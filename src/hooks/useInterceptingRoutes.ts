@@ -9,6 +9,7 @@ import { ChatSettingsTabs, SettingsTabs, SidebarTabKey } from '@/store/global/in
 import { useSessionStore } from '@/store/session';
 
 export const useOpenSettings = (tab: SettingsTabs = SettingsTabs.Common) => {
+  const activeId = useSessionStore((s) => s.activeId);
   const router = useQueryRoute();
   const mobile = useIsMobile();
 
@@ -17,9 +18,9 @@ export const useOpenSettings = (tab: SettingsTabs = SettingsTabs.Common) => {
       return () => router.push(urlJoin('/settings', tab));
     } else {
       // use Intercepting Routes on Desktop
-      return () => router.push('/settings/modal', { query: { tab } });
+      return () => router.push('/settings/modal', { query: { session: activeId, tab } });
     }
-  }, [mobile, tab, router]);
+  }, [mobile, tab, activeId, router]);
 };
 
 export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Meta) => {

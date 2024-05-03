@@ -1,6 +1,8 @@
+'use client';
+
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, memo } from 'react';
 
 import SettingModalLayout from '../../_layout/SettingModalLayout';
 
@@ -12,7 +14,7 @@ const UpgradeAlert = dynamic(() => import('@/app/(main)/settings/features/Upgrad
   ssr: false,
 });
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = memo<PropsWithChildren>(({ children }) => {
   return (
     <SettingModalLayout
       category={
@@ -25,6 +27,6 @@ const Layout = ({ children }: PropsWithChildren) => {
       {children}
     </SettingModalLayout>
   );
-};
+});
 
 export default Layout;

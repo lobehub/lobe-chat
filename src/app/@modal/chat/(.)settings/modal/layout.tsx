@@ -3,7 +3,7 @@
 import { Skeleton } from 'antd';
 import isEqual from 'fast-deep-equal';
 import dynamic from 'next/dynamic';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import StoreUpdater from '@/features/AgentSetting/StoreUpdater';
@@ -20,7 +20,7 @@ const CategoryContent = dynamic(() => import('./features/CategoryContent'), {
   ssr: false,
 });
 
-const Layout = ({ children }: PropsWithChildren) => {
+const Layout = memo<PropsWithChildren>(({ children }) => {
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
@@ -50,6 +50,6 @@ const Layout = ({ children }: PropsWithChildren) => {
       </Provider>
     </SettingModalLayout>
   );
-};
+});
 
 export default Layout;
