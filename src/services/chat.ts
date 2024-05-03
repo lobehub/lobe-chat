@@ -15,10 +15,10 @@ import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
 import { useUserStore } from '@/store/user';
 import {
-  commonSelectors,
   modelConfigSelectors,
   modelProviderSelectors,
   preferenceSelectors,
+  userProfileSelectors,
 } from '@/store/user/selectors';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
@@ -482,7 +482,7 @@ class ChatService {
       ...trace,
       enabled: true,
       tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
-      userId: commonSelectors.userId(useUserStore.getState()),
+      userId: userProfileSelectors.userId(useUserStore.getState()),
     };
   }
 
