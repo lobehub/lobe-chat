@@ -157,18 +157,5 @@
     "action": "Aktualisieren",
     "hasNew": "Neue Version verfügbar",
     "newVersion": "Neue Version verfügbar: {{version}}"
-  },
-  "userPanel": {
-    "billing": "Abrechnung",
-    "discord": "Community-Support",
-    "docs": "Dokumentation",
-    "email": "E-Mail-Support",
-    "feedback": "Feedback und Vorschläge",
-    "help": "Hilfezentrum",
-    "plans": "Pläne",
-    "profile": "Profil",
-    "setting": "Einstellungen",
-    "usages": "Nutzung",
-    "warn": "Dieser Zugang wird bald entfernt. Bitte rufen Sie das Menü über das Profilbild oben links auf."
   }
 }

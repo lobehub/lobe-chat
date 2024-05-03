@@ -13,24 +13,34 @@ import {
   Lock,
   Rss,
 } from 'lucide-react';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { ABOUT, CHANGELOG, FEEDBACK, GITHUB, PRIVACY_URL, TERMS_URL } from '@/const/url';
+import {
+  ABOUT,
+  BLOG,
+  CHANGELOG,
+  FEEDBACK,
+  GITHUB,
+  OFFICIAL_SITE,
+  PRIVACY_URL,
+  TERMS_URL,
+} from '@/const/url';
 
-const useStyles = createStyles(({ css, token, responsive }) => ({
+const useStyles = createStyles(({ css, token, responsive, isDarkMode }) => ({
   card: css`
     cursor: pointer;
 
-    padding: 24px;
+    padding: 20px;
 
-    background: ${token.colorFillTertiary};
+    background: ${isDarkMode ? token.colorFillTertiary : token.colorBgContainer};
     border: 1px solid ${token.colorFillSecondary};
     border-radius: ${token.borderRadiusLG}px;
 
     &:hover {
-      background: ${token.colorFillSecondary};
+      background: ${isDarkMode ? token.colorFillSecondary : token.colorBgContainer};
       border: 1px solid ${token.colorFill};
     }
 
@@ -51,69 +61,71 @@ const AboutList = memo(() => {
 
   const items = [
     {
+      href: OFFICIAL_SITE,
       icon: Home,
       label: t('officialSite'),
-      onClick: () => window.open('https://lobehub.com', '__blank'),
       value: 'officialSite',
     },
 
     {
+      href: FEEDBACK,
       icon: Book,
       label: t('document'),
-      onClick: () => window.open(FEEDBACK, '__blank'),
       value: 'feedback',
     },
     {
+      href: BLOG,
       icon: Rss,
       label: t('blog'),
-      onClick: () => window.open('https://lobehub.com/blog', '__blank'),
       value: 'blog',
     },
     {
+      href: GITHUB,
       icon: Github,
       label: 'GitHub',
-      onClick: () => window.open(GITHUB, '__blank'),
       value: 'feedback',
     },
     {
+      href: FEEDBACK,
       icon: Feather,
       label: t('feedback'),
-      onClick: () => window.open(FEEDBACK, '__blank'),
       value: 'feedback',
     },
     {
+      href: CHANGELOG,
       icon: FileClock,
       label: t('changelog'),
-      onClick: () => window.open(CHANGELOG, '__blank'),
       value: 'changelog',
     },
     {
+      href: TERMS_URL,
       icon: HeartHandshake,
       label: t('terms'),
-      onClick: () => window.open(TERMS_URL, '__blank'),
       value: 'terms',
     },
     {
+      href: PRIVACY_URL,
       icon: Lock,
       label: t('privacy'),
-      onClick: () => window.open(PRIVACY_URL, '__blank'),
       value: 'privacy',
     },
     {
+      href: ABOUT,
       icon: Heart,
       label: t('about'),
-      onClick: () => window.open(ABOUT, '__blank'),
       value: 'about',
     },
   ];
 
   return (
     <Grid className={styles.container} maxItemWidth={144} width={'100%'}>
-      {items.map(({ value, icon, label, onClick }) => (
-        <Flexbox className={styles.card} gap={8} horizontal key={value} onClick={onClick}>
-          <Icon icon={icon} size={{ fontSize: 20 }} />
-          {label}
-        </Flexbox>
+      {items.map(({ value, icon, label, href }) => (
+        <Link href={href} key={value} style={{ color: 'inherit' }} target={'_blank'}>
+          <Flexbox className={styles.card} gap={8} horizontal>
+            <Icon icon={icon} size={{ fontSize: 20 }} />
+            {label}
+          </Flexbox>
+        </Link>
       ))}
     </Grid>
   );

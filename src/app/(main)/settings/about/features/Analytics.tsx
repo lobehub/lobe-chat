@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/slices/preference/selectors';
+import { preferenceSelectors } from '@/store/user/selectors';
 
 type SettingItemGroup = ItemGroup;
 

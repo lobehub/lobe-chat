@@ -6,7 +6,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useCategory } from '@/app/(main)/settings//hooks/useCategory';
+import { useCategory } from '@/app/(main)/settings/hooks/useCategory';
 import Cell from '@/components/Cell';
 import Divider from '@/components/Cell/Divider';
 
@@ -24,7 +24,7 @@ const SettingCate = memo(() => {
             icon={icon}
             key={key}
             label={label}
-            onClick={() => router.replace(urlJoin('/settings', key))}
+            onClick={() => router.push(urlJoin('/settings', key))}
           />
         );
       })}
