@@ -91,6 +91,8 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     const systemRole = config.systemRole;
     const preValue = meta.description;
 
+    if (!systemRole) return;
+
     // 替换为 ...
     dispatchMeta({ type: 'update', value: { description: '...' } });
 
@@ -111,6 +113,8 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
     const systemRole = config.systemRole;
     const preValue = meta.tags;
+
+    if (!systemRole) return;
 
     // 替换为 ...
     dispatchMeta({ type: 'update', value: { tags: ['...'] } });
@@ -135,6 +139,8 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     const systemRole = config.systemRole;
     const previousTitle = meta.title;
 
+    if (!systemRole) return;
+    
     // 替换为 ...
     dispatchMeta({ type: 'update', value: { title: '...' } });
 
