@@ -6,7 +6,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 export const AVATAR_SIZE = 80;
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   avatar: css`
     z-index: 10;
 
@@ -14,13 +14,14 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     margin-top: -${AVATAR_SIZE / 2 + 6}px;
 
-    background: ${token.colorBgLayout};
-    border: 6px solid ${token.colorBgLayout};
+    background: ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
+    border: 6px solid ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
     border-radius: 50%;
   `,
   banner: css`
     position: relative;
     flex: none;
+    background: ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
   `,
   bannerBox: css`
     position: relative;
