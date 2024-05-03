@@ -5,7 +5,7 @@ import BrandWatermark from '@/components/BrandWatermark';
 import Avatar from '@/features/AvatarWithUpload';
 import { isMobileDevice } from '@/utils/responsive';
 
-import AvatarBanner from './features/AvatarBanner';
+import AvatarBanner, { AVATAR_SIZE } from './features/AvatarBanner';
 import Cate from './features/Cate';
 import ExtraCate from './features/ExtraCate';
 
@@ -17,7 +17,7 @@ const Page = () => {
   return (
     <>
       <AvatarBanner>
-        <Avatar size={88} />
+        <Avatar size={AVATAR_SIZE} />
       </AvatarBanner>
       <Cate />
       <ExtraCate />
