@@ -157,5 +157,22 @@
     "action": "Mettre à jour",
     "hasNew": "Nouvelle mise à jour disponible",
     "newVersion": "Nouvelle version disponible : {{version}}"
+  },
+  "userPanel": {
+    "billing": "Gestion de la facturation",
+    "default": {
+      "nickname": "Utilisateur de la communauté",
+      "username": "Version de prévisualisation de la communauté"
+    },
+    "discord": "Support de la communauté",
+    "docs": "Documentation d'utilisation",
+    "email": "Support par e-mail",
+    "feedback": "Retours et suggestions",
+    "help": "Centre d'aide",
+    "plans": "Forfaits d'abonnement",
+    "profile": "Gestion du compte",
+    "setting": "Paramètres de l'application",
+    "usages": "Statistiques d'utilisation",
+    "warn": "Cette entrée sera bientôt supprimée. Veuillez accéder à ce menu en cliquant sur l'avatar en haut à gauche."
   }
 }

@@ -1,9 +1,14 @@
 import { memo } from 'react';
 
-import AvatarWithUpload from '@/features/AvatarWithUpload';
+import UserAvatar from '@/features/User/UserAvatar';
+import UserPanel from '@/features/User/UserPanel';
 
 const Avatar = memo(() => {
-  return <AvatarWithUpload id={'avatar'} />;
+  return (
+    <UserPanel>
+      <UserAvatar clickable />
+    </UserPanel>
+  );
 });
 
 Avatar.displayName = 'Avatar';

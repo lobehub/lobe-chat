@@ -157,5 +157,22 @@
     "action": "Upgrade",
     "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Billing Management",
+    "default": {
+      "nickname": "Community User",
+      "username": "Community Preview"
+    },
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback and Suggestions",
+    "help": "Help Center",
+    "plans": "Subscription Plans",
+    "profile": "Account Management",
+    "setting": "App Settings",
+    "usages": "Usage Statistics",
+    "warn": "This entry will be offline soon. Please access this menu by clicking on the profile picture in the top left corner."
   }
 }

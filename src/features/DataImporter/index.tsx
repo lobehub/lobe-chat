@@ -116,6 +116,10 @@ const useStyles = createStyles(({ css, token }) => {
         }
       }
     `,
+    uploader: css`
+      display: block;
+      width: 100%;
+    `,
   };
 });
 
@@ -228,6 +232,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
           return false;
         }}
+        className={styles.uploader}
         maxCount={1}
         showUploadList={false}
       >

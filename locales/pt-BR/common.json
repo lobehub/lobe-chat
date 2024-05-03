@@ -157,5 +157,22 @@
     "action": "Atualizar",
     "hasNew": "Nova atualização disponível",
     "newVersion": "Nova versão disponível: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Gerenciamento de faturas",
+    "default": {
+      "nickname": "Usuário da Comunidade",
+      "username": "Visualização da Comunidade"
+    },
+    "discord": "Suporte da Comunidade",
+    "docs": "Documentação",
+    "email": "Suporte por E-mail",
+    "feedback": "Feedback e Sugestões",
+    "help": "Central de Ajuda",
+    "plans": "Planos de Assinatura",
+    "profile": "Gerenciamento de Conta",
+    "setting": "Configurações do Aplicativo",
+    "usages": "Estatísticas de Uso",
+    "warn": "Este acesso será descontinuado, por favor, acesse este menu a partir do ícone do perfil no canto superior esquerdo"
   }
 }

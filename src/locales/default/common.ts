@@ -152,4 +152,21 @@ export default {
     hasNew: '有可用更新',
     newVersion: '有新版本可用：{{version}}',
   },
+  userPanel: {
+    billing: '账单管理',
+    default: {
+      nickname: '社区用户',
+      username: '社区预览版',
+    },
+    discord: '社区支持',
+    docs: '使用文档',
+    email: '邮件支持',
+    feedback: '反馈与建议',
+    help: '帮助中心',
+    plans: '订阅方案',
+    profile: '账户管理',
+    setting: '应用设置',
+    usages: '用量统计',
+    warn: '此入口即将下线，后续请从左上角头像唤起本菜单',
+  },
 };
