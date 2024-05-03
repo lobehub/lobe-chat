@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from 'antd';
+import { Button, Skeleton } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { startCase } from 'lodash-es';
@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   active: css`
     color: ${token.colorBgLayout};
     background: ${token.colorPrimary};
@@ -20,11 +20,11 @@ const useStyles = createStyles(({ css, token }) => ({
     }
   `,
   tag: css`
-    background: ${token.colorBgContainer};
+    background: ${isDarkMode ? token.colorBgContainer : token.colorFillTertiary};
     border: none;
 
     &:hover {
-      background: ${token.colorBgElevated} !important;
+      background: ${isDarkMode ? token.colorBgElevated : token.colorFill} !important;
     }
   `,
 }));
@@ -37,6 +37,10 @@ const TagList = memo(() => {
     s.setSearchKeywords,
   ]);
   const agentTagList = useMarketStore(agentMarketSelectors.getAgentTagList, isEqual);
+
+  if (agentTagList?.length === 0) {
+    return <Skeleton paragraph={{ rows: 4 }} title={false} />;
+  }
 
   const list = md ? agentTagList : agentTagList.slice(0, 20);
 
