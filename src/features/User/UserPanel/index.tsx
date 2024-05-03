@@ -1,10 +1,8 @@
 'use client';
 
-import { Alert } from '@lobehub/ui';
 import { Badge, ConfigProvider, Popover } from 'antd';
 import { createStyles } from 'antd-style';
 import { PropsWithChildren, memo, useCallback, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import PopoverContent from './Popover';
@@ -17,15 +15,15 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const UserPanel = memo<PropsWithChildren<{ bottom?: boolean }>>(({ children, bottom }) => {
+const UserPanel = memo<PropsWithChildren>(({ children }) => {
   const hasNewVersion = useNewVersion();
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();
-  const { t } = useTranslation('common');
 
-  const AvararBadge = useCallback(
+  const AvatarBadge = useCallback(
     ({ children: badgeChildren, showBadge }: PropsWithChildren<{ showBadge?: boolean }>) => {
-      if (bottom || !showBadge) return badgeChildren;
+      if (!showBadge) return badgeChildren;
+
       return (
         <Flexbox>
           <ConfigProvider theme={{ components: { Badge: { dotSize: 8 } } }}>
@@ -40,27 +38,22 @@ const UserPanel = memo<PropsWithChildren<{ bottom?: boolean }>>(({ children, bot
   );
 
   return (
-    <AvararBadge showBadge={hasNewVersion}>
+    <AvatarBadge showBadge={hasNewVersion}>
       <Popover
         arrow={false}
-        content={
-          <>
-            {bottom && <Alert banner message={t('userPanel.warn')} type={'warning'} />}
-            <PopoverContent closePopover={() => setOpen(false)} />
-          </>
-        }
+        content={<PopoverContent closePopover={() => setOpen(false)} />}
         onOpenChange={setOpen}
         open={open}
         overlayInnerStyle={{
           padding: 0,
         }}
         placement={'topRight'}
-        rootClassName={bottom ? undefined : styles.popover}
+        rootClassName={styles.popover}
         trigger={['click']}
       >
         {children}
       </Popover>
-    </AvararBadge>
+    </AvatarBadge>
   );
 });
 
