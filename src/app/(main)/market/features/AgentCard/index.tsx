@@ -28,12 +28,13 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     background: ${token.colorBgContainer};
     border-radius: ${token.borderRadiusLG}px;
-    box-shadow: 0 0 1px 1px ${token.colorFillQuaternary} inset;
+    box-shadow: 0 0 1px 1px ${isDarkMode ? token.colorFillQuaternary : token.colorFillSecondary}
+      inset;
 
     transition: box-shadow 0.2s ${token.motionEaseInOut};
 
     &:hover {
-      box-shadow: 0 0 1px 1px ${token.colorFillSecondary} inset;
+      box-shadow: 0 0 1px 1px ${isDarkMode ? token.colorFillSecondary : token.colorFill} inset;
     }
   `,
   desc: css`
@@ -50,6 +51,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   title: css`
     margin-bottom: 0 !important;
     font-size: 18px !important;
+    font-weight: bold;
   `,
 }));
 

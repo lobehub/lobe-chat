@@ -21,6 +21,7 @@ const useStyles = createStyles(({ token, css }) => ({
   title: css`
     font-size: 18px;
     font-weight: 700;
+    line-height: 1.2;
   `,
 }));
 
