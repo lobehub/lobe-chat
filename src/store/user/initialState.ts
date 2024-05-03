@@ -1,11 +1,13 @@
-import { UserCommonState, initialCommonState } from './slices/common/initialState';
+import { UserAuthState, initialAuthState } from './slices/auth/initialState';
 import { UserPreferenceState, initialPreferenceState } from './slices/preference/initialState';
 import { UserSettingsState, initialSettingsState } from './slices/settings/initialState';
+import { UserSyncState, initialSyncState } from './slices/sync/initialState';
 
-export type UserState = UserCommonState & UserSettingsState & UserPreferenceState;
+export type UserState = UserSyncState & UserSettingsState & UserPreferenceState & UserAuthState;
 
 export const initialState: UserState = {
-  ...initialCommonState,
+  ...initialSyncState,
   ...initialSettingsState,
   ...initialPreferenceState,
+  ...initialAuthState,
 };
