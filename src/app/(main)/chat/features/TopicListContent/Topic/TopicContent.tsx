@@ -158,6 +158,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         }}
         size={'small'}
         spin={isLoading}
+        style={{ zIndex: 1 }}
       />
       {!editing ? (
         <Paragraph

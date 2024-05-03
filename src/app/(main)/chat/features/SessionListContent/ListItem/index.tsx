@@ -3,6 +3,7 @@ import { useHover } from 'ahooks';
 import { Dropdown } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
 import { memo, useMemo, useRef } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 const { Item } = List;
 
@@ -46,38 +47,29 @@ const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: strin
     );
 
     return (
-      <Item
-        actions={actions}
-        active={mobile ? false : active}
-        avatar={avatarRender}
-        className={styles.container}
-        ref={ref}
-        showAction={actions && (isHovering || showAction || mobile)}
-        {...(props as any)}
+      <Dropdown
+        arrow={false}
+        // menu={{
+        //   items,
+        //   onClick: ({ domEvent }) => {
+        //     domEvent.stopPropagation();
+        //   },
+        // }}
+        // onOpenChange={setOpen}
+        trigger={['contextMenu']}
       >
-        <Dropdown
-          arrow={false}
-          // menu={{
-          //   items,
-          //   onClick: ({ domEvent }) => {
-          //     domEvent.stopPropagation();
-          //   },
-          // }}
-          // onOpenChange={setOpen}
-          trigger={['contextMenu']}
-          // trigger={['click']}
-        >
-          <div
-            style={{
-              height: '100%',
-              left: 0,
-              position: 'absolute',
-              top: 0,
-              width: '100%',
-            }}
+        <Flexbox>
+          <Item
+            actions={actions}
+            active={mobile ? false : active}
+            avatar={avatarRender}
+            className={styles.container}
+            ref={ref}
+            showAction={actions && (isHovering || showAction || mobile)}
+            {...(props as any)}
           />
-        </Dropdown>
-      </Item>
+        </Flexbox>
+      </Dropdown>
     );
   },
 );
