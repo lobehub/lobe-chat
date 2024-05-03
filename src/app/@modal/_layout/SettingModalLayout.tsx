@@ -1,7 +1,7 @@
 'use client';
 
 import { useResponsive, useTheme, useThemeMode } from 'antd-style';
-import { ReactNode, useRef } from 'react';
+import { ReactNode, memo, useRef } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Header from '@/app/(main)/settings/_layout/Desktop/Header';
@@ -14,7 +14,7 @@ interface SettingLayoutProps {
   title?: string;
 }
 
-const SettingModalLayout = ({ children, category, desc, title }: SettingLayoutProps) => {
+const SettingModalLayout = memo<SettingLayoutProps>(({ children, category, desc, title }) => {
   const ref = useRef<any>(null);
   const theme = useTheme();
   const { isDarkMode } = useThemeMode();
@@ -52,7 +52,7 @@ const SettingModalLayout = ({ children, category, desc, title }: SettingLayoutPr
       </Flexbox>
     </>
   );
-};
+});
 
 SettingModalLayout.displayName = 'SettingModalLayout';
 

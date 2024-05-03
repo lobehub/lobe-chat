@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import { memo } from 'react';
 
 import { useQuery } from '@/hooks/useQuery';
 import { SettingsTabs } from '@/store/global/initialState';
@@ -16,7 +17,13 @@ const TTS = dynamic(() => import('@/app/(main)/settings/tts'), { loading, ssr: f
 const Agent = dynamic(() => import('@/app/(main)/settings/agent'), { loading, ssr: false });
 const Sync = dynamic(() => import('@/app/(main)/settings/sync'), { loading, ssr: false });
 
-const Modal = ({ browser, os, mobile }: { browser?: string; mobile?: boolean; os?: string }) => {
+interface SettingsModalProps {
+  browser?: string;
+  mobile?: boolean;
+  os?: string;
+}
+
+const SettingsModal = memo<SettingsModalProps>(({ browser, os, mobile }) => {
   const { tab = SettingsTabs.Common } = useQuery();
   return (
     <>
@@ -28,6 +35,6 @@ const Modal = ({ browser, os, mobile }: { browser?: string; mobile?: boolean; os
       {tab === SettingsTabs.About && <About mobile={mobile} />}
     </>
   );
-};
+});
 
-export default Modal;
+export default SettingsModal;

@@ -2,15 +2,11 @@
 
 import { Modal } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
-import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
+import { PropsWithChildren, memo, useMemo, useState } from 'react';
 
-const SessionSettingsModal = ({ children }: PropsWithChildren) => {
-  const [open, setOpen] = useState(false);
+const SessionSettingsModal = memo(({ children }: PropsWithChildren) => {
+  const [open, setOpen] = useState(true);
   const router = useRouter();
-
-  useEffect(() => {
-    setOpen(true);
-  }, []);
 
   const cacheRouter = useMemo(() => router, []);
 
@@ -31,6 +27,6 @@ const SessionSettingsModal = ({ children }: PropsWithChildren) => {
       {children}
     </Modal>
   );
-};
+});
 
 export default SessionSettingsModal;
