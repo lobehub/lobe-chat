@@ -1,8 +1,9 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Compass, MessageSquare } from 'lucide-react';
+import { Compass, MessageSquare, PanelLeftOpen, PanelLeftClose } from 'lucide-react';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { usePathname } from 'next/navigation';
 
 import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
@@ -15,6 +16,8 @@ export interface TopActionProps {
 const TopActions = memo<TopActionProps>(({ tab }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
+  const isChatPath = usePathname() === '/chat'; // 判断路径
+  const showSessionPanel = useGlobalStore((s) => s.preference.showSessionPanel);
 
   return (
     <>
@@ -43,6 +46,18 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
           title={t('tab.market')}
         />
       </Link>
+      {isChatPath && (
+        <Link aria-label={t('tab.assistantsAndConversations')} href={'/chat'}>
+          <ActionIcon
+            active={isChatPath}
+            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen} // 使用新的图标
+            onClick={}    // 点击事件待添加
+            placement={'right'}
+            size="large"
+            title={t('tab.assistantsAndConversations')}
+          />
+        </Link>
+      )}
     </>
   );
 });

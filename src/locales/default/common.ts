@@ -134,6 +134,7 @@ export default {
     chat: '会话',
     market: '发现',
     me: '我',
+    assistantsAndConversations: '助手与会话',
     setting: '设置',
   },
   telemetry: {
