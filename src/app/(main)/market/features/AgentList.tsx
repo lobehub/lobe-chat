@@ -58,7 +58,16 @@ const AgentList = memo<AgentListProps>(({ mobile }) => {
     [],
   );
 
-  if (isLoading) return <Skeleton paragraph={{ rows: 8 }} title={false} />;
+  if (isLoading || (!searchKeywords && agentList?.length === 0)) {
+    return (
+      <>
+        <h2 className={styles.title}>{t('title.recentSubmits')}</h2>
+        <Skeleton paragraph={{ rows: 8 }} title={false} />
+        <h2 className={styles.title}>{t('title.allAgents')}</h2>
+        <Skeleton paragraph={{ rows: 8 }} title={false} />
+      </>
+    );
+  }
 
   if (searchKeywords) {
     if (agentList.length === 0) return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
