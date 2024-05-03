@@ -140,6 +140,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Discover",
+    "me": "Me",
     "setting": "Settings"
   },
   "telemetry": {

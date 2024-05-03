@@ -1,3 +1,5 @@
+'use client';
+
 import { Moonshot } from '@lobehub/icons';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
@@ -16,7 +18,7 @@ const MoonshotProvider = memo(() => {
       title={
         <Moonshot.Combine
           color={theme.isDarkMode ? theme.colorText : Moonshot.colorPrimary}
-          size={24}
+          size={22}
         />
       }
     />

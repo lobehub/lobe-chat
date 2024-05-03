@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "إعدادات التفضيلات والنماذج.",
     "global": "إعدادات عامة",
     "session": "إعدادات الجلسة",
-    "sessionWithName": "إعدادات الجلسة · {{name}}"
+    "sessionDesc": "إعداد الشخصية وتفضيلات الجلسة.",
+    "sessionWithName": "إعدادات الجلسة · {{name}}",
+    "title": "إعدادات"
   },
   "llm": {
     "checker": {
