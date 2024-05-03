@@ -2,19 +2,25 @@
 
 import { Modal } from '@lobehub/ui';
 import { useRouter } from 'next/navigation';
-import { PropsWithChildren, useState } from 'react';
+import { PropsWithChildren, useEffect, useMemo, useState } from 'react';
 
 const SessionSettingsModal = ({ children }: PropsWithChildren) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    setOpen(true);
+  }, []);
+
+  const cacheRouter = useMemo(() => router, []);
 
   return (
     <Modal
-      footer={null}
-      onCancel={() => {
-        setOpen(false);
-        setTimeout(() => router.back(), 250);
+      afterClose={() => {
+        cacheRouter.back();
       }}
+      footer={null}
+      onCancel={() => setOpen(false)}
       open={open}
       styles={{
         body: { display: 'flex', minHeight: 'min(75vh, 750px)', overflow: 'hidden', padding: 0 },
