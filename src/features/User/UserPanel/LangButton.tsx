@@ -9,11 +9,13 @@ import Menu, { type MenuProps } from '@/components/Menu';
 import { localeOptions } from '@/locales/resources';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
-import { switchLang } from '@/utils/client/switchLang';
 
 const LangButton = memo(() => {
   const theme = useTheme();
-  const language = useUserStore((s) => settingsSelectors.currentSettings(s).language);
+  const [language, switchLocale] = useUserStore((s) => [
+    settingsSelectors.currentSettings(s).language,
+    s.switchLocale,
+  ]);
 
   const { t } = useTranslation('setting');
 
@@ -22,12 +24,12 @@ const LangButton = memo(() => {
       {
         key: 'auto',
         label: t('settingTheme.lang.autoMode'),
-        onClick: () => switchLang('auto'),
+        onClick: () => switchLocale('auto'),
       },
       ...localeOptions.map((item) => ({
         key: item.value,
         label: item.label,
-        onClick: () => switchLang(item.value),
+        onClick: () => switchLocale(item.value),
       })),
     ],
     [t],
@@ -41,7 +43,7 @@ const LangButton = memo(() => {
         padding: 0,
       }}
       placement={'right'}
-      trigger={['click']}
+      trigger={['click', 'hover']}
     >
       <ActionIcon
         icon={Languages}

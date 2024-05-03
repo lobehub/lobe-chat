@@ -56,7 +56,7 @@ const ThemeButton = memo(() => {
         padding: 0,
       }}
       placement={'right'}
-      trigger={['click']}
+      trigger={['click', 'hover']}
     >
       <ActionIcon
         icon={themeIcons[themeMode]}
