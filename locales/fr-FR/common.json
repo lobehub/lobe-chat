@@ -157,5 +157,19 @@
     "action": "Mettre à jour",
     "hasNew": "Nouvelle mise à jour disponible",
     "newVersion": "Nouvelle version disponible : {{version}}"
+  },
+  "userPanel": {
+    "billing": "Gestion de la facturation",
+    "defaultNickname": "Utilisateur de la version communautaire",
+    "discord": "Support de la communauté",
+    "docs": "Documentation d'utilisation",
+    "email": "Support par e-mail",
+    "feedback": "Retours et suggestions",
+    "help": "Centre d'aide",
+    "moveGuide": "Le bouton de configuration a été déplacé ici",
+    "plans": "Forfaits d'abonnement",
+    "profile": "Gestion du compte",
+    "setting": "Paramètres de l'application",
+    "usages": "Statistiques d'utilisation"
   }
 }
