@@ -1,7 +1,10 @@
 import { DeepPartial } from 'utility-types';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { SessionModel } from '@/database/client/models/session';
 import { SessionGroupModel } from '@/database/client/models/sessionGroup';
+import { UserModel } from '@/database/client/models/user';
+import { useUserStore } from '@/store/user';
 import { LobeAgentConfig } from '@/types/agent';
 import {
   ChatSessionList,
@@ -40,6 +43,18 @@ export class ClientService implements ISessionService {
     return SessionModel.queryWithGroups();
   }
 
+  async getSessionConfig(id: string): Promise<LobeAgentConfig> {
+    if (!id || id === INBOX_SESSION_ID) {
+      return UserModel.getAgentConfig();
+    }
+
+    const res = await SessionModel.findById(id);
+
+    if (!res) throw new Error('Session not found');
+
+    return res.config as LobeAgentConfig;
+  }
+
   async getSessionsByType(type: 'agent' | 'group' | 'all' = 'all'): Promise<LobeSessions> {
     switch (type) {
       // TODO: add a filter to get only agents or agents
@@ -64,6 +79,9 @@ export class ClientService implements ISessionService {
   async countSessions() {
     return SessionModel.count();
   }
+  async hasSessions() {
+    return (await this.countSessions()) !== 0;
+  }
 
   async searchSessions(keyword: string) {
     return SessionModel.queryByKeyword(keyword);
@@ -78,6 +96,10 @@ export class ClientService implements ISessionService {
   }
 
   async updateSessionConfig(activeId: string, config: DeepPartial<LobeAgentConfig>) {
+    if (activeId === INBOX_SESSION_ID) {
+      return useUserStore.getState().updateDefaultAgent({ config });
+    }
+
     return SessionModel.updateConfig(activeId, config);
   }
 

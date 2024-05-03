@@ -7,8 +7,9 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
+import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
@@ -69,7 +70,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
   vi.spyOn(agentSelectors, 'currentAgentConfig').mockImplementation(() => DEFAULT_AGENT_CONFIG);
-  vi.spyOn(agentSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
+  vi.spyOn(sessionMetaSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
 });
 
 afterEach(() => {
@@ -384,11 +385,7 @@ describe('chatMessage actions', () => {
       });
 
       expect(messageService.removeMessage).not.toHaveBeenCalledWith(messageId);
-      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(
-        expect.any(Array),
-        messageId,
-        undefined,
-      );
+      expect(mockState.coreProcessMessage).toHaveBeenCalledWith(expect.any(Array), messageId, {});
     });
 
     it('should not perform any action if the message id does not exist', async () => {

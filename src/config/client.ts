@@ -30,17 +30,12 @@ declare global {
       NEXT_PUBLIC_I18N_DEBUG_SERVER: string;
 
       NEXT_PUBLIC_DEVELOPER_DEBUG: string;
-
-      NEXT_PUBLIC_LOBE_CHAT_DOCS: string;
     }
   }
 }
 
 export const getClientConfig = () => ({
   BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
-
-  // docs
-  LOBE_CHAT_DOCS: process.env.NEXT_PUBLIC_LOBE_CHAT_DOCS,
 
   // Plausible Analytics
   ANALYTICS_PLAUSIBLE: process.env.NEXT_PUBLIC_ANALYTICS_PLAUSIBLE === '1',
@@ -59,6 +54,9 @@ export const getClientConfig = () => ({
   UMAMI_SCRIPT_URL:
     process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL || 'https://analytics.umami.is/script.js',
   UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
+
+  // Sentry
+  ENABLE_SENTRY: !!process.env.NEXT_PUBLIC_SENTRY_DSN,
 
   // i18n debug mode
   I18N_DEBUG: process.env.NEXT_PUBLIC_I18N_DEBUG === '1',

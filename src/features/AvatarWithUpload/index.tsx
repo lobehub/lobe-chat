@@ -1,11 +1,13 @@
+'use client';
+
 import { Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import NextImage from 'next/image';
 import { CSSProperties, memo, useCallback } from 'react';
 
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
 
@@ -38,8 +40,8 @@ interface AvatarWithUploadProps {
 const AvatarWithUpload = memo<AvatarWithUploadProps>(
   ({ size = 40, compressSize = 256, style, id }) => {
     const { styles } = useStyle();
-    const [avatar, updateAvatar] = useGlobalStore((s) => [
-      commonSelectors.userAvatar(s),
+    const [avatar, updateAvatar] = useUserStore((s) => [
+      userProfileSelectors.userAvatar(s),
       s.updateAvatar,
     ]);
 

@@ -314,7 +314,7 @@ describe('topic action', () => {
       const activeId = 'test-session-id';
 
       await act(async () => {
-        useChatStore.setState({ activeId });
+        useChatStore.setState({ activeId, activeTopicId: topicId });
       });
 
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
@@ -328,6 +328,27 @@ describe('topic action', () => {
       expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).toHaveBeenCalled();
+    });
+    it('should remove a specific topic and its messages, then not refresh the topic list', async () => {
+      const topicId = 'topic-1';
+      const { result } = renderHook(() => useChatStore());
+      const activeId = 'test-session-id';
+
+      await act(async () => {
+        useChatStore.setState({ activeId });
+      });
+
+      const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
+      const switchTopicSpy = vi.spyOn(result.current, 'switchTopic');
+
+      await act(async () => {
+        await result.current.removeTopic(topicId);
+      });
+
+      expect(messageService.removeMessages).toHaveBeenCalledWith(activeId, topicId);
+      expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
+      expect(refreshTopicSpy).toHaveBeenCalled();
+      expect(switchTopicSpy).not.toHaveBeenCalled();
     });
   });
   describe('removeUnstarredTopic', () => {
@@ -358,14 +379,18 @@ describe('topic action', () => {
   describe('updateTopicLoading', () => {
     it('should call update topicLoadingId', async () => {
       const { result } = renderHook(() => useChatStore());
-      expect(result.current.topicLoadingId).toBeUndefined();
-
-      // Call the action with the topicId and newTitle
-      await act(async () => {
-        await result.current.updateTopicLoading('loading-id');
+      act(() => {
+        useChatStore.setState({ topicLoadingIds: [] });
       });
 
-      expect(result.current.topicLoadingId).toEqual('loading-id');
+      expect(result.current.topicLoadingIds).toHaveLength(0);
+
+      // Call the action with the topicId and newTitle
+      act(() => {
+        result.current.internal_updateTopicLoading('loading-id', true);
+      });
+
+      expect(result.current.topicLoadingIds).toEqual(['loading-id']);
     });
   });
   describe('summaryTopicTitle', () => {

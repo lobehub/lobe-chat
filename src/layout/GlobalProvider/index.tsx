@@ -3,17 +3,21 @@ import { cookies } from 'next/headers';
 import { FC, ReactNode } from 'react';
 
 import { getClientConfig } from '@/config/client';
+import { getServerFeatureFlagsValue } from '@/config/server/featureFlags';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import {
   LOBE_THEME_APPEARANCE,
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
+import { getServerGlobalConfig } from '@/server/globalConfig';
+import { ServerConfigStoreProvider } from '@/store/serverConfig';
 import { getAntdLocale } from '@/utils/locale';
+import { isMobileDevice } from '@/utils/responsive';
 
 import AppTheme from './AppTheme';
 import Locale from './Locale';
-import StoreHydration from './StoreHydration';
+import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
 let DebugUI: FC = () => null;
@@ -42,6 +46,10 @@ const GlobalLayout = async ({ children }: GlobalLayoutProps) => {
   const defaultLang = cookieStore.get(LOBE_LOCALE_COOKIE);
   const antdLocale = await getAntdLocale(defaultLang?.value);
 
+  // get default feature flags to use with ssr
+  const serverFeatureFlags = getServerFeatureFlagsValue();
+  const serverConfig = getServerGlobalConfig();
+  const isMobile = isMobileDevice();
   return (
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={defaultLang?.value}>
@@ -50,8 +58,14 @@ const GlobalLayout = async ({ children }: GlobalLayoutProps) => {
           defaultNeutralColor={neutralColor?.value as any}
           defaultPrimaryColor={primaryColor?.value as any}
         >
-          <StoreHydration />
-          {children}
+          <StoreInitialization />
+          <ServerConfigStoreProvider
+            featureFlags={serverFeatureFlags}
+            isMobile={isMobile}
+            serverConfig={serverConfig}
+          >
+            {children}
+          </ServerConfigStoreProvider>
           <DebugUI />
         </AppTheme>
       </Locale>

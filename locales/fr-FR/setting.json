@@ -22,13 +22,17 @@
       "confirm": "Confirmer la réinitialisation de tous les paramètres ?",
       "currentVersion": "Version actuelle",
       "desc": "Réinitialiser tous les paramètres aux valeurs par défaut",
+      "success": "Toutes les configurations ont été réinitialisées avec succès",
       "title": "Réinitialiser tous les paramètres"
     }
   },
   "header": {
+    "desc": "Préférences et paramètres du modèle.",
     "global": "Paramètres globaux",
     "session": "Paramètres de session",
-    "sessionWithName": "Paramètres de session · {{name}}"
+    "sessionDesc": "Paramètres de personnage et préférences de session.",
+    "sessionWithName": "Paramètres de session · {{name}}",
+    "title": "Paramètres"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "Prise en charge de la reconnaissance visuelle"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "Le mode de requête client lancera directement une session à partir du navigateur, améliorant ainsi la vitesse de réponse",
+      "title": "Utiliser le mode de requête client"
     },
     "fetcher": {
       "fetch": "Obtenir la liste des modèles",

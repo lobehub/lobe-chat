@@ -22,13 +22,17 @@
       "confirm": "Alle Einstellungen zurücksetzen?",
       "currentVersion": "Aktuelle Version",
       "desc": "Alle Einstellungen auf Standardwerte zurücksetzen",
+      "success": "Alle Einstellungen wurden zurückgesetzt",
       "title": "Alle Einstellungen zurücksetzen"
     }
   },
   "header": {
+    "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
     "session": "Sitzungseinstellungen",
-    "sessionWithName": "Sitzungseinstellungen · {{name}}"
+    "sessionDesc": "Rollenkonfiguration und Sitzungspräferenzen.",
+    "sessionWithName": "Sitzungseinstellungen · {{name}}",
+    "title": "Einstellungen"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "Visuelle Erkennung unterstützen"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "Client Fetch-Modus initiiert direkte Sitzungsanfragen vom Browser aus und verbessert die Reaktionsgeschwindigkeit.",
+      "title": "Client Fetch-Modus verwenden"
     },
     "fetcher": {
       "fetch": "Modelle abrufen",

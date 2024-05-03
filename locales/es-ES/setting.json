@@ -22,13 +22,17 @@
       "confirm": "¿Confirmar el restablecimiento de todas las configuraciones?",
       "currentVersion": "Versión actual",
       "desc": "Restablecer todas las opciones de configuración a sus valores predeterminados",
+      "success": "Se han restablecido todas las configuraciones",
       "title": "Restablecer todas las configuraciones"
     }
   },
   "header": {
+    "desc": "Preferencias y configuración del modelo.",
     "global": "Configuración global",
     "session": "Configuración de la sesión",
-    "sessionWithName": "Configuración de la sesión · {{name}}"
+    "sessionDesc": "Configuración de roles y preferencias de sesión.",
+    "sessionWithName": "Configuración de la sesión · {{name}}",
+    "title": "Configuración"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "Soporte de reconocimiento visual"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "El modo de solicitud en el cliente iniciará directamente la solicitud de sesión desde el navegador, lo que puede mejorar la velocidad de respuesta",
+      "title": "Usar el modo de solicitud en el cliente"
     },
     "fetcher": {
       "fetch": "Obtener lista de modelos",

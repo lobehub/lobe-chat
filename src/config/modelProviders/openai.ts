@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// refs to: https://platform.openai.com/docs/models/gpt-4-turbo-and-gpt-4
+// ref https://platform.openai.com/docs/models
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
@@ -115,14 +115,6 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4-turbo-2024-04-09',
       tokens: 128_000,
-      vision: true,
-    },
-    {
-      displayName: 'GPT-4 ALL',
-      files: true,
-      functionCall: true,
-      id: 'gpt-4-all',
-      tokens: 32_768,
       vision: true,
     },
   ],

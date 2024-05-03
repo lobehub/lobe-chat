@@ -22,13 +22,17 @@
       "confirm": "確認重置所有設定？",
       "currentVersion": "當前版本",
       "desc": "重置所有設定項回預設值",
+      "success": "已重設所有設定",
       "title": "重置所有設定"
     }
   },
   "header": {
+    "desc": "偏好與模型設定",
     "global": "全域設定",
     "session": "對話設定",
-    "sessionWithName": "對話設定 · {{name}}"
+    "sessionDesc": "角色設定與會話偏好",
+    "sessionWithName": "對話設定 · {{name}}",
+    "title": "設定"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "支援視覺識別"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "客戶端請求模式將從瀏覽器直接發起會話請求，可提升響應速度",
+      "title": "使用客戶端請求模式"
     },
     "fetcher": {
       "fetch": "獲取模型列表",

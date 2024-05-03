@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Terug naar startpagina",
+    "desc": "Probeer het later opnieuw of keer terug naar de bekende wereld",
+    "retry": "Opnieuw proberen",
+    "title": "Er is een probleem opgetreden op de pagina.."
+  },
+  "notFound": {
+    "backHome": "Terug naar startpagina",
+    "desc": "We kunnen de pagina die je zoekt niet vinden, controleer of de link juist is",
+    "title": "Betreden onbekend terrein?"
+  },
   "pluginSettings": {
     "desc": "Voltooi de volgende instellingen om de plugin te gebruiken",
     "title": "{{name}} Plugin Instellingen"
@@ -45,6 +56,7 @@
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
     "InvalidGroqAPIKey": "Groq API Key is onjuist of leeg. Controleer de Groq API Key en probeer het opnieuw.",
+    "InvalidMinimaxAPIKey": "Ongeldige of lege Minimax API-sleutel. Controleer de Minimax API-sleutel en probeer het opnieuw.",
     "InvalidMistralAPIKey": "Ongeldige of lege Mistral AI API-sleutel. Controleer de Mistral API-sleutel en probeer het opnieuw.",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
@@ -54,11 +66,12 @@
     "InvalidZeroOneAPIKey": "Ongeldige ZeroOneAPI-sleutel of leeg, controleer de ZeroOneAPI-sleutel en probeer het opnieuw",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
+    "MinimaxBizError": "Er is een fout opgetreden bij het aanroepen van de Minimax-service. Controleer de volgende informatie of probeer het opnieuw.",
     "MistralBizError": "Er is een fout opgetreden bij het aanroepen van de Mistral AI-service. Controleer de onderstaande informatie of probeer het opnieuw.",
     "MoonshotBizError": "Er is een fout opgetreden bij het aanroepen van de Moonshot-service. Controleer de volgende informatie of probeer het opnieuw.",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
-    "OllamaServiceUnavailable": "De Ollama-service is niet beschikbaar. Controleer of deze correct is gestart.",
+    "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",
     "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
     "OpenRouterBizError": "Fout bij het aanvragen van OpenRouter AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
     "PerplexityBizError": "Er is een fout opgetreden bij het aanvragen van de Perplexity AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
@@ -88,18 +101,19 @@
     "addProxyUrl": "Voeg een optionele OpenAI-proxy-URL toe",
     "closeMessage": "Sluit bericht",
     "confirm": "Bevestigen en opnieuw proberen",
-    "model": {
-      "Ollama": {
-        "confirm": "Downloaden",
-        "description": "Voer je Ollama model tag in, voltooi om het gesprek voort te zetten",
-        "title": "Download het gespecificeerde Ollama model"
-      }
-    },
     "oauth": {
       "description": "De beheerder heeft een uniforme aanmeldingsverificatie ingeschakeld. Klik op de onderstaande knop om in te loggen en de app te ontgrendelen.",
       "success": "Succesvol ingelogd",
       "title": "Account inloggen",
       "welcome": "Welkom!"
+    },
+    "ollama": {
+      "cancel": "Annuleren",
+      "confirm": "Bevestigen",
+      "description": "Voer uw Ollama-modeltag in om door te gaan met de sessie",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Downloaden begint...",
+      "title": "Specifiek Ollama-model downloaden"
     },
     "password": {
       "description": "De beheerder heeft app-encryptie ingeschakeld. Voer het app-wachtwoord in om de app te ontgrendelen. Het wachtwoord hoeft slechts één keer te worden ingevoerd.",

@@ -22,13 +22,17 @@
       "confirm": "모든 설정을 재설정하시겠습니까?",
       "currentVersion": "현재 버전",
       "desc": "모든 설정을 기본값으로 재설정합니다",
+      "success": "모든 설정이 재설정되었습니다",
       "title": "모든 설정 재설정"
     }
   },
   "header": {
+    "desc": "설정 및 모델 설정.",
     "global": "전역 설정",
     "session": "세션 설정",
-    "sessionWithName": "세션 설정 · {{name}}"
+    "sessionDesc": "캐릭터 설정 및 세션 환경 설정.",
+    "sessionWithName": "세션 설정 · {{name}}",
+    "title": "설정"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "시각 인식 지원"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "브라우저에서 직접 세션 요청을 시작하는 클라이언트 요청 모드는 응답 속도를 향상시킬 수 있습니다",
+      "title": "클라이언트 요청 모드 사용"
     },
     "fetcher": {
       "fetch": "모델 목록 가져오기",

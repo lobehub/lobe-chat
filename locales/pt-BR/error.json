@@ -1,4 +1,15 @@
 {
+  "error": {
+    "backHome": "Voltar para a página inicial",
+    "desc": "Tente novamente mais tarde, ou retorne ao mundo conhecido",
+    "retry": "Tentar novamente",
+    "title": "Ocorreu um problema na página.."
+  },
+  "notFound": {
+    "backHome": "Voltar para a página inicial",
+    "desc": "Não conseguimos encontrar a página que você está procurando, por favor, verifique se o link está correto",
+    "title": "Entrou em um território desconhecido?"
+  },
   "pluginSettings": {
     "desc": "Complete a seguinte configuração para começar a usar este plugin",
     "title": "Configuração do plugin {{name}}"
@@ -45,6 +56,7 @@
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidGoogleAPIKey": "Chave de API Google incorreta ou vazia, por favor, verifique a chave de API Google e tente novamente",
     "InvalidGroqAPIKey": "Chave de API Groq AI inválida ou em branco, verifique a chave de API Groq e tente novamente",
+    "InvalidMinimaxAPIKey": "Chave de API Minimax inválida ou em branco, verifique a chave de API Minimax e tente novamente",
     "InvalidMistralAPIKey": "Chave de API Mistral AI inválida ou vazia. Por favor, verifique a chave de API Mistral e tente novamente.",
     "InvalidMoonshotAPIKey": "A chave da API Moonshot AI está incorreta ou vazia. Por favor, verifique a chave da API Moonshot e tente novamente.",
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",
@@ -54,11 +66,12 @@
     "InvalidZeroOneAPIKey": "Chave de API ZeroOne inválida ou vazia, verifique a chave de API ZeroOne e tente novamente",
     "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
     "LocationNotSupportError": "Desculpe, sua localização atual não suporta este serviço de modelo, pode ser devido a restrições geográficas ou serviço não disponível. Por favor, verifique se a localização atual suporta o uso deste serviço ou tente usar outras informações de localização.",
+    "MinimaxBizError": "Erro no serviço Minimax, verifique as informações abaixo ou tente novamente",
     "MistralBizError": "Ocorreu um erro ao solicitar o serviço Mistral AI. Por favor, verifique as informações abaixo ou tente novamente.",
     "MoonshotBizError": "O serviço Moonshot na face oculta da lua encontrou um erro. Por favor, verifique as informações abaixo ou tente novamente.",
     "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
-    "OllamaServiceUnavailable": "O serviço Ollama não está disponível, verifique se está iniciado corretamente",
+    "OllamaServiceUnavailable": "O serviço Ollama não está disponível. Verifique se o Ollama está em execução corretamente ou se a configuração de CORS do Ollama está correta",
     "OpenAIBizError": "Erro ao solicitar o serviço OpenAI. Verifique ou tente novamente com base nas informações abaixo",
     "OpenRouterBizError": "Erro de negócios ao solicitar o serviço de IA do OpenRouter. Por favor, verifique as informações abaixo ou tente novamente.",
     "PerplexityBizError": "Erro de negócios ao solicitar o serviço de IA Perplexity, verifique as informações a seguir ou tente novamente",
@@ -88,18 +101,19 @@
     "addProxyUrl": "Adicionar URL de proxy OpenAI (opcional)",
     "closeMessage": "Fechar mensagem",
     "confirm": "Confirmar e tentar novamente",
-    "model": {
-      "Ollama": {
-        "confirm": "Baixar",
-        "description": "Digite as tags do seu modelo Ollama para continuar a sessão",
-        "title": "Baixar o modelo Ollama especificado"
-      }
-    },
     "oauth": {
       "description": "O administrador ativou a autenticação de login unificado. Clique no botão abaixo para fazer login e desbloquear o aplicativo.",
       "success": "Login bem-sucedido",
       "title": "Faça login na sua conta",
       "welcome": "Bem-vindo!"
+    },
+    "ollama": {
+      "cancel": "Cancelar",
+      "confirm": "Confirmar",
+      "description": "Digite suas tags de modelo Ollama para continuar a sessão",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Iniciando download...",
+      "title": "Baixar modelo Ollama específico"
     },
     "password": {
       "description": "O administrador ativou a criptografia do aplicativo. Insira a senha do aplicativo para desbloqueá-lo. A senha só precisa ser inserida uma vez.",

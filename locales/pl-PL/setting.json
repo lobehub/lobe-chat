@@ -22,13 +22,17 @@
       "confirm": "Potwierdź zresetowanie wszystkich ustawień?",
       "currentVersion": "Aktualna wersja",
       "desc": "Zresetuj wszystkie ustawienia do wartości domyślnych",
+      "success": "Wszystkie ustawienia zostały zresetowane",
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
   "header": {
+    "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
     "session": "Ustawienia sesji",
-    "sessionWithName": "Ustawienia sesji · {{name}}"
+    "sessionDesc": "Ustawienia postaci i preferencje sesji.",
+    "sessionWithName": "Ustawienia sesji · {{name}}",
+    "title": "Ustawienia"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "Obsługa rozpoznawania wizyjnego"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "使用客户端请求模式，浏览器将直接发起会话请求，以提升响应速度",
+      "title": "使用客户端请求模式"
     },
     "fetcher": {
       "fetch": "Pobierz listę modeli",

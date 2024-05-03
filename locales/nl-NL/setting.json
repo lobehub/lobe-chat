@@ -22,13 +22,17 @@
       "confirm": "Alle instellingen resetten bevestigen?",
       "currentVersion": "Huidige versie",
       "desc": "Alle instellingen worden teruggezet naar de standaardwaarden",
+      "success": "Alle instellingen zijn succesvol gereset",
       "title": "Alle instellingen resetten"
     }
   },
   "header": {
+    "desc": "Voorkeuren en modelinstellingen.",
     "global": "Algemene instellingen",
     "session": "Sessie-instellingen",
-    "sessionWithName": "Sessie-instellingen · {{name}}"
+    "sessionDesc": "Rolinstellingen en sessievoorkeuren.",
+    "sessionWithName": "Sessie-instellingen · {{name}}",
+    "title": "Instellingen"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "Support Visual Recognition"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "使用客户端请求模式将直接从浏览器发起会话请求，可提升响应速度",
+      "title": "使用客户端请求模式"
     },
     "fetcher": {
       "fetch": "Haal model lijst op",

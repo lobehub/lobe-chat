@@ -28,6 +28,7 @@ export enum ModelProvider {
   ChatGLM = 'chatglm',
   Google = 'google',
   Groq = 'groq',
+  Minimax = 'minimax',
   Mistral = 'mistral',
   Moonshot = 'moonshot',
   Ollama = 'ollama',

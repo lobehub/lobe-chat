@@ -22,13 +22,17 @@
       "confirm": "Tüm ayarları sıfırlamayı onaylıyor musunuz?",
       "currentVersion": "Geçerli Sürüm",
       "desc": "Tüm ayarları varsayılan değerlere sıfırlar",
+      "success": "Tüm ayarlar sıfırlandı",
       "title": "Tüm Ayarları Sıfırla"
     }
   },
   "header": {
+    "desc": "Tercihler ve model ayarları.",
     "global": "Genel Ayarlar",
     "session": "Oturum Ayarları",
-    "sessionWithName": "Oturum Ayarları · {{name}}"
+    "sessionDesc": "Karakter ayarları ve oturum tercihleri.",
+    "sessionWithName": "Oturum Ayarları · {{name}}",
+    "title": "Ayarlar"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "Görüntü Tanımayı Destekle"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "İstemci tarafından alınan veri: Tarayıcı, doğrudan oturum isteği gönderir ve yanıt hızını artırabilir.",
+      "title": "İstemci Tarafından Veri Alımı"
     },
     "fetcher": {
       "fetch": "Modelleri Al",

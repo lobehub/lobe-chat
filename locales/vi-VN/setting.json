@@ -22,13 +22,17 @@
       "confirm": "Xác nhận đặt lại tất cả cài đặt?",
       "currentVersion": "Phiên bản hiện tại",
       "desc": "Đặt lại tất cả cài đặt về giá trị mặc định",
+      "success": "Đã đặt lại tất cả cài đặt",
       "title": "Đặt lại tất cả cài đặt"
     }
   },
   "header": {
+    "desc": "Thiết lập Ưu tiên và Mô hình.",
     "global": "Cài đặt toàn cầu",
     "session": "Cài đặt cuộc trò chuyện",
-    "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}"
+    "sessionDesc": "Thiết lập nhân vật và ưu tiên phiên hội thoại.",
+    "sessionWithName": "Cài đặt cuộc trò chuyện · {{name}}",
+    "title": "Cài đặt"
   },
   "llm": {
     "checker": {
@@ -74,6 +78,10 @@
           "title": "Hỗ trợ nhận diện hình ảnh"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "Chế độ yêu cầu từ khách hàng sẽ khởi động yêu cầu phiên trực tiếp từ trình duyệt, có thể cải thiện tốc độ phản hồi",
+      "title": "Sử dụng chế độ yêu cầu từ khách hàng"
     },
     "fetcher": {
       "fetch": "Lấy danh sách mô hình",

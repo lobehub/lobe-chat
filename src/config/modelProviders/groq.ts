@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://console.groq.com/docs/models
 const Groq: ModelProviderCard = {
   chatModels: [
     {
@@ -15,8 +16,19 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'LLaMA2-70b-chat',
+      displayName: 'LLaMA3-3-8B',
       enabled: true,
+      id: 'llama3-8b-8192',
+      tokens: 8192,
+    },
+    {
+      displayName: 'LLaMA3-3-70B',
+      enabled: true,
+      id: 'llama3-70b-8192',
+      tokens: 8192,
+    },
+    {
+      displayName: 'LLaMA2-70b-chat',
       id: 'llama2-70b-4096',
       tokens: 4096,
     },
