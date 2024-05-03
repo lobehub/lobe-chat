@@ -1,13 +1,47 @@
+import { ActionIcon } from '@lobehub/ui';
+import { Tooltip } from 'antd';
+import { LucideX } from 'lucide-react';
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import UserAvatar from '@/features/User/UserAvatar';
 import UserPanel from '@/features/User/UserPanel';
+import { useUserStore } from '@/store/user';
+import { preferenceSelectors } from '@/store/user/selectors';
 
 const Avatar = memo(() => {
-  return (
+  const hideSettingsMoveGuide = useUserStore(preferenceSelectors.hideSettingsMoveGuide);
+  const updateGuideState = useUserStore((s) => s.updateGuideState);
+  const content = (
     <UserPanel>
       <UserAvatar clickable />
     </UserPanel>
+  );
+
+  return hideSettingsMoveGuide ? (
+    content
+  ) : (
+    <Tooltip
+      color={'blue'}
+      open
+      placement={'right'}
+      prefixCls={'guide'}
+      title={
+        <Flexbox align={'center'} gap={8} horizontal>
+          <div style={{ lineHeight: '22px' }}>设置按钮搬到这里啦</div>
+          <ActionIcon
+            icon={LucideX}
+            onClick={() => {
+              updateGuideState({ moveSettingsToAvatar: true });
+            }}
+            size={'small'}
+            style={{ color: 'inherit' }}
+          />
+        </Flexbox>
+      }
+    >
+      {content}
+    </Tooltip>
   );
 });
 
