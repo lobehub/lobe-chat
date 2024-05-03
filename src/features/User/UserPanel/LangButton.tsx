@@ -41,7 +41,7 @@ const LangButton = memo(() => {
         padding: 0,
       }}
       placement={'right'}
-      trigger={['click', 'hover']}
+      trigger={['click']}
     >
       <ActionIcon
         icon={Languages}
