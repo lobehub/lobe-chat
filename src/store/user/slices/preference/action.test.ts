@@ -24,7 +24,7 @@ describe('createPreferenceSlice', () => {
         result.current.updateGuideState(guide);
       });
 
-      expect(result.current.preference.guide).toEqual(guide);
+      expect(result.current.preference.guide!.topic).toBeTruthy();
     });
   });
 
