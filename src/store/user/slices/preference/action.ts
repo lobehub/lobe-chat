@@ -6,7 +6,7 @@ import type { UserStore } from '@/store/user';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { Guide, UserPreference } from './initialState';
+import { DEFAULT_PREFERENCE, Guide, UserPreference } from './initialState';
 
 const n = setNamespace('preference');
 
@@ -41,7 +41,13 @@ export const createPreferenceSlice: StateCreator<
       () => get().preferenceStorage.getFromLocalStorage(),
       {
         onSuccess: (preference) => {
-          set({ isPreferenceInit: true, preference }, false, n('initPreference'));
+          const isEmpty = Object.keys(preference).length === 0;
+
+          set(
+            { isPreferenceInit: true, preference: isEmpty ? DEFAULT_PREFERENCE : preference },
+            false,
+            n('initPreference'),
+          );
         },
       },
     ),
