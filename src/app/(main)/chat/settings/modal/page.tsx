@@ -1,8 +1,5 @@
-'use client';
-
-import { useLayoutEffect } from 'react';
-
-import { useQueryRoute } from '@/hooks/useQueryRoute';
+import { redirect } from 'next/navigation';
+import qs from 'query-string';
 
 /**
  * @description: Chat Settings Modal (intercepting routes fallback when hard refresh)
@@ -10,14 +7,11 @@ import { useQueryRoute } from '@/hooks/useQueryRoute';
  * @refs: https://github.com/lobehub/lobe-chat/discussions/2295#discussioncomment-9290942
  */
 
-const ChatSettingsModalFallback = () => {
-  const router = useQueryRoute();
-
-  useLayoutEffect(() => {
-    router.replace('/chat/settings', { query: { tab: '' } });
-  }, []);
-
-  return null;
+const ChatSettingsModalFallback = ({ searchParams }: { searchParams: any }) => {
+  const { tab, ...query } = searchParams;
+  return redirect(
+    [qs.stringifyUrl({ query: query, url: '/chat/settings' }), tab].filter(Boolean).join('#'),
+  );
 };
 
 export default ChatSettingsModalFallback;
