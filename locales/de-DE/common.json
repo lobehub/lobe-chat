@@ -160,19 +160,16 @@
   },
   "userPanel": {
     "billing": "Abrechnung verwalten",
-    "default": {
-      "nickname": "Community-Benutzer",
-      "username": "Community-Vorschauversion"
-    },
+    "defaultNickname": "Community User",
     "discord": "Community-Support",
     "docs": "Dokumentation",
     "email": "E-Mail-Support",
     "feedback": "Feedback und Vorschläge",
     "help": "Hilfezentrum",
+    "moveGuide": "Die Einstellungen wurden hierher verschoben.",
     "plans": "Abonnementpläne",
     "profile": "Kontoverwaltung",
     "setting": "App-Einstellungen",
-    "usages": "Nutzungsstatistiken",
-    "warn": "Dieser Zugang wird bald entfernt. Bitte rufen Sie das Menü über das Profilbild oben links auf."
+    "usages": "Nutzungsstatistiken"
   }
 }

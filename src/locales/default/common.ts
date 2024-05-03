@@ -154,10 +154,7 @@ export default {
   },
   userPanel: {
     billing: '账单管理',
-    default: {
-      nickname: '社区用户',
-      username: '社区预览版',
-    },
+    defaultNickname: '社区版用户',
     discord: '社区支持',
     docs: '使用文档',
     email: '邮件支持',

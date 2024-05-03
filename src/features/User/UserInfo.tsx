@@ -7,6 +7,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import UserAvatar from './UserAvatar';
 
+const DEFAULT_USERNAME = 'LobeChat Community Edition';
+
 const useStyles = createStyles(({ css, token }) => ({
   nickname: css`
     font-size: 16px;
@@ -23,8 +25,7 @@ const UserInfo = memo<{ onClick?: () => void }>(({ onClick }) => {
   const { t } = useTranslation('common');
   const { styles, theme } = useStyles();
 
-  const DEFAULT_NICKNAME = t('userPanel.default.nickname');
-  const DEFAULT_USERNAME = t('userPanel.default.username');
+  const DEFAULT_NICKNAME = t('userPanel.defaultNickname');
 
   return (
     <Flexbox align={'center'} gap={12} horizontal paddingBlock={12} paddingInline={16}>

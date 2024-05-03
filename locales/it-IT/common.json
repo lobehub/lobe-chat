@@ -160,19 +160,16 @@
   },
   "userPanel": {
     "billing": "Gestione fatturazione",
-    "default": {
-      "nickname": "Utente della community",
-      "username": "Anteprima della community"
-    },
+    "defaultNickname": "Utente Community",
     "discord": "Supporto della community",
     "docs": "Documentazione",
     "email": "Supporto via email",
     "feedback": "Feedback e suggerimenti",
     "help": "Centro assistenza",
+    "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
     "plans": "Piani di abbonamento",
     "profile": "Gestione account",
     "setting": "Impostazioni app",
-    "usages": "Statistiche di utilizzo",
-    "warn": "Questa voce verrà presto rimossa, successivamente accedi a questo menu dall'icona in alto a sinistra"
+    "usages": "Statistiche di utilizzo"
   }
 }

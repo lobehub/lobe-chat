@@ -160,19 +160,16 @@
   },
   "userPanel": {
     "billing": "Zarządzanie rachunkami",
-    "default": {
-      "nickname": "Użytkownik społeczności",
-      "username": "Podgląd społeczności"
-    },
+    "defaultNickname": "Użytkownik Wersji Społecznościowej",
     "discord": "Wsparcie społeczności",
     "docs": "Dokumentacja",
     "email": "Wsparcie mailowe",
     "feedback": "Opinie i sugestie",
     "help": "Centrum pomocy",
+    "moveGuide": "Przenieś przycisk ustawień tutaj",
     "plans": "Plan abonamentu",
     "profile": "Zarządzanie kontem",
     "setting": "Ustawienia aplikacji",
-    "usages": "Statystyki użycia",
-    "warn": "To wejście zostanie wkrótce wyłączone, prosimy o skorzystanie z menu wywoływanego z lewego górnego rogu"
+    "usages": "Statystyki użycia"
   }
 }

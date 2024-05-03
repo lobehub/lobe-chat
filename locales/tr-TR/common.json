@@ -160,19 +160,16 @@
   },
   "userPanel": {
     "billing": "Fatura Yönetimi",
-    "default": {
-      "nickname": "Topluluk Kullanıcısı",
-      "username": "Topluluk Önizlemesi"
-    },
+    "defaultNickname": "Topluluk Kullanıcısı",
     "discord": "Topluluk Destek",
     "docs": "Belgeler",
     "email": "E-posta Destek",
     "feedback": "Geribildirim ve Öneriler",
     "help": "Yardım Merkezi",
+    "moveGuide": "Ayarlar düğmesini buraya taşıyın",
     "plans": "Planlar",
     "profile": "Hesap Yönetimi",
     "setting": "Uygulama Ayarları",
-    "usages": "Kullanım İstatistikleri",
-    "warn": "Bu giriş yakında kaldırılacak, ileride bu menüyü sol üst köşedeki avatarınızdan açabilirsiniz"
+    "usages": "Kullanım İstatistikleri"
   }
 }

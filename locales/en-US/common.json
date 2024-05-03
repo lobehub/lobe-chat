@@ -160,19 +160,16 @@
   },
   "userPanel": {
     "billing": "Billing Management",
-    "default": {
-      "nickname": "Community User",
-      "username": "Community Preview"
-    },
+    "defaultNickname": "Community User",
     "discord": "Community Support",
     "docs": "Documentation",
     "email": "Email Support",
     "feedback": "Feedback and Suggestions",
     "help": "Help Center",
+    "moveGuide": "The settings button has been moved here",
     "plans": "Subscription Plans",
     "profile": "Account Management",
     "setting": "App Settings",
-    "usages": "Usage Statistics",
-    "warn": "This entry will be offline soon. Please access this menu by clicking on the profile picture in the top left corner."
+    "usages": "Usage Statistics"
   }
 }
