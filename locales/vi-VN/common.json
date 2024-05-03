@@ -157,5 +157,19 @@
     "action": "Nâng cấp",
     "hasNew": "Có bản cập nhật mới",
     "newVersion": "Có phiên bản mới: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Quản lý hóa đơn",
+    "defaultNickname": "Người dùng phiên bản cộng đồng",
+    "discord": "Hỗ trợ cộng đồng",
+    "docs": "Tài liệu sử dụng",
+    "email": "Hỗ trợ qua email",
+    "feedback": "Phản hồi và đề xuất",
+    "help": "Trung tâm trợ giúp",
+    "moveGuide": "Đã di chuyển nút cài đặt đến đây",
+    "plans": "Kế hoạch đăng ký",
+    "profile": "Quản lý tài khoản",
+    "setting": "Cài đặt ứng dụng",
+    "usages": "Thống kê sử dụng"
   }
 }

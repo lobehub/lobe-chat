@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { Center } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
-import Avatar from '@/features/AvatarWithUpload';
+import UserAvatar from '@/features/User/UserAvatar';
 import { isMobileDevice } from '@/utils/responsive';
 
 import AvatarBanner, { AVATAR_SIZE } from './features/AvatarBanner';
@@ -17,7 +17,7 @@ const Page = () => {
   return (
     <>
       <AvatarBanner>
-        <Avatar size={AVATAR_SIZE} />
+        <UserAvatar size={AVATAR_SIZE} />
       </AvatarBanner>
       <Cate />
       <ExtraCate />

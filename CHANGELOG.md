@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.152.11](https://github.com/lobehub/lobe-chat/compare/v0.152.10...v0.152.11)
+
+<sup>Released on **2024-05-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add user panel and refactor the next-auth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add user panel and refactor the next-auth, closes [#2349](https://github.com/lobehub/lobe-chat/issues/2349) ([5cecee0](https://github.com/lobehub/lobe-chat/commit/5cecee0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.152.10](https://github.com/lobehub/lobe-chat/compare/v0.152.9...v0.152.10)
 
 <sup>Released on **2024-05-03**</sup>
