@@ -21,11 +21,7 @@ const CategoryContent = memo<{ modal?: boolean }>(({ modal }) => {
     <Menu
       items={cateItems}
       onClick={({ key }) => {
-        if (modal) {
-          router.replace('/settings/m', { tab: key });
-        } else {
-          router.push(urlJoin('/settings', key));
-        }
+        router.push(urlJoin('/settings', key));
       }}
       selectable
       selectedKeys={[modal ? tab : (activeTab as any)]}

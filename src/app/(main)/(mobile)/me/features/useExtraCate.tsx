@@ -1,9 +1,9 @@
 import { DiscordIcon, Icon } from '@lobehub/ui';
-import { Book, Feather, HardDriveDownload, HardDriveUpload, Mail } from 'lucide-react';
+import { Book, Feather, HardDriveDownload, HardDriveUpload } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 import { type MenuProps } from '@/components/Menu';
-import { AGENTS_INDEX_GITHUB_ISSUE, DISCORD, DOCUMENTS, EMAIL_SUPPORT } from '@/const/url';
+import { DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { configService } from '@/services/config';
 
@@ -33,26 +33,20 @@ export const useExtraCate = () => {
     {
       icon: <Icon icon={Book} size={iconSize} />,
       key: 'docs',
-      label: t('userPanel.docs'),
+      label: t('document'),
       onClick: () => window.open(DOCUMENTS, '__blank'),
     },
     {
       icon: <Icon icon={Feather} size={iconSize} />,
       key: 'feedback',
-      label: t('userPanel.feedback'),
-      onClick: () => window.open(AGENTS_INDEX_GITHUB_ISSUE, '__blank'),
+      label: t('feedback'),
+      onClick: () => window.open(FEEDBACK, '__blank'),
     },
     {
       icon: <Icon icon={DiscordIcon} size={iconSize} />,
       key: 'discord',
-      label: t('userPanel.discord'),
+      label: 'Discord',
       onClick: () => window.open(DISCORD, '__blank'),
-    },
-    {
-      icon: <Icon icon={Mail} size={iconSize} />,
-      key: 'email',
-      label: t('userPanel.email'),
-      onClick: () => window.open(`mailto:${EMAIL_SUPPORT}`, '__blank'),
     },
   ];
 

@@ -23,9 +23,9 @@ const SettingButton = memo<{ mobile?: boolean }>(({ mobile }) => {
           useGlobalStore.setState({
             sidebarKey: SidebarTabKey.Setting,
           });
-          router.push(mobile ? '/settings/agent' : '/settings/m', mobile ? {} : { tab: 'agent' });
+          router.push('/settings/agent');
         } else {
-          router.push(mobile ? '/chat/settings' : '/chat/settings/m');
+          router.push('/chat/settings');
         }
       }}
       size={mobile ? MOBILE_HEADER_ICON_SIZE : DESKTOP_HEADER_ICON_SIZE}
