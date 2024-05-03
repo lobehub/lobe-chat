@@ -14,6 +14,15 @@ const useStyles = createStyles(({ css, token }) => {
   const size = 28;
 
   return {
+    children: css`
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: transparent;
+      }
+    `,
+
     loader: css`
       transform: translateX(-${size * 2}px);
 
@@ -115,10 +124,6 @@ const useStyles = createStyles(({ css, token }) => {
             ${size * 3}px ${size}px 0 0;
         }
       }
-    `,
-    uploader: css`
-      display: block;
-      width: 100%;
     `,
   };
 });
@@ -232,11 +237,11 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
           return false;
         }}
-        className={styles.uploader}
         maxCount={1}
         showUploadList={false}
       >
-        {children}
+        {/* a very hackable solution: add a pseudo before to have a large hot zone */}
+        <div className={styles.children}>{children}</div>
       </Upload>
     </>
   );

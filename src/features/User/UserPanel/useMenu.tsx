@@ -9,22 +9,20 @@ import {
   Mail,
   Settings2,
 } from 'lucide-react';
+import Link from 'next/link';
 import { PropsWithChildren, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { type MenuProps } from '@/components/Menu';
-import { AGENTS_INDEX_GITHUB_ISSUE, DISCORD, DOCUMENTS, EMAIL_SUPPORT } from '@/const/url';
+import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
-import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { configService } from '@/services/config';
 
 import { useNewVersion } from './useNewVersion';
 
 export const useMenu = () => {
-  const router = useQueryRoute();
   const hasNewVersion = useNewVersion();
-
   const { t } = useTranslation(['common', 'setting']);
 
   const NewVersionBadge = useCallback(
@@ -85,8 +83,11 @@ export const useMenu = () => {
     {
       icon: <Icon icon={Settings2} />,
       key: 'setting',
-      label: <NewVersionBadge showBadge={hasNewVersion}>{t('userPanel.setting')}</NewVersionBadge>,
-      onClick: () => router.push('/settings'),
+      label: (
+        <Link href={'/settings'}>
+          <NewVersionBadge showBadge={hasNewVersion}>{t('userPanel.setting')}</NewVersionBadge>
+        </Link>
+      ),
     },
     {
       type: 'divider',
@@ -97,28 +98,40 @@ export const useMenu = () => {
     {
       icon: <Icon icon={DiscordIcon} />,
       key: 'discord',
-      label: t('userPanel.discord'),
-      onClick: () => window.open(DISCORD, '__blank'),
+      label: (
+        <Link href={DISCORD} target={'_blank'}>
+          {t('userPanel.discord')}
+        </Link>
+      ),
     },
     {
       children: [
         {
           icon: <Icon icon={Book} />,
           key: 'docs',
-          label: t('userPanel.docs'),
-          onClick: () => window.open(DOCUMENTS, '__blank'),
+          label: (
+            <Link href={DOCUMENTS} target={'_blank'}>
+              {t('userPanel.docs')}
+            </Link>
+          ),
         },
         {
           icon: <Icon icon={Feather} />,
           key: 'feedback',
-          label: t('userPanel.feedback'),
-          onClick: () => window.open(AGENTS_INDEX_GITHUB_ISSUE, '__blank'),
+          label: (
+            <Link href={GITHUB_ISSUES} target={'_blank'}>
+              {t('userPanel.feedback')}
+            </Link>
+          ),
         },
         {
           icon: <Icon icon={Mail} />,
           key: 'email',
-          label: t('userPanel.email'),
-          onClick: () => window.open(`mailto:${EMAIL_SUPPORT}`, '__blank'),
+          label: (
+            <Link href={`mailto:${EMAIL_SUPPORT}`} target={'_blank'}>
+              {t('userPanel.email')}
+            </Link>
+          ),
         },
       ],
       icon: <Icon icon={LifeBuoy} />,
