@@ -7,7 +7,7 @@ import { CSSProperties, memo, useCallback } from 'react';
 
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useUserStore } from '@/store/user';
-import { commonSelectors } from '@/store/user/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { imageToBase64 } from '@/utils/imageToBase64';
 import { createUploadImageHandler } from '@/utils/uploadFIle';
 
@@ -41,7 +41,7 @@ const AvatarWithUpload = memo<AvatarWithUploadProps>(
   ({ size = 40, compressSize = 256, style, id }) => {
     const { styles } = useStyle();
     const [avatar, updateAvatar] = useUserStore((s) => [
-      commonSelectors.userAvatar(s),
+      userProfileSelectors.userAvatar(s),
       s.updateAvatar,
     ]);
 
