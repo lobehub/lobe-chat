@@ -5,10 +5,10 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import SidebarHeader from '@/components/SidebarHeader';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 
-import SidebarHeader from '../../components/SidebarHeader';
 import TopicSearchBar from './TopicSearchBar';
 
 const Header = memo(() => {
