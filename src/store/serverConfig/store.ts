@@ -20,6 +20,7 @@ const initialState: ServerConfigStore = {
 
 export interface ServerConfigStore {
   featureFlags: IFeatureFlags;
+  isMobile?: boolean;
   serverConfig: GlobalServerConfig;
 }
 

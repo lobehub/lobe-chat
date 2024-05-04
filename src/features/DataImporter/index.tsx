@@ -14,6 +14,15 @@ const useStyles = createStyles(({ css, token }) => {
   const size = 28;
 
   return {
+    children: css`
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: transparent;
+      }
+    `,
+
     loader: css`
       transform: translateX(-${size * 2}px);
 
@@ -231,7 +240,8 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
         maxCount={1}
         showUploadList={false}
       >
-        {children}
+        {/* a very hackable solution: add a pseudo before to have a large hot zone */}
+        <div className={styles.children}>{children}</div>
       </Upload>
     </>
   );
