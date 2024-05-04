@@ -139,6 +139,7 @@
     }
   },
   "tab": {
+    "agentsAndConversations": "助手與對話",
     "chat": "對話",
     "market": "發現",
     "me": "我",

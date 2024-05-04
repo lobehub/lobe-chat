@@ -139,6 +139,7 @@
     }
   },
   "tab": {
+    "agentsAndConversations": "Agenten en Gesprekken",
     "chat": "会话",
     "market": "发现",
     "me": "我",

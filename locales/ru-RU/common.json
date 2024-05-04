@@ -139,6 +139,7 @@
     }
   },
   "tab": {
+    "agentsAndConversations": "Агенты и разговоры",
     "chat": "Чат",
     "market": "Обзор",
     "me": "я",

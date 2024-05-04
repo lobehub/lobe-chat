@@ -139,6 +139,7 @@
     }
   },
   "tab": {
+    "agentsAndConversations": "エージェントと会話",
     "chat": "チャット",
     "market": "探す",
     "me": "私",
