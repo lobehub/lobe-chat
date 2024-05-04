@@ -157,5 +157,19 @@
     "action": "Actualizar",
     "hasNew": "Hay una nueva actualización disponible",
     "newVersion": "Nueva versión disponible: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Gestión de facturación",
+    "defaultNickname": "Usuario de la comunidad",
+    "discord": "Soporte de la comunidad",
+    "docs": "Documentación de uso",
+    "email": "Soporte por correo electrónico",
+    "feedback": "Comentarios y sugerencias",
+    "help": "Centro de ayuda",
+    "moveGuide": "El botón de configuración se ha movido aquí",
+    "plans": "Planes de suscripción",
+    "profile": "Gestión de cuenta",
+    "setting": "Configuración de la aplicación",
+    "usages": "Estadísticas de uso"
   }
 }

@@ -2,6 +2,98 @@
 
 # Changelog
 
+### [Version 0.152.12](https://github.com/lobehub/lobe-chat/compare/v0.152.11...v0.152.12)
+
+<sup>Released on **2024-05-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disabled autogenerate field icon when empty system role.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disabled autogenerate field icon when empty system role, closes [#2076](https://github.com/lobehub/lobe-chat/issues/2076) ([27095f5](https://github.com/lobehub/lobe-chat/commit/27095f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.11](https://github.com/lobehub/lobe-chat/compare/v0.152.10...v0.152.11)
+
+<sup>Released on **2024-05-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add user panel and refactor the next-auth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add user panel and refactor the next-auth, closes [#2349](https://github.com/lobehub/lobe-chat/issues/2349) ([5cecee0](https://github.com/lobehub/lobe-chat/commit/5cecee0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.10](https://github.com/lobehub/lobe-chat/compare/v0.152.9...v0.152.10)
+
+<sup>Released on **2024-05-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve market layout styles and mobile style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve market layout styles and mobile style, closes [#2347](https://github.com/lobehub/lobe-chat/issues/2347) ([79b8115](https://github.com/lobehub/lobe-chat/commit/79b8115))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.9](https://github.com/lobehub/lobe-chat/compare/v0.152.8...v0.152.9)
+
+<sup>Released on **2024-05-03**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.152.8](https://github.com/lobehub/lobe-chat/compare/v0.152.7...v0.152.8)
 
 <sup>Released on **2024-05-03**</sup>
