@@ -28,6 +28,7 @@
   },
   "feedback": "Opinie i sugestie",
   "follow": "Zaobserwuj nas na {{name}}",
+  "fullscreen": "Tryb pełnoekranowy",
   "historyRange": "Zakres historii",
   "import": "Importuj ustawienia",
   "importModal": {
@@ -140,6 +141,7 @@
   "tab": {
     "chat": "Czat",
     "market": "Odkrywaj",
+    "me": "ja",
     "setting": "Ustawienia"
   },
   "telemetry": {
@@ -156,5 +158,19 @@
     "action": "Aktualizuj",
     "hasNew": "Dostępna jest nowa aktualizacja",
     "newVersion": "Dostępna jest nowa wersja: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Zarządzanie rachunkami",
+    "defaultNickname": "Użytkownik Wersji Społecznościowej",
+    "discord": "Wsparcie społeczności",
+    "docs": "Dokumentacja",
+    "email": "Wsparcie mailowe",
+    "feedback": "Opinie i sugestie",
+    "help": "Centrum pomocy",
+    "moveGuide": "Przenieś przycisk ustawień tutaj",
+    "plans": "Plan abonamentu",
+    "profile": "Zarządzanie kontem",
+    "setting": "Ustawienia aplikacji",
+    "usages": "Statystyki użycia"
   }
 }

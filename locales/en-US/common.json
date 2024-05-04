@@ -28,6 +28,7 @@
   },
   "feedback": "Feedback",
   "follow": "Follow us on {{name}}",
+  "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
@@ -140,6 +141,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Discover",
+    "me": "Me",
     "setting": "Settings"
   },
   "telemetry": {
@@ -156,5 +158,19 @@
     "action": "Upgrade",
     "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Billing Management",
+    "defaultNickname": "Community User",
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback and Suggestions",
+    "help": "Help Center",
+    "moveGuide": "The settings button has been moved here",
+    "plans": "Subscription Plans",
+    "profile": "Account Management",
+    "setting": "App Settings",
+    "usages": "Usage Statistics"
   }
 }

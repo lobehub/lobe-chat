@@ -28,6 +28,7 @@
   },
   "feedback": "Feedback e sugestões",
   "follow": "Siga-nos no {{name}}",
+  "fullscreen": "Modo de Tela Cheia",
   "historyRange": "Intervalo de histórico",
   "import": "Importar configuração",
   "importModal": {
@@ -140,6 +141,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Descobrir",
+    "me": "eu",
     "setting": "Configuração"
   },
   "telemetry": {
@@ -156,5 +158,19 @@
     "action": "Atualizar",
     "hasNew": "Nova atualização disponível",
     "newVersion": "Nova versão disponível: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Gerenciamento de faturas",
+    "defaultNickname": "Usuário da Comunidade",
+    "discord": "Suporte da Comunidade",
+    "docs": "Documentação",
+    "email": "Suporte por E-mail",
+    "feedback": "Feedback e Sugestões",
+    "help": "Central de Ajuda",
+    "moveGuide": "O botão de configurações foi movido para cá",
+    "plans": "Planos de Assinatura",
+    "profile": "Gerenciamento de Conta",
+    "setting": "Configurações do Aplicativo",
+    "usages": "Estatísticas de Uso"
   }
 }
