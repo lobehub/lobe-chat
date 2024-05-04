@@ -28,6 +28,7 @@
   },
   "feedback": "Feedback",
   "follow": "Follow us on {{name}}",
+  "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {

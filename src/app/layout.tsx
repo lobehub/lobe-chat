@@ -12,9 +12,10 @@ import { isMobileDevice } from '@/utils/responsive';
 
 type RootLayoutProps = {
   children: ReactNode;
+  modal: ReactNode;
 };
 
-const RootLayout = async ({ children }: RootLayoutProps) => {
+const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const cookieStore = cookies();
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
@@ -24,7 +25,10 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
     <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
       <body>
         <GlobalProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            {children}
+            {modal}
+          </AuthProvider>
         </GlobalProvider>
         <Analytics />
         <SpeedInsights />
