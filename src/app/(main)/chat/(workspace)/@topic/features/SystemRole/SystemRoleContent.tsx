@@ -3,7 +3,6 @@
 import { ActionIcon, EditableMessage } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { Edit } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -24,7 +23,7 @@ import { useStyles } from './style';
 const SystemRole = memo(() => {
   const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
-  const openChatSettings = useOpenChatSettings(ChatSettingsTabs.Prompt);
+  const openChatSettings = useOpenChatSettings();
   const [init, meta] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
     sessionMetaSelectors.currentAgentMeta(s),
@@ -95,7 +94,7 @@ const SystemRole = memo(() => {
                     onAvatarClick={() => {
                       setOpen(false);
                       setEditing(false);
-                      openChatSettings();
+                      openChatSettings(ChatSettingsTabs.Prompt);
                     }}
                     style={{ marginBottom: 16 }}
                   />

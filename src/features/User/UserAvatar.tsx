@@ -45,7 +45,7 @@ export interface UserAvatarProps extends AvatarProps {
 }
 
 const UserAvatar = memo<UserAvatarProps>(
-  ({ size = 40, background, clickable, className, ...rest }) => {
+  ({ size = 40, background, clickable, className, style, ...rest }) => {
     const { styles, cx } = useStyles();
     const avatar = useUserStore(userProfileSelectors.userAvatar);
     return (
@@ -55,6 +55,7 @@ const UserAvatar = memo<UserAvatarProps>(
         background={avatar ? background : undefined}
         className={cx(clickable && styles.clickable, className)}
         size={size}
+        style={{ flex: 'none', ...style }}
         unoptimized
         {...rest}
       />
