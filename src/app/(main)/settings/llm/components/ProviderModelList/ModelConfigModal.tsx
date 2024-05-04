@@ -1,5 +1,5 @@
 import { Modal } from '@lobehub/ui';
-import { Checkbox, Form, Input, Button } from 'antd';
+import { Button, Checkbox, Form, Input } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -43,21 +43,24 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
         <Button key="cancel" onClick={closeModal}>
           {tc('cancel')}
         </Button>,
-        
-        <Button key="ok" onClick={() => {
-          if (!editingProvider || !id) return;
-          const data = formInstance.getFieldsValue();
 
-          dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
+        <Button
+          key="ok"
+          onClick={() => {
+            if (!editingProvider || !id) return;
+            const data = formInstance.getFieldsValue();
 
-          closeModal();
+            dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
+
+            closeModal();
           }}
-          type="primary" 
+          type="primary"
         >
           {tc('ok')}
-        </Button>
+        </Button>,
       ]}
       maskClosable
+      onCancel={closeModal}
       open={open}
       title={t('llm.customModelCards.modelConfig.modalTitle')}
     >
