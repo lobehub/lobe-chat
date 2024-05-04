@@ -1,31 +1,17 @@
-import { InputNumber, Slider, SliderSingleProps } from 'antd';
-import { memo } from 'react';
+import { InputNumber, Slider } from 'antd';
+import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useMergeState from 'use-merge-value';
+
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 const Kibi = 1024;
 
 const exponent = (num: number) => Math.log2(num);
 const getRealValue = (num: number) => Math.round(Math.pow(2, num));
 const powerKibi = (num: number) => Math.round(Math.pow(2, num) * Kibi);
-
-const isSmallScreen = typeof window !== 'undefined' ? window.innerWidth < 475 : false;
-
-const marks: SliderSingleProps['marks'] = {
-  [exponent(1)]: '0',
-  [exponent(2)]: isSmallScreen ? '2' : '2K', // 2 Kibi = 2048
-  [exponent(4)]: isSmallScreen ? '4' : '4K',
-  [exponent(8)]: isSmallScreen ? '8' : '8K',
-  [exponent(16)]: isSmallScreen ? '16' : '16K',
-  [exponent(32)]: isSmallScreen ? '32' : '32K',
-  [exponent(64)]: isSmallScreen ? '64' : '64K',
-  // [exponent(128)]: isSmallScreen ? '128' : '128K',
-  // [exponent(256)]: isSmallScreen ? '256' : '256K',
-  [exponent((128 / Kibi) * 1000)]: ' ', // hide tick mark
-  [exponent((200 / Kibi) * 1000)]: isSmallScreen ? '200' : '200k', // 200,000
-  [exponent(1024)]: isSmallScreen ? '1024' : '1M',
-};
 
 interface MaxTokenSliderProps {
   defaultValue?: number;
@@ -58,6 +44,23 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
 
     setPowValue(exponent(value / Kibi));
   };
+
+  const isMobile = useServerConfigStore(serverConfigSelectors.isMobile);
+
+  const marks = useMemo(() => {
+    return {
+      [exponent(1)]: '0',
+      [exponent(2)]: isMobile ? '2' : '2K', // 2 Kibi = 2048
+      [exponent(4)]: isMobile ? '4' : '4K',
+      [exponent(8)]: isMobile ? '8' : '8K',
+      [exponent(16)]: isMobile ? '16' : '16K',
+      [exponent(32)]: isMobile ? '32' : '32K',
+      [exponent(64)]: isMobile ? '64' : '64K',
+      [exponent((128 / Kibi) * 1000)]: ' ', // hide tick mark
+      [exponent((200 / Kibi) * 1000)]: isMobile ? '200' : '200k', // 200,000
+      [exponent(1024)]: isMobile ? '1024' : '1M',
+    };
+  }, [isMobile]);
 
   return (
     <Flexbox align={'center'} gap={12} horizontal>
