@@ -132,9 +132,9 @@ export default {
     unconnected: { tip: '信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试' },
   },
   tab: {
+    assistantsAndConversations: '助手与会话',
     chat: '会话',
     market: '发现',
-    assistantsAndConversations: '助手与会话',
     me: '我',
     setting: '设置',
   },
