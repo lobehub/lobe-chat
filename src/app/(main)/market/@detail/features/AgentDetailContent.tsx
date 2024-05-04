@@ -5,21 +5,20 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import AgentCardBanner from '@/app/(main)/market/features/AgentCard/AgentCardBanner';
+import Banner from '@/app/(main)/market/@detail/features/Banner';
 import { useMarketStore } from '@/store/market';
 
 import Comment from './Comment';
 import Header from './Header';
 import Loading from './Loading';
 import TokenTag from './TokenTag';
-import { useStyles } from './style';
 
 enum InfoTabs {
   comment = 'comment',
   prompt = 'prompt',
 }
 
-const AgentModalInner = memo<{ mobile?: boolean }>(({ mobile }) => {
+const AgentDetailContent = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [useFetchAgent, currentIdentifier] = useMarketStore((s) => [
     s.useFetchAgent,
     s.currentIdentifier,
@@ -27,7 +26,6 @@ const AgentModalInner = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('market');
   const [tab, setTab] = useState<string>(InfoTabs.prompt);
   const { data, isLoading } = useFetchAgent(currentIdentifier);
-  const { styles } = useStyles();
 
   if (isLoading || !data?.meta) return <Loading />;
 
@@ -36,16 +34,11 @@ const AgentModalInner = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <>
-      <AgentCardBanner
-        avatar={meta?.avatar}
-        size={800}
-        style={{ height: 120, marginBottom: -60 }}
-      />
-      <Header mobile={mobile} />
+      <Banner avatar={meta.avatar} backgroundColor={meta.backgroundColor} mobile={mobile} />
+      <Header />
       <Flexbox align={'center'}>
         <TabsNav
           activeKey={tab}
-          className={styles.nav}
           items={[
             {
               key: InfoTabs.prompt,
@@ -61,6 +54,7 @@ const AgentModalInner = memo<{ mobile?: boolean }>(({ mobile }) => {
             },
           ]}
           onChange={setTab}
+          style={{ paddingTop: 8 }}
           variant={'compact'}
         />
       </Flexbox>
@@ -76,4 +70,4 @@ const AgentModalInner = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-export default AgentModalInner;
+export default AgentDetailContent;
