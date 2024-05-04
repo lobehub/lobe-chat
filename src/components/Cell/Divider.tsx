@@ -4,9 +4,9 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
 const useStyles = createStyles(
-  ({ css, token }) => css`
+  ({ css, token, isDarkMode }) => css`
     height: 6px;
-    background: ${token.colorBgLayout};
+    background: ${isDarkMode ? token.colorBgContainer : token.colorBgLayout};
   `,
 );
 

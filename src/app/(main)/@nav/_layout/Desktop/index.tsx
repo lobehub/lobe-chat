@@ -14,7 +14,7 @@ const Nav = memo(() => {
   return (
     <SideNav
       avatar={<Avatar />}
-      bottomActions={<BottomActions tab={sidebarKey} />}
+      bottomActions={<BottomActions />}
       style={{ height: '100%', zIndex: 100 }}
       topActions={<TopActions tab={sidebarKey} />}
     />

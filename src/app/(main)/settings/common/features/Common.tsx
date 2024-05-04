@@ -10,13 +10,12 @@ import { useTranslation } from 'react-i18next';
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
-import { useOAuthSession } from '@/hooks/useOAuthSession';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 import { useSessionStore } from '@/store/session';
 import { useToolStore } from '@/store/tool';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 type SettingItemGroup = ItemGroup;
 
@@ -29,7 +28,8 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
 
-  const { user, isOAuthLoggedIn } = useOAuthSession();
+  const isSignedIn = useUserStore((s) => s.isSignedIn);
+  const user = useUserStore(userProfileSelectors.userProfile, isEqual);
 
   const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
     s.clearSessions,
@@ -110,18 +110,18 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
         name: 'password',
       },
       {
-        children: isOAuthLoggedIn ? (
+        children: isSignedIn ? (
           <Button onClick={handleSignOut}>{t('settingSystem.oauth.signout.action')}</Button>
         ) : (
           <Button onClick={handleSignIn} type="primary">
             {t('settingSystem.oauth.signin.action')}
           </Button>
         ),
-        desc: isOAuthLoggedIn
+        desc: isSignedIn
           ? `${user?.email} ${t('settingSystem.oauth.info.desc')}`
           : t('settingSystem.oauth.signin.desc'),
         hidden: !showOAuthLogin,
-        label: isOAuthLoggedIn
+        label: isSignedIn
           ? t('settingSystem.oauth.info.title')
           : t('settingSystem.oauth.signin.title'),
         minWidth: undefined,
