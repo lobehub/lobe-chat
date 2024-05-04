@@ -4,7 +4,6 @@ import { ActionIcon, Logo, MobileNavBar } from '@lobehub/ui';
 import { MessageSquarePlus } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import { MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
@@ -16,25 +15,23 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
-  const { enableWebrtc, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { showCreateSession, enableWebrtc } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <MobileNavBar
-      left={
-        <Flexbox align={'center'} gap={8} horizontal style={{ marginLeft: 8 }}>
-          <UserAvatar onClick={() => router.push('/me')} size={32} />
-          <Logo type={'text'} />
-          {enableWebrtc && <SyncStatusInspector placement={'bottom'} />}
-        </Flexbox>
-      }
+      center={<Logo type={'text'} />}
+      left={<UserAvatar onClick={() => router.push('/me')} size={32} />}
       right={
-        showCreateSession && (
-          <ActionIcon
-            icon={MessageSquarePlus}
-            onClick={() => createSession()}
-            size={MOBILE_HEADER_ICON_SIZE}
-          />
-        )
+        <>
+          {enableWebrtc && <SyncStatusInspector mobile />}
+          {showCreateSession && (
+            <ActionIcon
+              icon={MessageSquarePlus}
+              onClick={() => createSession()}
+              size={MOBILE_HEADER_ICON_SIZE}
+            />
+          )}
+        </>
       }
       style={mobileHeaderSticky}
     />

@@ -26,6 +26,7 @@ const useStyles = createStyles(
 
       background: ${inverseTheme ? rgba(token.colorTextTertiary, 0.15) : token.colorFillTertiary};
       border-radius: ${token.borderRadius}px;
+      box-shadow: 0 0 0 1px ${rgba(token.colorBorder, 0.1)} inset;
     }
   `,
 );
@@ -67,7 +68,7 @@ const HotKeys = memo<HotKeysProps>(({ keys, desc, inverseTheme }) => {
 
   if (!desc) return content;
   return (
-    <Flexbox gap={16} horizontal>
+    <Flexbox align={'center'} gap={4} style={{ paddingBottom: 4 }}>
       {desc}
       {content}
     </Flexbox>

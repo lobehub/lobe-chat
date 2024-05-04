@@ -1,4 +1,3 @@
-import { TooltipPlacement } from 'antd/es/tooltip';
 import { memo } from 'react';
 
 import { useUserStore } from '@/store/user';
@@ -9,19 +8,17 @@ import EnableSync from './EnableSync';
 interface SyncStatusTagProps {
   hiddenActions?: boolean;
   hiddenEnableGuide?: boolean;
-  placement?: TooltipPlacement;
+  mobile?: boolean;
 }
 
-const SyncStatusTag = memo<SyncStatusTagProps>(
-  ({ hiddenActions, placement, hiddenEnableGuide }) => {
-    const [enableSync] = useUserStore((s) => [s.syncEnabled]);
+const SyncStatusTag = memo<SyncStatusTagProps>(({ hiddenActions, hiddenEnableGuide, mobile }) => {
+  const [enableSync] = useUserStore((s) => [s.syncEnabled]);
 
-    return enableSync ? (
-      <EnableSync hiddenActions={hiddenActions} placement={placement} />
-    ) : (
-      <DisableSync noPopover={hiddenEnableGuide} placement={placement} />
-    );
-  },
-);
+  return enableSync ? (
+    <EnableSync hiddenActions={hiddenActions} mobile={mobile} />
+  ) : (
+    <DisableSync mobile={mobile} noPopover={hiddenEnableGuide} />
+  );
+});
 
 export default SyncStatusTag;
