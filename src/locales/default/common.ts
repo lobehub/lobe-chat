@@ -28,8 +28,9 @@ export default {
   },
   feedback: '反馈与建议',
   follow: '在 {{name}} 上关注我们',
-  historyRange: '历史范围',
+  fullscreen: '全屏模式',
 
+  historyRange: '历史范围',
   import: '导入配置',
   importModal: {
     finish: {

@@ -6,6 +6,7 @@ import { rgba } from 'polished';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { SidebarTabKey } from '@/store/global/initialState';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -24,6 +25,7 @@ interface Props {
 export default memo<Props>(({ className, tabBarKey }) => {
   const { t } = useTranslation('common');
   const { styles } = useStyles();
+  const openSettings = useOpenSettings();
   const router = useRouter();
   const items: MobileTabBarProps['items'] = useMemo(
     () => [
@@ -48,9 +50,7 @@ export default memo<Props>(({ className, tabBarKey }) => {
       {
         icon: (active) => <Icon className={active ? styles.active : undefined} icon={User} />,
         key: SidebarTabKey.Setting,
-        onClick: () => {
-          router.push('/settings');
-        },
+        onClick: openSettings,
         title: t('tab.setting'),
       },
     ],
