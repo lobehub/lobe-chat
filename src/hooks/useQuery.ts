@@ -1,7 +1,8 @@
 import { useSearchParams } from 'next/navigation';
 import qs from 'query-string';
+import { useMemo } from 'react';
 
 export const useQuery = () => {
   const rawQuery = useSearchParams();
-  return qs.parse(rawQuery.toString());
+  return useMemo(() => qs.parse(rawQuery.toString()), [rawQuery]);
 };
