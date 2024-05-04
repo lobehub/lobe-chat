@@ -22,7 +22,6 @@ const useStyles = createStyles(({ css, token }) => {
         background-color: transparent;
       }
     `,
-
     loader: css`
       transform: translateX(-${size * 2}px);
 
@@ -124,6 +123,9 @@ const useStyles = createStyles(({ css, token }) => {
             ${size * 3}px ${size}px 0 0;
         }
       }
+    `,
+    wrapper: css`
+      font-size: inherit;
     `,
   };
 });
@@ -237,6 +239,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
           return false;
         }}
+        className={styles.wrapper}
         maxCount={1}
         showUploadList={false}
       >
