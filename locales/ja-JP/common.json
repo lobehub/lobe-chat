@@ -157,5 +157,19 @@
     "action": "アップグレード",
     "hasNew": "利用可能な更新があります",
     "newVersion": "新しいバージョンが利用可能です：{{version}}"
+  },
+  "userPanel": {
+    "billing": "請求管理",
+    "defaultNickname": "コミュニティユーザー",
+    "discord": "コミュニティサポート",
+    "docs": "使用文書",
+    "email": "メールサポート",
+    "feedback": "フィードバックと提案",
+    "help": "ヘルプセンター",
+    "moveGuide": "設定ボタンがこちらに移動しました",
+    "plans": "サブスクリプションプラン",
+    "profile": "アカウント管理",
+    "setting": "アプリ設定",
+    "usages": "利用量統計"
   }
 }

@@ -157,5 +157,19 @@
     "action": "Aktualisieren",
     "hasNew": "Neue Version verfügbar",
     "newVersion": "Neue Version verfügbar: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Abrechnung verwalten",
+    "defaultNickname": "Community User",
+    "discord": "Community-Support",
+    "docs": "Dokumentation",
+    "email": "E-Mail-Support",
+    "feedback": "Feedback und Vorschläge",
+    "help": "Hilfezentrum",
+    "moveGuide": "Die Einstellungen wurden hierher verschoben.",
+    "plans": "Abonnementpläne",
+    "profile": "Kontoverwaltung",
+    "setting": "App-Einstellungen",
+    "usages": "Nutzungsstatistiken"
   }
 }

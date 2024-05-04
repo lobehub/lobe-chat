@@ -1,18 +1,16 @@
-export interface LobeUser {
-  avatar?: string;
-  firstName?: string | null;
-  fullName?: string | null;
-  id: string;
-  latestName?: string | null;
-  username?: string | null;
-}
+import { Session, User } from '@auth/core/types';
+
+import { LobeUser } from '@/types/user';
 
 export interface UserAuthState {
   /**
    * @deprecated
    */
   avatar?: string;
+  isLoaded?: boolean;
   isSignedIn?: boolean;
+  nextSession?: Session;
+  nextUser?: User;
   user?: LobeUser;
   userId?: string;
 }

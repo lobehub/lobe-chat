@@ -30,6 +30,13 @@ const nextConfig = {
 
   output: buildWithDocker ? 'standalone' : undefined,
 
+  redirects: async () => [
+    {
+      source: '/settings',
+      permanent: true,
+      destination: '/settings/common',
+    },
+  ],
   rewrites: async () => [
     // due to google api not work correct in some countries
     // we need a proxy to bypass the restriction
