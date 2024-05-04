@@ -1,3 +1,4 @@
+import { signIn, signOut } from 'next-auth/react';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -38,10 +39,16 @@ export const createAuthSlice: StateCreator<
   login: async () => {
     // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
     console.log(n('login'));
+
+    // TODO: 应该条件调用 next-auth 的登陆 hook
+    signIn();
   },
   logout: async () => {
     // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
     console.log(n('logout'));
+
+    // TODO: 应该条件调用 next-auth 的登出 hook
+    signOut();
   },
   refreshUserConfig: async () => {
     await mutate([USER_CONFIG_FETCH_KEY, true]);

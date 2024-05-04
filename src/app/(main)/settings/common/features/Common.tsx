@@ -3,7 +3,6 @@
 import { Form, type ItemGroup } from '@lobehub/ui';
 import { App, Button, Input } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { signIn, signOut } from 'next-auth/react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -42,7 +41,12 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings, resetSettings] = useUserStore((s) => [s.setSettings, s.resetSettings]);
+  const [setSettings, resetSettings, signIn, signOut] = useUserStore((s) => [
+    s.setSettings,
+    s.resetSettings,
+    s.login,
+    s.logout,
+  ]);
 
   const { message, modal } = App.useApp();
 
