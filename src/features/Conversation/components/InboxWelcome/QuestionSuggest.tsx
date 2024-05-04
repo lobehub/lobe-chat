@@ -13,7 +13,7 @@ import { USAGE_DOCUMENTS } from '@/const/url';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`
     cursor: pointer;
 
@@ -26,6 +26,10 @@ const useStyles = createStyles(({ css, token }) => ({
 
     &:hover {
       background: ${token.colorBgElevated};
+    }
+
+    ${responsive.mobile} {
+      padding: 8px 16px;
     }
   `,
   icon: css`
@@ -52,10 +56,11 @@ const qa = shuffle([
   'q13',
   'q14',
   'q15',
-]).slice(0, 5);
+]);
 
-const QuestionSuggest = memo(() => {
+const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [updateInputMessage] = useChatStore((s) => [s.updateInputMessage]);
+
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
   const sendMessage = useSendMessage();
@@ -73,7 +78,7 @@ const QuestionSuggest = memo(() => {
         </Link>
       </Flexbox>
       <Flexbox gap={8} horizontal wrap={'wrap'}>
-        {qa.map((item) => {
+        {qa.slice(0, mobile ? 2 : 5).map((item) => {
           const text = t(`guide.qa.${item}` as any);
           return (
             <Flexbox

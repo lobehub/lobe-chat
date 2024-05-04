@@ -137,6 +137,7 @@ export default {
     me: '我',
     setting: '设置',
   },
+
   telemetry: {
     allow: '允许',
     deny: '拒绝',
@@ -144,7 +145,6 @@ export default {
     learnMore: '了解更多',
     title: '帮助 LobeChat 做得更好',
   },
-
   temp: '临时',
   terms: '服务条款',
   updateAgent: '更新助理信息',
@@ -163,6 +163,7 @@ export default {
     help: '帮助中心',
     moveGuide: '设置按钮搬到这里啦',
     plans: '订阅方案',
+    preview: '预览版',
     profile: '账户管理',
     setting: '应用设置',
     usages: '用量统计',
