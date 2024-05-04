@@ -35,14 +35,14 @@ vi.mock('@/store/global', () => ({
 describe('useOpenSettings', () => {
   it('should handle mobile route correctly', () => {
     vi.mocked(useIsMobile).mockReturnValue(true);
-    const { result } = renderHook(() => useOpenSettings(SettingsTabs.Common));
-    expect(result.current()).toBe('/settings/common');
+    const { result } = renderHook(() => useOpenSettings());
+    expect(result.current(SettingsTabs.Common)).toBe('/settings/common');
   });
 
   it('should handle desktop route correctly', () => {
     vi.mocked(useIsMobile).mockReturnValue(false);
-    const { result } = renderHook(() => useOpenSettings(SettingsTabs.Agent));
-    expect(result.current()).toBe('/settings/modal?tab=agent');
+    const { result } = renderHook(() => useOpenSettings());
+    expect(result.current(SettingsTabs.Agent)).toBe('/settings/modal?tab=agent');
   });
 });
 
@@ -57,14 +57,14 @@ describe('useOpenChatSettings', () => {
   it('should handle mobile route for chat settings', () => {
     vi.mocked(useSessionStore).mockReturnValue('123');
     vi.mocked(useIsMobile).mockReturnValue(true);
-    const { result } = renderHook(() => useOpenChatSettings(ChatSettingsTabs.Meta));
-    expect(result.current()).toBe('/chat/settings');
+    const { result } = renderHook(() => useOpenChatSettings());
+    expect(result.current(ChatSettingsTabs.Meta)).toBe('/chat/settings');
   });
 
   it('should handle desktop route for chat settings with session and tab', () => {
     vi.mocked(useSessionStore).mockReturnValue('456');
     vi.mocked(useIsMobile).mockReturnValue(false);
-    const { result } = renderHook(() => useOpenChatSettings(ChatSettingsTabs.Meta));
-    expect(result.current()).toBe('/chat/settings/modal?session=456&tab=meta');
+    const { result } = renderHook(() => useOpenChatSettings());
+    expect(result.current(ChatSettingsTabs.Meta)).toBe('/chat/settings/modal?session=456&tab=meta');
   });
 });

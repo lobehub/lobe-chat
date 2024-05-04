@@ -43,7 +43,7 @@ const Main = memo(() => {
       <Avatar
         avatar={avatar}
         background={backgroundColor}
-        onClick={openChatSettings}
+        onClick={() => openChatSettings()}
         size={40}
         title={title}
       />
