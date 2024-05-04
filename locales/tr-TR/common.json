@@ -157,5 +157,19 @@
     "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
     "newVersion": "Yeni sürüm mevcut: {{version}}"
+  },
+  "userPanel": {
+    "billing": "Fatura Yönetimi",
+    "defaultNickname": "Topluluk Kullanıcısı",
+    "discord": "Topluluk Destek",
+    "docs": "Belgeler",
+    "email": "E-posta Destek",
+    "feedback": "Geribildirim ve Öneriler",
+    "help": "Yardım Merkezi",
+    "moveGuide": "Ayarlar düğmesini buraya taşıyın",
+    "plans": "Planlar",
+    "profile": "Hesap Yönetimi",
+    "setting": "Uygulama Ayarları",
+    "usages": "Kullanım İstatistikleri"
   }
 }

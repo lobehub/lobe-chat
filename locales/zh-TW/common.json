@@ -157,5 +157,19 @@
     "action": "升級",
     "hasNew": "有可用更新",
     "newVersion": "有新版本可用：{{version}}"
+  },
+  "userPanel": {
+    "billing": "帳單管理",
+    "defaultNickname": "社群版使用者",
+    "discord": "社區支援",
+    "docs": "使用文件",
+    "email": "郵件支援",
+    "feedback": "反饋與建議",
+    "help": "幫助中心",
+    "moveGuide": "設置按鈕搬到這裡啦",
+    "plans": "訂閱方案",
+    "profile": "帳戶管理",
+    "setting": "應用設定",
+    "usages": "用量統計"
   }
 }

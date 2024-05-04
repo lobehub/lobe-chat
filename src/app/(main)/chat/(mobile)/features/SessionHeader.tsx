@@ -10,7 +10,7 @@ import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
-import { commonSelectors } from '@/store/user/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -26,7 +26,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
-  const avatar = useUserStore(commonSelectors.userAvatar);
+  const avatar = useUserStore(userProfileSelectors.userAvatar);
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (

@@ -5,8 +5,10 @@ import type { StateCreator } from 'zustand/vanilla';
 
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
+import { LocaleMode } from '@/types/locale';
 import { LobeAgentSettings } from '@/types/session';
 import { GlobalSettings } from '@/types/settings';
+import { switchLang } from '@/utils/client/switchLang';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
@@ -14,6 +16,7 @@ export interface GeneralSettingsAction {
   importAppSettings: (settings: GlobalSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
   setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
+  switchLocale: (locale: LocaleMode) => Promise<void>;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
 }
@@ -46,6 +49,11 @@ export const generalSettingsSlice: StateCreator<
 
     await userService.updateUserSettings(diffs);
     await get().refreshUserConfig();
+  },
+  switchLocale: async (locale) => {
+    await get().setSettings({ language: locale });
+
+    switchLang(locale);
   },
   switchThemeMode: async (themeMode) => {
     await get().setSettings({ themeMode });
