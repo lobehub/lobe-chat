@@ -50,8 +50,14 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
         <Link aria-label={t('tab.assistantsAndConversations')} href={'/chat'}>
           <ActionIcon
             active={isChatPath}
-            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen} // 使用新的图标
-            onClick={}    // 点击事件待添加
+            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
+            onClick={() => {
+              const currentShowSessionPanel = useGlobalStore.getState().preference.showSessionPanel;
+              useGlobalStore.getState().updatePreference({
+                sessionsWidth: currentShowSessionPanel ? 0 : 320,
+                showSessionPanel: !currentShowSessionPanel,
+              });
+            }}
             placement={'right'}
             size="large"
             title={t('tab.assistantsAndConversations')}
