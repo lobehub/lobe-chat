@@ -134,8 +134,8 @@ export default {
   tab: {
     chat: '会话',
     market: '发现',
-    me: '我',
     assistantsAndConversations: '助手与会话',
+    me: '我',
     setting: '设置',
   },
   telemetry: {

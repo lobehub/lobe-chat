@@ -47,22 +47,22 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
         />
       </Link>
       {isChatPath && (
-        <Link aria-label={t('tab.assistantsAndConversations')} href={'/chat'}>
-          <ActionIcon
-            active={isChatPath}
-            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-            onClick={() => {
-              const currentShowSessionPanel = useGlobalStore.getState().preference.showSessionPanel;
-              useGlobalStore.getState().updatePreference({
-                sessionsWidth: currentShowSessionPanel ? 0 : 320,
-                showSessionPanel: !currentShowSessionPanel,
-              });
-            }}
-            placement={'right'}
-            size="large"
-            title={t('tab.assistantsAndConversations')}
-          />
-        </Link>
+      <Link aria-label={t('tab.assistantsAndConversations')} href={'/chat'}>
+        <ActionIcon
+        active={isChatPath}
+        icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
+        onClick={() => {
+          const currentShowSessionPanel = useGlobalStore.getState().preference.showSessionPanel;
+          useGlobalStore.getState().updatePreference({
+            sessionsWidth: currentShowSessionPanel ? 0 : 320,
+            showSessionPanel: !currentShowSessionPanel,
+          });
+        }}
+        placement={'right'}
+        size="large"
+        title={t('tab.assistantsAndConversations')}
+        />
+      </Link>
       )}
     </>
   );
