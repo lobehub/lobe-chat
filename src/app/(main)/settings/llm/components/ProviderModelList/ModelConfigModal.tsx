@@ -54,6 +54,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
 
             closeModal();
           }}
+          style={{ marginInlineStart: '16px' }}
           type="primary"
         >
           {tc('ok')}
@@ -63,6 +64,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
       onCancel={closeModal}
       open={open}
       title={t('llm.customModelCards.modelConfig.modalTitle')}
+      zIndex={1051} // Select is 1050
     >
       <div
         onClick={(e) => {
