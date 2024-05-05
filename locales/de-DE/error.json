@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Weitermachen",
+      "desc": "{{greeting}}, es freut mich, dass ich dir weiterhelfen kann. Lass uns das Gespräch fortsetzen.",
+      "title": "Willkommen zurück, {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "Zurück zur Startseite",
     "desc": "Versuchen Sie es später erneut oder kehren Sie in die bekannte Welt zurück",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "Ungültiger oder leerer Anthropic API-Schlüssel. Bitte überprüfen Sie den Anthropic API-Schlüssel und versuchen Sie es erneut.",
     "InvalidAzureAPIKey": "Der Azure API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Azure API-Schlüssel und versuchen Sie es erneut.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
+    "InvalidClerkUser": "Entschuldigung, du bist derzeit nicht angemeldet. Bitte melde dich an oder registriere ein Konto, um fortzufahren.",
     "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
     "InvalidGroqAPIKey": "Der Groq API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Groq API-Schlüssel und versuchen Sie es erneut.",
     "InvalidMinimaxAPIKey": "Ungültiger oder leerer Minimax-API-Schlüssel. Bitte überprüfen Sie den Minimax-API-Schlüssel und versuchen Sie es erneut.",

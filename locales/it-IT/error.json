@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continua la sessione",
+      "desc": "{{greeting}}, Sono felice di poterti aiutare ancora. Continuiamo a parlare di quello di cui stavamo discutendo.",
+      "title": "Bentornato, {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "Torna alla homepage",
     "desc": "Prova di nuovo più tardi, o torna al mondo conosciuto",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "La chiave API Anthropic non è valida o è vuota. Si prega di controllare la chiave API Anthropic e riprovare.",
     "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
+    "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
     "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
     "InvalidGroqAPIKey": "Chiave API Groq non valida o vuota, controlla la chiave API Groq e riprova",
     "InvalidMinimaxAPIKey": "Chiave API Minimax non valida o vuota, controllare la chiave API Minimax e riprovare",
