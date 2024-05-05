@@ -28,6 +28,7 @@
   },
   "feedback": "Feedback e suggerimenti",
   "follow": "Seguici su {{name}}",
+  "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
@@ -168,6 +169,7 @@
     "help": "Centro assistenza",
     "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
     "plans": "Piani di abbonamento",
+    "preview": "Anteprima",
     "profile": "Gestione account",
     "setting": "Impostazioni app",
     "usages": "Statistiche di utilizzo"

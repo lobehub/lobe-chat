@@ -1,4 +1,4 @@
-import { Avatar, Tag } from '@lobehub/ui';
+import { Tag } from '@lobehub/ui';
 import { App, Button, Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { startCase } from 'lodash-es';
@@ -16,18 +16,18 @@ import { useStyles } from './style';
 
 const { Link } = Typography;
 
-const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
+const Header = memo(() => {
   const setSearchKeywords = useMarketStore((s) => s.setSearchKeywords);
   const router = useRouter();
   const { t } = useTranslation('market');
-  const { styles, theme } = useStyles();
+  const { styles } = useStyles();
   const createSession = useSessionStore((s) => s.createSession);
   const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem, isEqual);
 
   const { message } = App.useApp();
 
   const { meta, createAt, author, homepage, config } = agentItem;
-  const { avatar, title, description, tags, backgroundColor } = meta;
+  const { title, description, tags } = meta;
 
   const isMobile = useIsMobile();
 
@@ -47,20 +47,6 @@ const Header = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   return (
     <Center className={styles.container} gap={16}>
-      <Center
-        flex={'none'}
-        height={120}
-        style={{
-          backgroundColor:
-            backgroundColor || mobile ? theme.colorBgElevated : theme.colorBgContainer,
-          borderRadius: '50%',
-          overflow: 'hidden',
-          zIndex: 2,
-        }}
-        width={120}
-      >
-        <Avatar animation avatar={avatar} size={100} />
-      </Center>
       <h2 className={styles.title}>{title}</h2>
       <Center gap={6} horizontal style={{ flexWrap: 'wrap' }}>
         {(tags as string[]).map((tag: string, index) => (
