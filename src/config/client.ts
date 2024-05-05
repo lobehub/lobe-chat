@@ -30,15 +30,11 @@ declare global {
       NEXT_PUBLIC_I18N_DEBUG_SERVER: string;
 
       NEXT_PUBLIC_DEVELOPER_DEBUG: string;
-
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: string;
     }
   }
 }
 
 export const getClientConfig = () => ({
-  ENABLED_CLERK: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-
   BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
   // Plausible Analytics

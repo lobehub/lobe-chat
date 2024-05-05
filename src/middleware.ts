@@ -1,7 +1,7 @@
 import { clerkMiddleware } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
-import { getServerConfig } from '@/config/server';
+import { authEnv } from '@/config/auth';
 import { auth } from '@/libs/next-auth';
 
 import { OAUTH_AUTHORIZED } from './const/auth';
@@ -40,10 +40,8 @@ const nextAuthMiddleware = auth((req) => {
   });
 });
 
-const { ENABLE_OAUTH_SSO, ENABLE_CLERK_AUTH } = getServerConfig();
-
-export default ENABLE_CLERK_AUTH
+export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   ? clerkMiddleware()
-  : !ENABLE_OAUTH_SSO
-    ? defaultMiddleware
-    : nextAuthMiddleware;
+  : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
+    ? nextAuthMiddleware
+    : defaultMiddleware;

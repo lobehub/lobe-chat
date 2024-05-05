@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-import { enableAuth } from '@/const/version';
+import { enableAuth } from '@/const/auth';
 import { UserStore } from '@/store/user';
 import { LobeUser } from '@/types/user';
 
