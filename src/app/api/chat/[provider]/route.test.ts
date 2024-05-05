@@ -174,6 +174,13 @@ describe('POST handler', () => {
     });
 
     it('should return an error response when chat completion fails', async () => {
+      // 设置 getJWTPayload 和 initAgentRuntimeWithUserPayload 的模拟返回值
+      vi.mocked(getJWTPayload).mockResolvedValueOnce({
+        accessCode: 'test-access-code',
+        apiKey: 'test-api-key',
+        azureApiVersion: 'v1',
+      });
+
       const mockParams = { provider: 'test-provider' };
       const mockChatPayload = { message: 'Hello, world!' };
       request = new Request(new URL('https://test.com'), {
