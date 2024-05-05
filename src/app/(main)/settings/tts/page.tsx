@@ -1,18 +1,10 @@
-'use client';
+import { translation } from '@/server/translation';
 
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+export const generateMetadata = async () => {
+  const { t } = await translation('setting');
+  return {
+    title: t('tab.tts'),
+  };
+};
 
-import PageTitle from '@/components/PageTitle';
-
-import TTS from './TTS';
-
-export default memo(() => {
-  const { t } = useTranslation('setting');
-  return (
-    <>
-      <PageTitle title={t('tab.tts')} />
-      <TTS />
-    </>
-  );
-});
+export { default } from './index';

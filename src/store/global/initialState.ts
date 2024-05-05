@@ -6,7 +6,17 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Market = 'market',
+  Me = 'me',
   Setting = 'settings',
+}
+
+export enum ChatSettingsTabs {
+  Chat = 'chat',
+  Meta = 'meta',
+  Modal = 'modal',
+  Plugin = 'plugin',
+  Prompt = 'prompt',
+  TTS = 'tts',
 }
 
 export enum SettingsTabs {

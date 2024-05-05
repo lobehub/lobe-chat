@@ -1,7 +1,9 @@
-import { PropsWithChildren } from 'react';
+import { LayoutProps } from '../type';
 
-const MobileLayout = ({ children }: PropsWithChildren) => {
+const Layout = ({ children }: LayoutProps) => {
   return children;
 };
 
-export default MobileLayout;
+Layout.displayName = 'MobileChatLayout';
+
+export default Layout;

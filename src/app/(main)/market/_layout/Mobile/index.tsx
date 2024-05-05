@@ -1,19 +1,25 @@
-import { PropsWithChildren } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import MobileContentLayout from '@/components/server/MobileNavLayout';
 
-import AgentSearchBar from '../../features/AgentSearchBar';
+import { LayoutProps } from '../type';
+import DetailModal from './DetailModal';
 import Header from './Header';
 
-const MobileLayout = ({ children }: PropsWithChildren) => {
+const Layout = ({ children, detail }: LayoutProps) => {
   return (
     <>
-      <Header />
-      <Flexbox flex={1} gap={16} style={{ padding: 16 }}>
-        <AgentSearchBar mobile />
+      <MobileContentLayout
+        gap={16}
+        header={<Header />}
+        style={{ paddingInline: 16, paddingTop: 8 }}
+        withNav
+      >
         {children}
-      </Flexbox>
+      </MobileContentLayout>
+      <DetailModal>{detail}</DetailModal>
     </>
   );
 };
 
-export default MobileLayout;
+Layout.displayName = 'MobileMarketLayout';
+
+export default Layout;
