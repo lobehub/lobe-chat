@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "devam et",
+      "desc": "{{greeting}}，senin için hizmet vermeye devam edebilmek çok mutluluk verici. Hadi konuşmamıza kaldığımız yerden devam edelim",
+      "title": "Tekrar hoş geldin, {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "Ana Sayfaya Dön",
     "desc": "Biraz sonra tekrar deneyin veya bilinen dünyaya geri dönün",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "Anthropic API Key geçersiz veya boş, lütfen Anthropic API Key'inizi kontrol edip tekrar deneyin",
     "InvalidAzureAPIKey": "Azure API Anahtarı yanlış veya boş, lütfen Azure API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması geçersiz, lütfen AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
+    "InvalidClerkUser": "Üzgünüz, şu anda giriş yapmadınız. Lütfen işlemlere devam etmeden önce giriş yapın veya hesap oluşturun",
     "InvalidGoogleAPIKey": "Google API Anahtarı yanlış veya boş, lütfen Google API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidGroqAPIKey": "Groq API Anahtarı yanlış veya boş, lütfen Groq API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidMinimaxAPIKey": "Minimax API Anahtarı geçersiz veya boş, lütfen Minimax API Anahtarınızı kontrol edip tekrar deneyin",
