@@ -1,4 +1,11 @@
 export default {
+  clerkAuth: {
+    loginSuccess: {
+      action: '继续会话',
+      desc: '{{greeting}}，很高兴能够继续为你服务。让我们接着刚刚的话题聊下去吧',
+      title: '欢迎回来， {{nickName}}',
+    },
+  },
   error: {
     backHome: '返回首页',
     desc: '待会来试试，或者回到已知的世界',
@@ -63,6 +70,7 @@ export default {
     PluginOpenApiInitError: '很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确',
 
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
+    InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
     LocationNotSupportError:
       '很抱歉，你的所在位置不支持此模型服务，可能是由于地区限制或服务未开通。请确认当前位置是否支持使用此服务，或尝试使用其他位置信息。',
 

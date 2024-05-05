@@ -1,4 +1,4 @@
-export { userProfileSelectors } from './slices/auth/selectors';
+export { authSelectors, userProfileSelectors } from './slices/auth/selectors';
 export { preferenceSelectors } from './slices/preference/selectors';
 export {
   modelConfigSelectors,

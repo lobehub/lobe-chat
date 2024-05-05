@@ -10,6 +10,7 @@ export default {
   close: '关闭',
   copy: '复制',
   copyFail: '复制失败',
+
   copySuccess: '复制成功',
   defaultAgent: '自定义助手',
   defaultSession: '自定义助手',
@@ -154,6 +155,7 @@ export default {
     newVersion: '有新版本可用：{{version}}',
   },
   userPanel: {
+    anonymousNickName: '匿名用户',
     billing: '账单管理',
     defaultNickname: '社区版用户',
     discord: '社区支持',

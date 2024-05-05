@@ -1,7 +1,14 @@
+import { type AuthObject } from '@clerk/backend/internal';
 import { importJWK, jwtVerify } from 'jose';
 
 import { getServerConfig } from '@/config/server';
-import { JWTPayload, JWT_SECRET_KEY, NON_HTTP_PREFIX } from '@/const/auth';
+import {
+  JWTPayload,
+  JWT_SECRET_KEY,
+  NON_HTTP_PREFIX,
+  enableClerk,
+  enableNextAuth,
+} from '@/const/auth';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
@@ -30,6 +37,12 @@ export const getJWTPayload = async (token: string): Promise<JWTPayload> => {
   return payload as JWTPayload;
 };
 
+interface CheckAuthParams {
+  accessCode?: string;
+  apiKey?: string;
+  clerkAuth: AuthObject;
+  nextAuthAuthorized?: boolean;
+}
 /**
  * Check if the provided access code is valid, a user API key should be used or the OAuth 2 header is provided.
  *
@@ -38,18 +51,27 @@ export const getJWTPayload = async (token: string): Promise<JWTPayload> => {
  * @param {boolean} oauthAuthorized - Whether the OAuth 2 header is provided.
  * @throws {AgentRuntimeError} If the access code is invalid and no user API key is provided.
  */
-export const checkAuthMethod = (
-  accessCode?: string,
-  apiKey?: string,
-  oauthAuthorized?: boolean,
-) => {
-  const { ACCESS_CODES, ENABLE_OAUTH_SSO } = getServerConfig();
+export const checkAuthMethod = ({
+  apiKey,
+  nextAuthAuthorized,
+  accessCode,
+  clerkAuth,
+}: CheckAuthParams) => {
+  // clerk auth handler
+  if (enableClerk) {
+    // if there is no userId, means the use is not login, just throw error
+    if (!clerkAuth?.userId) throw AgentRuntimeError.createError(ChatErrorType.InvalidClerkUser);
+    // if the user is login, just return
+    else return;
+  }
 
-  // if OAuth 2 header is provided
-  if (ENABLE_OAUTH_SSO && oauthAuthorized) return;
+  // if next auth handler is provided
+  if (enableNextAuth && nextAuthAuthorized) return;
 
   // if apiKey exist
   if (apiKey) return;
+
+  const { ACCESS_CODES } = getServerConfig();
 
   // if accessCode doesn't exist
   if (!ACCESS_CODES.length) return;
