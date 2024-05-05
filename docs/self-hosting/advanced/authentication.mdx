@@ -24,17 +24,21 @@ LobeChat supports the configuration of external identity verification services f
 
 Currently supported identity verification services include:
 
-- [Auth0](/docs/self-hosting/advanced/sso-providers/auth0)
-- [Microsoft Entra ID](/docs/self-hosting/advanced/sso-providers/microsoft-entra-id)
-- [Authentik](/docs/self-hosting/advanced/sso-providers/authentik)
-- [Github](/docs/self-hosting/advanced/sso-providers/github)
-- [ZITADEL](/docs/self-hosting/advanced/sso-providers/zitadel)
-
+<Cards>
+  <Card href={'/docs/self-hosting/advanced/sso-providers/auth0'} title={'Auth0'} />
+  <Card
+    href={'/docs/self-hosting/advanced/sso-providers/microsoft-entra-id'}
+    title={'Microsoft Entra ID'}
+  />
+  <Card href={'/docs/self-hosting/advanced/sso-providers/authentik'} title={'Authentik'} />
+  <Card href={'/docs/self-hosting/advanced/sso-providers/github'} title={'Github'} />
+  <Card href={'/docs/self-hosting/advanced/sso-providers/zitadel'} title={'ZITADEL'} />
+</Cards>
 Click on the links to view the corresponding platform's configuration documentation.
 
 ## Advanced Configuration
 
-To simultaneously enable multiple identity verification sources, please set the `SSO_PROVIDERS` environment variable, separating them with commas, for example, `auth0,azure-ad,authentik`.
+To simultaneously enable multiple identity verification sources, please set the `NEXT_AUTH_SSO_PROVIDERS` environment variable, separating them with commas, for example, `auth0,azure-ad,authentik`.
 
 The order corresponds to the display order of the SSO providers.
 

@@ -49,8 +49,20 @@ declare global {
   }
 }
 
-export const getAuthConfig = () =>
-  createEnv({
+export const getAuthConfig = () => {
+  if (process.env.ENABLE_OAUTH_SSO) {
+    console.warn(
+      '`ENABLE_OAUTH_SSO` is deprecated and will be removed in LobeChat 1.0. just set `NEXT_AUTH_SECRET` enough',
+    );
+  }
+
+  if (process.env.SSO_PROVIDERS) {
+    console.warn(
+      '`SSO_PROVIDERS` is deprecated and will be removed in LobeChat 1.0. Please replace with `NEXT_AUTH_SSO_PROVIDERS`',
+    );
+  }
+
+  return createEnv({
     client: {
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
       /**
@@ -129,5 +141,6 @@ export const getAuthConfig = () =>
       ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
     },
   });
+};
 
 export const authEnv = getAuthConfig();
