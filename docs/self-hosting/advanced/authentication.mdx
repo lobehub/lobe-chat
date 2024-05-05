@@ -1,26 +1,29 @@
 ---
-title: >-
-  LobeChat Identity Verification Service - Centralized User Authorization
-  Management
+title: LobeChat Authorization Service
 description: >-
   Learn about LobeChat's support for configuring external identity verification
   services for centralized user authorization within enterprises/organizations.
   Explore supported services like Auth0, Microsoft Entra ID, Authentik, Github,
   and ZITADEL.
 tags:
-  - Identity Verification Service
-  - Centralized User Authorization
   - SSO Providers
-  - Auth0
-  - Microsoft Entra ID
-  - Authentik
-  - Github
-  - ZITADEL
+  - Next Auth
+  - Clerk
 ---
 
-# Identity Verification Service
+# LobeChat Authorization
 
 LobeChat supports the configuration of external identity verification services for internal use within enterprises/organizations to centrally manage user authorization.
+
+## Clerk
+
+Clerk is a comprehensive identity verification solution that has recently gained popularity. It provides a simple yet powerful API and services to handle user authentication and session management. Clerk's design philosophy is to offer a concise and modern authentication solution that enables developers to easily integrate and use it.
+
+LobeChat has deeply integrated with Clerk to provide users with a more secure and convenient login and registration experience. It also relieves developers from the burden of managing authentication logic. Clerk's concise and modern design philosophy aligns perfectly with LobeChat's goals, making user management on the entire platform more efficient and reliable.
+
+By setting the environment variables NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY and CLERK_SECRET_KEY in LobeChat's environment, you can enable and use Clerk.
+
+## Next Auth
 
 Currently supported identity verification services include:
 
