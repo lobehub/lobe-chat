@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "繼續會話",
+      "desc": "{{greeting}}，很高興能夠繼續為你服務。讓我們接著剛剛的話題聊下去吧",
+      "title": "歡迎回來， {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "返回首頁",
     "desc": "待會再試試，或者回到已知的世界",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "Anthropic API 金鑰不正確或為空，請檢查 Anthropic API 金鑰後重試",
     "InvalidAzureAPIKey": "Azure API Key 不正確或為空，請檢查 Azure API Key 後重試",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
+    "InvalidClerkUser": "很抱歉，你當前尚未登錄，請先登錄或註冊帳號後繼續操作",
     "InvalidGoogleAPIKey": "Google API Key 不正確或為空，請檢查 Google API Key 後重試",
     "InvalidGroqAPIKey": "Groq API 金鑰不正確或為空，請檢查 Groq API 金鑰後重試",
     "InvalidMinimaxAPIKey": "Minimax API 金鑰不正確或為空，請檢查 Minimax API 金鑰後重試",

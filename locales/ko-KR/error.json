@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "계속하기",
+      "desc": "{{greeting}}님, 다시 뵙게 되어 기쁩니다. 이전 대화를 이어나갈까요?",
+      "title": "다시 환영합니다, {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "홈페이지로 돌아가기",
     "desc": "잠시 후 다시 시도하거나 익숙한 세계로 돌아가세요",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "Anthropic API 키가 잘못되었거나 비어 있습니다. Anthropic API 키를 확인하고 다시 시도하십시오.",
     "InvalidAzureAPIKey": "잘못된 또는 비어 있는 Azure API Key입니다. Azure API Key를 확인한 후 다시 시도하십시오.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도하십시오.",
+    "InvalidClerkUser": "죄송합니다. 현재 로그인되어 있지 않습니다. 계속하려면 먼저 로그인하거나 계정을 등록해주세요.",
     "InvalidGoogleAPIKey": "잘못된 또는 비어 있는 Google API Key입니다. Google API Key를 확인한 후 다시 시도하십시오.",
     "InvalidGroqAPIKey": "잘못된 또는 비어 있는 Groq API Key입니다. Groq API Key를 확인한 후 다시 시도하십시오.",
     "InvalidMinimaxAPIKey": "잘못된 Minimax API 키이거나 비어 있습니다. Minimax API 키를 확인한 후 다시 시도해주세요.",
