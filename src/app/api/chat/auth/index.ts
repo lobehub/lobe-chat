@@ -1,8 +1,9 @@
+import { AuthObject } from '@clerk/backend/internal';
 import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest } from 'next/server';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
+import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableClerk } from '@/const/auth';
 import { AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
@@ -27,7 +28,11 @@ export const checkAuth =
       if (!authorization) throw AgentRuntimeError.createError(ChatErrorType.Unauthorized);
 
       // check the Auth With payload and clerk auth
-      const clerkAuth = getAuth(req as NextRequest);
+      let clerkAuth = {} as AuthObject;
+
+      if (enableClerk) {
+        clerkAuth = getAuth(req as NextRequest);
+      }
 
       jwtPayload = await getJWTPayload(authorization);
 
