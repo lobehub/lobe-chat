@@ -43,10 +43,12 @@ export const createAuthSlice: StateCreator<
     // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
     console.log(n('login'));
 
-    if (enableNextAuth) {
-      // TODO: 应该条件调用 next-auth 的登陆 hook
-      signIn();
-    }
+    // Currently disable the condition to judge the login method
+    // ref: https://github.com/lobehub/lobe-chat/pull/2364
+    // if (enableNextAuth) {
+    // TODO: 应该条件调用 next-auth 的登陆 hook
+    signIn();
+    // }
   },
   logout: async () => {
     if (enableClerk) {
@@ -55,11 +57,12 @@ export const createAuthSlice: StateCreator<
       return;
     }
 
-    if (enableNextAuth) {
-      // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
-      console.log(n('logout'));
-      signOut();
-    }
+    // Disable the condition,
+    // if (enableNextAuth) {
+    // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
+    console.log(n('logout'));
+    signOut();
+    // }
   },
   openLogin: async () => {
     if (enableClerk) {
@@ -70,10 +73,10 @@ export const createAuthSlice: StateCreator<
       return;
     }
 
-    if (enableNextAuth) {
-      // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
-      signIn();
-    }
+    // if (enableNextAuth) {
+    // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
+    signIn();
+    // }
   },
   openUserProfile: async () => {
     if (enableClerk) {

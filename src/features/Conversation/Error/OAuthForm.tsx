@@ -7,15 +7,16 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/selectors';
+import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 import { FormAction } from './style';
 
 const OAuthForm = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('error');
 
-  const [signIn, signOut, isOAuthLoggedIn] = useUserStore((s) => [s.login, s.logout, s.isSignedIn]);
+  const [signIn, signOut] = useUserStore((s) => [s.openLogin, s.logout]);
   const user = useUserStore(userProfileSelectors.userProfile);
+  const isOAuthLoggedIn = useUserStore(authSelectors.isLoginWithAuth);
 
   const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
 
