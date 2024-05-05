@@ -28,6 +28,7 @@
   },
   "feedback": "Comentarios y sugerencias",
   "follow": "Síguenos en {{name}}",
+  "fullscreen": "Pantalla completa",
   "historyRange": "Rango de historial",
   "import": "Importar configuración",
   "importModal": {
@@ -168,6 +169,7 @@
     "help": "Centro de ayuda",
     "moveGuide": "El botón de configuración se ha movido aquí",
     "plans": "Planes de suscripción",
+    "preview": "Vista previa",
     "profile": "Gestión de cuenta",
     "setting": "Configuración de la aplicación",
     "usages": "Estadísticas de uso"

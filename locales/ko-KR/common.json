@@ -28,6 +28,7 @@
   },
   "feedback": "피드백 및 제안",
   "follow": "{{name}}에서 우리를 팔로우하세요",
+  "fullscreen": "전체 화면",
   "historyRange": "기록 범위",
   "import": "가져오기",
   "importModal": {
@@ -168,6 +169,7 @@
     "help": "도움말 센터",
     "moveGuide": "설정 버튼을 여기로 이동했습니다",
     "plans": "요금제",
+    "preview": "미리보기",
     "profile": "계정 관리",
     "setting": "앱 설정",
     "usages": "사용량 통계"

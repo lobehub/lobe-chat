@@ -6,6 +6,8 @@ import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
+
 import AgentsSuggest from './AgentsSuggest';
 import QuestionSuggest from './QuestionSuggest';
 
@@ -40,7 +42,7 @@ const InboxWelcome = memo(() => {
   const { t } = useTranslation('welcome');
   const [greeting, setGreeting] = useState<'morning' | 'noon' | 'afternoon' | 'night'>();
   const { styles } = useStyles();
-
+  const mobile = useIsMobile();
   useEffect(() => {
     const now = new Date();
     const hours = now.getHours();
@@ -66,8 +68,8 @@ const InboxWelcome = memo(() => {
         <Markdown className={styles.desc} variant={'chat'}>
           {t('guide.defaultMessage')}
         </Markdown>
-        <AgentsSuggest />
-        <QuestionSuggest />
+        <AgentsSuggest mobile={mobile} />
+        <QuestionSuggest mobile={mobile} />
       </Flexbox>
     </Center>
   );

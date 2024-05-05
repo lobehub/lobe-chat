@@ -28,6 +28,7 @@
   },
   "feedback": "Opinie i sugestie",
   "follow": "Zaobserwuj nas na {{name}}",
+  "fullscreen": "Tryb pełnoekranowy",
   "historyRange": "Zakres historii",
   "import": "Importuj ustawienia",
   "importModal": {
@@ -168,6 +169,7 @@
     "help": "Centrum pomocy",
     "moveGuide": "Przenieś przycisk ustawień tutaj",
     "plans": "Plan abonamentu",
+    "preview": "Podgląd",
     "profile": "Zarządzanie kontem",
     "setting": "Ustawienia aplikacji",
     "usages": "Statystyki użycia"

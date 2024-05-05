@@ -28,6 +28,7 @@
   },
   "feedback": "Phản hồi và đề xuất",
   "follow": "Theo dõi chúng tôi trên {{name}}",
+  "fullscreen": "Chế độ toàn màn hình",
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
   "importModal": {
@@ -168,6 +169,7 @@
     "help": "Trung tâm trợ giúp",
     "moveGuide": "Đã di chuyển nút cài đặt đến đây",
     "plans": "Kế hoạch đăng ký",
+    "preview": "Phiên bản xem trước",
     "profile": "Quản lý tài khoản",
     "setting": "Cài đặt ứng dụng",
     "usages": "Thống kê sử dụng"
