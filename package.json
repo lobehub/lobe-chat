@@ -87,6 +87,7 @@
     "@aws-sdk/client-bedrock-runtime": "^3.565.0",
     "@azure/openai": "^1.0.0-beta.12",
     "@cfworker/json-schema": "^1.12.8",
+    "@clerk/backend": "^1.1.1",
     "@clerk/localizations": "2.0.0",
     "@clerk/nextjs": "^5.0.6",
     "@clerk/themes": "^2.0.0",
