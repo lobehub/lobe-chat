@@ -5,150 +5,143 @@ description: >-
   services in LobeChat, including OAuth SSO, NextAuth settings, and
   provider-specific details.
 tags:
-  - LobeChat
   - Authentication Service
-  - Environment Variables
   - OAuth SSO
+  - Clerk
   - NextAuth
-  - Provider Details
 ---
 
-## Authentication Service
+# Authentication Service
 
 LobeChat provides a complete authentication service capability when deployed. The following are the relevant environment variables. You can use these environment variables to easily define the identity verification services that need to be enabled in LobeChat.
 
-## General Settings
+## Next Auth
 
-### `ENABLE_OAUTH_SSO`
+### General Settings
 
-- Type: Required
-- Description: Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on.
-- Default: `-`
-- Example: `1`
-
-### `SSO_PROVIDERS`
-
-- Type: Required
-- Description: Select the single sign-on provider for LoboChat. For multiple SSO Providers separating them with commas, for example, `auth0,azure-ad,authentik`.
-- Default: `auth0`
-- Example: `auth0,azure-ad,authentik`
-
-### `NEXTAUTH_SECRET`
+#### `NEXTAUTH_SECRET`
 
 - Type: Required
 - Description: Key used to encrypt the session tokens in Auth.js. You can generate the key using the following command: `openssl rand -base64 32`.
 - Default: `-`
 - Example: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
 
-### `NEXTAUTH_URL`
+#### `NEXTAUTH_URL`
 
 - Type: Optional
 - Description: This URL is used to specify the callback address for Auth.js during OAuth authentication. It does not need to be set when deploying on Vercel.
 - Default: `-`
 - Example: `https://example.com/api/auth`
 
-## Auth0
+#### `NEXT_AUTH_SSO_PROVIDERS`
 
-### `AUTH0_CLIENT_ID`
+- Type: Optional
+- Description: Select the single sign-on provider for LoboChat. For multiple SSO Providers separating them with commas, for example, `auth0,azure-ad,authentik`.
+- Default: `auth0`
+- Example: `auth0,azure-ad,authentik`
+
+### Auth0
+
+#### `AUTH0_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the Auth0 application. You can access it [here](https://manage.auth0.com/dashboard) and navigate to the application settings to view.
 - Default: `-`
 - Example: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
 
-### `AUTH0_CLIENT_SECRET`
+#### `AUTH0_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Auth0 application.
 - Default: `-`
 - Example: `wnX7UbZg85ZUzF6ioxPLnJVEQa1Elbs7aqBUSF16xleBS5AdkVfASS49-fQIC8Rm`
 
-### `AUTH0_ISSUER`
+#### `AUTH0_ISSUER`
 
 - Type: Required
 - Description: Issuer/domain of the Auth0 application.
 - Default: `-`
 - Example: `https://example.auth0.com`
 
-## Microsoft Entra ID
+### Microsoft Entra ID
 
-### `AZURE_AD_CLIENT_ID`
+#### `AZURE_AD_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the Microsoft Entra ID application.
 - Default: `-`
 - Example: `be8f6da1-58c3-4f16-ff1b-78f5148e10df`
 
-### `AZURE_AD_CLIENT_SECRET`
+#### `AZURE_AD_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Microsoft Entra ID application.
 - Default: `-`
 - Example: `~gI8Q.pTiN1vwB6Gl.E1yFT1ojcXABkdACfJXaNj`
 
-### `AZURE_AD_TENANT_ID`
+#### `AZURE_AD_TENANT_ID`
 
 - Type: Required
 - Description: Tenant ID of the Microsoft Entra ID application.
 - Default: `-`
 - Example: `c8ae2f36-edf6-4cda-96b9-d3e198a47cba`
 
-## Authentik
+### Authentik
 
-### `AUTHENTIK_CLIENT_ID`
+#### `AUTHENTIK_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the Authentik provider application. You can access it [here][auth0-client-page] and navigate to the application settings to view.
 - Default: `-`
 - Example: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
 
-### `AUTHENTIK_CLIENT_SECRET`
+#### `AUTHENTIK_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Authentik provider application.
 - Default: `-`
 - Example: `wnX7UbZg85ZUzF6ioxPLnJVEQa1Elbs7aqBUSF16xleBS5AdkVfASS49-fQIC8Rm`
 
-### `AUTHENTIK_ISSUER`
+#### `AUTHENTIK_ISSUER`
 
 - Type: Required
 - Description: Issuer/domain of the Authentik provider application.
 - Default: `-`
 - Example: `https://your-authentik-domain.com/application/o/slug/`
 
-## Github
+### Github
 
-### `GITHUB_CLIENT_ID`
+#### `GITHUB_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the Github application. You can access it [here](https://github.com/settings/apps) and navigate to the application settings to view.
 - Default: `-`
 - Example: `abd94200333283550508`
 
-### `GITHUB_CLIENT_SECRET`
+#### `GITHUB_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Github application.
 - Default: `-`
 - Example: `dd262976ac0931d947e104891586a053f3d3750b`
 
-## ZITADEL
+### ZITADEL
 
-### `ZITADEL_CLIENT_ID`
+#### `ZITADEL_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the ZITADEL application. This can be found under your application in the ZITADEL console.
 - Default: `-`
 - Example: `123456789012345678@your-project`
 
-### `ZITADEL_CLIENT_SECRET`
+#### `ZITADEL_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the ZITADEL application.
 - Default: `-`
 - Example: `9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
 
-### `ZITADEL_ISSUER`
+#### `ZITADEL_ISSUER`
 
 - Type: Required
 - Description: Issuer of the ZITADEL application. This is usually the URL of the ZITADEL instance, and can be found in `URLs` tab of your application in the console.
@@ -160,3 +153,19 @@ LobeChat provides a complete authentication service capability when deployed. Th
   providers, you can submit a [feature
   request](https://github.com/lobehub/lobe-chat/issues/new/choose) or Pull Request.
 </Callout>
+
+## Clerk
+
+### `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+
+- Type: Required
+- Description: Publishable key of the Clerk application. You can access it [here](https://dashboard.clerk.com) and navigate to the API Keys to view.
+- Default: `-`
+- Example: `pk_test_Zmxvd4luZy1wdW1hLTIyLmNsXXJrTmFjY291bnRzLmRldiQ` in dev / `pk_live_Y2xlcdsubG9iZWh1Yi1cbmMuY24k` in production
+
+### `CLERK_SECRET_KEY`
+
+- Type: Required
+- Description: Secret key of the Clerk application.
+- Default: `-`
+- Example: `sk_test_513Ma0P7IAWM1XMv4waxZjRYRajWTaCfJLjpEO3SD2` in dev / `sk_live_eMMlHjwJvZFUfczFljSKqZdwQtLvmczmsJSNmdrpeZ` in production

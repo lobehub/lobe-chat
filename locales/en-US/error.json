@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continue Session",
+      "desc": "{{greeting}}, it's great to continue serving you. Let's pick up where we left off.",
+      "title": "Welcome back, {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "Back to Home",
     "desc": "Give it a try later, or go back to the known world.",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "The Anthropic API Key is incorrect or empty. Please check the Anthropic API Key and retry.",
     "InvalidAzureAPIKey": "Azure API Key is incorrect or empty. Please check the Azure API Key and retry.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
+    "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
     "InvalidGoogleAPIKey": "Google API Key is incorrect or empty. Please check the Google API Key and retry.",
     "InvalidGroqAPIKey": "Groq API Key is incorrect or empty. Please check the Groq API Key and retry.",
     "InvalidMinimaxAPIKey": "Incorrect or empty Minimax API Key, please check the Minimax API Key and try again",

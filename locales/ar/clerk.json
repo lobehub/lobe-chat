@@ -1,0 +1,769 @@
+{
+  "backButton": "الرجوع",
+  "badge__default": "افتراضي",
+  "badge__otherImpersonatorDevice": "جهاز تمثيل آخر",
+  "badge__primary": "أساسي",
+  "badge__requiresAction": "يتطلب إجراء",
+  "badge__thisDevice": "هذا الجهاز",
+  "badge__unverified": "غير موثق",
+  "badge__userDevice": "جهاز المستخدم",
+  "badge__you": "أنت",
+  "createOrganization": {
+    "formButtonSubmit": "إنشاء منظمة",
+    "invitePage": {
+      "formButtonReset": "تخطي"
+    },
+    "title": "إنشاء منظمة"
+  },
+  "dates": {
+    "lastDay": "أمس في {{ date | timeString('en-US') }}",
+    "next6Days": "{{ date | weekday('en-US','long') }} في {{ date | timeString('en-US') }}",
+    "nextDay": "غدًا في {{ date | timeString('en-US') }}",
+    "numeric": "{{ date | numeric('en-US') }}",
+    "previous6Days": "الماضي {{ date | weekday('en-US','long') }} في {{ date | timeString('en-US') }}",
+    "sameDay": "اليوم في {{ date | timeString('en-US') }}"
+  },
+  "dividerText": "أو",
+  "footerActionLink__useAnotherMethod": "استخدام طريقة أخرى",
+  "footerPageLink__help": "المساعدة",
+  "footerPageLink__privacy": "الخصوصية",
+  "footerPageLink__terms": "البنود",
+  "formButtonPrimary": "متابعة",
+  "formButtonPrimary__verify": "التحقق",
+  "formFieldAction__forgotPassword": "هل نسيت كلمة المرور؟",
+  "formFieldError__matchingPasswords": "تتطابق كلمات المرور.",
+  "formFieldError__notMatchingPasswords": "كلمات المرور غير متطابقة.",
+  "formFieldError__verificationLinkExpired": "انتهت صلاحية رابط التحقق. يرجى طلب رابط جديد.",
+  "formFieldHintText__optional": "اختياري",
+  "formFieldHintText__slug": "الـ Slug هو معرف يمكن قراءته بواسطة الإنسان ويجب أن يكون فريدًا. غالبًا ما يُستخدم في عناوين URL.",
+  "formFieldInputPlaceholder__backupCode": "",
+  "formFieldInputPlaceholder__confirmDeletionUserAccount": "حذف الحساب",
+  "formFieldInputPlaceholder__emailAddress": "",
+  "formFieldInputPlaceholder__emailAddress_username": "",
+  "formFieldInputPlaceholder__emailAddresses": "example@email.com, example2@email.com",
+  "formFieldInputPlaceholder__firstName": "",
+  "formFieldInputPlaceholder__lastName": "",
+  "formFieldInputPlaceholder__organizationDomain": "",
+  "formFieldInputPlaceholder__organizationDomainEmailAddress": "",
+  "formFieldInputPlaceholder__organizationName": "",
+  "formFieldInputPlaceholder__organizationSlug": "my-org",
+  "formFieldInputPlaceholder__password": "",
+  "formFieldInputPlaceholder__phoneNumber": "",
+  "formFieldInputPlaceholder__username": "",
+  "formFieldLabel__automaticInvitations": "تمكين الدعوات التلقائية لهذا النطاق",
+  "formFieldLabel__backupCode": "رمز النسخ الاحتياطي",
+  "formFieldLabel__confirmDeletion": "تأكيد",
+  "formFieldLabel__confirmPassword": "تأكيد كلمة المرور",
+  "formFieldLabel__currentPassword": "كلمة المرور الحالية",
+  "formFieldLabel__emailAddress": "عنوان البريد الإلكتروني",
+  "formFieldLabel__emailAddress_username": "عنوان البريد الإلكتروني أو اسم المستخدم",
+  "formFieldLabel__emailAddresses": "عناوين البريد الإلكتروني",
+  "formFieldLabel__firstName": "الاسم الأول",
+  "formFieldLabel__lastName": "الاسم الأخير",
+  "formFieldLabel__newPassword": "كلمة مرور جديدة",
+  "formFieldLabel__organizationDomain": "نطاق",
+  "formFieldLabel__organizationDomainDeletePending": "حذف الدعوات والاقتراحات المعلقة",
+  "formFieldLabel__organizationDomainEmailAddress": "عنوان البريد الإلكتروني للتحقق",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "أدخل عنوان بريد إلكتروني تحت هذا النطاق لتلقي رمز والتحقق من هذا النطاق.",
+  "formFieldLabel__organizationName": "الاسم",
+  "formFieldLabel__organizationSlug": "Slug",
+  "formFieldLabel__passkeyName": "اسم مفتاح الوصول",
+  "formFieldLabel__password": "كلمة المرور",
+  "formFieldLabel__phoneNumber": "رقم الهاتف",
+  "formFieldLabel__role": "الدور",
+  "formFieldLabel__signOutOfOtherSessions": "تسجيل الخروج من جميع الأجهزة الأخرى",
+  "formFieldLabel__username": "اسم المستخدم",
+  "impersonationFab": {
+    "action__signOut": "تسجيل الخروج",
+    "title": "تم تسجيل الدخول بواسطة {{identifier}}"
+  },
+  "locale": "ar",
+  "maintenanceMode": "نحن حاليًا في وضع الصيانة، ولكن لا تقلق، لن يستغرق الأمر أكثر من بضع دقائق.",
+  "membershipRole__admin": "مسؤول",
+  "membershipRole__basicMember": "عضو",
+  "membershipRole__guestMember": "ضيف",
+  "organizationList": {
+    "action__createOrganization": "إنشاء منظمة",
+    "action__invitationAccept": "الانضمام",
+    "action__suggestionsAccept": "طلب الانضمام",
+    "createOrganization": "إنشاء منظمة",
+    "invitationAcceptedLabel": "انضمام",
+    "subtitle": "لمتابعة {{applicationName}}",
+    "suggestionsAcceptedLabel": "في انتظار الموافقة",
+    "title": "اختر حسابًا",
+    "titleWithoutPersonal": "اختر منظمة"
+  },
+  "organizationProfile": {
+    "badge__automaticInvitation": "دعوات تلقائية",
+    "badge__automaticSuggestion": "اقتراحات تلقائية",
+    "badge__manualInvitation": "لا تسجيل تلقائي",
+    "badge__unverified": "غير موثق",
+    "createDomainPage": {
+      "subtitle": "أضف النطاق للتحقق. يمكن للمستخدمين الذين لديهم عناوين بريد إلكتروني في هذا النطاق الانضمام إلى المنظمة تلقائيًا أو طلب الانضمام.",
+      "title": "إضافة النطاق"
+    },
+    "invitePage": {
+      "detailsTitle__inviteFailed": "تعذر إرسال الدعوات. هناك دعوات معلقة بالفعل لعناوين البريد الإلكتروني التالية: {{email_addresses}}.",
+      "formButtonPrimary__continue": "إرسال الدعوات",
+      "selectDropdown__role": "اختر الدور",
+      "subtitle": "أدخل أو الصق عناوين بريد إلكتروني واحدة أو أكثر، مفصولة بمسافات أو فواصل.",
+      "successMessage": "تم إرسال الدعوات بنجاح",
+      "title": "دعوة أعضاء جدد"
+    },
+    "membersPage": {
+      "action__invite": "دعوة",
+      "activeMembersTab": {
+        "menuAction__remove": "إزالة العضو",
+        "tableHeader__actions": "",
+        "tableHeader__joined": "انضم",
+        "tableHeader__role": "الدور",
+        "tableHeader__user": "المستخدم"
+      },
+      "detailsTitle__emptyRow": "لا يوجد أعضاء لعرضهم",
+      "invitationsTab": {
+        "autoInvitations": {
+          "headerSubtitle": "قم بدعوة المستخدمين عن طريق ربط نطاق البريد الإلكتروني بالمنظمة. سيتمكن أي شخص يسجل الدخول بنطاق بريد إلكتروني متطابق من الانضمام إلى المنظمة في أي وقت.",
+          "headerTitle": "دعوات تلقائية",
+          "primaryButton": "إدارة النطاقات الموثقة"
+        },
+        "table__emptyRow": "لا توجد دعوات لعرضها"
+      },
+      "invitedMembersTab": {
+        "menuAction__revoke": "إلغاء الدعوة",
+        "tableHeader__invited": "تمت الدعوة"
+      },
+      "requestsTab": {
+        "autoSuggestions": {
+          "headerSubtitle": "المستخدمون الذين يسجلون الدخول بنطاق بريد إلكتروني متطابق، سيتمكنون من رؤية اقتراح لطلب الانضمام إلى منظمتك.",
+          "headerTitle": "اقتراحات تلقائية",
+          "primaryButton": "إدارة النطاقات الموثقة"
+        },
+        "menuAction__approve": "الموافقة",
+        "menuAction__reject": "رفض",
+        "tableHeader__requested": "طلب الوصول",
+        "table__emptyRow": "لا توجد طلبات لعرضها"
+      },
+      "start": {
+        "headerTitle__invitations": "دعوات",
+        "headerTitle__members": "أعضاء",
+        "headerTitle__requests": "طلبات"
+      }
+    },
+    "navbar": {
+      "description": "إدارة منظمتك.",
+      "general": "عام",
+      "members": "أعضاء",
+      "title": "المنظمة"
+    },
+    "profilePage": {
+      "dangerSection": {
+        "deleteOrganization": {
+          "actionDescription": "اكتب \"{{organizationName}}\" أدناه للمتابعة.",
+          "messageLine1": "هل أنت متأكد أنك تريد حذف هذه المنظمة؟",
+          "messageLine2": "هذا الإجراء دائم ولا يمكن التراجع عنه.",
+          "successMessage": "لقد حذفت المنظمة.",
+          "title": "حذف المنظمة"
+        },
+        "leaveOrganization": {
+          "actionDescription": "اكتب \"{{organizationName}}\" أدناه للمتابعة.",
+          "messageLine1": "هل أنت متأكد أنك تريد مغادرة هذه المنظمة؟ ستفقد الوصول إلى هذه المنظمة وتطبيقاتها.",
+          "messageLine2": "هذا الإجراء دائم ولا يمكن التراجع عنه.",
+          "successMessage": "لقد غادرت المنظمة.",
+          "title": "مغادرة المنظمة"
+        },
+        "title": "خطر"
+      },
+      "domainSection": {
+        "menuAction__manage": "إدارة",
+        "menuAction__remove": "حذف",
+        "menuAction__verify": "التحقق",
+        "primaryButton": "إضافة النطاق",
+        "subtitle": "اسمح للمستخدمين بالانضمام إلى المنظمة تلقائيًا أو طلب الانضمام بناءً على نطاق بريد إلكتروني موثق.",
+        "title": "النطاقات الموثقة"
+      },
+      "successMessage": "تم تحديث المنظمة.",
+      "title": "تحديث الملف الشخصي"
+    },
+    "removeDomainPage": {
+      "messageLine1": "سيتم إزالة نطاق البريد الإلكتروني {{domain}}.",
+      "messageLine2": "لن يتمكن المستخدمون من الانضمام إلى المنظمة تلقائيًا بعد ذلك.",
+      "successMessage": "تمت إزالة {{domain}}.",
+      "title": "إزالة النطاق"
+    },
+    "start": {
+      "headerTitle__general": "عام",
+      "headerTitle__members": "أعضاء",
+      "profileSection": {
+        "primaryButton": "تحديث الملف الشخصي",
+        "title": "ملف المنظمة",
+        "uploadAction__title": "شعار"
+      }
+    },
+    "verifiedDomainPage": {
+      "dangerTab": {
+        "calloutInfoLabel": "سيؤثر إزالة هذا النطاق على المستخدمين المدعوين.",
+        "removeDomainActionLabel__remove": "إزالة النطاق",
+        "removeDomainSubtitle": "قم بإزالة هذا النطاق من نطاقاتك الموثقة",
+        "removeDomainTitle": "إزالة النطاق"
+      },
+      "enrollmentTab": {
+        "automaticInvitationOption__description": "يتم دعوة المستخدمين تلقائيًا للانضمام إلى المنظمة عند تسجيلهم، ويمكنهم الانضمام في أي وقت.",
+        "automaticInvitationOption__label": "دعوات تلقائية",
+        "automaticSuggestionOption__description": "يتلقى المستخدمون اقتراحًا لطلب الانضمام، ولكن يجب أن يتمتعوا بموافقة من مسؤول قبل الانضمام إلى المنظمة.",
+        "automaticSuggestionOption__label": "اقتراحات تلقائية",
+        "calloutInfoLabel": "تؤثر تغيير وضع التسجيل فقط على المستخدمين الجدد.",
+        "calloutInvitationCountLabel": "الدعوات المعلقة المرسلة للمستخدمين: {{count}}",
+        "calloutSuggestionCountLabel": "الاقتراحات المعلقة المرسلة للمستخدمين: {{count}}",
+        "manualInvitationOption__description": "يمكن فقط دعوة المستخدمين يدويًا إلى المنظمة.",
+        "manualInvitationOption__label": "لا تسجيل تلقائي",
+        "subtitle": "اختر كيف يمكن للمستخدمين من هذا النطاق الانضمام إلى المنظمة."
+      },
+      "start": {
+        "headerTitle__danger": "خطر",
+        "headerTitle__enrollment": "خيارات التسجيل"
+      },
+      "subtitle": "تم التحقق الآن من النطاق {{domain}}. تابع باختيار وضع التسجيل.",
+      "title": "تحديث {{domain}}"
+    },
+    "verifyDomainPage": {
+      "formSubtitle": "أدخل رمز التحقق المرسل إلى عنوان بريدك الإلكتروني",
+      "formTitle": "رمز التحقق",
+      "resendButton": "لم تتلقى الرمز؟ إعادة الإرسال",
+      "subtitle": "يجب التحقق من النطاق {{domainName}} عبر البريد الإلكتروني.",
+      "subtitleVerificationCodeScreen": "تم إرسال رمز التحقق إلى {{emailAddress}}. أدخل الرمز للمتابعة.",
+      "title": "التحقق من النطاق"
+    }
+  },
+  "organizationSwitcher": {
+    "action__createOrganization": "إنشاء منظمة",
+    "action__invitationAccept": "الانضمام",
+    "action__manageOrganization": "إدارة",
+    "action__suggestionsAccept": "طلب الانضمام",
+    "notSelected": "لم يتم تحديد أي منظمة",
+    "personalWorkspace": "الحساب الشخصي",
+    "suggestionsAcceptedLabel": "في انتظار الموافقة"
+  },
+  "paginationButton__next": "التالي",
+  "paginationButton__previous": "السابق",
+  "paginationRowText__displaying": "عرض",
+  "paginationRowText__of": "من",
+  "signIn": {
+    "accountSwitcher": {
+      "action__addAccount": "إضافة حساب",
+      "action__signOutAll": "تسجيل الخروج من جميع الحسابات",
+      "subtitle": "اختر الحساب الذي ترغب في الاستمرار به.",
+      "title": "اختر حسابًا"
+    },
+    "alternativeMethods": {
+      "actionLink": "احصل على مساعدة",
+      "actionText": "ليس لديك أحد هذه؟",
+      "blockButton__backupCode": "استخدام رمز الاحتياطي",
+      "blockButton__emailCode": "إرسال رمز بريد إلكتروني إلى {{identifier}}",
+      "blockButton__emailLink": "إرسال رابط بريد إلكتروني إلى {{identifier}}",
+      "blockButton__passkey": "تسجيل الدخول برمز الدخول",
+      "blockButton__password": "تسجيل الدخول بكلمة المرور",
+      "blockButton__phoneCode": "إرسال رمز SMS إلى {{identifier}}",
+      "blockButton__totp": "استخدام تطبيق الموثق الخاص بك",
+      "getHelp": {
+        "blockButton__emailSupport": "الدعم عبر البريد الإلكتروني",
+        "content": "إذا كنت تواجه صعوبة في تسجيل الدخول إلى حسابك، ارسل لنا بريدًا إلكترونيًا وسنعمل معك لاستعادة الوصول في أقرب وقت ممكن.",
+        "title": "احصل على مساعدة"
+      },
+      "subtitle": "هل تواجه مشاكل؟ يمكنك استخدام أي من هذه الطرق لتسجيل الدخول.",
+      "title": "استخدم طريقة أخرى"
+    },
+    "backupCodeMfa": {
+      "subtitle": "رمز الاحتياطي هو الرمز الذي حصلت عليه عند إعداد المصادقة ثنائية العامل.",
+      "title": "أدخل رمز الاحتياطي"
+    },
+    "emailCode": {
+      "formTitle": "رمز التحقق",
+      "resendButton": "لم تستلم الرمز؟ إعادة الإرسال",
+      "subtitle": "للمتابعة إلى {{applicationName}}",
+      "title": "تحقق من بريدك الإلكتروني"
+    },
+    "emailLink": {
+      "expired": {
+        "subtitle": "الرجاء العودة إلى التبويب الأصلي للمتابعة.",
+        "title": "انتهت صلاحية رابط التحقق هذا"
+      },
+      "failed": {
+        "subtitle": "الرجاء العودة إلى التبويب الأصلي للمتابعة.",
+        "title": "رابط التحقق هذا غير صالح"
+      },
+      "formSubtitle": "استخدم الرابط المرسل إلى بريدك الإلكتروني للتحقق",
+      "formTitle": "رابط التحقق",
+      "loading": {
+        "subtitle": "سيتم توجيهك قريبًا",
+        "title": "تسجيل الدخول..."
+      },
+      "resendButton": "لم تستلم الرابط؟ إعادة الإرسال",
+      "subtitle": "للمتابعة إلى {{applicationName}}",
+      "title": "تحقق من بريدك الإلكتروني",
+      "unusedTab": {
+        "title": "يمكنك إغلاق هذا التبويب"
+      },
+      "verified": {
+        "subtitle": "سيتم توجيهك قريبًا",
+        "title": "تم تسجيل الدخول بنجاح"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "الرجوع إلى التبويب الأصلي للمتابعة",
+        "subtitleNewTab": "الرجوع إلى التبويب الجديد للمتابعة",
+        "titleNewTab": "تم تسجيل الدخول على تبويب آخر"
+      }
+    },
+    "forgotPassword": {
+      "formTitle": "رمز إعادة تعيين كلمة المرور",
+      "resendButton": "لم تستلم الرمز؟ إعادة الإرسال",
+      "subtitle": "لإعادة تعيين كلمة المرور",
+      "subtitle_email": "أدخل أولًا الرمز المرسل إلى عنوان بريدك الإلكتروني",
+      "subtitle_phone": "أدخل أولًا الرمز المرسل إلى هاتفك",
+      "title": "إعادة تعيين كلمة المرور"
+    },
+    "forgotPasswordAlternativeMethods": {
+      "blockButton__resetPassword": "إعادة تعيين كلمة المرور",
+      "label__alternativeMethods": "أو، قم بتسجيل الدخول باستخدام طريقة أخرى",
+      "title": "نسيت كلمة المرور؟"
+    },
+    "noAvailableMethods": {
+      "message": "لا يمكن المتابعة في عملية تسجيل الدخول. لا يوجد عامل مصادقة متاح.",
+      "subtitle": "حدث خطأ",
+      "title": "لا يمكن تسجيل الدخول"
+    },
+    "passkey": {
+      "subtitle": "استخدام رمز الدخول يؤكد أنك أنت. قد يطلب جهازك بصمة الإصبع أو الوجه أو قفل الشاشة.",
+      "title": "استخدام رمز الدخول"
+    },
+    "password": {
+      "actionLink": "استخدام طريقة أخرى",
+      "subtitle": "أدخل كلمة المرور المرتبطة بحسابك",
+      "title": "أدخل كلمة المرور"
+    },
+    "passwordPwned": {
+      "title": "تم تسريب كلمة المرور"
+    },
+    "phoneCode": {
+      "formTitle": "رمز التحقق",
+      "resendButton": "لم تستلم الرمز؟ إعادة الإرسال",
+      "subtitle": "للمتابعة إلى {{applicationName}}",
+      "title": "تحقق من هاتفك"
+    },
+    "phoneCodeMfa": {
+      "formTitle": "رمز التحقق",
+      "resendButton": "لم تستلم الرمز؟ إعادة الإرسال",
+      "subtitle": "للمتابعة، يرجى إدخال رمز التحقق المرسل إلى هاتفك",
+      "title": "تحقق من هاتفك"
+    },
+    "resetPassword": {
+      "formButtonPrimary": "إعادة تعيين كلمة المرور",
+      "requiredMessage": "من الضروري إعادة تعيين كلمة المرور لأسباب أمنية.",
+      "successMessage": "تم تغيير كلمة المرور بنجاح. جارٍ تسجيل الدخول، يرجى الانتظار لحظة.",
+      "title": "تعيين كلمة مرور جديدة"
+    },
+    "resetPasswordMfa": {
+      "detailsLabel": "نحتاج إلى التحقق من هويتك قبل إعادة تعيين كلمة المرور."
+    },
+    "start": {
+      "actionLink": "التسجيل",
+      "actionLink__use_email": "استخدام البريد الإلكتروني",
+      "actionLink__use_email_username": "استخدام البريد الإلكتروني أو اسم المستخدم",
+      "actionLink__use_passkey": "استخدام رمز الدخول بدلاً",
+      "actionLink__use_phone": "استخدام الهاتف",
+      "actionLink__use_username": "استخدام اسم المستخدم",
+      "actionText": "ليس لديك حساب؟",
+      "subtitle": "مرحبًا! يرجى ملء التفاصيل للبدء.",
+      "title": "إنشاء حسابك"
+    },
+    "totpMfa": {
+      "formTitle": "رمز التحقق",
+      "subtitle": "للمتابعة، يرجى إدخال رمز التحقق الذي تم توليده بواسطة تطبيق الموثق الخاص بك",
+      "title": "التحقق الثنائي الخطوة"
+    }
+  },
+  "signInEnterPasswordTitle": "أدخل كلمة المرور الخاصة بك",
+  "signUp": {
+    "continue": {
+      "actionLink": "تسجيل الدخول",
+      "actionText": "هل لديك حساب بالفعل؟",
+      "subtitle": "يرجى ملء التفاصيل المتبقية للمتابعة.",
+      "title": "املأ الحقول الناقصة"
+    },
+    "emailCode": {
+      "formSubtitle": "أدخل رمز التحقق المرسل إلى عنوان بريدك الإلكتروني",
+      "formTitle": "رمز التحقق",
+      "resendButton": "لم تستلم الرمز؟ إعادة الإرسال",
+      "subtitle": "أدخل رمز التحقق المرسل إلى بريدك الإلكتروني",
+      "title": "تحقق من بريدك الإلكتروني"
+    },
+    "emailLink": {
+      "formSubtitle": "استخدم الرابط المرسل إلى عنوان بريدك الإلكتروني للتحقق",
+      "formTitle": "رابط التحقق",
+      "loading": {
+        "title": "جارٍ التسجيل..."
+      },
+      "resendButton": "لم تستلم الرابط؟ إعادة الإرسال",
+      "subtitle": "للمتابعة إلى {{applicationName}}",
+      "title": "تحقق من بريدك الإلكتروني",
+      "verified": {
+        "title": "تم التسجيل بنجاح"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "الرجوع إلى التبويب الجديد للمتابعة",
+        "subtitleNewTab": "الرجوع إلى التبويب السابق للمتابعة",
+        "title": "تم التحقق بنجاح من البريد الإلكتروني"
+      }
+    },
+    "phoneCode": {
+      "formSubtitle": "أدخل رمز التحقق المرسل إلى رقم هاتفك",
+      "formTitle": "رمز التحقق",
+      "resendButton": "لم تستلم الرمز؟ إعادة الإرسال",
+      "subtitle": "أدخل رمز التحقق المرسل إلى هاتفك",
+      "title": "تحقق من هاتفك"
+    },
+    "start": {
+      "actionLink": "تسجيل الدخول",
+      "actionText": "هل لديك حساب بالفعل؟",
+      "subtitle": "مرحبًا! يرجى ملء التفاصيل للبدء.",
+      "title": "إنشاء حسابك"
+    }
+  },
+  "socialButtonsBlockButton": "المتابعة مع {{provider|titleize}}",
+  "unstable__errors": {
+    "captcha_invalid": "فشل تسجيل الدخول بسبب فشل التحقق من الأمان. يرجى تحديث الصفحة للمحاولة مرة أخرى أو التواصل مع الدعم للمزيد من المساعدة.",
+    "captcha_unavailable": "فشل تسجيل الدخول بسبب فشل التحقق من الروبوت. يرجى تحديث الصفحة للمحاولة مرة أخرى أو التواصل مع الدعم للمزيد من المساعدة.",
+    "form_code_incorrect": "",
+    "form_identifier_exists": "",
+    "form_identifier_exists__email_address": "هذا البريد الإلكتروني مستخدم. يرجى المحاولة بعنوان آخر.",
+    "form_identifier_exists__phone_number": "هذا الرقم مستخدم. يرجى المحاولة برقم آخر.",
+    "form_identifier_exists__username": "اسم المستخدم هذا مستخدم. يرجى المحاولة بآخر.",
+    "form_identifier_not_found": "",
+    "form_param_format_invalid": "",
+    "form_param_format_invalid__email_address": "يجب أن يكون عنوان البريد الإلكتروني صالحًا.",
+    "form_param_format_invalid__phone_number": "يجب أن يكون رقم الهاتف بتنسيق دولي صالح.",
+    "form_param_max_length_exceeded__first_name": "يجب ألا يتجاوز الاسم الأول 256 حرفًا.",
+    "form_param_max_length_exceeded__last_name": "يجب ألا يتجاوز الاسم الأخير 256 حرفًا.",
+    "form_param_max_length_exceeded__name": "يجب ألا يتجاوز الاسم 256 حرفًا.",
+    "form_param_nil": "",
+    "form_password_incorrect": "",
+    "form_password_length_too_short": "",
+    "form_password_not_strong_enough": "كلمة المرور الخاصة بك غير قوية بما فيه الكفاية.",
+    "form_password_pwned": "تم العثور على هذه كلمة المرور كجزء من اختراق ولا يمكن استخدامها، يرجى تجربة كلمة مرور أخرى بدلاً منها.",
+    "form_password_pwned__sign_in": "تم العثور على هذه كلمة المرور كجزء من اختراق ولا يمكن استخدامها، يرجى إعادة تعيين كلمة المرور الخاصة بك.",
+    "form_password_size_in_bytes_exceeded": "لقد تجاوزت كلمة المرور الحد الأقصى المسموح به من البايتات، يرجى تقصيرها أو إزالة بعض الرموز الخاصة.",
+    "form_password_validation_failed": "كلمة المرور غير صحيحة",
+    "form_username_invalid_character": "",
+    "form_username_invalid_length": "",
+    "identification_deletion_failed": "لا يمكنك حذف هويتك الأخيرة.",
+    "not_allowed_access": "",
+    "passkey_already_exists": "تم تسجيل مفتاح الوصول مسبقًا بهذا الجهاز.",
+    "passkey_not_supported": "مفاتيح الوصول غير مدعومة على هذا الجهاز.",
+    "passkey_pa_not_supported": "التسجيل يتطلب مصادق النظام ولكن الجهاز لا يدعم ذلك.",
+    "passkey_registration_cancelled": "تم إلغاء تسجيل مفتاح الوصول أو انتهت صلاحيته.",
+    "passkey_retrieval_cancelled": "تم إلغاء استرداد مفتاح الوصول أو انتهت صلاحيته.",
+    "passwordComplexity": {
+      "maximumLength": "أقل من {{length}} حرف",
+      "minimumLength": "{{length}} أو أكثر من الأحرف",
+      "requireLowercase": "حرف صغير",
+      "requireNumbers": "رقم",
+      "requireSpecialCharacter": "رمز خاص",
+      "requireUppercase": "حرف كبير",
+      "sentencePrefix": "يجب أن تحتوي كلمة المرور الخاصة بك على"
+    },
+    "phone_number_exists": "هذا الرقم مستخدم. يرجى المحاولة برقم آخر.",
+    "zxcvbn": {
+      "couldBeStronger": "كلمة المرور الخاصة بك تعمل، ولكن يمكن أن تكون أقوى. جرب إضافة المزيد من الأحرف.",
+      "goodPassword": "كلمة المرور الخاصة بك تلبي جميع المتطلبات اللازمة.",
+      "notEnough": "كلمة المرور الخاصة بك ليست قوية بما فيه الكفاية.",
+      "suggestions": {
+        "allUppercase": "قم بتحويل بعض الحروف إلى أحرف كبيرة، ولكن ليس كلها.",
+        "anotherWord": "أضف المزيد من الكلمات غير الشائعة.",
+        "associatedYears": "تجنب السنوات المرتبطة بك.",
+        "capitalization": "استخدم الحروف الكبيرة أكثر من الحرف الأول فقط.",
+        "dates": "تجنب التواريخ والسنوات المرتبطة بك.",
+        "l33t": "تجنب التبديلات التنبؤية للحروف مثل '@' بدلاً من 'a'.",
+        "longerKeyboardPattern": "استخدم أنماط لوحة المفاتيح الطويلة وغير اتجاه الكتابة عدة مرات.",
+        "noNeed": "يمكنك إنشاء كلمات مرور قوية دون استخدام رموز أو أرقام أو حروف كبيرة.",
+        "pwned": "إذا استخدمت هذه كلمة المرور في مكان آخر، يجب عليك تغييرها.",
+        "recentYears": "تجنب السنوات الحديثة.",
+        "repeated": "تجنب تكرار الكلمات والأحرف.",
+        "reverseWords": "تجنب تهجئة الكلمات الشائعة بشكل معكوس.",
+        "sequences": "تجنب تسلسلات الأحرف الشائعة.",
+        "useWords": "استخدم كلمات متعددة، ولكن تجنب العبارات الشائعة."
+      },
+      "warnings": {
+        "common": "هذه كلمة مرور شائعة الاستخدام.",
+        "commonNames": "الأسماء الشائعة سهلة التخمين.",
+        "dates": "التواريخ سهلة التخمين.",
+        "extendedRepeat": "أنماط الحروف المتكررة مثل \"abcabcabc\" سهلة التخمين.",
+        "keyPattern": "أنماط لوحة المفاتيح القصيرة سهلة التخمين.",
+        "namesByThemselves": "الأسماء الفردية أو الأسماء العائلية سهلة التخمين.",
+        "pwned": "تمت تعريض كلمة المرور الخاصة بك في اختراق على الإنترنت.",
+        "recentYears": "السنوات الحديثة سهلة التخمين.",
+        "sequences": "تسلسلات الأحرف الشائعة مثل \"abc\" سهلة التخمين.",
+        "similarToCommon": "هذا مشابه لكلمة مرور شائعة الاستخدام.",
+        "simpleRepeat": "الحروف المتكررة مثل \"aaa\" سهلة التخمين.",
+        "straightRow": "صفوف الحروف المستقيمة على لوحة المفاتيح سهلة التخمين.",
+        "topHundred": "هذه كلمة مرور تستخدم بكثرة.",
+        "topTen": "هذه كلمة مرور تستخدم بشكل كبير.",
+        "userInputs": "يجب ألا يكون هناك أي بيانات شخصية أو ذات صلة بالصفحة.",
+        "wordByItself": "الكلمات الفردية سهلة التخمين."
+      }
+    }
+  },
+  "userButton": {
+    "action__addAccount": "إضافة حساب",
+    "action__manageAccount": "إدارة الحساب",
+    "action__signOut": "تسجيل الخروج",
+    "action__signOutAll": "تسجيل الخروج من جميع الحسابات"
+  },
+  "userProfile": {
+    "backupCodePage": {
+      "actionLabel__copied": "تم النسخ!",
+      "actionLabel__copy": "نسخ الكل",
+      "actionLabel__download": "تحميل .txt",
+      "actionLabel__print": "طباعة",
+      "infoText1": "سيتم تمكين رموز النسخ الاحتياطي لهذا الحساب.",
+      "infoText2": "احتفظ برموز النسخ الاحتياطي بسرية وقم بتخزينها بشكل آمن. يمكنك إعادة إنشاء رموز النسخ الاحتياطي إذا كنت تشتبه في تعرضها للخطر.",
+      "subtitle__codelist": "قم بتخزينها بشكل آمن واحتفظ بها سرية.",
+      "successMessage": "تم تمكين رموز النسخ الاحتياطي الآن. يمكنك استخدام أحد هذه الرموز لتسجيل الدخول إلى حسابك، إذا فقدت الوصول إلى جهاز المصادقة الخاص بك. يمكن استخدام كل رمز مرة واحدة فقط.",
+      "successSubtitle": "يمكنك استخدام أحد هذه الرموز لتسجيل الدخول إلى حسابك، إذا فقدت الوصول إلى جهاز المصادقة الخاص بك.",
+      "title": "إضافة التحقق برمز النسخ الاحتياطي",
+      "title__codelist": "رموز النسخ الاحتياطي"
+    },
+    "connectedAccountPage": {
+      "formHint": "حدد مزودًا للاتصال بحسابك.",
+      "formHint__noAccounts": "لا توجد مزودي حساب خارجي متاحين.",
+      "removeResource": {
+        "messageLine1": "سيتم إزالة {{identifier}} من هذا الحساب.",
+        "messageLine2": "لن تتمكن بعد الآن من استخدام هذا الحساب المتصل ولن تعمل أي ميزات تعتمد عليه.",
+        "successMessage": "تمت إزالة {{connectedAccount}} من حسابك.",
+        "title": "إزالة الحساب المتصل"
+      },
+      "socialButtonsBlockButton": "{{provider|titleize}}",
+      "successMessage": "تمت إضافة المزود إلى حسابك",
+      "title": "إضافة حساب متصل"
+    },
+    "deletePage": {
+      "actionDescription": "اكتب \"حذف الحساب\" أدناه للمتابعة.",
+      "confirm": "حذف الحساب",
+      "messageLine1": "هل أنت متأكد أنك تريد حذف حسابك؟",
+      "messageLine2": "هذا الإجراء دائم ولا يمكن التراجع عنه.",
+      "title": "حذف الحساب"
+    },
+    "emailAddressPage": {
+      "emailCode": {
+        "formHint": "سيتم إرسال بريد إلكتروني يحتوي على رمز التحقق إلى هذا العنوان الإلكتروني.",
+        "formSubtitle": "أدخل رمز التحقق المرسل إلى {{identifier}}",
+        "formTitle": "رمز التحقق",
+        "resendButton": "لم تستلم الرمز؟ إعادة الإرسال",
+        "successMessage": "تمت إضافة البريد الإلكتروني {{identifier}} إلى حسابك."
+      },
+      "emailLink": {
+        "formHint": "سيتم إرسال بريد إلكتروني يحتوي على رابط التحقق إلى هذا العنوان الإلكتروني.",
+        "formSubtitle": "انقر على الرابط في البريد الإلكتروني المرسل إلى {{identifier}}",
+        "formTitle": "رابط التحقق",
+        "resendButton": "لم تستلم الرابط؟ إعادة الإرسال",
+        "successMessage": "تمت إضافة البريد الإلكتروني {{identifier}} إلى حسابك."
+      },
+      "removeResource": {
+        "messageLine1": "سيتم إزالة {{identifier}} من هذا الحساب.",
+        "messageLine2": "لن تتمكن بعد الآن من تسجيل الدخول باستخدام هذا العنوان الإلكتروني.",
+        "successMessage": "تمت إزالة {{emailAddress}} من حسابك.",
+        "title": "إزالة عنوان البريد الإلكتروني"
+      },
+      "title": "إضافة عنوان بريد إلكتروني",
+      "verifyTitle": "تحقق من عنوان البريد الإلكتروني"
+    },
+    "formButtonPrimary__add": "إضافة",
+    "formButtonPrimary__continue": "متابعة",
+    "formButtonPrimary__finish": "إنهاء",
+    "formButtonPrimary__remove": "إزالة",
+    "formButtonPrimary__save": "حفظ",
+    "formButtonReset": "إلغاء",
+    "mfaPage": {
+      "formHint": "حدد طريقة للإضافة.",
+      "title": "إضافة التحقق بخطوتين"
+    },
+    "mfaPhoneCodePage": {
+      "backButton": "استخدام الرقم الحالي",
+      "primaryButton__addPhoneNumber": "إضافة رقم الهاتف",
+      "removeResource": {
+        "messageLine1": "لن يتم استقبال رموز التحقق من هذا الرقم بعد الآن عند تسجيل الدخول.",
+        "messageLine2": "قد لا يكون حسابك آمنًا. هل أنت متأكد من رغبتك في المتابعة؟",
+        "successMessage": "تمت إزالة التحقق بخطوتين عبر رمز SMS لـ {{mfaPhoneCode}}",
+        "title": "إزالة التحقق بخطوتين"
+      },
+      "subtitle__availablePhoneNumbers": "حدد رقم هاتف موجود للتسجيل في التحقق بخطوتين عبر رمز SMS أو أضف واحدًا جديدًا.",
+      "subtitle__unavailablePhoneNumbers": "لا توجد أرقام هواتف متاحة للتسجيل في التحقق بخطوتين عبر رمز SMS، يرجى إضافة واحدة جديدة.",
+      "successMessage1": "عند تسجيل الدخول، ستحتاج إلى إدخال رمز التحقق المرسل إلى هذا الرقم كخطوة إضافية.",
+      "successMessage2": "احفظ هذه الرموز الاحتياطية وقم بتخزينها في مكان آمن. إذا فقدت الوصول إلى جهاز المصادقة الخاص بك، يمكنك استخدام رموز النسخ الاحتياطي لتسجيل الدخول.",
+      "successTitle": "تم تمكين التحقق برمز SMS",
+      "title": "إضافة التحقق برمز SMS"
+    },
+    "mfaTOTPPage": {
+      "authenticatorApp": {
+        "buttonAbleToScan__nonPrimary": "مسح رمز الاستجابة السريعة بدلاً من ذلك",
+        "buttonUnableToScan__nonPrimary": "لا يمكن مسح رمز الاستجابة السريعة؟",
+        "infoText__ableToScan": "قم بإعداد طريقة تسجيل دخول جديدة في تطبيق المصادقة الخاص بك وامسح رمز الاستجابة السريعة التالي لربطه بحسابك.",
+        "infoText__unableToScan": "قم بإعداد طريقة تسجيل دخول جديدة في تطبيق المصادقة الخاص بك وأدخل المفتاح المقدم أدناه.",
+        "inputLabel__unableToScan1": "تأكد من تمكين كلمة المرور الزمنية أو كلمات المرور لمرة واحدة، ثم انهي ربط حسابك.",
+        "inputLabel__unableToScan2": "بديلًا، إذا كان جهاز المصادقة الخاص بك يدعم TOTP URIs، يمكنك أيضًا نسخ الرابط الكامل."
+      },
+      "removeResource": {
+        "messageLine1": "لن تكون هناك حاجة لرموز التحقق من هذا التطبيق بعد الآن عند تسجيل الدخول.",
+        "messageLine2": "قد لا يكون حسابك آمنًا. هل أنت متأكد من رغبتك في المتابعة؟",
+        "successMessage": "تمت إزالة التحقق بخطوتين عبر تطبيق المصادقة.",
+        "title": "إزالة التحقق بخطوتين"
+      },
+      "successMessage": "تم تمكين التحقق بخطوتين الآن. عند تسجيل الدخول، ستحتاج إلى إدخال رمز التحقق من هذا التطبيق كخطوة إضافية.",
+      "title": "إضافة تطبيق المصادقة",
+      "verifySubtitle": "أدخل رمز التحقق الذي تم إنشاؤه بواسطة تطبيق المصادقة الخاص بك",
+      "verifyTitle": "رمز التحقق"
+    },
+    "mobileButton__menu": "القائمة",
+    "navbar": {
+      "account": "الملف الشخصي",
+      "description": "إدارة معلومات حسابك.",
+      "security": "الأمان",
+      "title": "الحساب"
+    },
+    "passkeyScreen": {
+      "removeResource": {
+        "messageLine1": "{{name}} سيتم إزالته من هذا الحساب.",
+        "title": "إزالة مفتاح المرور"
+      },
+      "subtitle__rename": "يمكنك تغيير اسم مفتاح المرور لتسهيل العثور عليه.",
+      "title__rename": "إعادة تسمية مفتاح المرور"
+    },
+    "passwordPage": {
+      "checkboxInfoText__signOutOfOtherSessions": "يُوصى بتسجيل الخروج من جميع الأجهزة الأخرى التي قد تكون استخدمت كلمة المرور القديمة الخاصة بك.",
+      "readonly": "لا يمكن تحرير كلمة المرور الخاصة بك حاليًا لأنه يمكنك تسجيل الدخول فقط عبر الاتصال بالشركة.",
+      "successMessage__set": "تم تعيين كلمة المرور الخاصة بك.",
+      "successMessage__signOutOfOtherSessions": "تم تسجيل الخروج من جميع الأجهزة الأخرى.",
+      "successMessage__update": "تم تحديث كلمة المرور الخاصة بك.",
+      "title__set": "تعيين كلمة المرور",
+      "title__update": "تحديث كلمة المرور"
+    },
+    "phoneNumberPage": {
+      "infoText": "سيتم إرسال رسالة نصية تحتوي على رمز التحقق إلى هذا الرقم. قد تنطبق رسوم الرسائل والبيانات.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} سيتم إزالته من هذا الحساب.",
+        "messageLine2": "لن تتمكن بعد الآن من تسجيل الدخول باستخدام هذا الرقم.",
+        "successMessage": "تمت إزالة {{phoneNumber}} من حسابك.",
+        "title": "إزالة رقم الهاتف"
+      },
+      "successMessage": "{{identifier}} تمت إضافته إلى حسابك.",
+      "title": "إضافة رقم الهاتف",
+      "verifySubtitle": "أدخل رمز التحقق المرسل إلى {{identifier}}",
+      "verifyTitle": "تحقق من رقم الهاتف"
+    },
+    "profilePage": {
+      "fileDropAreaHint": "الحجم الموصى به 1:1، حتى 10 ميغابايت.",
+      "imageFormDestructiveActionSubtitle": "إزالة",
+      "imageFormSubtitle": "تحميل",
+      "imageFormTitle": "صورة الملف الشخصي",
+      "readonly": "تم توفير معلومات ملفك الشخصي من خلال الاتصال بالشركة ولا يمكن تحريرها.",
+      "successMessage": "تم تحديث ملفك الشخصي.",
+      "title": "تحديث الملف الشخصي"
+    },
+    "start": {
+      "activeDevicesSection": {
+        "destructiveAction": "تسجيل الخروج من الجهاز",
+        "title": "الأجهزة النشطة"
+      },
+      "connectedAccountsSection": {
+        "actionLabel__connectionFailed": "حاول مرة أخرى",
+        "actionLabel__reauthorize": "التفويض الآن",
+        "destructiveActionTitle": "إزالة",
+        "primaryButton": "ربط الحساب",
+        "subtitle__reauthorize": "تم تحديث النطاقات المطلوبة، وقد تواجه قدرًا محدودًا من الوظائف. يرجى إعادة تفويض هذا التطبيق لتجنب أي مشاكل",
+        "title": "الحسابات المتصلة"
+      },
+      "dangerSection": {
+        "deleteAccountButton": "حذف الحساب",
+        "title": "حذف الحساب"
+      },
+      "emailAddressesSection": {
+        "destructiveAction": "إزالة البريد الإلكتروني",
+        "detailsAction__nonPrimary": "تعيين كأساسي",
+        "detailsAction__primary": "اكتمال التحقق",
+        "detailsAction__unverified": "التحقق",
+        "primaryButton": "إضافة عنوان بريد إلكتروني",
+        "title": "عناوين البريد الإلكتروني"
+      },
+      "enterpriseAccountsSection": {
+        "title": "حسابات المؤسسة"
+      },
+      "headerTitle__account": "تفاصيل الملف الشخصي",
+      "headerTitle__security": "الأمان",
+      "mfaSection": {
+        "backupCodes": {
+          "actionLabel__regenerate": "إعادة إنشاء",
+          "headerTitle": "رموز النسخ الاحتياطي",
+          "subtitle__regenerate": "احصل على مجموعة جديدة من رموز النسخ الاحتياطي الآمنة. سيتم حذف رموز النسخ الاحتياطي السابقة ولا يمكن استخدامها.",
+          "title__regenerate": "إعادة إنشاء رموز النسخ الاحتياطي"
+        },
+        "phoneCode": {
+          "actionLabel__setDefault": "تعيين كافتراضي",
+          "destructiveActionLabel": "إزالة"
+        },
+        "primaryButton": "إضافة التحقق من خطوتين",
+        "title": "التحقق من خطوتين",
+        "totp": {
+          "destructiveActionTitle": "إزالة",
+          "headerTitle": "تطبيق المصادقة"
+        }
+      },
+      "passkeysSection": {
+        "menuAction__destructive": "إزالة",
+        "menuAction__rename": "إعادة تسمية",
+        "title": "مفاتيح المرور"
+      },
+      "passwordSection": {
+        "primaryButton__setPassword": "تعيين كلمة مرور",
+        "primaryButton__updatePassword": "تحديث كلمة المرور",
+        "title": "كلمة المرور"
+      },
+      "phoneNumbersSection": {
+        "destructiveAction": "إزالة رقم الهاتف",
+        "detailsAction__nonPrimary": "تعيين كأساسي",
+        "detailsAction__primary": "اكتمال التحقق",
+        "detailsAction__unverified": "التحقق من رقم الهاتف",
+        "primaryButton": "إضافة رقم الهاتف",
+        "title": "أرقام الهواتف"
+      },
+      "profileSection": {
+        "primaryButton": "تحديث الملف الشخصي",
+        "title": "الملف الشخصي"
+      },
+      "usernameSection": {
+        "primaryButton__setUsername": "تعيين اسم المستخدم",
+        "primaryButton__updateUsername": "تحديث اسم المستخدم",
+        "title": "اسم المستخدم"
+      },
+      "web3WalletsSection": {
+        "destructiveAction": "إزالة المحفظة",
+        "primaryButton": "محافظ Web3",
+        "title": "محافظ Web3"
+      }
+    },
+    "usernamePage": {
+      "successMessage": "تم تحديث اسم المستخدم الخاص بك.",
+      "title__set": "تعيين اسم المستخدم",
+      "title__update": "تحديث اسم المستخدم"
+    },
+    "web3WalletPage": {
+      "removeResource": {
+        "messageLine1": "{{identifier}} سيتم إزالته من هذا الحساب.",
+        "messageLine2": "لن تتمكن بعد الآن من تسجيل الدخول باستخدام هذا المحفظة web3.",
+        "successMessage": "{{web3Wallet}} تمت إزالته من حسابك.",
+        "title": "إزالة محفظة web3"
+      },
+      "subtitle__availableWallets": "حدد محفظة web3 للاتصال بحسابك.",
+      "subtitle__unavailableWallets": "لا توجد محافظ web3 متاحة.",
+      "successMessage": "تمت إضافة المحفظة إلى حسابك.",
+      "title": "إضافة محفظة web3"
+    }
+  }
+}
