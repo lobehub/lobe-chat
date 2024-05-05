@@ -59,6 +59,7 @@ export const checkAuthMethod = ({
 }: CheckAuthParams) => {
   // clerk auth handler
   if (enableClerk) {
+    console.log('clerkAuth:', clerkAuth);
     // if there is no userId, means the use is not login, just throw error
     if (!clerkAuth?.userId) throw AgentRuntimeError.createError(ChatErrorType.InvalidClerkUser);
     // if the user is login, just return
