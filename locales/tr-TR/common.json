@@ -160,6 +160,7 @@
     "newVersion": "Yeni sürüm mevcut: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Anonim Kullanıcı",
     "billing": "Fatura Yönetimi",
     "defaultNickname": "Topluluk Kullanıcısı",
     "discord": "Topluluk Destek",

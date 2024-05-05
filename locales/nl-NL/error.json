@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continue session",
+      "desc": "{{greeting}}, it's great to continue serving you. Let's pick up where we left off.",
+      "title": "Welcome back, {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "Terug naar startpagina",
     "desc": "Probeer het later opnieuw of keer terug naar de bekende wereld",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "Anthropic API Key is onjuist of leeg. Controleer de Anthropic API Key en probeer het opnieuw.",
     "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
+    "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
     "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
     "InvalidGroqAPIKey": "Groq API Key is onjuist of leeg. Controleer de Groq API Key en probeer het opnieuw.",
     "InvalidMinimaxAPIKey": "Ongeldige of lege Minimax API-sleutel. Controleer de Minimax API-sleutel en probeer het opnieuw.",

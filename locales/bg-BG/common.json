@@ -160,6 +160,7 @@
     "newVersion": "Налична е нова версия: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Анонимен потребител",
     "billing": "Управление на сметките",
     "defaultNickname": "Потребител на общността",
     "discord": "Поддръжка на общността",

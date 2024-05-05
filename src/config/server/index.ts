@@ -1,6 +1,5 @@
 import { getAnalyticsConfig } from './analytics';
 import { getAppConfig } from './app';
-import { getAuthConfig } from './auth';
 import { getProviderConfig } from './provider';
 
 export const getServerConfig = () => {
@@ -10,8 +9,7 @@ export const getServerConfig = () => {
 
   const provider = getProviderConfig();
   const app = getAppConfig();
-  const auth = getAuthConfig();
   const analytics = getAnalyticsConfig();
 
-  return { ...provider, ...app, ...analytics, ...auth };
+  return { ...provider, ...app, ...analytics };
 };
