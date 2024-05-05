@@ -28,15 +28,17 @@ export const useStyles = createStyles(
         backdrop-filter: blur(2px);
       `,
       modalContent: css`
-        .${prefixCls}-cardBox {
-          border: 1px solid ${token.colorSplit} !important;
-          border-radius: ${token.borderRadiusLG}px !important;
-          box-shadow: ${token.boxShadow} !important;
-        }
+        &.${prefixCls}-modalContent {
+          .${prefixCls}-cardBox {
+            border: 1px solid ${token.colorSplit} !important;
+            border-radius: ${token.borderRadiusLG}px !important;
+            box-shadow: ${token.boxShadow} !important;
+          }
 
-        .${prefixCls}-userProfile-root {
-          width: min(80vw, 55rem);
-          height: min(80vh, 44rem);
+          .${prefixCls}-userProfile-root {
+            width: min(80vw, 55rem);
+            height: min(80vh, 44rem);
+          }
         }
       `,
       navbar: css`
