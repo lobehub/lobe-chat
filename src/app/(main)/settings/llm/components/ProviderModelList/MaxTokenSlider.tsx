@@ -58,7 +58,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
       [exponent(64)]: isMobile ? '64' : '64K',
       [exponent((128 / Kibi) * 1000)]: ' ', // hide tick mark
       [exponent((200 / Kibi) * 1000)]: isMobile ? '200' : '200k', // 200,000
-      [exponent(1024)]: isMobile ? '1024' : '1M',
+      [exponent(Kibi)]: isMobile ? '1024' : '1M',
     };
   }, [isMobile]);
 
@@ -67,7 +67,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
       <Flexbox flex={1}>
         <Slider
           marks={marks}
-          max={exponent(1024)}
+          max={exponent(Kibi)}
           min={0}
           onChange={updateWithPowValue}
           step={null}
@@ -93,7 +93,7 @@ const MaxTokenSlider = memo<MaxTokenSliderProps>(({ value, onChange, defaultValu
 
             updateWithRealValue(e);
           }}
-          step={2048}
+          step={2 * Kibi}
           value={token}
         />
       </div>
