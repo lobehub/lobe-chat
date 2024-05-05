@@ -20,7 +20,7 @@ type SettingItemGroup = ItemGroup;
 
 export interface SettingsCommonProps {
   showAccessCodeConfig: boolean;
-  showOAuthLogin: boolean;
+  showOAuthLogin?: boolean;
 }
 
 const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin }) => {

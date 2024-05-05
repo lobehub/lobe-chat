@@ -2,6 +2,7 @@ import { signIn, signOut } from 'next-auth/react';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { enableClerk, enableNextAuth } from '@/const/auth';
 import { UserConfig, userService } from '@/services/user';
 import { switchLang } from '@/utils/client/switchLang';
 import { setNamespace } from '@/utils/storeDebug';
@@ -14,14 +15,16 @@ const USER_CONFIG_FETCH_KEY = 'fetchUserConfig';
 
 export interface UserAuthAction {
   getUserConfig: () => void;
-  /**
-   * universal login method
-   */
   login: () => Promise<void>;
   /**
    * universal logout method
    */
   logout: () => Promise<void>;
+  /**
+   * universal login method
+   */
+  openLogin: () => Promise<void>;
+  openUserProfile: () => Promise<void>;
   refreshUserConfig: () => Promise<void>;
 
   useFetchUserConfig: (initServer: boolean) => SWRResponse<UserConfig | undefined>;
@@ -40,15 +43,49 @@ export const createAuthSlice: StateCreator<
     // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
     console.log(n('login'));
 
-    // TODO: 应该条件调用 next-auth 的登陆 hook
-    signIn();
+    if (enableNextAuth) {
+      // TODO: 应该条件调用 next-auth 的登陆 hook
+      signIn();
+    }
   },
   logout: async () => {
-    // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
-    console.log(n('logout'));
+    if (enableClerk) {
+      get().clerkSignOut?.({ redirectUrl: location.toString() });
 
-    // TODO: 应该条件调用 next-auth 的登出 hook
-    signOut();
+      return;
+    }
+
+    if (enableNextAuth) {
+      // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
+      console.log(n('logout'));
+      signOut();
+    }
+  },
+  openLogin: async () => {
+    if (enableClerk) {
+      console.log('fallbackRedirectUrl:', location.toString());
+
+      get().clerkSignIn?.({ fallbackRedirectUrl: location.toString() });
+
+      return;
+    }
+
+    if (enableNextAuth) {
+      // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
+      signIn();
+    }
+  },
+  openUserProfile: async () => {
+    if (enableClerk) {
+      get().clerkOpenUserProfile?.();
+
+      return;
+    }
+
+    if (enableNextAuth) {
+      // TODO: 针对开启 next-auth 的场景，需要在这里调用打开 profile 页
+      // NextAuht 没有 profile 页，未来应该隐藏 Profile Button
+    }
   },
   refreshUserConfig: async () => {
     await mutate([USER_CONFIG_FETCH_KEY, true]);

@@ -6,6 +6,7 @@ import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
 
+import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
 import InvalidAPIKey from './InvalidAPIKey';
 import InvalidAccessCode from './InvalidAccessCode';
@@ -61,6 +62,10 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
 
     case AgentRuntimeErrorType.OllamaBizError: {
       return <OllamaBizError {...data} />;
+    }
+
+    case ChatErrorType.InvalidClerkUser: {
+      return <ClerkLogin id={data.id} />;
     }
 
     case ChatErrorType.InvalidAccessCode: {

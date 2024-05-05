@@ -160,6 +160,7 @@
     "newVersion": "有新版本可用：{{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "匿名使用者",
     "billing": "帳單管理",
     "defaultNickname": "社群版使用者",
     "discord": "社區支援",

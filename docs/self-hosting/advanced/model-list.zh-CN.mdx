@@ -12,8 +12,8 @@ tags:
 
 LobeChat 支持在部署时自定义模型列表，可以使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。通过 `<>` 来添加扩展配置。基本语法如下：
 
-```shell
-id=displayName < maxToken:vision:fc:file > ,model2,model3
+```text
+id=displayName<maxToken:vision:fc:file>,model2,model3
 ```
 
 例如： `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`

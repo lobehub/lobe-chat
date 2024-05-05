@@ -160,6 +160,7 @@
     "newVersion": "Nueva versión disponible: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Usuario Anónimo",
     "billing": "Gestión de facturación",
     "defaultNickname": "Usuario de la comunidad",
     "discord": "Soporte de la comunidad",

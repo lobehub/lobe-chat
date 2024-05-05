@@ -1,155 +1,145 @@
 ---
 title: LobeChat 身份验证服务设置
-description: >-
-  了解如何配置 LobeChat 的身份验证服务环境变量，包括单点登录 (SSO)、Auth0、Microsoft Entra
-  ID、Authentik、Github 和 ZITADEL。
+description: 了解如何配置 LobeChat 的身份验证服务环境变量。
 tags:
   - LobeChat
   - 身份验证服务
   - 单点登录
-  - Auth0
-  - Microsoft Entra ID
-  - Authentik
-  - Github
-  - ZITADEL
+  - Next Auth
+  - Clerk
 ---
 
 # 身份验证服务
 
 LobeChat 在部署时提供了完善的身份验证服务能力，以下是相关的环境变量，你可以使用这些环境变量轻松定义需要在 LobeChat 中开启的身份验证服务。
 
-## 通用设置
+## Next Auth
 
-### `ENABLE_OAUTH_SSO`
+### 通用设置
 
-- 类型：必选
-- 描述：为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。
-- 默认值: `-`
-- 示例: `1`
-
-### `SSO_PROVIDERS`
-
-- Type: 必需
-- 描述：选择 LoboChat 的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,azure-ad,authentik`
-- 默认值: `auth0`
-- 示例: `auth0,azure-ad,authentik`
-
-### `NEXTAUTH_SECRET`
+#### `NEXTAUTH_SECRET`
 
 - 类型：必选
 - 描述：用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`.
 - 默认值: `-`
 - 示例: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
 
-### `NEXTAUTH_URL`
+#### `NEXTAUTH_URL`
 
 - 类型：可选
 - 描述：该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，在 Vercel 上部署时无需设置。
 - 默认值：`-`
 - 示例：`https://example.com/api/auth`
 
-## Auth0
+#### `NEXT_AUTH_SSO_PROVIDERS`
 
-### `AUTH0_CLIENT_ID`
+- 类型：可选
+- 描述：选择 LoboChat 的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,azure-ad,authentik`
+- 默认值: `auth0`
+- 示例: `auth0,azure-ad,authentik`
+
+### Auth0
+
+#### `AUTH0_CLIENT_ID`
 
 - 类型：必选
 - 描述: Auth0 应用程序的 Client ID，您可以访问[这里](https://manage.auth0.com/dashboard)并导航至应用程序设置来查看
 - 默认值: `-`
 - 示例: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
 
-### `AUTH0_CLIENT_SECRET`
+#### `AUTH0_CLIENT_SECRET`
 
 - 类型：必选
 - 描述: Auth0 应用程序的 Client Secret
 - 默认值: `-`
 - 示例: `wnX7UbZg85ZUzF6ioxPLnJVEQa1Elbs7aqBUSF16xleBS5AdkVfASS49-fQIC8Rm`
 
-### `AUTH0_ISSUER`
+#### `AUTH0_ISSUER`
 
 - 类型：必选
 - 描述: Auth0 应用程序的签发人 / 域
 - 默认值: `-`
 - 示例: `https://example.auth0.com`
 
-## Microsoft Entra ID
+### Microsoft Entra ID
 
-### `AZURE_AD_CLIENT_ID`
+#### `AZURE_AD_CLIENT_ID`
 
 - 类型：必需
 - 描述：Microsoft Entra ID 应用程序的客户端 ID。
 - 默认值：`-`
 - 示例：`be8f6da1-58c3-4f16-ff1b-78f5148e10df`
 
-### `AZURE_AD_CLIENT_SECRET`
+#### `AZURE_AD_CLIENT_SECRET`
 
 - 类型：必需
 - 描述：Microsoft Entra ID 应用程序的客户端密钥。
 - 默认值：`-`
 - 示例：`~gI8Q.pTiN1vwB6Gl.E1yFT1ojcXABkdACfJXaNj`
 
-### `AZURE_AD_TENANT_ID`
+#### `AZURE_AD_TENANT_ID`
 
 - 类型：必需
 - 描述：Microsoft Entra ID 应用程序的租户 ID。
 - 默认值：`-`
 - 示例：`c8ae2f36-edf6-4cda-96b9-d3e198a47cba`
 
-## Authentik
+### Authentik
 
-### `AUTHENTIK_CLIENT_ID`
+#### `AUTHENTIK_CLIENT_ID`
 
 - 类型：必选
 - 描述: Authentik 提供程序的 Client ID
 - 默认值: `-`
 - 示例: `YNtbIRlYF8Kj66mTLue59nsGLlb7HNyx1qjPH6VS`
 
-### `AUTHENTIK_CLIENT_SECRET`
+#### `AUTHENTIK_CLIENT_SECRET`
 
 - 类型：必选
 - 描述: Authentik 提供程序的 Client Secret
 - 默认值: `-`
 - 示例: `h3lMI1vPUzqyqqeIDUbH5UNNOxyQLXk35h89yETeaAwHk7qVXBG3sJQWeqHBU5pyggwhP9u0eaZ1eq6DHUddVPLoS4gncqD37yuCr8jI8dY66WAt45MStDsDcQm0Ygze`
 
-### `AUTHENTIK_ISSUER`
+#### `AUTHENTIK_ISSUER`
 
 - 类型：必选
 - 描述: Authentik 提供程序的 OpenID Connect 颁发者
 - 默认值: `-`
 - 示例: `https://your-authentik-domain.com/application/o/slug/`
 
-## Github
+### Github
 
-### `GITHUB_CLIENT_ID`
+#### `GITHUB_CLIENT_ID`
 
 - Type: Required
 - Description: Github应用的客户端ID。您可以在[这里](https://github.com/settings/apps)访问，并导航到应用程序设置以查看。
 - Default: `-`
 - Example: `abd94200333283550508`
 
-### `GITHUB_CLIENT_SECRET`
+#### `GITHUB_CLIENT_SECRET`
 
 - Type: Required
 - Description: Github应用的客户端密钥。
 - Default: `-`
 - Example: `dd262976ac0931d947e104891586a053f3d3750b`
 
-## ZITADEL
+### ZITADEL
 
-### `ZITADEL_CLIENT_ID`
+#### `ZITADEL_CLIENT_ID`
 
 - 类型：必选
 - 描述：ZITADEL 应用的 Client ID。您可以在 ZITADEL 控制台应用设置中找到 Client ID。
 - 默认值：`-`
 - 示例：`123456789012345678@your-project`
 
-### `ZITADEL_CLIENT_SECRET`
+#### `ZITADEL_CLIENT_SECRET`
 
 - 类型：必选
 - 描述：ZITADEL 应用的 Client Secret。
 - 默认值：`-`
 - 示例：`9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
 
-### `ZITADEL_ISSUER`
+#### `ZITADEL_ISSUER`
 
 - 类型：必选
 - 描述：ZITADEL 应用的 OpenID Connect 颁发者（issuer），通常为 ZITADEL 实例的 URL。您可以在 ZITADEL 控制台应用设置中的 `URLs` 选项卡中找到 issuer。
@@ -160,3 +150,19 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
   如果您需要使用其他身份验证服务提供商，可以提交
   [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
 </Callout>
+
+## Clerk
+
+### `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+
+- 类型：必选
+- 描述： Clerk 应用程序的 Publishable key。您可以在[这里](https://dashboard.clerk.com)访问，并导航到 API Keys 以查看。
+- 默认值：`-`
+- 示例： `pk_test_Zmxvd4luZy1wdW1hLTIyLmNsXXJrTmFjY291bnRzLmRldiQ` （测试环境） / `pk_live_Y2xlcdsubG9iZWh1Yi1cbmMuY24k` （生产环境）
+
+### `CLERK_SECRET_KEY`
+
+- 类型：必选
+- 描述： Clerk 应用程序的 Secret key。您可以在[这里](https://dashboard.clerk.com)访问，并导航到 API Keys 以查看。
+- 默认值：`-`
+- 示例： `sk_test_513Ma0P7IAWM1XMv4waxZjRYRajWTaCfJLjpEO3SD2` （测试环境） / `sk_live_eMMlHjwJvZFUfczFljSKqZdwQtLvmczmsJSNmdrpeZ`（生产环境）

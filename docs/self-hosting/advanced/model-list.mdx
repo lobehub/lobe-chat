@@ -14,8 +14,8 @@ tags:
 
 LobeChat supports customizing the model list during deployment. You can use `+` to add a model, `-` to hide a model, and use `model name=display name<extension configuration>` to customize the display name of a model, separated by English commas. The basic syntax is as follows:
 
-```shell
-id=displayName < maxToken:vision:fc:file > ,model2,model3
+```text
+id=displayName<maxToken:vision:fc:file>,model2,model3
 ```
 
 For example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`

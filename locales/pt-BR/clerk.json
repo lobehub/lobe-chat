@@ -1,0 +1,769 @@
+{
+  "backButton": "Voltar",
+  "badge__default": "Padrão",
+  "badge__otherImpersonatorDevice": "Outro dispositivo de impostor",
+  "badge__primary": "Primário",
+  "badge__requiresAction": "Requer ação",
+  "badge__thisDevice": "Este dispositivo",
+  "badge__unverified": "Não verificado",
+  "badge__userDevice": "Dispositivo do usuário",
+  "badge__you": "Você",
+  "createOrganization": {
+    "formButtonSubmit": "Criar organização",
+    "invitePage": {
+      "formButtonReset": "Pular"
+    },
+    "title": "Criar organização"
+  },
+  "dates": {
+    "lastDay": "Ontem às {{ date | timeString('pt-BR') }}",
+    "next6Days": "{{ date | weekday('pt-BR','long') }} às {{ date | timeString('pt-BR') }}",
+    "nextDay": "Amanhã às {{ date | timeString('pt-BR') }}",
+    "numeric": "{{ date | numeric('pt-BR') }}",
+    "previous6Days": "Último(a) {{ date | weekday('pt-BR','long') }} às {{ date | timeString('pt-BR') }}",
+    "sameDay": "Hoje às {{ date | timeString('pt-BR') }}"
+  },
+  "dividerText": "ou",
+  "footerActionLink__useAnotherMethod": "Usar outro método",
+  "footerPageLink__help": "Ajuda",
+  "footerPageLink__privacy": "Privacidade",
+  "footerPageLink__terms": "Termos",
+  "formButtonPrimary": "Continuar",
+  "formButtonPrimary__verify": "Verificar",
+  "formFieldAction__forgotPassword": "Esqueceu a senha?",
+  "formFieldError__matchingPasswords": "Senhas correspondem.",
+  "formFieldError__notMatchingPasswords": "Senhas não correspondem.",
+  "formFieldError__verificationLinkExpired": "O link de verificação expirou. Por favor, solicite um novo link.",
+  "formFieldHintText__optional": "Opcional",
+  "formFieldHintText__slug": "Um slug é um ID legível por humanos que deve ser único. Muitas vezes é usado em URLs.",
+  "formFieldInputPlaceholder__backupCode": "",
+  "formFieldInputPlaceholder__confirmDeletionUserAccount": "Excluir conta",
+  "formFieldInputPlaceholder__emailAddress": "",
+  "formFieldInputPlaceholder__emailAddress_username": "",
+  "formFieldInputPlaceholder__emailAddresses": "exemplo@email.com, exemplo2@email.com",
+  "formFieldInputPlaceholder__firstName": "",
+  "formFieldInputPlaceholder__lastName": "",
+  "formFieldInputPlaceholder__organizationDomain": "",
+  "formFieldInputPlaceholder__organizationDomainEmailAddress": "",
+  "formFieldInputPlaceholder__organizationName": "",
+  "formFieldInputPlaceholder__organizationSlug": "minha-org",
+  "formFieldInputPlaceholder__password": "",
+  "formFieldInputPlaceholder__phoneNumber": "",
+  "formFieldInputPlaceholder__username": "",
+  "formFieldLabel__automaticInvitations": "Ativar convites automáticos para este domínio",
+  "formFieldLabel__backupCode": "Código de backup",
+  "formFieldLabel__confirmDeletion": "Confirmação",
+  "formFieldLabel__confirmPassword": "Confirmar senha",
+  "formFieldLabel__currentPassword": "Senha atual",
+  "formFieldLabel__emailAddress": "Endereço de e-mail",
+  "formFieldLabel__emailAddress_username": "Endereço de e-mail ou nome de usuário",
+  "formFieldLabel__emailAddresses": "Endereços de e-mail",
+  "formFieldLabel__firstName": "Primeiro nome",
+  "formFieldLabel__lastName": "Sobrenome",
+  "formFieldLabel__newPassword": "Nova senha",
+  "formFieldLabel__organizationDomain": "Domínio",
+  "formFieldLabel__organizationDomainDeletePending": "Excluir convites e sugestões pendentes",
+  "formFieldLabel__organizationDomainEmailAddress": "Endereço de e-mail de verificação",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "Insira um endereço de e-mail sob este domínio para receber um código e verificar este domínio.",
+  "formFieldLabel__organizationName": "Nome",
+  "formFieldLabel__organizationSlug": "Slug",
+  "formFieldLabel__passkeyName": "Nome do passkey",
+  "formFieldLabel__password": "Senha",
+  "formFieldLabel__phoneNumber": "Número de telefone",
+  "formFieldLabel__role": "Função",
+  "formFieldLabel__signOutOfOtherSessions": "Sair de todas as outras sessões",
+  "formFieldLabel__username": "Nome de usuário",
+  "impersonationFab": {
+    "action__signOut": "Sair",
+    "title": "Logado como {{identifier}}"
+  },
+  "locale": "pt-BR",
+  "maintenanceMode": "Estamos passando por manutenção no momento, mas não se preocupe, não deve levar mais do que alguns minutos.",
+  "membershipRole__admin": "Administrador",
+  "membershipRole__basicMember": "Membro",
+  "membershipRole__guestMember": "Visitante",
+  "organizationList": {
+    "action__createOrganization": "Criar organização",
+    "action__invitationAccept": "Participar",
+    "action__suggestionsAccept": "Solicitar participação",
+    "createOrganization": "Criar Organização",
+    "invitationAcceptedLabel": "Participou",
+    "subtitle": "para continuar no(a) {{applicationName}}",
+    "suggestionsAcceptedLabel": "Aprovação pendente",
+    "title": "Escolha uma conta",
+    "titleWithoutPersonal": "Escolha uma organização"
+  },
+  "organizationProfile": {
+    "badge__automaticInvitation": "Convites automáticos",
+    "badge__automaticSuggestion": "Sugestões automáticas",
+    "badge__manualInvitation": "Sem inscrição automática",
+    "badge__unverified": "Não verificado",
+    "createDomainPage": {
+      "subtitle": "Adicione o domínio para verificar. Usuários com endereços de e-mail neste domínio podem se juntar à organização automaticamente ou solicitar participação.",
+      "title": "Adicionar domínio"
+    },
+    "invitePage": {
+      "detailsTitle__inviteFailed": "Os convites não puderam ser enviados. Já existem convites pendentes para os seguintes endereços de e-mail: {{email_addresses}}.",
+      "formButtonPrimary__continue": "Enviar convites",
+      "selectDropdown__role": "Selecione a função",
+      "subtitle": "Digite ou cole um ou mais endereços de e-mail, separados por espaços ou vírgulas.",
+      "successMessage": "Convites enviados com sucesso",
+      "title": "Convidar novos membros"
+    },
+    "membersPage": {
+      "action__invite": "Convidar",
+      "activeMembersTab": {
+        "menuAction__remove": "Remover membro",
+        "tableHeader__actions": "",
+        "tableHeader__joined": "Participou",
+        "tableHeader__role": "Função",
+        "tableHeader__user": "Usuário"
+      },
+      "detailsTitle__emptyRow": "Nenhum membro para exibir",
+      "invitationsTab": {
+        "autoInvitations": {
+          "headerSubtitle": "Convide usuários conectando um domínio de e-mail à sua organização. Qualquer pessoa que se inscrever com um domínio de e-mail correspondente poderá se juntar à organização a qualquer momento.",
+          "headerTitle": "Convites automáticos",
+          "primaryButton": "Gerenciar domínios verificados"
+        },
+        "table__emptyRow": "Nenhum convite para exibir"
+      },
+      "invitedMembersTab": {
+        "menuAction__revoke": "Revogar convite",
+        "tableHeader__invited": "Convidado"
+      },
+      "requestsTab": {
+        "autoSuggestions": {
+          "headerSubtitle": "Usuários que se inscreverem com um domínio de e-mail correspondente poderão ver uma sugestão para solicitar participação em sua organização.",
+          "headerTitle": "Sugestões automáticas",
+          "primaryButton": "Gerenciar domínios verificados"
+        },
+        "menuAction__approve": "Aprovar",
+        "menuAction__reject": "Rejeitar",
+        "tableHeader__requested": "Acesso solicitado",
+        "table__emptyRow": "Nenhuma solicitação para exibir"
+      },
+      "start": {
+        "headerTitle__invitations": "Convites",
+        "headerTitle__members": "Membros",
+        "headerTitle__requests": "Solicitações"
+      }
+    },
+    "navbar": {
+      "description": "Gerencie sua organização",
+      "general": "Geral",
+      "members": "Membros",
+      "title": "Organização"
+    },
+    "profilePage": {
+      "dangerSection": {
+        "deleteOrganization": {
+          "actionDescription": "Digite \"{{organizationName}}\" abaixo para continuar.",
+          "messageLine1": "Tem certeza de que deseja excluir esta organização?",
+          "messageLine2": "Esta ação é permanente e irreversível.",
+          "successMessage": "Você excluiu a organização.",
+          "title": "Excluir organização"
+        },
+        "leaveOrganization": {
+          "actionDescription": "Digite \"{{organizationName}}\" abaixo para continuar.",
+          "messageLine1": "Tem certeza de que deseja sair desta organização? Você perderá o acesso a esta organização e seus aplicativos.",
+          "messageLine2": "Esta ação é permanente e irreversível.",
+          "successMessage": "Você saiu da organização.",
+          "title": "Sair da organização"
+        },
+        "title": "Perigo"
+      },
+      "domainSection": {
+        "menuAction__manage": "Gerenciar",
+        "menuAction__remove": "Excluir",
+        "menuAction__verify": "Verificar",
+        "primaryButton": "Adicionar domínio",
+        "subtitle": "Permita que os usuários se juntem à organização automaticamente ou solicitem participação com base em um domínio de e-mail verificado.",
+        "title": "Domínios verificados"
+      },
+      "successMessage": "A organização foi atualizada.",
+      "title": "Atualizar perfil"
+    },
+    "removeDomainPage": {
+      "messageLine1": "O domínio de e-mail {{domain}} será removido.",
+      "messageLine2": "Os usuários não poderão se juntar automaticamente à organização após isso.",
+      "successMessage": "{{domain}} foi removido.",
+      "title": "Remover domínio"
+    },
+    "start": {
+      "headerTitle__general": "Geral",
+      "headerTitle__members": "Membros",
+      "profileSection": {
+        "primaryButton": "Atualizar perfil",
+        "title": "Perfil da Organização",
+        "uploadAction__title": "Logotipo"
+      }
+    },
+    "verifiedDomainPage": {
+      "dangerTab": {
+        "calloutInfoLabel": "Remover este domínio afetará os usuários convidados.",
+        "removeDomainActionLabel__remove": "Remover domínio",
+        "removeDomainSubtitle": "Remova este domínio de seus domínios verificados",
+        "removeDomainTitle": "Remover domínio"
+      },
+      "enrollmentTab": {
+        "automaticInvitationOption__description": "Os usuários são convidados automaticamente para se juntar à organização quando se inscrevem e podem se juntar a qualquer momento.",
+        "automaticInvitationOption__label": "Convites automáticos",
+        "automaticSuggestionOption__description": "Os usuários recebem uma sugestão para solicitar participação, mas devem ser aprovados por um administrador antes de poderem se juntar à organização.",
+        "automaticSuggestionOption__label": "Sugestões automáticas",
+        "calloutInfoLabel": "Alterar o modo de inscrição afetará apenas novos usuários.",
+        "calloutInvitationCountLabel": "Convites pendentes enviados aos usuários: {{count}}",
+        "calloutSuggestionCountLabel": "Sugestões pendentes enviadas aos usuários: {{count}}",
+        "manualInvitationOption__description": "Os usuários só podem ser convidados manualmente para a organização.",
+        "manualInvitationOption__label": "Sem inscrição automática",
+        "subtitle": "Escolha como os usuários deste domínio podem se juntar à organização."
+      },
+      "start": {
+        "headerTitle__danger": "Perigo",
+        "headerTitle__enrollment": "Opções de inscrição"
+      },
+      "subtitle": "O domínio {{domain}} agora está verificado. Continue selecionando o modo de inscrição.",
+      "title": "Atualizar {{domain}}"
+    },
+    "verifyDomainPage": {
+      "formSubtitle": "Digite o código de verificação enviado para o seu endereço de e-mail",
+      "formTitle": "Código de verificação",
+      "resendButton": "Não recebeu o código? Reenviar",
+      "subtitle": "O domínio {{domainName}} precisa ser verificado por e-mail.",
+      "subtitleVerificationCodeScreen": "Um código de verificação foi enviado para {{emailAddress}}. Digite o código para continuar.",
+      "title": "Verificar domínio"
+    }
+  },
+  "organizationSwitcher": {
+    "action__createOrganization": "Criar organização",
+    "action__invitationAccept": "Participar",
+    "action__manageOrganization": "Gerenciar",
+    "action__suggestionsAccept": "Solicitar participação",
+    "notSelected": "Nenhuma organização selecionada",
+    "personalWorkspace": "Conta pessoal",
+    "suggestionsAcceptedLabel": "Aprovação pendente"
+  },
+  "paginationButton__next": "Próximo",
+  "paginationButton__previous": "Anterior",
+  "paginationRowText__displaying": "Exibindo",
+  "paginationRowText__of": "de",
+  "signIn": {
+    "accountSwitcher": {
+      "action__addAccount": "Adicionar conta",
+      "action__signOutAll": "Sair de todas as contas",
+      "subtitle": "Selecione a conta com a qual deseja continuar.",
+      "title": "Escolha uma conta"
+    },
+    "alternativeMethods": {
+      "actionLink": "Obter ajuda",
+      "actionText": "Não tem nenhuma destas?",
+      "blockButton__backupCode": "Usar um código de backup",
+      "blockButton__emailCode": "Enviar código por e-mail para {{identifier}}",
+      "blockButton__emailLink": "Enviar link por e-mail para {{identifier}}",
+      "blockButton__passkey": "Entrar com sua chave de acesso",
+      "blockButton__password": "Entrar com sua senha",
+      "blockButton__phoneCode": "Enviar código por SMS para {{identifier}}",
+      "blockButton__totp": "Usar seu aplicativo autenticador",
+      "getHelp": {
+        "blockButton__emailSupport": "Suporte por e-mail",
+        "content": "Se estiver com dificuldades para entrar na sua conta, nos envie um e-mail e trabalharemos com você para restaurar o acesso o mais rápido possível.",
+        "title": "Obter ajuda"
+      },
+      "subtitle": "Enfrentando problemas? Você pode usar qualquer um destes métodos para entrar.",
+      "title": "Usar outro método"
+    },
+    "backupCodeMfa": {
+      "subtitle": "Seu código de backup é aquele que você recebeu ao configurar a autenticação em duas etapas.",
+      "title": "Digite um código de backup"
+    },
+    "emailCode": {
+      "formTitle": "Código de verificação",
+      "resendButton": "Não recebeu um código? Reenviar",
+      "subtitle": "para continuar em {{applicationName}}",
+      "title": "Verifique seu e-mail"
+    },
+    "emailLink": {
+      "expired": {
+        "subtitle": "Retorne à aba original para continuar.",
+        "title": "Este link de verificação expirou"
+      },
+      "failed": {
+        "subtitle": "Retorne à aba original para continuar.",
+        "title": "Este link de verificação é inválido"
+      },
+      "formSubtitle": "Use o link de verificação enviado para o seu e-mail",
+      "formTitle": "Link de verificação",
+      "loading": {
+        "subtitle": "Você será redirecionado em breve",
+        "title": "Entrando..."
+      },
+      "resendButton": "Não recebeu um link? Reenviar",
+      "subtitle": "para continuar em {{applicationName}}",
+      "title": "Verifique seu e-mail",
+      "unusedTab": {
+        "title": "Você pode fechar esta aba"
+      },
+      "verified": {
+        "subtitle": "Você será redirecionado em breve",
+        "title": "Entrou com sucesso"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Retorne à aba original para continuar",
+        "subtitleNewTab": "Retorne à nova aba aberta para continuar",
+        "titleNewTab": "Entrou em outra aba"
+      }
+    },
+    "forgotPassword": {
+      "formTitle": "Código de redefinição de senha",
+      "resendButton": "Não recebeu um código? Reenviar",
+      "subtitle": "para redefinir sua senha",
+      "subtitle_email": "Primeiro, insira o código enviado para o seu endereço de e-mail",
+      "subtitle_phone": "Primeiro, insira o código enviado para o seu telefone",
+      "title": "Redefinir senha"
+    },
+    "forgotPasswordAlternativeMethods": {
+      "blockButton__resetPassword": "Redefinir sua senha",
+      "label__alternativeMethods": "Ou, entrar com outro método",
+      "title": "Esqueceu a senha?"
+    },
+    "noAvailableMethods": {
+      "message": "Não é possível prosseguir com o login. Não há fator de autenticação disponível.",
+      "subtitle": "Ocorreu um erro",
+      "title": "Não é possível entrar"
+    },
+    "passkey": {
+      "subtitle": "Usar sua chave de acesso confirma que é você. Seu dispositivo pode solicitar sua impressão digital, rosto ou bloqueio de tela.",
+      "title": "Use sua chave de acesso"
+    },
+    "password": {
+      "actionLink": "Usar outro método",
+      "subtitle": "Digite a senha associada à sua conta",
+      "title": "Digite sua senha"
+    },
+    "passwordPwned": {
+      "title": "Senha comprometida"
+    },
+    "phoneCode": {
+      "formTitle": "Código de verificação",
+      "resendButton": "Não recebeu um código? Reenviar",
+      "subtitle": "para continuar em {{applicationName}}",
+      "title": "Verifique seu telefone"
+    },
+    "phoneCodeMfa": {
+      "formTitle": "Código de verificação",
+      "resendButton": "Não recebeu um código? Reenviar",
+      "subtitle": "Para continuar, por favor insira o código de verificação enviado para o seu telefone",
+      "title": "Verifique seu telefone"
+    },
+    "resetPassword": {
+      "formButtonPrimary": "Redefinir senha",
+      "requiredMessage": "Por motivos de segurança, é necessário redefinir sua senha.",
+      "successMessage": "Sua senha foi alterada com sucesso. Entrando, por favor aguarde um momento.",
+      "title": "Definir nova senha"
+    },
+    "resetPasswordMfa": {
+      "detailsLabel": "Precisamos verificar sua identidade antes de redefinir sua senha."
+    },
+    "start": {
+      "actionLink": "Registrar",
+      "actionLink__use_email": "Usar e-mail",
+      "actionLink__use_email_username": "Usar e-mail ou nome de usuário",
+      "actionLink__use_passkey": "Usar chave de acesso",
+      "actionLink__use_phone": "Usar telefone",
+      "actionLink__use_username": "Usar nome de usuário",
+      "actionText": "Não tem uma conta?",
+      "subtitle": "Bem-vindo de volta! Por favor, faça login para continuar",
+      "title": "Faça login em {{applicationName}}"
+    },
+    "totpMfa": {
+      "formTitle": "Código de verificação",
+      "subtitle": "Para continuar, por favor insira o código de verificação gerado pelo seu aplicativo autenticador",
+      "title": "Verificação em duas etapas"
+    }
+  },
+  "signInEnterPasswordTitle": "Digite sua senha",
+  "signUp": {
+    "continue": {
+      "actionLink": "Login",
+      "actionText": "Já tem uma conta?",
+      "subtitle": "Por favor, preencha os detalhes restantes para continuar",
+      "title": "Preencha os campos em falta"
+    },
+    "emailCode": {
+      "formSubtitle": "Digite o código de verificação enviado para o seu endereço de e-mail",
+      "formTitle": "Código de verificação",
+      "resendButton": "Não recebeu um código? Reenviar",
+      "subtitle": "Digite o código de verificação enviado para o seu e-mail",
+      "title": "Verifique seu e-mail"
+    },
+    "emailLink": {
+      "formSubtitle": "Use o link de verificação enviado para o seu endereço de e-mail",
+      "formTitle": "Link de verificação",
+      "loading": {
+        "title": "Registrando..."
+      },
+      "resendButton": "Não recebeu um link? Reenviar",
+      "subtitle": "para continuar em {{applicationName}}",
+      "title": "Verifique seu e-mail",
+      "verified": {
+        "title": "Registrado com sucesso"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Retorne à nova aba aberta para continuar",
+        "subtitleNewTab": "Retorne à aba anterior para continuar",
+        "title": "E-mail verificado com sucesso"
+      }
+    },
+    "phoneCode": {
+      "formSubtitle": "Digite o código de verificação enviado para o seu número de telefone",
+      "formTitle": "Código de verificação",
+      "resendButton": "Não recebeu um código? Reenviar",
+      "subtitle": "Digite o código de verificação enviado para o seu telefone",
+      "title": "Verifique seu telefone"
+    },
+    "start": {
+      "actionLink": "Login",
+      "actionText": "Já tem uma conta?",
+      "subtitle": "Bem-vindo! Por favor, preencha os detalhes para começar",
+      "title": "Crie sua conta"
+    }
+  },
+  "socialButtonsBlockButton": "Continuar com {{provider|titleize}}",
+  "unstable__errors": {
+    "captcha_invalid": "O cadastro não foi bem-sucedido devido a validações de segurança falhadas. Por favor, atualize a página para tentar novamente ou entre em contato com o suporte para mais assistência.",
+    "captcha_unavailable": "O cadastro não foi bem-sucedido devido à validação de bot falhada. Por favor, atualize a página para tentar novamente ou entre em contato com o suporte para mais assistência.",
+    "form_code_incorrect": "",
+    "form_identifier_exists": "",
+    "form_identifier_exists__email_address": "Este endereço de e-mail já está em uso. Por favor, tente outro.",
+    "form_identifier_exists__phone_number": "Este número de telefone já está em uso. Por favor, tente outro.",
+    "form_identifier_exists__username": "Este nome de usuário já está em uso. Por favor, tente outro.",
+    "form_identifier_not_found": "",
+    "form_param_format_invalid": "",
+    "form_param_format_invalid__email_address": "O endereço de e-mail deve ser um endereço de e-mail válido.",
+    "form_param_format_invalid__phone_number": "O número de telefone deve estar em um formato internacional válido.",
+    "form_param_max_length_exceeded__first_name": "O primeiro nome não deve exceder 256 caracteres.",
+    "form_param_max_length_exceeded__last_name": "O sobrenome não deve exceder 256 caracteres.",
+    "form_param_max_length_exceeded__name": "O nome não deve exceder 256 caracteres.",
+    "form_param_nil": "",
+    "form_password_incorrect": "",
+    "form_password_length_too_short": "",
+    "form_password_not_strong_enough": "Sua senha não é forte o suficiente.",
+    "form_password_pwned": "Esta senha foi encontrada em uma violação e não pode ser usada, por favor, tente outra senha.",
+    "form_password_pwned__sign_in": "Esta senha foi encontrada em uma violação e não pode ser usada, por favor, redefina sua senha.",
+    "form_password_size_in_bytes_exceeded": "Sua senha excedeu o número máximo de bytes permitido, por favor, encurte-a ou remova alguns caracteres especiais.",
+    "form_password_validation_failed": "Senha incorreta",
+    "form_username_invalid_character": "",
+    "form_username_invalid_length": "",
+    "identification_deletion_failed": "Você não pode excluir sua última identificação.",
+    "not_allowed_access": "",
+    "passkey_already_exists": "Um passkey já está registrado neste dispositivo.",
+    "passkey_not_supported": "Passkeys não são suportados neste dispositivo.",
+    "passkey_pa_not_supported": "O registro requer um autenticador de plataforma, mas o dispositivo não o suporta.",
+    "passkey_registration_cancelled": "O registro do passkey foi cancelado ou expirou.",
+    "passkey_retrieval_cancelled": "A verificação do passkey foi cancelada ou expirou.",
+    "passwordComplexity": {
+      "maximumLength": "menos de {{length}} caracteres",
+      "minimumLength": "{{length}} ou mais caracteres",
+      "requireLowercase": "uma letra minúscula",
+      "requireNumbers": "um número",
+      "requireSpecialCharacter": "um caractere especial",
+      "requireUppercase": "uma letra maiúscula",
+      "sentencePrefix": "Sua senha deve conter"
+    },
+    "phone_number_exists": "Este número de telefone já está em uso. Por favor, tente outro.",
+    "zxcvbn": {
+      "couldBeStronger": "Sua senha funciona, mas poderia ser mais forte. Tente adicionar mais caracteres.",
+      "goodPassword": "Sua senha atende a todos os requisitos necessários.",
+      "notEnough": "Sua senha não é forte o suficiente.",
+      "suggestions": {
+        "allUppercase": "Coloque letras maiúsculas em algumas, mas não em todas as letras.",
+        "anotherWord": "Adicione mais palavras menos comuns.",
+        "associatedYears": "Evite anos associados a você.",
+        "capitalization": "Coloque mais letras maiúsculas além da primeira letra.",
+        "dates": "Evite datas e anos associados a você.",
+        "l33t": "Evite substituições previsíveis de letras como '@' por 'a'.",
+        "longerKeyboardPattern": "Use padrões de teclado mais longos e mude a direção de digitação várias vezes.",
+        "noNeed": "Você pode criar senhas fortes sem usar símbolos, números ou letras maiúsculas.",
+        "pwned": "Se você usar esta senha em outro lugar, você deve alterá-la.",
+        "recentYears": "Evite anos recentes.",
+        "repeated": "Evite palavras e caracteres repetidos.",
+        "reverseWords": "Evite soletrações invertidas de palavras comuns.",
+        "sequences": "Evite sequências de caracteres comuns.",
+        "useWords": "Use várias palavras, mas evite frases comuns."
+      },
+      "warnings": {
+        "common": "Esta é uma senha comumente usada.",
+        "commonNames": "Nomes comuns são fáceis de adivinhar.",
+        "dates": "Datas são fáceis de adivinhar.",
+        "extendedRepeat": "Padrões de caracteres repetidos como \"abcabcabc\" são fáceis de adivinhar.",
+        "keyPattern": "Padrões de teclado curtos são fáceis de adivinhar.",
+        "namesByThemselves": "Nomes ou sobrenomes isolados são fáceis de adivinhar.",
+        "pwned": "Sua senha foi exposta em uma violação de dados na Internet.",
+        "recentYears": "Anos recentes são fáceis de adivinhar.",
+        "sequences": "Sequências de caracteres comuns como \"abc\" são fáceis de adivinhar.",
+        "similarToCommon": "Isso é semelhante a uma senha comumente usada.",
+        "simpleRepeat": "Caracteres repetidos como \"aaa\" são fáceis de adivinhar.",
+        "straightRow": "Linhas retas de teclas no seu teclado são fáceis de adivinhar.",
+        "topHundred": "Esta é uma senha frequentemente usada.",
+        "topTen": "Esta é uma senha muito usada.",
+        "userInputs": "Não deve haver dados pessoais ou relacionados à página.",
+        "wordByItself": "Palavras isoladas são fáceis de adivinhar."
+      }
+    }
+  },
+  "userButton": {
+    "action__addAccount": "Adicionar conta",
+    "action__manageAccount": "Gerenciar conta",
+    "action__signOut": "Sair",
+    "action__signOutAll": "Sair de todas as contas"
+  },
+  "userProfile": {
+    "backupCodePage": {
+      "actionLabel__copied": "Copiado!",
+      "actionLabel__copy": "Copiar tudo",
+      "actionLabel__download": "Baixar .txt",
+      "actionLabel__print": "Imprimir",
+      "infoText1": "Os códigos de backup serão habilitados para esta conta.",
+      "infoText2": "Mantenha os códigos de backup em segredo e armazene-os com segurança. Você pode regenerar os códigos de backup se suspeitar que foram comprometidos.",
+      "subtitle__codelist": "Armazene-os com segurança e mantenha-os em segredo.",
+      "successMessage": "Os códigos de backup estão agora habilitados. Você pode usar um deles para entrar em sua conta, caso perca o acesso ao seu dispositivo de autenticação. Cada código só pode ser usado uma vez.",
+      "successSubtitle": "Você pode usar um deles para entrar em sua conta, caso perca o acesso ao seu dispositivo de autenticação.",
+      "title": "Adicionar verificação de código de backup",
+      "title__codelist": "Códigos de backup"
+    },
+    "connectedAccountPage": {
+      "formHint": "Selecione um provedor para conectar sua conta.",
+      "formHint__noAccounts": "Não há provedores de conta externos disponíveis.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} será removido desta conta.",
+        "messageLine2": "Você não poderá mais usar esta conta conectada e quaisquer recursos dependentes deixarão de funcionar.",
+        "successMessage": "{{connectedAccount}} foi removido de sua conta.",
+        "title": "Remover conta conectada"
+      },
+      "socialButtonsBlockButton": "{{provider|titleize}}",
+      "successMessage": "O provedor foi adicionado à sua conta",
+      "title": "Adicionar conta conectada"
+    },
+    "deletePage": {
+      "actionDescription": "Digite \"Excluir conta\" abaixo para continuar.",
+      "confirm": "Excluir conta",
+      "messageLine1": "Tem certeza de que deseja excluir sua conta?",
+      "messageLine2": "Esta ação é permanente e irreversível.",
+      "title": "Excluir conta"
+    },
+    "emailAddressPage": {
+      "emailCode": {
+        "formHint": "Um e-mail contendo um código de verificação será enviado para este endereço de e-mail.",
+        "formSubtitle": "Digite o código de verificação enviado para {{identifier}}",
+        "formTitle": "Código de verificação",
+        "resendButton": "Não recebeu um código? Reenviar",
+        "successMessage": "O e-mail {{identifier}} foi adicionado à sua conta."
+      },
+      "emailLink": {
+        "formHint": "Um e-mail contendo um link de verificação será enviado para este endereço de e-mail.",
+        "formSubtitle": "Clique no link de verificação no e-mail enviado para {{identifier}}",
+        "formTitle": "Link de verificação",
+        "resendButton": "Não recebeu um link? Reenviar",
+        "successMessage": "O e-mail {{identifier}} foi adicionado à sua conta."
+      },
+      "removeResource": {
+        "messageLine1": "{{identifier}} será removido desta conta.",
+        "messageLine2": "Você não poderá mais entrar usando este endereço de e-mail.",
+        "successMessage": "{{emailAddress}} foi removido de sua conta.",
+        "title": "Remover endereço de e-mail"
+      },
+      "title": "Adicionar endereço de e-mail",
+      "verifyTitle": "Verificar endereço de e-mail"
+    },
+    "formButtonPrimary__add": "Adicionar",
+    "formButtonPrimary__continue": "Continuar",
+    "formButtonPrimary__finish": "Finalizar",
+    "formButtonPrimary__remove": "Remover",
+    "formButtonPrimary__save": "Salvar",
+    "formButtonReset": "Cancelar",
+    "mfaPage": {
+      "formHint": "Selecione um método para adicionar.",
+      "title": "Adicionar verificação em duas etapas"
+    },
+    "mfaPhoneCodePage": {
+      "backButton": "Usar número existente",
+      "primaryButton__addPhoneNumber": "Adicionar número de telefone",
+      "removeResource": {
+        "messageLine1": "{{identifier}} não receberá mais códigos de verificação ao entrar.",
+        "messageLine2": "Sua conta pode não ser tão segura. Tem certeza de que deseja continuar?",
+        "successMessage": "A verificação em duas etapas por código SMS foi removida para {{mfaPhoneCode}}",
+        "title": "Remover verificação em duas etapas"
+      },
+      "subtitle__availablePhoneNumbers": "Selecione um número de telefone existente para se registrar na verificação em duas etapas por código SMS ou adicione um novo.",
+      "subtitle__unavailablePhoneNumbers": "Não há números de telefone disponíveis para se registrar na verificação em duas etapas por código SMS, por favor adicione um novo.",
+      "successMessage1": "Ao entrar, você precisará inserir um código de verificação enviado para este número de telefone como uma etapa adicional.",
+      "successMessage2": "Salve esses códigos de backup e armazene-os em um local seguro. Se perder o acesso ao seu dispositivo de autenticação, você pode usar os códigos de backup para entrar.",
+      "successTitle": "Verificação por código SMS habilitada",
+      "title": "Adicionar verificação por código SMS"
+    },
+    "mfaTOTPPage": {
+      "authenticatorApp": {
+        "buttonAbleToScan__nonPrimary": "Escanear código QR em vez disso",
+        "buttonUnableToScan__nonPrimary": "Não consegue escanear o código QR?",
+        "infoText__ableToScan": "Configure um novo método de entrada em seu aplicativo autenticador e escaneie o código QR a seguir para vinculá-lo à sua conta.",
+        "infoText__unableToScan": "Configure um novo método de entrada em seu autenticador e insira a Chave fornecida abaixo.",
+        "inputLabel__unableToScan1": "Certifique-se de que as senhas baseadas em tempo ou únicas estão habilitadas e, em seguida, termine de vincular sua conta.",
+        "inputLabel__unableToScan2": "Alternativamente, se seu autenticador suportar URIs TOTP, você também pode copiar o URI completo."
+      },
+      "removeResource": {
+        "messageLine1": "Os códigos de verificação deste autenticador não serão mais necessários ao entrar.",
+        "messageLine2": "Sua conta pode não ser tão segura. Tem certeza de que deseja continuar?",
+        "successMessage": "A verificação em duas etapas via aplicativo autenticador foi removida.",
+        "title": "Remover verificação em duas etapas"
+      },
+      "successMessage": "A verificação em duas etapas está agora habilitada. Ao entrar, você precisará inserir um código de verificação deste autenticador como uma etapa adicional.",
+      "title": "Adicionar aplicativo autenticador",
+      "verifySubtitle": "Digite o código de verificação gerado pelo seu autenticador",
+      "verifyTitle": "Código de verificação"
+    },
+    "mobileButton__menu": "Menu",
+    "navbar": {
+      "account": "Perfil",
+      "description": "Gerencie as informações da sua conta.",
+      "security": "Segurança",
+      "title": "Conta"
+    },
+    "passkeyScreen": {
+      "removeResource": {
+        "messageLine1": "{{name}} será removido desta conta.",
+        "title": "Remover senha"
+      },
+      "subtitle__rename": "Você pode alterar o nome da senha para facilitar a busca.",
+      "title__rename": "Renomear Senha"
+    },
+    "passwordPage": {
+      "checkboxInfoText__signOutOfOtherSessions": "É recomendado sair de todas as outras sessões que possam ter usado sua senha antiga.",
+      "readonly": "Sua senha atualmente não pode ser editada porque você só pode fazer login via conexão empresarial.",
+      "successMessage__set": "Sua senha foi definida.",
+      "successMessage__signOutOfOtherSessions": "Todos os outros dispositivos foram desconectados.",
+      "successMessage__update": "Sua senha foi atualizada.",
+      "title__set": "Definir senha",
+      "title__update": "Atualizar senha"
+    },
+    "phoneNumberPage": {
+      "infoText": "Será enviado um SMS contendo um código de verificação para este número de telefone. Podem ser aplicadas taxas de mensagem e dados.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} será removido desta conta.",
+        "messageLine2": "Você não poderá mais fazer login usando este número de telefone.",
+        "successMessage": "{{phoneNumber}} foi removido da sua conta.",
+        "title": "Remover número de telefone"
+      },
+      "successMessage": "{{identifier}} foi adicionado à sua conta.",
+      "title": "Adicionar número de telefone",
+      "verifySubtitle": "Digite o código de verificação enviado para {{identifier}}",
+      "verifyTitle": "Verificar número de telefone"
+    },
+    "profilePage": {
+      "fileDropAreaHint": "Tamanho recomendado 1:1, até 10MB.",
+      "imageFormDestructiveActionSubtitle": "Remover",
+      "imageFormSubtitle": "Enviar",
+      "imageFormTitle": "Imagem de perfil",
+      "readonly": "Suas informações de perfil foram fornecidas pela conexão empresarial e não podem ser editadas.",
+      "successMessage": "Seu perfil foi atualizado.",
+      "title": "Atualizar perfil"
+    },
+    "start": {
+      "activeDevicesSection": {
+        "destructiveAction": "Sair do dispositivo",
+        "title": "Dispositivos ativos"
+      },
+      "connectedAccountsSection": {
+        "actionLabel__connectionFailed": "Tentar novamente",
+        "actionLabel__reauthorize": "Autorizar agora",
+        "destructiveActionTitle": "Remover",
+        "primaryButton": "Conectar conta",
+        "subtitle__reauthorize": "Os escopos necessários foram atualizados e você pode estar experimentando funcionalidades limitadas. Por favor, reautorize este aplicativo para evitar problemas",
+        "title": "Contas conectadas"
+      },
+      "dangerSection": {
+        "deleteAccountButton": "Excluir conta",
+        "title": "Excluir conta"
+      },
+      "emailAddressesSection": {
+        "destructiveAction": "Remover e-mail",
+        "detailsAction__nonPrimary": "Definir como principal",
+        "detailsAction__primary": "Completar verificação",
+        "detailsAction__unverified": "Verificar",
+        "primaryButton": "Adicionar endereço de e-mail",
+        "title": "Endereços de e-mail"
+      },
+      "enterpriseAccountsSection": {
+        "title": "Contas empresariais"
+      },
+      "headerTitle__account": "Detalhes do perfil",
+      "headerTitle__security": "Segurança",
+      "mfaSection": {
+        "backupCodes": {
+          "actionLabel__regenerate": "Regenerar",
+          "headerTitle": "Códigos de backup",
+          "subtitle__regenerate": "Obtenha um novo conjunto de códigos de backup seguros. Os códigos de backup anteriores serão excluídos e não poderão ser usados.",
+          "title__regenerate": "Regenerar códigos de backup"
+        },
+        "phoneCode": {
+          "actionLabel__setDefault": "Definir como padrão",
+          "destructiveActionLabel": "Remover"
+        },
+        "primaryButton": "Adicionar verificação em duas etapas",
+        "title": "Verificação em duas etapas",
+        "totp": {
+          "destructiveActionTitle": "Remover",
+          "headerTitle": "Aplicativo autenticador"
+        }
+      },
+      "passkeysSection": {
+        "menuAction__destructive": "Remover",
+        "menuAction__rename": "Renomear",
+        "title": "Senhas"
+      },
+      "passwordSection": {
+        "primaryButton__setPassword": "Definir senha",
+        "primaryButton__updatePassword": "Atualizar senha",
+        "title": "Senha"
+      },
+      "phoneNumbersSection": {
+        "destructiveAction": "Remover número de telefone",
+        "detailsAction__nonPrimary": "Definir como principal",
+        "detailsAction__primary": "Completar verificação",
+        "detailsAction__unverified": "Verificar número de telefone",
+        "primaryButton": "Adicionar número de telefone",
+        "title": "Números de telefone"
+      },
+      "profileSection": {
+        "primaryButton": "Atualizar perfil",
+        "title": "Perfil"
+      },
+      "usernameSection": {
+        "primaryButton__setUsername": "Definir nome de usuário",
+        "primaryButton__updateUsername": "Atualizar nome de usuário",
+        "title": "Nome de usuário"
+      },
+      "web3WalletsSection": {
+        "destructiveAction": "Remover carteira",
+        "primaryButton": "Carteiras Web3",
+        "title": "Carteiras Web3"
+      }
+    },
+    "usernamePage": {
+      "successMessage": "Seu nome de usuário foi atualizado.",
+      "title__set": "Definir nome de usuário",
+      "title__update": "Atualizar nome de usuário"
+    },
+    "web3WalletPage": {
+      "removeResource": {
+        "messageLine1": "{{identifier}} será removido desta conta.",
+        "messageLine2": "Você não poderá mais fazer login usando esta carteira web3.",
+        "successMessage": "{{web3Wallet}} foi removida da sua conta.",
+        "title": "Remover carteira web3"
+      },
+      "subtitle__availableWallets": "Selecione uma carteira web3 para conectar à sua conta.",
+      "subtitle__unavailableWallets": "Não há carteiras web3 disponíveis.",
+      "successMessage": "A carteira foi adicionada à sua conta.",
+      "title": "Adicionar carteira web3"
+    }
+  }
+}
