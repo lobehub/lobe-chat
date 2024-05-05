@@ -1,3 +1,5 @@
+'use client';
+
 import { Icon } from '@lobehub/ui';
 import { Button, Result, Table, Upload } from 'antd';
 import { createStyles } from 'antd-style';
