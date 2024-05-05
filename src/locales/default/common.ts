@@ -10,6 +10,7 @@ export default {
   close: '关闭',
   copy: '复制',
   copyFail: '复制失败',
+
   copySuccess: '复制成功',
   defaultAgent: '自定义助手',
   defaultSession: '自定义助手',
@@ -28,8 +29,9 @@ export default {
   },
   feedback: '反馈与建议',
   follow: '在 {{name}} 上关注我们',
-  historyRange: '历史范围',
+  fullscreen: '全屏模式',
 
+  historyRange: '历史范围',
   import: '导入配置',
   importModal: {
     finish: {
@@ -136,6 +138,7 @@ export default {
     me: '我',
     setting: '设置',
   },
+
   telemetry: {
     allow: '允许',
     deny: '拒绝',
@@ -143,7 +146,6 @@ export default {
     learnMore: '了解更多',
     title: '帮助 LobeChat 做得更好',
   },
-
   temp: '临时',
   terms: '服务条款',
   updateAgent: '更新助理信息',
@@ -153,6 +155,7 @@ export default {
     newVersion: '有新版本可用：{{version}}',
   },
   userPanel: {
+    anonymousNickName: '匿名用户',
     billing: '账单管理',
     defaultNickname: '社区版用户',
     discord: '社区支持',
@@ -162,6 +165,7 @@ export default {
     help: '帮助中心',
     moveGuide: '设置按钮搬到这里啦',
     plans: '订阅方案',
+    preview: '预览版',
     profile: '账户管理',
     setting: '应用设置',
     usages: '用量统计',

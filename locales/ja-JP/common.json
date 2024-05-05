@@ -28,6 +28,7 @@
   },
   "feedback": "フィードバック",
   "follow": " {{name}} で私たちをフォローする",
+  "fullscreen": "フルスクリーンモード",
   "historyRange": "履歴範囲",
   "import": "インポート",
   "importModal": {
@@ -159,6 +160,7 @@
     "newVersion": "新しいバージョンが利用可能です：{{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "匿名ユーザー",
     "billing": "請求管理",
     "defaultNickname": "コミュニティユーザー",
     "discord": "コミュニティサポート",
@@ -168,6 +170,7 @@
     "help": "ヘルプセンター",
     "moveGuide": "設定ボタンがこちらに移動しました",
     "plans": "サブスクリプションプラン",
+    "preview": "プレビュー",
     "profile": "アカウント管理",
     "setting": "アプリ設定",
     "usages": "利用量統計"

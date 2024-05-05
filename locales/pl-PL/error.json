@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "继续会话",
+      "desc": "{{greeting}}，很高兴能够继续为你服务。让我们接着刚刚的话题聊下去吧",
+      "title": "欢迎回来， {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "Powrót do strony głównej",
     "desc": "Spróbuj ponownie później lub wróć do znanego świata",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "Anthropic API Key jest nieprawidłowy lub pusty. Sprawdź poprawność klucza API Anthropic i spróbuj ponownie.",
     "InvalidAzureAPIKey": "Nieprawidłowy lub pusty klucz API Azure, prosimy sprawdzić klucz API Azure i spróbować ponownie.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
+    "InvalidClerkUser": "Przepraszamy, nie jesteś obecnie zalogowany. Proszę najpierw zalogować się lub zarejestrować, aby kontynuować.",
     "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
     "InvalidGroqAPIKey": "Nieprawidłowy klucz API Groq, prosimy sprawdzić klucz API Groq i spróbować ponownie.",
     "InvalidMinimaxAPIKey": "Nieprawidłowy lub pusty klucz API Minimax, proszę sprawdzić klucz API Minimax i spróbować ponownie",

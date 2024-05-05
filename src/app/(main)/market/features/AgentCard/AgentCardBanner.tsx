@@ -22,6 +22,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
 interface AgentCardBannerProps extends DivProps {
   avatar?: string;
+  loading?: boolean;
   mask?: boolean;
   maskColor?: string;
   size?: number;
@@ -29,22 +30,26 @@ interface AgentCardBannerProps extends DivProps {
 
 const AgentCardBanner = memo<AgentCardBannerProps>(
   ({ avatar, className, size = 600, children, ...props }) => {
-    const { styles, cx } = useStyles();
+    const { styles, theme, cx } = useStyles();
 
     return (
       <Flexbox
         align={'center'}
         className={cx(styles.banner, className)}
         justify={'center'}
+        style={avatar ? {} : { backgroundColor: theme.colorFillTertiary }}
+        width={'100%'}
         {...props}
       >
-        <Avatar
-          alt={'banner'}
-          avatar={avatar}
-          className={styles.bannerImg}
-          shape={'square'}
-          size={size}
-        />
+        {avatar && (
+          <Avatar
+            alt={'banner'}
+            avatar={avatar}
+            className={styles.bannerImg}
+            shape={'square'}
+            size={size}
+          />
+        )}
         {children}
       </Flexbox>
     );

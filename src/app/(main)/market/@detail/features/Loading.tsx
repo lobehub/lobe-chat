@@ -2,25 +2,26 @@ import { Skeleton } from 'antd';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import Banner from './Banner';
 import { useStyles } from './style';
 
 const Loading = memo(() => {
   const { styles } = useStyles();
   return (
     <>
-      <Center className={styles.container} gap={16} style={{ paddingTop: 80 }}>
-        <Skeleton.Avatar active shape={'circle'} size={100} />
+      <Banner loading />
+      <Center className={styles.container} gap={16}>
         <Skeleton
           active
           className={styles.loading}
           paragraph={{
-            rows: 3,
+            rows: 2,
             style: {
               alignItems: 'center',
               display: 'flex',
               flexDirection: 'column',
             },
-            width: ['60%', '80%', '20%'],
+            width: ['60%', '80%'],
           }}
           title={{
             style: {

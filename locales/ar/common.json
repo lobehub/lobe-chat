@@ -28,6 +28,7 @@
   },
   "feedback": "تقديم ملاحظات",
   "follow": "تابعنا على {{name}}",
+  "fullscreen": "وضع كامل الشاشة",
   "historyRange": "نطاق التاريخ",
   "import": "استيراد الإعدادات",
   "importModal": {
@@ -159,6 +160,7 @@
     "newVersion": "هناك إصدار جديد متاح: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "مستخدم مجهول",
     "billing": "إدارة الفواتير",
     "defaultNickname": "مستخدم النسخة المجتمعية",
     "discord": "الدعم المجتمعي",
@@ -168,6 +170,7 @@
     "help": "مركز المساعدة",
     "moveGuide": "تم نقل زر الإعدادات إلى هنا",
     "plans": "خطط الاشتراك",
+    "preview": "المعاينة",
     "profile": "إدارة الحساب",
     "setting": "إعدادات التطبيق",
     "usages": "إحصاءات الاستخدام"

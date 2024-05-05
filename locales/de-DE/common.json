@@ -28,6 +28,7 @@
   },
   "feedback": "Feedback und Vorschläge",
   "follow": "Folge uns auf {{name}}",
+  "fullscreen": "Vollbildmodus",
   "historyRange": "Verlaufsbereich",
   "import": "Importieren",
   "importModal": {
@@ -159,6 +160,7 @@
     "newVersion": "Neue Version verfügbar: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Anonymer Benutzer",
     "billing": "Abrechnung verwalten",
     "defaultNickname": "Community User",
     "discord": "Community-Support",
@@ -168,6 +170,7 @@
     "help": "Hilfezentrum",
     "moveGuide": "Die Einstellungen wurden hierher verschoben.",
     "plans": "Abonnementpläne",
+    "preview": "Vorschau",
     "profile": "Kontoverwaltung",
     "setting": "App-Einstellungen",
     "usages": "Nutzungsstatistiken"

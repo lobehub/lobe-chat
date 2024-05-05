@@ -19,9 +19,6 @@ export const useStyles = createStyles(({ css, token, prefixCls }) => ({
       flex-direction: column;
     }
   `,
-  nav: css`
-    padding-top: 8px;
-  `,
   time: css`
     font-size: 12px;
     color: ${token.colorTextDescription};

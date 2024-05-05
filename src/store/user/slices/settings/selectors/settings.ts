@@ -45,6 +45,11 @@ const currentLanguage = (s: UserStore) => {
   return locale;
 };
 
+export const currentThemeMode = (s: UserStore) => {
+  const themeMode = currentSettings(s).themeMode;
+  return themeMode || 'auto';
+};
+
 const dalleConfig = (s: UserStore) => currentSettings(s).tool?.dalle || {};
 const isDalleAutoGenerating = (s: UserStore) => currentSettings(s).tool?.dalle?.autoGenerate;
 
@@ -52,6 +57,7 @@ export const settingsSelectors = {
   currentLanguage,
   currentSettings,
   currentTTS,
+  currentThemeMode,
   dalleConfig,
   defaultAgent,
   defaultAgentConfig,
