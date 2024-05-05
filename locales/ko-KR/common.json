@@ -160,6 +160,7 @@
     "newVersion": "새 버전 사용 가능: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "익명 사용자",
     "billing": "결제 관리",
     "defaultNickname": "커뮤니티 사용자",
     "discord": "커뮤니티 지원",

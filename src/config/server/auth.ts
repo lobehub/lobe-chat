@@ -4,6 +4,11 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
+      // ===== Clerk ===== //
+      CLERK_SECRET_KEY?: string;
+      CLERK_WEBHOOK_SECRET?: string;
+
+      // ===== Next Auth ===== //
       ENABLE_OAUTH_SSO?: string;
       SSO_PROVIDERS?: string;
 
@@ -42,6 +47,9 @@ export const getAuthConfig = () => {
   return {
     ENABLE_OAUTH_SSO: !!process.env.ENABLE_OAUTH_SSO,
     SSO_PROVIDERS: process.env.SSO_PROVIDERS || 'auth0',
+
+    ENABLE_CLERK_AUTH: !!process.env.CLERK_SECRET_KEY,
+    CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
     // Auth0
     AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID || '',

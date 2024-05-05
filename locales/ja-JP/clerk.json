@@ -1,0 +1,769 @@
+{
+  "backButton": "戻る",
+  "badge__default": "デフォルト",
+  "badge__otherImpersonatorDevice": "他のなりすましデバイス",
+  "badge__primary": "プライマリ",
+  "badge__requiresAction": "アクションが必要",
+  "badge__thisDevice": "このデバイス",
+  "badge__unverified": "未確認",
+  "badge__userDevice": "ユーザーデバイス",
+  "badge__you": "あなた",
+  "createOrganization": {
+    "formButtonSubmit": "組織を作成",
+    "invitePage": {
+      "formButtonReset": "スキップ"
+    },
+    "title": "組織を作成"
+  },
+  "dates": {
+    "lastDay": "昨日 {{ date | timeString('ja-JP') }}",
+    "next6Days": "{{ date | weekday('ja-JP','long') }} {{ date | timeString('ja-JP') }}",
+    "nextDay": "明日 {{ date | timeString('ja-JP') }}",
+    "numeric": "{{ date | numeric('ja-JP') }}",
+    "previous6Days": "先週の{{ date | weekday('ja-JP','long') }} {{ date | timeString('ja-JP') }}",
+    "sameDay": "今日 {{ date | timeString('ja-JP') }}"
+  },
+  "dividerText": "または",
+  "footerActionLink__useAnotherMethod": "他の方法を使用",
+  "footerPageLink__help": "ヘルプ",
+  "footerPageLink__privacy": "プライバシー",
+  "footerPageLink__terms": "利用規約",
+  "formButtonPrimary": "続行",
+  "formButtonPrimary__verify": "確認",
+  "formFieldAction__forgotPassword": "パスワードを忘れましたか？",
+  "formFieldError__matchingPasswords": "パスワードが一致しています。",
+  "formFieldError__notMatchingPasswords": "パスワードが一致しません。",
+  "formFieldError__verificationLinkExpired": "確認リンクの有効期限が切れています。新しいリンクをリクエストしてください。",
+  "formFieldHintText__optional": "任意",
+  "formFieldHintText__slug": "スラッグはユニークで人間が読めるIDです。URLでよく使用されます。",
+  "formFieldInputPlaceholder__backupCode": "",
+  "formFieldInputPlaceholder__confirmDeletionUserAccount": "アカウントを削除",
+  "formFieldInputPlaceholder__emailAddress": "",
+  "formFieldInputPlaceholder__emailAddress_username": "",
+  "formFieldInputPlaceholder__emailAddresses": "example@email.com, example2@email.com",
+  "formFieldInputPlaceholder__firstName": "",
+  "formFieldInputPlaceholder__lastName": "",
+  "formFieldInputPlaceholder__organizationDomain": "",
+  "formFieldInputPlaceholder__organizationDomainEmailAddress": "",
+  "formFieldInputPlaceholder__organizationName": "",
+  "formFieldInputPlaceholder__organizationSlug": "my-org",
+  "formFieldInputPlaceholder__password": "",
+  "formFieldInputPlaceholder__phoneNumber": "",
+  "formFieldInputPlaceholder__username": "",
+  "formFieldLabel__automaticInvitations": "このドメインの自動招待を有効にする",
+  "formFieldLabel__backupCode": "バックアップコード",
+  "formFieldLabel__confirmDeletion": "確認",
+  "formFieldLabel__confirmPassword": "パスワードを確認",
+  "formFieldLabel__currentPassword": "現在のパスワード",
+  "formFieldLabel__emailAddress": "メールアドレス",
+  "formFieldLabel__emailAddress_username": "メールアドレスまたはユーザー名",
+  "formFieldLabel__emailAddresses": "メールアドレス",
+  "formFieldLabel__firstName": "名",
+  "formFieldLabel__lastName": "姓",
+  "formFieldLabel__newPassword": "新しいパスワード",
+  "formFieldLabel__organizationDomain": "ドメイン",
+  "formFieldLabel__organizationDomainDeletePending": "保留中の招待と提案を削除",
+  "formFieldLabel__organizationDomainEmailAddress": "検証メールアドレス",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "このドメインの下でコードを受信してこのドメインを確認するためのメールアドレスを入力してください。",
+  "formFieldLabel__organizationName": "名前",
+  "formFieldLabel__organizationSlug": "スラッグ",
+  "formFieldLabel__passkeyName": "パスキーの名前",
+  "formFieldLabel__password": "パスワード",
+  "formFieldLabel__phoneNumber": "電話番号",
+  "formFieldLabel__role": "役割",
+  "formFieldLabel__signOutOfOtherSessions": "他のデバイスからサインアウト",
+  "formFieldLabel__username": "ユーザー名",
+  "impersonationFab": {
+    "action__signOut": "サインアウト",
+    "title": "{{identifier}} としてサインインしています"
+  },
+  "locale": "ja-JP",
+  "maintenanceMode": "現在、メンテナンス中ですが、心配しないでください。数分以内に完了するはずです。",
+  "membershipRole__admin": "管理者",
+  "membershipRole__basicMember": "メンバー",
+  "membershipRole__guestMember": "ゲスト",
+  "organizationList": {
+    "action__createOrganization": "組織を作成",
+    "action__invitationAccept": "参加する",
+    "action__suggestionsAccept": "参加リクエスト",
+    "createOrganization": "組織を作成",
+    "invitationAcceptedLabel": "参加済み",
+    "subtitle": "{{applicationName}} を続行するため",
+    "suggestionsAcceptedLabel": "承認待ち",
+    "title": "アカウントを選択",
+    "titleWithoutPersonal": "組織を選択"
+  },
+  "organizationProfile": {
+    "badge__automaticInvitation": "自動招待",
+    "badge__automaticSuggestion": "自動提案",
+    "badge__manualInvitation": "自動登録なし",
+    "badge__unverified": "未確認",
+    "createDomainPage": {
+      "subtitle": "ドメインを追加して確認してください。このドメインのメールアドレスを持つユーザーは、組織に自動的に参加するか、参加をリクエストできます。",
+      "title": "ドメインを追加"
+    },
+    "invitePage": {
+      "detailsTitle__inviteFailed": "招待状を送信できませんでした。次のメールアドレスには既に保留中の招待状があります：{{email_addresses}}。",
+      "formButtonPrimary__continue": "招待状を送信",
+      "selectDropdown__role": "役割を選択",
+      "subtitle": "1つ以上のメールアドレスを入力または貼り付けてください。スペースやカンマで区切ってください。",
+      "successMessage": "招待状が正常に送信されました",
+      "title": "新しいメンバーを招待"
+    },
+    "membersPage": {
+      "action__invite": "招待",
+      "activeMembersTab": {
+        "menuAction__remove": "メンバーを削除",
+        "tableHeader__actions": "アクション",
+        "tableHeader__joined": "参加日",
+        "tableHeader__role": "役割",
+        "tableHeader__user": "ユーザー"
+      },
+      "detailsTitle__emptyRow": "表示するメンバーはありません",
+      "invitationsTab": {
+        "autoInvitations": {
+          "headerSubtitle": "組織とメールドメインを接続してユーザーを招待します。一致するメールドメインでサインアップしたユーザーはいつでも組織に参加できます。",
+          "headerTitle": "自動招待",
+          "primaryButton": "確認済みドメインを管理"
+        },
+        "table__emptyRow": "表示する招待状はありません"
+      },
+      "invitedMembersTab": {
+        "menuAction__revoke": "招待を取り消す",
+        "tableHeader__invited": "招待中"
+      },
+      "requestsTab": {
+        "autoSuggestions": {
+          "headerSubtitle": "一致するメールドメインでサインアップしたユーザーは、組織に参加をリクエストする提案を見ることができます。",
+          "headerTitle": "自動提案",
+          "primaryButton": "確認済みドメインを管理"
+        },
+        "menuAction__approve": "承認",
+        "menuAction__reject": "拒否",
+        "tableHeader__requested": "リクエスト済み",
+        "table__emptyRow": "表示するリクエストはありません"
+      },
+      "start": {
+        "headerTitle__invitations": "招待状",
+        "headerTitle__members": "メンバー",
+        "headerTitle__requests": "リクエスト"
+      }
+    },
+    "navbar": {
+      "description": "組織を管理します",
+      "general": "一般",
+      "members": "メンバー",
+      "title": "組織"
+    },
+    "profilePage": {
+      "dangerSection": {
+        "deleteOrganization": {
+          "actionDescription": "{{organizationName}} を入力して続行してください。",
+          "messageLine1": "この組織を削除してもよろしいですか？",
+          "messageLine2": "この操作は取り消せません。",
+          "successMessage": "組織を削除しました",
+          "title": "組織を削除"
+        },
+        "leaveOrganization": {
+          "actionDescription": "{{organizationName}} を入力して続行してください。",
+          "messageLine1": "この組織を退出してもよろしいですか？",
+          "messageLine2": "この操作は取り消せません。",
+          "successMessage": "組織を退出しました",
+          "title": "組織を退出"
+        },
+        "title": "危険"
+      },
+      "domainSection": {
+        "menuAction__manage": "管理",
+        "menuAction__remove": "削除",
+        "menuAction__verify": "確認",
+        "primaryButton": "ドメインを追加",
+        "subtitle": "確認済みメールドメインに基づいてユーザーが組織に自動的に参加するか、参加をリクエストできるようにします。",
+        "title": "確認済みドメイン"
+      },
+      "successMessage": "組織が更新されました",
+      "title": "プロフィールを更新"
+    },
+    "removeDomainPage": {
+      "messageLine1": "{{domain}} のメールドメインが削除されます。",
+      "messageLine2": "この後、ユーザーは組織に自動的に参加できなくなります。",
+      "successMessage": "{{domain}} が削除されました",
+      "title": "ドメインを削除"
+    },
+    "start": {
+      "headerTitle__general": "一般",
+      "headerTitle__members": "メンバー",
+      "profileSection": {
+        "primaryButton": "プロフィールを更新",
+        "title": "組織プロフィール",
+        "uploadAction__title": "ロゴをアップロード"
+      }
+    },
+    "verifiedDomainPage": {
+      "dangerTab": {
+        "calloutInfoLabel": "このドメインを削除すると招待中のユーザーに影響します",
+        "removeDomainActionLabel__remove": "ドメインを削除",
+        "removeDomainSubtitle": "このドメインを確認済みドメインから削除します",
+        "removeDomainTitle": "ドメインを削除"
+      },
+      "enrollmentTab": {
+        "automaticInvitationOption__description": "ユーザーはサインアップ時に組織に自動的に招待され、いつでも参加できます。",
+        "automaticInvitationOption__label": "自動招待",
+        "automaticSuggestionOption__description": "ユーザーは参加をリクエストする提案を受け取りますが、管理者の承認が必要です。",
+        "automaticSuggestionOption__label": "自動提案",
+        "calloutInfoLabel": "登録モードの変更は新規ユーザーにのみ影響します",
+        "calloutInvitationCountLabel": "ユーザーに送信された保留中の招待状：{{count}}",
+        "calloutSuggestionCountLabel": "ユーザーに送信された保留中の提案：{{count}}",
+        "manualInvitationOption__description": "ユーザーは組織に手動でのみ招待できます。",
+        "manualInvitationOption__label": "自動登録なし",
+        "subtitle": "このドメインからのユーザーが組織に参加する方法を選択してください"
+      },
+      "start": {
+        "headerTitle__danger": "危険",
+        "headerTitle__enrollment": "登録オプション"
+      },
+      "subtitle": "ドメイン {{domain}} が確認済みです。登録モードを選択して続行してください",
+      "title": "{{domain}} を更新"
+    },
+    "verifyDomainPage": {
+      "formSubtitle": "メールアドレスに送信された確認コードを入力してください",
+      "formTitle": "確認コード",
+      "resendButton": "コードを受信していませんか？ 再送信",
+      "subtitle": "{{domainName}} のドメインをメールで確認する必要があります",
+      "subtitleVerificationCodeScreen": "確認コードが {{emailAddress}} に送信されました。コードを入力して続行してください",
+      "title": "ドメインを確認"
+    }
+  },
+  "organizationSwitcher": {
+    "action__createOrganization": "組織を作成",
+    "action__invitationAccept": "参加する",
+    "action__manageOrganization": "管理",
+    "action__suggestionsAccept": "参加リクエスト",
+    "notSelected": "選択されている組織はありません",
+    "personalWorkspace": "個人アカウント",
+    "suggestionsAcceptedLabel": "承認待ち"
+  },
+  "paginationButton__next": "次へ",
+  "paginationButton__previous": "前へ",
+  "paginationRowText__displaying": "表示中",
+  "paginationRowText__of": "/",
+  "signIn": {
+    "accountSwitcher": {
+      "action__addAccount": "アカウントを追加",
+      "action__signOutAll": "すべてのアカウントからサインアウト",
+      "subtitle": "続行するアカウントを選択してください。",
+      "title": "アカウントを選択"
+    },
+    "alternativeMethods": {
+      "actionLink": "ヘルプを受ける",
+      "actionText": "これらのいずれも持っていない場合",
+      "blockButton__backupCode": "バックアップコードを使用",
+      "blockButton__emailCode": "{{identifier}} にメールコードを送信",
+      "blockButton__emailLink": "{{identifier}} にメールリンクを送信",
+      "blockButton__passkey": "パスキーを使用してサインイン",
+      "blockButton__password": "パスワードでサインイン",
+      "blockButton__phoneCode": "{{identifier}} にSMSコードを送信",
+      "blockButton__totp": "認証アプリを使用",
+      "getHelp": {
+        "blockButton__emailSupport": "メールサポート",
+        "content": "アカウントにサインインできない場合は、お問い合わせいただければ、できるだけ早くアクセスを回復するために協力します。",
+        "title": "ヘルプを受ける"
+      },
+      "subtitle": "問題が発生していますか？これらの方法のいずれかを使用してサインインできます。",
+      "title": "別の方法を使用"
+    },
+    "backupCodeMfa": {
+      "subtitle": "バックアップコードは、2段階認証を設定する際に受け取ったものです。",
+      "title": "バックアップコードを入力"
+    },
+    "emailCode": {
+      "formTitle": "確認コード",
+      "resendButton": "コードが届かない場合は再送信",
+      "subtitle": "{{applicationName}} へ続行するために",
+      "title": "メールを確認"
+    },
+    "emailLink": {
+      "expired": {
+        "subtitle": "続行するには元のタブに戻ってください。",
+        "title": "この検証リンクは期限切れです"
+      },
+      "failed": {
+        "subtitle": "続行するには元のタブに戻ってください。",
+        "title": "この検証リンクは無効です"
+      },
+      "formSubtitle": "メールに送信された検証リンクを使用",
+      "formTitle": "検証リンク",
+      "loading": {
+        "subtitle": "すぐにリダイレクトされます",
+        "title": "サインイン中..."
+      },
+      "resendButton": "リンクが届かない場合は再送信",
+      "subtitle": "{{applicationName}} へ続行するために",
+      "title": "メールを確認",
+      "unusedTab": {
+        "title": "このタブを閉じても構いません"
+      },
+      "verified": {
+        "subtitle": "すぐにリダイレクトされます",
+        "title": "正常にサインインしました"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "続行するには元のタブに戻ってください",
+        "subtitleNewTab": "続行するには新しく開いたタブに戻ってください",
+        "titleNewTab": "他のタブでサインイン済み"
+      }
+    },
+    "forgotPassword": {
+      "formTitle": "パスワードをリセットするコード",
+      "resendButton": "コードが届かない場合は再送信",
+      "subtitle": "パスワードをリセットするため",
+      "subtitle_email": "まず、メールアドレスに送信されたコードを入力してください",
+      "subtitle_phone": "まず、電話に送信されたコードを入力してください",
+      "title": "パスワードをリセット"
+    },
+    "forgotPasswordAlternativeMethods": {
+      "blockButton__resetPassword": "パスワードをリセット",
+      "label__alternativeMethods": "または、他の方法でサインイン",
+      "title": "パスワードを忘れましたか？"
+    },
+    "noAvailableMethods": {
+      "message": "サインインを続行できません。利用可能な認証要素がありません。",
+      "subtitle": "エラーが発生しました",
+      "title": "サインインできません"
+    },
+    "passkey": {
+      "subtitle": "パスキーを使用することで、あなたであることが確認されます。デバイスが指紋、顔認証、または画面ロックを要求する場合があります。",
+      "title": "パスキーを使用"
+    },
+    "password": {
+      "actionLink": "他の方法を使用",
+      "subtitle": "アカウントに関連付けられたパスワードを入力してください",
+      "title": "パスワードを入力"
+    },
+    "passwordPwned": {
+      "title": "パスワードが危険にさらされています"
+    },
+    "phoneCode": {
+      "formTitle": "確認コード",
+      "resendButton": "コードが届かない場合は再送信",
+      "subtitle": "{{applicationName}} へ続行するために",
+      "title": "携帯電話を確認"
+    },
+    "phoneCodeMfa": {
+      "formTitle": "確認コード",
+      "resendButton": "コードが届かない場合は再送信",
+      "subtitle": "続行するには、携帯電話に送信された確認コードを入力してください",
+      "title": "携帯電話を確認"
+    },
+    "resetPassword": {
+      "formButtonPrimary": "パスワードをリセット",
+      "requiredMessage": "セキュリティ上の理由から、パスワードをリセットする必要があります。",
+      "successMessage": "パスワードが正常に変更されました。サインイン中です、しばらくお待ちください。",
+      "title": "新しいパスワードを設定"
+    },
+    "resetPasswordMfa": {
+      "detailsLabel": "パスワードをリセットする前に、あなたの身元を確認する必要があります。"
+    },
+    "start": {
+      "actionLink": "サインアップ",
+      "actionLink__use_email": "メールを使用",
+      "actionLink__use_email_username": "メールまたはユーザー名を使用",
+      "actionLink__use_passkey": "代わりにパスキーを使用",
+      "actionLink__use_phone": "電話を使用",
+      "actionLink__use_username": "ユーザー名を使用",
+      "actionText": "アカウントを持っていませんか？",
+      "subtitle": "お帰りなさい！続行するにはサインインしてください",
+      "title": "{{applicationName}} にサインイン"
+    },
+    "totpMfa": {
+      "formTitle": "確認コード",
+      "subtitle": "続行するには、認証アプリで生成された確認コードを入力してください",
+      "title": "2段階認証"
+    }
+  },
+  "signInEnterPasswordTitle": "パスワードを入力",
+  "signUp": {
+    "continue": {
+      "actionLink": "サインイン",
+      "actionText": "すでにアカウントをお持ちですか？",
+      "subtitle": "続行するために残りの詳細を入力してください",
+      "title": "残りのフィールドを入力"
+    },
+    "emailCode": {
+      "formSubtitle": "メールアドレスに送信された検証コードを入力",
+      "formTitle": "検証コード",
+      "resendButton": "コードが届かない場合は再送信",
+      "subtitle": "メールアドレスに送信された検証コードを入力してください",
+      "title": "メールを検証"
+    },
+    "emailLink": {
+      "formSubtitle": "メールアドレスに送信された検証リンクを使用",
+      "formTitle": "検証リンク",
+      "loading": {
+        "title": "サインアップ中..."
+      },
+      "resendButton": "リンクが届かない場合は再送信",
+      "subtitle": "{{applicationName}} へ続行するために",
+      "title": "メールを検証",
+      "verified": {
+        "title": "正常にサインアップしました"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "続行するには新しく開いたタブに戻ってください",
+        "subtitleNewTab": "続行するには前のタブに戻ってください",
+        "title": "メールが正常に検証されました"
+      }
+    },
+    "phoneCode": {
+      "formSubtitle": "電話番号に送信された検証コードを入力",
+      "formTitle": "検証コード",
+      "resendButton": "コードが届かない場合は再送信",
+      "subtitle": "電話番号に送信された検証コードを入力してください",
+      "title": "電話を検証"
+    },
+    "start": {
+      "actionLink": "サインイン",
+      "actionText": "すでにアカウントをお持ちですか？",
+      "subtitle": "ようこそ！始めるには詳細を入力してください",
+      "title": "アカウントを作成"
+    }
+  },
+  "socialButtonsBlockButton": "{{provider|titleize}} で続行",
+  "unstable__errors": {
+    "captcha_invalid": "セキュリティ検証に失敗したため、サインアップできませんでした。もう一度試すにはページを更新するか、サポートにお問い合わせください。",
+    "captcha_unavailable": "ボット検証に失敗したため、サインアップできませんでした。もう一度試すにはページを更新するか、サポートにお問い合わせください。",
+    "form_code_incorrect": "",
+    "form_identifier_exists": "",
+    "form_identifier_exists__email_address": "このメールアドレスは既に使用されています。別のものをお試しください。",
+    "form_identifier_exists__phone_number": "この電話番号は既に使用されています。別のものをお試しください。",
+    "form_identifier_exists__username": "このユーザー名は既に使用されています。別のものをお試しください。",
+    "form_identifier_not_found": "",
+    "form_param_format_invalid": "",
+    "form_param_format_invalid__email_address": "有効なメールアドレスを入力してください。",
+    "form_param_format_invalid__phone_number": "有効な国際フォーマットの電話番号を入力してください。",
+    "form_param_max_length_exceeded__first_name": "名前は256文字を超えることはできません。",
+    "form_param_max_length_exceeded__last_name": "姓は256文字を超えることはできません。",
+    "form_param_max_length_exceeded__name": "名前は256文字を超えることはできません。",
+    "form_param_nil": "",
+    "form_password_incorrect": "",
+    "form_password_length_too_short": "",
+    "form_password_not_strong_enough": "パスワードが強力ではありません。",
+    "form_password_pwned": "このパスワードは侵害の一部として見つかったため使用できません。別のパスワードをお試しください。",
+    "form_password_pwned__sign_in": "このパスワードは侵害の一部として見つかったため使用できません。パスワードをリセットしてください。",
+    "form_password_size_in_bytes_exceeded": "パスワードが許容されるバイト数を超えています。短くするか、一部の特殊文字を削除してください。",
+    "form_password_validation_failed": "パスワードが間違っています。",
+    "form_username_invalid_character": "",
+    "form_username_invalid_length": "",
+    "identification_deletion_failed": "最後の識別情報を削除することはできません。",
+    "not_allowed_access": "",
+    "passkey_already_exists": "このデバイスにはすでにパスキーが登録されています。",
+    "passkey_not_supported": "このデバイスではパスキーはサポートされていません。",
+    "passkey_pa_not_supported": "登録にはプラットフォーム認証子が必要ですが、デバイスがサポートしていません。",
+    "passkey_registration_cancelled": "パスキーの登録がキャンセルされたか、タイムアウトしました。",
+    "passkey_retrieval_cancelled": "パスキーの確認がキャンセルされたか、タイムアウトしました。",
+    "passwordComplexity": {
+      "maximumLength": "{{length}}文字未満",
+      "minimumLength": "{{length}}文字以上",
+      "requireLowercase": "小文字の文字",
+      "requireNumbers": "数字",
+      "requireSpecialCharacter": "特殊文字",
+      "requireUppercase": "大文字の文字",
+      "sentencePrefix": "パスワードには次の要素が含まれる必要があります"
+    },
+    "phone_number_exists": "この電話番号は既に使用されています。別のものをお試しください。",
+    "zxcvbn": {
+      "couldBeStronger": "パスワードは機能しますが、もっと強力にすることができます。もっと文字を追加してみてください。",
+      "goodPassword": "パスワードはすべての必要条件を満たしています。",
+      "notEnough": "パスワードが強力ではありません。",
+      "suggestions": {
+        "allUppercase": "すべての文字を大文字にする",
+        "anotherWord": "一般的でない単語を追加する",
+        "associatedYears": "自分に関連する年を避ける",
+        "capitalization": "最初の文字以外も大文字にする",
+        "dates": "自分に関連する日付を避ける",
+        "l33t": "予測可能な文字の置換（例：'a' を '@' に）を避ける",
+        "longerKeyboardPattern": "長いキーボードパターンを使用し、入力方向を複数回変更する",
+        "noNeed": "記号、数字、大文字を使用せずに強力なパスワードを作成できます",
+        "pwned": "他の場所でこのパスワードを使用している場合は変更してください",
+        "recentYears": "最近の年を避ける",
+        "repeated": "繰り返された単語や文字を避ける",
+        "reverseWords": "一般的な単語の逆スペルを避ける",
+        "sequences": "一般的な文字のシーケンスを避ける",
+        "useWords": "複数の単語を使用するが、一般的なフレーズは避ける"
+      },
+      "warnings": {
+        "common": "これは一般的に使用されるパスワードです",
+        "commonNames": "一般的な名前や姓は推測されやすいです",
+        "dates": "日付は推測されやすいです",
+        "extendedRepeat": "「abcabcabc」のような繰り返し文字パターンは推測されやすいです",
+        "keyPattern": "短いキーボードパターンは推測されやすいです",
+        "namesByThemselves": "単独の名前や姓は推測されやすいです",
+        "pwned": "インターネット上のデータ侵害でパスワードが公開されました",
+        "recentYears": "最近の年は推測されやすいです",
+        "sequences": "「abc」のような一般的な文字のシーケンスは推測されやすいです",
+        "similarToCommon": "これは一般的に使用されるパスワードに類似しています",
+        "simpleRepeat": "「aaa」のような繰り返し文字は推測されやすいです",
+        "straightRow": "キーボードの直線的な行は推測されやすいです",
+        "topHundred": "これは頻繁に使用されるパスワードです",
+        "topTen": "これは非常に使用されるパスワードです",
+        "userInputs": "個人情報やページ関連のデータを含めないでください",
+        "wordByItself": "単語単体は推測されやすいです"
+      }
+    }
+  },
+  "userButton": {
+    "action__addAccount": "アカウントを追加",
+    "action__manageAccount": "アカウントを管理",
+    "action__signOut": "サインアウト",
+    "action__signOutAll": "すべてのアカウントからサインアウト"
+  },
+  "userProfile": {
+    "backupCodePage": {
+      "actionLabel__copied": "コピーしました！",
+      "actionLabel__copy": "すべてコピー",
+      "actionLabel__download": ".txt ダウンロード",
+      "actionLabel__print": "印刷",
+      "infoText1": "このアカウントのバックアップコードが有効になります。",
+      "infoText2": "バックアップコードは秘密に保ち、安全に保管してください。疑わしい場合はバックアップコードを再生成できます。",
+      "subtitle__codelist": "安全に保管し、秘密にしてください。",
+      "successMessage": "バックアップコードが有効になりました。認証デバイスへのアクセスが失われた場合、これらのいずれかを使用してアカウントにサインインできます。各コードは1回しか使用できません。",
+      "successSubtitle": "認証デバイスへのアクセスが失われた場合、これらのいずれかを使用してアカウントにサインインできます。",
+      "title": "バックアップコードの検証を追加",
+      "title__codelist": "バックアップコード"
+    },
+    "connectedAccountPage": {
+      "formHint": "アカウントを接続するプロバイダを選択してください。",
+      "formHint__noAccounts": "利用可能な外部アカウントプロバイダはありません。",
+      "removeResource": {
+        "messageLine1": "{{identifier}} はこのアカウントから削除されます。",
+        "messageLine2": "この接続されたアカウントを使用したり、依存する機能を使用したりすることはできなくなります。",
+        "successMessage": "{{connectedAccount}} がアカウントから削除されました。",
+        "title": "接続されたアカウントを削除"
+      },
+      "socialButtonsBlockButton": "{{provider|titleize}}",
+      "successMessage": "プロバイダがアカウントに追加されました",
+      "title": "接続されたアカウントを追加"
+    },
+    "deletePage": {
+      "actionDescription": "\"アカウントを削除\" と入力して続行してください。",
+      "confirm": "アカウントを削除",
+      "messageLine1": "アカウントを削除してもよろしいですか？",
+      "messageLine2": "この操作は永久的で取り消しできません。",
+      "title": "アカウントを削除"
+    },
+    "emailAddressPage": {
+      "emailCode": {
+        "formHint": "このメールアドレスに送信された確認コードを含むメールが送信されます。",
+        "formSubtitle": "{{identifier}} に送信された確認コードを入力してください。",
+        "formTitle": "確認コード",
+        "resendButton": "コードを受信していませんか？ 再送信",
+        "successMessage": "メール {{identifier}} がアカウントに追加されました。"
+      },
+      "emailLink": {
+        "formHint": "このメールアドレスに送信された確認リンクを含むメールが送信されます。",
+        "formSubtitle": "{{identifier}} に送信されたメール内の確認リンクをクリックしてください。",
+        "formTitle": "確認リンク",
+        "resendButton": "リンクを受信していませんか？ 再送信",
+        "successMessage": "メール {{identifier}} がアカウントに追加されました。"
+      },
+      "removeResource": {
+        "messageLine1": "{{identifier}} はこのアカウントから削除されます。",
+        "messageLine2": "このメールアドレスを使用してサインインすることはできなくなります。",
+        "successMessage": "{{emailAddress}} がアカウントから削除されました。",
+        "title": "メールアドレスを削除"
+      },
+      "title": "メールアドレスを追加",
+      "verifyTitle": "メールアドレスを確認"
+    },
+    "formButtonPrimary__add": "追加",
+    "formButtonPrimary__continue": "続行",
+    "formButtonPrimary__finish": "完了",
+    "formButtonPrimary__remove": "削除",
+    "formButtonPrimary__save": "保存",
+    "formButtonReset": "キャンセル",
+    "mfaPage": {
+      "formHint": "追加する方法を選択してください。",
+      "title": "2段階認証を追加"
+    },
+    "mfaPhoneCodePage": {
+      "backButton": "既存の番号を使用",
+      "primaryButton__addPhoneNumber": "電話番号を追加",
+      "removeResource": {
+        "messageLine1": "サインイン時にこの番号からの確認コードが不要になります。",
+        "messageLine2": "アカウントのセキュリティが低下する可能性があります。続行しますか？",
+        "successMessage": "{{mfaPhoneCode}} のSMSコード2段階認証が削除されました。",
+        "title": "2段階認証を削除"
+      },
+      "subtitle__availablePhoneNumbers": "SMSコード2段階認証に登録する既存の電話番号を選択するか、新しい電話番号を追加してください。",
+      "subtitle__unavailablePhoneNumbers": "SMSコード2段階認証に登録する利用可能な電話番号はありません。新しい電話番号を追加してください。",
+      "successMessage1": "サインイン時に、この電話番号に送信された確認コードを追加の手順として入力する必要があります。",
+      "successMessage2": "これらのバックアップコードを保存し、安全な場所に保管してください。認証デバイスへのアクセスが失われた場合、バックアップコードを使用できます。",
+      "successTitle": "SMSコード検証が有効になりました",
+      "title": "SMSコード検証を追加"
+    },
+    "mfaTOTPPage": {
+      "authenticatorApp": {
+        "buttonAbleToScan__nonPrimary": "代わりにQRコードをスキャン",
+        "buttonUnableToScan__nonPrimary": "QRコードをスキャンできませんか？",
+        "infoText__ableToScan": "認証アプリで新しいサインイン方法を設定し、以下のQRコードをスキャンしてアカウントにリンクしてください。",
+        "infoText__unableToScan": "認証アプリで新しいサインイン方法を設定し、以下のキーを入力してください。",
+        "inputLabel__unableToScan1": "タイムベースまたはワンタイムパスワードが有効になっていることを確認し、アカウントのリンクを完了してください。",
+        "inputLabel__unableToScan2": "代替として、認証アプリがTOTP URIをサポートしている場合は、フルURIをコピーすることもできます。"
+      },
+      "removeResource": {
+        "messageLine1": "この認証アプリからの確認コードは、サインイン時に不要になります。",
+        "messageLine2": "アカウントのセキュリティが低下する可能性があります。続行しますか？",
+        "successMessage": "認証アプリによる2段階認証が削除されました。",
+        "title": "2段階認証を削除"
+      },
+      "successMessage": "2段階認証が有効になりました。サインイン時に、この認証アプリからの確認コードを追加の手順として入力する必要があります。",
+      "title": "認証アプリを追加",
+      "verifySubtitle": "認証アプリで生成された確認コードを入力してください",
+      "verifyTitle": "確認コード"
+    },
+    "mobileButton__menu": "メニュー",
+    "navbar": {
+      "account": "プロフィール",
+      "description": "アカウント情報を管理します。",
+      "security": "セキュリティ",
+      "title": "アカウント"
+    },
+    "passkeyScreen": {
+      "removeResource": {
+        "messageLine1": "{{name}} がこのアカウントから削除されます。",
+        "title": "パスキーを削除"
+      },
+      "subtitle__rename": "パスキー名を変更して見つけやすくすることができます。",
+      "title__rename": "パスキーの名前を変更"
+    },
+    "passwordPage": {
+      "checkboxInfoText__signOutOfOtherSessions": "古いパスワードを使用した可能性のあるすべての他のデバイスからサインアウトすることをお勧めします。",
+      "readonly": "現在、パスワードを編集できません。企業接続を介してのみサインインできます。",
+      "successMessage__set": "パスワードが設定されました。",
+      "successMessage__signOutOfOtherSessions": "すべての他のデバイスからサインアウトされました。",
+      "successMessage__update": "パスワードが更新されました。",
+      "title__set": "パスワードを設定",
+      "title__update": "パスワードを更新"
+    },
+    "phoneNumberPage": {
+      "infoText": "検証コードが含まれたテキストメッセージがこの電話番号に送信されます。メッセージ料金が発生する場合があります。",
+      "removeResource": {
+        "messageLine1": "{{identifier}} がこのアカウントから削除されます。",
+        "messageLine2": "この電話番号を使用してサインインすることはできなくなります。",
+        "successMessage": "{{phoneNumber}} がアカウントから削除されました。",
+        "title": "電話番号を削除"
+      },
+      "successMessage": "{{identifier}} がアカウントに追加されました。",
+      "title": "電話番号を追加",
+      "verifySubtitle": "{{identifier}} に送信された検証コードを入力してください。",
+      "verifyTitle": "電話番号を検証"
+    },
+    "profilePage": {
+      "fileDropAreaHint": "推奨サイズ 1:1、最大10MB。",
+      "imageFormDestructiveActionSubtitle": "削除",
+      "imageFormSubtitle": "アップロード",
+      "imageFormTitle": "プロフィール画像",
+      "readonly": "プロフィール情報は企業接続によって提供され、編集できません。",
+      "successMessage": "プロフィールが更新されました。",
+      "title": "プロフィールを更新"
+    },
+    "start": {
+      "activeDevicesSection": {
+        "destructiveAction": "デバイスからサインアウト",
+        "title": "アクティブデバイス"
+      },
+      "connectedAccountsSection": {
+        "actionLabel__connectionFailed": "再試行",
+        "actionLabel__reauthorize": "今すぐ認証",
+        "destructiveActionTitle": "削除",
+        "primaryButton": "アカウントを接続",
+        "subtitle__reauthorize": "必要なスコープが更新されており、機能が制限されている可能性があります。問題を回避するために、このアプリケーションを再認証してください。",
+        "title": "接続されたアカウント"
+      },
+      "dangerSection": {
+        "deleteAccountButton": "アカウントを削除",
+        "title": "アカウントを削除"
+      },
+      "emailAddressesSection": {
+        "destructiveAction": "メールを削除",
+        "detailsAction__nonPrimary": "プライマリに設定",
+        "detailsAction__primary": "検証を完了",
+        "detailsAction__unverified": "検証",
+        "primaryButton": "メールアドレスを追加",
+        "title": "メールアドレス"
+      },
+      "enterpriseAccountsSection": {
+        "title": "エンタープライズアカウント"
+      },
+      "headerTitle__account": "プロフィール詳細",
+      "headerTitle__security": "セキュリティ",
+      "mfaSection": {
+        "backupCodes": {
+          "actionLabel__regenerate": "再生成",
+          "headerTitle": "バックアップコード",
+          "subtitle__regenerate": "安全なバックアップコードの新しいセットを取得します。以前のバックアップコードは削除され、使用できなくなります。",
+          "title__regenerate": "バックアップコードを再生成"
+        },
+        "phoneCode": {
+          "actionLabel__setDefault": "デフォルトに設定",
+          "destructiveActionLabel": "削除"
+        },
+        "primaryButton": "2段階認証を追加",
+        "title": "2段階認証",
+        "totp": {
+          "destructiveActionTitle": "削除",
+          "headerTitle": "認証アプリケーション"
+        }
+      },
+      "passkeysSection": {
+        "menuAction__destructive": "削除",
+        "menuAction__rename": "名前を変更",
+        "title": "パスキー"
+      },
+      "passwordSection": {
+        "primaryButton__setPassword": "パスワードを設定",
+        "primaryButton__updatePassword": "パスワードを更新",
+        "title": "パスワード"
+      },
+      "phoneNumbersSection": {
+        "destructiveAction": "電話番号を削除",
+        "detailsAction__nonPrimary": "プライマリに設定",
+        "detailsAction__primary": "検証を完了",
+        "detailsAction__unverified": "電話番号を検証",
+        "primaryButton": "電話番号を追加",
+        "title": "電話番号"
+      },
+      "profileSection": {
+        "primaryButton": "プロフィールを更新",
+        "title": "プロフィール"
+      },
+      "usernameSection": {
+        "primaryButton__setUsername": "ユーザー名を設定",
+        "primaryButton__updateUsername": "ユーザー名を更新",
+        "title": "ユーザー名"
+      },
+      "web3WalletsSection": {
+        "destructiveAction": "ウォレットを削除",
+        "primaryButton": "Web3ウォレット",
+        "title": "Web3ウォレット"
+      }
+    },
+    "usernamePage": {
+      "successMessage": "ユーザー名が更新されました。",
+      "title__set": "ユーザー名を設定",
+      "title__update": "ユーザー名を更新"
+    },
+    "web3WalletPage": {
+      "removeResource": {
+        "messageLine1": "{{identifier}} がこのアカウントから削除されます。",
+        "messageLine2": "このWeb3ウォレットを使用してサインインすることはできなくなります。",
+        "successMessage": "{{web3Wallet}} がアカウントから削除されました。",
+        "title": "Web3ウォレットを削除"
+      },
+      "subtitle__availableWallets": "アカウントに接続するWeb3ウォレットを選択してください。",
+      "subtitle__unavailableWallets": "利用可能なWeb3ウォレットはありません。",
+      "successMessage": "ウォレットがアカウントに追加されました。",
+      "title": "Web3ウォレットを追加"
+    }
+  }
+}

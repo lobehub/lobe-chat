@@ -160,6 +160,7 @@
     "newVersion": "هناك إصدار جديد متاح: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "مستخدم مجهول",
     "billing": "إدارة الفواتير",
     "defaultNickname": "مستخدم النسخة المجتمعية",
     "discord": "الدعم المجتمعي",

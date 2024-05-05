@@ -1,0 +1,769 @@
+{
+  "backButton": "Назад",
+  "badge__default": "По подразбиране",
+  "badge__otherImpersonatorDevice": "Друго устройство за имитиране",
+  "badge__primary": "Основен",
+  "badge__requiresAction": "Изисква действие",
+  "badge__thisDevice": "Това устройство",
+  "badge__unverified": "Непотвърден",
+  "badge__userDevice": "Потребителско устройство",
+  "badge__you": "Вие",
+  "createOrganization": {
+    "formButtonSubmit": "Създай организация",
+    "invitePage": {
+      "formButtonReset": "Пропусни"
+    },
+    "title": "Създаване на организация"
+  },
+  "dates": {
+    "lastDay": "Вчера в {{ date | timeString('en-US') }}",
+    "next6Days": "{{ date | weekday('en-US', 'long') }} в {{ date | timeString('en-US') }}",
+    "nextDay": "Утре в {{ date | timeString('en-US') }}",
+    "numeric": "{{ date | numeric('en-US') }}",
+    "previous6Days": "Миналата {{ date | weekday('en-US', 'long') }} в {{ date | timeString('en-US') }}",
+    "sameDay": "Днес в {{ date | timeString('en-US') }}"
+  },
+  "dividerText": "или",
+  "footerActionLink__useAnotherMethod": "Използвай друг метод",
+  "footerPageLink__help": "Помощ",
+  "footerPageLink__privacy": "Поверителност",
+  "footerPageLink__terms": "Условия",
+  "formButtonPrimary": "Продължи",
+  "formButtonPrimary__verify": "Потвърди",
+  "formFieldAction__forgotPassword": "Забравена парола?",
+  "formFieldError__matchingPasswords": "Паролите съвпадат.",
+  "formFieldError__notMatchingPasswords": "Паролите не съвпадат.",
+  "formFieldError__verificationLinkExpired": "Връзката за потвърждение изтече. Моля, поискайте нова връзка.",
+  "formFieldHintText__optional": "По избор",
+  "formFieldHintText__slug": "Slug е четим идентификатор, който трябва да бъде уникален. Често се използва в URL адреси.",
+  "formFieldInputPlaceholder__backupCode": "",
+  "formFieldInputPlaceholder__confirmDeletionUserAccount": "Изтрий профила",
+  "formFieldInputPlaceholder__emailAddress": "",
+  "formFieldInputPlaceholder__emailAddress_username": "",
+  "formFieldInputPlaceholder__emailAddresses": "пример@email.com, пример2@email.com",
+  "formFieldInputPlaceholder__firstName": "",
+  "formFieldInputPlaceholder__lastName": "",
+  "formFieldInputPlaceholder__organizationDomain": "",
+  "formFieldInputPlaceholder__organizationDomainEmailAddress": "",
+  "formFieldInputPlaceholder__organizationName": "",
+  "formFieldInputPlaceholder__organizationSlug": "моята-орг",
+  "formFieldInputPlaceholder__password": "",
+  "formFieldInputPlaceholder__phoneNumber": "",
+  "formFieldInputPlaceholder__username": "",
+  "formFieldLabel__automaticInvitations": "Активирай автоматични покани за този домейн",
+  "formFieldLabel__backupCode": "Резервен код",
+  "formFieldLabel__confirmDeletion": "Потвърждение",
+  "formFieldLabel__confirmPassword": "Потвърди парола",
+  "formFieldLabel__currentPassword": "Текуща парола",
+  "formFieldLabel__emailAddress": "Имейл адрес",
+  "formFieldLabel__emailAddress_username": "Имейл адрес или потребителско име",
+  "formFieldLabel__emailAddresses": "Имейл адреси",
+  "formFieldLabel__firstName": "Първо име",
+  "formFieldLabel__lastName": "Фамилия",
+  "formFieldLabel__newPassword": "Нова парола",
+  "formFieldLabel__organizationDomain": "Домейн",
+  "formFieldLabel__organizationDomainDeletePending": "Изтрийте изчакващите покани и предложения за този домейн",
+  "formFieldLabel__organizationDomainEmailAddress": "Имейл адрес за потвърждение",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "Въведете имейл адрес под този домейн, за да получите код и да потвърдите този домейн.",
+  "formFieldLabel__organizationName": "Име",
+  "formFieldLabel__organizationSlug": "Slug",
+  "formFieldLabel__passkeyName": "Име на ключ",
+  "formFieldLabel__password": "Парола",
+  "formFieldLabel__phoneNumber": "Телефонен номер",
+  "formFieldLabel__role": "Роля",
+  "formFieldLabel__signOutOfOtherSessions": "Изход от всички други устройства",
+  "formFieldLabel__username": "Потребителско име",
+  "impersonationFab": {
+    "action__signOut": "Изход",
+    "title": "Влизане като {{identifier}}"
+  },
+  "locale": "bg-BG",
+  "maintenanceMode": "В момента извършваме поддръжка, но не се притеснявайте, не би трябвало да отнеме повече от няколко минути.",
+  "membershipRole__admin": "Администратор",
+  "membershipRole__basicMember": "Член",
+  "membershipRole__guestMember": "Гост",
+  "organizationList": {
+    "action__createOrganization": "Създай организация",
+    "action__invitationAccept": "Присъедини се",
+    "action__suggestionsAccept": "Изпрати заявка за присъединяване",
+    "createOrganization": "Създай организация",
+    "invitationAcceptedLabel": "Присъединен",
+    "subtitle": "за продължаване към {{applicationName}}",
+    "suggestionsAcceptedLabel": "Чака одобрение",
+    "title": "Изберете акаунт",
+    "titleWithoutPersonal": "Изберете организация"
+  },
+  "organizationProfile": {
+    "badge__automaticInvitation": "Автоматични покани",
+    "badge__automaticSuggestion": "Автоматични предложения",
+    "badge__manualInvitation": "Няма автоматично записване",
+    "badge__unverified": "Непотвърден",
+    "createDomainPage": {
+      "subtitle": "Добавете домейна за потвърждение. Потребителите с имейл адреси от този домейн могат автоматично да се присъединят към организацията или да поискат присъединяване.",
+      "title": "Добавете домейн"
+    },
+    "invitePage": {
+      "detailsTitle__inviteFailed": "Поканите не могат да бъдат изпратени. Вече има чакащи покани за следните имейл адреси: {{email_addresses}}.",
+      "formButtonPrimary__continue": "Изпрати покани",
+      "selectDropdown__role": "Изберете роля",
+      "subtitle": "Въведете или поставете един или повече имейл адреси, разделени с интервали или запетая.",
+      "successMessage": "Поканите бяха успешно изпратени",
+      "title": "Покани нови членове"
+    },
+    "membersPage": {
+      "action__invite": "Покани",
+      "activeMembersTab": {
+        "menuAction__remove": "Премахни член",
+        "tableHeader__actions": "",
+        "tableHeader__joined": "Присъединил се",
+        "tableHeader__role": "Роля",
+        "tableHeader__user": "Потребител"
+      },
+      "detailsTitle__emptyRow": "Няма членове за показване",
+      "invitationsTab": {
+        "autoInvitations": {
+          "headerSubtitle": "Поканете потребители, като свържете имейл домейн с вашата организация. Всеки, който се регистрира със съвпадащ имейл домейн, ще може да се присъедини към организацията по всяко време.",
+          "headerTitle": "Автоматични покани",
+          "primaryButton": "Управление на потвърдени домейни"
+        },
+        "table__emptyRow": "Няма покани за показване"
+      },
+      "invitedMembersTab": {
+        "menuAction__revoke": "Оттегли поканата",
+        "tableHeader__invited": "Поканени"
+      },
+      "requestsTab": {
+        "autoSuggestions": {
+          "headerSubtitle": "Потребителите, които се регистрират със съвпадащ имейл домейн, ще виждат предложение да поискат да се присъединят към вашата организация.",
+          "headerTitle": "Автоматични предложения",
+          "primaryButton": "Управление на потвърдени домейни"
+        },
+        "menuAction__approve": "Одобри",
+        "menuAction__reject": "Отхвърли",
+        "tableHeader__requested": "Заявено право на достъп",
+        "table__emptyRow": "Няма заявки за показване"
+      },
+      "start": {
+        "headerTitle__invitations": "Покани",
+        "headerTitle__members": "Членове",
+        "headerTitle__requests": "Заявки"
+      }
+    },
+    "navbar": {
+      "description": "Управлявайте вашата организация",
+      "general": "Общи",
+      "members": "Членове",
+      "title": "Организация"
+    },
+    "profilePage": {
+      "dangerSection": {
+        "deleteOrganization": {
+          "actionDescription": "Въведете \"{{organizationName}}\" по-долу, за да продължите.",
+          "messageLine1": "Сигурни ли сте, че искате да изтриете тази организация?",
+          "messageLine2": "Това действие е постоянно и необратимо.",
+          "successMessage": "Изтрили сте организацията.",
+          "title": "Изтрий организация"
+        },
+        "leaveOrganization": {
+          "actionDescription": "Въведете \"{{organizationName}}\" по-долу, за да продължите.",
+          "messageLine1": "Сигурни ли сте, че искате да напуснете тази организация? Ще загубите достъп до тази организация и нейните приложения.",
+          "messageLine2": "Това действие е постоянно и необратимо.",
+          "successMessage": "Излязохте от организацията.",
+          "title": "Напусни организация"
+        },
+        "title": "Опасност"
+      },
+      "domainSection": {
+        "menuAction__manage": "Управление",
+        "menuAction__remove": "Изтрий",
+        "menuAction__verify": "Потвърди",
+        "primaryButton": "Добави домейн",
+        "subtitle": "Позволете на потребителите автоматично да се присъединяват към организацията или да поискат присъединяване въз основа на потвърден имейл домейн.",
+        "title": "Потвърдени домейни"
+      },
+      "successMessage": "Организацията беше актуализирана.",
+      "title": "Актуализиране на профила"
+    },
+    "removeDomainPage": {
+      "messageLine1": "Имейл домейнът {{domain}} ще бъде премахнат.",
+      "messageLine2": "Потребителите няма да могат автоматично да се присъединяват към организацията след това.",
+      "successMessage": "{{domain}} беше премахнат.",
+      "title": "Премахни домейн"
+    },
+    "start": {
+      "headerTitle__general": "Общи",
+      "headerTitle__members": "Членове",
+      "profileSection": {
+        "primaryButton": "Актуализиране на профила",
+        "title": "Профил на организацията",
+        "uploadAction__title": "Лого"
+      }
+    },
+    "verifiedDomainPage": {
+      "dangerTab": {
+        "calloutInfoLabel": "Премахването на този домейн ще засегне поканените потребители.",
+        "removeDomainActionLabel__remove": "Премахни домейна",
+        "removeDomainSubtitle": "Премахни този домейн от потвърдените ви домейни",
+        "removeDomainTitle": "Премахни домейн"
+      },
+      "enrollmentTab": {
+        "automaticInvitationOption__description": "Потребителите се поканват автоматично да се присъединят към организацията, когато се регистрират и могат да се присъединят по всяко време.",
+        "automaticInvitationOption__label": "Автоматични покани",
+        "automaticSuggestionOption__description": "Потребителите получават предложение да поискат да се присъединят, но трябва да бъдат одобрени от администратор, преди да могат да се присъединят към организацията.",
+        "automaticSuggestionOption__label": "Автоматични предложения",
+        "calloutInfoLabel": "Промяната на режима на записване ще засегне само новите потребители.",
+        "calloutInvitationCountLabel": "Чакащи покани изпратени на потребители: {{count}}",
+        "calloutSuggestionCountLabel": "Чакащи предложения изпратени на потребители: {{count}}",
+        "manualInvitationOption__description": "Потребителите могат да бъдат поканени само ръчно към организацията.",
+        "manualInvitationOption__label": "Няма автоматично записване",
+        "subtitle": "Изберете как потребителите от този домейн могат да се присъединят към организацията."
+      },
+      "start": {
+        "headerTitle__danger": "Опасност",
+        "headerTitle__enrollment": "Опции за записване"
+      },
+      "subtitle": "Домейнът {{domain}} вече е потвърден. Продължете, като изберете режим на записване.",
+      "title": "Актуализиране на {{domain}}"
+    },
+    "verifyDomainPage": {
+      "formSubtitle": "Въведете кода за потвърждение, изпратен на вашия имейл адрес",
+      "formTitle": "Код за потвърждение",
+      "resendButton": "Не сте получили код? Изпрати отново",
+      "subtitle": "Домейнът {{domainName}} трябва да бъде потвърден чрез имейл.",
+      "subtitleVerificationCodeScreen": "Беше изпратен код за потвърждение на {{emailAddress}}. Въведете кода, за да продължите.",
+      "title": "Потвърди домейн"
+    }
+  },
+  "organizationSwitcher": {
+    "action__createOrganization": "Създай организация",
+    "action__invitationAccept": "Присъедини се",
+    "action__manageOrganization": "Управление",
+    "action__suggestionsAccept": "Изпрати заявка за присъединяване",
+    "notSelected": "Не е избрана организация",
+    "personalWorkspace": "Личен акаунт",
+    "suggestionsAcceptedLabel": "Чака одобрение"
+  },
+  "paginationButton__next": "Следващ",
+  "paginationButton__previous": "Предишен",
+  "paginationRowText__displaying": "Показване на",
+  "paginationRowText__of": "от",
+  "signIn": {
+    "accountSwitcher": {
+      "action__addAccount": "Добавяне на акаунт",
+      "action__signOutAll": "Изход от всички акаунти",
+      "subtitle": "Изберете акаунта, с който искате да продължите.",
+      "title": "Изберете акаунт"
+    },
+    "alternativeMethods": {
+      "actionLink": "Получете помощ",
+      "actionText": "Нямате нито един от тях?",
+      "blockButton__backupCode": "Използвайте резервен код",
+      "blockButton__emailCode": "Изпратете код на имейл до {{identifier}}",
+      "blockButton__emailLink": "Изпратете връзка на имейл до {{identifier}}",
+      "blockButton__passkey": "Влезте с вашата парола",
+      "blockButton__password": "Влезте с паролата си",
+      "blockButton__phoneCode": "Изпратете SMS код до {{identifier}}",
+      "blockButton__totp": "Използвайте вашето приложение за аутентикация",
+      "getHelp": {
+        "blockButton__emailSupport": "Имейл поддръжка",
+        "content": "Ако имате затруднения при влизане в профила си, пишете ни имейл и ще работим с вас, за да възстановим достъпа възможно най-бързо.",
+        "title": "Получете помощ"
+      },
+      "subtitle": "Имате проблеми? Можете да използвате някой от тези методи за влизане.",
+      "title": "Използвайте друг метод"
+    },
+    "backupCodeMfa": {
+      "subtitle": "Вашият резервен код е този, който сте получили при настройване на двустепенната аутентикация.",
+      "title": "Въведете резервен код"
+    },
+    "emailCode": {
+      "formTitle": "Код за потвърждение",
+      "resendButton": "Не сте получили код? Изпратете отново",
+      "subtitle": "за да продължите към {{applicationName}}",
+      "title": "Проверете имейла си"
+    },
+    "emailLink": {
+      "expired": {
+        "subtitle": "Върнете се към оригиналната разделка, за да продължите.",
+        "title": "Тази връзка за потвърждение е изтекла"
+      },
+      "failed": {
+        "subtitle": "Върнете се към оригиналната разделка, за да продължите.",
+        "title": "Тази връзка за потвърждение е невалидна"
+      },
+      "formSubtitle": "Използвайте връзката за потвърждение изпратена на вашия имейл",
+      "formTitle": "Връзка за потвърждение",
+      "loading": {
+        "subtitle": "Ще бъдете пренасочени скоро",
+        "title": "Влизане..."
+      },
+      "resendButton": "Не сте получили връзка? Изпратете отново",
+      "subtitle": "за да продължите към {{applicationName}}",
+      "title": "Проверете имейла си",
+      "unusedTab": {
+        "title": "Можете да затворите тази разделка"
+      },
+      "verified": {
+        "subtitle": "Ще бъдете пренасочени скоро",
+        "title": "Успешно влязохте"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Върнете се към оригиналната разделка, за да продължите",
+        "subtitleNewTab": "Върнете се към новоотворената разделка, за да продължите",
+        "titleNewTab": "Влязохте в друга разделка"
+      }
+    },
+    "forgotPassword": {
+      "formTitle": "Код за нулиране на парола",
+      "resendButton": "Не сте получили код? Изпратете отново",
+      "subtitle": "за да нулирате паролата си",
+      "subtitle_email": "Първо въведете кода, изпратен на вашия имейл адрес",
+      "subtitle_phone": "Първо въведете кода, изпратен на вашия телефон",
+      "title": "Нулиране на парола"
+    },
+    "forgotPasswordAlternativeMethods": {
+      "blockButton__resetPassword": "Нулиране на паролата си",
+      "label__alternativeMethods": "Или влезте с друг метод",
+      "title": "Забравена парола?"
+    },
+    "noAvailableMethods": {
+      "message": "Не можем да продължим с влизането. Няма наличен аутентикационен фактор.",
+      "subtitle": "Възникна грешка",
+      "title": "Не може да се влезе"
+    },
+    "passkey": {
+      "subtitle": "Използването на вашия код потвърждава, че сте вие. Вашият устройство може да поиска вашите пръсти, лице или заключване на екрана.",
+      "title": "Използвайте вашия код"
+    },
+    "password": {
+      "actionLink": "Използвайте друг метод",
+      "subtitle": "Въведете паролата, свързана с вашия акаунт",
+      "title": "Въведете паролата си"
+    },
+    "passwordPwned": {
+      "title": "Паролата е компрометирана"
+    },
+    "phoneCode": {
+      "formTitle": "Код за потвърждение",
+      "resendButton": "Не сте получили код? Изпратете отново",
+      "subtitle": "за да продължите към {{applicationName}}",
+      "title": "Проверете телефона си"
+    },
+    "phoneCodeMfa": {
+      "formTitle": "Код за потвърждение",
+      "resendButton": "Не сте получили код? Изпратете отново",
+      "subtitle": "За да продължите, моля въведете кода за потвърждение, изпратен на телефона ви",
+      "title": "Проверете телефона си"
+    },
+    "resetPassword": {
+      "formButtonPrimary": "Нулиране на паролата",
+      "requiredMessage": "Поради сигурностни причини е необходимо да нулирате паролата си.",
+      "successMessage": "Паролата ви беше успешно променена. Влизане в процес, моля изчакайте момент.",
+      "title": "Задайте нова парола"
+    },
+    "resetPasswordMfa": {
+      "detailsLabel": "Трябва да потвърдим вашата самоличност преди да нулираме паролата ви."
+    },
+    "start": {
+      "actionLink": "Регистрирайте се",
+      "actionLink__use_email": "Използвайте имейл",
+      "actionLink__use_email_username": "Използвайте имейл или потребителско име",
+      "actionLink__use_passkey": "Използвайте кода си",
+      "actionLink__use_phone": "Използвайте телефона",
+      "actionLink__use_username": "Използвайте потребителско име",
+      "actionText": "Нямате акаунт?",
+      "subtitle": "Добре дошли отново! Моля, влезте, за да продължите",
+      "title": "Влезте в {{applicationName}}"
+    },
+    "totpMfa": {
+      "formTitle": "Код за потвърждение",
+      "subtitle": "За да продължите, моля въведете кода за потвърждение, генериран от вашето приложение за аутентикация",
+      "title": "Двустепенна верификация"
+    }
+  },
+  "signInEnterPasswordTitle": "Въведете паролата си",
+  "signUp": {
+    "continue": {
+      "actionLink": "Влезте",
+      "actionText": "Вече имате акаунт?",
+      "subtitle": "Моля, попълнете оставащите данни, за да продължите",
+      "title": "Попълнете липсващите полета"
+    },
+    "emailCode": {
+      "formSubtitle": "Въведете кода за потвърждение, изпратен на вашия имейл адрес",
+      "formTitle": "Код за потвърждение",
+      "resendButton": "Не сте получили код? Изпратете отново",
+      "subtitle": "Въведете кода за потвърждение, изпратен на вашия имейл",
+      "title": "Потвърдете вашия имейл"
+    },
+    "emailLink": {
+      "formSubtitle": "Използвайте връзката за потвърждение, изпратена на вашия имейл адрес",
+      "formTitle": "Връзка за потвърждение",
+      "loading": {
+        "title": "Регистриране..."
+      },
+      "resendButton": "Не сте получили връзка? Изпратете отново",
+      "subtitle": "за да продължите към {{applicationName}}",
+      "title": "Потвърдете вашия имейл",
+      "verified": {
+        "title": "Успешно се регистрирахте"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Върнете се към новоотворената разделка, за да продължите",
+        "subtitleNewTab": "Върнете се към предишната разделка, за да продължите",
+        "title": "Успешно потвърден имейл"
+      }
+    },
+    "phoneCode": {
+      "formSubtitle": "Въведете кода за потвърждение, изпратен на вашия телефонен номер",
+      "formTitle": "Код за потвърждение",
+      "resendButton": "Не сте получили код? Изпратете отново",
+      "subtitle": "Въведете кода за потвърждение, изпратен на вашия телефон",
+      "title": "Потвърдете вашия телефон"
+    },
+    "start": {
+      "actionLink": "Влезте",
+      "actionText": "Вече имате акаунт?",
+      "subtitle": "Добре дошли! Моля, попълнете данните, за да започнете",
+      "title": "Създайте вашия акаунт"
+    }
+  },
+  "socialButtonsBlockButton": "Продължете с {{provider|titleize}}",
+  "unstable__errors": {
+    "captcha_invalid": "Регистрацията не беше успешна поради неуспешни проверки за сигурност. Моля, опитайте отново като презаредите страницата или се свържете с поддръжката за повече помощ.",
+    "captcha_unavailable": "Регистрацията не беше успешна поради неуспешна валидация на бот. Моля, опитайте отново като презаредите страницата или се свържете с поддръжката за повече помощ.",
+    "form_code_incorrect": "",
+    "form_identifier_exists": "",
+    "form_identifier_exists__email_address": "Този имейл адрес е зает. Моля, опитайте с друг.",
+    "form_identifier_exists__phone_number": "Този телефонен номер е зает. Моля, опитайте с друг.",
+    "form_identifier_exists__username": "Това потребителско име е заето. Моля, опитайте с друго.",
+    "form_identifier_not_found": "",
+    "form_param_format_invalid": "",
+    "form_param_format_invalid__email_address": "Имейл адресът трябва да бъде валиден имейл адрес.",
+    "form_param_format_invalid__phone_number": "Телефонният номер трябва да бъде валиден в международен формат.",
+    "form_param_max_length_exceeded__first_name": "Първото име не трябва да надвишава 256 знака.",
+    "form_param_max_length_exceeded__last_name": "Фамилията не трябва да надвишава 256 знака.",
+    "form_param_max_length_exceeded__name": "Името не трябва да надвишава 256 знака.",
+    "form_param_nil": "",
+    "form_password_incorrect": "",
+    "form_password_length_too_short": "",
+    "form_password_not_strong_enough": "Паролата ви не е достатъчно силна.",
+    "form_password_pwned": "Тази парола е открита като част от нарушение и не може да се използва, моля опитайте с друга парола.",
+    "form_password_pwned__sign_in": "Тази парола е открита като част от нарушение и не може да се използва, моля нулирайте паролата си.",
+    "form_password_size_in_bytes_exceeded": "Паролата ви е надвишила максималния брой байтове, моля я скратете или премахнете някои специални знаци.",
+    "form_password_validation_failed": "Некоректна парола",
+    "form_username_invalid_character": "",
+    "form_username_invalid_length": "",
+    "identification_deletion_failed": "Не можете да изтриете последната си идентификация.",
+    "not_allowed_access": "",
+    "passkey_already_exists": "Паролата вече е регистрирана с този устройство.",
+    "passkey_not_supported": "Паролите не се поддържат на това устройство.",
+    "passkey_pa_not_supported": "Регистрацията изисква аутентикатор на платформата, но устройството не го поддържа.",
+    "passkey_registration_cancelled": "Регистрацията на паролата беше отменена или изтече.",
+    "passkey_retrieval_cancelled": "Проверката на паролата беше отменена или изтече.",
+    "passwordComplexity": {
+      "maximumLength": "по-малко от {{length}} знака",
+      "minimumLength": "{{length}} или повече знака",
+      "requireLowercase": "малка буква",
+      "requireNumbers": "число",
+      "requireSpecialCharacter": "специален символ",
+      "requireUppercase": "главна буква",
+      "sentencePrefix": "Паролата ви трябва да съдържа"
+    },
+    "phone_number_exists": "Този телефонен номер е зает. Моля, опитайте с друг.",
+    "zxcvbn": {
+      "couldBeStronger": "Паролата ви работи, но може да бъде по-силна. Опитайте да добавите повече знаци.",
+      "goodPassword": "Паролата ви отговаря на всички необходими изисквания.",
+      "notEnough": "Паролата ви не е достатъчно силна.",
+      "suggestions": {
+        "allUppercase": "Напишете някои букви с главни, но не всички.",
+        "anotherWord": "Добавете повече думи, които не са толкова обичайни.",
+        "associatedYears": "Избягвайте години, които са свързани с вас.",
+        "capitalization": "Напишете с главни повече от първата буква.",
+        "dates": "Избягвайте дати и години, които са свързани с вас.",
+        "l33t": "Избягвайте предсказуеми замествания на букви като '@' за 'а'.",
+        "longerKeyboardPattern": "Използвайте по-дълги шаблони на клавиатурата и променяйте посоката на набиране няколко пъти.",
+        "noNeed": "Можете да създадете силни пароли без да използвате символи, числа или главни букви.",
+        "pwned": "Ако използвате тази парола някъде другаде, трябва да я промените.",
+        "recentYears": "Избягвайте скорошни години.",
+        "repeated": "Избягвайте повтарящи се думи и знаци.",
+        "reverseWords": "Избягвайте обратни написания на обичайни думи.",
+        "sequences": "Избягвайте обичайни последователности на знаци.",
+        "useWords": "Използвайте няколко думи, но избягвайте обичайни фрази."
+      },
+      "warnings": {
+        "common": "Това е често използвана парола.",
+        "commonNames": "Обичайните имена и фамилии са лесни за отгатване.",
+        "dates": "Датите са лесни за отгатване.",
+        "extendedRepeat": "Повтарящи се шаблони на символи като \"abcabcabc\" са лесни за отгатване.",
+        "keyPattern": "Кратките шаблони на клавиатурата са лесни за отгатване.",
+        "namesByThemselves": "Единичните имена или фамилии са лесни за отгатване.",
+        "pwned": "Вашата парола беше изложена в интернет от данни.",
+        "recentYears": "Скорошните години са лесни за отгатване.",
+        "sequences": "Обичайните последователности на знаци като \"abc\" са лесни за отгатване.",
+        "similarToCommon": "Това е подобно на често използвана парола.",
+        "simpleRepeat": "Повтарящи се символи като \"aaa\" са лесни за отгатване.",
+        "straightRow": "Правите редове на клавишите на клавиатурата са лесни за отгатване.",
+        "topHundred": "Това е често използвана парола.",
+        "topTen": "Това е много използвана парола.",
+        "userInputs": "Не трябва да има лични или свързани със страницата данни.",
+        "wordByItself": "Единичните думи са лесни за отгатване."
+      }
+    }
+  },
+  "userButton": {
+    "action__addAccount": "Добави акаунт",
+    "action__manageAccount": "Управлявай акаунта",
+    "action__signOut": "Изход",
+    "action__signOutAll": "Изход от всички акаунти"
+  },
+  "userProfile": {
+    "backupCodePage": {
+      "actionLabel__copied": "Копирано!",
+      "actionLabel__copy": "Копиране на всички",
+      "actionLabel__download": "Изтегли .txt",
+      "actionLabel__print": "Принтиране",
+      "infoText1": "Резервните кодове ще бъдат активирани за този акаунт.",
+      "infoText2": "Пазете резервните кодове в тайна и ги съхранявайте на сигурно място. Можете да генерирате нови резервни кодове, ако подозирате, че са компрометирани.",
+      "subtitle__codelist": "Съхранявайте ги на сигурно място и ги пазете в тайна.",
+      "successMessage": "Резервните кодове вече са активирани. Можете да използвате един от тях, за да влезете в своя акаунт, ако загубите достъпа до устройството за удостоверяване. Всеки код може да бъде използван само веднъж.",
+      "successSubtitle": "Можете да използвате един от тези кодове, за да влезете в своя акаунт, ако загубите достъпа до устройството за удостоверяване.",
+      "title": "Добавяне на потвърждение с резервен код",
+      "title__codelist": "Резервни кодове"
+    },
+    "connectedAccountPage": {
+      "formHint": "Изберете доставчик, за да свържете своя акаунт.",
+      "formHint__noAccounts": "Няма налични външни доставчици на акаунти.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} ще бъде премахнат от този акаунт.",
+        "messageLine2": "Вече няма да можете да използвате този свързан акаунт и всички зависими функции няма да работят повече.",
+        "successMessage": "{{connectedAccount}} е премахнат от вашия акаунт.",
+        "title": "Премахване на свързан акаунт"
+      },
+      "socialButtonsBlockButton": "{{provider|titleize}}",
+      "successMessage": "Доставчикът е добавен към вашия акаунт",
+      "title": "Добавяне на свързан акаунт"
+    },
+    "deletePage": {
+      "actionDescription": "Въведете \"Изтриване на акаунт\" по-долу, за да продължите.",
+      "confirm": "Изтриване на акаунт",
+      "messageLine1": "Сигурни ли сте, че искате да изтриете своя акаунт?",
+      "messageLine2": "Това действие е постоянно и необратимо.",
+      "title": "Изтриване на акаунт"
+    },
+    "emailAddressPage": {
+      "emailCode": {
+        "formHint": "На този имейл адрес ще бъде изпратен имейл с код за потвърждение.",
+        "formSubtitle": "Въведете кода за потвърждение, изпратен на {{identifier}}",
+        "formTitle": "Код за потвърждение",
+        "resendButton": "Не сте получили код? Изпрати отново",
+        "successMessage": "Имейлът {{identifier}} е добавен към вашия акаунт."
+      },
+      "emailLink": {
+        "formHint": "На този имейл адрес ще бъде изпратен имейл с връзка за потвърждение.",
+        "formSubtitle": "Кликнете върху връзката за потвърждение в имейла, изпратен на {{identifier}}",
+        "formTitle": "Връзка за потвърждение",
+        "resendButton": "Не сте получили връзка? Изпрати отново",
+        "successMessage": "Имейлът {{identifier}} е добавен към вашия акаунт."
+      },
+      "removeResource": {
+        "messageLine1": "{{identifier}} ще бъде премахнат от този акаунт.",
+        "messageLine2": "Вече няма да можете да влезете, използвайки този имейл адрес.",
+        "successMessage": "{{emailAddress}} е премахнат от вашия акаунт.",
+        "title": "Премахване на имейл адрес"
+      },
+      "title": "Добавяне на имейл адрес",
+      "verifyTitle": "Потвърждение на имейл адрес"
+    },
+    "formButtonPrimary__add": "Добавяне",
+    "formButtonPrimary__continue": "Продължи",
+    "formButtonPrimary__finish": "Завърши",
+    "formButtonPrimary__remove": "Премахване",
+    "formButtonPrimary__save": "Запазване",
+    "formButtonReset": "Отказ",
+    "mfaPage": {
+      "formHint": "Изберете метод за добавяне.",
+      "title": "Добавяне на двустепенна верификация"
+    },
+    "mfaPhoneCodePage": {
+      "backButton": "Използвайте същия номер",
+      "primaryButton__addPhoneNumber": "Добавяне на телефонен номер",
+      "removeResource": {
+        "messageLine1": "{{identifier}} няма да получава повече кодове за потвърждение при влизане.",
+        "messageLine2": "Вашият акаунт може да не е толкова защитен. Сигурни ли сте, че искате да продължите?",
+        "successMessage": "Двустепенната верификация с код по SMS е премахната за {{mfaPhoneCode}}",
+        "title": "Премахване на двустепенна верификация"
+      },
+      "subtitle__availablePhoneNumbers": "Изберете съществуващ телефонен номер, за да се регистрирате за двустепенна верификация с код по SMS или добавете нов.",
+      "subtitle__unavailablePhoneNumbers": "Няма налични телефонни номера за регистрация за двустепенна верификация с код по SMS, моля добавете нов.",
+      "successMessage1": "При влизане ще трябва да въведете код за потвърждение, изпратен на този телефонен номер като допълнителна стъпка.",
+      "successMessage2": "Запазете тези резервни кодове и ги съхранявайте на сигурно място. Ако загубите достъпа до устройството за удостоверяване, можете да използвате резервни кодове, за да влезете.",
+      "successTitle": "Активиране на верификация с код по SMS",
+      "title": "Добавяне на верификация с код по SMS"
+    },
+    "mfaTOTPPage": {
+      "authenticatorApp": {
+        "buttonAbleToScan__nonPrimary": "Сканиране на QR код вместо това",
+        "buttonUnableToScan__nonPrimary": "Не може да се сканира QR код?",
+        "infoText__ableToScan": "Настройте нов метод за влизане във вашия аутентикатор и сканирайте следния QR код, за да го свържете с вашия акаунт.",
+        "infoText__unableToScan": "Настройте нов метод за влизане във вашия аутентикатор и въведете ключа, предоставен по-долу.",
+        "inputLabel__unableToScan1": "Уверете се, че времевите или еднократни пароли са активирани, след което завършете свързването на вашия акаунт.",
+        "inputLabel__unableToScan2": "Алтернативно, ако вашият аутентикатор поддържа TOTP URIs, можете също да копирате целия URI."
+      },
+      "removeResource": {
+        "messageLine1": "Кодовете за потвърждение от този аутентикатор вече няма да са необходими при влизане.",
+        "messageLine2": "Вашият акаунт може да не е толкова защитен. Сигурни ли сте, че искате да продължите?",
+        "successMessage": "Двустепенната верификация чрез приложение за аутентикация е премахната.",
+        "title": "Премахване на двустепенна верификация"
+      },
+      "successMessage": "Двустепенната верификация вече е активирана. При влизане ще трябва да въведете код за потвърждение от този аутентикатор като допълнителна стъпка.",
+      "title": "Добавяне на приложение за аутентикация",
+      "verifySubtitle": "Въведете кода за потвърждение, генериран от вашия аутентикатор",
+      "verifyTitle": "Код за потвърждение"
+    },
+    "mobileButton__menu": "Меню",
+    "navbar": {
+      "account": "Профил",
+      "description": "Управлявайте информацията за вашия профил.",
+      "security": "Сигурност",
+      "title": "Профил"
+    },
+    "passkeyScreen": {
+      "removeResource": {
+        "messageLine1": "{{name}} ще бъде премахнат от този профил.",
+        "title": "Премахни кода"
+      },
+      "subtitle__rename": "Можете да промените името на кода, за да го намерите по-лесно.",
+      "title__rename": "Преименувай кода"
+    },
+    "passwordPage": {
+      "checkboxInfoText__signOutOfOtherSessions": "Препоръчва се да излезете от всички други устройства, които може да са използвали старата ви парола.",
+      "readonly": "В момента не можете да редактирате паролата си, защото можете да влезете само чрез връзката с предприятието.",
+      "successMessage__set": "Паролата ви е зададена.",
+      "successMessage__signOutOfOtherSessions": "Всички други устройства са излезли.",
+      "successMessage__update": "Паролата ви е актуализирана.",
+      "title__set": "Задайте парола",
+      "title__update": "Актуализирайте паролата"
+    },
+    "phoneNumberPage": {
+      "infoText": "Ще бъде изпратено съобщение с код за потвърждение на този телефонен номер. Могат да се прилагат такси за съобщения и данни.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} ще бъде премахнат от този профил.",
+        "messageLine2": "Вече няма да можете да влезете с този телефонен номер.",
+        "successMessage": "{{phoneNumber}} е премахнат от вашия профил.",
+        "title": "Премахни телефонен номер"
+      },
+      "successMessage": "{{identifier}} е добавен към вашия профил.",
+      "title": "Добави телефонен номер",
+      "verifySubtitle": "Въведете кода за потвърждение, изпратен на {{identifier}}",
+      "verifyTitle": "Потвърди телефонния номер"
+    },
+    "profilePage": {
+      "fileDropAreaHint": "Препоръчителен размер 1:1, до 10MB.",
+      "imageFormDestructiveActionSubtitle": "Премахни",
+      "imageFormSubtitle": "Качи",
+      "imageFormTitle": "Профилна снимка",
+      "readonly": "Информацията за вашия профил е предоставена от връзката с предприятието и не може да бъде редактирана.",
+      "successMessage": "Профилът ви е актуализиран.",
+      "title": "Актуализирай профила"
+    },
+    "start": {
+      "activeDevicesSection": {
+        "destructiveAction": "Изход от устройството",
+        "title": "Активни устройства"
+      },
+      "connectedAccountsSection": {
+        "actionLabel__connectionFailed": "Опитайте отново",
+        "actionLabel__reauthorize": "Оторизирайте сега",
+        "destructiveActionTitle": "Премахни",
+        "primaryButton": "Свържете акаунт",
+        "subtitle__reauthorize": "Необходимите обхвати са актуализирани и може да изпитвате ограничена функционалност. Моля, повторно авторизирайте това приложение, за да избегнете проблеми",
+        "title": "Свързани акаунти"
+      },
+      "dangerSection": {
+        "deleteAccountButton": "Изтрий акаунта",
+        "title": "Изтрий акаунта"
+      },
+      "emailAddressesSection": {
+        "destructiveAction": "Премахни имейл",
+        "detailsAction__nonPrimary": "Задай като основен",
+        "detailsAction__primary": "Завърши верификацията",
+        "detailsAction__unverified": "Верифицирай",
+        "primaryButton": "Добави имейл адрес",
+        "title": "Имейл адреси"
+      },
+      "enterpriseAccountsSection": {
+        "title": "Корпоративни акаунти"
+      },
+      "headerTitle__account": "Детайли за профила",
+      "headerTitle__security": "Сигурност",
+      "mfaSection": {
+        "backupCodes": {
+          "actionLabel__regenerate": "Регенерирай",
+          "headerTitle": "Резервни кодове",
+          "subtitle__regenerate": "Получете нов комплект сигурни резервни кодове. Предишните резервни кодове ще бъдат изтрити и няма да могат да бъдат използвани.",
+          "title__regenerate": "Регенериране на резервни кодове"
+        },
+        "phoneCode": {
+          "actionLabel__setDefault": "Задай като основен",
+          "destructiveActionLabel": "Премахни"
+        },
+        "primaryButton": "Добави двустепенна верификация",
+        "title": "Двустепенна верификация",
+        "totp": {
+          "destructiveActionTitle": "Премахни",
+          "headerTitle": "Приложение за автентикация"
+        }
+      },
+      "passkeysSection": {
+        "menuAction__destructive": "Премахни",
+        "menuAction__rename": "Преименувай",
+        "title": "Пароли"
+      },
+      "passwordSection": {
+        "primaryButton__setPassword": "Задай парола",
+        "primaryButton__updatePassword": "Актуализирай паролата",
+        "title": "Парола"
+      },
+      "phoneNumbersSection": {
+        "destructiveAction": "Премахни телефонен номер",
+        "detailsAction__nonPrimary": "Задай като основен",
+        "detailsAction__primary": "Завърши верификацията",
+        "detailsAction__unverified": "Верифицирай телефонния номер",
+        "primaryButton": "Добави телефонен номер",
+        "title": "Телефонни номера"
+      },
+      "profileSection": {
+        "primaryButton": "Актуализирай профила",
+        "title": "Профил"
+      },
+      "usernameSection": {
+        "primaryButton__setUsername": "Задай потребителско име",
+        "primaryButton__updateUsername": "Актуализирай потребителското име",
+        "title": "Потребителско име"
+      },
+      "web3WalletsSection": {
+        "destructiveAction": "Премахни портфейла",
+        "primaryButton": "Web3 портфейли",
+        "title": "Web3 портфейли"
+      }
+    },
+    "usernamePage": {
+      "successMessage": "Потребителското ви име е актуализирано.",
+      "title__set": "Задайте потребителско име",
+      "title__update": "Актуализирайте потребителското име"
+    },
+    "web3WalletPage": {
+      "removeResource": {
+        "messageLine1": "{{identifier}} ще бъде премахнат от този профил.",
+        "messageLine2": "Вече няма да можете да влезете с този web3 портфейл.",
+        "successMessage": "{{web3Wallet}} е премахнат от вашия профил.",
+        "title": "Премахни web3 портфейла"
+      },
+      "subtitle__availableWallets": "Изберете web3 портфейл, за да се свържете с вашия профил.",
+      "subtitle__unavailableWallets": "Няма налични web3 портфейли.",
+      "successMessage": "Портфейлът е добавен към вашия профил.",
+      "title": "Добави web3 портфейл"
+    }
+  }
+}
