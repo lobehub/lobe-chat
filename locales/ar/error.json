@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "استمر في الجلسة",
+      "desc": "{{greeting}}، يسعدني أن أواصل خدمتك. دعنا نواصل الحديث عن الموضوع الذي تحدثنا عنه مؤخرًا",
+      "title": "مرحبًا بعودتك، {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "العودة إلى الصفحة الرئيسية",
     "desc": "حاول مرة أخرى في وقت لاحق، أو عد إلى العالم المألوف",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "مفتاح Anthropic API غير صحيح أو فارغ، يرجى التحقق من مفتاح Anthropic API وإعادة المحاولة",
     "InvalidAzureAPIKey": "مفتاح Azure API غير صحيح أو فارغ، يرجى التحقق من مفتاح Azure API وإعادة المحاولة",
     "InvalidBedrockCredentials": "فشلت مصادقة Bedrock، يرجى التحقق من AccessKeyId/SecretAccessKey وإعادة المحاولة",
+    "InvalidClerkUser": "عذرًا، لم تقم بتسجيل الدخول بعد، يرجى تسجيل الدخول أو التسجيل للمتابعة",
     "InvalidGoogleAPIKey": "مفتاح Google API غير صحيح أو فارغ، يرجى التحقق من مفتاح Google API وإعادة المحاولة",
     "InvalidGroqAPIKey": "مفتاح Groq API غير صحيح أو فارغ، يرجى التحقق من مفتاح Groq API وإعادة المحاولة",
     "InvalidMinimaxAPIKey": "مفتاح Minimax API غير صحيح أو فارغ، يرجى التحقق من مفتاح Minimax API وإعادة المحاولة",

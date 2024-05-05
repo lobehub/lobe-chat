@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continuar la sesión",
+      "desc": "{{greeting}}, es un placer poder seguir asistiéndote. Continuemos con el tema que estábamos tratando.",
+      "title": "Bienvenido de nuevo, {{nickName}}"
+    }
+  },
   "error": {
     "backHome": "Volver a la página de inicio",
     "desc": "Inténtalo de nuevo más tarde, o regresa al mundo conocido",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "La clave de API de Anthropic es incorrecta o está vacía. Por favor, revisa la clave de API de Anthropic e inténtalo de nuevo.",
     "InvalidAzureAPIKey": "La clave de API de Azure es incorrecta o está vacía, por favor, verifica la clave de API de Azure e inténtalo de nuevo",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
+    "InvalidClerkUser": "Lo siento mucho, actualmente no has iniciado sesión. Por favor, inicia sesión o regístrate antes de continuar.",
     "InvalidGoogleAPIKey": "La clave de API de Google es incorrecta o está vacía, por favor, verifica la clave de API de Google e inténtalo de nuevo",
     "InvalidGroqAPIKey": "La clave de API de Groq es incorrecta o está vacía. Por favor, revisa la clave de API de Groq e inténtalo de nuevo.",
     "InvalidMinimaxAPIKey": "Clave de API de Minimax incorrecta o vacía, por favor, revise la clave de API de Minimax e inténtelo de nuevo",

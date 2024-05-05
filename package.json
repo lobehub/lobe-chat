@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "0.153.1",
+  "version": "0.154.0",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -32,6 +32,7 @@
     "build:analyze": "ANALYZE=true next build",
     "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "dev": "next dev -p 3010",
+    "dev:clerk-proxy": "ngrok http http://localhost:3011",
     "docs:i18n": "lobe-i18n md && npm run workflow:docs && npm run lint:mdx",
     "docs:seo": "lobe-seo && npm run workflow:mdx && npm run lint:mdx",
     "i18n": "npm run workflow:i18n && lobe-i18n",
@@ -86,6 +87,9 @@
     "@aws-sdk/client-bedrock-runtime": "^3.565.0",
     "@azure/openai": "1.0.0-beta.12",
     "@cfworker/json-schema": "^1.12.8",
+    "@clerk/localizations": "2.0.0",
+    "@clerk/nextjs": "^5.0.6",
+    "@clerk/themes": "^2.0.0",
     "@google/generative-ai": "^0.8.0",
     "@icons-pack/react-simple-icons": "^9.4.1",
     "@lobehub/chat-plugin-sdk": "latest",

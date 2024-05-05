@@ -1,4 +1,11 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "続ける",
+      "desc": "{{greeting}}、続けてサービスを提供できて嬉しいです。前回の話題に戻りましょう",
+      "title": "おかえりなさい、{{nickName}}"
+    }
+  },
   "error": {
     "backHome": "ホームに戻る",
     "desc": "後で試してみるか、既知の世界に戻る",
@@ -54,6 +61,7 @@
     "InvalidAnthropicAPIKey": "Anthropic APIキーが正しくないか空です。Anthropic APIキーを確認してもう一度お試しください。",
     "InvalidAzureAPIKey": "Azure APIキーが正しくないか空です。Azure APIキーを確認してから再試行してください。",
     "InvalidBedrockCredentials": "Bedrockの認証に失敗しました。AccessKeyId/SecretAccessKeyを確認してから再試行してください。",
+    "InvalidClerkUser": "申し訳ありませんが、現在ログインしていません。続行するにはログインまたはアカウント登録を行ってください",
     "InvalidGoogleAPIKey": "Google APIキーが正しくないか空です。Google APIキーを確認してから再試行してください。",
     "InvalidGroqAPIKey": "Groq APIキーが正しくないか空です。Groq APIキーを確認して再試行してください。",
     "InvalidMinimaxAPIKey": "Minimax APIキーが正しくないか空です。Minimax APIキーを確認して再試行してください。",
