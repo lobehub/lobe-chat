@@ -1,5 +1,5 @@
 import { getServerConfig } from '@/config/server';
-import { enableAuth } from '@/const/auth';
+import { enableNextAuth } from '@/const/auth';
 
 import Common from './features/Common';
 import Theme from './features/Theme';
@@ -10,7 +10,7 @@ const Page = () => {
   return (
     <>
       <Theme />
-      <Common showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} showOAuthLogin={enableAuth} />
+      <Common showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} showOAuthLogin={enableNextAuth} />
     </>
   );
 };
