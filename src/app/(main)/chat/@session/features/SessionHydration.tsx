@@ -5,14 +5,14 @@ import { parseAsString } from 'nuqs/server';
 import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 // sync outside state to useSessionStore
 const SessionHydration = memo(() => {
   const useStoreUpdater = createStoreUpdater(useSessionStore);
 
-  const mobile = useIsMobile();
+  const mobile = useServerConfigStore((s) => s.isMobile);
   useStoreUpdater('isMobile', mobile);
 
   // two-way bindings the url and session store

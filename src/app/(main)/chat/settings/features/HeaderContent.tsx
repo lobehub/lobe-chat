@@ -5,8 +5,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { configService } from '@/services/config';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 import SubmitAgentButton from './SubmitAgentButton';
@@ -15,7 +15,7 @@ export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ moda
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
 
-  const mobile = useIsMobile();
+  const mobile = useServerConfigStore((s) => s.isMobile);
 
   const items = useMemo<MenuProps['items']>(
     () => [

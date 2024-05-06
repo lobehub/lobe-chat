@@ -1,7 +1,7 @@
 'use client';
 
 import { EmptyCard } from '@lobehub/ui';
-import { css, cx, useThemeMode } from 'antd-style';
+import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,13 +17,7 @@ import { ChatTopic } from '@/types/topic';
 import { Placeholder, SkeletonList } from './SkeletonList';
 import TopicItem from './TopicItem';
 
-const container = css`
-  > div {
-    padding-inline: 8px;
-  }
-`;
-
-export const Topic = memo(() => {
+export const Topic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const { isDarkMode } = useThemeMode();
@@ -64,29 +58,31 @@ export const Topic = memo(() => {
   return !topicsInit ? (
     <SkeletonList />
   ) : (
-    <Flexbox gap={2} height={'100%'} style={{ marginBottom: 12 }}>
+    <Flexbox
+      gap={2}
+      height={'100%'}
+      paddingInline={mobile ? undefined : 8}
+      style={{ marginBottom: 12 }}
+    >
       {topicLength === 0 && (
-        <Flexbox flex={1} paddingInline={8}>
-          <EmptyCard
-            alt={t('topic.guide.desc')}
-            cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
-            desc={t('topic.guide.desc')}
-            height={120}
-            imageProps={{
-              priority: true,
-            }}
-            onVisibleChange={(visible) => {
-              updateGuideState({ topic: visible });
-            }}
-            style={{ marginBottom: 6 }}
-            title={t('topic.guide.title')}
-            visible={visible}
-            width={200}
-          />
-        </Flexbox>
+        <EmptyCard
+          alt={t('topic.guide.desc')}
+          cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
+          desc={t('topic.guide.desc')}
+          height={120}
+          imageProps={{
+            priority: true,
+          }}
+          onVisibleChange={(visible) => {
+            updateGuideState({ topic: visible });
+          }}
+          style={{ flex: 'none', marginBottom: 12 }}
+          title={t('topic.guide.title')}
+          visible={visible}
+          width={200}
+        />
       )}
       <Virtuoso
-        className={cx(container)}
         components={{ ScrollSeekPlaceholder: Placeholder }}
         computeItemKey={(_, item) => item.id}
         data={topics}

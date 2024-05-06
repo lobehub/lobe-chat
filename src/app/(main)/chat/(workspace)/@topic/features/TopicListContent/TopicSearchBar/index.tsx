@@ -5,14 +5,14 @@ import { useUnmount } from 'ahooks';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
   const { t } = useTranslation('chat');
 
   const [keywords, setKeywords] = useState('');
-  const mobile = useIsMobile();
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const [activeSessionId, useSearchTopics] = useChatStore((s) => [s.activeId, s.useSearchTopics]);
 
   useSearchTopics(keywords, activeSessionId);

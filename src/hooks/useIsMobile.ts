@@ -1,9 +1,8 @@
+import { useResponsive } from 'antd-style';
 import { useMemo } from 'react';
 
-import { useServerConfigStore } from '@/store/serverConfig';
-
 export const useIsMobile = (): boolean => {
-  const mobile = useServerConfigStore((s) => s.isMobile);
+  const { mobile } = useResponsive();
 
   return useMemo(() => !!mobile, [mobile]);
 };
