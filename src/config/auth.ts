@@ -112,7 +112,8 @@ export const getAuthConfig = () => {
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
 
       // Next Auth
-      NEXT_PUBLIC_ENABLE_NEXT_AUTH: !!process.env.NEXT_AUTH_SECRET || process.env.ENABLE_OAUTH_SSO,
+      NEXT_PUBLIC_ENABLE_NEXT_AUTH:
+        !!process.env.NEXT_AUTH_SECRET || !!process.env.ENABLE_OAUTH_SSO,
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS || process.env.SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
 
