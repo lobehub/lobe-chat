@@ -2,17 +2,17 @@
 
 import { SearchBar } from '@lobehub/ui';
 import { useUnmount } from 'ahooks';
-import { useResponsive } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 
 const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
   const { t } = useTranslation('chat');
 
   const [keywords, setKeywords] = useState('');
-  const { mobile } = useResponsive();
+  const mobile = useIsMobile();
   const [activeSessionId, useSearchTopics] = useChatStore((s) => [s.activeId, s.useSearchTopics]);
 
   useSearchTopics(keywords, activeSessionId);

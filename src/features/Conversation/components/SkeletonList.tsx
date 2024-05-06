@@ -13,8 +13,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
       padding: 0;
     }
   `,
-
-  right: css`
+  user: css`
     flex-direction: row-reverse;
 
     .${prefixCls}-skeleton-paragraph {
@@ -42,7 +41,7 @@ const SkeletonList = memo<SkeletonListProps>(({ mobile }) => {
       <Skeleton
         active
         avatar={{ size: mobile ? 32 : 40 }}
-        className={cx(styles.message, styles.right)}
+        className={cx(styles.message, styles.user)}
         paragraph={{ width: mobile ? ['80%', '40%'] : ['50%', '30%'] }}
         title={false}
       />

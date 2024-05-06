@@ -6,20 +6,20 @@ import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import { WELCOME_GUIDE_CHAT_ID } from '@/const/session';
+import Item from '@/features/Conversation/components/ChatItem';
+import InboxWelcome from '@/features/Conversation/components/InboxWelcome';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
 import { useInitConversation } from '../../hooks/useInitConversation';
 import AutoScroll from '../AutoScroll';
 import SkeletonList from '../SkeletonList';
-import ItemContent from './ItemContent';
 
 interface VirtualizedListProps {
   mobile?: boolean;
 }
 const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   useInitConversation();
-
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
@@ -54,6 +54,19 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   // overscan should be 1.5 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
 
+  const itemContent = useCallback(
+    (index: number, id: string) => {
+      if (id === WELCOME_GUIDE_CHAT_ID) return <InboxWelcome />;
+
+      return index === 0 ? (
+        <div style={{ height: 24 + (mobile ? 0 : 64) }} />
+      ) : (
+        <Item id={id} index={index - 1} />
+      );
+    },
+    [mobile],
+  );
+
   return chatLoading ? (
     <SkeletonList mobile={mobile} />
   ) : (
@@ -67,7 +80,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         // increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
         isScrolling={setIsScrolling}
-        itemContent={(index, id) => <ItemContent id={id} index={index} mobile={mobile} />}
+        itemContent={itemContent}
         overscan={overscan}
         ref={virtuosoRef}
       />

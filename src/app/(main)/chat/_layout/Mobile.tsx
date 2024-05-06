@@ -3,6 +3,7 @@
 import { createStyles } from 'antd-style';
 import { ReactNode, memo } from 'react';
 
+import Migration from '@/app/(main)/chat/features/Migration';
 import { useQuery } from '@/hooks/useQuery';
 
 type Props = { children: ReactNode; session: ReactNode };
@@ -41,6 +42,7 @@ const Layout = memo<Props>(({ children, session }) => {
       {session}
       {active && <div className={styles.mask} />}
       <div className={cx(styles.subPage, active && styles.active)}>{children}</div>
+      <Migration />
     </>
   );
 });

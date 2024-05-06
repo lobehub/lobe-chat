@@ -1,11 +1,11 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { Button, Dropdown, MenuProps } from 'antd';
-import { useResponsive } from 'antd-style';
 import { HardDriveDownload } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { configService } from '@/services/config';
 import { useSessionStore } from '@/store/session';
 
@@ -15,7 +15,7 @@ export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ moda
   const { t } = useTranslation('setting');
   const id = useSessionStore((s) => s.activeId);
 
-  const { mobile } = useResponsive();
+  const mobile = useIsMobile();
 
   const items = useMemo<MenuProps['items']>(
     () => [

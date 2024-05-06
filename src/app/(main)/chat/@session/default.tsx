@@ -1,4 +1,3 @@
-import Migration from '@/app/(main)/chat/features/Migration';
 import ServerLayout from '@/components/server/ServerLayout';
 
 import Desktop from './_layout/Desktop';
@@ -11,11 +10,9 @@ const Layout = ServerLayout({ Desktop, Mobile });
 const Session = () => {
   return (
     <>
-      <Migration>
-        <Layout>
-          <SessionListContent />
-        </Layout>
-      </Migration>
+      <Layout>
+        <SessionListContent />
+      </Layout>
       <SessionHydration />
     </>
   );

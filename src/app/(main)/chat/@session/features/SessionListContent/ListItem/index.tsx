@@ -1,7 +1,9 @@
 import { Avatar, List, ListItemProps } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { createStyles, useResponsive } from 'antd-style';
+import { createStyles } from 'antd-style';
 import { memo, useMemo, useRef } from 'react';
+
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 const { Item } = List;
 
@@ -31,7 +33,7 @@ const ListItem = memo<ListItemProps & { avatar: string; avatarBackground?: strin
   ({ avatar, avatarBackground, active, showAction, actions, title, ...props }) => {
     const ref = useRef(null);
     const isHovering = useHover(ref);
-    const { mobile } = useResponsive();
+    const mobile = useIsMobile();
     const { styles } = useStyles();
 
     const avatarRender = useMemo(

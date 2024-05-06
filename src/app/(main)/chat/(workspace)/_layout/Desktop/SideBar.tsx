@@ -2,7 +2,7 @@
 
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
-import { PropsWithChildren, memo, useLayoutEffect } from 'react';
+import { PropsWithChildren, memo, useEffect } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
@@ -26,14 +26,16 @@ const useStyles = createStyles(({ css, token }) => ({
 const Desktop = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const { md = true, lg = true } = useResponsive();
-  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
+  const [showAgentSettings, toggleConfig, isPreferenceInit] = useGlobalStore((s) => [
     s.preference.showChatSideBar,
     s.toggleChatSideBar,
+    s.isPreferenceInit,
   ]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
+    if (!isPreferenceInit) return;
     toggleConfig(lg);
-  }, [lg]);
+  }, [lg, isPreferenceInit]);
 
   return (
     <DraggablePanel
