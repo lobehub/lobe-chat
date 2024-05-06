@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react';
-import { useSearchParams } from 'next/navigation';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useQuery } from './useQuery';

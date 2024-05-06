@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat이 초기화 중입니다. 잠시 기다려주세요...",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
+  "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
   "blog": "제품 블로그",
   "cancel": "취소",
   "changelog": "변경 로그",
@@ -28,6 +29,7 @@
   },
   "feedback": "피드백 및 제안",
   "follow": "{{name}}에서 우리를 팔로우하세요",
+  "fullscreen": "전체 화면",
   "historyRange": "기록 범위",
   "import": "가져오기",
   "importModal": {
@@ -159,6 +161,7 @@
     "newVersion": "새 버전 사용 가능: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "익명 사용자",
     "billing": "결제 관리",
     "defaultNickname": "커뮤니티 사용자",
     "discord": "커뮤니티 지원",
@@ -168,6 +171,7 @@
     "help": "도움말 센터",
     "moveGuide": "설정 버튼을 여기로 이동했습니다",
     "plans": "요금제",
+    "preview": "미리보기",
     "profile": "계정 관리",
     "setting": "앱 설정",
     "usages": "사용량 통계"

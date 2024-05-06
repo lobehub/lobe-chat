@@ -63,6 +63,7 @@ const AgentMeta = memo(() => {
     return {
       children: (
         <AutoGenerate
+          canAutoGenerate={hasSystemRole}
           loading={loading[item.key as keyof SessionLoadingState]}
           onChange={item.onChange}
           onGenerate={() => {
@@ -104,7 +105,13 @@ const AgentMeta = memo(() => {
         ...autocompleteItems,
       ],
       extra: (
-        <Tooltip title={t('autoGenerateTooltip', { ns: 'common' })}>
+        <Tooltip
+          title={
+            !hasSystemRole
+              ? t('autoGenerateTooltipDisabled', { ns: 'common' })
+              : t('autoGenerateTooltip', { ns: 'common' })
+          }
+        >
           <Button
             disabled={!hasSystemRole}
             icon={<Icon icon={Wand2} />}

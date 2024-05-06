@@ -8,7 +8,11 @@ const { Item } = List;
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     position: relative;
-    padding-block: 16px !important;
+
+    gap: 12px;
+
+    padding: 16px !important;
+
     background: ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
     border-radius: 0;
   `,

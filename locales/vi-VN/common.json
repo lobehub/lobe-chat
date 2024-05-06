@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat đang khởi động, vui lòng chờ...",
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
+  "autoGenerateTooltipDisabled": "Vui lòng nhập từ gợi ý trước khi sử dụng tính năng tự động hoàn thành",
   "blog": "Blog sản phẩm",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
@@ -28,6 +29,7 @@
   },
   "feedback": "Phản hồi và đề xuất",
   "follow": "Theo dõi chúng tôi trên {{name}}",
+  "fullscreen": "Chế độ toàn màn hình",
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
   "importModal": {
@@ -159,6 +161,7 @@
     "newVersion": "Có phiên bản mới: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Người dùng ẩn danh",
     "billing": "Quản lý hóa đơn",
     "defaultNickname": "Người dùng phiên bản cộng đồng",
     "discord": "Hỗ trợ cộng đồng",
@@ -168,6 +171,7 @@
     "help": "Trung tâm trợ giúp",
     "moveGuide": "Đã di chuyển nút cài đặt đến đây",
     "plans": "Kế hoạch đăng ký",
+    "preview": "Phiên bản xem trước",
     "profile": "Quản lý tài khoản",
     "setting": "Cài đặt ứng dụng",
     "usages": "Thống kê sử dụng"

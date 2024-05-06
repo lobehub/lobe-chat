@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat 初始化中，請耐心等候...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
+  "autoGenerateTooltipDisabled": "請填寫提示詞後使用自動補全功能",
   "blog": "產品部落格",
   "cancel": "取消",
   "changelog": "變更日誌",
@@ -28,6 +29,7 @@
   },
   "feedback": "回饋與建議",
   "follow": "在 {{name}} 上關注我們",
+  "fullscreen": "全螢幕模式",
   "historyRange": "歷史範圍",
   "import": "匯入設定",
   "importModal": {
@@ -159,6 +161,7 @@
     "newVersion": "有新版本可用：{{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "匿名使用者",
     "billing": "帳單管理",
     "defaultNickname": "社群版使用者",
     "discord": "社區支援",
@@ -168,6 +171,7 @@
     "help": "幫助中心",
     "moveGuide": "設置按鈕搬到這裡啦",
     "plans": "訂閱方案",
+    "preview": "預覽",
     "profile": "帳戶管理",
     "setting": "應用設定",
     "usages": "用量統計"

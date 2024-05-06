@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
+  "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
   "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
@@ -28,6 +29,7 @@
   },
   "feedback": "Feedback e suggerimenti",
   "follow": "Seguici su {{name}}",
+  "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
@@ -159,6 +161,7 @@
     "newVersion": "Nuova versione disponibile: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Utente Anonimo",
     "billing": "Gestione fatturazione",
     "defaultNickname": "Utente Community",
     "discord": "Supporto della community",
@@ -168,6 +171,7 @@
     "help": "Centro assistenza",
     "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
     "plans": "Piani di abbonamento",
+    "preview": "Anteprima",
     "profile": "Gestione account",
     "setting": "Impostazioni app",
     "usages": "Statistiche di utilizzo"

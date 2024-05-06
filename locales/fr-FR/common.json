@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
+  "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
   "blog": "Blog des produits",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
@@ -28,6 +29,7 @@
   },
   "feedback": "Retour d'information et suggestions",
   "follow": "Suivez-nous sur {{name}}",
+  "fullscreen": "Mode plein écran",
   "historyRange": "Plage d'historique",
   "import": "Importer",
   "importModal": {
@@ -159,6 +161,7 @@
     "newVersion": "Nouvelle version disponible : {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Utilisateur anonyme",
     "billing": "Gestion de la facturation",
     "defaultNickname": "Utilisateur de la version communautaire",
     "discord": "Support de la communauté",
@@ -168,6 +171,7 @@
     "help": "Centre d'aide",
     "moveGuide": "Le bouton de configuration a été déplacé ici",
     "plans": "Forfaits d'abonnement",
+    "preview": "Aperçu",
     "profile": "Gestion du compte",
     "setting": "Paramètres de l'application",
     "usages": "Statistiques d'utilisation"

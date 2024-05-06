@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat is initializing, please wait...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
   "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
@@ -28,6 +29,7 @@
   },
   "feedback": "Feedback",
   "follow": "Follow us on {{name}}",
+  "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
@@ -159,6 +161,7 @@
     "newVersion": "New version available: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Anonymous User",
     "billing": "Billing Management",
     "defaultNickname": "Community User",
     "discord": "Community Support",
@@ -168,6 +171,7 @@
     "help": "Help Center",
     "moveGuide": "The settings button has been moved here",
     "plans": "Subscription Plans",
+    "preview": "Preview",
     "profile": "Account Management",
     "setting": "App Settings",
     "usages": "Usage Statistics"

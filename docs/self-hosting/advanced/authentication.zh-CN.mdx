@@ -1,36 +1,45 @@
 ---
-title: LobeChat 外部身份验证服务配置指南
-description: >-
-  了解如何配置外部身份验证服务以统一管理用户授权。支持的身份验证服务包括 Auth0, Microsoft Entra ID, Authentik,
-  Github, 和 ZITADEL。
+title: LobeChat 身份验证服务配置
+description: 了解如何使用 Clerk 或 Next Auth 配置外部身份验证服务，以统一管理用户授权。支持的身份验证服务包括 Auth0、 Azure ID 等。
 tags:
   - 身份验证服务
   - LobeChat
   - SSO
-  - Auth0
-  - Microsoft Entra ID
-  - Authentik
-  - Github
-  - ZITADEL
+  - Clerk
 ---
 
 # 身份验证服务
 
-LobeChat 支持配置外部身份验证服务，供企业 / 组织内部使用，统一管理用户授权。
+LobeChat 支持使用 Clerk 或者 Next Auth 配置外部身份验证服务，供企业 / 组织内部使用，统一管理用户授权。
+
+## Clerk
+
+Clerk 是一个近期流行起来的全面的身份验证解决方案，它提供了简单而强大的 API 和服务来处理用户认证和会话管理。Clerk 的设计哲学是提供一套简洁、现代的认证解决方案，使得开发者可以轻松集成和使用。
+
+LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全、便捷的登录和注册体验，同时也为开发者减轻了管理身份验证逻辑的负担。Clerk 的简洁和现代的设计理念与 LobeChat 的目标非常契合，使得整个平台的用户管理更加高效和可靠。
+
+在 LobeChat 的环境变量中设置 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` 和 `CLERK_SECRET_KEY`，即可开启和使用 Clerk。
+
+## Next Auth
 
 目前支持的身份验证服务有：
 
-- [Auth0](/docs/self-hosting/advanced/sso-providers/auth0)
-- [Microsoft Entra ID](/docs/self-hosting/advanced/sso-providers/microsoft-entra-id)
-- [Authentik](/docs/self-hosting/advanced/sso-providers/authentik)
-- [Github](/docs/self-hosting/advanced/sso-providers/github)
-- [ZITADEL](/docs/self-hosting/advanced/sso-providers/zitadel)
+<Cards>
+  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/auth0'} title={'Auth0'} />
+  <Card
+    href={'/zh/docs/self-hosting/advanced/sso-providers/microsoft-entra-id'}
+    title={'Microsoft Entra ID'}
+  />
+  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/authentik'} title={'Authentik'} />
+  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/github'} title={'Github'} />
+  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/zitadel'} title={'ZITADEL'} />
+</Cards>
 
-点击链接可以查看对应平台的配置文档。
+点击即可查看对应平台的配置文档。
 
 ## 进阶配置
 
-同时启用多个身份验证源请设置 `SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,azure-ad,authentik`。
+同时启用多个身份验证源请设置 `NEXT_AUTH_SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,azure-ad,authentik`。
 
 顺序为 SSO 提供商的显示顺序。
 
