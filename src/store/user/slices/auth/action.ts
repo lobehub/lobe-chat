@@ -1,4 +1,3 @@
-import { signIn, signOut } from 'next-auth/react';
 import useSWR, { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
@@ -15,7 +14,6 @@ const USER_CONFIG_FETCH_KEY = 'fetchUserConfig';
 
 export interface UserAuthAction {
   getUserConfig: () => void;
-  login: () => Promise<void>;
   /**
    * universal logout method
    */
@@ -39,15 +37,6 @@ export const createAuthSlice: StateCreator<
   getUserConfig: () => {
     console.log(n('userconfig'));
   },
-  login: async () => {
-    // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
-    console.log(n('login'));
-
-    if (enableNextAuth) {
-      // TODO: 应该条件调用 next-auth 的登陆 hook
-      signIn();
-    }
-  },
   logout: async () => {
     if (enableClerk) {
       get().clerkSignOut?.({ redirectUrl: location.toString() });
@@ -56,8 +45,7 @@ export const createAuthSlice: StateCreator<
     }
 
     if (enableNextAuth) {
-      // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
-      console.log(n('logout'));
+      const { signOut } = await import('next-auth/react');
       signOut();
     }
   },
@@ -71,7 +59,7 @@ export const createAuthSlice: StateCreator<
     }
 
     if (enableNextAuth) {
-      // TODO: 针对开启 next-auth 的场景，需要在这里调用登录方法
+      const { signIn } = await import('next-auth/react');
       signIn();
     }
   },

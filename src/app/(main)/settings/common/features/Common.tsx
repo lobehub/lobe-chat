@@ -44,7 +44,7 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
   const [setSettings, resetSettings, signIn, signOut] = useUserStore((s) => [
     s.setSettings,
     s.resetSettings,
-    s.login,
+    s.openLogin,
     s.logout,
   ]);
 
