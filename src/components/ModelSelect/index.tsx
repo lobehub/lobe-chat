@@ -1,6 +1,6 @@
 import { Icon, Tooltip } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
+import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
 import { rgba } from 'polished';
 import { memo } from 'react';
@@ -57,8 +57,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 const formatTokenNumber = (num: number): string => {
-  if (num === 0) return '∞';
-  if (num < 1024) return '1K';
+  if (num > 0 && num < 1024) return '1K';
 
   let kiloToken = Math.floor(num / 1024);
   if (num >= 128_000 && num < 1_024_000) {
@@ -113,7 +112,11 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
             })}
           >
             <Center className={styles.token} title="">
-              {formatTokenNumber(model.tokens)}
+              {model.tokens === 0 ? (
+                <Infinity size={17} strokeWidth={1.6} />
+              ) : (
+                formatTokenNumber(model.tokens)
+              )}
             </Center>
           </Tooltip>
         )}
