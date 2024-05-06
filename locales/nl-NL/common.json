@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat wordt geïnitialiseerd, even geduld a.u.b...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
+  "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
   "blog": "Product Blog",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
