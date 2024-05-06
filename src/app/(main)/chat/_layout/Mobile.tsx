@@ -1,26 +1,18 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { ReactNode, memo } from 'react';
+import { memo } from 'react';
 
 import Migration from '@/app/(main)/chat/features/Migration';
 import { useQuery } from '@/hooks/useQuery';
 
-type Props = { children: ReactNode; session: ReactNode };
+import { LayoutProps } from './type';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
     transform: translateX(0);
   `,
-  mask: css`
-    position: absolute;
-    z-index: 101;
-    inset: 0;
-
-    background: ${token.colorBgMask};
-    backdrop-filter: blur(2px);
-  `,
-  subPage: css`
+  workspace: css`
     position: absolute;
     z-index: 102;
     inset: 0;
@@ -28,20 +20,17 @@ const useStyles = createStyles(({ css, token }) => ({
 
     background: ${token.colorBgLayout};
     box-shadow: ${token.boxShadow};
-
-    transition: transform 0.3s ${token.motionEaseInOut};
   `,
 }));
 
-const Layout = memo<Props>(({ children, session }) => {
-  const { active } = useQuery();
+const Layout = memo<LayoutProps>(({ children, session }) => {
+  const { active: showWorkspace } = useQuery();
   const { cx, styles } = useStyles();
 
   return (
     <>
       {session}
-      {active && <div className={styles.mask} />}
-      <div className={cx(styles.subPage, active && styles.active)}>{children}</div>
+      <div className={cx(styles.workspace, showWorkspace && styles.active)}>{children}</div>
       <Migration />
     </>
   );

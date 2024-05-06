@@ -1,15 +1,11 @@
-'use client';
-
-import { ReactNode } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import FolderPanel from '@/features/FolderPanel';
 
 import Migration from '../features/Migration';
+import { LayoutProps } from './type';
 
-type Props = { children: ReactNode; session: ReactNode };
-
-const Layout = ({ children, session }: Props) => {
+const Layout = ({ children, session }: LayoutProps) => {
   return (
     <>
       <Flexbox

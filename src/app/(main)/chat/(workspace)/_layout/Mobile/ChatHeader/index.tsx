@@ -16,37 +16,14 @@ const MobileHeader = memo(() => {
 
   const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
 
-  // const items: MenuProps['items'] = [
-  //   {
-  //     icon: <Icon icon={Share2} />,
-  //     key: 'share',
-  //     label: t('share', { ns: 'common' }),
-  //     onClick: () => setOpen(true),
-  //   },
-  //   !isInbox && {
-  //     icon: <Icon icon={Settings} />,
-  //     key: 'settings',
-  //     label: t('header.session', { ns: 'setting' }),
-  //     onClick: () => router.push(pathString('/chat/settings', { hash: location.hash })),
-  //   },
-  // ].filter(Boolean) as MenuProps['items'];
-
   return (
     <MobileNavBar
       center={<ChatHeaderTitle />}
-      onBackClick={() => router.push('/chat', { query: { active: '' } })}
+      onBackClick={() => router.push('/chat', { query: { session: '' }, replace: true })}
       right={
         <>
           <ShareButton mobile open={open} setOpen={setOpen} />
           {isAgentEditable && <SettingButton mobile />}
-          {/*<Dropdown*/}
-          {/*  menu={{*/}
-          {/*    items,*/}
-          {/*  }}*/}
-          {/*  trigger={['click']}*/}
-          {/*>*/}
-          {/*  <ActionIcon icon={MoreHorizontal} />*/}
-          {/*</Dropdown>*/}
         </>
       }
       showBackButton
