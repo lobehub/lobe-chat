@@ -21,6 +21,7 @@
   "emptyAgent": "Sem assistente disponível",
   "historyRange": "Intervalo de Histórico",
   "inbox": {
+    "agentsAndConversations": "Agentes e Conversas",
     "desc": "Ative o cluster cerebral, inspire faíscas de pensamento. Seu assistente inteligente, aqui para conversar sobre tudo.",
     "title": "Conversa Aleatória"
   },

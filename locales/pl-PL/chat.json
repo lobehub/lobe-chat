@@ -21,6 +21,7 @@
   "emptyAgent": "Brak asystenta",
   "historyRange": "Zakres historii",
   "inbox": {
+    "agentsAndConversations": "Agenci i rozmowy",
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
   },

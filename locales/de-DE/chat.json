@@ -21,6 +21,7 @@
   "emptyAgent": "Kein Assistent verfügbar",
   "historyRange": "Verlaufsbereich",
   "inbox": {
+    "agentsAndConversations": "Agenten und Unterhaltungen",
     "desc": "Aktiviere das Gehirncluster und entfache den Funken des Denkens. Dein intelligenter Assistent, der mit dir über alles kommuniziert.",
     "title": "Lass uns plaudern"
   },

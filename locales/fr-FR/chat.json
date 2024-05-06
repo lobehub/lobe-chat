@@ -21,6 +21,7 @@
   "emptyAgent": "Aucun assistant disponible",
   "historyRange": "Plage d'historique",
   "inbox": {
+    "agentsAndConversations": "Agents et conversations",
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
   },

@@ -21,6 +21,7 @@
   "emptyAgent": "Nessun assistente disponibile",
   "historyRange": "Intervallo cronologico",
   "inbox": {
+    "agentsAndConversations": "Assistenti e Conversazioni",
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
   },

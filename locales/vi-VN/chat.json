@@ -21,6 +21,7 @@
   "emptyAgent": "Không có trợ lý",
   "historyRange": "Phạm vi lịch sử",
   "inbox": {
+    "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
     "title": "Chuyện phiếm"
   },
