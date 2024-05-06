@@ -21,8 +21,26 @@ vi.mock('swr', async (importOriginal) => {
   };
 });
 
+// 定义一个变量来存储 enableAuth 的值
+let enableClerk = false;
+
+let enableNextAuth = false;
+
+// 模拟 @/const/auth 模块
+vi.mock('@/const/auth', () => ({
+  get enableClerk() {
+    return enableClerk;
+  },
+  get enableNextAuth() {
+    return enableNextAuth;
+  },
+}));
+
 afterEach(() => {
   vi.restoreAllMocks();
+
+  enableNextAuth = false;
+  enableClerk = false;
 });
 
 describe('createAuthSlice', () => {
@@ -113,6 +131,93 @@ describe('createAuthSlice', () => {
       // 验证状态未被错误更新
       expect(useUserStore.getState().avatar).toBeUndefined();
       expect(useUserStore.getState().settings).toEqual({});
+    });
+  });
+
+  describe('logout', () => {
+    it('should call clerkSignOut when Clerk is enabled', async () => {
+      enableClerk = true;
+
+      const clerkSignOutMock = vi.fn();
+      useUserStore.setState({ clerkSignOut: clerkSignOutMock });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.logout();
+      });
+
+      expect(clerkSignOutMock).toHaveBeenCalled();
+    });
+
+    it('should not call clerkSignOut when Clerk is disabled', async () => {
+      const clerkSignOutMock = vi.fn();
+      useUserStore.setState({ clerkSignOut: clerkSignOutMock });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.logout();
+      });
+
+      expect(clerkSignOutMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('openLogin', () => {
+    it('should call clerkSignIn when Clerk is enabled', async () => {
+      enableClerk = true;
+      const clerkSignInMock = vi.fn();
+      useUserStore.setState({ clerkSignIn: clerkSignInMock });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.openLogin();
+      });
+
+      expect(clerkSignInMock).toHaveBeenCalled();
+    });
+    it('should not call clerkSignIn when Clerk is disabled', async () => {
+      const clerkSignInMock = vi.fn();
+      useUserStore.setState({ clerkSignIn: clerkSignInMock });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.openLogin();
+      });
+
+      expect(clerkSignInMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('openUserProfile', () => {
+    it('should call clerkOpenUserProfile when Clerk is enabled', async () => {
+      enableClerk = true;
+
+      const clerkOpenUserProfileMock = vi.fn();
+      useUserStore.setState({ clerkOpenUserProfile: clerkOpenUserProfileMock });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.openUserProfile();
+      });
+
+      expect(clerkOpenUserProfileMock).toHaveBeenCalled();
+    });
+    it('should not call clerkOpenUserProfile when Clerk is disabled', async () => {
+      const clerkOpenUserProfileMock = vi.fn();
+      useUserStore.setState({ clerkOpenUserProfile: clerkOpenUserProfileMock });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.openUserProfile();
+      });
+
+      expect(clerkOpenUserProfileMock).not.toHaveBeenCalled();
     });
   });
 });

@@ -4,12 +4,14 @@ export default {
   appInitializing: 'LobeChat 启动中，请耐心等待...',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
+  autoGenerateTooltipDisabled: '请填写提示词后使用自动补全功能',
   blog: '产品博客',
   cancel: '取消',
   changelog: '更新日志',
   close: '关闭',
   copy: '复制',
   copyFail: '复制失败',
+
   copySuccess: '复制成功',
   defaultAgent: '自定义助手',
   defaultSession: '自定义助手',
@@ -154,6 +156,7 @@ export default {
     newVersion: '有新版本可用：{{version}}',
   },
   userPanel: {
+    anonymousNickName: '匿名用户',
     billing: '账单管理',
     defaultNickname: '社区版用户',
     discord: '社区支持',
