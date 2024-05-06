@@ -83,7 +83,7 @@ ENV API_KEY_SELECT_MODE ""
 
 # OpenAI
 ENV OPENAI_API_KEY ""
-ENV OPENAI_PROXY_URL ""
+ENV OPENAI_PROXY_URL "https://openai-api-proxy.zeabur.app/"
 ENV OPENAI_MODEL_LIST ""
 
 # Azure OpenAI
