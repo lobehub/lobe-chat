@@ -6,13 +6,13 @@ import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import { WELCOME_GUIDE_CHAT_ID } from '@/const/session';
-import Item from '@/features/Conversation/components/ChatItem';
-import InboxWelcome from '@/features/Conversation/components/InboxWelcome';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
 import { useInitConversation } from '../../hooks/useInitConversation';
 import AutoScroll from '../AutoScroll';
+import Item from '../ChatItem';
+import InboxWelcome from '../InboxWelcome';
 import SkeletonList from '../SkeletonList';
 
 interface VirtualizedListProps {
