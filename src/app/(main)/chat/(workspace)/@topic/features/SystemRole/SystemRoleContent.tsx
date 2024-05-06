@@ -23,7 +23,7 @@ import { useStyles } from './style';
 const SystemRole = memo(() => {
   const [editing, setEditing] = useState(false);
   const { styles } = useStyles();
-  const openChatSettings = useOpenChatSettings();
+  const openChatSettings = useOpenChatSettings(ChatSettingsTabs.Prompt);
   const [init, meta] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
     sessionMetaSelectors.currentAgentMeta(s),
@@ -94,7 +94,7 @@ const SystemRole = memo(() => {
                     onAvatarClick={() => {
                       setOpen(false);
                       setEditing(false);
-                      openChatSettings(ChatSettingsTabs.Prompt);
+                      openChatSettings();
                     }}
                     style={{ marginBottom: 16 }}
                   />

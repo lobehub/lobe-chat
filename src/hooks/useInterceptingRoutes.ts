@@ -8,25 +8,24 @@ import { useGlobalStore } from '@/store/global';
 import { ChatSettingsTabs, SettingsTabs, SidebarTabKey } from '@/store/global/initialState';
 import { useSessionStore } from '@/store/session';
 
-export const useOpenSettings = () => {
+export const useOpenSettings = (tab: SettingsTabs = SettingsTabs.Common) => {
   const activeId = useSessionStore((s) => s.activeId);
   const router = useQueryRoute();
   const mobile = useIsMobile();
 
   return useMemo(() => {
     if (mobile) {
-      return (tab: SettingsTabs = SettingsTabs.Common) => router.push(urlJoin('/settings', tab));
+      return () => router.push(urlJoin('/settings', tab));
     } else {
       // use Intercepting Routes on Desktop
-      return (tab: SettingsTabs = SettingsTabs.Common) =>
-        router.push('/settings/modal', { query: { session: activeId, tab } });
+      return () => router.push('/settings/modal', { query: { session: activeId, tab } });
     }
-  }, [mobile, activeId, router]);
+  }, [mobile, tab, activeId, router]);
 };
 
-export const useOpenChatSettings = () => {
+export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Meta) => {
   const activeId = useSessionStore((s) => s.activeId);
-  const openSettings = useOpenSettings();
+  const openSettings = useOpenSettings(SettingsTabs.Agent);
   const router = useQueryRoute();
   const mobile = useIsMobile();
 
@@ -35,14 +34,13 @@ export const useOpenChatSettings = () => {
       useGlobalStore.setState({
         sidebarKey: SidebarTabKey.Setting,
       });
-      return () => openSettings(SettingsTabs.Agent);
+      return openSettings;
     }
     if (mobile) {
       return () => router.push('/chat/settings');
     } else {
       // use Intercepting Routes on Desktop
-      return (tab: ChatSettingsTabs = ChatSettingsTabs.Meta) =>
-        router.push('/chat/settings/modal', { query: { session: activeId, tab } });
+      return () => router.push('/chat/settings/modal', { query: { session: activeId, tab } });
     }
-  }, [openSettings, mobile, activeId, router]);
+  }, [openSettings, mobile, activeId, router, tab]);
 };
