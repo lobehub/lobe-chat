@@ -1,8 +1,10 @@
+'use client';
+
 import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { isString } from 'lodash-es';
-import { UserCircle, Wand2 } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -61,6 +63,7 @@ const AgentMeta = memo(() => {
     return {
       children: (
         <AutoGenerate
+          canAutoGenerate={hasSystemRole}
           loading={loading[item.key as keyof SessionLoadingState]}
           onChange={item.onChange}
           onGenerate={() => {
@@ -102,7 +105,13 @@ const AgentMeta = memo(() => {
         ...autocompleteItems,
       ],
       extra: (
-        <Tooltip title={t('autoGenerateTooltip', { ns: 'common' })}>
+        <Tooltip
+          title={
+            !hasSystemRole
+              ? t('autoGenerateTooltipDisabled', { ns: 'common' })
+              : t('autoGenerateTooltip', { ns: 'common' })
+          }
+        >
           <Button
             disabled={!hasSystemRole}
             icon={<Icon icon={Wand2} />}
@@ -118,13 +127,12 @@ const AgentMeta = memo(() => {
           </Button>
         </Tooltip>
       ),
-      icon: UserCircle,
       title: t('settingAgent.title'),
     }),
     [autocompleteItems, meta],
   );
 
-  return <Form items={[metaData]} {...FORM_STYLE} />;
+  return <Form items={[metaData]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />;
 });
 
 export default AgentMeta;

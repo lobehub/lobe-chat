@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
+  "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
   "close": "Kapat",
@@ -26,6 +28,8 @@
     "globalSetting": "Ayarları Dışa Aktar"
   },
   "feedback": "Feedback",
+  "follow": "Bizi {{name}} üzerinde takip edin",
+  "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "Başlatılıyor...",
   "noDescription": "Açıklama yok",
   "oauth": "SSO Girişi",
+  "officialSite": "Resmi Site",
   "ok": "Tamam",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Gizlilik Politikası",
   "regenerate": "Tekrarla",
   "rename": "Yeniden İsimlendir",
   "reset": "Reset",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Keşfet",
+    "me": "ben",
     "setting": "Ayarlar"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
   },
   "temp": "Geçici",
+  "terms": "Hizmet Koşulları",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upgradeVersion": {
     "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
     "newVersion": "Yeni sürüm mevcut: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonim Kullanıcı",
+    "billing": "Fatura Yönetimi",
+    "defaultNickname": "Topluluk Kullanıcısı",
+    "discord": "Topluluk Destek",
+    "docs": "Belgeler",
+    "email": "E-posta Destek",
+    "feedback": "Geribildirim ve Öneriler",
+    "help": "Yardım Merkezi",
+    "moveGuide": "Ayarlar düğmesini buraya taşıyın",
+    "plans": "Planlar",
+    "preview": "Önizleme",
+    "profile": "Hesap Yönetimi",
+    "setting": "Uygulama Ayarları",
+    "usages": "Kullanım İstatistikleri"
   }
 }

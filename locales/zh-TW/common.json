@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat 初始化中，請耐心等候...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
+  "autoGenerateTooltipDisabled": "請填寫提示詞後使用自動補全功能",
+  "blog": "產品部落格",
   "cancel": "取消",
   "changelog": "變更日誌",
   "close": "關閉",
@@ -26,6 +28,8 @@
     "globalSetting": "匯出全域設定"
   },
   "feedback": "回饋與建議",
+  "follow": "在 {{name}} 上關注我們",
+  "fullscreen": "全螢幕模式",
   "historyRange": "歷史範圍",
   "import": "匯入設定",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "正在載入版面配置...",
   "noDescription": "暫無描述",
   "oauth": "單一登錄（SSO）",
+  "officialSite": "官方網站",
   "ok": "確定",
   "password": "密碼",
   "pin": "置頂",
   "pinOff": "取消置頂",
+  "privacy": "隱私政策",
   "regenerate": "重新生成",
   "rename": "重新命名",
   "reset": "重置",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "對話",
     "market": "發現",
+    "me": "我",
     "setting": "設定"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "幫助 LobeChat 做得更好"
   },
   "temp": "臨時",
+  "terms": "服務條款",
   "updateAgent": "更新助理資訊",
   "upgradeVersion": {
     "action": "升級",
     "hasNew": "有可用更新",
     "newVersion": "有新版本可用：{{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "匿名使用者",
+    "billing": "帳單管理",
+    "defaultNickname": "社群版使用者",
+    "discord": "社區支援",
+    "docs": "使用文件",
+    "email": "郵件支援",
+    "feedback": "反饋與建議",
+    "help": "幫助中心",
+    "moveGuide": "設置按鈕搬到這裡啦",
+    "plans": "訂閱方案",
+    "preview": "預覽",
+    "profile": "帳戶管理",
+    "setting": "應用設定",
+    "usages": "用量統計"
   }
 }

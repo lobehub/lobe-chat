@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
+  "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
+  "blog": "Blog des produits",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "close": "Fermer",
@@ -26,6 +28,8 @@
     "globalSetting": "Exporter les paramètres globaux"
   },
   "feedback": "Retour d'information et suggestions",
+  "follow": "Suivez-nous sur {{name}}",
+  "fullscreen": "Mode plein écran",
   "historyRange": "Plage d'historique",
   "import": "Importer",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "Initialisation de la mise en page en cours...",
   "noDescription": "Aucune description disponible",
   "oauth": "Connexion SSO",
+  "officialSite": "Site officiel",
   "ok": "OK",
   "password": "Mot de passe",
   "pin": "Épingler",
   "pinOff": "Désactiver l'épinglage",
+  "privacy": "Politique de confidentialité",
   "regenerate": "Régénérer",
   "rename": "Renommer",
   "reset": "Réinitialiser",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "Conversation",
     "market": "Découvrir",
+    "me": "moi",
     "setting": "Paramètre"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "Aider LobeChat à s'améliorer"
   },
   "temp": "Temporaire",
+  "terms": "Conditions de service",
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upgradeVersion": {
     "action": "Mettre à jour",
     "hasNew": "Nouvelle mise à jour disponible",
     "newVersion": "Nouvelle version disponible : {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Utilisateur anonyme",
+    "billing": "Gestion de la facturation",
+    "defaultNickname": "Utilisateur de la version communautaire",
+    "discord": "Support de la communauté",
+    "docs": "Documentation d'utilisation",
+    "email": "Support par e-mail",
+    "feedback": "Retours et suggestions",
+    "help": "Centre d'aide",
+    "moveGuide": "Le bouton de configuration a été déplacé ici",
+    "plans": "Forfaits d'abonnement",
+    "preview": "Aperçu",
+    "profile": "Gestion du compte",
+    "setting": "Paramètres de l'application",
+    "usages": "Statistiques d'utilisation"
   }
 }

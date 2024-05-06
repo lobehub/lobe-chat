@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat wird initialisiert. Bitte haben Sie einen Moment Geduld...",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
+  "autoGenerateTooltipDisabled": "Bitte geben Sie einen Hinweis ein, um die automatische Vervollständigung zu aktivieren",
+  "blog": "Produkt-Blog",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
   "close": "Schließen",
@@ -26,6 +28,8 @@
     "globalSetting": "Globale Einstellungen exportieren"
   },
   "feedback": "Feedback und Vorschläge",
+  "follow": "Folge uns auf {{name}}",
+  "fullscreen": "Vollbildmodus",
   "historyRange": "Verlaufsbereich",
   "import": "Importieren",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "Layout wird geladen...",
   "noDescription": "Keine Beschreibung vorhanden",
   "oauth": "SSO-Anmeldung",
+  "officialSite": "Offizielle Website",
   "ok": "OK",
   "password": "Passwort",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
+  "privacy": "Datenschutzrichtlinie",
   "regenerate": "Neu generieren",
   "rename": "Umbenennen",
   "reset": "Zurücksetzen",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Entdecken",
+    "me": "Ich",
     "setting": "Einstellung"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "Hilf LobeChat, besser zu werden"
   },
   "temp": "Temporär",
+  "terms": "Nutzungsbedingungen",
   "updateAgent": "Assistentenprofil aktualisieren",
   "upgradeVersion": {
     "action": "Aktualisieren",
     "hasNew": "Neue Version verfügbar",
     "newVersion": "Neue Version verfügbar: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonymer Benutzer",
+    "billing": "Abrechnung verwalten",
+    "defaultNickname": "Community User",
+    "discord": "Community-Support",
+    "docs": "Dokumentation",
+    "email": "E-Mail-Support",
+    "feedback": "Feedback und Vorschläge",
+    "help": "Hilfezentrum",
+    "moveGuide": "Die Einstellungen wurden hierher verschoben.",
+    "plans": "Abonnementpläne",
+    "preview": "Vorschau",
+    "profile": "Kontoverwaltung",
+    "setting": "App-Einstellungen",
+    "usages": "Nutzungsstatistiken"
   }
 }

@@ -1,8 +1,12 @@
+'use client';
+
 import { Form, type FormItemProps, type ItemGroup } from '@lobehub/ui';
-import { Form as AntForm, Input, Switch } from 'antd';
+import { Input, Switch } from 'antd';
+import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import {
@@ -18,6 +22,28 @@ import { GlobalLLMProviderKey } from '@/types/settings';
 
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
+
+const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
+  form: css`
+    .${prefixCls}-form-item-control:has(.${prefixCls}-input,.${prefixCls}-select) {
+      flex: none;
+      width: min(70%, 800px);
+      min-width: min(70%, 800px) !important;
+    }
+    ${responsive.mobile} {
+      width: 100%;
+      min-width: unset !important;
+    }
+    .${prefixCls}-select-selection-overflow-item {
+      font-size: 12px;
+    }
+  `,
+  safariIconWidthFix: css`
+    svg {
+      width: unset !important;
+    }
+  `,
+}));
 
 interface ProviderConfigProps {
   apiKeyItems?: FormItemProps[];
@@ -52,7 +78,8 @@ const ProviderConfig = memo<ProviderConfigProps>(
   }) => {
     const { t } = useTranslation('setting');
     const { t: modelT } = useTranslation('modelProvider');
-    const [form] = AntForm.useForm();
+    const [form] = Form.useForm();
+    const { styles } = useStyles();
     const [
       toggleProviderEnabled,
       setSettings,
@@ -142,16 +169,29 @@ const ProviderConfig = memo<ProviderConfigProps>(
           value={enabled}
         />
       ) : undefined,
-      title,
+      title: (
+        <Flexbox
+          align={'center'}
+          className={styles.safariIconWidthFix}
+          horizontal
+          style={{
+            height: 24,
+            maxHeight: 24,
+            ...(enabled ? {} : { filter: 'grayscale(100%)', maxHeight: 24, opacity: 0.66 }),
+          }}
+        >
+          {title}
+        </Flexbox>
+      ),
     };
 
     return (
       <Form
+        className={styles.form}
         form={form}
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}
         {...FORM_STYLE}
-        itemMinWidth={'max(50%,400px)'}
       />
     );
   },

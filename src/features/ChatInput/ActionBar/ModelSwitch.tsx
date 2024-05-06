@@ -1,5 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
-import { BrainCog } from 'lucide-react';
+import { Brain } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,7 +10,7 @@ const ModelSwitch = memo(() => {
 
   return (
     <ModelSwitchPanel>
-      <ActionIcon icon={BrainCog} placement={'bottom'} title={t('ModelSwitch.title')} />
+      <ActionIcon icon={Brain} placement={'bottom'} title={t('ModelSwitch.title')} />
     </ModelSwitchPanel>
   );
 });

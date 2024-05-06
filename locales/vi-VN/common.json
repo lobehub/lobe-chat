@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat đang khởi động, vui lòng chờ...",
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
+  "autoGenerateTooltipDisabled": "Vui lòng nhập từ gợi ý trước khi sử dụng tính năng tự động hoàn thành",
+  "blog": "Blog sản phẩm",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
   "close": "Đóng",
@@ -26,6 +28,8 @@
     "globalSetting": "Xuất cài đặt toàn cầu"
   },
   "feedback": "Phản hồi và đề xuất",
+  "follow": "Theo dõi chúng tôi trên {{name}}",
+  "fullscreen": "Chế độ toàn màn hình",
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "Đang tải bố cục...",
   "noDescription": "Chưa có mô tả",
   "oauth": "Đăng nhập SSO",
+  "officialSite": "Trang web chính thức",
   "ok": "Đồng ý",
   "password": "Mật khẩu",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
+  "privacy": "Chính sách bảo mật",
   "regenerate": "Tạo lại",
   "rename": "Đổi tên",
   "reset": "Đặt lại",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "Trò chuyện",
     "market": "Thị trường",
+    "me": "Tôi",
     "setting": "Cài đặt"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "Hỗ trợ LobeChat hoạt động tốt hơn"
   },
   "temp": "Tạm thời",
+  "terms": "Điều khoản dịch vụ",
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upgradeVersion": {
     "action": "Nâng cấp",
     "hasNew": "Có bản cập nhật mới",
     "newVersion": "Có phiên bản mới: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Người dùng ẩn danh",
+    "billing": "Quản lý hóa đơn",
+    "defaultNickname": "Người dùng phiên bản cộng đồng",
+    "discord": "Hỗ trợ cộng đồng",
+    "docs": "Tài liệu sử dụng",
+    "email": "Hỗ trợ qua email",
+    "feedback": "Phản hồi và đề xuất",
+    "help": "Trung tâm trợ giúp",
+    "moveGuide": "Đã di chuyển nút cài đặt đến đây",
+    "plans": "Kế hoạch đăng ký",
+    "preview": "Phiên bản xem trước",
+    "profile": "Quản lý tài khoản",
+    "setting": "Cài đặt ứng dụng",
+    "usages": "Thống kê sử dụng"
   }
 }

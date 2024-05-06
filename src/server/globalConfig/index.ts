@@ -5,6 +5,7 @@ import {
   TogetherAIProviderCard,
 } from '@/config/modelProviders';
 import { getServerConfig } from '@/config/server';
+import { enableNextAuth } from '@/const/auth';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseModels';
 
@@ -13,7 +14,6 @@ import { parseAgentConfig } from './parseDefaultAgent';
 export const getServerGlobalConfig = () => {
   const {
     ENABLE_LANGFUSE,
-    ENABLE_OAUTH_SSO,
 
     DEFAULT_AGENT_CONFIG,
     OPENAI_MODEL_LIST,
@@ -25,6 +25,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_GROQ,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
+    ENABLED_MINIMAX,
     ENABLED_MISTRAL,
 
     ENABLED_AZURE_OPENAI,
@@ -47,7 +48,7 @@ export const getServerGlobalConfig = () => {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
 
-    enabledOAuthSSO: ENABLE_OAUTH_SSO,
+    enabledOAuthSSO: enableNextAuth,
     languageModel: {
       anthropic: {
         enabled: ENABLED_ANTHROPIC,
@@ -64,6 +65,7 @@ export const getServerGlobalConfig = () => {
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       google: { enabled: ENABLED_GOOGLE },
       groq: { enabled: ENABLED_GROQ },
+      minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: {

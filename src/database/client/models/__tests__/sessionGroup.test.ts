@@ -89,6 +89,16 @@ describe('SessionGroupModel', () => {
         expect(session.group).not.toEqual(createdGroup.id);
       });
     });
+    it('should update associated sessions to default group when a session group is deleted', async () => {
+      const createdGroup = await SessionGroupModel.create(
+        sessionGroupData.name,
+        sessionGroupData.sort,
+      );
+      const sessionId = await SessionModel.create('agent', {}, createdGroup.id);
+      await SessionGroupModel.delete(createdGroup.id);
+      const updatedSession = await SessionModel.findById(sessionId.id);
+      expect(updatedSession.group).toEqual('default');
+    });
   });
 
   describe('query', () => {
@@ -152,6 +162,14 @@ describe('SessionGroupModel', () => {
       const fetchedGroups = await SessionGroupModel.query();
       expect(fetchedGroups[0].id).toEqual(group2.id);
       expect(fetchedGroups[1].id).toEqual(group1.id);
+    });
+
+    it('should sort session groups correctly when only b has a sort value', async () => {
+      const groupA = await SessionGroupModel.create('groupA'); // sort undefined
+      const groupB = await SessionGroupModel.create('groupB', 1); // sort defined
+      const fetchedGroups = await SessionGroupModel.query();
+      expect(fetchedGroups[0].id).toEqual(groupB.id);
+      expect(fetchedGroups[1].id).toEqual(groupA.id);
     });
   });
 

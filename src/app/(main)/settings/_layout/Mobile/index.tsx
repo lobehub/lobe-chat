@@ -1,23 +1,12 @@
-'use client';
+import MobileContentLayout from '@/components/server/MobileNavLayout';
 
-import { PropsWithChildren } from 'react';
+import { LayoutProps } from '../type';
+import Header from './Header';
 
-import { useIsSubSlug } from '@/hooks/useIsSubSlug';
-
-import SubSettingHeader from './SubSettingHeader';
-
-const MobileLayout = ({ children }: PropsWithChildren) => {
-  const isSubPath = useIsSubSlug();
-
-  if (isSubPath)
-    return (
-      <>
-        <SubSettingHeader />
-        {children}
-      </>
-    );
-
-  return children;
+const Layout = ({ children }: LayoutProps) => {
+  return <MobileContentLayout header={<Header />}>{children}</MobileContentLayout>;
 };
 
-export default MobileLayout;
+Layout.displayName = 'MobileSettingsLayout';
+
+export default Layout;

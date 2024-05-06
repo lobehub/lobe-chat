@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat wordt geïnitialiseerd, even geduld a.u.b...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
+  "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
+  "blog": "Product Blog",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
   "close": "Sluiten",
@@ -26,6 +28,8 @@
     "globalSetting": "Algemene instellingen exporteren"
   },
   "feedback": "Feedback en suggesties",
+  "follow": "Volg ons op {{name}}",
+  "fullscreen": "Volledig scherm",
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "Lay-out wordt geladen...",
   "noDescription": "Geen beschrijving beschikbaar",
   "oauth": "SSO inloggen",
+  "officialSite": "Officiële website",
   "ok": "Oké",
   "password": "Wachtwoord",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
+  "privacy": "Privacybeleid",
   "regenerate": "重新生成",
   "rename": "重命名",
   "reset": "重置",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "会话",
     "market": "发现",
+    "me": "我",
     "setting": "设置"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "Help LobeChat verbeteren"
   },
   "temp": "临时",
+  "terms": "Algemene voorwaarden",
   "updateAgent": "更新助理信息",
   "upgradeVersion": {
     "action": "升级",
     "hasNew": "有可用更新",
     "newVersion": "有新版本可用：{{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonieme gebruiker",
+    "billing": "账单管理",
+    "defaultNickname": "Standaardgebruiker",
+    "discord": "社区支持",
+    "docs": "使用文档",
+    "email": "邮件支持",
+    "feedback": "反馈与建议",
+    "help": "帮助中心",
+    "moveGuide": "De instellingenknop is hierheen verplaatst",
+    "plans": "订阅方案",
+    "preview": "Voorbeeld",
+    "profile": "账户管理",
+    "setting": "应用设置",
+    "usages": "用量统计"
   }
 }

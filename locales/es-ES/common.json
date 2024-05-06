@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat está inicializando, por favor espere...",
   "autoGenerate": "Generación automática",
   "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
+  "autoGenerateTooltipDisabled": "Por favor, complete la palabra clave antes de usar la función de autocompletar",
+  "blog": "Blog de productos",
   "cancel": "Cancelar",
   "changelog": "Registro de cambios",
   "close": "Cerrar",
@@ -26,6 +28,8 @@
     "globalSetting": "Exportar configuración global"
   },
   "feedback": "Comentarios y sugerencias",
+  "follow": "Síguenos en {{name}}",
+  "fullscreen": "Pantalla completa",
   "historyRange": "Rango de historial",
   "import": "Importar configuración",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "Inicializando diseño...",
   "noDescription": "Sin descripción",
   "oauth": "Inicio de sesión SSO",
+  "officialSite": "Sitio oficial",
   "ok": "Aceptar",
   "password": "Contraseña",
   "pin": "Fijar",
   "pinOff": "Quitar fijación",
+  "privacy": "Política de privacidad",
   "regenerate": "Regenerar",
   "rename": "Renombrar",
   "reset": "Restablecer",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Descubrir",
+    "me": "Yo",
     "setting": "Configuración"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "Ayuda a mejorar LobeChat"
   },
   "temp": "Temporal",
+  "terms": "Términos de servicio",
   "updateAgent": "Actualizar información del asistente",
   "upgradeVersion": {
     "action": "Actualizar",
     "hasNew": "Hay una nueva actualización disponible",
     "newVersion": "Nueva versión disponible: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Usuario Anónimo",
+    "billing": "Gestión de facturación",
+    "defaultNickname": "Usuario de la comunidad",
+    "discord": "Soporte de la comunidad",
+    "docs": "Documentación de uso",
+    "email": "Soporte por correo electrónico",
+    "feedback": "Comentarios y sugerencias",
+    "help": "Centro de ayuda",
+    "moveGuide": "El botón de configuración se ha movido aquí",
+    "plans": "Planes de suscripción",
+    "preview": "Vista previa",
+    "profile": "Gestión de cuenta",
+    "setting": "Configuración de la aplicación",
+    "usages": "Estadísticas de uso"
   }
 }

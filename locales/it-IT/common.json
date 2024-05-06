@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
+  "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
+  "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "close": "Chiudi",
@@ -26,6 +28,8 @@
     "globalSetting": "Esporta impostazioni globali"
   },
   "feedback": "Feedback e suggerimenti",
+  "follow": "Seguici su {{name}}",
+  "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "Inizializzazione layout in corso...",
   "noDescription": "Nessuna descrizione disponibile",
   "oauth": "Accesso SSO",
+  "officialSite": "Sito ufficiale",
   "ok": "OK",
   "password": "Password",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio",
+  "privacy": "Informativa sulla privacy",
   "regenerate": "Rigenera",
   "rename": "Rinomina",
   "reset": "Ripristina",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Scopri",
+    "me": "io",
     "setting": "Impostazioni"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "Aiuta LobeChat a migliorare"
   },
   "temp": "Temporaneo",
+  "terms": "Termini di servizio",
   "updateAgent": "Aggiorna informazioni agente",
   "upgradeVersion": {
     "action": "Aggiorna",
     "hasNew": "Nuovo aggiornamento disponibile",
     "newVersion": "Nuova versione disponibile: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Utente Anonimo",
+    "billing": "Gestione fatturazione",
+    "defaultNickname": "Utente Community",
+    "discord": "Supporto della community",
+    "docs": "Documentazione",
+    "email": "Supporto via email",
+    "feedback": "Feedback e suggerimenti",
+    "help": "Centro assistenza",
+    "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
+    "plans": "Piani di abbonamento",
+    "preview": "Anteprima",
+    "profile": "Gestione account",
+    "setting": "Impostazioni app",
+    "usages": "Statistiche di utilizzo"
   }
 }

@@ -4,6 +4,8 @@
   "appInitializing": "LobeChat이 초기화 중입니다. 잠시 기다려주세요...",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
+  "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
+  "blog": "제품 블로그",
   "cancel": "취소",
   "changelog": "변경 로그",
   "close": "닫기",
@@ -26,6 +28,8 @@
     "globalSetting": "전역 설정 내보내기"
   },
   "feedback": "피드백 및 제안",
+  "follow": "{{name}}에서 우리를 팔로우하세요",
+  "fullscreen": "전체 화면",
   "historyRange": "기록 범위",
   "import": "가져오기",
   "importModal": {
@@ -88,10 +92,12 @@
   "layoutInitializing": "레이아웃을 불러오는 중...",
   "noDescription": "설명 없음",
   "oauth": "SSO 로그인",
+  "officialSite": "공식 사이트",
   "ok": "확인",
   "password": "비밀번호",
   "pin": "고정",
   "pinOff": "고정 해제",
+  "privacy": "개인정보 보호 정책",
   "regenerate": "재생성",
   "rename": "이름 바꾸기",
   "reset": "재설정",
@@ -136,6 +142,7 @@
   "tab": {
     "chat": "채팅",
     "market": "발견",
+    "me": "나",
     "setting": "설정"
   },
   "telemetry": {
@@ -146,10 +153,27 @@
     "title": "LobeChat을 더 나아지게 하는 데 도와주세요"
   },
   "temp": "임시",
+  "terms": "이용 약관",
   "updateAgent": "에이전트 정보 업데이트",
   "upgradeVersion": {
     "action": "업그레이드",
     "hasNew": "사용 가능한 업데이트가 있습니다",
     "newVersion": "새 버전 사용 가능: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "익명 사용자",
+    "billing": "결제 관리",
+    "defaultNickname": "커뮤니티 사용자",
+    "discord": "커뮤니티 지원",
+    "docs": "사용 설명서",
+    "email": "이메일 지원",
+    "feedback": "피드백 및 제안",
+    "help": "도움말 센터",
+    "moveGuide": "설정 버튼을 여기로 이동했습니다",
+    "plans": "요금제",
+    "preview": "미리보기",
+    "profile": "계정 관리",
+    "setting": "앱 설정",
+    "usages": "사용량 통계"
   }
 }
