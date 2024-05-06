@@ -2,7 +2,7 @@
 
 import { Form, type FormItemProps, type ItemGroup } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
-import { createStyles, css } from 'antd-style';
+import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,21 @@ import { GlobalLLMProviderKey } from '@/types/settings';
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
+  form: css`
+    .${prefixCls}-form-item-control:has(.${prefixCls}-input,.${prefixCls}-select) {
+      flex: none;
+      width: min(70%, 800px);
+      min-width: min(70%, 800px) !important;
+    }
+    ${responsive.mobile} {
+      width: 100%;
+      min-width: unset !important;
+    }
+    .${prefixCls}-select-selection-overflow-item {
+      font-size: 12px;
+    }
+  `,
   safariIconWidthFix: css`
     svg {
       width: unset !important;
@@ -173,11 +187,11 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     return (
       <Form
+        className={styles.form}
         form={form}
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}
         {...FORM_STYLE}
-        itemMinWidth={'max(50%,400px)'}
       />
     );
   },
