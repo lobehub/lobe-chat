@@ -19,19 +19,12 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### General Settings
 
-#### `NEXTAUTH_SECRET`
+#### `NEXT_AUTH_SECRET`
 
 - Type: Required
 - Description: Key used to encrypt the session tokens in Auth.js. You can generate the key using the following command: `openssl rand -base64 32`.
 - Default: `-`
 - Example: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
-
-#### `NEXTAUTH_URL`
-
-- Type: Optional
-- Description: This URL is used to specify the callback address for Auth.js during OAuth authentication. It does not need to be set when deploying on Vercel.
-- Default: `-`
-- Example: `https://example.com/api/auth`
 
 #### `NEXT_AUTH_SSO_PROVIDERS`
 
@@ -39,6 +32,13 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Description: Select the single sign-on provider for LoboChat. For multiple SSO Providers separating them with commas, for example, `auth0,azure-ad,authentik`.
 - Default: `auth0`
 - Example: `auth0,azure-ad,authentik`
+
+#### `NEXTAUTH_URL`
+
+- Type: Optional
+- Description: This URL is used to specify the callback address for Auth.js during OAuth authentication. It does not need to be set when deploying on Vercel.
+- Default: `-`
+- Example: `https://example.com/api/auth`
 
 ### Auth0
 
