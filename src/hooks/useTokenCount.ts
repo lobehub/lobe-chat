@@ -6,6 +6,7 @@ export const useTokenCount = (input: string = '') => {
   const [value, setNum] = useState(0);
 
   useEffect(() => {
+    if (!input) return;
     startTransition(() => {
       encodeAsync(input)
         .then(setNum)
