@@ -19,7 +19,7 @@ RUN corepack enable
 WORKDIR /app
 
 COPY package.json ./
-COPY .env ./
+COPY .npmrc ./
 
 # If you want to build docker in China
 # RUN npm config set registry https://registry.npmmirror.com/
