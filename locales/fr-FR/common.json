@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
+  "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
   "blog": "Blog des produits",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
