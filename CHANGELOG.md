@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.154.3](https://github.com/lobehub/lobe-chat/compare/v0.154.2...v0.154.3)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker build ([80a270d](https://github.com/lobehub/lobe-chat/commit/80a270d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.154.2](https://github.com/lobehub/lobe-chat/compare/v0.154.1...v0.154.2)
 
 <sup>Released on **2024-05-06**</sup>
