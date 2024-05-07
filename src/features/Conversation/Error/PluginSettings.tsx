@@ -23,7 +23,7 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('error');
   const theme = useTheme();
-  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.internal_resendMessage, s.deleteMessage]);
   const pluginIdentifier = plugin?.identifier as string;
   const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
   const manifest = useToolStore(pluginSelectors.getPluginManifestById(pluginIdentifier), isEqual);
