@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.155.1](https://github.com/lobehub/lobe-chat/compare/v0.155.0...v0.155.1)
+
+<sup>Released on **2024-05-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve llm list when all closed.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve llm list when all closed, closes [#2409](https://github.com/lobehub/lobe-chat/issues/2409) ([1eb20c7](https://github.com/lobehub/lobe-chat/commit/1eb20c7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.155.0](https://github.com/lobehub/lobe-chat/compare/v0.154.7...v0.155.0)
 
 <sup>Released on **2024-05-07**</sup>
