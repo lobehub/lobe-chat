@@ -12,6 +12,12 @@
   "copy": "복사",
   "copyFail": "복사 실패",
   "copySuccess": "복사 성공",
+  "dataStatistics": {
+    "messages": "메시지",
+    "sessions": "세션",
+    "today": "오늘",
+    "topics": "주제"
+  },
   "defaultAgent": "기본 에이전트",
   "defaultSession": "기본 세션",
   "delete": "삭제",
