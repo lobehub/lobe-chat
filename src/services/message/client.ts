@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { MessageModel } from '@/database/client/models/message';
 import { DB_Message } from '@/database/client/schemas/message';
 import { ChatMessage, ChatMessageError, ChatPluginPayload } from '@/types/message';
@@ -25,6 +27,13 @@ export class ClientService implements IMessageService {
 
   async countMessages() {
     return MessageModel.count();
+  }
+
+  async countTodayMessages() {
+    const topics = await MessageModel.queryAll();
+    return topics.filter(
+      (item) => dayjs(item.createdAt).format('YYYY-MM-DD') === dayjs().format('YYYY-MM-DD'),
+    ).length;
   }
 
   async getAllMessagesInSession(sessionId: string) {

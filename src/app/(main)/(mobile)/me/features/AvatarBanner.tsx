@@ -4,13 +4,12 @@ import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import UserAvatar from '@/features/User/UserAvatar';
-import UserInfo from '@/features/User/UserInfo';
 
 import { useStyles } from './style';
 
 export const AVATAR_SIZE = 80;
 
-const AvatarBanner = memo<PropsWithChildren>(() => {
+const AvatarBanner = memo<PropsWithChildren>(({ children }) => {
   const { styles } = useStyles();
 
   return (
@@ -20,7 +19,7 @@ const AvatarBanner = memo<PropsWithChildren>(() => {
           <UserAvatar shape={'square'} size={AVATAR_SIZE} />
         </div>
       </Flexbox>
-      <UserInfo className={styles.info} />
+      <Flexbox className={styles.info}>{children}</Flexbox>
     </>
   );
 });

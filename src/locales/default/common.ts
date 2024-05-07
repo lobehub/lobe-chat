@@ -11,8 +11,13 @@ export default {
   close: '关闭',
   copy: '复制',
   copyFail: '复制失败',
-
   copySuccess: '复制成功',
+  dataStatistics: {
+    messages: '消息',
+    sessions: '助手',
+    today: '今日新增',
+    topics: '话题',
+  },
   defaultAgent: '自定义助手',
   defaultSession: '自定义助手',
   delete: '删除',
