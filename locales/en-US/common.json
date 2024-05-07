@@ -12,6 +12,12 @@
   "copy": "Copy",
   "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
+  "dataStatistics": {
+    "messages": "Messages",
+    "sessions": "Assistants",
+    "today": "Today's New",
+    "topics": "Topics"
+  },
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
   "delete": "Delete",
