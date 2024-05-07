@@ -12,6 +12,12 @@
   "copy": "Копирай",
   "copyFail": "Копирането не е успешно",
   "copySuccess": "Копирано успешно",
+  "dataStatistics": {
+    "messages": "Съобщения",
+    "sessions": "Сесии",
+    "today": "Днес",
+    "topics": "Теми"
+  },
   "defaultAgent": "Агент по подразбиране",
   "defaultSession": "Агент по подразбиране",
   "delete": "Изтрий",
