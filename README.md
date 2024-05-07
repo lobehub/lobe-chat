@@ -778,6 +778,6 @@ font-size: 16px;
 font-weight: bold;
 font-style: italic;
 text-decoration: underline;
-color: #333333;
+color: #f2f2f2f2;
 
 This updated documentation provides clear instructions on how to customize fonts using CSS properties, ensuring users can effectively enhance the appearance of their LobeChat application.
