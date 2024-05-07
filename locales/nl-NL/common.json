@@ -12,6 +12,12 @@
   "copy": "Kopiëren",
   "copyFail": "Kopiëren mislukt",
   "copySuccess": "Kopiëren gelukt",
+  "dataStatistics": {
+    "messages": "Berichten",
+    "sessions": "Sessies",
+    "today": "Vandaag",
+    "topics": "Onderwerpen"
+  },
   "defaultAgent": "Standaard assistent",
   "defaultSession": "Standaard assistent",
   "delete": "Verwijderen",
