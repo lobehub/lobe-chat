@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { isCommandPressed } from '@/utils/keyboard';
@@ -42,7 +43,7 @@ const InputArea = memo<InputAreaProps>(({ setExpand }) => {
   const isChineseInput = useRef(false);
 
   const [loading, value, updateInputMessage] = useChatStore((s) => [
-    !!s.chatLoadingId,
+    chatSelectors.isAIGenerating(s),
     s.inputMessage,
     s.updateInputMessage,
   ]);

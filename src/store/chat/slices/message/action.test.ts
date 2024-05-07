@@ -701,7 +701,7 @@ describe('chatMessage actions', () => {
 
       const state = useChatStore.getState();
       expect(state.abortController).toBeInstanceOf(AbortController);
-      expect(state.chatLoadingId).toEqual('message-id');
+      expect(state.chatLoadingIds).toEqual(['message-id']);
     });
 
     it('should clear loading state and abort controller when loading is false', () => {
@@ -720,7 +720,7 @@ describe('chatMessage actions', () => {
 
       const state = useChatStore.getState();
       expect(state.abortController).toBeUndefined();
-      expect(state.chatLoadingId).toBeUndefined();
+      expect(state.chatLoadingIds).toEqual([]);
     });
 
     it('should attach beforeunload event listener when loading starts', () => {

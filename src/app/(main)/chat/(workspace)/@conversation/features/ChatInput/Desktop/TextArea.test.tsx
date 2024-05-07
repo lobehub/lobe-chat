@@ -195,7 +195,7 @@ describe('<InputArea />', () => {
     it('does not send message when loading or shift key is pressed', () => {
       const sendMessageMock = vi.fn();
       act(() => {
-        useChatStore.setState({ chatLoadingId: '123', sendMessage: sendMessageMock });
+        useChatStore.setState({ chatLoadingIds: ['123'], sendMessage: sendMessageMock });
       });
 
       render(<InputArea setExpand={setExpandMock} />);
@@ -209,7 +209,7 @@ describe('<InputArea />', () => {
       const sendMessageMock = vi.fn();
       act(() => {
         useChatStore.setState({
-          chatLoadingId: '',
+          chatLoadingIds: [],
           inputMessage: 'abc',
           sendMessage: sendMessageMock,
         });
@@ -228,7 +228,7 @@ describe('<InputArea />', () => {
         const sendMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
-            chatLoadingId: '',
+            chatLoadingIds: [],
             inputMessage: '123',
             sendMessage: sendMessageMock,
           });
@@ -247,7 +247,7 @@ describe('<InputArea />', () => {
         const updateInputMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
-            chatLoadingId: '',
+            chatLoadingIds: [],
             inputMessage: 'Test',
             sendMessage: sendMessageMock,
             updateInputMessage: updateInputMessageMock,
@@ -271,7 +271,7 @@ describe('<InputArea />', () => {
         const sendMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
-            chatLoadingId: '',
+            chatLoadingIds: [],
             inputMessage: '123',
             sendMessage: sendMessageMock,
           });
@@ -295,7 +295,7 @@ describe('<InputArea />', () => {
         const updateInputMessageMock = vi.fn();
         act(() => {
           useChatStore.setState({
-            chatLoadingId: '',
+            chatLoadingIds: [],
             inputMessage: 'Test',
             sendMessage: sendMessageMock,
             updateInputMessage: updateInputMessageMock,
