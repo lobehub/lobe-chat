@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 0.154.5](https://github.com/lobehub/lobe-chat/compare/v0.154.4...v0.154.5)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update LLM Settings Form styles.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update LLM Settings Form styles, closes [#2393](https://github.com/lobehub/lobe-chat/issues/2393) ([4f98e6c](https://github.com/lobehub/lobe-chat/commit/4f98e6c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.4](https://github.com/lobehub/lobe-chat/compare/v0.154.3...v0.154.4)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix next auth config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix next auth config, closes [#2390](https://github.com/lobehub/lobe-chat/issues/2390) ([dbda107](https://github.com/lobehub/lobe-chat/commit/dbda107))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.3](https://github.com/lobehub/lobe-chat/compare/v0.154.2...v0.154.3)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker build ([80a270d](https://github.com/lobehub/lobe-chat/commit/80a270d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.2](https://github.com/lobehub/lobe-chat/compare/v0.154.1...v0.154.2)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker build, closes [#2385](https://github.com/lobehub/lobe-chat/issues/2385) ([9cf60b5](https://github.com/lobehub/lobe-chat/commit/9cf60b5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.154.1](https://github.com/lobehub/lobe-chat/compare/v0.154.0...v0.154.1)
 
 <sup>Released on **2024-05-05**</sup>

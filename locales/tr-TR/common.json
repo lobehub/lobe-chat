@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
   "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
