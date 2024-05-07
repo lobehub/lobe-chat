@@ -19,7 +19,7 @@ const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
     settingsSelectors.currentSettings(s).password,
     s.setSettings,
   ]);
-  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
 
   return (
     <>
