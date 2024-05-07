@@ -25,12 +25,12 @@ const MobileChatInput = memo(() => {
       onSend={onSend}
       placeholder={t('sendPlaceholder')}
       ref={ref}
-      safeArea
       setExpand={setExpand}
       style={{
-        background: `linear-gradient(to bottom, ${theme.colorFillQuaternary}, transparent)`,
+        background: theme.colorBgContainer,
         top: expand ? 0 : undefined,
         width: '100%',
+        zIndex: 101,
       }}
       textAreaLeftAddons={<STT mobile />}
       textAreaRightAddons={

@@ -14,11 +14,7 @@ const Layout = ({ children, session }: LayoutProps) => {
         width={'100%'}
       >
         <SessionPanel>{session}</SessionPanel>
-        <Flexbox
-          flex={1}
-          id={'lobe-conversion-container'}
-          style={{ overflow: 'hidden', position: 'relative' }}
-        >
+        <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
           {children}
         </Flexbox>
       </Flexbox>

@@ -2,6 +2,7 @@
 
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import Migration from '@/app/(main)/chat/features/Migration';
 import { useQuery } from '@/hooks/useQuery';
@@ -12,13 +13,10 @@ const useStyles = createStyles(({ css, token }) => ({
   active: css`
     display: unset;
   `,
-  workspace: css`
-    position: absolute;
-    z-index: 102;
-    inset: 0;
-
+  main: css`
+    position: relative;
+    overflow: hidden;
     display: none;
-
     background: ${token.colorBgLayout};
   `,
 }));
@@ -29,8 +27,21 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
 
   return (
     <>
-      {session}
-      <div className={cx(styles.workspace, showMobileWorkspace && styles.active)}>{children}</div>
+      <Flexbox
+        className={cx(styles.main, !showMobileWorkspace && styles.active)}
+        height="100%"
+        width="100%"
+      >
+        {session}
+      </Flexbox>
+      <Flexbox
+        className={cx(styles.main, showMobileWorkspace && styles.active)}
+        height="100%"
+        id={'lobe-chat-workspace'}
+        width="100%"
+      >
+        {children}
+      </Flexbox>
       <Migration />
     </>
   );

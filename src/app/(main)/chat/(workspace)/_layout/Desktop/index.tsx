@@ -15,7 +15,13 @@ const Layout = ({ children, topic, conversation }: LayoutProps) => {
         style={{ overflow: 'hidden', position: 'relative' }}
         width={'100%'}
       >
-        {conversation}
+        <Flexbox
+          height={'100%'}
+          style={{ overflow: 'hidden', position: 'relative' }}
+          width={'100%'}
+        >
+          {conversation}
+        </Flexbox>
         {children}
         <TopicPanel>{topic}</TopicPanel>
       </Flexbox>

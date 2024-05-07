@@ -6,11 +6,13 @@ import TopicModal from './TopicModal';
 
 const Layout = ({ children, topic, conversation }: LayoutProps) => {
   return (
-    <MobileContentLayout header={<ChatHeader />}>
-      {conversation}
-      {children}
+    <>
+      <MobileContentLayout header={<ChatHeader />} style={{ overflowY: 'hidden' }}>
+        {conversation}
+        {children}
+      </MobileContentLayout>
       <TopicModal>{topic}</TopicModal>
-    </MobileContentLayout>
+    </>
   );
 };
 

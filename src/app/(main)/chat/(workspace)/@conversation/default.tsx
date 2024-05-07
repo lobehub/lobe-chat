@@ -1,3 +1,4 @@
+import ChatHydration from '@/components/StoreHydration/ChatHydration';
 import Conversation from '@/features/Conversation';
 import { isMobileDevice } from '@/utils/responsive';
 
@@ -8,7 +9,13 @@ const ChatConversation = () => {
   const mobile = isMobileDevice();
   const ChatInput = mobile ? MobileChatInput : DesktopChatInput;
 
-  return <Conversation chatInput={<ChatInput />} mobile={mobile} />;
+  return (
+    <>
+      <Conversation mobile={mobile} />
+      <ChatInput />
+      <ChatHydration />
+    </>
+  );
 };
 
 ChatConversation.displayName = 'ChatConversation';
