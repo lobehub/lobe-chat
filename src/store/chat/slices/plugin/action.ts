@@ -54,28 +54,28 @@ export const chatPlugin: StateCreator<
   },
 
   fillPluginMessageContent: async (id, content, triggerAiMessage) => {
-    const { triggerAIMessage, internalUpdateMessageContent } = get();
+    const { triggerAIMessage, internal_updateMessageContent } = get();
 
-    await internalUpdateMessageContent(id, content);
+    await internal_updateMessageContent(id, content);
 
     if (triggerAiMessage) await triggerAIMessage(id);
   },
 
   invokeBuiltinTool: async (id, payload) => {
-    const { toggleChatLoading, internalUpdateMessageContent } = get();
+    const { internal_toggleChatLoading, internal_updateMessageContent } = get();
     const params = JSON.parse(payload.arguments);
-    toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
+    internal_toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
     let data;
     try {
       data = await useToolStore.getState().invokeBuiltinTool(payload.apiName, params);
     } catch (error) {
       console.log(error);
     }
-    toggleChatLoading(false);
+    internal_toggleChatLoading(false);
 
     if (!data) return;
 
-    await internalUpdateMessageContent(id, data);
+    await internal_updateMessageContent(id, data);
 
     // postToolCalling
     // @ts-ignore
@@ -131,11 +131,11 @@ export const chatPlugin: StateCreator<
   },
 
   runPluginApi: async (id, payload) => {
-    const { internalUpdateMessageContent, refreshMessages, toggleChatLoading } = get();
+    const { internal_updateMessageContent, refreshMessages, internal_toggleChatLoading } = get();
     let data: string;
 
     try {
-      const abortController = toggleChatLoading(true, id, n('fetchPlugin') as string);
+      const abortController = internal_toggleChatLoading(true, id, n('fetchPlugin') as string);
 
       const message = chatSelectors.getMessageById(id)(get());
 
@@ -162,19 +162,19 @@ export const chatPlugin: StateCreator<
       data = '';
     }
 
-    toggleChatLoading(false);
+    internal_toggleChatLoading(false);
     // 如果报错则结束了
     if (!data) return;
 
-    await internalUpdateMessageContent(id, data);
+    await internal_updateMessageContent(id, data);
 
     return data;
   },
 
   triggerAIMessage: async (id, traceId) => {
-    const { coreProcessMessage } = get();
+    const { internal_coreProcessMessage } = get();
     const chats = chatSelectors.currentChats(get());
-    await coreProcessMessage(chats, id, { traceId });
+    await internal_coreProcessMessage(chats, id, { traceId });
   },
 
   triggerFunctionCall: async (id) => {
@@ -187,7 +187,7 @@ export const chatPlugin: StateCreator<
       invokeStandaloneTypePlugin,
       invokeBuiltinTool,
       refreshMessages,
-      internalResendMessage,
+      internal_resendMessage,
       deleteMessage,
     } = get();
 
@@ -213,7 +213,7 @@ export const chatPlugin: StateCreator<
 
       // fix https://github.com/lobehub/lobe-chat/issues/1094, remove and retry after experiencing plugin illusion
       if (!apiName) {
-        internalResendMessage(id);
+        internal_resendMessage(id);
         deleteMessage(id);
         return;
       }

@@ -49,7 +49,7 @@ export const chatEnhance: StateCreator<
     ...data,
   }),
   translateMessage: async (id, targetLang) => {
-    const { toggleChatLoading, updateMessageTranslate, dispatchMessage } = get();
+    const { internal_toggleChatLoading, updateMessageTranslate, internal_dispatchMessage } = get();
 
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
@@ -57,7 +57,7 @@ export const chatEnhance: StateCreator<
     // create translate extra
     await updateMessageTranslate(id, { content: '', from: '', to: targetLang });
 
-    toggleChatLoading(true, id, n('translateMessage(start)', { id }) as string);
+    internal_toggleChatLoading(true, id, n('translateMessage(start)', { id }) as string);
 
     let content = '';
     let from = '';
@@ -77,7 +77,7 @@ export const chatEnhance: StateCreator<
     // translate to target language
     await chatService.fetchPresetTaskResult({
       onMessageHandle: (text) => {
-        dispatchMessage({
+        internal_dispatchMessage({
           id,
           key: 'translate',
           type: 'updateMessageExtra',
@@ -93,7 +93,7 @@ export const chatEnhance: StateCreator<
 
     await updateMessageTranslate(id, { content, from, to: targetLang });
 
-    toggleChatLoading(false);
+    internal_toggleChatLoading(false);
   },
 
   ttsMessage: async (id, state = {}) => {
