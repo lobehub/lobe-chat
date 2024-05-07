@@ -24,13 +24,13 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
-import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
+import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
-interface FetchOptions {
+interface FetchOptions extends FetchSSEOptions {
   isWelcomeQuestion?: boolean;
   signal?: AbortSignal | undefined;
   trace?: TracePayload;
@@ -40,23 +40,14 @@ interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'mess
   messages: ChatMessage[];
 }
 
-interface FetchAITaskResultParams {
+interface FetchAITaskResultParams extends FetchSSEOptions {
   abortController?: AbortController;
-  /**
-   * 错误处理函数
-   */
   onError?: (e: Error, rawError?: any) => void;
-  onFinish?: OnFinishHandler;
   /**
    * 加载状态变化处理函数
    * @param loading - 是否处于加载状态
    */
   onLoadingChange?: (loading: boolean) => void;
-  /**
-   * 消息处理函数
-   * @param text - 消息内容
-   */
-  onMessageHandle?: (text: string) => void;
   /**
    * 请求对象
    */
@@ -224,20 +215,15 @@ class ChatService {
     trace,
     isWelcomeQuestion,
   }: CreateAssistantMessageStream) => {
-    await fetchSSE(
-      () =>
-        this.createAssistantMessage(params, {
-          isWelcomeQuestion,
-          signal: abortController?.signal,
-          trace: this.mapTrace(trace, TraceTagMap.Chat),
-        }),
-      {
-        onAbort,
-        onErrorHandle,
-        onFinish,
-        onMessageHandle,
-      },
-    );
+    await this.createAssistantMessage(params, {
+      isWelcomeQuestion,
+      onAbort,
+      onErrorHandle,
+      onFinish,
+      onMessageHandle,
+      signal: abortController?.signal,
+      trace: this.mapTrace(trace, TraceTagMap.Chat),
+    });
   };
 
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
@@ -299,10 +285,14 @@ class ChatService {
       provider,
     });
 
-    return fetch(API_ENDPOINTS.chat(provider), {
+    return fetchSSE(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
       headers,
       method: 'POST',
+      onAbort: options?.onAbort,
+      onErrorHandle: options?.onErrorHandle,
+      onFinish: options?.onFinish,
+      onMessageHandle: options?.onMessageHandle,
       signal,
     });
   };
@@ -360,20 +350,15 @@ class ChatService {
 
     onLoadingChange?.(true);
 
-    const data = await fetchSSE(
-      () =>
-        this.getChatCompletion(params, {
-          signal: abortController?.signal,
-          trace: this.mapTrace(trace, TraceTagMap.SystemChain),
-        }),
-      {
-        onErrorHandle: (error) => {
-          errorHandle(new Error(error.message), error);
-        },
-        onFinish,
-        onMessageHandle,
+    const data = await this.getChatCompletion(params, {
+      onErrorHandle: (error) => {
+        errorHandle(new Error(error.message), error);
       },
-    ).catch(errorHandle);
+      onFinish,
+      onMessageHandle,
+      signal: abortController?.signal,
+      trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+    }).catch(errorHandle);
 
     onLoadingChange?.(false);
 
@@ -424,9 +409,23 @@ class ChatService {
           return { content: getContent(m), role: m.role };
         }
 
+        case 'assistant': {
+          return { content: m.content, role: m.role, tool_calls: m.tool_calls };
+        }
+
+        // TODO: need to be removed after upgrade
         case 'function': {
           const name = m.plugin?.identifier as string;
           return { content: m.content, name, role: m.role };
+        }
+
+        case 'tool': {
+          return {
+            content: m.content,
+            name: m.tool_calls?.find((tool) => tool.id === m.tool?.id)?.function.name,
+            role: m.role,
+            tool_call_id: m.tool?.id,
+          };
         }
 
         default: {

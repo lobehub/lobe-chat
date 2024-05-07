@@ -15,6 +15,7 @@ export const renderActions: Record<LLMRoleType, RenderAction> = {
   assistant: AssistantActionsBar,
   function: FunctionActionsBar,
   system: DefaultActionsBar,
+  tool: FunctionActionsBar,
   user: UserActionsBar,
 };
 

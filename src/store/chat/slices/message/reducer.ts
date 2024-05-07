@@ -11,6 +11,13 @@ interface UpdateMessage {
   type: 'updateMessage';
   value: ChatMessage[keyof ChatMessage];
 }
+
+interface UpdateMessages {
+  id: string;
+  type: 'updateMessages';
+  value: Partial<ChatMessage>;
+}
+
 interface CreateMessage {
   id: string;
   type: 'createMessage';
@@ -37,6 +44,7 @@ interface UpdateMessageExtra {
 export type MessageDispatch =
   | CreateMessage
   | UpdateMessage
+  | UpdateMessages
   | UpdatePluginState
   | UpdateMessageExtra
   | DeleteMessage;
@@ -54,6 +62,15 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
         message.updatedAt = Date.now();
       });
     }
+    case 'updateMessages': {
+      return produce(state, (draftState) => {
+        const { id, value } = payload;
+        const index = draftState.findIndex((i) => i.id === id);
+        if (index < 0) return;
+
+        draftState[index] = merge(draftState[index], { ...value, updatedAt: Date.now() });
+      });
+    }
 
     case 'updateMessageExtra': {
       return produce(state, (draftState) => {
@@ -67,7 +84,7 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
           message.extra[key] = value;
         }
 
-        message.updateAt = Date.now();
+        message.updatedAt = Date.now();
       });
     }
 

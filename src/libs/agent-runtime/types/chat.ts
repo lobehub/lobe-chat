@@ -1,6 +1,8 @@
 import { OpenAIStreamCallbacks } from 'ai';
 
-export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function';
+import { MessageToolCall } from '@/types/message';
+
+export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
 
 interface UserMessageContentPartText {
   text: string;
@@ -30,6 +32,7 @@ export interface OpenAIChatMessage {
    * @description 消息发送者的角色
    */
   role: LLMRoleType;
+  tool_calls?: MessageToolCall[];
 }
 
 /**

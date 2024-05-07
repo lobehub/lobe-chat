@@ -8,7 +8,7 @@ import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
-import { ChatPluginPayload } from '@/types/message';
+import { ChatToolPayload } from '@/types/message';
 import { LobeTool } from '@/types/tool';
 
 const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
@@ -172,7 +172,7 @@ describe('ChatPluginAction', () => {
     });
   });
 
-  describe('triggerFunctionCall', () => {
+  describe('triggerToolCalls', () => {
     it('should trigger a function call and update the plugin message accordingly', async () => {
       const messageId = 'message-id';
       const messageContent = JSON.stringify({
@@ -207,7 +207,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
+        await result.current.triggerToolCalls(messageId);
       });
 
       expect(chatSelectors.getMessageById).toHaveBeenCalledWith(messageId);
@@ -255,7 +255,7 @@ describe('ChatPluginAction', () => {
       vi.spyOn(result.current, 'refreshMessages');
 
       await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
+        await result.current.triggerToolCalls(messageId);
       });
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
@@ -308,7 +308,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
+        await result.current.triggerToolCalls(messageId);
       });
 
       // 验证 refreshMessages 是否被调用
@@ -349,7 +349,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
+        await result.current.triggerToolCalls(messageId);
       });
 
       // 验证 refreshMessages 是否被调用
@@ -393,7 +393,7 @@ describe('ChatPluginAction', () => {
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
+        await result.current.triggerToolCalls(messageId);
       });
 
       // 验证 refreshMessages 是否被调用
@@ -510,7 +510,7 @@ describe('ChatPluginAction', () => {
       const payload = {
         apiName: 'text2image',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       const messageId = 'message-id';
       const toolResponse = JSON.stringify({ abc: 'data' });
@@ -557,7 +557,7 @@ describe('ChatPluginAction', () => {
       const payload = {
         apiName: 'text2image',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       const messageId = 'message-id';
       const toolResponse = 'Builtin tool response';
@@ -606,7 +606,7 @@ describe('ChatPluginAction', () => {
       const payload = {
         apiName: 'builtinApi',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       const messageId = 'message-id';
       const error = new Error('Builtin tool failed');
@@ -652,7 +652,7 @@ describe('ChatPluginAction', () => {
         identifier: 'abc',
         type: 'markdown',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
       const messageId = 'message-id';
 
       const runPluginApiMock = vi.fn();
@@ -678,7 +678,7 @@ describe('ChatPluginAction', () => {
 
       const payload = {
         identifier: 'pluginName',
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       act(() => {
         useToolStore.setState({

@@ -4,7 +4,9 @@ export default {
     function_call: '函数调用',
     off: '关闭调试',
     on: '查看插件调用信息',
+    payload: '插件载荷',
     response: '返回结果',
+    tool_call: '工具调用请求',
   },
   detailModal: {
     info: {

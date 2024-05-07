@@ -1,4 +1,3 @@
-import { OpenAIStream, StreamingTextResponse } from 'ai';
 import OpenAI, { ClientOptions } from 'openai';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
@@ -11,6 +10,8 @@ import { AgentRuntimeError } from '../createError';
 import { debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
+import { StreamingResponse } from '../response';
+import { OpenAIStream } from '../streams';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 const CHAT_MODELS_BLOCK_LIST = [
@@ -86,7 +87,7 @@ export const LobeOpenAICompatibleFactory = ({
           debugStream(useForDebug.toReadableStream()).catch(console.error);
         }
 
-        return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
+        return StreamingResponse(OpenAIStream(prod, options?.callback), {
           headers: options?.headers,
         });
       } catch (error) {

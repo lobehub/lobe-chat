@@ -32,7 +32,10 @@ export const buildAnthropicMessage = (
   const content = message.content as string | UserMessageContentPart[];
   return {
     content: typeof content === 'string' ? content : content.map((c) => buildAnthropicBlock(c)),
-    role: message.role === 'function' || message.role === 'system' ? 'assistant' : message.role,
+    role:
+      message.role === 'tool' || message.role === 'function' || message.role === 'system'
+        ? 'assistant'
+        : message.role,
   };
 };
 
