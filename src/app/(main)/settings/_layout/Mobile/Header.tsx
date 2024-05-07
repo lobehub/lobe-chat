@@ -21,10 +21,12 @@ const Header = memo(() => {
       center={
         <MobileNavBarTitle
           title={
-            <Flexbox align={'center'} gap={4} horizontal>
+            <Flexbox align={'center'} gap={8} horizontal>
               <span style={{ lineHeight: 1.2 }}> {t(`tab.${activeSettingsKey}`)}</span>
               {activeSettingsKey === SettingsTabs.Sync && (
-                <Tag color={'gold'}>{t('tab.experiment')}</Tag>
+                <Tag bordered={false} color={'warning'}>
+                  {t('tab.experiment')}
+                </Tag>
               )}
             </Flexbox>
           }
