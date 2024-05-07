@@ -37,7 +37,7 @@ const Layout = memo<LayoutProps>(({ children, session }) => {
       <Flexbox
         className={cx(styles.main, showMobileWorkspace && styles.active)}
         height="100%"
-        id={'lobe-chat-workspace'}
+        id={'lobe-workspace-mobile'}
         width="100%"
       >
         {children}

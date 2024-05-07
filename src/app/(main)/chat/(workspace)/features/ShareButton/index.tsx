@@ -5,10 +5,11 @@ import { Share2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import useMergeState from 'use-merge-value';
 
 import { DESKTOP_HEADER_ICON_SIZE, MOBILE_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
+
+import { useWorkspaceModal } from '../useWorkspaceModal';
 
 const ShareModal = dynamic(() => import('./ShareModal'));
 interface ShareButtonProps {
@@ -18,11 +19,7 @@ interface ShareButtonProps {
 }
 
 const ShareButton = memo<ShareButtonProps>(({ mobile, setOpen, open }) => {
-  const [isModalOpen, setIsModalOpen] = useMergeState(false, {
-    defaultValue: false,
-    onChange: setOpen,
-    value: open,
-  });
+  const [isModalOpen, setIsModalOpen] = useWorkspaceModal(open, setOpen);
   const { t } = useTranslation('common');
   const [shareLoading] = useChatStore((s) => [s.shareLoading]);
 
