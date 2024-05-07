@@ -2,7 +2,7 @@
 
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
-import { PropsWithChildren, memo, useEffect } from 'react';
+import { PropsWithChildren, memo, useEffect, useLayoutEffect, useState } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
@@ -23,7 +23,7 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Desktop = memo(({ children }: PropsWithChildren) => {
+const TopicPanel = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const { md = true, lg = true } = useResponsive();
   const [showAgentSettings, toggleConfig, isPreferenceInit] = useGlobalStore((s) => [
@@ -31,11 +31,17 @@ const Desktop = memo(({ children }: PropsWithChildren) => {
     s.toggleChatSideBar,
     s.isPreferenceInit,
   ]);
+  const [expand, setExpand] = useState(showAgentSettings);
+
+  useLayoutEffect(() => {
+    if (!isPreferenceInit) return;
+    setExpand(showAgentSettings);
+  }, [isPreferenceInit, showAgentSettings]);
 
   useEffect(() => {
-    if (!isPreferenceInit) return;
-    toggleConfig(lg);
-  }, [lg, isPreferenceInit]);
+    if (lg && showAgentSettings) setExpand(true);
+    if (!lg) setExpand(false);
+  }, [lg, showAgentSettings]);
 
   return (
     <DraggablePanel
@@ -43,7 +49,7 @@ const Desktop = memo(({ children }: PropsWithChildren) => {
       classNames={{
         content: styles.content,
       }}
-      expand={showAgentSettings}
+      expand={expand}
       minWidth={CHAT_SIDEBAR_WIDTH}
       mode={md ? 'fixed' : 'float'}
       onExpandChange={toggleConfig}
@@ -65,4 +71,4 @@ const Desktop = memo(({ children }: PropsWithChildren) => {
   );
 });
 
-export default Desktop;
+export default TopicPanel;

@@ -1,9 +1,8 @@
 import { Flexbox } from 'react-layout-kit';
 
-import FolderPanel from '@/features/FolderPanel';
-
-import Migration from '../features/Migration';
-import { LayoutProps } from './type';
+import Migration from '../../features/Migration';
+import { LayoutProps } from '../type';
+import SessionPanel from './SessionPanel';
 
 const Layout = ({ children, session }: LayoutProps) => {
   return (
@@ -14,7 +13,7 @@ const Layout = ({ children, session }: LayoutProps) => {
         style={{ maxWidth: 'calc(100vw - 64px)', overflow: 'hidden', position: 'relative' }}
         width={'100%'}
       >
-        <FolderPanel>{session}</FolderPanel>
+        <SessionPanel>{session}</SessionPanel>
         <Flexbox
           flex={1}
           id={'lobe-conversion-container'}

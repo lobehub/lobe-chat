@@ -1,5 +1,5 @@
 import { Empty } from 'antd';
-import { createStyles, useResponsive } from 'antd-style';
+import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,7 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
 
   const { styles } = useStyles();
 
-  const { mobile } = useResponsive();
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const isEmpty = !dataSource || dataSource.length === 0;
   return !isInit ? (
     <SkeletonList />

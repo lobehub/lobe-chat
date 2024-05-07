@@ -3,7 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 import { LayoutProps } from '../type';
 import ChatHeader from './ChatHeader';
 import HotKeys from './HotKeys';
-import SideBar from './SideBar';
+import TopicPanel from './TopicPanel';
 
 const Layout = ({ children, topic, conversation }: LayoutProps) => {
   return (
@@ -17,7 +17,7 @@ const Layout = ({ children, topic, conversation }: LayoutProps) => {
       >
         {conversation}
         {children}
-        <SideBar>{topic}</SideBar>
+        <TopicPanel>{topic}</TopicPanel>
       </Flexbox>
       <HotKeys />
     </>

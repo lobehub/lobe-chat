@@ -3,7 +3,7 @@
 import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { PropsWithChildren, memo, useEffect, useState } from 'react';
+import { PropsWithChildren, memo, useEffect, useLayoutEffect, useState } from 'react';
 
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
@@ -16,7 +16,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const FolderPanel = memo<PropsWithChildren>(({ children }) => {
+const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const { md = true } = useResponsive();
   const { styles } = useStyles();
   const [sessionsWidth, sessionExpandable, updatePreference, isPreferenceInit] = useGlobalStore(
@@ -27,6 +27,7 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
       s.isPreferenceInit,
     ],
   );
+  const [expand, setExpand] = useState(sessionExpandable);
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
 
@@ -45,16 +46,21 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
     updatePreference({ sessionsWidth: nextWidth });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isPreferenceInit) return;
-    handleExpand(md);
-  }, [isPreferenceInit, md]);
+    setExpand(sessionExpandable);
+  }, [isPreferenceInit, sessionExpandable]);
+
+  useEffect(() => {
+    if (md && sessionExpandable) setExpand(true);
+    if (!md) setExpand(false);
+  }, [md, sessionExpandable]);
 
   return (
     <DraggablePanel
       className={styles.panel}
       defaultSize={{ width: tmpWidth }}
-      expand={sessionExpandable}
+      expand={expand}
       maxWidth={400}
       minWidth={FOLDER_WIDTH}
       mode={md ? 'fixed' : 'float'}
@@ -70,4 +76,4 @@ const FolderPanel = memo<PropsWithChildren>(({ children }) => {
   );
 });
 
-export default FolderPanel;
+export default SessionPanel;

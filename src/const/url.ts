@@ -42,7 +42,7 @@ export const AGENTS_INDEX_GITHUB_ISSUE = urlJoin(AGENTS_INDEX_GITHUB, 'issues/ne
 
 export const SESSION_CHAT_URL = (id: string = INBOX_SESSION_ID, mobile?: boolean) =>
   qs.stringifyUrl({
-    query: mobile ? { active: mobile, session: id } : { session: id },
+    query: mobile ? { session: id, showMobileWorkspace: mobile } : { session: id },
     url: '/chat',
   });
 
