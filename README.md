@@ -759,3 +759,25 @@ This project is [MIT](./LICENSE) licensed.
 [vercel-link]: https://chat-preview.lobehub.com
 [vercel-shield]: https://img.shields.io/website?down_message=offline&label=vercel&labelColor=black&logo=vercel&style=flat-square&up_message=online&url=https%3A%2F%2Fchat-preview.lobehub.com
 [vercel-shield-badge]: https://img.shields.io/website?down_message=offline&label=try%20lobechat&labelColor=black&logo=vercel&style=for-the-badge&up_message=online&url=https%3A%2F%2Fchat-preview.lobehub.com
+
+###update the documentation to include information on how to customize fonts using these CSS properties.
+## Customizing Fonts with CSS
+
+You can customize fonts in your LobeChat application using various CSS properties. Here's how you can do it:
+
+### Font Family
+
+To change the font family of your text, use the `font-family` property. Specify the desired font family name or a list of font families as fallbacks.
+
+Example:
+```css
+font-family: "Arial", sans-serif;
+
+#Example
+font-size: 16px;
+font-weight: bold;
+font-style: italic;
+text-decoration: underline;
+color: #333333;
+
+This updated documentation provides clear instructions on how to customize fonts using CSS properties, ensuring users can effectively enhance the appearance of their LobeChat application.
