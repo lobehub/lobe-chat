@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { z } from 'zod';
 
-import { MessageToolCallSchema } from '@/types/message';
 
 const TranslateSchema = z.object({
   from: z.string().optional(),
@@ -27,9 +26,8 @@ export const DB_MessageSchema = z.object({
   favorite: z.number().int().min(0).max(1).optional(),
   error: z.any().optional(),
 
-  tool_calls: z.array(MessageToolCallSchema).optional(),
   tools: z.array(ToolCallSchema).optional(),
-  tool: ToolCallSchema.optional(),
+  tool_call_id: z.string().optional(),
 
   plugin: PluginSchema.optional(),
   pluginState: z.any().optional(),

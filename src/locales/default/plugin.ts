@@ -131,10 +131,6 @@ export default {
     plugin: '插件运行中...',
   },
   pluginList: '插件列表',
-  plugins: {
-    loading: '工具检测中...',
-    unknown: '未知工具',
-  },
   setting: '插件设置',
   settings: {
     indexUrl: {
@@ -166,4 +162,5 @@ export default {
     },
     title: '插件商店',
   },
+  unknownPlugin: '未知插件',
 };

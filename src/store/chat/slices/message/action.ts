@@ -157,8 +157,29 @@ export const chatMessage: StateCreator<
   ChatMessageAction
 > = (set, get) => ({
   deleteMessage: async (id) => {
-    get().internal_dispatchMessage({ type: 'deleteMessage', id });
-    await messageService.removeMessage(id);
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    const deleteFn = async (id: string) => {
+      get().internal_dispatchMessage({ type: 'deleteMessage', id });
+      await messageService.removeMessage(id);
+    };
+
+    // if the message is a tool calls, then delete all the related messages
+    // TODO: maybe we need to delete it in the DB?
+    if (message.tools) {
+      const pools = message.tools
+        .flatMap((tool) => {
+          const messages = get().messages.filter((m) => m.tool_call_id === tool.id);
+
+          return messages.map((m) => m.id);
+        })
+        .map((i) => deleteFn(i));
+
+      await Promise.all(pools);
+    }
+
+    await deleteFn(id);
     await get().refreshMessages();
   },
   delAndRegenerateMessage: async (id) => {
@@ -470,10 +491,7 @@ export const chatMessage: StateCreator<
             internal_dispatchMessage({
               id: assistantId,
               type: 'updateMessages',
-              value: {
-                tool_calls: chunk.tool_calls,
-                tools: get().internal_transformToolCalls(chunk.tool_calls),
-              },
+              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
             });
             isFunctionCall = true;
           }
@@ -582,7 +600,7 @@ export const chatMessage: StateCreator<
       internal_dispatchMessage({
         id,
         type: 'updateMessages',
-        value: { tool_calls: toolCalls, tools: internal_transformToolCalls(toolCalls) },
+        value: { tools: internal_transformToolCalls(toolCalls) },
       });
     } else {
       internal_dispatchMessage({ id, type: 'updateMessages', value: { content } });
@@ -590,7 +608,6 @@ export const chatMessage: StateCreator<
 
     await messageService.updateMessage(id, {
       content,
-      tool_calls: toolCalls,
       tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
     });
     await refreshMessages();

@@ -56,6 +56,7 @@ interface MessageToolCallsChunk {
 }
 
 export interface FetchSSEOptions {
+  fetcher?: typeof fetch;
   onAbort?: (text: string) => Promise<void>;
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
@@ -86,6 +87,7 @@ export const parseToolCalls = (origin: MessageToolCall[], value: MessageToolCall
 export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptions = {}) => {
   let output = '';
   let toolCalls: undefined | MessageToolCall[];
+  let triggerOnMessageHandler = false;
 
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
@@ -93,6 +95,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   try {
     await fetchEventSource(url, {
       body: options.body,
+      fetch: options?.fetcher,
       headers: options.headers as Record<string, string>,
       method: options.method,
       onerror: (error) => {
@@ -107,7 +110,16 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         // options.onErrorHandle()
       },
       onmessage: (ev) => {
-        const data = JSON.parse(ev.data);
+        triggerOnMessageHandler = true;
+        let data;
+        try {
+          data = JSON.parse(ev.data);
+        } catch (e) {
+          console.warn('parse error, fallback to stream', e);
+          options.onMessageHandle?.({ text: data, type: 'text' });
+          return;
+        }
+
         switch (ev.event) {
           case 'text': {
             output += data;
@@ -145,9 +157,18 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     });
   } catch {}
 
-  const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
-  const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
-  await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
+  // only call onFinish when response is available
+  // so like abort, we don't need to call onFinish
+  if (response) {
+    // if there is no onMessageHandler, we should call onHandleMessage first
+    if (!triggerOnMessageHandler) {
+      options.onMessageHandle?.({ text: await response.clone().text(), type: 'text' });
+    }
+
+    const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
+    const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
+    await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
+  }
 
   return response;
 };

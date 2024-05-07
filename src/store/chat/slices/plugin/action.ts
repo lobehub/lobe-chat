@@ -30,7 +30,7 @@ export interface ChatPluginAction {
   invokeMarkdownTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
   invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
   runPluginApi: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
-  triggerAIMessage: (id: string, traceId?: string) => Promise<void>;
+  triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
   triggerToolCalls: (id: string) => Promise<void>;
 
   updatePluginState: (id: string, key: string, value: any) => Promise<void>;
@@ -60,36 +60,42 @@ export const chatPlugin: StateCreator<
 
     await internal_updateMessageContent(id, content);
 
-    if (triggerAiMessage) await triggerAIMessage(id);
+    if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },
 
   internal_transformToolCalls: (toolCalls) => {
-    return toolCalls.map((toolCall) => {
-      let payload: ChatToolPayload;
+    return toolCalls
+      .map((toolCall): ChatToolPayload | null => {
+        let payload: ChatToolPayload;
 
-      const [identifier, apiName, type] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
+        const [identifier, apiName, type] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
 
-      payload = {
-        apiName,
-        arguments: toolCall.function.arguments,
-        id: toolCall.id,
-        identifier,
-        type: (type ?? 'default') as any,
-      };
+        if (!apiName) return null;
 
-      // if the apiName is md5, try to find the correct apiName in the plugins
-      if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
-        const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
-        const manifest = pluginSelectors.getPluginManifestById(identifier)(useToolStore.getState());
+        payload = {
+          apiName,
+          arguments: toolCall.function.arguments,
+          id: toolCall.id,
+          identifier,
+          type: (type ?? 'default') as any,
+        };
 
-        const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
-        if (api) {
-          payload.apiName = api.name;
+        // if the apiName is md5, try to find the correct apiName in the plugins
+        if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
+          const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
+          const manifest = pluginSelectors.getPluginManifestById(identifier)(
+            useToolStore.getState(),
+          );
+
+          const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
+          if (api) {
+            payload.apiName = api.name;
+          }
         }
-      }
 
-      return payload;
-    });
+        return payload;
+      })
+      .filter(Boolean) as ChatToolPayload[];
   },
 
   invokeBuiltinTool: async (id, payload) => {
@@ -205,10 +211,10 @@ export const chatPlugin: StateCreator<
     return data;
   },
 
-  triggerAIMessage: async (id, traceId) => {
+  triggerAIMessage: async ({ parentId, traceId }) => {
     const { internal_coreProcessMessage } = get();
     const chats = chatSelectors.currentChats(get());
-    await internal_coreProcessMessage(chats, id, { traceId });
+    await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, { traceId });
   },
 
   triggerToolCalls: async (assistantId) => {
@@ -229,9 +235,10 @@ export const chatPlugin: StateCreator<
       const toolMessage: CreateMessageParams = {
         content: LOADING_FLAT,
         parentId: assistantId,
+        plugin: payload,
         role: 'tool',
         sessionId: get().activeId,
-        tool: payload,
+        tool_call_id: payload.id,
         topicId: get().activeTopicId, // if there is activeTopicId，then add it to topicId
       };
 
@@ -270,7 +277,7 @@ export const chatPlugin: StateCreator<
 
     const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
 
-    await triggerAIMessage(latestToolId, traceId);
+    await triggerAIMessage({ traceId });
   },
 
   updatePluginState: async (id, key, value) => {

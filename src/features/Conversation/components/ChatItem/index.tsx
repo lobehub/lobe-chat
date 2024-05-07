@@ -56,10 +56,6 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   }, isEqual);
 
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
-  const [editing, toggleMessageEditing] = useChatStore((s) => [
-    chatSelectors.isMessageEditing(id)(s),
-    s.toggleMessageEditing,
-  ]);
 
   const [isMessageLoading, generating, editing, toggleMessageEditing, updateMessageContent] =
     useChatStore((s) => [

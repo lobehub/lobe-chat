@@ -580,7 +580,7 @@ Get data from users`,
         body: JSON.stringify(expectedPayload),
         headers: expect.any(Object),
         method: 'POST',
-        signal: undefined,
+        signal: expect.any(AbortSignal),
       });
     });
 

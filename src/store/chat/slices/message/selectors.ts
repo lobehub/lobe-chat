@@ -1,4 +1,3 @@
-import { LobePluginType } from '@lobehub/chat-plugin-sdk';
 import { t } from 'i18next';
 
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
@@ -108,17 +107,6 @@ const chatsMessageString = (s: ChatStore): string => {
   return chats.map((m) => m.content).join('');
 };
 
-const getFunctionMessageProps =
-  ({ plugin, content, id }: Pick<ChatMessage, 'plugin' | 'content' | 'id'>) =>
-  (s: ChatStore) => ({
-    arguments: plugin?.arguments,
-    command: plugin,
-    content,
-    id: plugin?.identifier,
-    loading: s.chatLoadingIds.includes(id),
-    type: plugin?.type as LobePluginType,
-  });
-
 const getMessageById = (id: string) => (s: ChatStore) => chatHelpers.getMessageById(s.messages, id);
 const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(id)(s)?.traceId;
 
@@ -139,7 +127,6 @@ export const chatSelectors = {
   currentChats,
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
-  getFunctionMessageProps,
   getMessageById,
   getTraceIdByMessageId,
   isAIGenerating,

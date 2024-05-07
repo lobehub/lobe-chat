@@ -5,7 +5,7 @@ import { ErrorType } from '@/types/fetch';
 
 import { LLMRoleType } from '../llm';
 import { BaseDataModel } from '../meta';
-import { ChatPluginPayload, ChatToolPayload, MessageToolCall } from './tools';
+import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
 
 /**
@@ -55,9 +55,7 @@ export interface ChatMessage extends BaseDataModel {
    * parent message id
    */
   parentId?: string;
-  /**
-   * @deprecated
-   */
+
   plugin?: ChatPluginPayload;
   pluginState?: any;
 
@@ -71,8 +69,7 @@ export interface ChatMessage extends BaseDataModel {
   role: LLMRoleType;
   sessionId?: string;
 
-  tool?: ChatToolPayload;
-  tool_calls?: MessageToolCall[];
+  tool_call_id?: string;
   tools?: ChatToolPayload[];
 
   /**

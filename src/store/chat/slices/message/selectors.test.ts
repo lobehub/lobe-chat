@@ -35,12 +35,16 @@ const mockMessages = [
   {
     id: 'msg3',
     content: 'Function Message',
-    role: 'function',
-    plugin: {
-      arguments: ['arg1', 'arg2'],
-      identifier: 'func1',
-      type: 'pluginType',
-    },
+    role: 'tool',
+    tools: [
+      {
+        arguments: ['arg1', 'arg2'],
+        identifier: 'func1',
+        apiName: 'ttt',
+        type: 'pluginType',
+        id: 'abc',
+      },
+    ],
   },
 ] as ChatMessage[];
 
@@ -64,16 +68,22 @@ const mockedChats = [
   {
     id: 'msg3',
     content: 'Function Message',
-    role: 'function',
+    role: 'tool',
     meta: {
-      avatar: '🧩',
-      title: 'plugin-unknown',
+      avatar: '🤯',
+      backgroundColor: 'rgba(0,0,0,0)',
+      description: 'inbox.desc',
+      title: 'inbox.title',
     },
-    plugin: {
-      arguments: ['arg1', 'arg2'],
-      identifier: 'func1',
-      type: 'pluginType',
-    },
+    tools: [
+      {
+        arguments: ['arg1', 'arg2'],
+        identifier: 'func1',
+        apiName: 'ttt',
+        type: 'pluginType',
+        id: 'abc',
+      },
+    ],
   },
 ] as ChatMessage[];
 
@@ -100,52 +110,6 @@ describe('chatSelectors', () => {
     it('should return undefined if no message matches the id', () => {
       const message = chatSelectors.getMessageById('nonexistent')(mockChatStore);
       expect(message).toBeUndefined();
-    });
-  });
-
-  describe('getFunctionMessageProps', () => {
-    it('should return the properties of a function message', () => {
-      const state = merge(initialStore, {
-        messages: mockMessages,
-        chatLoadingIds: ['msg3'], // Assuming this id represents a loading state
-      });
-      const props = chatSelectors.getFunctionMessageProps(mockMessages[2])(state);
-      expect(props).toEqual({
-        arguments: ['arg1', 'arg2'],
-        command: mockMessages[2].plugin,
-        content: 'Function Message',
-        id: 'func1',
-        loading: true,
-        type: 'pluginType',
-      });
-    });
-
-    it('should return loading as false if the message id is not the current loading id', () => {
-      const state = merge(initialStore, { messages: mockMessages, chatLoadingId: 'msg1' });
-      const props = chatSelectors.getFunctionMessageProps(mockMessages[2])(state);
-      expect(props.loading).toBe(false);
-    });
-
-    it('should return correct properties when no plugin is present', () => {
-      const messageWithoutPlugin = {
-        id: 'msg4',
-        content: 'No Plugin Message',
-        role: 'function',
-        // No plugin property
-      };
-      const state = merge(initialStore, {
-        messages: [...mockMessages, messageWithoutPlugin],
-        chatLoadingId: 'msg1',
-      });
-      const props = chatSelectors.getFunctionMessageProps(messageWithoutPlugin)(state);
-      expect(props).toEqual({
-        arguments: undefined,
-        command: undefined,
-        content: 'No Plugin Message',
-        id: undefined,
-        loading: false,
-        type: undefined,
-      });
     });
   });
 
@@ -185,16 +149,22 @@ describe('chatSelectors', () => {
         {
           id: 'msg3',
           content: 'Function Message',
-          role: 'function',
+          role: 'tool',
           meta: {
-            avatar: '🧩',
-            title: 'plugin-unknown',
+            avatar: '🤯',
+            backgroundColor: 'rgba(0,0,0,0)',
+            description: 'inbox.desc',
+            title: 'inbox.title',
           },
-          plugin: {
-            arguments: ['arg1', 'arg2'],
-            identifier: 'func1',
-            type: 'pluginType',
-          },
+          tools: [
+            {
+              apiName: 'ttt',
+              arguments: ['arg1', 'arg2'],
+              identifier: 'func1',
+              id: 'abc',
+              type: 'pluginType',
+            },
+          ],
         },
       ]);
     });

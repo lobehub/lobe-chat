@@ -1,38 +1,43 @@
-import isEqual from 'fast-deep-equal';
+import { Snippet } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { LOADING_FLAT } from '@/const/message';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
-import Inspector from '../../Plugins/Inspector';
 import PluginRender from '../../Plugins/Render';
-import BubblesLoading from '../../components/BubblesLoading';
+import Inspector from './Inspector';
 
-export const ToolMessage = memo<ChatMessage>(({ id, content, tool }) => {
-  const fcProps = useChatStore(
-    chatSelectors.getFunctionMessageProps({ content, id, plugin: tool }),
-    isEqual,
-  );
+export const ToolMessage = memo<ChatMessage>(({ id, content, plugin }) => {
+  const loading = useChatStore(chatSelectors.isMessageGenerating(id));
 
-  const [showRender, setShow] = useState(true);
-
-  if (content === LOADING_FLAT) return <BubblesLoading />;
+  const [showRender, setShow] = useState(plugin?.type !== 'default');
 
   return (
     <Flexbox gap={12} id={id} width={'100%'}>
-      <Inspector showRender={showRender} {...fcProps} setShow={setShow} />
-      {showRender && (
+      <Inspector
+        arguments={plugin?.arguments}
+        content={content}
+        identifier={plugin?.identifier}
+        loading={loading}
+        payload={plugin}
+        setShow={setShow}
+        showRender={showRender}
+      />
+      {showRender || loading ? (
         <PluginRender
           content={content}
           id={id}
-          identifier={tool?.identifier}
-          loading={fcProps.loading}
-          payload={fcProps.command}
-          type={fcProps.type}
+          identifier={plugin?.identifier}
+          loading={loading}
+          payload={plugin}
+          type={plugin?.type}
         />
+      ) : (
+        <Flexbox>
+          <Snippet>{plugin?.arguments || ''}</Snippet>
+        </Flexbox>
       )}
     </Flexbox>
   );
