@@ -1,6 +1,5 @@
 import { Icon, SearchBar } from '@lobehub/ui';
 import { Empty } from 'antd';
-import { useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { ServerCrash } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
@@ -9,6 +8,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso } from 'react-virtuoso';
 
 import AddPluginButton from '@/features/PluginStore/AddPluginButton';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, pluginStoreSelectors } from '@/store/tool/selectors';
 
@@ -18,7 +18,7 @@ import PluginItem from './PluginItem';
 export const OnlineList = memo(() => {
   const { t } = useTranslation('plugin');
   const [keywords, setKeywords] = useState<string>();
-  const { mobile } = useResponsive();
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const pluginStoreList = useToolStore((s) => {
     const custom = pluginSelectors.installedCustomPluginMetaList(s);
     const store = pluginStoreSelectors.onlinePluginStore(s);
@@ -58,7 +58,6 @@ export const OnlineList = memo(() => {
         </Flexbox>
         <AddPluginButton />
       </Flexbox>
-
       {isLoading ? (
         <Loading />
       ) : isEmpty ? (
@@ -76,15 +75,10 @@ export const OnlineList = memo(() => {
         <Virtuoso
           itemContent={(index) => {
             const item = filteredPluginList[index];
-
-            return (
-              <Flexbox key={item.identifier} paddingBlock={12}>
-                <PluginItem {...item} />
-              </Flexbox>
-            );
+            return <PluginItem key={item.identifier} {...item} />;
           }}
           overscan={400}
-          style={{ height: 500 }}
+          style={{ height: 500, marginInline: -16 }}
           totalCount={filteredPluginList.length}
         />
       )}

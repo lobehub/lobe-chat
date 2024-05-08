@@ -1,12 +1,11 @@
 'use client';
 
 import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
-import { App } from 'antd';
 import { ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PropsWithChildren, ReactNode, memo, useEffect } from 'react';
+import { ReactNode, memo, useEffect } from 'react';
 
 import AntdStaticMethods from '@/components/AntdStaticMethods';
 import {
@@ -20,19 +19,17 @@ import { GlobalStyle } from '@/styles';
 import { setCookie } from '@/utils/cookie';
 
 const useStyles = createStyles(({ css, token }) => ({
-  bg: css`
+  app: css`
     position: relative;
 
-    overflow-y: hidden;
     overscroll-behavior: none;
     display: flex;
     flex-direction: column;
     align-items: center;
 
     height: 100%;
-    max-height: 100dvh !important;
-
-    background: ${token.colorBgLayout};
+    min-height: 100dvh;
+    max-height: 100dvh;
   `,
   // scrollbar-width and scrollbar-color are supported from Chrome 121
   // https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-color
@@ -64,14 +61,6 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const Container = memo<PropsWithChildren>(({ children }) => {
-  const { styles, cx } = useStyles();
-
-  return (
-    <App className={cx(styles.bg, styles.scrollbar, styles.scrollbarPolyfill)}>{children}</App>
-  );
-});
-
 export interface AppThemeProps {
   children?: ReactNode;
   defaultAppearance?: ThemeAppearance;
@@ -85,7 +74,7 @@ const AppTheme = memo<AppThemeProps>(
     // console.debug('server:primaryColor', defaultPrimaryColor);
     // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useUserStore(settingsSelectors.currentThemeMode);
-
+    const { styles, cx } = useStyles();
     const [primaryColor, neutralColor] = useUserStore((s) => [
       settingsSelectors.currentSettings(s).primaryColor,
       settingsSelectors.currentSettings(s).neutralColor,
@@ -101,6 +90,7 @@ const AppTheme = memo<AppThemeProps>(
 
     return (
       <ThemeProvider
+        className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
         customTheme={{
           neutralColor: neutralColor ?? defaultNeutralColor,
           primaryColor: primaryColor ?? defaultPrimaryColor,
@@ -114,7 +104,7 @@ const AppTheme = memo<AppThemeProps>(
         <GlobalStyle />
         <AntdStaticMethods />
         <ConfigProvider config={{ aAs: Link, imgAs: Image, imgUnoptimized: true }}>
-          <Container>{children}</Container>
+          {children}
         </ConfigProvider>
       </ThemeProvider>
     );
