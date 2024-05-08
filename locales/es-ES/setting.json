@@ -71,7 +71,8 @@
         },
         "modalTitle": "Configuración del modelo personalizado",
         "tokens": {
-          "title": "Número máximo de tokens"
+          "title": "Número máximo de tokens",
+          "unlimited": "ilimitado"
         },
         "vision": {
           "extra": "Esta configuración solo habilitará la configuración de carga de imágenes en LobeChat. La capacidad de reconocimiento depende completamente del modelo en sí. Por favor, realiza pruebas para verificar la disponibilidad de esta capacidad en el modelo.",
