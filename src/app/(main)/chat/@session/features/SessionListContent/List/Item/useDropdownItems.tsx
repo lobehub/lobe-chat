@@ -1,6 +1,6 @@
 // useActionItems.ts
 import { Icon } from '@lobehub/ui';
-import { MenuProps , App } from 'antd';
+import { App, MenuProps } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import {
