@@ -12,6 +12,12 @@
   "copy": "Copia",
   "copyFail": "Copia non riuscita",
   "copySuccess": "Copia riuscita",
+  "dataStatistics": {
+    "messages": "Messaggi",
+    "sessions": "Sessioni",
+    "today": "Oggi",
+    "topics": "Argomenti"
+  },
   "defaultAgent": "Assistente predefinito",
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",

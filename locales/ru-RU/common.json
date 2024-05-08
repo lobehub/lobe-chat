@@ -12,6 +12,12 @@
   "copy": "Копировать",
   "copyFail": "Не удалось скопировать",
   "copySuccess": "Успешно скопировано",
+  "dataStatistics": {
+    "messages": "Сообщения",
+    "sessions": "Сессии",
+    "today": "Сегодня",
+    "topics": "Темы"
+  },
   "defaultAgent": "Пользовательский агент",
   "defaultSession": "Пользовательский агент",
   "delete": "Удалить",

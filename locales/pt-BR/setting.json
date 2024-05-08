@@ -71,7 +71,8 @@
         },
         "modalTitle": "Configuração de Modelo Personalizado",
         "tokens": {
-          "title": "Número Máximo de Tokens"
+          "title": "Número Máximo de Tokens",
+          "unlimited": "ilimitado"
         },
         "vision": {
           "extra": "Esta configuração ativará apenas a configuração de upload de imagens no LobeChat. A capacidade de reconhecimento depende inteiramente do modelo em si. Por favor, teste a disponibilidade da capacidade de reconhecimento visual deste modelo.",

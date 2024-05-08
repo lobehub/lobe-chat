@@ -71,7 +71,8 @@
         },
         "modalTitle": "Özel Model Yapılandırması",
         "tokens": {
-          "title": "Maksimum token sayısı"
+          "title": "Maksimum token sayısı",
+          "unlimited": "Sınırsız"
         },
         "vision": {
           "extra": "Bu yapılandırma yalnızca LobeChat'teki görüntü yükleme yapılandırmasını etkinleştirir, tanıma desteğinin olup olmadığı tamamen modelin kendisine bağlıdır, bu modelin görüntü tanıma yeteneğini test etmek size kalmıştır",
