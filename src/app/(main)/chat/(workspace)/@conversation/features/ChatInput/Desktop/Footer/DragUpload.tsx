@@ -11,7 +11,6 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
-import { getPlatform, getEngine } from '@/utils/platform';
 
 const useStyles = createStyles(({ css, token, stylish }) => {
   return {
@@ -61,16 +60,11 @@ const useStyles = createStyles(({ css, token, stylish }) => {
   };
 });
 
-// 文字拖拽仅支持 Windows/Linux - Chromium 系浏览器 (#2111)
-const platform = getPlatform();
-const allowTextDrag = platform && /Linux|Windows/.test(platform) && getEngine() === 'Blink';
-const disallowTextDrag = !allowTextDrag;
-
 const handleDragOver = (e: DragEvent) => {
   if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
-  
+
   const isFile = e.dataTransfer.types.includes('Files');
-  if (disallowTextDrag || isFile) {
+  if (isFile) {
     e.preventDefault();
   }
 };
@@ -106,7 +100,7 @@ const DragUpload = memo(() => {
     if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
     const isFile = e.dataTransfer.types.includes('Files');
-    if (disallowTextDrag || isFile) {
+    if (isFile) {
       dragCounter.current += 1;
       e.preventDefault();
       setIsDragging(true);
@@ -117,7 +111,7 @@ const DragUpload = memo(() => {
     if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
     const isFile = e.dataTransfer.types.includes('Files');
-    if (disallowTextDrag || isFile) {
+    if (isFile) {
       e.preventDefault();
 
       // reset counter
@@ -133,7 +127,7 @@ const DragUpload = memo(() => {
     if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
     const isFile = e.dataTransfer.types.includes('Files');
-    if (disallowTextDrag || isFile) {
+    if (isFile) {
       e.preventDefault();
 
       // reset counter
