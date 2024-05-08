@@ -8,7 +8,7 @@ import { SESSION_CHAT_URL } from '@/const/url';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
-import ListItem from '../ListItem';
+import RawListItem from '../ListItem/item';
 
 const Inbox = memo(() => {
   const { t } = useTranslation('chat');
@@ -17,7 +17,7 @@ const Inbox = memo(() => {
 
   return (
     <Link aria-label={t('inbox.title')} href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}>
-      <ListItem
+      <RawListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
         title={t('inbox.title')}

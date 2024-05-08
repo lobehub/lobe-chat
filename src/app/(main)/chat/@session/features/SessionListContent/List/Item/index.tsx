@@ -77,8 +77,12 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         avatarBackground={avatarBackground}
         date={updateAt}
         description={description}
+        group={group}
+        id={id}
         loading={loading}
+        openCreateGroupModal={() => setCreateGroupModalOpen(true)}
         pin={pin}
+        setOpen={setOpen}
         showAction={open}
         title={title}
       />
