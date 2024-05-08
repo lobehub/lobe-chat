@@ -183,6 +183,7 @@
     "@next/bundle-analyzer": "^14.2.3",
     "@next/eslint-plugin-next": "^14.2.3",
     "@peculiar/webcrypto": "^1.4.6",
+    "@rc-component/async-validator": "5.0.3",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^15.0.6",
     "@types/chroma-js": "^2.4.4",
