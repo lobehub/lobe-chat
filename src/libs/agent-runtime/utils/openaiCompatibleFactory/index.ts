@@ -81,13 +81,26 @@ export const LobeOpenAICompatibleFactory = ({
           signal: options?.signal,
         });
 
-        const [prod, useForDebug] = response.tee();
+        if (postPayload.stream) {
+          const [prod, useForDebug] = response.tee();
 
-        if (debug?.chatCompletion?.()) {
-          debugStream(useForDebug.toReadableStream()).catch(console.error);
+          if (debug?.chatCompletion?.()) {
+            debugStream(useForDebug.toReadableStream()).catch(console.error);
+          }
+
+          return StreamingResponse(OpenAIStream(prod, options?.callback), {
+            headers: options?.headers,
+          });
         }
 
-        return StreamingResponse(OpenAIStream(prod, options?.callback), {
+        if (debug?.chatCompletion?.()) {
+          console.log('\n[no stream response]\n');
+          console.log(JSON.stringify(response) + '\n');
+        }
+
+        const stream = this.transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+
+        return StreamingResponse(OpenAIStream(stream, options?.callback), {
           headers: options?.headers,
         });
       } catch (error) {
@@ -160,5 +173,59 @@ export const LobeOpenAICompatibleFactory = ({
         })
 
         .filter(Boolean) as ChatModelCard[];
+    }
+
+    /**
+     * make the OpenAI response data as a stream
+     * @private
+     */
+    private transformResponseToStream(data: OpenAI.ChatCompletion) {
+      return new ReadableStream({
+        start(controller) {
+          const chunk: OpenAI.ChatCompletionChunk = {
+            choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+              delta: {
+                content: choice.message.content,
+                role: choice.message.role,
+                tool_calls: choice.message.tool_calls?.map(
+                  (tool, index): OpenAI.ChatCompletionChunk.Choice.Delta.ToolCall => ({
+                    function: tool.function,
+                    id: tool.id,
+                    index,
+                    type: tool.type,
+                  }),
+                ),
+              },
+              finish_reason: null,
+              index: choice.index,
+              logprobs: choice.logprobs,
+            })),
+            created: data.created,
+            id: data.id,
+            model: data.model,
+            object: 'chat.completion.chunk',
+          };
+
+          controller.enqueue(chunk);
+
+          controller.enqueue({
+            choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+              delta: {
+                content: choice.message.content,
+                role: choice.message.role,
+              },
+              finish_reason: choice.finish_reason,
+              index: choice.index,
+              logprobs: choice.logprobs,
+            })),
+            created: data.created,
+            id: data.id,
+            model: data.model,
+            object: 'chat.completion.chunk',
+            system_fingerprint: data.system_fingerprint,
+          } as OpenAI.ChatCompletionChunk);
+          controller.close();
+        },
+      });
     }
   };
