@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.155.6](https://github.com/lobehub/lobe-chat/compare/v0.155.5...v0.155.6)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix editing long message issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix editing long message issue, closes [#2431](https://github.com/lobehub/lobe-chat/issues/2431) ([380d8da](https://github.com/lobehub/lobe-chat/commit/380d8da))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.155.5](https://github.com/lobehub/lobe-chat/compare/v0.155.4...v0.155.5)
 
 <sup>Released on **2024-05-08**</sup>

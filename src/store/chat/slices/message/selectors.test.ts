@@ -107,7 +107,7 @@ describe('chatSelectors', () => {
     it('should return the properties of a function message', () => {
       const state = merge(initialStore, {
         messages: mockMessages,
-        chatLoadingId: 'msg3', // Assuming this id represents a loading state
+        chatLoadingIds: ['msg3'], // Assuming this id represents a loading state
       });
       const props = chatSelectors.getFunctionMessageProps(mockMessages[2])(state);
       expect(props).toEqual({

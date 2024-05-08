@@ -365,6 +365,31 @@ describe('chatMessage actions', () => {
     });
   });
 
+  describe('toggleMessageEditing action', () => {
+    it('should add message id to messageEditingIds when editing is true', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+
+      act(() => {
+        result.current.toggleMessageEditing(messageId, true);
+      });
+
+      expect(result.current.messageEditingIds).toContain(messageId);
+    });
+
+    it('should remove message id from messageEditingIds when editing is false', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'abc';
+
+      act(() => {
+        result.current.toggleMessageEditing(messageId, true);
+        result.current.toggleMessageEditing(messageId, false);
+      });
+
+      expect(result.current.messageEditingIds).not.toContain(messageId);
+    });
+  });
+
   describe('internal_resendMessage action', () => {
     it('should resend a message by id and refresh messages', async () => {
       const { result } = renderHook(() => useChatStore());
@@ -701,7 +726,7 @@ describe('chatMessage actions', () => {
 
       const state = useChatStore.getState();
       expect(state.abortController).toBeInstanceOf(AbortController);
-      expect(state.chatLoadingId).toEqual('message-id');
+      expect(state.chatLoadingIds).toEqual(['message-id']);
     });
 
     it('should clear loading state and abort controller when loading is false', () => {
@@ -720,7 +745,7 @@ describe('chatMessage actions', () => {
 
       const state = useChatStore.getState();
       expect(state.abortController).toBeUndefined();
-      expect(state.chatLoadingId).toBeUndefined();
+      expect(state.chatLoadingIds).toEqual([]);
     });
 
     it('should attach beforeunload event listener when loading starts', () => {
@@ -758,6 +783,31 @@ describe('chatMessage actions', () => {
 
       const state = useChatStore.getState();
       expect(state.abortController).toEqual(abortController);
+    });
+  });
+
+  describe('internal_toggleMessageLoading action', () => {
+    it('should add message id to messageLoadingIds when loading is true', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+
+      act(() => {
+        result.current.internal_toggleMessageLoading(true, messageId);
+      });
+
+      expect(result.current.messageLoadingIds).toContain(messageId);
+    });
+
+    it('should remove message id from messageLoadingIds when loading is false', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'ddd-id';
+
+      act(() => {
+        result.current.internal_toggleMessageLoading(true, messageId);
+        result.current.internal_toggleMessageLoading(false, messageId);
+      });
+
+      expect(result.current.messageLoadingIds).not.toContain(messageId);
     });
   });
 });

@@ -1,7 +1,7 @@
 import { AlertProps, ChatItem } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
@@ -41,7 +41,6 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   const fontSize = useUserStore((s) => settingsSelectors.currentSettings(s).fontSize);
   const { t } = useTranslation('common');
   const { styles, cx } = useStyles();
-  const [editing, setEditing] = useState(false);
   const [type = 'chat'] = useAgentStore((s) => {
     const config = agentSelectors.currentAgentConfig(s);
     return [config.displayMode];
@@ -58,12 +57,14 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
 
-  const [loading, updateMessageContent] = useChatStore((s) => [
-    s.chatLoadingId === id || s.messageLoadingIds.includes(id),
-    s.modifyMessageContent,
-  ]);
-
-  const [isMessageLoading] = useChatStore((s) => [s.messageLoadingIds.includes(id)]);
+  const [isMessageLoading, generating, editing, toggleMessageEditing, updateMessageContent] =
+    useChatStore((s) => [
+      chatSelectors.isMessageLoading(id)(s),
+      chatSelectors.isMessageGenerating(id)(s),
+      chatSelectors.isMessageEditing(id)(s),
+      s.toggleMessageEditing,
+      s.modifyMessageContent,
+    ]);
 
   const onAvatarsClick = useAvatarsClick();
 
@@ -115,14 +116,21 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
       <>
         <HistoryDivider enable={enableHistoryDivider} />
         <ChatItem
-          actions={<ActionsBar index={index} setEditing={setEditing} />}
+          actions={
+            <ActionsBar
+              index={index}
+              setEditing={(edit) => {
+                toggleMessageEditing(id, edit);
+              }}
+            />
+          }
           avatar={item.meta}
           className={cx(styles.message, isMessageLoading && styles.loading)}
           editing={editing}
           error={error}
           errorMessage={<ErrorMessageExtra data={item} />}
           fontSize={fontSize}
-          loading={loading}
+          loading={generating}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}
@@ -130,10 +138,12 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           onDoubleClick={(e) => {
             if (item.id === 'default' || item.error) return;
             if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
-              setEditing(true);
+              toggleMessageEditing(id, true);
             }
           }}
-          onEditingChange={setEditing}
+          onEditingChange={(edit) => {
+            toggleMessageEditing(id, edit);
+          }}
           placement={type === 'chat' ? (item.role === 'user' ? 'right' : 'left') : 'left'}
           primary={item.role === 'user'}
           renderMessage={(editableContent) => (
