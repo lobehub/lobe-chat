@@ -1,7 +1,7 @@
 'use client';
 
 import { useQueryState } from 'nuqs';
-import { memo, useEffect } from 'react';
+import { memo, useLayoutEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { useChatStore } from '@/store/chat';
@@ -14,7 +14,7 @@ const ChatHydration = memo(() => {
   const [topic, setTopic] = useQueryState('topic', { history: 'replace', throttleMs: 500 });
   useStoreUpdater('activeTopicId', topic);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const unsubscribe = useChatStore.subscribe(
       (s) => s.activeTopicId,
       (state) => {

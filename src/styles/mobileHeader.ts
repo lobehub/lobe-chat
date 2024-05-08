@@ -8,7 +8,7 @@ export const mobileHeaderSticky: CSSProperties = {
 };
 
 export const mobileHeaderFixed: CSSProperties = {
-  position: 'fixed',
+  position: 'absolute',
   top: 0,
   width: '100%',
   zIndex: 100,

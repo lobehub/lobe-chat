@@ -50,6 +50,7 @@ export interface GlobalPreferenceState {
 export interface GlobalCommonState {
   hasNewVersion?: boolean;
   isMobile?: boolean;
+  isPreferenceInit?: boolean;
   latestVersion?: string;
   router?: AppRouterInstance;
   sidebarKey: SidebarTabKey;
@@ -59,6 +60,7 @@ export type GlobalState = GlobalCommonState & GlobalPreferenceState;
 
 export const initialState: GlobalState = {
   isMobile: false,
+  isPreferenceInit: false,
   preference: {
     expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
     inputHeight: 200,
