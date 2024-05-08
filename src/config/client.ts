@@ -55,6 +55,9 @@ export const getClientConfig = () => ({
     process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL || 'https://analytics.umami.is/script.js',
   UMAMI_WEBSITE_ID: process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID,
 
+  // Sentry
+  ENABLE_SENTRY: !!process.env.NEXT_PUBLIC_SENTRY_DSN,
+
   // i18n debug mode
   I18N_DEBUG: process.env.NEXT_PUBLIC_I18N_DEBUG === '1',
   I18N_DEBUG_BROWSER: process.env.NEXT_PUBLIC_I18N_DEBUG_BROWSER === '1',

@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "Preferences and model settings.",
     "global": "Global Settings",
     "session": "Session Settings",
-    "sessionWithName": "Session Settings · {{name}}"
+    "sessionDesc": "Role settings and session preferences.",
+    "sessionWithName": "Session Settings · {{name}}",
+    "title": "Settings"
   },
   "llm": {
     "checker": {
@@ -68,7 +71,8 @@
         },
         "modalTitle": "Custom Model Configuration",
         "tokens": {
-          "title": "Maximum Token Count"
+          "title": "Maximum Token Count",
+          "unlimited": "unlimited"
         },
         "vision": {
           "extra": "This configuration will only enable the image upload configuration in LobeChat. Whether recognition is supported depends entirely on the model itself. Please test the availability of visual recognition in this model on your own.",

@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "Präferenzen und Modellkonfigurationen.",
     "global": "Global Einstellungen",
     "session": "Sitzungseinstellungen",
-    "sessionWithName": "Sitzungseinstellungen · {{name}}"
+    "sessionDesc": "Rollenkonfiguration und Sitzungspräferenzen.",
+    "sessionWithName": "Sitzungseinstellungen · {{name}}",
+    "title": "Einstellungen"
   },
   "llm": {
     "checker": {
@@ -68,7 +71,8 @@
         },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "tokens": {
-          "title": "Maximale Token-Anzahl"
+          "title": "Maximale Token-Anzahl",
+          "unlimited": "unbegrenzt"
         },
         "vision": {
           "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Konfiguration in LobeChat. Die Unterstützung der Erkennung hängt vollständig von dem Modell selbst ab. Bitte testen Sie die Verfügbarkeit der visuellen Erkennungsfähigkeiten des Modells selbst.",

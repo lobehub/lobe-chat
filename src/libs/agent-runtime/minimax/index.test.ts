@@ -223,7 +223,6 @@ describe('LobeMinimaxAI', () => {
           model: 'text-davinci-003',
           temperature: 0.5,
           top_p: 0.8,
-          max_tokens: 100,
         };
 
         const result = instance['buildCompletionsParams'](payload);
@@ -234,7 +233,6 @@ describe('LobeMinimaxAI', () => {
           stream: true,
           temperature: 0.5,
           top_p: 0.8,
-          max_tokens: 100,
         });
       });
 
@@ -244,7 +242,6 @@ describe('LobeMinimaxAI', () => {
           model: 'text-davinci-003',
           temperature: 0,
           top_p: 0,
-          max_tokens: 100,
         };
 
         const result = instance['buildCompletionsParams'](payload);
@@ -253,7 +250,24 @@ describe('LobeMinimaxAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'text-davinci-003',
           stream: true,
-          max_tokens: 100,
+        });
+      });
+
+      it('should include max tokens when model is abab6.5-chat', () => {
+        const payload: ChatStreamPayload = {
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'abab6.5-chat',
+          temperature: 0,
+          top_p: 0,
+        };
+
+        const result = instance['buildCompletionsParams'](payload);
+
+        expect(result).toEqual({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'abab6.5-chat',
+          stream: true,
+          max_tokens: 2048,
         });
       });
     });

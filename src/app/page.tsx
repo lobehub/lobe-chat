@@ -14,6 +14,8 @@ const Page = () => {
   );
 };
 
+Page.displayName = 'Loading';
+
 export default Page;
 
 export const metadata: Metadata = {

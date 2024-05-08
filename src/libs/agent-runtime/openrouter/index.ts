@@ -36,7 +36,10 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
             ? model.top_provider.max_completion_tokens
             : undefined,
         tokens: model.context_length,
-        vision: model.description.includes('vision') || model.id.includes('vision'),
+        vision:
+          model.description.includes('vision') ||
+          model.description.includes('multimodal') ||
+          model.id.includes('vision'),
       };
     },
   },

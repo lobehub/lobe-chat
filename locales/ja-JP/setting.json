@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "設定優先順位和模型設置。",
     "global": "グローバル設定",
     "session": "セッション設定",
-    "sessionWithName": "セッション設定 · {{name}}"
+    "sessionDesc": "キャラクター設定とセッションの好み。",
+    "sessionWithName": "セッション設定 · {{name}}",
+    "title": "設定"
   },
   "llm": {
     "checker": {
@@ -68,7 +71,8 @@
         },
         "modalTitle": "カスタムモデルの設定",
         "tokens": {
-          "title": "最大トークン数"
+          "title": "最大トークン数",
+          "unlimited": "無制限"
         },
         "vision": {
           "extra": "この設定は LobeChat での画像アップロード構成のみを有効にします。認識のサポートは完全にモデル自体に依存するため、モデルの視覚認識機能の可用性を自己でテストしてください",

@@ -1,29 +1,31 @@
-'use client';
+import { GridShowcase, Logo } from '@lobehub/ui';
+import { PropsWithChildren } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
-import { Logo } from '@lobehub/ui';
-import { PropsWithChildren, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import Follow from '@/features/Follow';
 
-import ClientResponsiveLayout from '@/components/client/ClientResponsiveLayout';
+const COPYRIGHT = `© ${new Date().getFullYear()} LobeHub, LLC`;
 
-import { useStyles } from '../features/Banner/style';
-
-const Desktop = memo<PropsWithChildren>(({ children }) => {
-  const { styles } = useStyles();
+const DesktopLayout = ({ children }: PropsWithChildren) => {
   return (
-    <Center
-      className={styles.layout}
-      flex={1}
+    <Flexbox
+      align={'center'}
       height={'100%'}
-      horizontal
-      style={{ position: 'relative' }}
+      justify={'space-between'}
+      padding={16}
+      style={{ overflow: 'hidden', position: 'relative' }}
+      width={'100%'}
     >
-      <Logo className={styles.logo} size={36} type={'text'} />
-      <Flexbox className={styles.view} flex={1}>
+      <Logo size={36} style={{ alignSelf: 'flex-start' }} type={'text'} />
+      <GridShowcase innerProps={{ gap: 24 }} style={{ maxWidth: 1024 }} width={'100%'}>
         {children}
+      </GridShowcase>
+      <Flexbox align={'center'} horizontal justify={'space-between'}>
+        <span style={{ opacity: 0.5 }}>{COPYRIGHT}</span>
+        <Follow />
       </Flexbox>
-    </Center>
+    </Flexbox>
   );
-});
+};
 
-export default ClientResponsiveLayout({ Desktop, Mobile: () => import('./Mobile') });
+export default DesktopLayout;

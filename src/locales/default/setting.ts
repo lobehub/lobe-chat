@@ -27,9 +27,12 @@ export default {
     },
   },
   header: {
+    desc: '偏好与模型设置',
     global: '全局设置',
     session: '会话设置',
+    sessionDesc: '角色设定与会话偏好',
     sessionWithName: '会话设置 · {{name}}',
+    title: '设置',
   },
   llm: {
     checker: {
@@ -69,7 +72,10 @@ export default {
           title: '模型 ID',
         },
         modalTitle: '自定义模型配置',
-        tokens: { title: '最大 token 数' },
+        tokens: {
+          title: '最大 token 数',
+          unlimited: '无限制',
+        },
         vision: {
           extra:
             '此配置将仅开启 LobeChat 中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性',
