@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.155.7](https://github.com/lobehub/lobe-chat/compare/v0.155.6...v0.155.7)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix panel expand.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix panel expand ([5e78089](https://github.com/lobehub/lobe-chat/commit/5e78089))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.155.6](https://github.com/lobehub/lobe-chat/compare/v0.155.5...v0.155.6)
 
 <sup>Released on **2024-05-08**</sup>
