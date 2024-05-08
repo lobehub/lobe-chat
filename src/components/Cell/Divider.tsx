@@ -4,11 +4,11 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 
 const useStyles = createStyles(
-  ({ css, token, isDarkMode }) => css`
+  ({ css, token }) => css`
     flex: none;
     width: 100%;
     height: 6px;
-    background: ${isDarkMode ? token.colorBgContainer : token.colorBgLayout};
+    background: ${token.colorFillTertiary};
   `,
 );
 
