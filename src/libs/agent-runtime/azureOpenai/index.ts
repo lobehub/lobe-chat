@@ -32,14 +32,14 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
     // fix the issue: "The sample encountered an error: TypeError: Cannot read properties of undefined (reading 'url')"
     messages.forEach(message => {
-      if (message['content'] instanceof Array) {
+      if (Array.isArray(message['content'])) {
         message['content'].forEach((content: any) => {
           if (content['type'] === 'image_url') {
             content['imageUrl'] = content['image_url'];
             delete content['image_url'];
           }
         });
-      };
+      }
     });
 
     // ============  2. send api   ============ //
