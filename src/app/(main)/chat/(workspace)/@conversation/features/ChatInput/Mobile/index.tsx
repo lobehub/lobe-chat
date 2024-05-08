@@ -25,6 +25,7 @@ const MobileChatInput = memo(() => {
       onSend={onSend}
       placeholder={t('sendPlaceholder')}
       ref={ref}
+      safeArea
       setExpand={setExpand}
       style={{
         background: theme.colorBgContainer,
