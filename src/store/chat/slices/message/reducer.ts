@@ -1,6 +1,7 @@
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 
+import { CreateMessageParams } from '@/services/message';
 import { ChatMessage } from '@/types/message';
 import { merge } from '@/utils/merge';
 
@@ -9,6 +10,15 @@ interface UpdateMessage {
   key: keyof ChatMessage;
   type: 'updateMessage';
   value: ChatMessage[keyof ChatMessage];
+}
+interface CreateMessage {
+  id: string;
+  type: 'createMessage';
+  value: CreateMessageParams;
+}
+interface DeleteMessage {
+  id: string;
+  type: 'deleteMessage';
 }
 
 interface UpdatePluginState {
@@ -24,7 +34,12 @@ interface UpdateMessageExtra {
   value: any;
 }
 
-export type MessageDispatch = UpdateMessage | UpdatePluginState | UpdateMessageExtra;
+export type MessageDispatch =
+  | CreateMessage
+  | UpdateMessage
+  | UpdatePluginState
+  | UpdateMessageExtra
+  | DeleteMessage;
 
 export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
   switch (payload.type) {
@@ -76,6 +91,22 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
       });
     }
 
+    case 'createMessage': {
+      return produce(state, (draftState) => {
+        const { value, id } = payload;
+
+        draftState.push({ ...value, createdAt: Date.now(), id, meta: {}, updatedAt: Date.now() });
+      });
+    }
+    case 'deleteMessage': {
+      return produce(state, (draft) => {
+        const { id } = payload;
+
+        const index = draft.findIndex((m) => m.id === id);
+
+        if (index >= 0) draft.splice(index, 1);
+      });
+    }
     default: {
       throw new Error('暂未实现的 type，请检查 reducer');
     }

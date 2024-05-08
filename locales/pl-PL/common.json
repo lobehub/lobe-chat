@@ -1,29 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",
-      "file": "Ten model obsługuje wczytywanie plików i rozpoznawanie",
-      "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
-      "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
-      "vision": "Ten model obsługuje rozpoznawanie wizualne."
-    }
-  },
   "about": "O nas",
   "advanceSettings": "Zaawansowane ustawienia",
-  "agentMaxToken": "Maksymalna długość sesji",
-  "agentModel": "Model",
-  "agentProfile": "Profil asystenta",
   "appInitializing": "LobeChat inicjuje, proszę czekać...",
-  "archive": "Archiwum",
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
+  "autoGenerateTooltipDisabled": "Proszę wprowadzić słowo kluczowe przed użyciem funkcji automatycznego uzupełniania",
+  "blog": "Blog produktowy",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
   "close": "Zamknij",
-  "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Po usunięciu nie będzie możliwe jego odzyskanie.",
   "copy": "Kopiuj",
   "copyFail": "Nie udało się skopiować",
   "copySuccess": "Skopiowano pomyślnie",
+  "dataStatistics": {
+    "messages": "Wiadomości",
+    "sessions": "Sesje",
+    "today": "Dzisiaj",
+    "topics": "Tematy"
+  },
   "defaultAgent": "Domyślny asystent",
   "defaultSession": "Domyślna sesja",
   "delete": "Usuń",
@@ -40,6 +34,8 @@
     "globalSetting": "Eksportuj ustawienia globalne"
   },
   "feedback": "Opinie i sugestie",
+  "follow": "Zaobserwuj nas na {{name}}",
+  "fullscreen": "Tryb pełnoekranowy",
   "historyRange": "Zakres historii",
   "import": "Importuj ustawienia",
   "importModal": {
@@ -64,6 +60,7 @@
   },
   "lang": {
     "ar": "arabski",
+    "bg-BG": "bułgarski",
     "bn": "Bengalski",
     "cs-CZ": "Czeski",
     "da-DK": "Duński",
@@ -99,27 +96,14 @@
     "zh-TW": "Chiński tradycyjny"
   },
   "layoutInitializing": "Inicjowanie układu...",
-  "modelProvider": {
-    "anthropic": "Antropiczny",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Brak opisu",
   "oauth": "Logowanie SSO",
+  "officialSite": "Oficjalna strona internetowa",
   "ok": "OK",
   "password": "Hasło",
   "pin": "Przypnij",
   "pinOff": "Odepnij",
+  "privacy": "Polityka prywatności",
   "regenerate": "Regeneruj",
   "rename": "Zmień nazwę",
   "reset": "Resetuj",
@@ -128,9 +112,43 @@
   "setting": "Ustawienia",
   "share": "Udostępnij",
   "stop": "Zatrzymaj",
+  "sync": {
+    "actions": {
+      "settings": "Ustawienia synchronizacji",
+      "sync": "Synchronizuj teraz"
+    },
+    "awareness": {
+      "current": "Bieżące urządzenie"
+    },
+    "channel": "Kanał",
+    "disabled": {
+      "actions": {
+        "enable": "Włącz synchronizację chmurową",
+        "settings": "Konfiguruj parametry synchronizacji"
+      },
+      "desc": "Dane bieżącej sesji są przechowywane tylko w tej przeglądarce. Jeśli chcesz synchronizować dane między wieloma urządzeniami, skonfiguruj i włącz synchronizację chmurową.",
+      "title": "Synchronizacja danych wyłączona"
+    },
+    "enabled": {
+      "title": "Synchronizacja danych"
+    },
+    "status": {
+      "connecting": "Łączenie",
+      "disabled": "Synchronizacja wyłączona",
+      "ready": "Gotowy",
+      "synced": "Synchronizacja zakończona",
+      "syncing": "Synchronizacja w toku",
+      "unconnected": "Brak połączenia"
+    },
+    "title": "Stan synchronizacji",
+    "unconnected": {
+      "tip": "Błąd połączenia z serwerem sygnalizacyjnym, nie można nawiązać kanału komunikacyjnego punkt-punkt, sprawdź sieć i spróbuj ponownie"
+    }
+  },
   "tab": {
     "chat": "Czat",
     "market": "Odkrywaj",
+    "me": "ja",
     "setting": "Ustawienia"
   },
   "telemetry": {
@@ -141,10 +159,27 @@
     "title": "Pomóż LobeChat stawać się lepszym"
   },
   "temp": "Tymczasowy",
+  "terms": "Warunki korzystania",
   "updateAgent": "Zaktualizuj informacje o agencie",
   "upgradeVersion": {
     "action": "Aktualizuj",
     "hasNew": "Dostępna jest nowa aktualizacja",
     "newVersion": "Dostępna jest nowa wersja: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Użytkownik Anonimowy",
+    "billing": "Zarządzanie rachunkami",
+    "defaultNickname": "Użytkownik Wersji Społecznościowej",
+    "discord": "Wsparcie społeczności",
+    "docs": "Dokumentacja",
+    "email": "Wsparcie mailowe",
+    "feedback": "Opinie i sugestie",
+    "help": "Centrum pomocy",
+    "moveGuide": "Przenieś przycisk ustawień tutaj",
+    "plans": "Plan abonamentu",
+    "preview": "Podgląd",
+    "profile": "Zarządzanie kontem",
+    "setting": "Ustawienia aplikacji",
+    "usages": "Statystyki użycia"
   }
 }

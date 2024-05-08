@@ -56,6 +56,15 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.GroqBizError: {
       return 482;
     }
+    case AgentRuntimeErrorType.ZeroOneBizError: {
+      return 483;
+    }
+    case AgentRuntimeErrorType.TogetherAIBizError: {
+      return 484;
+    }
+    case AgentRuntimeErrorType.MinimaxBizError: {
+      return 485;
+    }
   }
   return errorType as number;
 };

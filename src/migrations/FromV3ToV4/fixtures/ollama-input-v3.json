@@ -1,0 +1,85 @@
+{
+  "exportType": "settings",
+  "state": {
+    "settings": {
+      "defaultAgent": {
+        "config": {
+          "autoCreateTopicThreshold": 2,
+          "displayMode": "chat",
+          "enableAutoCreateTopic": true,
+          "historyCount": 1,
+          "model": "gpt-4-vision-preview",
+          "params": {
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
+            "temperature": 0.6,
+            "top_p": 1
+          },
+          "plugins": ["realtime-weather", "steam"],
+          "provider": "openai",
+          "systemRole": "",
+          "tts": {
+            "showAllLocaleVoice": false,
+            "sttLocale": "auto",
+            "ttsService": "openai",
+            "voice": { "openai": "alloy" }
+          }
+        },
+        "meta": {}
+      },
+      "languageModel": {
+        "anthropic": { "apiKey": "", "enabled": false },
+        "azure": { "apiKey": "", "deployments": "", "enabled": false, "endpoint": "" },
+        "bedrock": {
+          "accessKeyId": "",
+          "enabled": false,
+          "region": "us-east-1",
+          "secretAccessKey": ""
+        },
+        "google": { "apiKey": "", "enabled": false },
+        "groq": { "apiKey": "", "enabled": false },
+        "mistral": { "apiKey": "", "enabled": false },
+        "moonshot": { "apiKey": "", "enabled": false },
+        "ollama": {
+          "enabled": false,
+          "endpoint": "",
+          "customModelName": "-all,+llava"
+        },
+        "openAI": {
+          "OPENAI_API_KEY": "",
+          "enabled": true,
+          "models": [],
+          "endpoint": "",
+          "customModelName": "",
+          "useAzure": false
+        },
+        "openrouter": {
+          "apiKey": "",
+          "enabled": true
+        },
+        "perplexity": { "apiKey": "", "enabled": false },
+        "togetherai": { "apiKey": "", "enabled": false },
+        "zeroone": { "apiKey": "", "enabled": false },
+        "zhipu": { "apiKey": "", "enabled": false },
+        "openai": {
+          "OPENAI_API_KEY": "",
+          "models": ["gpt-3.5-turbo", "gpt-3.5-turbo-16k", "gpt-4"],
+          "endpoint": ""
+        }
+      },
+      "sync": { "webrtc": { "enabled": false } },
+      "tool": { "dalle": { "autoGenerate": false } },
+      "tts": {
+        "openAI": { "sttModel": "whisper-1", "ttsModel": "tts-1" },
+        "sttAutoStop": true,
+        "sttServer": "openai"
+      },
+      "fontSize": 14,
+      "language": "auto",
+      "themeMode": "auto",
+      "primaryColor": "",
+      "neutralColor": ""
+    }
+  },
+  "version": 3
+}

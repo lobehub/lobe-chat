@@ -2,7 +2,7 @@ import { act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
+import { useUserStore } from '@/store/user';
 import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
 
 import { getProviderAuthPayload } from './_auth';
@@ -14,6 +14,7 @@ const mockGoogleAPIKey = 'google-api-key';
 const mockAnthropicAPIKey = 'anthropic-api-key';
 const mockMistralAPIKey = 'mistral-api-key';
 const mockOpenRouterAPIKey = 'openrouter-api-key';
+const mockTogetherAIAPIKey = 'togetherai-api-key';
 
 // mock the traditional zustand
 vi.mock('zustand/traditional');
@@ -22,7 +23,7 @@ const setModelProviderConfig = <T extends GlobalLLMProviderKey>(
   provider: T,
   config: Partial<GlobalLLMConfig[T]>,
 ) => {
-  useGlobalStore.setState({
+  useUserStore.setState({
     settings: { languageModel: { [provider]: config } },
   });
 };
@@ -71,6 +72,15 @@ describe('getProviderAuthPayload', () => {
 
     const payload = getProviderAuthPayload(ModelProvider.OpenRouter);
     expect(payload).toEqual({ apiKey: mockOpenRouterAPIKey });
+  });
+
+  it('should return correct payload for TogetherAI provider', () => {
+    act(() => {
+      setModelProviderConfig('togetherai', { apiKey: mockTogetherAIAPIKey });
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.TogetherAI);
+    expect(payload).toEqual({ apiKey: mockTogetherAIAPIKey });
   });
 
   it('should return correct payload for Google provider', () => {
@@ -137,26 +147,24 @@ describe('getProviderAuthPayload', () => {
   it('should return correct payload for OpenAI provider', () => {
     // 假设的 OpenAI 配置
     const mockOpenAIConfig = {
-      OPENAI_API_KEY: 'openai-api-key',
+      apiKey: 'openai-api-key',
       endpoint: 'openai-endpoint',
       useAzure: true,
       azureApiVersion: 'openai-azure-api-version',
     };
     act(() => {
-      setModelProviderConfig('openAI', mockOpenAIConfig);
+      setModelProviderConfig('openai', mockOpenAIConfig);
     });
 
     const payload = getProviderAuthPayload(ModelProvider.OpenAI);
     expect(payload).toEqual({
-      apiKey: mockOpenAIConfig.OPENAI_API_KEY,
-      azureApiVersion: mockOpenAIConfig.azureApiVersion,
+      apiKey: mockOpenAIConfig.apiKey,
       endpoint: mockOpenAIConfig.endpoint,
-      useAzure: mockOpenAIConfig.useAzure,
     });
   });
 
   it('should return an empty object or throw an error for an unknown provider', () => {
     const payload = getProviderAuthPayload('UnknownProvider');
-    expect(payload).toEqual({ apiKey: '', endpoint: '' });
+    expect(payload).toEqual({});
   });
 });

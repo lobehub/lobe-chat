@@ -1,29 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Benutzerdefiniertes Modell, das standardmäßig sowohl Funktionsaufrufe als auch visuelle Erkennung unterstützt. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Anforderungen.",
-      "file": "Dieses Modell unterstützt das Hochladen von Dateien zur Erkennung.",
-      "functionCall": "Dieses Modell unterstützt Funktionsaufrufe (Function Call).",
-      "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro einzelner Sitzung.",
-      "vision": "Dieses Modell unterstützt visuelle Erkennung."
-    }
-  },
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
-  "agentMaxToken": "Maximale Sitzungslänge",
-  "agentModel": "Modell",
-  "agentProfile": "Assistentenprofil",
   "appInitializing": "LobeChat wird initialisiert. Bitte haben Sie einen Moment Geduld...",
-  "archive": "Archiv",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
+  "autoGenerateTooltipDisabled": "Bitte geben Sie einen Hinweis ein, um die automatische Vervollständigung zu aktivieren",
+  "blog": "Produkt-Blog",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
   "close": "Schließen",
-  "confirmRemoveSessionItemAlert": "Möchten Sie diesen Assistenten wirklich löschen? Nach dem Löschen kann er nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
   "copy": "Kopieren",
   "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
+  "dataStatistics": {
+    "messages": "Nachrichten",
+    "sessions": "Sitzungen",
+    "today": "Heute",
+    "topics": "Themen"
+  },
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
@@ -40,6 +34,8 @@
     "globalSetting": "Globale Einstellungen exportieren"
   },
   "feedback": "Feedback und Vorschläge",
+  "follow": "Folge uns auf {{name}}",
+  "fullscreen": "Vollbildmodus",
   "historyRange": "Verlaufsbereich",
   "import": "Importieren",
   "importModal": {
@@ -64,6 +60,7 @@
   },
   "lang": {
     "ar": "Arabisch",
+    "bg-BG": "Bulgarisch",
     "bn": "Bengalisch",
     "cs-CZ": "Tschechisch",
     "da-DK": "Dänisch",
@@ -99,27 +96,14 @@
     "zh-TW": "Chinesisch (traditionell)"
   },
   "layoutInitializing": "Layout wird geladen...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral KI",
-    "moonshot": "Moonshot KI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Keine Beschreibung vorhanden",
   "oauth": "SSO-Anmeldung",
+  "officialSite": "Offizielle Website",
   "ok": "OK",
   "password": "Passwort",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
+  "privacy": "Datenschutzrichtlinie",
   "regenerate": "Neu generieren",
   "rename": "Umbenennen",
   "reset": "Zurücksetzen",
@@ -128,9 +112,43 @@
   "setting": "Einstellung",
   "share": "Teilen",
   "stop": "Stoppen",
+  "sync": {
+    "actions": {
+      "settings": "Sync Einstellungen",
+      "sync": "Jetzt Syncen"
+    },
+    "awareness": {
+      "current": "Aktuelles Gerät"
+    },
+    "channel": "Kanal",
+    "disabled": {
+      "actions": {
+        "enable": "Cloud Sync Aktivieren",
+        "settings": "Sync Einstellungen"
+      },
+      "desc": "Momentane Session Daten ist nur im Brwoser gespeichert. Wenn Sie Daten über mehrere Geräte syncen möchten, konfigurieren und aktivieren Sie bitte cloud sync.",
+      "title": "Daten Sync Deaktiviert"
+    },
+    "enabled": {
+      "title": "Daten Sync Aktiviert"
+    },
+    "status": {
+      "connecting": "Verbinden",
+      "disabled": "Sync Deaktiviert",
+      "ready": "Verbunden",
+      "synced": "Synchronisiert",
+      "syncing": "Synchronisierung",
+      "unconnected": "Verbindung gescheitert"
+    },
+    "title": "Sync Status",
+    "unconnected": {
+      "tip": "Die Verbindung zum Signalisierungsserver ist fehlgeschlagen, und der Peer-to-Peer-Kommunikationskanal kann nicht hergestellt werden. Bitte überprüfen Sie das Netzwerk und versuchen Sie es erneut."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Entdecken",
+    "me": "Ich",
     "setting": "Einstellung"
   },
   "telemetry": {
@@ -141,10 +159,27 @@
     "title": "Hilf LobeChat, besser zu werden"
   },
   "temp": "Temporär",
+  "terms": "Nutzungsbedingungen",
   "updateAgent": "Assistentenprofil aktualisieren",
   "upgradeVersion": {
     "action": "Aktualisieren",
     "hasNew": "Neue Version verfügbar",
     "newVersion": "Neue Version verfügbar: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonymer Benutzer",
+    "billing": "Abrechnung verwalten",
+    "defaultNickname": "Community User",
+    "discord": "Community-Support",
+    "docs": "Dokumentation",
+    "email": "E-Mail-Support",
+    "feedback": "Feedback und Vorschläge",
+    "help": "Hilfezentrum",
+    "moveGuide": "Die Einstellungen wurden hierher verschoben.",
+    "plans": "Abonnementpläne",
+    "preview": "Vorschau",
+    "profile": "Kontoverwaltung",
+    "setting": "App-Einstellungen",
+    "usages": "Nutzungsstatistiken"
   }
 }

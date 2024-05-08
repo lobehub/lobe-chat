@@ -15,7 +15,6 @@ const mapWithBasePath = <T extends object>(apis: T): T => {
 };
 
 export const API_ENDPOINTS = mapWithBasePath({
-  config: '/api/config',
   proxy: '/api/proxy',
   oauth: '/api/auth',
 
@@ -29,6 +28,7 @@ export const API_ENDPOINTS = mapWithBasePath({
 
   // chat
   chat: (provider: string) => withBasePath(`/api/chat/${provider}`),
+  chatModels: (provider: string) => withBasePath(`/api/chat/models/${provider}`),
 
   // trace
   trace: '/api/trace',

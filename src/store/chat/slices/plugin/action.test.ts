@@ -16,11 +16,10 @@ const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypeP
 // Mock messageService
 vi.mock('@/services/message', () => ({
   messageService: {
-    internalUpdateMessageContent: vi.fn(),
     updateMessage: vi.fn(),
     updateMessageError: vi.fn(),
     updateMessagePluginState: vi.fn(),
-    create: vi.fn(),
+    createMessage: vi.fn(),
   },
 }));
 
@@ -38,7 +37,7 @@ describe('ChatPluginAction', () => {
       // 设置初始状态
       const initialState = {
         messages: [],
-        coreProcessMessage: vi.fn(),
+        internal_coreProcessMessage: vi.fn(),
         refreshMessages: vi.fn(),
       };
       useChatStore.setState(initialState);
@@ -52,17 +51,17 @@ describe('ChatPluginAction', () => {
         await result.current.fillPluginMessageContent(messageId, newContent, true);
       });
 
-      // 验证 messageService.internalUpdateMessageContent 是否被正确调用
+      // 验证 messageService.internal_updateMessageContent 是否被正确调用
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
 
       // 验证 refreshMessages 是否被调用
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
       // 验证 coreProcessMessage 是否被正确调用
-      expect(result.current.coreProcessMessage).toHaveBeenCalledWith(
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
         mockCurrentChats,
         messageId,
-        undefined,
+        {},
       );
     });
     it('should update message content and not trigger ai message', async () => {
@@ -87,14 +86,14 @@ describe('ChatPluginAction', () => {
         await result.current.fillPluginMessageContent(messageId, newContent);
       });
 
-      // 验证 messageService.internalUpdateMessageContent 是否被正确调用
+      // 验证 messageService.internal_updateMessageContent 是否被正确调用
       expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { content: newContent });
 
       // 验证 refreshMessages 是否被调用
       expect(result.current.refreshMessages).toHaveBeenCalled();
 
       // 验证 coreProcessMessage 没有被正确调用
-      expect(result.current.coreProcessMessage).not.toHaveBeenCalled();
+      expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
     });
   });
 
@@ -108,7 +107,7 @@ describe('ChatPluginAction', () => {
 
       vi.spyOn(storeState, 'refreshMessages');
       vi.spyOn(storeState, 'triggerAIMessage').mockResolvedValue(undefined);
-      vi.spyOn(storeState, 'toggleChatLoading').mockReturnValue(undefined);
+      vi.spyOn(storeState, 'internal_toggleChatLoading').mockReturnValue(undefined);
 
       const runSpy = vi.spyOn(chatService, 'runPluginApi').mockResolvedValue({
         text: pluginApiResponse,
@@ -121,7 +120,7 @@ describe('ChatPluginAction', () => {
         await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
-      expect(storeState.toggleChatLoading).toHaveBeenCalledWith(
+      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
@@ -132,7 +131,7 @@ describe('ChatPluginAction', () => {
       });
       expect(storeState.refreshMessages).toHaveBeenCalled();
       expect(storeState.triggerAIMessage).toHaveBeenCalled();
-      expect(storeState.toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(false);
     });
 
     it('should handle errors when the plugin API call fails', async () => {
@@ -143,7 +142,7 @@ describe('ChatPluginAction', () => {
       const storeState = useChatStore.getState();
       vi.spyOn(storeState, 'refreshMessages');
       vi.spyOn(storeState, 'triggerAIMessage').mockResolvedValue(undefined);
-      vi.spyOn(storeState, 'toggleChatLoading').mockReturnValue(undefined);
+      vi.spyOn(storeState, 'internal_toggleChatLoading').mockReturnValue(undefined);
 
       vi.spyOn(chatService, 'runPluginApi').mockRejectedValue(error);
 
@@ -152,7 +151,7 @@ describe('ChatPluginAction', () => {
         await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
-      expect(storeState.toggleChatLoading).toHaveBeenCalledWith(
+      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
@@ -160,7 +159,7 @@ describe('ChatPluginAction', () => {
       expect(chatService.runPluginApi).toHaveBeenCalledWith(pluginPayload, { trace: {} });
       expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error);
       expect(storeState.refreshMessages).toHaveBeenCalled();
-      expect(storeState.toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(false);
       expect(storeState.triggerAIMessage).not.toHaveBeenCalled(); // 确保在错误情况下不调用此方法
     });
   });
@@ -428,7 +427,7 @@ describe('ChatPluginAction', () => {
   describe('createAssistantMessageByPlugin', () => {
     it('should create an assistant message and refresh messages', async () => {
       // 模拟 messageService.create 方法的实现
-      (messageService.create as Mock).mockResolvedValue({});
+      (messageService.createMessage as Mock).mockResolvedValue({});
 
       // 设置初始状态并模拟 refreshMessages 方法
       const initialState = {
@@ -448,7 +447,7 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 messageService.create 是否被带有正确参数调用
-      expect(messageService.create).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',
@@ -463,7 +462,7 @@ describe('ChatPluginAction', () => {
     it('should handle errors when message creation fails', async () => {
       // 模拟 messageService.create 方法，使其抛出错误
       const errorMessage = 'Failed to create message';
-      (messageService.create as Mock).mockRejectedValue(new Error(errorMessage));
+      (messageService.createMessage as Mock).mockRejectedValue(new Error(errorMessage));
 
       // 设置初始状态并模拟 refreshMessages 方法
       const initialState = {
@@ -485,7 +484,7 @@ describe('ChatPluginAction', () => {
       });
 
       // 验证 messageService.create 是否被带有正确参数调用
-      expect(messageService.create).toHaveBeenCalledWith({
+      expect(messageService.createMessage).toHaveBeenCalledWith({
         content,
         parentId,
         role: 'assistant',
@@ -513,8 +512,8 @@ describe('ChatPluginAction', () => {
       });
 
       useChatStore.setState({
-        toggleChatLoading: vi.fn(),
-        internalUpdateMessageContent: vi.fn(),
+        internal_toggleChatLoading: vi.fn(),
+        internal_updateMessageContent: vi.fn(),
         text2image: vi.fn(),
       });
 
@@ -531,18 +530,18 @@ describe('ChatPluginAction', () => {
       );
 
       // Verify that the message content was updated with the tool response
-      expect(result.current.internalUpdateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
         toolResponse,
       );
 
       // Verify that loading was toggled correctly
-      expect(result.current.toggleChatLoading).toHaveBeenCalledWith(
+      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
       );
-      expect(result.current.toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(false);
       expect(useChatStore.getState().text2image).toHaveBeenCalled();
     });
 
@@ -562,9 +561,9 @@ describe('ChatPluginAction', () => {
         });
 
         useChatStore.setState({
-          toggleChatLoading: vi.fn(),
+          internal_toggleChatLoading: vi.fn(),
           text2image: vi.fn(),
-          internalUpdateMessageContent: vi.fn(),
+          internal_updateMessageContent: vi.fn(),
         });
       });
       const { result } = renderHook(() => useChatStore());
@@ -580,18 +579,18 @@ describe('ChatPluginAction', () => {
       );
 
       // Verify that the message content was updated with the tool response
-      expect(result.current.internalUpdateMessageContent).toHaveBeenCalledWith(
+      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
         messageId,
         toolResponse,
       );
 
       // Verify that loading was toggled correctly
-      expect(result.current.toggleChatLoading).toHaveBeenCalledWith(
+      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
       );
-      expect(result.current.toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(false);
       expect(useChatStore.getState().text2image).not.toHaveBeenCalled();
     });
 
@@ -609,8 +608,8 @@ describe('ChatPluginAction', () => {
       });
 
       useChatStore.setState({
-        toggleChatLoading: vi.fn(),
-        internalUpdateMessageContent: vi.fn(),
+        internal_toggleChatLoading: vi.fn(),
+        internal_updateMessageContent: vi.fn(),
         text2image: vi.fn(),
         refreshMessages: vi.fn(),
       });
@@ -622,15 +621,15 @@ describe('ChatPluginAction', () => {
       });
 
       // Verify that loading was toggled correctly
-      expect(result.current.toggleChatLoading).toHaveBeenCalledWith(
+      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
       );
-      expect(result.current.toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(false);
 
       // Verify that the message content was not updated
-      expect(result.current.internalUpdateMessageContent).not.toHaveBeenCalled();
+      expect(result.current.internal_updateMessageContent).not.toHaveBeenCalled();
 
       // Verify that messages were not refreshed
       expect(result.current.refreshMessages).not.toHaveBeenCalled();

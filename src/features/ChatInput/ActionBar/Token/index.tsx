@@ -1,16 +1,16 @@
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/slices/chat';
+import { useUserStore } from '@/store/user';
+import { modelProviderSelectors } from '@/store/user/selectors';
 
 const LargeTokenContent = dynamic(() => import('./TokenTag'), { ssr: false });
 
 const Token = memo(() => {
-  const model = useSessionStore(agentSelectors.currentAgentModel);
-  const showTag = useGlobalStore(modelProviderSelectors.modelHasMaxToken(model));
+  const model = useAgentStore(agentSelectors.currentAgentModel);
+  const showTag = useUserStore(modelProviderSelectors.isModelHasMaxToken(model));
 
   return showTag && <LargeTokenContent />;
 });

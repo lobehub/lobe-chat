@@ -6,8 +6,8 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import APIKeyForm from './APIKeyForm';
 import AccessCodeForm from './AccessCodeForm';
@@ -27,7 +27,7 @@ interface InvalidAccessCodeProps {
 
 const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
   const { t } = useTranslation('error');
-  const isEnabledOAuth = useGlobalStore(commonSelectors.enabledOAuthSSO);
+  const isEnabledOAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
   const defaultTab = isEnabledOAuth ? Tab.Oauth : Tab.Password;
   const [mode, setMode] = useState<Tab>(defaultTab);
 

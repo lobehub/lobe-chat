@@ -1,86 +1,44 @@
-import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI, { ClientOptions } from 'openai';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 
-import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
-import { AgentRuntimeError } from '../utils/createError';
-import { debugStream } from '../utils/debugStream';
-import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { handleOpenAIError } from '../utils/handleOpenAIError';
+import { ModelProvider } from '../types';
+import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { OpenRouterModelCard } from './type';
 
-const DEFAULT_BASE_URL = 'https://openrouter.ai/api/v1';
+export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
+  baseURL: 'https://openrouter.ai/api/v1',
+  constructorOptions: {
+    defaultHeaders: {
+      'HTTP-Referer': 'https://chat-preview.lobehub.com',
+      'X-Title': 'Lobe Chat',
+    },
+  },
+  debug: {
+    chatCompletion: () => process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1',
+  },
 
-export class LobeOpenRouterAI implements LobeRuntimeAI {
-  private client: OpenAI;
+  errorType: {
+    bizError: AgentRuntimeErrorType.OpenRouterBizError,
+    invalidAPIKey: AgentRuntimeErrorType.InvalidOpenRouterAPIKey,
+  },
+  models: {
+    transformModel: (m) => {
+      const model = m as unknown as OpenRouterModelCard;
 
-  baseURL: string;
-
-  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOpenRouterAPIKey);
-    
-    this.client = new OpenAI({
-      apiKey,
-      baseURL,
-      defaultHeaders: {
-        "HTTP-Referer": "https://chat-preview.lobehub.com",
-        "X-Title": "Lobe Chat"
-      },
-      ...res
-    });
-    this.baseURL = this.client.baseURL;
-  }
-
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    try {
-      const response = await this.client.chat.completions.create(
-        payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming
-      );
-      const [prod, debug] = response.tee();
-
-      if (process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1') {
-        debugStream(debug.toReadableStream()).catch(console.error);
-      }
-
-      return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
-    } catch (error) {
-      let desensitizedEndpoint = this.baseURL;
-
-      if (this.baseURL !== DEFAULT_BASE_URL) {
-        desensitizedEndpoint = desensitizeUrl(this.baseURL);
-      }
-
-      if ('status' in (error as any)) {
-        switch ((error as Response).status) {
-          case 401: {
-            throw AgentRuntimeError.chat({
-              endpoint: desensitizedEndpoint,
-              error: error as any,
-              errorType: AgentRuntimeErrorType.InvalidOpenRouterAPIKey,
-              provider: ModelProvider.OpenRouter,
-            });
-          }
-
-          default: {
-            break;
-          }
-        }
-      }
-
-      const { errorResult, RuntimeError } = handleOpenAIError(error);
-
-      const errorType = RuntimeError || AgentRuntimeErrorType.OpenRouterBizError;
-
-      throw AgentRuntimeError.chat({
-        endpoint: desensitizedEndpoint,
-        error: errorResult,
-        errorType,
-        provider: ModelProvider.OpenRouter,
-      });
-    }
-  }
-}
-
-export default LobeOpenRouterAI;
+      return {
+        description: model.description,
+        displayName: model.name,
+        enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.id.endsWith(m.id))?.enabled || false,
+        functionCall: model.description.includes('function calling'),
+        id: model.id,
+        maxTokens:
+          typeof model.top_provider.max_completion_tokens === 'number'
+            ? model.top_provider.max_completion_tokens
+            : undefined,
+        tokens: model.context_length,
+        vision: model.description.includes('vision') || model.id.includes('vision'),
+      };
+    },
+  },
+  provider: ModelProvider.OpenRouter,
+});

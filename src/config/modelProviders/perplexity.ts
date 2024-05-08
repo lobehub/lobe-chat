@@ -1,31 +1,29 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://docs.perplexity.ai/docs/model-cards
 const Perplexity: ModelProviderCard = {
   chatModels: [
     {
       displayName: 'Perplexity 7B Chat',
-      id: 'pplx-7b-chat',
-      tokens: 8192,
+      id: 'sonar-small-chat',
+      tokens: 16_384,
     },
     {
-      displayName: 'Perplexity 70B Chat',
-      id: 'pplx-70b-chat',
-      tokens: 8192,
+      displayName: 'Perplexity 8x7B Chat',
+      enabled: true,
+      id: 'sonar-medium-chat',
+      tokens: 16_384,
     },
     {
       displayName: 'Perplexity 7B Online',
-      id: 'pplx-7b-online',
-      tokens: 8192,
+      id: 'sonar-small-online',
+      tokens: 12_000,
     },
     {
-      displayName: 'Perplexity 70B Online',
-      id: 'pplx-70b-online',
-      tokens: 8192,
-    },
-    {
-      displayName: 'Codellama 34B Instruct',
-      id: 'codellama-34b-instruct',
-      tokens: 16_384,
+      displayName: 'Perplexity 8x7B Online',
+      enabled: true,
+      id: 'sonar-medium-online',
+      tokens: 12_000,
     },
     {
       displayName: 'Codellama 70B Instruct',
@@ -33,9 +31,14 @@ const Perplexity: ModelProviderCard = {
       tokens: 16_384,
     },
     {
+      displayName: 'Mistral 7B Instruct',
+      id: 'mistral-7b-instruc',
+      tokens: 16_384,
+    },
+    {
       displayName: 'Mixtral 8x7B Instruct',
       id: 'mixtral-8x7b-instruct',
-      tokens: 8192,
+      tokens: 16_384,
     },
   ],
   id: 'perplexity',

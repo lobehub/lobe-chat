@@ -1,29 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modello personalizzato, di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Si prega di verificare l'effettiva disponibilità di tali funzionalità in base alle esigenze specifiche.",
-      "file": "Questo modello supporta il caricamento e il riconoscimento dei file",
-      "functionCall": "Questo modello supporta la chiamata di funzioni (Function Call)",
-      "tokens": "Questo modello supporta un massimo di {{tokens}} token per singola sessione",
-      "vision": "Questo modello supporta il riconoscimento visivo"
-    }
-  },
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
-  "agentMaxToken": "Massima lunghezza della sessione",
-  "agentModel": "Modello",
-  "agentProfile": "Profilo assistente",
   "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
-  "archive": "Archivio",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
+  "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
+  "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "close": "Chiudi",
-  "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente. Una volta eliminato, non sarà possibile recuperarlo. Confermi l'operazione?",
   "copy": "Copia",
   "copyFail": "Copia non riuscita",
   "copySuccess": "Copia riuscita",
+  "dataStatistics": {
+    "messages": "Messaggi",
+    "sessions": "Sessioni",
+    "today": "Oggi",
+    "topics": "Argomenti"
+  },
   "defaultAgent": "Assistente predefinito",
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",
@@ -40,6 +34,8 @@
     "globalSetting": "Esporta impostazioni globali"
   },
   "feedback": "Feedback e suggerimenti",
+  "follow": "Seguici su {{name}}",
+  "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
@@ -64,6 +60,7 @@
   },
   "lang": {
     "ar": "Arabo",
+    "bg-BG": "bulgaro",
     "bn": "Bengalese",
     "cs-CZ": "Ceco",
     "da-DK": "Danese",
@@ -99,27 +96,14 @@
     "zh-TW": "Cinese tradizionale"
   },
   "layoutInitializing": "Inizializzazione layout in corso...",
-  "modelProvider": {
-    "anthropic": "Antropico",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Nessuna descrizione disponibile",
   "oauth": "Accesso SSO",
+  "officialSite": "Sito ufficiale",
   "ok": "OK",
   "password": "Password",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio",
+  "privacy": "Informativa sulla privacy",
   "regenerate": "Rigenera",
   "rename": "Rinomina",
   "reset": "Ripristina",
@@ -128,9 +112,43 @@
   "setting": "Impostazioni",
   "share": "Condividi",
   "stop": "Ferma",
+  "sync": {
+    "actions": {
+      "settings": "Impostazioni di sincronizzazione",
+      "sync": "Sincronizza ora"
+    },
+    "awareness": {
+      "current": "Dispositivo corrente"
+    },
+    "channel": "Canale",
+    "disabled": {
+      "actions": {
+        "enable": "Abilita la sincronizzazione cloud",
+        "settings": "Configura le impostazioni di sincronizzazione"
+      },
+      "desc": "I dati della sessione corrente sono memorizzati solo in questo browser. Se hai bisogno di sincronizzare i dati tra più dispositivi, configura e abilita la sincronizzazione cloud.",
+      "title": "Sincronizzazione dati disabilitata"
+    },
+    "enabled": {
+      "title": "Sincronizzazione dati"
+    },
+    "status": {
+      "connecting": "Connessione in corso",
+      "disabled": "Sincronizzazione disabilitata",
+      "ready": "Pronto",
+      "synced": "Sincronizzato",
+      "syncing": "Sincronizzazione in corso",
+      "unconnected": "Connessione non riuscita"
+    },
+    "title": "Stato di sincronizzazione",
+    "unconnected": {
+      "tip": "Connessione al server di segnalazione non riuscita. Impossibile stabilire un canale di comunicazione punto a punto. Controlla la rete e riprova."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Scopri",
+    "me": "io",
     "setting": "Impostazioni"
   },
   "telemetry": {
@@ -141,10 +159,27 @@
     "title": "Aiuta LobeChat a migliorare"
   },
   "temp": "Temporaneo",
+  "terms": "Termini di servizio",
   "updateAgent": "Aggiorna informazioni agente",
   "upgradeVersion": {
     "action": "Aggiorna",
     "hasNew": "Nuovo aggiornamento disponibile",
     "newVersion": "Nuova versione disponibile: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Utente Anonimo",
+    "billing": "Gestione fatturazione",
+    "defaultNickname": "Utente Community",
+    "discord": "Supporto della community",
+    "docs": "Documentazione",
+    "email": "Supporto via email",
+    "feedback": "Feedback e suggerimenti",
+    "help": "Centro assistenza",
+    "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
+    "plans": "Piani di abbonamento",
+    "preview": "Anteprima",
+    "profile": "Gestione account",
+    "setting": "Impostazioni app",
+    "usages": "Statistiche di utilizzo"
   }
 }

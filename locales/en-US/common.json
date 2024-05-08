@@ -1,29 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
-      "file": "This model supports file upload for reading and recognition",
-      "functionCall": "This model supports function call.",
-      "tokens": "This model supports a maximum of {{tokens}} tokens per session.",
-      "vision": "This model supports visual recognition."
-    }
-  },
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "agentMaxToken": "Max Session Length",
-  "agentModel": "Model",
-  "agentProfile": "Agent Profile",
   "appInitializing": "LobeChat is initializing, please wait...",
-  "archive": "Archive",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
-  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your action.",
   "copy": "Copy",
   "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
+  "dataStatistics": {
+    "messages": "Messages",
+    "sessions": "Assistants",
+    "today": "Today's New",
+    "topics": "Topics"
+  },
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
   "delete": "Delete",
@@ -40,6 +34,8 @@
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
+  "follow": "Follow us on {{name}}",
+  "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
@@ -64,6 +60,7 @@
   },
   "lang": {
     "ar": "Arabic",
+    "bg-BG": "Bulgarian",
     "bn": "Bengali",
     "cs-CZ": "Czech",
     "da-DK": "Danish",
@@ -99,27 +96,14 @@
     "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "No description available",
   "oauth": "SSO Login",
+  "officialSite": "Official Website",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Privacy Policy",
   "regenerate": "Regenerate",
   "rename": "Rename",
   "reset": "Reset",
@@ -128,9 +112,43 @@
   "setting": "Settings",
   "share": "Share",
   "stop": "Stop",
+  "sync": {
+    "actions": {
+      "settings": "Sync Settings",
+      "sync": "Sync Now"
+    },
+    "awareness": {
+      "current": "Current Device"
+    },
+    "channel": "Channel",
+    "disabled": {
+      "actions": {
+        "enable": "Enable Cloud Sync",
+        "settings": "Sync Settings"
+      },
+      "desc": "Current session data is only stored in this browser. If you need to sync data across multiple devices, please configure and enable cloud sync.",
+      "title": "Data Sync Disabled"
+    },
+    "enabled": {
+      "title": "Data Sync Enabled"
+    },
+    "status": {
+      "connecting": "Connecting",
+      "disabled": "Sync Disabled",
+      "ready": "Connected",
+      "synced": "Synced",
+      "syncing": "Syncing",
+      "unconnected": "Connection Failed"
+    },
+    "title": "Sync Status",
+    "unconnected": {
+      "tip": "Signaling server connection failed, and peer-to-peer communication channel cannot be established. Please check the network and try again."
+    }
+  },
   "tab": {
     "chat": "Chat",
     "market": "Discover",
+    "me": "Me",
     "setting": "Settings"
   },
   "telemetry": {
@@ -141,10 +159,27 @@
     "title": "Help LobeChat be better"
   },
   "temp": "Temporary",
+  "terms": "Terms of Service",
   "updateAgent": "Update Agent Information",
   "upgradeVersion": {
     "action": "Upgrade",
     "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonymous User",
+    "billing": "Billing Management",
+    "defaultNickname": "Community User",
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback and Suggestions",
+    "help": "Help Center",
+    "moveGuide": "The settings button has been moved here",
+    "plans": "Subscription Plans",
+    "preview": "Preview",
+    "profile": "Account Management",
+    "setting": "App Settings",
+    "usages": "Usage Statistics"
   }
 }

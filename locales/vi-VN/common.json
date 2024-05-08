@@ -1,29 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Chọn mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện thị giác, vui lòng xác minh khả năng sử dụng của các tính năng trên dựa trên tình hình thực tế",
-      "file": "Mô hình này hỗ trợ tải lên tệp để đọc và nhận dạng",
-      "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
-      "tokens": "Mô hình này hỗ trợ tối đa {{tokens}} Tokens cho mỗi phiên",
-      "vision": "Mô hình này hỗ trợ nhận diện thị giác"
-    }
-  },
   "about": "Giới thiệu",
   "advanceSettings": "Cài đặt nâng cao",
-  "agentMaxToken": "Số ký tự tối đa của phiên",
-  "agentModel": "Mô hình",
-  "agentProfile": "Hồ sơ trợ lý",
   "appInitializing": "LobeChat đang khởi động, vui lòng chờ...",
-  "archive": "Lưu trữ",
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
+  "autoGenerateTooltipDisabled": "Vui lòng nhập từ gợi ý trước khi sử dụng tính năng tự động hoàn thành",
+  "blog": "Blog sản phẩm",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
   "close": "Đóng",
-  "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Sau khi xóa, bạn sẽ không thể khôi phục. Vui lòng xác nhận hành động của bạn",
   "copy": "Sao chép",
   "copyFail": "Sao chép thất bại",
   "copySuccess": "Sao chép thành công",
+  "dataStatistics": {
+    "messages": "Tin nhắn",
+    "sessions": "Phiên làm việc",
+    "today": "Hôm nay",
+    "topics": "Chủ đề"
+  },
   "defaultAgent": "Trợ lý mặc định",
   "defaultSession": "Phiên mặc định",
   "delete": "Xóa",
@@ -40,6 +34,8 @@
     "globalSetting": "Xuất cài đặt toàn cầu"
   },
   "feedback": "Phản hồi và đề xuất",
+  "follow": "Theo dõi chúng tôi trên {{name}}",
+  "fullscreen": "Chế độ toàn màn hình",
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
   "importModal": {
@@ -64,6 +60,7 @@
   },
   "lang": {
     "ar": "Tiếng Ả Rập",
+    "bg-BG": "Tiếng Bun-ga-ri",
     "bn": "Tiếng Bengal",
     "cs-CZ": "Tiếng Séc",
     "da-DK": "Tiếng Đan Mạch",
@@ -99,27 +96,14 @@
     "zh-TW": "Tiếng Trung (phồn thể)"
   },
   "layoutInitializing": "Đang tải bố cục...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity AI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Chưa có mô tả",
   "oauth": "Đăng nhập SSO",
+  "officialSite": "Trang web chính thức",
   "ok": "Đồng ý",
   "password": "Mật khẩu",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
+  "privacy": "Chính sách bảo mật",
   "regenerate": "Tạo lại",
   "rename": "Đổi tên",
   "reset": "Đặt lại",
@@ -128,9 +112,43 @@
   "setting": "Cài đặt",
   "share": "Chia sẻ",
   "stop": "Dừng",
+  "sync": {
+    "actions": {
+      "settings": "Cài đặt đồng bộ hóa",
+      "sync": "Đồng bộ ngay"
+    },
+    "awareness": {
+      "current": "Thiết bị hiện tại"
+    },
+    "channel": "Kênh",
+    "disabled": {
+      "actions": {
+        "enable": "Bật đồng bộ hóa đám mây",
+        "settings": "Cấu hình tham số đồng bộ hóa"
+      },
+      "desc": "Dữ liệu phiên hiện tại chỉ lưu trữ trong trình duyệt này. Nếu bạn cần đồng bộ dữ liệu qua nhiều thiết bị, vui lòng cấu hình và bật đồng bộ hóa đám mây.",
+      "title": "Dữ liệu chưa được đồng bộ hóa"
+    },
+    "enabled": {
+      "title": "Đồng bộ dữ liệu"
+    },
+    "status": {
+      "connecting": "Đang kết nối",
+      "disabled": "Đồng bộ hóa chưa được bật",
+      "ready": "Đã kết nối",
+      "synced": "Đã đồng bộ",
+      "syncing": "Đang đồng bộ",
+      "unconnected": "Kết nối không thành công"
+    },
+    "title": "Trạng thái đồng bộ hóa",
+    "unconnected": {
+      "tip": "Kết nối đến máy chủ tín hiệu thất bại, không thể thiết lập kênh truyền thông điểm-điểm, vui lòng kiểm tra lại mạng và thử lại"
+    }
+  },
   "tab": {
     "chat": "Trò chuyện",
     "market": "Thị trường",
+    "me": "Tôi",
     "setting": "Cài đặt"
   },
   "telemetry": {
@@ -141,10 +159,27 @@
     "title": "Hỗ trợ LobeChat hoạt động tốt hơn"
   },
   "temp": "Tạm thời",
+  "terms": "Điều khoản dịch vụ",
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upgradeVersion": {
     "action": "Nâng cấp",
     "hasNew": "Có bản cập nhật mới",
     "newVersion": "Có phiên bản mới: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Người dùng ẩn danh",
+    "billing": "Quản lý hóa đơn",
+    "defaultNickname": "Người dùng phiên bản cộng đồng",
+    "discord": "Hỗ trợ cộng đồng",
+    "docs": "Tài liệu sử dụng",
+    "email": "Hỗ trợ qua email",
+    "feedback": "Phản hồi và đề xuất",
+    "help": "Trung tâm trợ giúp",
+    "moveGuide": "Đã di chuyển nút cài đặt đến đây",
+    "plans": "Kế hoạch đăng ký",
+    "preview": "Phiên bản xem trước",
+    "profile": "Quản lý tài khoản",
+    "setting": "Cài đặt ứng dụng",
+    "usages": "Thống kê sử dụng"
   }
 }
