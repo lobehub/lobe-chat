@@ -4,6 +4,7 @@ export default {
   appInitializing: 'LobeChat 启动中，请耐心等待...',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
+  autoGenerateTooltipDisabled: '请填写提示词后使用自动补全功能',
   blog: '产品博客',
   cancel: '取消',
   changelog: '更新日志',
@@ -11,6 +12,12 @@ export default {
   copy: '复制',
   copyFail: '复制失败',
   copySuccess: '复制成功',
+  dataStatistics: {
+    messages: '消息',
+    sessions: '助手',
+    today: '今日新增',
+    topics: '话题',
+  },
   defaultAgent: '自定义助手',
   defaultSession: '自定义助手',
   delete: '删除',
@@ -28,8 +35,9 @@ export default {
   },
   feedback: '反馈与建议',
   follow: '在 {{name}} 上关注我们',
-  historyRange: '历史范围',
+  fullscreen: '全屏模式',
 
+  historyRange: '历史范围',
   import: '导入配置',
   importModal: {
     finish: {
@@ -133,8 +141,10 @@ export default {
   tab: {
     chat: '会话',
     market: '发现',
+    me: '我',
     setting: '设置',
   },
+
   telemetry: {
     allow: '允许',
     deny: '拒绝',
@@ -142,7 +152,6 @@ export default {
     learnMore: '了解更多',
     title: '帮助 LobeChat 做得更好',
   },
-
   temp: '临时',
   terms: '服务条款',
   updateAgent: '更新助理信息',
@@ -150,5 +159,21 @@ export default {
     action: '升级',
     hasNew: '有可用更新',
     newVersion: '有新版本可用：{{version}}',
+  },
+  userPanel: {
+    anonymousNickName: '匿名用户',
+    billing: '账单管理',
+    defaultNickname: '社区版用户',
+    discord: '社区支持',
+    docs: '使用文档',
+    email: '邮件支持',
+    feedback: '反馈与建议',
+    help: '帮助中心',
+    moveGuide: '设置按钮搬到这里啦',
+    plans: '订阅方案',
+    preview: '预览版',
+    profile: '账户管理',
+    setting: '应用设置',
+    usages: '用量统计',
   },
 };

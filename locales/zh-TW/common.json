@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat 初始化中，請耐心等候...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
+  "autoGenerateTooltipDisabled": "請填寫提示詞後使用自動補全功能",
   "blog": "產品部落格",
   "cancel": "取消",
   "changelog": "變更日誌",
@@ -11,6 +12,12 @@
   "copy": "複製",
   "copyFail": "複製失敗",
   "copySuccess": "複製成功",
+  "dataStatistics": {
+    "messages": "消息",
+    "sessions": "助手",
+    "today": "今日新增",
+    "topics": "話題"
+  },
   "defaultAgent": "預設助手",
   "defaultSession": "預設助手",
   "delete": "刪除",
@@ -28,6 +35,7 @@
   },
   "feedback": "回饋與建議",
   "follow": "在 {{name}} 上關注我們",
+  "fullscreen": "全螢幕模式",
   "historyRange": "歷史範圍",
   "import": "匯入設定",
   "importModal": {
@@ -140,6 +148,7 @@
   "tab": {
     "chat": "對話",
     "market": "發現",
+    "me": "我",
     "setting": "設定"
   },
   "telemetry": {
@@ -156,5 +165,21 @@
     "action": "升級",
     "hasNew": "有可用更新",
     "newVersion": "有新版本可用：{{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "匿名使用者",
+    "billing": "帳單管理",
+    "defaultNickname": "社群版使用者",
+    "discord": "社區支援",
+    "docs": "使用文件",
+    "email": "郵件支援",
+    "feedback": "反饋與建議",
+    "help": "幫助中心",
+    "moveGuide": "設置按鈕搬到這裡啦",
+    "plans": "訂閱方案",
+    "preview": "預覽",
+    "profile": "帳戶管理",
+    "setting": "應用設定",
+    "usages": "用量統計"
   }
 }

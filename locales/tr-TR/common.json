@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
   "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
@@ -11,6 +12,12 @@
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
+  "dataStatistics": {
+    "messages": "Mesajlar",
+    "sessions": "Oturumlar",
+    "today": "Bugün",
+    "topics": "Konular"
+  },
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
@@ -28,6 +35,7 @@
   },
   "feedback": "Feedback",
   "follow": "Bizi {{name}} üzerinde takip edin",
+  "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
   "importModal": {
@@ -140,6 +148,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Keşfet",
+    "me": "ben",
     "setting": "Ayarlar"
   },
   "telemetry": {
@@ -156,5 +165,21 @@
     "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
     "newVersion": "Yeni sürüm mevcut: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonim Kullanıcı",
+    "billing": "Fatura Yönetimi",
+    "defaultNickname": "Topluluk Kullanıcısı",
+    "discord": "Topluluk Destek",
+    "docs": "Belgeler",
+    "email": "E-posta Destek",
+    "feedback": "Geribildirim ve Öneriler",
+    "help": "Yardım Merkezi",
+    "moveGuide": "Ayarlar düğmesini buraya taşıyın",
+    "plans": "Planlar",
+    "preview": "Önizleme",
+    "profile": "Hesap Yönetimi",
+    "setting": "Uygulama Ayarları",
+    "usages": "Kullanım İstatistikleri"
   }
 }

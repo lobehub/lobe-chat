@@ -4,6 +4,7 @@
   "appInitializing": "جاري تهيئة LobeChat، يرجى الانتظار ...",
   "autoGenerate": "توليد تلقائي",
   "autoGenerateTooltip": "إكمال تلقائي بناءً على الكلمات المقترحة لوصف المساعد",
+  "autoGenerateTooltipDisabled": "الرجاء إدخال كلمة تلميح قبل تفعيل وظيفة الإكمال التلقائي",
   "blog": "مدونة المنتجات",
   "cancel": "إلغاء",
   "changelog": "سجل التغييرات",
@@ -11,6 +12,12 @@
   "copy": "نسخ",
   "copyFail": "فشل في النسخ",
   "copySuccess": "تم النسخ بنجاح",
+  "dataStatistics": {
+    "messages": "رسائل",
+    "sessions": "جلسات",
+    "today": "اليوم",
+    "topics": "مواضيع"
+  },
   "defaultAgent": "مساعد افتراضي",
   "defaultSession": "جلسة افتراضية",
   "delete": "حذف",
@@ -28,6 +35,7 @@
   },
   "feedback": "تقديم ملاحظات",
   "follow": "تابعنا على {{name}}",
+  "fullscreen": "وضع كامل الشاشة",
   "historyRange": "نطاق التاريخ",
   "import": "استيراد الإعدادات",
   "importModal": {
@@ -140,6 +148,7 @@
   "tab": {
     "chat": "الدردشة",
     "market": "الاكتشاف",
+    "me": "أنا",
     "setting": "الإعدادات"
   },
   "telemetry": {
@@ -156,5 +165,21 @@
     "action": "ترقية",
     "hasNew": "يوجد تحديث متاح",
     "newVersion": "هناك إصدار جديد متاح: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "مستخدم مجهول",
+    "billing": "إدارة الفواتير",
+    "defaultNickname": "مستخدم النسخة المجتمعية",
+    "discord": "الدعم المجتمعي",
+    "docs": "وثائق الاستخدام",
+    "email": "الدعم عبر البريد الإلكتروني",
+    "feedback": "تقديم ملاحظات واقتراحات",
+    "help": "مركز المساعدة",
+    "moveGuide": "تم نقل زر الإعدادات إلى هنا",
+    "plans": "خطط الاشتراك",
+    "preview": "المعاينة",
+    "profile": "إدارة الحساب",
+    "setting": "إعدادات التطبيق",
+    "usages": "إحصاءات الاستخدام"
   }
 }

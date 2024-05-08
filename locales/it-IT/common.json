@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
+  "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
   "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
@@ -11,6 +12,12 @@
   "copy": "Copia",
   "copyFail": "Copia non riuscita",
   "copySuccess": "Copia riuscita",
+  "dataStatistics": {
+    "messages": "Messaggi",
+    "sessions": "Sessioni",
+    "today": "Oggi",
+    "topics": "Argomenti"
+  },
   "defaultAgent": "Assistente predefinito",
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",
@@ -28,6 +35,7 @@
   },
   "feedback": "Feedback e suggerimenti",
   "follow": "Seguici su {{name}}",
+  "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
@@ -140,6 +148,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Scopri",
+    "me": "io",
     "setting": "Impostazioni"
   },
   "telemetry": {
@@ -156,5 +165,21 @@
     "action": "Aggiorna",
     "hasNew": "Nuovo aggiornamento disponibile",
     "newVersion": "Nuova versione disponibile: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Utente Anonimo",
+    "billing": "Gestione fatturazione",
+    "defaultNickname": "Utente Community",
+    "discord": "Supporto della community",
+    "docs": "Documentazione",
+    "email": "Supporto via email",
+    "feedback": "Feedback e suggerimenti",
+    "help": "Centro assistenza",
+    "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
+    "plans": "Piani di abbonamento",
+    "preview": "Anteprima",
+    "profile": "Gestione account",
+    "setting": "Impostazioni app",
+    "usages": "Statistiche di utilizzo"
   }
 }

@@ -1,49 +1,30 @@
-import { createStyles } from 'antd-style';
-import { ReactNode, Suspense, lazy, memo } from 'react';
+import { Suspense, lazy } from 'react';
 import { Flexbox } from 'react-layout-kit';
-
-import ChatHydration from '@/components/StoreHydration/ChatHydration';
 
 import SkeletonList from './components/SkeletonList';
 
 const ChatList = lazy(() => import('./components/VirtualizedList'));
 
-const useStyles = createStyles(
-  ({ css, responsive }) => css`
-    position: relative;
-    overflow-y: auto;
-    height: 100%;
-
-    ${responsive.mobile} {
-      width: 100%;
-    }
-  `,
-);
-
 interface ConversationProps {
-  chatInput: ReactNode;
   mobile?: boolean;
 }
 
-const Conversation = memo<ConversationProps>(({ chatInput, mobile }) => {
-  const { styles } = useStyles();
-
+const Conversation = ({ mobile }: ConversationProps) => {
   return (
     <Flexbox
       flex={1}
-      height={'100%'}
-      // `relative` is required, ChatInput's absolute position needs it
-      style={{ position: 'relative' }}
+      style={{
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        position: 'relative',
+      }}
+      width={'100%'}
     >
-      <div className={styles}>
-        <Suspense fallback={<SkeletonList mobile={mobile} />}>
-          <ChatList mobile={mobile} />
-        </Suspense>
-      </div>
-      {chatInput}
-      <ChatHydration />
+      <Suspense fallback={<SkeletonList mobile={mobile} />}>
+        <ChatList mobile={mobile} />
+      </Suspense>
     </Flexbox>
   );
-});
+};
 
 export default Conversation;

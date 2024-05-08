@@ -1,26 +1,28 @@
-'use client';
-
-import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ClientResponsiveLayout from '@/components/client/ClientResponsiveLayout';
+import Migration from '../../features/Migration';
+import { LayoutProps } from '../type';
+import SessionPanel from './SessionPanel';
 
-import ResponsiveSessionList from './SessionList';
-
-const Desktop = memo(({ children }: PropsWithChildren) => {
+const Layout = ({ children, session }: LayoutProps) => {
   return (
     <>
-      <ResponsiveSessionList />
       <Flexbox
-        flex={1}
         height={'100%'}
-        id={'lobe-conversion-container'}
-        style={{ position: 'relative' }}
+        horizontal
+        style={{ maxWidth: 'calc(100vw - 64px)', overflow: 'hidden', position: 'relative' }}
+        width={'100%'}
       >
-        {children}
+        <SessionPanel>{session}</SessionPanel>
+        <Flexbox flex={1} style={{ overflow: 'hidden', position: 'relative' }}>
+          {children}
+        </Flexbox>
       </Flexbox>
+      <Migration />
     </>
   );
-});
+};
 
-export default ClientResponsiveLayout({ Desktop, Mobile: () => import('../Mobile') });
+Layout.displayName = 'DesktopChatLayout';
+
+export default Layout;

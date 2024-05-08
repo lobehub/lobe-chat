@@ -1,24 +1,23 @@
-'use client';
+import { authEnv } from '@/config/auth';
+import { getServerConfig } from '@/config/server';
 
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import Common from './features/Common';
+import Theme from './features/Theme';
 
-import PageTitle from '@/components/PageTitle';
-import { CURRENT_VERSION } from '@/const/version';
-
-import Footer from '../features/Footer';
-import Common, { SettingsCommonProps } from './Common';
-import Theme from './Theme';
-
-export default memo<SettingsCommonProps>((props) => {
-  const { t } = useTranslation('setting');
+const Page = () => {
+  const { SHOW_ACCESS_CODE_CONFIG } = getServerConfig();
 
   return (
     <>
-      <PageTitle title={t('tab.common')} />
       <Theme />
-      <Common {...props} />
-      <Footer>LobeChat v{CURRENT_VERSION}</Footer>
+      <Common
+        showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG}
+        showOAuthLogin={authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH}
+      />
     </>
   );
-});
+};
+
+Page.displayName = 'CommonSetting';
+
+export default Page;
