@@ -31,11 +31,12 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
 
-  const handleExpand: DraggablePanelProps['onExpandChange'] = (expand) => {
+  const handleExpand: DraggablePanelProps['onExpandChange'] = (e) => {
     updatePreference({
-      sessionsWidth: expand ? 320 : 0,
-      showSessionPanel: expand,
+      sessionsWidth: e ? 320 : 0,
+      showSessionPanel: e,
     });
+    setExpand(e);
   };
 
   const handleSizeChange: DraggablePanelProps['onSizeChange'] = (_, size) => {
