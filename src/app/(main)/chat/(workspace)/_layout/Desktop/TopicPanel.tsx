@@ -33,6 +33,11 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   ]);
   const [expand, setExpand] = useState(showAgentSettings);
 
+  const handleExpand = (e: boolean) => {
+    toggleConfig(e);
+    setExpand(e);
+  };
+
   useLayoutEffect(() => {
     if (!isPreferenceInit) return;
     setExpand(showAgentSettings);
@@ -52,7 +57,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
       expand={expand}
       minWidth={CHAT_SIDEBAR_WIDTH}
       mode={md ? 'fixed' : 'float'}
-      onExpandChange={toggleConfig}
+      onExpandChange={handleExpand}
       placement={'right'}
       showHandlerWideArea={false}
     >
