@@ -12,6 +12,12 @@
   "copy": "コピー",
   "copyFail": "コピーに失敗しました",
   "copySuccess": "コピーが成功しました",
+  "dataStatistics": {
+    "messages": "メッセージ",
+    "sessions": "セッション",
+    "today": "今日の追加",
+    "topics": "トピック"
+  },
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",
   "delete": "削除",

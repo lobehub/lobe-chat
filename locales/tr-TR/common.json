@@ -12,6 +12,12 @@
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
+  "dataStatistics": {
+    "messages": "Mesajlar",
+    "sessions": "Oturumlar",
+    "today": "Bugün",
+    "topics": "Konular"
+  },
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",

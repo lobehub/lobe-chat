@@ -1,5 +1,6 @@
 import { Mock, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { SessionModel } from '@/database/client/models/session';
 import { CreateTopicParams, TopicModel } from '@/database/client/models/topic';
 import { ChatTopic } from '@/types/topic';
 
@@ -13,6 +14,7 @@ vi.mock('@/database/client/models/topic', () => {
       create: vi.fn(),
       query: vi.fn(),
       delete: vi.fn(),
+      count: vi.fn(),
       batchDeleteBySessionId: vi.fn(),
       batchDelete: vi.fn(),
       clearTable: vi.fn(),
@@ -212,6 +214,32 @@ describe('TopicService', () => {
       // Assert
       expect(TopicModel.queryByKeyword).toHaveBeenCalledWith(keyword, undefined);
       expect(result).toBe(mockTopics);
+    });
+  });
+
+  describe('countTopics', () => {
+    it('should return false if no topics exist', async () => {
+      // Setup
+      (TopicModel.count as Mock).mockResolvedValue(0);
+
+      // Execute
+      const result = await topicService.countTopics();
+
+      // Assert
+      expect(TopicModel.count).toHaveBeenCalled();
+      expect(result).toBe(0);
+    });
+
+    it('should return true if topics exist', async () => {
+      // Setup
+      (TopicModel.count as Mock).mockResolvedValue(1);
+
+      // Execute
+      const result = await topicService.countTopics();
+
+      // Assert
+      expect(TopicModel.count).toHaveBeenCalled();
+      expect(result).toBe(1);
     });
   });
 });
