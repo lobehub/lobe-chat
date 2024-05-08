@@ -17,19 +17,12 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### 通用设置
 
-#### `NEXTAUTH_SECRET`
+#### `NEXT_AUTH_SECRET`
 
 - 类型：必选
 - 描述：用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`.
 - 默认值: `-`
 - 示例: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
-
-#### `NEXTAUTH_URL`
-
-- 类型：可选
-- 描述：该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，在 Vercel 上部署时无需设置。
-- 默认值：`-`
-- 示例：`https://example.com/api/auth`
 
 #### `NEXT_AUTH_SSO_PROVIDERS`
 
@@ -37,6 +30,13 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 - 描述：选择 LoboChat 的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,azure-ad,authentik`
 - 默认值: `auth0`
 - 示例: `auth0,azure-ad,authentik`
+
+#### `NEXTAUTH_URL`
+
+- 类型：可选
+- 描述：该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，在 Vercel 上部署时无需设置。
+- 默认值：`-`
+- 示例：`https://example.com/api/auth`
 
 ### Auth0
 
@@ -65,21 +65,21 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 #### `AZURE_AD_CLIENT_ID`
 
-- 类型：必需
+- 类型：必选
 - 描述：Microsoft Entra ID 应用程序的客户端 ID。
 - 默认值：`-`
 - 示例：`be8f6da1-58c3-4f16-ff1b-78f5148e10df`
 
 #### `AZURE_AD_CLIENT_SECRET`
 
-- 类型：必需
+- 类型：必选
 - 描述：Microsoft Entra ID 应用程序的客户端密钥。
 - 默认值：`-`
 - 示例：`~gI8Q.pTiN1vwB6Gl.E1yFT1ojcXABkdACfJXaNj`
 
 #### `AZURE_AD_TENANT_ID`
 
-- 类型：必需
+- 类型：必选
 - 描述：Microsoft Entra ID 应用程序的租户 ID。
 - 默认值：`-`
 - 示例：`c8ae2f36-edf6-4cda-96b9-d3e198a47cba`

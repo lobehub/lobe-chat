@@ -58,30 +58,31 @@
         },
         "files": {
           "extra": "Currently, the file upload implementation in LobeChat is just a temporary solution and is for self-exploration only. Please wait for the full file upload capability in the future.",
-          "title": "Support File Upload"
+          "title": "Ondersteuning voor het uploaden van bestanden"
         },
         "functionCall": {
-          "extra": "This configuration will only enable the function call capability in LobeChat. Whether function calls are supported depends entirely on the model itself. Please test the availability of function calls of this model on your own.",
-          "title": "Support Function Call"
+          "extra": "Deze configuratie schakelt alleen de functieaanroepmogelijkheid in LobeChat in. Of functieaanroepen worden ondersteund, hangt volledig af van het model zelf. Test zelf de beschikbaarheid van functieaanroepen van dit model.",
+          "title": "Ondersteuningsfunctie Oproep"
         },
         "id": {
-          "extra": "Will be displayed as the model tag",
-          "placeholder": "Please enter the model ID, for example gpt-4-turbo-preview or claude-2.1",
+          "extra": "Wordt weergegeven als de modeltag",
+          "placeholder": "Voer de model ID in, bijvoorbeeld gpt-4-turbo-preview of claude-2.1",
           "title": "Model ID"
         },
-        "modalTitle": "Custom Model Configuration",
+        "modalTitle": "Aangepaste modelconfiguratie",
         "tokens": {
-          "title": "Maximum Token Count"
+          "title": "Maximaal tokenaantal",
+          "unlimited": "onbeperkt"
         },
         "vision": {
-          "extra": "This configuration will only enable the image upload feature in LobeChat. Whether image recognition is supported depends entirely on the model itself. Please test the availability of visual recognition capability of this model on your own.",
-          "title": "Support Visual Recognition"
+          "extra": "Deze configuratie schakelt alleen de configuratie voor het uploaden van afbeeldingen in LobeChat in. Of herkenning wordt ondersteund, hangt volledig af van het model zelf. Test zelf de beschikbaarheid van visuele herkenning in dit model.",
+          "title": "Ondersteuning van visuele herkenning"
         }
       }
     },
     "fetchOnClient": {
-      "desc": "使用客户端请求模式将直接从浏览器发起会话请求，可提升响应速度",
-      "title": "使用客户端请求模式"
+      "desc": "De ophaalmodus aan de clientzijde initieert sessieverzoeken rechtstreeks vanuit de browser, waardoor de reactiesnelheid wordt verbeterd.",
+      "title": "Gebruik de ophaalmodus aan de clientzijde"
     },
     "fetcher": {
       "fetch": "Haal model lijst op",

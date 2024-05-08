@@ -106,7 +106,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
         // skip if the id already exists
         if (await this.table.get(id)) {
-          skips.push(id);
+          skips.push(id as string);
           continue;
         }
 

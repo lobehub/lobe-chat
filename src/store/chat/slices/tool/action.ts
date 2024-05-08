@@ -81,6 +81,6 @@ export const chatToolSlice: StateCreator<
     const data: DallEImageItem[] = JSON.parse(message.content);
 
     const nextContent = produce(data, updater);
-    await get().internalUpdateMessageContent(id, JSON.stringify(nextContent));
+    await get().internal_updateMessageContent(id, JSON.stringify(nextContent));
   },
 });

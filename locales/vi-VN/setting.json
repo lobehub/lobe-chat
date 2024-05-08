@@ -71,7 +71,8 @@
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
         "tokens": {
-          "title": "Số lượng token tối đa"
+          "title": "Số lượng token tối đa",
+          "unlimited": "vô hạn"
         },
         "vision": {
           "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong LobeChat, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng nhận diện hình ảnh của mô hình",

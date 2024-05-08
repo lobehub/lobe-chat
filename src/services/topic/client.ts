@@ -34,6 +34,10 @@ export class ClientService implements ITopicService {
     return TopicModel.queryAll();
   }
 
+  async countTopics() {
+    return TopicModel.count();
+  }
+
   async updateTopicFavorite(id: string, favorite?: boolean) {
     return this.updateTopic(id, { favorite });
   }

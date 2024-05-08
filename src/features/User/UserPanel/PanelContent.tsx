@@ -8,6 +8,7 @@ import { enableAuth } from '@/const/auth';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
+import DataStatistics from '../DataStatistics';
 import UserInfo from '../UserInfo';
 import UserLoginOrSignup from '../UserLoginOrSignup';
 import LangButton from './LangButton';
@@ -50,6 +51,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
       ) : (
         <UserLoginOrSignup onClick={handleSignIn} />
       )}
+      <DataStatistics />
       <Menu items={mainItems} onClick={closePopover} />
       <Flexbox
         align={'center'}
