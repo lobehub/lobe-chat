@@ -72,7 +72,7 @@ export interface ChatMessageAction {
   stopGenerateMessage: () => void;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
-
+  toggleMessageEditing: (id: string, editing: boolean) => void;
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
@@ -135,6 +135,18 @@ const preventLeavingFn = (e: BeforeUnloadEvent) => {
   // set returnValue to trigger alert modal
   // Note: No matter what value is set, the browser will display the standard text
   e.returnValue = '你有正在生成中的请求，确定要离开吗？';
+};
+
+const toggleBooleanList = (ids: string[], id: string, loading: boolean) => {
+  return produce(ids, (draft) => {
+    if (loading) {
+      draft.push(id);
+    } else {
+      const index = draft.indexOf(id);
+
+      if (index >= 0) draft.splice(index, 1);
+    }
+  });
 };
 
 export const chatMessage: StateCreator<
@@ -244,7 +256,13 @@ export const chatMessage: StateCreator<
 
     get().internal_traceMessage(id, { eventType: TraceEventType.CopyMessage });
   },
-
+  toggleMessageEditing: (id, editing) => {
+    set(
+      { messageEditingIds: toggleBooleanList(get().messageEditingIds, id, editing) },
+      false,
+      'toggleMessageEditing',
+    );
+  },
   stopGenerateMessage: () => {
     const { abortController, internal_toggleChatLoading } = get();
     if (!abortController) return;
@@ -518,11 +536,28 @@ export const chatMessage: StateCreator<
       window.addEventListener('beforeunload', preventLeavingFn);
 
       const abortController = new AbortController();
-      set({ abortController, chatLoadingId: id }, false, action);
+      set(
+        {
+          abortController,
+          chatLoadingIds: toggleBooleanList(get().messageLoadingIds, id!, loading),
+        },
+        false,
+        action,
+      );
 
       return abortController;
     } else {
-      set({ abortController: undefined, chatLoadingId: undefined }, false, action);
+      if (!id) {
+        set({ abortController: undefined, chatLoadingIds: [] }, false, action);
+      } else
+        set(
+          {
+            abortController: undefined,
+            chatLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
+          },
+          false,
+          action,
+        );
 
       window.removeEventListener('beforeunload', preventLeavingFn);
     }
@@ -530,15 +565,7 @@ export const chatMessage: StateCreator<
   internal_toggleMessageLoading: (loading, id) => {
     set(
       {
-        messageLoadingIds: produce(get().messageLoadingIds, (draft) => {
-          if (loading) {
-            draft.push(id);
-          } else {
-            const index = draft.indexOf(id);
-
-            if (index >= 0) draft.splice(index, 1);
-          }
-        }),
+        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
       },
       false,
       'internal_toggleMessageLoading',
