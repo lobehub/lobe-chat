@@ -169,6 +169,7 @@
   "userPanel": {
     "anonymousNickName": "Anonieme gebruiker",
     "billing": "账单管理",
+    "data": "Gegevensopslag",
     "defaultNickname": "Standaardgebruiker",
     "discord": "社区支持",
     "docs": "使用文档",
