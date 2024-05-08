@@ -10,6 +10,7 @@ import { API_ENDPOINTS } from '@/services/_url';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/slices/message/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { ChatMessageError } from '@/types/message';
@@ -51,7 +52,7 @@ const OpenaiSTT = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('chat');
 
   const [loading, updateInputMessage] = useChatStore((s) => [
-    !!s.chatLoadingId,
+    chatSelectors.isAIGenerating(s),
     s.updateInputMessage,
   ]);
 
