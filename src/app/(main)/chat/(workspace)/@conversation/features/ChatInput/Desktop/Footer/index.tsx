@@ -13,6 +13,7 @@ import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors, preferenceSelectors } from '@/store/user/selectors';
 import { isMacOS } from '@/utils/platform';
@@ -60,7 +61,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
   const { theme, styles } = useStyles();
 
   const [loading, stopGenerateMessage] = useChatStore((s) => [
-    !!s.chatLoadingId,
+    chatSelectors.isAIGenerating(s),
     s.stopGenerateMessage,
   ]);
 
