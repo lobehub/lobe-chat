@@ -26,6 +26,7 @@ const useStyles = createStyles(({ css, token }) => ({
     display: flex;
     flex-direction: column;
     align-items: center;
+
     height: 100%;
     min-height: 100dvh;
     max-height: 100dvh;

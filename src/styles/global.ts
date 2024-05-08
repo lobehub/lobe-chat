@@ -14,6 +14,7 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     height: 100%;
     min-height: 100dvh;
     max-height: 100dvh;
+
     background: ${token.colorBgLayout};
   }
 
