@@ -134,6 +134,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   );
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen2, setDropdownOpen2] = useState(false);
 
   return (
     <Flexbox
@@ -187,7 +188,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           value={title}
         />
       )}
-      {(showMore || dropdownOpen) && !editing && (
+      {(showMore || dropdownOpen || dropdownOpen2) && !editing && (
         <>
           <Dropdown
             arrow={false}
@@ -197,7 +198,13 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
                 domEvent.stopPropagation();
               },
             }}
-            onOpenChange={setDropdownOpen}
+            onOpenChange={(dropdownOpen) => {
+              if (!dropdownOpen) {
+                setTimeout(() => setDropdownOpen(dropdownOpen), 300);
+              } else {
+                setDropdownOpen(dropdownOpen);
+              }
+            }}
             trigger={['contextMenu']}
           >
             <div style={{ height: '100%', position: 'absolute', width: '100%' }}></div>
@@ -211,7 +218,13 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
                 domEvent.stopPropagation();
               },
             }}
-            onOpenChange={setDropdownOpen}
+            onOpenChange={(dropdownOpen2) => {
+              if (!dropdownOpen2) {
+                setTimeout(() => setDropdownOpen2(dropdownOpen2), 300);
+              } else {
+                setDropdownOpen2(dropdownOpen2);
+              }
+            }}
             trigger={['click']}
           >
             <ActionIcon

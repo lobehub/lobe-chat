@@ -1,5 +1,5 @@
 import { createStyles, useResponsive } from 'antd-style';
-import { memo, useState, useEffect } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
