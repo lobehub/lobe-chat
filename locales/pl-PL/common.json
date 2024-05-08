@@ -12,6 +12,12 @@
   "copy": "Kopiuj",
   "copyFail": "Nie udało się skopiować",
   "copySuccess": "Skopiowano pomyślnie",
+  "dataStatistics": {
+    "messages": "Wiadomości",
+    "sessions": "Sesje",
+    "today": "Dzisiaj",
+    "topics": "Tematy"
+  },
   "defaultAgent": "Domyślny asystent",
   "defaultSession": "Domyślna sesja",
   "delete": "Usuń",

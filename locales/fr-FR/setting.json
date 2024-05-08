@@ -71,7 +71,8 @@
         },
         "modalTitle": "Configuration du modèle personnalisé",
         "tokens": {
-          "title": "Nombre maximal de jetons"
+          "title": "Nombre maximal de jetons",
+          "unlimited": "illimité"
         },
         "vision": {
           "extra": "Cette configuration activera uniquement la configuration de téléchargement d'images dans LobeChat. La prise en charge de la reconnaissance dépend entièrement du modèle lui-même. Veuillez tester par vous-même la disponibilité de la capacité de reconnaissance visuelle de ce modèle.",
