@@ -71,7 +71,8 @@
         },
         "modalTitle": "Konfiguracja niestandardowego modelu",
         "tokens": {
-          "title": "Maksymalna liczba tokenów"
+          "title": "Maksymalna liczba tokenów",
+          "unlimited": "Nieograniczony"
         },
         "vision": {
           "extra": "Ta konfiguracja aktywuje tylko możliwość przesyłania obrazów w LobeChat. Możliwość rozpoznawania zależy wyłącznie od modelu. Proszę przetestować dostępność rozpoznawania wizyjnego tego modelu",

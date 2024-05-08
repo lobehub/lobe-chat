@@ -71,7 +71,8 @@
         },
         "modalTitle": "自定義模型配置",
         "tokens": {
-          "title": "最大 token 數"
+          "title": "最大 token 數",
+          "unlimited": "無限制"
         },
         "vision": {
           "extra": "此配置將僅開啟 LobeChat 中的圖片上傳配置，是否支持識別完全取決於模型本身，請自行測試該模型的視覺識別能力可用性",
