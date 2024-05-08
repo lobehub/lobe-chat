@@ -3,22 +3,20 @@
 import { Form, ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
 import { useThemeMode } from 'antd-style';
-import { debounce } from 'lodash-es';
 import { LayoutList, MessagesSquare } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 
 import { useStore } from '../store';
+import { useAgentSyncSettings } from '../useSyncAgemtSettings';
 
 const AgentChat = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
   const { isDarkMode } = useThemeMode();
-
   const [
     displayMode,
     enableAutoCreateTopic,
@@ -33,7 +31,7 @@ const AgentChat = memo(() => {
     s.setAgentConfig,
   ]);
 
-  useSyncSettings(form);
+  useAgentSyncSettings(form);
 
   const chat: ItemGroup = {
     children: [
@@ -125,7 +123,7 @@ const AgentChat = memo(() => {
       form={form}
       items={[chat]}
       itemsType={'group'}
-      onValuesChange={debounce(updateConfig, 100)}
+      onValuesChange={updateConfig}
       variant={'pure'}
       {...FORM_STYLE}
     />
