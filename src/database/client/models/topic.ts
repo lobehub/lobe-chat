@@ -118,6 +118,10 @@ class _TopicModel extends BaseModel {
     return this.table.get(id);
   }
 
+  async count() {
+    return this.table.count();
+  }
+
   // **************** Create *************** //
 
   async create({ title, favorite, sessionId, messages }: CreateTopicParams, id = nanoid()) {

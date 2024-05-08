@@ -12,6 +12,12 @@
   "copy": "Sao chép",
   "copyFail": "Sao chép thất bại",
   "copySuccess": "Sao chép thành công",
+  "dataStatistics": {
+    "messages": "Tin nhắn",
+    "sessions": "Phiên làm việc",
+    "today": "Hôm nay",
+    "topics": "Chủ đề"
+  },
   "defaultAgent": "Trợ lý mặc định",
   "defaultSession": "Phiên mặc định",
   "delete": "Xóa",
