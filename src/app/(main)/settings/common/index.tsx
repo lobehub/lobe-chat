@@ -1,16 +1,17 @@
-import { getServerConfig } from '@/config/server';
-import { enableNextAuth } from '@/const/auth';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import Common from './features/Common';
 import Theme from './features/Theme';
 
 const Page = () => {
-  const { SHOW_ACCESS_CODE_CONFIG } = getServerConfig();
+  const isEnableAccessCode = useServerConfigStore(serverConfigSelectors.enabledAccessCode);
+  const isEnabledOAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
 
   return (
     <>
       <Theme />
-      <Common showAccessCodeConfig={SHOW_ACCESS_CODE_CONFIG} showOAuthLogin={enableNextAuth} />
+      <Common showAccessCodeConfig={isEnableAccessCode} showOAuthLogin={isEnabledOAuth} />
     </>
   );
 };

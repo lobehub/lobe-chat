@@ -13,6 +13,7 @@ import { parseAgentConfig } from './parseDefaultAgent';
 
 export const getServerGlobalConfig = () => {
   const {
+    ACCESS_CODES,
     ENABLE_LANGFUSE,
 
     DEFAULT_AGENT_CONFIG,
@@ -48,6 +49,7 @@ export const getServerGlobalConfig = () => {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
 
+    enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
     languageModel: {
       anthropic: {
