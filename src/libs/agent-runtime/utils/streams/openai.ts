@@ -6,11 +6,12 @@ import { ChatStreamCallbacks } from '../../types';
 import { transformOpenAIStream } from './protocol';
 
 export const OpenAIStream = (
-  stream: Stream<OpenAI.ChatCompletionChunk>,
+  stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
   callbacks?: ChatStreamCallbacks,
 ) => {
-  return stream
-    .toReadableStream()
+  const readableStream = stream instanceof ReadableStream ? stream : stream.toReadableStream();
+
+  return readableStream
     .pipeThrough(
       new TransformStream({
         transform: (chunk, controller) => {
