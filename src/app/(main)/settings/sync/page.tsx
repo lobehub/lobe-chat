@@ -2,17 +2,19 @@ import { notFound } from 'next/navigation';
 
 import { serverFeatureFlags } from '@/config/server/featureFlags';
 import { translation } from '@/server/translation';
+import { ogService } from '@/services/og';
 import { gerServerDeviceInfo, isMobileDevice } from '@/utils/responsive';
 
 import Page from './index';
 
 export const generateMetadata = async () => {
   const { t } = await translation('setting');
-  return {
-    title: t('tab.sync'),
-  };
+  return ogService.generate({
+    description: t('tab.sync'),
+    title: t('header.desc'),
+    url: '/settings/sync',
+  });
 };
-
 export default () => {
   const enableWebrtc = serverFeatureFlags().enableWebrtc;
   if (!enableWebrtc) return notFound();
