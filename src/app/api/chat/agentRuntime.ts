@@ -93,9 +93,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { baseURL };
     }
     case ModelProvider.Perplexity: {
-      const { PERPLEXITY_API_KEY } = getServerConfig();
+      const { PERPLEXITY_API_KEY, PERPLEXITY_PROXY_URL } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || PERPLEXITY_API_KEY);
-      return { apiKey };
+      const baseURL = payload?.endpoint || PERPLEXITY_PROXY_URL;
+
+      return { apiKey, baseURL };
     }
     case ModelProvider.Anthropic: {
       const { ANTHROPIC_API_KEY, ANTHROPIC_PROXY_URL } = getServerConfig();

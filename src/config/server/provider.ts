@@ -37,6 +37,7 @@ declare global {
       // Perplexity Provider
       ENABLED_PERPLEXITY?: string;
       PERPLEXITY_API_KEY?: string;
+      PERPLEXITY_PROXY_URL?: string;
 
       // Anthropic Provider
       ENABLED_ANTHROPIC?: string;
@@ -173,6 +174,7 @@ export const getProviderConfig = () => {
 
     ENABLED_PERPLEXITY: !!PERPLEXITY_API_KEY,
     PERPLEXITY_API_KEY,
+    PERPLEXITY_PROXY_URL: process.env.PERPLEXITY_PROXY_URL,
 
     ENABLED_ANTHROPIC: !!ANTHROPIC_API_KEY,
     ANTHROPIC_API_KEY,
