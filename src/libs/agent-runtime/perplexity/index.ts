@@ -9,13 +9,21 @@ export const LobePerplexityAI = LobeOpenAICompatibleFactory({
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
       // Set a default frequency penalty value greater than 0
-      const defaultFrequencyPenalty = 1;
+      const { presence_penalty, frequency_penalty, ...res } = payload;
 
-      return {
-        ...payload,
-        frequency_penalty: payload.frequency_penalty || defaultFrequencyPenalty,
-        stream: true,
-      } as OpenAI.ChatCompletionCreateParamsStreaming;
+      let param;
+
+      // Ensure we are only have one frequency_penalty or frequency_penalty
+      if (presence_penalty !== 0) {
+        param = { presence_penalty };
+      } else {
+        const defaultFrequencyPenalty = 1;
+
+        param = { frequency_penalty: frequency_penalty || defaultFrequencyPenalty };
+      }
+
+      console.log(param);
+      return { ...res, ...param } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
   },
   debug: {
