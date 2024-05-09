@@ -19,7 +19,6 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
-import { enableClerk } from '@/const/auth';
 import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
@@ -58,9 +57,10 @@ export const useMenu = () => {
   const hasNewVersion = useNewVersion();
   const openSettings = useOpenSettings();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const [isLogin, isLoginWithAuth, openUserProfile] = useUserStore((s) => [
+  const [isLogin, isLoginWithAuth, isLoginWithClerk, openUserProfile] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
+    authSelectors.isLoginWithClerk(s),
     s.openUserProfile,
   ]);
 
@@ -190,7 +190,7 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-    ...(enableClerk && isLoginWithAuth ? profile : []),
+    ...(isLoginWithClerk ? profile : []),
     ...(isLogin ? settings : []),
     ...(isLogin ? data : []),
     ...helps,

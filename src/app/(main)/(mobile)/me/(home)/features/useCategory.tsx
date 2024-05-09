@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { enableAuth, enableClerk } from '@/const/auth';
+import { enableAuth } from '@/const/auth';
 import { DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
@@ -14,9 +14,10 @@ import { useCategory as useSettingsCategory } from '../../settings/features/useC
 export const useCategory = () => {
   const router = useRouter();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const [isLogin, isLoginWithAuth] = useUserStore((s) => [
+  const [isLogin, isLoginWithAuth, isLoginWithClerk] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
+    authSelectors.isLoginWithClerk(s),
   ]);
 
   const profile: CellProps[] = [
@@ -84,7 +85,7 @@ export const useCategory = () => {
     {
       type: 'divider',
     },
-    ...(enableClerk && isLoginWithAuth ? profile : []),
+    ...(isLoginWithClerk ? profile : []),
     ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
     ...(isLogin ? data : []),
     ...helps,
