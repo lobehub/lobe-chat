@@ -6,7 +6,7 @@ import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { ILobeAgentRuntimeErrorType } from '../../error';
-import { ChatCompetitionOptions, ChatStreamPayload } from '../../types';
+import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
@@ -28,6 +28,7 @@ const CHAT_MODELS_BLOCK_LIST = [
 interface OpenAICompatibleFactoryOptions {
   baseURL?: string;
   chatCompletion?: {
+    handleError?: (error: any) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
     handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
   };
   constructorOptions?: ClientOptions;
@@ -111,6 +112,16 @@ export const LobeOpenAICompatibleFactory = ({
               break;
             }
           }
+        }
+
+        if (chatCompletion?.handleError) {
+          const errorResult = chatCompletion.handleError(error);
+
+          if (errorResult)
+            throw AgentRuntimeError.chat({
+              ...errorResult,
+              provider,
+            } as ChatCompletionErrorPayload);
         }
 
         const { errorResult, RuntimeError } = handleOpenAIError(error);

@@ -38,7 +38,6 @@
     "checker": {
       "button": "檢查",
       "desc": "測試 API 金鑰與代理地址是否正確填寫",
-      "ollamaDesc": "測試代理地址是否正確填寫",
       "pass": "檢查通過",
       "title": "連通性檢查"
     },
@@ -95,6 +94,10 @@
       "placeholder": "請從列表中選擇模型",
       "title": "模型列表",
       "total": "共 {{count}} 個模型可用"
+    },
+    "proxyUrl": {
+      "desc": "必須包含 http(s):// 以外的預設地址",
+      "title": "API 代理位址"
     },
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
   },
