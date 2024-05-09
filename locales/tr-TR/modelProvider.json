@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Varsayılan adres dışında, http(s):// içermelidir",
-      "placeholder": "https://api.anthropic.com",
-      "title": "API Proxy Adresi"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Anthropic'ten gelen API Key'i girin",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "除默认地址外，必须包含 http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API 代理地址"
-    },
     "title": "Google",
     "token": {
       "desc": "Google'dan gelen API Key'i girin",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Proxy adresinin doğru girilip girilmediğini test edin"
+      "desc": "Proxy adresinin doğru girilip girilmediğini test edin",
+      "title": "Bağlantı Kontrolü"
     },
     "customModelName": {
       "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Ollama arayüz proxy adresini girin, yerel olarak belirtilmemişse boş bırakılabilir",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Arayüz Proxy Adresi"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Varsayılan adres dışında, http(s):// içermelidir",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Arayüz Proxy Adresi"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Kendi OpenAI Key'inizi kullanın",
