@@ -95,6 +95,18 @@
       "title": "Use Custom Groq API Key"
     }
   },
+  "minimax": {
+    "title": "Minimax",
+    "token": {
+      "desc": "Enter your API Key from Minimax",
+      "placeholder": "Minimax API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your Minimax API Key to start the session. The app will not store your API Key.",
+      "title": "Use Custom Minimax API Key"
+    }
+  },
   "mistral": {
     "title": "Mistral AI",
     "token": {

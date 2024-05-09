@@ -2,6 +2,990 @@
 
 # Changelog
 
+### [Version 0.155.7](https://github.com/lobehub/lobe-chat/compare/v0.155.6...v0.155.7)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix panel expand.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix panel expand ([5e78089](https://github.com/lobehub/lobe-chat/commit/5e78089))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.6](https://github.com/lobehub/lobe-chat/compare/v0.155.5...v0.155.6)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix editing long message issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix editing long message issue, closes [#2431](https://github.com/lobehub/lobe-chat/issues/2431) ([380d8da](https://github.com/lobehub/lobe-chat/commit/380d8da))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.5](https://github.com/lobehub/lobe-chat/compare/v0.155.4...v0.155.5)
+
+<sup>Released on **2024-05-08**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.4](https://github.com/lobehub/lobe-chat/compare/v0.155.3...v0.155.4)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Agent Settings Form.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Agent Settings Form ([12c62a0](https://github.com/lobehub/lobe-chat/commit/12c62a0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.3](https://github.com/lobehub/lobe-chat/compare/v0.155.2...v0.155.3)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Optimized MaxToken Slider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Optimized MaxToken Slider, closes [#2258](https://github.com/lobehub/lobe-chat/issues/2258) ([dfb892b](https://github.com/lobehub/lobe-chat/commit/dfb892b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.2](https://github.com/lobehub/lobe-chat/compare/v0.155.1...v0.155.2)
+
+<sup>Released on **2024-05-08**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.1](https://github.com/lobehub/lobe-chat/compare/v0.155.0...v0.155.1)
+
+<sup>Released on **2024-05-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve llm list when all closed.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve llm list when all closed, closes [#2409](https://github.com/lobehub/lobe-chat/issues/2409) ([1eb20c7](https://github.com/lobehub/lobe-chat/commit/1eb20c7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.155.0](https://github.com/lobehub/lobe-chat/compare/v0.154.7...v0.155.0)
+
+<sup>Released on **2024-05-07**</sup>
+
+#### ✨ Features
+
+- **misc**: Add DataStatistics.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add DataStatistics ([cf474bb](https://github.com/lobehub/lobe-chat/commit/cf474bb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.7](https://github.com/lobehub/lobe-chat/compare/v0.154.6...v0.154.7)
+
+<sup>Released on **2024-05-07**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the message slice internal method name.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the message slice internal method name, closes [#2407](https://github.com/lobehub/lobe-chat/issues/2407) ([8c70bdd](https://github.com/lobehub/lobe-chat/commit/8c70bdd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.6](https://github.com/lobehub/lobe-chat/compare/v0.154.5...v0.154.6)
+
+<sup>Released on **2024-05-07**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add gemini-1.0-pro-002.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add gemini-1.0-pro-002, closes [#2406](https://github.com/lobehub/lobe-chat/issues/2406) ([44b29a9](https://github.com/lobehub/lobe-chat/commit/44b29a9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.5](https://github.com/lobehub/lobe-chat/compare/v0.154.4...v0.154.5)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update LLM Settings Form styles.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update LLM Settings Form styles, closes [#2393](https://github.com/lobehub/lobe-chat/issues/2393) ([4f98e6c](https://github.com/lobehub/lobe-chat/commit/4f98e6c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.4](https://github.com/lobehub/lobe-chat/compare/v0.154.3...v0.154.4)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix next auth config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix next auth config, closes [#2390](https://github.com/lobehub/lobe-chat/issues/2390) ([dbda107](https://github.com/lobehub/lobe-chat/commit/dbda107))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.3](https://github.com/lobehub/lobe-chat/compare/v0.154.2...v0.154.3)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker build ([80a270d](https://github.com/lobehub/lobe-chat/commit/80a270d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.2](https://github.com/lobehub/lobe-chat/compare/v0.154.1...v0.154.2)
+
+<sup>Released on **2024-05-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix docker build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix docker build, closes [#2385](https://github.com/lobehub/lobe-chat/issues/2385) ([9cf60b5](https://github.com/lobehub/lobe-chat/commit/9cf60b5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.154.1](https://github.com/lobehub/lobe-chat/compare/v0.154.0...v0.154.1)
+
+<sup>Released on **2024-05-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent meta input disabled.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent meta input disabled, closes [#2381](https://github.com/lobehub/lobe-chat/issues/2381) ([d1fc512](https://github.com/lobehub/lobe-chat/commit/d1fc512))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.154.0](https://github.com/lobehub/lobe-chat/compare/v0.153.1...v0.154.0)
+
+<sup>Released on **2024-05-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Support clerk as auth provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support clerk as auth provider, closes [#2374](https://github.com/lobehub/lobe-chat/issues/2374) ([bf8ef1f](https://github.com/lobehub/lobe-chat/commit/bf8ef1f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.153.1](https://github.com/lobehub/lobe-chat/compare/v0.153.0...v0.153.1)
+
+<sup>Released on **2024-05-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Imporve mobile styles and loading skeleton.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Imporve mobile styles and loading skeleton, closes [#2363](https://github.com/lobehub/lobe-chat/issues/2363) ([8ee3591](https://github.com/lobehub/lobe-chat/commit/8ee3591))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.153.0](https://github.com/lobehub/lobe-chat/compare/v0.152.12...v0.153.0)
+
+<sup>Released on **2024-05-04**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Settings Intercepting Routes.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Settings Intercepting Routes, closes [#2346](https://github.com/lobehub/lobe-chat/issues/2346) ([29b6442](https://github.com/lobehub/lobe-chat/commit/29b6442))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.12](https://github.com/lobehub/lobe-chat/compare/v0.152.11...v0.152.12)
+
+<sup>Released on **2024-05-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disabled autogenerate field icon when empty system role.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disabled autogenerate field icon when empty system role, closes [#2076](https://github.com/lobehub/lobe-chat/issues/2076) ([27095f5](https://github.com/lobehub/lobe-chat/commit/27095f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.11](https://github.com/lobehub/lobe-chat/compare/v0.152.10...v0.152.11)
+
+<sup>Released on **2024-05-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add user panel and refactor the next-auth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add user panel and refactor the next-auth, closes [#2349](https://github.com/lobehub/lobe-chat/issues/2349) ([5cecee0](https://github.com/lobehub/lobe-chat/commit/5cecee0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.10](https://github.com/lobehub/lobe-chat/compare/v0.152.9...v0.152.10)
+
+<sup>Released on **2024-05-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve market layout styles and mobile style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve market layout styles and mobile style, closes [#2347](https://github.com/lobehub/lobe-chat/issues/2347) ([79b8115](https://github.com/lobehub/lobe-chat/commit/79b8115))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.9](https://github.com/lobehub/lobe-chat/compare/v0.152.8...v0.152.9)
+
+<sup>Released on **2024-05-03**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.8](https://github.com/lobehub/lobe-chat/compare/v0.152.7...v0.152.8)
+
+<sup>Released on **2024-05-03**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: User store add an auth slice.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: User store add an auth slice, closes [#2214](https://github.com/lobehub/lobe-chat/issues/2214) ([948b257](https://github.com/lobehub/lobe-chat/commit/948b257))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.7](https://github.com/lobehub/lobe-chat/compare/v0.152.6...v0.152.7)
+
+<sup>Released on **2024-05-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: Refactor setting layout and improve setting design.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Refactor setting layout and improve setting design, closes [#2344](https://github.com/lobehub/lobe-chat/issues/2344) ([fa16721](https://github.com/lobehub/lobe-chat/commit/fa16721))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.6](https://github.com/lobehub/lobe-chat/compare/v0.152.5...v0.152.6)
+
+<sup>Released on **2024-05-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: AutoScroll to the fully end.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: AutoScroll to the fully end, closes [#2345](https://github.com/lobehub/lobe-chat/issues/2345) ([5458e98](https://github.com/lobehub/lobe-chat/commit/5458e98))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.5](https://github.com/lobehub/lobe-chat/compare/v0.152.4...v0.152.5)
+
+<sup>Released on **2024-05-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Setings Layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Setings Layout, closes [#2340](https://github.com/lobehub/lobe-chat/issues/2340) ([6a2e9a9](https://github.com/lobehub/lobe-chat/commit/6a2e9a9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.152.1](https://github.com/lobehub/lobe-chat/compare/v0.152.0...v0.152.1)
+
+<sup>Released on **2024-05-01**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Market Layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Market Layout, closes [#2320](https://github.com/lobehub/lobe-chat/issues/2320) ([c05c3c1](https://github.com/lobehub/lobe-chat/commit/c05c3c1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.152.0](https://github.com/lobehub/lobe-chat/compare/v0.151.11...v0.152.0)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### ✨ Features
+
+- **misc**: Import settings from url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Import settings from url, closes [#2226](https://github.com/lobehub/lobe-chat/issues/2226) ([b1f6c20](https://github.com/lobehub/lobe-chat/commit/b1f6c20))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.11](https://github.com/lobehub/lobe-chat/compare/v0.151.10...v0.151.11)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix telemetry preference modal and default agent config error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix telemetry preference modal and default agent config error, closes [#2312](https://github.com/lobehub/lobe-chat/issues/2312) ([8900445](https://github.com/lobehub/lobe-chat/commit/8900445))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.10](https://github.com/lobehub/lobe-chat/compare/v0.151.9...v0.151.10)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor Welcome Layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor Welcome Layout, closes [#2314](https://github.com/lobehub/lobe-chat/issues/2314) ([1040051](https://github.com/lobehub/lobe-chat/commit/1040051))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.9](https://github.com/lobehub/lobe-chat/compare/v0.151.8...v0.151.9)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Minimax truncationed output.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Minimax truncationed output, closes [#2308](https://github.com/lobehub/lobe-chat/issues/2308) ([488f319](https://github.com/lobehub/lobe-chat/commit/488f319))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.8](https://github.com/lobehub/lobe-chat/compare/v0.151.7...v0.151.8)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move NavBar to `[@nav](https://github.com/nav)` slot route.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move NavBar to `[@nav](https://github.com/nav)` slot route, closes [#2306](https://github.com/lobehub/lobe-chat/issues/2306) ([aee7231](https://github.com/lobehub/lobe-chat/commit/aee7231))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.7](https://github.com/lobehub/lobe-chat/compare/v0.151.6...v0.151.7)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add 404 and Error page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add 404 and Error page, closes [#2299](https://github.com/lobehub/lobe-chat/issues/2299) ([938a3e9](https://github.com/lobehub/lobe-chat/commit/938a3e9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.6](https://github.com/lobehub/lobe-chat/compare/v0.151.5...v0.151.6)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Plugins with multiple settings cannot be correctly configured.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Plugins with multiple settings cannot be correctly configured, closes [#1991](https://github.com/lobehub/lobe-chat/issues/1991) ([0c041aa](https://github.com/lobehub/lobe-chat/commit/0c041aa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.5](https://github.com/lobehub/lobe-chat/compare/v0.151.4...v0.151.5)
+
+<sup>Released on **2024-04-30**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Effectively interrupt auto scrolling.
+
+#### 💄 Styles
+
+- **misc**: Revise some text.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Effectively interrupt auto scrolling, closes [#2223](https://github.com/lobehub/lobe-chat/issues/2223) ([afe4974](https://github.com/lobehub/lobe-chat/commit/afe4974))
+
+#### Styles
+
+- **misc**: Revise some text, closes [#2296](https://github.com/lobehub/lobe-chat/issues/2296) ([018427f](https://github.com/lobehub/lobe-chat/commit/018427f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.4](https://github.com/lobehub/lobe-chat/compare/v0.151.3...v0.151.4)
+
+<sup>Released on **2024-04-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move app page to the `(main)` layout group.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move app page to the `(main)` layout group, closes [#2297](https://github.com/lobehub/lobe-chat/issues/2297) ([6cc2c38](https://github.com/lobehub/lobe-chat/commit/6cc2c38))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.3](https://github.com/lobehub/lobe-chat/compare/v0.151.2...v0.151.3)
+
+<sup>Released on **2024-04-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Patching models info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Patching models info, closes [#2269](https://github.com/lobehub/lobe-chat/issues/2269) [#22802280](https://github.com/lobehub/lobe-chat/issues/22802280) ([03bcb06](https://github.com/lobehub/lobe-chat/commit/03bcb06))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.2](https://github.com/lobehub/lobe-chat/compare/v0.151.1...v0.151.2)
+
+<sup>Released on **2024-04-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix only inject welcome question in inbox.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix only inject welcome question in inbox, closes [#2289](https://github.com/lobehub/lobe-chat/issues/2289) ([cc8edd3](https://github.com/lobehub/lobe-chat/commit/cc8edd3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.151.1](https://github.com/lobehub/lobe-chat/compare/v0.151.0...v0.151.1)
+
+<sup>Released on **2024-04-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve Inbox Assistant Welcome Guide.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve Inbox Assistant Welcome Guide, closes [#2086](https://github.com/lobehub/lobe-chat/issues/2086) ([df37212](https://github.com/lobehub/lobe-chat/commit/df37212))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.151.0](https://github.com/lobehub/lobe-chat/compare/v0.150.10...v0.151.0)
+
+<sup>Released on **2024-04-29**</sup>
+
+#### ✨ Features
+
+- **misc**: Support minimax as a new provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support minimax as a new provider, closes [#2087](https://github.com/lobehub/lobe-chat/issues/2087) ([00abd82](https://github.com/lobehub/lobe-chat/commit/00abd82))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.150.10](https://github.com/lobehub/lobe-chat/compare/v0.150.9...v0.150.10)
 
 <sup>Released on **2024-04-28**</sup>

@@ -1,4 +1,22 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continua la sessione",
+      "desc": "{{greeting}}, Sono felice di poterti aiutare ancora. Continuiamo a parlare di quello di cui stavamo discutendo.",
+      "title": "Bentornato, {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "Torna alla homepage",
+    "desc": "Prova di nuovo più tardi, o torna al mondo conosciuto",
+    "retry": "Ricarica",
+    "title": "La pagina ha riscontrato un problema.."
+  },
+  "notFound": {
+    "backHome": "Torna alla homepage",
+    "desc": "Non riusciamo a trovare la pagina che stai cercando, controlla che il link sia corretto",
+    "title": "Hai raggiunto un territorio sconosciuto?"
+  },
   "pluginSettings": {
     "desc": "Completa la seguente configurazione per iniziare a utilizzare il plugin",
     "title": "Configurazione del plugin {{name}}"
@@ -43,8 +61,10 @@
     "InvalidAnthropicAPIKey": "La chiave API Anthropic non è valida o è vuota. Si prega di controllare la chiave API Anthropic e riprovare.",
     "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
+    "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
     "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
     "InvalidGroqAPIKey": "Chiave API Groq non valida o vuota, controlla la chiave API Groq e riprova",
+    "InvalidMinimaxAPIKey": "Chiave API Minimax non valida o vuota, controllare la chiave API Minimax e riprovare",
     "InvalidMistralAPIKey": "Chiave API Mistral AI non valida o vuota. Si prega di controllare la chiave API Mistral e riprovare.",
     "InvalidMoonshotAPIKey": "La chiave API di Moonshot AI non è corretta o è vuota, si prega di controllare la chiave API di Moonshot e riprovare",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
@@ -54,6 +74,7 @@
     "InvalidZeroOneAPIKey": "La chiave API ZeroOne non è corretta o è vuota, si prega di controllare la chiave API ZeroOne e riprovare",
     "InvalidZhipuAPIKey": "Chiave API Zhipu non corretta o vuota, controlla la chiave API Zhipu e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
+    "MinimaxBizError": "Errore di servizio Minimax, controllare le informazioni seguenti o riprovare",
     "MistralBizError": "Errore di richiesta del servizio Mistral AI. Si prega di controllare le informazioni seguenti o riprovare.",
     "MoonshotBizError": "Si è verificato un errore nel servizio Moonshot, si prega di controllare le informazioni seguenti o riprovare",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",

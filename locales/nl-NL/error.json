@@ -1,4 +1,22 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continue session",
+      "desc": "{{greeting}}, it's great to continue serving you. Let's pick up where we left off.",
+      "title": "Welcome back, {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "Terug naar startpagina",
+    "desc": "Probeer het later opnieuw of keer terug naar de bekende wereld",
+    "retry": "Opnieuw proberen",
+    "title": "Er is een probleem opgetreden op de pagina.."
+  },
+  "notFound": {
+    "backHome": "Terug naar startpagina",
+    "desc": "We kunnen de pagina die je zoekt niet vinden, controleer of de link juist is",
+    "title": "Betreden onbekend terrein?"
+  },
   "pluginSettings": {
     "desc": "Voltooi de volgende instellingen om de plugin te gebruiken",
     "title": "{{name}} Plugin Instellingen"
@@ -43,8 +61,10 @@
     "InvalidAnthropicAPIKey": "Anthropic API Key is onjuist of leeg. Controleer de Anthropic API Key en probeer het opnieuw.",
     "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
+    "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
     "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
     "InvalidGroqAPIKey": "Groq API Key is onjuist of leeg. Controleer de Groq API Key en probeer het opnieuw.",
+    "InvalidMinimaxAPIKey": "Ongeldige of lege Minimax API-sleutel. Controleer de Minimax API-sleutel en probeer het opnieuw.",
     "InvalidMistralAPIKey": "Ongeldige of lege Mistral AI API-sleutel. Controleer de Mistral API-sleutel en probeer het opnieuw.",
     "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
@@ -54,6 +74,7 @@
     "InvalidZeroOneAPIKey": "Ongeldige ZeroOneAPI-sleutel of leeg, controleer de ZeroOneAPI-sleutel en probeer het opnieuw",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
+    "MinimaxBizError": "Er is een fout opgetreden bij het aanroepen van de Minimax-service. Controleer de volgende informatie of probeer het opnieuw.",
     "MistralBizError": "Er is een fout opgetreden bij het aanroepen van de Mistral AI-service. Controleer de onderstaande informatie of probeer het opnieuw.",
     "MoonshotBizError": "Er is een fout opgetreden bij het aanroepen van de Moonshot-service. Controleer de volgende informatie of probeer het opnieuw.",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",

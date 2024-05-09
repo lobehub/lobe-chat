@@ -1,6 +1,11 @@
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
 export interface Guide {
+  /**
+   * Move the settings button to the avatar dropdown
+   */
+  moveSettingsToAvatar?: boolean;
+
   // Topic 引导
   topic?: boolean;
 }
@@ -16,6 +21,7 @@ export interface UserPreference {
 }
 
 export interface UserPreferenceState {
+  isPreferenceInit: boolean;
   /**
    * the user preference, which only store in local storage
    */
@@ -23,11 +29,16 @@ export interface UserPreferenceState {
   preferenceStorage: AsyncLocalStorage<UserPreference>;
 }
 
-export const initialPreferenceState: UserPreferenceState = {
-  preference: {
-    guide: {},
-    telemetry: null,
-    useCmdEnterToSend: false,
+export const DEFAULT_PREFERENCE: UserPreference = {
+  guide: {
+    moveSettingsToAvatar: true,
   },
+  telemetry: null,
+  useCmdEnterToSend: false,
+};
+
+export const initialPreferenceState: UserPreferenceState = {
+  isPreferenceInit: false,
+  preference: DEFAULT_PREFERENCE,
   preferenceStorage: new AsyncLocalStorage('LOBE_PREFERENCE'),
 };

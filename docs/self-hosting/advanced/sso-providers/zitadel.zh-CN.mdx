@@ -51,8 +51,9 @@ http(s)://your-domain/api/auth/callback/zitadel
 />
 
 <Callout type={'important'}>
-  - 可以创建应用后再填写或修改重定向 URL，但请确保填写的 URL 与部署的 URL 一致。 - 请将
-  `http(s)://your-domain` 替换为 LobeChat 部署的实际 URL。
+  - 可以创建应用后再填写或修改重定向 URL，但请确保填写的 URL 与部署的 URL 一致。
+
+  - 请将 `http(s)://your-domain` 替换为 LobeChat 部署的实际 URL。
 </Callout>
 
 确认配置并点击「创建」。
@@ -71,10 +72,18 @@ http(s)://your-domain/api/auth/callback/zitadel
   src="https://github.com/lobehub/lobe-chat/assets/8692892/40bb6b4c-18e0-4ae5-abae-ae0cf202cf08"
 />
 
-在应用设置页面中，切换到「URLs」选项卡，记录下「issuer」URL。
+在应用设置页面中，切换到「令牌设置」选项卡，勾选「在 ID Token 中包含用户信息」选项，点击「保存」。
 
 <Image
   alt="创建 ZITADEL 应用 7"
+  inStep
+  src="https://github.com/lobehub/lobe-chat/assets/8692892/20a257b5-d086-46f3-b5c2-f76394b11f55"
+/>
+
+切换到「URLs」选项卡，记录下「issuer」URL。
+
+<Image
+  alt="创建 ZITADEL 应用 8"
   inStep
   src="https://github.com/lobehub/lobe-chat/assets/8692892/79c55d44-8dcb-429c-a072-d3eb014bbceb"
 />

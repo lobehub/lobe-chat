@@ -6,7 +6,17 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 export enum SidebarTabKey {
   Chat = 'chat',
   Market = 'market',
+  Me = 'me',
   Setting = 'settings',
+}
+
+export enum ChatSettingsTabs {
+  Chat = 'chat',
+  Meta = 'meta',
+  Modal = 'modal',
+  Plugin = 'plugin',
+  Prompt = 'prompt',
+  TTS = 'tts',
 }
 
 export enum SettingsTabs {
@@ -40,6 +50,7 @@ export interface GlobalPreferenceState {
 export interface GlobalCommonState {
   hasNewVersion?: boolean;
   isMobile?: boolean;
+  isPreferenceInit?: boolean;
   latestVersion?: string;
   router?: AppRouterInstance;
   sidebarKey: SidebarTabKey;
@@ -49,6 +60,7 @@ export type GlobalState = GlobalCommonState & GlobalPreferenceState;
 
 export const initialState: GlobalState = {
   isMobile: false,
+  isPreferenceInit: false,
   preference: {
     expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
     inputHeight: 200,

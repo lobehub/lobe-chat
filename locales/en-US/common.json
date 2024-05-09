@@ -4,12 +4,20 @@
   "appInitializing": "LobeChat is initializing, please wait...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
   "copy": "Copy",
   "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
+  "dataStatistics": {
+    "messages": "Messages",
+    "sessions": "Assistants",
+    "today": "Today's New",
+    "topics": "Topics"
+  },
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
   "delete": "Delete",
@@ -26,6 +34,8 @@
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
+  "follow": "Follow us on {{name}}",
+  "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
@@ -88,10 +98,12 @@
   "layoutInitializing": "Initializing layout...",
   "noDescription": "No description available",
   "oauth": "SSO Login",
+  "officialSite": "Official Website",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Privacy Policy",
   "regenerate": "Regenerate",
   "rename": "Rename",
   "reset": "Reset",
@@ -136,6 +148,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Discover",
+    "me": "Me",
     "setting": "Settings"
   },
   "telemetry": {
@@ -146,10 +159,27 @@
     "title": "Help LobeChat be better"
   },
   "temp": "Temporary",
+  "terms": "Terms of Service",
   "updateAgent": "Update Agent Information",
   "upgradeVersion": {
     "action": "Upgrade",
     "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonymous User",
+    "billing": "Billing Management",
+    "defaultNickname": "Community User",
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback and Suggestions",
+    "help": "Help Center",
+    "moveGuide": "The settings button has been moved here",
+    "plans": "Subscription Plans",
+    "preview": "Preview",
+    "profile": "Account Management",
+    "setting": "App Settings",
+    "usages": "Usage Statistics"
   }
 }

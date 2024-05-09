@@ -27,9 +27,12 @@
     }
   },
   "header": {
+    "desc": "Preferenze e impostazioni del modello.",
     "global": "Impostazioni globali",
     "session": "Impostazioni della sessione",
-    "sessionWithName": "Impostazioni della sessione · {{name}}"
+    "sessionDesc": "Impostazioni del personaggio e preferenze di sessione.",
+    "sessionWithName": "Impostazioni della sessione · {{name}}",
+    "title": "Impostazioni"
   },
   "llm": {
     "checker": {
@@ -68,7 +71,8 @@
         },
         "modalTitle": "Configurazione del modello personalizzato",
         "tokens": {
-          "title": "Numero massimo di token"
+          "title": "Numero massimo di token",
+          "unlimited": "illimitato"
         },
         "vision": {
           "extra": "Questa configurazione abiliterà solo la funzionalità di caricamento delle immagini in LobeChat. La reale capacità di riconoscimento dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",

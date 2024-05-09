@@ -10,12 +10,13 @@ import { Provider, createServerConfigStore } from './store';
 interface GlobalStoreProviderProps {
   children: ReactNode;
   featureFlags?: Partial<IFeatureFlags>;
+  isMobile?: boolean;
   serverConfig?: GlobalServerConfig;
 }
 
 export const ServerConfigStoreProvider = memo<GlobalStoreProviderProps>(
-  ({ children, featureFlags, serverConfig }) => (
-    <Provider createStore={() => createServerConfigStore({ featureFlags, serverConfig })}>
+  ({ children, featureFlags, serverConfig, isMobile }) => (
+    <Provider createStore={() => createServerConfigStore({ featureFlags, isMobile, serverConfig })}>
       {children}
     </Provider>
   ),

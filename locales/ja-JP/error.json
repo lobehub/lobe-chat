@@ -1,4 +1,22 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "続ける",
+      "desc": "{{greeting}}、続けてサービスを提供できて嬉しいです。前回の話題に戻りましょう",
+      "title": "おかえりなさい、{{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "ホームに戻る",
+    "desc": "後で試してみるか、既知の世界に戻る",
+    "retry": "再読み込み",
+    "title": "ページに問題が発生しました.."
+  },
+  "notFound": {
+    "backHome": "ホームに戻る",
+    "desc": "お探しのページが見つかりません。リンクが正しいかどうかをご確認ください",
+    "title": "未知の領域に入りましたか？"
+  },
   "pluginSettings": {
     "desc": "以下の設定を完了すると、プラグインを使用することができます",
     "title": "{{name}} プラグイン設定"
@@ -43,8 +61,10 @@
     "InvalidAnthropicAPIKey": "Anthropic APIキーが正しくないか空です。Anthropic APIキーを確認してもう一度お試しください。",
     "InvalidAzureAPIKey": "Azure APIキーが正しくないか空です。Azure APIキーを確認してから再試行してください。",
     "InvalidBedrockCredentials": "Bedrockの認証に失敗しました。AccessKeyId/SecretAccessKeyを確認してから再試行してください。",
+    "InvalidClerkUser": "申し訳ありませんが、現在ログインしていません。続行するにはログインまたはアカウント登録を行ってください",
     "InvalidGoogleAPIKey": "Google APIキーが正しくないか空です。Google APIキーを確認してから再試行してください。",
     "InvalidGroqAPIKey": "Groq APIキーが正しくないか空です。Groq APIキーを確認して再試行してください。",
+    "InvalidMinimaxAPIKey": "Minimax APIキーが正しくないか空です。Minimax APIキーを確認して再試行してください。",
     "InvalidMistralAPIKey": "Mistral AI API キーが正しくないか空です。Mistral API キーを確認して再試行してください。",
     "InvalidMoonshotAPIKey": "Moonshot AI APIキーが正しくないか空です。Moonshot APIキーを確認して再試行してください。",
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
@@ -54,6 +74,7 @@
     "InvalidZeroOneAPIKey": "ZeroOne APIキーが正しくないか空です。ZeroOne APIキーを確認して再試行してください。",
     "InvalidZhipuAPIKey": "Zhipu APIキーが正しくないか空です。Zhipu APIキーを確認してから再試行してください。",
     "LocationNotSupportError": "申し訳ありませんが、お住まいの地域ではこのモデルサービスをサポートしていません。地域制限またはサービスが利用できない可能性があります。現在の位置がこのサービスをサポートしているかどうかを確認するか、他の位置情報を使用してみてください。",
+    "MinimaxBizError": "Minimaxサービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "MistralBizError": "Mistral AI サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "MoonshotBizError": "月の裏側サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "NoOpenAIAPIKey": "OpenAI APIキーが空です。カスタムOpenAI APIキーを追加してください。",

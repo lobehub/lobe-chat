@@ -1,17 +1,21 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ResolvingViewport } from 'next';
 import { cookies } from 'next/headers';
-import { PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
-import LayoutRoutes from '@/layout/routes';
 import { isMobileDevice } from '@/utils/responsive';
 
-const RootLayout = async ({ children }: PropsWithChildren) => {
+type RootLayoutProps = {
+  children: ReactNode;
+  modal: ReactNode;
+};
+
+const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const cookieStore = cookies();
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
@@ -22,7 +26,8 @@ const RootLayout = async ({ children }: PropsWithChildren) => {
       <body>
         <GlobalProvider>
           <AuthProvider>
-            <LayoutRoutes>{children}</LayoutRoutes>
+            {children}
+            {modal}
           </AuthProvider>
         </GlobalProvider>
         <Analytics />

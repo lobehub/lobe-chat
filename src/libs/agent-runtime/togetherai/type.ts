@@ -1,4 +1,3 @@
-
 interface ModelInstanceConfig {
   appearsIn: any[]; // 你可以替换为实际类型
   order: number;

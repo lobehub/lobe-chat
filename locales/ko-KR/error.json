@@ -1,4 +1,22 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "계속하기",
+      "desc": "{{greeting}}님, 다시 뵙게 되어 기쁩니다. 이전 대화를 이어나갈까요?",
+      "title": "다시 환영합니다, {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "홈페이지로 돌아가기",
+    "desc": "잠시 후 다시 시도하거나 익숙한 세계로 돌아가세요",
+    "retry": "다시 시도",
+    "title": "페이지에서 문제가 발생했습니다."
+  },
+  "notFound": {
+    "backHome": "홈페이지로 돌아가기",
+    "desc": "찾고 있는 페이지를 찾을 수 없습니다. 링크가 올바른지 확인해주세요.",
+    "title": "알 수 없는 영역에 들어갔나요?"
+  },
   "pluginSettings": {
     "desc": "다음 구성을 완료하면 플러그인을 사용할 수 있습니다.",
     "title": "{{name}} 플러그인 설정"
@@ -43,8 +61,10 @@
     "InvalidAnthropicAPIKey": "Anthropic API 키가 잘못되었거나 비어 있습니다. Anthropic API 키를 확인하고 다시 시도하십시오.",
     "InvalidAzureAPIKey": "잘못된 또는 비어 있는 Azure API Key입니다. Azure API Key를 확인한 후 다시 시도하십시오.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도하십시오.",
+    "InvalidClerkUser": "죄송합니다. 현재 로그인되어 있지 않습니다. 계속하려면 먼저 로그인하거나 계정을 등록해주세요.",
     "InvalidGoogleAPIKey": "잘못된 또는 비어 있는 Google API Key입니다. Google API Key를 확인한 후 다시 시도하십시오.",
     "InvalidGroqAPIKey": "잘못된 또는 비어 있는 Groq API Key입니다. Groq API Key를 확인한 후 다시 시도하십시오.",
+    "InvalidMinimaxAPIKey": "잘못된 Minimax API 키이거나 비어 있습니다. Minimax API 키를 확인한 후 다시 시도해주세요.",
     "InvalidMistralAPIKey": "Mistral AI API 키가 잘못되었거나 비어 있습니다. Mistral API 키를 확인한 후 다시 시도해주세요.",
     "InvalidMoonshotAPIKey": "Moonshot AI API 키가 잘못되었거나 비어 있습니다. Moonshot API 키를 확인한 후 다시 시도해주세요.",
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",
@@ -54,6 +74,7 @@
     "InvalidZeroOneAPIKey": "잘못된 또는 빈 제로원물 API 키입니다. 제로원물 API 키를 확인하고 다시 시도해주세요.",
     "InvalidZhipuAPIKey": "잘못된 또는 비어 있는 Zhipu API Key입니다. Zhipu API Key를 확인한 후 다시 시도하십시오.",
     "LocationNotSupportError": "죄송합니다. 귀하의 현재 위치는 해당 모델 서비스를 지원하지 않습니다. 지역 제한 또는 서비스 미개통으로 인한 것일 수 있습니다. 현재 위치가 해당 서비스를 지원하는지 확인하거나 다른 위치 정보를 사용해 보십시오.",
+    "MinimaxBizError": "Minimax 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하거나 다시 시도해주세요.",
     "MistralBizError": "Mistral AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "MoonshotBizError": "요청한 문샷 비즈니스에 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "NoOpenAIAPIKey": "OpenAI API 키가 비어 있습니다. 사용자 정의 OpenAI API 키를 추가해주세요.",

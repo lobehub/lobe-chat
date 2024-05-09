@@ -1,9 +1,11 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
+import { LOBE_URL_IMPORT_NAME } from '@/const/url';
+import { useImportConfig } from '@/hooks/useImportConfig';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
@@ -38,14 +40,28 @@ const StoreInitialization = memo(() => {
   useStoreUpdater('isMobile', mobile);
   useStoreUpdater('router', router);
 
+  // Import settings from the url
+  const { importSettings } = useImportConfig();
+  const searchParam = useSearchParams().get(LOBE_URL_IMPORT_NAME);
+  useEffect(() => {
+    importSettings(searchParam);
+  }, [searchParam]);
+
   useEffect(() => {
     router.prefetch('/chat');
-    router.prefetch('/chat/settings');
     router.prefetch('/market');
-    router.prefetch('/settings/common');
-    router.prefetch('/settings/agent');
-    router.prefetch('/settings/sync');
-  }, [router]);
+
+    if (mobile) {
+      router.prefetch('/me');
+      router.prefetch('/chat/settings');
+      router.prefetch('/settings/common');
+      router.prefetch('/settings/agent');
+      router.prefetch('/settings/sync');
+    } else {
+      router.prefetch('/chat/settings/modal');
+      router.prefetch('/settings/modal');
+    }
+  }, [router, mobile]);
 
   return null;
 });

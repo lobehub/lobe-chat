@@ -1,4 +1,22 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "devam et",
+      "desc": "{{greeting}}，senin için hizmet vermeye devam edebilmek çok mutluluk verici. Hadi konuşmamıza kaldığımız yerden devam edelim",
+      "title": "Tekrar hoş geldin, {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "Ana Sayfaya Dön",
+    "desc": "Biraz sonra tekrar deneyin veya bilinen dünyaya geri dönün",
+    "retry": "Yeniden Yükle",
+    "title": "Sayfa bir sorunla karşılaştı.."
+  },
+  "notFound": {
+    "backHome": "Ana Sayfaya Dön",
+    "desc": "Aradığınız sayfayı bulamadık, lütfen bağlantının doğru olduğundan emin olun",
+    "title": "Bilinmeyen bir alana mı girdiniz?"
+  },
   "pluginSettings": {
     "desc": "Bu eklentiyi kullanmaya başlamak için aşağıdaki yapılandırmayı tamamlayın",
     "title": "{{name}} Eklenti Ayarları"
@@ -43,8 +61,10 @@
     "InvalidAnthropicAPIKey": "Anthropic API Key geçersiz veya boş, lütfen Anthropic API Key'inizi kontrol edip tekrar deneyin",
     "InvalidAzureAPIKey": "Azure API Anahtarı yanlış veya boş, lütfen Azure API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması geçersiz, lütfen AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
+    "InvalidClerkUser": "Üzgünüz, şu anda giriş yapmadınız. Lütfen işlemlere devam etmeden önce giriş yapın veya hesap oluşturun",
     "InvalidGoogleAPIKey": "Google API Anahtarı yanlış veya boş, lütfen Google API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidGroqAPIKey": "Groq API Anahtarı yanlış veya boş, lütfen Groq API Anahtarınızı kontrol edip tekrar deneyin",
+    "InvalidMinimaxAPIKey": "Minimax API Anahtarı geçersiz veya boş, lütfen Minimax API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidMistralAPIKey": "Mistral AI API Anahtarı geçersiz veya boş. Lütfen Mistral API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidMoonshotAPIKey": "Geçersiz veya boş Moonshot AI API Anahtarı, lütfen Moonshot API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
@@ -54,6 +74,7 @@
     "InvalidZeroOneAPIKey": "SıfırBirIoT API Anahtarı geçersiz veya boş. Lütfen SıfırBirIoT API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidZhipuAPIKey": "Zhipu API Anahtarı yanlış veya boş, lütfen Zhipu API Anahtarınızı kontrol edip tekrar deneyin",
     "LocationNotSupportError": "Üzgünüz, bulunduğunuz konum bu model hizmetini desteklemiyor, muhtemelen bölge kısıtlamaları veya hizmetin henüz açılmamış olması nedeniyle. Lütfen mevcut konumun bu hizmeti kullanmaya uygun olup olmadığını doğrulayın veya başka bir konum bilgisi kullanmayı deneyin.",
+    "MinimaxBizError": "Minimax hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "MistralBizError": "Mistral AI hizmeti isteği sırasında bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "MoonshotBizError": "Moonshot hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",

@@ -1,4 +1,22 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "继续会话",
+      "desc": "{{greeting}}，很高兴能够继续为你服务。让我们接着刚刚的话题聊下去吧",
+      "title": "欢迎回来， {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "Powrót do strony głównej",
+    "desc": "Spróbuj ponownie później lub wróć do znanego świata",
+    "retry": "Ponów próbę",
+    "title": "Napotkano problem na stronie.."
+  },
+  "notFound": {
+    "backHome": "Powrót do strony głównej",
+    "desc": "Nie możemy odnaleźć strony, której szukasz. Sprawdź, czy link jest poprawny.",
+    "title": "Wkraczasz w nieznane terytorium?"
+  },
   "pluginSettings": {
     "desc": "Wykonaj poniższą konfigurację, aby rozpocząć korzystanie z tego wtyczki",
     "title": "Konfiguracja wtyczki {{name}}"
@@ -43,8 +61,10 @@
     "InvalidAnthropicAPIKey": "Anthropic API Key jest nieprawidłowy lub pusty. Sprawdź poprawność klucza API Anthropic i spróbuj ponownie.",
     "InvalidAzureAPIKey": "Nieprawidłowy lub pusty klucz API Azure, prosimy sprawdzić klucz API Azure i spróbować ponownie.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
+    "InvalidClerkUser": "Przepraszamy, nie jesteś obecnie zalogowany. Proszę najpierw zalogować się lub zarejestrować, aby kontynuować.",
     "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
     "InvalidGroqAPIKey": "Nieprawidłowy klucz API Groq, prosimy sprawdzić klucz API Groq i spróbować ponownie.",
+    "InvalidMinimaxAPIKey": "Nieprawidłowy lub pusty klucz API Minimax, proszę sprawdzić klucz API Minimax i spróbować ponownie",
     "InvalidMistralAPIKey": "Nieprawidłowy lub pusty klucz API Mistral AI. Proszę sprawdzić klucz API Mistral i spróbować ponownie.",
     "InvalidMoonshotAPIKey": "Nieprawidłowy lub pusty klucz API Moonshot AI. Proszę sprawdzić klucz API Moonshot i spróbować ponownie.",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
@@ -54,6 +74,7 @@
     "InvalidZeroOneAPIKey": "Klucz API Zero One nieprawidłowy lub pusty, sprawdź poprawność klucza API Zero One i spróbuj ponownie",
     "InvalidZhipuAPIKey": "Nieprawidłowy lub pusty klucz API Zhipu, prosimy sprawdzić klucz API Zhipu i spróbować ponownie.",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
+    "MinimaxBizError": "Wystąpił błąd usługi Minimax, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "MistralBizError": "Wystąpił błąd żądania usługi Mistral AI. Proszę sprawdzić poniższe informacje lub spróbować ponownie.",
     "MoonshotBizError": "Wystąpił błąd żądania usługi Moonshot AI. Proszę sprawdzić poniższe informacje lub spróbować ponownie.",
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",

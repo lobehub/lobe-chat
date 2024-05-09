@@ -26,6 +26,7 @@ export interface V3LLMConfig {
   bedrock: any;
   google: V3GeneralConfig;
   groq: V3GeneralConfig;
+  minimax: V3GeneralConfig;
   mistral: V3GeneralConfig;
   moonshot: V3GeneralConfig;
   ollama: V3LegacyConfig;

@@ -1,3 +1,5 @@
+'use client';
+
 import { Icon } from '@lobehub/ui';
 import { Button, Result, Table, Upload } from 'antd';
 import { createStyles } from 'antd-style';
@@ -14,6 +16,14 @@ const useStyles = createStyles(({ css, token }) => {
   const size = 28;
 
   return {
+    children: css`
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: transparent;
+      }
+    `,
     loader: css`
       transform: translateX(-${size * 2}px);
 
@@ -115,6 +125,9 @@ const useStyles = createStyles(({ css, token }) => {
             ${size * 3}px ${size}px 0 0;
         }
       }
+    `,
+    wrapper: css`
+      font-size: inherit;
     `,
   };
 });
@@ -228,10 +241,12 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
 
           return false;
         }}
+        className={styles.wrapper}
         maxCount={1}
         showUploadList={false}
       >
-        {children}
+        {/* a very hackable solution: add a pseudo before to have a large hot zone */}
+        <div className={styles.children}>{children}</div>
       </Upload>
     </>
   );

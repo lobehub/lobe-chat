@@ -21,7 +21,6 @@
   "emptyAgent": "Geen assistent beschikbaar",
   "historyRange": "Geschiedenisbereik",
   "inbox": {
-    "defaultMessage": "Hallo, ik ben je slimme assistent. Je kunt me alles vragen en ik zal mijn best doen om je te antwoorden. Als je een meer professionele of op maat gemaakte assistent nodig hebt, klik dan op het `+`-teken om een aangepaste assistent te maken.",
     "desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
     "title": "Praat maar raak"
   },
@@ -50,17 +49,17 @@
   "sessionGroup": {
     "config": "Groepsbeheer",
     "confirmRemoveGroupAlert": "Je staat op het punt deze groep te verwijderen. Na verwijdering zullen de assistenten van deze groep worden verplaatst naar de standaardlijst. Bevestig je actie.",
-    "createAgentSuccess": "Agent succesvol aangemaakt",
+    "createAgentSuccess": "Assistent succesvol aangemaakt",
     "createGroup": "Nieuwe groep toevoegen",
     "createSuccess": "Succesvol aangemaakt",
-    "creatingAgent": "Agent wordt aangemaakt...",
+    "creatingAgent": "Assistent wordt aangemaakt...",
     "inputPlaceholder": "Voer de naam van de groep in...",
     "moveGroup": "Verplaatsen naar groep",
     "newGroup": "Nieuwe groep",
     "rename": "Groepsnaam wijzigen",
     "renameSuccess": "Naam succesvol gewijzigd",
     "sortSuccess": "Sorteren succesvol voltooid",
-    "sorting": "Groepsortering wordt bijgewerkt...",
+    "sorting": "Groepsordening wordt bijgewerkt...",
     "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
   },
   "shareModal": {

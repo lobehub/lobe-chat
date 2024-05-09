@@ -79,8 +79,9 @@ export class ClientService implements ISessionService {
   async countSessions() {
     return SessionModel.count();
   }
+
   async hasSessions() {
-    return (await this.countSessions()) === 0;
+    return (await this.countSessions()) !== 0;
   }
 
   async searchSessions(keyword: string) {
