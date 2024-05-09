@@ -54,6 +54,7 @@ declare global {
       // Groq Provider
       ENABLED_GROQ?: string;
       GROQ_API_KEY?: string;
+      GROQ_PROXY_URL?: string;
 
       // OpenRouter Provider
       ENABLED_OPENROUTER?: string;
@@ -197,6 +198,7 @@ export const getProviderConfig = () => {
     MOONSHOT_PROXY_URL: process.env.MOONSHOT_PROXY_URL,
 
     ENABLED_GROQ: !!GROQ_API_KEY,
+    GROQ_PROXY_URL: process.env.GROQ_PROXY_URL,
     GROQ_API_KEY,
 
     ENABLED_ZEROONE: !!ZEROONE_API_KEY,
