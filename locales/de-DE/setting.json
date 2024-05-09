@@ -38,7 +38,6 @@
     "checker": {
       "button": "Überprüfen",
       "desc": "Überprüfen Sie, ob der API-Schlüssel und die Proxy-Adresse korrekt eingegeben wurden",
-      "ollamaDesc": "Testen Sie, ob die Proxy-Adresse korrekt eingegeben wurde",
       "pass": "Überprüfung bestanden",
       "title": "Konnektivitätsprüfung"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Wählen Sie ein Modell aus der Liste aus",
       "title": "Modellliste",
       "total": "Insgesamt {{count}} Modelle verfügbar"
+    },
+    "proxyUrl": {
+      "desc": "Außer der Standardadresse muss http(s):// enthalten sein",
+      "title": "API-Proxy-Adresse"
     },
     "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates ✨"
   },

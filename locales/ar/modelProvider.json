@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "يجب أن يتضمن العنوان، بخلاف الافتراضي، http(s)://",
-      "placeholder": "https://api.anthropic.com",
-      "title": "عنوان وكيل API"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "أدخل مفتاح API الخاص بـ Anthropic",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "بالإضافة إلى العنوان الافتراضي، يجب أن يتضمن http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "عنوان وكيل API"
-    },
     "title": "Google",
     "token": {
       "desc": "أدخل مفتاح API الخاص بـ Google",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح"
+      "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",
+      "title": "فحص الاتصال"
     },
     "customModelName": {
       "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "أدخل عنوان واجهة برمجة التطبيقات الخاص بـ Ollama، إذا لم يتم تحديده محليًا، يمكن تركه فارغًا",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "عنوان وكيل الواجهة"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "يجب أن يتضمن العنوان، بخلاف الافتراضي، http(s)://",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "عنوان وكيل الواجهة"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "استخدم مفتاح OpenAI الخاص بك",
