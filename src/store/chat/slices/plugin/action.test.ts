@@ -131,7 +131,11 @@ describe('ChatPluginAction', () => {
       });
       expect(storeState.refreshMessages).toHaveBeenCalled();
       expect(storeState.triggerAIMessage).toHaveBeenCalled();
-      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
+        false,
+        'message-id',
+        'plugin/fetchPlugin/end',
+      );
     });
 
     it('should handle errors when the plugin API call fails', async () => {
@@ -159,7 +163,11 @@ describe('ChatPluginAction', () => {
       expect(chatService.runPluginApi).toHaveBeenCalledWith(pluginPayload, { trace: {} });
       expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error);
       expect(storeState.refreshMessages).toHaveBeenCalled();
-      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
+        false,
+        'message-id',
+        'plugin/fetchPlugin/end',
+      );
       expect(storeState.triggerAIMessage).not.toHaveBeenCalled(); // 确保在错误情况下不调用此方法
     });
   });

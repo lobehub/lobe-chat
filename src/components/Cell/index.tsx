@@ -5,7 +5,7 @@ import { ReactNode, memo } from 'react';
 
 const { Item } = List;
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   container: css`
     position: relative;
 
@@ -13,7 +13,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     padding: 16px !important;
 
-    background: ${isDarkMode ? token.colorBgLayout : token.colorBgContainer};
+    background: ${token.colorBgLayout};
     border-radius: 0;
   `,
 }));

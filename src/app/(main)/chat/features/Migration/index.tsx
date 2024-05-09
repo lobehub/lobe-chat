@@ -3,13 +3,13 @@
 import { Spin } from 'antd';
 import { createStore, getMany } from 'idb-keyval';
 import dynamic from 'next/dynamic';
-import { PropsWithChildren, memo, useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 import { MIGRATE_KEY, V1DB_NAME, V1DB_TABLE_NAME } from './const';
 
 const Modal = dynamic(() => import('./Modal'), { loading: () => <Spin fullscreen />, ssr: false });
 
-const Migration = memo<PropsWithChildren>(({ children }) => {
+const Migration = memo(() => {
   const [dbState, setDbState] = useState(null);
   const [open, setOpen] = useState(false);
 
@@ -33,12 +33,7 @@ const Migration = memo<PropsWithChildren>(({ children }) => {
     checkMigration();
   }, []);
 
-  return (
-    <>
-      {open && <Modal open={open} setOpen={setOpen} state={dbState} />}
-      {children}
-    </>
-  );
+  return open && <Modal open={open} setOpen={setOpen} state={dbState} />;
 });
 
 export default Migration;

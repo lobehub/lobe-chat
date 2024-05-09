@@ -63,7 +63,7 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const agentList = useMarketStore((s) => s.agentList, isEqual);
   const { styles } = useStyles();
 
-  const agentLength = mobile ? 3 : 4;
+  const agentLength = mobile ? 2 : 4;
 
   const loadingCards = Array.from({ length: agentLength }).map((_, index) => (
     <Flexbox className={styles.card} key={index}>
