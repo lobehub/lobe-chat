@@ -21,6 +21,7 @@
   "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
   "inbox": {
+    "agentsAndConversations": "Ajanlar ve Konuşmalar",
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
   },

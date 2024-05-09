@@ -22,6 +22,7 @@ export default {
   emptyAgent: '暂无助手',
   historyRange: '历史范围',
   inbox: {
+    assistantsAndConversations: '助手与会话',
     desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
     title: '随便聊聊',
   },

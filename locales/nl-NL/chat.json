@@ -21,6 +21,7 @@
   "emptyAgent": "Geen assistent beschikbaar",
   "historyRange": "Geschiedenisbereik",
   "inbox": {
+    "agentsAndConversations": "agenten en gesprekken",
     "desc": "Activeer de hersencluster en laat de vonken van gedachten overslaan. Je slimme assistent, hier om met je over alles te praten.",
     "title": "Praat maar raak"
   },
