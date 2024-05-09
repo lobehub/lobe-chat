@@ -7,8 +7,18 @@ export interface ChatMessageState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
-  chatLoadingId?: string;
+  /**
+   * is the AI message is generating
+   */
+  chatLoadingIds: string[];
   inputMessage: string;
+  /**
+   * is the message is editing
+   */
+  messageEditingIds: string[];
+  /**
+   * is the message is creating or updating in the service
+   */
   messageLoadingIds: string[];
   messages: ChatMessage[];
   /**
@@ -19,7 +29,9 @@ export interface ChatMessageState {
 
 export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
+  chatLoadingIds: [],
   inputMessage: '',
+  messageEditingIds: [],
   messageLoadingIds: [],
   messages: [],
   messagesInit: false,

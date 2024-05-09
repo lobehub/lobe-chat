@@ -97,6 +97,8 @@ export const globalActionSlice: StateCreator<
         onSuccess: (preference) => {
           const nextPreference = merge(get().preference, preference);
 
+          set({ isPreferenceInit: true });
+
           if (isEqual(get().preference, nextPreference)) return;
 
           set({ preference: nextPreference }, false, n('initPreference'));

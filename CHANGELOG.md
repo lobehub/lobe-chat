@@ -2,6 +2,140 @@
 
 # Changelog
 
+### [Version 0.155.9](https://github.com/lobehub/lobe-chat/compare/v0.155.8...v0.155.9)
+
+<sup>Released on **2024-05-09**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.8](https://github.com/lobehub/lobe-chat/compare/v0.155.7...v0.155.8)
+
+<sup>Released on **2024-05-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix mobile session style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix mobile session style ([998a191](https://github.com/lobehub/lobe-chat/commit/998a191))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.7](https://github.com/lobehub/lobe-chat/compare/v0.155.6...v0.155.7)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix panel expand.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix panel expand ([5e78089](https://github.com/lobehub/lobe-chat/commit/5e78089))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.6](https://github.com/lobehub/lobe-chat/compare/v0.155.5...v0.155.6)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix editing long message issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix editing long message issue, closes [#2431](https://github.com/lobehub/lobe-chat/issues/2431) ([380d8da](https://github.com/lobehub/lobe-chat/commit/380d8da))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.5](https://github.com/lobehub/lobe-chat/compare/v0.155.4...v0.155.5)
+
+<sup>Released on **2024-05-08**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.155.4](https://github.com/lobehub/lobe-chat/compare/v0.155.3...v0.155.4)
+
+<sup>Released on **2024-05-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Agent Settings Form.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Agent Settings Form ([12c62a0](https://github.com/lobehub/lobe-chat/commit/12c62a0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.155.3](https://github.com/lobehub/lobe-chat/compare/v0.155.2...v0.155.3)
 
 <sup>Released on **2024-05-08**</sup>

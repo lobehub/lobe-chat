@@ -6,7 +6,7 @@ import isEqual from 'fast-deep-equal';
 import { isString } from 'lodash-es';
 import { Wand2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
@@ -77,60 +77,57 @@ const AgentMeta = memo(() => {
     };
   });
 
-  const metaData: ItemGroup = useMemo(
-    () => ({
-      children: [
-        {
-          children: (
-            <EmojiPicker
-              backgroundColor={meta.backgroundColor}
-              locale={locale}
-              onChange={(avatar) => updateMeta({ avatar })}
-              value={meta.avatar}
-            />
-          ),
-          label: t('settingAgent.avatar.title'),
-          minWidth: undefined,
-        },
-        {
-          children: (
-            <BackgroundSwatches
-              backgroundColor={meta.backgroundColor}
-              onChange={(backgroundColor) => updateMeta({ backgroundColor })}
-            />
-          ),
-          label: t('settingAgent.backgroundColor.title'),
-          minWidth: undefined,
-        },
-        ...autocompleteItems,
-      ],
-      extra: (
-        <Tooltip
-          title={
-            !hasSystemRole
-              ? t('autoGenerateTooltipDisabled', { ns: 'common' })
-              : t('autoGenerateTooltip', { ns: 'common' })
-          }
-        >
-          <Button
-            disabled={!hasSystemRole}
-            icon={<Icon icon={Wand2} />}
-            loading={Object.values(loading).some((i) => !!i)}
-            onClick={(e: any) => {
-              e.stopPropagation();
+  const metaData: ItemGroup = {
+    children: [
+      {
+        children: (
+          <EmojiPicker
+            backgroundColor={meta.backgroundColor}
+            locale={locale}
+            onChange={(avatar) => updateMeta({ avatar })}
+            value={meta.avatar}
+          />
+        ),
+        label: t('settingAgent.avatar.title'),
+        minWidth: undefined,
+      },
+      {
+        children: (
+          <BackgroundSwatches
+            backgroundColor={meta.backgroundColor}
+            onChange={(backgroundColor) => updateMeta({ backgroundColor })}
+          />
+        ),
+        label: t('settingAgent.backgroundColor.title'),
+        minWidth: undefined,
+      },
+      ...autocompleteItems,
+    ],
+    extra: (
+      <Tooltip
+        title={
+          !hasSystemRole
+            ? t('autoGenerateTooltipDisabled', { ns: 'common' })
+            : t('autoGenerateTooltip', { ns: 'common' })
+        }
+      >
+        <Button
+          disabled={!hasSystemRole}
+          icon={<Icon icon={Wand2} />}
+          loading={Object.values(loading).some((i) => !!i)}
+          onClick={(e: any) => {
+            e.stopPropagation();
 
-              autocompleteAllMeta(true);
-            }}
-            size={'small'}
-          >
-            {t('autoGenerate', { ns: 'common' })}
-          </Button>
-        </Tooltip>
-      ),
-      title: t('settingAgent.title'),
-    }),
-    [autocompleteItems, meta],
-  );
+            autocompleteAllMeta(true);
+          }}
+          size={'small'}
+        >
+          {t('autoGenerate', { ns: 'common' })}
+        </Button>
+      </Tooltip>
+    ),
+    title: t('settingAgent.title'),
+  };
 
   return <Form items={[metaData]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />;
 });

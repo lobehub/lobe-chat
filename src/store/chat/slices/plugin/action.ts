@@ -135,7 +135,11 @@ export const chatPlugin: StateCreator<
     let data: string;
 
     try {
-      const abortController = internal_toggleChatLoading(true, id, n('fetchPlugin') as string);
+      const abortController = internal_toggleChatLoading(
+        true,
+        id,
+        n('fetchPlugin/start') as string,
+      );
 
       const message = chatSelectors.getMessageById(id)(get());
 
@@ -162,7 +166,7 @@ export const chatPlugin: StateCreator<
       data = '';
     }
 
-    internal_toggleChatLoading(false);
+    internal_toggleChatLoading(false, id, n('fetchPlugin/end') as string);
     // 如果报错则结束了
     if (!data) return;
 
