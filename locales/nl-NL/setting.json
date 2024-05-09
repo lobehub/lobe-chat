@@ -38,7 +38,6 @@
     "checker": {
       "button": "Controleren",
       "desc": "Test of de API-sleutel en proxyadres correct zijn ingevuld",
-      "ollamaDesc": "Controleer of het proxy-adres correct is ingevuld",
       "pass": "Succesvol gecontroleerd",
       "title": "Connectiviteitscontrole"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Selecteer een model uit de lijst",
       "title": "Modellijst",
       "total": "In totaal {{count}} modellen beschikbaar"
+    },
+    "proxyUrl": {
+      "desc": "Moet http(s):// bevatten, naast het standaardadres",
+      "title": "API Proxy Adres"
     },
     "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
   },

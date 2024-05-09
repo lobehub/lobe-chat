@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Must include http(s):// in addition to the default address",
-      "placeholder": "https://api.anthropic.com",
-      "title": "API Proxy Address"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Enter the API Key from Anthropic",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "Must include http(s):// besides the default address",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API Proxy Address"
-    },
     "title": "Google",
     "token": {
       "desc": "Enter the API Key from Google",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Test if the proxy address is correctly filled in"
+      "desc": "Test if the proxy address is correctly filled in",
+      "title": "Connectivity Check"
     },
     "customModelName": {
       "desc": "Add custom models, separate multiple models with commas",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Interface proxy address"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Must include http(s):// besides the default address",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Interface proxy address"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Use your own OpenAI Key",

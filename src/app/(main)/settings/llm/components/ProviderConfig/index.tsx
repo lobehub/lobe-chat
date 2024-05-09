@@ -57,9 +57,15 @@ interface ProviderConfigProps {
     showModelFetcher?: boolean;
   };
   provider: GlobalLLMProviderKey;
+  proxyUrl?:
+    | {
+        desc?: string;
+        placeholder: string;
+        title?: string;
+      }
+    | false;
   showApiKey?: boolean;
   showBrowserRequest?: boolean;
-  showEndpoint?: boolean;
   title: ReactNode;
 }
 
@@ -67,7 +73,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
   ({
     apiKeyItems,
     provider,
-    showEndpoint,
+    proxyUrl,
     showApiKey = true,
     checkModel,
     canDeactivate = true,
@@ -112,14 +118,13 @@ const ProviderConfig = memo<ProviderConfigProps>(
           },
         ];
 
+    const showEndpoint = !!proxyUrl;
     const formItems = [
       ...apiKeyItem,
       showEndpoint && {
-        children: (
-          <Input allowClear placeholder={modelT(`${provider}.endpoint.placeholder` as any)} />
-        ),
-        desc: modelT(`${provider}.endpoint.desc` as any),
-        label: modelT(`${provider}.endpoint.title` as any),
+        children: <Input allowClear placeholder={proxyUrl?.placeholder} />,
+        desc: proxyUrl?.desc || t('llm.proxyUrl.desc'),
+        label: proxyUrl?.title || t('llm.proxyUrl.title'),
         name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
       },
       (showBrowserRequest || (showEndpoint && isProviderEndpointNotEmpty)) && {
