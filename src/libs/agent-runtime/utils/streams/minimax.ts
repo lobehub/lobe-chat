@@ -2,7 +2,7 @@ import { createCallbacksTransformer } from 'ai';
 import OpenAI from 'openai';
 
 import { ChatStreamCallbacks } from '../../types';
-import { transformOpenAIStream } from './protocol';
+import { transformOpenAIStream } from './openai';
 
 const unit8ArrayToJSONChunk = (unit8Array: Uint8Array): OpenAI.ChatCompletionChunk => {
   const decoder = new TextDecoder();
