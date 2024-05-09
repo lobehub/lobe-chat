@@ -1,12 +1,10 @@
-import OpenAI from 'openai';
-
 export interface StreamProtocolChunk {
   data: any;
   id: string;
   type: 'text' | 'tool_calls' | 'data' | 'stop';
 }
 
-export interface StreamToolCallChunk {
+export interface StreamToolCallChunkData {
   function?: {
     arguments?: string;
     name?: string | null;
@@ -14,6 +12,13 @@ export interface StreamToolCallChunk {
   id: string;
   index: number;
   type: 'function' | string;
+}
+
+export interface StreamProtocolToolCallChunk {
+  data: StreamToolCallChunkData[];
+  id: string;
+  index: number;
+  type: 'tool_calls';
 }
 
 export const generateToolCallId = (index: number, functionName?: string) =>

@@ -9,7 +9,7 @@ import { nanoid } from '@/utils/uuid';
 import { ChatStreamCallbacks } from '../../types';
 import {
   StreamProtocolChunk,
-  StreamToolCallChunk,
+  StreamToolCallChunkData,
   chatStreamable,
   generateToolCallId,
 } from './protocol';
@@ -23,7 +23,7 @@ const transformGoogleGenerativeAIStream = (
   if (functionCalls) {
     return {
       data: functionCalls.map(
-        (value, index): StreamToolCallChunk => ({
+        (value, index): StreamToolCallChunkData => ({
           function: {
             arguments: JSON.stringify(value.args),
             name: value.name,

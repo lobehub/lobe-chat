@@ -3,7 +3,12 @@ import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
 import { ChatStreamCallbacks } from '../../types';
-import { StreamProtocolChunk, StreamToolCallChunk, generateToolCallId } from './protocol';
+import {
+  StreamProtocolChunk,
+  StreamProtocolToolCallChunk,
+  StreamToolCallChunkData,
+  generateToolCallId,
+} from './protocol';
 
 export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
@@ -16,7 +21,7 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): Stream
   if (item.delta?.tool_calls) {
     return {
       data: item.delta.tool_calls.map(
-        (value, index): StreamToolCallChunk => ({
+        (value, index): StreamToolCallChunkData => ({
           function: value.function,
           id: value.id || generateToolCallId(index, value.function?.name),
 
@@ -33,7 +38,7 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): Stream
       ),
       id: chunk.id,
       type: 'tool_calls',
-    };
+    } as StreamProtocolToolCallChunk;
   }
 
   // 给定结束原因

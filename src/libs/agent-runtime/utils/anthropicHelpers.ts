@@ -30,13 +30,63 @@ export const buildAnthropicMessage = (
   message: OpenAIChatMessage,
 ): Anthropic.Messages.MessageParam => {
   const content = message.content as string | UserMessageContentPart[];
-  return {
-    content: typeof content === 'string' ? content : content.map((c) => buildAnthropicBlock(c)),
-    role:
-      message.role === 'tool' || message.role === 'function' || message.role === 'system'
-        ? 'assistant'
-        : message.role,
-  };
+
+  switch (message.role) {
+    case 'system': {
+      return { content: content as string, role: 'user' };
+    }
+
+    case 'user': {
+      return {
+        content: typeof content === 'string' ? content : content.map((c) => buildAnthropicBlock(c)),
+        role: 'user',
+      };
+    }
+
+    case 'tool': {
+      // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
+      return {
+        content: [
+          {
+            content: message.content,
+            tool_use_id: message.tool_call_id,
+            type: 'tool_result',
+          } as any,
+        ],
+        role: 'user',
+      };
+    }
+
+    case 'assistant': {
+      // if there is tool_calls , we need to covert the tool_calls to tool_use content block
+      // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
+      if (message.tool_calls) {
+        return {
+          content: [
+            // avoid empty text content block
+            !!message.content && {
+              text: message.content as string,
+              type: 'text',
+            },
+            ...(message.tool_calls.map((tool) => ({
+              id: tool.id,
+              input: JSON.parse(tool.function.arguments),
+              name: tool.function.name,
+              type: 'tool_use',
+            })) as any),
+          ].filter(Boolean),
+          role: 'assistant',
+        };
+      }
+
+      // or it's a plain assistant message
+      return { content: content as string, role: 'assistant' };
+    }
+
+    case 'function': {
+      return { content: content as string, role: 'assistant' };
+    }
+  }
 };
 
 export const buildAnthropicMessages = (

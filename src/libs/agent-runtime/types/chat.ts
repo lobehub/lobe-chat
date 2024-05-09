@@ -32,6 +32,7 @@ export interface OpenAIChatMessage {
    * @description 消息发送者的角色
    */
   role: LLMRoleType;
+  tool_call_id?: string;
   tool_calls?: MessageToolCall[];
 }
 
