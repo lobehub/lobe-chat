@@ -10,34 +10,31 @@ import { useQuery } from '@/hooks/useQuery';
 import { LayoutProps } from './type';
 
 const useStyles = createStyles(({ css, token }) => ({
-  active: css`
-    display: unset;
-  `,
   main: css`
     position: relative;
     overflow: hidden;
-    display: none;
     background: ${token.colorBgLayout};
   `,
 }));
 
 const Layout = memo<LayoutProps>(({ children, session }) => {
   const { showMobileWorkspace } = useQuery();
-  const { cx, styles } = useStyles();
+  const { styles } = useStyles();
 
   return (
     <>
       <Flexbox
-        className={cx(styles.main, !showMobileWorkspace && styles.active)}
+        className={styles.main}
         height="100%"
+        style={showMobileWorkspace ? { display: 'none' } : undefined}
         width="100%"
       >
         {session}
       </Flexbox>
       <Flexbox
-        className={cx(styles.main, showMobileWorkspace && styles.active)}
+        className={styles.main}
         height="100%"
-        id={'lobe-workspace-mobile'}
+        style={showMobileWorkspace ? undefined : { display: 'none' }}
         width="100%"
       >
         {children}
