@@ -27,21 +27,11 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    const { messages, model, max_tokens, temperature, top_p } = payload;
-    const system_message = messages.find((m) => m.role === 'system');
-    const user_messages = messages.filter((m) => m.role !== 'system');
-
     try {
+      const anthropicPayload = this.buildAnthropicPayload(payload);
+
       const response = await this.client.messages.create(
-        {
-          max_tokens: max_tokens || 4096,
-          messages: buildAnthropicMessages(user_messages),
-          model: model,
-          stream: true,
-          system: system_message?.content as string,
-          temperature: temperature,
-          top_p: top_p,
-        },
+        { ...anthropicPayload, stream: true },
         { signal: options?.signal },
       );
 
@@ -71,6 +61,15 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
               provider: ModelProvider.Anthropic,
             });
           }
+
+          case 403: {
+            throw AgentRuntimeError.chat({
+              endpoint: desensitizedEndpoint,
+              error: error as any,
+              errorType: AgentRuntimeErrorType.LocationNotSupportError,
+              provider: ModelProvider.Anthropic,
+            });
+          }
           default: {
             break;
           }
@@ -83,6 +82,22 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
         provider: ModelProvider.Anthropic,
       });
     }
+  }
+
+  private buildAnthropicPayload(payload: ChatStreamPayload) {
+    const { messages, model, max_tokens, temperature, top_p } = payload;
+    const system_message = messages.find((m) => m.role === 'system');
+    const user_messages = messages.filter((m) => m.role !== 'system');
+
+    return {
+      max_tokens: max_tokens || 4096,
+      messages: buildAnthropicMessages(user_messages),
+      model: model,
+      stream: true,
+      system: system_message?.content as string,
+      temperature: temperature,
+      top_p: top_p,
+    };
   }
 }
 

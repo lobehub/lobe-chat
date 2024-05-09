@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "除預設地址外，必須包含 http(s)://",
-      "placeholder": "https://api.anthropic.com",
-      "title": "API 代理地址"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "填入來自 Anthropic 的 API 金鑰",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "除了預設地址外，必須包含 http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API 代理地址"
-    },
     "title": "Google",
     "token": {
       "desc": "填入來自 Google 的 API 金鑰",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "測試代理地址是否正確填寫"
+      "desc": "測試代理地址是否正確填寫",
+      "title": "連通性檢查"
     },
     "customModelName": {
       "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "填入 Ollama 接口代理地址，本地未額外指定可留空",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "接口代理地址"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "除默認地址外，必須包含 http(s)://",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "接口代理地址"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "使用自己的 OpenAI 金鑰",
