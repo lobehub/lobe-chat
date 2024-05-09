@@ -195,13 +195,15 @@ export const useMenu = () => {
     ...helps,
   ].filter(Boolean) as MenuProps['items'];
 
-  const logoutItems: MenuProps['items'] = [
-    {
-      icon: <Icon icon={LogOut} />,
-      key: 'logout',
-      label: <span>{t('signout', { ns: 'auth' })}</span>,
-    },
-  ];
+  const logoutItems: MenuProps['items'] = isLoginWithAuth
+    ? [
+        {
+          icon: <Icon icon={LogOut} />,
+          key: 'logout',
+          label: <span>{t('signout', { ns: 'auth' })}</span>,
+        },
+      ]
+    : [];
 
   return { logoutItems, mainItems };
 };

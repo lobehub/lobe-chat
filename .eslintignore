@@ -11,7 +11,7 @@ coverage
 # test
 jest*
 _test_
-__test__
+src/app/(main)/(mobile)/me/(home)/__tests__
 *.test.ts
 
 # umi
