@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 
 import Header from './Header';
 
-const MobileLayout = ({ children }: PropsWithChildren) => {
+const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <Header />
@@ -11,4 +11,6 @@ const MobileLayout = ({ children }: PropsWithChildren) => {
   );
 };
 
-export default MobileLayout;
+Layout.displayName = 'ProfileMobileLayout';
+
+export default Layout;

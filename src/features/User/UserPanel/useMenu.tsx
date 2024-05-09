@@ -19,6 +19,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
+import { enableClerk } from '@/const/auth';
 import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
@@ -189,7 +190,7 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-    ...(isLoginWithAuth ? profile : []),
+    ...(enableClerk && isLoginWithAuth ? profile : []),
     ...(isLogin ? settings : []),
     ...(isLogin ? data : []),
     ...helps,

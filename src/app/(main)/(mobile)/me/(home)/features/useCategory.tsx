@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { enableAuth } from '@/const/auth';
+import { enableAuth, enableClerk } from '@/const/auth';
 import { DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
@@ -84,7 +84,7 @@ export const useCategory = () => {
     {
       type: 'divider',
     },
-    ...(isLoginWithAuth ? profile : []),
+    ...(enableClerk && isLoginWithAuth ? profile : []),
     ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
     ...(isLogin ? data : []),
     ...helps,

@@ -45,16 +45,20 @@ vi.mock('./useNewVersion', () => ({
 
 // 定义一个变量来存储 enableAuth 的值
 let enableAuth = true;
-
+let enableClerk = true;
 // 模拟 @/const/auth 模块
 vi.mock('@/const/auth', () => ({
   get enableAuth() {
     return enableAuth;
   },
+  get enableClerk() {
+    return enableClerk;
+  },
 }));
 
 afterEach(() => {
   enableAuth = true;
+  enableClerk = true;
 });
 
 describe('useMenu', () => {
@@ -63,6 +67,27 @@ describe('useMenu', () => {
       useUserStore.setState({ isSignedIn: true });
     });
     enableAuth = true;
+    enableClerk = false;
+
+    const { result } = renderHook(() => useMenu());
+
+    act(() => {
+      const { mainItems, logoutItems } = result.current;
+      expect(mainItems?.some((item) => item?.key === 'profile')).toBe(false);
+      expect(mainItems?.some((item) => item?.key === 'setting')).toBe(true);
+      expect(mainItems?.some((item) => item?.key === 'import')).toBe(true);
+      expect(mainItems?.some((item) => item?.key === 'export')).toBe(true);
+      expect(mainItems?.some((item) => item?.key === 'discord')).toBe(true);
+      expect(logoutItems.some((item) => item?.key === 'logout')).toBe(true);
+    });
+  });
+
+  it('should provide correct menu items when user is logged in with Clerk', () => {
+    act(() => {
+      useUserStore.setState({ isSignedIn: true });
+    });
+    enableAuth = true;
+    enableClerk = true;
 
     const { result } = renderHook(() => useMenu());
 
