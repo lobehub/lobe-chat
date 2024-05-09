@@ -38,7 +38,6 @@
     "checker": {
       "button": "Comprobar",
       "desc": "Comprueba si la clave API y la dirección del proxy están escritas correctamente",
-      "ollamaDesc": "Verifica si la dirección del proxy está correctamente completada",
       "pass": "Comprobación exitosa",
       "title": "Comprobación de conectividad"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Selecciona un modelo de la lista",
       "title": "Lista de modelos",
       "total": "Total de {{count}} modelos disponibles"
+    },
+    "proxyUrl": {
+      "desc": "Además de la dirección predeterminada, debe incluir http(s)://",
+      "title": "Dirección del proxy de la API"
     },
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos! ✨"
   },

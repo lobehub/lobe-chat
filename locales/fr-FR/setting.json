@@ -38,7 +38,6 @@
     "checker": {
       "button": "Vérifier",
       "desc": "Vérifie si la clé API et l'adresse du proxy sont correctement renseignées",
-      "ollamaDesc": "Vérifiez si l'adresse du proxy est correctement renseignée",
       "pass": "Vérification réussie",
       "title": "Vérification de la connectivité"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Veuillez sélectionner un modèle dans la liste",
       "title": "Liste des modèles",
       "total": "{{count}} modèles disponibles au total"
+    },
+    "proxyUrl": {
+      "desc": "Doit inclure http(s):// en plus de l'adresse par défaut",
+      "title": "Adresse du proxy de l'API"
     },
     "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute ✨"
   },

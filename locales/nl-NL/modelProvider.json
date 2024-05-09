@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Naast het standaardadres moet http(s):// worden opgenomen",
-      "placeholder": "https://api.anthropic.com",
-      "title": "API Proxy Adres"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Voer de API Key van Anthropic in",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "除默认地址外，必须包含 http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API 代理地址"
-    },
     "title": "Google",
     "token": {
       "desc": "Voer de API Key van Google in",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Test of het proxyadres correct is ingevuld"
+      "desc": "Test of het proxyadres correct is ingevuld",
+      "title": "Connectiviteitscontrole"
     },
     "customModelName": {
       "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Voer het Ollama interface proxyadres in, laat leeg indien niet specifiek aangegeven",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Interface Proxyadres"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Naast het standaardadres moet http(s):// worden opgenomen",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Interface Proxyadres"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Gebruik je eigen OpenAI Key",
