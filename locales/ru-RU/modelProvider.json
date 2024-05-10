@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Должен включать http(s):// помимо стандартного адреса",
-      "placeholder": "https://api.anthropic.com",
-      "title": "Адрес API-прокси"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Введите свой API Key от Anthropic",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "Помимо адреса по умолчанию, должен включать http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "Адрес прокси-API"
-    },
     "title": "Google",
     "token": {
       "desc": "Введите свой API Key от Google",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Проверить правильность адреса прокси"
+      "desc": "Проверить правильность адреса прокси",
+      "title": "Проверка связности"
     },
     "customModelName": {
       "desc": "Добавить кастомные модели, разделяя их через запятую (,)",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Введите адрес прокси-интерфейса Ollama, если локально не указано иное, можете оставить пустым",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Адрес прокси-интерфейса"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Должен включать http(s):// помимо стандартного адреса",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Адрес прокси-интерфейса"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Используйте свой собственный OpenAI Key",

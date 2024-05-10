@@ -14,7 +14,9 @@ const AnthropicProvider = memo(() => {
     <ProviderConfig
       checkModel={'claude-3-haiku-20240307'}
       provider={ModelProvider.Anthropic}
-      showEndpoint
+      proxyUrl={{
+        placeholder: 'https://api.anthropic.com',
+      }}
       title={<Anthropic.Text color={isDarkMode ? undefined : Claude.colorPrimary} size={15} />}
     />
   );
