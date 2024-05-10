@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
 import { OpenAIChatMessage, UserMessageContentPart } from '../types';
 import { parseDataUri } from './uriParser';
@@ -108,3 +109,12 @@ export const buildAnthropicMessages = (
 
   return messages;
 };
+
+export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
+  tools?.map(
+    (tool): Anthropic.Beta.Tools.Tool => ({
+      description: tool.function.description,
+      input_schema: tool.function.parameters as Anthropic.Beta.Tools.Tool.InputSchema,
+      name: tool.function.name,
+    }),
+  );

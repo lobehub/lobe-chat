@@ -9,7 +9,7 @@ import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../typ
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { buildAnthropicMessages } from '../utils/anthropicHelpers';
+import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { StreamingResponse } from '../utils/response';
 import { AnthropicStream } from '../utils/streams';
 
@@ -120,13 +120,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       temperature,
       // TODO: Anthropic sdk don't have tools interface currently
       // @ts-ignore
-      tools: tools?.map(
-        (tool): Anthropic.Beta.Tools.Tool => ({
-          description: tool.function.description,
-          input_schema: tool.function.parameters as Anthropic.Beta.Tools.Tool.InputSchema,
-          name: tool.function.name,
-        }),
-      ),
+      tools: buildAnthropicTools(tools),
       top_p,
     } satisfies Anthropic.MessageCreateParams;
   }
