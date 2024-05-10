@@ -2,6 +2,23 @@
 
 # Changelog
 
+### [Version 0.156.2](https://github.com/lobehub/lobe-chat/compare/v0.156.1...v0.156.2)
+
+<sup>Released on **2024-05-10**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.156.1](https://github.com/lobehub/lobe-chat/compare/v0.156.0...v0.156.1)
 
 <sup>Released on **2024-05-10**</sup>
