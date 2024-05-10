@@ -123,7 +123,7 @@ const getFunctionMessageProps =
     command: plugin,
     content,
     id: plugin?.identifier,
-    loading: id === s.chatLoadingId,
+    loading: s.chatLoadingIds.includes(id),
     type: plugin?.type as LobePluginType,
   });
 
@@ -133,6 +133,11 @@ const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(i
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
 
 const currentChatLoadingState = (s: ChatStore) => !s.messagesInit;
+
+const isMessageEditing = (id: string) => (s: ChatStore) => s.messageEditingIds.includes(id);
+const isMessageLoading = (id: string) => (s: ChatStore) => s.messageLoadingIds.includes(id);
+const isMessageGenerating = (id: string) => (s: ChatStore) => s.chatLoadingIds.includes(id);
+const isAIGenerating = (s: ChatStore) => s.chatLoadingIds.length > 0;
 
 export const chatSelectors = {
   chatsMessageString,
@@ -145,6 +150,10 @@ export const chatSelectors = {
   getFunctionMessageProps,
   getMessageById,
   getTraceIdByMessageId,
+  isAIGenerating,
+  isMessageEditing,
+  isMessageGenerating,
+  isMessageLoading,
   latestMessage,
   showInboxWelcome,
 };

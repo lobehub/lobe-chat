@@ -35,7 +35,7 @@ const AutoGenerateSelect = memo<AutoGenerateInputProps>(
                 color: theme.colorInfo,
                 marginRight: -4,
               }}
-              title={t('autoGenerate')}
+              title={!canAutoGenerate ? t('autoGenerateTooltipDisabled') : t('autoGenerate')}
             />
           )
         }

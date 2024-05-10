@@ -8,6 +8,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
+import { enableAuth } from '@/const/auth';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
@@ -32,6 +33,7 @@ const Theme = memo(() => {
     children: [
       {
         children: <AvatarWithUpload />,
+        hidden: enableAuth,
         label: t('settingTheme.avatar.title'),
         minWidth: undefined,
       },

@@ -3,9 +3,10 @@ import { Center } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
 import Divider from '@/components/Cell/Divider';
+import DataStatistics from '@/features/User/DataStatistics';
+import UserInfo from '@/features/User/UserInfo';
 import { isMobileDevice } from '@/utils/responsive';
 
-import AvatarBanner from './features/AvatarBanner';
 import Cate from './features/Cate';
 import ExtraCate from './features/ExtraCate';
 
@@ -16,7 +17,8 @@ const Page = () => {
 
   return (
     <>
-      <AvatarBanner />
+      <UserInfo />
+      <DataStatistics paddingInline={12} style={{ paddingBottom: 6 }} />
       <Divider />
       <Cate />
       <ExtraCate />

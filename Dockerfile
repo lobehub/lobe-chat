@@ -19,13 +19,33 @@ RUN corepack enable
 WORKDIR /app
 
 COPY package.json ./
+COPY .npmrc ./
 
 # If you want to build docker in China
 # RUN npm config set registry https://registry.npmmirror.com/
 RUN pnpm i
 
 COPY . .
-RUN pnpm run build:docker # run build standalone for docker version
+
+ENV NEXT_PUBLIC_BASE_PATH ""
+
+# Sentry
+ENV NEXT_PUBLIC_SENTRY_DSN ""
+ENV SENTRY_ORG ""
+ENV SENTRY_PROJECT ""
+
+# Posthog
+ENV NEXT_PUBLIC_ANALYTICS_POSTHOG ""
+ENV NEXT_PUBLIC_POSTHOG_KEY ""
+ENV NEXT_PUBLIC_POSTHOG_HOST ""
+
+# Umami
+ENV NEXT_PUBLIC_ANALYTICS_UMAMI ""
+ENV NEXT_PUBLIC_UMAMI_SCRIPT_URL ""
+ENV NEXT_PUBLIC_UMAMI_WEBSITE_ID ""
+
+
+RUN npm run build:docker # run build standalone for docker version
 
 ## Production image, copy all the files and run next
 FROM base AS runner

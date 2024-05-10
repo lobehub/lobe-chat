@@ -38,7 +38,6 @@
     "checker": {
       "button": "Überprüfen",
       "desc": "Überprüfen Sie, ob der API-Schlüssel und die Proxy-Adresse korrekt eingegeben wurden",
-      "ollamaDesc": "Testen Sie, ob die Proxy-Adresse korrekt eingegeben wurde",
       "pass": "Überprüfung bestanden",
       "title": "Konnektivitätsprüfung"
     },
@@ -71,7 +70,8 @@
         },
         "modalTitle": "Benutzerdefinierte Modellkonfiguration",
         "tokens": {
-          "title": "Maximale Token-Anzahl"
+          "title": "Maximale Token-Anzahl",
+          "unlimited": "unbegrenzt"
         },
         "vision": {
           "extra": "Diese Konfiguration aktiviert nur die Bild-Upload-Konfiguration in LobeChat. Die Unterstützung der Erkennung hängt vollständig von dem Modell selbst ab. Bitte testen Sie die Verfügbarkeit der visuellen Erkennungsfähigkeiten des Modells selbst.",
@@ -94,6 +94,10 @@
       "placeholder": "Wählen Sie ein Modell aus der Liste aus",
       "title": "Modellliste",
       "total": "Insgesamt {{count}} Modelle verfügbar"
+    },
+    "proxyUrl": {
+      "desc": "Außer der Standardadresse muss http(s):// enthalten sein",
+      "title": "API-Proxy-Adresse"
     },
     "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates ✨"
   },

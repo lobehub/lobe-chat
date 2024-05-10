@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat wird initialisiert. Bitte haben Sie einen Moment Geduld...",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
+  "autoGenerateTooltipDisabled": "Bitte geben Sie einen Hinweis ein, um die automatische Vervollständigung zu aktivieren",
   "blog": "Produkt-Blog",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
@@ -11,6 +12,12 @@
   "copy": "Kopieren",
   "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
+  "dataStatistics": {
+    "messages": "Nachrichten",
+    "sessions": "Sitzungen",
+    "today": "Heute",
+    "topics": "Themen"
+  },
   "defaultAgent": "Standardassistent",
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
@@ -160,6 +167,7 @@
     "newVersion": "Neue Version verfügbar: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Anonymer Benutzer",
     "billing": "Abrechnung verwalten",
     "defaultNickname": "Community User",
     "discord": "Community-Support",

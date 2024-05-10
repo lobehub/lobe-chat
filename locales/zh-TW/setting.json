@@ -38,7 +38,6 @@
     "checker": {
       "button": "檢查",
       "desc": "測試 API 金鑰與代理地址是否正確填寫",
-      "ollamaDesc": "測試代理地址是否正確填寫",
       "pass": "檢查通過",
       "title": "連通性檢查"
     },
@@ -71,7 +70,8 @@
         },
         "modalTitle": "自定義模型配置",
         "tokens": {
-          "title": "最大 token 數"
+          "title": "最大 token 數",
+          "unlimited": "無限制"
         },
         "vision": {
           "extra": "此配置將僅開啟 LobeChat 中的圖片上傳配置，是否支持識別完全取決於模型本身，請自行測試該模型的視覺識別能力可用性",
@@ -94,6 +94,10 @@
       "placeholder": "請從列表中選擇模型",
       "title": "模型列表",
       "total": "共 {{count}} 個模型可用"
+    },
+    "proxyUrl": {
+      "desc": "必須包含 http(s):// 以外的預設地址",
+      "title": "API 代理位址"
     },
     "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
   },

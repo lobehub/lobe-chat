@@ -2,7 +2,7 @@
 
 import { Form, type FormItemProps, type ItemGroup } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
-import { createStyles, css } from 'antd-style';
+import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,21 @@ import { GlobalLLMProviderKey } from '@/types/settings';
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
 
-const useStyles = createStyles(() => ({
+const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
+  form: css`
+    .${prefixCls}-form-item-control:has(.${prefixCls}-input,.${prefixCls}-select) {
+      flex: none;
+      width: min(70%, 800px);
+      min-width: min(70%, 800px) !important;
+    }
+    ${responsive.mobile} {
+      width: 100%;
+      min-width: unset !important;
+    }
+    .${prefixCls}-select-selection-overflow-item {
+      font-size: 12px;
+    }
+  `,
   safariIconWidthFix: css`
     svg {
       width: unset !important;
@@ -43,9 +57,15 @@ interface ProviderConfigProps {
     showModelFetcher?: boolean;
   };
   provider: GlobalLLMProviderKey;
+  proxyUrl?:
+    | {
+        desc?: string;
+        placeholder: string;
+        title?: string;
+      }
+    | false;
   showApiKey?: boolean;
   showBrowserRequest?: boolean;
-  showEndpoint?: boolean;
   title: ReactNode;
 }
 
@@ -53,7 +73,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
   ({
     apiKeyItems,
     provider,
-    showEndpoint,
+    proxyUrl,
     showApiKey = true,
     checkModel,
     canDeactivate = true,
@@ -98,14 +118,13 @@ const ProviderConfig = memo<ProviderConfigProps>(
           },
         ];
 
+    const showEndpoint = !!proxyUrl;
     const formItems = [
       ...apiKeyItem,
       showEndpoint && {
-        children: (
-          <Input allowClear placeholder={modelT(`${provider}.endpoint.placeholder` as any)} />
-        ),
-        desc: modelT(`${provider}.endpoint.desc` as any),
-        label: modelT(`${provider}.endpoint.title` as any),
+        children: <Input allowClear placeholder={proxyUrl?.placeholder} />,
+        desc: proxyUrl?.desc || t('llm.proxyUrl.desc'),
+        label: proxyUrl?.title || t('llm.proxyUrl.title'),
         name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
       },
       (showBrowserRequest || (showEndpoint && isProviderEndpointNotEmpty)) && {
@@ -173,11 +192,11 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     return (
       <Form
+        className={styles.form}
         form={form}
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}
         {...FORM_STYLE}
-        itemMinWidth={'max(50%,400px)'}
       />
     );
   },

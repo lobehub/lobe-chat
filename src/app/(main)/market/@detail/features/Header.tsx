@@ -8,8 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { agentMarketSelectors, useMarketStore } from '@/store/market';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 import { useStyles } from './style';
@@ -29,7 +29,7 @@ const Header = memo(() => {
   const { meta, createAt, author, homepage, config } = agentItem;
   const { title, description, tags } = meta;
 
-  const isMobile = useIsMobile();
+  const isMobile = useServerConfigStore((s) => s.isMobile);
 
   const handleAddAgentAndConverse = async () => {
     if (!agentItem) return;

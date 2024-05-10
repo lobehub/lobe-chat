@@ -4,6 +4,7 @@
   "appInitializing": "LobeChat се инициализира, моля изчакайте...",
   "autoGenerate": "Автоматично генериране",
   "autoGenerateTooltip": "Автоматично генериране на описание на агент въз основа на подкани",
+  "autoGenerateTooltipDisabled": "Моля, попълнете подсказката, за да използвате функцията за автоматично допълване",
   "blog": "Продуктов блог",
   "cancel": "Отказ",
   "changelog": "Дневник на промените",
@@ -11,6 +12,12 @@
   "copy": "Копирай",
   "copyFail": "Копирането не е успешно",
   "copySuccess": "Копирано успешно",
+  "dataStatistics": {
+    "messages": "Съобщения",
+    "sessions": "Сесии",
+    "today": "Днес",
+    "topics": "Теми"
+  },
   "defaultAgent": "Агент по подразбиране",
   "defaultSession": "Агент по подразбиране",
   "delete": "Изтрий",
@@ -160,6 +167,7 @@
     "newVersion": "Налична е нова версия: {{version}}"
   },
   "userPanel": {
+    "anonymousNickName": "Анонимен потребител",
     "billing": "Управление на сметките",
     "defaultNickname": "Потребител на общността",
     "discord": "Поддръжка на общността",

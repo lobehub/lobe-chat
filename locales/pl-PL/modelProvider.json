@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
-      "placeholder": "https://api.anthropic.com",
-      "title": "Adres proxy API"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Wprowadź klucz API uzyskany od Anthropic",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "除默认地址外，必须包含 http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API 代理地址"
-    },
     "title": "Google",
     "token": {
       "desc": "Wprowadź klucz API uzyskany od Google",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Test czy adres proxy jest poprawnie wypełniony"
+      "desc": "Test czy adres proxy jest poprawnie wypełniony",
+      "title": "Sprawdzanie łączności"
     },
     "customModelName": {
       "desc": "Dodaj własny model, oddzielaj modele przecinkiem (,)",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Wprowadź adres rest API Ollama, jeśli lokalnie nie określono, pozostaw puste",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Adres proxy API"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Adres proxy API"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Użyj własnego klucza OpenAI",
