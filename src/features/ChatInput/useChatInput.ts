@@ -4,6 +4,7 @@ import { useCallback, useRef, useState } from 'react';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
 
@@ -18,7 +19,7 @@ export const useChatInput = () => {
   const canUpload = useUserStore(modelProviderSelectors.isModelEnabledUpload(model));
 
   const [loading, value, onInput, onStop] = useChatStore((s) => [
-    !!s.chatLoadingId,
+    chatSelectors.isAIGenerating(s),
     s.inputMessage,
     s.updateInputMessage,
     s.stopGenerateMessage,

@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Muss neben der Standardadresse auch http(s):// enthalten",
-      "placeholder": "https://api.anthropic.com",
-      "title": "API-Proxy-Adresse"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Geben Sie Ihren API-Key von Anthropic ein",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "除默认地址外，必须包含 http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API 代理地址"
-    },
     "title": "Google",
     "token": {
       "desc": "Geben Sie Ihren API-Key von Google ein",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
+      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde",
+      "title": "Konnektivitätsprüfung"
     },
     "customModelName": {
       "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Schnittstellen-Proxy-Adresse"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Muss neben der Standardadresse auch http(s):// enthalten",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Schnittstellen-Proxy-Adresse"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Verwenden Sie Ihren eigenen OpenAI-Key",
