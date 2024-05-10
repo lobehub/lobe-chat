@@ -1,17 +1,11 @@
 export default {
   anthropic: {
-    endpoint: {
-      desc: '除默认地址外，必须包含 http(s)://',
-      placeholder: 'https://api.anthropic.com',
-      title: 'API 代理地址',
-    },
     title: 'Anthropic',
     token: {
       desc: '填入来自 Anthropic 的 API Key',
       placeholder: 'Anthropic API Key',
       title: 'API Key',
     },
-
     unlock: {
       description: '输入你的 Anthropic API Key 即可开始会话。应用不会记录你的 API Key',
       title: '使用自定义 Anthropic API Key',
@@ -69,11 +63,6 @@ export default {
     },
   },
   google: {
-    endpoint: {
-      desc: '除默认地址外，必须包含 http(s)://',
-      placeholder: 'https://generativelanguage.googleapis.com',
-      title: 'API 代理地址',
-    },
     title: 'Google',
     token: {
       desc: '填入来自 Google 的 API Key',
@@ -136,6 +125,7 @@ export default {
   ollama: {
     checker: {
       desc: '测试代理地址是否正确填写',
+      title: '连通性检查',
     },
     customModelName: {
       desc: '增加自定义模型，多个模型使用逗号（,）隔开',
@@ -144,8 +134,7 @@ export default {
     },
     endpoint: {
       desc: '填入 Ollama 接口代理地址，本地未额外指定可留空',
-      placeholder: 'http://127.0.0.1:11434',
-      title: '接口代理地址',
+      title: 'Ollama 服务地址',
     },
     setup: {
       cors: {
@@ -176,11 +165,6 @@ export default {
     title: 'Ollama',
   },
   openai: {
-    endpoint: {
-      desc: '除默认地址外，必须包含 http(s)://',
-      placeholder: 'https://api.openai.com/v1',
-      title: '接口代理地址',
-    },
     title: 'OpenAI',
     token: {
       desc: '使用自己的 OpenAI Key',

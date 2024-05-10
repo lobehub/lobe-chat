@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobePerplexityAI } from './index';
@@ -15,7 +15,7 @@ const invalidErrorType = 'InvalidPerplexityAPIKey';
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobePerplexityAI;
+let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
   instance = new LobePerplexityAI({ apiKey: 'test' });

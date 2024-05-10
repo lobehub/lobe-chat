@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다.",
-      "placeholder": "https://api.anthropic.com",
-      "title": "API 프록시 주소"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Anthropic에서 제공하는 API 키를 입력하세요.",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다.",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API 프록시 주소"
-    },
     "title": "Google",
     "token": {
       "desc": "Google에서 제공하는 API 키를 입력하세요.",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다"
+      "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",
+      "title": "연결성 검사"
     },
     "customModelName": {
       "desc": "사용자 정의 모델을 추가하려면 쉼표(,)로 구분하여 여러 모델을 입력하세요",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Ollama 인터페이스 프록시 주소를 입력하세요. 로컬에서 별도로 지정하지 않은 경우 비워둘 수 있습니다",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "인터페이스 프록시 주소"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "인터페이스 프록시 주소"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "자체 OpenAI 키를 사용하세요",

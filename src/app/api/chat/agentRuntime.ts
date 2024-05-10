@@ -85,76 +85,71 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
         accessKeySecret = payload?.awsSecretAccessKey;
         region = payload?.awsRegion;
       }
-      return {
-        accessKeyId,
-        accessKeySecret,
-        region,
-      };
+      return { accessKeyId, accessKeySecret, region };
     }
     case ModelProvider.Ollama: {
       const { OLLAMA_PROXY_URL } = getServerConfig();
       const baseURL = payload?.endpoint || OLLAMA_PROXY_URL;
-      return {
-        baseURL,
-      };
+      return { baseURL };
     }
     case ModelProvider.Perplexity: {
-      const { PERPLEXITY_API_KEY } = getServerConfig();
+      const { PERPLEXITY_API_KEY, PERPLEXITY_PROXY_URL } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || PERPLEXITY_API_KEY);
-      return {
-        apiKey,
-      };
+      const baseURL = payload?.endpoint || PERPLEXITY_PROXY_URL;
+
+      return { apiKey, baseURL };
     }
     case ModelProvider.Anthropic: {
       const { ANTHROPIC_API_KEY, ANTHROPIC_PROXY_URL } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || ANTHROPIC_API_KEY);
       const baseURL = payload?.endpoint || ANTHROPIC_PROXY_URL;
-      return {
-        apiKey,
-        baseURL,
-      };
+
+      return { apiKey, baseURL };
     }
     case ModelProvider.Minimax: {
       const { MINIMAX_API_KEY } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || MINIMAX_API_KEY);
-      return {
-        apiKey,
-      };
+
+      return { apiKey };
     }
     case ModelProvider.Mistral: {
       const { MISTRAL_API_KEY } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || MISTRAL_API_KEY);
-      return {
-        apiKey,
-      };
+
+      return { apiKey };
     }
     case ModelProvider.Groq: {
-      const { GROQ_API_KEY } = getServerConfig();
+      const { GROQ_API_KEY, GROQ_PROXY_URL } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || GROQ_API_KEY);
-      return {
-        apiKey,
-      };
+      const baseURL = payload?.endpoint || GROQ_PROXY_URL;
+
+      return { apiKey, baseURL };
     }
     case ModelProvider.OpenRouter: {
       const { OPENROUTER_API_KEY } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || OPENROUTER_API_KEY);
-      return {
-        apiKey,
-      };
+
+      return { apiKey };
     }
     case ModelProvider.TogetherAI: {
       const { TOGETHERAI_API_KEY } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || TOGETHERAI_API_KEY);
-      return {
-        apiKey,
-      };
+
+      return { apiKey };
     }
     case ModelProvider.ZeroOne: {
       const { ZEROONE_API_KEY } = getServerConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || ZEROONE_API_KEY);
-      return {
-        apiKey,
-      };
+
+      return { apiKey };
     }
   }
 };

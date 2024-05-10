@@ -37,5 +37,21 @@ export const buildAnthropicMessage = (
 };
 
 export const buildAnthropicMessages = (
-  messages: OpenAIChatMessage[],
-): Anthropic.Messages.MessageParam[] => messages.map((message) => buildAnthropicMessage(message));
+  oaiMessages: OpenAIChatMessage[],
+): Anthropic.Messages.MessageParam[] => {
+  const messages: Anthropic.Messages.MessageParam[] = [];
+  let lastRole = 'assistant';
+
+  oaiMessages.forEach((message) => {
+    const anthropicMessage = buildAnthropicMessage(message);
+
+    if (lastRole === anthropicMessage.role) {
+      messages.push({ content: '_', role: lastRole === 'user' ? 'assistant' : 'user' });
+    }
+
+    lastRole = anthropicMessage.role;
+    messages.push(anthropicMessage);
+  });
+
+  return messages;
+};
