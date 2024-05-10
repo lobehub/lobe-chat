@@ -47,7 +47,7 @@ const Main = memo(() => {
   ) : (
     <Flexbox align={'flex-start'} gap={12} horizontal>
       {isChatPath && (
-        <Link aria-label={t('assistantsAndConversations')} href={'/chat'}>
+        <Link aria-label={t('agentsAndConversations')} href={'/chat'}>
           <ActionIcon
             icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
             onClick={() => {
@@ -58,7 +58,7 @@ const Main = memo(() => {
               });
             }}
             size="large"
-            title={t('assistantsAndConversations')}
+            title={t('agentsAndConversations')}
           />
         </Link>
       )}
