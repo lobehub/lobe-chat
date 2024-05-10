@@ -1,4 +1,6 @@
-import { DeepSeek } from '@lobehub/icons';      //待加入
+'use client';
+
+import { DeepSeek } from '@lobehub/icons';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 
@@ -11,14 +13,11 @@ const DeepSeekProvider = memo(() => {
 
   return (
     <ProviderConfig
-      checkModel={'abab5.5s-chat'}
+      checkModel={'deepseek-chat'}
       provider={ModelProvider.DeepSeek}
-      title={
-        <DeepSeek.Combine
-          color={theme.isDarkMode ? theme.colorText : DeepSeek.colorPrimary}
-          size={32}
-        />
-      }
+      title={<DeepSeek.Text color={theme.isDarkMode ? theme.colorText : DeepSeek.colorPrimary} 
+      size={20} 
+      />}
     />
   );
 });

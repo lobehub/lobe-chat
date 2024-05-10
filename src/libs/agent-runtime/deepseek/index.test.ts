@@ -1,24 +1,29 @@
-// @vitest-environment edge-runtime
-import { StreamingTextResponse } from 'ai';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+// @vitest-environment node
+import OpenAI from 'openai';
+import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
-import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
-import { LobeDeepSeekAI } from './index';
+import * as debugStreamModule from '../utils/debugStream';
+import { LobeDeepSeek } from './index';
 
-const provider = ModelProvider.DeepSeek;
+const provider = 'DeepSeek';
+const defaultBaseURL = 'https://api.deepseek.com/v1';
 const bizErrorType = 'DeepSeekBizError';
 const invalidErrorType = 'InvalidDeepSeekAPIKey';
-const encoder = new TextEncoder();
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobeDeepSeekAI;
+let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
-  instance = new LobeDeepSeekAI({ apiKey: 'test' });
+  instance = new LobeDeepSeek({ apiKey: 'test' });
+
+  // 使用 vi.spyOn 来模拟 chat.completions.create 方法
+  vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+    new ReadableStream() as any,
+  );
 });
 
 afterEach(() => {
@@ -28,233 +33,317 @@ afterEach(() => {
 describe('LobeDeepSeekAI', () => {
   describe('init', () => {
     it('should correctly initialize with an API key', async () => {
-      const instance = new LobeDeepSeekAI({ apiKey: 'test_api_key' });
-      expect(instance).toBeInstanceOf(LobeDeepSeekAI);
-    });
-
-    it('should throw AgentRuntimeError with InvalidDeepSeekAPIKey if no apiKey is provided', async () => {
-      try {
-        new LobeDeepSeekAI({});
-      } catch (e) {
-        expect(e).toEqual({ errorType: invalidErrorType });
-      }
+      const instance = new LobeDeepSeek({ apiKey: 'test_api_key' });
+      expect(instance).toBeInstanceOf(LobeDeepSeek);
+      expect(instance.baseURL).toEqual(defaultBaseURL);
     });
   });
 
   describe('chat', () => {
     it('should return a StreamingTextResponse on successful API call', async () => {
-      const mockResponseData = {
-        choices: [{ delta: { content: 'Hello, world!' } }],
-      };
-      const mockResponse = new Response(
-        new ReadableStream({
-          start(controller) {
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(mockResponseData)}`));
-            controller.close();
-          },
-        }),
-      );
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(mockResponse);
+      // Arrange
+      const mockStream = new ReadableStream();
+      const mockResponse = Promise.resolve(mockStream);
 
+      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 0,
-      });
-
-      expect(result).toBeInstanceOf(StreamingTextResponse);
-    });
-
-    it('should handle text messages correctly', async () => {
-      const mockResponseData = {
-        choices: [{ delta: { content: 'Hello, world!' } }],
-      };
-      const mockResponse = new Response(
-        new ReadableStream({
-          start(controller) {
-            controller.enqueue(encoder.encode(`data: ${JSON.stringify(mockResponseData)}`));
-            controller.close();
-          },
-        }),
-      );
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(mockResponse);
-
-      const result = await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 0,
-      });
-
-      expect(result).toBeInstanceOf(StreamingTextResponse);
-    });
-
-    it('should call debugStream in DEBUG mode', async () => {
-      process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION = '1';
-
-      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
-        new Response(
-          new ReadableStream({
-            start(controller) {
-              controller.enqueue(encoder.encode(JSON.stringify('Hello, world!')));
-              controller.close();
-            },
-          }),
-        ),
-      );
-
-      vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
-
-      await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
+        model: 'mistralai/mistral-7b-instruct:free',
         temperature: 0,
       });
 
       // Assert
-      expect(debugStreamModule.debugStream).toHaveBeenCalled();
+      expect(result).toBeInstanceOf(Response);
+    });
 
-      delete process.env.DEBUG_DEEPSEEK_CHAT_COMPLETION;
+    it('should call OpenRouter API with corresponding options', async () => {
+      // Arrange
+      const mockStream = new ReadableStream();
+      const mockResponse = Promise.resolve(mockStream);
+
+      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.chat({
+        max_tokens: 1024,
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'mistralai/mistral-7b-instruct:free',
+        temperature: 0.7,
+        top_p: 1,
+      });
+
+      // Assert
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
+      expect(result).toBeInstanceOf(Response);
     });
 
     describe('Error', () => {
-      it('should throw InvalidDeepSeekAPIKey error on API_KEY_INVALID error', async () => {
-        const mockErrorResponse = {
-          base_resp: {
-            status_code: 1004,
-            status_msg: 'API key not valid',
+      it('should return OpenRouterBizError with an openai error response when OpenAI.APIError is thrown', async () => {
+        // Arrange
+        const apiError = new OpenAI.APIError(
+          400,
+          {
+            status: 400,
+            error: {
+              message: 'Bad Request',
+            },
           },
-        };
-        vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-          new Response(
-            new ReadableStream({
-              start(controller) {
-                controller.enqueue(encoder.encode(JSON.stringify(mockErrorResponse)));
-                controller.close();
-              },
-            }),
-          ),
+          'Error message',
+          {},
         );
 
+        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+
+        // Act
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
+            model: 'mistralai/mistral-7b-instruct:free',
             temperature: 0,
           });
         } catch (e) {
           expect(e).toEqual({
+            endpoint: defaultBaseURL,
+            error: {
+              error: { message: 'Bad Request' },
+              status: 400,
+            },
+            errorType: bizErrorType,
+            provider,
+          });
+        }
+      });
+
+      it('should throw AgentRuntimeError with InvalidDeepSeekAPIKey if no apiKey is provided', async () => {
+        try {
+          new LobeDeepSeek({});
+        } catch (e) {
+          expect(e).toEqual({ errorType: invalidErrorType });
+        }
+      });
+
+      it('should return DeepSeekBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
+        // Arrange
+        const errorInfo = {
+          stack: 'abc',
+          cause: {
+            message: 'api is undefined',
+          },
+        };
+        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+
+        // Act
+        try {
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'mistralai/mistral-7b-instruct:free',
+            temperature: 0,
+          });
+        } catch (e) {
+          expect(e).toEqual({
+            endpoint: defaultBaseURL,
+            error: {
+              cause: { message: 'api is undefined' },
+              stack: 'abc',
+            },
+            errorType: bizErrorType,
+            provider,
+          });
+        }
+      });
+
+      it('should return OpenRouterBizError with an cause response with desensitize Url', async () => {
+        // Arrange
+        const errorInfo = {
+          stack: 'abc',
+          cause: { message: 'api is undefined' },
+        };
+        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
+
+        instance = new LobeDeepSeek({
+          apiKey: 'test',
+
+          baseURL: 'https://api.abc.com/v1',
+        });
+
+        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
+
+        // Act
+        try {
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'mistralai/mistral-7b-instruct:free',
+            temperature: 0,
+          });
+        } catch (e) {
+          expect(e).toEqual({
+            endpoint: 'https://api.***.com/v1',
+            error: {
+              cause: { message: 'api is undefined' },
+              stack: 'abc',
+            },
+            errorType: bizErrorType,
+            provider,
+          });
+        }
+      });
+
+      it('should throw an InvalidDeepSeekAPIKey error type on 401 status code', async () => {
+        // Mock the API call to simulate a 401 error
+        const error = new Error('Unauthorized') as any;
+        error.status = 401;
+        vi.mocked(instance['client'].chat.completions.create).mockRejectedValue(error);
+
+        try {
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'mistralai/mistral-7b-instruct:free',
+            temperature: 0,
+          });
+        } catch (e) {
+          // Expect the chat method to throw an error with InvalidMoonshotAPIKey
+          expect(e).toEqual({
+            endpoint: defaultBaseURL,
+            error: new Error('Unauthorized'),
             errorType: invalidErrorType,
-            error: {
-              code: 1004,
-              message: 'API key not valid',
-            },
             provider,
           });
         }
       });
 
-      it('should throw DeepSeekBizError error on other error status codes', async () => {
-        const mockErrorResponse = {
-          base_resp: {
-            status_code: 1001,
-            status_msg: 'Some error occurred',
-          },
-        };
-        vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-          new Response(
-            new ReadableStream({
-              start(controller) {
-                controller.enqueue(encoder.encode(JSON.stringify(mockErrorResponse)));
-                controller.close();
-              },
-            }),
-          ),
-        );
+      it('should return AgentRuntimeError for non-OpenAI errors', async () => {
+        // Arrange
+        const genericError = new Error('Generic Error');
 
+        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(genericError);
+
+        // Act
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
+            model: 'mistralai/mistral-7b-instruct:free',
             temperature: 0,
           });
         } catch (e) {
           expect(e).toEqual({
-            errorType: bizErrorType,
-            error: {
-              code: 1001,
-              message: 'Some error occurred',
-            },
+            endpoint: defaultBaseURL,
+            errorType: 'AgentRuntimeError',
             provider,
-          });
-        }
-      });
-
-      it('should throw DeepSeekBizError error on generic errors', async () => {
-        const mockError = new Error('Something went wrong');
-        vi.spyOn(globalThis, 'fetch').mockRejectedValueOnce(mockError);
-
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            errorType: bizErrorType,
             error: {
-              cause: undefined,
-              message: 'Something went wrong',
-              name: 'Error',
-              stack: mockError.stack,
+              name: genericError.name,
+              cause: genericError.cause,
+              message: genericError.message,
+              stack: genericError.stack,
             },
-            provider,
           });
         }
       });
     });
-  });
 
-  describe('private methods', () => {
-    describe('buildCompletionsParams', () => {
-      it('should build the correct parameters', () => {
-        const payload: ChatStreamPayload = {
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'text-davinci-003',
-          temperature: 0.5,
-          top_p: 0.8,
-          max_tokens: 100,
+    describe('LobeDeepSeekAI chat with callback and headers', () => {
+      it('should handle callback and headers correctly', async () => {
+        // 模拟 chat.completions.create 方法返回一个可读流
+        const mockCreateMethod = vi
+          .spyOn(instance['client'].chat.completions, 'create')
+          .mockResolvedValue(
+            new ReadableStream({
+              start(controller) {
+                controller.enqueue({
+                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
+                  object: 'chat.completion.chunk',
+                  created: 1709125675,
+                  model: 'mistralai/mistral-7b-instruct:free',
+                  system_fingerprint: 'fp_86156a94a0',
+                  choices: [
+                    { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
+                  ],
+                });
+                controller.close();
+              },
+            }) as any,
+          );
+
+        // 准备 callback 和 headers
+        const mockCallback: ChatStreamCallbacks = {
+          onStart: vi.fn(),
+          onToken: vi.fn(),
         };
+        const mockHeaders = { 'Custom-Header': 'TestValue' };
 
-        const result = instance['buildCompletionsParams'](payload);
+        // 执行测试
+        const result = await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'mistralai/mistral-7b-instruct:free',
+            temperature: 0,
+          },
+          { callback: mockCallback, headers: mockHeaders },
+        );
 
-        expect(result).toEqual({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'text-davinci-003',
-          stream: true,
-          temperature: 0.5,
-          top_p: 0.8,
-          max_tokens: 100,
-        });
+        // 验证 callback 被调用
+        await result.text(); // 确保流被消费
+        expect(mockCallback.onStart).toHaveBeenCalled();
+        expect(mockCallback.onToken).toHaveBeenCalledWith('hello');
+
+        // 验证 headers 被正确传递
+        expect(result.headers.get('Custom-Header')).toEqual('TestValue');
+
+        // 清理
+        mockCreateMethod.mockRestore();
       });
+    });
 
-      it('should exclude temperature and top_p when they are 0', () => {
-        const payload: ChatStreamPayload = {
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'text-davinci-003',
-          temperature: 0,
-          top_p: 0,
-          max_tokens: 100,
-        };
+    describe('DEBUG', () => {
+      it('should call debugStream and return StreamingTextResponse when DEBUG_OPENROUTER_CHAT_COMPLETION is 1', async () => {
+        // Arrange
+        const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
+        const mockDebugStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue('Debug stream content');
+            controller.close();
+          },
+        }) as any;
+        mockDebugStream.toReadableStream = () => mockDebugStream; // 添加 toReadableStream 方法
 
-        const result = instance['buildCompletionsParams'](payload);
-
-        expect(result).toEqual({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'text-davinci-003',
-          stream: true,
-          max_tokens: 100,
+        // 模拟 chat.completions.create 返回值，包括模拟的 tee 方法
+        (instance['client'].chat.completions.create as Mock).mockResolvedValue({
+          tee: () => [mockProdStream, { toReadableStream: () => mockDebugStream }],
         });
+
+        // 保存原始环境变量值
+        const originalDebugValue = process.env.DEBUG_DeepSeek_CHAT_COMPLETION;
+
+        // 模拟环境变量
+        process.env.DEBUG_DeepSeek_CHAT_COMPLETION = '1';
+        vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
+
+        // 执行测试
+        // 运行你的测试函数，确保它会在条件满足时调用 debugStream
+        // 假设的测试函数调用，你可能需要根据实际情况调整
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0,
+        });
+
+        // 验证 debugStream 被调用
+        expect(debugStreamModule.debugStream).toHaveBeenCalled();
+
+        // 恢复原始环境变量值
+        process.env.DEBUG_DeepSeek_CHAT_COMPLETION = originalDebugValue;
       });
     });
   });
