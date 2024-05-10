@@ -81,27 +81,25 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
   // Convert object keys to camel case, copy from `@azure/openai` in `node_modules/@azure/openai/dist/index.cjs`
   private camelCaseKeys = (obj: any): any => {
-    if (typeof obj !== "object" || !obj)
-      return obj;
+    if (typeof obj !== 'object' || !obj) return obj;
     if (Array.isArray(obj)) {
       return obj.map((v) => this.camelCaseKeys(v));
-    }
-    else {
+    } else {
       for (const key of Object.keys(obj)) {
         const value = obj[key];
         const newKey = this.tocamelCase(key);
         if (newKey !== key) {
           delete obj[key];
         }
-        obj[newKey] = typeof obj[newKey] === "object" ? this.camelCaseKeys(value) : value;
+        obj[newKey] = typeof obj[newKey] === 'object' ? this.camelCaseKeys(value) : value;
       }
       return obj;
     }
-  }
+  };
 
   private tocamelCase = (str: string) => {
     return str
       .toLowerCase()
-      .replace(/(_[a-z])/g, (group) => group.toUpperCase().replace("_", ""));
-  }
+      .replaceAll(/(_[a-z])/g, (group) => group.toUpperCase().replace('_', ''));
+  };
 }
