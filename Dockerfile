@@ -44,8 +44,11 @@ ENV NEXT_PUBLIC_ANALYTICS_UMAMI ""
 ENV NEXT_PUBLIC_UMAMI_SCRIPT_URL ""
 ENV NEXT_PUBLIC_UMAMI_WEBSITE_ID ""
 
+# Node
+ENV NODE_OPTIONS "--max-old-space-size=8192"
 
-RUN npm run build:docker # run build standalone for docker version
+# run build standalone for docker version
+RUN npm run build:docker
 
 ## Production image, copy all the files and run next
 FROM base AS runner
