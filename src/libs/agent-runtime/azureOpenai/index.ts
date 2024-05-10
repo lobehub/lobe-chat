@@ -102,6 +102,6 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
   private tocamelCase = (str: string) => {
     return str
       .toLowerCase()
-      .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace("_", ""));
+      .replace(/(_[a-z])/g, (group) => group.toUpperCase().replace("_", ""));
   }
 }
