@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "デフォルトアドレス以外は、http(s)://を含む必要があります",
-      "placeholder": "https://api.anthropic.com",
-      "title": "APIプロキシアドレス"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "AnthropicからのAPIキーを入力してください",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "デフォルトのアドレスに加えて、http(s)://を含める必要があります",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "APIプロキシアドレス"
-    },
     "title": "Google",
     "token": {
       "desc": "Google の API Key を入力してください",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "プロキシアドレスが正しく入力されているかをテストします"
+      "desc": "プロキシアドレスが正しく入力されているかをテストします",
+      "title": "連結性チェック"
     },
     "customModelName": {
       "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Ollamaプロキシインターフェースアドレスを入力してください。ローカルで追加の指定がない場合は空白のままにしてください",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "プロキシインターフェースアドレス"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "デフォルト以外のアドレスは、http(s)://を含める必要があります",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "プロキシインターフェースアドレス"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "独自のOpenAIキーを使用します",
