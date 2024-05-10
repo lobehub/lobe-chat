@@ -28,19 +28,8 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     // ============  1. preprocess messages   ============ //
-    const { messages, model, ...params } = payload;
-
-    // fix the issue: "The sample encountered an error: TypeError: Cannot read properties of undefined (reading 'url')"
-    messages.forEach(message => {
-      if (Array.isArray(message['content'])) {
-        message['content'].forEach((content: any) => {
-          if (content['type'] === 'image_url') {
-            content['imageUrl'] = content['image_url'];
-            delete content['image_url'];
-          }
-        });
-      }
-    });
+    const camelCasePayload = this.camelCaseKeys(payload);
+    const { messages, model, maxTokens = 2048, ...params } = camelCasePayload;
 
     // ============  2. send api   ============ //
 
@@ -48,7 +37,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       const response = await this.client.streamChatCompletions(
         model,
         messages as ChatRequestMessage[],
-        { ...params, abortSignal: options?.signal } as GetChatCompletionsOptions,
+        { ...params, maxTokens, abortSignal: options?.signal } as GetChatCompletionsOptions,
       );
 
       const stream = OpenAIStream(response as any);
@@ -88,5 +77,31 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         provider: ModelProvider.Azure,
       });
     }
+  }
+
+  // Convert object keys to camel case, copy from `@azure/openai` in `node_modules/@azure/openai/dist/index.cjs`
+  private camelCaseKeys = (obj: any): any => {
+    if (typeof obj !== "object" || !obj)
+      return obj;
+    if (Array.isArray(obj)) {
+      return obj.map((v) => this.camelCaseKeys(v));
+    }
+    else {
+      for (const key of Object.keys(obj)) {
+        const value = obj[key];
+        const newKey = this.tocamelCase(key);
+        if (newKey !== key) {
+          delete obj[key];
+        }
+        obj[newKey] = typeof obj[newKey] === "object" ? this.camelCaseKeys(value) : value;
+      }
+      return obj;
+    }
+  }
+
+  private tocamelCase = (str: string) => {
+    return str
+      .toLowerCase()
+      .replace(/([_][a-z])/g, (group) => group.toUpperCase().replace("_", ""));
   }
 }
