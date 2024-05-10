@@ -8,6 +8,7 @@ import {
   StreamProtocolToolCallChunk,
   StreamStack,
   StreamToolCallChunkData,
+  createSSEProtocolTransformer,
 } from './protocol';
 
 export const transformAnthropicStream = (
@@ -84,16 +85,6 @@ export const AnthropicStream = (
     stream instanceof ReadableStream ? stream : readableFromAsyncIterable(chatStreamable(stream));
 
   return readableStream
-    .pipeThrough(
-      new TransformStream({
-        transform: (chunk, controller) => {
-          const { type, id, data } = transformAnthropicStream(chunk, streamStack);
-
-          controller.enqueue(`id: ${id}\n`);
-          controller.enqueue(`event: ${type}\n`);
-          controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
-        },
-      }),
-    )
+    .pipeThrough(createSSEProtocolTransformer(transformAnthropicStream, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };

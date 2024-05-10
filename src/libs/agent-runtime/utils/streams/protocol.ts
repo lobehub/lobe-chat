@@ -33,3 +33,17 @@ export const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
     yield response;
   }
 };
+
+export const createSSEProtocolTransformer = (
+  transformer: (chunk: any, stack: StreamStack) => StreamProtocolChunk,
+  streamStack?: StreamStack,
+) =>
+  new TransformStream({
+    transform: (chunk, controller) => {
+      const { type, id, data } = transformer(chunk, streamStack || { id: '' });
+
+      controller.enqueue(`id: ${id}\n`);
+      controller.enqueue(`event: ${type}\n`);
+      controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
+    },
+  });

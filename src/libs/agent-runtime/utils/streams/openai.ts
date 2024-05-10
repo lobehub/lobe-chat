@@ -7,6 +7,7 @@ import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
   StreamToolCallChunkData,
+  createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
 
@@ -72,16 +73,6 @@ export const OpenAIStream = (
     stream instanceof ReadableStream ? stream : readableFromAsyncIterable(chatStreamable(stream));
 
   return readableStream
-    .pipeThrough(
-      new TransformStream({
-        transform: (chunk, controller) => {
-          const { type, id, data } = transformOpenAIStream(chunk);
-
-          controller.enqueue(`id: ${id}\n`);
-          controller.enqueue(`event: ${type}\n`);
-          controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
-        },
-      }),
-    )
+    .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };

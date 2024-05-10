@@ -3,6 +3,7 @@ import OpenAI from 'openai';
 
 import { ChatStreamCallbacks } from '../../types';
 import { transformOpenAIStream } from './openai';
+import { createSSEProtocolTransformer } from './protocol';
 
 const unit8ArrayToJSONChunk = (unit8Array: Uint8Array): OpenAI.ChatCompletionChunk => {
   const decoder = new TextDecoder();
@@ -17,22 +18,22 @@ const unit8ArrayToJSONChunk = (unit8Array: Uint8Array): OpenAI.ChatCompletionChu
     chunkValue = chunkValue.slice(5).trim();
   }
 
-  return JSON.parse(chunkValue);
+  try {
+    return JSON.parse(chunkValue);
+  } catch (e) {
+    console.error('minimax chunk parse error:', e);
+
+    return { raw: chunkValue } as any;
+  }
 };
 
 export const MinimaxStream = (stream: ReadableStream, callbacks?: ChatStreamCallbacks) => {
   return stream
     .pipeThrough(
-      new TransformStream({
-        transform: (buffer, controller) => {
-          const chunk = unit8ArrayToJSONChunk(buffer);
+      createSSEProtocolTransformer((buffer) => {
+        const chunk = unit8ArrayToJSONChunk(buffer);
 
-          const { type, id, data } = transformOpenAIStream(chunk);
-
-          controller.enqueue(`id: ${id}\n`);
-          controller.enqueue(`event: ${type}\n`);
-          controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
-        },
+        return transformOpenAIStream(chunk);
       }),
     )
     .pipeThrough(createCallbacksTransformer(callbacks));

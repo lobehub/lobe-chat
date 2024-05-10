@@ -1,5 +1,3 @@
-// copy from https://github.com/vercel/ai/discussions/539#discussioncomment-8193721
-// and I have remove the unnecessary code
 import {
   type AIStreamCallbacksAndOptions,
   createCallbacksTransformer,
@@ -9,7 +7,7 @@ import { ChatResponse } from 'ollama/browser';
 
 import { nanoid } from '@/utils/uuid';
 
-import { StreamProtocolChunk, StreamStack } from './protocol';
+import { StreamProtocolChunk, StreamStack, createSSEProtocolTransformer } from './protocol';
 
 const transformOllamaStream = (chunk: ChatResponse, stack: StreamStack): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
@@ -33,16 +31,6 @@ export const OllamaStream = (
   const streamStack: StreamStack = { id: 'chat_' + nanoid() };
 
   return readableFromAsyncIterable(chatStreamable(res))
-    .pipeThrough(
-      new TransformStream({
-        transform: (chunk, controller) => {
-          const { type, id, data } = transformOllamaStream(chunk, streamStack);
-
-          controller.enqueue(`id: ${id}\n`);
-          controller.enqueue(`event: ${type}\n`);
-          controller.enqueue(`data: ${JSON.stringify(data)}\n\n`);
-        },
-      }),
-    )
+    .pipeThrough(createSSEProtocolTransformer(transformOllamaStream, streamStack))
     .pipeThrough(createCallbacksTransformer(cb) as any);
 };
