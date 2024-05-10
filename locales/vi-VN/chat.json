@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến [Cài đặt trợ lý](/chat/settings#session={{id}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
+  "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
   "backToBottom": "Quay về dưới cùng",
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
@@ -21,7 +22,6 @@
   "emptyAgent": "Không có trợ lý",
   "historyRange": "Phạm vi lịch sử",
   "inbox": {
-    "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
     "title": "Chuyện phiếm"
   },

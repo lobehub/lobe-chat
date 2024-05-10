@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 즉시 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 내 정보를 완성할 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
+  "agentsAndConversations": "에이전트 및 대화",
   "backToBottom": "하단으로 이동",
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
@@ -21,7 +22,6 @@
   "emptyAgent": "도우미가 없습니다",
   "historyRange": "대화 기록 범위",
   "inbox": {
-    "agentsAndConversations": "에이전트 및 대화",
     "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
     "title": "무작위 대화"
   },
