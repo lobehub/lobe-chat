@@ -6,12 +6,9 @@ import { ChatStreamCallbacks } from '../../types';
 import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
+  StreamStack,
   StreamToolCallChunkData,
 } from './protocol';
-
-interface StreamStack {
-  id: string;
-}
 
 export const transformAnthropicStream = (
   chunk: Anthropic.MessageStreamEvent,

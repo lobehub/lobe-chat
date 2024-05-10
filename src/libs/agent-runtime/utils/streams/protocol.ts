@@ -1,6 +1,10 @@
+export interface StreamStack {
+  id: string;
+}
+
 export interface StreamProtocolChunk {
   data: any;
-  id: string;
+  id?: string;
   type: 'text' | 'tool_calls' | 'data' | 'stop';
 }
 
