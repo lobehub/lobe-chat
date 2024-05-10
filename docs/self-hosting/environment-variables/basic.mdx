@@ -1,3 +1,19 @@
+---
+title: Customize LobeChat Deployment with Environment Variables
+description: >-
+  Learn about the common environment variables used to customize LobeChat
+  deployment, including access code, OAuth SSO, base path, and default agent
+  configuration.
+tags:
+  - LobeChat
+  - environment variables
+  - deployment
+  - access code
+  - OAuth SSO
+  - base path
+  - default agent configuration
+---
+
 # Environment Variables
 
 LobeChat provides some additional configuration options during deployment, which can be customized using environment variables.
@@ -11,12 +27,16 @@ LobeChat provides some additional configuration options during deployment, which
 - Default: -
 - Example: `awCTe)re_r74` or `rtrt_ewee3@09!`
 
-### `ENABLE_OAUTH_SSO`
+### `API_KEY_SELECT_MODE`
 
-- Type: Optional
-- Description: Enable Single Sign-On (SSO) for LobeChat. Set to `1` to enable SSO. For more information, see [Authentication Services](#authentication-services).
-- Default: -
-- Example: `1`
+- Type：Optional
+- Description：Controls the mode for selecting the API Key when multiple API Keys are available. Currently supports `random` and `turn`.
+- Default：`random`
+- Example：`random` or `turn`
+
+When using the `random` mode, a random API Key will be selected from the available multiple API Keys.
+
+When using the `turn` mode, the API Keys will be retrieved in a round-robin manner according to the specified order.
 
 ### `NEXT_PUBLIC_BASE_PATH`
 

@@ -1,3 +1,9 @@
-export * from './slices/common/selectors';
-export * from './slices/preference/selectors';
-export * from './slices/settings/selectors';
+import { GlobalStore } from '@/store/global';
+import { SessionDefaultGroup } from '@/types/session';
+
+const sessionGroupKeys = (s: GlobalStore): string[] =>
+  s.preference.expandSessionGroupKeys || [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default];
+
+export const preferenceSelectors = {
+  sessionGroupKeys,
+};

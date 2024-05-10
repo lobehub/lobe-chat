@@ -1,7 +1,42 @@
 {
   "button": {
     "import": "Importer la configuration",
+    "market": "Parcourir le marché",
     "start": "Démarrer maintenant"
+  },
+  "guide": {
+    "agents": {
+      "replaceBtn": "Remplacer",
+      "title": "Nouvelles recommandations d'assistants :"
+    },
+    "defaultMessage": "Je suis votre assistant intelligent personnel LobeChat. Que puis-je faire pour vous maintenant ?\nSi vous avez besoin d'une assistance plus professionnelle ou personnalisée, vous pouvez cliquer sur `+` pour créer un assistant personnalisé.",
+    "qa": {
+      "q01": "Qu'est-ce que LobeHub ?",
+      "q02": "Qu'est-ce que LobeChat ?",
+      "q03": "LobeChat a-t-il un support communautaire ?",
+      "q04": "Quelles sont les fonctionnalités prises en charge par LobeChat ?",
+      "q05": "Comment déployer et utiliser LobeChat ?",
+      "q06": "Quelle est la tarification de LobeChat ?",
+      "q07": "LobeChat est-il gratuit ?",
+      "q08": "Y a-t-il une version cloud de service ?",
+      "q09": "Prend-il en charge les modèles de langage locaux ?",
+      "q10": "Prend-il en charge la reconnaissance et la génération d'images ?",
+      "q11": "Prend-il en charge la synthèse vocale et la reconnaissance vocale ?",
+      "q12": "Prend-il en charge un système de plugins ?",
+      "q13": "A-t-il son propre marché pour obtenir des GPTs ?",
+      "q14": "Prend-il en charge plusieurs fournisseurs de services d'IA ?",
+      "q15": "Que faire si je rencontre des problèmes lors de l'utilisation ?"
+    },
+    "questions": {
+      "moreBtn": "En savoir plus",
+      "title": "Questions fréquentes :"
+    },
+    "welcome": {
+      "afternoon": "Bon après-midi",
+      "morning": "Bonjour",
+      "night": "Bonsoir",
+      "noon": "Bonjour"
+    }
   },
   "header": "Bienvenue",
   "pickAgent": "Ou choisissez parmi les modèles d'agent suivants",

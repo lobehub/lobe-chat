@@ -1,6 +1,18 @@
 export interface ChatModelCard {
+  /**
+   * only used in azure
+   */
+  deploymentName?: string;
   description?: string;
+  /**
+   * the name show for end user
+   */
   displayName?: string;
+
+  /**
+   * whether model is enabled by default
+   */
+  enabled?: boolean;
   /**
    * whether model supports file upload
    */
@@ -9,7 +21,6 @@ export interface ChatModelCard {
    * whether model supports function call
    */
   functionCall?: boolean;
-  hidden?: boolean;
   id: string;
   /**
    * whether model is custom
@@ -21,7 +32,7 @@ export interface ChatModelCard {
   legacy?: boolean;
   maxOutput?: number;
   /**
-   * the context window
+   * the context window (or input + output tokens limit)
    */
   tokens?: number;
   /**

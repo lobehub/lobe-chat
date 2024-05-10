@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeMistralAI } from './index';
@@ -15,7 +15,7 @@ const invalidErrorType = 'InvalidMistralAPIKey';
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobeMistralAI;
+let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
   instance = new LobeMistralAI({ apiKey: 'test' });
@@ -75,14 +75,17 @@ describe('LobeMistralAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'open-mistral-7b',
-        stream: true,
-        temperature: 0.7,
-        top_p: 1,
-      })
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'open-mistral-7b',
+          stream: true,
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -105,16 +108,19 @@ describe('LobeMistralAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'open-mistral-7b',
-        stream: true,
-        temperature: 0.7,
-        top_p: 1,
-      })
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'open-mistral-7b',
+          stream: true,
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
-    });   
+    });
 
     describe('Error', () => {
       it('should return MistralBizError with an openai error response when OpenAI.APIError is thrown', async () => {

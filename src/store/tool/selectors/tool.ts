@@ -40,8 +40,9 @@ const enabledSchema =
       .filter((m) => tools.includes(m?.identifier))
       .flatMap((manifest) =>
         manifest.api.map((m) => ({
-          ...m,
+          description: m.description,
           name: getAPIName(manifest.identifier, m.name, manifest.type),
+          parameters: m.parameters,
         })),
       );
 
@@ -85,16 +86,18 @@ const enabledSystemRoles =
     return '';
   };
 
-const metaList = (s: ToolStoreState): LobeToolMeta[] => {
-  const pluginList = pluginSelectors.installedPluginMetaList(s) as LobeToolMeta[];
+const metaList =
+  (showDalle?: boolean) =>
+  (s: ToolStoreState): LobeToolMeta[] => {
+    const pluginList = pluginSelectors.installedPluginMetaList(s) as LobeToolMeta[];
 
-  return builtinToolSelectors.metaList(s).concat(pluginList);
-};
+    return builtinToolSelectors.metaList(showDalle)(s).concat(pluginList);
+  };
 
 const getMetaById =
-  (id: string) =>
+  (id: string, showDalle: boolean = true) =>
   (s: ToolStoreState): MetaData | undefined =>
-    metaList(s).find((m) => m.identifier === id)?.meta;
+    metaList(showDalle)(s).find((m) => m.identifier === id)?.meta;
 
 const getManifestById =
   (id: string) =>

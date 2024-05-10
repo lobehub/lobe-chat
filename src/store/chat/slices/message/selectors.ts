@@ -3,10 +3,12 @@ import { t } from 'i18next';
 
 import { DEFAULT_INBOX_AVATAR, DEFAULT_USER_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
-import { useGlobalStore } from '@/store/global';
-import { commonSelectors } from '@/store/global/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { userProfileSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -18,7 +20,7 @@ const getMeta = (message: ChatMessage) => {
   switch (message.role) {
     case 'user': {
       return {
-        avatar: commonSelectors.userAvatar(useGlobalStore.getState()) || DEFAULT_USER_AVATAR,
+        avatar: userProfileSelectors.userAvatar(useUserStore.getState()) || DEFAULT_USER_AVATAR,
       };
     }
 
@@ -27,7 +29,7 @@ const getMeta = (message: ChatMessage) => {
     }
 
     case 'assistant': {
-      return agentSelectors.currentAgentMeta(useSessionStore.getState());
+      return sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
     }
 
     case 'function': {
@@ -50,6 +52,15 @@ const currentChats = (s: ChatStore): ChatMessage[] => {
 };
 
 const initTime = Date.now();
+
+const showInboxWelcome = (s: ChatStore): boolean => {
+  const isInbox = s.activeId === INBOX_SESSION_ID;
+  if (!isInbox) return false;
+  const data = currentChats(s);
+  const isBrandNewChat = data.length === 0;
+  return isBrandNewChat;
+};
+
 // 针对新助手添加初始化时的自定义消息
 const currentChatsWithGuideMessage =
   (meta: MetaData) =>
@@ -62,7 +73,7 @@ const currentChatsWithGuideMessage =
 
     const [activeId, isInbox] = [s.activeId, s.activeId === INBOX_SESSION_ID];
 
-    const inboxMsg = t('inbox.defaultMessage', { ns: 'chat' });
+    const inboxMsg = '';
     const agentSystemRoleMsg = t('agentDefaultMessageWithSystemRole', {
       name: meta.title || t('defaultAgent'),
       ns: 'chat',
@@ -88,14 +99,14 @@ const currentChatsWithGuideMessage =
   };
 
 const currentChatIDsWithGuideMessage = (s: ChatStore) => {
-  const meta = agentSelectors.currentAgentMeta(useSessionStore.getState());
+  const meta = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
 
   return currentChatsWithGuideMessage(meta)(s).map((s) => s.id);
 };
 
 const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
   const chats = currentChats(s);
-  const config = agentSelectors.currentAgentConfig(useSessionStore.getState());
+  const config = agentSelectors.currentAgentConfig(useAgentStore.getState());
 
   return chatHelpers.getSlicedMessagesWithConfig(chats, config);
 };
@@ -112,7 +123,7 @@ const getFunctionMessageProps =
     command: plugin,
     content,
     id: plugin?.identifier,
-    loading: id === s.chatLoadingId,
+    loading: s.chatLoadingIds.includes(id),
     type: plugin?.type as LobePluginType,
   });
 
@@ -122,6 +133,11 @@ const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(i
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
 
 const currentChatLoadingState = (s: ChatStore) => !s.messagesInit;
+
+const isMessageEditing = (id: string) => (s: ChatStore) => s.messageEditingIds.includes(id);
+const isMessageLoading = (id: string) => (s: ChatStore) => s.messageLoadingIds.includes(id);
+const isMessageGenerating = (id: string) => (s: ChatStore) => s.chatLoadingIds.includes(id);
+const isAIGenerating = (s: ChatStore) => s.chatLoadingIds.length > 0;
 
 export const chatSelectors = {
   chatsMessageString,
@@ -134,5 +150,10 @@ export const chatSelectors = {
   getFunctionMessageProps,
   getMessageById,
   getTraceIdByMessageId,
+  isAIGenerating,
+  isMessageEditing,
+  isMessageGenerating,
+  isMessageLoading,
   latestMessage,
+  showInboxWelcome,
 };

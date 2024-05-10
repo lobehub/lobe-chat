@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeTogetherAI } from './index';
@@ -15,7 +15,7 @@ const invalidErrorType = 'InvalidTogetherAIAPIKey';
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobeTogetherAI;
+let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
   instance = new LobeTogetherAI({ apiKey: 'test' });
@@ -75,13 +75,16 @@ describe('LobeTogetherAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'mistralai/mistral-7b-instruct:free',
-        temperature: 0.7,
-        top_p: 1,
-      });
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
     });
 

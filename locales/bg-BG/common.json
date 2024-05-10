@@ -1,24 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Персонализираният модел по подразбиране поддържа както извикване на функции, така и визуално разпознаване. Моля, проверете наличността на горните възможности въз основа на реални ситуации.",
-      "file": "Този модел поддържа качване на файлове за четене и разпознаване",
-      "functionCall": "Този модел поддържа извикване на функции.",
-      "tokens": "Този модел поддържа максимум {{tokens}} токена на сесия.",
-      "vision": "Този модел поддържа визуално разпознаване."
-    }
-  },
   "about": "Относно",
   "advanceSettings": "Разширени настройки",
   "appInitializing": "LobeChat се инициализира, моля изчакайте...",
   "autoGenerate": "Автоматично генериране",
   "autoGenerateTooltip": "Автоматично генериране на описание на агент въз основа на подкани",
+  "autoGenerateTooltipDisabled": "Моля, попълнете подсказката, за да използвате функцията за автоматично допълване",
+  "blog": "Продуктов блог",
   "cancel": "Отказ",
   "changelog": "Дневник на промените",
   "close": "Затвори",
   "copy": "Копирай",
   "copyFail": "Копирането не е успешно",
   "copySuccess": "Копирано успешно",
+  "dataStatistics": {
+    "messages": "Съобщения",
+    "sessions": "Сесии",
+    "today": "Днес",
+    "topics": "Теми"
+  },
   "defaultAgent": "Агент по подразбиране",
   "defaultSession": "Агент по подразбиране",
   "delete": "Изтрий",
@@ -35,6 +34,8 @@
     "globalSetting": "Експортирай глобални настройки"
   },
   "feedback": "Обратна връзка",
+  "follow": "Следете ни на {{name}}",
+  "fullscreen": "Цял екран",
   "historyRange": "Диапазон на историята",
   "import": "Импортирай конфигурация",
   "importModal": {
@@ -95,28 +96,14 @@
     "zh-TW": "Традиционен китайски"
   },
   "layoutInitializing": "Инициализиране на оформлението...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "zeroone": "01-AI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Няма налично описание",
   "oauth": "SSO Вход",
+  "officialSite": "Официален сайт",
   "ok": "Добре",
   "password": "Парола",
   "pin": "Закачи",
   "pinOff": "Откачи",
+  "privacy": "Политика за поверителност",
   "regenerate": "Прегенерирай",
   "rename": "Преименувай",
   "reset": "Нулирай",
@@ -161,6 +148,7 @@
   "tab": {
     "chat": "Чат",
     "market": "Открий",
+    "me": "аз",
     "setting": "Настройки"
   },
   "telemetry": {
@@ -171,10 +159,27 @@
     "title": "Помогнете на LobeChat да бъде по-добър"
   },
   "temp": "Временен",
+  "terms": "Условия за ползване",
   "updateAgent": "Актуализирай информацията за агента",
   "upgradeVersion": {
     "action": "Надстрой",
     "hasNew": "Налична е нова актуализация",
     "newVersion": "Налична е нова версия: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Анонимен потребител",
+    "billing": "Управление на сметките",
+    "defaultNickname": "Потребител на общността",
+    "discord": "Поддръжка на общността",
+    "docs": "Документация",
+    "email": "Поддръжка по имейл",
+    "feedback": "Обратна връзка и предложения",
+    "help": "Център за помощ",
+    "moveGuide": "Бутонът за настройки е преместен тук",
+    "plans": "Планове за абонамент",
+    "preview": "Преглед",
+    "profile": "Управление на профила",
+    "setting": "Настройки на приложението",
+    "usages": "Статистика за използване"
   }
 }

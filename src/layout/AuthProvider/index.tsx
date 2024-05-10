@@ -1,16 +1,16 @@
-import { SessionProvider } from 'next-auth/react';
 import { PropsWithChildren } from 'react';
 
-import { getServerConfig } from '@/config/server';
-import { API_ENDPOINTS } from '@/services/_url';
+import { authEnv } from '@/config/auth';
 
-const { ENABLE_OAUTH_SSO = false } = getServerConfig();
+import Clerk from './Clerk';
+import NextAuth from './NextAuth';
 
-const AuthProvider = ({ children }: PropsWithChildren) =>
-  ENABLE_OAUTH_SSO ? (
-    <SessionProvider basePath={API_ENDPOINTS.oauth}>{children}</SessionProvider>
-  ) : (
-    children
-  );
+const AuthProvider = ({ children }: PropsWithChildren) => {
+  if (authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH) return <Clerk>{children}</Clerk>;
+
+  if (authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH) return <NextAuth>{children}</NextAuth>;
+
+  return children;
+};
 
 export default AuthProvider;

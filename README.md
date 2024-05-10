@@ -123,11 +123,13 @@ We have implemented support for the following model service providers:
 - **AWS Bedrock**: Integrated with AWS Bedrock service, supporting models such as **Claude / LLama2**, providing powerful natural language processing capabilities. [Learn more](https://aws.amazon.com/cn/bedrock)
 - **Anthropic (Claude)**: Accessed Anthropic's **Claude** series models, including Claude 3 and Claude 2, with breakthroughs in multi-modal capabilities and extended context, setting a new industry benchmark. [Learn more](https://www.anthropic.com/claude)
 - **Google AI (Gemini Pro, Gemini Vision)**: Access to Google's **Gemini** series models, including Gemini and Gemini Pro, to support advanced language understanding and generation. [Learn more](https://deepmind.google/technologies/gemini/)
-- **ChatGLM**: Added the **ChatGLM** series models from Zhipuai (GLM-4/GLM-4-vision/GLM-3-turbo), providing users with another efficient conversation model choice. [Learn more](https://www.zhipuai.cn/)
-- **Moonshot AI (Dark Side of the Moon)**: Integrated with the Moonshot series models, an innovative AI startup from China, aiming to provide deeper conversation understanding. [Learn more](https://www.moonshot.cn/)
 - **Groq**: Accessed Groq's AI models, efficiently processing message sequences and generating responses, capable of multi-turn dialogues and single-interaction tasks. [Learn more](https://groq.com/)
 - **OpenRouter**: Supports routing of models including **Claude 3**, **Gemma**, **Mistral**, **Llama2** and **Cohere**, with intelligent routing optimization to improve usage efficiency, open and flexible. [Learn more](https://openrouter.ai/)
 - **01.AI (Yi Model)**: Integrated the 01.AI models, with series of APIs featuring fast inference speed, which not only shortened the processing time, but also maintained excellent model performance. [Learn more](https://01.ai/)
+- **Together.ai**: Over 100 leading open-source Chat, Language, Image, Code, and Embedding models are available through the Together Inference API. For these models you pay just for what you use. [Learn more](https://www.together.ai/)
+- **ChatGLM**: Added the **ChatGLM** series models from Zhipuai (GLM-4/GLM-4-vision/GLM-3-turbo), providing users with another efficient conversation model choice. [Learn more](https://www.zhipuai.cn/)
+- **Moonshot AI (Dark Side of the Moon)**: Integrated with the Moonshot series models, an innovative AI startup from China, aiming to provide deeper conversation understanding. [Learn more](https://www.moonshot.cn/)
+- **Minimax**: Integrated the Minimax models, including the MoE model **abab6**, offers a broader range of choices. [Learn more](https://www.minimaxi.com/)
 
 At the same time, we are also planning to support more model service providers, such as Replicate and Perplexity, to further enrich our service provider library. If you would like LobeChat to support your favorite service provider, feel free to join our [community discussion](https://github.com/lobehub/lobe-chat/discussions/1284).
 
@@ -220,14 +222,14 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                    | Description                                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [NFT Guru](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **swap** on **2024-04-03**</sup>          | Discover current prices of NFTs across major platforms and keep track of the rapidly changing marketplace with real-time<br/>`crypto` `nft`      |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-04-02**</sup> | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                       |
-| [Calendar Assistant](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>  | A plugin to manage your calendar events # will auto generate i18n in workflow<br/>`calendar` `schedule` `will-auto-generate-i-18-n-in-workflow`  |
-| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | Get realtime crypto price, BTC, ETH, BNB, and the latest insights.The latest coin news and airdrop opportunities.<br/>`crypto` `btc` `eth` `bnb` |
+| Recent Submits                                                                                                            | Description                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>            | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                                               |
+| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-05-02**</sup>         | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                  |
+| [Search Google via Serper](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Barry** on **2024-04-30**</sup> | Google search engine via Serper.dev free API (2500x🆓/month)<br/>`web` `search`                                                             |
+| [NFT Guru](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **swap** on **2024-04-03**</sup>                  | Discover current prices of NFTs across major platforms and keep track of the rapidly changing marketplace with real-time<br/>`crypto` `nft` |
 
-> 📊 Total plugins: [<kbd>**56**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**57**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -259,14 +261,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                      | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [English Technology Article Reading Assistant](https://chat-preview.lobehub.com/market?agent=encn-fy)<br/><sup>By **[sangxgg](https://github.com/sangxgg)** on **2024-04-02**</sup> | A translator with rich translation experience, specializing in accurately and clearly translating various English technology articles into Simplified Chinese. Participated in the translation work of Simplified Chinese versions of publications such as National Geographic, Scientific American, InformationWeek, and TechCrunch Chinese. Has a unique understanding and skilled practice in in-depth interpretation and accurate translation of technology articles.<br/>`translation` `english-to-chinese-translation` `translation-of-english-technology-content` |
-| [CAN](https://chat-preview.lobehub.com/market?agent=code-anything-noproblem)<br/><sup>By **[HenryWu9998](https://github.com/HenryWu9998)** on **2024-03-31**</sup>                  | Experienced programmer skilled in multiple languages. Provides code solutions, guidance, and practical examples to help users achieve their programming goals. "I adore coding."<br/>`programming` `coding` `programming-assistance` `code-examples` `guidance`                                                                                                                                                                                                                                                                                                          |
-| [Blood Test Analyst](https://chat-preview.lobehub.com/market?agent=blood-analyst)<br/><sup>By **[SimoMay](https://github.com/SimoMay)** on **2024-03-27**</sup>                     | Skilled in analysing blood test results, providing clear feedback using emojis for easy understanding.<br/>`healthcare` `analysis` `results` `consulting` `summary`                                                                                                                                                                                                                                                                                                                                                                                                      |
-| [High EQ Flattery Assistant](https://chat-preview.lobehub.com/market?agent=gpts-big-fart-chat)<br/><sup>By **[MapleEve](https://github.com/MapleEve)** on **2024-03-27**</sup>      | An expert in precise chat compliments, providing suitable praise and flattery<br/>`compliments` `eq` `chat`                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| Recent Submits                                                                                                                                                                             | Description                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [SF Symbols Finder](https://chat-preview.lobehub.com/market?agent=sf-symbols-finder)<br/><sup>By **[inquiry-paring0a](https://github.com/inquiry-paring0a)** on **2024-05-08**</sup>       | Master Apple SF Symbols, select symbols that match the description<br/>`sf-symbols` `expert` `icon` `symbol` `plugin`                                                                                                                                          |
+| [Video to Blog Post Assistant](https://chat-preview.lobehub.com/market?agent=video-2-blog-assistant)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-05-06**</sup> | Helps you quickly organize messy subtitles into beautiful blog posts<br/>`subtitle-organization` `blog-post-formatting` `video-to-blog`                                                                                                                        |
+| [Art Evaluation Tutor](https://chat-preview.lobehub.com/market?agent=wanwusheng-art)<br/><sup>By **[dingyufei615](https://github.com/dingyufei615)** on **2024-05-06**</sup>               | Specializes in teaching children's art, meticulously evaluates works, pays attention to details, and adapts to students of different age groups.<br/>`art-education` `evaluation` `creativity` `teaching` `painting`                                           |
+| [iOS Code Artist](https://chat-preview.lobehub.com/market?agent=ios-develop)<br/><sup>By **[Alcu1n](https://github.com/Alcu1n)** on **2024-05-03**</sup>                                   | iOS development expert with 15 years of experience, proficient in Swift, SwiftUI, Flutter. Clear logic in code, precise debugging, providing project frameworks from 0 to 1.<br/>`i-os-development` `coding` `debugging` `project-planning` `logical-thinking` |
 
-> 📊 Total agents: [<kbd>**226**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**248**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -459,7 +461,7 @@ This project provides some additional configuration items set with environment v
 | `OPENAI_API_KEY`     | Yes      | This is the API key you apply on the OpenAI account page                                                                                                                  | `sk-xxxxxx...xxxxxx`                                                                                                 |
 | `OPENAI_PROXY_URL`   | No       | If you manually configure the OpenAI interface proxy, you can use this configuration item to override the default OpenAI API request base URL                             | `https://api.chatanywhere.cn` or `https://aihubmix.com/v1` <br/>The default value is<br/>`https://api.openai.com/v1` |
 | `ACCESS_CODE`        | No       | Add a password to access this service; you can set a long password to avoid leaking. If this value contains a comma, it is a password array.                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                                            |
-| `CUSTOM_MODELS`      | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                                |
+| `OPENAI_MODEL_LIST`  | No       | Used to control the model list. Use `+` to add a model, `-` to hide a model, and `model_name=display_name` to customize the display name of a model, separated by commas. | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                                |
 
 > \[!NOTE]
 >
@@ -624,7 +626,7 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 
 </details>
 
-Copyright © 2023 [LobeHub][profile-link]. <br />
+Copyright © 2024 [LobeHub][profile-link]. <br />
 This project is [MIT](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
@@ -656,27 +658,27 @@ This project is [MIT](./LICENSE) licensed.
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
-[docs]: https://chat-docs.lobehub.com/en
+[docs]: https://lobehub.com/docs
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
-[docs-docker]: https://chat-docs.lobehub.com/en/self-hosting/platform/docker
-[docs-env-var]: https://chat-docs.lobehub.com/en/self-hosting/environment-variables
-[docs-feat-agent]: https://chat-docs.lobehub.com/en/usage/features/agent-market
-[docs-feat-local]: https://chat-docs.lobehub.com/en/usage/features/local-llm
-[docs-feat-mobile]: https://chat-docs.lobehub.com/en/usage/features/mobile
-[docs-feat-plugin]: https://chat-docs.lobehub.com/en/usage/features/plugin-system
-[docs-feat-provider]: https://chat-docs.lobehub.com/en/usage/features/multi-ai-providers
-[docs-feat-pwa]: https://chat-docs.lobehub.com/en/usage/features/pwa
-[docs-feat-t2i]: https://chat-docs.lobehub.com/en/usage/features/text-to-image
-[docs-feat-theme]: https://chat-docs.lobehub.com/en/usage/features/theme
-[docs-feat-tts]: https://chat-docs.lobehub.com/en/usage/features/tts
-[docs-feat-vision]: https://chat-docs.lobehub.com/en/usage/features/vision
+[docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
+[docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
+[docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
+[docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
+[docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
+[docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
+[docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
+[docs-feat-pwa]: https://lobehub.com/docs/usage/features/pwa
+[docs-feat-t2i]: https://lobehub.com/docs/usage/features/text-to-image
+[docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
+[docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
+[docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
 [docs-functionc-call]: https://platform.openai.com/docs/guides/function-calling
 [docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
-[docs-plugin-dev]: https://chat-docs.lobehub.com/en/usage/plugins/development
-[docs-self-hosting]: https://chat-docs.lobehub.com/en/self-hosting/start
-[docs-upstream-sync]: https://chat-docs.lobehub.com/en/self-hosting/advanced/upstream-sync
-[docs-usage-ollama]: https://chat-docs.lobehub.com/en/usage/providers/ollama
-[docs-usage-plugin]: https://chat-docs.lobehub.com/en/usage/plugins/basic
+[docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
+[docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
+[docs-upstream-sync]: https://lobehub.com/docs/self-hosting/advanced/upstream-sync
+[docs-usage-ollama]: https://lobehub.com/docs/usage/providers/ollama
+[docs-usage-plugin]: https://lobehub.com/docs/usage/plugins/basic
 [fossa-license-link]: https://app.fossa.com/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat
 [fossa-license-shield]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Flobehub%2Flobe-chat.svg?type=large
 [github-action-release-link]: https://github.com/actions/workflows/lobehub/lobe-chat/release.yml

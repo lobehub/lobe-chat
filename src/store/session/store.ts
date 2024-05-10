@@ -6,21 +6,15 @@ import { StateCreator } from 'zustand/vanilla';
 import { isDev } from '@/utils/env';
 
 import { SessionStoreState, initialState } from './initialState';
-import { AgentAction, createAgentSlice } from './slices/agent/action';
 import { SessionAction, createSessionSlice } from './slices/session/action';
 import { SessionGroupAction, createSessionGroupSlice } from './slices/sessionGroup/action';
 
 //  ===============  聚合 createStoreFn ============ //
 
-export interface SessionStore
-  extends SessionAction,
-    AgentAction,
-    SessionGroupAction,
-    SessionStoreState {}
+export interface SessionStore extends SessionAction, SessionGroupAction, SessionStoreState {}
 
 const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (...parameters) => ({
   ...initialState,
-  ...createAgentSlice(...parameters),
   ...createSessionSlice(...parameters),
   ...createSessionGroupSlice(...parameters),
 });

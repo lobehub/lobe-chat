@@ -30,6 +30,7 @@ export type SessionGroups = SessionGroupItem[];
 export interface LobeAgentSession extends BaseDataModel {
   config: LobeAgentConfig;
   group?: SessionGroupId;
+  model: string;
   pinned?: boolean;
   type: LobeSessionType.Agent;
 }
@@ -44,15 +45,13 @@ export interface LobeAgentSettings {
 
 export type LobeSessions = LobeAgentSession[];
 
-export interface CustomSessionGroup {
+export interface CustomSessionGroup extends SessionGroupItem {
   children: LobeSessions;
-  id: SessionGroupId;
-  name: string;
 }
 
+export type LobeSessionGroups = SessionGroupItem[];
+
 export interface ChatSessionList {
-  all: LobeSessions;
-  customGroup: CustomSessionGroup[];
-  default: LobeSessions;
-  pinned: LobeSessions;
+  sessionGroups: LobeSessionGroups;
+  sessions: LobeSessions;
 }

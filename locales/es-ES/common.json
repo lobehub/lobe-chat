@@ -1,24 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modelo personalizado: admite tanto la llamada de funciones como el reconocimiento visual. Por favor, verifique la disponibilidad de estas capacidades según sea necesario.",
-      "file": "Este modelo admite la carga y reconocimiento de archivos",
-      "functionCall": "Este modelo admite la llamada de funciones (Function Call).",
-      "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
-      "vision": "Este modelo admite el reconocimiento visual."
-    }
-  },
   "about": "Acerca de",
   "advanceSettings": "Configuración avanzada",
   "appInitializing": "LobeChat está inicializando, por favor espere...",
   "autoGenerate": "Generación automática",
   "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
+  "autoGenerateTooltipDisabled": "Por favor, complete la palabra clave antes de usar la función de autocompletar",
+  "blog": "Blog de productos",
   "cancel": "Cancelar",
   "changelog": "Registro de cambios",
   "close": "Cerrar",
   "copy": "Copiar",
   "copyFail": "Fallo al copiar",
   "copySuccess": "¡Copia exitosa!",
+  "dataStatistics": {
+    "messages": "Mensajes",
+    "sessions": "Sesiones",
+    "today": "Hoy",
+    "topics": "Temas"
+  },
   "defaultAgent": "Asistente predeterminado",
   "defaultSession": "Sesión predeterminada",
   "delete": "Eliminar",
@@ -35,6 +34,8 @@
     "globalSetting": "Exportar configuración global"
   },
   "feedback": "Comentarios y sugerencias",
+  "follow": "Síguenos en {{name}}",
+  "fullscreen": "Pantalla completa",
   "historyRange": "Rango de historial",
   "import": "Importar configuración",
   "importModal": {
@@ -95,29 +96,14 @@
     "zh-TW": "Chino tradicional"
   },
   "layoutInitializing": "Inicializando diseño...",
-  "modelProvider": {
-    "anthropic": "Antropico",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral IA",
-    "moonshot": "Moonshot IA",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "togetherai": "TogetherAI",
-    "perplexity": "Perplexity",
-    "zeroone": "01.AI ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Sin descripción",
   "oauth": "Inicio de sesión SSO",
+  "officialSite": "Sitio oficial",
   "ok": "Aceptar",
   "password": "Contraseña",
   "pin": "Fijar",
   "pinOff": "Quitar fijación",
+  "privacy": "Política de privacidad",
   "regenerate": "Regenerar",
   "rename": "Renombrar",
   "reset": "Restablecer",
@@ -162,6 +148,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Descubrir",
+    "me": "Yo",
     "setting": "Configuración"
   },
   "telemetry": {
@@ -172,10 +159,27 @@
     "title": "Ayuda a mejorar LobeChat"
   },
   "temp": "Temporal",
+  "terms": "Términos de servicio",
   "updateAgent": "Actualizar información del asistente",
   "upgradeVersion": {
     "action": "Actualizar",
     "hasNew": "Hay una nueva actualización disponible",
     "newVersion": "Nueva versión disponible: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Usuario Anónimo",
+    "billing": "Gestión de facturación",
+    "defaultNickname": "Usuario de la comunidad",
+    "discord": "Soporte de la comunidad",
+    "docs": "Documentación de uso",
+    "email": "Soporte por correo electrónico",
+    "feedback": "Comentarios y sugerencias",
+    "help": "Centro de ayuda",
+    "moveGuide": "El botón de configuración se ha movido aquí",
+    "plans": "Planes de suscripción",
+    "preview": "Vista previa",
+    "profile": "Gestión de cuenta",
+    "setting": "Configuración de la aplicación",
+    "usages": "Estadísticas de uso"
   }
 }

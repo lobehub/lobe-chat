@@ -128,8 +128,8 @@ export class LocalDB extends Dexie {
 在 `src/database/model/sessionGroup.ts` 中定义 `SessionGroupModel`：
 
 ```typescript
-import { BaseModel } from '@/database/core';
-import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessionGroup';
+import { BaseModel } from '@/database/client/core';
+import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { nanoid } from '@/utils/uuid';
 
 class _SessionGroupModel extends BaseModel {
@@ -231,7 +231,7 @@ export const createSessionGroupSlice: StateCreator<
 
 为了处理这些分组，我们需要改造 `useFetchSessions` 的实现逻辑。以下是关键的改动点：
 
-1. 使用 `sessionService.getSessionsWithGroup` 方法负责调用后端接口来获取分组后的会话数据；
+1. 使用 `sessionService.getGroupedSessions` 方法负责调用后端接口来获取分组后的会话数据；
 2. 将获取后的数据保存为三到不同的状态字段中：`pinnedSessions`、`customSessionGroups` 和 `defaultSessions`；
 
 #### `useFetchSessions` 方法
@@ -247,7 +247,7 @@ export const createSessionSlice: StateCreator<
 > = (set, get) => ({
   // ... 其他方法
   useFetchSessions: () =>
-    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
+    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getGroupedSessions, {
       onSuccess: (data) => {
         set(
           {
@@ -267,15 +267,15 @@ export const createSessionSlice: StateCreator<
 
 在成功获取数据后，我们使用 `set` 方法来更新 `customSessionGroups`、`defaultSessions`、`pinnedSessions` 和 `sessions` 状态。这将保证状态与最新的会话数据同步。
 
-#### getSessionsWithGroup
+#### getGroupedSessions
 
-使用 `sessionService.getSessionsWithGroup` 方法负责调用后端接口 `SessionModel.queryWithGroups()`
+使用 `sessionService.getGroupedSessions` 方法负责调用后端接口 `SessionModel.queryWithGroups()`
 
 ```typescript
 class SessionService {
   // ... 其他 SessionGroup 相关的实现
 
-  async getSessionsWithGroup(): Promise<ChatSessionList> {
+  async getGroupedSessions(): Promise<ChatSessionList> {
     return SessionModel.queryWithGroups();
   }
 }
@@ -283,7 +283,7 @@ class SessionService {
 
 #### `SessionModel.queryWithGroups` 方法
 
-此方法是 `sessionService.getSessionsWithGroup` 调用的核心方法，它负责查询和组织会话数据，代码如下：
+此方法是 `sessionService.getGroupedSessions` 调用的核心方法，它负责查询和组织会话数据，代码如下：
 
 ```typescript
 class _SessionModel extends BaseModel {
@@ -611,7 +611,7 @@ class ConfigService {
   // ... 省略其他
 
   exportSessions = async () => {
-    const sessions = await sessionService.getSessions();
+    const sessions = await sessionService.getAllSessions();
 +   const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
