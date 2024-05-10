@@ -37,7 +37,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       const response = await this.client.streamChatCompletions(
         model,
         messages as ChatRequestMessage[],
-        { ...params, maxTokens, abortSignal: options?.signal } as GetChatCompletionsOptions,
+        { ...params, abortSignal: options?.signal, maxTokens } as GetChatCompletionsOptions,
       );
 
       const stream = OpenAIStream(response as any);
