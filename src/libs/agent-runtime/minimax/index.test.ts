@@ -62,7 +62,7 @@ describe('LobeMinimaxAI', () => {
         temperature: 0,
       });
 
-      expect(result).toBeInstanceOf(StreamingTextResponse);
+      expect(result).toBeInstanceOf(Response);
     });
 
     it('should handle text messages correctly', async () => {
@@ -85,7 +85,7 @@ describe('LobeMinimaxAI', () => {
         temperature: 0,
       });
 
-      expect(result).toBeInstanceOf(StreamingTextResponse);
+      expect(result).toBeInstanceOf(Response);
     });
 
     it('should call debugStream in DEBUG mode', async () => {

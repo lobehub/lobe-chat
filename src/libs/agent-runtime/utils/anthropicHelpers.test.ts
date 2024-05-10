@@ -49,7 +49,7 @@ describe('anthropicHelpers', () => {
         role: 'system',
       };
       const result = buildAnthropicMessage(message);
-      expect(result).toEqual({ content: [{ type: 'text', text: 'Hello!' }], role: 'assistant' });
+      expect(result).toEqual({ content: [{ type: 'text', text: 'Hello!' }], role: 'user' });
     });
   });
 

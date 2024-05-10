@@ -73,7 +73,10 @@ export const LobeOpenAICompatibleFactory = ({
       try {
         const postPayload = chatCompletion?.handlePayload
           ? chatCompletion.handlePayload(payload)
-          : (payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming);
+          : ({
+              ...payload,
+              stream: payload.stream ?? true,
+            } as OpenAI.ChatCompletionCreateParamsStreaming);
 
         const response = await this.client.chat.completions.create(postPayload, {
           // https://github.com/lobehub/lobe-chat/pull/318
