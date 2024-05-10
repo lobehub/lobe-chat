@@ -19,6 +19,10 @@ declare global {
       AZURE_ENDPOINT?: string;
       AZURE_API_VERSION?: string;
 
+      // DeepSeek Provider
+      ENABLED_DEEPSEEK?: string;
+      DEEPSEEK_API_KEY?: string;
+      
       // ZhiPu Provider
       ENABLED_ZHIPU?: string;
       ZHIPU_API_KEY?: string;
@@ -105,8 +109,11 @@ export const getProviderConfig = () => {
   const AZURE_API_KEY = process.env.AZURE_API_KEY || '';
 
   const ZHIPU_API_KEY = process.env.ZHIPU_API_KEY || '';
+
   const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || '';
 
+  const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || '';
+  
   const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || '';
 
   const MOONSHOT_API_KEY = process.env.MOONSHOT_API_KEY || '';
@@ -167,6 +174,9 @@ export const getProviderConfig = () => {
 
     ENABLED_ZHIPU: !!ZHIPU_API_KEY,
     ZHIPU_API_KEY,
+
+    ENABLED_DEEPSEEK: !!DEEPSEEK_API_KEY,
+    DEEPSEEK_API_KEY,
 
     ENABLED_GOOGLE: !!GOOGLE_API_KEY,
     GOOGLE_API_KEY,

@@ -24,6 +24,7 @@ export interface V3LegacyConfig {
 export interface V3LLMConfig {
   anthropic: V3GeneralConfig;
   bedrock: any;
+  deepseek:V3GeneralConfig;
   google: V3GeneralConfig;
   groq: V3GeneralConfig;
   minimax: V3GeneralConfig;
