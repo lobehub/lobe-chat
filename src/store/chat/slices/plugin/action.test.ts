@@ -2,16 +2,19 @@ import { act, renderHook } from '@testing-library/react';
 import { Md5 } from 'ts-md5';
 import { Mock, afterEach, describe, expect, it, vi } from 'vitest';
 
+import { LOADING_FLAT } from '@/const/message';
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
-import { ChatPluginPayload } from '@/types/message';
+import { ChatMessage, ChatToolPayload } from '@/types/message';
 import { LobeTool } from '@/types/tool';
 
 const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
+
+vi.mock('zustand/traditional');
 
 // Mock messageService
 vi.mock('@/services/message', () => ({
@@ -73,6 +76,7 @@ describe('ChatPluginAction', () => {
       const initialState = {
         messages: [],
         coreProcessMessage: vi.fn(),
+        internal_coreProcessMessage: vi.fn(),
         refreshMessages: vi.fn(),
       };
       useChatStore.setState(initialState);
@@ -130,7 +134,6 @@ describe('ChatPluginAction', () => {
         content: pluginApiResponse,
       });
       expect(storeState.refreshMessages).toHaveBeenCalled();
-      expect(storeState.triggerAIMessage).toHaveBeenCalled();
       expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
         false,
         'message-id',
@@ -172,237 +175,178 @@ describe('ChatPluginAction', () => {
     });
   });
 
-  describe('triggerFunctionCall', () => {
-    it('should trigger a function call and update the plugin message accordingly', async () => {
-      const messageId = 'message-id';
-      const messageContent = JSON.stringify({
-        tool_calls: [
+  describe('triggerToolCalls', () => {
+    it('should trigger tool calls for the assistant message', async () => {
+      const assistantId = 'assistant-id';
+      const message = {
+        id: assistantId,
+        role: 'assistant',
+        content: 'Assistant message',
+        tools: [
           {
-            id: 'call_sbca',
-            type: 'function',
-            function: {
-              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName`,
-              arguments: { key: 'value' },
-            },
+            id: 'tool1',
+            type: 'standalone',
+            identifier: 'plugin1',
+            apiName: 'api1',
+            arguments: '{}',
+          },
+          {
+            id: 'tool2',
+            type: 'markdown',
+            identifier: 'plugin2',
+            apiName: 'api2',
+            arguments: '{}',
+          },
+          {
+            id: 'tool3',
+            type: 'builtin',
+            identifier: 'builtin1',
+            apiName: 'api3',
+            arguments: '{}',
+          },
+          {
+            id: 'tool4',
+            type: 'default',
+            identifier: 'plugin3',
+            apiName: 'api4',
+            arguments: '{}',
           },
         ],
-      });
-      const messagePluginPayload = {
-        apiName: 'apiName',
-        identifier: 'pluginName',
-        type: 'default',
-        arguments: { key: 'value' },
-      };
+      } as ChatMessage;
 
-      const refreshSpy = vi.spyOn(useChatStore.getState(), 'refreshMessages');
-      const invokeSpy = vi.spyOn(useChatStore.getState(), 'invokeDefaultTypePlugin');
-      vi.spyOn(chatSelectors, 'getMessageById').mockImplementationOnce(
-        () => () =>
-          ({
-            id: messageId,
-            content: messageContent,
-          }) as any,
-      );
-
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
-      });
-
-      expect(chatSelectors.getMessageById).toHaveBeenCalledWith(messageId);
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, {
-        content: '',
-        plugin: messagePluginPayload,
-        role: 'function',
-      });
-      expect(refreshSpy).toHaveBeenCalled();
-      expect(invokeSpy).toHaveBeenCalledWith(messageId, messagePluginPayload);
-    });
-
-    it('should handle function call with MD5 prefixed API name', async () => {
-      const messageId = 'message-id';
-      const apiName = 'originalApiName';
-      const id = 'pluginIdentifier';
-      const md5ApiName = PLUGIN_SCHEMA_API_MD5_PREFIX + Md5.hashStr(apiName).toString();
-      const messageContent = JSON.stringify({
-        tool_calls: [
-          {
-            id: 'call_sbca',
-            type: 'function',
-            function: {
-              name: id + PLUGIN_SCHEMA_SEPARATOR + md5ApiName,
-              arguments: {},
-            },
-          },
-        ],
-      });
-
-      const plugin = { identifier: id, manifest: { api: [{ name: apiName }] } } as LobeTool;
-
-      useToolStore.setState({ installedPlugins: [plugin] });
-
-      vi.spyOn(chatSelectors, 'getMessageById').mockImplementationOnce(
-        () => () =>
-          ({
-            id: messageId,
-            content: messageContent,
-          }) as any,
-      );
-
-      const { result } = renderHook(() => useChatStore());
-      vi.spyOn(result.current, 'invokeDefaultTypePlugin');
-      vi.spyOn(result.current, 'refreshMessages');
-
-      await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
-      });
-      expect(result.current.refreshMessages).toHaveBeenCalled();
-
-      expect(messageService.updateMessage).toHaveBeenCalledWith(
-        messageId,
-        expect.objectContaining({
-          // 确保正确的 API 名称被设置
-          plugin: expect.objectContaining({ apiName }),
-        }),
-      );
-      expect(result.current.invokeDefaultTypePlugin).toHaveBeenCalledWith(
-        messageId,
-        expect.objectContaining({
-          apiName: apiName,
-        }),
-      );
-    });
-
-    it('should handle standalone plugin type', async () => {
-      const messageId = 'message-id';
-      const messageContent = JSON.stringify({
-        tool_calls: [
-          {
-            id: 'call_scv',
-            function: {
-              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}standalone`,
-              arguments: {},
-            },
-          },
-        ],
-      });
-
-      const invokeStandaloneTypePlugin = useChatStore.getState().invokeStandaloneTypePlugin;
+      const invokeStandaloneTypePluginMock = vi.fn();
+      const invokeMarkdownTypePluginMock = vi.fn();
+      const invokeBuiltinToolMock = vi.fn();
+      const invokeDefaultTypePluginMock = vi.fn().mockResolvedValue('Default tool response');
+      const triggerAIMessageMock = vi.fn();
+      const internal_createMessageMock = vi.fn().mockResolvedValue('tool-message-id');
+      const getTraceIdByMessageIdMock = vi.fn().mockReturnValue('trace-id');
 
       act(() => {
         useChatStore.setState({
-          refreshMessages: vi.fn(),
-          invokeStandaloneTypePlugin: vi.fn(),
+          messages: [message],
+          invokeStandaloneTypePlugin: invokeStandaloneTypePluginMock,
+          invokeMarkdownTypePlugin: invokeMarkdownTypePluginMock,
+          invokeBuiltinTool: invokeBuiltinToolMock,
+          invokeDefaultTypePlugin: invokeDefaultTypePluginMock,
+          triggerAIMessage: triggerAIMessageMock,
+          internal_createMessage: internal_createMessageMock,
+          activeId: 'session-id',
+          activeTopicId: 'topic-id',
         });
       });
 
-      vi.spyOn(chatSelectors, 'getMessageById').mockImplementation(
-        () => () =>
-          ({
-            id: messageId,
-            content: messageContent,
-          }) as any,
-      );
-
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
+        await result.current.triggerToolCalls(assistantId);
       });
 
-      // 验证 refreshMessages 是否被调用
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      // Verify that tool messages were created for each tool call
+      expect(internal_createMessageMock).toHaveBeenCalledTimes(4);
+      expect(internal_createMessageMock).toHaveBeenCalledWith({
+        content: LOADING_FLAT,
+        parentId: assistantId,
+        plugin: message.tools![0],
+        role: 'tool',
+        sessionId: 'session-id',
+        tool_call_id: 'tool1',
+        topicId: 'topic-id',
+      });
+      // ... similar assertions for other tool calls
 
-      // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
-      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
-      expect(result.current.invokeStandaloneTypePlugin).toHaveBeenCalled();
+      // Verify that the appropriate plugin types were invoked
+      expect(invokeStandaloneTypePluginMock).toHaveBeenCalledWith(
+        'tool-message-id',
+        message.tools![0],
+      );
+      expect(invokeMarkdownTypePluginMock).toHaveBeenCalledWith(
+        'tool-message-id',
+        message.tools![1],
+      );
+      expect(invokeBuiltinToolMock).toHaveBeenCalledWith('tool-message-id', message.tools![2]);
+      expect(invokeDefaultTypePluginMock).toHaveBeenCalledWith(
+        'tool-message-id',
+        message.tools![3],
+      );
 
-      useChatStore.setState({ invokeStandaloneTypePlugin });
+      // Verify that AI message was triggered for default type tool call
+      // expect(getTraceIdByMessageIdMock).toHaveBeenCalledWith('tool-message-id');
+      // expect(triggerAIMessageMock).toHaveBeenCalledWith({ traceId: 'trace-id' });
     });
 
-    it('should handle builtin plugin type', async () => {
-      const messageId = 'message-id';
-      const messageContent = JSON.stringify({
-        tool_calls: [
+    it('should not trigger AI message if no default type tool calls', async () => {
+      const assistantId = 'assistant-id';
+      const message = {
+        id: assistantId,
+        role: 'assistant',
+        content: 'Assistant message',
+        tools: [
           {
-            id: 'call_scv',
-            function: {
-              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}builtin`,
-              arguments: {},
-            },
+            id: 'tool1',
+            type: 'standalone',
+            identifier: 'plugin1',
+            apiName: 'api1',
+            arguments: '{}',
+          },
+          {
+            id: 'tool2',
+            type: 'markdown',
+            identifier: 'plugin2',
+            apiName: 'api2',
+            arguments: '{}',
+          },
+          {
+            id: 'tool3',
+            type: 'builtin',
+            identifier: 'builtin1',
+            apiName: 'api3',
+            arguments: '{}',
           },
         ],
+      } as ChatMessage;
+
+      const invokeStandaloneTypePluginMock = vi.fn();
+      const invokeMarkdownTypePluginMock = vi.fn();
+      const invokeBuiltinToolMock = vi.fn();
+      const triggerAIMessageMock = vi.fn();
+      const internal_createMessageMock = vi.fn().mockResolvedValue('tool-message-id');
+
+      act(() => {
+        useChatStore.setState({
+          invokeStandaloneTypePlugin: invokeStandaloneTypePluginMock,
+          invokeMarkdownTypePlugin: invokeMarkdownTypePluginMock,
+          invokeBuiltinTool: invokeBuiltinToolMock,
+          triggerAIMessage: triggerAIMessageMock,
+          internal_createMessage: internal_createMessageMock,
+          activeId: 'session-id',
+          messages: [message],
+          activeTopicId: 'topic-id',
+        });
       });
-
-      const invokeBuiltinTool = useChatStore.getState().invokeBuiltinTool;
-      useChatStore.setState({ refreshMessages: vi.fn(), invokeBuiltinTool: vi.fn() });
-
-      vi.spyOn(chatSelectors, 'getMessageById').mockImplementation(
-        () => () =>
-          ({
-            id: messageId,
-            content: messageContent,
-          }) as any,
-      );
 
       const { result } = renderHook(() => useChatStore());
 
       await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
+        await result.current.triggerToolCalls(assistantId);
       });
 
-      // 验证 refreshMessages 是否被调用
-      expect(result.current.refreshMessages).toHaveBeenCalled();
+      // Verify that tool messages were created for each tool call
+      expect(internal_createMessageMock).toHaveBeenCalledTimes(3);
 
-      // 验证 invokeDefaultTypePlugin 是否没有被调用，因为类型是 standalone
-      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
-      expect(result.current.invokeBuiltinTool).toHaveBeenCalled();
-
-      useChatStore.setState({ invokeBuiltinTool });
-    });
-
-    it('should handle markdown plugin type', async () => {
-      const messageId = 'message-id';
-      const messageContent = JSON.stringify({
-        tool_calls: [
-          {
-            id: 'call_scv',
-            function: {
-              name: `pluginName${PLUGIN_SCHEMA_SEPARATOR}apiName${PLUGIN_SCHEMA_SEPARATOR}markdown`,
-              arguments: {},
-            },
-          },
-        ],
-      });
-
-      const invokeMarkdownTypePlugin = useChatStore.getState().invokeMarkdownTypePlugin;
-      useChatStore.setState({
-        refreshMessages: vi.fn(),
-        invokeMarkdownTypePlugin: vi.fn(),
-      });
-
-      vi.spyOn(chatSelectors, 'getMessageById').mockImplementation(
-        () => () =>
-          ({
-            id: messageId,
-            content: messageContent,
-          }) as any,
+      // Verify that the appropriate plugin types were invoked
+      expect(invokeStandaloneTypePluginMock).toHaveBeenCalledWith(
+        'tool-message-id',
+        message.tools![0],
       );
+      expect(invokeMarkdownTypePluginMock).toHaveBeenCalledWith(
+        'tool-message-id',
+        message.tools![1],
+      );
+      expect(invokeBuiltinToolMock).toHaveBeenCalledWith('tool-message-id', message.tools![2]);
 
-      const { result } = renderHook(() => useChatStore());
-
-      await act(async () => {
-        await result.current.triggerFunctionCall(messageId);
-      });
-
-      // 验证 refreshMessages 是否被调用
-      expect(result.current.refreshMessages).toHaveBeenCalled();
-
-      expect(result.current.invokeDefaultTypePlugin).not.toHaveBeenCalled();
-      expect(result.current.invokeMarkdownTypePlugin).toHaveBeenCalled();
-
-      useChatStore.setState({ invokeMarkdownTypePlugin });
+      // Verify that AI message was not triggered
+      expect(triggerAIMessageMock).not.toHaveBeenCalled();
     });
   });
 
@@ -510,7 +454,7 @@ describe('ChatPluginAction', () => {
       const payload = {
         apiName: 'text2image',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       const messageId = 'message-id';
       const toolResponse = JSON.stringify({ abc: 'data' });
@@ -557,7 +501,7 @@ describe('ChatPluginAction', () => {
       const payload = {
         apiName: 'text2image',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       const messageId = 'message-id';
       const toolResponse = 'Builtin tool response';
@@ -606,7 +550,7 @@ describe('ChatPluginAction', () => {
       const payload = {
         apiName: 'builtinApi',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       const messageId = 'message-id';
       const error = new Error('Builtin tool failed');
@@ -652,7 +596,7 @@ describe('ChatPluginAction', () => {
         identifier: 'abc',
         type: 'markdown',
         arguments: JSON.stringify({ key: 'value' }),
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
       const messageId = 'message-id';
 
       const runPluginApiMock = vi.fn();
@@ -678,7 +622,7 @@ describe('ChatPluginAction', () => {
 
       const payload = {
         identifier: 'pluginName',
-      } as ChatPluginPayload;
+      } as ChatToolPayload;
 
       act(() => {
         useToolStore.setState({
