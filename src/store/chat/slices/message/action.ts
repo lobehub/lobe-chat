@@ -564,7 +564,7 @@ export const chatMessage: StateCreator<
     let contextMessages: ChatMessage[] = [];
 
     switch (currentMessage.role) {
-      case 'function':
+      case 'tool':
       case 'user': {
         contextMessages = chats.slice(0, currentIndex + 1);
         break;

@@ -427,16 +427,10 @@ class ChatService {
                   name: genToolCallingName(tool.identifier, tool.apiName, tool.type),
                 },
                 id: tool.id,
-                type: tool.type,
+                type: 'function',
               }),
             ),
           };
-        }
-
-        // TODO: need to be removed after upgrade
-        case 'function': {
-          const name = m.plugin?.identifier as string;
-          return { content: m.content, name, role: m.role };
         }
 
         case 'tool': {

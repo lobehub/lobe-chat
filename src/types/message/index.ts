@@ -3,10 +3,11 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ErrorType } from '@/types/fetch';
 
-import { LLMRoleType } from '../llm';
 import { BaseDataModel } from '../meta';
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
+
+export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
 
 /**
  * 聊天消息错误对象
@@ -44,10 +45,6 @@ export interface ChatMessage extends BaseDataModel {
 
   files?: string[];
   /**
-   * only used in tool calling
-   */
-  name?: string;
-  /**
    * observation id
    */
   observationId?: string;
@@ -66,7 +63,7 @@ export interface ChatMessage extends BaseDataModel {
   /**
    * message role type
    */
-  role: LLMRoleType;
+  role: MessageRoleType;
   sessionId?: string;
 
   tool_call_id?: string;

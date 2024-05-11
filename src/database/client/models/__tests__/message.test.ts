@@ -264,7 +264,7 @@ describe('MessageModel', () => {
     it('should update a role and plugins', async () => {
       const createdMessage = await MessageModel.create(messageData);
       const updateData = {
-        role: 'function' as const,
+        role: 'tool' as const,
         plugin: { apiName: 'a', identifier: 'b', arguments: 'abc' },
       };
 

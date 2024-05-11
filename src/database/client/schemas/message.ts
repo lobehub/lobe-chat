@@ -1,7 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { z } from 'zod';
 
-
 const TranslateSchema = z.object({
   from: z.string().optional(),
   to: z.string(),
@@ -20,7 +19,7 @@ const ToolCallSchema = PluginSchema.extend({
 });
 
 export const DB_MessageSchema = z.object({
-  role: z.enum(['user', 'system', 'assistant', 'function', 'tool']),
+  role: z.enum(['user', 'system', 'assistant', 'tool']),
   content: z.string(),
   files: z.array(z.string()).optional(),
   favorite: z.number().int().min(0).max(1).optional(),
