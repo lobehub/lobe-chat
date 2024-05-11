@@ -71,6 +71,45 @@ describe('LobeGroqAI', () => {
       expect(result).toBeInstanceOf(Response);
     });
 
+    describe('handlePayload option', () => {
+      it('should set stream to false when payload contains tools', async () => {
+        const mockCreateMethod = vi
+          .spyOn(instance['client'].chat.completions, 'create')
+          .mockResolvedValue({
+            id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
+            object: 'chat.completion',
+            created: 1709125675,
+            model: 'mistralai/mistral-7b-instruct:free',
+            system_fingerprint: 'fp_86156a94a0',
+            choices: [
+              {
+                index: 0,
+                message: { role: 'assistant', content: 'hello' },
+                logprobs: null,
+                finish_reason: 'stop',
+              },
+            ],
+          });
+
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0,
+          tools: [
+            {
+              type: 'function',
+              function: { name: 'tool1', description: '', parameters: {} },
+            },
+          ],
+        });
+
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({ stream: false }),
+          expect.anything(),
+        );
+      });
+    });
+
     describe('Error', () => {
       it('should return OpenRouterBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange

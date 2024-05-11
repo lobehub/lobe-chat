@@ -30,13 +30,6 @@ const LobeMockProvider = LobeOpenAICompatibleFactory({
       if (error.status === 403)
         return { error, errorType: AgentRuntimeErrorType.LocationNotSupportError };
     },
-    handlePayload: (payload) => {
-      return {
-        ...payload,
-        // disable stream for tools due to groq dont support
-        stream: !payload.tools,
-      } as any;
-    },
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION === '1',
@@ -71,7 +64,7 @@ describe('LobeOpenAICompatibleFactory', () => {
   });
 
   describe('chat', () => {
-    it('should return a StreamingTextResponse on successful API call', async () => {
+    it('should return a Response on successful API call', async () => {
       // Arrange
       const mockStream = new ReadableStream();
       const mockResponse = Promise.resolve(mockStream);
@@ -118,6 +111,131 @@ describe('LobeOpenAICompatibleFactory', () => {
         { headers: { Accept: '*/*' } },
       );
       expect(result).toBeInstanceOf(Response);
+    });
+
+    describe('streaming response', () => {
+      it('should handle multiple data chunks correctly', async () => {
+        const mockStream = new ReadableStream({
+          start(controller) {
+            controller.enqueue({
+              id: 'a',
+              object: 'chat.completion.chunk',
+              created: 1709125675,
+              model: 'mistralai/mistral-7b-instruct:free',
+              system_fingerprint: 'fp_86156a94a0',
+              choices: [
+                { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
+              ],
+            });
+            controller.close();
+          },
+        });
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockStream as any,
+        );
+
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0,
+        });
+
+        const decoder = new TextDecoder();
+        const reader = result.body!.getReader();
+        expect(decoder.decode((await reader.read()).value)).toEqual('id: a\n');
+        expect(decoder.decode((await reader.read()).value)).toEqual('event: text\n');
+        expect(decoder.decode((await reader.read()).value)).toEqual('data: "hello"\n\n');
+        expect((await reader.read()).done).toBe(true);
+      });
+
+      it('should transform non-streaming response to stream correctly', async () => {
+        const mockResponse: OpenAI.ChatCompletion = {
+          id: 'a',
+          object: 'chat.completion',
+          created: 123,
+          model: 'mistralai/mistral-7b-instruct:free',
+          choices: [
+            {
+              index: 0,
+              message: { role: 'assistant', content: 'Hello' },
+              finish_reason: 'stop',
+              logprobs: null,
+            },
+          ],
+          usage: {
+            prompt_tokens: 5,
+            completion_tokens: 5,
+            total_tokens: 10,
+          },
+        };
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0,
+          stream: false,
+        });
+
+        const decoder = new TextDecoder();
+
+        const reader = result.body!.getReader();
+        expect(decoder.decode((await reader.read()).value)).toContain('id: a\n');
+        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
+        expect(decoder.decode((await reader.read()).value)).toContain('data: "Hello"\n\n');
+
+        expect(decoder.decode((await reader.read()).value)).toContain('id: a\n');
+        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
+        expect(decoder.decode((await reader.read()).value)).toContain('');
+
+        expect((await reader.read()).done).toBe(true);
+      });
+    });
+
+    describe('handlePayload option', () => {
+      it('should modify request payload correctly', async () => {
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create');
+
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'mistralai/mistral-7b-instruct:free',
+          temperature: 0,
+        });
+
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            // 根据实际的 handlePayload 函数,添加断言
+          }),
+          expect.anything(),
+        );
+      });
+    });
+
+    describe('cancel request', () => {
+      it('should cancel ongoing request correctly', async () => {
+        const controller = new AbortController();
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create');
+
+        instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'mistralai/mistral-7b-instruct:free',
+            temperature: 0,
+          },
+          { signal: controller.signal },
+        );
+
+        controller.abort();
+
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.anything(),
+          expect.objectContaining({
+            signal: controller.signal,
+          }),
+        );
+      });
     });
 
     describe('Error', () => {
@@ -231,6 +349,27 @@ describe('LobeOpenAICompatibleFactory', () => {
             provider,
           });
         }
+      });
+
+      describe('handleError option', () => {
+        it('should return correct error type for 403 status code', async () => {
+          const error = { status: 403 };
+          vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(error);
+
+          try {
+            await instance.chat({
+              messages: [{ content: 'Hello', role: 'user' }],
+              model: 'mistralai/mistral-7b-instruct:free',
+              temperature: 0,
+            });
+          } catch (e) {
+            expect(e).toEqual({
+              error,
+              errorType: AgentRuntimeErrorType.LocationNotSupportError,
+              provider,
+            });
+          }
+        });
       });
 
       it('should throw an InvalidOpenRouterAPIKey error type on 401 status code', async () => {

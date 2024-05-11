@@ -247,11 +247,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
     return [
       {
-        functionDeclarations: tools.map((tool) => {
-          const t = this.convertToolToGoogleTool(tool);
-          console.log('output Schema', t);
-          return t;
-        }),
+        functionDeclarations: tools.map((tool) => this.convertToolToGoogleTool(tool)),
       },
     ];
   }
@@ -259,8 +255,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   private convertToolToGoogleTool = (tool: ChatCompletionTool): FunctionDeclaration => {
     const functionDeclaration = tool.function;
     const parameters = functionDeclaration.parameters;
-
-    console.log('input Schema', JSON.stringify(parameters, null, 2));
 
     return {
       description: functionDeclaration.description,
