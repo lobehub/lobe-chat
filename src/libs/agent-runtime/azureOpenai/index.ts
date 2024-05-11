@@ -4,13 +4,14 @@ import {
   GetChatCompletionsOptions,
   OpenAIClient,
 } from '@azure/openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { StreamingResponse } from '../utils/response';
+import { OpenAIStream } from '../utils/streams';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: OpenAIClient;
@@ -40,15 +41,15 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         { ...params, abortSignal: options?.signal, maxTokens } as GetChatCompletionsOptions,
       );
 
-      const stream = OpenAIStream(response as any);
-
-      const [debug, prod] = stream.tee();
+      const [debug, prod] = response.tee();
 
       if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
 
-      return new StreamingTextResponse(prod);
+      return StreamingResponse(OpenAIStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
     } catch (e) {
       let error = e as { [key: string]: any; code: string; message: string };
 
