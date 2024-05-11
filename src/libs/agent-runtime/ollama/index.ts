@@ -1,15 +1,15 @@
-import { StreamingTextResponse } from 'ai';
 import { Ollama } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
 import { OpenAIChatMessage } from '@/libs/agent-runtime';
-import { OllamaStream } from '@/libs/agent-runtime/ollama/stream';
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
+import { StreamingResponse } from '../utils/response';
+import { OllamaStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
@@ -51,7 +51,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
         stream: true,
       });
 
-      return new StreamingTextResponse(OllamaStream(response, options?.callback), {
+      return StreamingResponse(OllamaStream(response, options?.callback), {
         headers: options?.headers,
       });
     } catch (error) {

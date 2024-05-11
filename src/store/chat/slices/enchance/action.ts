@@ -76,16 +76,21 @@ export const chatEnhance: StateCreator<
 
     // translate to target language
     await chatService.fetchPresetTaskResult({
-      onMessageHandle: (text) => {
-        internal_dispatchMessage({
-          id,
-          key: 'translate',
-          type: 'updateMessageExtra',
-          value: produce({ content: '', from, to: targetLang }, (draft) => {
-            content += text;
-            draft.content += content;
-          }),
-        });
+      onMessageHandle: (chunk) => {
+        switch (chunk.type) {
+          case 'text': {
+            internal_dispatchMessage({
+              id,
+              key: 'translate',
+              type: 'updateMessageExtra',
+              value: produce({ content: '', from, to: targetLang }, (draft) => {
+                content += chunk.text;
+                draft.content += content;
+              }),
+            });
+            break;
+          }
+        }
       },
       params: chainTranslate(message.content, targetLang),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.Translator }),

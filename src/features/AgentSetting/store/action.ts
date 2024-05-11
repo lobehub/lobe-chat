@@ -8,6 +8,7 @@ import { TraceNameMap, TracePayload, TraceTopicType } from '@/const/trace';
 import { chatService } from '@/services/chat';
 import { LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
+import { MessageTextChunk } from '@/utils/fetch';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { SessionLoadingState } from '../store/initialState';
@@ -246,17 +247,25 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
   streamUpdateMetaArray: (key: keyof MetaData) => {
     let value = '';
-    return (text: string) => {
-      value += text;
-      get().dispatchMeta({ type: 'update', value: { [key]: value.split(',') } });
+    return (chunk: MessageTextChunk) => {
+      switch (chunk.type) {
+        case 'text': {
+          value += chunk.text;
+          get().dispatchMeta({ type: 'update', value: { [key]: value.split(',') } });
+        }
+      }
     };
   },
 
   streamUpdateMetaString: (key: keyof MetaData) => {
     let value = '';
-    return (text: string) => {
-      value += text;
-      get().dispatchMeta({ type: 'update', value: { [key]: value } });
+    return (chunk: MessageTextChunk) => {
+      switch (chunk.type) {
+        case 'text': {
+          value += chunk.text;
+          get().dispatchMeta({ type: 'update', value: { [key]: value } });
+        }
+      }
     };
   },
 

@@ -1,0 +1,120 @@
+{
+  "exportType": "sessions",
+  "state": {
+    "messages": [
+      {
+        "role": "assistant",
+        "content": "",
+        "fromModel": "gpt-3.5-turbo",
+        "fromProvider": "openai",
+        "parentId": "WwRdrdCz",
+        "sessionId": "8eb073bb-e133-4dbd-81a2-5305a8447b5f",
+        "topicId": "yjkdZafZ",
+        "createdAt": 1715395810016,
+        "id": "tool_calls_UQ5VAGkk",
+        "updatedAt": 1715395822016,
+        "traceId": "4a8381a2-5582-46ce-87d8-c0f010de5c68",
+        "observationId": "904f7ab0-4066-4f9b-84fa-b1677974f976",
+        "tools": [
+          {
+            "id": "tool_call_UQ5VAGkk",
+            "apiName": "fetchCurrentWeather",
+            "arguments": "{\n  \"city\": \"杭州\"\n}",
+            "identifier": "realtime-weather",
+            "type": "default"
+          }
+        ]
+      },
+      {
+        "role": "tool",
+        "content": "[{\"city\":\"杭州市\",\"adcode\":\"330100\",\"province\":\"浙江\",\"reporttime\":\"2024-05-11 10:32:32\",\"casts\":[{\"date\":\"2024-05-11\",\"week\":\"6\",\"dayweather\":\"中雨\",\"nightweather\":\"中雨\",\"daytemp\":\"25\",\"nighttemp\":\"18\",\"daywind\":\"南\",\"nightwind\":\"南\",\"daypower\":\"4\",\"nightpower\":\"4\",\"daytemp_float\":\"25.0\",\"nighttemp_float\":\"18.0\"},{\"date\":\"2024-05-12\",\"week\":\"7\",\"dayweather\":\"多云\",\"nightweather\":\"晴\",\"daytemp\":\"25\",\"nighttemp\":\"16\",\"daywind\":\"北\",\"nightwind\":\"北\",\"daypower\":\"1-3\",\"nightpower\":\"1-3\",\"daytemp_float\":\"25.0\",\"nighttemp_float\":\"16.0\"},{\"date\":\"2024-05-13\",\"week\":\"1\",\"dayweather\":\"晴\",\"nightweather\":\"晴\",\"daytemp\":\"28\",\"nighttemp\":\"16\",\"daywind\":\"东北\",\"nightwind\":\"东北\",\"daypower\":\"1-3\",\"nightpower\":\"1-3\",\"daytemp_float\":\"28.0\",\"nighttemp_float\":\"16.0\"},{\"date\":\"2024-05-14\",\"week\":\"2\",\"dayweather\":\"多云\",\"nightweather\":\"阴\",\"daytemp\":\"28\",\"nighttemp\":\"15\",\"daywind\":\"东\",\"nightwind\":\"东\",\"daypower\":\"1-3\",\"nightpower\":\"1-3\",\"daytemp_float\":\"28.0\",\"nighttemp_float\":\"15.0\"}]}]",
+        "fromModel": "gpt-3.5-turbo",
+        "fromProvider": "openai",
+        "parentId": "tool_calls_UQ5VAGkk",
+        "sessionId": "8eb073bb-e133-4dbd-81a2-5305a8447b5f",
+        "topicId": "yjkdZafZ",
+        "createdAt": 1715395810026,
+        "id": "UQ5VAGkk",
+        "updatedAt": 1715395822026,
+        "traceId": "4a8381a2-5582-46ce-87d8-c0f010de5c68",
+        "observationId": "904f7ab0-4066-4f9b-84fa-b1677974f976",
+        "tool_call_id": "tool_call_UQ5VAGkk",
+        "plugin": {
+          "apiName": "fetchCurrentWeather",
+          "arguments": "{\n  \"city\": \"杭州\"\n}",
+          "identifier": "realtime-weather",
+          "type": "default"
+        }
+      },
+      {
+        "role": "user",
+        "content": "杭州天气如何？\n\n",
+        "files": [],
+        "sessionId": "8eb073bb-e133-4dbd-81a2-5305a8447b5f",
+        "topicId": "yjkdZafZ",
+        "createdAt": 1715394828164,
+        "id": "WwRdrdCz",
+        "updatedAt": 1715394828164
+      },
+      {
+        "role": "assistant",
+        "content": "杭州的天气情况如下：\n\n- 今天（5月11日）白天和晚上都有中雨，白天温度为25摄氏度，晚上温度为18摄氏度，南风，风力为4级。\n- 明天（5月12日）白天多云，晚上晴，白天温度为25摄氏度，晚上温度为16摄氏度，北风，风力为1-3级。\n- 后天（5月13日）白天和晚上都是晴天，白天温度为28摄氏度，晚上温度为16摄氏度，东北风，风力为1-3级。\n- 大后天（5月14日）白天多云，晚上阴天，白天温度为28摄氏度，晚上温度为15摄氏度，东风，风力为1-3级。\n\n请注意根据实际情况做好防雨和保暖措施。",
+        "fromModel": "gpt-3.5-turbo",
+        "fromProvider": "openai",
+        "parentId": "UQ5VAGkk",
+        "sessionId": "8eb073bb-e133-4dbd-81a2-5305a8447b5f",
+        "topicId": "yjkdZafZ",
+        "createdAt": 1715395822125,
+        "id": "hbqsYoMn",
+        "updatedAt": 1715395830606,
+        "traceId": "4a8381a2-5582-46ce-87d8-c0f010de5c68",
+        "observationId": "cad6a5bd-6a7a-4ff9-b37a-3deaa23b094a"
+      }
+    ],
+    "sessions": [
+      {
+        "config": {
+          "autoCreateTopicThreshold": 2,
+          "displayMode": "chat",
+          "enableAutoCreateTopic": true,
+          "historyCount": 1,
+          "model": "gpt-3.5-turbo",
+          "params": {
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
+            "temperature": 0.6,
+            "top_p": 1
+          },
+          "plugins": ["realtime-weather", "steam"],
+          "provider": "openai",
+          "systemRole": "",
+          "tts": {
+            "showAllLocaleVoice": false,
+            "sttLocale": "auto",
+            "ttsService": "openai",
+            "voice": { "openai": "alloy" }
+          }
+        },
+        "group": "default",
+        "meta": {},
+        "pinned": false,
+        "type": "agent",
+        "createdAt": 1715394818440,
+        "id": "8eb073bb-e133-4dbd-81a2-5305a8447b5f",
+        "updatedAt": 1715394822366,
+        "model": "gpt-3.5-turbo"
+      }
+    ],
+    "topics": [
+      {
+        "title": "杭州天气查询",
+        "sessionId": "8eb073bb-e133-4dbd-81a2-5305a8447b5f",
+        "createdAt": 1715394835099,
+        "id": "yjkdZafZ",
+        "updatedAt": 1715394838061,
+        "favorite": false
+      }
+    ]
+  },
+  "version": 5
+}

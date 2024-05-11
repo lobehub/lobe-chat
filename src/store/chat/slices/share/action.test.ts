@@ -85,7 +85,7 @@ describe('shareSlice actions', () => {
     it('should include plugin information when withPluginInfo is true', async () => {
       // 模拟带有插件信息的消息
       const pluginMessage = {
-        role: 'function',
+        role: 'tool',
         content: 'plugin content',
         plugin: {
           type: 'default',
@@ -118,7 +118,7 @@ describe('shareSlice actions', () => {
 
     it('should not include plugin information when withPluginInfo is false', async () => {
       const pluginMessage = {
-        role: 'function',
+        role: 'tool',
         content: 'plugin content',
         plugin: {
           type: 'default',
@@ -154,7 +154,7 @@ describe('shareSlice actions', () => {
         { role: 'user', content: 'user message', id: '1' },
         { role: 'assistant', content: 'assistant message', id: '2' },
         {
-          role: 'function',
+          role: 'tool',
           content: 'plugin content',
           plugin: {
             type: 'default',
