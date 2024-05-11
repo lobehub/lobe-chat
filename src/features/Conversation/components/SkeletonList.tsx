@@ -34,14 +34,14 @@ const SkeletonList = memo<SkeletonListProps>(({ mobile }) => {
       <Skeleton
         active
         avatar={{ size: mobile ? 32 : 40 }}
-        className={styles.message}
+        className={cx(styles.message, styles.user)}
         paragraph={{ width: mobile ? ['80%', '40%'] : ['50%', '30%'] }}
         title={false}
       />
       <Skeleton
         active
         avatar={{ size: mobile ? 32 : 40 }}
-        className={cx(styles.message, styles.user)}
+        className={styles.message}
         paragraph={{ width: mobile ? ['80%', '40%'] : ['50%', '30%'] }}
         title={false}
       />
