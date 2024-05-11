@@ -127,7 +127,7 @@ describe('ChatService', () => {
       it('should include image content when with vision model', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
@@ -167,8 +167,8 @@ describe('ChatService', () => {
               },
               {
                 content: 'Hi',
-                name: 'plugin1',
-                role: 'function',
+                name: 'plugin1____api1',
+                role: 'tool',
               },
               {
                 content: 'Hey',
@@ -184,7 +184,7 @@ describe('ChatService', () => {
       it('should not include image content when default model', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
@@ -213,7 +213,7 @@ describe('ChatService', () => {
           {
             messages: [
               { content: 'Hello', role: 'user' },
-              { content: 'Hi', name: 'plugin1', role: 'function' },
+              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
               { content: 'Hey', role: 'assistant' },
             ],
             model: 'gpt-3.5-turbo',
@@ -225,7 +225,7 @@ describe('ChatService', () => {
       it('should not include image with vision models when can not find the image', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
-          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
@@ -249,19 +249,9 @@ describe('ChatService', () => {
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
             messages: [
-              {
-                content: 'Hello',
-                role: 'user',
-              },
-              {
-                content: 'Hi',
-                name: 'plugin1',
-                role: 'function',
-              },
-              {
-                content: 'Hey',
-                role: 'assistant',
-              },
+              { content: 'Hello', role: 'user' },
+              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
+              { content: 'Hey', role: 'assistant' },
             ],
           },
           undefined,
@@ -581,7 +571,7 @@ Get data from users`,
         body: JSON.stringify(expectedPayload),
         headers: expect.any(Object),
         method: 'POST',
-        signal: undefined,
+        signal: expect.any(AbortSignal),
       });
     });
 
