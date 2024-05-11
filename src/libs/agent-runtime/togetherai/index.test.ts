@@ -2,9 +2,10 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
+import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
+import models from './fixtures/models.json';
 import { LobeTogetherAI } from './index';
 
 const provider = 'togetherai';
@@ -293,6 +294,19 @@ describe('LobeTogetherAI', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should get models', async () => {
+      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
+        json: async () => models,
+        ok: true,
+      } as Response);
+
+      const list = await instance.models();
+
+      expect(list).toMatchSnapshot();
     });
   });
 });

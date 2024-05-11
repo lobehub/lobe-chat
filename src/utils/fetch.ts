@@ -162,7 +162,8 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   if (response) {
     // if there is no onMessageHandler, we should call onHandleMessage first
     if (!triggerOnMessageHandler) {
-      options.onMessageHandle?.({ text: await response.clone().text(), type: 'text' });
+      output = await response.clone().text();
+      options.onMessageHandle?.({ text: output, type: 'text' });
     }
 
     const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
