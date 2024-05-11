@@ -271,8 +271,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   };
 
   private convertSchemaObject(schema: JSONSchema7): FunctionDeclarationSchemaProperty {
-    console.log('input:', schema);
-
     switch (schema.type) {
       default:
       case 'object': {
