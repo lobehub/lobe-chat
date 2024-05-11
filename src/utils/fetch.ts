@@ -45,7 +45,7 @@ export type OnFinishHandler = (
   },
 ) => Promise<void>;
 
-interface MessageTextChunk {
+export interface MessageTextChunk {
   text: string;
   type: 'text';
 }
