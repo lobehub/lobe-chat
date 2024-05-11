@@ -1,5 +1,3 @@
-import { OpenAIStreamCallbacks } from 'ai';
-
 import { MessageToolCall } from '@/types/message';
 
 export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function' | 'tool';
@@ -131,4 +129,18 @@ export interface ChatCompletionTool {
   type: 'function';
 }
 
-export type ChatStreamCallbacks = OpenAIStreamCallbacks;
+export interface ChatStreamCallbacks {
+  /**
+   * `onCompletion`: Called for each tokenized message.
+   **/
+  onCompletion?: (completion: string) => Promise<void> | void;
+  /** `onFinal`: Called once when the stream is closed with the final completion message. */
+  onFinal?: (completion: string) => Promise<void> | void;
+  /** `onStart`: Called once when the stream is initialized. */
+  onStart?: () => Promise<void> | void;
+  /** `onText`: Called for each text chunk. */
+  onText?: (text: string) => Promise<void> | void;
+  /** `onToken`: Called for each tokenized message. */
+  onToken?: (token: string) => Promise<void> | void;
+  onToolCall?: () => Promise<void> | void;
+}

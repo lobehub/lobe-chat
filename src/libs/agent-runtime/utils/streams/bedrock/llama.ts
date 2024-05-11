@@ -1,9 +1,14 @@
 import { InvokeModelWithResponseStreamResponse } from '@aws-sdk/client-bedrock-runtime';
-import { type AIStreamCallbacksAndOptions, createCallbacksTransformer } from 'ai';
 
 import { nanoid } from '@/utils/uuid';
 
-import { StreamProtocolChunk, StreamStack, createSSEProtocolTransformer } from '../protocol';
+import { ChatStreamCallbacks } from '../../../types';
+import {
+  StreamProtocolChunk,
+  StreamStack,
+  createCallbacksTransformer,
+  createSSEProtocolTransformer,
+} from '../protocol';
 import { createBedrockStream } from './common';
 
 interface AmazonBedrockInvocationMetrics {
@@ -34,7 +39,7 @@ export const transformLlamaStream = (
 
 export const AWSBedrockLlamaStream = (
   res: InvokeModelWithResponseStreamResponse | ReadableStream,
-  cb?: AIStreamCallbacksAndOptions,
+  cb?: ChatStreamCallbacks,
 ): ReadableStream<string> => {
   const streamStack: StreamStack = { id: 'chat_' + nanoid() };
 
@@ -42,5 +47,5 @@ export const AWSBedrockLlamaStream = (
 
   return stream
     .pipeThrough(createSSEProtocolTransformer(transformLlamaStream, streamStack))
-    .pipeThrough(createCallbacksTransformer(cb) as any);
+    .pipeThrough(createCallbacksTransformer(cb));
 };

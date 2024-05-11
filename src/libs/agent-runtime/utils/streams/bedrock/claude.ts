@@ -1,15 +1,15 @@
 import { InvokeModelWithResponseStreamResponse } from '@aws-sdk/client-bedrock-runtime';
-import { type AIStreamCallbacksAndOptions, createCallbacksTransformer } from 'ai';
 
 import { nanoid } from '@/utils/uuid';
 
+import { ChatStreamCallbacks } from '../../../types';
 import { transformAnthropicStream } from '../anthropic';
-import { StreamStack, createSSEProtocolTransformer } from '../protocol';
+import { StreamStack, createCallbacksTransformer, createSSEProtocolTransformer } from '../protocol';
 import { createBedrockStream } from './common';
 
 export const AWSBedrockClaudeStream = (
   res: InvokeModelWithResponseStreamResponse | ReadableStream,
-  cb?: AIStreamCallbacksAndOptions,
+  cb?: ChatStreamCallbacks,
 ): ReadableStream<string> => {
   const streamStack: StreamStack = { id: 'chat_' + nanoid() };
 
@@ -17,5 +17,5 @@ export const AWSBedrockClaudeStream = (
 
   return stream
     .pipeThrough(createSSEProtocolTransformer(transformAnthropicStream, streamStack))
-    .pipeThrough(createCallbacksTransformer(cb) as any);
+    .pipeThrough(createCallbacksTransformer(cb));
 };

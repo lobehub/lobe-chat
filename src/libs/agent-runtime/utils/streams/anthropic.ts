@@ -1,6 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
-import { createCallbacksTransformer, readableFromAsyncIterable } from 'ai';
+import { readableFromAsyncIterable } from 'ai';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
@@ -8,6 +8,7 @@ import {
   StreamProtocolToolCallChunk,
   StreamStack,
   StreamToolCallChunkData,
+  createCallbacksTransformer,
   createSSEProtocolTransformer,
 } from './protocol';
 

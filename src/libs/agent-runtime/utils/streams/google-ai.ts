@@ -2,7 +2,7 @@ import {
   EnhancedGenerateContentResponse,
   GenerateContentStreamResult,
 } from '@google/generative-ai';
-import { createCallbacksTransformer, readableFromAsyncIterable } from 'ai';
+import { readableFromAsyncIterable } from 'ai';
 
 import { nanoid } from '@/utils/uuid';
 
@@ -12,6 +12,7 @@ import {
   StreamStack,
   StreamToolCallChunkData,
   chatStreamable,
+  createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';

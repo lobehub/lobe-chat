@@ -1,4 +1,4 @@
-import { createCallbacksTransformer, readableFromAsyncIterable } from 'ai';
+import { readableFromAsyncIterable } from 'ai';
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
@@ -7,6 +7,7 @@ import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
   StreamToolCallChunkData,
+  createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
