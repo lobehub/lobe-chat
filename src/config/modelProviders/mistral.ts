@@ -18,6 +18,7 @@ const Mistral: ModelProviderCard = {
     {
       displayName: 'Mixtral 8x22B',
       enabled: true,
+      functionCall: true,
       id: 'open-mixtral-8x22b',
       tokens: 65_536,
     },
