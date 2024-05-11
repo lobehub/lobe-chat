@@ -6,7 +6,7 @@ import { template } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT, isFunctionMessageAtStart, testFunctionMessageAtEnd } from '@/const/message';
+import { LOADING_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
@@ -17,7 +17,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
-import { ChatMessage } from '@/types/message';
+import { ChatMessage, MessageToolCall } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
@@ -105,9 +105,6 @@ export interface ChatMessageAction {
     assistantMessageId: string,
     params?: ProcessMessageParams,
   ) => Promise<{
-    content: string;
-    functionCallAtEnd: boolean;
-    functionCallContent: string;
     isFunctionCall: boolean;
     traceId?: string;
   }>;
@@ -123,7 +120,11 @@ export interface ChatMessageAction {
    * @param id
    * @param content
    */
-  internal_updateMessageContent: (id: string, content: string) => Promise<void>;
+  internal_updateMessageContent: (
+    id: string,
+    content: string,
+    toolCalls?: MessageToolCall[],
+  ) => Promise<void>;
   internal_createMessage: (params: CreateMessageParams) => Promise<string>;
   internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
@@ -156,8 +157,29 @@ export const chatMessage: StateCreator<
   ChatMessageAction
 > = (set, get) => ({
   deleteMessage: async (id) => {
-    get().internal_dispatchMessage({ type: 'deleteMessage', id });
-    await messageService.removeMessage(id);
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message) return;
+
+    const deleteFn = async (id: string) => {
+      get().internal_dispatchMessage({ type: 'deleteMessage', id });
+      await messageService.removeMessage(id);
+    };
+
+    // if the message is a tool calls, then delete all the related messages
+    // TODO: maybe we need to delete it in the DB?
+    if (message.tools) {
+      const pools = message.tools
+        .flatMap((tool) => {
+          const messages = get().messages.filter((m) => m.tool_call_id === tool.id);
+
+          return messages.map((m) => m.id);
+        })
+        .map((i) => deleteFn(i));
+
+      await Promise.all(pools);
+    }
+
+    await deleteFn(id);
     await get().refreshMessages();
   },
   delAndRegenerateMessage: async (id) => {
@@ -310,8 +332,7 @@ export const chatMessage: StateCreator<
 
   // the internal process method of the AI message
   internal_coreProcessMessage: async (messages, userMessageId, params) => {
-    const { internal_fetchAIChatMessage, triggerFunctionCall, refreshMessages, activeTopicId } =
-      get();
+    const { internal_fetchAIChatMessage, triggerToolCalls, refreshMessages, activeTopicId } = get();
 
     const { model, provider } = getAgentConfig();
 
@@ -327,39 +348,15 @@ export const chatMessage: StateCreator<
       topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
     };
 
-    const mid = await get().internal_createMessage(assistantMessage);
+    const assistantId = await get().internal_createMessage(assistantMessage);
 
     // 2. fetch the AI response
-    const { isFunctionCall, content, functionCallAtEnd, functionCallContent, traceId } =
-      await internal_fetchAIChatMessage(messages, mid, params);
+    const { isFunctionCall } = await internal_fetchAIChatMessage(messages, assistantId, params);
 
     // 3. if it's the function call message, trigger the function method
     if (isFunctionCall) {
-      let functionId = mid;
-
-      // if the function call is at the end of the message, then create a new function message
-      if (functionCallAtEnd) {
-        // create a new separate message and remove the function call from the prev message
-
-        await get().internal_updateMessageContent(mid, content.replace(functionCallContent, ''));
-
-        const functionMessage: CreateMessageParams = {
-          role: 'function',
-          content: functionCallContent,
-          fromModel: model,
-          fromProvider: provider,
-
-          parentId: userMessageId,
-          sessionId: get().activeId,
-          topicId: activeTopicId,
-          traceId,
-        };
-
-        functionId = await get().internal_createMessage(functionMessage);
-      }
-
       await refreshMessages();
-      await triggerFunctionCall(functionId);
+      await triggerToolCalls(assistantId);
     }
   },
   internal_dispatchMessage: (payload) => {
@@ -369,7 +366,7 @@ export const chatMessage: StateCreator<
 
     const messages = messagesReducer(get().messages, payload);
 
-    set({ messages }, false, n(`dispatchMessage/${payload.type}`, payload));
+    set({ messages }, false, { type: `dispatchMessage/${payload.type}`, payload });
   },
   internal_fetchAIChatMessage: async (messages, assistantId, params) => {
     const {
@@ -432,10 +429,7 @@ export const chatMessage: StateCreator<
         config.params.max_tokens = 2048;
     }
 
-    let output = '';
     let isFunctionCall = false;
-    let functionCallAtEnd = false;
-    let functionCallContent = '';
     let msgTraceId: string | undefined;
 
     const { startAnimation, stopAnimation, outputQueue, isAnimationActive } =
@@ -464,7 +458,7 @@ export const chatMessage: StateCreator<
       onAbort: async () => {
         stopAnimation();
       },
-      onFinish: async (content, { traceId, observationId }) => {
+      onFinish: async (content, { traceId, observationId, toolCalls }) => {
         stopAnimation();
         // if there is traceId, update it
         if (traceId) {
@@ -483,22 +477,24 @@ export const chatMessage: StateCreator<
         }
 
         // update the content after fetch result
-        await internal_updateMessageContent(assistantId, content);
+        await internal_updateMessageContent(assistantId, content, toolCalls);
       },
-      onMessageHandle: async (text) => {
-        output += text;
-        outputQueue.push(...text.split(''));
+      onMessageHandle: async (chunk) => {
+        switch (chunk.type) {
+          case 'text': {
+            outputQueue.push(...chunk.text.split(''));
+            break;
+          }
 
-        // is this message is just a function call
-        if (isFunctionMessageAtStart(output)) {
-          stopAnimation();
-          internal_dispatchMessage({
-            id: assistantId,
-            key: 'content',
-            type: 'updateMessage',
-            value: output,
-          });
-          isFunctionCall = true;
+          // is this message is just a tool call
+          case 'tool_calls': {
+            internal_dispatchMessage({
+              id: assistantId,
+              type: 'updateMessages',
+              value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
+            });
+            isFunctionCall = true;
+          }
         }
 
         // if it's the first time to receive the message,
@@ -510,23 +506,7 @@ export const chatMessage: StateCreator<
 
     internal_toggleChatLoading(false, undefined, n('generateMessage(end)') as string);
 
-    // also exist message like this:
-    // 请稍等，我帮您查询一下。{"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}
-    if (!isFunctionCall) {
-      const { content, valid } = testFunctionMessageAtEnd(output);
-
-      // if fc at end, replace the message
-      if (valid) {
-        isFunctionCall = true;
-        functionCallAtEnd = true;
-        functionCallContent = content;
-      }
-    }
-
     return {
-      content: output,
-      functionCallAtEnd,
-      functionCallContent,
       isFunctionCall,
       traceId: msgTraceId,
     };
@@ -584,7 +564,7 @@ export const chatMessage: StateCreator<
     let contextMessages: ChatMessage[] = [];
 
     switch (currentMessage.role) {
-      case 'function':
+      case 'tool':
       case 'user': {
         contextMessages = chats.slice(0, currentIndex + 1);
         break;
@@ -610,15 +590,26 @@ export const chatMessage: StateCreator<
     await internal_coreProcessMessage(contextMessages, latestMsg.id, { traceId });
   },
 
-  internal_updateMessageContent: async (id, content) => {
-    const { internal_dispatchMessage, refreshMessages } = get();
+  internal_updateMessageContent: async (id, content, toolCalls) => {
+    const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 
     // Due to the async update method and refresh need about 100ms
     // we need to update the message content at the frontend to avoid the update flick
     // refs: https://medium.com/@kyledeguzmanx/what-are-optimistic-updates-483662c3e171
-    internal_dispatchMessage({ id, key: 'content', type: 'updateMessage', value: content });
+    if (toolCalls) {
+      internal_dispatchMessage({
+        id,
+        type: 'updateMessages',
+        value: { tools: internal_transformToolCalls(toolCalls) },
+      });
+    } else {
+      internal_dispatchMessage({ id, type: 'updateMessages', value: { content } });
+    }
 
-    await messageService.updateMessage(id, { content });
+    await messageService.updateMessage(id, {
+      content,
+      tools: toolCalls ? internal_transformToolCalls(toolCalls) : undefined,
+    });
     await refreshMessages();
   },
 
@@ -685,7 +676,7 @@ export const chatMessage: StateCreator<
             buffer += charsToAdd;
 
             // 更新消息内容，这里可能需要结合实际情况调整
-            internal_dispatchMessage({ id, key: 'content', type: 'updateMessage', value: buffer });
+            internal_dispatchMessage({ id, type: 'updateMessages', value: { content: buffer } });
 
             // 设置下一个字符的延迟
             animationTimeoutId = setTimeout(updateText, 16); // 16 毫秒的延迟模拟打字机效果
