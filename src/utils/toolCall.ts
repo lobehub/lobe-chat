@@ -2,7 +2,7 @@ import { Md5 } from 'ts-md5';
 
 import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 
-export const genToolCallingName = (identifier: string, name: string, type?: string) => {
+export const genToolCallingName = (identifier: string, name: string, type: string = 'default') => {
   const pluginType = type && type !== 'default' ? `${PLUGIN_SCHEMA_SEPARATOR + type}` : '';
 
   // 将插件的 identifier 作为前缀，避免重复

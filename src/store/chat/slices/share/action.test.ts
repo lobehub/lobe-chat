@@ -154,7 +154,7 @@ describe('shareSlice actions', () => {
         { role: 'user', content: 'user message', id: '1' },
         { role: 'assistant', content: 'assistant message', id: '2' },
         {
-          role: 'function',
+          role: 'tool',
           content: 'plugin content',
           plugin: {
             type: 'default',

@@ -271,7 +271,7 @@ describe('MessageModel', () => {
       await MessageModel.update(createdMessage.id, updateData);
       const updatedMessage = await MessageModel.findById(createdMessage.id);
 
-      expect(updatedMessage).toHaveProperty('role', 'function');
+      expect(updatedMessage).toHaveProperty('role', 'tool');
     });
   });
 
