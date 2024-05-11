@@ -19,6 +19,7 @@ import {
   dbSchemaV5,
   dbSchemaV6,
   dbSchemaV7,
+  dbSchemaV9,
 } from './schemas';
 import { DBModel, LOBE_CHAT_LOCAL_DB_NAME } from './types/db';
 
@@ -66,6 +67,10 @@ export class BrowserDB extends Dexie {
     this.version(8)
       .stores(dbSchemaV7)
       .upgrade((trans) => this.upgradeToV8(trans));
+
+    this.version(9)
+      .stores(dbSchemaV9)
+      .upgrade((trans) => this.upgradeToV9(trans));
 
     this.files = this.table('files');
     this.sessions = this.table('sessions');
@@ -150,6 +155,33 @@ export class BrowserDB extends Dexie {
     await users.toCollection().modify((user: DB_User) => {
       if (user.settings) {
         user.settings = MigrationLLMSettings.migrateSettings(user.settings as any);
+      }
+    });
+  };
+
+  upgradeToV9 = async (trans: Transaction) => {
+    const messages = trans.table('messages');
+    await messages.toCollection().modify(async (message: DBModel<DB_Message>) => {
+      if ((message.role as string) === 'function') {
+        const origin = Object.assign({}, message);
+
+        const toolCallId = `tool_call_${message.id}`;
+        const assistantMessageId = `tool_calls_${message.id}`;
+
+        message.role = 'tool';
+        message.tool_call_id = toolCallId;
+        message.parentId = assistantMessageId;
+
+        await messages.add({
+          ...origin,
+          content: '',
+          createdAt: message.createdAt - 10,
+          error: undefined,
+          id: assistantMessageId,
+          role: 'assistant',
+          tools: [{ ...message.plugin!, id: toolCallId }],
+          updatedAt: message.updatedAt - 10,
+        } as DBModel<DB_Message>);
       }
     });
   };
