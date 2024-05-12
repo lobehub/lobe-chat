@@ -1,13 +1,12 @@
 import { Loading3QuartersOutlined } from '@ant-design/icons';
-import { LobePluginType } from '@lobehub/chat-plugin-sdk';
-import { ActionIcon, Avatar, Highlighter, Icon } from '@lobehub/ui';
+import { ActionIcon, Avatar, Highlighter, Icon, Tag } from '@lobehub/ui';
 import { Tabs } from 'antd';
 import isEqual from 'fast-deep-equal';
 import {
   LucideBug,
   LucideBugOff,
   LucideChevronDown,
-  LucideChevronUp,
+  LucideChevronRight,
   LucideToyBrick,
 } from 'lucide-react';
 import { memo, useState } from 'react';
@@ -16,6 +15,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+import { ChatPluginPayload } from '@/types/message';
 
 import PluginResult from './PluginResultJSON';
 import Settings from './Settings';
@@ -23,36 +23,34 @@ import { useStyles } from './style';
 
 export interface InspectorProps {
   arguments?: string;
-  command?: any;
   content: string;
-  id?: string;
+  identifier?: string;
   loading?: boolean;
+  payload?: ChatPluginPayload;
   setShow?: (showRender: boolean) => void;
   showRender?: boolean;
-  type?: LobePluginType;
 }
 
 const Inspector = memo<InspectorProps>(
   ({
     arguments: requestArgs = '{}',
-    command,
+    payload,
     showRender,
     loading,
     setShow,
     content,
-    id = 'unknown',
-    // type,
+    identifier = 'unknown',
   }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
 
-    const pluginMeta = useToolStore(toolSelectors.getMetaById(id), isEqual);
+    const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
-    const showRightAction = useToolStore(pluginSelectors.isPluginHasUI(id));
+    const showRightAction = useToolStore(pluginSelectors.isPluginHasUI(identifier));
     const pluginAvatar = pluginHelpers.getPluginAvatar(pluginMeta);
 
-    const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('plugins.loading');
+    const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
     const avatar = pluginAvatar ? (
       <Avatar avatar={pluginAvatar} size={32} />
@@ -62,7 +60,7 @@ const Inspector = memo<InspectorProps>(
 
     let args, params;
     try {
-      args = JSON.stringify(command, null, 2);
+      args = JSON.stringify(payload, null, 2);
       params = JSON.stringify(JSON.parse(requestArgs), null, 2);
     } catch {
       args = '';
@@ -81,29 +79,30 @@ const Inspector = memo<InspectorProps>(
               setShow?.(!showRender);
             }}
           >
-            {loading ? (
-              <div>
-                <Loading3QuartersOutlined spin />
-              </div>
-            ) : (
-              avatar
-            )}
-            {pluginTitle}
-            {showRightAction && <Icon icon={showRender ? LucideChevronUp : LucideChevronDown} />}
-          </Flexbox>
-          {
-            <Flexbox horizontal>
-              {/*{type === 'standalone' && <ActionIcon icon={LucideOrbit} />}*/}
-              <ActionIcon
-                icon={open ? LucideBugOff : LucideBug}
-                onClick={() => {
-                  setOpen(!open);
-                }}
-                title={t(open ? 'debug.off' : 'debug.on')}
-              />
-              <Settings id={id} />
+            <Flexbox align={'center'} gap={8} horizontal>
+              {loading ? (
+                <div>
+                  <Loading3QuartersOutlined spin />
+                </div>
+              ) : (
+                avatar
+              )}
+              <div>{pluginTitle}</div>
+              <Tag>{payload?.apiName}</Tag>
             </Flexbox>
-          }
+            {showRightAction && <Icon icon={showRender ? LucideChevronDown : LucideChevronRight} />}
+          </Flexbox>
+
+          <Flexbox horizontal>
+            <ActionIcon
+              icon={open ? LucideBugOff : LucideBug}
+              onClick={() => {
+                setOpen(!open);
+              }}
+              title={t(open ? 'debug.off' : 'debug.on')}
+            />
+            <Settings id={identifier} />
+          </Flexbox>
         </Flexbox>
         {open && (
           <Tabs

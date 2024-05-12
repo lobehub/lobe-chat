@@ -10,6 +10,13 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
       if (error.status === 403)
         return { error, errorType: AgentRuntimeErrorType.LocationNotSupportError };
     },
+    handlePayload: (payload) => {
+      return {
+        ...payload,
+        // disable stream for tools due to groq dont support
+        stream: !payload.tools,
+      } as any;
+    },
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_GROQ_CHAT_COMPLETION === '1',

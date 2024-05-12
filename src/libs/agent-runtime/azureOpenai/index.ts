@@ -4,13 +4,14 @@ import {
   GetChatCompletionsOptions,
   OpenAIClient,
 } from '@azure/openai';
-import { OpenAIStream, StreamingTextResponse } from 'ai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { StreamingResponse } from '../utils/response';
+import { OpenAIStream } from '../utils/streams';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: OpenAIClient;
@@ -28,7 +29,8 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     // ============  1. preprocess messages   ============ //
-    const { messages, model, ...params } = payload;
+    const camelCasePayload = this.camelCaseKeys(payload);
+    const { messages, model, maxTokens = 2048, ...params } = camelCasePayload;
 
     // ============  2. send api   ============ //
 
@@ -36,18 +38,18 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       const response = await this.client.streamChatCompletions(
         model,
         messages as ChatRequestMessage[],
-        { ...params, abortSignal: options?.signal } as GetChatCompletionsOptions,
+        { ...params, abortSignal: options?.signal, maxTokens } as GetChatCompletionsOptions,
       );
 
-      const stream = OpenAIStream(response as any);
-
-      const [debug, prod] = stream.tee();
+      const [debug, prod] = response.tee();
 
       if (process.env.DEBUG_AZURE_CHAT_COMPLETION === '1') {
         debugStream(debug).catch(console.error);
       }
 
-      return new StreamingTextResponse(prod);
+      return StreamingResponse(OpenAIStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
     } catch (e) {
       let error = e as { [key: string]: any; code: string; message: string };
 
@@ -77,4 +79,28 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       });
     }
   }
+
+  // Convert object keys to camel case, copy from `@azure/openai` in `node_modules/@azure/openai/dist/index.cjs`
+  private camelCaseKeys = (obj: any): any => {
+    if (typeof obj !== 'object' || !obj) return obj;
+    if (Array.isArray(obj)) {
+      return obj.map((v) => this.camelCaseKeys(v));
+    } else {
+      for (const key of Object.keys(obj)) {
+        const value = obj[key];
+        const newKey = this.tocamelCase(key);
+        if (newKey !== key) {
+          delete obj[key];
+        }
+        obj[newKey] = typeof obj[newKey] === 'object' ? this.camelCaseKeys(value) : value;
+      }
+      return obj;
+    }
+  };
+
+  private tocamelCase = (str: string) => {
+    return str
+      .toLowerCase()
+      .replaceAll(/(_[a-z])/g, (group) => group.toUpperCase().replace('_', ''));
+  };
 }

@@ -19,6 +19,7 @@ vi.stubGlobal(
   vi.fn(() => Promise.resolve(new Response('mock'))),
 );
 
+vi.mock('zustand/traditional');
 // Mock service
 vi.mock('@/services/message', () => ({
   messageService: {
@@ -46,12 +47,6 @@ vi.mock('@/services/chat', async (importOriginal) => {
     },
   };
 });
-
-vi.mock('@/store/chat/selectors', () => ({
-  chatSelectors: {
-    currentChats: vi.fn(),
-  },
-}));
 
 const realCoreProcessMessage = useChatStore.getState().internal_coreProcessMessage;
 const realRefreshMessages = useChatStore.getState().refreshMessages;
@@ -86,6 +81,9 @@ describe('chatMessage actions', () => {
       const messageId = 'message-id';
       const deleteSpy = vi.spyOn(result.current, 'deleteMessage');
 
+      act(() => {
+        useChatStore.setState({ messages: [{ id: messageId } as ChatMessage] });
+      });
       await act(async () => {
         await result.current.deleteMessage(messageId);
       });
@@ -259,11 +257,6 @@ describe('chatMessage actions', () => {
           enableAutoCreateTopic,
         }));
 
-        // Mock the currentChats selector to return a list that does not reach the threshold
-        (chatSelectors.currentChats as Mock).mockReturnValue(
-          Array.from({ length: autoCreateTopicThreshold + 1 }, (_, i) => ({ id: `msg-${i}` })),
-        );
-
         // Mock saveToTopic and switchTopic to simulate not being called
         const saveToTopicMock = vi.fn();
         const switchTopicMock = vi.fn();
@@ -271,6 +264,10 @@ describe('chatMessage actions', () => {
         await act(async () => {
           useChatStore.setState({
             ...mockState,
+            // Mock the currentChats selector to return a list that does not reach the threshold
+            messages: Array.from({ length: autoCreateTopicThreshold + 1 }, (_, i) => ({
+              id: `msg-${i}`,
+            })) as any,
             activeTopicId: undefined,
             saveToTopic: saveToTopicMock,
             switchTopic: switchTopicMock,
@@ -298,11 +295,6 @@ describe('chatMessage actions', () => {
         // Mock messageService.create to resolve with a message id
         (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
 
-        // Mock the currentChats selector to return a list that reaches the threshold
-        (chatSelectors.currentChats as Mock).mockReturnValue(
-          Array.from({ length: autoCreateTopicThreshold }, (_, i) => ({ id: `msg-${i}` })),
-        );
-
         // Mock saveToTopic to resolve with a topic id and switchTopic to switch to the new topic
         const saveToTopicMock = vi.fn(() => Promise.resolve('new-topic-id'));
         const switchTopicMock = vi.fn();
@@ -310,6 +302,9 @@ describe('chatMessage actions', () => {
         act(() => {
           useChatStore.setState({
             ...mockState,
+            messages: Array.from({ length: autoCreateTopicThreshold }, (_, i) => ({
+              id: `msg-${i}`,
+            })) as any,
             activeTopicId: undefined,
             saveToTopic: saveToTopicMock,
             switchTopic: switchTopicMock,
@@ -339,11 +334,6 @@ describe('chatMessage actions', () => {
           enableAutoCreateTopic,
         }));
 
-        // Mock the currentChats selector to return a list that does not reach the threshold
-        (chatSelectors.currentChats as Mock).mockReturnValue(
-          Array.from({ length: autoCreateTopicThreshold - 1 }, (_, i) => ({ id: `msg-${i}` })),
-        );
-
         // Mock saveToTopic and switchTopic to simulate not being called
         const saveToTopicMock = vi.fn();
         const switchTopicMock = vi.fn();
@@ -351,6 +341,10 @@ describe('chatMessage actions', () => {
         await act(async () => {
           useChatStore.setState({
             ...mockState,
+            // Mock the currentChats selector to return a list that does not reach the threshold
+            messages: Array.from({ length: autoCreateTopicThreshold - 2 }, (_, i) => ({
+              id: `msg-${i}`,
+            })) as any,
             activeTopicId: undefined,
             saveToTopic: saveToTopicMock,
             switchTopic: switchTopicMock,
@@ -395,12 +389,14 @@ describe('chatMessage actions', () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'message-id';
 
-      // Mock the currentChats selector to return a list that includes the message to be resent
-      (chatSelectors.currentChats as Mock).mockReturnValue([
-        // ... other messages
-        { id: messageId, role: 'user', content: 'Resend this message' },
-        // ... other messages
-      ]);
+      act(() => {
+        useChatStore.setState({
+          // Mock the currentChats selector to return a list that includes the message to be resent
+          messages: [
+            { id: messageId, role: 'user', content: 'Resend this message' } as ChatMessage,
+          ],
+        });
+      });
 
       // Mock the internal_coreProcessMessage function to resolve immediately
       mockState.internal_coreProcessMessage.mockResolvedValue(undefined);
@@ -421,10 +417,12 @@ describe('chatMessage actions', () => {
       const { result } = renderHook(() => useChatStore());
       const messageId = 'non-existing-message-id';
 
-      // Mock the currentChats selector to return a list that does not include the message to be resent
-      (chatSelectors.currentChats as Mock).mockReturnValue([
-        // ... other messages
-      ]);
+      act(() => {
+        useChatStore.setState({
+          // Mock the currentChats selector to return a list that does not include the message to be resent
+          messages: [],
+        });
+      });
 
       await act(async () => {
         await result.current.internal_resendMessage(messageId);
@@ -461,9 +459,8 @@ describe('chatMessage actions', () => {
 
       expect(internal_dispatchMessageSpy).toHaveBeenCalledWith({
         id: messageId,
-        key: 'content',
-        type: 'updateMessage',
-        value: newContent,
+        type: 'updateMessages',
+        value: { content: newContent },
       });
     });
 
@@ -645,56 +642,7 @@ describe('chatMessage actions', () => {
           messages,
           assistantMessageId,
         );
-        expect(response.content).toEqual(aiResponse);
         expect(response.isFunctionCall).toEqual(false);
-        expect(response.functionCallAtEnd).toEqual(false);
-        expect(response.functionCallContent).toEqual('');
-      });
-    });
-
-    it('should handle function call message at start of AI response', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messages = [{ id: 'message-id', content: 'Hello', role: 'user' }] as ChatMessage[];
-      const assistantMessageId = 'assistant-message-id';
-      const aiResponse =
-        '{"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}';
-
-      // Mock fetch to resolve with AI response containing function call
-      vi.mocked(fetch).mockResolvedValueOnce(new Response(aiResponse));
-
-      await act(async () => {
-        const response = await result.current.internal_fetchAIChatMessage(
-          messages,
-          assistantMessageId,
-        );
-        expect(response.content).toEqual(aiResponse);
-        expect(response.isFunctionCall).toEqual(true);
-        expect(response.functionCallAtEnd).toEqual(false);
-        expect(response.functionCallContent).toEqual('');
-      });
-    });
-
-    it('should handle function message at end of AI response', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messages = [{ id: 'message-id', content: 'Hello', role: 'user' }] as ChatMessage[];
-      const assistantMessageId = 'assistant-message-id';
-      const aiResponse =
-        'Hello, human! {"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}';
-
-      // Mock fetch to resolve with AI response containing function call at end
-      vi.mocked(fetch).mockResolvedValue(new Response(aiResponse));
-
-      await act(async () => {
-        const response = await result.current.internal_fetchAIChatMessage(
-          messages,
-          assistantMessageId,
-        );
-        expect(response.content).toEqual(aiResponse);
-        expect(response.isFunctionCall).toEqual(true);
-        expect(response.functionCallAtEnd).toEqual(true);
-        expect(response.functionCallContent).toEqual(
-          '{"tool_calls":[{"id":"call_sbca","type":"function","function":{"name":"pluginName____apiName","arguments":{"key":"value"}}}]}',
-        );
       });
     });
 
@@ -708,9 +656,11 @@ describe('chatMessage actions', () => {
       vi.mocked(fetch).mockRejectedValue(new Error(errorMessage));
 
       await act(async () => {
-        await expect(
-          result.current.internal_fetchAIChatMessage(messages, assistantMessageId),
-        ).rejects.toThrow(errorMessage);
+        expect(
+          await result.current.internal_fetchAIChatMessage(messages, assistantMessageId),
+        ).toEqual({
+          isFunctionCall: false,
+        });
       });
     });
   });
