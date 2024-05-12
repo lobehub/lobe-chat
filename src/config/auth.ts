@@ -53,7 +53,7 @@ declare global {
 export const getAuthConfig = () => {
   if (process.env.ENABLE_OAUTH_SSO) {
     console.warn(
-      '`ENABLE_OAUTH_SSO` is deprecated and will be removed in LobeChat 1.0. Please set `NEXT_PUBLIC_ENABLE_NEXT_AUTH` instead.',
+      '`ENABLE_OAUTH_SSO` is deprecated and will be removed in LobeChat 1.0. just set `NEXT_AUTH_SECRET` enough',
     );
   }
 
