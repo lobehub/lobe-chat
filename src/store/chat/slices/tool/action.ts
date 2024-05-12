@@ -3,7 +3,7 @@ import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
-import { imageGenerationService } from '@/services/imageGeneration';
+import { imageGenerationService } from '@/services/textToImage';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -40,25 +40,31 @@ export const chatToolSlice: StateCreator<
 
     await pMap(items, async (params, index) => {
       toggleDallEImageLoading(messageId + params.prompt, true);
-      const url = await imageGenerationService.generateImage(params);
 
-      await updateImageItem(messageId, (draft) => {
-        draft[index].previewUrl = url;
-      });
+      try {
+        const url = await imageGenerationService.generateImage(params);
 
-      toggleDallEImageLoading(messageId + params.prompt, false);
-
-      fileService
-        .uploadImageByUrl(url, {
-          metadata: { ...params, originPrompt: originPrompt },
-          name: `${originPrompt || params.prompt}_${index}.png`,
-        })
-        .then(({ id }) => {
-          updateImageItem(messageId, (draft) => {
-            draft[index].imageId = id;
-            draft[index].previewUrl = undefined;
-          });
+        await updateImageItem(messageId, (draft) => {
+          draft[index].previewUrl = url;
         });
+
+        toggleDallEImageLoading(messageId + params.prompt, false);
+
+        fileService
+          .uploadImageByUrl(url, {
+            metadata: { ...params, originPrompt: originPrompt },
+            name: `${originPrompt || params.prompt}_${index}.png`,
+          })
+          .then(({ id }) => {
+            updateImageItem(messageId, (draft) => {
+              draft[index].imageId = id;
+              draft[index].previewUrl = undefined;
+            });
+          });
+      } catch (e) {
+        toggleDallEImageLoading(messageId + params.prompt, false);
+        console.error(e);
+      }
     });
   },
   text2image: async (id, data) => {

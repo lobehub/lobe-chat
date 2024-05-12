@@ -1,12 +1,13 @@
+import { NextResponse } from 'next/server';
+
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { TextToImagePayload } from '@/libs/agent-runtime/types';
 import { ChatErrorType } from '@/types/fetch';
-import { ChatStreamPayload } from '@/types/openai/chat';
-import { getTracePayload } from '@/utils/trace';
 
+import { initAgentRuntimeWithUserPayload } from '../../chat/agentRuntime';
 import { checkAuth } from '../../middleware/auth';
-import { createTraceOptions, initAgentRuntimeWithUserPayload } from '../agentRuntime';
 
 export const runtime = 'edge';
 
@@ -21,21 +22,11 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
 
     // ============  2. create chat completion   ============ //
 
-    const data = (await req.json()) as ChatStreamPayload;
+    const data = (await req.json()) as TextToImagePayload;
 
-    const tracePayload = getTracePayload(req);
+    const images = await agentRuntime.textToImage(data);
 
-    // If user enable trace
-    if (tracePayload?.enabled) {
-      return await agentRuntime.chat(
-        data,
-        createTraceOptions(data, {
-          provider,
-          trace: tracePayload,
-        }),
-      );
-    }
-    return await agentRuntime.chat(data);
+    return NextResponse.json(images);
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,

@@ -34,7 +34,7 @@ export const API_ENDPOINTS = mapWithBasePath({
   trace: '/api/trace',
 
   // image
-  images: '/api/openai/images',
+  images: '/api/text-to-image/openai',
 
   // TTS & STT
   stt: '/api/openai/stt',
