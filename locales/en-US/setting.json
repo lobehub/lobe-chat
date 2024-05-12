@@ -38,7 +38,6 @@
     "checker": {
       "button": "Check",
       "desc": "Test if the Api Key and proxy address are filled in correctly",
-      "ollamaDesc": "Check if the proxy address is filled in correctly",
       "pass": "Check Passed",
       "title": "Connectivity Check"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Please select a model from the list",
       "title": "Model List",
       "total": "{{count}} models available in total"
+    },
+    "proxyUrl": {
+      "desc": "Must include http(s):// in addition to the default address",
+      "title": "API Proxy Address"
     },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
   },

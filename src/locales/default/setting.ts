@@ -38,7 +38,6 @@ export default {
     checker: {
       button: '检查',
       desc: '测试 Api Key 与代理地址是否正确填写',
-      ollamaDesc: '测试代理地址是否正确填写',
       pass: '检查通过',
       title: '连通性检查',
     },
@@ -98,6 +97,10 @@ export default {
       placeholder: '请从列表中选择模型',
       title: '模型列表',
       total: '共 {{count}} 个模型可用',
+    },
+    proxyUrl: {
+      desc: '除默认地址外，必须包含 http(s)://',
+      title: 'API 代理地址',
     },
     waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
   },

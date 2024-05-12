@@ -126,7 +126,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
     // we need to know which message to trigger
     if (messageId !== id) return;
 
-    triggerAIMessage(id);
+    triggerAIMessage({ parentId: id });
   });
 
   // when plugin want to create an assistant message

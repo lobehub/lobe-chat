@@ -37,6 +37,7 @@ declare global {
       // Perplexity Provider
       ENABLED_PERPLEXITY?: string;
       PERPLEXITY_API_KEY?: string;
+      PERPLEXITY_PROXY_URL?: string;
 
       // Anthropic Provider
       ENABLED_ANTHROPIC?: string;
@@ -54,6 +55,7 @@ declare global {
       // Groq Provider
       ENABLED_GROQ?: string;
       GROQ_API_KEY?: string;
+      GROQ_PROXY_URL?: string;
 
       // OpenRouter Provider
       ENABLED_OPENROUTER?: string;
@@ -172,6 +174,7 @@ export const getProviderConfig = () => {
 
     ENABLED_PERPLEXITY: !!PERPLEXITY_API_KEY,
     PERPLEXITY_API_KEY,
+    PERPLEXITY_PROXY_URL: process.env.PERPLEXITY_PROXY_URL,
 
     ENABLED_ANTHROPIC: !!ANTHROPIC_API_KEY,
     ANTHROPIC_API_KEY,
@@ -197,6 +200,7 @@ export const getProviderConfig = () => {
     MOONSHOT_PROXY_URL: process.env.MOONSHOT_PROXY_URL,
 
     ENABLED_GROQ: !!GROQ_API_KEY,
+    GROQ_PROXY_URL: process.env.GROQ_PROXY_URL,
     GROQ_API_KEY,
 
     ENABLED_ZEROONE: !!ZEROONE_API_KEY,
@@ -207,7 +211,7 @@ export const getProviderConfig = () => {
     AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
 
-    ENABLE_OLLAMA: process.env.ENABLE_OLLAMA as unknown as boolean,
+    ENABLE_OLLAMA: Boolean(process.env.ENABLE_OLLAMA),
     OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
     OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST || process.env.OLLAMA_CUSTOM_MODELS,
   };
