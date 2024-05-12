@@ -602,7 +602,7 @@ describe('ChatPluginAction', () => {
       const runPluginApiMock = vi.fn();
 
       act(() => {
-        useChatStore.setState({ runPluginApi: runPluginApiMock });
+        useChatStore.setState({ internal_callPluginApi: runPluginApiMock });
       });
 
       const { result } = renderHook(() => useChatStore());
