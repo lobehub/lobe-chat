@@ -29,6 +29,7 @@ describe('ACCESS_CODE', () => {
   });
 
   it('no access code', () => {
+    delete process.env.ACCESS_CODE;
     ({ auth } = checkAuth({ accessCode: 'code1' }));
     expect(auth).toBe(true);
     ({ auth } = checkAuth({}));
