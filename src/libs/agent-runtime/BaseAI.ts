@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 
+import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
 import { ChatModelCard } from '@/types/llm';
 
 import { ChatCompetitionOptions, ChatStreamPayload } from './types';
@@ -9,6 +10,8 @@ export interface LobeRuntimeAI {
   chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
 
   models?(): Promise<any>;
+
+  textToImage?: (payload: TextToImagePayload) => Promise<string[]>;
 }
 
 export abstract class LobeOpenAICompatibleRuntime {
