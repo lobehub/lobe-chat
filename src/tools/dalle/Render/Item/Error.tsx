@@ -18,7 +18,7 @@ const Error = memo<ErrorProps>(({ messageId, index }) => {
   const { t: ct } = useTranslation('common');
 
   const error = useChatStore(
-    (s) => chatSelectors.getMessageById(messageId)(s)?.pluginState['error']?.[index],
+    (s) => chatSelectors.getMessageById(messageId)(s)?.pluginState?.['error']?.[index],
   );
   const [reInvokeToolMessage] = useChatStore((s) => [s.reInvokeToolMessage]);
 
