@@ -1,10 +1,20 @@
-import { Content, GoogleGenerativeAI, Part } from '@google/generative-ai';
-import { GoogleGenerativeAIStream, StreamingTextResponse } from 'ai';
+import {
+  Content,
+  FunctionDeclaration,
+  FunctionDeclarationSchemaProperty,
+  FunctionDeclarationSchemaType,
+  Tool as GoogleFunctionCallTool,
+  GoogleGenerativeAI,
+  Part,
+} from '@google/generative-ai';
+import { JSONSchema7 } from 'json-schema';
+import { transform } from 'lodash-es';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
 import {
   ChatCompetitionOptions,
+  ChatCompletionTool,
   ChatStreamPayload,
   OpenAIChatMessage,
   UserMessageContentPart,
@@ -12,6 +22,8 @@ import {
 import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { StreamingResponse } from '../utils/response';
+import { GoogleGenerativeAIStream, googleGenAIResultToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
 enum HarmCategory {
@@ -42,7 +54,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       const contents = this.buildGoogleMessages(payload.messages, model);
 
-      const geminiStream = await this.client
+      const geminiStreamResult = await this.client
         .getGenerativeModel(
           {
             generationConfig: {
@@ -74,19 +86,20 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           },
           { apiVersion: 'v1beta', baseUrl: this.baseURL },
         )
-        .generateContentStream({ contents });
+        .generateContentStream({ contents, tools: this.buildGoogleTools(payload.tools) });
 
-      // Convert the response into a friendly text-stream
-      const stream = GoogleGenerativeAIStream(geminiStream, options?.callback);
-
-      const [debug, output] = stream.tee();
+      const googleStream = googleGenAIResultToStream(geminiStreamResult);
+      const [prod, useForDebug] = googleStream.tee();
 
       if (process.env.DEBUG_GOOGLE_CHAT_COMPLETION === '1') {
-        debugStream(debug).catch(console.error);
+        debugStream(useForDebug).catch();
       }
 
+      // Convert the response into a friendly text-stream
+      const stream = GoogleGenerativeAIStream(prod, options?.callback);
+
       // Respond with the stream
-      return new StreamingTextResponse(output, { headers: options?.headers });
+      return StreamingResponse(stream, { headers: options?.headers });
     } catch (e) {
       const err = e as Error;
 
@@ -224,6 +237,74 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     } catch {
       // 如果解析失败，则返回原始错误消息
       return defaultError;
+    }
+  }
+
+  private buildGoogleTools(
+    tools: ChatCompletionTool[] | undefined,
+  ): GoogleFunctionCallTool[] | undefined {
+    if (!tools || tools.length === 0) return;
+
+    return [
+      {
+        functionDeclarations: tools.map((tool) => this.convertToolToGoogleTool(tool)),
+      },
+    ];
+  }
+
+  private convertToolToGoogleTool = (tool: ChatCompletionTool): FunctionDeclaration => {
+    const functionDeclaration = tool.function;
+    const parameters = functionDeclaration.parameters;
+
+    return {
+      description: functionDeclaration.description,
+      name: functionDeclaration.name,
+      parameters: {
+        description: parameters?.description,
+        properties: transform(parameters?.properties, (result, value, key: string) => {
+          result[key] = this.convertSchemaObject(value as JSONSchema7);
+        }),
+        required: parameters?.required,
+        type: FunctionDeclarationSchemaType.OBJECT,
+      },
+    };
+  };
+
+  private convertSchemaObject(schema: JSONSchema7): FunctionDeclarationSchemaProperty {
+    switch (schema.type) {
+      default:
+      case 'object': {
+        return {
+          ...schema,
+          properties: Object.fromEntries(
+            Object.entries(schema.properties || {}).map(([key, value]) => [
+              key,
+              this.convertSchemaObject(value as JSONSchema7),
+            ]),
+          ),
+          type: FunctionDeclarationSchemaType.OBJECT,
+        } as any;
+      }
+
+      case 'array': {
+        return {
+          ...schema,
+          items: this.convertSchemaObject(schema.items as JSONSchema7),
+          type: FunctionDeclarationSchemaType.ARRAY,
+        } as any;
+      }
+
+      case 'string': {
+        return { ...schema, type: FunctionDeclarationSchemaType.STRING } as any;
+      }
+
+      case 'number': {
+        return { ...schema, type: FunctionDeclarationSchemaType.NUMBER } as any;
+      }
+
+      case 'boolean': {
+        return { ...schema, type: FunctionDeclarationSchemaType.BOOLEAN } as any;
+      }
     }
   }
 }
