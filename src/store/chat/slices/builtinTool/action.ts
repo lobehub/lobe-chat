@@ -3,7 +3,7 @@ import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
-import { imageGenerationService } from '@/services/imageGeneration';
+import { imageGenerationService } from '@/services/textToImage';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -14,7 +14,7 @@ const n = setNamespace('tool');
 /**
  * builtin tool action
  */
-export interface ChatToolAction {
+export interface ChatBuiltinToolAction {
   generateImageFromPrompts: (items: DallEImageItem[], id: string) => Promise<void>;
   text2image: (id: string, data: DallEImageItem[]) => Promise<void>;
   toggleDallEImageLoading: (key: string, value: boolean) => void;
@@ -25,7 +25,7 @@ export const chatToolSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatToolAction
+  ChatBuiltinToolAction
 > = (set, get) => ({
   generateImageFromPrompts: async (items, messageId) => {
     const { toggleDallEImageLoading, updateImageItem } = get();
@@ -37,10 +37,22 @@ export const chatToolSlice: StateCreator<
 
     const parent = getMessageById(message!.parentId!);
     const originPrompt = parent?.content;
+    let errorArray: any[] = [];
 
     await pMap(items, async (params, index) => {
       toggleDallEImageLoading(messageId + params.prompt, true);
-      const url = await imageGenerationService.generateImage(params);
+
+      let url = '';
+      try {
+        url = await imageGenerationService.generateImage(params);
+      } catch (e) {
+        toggleDallEImageLoading(messageId + params.prompt, false);
+        errorArray[index] = e;
+
+        await get().updatePluginState(messageId, `error`, errorArray);
+      }
+
+      if (!url) return;
 
       await updateImageItem(messageId, (draft) => {
         draft[index].previewUrl = url;

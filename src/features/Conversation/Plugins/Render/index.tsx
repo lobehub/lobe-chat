@@ -1,12 +1,21 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
+import { Skeleton } from 'antd';
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
 import { LobeToolRenderType } from '@/types/tool';
 
-import BuiltinType from '././BuiltinType';
 import DefaultType from './DefaultType';
 import Markdown from './MarkdownType';
-import Standalone from './StandaloneType';
+
+const loading = () => (
+  <Skeleton.Node active style={{ width: '100%' }}>
+    {' '}
+  </Skeleton.Node>
+);
+
+const Standalone = dynamic(() => import('./StandaloneType'), { loading });
+const BuiltinType = dynamic(() => import('./BuiltinType'), { loading });
 
 export interface PluginRenderProps {
   content: string;
