@@ -14,7 +14,7 @@ const n = setNamespace('tool');
 /**
  * builtin tool action
  */
-export interface ChatToolAction {
+export interface ChatBuiltinToolAction {
   generateImageFromPrompts: (items: DallEImageItem[], id: string) => Promise<void>;
   text2image: (id: string, data: DallEImageItem[]) => Promise<void>;
   toggleDallEImageLoading: (key: string, value: boolean) => void;
@@ -25,7 +25,7 @@ export const chatToolSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatToolAction
+  ChatBuiltinToolAction
 > = (set, get) => ({
   generateImageFromPrompts: async (items, messageId) => {
     const { toggleDallEImageLoading, updateImageItem } = get();
@@ -37,34 +37,40 @@ export const chatToolSlice: StateCreator<
 
     const parent = getMessageById(message!.parentId!);
     const originPrompt = parent?.content;
+    let errorArray: any[] = [];
 
     await pMap(items, async (params, index) => {
       toggleDallEImageLoading(messageId + params.prompt, true);
 
+      let url = '';
       try {
-        const url = await imageGenerationService.generateImage(params);
-
-        await updateImageItem(messageId, (draft) => {
-          draft[index].previewUrl = url;
-        });
-
-        toggleDallEImageLoading(messageId + params.prompt, false);
-
-        fileService
-          .uploadImageByUrl(url, {
-            metadata: { ...params, originPrompt: originPrompt },
-            name: `${originPrompt || params.prompt}_${index}.png`,
-          })
-          .then(({ id }) => {
-            updateImageItem(messageId, (draft) => {
-              draft[index].imageId = id;
-              draft[index].previewUrl = undefined;
-            });
-          });
+        url = await imageGenerationService.generateImage(params);
       } catch (e) {
         toggleDallEImageLoading(messageId + params.prompt, false);
-        console.error(e);
+        errorArray[index] = e;
+
+        await get().updatePluginState(messageId, `error`, errorArray);
       }
+
+      if (!url) return;
+
+      await updateImageItem(messageId, (draft) => {
+        draft[index].previewUrl = url;
+      });
+
+      toggleDallEImageLoading(messageId + params.prompt, false);
+
+      fileService
+        .uploadImageByUrl(url, {
+          metadata: { ...params, originPrompt: originPrompt },
+          name: `${originPrompt || params.prompt}_${index}.png`,
+        })
+        .then(({ id }) => {
+          updateImageItem(messageId, (draft) => {
+            draft[index].imageId = id;
+            draft[index].previewUrl = undefined;
+          });
+        });
     });
   },
   text2image: async (id, data) => {

@@ -13,6 +13,24 @@ export const runtime = 'edge';
 
 export const preferredRegion = getPreferredRegion();
 
+// return NextResponse.json(
+//   {
+//     body: {
+//       endpoint: 'https://ai****ix.com/v1',
+//       error: {
+//         code: 'content_policy_violation',
+//         message:
+//           'Your request was rejected as a result of our safety system. Image descriptions generated from your prompt may contain text that is not allowed by our safety system. If you believe this was done in error, your request may succeed if retried, or by adjusting your prompt.',
+//         param: null,
+//         type: 'invalid_request_error',
+//       },
+//       provider: 'openai',
+//     },
+//     errorType: 'OpenAIBizError',
+//   },
+//   { status: 400 },
+// );
+
 export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
   const { provider } = params;
 

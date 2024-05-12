@@ -23,6 +23,9 @@ class ImageGenerationService {
       method: 'POST',
       signal: options?.signal,
     });
+    if (!res.ok) {
+      throw await res.json();
+    }
 
     const urls = await res.json();
 

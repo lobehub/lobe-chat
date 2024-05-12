@@ -28,17 +28,18 @@ export interface ChatPluginAction {
   internal_callPluginApi: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
   internal_invokeDifferentTypePlugin: (id: string, payload: ChatToolPayload) => Promise<any>;
   internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
+  internal_updatePluginError: (id: string, error: any) => Promise<void>;
 
   invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<string | undefined>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
+
   invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
 
   reInvokeToolMessage: (id: string) => Promise<void>;
-
   triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
-  triggerToolCalls: (id: string) => Promise<void>;
 
+  triggerToolCalls: (id: string) => Promise<void>;
   updatePluginState: (id: string, key: string, value: any) => Promise<void>;
 }
 
@@ -168,6 +169,13 @@ export const chatPlugin: StateCreator<
       .filter(Boolean) as ChatToolPayload[];
   },
 
+  internal_updatePluginError: async (id, error) => {
+    const { refreshMessages } = get();
+
+    await messageService.updateMessage(id, { pluginError: error });
+    await refreshMessages();
+  },
+
   invokeBuiltinTool: async (id, payload) => {
     const { internal_toggleChatLoading, internal_updateMessageContent } = get();
     const params = JSON.parse(payload.arguments);
@@ -250,7 +258,6 @@ export const chatPlugin: StateCreator<
     const chats = chatSelectors.currentChats(get());
     await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, { traceId });
   },
-
   triggerToolCalls: async (assistantId) => {
     const message = chatSelectors.getMessageById(assistantId)(get());
     if (!message || !message.tools) return;
