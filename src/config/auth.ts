@@ -16,7 +16,6 @@ declare global {
        * @deprecated
        */
       ENABLE_OAUTH_SSO?: string;
-      NEXT_PUBLIC_ENABLE_NEXT_AUTH?: string;
       NEXT_AUTH_SECRET?: string;
       /**
        * @deprecated
