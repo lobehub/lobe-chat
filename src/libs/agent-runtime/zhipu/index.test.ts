@@ -61,7 +61,7 @@ describe('LobeZhipuAI', () => {
         model: 'glm-4',
         temperature: 0,
       });
-      expect(result).toBeInstanceOf(StreamingTextResponse);
+      expect(result).toBeInstanceOf(Response);
     });
 
     it('should handle callback and headers correctly', async () => {
