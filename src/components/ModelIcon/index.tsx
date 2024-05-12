@@ -9,6 +9,7 @@ import {
   Claude,
   Cohere,
   Dbrx,
+  DeepSeek,
   FishAudio,
   Gemini,
   Gemma,

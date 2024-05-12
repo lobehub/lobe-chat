@@ -55,9 +55,9 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
     }
 
     case ModelProvider.DeepSeek: {
-      return <DeepSeek.Color size={56} />;
+      return <DeepSeek color={DeepSeek.colorPrimary} size={56} />;
     }
-    
+
     case ModelProvider.Groq: {
       return <Groq color={Groq.colorPrimary} size={56} />;
     }

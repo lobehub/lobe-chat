@@ -5,7 +5,7 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
-import { LobeDeepSeek } from './index';
+import { LobeDeepSeekAI } from './index';
 
 const provider = 'DeepSeek';
 const defaultBaseURL = 'https://api.deepseek.com/v1';
@@ -18,7 +18,7 @@ vi.spyOn(console, 'error').mockImplementation(() => {});
 let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
-  instance = new LobeDeepSeek({ apiKey: 'test' });
+  instance = new LobeDeepSeekAI({ apiKey: 'test' });
 
   // 使用 vi.spyOn 来模拟 chat.completions.create 方法
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
@@ -33,8 +33,8 @@ afterEach(() => {
 describe('LobeDeepSeekAI', () => {
   describe('init', () => {
     it('should correctly initialize with an API key', async () => {
-      const instance = new LobeDeepSeek({ apiKey: 'test_api_key' });
-      expect(instance).toBeInstanceOf(LobeDeepSeek);
+      const instance = new LobeDeepSeekAI({ apiKey: 'test_api_key' });
+      expect(instance).toBeInstanceOf(LobeDeepSeekAI);
       expect(instance.baseURL).toEqual(defaultBaseURL);
     });
   });
@@ -127,7 +127,7 @@ describe('LobeDeepSeekAI', () => {
 
       it('should throw AgentRuntimeError with InvalidDeepSeekAPIKey if no apiKey is provided', async () => {
         try {
-          new LobeDeepSeek({});
+          new LobeDeepSeekAI({});
         } catch (e) {
           expect(e).toEqual({ errorType: invalidErrorType });
         }
@@ -173,7 +173,7 @@ describe('LobeDeepSeekAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        instance = new LobeDeepSeek({
+        instance = new LobeDeepSeekAI({
           apiKey: 'test',
 
           baseURL: 'https://api.abc.com/v1',
