@@ -24,15 +24,22 @@ export interface ChatPluginAction {
     content: string,
     triggerAiMessage?: boolean,
   ) => Promise<void>;
+
+  internal_callPluginApi: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
+  internal_invokeDifferentTypePlugin: (id: string, payload: ChatToolPayload) => Promise<any>;
   internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
+  internal_updatePluginError: (id: string, error: any) => Promise<void>;
+
   invokeBuiltinTool: (id: string, payload: ChatToolPayload) => Promise<void>;
   invokeDefaultTypePlugin: (id: string, payload: any) => Promise<string | undefined>;
   invokeMarkdownTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
-  invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
-  runPluginApi: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
-  triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
-  triggerToolCalls: (id: string) => Promise<void>;
 
+  invokeStandaloneTypePlugin: (id: string, payload: ChatToolPayload) => Promise<void>;
+
+  reInvokeToolMessage: (id: string) => Promise<void>;
+  triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
+
+  triggerToolCalls: (id: string) => Promise<void>;
   updatePluginState: (id: string, key: string, value: any) => Promise<void>;
 }
 
@@ -62,111 +69,7 @@ export const chatPlugin: StateCreator<
 
     if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },
-
-  internal_transformToolCalls: (toolCalls) => {
-    return toolCalls
-      .map((toolCall): ChatToolPayload | null => {
-        let payload: ChatToolPayload;
-
-        const [identifier, apiName, type] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
-
-        if (!apiName) return null;
-
-        payload = {
-          apiName,
-          arguments: toolCall.function.arguments,
-          id: toolCall.id,
-          identifier,
-          type: (type ?? 'default') as any,
-        };
-
-        // if the apiName is md5, try to find the correct apiName in the plugins
-        if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
-          const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
-          const manifest = pluginSelectors.getPluginManifestById(identifier)(
-            useToolStore.getState(),
-          );
-
-          const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
-          if (api) {
-            payload.apiName = api.name;
-          }
-        }
-
-        return payload;
-      })
-      .filter(Boolean) as ChatToolPayload[];
-  },
-
-  invokeBuiltinTool: async (id, payload) => {
-    const { internal_toggleChatLoading, internal_updateMessageContent } = get();
-    const params = JSON.parse(payload.arguments);
-    internal_toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
-    let data;
-    try {
-      data = await useToolStore.getState().invokeBuiltinTool(payload.apiName, params);
-    } catch (error) {
-      console.log(error);
-    }
-    internal_toggleChatLoading(false);
-
-    if (!data) return;
-
-    await internal_updateMessageContent(id, data);
-
-    // postToolCalling
-    // @ts-ignore
-    const { [payload.apiName]: action } = get();
-    if (!action) return;
-
-    let content;
-
-    try {
-      content = JSON.parse(data);
-    } catch {}
-
-    if (!content) return;
-
-    await action(id, content);
-  },
-
-  invokeDefaultTypePlugin: async (id, payload) => {
-    const { runPluginApi } = get();
-
-    const data = await runPluginApi(id, payload);
-
-    if (!data) return;
-
-    return data;
-  },
-
-  invokeMarkdownTypePlugin: async (id, payload) => {
-    const { runPluginApi } = get();
-
-    await runPluginApi(id, payload);
-  },
-
-  invokeStandaloneTypePlugin: async (id, payload) => {
-    const result = await useToolStore.getState().validatePluginSettings(payload.identifier);
-    if (!result) return;
-
-    // if the plugin settings is not valid, then set the message with error type
-    if (!result.valid) {
-      await messageService.updateMessageError(id, {
-        body: {
-          error: result.errors,
-          message: '[plugin] your settings is invalid with plugin manifest setting schema',
-        },
-        message: t('response.PluginSettingsInvalid', { ns: 'error' }),
-        type: PluginErrorType.PluginSettingsInvalid as any,
-      });
-
-      await get().refreshMessages();
-      return;
-    }
-  },
-
-  runPluginApi: async (id, payload) => {
+  internal_callPluginApi: async (id, payload) => {
     const { internal_updateMessageContent, refreshMessages, internal_toggleChatLoading } = get();
     let data: string;
 
@@ -211,23 +114,153 @@ export const chatPlugin: StateCreator<
     return data;
   },
 
+  internal_invokeDifferentTypePlugin: async (id, payload) => {
+    switch (payload.type) {
+      case 'standalone': {
+        return await get().invokeStandaloneTypePlugin(id, payload);
+      }
+
+      case 'markdown': {
+        return await get().invokeMarkdownTypePlugin(id, payload);
+      }
+
+      case 'builtin': {
+        return await get().invokeBuiltinTool(id, payload);
+      }
+
+      default: {
+        return await get().invokeDefaultTypePlugin(id, payload);
+      }
+    }
+  },
+
+  internal_transformToolCalls: (toolCalls) => {
+    return toolCalls
+      .map((toolCall): ChatToolPayload | null => {
+        let payload: ChatToolPayload;
+
+        const [identifier, apiName, type] = toolCall.function.name.split(PLUGIN_SCHEMA_SEPARATOR);
+
+        if (!apiName) return null;
+
+        payload = {
+          apiName,
+          arguments: toolCall.function.arguments,
+          id: toolCall.id,
+          identifier,
+          type: (type ?? 'default') as any,
+        };
+
+        // if the apiName is md5, try to find the correct apiName in the plugins
+        if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
+          const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
+          const manifest = pluginSelectors.getPluginManifestById(identifier)(
+            useToolStore.getState(),
+          );
+
+          const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
+          if (api) {
+            payload.apiName = api.name;
+          }
+        }
+
+        return payload;
+      })
+      .filter(Boolean) as ChatToolPayload[];
+  },
+
+  internal_updatePluginError: async (id, error) => {
+    const { refreshMessages } = get();
+
+    await messageService.updateMessage(id, { pluginError: error });
+    await refreshMessages();
+  },
+
+  invokeBuiltinTool: async (id, payload) => {
+    const { internal_toggleChatLoading, internal_updateMessageContent } = get();
+    const params = JSON.parse(payload.arguments);
+    internal_toggleChatLoading(true, id, n('invokeBuiltinTool') as string);
+    let data;
+    try {
+      data = await useToolStore.getState().invokeBuiltinTool(payload.apiName, params);
+    } catch (error) {
+      console.log(error);
+    }
+    internal_toggleChatLoading(false);
+
+    if (!data) return;
+
+    await internal_updateMessageContent(id, data);
+
+    // postToolCalling
+    // @ts-ignore
+    const { [payload.apiName]: action } = get();
+    if (!action) return;
+
+    let content;
+
+    try {
+      content = JSON.parse(data);
+    } catch {}
+
+    if (!content) return;
+
+    await action(id, content);
+  },
+
+  invokeDefaultTypePlugin: async (id, payload) => {
+    const { internal_callPluginApi } = get();
+
+    const data = await internal_callPluginApi(id, payload);
+
+    if (!data) return;
+
+    return data;
+  },
+
+  invokeMarkdownTypePlugin: async (id, payload) => {
+    const { internal_callPluginApi } = get();
+
+    await internal_callPluginApi(id, payload);
+  },
+
+  invokeStandaloneTypePlugin: async (id, payload) => {
+    const result = await useToolStore.getState().validatePluginSettings(payload.identifier);
+    if (!result) return;
+
+    // if the plugin settings is not valid, then set the message with error type
+    if (!result.valid) {
+      await messageService.updateMessageError(id, {
+        body: {
+          error: result.errors,
+          message: '[plugin] your settings is invalid with plugin manifest setting schema',
+        },
+        message: t('response.PluginSettingsInvalid', { ns: 'error' }),
+        type: PluginErrorType.PluginSettingsInvalid as any,
+      });
+
+      await get().refreshMessages();
+      return;
+    }
+  },
+
+  reInvokeToolMessage: async (id) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message || message.role !== 'tool' || !message.plugin) return;
+
+    const payload: ChatToolPayload = { ...message.plugin, id: message.tool_call_id! };
+
+    await get().internal_invokeDifferentTypePlugin(id, payload);
+  },
+
   triggerAIMessage: async ({ parentId, traceId }) => {
     const { internal_coreProcessMessage } = get();
     const chats = chatSelectors.currentChats(get());
     await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, { traceId });
   },
-
   triggerToolCalls: async (assistantId) => {
     const message = chatSelectors.getMessageById(assistantId)(get());
     if (!message || !message.tools) return;
-
-    const {
-      invokeDefaultTypePlugin,
-      invokeMarkdownTypePlugin,
-      invokeStandaloneTypePlugin,
-      invokeBuiltinTool,
-      triggerAIMessage,
-    } = get();
 
     let shouldCreateMessage = false;
     let latestToolId = '';
@@ -244,29 +277,12 @@ export const chatPlugin: StateCreator<
 
       const id = await get().internal_createMessage(toolMessage);
 
-      switch (payload.type) {
-        case 'standalone': {
-          await invokeStandaloneTypePlugin(id, payload);
-          break;
-        }
+      // trigger the plugin call
+      const data = await get().internal_invokeDifferentTypePlugin(id, payload);
 
-        case 'markdown': {
-          await invokeMarkdownTypePlugin(id, payload);
-          break;
-        }
-
-        case 'builtin': {
-          await invokeBuiltinTool(id, payload);
-          break;
-        }
-
-        default: {
-          const data = await invokeDefaultTypePlugin(id, payload);
-          if (data) {
-            shouldCreateMessage = true;
-            latestToolId = id;
-          }
-        }
+      if (payload.type === 'default' && data) {
+        shouldCreateMessage = true;
+        latestToolId = id;
       }
     });
 
@@ -277,9 +293,8 @@ export const chatPlugin: StateCreator<
 
     const traceId = chatSelectors.getTraceIdByMessageId(latestToolId)(get());
 
-    await triggerAIMessage({ traceId });
+    await get().triggerAIMessage({ traceId });
   },
-
   updatePluginState: async (id, key, value) => {
     const { refreshMessages } = get();
 

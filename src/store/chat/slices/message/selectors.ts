@@ -117,6 +117,13 @@ const currentChatLoadingState = (s: ChatStore) => !s.messagesInit;
 const isMessageEditing = (id: string) => (s: ChatStore) => s.messageEditingIds.includes(id);
 const isMessageLoading = (id: string) => (s: ChatStore) => s.messageLoadingIds.includes(id);
 const isMessageGenerating = (id: string) => (s: ChatStore) => s.chatLoadingIds.includes(id);
+const isToolCallStreaming = (id: string, index: number) => (s: ChatStore) => {
+  const isLoading = s.toolCallingStreamIds[id];
+
+  if (!isLoading) return false;
+
+  return isLoading[index];
+};
 const isAIGenerating = (s: ChatStore) => s.chatLoadingIds.length > 0;
 
 export const chatSelectors = {
@@ -133,6 +140,7 @@ export const chatSelectors = {
   isMessageEditing,
   isMessageGenerating,
   isMessageLoading,
+  isToolCallStreaming,
   latestMessage,
   showInboxWelcome,
 };

@@ -17,7 +17,12 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeTogetherAI } from './togetherai';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from './types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  ModelProvider,
+  TextToImagePayload,
+} from './types';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
 
@@ -65,6 +70,9 @@ class AgentRuntime {
    */
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     return this._runtime.chat(payload, options);
+  }
+  async textToImage(payload: TextToImagePayload) {
+    return this._runtime.textToImage?.(payload);
   }
 
   async models() {
