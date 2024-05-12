@@ -13,11 +13,14 @@ const DeepSeekProvider = memo(() => {
 
   return (
     <ProviderConfig
-      checkModel={'deepseek-chat'}
+      checkModel={'deepseek/deepseek-chat'}
       provider={ModelProvider.DeepSeek}
-      title={<DeepSeek.Text color={theme.isDarkMode ? theme.colorText : DeepSeek.colorPrimary} 
-      size={20} 
-      />}
+      title={
+        <DeepSeek.Combine
+          color={theme.isDarkMode ? theme.colorText : DeepSeek.colorPrimary}
+          size={28}
+        />
+      }
     />
   );
 });
