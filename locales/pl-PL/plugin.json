@@ -4,7 +4,9 @@
     "function_call": "函数调用",
     "off": "关闭",
     "on": "开启调试",
-    "response": "响应结果"
+    "payload": "ładunek wtyczki",
+    "response": "响应结果",
+    "tool_call": "żądanie wywołania narzędzia"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "插件运行中..."
   },
   "pluginList": "插件列表",
-  "plugins": {
-    "loading": "插件检测中...",
-    "unknown": "未知插件"
-  },
   "setting": "插件设置",
   "settings": {
     "indexUrl": {
@@ -162,5 +160,6 @@
       "installed": "已安装"
     },
     "title": "插件商店"
-  }
+  },
+  "unknownPlugin": "Nieznana wtyczka"
 }

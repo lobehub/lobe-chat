@@ -61,6 +61,18 @@
       "title": "使用自定義 Bedrock 驗證資訊"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "填入來自 DeepSeek 的 API 金鑰",
+      "placeholder": "DeepSeek API 金鑰",
+      "title": "API 金鑰"
+    },
+    "unlock": {
+      "description": "輸入你的 DeepSeek API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
+      "title": "使用自訂 DeepSeek API 金鑰"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {
