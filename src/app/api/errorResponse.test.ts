@@ -132,9 +132,9 @@ describe('createErrorResponse', () => {
       const response = createErrorResponse(errorType);
       expect(response.status).toBe(485);
     });
-    
+
     it('returns a 486 status for DeepSeekBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.MinimaxBizError;
+      const errorType = AgentRuntimeErrorType.DeepSeekBizError;
       const response = createErrorResponse(errorType);
       expect(response.status).toBe(486);
     });
