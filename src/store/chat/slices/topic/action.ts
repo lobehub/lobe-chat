@@ -134,8 +134,13 @@ export const chatTopic: StateCreator<
       onLoadingChange: (loading) => {
         internal_updateTopicLoading(topicId, loading);
       },
-      onMessageHandle: (x) => {
-        output += x;
+      onMessageHandle: (chunk) => {
+        switch (chunk.type) {
+          case 'text': {
+            output += chunk.text;
+          }
+        }
+
         updateTopicTitleInSummary(topicId, output);
       },
       params: await chainSummaryTitle(messages),

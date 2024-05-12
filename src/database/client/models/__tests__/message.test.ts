@@ -264,14 +264,14 @@ describe('MessageModel', () => {
     it('should update a role and plugins', async () => {
       const createdMessage = await MessageModel.create(messageData);
       const updateData = {
-        role: 'function' as const,
+        role: 'tool' as const,
         plugin: { apiName: 'a', identifier: 'b', arguments: 'abc' },
       };
 
       await MessageModel.update(createdMessage.id, updateData);
       const updatedMessage = await MessageModel.findById(createdMessage.id);
 
-      expect(updatedMessage).toHaveProperty('role', 'function');
+      expect(updatedMessage).toHaveProperty('role', 'tool');
     });
   });
 
