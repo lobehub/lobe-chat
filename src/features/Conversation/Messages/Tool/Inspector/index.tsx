@@ -53,7 +53,7 @@ const Inspector = memo<InspectorProps>(
     const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
     const avatar = pluginAvatar ? (
-      <Avatar avatar={pluginAvatar} size={32} />
+      <Avatar alt={pluginTitle} avatar={pluginAvatar} size={32} />
     ) : (
       <Icon icon={LucideToyBrick} />
     );

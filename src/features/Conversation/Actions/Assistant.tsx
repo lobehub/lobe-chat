@@ -6,9 +6,10 @@ import { RenderAction } from '../types';
 import { ErrorActionsBar } from './Error';
 import { useCustomActions } from './customAction';
 
-export const AssistantActionsBar: RenderAction = memo(({ id, onActionClick, error }) => {
+export const AssistantActionsBar: RenderAction = memo(({ id, onActionClick, error, tools }) => {
   const { regenerate, edit, delAndRegenerate, copy, divider, del } = useChatListActionsBar();
   const { translate, tts } = useCustomActions();
+  const hasTools = !!tools;
 
   if (id === 'default') return;
 
@@ -27,7 +28,7 @@ export const AssistantActionsBar: RenderAction = memo(({ id, onActionClick, erro
         delAndRegenerate,
         del,
       ]}
-      items={[edit, copy]}
+      items={[hasTools ? delAndRegenerate : edit, copy]}
       onActionClick={onActionClick}
       type="ghost"
     />

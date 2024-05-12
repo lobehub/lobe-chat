@@ -2,7 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
-import { imageGenerationService } from '@/services/imageGeneration';
+import { imageGenerationService } from '@/services/textToImage';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
