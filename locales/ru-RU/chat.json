@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Привет, я **{{name}}**. Ты можешь начать общение со мной прямо сейчас или перейти к [настройкам помощника](/chat/settings#session={{id}}), чтобы улучшить мою информацию.",
   "agentDefaultMessageWithSystemRole": "Привет, я **{{name}}**, {{systemRole}}. Давай начнем разговор!",
+  "agentsAndConversations": "Агенты и беседы",
   "backToBottom": "Вернуться вниз",
   "clearCurrentMessages": "Очистить текущий разговор",
   "confirmClearCurrentMessages": "Вы уверены, что хотите очистить текущий разговор? После этого его нельзя будет восстановить.",
