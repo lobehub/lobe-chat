@@ -1,6 +1,7 @@
 import OpenAI, { ClientOptions } from 'openai';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
@@ -176,6 +177,56 @@ export const LobeOpenAICompatibleFactory = ({
         })
 
         .filter(Boolean) as ChatModelCard[];
+    }
+
+    async textToImage(payload: TextToImagePayload) {
+      try {
+        const res = await this.client.images.generate(payload);
+        return res.data.map((o) => o.url) as string[];
+      } catch (error) {
+        let desensitizedEndpoint = this.baseURL;
+
+        // refs: https://github.com/lobehub/lobe-chat/issues/842
+        if (this.baseURL !== DEFAULT_BASE_URL) {
+          desensitizedEndpoint = desensitizeUrl(this.baseURL);
+        }
+
+        if ('status' in (error as any)) {
+          switch ((error as Response).status) {
+            case 401: {
+              throw AgentRuntimeError.chat({
+                endpoint: desensitizedEndpoint,
+                error: error as any,
+                errorType: ErrorType.invalidAPIKey,
+                provider: provider as any,
+              });
+            }
+
+            default: {
+              break;
+            }
+          }
+        }
+
+        if (chatCompletion?.handleError) {
+          const errorResult = chatCompletion.handleError(error);
+
+          if (errorResult)
+            throw AgentRuntimeError.chat({
+              ...errorResult,
+              provider,
+            } as ChatCompletionErrorPayload);
+        }
+
+        const { errorResult, RuntimeError } = handleOpenAIError(error);
+
+        throw AgentRuntimeError.chat({
+          endpoint: desensitizedEndpoint,
+          error: errorResult,
+          errorType: RuntimeError || ErrorType.bizError,
+          provider: provider as any,
+        });
+      }
     }
 
     /**
