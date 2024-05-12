@@ -44,7 +44,7 @@ const Main = memo(() => {
     </Flexbox>
   ) : (
     <Flexbox align={'flex-start'} gap={12} horizontal>
-      {isChatPath && (
+      {
         <Link aria-label={t('agentsAndConversations')} href={'/chat'}>
           <ActionIcon
             icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
@@ -59,7 +59,7 @@ const Main = memo(() => {
             title={t('agentsAndConversations')}
           />
         </Link>
-      )}
+      }
       <Avatar
         avatar={avatar}
         background={backgroundColor}
