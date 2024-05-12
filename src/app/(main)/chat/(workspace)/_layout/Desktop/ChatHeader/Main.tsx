@@ -4,7 +4,6 @@ import { ActionIcon, Avatar, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -32,7 +31,6 @@ const Main = memo(() => {
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
-  const isChatPath = usePathname() === '/chat'; // 判断路径
   const showSessionPanel = useGlobalStore((s) => s.preference.showSessionPanel);
 
   return !init ? (
