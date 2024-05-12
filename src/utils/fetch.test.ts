@@ -188,7 +188,11 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onMessageHandle: mockOnMessageHandle, onFinish: mockOnFinish });
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+      smoothing: false,
+    });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'text' });
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: ' World', type: 'text' });
@@ -222,7 +226,11 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onMessageHandle: mockOnMessageHandle, onFinish: mockOnFinish });
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+      smoothing: false,
+    });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
       tool_calls: [{ id: '1', type: 'function', function: { name: 'func1', arguments: 'arg1' } }],
@@ -256,7 +264,7 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onAbort: mockOnAbort });
+    await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
 
     expect(mockOnAbort).toHaveBeenCalledWith('Hello');
   });
