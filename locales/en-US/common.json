@@ -14,7 +14,7 @@
   "copySuccess": "Copied successfully",
   "dataStatistics": {
     "messages": "Messages",
-    "sessions": "Assistants",
+    "sessions": "Agents",
     "today": "Today's New",
     "topics": "Topics"
   },
@@ -58,6 +58,7 @@
     },
     "title": "Import Data"
   },
+  "installPWA": "Install browser app",
   "lang": {
     "ar": "Arabic",
     "bg-BG": "Bulgarian",
