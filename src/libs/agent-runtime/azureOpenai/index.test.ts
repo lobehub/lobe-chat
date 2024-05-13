@@ -1,5 +1,6 @@
 // @vitest-environment node
 import { AzureKeyCredential, OpenAIClient } from '@azure/openai';
+import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as debugStreamModule from '../utils/debugStream';
@@ -50,7 +51,7 @@ describe('LobeAzureOpenAI', () => {
   });
 
   describe('chat', () => {
-    it('should return a StreamingTextResponse on successful API call', async () => {
+    it('should return a Response on successful API call', async () => {
       // Arrange
       const mockStream = new ReadableStream();
       const mockResponse = Promise.resolve(mockStream);
@@ -66,6 +67,140 @@ describe('LobeAzureOpenAI', () => {
 
       // Assert
       expect(result).toBeInstanceOf(Response);
+    });
+
+    describe('streaming response', () => {
+      it('should handle multiple data chunks correctly', async () => {
+        const data = [
+          {
+            choices: [],
+            created: 0,
+            id: '',
+            model: '',
+            object: '',
+            prompt_filter_results: [
+              {
+                prompt_index: 0,
+                content_filter_results: {
+                  hate: { filtered: false, severity: 'safe' },
+                  self_harm: { filtered: false, severity: 'safe' },
+                  sexual: { filtered: false, severity: 'safe' },
+                  violence: { filtered: false, severity: 'safe' },
+                },
+              },
+            ],
+          },
+          {
+            choices: [
+              {
+                content_filter_results: {
+                  hate: { filtered: false, severity: 'safe' },
+                  self_harm: { filtered: false, severity: 'safe' },
+                  sexual: { filtered: false, severity: 'safe' },
+                  violence: { filtered: false, severity: 'safe' },
+                },
+                delta: { content: '你' },
+                finish_reason: null,
+                index: 0,
+                logprobs: null,
+              },
+            ],
+            created: 1715516381,
+            id: 'chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+            model: 'gpt-35-turbo-16k',
+            object: 'chat.completion.chunk',
+            system_fingerprint: null,
+          },
+          {
+            choices: [
+              {
+                content_filter_results: {
+                  hate: { filtered: false, severity: 'safe' },
+                  self_harm: { filtered: false, severity: 'safe' },
+                  sexual: { filtered: false, severity: 'safe' },
+                  violence: { filtered: false, severity: 'safe' },
+                },
+                delta: { content: '好' },
+                finish_reason: null,
+                index: 0,
+                logprobs: null,
+              },
+            ],
+            created: 1715516381,
+            id: 'chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+            model: 'gpt-35-turbo-16k',
+            object: 'chat.completion.chunk',
+            system_fingerprint: null,
+          },
+          {
+            choices: [
+              {
+                content_filter_results: {
+                  hate: { filtered: false, severity: 'safe' },
+                  self_harm: { filtered: false, severity: 'safe' },
+                  sexual: { filtered: false, severity: 'safe' },
+                  violence: { filtered: false, severity: 'safe' },
+                },
+                delta: { content: '！' },
+                finish_reason: null,
+                index: 0,
+                logprobs: null,
+              },
+            ],
+            created: 1715516381,
+            id: 'chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+            model: 'gpt-35-turbo-16k',
+            object: 'chat.completion.chunk',
+            system_fingerprint: null,
+          },
+        ];
+
+        const mockStream = new ReadableStream({
+          start(controller) {
+            data.forEach((chunk) => controller.enqueue(chunk));
+            controller.close();
+          },
+        });
+        vi.spyOn(instance['client'], 'streamChatCompletions').mockResolvedValue(mockStream as any);
+
+        const result = await instance.chat({
+          stream: true,
+          max_tokens: 2048,
+          temperature: 0.6,
+          top_p: 1,
+          model: 'gpt-35-turbo-16k',
+          presence_penalty: 0,
+          frequency_penalty: 0,
+          messages: [{ role: 'user', content: '你好' }],
+        });
+
+        const decoder = new TextDecoder();
+        const reader = result.body!.getReader();
+        const stream: string[] = [];
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
+
+        expect(stream).toEqual(
+          [
+            'id: ',
+            'event: data',
+            'data: {"choices":[],"created":0,"id":"","model":"","object":"","prompt_filter_results":[{"prompt_index":0,"content_filter_results":{"hate":{"filtered":false,"severity":"safe"},"self_harm":{"filtered":false,"severity":"safe"},"sexual":{"filtered":false,"severity":"safe"},"violence":{"filtered":false,"severity":"safe"}}}]}\n',
+            'id: chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+            'event: text',
+            'data: "你"\n',
+            'id: chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+            'event: text',
+            'data: "好"\n',
+            'id: chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+            'event: text',
+            'data: "！"\n',
+          ].map((item) => `${item}\n`),
+        );
+      });
     });
 
     describe('Error', () => {
@@ -165,7 +300,6 @@ describe('LobeAzureOpenAI', () => {
   });
 
   describe('private method', () => {
-
     describe('tocamelCase', () => {
       it('should convert string to camel case', () => {
         const key = 'image_url';
@@ -179,41 +313,41 @@ describe('LobeAzureOpenAI', () => {
     describe('camelCaseKeys', () => {
       it('should convert object keys to camel case', () => {
         const obj = {
-          "frequency_penalty": 0,
-          "messages": [
+          frequency_penalty: 0,
+          messages: [
             {
-              "role": "user",
-              "content": [
+              role: 'user',
+              content: [
                 {
-                  "type": "image_url",
-                  "image_url": {
-                    "url": "<image URL>"
-                  }
-                }
-              ]
-            }
-          ]
+                  type: 'image_url',
+                  image_url: {
+                    url: '<image URL>',
+                  },
+                },
+              ],
+            },
+          ],
         };
 
         const newObj = instance['camelCaseKeys'](obj);
 
         expect(newObj).toEqual({
-          "frequencyPenalty": 0,
-          "messages": [
+          frequencyPenalty: 0,
+          messages: [
             {
-              "role": "user",
-              "content": [
+              role: 'user',
+              content: [
                 {
-                  "type": "image_url",
-                  "imageUrl": {
-                    "url": "<image URL>"
-                  }
-                }
-              ]
-            }
-          ]
+                  type: 'image_url',
+                  imageUrl: {
+                    url: '<image URL>',
+                  },
+                },
+              ],
+            },
+          ],
         });
       });
     });
-  })
+  });
 });
