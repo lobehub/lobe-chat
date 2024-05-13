@@ -13,6 +13,7 @@ import useSWR from 'swr';
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
@@ -53,6 +54,7 @@ const formatNumber = (num: any) => {
 };
 
 const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest }) => {
+  const mobile = useServerConfigStore((s) => s.isMobile);
   // sessions
   const { data: sessions, isLoading: sessionsLoading } = useSWR(
     'count-sessions',
@@ -111,7 +113,7 @@ const DataStatistics = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
             <Flexbox
               align={'center'}
               className={styles.card}
-              flex={showBadge ? 2 : 1}
+              flex={showBadge && !mobile ? 2 : 1}
               gap={4}
               horizontal
               justify={'space-between'}

@@ -1,42 +1,52 @@
-import { Icon, List } from '@lobehub/ui';
+import { Icon, IconProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ChevronRight } from 'lucide-react';
 import { ReactNode, memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
-const { Item } = List;
+import Divider from './Divider';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
     position: relative;
-
-    gap: 12px;
-
-    padding: 16px !important;
-
-    background: ${token.colorBgLayout};
+    font-size: 15px;
     border-radius: 0;
+
+    &:active {
+      background: ${token.colorFillTertiary};
+    }
   `,
 }));
 
 export interface CellProps {
-  icon: ReactNode;
-  label: string | ReactNode;
+  icon?: IconProps['icon'];
+  key?: string | number;
+  label?: string | ReactNode;
   onClick?: () => void;
+  type?: 'divider';
 }
 
-const Cell = memo<CellProps>(({ label, icon, onClick }) => {
-  const { cx, styles } = useStyles();
+const Cell = memo<CellProps>(({ label, icon, onClick, type }) => {
+  const { cx, styles, theme } = useStyles();
+
+  if (type === 'divider') return <Divider />;
 
   return (
-    <Item
-      active={false}
-      avatar={icon}
+    <Flexbox
+      align={'center'}
       className={cx(styles.container)}
+      gap={12}
+      horizontal
+      justify={'space-between'}
       onClick={onClick}
-      title={label as string}
+      padding={16}
     >
-      <Icon icon={ChevronRight} size={{ fontSize: 16 }} />
-    </Item>
+      <Flexbox align={'center'} gap={12} horizontal>
+        {icon && <Icon color={theme.colorPrimaryBorder} icon={icon} size={{ fontSize: 20 }} />}
+        {label}
+      </Flexbox>
+      <Icon color={theme.colorBorder} icon={ChevronRight} size={{ fontSize: 16 }} />
+    </Flexbox>
   );
 });
 

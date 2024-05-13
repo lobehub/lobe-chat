@@ -169,6 +169,7 @@
   "userPanel": {
     "anonymousNickName": "Anonymous User",
     "billing": "Billing Management",
+    "data": "Data Storage",
     "defaultNickname": "Community User",
     "discord": "Community Support",
     "docs": "Documentation",
