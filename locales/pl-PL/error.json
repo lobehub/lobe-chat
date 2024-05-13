@@ -1,9 +1,9 @@
 {
   "clerkAuth": {
     "loginSuccess": {
-      "action": "继续会话",
-      "desc": "{{greeting}}，很高兴能够继续为你服务。让我们接着刚刚的话题聊下去吧",
-      "title": "欢迎回来， {{nickName}}"
+      "action": "Continue session",
+      "desc": "{{greeting}}, it's great to continue serving you. Let's continue our previous conversation.",
+      "title": "Welcome back, {{nickName}}"
     }
   },
   "error": {
