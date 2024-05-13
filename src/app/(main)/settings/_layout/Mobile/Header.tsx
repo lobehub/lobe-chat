@@ -7,6 +7,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { enableAuth } from '@/const/auth';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
@@ -32,7 +33,7 @@ const Header = memo(() => {
           }
         />
       }
-      onBackClick={() => router.push('/me')}
+      onBackClick={() => router.push(enableAuth ? '/me/settings' : '/me')}
       showBackButton
       style={mobileHeaderSticky}
     />
