@@ -4,7 +4,9 @@
     "function_call": "函式呼叫",
     "off": "關閉偵錯",
     "on": "查看插件呼叫資訊",
-    "response": "回應"
+    "payload": "插件載荷",
+    "response": "回應",
+    "tool_call": "工具呼叫"
   },
   "detailModal": {
     "info": {
@@ -158,5 +160,6 @@
       "installed": "已安裝"
     },
     "title": "插件商店"
-  }
+  },
+  "unknownPlugin": "未知插件"
 }

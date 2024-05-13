@@ -4,7 +4,9 @@
     "function_call": "Chiamata di funzione",
     "off": "Disattivato",
     "on": "Visualizza informazioni sulla chiamata del plugin",
-    "response": "Risposta"
+    "payload": "carico del plugin",
+    "response": "Risposta",
+    "tool_call": "richiesta di chiamata dello strumento"
   },
   "detailModal": {
     "info": {
@@ -158,5 +160,6 @@
       "installed": "Installati"
     },
     "title": "Negozio dei plugin"
-  }
+  },
+  "unknownPlugin": "Plugin sconosciuto"
 }

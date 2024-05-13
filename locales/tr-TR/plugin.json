@@ -4,7 +4,9 @@
     "function_call": "Fonksiyon Çağrısı",
     "off": "Hata Ayıklamayı Kapat",
     "on": "Eklenti Çağrı Bilgilerini Görüntüle",
-    "response": "Yanıt"
+    "payload": "eklenti yükü",
+    "response": "Yanıt",
+    "tool_call": "aracı çağrı"
   },
   "detailModal": {
     "info": {
@@ -158,5 +160,6 @@
       "installed": "Yüklü"
     },
     "title": "Eklenti Mağazası"
-  }
+  },
+  "unknownPlugin": "Bilinmeyen eklenti"
 }

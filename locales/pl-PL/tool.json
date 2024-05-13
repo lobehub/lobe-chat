@@ -4,6 +4,7 @@
     "downloading": "Linki do obrazów wygenerowanych przez DallE3 są ważne tylko przez 1 godzinę. Trwa pobieranie obrazów do lokalnego bufora...",
     "generate": "Generuj",
     "generating": "Generowanie...",
-    "images": "Obrazy:"
+    "images": "Obrazy:",
+    "prompt": "słowo kluczowe"
   }
 }

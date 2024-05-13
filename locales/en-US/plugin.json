@@ -4,7 +4,9 @@
     "function_call": "Function Call",
     "off": "Turn off debug",
     "on": "View plugin invocation information",
-    "response": "Response"
+    "payload": "plugin payload",
+    "response": "Response",
+    "tool_call": "tool call request"
   },
   "detailModal": {
     "info": {
@@ -158,5 +160,6 @@
       "installed": "Installed"
     },
     "title": "Plugin Store"
-  }
+  },
+  "unknownPlugin": "Unknown plugin"
 }

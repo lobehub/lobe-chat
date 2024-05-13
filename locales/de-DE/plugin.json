@@ -4,7 +4,9 @@
     "function_call": "Funktionsaufruf",
     "off": "Debugging deaktivieren",
     "on": "Plugin-Aufrufinformationen anzeigen",
-    "response": "Antwort"
+    "payload": "Plugin-Payload",
+    "response": "Antwort",
+    "tool_call": "Tool Call Request"
   },
   "detailModal": {
     "info": {
@@ -158,5 +160,6 @@
       "installed": "Installiert"
     },
     "title": "Plugin-Shop"
-  }
+  },
+  "unknownPlugin": "Unbekanntes Plugin"
 }
