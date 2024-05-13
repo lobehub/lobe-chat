@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 0.158.2](https://github.com/lobehub/lobe-chat/compare/v0.158.1...v0.158.2)
+
+<sup>Released on **2024-05-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix TelemetryNotification zindex.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix TelemetryNotification zindex, closes [#2476](https://github.com/lobehub/lobe-chat/issues/2476) ([54524ab](https://github.com/lobehub/lobe-chat/commit/54524ab))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.158.1](https://github.com/lobehub/lobe-chat/compare/v0.158.0...v0.158.1)
+
+<sup>Released on **2024-05-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add PWA install and metadata & ld generate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add PWA install and metadata & ld generate, closes [#2438](https://github.com/lobehub/lobe-chat/issues/2438) ([6e9c69a](https://github.com/lobehub/lobe-chat/commit/6e9c69a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.158.0](https://github.com/lobehub/lobe-chat/compare/v0.157.2...v0.158.0)
 
 <sup>Released on **2024-05-13**</sup>
