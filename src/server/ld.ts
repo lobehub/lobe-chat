@@ -9,19 +9,19 @@ const { SITE_URL = OFFICIAL_URL } = getServerConfig();
 const LAST_MODIFIED = new Date().toISOString();
 export const AUTHOR_LIST = {
   arvinxx: {
-    avatar: 'https://hub-apac-1.lobeobjects.space/landing/avatar/arvin-xu.webp',
+    avatar: 'https://avatars.githubusercontent.com/u/28616219?v=4',
     desc: 'Founder, Design Engineer',
     name: 'Arvin Xu',
     url: 'https://github.com/arvinxx',
   },
   canisminor: {
-    avatar: 'https://hub-apac-1.lobeobjects.space/landing/avatar/canis-minor.webp',
+    avatar: 'https://avatars.githubusercontent.com/u/17870709?v=4',
     desc: 'Founder, Design Engineer',
     name: 'CanisMinor',
     url: 'https://github.com/arvinxx',
   },
   lobehub: {
-    avatar: 'https://hub-apac-1.lobeobjects.space/landing/avatar/lobe-hub.webp',
+    avatar: 'https://avatars.githubusercontent.com/u/131470832?v=4',
     desc: 'Official Account',
     name: 'LobeHub',
     url: 'https://github.com/lobehub',
@@ -136,8 +136,6 @@ class Ld {
   }) {
     const fixedUrl = this.fixUrl(url);
     const dateCreated = date ? new Date(date).toISOString() : LAST_MODIFIED;
-
-    // TODO: 需要新增一个 updateAt
     const dateModified = date ? new Date(date).toISOString() : LAST_MODIFIED;
 
     const baseInfo: any = {

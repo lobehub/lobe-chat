@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 
 import { getClientConfig } from '@/config/client';
 import { getServerConfig } from '@/config/server';
-import { OFFICIAL_URL, getCanonicalUrl } from '@/const/url';
+import { OFFICIAL_URL } from '@/const/url';
 import { translation } from '@/server/translation';
 
 const title = 'LobeChat';
@@ -16,7 +16,6 @@ const noManifest = !!BASE_PATH;
 export const generateMetadata = async (): Promise<Metadata> => {
   const { t } = await translation('metadata');
   return {
-    alternates: { canonical: getCanonicalUrl('/') },
     appleWebApp: {
       statusBarStyle: 'black-translucent',
       title,
