@@ -163,6 +163,7 @@ export default {
   userPanel: {
     anonymousNickName: '匿名用户',
     billing: '账单管理',
+    data: '数据存储',
     defaultNickname: '社区版用户',
     discord: '社区支持',
     docs: '使用文档',
