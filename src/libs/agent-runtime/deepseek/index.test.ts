@@ -65,7 +65,7 @@ describe('LobeDeepSeekAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
+            model: 'deepseek-chat',
             temperature: 0,
           });
         } catch (e) {
@@ -105,7 +105,7 @@ describe('LobeDeepSeekAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
+            model: 'deepseek-chat',
             temperature: 0,
           });
         } catch (e) {
@@ -141,7 +141,7 @@ describe('LobeDeepSeekAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'gpt-3.5-turbo',
+            model: 'deepseek-chat',
             temperature: 0,
           });
         } catch (e) {
@@ -166,7 +166,7 @@ describe('LobeDeepSeekAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'gpt-3.5-turbo',
+            model: 'deepseek-chat',
             temperature: 0,
           });
         } catch (e) {
@@ -190,7 +190,7 @@ describe('LobeDeepSeekAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
+            model: 'deepseek-chat',
             temperature: 0,
           });
         } catch (e) {
@@ -238,7 +238,7 @@ describe('LobeDeepSeekAI', () => {
         // 假设的测试函数调用，你可能需要根据实际情况调整
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'text-davinci-003',
+          model: 'deepseek-chat',
           stream: true,
           temperature: 0,
         });
