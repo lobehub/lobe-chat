@@ -2,13 +2,10 @@ import { redirect } from 'next/navigation';
 import { Center } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
-import Divider from '@/components/Cell/Divider';
-import DataStatistics from '@/features/User/DataStatistics';
-import UserInfo from '@/features/User/UserInfo';
 import { isMobileDevice } from '@/utils/responsive';
 
-import Cate from './features/Cate';
-import ExtraCate from './features/ExtraCate';
+import Category from './features/Category';
+import UserBanner from './features/UserBanner';
 
 const Page = () => {
   const mobile = isMobileDevice();
@@ -17,16 +14,15 @@ const Page = () => {
 
   return (
     <>
-      <UserInfo />
-      <DataStatistics paddingInline={12} style={{ paddingBottom: 6 }} />
-      <Divider />
-      <Cate />
-      <ExtraCate />
+      <UserBanner />
+      <Category />
       <Center padding={16}>
         <BrandWatermark />
       </Center>
     </>
   );
 };
+
+Page.displayName = 'Me';
 
 export default Page;
