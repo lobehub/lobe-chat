@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "description": "LobeChat 帶給你最佳的 ChatGPT、OLLaMA、Gemini、Claude WebUI 使用體驗",
+    "title": "LobeChat：個人 LLM 效能工具，給自己一個更聰明的大腦"
+  },
+  "market": {
+    "description": "內容創作、文案、問答、圖像生成、視頻生成、語音生成、智能 Agent、自動化工作流，定制你專屬的 AI / GPTs / OLLaMA 智能助手",
+    "title": "助手市場"
+  },
+  "plugins": {
+    "description": "搜尋、圖表生成、學術、圖像生成、視頻生成、語音生成、自動化工作流，定制 ChatGPT / OLLaMA 專屬的 ToolCall 插件能力",
+    "title": "插件市場"
+  },
+  "welcome": {
+    "description": "LobeChat 帶給你最佳的 ChatGPT、OLLaMA、Gemini、Claude WebUI 使用體驗",
+    "title": "歡迎使用 LobeChat：個人 LLM 效能工具，給自己一個更聰明的大腦"
+  }
+}

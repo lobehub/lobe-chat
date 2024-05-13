@@ -1,166 +1,165 @@
 {
   "debug": {
-    "arguments": "参数调试",
-    "function_call": "函数调用",
-    "off": "关闭",
-    "on": "开启调试",
-    "response": "响应结果"
+    "arguments": "Argumenty",
+    "function_call": "Wywołanie funkcji",
+    "off": "Wyłącz debugowanie",
+    "on": "Wyświetl informacje o wywołaniach wtyczki",
+    "payload": "dane wejściowe wtyczki",
+    "response": "Odpowiedź",
+    "tool_call": "żądanie wywołania narzędzia"
   },
   "detailModal": {
     "info": {
-      "description": "API 描述",
-      "name": "API 名称"
+      "description": "Opis interfejsu API",
+      "name": "Nazwa interfejsu API"
     },
     "tabs": {
-      "info": "插件信息",
-      "manifest": "安装清单",
-      "settings": "设置"
+      "info": "Zdolności wtyczki",
+      "manifest": "Plik instalacyjny",
+      "settings": "Ustawienia"
     },
-    "title": "插件详情"
+    "title": "Szczegóły wtyczki"
   },
   "dev": {
-    "confirmDeleteDevPlugin": "确认删除开发插件？删除后将无法恢复。",
+    "confirmDeleteDevPlugin": "Czy na pewno chcesz usunąć tę lokalną wtyczkę? Po usunięciu nie będzie możliwe jej odzyskanie.",
     "customParams": {
       "useProxy": {
-        "label": "使用代理安装（如遇跨域访问错误，可尝试开启该选项后重新安装）"
+        "label": "Zainstaluj za pośrednictwem serwera proxy (jeśli występują błędy dostępu z innej domeny, spróbuj włączyć tę opcję i ponownie zainstalować)"
       }
     },
-    "deleteSuccess": "插件删除成功",
+    "deleteSuccess": "Wtyczka została pomyślnie usunięta",
     "manifest": {
       "identifier": {
-        "desc": "插件的唯一标识",
-        "label": "标识符"
+        "desc": "Unikalny identyfikator wtyczki",
+        "label": "Identyfikator"
       },
       "mode": {
-        "local": "本地模式",
-        "local-tooltip": "暂不支持本地模式",
-        "url": "在线链接"
+        "local": "Konfiguracja wizualna",
+        "local-tooltip": "Konfiguracja wizualna nie jest obecnie obsługiwana",
+        "url": "Link online"
       },
       "name": {
-        "desc": "插件标题",
-        "label": "标题",
-        "placeholder": "搜索引擎"
+        "desc": "Tytuł wtyczki",
+        "label": "Tytuł",
+        "placeholder": "Wyszukiwarka"
       }
     },
     "meta": {
       "author": {
-        "desc": "插件作者",
-        "label": "作者"
+        "desc": "Autor wtyczki",
+        "label": "Autor"
       },
       "avatar": {
-        "desc": "插件图标，可使用 Emoji 或 URL",
-        "label": "图标"
+        "desc": "Ikona wtyczki, może być emotikonem lub adresem URL",
+        "label": "Ikona"
       },
       "description": {
-        "desc": "插件描述",
-        "label": "描述",
-        "placeholder": "查询搜索引擎获取信息"
+        "desc": "Opis wtyczki",
+        "label": "Opis",
+        "placeholder": "Pobierz informacje z wyszukiwarek"
       },
-      "formFieldRequired": "此字段为必填项",
+      "formFieldRequired": "To pole jest wymagane",
       "homepage": {
-        "desc": "插件首页",
-        "label": "首页"
+        "desc": "Strona główna wtyczki",
+        "label": "Strona główna"
       },
       "identifier": {
-        "desc": "插件的唯一标识，将从清单中自动识别",
-        "errorDuplicate": "标识符与现有插件重复，请修改标识符",
-        "label": "标识符",
-        "pattenErrorMessage": "只能输入英文字符、数字、- 和_"
+        "desc": "Unikalny identyfikator wtyczki, obsługuje tylko znaki alfanumeryczne, myślnik - i podkreślenie _",
+        "errorDuplicate": "Identyfikator jest już używany przez inną wtyczkę, proszę zmień identyfikator",
+        "label": "Identyfikator",
+        "pattenErrorMessage": "Dozwolone są tylko znaki alfanumeryczne, myślnik - i podkreślenie _"
       },
       "manifest": {
-        "desc": "LobeChat 将通过该链接安装插件",
-        "label": "插件描述文件 (Manifest) URL",
-        "preview": "预览清单",
-        "refresh": "刷新"
+        "desc": "LobeChat zainstaluje wtyczkę za pomocą tego linku",
+        "label": "Opis wtyczki (Manifest) URL",
+        "preview": "Podgląd",
+        "refresh": "Odśwież"
       },
       "title": {
-        "desc": "插件标题",
-        "label": "标题",
-        "placeholder": "搜索引擎"
+        "desc": "Tytuł wtyczki",
+        "label": "Tytuł",
+        "placeholder": "Wyszukiwarka"
       }
     },
-    "metaConfig": "插件元信息配置",
-    "modalDesc": "添加自定义插件后，可用于插件开发验证，也可直接在会话中使用。插件开发请参考<1>开发文档↗</>",
+    "metaConfig": "Konfiguracja metadanych wtyczki",
+    "modalDesc": "Po dodaniu niestandardowej wtyczki można jej używać do weryfikacji rozwoju wtyczki lub bezpośrednio w sesji. Proszę odnieść się do <1>dokumentacji rozwojowej↗</> dotyczącej rozwoju wtyczki.",
     "openai": {
-      "importUrl": "从 URL 导入",
-      "schema": "模式"
+      "importUrl": "Importuj z linku URL",
+      "schema": "Schemat"
     },
     "preview": {
-      "card": "预览插件效果",
-      "desc": "预览插件描述",
-      "title": "插件名称预览"
+      "card": "Podgląd wyświetlania wtyczki",
+      "desc": "Podgląd opisu wtyczki",
+      "title": "Podgląd nazwy wtyczki"
     },
-    "save": "安装插件",
-    "saveSuccess": "插件设置保存成功",
+    "save": "Zainstaluj wtyczkę",
+    "saveSuccess": "Ustawienia wtyczki zostały pomyślnie zapisane",
     "tabs": {
-      "manifest": "功能描述清单 (Manifest)",
-      "meta": "插件元信息"
+      "manifest": "Opis funkcji manifestu (Manifest)",
+      "meta": "Metadane wtyczki"
     },
     "title": {
-      "create": "添加自定义插件",
-      "edit": "编辑自定义插件"
+      "create": "Dodaj niestandardową wtyczkę",
+      "edit": "Edytuj niestandardową wtyczkę"
     },
     "type": {
-      "lobe": "LobeChat 插件",
-      "openai": "OpenAI 插件"
+      "lobe": "Wtyczka LobeChat",
+      "openai": "Wtyczka OpenAI"
     },
-    "update": "更新",
-    "updateSuccess": "插件设置更新成功"
+    "update": "Aktualizuj",
+    "updateSuccess": "Ustawienia wtyczki zostały pomyślnie zaktualizowane"
   },
   "error": {
-    "fetchError": "请求该清单链接失败，请确保链接的有效性，并检查链接是否允许跨域访问",
-    "installError": "插件 {{name}} 安装失败",
-    "manifestInvalid": "清单不符合规范，校验结果: \n\n {{error}}",
-    "noManifest": "描述文件不存在",
-    "openAPIInvalid": "OpenAPI 解析失败，错误: \n\n {{error}}",
-    "reinstallError": "插件 {{name}} 刷新失败",
-    "urlError": "该链接没有返回 JSON 格式的内容，请确保是有效的链接"
+    "fetchError": "Nie udało się pobrać linku manifestu. Upewnij się, że link jest poprawny i zezwala na dostęp z innej domeny.",
+    "installError": "Instalacja wtyczki {{name}} nie powiodła się",
+    "manifestInvalid": "Manifest nie spełnia specyfikacji. Wynik walidacji: \n\n {{error}}",
+    "noManifest": "Plik manifestu nie istnieje",
+    "openAPIInvalid": "Analiza OpenAPI nie powiodła się. Błąd: \n\n {{error}}",
+    "reinstallError": "Nie udało się odświeżyć wtyczki {{name}}",
+    "urlError": "Link nie zwrócił treści w formacie JSON. Upewnij się, że jest to poprawny link."
   },
   "list": {
     "item": {
-      "deprecated.title": "已删除",
-      "local.config": "配置",
-      "local.title": "自定义"
+      "deprecated.title": "Usunięte",
+      "local.config": "Konfiguracja",
+      "local.title": "Lokalne"
     }
   },
   "loading": {
-    "content": "调用插件中...",
-    "plugin": "插件运行中..."
+    "content": "Wywoływanie wtyczki...",
+    "plugin": "Wtyczka jest uruchomiona..."
   },
-  "pluginList": "插件列表",
-  "plugins": {
-    "loading": "插件检测中...",
-    "unknown": "未知插件"
-  },
-  "setting": "插件设置",
+  "pluginList": "Lista wtyczek",
+  "setting": "Ustawienia wtyczki",
   "settings": {
     "indexUrl": {
-      "title": "市场索引",
-      "tooltip": "暂不支持在线编辑，请通过部署时环境变量进行设置"
+      "title": "Indeks sklepu",
+      "tooltip": "Edycja nie jest obecnie obsługiwana"
     },
-    "modalDesc": "配置插件市场的地址后，可以使用自定义的插件市场",
-    "title": "设置插件市场"
+    "modalDesc": "Po skonfigurowaniu adresu sklepu wtyczek możesz korzystać z niestandardowego sklepu wtyczek",
+    "title": "Skonfiguruj sklep wtyczek"
   },
   "store": {
     "actions": {
-      "confirmUninstall": "即将卸载该插件，卸载后将清除该插件配置，请确认你的操作",
-      "detail": "详情",
-      "install": "安装",
-      "manifest": "编辑安装文件",
-      "settings": "设置",
-      "uninstall": "卸载"
+      "confirmUninstall": "Wtyczka zostanie odinstalowana. Po odinstalowaniu konfiguracja wtyczki zostanie wyczyszczona. Potwierdź swoje działanie.",
+      "detail": "Szczegóły",
+      "install": "Instaluj",
+      "manifest": "Edytuj plik instalacyjny",
+      "settings": "Ustawienia",
+      "uninstall": "Odinstaluj"
     },
-    "communityPlugin": "社区插件",
-    "customPlugin": "自定义",
-    "empty": "暂无已安装插件",
-    "installAllPlugins": "安装全部",
-    "networkError": "获取插件商店失败，请检测网络连接后重试",
-    "placeholder": "搜索插件名称、介绍或关键词...",
-    "releasedAt": "发布于 {{createdAt}}",
+    "communityPlugin": "Wtyczka społecznościowa",
+    "customPlugin": "Niestandardowa wtyczka",
+    "empty": "Brak zainstalowanych wtyczek",
+    "installAllPlugins": "Zainstaluj wszystkie",
+    "networkError": "Nie udało się pobrać sklepu wtyczek. Sprawdź swoje połączenie sieciowe i spróbuj ponownie",
+    "placeholder": "Szukaj nazwy wtyczki, opisu lub słowa kluczowego...",
+    "releasedAt": "Wydane {{createdAt}}",
     "tabs": {
-      "all": "全部",
-      "installed": "已安装"
+      "all": "Wszystkie",
+      "installed": "Zainstalowane"
     },
-    "title": "插件商店"
-  }
+    "title": "Sklep wtyczek"
+  },
+  "unknownPlugin": "nieznana wtyczka"
 }
