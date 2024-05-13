@@ -6,7 +6,7 @@
     "on": "查看插件呼叫資訊",
     "payload": "插件載荷",
     "response": "回應",
-    "tool_call": "工具呼叫請求"
+    "tool_call": "工具呼叫"
   },
   "detailModal": {
     "info": {

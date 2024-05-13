@@ -4,9 +4,9 @@
     "function_call": "関数呼び出し",
     "off": "デバッグをオフにする",
     "on": "プラグイン呼び出し情報を表示する",
-    "payload": "プラグインのペイロード",
+    "payload": "ペイロード",
     "response": "レスポンス",
-    "tool_call": "ツールの呼び出し要求"
+    "tool_call": "ツール呼び出し"
   },
   "detailModal": {
     "info": {

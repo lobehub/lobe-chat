@@ -6,7 +6,7 @@
     "on": "Xem thông tin gọi plugin",
     "payload": "Dữ liệu cắm",
     "response": "Kết quả trả về",
-    "tool_call": "Yêu cầu gọi công cụ"
+    "tool_call": "Yêu cầu công cụ"
   },
   "detailModal": {
     "info": {

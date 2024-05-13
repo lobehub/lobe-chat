@@ -1,11 +1,12 @@
 import { DiscordIcon } from '@lobehub/ui';
-import { Book, CircleUserRound, Database, Feather, Settings2 } from 'lucide-react';
+import { Book, CircleUserRound, Database, Download, Feather, Settings2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
 import { enableAuth } from '@/const/auth';
 import { DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
 
@@ -13,6 +14,7 @@ import { useCategory as useSettingsCategory } from '../../settings/features/useC
 
 export const useCategory = () => {
   const router = useRouter();
+  const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
   const [isLogin, isLoginWithAuth, isLoginWithClerk] = useUserStore((s) => [
     authSelectors.isLogin(s),
@@ -35,6 +37,18 @@ export const useCategory = () => {
       key: 'setting',
       label: t('userPanel.setting'),
       onClick: () => router.push('/me/settings'),
+    },
+    {
+      type: 'divider',
+    },
+  ];
+
+  const pwa: CellProps[] = [
+    {
+      icon: Download,
+      key: 'pwa',
+      label: t('installPWA'),
+      onClick: () => install(),
     },
     {
       type: 'divider',
@@ -87,6 +101,7 @@ export const useCategory = () => {
     },
     ...(isLoginWithClerk ? profile : []),
     ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
+    ...(canInstall ? pwa : []),
     ...(isLogin ? data : []),
     ...helps,
   ].filter(Boolean) as CellProps[];
