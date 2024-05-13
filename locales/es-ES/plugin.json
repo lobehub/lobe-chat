@@ -4,7 +4,9 @@
     "function_call": "Llamada a función",
     "off": "Desactivado",
     "on": "Ver información de llamada de complemento",
-    "response": "Respuesta"
+    "payload": "carga del complemento",
+    "response": "Respuesta",
+    "tool_call": "solicitud de llamada de herramienta"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Ejecutando complemento..."
   },
   "pluginList": "Lista de complementos",
-  "plugins": {
-    "loading": "Comprobando complementos...",
-    "unknown": "Complemento desconocido"
-  },
   "setting": "Configuración de complementos",
   "settings": {
     "indexUrl": {
@@ -162,5 +160,6 @@
       "installed": "Instalados"
     },
     "title": "Tienda de complementos"
-  }
+  },
+  "unknownPlugin": "Plugin desconocido"
 }

@@ -141,6 +141,7 @@
     "pino": "^9.0.0",
     "polished": "^4.3.1",
     "posthog-js": "^1.131.4",
+    "pwa-install-handler": "^2.5.0",
     "query-string": "^9.0.0",
     "random-words": "^2.0.1",
     "react": "^18.3.1",
