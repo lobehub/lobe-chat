@@ -57,7 +57,21 @@ export const useMenu = () => {
   const hasNewVersion = useNewVersion();
   const openSettings = useOpenSettings();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const isSignedIn = useUserStore(authSelectors.isLoginWithAuth);
+  const [isLogin, isLoginWithAuth, isLoginWithClerk, openUserProfile] = useUserStore((s) => [
+    authSelectors.isLogin(s),
+    authSelectors.isLoginWithAuth(s),
+    authSelectors.isLoginWithClerk(s),
+    s.openUserProfile,
+  ]);
+
+  const profile: MenuProps['items'] = [
+    {
+      icon: <Icon icon={CircleUserRound} />,
+      key: 'profile',
+      label: t('userPanel.profile'),
+      onClick: () => openUserProfile(),
+    },
+  ];
 
   const settings: MenuProps['items'] = [
     {
@@ -82,7 +96,7 @@ export const useMenu = () => {
     },
   ];
 
-  const exports: MenuProps['items'] = [
+  const data: MenuProps['items'] = [
     {
       icon: <Icon icon={HardDriveUpload} />,
       key: 'import',
@@ -117,22 +131,6 @@ export const useMenu = () => {
       icon: <Icon icon={HardDriveDownload} />,
       key: 'export',
       label: t('export'),
-    },
-    {
-      type: 'divider',
-    },
-  ];
-
-  const openUserProfile = useUserStore((s) => s.openUserProfile);
-
-  const planAndBilling: MenuProps['items'] = [
-    {
-      icon: <Icon icon={CircleUserRound} />,
-      key: 'profile',
-      label: t('userPanel.profile'),
-      onClick: () => {
-        openUserProfile();
-      },
     },
     {
       type: 'divider',
@@ -192,19 +190,21 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-    ...settings,
-    ...(isSignedIn ? planAndBilling : []),
-    ...exports,
+    ...(isLoginWithClerk ? profile : []),
+    ...(isLogin ? settings : []),
+    ...(isLogin ? data : []),
     ...helps,
   ].filter(Boolean) as MenuProps['items'];
 
-  const logoutItems: MenuProps['items'] = [
-    {
-      icon: <Icon icon={LogOut} />,
-      key: 'logout',
-      label: <span>{t('signout', { ns: 'auth' })}</span>,
-    },
-  ];
+  const logoutItems: MenuProps['items'] = isLoginWithAuth
+    ? [
+        {
+          icon: <Icon icon={LogOut} />,
+          key: 'logout',
+          label: <span>{t('signout', { ns: 'auth' })}</span>,
+        },
+      ]
+    : [];
 
   return { logoutItems, mainItems };
 };

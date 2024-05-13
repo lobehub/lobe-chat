@@ -169,6 +169,7 @@
   "userPanel": {
     "anonymousNickName": "匿名ユーザー",
     "billing": "請求管理",
+    "data": "データストレージ",
     "defaultNickname": "コミュニティユーザー",
     "discord": "コミュニティサポート",
     "docs": "使用文書",
