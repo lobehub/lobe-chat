@@ -1,8 +1,8 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
-import { getJWTPayload } from '@/app/api/chat/auth/utils';
 import { createErrorResponse } from '@/app/api/errorResponse';
+import { getJWTPayload } from '@/app/api/middleware/auth/utils';
 import { getServerConfig } from '@/config/server';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableNextAuth } from '@/const/auth';
 import { LOBE_CHAT_TRACE_ID, TraceNameMap } from '@/const/trace';

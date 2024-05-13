@@ -73,6 +73,7 @@ export interface ChatMessageAction {
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
   toggleMessageEditing: (id: string, editing: boolean) => void;
+
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
@@ -81,6 +82,7 @@ export interface ChatMessageAction {
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
   internal_toggleMessageLoading: (loading: boolean, id: string) => void;
   /**
    * update message at the frontend point
@@ -108,13 +110,7 @@ export interface ChatMessageAction {
     isFunctionCall: boolean;
     traceId?: string;
   }>;
-  // TODO: 后续 smoothMessage 实现考虑落到 sse 这一层
-  internal_createSmoothMessage: (id: string) => {
-    startAnimation: (speed?: number) => Promise<void>;
-    stopAnimation: () => void;
-    outputQueue: string[];
-    isAnimationActive: boolean;
-  };
+
   /**
    * a method used by other action
    * @param id
@@ -374,7 +370,7 @@ export const chatMessage: StateCreator<
       refreshMessages,
       internal_updateMessageContent,
       internal_dispatchMessage,
-      internal_createSmoothMessage,
+      internal_toggleToolCallingStreaming,
     } = get();
 
     const abortController = internal_toggleChatLoading(
@@ -431,9 +427,7 @@ export const chatMessage: StateCreator<
 
     let isFunctionCall = false;
     let msgTraceId: string | undefined;
-
-    const { startAnimation, stopAnimation, outputQueue, isAnimationActive } =
-      internal_createSmoothMessage(assistantId);
+    let output = '';
 
     await chatService.createAssistantMessageStream({
       abortController,
@@ -455,11 +449,7 @@ export const chatMessage: StateCreator<
         await messageService.updateMessageError(assistantId, error);
         await refreshMessages();
       },
-      onAbort: async () => {
-        stopAnimation();
-      },
       onFinish: async (content, { traceId, observationId, toolCalls }) => {
-        stopAnimation();
         // if there is traceId, update it
         if (traceId) {
           msgTraceId = traceId;
@@ -469,11 +459,8 @@ export const chatMessage: StateCreator<
           });
         }
 
-        // if there is still content not displayed,
-        // and the message is not a function call
-        // then continue the animation
-        if (outputQueue.length > 0 && !isFunctionCall) {
-          await startAnimation(15);
+        if (toolCalls && toolCalls.length > 0) {
+          internal_toggleToolCallingStreaming(assistantId, undefined);
         }
 
         // update the content after fetch result
@@ -482,12 +469,18 @@ export const chatMessage: StateCreator<
       onMessageHandle: async (chunk) => {
         switch (chunk.type) {
           case 'text': {
-            outputQueue.push(...chunk.text.split(''));
+            output += chunk.text;
+            internal_dispatchMessage({
+              id: assistantId,
+              type: 'updateMessages',
+              value: { content: output },
+            });
             break;
           }
 
           // is this message is just a tool call
           case 'tool_calls': {
+            internal_toggleToolCallingStreaming(assistantId, chunk.isAnimationActives);
             internal_dispatchMessage({
               id: assistantId,
               type: 'updateMessages',
@@ -496,15 +489,10 @@ export const chatMessage: StateCreator<
             isFunctionCall = true;
           }
         }
-
-        // if it's the first time to receive the message,
-        // and the message is not a function call
-        // then start the animation
-        if (!isAnimationActive && !isFunctionCall) startAnimation();
       },
     });
 
-    internal_toggleChatLoading(false, undefined, n('generateMessage(end)') as string);
+    internal_toggleChatLoading(false, assistantId, n('generateMessage(end)') as string);
 
     return {
       isFunctionCall,
@@ -551,7 +539,22 @@ export const chatMessage: StateCreator<
       'internal_toggleMessageLoading',
     );
   },
+  internal_toggleToolCallingStreaming: (id, streaming) => {
+    set(
+      {
+        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
+          if (!!streaming) {
+            draft[id] = streaming;
+          } else {
+            delete draft[id];
+          }
+        }),
+      },
 
+      false,
+      'toggleToolCallingStreaming',
+    );
+  },
   internal_resendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
     const chats = chatSelectors.currentChats(get());
@@ -627,71 +630,6 @@ export const chatMessage: StateCreator<
     internal_toggleMessageLoading(false, tempId);
 
     return id;
-  },
-
-  internal_createSmoothMessage: (id) => {
-    const { internal_dispatchMessage } = get();
-
-    let buffer = '';
-    // why use queue: https://shareg.pt/GLBrjpK
-    let outputQueue: string[] = [];
-
-    // eslint-disable-next-line no-undef
-    let animationTimeoutId: NodeJS.Timeout | null = null;
-    let isAnimationActive = false;
-
-    // when you need to stop the animation, call this function
-    const stopAnimation = () => {
-      isAnimationActive = false;
-      if (animationTimeoutId !== null) {
-        clearTimeout(animationTimeoutId);
-        animationTimeoutId = null;
-      }
-    };
-
-    // define startAnimation function to display the text in buffer smooth
-    // when you need to start the animation, call this function
-    const startAnimation = (speed = 2) =>
-      new Promise<void>((resolve) => {
-        if (isAnimationActive) {
-          resolve();
-          return;
-        }
-
-        isAnimationActive = true;
-
-        const updateText = () => {
-          // 如果动画已经不再激活，则停止更新文本
-          if (!isAnimationActive) {
-            clearTimeout(animationTimeoutId!);
-            animationTimeoutId = null;
-            resolve();
-          }
-
-          // 如果还有文本没有显示
-          // 检查队列中是否有字符待显示
-          if (outputQueue.length > 0) {
-            // 从队列中获取前两个字符（如果存在）
-            const charsToAdd = outputQueue.splice(0, speed).join('');
-            buffer += charsToAdd;
-
-            // 更新消息内容，这里可能需要结合实际情况调整
-            internal_dispatchMessage({ id, type: 'updateMessages', value: { content: buffer } });
-
-            // 设置下一个字符的延迟
-            animationTimeoutId = setTimeout(updateText, 16); // 16 毫秒的延迟模拟打字机效果
-          } else {
-            // 当所有字符都显示完毕时，清除动画状态
-            isAnimationActive = false;
-            animationTimeoutId = null;
-            resolve();
-          }
-        };
-
-        updateText();
-      });
-
-    return { startAnimation, stopAnimation, outputQueue, isAnimationActive };
   },
 
   internal_traceMessage: async (id, payload) => {

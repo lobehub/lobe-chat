@@ -1,6 +1,7 @@
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { FetchEventSourceInit } from '@microsoft/fetch-event-source';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ZodError } from 'zod';
 
 import { ErrorResponse } from '@/types/fetch';
 
@@ -81,6 +82,16 @@ describe('getMessageError', () => {
       type: 500,
     });
     expect(mockResponse.json).toHaveBeenCalled();
+  });
+
+  it('should handle timeout error correctly', async () => {
+    const mockResponse = createMockResponse(undefined, false, 504);
+    const error = await getMessageError(mockResponse as any);
+
+    expect(error).toEqual({
+      message: 'translated_response.504',
+      type: 504,
+    });
   });
 });
 
@@ -173,6 +184,34 @@ describe('parseToolCalls', () => {
       },
     ]);
   });
+
+  it('should throw error if incomplete tool calls data', () => {
+    const origin = [
+      {
+        id: '1',
+        type: 'function',
+        function: { name: 'func', arguments: '{"location\\": \\"Hangzhou\\"}' },
+      },
+    ];
+
+    const chunk = [{ index: 1, id: '2', type: 'function' }];
+
+    try {
+      parseToolCalls(origin, chunk as any);
+    } catch (e) {
+      expect(e).toEqual(
+        new ZodError([
+          {
+            code: 'invalid_type',
+            expected: 'object',
+            received: 'undefined',
+            path: ['function'],
+            message: 'Required',
+          },
+        ]),
+      );
+    }
+  });
 });
 
 describe('fetchSSE', () => {
@@ -188,7 +227,11 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onMessageHandle: mockOnMessageHandle, onFinish: mockOnFinish });
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+      smoothing: false,
+    });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hello', type: 'text' });
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: ' World', type: 'text' });
@@ -222,7 +265,11 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onMessageHandle: mockOnMessageHandle, onFinish: mockOnFinish });
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+      smoothing: false,
+    });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
       tool_calls: [{ id: '1', type: 'function', function: { name: 'func1', arguments: 'arg1' } }],
@@ -256,7 +303,7 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onAbort: mockOnAbort });
+    await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
 
     expect(mockOnAbort).toHaveBeenCalledWith('Hello');
   });
@@ -318,6 +365,164 @@ describe('fetchSSE', () => {
       toolCalls: undefined,
       traceId: null,
       type: 'done',
+    });
+  });
+
+  it('should handle text event with smoothing correctly', async () => {
+    const mockOnMessageHandle = vi.fn();
+    const mockOnFinish = vi.fn();
+
+    (fetchEventSource as any).mockImplementationOnce(
+      (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+        options.onmessage!({ event: 'text', data: JSON.stringify(' World') } as any);
+      },
+    );
+
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+    });
+
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'llo World', type: 'text' });
+    // more assertions for each character...
+    expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
+      observationId: null,
+      toolCalls: undefined,
+      traceId: null,
+      type: 'done',
+    });
+  });
+
+  it('should handle tool_calls event with smoothing correctly', async () => {
+    const mockOnMessageHandle = vi.fn();
+    const mockOnFinish = vi.fn();
+
+    (fetchEventSource as any).mockImplementationOnce(
+      (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({
+          event: 'tool_calls',
+          data: JSON.stringify([
+            { index: 0, id: '1', type: 'function', function: { name: 'func1', arguments: 'a' } },
+          ]),
+        } as any);
+        options.onmessage!({
+          event: 'tool_calls',
+          data: JSON.stringify([
+            { index: 0, function: { arguments: 'rg1' } },
+            { index: 1, id: '2', type: 'function', function: { name: 'func2', arguments: 'a' } },
+          ]),
+        } as any);
+        options.onmessage!({
+          event: 'tool_calls',
+          data: JSON.stringify([{ index: 1, function: { arguments: 'rg2' } }]),
+        } as any);
+      },
+    );
+
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+    });
+
+    // TODO: need to check whether the `aarg1` is correct
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
+      isAnimationActives: [true],
+      tool_calls: [
+        { id: '1', type: 'function', function: { name: 'func1', arguments: 'aarg1' } },
+        { function: { arguments: 'aarg2', name: 'func2' }, id: '2', type: 'function' },
+      ],
+      type: 'tool_calls',
+    });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, {
+      isAnimationActives: [true, true],
+      tool_calls: [
+        { id: '1', type: 'function', function: { name: 'func1', arguments: 'aarg1' } },
+        { id: '2', type: 'function', function: { name: 'func2', arguments: 'aarg2' } },
+      ],
+      type: 'tool_calls',
+    });
+
+    // more assertions for each character...
+    expect(mockOnFinish).toHaveBeenCalledWith('', {
+      observationId: null,
+      toolCalls: [
+        { id: '1', type: 'function', function: { name: 'func1', arguments: 'arg1' } },
+        { id: '2', type: 'function', function: { name: 'func2', arguments: 'arg2' } },
+      ],
+      traceId: null,
+      type: 'done',
+    });
+  });
+
+  it('should handle request interruption and resumption correctly', async () => {
+    const mockOnMessageHandle = vi.fn();
+    const mockOnFinish = vi.fn();
+    const abortController = new AbortController();
+
+    (fetchEventSource as any).mockImplementationOnce(
+      (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+        abortController.abort();
+        options.onmessage!({ event: 'text', data: JSON.stringify(' World') } as any);
+      },
+    );
+
+    await fetchSSE('/', {
+      onMessageHandle: mockOnMessageHandle,
+      onFinish: mockOnFinish,
+      signal: abortController.signal,
+    });
+
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'llo World', type: 'text' });
+
+    expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
+      type: 'done',
+      observationId: null,
+      traceId: null,
+    });
+  });
+
+  it('should call onFinish with correct parameters for different finish types', async () => {
+    const mockOnFinish = vi.fn();
+
+    (fetchEventSource as any).mockImplementationOnce(
+      (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+        options.onerror!({ name: 'AbortError' });
+      },
+    );
+
+    await fetchSSE('/', { onFinish: mockOnFinish, smoothing: false });
+
+    expect(mockOnFinish).toHaveBeenCalledWith('Hello', {
+      observationId: null,
+      toolCalls: undefined,
+      traceId: null,
+      type: 'abort',
+    });
+
+    (fetchEventSource as any).mockImplementationOnce(
+      (url: string, options: FetchEventSourceInit) => {
+        options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
+        options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+        options.onerror!(new Error('Unknown error'));
+      },
+    );
+
+    await fetchSSE('/', { onFinish: mockOnFinish, smoothing: false });
+
+    expect(mockOnFinish).toHaveBeenCalledWith('Hello', {
+      observationId: null,
+      toolCalls: undefined,
+      traceId: null,
+      type: 'error',
     });
   });
 });

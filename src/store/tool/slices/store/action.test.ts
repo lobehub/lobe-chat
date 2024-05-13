@@ -156,7 +156,9 @@ describe('useToolStore:pluginStore', () => {
       const { result } = renderHook(() => useToolStore.getState().useFetchPluginStore());
 
       // Then
-      expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function));
+      expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function), {
+        revalidateOnFocus: false,
+      });
       expect(result.current.data).toEqual(pluginListMock);
       expect(result.current.error).toBeNull();
       expect(result.current.isValidating).toBe(false);
@@ -175,7 +177,9 @@ describe('useToolStore:pluginStore', () => {
       const { result } = renderHook(() => useToolStore.getState().useFetchPluginStore());
 
       // Then
-      expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function));
+      expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function), {
+        revalidateOnFocus: false,
+      });
       expect(result.current.data).toBeNull();
       expect(result.current.error).toEqual(error);
       expect(result.current.isValidating).toBe(false);

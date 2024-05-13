@@ -57,6 +57,10 @@ vi.mock('../UserLoginOrSignup', () => ({
   )),
 }));
 
+vi.mock('../DataStatistics', () => ({
+  default: vi.fn(() => <div>Mocked DataStatistics</div>),
+}));
+
 // 定义一个变量来存储 enableAuth 的值
 let enableAuth = true;
 
@@ -83,6 +87,7 @@ describe('PanelContent', () => {
       render(<PanelContent closePopover={closePopover} />);
 
       expect(screen.getByText('Mocked UserInfo')).toBeInTheDocument();
+      expect(screen.getByText('Mocked DataStatistics')).toBeInTheDocument();
       expect(screen.queryByText('Mocked SignInBlock')).not.toBeInTheDocument();
     });
 
@@ -94,6 +99,7 @@ describe('PanelContent', () => {
       render(<PanelContent closePopover={closePopover} />);
 
       expect(screen.getByText('Mocked SignInBlock')).toBeInTheDocument();
+      expect(screen.queryByText('Mocked DataStatistics')).not.toBeInTheDocument();
       expect(screen.queryByText('Mocked UserInfo')).not.toBeInTheDocument();
     });
 
@@ -127,6 +133,7 @@ describe('PanelContent', () => {
       render(<PanelContent closePopover={closePopover} />);
 
       expect(screen.getByText('Mocked UserInfo')).toBeInTheDocument();
+      expect(screen.getByText('Mocked DataStatistics')).toBeInTheDocument();
       expect(screen.queryByText('Mocked SignInBlock')).not.toBeInTheDocument();
     });
 
