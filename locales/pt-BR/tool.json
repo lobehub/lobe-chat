@@ -4,6 +4,7 @@
     "downloading": "O link da imagem gerada pelo DALL·E3 é válido apenas por 1 hora, está baixando a imagem para o armazenamento local...",
     "generate": "Gerar",
     "generating": "Gerando...",
-    "images": "Imagens:"
+    "images": "Imagens:",
+    "prompt": "Palavra-chave"
   }
 }
