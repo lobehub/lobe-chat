@@ -5,14 +5,14 @@ import { formatDescLength, formatTitleLength } from '@/utils/genOG';
 
 export class Meta {
   public generate({
-    description,
+    description = 'LobeChat offers you the best ChatGPT, OLLaMA, Gemini, Claude WebUI user experience',
     title,
     image = '/og/cover.png',
     url,
     type = 'website',
     tags,
   }: {
-    description: string;
+    description?: string;
     image?: string;
     tags?: string[];
     title: string;

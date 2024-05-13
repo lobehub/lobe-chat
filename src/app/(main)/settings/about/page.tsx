@@ -7,8 +7,8 @@ import Page from './index';
 export const generateMetadata = async () => {
   const { t } = await translation('setting');
   return metadataModule.generate({
-    description: t('tab.about'),
-    title: t('header.desc'),
+    description: t('header.desc'),
+    title: t('tab.about'),
     url: '/settings/about',
   });
 };
