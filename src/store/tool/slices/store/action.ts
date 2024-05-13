@@ -101,5 +101,7 @@ export const createPluginStoreSlice: StateCreator<
       revalidateOnFocus: false,
     }),
   useFetchPluginStore: () =>
-    useSWR<LobeChatPluginsMarketIndex>('loadPluginStore', get().loadPluginStore),
+    useSWR<LobeChatPluginsMarketIndex>('loadPluginStore', get().loadPluginStore, {
+      revalidateOnFocus: false,
+    }),
 });

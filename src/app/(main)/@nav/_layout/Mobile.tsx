@@ -63,7 +63,7 @@ const Nav = memo(() => {
     [t],
   );
 
-  return <MobileTabBar activeKey={activeKey} className={styles.container} items={items} safeArea />;
+  return <MobileTabBar activeKey={activeKey} className={styles.container} items={items} />;
 });
 
 Nav.displayName = 'MobileNav';

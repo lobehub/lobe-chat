@@ -38,7 +38,6 @@
     "checker": {
       "button": "Kiểm tra",
       "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
-      "ollamaDesc": "Kiểm tra xem địa chỉ proxy đã được điền đúng chưa",
       "pass": "Kiểm tra thành công",
       "title": "Kiểm tra kết nối"
     },
@@ -71,7 +70,8 @@
         },
         "modalTitle": "Cấu hình mô hình tùy chỉnh",
         "tokens": {
-          "title": "Số lượng token tối đa"
+          "title": "Số lượng token tối đa",
+          "unlimited": "vô hạn"
         },
         "vision": {
           "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong LobeChat, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng nhận diện hình ảnh của mô hình",
@@ -94,6 +94,10 @@
       "placeholder": "Vui lòng chọn mô hình từ danh sách",
       "title": "Danh sách mô hình",
       "total": "Tổng cộng có {{count}} mô hình có sẵn"
+    },
+    "proxyUrl": {
+      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+      "title": "Địa chỉ Proxy API"
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
   },

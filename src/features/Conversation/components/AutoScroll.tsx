@@ -11,7 +11,7 @@ interface AutoScrollProps {
   onScrollToBottom: (type: 'auto' | 'click') => void;
 }
 const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBottom }) => {
-  const trackVisibility = useChatStore((s) => !!s.chatLoadingId);
+  const trackVisibility = useChatStore(chatSelectors.isAIGenerating);
   const str = useChatStore(chatSelectors.chatsMessageString);
 
   useEffect(() => {

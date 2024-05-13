@@ -76,3 +76,12 @@ export const dbSchemaV7 = {
   plugins:
     '&identifier, id, type, manifest.type, manifest.meta.title, manifest.meta.description, manifest.meta.author, createdAt, updatedAt',
 };
+// ************************************** //
+// ******* Version 9 - 2024-03-14 ******* //
+// ************************************** //
+// - Added id to `plugins` table
+export const dbSchemaV9 = {
+  ...dbSchemaV7,
+  messages:
+    '&id, role, content, fromModel, favorite, tool_call_id, plugin.identifier, plugin.apiName, translate.content, createdAt, updatedAt, sessionId, topicId, quotaId, parentId, [sessionId+topicId], traceId',
+};

@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useGreeting } from '@/hooks/useGreeting';
-import { useIsMobile } from '@/hooks/useIsMobile';
+import { useServerConfigStore } from '@/store/serverConfig';
 
 import AgentsSuggest from './AgentsSuggest';
 import QuestionSuggest from './QuestionSuggest';
@@ -42,7 +42,7 @@ const useStyles = createStyles(({ css, responsive }) => ({
 const InboxWelcome = memo(() => {
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
-  const mobile = useIsMobile();
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const greeting = useGreeting();
 
   return (

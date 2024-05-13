@@ -75,7 +75,7 @@ export interface LLMParams {
   top_p?: number;
 }
 
-export type LLMRoleType = 'user' | 'system' | 'assistant' | 'function';
+export type LLMRoleType = 'user' | 'system' | 'assistant' | 'tool';
 
 export interface LLMMessage {
   content: string;

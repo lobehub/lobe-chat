@@ -63,37 +63,41 @@ export const chatEnhance: StateCreator<
     let from = '';
 
     // detect from language
-    chatService
-      .fetchPresetTaskResult({
-        params: chainLangDetect(message.content),
-        trace: get().getCurrentTracePayload({ traceName: TraceNameMap.LanguageDetect }),
-      })
-      .then(async (data) => {
+    chatService.fetchPresetTaskResult({
+      onFinish: async (data) => {
         if (data && supportLocales.includes(data)) from = data;
 
         await updateMessageTranslate(id, { content, from, to: targetLang });
-      });
+      },
+      params: chainLangDetect(message.content),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.LanguageDetect }),
+    });
 
     // translate to target language
     await chatService.fetchPresetTaskResult({
-      onMessageHandle: (text) => {
-        internal_dispatchMessage({
-          id,
-          key: 'translate',
-          type: 'updateMessageExtra',
-          value: produce({ content: '', from, to: targetLang }, (draft) => {
-            content += text;
-            draft.content += content;
-          }),
-        });
+      onFinish: async (content) => {
+        await updateMessageTranslate(id, { content, from, to: targetLang });
+        internal_toggleChatLoading(false, id);
+      },
+      onMessageHandle: (chunk) => {
+        switch (chunk.type) {
+          case 'text': {
+            internal_dispatchMessage({
+              id,
+              key: 'translate',
+              type: 'updateMessageExtra',
+              value: produce({ content: '', from, to: targetLang }, (draft) => {
+                content += chunk.text;
+                draft.content += content;
+              }),
+            });
+            break;
+          }
+        }
       },
       params: chainTranslate(message.content, targetLang),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.Translator }),
     });
-
-    await updateMessageTranslate(id, { content, from, to: targetLang });
-
-    internal_toggleChatLoading(false);
   },
 
   ttsMessage: async (id, state = {}) => {

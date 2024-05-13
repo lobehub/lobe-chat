@@ -38,7 +38,6 @@
     "checker": {
       "button": "Verifica",
       "desc": "Verifica se la chiave API e l'indirizzo del proxy sono stati inseriti correttamente",
-      "ollamaDesc": "Verifica se l'indirizzo del proxy è stato compilato correttamente",
       "pass": "Verifica superata",
       "title": "Verifica di connettività"
     },
@@ -71,7 +70,8 @@
         },
         "modalTitle": "Configurazione del modello personalizzato",
         "tokens": {
-          "title": "Numero massimo di token"
+          "title": "Numero massimo di token",
+          "unlimited": "illimitato"
         },
         "vision": {
           "extra": "Questa configurazione abiliterà solo la funzionalità di caricamento delle immagini in LobeChat. La reale capacità di riconoscimento dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",
@@ -94,6 +94,10 @@
       "placeholder": "Seleziona un modello dall'elenco",
       "title": "Elenco dei modelli",
       "total": "Totale modelli disponibili: {{count}}"
+    },
+    "proxyUrl": {
+      "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
+      "title": "Indirizzo del proxy API"
     },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
   },
