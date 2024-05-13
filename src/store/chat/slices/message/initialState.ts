@@ -25,6 +25,10 @@ export interface ChatMessageState {
    * whether messages have fetched
    */
   messagesInit: boolean;
+  /**
+   * the tool calling stream ids
+   */
+  toolCallingStreamIds: Record<string, boolean[]>;
 }
 
 export const initialMessageState: ChatMessageState = {
@@ -35,4 +39,5 @@ export const initialMessageState: ChatMessageState = {
   messageLoadingIds: [],
   messages: [],
   messagesInit: false,
+  toolCallingStreamIds: {},
 };

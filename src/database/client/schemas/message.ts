@@ -30,6 +30,8 @@ export const DB_MessageSchema = z.object({
 
   plugin: PluginSchema.optional(),
   pluginState: z.any().optional(),
+  pluginError: z.any().optional(),
+
   fromModel: z.string().optional(),
   fromProvider: z.string().optional(),
   translate: TranslateSchema.optional().or(z.literal(false)),

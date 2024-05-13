@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في الدردشة معي على الفور، أو يمكنك الانتقال إلى [إعدادات المساعد](/chat/settings#session={{id}}) لتحسين معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
+  "agentsAndConversations": "الوكلاء والمحادثات",
   "backToBottom": "العودة إلى الأسفل",
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
