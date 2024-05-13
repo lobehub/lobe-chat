@@ -1,8 +1,9 @@
 import urlJoin from 'url-join';
 
-import pkg from '@/../package.json';
 import { getServerConfig } from '@/config/server';
 import { EMAIL_BUSINESS, EMAIL_SUPPORT, OFFICIAL_SITE, OFFICIAL_URL, X } from '@/const/url';
+
+import pkg from '../../package.json';
 
 const { SITE_URL = OFFICIAL_URL } = getServerConfig();
 const LAST_MODIFIED = new Date().toISOString();
@@ -216,4 +217,4 @@ class Ld {
   }
 }
 
-export const ldServices = new Ld();
+export const ldModule = new Ld();

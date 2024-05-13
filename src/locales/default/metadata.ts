@@ -1,7 +1,7 @@
 export default {
   chat: {
     description: 'LobeChat 带给你最好的 ChatGPT, OLLaMA, Gemini, Claude WebUI 使用体验',
-    title: 'LobeChat：个人 LLM 效能工具，超越 ChatGPT / OLLaMA 使用体验',
+    title: 'LobeChat：个人 LLM 效能工具，给自己一个更聪明的大脑',
   },
   market: {
     description:
@@ -15,6 +15,6 @@ export default {
   },
   welcome: {
     description: 'LobeChat 带给你最好的 ChatGPT, OLLaMA, Gemini, Claude WebUI 使用体验',
-    title: '欢迎使用 LobeChat：个人 LLM 效能工具，超越 ChatGPT / OLLaMA 使用体验',
+    title: '欢迎使用 LobeChat：个人 LLM 效能工具，给自己一个更聪明的大脑',
   },
 };

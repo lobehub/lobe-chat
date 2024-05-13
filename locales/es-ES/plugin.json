@@ -128,10 +128,6 @@
     "plugin": "Ejecutando complemento..."
   },
   "pluginList": "Lista de complementos",
-  "plugins": {
-    "loading": "Comprobando complementos...",
-    "unknown": "Complemento desconocido"
-  },
   "setting": "Configuración de complementos",
   "settings": {
     "indexUrl": {

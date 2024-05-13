@@ -1,7 +1,7 @@
 import StructuredData from '@/components/StructuredData';
+import { ldModule } from '@/server/ld';
+import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { ldServices } from '@/services/ld';
-import { ogService } from '@/services/og';
 import { isMobileDevice } from '@/utils/responsive';
 
 import PageTitle from '../features/PageTitle';
@@ -9,7 +9,7 @@ import TelemetryNotification from './features/TelemetryNotification';
 
 export const generateMetadata = async () => {
   const { t } = await translation('metadata');
-  return ogService.generate({
+  return metadataModule.generate({
     description: t('chat.description'),
     title: t('chat.title'),
     url: '/chat',
@@ -19,7 +19,7 @@ export const generateMetadata = async () => {
 const Page = async () => {
   const mobile = isMobileDevice();
   const { t } = await translation('metadata');
-  const ld = ldServices.generate({
+  const ld = ldModule.generate({
     description: t('chat.description'),
     title: t('chat.title'),
     url: '/chat',

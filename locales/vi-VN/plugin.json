@@ -128,10 +128,6 @@
     "plugin": "Plugin đang chạy..."
   },
   "pluginList": "Danh sách plugin",
-  "plugins": {
-    "loading": "Đang kiểm tra công cụ...",
-    "unknown": "Công cụ không xác định"
-  },
   "setting": "Cài đặt plugin",
   "settings": {
     "indexUrl": {

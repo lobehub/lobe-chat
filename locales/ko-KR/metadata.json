@@ -1,7 +1,6 @@
 {
   "chat": {
-    "description": "LobeChat은 최고의 ChatGPT, OLLaMA, Gemini, Claude WebUI 사용 경험을 제공합니다.",
-    "title": "LobeChat: 개인 LLM 생산성 도구, ChatGPT / OLLaMA 사용 경험을 뛰어넘는"
+    "description": "LobeChat은 최고의 ChatGPT, OLLaMA, Gemini, Claude WebUI 사용 경험을 제공합니다."
   },
   "market": {
     "description": "콘텐츠 작성, 문구, 질의응답, 이미지 생성, 비디오 생성, 음성 생성, 지능형 에이전트, 자동화된 워크플로우를 통해 AI / GPTs / OLLaMA를 맞춤 설정하세요.",
@@ -12,7 +11,6 @@
     "title": "플러그인 마켓"
   },
   "welcome": {
-    "description": "LobeChat은 최고의 ChatGPT, OLLaMA, Gemini, Claude WebUI 사용 경험을 제공합니다.",
-    "title": "LobeChat을 환영합니다: 개인 LLM 생산성 도구, ChatGPT / OLLaMA 사용 경험을 뛰어넘는"
+    "description": "LobeChat은 최고의 ChatGPT, OLLaMA, Gemini, Claude WebUI 사용 경험을 제공합니다."
   }
 }

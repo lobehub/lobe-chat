@@ -1,7 +1,6 @@
 {
   "chat": {
-    "description": "LobeChat предлагает вам лучший опыт использования ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "LobeChat: персональный инструмент для повышения производительности LLM, превосходящий опыт использования ChatGPT / OLLaMA"
+    "description": "LobeChat предлагает вам лучший опыт использования ChatGPT, OLLaMA, Gemini, Claude WebUI"
   },
   "market": {
     "description": "Создание контента, копирайтинг, вопросы и ответы, генерация изображений, видео, голоса, интеллектуальный агент, автоматизация рабочих процессов, настройте своего собственного помощника AI / GPTs / OLLaMA",
@@ -12,7 +11,6 @@
     "title": "Рынок плагинов"
   },
   "welcome": {
-    "description": "LobeChat предлагает вам лучший опыт использования ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "Добро пожаловать в LobeChat: персональный инструмент для повышения производительности LLM, превосходящий опыт использования ChatGPT / OLLaMA"
+    "description": "LobeChat предлагает вам лучший опыт использования ChatGPT, OLLaMA, Gemini, Claude WebUI"
   }
 }

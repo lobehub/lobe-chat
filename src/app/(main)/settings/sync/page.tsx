@@ -1,15 +1,15 @@
 import { notFound } from 'next/navigation';
 
 import { serverFeatureFlags } from '@/config/server/featureFlags';
+import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { ogService } from '@/services/og';
 import { gerServerDeviceInfo, isMobileDevice } from '@/utils/responsive';
 
 import Page from './index';
 
 export const generateMetadata = async () => {
   const { t } = await translation('setting');
-  return ogService.generate({
+  return metadataModule.generate({
     description: t('tab.sync'),
     title: t('header.desc'),
     url: '/settings/sync',

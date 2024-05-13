@@ -128,10 +128,6 @@
     "plugin": "Plugin wird ausgeführt..."
   },
   "pluginList": "Plugin-Liste",
-  "plugins": {
-    "loading": "Plugins werden überprüft...",
-    "unknown": "Unbekanntes Plugin"
-  },
   "setting": "Plugin-Einstellung",
   "settings": {
     "indexUrl": {

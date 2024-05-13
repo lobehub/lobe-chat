@@ -1,9 +1,9 @@
 import { Flexbox } from 'react-layout-kit';
 
 import StructuredData from '@/components/StructuredData';
+import { ldModule } from '@/server/ld';
+import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { ldServices } from '@/services/ld';
-import { ogService } from '@/services/og';
 import { isMobileDevice } from '@/utils/responsive';
 
 import AgentList from './features/AgentList';
@@ -12,7 +12,7 @@ import TagList from './features/TagList';
 
 export const generateMetadata = async () => {
   const { t } = await translation('metadata');
-  return ogService.generate({
+  return metadataModule.generate({
     description: t('market.description'),
     title: t('market.title'),
     url: '/market',
@@ -22,7 +22,7 @@ export const generateMetadata = async () => {
 const Page = async () => {
   const mobile = isMobileDevice();
   const { t } = await translation('metadata');
-  const ld = ldServices.generate({
+  const ld = ldModule.generate({
     description: t('market.description'),
     title: t('market.title'),
     url: '/market',

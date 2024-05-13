@@ -1,7 +1,6 @@
 {
   "chat": {
-    "description": "LobeChat size en iyi ChatGPT, OLLaMA, Gemini, Claude WebUI kullanım deneyimini sunar",
-    "title": "LobeChat: Kişisel LLM Verimlilik Aracı, ChatGPT / OLLaMA Deneyimini Aşar"
+    "description": "LobeChat size en iyi ChatGPT, OLLaMA, Gemini, Claude WebUI kullanım deneyimini sunar"
   },
   "market": {
     "description": "İçerik oluşturma, metin yazma, soru cevap, görüntü oluşturma, video oluşturma, ses oluşturma, akıllı ajan, otomasyon iş akışı, kendi AI / GPTs / OLLaMA akıllı asistanınızı özelleştirin",
@@ -12,7 +11,6 @@
     "title": "Eklenti Pazarı"
   },
   "welcome": {
-    "description": "LobeChat size en iyi ChatGPT, OLLaMA, Gemini, Claude WebUI kullanım deneyimini sunar",
-    "title": "LobeChat'ı Kullanmaya Hoş Geldiniz: Kişisel LLM Verimlilik Aracı, ChatGPT / OLLaMA Deneyimini Aşar"
+    "description": "LobeChat size en iyi ChatGPT, OLLaMA, Gemini, Claude WebUI kullanım deneyimini sunar"
   }
 }

@@ -128,10 +128,6 @@
     "plugin": "Plugin wordt uitgevoerd..."
   },
   "pluginList": "Lijst met plugins",
-  "plugins": {
-    "loading": "Plugins worden gecontroleerd...",
-    "unknown": "Onbekende plugin"
-  },
   "setting": "Plugin-instellingen",
   "settings": {
     "indexUrl": {

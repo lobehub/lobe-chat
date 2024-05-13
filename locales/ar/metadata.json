@@ -1,7 +1,6 @@
 {
   "chat": {
-    "description": "تقدم LobeChat أفضل تجربة استخدام لـ ChatGPT و OLLaMA و Gemini و Claude WebUI",
-    "title": "LobeChat: أداة أداء شخصية LLM، تفوق تجربة استخدام ChatGPT / OLLaMA"
+    "description": "تقدم LobeChat أفضل تجربة استخدام لـ ChatGPT و OLLaMA و Gemini و Claude WebUI"
   },
   "market": {
     "description": "إنشاء محتوى، كتابة نصوص، إجابة على الأسئلة، إنشاء صور، إنشاء فيديو، إنشاء صوت، وكيل ذكاء اصطناعي، سير عمل تلقائي، قم بتخصيص مساعد ذكاء اصطناعي / GPTs / OLLaMA الخاص بك",
@@ -12,7 +11,6 @@
     "title": "سوق الإضافات"
   },
   "welcome": {
-    "description": "تقدم LobeChat أفضل تجربة استخدام لـ ChatGPT و OLLaMA و Gemini و Claude WebUI",
-    "title": "مرحبًا بك في استخدام LobeChat: أداة أداء شخصية LLM، تفوق تجربة استخدام ChatGPT / OLLaMA"
+    "description": "تقدم LobeChat أفضل تجربة استخدام لـ ChatGPT و OLLaMA و Gemini و Claude WebUI"
   }
 }

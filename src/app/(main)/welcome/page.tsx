@@ -1,7 +1,7 @@
 import StructuredData from '@/components/StructuredData';
+import { ldModule } from '@/server/ld';
+import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { ldServices } from '@/services/ld';
-import { ogService } from '@/services/og';
 import { isMobileDevice } from '@/utils/responsive';
 
 import Actions from './features/Actions';
@@ -10,7 +10,7 @@ import Logo from './features/Logo';
 
 export const generateMetadata = async () => {
   const { t } = await translation('metadata');
-  return ogService.generate({
+  return metadataModule.generate({
     description: t('welcome.description'),
     title: t('welcome.title'),
     url: '/welcome',
@@ -20,7 +20,7 @@ export const generateMetadata = async () => {
 const Page = async () => {
   const mobile = isMobileDevice();
   const { t } = await translation('metadata');
-  const ld = ldServices.generate({
+  const ld = ldModule.generate({
     description: t('welcome.description'),
     title: t('welcome.title'),
     url: '/welcome',

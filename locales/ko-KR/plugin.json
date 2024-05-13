@@ -128,10 +128,6 @@
     "plugin": "플러그인 실행 중..."
   },
   "pluginList": "플러그인 목록",
-  "plugins": {
-    "loading": "플러그인을 확인하는 중...",
-    "unknown": "알 수 없는 플러그인"
-  },
   "setting": "플러그인 설정",
   "settings": {
     "indexUrl": {

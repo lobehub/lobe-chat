@@ -128,10 +128,6 @@
     "plugin": "Exécution du plugin en cours..."
   },
   "pluginList": "Liste des plugins",
-  "plugins": {
-    "loading": "Vérification des plugins en cours...",
-    "unknown": "Plugin inconnu"
-  },
   "setting": "Paramètres des plugins",
   "settings": {
     "indexUrl": {

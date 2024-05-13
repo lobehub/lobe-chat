@@ -51,7 +51,6 @@ export const generateMetadata = async (): Promise<Metadata> => {
     },
     twitter: {
       card: 'summary_large_image',
-      creator: '@lobehub',
       description: t('chat.description'),
       images: ['/og/cover.png'],
       site: '@lobehub',

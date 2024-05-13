@@ -128,10 +128,6 @@
     "plugin": "插件运行中..."
   },
   "pluginList": "插件列表",
-  "plugins": {
-    "loading": "插件检测中...",
-    "unknown": "未知插件"
-  },
   "setting": "插件设置",
   "settings": {
     "indexUrl": {

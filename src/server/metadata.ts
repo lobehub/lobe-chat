@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import { getCanonicalUrl } from '@/const/url';
 import { formatDescLength, formatTitleLength } from '@/utils/genOG';
 
-export class Og {
+export class Meta {
   public generate({
     description,
     title,
@@ -55,7 +55,6 @@ export class Og {
   }) {
     return {
       card: 'summary_large_image',
-      creator: '@lobehub',
       description,
       images: [image],
       site: '@lobehub',
@@ -94,4 +93,4 @@ export class Og {
   }
 }
 
-export const ogService = new Og();
+export const metadataModule = new Meta();

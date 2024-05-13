@@ -1,7 +1,6 @@
 {
   "chat": {
-    "description": "LobeChat mang đến trải nghiệm sử dụng tốt nhất với ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "LobeChat: Công cụ hiệu suất cá nhân LLM, vượt qua trải nghiệm sử dụng ChatGPT / OLLaMA"
+    "description": "LobeChat mang đến trải nghiệm sử dụng tốt nhất với ChatGPT, OLLaMA, Gemini, Claude WebUI"
   },
   "market": {
     "description": "Tạo nội dung, viết copy, trả lời câu hỏi, tạo hình ảnh, tạo video, tạo giọng nói, trợ lý thông minh, quy trình làm việc tự động, tùy chỉnh trợ lý trí tuệ AI / GPTs / OLLaMA riêng của bạn",
@@ -12,7 +11,6 @@
     "title": "Thị trường plugin"
   },
   "welcome": {
-    "description": "LobeChat mang đến trải nghiệm sử dụng tốt nhất với ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "Chào mừng bạn đến với LobeChat: Công cụ hiệu suất cá nhân LLM, vượt qua trải nghiệm sử dụng ChatGPT / OLLaMA"
+    "description": "LobeChat mang đến trải nghiệm sử dụng tốt nhất với ChatGPT, OLLaMA, Gemini, Claude WebUI"
   }
 }
