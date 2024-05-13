@@ -9,12 +9,14 @@ const UserLoginOrSignup = memo<{ onClick: () => void }>(({ onClick }) => {
   const { t } = useTranslation('auth');
 
   return (
-    <Flexbox gap={16} paddingBlock={12} paddingInline={16} width={'100%'}>
+    <>
       <UserInfo />
-      <Button block onClick={onClick} type={'primary'}>
-        {t('loginOrSignup')}
-      </Button>
-    </Flexbox>
+      <Flexbox paddingBlock={12} paddingInline={16} width={'100%'}>
+        <Button block onClick={onClick} type={'primary'}>
+          {t('loginOrSignup')}
+        </Button>
+      </Flexbox>
+    </>
   );
 });
 
