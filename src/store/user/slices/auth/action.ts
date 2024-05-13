@@ -80,12 +80,6 @@ export const createAuthSlice: StateCreator<
 
       return;
     }
-
-    const enableNextAuth = get().enabledNextAuth();
-    if (enableNextAuth) {
-      // TODO: 针对开启 next-auth 的场景，需要在这里调用打开 profile 页
-      // NextAuht 没有 profile 页，未来应该隐藏 Profile Button
-    }
   },
   refreshUserConfig: async () => {
     await mutate([USER_CONFIG_FETCH_KEY, true]);
