@@ -104,52 +104,52 @@
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
   "privacy": "Privacybeleid",
-  "regenerate": "重新生成",
-  "rename": "重命名",
-  "reset": "重置",
-  "retry": "重试",
-  "send": "发送",
-  "setting": "设置",
-  "share": "分享",
-  "stop": "停止",
+  "regenerate": "Opnieuw genereren",
+  "rename": "Naam wijzigen",
+  "reset": "Resetten",
+  "retry": "Opnieuw proberen",
+  "send": "Verzenden",
+  "setting": "Instelling",
+  "share": "Delen",
+  "stop": "Stoppen",
   "sync": {
     "actions": {
-      "settings": "同步设置",
-      "sync": "立即同步"
+      "settings": "Synchronisatie-instellingen",
+      "sync": "Nu synchroniseren"
     },
     "awareness": {
-      "current": "当前设备"
+      "current": "Huidig apparaat"
     },
-    "channel": "频道",
+    "channel": "Kanaal",
     "disabled": {
       "actions": {
-        "enable": "开启云端同步",
-        "settings": "配置同步参数"
+        "enable": "Cloudsynchronisatie inschakelen",
+        "settings": "Synchronisatie-instellingen configureren"
       },
-      "desc": "当前会话数据仅存储于此浏览器中。如果你需要在多个设备间同步数据，请配置并开启云端同步。",
-      "title": "数据同步未开启"
+      "desc": "De huidige gespreksgegevens worden alleen opgeslagen in deze browser. Als u gegevens wilt synchroniseren tussen meerdere apparaten, configureer en schakel dan cloudsynchronisatie in.",
+      "title": "Gegevenssynchronisatie is uitgeschakeld"
     },
     "enabled": {
-      "title": "数据同步"
+      "title": "Gegevenssynchronisatie"
     },
     "status": {
-      "connecting": "连接中",
-      "disabled": "同步未开启",
-      "ready": "已连接",
-      "synced": "已同步",
-      "syncing": "同步中",
-      "unconnected": "连接失败"
+      "connecting": "Verbinding maken",
+      "disabled": "Synchronisatie is uitgeschakeld",
+      "ready": "Verbonden",
+      "synced": "Gesynchroniseerd",
+      "syncing": "Synchroniseren",
+      "unconnected": "Verbinding mislukt"
     },
-    "title": "同步状态",
+    "title": "Synchronisatiestatus",
     "unconnected": {
-      "tip": "信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试"
+      "tip": "Verbindingsfout met de signaleringsserver. Er kan geen point-to-point-communicatiekanaal worden opgezet. Controleer het netwerk en probeer het opnieuw."
     }
   },
   "tab": {
-    "chat": "会话",
-    "market": "发现",
-    "me": "我",
-    "setting": "设置"
+    "chat": "Chat",
+    "market": "Ontdekken",
+    "me": "Ik",
+    "setting": "Instellingen"
   },
   "telemetry": {
     "allow": "Toestaan",
@@ -158,28 +158,29 @@
     "learnMore": "Meer informatie",
     "title": "Help LobeChat verbeteren"
   },
-  "temp": "临时",
-  "terms": "Algemene voorwaarden",
-  "updateAgent": "更新助理信息",
+  "temp": "tijdelijk",
+  "terms": "algemene voorwaarden",
+  "updateAgent": "update assistent",
   "upgradeVersion": {
-    "action": "升级",
-    "hasNew": "有可用更新",
-    "newVersion": "有新版本可用：{{version}}"
+    "action": "upgraden",
+    "hasNew": "nieuwe versie beschikbaar",
+    "newVersion": "nieuwe versie beschikbaar: {{version}}"
   },
   "userPanel": {
-    "anonymousNickName": "Anonieme gebruiker",
-    "billing": "账单管理",
-    "defaultNickname": "Standaardgebruiker",
-    "discord": "社区支持",
-    "docs": "使用文档",
-    "email": "邮件支持",
-    "feedback": "反馈与建议",
-    "help": "帮助中心",
-    "moveGuide": "De instellingenknop is hierheen verplaatst",
-    "plans": "订阅方案",
-    "preview": "Voorbeeld",
-    "profile": "账户管理",
-    "setting": "应用设置",
-    "usages": "用量统计"
+    "anonymousNickName": "anonieme gebruiker",
+    "billing": "facturatie",
+    "data": "gegevensopslag",
+    "defaultNickname": "communitygebruiker",
+    "discord": "communityondersteuning",
+    "docs": "gebruiksaanwijzing",
+    "email": "e-mailondersteuning",
+    "feedback": "feedback en suggesties",
+    "help": "helpcentrum",
+    "moveGuide": "instellingen verplaatst naar hier",
+    "plans": "abonnementen",
+    "preview": "voorbeeldversie",
+    "profile": "accountbeheer",
+    "setting": "app-instellingen",
+    "usages": "gebruiksstatistieken"
   }
 }
