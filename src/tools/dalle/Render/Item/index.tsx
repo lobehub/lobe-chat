@@ -1,4 +1,4 @@
-import { Icon, Image, Tooltip } from '@lobehub/ui';
+import { Highlighter, Icon } from '@lobehub/ui';
 import { Spin } from 'antd';
 import { createStyles } from 'antd-style';
 import { Loader2 } from 'lucide-react';
@@ -6,12 +6,13 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import ImageFileItem from '@/components/FileList/ImageFileItem';
 import { useChatStore } from '@/store/chat';
 import { chatToolSelectors } from '@/store/chat/selectors';
 import { DallEImageItem } from '@/types/tool/dalle';
 
 import EditMode from './EditMode';
+import Error from './Error';
+import ImagePreview from './Image';
 
 const useStyles = createStyles(({ css, token, prefixCls }) => ({
   action: css`
@@ -32,8 +33,8 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
   `,
 }));
 
-const ImageItem = memo<DallEImageItem & { messageId: string }>(
-  ({ prompt, messageId, imageId, previewUrl, style, size, quality }) => {
+const ImageItem = memo<DallEImageItem & { index: number; messageId: string }>(
+  ({ prompt, messageId, imageId, previewUrl, index, style, size, quality }) => {
     const { t } = useTranslation('tool');
     const { styles } = useStyles();
 
@@ -55,30 +56,7 @@ const ImageItem = memo<DallEImageItem & { messageId: string }>(
       );
 
     if (imageId || previewUrl)
-      return imageId ? (
-        // <Flexbox className={styles.action}>
-        //   <ActionIconGroup
-        //     items={[{ icon: LucideEdit, key: 'edit', label: t('edit', { ns: 'common' }) }]}
-        //     onActionClick={(e) => {
-        //       if (e.key === 'edit') {
-        //         setEdit(true);
-        //       }
-        //     }}
-        //   />
-        // </Flexbox>
-        <ImageFileItem id={imageId} />
-      ) : (
-        previewUrl && (
-          <Flexbox style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', right: 8, top: 8, zIndex: 10 }}>
-              <Tooltip title={t('dalle.downloading')}>
-                <Icon icon={Loader2} size={'large'} spin />
-              </Tooltip>
-            </div>
-            <Image alt={prompt} size={'100%'} src={previewUrl} />
-          </Flexbox>
-        )
-      );
+      return <ImagePreview imageId={imageId} previewUrl={previewUrl} prompt={prompt} />;
 
     return (
       <Flexbox className={styles.container} padding={8}>
@@ -87,7 +65,20 @@ const ImageItem = memo<DallEImageItem & { messageId: string }>(
             {prompt}
           </Spin>
         ) : (
-          prompt
+          <Flexbox gap={12}>
+            <Flexbox>
+              <Highlighter
+                copyButtonSize={'small'}
+                fileName={t('dalle.prompt')}
+                fullFeatured
+                language={'prompt'}
+                showLanguage
+              >
+                {prompt}
+              </Highlighter>
+            </Flexbox>
+            <Error index={index} messageId={messageId} />
+          </Flexbox>
         )}
       </Flexbox>
     );

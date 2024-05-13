@@ -1,12 +1,15 @@
 'use client';
 
-import { Avatar, ChatHeaderTitle } from '@lobehub/ui';
+import { ActionIcon, Avatar, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
+import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
+import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
@@ -28,6 +31,7 @@ const Main = memo(() => {
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
+  const showSessionPanel = useGlobalStore((s) => s.preference.showSessionPanel);
 
   return !init ? (
     <Flexbox horizontal>
@@ -40,6 +44,22 @@ const Main = memo(() => {
     </Flexbox>
   ) : (
     <Flexbox align={'flex-start'} gap={12} horizontal>
+      {
+        <Link aria-label={t('agentsAndConversations')} href={'/chat'}>
+          <ActionIcon
+            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
+            onClick={() => {
+              const currentShowSessionPanel = useGlobalStore.getState().preference.showSessionPanel;
+              useGlobalStore.getState().updatePreference({
+                sessionsWidth: currentShowSessionPanel ? 0 : 320,
+                showSessionPanel: !currentShowSessionPanel,
+              });
+            }}
+            size="large"
+            title={t('agentsAndConversations')}
+          />
+        </Link>
+      }
       <Avatar
         avatar={avatar}
         background={backgroundColor}

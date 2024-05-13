@@ -5,8 +5,8 @@ import { createErrorResponse } from '@/app/api/errorResponse';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
+import { checkAuth } from '../../../middleware/auth';
 import { initAgentRuntimeWithUserPayload } from '../../agentRuntime';
-import { checkAuth } from '../../auth';
 
 export const runtime = 'edge';
 
