@@ -38,7 +38,6 @@
     "checker": {
       "button": "Sprawdź",
       "desc": "Sprawdź poprawność wypełnienia klucza API i adresu proxy",
-      "ollamaDesc": "Sprawdź, czy adres proxy został poprawnie wprowadzony",
       "pass": "Połączenie udane",
       "title": "Test połączenia"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Wybierz model z listy",
       "title": "Lista modeli",
       "total": "Razem dostępne są {{count}} modele"
+    },
+    "proxyUrl": {
+      "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
+      "title": "Adres proxy API"
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
   },

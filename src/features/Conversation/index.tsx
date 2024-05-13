@@ -1,9 +1,8 @@
-import { Suspense, lazy } from 'react';
+import { Suspense } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import SkeletonList from './components/SkeletonList';
-
-const ChatList = lazy(() => import('./components/VirtualizedList'));
+import ChatList from './components/VirtualizedList';
 
 interface ConversationProps {
   mobile?: boolean;

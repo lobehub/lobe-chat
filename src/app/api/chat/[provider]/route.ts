@@ -5,8 +5,8 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { getTracePayload } from '@/utils/trace';
 
+import { checkAuth } from '../../middleware/auth';
 import { createTraceOptions, initAgentRuntimeWithUserPayload } from '../agentRuntime';
-import { checkAuth } from '../auth';
 
 export const runtime = 'edge';
 

@@ -15,6 +15,9 @@ const GroqProvider = memo(() => {
     <ProviderConfig
       checkModel={'gemma-7b-it'}
       provider={ModelProvider.Groq}
+      proxyUrl={{
+        placeholder: 'https://api.groq.com/openai/v1',
+      }}
       title={<Groq.Text color={theme.isDarkMode ? theme.colorText : Groq.colorPrimary} size={20} />}
     />
   );

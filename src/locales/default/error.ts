@@ -72,7 +72,7 @@ export default {
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
     InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
     LocationNotSupportError:
-      '很抱歉，你的所在位置不支持此模型服务，可能是由于地区限制或服务未开通。请确认当前位置是否支持使用此服务，或尝试使用其他位置信息。',
+      '很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。',
 
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
     NoOpenAIAPIKey: 'OpenAI API Key 为空，请添加自定义 OpenAI API Key',

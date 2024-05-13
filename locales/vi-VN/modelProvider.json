@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
-      "placeholder": "https://api.anthropic.com",
-      "title": "Địa chỉ API proxy"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Nhập API Key từ Anthropic",
@@ -67,11 +62,6 @@
     }
   },
   "google": {
-    "endpoint": {
-      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "Địa chỉ Proxy API"
-    },
     "title": "Google",
     "token": {
       "desc": "Nhập API Key từ Google",
@@ -133,7 +123,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"
+      "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",
+      "title": "Kiểm tra tính liên thông"
     },
     "customModelName": {
       "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
@@ -142,7 +133,6 @@
     },
     "endpoint": {
       "desc": "Nhập địa chỉ proxy API của Ollama, có thể để trống nếu không chỉ định cụ thể",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Địa chỉ proxy API"
     },
     "setup": {
@@ -172,11 +162,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Địa chỉ proxy API"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Sử dụng OpenAI Key của riêng bạn",
