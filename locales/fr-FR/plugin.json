@@ -4,7 +4,9 @@
     "function_call": "Appel de fonction",
     "off": "Désactivé",
     "on": "Activer le débogage",
-    "response": "Réponse"
+    "payload": "charge du plugin",
+    "response": "Réponse",
+    "tool_call": "demande d'appel d'outil"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Exécution du plugin en cours..."
   },
   "pluginList": "Liste des plugins",
-  "plugins": {
-    "loading": "Vérification des plugins en cours...",
-    "unknown": "Plugin inconnu"
-  },
   "setting": "Paramètres des plugins",
   "settings": {
     "indexUrl": {
@@ -162,5 +160,6 @@
       "installed": "Installés"
     },
     "title": "Boutique de plugins"
-  }
+  },
+  "unknownPlugin": "Plugin inconnu"
 }

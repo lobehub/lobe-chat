@@ -19,7 +19,7 @@ import { preferenceSelectors } from '@/store/user/selectors';
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     position: absolute;
-    z-index: 100;
+    z-index: 1100;
     bottom: 16px;
     inset-inline-end: 20px;
 

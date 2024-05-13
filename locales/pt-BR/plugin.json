@@ -4,7 +4,9 @@
     "function_call": "Chamada de Função",
     "off": "Desativar Depuração",
     "on": "Ver Informações de Chamada de Plugin",
-    "response": "Resposta"
+    "payload": "carga do plugin",
+    "response": "Resposta",
+    "tool_call": "solicitação de chamada de ferramenta"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Executando o plugin..."
   },
   "pluginList": "Lista de Plugins",
-  "plugins": {
-    "loading": "Verificando plugins...",
-    "unknown": "Plugin desconhecido"
-  },
   "setting": "Configuração do Plugin",
   "settings": {
     "indexUrl": {
@@ -162,5 +160,6 @@
       "installed": "Instalados"
     },
     "title": "Loja de Plugins"
-  }
+  },
+  "unknownPlugin": "Plugin desconhecido"
 }

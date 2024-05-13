@@ -59,6 +59,7 @@ export default {
     },
     title: '导入数据',
   },
+  installPWA: '安装浏览器应用 (PWA)',
   lang: {
     'ar': '阿拉伯语',
     'bg-BG': '保加利亚语',
@@ -138,13 +139,13 @@ export default {
     title: '同步状态',
     unconnected: { tip: '信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试' },
   },
+
   tab: {
     chat: '会话',
     market: '发现',
     me: '我',
     setting: '设置',
   },
-
   telemetry: {
     allow: '允许',
     deny: '拒绝',

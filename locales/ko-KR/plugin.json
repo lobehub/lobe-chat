@@ -4,7 +4,9 @@
     "function_call": "함수 호출",
     "off": "디버그 끄기",
     "on": "플러그인 호출 정보 보기",
-    "response": "응답"
+    "payload": "페이로드",
+    "response": "응답",
+    "tool_call": "도구 호출"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "플러그인 실행 중..."
   },
   "pluginList": "플러그인 목록",
-  "plugins": {
-    "loading": "플러그인을 확인하는 중...",
-    "unknown": "알 수 없는 플러그인"
-  },
   "setting": "플러그인 설정",
   "settings": {
     "indexUrl": {
@@ -162,5 +160,6 @@
       "installed": "설치됨"
     },
     "title": "플러그인 스토어"
-  }
+  },
+  "unknownPlugin": "알 수 없는 플러그인"
 }
