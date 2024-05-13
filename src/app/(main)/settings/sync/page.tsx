@@ -10,8 +10,8 @@ import Page from './index';
 export const generateMetadata = async () => {
   const { t } = await translation('setting');
   return metadataModule.generate({
-    description: t('tab.sync'),
-    title: t('header.desc'),
+    description: t('header.desc'),
+    title: t('tab.sync'),
     url: '/settings/sync',
   });
 };
