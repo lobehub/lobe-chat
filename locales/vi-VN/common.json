@@ -58,6 +58,7 @@
     },
     "title": "Nhập dữ liệu"
   },
+  "installPWA": "Cài đặt ứng dụng trình duyệt",
   "lang": {
     "ar": "Tiếng Ả Rập",
     "bg-BG": "Tiếng Bun-ga-ri",
@@ -169,6 +170,7 @@
   "userPanel": {
     "anonymousNickName": "Người dùng ẩn danh",
     "billing": "Quản lý hóa đơn",
+    "data": "Lưu trữ dữ liệu",
     "defaultNickname": "Người dùng phiên bản cộng đồng",
     "discord": "Hỗ trợ cộng đồng",
     "docs": "Tài liệu sử dụng",
