@@ -59,7 +59,7 @@ export default {
     },
     title: '导入数据',
   },
-  installPWA: '安装客户端',
+  installPWA: '安装浏览器应用 (PWA)',
   lang: {
     'ar': '阿拉伯语',
     'bg-BG': '保加利亚语',
