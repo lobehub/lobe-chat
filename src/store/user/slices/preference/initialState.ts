@@ -32,6 +32,7 @@ export interface UserPreferenceState {
 export const DEFAULT_PREFERENCE: UserPreference = {
   guide: {
     moveSettingsToAvatar: true,
+    topic: true,
   },
   telemetry: null,
   useCmdEnterToSend: false,
