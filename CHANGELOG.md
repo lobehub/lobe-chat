@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.159.0](https://github.com/lobehub/lobe-chat/compare/v0.158.2...v0.159.0)
+
+<sup>Released on **2024-05-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Support DeepSeek as new model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support DeepSeek as new model provider, closes [#2446](https://github.com/lobehub/lobe-chat/issues/2446) ([18028f3](https://github.com/lobehub/lobe-chat/commit/18028f3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.158.2](https://github.com/lobehub/lobe-chat/compare/v0.158.1...v0.158.2)
 
 <sup>Released on **2024-05-13**</sup>
