@@ -17,11 +17,12 @@ import { useMenu } from './useMenu';
 const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const router = useRouter();
   const isLoginWithAuth = useUserStore(authSelectors.isLoginWithAuth);
-  const [openSignIn, signOut, openUserProfile, enableAuth] = useUserStore((s) => [
+  const [openSignIn, signOut, openUserProfile, enableAuth, enabledNextAuth] = useUserStore((s) => [
     s.openLogin,
     s.logout,
     s.openUserProfile,
     s.enableAuth(),
+    s.enabledNextAuth(),
   ]);
   const { mainItems, logoutItems } = useMenu();
 
@@ -39,6 +40,8 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
   const handleSignOut = () => {
     signOut();
     closePopover();
+    // NextAuth doesn't need to redirect to login page
+    if (enabledNextAuth) return;
     router.push('/login');
   };
 
