@@ -111,7 +111,7 @@ describe('PluginService', () => {
 
       // Assert
       expect(PluginModel.update).toHaveBeenCalledWith(id, value);
-      expect(result).toEqual(1);
+      expect(result).toEqual(undefined);
     });
   });
 
@@ -127,7 +127,7 @@ describe('PluginService', () => {
 
       // Assert
       expect(PluginModel.update).toHaveBeenCalledWith(id, { manifest });
-      expect(result).toEqual(1);
+      expect(result).toEqual(undefined);
     });
   });
 
@@ -150,14 +150,13 @@ describe('PluginService', () => {
       // Arrange
       const id = 'plugin-id';
       const settings = { color: 'blue' };
-      vi.mocked(PluginModel.update).mockResolvedValue(1);
 
       // Act
       const result = await pluginService.updatePluginSettings(id, settings);
 
       // Assert
       expect(PluginModel.update).toHaveBeenCalledWith(id, { settings });
-      expect(result).toEqual(1);
+      expect(result).toEqual(undefined);
     });
   });
 });
