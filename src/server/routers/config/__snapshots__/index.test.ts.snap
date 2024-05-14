@@ -69,12 +69,15 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "tokens": 16385,
   },
   {
+    "description": "Currently points to gpt-3.5-turbo-16k-0613",
     "displayName": "GPT-3.5 Turbo 16K",
     "enabled": true,
     "id": "gpt-3.5-turbo-16k",
+    "legacy": true,
     "tokens": 16385,
   },
   {
+    "description": "Currently points to gpt-4-0613",
     "displayName": "GPT-4",
     "enabled": true,
     "functionCall": true,
@@ -82,6 +85,7 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "tokens": 8192,
   },
   {
+    "description": "Currently points to gpt-4-32k-0613",
     "displayName": "GPT-4 32K",
     "enabled": true,
     "functionCall": true,
@@ -96,7 +100,7 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "tokens": 128000,
   },
   {
-    "description": "GPT-4 视觉预览版，支持视觉任务",
+    "description": "Currently points to gpt-4-1106-vision-preview",
     "displayName": "GPT-4 Turbo Vision Preview",
     "enabled": true,
     "id": "gpt-4-vision-preview",
