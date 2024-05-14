@@ -3,7 +3,6 @@
 import { Form, type ItemGroup } from '@lobehub/ui';
 import { App, Button, Input } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { signIn, signOut } from 'next-auth/react';
 import { memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -12,6 +11,8 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import { DEFAULT_SETTINGS } from '@/const/settings';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
+import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
 import { useToolStore } from '@/store/tool';
 import { useUserStore } from '@/store/user';
@@ -19,16 +20,13 @@ import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors'
 
 type SettingItemGroup = ItemGroup;
 
-export interface SettingsCommonProps {
-  showAccessCodeConfig: boolean;
-  showOAuthLogin?: boolean;
-}
-
-const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin }) => {
+const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
 
   const isSignedIn = useUserStore((s) => s.isSignedIn);
+  const showAccessCodeConfig = useServerConfigStore(serverConfigSelectors.enabledAccessCode);
+  const showOAuthLogin = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
   const user = useUserStore(userProfileSelectors.userProfile, isEqual);
 
   const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
@@ -42,7 +40,12 @@ const Common = memo<SettingsCommonProps>(({ showAccessCodeConfig, showOAuthLogin
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings, resetSettings] = useUserStore((s) => [s.setSettings, s.resetSettings]);
+  const [setSettings, resetSettings, signIn, signOut] = useUserStore((s) => [
+    s.setSettings,
+    s.resetSettings,
+    s.openLogin,
+    s.logout,
+  ]);
 
   const { message, modal } = App.useApp();
 

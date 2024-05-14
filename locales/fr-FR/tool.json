@@ -4,6 +4,7 @@
     "downloading": "Les liens d'image générés par DallE3 ne sont valides que pendant 1 heure. Le téléchargement de l'image est en cours...",
     "generate": "Générer",
     "generating": "En cours de génération...",
-    "images": "Images :"
+    "images": "Images :",
+    "prompt": "Mot de rappel"
   }
 }

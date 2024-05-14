@@ -44,10 +44,3 @@ export const {
   handlers: { GET, POST },
   auth,
 } = nextAuth;
-
-declare module '@auth/core/jwt' {
-  // Returned by the `jwt` callback and `auth`, when using JWT sessions
-  interface JWT {
-    userId?: string;
-  }
-}

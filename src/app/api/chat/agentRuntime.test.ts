@@ -16,6 +16,7 @@ import {
   LobeOpenRouterAI,
   LobePerplexityAI,
   LobeRuntimeAI,
+  LobeDeepSeekAI,
   LobeTogetherAI,
   LobeZeroOneAI,
   LobeZhipuAI,
@@ -42,6 +43,7 @@ vi.mock('@/config/server', () => ({
     AWS_REGION: 'test-aws-region',
     OLLAMA_PROXY_URL: 'https://test-ollama-url.local',
     PERPLEXITY_API_KEY: 'test-perplexity-key',
+    DEEPSEEK_API_KEY: 'test-deepseek-key',
     ANTHROPIC_API_KEY: 'test-anthropic-key',
     MINIMAX_API_KEY: 'test-minimax-key',
     MISTRAL_API_KEY: 'test-mistral-key',
@@ -151,6 +153,13 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenRouter, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
+    });
+
+    it('DeepSeek AI provider: with apikey', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-deepseek-key' };
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.DeepSeek, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
     });
 
     it('Together AI provider: with apikey', async () => {
@@ -279,6 +288,14 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
     });
 
+    it('DeepSeek AI provider: without apikey', async () => {
+      const jwtPayload = {};
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.DeepSeek, jwtPayload);
+
+      // 假设 LobeDeepSeekAI 是 DeepSeek 提供者的实现类
+      expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
+    });
+    
     it('Together AI provider: without apikey', async () => {
       const jwtPayload = {};
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.TogetherAI, jwtPayload);

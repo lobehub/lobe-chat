@@ -15,6 +15,7 @@ export interface ServerModelProviderConfig {
 
 export interface GlobalServerConfig {
   defaultAgent?: DeepPartial<GlobalDefaultAgent>;
+  enabledAccessCode?: boolean;
   enabledOAuthSSO?: boolean;
   languageModel?: Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;
   telemetry: {

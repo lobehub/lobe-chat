@@ -130,6 +130,7 @@ We have implemented support for the following model service providers:
 - **ChatGLM**: Added the **ChatGLM** series models from Zhipuai (GLM-4/GLM-4-vision/GLM-3-turbo), providing users with another efficient conversation model choice. [Learn more](https://www.zhipuai.cn/)
 - **Moonshot AI (Dark Side of the Moon)**: Integrated with the Moonshot series models, an innovative AI startup from China, aiming to provide deeper conversation understanding. [Learn more](https://www.moonshot.cn/)
 - **Minimax**: Integrated the Minimax models, including the MoE model **abab6**, offers a broader range of choices. [Learn more](https://www.minimaxi.com/)
+- **DeepSeek**: Integrated with the DeepSeek series models, an innovative AI startup from China, The product has been designed to provide a model that balances performance with price. [Learn more](https://www.deepseek.com/)
 
 At the same time, we are also planning to support more model service providers, such as Replicate and Perplexity, to further enrich our service provider library. If you would like LobeChat to support your favorite service provider, feel free to join our [community discussion](https://github.com/lobehub/lobe-chat/discussions/1284).
 
