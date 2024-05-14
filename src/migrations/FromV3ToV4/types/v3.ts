@@ -22,20 +22,12 @@ export interface V3LegacyConfig {
 }
 
 export interface V3LLMConfig {
-  anthropic: V3GeneralConfig;
   bedrock: any;
   google: V3GeneralConfig;
-  groq: V3GeneralConfig;
-  minimax: V3GeneralConfig;
-  mistral: V3GeneralConfig;
-  moonshot: V3GeneralConfig;
   ollama: V3LegacyConfig;
   openAI: V3OpenAIConfig;
   openrouter: V3LegacyConfig;
-  perplexity: V3GeneralConfig;
   togetherai: V3LegacyConfig;
-  zeroone: V3GeneralConfig;
-  zhipu: V3GeneralConfig;
 }
 
 /**
