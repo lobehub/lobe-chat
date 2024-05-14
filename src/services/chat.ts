@@ -139,6 +139,9 @@ export function initializeWithClientStore(provider: string, payload: any) {
     case ModelProvider.Groq: {
       break;
     }
+    case ModelProvider.DeepSeek: {
+      break;
+    }
     case ModelProvider.OpenRouter: {
       break;
     }
