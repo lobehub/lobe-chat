@@ -61,6 +61,18 @@
       "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "أدخل مفتاح API الخاص بـ DeepSeek",
+      "placeholder": "مفتاح API DeepSeek",
+      "title": "مفتاح API"
+    },
+    "unlock": {
+      "description": "قم بإدخال مفتاح API DeepSeek الخاص بك لبدء الجلسة. لن يتم تسجيل مفتاح الـ API الخاص بك",
+      "title": "استخدام مفتاح API خاص بـ DeepSeek"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {

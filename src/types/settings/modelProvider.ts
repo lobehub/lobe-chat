@@ -44,6 +44,7 @@ export interface GlobalLLMConfig {
   anthropic: GeneralModelProviderConfig;
   azure: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
+  deepseek: GeneralModelProviderConfig;
   google: GeneralModelProviderConfig;
   groq: GeneralModelProviderConfig;
   minimax: GeneralModelProviderConfig;

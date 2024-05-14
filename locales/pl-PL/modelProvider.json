@@ -61,6 +61,18 @@
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Wprowadź klucz API DeepSeek",
+      "placeholder": "Klucz API DeepSeek",
+      "title": "Klucz API"
+    },
+    "unlock": {
+      "description": "Wprowadź swój klucz API DeepSeek, aby rozpocząć sesję. Aplikacja nie zapisuje Twojego klucza API.",
+      "title": "Użyj niestandardowego klucza API DeepSeek"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {
