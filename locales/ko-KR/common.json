@@ -58,6 +58,7 @@
     },
     "title": "데이터 가져오기"
   },
+  "installPWA": "브라우저 앱 설치",
   "lang": {
     "ar": "아랍어",
     "bg-BG": "불가리아어",
@@ -169,6 +170,7 @@
   "userPanel": {
     "anonymousNickName": "익명 사용자",
     "billing": "결제 관리",
+    "data": "데이터 저장",
     "defaultNickname": "커뮤니티 사용자",
     "discord": "커뮤니티 지원",
     "docs": "사용 설명서",

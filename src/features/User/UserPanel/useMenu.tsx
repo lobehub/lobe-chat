@@ -3,6 +3,7 @@ import { Badge } from 'antd';
 import {
   Book,
   CircleUserRound,
+  Download,
   Feather,
   HardDriveDownload,
   HardDriveUpload,
@@ -22,6 +23,7 @@ import type { MenuProps } from '@/components/Menu';
 import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { configService } from '@/services/config';
 import { SettingsTabs } from '@/store/global/initialState';
@@ -54,10 +56,25 @@ const NewVersionBadge = memo(
 
 export const useMenu = () => {
   const router = useQueryRoute();
+  const { canInstall, install } = usePWAInstall();
   const hasNewVersion = useNewVersion();
   const openSettings = useOpenSettings();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const isSignedIn = useUserStore(authSelectors.isLoginWithAuth);
+  const [isLogin, isLoginWithAuth, isLoginWithClerk, openUserProfile] = useUserStore((s) => [
+    authSelectors.isLogin(s),
+    authSelectors.isLoginWithAuth(s),
+    authSelectors.isLoginWithClerk(s),
+    s.openUserProfile,
+  ]);
+
+  const profile: MenuProps['items'] = [
+    {
+      icon: <Icon icon={CircleUserRound} />,
+      key: 'profile',
+      label: t('userPanel.profile'),
+      onClick: () => openUserProfile(),
+    },
+  ];
 
   const settings: MenuProps['items'] = [
     {
@@ -82,7 +99,19 @@ export const useMenu = () => {
     },
   ];
 
-  const exports: MenuProps['items'] = [
+  const pwa: MenuProps['items'] = [
+    {
+      icon: <Icon icon={Download} />,
+      key: 'pwa',
+      label: t('installPWA'),
+      onClick: () => install(),
+    },
+    {
+      type: 'divider',
+    },
+  ];
+
+  const data: MenuProps['items'] = [
     {
       icon: <Icon icon={HardDriveUpload} />,
       key: 'import',
@@ -117,22 +146,6 @@ export const useMenu = () => {
       icon: <Icon icon={HardDriveDownload} />,
       key: 'export',
       label: t('export'),
-    },
-    {
-      type: 'divider',
-    },
-  ];
-
-  const openUserProfile = useUserStore((s) => s.openUserProfile);
-
-  const planAndBilling: MenuProps['items'] = [
-    {
-      icon: <Icon icon={CircleUserRound} />,
-      key: 'profile',
-      label: t('userPanel.profile'),
-      onClick: () => {
-        openUserProfile();
-      },
     },
     {
       type: 'divider',
@@ -192,19 +205,22 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-    ...settings,
-    ...(isSignedIn ? planAndBilling : []),
-    ...exports,
+    ...(isLoginWithClerk ? profile : []),
+    ...(isLogin ? settings : []),
+    ...(canInstall ? pwa : []),
+    ...(isLogin ? data : []),
     ...helps,
   ].filter(Boolean) as MenuProps['items'];
 
-  const logoutItems: MenuProps['items'] = [
-    {
-      icon: <Icon icon={LogOut} />,
-      key: 'logout',
-      label: <span>{t('signout', { ns: 'auth' })}</span>,
-    },
-  ];
+  const logoutItems: MenuProps['items'] = isLoginWithAuth
+    ? [
+        {
+          icon: <Icon icon={LogOut} />,
+          key: 'logout',
+          label: <span>{t('signout', { ns: 'auth' })}</span>,
+        },
+      ]
+    : [];
 
   return { logoutItems, mainItems };
 };

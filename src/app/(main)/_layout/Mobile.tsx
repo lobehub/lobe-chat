@@ -1,24 +1,25 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
+import qs from 'query-string';
 import { memo } from 'react';
 
 import { useQuery } from '@/hooks/useQuery';
 
 import { LayoutProps } from './type';
 
-const MOBILE_IGNORE_NAV_ROUTES = ['/settings/', '/chat/'];
+const MOBILE_NAV_ROUTES = new Set(['/chat', '/market', '/me']);
 
 const Layout = memo(({ children, nav }: LayoutProps) => {
   const { showMobileWorkspace } = useQuery();
   const pathname = usePathname();
-  const hideNav =
-    showMobileWorkspace || MOBILE_IGNORE_NAV_ROUTES.some((path) => pathname.startsWith(path));
+  const { url } = qs.parseUrl(pathname);
+  const showNav = !showMobileWorkspace && MOBILE_NAV_ROUTES.has(url);
 
   return (
     <>
       {children}
-      {!hideNav && nav}
+      {showNav && nav}
     </>
   );
 });
