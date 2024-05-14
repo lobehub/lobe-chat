@@ -19,7 +19,12 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   container: css`
     cursor: pointer;
+
+    width: calc(100% - 16px);
+    margin-block: 2px;
+    margin-inline: 8px;
     padding: 8px;
+
     border-radius: ${token.borderRadius}px;
 
     &:hover {
