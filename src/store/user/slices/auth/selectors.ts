@@ -1,13 +1,13 @@
 import { t } from 'i18next';
 
-import { enableAuth, enableClerk } from '@/const/auth';
+import { enableClerk } from '@/const/auth';
 import { UserStore } from '@/store/user';
 import { LobeUser } from '@/types/user';
 
 const DEFAULT_USERNAME = 'LobeChat';
 
 const nickName = (s: UserStore) => {
-  if (!enableAuth) return t('userPanel.defaultNickname', { ns: 'common' });
+  if (!s.enableAuth()) return t('userPanel.defaultNickname', { ns: 'common' });
 
   if (s.isSignedIn) return s.user?.fullName || s.user?.username;
 
@@ -15,7 +15,7 @@ const nickName = (s: UserStore) => {
 };
 
 const username = (s: UserStore) => {
-  if (!enableAuth) return DEFAULT_USERNAME;
+  if (!s.enableAuth()) return DEFAULT_USERNAME;
 
   if (s.isSignedIn) return s.user?.username;
 
@@ -35,7 +35,7 @@ export const userProfileSelectors = {
  */
 const isLogin = (s: UserStore) => {
   // 如果没有开启鉴权，说明不需要登录，默认是登录态
-  if (!enableAuth) return true;
+  if (!s.enableAuth()) return true;
 
   return s.isSignedIn;
 };
