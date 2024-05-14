@@ -60,7 +60,7 @@ const TopicListContent = memo(() => {
   ) : (
     <>
       {topicLength === 0 && visible && (
-        <Flexbox padding={8}>
+        <Flexbox paddingInline={8}>
           <EmptyCard
             alt={t('topic.guide.desc')}
             cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
