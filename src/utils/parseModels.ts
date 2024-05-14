@@ -118,10 +118,14 @@ export const transformToChatModelCards = ({
 
         // if the model is already in chatModels, update it
         if (modelInList) {
+          // if deploymentName exists, then update model
+          if (toAddModel.deploymentName) modelInList.deploymentName = toAddModel.deploymentName;
           // if (modelInList.hidden) delete modelInList.hidden;
           modelInList.enabled = true;
           if (toAddModel.displayName) modelInList.displayName = toAddModel.displayName;
         } else {
+          // if model is known but not in list, also update deploymentName
+          if (toAddModel.deploymentName) knownModel.deploymentName = toAddModel.deploymentName;
           // if the model is not in chatModels, add it
           draft.push({
             ...knownModel,
