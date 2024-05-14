@@ -10,7 +10,7 @@ import ProviderConfig from '../components/ProviderConfig';
 const DeepSeekProvider = memo(() => {
   return (
     <ProviderConfig
-      checkModel={'deepseek/deepseek-chat'}
+      checkModel={'deepseek-chat'}
       modelList={{ showModelFetcher: true }}
       provider={ModelProvider.DeepSeek}
       title={<DeepSeek.Combine size={28} type={'color'} />}
