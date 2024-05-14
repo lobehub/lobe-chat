@@ -1,5 +1,6 @@
 import {
   Anthropic,
+  DeepSeek,
   Google,
   Groq,
   Minimax,
@@ -51,6 +52,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.Anthropic: {
       return <Anthropic color={Anthropic.colorPrimary} size={52} />;
+    }
+
+    case ModelProvider.DeepSeek: {
+      return <DeepSeek color={DeepSeek.colorPrimary} size={56} />;
     }
 
     case ModelProvider.Groq: {
