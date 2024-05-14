@@ -2,6 +2,274 @@
 
 # Changelog
 
+### [Version 0.159.4](https://github.com/lobehub/lobe-chat/compare/v0.159.3...v0.159.4)
+
+<sup>Released on **2024-05-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refresh model config form & mobile footer button lost.
+
+#### 💄 Styles
+
+- **misc**: Add GPT-4o model, update perplexity models, updates 01.AI model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refresh model config form & mobile footer button lost, closes [#2318](https://github.com/lobehub/lobe-chat/issues/2318) [#2319](https://github.com/lobehub/lobe-chat/issues/2319) [#1811](https://github.com/lobehub/lobe-chat/issues/1811) ([eadcefc](https://github.com/lobehub/lobe-chat/commit/eadcefc))
+
+#### Styles
+
+- **misc**: Add GPT-4o model, closes [#2481](https://github.com/lobehub/lobe-chat/issues/2481) ([ae6a03f](https://github.com/lobehub/lobe-chat/commit/ae6a03f))
+- **misc**: Update perplexity models, closes [#2469](https://github.com/lobehub/lobe-chat/issues/2469) ([488cde7](https://github.com/lobehub/lobe-chat/commit/488cde7))
+- **misc**: Updates 01.AI model list, closes [#2471](https://github.com/lobehub/lobe-chat/issues/2471) ([f28711a](https://github.com/lobehub/lobe-chat/commit/f28711a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.159.3](https://github.com/lobehub/lobe-chat/compare/v0.159.2...v0.159.3)
+
+<sup>Released on **2024-05-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix DeepSeek using wrong model ID.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix DeepSeek using wrong model ID, closes [#2484](https://github.com/lobehub/lobe-chat/issues/2484) ([465dbfc](https://github.com/lobehub/lobe-chat/commit/465dbfc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.159.2](https://github.com/lobehub/lobe-chat/compare/v0.159.1...v0.159.2)
+
+<sup>Released on **2024-05-14**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Dragging text mistakenly as image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Dragging text mistakenly as image, closes [#2111](https://github.com/lobehub/lobe-chat/issues/2111) ([3c047ef](https://github.com/lobehub/lobe-chat/commit/3c047ef))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.159.1](https://github.com/lobehub/lobe-chat/compare/v0.159.0...v0.159.1)
+
+<sup>Released on **2024-05-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move next-auth hooks to user store actions.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `antd@5.17.0` to fix build error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move next-auth hooks to user store actions, closes [#2364](https://github.com/lobehub/lobe-chat/issues/2364) ([6dbcd70](https://github.com/lobehub/lobe-chat/commit/6dbcd70))
+
+#### What's fixed
+
+- **misc**: Pin `antd@5.17.0` to fix build error, closes [#2483](https://github.com/lobehub/lobe-chat/issues/2483) ([aa03833](https://github.com/lobehub/lobe-chat/commit/aa03833))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.159.0](https://github.com/lobehub/lobe-chat/compare/v0.158.2...v0.159.0)
+
+<sup>Released on **2024-05-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Support DeepSeek as new model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support DeepSeek as new model provider, closes [#2446](https://github.com/lobehub/lobe-chat/issues/2446) ([18028f3](https://github.com/lobehub/lobe-chat/commit/18028f3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.158.2](https://github.com/lobehub/lobe-chat/compare/v0.158.1...v0.158.2)
+
+<sup>Released on **2024-05-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix TelemetryNotification zindex.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix TelemetryNotification zindex, closes [#2476](https://github.com/lobehub/lobe-chat/issues/2476) ([54524ab](https://github.com/lobehub/lobe-chat/commit/54524ab))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.158.1](https://github.com/lobehub/lobe-chat/compare/v0.158.0...v0.158.1)
+
+<sup>Released on **2024-05-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add PWA install and metadata & ld generate.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add PWA install and metadata & ld generate, closes [#2438](https://github.com/lobehub/lobe-chat/issues/2438) ([6e9c69a](https://github.com/lobehub/lobe-chat/commit/6e9c69a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.158.0](https://github.com/lobehub/lobe-chat/compare/v0.157.2...v0.158.0)
+
+<sup>Released on **2024-05-13**</sup>
+
+#### ✨ Features
+
+- **misc**: Add user profile page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add user profile page, closes [#2433](https://github.com/lobehub/lobe-chat/issues/2433) ([91f7294](https://github.com/lobehub/lobe-chat/commit/91f7294))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.157.2](https://github.com/lobehub/lobe-chat/compare/v0.157.1...v0.157.2)
+
+<sup>Released on **2024-05-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix azure openai stream.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix azure openai stream, closes [#2465](https://github.com/lobehub/lobe-chat/issues/2465) ([760fe67](https://github.com/lobehub/lobe-chat/commit/760fe67))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.157.1](https://github.com/lobehub/lobe-chat/compare/v0.157.0...v0.157.1)
+
+<sup>Released on **2024-05-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix dalle error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix dalle error ([7c493de](https://github.com/lobehub/lobe-chat/commit/7c493de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.157.0](https://github.com/lobehub/lobe-chat/compare/v0.156.2...v0.157.0)
 
 <sup>Released on **2024-05-11**</sup>

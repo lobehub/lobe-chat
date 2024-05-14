@@ -1,10 +1,10 @@
 import OpenAI from 'openai';
 
-import { checkAuth } from '@/app/api/auth';
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 
 import { createErrorResponse } from '../../errorResponse';
+import { checkAuth } from './auth';
 import { createOpenai } from './createOpenai';
 
 /**

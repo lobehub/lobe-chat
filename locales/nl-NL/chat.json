@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me praten of naar [Assistentinstellingen](/chat/settings#session={{id}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
+  "agentsAndConversations": "agenten en gesprekken",
   "backToBottom": "Terug naar onderen",
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",

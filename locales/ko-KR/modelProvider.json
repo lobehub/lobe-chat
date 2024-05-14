@@ -61,6 +61,18 @@
       "title": "사용자 정의 Bedrock 인증 정보 사용"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "DeepSeek의 API 키를 입력하세요",
+      "placeholder": "DeepSeek API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "DeepSeek API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 API 키를 기록하지 않습니다.",
+      "title": "사용자 정의 DeepSeek API 키 사용"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {

@@ -58,6 +58,7 @@
     },
     "title": "Daten importieren"
   },
+  "installPWA": "Installiere die Browser-App",
   "lang": {
     "ar": "Arabisch",
     "bg-BG": "Bulgarisch",
@@ -169,6 +170,7 @@
   "userPanel": {
     "anonymousNickName": "Anonymer Benutzer",
     "billing": "Abrechnung verwalten",
+    "data": "Daten speichern",
     "defaultNickname": "Community User",
     "discord": "Community-Support",
     "docs": "Dokumentation",
