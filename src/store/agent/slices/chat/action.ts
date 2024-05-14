@@ -81,11 +81,13 @@ export const createChatSlice: StateCreator<
       [FETCH_AGENT_CONFIG_KEY, sessionId],
       ([, id]: string[]) => sessionService.getSessionConfig(id),
       {
+        fallbackData: DEFAULT_AGENT_CONFIG,
         onSuccess: (data) => {
           if (get().isAgentConfigInit && isEqual(get().agentConfig, data)) return;
 
           set({ agentConfig: data, isAgentConfigInit: true }, false, 'fetchAgentConfig');
         },
+        suspense: true,
       },
     ),
   useFetchDefaultAgentConfig: () =>
