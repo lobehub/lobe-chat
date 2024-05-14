@@ -64,7 +64,7 @@ afterEach(() => {
 describe('useMenu', () => {
   it('should provide correct menu items when user is logged in with auth', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: true });
+      useUserStore.setState({ isSignedIn: true, enableAuth: () => true });
     });
     enableAuth = true;
     enableClerk = false;
@@ -104,7 +104,7 @@ describe('useMenu', () => {
 
   it('should provide correct menu items when user is logged in without auth', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false });
+      useUserStore.setState({ isSignedIn: false, enableAuth: () => false });
     });
     enableAuth = false;
 
@@ -123,7 +123,7 @@ describe('useMenu', () => {
 
   it('should provide correct menu items when user is not logged in', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false });
+      useUserStore.setState({ isSignedIn: false, enableAuth: () => true });
     });
     enableAuth = true;
 
