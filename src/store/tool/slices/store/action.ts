@@ -45,11 +45,12 @@ export const createPluginStoreSlice: StateCreator<
     try {
       updateInstallLoadingState(name, true);
       const data = await toolService.getPluginManifest(plugin.manifest);
-      updateInstallLoadingState(name, undefined);
 
       // 4. 存储 manifest 信息
       await pluginService.installPlugin({ identifier: plugin.identifier, manifest: data, type });
       await refreshPlugins();
+
+      updateInstallLoadingState(name, undefined);
     } catch (error) {
       console.error(error);
       updateInstallLoadingState(name, undefined);

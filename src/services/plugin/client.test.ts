@@ -6,7 +6,8 @@ import { DB_Plugin } from '@/database/client/schemas/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-import { ClientService, InstallPluginParams } from './client';
+import { ClientService } from './client';
+import { InstallPluginParams } from './type';
 
 const pluginService = new ClientService();
 
