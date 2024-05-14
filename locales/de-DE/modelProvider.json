@@ -61,6 +61,18 @@
       "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Geben Sie Ihren API-Schlüssel von DeepSeek ein",
+      "placeholder": "DeepSeek API-Schlüssel",
+      "title": "API-Schlüssel"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren DeepSeek API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen benutzerdefinierten DeepSeek API-Schlüssel"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {
