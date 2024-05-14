@@ -103,6 +103,15 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "tokens": 128000,
     "vision": true,
   },
+  {
+    description: 'Currently points to gpt-4o-2024-05-13',
+    displayName: 'GPT-4o',
+    enabled: true,
+    functionCall: true,
+    id: 'gpt-4o',
+    tokens: 128_000,
+    vision: true,
+  },
 ]
 `;
 
