@@ -61,6 +61,18 @@
       "title": "Използване на персонализирана информация за удостоверяване на Bedrock"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Въведете API ключ от DeepSeek",
+      "placeholder": "API ключ на DeepSeek",
+      "title": "API ключ"
+    },
+    "unlock": {
+      "description": "Само въведете вашия API ключ от DeepSeek, за да започнете сесията. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран API ключ от DeepSeek"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {

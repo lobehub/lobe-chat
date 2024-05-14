@@ -62,6 +62,18 @@ export default {
       title: '使用自定义 Bedrock 鉴权信息',
     },
   },
+  deepseek: {
+    title: 'DeepSeek',
+    token: {
+      desc: '填入来自 DeepSeek 的 API Key',
+      placeholder: 'DeepSeek API Key',
+      title: 'API Key',
+    },
+    unlock: {
+      description: '输入你的 DeepSeek API Key 即可开始会话。应用不会记录你的 API Key',
+      title: '使用自定义 DeepSeek API Key',
+    },
+  },
   google: {
     title: 'Google',
     token: {
