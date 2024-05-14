@@ -43,6 +43,16 @@ afterEach(() => {
   enableClerk = false;
 });
 
+/**
+ * Mock nextauth 库相关方法
+ */
+vi.mock('next-auth/react', async () => {
+  return {
+    signIn: vi.fn(),
+    signOut: vi.fn(),
+  };
+});
+
 describe('createAuthSlice', () => {
   describe('refreshUserConfig', () => {
     it('should refresh user config', async () => {
@@ -162,6 +172,32 @@ describe('createAuthSlice', () => {
 
       expect(clerkSignOutMock).not.toHaveBeenCalled();
     });
+
+    it('should call next-auth signOut when NextAuth is enabled', async () => {
+      useUserStore.setState({ enabledNextAuth: () => true });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.logout();
+      });
+
+      const { signOut } = await import('next-auth/react');
+
+      expect(signOut).toHaveBeenCalled();
+    });
+
+    it('should not call next-auth signOut when NextAuth is disabled', async () => {
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.logout();
+      });
+
+      const { signOut } = await import('next-auth/react');
+
+      expect(signOut).not.toHaveBeenCalled();
+    });
   });
 
   describe('openLogin', () => {
@@ -189,6 +225,31 @@ describe('createAuthSlice', () => {
       });
 
       expect(clerkSignInMock).not.toHaveBeenCalled();
+    });
+
+    it('should call next-auth signIn when NextAuth is enabled', async () => {
+      useUserStore.setState({ enabledNextAuth: () => true });
+
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.openLogin();
+      });
+
+      const { signIn } = await import('next-auth/react');
+
+      expect(signIn).toHaveBeenCalled();
+    });
+    it('should not call next-auth signIn when NextAuth is disabled', async () => {
+      const { result } = renderHook(() => useUserStore());
+
+      await act(async () => {
+        await result.current.openLogin();
+      });
+
+      const { signIn } = await import('next-auth/react');
+
+      expect(signIn).not.toHaveBeenCalled();
     });
   });
 

@@ -30,6 +30,7 @@ describe('UserAvatar', () => {
 
       act(() => {
         useUserStore.setState({
+          enableAuth: () => true,
           isSignedIn: true,
           user: { avatar: mockAvatar, id: 'abc', username: mockUsername },
         });
@@ -45,7 +46,11 @@ describe('UserAvatar', () => {
       const mockUsername = 'testuser';
 
       act(() => {
-        useUserStore.setState({ isSignedIn: true, user: { id: 'bbb', username: mockUsername } });
+        useUserStore.setState({
+          enableAuth: () => true,
+          isSignedIn: true,
+          user: { id: 'bbb', username: mockUsername },
+        });
       });
 
       render(<UserAvatar />);
@@ -54,7 +59,7 @@ describe('UserAvatar', () => {
 
     it('should show LobeChat and default avatar when the user is not logged in and enable auth', () => {
       act(() => {
-        useUserStore.setState({ isSignedIn: false, user: undefined });
+        useUserStore.setState({ enableAuth: () => true, isSignedIn: false, user: undefined });
       });
 
       render(<UserAvatar />);
@@ -67,7 +72,7 @@ describe('UserAvatar', () => {
     it('should show LobeChat and default avatar when the user is not logged in and disabled auth', () => {
       enableAuth = false;
       act(() => {
-        useUserStore.setState({ isSignedIn: false, user: undefined });
+        useUserStore.setState({ enableAuth: () => false, isSignedIn: false, user: undefined });
       });
 
       render(<UserAvatar />);

@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.159.1](https://github.com/lobehub/lobe-chat/compare/v0.159.0...v0.159.1)
+
+<sup>Released on **2024-05-14**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move next-auth hooks to user store actions.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `antd@5.17.0` to fix build error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move next-auth hooks to user store actions, closes [#2364](https://github.com/lobehub/lobe-chat/issues/2364) ([6dbcd70](https://github.com/lobehub/lobe-chat/commit/6dbcd70))
+
+#### What's fixed
+
+- **misc**: Pin `antd@5.17.0` to fix build error, closes [#2483](https://github.com/lobehub/lobe-chat/issues/2483) ([aa03833](https://github.com/lobehub/lobe-chat/commit/aa03833))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 0.159.0](https://github.com/lobehub/lobe-chat/compare/v0.158.2...v0.159.0)
 
 <sup>Released on **2024-05-14**</sup>
