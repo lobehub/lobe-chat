@@ -44,6 +44,74 @@ describe('LobeDeepSeekAI', () => {
   });
 
   describe('chat', () => {
+    it('should call chat with corresponding options', async () => {
+      // Arrange
+      const mockStream = new ReadableStream();
+      const mockResponse = Promise.resolve(mockStream);
+
+      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+      // Act
+      const result = await instance.chat({
+        max_tokens: 1024,
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'deepseek-chat',
+        temperature: 0.7,
+      });
+
+      // Assert
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          stream: true,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'deepseek-chat',
+          temperature: 0.7,
+        },
+        { headers: { Accept: '*/*' } },
+      );
+      expect(result).toBeInstanceOf(Response);
+    });
+
+    describe('handlePayload option', () => {
+      it('should set stream to false when payload contains tools', async () => {
+        const mockCreateMethod = vi
+          .spyOn(instance['client'].chat.completions, 'create')
+          .mockResolvedValue({
+            id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
+            object: 'chat.completion',
+            created: 1709125675,
+            model: 'deepseek-chat',
+            system_fingerprint: 'fp_86156a94a0',
+            choices: [
+              {
+                index: 0,
+                message: { role: 'assistant', content: 'hello' },
+                logprobs: null,
+                finish_reason: 'stop',
+              },
+            ],
+          });
+
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'deepseek-chat',
+          temperature: 0,
+          tools: [
+            {
+              type: 'function',
+              function: { name: 'tool1', description: '', parameters: {} },
+            },
+          ],
+        });
+
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({ stream: false }),
+          expect.anything(),
+        );
+      });
+    });
+
     describe('Error', () => {
       it('should return OpenAIBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange
@@ -81,7 +149,7 @@ describe('LobeDeepSeekAI', () => {
         }
       });
 
-      it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
+      it('should throw AgentRuntimeError with InvalidOpenAIAPIKey if no apiKey is provided', async () => {
         try {
           new LobeDeepSeekAI({});
         } catch (e) {
@@ -210,7 +278,7 @@ describe('LobeDeepSeekAI', () => {
     });
 
     describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_DEEPSEEK_CHAT_COMPLETION is 1', async () => {
+      it('should call debugStream and return StreamingTextResponse when DEBUG_OPENROUTER_CHAT_COMPLETION is 1', async () => {
         // Arrange
         const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
         const mockDebugStream = new ReadableStream({
@@ -239,7 +307,6 @@ describe('LobeDeepSeekAI', () => {
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'deepseek-chat',
-          stream: true,
           temperature: 0,
         });
 
