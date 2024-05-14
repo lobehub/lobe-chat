@@ -30,7 +30,7 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
   const { t } = useTranslation('chat');
   const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
-
+  const activeSession = useSessionStore((s) => s.activeSession);
   const { styles } = useStyles();
 
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -40,7 +40,14 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
   ) : !isEmpty ? (
     dataSource.map(({ id }) => (
       <LazyLoad className={styles} key={id}>
-        <Link aria-label={id} href={SESSION_CHAT_URL(id, mobile)}>
+        <Link
+          aria-label={id}
+          href={SESSION_CHAT_URL(id, mobile)}
+          onClick={(e) => {
+            e.preventDefault();
+            activeSession(id);
+          }}
+        >
           <SessionItem id={id} />
         </Link>
       </LazyLoad>
