@@ -23,11 +23,6 @@ export default defineConfig({
     // threads: false,
     environment: 'happy-dom',
     globals: true,
-    server: {
-      deps: {
-        inline: ['rc-util'],
-      }
-    },
     setupFiles: './tests/setup.ts',
   },
 });
