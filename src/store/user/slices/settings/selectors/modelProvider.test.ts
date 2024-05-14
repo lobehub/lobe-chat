@@ -49,7 +49,7 @@ describe('modelProviderSelectors', () => {
       const s = merge(initialSettingsState, {}) as unknown as UserStore;
 
       const result = modelProviderSelectors.getDefaultEnabledModelsById('openai')(s);
-      expect(result).toEqual(['gpt-3.5-turbo', 'gpt-4-turbo']);
+      expect(result).toEqual(['gpt-3.5-turbo', 'gpt-4-turbo', 'gpt-4o']);
     });
 
     it('should return undefined for a non-existing provider', () => {
