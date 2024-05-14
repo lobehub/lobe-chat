@@ -137,6 +137,11 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.DeepSeek: {
+      const { DEEPSEEK_API_KEY } = getServerConfig();
+      const apiKey = apiKeyManager.pick(payload?.apiKey || DEEPSEEK_API_KEY);
+      return { apiKey };
+    }
     case ModelProvider.TogetherAI: {
       const { TOGETHERAI_API_KEY } = getServerConfig();
 

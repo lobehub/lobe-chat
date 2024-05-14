@@ -61,6 +61,18 @@
       "title": "Usar informações de autenticação Bedrock personalizadas"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Insira a chave da API do DeepSeek",
+      "placeholder": "Chave da API do DeepSeek",
+      "title": "Chave da API"
+    },
+    "unlock": {
+      "description": "Digite sua chave da API do DeepSeek para iniciar a sessão. O aplicativo não irá armazenar sua chave da API",
+      "title": "Usar chave da API personalizada do DeepSeek"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {

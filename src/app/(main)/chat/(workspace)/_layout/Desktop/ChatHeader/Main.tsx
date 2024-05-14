@@ -3,7 +3,6 @@
 import { ActionIcon, Avatar, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -45,20 +44,19 @@ const Main = memo(() => {
   ) : (
     <Flexbox align={'flex-start'} gap={12} horizontal>
       {
-        <Link aria-label={t('agentsAndConversations')} href={'/chat'}>
-          <ActionIcon
-            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-            onClick={() => {
-              const currentShowSessionPanel = useGlobalStore.getState().preference.showSessionPanel;
-              useGlobalStore.getState().updatePreference({
-                sessionsWidth: currentShowSessionPanel ? 0 : 320,
-                showSessionPanel: !currentShowSessionPanel,
-              });
-            }}
-            size="large"
-            title={t('agentsAndConversations')}
-          />
-        </Link>
+        <ActionIcon
+          aria-label={t('agentsAndConversations')}
+          icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
+          onClick={() => {
+            const currentShowSessionPanel = useGlobalStore.getState().preference.showSessionPanel;
+            useGlobalStore.getState().updatePreference({
+              sessionsWidth: currentShowSessionPanel ? 0 : 320,
+              showSessionPanel: !currentShowSessionPanel,
+            });
+          }}
+          size="large"
+          title={t('agentsAndConversations')}
+        />
       }
       <Avatar
         avatar={avatar}
