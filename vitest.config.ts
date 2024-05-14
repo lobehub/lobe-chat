@@ -18,7 +18,7 @@ export default defineConfig({
       reporter: ['text', 'json', 'lcov', 'text-summary'],
     },
     deps: {
-      inline: ['vitest-canvas-mock'],
+      inline: ['vitest-canvas-mock', 'rc-util'],
     },
     // threads: false,
     environment: 'happy-dom',
