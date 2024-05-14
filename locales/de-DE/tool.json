@@ -4,6 +4,7 @@
     "downloading": "Die von DallE3 generierten Bildlinks sind nur 1 Stunde lang gültig. Das Bild wird lokal zwischengespeichert...",
     "generate": "Generieren",
     "generating": "Generiert",
-    "images": "Bilder:"
+    "images": "Bilder:",
+    "prompt": "Hinweiswort"
   }
 }
