@@ -31,6 +31,7 @@ describe('userProfileSelectors', () => {
       const store: UserStore = {
         isSignedIn: false,
         user: null,
+        enableAuth: () => false,
       } as unknown as UserStore;
 
       expect(userProfileSelectors.nickName(store)).toBe('userPanel.defaultNickname');
@@ -43,6 +44,7 @@ describe('userProfileSelectors', () => {
       const store: UserStore = {
         isSignedIn: true,
         user: { fullName: 'John Doe' },
+        enableAuth: () => true,
       } as UserStore;
 
       expect(userProfileSelectors.nickName(store)).toBe('John Doe');
@@ -52,6 +54,7 @@ describe('userProfileSelectors', () => {
       const store: UserStore = {
         isSignedIn: true,
         user: { username: 'johndoe' },
+        enableAuth: () => true,
       } as UserStore;
 
       expect(userProfileSelectors.nickName(store)).toBe('johndoe');
@@ -60,7 +63,11 @@ describe('userProfileSelectors', () => {
     it('should return anonymous nickname when not signed in', () => {
       enableAuth = true;
 
-      const store: UserStore = { isSignedIn: false, user: null } as unknown as UserStore;
+      const store: UserStore = {
+        enableAuth: () => true,
+        isSignedIn: false,
+        user: null,
+      } as unknown as UserStore;
 
       expect(userProfileSelectors.nickName(store)).toBe('userPanel.anonymousNickName');
       expect(t).toHaveBeenCalledWith('userPanel.anonymousNickName', { ns: 'common' });
@@ -74,6 +81,7 @@ describe('userProfileSelectors', () => {
       const store: UserStore = {
         isSignedIn: false,
         user: null,
+        enableAuth: () => false,
       } as unknown as UserStore;
 
       expect(userProfileSelectors.username(store)).toBe('LobeChat');
@@ -83,13 +91,18 @@ describe('userProfileSelectors', () => {
       const store: UserStore = {
         isSignedIn: true,
         user: { username: 'johndoe' },
+        enableAuth: () => true,
       } as UserStore;
 
       expect(userProfileSelectors.username(store)).toBe('johndoe');
     });
 
     it('should return "anonymous" when not signed in', () => {
-      const store: UserStore = { isSignedIn: false, user: null } as unknown as UserStore;
+      const store: UserStore = {
+        enableAuth: () => true,
+        isSignedIn: false,
+        user: null,
+      } as unknown as UserStore;
 
       expect(userProfileSelectors.username(store)).toBe('anonymous');
     });
@@ -103,6 +116,7 @@ describe('authSelectors', () => {
 
       const store: UserStore = {
         isSignedIn: false,
+        enableAuth: () => false,
       } as UserStore;
 
       expect(authSelectors.isLogin(store)).toBe(true);
@@ -111,6 +125,7 @@ describe('authSelectors', () => {
     it('should return true when signed in', () => {
       const store: UserStore = {
         isSignedIn: true,
+        enableAuth: () => true,
       } as UserStore;
 
       expect(authSelectors.isLogin(store)).toBe(true);
@@ -119,6 +134,7 @@ describe('authSelectors', () => {
     it('should return false when not signed in and auth is enabled', () => {
       const store: UserStore = {
         isSignedIn: false,
+        enableAuth: () => true,
       } as UserStore;
 
       expect(authSelectors.isLogin(store)).toBe(false);
