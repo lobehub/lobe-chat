@@ -61,6 +61,18 @@
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Fill in your API Key from DeepSeek",
+      "placeholder": "DeepSeek API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Enter your DeepSeek API Key to start the session. The app will not store your API Key.",
+      "title": "Use Custom DeepSeek API Key"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {
