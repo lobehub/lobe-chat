@@ -18,11 +18,16 @@ export default defineConfig({
       reporter: ['text', 'json', 'lcov', 'text-summary'],
     },
     deps: {
-      inline: ['vitest-canvas-mock', 'rc-util'],
+      inline: ['vitest-canvas-mock'],
     },
     // threads: false,
     environment: 'happy-dom',
     globals: true,
+    server: {
+      deps: {
+        inline: ['rc-util'],
+      }
+    },
     setupFiles: './tests/setup.ts',
   },
 });
