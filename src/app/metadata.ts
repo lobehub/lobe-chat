@@ -6,7 +6,7 @@ import { OFFICIAL_URL } from '@/const/url';
 
 import pkg from '../../package.json';
 
-const title = 'CloudOSD';
+const title = 'LobeChat';
 const { description, homepage } = pkg;
 
 const { SITE_URL = OFFICIAL_URL } = getServerConfig();
