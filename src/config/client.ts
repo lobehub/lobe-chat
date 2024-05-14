@@ -30,11 +30,15 @@ declare global {
       NEXT_PUBLIC_I18N_DEBUG_SERVER: string;
 
       NEXT_PUBLIC_DEVELOPER_DEBUG: string;
+
+      NEXT_PUBLIC_SERVICE_MODE?: 'server' | 'browser';
     }
   }
 }
 
 export const getClientConfig = () => ({
+  ENABLED_SERVER_SERVICE: process.env.NEXT_PUBLIC_SERVICE_MODE === 'server',
+
   BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
 
   // Plausible Analytics

@@ -3,14 +3,16 @@
 import { EmptyCard } from '@lobehub/ui';
 import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import React, { memo, useCallback, useRef } from 'react';
+import React, { Suspense, memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import { imageUrl } from '@/const/url';
+import { isServerMode } from '@/const/version';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { ChatTopic } from '@/types/topic';
 
@@ -21,10 +23,11 @@ const TopicListContent = memo(() => {
   const { t } = useTranslation('chat');
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const { isDarkMode } = useThemeMode();
-  const [topicsInit, activeTopicId, topicLength] = useChatStore((s) => [
+  const [topicsInit, activeTopicId, topicLength, useFetchTopics] = useChatStore((s) => [
     s.topicsInit,
     s.activeTopicId,
     topicSelectors.currentTopicLength(s),
+    s.useFetchTopics,
   ]);
   const [visible, updateGuideState] = useUserStore((s) => [
     s.preference.guide?.topic,
@@ -43,6 +46,10 @@ const TopicListContent = memo(() => {
     isEqual,
   );
 
+  const [sessionId] = useSessionStore((s) => [s.activeId]);
+
+  const { isLoading } = useFetchTopics(sessionId);
+
   const itemContent = useCallback(
     (index: number, { id, favorite, title }: ChatTopic) =>
       index === 0 ? (
@@ -55,9 +62,14 @@ const TopicListContent = memo(() => {
 
   const activeIndex = topics.findIndex((topic) => topic.id === activeTopicId);
 
-  return !topicsInit ? (
-    <SkeletonList />
-  ) : (
+  // first time loading
+  if (!topicsInit) return <SkeletonList />;
+
+  // in server mode and re-loading
+  if (isServerMode && isLoading) return <SkeletonList />;
+
+  // in client mode no need the loading state for better UX
+  return (
     <>
       {topicLength === 0 && visible && (
         <Flexbox paddingInline={8}>
@@ -97,4 +109,10 @@ const TopicListContent = memo(() => {
   );
 });
 
-export default TopicListContent;
+TopicListContent.displayName = 'TopicListContent';
+
+export default memo(() => (
+  <Suspense fallback={<SkeletonList />}>
+    <TopicListContent />;
+  </Suspense>
+));
