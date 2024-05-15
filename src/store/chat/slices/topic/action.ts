@@ -24,7 +24,7 @@ import { chatSelectors } from '../message/selectors';
 import { ChatTopicDispatch, topicReducer } from './reducer';
 import { topicSelectors } from './selectors';
 
-const n = setNamespace('topic');
+const n = setNamespace('t');
 
 const SWR_USE_FETCH_TOPIC = 'SWR_USE_FETCH_TOPIC';
 const SWR_USE_SEARCH_TOPIC = 'SWR_USE_SEARCH_TOPIC';
@@ -38,10 +38,12 @@ export interface ChatTopicAction {
   removeTopic: (id: string) => Promise<void>;
   removeUnstarredTopic: () => void;
   saveToTopic: () => Promise<string | undefined>;
+  createTopic: () => Promise<string | undefined>;
+
   autoRenameTopicTitle: (id: string) => Promise<void>;
   duplicateTopic: (id: string) => Promise<void>;
   summaryTopicTitle: (topicId: string, messages: ChatMessage[]) => Promise<void>;
-  switchTopic: (id?: string) => Promise<void>;
+  switchTopic: (id?: string, skipRefreshMessage?: boolean) => Promise<void>;
   updateTopicTitleInSummary: (id: string, title: string) => void;
   updateTopicTitle: (id: string, title: string) => Promise<void>;
   useFetchTopics: (sessionId: string) => SWRResponse<ChatTopic[]>;
@@ -69,6 +71,21 @@ export const chatTopic: StateCreator<
       await saveToTopic();
       refreshMessages();
     }
+  },
+
+  createTopic: async () => {
+    const { activeId, internal_createTopic } = get();
+
+    const messages = chatSelectors.currentChats(get());
+    const topicId = await internal_createTopic({
+      sessionId: activeId,
+      title: t('topic.defaultTitle', { ns: 'chat' }),
+      messages: messages.map((m) => m.id),
+    });
+
+    // get().internal_updateTopicLoading(topicId, true);
+
+    return topicId;
   },
 
   saveToTopic: async () => {
@@ -189,9 +206,10 @@ export const chatTopic: StateCreator<
         },
       },
     ),
-  switchTopic: async (id) => {
-    set({ activeTopicId: id }, false, n('toggleTopic'));
+  switchTopic: async (id, skipRefreshMessage) => {
+    set({ activeTopicId: !id ? (null as any) : id }, false, n('toggleTopic'));
 
+    if (skipRefreshMessage) return;
     await get().refreshMessages();
   },
   // delete
@@ -272,7 +290,10 @@ export const chatTopic: StateCreator<
   },
   internal_createTopic: async (params) => {
     const tmpId = Date.now().toString();
-    get().internal_dispatchTopic({ type: 'addTopic', value: { ...params, id: tmpId } });
+    get().internal_dispatchTopic(
+      { type: 'addTopic', value: { ...params, id: tmpId } },
+      'internal_createTopic',
+    );
 
     get().internal_updateTopicLoading(tmpId, true);
     const topicId = await topicService.createTopic(params);
@@ -288,6 +309,6 @@ export const chatTopic: StateCreator<
   internal_dispatchTopic: (payload, action) => {
     const nextTopics = topicReducer(get().topics, payload);
 
-    set({ topics: nextTopics }, false, action);
+    set({ topics: nextTopics }, false, action ?? n(`dispatchTopic/${payload.type}`));
   },
 });

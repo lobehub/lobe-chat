@@ -7,6 +7,7 @@ import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/p
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { useChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { ChatMessage, ChatToolPayload } from '@/types/message';
@@ -224,7 +225,9 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useChatStore.setState({
-          messages: [message],
+          messagesMap: {
+            [messageMapKey('session-id', 'topic-id')]: [message],
+          },
           invokeStandaloneTypePlugin: invokeStandaloneTypePluginMock,
           invokeMarkdownTypePlugin: invokeMarkdownTypePluginMock,
           invokeBuiltinTool: invokeBuiltinToolMock,
@@ -320,7 +323,9 @@ describe('ChatPluginAction', () => {
           triggerAIMessage: triggerAIMessageMock,
           internal_createMessage: internal_createMessageMock,
           activeId: 'session-id',
-          messages: [message],
+          messagesMap: {
+            [messageMapKey('session-id', 'topic-id')]: [message],
+          },
           activeTopicId: 'topic-id',
         });
       });
