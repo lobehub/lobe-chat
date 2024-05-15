@@ -31,7 +31,7 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       title={t('store.title')}
       width={800}
     >
-      <Flexbox gap={mobile ? 8 : 16} width={'100%'}>
+      <Flexbox gap={mobile ? 8 : 16} width={'100%'} style={{maxHeight: 'calc(75vh - 56px)'}}>
         <Segmented
           block
           onChange={(v) => {
