@@ -20,11 +20,11 @@ export interface ChatMessageState {
    * is the message is creating or updating in the service
    */
   messageLoadingIds: string[];
-  messages: ChatMessage[];
   /**
    * whether messages have fetched
    */
   messagesInit: boolean;
+  messagesMap: Record<string, ChatMessage[]>;
   /**
    * the tool calling stream ids
    */
@@ -37,7 +37,7 @@ export const initialMessageState: ChatMessageState = {
   inputMessage: '',
   messageEditingIds: [],
   messageLoadingIds: [],
-  messages: [],
   messagesInit: false,
+  messagesMap: {},
   toolCallingStreamIds: {},
 };
