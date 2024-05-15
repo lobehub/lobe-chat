@@ -7,6 +7,7 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
+import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
@@ -337,6 +338,31 @@ describe('chatMessage actions', () => {
         expect(switchTopicMock).toHaveBeenCalledWith('new-topic-id', true);
       });
 
+      it('should not auto-create topic, if autoCreateTopic = false and reached topic threshold', async () => {
+        const { result } = renderHook(() => useChatStore());
+        act(() => {
+          useAgentStore.setState({
+            agentConfig: {
+              enableAutoCreateTopic: false,
+              autoCreateTopicThreshold: 1,
+            },
+          });
+          useChatStore.setState({
+            // Mock the currentChats selector to return a list that does not reach the threshold
+            messagesMap: {
+              [messageMapKey('inbox')]: [{ id: '1' }, { id: '2' }] as ChatMessage[],
+            },
+            activeTopicId: 'inbox',
+          });
+        });
+
+        await act(async () => {
+          await result.current.sendMessage({ message: 'test' });
+        });
+
+        expect(topicService.createTopic).not.toHaveBeenCalled();
+      });
+
       it('should not auto-create topic if autoCreateTopicThreshold is not reached', async () => {
         const { result } = renderHook(() => useChatStore());
         const message = 'Test message';
@@ -381,6 +407,157 @@ describe('chatMessage actions', () => {
         expect(switchTopicMock).not.toHaveBeenCalled();
       });
     });
+
+    it('should add user message and not call internal_coreProcessMessage if onlyAddUserMessage = true', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.sendMessage({ message: 'test', onlyAddUserMessage: true });
+      });
+
+      expect(messageService.createMessage).toHaveBeenCalled();
+      expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+    });
+
+    it('当 isWelcomeQuestion 为 true 时,正确地传递给 internal_coreProcessMessage', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.sendMessage({ message: 'test', isWelcomeQuestion: true });
+      });
+
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.anything(),
+        { isWelcomeQuestion: true },
+      );
+    });
+
+    it('当只有文件而没有消息内容时,正确发送消息', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.sendMessage({ message: '', files: [{ id: 'file-1' }] as any });
+      });
+
+      expect(messageService.createMessage).toHaveBeenCalledWith({
+        content: '',
+        files: ['file-1'],
+        role: 'user',
+        sessionId: 'session-id',
+        topicId: 'topic-id',
+      });
+    });
+
+    it('当同时有文件和消息内容时,正确发送消息并关联文件', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.sendMessage({ message: 'test', files: [{ id: 'file-1' }] as any });
+      });
+
+      expect(messageService.createMessage).toHaveBeenCalledWith({
+        content: 'test',
+        files: ['file-1'],
+        role: 'user',
+        sessionId: 'session-id',
+        topicId: 'topic-id',
+      });
+    });
+
+    it('当 createMessage 抛出错误时,正确处理错误而不影响整个应用', async () => {
+      const { result } = renderHook(() => useChatStore());
+      vi.spyOn(messageService, 'createMessage').mockRejectedValue(
+        new Error('create message error'),
+      );
+
+      await expect(result.current.sendMessage({ message: 'test' })).rejects.toThrow(
+        'create message error',
+      );
+
+      expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+    });
+
+    // it('自动创建主题成功后,正确地将消息复制到新主题,并删除之前的临时消息', async () => {
+    //   const { result } = renderHook(() => useChatStore());
+    //   act(() => {
+    //     useAgentStore.setState({
+    //       agentConfig: { enableAutoCreateTopic: true, autoCreateTopicThreshold: 1 },
+    //     });
+    //
+    //     useChatStore.setState({
+    //       // Mock the currentChats selector to return a list that does not reach the threshold
+    //       messagesMap: {
+    //         [messageMapKey('inbox')]: [{ id: '1' }, { id: '2' }] as ChatMessage[],
+    //       },
+    //       activeId: 'inbox',
+    //     });
+    //   });
+    //   vi.spyOn(topicService, 'createTopic').mockResolvedValue('new-topic');
+    //
+    //   await act(async () => {
+    //     await result.current.sendMessage({ message: 'test' });
+    //   });
+    //
+    //   expect(result.current.messagesMap[messageMapKey('inbox')]).toEqual([
+    //     // { id: '1' },
+    //     // { id: '2' },
+    //     // { id: 'temp-id', content: 'test', role: 'user' },
+    //   ]);
+    //   // expect(result.current.getMessages('session-id')).toEqual([]);
+    // });
+
+    // it('自动创建主题失败时,正确地处理错误,不会影响后续的消息发送', async () => {
+    //   const { result } = renderHook(() => useChatStore());
+    //   result.current.setAgentConfig({ enableAutoCreateTopic: true, autoCreateTopicThreshold: 1 });
+    //   result.current.setMessages([{ id: '1' }, { id: '2' }] as any);
+    //   vi.spyOn(topicService, 'createTopic').mockRejectedValue(new Error('create topic error'));
+    //
+    //   await act(async () => {
+    //     await result.current.sendMessage({ message: 'test' });
+    //   });
+    //
+    //   expect(result.current.getMessages('session-id')).toEqual([
+    //     { id: '1' },
+    //     { id: '2' },
+    //     { id: 'new-message-id', content: 'test', role: 'user' },
+    //   ]);
+    // });
+
+    // it('当 activeTopicId 不存在且 autoCreateTopic 为 true,但消息数量未达到阈值时,正确地总结主题标题', async () => {
+    //   const { result } = renderHook(() => useChatStore());
+    //   result.current.setAgentConfig({ enableAutoCreateTopic: true, autoCreateTopicThreshold: 10 });
+    //   result.current.setMessages([{ id: '1' }, { id: '2' }] as any);
+    //   result.current.setActiveTopic({ id: 'topic-1', title: '' });
+    //
+    //   await act(async () => {
+    //     await result.current.sendMessage({ message: 'test' });
+    //   });
+    //
+    //   expect(result.current.summaryTopicTitle).toHaveBeenCalledWith('topic-1', [
+    //     { id: '1' },
+    //     { id: '2' },
+    //     { id: 'new-message-id', content: 'test', role: 'user' },
+    //     { id: 'assistant-message', role: 'assistant' },
+    //   ]);
+    // });
+    //
+    // it('当 activeTopicId 存在且主题标题为空时,正确地总结主题标题', async () => {
+    //   const { result } = renderHook(() => useChatStore());
+    //   result.current.setActiveTopic({ id: 'topic-1', title: '' });
+    //   result.current.setMessages([{ id: '1' }, { id: '2' }] as any, 'session-id', 'topic-1');
+    //
+    //   await act(async () => {
+    //     await result.current.sendMessage({ message: 'test' });
+    //   });
+    //
+    //   expect(result.current.summaryTopicTitle).toHaveBeenCalledWith('topic-1', [
+    //     { id: '1' },
+    //     { id: '2' },
+    //     { id: 'new-message-id', content: 'test', role: 'user' },
+    //     { id: 'assistant-message', role: 'assistant' },
+    //   ]);
+    // });
   });
 
   describe('toggleMessageEditing action', () => {
