@@ -1,11 +1,13 @@
 import { Avatar, List, ListItemProps } from '@lobehub/ui';
 import { useHover } from 'ahooks';
-import { createStyles, useResponsive } from 'antd-style';
+import { createStyles } from 'antd-style';
 import { memo, useMemo, useRef } from 'react';
+
+import { useServerConfigStore } from '@/store/serverConfig';
 
 const { Item } = List;
 
-const useStyles = createStyles(({ css, token, responsive }) => {
+const useStyles = createStyles(({ css, token }) => {
   return {
     container: css`
       position: relative;
@@ -15,11 +17,11 @@ const useStyles = createStyles(({ css, token, responsive }) => {
       padding-left: 8px;
 
       border-radius: ${token.borderRadius}px;
-      ${responsive.mobile} {
-        margin-block: 0;
-        padding-left: 12px;
-        border-radius: 0;
-      }
+    `,
+    mobile: css`
+      margin-block: 0;
+      padding-left: 12px;
+      border-radius: 0;
     `,
     title: css`
       line-height: 1.2;
@@ -31,8 +33,8 @@ const RawListItem = memo<ListItemProps & { avatar: string; avatarBackground?: st
   ({ avatar, avatarBackground, active, showAction, actions, title, ...props }) => {
     const ref = useRef(null);
     const isHovering = useHover(ref);
-    const { mobile } = useResponsive();
-    const { styles } = useStyles();
+    const mobile = useServerConfigStore((s) => s.isMobile);
+    const { cx, styles } = useStyles();
 
     const avatarRender = useMemo(
       () => (
@@ -52,7 +54,7 @@ const RawListItem = memo<ListItemProps & { avatar: string; avatarBackground?: st
         actions={actions}
         active={mobile ? false : active}
         avatar={avatarRender}
-        className={styles.container}
+        className={cx(styles.container, mobile && styles.mobile)}
         ref={ref}
         showAction={actions && (isHovering || showAction || mobile)}
         title={<span className={styles.title}>{title}</span>}
