@@ -113,6 +113,6 @@ TopicListContent.displayName = 'TopicListContent';
 
 export default memo(() => (
   <Suspense fallback={<SkeletonList />}>
-    <TopicListContent />;
+    <TopicListContent />
   </Suspense>
 ));
