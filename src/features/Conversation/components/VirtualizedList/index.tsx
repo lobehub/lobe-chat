@@ -80,20 +80,20 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   // first time loading
   if (isFirstLoading) return <SkeletonList mobile={mobile} />;
 
-  // in server mode and switch page
-  if (isServerMode && isLoading) return <SkeletonList mobile={mobile} />;
+  // in client mode and switch page, using the center loading for more
+  if (!isServerMode && isLoading)
+    return (
+      <Center height={'100%'} width={'100%'}>
+        <Icon
+          icon={Loader2Icon}
+          size={{ fontSize: 32 }}
+          spin
+          style={{ color: theme.colorTextTertiary }}
+        />
+      </Center>
+    );
 
-  // in client mode using the center loading for more
-  return isLoading ? (
-    <Center height={'100%'} width={'100%'}>
-      <Icon
-        icon={Loader2Icon}
-        size={{ fontSize: 32 }}
-        spin
-        style={{ color: theme.colorTextTertiary }}
-      />
-    </Center>
-  ) : (
+  return (
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}

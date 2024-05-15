@@ -1,15 +1,18 @@
 import { DB_Message } from '@/database/client/schemas/message';
-import { ChatMessage, ChatMessageError, ChatPluginPayload } from '@/types/message';
+import { ChatMessage, ChatMessageError, ChatPluginPayload, MessageRoleType } from '@/types/message';
 
 /* eslint-disable typescript-sort-keys/interface */
 
 export interface CreateMessageParams
-  extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
-    Pick<ChatMessage, 'content' | 'role'> {
+  extends Partial<Omit<ChatMessage, 'content' | 'role' | 'topicId'>> {
   fromModel?: string;
   fromProvider?: string;
   sessionId: string;
   traceId?: string;
+  topicId?: string;
+  content: string;
+  error?: ChatMessageError;
+  role: MessageRoleType;
 }
 
 export interface IMessageService {

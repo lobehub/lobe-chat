@@ -9,6 +9,7 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
@@ -34,6 +35,7 @@ vi.mock('@/services/message', () => ({
 }));
 vi.mock('@/services/topic', () => ({
   topicService: {
+    createTopic: vi.fn(() => Promise.resolve()),
     removeTopic: vi.fn(() => Promise.resolve()),
   },
 }));
@@ -82,7 +84,13 @@ describe('chatMessage actions', () => {
       const deleteSpy = vi.spyOn(result.current, 'deleteMessage');
 
       act(() => {
-        useChatStore.setState({ messages: [{ id: messageId } as ChatMessage] });
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [{ id: messageId } as ChatMessage],
+          },
+        });
       });
       await act(async () => {
         await result.current.deleteMessage(messageId);
@@ -157,7 +165,7 @@ describe('chatMessage actions', () => {
       expect(switchTopicSpy).toHaveBeenCalled();
 
       // 检查 activeTopicId 是否被清除，需要在状态更新后进行检查
-      expect(useChatStore.getState().activeTopicId).toBeUndefined();
+      expect(useChatStore.getState().activeTopicId).toBeNull();
     });
 
     it('should call removeTopic if there is an activeTopicId', async () => {
@@ -237,7 +245,6 @@ describe('chatMessage actions', () => {
         sessionId: mockState.activeId,
         topicId: mockState.activeTopicId,
       });
-      expect(result.current.refreshMessages).toHaveBeenCalled();
       expect(result.current.internal_coreProcessMessage).toHaveBeenCalled();
     });
 
@@ -265,9 +272,14 @@ describe('chatMessage actions', () => {
           useChatStore.setState({
             ...mockState,
             // Mock the currentChats selector to return a list that does not reach the threshold
-            messages: Array.from({ length: autoCreateTopicThreshold + 1 }, (_, i) => ({
-              id: `msg-${i}`,
-            })) as any,
+            messagesMap: {
+              [messageMapKey('session-id')]: Array.from(
+                { length: autoCreateTopicThreshold + 1 },
+                (_, i) => ({
+                  id: `msg-${i}`,
+                }),
+              ) as any,
+            },
             activeTopicId: undefined,
             saveToTopic: saveToTopicMock,
             switchTopic: switchTopicMock,
@@ -296,17 +308,23 @@ describe('chatMessage actions', () => {
         (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
 
         // Mock saveToTopic to resolve with a topic id and switchTopic to switch to the new topic
-        const saveToTopicMock = vi.fn(() => Promise.resolve('new-topic-id'));
+        const createTopicMock = vi.fn(() => Promise.resolve('new-topic-id'));
         const switchTopicMock = vi.fn();
 
         act(() => {
           useChatStore.setState({
             ...mockState,
-            messages: Array.from({ length: autoCreateTopicThreshold }, (_, i) => ({
-              id: `msg-${i}`,
-            })) as any,
+            activeId: 'session_id',
+            messagesMap: {
+              [messageMapKey('session_id')]: Array.from(
+                { length: autoCreateTopicThreshold },
+                (_, i) => ({
+                  id: `msg-${i}`,
+                }),
+              ) as any,
+            },
             activeTopicId: undefined,
-            saveToTopic: saveToTopicMock,
+            createTopic: createTopicMock,
             switchTopic: switchTopicMock,
           });
         });
@@ -315,8 +333,8 @@ describe('chatMessage actions', () => {
           await result.current.sendMessage({ message });
         });
 
-        expect(saveToTopicMock).toHaveBeenCalled();
-        expect(switchTopicMock).toHaveBeenCalledWith('new-topic-id');
+        expect(createTopicMock).toHaveBeenCalled();
+        expect(switchTopicMock).toHaveBeenCalledWith('new-topic-id', true);
       });
 
       it('should not auto-create topic if autoCreateTopicThreshold is not reached', async () => {
@@ -335,25 +353,31 @@ describe('chatMessage actions', () => {
         }));
 
         // Mock saveToTopic and switchTopic to simulate not being called
-        const saveToTopicMock = vi.fn();
+        const createTopicMock = vi.fn();
         const switchTopicMock = vi.fn();
 
         await act(async () => {
           useChatStore.setState({
             ...mockState,
-            // Mock the currentChats selector to return a list that does not reach the threshold
-            messages: Array.from({ length: autoCreateTopicThreshold - 2 }, (_, i) => ({
-              id: `msg-${i}`,
-            })) as any,
+            activeId: 'session_id',
+            messagesMap: {
+              // Mock the currentChats selector to return a list that does not reach the threshold
+              [messageMapKey('session_id')]: Array.from(
+                { length: autoCreateTopicThreshold - 3 },
+                (_, i) => ({
+                  id: `msg-${i}`,
+                }),
+              ) as any,
+            },
             activeTopicId: undefined,
-            saveToTopic: saveToTopicMock,
+            createTopic: createTopicMock,
             switchTopic: switchTopicMock,
           });
 
           await result.current.sendMessage({ message });
         });
 
-        expect(saveToTopicMock).not.toHaveBeenCalled();
+        expect(createTopicMock).not.toHaveBeenCalled();
         expect(switchTopicMock).not.toHaveBeenCalled();
       });
     });
@@ -391,10 +415,14 @@ describe('chatMessage actions', () => {
 
       act(() => {
         useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
           // Mock the currentChats selector to return a list that includes the message to be resent
-          messages: [
-            { id: messageId, role: 'user', content: 'Resend this message' } as ChatMessage,
-          ],
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: messageId, role: 'user', content: 'Resend this message' } as ChatMessage,
+            ],
+          },
         });
       });
 
@@ -419,8 +447,12 @@ describe('chatMessage actions', () => {
 
       act(() => {
         useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
           // Mock the currentChats selector to return a list that does not include the message to be resent
-          messages: [],
+          messagesMap: {
+            [messageMapKey('session-id')]: [],
+          },
         });
       });
 
