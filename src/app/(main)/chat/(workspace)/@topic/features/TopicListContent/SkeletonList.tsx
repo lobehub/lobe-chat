@@ -45,7 +45,7 @@ export const Placeholder = memo(() => {
 });
 
 export const SkeletonList = memo(() => (
-  <Flexbox>
+  <Flexbox style={{ paddingTop: 6 }}>
     {Array.from({ length: 8 }).map((_, i) => (
       <Placeholder key={i} />
     ))}

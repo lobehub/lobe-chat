@@ -2,10 +2,9 @@ import { createStyles } from 'antd-style';
 import { type ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css }) => ({
   header: css`
     z-index: 10;
-    box-shadow: 0 2px 6px ${token.colorBgLayout};
   `,
 }));
 
