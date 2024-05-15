@@ -23,7 +23,6 @@ const Google: ModelProviderCard = {
     {
       description: 'The best model for scaling across a wide range of tasks',
       displayName: 'Gemini 1.0 Pro',
-      enabled: true,
       functionCall: true,
       id: 'gemini-pro',
       maxOutput: 2048,
@@ -40,7 +39,6 @@ const Google: ModelProviderCard = {
     {
       description: 'The best image understanding model to handle a broad range of applications',
       displayName: 'Gemini 1.0 Pro Vision',
-      enabled: true,
       id: 'gemini-pro-vision',
       maxOutput: 4096,
       tokens: 12_288 + 4096,
