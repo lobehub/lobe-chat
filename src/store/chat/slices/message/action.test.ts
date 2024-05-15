@@ -1,9 +1,11 @@
+import * as lobeUIModules from '@lobehub/ui';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import useSWR, { mutate } from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOADING_FLAT } from '@/const/message';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import { TraceEventType } from '@/const/trace';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
@@ -78,6 +80,48 @@ afterEach(() => {
 });
 
 describe('chatMessage actions', () => {
+  describe('addAIMessage', () => {
+    it('should return early if activeId is undefined', async () => {
+      useChatStore.setState({ activeId: undefined });
+      const { result } = renderHook(() => useChatStore());
+      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+
+      await act(async () => {
+        await result.current.addAIMessage();
+      });
+
+      expect(messageService.createMessage).not.toHaveBeenCalled();
+      expect(updateInputMessageSpy).not.toHaveBeenCalled();
+    });
+
+    it('should call internal_createMessage with correct parameters', async () => {
+      const inputMessage = 'Test input message';
+      useChatStore.setState({ inputMessage });
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.addAIMessage();
+      });
+
+      expect(messageService.createMessage).toHaveBeenCalledWith({
+        content: inputMessage,
+        role: 'assistant',
+        sessionId: mockState.activeId,
+        topicId: mockState.activeTopicId,
+      });
+    });
+
+    it('should call updateInputMessage with empty string', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const updateInputMessageSpy = vi.spyOn(result.current, 'updateInputMessage');
+      await act(async () => {
+        await result.current.addAIMessage();
+      });
+
+      expect(updateInputMessageSpy).toHaveBeenCalledWith('');
+    });
+  });
+
   describe('deleteMessage', () => {
     it('deleteMessage should remove a message by id', async () => {
       const { result } = renderHook(() => useChatStore());
@@ -125,6 +169,36 @@ describe('chatMessage actions', () => {
       });
 
       expect(result.current.inputMessage).toEqual(newInputMessage);
+    });
+  });
+
+  describe('copyMessage', () => {
+    it('should call copyToClipboard with correct content', async () => {
+      const messageId = 'message-id';
+      const content = 'Test content';
+      const { result } = renderHook(() => useChatStore());
+      const copyToClipboardSpy = vi.spyOn(lobeUIModules, 'copyToClipboard');
+
+      await act(async () => {
+        await result.current.copyMessage(messageId, content);
+      });
+
+      expect(copyToClipboardSpy).toHaveBeenCalledWith(content);
+    });
+
+    it('should call internal_traceMessage with correct parameters', async () => {
+      const messageId = 'message-id';
+      const content = 'Test content';
+      const { result } = renderHook(() => useChatStore());
+      const internal_traceMessageSpy = vi.spyOn(result.current, 'internal_traceMessage');
+
+      await act(async () => {
+        await result.current.copyMessage(messageId, content);
+      });
+
+      expect(internal_traceMessageSpy).toHaveBeenCalledWith(messageId, {
+        eventType: TraceEventType.CopyMessage,
+      });
     });
   });
 
@@ -768,6 +842,31 @@ describe('chatMessage actions', () => {
     });
   });
 
+  describe('toggleMessageEditing', () => {
+    it('should update messageEditingIds correctly when enabling editing', () => {
+      const messageId = 'message-id';
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.toggleMessageEditing(messageId, true);
+      });
+
+      expect(result.current.messageEditingIds).toContain(messageId);
+    });
+
+    it('should update messageEditingIds correctly when disabling editing', () => {
+      const messageId = 'message-id';
+      useChatStore.setState({ messageEditingIds: [messageId] });
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.toggleMessageEditing(messageId, false);
+      });
+
+      expect(result.current.messageEditingIds).not.toContain(messageId);
+    });
+  });
+
   describe('refreshMessages action', () => {
     beforeEach(() => {
       vi.mock('swr', async () => {
@@ -872,6 +971,72 @@ describe('chatMessage actions', () => {
         });
       });
     });
+
+    it('should generate correct contextMessages for "user" role', async () => {
+      const messageId = 'message-id';
+      const messages = [
+        { id: 'msg-1', role: 'system' },
+        { id: messageId, role: 'user', meta: { avatar: '😀' } },
+        { id: 'msg-3', role: 'assistant' },
+      ];
+      act(() => {
+        useChatStore.setState({
+          messagesMap: {
+            [chatSelectors.currentChatKey(mockState as any)]: messages as ChatMessage[],
+          },
+        });
+      });
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.internal_resendMessage(messageId);
+      });
+
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        messages.slice(0, 2),
+        messageId,
+        { traceId: undefined },
+      );
+    });
+
+    it('should generate correct contextMessages for "assistant" role', async () => {
+      const messageId = 'message-id';
+      const messages = [
+        { id: 'msg-1', role: 'system' },
+        { id: 'msg-2', role: 'user', meta: { avatar: '😀' } },
+        { id: messageId, role: 'assistant', parentId: 'msg-2' },
+      ];
+      useChatStore.setState({
+        messagesMap: {
+          [chatSelectors.currentChatKey(mockState as any)]: messages as ChatMessage[],
+        },
+      });
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.internal_resendMessage(messageId);
+      });
+
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        messages.slice(0, 2),
+        'msg-2',
+        { traceId: undefined },
+      );
+    });
+
+    it('should return early if contextMessages is empty', async () => {
+      const messageId = 'message-id';
+      useChatStore.setState({
+        messagesMap: { [chatSelectors.currentChatKey(mockState as any)]: [] },
+      });
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.internal_resendMessage(messageId);
+      });
+
+      expect(result.current.internal_coreProcessMessage).not.toHaveBeenCalled();
+    });
   });
 
   describe('internal_toggleChatLoading', () => {
@@ -967,6 +1132,103 @@ describe('chatMessage actions', () => {
       });
 
       expect(result.current.messageLoadingIds).not.toContain(messageId);
+    });
+  });
+
+  describe('stopGenerateMessage', () => {
+    it('should return early if abortController is undefined', () => {
+      act(() => {
+        useChatStore.setState({ abortController: undefined });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      const spy = vi.spyOn(result.current, 'internal_toggleChatLoading');
+
+      act(() => {
+        result.current.stopGenerateMessage();
+      });
+
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('should call abortController.abort()', () => {
+      const abortMock = vi.fn();
+      const abortController = { abort: abortMock } as unknown as AbortController;
+      act(() => {
+        useChatStore.setState({ abortController });
+      });
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.stopGenerateMessage();
+      });
+
+      expect(abortMock).toHaveBeenCalled();
+    });
+
+    it('should call internal_toggleChatLoading with correct parameters', () => {
+      const abortController = new AbortController();
+      act(() => {
+        useChatStore.setState({ abortController });
+      });
+      const { result } = renderHook(() => useChatStore());
+      const spy = vi.spyOn(result.current, 'internal_toggleChatLoading');
+
+      act(() => {
+        result.current.stopGenerateMessage();
+      });
+
+      expect(spy).toHaveBeenCalledWith(false, undefined, expect.any(String));
+    });
+  });
+
+  describe('updateInputMessage', () => {
+    it('should not update state if message is the same as current inputMessage', () => {
+      const inputMessage = 'Test input message';
+      useChatStore.setState({ inputMessage });
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.updateInputMessage(inputMessage);
+      });
+
+      expect(result.current.inputMessage).toBe(inputMessage);
+    });
+  });
+
+  describe('modifyMessageContent', () => {
+    it('should call internal_traceMessage with correct parameters before updating', async () => {
+      const messageId = 'message-id';
+      const content = 'Updated content';
+      const { result } = renderHook(() => useChatStore());
+
+      const spy = vi.spyOn(result.current, 'internal_traceMessage');
+      await act(async () => {
+        await result.current.modifyMessageContent(messageId, content);
+      });
+
+      expect(spy).toHaveBeenCalledWith(messageId, {
+        eventType: TraceEventType.ModifyMessage,
+        nextContent: content,
+      });
+    });
+
+    it('should call internal_updateMessageContent with correct parameters', async () => {
+      const messageId = 'message-id';
+      const content = 'Updated content';
+      const { result } = renderHook(() => useChatStore());
+
+      const spy = vi.spyOn(result.current, 'internal_traceMessage');
+
+      await act(async () => {
+        await result.current.modifyMessageContent(messageId, content);
+      });
+
+      expect(spy).toHaveBeenCalledWith(messageId, {
+        eventType: 'Modify Message',
+        nextContent: 'Updated content',
+      });
     });
   });
 });
