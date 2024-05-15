@@ -16,6 +16,7 @@ const MobileContentLayout = ({
   const content = (
     <Flexbox
       height="100%"
+      id={'lobe-mobile-scroll-container'}
       style={{
         overflowX: 'hidden',
         overflowY: 'auto',

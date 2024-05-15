@@ -17,7 +17,15 @@ const Topics = memo(({ children }: PropsWithChildren) => {
   const { t } = useTranslation('chat');
 
   return (
-    <Modal allowFullscreen onCancel={() => setOpen(false)} open={open} title={t('topic.title')}>
+    <Modal
+      allowFullscreen
+      onCancel={() => setOpen(false)}
+      open={open}
+      styles={{
+        body: { padding: 0 },
+      }}
+      title={t('topic.title')}
+    >
       {children}
     </Modal>
   );
