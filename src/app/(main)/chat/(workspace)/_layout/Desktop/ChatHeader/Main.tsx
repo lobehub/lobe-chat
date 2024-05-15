@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useInitAgentConfig } from '@/app/(main)/chat/(workspace)/_layout/useInitAgentConfig';
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -45,7 +46,7 @@ const Main = memo(() => {
       />
     </Flexbox>
   ) : (
-    <Flexbox align={'flex-start'} gap={12} horizontal>
+    <Flexbox align={'center'} gap={4} horizontal>
       {
         <ActionIcon
           aria-label={t('agentsAndConversations')}
@@ -57,7 +58,7 @@ const Main = memo(() => {
               showSessionPanel: !currentShowSessionPanel,
             });
           }}
-          size="large"
+          size={DESKTOP_HEADER_ICON_SIZE}
           title={t('agentsAndConversations')}
         />
       }
