@@ -22,6 +22,7 @@ export interface ITopicService {
 
   getTopics(params: QueryTopicParams): Promise<ChatTopic[]>;
   getAllTopics(): Promise<ChatTopic[]>;
+  countTopics(): Promise<number>;
   searchTopics(keyword: string, sessionId?: string): Promise<ChatTopic[]>;
 
   updateTopic(id: string, data: Partial<ChatTopic>): Promise<any>;

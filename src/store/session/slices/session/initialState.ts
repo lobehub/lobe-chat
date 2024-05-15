@@ -8,7 +8,6 @@ export interface SessionState {
   activeId: string;
   customSessionGroups: CustomSessionGroup[];
   defaultSessions: LobeAgentSession[];
-  isMobile?: boolean;
   isSearching: boolean;
   isSessionsFirstFetchFinished: boolean;
   pinnedSessions: LobeAgentSession[];
@@ -25,7 +24,6 @@ export const initialSessionState: SessionState = {
   activeId: 'inbox',
   customSessionGroups: [],
   defaultSessions: [],
-  isMobile: false,
   isSearching: false,
   isSessionsFirstFetchFinished: false,
   pinnedSessions: [],

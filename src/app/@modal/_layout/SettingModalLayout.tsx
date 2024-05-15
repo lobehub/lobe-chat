@@ -18,11 +18,11 @@ const SettingModalLayout = memo<SettingLayoutProps>(({ children, category, desc,
   const ref = useRef<any>(null);
   const theme = useTheme();
   const { isDarkMode } = useThemeMode();
-  const { md = true } = useResponsive();
+  const { mobile = false } = useResponsive();
 
   return (
-    <>
-      {md ? (
+    <Flexbox horizontal={!mobile} width={'100%'}>
+      {!mobile ? (
         <SideBar
           desc={desc}
           style={{
@@ -38,19 +38,25 @@ const SettingModalLayout = memo<SettingLayoutProps>(({ children, category, desc,
       )}
       <Flexbox
         align={'center'}
-        gap={64}
+        gap={mobile ? 0 : 64}
+        ref={ref}
         style={{
-          background: isDarkMode ? theme.colorFillQuaternary : theme.colorBgElevated,
+          background: mobile
+            ? theme.colorBgContainer
+            : isDarkMode
+              ? theme.colorFillQuaternary
+              : theme.colorBgElevated,
+          minHeight: '100%',
           overflowX: 'hidden',
           overflowY: 'auto',
-          paddingBlock: 40,
-          paddingInline: 56,
+          paddingBlock: mobile ? 0 : 40,
+          paddingInline: mobile ? 0 : 56,
         }}
         width={'100%'}
       >
         {children}
       </Flexbox>
-    </>
+    </Flexbox>
   );
 });
 
