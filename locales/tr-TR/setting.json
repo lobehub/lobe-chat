@@ -38,7 +38,6 @@
     "checker": {
       "button": "Kontrol Et",
       "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
-      "ollamaDesc": "Proxy adresinin doğru şekilde doldurulup doldurulmadığını test edin",
       "pass": "Kontrol Başarılı",
       "title": "Bağlantı Kontrolü"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Lütfen listeden bir model seçin",
       "title": "Model Listesi",
       "total": "Toplam {{count}} model kullanılabilir"
+    },
+    "proxyUrl": {
+      "desc": "Varsayılan adres dışında, http(s):// içermelidir",
+      "title": "API Proxy Adresi"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
   },

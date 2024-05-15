@@ -134,8 +134,13 @@ export const chatTopic: StateCreator<
       onLoadingChange: (loading) => {
         internal_updateTopicLoading(topicId, loading);
       },
-      onMessageHandle: (x) => {
-        output += x;
+      onMessageHandle: (chunk) => {
+        switch (chunk.type) {
+          case 'text': {
+            output += chunk.text;
+          }
+        }
+
         updateTopicTitleInSummary(topicId, output);
       },
       params: await chainSummaryTitle(messages),
@@ -166,6 +171,8 @@ export const chatTopic: StateCreator<
       [SWR_USE_FETCH_TOPIC, sessionId],
       async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
       {
+        suspense: true,
+        fallbackData: [],
         onSuccess: (topics) => {
           set({ topics, topicsInit: true }, false, n('useFetchTopics(success)', { sessionId }));
         },

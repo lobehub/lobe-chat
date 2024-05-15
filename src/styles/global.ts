@@ -16,10 +16,33 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     max-height: 100dvh;
 
     background: ${token.colorBgLayout};
+
+    @media (min-device-width: 576px) {
+      overflow: hidden;
+    }
   }
 
   * {
     scrollbar-color: ${token.colorFill} transparent;
     scrollbar-width: thin;
+
+    ::-webkit-scrollbar {
+      width: 0.75em;
+      height: 0.75em;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+    }
+
+    :hover::-webkit-scrollbar-thumb {
+      background-color: ${token.colorText};
+      background-clip: content-box;
+      border: 3px solid transparent;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
+    }
   }
 `;

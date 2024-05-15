@@ -4,13 +4,9 @@ import { PluginModel } from '@/database/client/models/plugin';
 import { LobeTool } from '@/types/tool';
 import { LobeToolCustomPlugin } from '@/types/tool/plugin';
 
-export interface InstallPluginParams {
-  identifier: string;
-  manifest: LobeChatPluginManifest;
-  type: 'plugin' | 'customPlugin';
-}
+import { IPluginService, InstallPluginParams } from './type';
 
-export class ClientService {
+export class ClientService implements IPluginService {
   installPlugin = async (plugin: InstallPluginParams) => {
     return PluginModel.create(plugin);
   };
@@ -28,17 +24,19 @@ export class ClientService {
   }
 
   async updatePlugin(id: string, value: LobeToolCustomPlugin) {
-    return PluginModel.update(id, value);
+    await PluginModel.update(id, value);
+    return;
   }
   async updatePluginManifest(id: string, manifest: LobeChatPluginManifest) {
-    return PluginModel.update(id, { manifest });
+    await PluginModel.update(id, { manifest });
   }
 
   async removeAllPlugins() {
     return PluginModel.clear();
   }
 
-  async updatePluginSettings(id: string, settings: any) {
-    return PluginModel.update(id, { settings });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async updatePluginSettings(id: string, settings: any, _?: AbortSignal) {
+    await PluginModel.update(id, { settings });
   }
 }

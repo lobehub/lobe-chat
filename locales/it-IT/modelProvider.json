@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
-      "placeholder": "https://api.anthropic.com",
-      "title": "Indirizzo API Proxy"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Inserisci la chiave API da Anthropic",
@@ -66,12 +61,19 @@
       "title": "Usa le informazioni di autenticazione Bedrock personalizzate"
     }
   },
-  "google": {
-    "endpoint": {
-      "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "Indirizzo dell'API Proxy"
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Inserisci la chiave API di DeepSeek",
+      "placeholder": "Chiave API di DeepSeek",
+      "title": "Chiave API"
     },
+    "unlock": {
+      "description": "Inserisci la tua chiave API di DeepSeek per avviare la sessione. L'applicazione non memorizzerà la tua chiave API.",
+      "title": "Usa una chiave API personalizzata di DeepSeek"
+    }
+  },
+  "google": {
     "title": "Google",
     "token": {
       "desc": "Inserisci la chiave API da Google",
@@ -133,7 +135,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"
+      "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente",
+      "title": "Controllo della connettività"
     },
     "customModelName": {
       "desc": "Aggiungi modelli personalizzati, separati da virgola (,)",
@@ -142,7 +145,6 @@
     },
     "endpoint": {
       "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama. Lascia vuoto se non specificato localmente",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Indirizzo del proxy dell'interfaccia"
     },
     "setup": {
@@ -172,11 +174,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Indirizzo del proxy dell'interfaccia"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Utilizza la tua chiave OpenAI",

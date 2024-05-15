@@ -45,10 +45,16 @@ export const createPluginSlice: StateCreator<
     await get().refreshPlugins();
   },
   updatePluginSettings: async (id, settings) => {
-    const previousSettings = pluginSelectors.getPluginSettingsById(id)(get());
+    const signal = get().updatePluginSettingsSignal;
+    if (signal) signal.abort('canceled');
 
+    const newSignal = new AbortController();
+
+    const previousSettings = pluginSelectors.getPluginSettingsById(id)(get());
     const nextSettings = merge(previousSettings, settings);
-    await pluginService.updatePluginSettings(id, nextSettings);
+
+    set({ updatePluginSettingsSignal: newSignal });
+    await pluginService.updatePluginSettings(id, nextSettings, newSignal.signal);
 
     await get().refreshPlugins();
   },

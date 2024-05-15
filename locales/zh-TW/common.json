@@ -58,6 +58,7 @@
     },
     "title": "匯入資料"
   },
+  "installPWA": "安裝瀏覽器應用 (PWA)",
   "lang": {
     "ar": "阿拉伯語",
     "bg-BG": "保加利亞語",
@@ -169,6 +170,7 @@
   "userPanel": {
     "anonymousNickName": "匿名使用者",
     "billing": "帳單管理",
+    "data": "資料儲存",
     "defaultNickname": "社群版使用者",
     "discord": "社區支援",
     "docs": "使用文件",

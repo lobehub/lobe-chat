@@ -38,7 +38,6 @@
     "checker": {
       "button": "Kiểm tra",
       "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
-      "ollamaDesc": "Kiểm tra xem địa chỉ proxy đã được điền đúng chưa",
       "pass": "Kiểm tra thành công",
       "title": "Kiểm tra kết nối"
     },
@@ -95,6 +94,10 @@
       "placeholder": "Vui lòng chọn mô hình từ danh sách",
       "title": "Danh sách mô hình",
       "total": "Tổng cộng có {{count}} mô hình có sẵn"
+    },
+    "proxyUrl": {
+      "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
+      "title": "Địa chỉ Proxy API"
     },
     "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
   },
