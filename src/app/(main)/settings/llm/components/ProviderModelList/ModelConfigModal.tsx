@@ -1,5 +1,5 @@
 import { Modal } from '@lobehub/ui';
-import { Checkbox, Form, Input } from 'antd';
+import { Button, Checkbox, Form, Input } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +16,7 @@ interface ModelConfigModalProps {
 const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, provider }) => {
   const [formInstance] = Form.useForm();
   const { t } = useTranslation('setting');
+  const { t: tc } = useTranslation('common');
 
   const [open, id, editingProvider, dispatchCustomModelCards, toggleEditingCustomModelCard] =
     useUserStore((s) => [
@@ -38,20 +39,32 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
   return (
     <Modal
       destroyOnClose
+      footer={[
+        <Button key="cancel" onClick={closeModal}>
+          {tc('cancel')}
+        </Button>,
+
+        <Button
+          key="ok"
+          onClick={() => {
+            if (!editingProvider || !id) return;
+            const data = formInstance.getFieldsValue();
+
+            dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
+
+            closeModal();
+          }}
+          style={{ marginInlineStart: '16px' }}
+          type="primary"
+        >
+          {tc('ok')}
+        </Button>,
+      ]}
       maskClosable
-      onCancel={() => {
-        closeModal();
-      }}
-      onOk={() => {
-        if (!editingProvider || !id) return;
-        const data = formInstance.getFieldsValue();
-
-        dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
-
-        closeModal();
-      }}
+      onCancel={closeModal}
       open={open}
       title={t('llm.customModelCards.modelConfig.modalTitle')}
+      zIndex={1051} // Select is 1050
     >
       <div
         onClick={(e) => {
@@ -66,6 +79,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
           form={formInstance}
           initialValues={modelCard}
           labelCol={{ span: 4 }}
+          preserve={false}
           style={{ marginTop: 16 }}
           wrapperCol={{ offset: 1, span: 18 }}
         >

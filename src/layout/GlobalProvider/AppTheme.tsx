@@ -30,12 +30,25 @@ const useStyles = createStyles(({ css, token }) => ({
     height: 100%;
     min-height: 100dvh;
     max-height: 100dvh;
+
+    @media (min-device-width: 576px) {
+      overflow: hidden;
+    }
   `,
   // scrollbar-width and scrollbar-color are supported from Chrome 121
   // https://developer.mozilla.org/en-US/docs/Web/CSS/scrollbar-color
   scrollbar: css`
     scrollbar-color: ${token.colorFill} transparent;
     scrollbar-width: thin;
+
+    #lobe-mobile-scroll-container {
+      scrollbar-width: none;
+
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+      }
+    }
   `,
 
   // so this is a polyfill for older browsers
