@@ -5,6 +5,7 @@ import { chainLangDetect } from '@/chains/langDetect';
 import { chainTranslate } from '@/chains/translate';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 
 import { useChatStore } from '../../store';
 
@@ -73,18 +74,21 @@ describe('ChatEnhanceAction', () => {
 
       act(() => {
         useChatStore.setState({
-          messages: [
-            {
-              id: messageId,
-              content: messageContent,
-              createdAt: Date.now(),
-              updatedAt: Date.now(),
-              role: 'user',
-              sessionId: 'test',
-              topicId: 'test',
-              meta: {},
-            },
-          ],
+          activeId: 'session',
+          messagesMap: {
+            [messageMapKey('session')]: [
+              {
+                id: messageId,
+                content: messageContent,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                role: 'user',
+                sessionId: 'test',
+                topicId: 'test',
+                meta: {},
+              },
+            ],
+          },
         });
       });
 
