@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.159.10](https://github.com/lobehub/lobe-chat/compare/v0.159.9...v0.159.10)
+
+<sup>Released on **2024-05-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix setting modal on responsive and some other style problem.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix setting modal on responsive and some other style problem, closes [#2512](https://github.com/lobehub/lobe-chat/issues/2512) ([f6b4ca4](https://github.com/lobehub/lobe-chat/commit/f6b4ca4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.159.9](https://github.com/lobehub/lobe-chat/compare/v0.159.8...v0.159.9)
 
 <sup>Released on **2024-05-14**</sup>
