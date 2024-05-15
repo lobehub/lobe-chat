@@ -61,6 +61,18 @@
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Nhập API Key từ DeepSeek",
+      "placeholder": "Khóa API DeepSeek",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập API Key của bạn từ DeepSeek để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ API Key của bạn",
+      "title": "Sử dụng API Key DeepSeek tùy chỉnh"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {

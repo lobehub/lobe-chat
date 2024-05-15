@@ -1,111 +1,113 @@
 {
   "debug": {
-    "arguments": "调用参数",
-    "function_call": "函数调用",
-    "off": "关闭调试",
-    "on": "查看插件调用信息",
-    "response": "返回结果"
+    "arguments": "Argumenten",
+    "function_call": "Functieoproep",
+    "off": "Zet debug uit",
+    "on": "Bekijk plug-in oproepinformatie",
+    "payload": "plug-in payload",
+    "response": "Reactie",
+    "tool_call": "Tool-oproepverzoek"
   },
   "detailModal": {
     "info": {
-      "description": "API 描述",
-      "name": "API 名称"
+      "description": "API-beschrijving",
+      "name": "API-naam"
     },
     "tabs": {
-      "info": "插件能力",
-      "manifest": "安装文件",
-      "settings": "设置"
+      "info": "Plug-in mogelijkheden",
+      "manifest": "Installatiebestand",
+      "settings": "Instellingen"
     },
-    "title": "插件详情"
+    "title": "Plug-in Details"
   },
   "dev": {
-    "confirmDeleteDevPlugin": "即将删除该本地插件，删除后将无法找回，是否删除该插件？",
+    "confirmDeleteDevPlugin": "Weet u zeker dat u deze lokale plug-in wilt verwijderen? Eenmaal verwijderd, kan het niet worden hersteld.",
     "customParams": {
       "useProxy": {
-        "label": "通过代理安装（如遇到跨域访问错误，可尝试开启该选项后重新安装）"
+        "label": "Installeren via proxy (als u problemen ondervindt met toegang tot cross-origin, probeer dan deze optie in te schakelen en opnieuw te installeren)"
       }
     },
-    "deleteSuccess": "插件删除成功",
+    "deleteSuccess": "Plug-in succesvol verwijderd",
     "manifest": {
       "identifier": {
-        "desc": "插件的唯一标识",
-        "label": "标识符"
+        "desc": "De unieke identificatie van de plug-in",
+        "label": "Identificatie"
       },
       "mode": {
-        "local": "可视化配置",
-        "local-tooltip": "暂时不支持可视化配置",
-        "url": "在线链接"
+        "local": "Visuele configuratie",
+        "local-tooltip": "Visuele configuratie wordt op dit moment niet ondersteund",
+        "url": "Online link"
       },
       "name": {
-        "desc": "插件标题",
-        "label": "标题",
-        "placeholder": "搜索引擎"
+        "desc": "De titel van de plug-in",
+        "label": "Titel",
+        "placeholder": "Zoekmachine"
       }
     },
     "meta": {
       "author": {
-        "desc": "插件的作者",
-        "label": "作者"
+        "desc": "De auteur van de plug-in",
+        "label": "Auteur"
       },
       "avatar": {
-        "desc": "插件的图标，可以使用 Emoji，也可以使用 URL",
-        "label": "图标"
+        "desc": "Het pictogram van de plug-in, kan een Emoji of een URL zijn",
+        "label": "Pictogram"
       },
       "description": {
-        "desc": "插件描述",
-        "label": "描述",
-        "placeholder": "查询搜索引擎获取信息"
+        "desc": "De beschrijving van de plug-in",
+        "label": "Beschrijving",
+        "placeholder": "Informatie verkrijgen van zoekmachines"
       },
-      "formFieldRequired": "该字段为必填项",
+      "formFieldRequired": "Dit veld is verplicht",
       "homepage": {
-        "desc": "插件的首页",
-        "label": "首页"
+        "desc": "De startpagina van de plug-in",
+        "label": "Startpagina"
       },
       "identifier": {
-        "desc": "插件的唯一标识，将从 manifest 中自动识别",
-        "errorDuplicate": "标识符和已有插件重复，请修改标识符",
-        "label": "标识符",
-        "pattenErrorMessage": "只能输入英文字符、数字 、- 和_ 这两个符号"
+        "desc": "De unieke identificatie van de plug-in, ondersteunt alleen alfanumerieke tekens, koppelteken - en underscore _",
+        "errorDuplicate": "De identificatie wordt al gebruikt door een andere plug-in, wijzig de identificatie",
+        "label": "Identificatie",
+        "pattenErrorMessage": "Alleen alfanumerieke tekens, koppelteken - en underscore _ zijn toegestaan"
       },
       "manifest": {
-        "desc": "LobeChat 将会通过该链接安装插件",
-        "label": "插件描述文件 (Manifest) URL",
-        "preview": "预览 Manifest",
-        "refresh": "刷新"
+        "desc": "LobeChat zal de plug-in installeren via deze link",
+        "label": "Plug-in Beschrijving (Manifest) URL",
+        "preview": "Voorbeeld",
+        "refresh": "Vernieuwen"
       },
       "title": {
-        "desc": "插件标题",
-        "label": "标题",
-        "placeholder": "搜索引擎"
+        "desc": "De titel van de plug-in",
+        "label": "Titel",
+        "placeholder": "Zoekmachine"
       }
     },
-    "metaConfig": "插件元信息配置",
-    "modalDesc": "添加自定义插件后，可用于插件开发验证，也可直接在会话中使用。插件开发请参考<1>开发文档↗</>",
+    "metaConfig": "Configuratie van plug-inmetadata",
+    "modalDesc": "Na het toevoegen van een aangepaste plug-in kan deze worden gebruikt voor verificatie van plug-inontwikkeling of direct in de sessie. Raadpleeg de <1>ontwikkelingsdocumentatie↗</> voor plug-inontwikkeling.",
     "openai": {
-      "importUrl": "从 URL 链接导入",
+      "importUrl": "Importeren van URL-link",
       "schema": "Schema"
     },
     "preview": {
-      "card": "预览插件展示效果",
-      "desc": "预览插件描述",
-      "title": "插件名称预览"
+      "card": "Voorbeeld van plug-inweergave",
+      "desc": "Voorbeeld van plug-inbeschrijving",
+      "title": "Voorbeeld van plug-innaam"
     },
-    "save": "安装插件",
-    "saveSuccess": "插件设置保存成功",
+    "save": "Installeer plug-in",
+    "saveSuccess": "Instellingen van plug-in succesvol opgeslagen",
     "tabs": {
-      "manifest": "功能描述清单 (Manifest)",
-      "meta": "插件元信息"
+      "manifest": "Functiebeschrijving Manifest (Manifest)",
+      "meta": "Plug-in Metadata"
     },
     "title": {
-      "create": "添加自定义插件",
-      "edit": "编辑自定义插件"
+      "create": "Aangepaste plug-in toevoegen",
+      "edit": "Aangepaste plug-in bewerken"
     },
     "type": {
-      "lobe": "LobeChat 插件",
-      "openai": "OpenAI 插件"
+      "lobe": "LobeChat-plug-in",
+      "openai": "OpenAI-plug-in"
     },
-    "update": "更新",
-    "updateSuccess": "插件设置更新成功"
+    "update": "Bijwerken",
+    "updateSuccess": "Instellingen van plug-in succesvol bijgewerkt"
   },
   "error": {
     "fetchError": "Het ophalen van de manifest-link is mislukt. Zorg ervoor dat de link geldig is en controleer of de link cross-origin toegang toestaat.",
@@ -128,10 +130,6 @@
     "plugin": "Plugin wordt uitgevoerd..."
   },
   "pluginList": "Lijst met plugins",
-  "plugins": {
-    "loading": "Plugins worden gecontroleerd...",
-    "unknown": "Onbekende plugin"
-  },
   "setting": "Plugin-instellingen",
   "settings": {
     "indexUrl": {
@@ -162,5 +160,6 @@
       "installed": "Geïnstalleerd"
     },
     "title": "Pluginwinkel"
-  }
+  },
+  "unknownPlugin": "onbekende plugin"
 }

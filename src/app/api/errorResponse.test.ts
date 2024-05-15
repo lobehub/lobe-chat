@@ -132,6 +132,12 @@ describe('createErrorResponse', () => {
       const response = createErrorResponse(errorType);
       expect(response.status).toBe(485);
     });
+
+    it('returns a 486 status for DeepSeekBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.DeepSeekBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(486);
+    });
   });
 
   // 测试状态码不在200-599范围内的情况
