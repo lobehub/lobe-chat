@@ -53,14 +53,14 @@ const Google: ModelProviderCard = {
       maxOutput: 2048,
       tokens: 30_720 + 2048,
     },
-    // {
-    //   description:
-    //     'The best model for scaling across a wide range of tasks. Released April 9, 2024.',
-    //   displayName: 'Gemini 1.0 Pro 002 (Tuning)',
-    //   id: 'gemini-1.0-pro-002',
-    //   maxOutput: 2048,
-    //   tokens: 30_720 + 2048,
-    // },
+    {
+      description:
+        'The best model for scaling across a wide range of tasks. Released April 9, 2024.',
+      displayName: 'Gemini 1.0 Pro 002 (Tuning)',
+      id: 'gemini-1.0-pro-002',
+      maxOutput: 2048,
+      tokens: 30_720 + 2048,
+    },
     {
       description:
         'The best model for scaling across a wide range of tasks. This is the latest model.',
