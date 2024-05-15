@@ -29,14 +29,17 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
 
   const [id] = useChatStore((s) => [chatSelectors.currentChatKey(s)]);
 
-  const [activeTopicId, useFetchMessages, isFirstLoading] = useChatStore((s) => [
-    s.activeTopicId,
-    s.useFetchMessages,
-    chatSelectors.currentChatLoadingState(s),
-  ]);
+  const [activeTopicId, useFetchMessages, isFirstLoading, isCurrentChatLoaded] = useChatStore(
+    (s) => [
+      s.activeTopicId,
+      s.useFetchMessages,
+      chatSelectors.currentChatLoadingState(s),
+      chatSelectors.isCurrentChatLoaded(s),
+    ],
+  );
 
   const [sessionId] = useSessionStore((s) => [s.activeId]);
-  const { isLoading } = useFetchMessages(sessionId, activeTopicId);
+  useFetchMessages(sessionId, activeTopicId);
 
   const data = useChatStore((s) => {
     const showInboxWelcome = chatSelectors.showInboxWelcome(s);
@@ -77,12 +80,15 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     [mobile],
   );
 
-  // first time loading
+  // first time loading or not loaded
   if (isFirstLoading) return <SkeletonList mobile={mobile} />;
 
-  // in client mode and switch page, using the center loading for more
-  if (!isServerMode && isLoading)
-    return (
+  if (!isCurrentChatLoaded)
+    // use skeleton list when not loaded in server mode due to the loading duration is much longer than client mode
+    return isServerMode ? (
+      <SkeletonList mobile={mobile} />
+    ) : (
+      // in client mode and switch page, using the center loading for smooth transition
       <Center height={'100%'} width={'100%'}>
         <Icon
           icon={Loader2Icon}

@@ -121,6 +121,8 @@ const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
 
 const currentChatLoadingState = (s: ChatStore) => !s.messagesInit;
 
+const isCurrentChatLoaded = (s: ChatStore) => !!s.messagesMap[currentChatKey(s)];
+
 const isMessageEditing = (id: string) => (s: ChatStore) => s.messageEditingIds.includes(id);
 const isMessageLoading = (id: string) => (s: ChatStore) => s.messageLoadingIds.includes(id);
 const isMessageGenerating = (id: string) => (s: ChatStore) => s.chatLoadingIds.includes(id);
@@ -144,6 +146,7 @@ export const chatSelectors = {
   getMessageById,
   getTraceIdByMessageId,
   isAIGenerating,
+  isCurrentChatLoaded,
   isMessageEditing,
   isMessageGenerating,
   isMessageLoading,
