@@ -250,14 +250,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                             | 助手说明                                                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [SF Symbols 查找器](https://chat-preview.lobehub.com/market?agent=sf-symbols-finder)<br/><sup>By **[inquiry-paring0a](https://github.com/inquiry-paring0a)** on **2024-05-08**</sup> | 精通苹果 SF Symbols，可根据描述选择符合的 Symbols<br/>`sf-symbols` `专家` `图标` `符号` `插件`                                                                                     |
-| [GhostWriter Pro](https://chat-preview.lobehub.com/market?agent=ghostwriter-pro-ai)<br/><sup>By **[EarlofSandwhich](https://github.com/EarlofSandwhich)** on **2024-05-07**</sup>    | 一款复杂的 AI 驱动的写手代理，旨在跨多种流派和格式创作高质量内容。GhostWriter Pro 配备先进的语言模型，擅长创作个性化、引人入胜且有研究支持的写作，符合专业标准。<br/>`作者` `写作` |
-| [视频转博客文章助手](https://chat-preview.lobehub.com/market?agent=video-2-blog-assistant)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-05-06**</sup>     | 帮你快速整理缭乱的字幕，变成精美的博客文章<br/>`字幕整理` `博文格式` `视频变博客`                                                                                                  |
-| [美术评价导师](https://chat-preview.lobehub.com/market?agent=wanwusheng-art)<br/><sup>By **[dingyufei615](https://github.com/dingyufei615)** on **2024-05-06**</sup>                 | 擅长少儿美术教学，细致评价作品，关注细节，适应不同年龄段学生。<br/>`美术教育` `评价` `创意` `教学` `绘画`                                                                          |
+| 最近新增                                                                                                                                                         | 助手说明                                                                                                              |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [AWS Guru](https://chat-preview.lobehub.com/market?agent=aws-guru)<br/><sup>By **[wilbeibi](https://github.com/wilbeibi)** on **2024-05-15**</sup>               | Agent to answer AWS questions<br/>`programming`                                                                       |
+| [Linux Buddy](https://chat-preview.lobehub.com/market?agent=linux-buddy)<br/><sup>By **[Firpo7](https://github.com/Firpo7)** on **2024-05-15**</sup>             | 您的 Linux 专家朋友<br/>`linux` `technical-support` `buddy`                                                           |
+| [摄影评论家](https://chat-preview.lobehub.com/market?agent=photography-critic)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-05-15**</sup> | 擅长摄影作品细致分析，包括主题、构图、技术质量、光线使用、创意与原创性等。<br/>`摄影` `评价` `分析` `构图` `技术质量` |
+| [Python Buddy](https://chat-preview.lobehub.com/market?agent=python-buddy)<br/><sup>By **[Firpo7](https://github.com/Firpo7)** on **2024-05-15**</sup>           | 您的 Python 专家朋友<br/>`python` `软件开发` `编程` `代码` `伙伴`                                                     |
 
-> 📊 Total agents: [<kbd>**249**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**258**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -735,7 +735,7 @@ This project is [MIT](./LICENSE) licensed.
 [image-feat-theme]: https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp
 [image-feat-tts]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png
 [image-feat-vision]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png
-[image-overview]: https://github.com/lobehub/lobe-chat/assets/28616219/8b04c3c9-3d71-4fb4-bd9b-a4f415c5876d
+[image-overview]: https://github.com/lobehub/lobe-chat/assets/17870709/56b95d48-f573-41cd-8b38-387bf88bc4bf
 [image-star]: https://github.com/lobehub/lobe-chat/assets/17870709/cb06b748-513f-47c2-8740-d876858d7855
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
