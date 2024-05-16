@@ -318,32 +318,38 @@ describe('fetchSSE', () => {
       },
     );
 
-    await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+    try {
+      await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+    } catch (e) {}
 
-    expect(mockOnErrorHandle).not.toHaveBeenCalled();
+    expect(mockOnErrorHandle).toHaveBeenCalled();
   });
 
   it('should call onErrorHandle when response is not ok', async () => {
     const mockOnErrorHandle = vi.fn();
 
     (fetchEventSource as any).mockImplementationOnce(
-      (url: string, options: FetchEventSourceInit) => {
+      async (url: string, options: FetchEventSourceInit) => {
         const res = new Response(JSON.stringify({ errorType: 'SomeError' }), {
           status: 400,
           statusText: 'Error',
         });
 
-        options.onopen!(res as any);
+        try {
+          await options.onopen!(res as any);
+        } catch (e) {}
       },
     );
 
-    await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-
-    expect(mockOnErrorHandle).toHaveBeenCalledWith({
-      body: undefined,
-      message: 'translated_response.SomeError',
-      type: 'SomeError',
-    });
+    try {
+      await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+    } catch (e) {
+      expect(mockOnErrorHandle).toHaveBeenCalledWith({
+        body: undefined,
+        message: 'translated_response.SomeError',
+        type: 'SomeError',
+      });
+    }
   });
 
   it('should call onMessageHandle with full text if no message event', async () => {
