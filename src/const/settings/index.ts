@@ -1,6 +1,7 @@
 import {
   AnthropicProviderCard,
   BedrockProviderCard,
+  DeepSeekProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -80,6 +81,11 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     enabledModels: filterEnabledModels(BedrockProviderCard),
     region: 'us-east-1',
     secretAccessKey: '',
+  },
+  deepseek: {
+    apiKey: '',
+    enabled: false,
+    enabledModels: filterEnabledModels(DeepSeekProviderCard),
   },
   google: {
     apiKey: '',

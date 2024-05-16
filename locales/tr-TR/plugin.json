@@ -4,7 +4,9 @@
     "function_call": "Fonksiyon Çağrısı",
     "off": "Hata Ayıklamayı Kapat",
     "on": "Eklenti Çağrı Bilgilerini Görüntüle",
-    "response": "Yanıt"
+    "payload": "eklenti yükü",
+    "response": "Yanıt",
+    "tool_call": "aracı çağrı"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Eklenti çalışıyor..."
   },
   "pluginList": "Eklenti Listesi",
-  "plugins": {
-    "loading": "Eklentiler kontrol ediliyor...",
-    "unknown": "Bilinmeyen eklenti"
-  },
   "setting": "Eklenti Ayarları",
   "settings": {
     "indexUrl": {
@@ -162,5 +160,6 @@
       "installed": "Yüklü"
     },
     "title": "Eklenti Mağazası"
-  }
+  },
+  "unknownPlugin": "Bilinmeyen eklenti"
 }

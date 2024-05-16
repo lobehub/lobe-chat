@@ -3,6 +3,7 @@ import { act, renderHook } from '@testing-library/react';
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { shareService } from '@/services/share';
 import { useChatStore } from '@/store/chat';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatMessage } from '@/types/message';
 
 describe('shareSlice actions', () => {
@@ -85,7 +86,7 @@ describe('shareSlice actions', () => {
     it('should include plugin information when withPluginInfo is true', async () => {
       // 模拟带有插件信息的消息
       const pluginMessage = {
-        role: 'function',
+        role: 'tool',
         content: 'plugin content',
         plugin: {
           type: 'default',
@@ -97,7 +98,12 @@ describe('shareSlice actions', () => {
       } as ChatMessage;
 
       act(() => {
-        useChatStore.setState({ messages: [pluginMessage] });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('abc')]: [pluginMessage],
+          },
+          activeId: 'abc',
+        });
       });
 
       const { result } = renderHook(() => useChatStore());
@@ -118,7 +124,7 @@ describe('shareSlice actions', () => {
 
     it('should not include plugin information when withPluginInfo is false', async () => {
       const pluginMessage = {
-        role: 'function',
+        role: 'tool',
         content: 'plugin content',
         plugin: {
           type: 'default',
@@ -130,7 +136,12 @@ describe('shareSlice actions', () => {
       } as ChatMessage;
 
       act(() => {
-        useChatStore.setState({ messages: [pluginMessage] });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('abc')]: [pluginMessage],
+          },
+          activeId: 'abc',
+        });
       });
 
       const { result } = renderHook(() => useChatStore());
@@ -154,7 +165,7 @@ describe('shareSlice actions', () => {
         { role: 'user', content: 'user message', id: '1' },
         { role: 'assistant', content: 'assistant message', id: '2' },
         {
-          role: 'function',
+          role: 'tool',
           content: 'plugin content',
           plugin: {
             type: 'default',
@@ -167,7 +178,12 @@ describe('shareSlice actions', () => {
       ] as ChatMessage[];
 
       act(() => {
-        useChatStore.setState({ messages });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('abc')]: messages,
+          },
+          activeId: 'abc',
+        });
       });
 
       const { result } = renderHook(() => useChatStore());

@@ -5,12 +5,19 @@ import { ConfigStateAll } from '@/types/exportConfig';
 import { MigrationV0ToV1 } from './FromV0ToV1';
 import { MigrationV1ToV2 } from './FromV1ToV2';
 import { MigrationV3ToV4 } from './FromV3ToV4';
+import { MigrationV4ToV5 } from './FromV4ToV5';
 
 // Current latest version
-export const CURRENT_CONFIG_VERSION = 4;
+export const CURRENT_CONFIG_VERSION = 5;
 
 // Version migrations module
 const ConfigMigrations = [
+  /**
+   * 2024.05.11
+   *
+   * role=function to role=tool
+   */
+  MigrationV4ToV5,
   /**
    * 2024.04.09
    * settings migrate the `languageModel`

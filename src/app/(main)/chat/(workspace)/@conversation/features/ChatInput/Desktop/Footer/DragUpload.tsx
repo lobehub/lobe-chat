@@ -61,7 +61,12 @@ const useStyles = createStyles(({ css, token, stylish }) => {
 });
 
 const handleDragOver = (e: DragEvent) => {
-  e.preventDefault();
+  if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
+
+  const isFile = e.dataTransfer.types.includes('Files');
+  if (isFile) {
+    e.preventDefault();
+  }
 };
 
 const DragUpload = memo(() => {
@@ -92,43 +97,55 @@ const DragUpload = memo(() => {
   };
 
   const handleDragEnter = (e: DragEvent) => {
-    e.preventDefault();
+    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
-    dragCounter.current += 1;
-    if (e.dataTransfer?.items && e.dataTransfer.items.length > 0) {
+    const isFile = e.dataTransfer.types.includes('Files');
+    if (isFile) {
+      dragCounter.current += 1;
+      e.preventDefault();
       setIsDragging(true);
     }
   };
 
   const handleDragLeave = (e: DragEvent) => {
-    e.preventDefault();
+    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
-    // reset counter
-    dragCounter.current -= 1;
+    const isFile = e.dataTransfer.types.includes('Files');
+    if (isFile) {
+      e.preventDefault();
 
-    if (dragCounter.current === 0) {
-      setIsDragging(false);
+      // reset counter
+      dragCounter.current -= 1;
+
+      if (dragCounter.current === 0) {
+        setIsDragging(false);
+      }
     }
   };
 
   const handleDrop = async (e: DragEvent) => {
-    e.preventDefault();
-    // reset counter
-    dragCounter.current = 0;
+    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
 
-    setIsDragging(false);
+    const isFile = e.dataTransfer.types.includes('Files');
+    if (isFile) {
+      e.preventDefault();
 
-    // get filesList
-    // TODO: support folder files upload
-    const files = e.dataTransfer?.files;
+      // reset counter
+      dragCounter.current = 0;
 
-    // upload files
-    uploadImages(files);
+      setIsDragging(false);
+
+      // get filesList
+      // TODO: support folder files upload
+      const files = e.dataTransfer?.files;
+
+      // upload files
+      uploadImages(files);
+    }
   };
 
   const handlePaste = (event: ClipboardEvent) => {
     // get files from clipboard
-
     const files = event.clipboardData?.files;
 
     uploadImages(files);

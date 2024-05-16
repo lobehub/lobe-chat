@@ -4,9 +4,9 @@ import { CustomPluginParams } from './plugin';
 import { LobeToolType } from './tool';
 
 export interface LobeTool {
-  customParams?: CustomPluginParams;
+  customParams?: CustomPluginParams | null;
   identifier: string;
-  manifest?: LobeChatPluginManifest;
+  manifest?: LobeChatPluginManifest | null;
   settings?: any;
   type: LobeToolType;
 }

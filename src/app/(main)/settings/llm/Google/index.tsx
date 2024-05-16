@@ -14,7 +14,9 @@ const GoogleProvider = memo(() => {
     <ProviderConfig
       checkModel={'gemini-pro'}
       provider={ModelProvider.Google}
-      showEndpoint
+      proxyUrl={{
+        placeholder: 'https://generativelanguage.googleapis.com',
+      }}
       title={
         <Flexbox align={'center'} gap={8} horizontal>
           <Google.BrandColor size={22} />

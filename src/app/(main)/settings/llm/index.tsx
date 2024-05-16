@@ -5,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import Anthropic from './Anthropic';
 import Azure from './Azure';
 import Bedrock from './Bedrock';
+import DeepSeek from './DeepSeek';
 import Google from './Google';
 import Groq from './Groq';
 import Minimax from './Minimax';
@@ -28,6 +29,7 @@ const Page = () => {
       <Google />
       <Anthropic />
       <Bedrock />
+      <DeepSeek />
       <OpenRouter />
       <TogetherAI />
       <Groq />

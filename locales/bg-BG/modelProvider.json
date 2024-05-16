@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Освен адреса по подразбиране, задължително трябва да включва http(s)://",
-      "placeholder": "https://api.anthropic.com",
-      "title": "Адрес на API прокси"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Въведете API Key, получен от Anthropic",
@@ -66,12 +61,19 @@
       "title": "Използване на персонализирана информация за удостоверяване на Bedrock"
     }
   },
-  "google": {
-    "endpoint": {
-      "desc": "Изисква се адрес, включително http(s)://, освен ако не е по подразбиране",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "Адрес на API прокси"
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Въведете API ключ от DeepSeek",
+      "placeholder": "API ключ на DeepSeek",
+      "title": "API ключ"
     },
+    "unlock": {
+      "description": "Само въведете вашия API ключ от DeepSeek, за да започнете сесията. Приложението няма да запази вашия API ключ",
+      "title": "Използване на персонализиран API ключ от DeepSeek"
+    }
+  },
+  "google": {
     "title": "Google",
     "token": {
       "desc": "Въведете API Key, получен от Google",
@@ -133,7 +135,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Тестване дали адресът на прокси е попълнен правилно"
+      "desc": "Тестване дали адресът на прокси е попълнен правилно",
+      "title": "Проверка на свързаност"
     },
     "customModelName": {
       "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
@@ -142,7 +145,6 @@
     },
     "endpoint": {
       "desc": "Въведете адрес на Ollama интерфейсния прокси, оставете празно, ако локално не е указано специално",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Адрес на прокси интерфейс"
     },
     "setup": {
@@ -172,11 +174,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Освен адреса по подразбиране, задължително трябва да включва http(s)://",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Адрес на прокси интерфейс"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Използвайте собствения си OpenAI Key",

@@ -10,9 +10,8 @@ coverage
 
 # test
 jest*
-_test_
-__test__
 *.test.ts
+*.test.tsx
 
 # umi
 .umi

@@ -1,10 +1,5 @@
 {
   "anthropic": {
-    "endpoint": {
-      "desc": "Must include http(s):// in addition to the default address",
-      "placeholder": "https://api.anthropic.com",
-      "title": "API Proxy Address"
-    },
     "title": "Anthropic",
     "token": {
       "desc": "Enter the API Key from Anthropic",
@@ -66,12 +61,19 @@
       "title": "Use Custom Bedrock Authentication Information"
     }
   },
-  "google": {
-    "endpoint": {
-      "desc": "Must include http(s):// besides the default address",
-      "placeholder": "https://generativelanguage.googleapis.com",
-      "title": "API Proxy Address"
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "Enter your API Key from DeepSeek",
+      "placeholder": "DeepSeek API Key",
+      "title": "API Key"
     },
+    "unlock": {
+      "description": "Enter your DeepSeek API Key to start the session. The app will not store your API Key.",
+      "title": "Use Custom DeepSeek API Key"
+    }
+  },
+  "google": {
     "title": "Google",
     "token": {
       "desc": "Enter the API Key from Google",
@@ -133,7 +135,8 @@
   },
   "ollama": {
     "checker": {
-      "desc": "Test if the proxy address is correctly filled in"
+      "desc": "Test if the proxy address is correctly filled in",
+      "title": "Connectivity Check"
     },
     "customModelName": {
       "desc": "Add custom models, separate multiple models with commas",
@@ -142,7 +145,6 @@
     },
     "endpoint": {
       "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
-      "placeholder": "http://127.0.0.1:11434",
       "title": "Interface proxy address"
     },
     "setup": {
@@ -172,11 +174,6 @@
     "title": "Ollama"
   },
   "openai": {
-    "endpoint": {
-      "desc": "Must include http(s):// besides the default address",
-      "placeholder": "https://api.openai.com/v1",
-      "title": "Interface proxy address"
-    },
     "title": "OpenAI",
     "token": {
       "desc": "Use your own OpenAI Key",
