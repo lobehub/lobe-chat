@@ -1,15 +1,19 @@
 'use client';
 
+import { Icon } from '@lobehub/ui';
+import { useTheme } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { Loader2Icon } from 'lucide-react';
 import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import { WELCOME_GUIDE_CHAT_ID } from '@/const/session';
+import { isServerMode } from '@/const/version';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { useSessionStore } from '@/store/session';
 
-import { useInitConversation } from '../../hooks/useInitConversation';
 import AutoScroll from '../AutoScroll';
 import Item from '../ChatItem';
 import InboxWelcome from '../InboxWelcome';
@@ -19,15 +23,23 @@ interface VirtualizedListProps {
   mobile?: boolean;
 }
 const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
-  useInitConversation();
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [atBottom, setAtBottom] = useState(true);
   const [isScrolling, setIsScrolling] = useState(false);
 
-  const [id, chatLoading] = useChatStore((s) => [
-    chatSelectors.currentChatKey(s),
-    chatSelectors.currentChatLoadingState(s),
-  ]);
+  const [id] = useChatStore((s) => [chatSelectors.currentChatKey(s)]);
+
+  const [activeTopicId, useFetchMessages, isFirstLoading, isCurrentChatLoaded] = useChatStore(
+    (s) => [
+      s.activeTopicId,
+      s.useFetchMessages,
+      chatSelectors.currentChatLoadingState(s),
+      chatSelectors.isCurrentChatLoaded(s),
+    ],
+  );
+
+  const [sessionId] = useSessionStore((s) => [s.activeId]);
+  useFetchMessages(sessionId, activeTopicId);
 
   const data = useChatStore((s) => {
     const showInboxWelcome = chatSelectors.showInboxWelcome(s);
@@ -51,6 +63,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     return newFollowOutput;
   }, [data.length]);
 
+  const theme = useTheme();
   // overscan should be 1.5 times the height of the window
   const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
 
@@ -67,9 +80,26 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     [mobile],
   );
 
-  return chatLoading ? (
-    <SkeletonList mobile={mobile} />
-  ) : (
+  // first time loading or not loaded
+  if (isFirstLoading) return <SkeletonList mobile={mobile} />;
+
+  if (!isCurrentChatLoaded)
+    // use skeleton list when not loaded in server mode due to the loading duration is much longer than client mode
+    return isServerMode ? (
+      <SkeletonList mobile={mobile} />
+    ) : (
+      // in client mode and switch page, using the center loading for smooth transition
+      <Center height={'100%'} width={'100%'}>
+        <Icon
+          icon={Loader2Icon}
+          size={{ fontSize: 32 }}
+          spin
+          style={{ color: theme.colorTextTertiary }}
+        />
+      </Center>
+    );
+
+  return (
     <Flexbox height={'100%'}>
       <Virtuoso
         atBottomStateChange={setAtBottom}

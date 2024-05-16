@@ -9,6 +9,7 @@ import {
   Claude,
   Cohere,
   Dbrx,
+  DeepSeek,
   FishAudio,
   Gemini,
   Gemma,
@@ -43,6 +44,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.startsWith('gpt')) return <OpenAI size={size} />;
   if (model.startsWith('glm') || model.includes('chatglm')) return <ChatGLM size={size} />;
   if (model.includes('claude')) return <Claude size={size} />;
+  if (model.includes('deepseek')) return <DeepSeek size={size} />;
   if (model.includes('titan')) return <Aws size={size} />;
   if (model.includes('llama')) return <Meta size={size} />;
   if (model.includes('llava')) return <LLaVA size={size} />;

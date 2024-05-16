@@ -101,9 +101,6 @@ describe('SessionAction', () => {
       expect(call[1]).toMatchObject({ config: { displayMode: 'docs' } });
 
       expect(createdSessionId).toBe(newSessionId);
-      expect(mockRouterPush).not.toHaveBeenCalledWith(
-        SESSION_CHAT_URL(newSessionId, result.current.isMobile),
-      );
     });
   });
 

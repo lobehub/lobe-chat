@@ -61,6 +61,18 @@
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
     }
   },
+  "deepseek": {
+    "title": "DeepSeek",
+    "token": {
+      "desc": "DeepSeek 的 API Anahtarını girin",
+      "placeholder": "DeepSeek API Anahtarı",
+      "title": "API Anahtarı"
+    },
+    "unlock": {
+      "description": "Oturumu başlatmak için DeepSeek API Anahtarınızı girin. Uygulama API Anahtarınızı kaydetmez",
+      "title": "Özel DeepSeek API Anahtarını Kullan"
+    }
+  },
   "google": {
     "title": "Google",
     "token": {

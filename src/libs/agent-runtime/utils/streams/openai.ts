@@ -14,7 +14,11 @@ import {
 
 export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
+
   const item = chunk.choices[0];
+  if (!item) {
+    return { data: chunk, id: chunk.id, type: 'data' };
+  }
 
   if (typeof item.delta?.content === 'string') {
     return { data: item.delta.content, id: chunk.id, type: 'text' };

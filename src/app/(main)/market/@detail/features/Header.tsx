@@ -3,7 +3,7 @@ import { App, Button, Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { startCase } from 'lodash-es';
 import { useRouter } from 'next/navigation';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -23,7 +23,7 @@ const Header = memo(() => {
   const { styles } = useStyles();
   const createSession = useSessionStore((s) => s.createSession);
   const agentItem = useMarketStore(agentMarketSelectors.currentAgentItem, isEqual);
-
+  const [isLoading, setIsLoading] = useState(false);
   const { message } = App.useApp();
 
   const { meta, createAt, author, homepage, config } = agentItem;
@@ -34,15 +34,19 @@ const Header = memo(() => {
   const handleAddAgentAndConverse = async () => {
     if (!agentItem) return;
 
+    setIsLoading(true);
     const session = await createSession({ config, meta });
+    setIsLoading(false);
     message.success(t('addAgentSuccess'));
     router.push(SESSION_CHAT_URL(session, isMobile));
   };
 
-  const handleAddAgent = () => {
+  const handleAddAgent = async () => {
     if (!agentItem) return;
+    setIsLoading(true);
     createSession({ config, meta }, false);
     message.success(t('addAgentSuccess'));
+    setIsLoading(false);
   };
 
   return (
@@ -56,10 +60,10 @@ const Header = memo(() => {
         ))}
       </Center>
       <div className={styles.desc}>{description}</div>
-      <Button block onClick={handleAddAgentAndConverse} type={'primary'}>
+      <Button block loading={isLoading} onClick={handleAddAgentAndConverse} type={'primary'}>
         {t('addAgentAndConverse')}
       </Button>
-      <Button block onClick={handleAddAgent}>
+      <Button block loading={isLoading} onClick={handleAddAgent}>
         {t('addAgent')}
       </Button>
       <Flexbox align={'center'} gap={12} horizontal>
