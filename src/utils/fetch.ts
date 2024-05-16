@@ -298,10 +298,10 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           textController.stopAnimation();
         } else {
           finishedType = 'error';
-          console.error(error);
+          options.onErrorHandle?.(error);
         }
-        throw new Error('Fetch error');
-        // options.onErrorHandle()
+
+        throw new Error(error);
       },
       onmessage: (ev) => {
         triggerOnMessageHandler = true;
@@ -354,13 +354,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       },
       onopen: async (res) => {
         response = res.clone();
-
         // 如果不 ok 说明有请求错误
         if (!response.ok) {
-          const chatMessageError = await getMessageError(res);
-
-          options.onErrorHandle?.(chatMessageError);
-          return;
+          throw await getMessageError(res);
         }
       },
       // we should keep open when page hidden, or it will case lots of token cost
@@ -376,24 +372,26 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     textController.stopAnimation();
     toolCallsController.stopAnimations();
 
-    // if there is no onMessageHandler, we should call onHandleMessage first
-    if (!triggerOnMessageHandler) {
-      output = await response.clone().text();
-      options.onMessageHandle?.({ text: output, type: 'text' });
+    if (response.ok) {
+      // if there is no onMessageHandler, we should call onHandleMessage first
+      if (!triggerOnMessageHandler) {
+        output = await response.clone().text();
+        options.onMessageHandle?.({ text: output, type: 'text' });
+      }
+
+      const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
+      const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
+
+      if (textController.isTokenRemain()) {
+        await textController.startAnimation(15);
+      }
+
+      if (toolCallsController.isTokenRemain()) {
+        await toolCallsController.startAnimations(15);
+      }
+
+      await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
     }
-
-    const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
-    const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
-
-    if (textController.isTokenRemain()) {
-      await textController.startAnimation(15);
-    }
-
-    if (toolCallsController.isTokenRemain()) {
-      await toolCallsController.startAnimations(15);
-    }
-
-    await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
   }
 
   return response;
