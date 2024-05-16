@@ -16,5 +16,15 @@ export const translation = async (ns: NS) => {
   const file = readFileSync(filepath, 'utf8');
   const i18ns = JSON.parse(file);
 
-  return { t: (key: string) => get(i18ns, key) };
+  return {
+    t: (key: string, options: { [key: string]: string } = {}) => {
+      let content = get(i18ns, key);
+      if (options) {
+        Object.entries(options).forEach(([key, value]) => {
+          content = content.replace(`{{${key}}}`, value);
+        });
+      }
+      return content;
+    },
+  };
 };

@@ -90,7 +90,11 @@ describe('useToolStore:plugin', () => {
         await result.current.updatePluginSettings(pluginId, newSettings);
       });
 
-      expect(pluginService.updatePluginSettings).toBeCalledWith(pluginId, newSettings);
+      expect(pluginService.updatePluginSettings).toBeCalledWith(
+        pluginId,
+        newSettings,
+        expect.any(AbortSignal),
+      );
     });
 
     it('should merge settings for a plugin with existing settings', async () => {
@@ -108,7 +112,11 @@ describe('useToolStore:plugin', () => {
         await result.current.updatePluginSettings(pluginId, newSettings);
       });
 
-      expect(pluginService.updatePluginSettings).toBeCalledWith(pluginId, mergedSettings);
+      expect(pluginService.updatePluginSettings).toBeCalledWith(
+        pluginId,
+        mergedSettings,
+        expect.any(AbortSignal),
+      );
     });
   });
 

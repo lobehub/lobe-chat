@@ -1,5 +1,5 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { Button, Dropdown, Popconfirm } from 'antd';
+import { App, Button, Dropdown } from 'antd';
 import { InfoIcon, MoreVerticalIcon, Settings, Trash2 } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
   const { t } = useTranslation('plugin');
   const [open, setOpen] = useState(false);
   const plugin = useToolStore(pluginSelectors.getPluginManifestById(identifier));
-
+  const { modal } = App.useApp();
   const [tab, setTab] = useState('info');
   const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(plugin?.settings);
 
@@ -67,21 +67,16 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
                     danger: true,
                     icon: <Icon icon={Trash2} />,
                     key: 'uninstall',
-                    label: (
-                      <Popconfirm
-                        arrow={false}
-                        cancelText={t('cancel', { ns: 'common' })}
-                        okButtonProps={{ danger: true }}
-                        okText={t('ok', { ns: 'common' })}
-                        onConfirm={() => {
-                          unInstallPlugin(identifier);
-                        }}
-                        placement={'topRight'}
-                        title={t('store.actions.confirmUninstall')}
-                      >
-                        {t('store.actions.uninstall')}
-                      </Popconfirm>
-                    ),
+                    label: t('store.actions.uninstall'),
+                    onClick: () => {
+                      modal.confirm({
+                        centered: true,
+                        okButtonProps: { danger: true },
+                        onOk: async () => unInstallPlugin(identifier),
+                        title: t('store.actions.confirmUninstall'),
+                        type: 'error',
+                      });
+                    },
                   },
                 ],
               }}

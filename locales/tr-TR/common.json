@@ -58,6 +58,7 @@
     },
     "title": "Veri İçe Aktar"
   },
+  "installPWA": "Tarayıcı Uygulamasını Yükle",
   "lang": {
     "ar": "Arapça",
     "bg-BG": "Bulgarca",
@@ -169,6 +170,7 @@
   "userPanel": {
     "anonymousNickName": "Anonim Kullanıcı",
     "billing": "Fatura Yönetimi",
+    "data": "Veri Depolama",
     "defaultNickname": "Topluluk Kullanıcısı",
     "discord": "Topluluk Destek",
     "docs": "Belgeler",

@@ -58,6 +58,7 @@
     },
     "title": "Importa dati"
   },
+  "installPWA": "Installa l'applicazione del browser",
   "lang": {
     "ar": "Arabo",
     "bg-BG": "bulgaro",
@@ -169,6 +170,7 @@
   "userPanel": {
     "anonymousNickName": "Utente Anonimo",
     "billing": "Gestione fatturazione",
+    "data": "Archiviazione dati",
     "defaultNickname": "Utente Community",
     "discord": "Supporto della community",
     "docs": "Documentazione",
