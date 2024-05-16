@@ -74,6 +74,9 @@ export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
     apiKey: '',
     enabled: false,
     endpoint: '',
+    // Fetch on client cause the CORS error like:
+    // https://github.com/lobehub/lobe-chat/issues/2487
+    fetchOnClient: false,
   },
   bedrock: {
     accessKeyId: '',
