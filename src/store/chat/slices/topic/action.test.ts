@@ -6,6 +6,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 
@@ -87,7 +88,12 @@ describe('topic action', () => {
     it('should not create a topic if there are no messages', async () => {
       const { result } = renderHook(() => useChatStore());
       act(() => {
-        useChatStore.setState({ messages: [] });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('session')]: [],
+          },
+          activeId: 'session',
+        });
       });
 
       const createTopicSpy = vi.spyOn(topicService, 'createTopic');
@@ -102,7 +108,12 @@ describe('topic action', () => {
       const { result } = renderHook(() => useChatStore());
       const messages = [{ id: 'message1' }, { id: 'message2' }] as ChatMessage[];
       act(() => {
-        useChatStore.setState({ messages, activeId: 'session-id' });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('session-id')]: messages,
+          },
+          activeId: 'session-id',
+        });
       });
 
       const createTopicSpy = vi
