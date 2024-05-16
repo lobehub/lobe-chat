@@ -25,6 +25,7 @@ export enum ModelProvider {
   Anthropic = 'anthropic',
   Azure = 'azure',
   Bedrock = 'bedrock',
+  Cohere = 'cohere',
   DeepSeek = 'deepseek',
   Google = 'google',
   Groq = 'groq',
