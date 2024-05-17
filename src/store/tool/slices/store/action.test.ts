@@ -157,7 +157,12 @@ describe('useToolStore:pluginStore', () => {
 
       // Then
       expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function), {
+        fallbackData: {
+          plugins: [],
+          schemaVersion: 1,
+        },
         revalidateOnFocus: false,
+        suspense: true,
       });
       expect(result.current.data).toEqual(pluginListMock);
       expect(result.current.error).toBeNull();
@@ -178,7 +183,12 @@ describe('useToolStore:pluginStore', () => {
 
       // Then
       expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function), {
+        fallbackData: {
+          plugins: [],
+          schemaVersion: 1,
+        },
         revalidateOnFocus: false,
+        suspense: true,
       });
       expect(result.current.data).toBeNull();
       expect(result.current.error).toEqual(error);

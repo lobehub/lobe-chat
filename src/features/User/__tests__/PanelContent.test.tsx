@@ -64,12 +64,9 @@ vi.mock('../DataStatistics', () => ({
 // 定义一个变量来存储 enableAuth 的值
 let enableAuth = true;
 
-// 模拟 @/const/auth 模块
-vi.mock('@/const/auth', () => ({
-  get enableAuth() {
-    return enableAuth;
-  },
-}));
+beforeEach(() => {
+  useUserStore.setState({ enableAuth: () => true });
+});
 
 afterEach(() => {
   enableAuth = true;
