@@ -8,6 +8,7 @@ const Google: ModelProviderCard = {
       description: 'A legacy text-only model optimized for chat conversations',
       displayName: 'PaLM 2 Chat (Legacy)',
       id: 'chat-bison-001',
+      legacy: true,
       maxOutput: 1024,
       // tokens: 4096 + 1024, // none tokens test
     },
@@ -15,13 +16,13 @@ const Google: ModelProviderCard = {
       description: 'A legacy model that understands text and generates text as an output',
       displayName: 'PaLM 2 (Legacy)',
       id: 'text-bison-001',
+      legacy: true,
       maxOutput: 1024,
       tokens: 8196 + 1024,
     },
     {
       description: 'The best model for scaling across a wide range of tasks',
       displayName: 'Gemini 1.0 Pro',
-      enabled: true,
       functionCall: true,
       id: 'gemini-pro',
       maxOutput: 2048,
@@ -38,7 +39,6 @@ const Google: ModelProviderCard = {
     {
       description: 'The best image understanding model to handle a broad range of applications',
       displayName: 'Gemini 1.0 Pro Vision',
-      enabled: true,
       id: 'gemini-pro-vision',
       maxOutput: 4096,
       tokens: 12_288 + 4096,
@@ -68,6 +68,16 @@ const Google: ModelProviderCard = {
       id: 'gemini-1.0-pro-latest',
       maxOutput: 2048,
       tokens: 30_720 + 2048,
+    },
+    {
+      description: 'Fast and versatile multimodal model for scaling across diverse tasks',
+      displayName: 'Gemini 1.5 Flash',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-1.5-flash-latest',
+      maxOutput: 8192,
+      tokens: 1_048_576 + 8192,
+      vision: true,
     },
     {
       description: 'Mid-size multimodal model that supports up to 1 million tokens',

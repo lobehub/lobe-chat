@@ -6,6 +6,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { LobeAgentConfig } from '@/types/agent';
@@ -87,7 +88,12 @@ const mockedChats = [
   },
 ] as ChatMessage[];
 
-const mockChatStore = { messages: mockMessages } as ChatStore;
+const mockChatStore = {
+  messagesMap: {
+    [messageMapKey('abc')]: mockMessages,
+  },
+  activeId: 'abc',
+} as ChatStore;
 
 describe('chatSelectors', () => {
   describe('getMessageById', () => {
@@ -97,14 +103,19 @@ describe('chatSelectors', () => {
     });
 
     it('should return the message object with the matching id', () => {
-      const state = merge(initialStore, { messages: mockMessages });
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: mockMessages,
+        },
+        activeId: 'abc',
+      });
       const message = chatSelectors.getMessageById('msg1')(state);
-      expect(message).toEqual(mockMessages[0]);
+      expect(message).toEqual(mockedChats[0]);
     });
 
     it('should return the message with the matching id', () => {
       const message = chatSelectors.getMessageById('msg1')(mockChatStore);
-      expect(message).toEqual(mockMessages[0]);
+      expect(message).toEqual(mockedChats[0]);
     });
 
     it('should return undefined if no message matches the id', () => {
@@ -115,14 +126,24 @@ describe('chatSelectors', () => {
 
   describe('currentChatsWithHistoryConfig', () => {
     it('should slice the messages according to the current agent config', () => {
-      const state = merge(initialStore, { messages: mockMessages });
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: mockMessages,
+        },
+        activeId: 'abc',
+      });
 
       const chats = chatSelectors.currentChatsWithHistoryConfig(state);
       expect(chats).toHaveLength(3);
       expect(chats).toEqual(mockedChats);
     });
     it('should slice the messages according to config, assuming historyCount is mocked to 2', async () => {
-      const state = merge(initialStore, { messages: mockMessages });
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: mockMessages,
+        },
+        activeId: 'abc',
+      });
       act(() => {
         useAgentStore.setState({
           activeId: 'inbox',
@@ -172,7 +193,12 @@ describe('chatSelectors', () => {
 
   describe('currentChatsWithGuideMessage', () => {
     it('should return existing messages if there are any', () => {
-      const state = merge(initialStore, { messages: mockMessages, activeId: 'someActiveId' });
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: mockMessages,
+        },
+        activeId: 'someActiveId',
+      });
       const chats = chatSelectors.currentChatsWithGuideMessage({} as MetaData)(state);
       expect(chats).toEqual(mockedChats);
     });
@@ -212,7 +238,9 @@ describe('chatSelectors', () => {
     it('should concatenate the contents of all messages returned by currentChatsWithHistoryConfig', () => {
       // Prepare a state with a few messages
       const state = merge(initialStore, {
-        messages: mockMessages,
+        messagesMap: {
+          [messageMapKey('active-session')]: mockMessages,
+        },
         activeId: 'active-session',
       });
 
@@ -241,7 +269,9 @@ describe('chatSelectors', () => {
     it('should return false if there are existing messages in the inbox session', () => {
       const state = merge(initialStore, {
         activeId: INBOX_SESSION_ID,
-        messages: mockMessages,
+        messagesMap: {
+          [messageMapKey('inbox')]: mockMessages,
+        },
       });
       const result = chatSelectors.showInboxWelcome(state);
       expect(result).toBe(false);
