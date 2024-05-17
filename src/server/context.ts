@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextRequest } from 'next/server';
 
+import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+
 export interface AuthContext {
+  authorizationHeader?: string | null;
+  jwtPayload?: JWTPayload | null;
   userId?: string | null;
 }
 
@@ -9,7 +13,10 @@ export interface AuthContext {
  * Inner function for `createContext` where we create the context.
  * This is useful for testing when we don't want to mock Next.js' request/response
  */
-export const createContextInner = async (): Promise<AuthContext> => ({
+export const createContextInner = async (params?: {
+  authorizationHeader: string | null;
+}): Promise<AuthContext> => ({
+  authorizationHeader: params?.authorizationHeader,
   userId: null,
 });
 
@@ -22,5 +29,7 @@ export type Context = Awaited<ReturnType<typeof createContextInner>>;
 export const createContext = async (request: NextRequest): Promise<Context> => {
   // for API-response caching see https://trpc.io/docs/v11/caching
 
-  return createContextInner();
+  const authorization = request.headers.get(LOBE_CHAT_AUTH_HEADER);
+
+  return createContextInner({ authorizationHeader: authorization });
 };

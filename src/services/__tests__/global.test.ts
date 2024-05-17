@@ -1,7 +1,6 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { edgeClient } from '@/libs/trpc/client';
-import { LobeAgentConfig } from '@/types/agent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
 import { globalService } from '../global';
