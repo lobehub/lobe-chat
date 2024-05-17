@@ -1,21 +1,12 @@
 import { act, renderHook } from '@testing-library/react';
 import useSWR from 'swr';
-import { Mock, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
 
 import { useFileStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
-
-// Mocks for fileService
-vi.mock('@/services/file', () => ({
-  fileService: {
-    removeFile: vi.fn(),
-    uploadFile: vi.fn(),
-    getFile: vi.fn(),
-  },
-}));
 
 // Mock for useSWR
 vi.mock('swr', () => ({
@@ -49,7 +40,7 @@ describe('TTSFileAction', () => {
     const fileId = 'tts-file-id';
 
     // Mock the fileService.removeFile to resolve
-    (fileService.removeFile as Mock).mockResolvedValue(undefined);
+    vi.spyOn(fileService, 'removeFile').mockResolvedValue(undefined);
 
     await act(async () => {
       await useStore.getState().removeTTSFile(fileId);
@@ -72,14 +63,14 @@ describe('TTSFileAction', () => {
     };
 
     // Mock the fileService.uploadFile to resolve with uploadedFileData
-    (fileService.uploadFile as Mock).mockResolvedValue(uploadedFileData);
+    vi.spyOn(fileService, 'createFile').mockResolvedValue(uploadedFileData);
 
     let fileId;
     await act(async () => {
       fileId = await useStore.getState().uploadTTSFile(testFile);
     });
 
-    expect(fileService.uploadFile).toHaveBeenCalledWith({
+    expect(fileService.createFile).toHaveBeenCalledWith({
       createdAt: testFile.lastModified,
       data: await testFile.arrayBuffer(),
       fileType: testFile.type,
@@ -127,7 +118,7 @@ describe('TTSFileAction', () => {
     };
 
     // Mock the fileService.getFile to resolve with fileData
-    (fileService.getFile as Mock).mockResolvedValue(fileData);
+    vi.spyOn(fileService, 'getFile').mockResolvedValue(fileData as any);
 
     // Mock useSWR to call the fetcher function immediately
     const useSWRMock = vi.mocked(useSWR);

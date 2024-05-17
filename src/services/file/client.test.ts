@@ -37,7 +37,7 @@ describe('FileService', () => {
 
     (FileModel.create as Mock).mockResolvedValue(localFile);
 
-    const result = await fileService.uploadFile(localFile);
+    const result = await fileService.createFile(localFile);
 
     expect(FileModel.create).toHaveBeenCalledWith(localFile);
     expect(result).toEqual(localFile);
