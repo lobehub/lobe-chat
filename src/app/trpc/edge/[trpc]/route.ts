@@ -14,7 +14,7 @@ const handler = (req: NextRequest) =>
      */
     createContext: () => createContext(req),
 
-    endpoint: '/trpc',
+    endpoint: '/trpc/edge',
 
     onError: ({ error, path }) => {
       pino.info(`Error in tRPC handler (edge) on path: ${path}`);

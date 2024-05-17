@@ -1,7 +1,7 @@
 import { DeepPartial } from 'utility-types';
 
 import { dataSync } from '@/database/client/core';
-import { trpcClient } from '@/libs/trpc/client';
+import { edgeClient } from '@/libs/trpc/client';
 import { LobeAgentConfig } from '@/types/agent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { StartDataSyncParams } from '@/types/sync';
@@ -20,11 +20,11 @@ class GlobalService {
   };
 
   getGlobalConfig = async (): Promise<GlobalServerConfig> => {
-    return trpcClient.config.getGlobalConfig.query();
+    return edgeClient.config.getGlobalConfig.query();
   };
 
   getDefaultAgentConfig = async (): Promise<DeepPartial<LobeAgentConfig>> => {
-    return trpcClient.config.getDefaultAgentConfig.query();
+    return edgeClient.config.getDefaultAgentConfig.query();
   };
 
   enabledSync = async (params: StartDataSyncParams) => {

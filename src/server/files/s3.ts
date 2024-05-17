@@ -14,10 +14,12 @@ export const listFileSchema = z.array(fileSchema);
 
 export type FileType = z.infer<typeof fileSchema>;
 
-export class S3 {
-  private client: S3Client;
+const DEFAULT_S3_REGION = 'us-east-1';
 
-  private bucket: string;
+export class S3 {
+  private readonly client: S3Client;
+
+  private readonly bucket: string;
 
   constructor() {
     if (!fileEnv.S3_ACCESS_KEY_ID || !fileEnv.S3_SECRET_ACCESS_KEY || !fileEnv.S3_BUCKET)
@@ -31,7 +33,7 @@ export class S3 {
         secretAccessKey: fileEnv.S3_SECRET_ACCESS_KEY,
       },
       endpoint: fileEnv.S3_ENDPOINT,
-      region: fileEnv.S3_REGION,
+      region: fileEnv.S3_REGION || DEFAULT_S3_REGION,
     });
   }
 
@@ -44,11 +46,11 @@ export class S3 {
     return listFileSchema.parse(res.Contents);
   }
 
-  public async createPreSignedUrl(filename: string): Promise<string> {
+  public async createPreSignedUrl(key: string): Promise<string> {
     const command = new PutObjectCommand({
       ACL: 'public-read',
       Bucket: this.bucket,
-      Key: `${fileEnv.S3_FILE_PATH}/${filename}`,
+      Key: key,
     });
 
     return getSignedUrl(this.client, command, { expiresIn: 3600 });

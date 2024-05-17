@@ -1,9 +1,43 @@
+import { fileEnv } from '@/config/file';
 import { DB_File } from '@/database/client/schemas/files';
+import { edgeClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import compressImage from '@/utils/compressImage';
+import { uuid } from '@/utils/uuid';
 
 class UploadService {
   async uploadFile(file: DB_File) {
+    if (this.enableServer) {
+      const { data, ...params } = file;
+      const filename = `${uuid()}.${file.name.split('.').at(-1)}`;
+
+      // 精确到以 h 为单位的 path
+      const date = (Date.now() / 1000 / 60 / 60).toFixed(0);
+
+      const pathname = `${fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}/${filename}`;
+
+      const url = await edgeClient.upload.createS3PreSignedUrl.mutate({ pathname });
+
+      const res = await fetch(url, {
+        body: data,
+        headers: { 'Content-Type': file.fileType },
+        method: 'PUT',
+      });
+
+      if (res.ok) {
+        return {
+          ...params,
+          metadata: { date, filename: file.name },
+          name: filename,
+          saveMode: 'url',
+          url: pathname,
+        } as DB_File;
+      } else {
+        throw new Error('Upload Error');
+      }
+    }
+
     // 跳过图片上传测试
     const isTestData = file.size === 1;
     if (this.isImage(file.fileType) && !isTestData) {
@@ -37,7 +71,7 @@ class UploadService {
 
   private async uploadImageFile(file: DB_File) {
     // 加载图片
-    const url = file.url || URL.createObjectURL(new Blob([file.data]));
+    const url = file.url || URL.createObjectURL(new Blob([file.data!]));
 
     const img = new Image();
     img.src = url;
@@ -53,6 +87,12 @@ class UploadService {
     file.data = uint8Array.buffer;
 
     return file;
+  }
+
+  private get enableServer() {
+    return serverConfigSelectors.enableUploadFileToServer(
+      window.global_serverConfigStore.getState(),
+    );
   }
 }
 

@@ -1,6 +1,6 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { trpcClient } from '@/libs/trpc/client';
+import { edgeClient } from '@/libs/trpc/client';
 import { LobeAgentConfig } from '@/types/agent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 
@@ -76,7 +76,7 @@ describe('GlobalService', () => {
     it('should return the serverConfig when fetch is successful', async () => {
       // Arrange
       const mockConfig = { enabledOAuthSSO: true } as GlobalServerConfig;
-      vi.spyOn(trpcClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
+      vi.spyOn(edgeClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
 
       // Act
       const config = await globalService.getGlobalConfig();
@@ -87,7 +87,7 @@ describe('GlobalService', () => {
 
     it('should return the defaultAgentConfig when fetch is successful', async () => {
       // Arrange
-      vi.spyOn(trpcClient.config.getDefaultAgentConfig, 'query').mockResolvedValue({
+      vi.spyOn(edgeClient.config.getDefaultAgentConfig, 'query').mockResolvedValue({
         model: 'gemini-pro',
       });
 
