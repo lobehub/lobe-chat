@@ -14,7 +14,7 @@ beforeEach(() => {
 
 vi.mock('@/libs/trpc/client', () => {
   return {
-    trpcClient: {
+    edgeClient: {
       config: {
         getGlobalConfig: { query: vi.fn() },
         getDefaultAgentConfig: { query: vi.fn() },

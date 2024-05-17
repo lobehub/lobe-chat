@@ -3,6 +3,7 @@ import useSWR from 'swr';
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
+import { createServerConfigStore } from '@/store/serverConfig/store';
 
 import { useFileStore as useStore } from '../../store';
 
@@ -27,6 +28,8 @@ beforeAll(() => {
       });
     },
   });
+
+  createServerConfigStore();
 });
 
 beforeEach(() => {
