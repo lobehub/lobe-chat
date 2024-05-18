@@ -3,6 +3,6 @@
  */
 import { createCallerFactory } from '@/libs/trpc';
 
-import { appRouter } from './routers';
+import { edgeRouter } from './routers';
 
-export const createCaller = createCallerFactory(appRouter);
+export const createCaller = createCallerFactory(edgeRouter);

@@ -4,6 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
 import { imageGenerationService } from '@/services/textToImage';
+import { uploadService } from '@/services/upload';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -60,14 +61,16 @@ export const chatToolSlice: StateCreator<
 
       toggleDallEImageLoading(messageId + params.prompt, false);
 
-      fileService
+      uploadService
         .uploadImageByUrl(url, {
           metadata: { ...params, originPrompt: originPrompt },
           name: `${originPrompt || params.prompt}_${index}.png`,
         })
-        .then(({ id }) => {
+        .then(async (res) => {
+          const data = await fileService.createFile(res);
+
           updateImageItem(messageId, (draft) => {
-            draft[index].imageId = id;
+            draft[index].imageId = data.id;
             draft[index].previewUrl = undefined;
           });
         });
