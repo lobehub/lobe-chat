@@ -2,10 +2,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withSWR } from '~test-utils';
 
-import { globalService } from '@/services/global';
+import { syncService } from '@/services/sync';
 import { useUserStore } from '@/store/user';
-import { userProfileSelectors } from '@/store/user/slices/auth/selectors';
-import { syncSettingsSelectors } from '@/store/user/slices/settings/selectors';
+import { userProfileSelectors } from '@/store/user/selectors';
+import { syncSettingsSelectors } from '@/store/user/selectors';
 
 vi.mock('zustand/traditional');
 
@@ -86,7 +86,7 @@ describe('createSyncSlice', () => {
         enabled: true,
       });
       vi.spyOn(syncSettingsSelectors, 'deviceName').mockReturnValueOnce(deviceName);
-      const enabledSyncSpy = vi.spyOn(globalService, 'enabledSync').mockResolvedValueOnce(true);
+      const enabledSyncSpy = vi.spyOn(syncService, 'enabledSync').mockResolvedValueOnce(true);
       const { result } = renderHook(() => useUserStore());
 
       const data = await act(async () => {
@@ -114,8 +114,8 @@ describe('createSyncSlice', () => {
       await waitFor(() => expect(result.current.data).toBe(false));
     });
 
-    it('should call globalService.disableSync when userEnableSync is false', async () => {
-      const disableSyncSpy = vi.spyOn(globalService, 'disableSync').mockResolvedValueOnce(false);
+    it('should call syncService.disableSync when userEnableSync is false', async () => {
+      const disableSyncSpy = vi.spyOn(syncService, 'disableSync').mockResolvedValueOnce(false);
 
       const { result } = renderHook(
         () => useUserStore().useEnabledSync(false, 'user-id', vi.fn()),
