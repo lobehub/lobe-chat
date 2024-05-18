@@ -1,4 +1,3 @@
-
 import { dataSync } from '@/database/client/core';
 import { StartDataSyncParams } from '@/types/sync';
 

@@ -14,7 +14,7 @@ export const passwordChecker = trpc.middleware(async (opts) => {
   const jwtPayload = await getJWTPayload(ctx.authorizationHeader);
 
   // if there are access codes, check if the user has set correct one
-  if (ACCESS_CODES.length > 0) {
+  if (ACCESS_CODES && ACCESS_CODES.length > 0) {
     const accessCode = jwtPayload.accessCode;
 
     if (!accessCode || !ACCESS_CODES.includes(accessCode)) {
