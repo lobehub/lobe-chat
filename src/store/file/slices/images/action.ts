@@ -3,6 +3,7 @@ import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
+import { uploadService } from '@/services/upload';
 import { FilePreview } from '@/types/files';
 import { setNamespace } from '@/utils/storeDebug';
 
@@ -55,7 +56,7 @@ export const createFileSlice: StateCreator<
   },
   uploadFile: async (file) => {
     try {
-      const data = await fileService.uploadFile({
+      const result = await uploadService.uploadFile({
         createdAt: file.lastModified,
         data: await file.arrayBuffer(),
         fileType: file.type,
@@ -63,6 +64,8 @@ export const createFileSlice: StateCreator<
         saveMode: 'local',
         size: file.size,
       });
+
+      const data = await fileService.createFile(result);
 
       set(
         ({ inputFilesList }) => ({ inputFilesList: [...inputFilesList, data.id] }),
