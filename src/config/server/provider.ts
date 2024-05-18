@@ -221,7 +221,7 @@ export const getProviderConfig = () => {
     AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
 
-    ENABLE_OLLAMA: process.env.ENABLE_OLLAMA === '0',
+    ENABLE_OLLAMA: process.env.ENABLE_OLLAMA !== '0',
     OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
     OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST || process.env.OLLAMA_CUSTOM_MODELS,
   };
