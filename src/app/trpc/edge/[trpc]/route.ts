@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 import { pino } from '@/libs/logger';
 import { createContext } from '@/server/context';
-import { appRouter } from '@/server/routers';
+import { edgeRouter } from '@/server/routers';
 
 export const runtime = 'edge';
 
@@ -14,7 +14,7 @@ const handler = (req: NextRequest) =>
      */
     createContext: () => createContext(req),
 
-    endpoint: '/trpc',
+    endpoint: '/trpc/edge',
 
     onError: ({ error, path }) => {
       pino.info(`Error in tRPC handler (edge) on path: ${path}`);
@@ -22,7 +22,7 @@ const handler = (req: NextRequest) =>
     },
 
     req,
-    router: appRouter,
+    router: edgeRouter,
   });
 
 export { handler as GET, handler as POST };

@@ -2,6 +2,7 @@ import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
+import { uploadService } from '@/services/upload';
 import { FilePreview } from '@/types/files';
 
 import { FileStore } from '../../store';
@@ -41,7 +42,7 @@ export const createTTSFileSlice: StateCreator<
   },
   uploadTTSFile: async (file) => {
     try {
-      const data = await fileService.uploadFile({
+      const res = await uploadService.uploadFile({
         createdAt: file.lastModified,
         data: await file.arrayBuffer(),
         fileType: file.type,
@@ -49,6 +50,8 @@ export const createTTSFileSlice: StateCreator<
         saveMode: 'local',
         size: file.size,
       });
+
+      const data = await fileService.createFile(res);
 
       return data.id;
     } catch (error) {

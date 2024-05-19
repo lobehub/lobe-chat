@@ -115,18 +115,31 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         return { text: content.text };
       }
       case 'image_url': {
-        const { mimeType, base64 } = parseDataUri(content.image_url.url);
+        const { mimeType, base64, type } = parseDataUri(content.image_url.url);
 
-        if (!base64) {
-          throw new TypeError("Image URL doesn't contain base64 data");
+        if (type === 'base64') {
+          if (!base64) {
+            throw new TypeError("Image URL doesn't contain base64 data");
+          }
+
+          return {
+            inlineData: {
+              data: base64,
+              mimeType: mimeType || 'image/png',
+            },
+          };
         }
 
-        return {
-          inlineData: {
-            data: base64,
-            mimeType: mimeType || 'image/png',
-          },
-        };
+        // if (type === 'url') {
+        //   return {
+        //     fileData: {
+        //       fileUri: content.image_url.url,
+        //       mimeType: mimeType || 'image/png',
+        //     },
+        //   };
+        // }
+
+        throw new TypeError(`currently we don't support image url: ${content.image_url.url}`);
       }
     }
   };
