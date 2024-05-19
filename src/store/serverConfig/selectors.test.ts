@@ -24,6 +24,8 @@ describe('featureFlagsSelectors', () => {
       showLLM: false,
       showOpenAIApiKey: true,
       showOpenAIProxyUrl: true,
+      enableCheckUpdates: true,
+      showWelcomeSuggest: true,
     });
   });
 });
