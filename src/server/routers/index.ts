@@ -3,11 +3,13 @@
  */
 import { publicProcedure, router } from '@/libs/trpc';
 
-import { configRouter } from './config';
+import { configRouter } from './edge/config';
+import { uploadRouter } from './edge/upload';
 
-export const appRouter = router({
+export const edgeRouter = router({
   config: configRouter,
   healthcheck: publicProcedure.query(() => "i'm live!"),
+  upload: uploadRouter,
 });
 
-export type AppRouter = typeof appRouter;
+export type EdgeRouter = typeof edgeRouter;
