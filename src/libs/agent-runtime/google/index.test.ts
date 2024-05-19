@@ -560,12 +560,31 @@ describe('LobeGoogleAI', () => {
         });
       });
 
-      it('should correctly convert message with content parts', () => {
+      it('should correctly convert message with inline base64 image parts', () => {
         const message: OpenAIChatMessage = {
           role: 'user',
           content: [
             { type: 'text', text: 'Check this image:' },
             { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
+          ],
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'user',
+          parts: [
+            { text: 'Check this image:' },
+            { inlineData: { data: '...', mimeType: 'image/png' } },
+          ],
+        });
+      });
+      it.skip('should correctly convert message with image url parts', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Check this image:' },
+            { type: 'image_url', image_url: { url: 'https://image-file.com' } },
           ],
         };
 
