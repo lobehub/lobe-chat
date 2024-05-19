@@ -1,13 +1,15 @@
 import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import superjson from 'superjson';
 
-import type { AppRouter } from '@/server/routers';
+import type { EdgeRouter } from '@/server/routers';
+import { createHeaderWithAuth } from '@/services/_auth';
 
-export const trpcClient = createTRPCClient<AppRouter>({
+export const edgeClient = createTRPCClient<EdgeRouter>({
   links: [
     httpBatchLink({
+      headers: async () => createHeaderWithAuth(),
       transformer: superjson,
-      url: '/trpc',
+      url: '/trpc/edge',
     }),
   ],
 });
