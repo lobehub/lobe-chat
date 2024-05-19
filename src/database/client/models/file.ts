@@ -1,3 +1,4 @@
+import { DBModel } from '@/database/client/core/types/db';
 import { DB_File, DB_FileSchema } from '@/database/client/schemas/files';
 import { nanoid } from '@/utils/uuid';
 
@@ -14,7 +15,7 @@ class _FileModel extends BaseModel<'files'> {
     return this._addWithSync(file, `file-${id}`);
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<DBModel<DB_File>> {
     return this.table.get(id);
   }
 

@@ -36,6 +36,12 @@ const createStore: CreateStore = (runtimeState) => () => ({
 
 let store: StoreApi<ServerConfigStore>;
 
+declare global {
+  interface Window {
+    global_serverConfigStore: StoreApi<ServerConfigStore>;
+  }
+}
+
 export const initServerConfigStore = (initState: Partial<ServerConfigStore>) =>
   createWithEqualityFn<ServerConfigStore>()(
     devtools(createStore(initState || {}), {
@@ -53,6 +59,10 @@ export const createServerConfigStore = (initState?: Partial<ServerConfigStore>) 
       }),
       shallow,
     );
+
+    if (typeof window !== 'undefined') {
+      window.global_serverConfigStore = store;
+    }
   }
 
   return store;

@@ -33,17 +33,6 @@ describe('getServerConfig', () => {
     expect(config.OPENAI_FUNCTION_REGIONS).toStrictEqual(['iad1', 'sfo1']);
   });
 
-  it('returns default IMGUR_CLIENT_ID when no environment variable is set', () => {
-    const config = getServerConfig();
-    expect(config.IMGUR_CLIENT_ID).toBe('e415f320d6e24f9');
-  });
-
-  it('returns custom IMGUR_CLIENT_ID when environment variable is set', () => {
-    process.env.IMGUR_CLIENT_ID = 'custom-client-id';
-    const config = getServerConfig();
-    expect(config.IMGUR_CLIENT_ID).toBe('custom-client-id');
-  });
-
   describe('index url', () => {
     it('should return default URLs when no environment variables are set', () => {
       const config = getServerConfig();

@@ -7,60 +7,36 @@
  * @link https://trpc.io/docs/v11/router
  * @link https://trpc.io/docs/v11/procedures
  */
-import { TRPCError, initTRPC } from '@trpc/server';
-import superjson from 'superjson';
-
-import type { Context } from '@/server/context';
-
-const t = initTRPC.context<Context>().create({
-  /**
-   * @link https://trpc.io/docs/v11/error-formatting
-   */
-  errorFormatter({ shape }) {
-    return shape;
-  },
-  /**
-   * @link https://trpc.io/docs/v11/data-transformers
-   */
-  transformer: superjson,
-});
+import { trpc } from './init';
+import { passwordChecker } from './middleware/password';
+import { userAuth } from './middleware/userAuth';
 
 /**
  * Create a router
  * @link https://trpc.io/docs/v11/router
  */
-export const router = t.router;
+export const router = trpc.router;
 
 /**
  * Create an unprotected procedure
  * @link https://trpc.io/docs/v11/procedures
  **/
-export const publicProcedure = t.procedure;
+export const publicProcedure = trpc.procedure;
 
 // procedure that asserts that the user is logged in
-export const authedProcedure = t.procedure.use(async (opts) => {
-  const { ctx } = opts;
-  // `ctx.user` is nullable
-  if (!ctx.userId) {
-    throw new TRPCError({ code: 'UNAUTHORIZED' });
-  }
+export const authedProcedure = trpc.procedure.use(userAuth);
 
-  return opts.next({
-    ctx: {
-      // ✅ user value is known to be non-null now
-      userId: ctx.userId,
-    },
-  });
-});
+// procedure that asserts that the user add the password
+export const passwordProcedure = trpc.procedure.use(passwordChecker);
 
 /**
  * Merge multiple routers together
  * @link https://trpc.io/docs/v11/merging-routers
  */
-export const mergeRouters = t.mergeRouters;
+export const mergeRouters = trpc.mergeRouters;
 
 /**
  * Create a server-side caller
  * @link https://trpc.io/docs/v11/server/server-side-calls
  */
-export const createCallerFactory = t.createCallerFactory;
+export const createCallerFactory = trpc.createCallerFactory;
