@@ -36,6 +36,8 @@ describe('mapFeatureFlagsEnvToState', () => {
       create_session: true,
       edit_agent: false,
       dalle: true,
+      check_updates: true,
+      welcome_suggest: true,
     };
 
     const expectedState = {
@@ -46,6 +48,8 @@ describe('mapFeatureFlagsEnvToState', () => {
       showOpenAIApiKey: true,
       showOpenAIProxyUrl: false,
       showDalle: true,
+      enableCheckUpdates: true,
+      showWelcomeSuggest: true,
     };
 
     const mappedState = mapFeatureFlagsEnvToState(config);
