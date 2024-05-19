@@ -57,10 +57,10 @@ const InboxWelcome = memo(() => {
           {t('guide.defaultMessage')}
         </Markdown>
         {
-          showWelcomeSuggest ? <>
+          showWelcomeSuggest && <>
             <AgentsSuggest mobile={mobile} />
             <QuestionSuggest mobile={mobile} />
-          </> : <></>
+          </>
         }
       </Flexbox>
     </Center>
