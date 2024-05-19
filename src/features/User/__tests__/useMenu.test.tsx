@@ -2,6 +2,7 @@ import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { useUserStore } from '@/store/user';
+import { ServerConfigStoreProvider } from '@/store/serverConfig';
 
 import { useMenu } from '../UserPanel/useMenu';
 
@@ -69,7 +70,7 @@ describe('useMenu', () => {
     enableAuth = true;
     enableClerk = false;
 
-    const { result } = renderHook(() => useMenu());
+    const { result } = renderHook(() => useMenu(), { wrapper: ({children})=> <ServerConfigStoreProvider>{children}</ServerConfigStoreProvider> });
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
@@ -89,7 +90,7 @@ describe('useMenu', () => {
     enableAuth = true;
     enableClerk = true;
 
-    const { result } = renderHook(() => useMenu());
+    const { result } = renderHook(() => useMenu(), { wrapper: ({children})=> <ServerConfigStoreProvider>{children}</ServerConfigStoreProvider> });
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
@@ -108,7 +109,7 @@ describe('useMenu', () => {
     });
     enableAuth = false;
 
-    const { result } = renderHook(() => useMenu());
+    const { result } = renderHook(() => useMenu(), { wrapper: ({children})=> <ServerConfigStoreProvider>{children}</ServerConfigStoreProvider> });
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
@@ -127,7 +128,7 @@ describe('useMenu', () => {
     });
     enableAuth = true;
 
-    const { result } = renderHook(() => useMenu());
+    const { result } = renderHook(() => useMenu(), { wrapper: ({children})=> <ServerConfigStoreProvider>{children}</ServerConfigStoreProvider> });
 
     act(() => {
       const { mainItems, logoutItems } = result.current;
