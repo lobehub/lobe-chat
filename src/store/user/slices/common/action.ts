@@ -2,7 +2,6 @@ import useSWR, { SWRResponse } from 'swr';
 import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { globalService } from '@/services/global';
 import { messageService } from '@/services/message';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
@@ -53,22 +52,35 @@ export const createCommonSlice: StateCreator<
       },
     ),
 
+  /**
+   * TODO: need to be removed in the future
+   * the serverConfig should be fetched only in the serverConfigStore
+   * @deprecated
+   */
   useFetchServerConfig: () =>
-    useSWR<GlobalServerConfig>('fetchGlobalConfig', globalService.getGlobalConfig, {
-      onSuccess: (data) => {
-        if (data) {
-          const serverSettings: DeepPartial<GlobalSettings> = {
-            defaultAgent: data.defaultAgent,
-            languageModel: data.languageModel,
-          };
+    useSWR<GlobalServerConfig>(
+      'fetchGlobalConfig',
+      async () => {
+        const { globalService } = await import('@/services/global');
 
-          const defaultSettings = merge(get().defaultSettings, serverSettings);
-
-          set({ defaultSettings, serverConfig: data }, false, n('initGlobalConfig'));
-
-          get().refreshDefaultModelProviderList({ trigger: 'fetchServerConfig' });
-        }
+        return globalService.getGlobalConfig();
       },
-      revalidateOnFocus: false,
-    }),
+      {
+        onSuccess: (data) => {
+          if (data) {
+            const serverSettings: DeepPartial<GlobalSettings> = {
+              defaultAgent: data.defaultAgent,
+              languageModel: data.languageModel,
+            };
+
+            const defaultSettings = merge(get().defaultSettings, serverSettings);
+
+            set({ defaultSettings, serverConfig: data }, false, n('initGlobalConfig'));
+
+            get().refreshDefaultModelProviderList({ trigger: 'fetchServerConfig' });
+          }
+        },
+        revalidateOnFocus: false,
+      },
+    ),
 });

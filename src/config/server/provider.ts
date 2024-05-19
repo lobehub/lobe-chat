@@ -22,7 +22,7 @@ declare global {
       // DeepSeek Provider
       ENABLED_DEEPSEEK?: string;
       DEEPSEEK_API_KEY?: string;
-      
+
       // ZhiPu Provider
       ENABLED_ZHIPU?: string;
       ZHIPU_API_KEY?: string;
@@ -113,7 +113,7 @@ export const getProviderConfig = () => {
   const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID || '';
 
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY || '';
-  
+
   const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || '';
 
   const MOONSHOT_API_KEY = process.env.MOONSHOT_API_KEY || '';
@@ -221,7 +221,7 @@ export const getProviderConfig = () => {
     AWS_ACCESS_KEY_ID: AWS_ACCESS_KEY_ID,
     AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY || '',
 
-    ENABLE_OLLAMA: Boolean(process.env.ENABLE_OLLAMA),
+    ENABLE_OLLAMA: process.env.ENABLE_OLLAMA !== '0',
     OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
     OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST || process.env.OLLAMA_CUSTOM_MODELS,
   };

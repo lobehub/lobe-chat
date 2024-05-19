@@ -1,6 +1,8 @@
 import { IPluginErrorType, PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
-import { memo } from 'react';
+import { Skeleton } from 'antd';
+import dynamic from 'next/dynamic';
+import { Suspense, memo } from 'react';
 
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
@@ -10,9 +12,12 @@ import ClerkLogin from './ClerkLogin';
 import ErrorJsonViewer from './ErrorJsonViewer';
 import InvalidAPIKey from './InvalidAPIKey';
 import InvalidAccessCode from './InvalidAccessCode';
-import OllamaBizError from './OllamaBizError';
 import OpenAiBizError from './OpenAiBizError';
-import PluginSettings from './PluginSettings';
+
+const loading = () => <Skeleton active />;
+
+const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr: false });
+const PluginSettings = dynamic(() => import('./PluginSettings'), { loading, ssr: false });
 
 // Config for the errorMessage display
 export const getErrorAlertConfig = (
@@ -95,4 +100,8 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   }
 });
 
-export default ErrorMessageExtra;
+export default memo<{ data: ChatMessage }>(({ data }) => (
+  <Suspense fallback={<Skeleton active style={{ width: '100%' }} />}>
+    <ErrorMessageExtra data={data} />
+  </Suspense>
+));

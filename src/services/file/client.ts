@@ -1,37 +1,18 @@
+import urlJoin from 'url-join';
+
+import { fileEnv } from '@/config/file';
 import { FileModel } from '@/database/client/models/file';
 import { DB_File } from '@/database/client/schemas/files';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { FilePreview } from '@/types/files';
-import compressImage from '@/utils/compressImage';
 
-import { API_ENDPOINTS } from '../_url';
 import { IFileService } from './type';
 
 export class ClientService implements IFileService {
-  async uploadFile(file: DB_File) {
-    // 跳过图片上传测试
-    const isTestData = file.size === 1;
-    if (this.isImage(file.fileType) && !isTestData) {
-      return this.uploadImageFile(file);
-    }
-
+  async createFile(file: DB_File) {
     // save to local storage
     // we may want to save to a remote server later
     return FileModel.create(file);
-  }
-
-  async uploadImageByUrl(url: string, file: Pick<DB_File, 'name' | 'metadata'>) {
-    const res = await fetch(API_ENDPOINTS.proxy, { body: url, method: 'POST' });
-    const data = await res.arrayBuffer();
-    const fileType = res.headers.get('content-type') || 'image/webp';
-
-    return this.uploadFile({
-      data,
-      fileType,
-      metadata: file.metadata,
-      name: file.name,
-      saveMode: 'local',
-      size: data.byteLength,
-    });
   }
 
   async getFile(id: string): Promise<FilePreview> {
@@ -40,9 +21,22 @@ export class ClientService implements IFileService {
       throw new Error('file not found');
     }
 
+    if (item.saveMode === 'url') {
+      if (this.enableServer && !fileEnv.NEXT_PUBLIC_S3_DOMAIN) {
+        throw new Error('fileEnv.NEXT_PUBLIC_S3_DOMAIN is not set while enable server upload');
+      }
+
+      return {
+        fileType: item.fileType,
+        name: item.metadata.filename,
+        saveMode: 'url',
+        url: urlJoin(fileEnv.NEXT_PUBLIC_S3_DOMAIN!, item.url!),
+      };
+    }
+
     // arrayBuffer to url
-    const url = URL.createObjectURL(new Blob([item.data], { type: item.fileType }));
-    const base64 = Buffer.from(item.data).toString('base64');
+    const url = URL.createObjectURL(new Blob([item.data!], { type: item.fileType }));
+    const base64 = Buffer.from(item.data!).toString('base64');
 
     return {
       base64Url: `data:${item.fileType};base64,${base64}`,
@@ -61,28 +55,9 @@ export class ClientService implements IFileService {
     return FileModel.clear();
   }
 
-  private isImage(fileType: string) {
-    const imageRegex = /^image\//;
-    return imageRegex.test(fileType);
-  }
-
-  private async uploadImageFile(file: DB_File) {
-    // 加载图片
-    const url = file.url || URL.createObjectURL(new Blob([file.data]));
-
-    const img = new Image();
-    img.src = url;
-    await (() =>
-      new Promise((resolve) => {
-        img.addEventListener('load', resolve);
-      }))();
-
-    // 压缩图片
-    const base64String = compressImage({ img, type: file.fileType });
-    const binaryString = atob(base64String.split('base64,')[1]);
-    const uint8Array = Uint8Array.from(binaryString, (char) => char.charCodeAt(0));
-    file.data = uint8Array.buffer;
-
-    return FileModel.create(file);
+  private get enableServer() {
+    return serverConfigSelectors.enableUploadFileToServer(
+      window.global_serverConfigStore.getState(),
+    );
   }
 }
