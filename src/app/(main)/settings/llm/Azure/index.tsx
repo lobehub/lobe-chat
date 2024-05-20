@@ -95,6 +95,7 @@ const AzureOpenAIProvider = memo(() => {
         placeholder: t('azure.modelListPlaceholder'),
       }}
       provider={providerKey}
+      showBrowserRequest
       title={
         <Flexbox align={'center'} gap={8} horizontal>
           <Azure.Combine size={22} type={'color'}></Azure.Combine>
