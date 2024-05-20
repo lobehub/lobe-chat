@@ -10,7 +10,7 @@ const Bedrock: ModelProviderCard = {
     },
     {
       description:
-        'Amazon Titan Text G1 - Express v1，上下文长度可达 8192 个 token，适合广泛的用途。',
+        'Amazon Titan Text G1 - Express v1，上下文长度可达 8000 个 token，适合广泛的用途。',
       displayName: 'Titan Text G1 - Express',
       id: 'amazon.titan-text-express-v1:0:8k',
       tokens: 8000,
