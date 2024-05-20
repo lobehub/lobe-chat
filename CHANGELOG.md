@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.160.4](https://github.com/lobehub/lobe-chat/compare/v0.160.3...v0.160.4)
+
+<sup>Released on **2024-05-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Modify bedrock provided model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Modify bedrock provided model, closes [#2473](https://github.com/lobehub/lobe-chat/issues/2473) ([a1fabf6](https://github.com/lobehub/lobe-chat/commit/a1fabf6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.160.3](https://github.com/lobehub/lobe-chat/compare/v0.160.2...v0.160.3)
 
 <sup>Released on **2024-05-19**</sup>
