@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.160.5](https://github.com/lobehub/lobe-chat/compare/v0.160.4...v0.160.5)
+
+<sup>Released on **2024-05-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor analytics env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor analytics env, closes [#2570](https://github.com/lobehub/lobe-chat/issues/2570) ([d809d3f](https://github.com/lobehub/lobe-chat/commit/d809d3f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.160.4](https://github.com/lobehub/lobe-chat/compare/v0.160.3...v0.160.4)
 
 <sup>Released on **2024-05-20**</sup>
