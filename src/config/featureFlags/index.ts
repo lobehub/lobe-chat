@@ -13,6 +13,9 @@ export const FeatureFlagsSchema = z.object({
   edit_agent: z.boolean().optional(),
 
   dalle: z.boolean().optional(),
+
+  check_updates: z.boolean().optional(),
+  welcome_suggest: z.boolean().optional(),
 });
 
 // TypeScript 类型，从 Zod schema 生成
@@ -30,6 +33,9 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   edit_agent: true,
 
   dalle: true,
+
+  check_updates: true,
+  welcome_suggest: true,
 };
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
@@ -44,5 +50,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
     showOpenAIProxyUrl: config.openai_proxy_url,
 
     showDalle: config.dalle,
+
+    enableCheckUpdates: config.check_updates,
+    showWelcomeSuggest: config.welcome_suggest,
   };
 };
