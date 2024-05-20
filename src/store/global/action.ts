@@ -27,7 +27,7 @@ export interface GlobalStoreAction {
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
   updatePreference: (preference: Partial<GlobalPreference>, action?: any) => void;
-  useCheckLatestVersion: () => SWRResponse<string>;
+  useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitGlobalPreference: () => SWRResponse;
 }
 
@@ -79,8 +79,8 @@ export const globalActionSlice: StateCreator<
     get().preferenceStorage.saveToLocalStorage(nextPreference);
   },
 
-  useCheckLatestVersion: () =>
-    useSWR('checkLatestVersion', globalService.getLatestVersion, {
+  useCheckLatestVersion: (enabledCheck = true) =>
+    useSWR(enabledCheck ? 'checkLatestVersion' : null, globalService.getLatestVersion, {
       // check latest version every 30 minutes
       focusThrottleInterval: 1000 * 60 * 30,
       onSuccess: (data: string) => {

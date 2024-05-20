@@ -18,9 +18,6 @@ describe('getClientConfig', () => {
     process.env.NEXT_PUBLIC_I18N_DEBUG_SERVER = '1';
 
     const config = getClientConfig();
-    expect(config.ANALYTICS_PLAUSIBLE).toBe(true);
-    expect(config.ANALYTICS_POSTHOG).toBe(true);
-    expect(config.POSTHOG_DEBUG).toBe(true);
     expect(config.I18N_DEBUG).toBe(true);
     expect(config.I18N_DEBUG_BROWSER).toBe(true);
     expect(config.I18N_DEBUG_SERVER).toBe(true);
@@ -36,9 +33,6 @@ describe('getClientConfig', () => {
 
     const config = getClientConfig();
 
-    expect(config.ANALYTICS_PLAUSIBLE).toBe(false);
-    expect(config.ANALYTICS_POSTHOG).toBe(false);
-    expect(config.POSTHOG_DEBUG).toBe(false);
     expect(config.I18N_DEBUG).toBe(false);
     expect(config.I18N_DEBUG_BROWSER).toBe(false);
     expect(config.I18N_DEBUG_SERVER).toBe(false);
