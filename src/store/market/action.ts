@@ -69,6 +69,7 @@ export const createMarketAction: StateCreator<
             'useFetchAgentList',
           );
         },
+        revalidateOnFocus: false,
       },
     ),
 });
