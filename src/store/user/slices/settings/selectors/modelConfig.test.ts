@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 
+import { UserStore } from '@/store/user';
 import { merge } from '@/utils/merge';
 
-import { UserStore, useUserStore } from '../../../store';
 import { UserSettingsState, initialSettingsState } from '../initialState';
 import { modelConfigSelectors } from './modelConfig';
 
@@ -30,6 +30,34 @@ describe('modelConfigSelectors', () => {
       } as UserSettingsState) as unknown as UserStore;
 
       expect(modelConfigSelectors.isProviderEnabled('perplexity')(s)).toBe(false);
+    });
+  });
+
+  describe('isProviderFetchOnClient', () => {
+    it('client fetch should disabled on default', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            azure: {
+              endpoint: 'endpoint',
+              apiKey: 'apikey',
+            },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+
+      expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(false);
+    });
+
+    it('client fetch should enabled if user set it enabled', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            azure: { fetchOnClient: true },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+      expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(true);
     });
   });
 
