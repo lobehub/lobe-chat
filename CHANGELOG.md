@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 0.160.3](https://github.com/lobehub/lobe-chat/compare/v0.160.2...v0.160.3)
+
+<sup>Released on **2024-05-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add two feature flags: check_updates 、welcome_suggest.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add two feature flags: check_updates 、welcome_suggest, closes [#2555](https://github.com/lobehub/lobe-chat/issues/2555) ([84c69c9](https://github.com/lobehub/lobe-chat/commit/84c69c9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.160.2](https://github.com/lobehub/lobe-chat/compare/v0.160.1...v0.160.2)
+
+<sup>Released on **2024-05-19**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Upgrade antd and fix lint type.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Upgrade antd and fix lint type, closes [#2567](https://github.com/lobehub/lobe-chat/issues/2567) ([efe28da](https://github.com/lobehub/lobe-chat/commit/efe28da))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.160.1](https://github.com/lobehub/lobe-chat/compare/v0.160.0...v0.160.1)
+
+<sup>Released on **2024-05-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix enable ollama env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix enable ollama env ([9c3f5a8](https://github.com/lobehub/lobe-chat/commit/9c3f5a8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.160.0](https://github.com/lobehub/lobe-chat/compare/v0.159.12...v0.160.0)
+
+<sup>Released on **2024-05-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Bump version and add enable ollama env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Bump version and add enable ollama env, closes [#2554](https://github.com/lobehub/lobe-chat/issues/2554) ([f5ce7c9](https://github.com/lobehub/lobe-chat/commit/f5ce7c9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.159.12](https://github.com/lobehub/lobe-chat/compare/v0.159.11...v0.159.12)
 
 <sup>Released on **2024-05-15**</sup>

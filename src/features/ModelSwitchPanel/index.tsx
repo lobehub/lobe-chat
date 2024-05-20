@@ -1,6 +1,7 @@
 import { Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
+import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { LucideArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -48,7 +49,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const router = useRouter();
   const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
 
-  const items = useMemo(() => {
+  const items = useMemo<ItemType[]>(() => {
     const getModelItems = (provider: ModelProviderCard) => {
       const items = provider.chatModels.map((model) => ({
         key: model.id,
