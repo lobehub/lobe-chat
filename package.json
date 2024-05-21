@@ -98,7 +98,7 @@
     "@lobehub/chat-plugins-gateway": "latest",
     "@lobehub/icons": "^1.21.0",
     "@lobehub/tts": "latest",
-    "@lobehub/ui": "^1.138.24",
+    "@lobehub/ui": "^1.138.26",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@next/third-parties": "^14.2.3",
     "@sentry/nextjs": "^7.114.0",
