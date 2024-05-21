@@ -359,6 +359,14 @@
       "title": "WebRTC Sync"
     }
   },
+  "systemAgent": {
+    "title": "System Agents",
+    "translation": {
+      "label": "Translation Agent",
+      "modelDesc": "Specific model for translate message",
+      "title": "Translation Settings"
+    }
+  },
   "tab": {
     "about": "About",
     "agent": "Default Agent",
@@ -366,6 +374,7 @@
     "experiment": "Experiment",
     "llm": "Language Model",
     "sync": "Cloud Sync",
+    "system-agent": "System Agent",
     "tts": "Text-to-Speech"
   },
   "tools": {

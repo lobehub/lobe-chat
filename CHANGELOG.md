@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.161.0](https://github.com/lobehub/lobe-chat/compare/v0.160.8...v0.161.0)
+
+<sup>Released on **2024-05-21**</sup>
+
+#### ✨ Features
+
+- **misc**: Add system agent to select another model provider for translation.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add system agent to select another model provider for translation, closes [#1902](https://github.com/lobehub/lobe-chat/issues/1902) ([3945387](https://github.com/lobehub/lobe-chat/commit/3945387))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.160.8](https://github.com/lobehub/lobe-chat/compare/v0.160.7...v0.160.8)
 
 <sup>Released on **2024-05-21**</sup>
