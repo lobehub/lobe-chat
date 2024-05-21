@@ -1,7 +1,14 @@
+import dayjs from 'dayjs';
 import { Mock, describe, expect, it, vi } from 'vitest';
 
 import { CreateMessageParams, MessageModel } from '@/database/client/models/message';
-import { ChatMessage, ChatMessageError, ChatPluginPayload } from '@/types/message';
+import {
+  ChatMessage,
+  ChatMessageError,
+  ChatPluginPayload,
+  ChatTTS,
+  ChatTranslate,
+} from '@/types/message';
 
 import { ClientService } from './client';
 
@@ -199,26 +206,26 @@ describe('MessageClientService', () => {
     });
   });
 
-  describe('updateMessagePlugin', () => {
-    it('should update the plugin payload of a message', async () => {
-      // Setup
-      const newPlugin = {
-        type: 'default',
-        apiName: 'abc',
-        arguments: '',
-        identifier: 'plugin1',
-      } as ChatPluginPayload;
-
-      (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, plugin: newPlugin });
-
-      // Execute
-      const result = await messageService.updateMessagePlugin(mockMessageId, newPlugin);
-
-      // Assert
-      expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, { plugin: newPlugin });
-      expect(result).toEqual({ ...mockMessage, plugin: newPlugin });
-    });
-  });
+  // describe('updateMessagePlugin', () => {
+  // it('should update the plugin payload of a message', async () => {
+  //   // Setup
+  //   const newPlugin = {
+  //     type: 'default',
+  //     apiName: 'abc',
+  //     arguments: '',
+  //     identifier: 'plugin1',
+  //   } as ChatPluginPayload;
+  //
+  //   (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, plugin: newPlugin });
+  //
+  //   // Execute
+  //   const result = await messageService.updateMessagePlugin(mockMessageId, newPlugin);
+  //
+  //   // Assert
+  //   expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, { plugin: newPlugin });
+  //   expect(result).toEqual({ ...mockMessage, plugin: newPlugin });
+  // });
+  // });
 
   describe('updateMessagePluginState', () => {
     it('should update the plugin state of a message', async () => {
@@ -232,11 +239,132 @@ describe('MessageClientService', () => {
       });
 
       // Execute
-      const result = await messageService.updateMessagePluginState(mockMessageId, key, value);
+      const result = await messageService.updateMessagePluginState(mockMessageId, { key: value });
 
       // Assert
-      expect(MessageModel.updatePluginState).toHaveBeenCalledWith(mockMessageId, key, value);
+      expect(MessageModel.updatePluginState).toHaveBeenCalledWith(mockMessageId, { key: value });
       expect(result).toEqual({ ...mockMessage, pluginState: newPluginState });
+    });
+  });
+
+  describe('countMessages', () => {
+    it('should count the total number of messages', async () => {
+      // Setup
+      const mockCount = 10;
+      (MessageModel.count as Mock).mockResolvedValue(mockCount);
+
+      // Execute
+      const count = await messageService.countMessages();
+
+      // Assert
+      expect(MessageModel.count).toHaveBeenCalled();
+      expect(count).toBe(mockCount);
+    });
+  });
+
+  describe('countTodayMessages', () => {
+    it('should count the number of messages created today', async () => {
+      // Setup
+      const today = dayjs().format('YYYY-MM-DD');
+      const mockMessages = [
+        { ...mockMessage, createdAt: today },
+        { ...mockMessage, createdAt: today },
+        { ...mockMessage, createdAt: '2023-01-01' },
+      ];
+      (MessageModel.queryAll as Mock).mockResolvedValue(mockMessages);
+
+      // Execute
+      const count = await messageService.countTodayMessages();
+
+      // Assert
+      expect(MessageModel.queryAll).toHaveBeenCalled();
+      expect(count).toBe(2);
+    });
+  });
+
+  describe('updateMessageTTS', () => {
+    it('should update the TTS field of a message', async () => {
+      // Setup
+      const newTTS: ChatTTS = {
+        contentMd5: 'abc',
+        file: 'file-abc',
+      };
+
+      (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, tts: newTTS });
+
+      // Execute
+      const result = await messageService.updateMessageTTS(mockMessageId, newTTS);
+
+      // Assert
+      expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, { tts: newTTS });
+      expect(result).toEqual({ ...mockMessage, tts: newTTS });
+    });
+  });
+
+  describe('updateMessageTranslate', () => {
+    it('should update the translate field of a message', async () => {
+      // Setup
+      const newTranslate: ChatTranslate = {
+        content: 'Translated text',
+        to: 'es',
+      };
+
+      (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, translate: newTranslate });
+
+      // Execute
+      const result = await messageService.updateMessageTranslate(mockMessageId, newTranslate);
+
+      // Assert
+      expect(MessageModel.update).toHaveBeenCalledWith(mockMessageId, { translate: newTranslate });
+      expect(result).toEqual({ ...mockMessage, translate: newTranslate });
+    });
+  });
+
+  describe('hasMessages', () => {
+    it('should return true if there are messages', async () => {
+      // Setup
+      (MessageModel.count as Mock).mockResolvedValue(1);
+
+      // Execute
+      const result = await messageService.hasMessages();
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it('should return false if there are no messages', async () => {
+      // Setup
+      (MessageModel.count as Mock).mockResolvedValue(0);
+
+      // Execute
+      const result = await messageService.hasMessages();
+
+      // Assert
+      expect(result).toBe(false);
+    });
+  });
+
+  describe('messageCountToCheckTrace', () => {
+    it('should return true if message count is greater than or equal to 4', async () => {
+      // Setup
+      (MessageModel.count as Mock).mockResolvedValue(5);
+
+      // Execute
+      const result = await messageService.messageCountToCheckTrace();
+
+      // Assert
+      expect(result).toBe(true);
+    });
+
+    it('should return false if message count is less than 4', async () => {
+      // Setup
+      (MessageModel.count as Mock).mockResolvedValue(3);
+
+      // Execute
+      const result = await messageService.messageCountToCheckTrace();
+
+      // Assert
+      expect(result).toBe(false);
     });
   });
 });

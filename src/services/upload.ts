@@ -14,8 +14,8 @@ class UploadService {
 
       // 精确到以 h 为单位的 path
       const date = (Date.now() / 1000 / 60 / 60).toFixed(0);
-
-      const pathname = `${fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}/${filename}`;
+      const dirname = `${fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}`;
+      const pathname = `${dirname}/${filename}`;
 
       const url = await edgeClient.upload.createS3PreSignedUrl.mutate({ pathname });
 
@@ -28,8 +28,8 @@ class UploadService {
       if (res.ok) {
         return {
           ...params,
-          metadata: { date, filename: file.name },
-          name: filename,
+          metadata: { date, dirname: dirname, filename: filename, path: pathname },
+          name: file.name,
           saveMode: 'url',
           url: pathname,
         } as DB_File;

@@ -16,6 +16,7 @@ import {
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
+import { Logo } from '@lobehub/ui';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
@@ -27,6 +28,10 @@ interface ModelProviderIconProps {
 
 const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
   switch (provider) {
+    case 'lobehub': {
+      return <Logo size={20} />;
+    }
+
     case ModelProvider.ZhiPu: {
       return <Zhipu size={20} />;
     }
@@ -38,7 +43,7 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
     case ModelProvider.DeepSeek: {
       return <DeepSeek size={20} />;
     }
-    
+
     case ModelProvider.Google: {
       return (
         <Center height={20} width={20}>

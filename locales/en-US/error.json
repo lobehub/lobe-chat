@@ -12,6 +12,8 @@
     "retry": "Reload",
     "title": "Oops, something went wrong.."
   },
+  "fetchError": "Request Failed",
+  "fetchErrorDetail": "Error Details",
   "notFound": {
     "backHome": "Back to Home",
     "desc": "We couldn't find the page you're looking for, please check if the link is correct",

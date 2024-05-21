@@ -161,6 +161,7 @@ export const getProviderConfig = () => {
   return {
     API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
 
+    ENABLED_OPENAI: process.env.ENABLED_OPENAI !== '0',
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
     OPENAI_MODEL_LIST: process.env.OPENAI_MODEL_LIST || process.env.CUSTOM_MODELS,
