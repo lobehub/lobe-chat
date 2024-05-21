@@ -362,9 +362,9 @@
   "systemAgent": {
     "title": "System Agents",
     "translation": {
-      "title": "Translation Settings",
       "label": "Translation Agent",
-      "modelDesc": "Specific model for translate message"
+      "modelDesc": "Specific model for translate message",
+      "title": "Translation Settings"
     }
   },
   "tab": {
@@ -374,6 +374,7 @@
     "experiment": "Experiment",
     "llm": "Language Model",
     "sync": "Cloud Sync",
+    "system-agent": "System Agent",
     "tts": "Text-to-Speech"
   },
   "tools": {
