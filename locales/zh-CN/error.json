@@ -12,6 +12,8 @@
     "retry": "重新加载",
     "title": "页面遇到一点问题.."
   },
+  "fetchError": "请求失败",
+  "fetchErrorDetail": "错误详情",
   "notFound": {
     "backHome": "返回首页",
     "desc": "我们找不到你正在寻找的页面，请检查链接是否正确",

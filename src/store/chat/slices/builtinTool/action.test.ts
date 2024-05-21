@@ -3,6 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
 import { imageGenerationService } from '@/services/textToImage';
+import { uploadService } from '@/services/upload';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -35,7 +36,8 @@ describe('chatToolSlice', () => {
       const mockId = 'image-id';
 
       vi.spyOn(imageGenerationService, 'generateImage').mockResolvedValue(mockUrl);
-      vi.spyOn(fileService, 'uploadImageByUrl').mockResolvedValue({ id: mockId });
+      vi.spyOn(uploadService, 'uploadImageByUrl').mockResolvedValue({} as any);
+      vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: mockId });
       vi.spyOn(result.current, 'toggleDallEImageLoading');
 
       await act(async () => {
@@ -43,7 +45,7 @@ describe('chatToolSlice', () => {
       });
       // For each prompt, loading is toggled on and then off
       expect(imageGenerationService.generateImage).toHaveBeenCalledTimes(prompts.length);
-      expect(fileService.uploadImageByUrl).toHaveBeenCalledTimes(prompts.length);
+      expect(uploadService.uploadImageByUrl).toHaveBeenCalledTimes(prompts.length);
 
       expect(result.current.toggleDallEImageLoading).toHaveBeenCalledTimes(prompts.length * 2);
     });

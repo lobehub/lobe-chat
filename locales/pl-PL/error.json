@@ -12,6 +12,8 @@
     "retry": "Ponów próbę",
     "title": "Napotkano problem na stronie.."
   },
+  "fetchError": "Błąd żądania",
+  "fetchErrorDetail": "Szczegóły błędu",
   "notFound": {
     "backHome": "Powrót do strony głównej",
     "desc": "Nie możemy odnaleźć strony, której szukasz. Sprawdź, czy link jest poprawny.",

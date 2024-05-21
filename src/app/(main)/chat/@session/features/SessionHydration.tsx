@@ -13,6 +13,7 @@ import { useSessionStore } from '@/store/session';
 const SessionHydration = memo(() => {
   const useStoreUpdater = createStoreUpdater(useSessionStore);
   const useAgentStoreUpdater = createStoreUpdater(useAgentStore);
+  const useChatStoreUpdater = createStoreUpdater(useChatStore);
   const [switchTopic] = useChatStore((s) => [s.switchTopic]);
 
   // two-way bindings the url and session store
@@ -22,6 +23,7 @@ const SessionHydration = memo(() => {
   );
   useStoreUpdater('activeId', session);
   useAgentStoreUpdater('activeId', session);
+  useChatStoreUpdater('activeId', session);
 
   useEffect(() => {
     const unsubscribe = useSessionStore.subscribe(
