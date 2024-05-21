@@ -20,7 +20,6 @@ const OpenAIProvider = memo(() => {
         }
       }
       showApiKey={showOpenAIApiKey}
-      showBrowserRequest
       title={<OpenAI.Combine size={24} />}
     />
   );

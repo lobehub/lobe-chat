@@ -12,6 +12,8 @@
     "retry": "Thử lại",
     "title": "Trang gặp một chút vấn đề.."
   },
+  "fetchError": "Yêu cầu thất bại",
+  "fetchErrorDetail": "Chi tiết lỗi",
   "notFound": {
     "backHome": "Quay về Trang chủ",
     "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm, vui lòng kiểm tra xem liên kết có đúng không",

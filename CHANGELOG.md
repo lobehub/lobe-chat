@@ -2,6 +2,46 @@
 
 # Changelog
 
+### [Version 0.160.6](https://github.com/lobehub/lobe-chat/compare/v0.160.5...v0.160.6)
+
+<sup>Released on **2024-05-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor a Notification component, refactor code, refactor message action, refactor the type, refactor user preference.
+
+#### 💄 Styles
+
+- **misc**: Add ENABLED_OPENAI env, add fetch error notification, improve openai fetch client switch, improve redirect when login.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor a Notification component ([28db3d5](https://github.com/lobehub/lobe-chat/commit/28db3d5))
+- **misc**: Refactor code, closes [#2584](https://github.com/lobehub/lobe-chat/issues/2584) ([086244c](https://github.com/lobehub/lobe-chat/commit/086244c))
+- **misc**: Refactor message action ([224bd67](https://github.com/lobehub/lobe-chat/commit/224bd67))
+- **misc**: Refactor the type ([ddf1abf](https://github.com/lobehub/lobe-chat/commit/ddf1abf))
+- **misc**: Refactor user preference ([1823b0d](https://github.com/lobehub/lobe-chat/commit/1823b0d))
+
+#### Styles
+
+- **misc**: Add ENABLED_OPENAI env ([35f6230](https://github.com/lobehub/lobe-chat/commit/35f6230))
+- **misc**: Add fetch error notification ([0186b4b](https://github.com/lobehub/lobe-chat/commit/0186b4b))
+- **misc**: Improve openai fetch client switch ([3cad470](https://github.com/lobehub/lobe-chat/commit/3cad470))
+- **misc**: Improve redirect when login ([cb26655](https://github.com/lobehub/lobe-chat/commit/cb26655))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.160.5](https://github.com/lobehub/lobe-chat/compare/v0.160.4...v0.160.5)
 
 <sup>Released on **2024-05-20**</sup>
