@@ -79,14 +79,22 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
     return (
       <Flexbox direction={directionReverse ? 'horizontal-reverse' : 'horizontal'} gap={4}>
         {model.files && (
-          <Tooltip placement={placement} title={t('ModelSelect.featureTag.file')}>
-            <div className={cx(styles.tag, styles.tagGreen)}>
+          <Tooltip 
+            overlayStyle={{ pointerEvents: 'none' }}
+            placement={placement} 
+            title={t('ModelSelect.featureTag.file')} 
+          >
+            <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={LucidePaperclip} />
             </div>
           </Tooltip>
         )}
         {model.vision && (
-          <Tooltip placement={placement} title={t('ModelSelect.featureTag.vision')}>
+          <Tooltip 
+            overlayStyle={{ pointerEvents: 'none' }}
+            placement={placement} 
+            title={t('ModelSelect.featureTag.vision')}
+          >
             <div className={cx(styles.tag, styles.tagGreen)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={LucideEye} />
             </div>
@@ -94,7 +102,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.functionCall && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset' }}
+            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
             title={t('ModelSelect.featureTag.functionCall')}
           >
@@ -105,7 +113,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
         )}
         {model.tokens !== undefined && (
           <Tooltip
-            overlayStyle={{ maxWidth: 'unset' }}
+            overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
             placement={placement}
             title={t('ModelSelect.featureTag.tokens', {
               tokens: model.tokens === 0 ? '∞' : numeral(model.tokens).format('0,0'),
