@@ -157,7 +157,7 @@ describe('agentSelectors', () => {
       expect(provider).toBe(mockSessionStore.agentConfig.provider);
     });
 
-    it('should return undefined if provider is not defined in the agent config', () => {
+    it('should fallback to openai if provider is not defined in the agent config', () => {
       const modifiedStore = {
         ...mockSessionStore,
         agentConfig: {
@@ -166,7 +166,7 @@ describe('agentSelectors', () => {
         },
       };
       const provider = agentSelectors.currentAgentModelProvider(modifiedStore);
-      expect(provider).toBeUndefined();
+      expect(provider).toEqual('openai');
     });
   });
 

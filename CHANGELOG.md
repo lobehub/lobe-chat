@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.160.7](https://github.com/lobehub/lobe-chat/compare/v0.160.6...v0.160.7)
+
+<sup>Released on **2024-05-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix duplicate model panel key.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix duplicate model panel key, closes [#2591](https://github.com/lobehub/lobe-chat/issues/2591) ([c733fcf](https://github.com/lobehub/lobe-chat/commit/c733fcf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.160.6](https://github.com/lobehub/lobe-chat/compare/v0.160.5...v0.160.6)
 
 <sup>Released on **2024-05-21**</sup>

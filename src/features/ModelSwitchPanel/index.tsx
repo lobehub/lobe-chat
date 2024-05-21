@@ -38,11 +38,14 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
   `,
 }));
 
+const menuKey = (provider: string, model: string) => `${provider}-${model}`;
+
 const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const { t } = useTranslation('components');
   const { styles, theme } = useStyles();
-  const [model, updateAgentConfig] = useAgentStore((s) => [
+  const [model, provider, updateAgentConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
+    agentSelectors.currentAgentModelProvider(s),
     s.updateAgentConfig,
   ]);
 
@@ -52,7 +55,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const items = useMemo<ItemType[]>(() => {
     const getModelItems = (provider: ModelProviderCard) => {
       const items = provider.chatModels.map((model) => ({
-        key: model.id,
+        key: menuKey(provider.id, model.id),
         label: <ModelItemRender {...model} />,
         onClick: () => {
           updateAgentConfig({ model: model.id, provider: provider.id });
@@ -91,7 +94,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   return (
     <Dropdown
       menu={{
-        activeKey: model,
+        activeKey: menuKey(provider, model),
         className: styles.menu,
         items,
         style: {
