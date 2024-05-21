@@ -12,6 +12,8 @@
     "retry": "Opnieuw proberen",
     "title": "Er is een probleem opgetreden op de pagina.."
   },
+  "fetchError": "Verzoek mislukt",
+  "fetchErrorDetail": "Foutdetails",
   "notFound": {
     "backHome": "Terug naar startpagina",
     "desc": "We kunnen de pagina die je zoekt niet vinden, controleer of de link juist is",
