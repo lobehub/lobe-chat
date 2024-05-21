@@ -41,7 +41,16 @@ const nextAuthMiddleware = auth((req) => {
 });
 
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
-  ? clerkMiddleware()
+  ? // can't lift to a function because if there is no clerk public key, it will throw error
+    clerkMiddleware((auth, request) => {
+      // if user is logged in and on the home page, redirect to chat
+      if (auth().userId && request.nextUrl.pathname === '/') {
+        request.nextUrl.pathname = '/chat';
+        return NextResponse.redirect(request.nextUrl);
+      }
+
+      return NextResponse.next();
+    })
   : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
     ? nextAuthMiddleware
     : defaultMiddleware;
