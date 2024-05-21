@@ -33,7 +33,8 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       title={t('store.title')}
       width={800}
     >
-      <Flexbox gap={gap} 
+      <Flexbox 
+        gap={gap} 
         style={{maxHeight: mobile ? `calc(75vh - 56px - 13px - ${gap}px)` : `calc(75vh - 56px - ${gap}px)`}}
         width={'100%'}
       >
