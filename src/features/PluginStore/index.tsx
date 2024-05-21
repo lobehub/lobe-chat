@@ -19,8 +19,6 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   const [listType] = useToolStore((s) => [s.listType]);
 
-  const gap = mobile ? 8 : 16;
-
   return (
     <Modal
       allowFullscreen

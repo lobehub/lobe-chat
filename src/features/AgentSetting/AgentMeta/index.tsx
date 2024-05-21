@@ -1,10 +1,11 @@
 'use client';
 
-import { EmojiPicker, Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
+import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { isString } from 'lodash-es';
 import { Wand2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +18,8 @@ import { SessionLoadingState } from '../store/initialState';
 import AutoGenerateInput from './AutoGenerateInput';
 import AutoGenerateSelect from './AutoGenerateSelect';
 import BackgroundSwatches from './BackgroundSwatches';
+
+const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 const AgentMeta = memo(() => {
   const { t } = useTranslation('setting');
