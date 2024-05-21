@@ -12,6 +12,8 @@
     "retry": "Tentar novamente",
     "title": "Ocorreu um problema na página.."
   },
+  "fetchError": "Falha na solicitação",
+  "fetchErrorDetail": "Detalhes do erro",
   "notFound": {
     "backHome": "Voltar para a página inicial",
     "desc": "Não conseguimos encontrar a página que você está procurando, por favor, verifique se o link está correto",
