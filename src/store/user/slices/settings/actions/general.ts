@@ -16,8 +16,8 @@ export interface GeneralSettingsAction {
   importAppSettings: (settings: GlobalSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
   setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
-  switchLocale: (locale: LocaleMode) => Promise<void>;
   setTranslationSystemAgent: (provider: string, model: string) => Promise<void>;
+  switchLocale: (locale: LocaleMode) => Promise<void>;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
 }
@@ -51,11 +51,6 @@ export const generalSettingsSlice: StateCreator<
     await userService.updateUserSettings(diffs);
     await get().refreshUserConfig();
   },
-  switchLocale: async (locale) => {
-    await get().setSettings({ language: locale });
-
-    switchLang(locale);
-  },
   setTranslationSystemAgent: async (provider, model) => {
     await get().setSettings({
       systemAgent: {
@@ -65,6 +60,11 @@ export const generalSettingsSlice: StateCreator<
         },
       },
     });
+  },
+  switchLocale: async (locale) => {
+    await get().setSettings({ language: locale });
+
+    switchLang(locale);
   },
   switchThemeMode: async (themeMode) => {
     await get().setSettings({ themeMode });
