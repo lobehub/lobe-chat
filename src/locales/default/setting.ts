@@ -363,14 +363,23 @@ export default {
       title: 'WebRTC 同步',
     },
   },
+  systemAgent: {
+    title: '系统助手',
+    translation: {
+      label: '翻译模型',
+      modelDesc: '指定用于翻译的模型',
+      title: '翻译助手设置',
+    },
+  },
   tab: {
-    about: '关于',
-    agent: '默认助手',
-    common: '通用设置',
-    experiment: '实验',
-    llm: '语言模型',
-    sync: '云端同步',
-    tts: '语音服务',
+    'about': '关于',
+    'agent': '默认助手',
+    'common': '通用设置',
+    'experiment': '实验',
+    'llm': '语言模型',
+    'sync': '云端同步',
+    'system-agent': '系统助手',
+    'tts': '语音服务',
   },
   tools: {
     builtins: {

@@ -359,6 +359,14 @@
       "title": "WebRTC Đồng bộ"
     }
   },
+  "systemAgent": {
+    "title": "Trợ lý hệ thống",
+    "translation": {
+      "label": "Mô hình dịch",
+      "modelDesc": "Chọn mô hình để dịch",
+      "title": "Cài đặt trợ lý dịch"
+    }
+  },
   "tab": {
     "about": "Về chúng tôi",
     "agent": "Trợ lý mặc định",
@@ -366,6 +374,7 @@
     "experiment": "Thử nghiệm",
     "llm": "Mô hình ngôn ngữ",
     "sync": "Đồng bộ trên đám mây",
+    "system-agent": "Trợ lý hệ thống",
     "tts": "Dịch vụ giọng nói"
   },
   "tools": {
