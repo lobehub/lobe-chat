@@ -1,8 +1,10 @@
+'use client';
+
 import { Form, type ItemGroup } from '@lobehub/ui';
 import { Form as AntForm, Select, SelectProps } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { MessageSquareMore } from 'lucide-react';
+import { Globe } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -31,7 +33,7 @@ interface ModelOption {
   value: string;
 }
 
-const SystemAgent = memo(() => {
+const Translation = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
@@ -84,15 +86,21 @@ const SystemAgent = memo(() => {
         name: [SYSTEM_AGENT_SETTING_KEY, 'translation', 'model'],
       },
     ],
-    icon: MessageSquareMore,
-    title: t('systemAgent.title'),
+    icon: Globe,
+    title: t('systemAgent.translation.title'),
   };
 
   useSyncSettings(form);
 
   return (
-    <Form form={form} initialValues={settings} items={[systemAgentSettings]} {...FORM_STYLE} />
+    <Form
+      form={form}
+      initialValues={settings}
+      items={[systemAgentSettings]}
+      variant={'pure'}
+      {...FORM_STYLE}
+    />
   );
 });
 
-export default SystemAgent;
+export default Translation;

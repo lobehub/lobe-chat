@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { Tag } from 'antd';
-import { Bot, Brain, Cloudy, Info, Mic2, Settings2 } from 'lucide-react';
+import { Bot, Brain, Cloudy, Info, Mic2, Settings2, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,6 +23,15 @@ export const useCategory = () => {
           label: (
             <Link href={'/settings/common'} onClick={(e) => e.preventDefault()}>
               {t('tab.common')}
+            </Link>
+          ),
+        },
+        {
+          icon: <Icon icon={Sparkles} />,
+          key: SettingsTabs.SystemAgent,
+          label: (
+            <Link href={'/settings/system-agent'} onClick={(e) => e.preventDefault()}>
+              {t('tab.system-agent')}
             </Link>
           ),
         },
@@ -49,6 +58,7 @@ export const useCategory = () => {
             </Link>
           ),
         },
+
         {
           icon: <Icon icon={Mic2} />,
           key: SettingsTabs.TTS,
