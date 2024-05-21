@@ -9,7 +9,10 @@ import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
+import { useUserStore } from '@/store/user';
+import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatTTS, ChatTranslate } from '@/types/message';
+import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('enhance');
@@ -48,11 +51,15 @@ export const chatEnhance: StateCreator<
     topicId: get().activeTopicId,
     ...data,
   }),
+
   translateMessage: async (id, targetLang) => {
     const { internal_toggleChatLoading, updateMessageTranslate, internal_dispatchMessage } = get();
 
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
+
+    // Get current agent for translation
+    const translationSetting = systemAgentSelectors.translation(useUserStore.getState());
 
     // create translate extra
     await updateMessageTranslate(id, { content: '', from: '', to: targetLang });
@@ -69,7 +76,7 @@ export const chatEnhance: StateCreator<
 
         await updateMessageTranslate(id, { content, from, to: targetLang });
       },
-      params: chainLangDetect(message.content),
+      params: merge(translationSetting, chainLangDetect(message.content)),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.LanguageDetect }),
     });
 
@@ -95,7 +102,7 @@ export const chatEnhance: StateCreator<
           }
         }
       },
-      params: chainTranslate(message.content, targetLang),
+      params: merge(translationSetting, chainTranslate(message.content, targetLang)),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.Translator }),
     });
   },

@@ -1,4 +1,5 @@
 {
+  "": {},
   "about": {
     "title": "O nas"
   },
@@ -328,44 +329,53 @@
   "sync": {
     "device": {
       "deviceName": {
-        "hint": "添加名称以便于识别",
-        "placeholder": "请输入设备名称",
-        "title": "设备名称"
+        "hint": "Dodaj nazwę, aby ułatwić identyfikację",
+        "placeholder": "Wprowadź nazwę urządzenia",
+        "title": "Nazwa urządzenia"
       },
-      "title": "设备信息",
-      "unknownBrowser": "未知浏览器",
-      "unknownOS": "未知系统"
+      "title": "Informacje o urządzeniu",
+      "unknownBrowser": "Nieznana przeglądarka",
+      "unknownOS": "Nieznany system"
     },
     "warning": {
-      "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
+      "message": "Ta funkcja jest obecnie eksperymentalna i może działać nieprzewidywalnie lub niestabilnie. W przypadku problemów prosimy o natychmiastowe zgłoszenie opinii."
     },
     "webrtc": {
       "channelName": {
-        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
-        "placeholder": "请输入同步频道名称",
-        "shuffle": "随机生成",
-        "title": "同步频道名称"
+        "desc": "WebRTC użyje tej nazwy do utworzenia kanału synchronizacji, upewnij się, że nazwa kanału jest unikalna",
+        "placeholder": "Wprowadź nazwę kanału synchronizacji",
+        "shuffle": "Wygeneruj losowo",
+        "title": "Nazwa kanału synchronizacji"
       },
       "channelPassword": {
-        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
-        "placeholder": "请输入同步频道密码",
-        "title": "同步频道密码"
+        "desc": "Dodaj hasło, aby zapewnić prywatność kanału. Tylko urządzenia z poprawnym hasłem mogą dołączyć do kanału",
+        "placeholder": "Wprowadź hasło kanału synchronizacji",
+        "title": "Hasło kanału synchronizacji"
       },
-      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "desc": "Bezpośrednia, punkt-do-punktu komunikacja danych w czasie rzeczywistym, wymaga jednoczesnej obecności urządzeń online do synchronizacji",
       "enabled": {
-        "invalid": "请填写同步频道名称后再开启",
-        "title": "开启同步"
+        "invalid": "Wprowadź nazwę kanału synchronizacji przed włączeniem",
+        "title": "Włącz synchronizację"
       },
-      "title": "WebRTC 同步"
+      "title": "Synchronizacja WebRTC"
+    }
+  },
+  "systemAgent": {
+    "title": "Asystent Systemowy",
+    "translation": {
+      "label": "Model Tłumaczenia",
+      "modelDesc": "Określ model używany do tłumaczenia",
+      "title": "Ustawienia Asystenta Tłumaczenia"
     }
   },
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
-    "experiment": "实验",
+    "experiment": "Eksperyment",
     "llm": "Model językowy",
-    "sync": "云端同步",
+    "sync": "Synchronizacja w chmurze",
+    "system-agent": "System Assistant",
     "tts": "Usługa głosowa"
   },
   "tools": {

@@ -25,6 +25,7 @@ export enum SettingsTabs {
   Common = 'common',
   LLM = 'llm',
   Sync = 'sync',
+  SystemAgent = 'system-agent',
   TTS = 'tts',
 }
 

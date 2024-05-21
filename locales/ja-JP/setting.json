@@ -359,6 +359,14 @@
       "title": "WebRTC 同期"
     }
   },
+  "systemAgent": {
+    "title": "システムアシスタント",
+    "translation": {
+      "label": "翻訳モデル",
+      "modelDesc": "翻訳に使用するモデルを指定します",
+      "title": "翻訳アシスタントの設定"
+    }
+  },
   "tab": {
     "about": "について",
     "agent": "デフォルトエージェント",
@@ -366,6 +374,7 @@
     "experiment": "実験",
     "llm": "言語モデル",
     "sync": "クラウド同期",
+    "system-agent": "システムアシスタント",
     "tts": "音声サービス"
   },
   "tools": {
