@@ -13,7 +13,7 @@ const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s:
   const config = getProviderConfigById(provider)(s);
   if (typeof config?.fetchOnClient !== 'undefined') return config?.fetchOnClient;
 
-  return isProviderEndpointNotEmpty(provider)(s);
+  return false;
 };
 
 const getCustomModelCard =
