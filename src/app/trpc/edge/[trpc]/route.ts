@@ -18,7 +18,7 @@ const handler = (req: NextRequest) =>
 
     onError: ({ error, path }) => {
       pino.info(`Error in tRPC handler (edge) on path: ${path}`);
-      pino.error(error);
+      console.error(error);
     },
 
     req,
