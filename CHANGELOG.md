@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.160.8](https://github.com/lobehub/lobe-chat/compare/v0.160.7...v0.160.8)
+
+<sup>Released on **2024-05-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: `Tooltip` should not be selected & Model selector overlaps with reset button.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: `Tooltip` should not be selected & Model selector overlaps with reset button, closes [#2500](https://github.com/lobehub/lobe-chat/issues/2500) [#2511](https://github.com/lobehub/lobe-chat/issues/2511) [#2581](https://github.com/lobehub/lobe-chat/issues/2581) ([0c62fb7](https://github.com/lobehub/lobe-chat/commit/0c62fb7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.160.7](https://github.com/lobehub/lobe-chat/compare/v0.160.6...v0.160.7)
 
 <sup>Released on **2024-05-21**</sup>
