@@ -298,7 +298,7 @@ export const chatPlugin: StateCreator<
   updatePluginState: async (id, key, value) => {
     const { refreshMessages } = get();
 
-    await messageService.updateMessagePluginState(id, key, value);
+    await messageService.updateMessagePluginState(id, { [key]: value });
     await refreshMessages();
   },
 });

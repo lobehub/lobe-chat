@@ -105,12 +105,13 @@ export const chatEnhance: StateCreator<
   },
 
   updateMessageTTS: async (id, data) => {
-    await messageService.updateMessage(id, { tts: data as ChatTTS });
+    await messageService.updateMessageTTS(id, data);
     await get().refreshMessages();
   },
 
   updateMessageTranslate: async (id, data) => {
-    await messageService.updateMessage(id, { translate: data as ChatTranslate });
+    await messageService.updateMessageTranslate(id, data);
+
     await get().refreshMessages();
   },
 });

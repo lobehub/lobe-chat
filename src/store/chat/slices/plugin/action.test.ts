@@ -372,11 +372,9 @@ describe('ChatPluginAction', () => {
         await result.current.updatePluginState(messageId, pluginStateKey, pluginStateValue);
       });
 
-      expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(
-        messageId,
-        pluginStateKey,
-        pluginStateValue,
-      );
+      expect(messageService.updateMessagePluginState).toHaveBeenCalledWith(messageId, {
+        [pluginStateKey]: pluginStateValue,
+      });
       expect(initialState.refreshMessages).toHaveBeenCalled();
     });
   });
