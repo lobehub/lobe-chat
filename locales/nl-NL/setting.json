@@ -359,6 +359,14 @@
       "title": "WebRTC Synchronisatie"
     }
   },
+  "systemAgent": {
+    "title": "Systeemassistent",
+    "translation": {
+      "label": "Vertaalmodel",
+      "modelDesc": "Specificeer het model voor vertaling",
+      "title": "Instellingen voor vertaalassistent"
+    }
+  },
   "tab": {
     "about": "Over",
     "agent": "Standaardassistent",
@@ -366,6 +374,7 @@
     "experiment": "Experiment",
     "llm": "Taalmodel",
     "sync": "Cloudsynchronisatie",
+    "system-agent": "Systeemassistent",
     "tts": "Spraakdienst"
   },
   "tools": {

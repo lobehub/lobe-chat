@@ -359,6 +359,14 @@
       "title": "Sincronizzazione WebRTC"
     }
   },
+  "systemAgent": {
+    "title": "Assistente di sistema",
+    "translation": {
+      "label": "Modello di traduzione",
+      "modelDesc": "Modello specificato per la traduzione",
+      "title": "Impostazioni dell'assistente di traduzione"
+    }
+  },
   "tab": {
     "about": "Informazioni",
     "agent": "Assistente predefinito",
@@ -366,6 +374,7 @@
     "experiment": "实验",
     "llm": "Modello linguistico",
     "sync": "云端同步",
+    "system-agent": "Assistente di sistema",
     "tts": "Servizio vocale"
   },
   "tools": {
