@@ -359,6 +359,14 @@
       "title": "WebRTC 同步"
     }
   },
+  "systemAgent": {
+    "title": "系統助手",
+    "translation": {
+      "label": "翻譯模型",
+      "modelDesc": "指定用於翻譯的模型",
+      "title": "翻譯助手設定"
+    }
+  },
   "tab": {
     "about": "關於",
     "agent": "默認助手",
@@ -366,6 +374,7 @@
     "experiment": "實驗",
     "llm": "語言模型",
     "sync": "雲端同步",
+    "system-agent": "系統助手",
     "tts": "語音服務"
   },
   "tools": {
