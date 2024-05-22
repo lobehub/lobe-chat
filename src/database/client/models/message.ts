@@ -184,10 +184,10 @@ class _MessageModel extends BaseModel {
     return super._updateWithSync(id, data);
   }
 
-  async updatePluginState(id: string, key: string, value: any) {
+  async updatePluginState(id: string, value: any) {
     const item = await this.findById(id);
 
-    return this.update(id, { pluginState: { ...item.pluginState, [key]: value } });
+    return this.update(id, { pluginState: { ...item.pluginState, ...value } });
   }
 
   /**

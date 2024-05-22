@@ -12,6 +12,8 @@
     "retry": "重新加載",
     "title": "頁面遇到一點問題.."
   },
+  "fetchError": "請求失敗",
+  "fetchErrorDetail": "錯誤詳情",
   "notFound": {
     "backHome": "返回首頁",
     "desc": "我們找不到您正在尋找的頁面，請檢查連結是否正確",

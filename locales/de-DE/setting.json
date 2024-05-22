@@ -359,6 +359,14 @@
       "title": "WebRTC-Synchronisierung"
     }
   },
+  "systemAgent": {
+    "title": "Systemassistent",
+    "translation": {
+      "label": "Übersetzungsmodell",
+      "modelDesc": "Das für die Übersetzung verwendete Modell",
+      "title": "Einstellungen für Übersetzungsassistent"
+    }
+  },
   "tab": {
     "about": "Über",
     "agent": "Standard-Assistent",
@@ -366,6 +374,7 @@
     "experiment": "Experiment",
     "llm": "Sprachmodell",
     "sync": "Cloud-Synchronisierung",
+    "system-agent": "Systemassistent",
     "tts": "Sprachdienste"
   },
   "tools": {

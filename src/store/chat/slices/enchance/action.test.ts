@@ -13,6 +13,7 @@ import { useChatStore } from '../../store';
 vi.mock('@/services/message', () => ({
   messageService: {
     updateMessageTTS: vi.fn(),
+    updateMessageTranslate: vi.fn(),
     updateMessage: vi.fn(),
   },
 }));
@@ -60,7 +61,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.clearTTS(messageId);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { tts: false });
+      expect(messageService.updateMessageTTS).toHaveBeenCalledWith(messageId, false);
     });
   });
 
@@ -106,7 +107,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.translateMessage(messageId, targetLang);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalled();
+      expect(messageService.updateMessageTranslate).toHaveBeenCalled();
     });
   });
 
@@ -119,7 +120,7 @@ describe('ChatEnhanceAction', () => {
         await result.current.clearTranslate(messageId);
       });
 
-      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { translate: false });
+      expect(messageService.updateMessageTranslate).toHaveBeenCalledWith(messageId, false);
     });
   });
 });

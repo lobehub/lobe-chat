@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { withSWR } from '~test-utils';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
+import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { UserGuide, UserPreference } from '@/types/user';
 
@@ -44,9 +45,7 @@ describe('createPreferenceSlice', () => {
     it('should return false when userId is empty', async () => {
       const { result } = renderHook(() => useUserStore());
 
-      vi.spyOn(result.current.preferenceStorage, 'getFromLocalStorage').mockResolvedValueOnce(
-        {} as any,
-      );
+      vi.spyOn(userService, 'getPreference').mockResolvedValueOnce({} as any);
 
       const { result: prefernce } = renderHook(() => result.current.useInitPreference(), {
         wrapper: withSWR,
@@ -60,9 +59,7 @@ describe('createPreferenceSlice', () => {
     it('should return default preference when local storage is empty', async () => {
       const { result } = renderHook(() => useUserStore());
 
-      vi.spyOn(result.current.preferenceStorage, 'getFromLocalStorage').mockResolvedValueOnce(
-        {} as any,
-      );
+      vi.spyOn(userService, 'getPreference').mockResolvedValueOnce({} as any);
 
       renderHook(() => result.current.useInitPreference(), {
         wrapper: withSWR,
@@ -82,9 +79,7 @@ describe('createPreferenceSlice', () => {
         guide: { topic: false, moveSettingsToAvatar: true },
       };
 
-      vi.spyOn(result.current.preferenceStorage, 'getFromLocalStorage').mockResolvedValueOnce(
-        savedPreference,
-      );
+      vi.spyOn(userService, 'getPreference').mockResolvedValueOnce(savedPreference);
 
       const { result: prefernce } = renderHook(() => result.current.useInitPreference(), {
         wrapper: withSWR,
