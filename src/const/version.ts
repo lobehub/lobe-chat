@@ -1,6 +1,6 @@
 import pkg from '@/../package.json';
-import { getClientConfig } from '@/config/client';
+import { getServerDBConfig } from '@/config/db';
 
 export const CURRENT_VERSION = pkg.version;
 
-export const isServerMode = getClientConfig().ENABLED_SERVER_SERVICE;
+export const isServerMode = getServerDBConfig().NEXT_PUBLIC_ENABLED_SERVER_SERVICE;
