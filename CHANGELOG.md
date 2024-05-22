@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 0.161.4](https://github.com/lobehub/lobe-chat/compare/v0.161.3...v0.161.4)
+
+<sup>Released on **2024-05-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the app ENV.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix market and plugin cache.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the app ENV, closes [#2604](https://github.com/lobehub/lobe-chat/issues/2604) ([acc0fdc](https://github.com/lobehub/lobe-chat/commit/acc0fdc))
+
+#### What's fixed
+
+- **misc**: Fix market and plugin cache, closes [#2608](https://github.com/lobehub/lobe-chat/issues/2608) ([a3f161e](https://github.com/lobehub/lobe-chat/commit/a3f161e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.3](https://github.com/lobehub/lobe-chat/compare/v0.161.2...v0.161.3)
 
 <sup>Released on **2024-05-22**</sup>
