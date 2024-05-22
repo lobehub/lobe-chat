@@ -5,6 +5,7 @@ import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
+import { DRAGGING_ROOT_ID } from '@/const/layoutTokens';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
@@ -31,6 +32,7 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
             {children}
             {modal}
           </AuthProvider>
+          <div id={DRAGGING_ROOT_ID} />
         </GlobalProvider>
         <Analytics />
         {inVercel && <SpeedInsights />}
