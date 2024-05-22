@@ -12,6 +12,8 @@
     "retry": "Yeniden Yükle",
     "title": "Sayfa bir sorunla karşılaştı.."
   },
+  "fetchError": "İstek başarısız oldu",
+  "fetchErrorDetail": "Hata detayı",
   "notFound": {
     "backHome": "Ana Sayfaya Dön",
     "desc": "Aradığınız sayfayı bulamadık, lütfen bağlantının doğru olduğundan emin olun",

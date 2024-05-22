@@ -12,6 +12,7 @@ import type { Store } from './store';
 export interface StoreAction {
   activateAgent: (identifier: string) => void;
   deactivateAgent: () => void;
+  getAgentById: (identifiers: string) => Promise<AgentsMarketItem>;
   setSearchKeywords: (keywords: string) => void;
   updateAgentMap: (key: string, value: AgentsMarketItem) => void;
   useFetchAgent: (identifier: string) => SWRResponse<AgentsMarketItem>;
@@ -30,6 +31,12 @@ export const createMarketAction: StateCreator<
   deactivateAgent: () => {
     set({ currentIdentifier: '' }, false, 'deactivateAgent');
   },
+
+  getAgentById: async (identifier) => {
+    const locale = globalHelpers.getCurrentLanguage();
+    return marketService.getAgentManifest(identifier, locale as string);
+  },
+
   setSearchKeywords: (keywords) => {
     set({ searchKeywords: keywords });
   },

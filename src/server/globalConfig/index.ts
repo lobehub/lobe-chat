@@ -18,6 +18,7 @@ export const getServerGlobalConfig = () => {
     ENABLE_LANGFUSE,
 
     DEFAULT_AGENT_CONFIG,
+    ENABLED_OPENAI,
     OPENAI_MODEL_LIST,
 
     ENABLED_MOONSHOT,
@@ -83,6 +84,7 @@ export const getServerGlobalConfig = () => {
         }),
       },
       openai: {
+        enabled: ENABLED_OPENAI,
         enabledModels: extractEnabledModels(OPENAI_MODEL_LIST),
         serverModelCards: transformToChatModelCards({
           defaultChatModels: OpenAIProviderCard.chatModels,

@@ -55,6 +55,7 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
       <Flexbox align={'center'} gap={0} horizontal justify={'space-between'}>
         <div>{t('llm.modelList.total', { count: totalModels })}</div>
         <Tooltip
+          overlayStyle={{ pointerEvents: 'none' }}
           title={
             latestFetchTime
               ? t('llm.fetcher.latestTime', {
