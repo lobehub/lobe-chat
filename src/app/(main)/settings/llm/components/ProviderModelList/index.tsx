@@ -16,6 +16,13 @@ import ModelFetcher from './ModelFetcher';
 import OptionRender from './Option';
 
 const styles = {
+  divStyle: css`
+    position: relative;
+
+    .ant-select-selector {
+      padding-inline-end: 50px !important;
+    }
+  `,
   popup: css`
     &.ant-select-dropdown {
       .ant-select-item-option-selected {
@@ -69,7 +76,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
     return (
       <>
         <Flexbox gap={8}>
-          <div style={{ position: 'relative' }}>
+          <div className={cx(styles.divStyle)}>
             <div className={cx(styles.reset)}>
               {showReset && (
                 <ActionIcon

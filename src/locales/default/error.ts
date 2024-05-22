@@ -12,6 +12,8 @@ export default {
     retry: '重新加载',
     title: '页面遇到一点问题..',
   },
+  fetchError: '请求失败',
+  fetchErrorDetail: '错误详情',
   notFound: {
     backHome: '返回首页',
     desc: '我们找不到你正在寻找的页面，请检查链接是否正确',
@@ -94,7 +96,7 @@ export default {
 
     InvalidDeepSeekAPIKey: 'DeepSeek API Key 不正确或为空，请检查 DeepSeek API Key 后重试',
     DeepSeekBizError: '请求 DeepSeek 服务出错，请根据以下信息排查或重试',
-    
+
     InvalidAzureAPIKey: 'Azure API Key 不正确或为空，请检查 Azure API Key 后重试',
     AzureBizError: '请求 Azure AI 服务出错，请根据以下信息排查或重试',
 

@@ -112,4 +112,26 @@ describe('SettingsAction', () => {
       expect(userService.updateUserSettings).toHaveBeenCalledWith({ defaultAgent: updatedAgent });
     });
   });
+
+  describe('setTranslationSystemAgent', () => {
+    it('should set partial settings', async () => {
+      const { result } = renderHook(() => useUserStore());
+      const systemAgentSettings: Partial<GlobalSettings> = {
+        systemAgent: {
+          translation: {
+            model: 'testmodel',
+            provider: 'provider',
+          },
+        },
+      };
+
+      // Perform the action
+      await act(async () => {
+        await result.current.setTranslationSystemAgent('provider', 'testmodel');
+      });
+
+      // Assert that updateUserSettings was called with the correct settings
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(systemAgentSettings);
+    });
+  });
 });

@@ -385,7 +385,7 @@ describe('MessageModel', () => {
   describe('updatePluginState', () => {
     it('should update plugin state', async () => {
       const createdMessage = await MessageModel.create(messageData);
-      await MessageModel.updatePluginState(createdMessage.id, 'testKey', 'testValue');
+      await MessageModel.updatePluginState(createdMessage.id, { testKey: 'testValue' });
       const updatedMessage = await MessageModel.findById(createdMessage.id);
       expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
     });
@@ -402,7 +402,7 @@ describe('MessageModel', () => {
   describe('updatePluginState', () => {
     it('should update plugin state', async () => {
       const createdMessage = await MessageModel.create(messageData);
-      await MessageModel.updatePluginState(createdMessage.id, 'testKey', 'testValue');
+      await MessageModel.updatePluginState(createdMessage.id, { testKey: 'testValue' });
       const updatedMessage = await MessageModel.findById(createdMessage.id);
       expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
     });
