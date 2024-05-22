@@ -2,8 +2,6 @@
 import { nanoid } from 'nanoid';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getServerConfig } from '@/config/server';
-
 import { ApiKeyManager } from './apiKeyManager';
 
 function generateKeys(count: number = 1) {
