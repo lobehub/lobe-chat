@@ -19,32 +19,32 @@ export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
       {
         icon: <Icon icon={UserCircle} size={iconSize} />,
         key: ChatSettingsTabs.Meta,
-        label: t('settingAgent.title'),
+        label: t('agentTab.meta'),
       },
       {
         icon: <Icon icon={Bot} size={iconSize} />,
         key: ChatSettingsTabs.Prompt,
-        label: t('settingAgent.prompt.title'),
+        label: t('agentTab.prompt'),
       },
       {
         icon: <Icon icon={MessagesSquare} size={iconSize} />,
         key: ChatSettingsTabs.Chat,
-        label: t('settingChat.title'),
+        label: t('agentTab.chat'),
       },
       {
         icon: <Icon icon={BrainCog} size={iconSize} />,
         key: ChatSettingsTabs.Modal,
-        label: t('settingModel.title'),
+        label: t('agentTab.modal'),
       },
       {
         icon: <Icon icon={Mic2} size={iconSize} />,
         key: ChatSettingsTabs.TTS,
-        label: t('settingTTS.title'),
+        label: t('agentTab.tts'),
       },
       {
         icon: <Icon icon={Blocks} size={iconSize} />,
         key: ChatSettingsTabs.Plugin,
-        label: t('settingPlugin.title'),
+        label: t('agentTab.plugin'),
       },
     ],
     [t],

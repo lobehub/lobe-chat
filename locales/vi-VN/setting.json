@@ -2,6 +2,14 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "agentTab": {
+    "chat": "Tùy chọn Trò chuyện",
+    "meta": "Thông tin Trợ lý",
+    "modal": "Cài đặt Mô hình",
+    "plugin": "Cài đặt Plugin",
+    "prompt": "Thiết lập Nhân vật",
+    "tts": "Dịch vụ Giọng nói"
+  },
   "analytics": {
     "telemetry": {
       "desc": "Bằng cách chọn gửi dữ liệu telemetri, bạn có thể giúp chúng tôi cải thiện trải nghiệm người dùng toàn diện của LobeChat",
