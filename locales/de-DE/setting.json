@@ -342,6 +342,44 @@
       "unknownBrowser": "Unbekannter Browser",
       "unknownOS": "Unbekanntes Betriebssystem"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Verwenden Sie standardmäßig den vom Server konfigurierten Liveblocks-Synchronisationsdienst",
+        "title": "Benutzerdefinierter Dienst"
+      },
+      "customName": {
+        "desc": "Nach dem Anmelden bei LobeChat wird automatisch ein benutzerdefinierter Raumname zugewiesen",
+        "title": "Benutzerdefinierter Raumname"
+      },
+      "desc": "Synchronisieren Sie mehrere Geräte über eine Echtzeit-Zusammenarbeitsplattform, ohne dass andere Geräte online sein müssen",
+      "enabled": {
+        "invalid": "Bitte geben Sie zuerst einen Synchronisierungsraumnamen ein, bevor Sie die Synchronisierung aktivieren",
+        "title": "Synchronisierung aktivieren"
+      },
+      "publicApiKey": {
+        "desc": "Verwenden Sie einen benutzerdefinierten Liveblocks-Dienst anstelle der Datenspeicherung in der vom Server konfigurierten Synchronisierungsdatenbank",
+        "placeholder": "Geben Sie den öffentlichen Schlüssel ein",
+        "title": "Öffentlicher Liveblocks-Dienstschlüssel"
+      },
+      "roomName": {
+        "desc": "Benutzerdefinierter Name des Liveblocks-Synchronisierungsraums",
+        "placeholder": "Geben Sie den Synchronisierungsraumnamen ein",
+        "reset": "Zurücksetzen",
+        "shuffle": "Zufällig generieren",
+        "title": "Synchronisierungsraumname"
+      },
+      "roomPassword": {
+        "desc": "Fügen Sie ein Passwort hinzu, um den Synchronisierungsraum zu verschlüsseln. Nur wenn das Passwort korrekt ist, können die Daten korrekt synchronisiert werden",
+        "placeholder": "Geben Sie das Synchronisierungsraumpasswort ein",
+        "title": "Synchronisierungsraumpasswort"
+      },
+      "title": "Liveblocks Online-Synchronisierung",
+      "warning": {
+        "accessCodeRequired": "Der Server hat eine Zugangscode-Funktion aktiviert. Sie müssen zuerst in den allgemeinen Einstellungen einen Zugangscode konfigurieren oder einen öffentlichen Schlüssel für die Verwendung benutzerdefinierter Dienste eingeben, ansonsten können keine Daten synchronisiert werden.",
+        "authRequired": "Der Server hat eine Authentifizierungsfunktion aktiviert. Sie müssen sich zuerst anmelden, um Liveblocks-Synchronisierung zu aktivieren, oder einen öffentlichen Schlüssel für die Verwendung benutzerdefinierter Dienste eingeben, ansonsten können keine Daten synchronisiert werden.",
+        "keyRequired": "Der Server hat keinen Liveblocks-Dienst konfiguriert. Sie müssen einen öffentlichen Schlüssel bereitstellen, um benutzerdefinierte Dienste zu nutzen, ansonsten können keine Daten synchronisiert werden."
+      }
+    },
     "warning": {
       "message": "Diese Funktion ist derzeit experimentell und kann unerwartete oder instabile Situationen aufweisen. Bitte geben Sie bei Problemen rechtzeitig Feedback ab."
     },

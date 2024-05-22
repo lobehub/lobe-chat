@@ -52,6 +52,7 @@ describe('createCommonSlice', () => {
     const mockServerConfig = {
       defaultAgent: 'agent1',
       languageModel: 'model1',
+      sync: {},
       telemetry: {},
     } as GlobalServerConfig;
 

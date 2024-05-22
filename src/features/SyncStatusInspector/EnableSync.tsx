@@ -11,6 +11,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { syncSettingsSelectors } from '@/store/user/selectors';
+import type { SyncMethod } from '@/types/sync';
 import { pathString } from '@/utils/url';
 
 import EnableTag from './EnableTag';
@@ -32,22 +33,23 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
 
 interface EnableSyncProps {
   hiddenActions?: boolean;
+  method: SyncMethod;
   placement?: TooltipPlacement;
 }
 
-const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLeft' }) => {
+const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLeft', method }) => {
   const { t } = useTranslation('common');
 
   const { styles, theme } = useStyles();
   const [syncStatus, isSyncing, channelName, enableWebRTC, setSettings] = useUserStore((s) => [
-    s.syncStatus,
-    s.syncStatus === 'syncing',
+    s[method].status,
+    s[method].status === 'syncing',
     syncSettingsSelectors.webrtcChannelName(s),
     syncSettingsSelectors.enableWebRTC(s),
     s.setSettings,
   ]);
 
-  const users = useUserStore((s) => s.syncAwareness, isEqual);
+  const users = useUserStore((s) => s[method].awareness, isEqual);
 
   const switchSync = (enabled: boolean) => {
     setSettings({ sync: { webrtc: { enabled } } });
@@ -74,7 +76,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
           </Flexbox>
           <Divider dashed style={{ margin: 0 }} />
           <Flexbox gap={12}>
-            {users.map((user) => (
+            {users?.map((user) => (
               <Flexbox gap={12} horizontal key={user.clientID}>
                 <Avatar
                   avatar={

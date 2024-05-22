@@ -17,17 +17,32 @@ export enum PeerSyncStatus {
 
 export interface StartDataSyncParams {
   channel: {
-    name: string;
-    password?: string;
+    liveblocks: {
+      accessCode?: string;
+      enabled: boolean;
+      name: string;
+      password?: string;
+      publicApiKey?: string;
+    };
+    webrtc: {
+      enabled: boolean;
+      name: string;
+      password?: string;
+      signaling?: string;
+    };
   };
   onAwarenessChange: OnAwarenessChange;
   onSyncEvent: OnSyncEvent;
   onSyncStatusChange: OnSyncStatusChange;
-  signaling?: string;
   user: SyncUserInfo;
 }
 
-export interface SyncUserInfo {
+export enum SyncMethod {
+  Liveblocks = 'liveblocks',
+  WebRTC = 'webrtc',
+}
+
+export interface SyncUserInfo extends Record<string, string | boolean | undefined | number> {
   browser?: string;
   id: string;
   isMobile: boolean;

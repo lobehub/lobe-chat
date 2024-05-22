@@ -8,22 +8,24 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
-import { syncSettingsSelectors } from '@/store/user/selectors';
+import { channelSyncConfig } from '@/store/user/slices/sync/action';
+import type { SyncMethod } from '@/types/sync';
 
 interface DisableSyncProps {
+  method: SyncMethod;
   noPopover?: boolean;
   placement?: TooltipPlacement;
 }
 
-const DisableSync = memo<DisableSyncProps>(({ noPopover, placement = 'bottomLeft' }) => {
+const DisableSync = memo<DisableSyncProps>(({ noPopover, placement = 'bottomLeft', method }) => {
   const { t } = useTranslation('common');
   const [haveConfig, setSettings] = useUserStore((s) => [
-    !!syncSettingsSelectors.webrtcConfig(s).channelName,
+    !!channelSyncConfig(method)(s),
     s.setSettings,
   ]);
 
   const enableSync = () => {
-    setSettings({ sync: { webrtc: { enabled: true } } });
+    setSettings({ sync: { [method]: { enabled: true } } });
   };
 
   const tag = (

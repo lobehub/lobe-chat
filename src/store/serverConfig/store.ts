@@ -12,7 +12,7 @@ import { StoreApiWithSelector } from '@/utils/zustand';
 
 const initialState: ServerConfigStore = {
   featureFlags: DEFAULT_FEATURE_FLAGS,
-  serverConfig: { telemetry: {} },
+  serverConfig: { sync: {}, telemetry: {} },
 };
 
 //  ===============  聚合 createStoreFn ============ //

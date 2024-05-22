@@ -342,6 +342,44 @@
       "unknownBrowser": "Bilinmeyen Tarayıcı",
       "unknownOS": "Bilinmeyen Sistem"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Varsayılan olarak sunucu yapılandırmasında Liveblocks senkronizasyon hizmeti kullanılır",
+        "title": "Özel Anahtar Kullan"
+      },
+      "customName": {
+        "desc": "LobeChat'e giriş yaptıktan sonra otomatik olarak bir oda adı atanır",
+        "title": "Özel Oda Adı"
+      },
+      "desc": "Gerçek zamanlı işbirliği platformu aracılığıyla çoklu cihaz senkronizasyonu sağlanır, diğer cihazlar çevrimdışı olsa bile.",
+      "enabled": {
+        "invalid": "Senkronizasyon oda adını girdikten sonra etkinleştirin",
+        "title": "Senkronizasyonu Etkinleştir"
+      },
+      "publicApiKey": {
+        "desc": "Sunucu yapılandırmasında senkronizasyon veritabanında veri saklamak yerine özel Liveblocks servisini kullan",
+        "placeholder": "Lütfen Genel Anahtarı Girin",
+        "title": "Liveblocks Hizmeti Genel Anahtarı"
+      },
+      "roomName": {
+        "desc": "Özel Liveblocks senkronizasyon oda adını belirle",
+        "placeholder": "Senkronizasyon Oda Adını Girin",
+        "reset": "Sıfırla",
+        "shuffle": "Rastgele Oluştur",
+        "title": "Senkronizasyon Oda Adı"
+      },
+      "roomPassword": {
+        "desc": "Senkronizasyon oda adını şifreleyerek verileri sadece doğru şifreyle senkronize edebilirsiniz",
+        "placeholder": "Senkronizasyon Oda Şifresini Girin",
+        "title": "Senkronizasyon Oda Şifresi"
+      },
+      "title": "Liveblocks Çevrimiçi Senkronizasyon",
+      "warning": {
+        "accessCodeRequired": "Sunucu erişim kodunu etkinleştirdi, verileri senkronize etmek için genel ayarlarda erişim kodunu veya özel hizmeti kullanarak genel anahtarı yapılandırmanız gerekmektedir.",
+        "authRequired": "Sunucu kimlik doğrulamayı etkinleştirdi, Liveblocks senkronizasyonunu başlatmak için giriş yapmanız veya özel hizmeti kullanarak genel anahtarı yapılandırmanız gerekmektedir.",
+        "keyRequired": "Sunucu Liveblocks servisini yapılandırmamış, verileri senkronize etmek için özel hizmeti kullanarak genel anahtarı sağlamanız gerekmektedir."
+      }
+    },
     "warning": {
       "message": "Bu özellik şu anda deneysel bir özellik olup, beklenmedik veya kararsız durumlar yaşanabilir. Sorunla karşılaşırsanız lütfen geri bildirimde bulunun."
     },

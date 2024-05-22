@@ -342,6 +342,44 @@
       "unknownBrowser": "未知浏览器",
       "unknownOS": "未知系统"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "默认使用服务器配置的 Liveblocks 同步服务",
+        "title": "自定义服务"
+      },
+      "customName": {
+        "desc": "登录 LobeChat 后，默认自动分配房间名称",
+        "title": "自定义房间名称"
+      },
+      "desc": "通过实时协作平台实现多端同步，其他设备无需在线",
+      "enabled": {
+        "invalid": "请填写同步房间名称后再开启",
+        "title": "开启同步"
+      },
+      "publicApiKey": {
+        "desc": "使用自定义的 Liveblocks 服务，而不将数据储存在服务端配置的同步数据库中",
+        "placeholder": "请输入公钥",
+        "title": "Liveblocks 服务公钥"
+      },
+      "roomName": {
+        "desc": "自定义 Liveblocks 同步房间名称",
+        "placeholder": "请输入同步房间名称",
+        "reset": "重置",
+        "shuffle": "随机生成",
+        "title": "同步房间名称"
+      },
+      "roomPassword": {
+        "desc": "添加密码以加密同步房间名，只有密码正确时，才可正确同步数据",
+        "placeholder": "请输入同步房间密码",
+        "title": "同步房间密码"
+      },
+      "title": "Liveblocks 在线同步",
+      "warning": {
+        "accessCodeRequired": "服务器启用了访问密码，你需要先在通用设置中配置访问密码，或输入公钥使用自定义服务，否则将无法同步数据。",
+        "authRequired": "服务器启用了身份验证功能，你需要先登录才能开启 Liveblocks 同步，或输入公钥使用自定义服务，否则将无法同步数据。",
+        "keyRequired": "服务器没有配置 Liveblocks 服务，你需要提供公钥以使用自定义服务，否则将无法同步数据。"
+      }
+    },
     "warning": {
       "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
     },

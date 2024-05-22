@@ -36,6 +36,7 @@ describe('serverConfigSelectors', () => {
       const store = initServerConfigStore({
         serverConfig: {
           enabledOAuthSSO: true,
+          sync: {},
           telemetry: {},
         },
       });
@@ -50,6 +51,7 @@ describe('serverConfigSelectors', () => {
     it('should return langfuse value from store when defined', () => {
       const store = initServerConfigStore({
         serverConfig: {
+          sync: {},
           telemetry: { langfuse: true },
         },
       });
@@ -62,6 +64,7 @@ describe('serverConfigSelectors', () => {
     it('should return false when langfuse is not defined', () => {
       const store = initServerConfigStore({
         serverConfig: {
+          sync: {},
           telemetry: {},
         },
       });

@@ -342,6 +342,44 @@
       "unknownBrowser": "Nieznana przeglądarka",
       "unknownOS": "Nieznany system"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Domyślnie korzystaj z usługi synchronizacji Liveblocks skonfigurowanej na serwerze",
+        "title": "Niestandardowa usługa"
+      },
+      "customName": {
+        "desc": "Po zalogowaniu do LobeChat, domyślnie przypisywana jest nazwa pokoju",
+        "title": "Niestandardowa nazwa pokoju"
+      },
+      "desc": "Synchronizacja między wieloma urządzeniami za pomocą platformy współpracy w czasie rzeczywistym, inne urządzenia nie muszą być online",
+      "enabled": {
+        "invalid": "Wprowadź nazwę pokoju do synchronizacji przed włączeniem",
+        "title": "Włącz synchronizację"
+      },
+      "publicApiKey": {
+        "desc": "Użyj niestandardowej usługi Liveblocks, zamiast przechowywać dane w skonfigurowanej na serwerze bazie danych synchronizacji",
+        "placeholder": "Wprowadź klucz publiczny",
+        "title": "Klucz publiczny usługi Liveblocks"
+      },
+      "roomName": {
+        "desc": "Niestandardowa nazwa pokoju synchronizacji Liveblocks",
+        "placeholder": "Wprowadź nazwę pokoju do synchronizacji",
+        "reset": "Resetuj",
+        "shuffle": "Losowo generuj",
+        "title": "Nazwa pokoju synchronizacji"
+      },
+      "roomPassword": {
+        "desc": "Dodaj hasło, aby zaszyfrować nazwę pokoju synchronizacji, tylko poprawne hasło umożliwi poprawną synchronizację danych",
+        "placeholder": "Wprowadź hasło pokoju synchronizacji",
+        "title": "Hasło pokoju synchronizacji"
+      },
+      "title": "Liveblocks online synchronization",
+      "warning": {
+        "accessCodeRequired": "Serwer wymaga hasła dostępu. Musisz najpierw skonfigurować hasło dostępu w ustawieniach ogólnych lub wprowadzić klucz publiczny, aby korzystać z niestandardowej usługi, w przeciwnym razie nie będzie możliwa synchronizacja danych.",
+        "authRequired": "Serwer wymaga uwierzytelnienia użytkownika. Musisz się najpierw zalogować, aby włączyć synchronizację Liveblocks lub wprowadzić klucz publiczny, aby korzystać z niestandardowej usługi, w przeciwnym razie nie będzie możliwa synchronizacja danych.",
+        "keyRequired": "Serwer nie skonfigurował usługi Liveblocks. Musisz podać klucz publiczny, aby skorzystać z niestandardowej usługi, w przeciwnym razie nie będzie możliwa synchronizacja danych."
+      }
+    },
     "warning": {
       "message": "Ta funkcja jest obecnie eksperymentalna i może działać nieprzewidywalnie lub niestabilnie. W przypadku problemów prosimy o natychmiastowe zgłoszenie opinii."
     },

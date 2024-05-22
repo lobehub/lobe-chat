@@ -342,6 +342,44 @@
       "unknownBrowser": "알 수 없는 브라우저",
       "unknownOS": "알 수 없는 OS"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "서버에서 구성된 Liveblocks 동기화 서비스를 사용합니다",
+        "title": "사용자 정의 서비스"
+      },
+      "customName": {
+        "desc": "LobeChat에 로그인한 후 기본적으로 방 이름을 자동으로 할당합니다",
+        "title": "사용자 정의 방 이름"
+      },
+      "desc": "실시간 협업 플랫폼을 통해 여러 기기 간에 동기화를 실현할 수 있으며, 다른 기기가 온라인 상태일 필요가 없습니다",
+      "enabled": {
+        "invalid": "동기화할 방 이름을 입력한 후에 활성화해 주십시오",
+        "title": "동기화 활성화"
+      },
+      "publicApiKey": {
+        "desc": "서버에 구성된 동기화 데이터베이스에 데이터를 저장하지 않고 사용자 정의 Liveblocks 서비스를 사용합니다",
+        "placeholder": "공개 키를 입력해 주세요",
+        "title": "Liveblocks 서비스 공개 키"
+      },
+      "roomName": {
+        "desc": "사용자 정의 Liveblocks 동기화 방 이름",
+        "placeholder": "동기화 방 이름을 입력해 주세요",
+        "reset": "재설정",
+        "shuffle": "랜덤 생성",
+        "title": "동기화 방 이름"
+      },
+      "roomPassword": {
+        "desc": "동기화 방 이름을 암호화하기 위한 암호를 추가합니다. 암호가 올바르면 데이터를 올바르게 동기화할 수 있습니다",
+        "placeholder": "동기화 방 암호를 입력해 주세요",
+        "title": "동기화 방 암호"
+      },
+      "title": "Liveblocks 온라인 동기화",
+      "warning": {
+        "accessCodeRequired": "서버에서 액세스 코드를 활성화했습니다. 데이터를 동기화하려면 일반 설정에서 먼저 액세스 코드를 구성하거나 사용자 정의 서비스를 사용하려면 공개 키를 입력해야 합니다.",
+        "authRequired": "서버에서 인증 기능을 활성화했습니다. Liveblocks 동기화를 시작하려면 먼저 로그인하거나 사용자 정의 서비스를 사용하려면 공개 키를 입력해야 합니다.",
+        "keyRequired": "서버에서 Liveblocks 서비스를 구성하지 않았습니다. 사용자 정의 서비스를 사용하려면 공개 키를 제공해야 합니다."
+      }
+    },
     "warning": {
       "message": "이 기능은 현재 실험적인 기능으로 예기치 않거나 불안정한 상황이 발생할 수 있으며 문제가 발생하면 즉시 피드백을 제출해 주세요."
     },

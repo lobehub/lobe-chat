@@ -25,6 +25,9 @@ export interface GlobalServerConfig {
   enabledAccessCode?: boolean;
   enabledOAuthSSO?: boolean;
   languageModel?: ServerLanguageModel;
+  sync: {
+    liveblocks?: boolean;
+  };
   systemAgent?: DeepPartial<UserSystemAgentConfig>;
   telemetry: {
     langfuse?: boolean;
