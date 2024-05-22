@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.161.5](https://github.com/lobehub/lobe-chat/compare/v0.161.4...v0.161.5)
+
+<sup>Released on **2024-05-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move feature flags ENV.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move feature flags ENV, closes [#2605](https://github.com/lobehub/lobe-chat/issues/2605) ([054a404](https://github.com/lobehub/lobe-chat/commit/054a404))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.4](https://github.com/lobehub/lobe-chat/compare/v0.161.3...v0.161.4)
 
 <sup>Released on **2024-05-22**</sup>
