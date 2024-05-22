@@ -77,7 +77,7 @@ export const getLLMConfig = () => {
 
   return createEnv({
     server: {
-      API_KEY_SELECT_MODE: z.enum(['random', 'turn']).optional(),
+      API_KEY_SELECT_MODE: z.string().optional(),
 
       ENABLED_OPENAI: z.boolean(),
       OPENAI_API_KEY: z.string().optional(),
