@@ -3,7 +3,7 @@ import { cookies } from 'next/headers';
 import { FC, ReactNode } from 'react';
 
 import { getClientConfig } from '@/config/client';
-import { getServerFeatureFlagsValue } from '@/config/server/featureFlags';
+import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import {
   LOBE_THEME_APPEARANCE,

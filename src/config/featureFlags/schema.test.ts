@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { FeatureFlagsSchema, mapFeatureFlagsEnvToState } from './index';
+import { FeatureFlagsSchema, mapFeatureFlagsEnvToState } from './schema';
 
 describe('FeatureFlagsSchema', () => {
   it('should validate correct feature flags', () => {
