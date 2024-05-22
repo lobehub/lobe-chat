@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.161.3](https://github.com/lobehub/lobe-chat/compare/v0.161.2...v0.161.3)
+
+<sup>Released on **2024-05-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the langfuse env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the langfuse env, closes [#2602](https://github.com/lobehub/lobe-chat/issues/2602) ([cbebfbc](https://github.com/lobehub/lobe-chat/commit/cbebfbc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.2](https://github.com/lobehub/lobe-chat/compare/v0.161.1...v0.161.2)
 
 <sup>Released on **2024-05-22**</sup>
