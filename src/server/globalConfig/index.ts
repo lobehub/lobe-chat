@@ -1,3 +1,4 @@
+import { getAppConfig } from '@/config/app';
 import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
@@ -7,7 +8,6 @@ import {
   OpenRouterProviderCard,
   TogetherAIProviderCard,
 } from '@/config/modelProviders';
-import { getServerConfig } from '@/config/server';
 import { enableNextAuth } from '@/const/auth';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseModels';
@@ -15,7 +15,7 @@ import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseMo
 import { parseAgentConfig } from './parseDefaultAgent';
 
 export const getServerGlobalConfig = () => {
-  const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getServerConfig();
+  const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   const {
     ENABLED_OPENAI,
@@ -123,7 +123,7 @@ export const getServerGlobalConfig = () => {
 };
 
 export const getServerDefaultAgentConfig = () => {
-  const { DEFAULT_AGENT_CONFIG } = getServerConfig();
+  const { DEFAULT_AGENT_CONFIG } = getAppConfig();
 
   return parseAgentConfig(DEFAULT_AGENT_CONFIG) || {};
 };

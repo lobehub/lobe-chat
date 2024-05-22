@@ -1,4 +1,4 @@
-import { getServerConfig } from '@/config/server';
+import { getAppConfig } from '@/config/app';
 import { ChatErrorType } from '@/types/fetch';
 
 interface AuthConfig {
@@ -13,7 +13,7 @@ export const checkAuth = ({ apiKey, accessCode, oauthAuthorized }: AuthConfig) =
     return { auth: true };
   }
 
-  const { ACCESS_CODES } = getServerConfig();
+  const { ACCESS_CODES } = getAppConfig();
 
   // if apiKey exist
   if (apiKey) {
