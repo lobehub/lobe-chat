@@ -1,3 +1,5 @@
+'use client';
+
 import { Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
