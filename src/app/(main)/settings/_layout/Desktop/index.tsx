@@ -1,8 +1,13 @@
 'use client';
 
+import { Tag } from 'antd';
 import { useResponsive } from 'antd-style';
 import { memo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+
+import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
+import { SettingsTabs } from '@/store/global/initialState';
 
 import { LayoutProps } from '../type';
 import Header from './Header';
@@ -11,6 +16,8 @@ import SideBar from './SideBar';
 const Layout = memo<LayoutProps>(({ children, category }) => {
   const ref = useRef<any>(null);
   const { md = true, mobile = false } = useResponsive();
+  const { t } = useTranslation('setting');
+  const activeKey = useActiveSettingsKey();
 
   return (
     <Flexbox
@@ -23,7 +30,17 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
       {md ? (
         <SideBar>{category}</SideBar>
       ) : (
-        <Header getContainer={() => ref.current}>{category}</Header>
+        <Header
+          getContainer={() => ref.current}
+          title={
+            <>
+              {t(`tab.${activeKey}`)}
+              {activeKey === SettingsTabs.Sync && <Tag color={'gold'}>{t('tab.experiment')}</Tag>}
+            </>
+          }
+        >
+          {category}
+        </Header>
       )}
       <Flexbox
         align={'center'}

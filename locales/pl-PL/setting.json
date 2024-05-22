@@ -1,7 +1,14 @@
 {
-  "": {},
   "about": {
     "title": "O nas"
+  },
+  "agentTab": {
+    "chat": "Preferencje czatu",
+    "meta": "Informacje o asystencie",
+    "modal": "Ustawienia modalne",
+    "plugin": "Ustawienia wtyczki",
+    "prompt": "Ustawienia roli",
+    "tts": "Usługi głosowe"
   },
   "analytics": {
     "telemetry": {
