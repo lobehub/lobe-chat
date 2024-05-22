@@ -22,11 +22,6 @@ declare global {
 export const getClientConfig = () => ({
   ENABLED_SERVER_SERVICE: process.env.NEXT_PUBLIC_SERVICE_MODE === 'server',
 
-  BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
-
-  // Sentry
-  ENABLE_SENTRY: !!process.env.NEXT_PUBLIC_SENTRY_DSN,
-
   // i18n debug mode
   I18N_DEBUG: process.env.NEXT_PUBLIC_I18N_DEBUG === '1',
   I18N_DEBUG_BROWSER: process.env.NEXT_PUBLIC_I18N_DEBUG_BROWSER === '1',
