@@ -2,6 +2,14 @@
   "about": {
     "title": "關於"
   },
+  "agentTab": {
+    "chat": "聊天偏好",
+    "meta": "助手資訊",
+    "modal": "模型設定",
+    "plugin": "外掛程式設定",
+    "prompt": "角色設定",
+    "tts": "語音服務"
+  },
   "analytics": {
     "telemetry": {
       "desc": "通過選擇發送遙測數據，你可以幫助我們改善 LobeChat 整體用戶體驗",
