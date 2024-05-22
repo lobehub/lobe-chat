@@ -37,14 +37,24 @@ export const useSyncEvent = () => {
 };
 
 export const useEnabledDataSync = () => {
-  const [userId, userEnableSync, useEnabledSync] = useUserStore((s) => [
-    userProfileSelectors.userId(s),
-    syncSettingsSelectors.enableWebRTC(s),
-    s.useEnabledSync,
-  ]);
+  const [userId, userEnableWebRTCSync, userEnableLiveblocksSync, useEnabledSync] = useUserStore(
+    (s) => [
+      userProfileSelectors.userId(s),
+      syncSettingsSelectors.enableWebRTC(s),
+      syncSettingsSelectors.enableLiveblocks(s),
+      s.useEnabledSync,
+    ],
+  );
 
-  const { enableWebrtc } = useServerConfigStore(featureFlagsSelectors);
+  const { enableWebrtc: enableSync } = useServerConfigStore(featureFlagsSelectors);
   const syncEvent = useSyncEvent();
 
-  useEnabledSync(enableWebrtc, { onEvent: syncEvent, userEnableSync, userId });
+  useEnabledSync(enableSync, {
+    onEvent: syncEvent,
+    userEnableSync: {
+      liveblocks: userEnableLiveblocksSync,
+      webrtc: userEnableWebRTCSync,
+    },
+    userId,
+  });
 };

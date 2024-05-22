@@ -342,6 +342,44 @@
       "unknownBrowser": "Onbekende browser",
       "unknownOS": "Onbekend besturingssysteem"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Gebruik standaard de door de server geconfigureerde Liveblocks synchronisatieservice",
+        "title": "Aangepaste service"
+      },
+      "customName": {
+        "desc": "Na het inloggen op LobeChat wordt automatisch een kamer naam toegewezen",
+        "title": "Aangepaste kamer naam"
+      },
+      "desc": "Realtime samenwerking via meerdere apparaten zonder dat andere apparaten online hoeven te zijn",
+      "enabled": {
+        "invalid": "Schakel de synchronisatie pas in nadat de kamer naam is ingevuld",
+        "title": "Synchronisatie inschakelen"
+      },
+      "publicApiKey": {
+        "desc": "Gebruik een aangepaste Liveblocks service in plaats van gegevens op te slaan in de op de server geconfigureerde synchronisatiedatabase",
+        "placeholder": "Voer de openbare sleutel in",
+        "title": "Openbare sleutel van de Liveblocks service"
+      },
+      "roomName": {
+        "desc": "Aangepaste naam van de Liveblocks synchronisatiekamer",
+        "placeholder": "Voer de naam van de synchronisatiekamer in",
+        "reset": "Opnieuw instellen",
+        "shuffle": "Willekeurig genereren",
+        "title": "Naam van de synchronisatiekamer"
+      },
+      "roomPassword": {
+        "desc": "Voeg een wachtwoord toe om de synchronisatiekamer te versleutelen. Alleen met het juiste wachtwoord kan data correct gesynchroniseerd worden",
+        "placeholder": "Voer het wachtwoord van de synchronisatiekamer in",
+        "title": "Wachtwoord van de synchronisatiekamer"
+      },
+      "title": "Liveblocks Live Synchronisatie",
+      "warning": {
+        "accessCodeRequired": "De server vereist een toegangscode. Je moet eerst een toegangscode configureren in de algemene instellingen of een openbare sleutel invoeren om gebruik te maken van een aangepaste service, anders kan data niet gesynchroniseerd worden.",
+        "authRequired": "De server vereist authenticatie. Je moet eerst inloggen om Liveblocks synchronisatie in te schakelen of een openbare sleutel invoeren om gebruik te maken van een aangepaste service, anders kan data niet gesynchroniseerd worden.",
+        "keyRequired": "De server heeft geen Liveblocks service geconfigureerd. Je moet een openbare sleutel verstrekken om gebruik te maken van een aangepaste service, anders kan data niet gesynchroniseerd worden."
+      }
+    },
     "warning": {
       "message": "Deze functie is momenteel experimenteel en kan onverwachte of onstabiele situaties veroorzaken. Als u problemen ondervindt, geef dan tijdig feedback."
     },

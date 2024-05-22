@@ -10,11 +10,17 @@ const syncConfig = (s: UserStore): UserSyncSettings =>
 const webrtcConfig = (s: UserStore) => syncConfig(s).webrtc;
 const webrtcChannelName = (s: UserStore) => webrtcConfig(s).channelName;
 const enableWebRTC = (s: UserStore) => webrtcConfig(s).enabled;
+const liveblocksConfig = (s: UserStore) => syncConfig(s).liveblocks;
+const liveblocksRoomName = (s: UserStore) => liveblocksConfig(s).roomName;
+const enableLiveblocks = (s: UserStore) => liveblocksConfig(s).enabled;
 const deviceName = (s: UserStore) => syncConfig(s).deviceName;
 
 export const syncSettingsSelectors = {
   deviceName,
+  enableLiveblocks,
   enableWebRTC,
+  liveblocksConfig,
+  liveblocksRoomName,
   webrtcChannelName,
   webrtcConfig,
 };

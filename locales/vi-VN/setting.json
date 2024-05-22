@@ -342,6 +342,44 @@
       "unknownBrowser": "Trình duyệt không xác định",
       "unknownOS": "Hệ điều hành không xác định"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Sử dụng dịch vụ đồng bộ hóa Liveblocks được cấu hình trên máy chủ mặc định",
+        "title": "Dịch vụ tùy chỉnh"
+      },
+      "customName": {
+        "desc": "Sau khi đăng nhập vào LobeChat, hệ thống sẽ tự động gán tên phòng theo mặc định",
+        "title": "Tên phòng tùy chỉnh"
+      },
+      "desc": "Đồng bộ hóa trên nhiều thiết bị thông qua nền tảng cộng tác thời gian thực, các thiết bị khác không cần phải trực tuyến",
+      "enabled": {
+        "invalid": "Vui lòng nhập tên phòng đồng bộ hóa trước khi bật",
+        "title": "Bật đồng bộ hóa"
+      },
+      "publicApiKey": {
+        "desc": "Sử dụng dịch vụ Liveblocks tùy chỉnh thay vì lưu trữ dữ liệu trong cơ sở dữ liệu đồng bộ hóa được cấu hình trên máy chủ",
+        "placeholder": "Vui lòng nhập khóa công khai",
+        "title": "Khóa công khai dịch vụ Liveblocks"
+      },
+      "roomName": {
+        "desc": "Tên phòng đồng bộ hóa Liveblocks tùy chỉnh",
+        "placeholder": "Vui lòng nhập tên phòng đồng bộ hóa",
+        "reset": "Đặt lại",
+        "shuffle": "Tạo ngẫu nhiên",
+        "title": "Tên phòng đồng bộ hóa"
+      },
+      "roomPassword": {
+        "desc": "Thêm mật khẩu để mã hóa tên phòng đồng bộ hóa, dữ liệu chỉ được đồng bộ hóa khi mật khẩu đúng",
+        "placeholder": "Vui lòng nhập mật khẩu phòng đồng bộ hóa",
+        "title": "Mật khẩu phòng đồng bộ hóa"
+      },
+      "title": "Đồng bộ hóa trực tuyến Liveblocks",
+      "warning": {
+        "accessCodeRequired": "Máy chủ đã bật mật khẩu truy cập, bạn cần phải cấu hình mật khẩu truy cập trong cài đặt chung hoặc nhập khóa công khai để sử dụng dịch vụ tùy chỉnh, nếu không có thể không thể đồng bộ hóa dữ liệu.",
+        "authRequired": "Máy chủ đã bật chức năng xác thực, bạn cần phải đăng nhập trước khi kích hoạt đồng bộ hóa Liveblocks hoặc nhập khóa công khai để sử dụng dịch vụ tùy chỉnh, nếu không có thể không thể đồng bộ hóa dữ liệu.",
+        "keyRequired": "Máy chủ không cấu hình dịch vụ Liveblocks, bạn cần phải cung cấp khóa công khai để sử dụng dịch vụ tùy chỉnh, nếu không có thể không thể đồng bộ hóa dữ liệu."
+      }
+    },
     "warning": {
       "message": "Chức năng này hiện vẫn đang trong thử nghiệm, có thể gặp phải tình huống ngoài dự kiến hoặc không ổn định, nếu gặp vấn đề vui lòng gửi phản hồi ngay lập tức."
     },

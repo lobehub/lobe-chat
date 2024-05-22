@@ -30,6 +30,8 @@ export const getAppConfig = () => {
       PLUGINS_INDEX_URL: z.string().url(),
       PLUGIN_SETTINGS: z.string().optional(),
 
+      LIVEBLOCKS_SECRET_KEY: z.string().optional(),
+
       SITE_URL: z.string().optional(),
     },
     runtimeEnv: {
@@ -52,6 +54,9 @@ export const getAppConfig = () => {
         : 'https://chat-plugins.lobehub.com',
 
       PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
+
+      LIVEBLOCKS_SECRET_KEY: process.env.LIVEBLOCKS_SECRET_KEY || '',
+
       SITE_URL: process.env.SITE_URL,
     },
   });

@@ -342,6 +342,44 @@
       "unknownBrowser": "Navegador desconhecido",
       "unknownOS": "Sistema operacional desconhecido"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Usar o serviço de sincronização Liveblocks configurado no servidor por padrão",
+        "title": "Chave Personalizada"
+      },
+      "customName": {
+        "desc": "Após fazer login no LobeChat, um nome de sala será atribuído automaticamente por padrão",
+        "title": "Nome Personalizado da Sala"
+      },
+      "desc": "Sincronização em várias plataformas por meio de uma plataforma de colaboração em tempo real, outros dispositivos não precisam estar online",
+      "enabled": {
+        "invalid": "Por favor, forneça um nome de sala para ativar a sincronização",
+        "title": "Ativar Sincronização"
+      },
+      "publicApiKey": {
+        "desc": "Usar o serviço Liveblocks personalizado em vez de armazenar dados no banco de dados de sincronização configurado no servidor",
+        "placeholder": "Insira a chave pública",
+        "title": "Chave Pública do Serviço Liveblocks"
+      },
+      "roomName": {
+        "desc": "Nome da sala de sincronização personalizado do Liveblocks",
+        "placeholder": "Insira o nome da sala de sincronização",
+        "reset": "Redefinir",
+        "shuffle": "Gerar Aleatoriamente",
+        "title": "Nome da Sala de Sincronização"
+      },
+      "roomPassword": {
+        "desc": "Adicionar uma senha para criptografar o nome da sala de sincronização, somente com a senha correta os dados poderão ser sincronizados corretamente",
+        "placeholder": "Insira a senha da sala de sincronização",
+        "title": "Senha da Sala de Sincronização"
+      },
+      "title": "Sincronização Online com Liveblocks",
+      "warning": {
+        "accessCodeRequired": "O servidor requer um código de acesso. Você precisa configurar um código de acesso nas configurações gerais ou inserir uma chave pública para usar o serviço personalizado, caso contrário, não será possível sincronizar os dados.",
+        "authRequired": "O servidor requer autenticação. Você precisa fazer login antes de ativar a sincronização com o Liveblocks ou inserir uma chave pública para usar o serviço personalizado, caso contrário, não será possível sincronizar os dados.",
+        "keyRequired": "O servidor não configurou o serviço Liveblocks. Você precisa fornecer uma chave pública para usar o serviço personalizado, caso contrário, não será possível sincronizar os dados."
+      }
+    },
     "warning": {
       "message": "Esta função ainda é experimental e pode apresentar comportamento inesperado ou instável. Se encontrar problemas, envie um feedback imediatamente."
     },

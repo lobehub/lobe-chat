@@ -342,6 +342,44 @@
       "unknownBrowser": "Navigateur inconnu",
       "unknownOS": "Système d'exploitation inconnu"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Utilisez le service de synchronisation Liveblocks personnalisé par défaut sur le serveur",
+        "title": "Clé personnalisée"
+      },
+      "customName": {
+        "desc": "Après vous être connecté à LobeChat, le nom de la salle est automatiquement attribué",
+        "title": "Nom personnalisé de la salle"
+      },
+      "desc": "Synchronisation multiplateforme via une plateforme de collaboration en temps réel, sans nécessité de connexion sur d'autres appareils",
+      "enabled": {
+        "invalid": "Veuillez spécifier un nom de salle de synchronisation avant d'activer",
+        "title": "Activer la synchronisation"
+      },
+      "publicApiKey": {
+        "desc": "Utilisez le service Liveblocks personnalisé et ne stockez pas les données dans la base de données de synchronisation configurée côté serveur",
+        "placeholder": "Entrez la clé publique",
+        "title": "Clé publique du service Liveblocks"
+      },
+      "roomName": {
+        "desc": "Nom personnalisé de la salle de synchronisation Liveblocks",
+        "placeholder": "Entrez le nom de la salle de synchronisation",
+        "reset": "Réinitialiser",
+        "shuffle": "Générer aléatoirement",
+        "title": "Nom de la salle de synchronisation"
+      },
+      "roomPassword": {
+        "desc": "Ajoutez un mot de passe pour chiffrer le nom de la salle de synchronisation, seules les personnes ayant le bon mot de passe pourront synchroniser les données correctement",
+        "placeholder": "Entrez le mot de passe de la salle de synchronisation",
+        "title": "Mot de passe de la salle de synchronisation"
+      },
+      "title": "Synchronisation en ligne avec Liveblocks",
+      "warning": {
+        "accessCodeRequired": "Le serveur nécessite un code d'accès, veuillez d'abord configurer un code d'accès dans les paramètres généraux ou entrer une clé publique pour utiliser un service personnalisé, sinon la synchronisation des données sera impossible.",
+        "authRequired": "Le serveur requiert une authentification, veuillez vous connecter d'abord pour activer la synchronisation Liveblocks ou entrer une clé publique pour utiliser un service personnalisé, sinon la synchronisation des données sera impossible.",
+        "keyRequired": "Le serveur n'a pas configuré le service Liveblocks, veuillez fournir une clé publique pour utiliser un service personnalisé, sinon la synchronisation des données sera impossible."
+      }
+    },
     "warning": {
       "message": "Cette fonctionnalité est actuellement expérimentale et peut présenter des comportements inattendus ou instables. En cas de problème, veuillez soumettre vos commentaires rapidement."
     },

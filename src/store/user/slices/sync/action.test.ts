@@ -110,7 +110,10 @@ describe('createSyncSlice', () => {
       const { result } = renderHook(
         () =>
           useUserStore().useEnabledSync(true, {
-            userEnableSync: true,
+            userEnableSync: {
+              liveblocks: true,
+              webrtc: true,
+            },
             userId: undefined,
             onEvent: vi.fn(),
           }),
@@ -128,7 +131,10 @@ describe('createSyncSlice', () => {
       const { result } = renderHook(
         () =>
           useUserStore().useEnabledSync(true, {
-            userEnableSync: false,
+            userEnableSync: {
+              liveblocks: false,
+              webrtc: false,
+            },
             userId: 'user-id',
             onEvent: vi.fn(),
           }),
@@ -151,7 +157,10 @@ describe('createSyncSlice', () => {
       result.current.triggerEnableSync = triggerEnableSyncSpy;
 
       const { result: swrResult } = renderHook(
-        () => result.current.useEnabledSync(true, { userEnableSync: true, userId, onEvent }),
+        () => result.current.useEnabledSync(true, { userEnableSync: {
+          liveblocks: true,
+          webrtc: true,
+        }, userId, onEvent }),
         {
           wrapper: withSWR,
         },

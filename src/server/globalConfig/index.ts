@@ -16,7 +16,7 @@ import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseMo
 import { parseAgentConfig } from './parseDefaultAgent';
 
 export const getServerGlobalConfig = () => {
-  const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
+  const { ACCESS_CODES, DEFAULT_AGENT_CONFIG, LIVEBLOCKS_SECRET_KEY } = getAppConfig();
 
   const {
     ENABLED_OPENAI,
@@ -115,6 +115,9 @@ export const getServerGlobalConfig = () => {
 
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },
+    },
+    sync: {
+      liveblocks: !!LIVEBLOCKS_SECRET_KEY,
     },
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {

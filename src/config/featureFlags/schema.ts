@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 export const FeatureFlagsSchema = z.object({
   webrtc_sync: z.boolean().optional(),
+  liveblocks_sync: z.boolean().optional(),
 
   language_model_settings: z.boolean().optional(),
 
@@ -22,6 +23,7 @@ export const FeatureFlagsSchema = z.object({
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
+  liveblocks_sync: true,
   webrtc_sync: true,
 
   language_model_settings: true,
