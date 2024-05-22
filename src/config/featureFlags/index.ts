@@ -1,57 +1,31 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix */
+import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
-export const FeatureFlagsSchema = z.object({
-  webrtc_sync: z.boolean().optional(),
+import { merge } from '@/utils/merge';
 
-  language_model_settings: z.boolean().optional(),
+import { DEFAULT_FEATURE_FLAGS, mapFeatureFlagsEnvToState } from './schema';
+import { parseFeatureFlag } from './utils/parser';
 
-  openai_api_key: z.boolean().optional(),
-  openai_proxy_url: z.boolean().optional(),
+const env = createEnv({
+  runtimeEnv: {
+    FEATURE_FLAGS: process.env.FEATURE_FLAGS,
+  },
 
-  create_session: z.boolean().optional(),
-  edit_agent: z.boolean().optional(),
-
-  dalle: z.boolean().optional(),
-
-  check_updates: z.boolean().optional(),
-  welcome_suggest: z.boolean().optional(),
+  server: {
+    FEATURE_FLAGS: z.string().optional(),
+  },
 });
 
-// TypeScript 类型，从 Zod schema 生成
-export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
+export const getServerFeatureFlagsValue = () => {
+  const flags = parseFeatureFlag(env.FEATURE_FLAGS);
 
-export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
-  webrtc_sync: true,
-
-  language_model_settings: true,
-
-  openai_api_key: true,
-  openai_proxy_url: true,
-
-  create_session: true,
-  edit_agent: true,
-
-  dalle: true,
-
-  check_updates: true,
-  welcome_suggest: true,
+  return merge(DEFAULT_FEATURE_FLAGS, flags);
 };
 
-export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
-  return {
-    enableWebrtc: config.webrtc_sync,
-    isAgentEditable: config.edit_agent,
+export const serverFeatureFlags = () => {
+  const serverConfig = getServerFeatureFlagsValue();
 
-    showCreateSession: config.create_session,
-    showLLM: config.language_model_settings,
-
-    showOpenAIApiKey: config.openai_api_key,
-    showOpenAIProxyUrl: config.openai_proxy_url,
-
-    showDalle: config.dalle,
-
-    enableCheckUpdates: config.check_updates,
-    showWelcomeSuggest: config.welcome_suggest,
-  };
+  return mapFeatureFlagsEnvToState(serverConfig);
 };
+
+export * from './schema';
