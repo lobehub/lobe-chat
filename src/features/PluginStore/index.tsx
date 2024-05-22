@@ -35,7 +35,10 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
     >
       <Flexbox 
         gap={gap} 
-        style={{maxHeight: 'inherit', paddingBottom: `${gap}px`}}
+        style={{
+          maxHeight: mobile ? 'inherit' : '-webkit-fill-available',
+          paddingBottom: mobile ? 0 : `${gap}px`
+        }}
         width={'100%'}
       >
         <Segmented
