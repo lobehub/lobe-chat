@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
+import { getAppConfig } from '@/config/app';
 import { getClientConfig } from '@/config/client';
-import { getServerConfig } from '@/config/server';
 import { OFFICIAL_URL } from '@/const/url';
 import { translation } from '@/server/translation';
 
 const title = 'LobeChat';
 
-const { SITE_URL = OFFICIAL_URL } = getServerConfig();
+const { SITE_URL = OFFICIAL_URL } = getAppConfig();
 const { BASE_PATH } = getClientConfig();
 
 // if there is a base path, then we don't need the manifest
