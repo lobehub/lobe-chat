@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Note: To make the code more logic and readable, we just disable the auto sort key eslint rule
 // DON'T REMOVE THE FIRST LINE
+import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { produce } from 'immer';
 import useSWR, { SWRResponse, mutate } from 'swr';
@@ -191,7 +192,16 @@ export const chatTopic: StateCreator<
         suspense: true,
         fallbackData: [],
         onSuccess: (topics) => {
-          set({ topics, topicsInit: true }, false, n('useFetchTopics(success)', { sessionId }));
+          const nextMap = { ...get().topicMaps, [sessionId]: topics };
+
+          // no need to update map if the topics have been init and the map is the same
+          if (get().topicsInit && isEqual(nextMap, get().topicMaps)) return;
+
+          set(
+            { topicMaps: nextMap, topicsInit: true },
+            false,
+            n('useFetchTopics(success)', { sessionId }),
+          );
         },
       },
     ),
