@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix */
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
@@ -16,24 +17,7 @@ export const getAppConfig = () => {
   return createEnv({
     client: {
       NEXT_PUBLIC_BASE_PATH: z.string(),
-    },
-    runtimeEnv: {
-      ACCESS_CODES: ACCESS_CODES as any,
-
-      AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
-        ? process.env.AGENTS_INDEX_URL
-        : 'https://chat-agents.lobehub.com',
-
-      DEFAULT_AGENT_CONFIG: process.env.DEFAULT_AGENT_CONFIG || '',
-
-      NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
-
-      PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
-        ? process.env.PLUGINS_INDEX_URL
-        : 'https://chat-plugins.lobehub.com',
-
-      PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
-      SITE_URL: process.env.SITE_URL,
+      NEXT_PUBLIC_ENABLE_SENTRY: z.boolean(),
     },
     server: {
       ACCESS_CODES: z.any(z.string()).optional(),
@@ -46,6 +30,27 @@ export const getAppConfig = () => {
       PLUGIN_SETTINGS: z.string().optional(),
 
       SITE_URL: z.string().optional(),
+    },
+    runtimeEnv: {
+      NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
+
+      // Sentry
+      NEXT_PUBLIC_ENABLE_SENTRY: !!process.env.NEXT_PUBLIC_SENTRY_DSN,
+
+      ACCESS_CODES: ACCESS_CODES as any,
+
+      AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
+        ? process.env.AGENTS_INDEX_URL
+        : 'https://chat-agents.lobehub.com',
+
+      DEFAULT_AGENT_CONFIG: process.env.DEFAULT_AGENT_CONFIG || '',
+
+      PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
+        ? process.env.PLUGINS_INDEX_URL
+        : 'https://chat-plugins.lobehub.com',
+
+      PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
+      SITE_URL: process.env.SITE_URL,
     },
   });
 };
