@@ -222,7 +222,7 @@ describe('topic action', () => {
         expect(result.current.data).toEqual(topics);
       });
       expect(useChatStore.getState().topicsInit).toBeTruthy();
-      expect(useChatStore.getState().topics).toEqual(topics);
+      expect(useChatStore.getState().topicMaps).toEqual({ [sessionId]: topics });
     });
   });
   describe('useSearchTopics', () => {
@@ -411,7 +411,7 @@ describe('topic action', () => {
       const topics = [{ id: 'topic-1', title: 'Test Topic' }] as ChatTopic[];
       const { result } = renderHook(() => useChatStore());
       await act(async () => {
-        useChatStore.setState({ topics });
+        useChatStore.setState({ topicMaps: { test: topics }, activeId: 'test' });
       });
 
       // Mock the `updateTopicTitleInSummary` and `refreshTopic` for spying

@@ -8,23 +8,25 @@ import { topicSelectors } from '../../selectors';
 
 const initialStore = initialState as ChatStore;
 
-const mockTopics = [
-  { id: 'topic1', name: 'Topic 1' },
-  { id: 'topic2', name: 'Topic 2' },
-];
+const topicMaps = {
+  test: [
+    { id: 'topic1', name: 'Topic 1' },
+    { id: 'topic2', name: 'Topic 2' },
+  ],
+};
 
 describe('topicSelectors', () => {
   describe('currentTopics', () => {
-    it('should return an empty array if there are no topics', () => {
+    it('should return undefined if there are no topics with activeId', () => {
       const topics = topicSelectors.currentTopics(initialStore);
-      expect(topics).toEqual([]);
+      expect(topics).toBeUndefined();
     });
 
     it('should return all current topics from the store', () => {
-      const state = merge(initialStore, { topics: mockTopics });
+      const state = merge(initialStore, { topicMaps, activeId: 'test' });
 
       const topics = topicSelectors.currentTopics(state);
-      expect(topics).toEqual(mockTopics);
+      expect(topics).toEqual(topicMaps.test);
     });
   });
 
@@ -35,9 +37,9 @@ describe('topicSelectors', () => {
     });
 
     it('should return the number of current topics', () => {
-      const state = merge(initialStore, { topics: mockTopics });
+      const state = merge(initialStore, { topicMaps, activeId: 'test' });
       const length = topicSelectors.currentTopicLength(state);
-      expect(length).toBe(mockTopics.length);
+      expect(length).toBe(topicMaps.test.length);
     });
   });
 });
