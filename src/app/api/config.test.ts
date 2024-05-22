@@ -1,7 +1,7 @@
+// @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
 
 import { getPreferredRegion } from './config';
-import { checkAuth } from './openai/createBizOpenAI/auth';
 
 // Stub the global process object to safely mock environment variables
 vi.stubGlobal('process', {

@@ -1,5 +1,4 @@
 // @vitest-environment edge-runtime
-import { StreamingTextResponse } from 'ai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
