@@ -2,6 +2,14 @@
   "about": {
     "title": "소개"
   },
+  "agentTab": {
+    "chat": "채팅 환경",
+    "meta": "도우미 정보",
+    "modal": "모델 설정",
+    "plugin": "플러그인 설정",
+    "prompt": "역할 설정",
+    "tts": "음성 서비스"
+  },
   "analytics": {
     "telemetry": {
       "desc": "익명 사용 데이터를 보내는 것으로 LobeChat의 전반적인 사용자 경험을 개선하는 데 도움을 줄 수 있습니다",

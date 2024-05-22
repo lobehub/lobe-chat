@@ -15,6 +15,7 @@ const SessionSettingsModal = memo<PropsWithChildren>(({ children }) => {
       afterClose={() => {
         router.back();
       }}
+      enableResponsive={false}
       footer={null}
       onCancel={() => setOpen(false)}
       open={open}
