@@ -1,6 +1,7 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FileImage, FileText, FileUpIcon } from 'lucide-react';
+import { darken, lighten } from 'polished';
 import { memo, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
@@ -13,41 +14,42 @@ import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
 
+const BLOCK_SIZE = 64;
+const ICON_SIZE = 36;
+
 const useStyles = createStyles(({ css, token }) => {
   return {
     container: css`
-      width: 280px;
-      height: 280px;
+      width: 320px;
+      height: 200px;
       padding: ${token.borderRadiusLG + 4}px;
 
-      background: ${token.colorBgContainer};
-      border: 1px solid ${token.colorFillSecondary};
+      background: ${token.geekblue};
       border-radius: 16px;
-      box-shadow: ${token.boxShadow};
     `,
     content: css`
       width: 100%;
       height: 100%;
       padding: 16px;
 
-      border: 2px dotted ${token.colorBorder};
+      border: 1.5px dashed ${token.colorBorder};
       border-radius: ${token.borderRadiusLG}px;
     `,
     desc: css`
-      color: ${token.colorTextDescription};
+      color: #fff;
     `,
     icon: css`
-      color: ${token.colorBgLayout};
-
-      background: ${token.colorText};
-      border: 1px solid ${token.colorBorder};
-      border-radius: ${token.borderRadiusLG * 1.5}px;
-      box-shadow: ${token.boxShadowTertiary};
+      color: ${darken(0.05, token.geekblue)};
+      background: ${lighten(0.38, token.geekblue)};
+      border-radius: ${token.borderRadiusLG}px;
+    `,
+    iconGroup: css`
+      margin-top: -44px;
     `,
     title: css`
       font-size: 20px;
       font-weight: bold;
-      color: ${token.colorText};
+      color: #fff;
     `,
     wrapper: css`
       position: fixed;
@@ -75,7 +77,7 @@ const handleDragOver = (e: DragEvent) => {
 };
 
 const DragUpload = memo(() => {
-  const { styles } = useStyles();
+  const { styles, theme } = useStyles();
   const { t } = useTranslation('chat');
   const [isDragging, setIsDragging] = useState(false);
   // When a file is dragged to a different area, the 'dragleave' event may be triggered,
@@ -177,16 +179,40 @@ const DragUpload = memo(() => {
   return createPortal(
     <Center className={styles.wrapper}>
       <div className={styles.container}>
-        <Center className={styles.content} gap={24}>
-          <Flexbox gap={6} horizontal>
-            <Center className={styles.icon} height={56} width={56}>
-              <Icon icon={FileImage} size={{ fontSize: 32, strokeWidth: 1.5 }} />
+        <Center className={styles.content} gap={12}>
+          <Flexbox className={styles.iconGroup} horizontal>
+            <Center
+              className={styles.icon}
+              height={BLOCK_SIZE * 1.25}
+              style={{
+                background: lighten(0.32, theme.geekblue),
+                transform: 'rotateZ(-20deg) translateX(10px)',
+              }}
+              width={BLOCK_SIZE}
+            >
+              <Icon icon={FileImage} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
             </Center>
-            <Center className={styles.icon} height={56} width={56}>
-              <Icon icon={FileUpIcon} size={{ fontSize: 32, strokeWidth: 1.5 }} />
+            <Center
+              className={styles.icon}
+              height={BLOCK_SIZE * 1.25}
+              style={{
+                transform: 'translateY(-12px)',
+                zIndex: 1,
+              }}
+              width={BLOCK_SIZE}
+            >
+              <Icon icon={FileUpIcon} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
             </Center>
-            <Center className={styles.icon} height={56} width={56}>
-              <Icon icon={FileText} size={{ fontSize: 32, strokeWidth: 1.5 }} />
+            <Center
+              className={styles.icon}
+              height={BLOCK_SIZE * 1.25}
+              style={{
+                background: lighten(0.32, theme.geekblue),
+                transform: 'rotateZ(20deg) translateX(-10px)',
+              }}
+              width={BLOCK_SIZE}
+            >
+              <Icon icon={FileText} size={{ fontSize: ICON_SIZE, strokeWidth: 1.5 }} />
             </Center>
           </Flexbox>
           <Flexbox align={'center'} gap={8} style={{ textAlign: 'center' }}>
