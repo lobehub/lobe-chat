@@ -1,4 +1,5 @@
 import { fileEnv } from '@/config/file';
+import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
   OllamaProviderCard,
@@ -14,7 +15,7 @@ import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseMo
 import { parseAgentConfig } from './parseDefaultAgent';
 
 export const getServerGlobalConfig = () => {
-  const { ACCESS_CODES, ENABLE_LANGFUSE, DEFAULT_AGENT_CONFIG } = getServerConfig();
+  const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getServerConfig();
 
   const {
     ENABLED_OPENAI,
@@ -114,7 +115,7 @@ export const getServerGlobalConfig = () => {
       zhipu: { enabled: ENABLED_ZHIPU },
     },
     telemetry: {
-      langfuse: ENABLE_LANGFUSE,
+      langfuse: langfuseEnv.ENABLE_LANGFUSE,
     },
   };
 
