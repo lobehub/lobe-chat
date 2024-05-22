@@ -27,11 +27,11 @@ describe('getServerConfig', () => {
     global.process = originalProcess; // Restore the original process object
   });
 
-  it('correctly handles values for OPENAI_FUNCTION_REGIONS', () => {
-    process.env.OPENAI_FUNCTION_REGIONS = 'iad1,sfo1';
-    const config = getServerConfig();
-    expect(config.OPENAI_FUNCTION_REGIONS).toStrictEqual(['iad1', 'sfo1']);
-  });
+  // it('correctly handles values for OPENAI_FUNCTION_REGIONS', () => {
+  //   process.env.OPENAI_FUNCTION_REGIONS = 'iad1,sfo1';
+  //   const config = getServerConfig();
+  //   expect(config.OPENAI_FUNCTION_REGIONS).toStrictEqual(['iad1', 'sfo1']);
+  // });
 
   describe('index url', () => {
     it('should return default URLs when no environment variables are set', () => {

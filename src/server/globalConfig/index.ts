@@ -1,4 +1,5 @@
 import { fileEnv } from '@/config/file';
+import { getLLMConfig } from '@/config/llm';
 import {
   OllamaProviderCard,
   OpenAIProviderCard,
@@ -13,11 +14,9 @@ import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseMo
 import { parseAgentConfig } from './parseDefaultAgent';
 
 export const getServerGlobalConfig = () => {
-  const {
-    ACCESS_CODES,
-    ENABLE_LANGFUSE,
+  const { ACCESS_CODES, ENABLE_LANGFUSE, DEFAULT_AGENT_CONFIG } = getServerConfig();
 
-    DEFAULT_AGENT_CONFIG,
+  const {
     ENABLED_OPENAI,
     OPENAI_MODEL_LIST,
 
@@ -35,7 +34,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
 
-    ENABLE_OLLAMA,
+    ENABLED_OLLAMA,
     OLLAMA_MODEL_LIST,
     OLLAMA_PROXY_URL,
 
@@ -45,7 +44,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_ZEROONE,
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
-  } = getServerConfig();
+  } = getLLMConfig();
 
   const config: GlobalServerConfig = {
     defaultAgent: {
@@ -76,7 +75,7 @@ export const getServerGlobalConfig = () => {
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
       ollama: {
-        enabled: ENABLE_OLLAMA,
+        enabled: ENABLED_OLLAMA,
         fetchOnClient: !OLLAMA_PROXY_URL,
         serverModelCards: transformToChatModelCards({
           defaultChatModels: OllamaProviderCard.chatModels,
