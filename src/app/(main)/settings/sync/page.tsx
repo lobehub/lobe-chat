@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 
-import { serverFeatureFlags } from '@/config/server/featureFlags';
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { gerServerDeviceInfo, isMobileDevice } from '@/utils/responsive';
