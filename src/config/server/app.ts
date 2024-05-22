@@ -14,11 +14,6 @@ declare global {
       PLUGIN_SETTINGS?: string;
 
       DEFAULT_AGENT_CONFIG?: string;
-
-      ENABLE_LANGFUSE?: string;
-      LANGFUSE_PUBLIC_KEY?: string;
-      LANGFUSE_SECRET_KEY?: string;
-      LANGFUSE_HOST?: string;
     }
   }
 }
@@ -35,8 +30,6 @@ export const getAppConfig = () => {
 
     DEFAULT_AGENT_CONFIG: process.env.DEFAULT_AGENT_CONFIG || '',
 
-    SHOW_ACCESS_CODE_CONFIG: !!ACCESS_CODES.length,
-
     SITE_URL: process.env.SITE_URL,
 
     AGENTS_INDEX_URL: !!process.env.AGENTS_INDEX_URL
@@ -48,10 +41,5 @@ export const getAppConfig = () => {
       : 'https://chat-plugins.lobehub.com',
 
     PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
-
-    ENABLE_LANGFUSE: process.env.ENABLE_LANGFUSE === '1',
-    LANGFUSE_SECRET_KEY: process.env.LANGFUSE_SECRET_KEY || '',
-    LANGFUSE_PUBLIC_KEY: process.env.LANGFUSE_PUBLIC_KEY || '',
-    LANGFUSE_HOST: process.env.LANGFUSE_HOST || 'https://cloud.langfuse.com',
   };
 };
