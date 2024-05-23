@@ -2,6 +2,14 @@
   "about": {
     "title": "Hakkında"
   },
+  "agentTab": {
+    "chat": "Sohbet Tercihi",
+    "meta": "Asistan Bilgisi",
+    "modal": "Model Ayarları",
+    "plugin": "Eklenti Ayarları",
+    "prompt": "Karakter Ayarları",
+    "tts": "Metin Okuma Hizmeti"
+  },
   "analytics": {
     "telemetry": {
       "desc": "Anonim kullanım verilerini göndererek LobeChat'in genel kullanıcı deneyimini iyileştirmemize yardımcı olabilirsiniz",
