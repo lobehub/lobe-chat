@@ -5,6 +5,7 @@ import { withSWR } from '~test-utils';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { userService } from '@/services/user';
+import { ClientService } from '@/services/user/client';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { GlobalServerConfig } from '@/types/serverConfig';
@@ -36,7 +37,7 @@ describe('createCommonSlice', () => {
       const avatar = 'new-avatar';
 
       const spyOn = vi.spyOn(result.current, 'refreshUserState');
-      const updateAvatarSpy = vi.spyOn(userService, 'updateAvatar');
+      const updateAvatarSpy = vi.spyOn(ClientService.prototype, 'updateAvatar');
 
       await act(async () => {
         await result.current.updateAvatar(avatar);

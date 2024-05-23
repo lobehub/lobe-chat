@@ -4,6 +4,7 @@ import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { userService } from '@/services/user';
+import { ClientService } from '@/services/user/client';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
 import type { GlobalSettings } from '@/types/settings';
@@ -45,7 +46,9 @@ export const createCommonSlice: StateCreator<
     await mutate(GET_USER_STATE_KEY);
   },
   updateAvatar: async (avatar) => {
-    await userService.updateAvatar(avatar);
+    const clientService = new ClientService();
+
+    await clientService.updateAvatar(avatar);
     await get().refreshUserState();
   },
 
@@ -89,8 +92,12 @@ export const createCommonSlice: StateCreator<
               {
                 defaultSettings,
                 enabledNextAuth: serverConfig.enabledOAuthSSO,
+                isOnboard: data.isOnboard,
+                isShowPWAGuide: data.canEnablePWAGuide,
                 isUserCanEnableTrace: data.canEnableTrace,
+                isUserHasConversation: data.hasConversation,
                 isUserStateInit: true,
+
                 preference,
                 serverLanguageModel: serverConfig.languageModel,
                 settings: data.settings || {},
