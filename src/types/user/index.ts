@@ -34,7 +34,9 @@ export interface UserPreference {
 
 export interface UserInitializationState {
   avatar?: string;
+  canEnablePWAGuide?: boolean;
   canEnableTrace?: boolean;
+  hasConversation?: boolean;
   isOnboard?: boolean;
   preference: UserPreference;
   settings: DeepPartial<GlobalSettings>;
