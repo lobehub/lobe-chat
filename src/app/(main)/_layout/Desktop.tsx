@@ -4,12 +4,12 @@ import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { useIsPWA } from '@/hooks/useIsPWA';
+import { isInStandaloneMode } from '@/utils/matchMedia';
 
 import { LayoutProps } from './type';
 
 const Layout = memo<LayoutProps>(({ children, nav }) => {
-  const isPWA = useIsPWA();
+  const isPWA = isInStandaloneMode();
   const theme = useTheme();
 
   return (
