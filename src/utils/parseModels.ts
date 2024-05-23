@@ -114,17 +114,17 @@ export const transformToChatModelCards = ({
 
       // if the model is known, update it based on the known model
       if (knownModel) {
-        const modelInList = draft.find((model) => model.id === toAddModel.id);
+        const index = draft.findIndex((model) => model.id === toAddModel.id);
+        const modelInList = draft[index];
 
         // if the model is already in chatModels, update it
         if (modelInList) {
-          // if (modelInList.hidden) delete modelInList.hidden;
-          modelInList.enabled = true;
-          if (toAddModel.displayName) modelInList.displayName = toAddModel.displayName;
+          draft[index] = { ...modelInList, ...toAddModel, enabled: true };
         } else {
           // if the model is not in chatModels, add it
           draft.push({
             ...knownModel,
+            ...toAddModel,
             displayName: toAddModel.displayName || knownModel.displayName || knownModel.id,
             enabled: true,
           });

@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-import { parseModelString } from './parseModels';
+import { LOBE_DEFAULT_MODEL_LIST, OpenAIProviderCard } from '@/config/modelProviders';
+import { ChatModelCard } from '@/types/llm';
+
+import { parseModelString, transformToChatModelCards } from './parseModels';
 
 describe('parseModelString', () => {
   it('custom deletion, addition, and renaming of models', () => {
@@ -63,6 +66,29 @@ describe('parseModelString', () => {
           files: true,
           id: 'gpt-4-all',
           tokens: 128000,
+        },
+      ]);
+    });
+
+    it('should have file with builtin models like gpt-4-0125-preview', () => {
+      const result = parseModelString(
+        '-all,+gpt-4-0125-preview=ChatGPT-4<128000:fc:file>,+gpt-4-turbo-2024-04-09=ChatGPT-4 Vision<128000:fc:vision:file>',
+      );
+      expect(result.add).toEqual([
+        {
+          displayName: 'ChatGPT-4',
+          files: true,
+          functionCall: true,
+          id: 'gpt-4-0125-preview',
+          tokens: 128000,
+        },
+        {
+          displayName: 'ChatGPT-4 Vision',
+          files: true,
+          functionCall: true,
+          id: 'gpt-4-turbo-2024-04-09',
+          tokens: 128000,
+          vision: true,
         },
       ]);
     });
@@ -166,5 +192,99 @@ describe('parseModelString', () => {
         deploymentName: 'my-deploy',
       });
     });
+  });
+});
+
+describe('transformToChatModelCards', () => {
+  const defaultChatModels: ChatModelCard[] = [
+    { id: 'model1', displayName: 'Model 1', enabled: true },
+    { id: 'model2', displayName: 'Model 2', enabled: false },
+  ];
+
+  it('should return undefined when modelString is empty', () => {
+    const result = transformToChatModelCards({
+      modelString: '',
+      defaultChatModels,
+    });
+    expect(result).toBeUndefined();
+  });
+
+  it('should remove all models when removeAll is true', () => {
+    const result = transformToChatModelCards({
+      modelString: '-all',
+      defaultChatModels,
+    });
+    expect(result).toEqual([]);
+  });
+
+  it('should remove specified models', () => {
+    const result = transformToChatModelCards({
+      modelString: '-model1',
+      defaultChatModels,
+    });
+    expect(result).toEqual([{ id: 'model2', displayName: 'Model 2', enabled: false }]);
+  });
+
+  it('should add a new known model', () => {
+    const knownModel = LOBE_DEFAULT_MODEL_LIST[0];
+    const result = transformToChatModelCards({
+      modelString: `${knownModel.id}`,
+      defaultChatModels,
+    });
+    expect(result).toContainEqual({
+      ...knownModel,
+      displayName: knownModel.displayName || knownModel.id,
+      enabled: true,
+    });
+  });
+
+  it('should update an existing known model', () => {
+    const knownModel = LOBE_DEFAULT_MODEL_LIST[0];
+    const result = transformToChatModelCards({
+      modelString: `+${knownModel.id}=Updated Model`,
+      defaultChatModels: [knownModel],
+    });
+    expect(result![0]).toEqual({ ...knownModel, displayName: 'Updated Model', enabled: true });
+  });
+
+  it('should add a new custom model', () => {
+    const result = transformToChatModelCards({
+      modelString: '+custom_model=Custom Model',
+      defaultChatModels,
+    });
+    expect(result).toContainEqual({
+      id: 'custom_model',
+      displayName: 'Custom Model',
+      enabled: true,
+    });
+  });
+
+  it('should have file with builtin models like gpt-4-0125-preview', () => {
+    const result = transformToChatModelCards({
+      modelString:
+        '-all,+gpt-4-0125-preview=ChatGPT-4<128000:fc:file>,+gpt-4-turbo-2024-04-09=ChatGPT-4 Vision<128000:fc:vision:file>',
+      defaultChatModels: OpenAIProviderCard.chatModels,
+    });
+
+    expect(result).toEqual([
+      {
+        displayName: 'ChatGPT-4',
+        files: true,
+        functionCall: true,
+        enabled: true,
+        id: 'gpt-4-0125-preview',
+        tokens: 128000,
+      },
+      {
+        description: 'GPT-4 Turbo 视觉版 (240409)',
+        displayName: 'ChatGPT-4 Vision',
+        files: true,
+        functionCall: true,
+        enabled: true,
+        id: 'gpt-4-turbo-2024-04-09',
+        tokens: 128000,
+        vision: true,
+      },
+    ]);
   });
 });

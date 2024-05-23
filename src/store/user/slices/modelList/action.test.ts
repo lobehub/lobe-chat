@@ -76,6 +76,61 @@ describe('LLMSettingsSliceAction', () => {
       const azure = result.current.defaultModelProviderList.find((m) => m.id === 'azure');
       expect(azure?.chatModels).toEqual([{ id: 'abc', deploymentName: 'abc' }]);
     });
+
+    it('openai', () => {
+      const { result } = renderHook(() => useUserStore());
+      act(() => {
+        useUserStore.setState({
+          serverLanguageModel: {
+            openai: {
+              enabled: true,
+              enabledModels: ['gpt-4-0125-preview', 'gpt-4-turbo-2024-04-09'],
+              serverModelCards: [
+                {
+                  displayName: 'ChatGPT-4',
+                  functionCall: true,
+                  id: 'gpt-4-0125-preview',
+                  tokens: 128000,
+                  enabled: true,
+                },
+                {
+                  displayName: 'ChatGPT-4 Vision',
+                  functionCall: true,
+                  id: 'gpt-4-turbo-2024-04-09',
+                  tokens: 128000,
+                  vision: true,
+                  enabled: true,
+                },
+              ],
+            },
+          },
+        });
+      });
+
+      act(() => {
+        result.current.refreshDefaultModelProviderList();
+      });
+
+      // Assert that setModelProviderConfig was not called
+      const openai = result.current.defaultModelProviderList.find((m) => m.id === 'openai');
+      expect(openai?.chatModels).toEqual([
+        {
+          displayName: 'ChatGPT-4',
+          enabled: true,
+          functionCall: true,
+          id: 'gpt-4-0125-preview',
+          tokens: 128000,
+        },
+        {
+          displayName: 'ChatGPT-4 Vision',
+          enabled: true,
+          functionCall: true,
+          id: 'gpt-4-turbo-2024-04-09',
+          tokens: 128000,
+          vision: true,
+        },
+      ]);
+    });
   });
 
   describe('refreshModelProviderList', () => {
