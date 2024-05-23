@@ -234,12 +234,12 @@ describe('createCommonSlice', () => {
   });
 
   describe('useCheckTrace', () => {
-    it('should return false when shouldFetch is false', async () => {
+    it('should return undefined when shouldFetch is false', async () => {
       const { result } = renderHook(() => useUserStore().useCheckTrace(false), {
         wrapper: withSWR,
       });
 
-      await waitFor(() => expect(result.current.data).toBe(false));
+      await waitFor(() => expect(result.current.data).toBeUndefined());
     });
 
     it('should return false when userAllowTrace is already set', async () => {
@@ -254,16 +254,18 @@ describe('createCommonSlice', () => {
 
     it('should call messageService.messageCountToCheckTrace when needed', async () => {
       vi.spyOn(preferenceSelectors, 'userAllowTrace').mockReturnValueOnce(null);
-      const messageCountToCheckTraceSpy = vi
-        .spyOn(messageService, 'messageCountToCheckTrace')
-        .mockResolvedValueOnce(true);
 
-      const { result } = renderHook(() => useUserStore().useCheckTrace(true), {
+      act(() => {
+        useUserStore.setState({
+          isUserCanEnableTrace: true,
+        });
+      });
+
+      const { result } = renderHook(() => useUserStore.getState().useCheckTrace(true), {
         wrapper: withSWR,
       });
 
       await waitFor(() => expect(result.current.data).toBe(true));
-      expect(messageCountToCheckTraceSpy).toHaveBeenCalled();
     });
   });
 });

@@ -1,5 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
+import { MessageModel } from '@/database/client/models/message';
 import { UserModel } from '@/database/client/models/user';
 import { GlobalSettings } from '@/types/settings';
 import { UserInitializationState, UserPreference } from '@/types/user';
@@ -16,9 +17,11 @@ export class ClientService implements IUserService {
 
   async getUserState(): Promise<UserInitializationState> {
     const user = await UserModel.getUser();
+    const messageCount = await MessageModel.count();
 
     return {
       avatar: user.avatar,
+      canEnableTrace: messageCount >= 4,
       isOnboard: true,
       preference: await this.preferenceStorage.getFromLocalStorage(),
       settings: user.settings as GlobalSettings,

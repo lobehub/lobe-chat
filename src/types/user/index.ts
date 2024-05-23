@@ -34,6 +34,7 @@ export interface UserPreference {
 
 export interface UserInitializationState {
   avatar?: string;
+  canEnableTrace?: boolean;
   isOnboard?: boolean;
   preference: UserPreference;
   settings: DeepPartial<GlobalSettings>;

@@ -3,7 +3,6 @@ import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
-import { messageService } from '@/services/message';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
@@ -18,6 +17,7 @@ import { settingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
+const GET_USER_STATE_KEY = 'initUserState';
 /**
  * 设置操作
  */
@@ -42,10 +42,7 @@ export const createCommonSlice: StateCreator<
   CommonAction
 > = (set, get) => ({
   refreshUserConfig: async () => {
-    await mutate('initUserState');
-
-    // when get the user config ,refresh the model provider list to the latest
-    // get().refreshModelProviderList();
+    await mutate(GET_USER_STATE_KEY);
   },
   updateAvatar: async (avatar) => {
     await userService.updateAvatar(avatar);
@@ -54,16 +51,14 @@ export const createCommonSlice: StateCreator<
 
   useCheckTrace: (shouldFetch) =>
     useSWR<boolean>(
-      ['checkTrace', shouldFetch],
+      shouldFetch ? 'checkTrace' : null,
       () => {
         const userAllowTrace = preferenceSelectors.userAllowTrace(get());
-        // if not init with server side, return false
-        if (!shouldFetch) return Promise.resolve(false);
 
         // if user have set the trace, return false
         if (typeof userAllowTrace === 'boolean') return Promise.resolve(false);
 
-        return messageService.messageCountToCheckTrace();
+        return Promise.resolve(get().isUserCanEnableTrace);
       },
       {
         revalidateOnFocus: false,
@@ -72,7 +67,7 @@ export const createCommonSlice: StateCreator<
 
   useInitUserState: (isLogin, serverConfig, options) =>
     useSWR<UserInitializationState>(
-      !!isLogin ? 'initUserState' : null,
+      !!isLogin ? GET_USER_STATE_KEY : null,
       () => userService.getUserState(),
       {
         onSuccess: (data) => {
@@ -94,6 +89,7 @@ export const createCommonSlice: StateCreator<
               {
                 defaultSettings,
                 enabledNextAuth: serverConfig.enabledOAuthSSO,
+                isUserCanEnableTrace: data.canEnableTrace,
                 isUserStateInit: true,
                 preference,
                 serverLanguageModel: serverConfig.languageModel,
@@ -104,7 +100,7 @@ export const createCommonSlice: StateCreator<
               n('initUserState'),
             );
 
-            get().refreshDefaultModelProviderList({ trigger: 'initUserState' });
+            get().refreshDefaultModelProviderList({ trigger: 'fetchUserState' });
 
             // auto switch language
             const { language } = settingsSelectors.currentSettings(get());
