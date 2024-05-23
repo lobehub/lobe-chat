@@ -5,6 +5,7 @@ import {
   DeepSeek,
   Google,
   Groq,
+  LobeHub,
   Minimax,
   Mistral,
   Moonshot,
@@ -16,7 +17,6 @@ import {
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
-import { Logo } from '@lobehub/ui';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
@@ -29,7 +29,7 @@ interface ModelProviderIconProps {
 const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
   switch (provider) {
     case 'lobehub': {
-      return <Logo size={20} />;
+      return <LobeHub size={20} />;
     }
 
     case ModelProvider.ZhiPu: {
