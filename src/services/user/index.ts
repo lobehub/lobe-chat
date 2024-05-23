@@ -8,6 +8,4 @@
 // export const userService = ENABLED_SERVER_SERVICE ? new ServerService() : new ClientService();
 import { ClientService } from './client';
 
-export type { UserConfig } from './client';
-
 export const userService = new ClientService();

@@ -7,6 +7,7 @@ export default {
       tokens: '该模型单个会话最多支持 {{tokens}} Tokens',
       vision: '该模型支持视觉识别',
     },
+    removed: '该模型不在列表中，若取消选中将会自动移除',
   },
   ModelSwitchPanel: {
     emptyModel: '没有启用的模型，请前往设置开启',
