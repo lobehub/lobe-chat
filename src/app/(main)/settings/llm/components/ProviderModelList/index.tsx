@@ -51,10 +51,9 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
   ({ showModelFetcher = false, provider, showAzureDeployName, notFoundContent, placeholder }) => {
     const { t } = useTranslation('common');
     const { t: transSetting } = useTranslation('setting');
-    const [setModelProviderConfig, dispatchCustomModelCards] = useUserStore((s) => [
+    const [setModelProviderConfig, updateEnabledModels] = useUserStore((s) => [
       s.setModelProviderConfig,
-      s.dispatchCustomModelCards,
-      s.useFetchProviderModelList,
+      s.updateEnabledModels,
     ]);
 
     const chatModelCards = useUserStore(
@@ -94,21 +93,7 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
               mode="tags"
               notFoundContent={notFoundContent}
               onChange={(value, options) => {
-                setModelProviderConfig(provider, { enabledModels: value.filter(Boolean) });
-
-                // if there is a new model, add it to `customModelCards`
-                options.forEach((option: { label?: string; value?: string }, index: number) => {
-                  // if is a known model, it should have value
-                  // if is an unknown model, the option will be {}
-                  if (option.value) return;
-
-                  const modelId = value[index];
-
-                  dispatchCustomModelCards(provider, {
-                    modelCard: { id: modelId },
-                    type: 'add',
-                  });
-                });
+                updateEnabledModels(provider, value, options as any[]);
               }}
               optionFilterProp="label"
               optionRender={({ label, value }) => {
@@ -122,6 +107,18 @@ const ProviderModelListSelect = memo<CustomModelSelectProps>(
                       provider={provider}
                     />
                   );
+
+                if (enabledModels?.some((m) => value === m)) {
+                  return (
+                    <OptionRender
+                      displayName={label as string}
+                      id={value as string}
+                      isAzure={showAzureDeployName}
+                      provider={provider}
+                      removed
+                    />
+                  );
+                }
 
                 // model is defined by user in client
                 return (
