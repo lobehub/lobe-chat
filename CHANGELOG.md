@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.161.9](https://github.com/lobehub/lobe-chat/compare/v0.161.8...v0.161.9)
+
+<sup>Released on **2024-05-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix image style and improve drag upload box.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix image style and improve drag upload box, closes [#2610](https://github.com/lobehub/lobe-chat/issues/2610) ([5e1a4d6](https://github.com/lobehub/lobe-chat/commit/5e1a4d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.8](https://github.com/lobehub/lobe-chat/compare/v0.161.7...v0.161.8)
 
 <sup>Released on **2024-05-22**</sup>
