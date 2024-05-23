@@ -14,7 +14,7 @@ export const usePlatform = () => {
   const platformInfo = {
     isApple: platform.current && ['Mac OS', 'iOS'].includes(platform.current),
     isChrome: browser.current === 'Chrome',
-    isChromium: ['Chrome', 'Edge', 'Opera', 'Brave'].includes(browser.current),
+    isChromium: browser.current && ['Chrome', 'Edge', 'Opera', 'Brave'].includes(browser.current),
     isEdge: browser.current === 'Edge',
     isIOS: platform.current === 'iOS',
     isMacOS: platform.current === 'Mac OS',
@@ -26,7 +26,6 @@ export const usePlatform = () => {
   return {
     ...platformInfo,
     isSupportInstallPWA:
-      (platformInfo.isChromium && !platformInfo.isIOS) ||
-      (platformInfo.isMacOS && platformInfo.isSonomaOrLaterSafari),
+      (platformInfo.isChromium && !platformInfo.isIOS) || platformInfo.isSonomaOrLaterSafari,
   };
 };
