@@ -7,13 +7,14 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { DRAGGING_ROOT_ID } from '@/const/layoutTokens';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
 
+const DRAGGING_ROOT_ID = 'dragging-root';
+const getContainer = () => document.querySelector(`#${DRAGGING_ROOT_ID}`);
 const BLOCK_SIZE = 64;
 const ICON_SIZE = 36;
 
@@ -159,6 +160,17 @@ const DragUpload = memo(() => {
   };
 
   useEffect(() => {
+    if (getContainer()) return;
+    const root = document.createElement('div');
+    root.id = DRAGGING_ROOT_ID;
+    document.body.append(root);
+
+    return () => {
+      root.remove();
+    };
+  }, []);
+
+  useEffect(() => {
     window.addEventListener('dragenter', handleDragEnter);
     window.addEventListener('dragover', handleDragOver);
     window.addEventListener('dragleave', handleDragLeave);
@@ -226,7 +238,7 @@ const DragUpload = memo(() => {
         </Center>
       </div>
     </Center>,
-    document.querySelector(`#${DRAGGING_ROOT_ID}`)!,
+    getContainer()!,
   );
 });
 
