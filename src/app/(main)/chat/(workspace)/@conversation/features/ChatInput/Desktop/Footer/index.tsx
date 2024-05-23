@@ -101,7 +101,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
       horizontal
       padding={'0 24px'}
     >
-      <Flexbox align={'center'} gap={8} horizontal>
+      <Flexbox align={'center'} gap={8} horizontal style={{ overflow: 'hidden' }}>
         {canUpload && (
           <>
             <DragUpload />
@@ -109,7 +109,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
           </>
         )}
       </Flexbox>
-      <Flexbox align={'center'} gap={8} horizontal>
+      <Flexbox align={'center'} flex={'none'} gap={8} horizontal>
         <Flexbox
           gap={4}
           horizontal
