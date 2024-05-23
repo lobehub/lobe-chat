@@ -32,6 +32,7 @@ export enum SettingsTabs {
 export interface GlobalPreference {
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  hidePWAInstaller?: boolean;
   inputHeight: number;
   mobileShowTopic?: boolean;
   sessionsWidth: number;
@@ -64,6 +65,7 @@ export const initialState: GlobalState = {
   isPreferenceInit: false,
   preference: {
     expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
+    hidePWAInstaller: false,
     inputHeight: 200,
     mobileShowTopic: false,
     sessionsWidth: 320,
