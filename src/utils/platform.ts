@@ -27,21 +27,16 @@ export const isMacOS = () => getPlatform() === 'Mac OS';
 
 export const isInStandaloneMode = () => {
   if (isOnServerSide) return false;
-  return (
-    window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone
-  );
+  return window.matchMedia('(display-mode: standalone)').matches;
 };
 
 export const isSonomaOrLaterSafari = () => {
-  if (isOnServerSide) return false;
-  const userAgent = navigator.userAgent;
-  const safariRegex = /Version\/(\d+)\.(\d+)\.?(\d+)? Safari/;
-  const match = userAgent.match(safariRegex);
-
-  if (match) {
-    const majorVersion = parseInt(match[1], 10);
-    return majorVersion >= 16;
+  const browser = getParser().getResult().browser;
+  const version = browser.version;
+  if (browser.name === 'Safari' && version) {
+    const [majorVersion] = version.split('.');
+    // Sonoma 版本对应的 Safari 版本号假设为 16.0 或更高
+    return parseInt(majorVersion, 10) >= 16;
   }
-
   return false;
 };
