@@ -37,4 +37,23 @@ describe('getClientConfig', () => {
     expect(config.I18N_DEBUG_BROWSER).toBe(false);
     expect(config.I18N_DEBUG_SERVER).toBe(false);
   });
-});
+
+  // New test cases for client configurations
+  it('should validate new client configurations correctly', () => {
+    process.env.NEW_CLIENT_CONFIG_A = 'true';
+    process.env.NEW_CLIENT_CONFIG_B = 'false';
+
+    const config = getDebugConfig();
+
+    expect(config.NEW_CLIENT_CONFIG_A).toBe(true);
+    expect(config.NEW_CLIENT_CONFIG_B).toBe(false);
+  });
+
+  it('should handle invalid client configurations gracefully', () => {
+    process.env.INVALID_CLIENT_CONFIG = 'invalid';
+
+    const config = getDebugConfig();
+
+    expect(config.INVALID_CLIENT_CONFIG).toBeUndefined();
+  });
+})

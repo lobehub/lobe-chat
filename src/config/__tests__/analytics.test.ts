@@ -67,4 +67,25 @@ describe('getAnalyticsConfig', () => {
       'NEXT_PUBLIC_UMAMI_WEBSITE_ID is deprecated. Please use UMAMI_WEBSITE_ID instead. We will remove it in LobeChat 1.0',
     );
   });
+
+  // New test cases for additional analytics configurations
+  describe('new analytics configurations', () => {
+    it('should handle new analytics configuration A', () => {
+      process.env.NEW_ANALYTICS_CONFIG_A = 'true';
+      const config = getAnalyticsConfig();
+      expect(config.NEW_ANALYTICS_CONFIG_A).toBeTruthy();
+    });
+
+    it('should handle new analytics configuration B', () => {
+      process.env.NEW_ANALYTICS_CONFIG_B = 'false';
+      const config = getAnalyticsConfig();
+      expect(config.NEW_ANALYTICS_CONFIG_B).toBeFalsy();
+    });
+
+    it('should handle invalid analytics configuration', () => {
+      process.env.INVALID_ANALYTICS_CONFIG = 'invalid';
+      const config = getAnalyticsConfig();
+      expect(config.INVALID_ANALYTICS_CONFIG).toBeUndefined();
+    });
+  });
 });

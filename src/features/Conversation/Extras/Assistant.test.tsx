@@ -83,4 +83,36 @@ describe('AssistantMessageExtra', () => {
     expect(screen.getByText('TTS Component')).toBeInTheDocument();
     expect(screen.getByText('Translate Component')).toBeInTheDocument();
   });
+
+  // Integration tests for AssistantMessageExtra component
+  it('should correctly render extra components based on props and state changes', () => {
+    const testData = {
+      ...mockData,
+      extra: {
+        fromModel: 'customModel',
+        tts: { url: 'test-url' },
+        translate: { from: 'en', to: 'fr', content: 'translated content' },
+      },
+    };
+
+    render(<AssistantMessageExtra {...testData} />);
+
+    // Verify that all extra components are rendered based on the provided props
+    expect(screen.getByText('customModel')).toBeInTheDocument();
+    expect(screen.getByText('TTS Component')).toBeInTheDocument();
+    expect(screen.getByText('Translate Component')).toBeInTheDocument();
+  });
+
+  it('should update the component when props change', () => {
+    const { rerender } = render(<AssistantMessageExtra {...mockData} />);
+    expect(screen.queryByText('TTS Component')).toBeNull();
+
+    const updatedData = {
+      ...mockData,
+      extra: { tts: { url: 'test-url' } },
+    };
+
+    rerender(<AssistantMessageExtra {...updatedData} />);
+    expect(screen.getByText('TTS Component')).toBeInTheDocument();
+  });
 });
