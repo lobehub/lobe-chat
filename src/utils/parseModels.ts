@@ -116,18 +116,19 @@ export const transformToChatModelCards = ({
       if (knownModel) {
         const index = draft.findIndex((model) => model.id === toAddModel.id);
         const modelInList = draft[index];
+        const newModel = {
+          ...modelInList,
+          ...toAddModel,
+          displayName: toAddModel.displayName || knownModel.displayName || knownModel.id,
+          enabled: true,
+        };
 
         // if the model is already in chatModels, update it
         if (modelInList) {
-          draft[index] = { ...modelInList, ...toAddModel, enabled: true };
+          draft[index] = newModel;
         } else {
           // if the model is not in chatModels, add it
-          draft.push({
-            ...knownModel,
-            ...toAddModel,
-            displayName: toAddModel.displayName || knownModel.displayName || knownModel.id,
-            enabled: true,
-          });
+          draft.push(newModel);
         }
       } else {
         // if the model is not in LOBE_DEFAULT_MODEL_LIST, add it as a new custom model
