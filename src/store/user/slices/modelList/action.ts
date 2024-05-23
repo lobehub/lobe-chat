@@ -144,6 +144,7 @@ export const createModelListSlice: StateCreator<
   updateEnabledModels: async (provider, value, options) => {
     const { dispatchCustomModelCards, setModelProviderConfig } = get();
     const enabledModels = modelProviderSelectors.getEnableModelsById(provider)(get());
+
     // if there is a new model, add it to `customModelCards`
     const pools = options.map(async (option: { label?: string; value?: string }, index: number) => {
       // if is a known model, it should have value
@@ -161,6 +162,10 @@ export const createModelListSlice: StateCreator<
       });
     });
 
+    // TODO: 当前的这个 pool 方法并不是最好的实现，因为它会触发 setModelProviderConfig 的多次更新。
+    // 理论上应该合并这些变更，然后最后只做一次触发
+    // 因此后续的做法应该是将 dispatchCustomModelCards 改造为同步方法，并在最后做一次异步更新
+    // 对应需要改造 'should add new custom model to customModelCards' 这一个单测
     await Promise.all(pools);
 
     await setModelProviderConfig(provider, { enabledModels: value.filter(Boolean) });

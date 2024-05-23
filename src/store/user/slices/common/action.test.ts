@@ -4,8 +4,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { withSWR } from '~test-utils';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
-import { globalService } from '@/services/global';
-import { messageService } from '@/services/message';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
@@ -37,7 +35,7 @@ describe('createCommonSlice', () => {
       const { result } = renderHook(() => useUserStore());
       const avatar = 'new-avatar';
 
-      const spyOn = vi.spyOn(result.current, 'refreshUserConfig');
+      const spyOn = vi.spyOn(result.current, 'refreshUserState');
       const updateAvatarSpy = vi.spyOn(userService, 'updateAvatar');
 
       await act(async () => {

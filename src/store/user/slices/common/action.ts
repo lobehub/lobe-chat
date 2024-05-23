@@ -22,7 +22,7 @@ const GET_USER_STATE_KEY = 'initUserState';
  * 设置操作
  */
 export interface CommonAction {
-  refreshUserConfig: () => Promise<void>;
+  refreshUserState: () => Promise<void>;
 
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
@@ -41,12 +41,12 @@ export const createCommonSlice: StateCreator<
   [],
   CommonAction
 > = (set, get) => ({
-  refreshUserConfig: async () => {
+  refreshUserState: async () => {
     await mutate(GET_USER_STATE_KEY);
   },
   updateAvatar: async (avatar) => {
     await userService.updateAvatar(avatar);
-    await get().refreshUserConfig();
+    await get().refreshUserState();
   },
 
   useCheckTrace: (shouldFetch) =>

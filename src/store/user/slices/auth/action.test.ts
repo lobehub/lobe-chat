@@ -50,12 +50,12 @@ vi.mock('next-auth/react', async () => {
 });
 
 describe('createAuthSlice', () => {
-  describe('refreshUserConfig', () => {
+  describe('refreshUserState', () => {
     it('should refresh user config', async () => {
       const { result } = renderHook(() => useUserStore());
 
       await act(async () => {
-        await result.current.refreshUserConfig();
+        await result.current.refreshUserState();
       });
 
       expect(mutate).toHaveBeenCalledWith('initUserState');

@@ -37,7 +37,7 @@ export const createSettingsSlice: StateCreator<
   },
   resetSettings: async () => {
     await userService.resetUserSettings();
-    await get().refreshUserConfig();
+    await get().refreshUserState();
   },
   setSettings: async (settings) => {
     const { settings: prevSetting, defaultSettings } = get();
@@ -49,7 +49,7 @@ export const createSettingsSlice: StateCreator<
     const diffs = difference(nextSettings, defaultSettings);
 
     await userService.updateUserSettings(diffs);
-    await get().refreshUserConfig();
+    await get().refreshUserState();
   },
   setTranslationSystemAgent: async (provider, model) => {
     await get().setSettings({
