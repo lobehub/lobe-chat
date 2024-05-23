@@ -46,6 +46,8 @@ describe('ClientService', () => {
     expect(userState).toEqual({
       avatar: mockUser.avatar,
       isOnboard: true,
+      canEnablePWAGuide: false,
+      hasConversation: false,
       canEnableTrace: false,
       preference: mockPreference,
       settings: mockUser.settings,
