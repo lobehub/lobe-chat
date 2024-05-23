@@ -43,7 +43,7 @@ const Redirect = memo(() => {
     } else {
       router.replace('/welcome');
     }
-  }, [isUserStateInit, isUserHasConversation, isOnboard, isLogin]);
+  }, [isUserStateInit, isLoaded, isUserHasConversation, isOnboard, isLogin]);
 
   return null;
 });
