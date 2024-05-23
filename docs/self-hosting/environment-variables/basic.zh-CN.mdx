@@ -67,6 +67,15 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 
 - [[RFC] 022 - 环境变量配置默认助手参数](https://github.com/lobehub/lobe-chat/discussions/913)
 
+### `FEATURE_FLAGS`
+
+- 类型：可选
+- 描述：用于控制 LobeChat 的特性功能，支持多个功能标志，使用 `+` 增加一个功能，使用 `-` 来关闭一个功能，多个功能标志之间使用英文逗号 `,` 隔开，最外层建议添加引号 `"` 以避免解析错误。
+- 默认值：`-`
+- 示例：`"-welcome_suggest"`
+
+具体的内容可以参见 [特性标志](/zh/docs/self-hosting/advanced/feature-flags) 中的说明。
+
 ## 插件服务
 
 ### `PLUGINS_INDEX_URL`
