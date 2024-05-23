@@ -30,9 +30,16 @@ export interface ModelListAction {
     provider: T,
     config: Partial<GlobalLLMConfig[T]>,
   ) => Promise<void>;
+
   toggleEditingCustomModelCard: (params?: { id: string; provider: GlobalLLMProviderKey }) => void;
 
   toggleProviderEnabled: (provider: GlobalLLMProviderKey, enabled: boolean) => Promise<void>;
+
+  updateEnabledModels: (
+    provider: GlobalLLMProviderKey,
+    modelKeys: string[],
+    options: { label?: string; value?: string }[],
+  ) => Promise<void>;
 
   useFetchProviderModelList: (
     provider: GlobalLLMProviderKey,
@@ -55,7 +62,6 @@ export const createModelListSlice: StateCreator<
 
     await get().setModelProviderConfig(provider, { customModelCards: nextState });
   },
-
   refreshDefaultModelProviderList: (params) => {
     /**
      * Because we have several model cards sources, we need to merge the model cards
@@ -95,7 +101,6 @@ export const createModelListSlice: StateCreator<
 
     get().refreshModelProviderList({ trigger: 'refreshDefaultModelList' });
   },
-
   refreshModelProviderList: (params) => {
     const modelProviderList = get().defaultModelProviderList.map((list) => ({
       ...list,
@@ -128,12 +133,37 @@ export const createModelListSlice: StateCreator<
   setModelProviderConfig: async (provider, config) => {
     await get().setSettings({ languageModel: { [provider]: config } });
   },
+
   toggleEditingCustomModelCard: (params) => {
     set({ editingCustomCardModel: params }, false, 'toggleEditingCustomModelCard');
   },
-
   toggleProviderEnabled: async (provider, enabled) => {
     await get().setSettings({ languageModel: { [provider]: { enabled } } });
+  },
+
+  updateEnabledModels: async (provider, value, options) => {
+    const { dispatchCustomModelCards, setModelProviderConfig } = get();
+    const enabledModels = modelProviderSelectors.getEnableModelsById(provider)(get());
+    // if there is a new model, add it to `customModelCards`
+    const pools = options.map(async (option: { label?: string; value?: string }, index: number) => {
+      // if is a known model, it should have value
+      // if is an unknown model, the option will be {}
+      if (option.value) return;
+
+      const modelId = value[index];
+
+      // if is in enabledModels, it means it's a removed model
+      if (enabledModels?.some((m) => modelId === m)) return;
+
+      await dispatchCustomModelCards(provider, {
+        modelCard: { id: modelId },
+        type: 'add',
+      });
+    });
+
+    await Promise.all(pools);
+
+    await setModelProviderConfig(provider, { enabledModels: value.filter(Boolean) });
   },
 
   useFetchProviderModelList: (provider, enabledAutoFetch) =>
