@@ -3,35 +3,47 @@
 import { useRouter } from 'next/navigation';
 import { memo, useEffect } from 'react';
 
-import { messageService } from '@/services/message';
-import { sessionService } from '@/services/session';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
-const checkHasConversation = async () => {
-  const hasMessages = await messageService.hasMessages();
-  const hasAgents = await sessionService.hasSessions();
-  return hasMessages || hasAgents;
-};
-
 const Redirect = memo(() => {
   const router = useRouter();
-  const isLogin = useUserStore(authSelectors.isLogin);
+  const [isLogin, isLoaded, isUserStateInit, isUserHasConversation, isOnboard] = useUserStore(
+    (s) => [
+      authSelectors.isLogin(s),
+      authSelectors.isLoaded(s),
+      s.isUserStateInit,
+      s.isUserHasConversation,
+      s.isOnboard,
+    ],
+  );
 
   useEffect(() => {
+    // if user auth state is not ready, wait for loading
+    if (!isLoaded) return;
+
+    // this mean user is definitely not login
     if (!isLogin) {
       router.replace('/welcome');
       return;
     }
 
-    checkHasConversation().then((hasData) => {
-      if (hasData) {
-        router.replace('/chat');
-      } else {
-        router.replace('/welcome');
-      }
-    });
-  }, []);
+    // if user state not init, wait for loading
+    if (!isUserStateInit) return;
+
+    // user need to onboard
+    if (!isOnboard) {
+      router.replace('/onboard');
+      return;
+    }
+
+    // finally check the conversation status
+    if (isUserHasConversation) {
+      router.replace('/chat');
+    } else {
+      router.replace('/welcome');
+    }
+  }, [isUserStateInit, isLoaded, isUserHasConversation, isOnboard, isLogin]);
 
   return null;
 });
