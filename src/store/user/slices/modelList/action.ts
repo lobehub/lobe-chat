@@ -1,39 +1,21 @@
+import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import {
-  AnthropicProviderCard,
-  AzureProviderCard,
-  BedrockProviderCard,
-  DeepSeekProviderCard,
-  GoogleProviderCard,
-  GroqProviderCard,
-  MinimaxProviderCard,
-  MistralProviderCard,
-  MoonshotProviderCard,
-  OllamaProviderCard,
-  OpenAIProviderCard,
-  OpenRouterProviderCard,
-  PerplexityProviderCard,
-  TogetherAIProviderCard,
-  ZeroOneProviderCard,
-  ZhiPuProviderCard,
-} from '@/config/modelProviders';
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
+import { ModelProvider } from '@/libs/agent-runtime';
 import { UserStore } from '@/store/user';
 import { ChatModelCard } from '@/types/llm';
 import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
-import { setNamespace } from '@/utils/storeDebug';
 
-import { CustomModelCardDispatch, customModelCardsReducer } from '../reducers/customModelCard';
-import { modelProviderSelectors } from '../selectors/modelProvider';
-import { settingsSelectors } from '../selectors/settings';
-
-const n = setNamespace('settings');
+import { settingsSelectors } from '../settings/selectors';
+import { CustomModelCardDispatch, customModelCardsReducer } from './reducers/customModelCard';
+import { modelProviderSelectors } from './selectors/modelProvider';
 
 /**
  * 设置操作
  */
-export interface LLMSettingsAction {
+export interface ModelListAction {
   dispatchCustomModelCards: (
     provider: GlobalLLMProviderKey,
     payload: CustomModelCardDispatch,
@@ -58,11 +40,11 @@ export interface LLMSettingsAction {
   ) => SWRResponse;
 }
 
-export const llmSettingsSlice: StateCreator<
+export const createModelListSlice: StateCreator<
   UserStore,
   [['zustand/devtools', never]],
   [],
-  LLMSettingsAction
+  ModelListAction
 > = (set, get) => ({
   dispatchCustomModelCards: async (provider, payload) => {
     const prevState = settingsSelectors.providerConfig(provider)(get());
@@ -92,35 +74,24 @@ export const llmSettingsSlice: StateCreator<
       return serverChatModels ?? remoteChatModels ?? defaultChatModels;
     };
 
-    const defaultModelProviderList = [
-      {
-        ...OpenAIProviderCard,
-        chatModels: mergeModels('openai', OpenAIProviderCard.chatModels),
-      },
-      { ...AzureProviderCard, chatModels: mergeModels('azure', []) },
-      { ...OllamaProviderCard, chatModels: mergeModels('ollama', OllamaProviderCard.chatModels) },
-      AnthropicProviderCard,
-      GoogleProviderCard,
-      {
-        ...OpenRouterProviderCard,
-        chatModels: mergeModels('openrouter', OpenRouterProviderCard.chatModels),
-      },
-      {
-        ...TogetherAIProviderCard,
-        chatModels: mergeModels('togetherai', TogetherAIProviderCard.chatModels),
-      },
-      BedrockProviderCard,
-      DeepSeekProviderCard,
-      PerplexityProviderCard,
-      MinimaxProviderCard,
-      MistralProviderCard,
-      GroqProviderCard,
-      MoonshotProviderCard,
-      ZeroOneProviderCard,
-      ZhiPuProviderCard,
-    ];
+    const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
+      const openai = draft.find((d) => d.id === ModelProvider.OpenAI);
+      if (openai) openai.chatModels = mergeModels('openai', openai.chatModels);
 
-    set({ defaultModelProviderList }, false, n(`refreshDefaultModelList - ${params?.trigger}`));
+      const azure = draft.find((d) => d.id === ModelProvider.Azure);
+      if (azure) azure.chatModels = mergeModels('azure', azure.chatModels);
+
+      const ollama = draft.find((d) => d.id === ModelProvider.Ollama);
+      if (ollama) ollama.chatModels = mergeModels('ollama', ollama.chatModels);
+
+      const openrouter = draft.find((d) => d.id === ModelProvider.OpenRouter);
+      if (openrouter) openrouter.chatModels = mergeModels('openrouter', openrouter.chatModels);
+
+      const togetherai = draft.find((d) => d.id === ModelProvider.TogetherAI);
+      if (togetherai) togetherai.chatModels = mergeModels('togetherai', togetherai.chatModels);
+    });
+
+    set({ defaultModelProviderList }, false, `refreshDefaultModelList - ${params?.trigger}`);
 
     get().refreshModelProviderList({ trigger: 'refreshDefaultModelList' });
   },
@@ -143,7 +114,7 @@ export const llmSettingsSlice: StateCreator<
       enabled: modelProviderSelectors.isProviderEnabled(list.id as any)(get()),
     }));
 
-    set({ modelProviderList }, false, n(`refreshModelList - ${params?.trigger}`));
+    set({ modelProviderList }, false, `refreshModelList - ${params?.trigger}`);
   },
 
   removeEnabledModels: async (provider, model) => {

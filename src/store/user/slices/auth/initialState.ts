@@ -15,12 +15,13 @@ export interface UserAuthState {
    * @deprecated
    */
   avatar?: string;
-
   clerkOpenUserProfile?: (props?: UserProfileProps) => void;
+
   clerkSession?: ActiveSessionResource;
   clerkSignIn?: (props?: SignInProps) => void;
   clerkSignOut?: SignOut;
   clerkUser?: UserResource;
+  enabledNextAuth?: boolean;
 
   isLoaded?: boolean;
   isSignedIn?: boolean;

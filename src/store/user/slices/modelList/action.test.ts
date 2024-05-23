@@ -5,8 +5,9 @@ import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { GeneralModelProviderConfig } from '@/types/settings';
 
-import { CustomModelCardDispatch } from '../reducers/customModelCard';
-import { modelProviderSelectors, settingsSelectors } from '../selectors';
+import { settingsSelectors } from '../settings/selectors';
+import { CustomModelCardDispatch } from './reducers/customModelCard';
+import { modelProviderSelectors } from './selectors';
 
 // Mock userService
 vi.mock('@/services/user', () => ({
@@ -61,11 +62,8 @@ describe('LLMSettingsSliceAction', () => {
 
       act(() => {
         useUserStore.setState({
-          serverConfig: {
-            languageModel: {
-              azure: { serverModelCards: [{ id: 'abc', deploymentName: 'abc' }] },
-            },
-            telemetry: {},
+          serverLanguageModel: {
+            azure: { serverModelCards: [{ id: 'abc', deploymentName: 'abc' }] },
           },
         });
       });

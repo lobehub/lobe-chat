@@ -3,7 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { UserStore } from '@/store/user';
 import { merge } from '@/utils/merge';
 
-import { UserSettingsState, initialSettingsState } from '../initialState';
+import { UserState } from '../../../initialState';
+import { UserSettingsState, initialSettingsState } from '../../settings/initialState';
 import { modelConfigSelectors } from './modelConfig';
 
 describe('modelConfigSelectors', () => {
@@ -121,7 +122,7 @@ describe('modelConfigSelectors', () => {
           id: 'custom-model-2',
           provider: 'perplexity',
         },
-      } as UserSettingsState) as unknown as UserStore;
+      } as UserState) as unknown as UserStore;
 
       const currentEditingModelCard = modelConfigSelectors.currentEditingCustomModelCard(s);
 

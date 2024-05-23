@@ -1,16 +1,20 @@
-import useSWR, { SWRResponse } from 'swr';
+import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { DEFAULT_PREFERENCE } from '@/const/user';
 import { messageService } from '@/services/message';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
 import type { GlobalSettings } from '@/types/settings';
+import { UserInitializationState } from '@/types/user';
+import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { preferenceSelectors } from '../preference/selectors';
+import { settingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
@@ -18,9 +22,17 @@ const n = setNamespace('common');
  * 设置操作
  */
 export interface CommonAction {
+  refreshUserConfig: () => Promise<void>;
+
   updateAvatar: (avatar: string) => Promise<void>;
   useCheckTrace: (shouldFetch: boolean) => SWRResponse;
-  useFetchServerConfig: () => SWRResponse;
+  useInitUserState: (
+    isLogin: boolean | undefined,
+    serverConfig: GlobalServerConfig,
+    options?: {
+      onSuccess: (data: UserInitializationState) => void;
+    },
+  ) => SWRResponse;
 }
 
 export const createCommonSlice: StateCreator<
@@ -29,6 +41,12 @@ export const createCommonSlice: StateCreator<
   [],
   CommonAction
 > = (set, get) => ({
+  refreshUserConfig: async () => {
+    await mutate('initUserState');
+
+    // when get the user config ,refresh the model provider list to the latest
+    // get().refreshModelProviderList();
+  },
   updateAvatar: async (avatar) => {
     await userService.updateAvatar(avatar);
     await get().refreshUserConfig();
@@ -52,32 +70,47 @@ export const createCommonSlice: StateCreator<
       },
     ),
 
-  /**
-   * TODO: need to be removed in the future
-   * the serverConfig should be fetched only in the serverConfigStore
-   * @deprecated
-   */
-  useFetchServerConfig: () =>
-    useSWR<GlobalServerConfig>(
-      'fetchGlobalConfig',
-      async () => {
-        const { globalService } = await import('@/services/global');
-
-        return globalService.getGlobalConfig();
-      },
+  useInitUserState: (isLogin, serverConfig, options) =>
+    useSWR<UserInitializationState>(
+      !!isLogin ? 'initUserState' : null,
+      () => userService.getUserState(),
       {
         onSuccess: (data) => {
-          if (data) {
-            const serverSettings: DeepPartial<GlobalSettings> = {
-              defaultAgent: data.defaultAgent,
-              languageModel: data.languageModel,
-            };
+          options?.onSuccess?.(data);
 
+          if (data) {
+            // merge settings
+            const serverSettings: DeepPartial<GlobalSettings> = {
+              defaultAgent: serverConfig.defaultAgent,
+              languageModel: serverConfig.languageModel,
+            };
             const defaultSettings = merge(get().defaultSettings, serverSettings);
 
-            set({ defaultSettings, serverConfig: data }, false, n('initGlobalConfig'));
+            // merge preference
+            const isEmpty = Object.keys(data.preference || {}).length === 0;
+            const preference = isEmpty ? DEFAULT_PREFERENCE : data.preference;
 
-            get().refreshDefaultModelProviderList({ trigger: 'fetchServerConfig' });
+            set(
+              {
+                defaultSettings,
+                enabledNextAuth: serverConfig.enabledOAuthSSO,
+                isUserStateInit: true,
+                preference,
+                serverLanguageModel: serverConfig.languageModel,
+                settings: data.settings || {},
+                userId: data.userId,
+              },
+              false,
+              n('initUserState'),
+            );
+
+            get().refreshDefaultModelProviderList({ trigger: 'initUserState' });
+
+            // auto switch language
+            const { language } = settingsSelectors.currentSettings(get());
+            if (language === 'auto') {
+              switchLang('auto');
+            }
           }
         },
         revalidateOnFocus: false,

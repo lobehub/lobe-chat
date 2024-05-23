@@ -6,7 +6,7 @@ import { ServerModelProviderConfig } from '@/types/serverConfig';
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import { UserStore } from '../../../store';
-import { currentSettings, getProviderConfigById } from './settings';
+import { currentSettings, getProviderConfigById } from '../../settings/selectors/settings';
 
 /**
  * get the server side model cards
@@ -14,9 +14,7 @@ import { currentSettings, getProviderConfigById } from './settings';
 const serverProviderModelCards =
   (provider: GlobalLLMProviderKey) =>
   (s: UserStore): ChatModelCard[] | undefined => {
-    const config = s.serverConfig.languageModel?.[provider] as
-      | ServerModelProviderConfig
-      | undefined;
+    const config = s.serverLanguageModel?.[provider] as ServerModelProviderConfig | undefined;
 
     if (!config) return;
 

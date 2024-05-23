@@ -12,7 +12,7 @@ import { switchLang } from '@/utils/client/switchLang';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
-export interface GeneralSettingsAction {
+export interface UserSettingsAction {
   importAppSettings: (settings: GlobalSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
   setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
@@ -22,11 +22,11 @@ export interface GeneralSettingsAction {
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
 }
 
-export const generalSettingsSlice: StateCreator<
+export const createSettingsSlice: StateCreator<
   UserStore,
   [['zustand/devtools', never]],
   [],
-  GeneralSettingsAction
+  UserSettingsAction
 > = (set, get) => ({
   importAppSettings: async (importAppSettings) => {
     const { setSettings } = get();
