@@ -2,6 +2,14 @@
   "about": {
     "title": "À propos"
   },
+  "agentTab": {
+    "chat": "Préférences de discussion",
+    "meta": "Informations de l'assistant",
+    "modal": "Paramètres du modèle",
+    "plugin": "Paramètres du plugin",
+    "prompt": "Configuration du rôle",
+    "tts": "Service vocal"
+  },
   "analytics": {
     "telemetry": {
       "desc": "En choisissant d'envoyer des données de télémétrie, vous pouvez nous aider à améliorer l'expérience utilisateur globale de LobeChat",

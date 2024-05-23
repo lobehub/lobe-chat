@@ -36,7 +36,7 @@ LobeChat provides some additional configuration options during deployment, which
 
 When using the `random` mode, a random API Key will be selected from the available multiple API Keys.
 
-When using the `turn` mode, the API Keys will be retrieved in a round-robin manner according to the specified order.
+When using the `turn` mode, the API Keys will be retrieved in a polling manner according to the specified order.
 
 ### `NEXT_PUBLIC_BASE_PATH`
 
@@ -50,7 +50,7 @@ When using the `turn` mode, the API Keys will be retrieved in a round-robin mann
 - Type: Optional
 - Description: Used to configure the default settings for the LobeChat default agent. It supports various data types and structures, including key-value pairs, nested fields, array values, and more.
 - Default: -
-- Example: `'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer`
+- Example: `'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer'`
 
 The `DEFAULT_AGENT_CONFIG` is used to configure the default settings for the LobeChat default agent. It supports various data types and structures, including key-value pairs, nested fields, array values, and more. The table below provides detailed information on the configuration options, examples, and corresponding explanations for the `DEFAULT_AGENT_CONFIG` environment variable:
 

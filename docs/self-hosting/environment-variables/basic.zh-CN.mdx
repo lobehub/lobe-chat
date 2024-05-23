@@ -32,7 +32,7 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 
 使用 `random` 模式下，将在多个 API Keys 中随机获取一个 API Key。
 
-使用 `turn` 模式下，将按照填写的顺序，轮训获取得到 API Key。
+使用 `turn` 模式下，将按照填写的顺序，轮询获取得到 API Key。
 
 ### `NEXT_PUBLIC_BASE_PATH`
 
@@ -46,7 +46,7 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 类型：可选
 - 描述：用于配置 LobeChat 默认助理的默认配置。它支持多种数据类型和结构，包括键值对、嵌套字段、数组值等。
 - 默认值：`-`
-- 示例：`'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer`
+- 示例：`'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer'`
 
 `DEFAULT_AGENT_CONFIG` 用于配置 LobeChat 默认助理的默认配置。它支持多种数据类型和结构，包括键值对、嵌套字段、数组值等。下表详细说明了 `DEFAULT_AGENT_CONFIG` 环境变量的配置项、示例以及相应解释：
 

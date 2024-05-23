@@ -624,7 +624,7 @@
     "mobileButton__menu": "選單",
     "navbar": {
       "account": "個人資料",
-      "description": "管理您的帳戶資訊。",
+      "description": "管理您的帳戶資訊",
       "security": "安全性",
       "title": "帳戶"
     },

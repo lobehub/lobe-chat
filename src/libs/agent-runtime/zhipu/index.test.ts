@@ -1,13 +1,10 @@
 // @vitest-environment node
-import { StreamingTextResponse } from 'ai';
 import { OpenAI } from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatStreamCallbacks, LobeOpenAI } from '@/libs/agent-runtime';
 import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
 
-import { AgentRuntimeErrorType } from '../error';
-import { ModelProvider } from '../types';
 import * as authTokenModule from './authToken';
 import { LobeZhipuAI } from './index';
 
