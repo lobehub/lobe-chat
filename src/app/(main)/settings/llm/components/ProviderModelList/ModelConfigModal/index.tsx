@@ -1,9 +1,11 @@
 import { Modal } from '@lobehub/ui';
 import { Button, FormInstance } from 'antd';
+import isEqual from 'fast-deep-equal';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/slices/modelList/selectors';
 
 import ModelConfigForm from './Form';
 
@@ -25,6 +27,11 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
       s.dispatchCustomModelCards,
       s.toggleEditingCustomModelCard,
     ]);
+
+  const modelCard = useUserStore(
+    modelConfigSelectors.getCustomModelCard({ id, provider: editingProvider }),
+    isEqual,
+  );
 
   const closeModal = () => {
     toggleEditingCustomModelCard(undefined);
@@ -58,9 +65,10 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
       onCancel={closeModal}
       open={open}
       title={t('llm.customModelCards.modelConfig.modalTitle')}
-      zIndex={1051} // Select is 1050
+      zIndex={1251} // Select is 1150
     >
       <ModelConfigForm
+        initialValues={modelCard}
         onFormInstanceReady={setFormInstance}
         showAzureDeployName={showAzureDeployName}
       />

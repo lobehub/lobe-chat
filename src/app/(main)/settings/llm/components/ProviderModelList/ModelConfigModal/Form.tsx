@@ -1,31 +1,20 @@
 import { Checkbox, Form, FormInstance, Input } from 'antd';
-import isEqual from 'fast-deep-equal';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/selectors';
+import { ChatModelCard } from '@/types/llm';
 
 import MaxTokenSlider from './MaxTokenSlider';
 
 interface ModelConfigFormProps {
+  initialValues?: ChatModelCard;
   onFormInstanceReady: (instance: FormInstance) => void;
   showAzureDeployName?: boolean;
 }
 
 const ModelConfigForm = memo<ModelConfigFormProps>(
-  ({ showAzureDeployName, onFormInstanceReady }) => {
+  ({ showAzureDeployName, onFormInstanceReady, initialValues }) => {
     const { t } = useTranslation('setting');
-
-    const [id, editingProvider] = useUserStore((s) => [
-      s.editingCustomCardModel?.id,
-      s.editingCustomCardModel?.provider,
-    ]);
-
-    const modelCard = useUserStore(
-      modelConfigSelectors.getCustomModelCard({ id, provider: editingProvider }),
-      isEqual,
-    );
 
     const [formInstance] = Form.useForm();
 
@@ -45,7 +34,7 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
         <Form
           colon={false}
           form={formInstance}
-          initialValues={modelCard}
+          initialValues={initialValues}
           labelCol={{ span: 4 }}
           style={{ marginTop: 16 }}
           wrapperCol={{ offset: 1, span: 18 }}
