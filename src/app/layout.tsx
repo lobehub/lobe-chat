@@ -6,6 +6,7 @@ import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { isMobileDevice } from '@/utils/responsive';
@@ -31,6 +32,7 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
             {children}
             {modal}
           </AuthProvider>
+          <PWAInstall />
         </GlobalProvider>
         <Analytics />
         {inVercel && <SpeedInsights />}
