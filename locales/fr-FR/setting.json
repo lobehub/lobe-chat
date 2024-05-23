@@ -2,6 +2,14 @@
   "about": {
     "title": "À propos"
   },
+  "agentTab": {
+    "chat": "Préférences de discussion",
+    "meta": "Informations de l'assistant",
+    "modal": "Paramètres du modèle",
+    "plugin": "Paramètres du plugin",
+    "prompt": "Configuration du rôle",
+    "tts": "Service vocal"
+  },
   "analytics": {
     "telemetry": {
       "desc": "En choisissant d'envoyer des données de télémétrie, vous pouvez nous aider à améliorer l'expérience utilisateur globale de LobeChat",
@@ -359,6 +367,14 @@
       "title": "Synchronisation WebRTC"
     }
   },
+  "systemAgent": {
+    "title": "Assistant système",
+    "translation": {
+      "label": "Modèle de traduction",
+      "modelDesc": "Modèle spécifié pour la traduction",
+      "title": "Paramètres de l'assistant de traduction"
+    }
+  },
   "tab": {
     "about": "À propos",
     "agent": "Agent par défaut",
@@ -366,6 +382,7 @@
     "experiment": "Expérience",
     "llm": "Modèle de langue",
     "sync": "Synchronisation cloud",
+    "system-agent": "Assistant système",
     "tts": "Service vocal"
   },
   "tools": {

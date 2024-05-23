@@ -28,7 +28,7 @@ const Error = memo<ErrorProps>(({ messageId, index }) => {
         <Alert
           extra={
             <Highlighter copyButtonSize={'small'} language={'json'}>
-              {JSON.stringify(error.body, null, 2)}
+              {JSON.stringify(error?.body || error, null, 2)}
             </Highlighter>
           }
           extraDefaultExpand

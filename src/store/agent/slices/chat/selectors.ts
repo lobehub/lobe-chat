@@ -28,7 +28,7 @@ const currentAgentModel = (s: AgentStore): string => {
 const currentAgentModelProvider = (s: AgentStore) => {
   const config = currentAgentConfig(s);
 
-  return config?.provider;
+  return config?.provider || 'openai';
 };
 
 const currentAgentPlugins = (s: AgentStore) => {

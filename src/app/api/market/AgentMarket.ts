@@ -1,6 +1,6 @@
 import urlJoin from 'url-join';
 
-import { getServerConfig } from '@/config/server';
+import { appEnv } from '@/config/app';
 import { DEFAULT_LANG, isLocaleNotSupport } from '@/const/locale';
 import { Locales, normalizeLocale } from '@/locales/resources';
 
@@ -8,7 +8,7 @@ export class AgentMarket {
   private readonly baseUrl: string;
 
   constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl || getServerConfig().AGENTS_INDEX_URL;
+    this.baseUrl = baseUrl || appEnv.AGENTS_INDEX_URL;
   }
 
   getAgentIndexUrl = (lang: Locales = DEFAULT_LANG) => {

@@ -1,6 +1,5 @@
+// @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
-
-import { isLocaleNotSupport } from '@/const/locale';
 
 import { PluginStore } from './Store';
 

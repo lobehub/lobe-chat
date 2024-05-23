@@ -5,4 +5,5 @@ export {
   modelProviderSelectors,
   settingsSelectors,
   syncSettingsSelectors,
+  systemAgentSelectors,
 } from './slices/settings/selectors';
