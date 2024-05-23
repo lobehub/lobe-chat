@@ -43,5 +43,4 @@ export interface IMessageService {
   removeAllMessages(): Promise<any>;
 
   hasMessages(): Promise<boolean>;
-  messageCountToCheckTrace(): Promise<boolean>;
 }

@@ -1,7 +1,7 @@
 import { GlobalLLMProviderKey } from '@/types/settings';
 
 import { UserStore } from '../../../store';
-import { currentLLMSettings, getProviderConfigById } from './settings';
+import { currentLLMSettings, getProviderConfigById } from '../../settings/selectors/settings';
 
 const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
   getProviderConfigById(provider)(s)?.enabled || false;

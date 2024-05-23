@@ -343,28 +343,4 @@ describe('MessageClientService', () => {
       expect(result).toBe(false);
     });
   });
-
-  describe('messageCountToCheckTrace', () => {
-    it('should return true if message count is greater than or equal to 4', async () => {
-      // Setup
-      (MessageModel.count as Mock).mockResolvedValue(5);
-
-      // Execute
-      const result = await messageService.messageCountToCheckTrace();
-
-      // Assert
-      expect(result).toBe(true);
-    });
-
-    it('should return false if message count is less than 4', async () => {
-      // Setup
-      (MessageModel.count as Mock).mockResolvedValue(3);
-
-      // Execute
-      const result = await messageService.messageCountToCheckTrace();
-
-      // Assert
-      expect(result).toBe(false);
-    });
-  });
 });
