@@ -35,17 +35,21 @@ export const isInStandaloneMode = () => {
 
 export const isSonomaOrLaterSafari = () => {
   if (isOnServerSide) return false;
+
   // refs: https://github.com/khmyznikov/pwa-install/blob/0904788b9d0e34399846f6cb7dbb5efeabb62c20/src/utils.ts#L24
   const userAgent = navigator.userAgent.toLowerCase();
   if (navigator.maxTouchPoints || !/macintosh/.test(userAgent)) return false;
+
   // check safari version >= 17
   const version = /version\/(\d{2})\./.exec(userAgent);
   if (!version || !version[1] || !(parseInt(version[1]) >= 17)) return false;
-  // hacky way to detect Sonoma
-  const audioCheck = document.createElement('audio').canPlayType('audio/wav; codecs="1"')
-    ? true
-    : false;
-  const webGLCheck = new OffscreenCanvas(1, 1).getContext('webgl') ? true : false;
 
-  return audioCheck && webGLCheck;
+  try {
+    // hacky way to detect Sonoma
+    const audioCheck = document.createElement('audio').canPlayType('audio/wav; codecs="1"');
+    const webGLCheck = new OffscreenCanvas(1, 1).getContext('webgl');
+    return Boolean(audioCheck) && Boolean(webGLCheck);
+  } catch {
+    return false;
+  }
 };
