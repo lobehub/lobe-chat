@@ -1,3 +1,7 @@
+import { DeepPartial } from 'utility-types';
+
+import { GlobalSettings } from '@/types/settings';
+
 export interface LobeUser {
   avatar?: string;
   email?: string | null;
@@ -26,4 +30,13 @@ export interface UserPreference {
    * whether to use cmd + enter to send message
    */
   useCmdEnterToSend?: boolean;
+}
+
+export interface UserInitializationState {
+  avatar?: string;
+  canEnableTrace?: boolean;
+  isOnboard?: boolean;
+  preference: UserPreference;
+  settings: DeepPartial<GlobalSettings>;
+  userId: string;
 }

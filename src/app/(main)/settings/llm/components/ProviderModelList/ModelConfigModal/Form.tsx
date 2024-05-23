@@ -1,71 +1,28 @@
-import { Modal } from '@lobehub/ui';
-import { Button, Checkbox, Form, Input } from 'antd';
-import isEqual from 'fast-deep-equal';
-import { memo } from 'react';
+import { Checkbox, Form, FormInstance, Input } from 'antd';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/selectors';
+import { ChatModelCard } from '@/types/llm';
 
 import MaxTokenSlider from './MaxTokenSlider';
 
-interface ModelConfigModalProps {
-  provider?: string;
+interface ModelConfigFormProps {
+  initialValues?: ChatModelCard;
+  onFormInstanceReady: (instance: FormInstance) => void;
   showAzureDeployName?: boolean;
 }
-const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, provider }) => {
-  const [formInstance] = Form.useForm();
-  const { t } = useTranslation('setting');
-  const { t: tc } = useTranslation('common');
 
-  const [open, id, editingProvider, dispatchCustomModelCards, toggleEditingCustomModelCard] =
-    useUserStore((s) => [
-      !!s.editingCustomCardModel && provider === s.editingCustomCardModel?.provider,
-      s.editingCustomCardModel?.id,
-      s.editingCustomCardModel?.provider,
-      s.dispatchCustomModelCards,
-      s.toggleEditingCustomModelCard,
-    ]);
+const ModelConfigForm = memo<ModelConfigFormProps>(
+  ({ showAzureDeployName, onFormInstanceReady, initialValues }) => {
+    const { t } = useTranslation('setting');
 
-  const modelCard = useUserStore(
-    modelConfigSelectors.getCustomModelCard({ id, provider: editingProvider }),
-    isEqual,
-  );
+    const [formInstance] = Form.useForm();
 
-  const closeModal = () => {
-    toggleEditingCustomModelCard(undefined);
-  };
+    useEffect(() => {
+      onFormInstanceReady(formInstance);
+    }, []);
 
-  return (
-    <Modal
-      destroyOnClose
-      footer={[
-        <Button key="cancel" onClick={closeModal}>
-          {tc('cancel')}
-        </Button>,
-
-        <Button
-          key="ok"
-          onClick={() => {
-            if (!editingProvider || !id) return;
-            const data = formInstance.getFieldsValue();
-
-            dispatchCustomModelCards(editingProvider as any, { id, type: 'update', value: data });
-
-            closeModal();
-          }}
-          style={{ marginInlineStart: '16px' }}
-          type="primary"
-        >
-          {tc('ok')}
-        </Button>,
-      ]}
-      maskClosable
-      onCancel={closeModal}
-      open={open}
-      title={t('llm.customModelCards.modelConfig.modalTitle')}
-      zIndex={1051} // Select is 1050
-    >
+    return (
       <div
         onClick={(e) => {
           e.stopPropagation();
@@ -77,9 +34,8 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
         <Form
           colon={false}
           form={formInstance}
-          initialValues={modelCard}
+          initialValues={initialValues}
           labelCol={{ span: 4 }}
-          preserve={false}
           style={{ marginTop: 16 }}
           wrapperCol={{ offset: 1, span: 18 }}
         >
@@ -136,7 +92,7 @@ const ModelConfigModal = memo<ModelConfigModalProps>(({ showAzureDeployName, pro
           </Form.Item>
         </Form>
       </div>
-    </Modal>
-  );
-});
-export default ModelConfigModal;
+    );
+  },
+);
+export default ModelConfigForm;

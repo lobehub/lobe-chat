@@ -1,27 +1,33 @@
 import { DeepPartial } from 'utility-types';
 
+import { MessageModel } from '@/database/client/models/message';
 import { UserModel } from '@/database/client/models/user';
-import { IUserService } from '@/services/user/type';
 import { GlobalSettings } from '@/types/settings';
-import { UserPreference } from '@/types/user';
+import { UserInitializationState, UserPreference } from '@/types/user';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
-export interface UserConfig {
-  avatar?: string;
-  settings: DeepPartial<GlobalSettings>;
-  uuid: string;
-}
+import { IUserService } from './type';
 
 export class ClientService implements IUserService {
   private preferenceStorage: AsyncLocalStorage<UserPreference>;
+
   constructor() {
     this.preferenceStorage = new AsyncLocalStorage('LOBE_PREFERENCE');
   }
 
-  getUserConfig = async () => {
+  async getUserState(): Promise<UserInitializationState> {
     const user = await UserModel.getUser();
-    return user as unknown as UserConfig;
-  };
+    const messageCount = await MessageModel.count();
+
+    return {
+      avatar: user.avatar,
+      canEnableTrace: messageCount >= 4,
+      isOnboard: true,
+      preference: await this.preferenceStorage.getFromLocalStorage(),
+      settings: user.settings as GlobalSettings,
+      userId: user.uuid,
+    };
+  }
 
   updateUserSettings = async (patch: DeepPartial<GlobalSettings>) => {
     return UserModel.updateSettings(patch);
@@ -33,10 +39,6 @@ export class ClientService implements IUserService {
 
   updateAvatar(avatar: string) {
     return UserModel.updateAvatar(avatar);
-  }
-
-  async getPreference() {
-    return this.preferenceStorage.getFromLocalStorage();
   }
 
   async updatePreference(preference: UserPreference) {
