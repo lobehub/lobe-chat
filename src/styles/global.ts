@@ -72,7 +72,7 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
 body>.css-1956qp3 {
     justify-content: center;
 }
-body>.css-1956qp3::before {
+body>.css-1956qp3:nth-child(1)::before {
     content: "";
     position: absolute;
     top: 0;
@@ -86,7 +86,7 @@ body>.css-1cxc6hc {
     justify-content: center;
 	padding-bottom: 5px;
 }
-body>.css-1cxc6hc::before {
+body>.css-1cxc6hc:nth-child(1)::before {
     content: "";
     position: absolute;
     top: 0;
@@ -568,11 +568,18 @@ body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
     position: absolute;
     bottom: 20px;
 }
-/* 设置按钮下的东西的位置 */
+/* 设置按钮下的东西 */
 body>div>.acss-1afprqa {
     bottom: 115px !important;
     left: 30px !important;
     top: auto !important;
+}
+body>div>.acss-1afprqa>div>div {
+    border-radius: 0 !important;
+	border: 0 !important;
+}
+body>div>.acss-1afprqa>div>div * {
+    border-radius: 20px !important;
 }
 /* 删除设置按钮下的东西 */
 .acss-1afprqa .css-1mcrjnz div:last-child {
@@ -748,6 +755,9 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
 
 
 
