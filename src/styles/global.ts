@@ -542,9 +542,12 @@ form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+9),form:first
 	display: none;
 }
 .css-qx52nb .css-rq7h3k {
-	display: none;
+	display: none !important;
 }
-
+/* 删除安装浏览器应用（PWA） */
+#pwa-install {
+    display: none;
+}
 /* 欢迎页面删除 */
 body>div>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) {
     display: none;
@@ -568,7 +571,7 @@ body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
 /* 设置按钮下的东西的位置 */
 body>div>.acss-1afprqa {
     bottom: 115px !important;
-    left: 215px !important;
+    left: 160px !important;
     top: auto !important;
 }
 /* 删除设置按钮下的东西 */
@@ -745,6 +748,9 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
 
 
 
