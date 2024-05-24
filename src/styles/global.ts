@@ -645,7 +645,7 @@ body>div>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) ol 
     width: 296px;
     text-align: center;
 	position: relative;
-	left: -26px;
+	left: -32px;
 }
 .HelloGPT h1 img {
     width: 138px;
