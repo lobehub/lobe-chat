@@ -578,9 +578,6 @@ body>div>.acss-1afprqa>div>div {
     border-radius: 0 !important;
 	border: 0 !important;
 }
-body>div>.acss-1afprqa>div>div * {
-    border-radius: 20px !important;
-}
 /* 删除设置按钮下的东西 */
 .acss-1afprqa .css-1mcrjnz div:last-child {
 	display: none;
@@ -675,7 +672,7 @@ content: "";
     list-style: none;
     padding: 0;
     margin: 0;
-	margin-right: 40px;
+	margin-right: 32px;
 }
 .HelloGPT li {
     float: left;
