@@ -26,6 +26,7 @@ const nextConfig = {
       'shiki',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
+    reactCompiler: true,
   },
 
   output: buildWithDocker ? 'standalone' : undefined,
