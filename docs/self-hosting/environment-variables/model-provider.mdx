@@ -15,6 +15,13 @@ When deploying LobeChat, a rich set of environment variables related to model se
 
 ## OpenAI
 
+### `ENABLED_OPENAI`
+
+- Type：Optional
+- Description：Enables OpenAI as a model provider by default, turns off the OpenAI service when set to `0`
+- Default：`1`
+- Example：`0`
+
 ### `OPENAI_API_KEY`
 
 - Type: Required
@@ -188,6 +195,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Example: `01-ai/yi-34b-chat`
 
 ## Ollama
+
+### `ENABLED_OLLAMA`
+
+- Type：Optional
+- Description：Enables Ollama as a model provider by default, turns off the Ollama service when set to `0`
+- Default：`1`
+- Example：`0`
 
 ### `OLLAMA_PROXY_URL`
 
