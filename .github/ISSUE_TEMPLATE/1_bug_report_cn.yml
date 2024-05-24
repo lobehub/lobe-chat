@@ -3,16 +3,15 @@ description: '反馈一个问题缺陷'
 title: '[Bug] '
 labels: ['🐛 Bug']
 body:
-  - type: dropdown
+  - type: checkboxes
     attributes:
       label: '📦 部署环境'
       options:
-        - 待选择
-        - Official
-        - Official Preview
-        - Vercel / Zeabur / Sealos
-        - Docker
-        - Other
+        - label: 'Official'
+        - label: 'Official Preview'
+        - label: 'Vercel / Zeabur / Sealos'
+        - label: 'Docker'
+        - label: 'Other'
     validations:
       required: true
   - type: input
@@ -21,30 +20,28 @@ body:
     validations:
       required: true
 
-  - type: dropdown
+  - type: checkboxes
     attributes:
       label: '💻 系统环境'
       options:
-        - 待选择
-        - Windows
-        - macOS
-        - Ubuntu
-        - Other Linux
-        - iOS
-        - Android
-        - Other
+        - label: 'Windows'
+        - label: 'macOS'
+        - label: 'Ubuntu'
+        - label: 'Other Linux'
+        - label: 'iOS'
+        - label: 'Android'
+        - label: 'Other'
     validations:
       required: true
-  - type: dropdown
+  - type: checkboxes
     attributes:
       label: '🌐 浏览器'
       options:
-        - 待选择
-        - Chrome
-        - Edge
-        - Safari
-        - Firefox
-        - Other
+        - label: 'Chrome'
+        - label: 'Edge'
+        - label: 'Safari'
+        - label: 'Firefox'
+        - label: 'Other'
     validations:
       required: true
   - type: textarea
