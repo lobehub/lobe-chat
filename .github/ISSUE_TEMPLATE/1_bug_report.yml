@@ -7,6 +7,7 @@ body:
     attributes:
       label: '📦 Environment'
       options:
+        - Unselected
         - Official
         - Official Preview
         - Vercel / Zeabur / Sealos
@@ -24,6 +25,7 @@ body:
     attributes:
       label: '💻 Operating System'
       options:
+        - Unselected
         - Windows
         - macOS
         - Ubuntu
@@ -37,6 +39,7 @@ body:
     attributes:
       label: '🌐 Browser'
       options:
+        - Unselected
         - Chrome
         - Edge
         - Safari

@@ -7,6 +7,7 @@ body:
     attributes:
       label: '📦 部署环境'
       options:
+        - 待选择
         - Official
         - Official Preview
         - Vercel / Zeabur / Sealos
@@ -24,6 +25,7 @@ body:
     attributes:
       label: '💻 系统环境'
       options:
+        - 待选择
         - Windows
         - macOS
         - Ubuntu
@@ -37,6 +39,7 @@ body:
     attributes:
       label: '🌐 浏览器'
       options:
+        - 待选择
         - Chrome
         - Edge
         - Safari
