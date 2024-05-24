@@ -571,7 +571,7 @@ body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
 /* 设置按钮下的东西的位置 */
 body>div>.acss-1afprqa {
     bottom: 115px !important;
-    left: 160px !important;
+    left: 30px !important;
     top: auto !important;
 }
 /* 删除设置按钮下的东西 */
