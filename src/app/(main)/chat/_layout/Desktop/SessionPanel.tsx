@@ -7,6 +7,7 @@ import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
@@ -21,10 +22,11 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
 
   const { styles } = useStyles();
   const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
-    s.preference.sessionsWidth,
-    s.preference.showSessionPanel,
-    s.updatePreference,
+    systemStatusSelectors.sessionWidth(s),
+    systemStatusSelectors.showSessionPanel(s),
+    s.updateSystemStatus,
   ]);
+
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(sessionExpandable));
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);

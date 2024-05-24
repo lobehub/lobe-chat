@@ -29,9 +29,10 @@ export enum SettingsTabs {
   TTS = 'tts',
 }
 
-export interface GlobalPreference {
+export interface SystemStatus {
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  hidePWAInstaller?: boolean;
   inputHeight: number;
   mobileShowTopic?: boolean;
   sessionsWidth: number;
@@ -40,37 +41,32 @@ export interface GlobalPreference {
   showSystemRole?: boolean;
 }
 
-export interface GlobalPreferenceState {
-  /**
-   * the user preference, which only store in local storage
-   */
-  preference: GlobalPreference;
-  preferenceStorage: AsyncLocalStorage<GlobalPreference>;
-}
-
-export interface GlobalCommonState {
+export interface GlobalState {
   hasNewVersion?: boolean;
   isMobile?: boolean;
-  isPreferenceInit?: boolean;
+  isStatusInit?: boolean;
   latestVersion?: string;
   router?: AppRouterInstance;
   sidebarKey: SidebarTabKey;
+  status: SystemStatus;
+  statusStorage: AsyncLocalStorage<SystemStatus>;
 }
 
-export type GlobalState = GlobalCommonState & GlobalPreferenceState;
+export const INITIAL_STATUS = {
+  expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
+  hidePWAInstaller: false,
+  inputHeight: 200,
+  mobileShowTopic: false,
+  sessionsWidth: 320,
+  showChatSideBar: true,
+  showSessionPanel: true,
+  showSystemRole: false,
+} satisfies SystemStatus;
 
 export const initialState: GlobalState = {
   isMobile: false,
-  isPreferenceInit: false,
-  preference: {
-    expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
-    inputHeight: 200,
-    mobileShowTopic: false,
-    sessionsWidth: 320,
-    showChatSideBar: true,
-    showSessionPanel: true,
-    showSystemRole: false,
-  },
-  preferenceStorage: new AsyncLocalStorage('LOBE_GLOBAL_PREFERENCE'),
+  isStatusInit: false,
   sidebarKey: SidebarTabKey.Chat,
+  status: INITIAL_STATUS,
+  statusStorage: new AsyncLocalStorage('LOBE_SYSTEM_STATUS'),
 };
