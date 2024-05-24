@@ -76,14 +76,14 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     justify-content: center;
 	padding-bottom: 5px;
 }
-.css-5m4etf {
+body>div>.css-5m4etf {
     width: 80% !important;
     height: 86% !important;
     position: relative !important;
     z-index: 9 !important;
 	justify-content: center;
 }
-.css-5m4etf::after {
+body>div>.css-5m4etf::after {
     content: "";
     position: absolute;
     top: -9px;
@@ -92,11 +92,14 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     right: 9px;
     z-index: -1;
 }
-.css-1cxc6hc .css-5m4etf,.css-1cxc6hc .css-5m4etf::after {
+.css-1cxc6hc>.css-5m4etf,.css-1cxc6hc>.css-5m4etf::after {
     background: #222;
 }
-.css-1956qp3 .css-5m4etf,.css-1956qp3 .css-5m4etf::after {
+.css-1956qp3>.css-5m4etf,.css-1956qp3>.css-5m4etf::after {
     background: #fff;
+}
+body>div>.css-5m4etf * {
+    background: none !important;
 }
 .css-1cxc6hc .css-5m4etf>aside:nth-child(2),.css-1cxc6hc .css-5m4etf>div:nth-child(3)>div:nth-child(1),.css-1cxc6hc .css-5m4etf>div:nth-child(3)>div:nth-child(2)>aside:nth-child(2),.css-1cxc6hc .acss-1s2s9nk,.css-1cxc6hc .acss-yo1cec,.css-1cxc6hc .css-5m4etf>div:nth-child(2)>div:nth-child(1) {
 	background: #222 !important;
