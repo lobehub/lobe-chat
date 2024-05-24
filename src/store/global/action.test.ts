@@ -48,6 +48,7 @@ describe('createPreferenceSlice', () => {
       const groupId = 'group-id';
 
       act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
         result.current.toggleExpandSessionGroup(groupId, true);
       });
 
@@ -60,6 +61,7 @@ describe('createPreferenceSlice', () => {
       const { result } = renderHook(() => useGlobalStore());
 
       act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
         result.current.toggleMobileTopic();
       });
 
@@ -72,6 +74,7 @@ describe('createPreferenceSlice', () => {
       const { result } = renderHook(() => useGlobalStore());
 
       act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
         result.current.toggleSystemRole(true);
       });
 
