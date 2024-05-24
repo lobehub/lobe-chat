@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.161.15](https://github.com/lobehub/lobe-chat/compare/v0.161.14...v0.161.15)
+
+<sup>Released on **2024-05-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix avatar missing on client DB mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix avatar missing on client DB mode, closes [#2645](https://github.com/lobehub/lobe-chat/issues/2645) ([12726c2](https://github.com/lobehub/lobe-chat/commit/12726c2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.14](https://github.com/lobehub/lobe-chat/compare/v0.161.13...v0.161.14)
 
 <sup>Released on **2024-05-24**</sup>
