@@ -27,7 +27,12 @@ const TokenProgress = memo<TokenProgressProps>(({ data, showIcon, showTotal }) =
       <Flexbox
         height={6}
         horizontal
-        style={{ borderRadius: 3, overflow: 'hidden', position: 'relative' }}
+        style={{
+          background: total === 0 ? theme.colorFill : undefined,
+          borderRadius: 3,
+          overflow: 'hidden',
+          position: 'relative',
+        }}
         width={'100%'}
       >
         {data.map((item) => (
