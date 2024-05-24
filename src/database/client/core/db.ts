@@ -203,7 +203,8 @@ export class BrowserDB extends Dexie {
   upgradeToV10 = async (trans: Transaction) => {
     const sessions = trans.table('sessions');
     await sessions.toCollection().modify(async (session: DBModel<DB_Session>) => {
-      session.config = MigrationAgentChatConfig.migrateChatConfig(session.config as any);
+      if (session.config)
+        session.config = MigrationAgentChatConfig.migrateChatConfig(session.config as any);
     });
   };
 }
