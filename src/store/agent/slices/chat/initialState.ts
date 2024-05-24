@@ -9,6 +9,8 @@ export interface AgentState {
   defaultAgentConfig: LobeAgentConfig;
   isAgentConfigInit: boolean;
   isDefaultAgentConfigInit: boolean;
+  updateAgentChatConfigSignal?: AbortController;
+  updateAgentConfigSignal?: AbortController;
 }
 
 export const initialAgentChatState: AgentState = {

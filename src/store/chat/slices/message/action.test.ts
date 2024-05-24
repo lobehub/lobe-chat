@@ -417,8 +417,10 @@ describe('chatMessage actions', () => {
         act(() => {
           useAgentStore.setState({
             agentConfig: {
-              enableAutoCreateTopic: false,
-              autoCreateTopicThreshold: 1,
+              chatConfig: {
+                enableAutoCreateTopic: false,
+                autoCreateTopicThreshold: 1,
+              },
             },
           });
           useChatStore.setState({
