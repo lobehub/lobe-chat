@@ -8,7 +8,7 @@ import { PWA_INSTALL_ID } from '@/const/layoutTokens';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { usePlatform } from '@/hooks/usePlatform';
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useUserStore } from '@/store/user';
 
 // @ts-ignore
@@ -23,9 +23,9 @@ const PWAInstall = memo(() => {
   const { install, canInstall } = usePWAInstall();
 
   const isShowPWAGuide = useUserStore((s) => s.isShowPWAGuide);
-  const [hidePWAInstaller, updatePreference] = useGlobalStore((s) => [
-    preferenceSelectors.hidePWAInstaller(s),
-    s.updatePreference,
+  const [hidePWAInstaller, updateSystemStatus] = useGlobalStore((s) => [
+    systemStatusSelectors.hidePWAInstaller(s),
+    s.updateSystemStatus,
   ]);
 
   // we need to make the pwa installer hidden by default
@@ -49,7 +49,7 @@ const PWAInstall = memo(() => {
 
       // it means user hide installer
       if (event.detail.message === 'dismissed') {
-        updatePreference({ hidePWAInstaller: true });
+        updateSystemStatus({ hidePWAInstaller: true });
       }
     };
 

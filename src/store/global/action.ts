@@ -13,9 +13,9 @@ import type { GlobalStore } from '@/store/global/index';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
-import type { GlobalPreference } from './initialState';
+import type { SystemStatus } from './initialState';
 
-const n = setNamespace('preference');
+const n = setNamespace('g');
 
 /**
  * 设置操作
@@ -26,9 +26,9 @@ export interface GlobalStoreAction {
   toggleExpandSessionGroup: (id: string, expand: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
-  updatePreference: (preference: Partial<GlobalPreference>, action?: any) => void;
+  updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
-  useInitGlobalPreference: () => SWRResponse;
+  useInitSystemStatus: () => SWRResponse;
 }
 
 export const globalActionSlice: StateCreator<
@@ -42,13 +42,13 @@ export const globalActionSlice: StateCreator<
   },
   toggleChatSideBar: (newValue) => {
     const showChatSideBar =
-      typeof newValue === 'boolean' ? newValue : !get().preference.showChatSideBar;
+      typeof newValue === 'boolean' ? newValue : !get().status.showChatSideBar;
 
-    get().updatePreference({ showChatSideBar }, n('toggleAgentPanel', newValue));
+    get().updateSystemStatus({ showChatSideBar }, n('toggleAgentPanel', newValue));
   },
   toggleExpandSessionGroup: (id, expand) => {
-    const { preference } = get();
-    const nextExpandSessionGroup = produce(preference.expandSessionGroupKeys, (draft: string[]) => {
+    const { status } = get();
+    const nextExpandSessionGroup = produce(status.expandSessionGroupKeys, (draft: string[]) => {
       if (expand) {
         if (draft.includes(id)) return;
         draft.push(id);
@@ -57,26 +57,25 @@ export const globalActionSlice: StateCreator<
         if (index !== -1) draft.splice(index, 1);
       }
     });
-    get().updatePreference({ expandSessionGroupKeys: nextExpandSessionGroup });
+    get().updateSystemStatus({ expandSessionGroupKeys: nextExpandSessionGroup });
   },
   toggleMobileTopic: (newValue) => {
     const mobileShowTopic =
-      typeof newValue === 'boolean' ? newValue : !get().preference.mobileShowTopic;
+      typeof newValue === 'boolean' ? newValue : !get().status.mobileShowTopic;
 
-    get().updatePreference({ mobileShowTopic }, n('toggleMobileTopic', newValue));
+    get().updateSystemStatus({ mobileShowTopic }, n('toggleMobileTopic', newValue));
   },
   toggleSystemRole: (newValue) => {
-    const showSystemRole =
-      typeof newValue === 'boolean' ? newValue : !get().preference.mobileShowTopic;
+    const showSystemRole = typeof newValue === 'boolean' ? newValue : !get().status.mobileShowTopic;
 
-    get().updatePreference({ showSystemRole }, n('toggleMobileTopic', newValue));
+    get().updateSystemStatus({ showSystemRole }, n('toggleMobileTopic', newValue));
   },
-  updatePreference: (preference, action) => {
-    const nextPreference = merge(get().preference, preference);
+  updateSystemStatus: (preference, action) => {
+    const nextPreference = merge(get().status, preference);
 
-    set({ preference: nextPreference }, false, action || n('updatePreference'));
+    set({ status: nextPreference }, false, action || n('updatePreference'));
 
-    get().preferenceStorage.saveToLocalStorage(nextPreference);
+    get().statusStorage.saveToLocalStorage(nextPreference);
   },
 
   useCheckLatestVersion: (enabledCheck = true) =>
@@ -89,19 +88,19 @@ export const globalActionSlice: StateCreator<
       },
     }),
 
-  useInitGlobalPreference: () =>
-    useClientDataSWR<GlobalPreference>(
-      'initGlobalPreference',
-      () => get().preferenceStorage.getFromLocalStorage(),
+  useInitSystemStatus: () =>
+    useClientDataSWR<SystemStatus>(
+      'initSystemStatus',
+      () => get().statusStorage.getFromLocalStorage(),
       {
         onSuccess: (preference) => {
-          const nextPreference = merge(get().preference, preference);
+          const nextPreference = merge(get().status, preference);
 
-          set({ isPreferenceInit: true });
+          set({ isStatusInit: true });
 
-          if (isEqual(get().preference, nextPreference)) return;
+          if (isEqual(get().status, nextPreference)) return;
 
-          set({ preference: nextPreference }, false, n('initPreference'));
+          set({ status: nextPreference }, false, n('initSystemStatus'));
         },
       },
     ),

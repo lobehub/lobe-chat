@@ -1,12 +1,28 @@
 import { GlobalStore } from '@/store/global';
-import { SessionDefaultGroup } from '@/types/session';
+
+import { INITIAL_STATUS } from './initialState';
 
 const sessionGroupKeys = (s: GlobalStore): string[] =>
-  s.preference.expandSessionGroupKeys || [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default];
+  s.status.expandSessionGroupKeys || INITIAL_STATUS.expandSessionGroupKeys;
 
-const hidePWAInstaller = (s: GlobalStore): boolean => s.preference.hidePWAInstaller || false;
+const showSystemRole = (s: GlobalStore) => s.status.showSystemRole;
+const mobileShowTopic = (s: GlobalStore) => s.status.mobileShowTopic;
+const showChatSideBar = (s: GlobalStore) => s.status.showChatSideBar;
+const showSessionPanel = (s: GlobalStore) =>
+  s.status.showSessionPanel || INITIAL_STATUS.showSessionPanel;
+const hidePWAInstaller = (s: GlobalStore) =>
+  s.status.hidePWAInstaller || INITIAL_STATUS.hidePWAInstaller;
 
-export const preferenceSelectors = {
+const sessionWidth = (s: GlobalStore) => s.status.sessionsWidth;
+const inputHeight = (s: GlobalStore) => s.status.inputHeight;
+
+export const systemStatusSelectors = {
   hidePWAInstaller,
+  inputHeight,
+  mobileShowTopic,
   sessionGroupKeys,
+  sessionWidth,
+  showChatSideBar,
+  showSessionPanel,
+  showSystemRole,
 };
