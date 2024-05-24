@@ -61,7 +61,7 @@ const Token = memo(() => {
     <Popover
       arrow={false}
       content={
-        <Flexbox gap={12} width={150}>
+        <Flexbox gap={12} style={{ minWidth: 160 }}>
           <TokenProgress
             data={[
               {
