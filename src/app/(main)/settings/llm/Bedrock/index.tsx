@@ -46,7 +46,7 @@ const BedrockProvider = memo(() => {
           children: (
             <Select
               allowClear
-              options={['us-east-1', 'us-west-2', 'ap-southeast-1'].map((i) => ({
+              options={['us-east-1', 'us-west-2', 'ap-southeast-1', 'ap-southeast-2'].map((i) => ({
                 label: i,
                 value: i,
               }))}
