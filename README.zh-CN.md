@@ -252,12 +252,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                    | 助手说明                                                                         |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| [我的世界指令导师](https://chat-preview.lobehub.com/market?agent=mcse-helper)<br/><sup>By **[CLOT-LIU](https://github.com/CLOT-LIU)** on **2024-05-24**</sup>               | 擅长解释和示范 “我的世界” 指令<br/>`我的世界` `指令` `解释` `示例`               |
 | [Bahasa/English Translator](https://chat-preview.lobehub.com/market?agent=bahasa-translation)<br/><sup>By **[xenstar](https://github.com/xenstar)** on **2024-05-22**</sup> | 根据需要将文本翻译成马来语或英语<br/>`英语` `翻译` `写作` `马来语`               |
 | [禅定法师](https://chat-preview.lobehub.com/market?agent=buddhism-master)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>               | 熟读经典，善于运用佛法来指导人生<br/>`佛法佛法研究` `禅宗` `佛经解读` `智慧问答` |
 | [中国历史学者](https://chat-preview.lobehub.com/market?agent=chinese-historian)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>         | 专精于中国历史研究，擅长将古代智慧应用于现代问题分析<br/>`历史研究` `中国历史`   |
-| [儒家学者](https://chat-preview.lobehub.com/market?agent=confucian-sage)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>                | 一名精通儒家经典且注重弘扬道义的学者<br/>`儒家学者` `道义弘扬者`                 |
 
-> 📊 Total agents: [<kbd>**269**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**270**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
