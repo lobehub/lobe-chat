@@ -216,16 +216,16 @@ a[href="/chat?session=inbox"]>div {
     background: #f1f1f1 !important;
 }
 /* 跳转至当前按钮 */
-.acss-1pj5wwz>div>button {
+.css-i80ya5>button {
 	border-radius: 10px !important;
 }
-.acss-1pj5wwz>div>button>span:first-child {
+.css-i80ya5>button>span:first-child {
 	margin: 0 !important;
 }
-.acss-1pj5wwz>div>button>span:last-child {
+.css-i80ya5>button>span:last-child {
 	display: none !important
 }
-.acss-1pj5wwz>div>button:hover {
+.css-i80ya5>button:hover {
     background: #FF5722 !important;
 }
 /* 侧边栏颜色 
@@ -745,6 +745,9 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
 
 
 
