@@ -49,6 +49,8 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
 
 
 
+
+
 ::selection {
     background: #99e640 !important;
     color: #000 !important;
@@ -526,8 +528,8 @@ a[href="https://github.com/lobehub/lobe-chat"] {
 .layoutkit-flexbox.css-fr78qt a:last-child {
 	display: none !important;
 }
-.layoutkit-center>form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+10) {
-	display: none !important;
+form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+9),form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+10) {
+	display: none;
 }
 #lobe-market-container .acss-1jn2ou {
     display: none;
@@ -536,10 +538,10 @@ a[href="https://github.com/lobehub/lobe-chat"] {
 	display: none !important;
 }:last-child {
 }
-.acss-1xzbft5 .css-qx52nb ul>li:last-child {
+.css-qx52nb ul>li:last-child {
 	display: none;
 }
-.acss-1xzbft5 .css-qx52nb .css-rq7h3k {
+.css-qx52nb .css-rq7h3k {
 	display: none;
 }
 
@@ -556,8 +558,7 @@ body>div>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>svg {
 }
 /* 删除侧栏底部按钮 */
 body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
-    position: absolute;
-    bottom: 20px;
+    display: none
 }
 /* 设置按钮位置 */
 .css-5m4etf>div:nth-child(1)>div:nth-child(1)>span:nth-child(1) {
@@ -565,7 +566,7 @@ body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
     bottom: 20px;
 }
 /* 设置按钮下的东西的位置 */
-.acss-1afprqa {
+body>div>.acss-1afprqa {
     bottom: 115px !important;
     left: 215px !important;
     top: auto !important;
@@ -744,6 +745,10 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
+
 
 
 
