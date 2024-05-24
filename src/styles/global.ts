@@ -174,13 +174,13 @@ a[href="/chat?session=inbox"]>div {
 .css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover,.css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-14juscs,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-14juscs::before {
     background: #673ab7 !important;
 }
-.css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover,.css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1uqtsel,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1uqtsel::before {
+.css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover,.css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1ua72wq,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1ua72wq::before {
     background: #99e640 !important;
 }
 .css-1cxc6hc a[href="/chat?session=inbox"]>div:hover,.css-1cxc6hc a[href="/chat?session=inbox"]>div:hover::before,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-14juscs,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-14juscs::before {
     background: #673ab7 !important;
 }
-.css-1956qp3 a[href="/chat?session=inbox"]>div:hover,.css-1956qp3 a[href="/chat?session=inbox"]>div:hover::before,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1uqtsel,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1uqtsel::before {
+.css-1956qp3 a[href="/chat?session=inbox"]>div:hover,.css-1956qp3 a[href="/chat?session=inbox"]>div:hover::before,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1ua72wq,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1ua72wq::before {
     background: #99e640 !important;
 }
 .LazyLoad.is-visible>a>div:first-child .acss-1hsh9br:hover {
@@ -463,10 +463,10 @@ ul.ant-dropdown-menu-item-group-list li span.ant-dropdown-menu-item-icon {
     background: none !important;
 }
 /* 助手页hellogpt logo */
-a[aria-label="home"]>div {
-    position: relative;
+#lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1) {
+	position: relative;
 }
-a[aria-label="home"]>div::before {
+#lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
     content: 'HelloGPT';
     position: absolute;
     top: 0px;
@@ -474,14 +474,15 @@ a[aria-label="home"]>div::before {
     font-size: 1.7em;
     font-weight: 700;
 }
-.css-1cxc6hc a[aria-label="home"]>div::before {
+.css-1cxc6hc #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
     background: #222;
     color: #fff;
 }
-.css-1956qp3 a[aria-label="home"]>div::before {
+.css-1956qp3 #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
     background: #fff;
     color: #111;
 }
+
 /* 助手页分类按钮 */
 .css-vwb4od {
     justify-content: center;
@@ -533,7 +534,15 @@ a[href="https://github.com/lobehub/lobe-chat"] {
 }
 .ant-dropdown-placement-topLeft>ul.ant-dropdown-menu.ant-dropdown-menu-root.ant-dropdown-menu-vertical.ant-dropdown-menu-light>li:nth-child(n+4):nth-child(-n+8) {
 	display: none !important;
+}:last-child {
 }
+.acss-1xzbft5 .css-qx52nb ul>li:last-child {
+	display: none;
+}
+.acss-1xzbft5 .css-qx52nb .css-rq7h3k {
+	display: none;
+}
+
 /* 欢迎页面删除 */
 body>div>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) {
     display: none;
@@ -544,6 +553,17 @@ body>div>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>svg {
 /* 删除大家都在问 */
 .css-1txg53k {
     display: none !important;
+}
+
+/* 删除设置按钮下的东西 */
+.acss-1afprqa .css-1mcrjnz div:last-child {
+	display: none;
+}
+.acss-1afprqa ul>li:nth-child(4),.acss-1afprqa ul>li:nth-child(5),.acss-1afprqa ul>li:nth-child(8),.acss-1afprqa ul>li:nth-child(9),.acss-1afprqa ul>li:nth-child(10) {
+	display: none;
+}
+.acss-1afprqa .css-b2xo4 {
+	display: none;
 }
 
 /* 欢迎页面背景色 */
@@ -709,6 +729,10 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
+
 
 
 
