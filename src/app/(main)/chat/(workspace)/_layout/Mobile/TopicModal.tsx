@@ -5,12 +5,13 @@ import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import { useWorkspaceModal } from '../../features/useWorkspaceModal';
 
 const Topics = memo(({ children }: PropsWithChildren) => {
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
-    s.preference.mobileShowTopic,
+    systemStatusSelectors.mobileShowTopic(s),
     s.toggleMobileTopic,
   ]);
   const [open, setOpen] = useWorkspaceModal(showAgentSettings, toggleConfig);
