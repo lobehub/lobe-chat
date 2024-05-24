@@ -14,7 +14,7 @@ export interface TTSConfig {
 }
 
 export interface ChatConfig {
-  autoCreateTopicThreshold?: number;
+  autoCreateTopicThreshold: number;
   compressThreshold?: number;
   displayMode?: 'chat' | 'docs';
   enableAutoCreateTopic?: boolean;
@@ -22,6 +22,7 @@ export interface ChatConfig {
   enableHistoryCount?: boolean;
   enableMaxTokens?: boolean;
   historyCount?: number;
+  inputTemplate?: string;
 }
 
 export interface V6AgentConfig {

@@ -18,40 +18,44 @@ export class MigrationV5ToV6 implements Migration {
       },
     };
   }
+  static migrateChatConfig(config: V5Session['config']): V6Session['config'] {
+    const {
+      autoCreateTopicThreshold,
+      enableAutoCreateTopic,
+      compressThreshold,
+      enableCompressThreshold,
+      enableHistoryCount,
+      enableMaxTokens,
+      historyCount,
+      inputTemplate,
+      displayMode,
+      ...agentConfig
+    } = config;
 
-  static migrateSession(sessions: V5Session[]): V6Session[] {
-    return sessions.map(({ config, updateAt, updatedAt, createdAt, createAt, ...res }) => {
-      const {
+    return {
+      ...agentConfig,
+      chatConfig: {
         autoCreateTopicThreshold,
-        enableAutoCreateTopic,
         compressThreshold,
+        displayMode,
+        enableAutoCreateTopic,
         enableCompressThreshold,
         enableHistoryCount,
         enableMaxTokens,
         historyCount,
         inputTemplate,
-        displayMode,
-        ...agentConfig
-      } = config;
-      return {
-        ...res,
-        config: {
-          ...agentConfig,
-          chatConfig: {
-            autoCreateTopicThreshold,
-            compressThreshold,
-            displayMode,
-            enableAutoCreateTopic,
-            enableCompressThreshold,
-            enableHistoryCount,
-            enableMaxTokens,
-            historyCount,
-            inputTemplate,
-          },
-        },
-        createdAt: createdAt || createAt!,
-        updatedAt: updatedAt || updateAt!,
-      };
-    });
+      },
+    };
+  }
+
+  static migrateSession(sessions: V5Session[]): V6Session[] {
+    return sessions.map(({ config, updateAt, updatedAt, createdAt, createAt, ...res }) => ({
+      ...res,
+      config: MigrationV5ToV6.migrateChatConfig(config),
+      createdAt: createdAt || createAt!,
+      updatedAt: updatedAt || updateAt!,
+    }));
   }
 }
+
+export const MigrationAgentChatConfig = MigrationV5ToV6;
