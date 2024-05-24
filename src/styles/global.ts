@@ -116,7 +116,7 @@ body>div>.css-5m4etf::after {
 .css-1956qp3>.css-5m4etf,.css-1956qp3>.css-5m4etf::after {
     background: #fff;
 }
-.css-5m4etf>.css-5m4etf aside,.css-5m4etf>.css-5m4etf>div>div{
+.css-5m4etf>.css-5m4etf aside,.css-5m4etf>.css-5m4etf>div>div,#lobe-market-container>div:nth-child(1) {
     background: none !important;
 }
 .acss-rlur1a {
@@ -282,7 +282,7 @@ a[href="/chat?session=inbox"]>div {
 }
 /* 右侧栏按钮 */
 aside .css-1u84j5a {
-    margin: 5px 0 !important;
+    margin: 5px 8px !important;
     border-radius: 10px !important;
     height: 40px !important;
 }
@@ -554,7 +554,22 @@ body>div>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>svg {
 .css-1txg53k {
     display: none !important;
 }
-
+/* 删除侧栏底部按钮 */
+body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
+    position: absolute;
+    bottom: 20px;
+}
+/* 设置按钮位置 */
+.css-5m4etf>div:nth-child(1)>div:nth-child(1)>span:nth-child(1) {
+    position: absolute;
+    bottom: 20px;
+}
+/* 设置按钮下的东西的位置 */
+.acss-1afprqa {
+    bottom: 115px !important;
+    left: 215px !important;
+    top: auto !important;
+}
 /* 删除设置按钮下的东西 */
 .acss-1afprqa .css-1mcrjnz div:last-child {
 	display: none;
@@ -729,6 +744,10 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
+
 
 
 
