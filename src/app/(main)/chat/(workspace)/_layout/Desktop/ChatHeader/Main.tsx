@@ -36,6 +36,7 @@ const Main = memo(() => {
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
+  const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
   return !init ? (
     <Flexbox horizontal>
@@ -53,10 +54,9 @@ const Main = memo(() => {
           aria-label={t('agentsAndConversations')}
           icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
           onClick={() => {
-            const currentShowSessionPanel = useGlobalStore.getState().status.showSessionPanel;
-            useGlobalStore.getState().updateSystemStatus({
-              sessionsWidth: currentShowSessionPanel ? 0 : 320,
-              showSessionPanel: !currentShowSessionPanel,
+            updateSystemStatus({
+              sessionsWidth: showSessionPanel ? 0 : 320,
+              showSessionPanel: !showSessionPanel,
             });
           }}
           size={DESKTOP_HEADER_ICON_SIZE}
