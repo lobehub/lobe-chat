@@ -1,3 +1,4 @@
+import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { gt } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
@@ -74,6 +75,7 @@ export const globalActionSlice: StateCreator<
     if (!get().isStatusInit) return;
 
     const nextStatus = merge(get().status, status);
+    if (isEqual(get().status, nextStatus)) return;
 
     set({ status: nextStatus }, false, action || n('updateSystemStatus'));
 
@@ -96,7 +98,7 @@ export const globalActionSlice: StateCreator<
       () => get().statusStorage.getFromLocalStorage(),
       {
         onSuccess: (status) => {
-          set({ isStatusInit: true });
+          set({ isStatusInit: true }, false, 'setStatusInit');
 
           get().updateSystemStatus(status, 'initSystemStatus');
         },
