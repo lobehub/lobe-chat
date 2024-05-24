@@ -58,13 +58,13 @@ const GlobalLayout = async ({ children }: GlobalLayoutProps) => {
           defaultNeutralColor={neutralColor?.value as any}
           defaultPrimaryColor={primaryColor?.value as any}
         >
-          <StoreInitialization />
           <ServerConfigStoreProvider
             featureFlags={serverFeatureFlags}
             isMobile={isMobile}
             serverConfig={serverConfig}
           >
             {children}
+            <StoreInitialization />
           </ServerConfigStoreProvider>
           <DebugUI />
         </AppTheme>

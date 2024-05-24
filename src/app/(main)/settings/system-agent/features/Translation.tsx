@@ -3,7 +3,6 @@
 import { Form, type ItemGroup } from '@lobehub/ui';
 import { Form as AntForm } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { Globe } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -40,7 +39,6 @@ const Translation = memo(() => {
         name: [SYSTEM_AGENT_SETTING_KEY, 'translation', 'model'],
       },
     ],
-    icon: Globe,
     title: t('systemAgent.translation.title'),
   };
 

@@ -2,21 +2,21 @@ import { describe, expect, it } from 'vitest';
 
 import { merge } from '@/utils/merge';
 
+import { UserState, initialState } from '../../../initialState';
 import { UserStore, useUserStore } from '../../../store';
-import { UserSettingsState, initialSettingsState } from '../initialState';
 import { getDefaultModeProviderById, modelProviderSelectors } from './modelProvider';
 
 describe('modelProviderSelectors', () => {
   describe('getDefaultModeProviderById', () => {
     it('should return the correct ModelProviderCard when provider ID matches', () => {
-      const s = merge(initialSettingsState, {}) as unknown as UserStore;
+      const s = merge(initialState, {}) as unknown as UserStore;
 
       const result = getDefaultModeProviderById('openai')(s);
       expect(result).not.toBeUndefined();
     });
 
     it('should return undefined when provider ID does not exist', () => {
-      const s = merge(initialSettingsState, {}) as unknown as UserStore;
+      const s = merge(initialState, {}) as unknown as UserStore;
       const result = getDefaultModeProviderById('nonExistingProvider')(s);
       expect(result).toBeUndefined();
     });
@@ -24,7 +24,7 @@ describe('modelProviderSelectors', () => {
 
   describe('getModelCardsById', () => {
     it('should return model cards including custom model cards', () => {
-      const s = merge(initialSettingsState, {
+      const s = merge(initialState, {
         settings: {
           languageModel: {
             perplexity: {
@@ -32,7 +32,7 @@ describe('modelProviderSelectors', () => {
             },
           },
         },
-      } as UserSettingsState) as unknown as UserStore;
+      } as UserState) as unknown as UserStore;
 
       const modelCards = modelProviderSelectors.getModelCardsById('perplexity')(s);
 
@@ -46,14 +46,14 @@ describe('modelProviderSelectors', () => {
 
   describe('defaultEnabledProviderModels', () => {
     it('should return enabled models for a given provider', () => {
-      const s = merge(initialSettingsState, {}) as unknown as UserStore;
+      const s = merge(initialState, {}) as unknown as UserStore;
 
       const result = modelProviderSelectors.getDefaultEnabledModelsById('openai')(s);
       expect(result).toEqual(['gpt-3.5-turbo', 'gpt-4-turbo', 'gpt-4o']);
     });
 
     it('should return undefined for a non-existing provider', () => {
-      const s = merge(initialSettingsState, {}) as unknown as UserStore;
+      const s = merge(initialState, {}) as unknown as UserStore;
 
       const result = modelProviderSelectors.getDefaultEnabledModelsById('nonExistingProvider')(s);
       expect(result).toBeUndefined();

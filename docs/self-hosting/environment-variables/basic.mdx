@@ -71,6 +71,15 @@ Further reading:
 
 - [[RFC] 022 - Default Assistant Parameters Configuration via Environment Variables](https://github.com/lobehub/lobe-chat/discussions/913)
 
+### `FEATURE_FLAGS`
+
+- Type: Optional
+- Description: Used to control LobeChat's feature functionalities. Supports multiple feature flags, using `+` to add a feature and `-` to disable a feature. Separate multiple feature flags with a comma `,` and enclose the entire value in quotes `"` to avoid parsing errors.
+- Default: `-`
+- Example: `"-welcome_suggest"`
+
+For specific content, please refer to the [Feature Flags](/docs/self-hosting/advanced/feature-flags) documentation.
+
 ## Plugin Service
 
 ### `PLUGINS_INDEX_URL`
