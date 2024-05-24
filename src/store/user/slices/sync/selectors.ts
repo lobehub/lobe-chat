@@ -1,5 +1,5 @@
-import { UserStore } from '../../../store';
-import { currentSettings } from './settings';
+import { UserStore } from '../../store';
+import { currentSettings } from '../settings/selectors/settings';
 
 const webrtcConfig = (s: UserStore) => currentSettings(s).sync.webrtc;
 const webrtcChannelName = (s: UserStore) => webrtcConfig(s).channelName;

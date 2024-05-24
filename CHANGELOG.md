@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 0.161.12](https://github.com/lobehub/lobe-chat/compare/v0.161.11...v0.161.12)
+
+<sup>Released on **2024-05-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the home redirect implement.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the home redirect implement, closes [#2626](https://github.com/lobehub/lobe-chat/issues/2626) ([ab4216e](https://github.com/lobehub/lobe-chat/commit/ab4216e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.161.11](https://github.com/lobehub/lobe-chat/compare/v0.161.10...v0.161.11)
+
+<sup>Released on **2024-05-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve PWA install guide.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve PWA install guide, closes [#2617](https://github.com/lobehub/lobe-chat/issues/2617) ([7fee545](https://github.com/lobehub/lobe-chat/commit/7fee545))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.161.10](https://github.com/lobehub/lobe-chat/compare/v0.161.9...v0.161.10)
+
+<sup>Released on **2024-05-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Refactor user store and fix custom model list form.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Refactor user store and fix custom model list form, closes [#2620](https://github.com/lobehub/lobe-chat/issues/2620) ([81ea886](https://github.com/lobehub/lobe-chat/commit/81ea886))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.161.9](https://github.com/lobehub/lobe-chat/compare/v0.161.8...v0.161.9)
+
+<sup>Released on **2024-05-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix image style and improve drag upload box.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix image style and improve drag upload box, closes [#2610](https://github.com/lobehub/lobe-chat/issues/2610) ([5e1a4d6](https://github.com/lobehub/lobe-chat/commit/5e1a4d6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.8](https://github.com/lobehub/lobe-chat/compare/v0.161.7...v0.161.8)
 
 <sup>Released on **2024-05-22**</sup>
