@@ -4,7 +4,9 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import type { MenuProps } from '@/components/Menu';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { ChatSettingsTabs } from '@/store/global/initialState';
+import { useSessionStore } from '@/store/session';
 
 interface UseCategoryOptions {
   mobile?: boolean;
@@ -13,41 +15,43 @@ interface UseCategoryOptions {
 export const useCategory = ({ mobile }: UseCategoryOptions = {}) => {
   const { t } = useTranslation('setting');
   const iconSize = mobile ? { fontSize: 20 } : undefined;
+  const isInbox = useSessionStore((s) => s.activeId === INBOX_SESSION_ID);
 
   const cateItems: MenuProps['items'] = useMemo(
-    () => [
-      {
-        icon: <Icon icon={UserCircle} size={iconSize} />,
-        key: ChatSettingsTabs.Meta,
-        label: t('agentTab.meta'),
-      },
-      {
-        icon: <Icon icon={Bot} size={iconSize} />,
-        key: ChatSettingsTabs.Prompt,
-        label: t('agentTab.prompt'),
-      },
-      {
-        icon: <Icon icon={MessagesSquare} size={iconSize} />,
-        key: ChatSettingsTabs.Chat,
-        label: t('agentTab.chat'),
-      },
-      {
-        icon: <Icon icon={BrainCog} size={iconSize} />,
-        key: ChatSettingsTabs.Modal,
-        label: t('agentTab.modal'),
-      },
-      {
-        icon: <Icon icon={Mic2} size={iconSize} />,
-        key: ChatSettingsTabs.TTS,
-        label: t('agentTab.tts'),
-      },
-      {
-        icon: <Icon icon={Blocks} size={iconSize} />,
-        key: ChatSettingsTabs.Plugin,
-        label: t('agentTab.plugin'),
-      },
-    ],
-    [t],
+    () =>
+      [
+        !isInbox && {
+          icon: <Icon icon={UserCircle} size={iconSize} />,
+          key: ChatSettingsTabs.Meta,
+          label: t('agentTab.meta'),
+        },
+        {
+          icon: <Icon icon={Bot} size={iconSize} />,
+          key: ChatSettingsTabs.Prompt,
+          label: t('agentTab.prompt'),
+        },
+        {
+          icon: <Icon icon={MessagesSquare} size={iconSize} />,
+          key: ChatSettingsTabs.Chat,
+          label: t('agentTab.chat'),
+        },
+        {
+          icon: <Icon icon={BrainCog} size={iconSize} />,
+          key: ChatSettingsTabs.Modal,
+          label: t('agentTab.modal'),
+        },
+        {
+          icon: <Icon icon={Mic2} size={iconSize} />,
+          key: ChatSettingsTabs.TTS,
+          label: t('agentTab.tts'),
+        },
+        {
+          icon: <Icon icon={Blocks} size={iconSize} />,
+          key: ChatSettingsTabs.Plugin,
+          label: t('agentTab.plugin'),
+        },
+      ].filter(Boolean) as MenuProps['items'],
+    [t, isInbox],
   );
 
   return cateItems;

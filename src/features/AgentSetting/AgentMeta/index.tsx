@@ -10,6 +10,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
@@ -31,8 +32,10 @@ const AgentMeta = memo(() => {
     s.autocompleteAllMeta,
   ]);
   const locale = useUserStore(userGeneralSettingsSelectors.currentLanguage);
-  const loading = useStore((s) => s.autocompleteLoading);
+  const [isInbox, loading] = useStore((s) => [s.id === INBOX_SESSION_ID, s.autocompleteLoading]);
   const meta = useStore((s) => s.meta, isEqual);
+
+  if (isInbox) return;
 
   const basic = [
     {
@@ -133,3 +136,4 @@ const AgentMeta = memo(() => {
 });
 
 export default AgentMeta;
+
