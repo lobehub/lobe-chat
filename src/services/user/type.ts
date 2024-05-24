@@ -6,7 +6,6 @@ import { UserInitializationState, UserPreference } from '@/types/user';
 export interface IUserService {
   getUserState: () => Promise<UserInitializationState>;
   resetUserSettings: () => Promise<any>;
-  updateAvatar: (avatar: string) => Promise<any>;
   updatePreference: (preference: UserPreference) => Promise<any>;
   updateUserSettings: (patch: DeepPartial<GlobalSettings>) => Promise<any>;
 }
