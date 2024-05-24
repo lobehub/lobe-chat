@@ -67,10 +67,10 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
 /* body {
     background: url(https://dl.cmdpe.com/HelloGPT/img0.jpg) center center / cover no-repeat fixed !important;
 } */
-.css-1956qp3 {
+body>.css-1956qp3 {
     justify-content: center;
 }
-.css-1956qp3::before {
+body>.css-1956qp3::before {
     content: "";
     position: absolute;
     top: 0;
@@ -80,11 +80,11 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     z-index: 0;
     background: #232323;
 }
-.css-1cxc6hc {
+body>.css-1cxc6hc {
     justify-content: center;
 	padding-bottom: 5px;
 }
-.css-1cxc6hc::before {
+body>.css-1cxc6hc::before {
     content: "";
     position: absolute;
     top: 0;
@@ -709,6 +709,10 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
+
 
   
 `;
