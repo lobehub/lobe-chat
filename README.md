@@ -262,14 +262,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                              | Description                                                                                                                                                       |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Bahasa/English Translator](https://chat-preview.lobehub.com/market?agent=bahasa-translation)<br/><sup>By **[xenstar](https://github.com/xenstar)** on **2024-05-22**</sup> | Translates text into Bahasa or English, as needed<br/>`english` `translation` `writing` `bahasa`                                                                  |
-| [Zen Master](https://chat-preview.lobehub.com/market?agent=buddhism-master)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>             | Well-versed in classics, adept at using Buddhism to guide life<br/>`buddhist-studies` `zen-buddhism` `buddhist-scripture-interpretation` `wisdom-q-a`             |
-| [Chinese Historian](https://chat-preview.lobehub.com/market?agent=chinese-historian)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>    | Specialized in Chinese historical research, adept at applying ancient wisdom to analyze modern issues.<br/>`historical-research` `chinese-history`                |
-| [Confucian Scholar](https://chat-preview.lobehub.com/market?agent=confucian-sage)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>       | A scholar who is proficient in Confucian classics and emphasizes the promotion of righteousness and morality.<br/>`confucian-scholar` `promoter-of-righteousness` |
+| Recent Submits                                                                                                                                                              | Description                                                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Minecraft Command Instructor](https://chat-preview.lobehub.com/market?agent=mcse-helper)<br/><sup>By **[CLOT-LIU](https://github.com/CLOT-LIU)** on **2024-05-24**</sup>   | Specializes in explaining and demonstrating Minecraft commands<br/>`minecraft` `commands` `explanation` `examples`                                    |
+| [Bahasa/English Translator](https://chat-preview.lobehub.com/market?agent=bahasa-translation)<br/><sup>By **[xenstar](https://github.com/xenstar)** on **2024-05-22**</sup> | Translates text into Bahasa or English, as needed<br/>`english` `translation` `writing` `bahasa`                                                      |
+| [Zen Master](https://chat-preview.lobehub.com/market?agent=buddhism-master)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>             | Well-versed in classics, adept at using Buddhism to guide life<br/>`buddhist-studies` `zen-buddhism` `buddhist-scripture-interpretation` `wisdom-q-a` |
+| [Chinese Historian](https://chat-preview.lobehub.com/market?agent=chinese-historian)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-22**</sup>    | Specialized in Chinese historical research, adept at applying ancient wisdom to analyze modern issues.<br/>`historical-research` `chinese-history`    |
 
-> 📊 Total agents: [<kbd>**269**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**270**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

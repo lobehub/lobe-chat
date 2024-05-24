@@ -24,11 +24,11 @@ const StoreInitialization = memo(() => {
 
   const { serverConfig } = useServerConfigStore();
 
-  const useInitGlobalPreference = useGlobalStore((s) => s.useInitGlobalPreference);
+  const useInitSystemStatus = useGlobalStore((s) => s.useInitSystemStatus);
 
   const useFetchDefaultAgentConfig = useAgentStore((s) => s.useFetchDefaultAgentConfig);
   // init the system preference
-  useInitGlobalPreference();
+  useInitSystemStatus();
   useFetchDefaultAgentConfig();
 
   useInitUserState(isLogin, serverConfig, {
