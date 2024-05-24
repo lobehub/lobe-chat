@@ -64,7 +64,7 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     background: rgb(0 0 0 / 20%) !important;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #9C27B0 !important;
+    background: #673AB7 !important;
 }
 /* body {
     background: url(https://dl.cmdpe.com/HelloGPT/img0.jpg) center center / cover no-repeat fixed !important;
@@ -174,13 +174,13 @@ a[href="/chat?session=inbox"]>div {
     background: #f1f1f1;
 }
 .css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover,.css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-14juscs,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-14juscs::before {
-    background: #9C27B0 !important;
+    background: #FF5722 !important;
 }
 .css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover,.css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1ua72wq,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1ua72wq::before {
     background: #99e640 !important;
 }
 .css-1cxc6hc a[href="/chat?session=inbox"]>div:hover,.css-1cxc6hc a[href="/chat?session=inbox"]>div:hover::before,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-14juscs,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-14juscs::before {
-    background: #9C27B0 !important;
+    background: #FF5722 !important;
 }
 .css-1956qp3 a[href="/chat?session=inbox"]>div:hover,.css-1956qp3 a[href="/chat?session=inbox"]>div:hover::before,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1ua72wq,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1ua72wq::before {
     background: #99e640 !important;
@@ -280,7 +280,7 @@ a[href="/chat?session=inbox"]>div {
 	border-radius: 10px 10px 0 10px !important;
 }
 .acss-i3padr {
-    background: #9C27B0 !important;
+    background: #673AB7 !important;
 }
 /* 右侧栏按钮 */
 aside .css-1u84j5a {
@@ -341,10 +341,10 @@ aside .css-1u84j5a {
 	background: #333 !important;
 }
 .css-1956qp3 div [data-code-type='highlighter']>div:nth-child(1):hover {
-    background: #9C27B0 !important;
+    background: #673AB7 !important;
 }
 .css-1cxc6hc div [data-code-type='highlighter']>div:nth-child(1)>div:nth-child(3):hover {
-	background: #9C27B0 !important;
+	background: #673ab7 !important;
 }
 .css-1956qp3 div [data-code-type='highlighter']>div:nth-child(1)>div:nth-child(3):hover {
     background: #99e640 !important;
@@ -440,12 +440,12 @@ ul.ant-dropdown-menu-item-group-list li span.ant-dropdown-menu-item-icon {
 }
 /* 标题栏模型按钮 */
 .ant-dropdown-trigger>span.ant-tag-borderless {
-    background: #9C27B0;
+    background: #673AB7;
     border-radius: 6px !important;
     padding: 2px 5px !important;
 }
 .css-1cxc6hc .ant-dropdown-trigger>span.ant-tag-borderless {
-    background: #9C27B0 !important;
+    background: #673AB7 !important;
 }
 .css-1956qp3 .ant-dropdown-trigger>span.ant-tag-borderless {
     background: #99e640 !important;
@@ -694,7 +694,7 @@ content: "";
     right: 4px;
     opacity: 1;
     z-index: -1;
-    background: #9C27B0;
+    background: #673AB7;
 }
 .HelloGPT li::after {
     content: "";
@@ -705,7 +705,7 @@ content: "";
     left: 0;
     opacity: 1;
     z-index: -1;
-    background: #9C27B0;
+    background: #673AB7;
 }
 .HelloGPT li:hover::after, .HelloGPT li:hover::before {
     opacity: 1;
@@ -748,6 +748,9 @@ content: "";
 		display: none !important;
 	}
 }
+
+
+
 
 
 
