@@ -37,15 +37,12 @@ const PWAInstall = memo(() => {
     // eslint-disable-next-line unicorn/prefer-query-selector
     typeof window === 'undefined' ? undefined : document.getElementById(PWA_INSTALL_ID);
 
-  console.log(pwaInstall);
-
   // add an event listener to control the user close installer action
   useEffect(() => {
     if (!pwaInstall) return;
 
     const handler = (e: Event) => {
       const event = e as CustomEvent;
-      console.log(event.detail);
 
       // it means user hide installer
       if (event.detail.message === 'dismissed') {

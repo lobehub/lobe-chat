@@ -1,4 +1,3 @@
-import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { gt } from 'semver';
 import useSWR, { SWRResponse } from 'swr';
@@ -70,12 +69,15 @@ export const globalActionSlice: StateCreator<
 
     get().updateSystemStatus({ showSystemRole }, n('toggleMobileTopic', newValue));
   },
-  updateSystemStatus: (preference, action) => {
-    const nextPreference = merge(get().status, preference);
+  updateSystemStatus: (status, action) => {
+    // Status cannot be modified when it is not initialized
+    if (!get().isStatusInit) return;
 
-    set({ status: nextPreference }, false, action || n('updatePreference'));
+    const nextStatus = merge(get().status, status);
 
-    get().statusStorage.saveToLocalStorage(nextPreference);
+    set({ status: nextStatus }, false, action || n('updateSystemStatus'));
+
+    get().statusStorage.saveToLocalStorage(nextStatus);
   },
 
   useCheckLatestVersion: (enabledCheck = true) =>
@@ -93,14 +95,10 @@ export const globalActionSlice: StateCreator<
       'initSystemStatus',
       () => get().statusStorage.getFromLocalStorage(),
       {
-        onSuccess: (preference) => {
-          const nextPreference = merge(get().status, preference);
-
+        onSuccess: (status) => {
           set({ isStatusInit: true });
 
-          if (isEqual(get().status, nextPreference)) return;
-
-          set({ status: nextPreference }, false, n('initSystemStatus'));
+          get().updateSystemStatus(status, 'initSystemStatus');
         },
       },
     ),

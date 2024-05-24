@@ -8,10 +8,8 @@ const sessionGroupKeys = (s: GlobalStore): string[] =>
 const showSystemRole = (s: GlobalStore) => s.status.showSystemRole;
 const mobileShowTopic = (s: GlobalStore) => s.status.mobileShowTopic;
 const showChatSideBar = (s: GlobalStore) => s.status.showChatSideBar;
-const showSessionPanel = (s: GlobalStore) =>
-  s.status.showSessionPanel || INITIAL_STATUS.showSessionPanel;
-const hidePWAInstaller = (s: GlobalStore) =>
-  s.status.hidePWAInstaller || INITIAL_STATUS.hidePWAInstaller;
+const showSessionPanel = (s: GlobalStore) => s.status.showSessionPanel;
+const hidePWAInstaller = (s: GlobalStore) => s.status.hidePWAInstaller;
 
 const sessionWidth = (s: GlobalStore) => s.status.sessionsWidth;
 const inputHeight = (s: GlobalStore) => s.status.inputHeight;
