@@ -97,7 +97,7 @@ body>.css-1cxc6hc::before {
     background: #fff;
 }
 body>div>.css-5m4etf {
-    width: 80% !important;
+    width: 86% !important;
     height: 86% !important;
     position: relative !important;
     z-index: 9 !important;
@@ -620,7 +620,7 @@ body>div>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) ol 
     padding: 5px 0;
     display: flex;
     justify-content: space-between;
-    width: calc(80% - 54px);
+    width: calc(86% - 54px);
     position: relative;
 	align-items: center;
 }
@@ -748,6 +748,8 @@ content: "";
 		display: none !important;
 	}
 }
+
+
 
 
 
