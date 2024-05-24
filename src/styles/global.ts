@@ -118,7 +118,7 @@ body>div>.css-5m4etf::after {
 .css-1956qp3>.css-5m4etf,.css-1956qp3>.css-5m4etf::after {
     background: #fff;
 }
-.css-5m4etf>.css-5m4etf aside,.css-5m4etf>.css-5m4etf>div>div,#lobe-market-container>div:nth-child(1) {
+body>div>.css-5m4etf>div:first-child,.css-5m4etf>.css-5m4etf aside,.css-5m4etf>.css-5m4etf>div>div,#lobe-market-container>div:nth-child(1) {
     background: none !important;
 }
 .acss-rlur1a {
