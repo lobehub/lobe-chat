@@ -5,8 +5,27 @@ labels: ['🐛 Bug']
 body:
   - type: dropdown
     attributes:
+      label: '📦 Environment'
+      options:
+        - Unselected
+        - Official
+        - Official Preview
+        - Vercel / Zeabur / Sealos
+        - Docker
+        - Other
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: '📌 Version'
+    validations:
+      required: true
+  
+  - type: dropdown
+    attributes:
       label: '💻 Operating System'
       options:
+        - Unselected
         - Windows
         - macOS
         - Ubuntu
@@ -18,19 +37,9 @@ body:
       required: true
   - type: dropdown
     attributes:
-      label: '📦 Environment'
-      options:
-        - Official Preview
-        - Vercel / Zeabur / Sealos
-        - Docker
-        - Other
-    validations:
-      required: true
-
-  - type: dropdown
-    attributes:
       label: '🌐 Browser'
       options:
+        - Unselected
         - Chrome
         - Edge
         - Safari
@@ -41,17 +50,17 @@ body:
   - type: textarea
     attributes:
       label: '🐛 Bug Description'
-      description: A clear and concise description of the bug.
+      description: A clear and concise description of the bug, if the above option is `Other`, please also explain in detail.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: '🚦 Expected Behavior'
-      description: A clear and concise description of what you expected to happen.
-  - type: textarea
-    attributes:
       label: '📷 Recurrence Steps'
       description: A clear and concise description of how to recurrence.
+  - type: textarea
+    attributes:
+      label: '🚦 Expected Behavior'
+      description: A clear and concise description of what you expected to happen.
   - type: textarea
     attributes:
       label: '📝 Additional Information'
