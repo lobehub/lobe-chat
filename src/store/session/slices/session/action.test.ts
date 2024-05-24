@@ -34,9 +34,6 @@ vi.mock('@/components/AntdStaticMethods', () => ({
   },
 }));
 
-// Mock router
-const mockRouterPush = vi.fn();
-
 const mockRefresh = vi.fn();
 beforeEach(() => {
   vi.clearAllMocks();
@@ -79,7 +76,7 @@ describe('SessionAction', () => {
 
       const call = vi.mocked(sessionService.createSession).mock.calls[0];
       expect(call[0]).toEqual(LobeSessionType.Agent);
-      expect(call[1]).toMatchObject({ config: { displayMode: 'docs' } });
+      expect(call[1]).toMatchObject({ config: { chatConfig: { displayMode: 'docs' } } });
 
       expect(createdSessionId).toBe(newSessionId);
     });
@@ -100,7 +97,7 @@ describe('SessionAction', () => {
 
       const call = vi.mocked(sessionService.createSession).mock.calls[0];
       expect(call[0]).toEqual(LobeSessionType.Agent);
-      expect(call[1]).toMatchObject({ config: { displayMode: 'docs' } });
+      expect(call[1]).toMatchObject({ config: { chatConfig: { displayMode: 'docs' } } });
 
       expect(createdSessionId).toBe(newSessionId);
     });
