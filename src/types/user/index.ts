@@ -40,5 +40,5 @@ export interface UserInitializationState {
   isOnboard?: boolean;
   preference: UserPreference;
   settings: DeepPartial<GlobalSettings>;
-  userId: string;
+  userId?: string;
 }

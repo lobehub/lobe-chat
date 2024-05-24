@@ -105,7 +105,7 @@ describe('createCommonSlice', () => {
       await waitFor(() => expect(result.current.data).toEqual(mockUserState));
 
       // 验证状态是否正确更新
-      expect(useUserStore.getState().avatar).toBe(mockUserState.avatar);
+      expect(useUserStore.getState().user?.avatar).toBe(mockUserState.avatar);
       expect(useUserStore.getState().settings).toEqual(mockUserState.settings);
       expect(successCallback).toHaveBeenCalledWith(mockUserState);
 
@@ -183,13 +183,14 @@ describe('createCommonSlice', () => {
       });
     });
 
-    it('should handle the case when user config is null', async () => {
+    it('should handle the case when user state have avatar', async () => {
       const { result } = renderHook(() => useUserStore());
       const mockUserState: UserInitializationState = {
         userId: 'user-id',
         isOnboard: true,
         preference: undefined as any,
         settings: null as any,
+        avatar: 'abc',
       };
 
       vi.spyOn(userService, 'getUserState').mockResolvedValueOnce(mockUserState);
@@ -202,7 +203,7 @@ describe('createCommonSlice', () => {
       await waitFor(() => {
         expect(result.current.isUserStateInit).toBeTruthy();
         // 验证状态未被错误更新
-        expect(result.current.avatar).toBeUndefined();
+        expect(result.current.user?.avatar).toEqual('abc');
         expect(result.current.settings).toEqual({});
       });
     });

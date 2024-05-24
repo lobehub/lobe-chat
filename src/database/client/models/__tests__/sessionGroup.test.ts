@@ -6,6 +6,8 @@ import { SessionGroups } from '@/types/session';
 import { DB_SessionGroup } from '../../schemas/sessionGroup';
 import { SessionGroupModel } from '../sessionGroup';
 
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 describe('SessionGroupModel', () => {
   let sessionGroupData: DB_SessionGroup;
 
@@ -135,9 +137,14 @@ describe('SessionGroupModel', () => {
 
     it('should return session groups sorted by sort field first and then by createdAt', async () => {
       const group0 = await SessionGroupModel.create('group0');
+      await sleep(10);
       const group1 = await SessionGroupModel.create('group1', 1);
+      await sleep(10);
       const group2 = await SessionGroupModel.create('group2');
+      await sleep(10);
       const group3 = await SessionGroupModel.create('group3', 2);
+      await sleep(10);
+
       const fetchedGroups = await SessionGroupModel.query();
       expect(fetchedGroups[0].id).toEqual(group1.id);
       expect(fetchedGroups[1].id).toEqual(group3.id);
