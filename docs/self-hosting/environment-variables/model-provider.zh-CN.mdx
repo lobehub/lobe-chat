@@ -15,6 +15,13 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 
 ## OpenAI
 
+### `ENABLED_OPENAI`
+
+- 类型：可选
+- 描述：默认启用 OpenAI 作为模型供应商，当设为 0 时关闭 OpenAI 服务
+- 默认值：`1`
+- 示例：`0`
+
 ### `OPENAI_API_KEY`
 
 - 类型：必选
@@ -186,6 +193,13 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 示例：`01-ai/yi-34b-chat`
 
 ## Ollama
+
+### `ENABLED_OLLAMA`
+
+- 类型：可选
+- 描述：默认启用 Ollama 作为模型供应商，当设为 0 时关闭 Ollama 服务
+- 默认值：`1`
+- 示例：`0`
 
 ### `OLLAMA_PROXY_URL`
 
