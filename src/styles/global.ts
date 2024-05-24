@@ -68,13 +68,31 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     background: url(https://dl.cmdpe.com/HelloGPT/img0.jpg) center center / cover no-repeat fixed !important;
 } */
 .css-1956qp3 {
-    background: #232323 !important;
     justify-content: center;
 }
+.css-1956qp3::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 0;
+    background: #232323;
+}
 .css-1cxc6hc {
-    background: #fff !important;
     justify-content: center;
 	padding-bottom: 5px;
+}
+.css-1cxc6hc::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 0;
+    background: #fff;
 }
 body>div>.css-5m4etf {
     width: 80% !important;
@@ -98,14 +116,8 @@ body>div>.css-5m4etf::after {
 .css-1956qp3>.css-5m4etf,.css-1956qp3>.css-5m4etf::after {
     background: #fff;
 }
-body>div>.css-5m4etf * {
+.css-5m4etf>.css-5m4etf aside,.css-5m4etf>.css-5m4etf>div>div{
     background: none !important;
-}
-.css-1cxc6hc .css-5m4etf>aside:nth-child(2),.css-1cxc6hc .css-5m4etf>div:nth-child(3)>div:nth-child(1),.css-1cxc6hc .css-5m4etf>div:nth-child(3)>div:nth-child(2)>aside:nth-child(2),.css-1cxc6hc .acss-1s2s9nk,.css-1cxc6hc .acss-yo1cec,.css-1cxc6hc .css-5m4etf>div:nth-child(2)>div:nth-child(1) {
-	background: #222 !important;
-}
-.css-1956qp3 .css-5m4etf>aside:nth-child(2),.css-1956qp3 .css-5m4etf>div:nth-child(3)>div:nth-child(1),.css-1956qp3 .css-5m4etf>div:nth-child(3)>div:nth-child(2)>aside:nth-child(2),.css-1956qp3 .acss-1s2s9nk,.css-1956qp3 .acss-nyfi2l,.css-1956qp3 .css-5m4etf>div:nth-child(2)>div:nth-child(1) {
-	background: #fff !important;
 }
 .acss-rlur1a {
     box-shadow: none !important;
@@ -159,13 +171,13 @@ a[href="/chat?session=inbox"]>div {
 .css-1956qp3 .LazyLoad.is-visible>a>div:first-child,.css-1956qp3 .LazyLoad.is-visible>a>div:first-child::before,.css-1956qp3 a[href="/chat?session=inbox"]>div,.css-1956qp3 a[href="/chat?session=inbox"]>div::before {
     background: #f1f1f1;
 }
-.css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover,.css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-l0xyvp,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-l0xyvp::before {
+.css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover,.css-1cxc6hc .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-14juscs,.css-1cxc6hc .LazyLoad.is-visible>a>.acss-14juscs::before {
     background: #673ab7 !important;
 }
 .css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover,.css-1956qp3 .LazyLoad.is-visible>a>div:first-child:hover::before,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1uqtsel,.css-1956qp3 .LazyLoad.is-visible>a>.acss-1uqtsel::before {
     background: #99e640 !important;
 }
-.css-1cxc6hc a[href="/chat?session=inbox"]>div:hover,.css-1cxc6hc a[href="/chat?session=inbox"]>div:hover::before,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-l0xyvp,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-l0xyvp::before {
+.css-1cxc6hc a[href="/chat?session=inbox"]>div:hover,.css-1cxc6hc a[href="/chat?session=inbox"]>div:hover::before,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-14juscs,.css-1cxc6hc a[href="/chat?session=inbox"]>.acss-14juscs::before {
     background: #673ab7 !important;
 }
 .css-1956qp3 a[href="/chat?session=inbox"]>div:hover,.css-1956qp3 a[href="/chat?session=inbox"]>div:hover::before,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1uqtsel,.css-1956qp3 a[href="/chat?session=inbox"]>.acss-1uqtsel::before {
@@ -214,13 +226,13 @@ a[href="/chat?session=inbox"]>div {
 .acss-1pj5wwz>div>button:hover {
     background: #FF5722 !important;
 }
-/* 侧边栏颜色 */
+/* 侧边栏颜色 
 .css-1cxc6hc .css-5m4etf>div:first-child {
     background: #111 !important;
 }
 .css-1956qp3 .css-5m4etf>div:first-child {
     background: #fff !important;
-}
+}*/
 /* 主页hellogpt logo */
 .css-9tjxg1.acss-lo0bkt>.layoutkit-flexbox::before {
     content: "HelloGPT";
