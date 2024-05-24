@@ -25,7 +25,7 @@ const username = (s: UserStore) => {
 export const userProfileSelectors = {
   nickName,
   userAvatar: (s: UserStore): string => s.user?.avatar || '',
-  userId: (s: UserStore) => s.userId,
+  userId: (s: UserStore) => s.user?.id,
   userProfile: (s: UserStore): LobeUser | null | undefined => s.user,
   username,
 };

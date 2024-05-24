@@ -8,7 +8,7 @@ import { ClientService } from '@/services/user/client';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
 import type { GlobalSettings } from '@/types/settings';
-import { LobeUser, UserInitializationState } from '@/types/user';
+import { UserInitializationState } from '@/types/user';
 import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
@@ -88,10 +88,11 @@ export const createCommonSlice: StateCreator<
             const isEmpty = Object.keys(data.preference || {}).length === 0;
             const preference = isEmpty ? DEFAULT_PREFERENCE : data.preference;
 
-            // if there is avatar (from client DB), update it into user
-            const user = data.avatar
-              ? merge(get().user, { avatar: data.avatar } as LobeUser)
-              : get().user;
+            // if there is avatar or userId (from client DB), update it into user
+            const user =
+              data.avatar || data.userId
+                ? merge(get().user, { avatar: data.avatar, id: data.userId })
+                : get().user;
 
             set(
               {
@@ -106,7 +107,6 @@ export const createCommonSlice: StateCreator<
                 serverLanguageModel: serverConfig.languageModel,
                 settings: data.settings || {},
                 user,
-                userId: data.userId,
               },
               false,
               n('initUserState'),

@@ -23,7 +23,6 @@ export interface UserAuthState {
   nextSession?: Session;
   nextUser?: User;
   user?: LobeUser;
-  userId?: string;
 }
 
 export const initialAuthState: UserAuthState = {};
