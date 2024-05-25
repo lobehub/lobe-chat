@@ -6,7 +6,8 @@
       "functionCall": "Este modelo admite llamadas de función.",
       "tokens": "Este modelo admite un máximo de {{tokens}} tokens por sesión.",
       "vision": "Este modelo admite el reconocimiento visual."
-    }
+    },
+    "removed": "El modelo no está en la lista, se eliminará automáticamente si se cancela la selección"
   },
   "ModelSwitchPanel": {
     "emptyModel": "No hay modelos habilitados. Vaya a la configuración para habilitarlos.",
