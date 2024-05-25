@@ -70,10 +70,13 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     font-family: 'hellogpt';
     src: url('https://raw.githubusercontent.com/gtla2025/SSR/master/WenYue-ShengHuoJiaTi-J.woff') format('woff');
 }
-body {
-    /* background: url(https://dl.cmdpe.com/HelloGPT/img0.jpg) center center / cover no-repeat fixed !important;*/
+/*body {
+    background: url(https://dl.cmdpe.com/HelloGPT/img0.jpg) center center / cover no-repeat fixed !important;
+}*/
+body * {
 	font-family: "hellogpt", "HarmonyOS Sans", "Segoe UI", "SF Pro Display", -apple-system, BlinkMacSystemFont, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif, "HarmonyOS Sans SC", "PingFang SC", "Hiragino Sans GB", "Microsoft Yahei UI", "Microsoft Yahei", "Source Han Sans CN", sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "Android Emoji" !important;
-} 
+	text-shadow: 0.01em 0.01em 0.05em #666;
+}
 body>.css-1956qp3 {
     justify-content: center;
 }
