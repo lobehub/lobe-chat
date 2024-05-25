@@ -98,7 +98,7 @@ body>.css-1cxc6hc:nth-child(1)::before {
     background: #fff;
 }
 body>div>.css-5m4etf {
-    width: 86% !important;
+    width: 82% !important;
     height: 86% !important;
     position: relative !important;
     z-index: 9 !important;
@@ -573,7 +573,7 @@ body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
     display: none
 }
 /* 设置按钮位置 */
-.css-5m4etf>div:nth-child(1)>div:nth-child(1)>span:nth-child(1) {
+body>div>.css-5m4etf>div:nth-child(1)>div:nth-child(1)>div:nth-child(1) {
     position: absolute;
     bottom: 20px;
 }
@@ -633,7 +633,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     padding: 5px 0;
     display: flex;
     justify-content: space-between;
-    width: calc(86% - 54px);
+    width: calc(82% - 18px);
     position: relative;
 	align-items: center;
 }
@@ -641,7 +641,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     content: "";
     position: absolute;
     top: 9px;
-    bottom: 0;
+    bottom: 3;
     left: -9px;
     right: -9px;
     z-index: -1;
@@ -651,7 +651,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     width: 296px;
     text-align: center;
 	position: relative;
-	left: -32px;
+	left: -14px;
 }
 .HelloGPT h1 img {
     width: 138px;
@@ -761,8 +761,6 @@ content: "";
 		display: none !important;
 	}
 }
-
-
 
 
 
