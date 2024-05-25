@@ -717,7 +717,6 @@ content: "";
     opacity: 1;
     z-index: -1;
     background: #673AB7;
-	opacity: 0;
 }
 .HelloGPT li::after {
     content: "";
@@ -729,7 +728,6 @@ content: "";
     opacity: 1;
     z-index: -1;
     background: #673AB7;
-	opacity: 0;
 }
 .HelloGPT li:hover::after, .HelloGPT li:hover::before {
     opacity: 1;
@@ -749,6 +747,10 @@ content: "";
 .css-1cxc6hc .HelloGPT li:hover a {
     color: #000;
 }
+.css-1cxc6hc .HelloGPT li::before,.css-1cxc6hc .HelloGPT li::after {
+	opacity: 0;
+}
+
 /* HelloGPT白 */
 .css-1956qp3 .HelloGPT {
     background: #fbfbfb;
@@ -763,6 +765,11 @@ content: "";
 .css-1956qp3 .HelloGPT li:hover a {
     color: #fff;
 }	
+.css-1956qp3 .HelloGPT li::before,.css-1956qp3 .HelloGPT li::after {
+	opacity: 1;
+}
+
+
 
 @media (max-width: 575px) {
 	.css-1cxc6hc {
@@ -772,6 +779,7 @@ content: "";
 		display: none !important;
 	}
 }
+
 
 
 
