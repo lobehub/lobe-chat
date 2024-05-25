@@ -6,7 +6,8 @@
       "functionCall": "This model supports function call.",
       "tokens": "This model supports up to {{tokens}} tokens in a single session.",
       "vision": "This model supports visual recognition."
-    }
+    },
+    "removed": "The model is not in the list. It will be automatically removed if deselected."
   },
   "ModelSwitchPanel": {
     "emptyModel": "No enabled model. Please go to settings to enable.",
