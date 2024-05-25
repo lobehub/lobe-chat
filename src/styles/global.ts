@@ -288,10 +288,10 @@ aside .css-1u84j5a {
     border-radius: 10px !important;
     height: 40px !important;
 }
-.css-1cxc6hc aside .css-1u84j5a:hover, .acss-3i04cy {
+.css-1cxc6hc aside .css-1u84j5a:hover,.acss-1osp3tn {
     background: #161616 !important;
 }
-.css-1956qp3 aside .css-1u84j5a:hover,.acss-hyvqjb {
+.css-1956qp3 aside .css-1u84j5a:hover,.acss-1wyfodc {
     background: rgba(0, 0, 0, 0.06) !important;
 }
 /* 对话框背景色 */
@@ -477,14 +477,14 @@ ul.ant-dropdown-menu-item-group-list li span.ant-dropdown-menu-item-icon {
     font-weight: 700;
 }
 .css-1cxc6hc #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
-    background: #222;
     color: #fff;
 }
 .css-1956qp3 #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
-    background: #fff;
     color: #111;
 }
-
+.css-1956qp3 #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)>svg:nth-child(1) {
+    opacity: 0;
+}
 /* 助手页分类按钮 */
 .css-vwb4od {
     justify-content: center;
@@ -577,7 +577,7 @@ body>div>.acss-1afprqa {
     left: 30px !important;
     top: auto !important;
 }
-body>div>.acss-1afprqa>div>div {
+body>div>.acss-1afprqa>div>div,#rc-menu-uuid-04057-2-export-popup {
     border-radius: 0 !important;
 	border: 0 !important;
 }
