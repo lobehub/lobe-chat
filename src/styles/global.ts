@@ -557,10 +557,10 @@ form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+9),form:first
     display: none;
 }
 /* 欢迎页面删除 */
-body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:last-child {
+body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:last-child {
     display: none;
 }
-body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>svg {
+body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>svg {
     display: none;
 }
 /* 删除大家都在问 */
@@ -598,14 +598,14 @@ body>div>.acss-1afprqa>div>div,.ant-menu-vertical {
 }
 
 /* 欢迎页面背景色 */
-body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2) {
+body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2) {
 	background: none !important;
 }
 /* 欢迎页面logo */
-body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) strong {
+body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2) strong {
     position: relative;
 }
-body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) strong::before {
+body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2) strong::before {
     content: 'HelloGPT';
     position: absolute;
     top: 0px;
@@ -614,15 +614,15 @@ body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) strong:
     font-size: 53px;
     font-weight: 700;
 }
-body>.css-1cxc6hc >div:nth-child(2)>div:nth-child(2)>div:nth-child(2) strong::before {
+body>.css-1cxc6hc >div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2) strong::before {
     background: #222;
 	color: #fff !important;
 }
-body>.css-1956qp3>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) strong::before {
+body>.css-1956qp3>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2) strong::before {
     background: #fff;
 	color: #000 !important;
 }
-body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) ol li strong::before {
+body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2) ol li strong::before {
     display: none
 }
 /* HelloGPT */
@@ -760,7 +760,6 @@ content: "";
 		display: none !important;
 	}
 }
-
 
 
 
