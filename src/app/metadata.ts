@@ -21,7 +21,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
     },
     description: t('chat.description'),
     icons: {
-      apple: '/icons/apple-touch-icon.png',
+      apple: '/apple-touch-icon.png',
       icon: '/favicon.ico',
       shortcut: '/favicon-32x32.ico',
     },

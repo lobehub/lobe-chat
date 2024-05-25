@@ -42,7 +42,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   const { t } = useTranslation('common');
   const { styles, cx } = useStyles();
   const [type = 'chat'] = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentConfig(s);
+    const config = agentSelectors.currentAgentChatConfig(s);
     return [config.displayMode];
   });
 
@@ -103,7 +103,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   }, [item?.error]);
 
   const enableHistoryDivider = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentConfig(s);
+    const config = agentSelectors.currentAgentChatConfig(s);
     return (
       config.enableHistoryCount &&
       historyLength > (config.historyCount ?? 0) &&
