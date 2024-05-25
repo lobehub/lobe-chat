@@ -3,15 +3,16 @@
 import { Form, ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
 import { useThemeMode } from 'antd-style';
+import isEqual from 'fast-deep-equal';
 import { LayoutList, MessagesSquare } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 
 import { useStore } from '../store';
-import { useAgentSyncSettings } from '../useSyncAgemtSettings';
+import { selectors } from '../store/selectors';
 
 const AgentChat = memo(() => {
   const { t } = useTranslation('setting');
@@ -23,15 +24,23 @@ const AgentChat = memo(() => {
     enableHistoryCount,
     enableCompressThreshold,
     updateConfig,
-  ] = useStore((s) => [
-    s.config.displayMode,
-    s.config.enableAutoCreateTopic,
-    s.config.enableHistoryCount,
-    s.config.enableCompressThreshold,
-    s.setAgentConfig,
-  ]);
+  ] = useStore((s) => {
+    const config = selectors.chatConfig(s);
 
-  useAgentSyncSettings(form);
+    return [
+      config.displayMode,
+      config.enableAutoCreateTopic,
+      config.enableHistoryCount,
+      config.enableCompressThreshold,
+      s.setChatConfig,
+    ];
+  });
+
+  const config = useStore(selectors.chatConfig, isEqual);
+
+  useLayoutEffect(() => {
+    form.setFieldsValue(config);
+  }, [config]);
 
   const chat: ItemGroup = {
     children: [
