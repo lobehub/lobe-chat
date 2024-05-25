@@ -580,6 +580,10 @@ body>div>.css-5m4etf>.css-2tx0mv>div:nth-child(1)>div:nth-child(1) {
     position: absolute;
     bottom: 20px;
 }
+body>div>.css-5m4etf>.css-2tx0mv>div:nth-child(1)>span:nth-child(1) {
+    position: absolute;
+    bottom: 20px;
+}
 /* 设置按钮下的东西 */
 body>div>.acss-1afprqa {
     bottom: 115px !important;
@@ -695,11 +699,11 @@ content: "";
 .HelloGPT li {
     float: left;
     position: relative;
-	margin-left: 0px;
+	margin-left: 10px;
 }
 .HelloGPT li a {
     color: #fff;
-    padding: 4px 10px;
+    padding: 4px 12px;
     display: grid;
     align-items: center;
     justify-content: center;
@@ -747,9 +751,6 @@ content: "";
 .css-1cxc6hc .HelloGPT li:hover a {
     color: #000;
 }
-.css-1cxc6hc .HelloGPT li::before,.css-1cxc6hc .HelloGPT li::after {
-	opacity: 0;
-}
 
 /* HelloGPT白 */
 .css-1956qp3 .HelloGPT {
@@ -764,12 +765,7 @@ content: "";
 }
 .css-1956qp3 .HelloGPT li:hover a {
     color: #fff;
-}	
-.css-1956qp3 .HelloGPT li::before,.css-1956qp3 .HelloGPT li::after {
-	opacity: 1;
 }
-
-
 
 @media (max-width: 575px) {
 	.css-1cxc6hc {
@@ -779,6 +775,7 @@ content: "";
 		display: none !important;
 	}
 }
+
 
 
 
