@@ -482,7 +482,7 @@ ul.ant-dropdown-menu-item-group-list li span.ant-dropdown-menu-item-icon {
 .css-1956qp3 #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
     color: #111;
 }
-.css-1956qp3 #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)>svg:nth-child(1) {
+.css-1cxc6hc #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)>svg:first-child {
     opacity: 0;
 }
 /* 助手页分类按钮 */
@@ -544,7 +544,7 @@ form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+9),form:first
 .css-qx52nb .css-rq7h3k {
 	display: none !important;
 }
-div[aria-label="助手与会话"] {
+.css-54fgub.acss-1g4myfy>div:nth-child(1)>div:nth-child(1),div[aria-label="助手与会话"] {
 	display: none;
 }
 /* 删除安装浏览器应用（PWA） */
@@ -577,7 +577,7 @@ body>div>.acss-1afprqa {
     left: 30px !important;
     top: auto !important;
 }
-body>div>.acss-1afprqa>div>div,#rc-menu-uuid-04057-2-export-popup {
+body>div>.acss-1afprqa>div>div,.ant-menu-vertical {
     border-radius: 0 !important;
 	border: 0 !important;
 }
