@@ -409,11 +409,11 @@ div[role='menubar']>div {
     border-radius: 10px !important;
 }
 /* 输入框上方使用按钮 */
-.acss-1jso55,.acss-v5ajt {
+.css-b2xo4,.acss-v5ajt {
     padding-inline: 8px 10.6px !important;
     border-radius: 10px !important;
 }
-.acss-1jso55 {
+.css-b2xo4 {
     background: #161616 !important;
 }
 .acss-v5ajt {
@@ -653,7 +653,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     content: "";
     position: absolute;
     inset: -3px 9px 3px;
-    z-index: -2;
+    z-index: -1;
 }
 .HelloGPT h1 {
     margin: 0;
@@ -684,7 +684,7 @@ content: "";
     bottom: 0px;
     left: 68px;
     right: 68px;
-    z-index: -1;
+    z-index: -2;
 }
 .HelloGPT ul {
     list-style: none;
@@ -770,8 +770,6 @@ content: "";
 		display: none !important;
 	}
 }
-
-
 
 
 
