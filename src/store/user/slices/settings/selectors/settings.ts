@@ -7,14 +7,17 @@ import {
   DEFAULT_TTS_CONFIG,
 } from '@/const/settings';
 import { Locales } from '@/locales/resources';
-import { GeneralModelProviderConfig, GlobalLLMProviderKey, GlobalSettings } from '@/types/settings';
+import {
+  GeneralModelProviderConfig,
+  GlobalLLMProviderKey,
+  UserSettings,
+} from '@/types/user/settings';
 import { isOnServerSide } from '@/utils/env';
 import { merge } from '@/utils/merge';
 
 import { UserStore } from '../../../store';
 
-export const currentSettings = (s: UserStore): GlobalSettings =>
-  merge(s.defaultSettings, s.settings);
+export const currentSettings = (s: UserStore): UserSettings => merge(s.defaultSettings, s.settings);
 
 export const currentLLMSettings = (s: UserStore) => currentSettings(s).languageModel;
 
@@ -35,7 +38,7 @@ const exportSettings = (s: UserStore) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _, ...settings } = currentSettings(s);
 
-  return settings as GlobalSettings;
+  return settings as UserSettings;
 };
 
 const currentLanguage = (s: UserStore) => {

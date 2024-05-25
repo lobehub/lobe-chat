@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
-import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { getProviderAuthPayload } from './_auth';
 

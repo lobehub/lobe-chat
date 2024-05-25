@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { modelsService } from '@/services/models';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
-import { GeneralModelProviderConfig } from '@/types/settings';
+import { GeneralModelProviderConfig } from '@/types/user/settings';
 
 import { settingsSelectors } from '../settings/selectors';
 import { CustomModelCardDispatch } from './reducers/customModelCard';

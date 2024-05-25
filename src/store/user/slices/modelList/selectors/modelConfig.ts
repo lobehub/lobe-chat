@@ -1,4 +1,4 @@
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { UserStore } from '../../../store';
 import { currentLLMSettings, getProviderConfigById } from '../../settings/selectors/settings';

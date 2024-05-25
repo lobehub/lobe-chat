@@ -1,7 +1,7 @@
 import { DeepPartial } from 'utility-types';
 
 import { ChatModelCard } from '@/types/llm';
-import { GlobalDefaultAgent, GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalDefaultAgent, GlobalLLMProviderKey } from '@/types/user/settings';
 
 export interface ServerModelProviderConfig {
   enabled?: boolean;

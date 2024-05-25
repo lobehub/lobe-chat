@@ -1,6 +1,9 @@
 import { ChatModelCard } from '@/types/llm';
 
 export interface GeneralModelProviderConfig {
+  /**
+   * @deprecated
+   */
   apiKey?: string;
   /**
    * whether to auto fetch model lists
@@ -15,6 +18,9 @@ export interface GeneralModelProviderConfig {
    * enabled models id
    */
   enabledModels?: string[] | null;
+  /**
+   * @deprecated
+   */
   endpoint?: string;
   /**
    * whether fetch on client
@@ -30,8 +36,9 @@ export interface GeneralModelProviderConfig {
   remoteModelCards?: ChatModelCard[];
 }
 
-export interface AzureOpenAIConfig extends GeneralModelProviderConfig {
+export interface AzureOpenAIConfig extends Omit<GeneralModelProviderConfig, 'endpoint'> {
   apiVersion?: string;
+  endpoint?: string;
 }
 
 export interface AWSBedrockConfig extends Omit<GeneralModelProviderConfig, 'apiKey' | 'endpoint'> {

@@ -6,7 +6,7 @@ import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { UserStore } from '@/store/user';
 import { ChatModelCard } from '@/types/llm';
-import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { settingsSelectors } from '../settings/selectors';
 import { CustomModelCardDispatch, customModelCardsReducer } from './reducers/customModelCard';

@@ -17,7 +17,7 @@ import {
   filterEnabledModels,
 } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { GlobalLLMConfig } from '@/types/settings';
+import { GlobalLLMConfig } from '@/types/user/settings';
 
 export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
   anthropic: {

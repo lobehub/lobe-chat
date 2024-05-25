@@ -1,4 +1,4 @@
-import { GlobalSystemAgentConfig, GlobalTranslationConfig } from '@/types/settings';
+import { GlobalSystemAgentConfig, GlobalTranslationConfig } from '@/types/user/settings';
 
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from './llm';
 
