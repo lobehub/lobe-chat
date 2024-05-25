@@ -255,6 +255,7 @@ a[href="/chat?session=inbox"]>div {
     right: 0px;
     font-size: 20px;
     font-weight: 700;
+	opacity: 0;
 }
 .css-1cxc6hc .css-9tjxg1.acss-lo0bkt>.layoutkit-flexbox::before {
     background: #222;
