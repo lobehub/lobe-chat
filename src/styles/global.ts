@@ -653,7 +653,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     content: "";
     position: absolute;
     inset: -3px 9px 3px;
-    z-index: -1;
+    z-index: -2;
 }
 .HelloGPT h1 {
     margin: 0;
@@ -684,7 +684,7 @@ content: "";
     bottom: 0px;
     left: 68px;
     right: 68px;
-    z-index: -2;
+    z-index: -1;
 }
 .HelloGPT ul {
     list-style: none;
@@ -770,9 +770,6 @@ content: "";
 		display: none !important;
 	}
 }
-
-
-
 
 
 
