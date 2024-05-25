@@ -4,12 +4,13 @@ import type { ThemeMode } from 'antd-style';
 import { LocaleMode } from '@/types/locale';
 import type { LobeAgentSession } from '@/types/session';
 
-import { GlobalLLMConfig } from './modelProvider';
-import { GlobalSyncSettings } from './sync';
-import { GlobalSystemAgentConfig } from './systemAgent';
-import { GlobalTTSConfig } from './tts';
+import { UserModelProviderConfig } from './modelProvider';
+import { UserSyncSettings } from './sync';
+import { UserSystemAgentConfig } from './systemAgent';
+import { UserToolConfig } from './tool';
+import { UserTTSConfig } from './tts';
 
-export type GlobalDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
+export type UserDefaultAgent = Pick<LobeAgentSession, 'config' | 'meta'>;
 
 export * from './general';
 export * from './modelProvider';
@@ -17,17 +18,11 @@ export * from './sync';
 export * from './systemAgent';
 export * from './tts';
 
-export interface GlobalTool {
-  dalle: {
-    autoGenerate: boolean;
-  };
-}
-
 /**
  * 配置设置
  */
 export interface UserSettings {
-  defaultAgent: GlobalDefaultAgent;
+  defaultAgent: UserDefaultAgent;
   /**
    * @deprecated
    */
@@ -36,7 +31,7 @@ export interface UserSettings {
    * @deprecated
    */
   language: LocaleMode;
-  languageModel: GlobalLLMConfig;
+  languageModel: UserModelProviderConfig;
   /**
    * @deprecated
    */
@@ -48,12 +43,12 @@ export interface UserSettings {
    * @deprecated
    */
   primaryColor?: PrimaryColors;
-  sync: GlobalSyncSettings;
-  systemAgent: GlobalSystemAgentConfig;
+  sync: UserSyncSettings;
+  systemAgent: UserSystemAgentConfig;
   /**
    * @deprecated
    */
   themeMode: ThemeMode;
-  tool: GlobalTool;
-  tts: GlobalTTSConfig;
+  tool: UserToolConfig;
+  tts: UserTTSConfig;
 }

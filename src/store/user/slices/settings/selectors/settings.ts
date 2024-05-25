@@ -8,7 +8,7 @@ import {
 } from '@/const/settings';
 import { Locales } from '@/locales/resources';
 import {
-  GeneralModelProviderConfig,
+  OpenAICompatibleProviderConfig,
   GlobalLLMProviderKey,
   UserSettings,
 } from '@/types/user/settings';
@@ -22,7 +22,7 @@ export const currentSettings = (s: UserStore): UserSettings => merge(s.defaultSe
 export const currentLLMSettings = (s: UserStore) => currentSettings(s).languageModel;
 
 export const getProviderConfigById = (provider: string) => (s: UserStore) =>
-  currentLLMSettings(s)[provider as GlobalLLMProviderKey] as GeneralModelProviderConfig | undefined;
+  currentLLMSettings(s)[provider as GlobalLLMProviderKey] as OpenAICompatibleProviderConfig | undefined;
 
 const password = (s: UserStore) => currentSettings(s).password;
 

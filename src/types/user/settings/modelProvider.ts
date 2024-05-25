@@ -1,6 +1,6 @@
 import { ChatModelCard } from '@/types/llm';
 
-export interface GeneralModelProviderConfig {
+export interface OpenAICompatibleProviderConfig {
   /**
    * @deprecated
    */
@@ -36,34 +36,35 @@ export interface GeneralModelProviderConfig {
   remoteModelCards?: ChatModelCard[];
 }
 
-export interface AzureOpenAIConfig extends Omit<GeneralModelProviderConfig, 'endpoint'> {
+export interface AzureOpenAIConfig extends Omit<OpenAICompatibleProviderConfig, 'endpoint'> {
   apiVersion?: string;
   endpoint?: string;
 }
 
-export interface AWSBedrockConfig extends Omit<GeneralModelProviderConfig, 'apiKey' | 'endpoint'> {
+export interface AWSBedrockConfig
+  extends Omit<OpenAICompatibleProviderConfig, 'apiKey' | 'endpoint'> {
   accessKeyId?: string;
   region?: string;
   secretAccessKey?: string;
 }
 
-export interface GlobalLLMConfig {
-  anthropic: GeneralModelProviderConfig;
+export interface UserModelProviderConfig {
+  anthropic: OpenAICompatibleProviderConfig;
   azure: AzureOpenAIConfig;
   bedrock: AWSBedrockConfig;
-  deepseek: GeneralModelProviderConfig;
-  google: GeneralModelProviderConfig;
-  groq: GeneralModelProviderConfig;
-  minimax: GeneralModelProviderConfig;
-  mistral: GeneralModelProviderConfig;
-  moonshot: GeneralModelProviderConfig;
-  ollama: GeneralModelProviderConfig;
-  openai: GeneralModelProviderConfig;
-  openrouter: GeneralModelProviderConfig;
-  perplexity: GeneralModelProviderConfig;
-  togetherai: GeneralModelProviderConfig;
-  zeroone: GeneralModelProviderConfig;
-  zhipu: GeneralModelProviderConfig;
+  deepseek: OpenAICompatibleProviderConfig;
+  google: OpenAICompatibleProviderConfig;
+  groq: OpenAICompatibleProviderConfig;
+  minimax: OpenAICompatibleProviderConfig;
+  mistral: OpenAICompatibleProviderConfig;
+  moonshot: OpenAICompatibleProviderConfig;
+  ollama: OpenAICompatibleProviderConfig;
+  openai: OpenAICompatibleProviderConfig;
+  openrouter: OpenAICompatibleProviderConfig;
+  perplexity: OpenAICompatibleProviderConfig;
+  togetherai: OpenAICompatibleProviderConfig;
+  zeroone: OpenAICompatibleProviderConfig;
+  zhipu: OpenAICompatibleProviderConfig;
 }
 
-export type GlobalLLMProviderKey = keyof GlobalLLMConfig;
+export type GlobalLLMProviderKey = keyof UserModelProviderConfig;
