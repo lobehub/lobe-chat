@@ -6,7 +6,8 @@
       "functionCall": "Questo modello supporta la chiamata di funzioni.",
       "tokens": "Questo modello supporta un massimo di {{tokens}} token per sessione.",
       "vision": "Questo modello supporta il riconoscimento visivo."
-    }
+    },
+    "removed": "Il modello non è più nella lista, verrà rimosso automaticamente se deselezionato"
   },
   "ModelSwitchPanel": {
     "emptyModel": "Nessun modello attivo. Vai alle impostazioni per attivarne uno.",
