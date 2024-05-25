@@ -51,7 +51,6 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
 
 
 
-
 ::selection {
     background: #99e640 !important;
     color: #000 !important;
@@ -491,7 +490,7 @@ ul.ant-dropdown-menu-item-group-list li span.ant-dropdown-menu-item-icon {
 .css-1956qp3 #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
     color: #111;
 }
-.css-1cxc6hc #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)>svg:first-child {
+#lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)>svg:first-child {
     opacity: 0;
 }
 /* 助手页分类按钮 */
@@ -775,7 +774,6 @@ content: "";
 		display: none !important;
 	}
 }
-
 
 
 
