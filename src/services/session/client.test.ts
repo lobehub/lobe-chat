@@ -205,7 +205,7 @@ describe('SessionService', () => {
   describe('updateSessionConfig', () => {
     it('should update the config of a session', async () => {
       // Setup
-      const newConfig = { compressThreshold: 2 } as LobeAgentConfig;
+      const newConfig = { model: 'abc' } as LobeAgentConfig;
       (SessionModel.updateConfig as Mock).mockResolvedValue({ ...mockSession, config: newConfig });
 
       // Execute

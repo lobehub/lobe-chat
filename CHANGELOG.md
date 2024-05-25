@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 0.161.17](https://github.com/lobehub/lobe-chat/compare/v0.161.16...v0.161.17)
+
+<sup>Released on **2024-05-25**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Migrate some agent config to `chatConfig`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Migrate some agent config to `chatConfig`, closes [#2646](https://github.com/lobehub/lobe-chat/issues/2646) ([2f311dc](https://github.com/lobehub/lobe-chat/commit/2f311dc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.161.16](https://github.com/lobehub/lobe-chat/compare/v0.161.15...v0.161.16)
+
+<sup>Released on **2024-05-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix bedrock show by default on vercel.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix bedrock show by default on vercel, closes [#2634](https://github.com/lobehub/lobe-chat/issues/2634) ([7ad3af2](https://github.com/lobehub/lobe-chat/commit/7ad3af2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.15](https://github.com/lobehub/lobe-chat/compare/v0.161.14...v0.161.15)
 
 <sup>Released on **2024-05-24**</sup>
