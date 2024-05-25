@@ -58,7 +58,7 @@ interface V4DefaultAgent {
   meta: MetaData;
 }
 
-interface V4OpenAIConfig {
+interface OpenAIConfig {
   OPENAI_API_KEY: string;
   azureApiVersion?: string;
   customModelName?: string;
@@ -68,15 +68,10 @@ interface V4OpenAIConfig {
 }
 
 interface V4LLMConfig {
-  openAI: V4OpenAIConfig;
+  openAI: OpenAIConfig;
 }
 
-interface V4Tool {
-  dalle: {
-    autoGenerate: boolean;
-  };
-}
-interface V4TTSConfig {
+interface TTSConfig {
   openAI: {
     sttModel: 'whisper-1';
     ttsModel: 'tts-1' | 'tts-1-hd';
@@ -95,6 +90,19 @@ export interface V4Settings {
   password: string;
   primaryColor?: string;
   themeMode: ThemeMode;
-  tool: V4Tool;
-  tts: V4TTSConfig;
+  tts: TTSConfig;
+}
+
+export interface V5Settings {
+  defaultAgent: V4DefaultAgent;
+  fontSize: number;
+  language: string;
+  languageModel: {
+    openai: OpenAIConfig;
+  };
+  neutralColor?: string;
+  password: string;
+  primaryColor?: string;
+  themeMode: ThemeMode;
+  tts: TTSConfig;
 }
