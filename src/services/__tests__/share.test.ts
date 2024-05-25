@@ -92,7 +92,7 @@ describe('ShareViaUrl', () => {
   describe('createShareSettingsUrl', () => {
     it('should create a share settings URL with the provided settings', () => {
       const settings: DeepPartial<UserSettings> = {
-        languageModel: {
+        keyVaults: {
           openai: {
             apiKey: 'user-key',
           },

@@ -21,10 +21,12 @@ describe('SettingsAction', () => {
   describe('importAppSettings', () => {
     it('should import app settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const newSettings: UserSettings = {
-        ...DEFAULT_SETTINGS,
-        themeMode: 'dark',
-      };
+      const newSettings = {
+        general: {
+          ...DEFAULT_SETTINGS,
+          themeMode: 'dark',
+        },
+      } as unknown as UserSettings;
 
       // Mock the internal setSettings function call
       const setSettingsSpy = vi.spyOn(result.current, 'setSettings');
@@ -69,7 +71,7 @@ describe('SettingsAction', () => {
   describe('setSettings', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const partialSettings: Partial<UserSettings> = { themeMode: 'dark' };
+      const partialSettings: DeepPartial<UserSettings> = { general: { themeMode: 'dark' } };
 
       // Perform the action
       await act(async () => {

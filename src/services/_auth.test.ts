@@ -3,7 +3,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
-import { UserModelProviderConfig, GlobalLLMProviderKey } from '@/types/user/settings';
+import {
+  GlobalLLMProviderKey,
+  UserKeyVaults,
+  UserModelProviderConfig,
+} from '@/types/user/settings';
 
 import { getProviderAuthPayload } from './_auth';
 
@@ -21,10 +25,10 @@ vi.mock('zustand/traditional');
 
 const setModelProviderConfig = <T extends GlobalLLMProviderKey>(
   provider: T,
-  config: Partial<UserModelProviderConfig[T]>,
+  config: Partial<UserKeyVaults[T]>,
 ) => {
   useUserStore.setState({
-    settings: { languageModel: { [provider]: config } },
+    settings: { keyVaults: { [provider]: config } },
   });
 };
 
@@ -135,7 +139,7 @@ describe('getProviderAuthPayload', () => {
     // 假设的 Ollama 配置
     const mockOllamaProxyUrl = 'ollama-proxy-url';
     act(() => {
-      setModelProviderConfig('ollama', { endpoint: mockOllamaProxyUrl });
+      setModelProviderConfig('ollama', { baseURL: mockOllamaProxyUrl });
     });
 
     const payload = getProviderAuthPayload(ModelProvider.Ollama);

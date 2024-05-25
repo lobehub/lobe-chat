@@ -84,7 +84,7 @@ describe('createCommonSlice', () => {
           telemetry: true,
         },
         settings: {
-          language: 'en-US',
+          general: { language: 'en-US' },
         },
       };
 
@@ -166,7 +166,7 @@ describe('createCommonSlice', () => {
         isOnboard: true,
         preference: savedPreference,
         settings: {
-          language: 'en-US',
+          general: { language: 'en-US' },
         },
       };
       vi.spyOn(userService, 'getUserState').mockResolvedValueOnce(mockUserState);
@@ -216,7 +216,7 @@ describe('createCommonSlice', () => {
         isOnboard: true,
         preference: {} as any,
         settings: {
-          language: 'en-US',
+          general: { language: 'en-US' },
         },
       };
 
