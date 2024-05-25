@@ -98,7 +98,7 @@ body>.css-1cxc6hc:nth-child(1)::before {
     background: #fff;
 }
 body>div>.css-5m4etf {
-    width: 82% !important;
+    width: 80% !important;
     height: 86% !important;
     position: relative !important;
     z-index: 9 !important;
@@ -409,14 +409,14 @@ div[role='menubar']>div {
     border-radius: 10px !important;
 }
 /* 输入框上方使用按钮 */
-.css-b2xo4,.acss-v5ajt {
+.css-1a5hs83.acss-18qdyno>div:last-child {
     padding-inline: 8px 10.6px !important;
-    border-radius: 10px !important;
+    border-radius: 10px !important;	
 }
-.css-b2xo4 {
+.css-1cxc6hc .css-1a5hs83.acss-18qdyno>div:last-child {
     background: #161616 !important;
 }
-.acss-v5ajt {
+.css-1956qp3 .css-1a5hs83.acss-18qdyno>div:last-child {
     background: #eee !important;
 }
 /* 输入框上方插件按钮 */
@@ -636,7 +636,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     padding: 5px 0;
     display: flex;
     justify-content: space-between;
-    width: calc(82% - 18px);
+    width: calc(80% - 18px);
     position: relative;
 	align-items: center;
 }
@@ -695,11 +695,11 @@ content: "";
 .HelloGPT li {
     float: left;
     position: relative;
-	margin-left: 10px;
+	margin-left: 0px;
 }
 .HelloGPT li a {
     color: #fff;
-    padding: 4px 12px;
+    padding: 4px 10px;
     display: grid;
     align-items: center;
     justify-content: center;
@@ -717,6 +717,7 @@ content: "";
     opacity: 1;
     z-index: -1;
     background: #673AB7;
+	opacity: 0;
 }
 .HelloGPT li::after {
     content: "";
@@ -728,6 +729,7 @@ content: "";
     opacity: 1;
     z-index: -1;
     background: #673AB7;
+	opacity: 0;
 }
 .HelloGPT li:hover::after, .HelloGPT li:hover::before {
     opacity: 1;
@@ -770,6 +772,7 @@ content: "";
 		display: none !important;
 	}
 }
+
 
 
 
