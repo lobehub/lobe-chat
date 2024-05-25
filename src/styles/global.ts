@@ -557,7 +557,7 @@ form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+9),form:first
     display: none;
 }
 /* 欢迎页面删除 */
-body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2) {
+body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>div:last-child {
     display: none;
 }
 body>div:nth-child(1)>div:nth-child(2)>div:nth-child(2)>svg {
@@ -760,9 +760,6 @@ content: "";
 		display: none !important;
 	}
 }
-
-
-
 
 
 
