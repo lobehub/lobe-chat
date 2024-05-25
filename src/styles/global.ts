@@ -253,6 +253,11 @@ a[href="/chat?session=inbox"]>div {
     background: #fff;
 	color: #000;
 }
+.css-9tjxg1.acss-lo0bkt>.layoutkit-flexbox>div:first-child>svg:first-child {
+    display: none
+}
+
+
 /* 主页同步按钮 */
 .css-1109xs8>div>.ant-tag {
     padding: 3px 10px;
@@ -755,7 +760,6 @@ content: "";
 		display: none !important;
 	}
 }
-
 
 
 
