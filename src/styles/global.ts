@@ -573,7 +573,7 @@ body>div>.css-5m4etf>div:nth-child(1)>div:last-child {
     display: none
 }
 /* 设置按钮位置 */
-body>div>.css-5m4etf>div:nth-child(1)>div:nth-child(1)>div:nth-child(1) {
+body>div>.css-5m4etf>.css-2tx0mv>div:nth-child(1)>div:nth-child(1) {
     position: absolute;
     bottom: 20px;
 }
@@ -641,7 +641,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     content: "";
     position: absolute;
     top: 9px;
-    bottom: 3;
+    bottom: 3px;
     left: -9px;
     right: -9px;
     z-index: -1;
@@ -761,7 +761,6 @@ content: "";
 		display: none !important;
 	}
 }
-
 
 
 
