@@ -68,7 +68,7 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
 }
 @font-face {
     font-family: 'hellogpt';
-    src: url('https://dl.cmdpe.com/font/WenYue-ShengHuoJiaTi-J.woff') format('woff');
+    src: url('https://raw.githubusercontent.com/gtla2025/SSR/master/WenYue-ShengHuoJiaTi-J.woff') format('woff');
 }
 body {
     /* background: url(https://dl.cmdpe.com/HelloGPT/img0.jpg) center center / cover no-repeat fixed !important;*/
