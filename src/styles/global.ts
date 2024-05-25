@@ -119,23 +119,8 @@ body>div>.css-5m4etf::after {
 .css-1956qp3>.css-5m4etf,.css-1956qp3>.css-5m4etf::after {
     background: #fff;
 }
-.css-1cxc6hc>.css-5m4etf::before {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 9px;
-    background: #fff;
-    left: 330px;
-    bottom: -9px;
-}
-.css-1956qp3>.css-5m4etf::before {
-    content: '';
-    position: absolute;
-    width: 4px;
-    height: 9px;
-    background: #232323;
-    left: 330px;
-    bottom: -9px;
+.css-5m4etf>.css-5m4etf {
+	overflow: initial !important;
 }
 body>div>.css-5m4etf>div:first-child,.css-5m4etf>.css-5m4etf aside,.css-5m4etf>.css-5m4etf>div>div,#lobe-market-container>div:nth-child(1),.acss-1s2s9nk {
     background: none !important;
@@ -779,7 +764,6 @@ content: "";
 		display: none !important;
 	}
 }
-
 
 
 
