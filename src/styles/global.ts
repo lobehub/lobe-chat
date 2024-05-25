@@ -649,6 +649,12 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     right: -9px;
     z-index: -1;
 }
+.HelloGPT::after {
+    content: "";
+    position: absolute;
+    inset: -3px 9px 3px;
+    z-index: -1;
+}
 .HelloGPT h1 {
     margin: 0;
     width: 296px;
@@ -732,7 +738,7 @@ content: "";
     background: #222;
 	border-bottom: 1px solid #333333;
 }
-.css-1cxc6hc .HelloGPT::before {
+.css-1cxc6hc .HelloGPT::before,.css-1cxc6hc .HelloGPT::after {
     background: #222;
 }
 .css-1cxc6hc .HelloGPT li:hover::after, .css-1cxc6hc .HelloGPT li:hover::before {
@@ -746,7 +752,7 @@ content: "";
     background: #fbfbfb;
 	border-bottom: 1px solid #dddddd;
 }
-.css-1956qp3 .HelloGPT::before {
+.css-1956qp3 .HelloGPT::before,.css-1956qp3 .HelloGPT::after {
     background: #fbfbfb;
 }
 .css-1956qp3 .HelloGPT li:hover::after, .css-1956qp3 .HelloGPT li:hover::before {
@@ -764,8 +770,6 @@ content: "";
 		display: none !important;
 	}
 }
-
-
 
 
 
