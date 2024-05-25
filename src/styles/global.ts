@@ -52,7 +52,7 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
 
 @font-face {
     font-family: 'HelloGPT';
-    src: url('https://dl.cmdpe.com/font/WenYue-ShengHuoJiaTi-J.woff') format('woff');
+    src: url(https://dl.cmdpe.com/font/WenYue-ShengHuoJiaTi-J.woff) format('woff');
 }
 ::selection {
     background: #99e640 !important;
