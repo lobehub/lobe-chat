@@ -47,10 +47,6 @@ export const getLLMConfig = () => {
     regions = process.env.OPENAI_FUNCTION_REGIONS.split(',');
   }
 
-  console.log('AWS_REGION:', process.env.AWS_REGION);
-  console.log('AWS_ACCESS_KEY_ID:', process.env.AWS_ACCESS_KEY_ID);
-  console.log('AWS_SECRET_ACCESS_KEY:', process.env.AWS_SECRET_ACCESS_KEY);
-
   return createEnv({
     server: {
       API_KEY_SELECT_MODE: z.string().optional(),
