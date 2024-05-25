@@ -653,7 +653,7 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     content: "";
     position: absolute;
     inset: -3px 9px 3px;
-    z-index: -1;
+    z-index: -2;
 }
 .HelloGPT h1 {
     margin: 0;
