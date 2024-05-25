@@ -765,7 +765,11 @@ content: "";
 .css-1956qp3 .HelloGPT li:hover a {
     color: #fff;
 }
-
+@media only screen and (max-width: 1280px) {
+	body>div {
+		zoom: 80%;
+	}
+}
 @media (max-width: 575px) {
 	.css-1cxc6hc {
 		background: none !important;
