@@ -544,7 +544,7 @@ form:first-child>div>div>.ant-collapse-content>div>div:nth-child(n+9),form:first
 .css-qx52nb .css-rq7h3k {
 	display: none !important;
 }
-div[aria-label="你的属性值"] {
+div[aria-label="助手与会话"] {
 	display: none;
 }
 /* 删除安装浏览器应用（PWA） */
