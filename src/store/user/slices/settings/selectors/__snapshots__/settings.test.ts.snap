@@ -69,10 +69,12 @@ exports[`settingsSelectors > dalleConfig > should return the dalle configuration
 exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.settings.defaultAgent correctly 1`] = `
 {
   "config": {
-    "autoCreateTopicThreshold": 2,
-    "displayMode": "chat",
-    "enableAutoCreateTopic": true,
-    "historyCount": 1,
+    "chatConfig": {
+      "autoCreateTopicThreshold": 2,
+      "displayMode": "chat",
+      "enableAutoCreateTopic": true,
+      "historyCount": 1,
+    },
     "model": "gpt-3.5-turbo",
     "params": {
       "frequency_penalty": 0,

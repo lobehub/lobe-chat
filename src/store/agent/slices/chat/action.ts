@@ -8,8 +8,9 @@ import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { useClientDataSWR } from '@/libs/swr';
 import { globalService } from '@/services/global';
 import { sessionService } from '@/services/session';
+import { AgentState } from '@/store/agent/slices/chat/initialState';
 import { useSessionStore } from '@/store/session';
-import { LobeAgentConfig } from '@/types/agent';
+import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { merge } from '@/utils/merge';
 
 import { AgentStore } from '../../store';
@@ -21,6 +22,7 @@ import { agentSelectors } from './selectors';
 export interface AgentChatAction {
   removePlugin: (id: string) => void;
   togglePlugin: (id: string, open?: boolean) => Promise<void>;
+  updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
   updateAgentConfig: (config: Partial<LobeAgentConfig>) => Promise<void>;
 
   useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
@@ -28,8 +30,18 @@ export interface AgentChatAction {
 
   /* eslint-disable typescript-sort-keys/interface */
 
-  internal_updateAgentConfig: (id: string, data: DeepPartial<LobeAgentConfig>) => Promise<void>;
+  internal_updateAgentConfig: (
+    id: string,
+    data: DeepPartial<LobeAgentConfig>,
+    signal?: AbortSignal,
+  ) => Promise<void>;
+  internal_updateAgentChatConfig: (
+    id: string,
+    data: DeepPartial<LobeAgentChatConfig>,
+    signal?: AbortSignal,
+  ) => Promise<void>;
   internal_refreshAgentConfig: (id: string) => Promise<void>;
+  internal_createAbortController: (key: keyof AgentState) => AbortController;
   /* eslint-enable */
 }
 
@@ -69,12 +81,23 @@ export const createChatSlice: StateCreator<
 
     await get().updateAgentConfig(config);
   },
+  updateAgentChatConfig: async (config) => {
+    const { activeId } = get();
+
+    if (!activeId) return;
+
+    const controller = get().internal_createAbortController('updateAgentChatConfigSignal');
+
+    await get().internal_updateAgentChatConfig(activeId, config, controller.signal);
+  },
   updateAgentConfig: async (config) => {
     const { activeId } = get();
 
     if (!activeId) return;
 
-    await get().internal_updateAgentConfig(activeId, config);
+    const controller = get().internal_createAbortController('updateAgentConfigSignal');
+
+    await get().internal_updateAgentConfig(activeId, config, controller.signal);
   },
   useFetchAgentConfig: (sessionId) =>
     useClientDataSWR<LobeAgentConfig>(
@@ -113,19 +136,42 @@ export const createChatSlice: StateCreator<
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
 
-  internal_updateAgentConfig: async (id, data) => {
+  internal_updateAgentConfig: async (id, data, signal) => {
     const prevModel = agentSelectors.currentAgentModel(get());
     // optimistic update at frontend
     set({ agentConfig: merge(get().agentConfig, data) }, false, 'optimistic_updateAgentConfig');
 
-    await sessionService.updateSessionConfig(id, data);
+    await sessionService.updateSessionConfig(id, data, signal);
     await get().internal_refreshAgentConfig(id);
 
     // refresh sessions to update the agent config if the model has changed
     if (prevModel !== data.model) await useSessionStore.getState().refreshSessions();
   },
 
+  internal_updateAgentChatConfig: async (id, data, signal) => {
+    // optimistic update at frontend
+    const chatConfig = merge(get().agentConfig.chatConfig, data);
+
+    set(
+      { agentConfig: { ...get().agentConfig, chatConfig } },
+      false,
+      'optimistic_updateAgentConfig',
+    );
+
+    await sessionService.updateSessionChatConfig(id, data, signal);
+    await get().internal_refreshAgentConfig(id);
+  },
+
   internal_refreshAgentConfig: async (id) => {
     await mutate([FETCH_AGENT_CONFIG_KEY, id]);
+  },
+
+  internal_createAbortController: (key) => {
+    const abortController = get()[key] as AbortController;
+    if (abortController) abortController.abort('canceled');
+    const controller = new AbortController();
+    set({ [key]: controller }, false, 'internal_createAbortController');
+
+    return controller;
   },
 });

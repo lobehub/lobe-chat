@@ -8,6 +8,7 @@ import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
@@ -28,10 +29,10 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const { md = true, lg = true } = useResponsive();
   const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
-    s.preference.showChatSideBar,
+    systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
-    s.isPreferenceInit,
   ]);
+
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showAgentSettings));
 
   const handleExpand = (expand: boolean) => {
