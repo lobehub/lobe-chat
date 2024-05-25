@@ -16,7 +16,10 @@ const EditPage = memo(() => {
   const id = useSessionStore((s) => s.activeId);
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
-  const [updateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
+  const [updateAgentConfig, updateAgentChatConfig] = useAgentStore((s) => [
+    s.updateAgentConfig,
+    s.updateAgentChatConfig,
+  ]);
 
   const [updateAgentMeta, title] = useSessionStore((s) => [
     s.updateSessionMeta,
@@ -30,6 +33,7 @@ const EditPage = memo(() => {
         config={config}
         id={id}
         meta={meta}
+        onChatConfigChange={updateAgentChatConfig}
         onConfigChange={updateAgentConfig}
         onMetaChange={updateAgentMeta}
       />
