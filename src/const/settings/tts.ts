@@ -1,6 +1,6 @@
-import { GlobalTTSConfig } from '@/types/settings';
+import { UserTTSConfig } from '@/types/user/settings';
 
-export const DEFAULT_TTS_CONFIG: GlobalTTSConfig = {
+export const DEFAULT_TTS_CONFIG: UserTTSConfig = {
   openAI: {
     sttModel: 'whisper-1',
     ttsModel: 'tts-1',
