@@ -1,6 +1,6 @@
-import { GlobalBaseSettings } from '@/types/settings';
+import { UserGeneralSettings } from '@/types/user/settings';
 
-export const DEFAULT_COMMON_SETTINGS: GlobalBaseSettings = {
+export const DEFAULT_COMMON_SETTINGS: UserGeneralSettings = {
   fontSize: 14,
   language: 'auto',
   password: '',

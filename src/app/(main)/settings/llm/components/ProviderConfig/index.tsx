@@ -18,7 +18,7 @@ import {
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors } from '@/store/user/selectors';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';

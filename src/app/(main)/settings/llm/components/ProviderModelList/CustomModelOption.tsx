@@ -10,7 +10,7 @@ import ModelIcon from '@/components/ModelIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors } from '@/store/user/selectors';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 interface CustomModelOptionProps {
   id: string;
