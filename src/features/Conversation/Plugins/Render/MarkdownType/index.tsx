@@ -2,7 +2,7 @@ import { Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useUserStore } from '@/store/user';
-import {settingsSelectors, userGeneralSettingsSelectors} from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import Loading from '../Loading';
 
