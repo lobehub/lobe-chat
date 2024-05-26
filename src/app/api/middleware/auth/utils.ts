@@ -1,7 +1,7 @@
 import { type AuthObject } from '@clerk/backend/internal';
 import { importJWK, jwtVerify } from 'jose';
 
-import { getServerConfig } from '@/config/server';
+import { getAppConfig } from '@/config/app';
 import {
   JWTPayload,
   JWT_SECRET_KEY,
@@ -71,7 +71,7 @@ export const checkAuthMethod = ({
   // if apiKey exist
   if (apiKey) return;
 
-  const { ACCESS_CODES } = getServerConfig();
+  const { ACCESS_CODES } = getAppConfig();
 
   // if accessCode doesn't exist
   if (!ACCESS_CODES.length) return;

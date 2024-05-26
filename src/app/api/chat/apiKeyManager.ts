@@ -1,4 +1,4 @@
-import { getServerConfig } from '@/config/server';
+import { getLLMConfig } from '@/config/llm';
 
 interface KeyStore {
   index: number;
@@ -12,7 +12,7 @@ export class ApiKeyManager {
   private _mode: string;
 
   constructor() {
-    const { API_KEY_SELECT_MODE: mode = 'random' } = getServerConfig();
+    const { API_KEY_SELECT_MODE: mode = 'random' } = getLLMConfig();
 
     this._mode = mode;
   }

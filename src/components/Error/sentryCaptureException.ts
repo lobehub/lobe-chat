@@ -1,11 +1,9 @@
-import { getClientConfig } from '@/config/client';
-
-const { ENABLE_SENTRY } = getClientConfig();
+import { appEnv } from '@/config/app';
 
 export type ErrorType = Error & { digest?: string };
 
 export const sentryCaptureException = async (error: Error & { digest?: string }) => {
-  if (!ENABLE_SENTRY) return;
+  if (!appEnv.NEXT_PUBLIC_ENABLE_SENTRY) return;
   const { captureException } = await import('@sentry/nextjs');
   return captureException(error);
 };

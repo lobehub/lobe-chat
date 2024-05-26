@@ -12,6 +12,8 @@
     "retry": "다시 시도",
     "title": "페이지에서 문제가 발생했습니다."
   },
+  "fetchError": "요청 실패",
+  "fetchErrorDetail": "오류 상세",
   "notFound": {
     "backHome": "홈페이지로 돌아가기",
     "desc": "찾고 있는 페이지를 찾을 수 없습니다. 링크가 올바른지 확인해주세요.",

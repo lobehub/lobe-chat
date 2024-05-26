@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 
 import { useChatStore } from '@/store/chat';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
-import { syncSettingsSelectors } from '@/store/user/selectors';
+import { syncSettingsSelectors, userProfileSelectors } from '@/store/user/selectors';
 
 export const useSyncEvent = () => {
   const [refreshMessages, refreshTopic] = useChatStore((s) => [s.refreshMessages, s.refreshTopic]);
@@ -37,12 +38,13 @@ export const useSyncEvent = () => {
 
 export const useEnabledDataSync = () => {
   const [userId, userEnableSync, useEnabledSync] = useUserStore((s) => [
-    s.userId,
+    userProfileSelectors.userId(s),
     syncSettingsSelectors.enableWebRTC(s),
     s.useEnabledSync,
   ]);
 
+  const { enableWebrtc } = useServerConfigStore(featureFlagsSelectors);
   const syncEvent = useSyncEvent();
 
-  useEnabledSync(userEnableSync, userId, syncEvent);
+  useEnabledSync(enableWebrtc, { onEvent: syncEvent, userEnableSync, userId });
 };

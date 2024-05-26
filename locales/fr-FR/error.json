@@ -12,6 +12,8 @@
     "retry": "Recharger",
     "title": "Un problème est survenu sur la page.."
   },
+  "fetchError": "Échec de la requête",
+  "fetchErrorDetail": "Détails de l'erreur",
   "notFound": {
     "backHome": "Retour à la page d'accueil",
     "desc": "La page que vous recherchez est introuvable. Veuillez vérifier si le lien est correct.",

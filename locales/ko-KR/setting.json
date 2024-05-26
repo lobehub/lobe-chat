@@ -2,6 +2,14 @@
   "about": {
     "title": "소개"
   },
+  "agentTab": {
+    "chat": "채팅 환경",
+    "meta": "도우미 정보",
+    "modal": "모델 설정",
+    "plugin": "플러그인 설정",
+    "prompt": "역할 설정",
+    "tts": "음성 서비스"
+  },
   "analytics": {
     "telemetry": {
       "desc": "익명 사용 데이터를 보내는 것으로 LobeChat의 전반적인 사용자 경험을 개선하는 데 도움을 줄 수 있습니다",
@@ -359,6 +367,14 @@
       "title": "WebRTC 동기화"
     }
   },
+  "systemAgent": {
+    "title": "시스템 도우미",
+    "translation": {
+      "label": "번역 모델",
+      "modelDesc": "번역에 사용되는 모델 지정",
+      "title": "번역 도우미 설정"
+    }
+  },
   "tab": {
     "about": "소개",
     "agent": "기본 에이전트",
@@ -366,6 +382,7 @@
     "experiment": "실험",
     "llm": "언어 모델",
     "sync": "클라우드 동기화",
+    "system-agent": "시스템 도우미",
     "tts": "음성 서비스"
   },
   "tools": {

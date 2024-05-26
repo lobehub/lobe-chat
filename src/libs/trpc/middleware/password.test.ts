@@ -1,8 +1,9 @@
+// @vitest-environment node
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import * as utils from '@/app/api/middleware/auth/utils';
-import * as serverConfig from '@/config/server';
+import * as appConfig from '@/config/app';
 import { createCallerFactory } from '@/libs/trpc';
 import { trpc } from '@/libs/trpc/init';
 import { AuthContext, createContextInner } from '@/server/context';
@@ -32,7 +33,7 @@ describe('passwordChecker middleware', () => {
   });
 
   it('should throw UNAUTHORIZED error if access code is not correct', async () => {
-    vi.spyOn(serverConfig, 'getServerConfig').mockReturnValue({
+    vi.spyOn(appConfig, 'getAppConfig').mockReturnValue({
       ACCESS_CODES: ['123'],
     } as any);
     vi.spyOn(utils, 'getJWTPayload').mockResolvedValue({ accessCode: '456' });
@@ -45,7 +46,7 @@ describe('passwordChecker middleware', () => {
 
   it('should call next with jwtPayload in context if access code is correct', async () => {
     const jwtPayload = { accessCode: '123' };
-    vi.spyOn(serverConfig, 'getServerConfig').mockReturnValue({
+    vi.spyOn(appConfig, 'getAppConfig').mockReturnValue({
       ACCESS_CODES: ['123'],
     } as any);
     vi.spyOn(utils, 'getJWTPayload').mockResolvedValue(jwtPayload);
@@ -60,7 +61,7 @@ describe('passwordChecker middleware', () => {
 
   it('should call next with jwtPayload in context if no access codes are set', async () => {
     const jwtPayload = {};
-    vi.spyOn(serverConfig, 'getServerConfig').mockReturnValue({
+    vi.spyOn(appConfig, 'getAppConfig').mockReturnValue({
       ACCESS_CODES: [],
     } as any);
     vi.spyOn(utils, 'getJWTPayload').mockResolvedValue(jwtPayload);
@@ -74,7 +75,7 @@ describe('passwordChecker middleware', () => {
   });
   it('should call next with jwtPayload in context if  access codes is undefined', async () => {
     const jwtPayload = {};
-    vi.spyOn(serverConfig, 'getServerConfig').mockReturnValue({} as any);
+    vi.spyOn(appConfig, 'getAppConfig').mockReturnValue({} as any);
     vi.spyOn(utils, 'getJWTPayload').mockResolvedValue(jwtPayload);
 
     ctx = await createContextInner({ authorizationHeader: 'Bearer token' });

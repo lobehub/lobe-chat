@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { PropsWithChildren } from 'react';
 
 import ServerLayout from '@/components/server/ServerLayout';
-import { serverFeatureFlags } from '@/config/server/featureFlags';
+import { serverFeatureFlags } from '@/config/featureFlags';
 
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
