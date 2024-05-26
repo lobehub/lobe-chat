@@ -707,17 +707,14 @@ content: "";
 .HelloGPT li {
     float: left;
     position: relative;
-	margin-left: 10px;
+	margin-left: 0px;
 }
 .HelloGPT li a {
-    color: #fff;
-    padding: 4px 12px;
+    padding: 4px 4px;
     display: grid;
     align-items: center;
     justify-content: center;
-}
-.HelloGPT li:hover a {
-    color: #fff;
+	font-size: 16px;
 }
 .HelloGPT li::before {
     content: "";
@@ -726,7 +723,7 @@ content: "";
     bottom: -4px;
     left: 4px;
     right: 4px;
-    opacity: 1;
+    opacity: 0;
     z-index: -1;
     background: #673AB7;
 }
@@ -737,7 +734,7 @@ content: "";
     right: 0;
     bottom: 0;
     left: 0;
-    opacity: 1;
+    opacity: 0;
     z-index: -1;
     background: #673AB7;
 }
@@ -753,11 +750,14 @@ content: "";
 .css-1cxc6hc .HelloGPT::before,.css-1cxc6hc .HelloGPT::after {
     background: #222;
 }
+.css-1cxc6hc .HelloGPT li a {
+    color: #fff;
+}
 .css-1cxc6hc .HelloGPT li:hover::after, .css-1cxc6hc .HelloGPT li:hover::before {
     background: #FF5722;
 }
 .css-1cxc6hc .HelloGPT li:hover a {
-    color: #000;
+    color: #fff;
 }
 
 /* HelloGPT白 */
@@ -768,8 +768,11 @@ content: "";
 .css-1956qp3 .HelloGPT::before,.css-1956qp3 .HelloGPT::after {
     background: #fbfbfb;
 }
+.css-1956qp3 .HelloGPT li a {
+    color: #000;
+}
 .css-1956qp3 .HelloGPT li:hover::after, .css-1956qp3 .HelloGPT li:hover::before {
-    background: #000;
+    background: #FF5722;
 }
 .css-1956qp3 .HelloGPT li:hover a {
     color: #fff;
