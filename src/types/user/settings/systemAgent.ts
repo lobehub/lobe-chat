@@ -3,6 +3,6 @@ export interface GlobalTranslationConfig {
   provider: string;
 }
 
-export interface GlobalSystemAgentConfig {
+export interface UserSystemAgentConfig {
   translation: GlobalTranslationConfig;
 }

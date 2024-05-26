@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.161.22](https://github.com/lobehub/lobe-chat/compare/v0.161.21...v0.161.22)
+
+<sup>Released on **2024-05-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix connection checker.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix connection checker, closes [#2672](https://github.com/lobehub/lobe-chat/issues/2672) ([bef8926](https://github.com/lobehub/lobe-chat/commit/bef8926))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.21](https://github.com/lobehub/lobe-chat/compare/v0.161.20...v0.161.21)
 
 <sup>Released on **2024-05-26**</sup>
