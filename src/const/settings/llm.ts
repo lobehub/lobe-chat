@@ -17,9 +17,9 @@ import {
   filterEnabledModels,
 } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { GlobalLLMConfig } from '@/types/settings';
+import { UserModelProviderConfig } from '@/types/user/settings';
 
-export const DEFAULT_LLM_CONFIG: GlobalLLMConfig = {
+export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   anthropic: {
     apiKey: '',
     enabled: false,

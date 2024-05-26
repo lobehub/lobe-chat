@@ -7,15 +7,15 @@ import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import { LocaleMode } from '@/types/locale';
 import { LobeAgentSettings } from '@/types/session';
-import { GlobalSettings } from '@/types/settings';
+import { UserSettings } from '@/types/user/settings';
 import { switchLang } from '@/utils/client/switchLang';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
 export interface UserSettingsAction {
-  importAppSettings: (settings: GlobalSettings) => Promise<void>;
+  importAppSettings: (settings: UserSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
-  setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
+  setSettings: (settings: DeepPartial<UserSettings>) => Promise<void>;
   setTranslationSystemAgent: (provider: string, model: string) => Promise<void>;
   switchLocale: (locale: LocaleMode) => Promise<void>;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;

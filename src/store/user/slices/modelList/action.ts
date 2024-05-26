@@ -6,7 +6,7 @@ import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { UserStore } from '@/store/user';
 import { ChatModelCard } from '@/types/llm';
-import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
+import { UserModelProviderConfig, GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { settingsSelectors } from '../settings/selectors';
 import { CustomModelCardDispatch, customModelCardsReducer } from './reducers/customModelCard';
@@ -28,7 +28,7 @@ export interface ModelListAction {
   removeEnabledModels: (provider: GlobalLLMProviderKey, model: string) => Promise<void>;
   setModelProviderConfig: <T extends GlobalLLMProviderKey>(
     provider: T,
-    config: Partial<GlobalLLMConfig[T]>,
+    config: Partial<UserModelProviderConfig[T]>,
   ) => Promise<void>;
 
   toggleEditingCustomModelCard: (params?: { id: string; provider: GlobalLLMProviderKey }) => void;

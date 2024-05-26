@@ -1,11 +1,11 @@
 import { DeepPartial } from 'utility-types';
 
 import { DEFAULT_SETTINGS } from '@/const/settings';
-import { GlobalSettings } from '@/types/settings';
+import { UserSettings } from '@/types/user/settings';
 
 export interface UserSettingsState {
-  defaultSettings: GlobalSettings;
-  settings: DeepPartial<GlobalSettings>;
+  defaultSettings: UserSettings;
+  settings: DeepPartial<UserSettings>;
 }
 
 export const initialSettingsState: UserSettingsState = {
