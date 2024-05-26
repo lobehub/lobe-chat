@@ -2,8 +2,8 @@ import { DeepPartial } from 'utility-types';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserModel } from '@/database/client/models/user';
-import { GlobalSettings } from '@/types/settings';
 import { UserPreference } from '@/types/user';
+import { UserSettings } from '@/types/user/settings';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
 import { ClientService } from './client';
@@ -19,7 +19,7 @@ vi.mock('@/database/client/models/user', () => ({
 
 const mockUser = {
   avatar: 'avatar.png',
-  settings: { themeMode: 'light' } as unknown as GlobalSettings,
+  settings: { themeMode: 'light' } as unknown as UserSettings,
   uuid: 'user-id',
 };
 
@@ -58,7 +58,7 @@ describe('ClientService', () => {
   });
 
   it('should update user settings correctly', async () => {
-    const settingsPatch: DeepPartial<GlobalSettings> = { themeMode: 'dark' };
+    const settingsPatch: DeepPartial<UserSettings> = { themeMode: 'dark' };
     (UserModel.updateSettings as Mock).mockResolvedValue(undefined);
 
     await clientService.updateUserSettings(settingsPatch);
