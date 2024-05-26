@@ -7,7 +7,7 @@ import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import { LocaleMode } from '@/types/locale';
 import { LobeAgentSettings } from '@/types/session';
-import { UserGeneralConfig, UserSettings , UserKeyVaults } from '@/types/user/settings';
+import { UserGeneralConfig, UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { switchLang } from '@/utils/client/switchLang';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';

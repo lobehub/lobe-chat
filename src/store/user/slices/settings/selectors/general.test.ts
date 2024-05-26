@@ -1,16 +1,19 @@
-import { UserStore } from '../../../store';
+import { UserStore } from '@/store/user';
+import { UserState, initialState } from '@/store/user/initialState';
+import { merge } from '@/utils/merge';
+
 import { userGeneralSettingsSelectors } from './general';
 
 describe('settingsSelectors', () => {
   describe('currentLanguage', () => {
     it('should return the correct language setting', () => {
-      const s = {
+      const s: UserState = merge(initialState, {
         settings: {
-          language: 'fr',
+          general: { language: 'fr' },
         },
-      } as unknown as UserStore;
+      });
 
-      const result = userGeneralSettingsSelectors.currentLanguage(s);
+      const result = userGeneralSettingsSelectors.currentLanguage(s as UserStore);
 
       expect(result).toBe('fr');
     });
@@ -18,24 +21,23 @@ describe('settingsSelectors', () => {
 
   describe('currentThemeMode', () => {
     it('should return the correct theme', () => {
-      const s = {
+      const s: UserState = merge(initialState, {
         settings: {
-          themeMode: 'light',
+          general: { themeMode: 'light' },
         },
-      } as unknown as UserStore;
+      });
 
-      const result = userGeneralSettingsSelectors.currentThemeMode(s);
+      const result = userGeneralSettingsSelectors.currentThemeMode(s as UserStore);
 
       expect(result).toBe('light');
     });
     it('should return the auto if not set the themeMode', () => {
-      const s = {
+      const s: UserState = merge(initialState, {
         settings: {
-          themeMode: undefined,
+          general: { themeMode: undefined },
         },
-      } as unknown as UserStore;
-
-      const result = userGeneralSettingsSelectors.currentThemeMode(s);
+      });
+      const result = userGeneralSettingsSelectors.currentThemeMode(s as UserStore);
 
       expect(result).toBe('auto');
     });

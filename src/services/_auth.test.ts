@@ -152,6 +152,7 @@ describe('getProviderAuthPayload', () => {
     // 假设的 OpenAI 配置
     const mockOpenAIConfig = {
       apiKey: 'openai-api-key',
+      baseURL: 'openai-baseURL',
       endpoint: 'openai-endpoint',
       useAzure: true,
       azureApiVersion: 'openai-azure-api-version',
@@ -163,7 +164,7 @@ describe('getProviderAuthPayload', () => {
     const payload = getProviderAuthPayload(ModelProvider.OpenAI);
     expect(payload).toEqual({
       apiKey: mockOpenAIConfig.apiKey,
-      endpoint: mockOpenAIConfig.endpoint,
+      endpoint: mockOpenAIConfig.baseURL,
     });
   });
 
