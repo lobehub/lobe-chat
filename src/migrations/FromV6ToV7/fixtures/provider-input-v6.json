@@ -29,7 +29,7 @@
       },
       "password": "213455",
       "languageModel": {
-        "anthropic": { "apiKey": "anthropic", "enabled": false },
+        "anthropic": { "apiKey": "anthropic", "enabled": false, "endpoint": "anthropic-baseURL" },
         "azure": {
           "apiKey": "asbdasd",
           "apiVersion": "2024-02-15-preview",
@@ -42,8 +42,9 @@
           "region": "us-east-1",
           "secretAccessKey": "secretAccessKey"
         },
-        "google": { "apiKey": "google", "enabled": false },
-        "groq": { "apiKey": "groq", "enabled": false },
+        "google": { "apiKey": "google", "enabled": false, "endpoint": "google-baseURL" },
+        "deepseek": { "apiKey": "deepseek", "enabled": true },
+        "groq": { "apiKey": "groq", "enabled": false, "endpoint": "groq-baseURL" },
         "mistral": { "apiKey": "mistral", "enabled": false },
         "moonshot": { "apiKey": "moonshot", "enabled": false },
         "ollama": { "enabled": false, "endpoint": "http://1237.0.0.1:3245" },
@@ -63,7 +64,11 @@
             }
           ]
         },
-        "perplexity": { "apiKey": "perplexity", "enabled": false },
+        "perplexity": {
+          "apiKey": "perplexity",
+          "enabled": false,
+          "endpoint": "perplexity-baseURL"
+        },
         "togetherai": { "apiKey": "togetherai", "enabled": false },
         "zeroone": { "apiKey": "zeroone", "enabled": false },
         "zhipu": { "apiKey": "zhipu", "enabled": false },

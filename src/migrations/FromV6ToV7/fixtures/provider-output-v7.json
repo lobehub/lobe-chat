@@ -32,6 +32,7 @@
         "azure": { "enabled": true },
         "bedrock": { "enabled": false },
         "google": { "enabled": false },
+        "deepseek": { "enabled": true },
         "groq": { "enabled": false },
         "mistral": { "enabled": false },
         "moonshot": { "enabled": false },
@@ -68,7 +69,7 @@
       },
       "keyVaults": {
         "password": "213455",
-        "anthropic": { "apiKey": "anthropic" },
+        "anthropic": { "apiKey": "anthropic", "baseURL": "anthropic-baseURL" },
         "azure": {
           "apiKey": "asbdasd",
           "apiVersion": "2024-02-15-preview",
@@ -79,21 +80,22 @@
           "region": "us-east-1",
           "secretAccessKey": "secretAccessKey"
         },
-        "google": { "apiKey": "google" },
-        "groq": { "apiKey": "groq" },
+        "google": { "apiKey": "google", "baseURL": "google-baseURL" },
+        "groq": { "apiKey": "groq", "baseURL": "groq-baseURL" },
         "mistral": { "apiKey": "mistral" },
         "moonshot": { "apiKey": "moonshot" },
-        "ollama": { "endpoint": "http://1237.0.0.1:3245" },
+        "ollama": { "baseURL": "http://1237.0.0.1:3245" },
         "openrouter": {
           "apiKey": "openrouter-key"
         },
-        "perplexity": { "apiKey": "perplexity" },
+        "perplexity": { "apiKey": "perplexity", "baseURL": "perplexity-baseURL" },
         "togetherai": { "apiKey": "togetherai" },
+        "deepseek": { "apiKey": "deepseek" },
         "zeroone": { "apiKey": "zeroone" },
         "zhipu": { "apiKey": "zhipu" },
         "openai": {
           "apiKey": "openai",
-          "endpoint": "endpoint"
+          "baseURL": "endpoint"
         }
       },
       "sync": { "webrtc": { "enabled": false } },

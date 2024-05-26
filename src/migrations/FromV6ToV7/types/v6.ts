@@ -40,6 +40,8 @@ interface V6ModelProviderConfig {
   zhipu: V6OpenAICompatibleConfig;
 }
 
+export type V6ProviderKey = keyof V6ModelProviderConfig;
+
 export interface V6Settings {
   defaultAgent: any;
   fontSize: number;
