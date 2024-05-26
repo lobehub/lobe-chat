@@ -4,12 +4,12 @@
 
 我们将以 sessionGroup 的实现为示例：[✨ feat: add session group manager](https://github.com/lobehub/lobe-chat/pull/1055) ， 通过以下六个主要部分来阐述完整的实现流程：
 
-1. 数据模型 / 数据库定义
-2. Service 实现 / Model 实现
-3. 前端数据流 Store 实现
-4. UI 实现与 action 绑定
-5. 数据迁移
-6. 数据导入导出
+1. [数据模型 / 数据库定义](#一数据库部分)
+2. [Service 实现 / Model 实现](#二model-与-service-部分)
+3. [前端数据流 Store 实现](#三store-action-部分)
+4. [UI 实现与 action 绑定](#四ui-部分)
+5. [数据迁移](#五数据迁移)
+6. [数据导入导出](#六数据导入导出)
 
 ## 一、数据库部分
 

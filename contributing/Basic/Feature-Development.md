@@ -4,12 +4,12 @@ This document aims to guide developers on how to develop a complete feature requ
 
 We will use the implementation of sessionGroup as an example: [✨ feat: add session group manager](https://github.com/lobehub/lobe-chat/pull/1055), and explain the complete implementation process through the following six main sections:
 
-1. Data Model / Database Definition
-2. Service Implementation / Model Implementation
-3. Frontend Data Flow Store Implementation
-4. UI Implementation and Action Binding
-5. Data Migration
-6. Data Import and Export
+1. [Data Model / Database Definition](#1-database-section)
+2. [Service Implementation / Model Implementation](#2-model-and-service-section)
+3. [Frontend Data Flow Store Implementation](#3-store-action-section)
+4. [UI Implementation and Action Binding](#4-ui-section)
+5. [Data Migration](#5-data-migration)
+6. [Data Import and Export](#6-data-import-and-export)
 
 ## 1. Database Section
 
@@ -351,7 +351,7 @@ Since all data retrieval in the UI is implemented using syntax like `useSessionS
 >
 > If you are not familiar with the concept and functionality of selectors, you can refer to the section [📘 Data Storage and Retrieval Module](./State-Management-Selectors.en-US) for relevant information.
 
-## IV. UI Section
+## 4. UI Section
 
 Bind Store Action in the UI component to implement interactive logic, for example `CreateGroupModal`:
 
@@ -570,7 +570,7 @@ export class LocalDB extends Dexie {
 
 This is our data migration strategy. When performing the migration, it is essential to ensure the correctness of the migration script and validate the migration results through thorough testing.
 
-## VI. Data Import and Export
+## 6. Data Import and Export
 
 In LobeChat, the data import and export feature is designed to ensure that users can migrate their data between different devices. This includes session, topic, message, and settings data. In the implementation of the Session Group feature, we also need to handle data import and export to ensure that the complete exported data can be restored exactly the same on other devices.
 
