@@ -40,6 +40,8 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const handleSizeChange: DraggablePanelProps['onSizeChange'] = (_, size) => {
     if (!size) return;
     const nextWidth = typeof size.width === 'string' ? Number.parseInt(size.width) : size.width;
+    if (!nextWidth) return;
+
     if (isEqual(nextWidth, sessionsWidth)) return;
     setWidth(nextWidth);
     updatePreference({ sessionsWidth: nextWidth });
