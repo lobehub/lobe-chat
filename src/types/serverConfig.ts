@@ -1,7 +1,7 @@
 import { DeepPartial } from 'utility-types';
 
 import { ChatModelCard } from '@/types/llm';
-import { GlobalDefaultAgent, GlobalLLMProviderKey } from '@/types/settings';
+import { UserDefaultAgent, GlobalLLMProviderKey } from '@/types/user/settings';
 
 export interface ServerModelProviderConfig {
   enabled?: boolean;
@@ -16,7 +16,7 @@ export interface ServerModelProviderConfig {
 export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerModelProviderConfig>>;
 
 export interface GlobalServerConfig {
-  defaultAgent?: DeepPartial<GlobalDefaultAgent>;
+  defaultAgent?: DeepPartial<UserDefaultAgent>;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
   enabledOAuthSSO?: boolean;

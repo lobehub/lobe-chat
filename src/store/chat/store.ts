@@ -1,10 +1,9 @@
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { isDev } from '@/utils/env';
-
+import { createDevtools } from '../middleware/createDevtools';
 import { ChatStoreState, initialState } from './initialState';
 import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/action';
 import { ChatEnhanceAction, chatEnhance } from './slices/enchance/action';
@@ -37,12 +36,9 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
 });
 
 //  ===============  实装 useStore ============ //
+const devtools = createDevtools('chat');
 
 export const useChatStore = createWithEqualityFn<ChatStore>()(
-  subscribeWithSelector(
-    devtools(createStore, {
-      name: 'LobeChat_Chat' + (isDev ? '_DEV' : ''),
-    }),
-  ),
+  subscribeWithSelector(devtools(createStore)),
   shallow,
 );
