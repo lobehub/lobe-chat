@@ -486,11 +486,11 @@ ul.ant-dropdown-menu-item-group-list li span.ant-dropdown-menu-item-icon {
 	position: relative;
 }
 #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
-    content: 'HelloGPT';
+	content: "HelloGPT";
     position: absolute;
-    top: 0px;
+    top: -3px;
     left: 0px;
-    font-size: 1.7em;
+    font-size: 2em;
     font-weight: 700;
 }
 .css-1cxc6hc #lobe-market-container>div:nth-child(1)>div:nth-child(1)>div:nth-child(1)::before {
@@ -625,9 +625,9 @@ body>div:nth-child(1)>div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2)
     content: 'HelloGPT';
     position: absolute;
     top: 0px;
-    left: 0;
-    right: 0;
-    font-size: 53px;
+    left: -2px;
+    right: -2px;
+    font-size: 56px;
     font-weight: 700;
 }
 body>.css-1cxc6hc >div:nth-child(2)>.css-zlqreh:nth-child(2)>div:nth-child(2) strong::before {
@@ -707,10 +707,10 @@ content: "";
 .HelloGPT li {
     float: left;
     position: relative;
-	margin-left: 0px;
+	margin: 0 -3px;
 }
 .HelloGPT li a {
-    padding: 4px 4px;
+    padding: 4px 12px;
     display: grid;
     align-items: center;
     justify-content: center;
@@ -790,7 +790,6 @@ content: "";
 		display: none !important;
 	}
 }
-
 
 
 
