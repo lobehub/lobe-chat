@@ -7,8 +7,8 @@ import { userService } from '@/services/user';
 import { ClientService } from '@/services/user/client';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
-import type { GlobalSettings } from '@/types/settings';
 import { UserInitializationState } from '@/types/user';
+import type { UserSettings } from '@/types/user/settings';
 import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
@@ -78,7 +78,7 @@ export const createCommonSlice: StateCreator<
 
           if (data) {
             // merge settings
-            const serverSettings: DeepPartial<GlobalSettings> = {
+            const serverSettings: DeepPartial<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
               languageModel: serverConfig.languageModel,
             };
@@ -87,6 +87,12 @@ export const createCommonSlice: StateCreator<
             // merge preference
             const isEmpty = Object.keys(data.preference || {}).length === 0;
             const preference = isEmpty ? DEFAULT_PREFERENCE : data.preference;
+
+            // if there is avatar or userId (from client DB), update it into user
+            const user =
+              data.avatar || data.userId
+                ? merge(get().user, { avatar: data.avatar, id: data.userId })
+                : get().user;
 
             set(
               {
@@ -97,11 +103,10 @@ export const createCommonSlice: StateCreator<
                 isUserCanEnableTrace: data.canEnableTrace,
                 isUserHasConversation: data.hasConversation,
                 isUserStateInit: true,
-
                 preference,
                 serverLanguageModel: serverConfig.languageModel,
                 settings: data.settings || {},
-                userId: data.userId,
+                user,
               },
               false,
               n('initUserState'),

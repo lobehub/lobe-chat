@@ -6,7 +6,8 @@
       "functionCall": "Mô hình này hỗ trợ cuộc gọi hàm (Function Call)",
       "tokens": "Mỗi phiên của mô hình này hỗ trợ tối đa {{tokens}} Tokens",
       "vision": "Mô hình này hỗ trợ nhận diện hình ảnh"
-    }
+    },
+    "removed": "Mô hình này không còn trong danh sách, nếu bỏ chọn sẽ tự động xóa"
   },
   "ModelSwitchPanel": {
     "emptyModel": "Không có mô hình nào được kích hoạt, vui lòng điều chỉnh trong cài đặt",

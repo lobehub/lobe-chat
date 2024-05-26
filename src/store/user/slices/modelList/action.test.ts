@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { modelsService } from '@/services/models';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
-import { GeneralModelProviderConfig } from '@/types/settings';
+import { OpenAICompatibleProviderConfig } from '@/types/user/settings';
 
 import { settingsSelectors } from '../settings/selectors';
 import { CustomModelCardDispatch } from './reducers/customModelCard';
@@ -24,7 +24,7 @@ describe('LLMSettingsSliceAction', () => {
   describe('setModelProviderConfig', () => {
     it('should set OpenAI configuration', async () => {
       const { result } = renderHook(() => useUserStore());
-      const openAIConfig: Partial<GeneralModelProviderConfig> = { apiKey: 'test-key' };
+      const openAIConfig: Partial<OpenAICompatibleProviderConfig> = { apiKey: 'test-key' };
 
       // Perform the action
       await act(async () => {

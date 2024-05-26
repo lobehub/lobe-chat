@@ -3,55 +3,61 @@ description: 'Report an bug'
 title: '[Bug] '
 labels: ['🐛 Bug']
 body:
-  - type: dropdown
-    attributes:
-      label: '💻 Operating System'
-      options:
-        - Windows
-        - macOS
-        - Ubuntu
-        - Other Linux
-        - iOS
-        - Android
-        - Other
-    validations:
-      required: true
-  - type: dropdown
+  - type: checkboxes
     attributes:
       label: '📦 Environment'
       options:
-        - Official Preview
-        - Vercel / Zeabur / Sealos
-        - Docker
-        - Other
+        - label: 'Official'
+        - label: 'Official Preview'
+        - label: 'Vercel / Zeabur / Sealos'
+        - label: 'Docker'
+        - label: 'Other'
     validations:
       required: true
-
-  - type: dropdown
+  - type: input
+    attributes:
+      label: '📌 Version'
+    validations:
+      required: true
+  
+  - type: checkboxes
+    attributes:
+      label: '💻 Operating System'
+      options:
+        - label: 'Windows'
+        - label: 'macOS'
+        - label: 'Ubuntu'
+        - label: 'Other Linux'
+        - label: 'iOS'
+        - label: 'Android'
+        - label: 'Other'
+    validations:
+      required: true
+  - type: checkboxes
     attributes:
       label: '🌐 Browser'
       options:
-        - Chrome
-        - Edge
-        - Safari
-        - Firefox
-        - Other
+        - label: 'Chrome'
+        - label: 'Edge'
+        - label: 'Safari'
+        - label: 'Firefox'
+        - label: 'Other'
     validations:
       required: true
   - type: textarea
     attributes:
       label: '🐛 Bug Description'
-      description: A clear and concise description of the bug.
+      description: A clear and concise description of the bug, if the above option is `Other`, please also explain in detail.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: '🚦 Expected Behavior'
-      description: A clear and concise description of what you expected to happen.
-  - type: textarea
-    attributes:
       label: '📷 Recurrence Steps'
       description: A clear and concise description of how to recurrence.
+  - type: textarea
+    attributes:
+      label: '🚦 Expected Behavior'
+      description: A clear and concise description of what you expected to happen.
   - type: textarea
     attributes:
       label: '📝 Additional Information'

@@ -10,6 +10,7 @@ import {
   HEADER_HEIGHT,
 } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 import Footer from './Footer';
 import Head from './Header';
@@ -19,8 +20,8 @@ const DesktopChatInput = memo(() => {
   const [expand, setExpand] = useState<boolean>(false);
 
   const [inputHeight, updatePreference] = useGlobalStore((s) => [
-    s.preference.inputHeight,
-    s.updatePreference,
+    systemStatusSelectors.inputHeight(s),
+    s.updateSystemStatus,
   ]);
 
   return (

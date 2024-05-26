@@ -1,9 +1,13 @@
 import { VoiceList } from '@lobehub/tts';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
+import {
+  DEFAULT_AGENT_CHAT_CONFIG,
+  DEFAULT_AGENT_CONFIG,
+  DEFAUTT_AGENT_TTS_CONFIG,
+} from '@/const/settings';
 import { AgentStore } from '@/store/agent';
-import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
+import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { merge } from '@/utils/merge';
 
 const isInboxSession = (s: AgentStore) => s.activeId === INBOX_SESSION_ID;
@@ -14,6 +18,9 @@ const defaultAgentConfig = (s: AgentStore) => merge(DEFAULT_AGENT_CONFIG, s.defa
 
 const currentAgentConfig = (s: AgentStore): LobeAgentConfig =>
   merge(s.defaultAgentConfig, s.agentConfig);
+
+const currentAgentChatConfig = (s: AgentStore): LobeAgentChatConfig =>
+  currentAgentConfig(s).chatConfig || DEFAULT_AGENT_CHAT_CONFIG;
 
 const currentAgentSystemRole = (s: AgentStore) => {
   return currentAgentConfig(s).systemRole;
@@ -73,6 +80,7 @@ const hasSystemRole = (s: AgentStore) => {
 };
 
 export const agentSelectors = {
+  currentAgentChatConfig,
   currentAgentConfig,
   currentAgentModel,
   currentAgentModelProvider,

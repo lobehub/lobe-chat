@@ -1,7 +1,7 @@
 import { ChatMessage } from '@/types/message';
 import { LobeSessions, SessionGroupItem } from '@/types/session';
-import { GlobalSettings } from '@/types/settings';
 import { ChatTopic } from '@/types/topic';
+import { UserSettings } from '@/types/user/settings';
 
 /**
  * 导出方式
@@ -69,7 +69,7 @@ export interface ConfigStateAgents {
  * 配置状态：设置
  */
 export interface ConfigStateSettings {
-  settings: GlobalSettings;
+  settings: UserSettings;
 }
 
 /**

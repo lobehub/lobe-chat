@@ -7,7 +7,7 @@ import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { LobeAgentSettings } from '@/types/session';
-import { GlobalSettings } from '@/types/settings';
+import { UserSettings } from '@/types/user/settings';
 
 // Mock userService
 vi.mock('@/services/user', () => ({
@@ -21,7 +21,7 @@ describe('SettingsAction', () => {
   describe('importAppSettings', () => {
     it('should import app settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const newSettings: GlobalSettings = {
+      const newSettings: UserSettings = {
         ...DEFAULT_SETTINGS,
         themeMode: 'dark',
       };
@@ -69,7 +69,7 @@ describe('SettingsAction', () => {
   describe('setSettings', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const partialSettings: Partial<GlobalSettings> = { themeMode: 'dark' };
+      const partialSettings: Partial<UserSettings> = { themeMode: 'dark' };
 
       // Perform the action
       await act(async () => {
@@ -116,7 +116,7 @@ describe('SettingsAction', () => {
   describe('setTranslationSystemAgent', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const systemAgentSettings: Partial<GlobalSettings> = {
+      const systemAgentSettings: Partial<UserSettings> = {
         systemAgent: {
           translation: {
             model: 'testmodel',
