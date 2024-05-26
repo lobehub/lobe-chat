@@ -58,6 +58,12 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
         setPass(false);
         isError = true;
       },
+      onFinish: async () => {
+        if (!isError) {
+          setError(undefined);
+          setPass(true);
+        }
+      },
       onLoadingChange: (loading) => {
         setLoading(loading);
       },
@@ -77,11 +83,6 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
         traceName: TraceNameMap.ConnectivityChecker,
       },
     });
-
-    if (!isError) {
-      setError(undefined);
-      setPass(true);
-    }
   };
   const isMobile = useIsMobile();
 
