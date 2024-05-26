@@ -2,6 +2,14 @@
   "about": {
     "title": "について"
   },
+  "agentTab": {
+    "chat": "チャット設定",
+    "meta": "メタ情報",
+    "modal": "モーダル設定",
+    "plugin": "プラグイン設定",
+    "prompt": "プロンプト設定",
+    "tts": "音声サービス"
+  },
   "analytics": {
     "telemetry": {
       "desc": "匿名の使用データを送信することで、LobeChat の全体的なユーザーエクスペリエンスの向上にご協力いただけます",

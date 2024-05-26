@@ -1,4 +1,4 @@
-// @vitest-environment edge-runtime
+// @vitest-environment node
 import { getAuth } from '@clerk/nextjs/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 

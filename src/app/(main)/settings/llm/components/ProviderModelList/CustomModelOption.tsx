@@ -71,18 +71,17 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
             e.stopPropagation();
             e.preventDefault();
 
-            const isConfirm = await modal.confirm({
+            await modal.confirm({
               centered: true,
               content: s('llm.customModelCards.confirmDelete'),
               okButtonProps: { danger: true },
+              onOk: async () => {
+                // delete model and deactivate id
+                await dispatchCustomModelCards(provider, { id, type: 'delete' });
+                await removeEnabledModels(provider, id);
+              },
               type: 'warning',
             });
-
-            // delete model and deactive id
-            if (isConfirm) {
-              await dispatchCustomModelCards(provider, { id, type: 'delete' });
-              await removeEnabledModels(provider, id);
-            }
           }}
           title={t('delete')}
         />

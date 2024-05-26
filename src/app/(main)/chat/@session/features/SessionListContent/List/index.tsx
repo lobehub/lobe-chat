@@ -12,7 +12,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
 
-import SkeletonList from '../SkeletonList';
+import SkeletonList from '../../SkeletonList';
 import AddButton from './AddButton';
 import SessionItem from './Item';
 

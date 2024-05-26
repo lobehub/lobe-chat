@@ -1,4 +1,5 @@
 import { memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
 
 import EditableFileList from '@/components/FileList/EditableFileList';
 import { useFileStore } from '@/store/file';
@@ -9,9 +10,9 @@ const Files = memo(() => {
   if (!inputFilesList || inputFilesList?.length === 0) return null;
 
   return (
-    <div style={{ position: 'relative', width: '100vw' }}>
-      <EditableFileList alwaysShowClose items={inputFilesList} padding={'0 8px'} />
-    </div>
+    <Flexbox paddingBlock={4} style={{ position: 'relative' }}>
+      <EditableFileList alwaysShowClose items={inputFilesList} padding={'4px 8px 8px'} />
+    </Flexbox>
   );
 });
 
