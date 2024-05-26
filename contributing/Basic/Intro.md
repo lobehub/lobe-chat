@@ -77,7 +77,7 @@ bun run dev
 ```
 
 > \[!IMPORTANT]\
-> If you use `npm` to install dependencies, you should run `npm run stylelint-config-recommended@13.0.0` before committing your code, otherwise you will encounter the error `Could not find "stylelint-config-recommended"`.
+> If you are using `npm` to install dependencies, please run `npm run stylelint-config-recommended@13.0.0` before committing your code to avoid the `Could not find "stylelint-config-recommended"` error.
 
 Now, you should be able to see the welcome page of LobeChat in your browser. For a detailed environment setup guide, please refer to [Development Environment Setup Guide](Setup-Development.zh-CN.md).
 

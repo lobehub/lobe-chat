@@ -77,7 +77,7 @@ bun run dev
 ```
 
 > \[!IMPORTANT]\
-> 如果使用`npm`安装依赖，当你进行代码提交前，应先运行`npm run stylelint-config-recommended@13.0.0`，否则会报错`Could not find "stylelint-config-recommended"`
+> 如果使用`npm`安装依赖，请在提交代码前运行`npm run stylelint-config-recommended@13.0.0`，这样可以避免出现`Could not find "stylelint-config-recommended"`错误
 
 现在，你应该可以在浏览器中看到 LobeChat 的欢迎页面。详细的环境配置指南，请参考 [开发环境设置指南](Setup-Development.zh-CN.md)。
 
