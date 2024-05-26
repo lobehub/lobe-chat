@@ -110,11 +110,18 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
           continue;
         }
 
+        const getTime = (time?: string | number) => {
+          if (!time) return Date.now();
+          if (typeof time === 'number') return time;
+
+          return new Date(time).valueOf();
+        };
+
         validatedData.push({
           ...item,
-          createdAt: item.createdAt ?? Date.now(),
+          createdAt: getTime(item.createdAt as string),
           id,
-          updatedAt: item.updatedAt ?? Date.now(),
+          updatedAt: getTime(item.updatedAt as string),
         });
       } else {
         errors.push(result.error);
