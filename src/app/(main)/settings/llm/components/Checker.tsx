@@ -50,10 +50,13 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
   const [error, setError] = useState<ChatMessageError | undefined>();
 
   const checkConnection = async () => {
-    const data = await chatService.fetchPresetTaskResult({
+    let isError = false;
+
+    await chatService.fetchPresetTaskResult({
       onError: (_, rawError) => {
         setError(rawError);
         setPass(false);
+        isError = true;
       },
       onLoadingChange: (loading) => {
         setLoading(loading);
@@ -75,7 +78,7 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
       },
     });
 
-    if (data) {
+    if (!isError) {
       setError(undefined);
       setPass(true);
     }
