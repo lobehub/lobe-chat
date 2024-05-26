@@ -5,7 +5,7 @@ import { ClientOptions } from 'openai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { createTraceOptions } from '@/app/api/chat/agentRuntime';
-import { getServerConfig } from '@/config/server';
+import * as langfuseCfg from '@/config/langfuse';
 import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
 import {
@@ -312,15 +312,14 @@ describe('AgentRuntime', () => {
       };
 
       const updateMock = vi.fn();
-      beforeEach(() => {
-        vi.mocked(getServerConfig).mockReturnValue({
+
+      it('should call experimental_onToolCall correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
           ENABLE_LANGFUSE: true,
           LANGFUSE_PUBLIC_KEY: 'abc',
           LANGFUSE_SECRET_KEY: 'DDD',
         } as any);
-      });
 
-      it('should call experimental_onToolCall correctly', async () => {
         // 使用 spyOn 模拟 chat 方法
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
@@ -338,6 +337,12 @@ describe('AgentRuntime', () => {
         expect(updateMock).toHaveBeenCalledWith({ tags: ['Tools Call'] });
       });
       it('should call onStart correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
+          ENABLE_LANGFUSE: true,
+          LANGFUSE_PUBLIC_KEY: 'abc',
+          LANGFUSE_SECRET_KEY: 'DDD',
+        } as any);
+
         vi.spyOn(LangfuseGenerationClient.prototype, 'update').mockImplementation(updateMock);
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
@@ -355,6 +360,11 @@ describe('AgentRuntime', () => {
       });
 
       it('should call onCompletion correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
+          ENABLE_LANGFUSE: true,
+          LANGFUSE_PUBLIC_KEY: 'abc',
+          LANGFUSE_SECRET_KEY: 'DDD',
+        } as any);
         // Spy on the chat method and trigger onCompletion callback
         vi.spyOn(LangfuseGenerationClient.prototype, 'update').mockImplementation(updateMock);
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
@@ -379,6 +389,12 @@ describe('AgentRuntime', () => {
         });
       });
       it('should call onFinal correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
+          ENABLE_LANGFUSE: true,
+          LANGFUSE_PUBLIC_KEY: 'abc',
+          LANGFUSE_SECRET_KEY: 'DDD',
+        } as any);
+
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
             if (callback?.onFinal) {

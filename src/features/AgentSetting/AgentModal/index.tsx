@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { FORM_STYLE } from '@/const/layoutTokens';
 
 import { useStore } from '../store';
+import { selectors } from '../store/selectors';
 import { useAgentSyncSettings } from '../useSyncAgemtSettings';
 import ModelSelect from './ModelSelect';
 
@@ -17,7 +18,7 @@ const AgentModal = memo(() => {
   const [form] = Form.useForm();
 
   const [enableMaxTokens, updateConfig] = useStore((s) => [
-    s.config.enableMaxTokens,
+    selectors.chatConfig(s).enableMaxTokens,
     s.setAgentConfig,
   ]);
 

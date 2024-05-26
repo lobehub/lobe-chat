@@ -107,9 +107,17 @@ describe('createSyncSlice', () => {
 
   describe('useEnabledSync', () => {
     it('should return false when userId is empty', async () => {
-      const { result } = renderHook(() => useUserStore().useEnabledSync(true, undefined, vi.fn()), {
-        wrapper: withSWR,
-      });
+      const { result } = renderHook(
+        () =>
+          useUserStore().useEnabledSync(true, {
+            userEnableSync: true,
+            userId: undefined,
+            onEvent: vi.fn(),
+          }),
+        {
+          wrapper: withSWR,
+        },
+      );
 
       await waitFor(() => expect(result.current.data).toBe(false));
     });
@@ -118,7 +126,13 @@ describe('createSyncSlice', () => {
       const disableSyncSpy = vi.spyOn(syncService, 'disableSync').mockResolvedValueOnce(false);
 
       const { result } = renderHook(
-        () => useUserStore().useEnabledSync(false, 'user-id', vi.fn()),
+        () =>
+          useUserStore().useEnabledSync(true, {
+            userEnableSync: false,
+            userId: 'user-id',
+            onEvent: vi.fn(),
+          }),
+
         { wrapper: withSWR },
       );
 
@@ -137,7 +151,7 @@ describe('createSyncSlice', () => {
       result.current.triggerEnableSync = triggerEnableSyncSpy;
 
       const { result: swrResult } = renderHook(
-        () => result.current.useEnabledSync(true, userId, onEvent),
+        () => result.current.useEnabledSync(true, { userEnableSync: true, userId, onEvent }),
         {
           wrapper: withSWR,
         },

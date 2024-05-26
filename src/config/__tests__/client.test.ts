@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { getClientConfig } from '../client';
+import { getDebugConfig } from '../debug';
 
 // 测试前重置 process.env
 vi.stubGlobal('process', {
@@ -17,7 +17,7 @@ describe('getClientConfig', () => {
     process.env.NEXT_PUBLIC_I18N_DEBUG_BROWSER = '1';
     process.env.NEXT_PUBLIC_I18N_DEBUG_SERVER = '1';
 
-    const config = getClientConfig();
+    const config = getDebugConfig();
     expect(config.I18N_DEBUG).toBe(true);
     expect(config.I18N_DEBUG_BROWSER).toBe(true);
     expect(config.I18N_DEBUG_SERVER).toBe(true);
@@ -31,7 +31,7 @@ describe('getClientConfig', () => {
     process.env.NEXT_PUBLIC_I18N_DEBUG_BROWSER = '0';
     process.env.NEXT_PUBLIC_I18N_DEBUG_SERVER = '0';
 
-    const config = getClientConfig();
+    const config = getDebugConfig();
 
     expect(config.I18N_DEBUG).toBe(false);
     expect(config.I18N_DEBUG_BROWSER).toBe(false);

@@ -4,6 +4,8 @@ import { PluginStore } from './Store';
 
 export const runtime = 'edge';
 
+export const revalidate = 43_200; // revalidate at almost every 12 hours
+
 export const GET = async (req: Request) => {
   const locale = new URL(req.url).searchParams.get('locale');
 
@@ -11,7 +13,7 @@ export const GET = async (req: Request) => {
 
   let res: Response;
 
-  res = await fetch(pluginStore.getPluginIndexUrl(locale as any), { next: { revalidate: 3600 } });
+  res = await fetch(pluginStore.getPluginIndexUrl(locale as any));
 
   if (res.status === 404) {
     res = await fetch(pluginStore.getPluginIndexUrl(DEFAULT_LANG));

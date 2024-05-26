@@ -84,6 +84,7 @@
     "chats": "Chat Messages",
     "rest": "Remaining",
     "systemRole": "Role Settings",
+    "title": "Context Details",
     "tools": "Plugin Settings",
     "total": "Total Available",
     "used": "Total Used"

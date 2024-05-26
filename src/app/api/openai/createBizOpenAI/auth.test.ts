@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { checkAuth } from './auth';
 
 describe('ACCESS_CODE', () => {

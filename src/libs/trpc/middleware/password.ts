@@ -1,11 +1,11 @@
 import { TRPCError } from '@trpc/server';
 
 import { getJWTPayload } from '@/app/api/middleware/auth/utils';
-import { getServerConfig } from '@/config/server';
+import { getAppConfig } from '@/config/app';
 import { trpc } from '@/libs/trpc/init';
 
 export const passwordChecker = trpc.middleware(async (opts) => {
-  const { ACCESS_CODES } = getServerConfig();
+  const { ACCESS_CODES } = getAppConfig();
 
   const { ctx } = opts;
 

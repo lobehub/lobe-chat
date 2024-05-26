@@ -1,11 +1,11 @@
 import OpenAI from 'openai';
 
-import { getServerConfig } from '@/config/server';
+import { getLLMConfig } from '@/config/llm';
 import { ChatErrorType } from '@/types/fetch';
 
 // create OpenAI instance
 export const createOpenai = (userApiKey: string | null, endpoint?: string | null) => {
-  const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getServerConfig();
+  const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getLLMConfig();
 
   const baseURL = endpoint ? endpoint : OPENAI_PROXY_URL ? OPENAI_PROXY_URL : undefined;
 

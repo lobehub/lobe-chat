@@ -9,4 +9,10 @@ export default ({ token }: { prefixCls: string; token: Theme }) => css`
     border: 1px solid ${token.colorBorder};
     box-shadow: ${token.boxShadow};
   }
+
+  .${token.prefixCls}-menu-item-selected {
+    .${token.prefixCls}-menu-title-content {
+      color: ${token.colorText};
+    }
+  }
 `;
