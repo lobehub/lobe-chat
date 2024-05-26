@@ -1,6 +1,6 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
-import { LobeAgentConfig } from '@/types/agent';
+import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
 
 export interface State {
@@ -9,6 +9,7 @@ export interface State {
   id?: string;
   meta: MetaData;
 
+  onChatConfigChange?: (config: LobeAgentChatConfig) => void;
   onConfigChange?: (config: LobeAgentConfig) => void;
   onMetaChange?: (meta: MetaData) => void;
 }

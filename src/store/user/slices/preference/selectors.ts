@@ -8,7 +8,7 @@ const hideSyncAlert = (s: UserStore) => s.preference.hideSyncAlert;
 
 const hideSettingsMoveGuide = (s: UserStore) => s.preference.guide?.moveSettingsToAvatar;
 
-const isPreferenceInit = (s: UserStore) => s.isPreferenceInit;
+const isPreferenceInit = (s: UserStore) => s.isUserStateInit;
 
 export const preferenceSelectors = {
   hideSettingsMoveGuide,

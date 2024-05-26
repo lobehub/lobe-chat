@@ -99,7 +99,11 @@ describe('AgentSlice', () => {
         await result.current.updateAgentConfig(config);
       });
 
-      expect(updateSessionConfigMock).toHaveBeenCalledWith('inbox', config);
+      expect(updateSessionConfigMock).toHaveBeenCalledWith(
+        'inbox',
+        config,
+        expect.any(AbortSignal),
+      );
       expect(refreshMock).toHaveBeenCalled();
       updateSessionConfigMock.mockRestore();
       refreshMock.mockRestore();
@@ -122,7 +126,11 @@ describe('AgentSlice', () => {
         await result.current.updateAgentConfig(config);
       });
 
-      expect(updateSessionConfigMock).toHaveBeenCalledWith('session-id', config);
+      expect(updateSessionConfigMock).toHaveBeenCalledWith(
+        'session-id',
+        config,
+        expect.any(AbortSignal),
+      );
       expect(refreshMock).toHaveBeenCalled();
       updateSessionConfigMock.mockRestore();
       refreshMock.mockRestore();
@@ -229,7 +237,11 @@ describe('AgentSlice', () => {
         await result.current.internal_updateAgentConfig('test-session-id', { foo: 'bar' } as any);
       });
 
-      expect(updateSessionConfigMock).toHaveBeenCalledWith('test-session-id', { foo: 'bar' });
+      expect(updateSessionConfigMock).toHaveBeenCalledWith(
+        'test-session-id',
+        { foo: 'bar' },
+        undefined,
+      );
     });
 
     it('should trigger internal_refreshAgentConfig', async () => {

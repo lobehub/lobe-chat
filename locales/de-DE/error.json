@@ -12,6 +12,8 @@
     "retry": "Erneut laden",
     "title": "Ein Problem ist aufgetreten auf der Seite.."
   },
+  "fetchError": "Anforderung fehlgeschlagen",
+  "fetchErrorDetail": "Fehlerdetails",
   "notFound": {
     "backHome": "Zurück zur Startseite",
     "desc": "Die von Ihnen gesuchte Seite konnte nicht gefunden werden. Bitte überprüfen Sie, ob der Link korrekt ist.",

@@ -19,6 +19,9 @@ const Layout = ({ children, session }: LayoutProps) => {
         </Flexbox>
       </Flexbox>
       <Migration />
+      {/* ↓ cloud slot ↓ */}
+
+      {/* ↑ cloud slot ↑ */}
     </>
   );
 };

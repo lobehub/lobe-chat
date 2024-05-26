@@ -24,6 +24,7 @@ exports[`configRouter > getGlobalConfig > Model Provider env > CUSTOM_MODELS > c
 
 exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
 {
+  "enabled": true,
   "enabledModels": [
     "llama",
     "claude-2",

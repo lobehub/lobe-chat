@@ -8,7 +8,7 @@ import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { userProfileSelectors } from '../auth/selectors';
-import { syncSettingsSelectors } from '../settings/selectors';
+import { syncSettingsSelectors } from './selectors';
 
 const n = setNamespace('sync');
 
@@ -19,9 +19,12 @@ export interface SyncAction {
   refreshConnection: (onEvent: OnSyncEvent) => Promise<void>;
   triggerEnableSync: (userId: string, onEvent: OnSyncEvent) => Promise<boolean>;
   useEnabledSync: (
-    userEnableSync: boolean,
-    userId: string | undefined,
-    onEvent: OnSyncEvent,
+    systemEnable: boolean | undefined,
+    params: {
+      onEvent: OnSyncEvent;
+      userEnableSync: boolean;
+      userId: string | undefined;
+    },
   ) => SWRResponse;
 }
 
@@ -72,9 +75,9 @@ export const createSyncSlice: StateCreator<
     });
   },
 
-  useEnabledSync: (userEnableSync, userId, onEvent) =>
+  useEnabledSync: (systemEnable, { userEnableSync, userId, onEvent }) =>
     useSWR<boolean>(
-      ['enableSync', userEnableSync, userId],
+      systemEnable ? ['enableSync', userEnableSync, userId] : null,
       async () => {
         // if user don't enable sync or no userId ,don't start sync
         if (!userId) return false;

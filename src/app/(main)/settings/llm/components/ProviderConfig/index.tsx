@@ -50,6 +50,8 @@ interface ProviderConfigProps {
   canDeactivate?: boolean;
   checkModel?: string;
   checkerItem?: FormItemProps;
+  className?: string;
+  hideSwitch?: boolean;
   modelList?: {
     azureDeployName?: boolean;
     notFoundContent?: ReactNode;
@@ -81,11 +83,12 @@ const ProviderConfig = memo<ProviderConfigProps>(
     checkerItem,
     modelList,
     showBrowserRequest,
+    className,
   }) => {
     const { t } = useTranslation('setting');
     const { t: modelT } = useTranslation('modelProvider');
     const [form] = Form.useForm();
-    const { styles } = useStyles();
+    const { cx, styles } = useStyles();
     const [
       toggleProviderEnabled,
       setSettings,
@@ -192,7 +195,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     return (
       <Form
-        className={styles.form}
+        className={cx(styles.form, className)}
         form={form}
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}
