@@ -1,6 +1,6 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
+import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
 import { GlobalDefaultAgent } from '@/types/settings';
 
 export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
@@ -12,11 +12,15 @@ export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
   },
 };
 
-export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
+export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
   autoCreateTopicThreshold: 2,
   displayMode: 'chat',
   enableAutoCreateTopic: true,
   historyCount: 1,
+};
+
+export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
+  chatConfig: DEFAULT_AGENT_CHAT_CONFIG,
   model: 'gpt-3.5-turbo',
   params: {
     frequency_penalty: 0,
