@@ -8,6 +8,9 @@ import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { LobeAgentSettings } from '@/types/session';
 import { UserSettings } from '@/types/user/settings';
+import { merge } from '@/utils/merge';
+
+vi.mock('zustand/traditional');
 
 // Mock userService
 vi.mock('@/services/user', () => ({
@@ -21,10 +24,9 @@ describe('SettingsAction', () => {
   describe('importAppSettings', () => {
     it('should import app settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const newSettings: UserSettings = {
-        ...DEFAULT_SETTINGS,
-        themeMode: 'dark',
-      };
+      const newSettings: UserSettings = merge(DEFAULT_SETTINGS, {
+        general: { themeMode: 'dark' },
+      });
 
       // Mock the internal setSettings function call
       const setSettingsSpy = vi.spyOn(result.current, 'setSettings');
@@ -35,14 +37,12 @@ describe('SettingsAction', () => {
       });
 
       // Assert that setSettings was called with the correct settings
-      expect(setSettingsSpy).toHaveBeenCalledWith({
-        ...DEFAULT_SETTINGS,
-        password: undefined,
-        themeMode: 'dark',
-      });
+      expect(setSettingsSpy).toHaveBeenCalledWith(newSettings);
 
       // Assert that the state has been updated
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({ themeMode: 'dark' });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith({
+        general: { themeMode: 'dark' },
+      });
 
       // Restore the spy
       setSettingsSpy.mockRestore();
@@ -69,7 +69,7 @@ describe('SettingsAction', () => {
   describe('setSettings', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const partialSettings: Partial<UserSettings> = { themeMode: 'dark' };
+      const partialSettings: DeepPartial<UserSettings> = { general: { themeMode: 'dark' } };
 
       // Perform the action
       await act(async () => {
@@ -92,7 +92,9 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the correct theme mode
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({ themeMode });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith({
+        general: { themeMode },
+      });
     });
   });
 

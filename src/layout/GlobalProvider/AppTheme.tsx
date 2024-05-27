@@ -14,7 +14,7 @@ import {
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { GlobalStyle } from '@/styles';
 import { setCookie } from '@/utils/cookie';
 
@@ -86,11 +86,11 @@ const AppTheme = memo<AppThemeProps>(
     // console.debug('server:appearance', defaultAppearance);
     // console.debug('server:primaryColor', defaultPrimaryColor);
     // console.debug('server:neutralColor', defaultNeutralColor);
-    const themeMode = useUserStore(settingsSelectors.currentThemeMode);
+    const themeMode = useUserStore(userGeneralSettingsSelectors.currentThemeMode);
     const { styles, cx } = useStyles();
     const [primaryColor, neutralColor] = useUserStore((s) => [
-      settingsSelectors.currentSettings(s).primaryColor,
-      settingsSelectors.currentSettings(s).neutralColor,
+      userGeneralSettingsSelectors.primaryColor(s),
+      userGeneralSettingsSelectors.neutralColor(s),
     ]);
 
     useEffect(() => {
