@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "Asistente del sistema",
+    "topic": {
+      "label": "Modelo de nombramiento de temas",
+      "modelDesc": "Modelo designado para el renombramiento automático de temas",
+      "title": "Renombramiento automático de temas"
+    },
     "translation": {
       "label": "Modelo de traducción",
       "modelDesc": "Especifica el modelo a utilizar para la traducción",

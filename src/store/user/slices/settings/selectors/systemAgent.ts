@@ -8,7 +8,9 @@ const currentSystemAgent = (s: UserStore) =>
   merge(DEFAULT_SYSTEM_AGENT_CONFIG, currentSettings(s).systemAgent);
 
 const translation = (s: UserStore) => currentSystemAgent(s).translation;
+const topic = (s: UserStore) => currentSystemAgent(s).topic;
 
 export const systemAgentSelectors = {
+  topic,
   translation,
 };
