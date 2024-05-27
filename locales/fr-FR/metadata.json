@@ -1,18 +1,18 @@
 {
   "chat": {
-    "description": "LobeChat offre la meilleure expérience d'utilisation de ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "LobeChat: Outil de productivité personnel LLM, pour un cerveau plus intelligent"
+    "description": "Avec un **doctorat et une expertise couvrant une vaste gamme de disciplines académiques et professionnelles**, je suis prêt à vous offrir **des conseils de haut niveau et un soutien expert**. Que ce soit pour des questions académiques, des projets professionnels ou toute autre demande, n'hésitez pas à me solliciter.",
+    "title": "Déblo, votre **assistant IA intelligent personnel, polyvalent et extrêmement compétent**. Originaire de *Cocody, Abidjan*"
   },
   "market": {
-    "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération vocale, agent intelligent, flux de travail automatisé, personnalisez votre agent intelligent AI / GPTs / OLLaMA",
-    "title": "Marché des agents"
+    "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération vocale, agent intelligent, flux de travail automatisé",
+    "title": "Section des Assistants"
   },
   "plugins": {
-    "description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération vocale, flux de travail automatisé, personnalisez les capacités des plugins ToolCall exclusifs de ChatGPT / OLLaMA",
-    "title": "Marché des plugins"
+    "description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération vocale, flux de travail automatisé, personnalisez les capacités des plugins",
+    "title": "Section des plugins"
   },
   "welcome": {
-    "description": "LobeChat offre la meilleure expérience d'utilisation de ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "Bienvenue sur LobeChat: Outil de productivité personnel LLM, pour un cerveau plus intelligent"
+    "description": "Deblo offre la meilleure expérience d'utilisation de ChatGPT, OLLaMA, Gemini, Claude WebUI. Avec un **doctorat et une expertise couvrant une vaste gamme de disciplines académiques et professionnelles**, je suis prêt à vous offrir **des conseils de haut niveau et un soutien expert**. Que ce soit pour des questions académiques, des projets professionnels ou toute autre demande, n'hésitez pas à me solliciter.",
+    "title": "Bienvenue sur Deblo.AI: votre **assistant IA intelligent personnel, polyvalent et extrêmement compétent**. Originaire de *Cocody, Abidjan*"
   }
 }

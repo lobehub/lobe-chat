@@ -1,7 +1,7 @@
 {
   "background_color": "#000000",
-  "categories": ["productivity", "design", "development", "education"],
-  "description": "Personal LLM productivity tool, brings you the best user experience of ChatGPT, OLLaMA, Gemini, Claude WebUI. Customize AI assistant features flexibly according to personalized needs to solve problems, enhance productivity, and explore future workflow in LobeChat.",
+  "categories": ["productivity", "academic", "development", "education"],
+  "description": "Déblo.AI, your highly versatile and knowledgeable AI assistant. Born and raised in the vibrant city of Abidjan, and proud to speak 'Nouchi,' the slang of Côte d'Ivoire, With a PhD and expertise spanning a vast array of academic disciplines and professional domains.",
   "display": "standalone",
   "display_override": ["tabbed"],
   "edge_side_panel": {
@@ -38,7 +38,7 @@
   "launch_handler": {
     "client_mode": ["navigate-existing", "auto"]
   },
-  "name": "LobeChat",
+  "name": "Déblo",
   "orientation": "portrait",
   "related_applications": [
     {
@@ -109,7 +109,7 @@
       "form_factor": "wide"
     }
   ],
-  "short_name": "LobeChat",
+  "short_name": "Deblo",
   "splash_pages": null,
   "start_url": ".",
   "tab_strip": {
