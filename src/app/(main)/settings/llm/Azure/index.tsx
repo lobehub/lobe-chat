@@ -13,7 +13,7 @@ import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
 
 import ProviderConfig from '../components/ProviderConfig';
-import { LLMProviderApiTokenKey, LLMProviderBaseUrlKey, LLMProviderConfigKey } from '../const';
+import { KeyVaultsConfigKey, LLMProviderApiTokenKey } from '../const';
 
 const useStyles = createStyles(({ css, token }) => ({
   markdown: css`
@@ -57,13 +57,13 @@ const AzureOpenAIProvider = memo(() => {
           ),
           desc: t('azure.token.desc'),
           label: t('azure.token.title'),
-          name: [LLMProviderConfigKey, providerKey, LLMProviderApiTokenKey],
+          name: [KeyVaultsConfigKey, providerKey, LLMProviderApiTokenKey],
         },
         {
           children: <Input allowClear placeholder={t('azure.endpoint.placeholder')} />,
           desc: t('azure.endpoint.desc'),
           label: t('azure.endpoint.title'),
-          name: [LLMProviderConfigKey, providerKey, LLMProviderBaseUrlKey],
+          name: [KeyVaultsConfigKey, providerKey, 'endpoint'],
         },
         {
           children: (
@@ -85,7 +85,7 @@ const AzureOpenAIProvider = memo(() => {
             </Markdown>
           ),
           label: t('azure.azureApiVersion.title'),
-          name: [LLMProviderConfigKey, providerKey, 'apiVersion'],
+          name: [KeyVaultsConfigKey, providerKey, 'apiVersion'],
         },
       ]}
       checkModel={checkModel}
