@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "Assistente do Sistema",
+    "topic": {
+      "label": "Modelo de Nomeação de Tópicos",
+      "modelDesc": "Especifica o modelo usado para renomeação automática de tópicos",
+      "title": "Renomeação Automática de Tópicos"
+    },
     "translation": {
       "label": "Modelo de Tradução",
       "modelDesc": "Especifica o modelo usado para tradução",
