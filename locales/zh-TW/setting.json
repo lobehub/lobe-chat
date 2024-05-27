@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "系統助手",
+    "topic": {
+      "label": "話題命名模型",
+      "modelDesc": "指定用於話題自動重命名的模型",
+      "title": "話題自動命名"
+    },
     "translation": {
       "label": "翻譯模型",
       "modelDesc": "指定用於翻譯的模型",
