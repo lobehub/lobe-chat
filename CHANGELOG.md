@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.161.25](https://github.com/lobehub/lobe-chat/compare/v0.161.24...v0.161.25)
+
+<sup>Released on **2024-05-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix trpc/edge path error when setting `NEXT_PUBLIC_BASE_PATH`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix trpc/edge path error when setting `NEXT_PUBLIC_BASE_PATH`, closes [#2681](https://github.com/lobehub/lobe-chat/issues/2681) ([622b390](https://github.com/lobehub/lobe-chat/commit/622b390))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.24](https://github.com/lobehub/lobe-chat/compare/v0.161.23...v0.161.24)
 
 <sup>Released on **2024-05-27**</sup>
