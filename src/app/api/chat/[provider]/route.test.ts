@@ -159,6 +159,7 @@ describe('POST handler', () => {
         accessCode: 'test-access-code',
         apiKey: 'test-api-key',
         azureApiVersion: 'v1',
+        userId: 'abc',
       });
 
       const mockParams = { provider: 'test-provider' };
@@ -176,7 +177,7 @@ describe('POST handler', () => {
       const response = await POST(request as unknown as Request, { params: mockParams });
 
       expect(response).toEqual(mockChatResponse);
-      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload);
+      expect(AgentRuntime.prototype.chat).toHaveBeenCalledWith(mockChatPayload, { user: 'abc' });
     });
 
     it('should return an error response when chat completion fails', async () => {
