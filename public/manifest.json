@@ -1,6 +1,6 @@
 {
   "background_color": "#000000",
-  "categories": ["productivity", "academic", "development", "education"],
+  "categories": ["productivity", "academic", "development", "communication", "entertainment", "health", "education"],
   "description": "Déblo.AI, your highly versatile and knowledgeable AI assistant. Born and raised in the vibrant city of Abidjan, and proud to speak 'Nouchi,' the slang of Côte d'Ivoire, With a PhD and expertise spanning a vast array of academic disciplines and professional domains.",
   "display": "standalone",
   "display_override": ["tabbed"],
@@ -43,7 +43,7 @@
   "related_applications": [
     {
       "platform": "webapp",
-      "url": "https://chat-preview.lobehub.com/manifest.json"
+      "url": "https://cdn.deblo.ci/manifest.json"
     }
   ],
   "scope": "/",

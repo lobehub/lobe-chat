@@ -4,7 +4,7 @@ import { appEnv, getAppConfig } from '@/config/app';
 import { OFFICIAL_URL } from '@/const/url';
 import { translation } from '@/server/translation';
 
-const title = 'LobeChat';
+const title = 'Deblo';
 
 const { SITE_URL = OFFICIAL_URL } = getAppConfig();
 const BASE_PATH = appEnv.NEXT_PUBLIC_BASE_PATH;
@@ -45,7 +45,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
     },
     title: {
       default: t('chat.title'),
-      template: '%s · LobeChat',
+      template: '%s · Deblo',
     },
     twitter: {
       card: 'summary_large_image',

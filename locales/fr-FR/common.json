@@ -147,10 +147,10 @@
     }
   },
   "tab": {
-    "chat": "Conversation",
-    "market": "Découvrir",
+    "chat": "Chat",
+    "market": "Agents",
     "me": "moi",
-    "setting": "Paramètre"
+    "setting": "Paramètres"
   },
   "telemetry": {
     "allow": "Autoriser",

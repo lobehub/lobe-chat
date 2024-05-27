@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { SidebarTabKey } from '@/store/global/initialState';
+import chat from '@/locales/default/chat';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
@@ -33,6 +34,17 @@ const Nav = memo(() => {
   const router = useRouter();
   const items: MobileTabBarProps['items'] = useMemo(
     () => [
+      {
+        icon: (active) => (
+          <Icon className={active ? styles.active : undefined} icon={chat} />
+        ),
+        key: SidebarTabKey.Deblo,
+        onClick: () => {
+          router.push('/chat?session=inbox');
+        },
+  //      title: t('tab.chat'),
+        title: 'Deblo',
+      },
       {
         icon: (active) => (
           <Icon className={active ? styles.active : undefined} icon={MessageSquare} />

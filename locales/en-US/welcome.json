@@ -1,15 +1,15 @@
 {
   "button": {
     "import": "Import Configuration",
-    "market": "Visit Market",
-    "start": "Start Now"
+    "market": "Visit Assistants",
+    "start": "Chat Now"
   },
   "guide": {
     "agents": {
       "replaceBtn": "Replace Batch",
       "title": "New Assistant Recommendations:"
     },
-    "defaultMessage": "I am your personal intelligent assistant Deblo, how can I help you now?\nIf you need a more professional or customized assistant, you can click on `+` to create a custom assistant",
+    "defaultMessage": "🤯 Hello and welcome! I am *Déblo*, your highly versatile and knowledgeable AI assistant. Born and raised in the vibrant city of Abidjan, and proud to speak 'Nouchi,' the slang of Côte d'Ivoire, With a *PhD and expertise spanning a vast array of academic disciplines and professional* domains.\nhow can I help you now?\n",
     "qa": {
       "q01": "What is LobeHub?",
       "q02": "What is Deblo?",
