@@ -38,7 +38,7 @@ describe('modelConfigSelectors', () => {
     it('client fetch should disabled on default', () => {
       const s = merge(initialSettingsState, {
         settings: {
-          languageModel: {
+          keyVaults: {
             azure: {
               endpoint: 'endpoint',
               apiKey: 'apikey',
