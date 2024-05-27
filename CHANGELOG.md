@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.161.24](https://github.com/lobehub/lobe-chat/compare/v0.161.23...v0.161.24)
+
+<sup>Released on **2024-05-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the missing user id in chat compeletition and fix remove unstarred topic not working.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the missing user id in chat compeletition and fix remove unstarred topic not working, closes [#2677](https://github.com/lobehub/lobe-chat/issues/2677) ([c9fb2de](https://github.com/lobehub/lobe-chat/commit/c9fb2de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.23](https://github.com/lobehub/lobe-chat/compare/v0.161.22...v0.161.23)
 
 <sup>Released on **2024-05-27**</sup>
