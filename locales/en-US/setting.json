@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "System Agents",
+    "topic": {
+      "label": "Topic Naming Model",
+      "modelDesc": "Model designated for automatic topic renaming",
+      "title": "Automatic Topic Naming"
+    },
     "translation": {
       "label": "Translation Agent",
       "modelDesc": "Specific model for translate message",

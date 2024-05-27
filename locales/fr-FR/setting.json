@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "Assistant système",
+    "topic": {
+      "label": "Modèle de nommage des sujets",
+      "modelDesc": "Modèle spécifié pour le renommage automatique des sujets",
+      "title": "Renommage automatique des sujets"
+    },
     "translation": {
       "label": "Modèle de traduction",
       "modelDesc": "Modèle spécifié pour la traduction",
