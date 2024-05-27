@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { GlobalSettings } from '@/types/settings';
+import { UserSettings } from '@/types/user/settings';
 
 import { UserModel } from '../user';
 

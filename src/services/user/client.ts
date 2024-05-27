@@ -3,8 +3,8 @@ import { DeepPartial } from 'utility-types';
 import { MessageModel } from '@/database/client/models/message';
 import { SessionModel } from '@/database/client/models/session';
 import { UserModel } from '@/database/client/models/user';
-import { GlobalSettings } from '@/types/settings';
 import { UserInitializationState, UserPreference } from '@/types/user';
+import { UserSettings } from '@/types/user/settings';
 import { AsyncLocalStorage } from '@/utils/localStorage';
 
 import { IUserService } from './type';
@@ -28,12 +28,12 @@ export class ClientService implements IUserService {
       hasConversation: messageCount > 0 || sessionCount > 0,
       isOnboard: true,
       preference: await this.preferenceStorage.getFromLocalStorage(),
-      settings: user.settings as GlobalSettings,
+      settings: user.settings as UserSettings,
       userId: user.uuid,
     };
   }
 
-  updateUserSettings = async (patch: DeepPartial<GlobalSettings>) => {
+  updateUserSettings = async (patch: DeepPartial<UserSettings>) => {
     return UserModel.updateSettings(patch);
   };
 

@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 0.161.22](https://github.com/lobehub/lobe-chat/compare/v0.161.21...v0.161.22)
+
+<sup>Released on **2024-05-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix connection checker.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix connection checker, closes [#2672](https://github.com/lobehub/lobe-chat/issues/2672) ([bef8926](https://github.com/lobehub/lobe-chat/commit/bef8926))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.161.21](https://github.com/lobehub/lobe-chat/compare/v0.161.20...v0.161.21)
+
+<sup>Released on **2024-05-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the batch import error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the batch import error, closes [#2671](https://github.com/lobehub/lobe-chat/issues/2671) ([db8f2c6](https://github.com/lobehub/lobe-chat/commit/db8f2c6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.161.20](https://github.com/lobehub/lobe-chat/compare/v0.161.19...v0.161.20)
+
+<sup>Released on **2024-05-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix vercel build.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix vercel build, closes [#2666](https://github.com/lobehub/lobe-chat/issues/2666) ([cb70e4a](https://github.com/lobehub/lobe-chat/commit/cb70e4a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.161.19](https://github.com/lobehub/lobe-chat/compare/v0.161.18...v0.161.19)
 
 <sup>Released on **2024-05-25**</sup>
