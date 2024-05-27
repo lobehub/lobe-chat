@@ -255,7 +255,6 @@ export const chatTopic: StateCreator<
     const { refreshTopic, switchTopic } = get();
     const topics = topicSelectors.currentUnFavTopics(get());
 
-    console.log(topics);
     await topicService.batchRemoveTopics(topics.map((t) => t.id));
     await refreshTopic();
 
