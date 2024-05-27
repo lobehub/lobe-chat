@@ -16,12 +16,12 @@ export interface UserSettingsAction {
   importAppSettings: (settings: UserSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
   setSettings: (settings: DeepPartial<UserSettings>) => Promise<void>;
-  setTranslationSystemAgent: (provider: string, model: string) => Promise<void>;
   switchLocale: (locale: LocaleMode) => Promise<void>;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
+  updateSystemAgent: (key: string, value: { model: string; provider: string }) => Promise<void>;
 }
 
 export const createSettingsSlice: StateCreator<
@@ -51,16 +51,6 @@ export const createSettingsSlice: StateCreator<
     await userService.updateUserSettings(diffs);
     await get().refreshUserState();
   },
-  setTranslationSystemAgent: async (provider, model) => {
-    await get().setSettings({
-      systemAgent: {
-        translation: {
-          model: model,
-          provider: provider,
-        },
-      },
-    });
-  },
   switchLocale: async (locale) => {
     await get().updateGeneralConfig({ language: locale });
 
@@ -77,5 +67,10 @@ export const createSettingsSlice: StateCreator<
   },
   updateKeyVaults: async (keyVaults) => {
     await get().setSettings({ keyVaults });
+  },
+  updateSystemAgent: async (key, { provider, model }) => {
+    await get().setSettings({
+      systemAgent: { [key]: { model, provider } },
+    });
   },
 });

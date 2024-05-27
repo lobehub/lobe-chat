@@ -115,10 +115,10 @@ describe('SettingsAction', () => {
     });
   });
 
-  describe('setTranslationSystemAgent', () => {
+  describe('updateSystemAgent', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const systemAgentSettings: Partial<UserSettings> = {
+      const systemAgentSettings: DeepPartial<UserSettings> = {
         systemAgent: {
           translation: {
             model: 'testmodel',
@@ -129,7 +129,10 @@ describe('SettingsAction', () => {
 
       // Perform the action
       await act(async () => {
-        await result.current.setTranslationSystemAgent('provider', 'testmodel');
+        await result.current.updateSystemAgent('translation', {
+          provider: 'provider',
+          model: 'testmodel',
+        });
       });
 
       // Assert that updateUserSettings was called with the correct settings
