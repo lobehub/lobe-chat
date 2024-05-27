@@ -6,9 +6,6 @@ import { currentLLMSettings, getProviderConfigById } from '../../settings/select
 const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
   getProviderConfigById(provider)(s)?.enabled || false;
 
-const isProviderEndpointNotEmpty = (provider: GlobalLLMProviderKey | string) => (s: UserStore) =>
-  !!getProviderConfigById(provider)(s)?.endpoint;
-
 const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: UserStore) => {
   const config = getProviderConfigById(provider)(s);
   if (typeof config?.fetchOnClient !== 'undefined') return config?.fetchOnClient;
@@ -56,10 +53,8 @@ export const modelConfigSelectors = {
   isAutoFetchModelsEnabled,
   isAzureEnabled,
   isProviderEnabled,
-  isProviderEndpointNotEmpty,
   isProviderFetchOnClient,
 
   ollamaConfig,
-
   openAIConfig,
 };

@@ -76,10 +76,11 @@ export const dbSchemaV7 = {
   plugins:
     '&identifier, id, type, manifest.type, manifest.meta.title, manifest.meta.description, manifest.meta.author, createdAt, updatedAt',
 };
+
 // ************************************** //
-// ******* Version 9 - 2024-03-14 ******* //
+// ******* Version 9 - 2024-05-11 ******* //
 // ************************************** //
-// - Added id to `plugins` table
+// - Added tool_call_id to `messages` table
 export const dbSchemaV9 = {
   ...dbSchemaV7,
   messages:

@@ -2,6 +2,7 @@ import Dexie, { Transaction } from 'dexie';
 
 import { MigrationLLMSettings } from '@/migrations/FromV3ToV4';
 import { MigrationAgentChatConfig } from '@/migrations/FromV5ToV6';
+import { MigrationKeyValueSettings } from '@/migrations/FromV6ToV7';
 import { uuid } from '@/utils/uuid';
 
 import { DB_File } from '../schemas/files';
@@ -76,6 +77,10 @@ export class BrowserDB extends Dexie {
     this.version(10)
       .stores(dbSchemaV9)
       .upgrade((trans) => this.upgradeToV10(trans));
+
+    this.version(11)
+      .stores(dbSchemaV9)
+      .upgrade((trans) => this.upgradeToV11(trans));
 
     this.files = this.table('files');
     this.sessions = this.table('sessions');
@@ -205,6 +210,20 @@ export class BrowserDB extends Dexie {
     await sessions.toCollection().modify(async (session: DBModel<DB_Session>) => {
       if (session.config)
         session.config = MigrationAgentChatConfig.migrateChatConfig(session.config as any);
+    });
+  };
+
+  /**
+   * 2024.05.27
+   * migrate apiKey in languageModel to keyVaults
+   */
+  upgradeToV11 = async (trans: Transaction) => {
+    const users = trans.table('users');
+
+    await users.toCollection().modify((user: DB_User) => {
+      if (user.settings) {
+        user.settings = MigrationKeyValueSettings.migrateSettings(user.settings as any);
+      }
     });
   };
 }
