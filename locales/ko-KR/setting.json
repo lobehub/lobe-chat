@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "시스템 도우미",
+    "topic": {
+      "label": "주제 명명 모델",
+      "modelDesc": "주제 자동 재명명에 사용되는 모델 지정",
+      "title": "주제 자동 명명"
+    },
     "translation": {
       "label": "번역 모델",
       "modelDesc": "번역에 사용되는 모델 지정",
