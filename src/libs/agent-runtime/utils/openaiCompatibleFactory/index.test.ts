@@ -195,18 +195,21 @@ describe('LobeOpenAICompatibleFactory', () => {
     });
 
     describe('handlePayload option', () => {
-      it('should modify request payload correctly', async () => {
+      it('should add user in payload correctly', async () => {
         const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create');
 
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'mistralai/mistral-7b-instruct:free',
-          temperature: 0,
-        });
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'mistralai/mistral-7b-instruct:free',
+            temperature: 0,
+          },
+          { user: 'abc' },
+        );
 
         expect(mockCreateMethod).toHaveBeenCalledWith(
           expect.objectContaining({
-            // 根据实际的 handlePayload 函数,添加断言
+            user: 'abc',
           }),
           expect.anything(),
         );
