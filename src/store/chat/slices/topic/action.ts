@@ -16,8 +16,11 @@ import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { CreateTopicParams } from '@/services/topic/type';
 import type { ChatStore } from '@/store/chat';
+import { useUserStore } from '@/store/user';
+import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
+import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../message/selectors';
@@ -140,7 +143,10 @@ export const chatTopic: StateCreator<
 
     let output = '';
 
-    // 自动总结话题标题
+    // Get current agent for topic
+    const topicConfig = systemAgentSelectors.topic(useUserStore.getState());
+
+    // Automatically summarize the topic title
     await chatService.fetchPresetTaskResult({
       onError: () => {
         internal_updateTopicTitleInSummary(topicId, topic.title);
@@ -160,7 +166,7 @@ export const chatTopic: StateCreator<
 
         internal_updateTopicTitleInSummary(topicId, output);
       },
-      params: await chainSummaryTitle(messages),
+      params: merge(topicConfig, chainSummaryTitle(messages)),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryTopicTitle, topicId }),
     });
   },
