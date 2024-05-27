@@ -15,9 +15,9 @@ interface AccessCodeFormProps {
 
 const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
   const { t } = useTranslation('error');
-  const [password, setSettings] = useUserStore((s) => [
-    settingsSelectors.currentSettings(s).password,
-    s.setSettings,
+  const [password, updateKeyVaults] = useUserStore((s) => [
+    settingsSelectors.password(s),
+    s.updateKeyVaults,
   ]);
   const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
 
@@ -31,7 +31,7 @@ const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
         <Input.Password
           autoComplete={'new-password'}
           onChange={(e) => {
-            setSettings({ password: e.target.value });
+            updateKeyVaults({ password: e.target.value });
           }}
           placeholder={t('unlock.password.placeholder')}
           type={'block'}
