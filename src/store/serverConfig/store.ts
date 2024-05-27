@@ -1,13 +1,12 @@
 import { StoreApi } from 'zustand';
 import { createContext } from 'zustand-utils';
-import { devtools } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_FEATURE_FLAGS, IFeatureFlags } from '@/config/featureFlags';
+import { createDevtools } from '@/store/middleware/createDevtools';
 import { GlobalServerConfig } from '@/types/serverConfig';
-import { isDev } from '@/utils/env';
 import { merge } from '@/utils/merge';
 import { StoreApiWithSelector } from '@/utils/zustand';
 
@@ -42,21 +41,16 @@ declare global {
   }
 }
 
+const devtools = createDevtools('serverConfig');
+
 export const initServerConfigStore = (initState: Partial<ServerConfigStore>) =>
-  createWithEqualityFn<ServerConfigStore>()(
-    devtools(createStore(initState || {}), {
-      name: 'LobeChat_ServerConfig' + (isDev ? '_DEV' : ''),
-    }),
-    shallow,
-  );
+  createWithEqualityFn<ServerConfigStore>()(devtools(createStore(initState || {})), shallow);
 
 export const createServerConfigStore = (initState?: Partial<ServerConfigStore>) => {
   // make sure there is only one store
   if (!store) {
     store = createWithEqualityFn<ServerConfigStore>()(
-      devtools(createStore(initState || {}), {
-        name: 'LobeChat_ServerConfig' + (isDev ? '_DEV' : ''),
-      }),
+      devtools(createStore(initState || {})),
       shallow,
     );
 

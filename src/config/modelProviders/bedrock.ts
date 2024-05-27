@@ -4,11 +4,33 @@ import { ModelProviderCard } from '@/types/llm';
 const Bedrock: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'Titan Text G1 - Lite',
+      id: 'amazon.titan-text-lite-v1:0:4k',
+      tokens: 4000,
+    },
+    {
       description:
         'Amazon Titan Text G1 - Express v1，上下文长度可达 8000 个 token，适合广泛的用途。',
       displayName: 'Titan Text G1 - Express',
       id: 'amazon.titan-text-express-v1:0:8k',
       tokens: 8000,
+    },
+    {
+      displayName: 'Titan Text Premier',
+      id: 'amazon.titan-text-premier-v1:0:32K',
+      tokens: 32_000,
+    },
+    {
+      displayName: 'Jurassic-2 Mid',
+      enabled: true,
+      id: 'ai21.j2-mid-v1',
+      tokens: 8192,
+    },
+    {
+      displayName: 'Jurassic-2 Ultra',
+      enabled: true,
+      id: 'ai21.j2-ultra-v1',
+      tokens: 8192,
     },
     {
       description:

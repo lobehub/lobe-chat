@@ -1,21 +1,39 @@
 import { DeepPartial } from 'utility-types';
 
+import { MessageModel } from '@/database/client/models/message';
+import { SessionModel } from '@/database/client/models/session';
 import { UserModel } from '@/database/client/models/user';
-import { GlobalSettings } from '@/types/settings';
+import { UserInitializationState, UserPreference } from '@/types/user';
+import { UserSettings } from '@/types/user/settings';
+import { AsyncLocalStorage } from '@/utils/localStorage';
 
-export interface UserConfig {
-  avatar?: string;
-  settings: DeepPartial<GlobalSettings>;
-  uuid: string;
-}
+import { IUserService } from './type';
 
-export class ClientService {
-  getUserConfig = async () => {
+export class ClientService implements IUserService {
+  private preferenceStorage: AsyncLocalStorage<UserPreference>;
+
+  constructor() {
+    this.preferenceStorage = new AsyncLocalStorage('LOBE_PREFERENCE');
+  }
+
+  async getUserState(): Promise<UserInitializationState> {
     const user = await UserModel.getUser();
-    return user as unknown as UserConfig;
-  };
+    const messageCount = await MessageModel.count();
+    const sessionCount = await SessionModel.count();
 
-  updateUserSettings = async (patch: DeepPartial<GlobalSettings>) => {
+    return {
+      avatar: user.avatar,
+      canEnablePWAGuide: messageCount >= 2,
+      canEnableTrace: messageCount >= 4,
+      hasConversation: messageCount > 0 || sessionCount > 0,
+      isOnboard: true,
+      preference: await this.preferenceStorage.getFromLocalStorage(),
+      settings: user.settings as UserSettings,
+      userId: user.uuid,
+    };
+  }
+
+  updateUserSettings = async (patch: DeepPartial<UserSettings>) => {
     return UserModel.updateSettings(patch);
   };
 
@@ -25,5 +43,9 @@ export class ClientService {
 
   updateAvatar(avatar: string) {
     return UserModel.updateAvatar(avatar);
+  }
+
+  async updatePreference(preference: UserPreference) {
+    await this.preferenceStorage.saveToLocalStorage(preference);
   }
 }

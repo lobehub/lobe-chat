@@ -1,6 +1,7 @@
 import Dexie, { Transaction } from 'dexie';
 
 import { MigrationLLMSettings } from '@/migrations/FromV3ToV4';
+import { MigrationAgentChatConfig } from '@/migrations/FromV5ToV6';
 import { uuid } from '@/utils/uuid';
 
 import { DB_File } from '../schemas/files';
@@ -71,6 +72,10 @@ export class BrowserDB extends Dexie {
     this.version(9)
       .stores(dbSchemaV9)
       .upgrade((trans) => this.upgradeToV9(trans));
+
+    this.version(10)
+      .stores(dbSchemaV9)
+      .upgrade((trans) => this.upgradeToV10(trans));
 
     this.files = this.table('files');
     this.sessions = this.table('sessions');
@@ -159,6 +164,11 @@ export class BrowserDB extends Dexie {
     });
   };
 
+  /**
+   * 2024.05.11
+   *
+   * message role=function to role=tool
+   */
   upgradeToV9 = async (trans: Transaction) => {
     const messages = trans.table('messages');
     await messages.toCollection().modify(async (message: DBModel<DB_Message>) => {
@@ -183,6 +193,18 @@ export class BrowserDB extends Dexie {
           updatedAt: message.updatedAt - 10,
         } as DBModel<DB_Message>);
       }
+    });
+  };
+
+  /**
+   * 2024.05.25
+   * migrate some agent config to chatConfig
+   */
+  upgradeToV10 = async (trans: Transaction) => {
+    const sessions = trans.table('sessions');
+    await sessions.toCollection().modify(async (session: DBModel<DB_Session>) => {
+      if (session.config)
+        session.config = MigrationAgentChatConfig.migrateChatConfig(session.config as any);
     });
   };
 }

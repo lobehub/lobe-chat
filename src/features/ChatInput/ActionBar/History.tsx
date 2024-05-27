@@ -12,8 +12,8 @@ const History = memo(() => {
   const { t } = useTranslation('setting');
 
   const [historyCount, unlimited, updateAgentConfig] = useAgentStore((s) => {
-    const config = agentSelectors.currentAgentConfig(s);
-    return [config.historyCount, !config.enableHistoryCount, s.updateAgentConfig];
+    const config = agentSelectors.currentAgentChatConfig(s);
+    return [config.historyCount, !config.enableHistoryCount, s.updateAgentChatConfig];
   });
 
   return (

@@ -44,6 +44,10 @@ export const useStyles = createStyles(
       `,
       navbar: css`
         background: ${isDarkMode ? token.colorBgContainer : token.colorFillTertiary};
+
+        @media (max-width: 768px) {
+          background: ${token.colorBgContainer};
+        }
       `,
       navbarButton: css`
         line-height: 2;
@@ -108,7 +112,7 @@ export const useAppearance = () => {
       colorDanger: theme.colorError,
       colorInputBackground: theme.colorFillTertiary,
       colorNeutral: theme.colorText,
-      colorPrimary: theme.colorPrimary,
+
       colorSuccess: theme.colorSuccess,
       colorText: theme.colorText,
       colorTextSecondary: theme.colorTextDescription,

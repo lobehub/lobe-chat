@@ -85,6 +85,7 @@ export default {
     chats: '会话消息',
     rest: '剩余可用',
     systemRole: '角色设定',
+    title: '上下文明细',
     tools: '插件设定',
     total: '总共可用',
     used: '总计使用',

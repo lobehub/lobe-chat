@@ -6,7 +6,8 @@
       "functionCall": "Bu model fonksiyon çağrısını destekler",
       "tokens": "Bu model tek bir oturumda en fazla {{tokens}} Token destekler",
       "vision": "Bu model görüntü tanımıyı destekler"
-    }
+    },
+    "removed": "Bu model listeden çıkarıldı, seçiminizi kaldırırsanız otomatik olarak kaldırılacaktır"
   },
   "ModelSwitchPanel": {
     "emptyModel": "Etkinleştirilmiş model bulunmamaktadır, lütfen ayarlara giderek açın",
