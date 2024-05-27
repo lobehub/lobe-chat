@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "Systeemassistent",
+    "topic": {
+      "label": "Onderwerp Naamgevingsmodel",
+      "modelDesc": "Specificeer het model dat wordt gebruikt voor automatische hernoeming van onderwerpen",
+      "title": "Automatische Onderwerpnaamgeving"
+    },
     "translation": {
       "label": "Vertaalmodel",
       "modelDesc": "Specificeer het model voor vertaling",
