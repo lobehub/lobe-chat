@@ -80,9 +80,4 @@ export class ClientService implements IMessageService {
     const number = await this.countMessages();
     return number > 0;
   }
-
-  async messageCountToCheckTrace() {
-    const number = await this.countMessages();
-    return number >= 4;
-  }
 }

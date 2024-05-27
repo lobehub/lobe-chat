@@ -8,8 +8,8 @@ import { settingsSelectors } from '@/store/user/selectors';
 import { ConfigFile } from '@/types/exportConfig';
 import { ChatMessage } from '@/types/message';
 import { LobeSessions, SessionGroupItem } from '@/types/session';
-import { GlobalSettings } from '@/types/settings';
 import { ChatTopic } from '@/types/topic';
+import { UserSettings } from '@/types/user/settings';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
 export interface ImportResult {
@@ -35,7 +35,7 @@ class ConfigService {
   importMessages = async (messages: ChatMessage[]) => {
     return messageService.batchCreateMessages(messages);
   };
-  importSettings = async (settings: GlobalSettings) => {
+  importSettings = async (settings: UserSettings) => {
     useUserStore.getState().importAppSettings(settings);
   };
   importTopics = async (topics: ChatTopic[]) => {

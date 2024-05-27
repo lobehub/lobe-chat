@@ -2,8 +2,8 @@ import { DeepPartial } from 'utility-types';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { LOBE_URL_IMPORT_NAME } from '@/const/url';
-import { GlobalSettings } from '@/types/settings';
 import { ShareGPTConversation } from '@/types/share';
+import { UserSettings } from '@/types/user/settings';
 import { parseMarkdown } from '@/utils/parseMarkdown';
 
 import { SHARE_GPT_URL, shareService } from '../share';
@@ -91,8 +91,8 @@ describe('ShareGPTService', () => {
 describe('ShareViaUrl', () => {
   describe('createShareSettingsUrl', () => {
     it('should create a share settings URL with the provided settings', () => {
-      const settings: DeepPartial<GlobalSettings> = {
-        languageModel: {
+      const settings: DeepPartial<UserSettings> = {
+        keyVaults: {
           openai: {
             apiKey: 'user-key',
           },
@@ -100,7 +100,7 @@ describe('ShareViaUrl', () => {
       };
       const url = shareService.createShareSettingsUrl(settings);
       expect(url).toBe(
-        `/?${LOBE_URL_IMPORT_NAME}=%7B%22languageModel%22:%7B%22openai%22:%7B%22apiKey%22:%22user-key%22%7D%7D%7D`,
+        `/?${LOBE_URL_IMPORT_NAME}=%7B%22keyVaults%22:%7B%22openai%22:%7B%22apiKey%22:%22user-key%22%7D%7D%7D`,
       );
     });
   });

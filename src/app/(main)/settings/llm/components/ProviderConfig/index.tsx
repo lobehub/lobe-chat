@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import {
+  KeyVaultsConfigKey,
   LLMProviderApiTokenKey,
   LLMProviderBaseUrlKey,
   LLMProviderConfigKey,
@@ -17,8 +18,8 @@ import {
 } from '@/app/(main)/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/selectors';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { keyVaultsConfigSelectors, modelConfigSelectors } from '@/store/user/selectors';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
@@ -50,6 +51,8 @@ interface ProviderConfigProps {
   canDeactivate?: boolean;
   checkModel?: string;
   checkerItem?: FormItemProps;
+  className?: string;
+  hideSwitch?: boolean;
   modelList?: {
     azureDeployName?: boolean;
     notFoundContent?: ReactNode;
@@ -81,11 +84,12 @@ const ProviderConfig = memo<ProviderConfigProps>(
     checkerItem,
     modelList,
     showBrowserRequest,
+    className,
   }) => {
     const { t } = useTranslation('setting');
     const { t: modelT } = useTranslation('modelProvider');
     const [form] = Form.useForm();
-    const { styles } = useStyles();
+    const { cx, styles } = useStyles();
     const [
       toggleProviderEnabled,
       setSettings,
@@ -97,7 +101,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
       s.setSettings,
       modelConfigSelectors.isProviderEnabled(provider)(s),
       modelConfigSelectors.isProviderFetchOnClient(provider)(s),
-      modelConfigSelectors.isProviderEndpointNotEmpty(provider)(s),
+      keyVaultsConfigSelectors.isProviderEndpointNotEmpty(provider)(s),
     ]);
 
     useSyncSettings(form);
@@ -114,7 +118,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             ),
             desc: modelT(`${provider}.token.desc` as any),
             label: modelT(`${provider}.token.title` as any),
-            name: [LLMProviderConfigKey, provider, LLMProviderApiTokenKey],
+            name: [KeyVaultsConfigKey, provider, LLMProviderApiTokenKey],
           },
         ];
 
@@ -125,7 +129,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         children: <Input allowClear placeholder={proxyUrl?.placeholder} />,
         desc: proxyUrl?.desc || t('llm.proxyUrl.desc'),
         label: proxyUrl?.title || t('llm.proxyUrl.title'),
-        name: [LLMProviderConfigKey, provider, LLMProviderBaseUrlKey],
+        name: [KeyVaultsConfigKey, provider, LLMProviderBaseUrlKey],
       },
       (showBrowserRequest || (showEndpoint && isProviderEndpointNotEmpty)) && {
         children: (
@@ -192,7 +196,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     return (
       <Form
-        className={styles.form}
+        className={cx(styles.form, className)}
         form={form}
         items={[model]}
         onValuesChange={debounce(setSettings, 100)}

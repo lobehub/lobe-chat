@@ -1,4 +1,4 @@
-import { GlobalSettings } from '@/types/settings';
+import { UserSettings } from '@/types/user/settings';
 
 import { DEFAULT_AGENT } from './agent';
 import { DEFAULT_COMMON_SETTINGS } from './common';
@@ -16,12 +16,13 @@ export * from './systemAgent';
 export * from './tool';
 export * from './tts';
 
-export const DEFAULT_SETTINGS: GlobalSettings = {
+export const DEFAULT_SETTINGS: UserSettings = {
   defaultAgent: DEFAULT_AGENT,
+  general: DEFAULT_COMMON_SETTINGS,
+  keyVaults: {},
   languageModel: DEFAULT_LLM_CONFIG,
   sync: DEFAULT_SYNC_CONFIG,
   systemAgent: DEFAULT_SYSTEM_AGENT_CONFIG,
   tool: DEFAULT_TOOL_CONFIG,
   tts: DEFAULT_TTS_CONFIG,
-  ...DEFAULT_COMMON_SETTINGS,
 };

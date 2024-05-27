@@ -1,14 +1,11 @@
 import { DeepPartial } from 'utility-types';
 
-import { UserConfig } from '@/services/user/client';
-import { GlobalSettings } from '@/types/settings';
-import { UserPreference } from '@/types/user';
+import { UserInitializationState, UserPreference } from '@/types/user';
+import { UserSettings } from '@/types/user/settings';
 
 export interface IUserService {
-  getPreference: () => Promise<UserPreference>;
-  getUserConfig: () => Promise<UserConfig>;
+  getUserState: () => Promise<UserInitializationState>;
   resetUserSettings: () => Promise<any>;
-  updateAvatar: (avatar: string) => Promise<any>;
   updatePreference: (preference: UserPreference) => Promise<any>;
-  updateUserSettings: (patch: DeepPartial<GlobalSettings>) => Promise<any>;
+  updateUserSettings: (patch: DeepPartial<UserSettings>) => Promise<any>;
 }
