@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/selectors';
+import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
 import { FormAction } from '../style';
 
@@ -17,10 +17,10 @@ const BedrockForm = memo(() => {
   const [showRegion, setShow] = useState(false);
 
   const [accessKeyId, secretAccessKey, region, setConfig] = useUserStore((s) => [
-    modelConfigSelectors.bedrockConfig(s).accessKeyId,
-    modelConfigSelectors.bedrockConfig(s).secretAccessKey,
-    modelConfigSelectors.bedrockConfig(s).region,
-    s.setModelProviderConfig,
+    keyVaultsConfigSelectors.bedrockConfig(s).accessKeyId,
+    keyVaultsConfigSelectors.bedrockConfig(s).secretAccessKey,
+    keyVaultsConfigSelectors.bedrockConfig(s).region,
+    s.updateKeyVaultConfig,
   ]);
 
   const theme = useTheme();

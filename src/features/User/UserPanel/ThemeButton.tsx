@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import Menu, { type MenuProps } from '@/components/Menu';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const themeIcons = {
   auto: Monitor,
@@ -18,7 +18,7 @@ const themeIcons = {
 const ThemeButton = memo(() => {
   const theme = useTheme();
   const [themeMode, switchThemeMode] = useUserStore((s) => [
-    settingsSelectors.currentSettings(s).themeMode,
+    userGeneralSettingsSelectors.currentThemeMode(s),
     s.switchThemeMode,
   ]);
 

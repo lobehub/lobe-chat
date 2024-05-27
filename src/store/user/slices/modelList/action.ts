@@ -6,7 +6,11 @@ import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { UserStore } from '@/store/user';
 import { ChatModelCard } from '@/types/llm';
-import { UserModelProviderConfig, GlobalLLMProviderKey } from '@/types/user/settings';
+import {
+  GlobalLLMProviderKey,
+  UserKeyVaults,
+  UserModelProviderConfig,
+} from '@/types/user/settings';
 
 import { settingsSelectors } from '../settings/selectors';
 import { CustomModelCardDispatch, customModelCardsReducer } from './reducers/customModelCard';
@@ -30,7 +34,6 @@ export interface ModelListAction {
     provider: T,
     config: Partial<UserModelProviderConfig[T]>,
   ) => Promise<void>;
-
   toggleEditingCustomModelCard: (params?: { id: string; provider: GlobalLLMProviderKey }) => void;
 
   toggleProviderEnabled: (provider: GlobalLLMProviderKey, enabled: boolean) => Promise<void>;
@@ -39,6 +42,11 @@ export interface ModelListAction {
     provider: GlobalLLMProviderKey,
     modelKeys: string[],
     options: { label?: string; value?: string }[],
+  ) => Promise<void>;
+
+  updateKeyVaultConfig: <T extends GlobalLLMProviderKey>(
+    provider: T,
+    config: Partial<UserKeyVaults[T]>,
   ) => Promise<void>;
 
   useFetchProviderModelList: (
@@ -137,10 +145,10 @@ export const createModelListSlice: StateCreator<
   toggleEditingCustomModelCard: (params) => {
     set({ editingCustomCardModel: params }, false, 'toggleEditingCustomModelCard');
   },
+
   toggleProviderEnabled: async (provider, enabled) => {
     await get().setSettings({ languageModel: { [provider]: { enabled } } });
   },
-
   updateEnabledModels: async (provider, value, options) => {
     const { dispatchCustomModelCards, setModelProviderConfig } = get();
     const enabledModels = modelProviderSelectors.getEnableModelsById(provider)(get());
@@ -169,6 +177,10 @@ export const createModelListSlice: StateCreator<
     await Promise.all(pools);
 
     await setModelProviderConfig(provider, { enabledModels: value.filter(Boolean) });
+  },
+
+  updateKeyVaultConfig: async (provider, config) => {
+    await get().setSettings({ keyVaults: { [provider]: config } });
   },
 
   useFetchProviderModelList: (provider, enabledAutoFetch) =>
