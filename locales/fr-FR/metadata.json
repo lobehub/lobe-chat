@@ -5,11 +5,11 @@
   },
   "market": {
     "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération vocale, agent intelligent, flux de travail automatisé, personnalisez votre agent intelligent AI / GPTs / OLLaMA",
-    "title": "Marché des agents"
+    "title": "Section des Assistants"
   },
   "plugins": {
     "description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération vocale, flux de travail automatisé, personnalisez les capacités des plugins ToolCall exclusifs de ChatGPT / OLLaMA",
-    "title": "Marché des plugins"
+    "title": "Section des plugins"
   },
   "welcome": {
     "description": "LobeChat offre la meilleure expérience d'utilisation de ChatGPT, OLLaMA, Gemini, Claude WebUI",
