@@ -58,7 +58,7 @@ describe('topicSelectors', () => {
 
   describe('currentUnFavTopics', () => {
     it('should return all unfavorited topics', () => {
-      const state = merge(initialStore, { topics: topicMaps.test });
+      const state = merge(initialStore, { topicMaps, activeId: 'test' });
       const topics = topicSelectors.currentUnFavTopics(state);
       expect(topics).toEqual([topicMaps.test[1]]);
     });
