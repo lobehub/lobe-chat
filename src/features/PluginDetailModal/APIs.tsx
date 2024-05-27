@@ -22,13 +22,11 @@ const APIs = memo<{
         columns={[
           {
             dataIndex: 'name',
-            ellipsis: true,
             render: (name: string) => <code>{name}</code>,
             title: t('detailModal.info.name'),
           },
           {
             dataIndex: 'description',
-            ellipsis: true,
             title: t('detailModal.info.description'),
           },
         ]}
@@ -36,6 +34,7 @@ const APIs = memo<{
         pagination={false}
         rowKey={'name'}
         size={'small'}
+        tableLayout="fixed"
       />
     </Flexbox>
   );
