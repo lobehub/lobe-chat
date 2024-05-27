@@ -4,14 +4,14 @@
 
 我们将以 sessionGroup 的实现为示例：[✨ feat: add session group manager](https://github.com/lobehub/lobe-chat/pull/1055) ， 通过以下六个主要部分来阐述完整的实现流程：
 
-1. 数据模型 / 数据库定义
-2. Service 实现 / Model 实现
-3. 前端数据流 Store 实现
-4. UI 实现与 action 绑定
-5. 数据迁移
-6. 数据导入导出
+1. [数据模型 / 数据库定义](#一数据模型--数据库定义)
+2. [Service 实现 / Model 实现](#二service-实现--model-实现)
+3. [前端数据流 Store 实现](#三前端数据流-store-实现)
+4. [UI 实现与 action 绑定](#四ui-实现与-action-绑定)
+5. [数据迁移](#五数据迁移)
+6. [数据导入导出](#六数据导入导出)
 
-## 一、数据库部分
+## 一、数据模型 / 数据库定义
 
 为了实现 Session Group 功能，首先需要在数据库层面定义相关的数据模型和索引。
 
@@ -119,7 +119,7 @@ export class LocalDB extends Dexie {
 
 ![](https://github.com/lobehub/lobe-chat/assets/28616219/aea50f66-4060-4a32-88c8-b3c672d05be8)
 
-## 二、Model 与 Service 部分
+## 二、Service 实现 / Model 实现
 
 ### 定义 Model
 
@@ -176,7 +176,7 @@ class SessionService {
 }
 ```
 
-## 三、Store Action 部分
+## 三、前端数据流 Store 实现
 
 在 LobeChat 应用中，Store 是用于管理应用前端状态的模块。其中的 Action 是触发状态更新的函数，通常会调用服务层的方法来执行实际的数据处理操作，然后更新 Store 中的状态。我们采用了 `zustand` 作为 Store 模块的底层依赖，对于状态管理的详细实践介绍，可以查阅 [📘 状态管理最佳实践](../State-Management/State-Management-Intro.zh-CN.md)
 
@@ -351,7 +351,7 @@ const customSessionGroups = (s: SessionStore): CustomSessionGroup[] => s.customS
 >
 > 如果你对 Selectors 的概念和功能不太了解，可以查阅 [📘 数据存储取数模块](../State-Management/State-Management-Selectors.zh-CN.md) 部分了解相关内容。
 
-## 四、UI 部分
+## 四、UI 实现与 action 绑定
 
 在 UI 组件中绑定 Store Action 实现交互逻辑，例如 `CreateGroupModal`：
 
