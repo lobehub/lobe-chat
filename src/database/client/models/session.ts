@@ -246,16 +246,20 @@ class _SessionModel extends BaseModel {
   private mapToDB_Session(session: LobeAgentSession): DBModel<DB_Session> {
     return {
       ...session,
+      createdAt: session.createdAt?.valueOf(),
       group: session.group || SessionDefaultGroup.Default,
       pinned: session.pinned ? 1 : 0,
+      updatedAt: session.updatedAt?.valueOf(),
     };
   }
 
   private DB_SessionToAgentSession(session: DBModel<DB_Session>) {
     return {
       ...session,
+      createdAt: new Date(session.createdAt),
       model: session.config.model,
       pinned: !!session.pinned,
+      updatedAt: new Date(session.updatedAt),
     } as LobeAgentSession;
   }
 

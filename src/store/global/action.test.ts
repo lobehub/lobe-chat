@@ -34,11 +34,11 @@ describe('createPreferenceSlice', () => {
       const { result } = renderHook(() => useGlobalStore());
 
       act(() => {
-        useGlobalStore.getState().updatePreference({ showChatSideBar: false });
+        useGlobalStore.getState().updateSystemStatus({ showChatSideBar: false });
         result.current.toggleChatSideBar();
       });
 
-      expect(result.current.preference.showChatSideBar).toBe(true);
+      expect(result.current.status.showChatSideBar).toBe(true);
     });
   });
 
@@ -48,10 +48,11 @@ describe('createPreferenceSlice', () => {
       const groupId = 'group-id';
 
       act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
         result.current.toggleExpandSessionGroup(groupId, true);
       });
 
-      expect(result.current.preference.expandSessionGroupKeys).toContain(groupId);
+      expect(result.current.status.expandSessionGroupKeys).toContain(groupId);
     });
   });
 
@@ -60,10 +61,11 @@ describe('createPreferenceSlice', () => {
       const { result } = renderHook(() => useGlobalStore());
 
       act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
         result.current.toggleMobileTopic();
       });
 
-      expect(result.current.preference.mobileShowTopic).toBe(true);
+      expect(result.current.status.mobileShowTopic).toBe(true);
     });
   });
 
@@ -72,23 +74,24 @@ describe('createPreferenceSlice', () => {
       const { result } = renderHook(() => useGlobalStore());
 
       act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
         result.current.toggleSystemRole(true);
       });
 
-      expect(result.current.preference.showSystemRole).toBe(true);
+      expect(result.current.status.showSystemRole).toBe(true);
     });
   });
 
   describe('updatePreference', () => {
-    it('should update preference', () => {
+    it('should update status', () => {
       const { result } = renderHook(() => useGlobalStore());
-      const preference = { inputHeight: 200 };
+      const status = { inputHeight: 200 };
 
       act(() => {
-        result.current.updatePreference(preference);
+        result.current.updateSystemStatus(status);
       });
 
-      expect(result.current.preference.inputHeight).toEqual(200);
+      expect(result.current.status.inputHeight).toEqual(200);
     });
   });
 
@@ -144,13 +147,12 @@ describe('createPreferenceSlice', () => {
   });
 
   describe('useInitGlobalPreference', () => {
-    it('should init global preference if there is empty object', async () => {
-      vi.spyOn(
-        useGlobalStore.getState().preferenceStorage,
-        'getFromLocalStorage',
-      ).mockReturnValueOnce({} as any);
+    it('should init global status if there is empty object', async () => {
+      vi.spyOn(useGlobalStore.getState().statusStorage, 'getFromLocalStorage').mockReturnValueOnce(
+        {} as any,
+      );
 
-      const { result } = renderHook(() => useGlobalStore().useInitGlobalPreference(), {
+      const { result } = renderHook(() => useGlobalStore().useInitSystemStatus(), {
         wrapper: withSWR,
       });
 
@@ -158,17 +160,16 @@ describe('createPreferenceSlice', () => {
         expect(result.current.data).toEqual({});
       });
 
-      expect(useGlobalStore.getState().preference).toEqual(initialState.preference);
+      expect(useGlobalStore.getState().status).toEqual(initialState.status);
     });
 
     it('should update with data', async () => {
       const { result } = renderHook(() => useGlobalStore());
-      vi.spyOn(
-        useGlobalStore.getState().preferenceStorage,
-        'getFromLocalStorage',
-      ).mockReturnValueOnce({ inputHeight: 300 } as any);
+      vi.spyOn(useGlobalStore.getState().statusStorage, 'getFromLocalStorage').mockReturnValueOnce({
+        inputHeight: 300,
+      } as any);
 
-      const { result: hooks } = renderHook(() => result.current.useInitGlobalPreference(), {
+      const { result: hooks } = renderHook(() => result.current.useInitSystemStatus(), {
         wrapper: withSWR,
       });
 
@@ -176,7 +177,7 @@ describe('createPreferenceSlice', () => {
         expect(hooks.current.data).toEqual({ inputHeight: 300 });
       });
 
-      expect(result.current.preference.inputHeight).toEqual(300);
+      expect(result.current.status.inputHeight).toEqual(300);
     });
   });
 });

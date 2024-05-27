@@ -13,7 +13,7 @@ import {
   modelProviderSelectors,
   settingsSelectors,
 } from '@/store/user/selectors';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 const useStyles = createStyles(({ css, token }) => ({
   hover: css`
@@ -55,6 +55,7 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
       <Flexbox align={'center'} gap={0} horizontal justify={'space-between'}>
         <div>{t('llm.modelList.total', { count: totalModels })}</div>
         <Tooltip
+          overlayStyle={{ pointerEvents: 'none' }}
           title={
             latestFetchTime
               ? t('llm.fetcher.latestTime', {

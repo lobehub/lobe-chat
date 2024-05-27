@@ -1,15 +1,17 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors, settingsSelectors } from '@/store/user/selectors';
+import { keyVaultsConfigSelectors, settingsSelectors } from '@/store/user/selectors';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 import { createJWT } from '@/utils/jwt';
 
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
-      const { accessKeyId, region, secretAccessKey } = modelConfigSelectors.bedrockConfig(
+      const { accessKeyId, region, secretAccessKey } = keyVaultsConfigSelectors.bedrockConfig(
         useUserStore.getState(),
       );
+
       const awsSecretAccessKey = secretAccessKey;
       const awsAccessKeyId = accessKeyId;
 
@@ -19,7 +21,7 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Azure: {
-      const azure = modelConfigSelectors.azureConfig(useUserStore.getState());
+      const azure = keyVaultsConfigSelectors.azureConfig(useUserStore.getState());
 
       return {
         apiKey: azure.apiKey,
@@ -29,15 +31,17 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Ollama: {
-      const config = modelConfigSelectors.ollamaConfig(useUserStore.getState());
+      const config = keyVaultsConfigSelectors.ollamaConfig(useUserStore.getState());
 
-      return { endpoint: config?.endpoint };
+      return { endpoint: config?.baseURL };
     }
 
     default: {
-      const config = settingsSelectors.providerConfig(provider)(useUserStore.getState());
+      const config = keyVaultsConfigSelectors.getVaultByProvider(provider as GlobalLLMProviderKey)(
+        useUserStore.getState(),
+      );
 
-      return { apiKey: config?.apiKey, endpoint: config?.endpoint };
+      return { apiKey: config?.apiKey, endpoint: config?.baseURL };
     }
   }
 };

@@ -1,6 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 // Disable the auto sort key eslint rule to make the code more logic and readable
 import { copyToClipboard } from '@lobehub/ui';
+import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
@@ -16,16 +17,17 @@ import { traceService } from '@/services/trace';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatStore } from '@/store/chat/store';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
-import { chatSelectors } from '../../selectors';
+import { chatSelectors, topicSelectors } from '../../selectors';
 import { MessageDispatch, messagesReducer } from './reducer';
 
-const n = setNamespace('message');
+const n = setNamespace('m');
 
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
@@ -121,12 +123,18 @@ export interface ChatMessageAction {
     content: string,
     toolCalls?: MessageToolCall[],
   ) => Promise<void>;
-  internal_createMessage: (params: CreateMessageParams) => Promise<string>;
+  internal_createMessage: (
+    params: CreateMessageParams,
+    context?: { tempMessageId?: string; skipRefresh?: boolean },
+  ) => Promise<string>;
+  internal_createTmpMessage: (params: CreateMessageParams) => string;
+  internal_fetchMessages: () => Promise<void>;
   internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
+const getAgentChatConfig = () => agentSelectors.currentAgentChatConfig(useAgentStore.getState());
 
 const preventLeavingFn = (e: BeforeUnloadEvent) => {
   // set returnValue to trigger alert modal
@@ -166,7 +174,9 @@ export const chatMessage: StateCreator<
     if (message.tools) {
       const pools = message.tools
         .flatMap((tool) => {
-          const messages = get().messages.filter((m) => m.tool_call_id === tool.id);
+          const messages = chatSelectors
+            .currentChats(get())
+            .filter((m) => m.tool_call_id === tool.id);
 
           return messages.map((m) => m.id);
         })
@@ -218,8 +228,10 @@ export const chatMessage: StateCreator<
 
     const fileIdList = files?.map((f) => f.id);
 
-    // if message is empty and no files, then stop
-    if (!message && (!fileIdList || fileIdList?.length === 0)) return;
+    const isNoFile = !fileIdList || fileIdList.length === 0;
+
+    // if message is empty or no files, then stop
+    if (!message && isNoFile) return;
 
     const newMessage: CreateMessageParams = {
       content: message,
@@ -231,27 +243,91 @@ export const chatMessage: StateCreator<
       topicId: activeTopicId,
     };
 
-    const id = await get().internal_createMessage(newMessage);
+    const agentConfig = getAgentChatConfig();
+
+    let tempMessageId: string | undefined = undefined;
+    let newTopicId: string | undefined = undefined;
+
+    // it should be the default topic, then
+    // if autoCreateTopic is enabled, check to whether we need to create a topic
+    if (!onlyAddUserMessage && !activeTopicId && agentConfig.enableAutoCreateTopic) {
+      // check activeTopic and then auto create topic
+      const chats = chatSelectors.currentChats(get());
+
+      // we will add two messages (user and assistant), so the finial length should +2
+      const featureLength = chats.length + 2;
+
+      // if there is no activeTopicId and the feature length is greater than the threshold
+      // then create a new topic and active it
+      if (!get().activeTopicId && featureLength >= agentConfig.autoCreateTopicThreshold) {
+        // we need to create a temp message for optimistic update
+        tempMessageId = get().internal_createTmpMessage(newMessage);
+        get().internal_toggleMessageLoading(true, tempMessageId);
+
+        const topicId = await get().createTopic();
+
+        if (topicId) {
+          newTopicId = topicId;
+          newMessage.topicId = topicId;
+
+          // we need to copy the messages to the new topic or the message will disappear
+          const mapKey = chatSelectors.currentChatKey(get());
+          const newMaps = {
+            ...get().messagesMap,
+            [messageMapKey(activeId, topicId)]: get().messagesMap[mapKey],
+          };
+          set({ messagesMap: newMaps }, false, 'internal_copyMessages');
+
+          // get().internal_dispatchMessage({ type: 'deleteMessage', id: tempMessageId });
+          get().internal_toggleMessageLoading(false, tempMessageId);
+
+          // make the topic loading
+          get().internal_updateTopicLoading(topicId, true);
+        }
+      }
+    }
+
+    const id = await get().internal_createMessage(newMessage, {
+      tempMessageId,
+      skipRefresh: !onlyAddUserMessage,
+    });
+
+    // switch to the new topic if create the new topic
+    if (!!newTopicId) {
+      await get().switchTopic(newTopicId, true);
+      await get().internal_fetchMessages();
+
+      // delete previous messages
+      // remove the temp message map
+      const newMaps = { ...get().messagesMap, [messageMapKey(activeId, null)]: [] };
+      set({ messagesMap: newMaps }, false, 'internal_copyMessages');
+    }
 
     // if only add user message, then stop
-    if (onlyAddUserMessage) return;
+    if (onlyAddUserMessage) {
+      return;
+    }
 
     // Get the current messages to generate AI response
     const messages = chatSelectors.currentChats(get());
 
     await internal_coreProcessMessage(messages, id, { isWelcomeQuestion });
 
-    // check activeTopic and then auto create topic
-    const chats = chatSelectors.currentChats(get());
-
-    const agentConfig = getAgentConfig();
     // if autoCreateTopic is false, then stop
     if (!agentConfig.enableAutoCreateTopic) return;
 
-    if (!activeTopicId && chats.length >= agentConfig.autoCreateTopicThreshold) {
-      const { saveToTopic, switchTopic } = get();
-      const id = await saveToTopic();
-      if (id) switchTopic(id);
+    // check activeTopic and then auto update topic title
+    if (newTopicId) {
+      const chats = chatSelectors.currentChats(get());
+      await get().summaryTopicTitle(newTopicId, chats);
+      return;
+    }
+
+    const topic = topicSelectors.currentActiveTopic(get());
+
+    if (topic && !topic.title) {
+      const chats = chatSelectors.currentChats(get());
+      await get().summaryTopicTitle(topic.id, chats);
     }
   },
   addAIMessage: async () => {
@@ -289,7 +365,10 @@ export const chatMessage: StateCreator<
 
     internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },
+
   updateInputMessage: (message) => {
+    if (isEqual(message, get().inputMessage)) return;
+
     set({ inputMessage: message }, false, n('updateInputMessage', message));
   },
   modifyMessageContent: async (id, content) => {
@@ -308,16 +387,18 @@ export const chatMessage: StateCreator<
       async ([, sessionId, topicId]: [string, string, string | undefined]) =>
         messageService.getMessages(sessionId, topicId),
       {
-        suspense: true,
-        fallbackData: [],
         onSuccess: (messages, key) => {
+          const nextMap = {
+            ...get().messagesMap,
+            [messageMapKey(sessionId, activeTopicId)]: messages,
+          };
+          // no need to update map if the messages have been init and the map is the same
+          if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
+
           set(
-            { activeId: sessionId, messages, messagesInit: true },
+            { messagesInit: true, messagesMap: nextMap },
             false,
-            n('useFetchMessages', {
-              messages,
-              queryKey: key,
-            }),
+            n('useFetchMessages', { messages, queryKey: key }),
           );
         },
       },
@@ -360,9 +441,13 @@ export const chatMessage: StateCreator<
 
     if (!activeId) return;
 
-    const messages = messagesReducer(get().messages, payload);
+    const messages = messagesReducer(chatSelectors.currentChats(get()), payload);
 
-    set({ messages }, false, { type: `dispatchMessage/${payload.type}`, payload });
+    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
+
+    if (isEqual(nextMap, get().messagesMap)) return;
+
+    set({ messagesMap: nextMap }, false, { type: `dispatchMessage/${payload.type}`, payload });
   },
   internal_fetchAIChatMessage: async (messages, assistantId, params) => {
     const {
@@ -379,19 +464,20 @@ export const chatMessage: StateCreator<
       n('generateMessage(start)', { assistantId, messages }) as string,
     );
 
-    const config = getAgentConfig();
+    const agentConfig = getAgentConfig();
+    const chatConfig = agentConfig.chatConfig;
 
-    const compiler = template(config.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
+    const compiler = template(chatConfig.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
     // ================================== //
     //   messages uniformly preprocess    //
     // ================================== //
 
     // 1. slice messages with config
-    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, config);
+    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig);
 
     // 2. replace inputMessage template
-    preprocessMsgs = !config.inputTemplate
+    preprocessMsgs = !chatConfig.inputTemplate
       ? preprocessMsgs
       : preprocessMsgs.map((m) => {
           if (m.role === 'user') {
@@ -408,21 +494,23 @@ export const chatMessage: StateCreator<
         });
 
     // 3. add systemRole
-    if (config.systemRole) {
-      preprocessMsgs.unshift({ content: config.systemRole, role: 'system' } as ChatMessage);
+    if (agentConfig.systemRole) {
+      preprocessMsgs.unshift({ content: agentConfig.systemRole, role: 'system' } as ChatMessage);
     }
 
     // 4. handle max_tokens
-    config.params.max_tokens = config.enableMaxTokens ? config.params.max_tokens : undefined;
+    agentConfig.params.max_tokens = chatConfig.enableMaxTokens
+      ? agentConfig.params.max_tokens
+      : undefined;
 
     // 5. handle config for the vision model
     // Due to the gpt-4-vision-preview model's default max_tokens is very small
     // we need to set the max_tokens a larger one.
-    if (config.model === 'gpt-4-vision-preview') {
+    if (agentConfig.model === 'gpt-4-vision-preview') {
       /* eslint-disable unicorn/no-lonely-if */
-      if (!config.params.max_tokens)
+      if (!agentConfig.params.max_tokens)
         // refs: https://github.com/lobehub/lobe-chat/issues/837
-        config.params.max_tokens = 2048;
+        agentConfig.params.max_tokens = 2048;
     }
 
     let isFunctionCall = false;
@@ -433,10 +521,10 @@ export const chatMessage: StateCreator<
       abortController,
       params: {
         messages: preprocessMsgs,
-        model: config.model,
-        provider: config.provider,
-        ...config.params,
-        plugins: config.plugins,
+        model: agentConfig.model,
+        provider: agentConfig.provider,
+        ...agentConfig.params,
+        plugins: agentConfig.plugins,
       },
       trace: {
         traceId: params?.traceId,
@@ -616,20 +704,47 @@ export const chatMessage: StateCreator<
     await refreshMessages();
   },
 
-  internal_createMessage: async (message) => {
-    const { internal_dispatchMessage, refreshMessages, internal_toggleMessageLoading } = get();
+  internal_createMessage: async (message, context) => {
+    const { internal_createTmpMessage, refreshMessages, internal_toggleMessageLoading } = get();
+    let tempId = context?.tempMessageId;
+
+    if (!tempId) {
+      // use optimistic update to avoid the slow waiting
+      tempId = internal_createTmpMessage(message);
+
+      internal_toggleMessageLoading(true, tempId);
+    }
+
+    const id = await messageService.createMessage(message);
+    if (!context?.skipRefresh) {
+      await refreshMessages();
+    }
+
+    internal_toggleMessageLoading(false, tempId);
+
+    return id;
+  },
+
+  internal_fetchMessages: async () => {
+    const messages = await messageService.getMessages(get().activeId, get().activeTopicId);
+    const nextMap = { ...get().messagesMap, [chatSelectors.currentChatKey(get())]: messages };
+    // no need to update map if the messages have been init and the map is the same
+    if (get().messagesInit && isEqual(nextMap, get().messagesMap)) return;
+
+    set(
+      { messagesInit: true, messagesMap: nextMap },
+      false,
+      n('internal_fetchMessages', { messages }),
+    );
+  },
+  internal_createTmpMessage: (message) => {
+    const { internal_dispatchMessage } = get();
 
     // use optimistic update to avoid the slow waiting
     const tempId = 'tmp_' + nanoid();
     internal_dispatchMessage({ type: 'createMessage', id: tempId, value: message });
 
-    internal_toggleMessageLoading(true, tempId);
-    const id = await messageService.createMessage(message);
-
-    await refreshMessages();
-    internal_toggleMessageLoading(false, tempId);
-
-    return id;
+    return tempId;
   },
 
   internal_traceMessage: async (id, payload) => {

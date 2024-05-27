@@ -3,7 +3,7 @@ import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { getJWTPayload } from '@/app/api/middleware/auth/utils';
-import { getServerConfig } from '@/config/server';
+import { getAppConfig } from '@/config/app';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableNextAuth } from '@/const/auth';
 import { LOBE_CHAT_TRACE_ID, TraceNameMap } from '@/const/trace';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
@@ -14,7 +14,7 @@ import { getTracePayload } from '@/utils/trace';
 import { parserPluginSettings } from './settings';
 
 const checkAuth = (accessCode: string | null, oauthAuthorized: boolean | null) => {
-  const { ACCESS_CODES, PLUGIN_SETTINGS } = getServerConfig();
+  const { ACCESS_CODES, PLUGIN_SETTINGS } = getAppConfig();
 
   // if there is no plugin settings, just skip the auth
   if (!PLUGIN_SETTINGS) return { auth: true };
@@ -32,7 +32,7 @@ const checkAuth = (accessCode: string | null, oauthAuthorized: boolean | null) =
   return { auth: true };
 };
 
-const { PLUGINS_INDEX_URL: pluginsIndexUrl, PLUGIN_SETTINGS } = getServerConfig();
+const { PLUGINS_INDEX_URL: pluginsIndexUrl, PLUGIN_SETTINGS } = getAppConfig();
 
 const defaultPluginSettings = parserPluginSettings(PLUGIN_SETTINGS);
 

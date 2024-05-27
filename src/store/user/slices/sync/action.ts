@@ -1,14 +1,14 @@
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { globalService } from '@/services/global';
+import { syncService } from '@/services/sync';
 import type { UserStore } from '@/store/user';
 import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
 import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { userProfileSelectors } from '../auth/selectors';
-import { syncSettingsSelectors } from '../settings/selectors';
+import { syncSettingsSelectors } from './selectors';
 
 const n = setNamespace('sync');
 
@@ -19,9 +19,12 @@ export interface SyncAction {
   refreshConnection: (onEvent: OnSyncEvent) => Promise<void>;
   triggerEnableSync: (userId: string, onEvent: OnSyncEvent) => Promise<boolean>;
   useEnabledSync: (
-    userEnableSync: boolean,
-    userId: string | undefined,
-    onEvent: OnSyncEvent,
+    systemEnable: boolean | undefined,
+    params: {
+      onEvent: OnSyncEvent;
+      userEnableSync: boolean;
+      userId: string | undefined;
+    },
   ) => SWRResponse;
 }
 
@@ -50,7 +53,7 @@ export const createSyncSlice: StateCreator<
     const defaultUserName = `My ${browserInfo.browser} (${browserInfo.os})`;
 
     set({ syncStatus: PeerSyncStatus.Connecting });
-    return globalService.enabledSync({
+    return syncService.enabledSync({
       channel: {
         name: sync.channelName,
         password: sync.channelPassword,
@@ -72,15 +75,15 @@ export const createSyncSlice: StateCreator<
     });
   },
 
-  useEnabledSync: (userEnableSync, userId, onEvent) =>
+  useEnabledSync: (systemEnable, { userEnableSync, userId, onEvent }) =>
     useSWR<boolean>(
-      ['enableSync', userEnableSync, userId],
+      systemEnable ? ['enableSync', userEnableSync, userId] : null,
       async () => {
         // if user don't enable sync or no userId ,don't start sync
         if (!userId) return false;
 
         // if user don't enable sync, stop sync
-        if (!userEnableSync) return globalService.disableSync();
+        if (!userEnableSync) return syncService.disableSync();
 
         return get().triggerEnableSync(userId, onEvent);
       },

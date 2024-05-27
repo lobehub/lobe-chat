@@ -81,7 +81,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         addon={addon}
         avatar={avatar}
         avatarBackground={avatarBackground}
-        date={updateAt}
+        date={updateAt?.valueOf()}
         description={description}
         group={group}
         id={id}

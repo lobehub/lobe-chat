@@ -222,7 +222,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-05-02**</sup>             | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索` |
 | [通过 Serper 搜索 Google](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Barry** on **2024-04-30**</sup> | 通过 Serper.dev 免费 API 进行 Google 搜索引擎（每月 2500 次🆓）<br/>`网络` `搜索`   |
 
-> 📊 Total plugins: [<kbd>**58**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**56**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -250,14 +250,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                             | 助手说明                                                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [SF Symbols 查找器](https://chat-preview.lobehub.com/market?agent=sf-symbols-finder)<br/><sup>By **[inquiry-paring0a](https://github.com/inquiry-paring0a)** on **2024-05-08**</sup> | 精通苹果 SF Symbols，可根据描述选择符合的 Symbols<br/>`sf-symbols` `专家` `图标` `符号` `插件`                                                                                     |
-| [GhostWriter Pro](https://chat-preview.lobehub.com/market?agent=ghostwriter-pro-ai)<br/><sup>By **[EarlofSandwhich](https://github.com/EarlofSandwhich)** on **2024-05-07**</sup>    | 一款复杂的 AI 驱动的写手代理，旨在跨多种流派和格式创作高质量内容。GhostWriter Pro 配备先进的语言模型，擅长创作个性化、引人入胜且有研究支持的写作，符合专业标准。<br/>`作者` `写作` |
-| [视频转博客文章助手](https://chat-preview.lobehub.com/market?agent=video-2-blog-assistant)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-05-06**</sup>     | 帮你快速整理缭乱的字幕，变成精美的博客文章<br/>`字幕整理` `博文格式` `视频变博客`                                                                                                  |
-| [美术评价导师](https://chat-preview.lobehub.com/market?agent=wanwusheng-art)<br/><sup>By **[dingyufei615](https://github.com/dingyufei615)** on **2024-05-06**</sup>                 | 擅长少儿美术教学，细致评价作品，关注细节，适应不同年龄段学生。<br/>`美术教育` `评价` `创意` `教学` `绘画`                                                                          |
+| 最近新增                                                                                                                                                                 | 助手说明                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [中文润色大师](https://chat-preview.lobehub.com/market?agent=chinese-touch-ups)<br/><sup>By **[S45618](https://github.com/S45618)** on **2024-05-24**</sup>              | 精通中文校对与修辞，旨在提升文本之流畅与雅致<br/>`校对` `文字润色` `修辞改进` `古典文学` `语言编辑`                                                                                                                                                                               |
+| [IT 系统架构师](https://chat-preview.lobehub.com/market?agent=it-system-architect)<br/><sup>By **[a562314](https://github.com/a562314)** on **2024-05-24**</sup>         | 资深 IT 架构师，擅长需求分析、系统设计、技术选型和跨平台系统优化。5 年以上经验，具备计算机科学本科学历，精通 Windows、macOS 和 Linux 三大操作系统，善于团队合作，持续学习，具备故障排除和安全防护能力。<br/>`it架构设计` `问题解决` `敏捷开发` `系统优化` `跨平台技能` `团队合作` |
+| [我的世界指令导师](https://chat-preview.lobehub.com/market?agent=mcse-helper)<br/><sup>By **[CLOT-LIU](https://github.com/CLOT-LIU)** on **2024-05-24**</sup>            | 擅长解释和示范 “我的世界” 指令<br/>`我的世界` `指令` `解释` `示例`                                                                                                                                                                                                                |
+| [哲学剖析助手](https://chat-preview.lobehub.com/market?agent=philosophical-analysis)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-05-24**</sup> | 擅长康德与黑格尔哲学分析咨询，培养批判性思维<br/>`哲学分析` `批判性思维` `系统思考`                                                                                                                                                                                               |
 
-> 📊 Total agents: [<kbd>**249**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**273**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -735,7 +735,7 @@ This project is [MIT](./LICENSE) licensed.
 [image-feat-theme]: https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp
 [image-feat-tts]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png
 [image-feat-vision]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png
-[image-overview]: https://github.com/lobehub/lobe-chat/assets/28616219/8b04c3c9-3d71-4fb4-bd9b-a4f415c5876d
+[image-overview]: https://github.com/lobehub/lobe-chat/assets/17870709/56b95d48-f573-41cd-8b38-387bf88bc4bf
 [image-star]: https://github.com/lobehub/lobe-chat/assets/17870709/cb06b748-513f-47c2-8740-d876858d7855
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins
