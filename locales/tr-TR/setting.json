@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "Sistem Asistanı",
+    "topic": {
+      "label": "Konu Adlandırma Modeli",
+      "modelDesc": "Konuların otomatik olarak yeniden adlandırılması için belirlenen model",
+      "title": "Konu Otomatik Adlandırma"
+    },
     "translation": {
       "label": "Çeviri Modeli",
       "modelDesc": "Çeviri için belirlenen model",

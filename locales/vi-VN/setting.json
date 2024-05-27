@@ -369,6 +369,11 @@
   },
   "systemAgent": {
     "title": "Trợ lý hệ thống",
+    "topic": {
+      "label": "Mô hình đặt tên chủ đề",
+      "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề",
+      "title": "Tự động đặt tên chủ đề"
+    },
     "translation": {
       "label": "Mô hình dịch",
       "modelDesc": "Chọn mô hình để dịch",

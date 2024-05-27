@@ -148,7 +148,7 @@ describe('SessionAction', () => {
   });
 
   describe('pinSession', () => {
-    it.skip('should pin a session when pinned is true', async () => {
+    it('should pin a session when pinned is true', async () => {
       const { result } = renderHook(() => useSessionStore());
       const sessionId = 'session-id-to-pin';
 
@@ -160,7 +160,7 @@ describe('SessionAction', () => {
       expect(mockRefresh).toHaveBeenCalled();
     });
 
-    it.skip('should unpin a session when pinned is false', async () => {
+    it('should unpin a session when pinned is false', async () => {
       const { result } = renderHook(() => useSessionStore());
       const sessionId = 'session-id-to-unpin';
 
