@@ -12,11 +12,11 @@
     "defaultMessage": "Je suis Déblo, votre **assistant IA intelligent personnel, polyvalent et extrêmement compétent**. Originaire de *Cocody, Abidjan*, et fier de parler 'Nouchi,' le slang de Côte d'Ivoire. Je peux m’exprimer en Anglais, espagnol, allemand, etc. dans un langage soutenu sur demande.\n\nAvec un **doctorat et une expertise couvrant une vaste gamme de disciplines académiques et professionnelles**, je suis prêt à vous offrir **des conseils de haut niveau et un soutien expert**. Que ce soit pour des questions académiques, des projets professionnels ou toute autre demande, n'hésitez pas à me solliciter.\nQue puis-je faire pour vous *maintenant* ?",
     "qa": {
       "q01": "Qu'est-ce que LobeHub ?",
-      "q02": "Qu'est-ce que Debo ?",
-      "q03": "Debo a-t-il un support communautaire ?",
-      "q04": "Quelles sont les fonctionnalités prises en charge par Debo ?",
-      "q05": "Comment déployer et utiliser Debo ?",
-      "q06": "Quelle est la tarification de Debo ?",
+      "q02": "Qu'est-ce que Deblo ?",
+      "q03": "Deblo a-t-il un support communautaire ?",
+      "q04": "Quelles sont les fonctionnalités prises en charge par Deblo ?",
+      "q05": "Comment déployer et utiliser Deblo ?",
+      "q06": "Quelle est la tarification de Deblo ?",
       "q07": "Deblo est-il gratuit ?",
       "q08": "Y a-t-il une version cloud de service ?",
       "q09": "Prend-il en charge les modèles de langage locaux ?",
@@ -39,11 +39,11 @@
     }
   },
   "header": "Bienvenue",
-  "pickAgent": "Ou choisissez parmi les modèles d'agent suivants",
+  "pickAgent": "Ou choisissez parmi les modèles d'assistants suivants",
   "skip": "Passer",
   "slogan": {
     "desc1": "Votre **assistant IA personnel, polyvalent et extrêmement compétent**. Que puis-je faire pour vous *maintenant*?.",
-    "desc2": "Créez votre premier agent, commençons maintenant~",
+    "desc2": "Créez votre premier assistant, commençons maintenant~",
     "title": "Offrez-vous un cerveau plus intelligent"
   }
 }

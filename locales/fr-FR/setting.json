@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "En choisissant d'envoyer des données de télémétrie, vous pouvez nous aider à améliorer l'expérience utilisateur globale de LobeChat",
+      "desc": "En choisissant d'envoyer des données de télémétrie, vous pouvez nous aider à améliorer l'expérience utilisateur globale de Deblo",
       "title": "Envoyer des données d'utilisation anonymes"
     },
     "title": "Analytique"
@@ -64,11 +64,11 @@
           "title": "Nom d'affichage du modèle"
         },
         "files": {
-          "extra": "La fonctionnalité de téléchargement de fichiers actuelle de LobeChat est une solution de contournement, à utiliser à vos risques et périls. Veuillez attendre une mise en œuvre complète de la capacité de téléchargement de fichiers.",
+          "extra": "La fonctionnalité de téléchargement de fichiers actuelle de Deblo est une solution de contournement, à utiliser à vos risques et périls. Veuillez attendre une mise en œuvre complète de la capacité de téléchargement de fichiers.",
           "title": "Prise en charge du téléchargement de fichiers"
         },
         "functionCall": {
-          "extra": "Cette configuration activera uniquement la capacité d'appel de fonctions dans LobeChat. La prise en charge des appels de fonctions dépend entièrement du modèle lui-même. Veuillez tester par vous-même la disponibilité de la capacité d'appel de fonctions de ce modèle.",
+          "extra": "Cette configuration activera uniquement la capacité d'appel de fonctions dans Deblo. La prise en charge des appels de fonctions dépend entièrement du modèle lui-même. Veuillez tester par vous-même la disponibilité de la capacité d'appel de fonctions de ce modèle.",
           "title": "Prise en charge de l'appel de fonctions"
         },
         "id": {
@@ -82,7 +82,7 @@
           "unlimited": "illimité"
         },
         "vision": {
-          "extra": "Cette configuration activera uniquement la configuration de téléchargement d'images dans LobeChat. La prise en charge de la reconnaissance dépend entièrement du modèle lui-même. Veuillez tester par vous-même la disponibilité de la capacité de reconnaissance visuelle de ce modèle.",
+          "extra": "Cette configuration activera uniquement la configuration de téléchargement d'images dans Deblo. La prise en charge de la reconnaissance dépend entièrement du modèle lui-même. Veuillez tester par vous-même la disponibilité de la capacité de reconnaissance visuelle de ce modèle.",
           "title": "Prise en charge de la reconnaissance visuelle"
         }
       }

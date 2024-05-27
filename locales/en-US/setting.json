@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of LobeChat",
+      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of Deblo",
       "title": "Send Anonymous Usage Data"
     },
     "title": "Analytics"
@@ -64,11 +64,11 @@
           "title": "Model Display Name"
         },
         "files": {
-          "extra": "The current file upload implementation in LobeChat is only a hack solution for self-attempt. Please wait for the complete file upload capability in future implementations.",
+          "extra": "The current file upload implementation in Deblo is only a hack solution for self-attempt. Please wait for the complete file upload capability in future implementations.",
           "title": "Support File Upload"
         },
         "functionCall": {
-          "extra": "This configuration will only enable the function call capability in LobeChat. Whether function calls are supported depends entirely on the model itself. Please test the availability of function calls in this model on your own.",
+          "extra": "This configuration will only enable the function call capability in Deblo. Whether function calls are supported depends entirely on the model itself. Please test the availability of function calls in this model on your own.",
           "title": "Support Function Call"
         },
         "id": {
@@ -82,7 +82,7 @@
           "unlimited": "unlimited"
         },
         "vision": {
-          "extra": "This configuration will only enable the image upload configuration in LobeChat. Whether recognition is supported depends entirely on the model itself. Please test the availability of visual recognition in this model on your own.",
+          "extra": "This configuration will only enable the image upload configuration in Deblo. Whether recognition is supported depends entirely on the model itself. Please test the availability of visual recognition in this model on your own.",
           "title": "Support Visual Recognition"
         }
       }
