@@ -21,6 +21,7 @@ describe('useTokenCount', () => {
 
     expect(result.current).toBe(0);
     await waitFor(() => expect(result.current).toBe(0));
+    mockEncodeAsync.mockClear();
   });
 
   it('should handle empty input', async () => {
