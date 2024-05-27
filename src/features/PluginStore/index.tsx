@@ -19,8 +19,6 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   const [listType] = useToolStore((s) => [s.listType]);
 
-  const gap = mobile ? 8 : 16;
-
   return (
     <Modal
       allowFullscreen
@@ -34,11 +32,8 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
       width={800}
     >
       <Flexbox 
-        gap={gap} 
-        style={{
-          maxHeight: mobile ? '-webkit-fill-available' : 'inherit',
-          paddingBottom: mobile ? 0 : `${gap}px`
-        }}
+        gap={ mobile ? 8 : 16 } 
+        style={{ maxHeight: mobile ? '-webkit-fill-available' : 'inherit' }}
         width={'100%'}
       >
         <Segmented
