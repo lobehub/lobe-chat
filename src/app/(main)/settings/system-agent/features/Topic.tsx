@@ -15,7 +15,7 @@ import { useSyncSystemAgent } from './useSync';
 
 type SettingItemGroup = ItemGroup;
 
-const Translation = memo(() => {
+const Topic = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
@@ -28,16 +28,16 @@ const Translation = memo(() => {
         children: (
           <ModelSelect
             onChange={(props) => {
-              updateSystemAgent('translation', props);
+              updateSystemAgent('topic', props);
             }}
           />
         ),
-        desc: t('systemAgent.translation.modelDesc'),
-        label: t('systemAgent.translation.label'),
-        name: ['translation', 'model'],
+        desc: t('systemAgent.topic.modelDesc'),
+        label: t('systemAgent.topic.label'),
+        name: ['topic', 'model'],
       },
     ],
-    title: t('systemAgent.translation.title'),
+    title: t('systemAgent.topic.title'),
   };
 
   useSyncSystemAgent(form);
@@ -53,4 +53,4 @@ const Translation = memo(() => {
   );
 });
 
-export default Translation;
+export default Topic;
