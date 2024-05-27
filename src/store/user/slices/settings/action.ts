@@ -7,19 +7,21 @@ import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import { LocaleMode } from '@/types/locale';
 import { LobeAgentSettings } from '@/types/session';
-import { GlobalSettings } from '@/types/settings';
+import { UserGeneralConfig, UserKeyVaults, UserSettings } from '@/types/user/settings';
 import { switchLang } from '@/utils/client/switchLang';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
 
 export interface UserSettingsAction {
-  importAppSettings: (settings: GlobalSettings) => Promise<void>;
+  importAppSettings: (settings: UserSettings) => Promise<void>;
   resetSettings: () => Promise<void>;
-  setSettings: (settings: DeepPartial<GlobalSettings>) => Promise<void>;
+  setSettings: (settings: DeepPartial<UserSettings>) => Promise<void>;
   setTranslationSystemAgent: (provider: string, model: string) => Promise<void>;
   switchLocale: (locale: LocaleMode) => Promise<void>;
   switchThemeMode: (themeMode: ThemeMode) => Promise<void>;
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
+  updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
+  updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
 }
 
 export const createSettingsSlice: StateCreator<
@@ -30,10 +32,8 @@ export const createSettingsSlice: StateCreator<
 > = (set, get) => ({
   importAppSettings: async (importAppSettings) => {
     const { setSettings } = get();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...settings } = importAppSettings;
 
-    await setSettings(settings);
+    await setSettings(importAppSettings);
   },
   resetSettings: async () => {
     await userService.resetUserSettings();
@@ -62,14 +62,20 @@ export const createSettingsSlice: StateCreator<
     });
   },
   switchLocale: async (locale) => {
-    await get().setSettings({ language: locale });
+    await get().updateGeneralConfig({ language: locale });
 
     switchLang(locale);
   },
   switchThemeMode: async (themeMode) => {
-    await get().setSettings({ themeMode });
+    await get().updateGeneralConfig({ themeMode });
   },
   updateDefaultAgent: async (defaultAgent) => {
     await get().setSettings({ defaultAgent });
+  },
+  updateGeneralConfig: async (general) => {
+    await get().setSettings({ general });
+  },
+  updateKeyVaults: async (keyVaults) => {
+    await get().setSettings({ keyVaults });
   },
 });

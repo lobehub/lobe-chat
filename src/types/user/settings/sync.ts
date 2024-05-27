@@ -4,7 +4,7 @@ export interface WebRTCSyncConfig {
   enabled: boolean;
   signaling?: string;
 }
-export interface GlobalSyncSettings {
+export interface UserSyncSettings {
   deviceName?: string;
   webrtc: WebRTCSyncConfig;
 }

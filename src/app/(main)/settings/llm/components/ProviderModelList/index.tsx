@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import ModelConfigModal from './ModelConfigModal';
 import ModelFetcher from './ModelFetcher';
