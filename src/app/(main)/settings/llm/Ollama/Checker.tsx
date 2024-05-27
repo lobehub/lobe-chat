@@ -27,7 +27,7 @@ const OllamaChecker = memo(() => {
   );
 
   const checkConnection = () => {
-    mutate();
+    mutate().catch();
   };
 
   const isMobile = useIsMobile();

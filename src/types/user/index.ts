@@ -1,6 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
-import { GlobalSettings } from '@/types/settings';
+import { UserSettings } from '@/types/user/settings';
 
 export interface LobeUser {
   avatar?: string;
@@ -39,6 +39,6 @@ export interface UserInitializationState {
   hasConversation?: boolean;
   isOnboard?: boolean;
   preference: UserPreference;
-  settings: DeepPartial<GlobalSettings>;
+  settings: DeepPartial<UserSettings>;
   userId?: string;
 }
