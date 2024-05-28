@@ -115,10 +115,8 @@ export const createFileSlice: StateCreator<
     try {
       // after finish upload, mark the `loading=false` to show the uploaded item
       const result = await uploadService.uploadFile(fileItem);
-
-      get().internal_toggleLoading(tempId, false);
-
       const data = await fileService.createFile(result);
+      get().internal_toggleLoading(tempId, false);
 
       // after finish upload, remove the temp id and add the final one
       get().internal_removeFile(tempId);
