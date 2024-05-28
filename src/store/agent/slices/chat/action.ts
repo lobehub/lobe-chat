@@ -4,9 +4,9 @@ import useSWR, { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
+import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { useClientDataSWR } from '@/libs/swr';
-import { globalService } from '@/services/global';
 import { sessionService } from '@/services/session';
 import { AgentState } from '@/store/agent/slices/chat/initialState';
 import { useSessionStore } from '@/store/session';
@@ -23,10 +23,12 @@ export interface AgentChatAction {
   removePlugin: (id: string) => void;
   togglePlugin: (id: string, open?: boolean) => Promise<void>;
   updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
-  updateAgentConfig: (config: Partial<LobeAgentConfig>) => Promise<void>;
+  updateAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
 
   useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
-  useFetchDefaultAgentConfig: () => SWRResponse<DeepPartial<LobeAgentConfig>>;
+  useInitAgentStore: (
+    defaultAgentConfig?: DeepPartial<LobeAgentConfig>,
+  ) => SWRResponse<DeepPartial<LobeAgentConfig>>;
 
   /* eslint-disable typescript-sort-keys/interface */
 
@@ -35,12 +37,12 @@ export interface AgentChatAction {
     data: DeepPartial<LobeAgentConfig>,
     signal?: AbortSignal,
   ) => Promise<void>;
-  internal_updateAgentChatConfig: (
-    id: string,
-    data: DeepPartial<LobeAgentChatConfig>,
-    signal?: AbortSignal,
-  ) => Promise<void>;
   internal_refreshAgentConfig: (id: string) => Promise<void>;
+  internal_dispatchAgentMap: (
+    id: string,
+    config: DeepPartial<LobeAgentConfig>,
+    actions?: string,
+  ) => void;
   internal_createAbortController: (key: keyof AgentState) => AbortController;
   /* eslint-enable */
 }
@@ -86,9 +88,7 @@ export const createChatSlice: StateCreator<
 
     if (!activeId) return;
 
-    const controller = get().internal_createAbortController('updateAgentChatConfigSignal');
-
-    await get().internal_updateAgentChatConfig(activeId, config, controller.signal);
+    await get().updateAgentConfig({ chatConfig: config });
   },
   updateAgentConfig: async (config) => {
     const { activeId } = get();
@@ -106,28 +106,28 @@ export const createChatSlice: StateCreator<
       {
         fallbackData: DEFAULT_AGENT_CONFIG,
         onSuccess: (data) => {
-          if (get().isAgentConfigInit && isEqual(get().agentConfig, data)) return;
-
-          set({ agentConfig: data, isAgentConfigInit: true }, false, 'fetchAgentConfig');
+          get().internal_dispatchAgentMap(sessionId, data, 'fetch');
         },
         suspense: true,
       },
     ),
-  useFetchDefaultAgentConfig: () =>
+  useInitAgentStore: (defaultAgentConfig) =>
     useSWR<DeepPartial<LobeAgentConfig>>(
-      'fetchDefaultAgentConfig',
-      globalService.getDefaultAgentConfig,
+      'fetchInboxAgentConfig',
+      () => sessionService.getSessionConfig(INBOX_SESSION_ID),
       {
         onSuccess: (data) => {
           if (data) {
             set(
               {
-                defaultAgentConfig: merge(DEFAULT_AGENT_CONFIG, data),
-                isDefaultAgentConfigInit: true,
+                defaultAgentConfig: merge(get().defaultAgentConfig, defaultAgentConfig),
+                isInboxAgentConfigInit: true,
               },
               false,
-              'fetchDefaultAgentConfig',
+              'initStore',
             );
+
+            get().internal_dispatchAgentMap(INBOX_SESSION_ID, data, 'initInbox');
           }
         },
         revalidateOnFocus: false,
@@ -136,30 +136,30 @@ export const createChatSlice: StateCreator<
 
   /* eslint-disable sort-keys-fix/sort-keys-fix */
 
+  internal_dispatchAgentMap: (id, config, actions) => {
+    const agentMap = produce(get().agentMap, (draft) => {
+      if (!draft[id]) {
+        draft[id] = config;
+      } else {
+        draft[id] = merge(draft[id], config);
+      }
+    });
+
+    if (isEqual(get().agentMap, agentMap)) return;
+
+    set({ agentMap }, false, 'dispatchAgent' + (actions ? `/${actions}` : ''));
+  },
+
   internal_updateAgentConfig: async (id, data, signal) => {
     const prevModel = agentSelectors.currentAgentModel(get());
     // optimistic update at frontend
-    set({ agentConfig: merge(get().agentConfig, data) }, false, 'optimistic_updateAgentConfig');
+    get().internal_dispatchAgentMap(id, data, 'optimistic_updateAgentConfig');
 
     await sessionService.updateSessionConfig(id, data, signal);
     await get().internal_refreshAgentConfig(id);
 
     // refresh sessions to update the agent config if the model has changed
     if (prevModel !== data.model) await useSessionStore.getState().refreshSessions();
-  },
-
-  internal_updateAgentChatConfig: async (id, data, signal) => {
-    // optimistic update at frontend
-    const chatConfig = merge(get().agentConfig.chatConfig, data);
-
-    set(
-      { agentConfig: { ...get().agentConfig, chatConfig } },
-      false,
-      'optimistic_updateAgentConfig',
-    );
-
-    await sessionService.updateSessionChatConfig(id, data, signal);
-    await get().internal_refreshAgentConfig(id);
   },
 
   internal_refreshAgentConfig: async (id) => {
