@@ -28,10 +28,7 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
   const id = useSessionStore((s) => s.activeId);
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
-  const [updateAgentConfig, updateAgentChatConfig] = useAgentStore((s) => [
-    s.updateAgentConfig,
-    s.updateAgentChatConfig,
-  ]);
+  const [updateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
   const [updateAgentMeta] = useSessionStore((s) => [
     s.updateSessionMeta,
     sessionMetaSelectors.currentAgentTitle(s),
@@ -49,7 +46,6 @@ const Layout = memo<PropsWithChildren>(({ children }) => {
           config={config}
           id={id}
           meta={meta}
-          onChatConfigChange={updateAgentChatConfig}
           onConfigChange={updateAgentConfig}
           onMetaChange={updateAgentMeta}
         />
