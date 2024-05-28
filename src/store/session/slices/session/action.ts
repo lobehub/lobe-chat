@@ -72,7 +72,7 @@ export interface SessionAction {
 
   updateSearchKeywords: (keywords: string) => void;
 
-  useFetchSessions: () => SWRResponse<ChatSessionList>;
+  useFetchSessions: (isLogin: boolean | undefined) => SWRResponse<ChatSessionList>;
   useSearchSessions: (keyword?: string) => SWRResponse<any>;
 
   internal_dispatchSessions: (payload: SessionDispatch) => void;
@@ -192,29 +192,33 @@ export const createSessionSlice: StateCreator<
     await refreshSessions();
   },
 
-  useFetchSessions: () =>
-    useClientDataSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getGroupedSessions, {
-      fallbackData: {
-        sessionGroups: [],
-        sessions: [],
-      },
-      onSuccess: (data) => {
-        if (
-          get().isSessionsFirstFetchFinished &&
-          isEqual(get().sessions, data.sessions) &&
-          isEqual(get().sessionGroups, data.sessionGroups)
-        )
-          return;
+  useFetchSessions: (isLogin) =>
+    useClientDataSWR<ChatSessionList>(
+      [FETCH_SESSIONS_KEY, isLogin],
+      () => sessionService.getGroupedSessions(),
+      {
+        fallbackData: {
+          sessionGroups: [],
+          sessions: [],
+        },
+        onSuccess: (data) => {
+          if (
+            get().isSessionsFirstFetchFinished &&
+            isEqual(get().sessions, data.sessions) &&
+            isEqual(get().sessionGroups, data.sessionGroups)
+          )
+            return;
 
-        get().internal_processSessions(
-          data.sessions,
-          data.sessionGroups,
-          n('useFetchSessions/updateData') as any,
-        );
-        set({ isSessionsFirstFetchFinished: true }, false, n('useFetchSessions/onSuccess', data));
+          get().internal_processSessions(
+            data.sessions,
+            data.sessionGroups,
+            n('useFetchSessions/updateData') as any,
+          );
+          set({ isSessionsFirstFetchFinished: true }, false, n('useFetchSessions/onSuccess', data));
+        },
+        suspense: true,
       },
-      suspense: true,
-    }),
+    ),
   useSearchSessions: (keyword) =>
     useSWR<LobeSessions>(
       [SEARCH_SESSIONS_KEY, keyword],
