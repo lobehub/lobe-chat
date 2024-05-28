@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.162.8](https://github.com/lobehub/lobe-chat/compare/v0.162.7...v0.162.8)
+
+<sup>Released on **2024-05-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add optimistic loading for image uploading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add optimistic loading for image uploading, closes [#2700](https://github.com/lobehub/lobe-chat/issues/2700) ([f99c9ce](https://github.com/lobehub/lobe-chat/commit/f99c9ce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.7](https://github.com/lobehub/lobe-chat/compare/v0.162.6...v0.162.7)
 
 <sup>Released on **2024-05-28**</sup>
