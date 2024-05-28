@@ -6,7 +6,7 @@ import { CSSProperties, memo, useCallback } from 'react';
 import { usePlatform } from '@/hooks/usePlatform';
 import { useFileStore } from '@/store/file';
 
-import { MIN_IMAGE_SIZE } from './style';
+const MIN_IMAGE_SIZE = 64;
 
 export const useStyles = createStyles(({ css, token }) => ({
   deleteButton: css`

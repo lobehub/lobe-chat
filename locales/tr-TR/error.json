@@ -136,5 +136,9 @@
       "apiKey": "Özel API Anahtarı",
       "password": "Şifre"
     }
+  },
+  "upload": {
+    "desc": "Detay: {{detail}}",
+    "title": "Dosya yükleme başarısız, lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin"
   }
 }
