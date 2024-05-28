@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Onbeperkt",
       "limited": "Bevat alleen {{number}} berichten",
+      "setlimited": "Stel berichtengeschiedenis in",
       "title": "Berichtgeschiedenis beperken",
       "unlimited": "Onbeperkt aantal berichten in de geschiedenis"
     },

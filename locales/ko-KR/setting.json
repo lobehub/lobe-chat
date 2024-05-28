@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "제한 없음",
       "limited": "{{number}}개의 대화 메시지만 포함",
+      "setlimited": "사용할 메시지 수 설정",
       "title": "이전 메시지 수 제한",
       "unlimited": "이전 메시지 수 제한 없음"
     },

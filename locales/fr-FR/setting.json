@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Illimité",
       "limited": "Inclure uniquement {{number}} messages de conversation",
+      "setlimited": "Définir le nombre de messages d'historique",
       "title": "Limite du nombre de messages historiques",
       "unlimited": "Aucune limite sur le nombre de messages historiques"
     },

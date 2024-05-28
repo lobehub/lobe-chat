@@ -136,5 +136,9 @@
       "apiKey": "Custom API Key",
       "password": "Password"
     }
+  },
+  "upload": {
+    "desc": "Details: {{detail}}",
+    "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw"
   }
 }

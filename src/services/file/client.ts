@@ -28,6 +28,7 @@ export class ClientService implements IFileService {
 
       return {
         fileType: item.fileType,
+        id,
         name: item.metadata.filename,
         saveMode: 'url',
         url: urlJoin(fileEnv.NEXT_PUBLIC_S3_DOMAIN!, item.url!),
@@ -41,6 +42,7 @@ export class ClientService implements IFileService {
     return {
       base64Url: `data:${item.fileType};base64,${base64}`,
       fileType: item.fileType,
+      id,
       name: item.name,
       saveMode: 'local',
       url,

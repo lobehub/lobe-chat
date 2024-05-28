@@ -7,7 +7,7 @@ import type { StateCreator } from 'zustand/vanilla';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
-import { useClientDataSWR } from '@/libs/swr';
+import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { globalService } from '@/services/global';
 import type { GlobalStore } from '@/store/global/index';
 import { merge } from '@/utils/merge';
@@ -93,7 +93,7 @@ export const globalActionSlice: StateCreator<
     }),
 
   useInitSystemStatus: () =>
-    useClientDataSWR<SystemStatus>(
+    useOnlyFetchOnceSWR<SystemStatus>(
       'initSystemStatus',
       () => get().statusStorage.getFromLocalStorage(),
       {
