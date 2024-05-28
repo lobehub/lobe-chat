@@ -117,16 +117,16 @@ export const createChatSlice: StateCreator<
       () => sessionService.getSessionConfig(INBOX_SESSION_ID),
       {
         onSuccess: (data) => {
-          if (data) {
-            set(
-              {
-                defaultAgentConfig: merge(get().defaultAgentConfig, defaultAgentConfig),
-                isInboxAgentConfigInit: true,
-              },
-              false,
-              'initStore',
-            );
+          set(
+            {
+              defaultAgentConfig: merge(get().defaultAgentConfig, defaultAgentConfig),
+              isInboxAgentConfigInit: true,
+            },
+            false,
+            'initDefaultAgent',
+          );
 
+          if (data) {
             get().internal_dispatchAgentMap(INBOX_SESSION_ID, data, 'initInbox');
           }
         },
