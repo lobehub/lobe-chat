@@ -1,7 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
-import { UserSettings } from '@/types/user/settings';
-
 import { UserModel } from '../user';
 
 describe('UserModel', () => {
@@ -51,17 +49,19 @@ describe('UserModel', () => {
   it('should update user settings', async () => {
     await UserModel.create(userData);
 
-    await UserModel.updateSettings({ themeMode: 'dark' });
+    await UserModel.updateSettings({ general: { themeMode: 'dark' } });
 
     const userInDb = await UserModel.getUser();
 
-    expect(userInDb).toHaveProperty('settings', { themeMode: 'dark' });
+    expect(userInDb).toHaveProperty('settings', {
+      general: { themeMode: 'dark' },
+    });
   });
 
   it('should reset user settings', async () => {
     await UserModel.create(userData);
 
-    await UserModel.updateSettings({ themeMode: 'dark' });
+    await UserModel.updateSettings({ general: { themeMode: 'dark' } });
 
     await UserModel.resetSettings();
 

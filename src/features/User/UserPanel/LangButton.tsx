@@ -8,12 +8,12 @@ import { useTranslation } from 'react-i18next';
 import Menu, { type MenuProps } from '@/components/Menu';
 import { localeOptions } from '@/locales/resources';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const LangButton = memo(() => {
   const theme = useTheme();
   const [language, switchLocale] = useUserStore((s) => [
-    settingsSelectors.currentSettings(s).language,
+    userGeneralSettingsSelectors.language(s),
     s.switchLocale,
   ]);
 

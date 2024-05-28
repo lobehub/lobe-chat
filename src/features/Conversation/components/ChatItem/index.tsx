@@ -11,7 +11,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 
 import ErrorMessageExtra, { getErrorAlertConfig } from '../../Error';
@@ -38,7 +38,7 @@ export interface ChatListItemProps {
 }
 
 const Item = memo<ChatListItemProps>(({ index, id }) => {
-  const fontSize = useUserStore((s) => settingsSelectors.currentSettings(s).fontSize);
+  const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const { t } = useTranslation('common');
   const { styles, cx } = useStyles();
   const [type = 'chat'] = useAgentStore((s) => {
