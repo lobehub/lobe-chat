@@ -9,7 +9,6 @@ export interface ChatTopicState {
   topicMaps: Record<string, ChatTopic[]>;
   topicRenamingId?: string;
   topicSearchKeywords: string;
-  topics: ChatTopic[];
   /**
    * whether topics have fetched
    */
@@ -23,6 +22,5 @@ export const initialTopicState: ChatTopicState = {
   topicLoadingIds: [],
   topicMaps: {},
   topicSearchKeywords: '',
-  topics: [],
   topicsInit: false,
 };

@@ -1,10 +1,11 @@
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
 import { isDev } from '@/utils/env';
 
+import { createDevtools } from '../middleware/createDevtools';
 import { SessionStoreState, initialState } from './initialState';
 import { SessionAction, createSessionSlice } from './slices/session/action';
 import { SessionGroupAction, createSessionGroupSlice } from './slices/sessionGroup/action';
@@ -20,6 +21,7 @@ const createStore: StateCreator<SessionStore, [['zustand/devtools', never]]> = (
 });
 
 //  ===============  implement useStore ============ //
+const devtools = createDevtools('session');
 
 export const useSessionStore = createWithEqualityFn<SessionStore>()(
   subscribeWithSelector(
