@@ -138,7 +138,11 @@ export const createChatSlice: StateCreator<
 
   internal_dispatchAgentMap: (id, config, actions) => {
     const agentMap = produce(get().agentMap, (draft) => {
-      draft[id] = config;
+      if (!draft[id]) {
+        draft[id] = config;
+      } else {
+        draft[id] = merge(draft[id], config);
+      }
     });
 
     if (isEqual(get().agentMap, agentMap)) return;
