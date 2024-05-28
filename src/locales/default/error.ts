@@ -164,4 +164,5 @@ export default {
       password: '密码',
     },
   },
+  upload: { desc: '详情: {{detail}}', title: '文件上传失败，请检查网络连接或稍后再试' },
 };
