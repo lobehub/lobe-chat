@@ -13,13 +13,19 @@ const n = setNamespace('image');
 
 export interface FileAction {
   clearImageList: () => void;
+
+  internal_addFile: (id: string) => void;
+  internal_removeFile: (id: string) => void;
+  internal_toggleLoading: (id: string, loading: boolean) => void;
+  loadFileDetail: (id: string) => Promise<void>;
   removeAllFiles: () => Promise<void>;
   removeFile: (id: string) => Promise<void>;
 
   setImageMapItem: (id: string, item: FilePreview) => void;
-  uploadFile: (file: File) => Promise<void>;
 
+  uploadFile: (file: File) => Promise<void>;
   useFetchFile: (id: string) => SWRResponse<FilePreview>;
+  useFetchFiles: (ids: string[]) => SWRResponse<void>;
 }
 
 export const createFileSlice: StateCreator<
@@ -31,18 +37,47 @@ export const createFileSlice: StateCreator<
   clearImageList: () => {
     set({ inputFilesList: [] }, false, n('clearImageList'));
   },
-  removeAllFiles: async () => {
-    await fileService.removeAllFiles();
+  internal_addFile: (id: string) => {
+    set(({ inputFilesList }) => ({ inputFilesList: [...inputFilesList, id] }), false, n('addFile'));
   },
-  removeFile: async (id) => {
-    await fileService.removeFile(id);
-
+  internal_removeFile: (id: string) => {
     set(
       ({ inputFilesList }) => ({ inputFilesList: inputFilesList.filter((i) => i !== id) }),
       false,
       n('removeFile'),
     );
   },
+  internal_toggleLoading: (id: string, loading) => {
+    if (loading) {
+      set(
+        ({ uploadingIds }) => ({ uploadingIds: [...uploadingIds, id] }),
+        false,
+        'toggleLoading/loading',
+      );
+    } else {
+      set(
+        ({ uploadingIds }) => ({ uploadingIds: uploadingIds.filter((i) => i !== id) }),
+        false,
+        'toggleLoading/stopLoading',
+      );
+    }
+  },
+
+  loadFileDetail: async (id) => {
+    // initFile preview
+    const item = await fileService.getFile(id);
+    get().setImageMapItem(item.id, item);
+  },
+
+  removeAllFiles: async () => {
+    await fileService.removeAllFiles();
+  },
+  removeFile: async (id) => {
+    get().internal_removeFile(id);
+
+    await fileService.removeFile(id);
+  },
+
   setImageMapItem: (id, item) => {
     set(
       produce((draft) => {
@@ -54,29 +89,50 @@ export const createFileSlice: StateCreator<
       n('setImageMapItem'),
     );
   },
+
   uploadFile: async (file) => {
+    const fileItem = {
+      createdAt: file.lastModified,
+      data: await file.arrayBuffer(),
+      fileType: file.type,
+      name: file.name,
+      saveMode: 'local' as const,
+      size: file.size,
+    };
+
+    // at first create a temp id for the file for optimistic rendering
+    const tempId = Date.now().toString();
+    get().internal_addFile(tempId);
+
+    get().internal_toggleLoading(tempId, true);
+
+    // create a local Url for display
+    const url = URL.createObjectURL(new Blob([fileItem.data!], { type: fileItem.fileType }));
+    get().setImageMapItem(tempId, { ...fileItem, id: tempId, url });
+
     try {
-      const result = await uploadService.uploadFile({
-        createdAt: file.lastModified,
-        data: await file.arrayBuffer(),
-        fileType: file.type,
-        name: file.name,
-        saveMode: 'local',
-        size: file.size,
-      });
+      // after finish upload, mark the `loading=false` to show the uploaded item
+      const result = await uploadService.uploadFile(fileItem);
+
+      get().internal_toggleLoading(tempId, false);
 
       const data = await fileService.createFile(result);
 
-      set(
-        ({ inputFilesList }) => ({ inputFilesList: [...inputFilesList, data.id] }),
-        false,
-        n('uploadFile'),
-      );
+      // after finish upload, remove the temp id and add the final one
+      get().internal_removeFile(tempId);
+      get().internal_addFile(data.id);
+
+      // initFile preview
+      await get().loadFileDetail(data.id);
     } catch (error) {
       // 提示用户上传失败
       console.error('upload error:', error);
+
+      get().internal_removeFile(tempId);
+      get().internal_toggleLoading(tempId, false);
     }
   },
+
   useFetchFile: (id) =>
     useSWR(id, async (id) => {
       const item = await fileService.getFile(id);
@@ -84,5 +140,11 @@ export const createFileSlice: StateCreator<
       get().setImageMapItem(id, item);
 
       return item;
+    }),
+  useFetchFiles: (ids) =>
+    useSWR(ids, async (ids) => {
+      const pools = ids.map(async (id) => get().loadFileDetail(id));
+
+      await Promise.all(pools);
     }),
 });
