@@ -207,7 +207,7 @@ describe('AgentSlice', () => {
         model: 'gemini-pro',
       } as any);
 
-      renderHook(() => result.current.useFetchInboxAgentConfig());
+      renderHook(() => result.current.useInitAgentStore());
 
       await waitFor(async () => {
         expect(result.current.agentMap[INBOX_SESSION_ID]).toEqual({ model: 'gemini-pro' });
@@ -220,7 +220,7 @@ describe('AgentSlice', () => {
 
       vi.spyOn(globalService, 'getDefaultAgentConfig').mockRejectedValueOnce(new Error());
 
-      renderHook(() => result.current.useFetchInboxAgentConfig());
+      renderHook(() => result.current.useInitAgentStore());
 
       await waitFor(async () => {
         expect(result.current.agentMap[INBOX_SESSION_ID]).toBeUndefined();

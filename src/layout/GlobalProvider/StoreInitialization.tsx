@@ -26,15 +26,13 @@ const StoreInitialization = memo(() => {
 
   const useInitSystemStatus = useGlobalStore((s) => s.useInitSystemStatus);
 
-  const useFetchInboxAgentConfig = useAgentStore((s) => s.useFetchInboxAgentConfig);
-  const useAgentStoreUpdater = createStoreUpdater(useAgentStore);
+  const useInitAgentStore = useAgentStore((s) => s.useInitAgentStore);
 
   // init the system preference
   useInitSystemStatus();
 
-  // init inbox agent and default agent
-  useFetchInboxAgentConfig();
-  useAgentStoreUpdater('defaultAgentConfig', serverConfig.defaultAgent?.config);
+  // init inbox agent and default agent config
+  useInitAgentStore(serverConfig.defaultAgent?.config);
 
   useInitUserState(isLogin, serverConfig, {
     onSuccess: (state) => {
