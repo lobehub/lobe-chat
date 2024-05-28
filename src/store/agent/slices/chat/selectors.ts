@@ -14,10 +14,12 @@ const isInboxSession = (s: AgentStore) => s.activeId === INBOX_SESSION_ID;
 
 // ==========   Config   ============== //
 
-const defaultAgentConfig = (s: AgentStore) => merge(DEFAULT_AGENT_CONFIG, s.defaultAgentConfig);
+const inboxAgentConfig = (s: AgentStore) =>
+  merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
+const inboxAgentModel = (s: AgentStore) => inboxAgentConfig(s).model;
 
 const currentAgentConfig = (s: AgentStore): LobeAgentConfig =>
-  merge(s.defaultAgentConfig, s.agentConfig);
+  merge(s.defaultAgentConfig, s.agentMap[s.activeId]);
 
 const currentAgentChatConfig = (s: AgentStore): LobeAgentChatConfig =>
   currentAgentConfig(s).chatConfig || DEFAULT_AGENT_CHAT_CONFIG;
@@ -88,7 +90,8 @@ export const agentSelectors = {
   currentAgentSystemRole,
   currentAgentTTS,
   currentAgentTTSVoice,
-  defaultAgentConfig,
   hasSystemRole,
+  inboxAgentConfig,
+  inboxAgentModel,
   isInboxSession,
 };

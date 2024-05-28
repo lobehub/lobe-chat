@@ -26,10 +26,15 @@ const StoreInitialization = memo(() => {
 
   const useInitSystemStatus = useGlobalStore((s) => s.useInitSystemStatus);
 
-  const useFetchDefaultAgentConfig = useAgentStore((s) => s.useFetchDefaultAgentConfig);
+  const useFetchInboxAgentConfig = useAgentStore((s) => s.useFetchInboxAgentConfig);
+  const useAgentStoreUpdater = createStoreUpdater(useAgentStore);
+
   // init the system preference
   useInitSystemStatus();
-  useFetchDefaultAgentConfig();
+
+  // init inbox agent and default agent
+  useFetchInboxAgentConfig();
+  useAgentStoreUpdater('defaultAgentConfig', serverConfig.defaultAgent?.config);
 
   useInitUserState(isLogin, serverConfig, {
     onSuccess: (state) => {
@@ -55,21 +60,21 @@ const StoreInitialization = memo(() => {
     importSettings(searchParam);
   }, [searchParam]);
 
-  useEffect(() => {
-    router.prefetch('/chat');
-    router.prefetch('/market');
-
-    if (mobile) {
-      router.prefetch('/me');
-      router.prefetch('/chat/settings');
-      router.prefetch('/settings/common');
-      router.prefetch('/settings/agent');
-      router.prefetch('/settings/sync');
-    } else {
-      router.prefetch('/chat/settings/modal');
-      router.prefetch('/settings/modal');
-    }
-  }, [router, mobile]);
+  // useEffect(() => {
+  //   router.prefetch('/chat');
+  //   router.prefetch('/market');
+  //
+  //   if (mobile) {
+  //     router.prefetch('/me');
+  //     router.prefetch('/chat/settings');
+  //     router.prefetch('/settings/common');
+  //     router.prefetch('/settings/agent');
+  //     router.prefetch('/settings/sync');
+  //   } else {
+  //     router.prefetch('/chat/settings/modal');
+  //     router.prefetch('/settings/modal');
+  //   }
+  // }, [router, mobile]);
 
   return null;
 });
