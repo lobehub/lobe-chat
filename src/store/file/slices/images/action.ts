@@ -1,7 +1,9 @@
+import { t } from 'i18next';
 import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { notification } from '@/components/AntdStaticMethods';
 import { fileService } from '@/services/file';
 import { uploadService } from '@/services/upload';
 import { FilePreview } from '@/types/files';
@@ -125,11 +127,14 @@ export const createFileSlice: StateCreator<
       // initFile preview
       await get().loadFileDetail(data.id);
     } catch (error) {
-      // 提示用户上传失败
-      console.error('upload error:', error);
-
       get().internal_removeFile(tempId);
       get().internal_toggleLoading(tempId, false);
+
+      // show error message
+      notification.error({
+        description: t('upload.desc', { detail: error, ns: 'error' }),
+        message: t('upload.title', { ns: 'error' }),
+      });
     }
   },
 
