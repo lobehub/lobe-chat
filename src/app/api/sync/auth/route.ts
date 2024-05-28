@@ -1,9 +1,9 @@
 import { Liveblocks } from '@liveblocks/node';
 
+import { getAppConfig } from '@/config/app';
 import { hashRoomName } from '@/libs/sync/liveblocks/utils';
 
 import { checkAuth } from '../../middleware/auth';
-import { getAppConfig } from '@/config/app';
 
 const { LIVEBLOCKS_SECRET_KEY } = getAppConfig();
 
@@ -12,14 +12,13 @@ const liveblocks = new Liveblocks({
 });
 
 export const POST = checkAuth(async (req: Request) => {
-
   if (!LIVEBLOCKS_SECRET_KEY) {
     return new Response('Liveblocks secret key is not set', { status: 500 });
   }
 
-  const { channel, password }: { channel: string; password?: string } = await req.json();
+  const { name, password }: { name: string; password?: string } = await req.json();
 
-  const hashedRoomName = hashRoomName(channel, password);
+  const hashedRoomName = hashRoomName(name, password);
 
   const session = liveblocks.prepareSession(hashedRoomName);
 
