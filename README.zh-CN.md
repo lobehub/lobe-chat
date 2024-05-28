@@ -252,12 +252,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                               | 助手说明                                                                                                                                                            |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [C# .NET 技术专家](https://chat-preview.lobehub.com/market?agent=dotnet-expert)<br/><sup>By **[johnnyqian](https://github.com/johnnyqian)** on **2024-05-28**</sup>    | C# .NET 技术专家<br/>`net` `developer` `net-core` `azure` `c` `microsoft` `sql-server` `entity-framework` `ef` `ef-core`                                            |
+| [日常小助手](https://chat-preview.lobehub.com/market?agent=junior-helper)<br/><sup>By **[Qinks6](https://github.com/Qinks6)** on **2024-05-28**</sup>                  | 一个能搜索、能画图的小可爱<br/>`助手` `搜索` `绘图` `信息查询` `用户交互`                                                                                           |
 | [Node.js 优化师](https://chat-preview.lobehub.com/market?agent=node-js-devoloper)<br/><sup>By **[chrisuhg](https://github.com/chrisuhg)** on **2024-05-28**</sup>      | 擅长 Node.js 代码审查、性能优化、异步编程、错误处理、代码重构、依赖管理、安全增强、测试覆盖率和文档编写。<br/>`node-js` `代码优化` `性能优化` `异步编程` `错误处理` |
 | [外企同事评价助手](https://chat-preview.lobehub.com/market?agent=praise-assistant)<br/><sup>By **[johnnyqian](https://github.com/johnnyqian)** on **2024-05-27**</sup> | 给你的同事好评<br/>`foreign-company` `evaluate` `review` `software-engineer` `praise`                                                                               |
-| [SEO 优化专家](https://chat-preview.lobehub.com/market?agent=seo-helper)<br/><sup>By **[tutorial0](https://github.com/tutorial0)** on **2024-05-27**</sup>             | 精通 SEO 术语和优化策略，提供全面 SEO 解决方案和实用建议。<br/>`seo` `搜索引擎优化` `咨询`                                                                          |
-| [中文润色大师](https://chat-preview.lobehub.com/market?agent=chinese-touch-ups)<br/><sup>By **[S45618](https://github.com/S45618)** on **2024-05-24**</sup>            | 精通中文校对与修辞，旨在提升文本之流畅与雅致<br/>`校对` `文字润色` `修辞改进` `古典文学` `语言编辑`                                                                 |
 
-> 📊 Total agents: [<kbd>**276**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**278**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
