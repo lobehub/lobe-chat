@@ -1,3 +1,4 @@
+import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainPickEmoji } from '@/chains/pickEmoji';
@@ -50,7 +51,7 @@ export interface Action {
   resetAgentConfig: () => void;
   resetAgentMeta: () => void;
 
-  setAgentConfig: (config: Partial<LobeAgentConfig>) => void;
+  setAgentConfig: (config: DeepPartial<LobeAgentConfig>) => void;
   setAgentMeta: (meta: Partial<MetaData>) => void;
   setChatConfig: (config: Partial<LobeAgentChatConfig>) => void;
 
@@ -245,11 +246,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     get().dispatchMeta({ type: 'update', value: meta });
   },
   setChatConfig: (config) => {
-    const nextConfig = { ...get().config.chatConfig, ...config };
-
-    set({ config: { ...get().config, chatConfig: nextConfig } }, false, 'updateChatConfig');
-
-    get().onChatConfigChange?.(nextConfig);
+    get().setAgentConfig({ chatConfig: config });
   },
 
   streamUpdateMetaArray: (key: keyof MetaData) => {
