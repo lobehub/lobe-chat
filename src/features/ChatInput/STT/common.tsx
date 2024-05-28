@@ -83,7 +83,7 @@ const CommonSTT = memo<{
               key: 'title',
               label: (
                 <Flexbox>
-                  <div>{t('stt.action')}</div>
+                  <div style={{ fontWeight: 'bolder' }}>{t('stt.action')}</div>
                 </Flexbox>
               ),
             },
