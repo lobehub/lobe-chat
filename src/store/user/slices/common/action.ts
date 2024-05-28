@@ -81,7 +81,9 @@ export const createCommonSlice: StateCreator<
             const serverSettings: DeepPartial<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
               languageModel: serverConfig.languageModel,
+              systemAgent: serverConfig.systemAgent,
             };
+
             const defaultSettings = merge(get().defaultSettings, serverSettings);
 
             // merge preference
