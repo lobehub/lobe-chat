@@ -265,6 +265,6 @@ export const createSessionSlice: StateCreator<
     );
   },
   refreshSessions: async () => {
-    await mutate(FETCH_SESSIONS_KEY);
+    await mutate([FETCH_SESSIONS_KEY, true]);
   },
 });
