@@ -55,7 +55,7 @@ export const getAppConfig = () => {
 
       PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
 
-      LIVEBLOCKS_SECRET_KEY: process.env.LIVEBLOCKS_SECRET_KEY || '',
+      LIVEBLOCKS_SECRET_KEY: process.env.LIVEBLOCKS_SECRET_KEY,
 
       SITE_URL: process.env.SITE_URL,
     },

@@ -23,7 +23,7 @@ export const FeatureFlagsSchema = z.object({
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
-  liveblocks_sync: true,
+  liveblocks_sync: false,
   webrtc_sync: true,
 
   language_model_settings: true,
@@ -42,6 +42,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
   return {
+    enableLiveblocks: config.liveblocks_sync,
     enableWebrtc: config.webrtc_sync,
     isAgentEditable: config.edit_agent,
 
