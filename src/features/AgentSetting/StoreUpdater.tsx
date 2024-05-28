@@ -6,11 +6,11 @@ import { createStoreUpdater } from 'zustand-utils';
 import { State, useStoreApi } from './store';
 
 export type StoreUpdaterProps = Partial<
-  Pick<State, 'onMetaChange' | 'onChatConfigChange' | 'onConfigChange' | 'meta' | 'config' | 'id'>
+  Pick<State, 'onMetaChange' | 'onConfigChange' | 'meta' | 'config' | 'id'>
 >;
 
 const StoreUpdater = memo<StoreUpdaterProps>(
-  ({ onConfigChange, onChatConfigChange, id, onMetaChange, meta, config }) => {
+  ({ onConfigChange, id, onMetaChange, meta, config }) => {
     const storeApi = useStoreApi();
     const useStoreUpdater = createStoreUpdater(storeApi);
 
@@ -18,7 +18,6 @@ const StoreUpdater = memo<StoreUpdaterProps>(
     useStoreUpdater('config', config);
     useStoreUpdater('onConfigChange', onConfigChange);
     useStoreUpdater('onMetaChange', onMetaChange);
-    useStoreUpdater('onChatConfigChange', onChatConfigChange);
     useStoreUpdater('id', id);
 
     return null;
