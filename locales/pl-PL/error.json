@@ -136,5 +136,9 @@
       "apiKey": "Niestandardowy klucz API",
       "password": "Hasło"
     }
+  },
+  "upload": {
+    "desc": "Szczegóły: {{detail}}",
+    "title": "Nie udało się przesłać pliku. Sprawdź połączenie sieciowe lub spróbuj ponownie później"
   }
 }

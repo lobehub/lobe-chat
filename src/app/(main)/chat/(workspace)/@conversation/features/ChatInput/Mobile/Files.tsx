@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import EditableFileList from '@/components/FileList/EditableFileList';
+import { EditableFileList } from '@/features/FileList';
 import { useFileStore } from '@/store/file';
 
 const Files = memo(() => {

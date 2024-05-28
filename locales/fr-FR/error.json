@@ -136,5 +136,9 @@
       "apiKey": "Clé API personnalisée",
       "password": "Mot de passe"
     }
+  },
+  "upload": {
+    "desc": "Détails : {{detail}}",
+    "title": "Échec de l'envoi du fichier, veuillez vérifier votre connexion réseau ou réessayer plus tard"
   }
 }
