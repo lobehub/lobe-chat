@@ -80,14 +80,19 @@ const CommonSTT = memo<{
           activeKey: 'time',
           items: [
             {
-              key: 'time',
+              key: 'title',
               label: (
                 <Flexbox>
-                  {t('stt.action')}
-                  <Flexbox align={'center'} gap={8} horizontal>
-                    <div className={styles.recording} />
-                    {time > 0 ? formattedTime : t(isRecording ? 'stt.loading' : 'stt.prettifying')}
-                  </Flexbox>
+                  <div>{t('stt.action')}</div>
+                </Flexbox>
+              ),
+            },
+            {
+              key: 'time',
+              label: (
+                <Flexbox align={'center'} gap={8} horizontal>
+                  <div className={styles.recording} />
+                  {time > 0 ? formattedTime : t(isRecording ? 'stt.loading' : 'stt.prettifying')}
                 </Flexbox>
               ),
             },
