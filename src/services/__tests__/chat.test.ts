@@ -8,9 +8,9 @@ import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
+  LobeDeepSeekAI,
   LobeGoogleAI,
   LobeGroq,
-  LobeDeepSeekAI,
   LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
@@ -136,6 +136,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -193,6 +194,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -234,6 +236,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',

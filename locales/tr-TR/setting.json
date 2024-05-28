@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Sınırsız",
       "limited": "Yalnızca {{number}} konuşma mesajını içerir",
+      "setlimited": "Kullanılan mesaj sayısı",
       "title": "Geçmiş Mesaj Sayısı Sınırlama",
       "unlimited": "Sınırsız geçmiş mesaj sayısı"
     },
