@@ -136,5 +136,9 @@
       "apiKey": "Custom API Key",
       "password": "Password"
     }
+  },
+  "upload": {
+    "desc": "Details: {{detail}}",
+    "title": "File upload failed. Please check your network connection or try again later"
   }
 }
