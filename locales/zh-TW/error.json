@@ -136,5 +136,9 @@
       "apiKey": "自定義 API Key",
       "password": "密碼"
     }
+  },
+  "upload": {
+    "desc": "詳情: {{detail}}",
+    "title": "檔案上傳失敗，請檢查網路連線或稍後再試"
   }
 }

@@ -185,6 +185,7 @@ export default {
     enableHistoryCount: {
       alias: '不限制',
       limited: '只包含 {{number}} 条会话消息',
+      setlimited: '使用历史消息数',
       title: '限制历史消息数',
       unlimited: '不限历史消息数',
     },
