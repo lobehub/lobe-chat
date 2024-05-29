@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "不限制",
       "limited": "只包含 {{number}} 條對話訊息",
+      "setlimited": "設置限制",
       "title": "限制歷史訊息數",
       "unlimited": "不限歷史訊息數"
     },

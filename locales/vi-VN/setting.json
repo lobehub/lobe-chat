@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Không giới hạn",
       "limited": "Chỉ chứa {{number}} tin nhắn trò chuyện",
+      "setlimited": "Thiết lập số lượng tin nhắn lịch sử",
       "title": "Giới hạn số lượng tin nhắn lịch sử",
       "unlimited": "Không giới hạn số lượng tin nhắn lịch sử"
     },

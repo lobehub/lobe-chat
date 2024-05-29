@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Unlimited",
       "limited": "Include only {{number}} conversation messages",
+      "setlimited": "Set limited history messages",
       "title": "Limit History Message Count",
       "unlimited": "Unlimited history message count"
     },
