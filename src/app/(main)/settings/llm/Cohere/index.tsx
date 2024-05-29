@@ -13,7 +13,7 @@ const CohereProvider = memo(() => {
   const { isDarkMode } = useTheme();
   return (
     <ProviderConfig
-      checkModel={'command-r'}
+      checkModel={'command-r-plus'}
       provider={ModelProvider.Cohere}
       proxyUrl={{
         placeholder: 'https://api.cohere.ai',
