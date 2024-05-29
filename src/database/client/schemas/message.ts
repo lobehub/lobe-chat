@@ -34,7 +34,7 @@ export const DB_MessageSchema = z.object({
 
   fromModel: z.string().optional(),
   fromProvider: z.string().optional(),
-  translate: TranslateSchema.optional().or(z.literal(false)),
+  translate: TranslateSchema.optional().or(z.literal(false)).or(z.null()),
   tts: z.any().optional(),
 
   traceId: z.string().optional(),

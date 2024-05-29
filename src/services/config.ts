@@ -1,3 +1,4 @@
+import { importService } from '@/services/import';
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
@@ -6,10 +7,6 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 import { ConfigFile } from '@/types/exportConfig';
-import { ChatMessage } from '@/types/message';
-import { LobeSessions, SessionGroupItem } from '@/types/session';
-import { ChatTopic } from '@/types/topic';
-import { UserSettings } from '@/types/user/settings';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
 export interface ImportResult {
@@ -20,70 +17,33 @@ export interface ImportResult {
 export interface ImportResults {
   messages?: ImportResult;
   sessionGroups?: ImportResult;
-  sessions: ImportResult;
+  sessions?: ImportResult;
   topics?: ImportResult;
+  type?: string;
 }
 
 class ConfigService {
-  /**
-   * import sessions from files
-   * @param sessions
-   */
-  importSessions = async (sessions: LobeSessions) => {
-    return await sessionService.batchCreateSessions(sessions);
-  };
-  importMessages = async (messages: ChatMessage[]) => {
-    return messageService.batchCreateMessages(messages);
-  };
-  importSettings = async (settings: UserSettings) => {
-    useUserStore.getState().importAppSettings(settings);
-  };
-  importTopics = async (topics: ChatTopic[]) => {
-    return topicService.batchCreateTopics(topics);
-  };
-  importSessionGroups = async (sessionGroups: SessionGroupItem[]) => {
-    return sessionService.batchCreateSessionGroups(sessionGroups || []);
-  };
-
-  importConfigState = async (config: ConfigFile): Promise<ImportResults | undefined> => {
-    switch (config.exportType) {
-      case 'settings': {
-        await this.importSettings(config.state.settings);
-
-        break;
-      }
-
-      case 'agents': {
-        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
-
-        const data = await this.importSessions(config.state.sessions);
-        return {
-          sessionGroups: this.mapImportResult(sessionGroups),
-          sessions: this.mapImportResult(data),
-        };
-      }
-
-      case 'all': {
-        await this.importSettings(config.state.settings);
-      }
-      // all and sessions have the same data process, so we can fall through
-
-      // eslint-disable-next-line no-fallthrough
-      case 'sessions': {
-        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
-        const sessions = await this.importSessions(config.state.sessions);
-        const topics = await this.importTopics(config.state.topics);
-        const messages = await this.importMessages(config.state.messages);
-
-        return {
-          messages: this.mapImportResult(messages),
-          sessionGroups: this.mapImportResult(sessionGroups),
-          sessions: this.mapImportResult(sessions),
-          topics: this.mapImportResult(topics),
-        };
-      }
+  importConfigState = async (config: ConfigFile): Promise<ImportResults> => {
+    if (config.exportType === 'settings') {
+      await importService.importSettings(config.state.settings);
+      return { type: 'settings' };
     }
+
+    if (config.exportType === 'all') {
+      await importService.importSettings(config.state.settings);
+    }
+
+    const data = await importService.importData({
+      messages: (config.state as any).messages || [],
+      sessionGroups: (config.state as any).sessionGroups || [],
+      sessions: (config.state as any).sessions || [],
+      topics: (config.state as any).topics || [],
+    });
+
+    return { ...data, type: config.exportType };
   };
+
+  // TODO: Seperate export feature into a new service like importService
 
   /**
    * export all agents
@@ -190,18 +150,6 @@ class ConfigService {
 
   private getAgent = (id: string) =>
     sessionSelectors.getSessionById(id)(useSessionStore.getState());
-
-  private mapImportResult = (input: {
-    added: number;
-    errors?: Error[];
-    skips: string[];
-  }): ImportResult => {
-    return {
-      added: input.added,
-      errors: input.errors?.length || 0,
-      skips: input.skips.length,
-    };
-  };
 }
 
 export const configService = new ConfigService();
