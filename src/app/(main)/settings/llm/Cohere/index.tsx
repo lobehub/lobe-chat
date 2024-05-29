@@ -1,7 +1,7 @@
 'use client';
 
 // TODO: FOR COHERE  FOR COHERE  Update icons
-import { Anthropic, Claude } from '@lobehub/icons'; 
+import { Cohere } from '@lobehub/icons';
 import { useTheme } from 'antd-style';
 import { memo } from 'react';
 
@@ -19,7 +19,7 @@ const CohereProvider = memo(() => {
         placeholder: 'https://api.cohere.ai',
       }}
     //   TODO: FOR COHERE UPDATE COHERE COLORS
-      title={<Anthropic.Text color={isDarkMode ? undefined : Claude.colorPrimary} size={15} />}
+      title={<Cohere.Text color={isDarkMode ? undefined : Cohere.colorPrimary} size={15} />}
     />
   );
 });
