@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.162.9](https://github.com/lobehub/lobe-chat/compare/v0.162.8...v0.162.9)
+
+<sup>Released on **2024-05-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the settings to add optimistic updating.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the settings to add optimistic updating, closes [#2709](https://github.com/lobehub/lobe-chat/issues/2709) ([fade53e](https://github.com/lobehub/lobe-chat/commit/fade53e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.8](https://github.com/lobehub/lobe-chat/compare/v0.162.7...v0.162.8)
 
 <sup>Released on **2024-05-28**</sup>
