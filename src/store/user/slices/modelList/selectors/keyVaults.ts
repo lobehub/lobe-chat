@@ -1,9 +1,14 @@
 import { UserStore } from '@/store/user';
-import { GlobalLLMProviderKey, OpenAICompatibleKeyVault } from '@/types/user/settings';
+import {
+  GlobalLLMProviderKey,
+  OpenAICompatibleKeyVault,
+  UserKeyVaults,
+} from '@/types/user/settings';
 
 import { currentSettings } from '../../settings/selectors/settings';
 
-export const keyVaultsSettings = (s: UserStore) => currentSettings(s).keyVaults;
+export const keyVaultsSettings = (s: UserStore): UserKeyVaults =>
+  currentSettings(s).keyVaults || {};
 
 const openAIConfig = (s: UserStore) => keyVaultsSettings(s).openai || {};
 const bedrockConfig = (s: UserStore) => keyVaultsSettings(s).bedrock || {};
@@ -15,6 +20,8 @@ const getVaultByProvider = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
 const isProviderEndpointNotEmpty = (provider: string) => (s: UserStore) =>
   !!getVaultByProvider(provider as GlobalLLMProviderKey)(s)?.baseURL;
 
+const password = (s: UserStore) => keyVaultsSettings(s).password || '';
+
 export const keyVaultsConfigSelectors = {
   azureConfig,
   bedrockConfig,
@@ -22,4 +29,5 @@ export const keyVaultsConfigSelectors = {
   isProviderEndpointNotEmpty,
   ollamaConfig,
   openAIConfig,
+  password,
 };
