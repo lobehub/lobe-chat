@@ -41,7 +41,6 @@ const Theme = memo(() => {
       {
         children: (
           <SelectWithImg
-            defaultValue={themeMode}
             height={60}
             onChange={setThemeMode}
             options={[
@@ -65,6 +64,7 @@ const Theme = memo(() => {
               },
             ]}
             unoptimized={false}
+            value={themeMode}
             width={100}
           />
         ),

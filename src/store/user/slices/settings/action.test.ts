@@ -40,9 +40,10 @@ describe('SettingsAction', () => {
       expect(setSettingsSpy).toHaveBeenCalledWith(newSettings);
 
       // Assert that the state has been updated
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        general: { themeMode: 'dark' },
-      });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { general: { themeMode: 'dark' } },
+        expect.any(AbortSignal),
+      );
 
       // Restore the spy
       setSettingsSpy.mockRestore();
@@ -77,7 +78,10 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the correct settings
-      expect(userService.updateUserSettings).toHaveBeenCalledWith(partialSettings);
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        partialSettings,
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -92,9 +96,10 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the correct theme mode
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        general: { themeMode },
-      });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { general: { themeMode } },
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -111,7 +116,10 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the merged agent settings
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({ defaultAgent: updatedAgent });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { defaultAgent: updatedAgent },
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -136,7 +144,10 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the correct settings
-      expect(userService.updateUserSettings).toHaveBeenCalledWith(systemAgentSettings);
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        systemAgentSettings,
+        expect.any(AbortSignal),
+      );
     });
   });
 });

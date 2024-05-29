@@ -8,6 +8,7 @@ import {
 import {
   GlobalLLMProviderKey,
   ProviderConfig,
+  UserModelProviderConfig,
   UserSettings,
 } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
@@ -16,14 +17,11 @@ import { UserStore } from '../../../store';
 
 export const currentSettings = (s: UserStore): UserSettings => merge(s.defaultSettings, s.settings);
 
-export const currentLLMSettings = (s: UserStore) => currentSettings(s).languageModel;
+export const currentLLMSettings = (s: UserStore): UserModelProviderConfig =>
+  currentSettings(s).languageModel || {};
 
 export const getProviderConfigById = (provider: string) => (s: UserStore) =>
-  currentLLMSettings(s)[provider as GlobalLLMProviderKey] as
-    | ProviderConfig
-    | undefined;
-
-const password = (s: UserStore) => currentSettings(s).keyVaults.password || '';
+  currentLLMSettings(s)[provider as GlobalLLMProviderKey] as ProviderConfig | undefined;
 
 const currentTTS = (s: UserStore) => merge(DEFAULT_TTS_CONFIG, currentSettings(s).tts);
 
@@ -50,6 +48,5 @@ export const settingsSelectors = {
   defaultAgentMeta,
   exportSettings,
   isDalleAutoGenerating,
-  password,
   providerConfig: getProviderConfigById,
 };
