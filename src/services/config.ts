@@ -29,6 +29,10 @@ class ConfigService {
       return { type: 'settings' };
     }
 
+    if (config.exportType === 'all') {
+      await importService.importSettings(config.state.settings);
+    }
+
     const data = await importService.importData({
       messages: (config.state as any).messages || [],
       sessionGroups: (config.state as any).sessionGroups || [],
