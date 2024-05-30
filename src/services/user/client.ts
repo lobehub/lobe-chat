@@ -33,7 +33,8 @@ export class ClientService implements IUserService {
     };
   }
 
-  updateUserSettings = async (patch: DeepPartial<UserSettings>) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  updateUserSettings = async (patch: DeepPartial<UserSettings>, _?: any) => {
     return UserModel.updateSettings(patch);
   };
 
