@@ -1,19 +1,15 @@
-// sort-imports-ignore
-// TODO: FOR COHERE See if this shims is needed for Cohere
-// import '@anthropic-ai/sdk/shims/web';
 import { CohereClient, CohereError, CohereTimeoutError } from "cohere-ai";
 import { ClientOptions } from 'openai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-// TODO: FOR COHERE Add cohere to types
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider, UserMessageContentPart } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
 
 // TODO: FOR COHERE create cohereHelpers
-import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
+import { buildCohereMessages, buildCohereTools } from '../utils/cohereHelpers';
 import { StreamingResponse } from '../utils/response';
 
 // TODO: FOR COHERE create stream util for cohere
@@ -127,10 +123,10 @@ export class LobeCohereAI implements LobeRuntimeAI {
       max_tokens,
       model,
       temperature,
-      tools: buildAnthropicTools(tools),
+      tools: buildCohereTools(tools),
       p,
       message: typeof message === 'string' ? message : message.join(' '),
-      chatHistory: chatHistory.map((m) => ({ role: m.role, message: m.content })),
+      chat_history: chatHistory.map((m) => ({ role: m.role.toUpperCase(), message: m.content })),
     };
   }  
 
