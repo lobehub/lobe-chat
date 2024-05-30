@@ -14,6 +14,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
+import { filesSelectors, useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors, preferenceSelectors } from '@/store/user/selectors';
 import { isMacOS } from '@/utils/platform';
@@ -60,10 +61,11 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
 
   const { theme, styles } = useStyles();
 
-  const [loading, stopGenerateMessage] = useChatStore((s) => [
+  const [isAIGenerating, stopGenerateMessage] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
     s.stopGenerateMessage,
   ]);
+  const isImageUploading = useFileStore(filesSelectors.isImageUploading);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
 
@@ -123,7 +125,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
         </Flexbox>
         <SaveTopic />
         <Flexbox style={{ minWidth: 92 }}>
-          {loading ? (
+          {isAIGenerating ? (
             <Button
               className={styles.loadingButton}
               icon={<StopLoadingIcon />}
@@ -134,6 +136,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
           ) : (
             <Space.Compact>
               <Button
+                disabled={isImageUploading}
                 onClick={() => {
                   sendMessage();
                   setExpand?.(false);
@@ -142,7 +145,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
               >
                 {t('input.send')}
               </Button>
-              <SendMore />
+              <SendMore disabled={isImageUploading} />
             </Space.Compact>
           )}
         </Flexbox>

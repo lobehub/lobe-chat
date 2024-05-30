@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "不限制",
       "limited": "只包含 {{number}} 条会话消息",
+      "setlimited": "使用历史消息数",
       "title": "限制历史消息数",
       "unlimited": "不限历史消息数"
     },
@@ -369,10 +370,15 @@
   },
   "systemAgent": {
     "title": "系统助手",
+    "topic": {
+      "label": "话题命名模型",
+      "modelDesc": "指定用于话题自动重命名的模型",
+      "title": "话题自动命名"
+    },
     "translation": {
       "label": "翻译模型",
       "modelDesc": "指定用于翻译的模型",
-      "title": "翻译助手设置"
+      "title": "消息内容翻译"
     }
   },
   "tab": {

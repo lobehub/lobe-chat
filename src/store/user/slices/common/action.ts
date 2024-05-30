@@ -3,6 +3,7 @@ import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
+import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import { ClientService } from '@/services/user/client';
 import type { UserStore } from '@/store/user';
@@ -69,7 +70,7 @@ export const createCommonSlice: StateCreator<
     ),
 
   useInitUserState: (isLogin, serverConfig, options) =>
-    useSWR<UserInitializationState>(
+    useOnlyFetchOnceSWR<UserInitializationState>(
       !!isLogin ? GET_USER_STATE_KEY : null,
       () => userService.getUserState(),
       {
@@ -81,7 +82,9 @@ export const createCommonSlice: StateCreator<
             const serverSettings: DeepPartial<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
               languageModel: serverConfig.languageModel,
+              systemAgent: serverConfig.systemAgent,
             };
+
             const defaultSettings = merge(get().defaultSettings, serverSettings);
 
             // merge preference
@@ -121,7 +124,6 @@ export const createCommonSlice: StateCreator<
             }
           }
         },
-        revalidateOnFocus: false,
       },
     ),
 });

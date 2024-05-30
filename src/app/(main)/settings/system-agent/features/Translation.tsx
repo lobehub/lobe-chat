@@ -11,9 +11,7 @@ import ModelSelect from '@/features/ModelSelect';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 
-import { useSyncSettings } from '../../hooks/useSyncSettings';
-
-const SYSTEM_AGENT_SETTING_KEY = 'systemAgent';
+import { useSyncSystemAgent } from './useSync';
 
 type SettingItemGroup = ItemGroup;
 
@@ -21,8 +19,8 @@ const Translation = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
 
-  const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setTranslationSystemAgent] = useUserStore((s) => [s.setTranslationSystemAgent]);
+  const settings = useUserStore(settingsSelectors.currentSystemAgent, isEqual);
+  const [updateSystemAgent] = useUserStore((s) => [s.updateSystemAgent]);
 
   const systemAgentSettings: SettingItemGroup = {
     children: [
@@ -30,19 +28,19 @@ const Translation = memo(() => {
         children: (
           <ModelSelect
             onChange={(props) => {
-              setTranslationSystemAgent(props.provider, props.model);
+              updateSystemAgent('translation', props);
             }}
           />
         ),
         desc: t('systemAgent.translation.modelDesc'),
         label: t('systemAgent.translation.label'),
-        name: [SYSTEM_AGENT_SETTING_KEY, 'translation', 'model'],
+        name: ['translation', 'model'],
       },
     ],
     title: t('systemAgent.translation.title'),
   };
 
-  useSyncSettings(form);
+  useSyncSystemAgent(form);
 
   return (
     <Form
