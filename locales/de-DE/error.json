@@ -136,5 +136,9 @@
       "apiKey": "Benutzerdefinierter API-Schlüssel",
       "password": "Passwort"
     }
+  },
+  "upload": {
+    "desc": "Details: {{detail}}",
+    "title": "Dateiupload fehlgeschlagen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es später erneut."
   }
 }

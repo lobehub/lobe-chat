@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Unbegrenzt",
       "limited": "Enthält nur {{number}} Gesprächsnachrichten",
+      "setlimited": "Setzen Sie die begrenzte Anzahl von Nachrichten",
       "title": "Historiennachrichten begrenzen",
       "unlimited": "Unbegrenzte Historiennachrichten"
     },

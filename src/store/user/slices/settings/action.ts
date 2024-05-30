@@ -3,6 +3,7 @@ import isEqual from 'fast-deep-equal';
 import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { shareService } from '@/services/share';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import { LocaleMode } from '@/types/locale';
@@ -14,6 +15,8 @@ import { merge } from '@/utils/merge';
 
 export interface UserSettingsAction {
   importAppSettings: (settings: UserSettings) => Promise<void>;
+  importUrlShareSettings: (settingsParams: string | null) => Promise<void>;
+  internal_createSignal: () => AbortController;
   resetSettings: () => Promise<void>;
   setSettings: (settings: DeepPartial<UserSettings>) => Promise<void>;
   switchLocale: (locale: LocaleMode) => Promise<void>;
@@ -21,6 +24,7 @@ export interface UserSettingsAction {
   updateDefaultAgent: (agent: DeepPartial<LobeAgentSettings>) => Promise<void>;
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
+
   updateSystemAgent: (key: string, value: { model: string; provider: string }) => Promise<void>;
 }
 
@@ -35,6 +39,33 @@ export const createSettingsSlice: StateCreator<
 
     await setSettings(importAppSettings);
   },
+
+  /**
+   * Import settings from a string in json format
+   */
+  importUrlShareSettings: async (settingsParams: string | null) => {
+    if (settingsParams) {
+      const importSettings = shareService.decodeShareSettings(settingsParams);
+      if (importSettings?.message || !importSettings?.data) {
+        // handle some error
+        return;
+      }
+
+      await get().setSettings(importSettings.data);
+    }
+  },
+
+  internal_createSignal: () => {
+    const abortController = get().updateSettingsSignal;
+    if (abortController && !abortController.signal.aborted) abortController.abort('canceled');
+
+    const newSignal = new AbortController();
+
+    set({ updateSettingsSignal: newSignal }, false, 'signalForUpdateSettings');
+
+    return newSignal;
+  },
+
   resetSettings: async () => {
     await userService.resetUserSettings();
     await get().refreshUserState();
@@ -47,8 +78,10 @@ export const createSettingsSlice: StateCreator<
     if (isEqual(prevSetting, nextSettings)) return;
 
     const diffs = difference(nextSettings, defaultSettings);
+    set({ settings: diffs }, false, 'optimistic_updateSettings');
 
-    await userService.updateUserSettings(diffs);
+    const abortController = get().internal_createSignal();
+    await userService.updateUserSettings(diffs, abortController.signal);
     await get().refreshUserState();
   },
   switchLocale: async (locale) => {

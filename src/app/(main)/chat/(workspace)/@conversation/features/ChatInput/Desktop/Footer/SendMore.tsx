@@ -27,7 +27,11 @@ const useStyles = createStyles(({ css, prefixCls }) => {
 
 const isMac = isMacOS();
 
-const SendMore = memo(() => {
+interface SendMoreProps {
+  disabled?: boolean;
+}
+
+const SendMore = memo<SendMoreProps>(({ disabled }) => {
   const { t } = useTranslation('chat');
 
   const { styles } = useStyles();
@@ -55,6 +59,7 @@ const SendMore = memo(() => {
 
   return (
     <Dropdown
+      disabled={disabled}
       menu={{
         items: [
           {
