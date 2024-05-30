@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 0.162.11](https://github.com/lobehub/lobe-chat/compare/v0.162.10...v0.162.11)
+
+<sup>Released on **2024-05-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix import config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix import config, closes [#2720](https://github.com/lobehub/lobe-chat/issues/2720) ([a5ddd9a](https://github.com/lobehub/lobe-chat/commit/a5ddd9a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.162.10](https://github.com/lobehub/lobe-chat/compare/v0.162.9...v0.162.10)
+
+<sup>Released on **2024-05-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the config import for server import.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the config import for server import, closes [#2718](https://github.com/lobehub/lobe-chat/issues/2718) ([d4ee64b](https://github.com/lobehub/lobe-chat/commit/d4ee64b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.9](https://github.com/lobehub/lobe-chat/compare/v0.162.8...v0.162.9)
 
 <sup>Released on **2024-05-29**</sup>
