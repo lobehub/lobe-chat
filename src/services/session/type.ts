@@ -2,6 +2,7 @@
 import { DeepPartial } from 'utility-types';
 
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
+import { MetaData } from '@/types/meta';
 import { BatchTaskResult } from '@/types/service';
 import {
   ChatSessionList,
@@ -35,6 +36,9 @@ export interface ISessionService {
     config: DeepPartial<LobeAgentConfig>,
     signal?: AbortSignal,
   ): Promise<any>;
+
+  updateSessionMeta(id: string, meta: Partial<MetaData>, signal?: AbortSignal): Promise<any>;
+
   updateSessionChatConfig(
     id: string,
     config: DeepPartial<LobeAgentChatConfig>,
