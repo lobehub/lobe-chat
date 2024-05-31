@@ -19,6 +19,7 @@ vi.mock('@/services/session', () => ({
     removeSession: vi.fn(),
     getAllSessions: vi.fn(),
     updateSession: vi.fn(),
+    updateSessionMeta: vi.fn(),
     updateSessionGroupId: vi.fn(),
     searchSessions: vi.fn(),
     updateSessionPinned: vi.fn(),
@@ -211,7 +212,7 @@ describe('SessionAction', () => {
     it('should update session meta and refresh sessions', async () => {
       const { result } = renderHook(() => useSessionStore());
       const meta = { title: 'Test Agent' };
-      const updateSessionMock = vi.spyOn(sessionService, 'updateSession');
+      const updateSessionMock = vi.spyOn(sessionService, 'updateSessionMeta');
       const refreshSessionsMock = vi.spyOn(result.current, 'refreshSessions');
 
       // 模拟有当前会话
@@ -222,7 +223,7 @@ describe('SessionAction', () => {
         await result.current.updateSessionMeta(meta);
       });
 
-      expect(updateSessionMock).toHaveBeenCalledWith('session-id', { meta });
+      expect(updateSessionMock).toHaveBeenCalledWith('session-id', meta, expect.any(AbortSignal));
       expect(refreshSessionsMock).toHaveBeenCalled();
       updateSessionMock.mockRestore();
       refreshSessionsMock.mockRestore();
