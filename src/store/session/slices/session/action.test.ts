@@ -19,6 +19,7 @@ vi.mock('@/services/session', () => ({
     removeSession: vi.fn(),
     getAllSessions: vi.fn(),
     updateSession: vi.fn(),
+    updateSessionMeta: vi.fn(),
     updateSessionGroupId: vi.fn(),
     searchSessions: vi.fn(),
     updateSessionPinned: vi.fn(),
