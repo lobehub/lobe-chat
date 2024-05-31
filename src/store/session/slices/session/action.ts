@@ -188,7 +188,12 @@ export const createSessionSlice: StateCreator<
 
     const { activeId, refreshSessions } = get();
 
-    await sessionService.updateSession(activeId, { meta });
+    const abortController = get().signalSessionMeta as AbortController;
+    if (abortController) abortController.abort('canceled');
+    const controller = new AbortController();
+    set({ signalSessionMeta: controller }, false, 'updateSessionMetaSignal');
+
+    await sessionService.updateSessionMeta(activeId, meta, controller.signal);
     await refreshSessions();
   },
 
