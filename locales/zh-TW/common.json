@@ -39,6 +39,10 @@
   "historyRange": "歷史範圍",
   "import": "匯入設定",
   "importModal": {
+    "error": {
+      "desc": "非常抱歉，資料匯入過程發生異常。請嘗試重新匯入，或 <1>提交問題</1>，我們將會第一時間幫你排查問題。",
+      "title": "資料匯入失敗"
+    },
     "finish": {
       "onlySettings": "系統設定匯入成功",
       "start": "開始使用",
@@ -46,6 +50,7 @@
       "title": "資料匯入完成"
     },
     "loading": "資料匯入中，請耐心等候...",
+    "preparing": "資料匯入模組準備中...",
     "result": {
       "added": "匯入成功",
       "errors": "匯入出錯",
@@ -56,7 +61,12 @@
       "topics": "話題",
       "type": "資料類型"
     },
-    "title": "匯入資料"
+    "title": "匯入資料",
+    "uploading": {
+      "desc": "當前檔案較大，正在努力上傳中...",
+      "restTime": "剩餘時間",
+      "speed": "上傳速度"
+    }
   },
   "installPWA": "安裝瀏覽器應用 (PWA)",
   "lang": {

@@ -1,6 +1,8 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 
+export const LOBEERRORCODE = { SKIP_NOTIFICATION: 'SKIP_NOTIFICATION' };
+
 export const ChatErrorType = {
   // ******* 业务错误语义 ******* //
 
