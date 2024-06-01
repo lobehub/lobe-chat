@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 0.162.13](https://github.com/lobehub/lobe-chat/compare/v0.162.12...v0.162.13)
+
+<sup>Released on **2024-06-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve config upload modal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve config upload modal, closes [#2745](https://github.com/lobehub/lobe-chat/issues/2745) ([af9af9f](https://github.com/lobehub/lobe-chat/commit/af9af9f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.162.12](https://github.com/lobehub/lobe-chat/compare/v0.162.11...v0.162.12)
+
+<sup>Released on **2024-05-31**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor session meta method.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor session meta method, closes [#2737](https://github.com/lobehub/lobe-chat/issues/2737) ([b103c3c](https://github.com/lobehub/lobe-chat/commit/b103c3c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.11](https://github.com/lobehub/lobe-chat/compare/v0.162.10...v0.162.11)
 
 <sup>Released on **2024-05-29**</sup>
