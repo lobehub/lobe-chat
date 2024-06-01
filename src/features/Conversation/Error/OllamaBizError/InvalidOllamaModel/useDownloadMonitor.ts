@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 
+import { formatTime } from '@/utils/speed';
+
 export const formatSize = (bytes: number): string => {
   const kbSize = bytes / 1024;
   if (kbSize < 1024) {
@@ -15,16 +17,6 @@ export const formatSize = (bytes: number): string => {
 
 const formatSpeed = (speed: number): string => {
   return `${formatSize(speed)}/s`;
-};
-
-const formatTime = (timeInSeconds: number): string => {
-  if (timeInSeconds < 60) {
-    return `${timeInSeconds.toFixed(1)} s`;
-  } else if (timeInSeconds < 3600) {
-    return `${(timeInSeconds / 60).toFixed(1)} min`;
-  } else {
-    return `${(timeInSeconds / 3600).toFixed(2)} h`;
-  }
 };
 
 export const useDownloadMonitor = (totalSize: number, completedSize: number) => {
