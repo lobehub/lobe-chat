@@ -96,12 +96,14 @@ const ProviderConfig = memo<ProviderConfigProps>(
       enabled,
       isFetchOnClient,
       isProviderEndpointNotEmpty,
+      isProviderApiKeyNotEmpty,
     ] = useUserStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
       modelConfigSelectors.isProviderEnabled(provider)(s),
       modelConfigSelectors.isProviderFetchOnClient(provider)(s),
       keyVaultsConfigSelectors.isProviderEndpointNotEmpty(provider)(s),
+      keyVaultsConfigSelectors.isProviderApiKeyNotEmpty(provider)(s),
     ]);
 
     useSyncSettings(form);
@@ -131,7 +133,15 @@ const ProviderConfig = memo<ProviderConfigProps>(
         label: proxyUrl?.title || t('llm.proxyUrl.title'),
         name: [KeyVaultsConfigKey, provider, LLMProviderBaseUrlKey],
       },
-      (showBrowserRequest || (showEndpoint && isProviderEndpointNotEmpty)) && {
+      /*
+       * Conditions to show Client Fetch Switch
+       * 1. Component props
+       * 2. Provider allow to edit endpoint and the value of endpoint is not empty
+       * 3. There is an apikey provided by user
+       */
+      (showBrowserRequest ||
+        (showEndpoint && isProviderEndpointNotEmpty) ||
+        isProviderApiKeyNotEmpty) && {
         children: (
           <Switch
             onChange={(enabled) => {

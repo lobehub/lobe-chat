@@ -20,12 +20,16 @@ const getVaultByProvider = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
 const isProviderEndpointNotEmpty = (provider: string) => (s: UserStore) =>
   !!getVaultByProvider(provider as GlobalLLMProviderKey)(s)?.baseURL;
 
+const isProviderApiKeyNotEmpty = (provider: string) => (s: UserStore) =>
+  !!getVaultByProvider(provider as GlobalLLMProviderKey)(s)?.apiKey;
+
 const password = (s: UserStore) => keyVaultsSettings(s).password || '';
 
 export const keyVaultsConfigSelectors = {
   azureConfig,
   bedrockConfig,
   getVaultByProvider,
+  isProviderApiKeyNotEmpty,
   isProviderEndpointNotEmpty,
   ollamaConfig,
   openAIConfig,
