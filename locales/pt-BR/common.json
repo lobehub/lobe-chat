@@ -39,6 +39,10 @@
   "historyRange": "Intervalo de histórico",
   "import": "Importar configuração",
   "importModal": {
+    "error": {
+      "desc": "Desculpe, ocorreu um erro durante o processo de importação de dados. Por favor, tente importar novamente ou <1>envie um problema</1>, e nós iremos ajudá-lo a resolver o problema o mais rápido possível.",
+      "title": "Falha na importação de dados"
+    },
     "finish": {
       "onlySettings": "Configurações do sistema importadas com sucesso",
       "start": "Começar a usar",
@@ -46,6 +50,7 @@
       "title": "Importação de dados concluída"
     },
     "loading": "Importando dados, por favor aguarde...",
+    "preparing": "Preparando módulo de importação de dados...",
     "result": {
       "added": "Importação bem-sucedida",
       "errors": "Erros na importação",
@@ -56,7 +61,12 @@
       "topics": "Tópicos",
       "type": "Tipo de dados"
     },
-    "title": "Importar dados"
+    "title": "Importar dados",
+    "uploading": {
+      "desc": "O arquivo atual é grande, estamos fazendo o upload...",
+      "restTime": "Tempo restante",
+      "speed": "Velocidade de upload"
+    }
   },
   "installPWA": "Instalar aplicativo de navegador",
   "lang": {
