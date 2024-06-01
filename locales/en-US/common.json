@@ -39,6 +39,10 @@
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
+    "error": {
+      "desc": "Sorry, an error occurred during the data import process. Please try importing again, or <1>submit a request</1>, and we will help you troubleshoot the issue as soon as possible.",
+      "title": "Data Import Failed"
+    },
     "finish": {
       "onlySettings": "System settings imported successfully",
       "start": "Start using",
@@ -46,6 +50,7 @@
       "title": "Data import completed"
     },
     "loading": "Data importing, please wait...",
+    "preparing": "Data import module is preparing...",
     "result": {
       "added": "Imported successfully",
       "errors": "Import errors",
@@ -56,7 +61,12 @@
       "topics": "Topics",
       "type": "Data Type"
     },
-    "title": "Import Data"
+    "title": "Import Data",
+    "uploading": {
+      "desc": "The current file is large, and is being uploaded...",
+      "restTime": "Time remaining",
+      "speed": "Upload speed"
+    }
   },
   "installPWA": "Install browser app",
   "lang": {

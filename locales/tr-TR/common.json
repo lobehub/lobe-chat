@@ -39,6 +39,10 @@
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
   "importModal": {
+    "error": {
+      "desc": "Üzgünüz, veri aktarımı sırasında bir hata oluştu. Lütfen tekrar deneyin veya <1>bir sorun bildirin</1>, sorunu çözmek için elimizden geleni yapacağız.",
+      "title": "Veri Aktarımı Başarısız"
+    },
     "finish": {
       "onlySettings": "Sistem ayarları başarıyla içe aktarıldı",
       "start": "Başla",
@@ -46,6 +50,7 @@
       "title": "Veri başarıyla aktarıldı"
     },
     "loading": "Veri aktarılıyor, lütfen bekleyin...",
+    "preparing": "Veri aktarımı modülü hazırlanıyor...",
     "result": {
       "added": "Başarıyla içe aktarıldı",
       "errors": "İçe Aktarma Hataları",
@@ -56,7 +61,12 @@
       "topics": "Konular",
       "type": "Tip"
     },
-    "title": "Veri İçe Aktar"
+    "title": "Veri İçe Aktar",
+    "uploading": {
+      "desc": "Dosya şu anda büyük olduğundan, yüklenmeye çalışılıyor...",
+      "restTime": "Kalan Zaman",
+      "speed": "Yükleme Hızı"
+    }
   },
   "installPWA": "Tarayıcı Uygulamasını Yükle",
   "lang": {
