@@ -230,7 +230,7 @@
     "prettier": "^3.2.5",
     "remark-cli": "^11.0.0",
     "remark-parse": "^10.0.2",
-    "semantic-release": "^21.1.2",
+    "semantic-release": "^24.0.0",
     "stylelint": "^15.11.0",
     "tsx": "^4.11.0",
     "typescript": "^5.4.5",
