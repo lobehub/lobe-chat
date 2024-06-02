@@ -136,5 +136,9 @@
       "apiKey": "Clave de API personalizada",
       "password": "Contraseña"
     }
+  },
+  "upload": {
+    "desc": "Detalles: {{detail}}",
+    "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde"
   }
 }

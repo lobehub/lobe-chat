@@ -7,7 +7,10 @@ import { DEFAULT_AGENT, DEFAULT_SETTINGS } from '@/const/settings';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
 import { LobeAgentSettings } from '@/types/session';
-import { GlobalSettings } from '@/types/settings';
+import { UserSettings } from '@/types/user/settings';
+import { merge } from '@/utils/merge';
+
+vi.mock('zustand/traditional');
 
 // Mock userService
 vi.mock('@/services/user', () => ({
@@ -21,10 +24,9 @@ describe('SettingsAction', () => {
   describe('importAppSettings', () => {
     it('should import app settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const newSettings: GlobalSettings = {
-        ...DEFAULT_SETTINGS,
-        themeMode: 'dark',
-      };
+      const newSettings: UserSettings = merge(DEFAULT_SETTINGS, {
+        general: { themeMode: 'dark' },
+      });
 
       // Mock the internal setSettings function call
       const setSettingsSpy = vi.spyOn(result.current, 'setSettings');
@@ -35,14 +37,13 @@ describe('SettingsAction', () => {
       });
 
       // Assert that setSettings was called with the correct settings
-      expect(setSettingsSpy).toHaveBeenCalledWith({
-        ...DEFAULT_SETTINGS,
-        password: undefined,
-        themeMode: 'dark',
-      });
+      expect(setSettingsSpy).toHaveBeenCalledWith(newSettings);
 
       // Assert that the state has been updated
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({ themeMode: 'dark' });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { general: { themeMode: 'dark' } },
+        expect.any(AbortSignal),
+      );
 
       // Restore the spy
       setSettingsSpy.mockRestore();
@@ -69,7 +70,7 @@ describe('SettingsAction', () => {
   describe('setSettings', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const partialSettings: Partial<GlobalSettings> = { themeMode: 'dark' };
+      const partialSettings: DeepPartial<UserSettings> = { general: { themeMode: 'dark' } };
 
       // Perform the action
       await act(async () => {
@@ -77,7 +78,10 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the correct settings
-      expect(userService.updateUserSettings).toHaveBeenCalledWith(partialSettings);
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        partialSettings,
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -92,7 +96,10 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the correct theme mode
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({ themeMode });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { general: { themeMode } },
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -109,14 +116,17 @@ describe('SettingsAction', () => {
       });
 
       // Assert that updateUserSettings was called with the merged agent settings
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({ defaultAgent: updatedAgent });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { defaultAgent: updatedAgent },
+        expect.any(AbortSignal),
+      );
     });
   });
 
-  describe('setTranslationSystemAgent', () => {
+  describe('updateSystemAgent', () => {
     it('should set partial settings', async () => {
       const { result } = renderHook(() => useUserStore());
-      const systemAgentSettings: Partial<GlobalSettings> = {
+      const systemAgentSettings: DeepPartial<UserSettings> = {
         systemAgent: {
           translation: {
             model: 'testmodel',
@@ -127,11 +137,17 @@ describe('SettingsAction', () => {
 
       // Perform the action
       await act(async () => {
-        await result.current.setTranslationSystemAgent('provider', 'testmodel');
+        await result.current.updateSystemAgent('translation', {
+          provider: 'provider',
+          model: 'testmodel',
+        });
       });
 
       // Assert that updateUserSettings was called with the correct settings
-      expect(userService.updateUserSettings).toHaveBeenCalledWith(systemAgentSettings);
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        systemAgentSettings,
+        expect.any(AbortSignal),
+      );
     });
   });
 });

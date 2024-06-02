@@ -3,18 +3,19 @@ import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
+import { useOnlyFetchOnceSWR } from '@/libs/swr';
 import { userService } from '@/services/user';
 import { ClientService } from '@/services/user/client';
 import type { UserStore } from '@/store/user';
 import type { GlobalServerConfig } from '@/types/serverConfig';
-import type { GlobalSettings } from '@/types/settings';
 import { UserInitializationState } from '@/types/user';
+import type { UserSettings } from '@/types/user/settings';
 import { switchLang } from '@/utils/client/switchLang';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { preferenceSelectors } from '../preference/selectors';
-import { settingsSelectors } from '../settings/selectors';
+import { userGeneralSettingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('common');
 
@@ -69,7 +70,7 @@ export const createCommonSlice: StateCreator<
     ),
 
   useInitUserState: (isLogin, serverConfig, options) =>
-    useSWR<UserInitializationState>(
+    useOnlyFetchOnceSWR<UserInitializationState>(
       !!isLogin ? GET_USER_STATE_KEY : null,
       () => userService.getUserState(),
       {
@@ -78,10 +79,12 @@ export const createCommonSlice: StateCreator<
 
           if (data) {
             // merge settings
-            const serverSettings: DeepPartial<GlobalSettings> = {
+            const serverSettings: DeepPartial<UserSettings> = {
               defaultAgent: serverConfig.defaultAgent,
               languageModel: serverConfig.languageModel,
+              systemAgent: serverConfig.systemAgent,
             };
+
             const defaultSettings = merge(get().defaultSettings, serverSettings);
 
             // merge preference
@@ -115,13 +118,12 @@ export const createCommonSlice: StateCreator<
             get().refreshDefaultModelProviderList({ trigger: 'fetchUserState' });
 
             // auto switch language
-            const { language } = settingsSelectors.currentSettings(get());
+            const language = userGeneralSettingsSelectors.config(get()).language;
             if (language === 'auto') {
               switchLang('auto');
             }
           }
         },
-        revalidateOnFocus: false,
       },
     ),
 });

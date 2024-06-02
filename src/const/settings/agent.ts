@@ -1,7 +1,7 @@
 import { DEFAULT_AGENT_META } from '@/const/meta';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
-import { GlobalDefaultAgent } from '@/types/settings';
+import { UserDefaultAgent } from '@/types/user/settings';
 
 export const DEFAUTT_AGENT_TTS_CONFIG: LobeAgentTTSConfig = {
   showAllLocaleVoice: false,
@@ -34,7 +34,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   tts: DEFAUTT_AGENT_TTS_CONFIG,
 };
 
-export const DEFAULT_AGENT: GlobalDefaultAgent = {
+export const DEFAULT_AGENT: UserDefaultAgent = {
   config: DEFAULT_AGENT_CONFIG,
   meta: DEFAULT_AGENT_META,
 };

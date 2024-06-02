@@ -53,7 +53,7 @@ export const createPluginSlice: StateCreator<
     const previousSettings = pluginSelectors.getPluginSettingsById(id)(get());
     const nextSettings = merge(previousSettings, settings);
 
-    set({ updatePluginSettingsSignal: newSignal });
+    set({ updatePluginSettingsSignal: newSignal }, false, 'create new Signal');
     await pluginService.updatePluginSettings(id, nextSettings, newSignal.signal);
 
     await get().refreshPlugins();

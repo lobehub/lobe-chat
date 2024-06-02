@@ -110,7 +110,7 @@ const Common = memo(() => {
         desc: t('settingSystem.accessCode.desc'),
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
-        name: 'password',
+        name: ['keyVaults', 'password'],
       },
       {
         children: isSignedIn ? (

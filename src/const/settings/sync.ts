@@ -1,5 +1,5 @@
-import { GlobalSyncSettings } from '@/types/settings';
+import { UserSyncSettings } from '@/types/user/settings';
 
-export const DEFAULT_SYNC_CONFIG: GlobalSyncSettings = {
+export const DEFAULT_SYNC_CONFIG: UserSyncSettings = {
   webrtc: { enabled: false },
 };

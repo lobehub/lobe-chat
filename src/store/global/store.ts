@@ -1,10 +1,9 @@
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
+import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { isDev } from '@/utils/env';
-
+import { createDevtools } from '../middleware/createDevtools';
 import { type GlobalStoreAction, globalActionSlice } from './action';
 import { type GlobalState, initialState } from './initialState';
 
@@ -19,11 +18,9 @@ const createStore: StateCreator<GlobalStore, [['zustand/devtools', never]]> = (.
 
 //  ===============  实装 useStore ============ //
 
+const devtools = createDevtools('global');
+
 export const useGlobalStore = createWithEqualityFn<GlobalStore>()(
-  subscribeWithSelector(
-    devtools(createStore, {
-      name: 'LobeChat_Global' + (isDev ? '_DEV' : ''),
-    }),
-  ),
+  subscribeWithSelector(devtools(createStore)),
   shallow,
 );

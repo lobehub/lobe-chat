@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Sin límite",
       "limited": "Incluye solo {{number}} mensajes de conversación",
+      "setlimited": "Establecer cantidad de mensajes históricos",
       "title": "Limitar número de mensajes históricos",
       "unlimited": "Sin límite de mensajes históricos"
     },
@@ -369,6 +370,11 @@
   },
   "systemAgent": {
     "title": "Asistente del sistema",
+    "topic": {
+      "label": "Modelo de nombramiento de temas",
+      "modelDesc": "Modelo designado para el renombramiento automático de temas",
+      "title": "Renombramiento automático de temas"
+    },
     "translation": {
       "label": "Modelo de traducción",
       "modelDesc": "Especifica el modelo a utilizar para la traducción",
