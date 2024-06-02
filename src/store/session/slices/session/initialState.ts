@@ -16,6 +16,7 @@ export interface SessionState {
    * it means defaultSessions
    */
   sessions: LobeAgentSession[];
+  signalSessionMeta?: AbortController;
 }
 
 export const initialSessionState: SessionState = {

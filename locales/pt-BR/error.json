@@ -136,5 +136,9 @@
       "apiKey": "Chave de API personalizada",
       "password": "Senha"
     }
+  },
+  "upload": {
+    "desc": "Detalhes: {{detail}}",
+    "title": "Falha ao enviar o arquivo, verifique a conexão de rede ou tente novamente mais tarde"
   }
 }
