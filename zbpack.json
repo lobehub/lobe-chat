@@ -1,0 +1,11 @@
+{
+  "build": {
+    "type": "nextjs",
+    "build_command": "npm run build",
+    "output_dir": "build"
+  },
+  "deploy": {
+    "type": "zeabur",
+    "serverless": true
+  }
+}
