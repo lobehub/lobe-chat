@@ -10,12 +10,16 @@ import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
+import {
+  authSelectors,
+  keyVaultsConfigSelectors,
+  syncSettingsSelectors,
+} from '@/store/user/selectors';
 import { SyncMethod } from '@/types/sync';
 
 import RoomNameInput from './RoomNameInput';
-import { authSelectors, settingsSelectors, syncSettingsSelectors } from '@/store/user/selectors';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 type SettingItemGroup = ItemGroup;
 
@@ -42,10 +46,18 @@ const Liveblocks = memo(() => {
     serverConfigSelectors.enabledLiveblockSync(s),
   ]);
 
-  const [customName, customApiKey, isAccessCodeFilled, isLoginWithAuth, userId, enableAuth, setSettings] = useUserStore((s) => [
+  const [
+    customName,
+    customApiKey,
+    isAccessCodeFilled,
+    isLoginWithAuth,
+    userId,
+    enableAuth,
+    setSettings,
+  ] = useUserStore((s) => [
     syncSettingsSelectors.liveblocksConfig(s).customName,
     syncSettingsSelectors.liveblocksConfig(s).customApiKey,
-    !!settingsSelectors.password(s),
+    !!keyVaultsConfigSelectors.password(s),
     authSelectors.isLoginWithAuth(s),
     s.user?.id,
     s.enableAuth(),
@@ -58,7 +70,7 @@ const Liveblocks = memo(() => {
 
   useEffect(() => {
     // Fix for the first time setting up
-    if( userId && !customName && !roomName ) {
+    if (userId && !customName && !roomName) {
       form.setFieldValue(['sync', 'liveblocks', 'roomName'], userId);
       form.submit();
     }
@@ -67,12 +79,15 @@ const Liveblocks = memo(() => {
   const config: SettingItemGroup = {
     children: [
       {
-        children:
-          <Switch onChange={(checked) => {
-            form.setFieldValue(['sync', 'liveblocks', 'roomName'], checked ? '' : userId);
-            form.setFieldValue(['sync', 'liveblocks', 'enabled'], false);
-            form.submit();
-          }} />,
+        children: (
+          <Switch
+            onChange={(checked) => {
+              form.setFieldValue(['sync', 'liveblocks', 'roomName'], checked ? '' : userId);
+              form.setFieldValue(['sync', 'liveblocks', 'enabled'], false);
+              form.submit();
+            }}
+          />
+        ),
         desc: t('sync.liveblocks.customName.desc'),
         hidden: !enableAuth || (enableAuth && !isLoginWithAuth),
         label: t('sync.liveblocks.customName.title'),
@@ -103,13 +118,16 @@ const Liveblocks = memo(() => {
         name: ['sync', 'liveblocks', 'roomPassword'],
       },
       {
-        children:
-          <Switch onChange={(checked) => {
-            form.setFieldValue(['sync', 'liveblocks', 'customApiKey'], checked);
-            form.setFieldValue(['sync', 'liveblocks', 'publicApiKey'], '');
-            form.setFieldValue(['sync', 'liveblocks', 'enabled'], false);
-            form.submit();
-          }} />,
+        children: (
+          <Switch
+            onChange={(checked) => {
+              form.setFieldValue(['sync', 'liveblocks', 'customApiKey'], checked);
+              form.setFieldValue(['sync', 'liveblocks', 'publicApiKey'], '');
+              form.setFieldValue(['sync', 'liveblocks', 'enabled'], false);
+              form.submit();
+            }}
+          />
+        ),
         desc: t('sync.liveblocks.customApiKey.desc'),
         hidden: !enabledLiveblocks,
         label: t('sync.liveblocks.customApiKey.title'),
@@ -139,13 +157,15 @@ const Liveblocks = memo(() => {
       },
       {
         hidden: isLoginWithAuth || (enabledAccessCode && isAccessCodeFilled) || !enabledLiveblocks,
-        label: (
-          enableAuth ? <Alert
+        label: enableAuth ? (
+          <Alert
             closable
             colorfulText
             message={t('sync.liveblocks.warning.authRequired')}
             type="warning"
-          /> : <Alert
+          />
+        ) : (
+          <Alert
             closable
             colorfulText
             message={t('sync.liveblocks.warning.accessCodeRequired')}
