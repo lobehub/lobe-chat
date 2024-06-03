@@ -8,8 +8,8 @@ import { browserInfo } from '@/utils/platform';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { userProfileSelectors } from '../auth/selectors';
+import { keyVaultsConfigSelectors } from '../modelList/selectors';
 import { syncSettingsSelectors } from './selectors';
-import { settingsSelectors } from '../settings/selectors';
 
 const n = setNamespace('sync');
 
@@ -25,7 +25,7 @@ export interface SyncAction {
       onEvent: OnSyncEvent;
       userEnableSync: {
         [K in SyncMethod]: boolean;
-      },
+      };
       userId: string | undefined;
     },
   ) => SWRResponse;
@@ -59,7 +59,7 @@ export const createSyncSlice: StateCreator<
     const webrtcConfig = syncSettingsSelectors.webrtcConfig(get());
     const liveblocksConfig = syncSettingsSelectors.liveblocksConfig(get());
 
-    const accessCode = settingsSelectors.password(get());
+    const accessCode = keyVaultsConfigSelectors.password(get());
 
     if (!webrtcConfig.channelName && !liveblocksConfig.roomName) return false;
 
