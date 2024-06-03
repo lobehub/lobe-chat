@@ -18,10 +18,11 @@ export * from './tts';
 
 export const DEFAULT_SETTINGS: UserSettings = {
   defaultAgent: DEFAULT_AGENT,
+  general: DEFAULT_COMMON_SETTINGS,
+  keyVaults: {},
   languageModel: DEFAULT_LLM_CONFIG,
   sync: DEFAULT_SYNC_CONFIG,
   systemAgent: DEFAULT_SYSTEM_AGENT_CONFIG,
   tool: DEFAULT_TOOL_CONFIG,
   tts: DEFAULT_TTS_CONFIG,
-  ...DEFAULT_COMMON_SETTINGS,
 };

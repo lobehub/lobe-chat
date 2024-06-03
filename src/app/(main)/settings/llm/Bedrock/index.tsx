@@ -10,7 +10,7 @@ import { ModelProvider } from '@/libs/agent-runtime';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import ProviderConfig from '../components/ProviderConfig';
-import { LLMProviderConfigKey } from '../const';
+import { KeyVaultsConfigKey } from '../const';
 
 const providerKey: GlobalLLMProviderKey = 'bedrock';
 
@@ -29,7 +29,7 @@ const BedrockProvider = memo(() => {
           ),
           desc: t(`${providerKey}.accessKeyId.desc`),
           label: t(`${providerKey}.accessKeyId.title`),
-          name: [LLMProviderConfigKey, providerKey, 'accessKeyId'],
+          name: [KeyVaultsConfigKey, providerKey, 'accessKeyId'],
         },
         {
           children: (
@@ -40,7 +40,7 @@ const BedrockProvider = memo(() => {
           ),
           desc: t(`${providerKey}.secretAccessKey.desc`),
           label: t(`${providerKey}.secretAccessKey.title`),
-          name: [LLMProviderConfigKey, providerKey, 'secretAccessKey'],
+          name: [KeyVaultsConfigKey, providerKey, 'secretAccessKey'],
         },
         {
           children: (
@@ -55,7 +55,7 @@ const BedrockProvider = memo(() => {
           ),
           desc: t(`${providerKey}.region.desc`),
           label: t(`${providerKey}.region.title`),
-          name: [LLMProviderConfigKey, providerKey, 'region'],
+          name: [KeyVaultsConfigKey, providerKey, 'region'],
         },
       ]}
       checkModel={'anthropic.claude-instant-v1'}

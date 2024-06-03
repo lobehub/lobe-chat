@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "Unbegrenzt",
       "limited": "Enthält nur {{number}} Gesprächsnachrichten",
+      "setlimited": "Setzen Sie die begrenzte Anzahl von Nachrichten",
       "title": "Historiennachrichten begrenzen",
       "unlimited": "Unbegrenzte Historiennachrichten"
     },
@@ -369,6 +370,11 @@
   },
   "systemAgent": {
     "title": "Systemassistent",
+    "topic": {
+      "label": "Themenbenennungsmodell",
+      "modelDesc": "Das Modell, das für die automatische Umbenennung von Themen verwendet wird",
+      "title": "Automatische Themenbenennung"
+    },
     "translation": {
       "label": "Übersetzungsmodell",
       "modelDesc": "Das für die Übersetzung verwendete Modell",

@@ -2,7 +2,7 @@ import { Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import Loading from '../Loading';
 
@@ -12,7 +12,7 @@ export interface PluginMarkdownTypeProps {
 }
 
 const PluginMarkdownType = memo<PluginMarkdownTypeProps>(({ content, loading }) => {
-  const fontSize = useUserStore((s) => settingsSelectors.currentSettings(s).fontSize);
+  const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   if (loading) return <Loading />;
 
   return (

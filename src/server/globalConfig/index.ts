@@ -1,4 +1,4 @@
-import { getAppConfig } from '@/config/app';
+import { appEnv, getAppConfig } from '@/config/app';
 import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
@@ -9,6 +9,7 @@ import {
   TogetherAIProviderCard,
 } from '@/config/modelProviders';
 import { enableNextAuth } from '@/const/auth';
+import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
 import { GlobalServerConfig } from '@/types/serverConfig';
 import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseModels';
 
@@ -51,7 +52,6 @@ export const getServerGlobalConfig = () => {
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
-
     enableUploadFileToServer: !!fileEnv.S3_SECRET_ACCESS_KEY,
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
@@ -114,6 +114,7 @@ export const getServerGlobalConfig = () => {
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
+    systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {
       langfuse: langfuseEnv.ENABLE_LANGFUSE,
     },

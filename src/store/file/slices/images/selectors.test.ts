@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { FilesStoreState } from './initialState';
+import { FilesStoreState } from '../../initialState';
 import { filesSelectors } from './selectors';
 
 describe('filesSelectors', () => {
@@ -11,6 +11,7 @@ describe('filesSelectors', () => {
     state = {
       imagesMap: {
         '1': {
+          id: '1',
           name: 'a',
           fileType: 'image/png',
           saveMode: 'local',
@@ -18,6 +19,7 @@ describe('filesSelectors', () => {
           url: 'blob:abc',
         },
         '2': {
+          id: '2',
           name: 'b',
           fileType: 'image/png',
           saveMode: 'url',
@@ -25,6 +27,7 @@ describe('filesSelectors', () => {
           url: 'url2',
         },
       },
+      uploadingIds: [],
       // 假设 '3' 是不存在的 ID
       inputFilesList: ['1', '2', '3'],
     };

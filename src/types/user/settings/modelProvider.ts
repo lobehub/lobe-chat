@@ -1,10 +1,7 @@
+import { ModelProviderKey } from '@/libs/agent-runtime';
 import { ChatModelCard } from '@/types/llm';
 
-export interface OpenAICompatibleProviderConfig {
-  /**
-   * @deprecated
-   */
-  apiKey?: string;
+export interface ProviderConfig {
   /**
    * whether to auto fetch model lists
    */
@@ -19,10 +16,6 @@ export interface OpenAICompatibleProviderConfig {
    */
   enabledModels?: string[] | null;
   /**
-   * @deprecated
-   */
-  endpoint?: string;
-  /**
    * whether fetch on client
    */
   fetchOnClient?: boolean;
@@ -36,35 +29,6 @@ export interface OpenAICompatibleProviderConfig {
   remoteModelCards?: ChatModelCard[];
 }
 
-export interface AzureOpenAIConfig extends Omit<OpenAICompatibleProviderConfig, 'endpoint'> {
-  apiVersion?: string;
-  endpoint?: string;
-}
+export type GlobalLLMProviderKey = ModelProviderKey;
 
-export interface AWSBedrockConfig
-  extends Omit<OpenAICompatibleProviderConfig, 'apiKey' | 'endpoint'> {
-  accessKeyId?: string;
-  region?: string;
-  secretAccessKey?: string;
-}
-
-export interface UserModelProviderConfig {
-  anthropic: OpenAICompatibleProviderConfig;
-  azure: AzureOpenAIConfig;
-  bedrock: AWSBedrockConfig;
-  deepseek: OpenAICompatibleProviderConfig;
-  google: OpenAICompatibleProviderConfig;
-  groq: OpenAICompatibleProviderConfig;
-  minimax: OpenAICompatibleProviderConfig;
-  mistral: OpenAICompatibleProviderConfig;
-  moonshot: OpenAICompatibleProviderConfig;
-  ollama: OpenAICompatibleProviderConfig;
-  openai: OpenAICompatibleProviderConfig;
-  openrouter: OpenAICompatibleProviderConfig;
-  perplexity: OpenAICompatibleProviderConfig;
-  togetherai: OpenAICompatibleProviderConfig;
-  zeroone: OpenAICompatibleProviderConfig;
-  zhipu: OpenAICompatibleProviderConfig;
-}
-
-export type GlobalLLMProviderKey = keyof UserModelProviderConfig;
+export type UserModelProviderConfig = Record<ModelProviderKey, ProviderConfig>;

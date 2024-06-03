@@ -25,17 +25,16 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
 
     const tracePayload = getTracePayload(req);
 
+    let traceOptions = {};
     // If user enable trace
     if (tracePayload?.enabled) {
-      return await agentRuntime.chat(
-        data,
-        createTraceOptions(data, {
-          provider,
-          trace: tracePayload,
-        }),
-      );
+      traceOptions = createTraceOptions(data, {
+        provider,
+        trace: tracePayload,
+      });
     }
-    return await agentRuntime.chat(data);
+
+    return await agentRuntime.chat(data, { user: jwtPayload.userId, ...traceOptions });
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,

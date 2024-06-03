@@ -4,7 +4,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { modelsService } from '@/services/models';
 import { userService } from '@/services/user';
 import { useUserStore } from '@/store/user';
-import { OpenAICompatibleProviderConfig } from '@/types/user/settings';
+import { ProviderConfig } from '@/types/user/settings';
 
 import { settingsSelectors } from '../settings/selectors';
 import { CustomModelCardDispatch } from './reducers/customModelCard';
@@ -24,7 +24,7 @@ describe('LLMSettingsSliceAction', () => {
   describe('setModelProviderConfig', () => {
     it('should set OpenAI configuration', async () => {
       const { result } = renderHook(() => useUserStore());
-      const openAIConfig: Partial<OpenAICompatibleProviderConfig> = { apiKey: 'test-key' };
+      const openAIConfig: Partial<ProviderConfig> = { fetchOnClient: true };
 
       // Perform the action
       await act(async () => {
@@ -32,11 +32,10 @@ describe('LLMSettingsSliceAction', () => {
       });
 
       // Assert that updateUserSettings was called with the correct OpenAI configuration
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        languageModel: {
-          openai: openAIConfig,
-        },
-      });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { languageModel: { openai: openAIConfig } },
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -212,11 +211,10 @@ describe('LLMSettingsSliceAction', () => {
         await result.current.removeEnabledModels('azure', model);
       });
 
-      expect(spyOn).toHaveBeenCalledWith({
-        languageModel: {
-          azure: { enabledModels: ['gpt-4'] },
-        },
-      });
+      expect(spyOn).toHaveBeenCalledWith(
+        { languageModel: { azure: { enabledModels: ['gpt-4'] } } },
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -250,11 +248,10 @@ describe('LLMSettingsSliceAction', () => {
         await result.current.toggleProviderEnabled('minimax', true);
       });
 
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        languageModel: {
-          minimax: { enabled: true },
-        },
-      });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { languageModel: { minimax: { enabled: true } } },
+        expect.any(AbortSignal),
+      );
     });
 
     it('should disable the provider', async () => {
@@ -265,11 +262,10 @@ describe('LLMSettingsSliceAction', () => {
         await result.current.toggleProviderEnabled(provider, false);
       });
 
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        languageModel: {
-          openai: { enabled: false },
-        },
-      });
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        { languageModel: { openai: { enabled: false } } },
+        expect.any(AbortSignal),
+      );
     });
   });
 
@@ -285,15 +281,18 @@ describe('LLMSettingsSliceAction', () => {
         await result.current.updateEnabledModels(provider, modelKeys, options);
       });
 
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        languageModel: {
-          openai: {
-            customModelCards: [{ id: 'custom-model' }],
-            // TODO：目标单测中需要包含下面这一行
-            // enabledModels: ['gpt-3.5-turbo', 'custom-model'],
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        {
+          languageModel: {
+            openai: {
+              customModelCards: [{ id: 'custom-model' }],
+              // TODO：目标单测中需要包含下面这一行
+              // enabledModels: ['gpt-3.5-turbo', 'custom-model'],
+            },
           },
         },
-      });
+        expect.any(AbortSignal),
+      );
     });
 
     it('should not add removed model to customModelCards', async () => {
@@ -316,11 +315,12 @@ describe('LLMSettingsSliceAction', () => {
         await result.current.updateEnabledModels(provider, modelKeys, options);
       });
 
-      expect(userService.updateUserSettings).toHaveBeenCalledWith({
-        languageModel: {
-          openai: { enabledModels: ['gpt-3.5-turbo'] },
+      expect(userService.updateUserSettings).toHaveBeenCalledWith(
+        {
+          languageModel: { openai: { enabledModels: ['gpt-3.5-turbo'] } },
         },
-      });
+        expect.any(AbortSignal),
+      );
     });
   });
 

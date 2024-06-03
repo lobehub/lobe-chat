@@ -182,6 +182,7 @@
     "enableHistoryCount": {
       "alias": "制限なし",
       "limited": "{{number}}件の会話メッセージのみ含む",
+      "setlimited": "使用履歴メッセージ数",
       "title": "過去メッセージ数を制限する",
       "unlimited": "過去メッセージ数を制限しない"
     },
@@ -369,6 +370,11 @@
   },
   "systemAgent": {
     "title": "システムアシスタント",
+    "topic": {
+      "label": "トピックネーミングモデル",
+      "modelDesc": "トピックの自動リネームに使用されるモデルを指定します",
+      "title": "トピックの自動リネーム"
+    },
     "translation": {
       "label": "翻訳モデル",
       "modelDesc": "翻訳に使用するモデルを指定します",

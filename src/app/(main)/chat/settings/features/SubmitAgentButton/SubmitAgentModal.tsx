@@ -17,7 +17,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const { t } = useTranslation('setting');
@@ -25,7 +25,7 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
   const theme = useTheme();
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
-  const language = useUserStore((s) => settingsSelectors.currentSettings(s).language);
+  const language = useUserStore((s) => userGeneralSettingsSelectors.currentLanguage(s));
 
   const isMetaPass = Boolean(
     meta && meta.title && meta.description && (meta.tags as string[])?.length > 0 && meta.avatar,
@@ -46,7 +46,7 @@ const SubmitAgentModal = memo<ModalProps>(({ open, onCancel }) => {
       '### tags',
       (meta.tags as string[]).join(', '),
       '### locale',
-      language === 'auto' ? navigator.language : language,
+      language,
     ].join('\n\n');
 
     const url = qs.stringifyUrl({

@@ -2,10 +2,9 @@ import { DeepPartial } from 'utility-types';
 
 import { BaseModel } from '@/database/client/core';
 import { LobeAgentConfig } from '@/types/agent';
-import { UserSettings } from '@/types/user/settings';
 import { uuid } from '@/utils/uuid';
 
-import { DB_User, DB_UserSchema } from '../schemas/user';
+import { DB_Settings, DB_User, DB_UserSchema } from '../schemas/user';
 
 class _UserModel extends BaseModel {
   constructor() {
@@ -42,7 +41,7 @@ class _UserModel extends BaseModel {
 
   // **************** Update *************** //
 
-  async updateSettings(settings: DeepPartial<UserSettings>) {
+  async updateSettings(settings: DeepPartial<DB_Settings>) {
     const user = await this.getUser();
 
     return this.update(user.id, { settings: settings as any });

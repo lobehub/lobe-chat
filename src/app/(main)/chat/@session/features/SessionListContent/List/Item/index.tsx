@@ -4,6 +4,7 @@ import { shallow } from 'zustand/shallow';
 
 import ModelTag from '@/components/ModelTag';
 import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
@@ -21,7 +22,7 @@ interface SessionItemProps {
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
-  const [defaultModel] = useAgentStore((s) => [s.defaultAgentConfig.model]);
+  const [defaultModel] = useAgentStore((s) => [agentSelectors.inboxAgentModel(s)]);
 
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [chatSelectors.isAIGenerating(s) && id === s.activeId]);

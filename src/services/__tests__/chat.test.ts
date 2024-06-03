@@ -8,9 +8,9 @@ import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
+  LobeDeepSeekAI,
   LobeGoogleAI,
   LobeGroq,
-  LobeDeepSeekAI,
   LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
@@ -136,6 +136,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -193,6 +194,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -234,6 +236,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -676,10 +679,10 @@ describe('AgentRuntimeOnClient', () => {
         // Mock the global store to return the user's OpenAI API key and endpoint
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               openai: {
                 apiKey: 'user-openai-key',
-                endpoint: 'user-openai-endpoint',
+                baseURL: 'user-openai-endpoint',
               },
             },
           },
@@ -693,7 +696,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Azure provider: with apiKey, apiVersion, endpoint', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               azure: {
                 apiKey: 'user-azure-key',
                 endpoint: 'user-azure-endpoint',
@@ -710,7 +713,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Google provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               google: {
                 apiKey: 'user-google-key',
               },
@@ -725,7 +728,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Moonshot AI provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               moonshot: {
                 apiKey: 'user-moonshot-key',
               },
@@ -740,7 +743,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Bedrock provider: with accessKeyId, region, secretAccessKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               bedrock: {
                 accessKeyId: 'user-bedrock-access-key',
                 region: 'user-bedrock-region',
@@ -757,9 +760,9 @@ describe('AgentRuntimeOnClient', () => {
       it('Ollama provider: with endpoint', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               ollama: {
-                endpoint: 'http://127.0.0.1:1234',
+                baseURL: 'http://127.0.0.1:1234',
               },
             },
           },
@@ -772,7 +775,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Perplexity provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               perplexity: {
                 apiKey: 'user-perplexity-key',
               },
@@ -787,7 +790,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Anthropic provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               anthropic: {
                 apiKey: 'user-anthropic-key',
               },
@@ -802,7 +805,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Mistral provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               mistral: {
                 apiKey: 'user-mistral-key',
               },
@@ -817,7 +820,7 @@ describe('AgentRuntimeOnClient', () => {
       it('OpenRouter provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               openrouter: {
                 apiKey: 'user-openrouter-key',
               },
@@ -832,7 +835,7 @@ describe('AgentRuntimeOnClient', () => {
       it('TogetherAI provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               togetherai: {
                 apiKey: 'user-togetherai-key',
               },
@@ -847,7 +850,7 @@ describe('AgentRuntimeOnClient', () => {
       it('ZeroOneAI provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               zeroone: {
                 apiKey: 'user-zeroone-key',
               },
@@ -862,7 +865,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Groq provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               groq: {
                 apiKey: 'user-groq-key',
               },
@@ -877,7 +880,7 @@ describe('AgentRuntimeOnClient', () => {
       it('DeepSeek provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               deepseek: {
                 apiKey: 'user-deepseek-key',
               },
@@ -888,7 +891,7 @@ describe('AgentRuntimeOnClient', () => {
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
       });
-      
+
       /**
        * Should not have a unknown provider in client, but has
        * similar cases in server side
@@ -896,7 +899,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Unknown provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               unknown: {
                 apiKey: 'user-unknown-key',
                 endpoint: 'user-unknown-endpoint',
@@ -924,7 +927,7 @@ describe('AgentRuntimeOnClient', () => {
         }));
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               zhipu: {
                 apiKey: 'zhipu.user-key',
               },

@@ -79,11 +79,14 @@ export const LobeOpenAICompatibleFactory = ({
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
-        const response = await this.client.chat.completions.create(postPayload, {
-          // https://github.com/lobehub/lobe-chat/pull/318
-          headers: { Accept: '*/*' },
-          signal: options?.signal,
-        });
+        const response = await this.client.chat.completions.create(
+          { ...postPayload, user: options?.user },
+          {
+            // https://github.com/lobehub/lobe-chat/pull/318
+            headers: { Accept: '*/*' },
+            signal: options?.signal,
+          },
+        );
 
         if (postPayload.stream) {
           const [prod, useForDebug] = response.tee();
