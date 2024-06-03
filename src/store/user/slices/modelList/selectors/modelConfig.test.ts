@@ -35,7 +35,7 @@ describe('modelConfigSelectors', () => {
   });
 
   describe('isProviderFetchOnClient', () => {
-    // The next 3 case are base on the rules on https://github.com/lobehub/lobe-chat/pull/2753
+    // The next 4 case are base on the rules on https://github.com/lobehub/lobe-chat/pull/2753
     it('client fetch should disabled on default', () => {
       const s = merge(initialSettingsState, {
         settings: {
@@ -55,6 +55,20 @@ describe('modelConfigSelectors', () => {
         settings: {
           languageModel: {
             azure: { fetchOnClient: true },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+      expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(false);
+    });
+
+    it('client fetch should disabled if only endpoint provided even user set it enabled', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            azure: { fetchOnClient: true },
+          },
+          keyVaults: {
+            azure: { endpoint: 'https://example.com' },
           },
         },
       } as UserSettingsState) as unknown as UserStore;
