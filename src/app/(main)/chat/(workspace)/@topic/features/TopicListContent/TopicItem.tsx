@@ -20,12 +20,15 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     cursor: pointer;
 
-    width: calc(100% - 16px);
     margin-block: 2px;
     margin-inline: 8px;
     padding: 8px;
 
     border-radius: ${token.borderRadius}px;
+
+    &.topic-item {
+      width: calc(100% - 16px);
+    }
 
     &:hover {
       background: ${token.colorFillSecondary};
@@ -52,7 +55,7 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
   return (
     <Flexbox
       align={'center'}
-      className={cx(styles.container, active && styles.active)}
+      className={cx(styles.container, 'topic-item', active && styles.active)}
       distribution={'space-between'}
       horizontal
       onClick={() => {
