@@ -61,11 +61,11 @@ describe('modelConfigSelectors', () => {
       expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(false);
     });
 
-    it('client fetch should enable if only endpoint provided even user set it enabled', () => {
+    it('client fetch should enable if only endpoint provided', () => {
       const s = merge(initialSettingsState, {
         settings: {
           languageModel: {
-            azure: { fetchOnClient: true },
+            azure: { fetchOnClient: false },
           },
           keyVaults: {
             azure: { endpoint: 'https://example.com' },

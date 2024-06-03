@@ -18,7 +18,8 @@ const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s:
   const config = getProviderConfigById(provider)(s);
 
   // 1. If no baseUrl and apikey input, force on Server.
-  const isProviderEndpointNotEmpty = keyVaultsConfigSelectors.isProviderApiKeyNotEmpty(provider)(s);
+  const isProviderEndpointNotEmpty =
+    keyVaultsConfigSelectors.isProviderEndpointNotEmpty(provider)(s);
   const isProviderApiKeyNotEmpty = keyVaultsConfigSelectors.isProviderApiKeyNotEmpty(provider)(s);
   if (!isProviderEndpointNotEmpty && !isProviderApiKeyNotEmpty) return false;
 
