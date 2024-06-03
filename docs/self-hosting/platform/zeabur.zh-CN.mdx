@@ -34,3 +34,33 @@ tags:
 
 [deploy-button-image]: https://zeabur.com/button.svg
 [deploy-link]: https://zeabur.com/templates/VZGGTI
+
+# 使用 Zeabur 部署你 fork 的 LobeChat
+
+> 注意：这可能导致网页性能问题和其他意外行为，使用需自担风险！ 
+
+由于 Zeabur 不正式支持免费用户部署 containerd 服务，你可能希望将 LobeChat 部署为无服务器函数服务。 
+要在 Zeabur 上将 LobeChat 部署为无服务器函数服务，你将不会使用预构建的镜像，你可以按照以下步骤操作： 
+
+## Zeabur 部署流程 
+
+<Steps> 
+### 准备你的 OpenAI API 密钥 
+
+前往 [OpenAI API Key](https://platform.openai.com/account/api-keys) 获取你的 OpenAI API Key 
+
+### 登录到你的 Zeabur 仪表板 
+
+### 如果需要，创建一个服务。
+
+### 将你 fork 的 LobeChat 链接到刚刚创建的 Zeabur 服务。 
+
+这可能会触发一个 oAuth，具体可能取决于你如何登录 Zeabur 以及你是否已经授权 Zeabur 访问你所有的仓库。 
+
+### 绑定自定义域名（可选） 
+
+你可以创建一个由 Zeabur 提供的子域名，或者选择绑定自定义域名。目前，Zeabur 提供的域名尚未被污染，大多数地区可以直接连接。 
+
+### Zeabur 将开始自动构建，你稍后应该能够通过你选择的域名访问它。 
+
+</Steps>

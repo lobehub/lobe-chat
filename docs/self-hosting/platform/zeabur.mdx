@@ -10,7 +10,7 @@ tags:
   - Custom Domain Binding
 ---
 
-# Deploy LobeChat with Zeabur
+# Deploy LobeChat with Zeabur using the prebuilt image
 
 If you want to deploy LobeChat on Zeabur, you can follow the steps below:
 
@@ -35,3 +35,32 @@ You can use the subdomain provided by Zeabur, or choose to bind a custom domain.
 
 [deploy-button-image]: https://zeabur.com/button.svg
 [deploy-link]: https://zeabur.com/templates/VZGGTI
+
+# Deploy LobeChat with Zeabur using your fork
+
+>Note: This may lead to a impact of webpage performance issue and other unexpected behavior, use at your own risk!
+
+Since Zeabur does NOT officially support FREE user deploy containerd service, you may wish to deploy LobeChat as a serverless function service.
+To deploy LobeChat as a serverless function service on Zeabur, you would not be using the prebuilt image, you can follow the steps below:
+
+## Zeabur Deployment Process
+
+<Steps>
+  ### Prepare your OpenAI API Key
+
+Go to [OpenAI API Key](https://platform.openai.com/account/api-keys) to get your OpenAI API Key.
+
+### Login to your Zeabur dashboard
+
+### Create a service if needed.
+
+### Link your fork of LobeChat to the just created Zeabur service.
+
+This may triger a oAuth depend on varies factors like how you login to Zeabur and if you have already authorized Zeabur to access all your repos
+
+### Bind a custom domain (optional)
+
+You can create a subdomain provided by Zeabur, or choose to bind a custom domain. Currently, the domains provided by Zeabur have not been contaminated, and most regions can connect directly.
+
+### Zeabur shall start auto build and you should be able to access it by the domain of your choice after a while.
+</Steps>
