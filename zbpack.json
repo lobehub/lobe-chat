@@ -1,15 +1,4 @@
 {
   "serverless": true,
-  "name": "lobe-chat",
-  "version": "1.0.0",
-  "description": "Configuration for lobe-chat",
-  "framework": "nextjs",
-  "provider": "nextjs",
-  "build": {
-    "install": "bun install",
-    "command": "next build"
-  },
-  "start": {
-    "command": "next start"
-  }
+  "ignore_dockerfile": true
 }
