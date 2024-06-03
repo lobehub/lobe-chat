@@ -1,11 +1,9 @@
 {
-  "build": {
-    "type": "nextjs",
-    "build_command": "npm run build",
-    "output_dir": "build"
-  },
-  "deploy": {
-    "type": "zeabur",
-    "serverless": true
+  "serverless": true,
+  "name": "lobe-chat",
+  "version": "1.0.0",
+  "description": "Configuration for lobe-chat",
+  "scripts": {
+    "install": "bun install"
   }
 }
