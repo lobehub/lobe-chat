@@ -232,6 +232,7 @@ export const chatMessage: StateCreator<
 
     // if message is empty or no files, then stop
     if (!message && isNoFile) return;
+    set({ isCreatingMessage: true }, false, 'creatingMessage/start');
 
     const newMessage: CreateMessageParams = {
       content: message,
@@ -310,8 +311,9 @@ export const chatMessage: StateCreator<
 
     // Get the current messages to generate AI response
     const messages = chatSelectors.currentChats(get());
-
     await internal_coreProcessMessage(messages, id, { isWelcomeQuestion });
+
+    set({ isCreatingMessage: false }, false, 'creatingMessage/stop');
 
     // if autoCreateTopic is false, then stop
     if (!agentConfig.enableAutoCreateTopic) return;
@@ -707,7 +709,6 @@ export const chatMessage: StateCreator<
   internal_createMessage: async (message, context) => {
     const { internal_createTmpMessage, refreshMessages, internal_toggleMessageLoading } = get();
     let tempId = context?.tempMessageId;
-
     if (!tempId) {
       // use optimistic update to avoid the slow waiting
       tempId = internal_createTmpMessage(message);
@@ -721,7 +722,6 @@ export const chatMessage: StateCreator<
     }
 
     internal_toggleMessageLoading(false, tempId);
-
     return id;
   },
 
