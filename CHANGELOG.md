@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.162.14](https://github.com/lobehub/lobe-chat/compare/v0.162.13...v0.162.14)
+
+<sup>Released on **2024-06-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve loading state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve loading state, closes [#2767](https://github.com/lobehub/lobe-chat/issues/2767) ([fbdfde9](https://github.com/lobehub/lobe-chat/commit/fbdfde9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.13](https://github.com/lobehub/lobe-chat/compare/v0.162.12...v0.162.13)
 
 <sup>Released on **2024-06-01**</sup>
