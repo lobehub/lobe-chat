@@ -40,6 +40,10 @@ export default {
   historyRange: '历史范围',
   import: '导入配置',
   importModal: {
+    error: {
+      desc: '非常抱歉，数据导入过程发生异常。请尝试重新导入，或 <1>提交问题</1>，我们将会第一时间帮你排查问题。',
+      title: '数据导入失败',
+    },
     finish: {
       onlySettings: '系统设置导入成功',
       start: '开始使用',
@@ -47,6 +51,7 @@ export default {
       title: '数据导入完成',
     },
     loading: '数据导入中，请耐心等待...',
+    preparing: '数据导入模块准备中...',
     result: {
       added: '导入成功',
       errors: '导入出错',
@@ -58,6 +63,11 @@ export default {
       type: '数据类型',
     },
     title: '导入数据',
+    uploading: {
+      desc: '当前文件较大，正在努力上传中...',
+      restTime: '剩余时间',
+      speed: '上传速度',
+    },
   },
   installPWA: '安装浏览器应用 (PWA)',
   lang: {
