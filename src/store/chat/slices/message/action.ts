@@ -306,6 +306,7 @@ export const chatMessage: StateCreator<
 
     // if only add user message, then stop
     if (onlyAddUserMessage) {
+      set({ isCreatingMessage: false }, false, 'creatingMessage/start');
       return;
     }
 
