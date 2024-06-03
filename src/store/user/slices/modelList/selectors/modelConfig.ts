@@ -23,7 +23,7 @@ const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s:
   if (!isProviderEndpointNotEmpty && !isProviderApiKeyNotEmpty) return false;
 
   // 2. If only contains baseUrl, force on Client
-  if (isProviderEndpointNotEmpty && !isProviderApiKeyNotEmpty) return false;
+  if (isProviderEndpointNotEmpty && !isProviderApiKeyNotEmpty) return true;
 
   // 3. Follow the user settings.
   if (typeof config?.fetchOnClient !== 'undefined') return config?.fetchOnClient;
