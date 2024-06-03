@@ -61,7 +61,7 @@ describe('modelConfigSelectors', () => {
       expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(false);
     });
 
-    it('client fetch should disabled if only endpoint provided even user set it enabled', () => {
+    it('client fetch should enable if only endpoint provided even user set it enabled', () => {
       const s = merge(initialSettingsState, {
         settings: {
           languageModel: {
@@ -72,7 +72,7 @@ describe('modelConfigSelectors', () => {
           },
         },
       } as UserSettingsState) as unknown as UserStore;
-      expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(false);
+      expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(true);
     });
 
     it('client fetch should control by user when a apikey or endpoint provided', () => {
