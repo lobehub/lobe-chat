@@ -39,6 +39,10 @@
   "historyRange": "Verlaufsbereich",
   "import": "Importieren",
   "importModal": {
+    "error": {
+      "desc": "Es tut uns sehr leid, aber beim Importieren der Daten ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut oder <1>senden Sie uns eine Anfrage</1>, damit wir das Problem umgehend für Sie lösen können.",
+      "title": "Datenimport fehlgeschlagen"
+    },
     "finish": {
       "onlySettings": "Systemeinstellungen erfolgreich importiert",
       "start": "Starten",
@@ -46,6 +50,7 @@
       "title": "Import abgeschlossen"
     },
     "loading": "Daten werden importiert. Bitte haben Sie einen Moment Geduld...",
+    "preparing": "Vorbereitung für den Datenimport läuft...",
     "result": {
       "added": "Erfolgreich importiert",
       "errors": "Fehler beim Import",
@@ -56,7 +61,12 @@
       "topics": "Themen",
       "type": "Datentyp"
     },
-    "title": "Daten importieren"
+    "title": "Daten importieren",
+    "uploading": {
+      "desc": "Die Datei ist momentan zu groß und wird mit Hochdruck hochgeladen...",
+      "restTime": "Verbleibende Zeit",
+      "speed": "Upload-Geschwindigkeit"
+    }
   },
   "installPWA": "Installiere die Browser-App",
   "lang": {

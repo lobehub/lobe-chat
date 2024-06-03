@@ -39,6 +39,10 @@
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
   "importModal": {
+    "error": {
+      "desc": "Sorry, er is een uitzondering opgetreden tijdens het importeren van gegevens. Probeer opnieuw te importeren of <1>diend een probleem in</1>, we zullen het probleem zo snel mogelijk voor je onderzoeken.",
+      "title": "Gegevens importeren mislukt"
+    },
     "finish": {
       "onlySettings": "Systeeminstellingen succesvol geïmporteerd",
       "start": "Beginnen met gebruiken",
@@ -46,6 +50,7 @@
       "title": "Gegevensimport voltooid"
     },
     "loading": "Gegevens worden geïmporteerd, even geduld a.u.b...",
+    "preparing": "Voorbereiden van gegevensimportmodule...",
     "result": {
       "added": "Succesvol geïmporteerd",
       "errors": "Fouten bij importeren",
@@ -56,7 +61,12 @@
       "topics": "Onderwerpen",
       "type": "Gegevenstype"
     },
-    "title": "Gegevens importeren"
+    "title": "Gegevens importeren",
+    "uploading": {
+      "desc": "Het bestand is momenteel aan het uploaden vanwege de grote omvang...",
+      "restTime": "Resterende tijd",
+      "speed": "Uploadsnelheid"
+    }
   },
   "installPWA": "Installeer de browser-app",
   "lang": {
