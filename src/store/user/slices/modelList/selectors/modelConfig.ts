@@ -1,8 +1,8 @@
-import { keyVaultsConfigSelectors } from '@/store/user/selectors';
+import { UserStore } from '@/store/user';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
-import { UserStore } from '../../../store';
 import { currentLLMSettings, getProviderConfigById } from '../../settings/selectors/settings';
+import { keyVaultsConfigSelectors } from './keyVaults';
 
 const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
   getProviderConfigById(provider)(s)?.enabled || false;

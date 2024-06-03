@@ -141,7 +141,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
        */
       (showBrowserRequest ||
         (showEndpoint && isProviderEndpointNotEmpty) ||
-        isProviderApiKeyNotEmpty) && {
+        (showApiKey && isProviderApiKeyNotEmpty)) && {
         children: (
           <Switch
             onChange={(enabled) => {
