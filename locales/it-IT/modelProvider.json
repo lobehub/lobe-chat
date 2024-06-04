@@ -217,6 +217,18 @@
       "title": "Usa una chiave API personalizzata da Perplexity"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "Inserisci la tua chiave API da Qwen",
+      "placeholder": "Chiave API Qwen",
+      "title": "Chiave API"
+    },
+    "unlock": {
+      "description": "Inserisci la tua chiave API da Qwen per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
+      "title": "Usa una chiave API personalizzata da Qwen"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente"

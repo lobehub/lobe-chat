@@ -217,6 +217,18 @@
       "title": "Gebruik aangepaste Perplexity API-sleutel"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "Voer de API Key van Qwen in",
+      "placeholder": "Qwen API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Voer uw Qwen API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
+      "title": "Gebruik aangepaste Qwen API-sleutel"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "Test of het proxyadres correct is ingevuld"

@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.162.17](https://github.com/lobehub/lobe-chat/compare/v0.162.16...v0.162.17)
+
+<sup>Released on **2024-06-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `response.undefined` error with some provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `response.undefined` error with some provider, closes [#2782](https://github.com/lobehub/lobe-chat/issues/2782) ([5676899](https://github.com/lobehub/lobe-chat/commit/5676899))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.16](https://github.com/lobehub/lobe-chat/compare/v0.162.15...v0.162.16)
 
 <sup>Released on **2024-06-04**</sup>
