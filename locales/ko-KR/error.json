@@ -74,6 +74,7 @@
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",
     "InvalidOpenRouterAPIKey": "OpenRouter API 키가 잘못되었거나 비어 있습니다. OpenRouter API 키를 확인한 후 다시 시도하십시오.",
     "InvalidPerplexityAPIKey": "Perplexity API 키가 잘못되었거나 비어 있습니다. Perplexity API 키를 확인한 후 다시 시도하십시오.",
+    "InvalidQwenAPIKey": "잘못된 또는 비어 있는 Qwen API Key입니다. Qwen API Key를 확인한 후 다시 시도하십시오.",
     "InvalidTogetherAIAPIKey": "TogetherAI API 키가 잘못되었거나 비어 있습니다. TogetherAI API 키를 확인한 후 다시 시도하십시오.",
     "InvalidZeroOneAPIKey": "잘못된 또는 빈 제로원물 API 키입니다. 제로원물 API 키를 확인하고 다시 시도해주세요.",
     "InvalidZhipuAPIKey": "잘못된 또는 비어 있는 Zhipu API Key입니다. Zhipu API Key를 확인한 후 다시 시도하십시오.",
@@ -99,6 +100,7 @@
     "PluginOpenApiInitError": "죄송합니다. OpenAPI 클라이언트 초기화에 실패했습니다. OpenAPI 구성 정보를 확인해주세요.",
     "PluginServerError": "플러그인 서버 요청이 오류로 반환되었습니다. 플러그인 설명 파일, 플러그인 구성 또는 서버 구현을 확인해주세요.",
     "PluginSettingsInvalid": "플러그인을 사용하려면 올바른 구성이 필요합니다. 구성이 올바른지 확인해주세요.",
+    "QwenBizError": "Qwen 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "TogetherAIBizError": "TogetherAI AI 서비스 요청 중 오류가 발생했습니다. 다음 정보를 확인하고 다시 시도하십시오.",
     "ZeroOneBizError": "제로원물 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "ZhipuBizError": "Zhipu 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오."

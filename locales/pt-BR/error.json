@@ -74,6 +74,7 @@
     "InvalidOllamaArgs": "Configuração Ollama inválida, verifique a configuração do Ollama e tente novamente",
     "InvalidOpenRouterAPIKey": "Chave da API do OpenRouter inválida ou em branco. Por favor, verifique a chave da API do OpenRouter e tente novamente.",
     "InvalidPerplexityAPIKey": "Chave da API Perplexity inválida ou em branco, verifique a chave da API Perplexity e tente novamente",
+    "InvalidQwenAPIKey": "Chave de API Qwen incorreta ou vazia, por favor, verifique a chave de API Qwen e tente novamente",
     "InvalidTogetherAIAPIKey": "Chave da API do TogetherAI inválida ou em branco. Por favor, verifique a chave da API do TogetherAI e tente novamente.",
     "InvalidZeroOneAPIKey": "Chave de API ZeroOne inválida ou vazia, verifique a chave de API ZeroOne e tente novamente",
     "InvalidZhipuAPIKey": "Chave de API Zhipu incorreta ou vazia, por favor, verifique a chave de API Zhipu e tente novamente",
@@ -99,6 +100,7 @@
     "PluginOpenApiInitError": "Desculpe, a inicialização do cliente OpenAPI falhou. Verifique se as informações de configuração do OpenAPI estão corretas",
     "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
     "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
+    "QwenBizError": "Erro ao solicitar o serviço Qwen, por favor, verifique as informações abaixo ou tente novamente",
     "TogetherAIBizError": "Erro de negócios ao solicitar o serviço de IA do TogetherAI. Por favor, verifique as informações abaixo ou tente novamente.",
     "ZeroOneBizError": "Erro no serviço ZeroOneBiz, verifique as informações abaixo e tente novamente",
     "ZhipuBizError": "Erro ao solicitar o serviço Zhipu, por favor, verifique as informações abaixo ou tente novamente"
