@@ -11,6 +11,7 @@ import {
   OpenAIProviderCard,
   OpenRouterProviderCard,
   PerplexityProviderCard,
+  QwenProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -71,6 +72,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   perplexity: {
     enabled: false,
     enabledModels: filterEnabledModels(PerplexityProviderCard),
+  },
+  qwen: {
+    enabled: false,
+    enabledModels: filterEnabledModels(QwenProviderCard),
   },
   togetherai: {
     enabled: false,

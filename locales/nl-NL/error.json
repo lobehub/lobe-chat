@@ -74,6 +74,7 @@
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
     "InvalidOpenRouterAPIKey": "OpenRouter API Key is onjuist of leeg. Controleer de OpenRouter API Key en probeer het opnieuw.",
     "InvalidPerplexityAPIKey": "Perplexity API Key is onjuist of leeg. Controleer de Perplexity API Key en probeer het opnieuw.",
+    "InvalidQwenAPIKey": "Incorrect or empty Qwen API Key, please check the Qwen API Key and retry",
     "InvalidTogetherAIAPIKey": "TogetherAI API Key is onjuist of leeg. Controleer de TogetherAI API Key en probeer het opnieuw.",
     "InvalidZeroOneAPIKey": "Ongeldige ZeroOneAPI-sleutel of leeg, controleer de ZeroOneAPI-sleutel en probeer het opnieuw",
     "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
@@ -99,6 +100,7 @@
     "PluginOpenApiInitError": "Sorry, initialisatie van de OpenAPI-client is mislukt. Controleer of de configuratie van OpenAPI juist is",
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
+    "QwenBizError": "Error requesting Qwen service, please troubleshoot or retry based on the following information",
     "TogetherAIBizError": "Fout bij het aanvragen van TogetherAI AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
     "ZeroOneBizError": "请求零一万物服务出错，请根据以下信息排查或重试",
     "ZhipuBizError": "Error requesting Zhipu service, please troubleshoot or retry based on the following information"

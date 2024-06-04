@@ -217,6 +217,18 @@
       "title": "Sử dụng Khóa API Perplexity tùy chỉnh"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "Nhập API Key từ Qwen",
+      "placeholder": "Qwen API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Nhập Khóa API Qwen của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ Khóa API của bạn",
+      "title": "Sử dụng Khóa API Qwen tùy chỉnh"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không"

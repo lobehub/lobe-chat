@@ -52,6 +52,9 @@ export const AgentRuntimeErrorType = {
 
   InvalidDeepSeekAPIKey: 'InvalidDeepSeekAPIKey',
   DeepSeekBizError: 'DeepSeekBizError',
+
+  InvalidQwenAPIKey: 'InvalidQwenAPIKey',
+  QwenBizError: 'QwenBizError',
 } as const;
 
 export type ILobeAgentRuntimeErrorType =

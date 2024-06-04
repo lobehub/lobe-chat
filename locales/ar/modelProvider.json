@@ -217,6 +217,18 @@
       "title": "استخدام مفتاح API الخاص بـ Perplexity المخصص"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "أدخل مفتاح API الخاص بـ Qwen",
+      "placeholder": "Qwen API Key",
+      "title": "مفتاح API"
+    },
+    "unlock": {
+      "description": "أدخل مفتاح API الخاص بك في Qwen لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
+      "title": "استخدام مفتاح API الخاص بـ Qwen المخصص"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح"
