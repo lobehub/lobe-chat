@@ -15,6 +15,7 @@ import Ollama from './Ollama';
 import OpenAI from './OpenAI';
 import OpenRouter from './OpenRouter';
 import Perplexity from './Perplexity';
+import Qwen from './Qwen';
 import TogetherAI from './TogetherAI';
 import ZeroOne from './ZeroOne';
 import Zhipu from './Zhipu';
@@ -34,6 +35,7 @@ const Page = () => {
       <TogetherAI />
       <Groq />
       <Perplexity />
+      <Qwen />
       <Minimax />
       <Mistral />
       <Moonshot />

@@ -1,4 +1,16 @@
 {
+  "Qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "Qwen'dan gelen API Key'i girin",
+      "placeholder": "Qwen API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Qwen API Anahtarınızı girerek oturumu başlatabilirsiniz. Uygulama API Anahtarınızı kaydetmez.",
+      "title": "Özel Qwen API Anahtarı Kullan"
+    }
+  },
   "anthropic": {
     "title": "Anthropic",
     "token": {

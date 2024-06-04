@@ -217,6 +217,18 @@
       "title": "Verwenden Sie einen individuellen Perplexity-API-Schlüssel"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "Geben Sie Ihren API-Key von Qwen ein",
+      "placeholder": "Qwen API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Geben Sie Ihren individuellen Qwen-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
+      "title": "Verwenden Sie einen individuellen Qwen-API-Schlüssel"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"

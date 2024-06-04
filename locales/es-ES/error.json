@@ -74,6 +74,7 @@
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
     "InvalidOpenRouterAPIKey": "La clave de API de OpenRouter es incorrecta o está vacía. Por favor, revisa la clave de API de OpenRouter e inténtalo de nuevo",
     "InvalidPerplexityAPIKey": "La clave de API de Perplexity es inválida o está vacía. Por favor, verifica la clave de API de Perplexity e inténtalo de nuevo",
+    "InvalidQwenAPIKey": "La clave de API de Qwen es incorrecta o está vacía, por favor, verifica la clave de API de Qwen e inténtalo de nuevo",
     "InvalidTogetherAIAPIKey": "La clave de API de TogetherAI es incorrecta o está vacía. Por favor, revisa la clave de API de TogetherAI e inténtalo de nuevo",
     "InvalidZeroOneAPIKey": "La clave de API de ZeroOneBiz es incorrecta o está vacía. Por favor, revise la clave de API de ZeroOneBiz e inténtelo de nuevo.",
     "InvalidZhipuAPIKey": "La clave de API de Zhipu es incorrecta o está vacía, por favor, verifica la clave de API de Zhipu e inténtalo de nuevo",
@@ -99,6 +100,7 @@
     "PluginOpenApiInitError": "Lo sentimos, la inicialización del cliente OpenAPI ha fallado. Verifique si la información de configuración de OpenAPI es correcta",
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
+    "QwenBizError": "Se produjo un error al solicitar el servicio Qwen, por favor, verifica la siguiente información o inténtalo de nuevo",
     "TogetherAIBizError": "Error al solicitar el servicio de IA de TogetherAI. Por favor, revisa la siguiente información o inténtalo de nuevo",
     "ZeroOneBizError": "Se produjo un error al solicitar el servicio ZeroOneBiz. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "ZhipuBizError": "Se produjo un error al solicitar el servicio Zhipu, por favor, verifica la siguiente información o inténtalo de nuevo"
