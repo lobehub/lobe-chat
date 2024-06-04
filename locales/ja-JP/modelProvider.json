@@ -217,6 +217,18 @@
       "title": "カスタムPerplexity APIキーを使用する"
     }
   },
+  "qwen": {
+    "title": "通义千问",
+    "token": {
+      "desc": "通义千问からのAPIキーを入力してください",
+      "placeholder": "Qwen API Key",
+      "title": "APIキー"
+    },
+    "unlock": {
+      "description": "あなたのQwen APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
+      "title": "カスタムQwen APIキーを使用する"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "プロキシアドレスが正しく入力されているかをテストします"
