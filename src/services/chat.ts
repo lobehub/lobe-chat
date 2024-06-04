@@ -127,6 +127,9 @@ export function initializeWithClientStore(provider: string, payload: any) {
     case ModelProvider.Perplexity: {
       break;
     }
+    case ModelProvider.Qwen: {
+      break;
+    }
     case ModelProvider.Anthropic: {
       providerOptions = {
         baseURL: providerAuthPayload?.endpoint,

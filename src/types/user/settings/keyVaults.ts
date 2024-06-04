@@ -30,6 +30,7 @@ export interface UserKeyVaults {
   openrouter?: OpenAICompatibleKeyVault;
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
+  qwen?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
