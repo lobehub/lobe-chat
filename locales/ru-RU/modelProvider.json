@@ -217,6 +217,18 @@
       "title": "Использовать пользовательский ключ API Perplexity"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "Введите свой API Key от Qwen",
+      "placeholder": "Qwen API Key",
+      "title": "API Key"
+    },
+    "unlock": {
+      "description": "Введите свой ключ API Qwen, чтобы начать сеанс. Приложение не будет сохранять ваш ключ API",
+      "title": "Использовать пользовательский ключ API Qwen"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "Проверить правильность адреса прокси"

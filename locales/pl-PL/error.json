@@ -74,6 +74,7 @@
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
     "InvalidOpenRouterAPIKey": "OpenRouter API Key jest nieprawidłowy lub pusty. Sprawdź klucz API OpenRouter i spróbuj ponownie.",
     "InvalidPerplexityAPIKey": "Klucz API Perplexity jest nieprawidłowy lub pusty. Sprawdź klucz API Perplexity i spróbuj ponownie.",
+    "InvalidQwenAPIKey": "Nieprawidłowy lub pusty klucz API Qwen, prosimy sprawdzić klucz API Qwen i spróbować ponownie.",
     "InvalidTogetherAIAPIKey": "TogetherAI API Key jest nieprawidłowy lub pusty. Sprawdź klucz API TogetherAI i spróbuj ponownie.",
     "InvalidZeroOneAPIKey": "Klucz API Zero One nieprawidłowy lub pusty, sprawdź poprawność klucza API Zero One i spróbuj ponownie",
     "InvalidZhipuAPIKey": "Nieprawidłowy lub pusty klucz API Zhipu, prosimy sprawdzić klucz API Zhipu i spróbować ponownie.",
@@ -99,6 +100,7 @@
     "PluginOpenApiInitError": "Przepraszamy, inicjalizacja klienta OpenAPI nie powiodła się. Proszę sprawdź, czy informacje konfiguracyjne OpenAPI są poprawne",
     "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
     "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna",
+    "QwenBizError": "Wystąpił błąd żądania usługi Qwen, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "TogetherAIBizError": "Wystąpił błąd biznesowy podczas żądania usługi TogetherAI AI. Sprawdź poniższe informacje lub spróbuj ponownie.",
     "ZeroOneBizError": "请求零一万物服务出错，请根据以下信息排查或重试",
     "ZhipuBizError": "Wystąpił błąd żądania usługi Zhipu, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie."
