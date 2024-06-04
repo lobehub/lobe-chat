@@ -217,6 +217,18 @@
       "title": "使用自定义 Perplexity API Key"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "填入来自 DashScope 的 Qwen API Key",
+      "placeholder": "Qwen API Key",
+      "title": "Qwen API Key"
+    },
+    "unlock": {
+      "description": "输入你的 Qwen API Key 即可开始会话。应用不会记录你的 API Key",
+      "title": "使用自定义 Qwen API Key"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "测试代理地址是否正确填写"

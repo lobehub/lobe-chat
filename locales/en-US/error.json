@@ -74,6 +74,7 @@
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
     "InvalidOpenRouterAPIKey": "Invalid or empty OpenRouter API Key. Please check your OpenRouter API Key and try again.",
     "InvalidPerplexityAPIKey": "Perplexity API Key is incorrect or empty. Please check the Perplexity API Key and retry.",
+    "InvalidQwenAPIKey": "Qwen API Key is incorrect or empty. Please check the Qwen API Key and retry.",
     "InvalidTogetherAIAPIKey": "Invalid or empty TogetherAI API Key. Please check your TogetherAI API Key and try again.",
     "InvalidZeroOneAPIKey": "01-AI API Key is incorrect or empty. Please check the 01-AI API Key and retry.",
     "InvalidZhipuAPIKey": "Zhipu API Key is incorrect or empty. Please check the Zhipu API Key and retry.",
@@ -99,6 +100,7 @@
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
+    "QwenBizError": "Error requesting Qwen service. Please troubleshoot or retry based on the following information.",
     "TogetherAIBizError": "Error requesting TogetherAI AI service. Please troubleshoot or retry based on the following information.",
     "ZeroOneBizError": "Error requesting 01-AI service. Please troubleshoot or retry based on the following information.",
     "ZhipuBizError": "Error requesting Zhipu service. Please troubleshoot or retry based on the following information."

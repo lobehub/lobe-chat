@@ -88,6 +88,7 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
     case AgentRuntimeErrorType.InvalidAnthropicAPIKey:
     case AgentRuntimeErrorType.InvalidGroqAPIKey:
     case AgentRuntimeErrorType.InvalidOpenRouterAPIKey:
+    case AgentRuntimeErrorType.InvalidQwenAPIKey:
     case AgentRuntimeErrorType.InvalidTogetherAIAPIKey:
     case AgentRuntimeErrorType.InvalidZeroOneAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {

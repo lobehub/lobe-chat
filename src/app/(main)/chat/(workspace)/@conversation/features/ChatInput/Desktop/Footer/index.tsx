@@ -13,7 +13,7 @@ import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors, preferenceSelectors } from '@/store/user/selectors';
@@ -61,10 +61,20 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
 
   const { theme, styles } = useStyles();
 
-  const [isAIGenerating, stopGenerateMessage] = useChatStore((s) => [
+  const [
+    isAIGenerating,
+    isHasMessageLoading,
+    isCreatingMessage,
+    isCreatingTopic,
+    stopGenerateMessage,
+  ] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
+    chatSelectors.isHasMessageLoading(s),
+    chatSelectors.isCreatingMessage(s),
+    topicSelectors.isCreatingTopic(s),
     s.stopGenerateMessage,
   ]);
+
   const isImageUploading = useFileStore(filesSelectors.isImageUploading);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
@@ -92,6 +102,9 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
   const sendShortcut = useCmdEnterToSend ? cmdEnter : enter;
 
   const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
+
+  const buttonDisabled =
+    isImageUploading || isHasMessageLoading || isCreatingTopic || isCreatingMessage;
 
   return (
     <Flexbox
@@ -136,7 +149,8 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
           ) : (
             <Space.Compact>
               <Button
-                disabled={isImageUploading}
+                disabled={buttonDisabled}
+                loading={buttonDisabled}
                 onClick={() => {
                   sendMessage();
                   setExpand?.(false);
@@ -145,7 +159,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
               >
                 {t('input.send')}
               </Button>
-              <SendMore disabled={isImageUploading} />
+              <SendMore disabled={buttonDisabled} />
             </Space.Compact>
           )}
         </Flexbox>
