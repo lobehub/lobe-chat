@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 0.162.15](https://github.com/lobehub/lobe-chat/compare/v0.162.14...v0.162.15)
+
+<sup>Released on **2024-06-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix send button loading on only add user message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix send button loading on only add user message, closes [#2774](https://github.com/lobehub/lobe-chat/issues/2774) ([a7f2982](https://github.com/lobehub/lobe-chat/commit/a7f2982))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.162.14](https://github.com/lobehub/lobe-chat/compare/v0.162.13...v0.162.14)
+
+<sup>Released on **2024-06-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve loading state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve loading state, closes [#2767](https://github.com/lobehub/lobe-chat/issues/2767) ([fbdfde9](https://github.com/lobehub/lobe-chat/commit/fbdfde9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.13](https://github.com/lobehub/lobe-chat/compare/v0.162.12...v0.162.13)
 
 <sup>Released on **2024-06-01**</sup>
