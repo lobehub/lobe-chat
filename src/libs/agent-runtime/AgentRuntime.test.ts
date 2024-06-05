@@ -27,6 +27,7 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
+import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
 
 import { AgentChatOptions } from './AgentRuntime';
 import { LobeBedrockAIParams } from './bedrock';

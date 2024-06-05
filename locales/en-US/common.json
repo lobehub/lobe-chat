@@ -1,7 +1,7 @@
 {
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "appInitializing": "The application is initializing, please wait patiently...",
+  "appInitializing": "The application is initializing, please wait for a moment...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
@@ -217,7 +217,7 @@
     "plans": "Subscription Plans",
     "preview": "Preview",
     "profile": "Account Management",
-    "setting": "App Settings",
+    "setting": "Settings",
     "usages": "Usage Statistics"
   },
   "version": "Version"
