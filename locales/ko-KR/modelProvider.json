@@ -217,6 +217,18 @@
       "title": "사용자 정의 Perplexity API 키 사용"
     }
   },
+  "qwen": {
+    "title": "Qwen",
+    "token": {
+      "desc": "Qwen의 API 키를 입력하세요",
+      "placeholder": "Qwen API 키",
+      "title": "API 키"
+    },
+    "unlock": {
+      "description": "귀하의 Qwen API 키를 입력하면 세션을 시작할 수 있습니다. 애플리케이션은 귀하의 API 키를 기록하지 않습니다",
+      "title": "사용자 정의 Qwen API 키 사용"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다"
