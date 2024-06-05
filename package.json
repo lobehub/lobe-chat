@@ -209,7 +209,6 @@
     "@types/uuid": "^9.0.8",
     "@umijs/lint": "^4.2.5",
     "@vitest/coverage-v8": "~1.2.2",
-    "ajv": "8.14.0",
     "ajv-keywords": "^5.1.0",
     "commitlint": "^19.3.0",
     "consola": "^3.2.3",
