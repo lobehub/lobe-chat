@@ -9,6 +9,7 @@ import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
+  LobeCohereAI,
   LobeDeepSeekAI,
   LobeGoogleAI,
   LobeGroq,
@@ -803,6 +804,21 @@ describe('AgentRuntimeOnClient', () => {
         const runtime = await initializeWithClientStore(ModelProvider.Anthropic, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
+      });
+
+      it('Mistral provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              mistral: {
+                apiKey: 'user-mistral-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Mistral, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
       });
 
       it('Mistral provider: with apiKey', async () => {

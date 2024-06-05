@@ -6,6 +6,7 @@ import { LobeRuntimeAI } from './BaseAI';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
+import { LobeCohereAI } from './cohere';
 import { LobeDeepSeekAI } from './deepseek';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
@@ -172,6 +173,11 @@ class AgentRuntime {
 
       case ModelProvider.Anthropic: {
         runtimeModel = new LobeAnthropicAI(params.anthropic ?? {});
+        break;
+      }
+
+      case ModelProvider.Cohere: {
+        runtimeModel = new LobeCohereAI(params.cohere ?? {});
         break;
       }
 
