@@ -4,6 +4,7 @@ import { Network } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -19,7 +20,7 @@ interface ProviderApiKeyFormProps {
 
 const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
   ({ provider, avatar, showEndpoint = false, apiKeyPlaceholder }) => {
-    const { t } = useTranslation('modelProvider');
+    const { t } = useTranslation(['modelProvider', 'error']);
     const { t: errorT } = useTranslation('error');
     const [showProxy, setShow] = useState(false);
 
@@ -29,11 +30,14 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
       s.updateKeyVaultConfig,
     ]);
 
+    const providerCard = DEFAULT_MODEL_PROVIDER_LIST.find((p) => p.id === provider);
+    const providerName = providerCard?.name || provider;
+
     return (
       <FormAction
         avatar={avatar}
-        description={t(`${provider}.unlock.description` as any)}
-        title={t(`${provider}.unlock.title` as any)}
+        description={t(`unlock.apiKey.description`, { name: providerName, ns: 'error' })}
+        title={t(`unlock.apiKey.title`, { name: providerName, ns: 'error' })}
       >
         <Input.Password
           autoComplete={'new-password'}

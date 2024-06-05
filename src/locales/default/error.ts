@@ -137,22 +137,17 @@ export default {
   },
   unlock: {
     addProxyUrl: '添加 OpenAI 代理地址（可选）',
+    apiKey: {
+      description: '输入你的 {{name}} API Key 即可开始会话',
+      title: '使用自定义 {{name}} API Key',
+    },
     closeMessage: '关闭提示',
     confirm: '确认并重试',
-
     oauth: {
       description: '管理员已开启统一登录认证，点击下方按钮登录，即可解锁应用',
       success: '登录成功',
       title: '登录账号',
       welcome: '欢迎你！',
-    },
-    ollama: {
-      cancel: '取消下载',
-      confirm: '下载',
-      description: '输入你的 Ollama 模型标签，完成即可继续会话',
-      downloaded: '{{completed}} / {{total}}',
-      starting: '开始下载...',
-      title: '下载指定的 Ollama 模型',
     },
     password: {
       description: '管理员已开启应用加密，输入应用密码后即可解锁应用。密码只需填写一次',
