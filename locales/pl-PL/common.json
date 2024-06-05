@@ -39,6 +39,10 @@
   "historyRange": "Zakres historii",
   "import": "Importuj ustawienia",
   "importModal": {
+    "error": {
+      "desc": "Przepraszamy, wystąpił błąd podczas importowania danych. Spróbuj ponownie zaimportować, lub <1>zgłoś problem</1>, a my postaramy się jak najszybciej rozwiązać problem.",
+      "title": "Import danych nie powiódł się"
+    },
     "finish": {
       "onlySettings": "Pomyślnie zaimportowano ustawienia systemowe",
       "start": "Rozpocznij korzystanie",
@@ -46,6 +50,7 @@
       "title": "Zakończono import danych"
     },
     "loading": "Trwa import danych, proszę czekać...",
+    "preparing": "Przygotowywanie modułu importu danych...",
     "result": {
       "added": "Pomyślnie zaimportowano",
       "errors": "Błędy importu",
@@ -56,7 +61,12 @@
       "topics": "Tematy",
       "type": "Typ danych"
     },
-    "title": "Import danych"
+    "title": "Import danych",
+    "uploading": {
+      "desc": "Obecny plik jest duży, trwa wysyłanie...",
+      "restTime": "Pozostały czas",
+      "speed": "Prędkość wysyłania"
+    }
   },
   "installPWA": "Zainstaluj aplikację przeglądarki",
   "lang": {

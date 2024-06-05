@@ -217,6 +217,18 @@
       "title": "使用自定義 Perplexity API 金鑰"
     }
   },
+  "qwen": {
+    "title": "通義千問",
+    "token": {
+      "desc": "填入來自通義千問的 API 金鑰",
+      "placeholder": "通義千問 API 金鑰",
+      "title": "API 金鑰"
+    },
+    "unlock": {
+      "description": "輸入你的 通義千問 API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
+      "title": "使用自定義 通義千問 API 金鑰"
+    }
+  },
   "togetherai": {
     "checker": {
       "desc": "測試代理地址是否正確填寫"
