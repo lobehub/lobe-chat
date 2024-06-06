@@ -232,7 +232,7 @@ describe('LobeAzureOpenAI', () => {
               message: 'Deployment not found',
               deployId: 'text-davinci-003',
             },
-            errorType: 'AzureBizError',
+            errorType: bizErrorType,
             provider: 'azure',
           });
         }
