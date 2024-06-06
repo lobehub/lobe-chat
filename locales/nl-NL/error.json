@@ -54,40 +54,15 @@
     "503": "Sorry, de server kan uw verzoek momenteel niet verwerken vanwege overbelasting of onderhoud. Probeer het later opnieuw",
     "504": "Sorry, de server heeft geen reactie ontvangen van de upstream server. Probeer het later opnieuw",
     "AgentRuntimeError": "Lobe language model runtime execution error, please troubleshoot or retry based on the following information",
-    "AnthropicBizError": "Er is een fout opgetreden bij het aanvragen van de Anthropic AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
-    "AzureBizError": "Error requesting Azure AI service, please troubleshoot or retry based on the following information",
-    "BedrockBizError": "Error requesting Bedrock service, please troubleshoot or retry based on the following information",
-    "DeepSeekBizError": "Er is een fout opgetreden bij het aanvragen van de DeepSeek-service. Controleer de volgende informatie en probeer het opnieuw.",
-    "GoogleBizError": "Error requesting Google service, please troubleshoot or retry based on the following information",
-    "GroqBizError": "Er is een fout opgetreden bij het aanroepen van de Groq-service. Controleer de onderstaande informatie of probeer het opnieuw.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
-    "InvalidAnthropicAPIKey": "Anthropic API Key is onjuist of leeg. Controleer de Anthropic API Key en probeer het opnieuw.",
-    "InvalidAzureAPIKey": "Incorrect or empty Azure API Key, please check the Azure API Key and retry",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
-    "InvalidDeepSeekAPIKey": "DeepSeek API-sleutel is onjuist of leeg. Controleer de DeepSeek API-sleutel en probeer het opnieuw.",
-    "InvalidGoogleAPIKey": "Incorrect or empty Google API Key, please check the Google API Key and retry",
-    "InvalidGroqAPIKey": "Groq API Key is onjuist of leeg. Controleer de Groq API Key en probeer het opnieuw.",
-    "InvalidMinimaxAPIKey": "Ongeldige of lege Minimax API-sleutel. Controleer de Minimax API-sleutel en probeer het opnieuw.",
-    "InvalidMistralAPIKey": "Ongeldige of lege Mistral AI API-sleutel. Controleer de Mistral API-sleutel en probeer het opnieuw.",
-    "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
-    "InvalidOpenRouterAPIKey": "OpenRouter API Key is onjuist of leeg. Controleer de OpenRouter API Key en probeer het opnieuw.",
-    "InvalidPerplexityAPIKey": "Perplexity API Key is onjuist of leeg. Controleer de Perplexity API Key en probeer het opnieuw.",
-    "InvalidQwenAPIKey": "Incorrect or empty Qwen API Key, please check the Qwen API Key and retry",
-    "InvalidTogetherAIAPIKey": "TogetherAI API Key is onjuist of leeg. Controleer de TogetherAI API Key en probeer het opnieuw.",
-    "InvalidZeroOneAPIKey": "Ongeldige ZeroOneAPI-sleutel of leeg, controleer de ZeroOneAPI-sleutel en probeer het opnieuw",
-    "InvalidZhipuAPIKey": "Incorrect or empty Zhipu API Key, please check the Zhipu API Key and retry",
+    "InvalidProviderAPIKey": "{{provider}} API-sleutel is onjuist of leeg. Controleer de {{provider}} API-sleutel en probeer het opnieuw.",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
-    "MinimaxBizError": "Er is een fout opgetreden bij het aanroepen van de Minimax-service. Controleer de volgende informatie of probeer het opnieuw.",
-    "MistralBizError": "Er is een fout opgetreden bij het aanroepen van de Mistral AI-service. Controleer de onderstaande informatie of probeer het opnieuw.",
-    "MoonshotBizError": "Er is een fout opgetreden bij het aanroepen van de Moonshot-service. Controleer de volgende informatie of probeer het opnieuw.",
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",
-    "OpenAIBizError": "Fout bij het aanvragen van OpenAI-service. Controleer de onderstaande informatie voor probleemoplossing of probeer opnieuw",
-    "OpenRouterBizError": "Fout bij het aanvragen van OpenRouter AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
-    "PerplexityBizError": "Er is een fout opgetreden bij het aanvragen van de Perplexity AI-service. Controleer de onderstaande informatie en probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
     "PluginGatewayError": "Sorry, er is een fout opgetreden in de plug-in gateway. Controleer of de plug-in gatewayconfiguratie juist is",
@@ -100,10 +75,7 @@
     "PluginOpenApiInitError": "Sorry, initialisatie van de OpenAPI-client is mislukt. Controleer of de configuratie van OpenAPI juist is",
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
-    "QwenBizError": "Error requesting Qwen service, please troubleshoot or retry based on the following information",
-    "TogetherAIBizError": "Fout bij het aanvragen van TogetherAI AI-service. Controleer de onderstaande informatie en probeer opnieuw.",
-    "ZeroOneBizError": "请求零一万物服务出错，请根据以下信息排查或重试",
-    "ZhipuBizError": "Error requesting Zhipu service, please troubleshoot or retry based on the following information"
+    "ProviderBizAPIKey": "Fout bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie en probeer het opnieuw."
   },
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
@@ -113,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "Voeg een optionele OpenAI-proxy-URL toe",
+    "apiKey": {
+      "description": "Voer uw {{name}} API-sleutel in om de sessie te starten.",
+      "title": "Gebruik aangepaste {{name}} API-sleutel"
+    },
     "closeMessage": "Sluit bericht",
     "confirm": "Bevestigen en opnieuw proberen",
     "oauth": {
@@ -120,14 +96,6 @@
       "success": "Succesvol ingelogd",
       "title": "Account inloggen",
       "welcome": "Welkom!"
-    },
-    "ollama": {
-      "cancel": "Annuleren",
-      "confirm": "Bevestigen",
-      "description": "Voer uw Ollama-modeltag in om door te gaan met de sessie",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Downloaden begint...",
-      "title": "Specifiek Ollama-model downloaden"
     },
     "password": {
       "description": "De beheerder heeft app-encryptie ingeschakeld. Voer het app-wachtwoord in om de app te ontgrendelen. Het wachtwoord hoeft slechts één keer te worden ingevoerd.",
