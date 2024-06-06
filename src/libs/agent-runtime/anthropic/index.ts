@@ -80,7 +80,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
             throw AgentRuntimeError.chat({
               endpoint: desensitizedEndpoint,
               error: error as any,
-              errorType: AgentRuntimeErrorType.ProviderBizError,
+              errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
               provider: ModelProvider.Anthropic,
             });
           }
