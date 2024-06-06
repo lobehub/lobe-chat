@@ -54,40 +54,15 @@
     "503": "Sorry, the server is currently unable to process your request, possibly due to overload or maintenance. Please try again later.",
     "504": "Sorry, the server did not receive a response from the upstream server. Please try again later.",
     "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
-    "AnthropicBizError": "Error requesting Anthropic service. Please troubleshoot or retry based on the following information.",
-    "AzureBizError": "Error requesting Azure AI service. Please troubleshoot or retry based on the following information.",
-    "BedrockBizError": "Error requesting Bedrock service. Please troubleshoot or retry based on the following information.",
-    "DeepSeekBizError": "Error requesting DeepSeek service, please troubleshoot or retry based on the following information",
-    "GoogleBizError": "Error requesting Google service. Please troubleshoot or retry based on the following information.",
-    "GroqBizError": "Error occurred while requesting Groq service. Please troubleshoot based on the following information or retry.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
-    "InvalidAnthropicAPIKey": "The Anthropic API Key is incorrect or empty. Please check the Anthropic API Key and retry.",
-    "InvalidAzureAPIKey": "Azure API Key is incorrect or empty. Please check the Azure API Key and retry.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
-    "InvalidDeepSeekAPIKey": "The DeepSeek API Key is incorrect or empty, please check the DeepSeek API Key and try again",
-    "InvalidGoogleAPIKey": "Google API Key is incorrect or empty. Please check the Google API Key and retry.",
-    "InvalidGroqAPIKey": "Groq API Key is incorrect or empty. Please check the Groq API Key and retry.",
-    "InvalidMinimaxAPIKey": "Incorrect or empty Minimax API Key, please check the Minimax API Key and try again",
-    "InvalidMistralAPIKey": "Incorrect or empty Mistral AI API Key. Please check your Mistral API Key and try again.",
-    "InvalidMoonshotAPIKey": "The Moonshot AI API Key is incorrect or empty, please check the Moonshot API Key and try again.",
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
-    "InvalidOpenRouterAPIKey": "Invalid or empty OpenRouter API Key. Please check your OpenRouter API Key and try again.",
-    "InvalidPerplexityAPIKey": "Perplexity API Key is incorrect or empty. Please check the Perplexity API Key and retry.",
-    "InvalidQwenAPIKey": "Qwen API Key is incorrect or empty. Please check the Qwen API Key and retry.",
-    "InvalidTogetherAIAPIKey": "Invalid or empty TogetherAI API Key. Please check your TogetherAI API Key and try again.",
-    "InvalidZeroOneAPIKey": "01-AI API Key is incorrect or empty. Please check the 01-AI API Key and retry.",
-    "InvalidZhipuAPIKey": "Zhipu API Key is incorrect or empty. Please check the Zhipu API Key and retry.",
+    "InvalidProviderAPIKey": "{{provider}} API Key is incorrect or empty, please check your {{provider}} API Key and try again",
     "LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
-    "MinimaxBizError": "Error occurred while requesting Minimax service, please troubleshoot or retry based on the following information",
-    "MistralBizError": "Error occurred while requesting Mistral AI service. Please troubleshoot based on the following information or retry.",
-    "MoonshotBizError": "There was an error with the Moonshot service, please troubleshoot or retry based on the following information.",
     "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OllamaBizError": "Error requesting Ollama service, please troubleshoot or retry based on the following information",
     "OllamaServiceUnavailable": "Ollama service is unavailable. Please check if Ollama is running properly or if the cross-origin configuration of Ollama is set correctly.",
-    "OpenAIBizError": "Error requesting OpenAI service. Please troubleshoot or retry based on the following information.",
-    "OpenRouterBizError": "Error requesting OpenRouter AI service. Please troubleshoot or retry based on the following information.",
-    "PerplexityBizError": "Error requesting Perplexity AI service. Please troubleshoot or retry based on the following information.",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
     "PluginGatewayError": "Sorry, there was an error with the plugin gateway. Please check if the plugin gateway configuration is correct.",
@@ -100,10 +75,7 @@
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
-    "QwenBizError": "Error requesting Qwen service. Please troubleshoot or retry based on the following information.",
-    "TogetherAIBizError": "Error requesting TogetherAI AI service. Please troubleshoot or retry based on the following information.",
-    "ZeroOneBizError": "Error requesting 01-AI service. Please troubleshoot or retry based on the following information.",
-    "ZhipuBizError": "Error requesting Zhipu service. Please troubleshoot or retry based on the following information."
+    "ProviderBizAPIKey": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information"
   },
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"
@@ -113,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "Add OpenAI proxy URL (optional)",
+    "apiKey": {
+      "description": "Enter your {{name}} API Key to start the session",
+      "title": "Use custom {{name}} API Key"
+    },
     "closeMessage": "Close message",
     "confirm": "Confirm and Retry",
     "oauth": {
@@ -120,14 +96,6 @@
       "success": "Login successful",
       "title": "Log in to your account",
       "welcome": "Welcome!"
-    },
-    "ollama": {
-      "cancel": "Cancel Download",
-      "confirm": "Download",
-      "description": "Enter your Ollama model tag to proceed with the conversation",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Starting download...",
-      "title": "Download Specific Ollama Model"
     },
     "password": {
       "description": "The application encryption has been enabled by the administrator. Enter the application password to unlock the application. The password only needs to be filled in once.",
