@@ -74,6 +74,7 @@
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
     "InvalidOpenRouterAPIKey": "OpenRouter API Anahtarı geçersiz veya boş, lütfen OpenRouter API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidPerplexityAPIKey": "Perplexity API Key geçersiz veya boş, lütfen Perplexity API Key'inizi kontrol edip tekrar deneyin",
+    "InvalidQwenAPIKey": "Qwen API Anahtarı yanlış veya boş, lütfen Qwen API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidTogetherAIAPIKey": "TogetherAI API Anahtarı geçersiz veya boş, lütfen TogetherAI API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidZeroOneAPIKey": "SıfırBirIoT API Anahtarı geçersiz veya boş. Lütfen SıfırBirIoT API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidZhipuAPIKey": "Zhipu API Anahtarı yanlış veya boş, lütfen Zhipu API Anahtarınızı kontrol edip tekrar deneyin",
@@ -99,6 +100,7 @@
     "PluginOpenApiInitError": "Üzgünüz, OpenAPI istemci başlatma hatası, lütfen OpenAPI yapılandırma bilgilerini kontrol edin",
     "PluginServerError": "Eklenti sunucusu isteği bir hata ile döndü. Lütfen aşağıdaki hata bilgilerine dayanarak eklenti bildirim dosyanızı, eklenti yapılandırmanızı veya sunucu uygulamanızı kontrol edin",
     "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin",
+    "QwenBizError": "Qwen servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "TogetherAIBizError": "TogetherAI AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "ZeroOneBizError": "SıfırBirIoT hizmetine yapılan istekte bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "ZhipuBizError": "Zhipu servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin"
