@@ -14,8 +14,8 @@ import { LobeOpenAICompatibleFactory } from './index';
 
 const provider = 'groq';
 const defaultBaseURL = 'https://api.groq.com/openai/v1';
-const bizErrorType = 'GroqBizError';
-const invalidErrorType = 'InvalidGroqAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -33,10 +33,6 @@ const LobeMockProvider = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION === '1',
-  },
-  errorType: {
-    bizError: AgentRuntimeErrorType.GroqBizError,
-    invalidAPIKey: AgentRuntimeErrorType.InvalidGroqAPIKey,
   },
   provider: ModelProvider.Groq,
 });

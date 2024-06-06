@@ -9,8 +9,8 @@ import { LobePerplexityAI } from './index';
 
 const provider = 'perplexity';
 const defaultBaseURL = 'https://api.perplexity.ai';
-const bizErrorType = 'PerplexityBizError';
-const invalidErrorType = 'InvalidPerplexityAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});

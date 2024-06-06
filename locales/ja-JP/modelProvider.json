@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "AnthropicからのAPIキーを入力してください",
-      "placeholder": "Anthropic API Key",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "あなたのAnthropic APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
-      "title": "カスタムAnthropic APIキーを使用する"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "Azure の API バージョン、YYYY-MM-DD 形式に従う、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
@@ -29,10 +17,6 @@
       "desc": "Azure ポータルでリソースを確認する際に、「キーとエンドポイント」セクションでこの値を見つけることができます。KEY1 または KEY2 を使用できます",
       "placeholder": "Azure API Key",
       "title": "API Key"
-    },
-    "unlock": {
-      "description": "Azure OpenAI API Key を入力するとセッションを開始できます",
-      "title": "使用カスタム Azure OpenAI API Key"
     }
   },
   "bedrock": {
@@ -61,78 +45,6 @@
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "DeepSeek の API キーを入力してください",
-      "placeholder": "DeepSeek API キー",
-      "title": "API キー"
-    },
-    "unlock": {
-      "description": "DeepSeek の API キーを入力するとセッションが開始されます。アプリは API キーを記録しません",
-      "title": "カスタム DeepSeek API キーを使用"
-    }
-  },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "Google の API Key を入力してください",
-      "placeholder": "Google API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Google API Key を入力するとセッションを開始できます。アプリは API Key を記録しません",
-      "title": "使用カスタム Google API Key"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "Groq の API Key を入力してください",
-      "placeholder": "Groq API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Groq API Key を入力するとセッションを開始できます。アプリは API Key を記録しません",
-      "title": "使用カスタム Groq API Key"
-    }
-  },
-  "minimax": {
-    "title": "ミニマックス",
-    "token": {
-      "desc": "ミニマックスからのAPIキーを入力してください",
-      "placeholder": "ミニマックスAPIキー",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "ミニマックスAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
-      "title": "カスタムミニマックスAPIキーを使用"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "Mistral AI の API Key を入力してください",
-      "placeholder": "Mistral AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Mistral AI API Key を入力するとセッションを開始できます。アプリは API Key を記録しません",
-      "title": "使用カスタム Mistral AI API Key"
-    }
-  },
-  "moonshot": {
-    "title": "Moonshot AI",
-    "token": {
-      "desc": "Moonshot AIのAPIキーを入力してください",
-      "placeholder": "Moonshot AI APIキー",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "Moonshot AIのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
-      "title": "カスタムMoonshot AI APIキーを使用する"
-    }
-  },
   "ollama": {
     "checker": {
       "desc": "プロキシアドレスが正しく入力されているかをテストします",
@@ -142,6 +54,12 @@
       "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "カスタムモデル名"
+    },
+    "download": {
+      "desc": "Ollama is currently downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
     },
     "endpoint": {
       "desc": "Ollamaプロキシインターフェースアドレスを入力してください。ローカルで追加の指定がない場合は空白のままにしてください",
@@ -171,106 +89,20 @@
         "windowsTab": "Windows（プレビュー版）"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "独自のOpenAIキーを使用します",
-      "placeholder": "OpenAI APIキー",
-      "title": "OpenAI APIキー"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "OpenAIのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
-      "title": "カスタムOpenAI APIキーを使用する"
-    }
-  },
-  "openrouter": {
-    "checker": {
-      "desc": "プロキシアドレスが正しく入力されているかをテストします"
-    },
-    "customModelName": {
-      "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
-      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-      "title": "カスタムモデル名"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "OpenRouter AIのAPIキーを入力してください",
-      "placeholder": "OpenRouter AI APIキー",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "OpenRouterのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
-      "title": "カスタムOpenRouter APIキーを使用する"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "Perplexity AIのAPIキーを入力してください",
-      "placeholder": "Perplexity AI APIキー",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "PerplexityのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
-      "title": "カスタムPerplexity APIキーを使用する"
-    }
-  },
-  "qwen": {
-    "title": "通义千问",
-    "token": {
-      "desc": "通义千问からのAPIキーを入力してください",
-      "placeholder": "Qwen API Key",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "あなたのQwen APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
-      "title": "カスタムQwen APIキーを使用する"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "プロキシアドレスが正しく入力されているかをテストします"
-    },
-    "customModelName": {
-      "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-      "title": "カスタムモデル名"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "TogetherAI AIのAPIキーを入力してください",
-      "placeholder": "TogetherAI AI APIキー",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "TogetherAIのAPIキーを入力するとセッションが開始されます。アプリはAPIキーを記録しません",
-      "title": "カスタムTogetherAI APIキーを使用する"
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
     }
   },
   "zeroone": {
-    "title": "01.AI 零一万物",
-    "token": {
-      "desc": "01.AI 零一万物からのAPIキーを入力してください",
-      "placeholder": "01.AI 零一万物 API Key",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "あなたのZeroOne APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
-      "title": "カスタムZeroOne APIキーを使用する"
-    }
+    "title": "01.AI 零一万物"
   },
   "zhipu": {
-    "title": "智谱",
-    "token": {
-      "desc": "智谱からのAPIキーを入力してください",
-      "placeholder": "Zhipu API Key",
-      "title": "APIキー"
-    },
-    "unlock": {
-      "description": "あなたのZhipu APIキーを入力すると、セッションを開始できます。アプリはあなたのAPIキーを記録しません。",
-      "title": "カスタムZhipu APIキーを使用する"
-    }
+    "title": "智谱"
   }
 }
