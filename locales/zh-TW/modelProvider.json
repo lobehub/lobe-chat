@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "填入來自 Anthropic 的 API 金鑰",
-      "placeholder": "Anthropic API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Anthropic API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 Anthropic API 金鑰"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
@@ -29,10 +17,6 @@
       "desc": "從 Azure 門戶檢查資源時，可在“金鑰和終點”部分中找到此值。 可以使用 KEY1 或 KEY2",
       "placeholder": "Azure API 金鑰",
       "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Azure OpenAI API 金鑰即可開始會話",
-      "title": "使用自定義 Azure OpenAI API 金鑰"
     }
   },
   "bedrock": {
@@ -61,78 +45,6 @@
       "title": "使用自定義 Bedrock 驗證資訊"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "填入來自 DeepSeek 的 API 金鑰",
-      "placeholder": "DeepSeek API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 DeepSeek API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自訂 DeepSeek API 金鑰"
-    }
-  },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "填入來自 Google 的 API 金鑰",
-      "placeholder": "Google API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Google API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 Google API 金鑰"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "填入來自 Groq 的 API 金鑰",
-      "placeholder": "Groq API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Groq API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 Groq API 金鑰"
-    }
-  },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "請填入來自 Minimax 的 API 金鑰",
-      "placeholder": "Minimax API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入您的 Minimax API 金鑰即可開始會話。應用程式不會記錄您的 API 金鑰",
-      "title": "使用自訂 Minimax API 金鑰"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "填入來自 Mistral AI 的 API 金鑰",
-      "placeholder": "Mistral AI API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Mistral AI API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 Mistral AI API 金鑰"
-    }
-  },
-  "moonshot": {
-    "title": "Moonshot AI",
-    "token": {
-      "desc": "填入來自 Moonshot AI 的 API 金鑰",
-      "placeholder": "Moonshot AI API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Moonshot AI API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 Moonshot AI API 金鑰"
-    }
-  },
   "ollama": {
     "checker": {
       "desc": "測試代理地址是否正確填寫",
@@ -142,6 +54,12 @@
       "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "自定義模型名稱"
+    },
+    "download": {
+      "desc": "Ollama 正在下載該模型，請儘量不要關閉本頁面。重新下載時將會中斷處繼續",
+      "remainingTime": "剩餘時間",
+      "speed": "下載速度",
+      "title": "正在下載模型 {{model}}"
     },
     "endpoint": {
       "desc": "填入 Ollama 接口代理地址，本地未額外指定可留空",
@@ -171,106 +89,20 @@
         "windowsTab": "Windows (預覽版)"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "使用自己的 OpenAI 金鑰",
-      "placeholder": "OpenAI API 金鑰",
-      "title": "OpenAI API 金鑰"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "輸入你的 OpenAI API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 OpenAI API 金鑰"
-    }
-  },
-  "openrouter": {
-    "checker": {
-      "desc": "測試代理地址是否正確填寫"
-    },
-    "customModelName": {
-      "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
-      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-      "title": "自定義模型名稱"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "填入來自 OpenRouter AI 的 API 金鑰",
-      "placeholder": "OpenRouter AI API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 OpenRouter API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 OpenRouter API 金鑰"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "填入來自 Perplexity AI 的 API 金鑰",
-      "placeholder": "Perplexity AI API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Perplexity API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 Perplexity API 金鑰"
-    }
-  },
-  "qwen": {
-    "title": "通義千問",
-    "token": {
-      "desc": "填入來自通義千問的 API 金鑰",
-      "placeholder": "通義千問 API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 通義千問 API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-      "title": "使用自定義 通義千問 API 金鑰"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "測試代理地址是否正確填寫"
-    },
-    "customModelName": {
-      "desc": "增加自定義模型，多個模型使用逗號（,）隔開",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-      "title": "自定義模型名稱"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "填入來自 TogetherAI AI 的 API 金鑰",
-      "placeholder": "TogetherAI AI API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 TogetherAI API 金鑰即可開始會話。應用程式不會記錄你的 API 金鑰",
-      "title": "使用自定義 TogetherAI API 金鑰"
+      "cancel": "取消下載",
+      "confirm": "下載",
+      "description": "輸入你的 Ollama 模型標籤，完成即可繼續會話",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "開始下載...",
+      "title": "下載指定的 Ollama 模型"
     }
   },
   "zeroone": {
-    "title": "01.AI 零一萬物",
-    "token": {
-      "desc": "填入來自 01.AI 零一萬物的 API 金鑰",
-      "placeholder": "01.AI 零一萬物 API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的零一萬物 API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-      "title": "使用自定義零一萬物 API 金鑰"
-    }
+    "title": "01.AI 零一萬物"
   },
   "zhipu": {
-    "title": "智譜",
-    "token": {
-      "desc": "填入來自智譜的 API 金鑰",
-      "placeholder": "Zhipu API 金鑰",
-      "title": "API 金鑰"
-    },
-    "unlock": {
-      "description": "輸入你的 Zhipu API 金鑰即可開始會話。應用不會記錄你的 API 金鑰",
-      "title": "使用自定義 Zhipu API 金鑰"
-    }
+    "title": "智譜"
   }
 }
