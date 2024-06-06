@@ -31,6 +31,7 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  StepfunProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -133,6 +134,10 @@ export const useProviderList = (): ProviderItem[] => {
       },
       {
         ...ZeroOneProviderCard,
+        title: <ZeroOne.Text size={20} />,
+      },
+      {
+        ...StepfunProviderCard,
         title: <ZeroOne.Text size={20} />,
       },
     ],
