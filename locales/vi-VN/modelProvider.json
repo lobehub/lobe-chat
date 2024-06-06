@@ -99,26 +99,6 @@
       "title": "Tải xuống mô hình Ollama đã chỉ định"
     }
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Nhập Access Key của bạn trên nền tảng Baidu Qianfan",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "Kiểm tra xem AccessKey / SecretAccess đã được điền đúng chưa"
-    },
-    "secretKey": {
-      "desc": "Nhập Secret Key của bạn trên nền tảng Baidu Qianfan",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Vùng dịch vụ tùy chỉnh",
-      "description": "Nhập AccessKey / SecretKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu cấu hình xác thực của bạn",
-      "title": "Sử dụng thông tin xác thực Wenxin tự tùy chỉnh"
-    }
-  },
   "zeroone": {
     "title": "01.AI Zero One"
   },
