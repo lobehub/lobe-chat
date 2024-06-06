@@ -54,42 +54,16 @@
     "503": "Xin lỗi, máy chủ hiện không thể xử lý yêu cầu của bạn, có thể do quá tải hoặc đang bảo trì, vui lòng thử lại sau",
     "504": "Xin lỗi, máy chủ không đợi được phản hồi từ máy chủ upstream, vui lòng thử lại sau",
     "AgentRuntimeError": "Lobe mô hình ngôn ngữ thực thi gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "AnthropicBizError": "Yêu cầu dịch vụ AI Anthropic gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "AzureBizError": "Yêu cầu dịch vụ Azure AI gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "BedrockBizError": "Yêu cầu dịch vụ Bedrock gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "DeepSeekBizError": "Yêu cầu dịch vụ DeepSeek gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "GoogleBizError": "Yêu cầu dịch vụ Google gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "GroqBizError": "Yêu cầu dịch vụ Groq gặp sự cố, vui lòng kiểm tra thông tin bên dưới hoặc thử lại",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
-    "InvalidAnthropicAPIKey": "Khóa API Anthropic không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidAzureAPIKey": "Khóa API Azure không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Azure và thử lại",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidClerkUser": "Xin lỗi, bạn chưa đăng nhập. Vui lòng đăng nhập hoặc đăng ký tài khoản trước khi tiếp tục.",
-    "InvalidDeepSeekAPIKey": "Khóa API DeepSeek không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidGoogleAPIKey": "Khóa API Google không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Google và thử lại",
-    "InvalidGroqAPIKey": "Khóa API Groq không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Groq và thử lại",
-    "InvalidMinimaxAPIKey": "Khóa API Minimax không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Minimax và thử lại",
-    "InvalidMistralAPIKey": "Mistral AI API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại Mistral API Key và thử lại",
-    "InvalidMoonshotAPIKey": "Khóa API Moonshot AI không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Moonshot và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
-    "InvalidOpenRouterAPIKey": "OpenRouter API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidPerplexityAPIKey": "Khóa API Perplexity không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại sau",
-    "InvalidQwenAPIKey": "Khóa API Qwen không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Qwen và thử lại",
-    "InvalidTogetherAIAPIKey": "TogetherAI API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidZeroOneAPIKey": "Khóa API ZeroOne không hợp lệ hoặc trống, vui lòng kiểm tra lại khóa API ZeroOne và thử lại",
-    "InvalidZhipuAPIKey": "Khóa API Zhipu không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Zhipu và thử lại",
+    "InvalidProviderAPIKey": "{{provider}} API Key không hợp lệ hoặc trống, vui lòng kiểm tra và thử lại",
     "LocationNotSupportError": "Xin lỗi, vị trí của bạn không hỗ trợ dịch vụ mô hình này, có thể do hạn chế vùng miền hoặc dịch vụ chưa được mở. Vui lòng xác nhận xem vị trí hiện tại có hỗ trợ sử dụng dịch vụ này không, hoặc thử sử dụng thông tin vị trí khác.",
-    "MinimaxBizError": "Yêu cầu dịch vụ Minimax gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "MistralBizError": "Yêu cầu dịch vụ Mistral AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "MoonshotBizError": "Yêu cầu dịch vụ Mặt Trăng Tối gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem Ollama có hoạt động bình thường không, hoặc xem xét cấu hình chéo đúng của Ollama",
-    "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp lỗi, vui lòng xác minh hoặc thử lại dựa trên thông tin dưới đây",
-    "OpenRouterBizError": "Yêu cầu dịch vụ OpenRouter AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "PerplexityBizError": "Yêu cầu dịch vụ AI Perplexity gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại sau",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
-    "QwenBizError": "Yêu cầu dịch vụ Qwen gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại sau",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
     "PluginGatewayError": "Xin lỗi, cổng plugin gặp lỗi, vui lòng kiểm tra cấu hình cổng plugin có đúng không",
     "PluginManifestInvalid": "Xin lỗi, kiểm tra mô tả plugin không thông qua, vui lòng kiểm tra định dạng mô tả có đúng không",
@@ -101,9 +75,7 @@
     "PluginOpenApiInitError": "Xin lỗi, khởi tạo khách hàng OpenAPI thất bại, vui lòng kiểm tra thông tin cấu hình OpenAPI có đúng không",
     "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
-    "TogetherAIBizError": "Yêu cầu dịch vụ TogetherAI AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "ZeroOneBizError": "Yêu cầu dịch vụ ZeroOneBiz gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "ZhipuBizError": "Yêu cầu dịch vụ Zhipu gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây"
+    "ProviderBizAPIKey": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại"
   },
   "stt": {
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
@@ -113,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "Thêm URL proxy OpenAI (tùy chọn)",
+    "apiKey": {
+      "description": "Nhập {{name}} API Key của bạn để bắt đầu phiên làm việc",
+      "title": "Sử dụng {{name}} API Key tùy chỉnh"
+    },
     "closeMessage": "Đóng thông báo",
     "confirm": "Xác nhận và thử lại",
     "oauth": {
@@ -120,14 +96,6 @@
       "success": "Đăng nhập thành công",
       "title": "Đăng nhập tài khoản",
       "welcome": "Chào mừng bạn!"
-    },
-    "ollama": {
-      "cancel": "Hủy bỏ",
-      "confirm": "Tải xuống",
-      "description": "Nhập nhãn mô hình Ollama của bạn để tiếp tục cuộc trò chuyện",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Bắt đầu tải xuống...",
-      "title": "Tải xuống mô hình Ollama cụ thể"
     },
     "password": {
       "description": "Quản trị viên đã kích hoạt mã hóa ứng dụng. Nhập mật khẩu ứng dụng để mở khóa. Chỉ cần nhập mật khẩu một lần",

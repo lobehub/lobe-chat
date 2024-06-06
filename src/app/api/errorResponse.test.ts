@@ -34,7 +34,13 @@ describe('createErrorResponse', () => {
 
   describe('Provider Biz Error', () => {
     it('returns a 471 status for OpenAIBizError error type', () => {
-      const errorType = ChatErrorType.OpenAIBizError;
+      const errorType = AgentRuntimeErrorType.OpenAIBizError;
+      const response = createErrorResponse(errorType);
+      expect(response.status).toBe(471);
+    });
+
+    it('returns a 471 status for ProviderBizError error type', () => {
+      const errorType = AgentRuntimeErrorType.ProviderBizError;
       const response = createErrorResponse(errorType);
       expect(response.status).toBe(471);
     });
@@ -49,100 +55,6 @@ describe('createErrorResponse', () => {
       const errorType = AgentRuntimeErrorType.OpenAIBizError;
       const response = createErrorResponse(errorType as any);
       expect(response.status).toBe(471);
-    });
-
-    // 测试 AzureBizError 错误类型返回472状态码
-    it('returns a 472 status for AzureBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.AzureBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(472);
-    });
-
-    // 测试 ZhipuBizError 错误类型返回473状态码
-    it('returns a 473 status for ZhipuBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.ZhipuBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(473);
-    });
-
-    // 测试 BedrockBizError 错误类型返回474状态码
-    it('returns a 474 status for BedrockBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.BedrockBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(474);
-    });
-
-    // 测试 GoogleBizError 错误类型返回475状态码
-    it('returns a 475 status for GoogleBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.GoogleBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(475);
-    });
-
-    // 测试 MoonshotBizError 错误类型返回476状态码
-    it('returns a 476 status for MoonshotBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.MoonshotBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(476);
-    });
-
-    // 测试 OpenRouterBizError 错误类型返回477状态码
-    it('returns a 477 status for OpenRouterBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.OpenRouterBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(477);
-    });
-
-    // 测试 OllamaBizError 错误类型返回478状态码
-    it('returns a 478 status for OllamaBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.OllamaBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(478);
-    });
-
-    // 测试 PerplexityBizError 错误类型返回479状态码
-    it('returns a 479 status for PerplexityBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.PerplexityBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(479);
-    });
-
-    // 测试 AnthropicBizError 错误类型返回480状态码
-    it('returns a 480 status for AnthropicBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.AnthropicBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(480);
-    });
-
-    // 测试 MistralBizError 错误类型返回481状态码
-    it('returns a 481 status for MistralBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.MistralBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(481);
-    });
-
-    it('returns a 484 status for TogetherAIBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.TogetherAIBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(484);
-    });
-
-    it('returns a 485 status for MinimaxBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.MinimaxBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(485);
-    });
-
-    it('returns a 486 status for DeepSeekBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.DeepSeekBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(486);
-    });
-
-    it('returns a 487 status for QwenBizError error type', () => {
-      const errorType = AgentRuntimeErrorType.QwenBizError;
-      const response = createErrorResponse(errorType);
-      expect(response.status).toBe(487);
     });
   });
 

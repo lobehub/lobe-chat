@@ -26,7 +26,10 @@ const Qwen: ModelProviderCard = {
       tokens: 8192,
     },
   ],
+  checkModel: 'qwen-turbo',
   id: 'qwen',
+  modelList: { showModelFetcher: true },
+  name: 'Qwen',
 };
 
 export default Qwen;
