@@ -1,6 +1,5 @@
 import OpenAI from 'openai';
 
-import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
@@ -23,10 +22,6 @@ export const LobeQwenAI = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_QWEN_CHAT_COMPLETION === '1',
-  },
-  errorType: {
-    bizError: AgentRuntimeErrorType.QwenBizError,
-    invalidAPIKey: AgentRuntimeErrorType.InvalidQwenAPIKey,
   },
 
   provider: ModelProvider.Qwen,

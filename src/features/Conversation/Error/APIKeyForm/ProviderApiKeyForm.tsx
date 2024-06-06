@@ -4,7 +4,7 @@ import { Network } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
+import { useProviderName } from '@/hooks/useProviderName';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -30,8 +30,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
       s.updateKeyVaultConfig,
     ]);
 
-    const providerCard = DEFAULT_MODEL_PROVIDER_LIST.find((p) => p.id === provider);
-    const providerName = providerCard?.name || provider;
+    const providerName = useProviderName(provider);
 
     return (
       <FormAction
