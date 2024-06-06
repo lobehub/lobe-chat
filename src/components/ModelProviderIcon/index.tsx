@@ -13,6 +13,7 @@ import {
   OpenAI,
   OpenRouter,
   Perplexity,
+  Stepfun,
   Together,
   Tongyi,
   ZeroOne,
@@ -30,7 +31,7 @@ interface ModelProviderIconProps {
 const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
   switch (provider) {
     case 'lobehub': {
-      return <LobeHub size={20} />;
+      return <LobeHub.Color size={20} />;
     }
 
     case ModelProvider.ZhiPu: {
@@ -107,6 +108,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Qwen: {
       return <Tongyi size={20} />;
+    }
+
+    case ModelProvider.Stepfun: {
+      return <Stepfun size={20} />;
     }
 
     default: {
