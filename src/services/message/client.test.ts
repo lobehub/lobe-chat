@@ -194,7 +194,10 @@ describe('MessageClientService', () => {
   describe('updateMessageError', () => {
     it('should update the error field of a message', async () => {
       // Setup
-      const newError = { type: 'NoOpenAIAPIKey', message: 'Error occurred' } as ChatMessageError;
+      const newError = {
+        type: 'InvalidProviderAPIKey',
+        message: 'Error occurred',
+      } as ChatMessageError;
       (MessageModel.update as Mock).mockResolvedValue({ ...mockMessage, error: newError });
 
       // Execute

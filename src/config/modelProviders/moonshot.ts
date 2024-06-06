@@ -25,7 +25,9 @@ const Moonshot: ModelProviderCard = {
       tokens: 128_000,
     },
   ],
+  checkModel: 'moonshot-v1-8k',
   id: 'moonshot',
+  name: 'Moonshot',
 };
 
 export default Moonshot;

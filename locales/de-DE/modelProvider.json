@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Anthropic ein",
-      "placeholder": "Anthropic API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Anthropic-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Anthropic-API-Schlüssel"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "Die API-Version von Azure im Format JJJJ-MM-TT, siehe [neueste Version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
@@ -29,10 +17,6 @@
       "desc": "Diesen Wert finden Sie im Abschnitt 'Schlüssel und Endpunkte', wenn Sie in Azure Portal Ihre Ressource überprüfen. Sie können KEY1 oder KEY2 verwenden",
       "placeholder": "Azure API Key",
       "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Azure OpenAI-API-Schlüssel ein, um das Gespräch zu beginnen",
-      "title": "Verwenden Sie einen individuellen Azure OpenAI-API-Schlüssel"
     }
   },
   "bedrock": {
@@ -61,78 +45,6 @@
       "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "Geben Sie Ihren API-Schlüssel von DeepSeek ein",
-      "placeholder": "DeepSeek API-Schlüssel",
-      "title": "API-Schlüssel"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren DeepSeek API-Schlüssel ein, um die Sitzung zu starten. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen benutzerdefinierten DeepSeek API-Schlüssel"
-    }
-  },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Google ein",
-      "placeholder": "Google API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Google-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Google-API-Schlüssel"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Groq ein",
-      "placeholder": "Groq API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Groq-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Groq-API-Schlüssel"
-    }
-  },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "Geben Sie Ihren API-Schlüssel von Minimax ein",
-      "placeholder": "Minimax API-Schlüssel",
-      "title": "API-Schlüssel"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren Minimax API-Schlüssel ein, um die Sitzung zu starten. Die Anwendung speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen benutzerdefinierten Minimax API-Schlüssel"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Mistral AI ein",
-      "placeholder": "Mistral AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Mistral AI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Mistral AI-API-Schlüssel"
-    }
-  },
-  "moonshot": {
-    "title": "Moonshot AI",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Moonshot AI ein",
-      "placeholder": "Moonshot AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Moonshot AI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Moonshot AI-API-Schlüssel"
-    }
-  },
   "ollama": {
     "checker": {
       "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde",
@@ -142,6 +54,12 @@
       "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "Benutzerdefinierte Modellnamen"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
     },
     "endpoint": {
       "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",
@@ -171,106 +89,20 @@
         "windowsTab": "Windows (Vorschau)"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "Verwenden Sie Ihren eigenen OpenAI-Key",
-      "placeholder": "OpenAI API Key",
-      "title": "OpenAI API Key"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "Geben Sie Ihren individuellen OpenAI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen OpenAI-API-Schlüssel"
-    }
-  },
-  "openrouter": {
-    "checker": {
-      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
-    },
-    "customModelName": {
-      "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
-      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-      "title": "Benutzerdefinierte Modellnamen"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von OpenRouter AI ein",
-      "placeholder": "OpenRouter AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen OpenRouter-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen OpenRouter-API-Schlüssel"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Perplexity AI ein",
-      "placeholder": "Perplexity AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Perplexity-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Perplexity-API-Schlüssel"
-    }
-  },
-  "qwen": {
-    "title": "Qwen",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Qwen ein",
-      "placeholder": "Qwen API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Qwen-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Qwen-API-Schlüssel"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde"
-    },
-    "customModelName": {
-      "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-      "title": "Benutzerdefinierte Modellnamen"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von TogetherAI AI ein",
-      "placeholder": "TogetherAI AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen TogetherAI-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen TogetherAI-API-Schlüssel"
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
     }
   },
   "zeroone": {
-    "title": "01.AI Alles und Nichts",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von 01.AI Alles und Nichts ein",
-      "placeholder": "01.AI Alles und Nichts API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen ZeroOne-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen ZeroOne-API-Schlüssel"
-    }
+    "title": "01.AI Alles und Nichts"
   },
   "zhipu": {
-    "title": "Zhipu",
-    "token": {
-      "desc": "Geben Sie Ihren API-Key von Zhipu ein",
-      "placeholder": "Zhipu API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Geben Sie Ihren individuellen Zhipu-API-Schlüssel ein, um das Gespräch zu beginnen. Die App speichert Ihren API-Schlüssel nicht.",
-      "title": "Verwenden Sie einen individuellen Zhipu-API-Schlüssel"
-    }
+    "title": "Zhipu"
   }
 }
