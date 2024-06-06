@@ -11,8 +11,8 @@ import { LobeQwenAI } from './index';
 
 const provider = ModelProvider.Qwen;
 const defaultBaseURL = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
-const bizErrorType = AgentRuntimeErrorType.QwenBizError;
-const invalidErrorType = AgentRuntimeErrorType.InvalidQwenAPIKey;
+const bizErrorType = AgentRuntimeErrorType.ProviderBizError;
+const invalidErrorType = AgentRuntimeErrorType.InvalidProviderAPIKey;
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});

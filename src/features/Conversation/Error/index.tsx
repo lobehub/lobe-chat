@@ -2,8 +2,10 @@ import { IPluginErrorType, PluginErrorType } from '@lobehub/chat-plugin-sdk';
 import type { AlertProps } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import dynamic from 'next/dynamic';
-import { Suspense, memo } from 'react';
+import { Suspense, memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { useProviderName } from '@/hooks/useProviderName';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 import { ChatMessage, ChatMessageError } from '@/types/message';
@@ -20,7 +22,7 @@ const OllamaBizError = dynamic(() => import('./OllamaBizError'), { loading, ssr:
 const PluginSettings = dynamic(() => import('./PluginSettings'), { loading, ssr: false });
 
 // Config for the errorMessage display
-export const getErrorAlertConfig = (
+const getErrorAlertConfig = (
   errorType?: IPluginErrorType | ILobeAgentRuntimeErrorType | ErrorType,
 ): AlertProps | undefined => {
   // OpenAIBizError / ZhipuBizError / GoogleBizError / ...
@@ -52,6 +54,23 @@ export const getErrorAlertConfig = (
   }
 };
 
+export const useErrorContent = (error: any) => {
+  const { t } = useTranslation('error');
+  const providerName = useProviderName(error?.body?.provider || '');
+
+  return useMemo<AlertProps | undefined>(() => {
+    if (!error) return;
+    const messageError = error;
+
+    const alertConfig = getErrorAlertConfig(messageError.type);
+
+    return {
+      message: t(`response.${messageError.type}` as any, { provider: providerName }),
+      ...alertConfig,
+    };
+  }, [error]);
+};
+
 const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
   const error = data.error as ChatMessageError;
   if (!error?.type) return;
@@ -77,28 +96,18 @@ const ErrorMessageExtra = memo<{ data: ChatMessage }>(({ data }) => {
       return <InvalidAccessCode id={data.id} provider={data.error?.body?.provider} />;
     }
 
-    case AgentRuntimeErrorType.InvalidBedrockCredentials:
-    case AgentRuntimeErrorType.InvalidDeepSeekAPIKey:
-    case AgentRuntimeErrorType.InvalidZhipuAPIKey:
-    case AgentRuntimeErrorType.InvalidMinimaxAPIKey:
-    case AgentRuntimeErrorType.InvalidMistralAPIKey:
-    case AgentRuntimeErrorType.InvalidMoonshotAPIKey:
-    case AgentRuntimeErrorType.InvalidGoogleAPIKey:
-    case AgentRuntimeErrorType.InvalidPerplexityAPIKey:
-    case AgentRuntimeErrorType.InvalidAnthropicAPIKey:
-    case AgentRuntimeErrorType.InvalidGroqAPIKey:
-    case AgentRuntimeErrorType.InvalidOpenRouterAPIKey:
-    case AgentRuntimeErrorType.InvalidQwenAPIKey:
-    case AgentRuntimeErrorType.InvalidTogetherAIAPIKey:
-    case AgentRuntimeErrorType.InvalidZeroOneAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
-      return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
-    }
-
-    default: {
-      return <ErrorJsonViewer error={data.error} id={data.id} />;
+      {
+        return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
+      }
     }
   }
+
+  if (error.type.toString().includes('Invalid')) {
+    return <InvalidAPIKey id={data.id} provider={data.error?.body?.provider} />;
+  }
+
+  return <ErrorJsonViewer error={data.error} id={data.id} />;
 });
 
 export default memo<{ data: ChatMessage }>(({ data }) => (
