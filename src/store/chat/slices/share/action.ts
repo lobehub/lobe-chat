@@ -3,9 +3,11 @@ import { produce } from 'immer';
 import { StateCreator } from 'zustand/vanilla';
 
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
-import { shareGPTService } from '@/services/share';
+import { shareService } from '@/services/share';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 import { ShareGPTConversation } from '@/types/share';
 
 import { chatSelectors } from '../../selectors';
@@ -47,7 +49,7 @@ export interface ShareAction {
     avatar?: string;
     withPluginInfo?: boolean;
     withSystemRole?: boolean;
-  }) => void;
+  }) => Promise<void>;
 }
 
 export const chatShare: StateCreator<ChatStore, [['zustand/devtools', never]], [], ShareAction> = (
@@ -56,8 +58,8 @@ export const chatShare: StateCreator<ChatStore, [['zustand/devtools', never]], [
 ) => ({
   shareToShareGPT: async ({ withSystemRole, withPluginInfo, avatar }) => {
     const messages = chatSelectors.currentChats(get());
-    const config = agentSelectors.currentAgentConfig(useSessionStore.getState());
-    const meta = agentSelectors.currentAgentMeta(useSessionStore.getState());
+    const config = agentSelectors.currentAgentConfig(useAgentStore.getState());
+    const meta = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
 
     const defaultMsg: ShareGPTConversation['items'] = [];
     const showSystemRole = withSystemRole && !!config.systemRole;
@@ -79,7 +81,7 @@ export const chatShare: StateCreator<ChatStore, [['zustand/devtools', never]], [
             draft.push({ from: 'gpt', value: i.content });
             break;
           }
-          case 'function': {
+          case 'tool': {
             if (withPluginInfo)
               draft.push(
                 PLUGIN_INFO({
@@ -102,7 +104,7 @@ export const chatShare: StateCreator<ChatStore, [['zustand/devtools', never]], [
 
     set({ shareLoading: true });
 
-    const res = await shareGPTService.createShareGPTUrl({
+    const res = await shareService.createShareGPTUrl({
       avatarUrl: avatar || DEFAULT_USER_AVATAR_URL,
       items: shareMsgs,
     });

@@ -1,8 +1,8 @@
-import { dataSync } from '@/database/core';
-import { GlobalServerConfig } from '@/types/settings';
-import { StartDataSyncParams } from '@/types/sync';
+import { DeepPartial } from 'utility-types';
 
-import { API_ENDPOINTS } from './_url';
+import { edgeClient } from '@/libs/trpc/client';
+import { LobeAgentConfig } from '@/types/agent';
+import { GlobalServerConfig } from '@/types/serverConfig';
 
 const VERSION_URL = 'https://registry.npmmirror.com/@lobehub/chat';
 
@@ -18,22 +18,11 @@ class GlobalService {
   };
 
   getGlobalConfig = async (): Promise<GlobalServerConfig> => {
-    const res = await fetch(API_ENDPOINTS.config);
-
-    return res.json();
+    return edgeClient.config.getGlobalConfig.query();
   };
 
-  enabledSync = async (params: StartDataSyncParams) => {
-    if (typeof window === 'undefined') return false;
-
-    await dataSync.startDataSync(params);
-    return true;
-  };
-
-  disableSync = async () => {
-    await dataSync.disconnect();
-
-    return false;
+  getDefaultAgentConfig = async (): Promise<DeepPartial<LobeAgentConfig>> => {
+    return edgeClient.config.getDefaultAgentConfig.query();
   };
 }
 

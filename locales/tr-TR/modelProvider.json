@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Azure'un API versiyonu, YYYY-AA-GG formatına uygun, [en son versiyonu](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) kontrol edin",
+      "fetch": "Listeyi al",
+      "title": "Azure Api Versiyonu"
+    },
+    "empty": "İlk modeli eklemek için model kimliğini girin",
+    "endpoint": {
+      "desc": "Azure portalından kaynağı kontrol ederken, bu değeri \"Anahtarlar ve uç noktalar\" bölümünde bulabilirsiniz",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure API Adresi"
+    },
+    "modelListPlaceholder": "Dağıttığınız OpenAI modelini seçin veya ekleyin",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure portalından kaynağı kontrol ederken, bu değeri \"Anahtarlar ve uç noktalar\" bölümünde bulabilirsiniz. KEY1 veya KEY2 kullanabilirsiniz",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "AWS Access Key Id girin",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "AccessKeyId / SecretAccessKey'in doğru girilip girilmediğini test edin"
+    },
+    "region": {
+      "desc": "AWS Bölgesi girin",
+      "placeholder": "AWS Region",
+      "title": "AWS Bölgesi"
+    },
+    "secretAccessKey": {
+      "desc": "AWS Secret Access Key girin",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Özel Bölge",
+      "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama bilgilerinizi kaydetmez.",
+      "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Proxy adresinin doğru girilip girilmediğini test edin",
+      "title": "Bağlantı Kontrolü"
+    },
+    "customModelName": {
+      "desc": "Özel modeller ekleyin, birden fazla model için virgül (,) kullanın",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Özel Model Adları"
+    },
+    "download": {
+      "desc": "Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续",
+      "remainingTime": "剩余时间",
+      "speed": "下载速度",
+      "title": "正在下载模型 {{model}} "
+    },
+    "endpoint": {
+      "desc": "Ollama arayüz proxy adresini girin, yerel olarak belirtilmemişse boş bırakılabilir",
+      "title": "Arayüz Proxy Adresi"
+    },
+    "setup": {
+      "cors": {
+        "description": "Ollama'nın normal şekilde çalışabilmesi için, tarayıcı güvenlik kısıtlamaları nedeniyle Ollama'nın çapraz kaynak isteklerine izin verilmesi gerekmektedir.",
+        "linux": {
+          "env": "[Service] bölümüne `Environment` ekleyerek OLLAMA_ORIGINS ortam değişkenini ekleyin:",
+          "reboot": "systemd'yi yeniden yükleyin ve Ollama'yı yeniden başlatın",
+          "systemd": "systemd'yi çağırarak ollama servisini düzenleyin:"
+        },
+        "macos": "Lütfen 'Terminal' uygulamasını açın ve aşağıdaki komutu yapıştırıp Enter tuşuna basın",
+        "reboot": "Komut tamamlandıktan sonra Ollama servisini yeniden başlatın",
+        "title": "Ollama'nın çapraz kaynak erişimine izin vermek için yapılandırma",
+        "windows": "Windows'ta, 'Control Panel'ı tıklayarak sistem ortam değişkenlerini düzenleyin. Kullanıcı hesabınıza * değerinde 'OLLAMA_ORIGINS' adında bir ortam değişkeni oluşturun ve 'OK/Apply' düğmesine tıklayarak kaydedin"
+      },
+      "install": {
+        "description": "Ollama'nın açık olduğundan emin olun. Ollama'yı indirmediyseniz, lütfen resmi web sitesine giderek <1>indirin</1>.",
+        "docker": "Docker kullanmayı tercih ediyorsanız, Ollama resmi Docker görüntüsünü aşağıdaki komutla çekebilirsiniz:",
+        "linux": {
+          "command": "Aşağıdaki komutları kullanarak yükleyin:",
+          "manual": "Ya da, <1>Linux için el ile kurulum kılavuzuna</1> bakarak kendiniz kurabilirsiniz"
+        },
+        "title": "Yerel olarak Ollama uygulamasını kurun ve başlatın",
+        "windowsTab": "Windows (Önizleme)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "取消下载",
+      "confirm": "下载",
+      "description": "输入你的 Ollama 模型标签，完成即可继续会话",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "开始下载...",
+      "title": "下载指定的 Ollama 模型"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Sıfır Bir"
+  },
+  "zhipu": {
+    "title": "Zeka Haritası"
+  }
+}

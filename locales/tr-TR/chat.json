@@ -4,23 +4,31 @@
   },
   "agentDefaultMessage": "Merhaba, Ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilirsiniz veya [Asistan Ayarları](/chat/settings#session={{id}}) sayfasına giderek bilgilerimi tamamlayabilirsiniz.",
   "agentDefaultMessageWithSystemRole": "Merhaba, Ben **{{name}}**, {{systemRole}}. Hemen sohbet etmeye başlayalım!",
+  "agentsAndConversations": "Ajanlar ve Konuşmalar",
   "backToBottom": "En alta git",
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
+  "confirmRemoveSessionSuccess": "Oturum başarıyla kaldırıldı",
   "defaultAgent": "Varsayılan Asistan",
   "defaultList": "Varsayılan Liste",
   "defaultSession": "Varsayılan Asistan",
+  "duplicateSession": {
+    "loading": "Kopyalanıyor...",
+    "success": "Kopyalama başarılı",
+    "title": "{{title}} Kopyası"
+  },
   "duplicateTitle": "{{title}} Kopya",
+  "emptyAgent": "Asistan yok",
   "historyRange": "Geçmiş Aralığı",
   "inbox": {
-    "defaultMessage": "Merhaba, ben sanal asistanınızım. Bana herhangi bir şey sorabilirsiniz ve size cevap vermek için elimden geleni yapacağım. Daha profesyonel veya özelleştirilmiş bir asistana ihtiyacınız varsa, özel bir asistan oluşturmak için `+` simgesine tıklayabilirsiniz.",
     "desc": "Beyin fırtınasını başlatın ve yaratıcı düşünmeye başlayın. Sanal asistanınız burada, her konuda sizinle iletişim kurmak için hazır.",
     "title": "Sohbet Et"
   },
   "input": {
+    "addAi": "Bir AI mesajı ekleyin",
+    "addUser": "Bir kullanıcı mesajı ekleyin",
     "more": "Daha fazla",
-    "onlyAdd": "Sadece mesaj ekle",
     "send": "Gönder",
     "sendWithCmdEnter": "{{meta}} + Enter tuşuna basarak gönder",
     "sendWithEnter": "Enter tuşuna basarak gönder",
@@ -42,13 +50,17 @@
   "sessionGroup": {
     "config": "Grup Yönetimi",
     "confirmRemoveGroupAlert": "Bu grup silinecek, silindikten sonra bu grubun yardımcıları varsayılan listeye taşınacak, işleminizi onaylıyor musunuz?",
+    "createAgentSuccess": "Yardımcı oluşturuldu",
     "createGroup": "Yeni Grup Ekle",
     "createSuccess": "Oluşturma Başarılı",
+    "creatingAgent": "Yardımcı oluşturuluyor...",
     "inputPlaceholder": "Grup adını girin...",
     "moveGroup": "Gruba Taşı",
     "newGroup": "Yeni Grup",
     "rename": "Grup Adını Değiştir",
     "renameSuccess": "Yeniden Adlandırma Başarılı",
+    "sortSuccess": "Yeniden sıralama başarılı",
+    "sorting": "Grup sıralaması güncelleniyor...",
     "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
   },
   "shareModal": {
@@ -72,6 +84,7 @@
     "chats": "Sohbetler",
     "rest": "Kalan",
     "systemRole": "Sistem Rolü",
+    "title": "Bağlam Detayları",
     "tools": "Araçlar",
     "total": "Toplam",
     "used": "Kullanılan"
@@ -91,6 +104,8 @@
     "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
     "defaultTitle": "Konu",
+    "duplicateLoading": "Konu kopyalanıyor...",
+    "duplicateSuccess": "Konu başarıyla kopyalandı",
     "guide": {
       "desc": "Mevcut oturumu geçmiş konu olarak kaydetmek ve yeni bir oturum başlatmak için sol taraftaki düğmeye tıklayın",
       "title": "Konu Listesi"
@@ -112,9 +127,12 @@
   },
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
+    "actionFiletip": "Dosyayı Yükle",
     "actionTooltip": "Resim Yükle",
     "disabled": "Geçerli model görüntü tanıma desteğini desteklemiyor, lütfen modeli değiştirerek kullanın",
     "dragDesc": "Dosyaları buraya sürükleyip bırakın, birden fazla resim yüklemeyi destekler. Resimleri doğrudan göndermek için Shift tuşunu basılı tutun.",
+    "dragFileDesc": "Birden fazla resim ve dosya yüklemeyi desteklemek için resimleri ve dosyaları buraya sürükleyin. Bir görüntüyü veya dosyayı doğrudan göndermek için Shift tuşunu basılı tutun.",
+    "dragFileTitle": "Dosyayı Yükle",
     "dragTitle": "Resim Yükle"
   }
 }

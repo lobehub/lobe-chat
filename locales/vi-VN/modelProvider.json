@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Phiên bản API của Azure, tuân theo định dạng YYYY-MM-DD, tham khảo [phiên bản mới nhất](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Lấy danh sách",
+      "title": "Phiên bản API Azure"
+    },
+    "empty": "Vui lòng nhập ID mô hình để thêm mô hình đầu tiên",
+    "endpoint": {
+      "desc": "Kiểm tra tài nguyên từ cổng Azure, bạn có thể tìm thấy giá trị này trong phần 'Khóa và điểm cuối'",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Địa chỉ API Azure"
+    },
+    "modelListPlaceholder": "Chọn hoặc thêm mô hình OpenAI bạn đã triển khai",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Kiểm tra tài nguyên từ cổng Azure, bạn có thể tìm thấy giá trị này trong phần 'Khóa và điểm cuối'. Có thể sử dụng KEY1 hoặc KEY2",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Nhập AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Kiểm tra AccessKeyId / SecretAccessKey có được nhập chính xác không"
+    },
+    "region": {
+      "desc": "Nhập AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Nhập AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Vùng Dịch vụ Tùy chỉnh",
+      "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
+      "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",
+      "title": "Kiểm tra tính liên thông"
+    },
+    "customModelName": {
+      "desc": "Thêm mô hình tùy chỉnh, sử dụng dấu phẩy (,) để tách biệt nhiều mô hình",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Tên mô hình tùy chỉnh"
+    },
+    "download": {
+      "desc": "Ollama đang tải xuống mô hình này, vui lòng không đóng trang này. Quá trình tải xuống sẽ tiếp tục từ nơi đã bị gián đoạn khi tải lại",
+      "remainingTime": "Thời gian còn lại",
+      "speed": "Tốc độ tải xuống",
+      "title": "Đang tải mô hình {{model}}"
+    },
+    "endpoint": {
+      "desc": "Nhập địa chỉ proxy API của Ollama, có thể để trống nếu không chỉ định cụ thể",
+      "title": "Địa chỉ proxy API"
+    },
+    "setup": {
+      "cors": {
+        "description": "Do vấn đề về an ninh trình duyệt, bạn cần cấu hình CORS cho Ollama trước khi có thể sử dụng bình thường.",
+        "linux": {
+          "env": "Trong phần [Service], thêm `Environment`, thêm biến môi trường OLLAMA_ORIGINS:",
+          "reboot": "Tải lại systemd và khởi động lại Ollama",
+          "systemd": "Gọi systemd để chỉnh sửa dịch vụ ollama:"
+        },
+        "macos": "Vui lòng mở ứng dụng «Terminal», dán lệnh sau và nhấn Enter để chạy",
+        "reboot": "Vui lòng khởi động lại dịch vụ Ollama sau khi hoàn thành",
+        "title": "Cấu hình Ollama cho phép truy cập từ xa",
+        "windows": "Trên Windows, nhấp vào «Control Panel», vào chỉnh sửa biến môi trường hệ thống. Tạo biến môi trường tên là «OLLAMA_ORIGINS» cho tài khoản người dùng của bạn, giá trị là * , nhấp vào «OK/Áp dụng» để lưu lại"
+      },
+      "install": {
+        "description": "Vui lòng xác nhận rằng bạn đã bật Ollama. Nếu chưa tải Ollama, vui lòng truy cập trang web chính thức để <1>tải xuống</1>",
+        "docker": "Nếu bạn muốn sử dụng Docker, Ollama cũng cung cấp hình ảnh Docker chính thức, bạn có thể kéo theo lệnh sau:",
+        "linux": {
+          "command": "Cài đặt bằng lệnh sau:",
+          "manual": "Hoặc bạn cũng có thể tham khảo <1>Hướng dẫn cài đặt thủ công trên Linux</1> để tự cài đặt"
+        },
+        "title": "Cài đặt và mở Ollama ứng dụng trên máy cục bộ",
+        "windowsTab": "Windows (Bản xem trước)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Hủy tải xuống",
+      "confirm": "Tải xuống",
+      "description": "Nhập nhãn mô hình Ollama của bạn để tiếp tục phiên làm việc",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Bắt đầu tải xuống...",
+      "title": "Tải xuống mô hình Ollama đã chỉ định"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Zero One"
+  },
+  "zhipu": {
+    "title": "Zhipu"
+  }
+}

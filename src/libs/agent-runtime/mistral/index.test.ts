@@ -2,20 +2,20 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeMistralAI } from './index';
 
 const provider = 'mistral';
 const defaultBaseURL = 'https://api.mistral.ai/v1';
-const bizErrorType = 'MistralBizError';
-const invalidErrorType = 'InvalidMistralAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobeMistralAI;
+let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
   instance = new LobeMistralAI({ apiKey: 'test' });
@@ -75,14 +75,17 @@ describe('LobeMistralAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'open-mistral-7b',
-        stream: true,
-        temperature: 0.7,
-        top_p: 1,
-      })
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'open-mistral-7b',
+          stream: true,
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
     });
 
@@ -105,16 +108,19 @@ describe('LobeMistralAI', () => {
       });
 
       // Assert
-      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith({
-        max_tokens: 1024,
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'open-mistral-7b',
-        stream: true,
-        temperature: 0.7,
-        top_p: 1,
-      })
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        {
+          max_tokens: 1024,
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'open-mistral-7b',
+          stream: true,
+          temperature: 0.7,
+          top_p: 1,
+        },
+        { headers: { Accept: '*/*' } },
+      );
       expect(result).toBeInstanceOf(Response);
-    });   
+    });
 
     describe('Error', () => {
       it('should return MistralBizError with an openai error response when OpenAI.APIError is thrown', async () => {
@@ -278,59 +284,6 @@ describe('LobeMistralAI', () => {
             },
           });
         }
-      });
-    });
-
-    describe('LobeMistralAI chat with callback and headers', () => {
-      it('should handle callback and headers correctly', async () => {
-        // 模拟 chat.completions.create 方法返回一个可读流
-        const mockCreateMethod = vi
-          .spyOn(instance['client'].chat.completions, 'create')
-          .mockResolvedValue(
-            new ReadableStream({
-              start(controller) {
-                controller.enqueue({
-                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
-                  object: 'chat.completion.chunk',
-                  created: 1709125675,
-                  model: 'open-mistral-7b',
-                  system_fingerprint: 'fp_86156a94a0',
-                  choices: [
-                    { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
-                  ],
-                });
-                controller.close();
-              },
-            }) as any,
-          );
-
-        // 准备 callback 和 headers
-        const mockCallback: ChatStreamCallbacks = {
-          onStart: vi.fn(),
-          onToken: vi.fn(),
-        };
-        const mockHeaders = { 'Custom-Header': 'TestValue' };
-
-        // 执行测试
-        const result = await instance.chat(
-          {
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'open-mistral-7b',
-            temperature: 0,
-          },
-          { callback: mockCallback, headers: mockHeaders },
-        );
-
-        // 验证 callback 被调用
-        await result.text(); // 确保流被消费
-        expect(mockCallback.onStart).toHaveBeenCalled();
-        expect(mockCallback.onToken).toHaveBeenCalledWith('hello');
-
-        // 验证 headers 被正确传递
-        expect(result.headers.get('Custom-Header')).toEqual('TestValue');
-
-        // 清理
-        mockCreateMethod.mockRestore();
       });
     });
 

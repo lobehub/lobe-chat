@@ -1,24 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modelo personalizado, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
-      "file": "Este modelo suporta o carregamento de arquivos para leitura e reconhecimento",
-      "functionCall": "Este modelo suporta chamadas de função (Function Call)",
-      "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão",
-      "vision": "Este modelo suporta reconhecimento visual"
-    }
-  },
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
   "appInitializing": "LobeChat inicializando, por favor aguarde...",
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
+  "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
+  "blog": "Blog de Produtos",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
   "close": "Fechar",
   "copy": "Copiar",
   "copyFail": "Falha ao copiar",
   "copySuccess": "Cópia bem-sucedida",
+  "dataStatistics": {
+    "messages": "Mensagens",
+    "sessions": "Sessões",
+    "today": "Hoje",
+    "topics": "Tópicos"
+  },
   "defaultAgent": "Assistente padrão",
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
@@ -35,9 +34,15 @@
     "globalSetting": "Exportar configurações globais"
   },
   "feedback": "Feedback e sugestões",
+  "follow": "Siga-nos no {{name}}",
+  "fullscreen": "Modo de Tela Cheia",
   "historyRange": "Intervalo de histórico",
   "import": "Importar configuração",
   "importModal": {
+    "error": {
+      "desc": "Desculpe, ocorreu um erro durante o processo de importação de dados. Por favor, tente importar novamente ou <1>envie um problema</1>, e nós iremos ajudá-lo a resolver o problema o mais rápido possível.",
+      "title": "Falha na importação de dados"
+    },
     "finish": {
       "onlySettings": "Configurações do sistema importadas com sucesso",
       "start": "Começar a usar",
@@ -45,6 +50,7 @@
       "title": "Importação de dados concluída"
     },
     "loading": "Importando dados, por favor aguarde...",
+    "preparing": "Preparando módulo de importação de dados...",
     "result": {
       "added": "Importação bem-sucedida",
       "errors": "Erros na importação",
@@ -55,8 +61,14 @@
       "topics": "Tópicos",
       "type": "Tipo de dados"
     },
-    "title": "Importar dados"
+    "title": "Importar dados",
+    "uploading": {
+      "desc": "O arquivo atual é grande, estamos fazendo o upload...",
+      "restTime": "Tempo restante",
+      "speed": "Velocidade de upload"
+    }
   },
+  "installPWA": "Instalar aplicativo de navegador",
   "lang": {
     "ar": "árabe",
     "bg-BG": "Búlgaro",
@@ -95,29 +107,14 @@
     "zh-TW": "Chinês tradicional"
   },
   "layoutInitializing": "Inicializando layout...",
-  "modelProvider": {
-    "anthropic": "Antropogênico",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot IA",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01. IA ZeroOne",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Sem descrição",
   "oauth": "Login SSO",
+  "officialSite": "Site Oficial",
   "ok": "OK",
   "password": "Senha",
   "pin": "Fixar",
   "pinOff": "Desafixar",
+  "privacy": "Política de Privacidade",
   "regenerate": "Regenerar",
   "rename": "Renomear",
   "reset": "Redefinir",
@@ -162,6 +159,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Descobrir",
+    "me": "eu",
     "setting": "Configuração"
   },
   "telemetry": {
@@ -172,10 +170,28 @@
     "title": "Ajude o LobeChat a melhorar"
   },
   "temp": "Temporário",
+  "terms": "Termos de Serviço",
   "updateAgent": "Atualizar informações do assistente",
   "upgradeVersion": {
     "action": "Atualizar",
     "hasNew": "Nova atualização disponível",
     "newVersion": "Nova versão disponível: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Usuário Anônimo",
+    "billing": "Gerenciamento de faturas",
+    "data": "Armazenamento de dados",
+    "defaultNickname": "Usuário da Comunidade",
+    "discord": "Suporte da Comunidade",
+    "docs": "Documentação",
+    "email": "Suporte por E-mail",
+    "feedback": "Feedback e Sugestões",
+    "help": "Central de Ajuda",
+    "moveGuide": "O botão de configurações foi movido para cá",
+    "plans": "Planos de Assinatura",
+    "preview": "Versão de visualização",
+    "profile": "Gerenciamento de Conta",
+    "setting": "Configurações do Aplicativo",
+    "usages": "Estatísticas de Uso"
   }
 }

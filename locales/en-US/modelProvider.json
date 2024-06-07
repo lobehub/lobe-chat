@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Azure API version, follow the format YYYY-MM-DD, check the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Fetch List",
+      "title": "Azure API Version"
+    },
+    "empty": "Please enter a model ID to add the first model",
+    "endpoint": {
+      "desc": "When checking resources from the Azure portal, you can find this value in the 'Keys and Endpoints' section",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure API Address"
+    },
+    "modelListPlaceholder": "Select or add the OpenAI model you deployed",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "When checking resources from the Azure portal, you can find this value in the 'Keys and Endpoints' section. You can use KEY1 or KEY2",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Enter AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Test if AccessKeyId / SecretAccessKey are filled in correctly"
+    },
+    "region": {
+      "desc": "Enter AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Enter AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Custom Service Region",
+      "description": "Enter your AWS AccessKeyId / SecretAccessKey to start the session. The app will not store your authentication configuration",
+      "title": "Use Custom Bedrock Authentication Information"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Test if the proxy address is correctly filled in",
+      "title": "Connectivity Check"
+    },
+    "customModelName": {
+      "desc": "Add custom models, separate multiple models with commas",
+      "placeholder": "vicuna, llava, codellama, llama2:13b-text",
+      "title": "Custom model name"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
+    },
+    "endpoint": {
+      "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
+      "title": "Interface proxy address"
+    },
+    "setup": {
+      "cors": {
+        "description": "Due to browser security restrictions, you need to configure cross-origin settings for Ollama to function properly.",
+        "linux": {
+          "env": "Add `Environment` under [Service] section, and set the OLLAMA_ORIGINS environment variable:",
+          "reboot": "Reload systemd and restart Ollama.",
+          "systemd": "Invoke systemd to edit the ollama service:"
+        },
+        "macos": "Open the 'Terminal' application, paste the following command, and press Enter to run it.",
+        "reboot": "Please restart the Ollama service after completion.",
+        "title": "Configure Ollama for Cross-Origin Access",
+        "windows": "On Windows, go to 'Control Panel' and edit system environment variables. Create a new environment variable named 'OLLAMA_ORIGINS' for your user account, set the value to '*', and click 'OK/Apply' to save."
+      },
+      "install": {
+        "description": "Please make sure you have enabled Ollama. If you haven't downloaded Ollama yet, please visit the official website <1>to download</1>.",
+        "docker": "If you prefer using Docker, Ollama also provides an official Docker image. You can pull it using the following command:",
+        "linux": {
+          "command": "Install using the following command:",
+          "manual": "Alternatively, you can refer to the <1>Linux Manual Installation Guide</1> for manual installation."
+        },
+        "title": "Install and Start Ollama Locally",
+        "windowsTab": "Windows (Preview)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Zero One Everything"
+  },
+  "zhipu": {
+    "title": "Zhipu"
+  }
+}

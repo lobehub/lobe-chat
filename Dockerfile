@@ -19,13 +19,36 @@ RUN corepack enable
 WORKDIR /app
 
 COPY package.json ./
+COPY .npmrc ./
 
 # If you want to build docker in China
 # RUN npm config set registry https://registry.npmmirror.com/
 RUN pnpm i
 
 COPY . .
-RUN pnpm run build:docker # run build standalone for docker version
+
+ENV NEXT_PUBLIC_BASE_PATH ""
+
+# Sentry
+ENV NEXT_PUBLIC_SENTRY_DSN ""
+ENV SENTRY_ORG ""
+ENV SENTRY_PROJECT ""
+
+# Posthog
+ENV NEXT_PUBLIC_ANALYTICS_POSTHOG ""
+ENV NEXT_PUBLIC_POSTHOG_KEY ""
+ENV NEXT_PUBLIC_POSTHOG_HOST ""
+
+# Umami
+ENV NEXT_PUBLIC_ANALYTICS_UMAMI ""
+ENV NEXT_PUBLIC_UMAMI_SCRIPT_URL ""
+ENV NEXT_PUBLIC_UMAMI_WEBSITE_ID ""
+
+# Node
+ENV NODE_OPTIONS "--max-old-space-size=8192"
+
+# run build standalone for docker version
+RUN npm run build:docker
 
 ## Production image, copy all the files and run next
 FROM base AS runner
@@ -58,13 +81,13 @@ ENV PORT=3210
 
 # General Variables
 ENV ACCESS_CODE ""
-ENV CUSTOM_MODELS ""
 
 ENV API_KEY_SELECT_MODE ""
 
 # OpenAI
 ENV OPENAI_API_KEY ""
 ENV OPENAI_PROXY_URL ""
+ENV OPENAI_MODEL_LIST ""
 
 # Azure OpenAI
 ENV USE_AZURE_OPENAI ""
@@ -82,6 +105,7 @@ ENV MOONSHOT_API_KEY ""
 
 # Ollama
 ENV OLLAMA_PROXY_URL ""
+ENV OLLAMA_MODEL_LIST ""
 
 # Perplexity
 ENV PERPLEXITY_API_KEY ""
@@ -94,12 +118,21 @@ ENV MISTRAL_API_KEY ""
 
 # OpenRouter
 ENV OPENROUTER_API_KEY ""
-ENV OPENROUTER_CUSTOM_MODELS ""
+ENV OPENROUTER_MODEL_LIST ""
 
 # 01.AI
 ENV ZEROONE_API_KEY ""
 
 # TogetherAI
 ENV TOGETHERAI_API_KEY ""
+
+# Minimax
+ENV MINIMAX_API_KEY ""
+
+# DeepSeek
+ENV DEEPSEEK_API_KEY ""
+
+# Qwen
+ENV QWEN_API_KEY ""
 
 CMD ["node", "server.js"]

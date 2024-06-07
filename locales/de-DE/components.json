@@ -1,0 +1,16 @@
+{
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Benutzerdefiniertes Modell, standardmäßig unterstützt es sowohl Funktionsaufrufe als auch visuelle Erkennung. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Gegebenheiten.",
+      "file": "Dieses Modell unterstützt das Hochladen von Dateien und deren Erkennung.",
+      "functionCall": "Dieses Modell unterstützt Funktionsaufrufe.",
+      "tokens": "Dieses Modell unterstützt maximal {{tokens}} Tokens pro Sitzung.",
+      "vision": "Dieses Modell unterstützt die visuelle Erkennung."
+    },
+    "removed": "Das Modell wurde aus der Liste entfernt. Wenn Sie die Auswahl aufheben, wird es automatisch entfernt."
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "Kein aktiviertes Modell. Bitte gehen Sie zu den Einstellungen, um es zu aktivieren.",
+    "provider": "Anbieter"
+  }
+}

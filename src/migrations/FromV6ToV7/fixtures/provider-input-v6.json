@@ -1,0 +1,103 @@
+{
+  "exportType": "settings",
+  "state": {
+    "settings": {
+      "defaultAgent": {
+        "config": {
+          "autoCreateTopicThreshold": 2,
+          "displayMode": "chat",
+          "enableAutoCreateTopic": true,
+          "historyCount": 1,
+          "model": "gpt-4-vision-preview",
+          "params": {
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
+            "temperature": 0.6,
+            "top_p": 1
+          },
+          "plugins": ["realtime-weather", "steam"],
+          "provider": "openai",
+          "systemRole": "",
+          "tts": {
+            "showAllLocaleVoice": false,
+            "sttLocale": "auto",
+            "ttsService": "openai",
+            "voice": { "openai": "alloy" }
+          }
+        },
+        "meta": {}
+      },
+      "password": "213455",
+      "languageModel": {
+        "anthropic": { "apiKey": "anthropic", "enabled": false, "endpoint": "anthropic-baseURL" },
+        "azure": {
+          "apiKey": "asbdasd",
+          "apiVersion": "2024-02-15-preview",
+          "enabled": true,
+          "endpoint": "https://api.chatanywhere.com.cn"
+        },
+        "bedrock": {
+          "accessKeyId": "accessKeyId",
+          "enabled": false,
+          "region": "us-east-1",
+          "secretAccessKey": "secretAccessKey"
+        },
+        "google": { "apiKey": "google", "enabled": false, "endpoint": "google-baseURL" },
+        "deepseek": { "apiKey": "deepseek", "enabled": true },
+        "groq": { "apiKey": "groq", "enabled": false, "endpoint": "groq-baseURL" },
+        "mistral": { "apiKey": "mistral", "enabled": false },
+        "moonshot": { "apiKey": "moonshot", "enabled": false },
+        "ollama": { "enabled": false, "endpoint": "http://1237.0.0.1:3245" },
+        "openrouter": {
+          "apiKey": "openrouter-key",
+          "enabled": true,
+          "customModelCards": [
+            {
+              "displayName": "01-ai/yi-34b-chat",
+              "enabled": true,
+              "id": "01-ai/yi-34b-chat"
+            },
+            {
+              "displayName": "huggingfaceh4/zephyr-7b-beta",
+              "enabled": true,
+              "id": "huggingfaceh4/zephyr-7b-beta"
+            }
+          ]
+        },
+        "perplexity": {
+          "apiKey": "perplexity",
+          "enabled": false,
+          "endpoint": "perplexity-baseURL"
+        },
+        "togetherai": { "apiKey": "togetherai", "enabled": false },
+        "zeroone": { "apiKey": "zeroone", "enabled": false },
+        "zhipu": { "apiKey": "zhipu", "enabled": false },
+        "openai": {
+          "apiKey": "openai",
+          "endpoint": "endpoint",
+          "enabled": true,
+          "customModelCards": [
+            {
+              "displayName": "deerercsds",
+              "enabled": true,
+              "id": "deerercsds"
+            }
+          ]
+        }
+      },
+      "sync": { "webrtc": { "enabled": false } },
+      "tool": { "dalle": { "autoGenerate": false } },
+      "tts": {
+        "openAI": { "sttModel": "whisper-1", "ttsModel": "tts-1" },
+        "sttAutoStop": true,
+        "sttServer": "openai"
+      },
+      "fontSize": 14,
+      "language": "auto",
+      "themeMode": "auto",
+      "primaryColor": "",
+      "neutralColor": ""
+    }
+  },
+  "version": 6
+}

@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Версия API Azure, следующая формату ГГГГ-ММ-ДД, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Получить список",
+      "title": "Версия Azure API"
+    },
+    "empty": "Введите идентификатор модели, чтобы добавить первую модель",
+    "endpoint": {
+      "desc": "Можно найти в разделе «Ключи и конечные точки» при проверке ресурса в портале Azure",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Адрес Azure API"
+    },
+    "modelListPlaceholder": "Выберите или добавьте модель OpenAI, которую вы развернули",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Можно найти в разделе «Ключи и конечные точки» при проверке ресурса в портале Azure. Можно использовать KEY1 или KEY2",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Введите ваш AWS Access Key ID",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key ID"
+    },
+    "checker": {
+      "desc": "Проверить правильность заполнения AccessKeyId/SecretAccessKey"
+    },
+    "region": {
+      "desc": "Введите ваш AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Введите ваш AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Пользовательский регион обслуживания",
+      "description": "Введите свой ключ доступа AWS AccessKeyId / SecretAccessKey, чтобы начать сеанс. Приложение не будет сохранять вашу конфигурацию аутентификации",
+      "title": "Использовать пользовательскую информацию аутентификации Bedrock"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Проверить правильность адреса прокси",
+      "title": "Проверка связности"
+    },
+    "customModelName": {
+      "desc": "Добавить кастомные модели, разделяя их через запятую (,)",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Название кастомных моделей"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
+    },
+    "endpoint": {
+      "desc": "Введите адрес прокси-интерфейса Ollama, если локально не указано иное, можете оставить пустым",
+      "title": "Адрес прокси-интерфейса"
+    },
+    "setup": {
+      "cors": {
+        "description": "Из-за ограничений безопасности браузера вам необходимо настроить кросс-доменные запросы для правильной работы Ollama.",
+        "linux": {
+          "env": "Добавьте переменную среды OLLAMA_ORIGINS в разделе [Service],",
+          "reboot": "Перезагрузите systemd и перезапустите Ollama.",
+          "systemd": "Вызовите редактирование службы ollama в systemd:"
+        },
+        "macos": "Откройте приложение \"Терминал\", вставьте и выполните следующую команду, затем нажмите Enter.",
+        "reboot": "Пожалуйста, перезагрузите службу Ollama после завершения выполнения команды.",
+        "title": "Настройка разрешений на кросс-доменный доступ для Ollama",
+        "windows": "На Windows откройте \"Панель управления\", зайдите в настройки системных переменных. Создайте новую переменную среды для вашей учетной записи с именем \"OLLAMA_ORIGINS\" и значением * , затем нажмите \"OK/Применить\" для сохранения."
+      },
+      "install": {
+        "description": "Пожалуйста, убедитесь, что вы установили Ollama. Если вы еще не скачали Ollama, перейдите на официальный сайт <1> для загрузки</1>",
+        "docker": "Если вы предпочитаете использовать Docker, Ollama также предоставляет официальное образ Docker. Вы можете загрузить его с помощью следующей команды:",
+        "linux": {
+          "command": "Установите с помощью следующей команды:",
+          "manual": "Или вы можете установить его вручную, следуя <1>руководству по установке на Linux</1>."
+        },
+        "title": "Установка и запуск приложения Ollama локально",
+        "windowsTab": "Windows (превью)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Цифровая Вселенная"
+  },
+  "zhipu": {
+    "title": "Zhipu"
+  }
+}

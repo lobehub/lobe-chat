@@ -3,16 +3,17 @@ import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 // 引入模块以便于对函数进行spy
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
+import officalOpenAIModels from './fixtures/openai-models.json';
 import { LobeOpenAI } from './index';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
 describe('LobeOpenAI', () => {
-  let instance: LobeOpenAI;
+  let instance: LobeOpenAICompatibleRuntime;
 
   beforeEach(() => {
     instance = new LobeOpenAI({ apiKey: 'test' });
@@ -21,58 +22,11 @@ describe('LobeOpenAI', () => {
     vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
       new ReadableStream() as any,
     );
+    vi.spyOn(instance['client'].models, 'list').mockResolvedValue({ data: [] } as any);
   });
 
   afterEach(() => {
     vi.clearAllMocks();
-  });
-
-  describe('init', () => {
-    it('should correctly initialize with Azure options', () => {
-      const baseURL = 'https://abc.com';
-      const modelName = 'abc';
-      const client = new LobeOpenAI({
-        apiKey: 'test',
-        useAzure: true,
-        baseURL,
-        azureOptions: {
-          apiVersion: '2023-08-01-preview',
-          model: 'abc',
-        },
-      });
-
-      expect(client.baseURL).toEqual(baseURL + '/openai/deployments/' + modelName);
-    });
-
-    describe('initWithAzureOpenAI', () => {
-      it('should correctly initialize with Azure options', () => {
-        const baseURL = 'https://abc.com';
-        const modelName = 'abc';
-        const client = LobeOpenAI.initWithAzureOpenAI({
-          apiKey: 'test',
-          useAzure: true,
-          baseURL,
-          azureOptions: {
-            apiVersion: '2023-08-01-preview',
-            model: 'abc',
-          },
-        });
-
-        expect(client.baseURL).toEqual(baseURL + '/openai/deployments/' + modelName);
-      });
-
-      it('should use default Azure options when not explicitly provided', () => {
-        const baseURL = 'https://abc.com';
-
-        const client = LobeOpenAI.initWithAzureOpenAI({
-          apiKey: 'test',
-          useAzure: true,
-          baseURL,
-        });
-
-        expect(client.baseURL).toEqual(baseURL + '/openai/deployments/');
-      });
-    });
   });
 
   describe('chat', () => {
@@ -236,59 +190,6 @@ describe('LobeOpenAI', () => {
       });
     });
 
-    describe('LobeOpenAI chat with callback and headers', () => {
-      it('should handle callback and headers correctly', async () => {
-        // 模拟 chat.completions.create 方法返回一个可读流
-        const mockCreateMethod = vi
-          .spyOn(instance['client'].chat.completions, 'create')
-          .mockResolvedValue(
-            new ReadableStream({
-              start(controller) {
-                controller.enqueue({
-                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
-                  object: 'chat.completion.chunk',
-                  created: 1709125675,
-                  model: 'gpt-3.5-turbo-0125',
-                  system_fingerprint: 'fp_86156a94a0',
-                  choices: [
-                    { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
-                  ],
-                });
-                controller.close();
-              },
-            }) as any,
-          );
-
-        // 准备 callback 和 headers
-        const mockCallback: ChatStreamCallbacks = {
-          onStart: vi.fn(),
-          onToken: vi.fn(),
-        };
-        const mockHeaders = { 'Custom-Header': 'TestValue' };
-
-        // 执行测试
-        const result = await instance.chat(
-          {
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
-            temperature: 0,
-          },
-          { callback: mockCallback, headers: mockHeaders },
-        );
-
-        // 验证 callback 被调用
-        await result.text(); // 确保流被消费
-        expect(mockCallback.onStart).toHaveBeenCalled();
-        expect(mockCallback.onToken).toHaveBeenCalledWith('hello');
-
-        // 验证 headers 被正确传递
-        expect(result.headers.get('Custom-Header')).toEqual('TestValue');
-
-        // 清理
-        mockCreateMethod.mockRestore();
-      });
-    });
-
     describe('DEBUG', () => {
       it('should call debugStream and return StreamingTextResponse when DEBUG_OPENAI_CHAT_COMPLETION is 1', async () => {
         // Arrange
@@ -328,6 +229,17 @@ describe('LobeOpenAI', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_OPENAI_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should get models', async () => {
+      // mock the models.list method
+      (instance['client'].models.list as Mock).mockResolvedValue({ data: officalOpenAIModels });
+
+      const list = await instance.models();
+
+      expect(list).toMatchSnapshot();
     });
   });
 });

@@ -1,15 +1,17 @@
+'use client';
+
 import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Button } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { isString } from 'lodash-es';
-import { UserCircle, Wand2 } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
 import dynamic from 'next/dynamic';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';
@@ -28,7 +30,7 @@ const AgentMeta = memo(() => {
     s.autocompleteMeta,
     s.autocompleteAllMeta,
   ]);
-  const locale = useGlobalStore(settingsSelectors.currentLanguage);
+  const locale = useUserStore(userGeneralSettingsSelectors.currentLanguage);
   const loading = useStore((s) => s.autocompleteLoading);
   const meta = useStore((s) => s.meta, isEqual);
 
@@ -61,6 +63,7 @@ const AgentMeta = memo(() => {
     return {
       children: (
         <AutoGenerate
+          canAutoGenerate={hasSystemRole}
           loading={loading[item.key as keyof SessionLoadingState]}
           onChange={item.onChange}
           onGenerate={() => {
@@ -74,57 +77,59 @@ const AgentMeta = memo(() => {
     };
   });
 
-  const metaData: ItemGroup = useMemo(
-    () => ({
-      children: [
-        {
-          children: (
-            <EmojiPicker
-              backgroundColor={meta.backgroundColor}
-              locale={locale}
-              onChange={(avatar) => updateMeta({ avatar })}
-              value={meta.avatar}
-            />
-          ),
-          label: t('settingAgent.avatar.title'),
-          minWidth: undefined,
-        },
-        {
-          children: (
-            <BackgroundSwatches
-              backgroundColor={meta.backgroundColor}
-              onChange={(backgroundColor) => updateMeta({ backgroundColor })}
-            />
-          ),
-          label: t('settingAgent.backgroundColor.title'),
-          minWidth: undefined,
-        },
-        ...autocompleteItems,
-      ],
-      extra: (
-        <Tooltip title={t('autoGenerateTooltip', { ns: 'common' })}>
-          <Button
-            disabled={!hasSystemRole}
-            icon={<Icon icon={Wand2} />}
-            loading={Object.values(loading).some((i) => !!i)}
-            onClick={(e: any) => {
-              e.stopPropagation();
+  const metaData: ItemGroup = {
+    children: [
+      {
+        children: (
+          <EmojiPicker
+            backgroundColor={meta.backgroundColor}
+            locale={locale}
+            onChange={(avatar) => updateMeta({ avatar })}
+            value={meta.avatar}
+          />
+        ),
+        label: t('settingAgent.avatar.title'),
+        minWidth: undefined,
+      },
+      {
+        children: (
+          <BackgroundSwatches
+            backgroundColor={meta.backgroundColor}
+            onChange={(backgroundColor) => updateMeta({ backgroundColor })}
+          />
+        ),
+        label: t('settingAgent.backgroundColor.title'),
+        minWidth: undefined,
+      },
+      ...autocompleteItems,
+    ],
+    extra: (
+      <Tooltip
+        title={
+          !hasSystemRole
+            ? t('autoGenerateTooltipDisabled', { ns: 'common' })
+            : t('autoGenerateTooltip', { ns: 'common' })
+        }
+      >
+        <Button
+          disabled={!hasSystemRole}
+          icon={<Icon icon={Wand2} />}
+          loading={Object.values(loading).some((i) => !!i)}
+          onClick={(e: any) => {
+            e.stopPropagation();
 
-              autocompleteAllMeta(true);
-            }}
-            size={'small'}
-          >
-            {t('autoGenerate', { ns: 'common' })}
-          </Button>
-        </Tooltip>
-      ),
-      icon: UserCircle,
-      title: t('settingAgent.title'),
-    }),
-    [autocompleteItems, meta],
-  );
+            autocompleteAllMeta(true);
+          }}
+          size={'small'}
+        >
+          {t('autoGenerate', { ns: 'common' })}
+        </Button>
+      </Tooltip>
+    ),
+    title: t('settingAgent.title'),
+  };
 
-  return <Form items={[metaData]} {...FORM_STYLE} />;
+  return <Form items={[metaData]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />;
 });
 
 export default AgentMeta;

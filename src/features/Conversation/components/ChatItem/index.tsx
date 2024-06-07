@@ -1,24 +1,29 @@
-import { AlertProps, ChatItem } from '@lobehub/ui';
+import { ChatItem } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo, useCallback, useMemo, useState } from 'react';
+import { ReactNode, memo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 
-import ErrorMessageExtra, { getErrorAlertConfig } from '../../Error';
+import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
 import { renderMessages, useAvatarsClick } from '../../Messages';
 import ActionsBar from './ActionsBar';
 import HistoryDivider from './HistoryDivider';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
+  loading: css`
+    opacity: 0.6;
+  `,
   message: css`
     // prevent the textarea too long
     .${prefixCls}-input {
@@ -33,16 +38,15 @@ export interface ChatListItemProps {
 }
 
 const Item = memo<ChatListItemProps>(({ index, id }) => {
-  const fontSize = useGlobalStore((s) => settingsSelectors.currentSettings(s).fontSize);
+  const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const { t } = useTranslation('common');
-  const { styles } = useStyles();
-  const [editing, setEditing] = useState(false);
-  const [type = 'chat'] = useSessionStore((s) => {
-    const config = agentSelectors.currentAgentConfig(s);
+  const { styles, cx } = useStyles();
+  const [type = 'chat'] = useAgentStore((s) => {
+    const config = agentSelectors.currentAgentChatConfig(s);
     return [config.displayMode];
   });
 
-  const meta = useSessionStore(agentSelectors.currentAgentMeta, isEqual);
+  const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
   const item = useChatStore((s) => {
     const chats = chatSelectors.currentChatsWithGuideMessage(meta)(s);
 
@@ -53,10 +57,14 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
 
-  const [loading, updateMessageContent] = useChatStore((s) => [
-    s.chatLoadingId === id,
-    s.modifyMessageContent,
-  ]);
+  const [isMessageLoading, generating, editing, toggleMessageEditing, updateMessageContent] =
+    useChatStore((s) => [
+      chatSelectors.isMessageLoading(id)(s),
+      chatSelectors.isMessageGenerating(id)(s),
+      chatSelectors.isMessageEditing(id)(s),
+      s.toggleMessageEditing,
+      s.modifyMessageContent,
+    ]);
 
   const onAvatarsClick = useAvatarsClick();
 
@@ -83,19 +91,10 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     },
     [item?.role],
   );
+  const error = useErrorContent(item?.error);
 
-  const { t: errorT } = useTranslation('error');
-  const error = useMemo<AlertProps | undefined>(() => {
-    if (!item?.error) return;
-    const messageError = item.error;
-
-    const alertConfig = getErrorAlertConfig(messageError.type);
-
-    return { message: errorT(`response.${messageError.type}` as any), ...alertConfig };
-  }, [item?.error]);
-
-  const enableHistoryDivider = useSessionStore((s) => {
-    const config = agentSelectors.currentAgentConfig(s);
+  const enableHistoryDivider = useAgentStore((s) => {
+    const config = agentSelectors.currentAgentChatConfig(s);
     return (
       config.enableHistoryCount &&
       historyLength > (config.historyCount ?? 0) &&
@@ -108,14 +107,21 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
       <>
         <HistoryDivider enable={enableHistoryDivider} />
         <ChatItem
-          actions={<ActionsBar index={index} setEditing={setEditing} />}
+          actions={
+            <ActionsBar
+              index={index}
+              setEditing={(edit) => {
+                toggleMessageEditing(id, edit);
+              }}
+            />
+          }
           avatar={item.meta}
-          className={styles.message}
+          className={cx(styles.message, isMessageLoading && styles.loading)}
           editing={editing}
           error={error}
           errorMessage={<ErrorMessageExtra data={item} />}
           fontSize={fontSize}
-          loading={loading}
+          loading={generating}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}
@@ -123,10 +129,12 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           onDoubleClick={(e) => {
             if (item.id === 'default' || item.error) return;
             if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
-              setEditing(true);
+              toggleMessageEditing(id, true);
             }
           }}
-          onEditingChange={setEditing}
+          onEditingChange={(edit) => {
+            toggleMessageEditing(id, edit);
+          }}
           placement={type === 'chat' ? (item.role === 'user' ? 'right' : 'left') : 'left'}
           primary={item.role === 'user'}
           renderMessage={(editableContent) => (

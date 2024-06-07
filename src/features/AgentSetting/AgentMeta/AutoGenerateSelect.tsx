@@ -7,12 +7,13 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export interface AutoGenerateInputProps extends SelectProps {
+  canAutoGenerate?: boolean;
   loading?: boolean;
   onGenerate?: () => void;
 }
 
 const AutoGenerateSelect = memo<AutoGenerateInputProps>(
-  ({ loading, onGenerate, value, ...props }) => {
+  ({ loading, onGenerate, value, canAutoGenerate, ...props }) => {
     const { t } = useTranslation('common');
     const theme = useTheme();
 
@@ -25,6 +26,7 @@ const AutoGenerateSelect = memo<AutoGenerateInputProps>(
           onGenerate && (
             <ActionIcon
               active
+              disable={!canAutoGenerate}
               icon={Wand2}
               loading={loading}
               onClick={onGenerate}
@@ -33,7 +35,7 @@ const AutoGenerateSelect = memo<AutoGenerateInputProps>(
                 color: theme.colorInfo,
                 marginRight: -4,
               }}
-              title={t('autoGenerate')}
+              title={!canAutoGenerate ? t('autoGenerateTooltipDisabled') : t('autoGenerate')}
             />
           )
         }

@@ -1,24 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
-      "file": "This model supports file upload for reading and recognition",
-      "functionCall": "This model supports function call.",
-      "tokens": "This model supports a maximum of {{tokens}} tokens per session.",
-      "vision": "This model supports visual recognition."
-    }
-  },
   "about": "About",
   "advanceSettings": "Advanced Settings",
   "appInitializing": "LobeChat is initializing, please wait...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
   "copy": "Copy",
   "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
+  "dataStatistics": {
+    "messages": "Messages",
+    "sessions": "Agents",
+    "today": "Today's New",
+    "topics": "Topics"
+  },
   "defaultAgent": "Default Agent",
   "defaultSession": "Default Agent",
   "delete": "Delete",
@@ -35,9 +34,15 @@
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
+  "follow": "Follow us on {{name}}",
+  "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
+    "error": {
+      "desc": "Sorry, an error occurred during the data import process. Please try importing again, or <1>submit a request</1>, and we will help you troubleshoot the issue as soon as possible.",
+      "title": "Data Import Failed"
+    },
     "finish": {
       "onlySettings": "System settings imported successfully",
       "start": "Start using",
@@ -45,6 +50,7 @@
       "title": "Data import completed"
     },
     "loading": "Data importing, please wait...",
+    "preparing": "Data import module is preparing...",
     "result": {
       "added": "Imported successfully",
       "errors": "Import errors",
@@ -55,8 +61,14 @@
       "topics": "Topics",
       "type": "Data Type"
     },
-    "title": "Import Data"
+    "title": "Import Data",
+    "uploading": {
+      "desc": "The current file is large, and is being uploaded...",
+      "restTime": "Time remaining",
+      "speed": "Upload speed"
+    }
   },
+  "installPWA": "Install browser app",
   "lang": {
     "ar": "Arabic",
     "bg-BG": "Bulgarian",
@@ -95,29 +107,14 @@
     "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
-  "modelProvider": {
-    "anthropic": "Anthropic",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "OpenRouter",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01-AI",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "No description available",
   "oauth": "SSO Login",
+  "officialSite": "Official Website",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Privacy Policy",
   "regenerate": "Regenerate",
   "rename": "Rename",
   "reset": "Reset",
@@ -162,6 +159,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Discover",
+    "me": "Me",
     "setting": "Settings"
   },
   "telemetry": {
@@ -172,10 +170,28 @@
     "title": "Help LobeChat be better"
   },
   "temp": "Temporary",
+  "terms": "Terms of Service",
   "updateAgent": "Update Agent Information",
   "upgradeVersion": {
     "action": "Upgrade",
     "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonymous User",
+    "billing": "Billing Management",
+    "data": "Data Storage",
+    "defaultNickname": "Community User",
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback and Suggestions",
+    "help": "Help Center",
+    "moveGuide": "The settings button has been moved here",
+    "plans": "Subscription Plans",
+    "preview": "Preview",
+    "profile": "Account Management",
+    "setting": "App Settings",
+    "usages": "Usage Statistics"
   }
 }

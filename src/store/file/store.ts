@@ -1,10 +1,8 @@
-import { devtools } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { isDev } from '@/utils/env';
-
+import { createDevtools } from '../middleware/createDevtools';
 import { FilesStoreState, initialState } from './initialState';
 import { FileAction, createFileSlice } from './slices/images';
 import { TTSFileAction, createTTSFileSlice } from './slices/tts';
@@ -20,10 +18,6 @@ const createStore: StateCreator<FileStore, [['zustand/devtools', never]]> = (...
 });
 
 //  ===============  实装 useStore ============ //
+const devtools = createDevtools('file');
 
-export const useFileStore = createWithEqualityFn<FileStore>()(
-  devtools(createStore, {
-    name: 'LobeChat_File' + (isDev ? '_DEV' : ''),
-  }),
-  shallow,
-);
+export const useFileStore = createWithEqualityFn<FileStore>()(devtools(createStore), shallow);

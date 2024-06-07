@@ -1,3 +1,10 @@
+import { authEnv } from '@/config/auth';
+
+export const enableClerk = authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH;
+export const enableNextAuth = authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH;
+export const enableAuth =
+  authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH || authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH;
+
 export const LOBE_CHAT_AUTH_HEADER = 'X-lobe-chat-auth';
 
 export const OAUTH_AUTHORIZED = 'X-oauth-authorized';
@@ -24,10 +31,15 @@ export interface JWTPayload {
   endpoint?: string;
 
   azureApiVersion?: string;
-  useAzure?: boolean;
 
   awsAccessKeyId?: string;
   awsRegion?: string;
   awsSecretAccessKey?: string;
+  /**
+   * user id
+   * in client db mode it's a uuid
+   * in server db mode it's a user id
+   */
+  userId?: string;
 }
 /* eslint-enable */

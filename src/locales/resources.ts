@@ -18,33 +18,21 @@ export const locales = [
 ] as const;
 
 export type DefaultResources = typeof resources;
+export type NS = keyof DefaultResources;
 export type Locales = (typeof locales)[number];
 
-export const normalizeLocale = (locale?: string) => {
+export const normalizeLocale = (locale?: string): string => {
   if (!locale) return 'en-US';
 
-  switch (locale) {
-    case 'zh-CN':
-    case 'zh': {
-      return 'zh-CN';
-    }
+  if (locale.startsWith('ar')) return 'ar';
 
-    case 'de': {
-      return 'de-DE';
-    }
-
-    case 'ru': {
-      return 'ru-RU';
-    }
-
-    case 'en': {
-      return 'en-US';
-    }
-
-    default: {
-      return locale;
+  for (const l of locales) {
+    if (l.startsWith(locale)) {
+      return l;
     }
   }
+
+  return 'en-US';
 };
 
 type LocaleOptions = {

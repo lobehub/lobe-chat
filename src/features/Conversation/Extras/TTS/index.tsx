@@ -1,10 +1,10 @@
 import { memo, useMemo } from 'react';
 import { Md5 } from 'ts-md5';
 
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/slices/chat';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import FilePlayer from './FilePlayer';
 import InitPlayer, { TTSProps } from './InitPlayer';
@@ -12,8 +12,8 @@ import InitPlayer, { TTSProps } from './InitPlayer';
 const TTS = memo<TTSProps>(
   (props) => {
     const { file, voice, content, contentMd5 } = props;
-    const lang = useGlobalStore(settingsSelectors.currentLanguage);
-    const currentVoice = useSessionStore(agentSelectors.currentAgentTTSVoice(lang));
+    const lang = useUserStore(userGeneralSettingsSelectors.currentLanguage);
+    const currentVoice = useAgentStore(agentSelectors.currentAgentTTSVoice(lang));
 
     const md5 = useMemo(() => Md5.hashStr(content).toString(), [content]);
 

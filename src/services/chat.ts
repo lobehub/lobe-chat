@@ -2,30 +2,37 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
+import { createErrorResponse } from '@/app/api/errorResponse';
+import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { ModelProvider } from '@/libs/agent-runtime';
+import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { filesSelectors, useFileStore } from '@/store/file';
-import { useGlobalStore } from '@/store/global';
-import {
-  commonSelectors,
-  modelProviderSelectors,
-  preferenceSelectors,
-} from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
-import { ChatMessage } from '@/types/message';
+import { useUserStore } from '@/store/user';
+import {
+  modelConfigSelectors,
+  modelProviderSelectors,
+  preferenceSelectors,
+  userProfileSelectors,
+} from '@/store/user/selectors';
+import { ChatErrorType } from '@/types/fetch';
+import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
-import { FetchSSEOptions, OnFinishHandler, fetchSSE, getMessageError } from '@/utils/fetch';
+import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
+import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
 
-import { createHeaderWithAuth } from './_auth';
+import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
-interface FetchOptions {
+interface FetchOptions extends FetchSSEOptions {
+  isWelcomeQuestion?: boolean;
   signal?: AbortSignal | undefined;
   trace?: TracePayload;
 }
@@ -34,23 +41,14 @@ interface GetChatCompletionPayload extends Partial<Omit<ChatStreamPayload, 'mess
   messages: ChatMessage[];
 }
 
-interface FetchAITaskResultParams {
+interface FetchAITaskResultParams extends FetchSSEOptions {
   abortController?: AbortController;
-  /**
-   * 错误处理函数
-   */
   onError?: (e: Error, rawError?: any) => void;
-  onFinish?: OnFinishHandler;
   /**
    * 加载状态变化处理函数
    * @param loading - 是否处于加载状态
    */
   onLoadingChange?: (loading: boolean) => void;
-  /**
-   * 消息处理函数
-   * @param text - 消息内容
-   */
-  onMessageHandle?: (text: string) => void;
   /**
    * 请求对象
    */
@@ -60,8 +58,116 @@ interface FetchAITaskResultParams {
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
+  isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
+}
+
+/**
+ * Initializes the AgentRuntime with the client store.
+ * @param provider - The provider name.
+ * @param payload - Init options
+ * @returns The initialized AgentRuntime instance
+ *
+ * **Note**: if you try to fetch directly, use `fetchOnClient` instead.
+ */
+export function initializeWithClientStore(provider: string, payload: any) {
+  // add auth payload
+  const providerAuthPayload = getProviderAuthPayload(provider);
+  const commonOptions = {
+    // Some provider base openai sdk, so enable it run on browser
+    dangerouslyAllowBrowser: true,
+  };
+  let providerOptions = {};
+
+  switch (provider) {
+    default:
+    case ModelProvider.OpenAI: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Azure: {
+      providerOptions = {
+        apiVersion: providerAuthPayload?.azureApiVersion,
+        // That's a wired properity, but just remapped it
+        apikey: providerAuthPayload?.apiKey,
+      };
+      break;
+    }
+    case ModelProvider.ZhiPu: {
+      break;
+    }
+    case ModelProvider.Google: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Moonshot: {
+      break;
+    }
+    case ModelProvider.Bedrock: {
+      if (providerAuthPayload?.apiKey) {
+        providerOptions = {
+          accessKeyId: providerAuthPayload?.awsAccessKeyId,
+          accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
+          region: providerAuthPayload?.awsRegion,
+        };
+      }
+      break;
+    }
+    case ModelProvider.Ollama: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Perplexity: {
+      break;
+    }
+    case ModelProvider.Qwen: {
+      break;
+    }
+    case ModelProvider.Anthropic: {
+      providerOptions = {
+        baseURL: providerAuthPayload?.endpoint,
+      };
+      break;
+    }
+    case ModelProvider.Mistral: {
+      break;
+    }
+    case ModelProvider.Groq: {
+      break;
+    }
+    case ModelProvider.DeepSeek: {
+      break;
+    }
+    case ModelProvider.OpenRouter: {
+      break;
+    }
+    case ModelProvider.TogetherAI: {
+      break;
+    }
+    case ModelProvider.ZeroOne: {
+      break;
+    }
+  }
+
+  /**
+   * Configuration override order:
+   * payload -> providerOptions -> providerAuthPayload -> commonOptions
+   */
+  return AgentRuntime.initializeWithProviderOptions(provider, {
+    [provider]: {
+      ...commonOptions,
+      ...providerAuthPayload,
+      ...providerOptions,
+      ...payload,
+    },
+  });
 }
 
 class ChatService {
@@ -79,19 +185,22 @@ class ChatService {
     );
     // ============  1. preprocess messages   ============ //
 
-    const oaiMessages = this.processMessages({
-      messages,
-      model: payload.model,
-      tools: enabledPlugins,
-    });
+    const oaiMessages = this.processMessages(
+      {
+        messages,
+        model: payload.model,
+        tools: enabledPlugins,
+      },
+      options,
+    );
 
     // ============  2. preprocess tools   ============ //
 
     const filterTools = toolSelectors.enabledSchema(enabledPlugins)(useToolStore.getState());
 
     // check this model can use function call
-    const canUseFC = modelProviderSelectors.modelEnabledFunctionCall(payload.model)(
-      useGlobalStore.getState(),
+    const canUseFC = modelProviderSelectors.isModelEnabledFunctionCall(payload.model)(
+      useUserStore.getState(),
     );
     // the rule that model can use tools:
     // 1. tools is not empty
@@ -111,34 +220,75 @@ class ChatService {
     onErrorHandle,
     onFinish,
     trace,
+    isWelcomeQuestion,
   }: CreateAssistantMessageStream) => {
-    await fetchSSE(
-      () =>
-        this.createAssistantMessage(params, {
-          signal: abortController?.signal,
-          trace: this.mapTrace(trace, TraceTagMap.Chat),
-        }),
-      {
-        onAbort,
-        onErrorHandle,
-        onFinish,
-        onMessageHandle,
-      },
-    );
+    await this.createAssistantMessage(params, {
+      isWelcomeQuestion,
+      onAbort,
+      onErrorHandle,
+      onFinish,
+      onMessageHandle,
+      signal: abortController?.signal,
+      trace: this.mapTrace(trace, TraceTagMap.Chat),
+    });
   };
 
   getChatCompletion = async (params: Partial<ChatStreamPayload>, options?: FetchOptions) => {
     const { signal } = options ?? {};
 
     const { provider = ModelProvider.OpenAI, ...res } = params;
+
+    let model = res.model || DEFAULT_AGENT_CONFIG.model;
+
+    // if the provider is Azure, get the deployment name as the request model
+    if (provider === ModelProvider.Azure) {
+      const chatModelCards = modelProviderSelectors.getModelCardsById(provider)(
+        useUserStore.getState(),
+      );
+
+      const deploymentName = chatModelCards.find((i) => i.id === model)?.deploymentName;
+      if (deploymentName) model = deploymentName;
+    }
+
     const payload = merge(
-      {
-        model: DEFAULT_AGENT_CONFIG.model,
-        stream: true,
-        ...DEFAULT_AGENT_CONFIG.params,
-      },
-      res,
+      { model: DEFAULT_AGENT_CONFIG.model, stream: true, ...DEFAULT_AGENT_CONFIG.params },
+      { ...res, model },
     );
+
+    /**
+     * Use browser agent runtime
+     */
+    const enableFetchOnClient = modelConfigSelectors.isProviderFetchOnClient(provider)(
+      useUserStore.getState(),
+    );
+
+    let fetcher: typeof fetch | undefined = undefined;
+
+    if (enableFetchOnClient) {
+      /**
+       * Notes:
+       * 1. Browser agent runtime will skip auth check if a key and endpoint provided by
+       *    user which will cause abuse of plugins services
+       * 2. This feature will be disabled by default
+       */
+      fetcher = async () => {
+        try {
+          return await this.fetchOnClient({ payload, provider, signal });
+        } catch (e) {
+          const {
+            errorType = ChatErrorType.BadRequest,
+            error: errorContent,
+            ...res
+          } = e as ChatCompletionErrorPayload;
+
+          const error = errorContent || e;
+          // track the error at server side
+          console.error(`Route: [${provider}] ${errorType}:`, error);
+
+          return createErrorResponse(errorType, { error, ...res, provider });
+        }
+      };
+    }
 
     const traceHeader = createTraceHeader({ ...options?.trace });
 
@@ -147,10 +297,15 @@ class ChatService {
       provider,
     });
 
-    return fetch(API_ENDPOINTS.chat(provider), {
+    return fetchSSE(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
+      fetcher: fetcher,
       headers,
       method: 'POST',
+      onAbort: options?.onAbort,
+      onErrorHandle: options?.onErrorHandle,
+      onFinish: options?.onFinish,
+      onMessageHandle: options?.onMessageHandle,
       signal,
     });
   };
@@ -208,35 +363,33 @@ class ChatService {
 
     onLoadingChange?.(true);
 
-    const data = await fetchSSE(
-      () =>
-        this.getChatCompletion(params, {
-          signal: abortController?.signal,
-          trace: this.mapTrace(trace, TraceTagMap.SystemChain),
-        }),
-      {
-        onErrorHandle: (error) => {
-          errorHandle(new Error(error.message), error);
-        },
-        onFinish,
-        onMessageHandle,
+    const data = await this.getChatCompletion(params, {
+      onErrorHandle: (error) => {
+        errorHandle(new Error(error.message), error);
       },
-    ).catch(errorHandle);
+      onFinish,
+      onMessageHandle,
+      signal: abortController?.signal,
+      trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+    }).catch(errorHandle);
 
     onLoadingChange?.(false);
 
     return await data?.text();
   };
 
-  private processMessages = ({
-    messages,
-    tools,
-    model,
-  }: {
-    messages: ChatMessage[];
-    model: string;
-    tools?: string[];
-  }): OpenAIChatMessage[] => {
+  private processMessages = (
+    {
+      messages,
+      tools,
+      model,
+    }: {
+      messages: ChatMessage[];
+      model: string;
+      tools?: string[];
+    },
+    options?: FetchOptions,
+  ): OpenAIChatMessage[] => {
     // handle content type for vision model
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
@@ -247,8 +400,8 @@ class ChatService {
 
       if (imageList.length === 0) return m.content;
 
-      const canUploadFile = modelProviderSelectors.modelEnabledUpload(model)(
-        useGlobalStore.getState(),
+      const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
+        useUserStore.getState(),
       );
 
       if (!canUploadFile) {
@@ -269,9 +422,30 @@ class ChatService {
           return { content: getContent(m), role: m.role };
         }
 
-        case 'function': {
-          const name = m.plugin?.identifier as string;
-          return { content: m.content, name, role: m.role };
+        case 'assistant': {
+          return {
+            content: m.content,
+            role: m.role,
+            tool_calls: m.tools?.map(
+              (tool): MessageToolCall => ({
+                function: {
+                  arguments: tool.arguments,
+                  name: genToolCallingName(tool.identifier, tool.apiName, tool.type),
+                },
+                id: tool.id,
+                type: 'function',
+              }),
+            ),
+          };
+        }
+
+        case 'tool': {
+          return {
+            content: m.content,
+            name: genToolCallingName(m.plugin!.identifier, m.plugin!.apiName, m.plugin?.type),
+            role: m.role,
+            tool_call_id: m.tool_call_id,
+          };
         }
 
         default: {
@@ -281,22 +455,35 @@ class ChatService {
     });
 
     return produce(postMessages, (draft) => {
-      if (!tools || tools.length === 0) return;
-      const hasFC = modelProviderSelectors.modelEnabledFunctionCall(model)(
-        useGlobalStore.getState(),
-      );
-      if (!hasFC) return;
+      // if it's a welcome question, inject InboxGuide SystemRole
+      const inboxGuideSystemRole =
+        options?.isWelcomeQuestion &&
+        options?.trace?.sessionId === INBOX_SESSION_ID &&
+        INBOX_GUIDE_SYSTEMROLE;
+
+      // Inject Tool SystemRole
+      const hasTools = tools && tools?.length > 0;
+      const hasFC =
+        hasTools &&
+        modelProviderSelectors.isModelEnabledFunctionCall(model)(useUserStore.getState());
+      const toolsSystemRoles =
+        hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
+
+      const injectSystemRoles = [inboxGuideSystemRole, toolsSystemRoles]
+        .filter(Boolean)
+        .join('\n\n');
+
+      if (!injectSystemRoles) return;
 
       const systemMessage = draft.find((i) => i.role === 'system');
 
-      const toolsSystemRoles = toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
-      if (!toolsSystemRoles) return;
-
       if (systemMessage) {
-        systemMessage.content = systemMessage.content + '\n\n' + toolsSystemRoles;
+        systemMessage.content = [systemMessage.content, injectSystemRoles]
+          .filter(Boolean)
+          .join('\n\n');
       } else {
         draft.unshift({
-          content: toolsSystemRoles,
+          content: injectSystemRoles,
           role: 'system',
         });
       }
@@ -304,19 +491,34 @@ class ChatService {
   };
 
   private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
-    const tags = agentSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
+    const tags = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState()).tags || [];
 
-    const enabled = preferenceSelectors.userAllowTrace(useGlobalStore.getState());
+    const enabled = preferenceSelectors.userAllowTrace(useUserStore.getState());
 
-    if (!enabled) return { enabled: false };
+    if (!enabled) return { ...trace, enabled: false };
 
     return {
       ...trace,
       enabled: true,
       tags: [tag, ...(trace?.tags || []), ...tags].filter(Boolean) as string[],
-      userId: commonSelectors.userId(useGlobalStore.getState()),
+      userId: userProfileSelectors.userId(useUserStore.getState()),
     };
   }
+
+  /**
+   * Fetch chat completion on the client side.
+
+   */
+  private fetchOnClient = async (params: {
+    payload: Partial<ChatStreamPayload>;
+    provider: string;
+    signal?: AbortSignal;
+  }) => {
+    const agentRuntime = await initializeWithClientStore(params.provider, params.payload);
+    const data = params.payload as ChatStreamPayload;
+
+    return agentRuntime.chat(data, { signal: params.signal });
+  };
 }
 
 export const chatService = new ChatService();

@@ -1,86 +1,47 @@
-import { OpenAIStream, StreamingTextResponse } from 'ai';
-import OpenAI, { ClientOptions } from 'openai';
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 
-import { LobeRuntimeAI } from '../BaseAI';
-import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
-import { AgentRuntimeError } from '../utils/createError';
-import { debugStream } from '../utils/debugStream';
-import { desensitizeUrl } from '../utils/desensitizeUrl';
-import { handleOpenAIError } from '../utils/handleOpenAIError';
+import { ModelProvider } from '../types';
+import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { TogetherAIModel } from './type';
 
-const DEFAULT_BASE_URL = 'https://api.together.xyz/v1';
-
-export class LobeTogetherAI implements LobeRuntimeAI {
-  private client: OpenAI;
-
-  baseURL: string;
-
-  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidTogetherAIAPIKey);
-
-    this.client = new OpenAI({
-      apiKey,
-      baseURL,
-      defaultHeaders: {
-        'HTTP-Referer': 'https://chat-preview.lobehub.com',
-        'X-Title': 'Lobe Chat',
+const baseURL = 'https://api.together.xyz';
+export const LobeTogetherAI = LobeOpenAICompatibleFactory({
+  baseURL: `${baseURL}/v1`,
+  constructorOptions: {
+    defaultHeaders: {
+      'HTTP-Referer': 'https://chat-preview.lobehub.com',
+      'X-Title': 'Lobe Chat',
+    },
+  },
+  debug: {
+    chatCompletion: () => process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1',
+  },
+  models: async ({ apiKey }) => {
+    const data = await fetch(`${baseURL}/api/models`, {
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
       },
-      ...res,
     });
-    this.baseURL = this.client.baseURL;
-  }
-
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    try {
-      const response = await this.client.chat.completions.create(
-        payload as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
-      );
-      const [prod, debug] = response.tee();
-
-      if (process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1') {
-        debugStream(debug.toReadableStream()).catch(console.error);
-      }
-
-      return new StreamingTextResponse(OpenAIStream(prod, options?.callback), {
-        headers: options?.headers,
-      });
-    } catch (error) {
-      let desensitizedEndpoint = this.baseURL;
-
-      if (this.baseURL !== DEFAULT_BASE_URL) {
-        desensitizedEndpoint = desensitizeUrl(this.baseURL);
-      }
-
-      if ('status' in (error as any)) {
-        switch ((error as Response).status) {
-          case 401: {
-            throw AgentRuntimeError.chat({
-              endpoint: desensitizedEndpoint,
-              error: error as any,
-              errorType: AgentRuntimeErrorType.InvalidTogetherAIAPIKey,
-              provider: ModelProvider.TogetherAI,
-            });
-          }
-
-          default: {
-            break;
-          }
-        }
-      }
-
-      const { errorResult, RuntimeError } = handleOpenAIError(error);
-
-      const errorType = RuntimeError || AgentRuntimeErrorType.TogetherAIBizError;
-
-      throw AgentRuntimeError.chat({
-        endpoint: desensitizedEndpoint,
-        error: errorResult,
-        errorType,
-        provider: ModelProvider.TogetherAI,
-      });
+    if (!data.ok) {
+      throw new Error(`Together Fetch Error: ${data.statusText || data.status}`);
     }
-  }
-}
 
-export default LobeTogetherAI;
+    const models: TogetherAIModel[] = await data.json();
+
+    return models
+      .filter((m) => m.display_type === 'chat')
+      .map((model) => {
+        return {
+          description: model.description,
+          displayName: model.display_name,
+          enabled: LOBE_DEFAULT_MODEL_LIST.find((m) => model.name.endsWith(m.id))?.enabled || false,
+          functionCall: model.description?.includes('function calling'),
+          id: model.name,
+          maxOutput: model.context_length,
+          tokens: model.context_length,
+          vision: model.description?.includes('vision') || model.name?.includes('vision'),
+        };
+      });
+  },
+  provider: ModelProvider.TogetherAI,
+});

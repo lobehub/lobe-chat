@@ -1,7 +1,42 @@
 {
   "button": {
     "import": "Importeer configuratie",
+    "market": "Verken de markt",
     "start": "Nu beginnen"
+  },
+  "guide": {
+    "agents": {
+      "replaceBtn": "Vervang een groep",
+      "title": "Nieuwe aanbeveling assistent: "
+    },
+    "defaultMessage": "Ik ben uw persoonlijke slimme assistent LobeChat, waarmee kan ik u helpen?\nAls u een meer professionele of op maat gemaakte assistent nodig heeft, kunt u op `+` klikken om een aangepaste assistent te maken",
+    "qa": {
+      "q01": "Wat is LobeHub?",
+      "q02": "Wat is LobeChat?",
+      "q03": "Heeft LobeChat community-ondersteuning?",
+      "q04": "Welke functies ondersteunt LobeChat?",
+      "q05": "Hoe kan ik LobeChat implementeren en gebruiken?",
+      "q06": "Hoe is de prijsstelling van LobeChat?",
+      "q07": "Is LobeChat gratis?",
+      "q08": "Is er een cloudserviceversie beschikbaar?",
+      "q09": "Ondersteunt LobeChat lokale taalmodellen?",
+      "q10": "Ondersteunt LobeChat beeldherkenning en -generatie?",
+      "q11": "Ondersteunt LobeChat spraaksynthese en spraakherkenning?",
+      "q12": "Ondersteunt LobeChat plug-insysteem?",
+      "q13": "Heeft LobeChat een eigen marktplaats om GPT's te verkrijgen?",
+      "q14": "Ondersteunt LobeChat meerdere AI-serviceproviders?",
+      "q15": "Wat moet ik doen als ik problemen ondervind tijdens het gebruik?"
+    },
+    "questions": {
+      "moreBtn": "Meer informatie",
+      "title": "Veelgestelde vragen: "
+    },
+    "welcome": {
+      "afternoon": "Goedemiddag",
+      "morning": "Goedemorgen",
+      "night": "Goedenavond",
+      "noon": "Goedemiddag"
+    }
   },
   "header": "Welkom",
   "pickAgent": "Of kies een assistent-sjabloon uit de onderstaande opties",

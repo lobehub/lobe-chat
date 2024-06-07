@@ -1,24 +1,23 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
-      "file": "Bu model dosya yükleme ve tanıma desteği sağlar",
-      "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
-      "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
-      "vision": "Bu model görüntü tanımı destekler"
-    }
-  },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
+  "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
   "close": "Kapat",
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
+  "dataStatistics": {
+    "messages": "Mesajlar",
+    "sessions": "Oturumlar",
+    "today": "Bugün",
+    "topics": "Konular"
+  },
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
@@ -35,9 +34,15 @@
     "globalSetting": "Ayarları Dışa Aktar"
   },
   "feedback": "Feedback",
+  "follow": "Bizi {{name}} üzerinde takip edin",
+  "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
   "importModal": {
+    "error": {
+      "desc": "Üzgünüz, veri aktarımı sırasında bir hata oluştu. Lütfen tekrar deneyin veya <1>bir sorun bildirin</1>, sorunu çözmek için elimizden geleni yapacağız.",
+      "title": "Veri Aktarımı Başarısız"
+    },
     "finish": {
       "onlySettings": "Sistem ayarları başarıyla içe aktarıldı",
       "start": "Başla",
@@ -45,6 +50,7 @@
       "title": "Veri başarıyla aktarıldı"
     },
     "loading": "Veri aktarılıyor, lütfen bekleyin...",
+    "preparing": "Veri aktarımı modülü hazırlanıyor...",
     "result": {
       "added": "Başarıyla içe aktarıldı",
       "errors": "İçe Aktarma Hataları",
@@ -55,8 +61,14 @@
       "topics": "Konular",
       "type": "Tip"
     },
-    "title": "Veri İçe Aktar"
+    "title": "Veri İçe Aktar",
+    "uploading": {
+      "desc": "Dosya şu anda büyük olduğundan, yüklenmeye çalışılıyor...",
+      "restTime": "Kalan Zaman",
+      "speed": "Yükleme Hızı"
+    }
   },
+  "installPWA": "Tarayıcı Uygulamasını Yükle",
   "lang": {
     "ar": "Arapça",
     "bg-BG": "Bulgarca",
@@ -95,29 +107,14 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
-  "modelProvider": {
-    "anthropic": "Antropik",
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "groq": "Groq",
-    "mistral": "Mistral AI",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "openrouter": "AçıkYönlendirici",
-    "perplexity": "Perplexity",
-    "togetherai": "TogetherAI",
-    "zeroone": "01.AI SıfırBir",
-    "zhipu": "Zhipu AI"
-  },
   "noDescription": "Açıklama yok",
   "oauth": "SSO Girişi",
+  "officialSite": "Resmi Site",
   "ok": "Tamam",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Gizlilik Politikası",
   "regenerate": "Tekrarla",
   "rename": "Yeniden İsimlendir",
   "reset": "Reset",
@@ -162,6 +159,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Keşfet",
+    "me": "ben",
     "setting": "Ayarlar"
   },
   "telemetry": {
@@ -172,10 +170,28 @@
     "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
   },
   "temp": "Geçici",
+  "terms": "Hizmet Koşulları",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upgradeVersion": {
     "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
     "newVersion": "Yeni sürüm mevcut: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonim Kullanıcı",
+    "billing": "Fatura Yönetimi",
+    "data": "Veri Depolama",
+    "defaultNickname": "Topluluk Kullanıcısı",
+    "discord": "Topluluk Destek",
+    "docs": "Belgeler",
+    "email": "E-posta Destek",
+    "feedback": "Geribildirim ve Öneriler",
+    "help": "Yardım Merkezi",
+    "moveGuide": "Ayarlar düğmesini buraya taşıyın",
+    "plans": "Planlar",
+    "preview": "Önizleme",
+    "profile": "Hesap Yönetimi",
+    "setting": "Uygulama Ayarları",
+    "usages": "Kullanım İstatistikleri"
   }
 }

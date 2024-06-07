@@ -124,9 +124,13 @@
 - **Anthropic (Claude)**：接入了 Anthropic 的 **Claude** 系列模型，包括 Claude 3 和 Claude 2，多模态突破，超长上下文，树立行业新基准。[了解更多](https://www.anthropic.com/claude)
 - **ChatGLM**：加入了智谱的 **ChatGLM** 系列模型（GLM-4/GLM-4-vision/GLM-3-turbo），为用户提供了另一种高效的会话模型选择。[了解更多](https://www.zhipuai.cn/)
 - **Moonshot AI (月之暗面)**：集成了 Moonshot 系列模型，这是一家来自中国的创新性 AI 创业公司，旨在提供更深层次的会话理解。[了解更多](https://www.moonshot.cn/)
+- **Together.ai**：集成部署了数百种开源模型和向量模型，无需本地部署即可随时访问这些模型。[了解更多](https://www.together.ai/)
 - **01.AI (零一万物)**：集成了零一万物模型，系列 API 具备较快的推理速度，这不仅缩短了处理时间，同时也保持了出色的模型效果。[了解更多](https://www.lingyiwanwu.com/)
 - **Groq**：接入了 Groq 的 AI 模型，高效处理消息序列，生成回应，胜任多轮对话及单次交互任务。[了解更多](https://groq.com/)
 - **OpenRouter**：其支持包括 **Claude 3**，**Gemma**，**Mistral**，**Llama2**和**Cohere**等模型路由，支持智能路由优化，提升使用效率，开放且灵活。[了解更多](https://openrouter.ai/)
+- **Minimax**: 接入了 Minimax 的 AI 模型，包括 MoE 模型 **abab6**，提供了更多的选择空间。[了解更多](https://www.minimaxi.com/)
+- **DeepSeek**: 接入了 DeepSeek 的 AI 模型，包括最新的 **DeepSeek-V2**，提供兼顾性能与价格的模型。[了解更多](https://www.deepseek.com/)
+- **Qwen**: 接入了 Qwen 的 AI 模型，包括最新的 **qwen-turbo**，**qwen-plus** 和 **qwen-max** 等模型。[了解更多](https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction)
 
 同时，我们也在计划支持更多的模型服务商，如 Replicate 和 Perplexity 等，以进一步丰富我们的服务商库。如果你希望让 LobeChat 支持你喜爱的服务商，欢迎加入我们的[社区讨论](https://github.com/lobehub/lobe-chat/discussions/1284)。
 
@@ -212,12 +216,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                          | 插件描述                                                                                                       |
-| ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [NFT Guru](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **swap** on **2024-04-03**</sup>          | 发现主要平台上 NFT 的当前价格，并通过实时跟踪快速变化的市场了解情况<br/>`加密货币` `nft`                       |
-| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-04-02**</sup>      | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索`                            |
-| [日历助手](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **cc** on **2024-03-13**</sup>            | 一个用于管理日历事件的插件 # 将自动生成工作流程中的 i18n<br/>`日历` `日程安排` `将自动生成工作流程中的-i-18-n` |
-| [TokenInsights](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **feednews** on **2024-01-27**</sup> | 获取实时加密货币价格，BTC，ETH，BNB 和最新见解。最新的币新闻和空投机会。<br/>`加密货币` `btc` `eth` `bnb`      |
+| 最近新增                                                                                                                 | 插件描述                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>             | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索` |
+| [空间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>      | 包括 NASA 的空间数据。<br/>`空间` `nasa`                                            |
+| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>           | 搜索聚合服务，专为 LLMs 设计<br/>`web` `search`                                     |
+| [通过 Serper 搜索 Google](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Barry** on **2024-04-30**</sup> | 通过 Serper.dev 免费 API 进行 Google 搜索引擎（每月 2500 次🆓）<br/>`网络` `搜索`   |
 
 > 📊 Total plugins: [<kbd>**55**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
@@ -247,14 +251,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                      | 助手说明                                                                     |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| [脏话学习助手](https://chat-preview.lobehub.com/market?agent=profanity-assistant)<br/><sup>By **[cokice](https://github.com/cokice)** on **2024-04-10**</sup>                 | 我只会骂人 别的都不会<br/>`回答` `脏话`                                      |
-| [设计理念分析](https://chat-preview.lobehub.com/market?agent=sixin-design-analysis)<br/><sup>By **[YuJiaoChiu](https://github.com/YuJiaoChiu)** on **2024-04-09**</sup>       | 帮助你识图并分析建筑设计理念<br/>`arch`                                      |
-| [YouTue 摘要](https://chat-preview.lobehub.com/market?agent=epoch-ai)<br/><sup>By **[epochaudio](https://github.com/epochaudio)** on **2024-04-08**</sup>                     | 擅长 YouTube 脚本分析和总结<br/>`you-tube` `脚本分析` `总结`                 |
-| [Shell 脚本开发助手](https://chat-preview.lobehub.com/market?agent=linux-shell-assistant)<br/><sup>By **[etnperlong](https://github.com/etnperlong)** on **2024-04-06**</sup> | 一个协助你编写高质量 Shell 脚本的 AI 助手<br/>`shell` `开发` `计算机` `运维` |
+| 最近新增                                                                                                                                                                              | 助手说明                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [审稿回复专家](https://chat-preview.lobehub.com/market?agent=academic-editor-en)<br/><sup>By **[Starlitnightly](https://github.com/Starlitnightly)** on **2024-06-03**</sup>          | 擅长自然学术编辑，协助作者回复审稿人意见，科学、礼貌、逐点回应。<br/>`学术编辑` `审稿意见回复` `科学写作`             |
+| [小说翻译 英译中](https://chat-preview.lobehub.com/market?agent=noveltranslation)<br/><sup>By **[xbtachlb](https://github.com/xbtachlb)** on **2024-06-03**</sup>                     | 小说二次翻译<br/>`翻译`                                                                                               |
+| [Docker 转 DockerCompose](https://chat-preview.lobehub.com/market?agent=onekr-docker-2-compose)<br/><sup>By **[onekr-billy](https://github.com/onekr-billy)** on **2024-05-31**</sup> | 擅长将 Docker run 命令转换为 Docker Compose 配置<br/>`docker` `docker-compose` `系统运维` `配置文件` `转换`           |
+| [Java Class 转 MySQL](https://chat-preview.lobehub.com/market?agent=onekr-java-2-sql)<br/><sup>By **[onekr-billy](https://github.com/onekr-billy)** on **2024-05-31**</sup>           | 擅长根据 Java 类文件生成符合 MySQL 规范的 SQL 脚本<br/>`java-class转-my-sql` `后端开发` `sql脚本` `数据转换` `数据库` |
 
-> 📊 Total agents: [<kbd>**232**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**285**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -435,12 +439,12 @@ $ docker run -d -p 3210:3210 \
 
 本项目提供了一些额外的配置项，使用环境变量进行设置：
 
-| 环境变量           | 类型 | 描述                                                                                                                          | 示例                                                                                                   |
-| ------------------ | ---- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `OPENAI_API_KEY`   | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                       | `sk-xxxxxx...xxxxxx`                                                                                   |
-| `OPENAI_PROXY_URL` | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL                                        | `https://api.chatanywhere.cn` 或 `https://aihubmix.com/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
-| `ACCESS_CODE`      | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组                                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                              |
-| `CUSTOM_MODELS`    | 可选 | 用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。 | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                  |
+| 环境变量            | 类型 | 描述                                                                                                                          | 示例                                                                                                   |
+| ------------------- | ---- | ----------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `OPENAI_API_KEY`    | 必选 | 这是你在 OpenAI 账户页面申请的 API 密钥                                                                                       | `sk-xxxxxx...xxxxxx`                                                                                   |
+| `OPENAI_PROXY_URL`  | 可选 | 如果你手动配置了 OpenAI 接口代理，可以使用此配置项来覆盖默认的 OpenAI API 请求基础 URL                                        | `https://api.chatanywhere.cn` 或 `https://aihubmix.com/v1`<br/>默认值:<br/>`https://api.openai.com/v1` |
+| `ACCESS_CODE`       | 可选 | 添加访问此服务的密码，你可以设置一个长密码以防被爆破，该值用逗号分隔时为密码数组                                              | `awCTe)re_r74` or `rtrt_ewee3@09!` or `code1,code2,code3`                                              |
+| `OPENAI_MODEL_LIST` | 可选 | 用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名` 来自定义模型的展示名，用英文逗号隔开。 | `qwen-7b-chat,+glm-6b,-gpt-3.5-turbo`                                                                  |
 
 > \[!NOTE]
 >
@@ -732,7 +736,7 @@ This project is [MIT](./LICENSE) licensed.
 [image-feat-theme]: https://gw.alipayobjects.com/zos/kitchen/pvus1lo%26Z7/darkmode.webp
 [image-feat-tts]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072124-c9853d8d-f1b5-44a8-a305-45ebc0f6d19a.png
 [image-feat-vision]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/284072129-382bdf30-e3d6-4411-b5a0-249710b8ba08.png
-[image-overview]: https://github.com/lobehub/lobe-chat/assets/28616219/8b04c3c9-3d71-4fb4-bd9b-a4f415c5876d
+[image-overview]: https://github.com/lobehub/lobe-chat/assets/17870709/56b95d48-f573-41cd-8b38-387bf88bc4bf
 [image-star]: https://github.com/lobehub/lobe-chat/assets/17870709/cb06b748-513f-47c2-8740-d876858d7855
 [issues-link]: https://img.shields.io/github/issues/lobehub/lobe-chat.svg?style=flat
 [lobe-chat-plugins]: https://github.com/lobehub/lobe-chat-plugins

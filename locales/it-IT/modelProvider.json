@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Versione dell'API di Azure, nel formato YYYY-MM-DD, consulta [ultima versione](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Ottieni elenco",
+      "title": "Versione API Azure"
+    },
+    "empty": "Inserisci l'ID del modello per aggiungere il primo modello",
+    "endpoint": {
+      "desc": "Quando si controllano le risorse dal portale di Azure, questo valore si trova nella sezione 'Chiavi e endpoint'",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Indirizzo API Azure"
+    },
+    "modelListPlaceholder": "Seleziona o aggiungi il modello OpenAI che hai distribuito",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Quando si controllano le risorse dal portale di Azure, questo valore si trova nella sezione 'Chiavi e endpoint'. Puoi usare KEY1 o KEY2",
+      "placeholder": "Chiave API Azure",
+      "title": "Chiave API"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Inserisci l'ID chiave di accesso AWS",
+      "placeholder": "ID chiave di accesso AWS",
+      "title": "ID chiave di accesso AWS"
+    },
+    "checker": {
+      "desc": "Verifica se AccessKeyId / SecretAccessKey sono stati inseriti correttamente"
+    },
+    "region": {
+      "desc": "Inserisci la regione AWS",
+      "placeholder": "Regione AWS",
+      "title": "Regione AWS"
+    },
+    "secretAccessKey": {
+      "desc": "Inserisci la chiave di accesso segreta AWS",
+      "placeholder": "Chiave di accesso segreta AWS",
+      "title": "Chiave di accesso segreta AWS"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Regione del servizio personalizzata",
+      "description": "Inserisci la tua chiave di accesso AWS AccessKeyId / SecretAccessKey per avviare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
+      "title": "Usa le informazioni di autenticazione Bedrock personalizzate"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Verifica se l'indirizzo del proxy è stato compilato correttamente",
+      "title": "Controllo della connettività"
+    },
+    "customModelName": {
+      "desc": "Aggiungi modelli personalizzati, separati da virgola (,)",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Nome del modello personalizzato"
+    },
+    "download": {
+      "desc": "Ollama sta scaricando questo modello, per favore non chiudere questa pagina. Il download verrà interrotto e riprenderà dal punto in cui si è interrotto in caso di riavvio.",
+      "remainingTime": "Tempo rimanente",
+      "speed": "Velocità di download",
+      "title": "Download del modello in corso {{model}}"
+    },
+    "endpoint": {
+      "desc": "Inserisci l'indirizzo del proxy dell'interfaccia Ollama. Lascia vuoto se non specificato localmente",
+      "title": "Indirizzo del proxy dell'interfaccia"
+    },
+    "setup": {
+      "cors": {
+        "description": "A causa delle restrizioni di sicurezza del browser, è necessario configurare il cross-origin resource sharing (CORS) per consentire l'utilizzo di Ollama.",
+        "linux": {
+          "env": "Nella sezione [Service], aggiungi `Environment` e inserisci la variabile di ambiente OLLAMA_ORIGINS:",
+          "reboot": "Dopo aver completato l'esecuzione, riavvia il servizio Ollama.",
+          "systemd": "Per modificare il servizio ollama, chiama systemd:"
+        },
+        "macos": "Apri l'applicazione 'Terminale', incolla il comando seguente e premi Invio per eseguirlo",
+        "reboot": "Riavvia il servizio Ollama una volta completata l'esecuzione",
+        "title": "Configura Ollama per consentire l'accesso cross-origin",
+        "windows": "Su Windows, fai clic su 'Pannello di controllo', accedi alle variabili di ambiente di sistema. Crea una nuova variabile di ambiente chiamata 'OLLAMA_ORIGINS' per il tuo account utente, con valore *, quindi fai clic su 'OK/Applica' per salvare le modifiche"
+      },
+      "install": {
+        "description": "Assicurati di aver avviato Ollama. Se non l'hai ancora scaricato, visita il sito ufficiale per <1>scaricarlo</1>",
+        "docker": "Se preferisci utilizzare Docker, Ollama fornisce anche un'immagine Docker ufficiale che puoi scaricare tramite il seguente comando:",
+        "linux": {
+          "command": "Per installare, utilizza il seguente comando:",
+          "manual": "Oppure, puoi consultare la <1>Guida all'installazione manuale di Linux</1> per installare manualmente"
+        },
+        "title": "Installa e avvia l'applicazione Ollama localmente",
+        "windowsTab": "Windows (Versione di anteprima)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Annulla download",
+      "confirm": "Download",
+      "description": "Inserisci l'etichetta del modello Ollama per continuare la sessione",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Inizio download...",
+      "title": "Scarica il modello Ollama specificato"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI ZeroOne"
+  },
+  "zhipu": {
+    "title": "Zhipu"
+  }
+}

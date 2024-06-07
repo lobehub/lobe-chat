@@ -4,23 +4,31 @@
   },
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**. Vous pouvez commencer à discuter avec moi dès maintenant ou aller dans [Paramètres de l'agent](/chat/settings#session={{id}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
+  "agentsAndConversations": "Agents et conversations",
   "backToBottom": "Retour en bas",
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
+  "confirmRemoveSessionSuccess": "Agent supprimé avec succès",
   "defaultAgent": "Agent par défaut",
   "defaultList": "Liste par défaut",
   "defaultSession": "Session par défaut",
+  "duplicateSession": {
+    "loading": "Copie en cours...",
+    "success": "Copie réussie",
+    "title": "{{title}} Copie"
+  },
   "duplicateTitle": "{{title}} Copie",
+  "emptyAgent": "Aucun assistant disponible",
   "historyRange": "Plage d'historique",
   "inbox": {
-    "defaultMessage": "Bonjour, je suis votre agent virtuel. Vous pouvez me poser n'importe quelle question et je ferai de mon mieux pour vous répondre. Si vous avez besoin d'un agent plus professionnel ou personnalisé, cliquez sur le `+` pour créer un agent personnalisé.",
     "desc": "Débloquez le potentiel de votre esprit. Votre agent intelligent est là pour discuter avec vous de tout et de rien.",
     "title": "Discutons un peu"
   },
   "input": {
+    "addAi": "Ajouter un message AI",
+    "addUser": "Ajouter un message utilisateur",
     "more": "Plus",
-    "onlyAdd": "Ajouter uniquement",
     "send": "Envoyer",
     "sendWithCmdEnter": "Envoyer avec {{meta}} + Entrée",
     "sendWithEnter": "Envoyer avec Entrée",
@@ -42,13 +50,17 @@
   "sessionGroup": {
     "config": "Gestion des groupes",
     "confirmRemoveGroupAlert": "Vous êtes sur le point de supprimer ce groupe. Une fois supprimé, les agents de ce groupe seront déplacés vers la liste par défaut. Veuillez confirmer votre action.",
+    "createAgentSuccess": "Création de l'agent réussie",
     "createGroup": "Créer un nouveau groupe",
     "createSuccess": "Création réussie",
+    "creatingAgent": "Création de l'agent en cours...",
     "inputPlaceholder": "Veuillez saisir le nom du groupe...",
     "moveGroup": "Déplacer vers un groupe",
     "newGroup": "Nouveau groupe",
     "rename": "Renommer le groupe",
     "renameSuccess": "Renommage réussi",
+    "sortSuccess": "Réorganisation réussie",
+    "sorting": "Mise à jour de la réorganisation des groupes en cours...",
     "tooLong": "Le nom du groupe doit comporter entre 1 et 20 caractères"
   },
   "shareModal": {
@@ -72,6 +84,7 @@
     "chats": "Messages de discussion",
     "rest": "Restant disponible",
     "systemRole": "Rôle système",
+    "title": "Détails du jeton",
     "tools": "Paramètres du plugin",
     "total": "Total disponible",
     "used": "Total utilisé"
@@ -91,6 +104,8 @@
     "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",
     "defaultTitle": "Sujet par défaut",
+    "duplicateLoading": "Duplication du sujet en cours...",
+    "duplicateSuccess": "Sujet dupliqué avec succès",
     "guide": {
       "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme un sujet historique et démarrer une nouvelle session.",
       "title": "Liste des sujets"
@@ -112,9 +127,12 @@
   },
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upload": {
+    "actionFiletip": "Télécharger le fichier",
     "actionTooltip": "Télécharger une image",
     "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité.",
     "dragDesc": "Faites glisser les fichiers ici pour télécharger plusieurs images. Maintenez la touche Maj enfoncée pour envoyer directement les images.",
+    "dragFileDesc": "Faites glisser les images et les fichiers ici pour prendre en charge le téléchargement de plusieurs images et fichiers. Maintenez la touche Shift enfoncée pour envoyer directement une image ou un fichier.",
+    "dragFileTitle": "Télécharger le fichier",
     "dragTitle": "Télécharger une image"
   }
 }

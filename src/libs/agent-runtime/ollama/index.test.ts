@@ -1,364 +1,196 @@
-// @vitest-environment node
-import OpenAI from 'openai';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { Ollama } from 'ollama/browser';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, OpenAIChatMessage } from '@/libs/agent-runtime';
-
-import * as debugStreamModule from '../utils/debugStream';
+import { AgentRuntimeErrorType } from '../error';
+import { ModelProvider } from '../types';
+import { AgentRuntimeError } from '../utils/createError';
 import { LobeOllamaAI } from './index';
 
-const provider = 'ollama';
-const defaultBaseURL = 'http://127.0.0.1:11434/v1';
-const bizErrorType = 'OllamaBizError';
-const invalidErrorType = 'InvalidOllamaArgs';
-
-// Mock the console.error to avoid polluting test output
-vi.spyOn(console, 'error').mockImplementation(() => {});
-
-let instance: LobeOllamaAI;
-
-beforeEach(() => {
-  instance = new LobeOllamaAI({ apiKey: 'test' });
-
-  // 使用 vi.spyOn 来模拟 chat.completions.create 方法
-  vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
-    new ReadableStream() as any,
-  );
-});
-
-afterEach(() => {
-  vi.clearAllMocks();
-});
+vi.mock('ollama/browser');
 
 describe('LobeOllamaAI', () => {
-  describe('init', () => {
-    it('should correctly initialize with an API key', async () => {
-      const instance = new LobeOllamaAI({ apiKey: 'test_api_key' });
-      expect(instance).toBeInstanceOf(LobeOllamaAI);
-      expect(instance.baseURL).toEqual(defaultBaseURL);
+  let ollamaAI: LobeOllamaAI;
+
+  beforeEach(() => {
+    ollamaAI = new LobeOllamaAI({ baseURL: 'https://example.com' });
+  });
+
+  afterEach(() => {
+    vi.resetAllMocks();
+  });
+
+  describe('constructor', () => {
+    it('should initialize Ollama client and baseURL with valid baseURL', () => {
+      expect(ollamaAI['client']).toBeInstanceOf(Ollama);
+      expect(ollamaAI.baseURL).toBe('https://example.com');
+    });
+
+    it('should throw AgentRuntimeError with invalid baseURL', () => {
+      try {
+        new LobeOllamaAI({ baseURL: 'invalid-url' });
+      } catch (e) {
+        expect(e).toEqual(AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidOllamaArgs));
+      }
     });
   });
 
   describe('chat', () => {
-    it('should return a StreamingTextResponse on successful API call', async () => {
-      // Arrange
-      const mockStream = new ReadableStream();
-      const mockResponse = Promise.resolve(mockStream);
+    it('should call Ollama client chat method and return StreamingResponse', async () => {
+      const chatMock = vi.fn().mockResolvedValue({});
+      vi.mocked(Ollama.prototype.chat).mockImplementation(chatMock);
 
-      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
-
-      // Act
-      const result = await instance.chat({
+      const payload = {
         messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 0,
-      });
+        model: 'model-id',
+      };
+      const options = { signal: new AbortController().signal };
 
-      // Assert
-      expect(result).toBeInstanceOf(Response);
+      const response = await ollamaAI.chat(payload as any, options);
+
+      expect(chatMock).toHaveBeenCalledWith({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'model-id',
+        options: {
+          frequency_penalty: undefined,
+          presence_penalty: undefined,
+          temperature: undefined,
+          top_p: undefined,
+        },
+        stream: true,
+      });
+      expect(response).toBeInstanceOf(Response);
     });
 
-    describe('Error', () => {
-      it('should return OpenAIBizError with an openai error response when OpenAI.APIError is thrown', async () => {
-        // Arrange
-        const apiError = new OpenAI.APIError(
-          400,
-          {
-            status: 400,
-            error: {
-              message: 'Bad Request',
-            },
-          },
-          'Error message',
-          {},
+    it('should throw AgentRuntimeError when Ollama client chat method throws an error', async () => {
+      const errorMock = {
+        message: 'Chat error',
+        name: 'ChatError',
+        status_code: 500,
+      };
+      vi.mocked(Ollama.prototype.chat).mockRejectedValue(errorMock);
+
+      const payload = {
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'model-id',
+      };
+
+      try {
+        await ollamaAI.chat(payload as any);
+      } catch (e) {
+        expect(e).toEqual(
+          AgentRuntimeError.chat({
+            error: errorMock,
+            errorType: AgentRuntimeErrorType.OllamaBizError,
+            provider: ModelProvider.Ollama,
+          }),
         );
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            error: {
-              error: { message: 'Bad Request' },
-              status: 400,
-            },
-            errorType: bizErrorType,
-            provider,
-          });
-        }
-      });
-
-      it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
-        try {
-          new LobeOllamaAI({});
-        } catch (e) {
-          expect(e).toEqual({ errorType: invalidErrorType });
-        }
-      });
-
-      it('should return OpenAIBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
-        // Arrange
-        const errorInfo = {
-          stack: 'abc',
-          cause: {
-            message: 'api is undefined',
-          },
-        };
-        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            error: {
-              cause: { message: 'api is undefined' },
-              stack: 'abc',
-            },
-            errorType: bizErrorType,
-            provider,
-          });
-        }
-      });
-
-      it('should return OpenAIBizError with an cause response with desensitize Url', async () => {
-        // Arrange
-        const errorInfo = {
-          stack: 'abc',
-          cause: { message: 'api is undefined' },
-        };
-        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
-
-        instance = new LobeOllamaAI({
-          apiKey: 'test',
-
-          baseURL: 'https://api.abc.com/v1',
-        });
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'gpt-3.5-turbo',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: 'https://api.***.com/v1',
-            error: {
-              cause: { message: 'api is undefined' },
-              stack: 'abc',
-            },
-            errorType: bizErrorType,
-            provider,
-          });
-        }
-      });
-
-      it('should throw an InvalidOllamaAPIKey error type on 401 status code', async () => {
-        // Mock the API call to simulate a 401 error
-        const error = new Error('Unauthorized') as any;
-        error.status = 401;
-        vi.mocked(instance['client'].chat.completions.create).mockRejectedValue(error);
-
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'gpt-3.5-turbo',
-            temperature: 0,
-          });
-        } catch (e) {
-          // Expect the chat method to throw an error with InvalidOllamaAPIKey
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            error: new Error('Unauthorized'),
-            errorType: invalidErrorType,
-            provider,
-          });
-        }
-      });
-
-      it('should return AgentRuntimeError for non-OpenAI errors', async () => {
-        // Arrange
-        const genericError = new Error('Generic Error');
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(genericError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
-            temperature: 0,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: defaultBaseURL,
-            errorType: 'AgentRuntimeError',
-            provider,
-            error: {
-              name: genericError.name,
-              cause: genericError.cause,
-              message: genericError.message,
-              stack: genericError.stack,
-            },
-          });
-        }
-      });
+      }
     });
 
-    describe('LobeOllamaAI chat with callback and headers', () => {
-      it('should handle callback and headers correctly', async () => {
-        // 模拟 chat.completions.create 方法返回一个可读流
-        const mockCreateMethod = vi
-          .spyOn(instance['client'].chat.completions, 'create')
-          .mockResolvedValue(
-            new ReadableStream({
-              start(controller) {
-                controller.enqueue({
-                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
-                  object: 'chat.completion.chunk',
-                  created: 1709125675,
-                  model: 'gpt-3.5-turbo-0125',
-                  system_fingerprint: 'fp_86156a94a0',
-                  choices: [
-                    { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
-                  ],
-                });
-                controller.close();
-              },
-            }) as any,
-          );
+    it('should abort the request when signal aborts', async () => {
+      const abortMock = vi.fn();
+      vi.mocked(Ollama.prototype.abort).mockImplementation(abortMock);
 
-        // 准备 callback 和 headers
-        const mockCallback: ChatStreamCallbacks = {
-          onStart: vi.fn(),
-          onToken: vi.fn(),
-        };
-        const mockHeaders = { 'Custom-Header': 'TestValue' };
+      const payload = {
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'model-id',
+      };
+      const options = { signal: new AbortController().signal };
 
-        // 执行测试
-        const result = await instance.chat(
-          {
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
-            temperature: 0,
-          },
-          { callback: mockCallback, headers: mockHeaders },
-        );
+      ollamaAI.chat(payload as any, options);
 
-        // 验证 callback 被调用
-        await result.text(); // 确保流被消费
-        expect(mockCallback.onStart).toHaveBeenCalled();
-        expect(mockCallback.onToken).toHaveBeenCalledWith('hello');
+      options.signal.dispatchEvent(new Event('abort'));
 
-        // 验证 headers 被正确传递
-        expect(result.headers.get('Custom-Header')).toEqual('TestValue');
-
-        // 清理
-        mockCreateMethod.mockRestore();
-      });
-    });
-
-    describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_OLLAMA_CHAT_COMPLETION is 1', async () => {
-        // Arrange
-        const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
-        const mockDebugStream = new ReadableStream({
-          start(controller) {
-            controller.enqueue('Debug stream content');
-            controller.close();
-          },
-        }) as any;
-        mockDebugStream.toReadableStream = () => mockDebugStream; // 添加 toReadableStream 方法
-
-        // 模拟 chat.completions.create 返回值，包括模拟的 tee 方法
-        (instance['client'].chat.completions.create as Mock).mockResolvedValue({
-          tee: () => [mockProdStream, { toReadableStream: () => mockDebugStream }],
-        });
-
-        // 保存原始环境变量值
-        const originalDebugValue = process.env.DEBUG_OLLAMA_CHAT_COMPLETION;
-
-        // 模拟环境变量
-        process.env.DEBUG_OLLAMA_CHAT_COMPLETION = '1';
-        vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
-
-        // 执行测试
-        // 运行你的测试函数，确保它会在条件满足时调用 debugStream
-        // 假设的测试函数调用，你可能需要根据实际情况调整
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'text-davinci-003',
-          temperature: 0,
-        });
-
-        // 验证 debugStream 被调用
-        expect(debugStreamModule.debugStream).toHaveBeenCalled();
-
-        // 恢复原始环境变量值
-        process.env.DEBUG_OLLAMA_CHAT_COMPLETION = originalDebugValue;
-      });
+      expect(abortMock).toHaveBeenCalled();
     });
   });
 
-  describe('private method', () => {
-    describe('convertContentToOllamaMessage', () => {
-      it('should format message array content of UserMessageContentPart to match ollama api', () => {
-        const message: OpenAIChatMessage = {
-          role: 'user',
-          content: [
-            {
-              type: 'text',
-              text: 'Hello',
-            },
-            {
-              type: 'image_url',
-              image_url: {
-                detail: 'auto',
-                url: 'data:image/png;base64,iVBO...',
-              },
-            },
-          ],
-        };
-
-        const ollamaMessage = instance['convertContentToOllamaMessage'](message);
-
-        expect(ollamaMessage).toEqual({
-          role: 'user',
-          content: 'Hello',
-          images: ['iVBO...'],
-        });
+  describe('models', () => {
+    it('should call Ollama client list method and return ChatModelCard array', async () => {
+      const listMock = vi.fn().mockResolvedValue({
+        models: [{ name: 'model-1' }, { name: 'model-2' }],
       });
+      vi.mocked(Ollama.prototype.list).mockImplementation(listMock);
 
-      it('should not affect string type message content', () => {
-        const message: OpenAIChatMessage = {
-          role: 'user',
-          content: 'Hello',
-        };
+      const models = await ollamaAI.models();
 
-        const ollamaMessage = instance['convertContentToOllamaMessage'](message);
+      expect(listMock).toHaveBeenCalled();
+      expect(models).toEqual([{ id: 'model-1' }, { id: 'model-2' }]);
+    });
+  });
 
-        expect(ollamaMessage).toEqual({
-          role: 'user',
-          content: 'Hello',
-        });
+  describe('buildOllamaMessages', () => {
+    it('should convert OpenAIChatMessage array to OllamaMessage array', () => {
+      const messages = [
+        { content: 'Hello', role: 'user' },
+        { content: 'Hi there!', role: 'assistant' },
+      ];
+
+      const ollamaMessages = ollamaAI['buildOllamaMessages'](messages as any);
+
+      expect(ollamaMessages).toEqual([
+        { content: 'Hello', role: 'user' },
+        { content: 'Hi there!', role: 'assistant' },
+      ]);
+    });
+  });
+
+  describe('convertContentToOllamaMessage', () => {
+    it('should convert string content to OllamaMessage', () => {
+      const message = { content: 'Hello', role: 'user' };
+
+      const ollamaMessage = ollamaAI['convertContentToOllamaMessage'](message as any);
+
+      expect(ollamaMessage).toEqual({ content: 'Hello', role: 'user' });
+    });
+
+    it('should convert text content to OllamaMessage', () => {
+      const message = {
+        content: [{ type: 'text', text: 'Hello' }],
+        role: 'user',
+      };
+
+      const ollamaMessage = ollamaAI['convertContentToOllamaMessage'](message as any);
+
+      expect(ollamaMessage).toEqual({ content: 'Hello', role: 'user' });
+    });
+
+    it('should convert image_url content to OllamaMessage with images', () => {
+      const message = {
+        content: [
+          {
+            type: 'image_url',
+            image_url: { url: 'data:image/png;base64,abc123' },
+          },
+        ],
+        role: 'user',
+      };
+
+      const ollamaMessage = ollamaAI['convertContentToOllamaMessage'](message as any);
+
+      expect(ollamaMessage).toEqual({
+        content: '',
+        role: 'user',
+        images: ['abc123'],
+      });
+    });
+
+    it('should ignore invalid image_url content', () => {
+      const message = {
+        content: [
+          {
+            type: 'image_url',
+            image_url: { url: 'invalid-url' },
+          },
+        ],
+        role: 'user',
+      };
+
+      const ollamaMessage = ollamaAI['convertContentToOllamaMessage'](message as any);
+
+      expect(ollamaMessage).toEqual({
+        content: '',
+        role: 'user',
       });
     });
   });

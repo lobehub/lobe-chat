@@ -1,4 +1,5 @@
 import { LLMRoleType } from '@/types/llm';
+import { MessageToolCall } from '@/types/message';
 
 import { OpenAIFunctionCall } from './functionCall';
 
@@ -23,6 +24,9 @@ export interface OpenAIChatMessage {
    */
   content: string | UserMessageContentPart[];
 
+  /**
+   * @deprecated
+   */
   function_call?: OpenAIFunctionCall;
   name?: string;
   /**
@@ -30,6 +34,8 @@ export interface OpenAIChatMessage {
    * @description 消息发送者的角色
    */
   role: LLMRoleType;
+  tool_call_id?: string;
+  tool_calls?: MessageToolCall[];
 }
 
 /**

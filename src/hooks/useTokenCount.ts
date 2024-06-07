@@ -7,7 +7,7 @@ export const useTokenCount = (input: string = '') => {
 
   useEffect(() => {
     startTransition(() => {
-      encodeAsync(input)
+      encodeAsync(input || '')
         .then(setNum)
         .catch(() => {
           // 兜底采用字符数

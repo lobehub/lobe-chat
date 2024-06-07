@@ -1,0 +1,16 @@
+{
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modelo personalizado, por padrão, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
+      "file": "Este modelo suporta leitura e reconhecimento de arquivos enviados.",
+      "functionCall": "Este modelo suporta chamadas de função.",
+      "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão.",
+      "vision": "Este modelo suporta reconhecimento visual."
+    },
+    "removed": "Este modelo não está na lista, se for desmarcado, será removido automaticamente"
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "Nenhum modelo habilitado. Por favor, vá para as configurações e habilite um.",
+    "provider": "Fornecedor"
+  }
+}

@@ -1,44 +1,52 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://docs.perplexity.ai/docs/model-cards
 const Perplexity: ModelProviderCard = {
   chatModels: [
     {
       displayName: 'Perplexity 7B Chat',
-      id: 'pplx-7b-chat',
-      tokens: 8192,
+      id: 'llama-3-sonar-small-32k-chat',
+      tokens: 32_768,
     },
     {
       displayName: 'Perplexity 70B Chat',
-      id: 'pplx-70b-chat',
-      tokens: 8192,
+      enabled: true,
+      id: 'llama-3-sonar-large-32k-chat',
+      tokens: 32_768,
     },
     {
       displayName: 'Perplexity 7B Online',
-      id: 'pplx-7b-online',
-      tokens: 8192,
+      id: 'llama-3-sonar-small-32k-online',
+      tokens: 28_000,
     },
     {
       displayName: 'Perplexity 70B Online',
-      id: 'pplx-70b-online',
+      enabled: true,
+      id: 'llama-3-sonar-large-32k-online',
+      tokens: 28_000,
+    },
+    {
+      displayName: 'Llama3 8B Instruct',
+      id: 'llama-3-8b-instruct',
       tokens: 8192,
     },
     {
-      displayName: 'Codellama 34B Instruct',
-      id: 'codellama-34b-instruct',
-      tokens: 16_384,
-    },
-    {
-      displayName: 'Codellama 70B Instruct',
-      id: 'codellama-70b-instruct',
-      tokens: 16_384,
+      displayName: 'Llama3 70B Instruct',
+      id: 'llama-3-70b-instruct',
+      tokens: 8192,
     },
     {
       displayName: 'Mixtral 8x7B Instruct',
       id: 'mixtral-8x7b-instruct',
-      tokens: 8192,
+      tokens: 16_384,
     },
   ],
+  checkModel: 'pplx-7b-chat',
   id: 'perplexity',
+  name: 'Perplexity',
+  proxyUrl: {
+    placeholder: 'https://api.perplexity.ai',
+  },
 };
 
 export default Perplexity;

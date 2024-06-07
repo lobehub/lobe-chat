@@ -2,18 +2,19 @@ import { act, renderHook } from '@testing-library/react';
 import useSWR from 'swr';
 import { Mock, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { notification } from '@/components/AntdStaticMethods';
+import { DB_File } from '@/database/client/schemas/files';
 import { fileService } from '@/services/file';
+import { uploadService } from '@/services/upload';
 
 import { useFileStore as useStore } from '../../store';
 
 vi.mock('zustand/traditional');
 
-// Mocks for fileService
-vi.mock('@/services/file', () => ({
-  fileService: {
-    removeFile: vi.fn(),
-    uploadFile: vi.fn(),
-    getFile: vi.fn(),
+// Mock necessary modules and functions
+vi.mock('@/components/AntdStaticMethods', () => ({
+  notification: {
+    error: vi.fn(),
   },
 }));
 
@@ -67,7 +68,7 @@ describe('useFileStore:images', () => {
     const fileId = 'test-id';
 
     // Mock the fileService.removeFile to resolve
-    (fileService.removeFile as Mock).mockResolvedValue(undefined);
+    vi.spyOn(fileService, 'removeFile').mockResolvedValue(undefined);
 
     // Populate the list to remove an item later
     act(() => {
@@ -96,7 +97,7 @@ describe('useFileStore:images', () => {
     };
 
     // Mock the fileService.getFile to resolve with fileData
-    (fileService.getFile as Mock).mockResolvedValue(fileData);
+    vi.spyOn(fileService, 'getFile').mockResolvedValue(fileData as any);
 
     // Mock useSWR to call the fetcher function immediately
     const useSWRMock = vi.mocked(useSWR);
@@ -124,16 +125,15 @@ describe('useFileStore:images', () => {
 
       // 模拟 fileService.uploadFile 抛出错误
       const errorMessage = 'Upload failed';
-      (fileService.uploadFile as Mock).mockRejectedValue(new Error(errorMessage));
+      vi.spyOn(uploadService, 'uploadFile').mockRejectedValue(new Error(errorMessage));
 
       // Mock console.error for testing
-      const consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       await act(async () => {
         await result.current.uploadFile(testFile);
       });
 
-      expect(fileService.uploadFile).toHaveBeenCalledWith({
+      expect(uploadService.uploadFile).toHaveBeenCalledWith({
         createdAt: testFile.lastModified,
         data: await testFile.arrayBuffer(),
         fileType: testFile.type,
@@ -143,11 +143,9 @@ describe('useFileStore:images', () => {
       });
       // 由于上传失败，inputFilesList 应该没有变化
       expect(result.current.inputFilesList).toEqual([]);
-      // 确保错误被正确记录
-      expect(consoleErrorMock).toHaveBeenCalledWith('upload error:', expect.any(Error));
 
-      // Cleanup mock
-      consoleErrorMock.mockRestore();
+      // 确保错误提示被调用
+      expect(notification.error).toHaveBeenCalled();
     });
 
     it('uploadFile should upload the file and update inputFilesList', async () => {
@@ -156,7 +154,6 @@ describe('useFileStore:images', () => {
 
       // 模拟 fileService.uploadFile 返回的数据
       const uploadedFileData = {
-        id: 'new-file-id',
         createdAt: testFile.lastModified,
         data: await testFile.arrayBuffer(),
         fileType: testFile.type,
@@ -166,13 +163,14 @@ describe('useFileStore:images', () => {
       };
 
       // Mock the fileService.uploadFile to resolve with uploadedFileData
-      (fileService.uploadFile as Mock).mockResolvedValue(uploadedFileData);
+      vi.spyOn(uploadService, 'uploadFile').mockResolvedValue(uploadedFileData as DB_File);
+      vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: 'new-file-id' });
 
       await act(async () => {
         await result.current.uploadFile(testFile);
       });
 
-      expect(fileService.uploadFile).toHaveBeenCalledWith({
+      expect(fileService.createFile).toHaveBeenCalledWith({
         createdAt: testFile.lastModified,
         data: await testFile.arrayBuffer(),
         fileType: testFile.type,
@@ -180,7 +178,7 @@ describe('useFileStore:images', () => {
         saveMode: 'local',
         size: testFile.size,
       });
-      expect(result.current.inputFilesList).toContain(uploadedFileData.id);
+      expect(result.current.inputFilesList).toContain('new-file-id');
     });
   });
 });

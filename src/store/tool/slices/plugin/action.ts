@@ -3,6 +3,7 @@ import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { pluginService } from '@/services/plugin';
+import { merge } from '@/utils/merge';
 
 import { ToolStore } from '../../store';
 import { pluginStoreSelectors } from '../store/selectors';
@@ -44,7 +45,17 @@ export const createPluginSlice: StateCreator<
     await get().refreshPlugins();
   },
   updatePluginSettings: async (id, settings) => {
-    await pluginService.updatePluginSettings(id, settings);
+    const signal = get().updatePluginSettingsSignal;
+    if (signal) signal.abort('canceled');
+
+    const newSignal = new AbortController();
+
+    const previousSettings = pluginSelectors.getPluginSettingsById(id)(get());
+    const nextSettings = merge(previousSettings, settings);
+
+    set({ updatePluginSettingsSignal: newSignal }, false, 'create new Signal');
+    await pluginService.updatePluginSettings(id, nextSettings, newSignal.signal);
+
     await get().refreshPlugins();
   },
   useCheckPluginsIsInstalled: (plugins) => useSWR(plugins, get().checkPluginsIsInstalled),

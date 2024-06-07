@@ -1,11 +1,25 @@
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { edgeClient } from '@/libs/trpc/client';
+import { GlobalServerConfig } from '@/types/serverConfig';
+
 import { globalService } from '../global';
 
 global.fetch = vi.fn();
 
 beforeEach(() => {
   vi.clearAllMocks();
+});
+
+vi.mock('@/libs/trpc/client', () => {
+  return {
+    edgeClient: {
+      config: {
+        getGlobalConfig: { query: vi.fn() },
+        getDefaultAgentConfig: { query: vi.fn() },
+      },
+    },
+  };
 });
 
 describe('GlobalService', () => {
@@ -60,15 +74,27 @@ describe('GlobalService', () => {
   describe('ServerConfig', () => {
     it('should return the serverConfig when fetch is successful', async () => {
       // Arrange
-      (fetch as Mock).mockResolvedValue({
-        json: () => Promise.resolve({ customModelName: 'abc' }),
-      });
+      const mockConfig = { enabledOAuthSSO: true } as GlobalServerConfig;
+      vi.spyOn(edgeClient.config.getGlobalConfig, 'query').mockResolvedValue(mockConfig);
 
       // Act
       const config = await globalService.getGlobalConfig();
 
       // Assert
-      expect(config).toEqual({ customModelName: 'abc' });
+      expect(config).toEqual({ enabledOAuthSSO: true });
+    });
+
+    it('should return the defaultAgentConfig when fetch is successful', async () => {
+      // Arrange
+      vi.spyOn(edgeClient.config.getDefaultAgentConfig, 'query').mockResolvedValue({
+        model: 'gemini-pro',
+      });
+
+      // Act
+      const config = await globalService.getDefaultAgentConfig();
+
+      // Assert
+      expect(config).toEqual({ model: 'gemini-pro' });
     });
   });
 });

@@ -2,8 +2,12 @@ import { act } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
-import { GlobalLLMConfig, GlobalLLMProviderKey } from '@/types/settings';
+import { useUserStore } from '@/store/user';
+import {
+  GlobalLLMProviderKey,
+  UserKeyVaults,
+  UserModelProviderConfig,
+} from '@/types/user/settings';
 
 import { getProviderAuthPayload } from './_auth';
 
@@ -21,10 +25,10 @@ vi.mock('zustand/traditional');
 
 const setModelProviderConfig = <T extends GlobalLLMProviderKey>(
   provider: T,
-  config: Partial<GlobalLLMConfig[T]>,
+  config: Partial<UserKeyVaults[T]>,
 ) => {
-  useGlobalStore.setState({
-    settings: { languageModel: { [provider]: config } },
+  useUserStore.setState({
+    settings: { keyVaults: { [provider]: config } },
   });
 };
 
@@ -135,7 +139,7 @@ describe('getProviderAuthPayload', () => {
     // 假设的 Ollama 配置
     const mockOllamaProxyUrl = 'ollama-proxy-url';
     act(() => {
-      setModelProviderConfig('ollama', { endpoint: mockOllamaProxyUrl });
+      setModelProviderConfig('ollama', { baseURL: mockOllamaProxyUrl });
     });
 
     const payload = getProviderAuthPayload(ModelProvider.Ollama);
@@ -147,26 +151,25 @@ describe('getProviderAuthPayload', () => {
   it('should return correct payload for OpenAI provider', () => {
     // 假设的 OpenAI 配置
     const mockOpenAIConfig = {
-      OPENAI_API_KEY: 'openai-api-key',
+      apiKey: 'openai-api-key',
+      baseURL: 'openai-baseURL',
       endpoint: 'openai-endpoint',
       useAzure: true,
       azureApiVersion: 'openai-azure-api-version',
     };
     act(() => {
-      setModelProviderConfig('openAI', mockOpenAIConfig);
+      setModelProviderConfig('openai', mockOpenAIConfig);
     });
 
     const payload = getProviderAuthPayload(ModelProvider.OpenAI);
     expect(payload).toEqual({
-      apiKey: mockOpenAIConfig.OPENAI_API_KEY,
-      azureApiVersion: mockOpenAIConfig.azureApiVersion,
-      endpoint: mockOpenAIConfig.endpoint,
-      useAzure: mockOpenAIConfig.useAzure,
+      apiKey: mockOpenAIConfig.apiKey,
+      endpoint: mockOpenAIConfig.baseURL,
     });
   });
 
   it('should return an empty object or throw an error for an unknown provider', () => {
     const payload = getProviderAuthPayload('UnknownProvider');
-    expect(payload).toEqual({ apiKey: '', endpoint: '' });
+    expect(payload).toEqual({});
   });
 });

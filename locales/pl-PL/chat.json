@@ -4,23 +4,31 @@
   },
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu zacząć ze mną rozmawiać, lub udoskonalić moje informacje, przechodząc do [Ustawień asystenta](/chat/settings#session={{id}}).",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
+  "agentsAndConversations": "Agenci i rozmowy",
   "backToBottom": "Przewiń na dół",
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
+  "confirmRemoveSessionSuccess": "Sesja usunięta pomyślnie",
   "defaultAgent": "Domyślny asystent",
   "defaultList": "Domyślna lista",
   "defaultSession": "Domyślna sesja",
+  "duplicateSession": {
+    "loading": "Kopiowanie...",
+    "success": "Kopiowanie zakończone powodzeniem",
+    "title": "{{title}} - kopia"
+  },
   "duplicateTitle": "{{title}} kopia",
+  "emptyAgent": "Brak asystenta",
   "historyRange": "Zakres historii",
   "inbox": {
-    "defaultMessage": "Cześć, jestem twoim inteligentnym asystentem, możesz zadać mi dowolne pytanie, postaram się na nie odpowiedzieć. Jeśli potrzebujesz bardziej profesjonalnego lub spersonalizowanego asystenta, kliknij `+`, aby utworzyć niestandardowego asystenta.",
     "desc": "Włącz klastry mózgów, rozpal iskrę myślenia. Twój inteligentny asystent, gotowy do rozmowy o wszystkim.",
     "title": "Pogadajmy sobie"
   },
   "input": {
+    "addAi": "Dodaj wiadomość AI",
+    "addUser": "Dodaj wiadomość użytkownika",
     "more": "więcej",
-    "onlyAdd": "Tylko dodaj wiadomość",
     "send": "Wyślij",
     "sendWithCmdEnter": "Wyślij za pomocą klawisza {{meta}} + Enter",
     "sendWithEnter": "Wyślij za pomocą klawisza Enter",
@@ -42,13 +50,17 @@
   "sessionGroup": {
     "config": "Zarządzanie grupami",
     "confirmRemoveGroupAlert": "Czy na pewno chcesz usunąć tę grupę? Po usunięciu asystenci z tej grupy zostaną przeniesieni do domyślnej listy. Potwierdź swoje działanie.",
+    "createAgentSuccess": "Utworzenie asystenta zakończone sukcesem",
     "createGroup": "Dodaj nową grupę",
     "createSuccess": "Utworzono pomyślnie",
+    "creatingAgent": "Tworzenie asystenta...",
     "inputPlaceholder": "Wprowadź nazwę grupy...",
     "moveGroup": "Przenieś do grupy",
     "newGroup": "Nowa grupa",
     "rename": "Zmień nazwę grupy",
     "renameSuccess": "Zmiana nazwy pomyślna",
+    "sortSuccess": "Pomyślne ponowne sortowanie",
+    "sorting": "Aktualizacja sortowania grupy...",
     "tooLong": "Nazwa grupy musi mieć od 1 do 20 znaków"
   },
   "shareModal": {
@@ -72,6 +84,7 @@
     "chats": "Rozmowy",
     "rest": "Pozostałe",
     "systemRole": "Rola systemowa",
+    "title": "Szczegóły tokena",
     "tools": "Narzędzia",
     "total": "Razem",
     "used": "Wykorzystane"
@@ -91,6 +104,8 @@
     "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "defaultTitle": "Domyślne tematy",
+    "duplicateLoading": "Kopiowanie tematu...",
+    "duplicateSuccess": "Temat został skopiowany pomyślnie",
     "guide": {
       "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako historię tematu i rozpocząć nową rundę rozmowy",
       "title": "Lista tematów"
@@ -112,9 +127,12 @@
   },
   "updateAgent": "Aktualizuj informacje asystenta",
   "upload": {
+    "actionFiletip": "Prześlij plik",
     "actionTooltip": "Prześlij obraz",
     "disabled": "Obecny model nie obsługuje rozpoznawania wizyjnego. Proszę przełączyć model.",
     "dragDesc": "Przeciągnij pliki tutaj, obsługiwane jest przesyłanie wielu obrazów. Naciśnij klawisz Shift, aby wysłać obraz bezpośrednio",
+    "dragFileDesc": "Przeciągnij zdjęcia i pliki tutaj, aby umożliwić przesyłanie wielu zdjęć i plików. Przytrzymaj klawisz Shift, aby bezpośrednio wysłać obraz lub plik",
+    "dragFileTitle": "Prześlij plik",
     "dragTitle": "Prześlij obraz"
   }
 }

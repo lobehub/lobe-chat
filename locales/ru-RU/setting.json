@@ -2,6 +2,14 @@
   "about": {
     "title": "О нас"
   },
+  "agentTab": {
+    "chat": "Предпочтения чата",
+    "meta": "Информация об ассистенте",
+    "modal": "Настройки модели",
+    "plugin": "Настройки плагина",
+    "prompt": "Настройки роли",
+    "tts": "Сервис озвучивания текста"
+  },
   "analytics": {
     "telemetry": {
       "desc": "Выбрав отправку телеметрических данных, вы можете помочь нам улучшить общий пользовательский опыт LobeChat",
@@ -22,74 +30,23 @@
       "confirm": "Вы уверены, что хотите сбросить все настройки?",
       "currentVersion": "Текущая версия",
       "desc": "Сброс всех параметров настройки до значений по умолчанию",
+      "success": "Все настройки были успешно сброшены",
       "title": "Сброс всех настроек"
     }
   },
   "header": {
+    "desc": "Настройки предпочтений и моделей.",
     "global": "Глобальные настройки",
     "session": "Настройки сеанса",
-    "sessionWithName": "Настройки сеанса · {{name}}"
+    "sessionDesc": "Настройки персонажа и предпочтения сессии.",
+    "sessionWithName": "Настройки сеанса · {{name}}",
+    "title": "Настройки"
   },
   "llm": {
-    "anthropic": {
-      "endpoint": {
-        "desc": "Должен включать http(s):// помимо стандартного адреса",
-        "placeholder": "https://api.anthropic.com",
-        "title": "Адрес API-прокси"
-      },
-      "title": "Anthropic",
-      "token": {
-        "desc": "Введите свой API Key от Anthropic",
-        "placeholder": "Anthropic API Key",
-        "title": "API Key"
-      }
-    },
-    "azure": {
-      "azureApiVersion": {
-        "desc": "Версия API Azure, следующая формату ГГГГ-ММ-ДД, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Получить список",
-        "title": "Версия Azure API"
-      },
-      "deployments": {
-        "desc": "Введите список ваших моделей используя id=name синтакс (например, если имя деплоя и модели идентичны, можно ввести только имя модели), разделите модели через запятую (,)",
-        "title": "Список моделей Azure"
-      },
-      "endpoint": {
-        "desc": "Можно найти в разделе «Ключи и конечные точки» при проверке ресурса в портале Azure",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Адрес Azure API"
-      },
-      "models": {
-        "desc": "Поддерживаемые модели",
-        "title": "Список моделей"
-      },
-      "title": "Azure OpenAI",
-      "token": {
-        "desc": "Можно найти в разделе «Ключи и конечные точки» при проверке ресурса в портале Azure. Можно использовать KEY1 или KEY2",
-        "placeholder": "Azure API Key",
-        "title": "API Key"
-      }
-    },
-    "bedrock": {
-      "accessKeyId": {
-        "desc": "Введите ваш AWS Access Key ID",
-        "placeholder": "AWS Access Key Id",
-        "title": "AWS Access Key ID"
-      },
-      "checker": {
-        "desc": "Проверить правильность заполнения AccessKeyId/SecretAccessKey"
-      },
-      "region": {
-        "desc": "Введите ваш AWS Region",
-        "placeholder": "AWS Region",
-        "title": "AWS Region"
-      },
-      "secretAccessKey": {
-        "desc": "Введите ваш AWS Secret Access Key",
-        "placeholder": "AWS Secret Access Key",
-        "title": "AWS Secret Access Key"
-      },
-      "title": "Bedrock"
+    "apiKey": {
+      "desc": "Введите ваш {{name}} ключ API",
+      "placeholder": "{{name}} ключ API",
+      "title": "Ключ API"
     },
     "checker": {
       "button": "Проверить",
@@ -97,157 +54,65 @@
       "pass": "Проверка пройдена",
       "title": "Проверка доступности"
     },
-    "google": {
-      "title": "Google",
-      "token": {
-        "desc": "Введите свой API Key от Google",
-        "placeholder": "Google API Key",
-        "title": "API Key"
+    "customModelCards": {
+      "addNew": "Создать и добавить модель {{id}}",
+      "config": "Настроить модель",
+      "confirmDelete": "Вы уверены, что хотите удалить эту пользовательскую модель? Действие нельзя отменить, будьте осторожны.",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Поле, фактически запрашиваемое в Azure OpenAI",
+          "placeholder": "Введите название развертывания модели в Azure",
+          "title": "Название развертывания модели"
+        },
+        "displayName": {
+          "placeholder": "Введите отображаемое название модели, например, ChatGPT, GPT-4 и т. д.",
+          "title": "Отображаемое название модели"
+        },
+        "files": {
+          "extra": "Текущая реализация загрузки файлов в LobeChat является временным решением, предназначенным только для самостоятельного тестирования. Полная функциональность загрузки файлов будет доступна в будущем",
+          "title": "Поддержка загрузки файлов"
+        },
+        "functionCall": {
+          "extra": "Эта настройка активирует только возможность вызова функций в LobeChat. Поддержка вызова функций полностью зависит от самой модели, пожалуйста, протестируйте доступность вызова функций этой модели самостоятельно",
+          "title": "Вызов функций"
+        },
+        "id": {
+          "extra": "Будет отображаться как метка модели",
+          "placeholder": "Введите идентификатор модели, например, gpt-4-turbo-preview или claude-2.1",
+          "title": "Идентификатор модели"
+        },
+        "modalTitle": "Настройка пользовательской модели",
+        "tokens": {
+          "title": "Максимальное количество токенов",
+          "unlimited": "неограниченный"
+        },
+        "vision": {
+          "extra": "Эта настройка активирует только конфигурацию загрузки изображений в LobeChat. Поддержка распознавания полностью зависит от самой модели, пожалуйста, протестируйте доступность распознавания изображений этой модели самостоятельно",
+          "title": "Распознавание изображений"
+        }
       }
     },
-    "groq": {
-      "title": "Groq",
-      "token": {
-        "desc": "Введите свой API Key от Groq",
-        "placeholder": "Groq API Key",
-        "title": "API Key"
-      }
+    "fetchOnClient": {
+      "desc": "Режим запроса с клиента позволяет инициировать запрос сеанса непосредственно из браузера, что улучшает скорость ответа",
+      "title": "Использовать режим запроса с клиента"
     },
-    "mistral": {
-      "title": "Mistral AI",
-      "token": {
-        "desc": "Введите свой API Key от Mistral AI",
-        "placeholder": "Mistral AI API Key",
-        "title": "API Key"
-      }
+    "fetcher": {
+      "fetch": "Получить список моделей",
+      "fetching": "Идет получение списка моделей...",
+      "latestTime": "Последнее обновление: {{time}}",
+      "noLatestTime": "Список пока не получен"
     },
-    "moonshot": {
-      "title": "Луна в тени",
-      "token": {
-        "desc": "Введите свой API Key от Moonshot AI",
-        "placeholder": "Moonshot AI API Key",
-        "title": "API Key"
-      }
+    "modelList": {
+      "desc": "Выберите модель для отображения в сеансе, выбранная модель будет отображаться в списке моделей",
+      "placeholder": "Выберите модель из списка",
+      "title": "Список моделей",
+      "total": "Всего доступно {{count}} моделей"
     },
-    "ollama": {
-      "checker": {
-        "desc": "Проверить правильность адреса прокси"
-      },
-      "customModelName": {
-        "desc": "Добавить кастомные модели, разделяя их через запятую (,)",
-        "placeholder": "vicuna,llava,codellama,llama2:13b-text",
-        "title": "Название кастомных моделей"
-      },
-      "endpoint": {
-        "desc": "Введите адрес прокси-интерфейса Ollama, если локально не указано иное, можете оставить пустым",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "Адрес прокси-интерфейса"
-      },
-      "title": "Ollama"
+    "proxyUrl": {
+      "desc": "За исключением адреса по умолчанию, должен включать http(s)://",
+      "title": "Адрес прокси API"
     },
-    "openai": {
-      "azureApiVersion": {
-        "desc": "Версия API Azure, следующая формату ГГГГ-ММ-ДД, см. [последнюю версию](https://learn.microsoft.com/ru-ru/azure/ai-services/openai/reference#chat-completions)",
-        "fetch": "Получить список",
-        "title": "Версия Azure API"
-      },
-      "customModelName": {
-        "desc": "Добавить кастомные модели, разделяя их через запятую (,)",
-        "placeholder": "model1,model2,model3",
-        "title": "Название кастомных моделей"
-      },
-      "endpoint": {
-        "desc": "Должен включать http(s):// помимо стандартного адреса",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "Адрес прокси-интерфейса"
-      },
-      "models": {
-        "count": "Поддерживается {{count}} моделей",
-        "desc": "Поддерживаемые модели",
-        "fetch": "Получить список моделей",
-        "notSupport": "Azure OpenAI в настоящее время не поддерживает просмотр списка моделей",
-        "notSupportTip": "Вам нужно самостоятельно убедиться, что имя деплоя соответствует имени модели",
-        "refetch": "Заново получить список моделей",
-        "title": "Список моделей"
-      },
-      "title": "OpenAI",
-      "token": {
-        "desc": "Используйте свой собственный OpenAI Key",
-        "placeholder": "OpenAI API Key",
-        "title": "OpenAI API Key"
-      },
-      "useAzure": {
-        "desc": "Использовать услуги OpenAI от Azure",
-        "fetch": "Получить список",
-        "serverConfig": "Администратор на сервере включил Azure OpenAI, переключение запрещено",
-        "title": "Azure OpenAI"
-      }
-    },
-    "openrouter": {
-      "checker": {
-        "desc": "Проверить правильность адреса прокси"
-      },
-      "customModelName": {
-        "desc": "Добавить кастомные модели, разделяя их через запятую (,)",
-        "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-        "title": "Название кастомных моделей"
-      },
-      "title": "OpenRouter",
-      "token": {
-        "desc": "Введите свой API Key от OpenRouter AI",
-        "placeholder": "OpenRouter AI API Key",
-        "title": "API Key"
-      }
-    },
-    "perplexity": {
-      "title": "Perplexity",
-      "token": {
-        "desc": "Введите свой API Key от Perplexity AI",
-        "placeholder": "Perplexity AI API Key",
-        "title": "API Key"
-      }
-    },
-    "togetherai": {
-      "checker": {
-        "desc": "Проверить правильность адреса прокси"
-      },
-      "customModelName": {
-        "desc": "Добавить кастомные модели, разделяя их через запятую (,)",
-        "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-        "title": "Название кастомных моделей"
-      },
-      "title": "TogetherAI",
-      "token": {
-        "desc": "Введите свой API Key от TogetherAI AI",
-        "placeholder": "TogetherAI AI API Key",
-        "title": "API Key"
-      }
-    },
-    "waitingForMore": "Больше моделей доступно в <1>плане подключения</1>, ожидайте ✨",
-    "zeroone": {
-      "title": "01.AI Цифровая Вселенная",
-      "token": {
-        "desc": "Введите свой API Key от 01.AI Цифровая Вселенная",
-        "placeholder": "01.AI Цифровая Вселенная API Key",
-        "title": "API Key"
-      }
-    },
-    "zhipu": {
-      "title": "Zhipu",
-      "token": {
-        "desc": "Введите свой API Key от Zhipu",
-        "placeholder": "Zhipu API Key",
-        "title": "API Key"
-      }
-    }
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama загружает эту модель. Пожалуйста, не закрывайте эту страницу. Загрузка будет возобновлена с того же места, если вы решите начать её заново.",
-      "remainingTime": "Оставшееся время",
-      "speed": "Скорость загрузки",
-      "title": "Загрузка модели {{model}}"
-    }
+    "waitingForMore": "Больше моделей доступно в <1>плане подключения</1>, ожидайте ✨"
   },
   "plugin": {
     "addTooltip": "Добавить настраиваемый плагин",
@@ -314,6 +179,7 @@
     "enableHistoryCount": {
       "alias": "Без ограничений",
       "limited": "Содержит только {{number}} сообщений",
+      "setlimited": "Установить ограничение на количество использованных сообщений",
       "title": "Ограничение истории сообщений",
       "unlimited": "Без ограничения истории сообщений"
     },
@@ -395,6 +261,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "Модель распознавания речи OpenAI",
+      "title": "OpenAI",
       "ttsModel": "Модель синтеза речи OpenAI"
     },
     "showAllLocaleVoice": {
@@ -467,44 +334,58 @@
   "sync": {
     "device": {
       "deviceName": {
-        "hint": "添加名称以便于识别",
-        "placeholder": "请输入设备名称",
-        "title": "设备名称"
+        "hint": "Добавьте имя для удобства идентификации",
+        "placeholder": "Введите имя устройства",
+        "title": "Имя устройства"
       },
-      "title": "设备信息",
-      "unknownBrowser": "未知浏览器",
-      "unknownOS": "未知系统"
+      "title": "Информация об устройстве",
+      "unknownBrowser": "Неизвестный браузер",
+      "unknownOS": "Неизвестная система"
     },
     "warning": {
-      "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
+      "message": "Эта функция в настоящее время является экспериментальной и может работать нестабильно или непредсказуемо. Если вы столкнетесь с проблемами, пожалуйста, отправьте отзыв."
     },
     "webrtc": {
       "channelName": {
-        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
-        "placeholder": "请输入同步频道名称",
-        "shuffle": "随机生成",
-        "title": "同步频道名称"
+        "desc": "WebRTC будет использовать это имя для создания канала синхронизации, убедитесь, что имя канала уникально",
+        "placeholder": "Введите имя канала синхронизации",
+        "shuffle": "Сгенерировать случайно",
+        "title": "Имя канала синхронизации"
       },
       "channelPassword": {
-        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
-        "placeholder": "请输入同步频道密码",
-        "title": "同步频道密码"
+        "desc": "Добавьте пароль для обеспечения конфиденциальности канала, только устройства с правильным паролем могут присоединиться к каналу",
+        "placeholder": "Введите пароль канала синхронизации",
+        "title": "Пароль канала синхронизации"
       },
-      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "desc": "Реальное время, точка-точка передачи данных, устройства должны быть онлайн одновременно для синхронизации",
       "enabled": {
-        "invalid": "请填写同步频道名称后再开启",
-        "title": "开启同步"
+        "invalid": "Пожалуйста, введите имя канала синхронизации перед включением",
+        "title": "Включить синхронизацию"
       },
-      "title": "WebRTC 同步"
+      "title": "WebRTC синхронизация"
+    }
+  },
+  "systemAgent": {
+    "title": "Системный агент",
+    "topic": {
+      "label": "Модель именования тем",
+      "modelDesc": "Модель, используемая для автоматического переименования тем",
+      "title": "Автоматическое именование тем"
+    },
+    "translation": {
+      "label": "Модель перевода",
+      "modelDesc": "Модель, используемая для перевода",
+      "title": "Настройки помощника по переводу"
     }
   },
   "tab": {
     "about": "О нас",
     "agent": "Помощник по умолчанию",
     "common": "Общие настройки",
-    "experiment": "实验",
+    "experiment": "Эксперимент",
     "llm": "Языковая модель",
-    "sync": "云端同步",
+    "sync": "Синхронизация с облаком",
+    "system-agent": "Системный агент",
     "tts": "Голосовые услуги"
   },
   "tools": {

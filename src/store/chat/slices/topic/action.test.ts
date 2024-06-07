@@ -6,20 +6,24 @@ import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 
 import { useChatStore } from '../../store';
 
+vi.mock('zustand/traditional');
 // Mock topicService 和 messageService
 vi.mock('@/services/topic', () => ({
   topicService: {
     removeTopics: vi.fn(),
     removeAllTopic: vi.fn(),
     removeTopic: vi.fn(),
+    cloneTopic: vi.fn(),
     createTopic: vi.fn(),
-    updateTitle: vi.fn(),
-    updateFavorite: vi.fn(),
+    updateTopicFavorite: vi.fn(),
+    updateTopicTitle: vi.fn(),
+    updateTopic: vi.fn(),
     batchRemoveTopics: vi.fn(),
     getTopics: vi.fn(),
     searchTopics: vi.fn(),
@@ -29,7 +33,21 @@ vi.mock('@/services/topic', () => ({
 vi.mock('@/services/message', () => ({
   messageService: {
     removeMessages: vi.fn(),
+    getMessages: vi.fn(),
   },
+}));
+
+vi.mock('@/components/AntdStaticMethods', () => ({
+  message: {
+    loading: vi.fn(),
+    success: vi.fn(),
+    error: vi.fn(),
+    destroy: vi.fn(),
+  },
+}));
+
+vi.mock('i18next', () => ({
+  t: vi.fn((key, params) => (params.title ? key + '_' + params.title : key)),
 }));
 
 beforeEach(() => {
@@ -86,7 +104,12 @@ describe('topic action', () => {
     it('should not create a topic if there are no messages', async () => {
       const { result } = renderHook(() => useChatStore());
       act(() => {
-        useChatStore.setState({ messages: [] });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('session')]: [],
+          },
+          activeId: 'session',
+        });
       });
 
       const createTopicSpy = vi.spyOn(topicService, 'createTopic');
@@ -101,7 +124,12 @@ describe('topic action', () => {
       const { result } = renderHook(() => useChatStore());
       const messages = [{ id: 'message1' }, { id: 'message2' }] as ChatMessage[];
       act(() => {
-        useChatStore.setState({ messages, activeId: 'session-id' });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('session-id')]: messages,
+          },
+          activeId: 'session-id',
+        });
       });
 
       const createTopicSpy = vi
@@ -180,7 +208,9 @@ describe('topic action', () => {
       const topicId = 'topic-id';
       const favState = true;
 
-      const updateFavoriteSpy = vi.spyOn(topicService, 'updateFavorite').mockResolvedValue(true);
+      const updateFavoriteSpy = vi
+        .spyOn(topicService, 'updateTopic')
+        .mockResolvedValue({ success: 1 });
 
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
 
@@ -188,7 +218,7 @@ describe('topic action', () => {
         await result.current.favoriteTopic(topicId, favState);
       });
 
-      expect(updateFavoriteSpy).toHaveBeenCalledWith(topicId, favState);
+      expect(updateFavoriteSpy).toHaveBeenCalledWith(topicId, { favorite: favState });
       expect(refreshTopicSpy).toHaveBeenCalled();
     });
   });
@@ -208,7 +238,7 @@ describe('topic action', () => {
         expect(result.current.data).toEqual(topics);
       });
       expect(useChatStore.getState().topicsInit).toBeTruthy();
-      expect(useChatStore.getState().topics).toEqual(topics);
+      expect(useChatStore.getState().topicMaps).toEqual({ [sessionId]: topics });
     });
   });
   describe('useSearchTopics', () => {
@@ -233,7 +263,7 @@ describe('topic action', () => {
       const topicId = 'topic-id';
       const newTitle = 'Updated Topic Title';
       // Mock the topicService.updateTitle to resolve immediately
-      (topicService.updateTitle as Mock).mockResolvedValue(undefined);
+      (topicService.updateTopic as Mock).mockResolvedValue(undefined);
 
       const { result } = renderHook(() => useChatStore());
 
@@ -245,7 +275,9 @@ describe('topic action', () => {
       });
 
       // Verify that the topicService.updateTitle was called with correct parameters
-      expect(topicService.updateTitle).toHaveBeenCalledWith(topicId, newTitle);
+      expect(topicService.updateTopic).toHaveBeenCalledWith(topicId, {
+        title: 'Updated Topic Title',
+      });
 
       // Verify that the refreshTopic was called to update the state
       expect(refreshTopicSpy).toHaveBeenCalled();
@@ -309,7 +341,7 @@ describe('topic action', () => {
       const activeId = 'test-session-id';
 
       await act(async () => {
-        useChatStore.setState({ activeId });
+        useChatStore.setState({ activeId, activeTopicId: topicId });
       });
 
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
@@ -324,6 +356,27 @@ describe('topic action', () => {
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).toHaveBeenCalled();
     });
+    it('should remove a specific topic and its messages, then not refresh the topic list', async () => {
+      const topicId = 'topic-1';
+      const { result } = renderHook(() => useChatStore());
+      const activeId = 'test-session-id';
+
+      await act(async () => {
+        useChatStore.setState({ activeId });
+      });
+
+      const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
+      const switchTopicSpy = vi.spyOn(result.current, 'switchTopic');
+
+      await act(async () => {
+        await result.current.removeTopic(topicId);
+      });
+
+      expect(messageService.removeMessages).toHaveBeenCalledWith(activeId, topicId);
+      expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
+      expect(refreshTopicSpy).toHaveBeenCalled();
+      expect(switchTopicSpy).not.toHaveBeenCalled();
+    });
   });
   describe('removeUnstarredTopic', () => {
     it('should remove unstarred topics and refresh the topic list', async () => {
@@ -331,11 +384,14 @@ describe('topic action', () => {
       // Set up mock state with unstarred topics
       await act(async () => {
         useChatStore.setState({
-          topics: [
-            { id: 'topic-1', favorite: false },
-            { id: 'topic-2', favorite: true },
-            { id: 'topic-3', favorite: false },
-          ] as ChatTopic[],
+          activeId: 'abc',
+          topicMaps: {
+            abc: [
+              { id: 'topic-1', favorite: false },
+              { id: 'topic-2', favorite: true },
+              { id: 'topic-3', favorite: false },
+            ] as ChatTopic[],
+          },
         });
       });
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
@@ -353,14 +409,18 @@ describe('topic action', () => {
   describe('updateTopicLoading', () => {
     it('should call update topicLoadingId', async () => {
       const { result } = renderHook(() => useChatStore());
-      expect(result.current.topicLoadingId).toBeUndefined();
-
-      // Call the action with the topicId and newTitle
-      await act(async () => {
-        await result.current.updateTopicLoading('loading-id');
+      act(() => {
+        useChatStore.setState({ topicLoadingIds: [] });
       });
 
-      expect(result.current.topicLoadingId).toEqual('loading-id');
+      expect(result.current.topicLoadingIds).toHaveLength(0);
+
+      // Call the action with the topicId and newTitle
+      act(() => {
+        result.current.internal_updateTopicLoading('loading-id', true);
+      });
+
+      expect(result.current.topicLoadingIds).toEqual(['loading-id']);
     });
   });
   describe('summaryTopicTitle', () => {
@@ -370,11 +430,14 @@ describe('topic action', () => {
       const topics = [{ id: 'topic-1', title: 'Test Topic' }] as ChatTopic[];
       const { result } = renderHook(() => useChatStore());
       await act(async () => {
-        useChatStore.setState({ topics });
+        useChatStore.setState({ topicMaps: { test: topics }, activeId: 'test' });
       });
 
       // Mock the `updateTopicTitleInSummary` and `refreshTopic` for spying
-      const updateTopicTitleInSummarySpy = vi.spyOn(result.current, 'updateTopicTitleInSummary');
+      const updateTopicTitleInSummarySpy = vi.spyOn(
+        result.current,
+        'internal_updateTopicTitleInSummary',
+      );
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
 
       // Mock the `chatService.fetchPresetTaskResult` to simulate the AI response
@@ -394,6 +457,84 @@ describe('topic action', () => {
       expect(refreshTopicSpy).toHaveBeenCalled();
 
       // TODO: need to test with fetchPresetTaskResult
+    });
+  });
+  describe('createTopic', () => {
+    it('should create a new topic and update the store', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const activeId = 'test-session-id';
+      const newTopicId = 'new-topic-id';
+      const messages = [{ id: 'message-1' }, { id: 'message-2' }] as ChatMessage[];
+
+      await act(async () => {
+        useChatStore.setState({
+          activeId,
+          messagesMap: {
+            [messageMapKey(activeId)]: messages,
+          },
+        });
+      });
+
+      const createTopicSpy = vi.spyOn(topicService, 'createTopic').mockResolvedValue(newTopicId);
+      const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
+
+      await act(async () => {
+        const topicId = await result.current.createTopic();
+        expect(topicId).toBe(newTopicId);
+      });
+
+      expect(createTopicSpy).toHaveBeenCalledWith({
+        sessionId: activeId,
+        messages: messages.map((m) => m.id),
+        title: 'topic.defaultTitle',
+      });
+      expect(refreshTopicSpy).toHaveBeenCalled();
+    });
+  });
+  describe('duplicateTopic', () => {
+    it('should duplicate a topic and switch to the new topic', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const topicId = 'topic-1';
+      const newTopicId = 'new-topic-id';
+      const topics = [{ id: topicId, title: 'Original Topic' }] as ChatTopic[];
+
+      await act(async () => {
+        useChatStore.setState({ activeId: 'abc', topicMaps: { abc: topics } });
+      });
+
+      const cloneTopicSpy = vi.spyOn(topicService, 'cloneTopic').mockResolvedValue(newTopicId);
+      const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
+      const switchTopicSpy = vi.spyOn(result.current, 'switchTopic');
+
+      await act(async () => {
+        await result.current.duplicateTopic(topicId);
+      });
+
+      expect(cloneTopicSpy).toHaveBeenCalledWith(topicId, 'duplicateTitle_Original Topic');
+      expect(refreshTopicSpy).toHaveBeenCalled();
+      expect(switchTopicSpy).toHaveBeenCalledWith(newTopicId);
+    });
+  });
+  describe('autoRenameTopicTitle', () => {
+    it('should auto-rename the topic title based on the messages', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const topicId = 'topic-1';
+      const activeId = 'test-session-id';
+      const messages = [{ id: 'message-1', content: 'Hello' }] as ChatMessage[];
+
+      await act(async () => {
+        useChatStore.setState({ activeId });
+      });
+
+      const getMessagesSpy = vi.spyOn(messageService, 'getMessages').mockResolvedValue(messages);
+      const summaryTopicTitleSpy = vi.spyOn(result.current, 'summaryTopicTitle');
+
+      await act(async () => {
+        await result.current.autoRenameTopicTitle(topicId);
+      });
+
+      expect(getMessagesSpy).toHaveBeenCalledWith(activeId, topicId);
+      expect(summaryTopicTitleSpy).toHaveBeenCalledWith(topicId, messages);
     });
   });
 });

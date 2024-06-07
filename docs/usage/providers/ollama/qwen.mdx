@@ -11,7 +11,11 @@ tags:
 
 # Using the Local Qwen Model
 
-<Image alt={'Using Qwen in LobeChat'} cover src={'https://github.com/lobehub/lobe-chat/assets/28616219/7a5fd01a-9fed-49c1-93a3-422269213f19'} />
+<Image
+  alt={'Using Qwen in LobeChat'}
+  cover
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/7a5fd01a-9fed-49c1-93a3-422269213f19'}
+/>
 
 [Qwen](https://github.com/QwenLM/Qwen1.5) is a large language model (LLM) open-sourced by Alibaba Cloud. It is officially defined as a constantly evolving AI large model, and it achieves more accurate Chinese recognition capabilities through more training set content.
 
@@ -22,33 +26,43 @@ Now, through the integration of LobeChat and [Ollama](https://ollama.com/), you 
 <Steps>
   ## Local Installation of Ollama
 
-  First, you need to install Ollama. For the installation process, please refer to the [Ollama Usage Document](/en/usage/providers/ollama).
+First, you need to install Ollama. For the installation process, please refer to the [Ollama Usage Document](/docs/usage/providers/ollama).
 
-  ## Pull the Qwen Model to Local with Ollama
+## Pull the Qwen Model to Local with Ollama
 
-  After installing Ollama, you can install the Qwen model with the following command, taking the 14b model as an example:
+After installing Ollama, you can install the Qwen model with the following command, taking the 14b model as an example:
 
-  ```bash
-  ollama pull qwen:14b
-  ```
-  <Callout type={'info'}>
-    The local version of Qwen provides different model sizes to choose from. Please refer to the
-    [Qwen's Ollama integration page](https://ollama.com/library/qwen) to understand how to choose the
-    model size.
- 
+```bash
+ollama pull qwen:14b
+```
+
+<Callout type={'info'}>
+  The local version of Qwen provides different model sizes to choose from. Please refer to the
+  [Qwen's Ollama integration page](https://ollama.com/library/qwen) to understand how to choose the
+  model size.
 </Callout>
 
-  <Image alt={'Use Ollama Pull Qwen Model'} height={473} inStep src={'https://github.com/lobehub/lobe-chat/assets/1845053/fe34fdfe-c2e4-4d6a-84d7-4ebc61b2516a'} />
+<Image
+  alt={'Use Ollama Pull Qwen Model'}
+  height={473}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/1845053/fe34fdfe-c2e4-4d6a-84d7-4ebc61b2516a'}
+/>
 
-  ### Select the Qwen Model
+### Select the Qwen Model
 
-  In the LobeChat conversation page, open the model selection panel, and then select the Qwen model.
+In the LobeChat conversation page, open the model selection panel, and then select the Qwen model.
 
-  <Image alt={'Choose Qwen Model'} height={430} inStep src={'https://github.com/lobehub/lobe-chat/assets/28616219/e0608cca-f62f-414a-bc55-28a61ba21f14'} />
+<Image
+  alt={'Choose Qwen Model'}
+  height={430}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/e0608cca-f62f-414a-bc55-28a61ba21f14'}
+/>
 
   <Callout type={'info'}>
-    If you do not see the Ollama provider in the model selection panel, please refer to [Integration with Ollama](/en/self-hosting/examples/ollama) to learn how to enable the Ollama provider in LobeChat.
- 
+    If you do not see the Ollama provider in the model selection panel, please refer to [Integration with Ollama](/docs/self-hosting/examples/ollama) to learn how to enable the Ollama provider in LobeChat.
+
 </Callout>
 </Steps>
 

@@ -2,20 +2,21 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeMoonshotAI } from './index';
 
 const provider = 'moonshot';
 const defaultBaseURL = 'https://api.moonshot.cn/v1';
-const bizErrorType = 'MoonshotBizError';
-const invalidErrorType = 'InvalidMoonshotAPIKey';
+
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobeMoonshotAI;
+let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
   instance = new LobeMoonshotAI({ apiKey: 'test' });
@@ -40,24 +41,6 @@ describe('LobeMoonshotAI', () => {
   });
 
   describe('chat', () => {
-    it('should return a StreamingTextResponse on successful API call', async () => {
-      // Arrange
-      const mockStream = new ReadableStream();
-      const mockResponse = Promise.resolve(mockStream);
-
-      (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
-
-      // Act
-      const result = await instance.chat({
-        messages: [{ content: 'Hello', role: 'user' }],
-        model: 'text-davinci-003',
-        temperature: 0,
-      });
-
-      // Assert
-      expect(result).toBeInstanceOf(Response);
-    });
-
     describe('Error', () => {
       it('should return OpenAIBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange
@@ -223,59 +206,6 @@ describe('LobeMoonshotAI', () => {
       });
     });
 
-    describe('LobeMoonshotAI chat with callback and headers', () => {
-      it('should handle callback and headers correctly', async () => {
-        // 模拟 chat.completions.create 方法返回一个可读流
-        const mockCreateMethod = vi
-          .spyOn(instance['client'].chat.completions, 'create')
-          .mockResolvedValue(
-            new ReadableStream({
-              start(controller) {
-                controller.enqueue({
-                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
-                  object: 'chat.completion.chunk',
-                  created: 1709125675,
-                  model: 'gpt-3.5-turbo-0125',
-                  system_fingerprint: 'fp_86156a94a0',
-                  choices: [
-                    { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
-                  ],
-                });
-                controller.close();
-              },
-            }) as any,
-          );
-
-        // 准备 callback 和 headers
-        const mockCallback: ChatStreamCallbacks = {
-          onStart: vi.fn(),
-          onToken: vi.fn(),
-        };
-        const mockHeaders = { 'Custom-Header': 'TestValue' };
-
-        // 执行测试
-        const result = await instance.chat(
-          {
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'text-davinci-003',
-            temperature: 0,
-          },
-          { callback: mockCallback, headers: mockHeaders },
-        );
-
-        // 验证 callback 被调用
-        await result.text(); // 确保流被消费
-        expect(mockCallback.onStart).toHaveBeenCalled();
-        expect(mockCallback.onToken).toHaveBeenCalledWith('hello');
-
-        // 验证 headers 被正确传递
-        expect(result.headers.get('Custom-Header')).toEqual('TestValue');
-
-        // 清理
-        mockCreateMethod.mockRestore();
-      });
-    });
-
     describe('DEBUG', () => {
       it('should call debugStream and return StreamingTextResponse when DEBUG_MOONSHOT_CHAT_COMPLETION is 1', async () => {
         // Arrange
@@ -306,6 +236,7 @@ describe('LobeMoonshotAI', () => {
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'text-davinci-003',
+          stream: true,
           temperature: 0,
         });
 

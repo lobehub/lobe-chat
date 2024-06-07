@@ -1,7 +1,42 @@
 {
   "button": {
     "import": "Importar configuración",
+    "market": "Explorar el mercado",
     "start": "Comenzar ahora"
+  },
+  "guide": {
+    "agents": {
+      "replaceBtn": "Cambiar grupo",
+      "title": "Recomendación de asistentes nuevos:"
+    },
+    "defaultMessage": "Soy tu asistente de inteligencia artificial personal, LobeChat. ¿En qué puedo ayudarte ahora?\nSi necesitas un asistente más profesional o personalizado, puedes hacer clic en `+` para crear un asistente personalizado",
+    "qa": {
+      "q01": "¿Qué es LobeHub?",
+      "q02": "¿Qué es LobeChat?",
+      "q03": "¿LobeChat tiene soporte comunitario?",
+      "q04": "¿Qué funciones admite LobeChat?",
+      "q05": "¿Cómo se despliega y utiliza LobeChat?",
+      "q06": "¿Cuál es la estructura de precios de LobeChat?",
+      "q07": "¿LobeChat es gratuito?",
+      "q08": "¿Hay una versión de servicio en la nube?",
+      "q09": "¿Admite modelos de lenguaje locales?",
+      "q10": "¿Admite reconocimiento y generación de imágenes?",
+      "q11": "¿Admite síntesis de voz y reconocimiento de voz?",
+      "q12": "¿Admite un sistema de complementos?",
+      "q13": "¿Tiene su propio mercado para obtener GPTs?",
+      "q14": "¿Admite varios proveedores de servicios de IA?",
+      "q15": "¿Qué debo hacer si encuentro problemas al usarlo?"
+    },
+    "questions": {
+      "moreBtn": "Saber más",
+      "title": "Preguntas frecuentes:"
+    },
+    "welcome": {
+      "afternoon": "Buenas tardes",
+      "morning": "Buenos días",
+      "night": "Buenas noches",
+      "noon": "Buen mediodía"
+    }
   },
   "header": "Bienvenido/a",
   "pickAgent": "O elige una plantilla de asistente a continuación",
