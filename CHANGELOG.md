@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.162.19](https://github.com/lobehub/lobe-chat/compare/v0.162.18...v0.162.19)
+
+<sup>Released on **2024-06-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix OpenAi BaseURL in api form.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix OpenAi BaseURL in api form, closes [#2806](https://github.com/lobehub/lobe-chat/issues/2806) ([1392957](https://github.com/lobehub/lobe-chat/commit/1392957))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.18](https://github.com/lobehub/lobe-chat/compare/v0.162.17...v0.162.18)
 
 <sup>Released on **2024-06-06**</sup>
