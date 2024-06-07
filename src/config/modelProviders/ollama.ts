@@ -36,6 +36,16 @@ const Ollama: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      displayName: 'Qwen2 7B',
+      id: 'qwen2',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Qwen2 72B',
+      id: 'qwen2:72b',
+      tokens: 128_000,
+    },
+    {
       displayName: 'Command R 35B',
       enabled: true,
       id: 'command-r',
