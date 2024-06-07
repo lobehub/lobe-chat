@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "Enter the API Key from Anthropic",
-      "placeholder": "Anthropic API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Anthropic API Key to start the session. The app will not store your API Key",
-      "title": "Use Custom Anthropic API Key"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "Azure API version, follow the format YYYY-MM-DD, check the [latest version](https://learn.microsoft.com/en-us/azure/ai-services/openai/reference#chat-completions)",
@@ -29,10 +17,6 @@
       "desc": "When checking resources from the Azure portal, you can find this value in the 'Keys and Endpoints' section. You can use KEY1 or KEY2",
       "placeholder": "Azure API Key",
       "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Azure OpenAI API Key to start the session",
-      "title": "Use Custom Azure OpenAI API Key"
     }
   },
   "bedrock": {
@@ -61,78 +45,6 @@
       "title": "Use Custom Bedrock Authentication Information"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "Enter your API Key from DeepSeek",
-      "placeholder": "DeepSeek API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your DeepSeek API Key to start the session. The app will not store your API Key.",
-      "title": "Use Custom DeepSeek API Key"
-    }
-  },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "Enter the API Key from Google",
-      "placeholder": "Google API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Google API Key to start the session. The app will not store your API Key",
-      "title": "Use Custom Google API Key"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "Enter the API Key from Groq",
-      "placeholder": "Groq API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Groq API Key to start the session. The app will not store your API Key",
-      "title": "Use Custom Groq API Key"
-    }
-  },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "Enter your API Key from Minimax",
-      "placeholder": "Minimax API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Minimax API Key to start the session. The app will not store your API Key.",
-      "title": "Use Custom Minimax API Key"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "Enter the API Key from Mistral AI",
-      "placeholder": "Mistral AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Mistral AI API Key to start the session. The app will not store your API Key",
-      "title": "Use Custom Mistral AI API Key"
-    }
-  },
-  "moonshot": {
-    "title": "Moonshot AI",
-    "token": {
-      "desc": "Enter your API Key from Moonshot AI",
-      "placeholder": "Moonshot AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Moonshot AI API Key to start the session. The app will not store your API Key",
-      "title": "Use custom Moonshot AI API Key"
-    }
-  },
   "ollama": {
     "checker": {
       "desc": "Test if the proxy address is correctly filled in",
@@ -142,6 +54,12 @@
       "desc": "Add custom models, separate multiple models with commas",
       "placeholder": "vicuna, llava, codellama, llama2:13b-text",
       "title": "Custom model name"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
     },
     "endpoint": {
       "desc": "Enter the Ollama interface proxy address, leave blank if not specified locally",
@@ -171,106 +89,20 @@
         "windowsTab": "Windows (Preview)"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "Use your own OpenAI Key",
-      "placeholder": "OpenAI API Key",
-      "title": "OpenAI API Key"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "Enter your OpenAI API Key to start the session. The app will not store your API Key",
-      "title": "Use custom OpenAI API Key"
-    }
-  },
-  "openrouter": {
-    "checker": {
-      "desc": "Test if the proxy address is correctly filled in"
-    },
-    "customModelName": {
-      "desc": "Add custom models, separate multiple models with commas",
-      "placeholder": "mistralai/mistral-7b-instruct:free, openchat/openchat-7b:free",
-      "title": "Custom model name"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "Enter your API Key from OpenRouter AI",
-      "placeholder": "OpenRouter AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your OpenRouter API Key to start the session. The app will not store your API Key",
-      "title": "Use custom OpenRouter API Key"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "Enter your API Key from Perplexity AI",
-      "placeholder": "Perplexity AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Perplexity API Key to start the session. The app will not store your API Key",
-      "title": "Use custom Perplexity API Key"
-    }
-  },
-  "qwen": {
-    "title": "Qwen",
-    "token": {
-      "desc": "Enter the API Key from Qwen",
-      "placeholder": "Qwen API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Qwen API Key to start the session. The app will not store your API Key.",
-      "title": "Use Custom Qwen API Key"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "Test if the proxy address is correctly filled in"
-    },
-    "customModelName": {
-      "desc": "Add custom models, separate multiple models with commas",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct, teknium/OpenHermes-2-Mistral-7B",
-      "title": "Custom model name"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "Enter your API Key from TogetherAI AI",
-      "placeholder": "TogetherAI AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your TogetherAI API Key to start the session. The app will not store your API Key",
-      "title": "Use custom TogetherAI API Key"
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
     }
   },
   "zeroone": {
-    "title": "01.AI Zero One Everything",
-    "token": {
-      "desc": "Enter the API Key from 01.AI Zero One Everything",
-      "placeholder": "01.AI Zero One Everything API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your 01.AI Zero One Everything API Key to start the session. The app will not store your API Key.",
-      "title": "Use Custom 01.AI Zero One Everything API Key"
-    }
+    "title": "01.AI Zero One Everything"
   },
   "zhipu": {
-    "title": "Zhipu",
-    "token": {
-      "desc": "Enter the API Key from Zhipu",
-      "placeholder": "Zhipu API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Zhipu API Key to start the session. The app will not store your API Key.",
-      "title": "Use Custom Zhipu API Key"
-    }
+    "title": "Zhipu"
   }
 }

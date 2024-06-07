@@ -10,9 +10,8 @@ import * as debugStreamModule from '../utils/debugStream';
 import { LobeGoogleAI } from './index';
 
 const provider = 'google';
-const defaultBaseURL = 'https://api.moonshot.cn/v1';
-const bizErrorType = 'GoogleBizError';
-const invalidErrorType = 'InvalidGoogleAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -291,7 +290,7 @@ describe('LobeGoogleAI', () => {
           });
         } catch (e) {
           expect(e).toEqual({
-            errorType: 'GoogleBizError',
+            errorType: bizErrorType,
             provider,
             error: {
               message: 'Generic Error',

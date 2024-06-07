@@ -43,6 +43,11 @@
     "title": "Impostazioni"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Inserisci la tua chiave API {{name}}",
+      "placeholder": "Chiave API {{name}}",
+      "title": "Chiave API"
+    },
     "checker": {
       "button": "Verifica",
       "desc": "Verifica se la chiave API e l'indirizzo del proxy sono stati inseriti correttamente",
@@ -108,14 +113,6 @@
       "title": "Indirizzo del proxy API"
     },
     "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama sta scaricando questo modello. Si prega di non chiudere questa pagina. Il download verrà ripreso dal punto in cui è stato interrotto in caso di riavvio.",
-      "remainingTime": "Tempo rimanente",
-      "speed": "Velocità di download",
-      "title": "Download del modello {{model}} in corso"
-    }
   },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",
