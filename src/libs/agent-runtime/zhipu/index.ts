@@ -31,7 +31,7 @@ export class LobeZhipuAI implements LobeRuntimeAI {
 
   static async fromAPIKey({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
     const invalidZhipuAPIKey = AgentRuntimeError.createError(
-      AgentRuntimeErrorType.InvalidZhipuAPIKey,
+      AgentRuntimeErrorType.InvalidProviderAPIKey,
     );
 
     if (!apiKey) throw invalidZhipuAPIKey;
@@ -70,7 +70,7 @@ export class LobeZhipuAI implements LobeRuntimeAI {
     } catch (error) {
       const { errorResult, RuntimeError } = handleOpenAIError(error);
 
-      const errorType = RuntimeError || AgentRuntimeErrorType.ZhipuBizError;
+      const errorType = RuntimeError || AgentRuntimeErrorType.ProviderBizError;
       let desensitizedEndpoint = this.baseURL;
 
       if (this.baseURL !== DEFAULT_BASE_URL) {

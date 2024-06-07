@@ -21,7 +21,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   baseURL: string;
 
   constructor({ apiKey, baseURL = DEFAULT_BASE_URL }: ClientOptions) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidAnthropicAPIKey);
+    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new Anthropic({ apiKey, baseURL });
     this.baseURL = this.client.baseURL;
@@ -80,7 +80,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
             throw AgentRuntimeError.chat({
               endpoint: desensitizedEndpoint,
               error: error as any,
-              errorType: AgentRuntimeErrorType.InvalidAnthropicAPIKey,
+              errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
               provider: ModelProvider.Anthropic,
             });
           }
@@ -101,7 +101,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       throw AgentRuntimeError.chat({
         endpoint: desensitizedEndpoint,
         error: error as any,
-        errorType: AgentRuntimeErrorType.AnthropicBizError,
+        errorType: AgentRuntimeErrorType.ProviderBizError,
         provider: ModelProvider.Anthropic,
       });
     }

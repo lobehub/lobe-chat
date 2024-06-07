@@ -155,6 +155,10 @@ const Ollama: ModelProviderCard = {
     },
   ],
   id: 'ollama',
+  modelList: { showModelFetcher: true },
+  name: 'Ollama',
+  showApiKey: false,
+  showBrowserRequest: true,
 };
 
 export default Ollama;

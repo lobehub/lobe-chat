@@ -4,16 +4,20 @@ import { NextRequest } from 'next/server';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableClerk } from '@/const/auth';
-import { AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
 import { checkAuthMethod, getJWTPayload } from './utils';
 
-type RequestOptions = { params: { provider: string } };
+type CreateRuntime = (jwtPayload: JWTPayload) => AgentRuntime;
+type RequestOptions = { createRuntime?: CreateRuntime, params: { provider: string }; };
 
 export type RequestHandler = (
   req: Request,
-  options: RequestOptions & { jwtPayload: JWTPayload },
+  options: RequestOptions & {
+    createRuntime?: CreateRuntime;
+    jwtPayload: JWTPayload;
+  },
 ) => Promise<Response>;
 
 export const checkAuth =

@@ -43,6 +43,11 @@
     "title": "设置"
   },
   "llm": {
+    "apiKey": {
+      "desc": "请填写你的 {{name}} API Key",
+      "placeholder": "{{name}} API Key",
+      "title": "API Key"
+    },
     "checker": {
       "button": "检查",
       "desc": "测试 Api Key 与代理地址是否正确填写",
@@ -108,14 +113,6 @@
       "title": "API 代理地址"
     },
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待 ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续",
-      "remainingTime": "剩余时间",
-      "speed": "下载速度",
-      "title": "正在下载模型 {{model}} "
-    }
   },
   "plugin": {
     "addTooltip": "自定义插件",

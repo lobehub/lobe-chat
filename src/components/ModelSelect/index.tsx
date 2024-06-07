@@ -151,16 +151,13 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
 });
 
 interface ProviderItemRenderProps {
+  name: string;
   provider: string;
 }
 
-export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider }) => {
-  const { t } = useTranslation('modelProvider');
-
-  return (
-    <Flexbox align={'center'} gap={4} horizontal>
-      <ModelProviderIcon provider={provider} />
-      {t(`${provider}.title` as any)}
-    </Flexbox>
-  );
-});
+export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name }) => (
+  <Flexbox align={'center'} gap={4} horizontal>
+    <ModelProviderIcon provider={provider} />
+    {name}
+  </Flexbox>
+));
