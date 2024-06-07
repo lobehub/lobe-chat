@@ -9,6 +9,9 @@ import { LobeAnthropicAI } from './index';
 
 const provider = 'anthropic';
 
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
+
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -315,7 +318,7 @@ describe('LobeAnthropicAI', () => {
           expect(e).toEqual({
             endpoint: 'https://api.anthropic.com',
             error: apiError,
-            errorType: 'InvalidAnthropicAPIKey',
+            errorType: invalidErrorType,
             provider,
           });
         }
@@ -346,7 +349,7 @@ describe('LobeAnthropicAI', () => {
           expect(e).toEqual({
             endpoint: 'https://api.anthropic.com',
             error: apiError,
-            errorType: 'AnthropicBizError',
+            errorType: bizErrorType,
             provider,
           });
         }
@@ -356,7 +359,7 @@ describe('LobeAnthropicAI', () => {
         try {
           new LobeAnthropicAI({});
         } catch (e) {
-          expect(e).toEqual({ errorType: 'InvalidAnthropicAPIKey' });
+          expect(e).toEqual({ errorType: invalidErrorType });
         }
       });
     });
@@ -397,7 +400,7 @@ describe('LobeAnthropicAI', () => {
         ).rejects.toEqual({
           endpoint: 'https://api.anthropic.com',
           error: apiError,
-          errorType: 'AnthropicBizError',
+          errorType: bizErrorType,
           provider,
         });
       });
@@ -421,7 +424,7 @@ describe('LobeAnthropicAI', () => {
         ).rejects.toEqual({
           endpoint: 'https://api.cu****om.com/v1',
           error: apiError,
-          errorType: 'InvalidAnthropicAPIKey',
+          errorType: invalidErrorType,
           provider,
         });
       });

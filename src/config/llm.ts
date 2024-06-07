@@ -114,6 +114,9 @@ export const getLLMConfig = () => {
       ENABLED_OLLAMA: z.boolean(),
       OLLAMA_PROXY_URL: z.string().optional(),
       OLLAMA_MODEL_LIST: z.string().optional(),
+
+      ENABLED_QWEN: z.boolean(),
+      QWEN_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -182,6 +185,9 @@ export const getLLMConfig = () => {
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
       OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
       OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST || process.env.OLLAMA_CUSTOM_MODELS,
+
+      ENABLED_QWEN: !!process.env.QWEN_API_KEY,
+      QWEN_API_KEY: process.env.QWEN_API_KEY,
     },
   });
 };

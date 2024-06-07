@@ -58,7 +58,12 @@ const Anthropic: ModelProviderCard = {
       tokens: 100_000,
     },
   ],
+  checkModel: 'claude-3-haiku-20240307',
   id: 'anthropic',
+  name: 'Anthropic',
+  proxyUrl: {
+    placeholder: 'https://api.anthropic.com',
+  },
 };
 
 export default Anthropic;
