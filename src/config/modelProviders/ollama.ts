@@ -14,6 +14,28 @@ const Ollama: ModelProviderCard = {
       tokens: 8000,
     },
     {
+      displayName: 'Phi-3 3.8B',
+      enabled: true,
+      id: 'phi3',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Phi-3 14B',
+      id: 'phi3:14b',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Aya 23 8B',
+      enabled: true,
+      id: 'aya',
+      tokens: 8192,
+    },
+    {
+      displayName: 'Aya 23 35B',
+      id: 'aya:35b',
+      tokens: 8192,
+    },
+    {
       displayName: 'Command R 35B',
       enabled: true,
       id: 'command-r',
