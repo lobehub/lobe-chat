@@ -7,6 +7,7 @@ import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
+import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -28,9 +29,12 @@ interface SessionListProps {
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
   const { t } = useTranslation('chat');
-  const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
+  const [isInit, activeSession] = useSessionStore((s) => [
+    sessionSelectors.isSessionListInit(s),
+    s.activeSession,
+  ]);
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
-
+  const router = useQueryRoute();
   const { styles } = useStyles();
 
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -40,7 +44,20 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
   ) : !isEmpty ? (
     dataSource.map(({ id }) => (
       <LazyLoad className={styles} key={id}>
-        <Link aria-label={id} href={SESSION_CHAT_URL(id, mobile)}>
+        <Link
+          aria-label={id}
+          href={SESSION_CHAT_URL(id, mobile)}
+          onClick={(e) => {
+            e.preventDefault();
+            activeSession(id);
+
+            if (mobile) {
+              setTimeout(() => {
+                router.replace('/chat', { query: { session: id, showMobileWorkspace: 'true' } });
+              }, 50);
+            }
+          }}
+        >
           <SessionItem id={id} />
         </Link>
       </LazyLoad>
