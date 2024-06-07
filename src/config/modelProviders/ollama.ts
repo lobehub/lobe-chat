@@ -28,7 +28,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'Aya 23 8B',
       enabled: true,
       id: 'aya',
-      tokens: 8192,
+      tokens: 8192, // https://cohere.com/research/papers/aya-command-23-8b-and-35b-technical-report-2024-05-23
     },
     {
       displayName: 'Aya 23 35B',
