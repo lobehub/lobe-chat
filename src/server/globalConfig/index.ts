@@ -115,6 +115,7 @@ export const getServerGlobalConfig = () => {
           modelString: TOGETHERAI_MODEL_LIST,
         }),
       },
+
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
