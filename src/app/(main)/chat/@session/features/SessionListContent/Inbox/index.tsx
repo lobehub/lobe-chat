@@ -14,7 +14,7 @@ import ListItem from '../ListItem';
 const Inbox = memo(() => {
   const { t } = useTranslation('chat');
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const [activeId, activeSession] = useSessionStore((s) => [s.activeId, s.activeSession]);
+  const [activeId, switchSession] = useSessionStore((s) => [s.activeId, s.switchSession]);
   const router = useQueryRoute();
 
   return (
@@ -23,11 +23,11 @@ const Inbox = memo(() => {
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
-        activeSession(INBOX_SESSION_ID);
+        switchSession(INBOX_SESSION_ID);
 
         if (mobile) {
           setTimeout(() => {
-            router.replace('/chat', {
+            router.push('/chat', {
               query: { session: INBOX_SESSION_ID, showMobileWorkspace: 'true' },
             });
           }, 50);

@@ -29,9 +29,9 @@ interface SessionListProps {
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
   const { t } = useTranslation('chat');
-  const [isInit, activeSession] = useSessionStore((s) => [
+  const [isInit, switchSession] = useSessionStore((s) => [
     sessionSelectors.isSessionListInit(s),
-    s.activeSession,
+    s.switchSession,
   ]);
   const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const router = useQueryRoute();
@@ -49,11 +49,11 @@ const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton
           href={SESSION_CHAT_URL(id, mobile)}
           onClick={(e) => {
             e.preventDefault();
-            activeSession(id);
+            switchSession(id);
 
             if (mobile) {
               setTimeout(() => {
-                router.replace('/chat', { query: { session: id, showMobileWorkspace: 'true' } });
+                router.push('/chat', { query: { session: id, showMobileWorkspace: 'true' } });
               }, 50);
             }
           }}
