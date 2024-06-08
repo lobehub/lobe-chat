@@ -5,17 +5,17 @@ import { useTranslation } from 'react-i18next';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
-import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 import ListItem from '../ListItem';
+import { useSwitchSession } from '../useSwitchSession';
 
 const Inbox = memo(() => {
   const { t } = useTranslation('chat');
   const mobile = useServerConfigStore((s) => s.isMobile);
-  const [activeId, switchSession] = useSessionStore((s) => [s.activeId, s.switchSession]);
-  const router = useQueryRoute();
+  const activeId = useSessionStore((s) => s.activeId);
+  const switchSession = useSwitchSession();
 
   return (
     <Link
@@ -24,14 +24,6 @@ const Inbox = memo(() => {
       onClick={(e) => {
         e.preventDefault();
         switchSession(INBOX_SESSION_ID);
-
-        if (mobile) {
-          setTimeout(() => {
-            router.push('/chat', {
-              query: { session: INBOX_SESSION_ID, showMobileWorkspace: 'true' },
-            });
-          }, 50);
-        }
       }}
     >
       <ListItem
