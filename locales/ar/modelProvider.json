@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Anthropic",
-      "placeholder": "Anthropic API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Anthropic لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Anthropic المخصص"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "نسخة API الخاصة بـ Azure، والتي تتبع تنسيق YYYY-MM-DD، راجع [الإصدارات الأحدث](https://learn.microsoft.com/zh-en/azure/ai-services/openai/reference#chat-completions)",
@@ -29,10 +17,6 @@
       "desc": "يمكن العثور على هذه القيمة في قسم 'المفاتيح والنقاط النهائية' عند فحص الموارد في بوابة Azure. يمكن استخدام KEY1 أو KEY2",
       "placeholder": "Azure API Key",
       "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بـ Azure OpenAI الخاص بك لبدء الجلسة",
-      "title": "استخدام مفتاح API الخاص بـ Azure OpenAI المخصص"
     }
   },
   "bedrock": {
@@ -61,78 +45,6 @@
       "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ DeepSeek",
-      "placeholder": "مفتاح API DeepSeek",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "قم بإدخال مفتاح API DeepSeek الخاص بك لبدء الجلسة. لن يتم تسجيل مفتاح الـ API الخاص بك",
-      "title": "استخدام مفتاح API خاص بـ DeepSeek"
-    }
-  },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Google",
-      "placeholder": "Google API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Google لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Google المخصص"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Groq",
-      "placeholder": "Groq API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Groq لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Groq المخصص"
-    }
-  },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Minimax",
-      "placeholder": "مفتاح API Minimax",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "قم بإدخال مفتاح API Minimax الخاص بك لبدء الجلسة. لن يتم تسجيل مفتاح الـ API الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API Minimax المخصص"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Mistral AI",
-      "placeholder": "Mistral AI API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Mistral AI لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Mistral AI المخصص"
-    }
-  },
-  "moonshot": {
-    "title": "الجانب المظلم للقمر",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Moonshot AI",
-      "placeholder": "Moonshot AI API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Moonshot AI لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Moonshot AI المخصص"
-    }
-  },
   "ollama": {
     "checker": {
       "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",
@@ -142,6 +54,12 @@
       "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "أسماء النماذج المخصصة"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
     },
     "endpoint": {
       "desc": "أدخل عنوان واجهة برمجة التطبيقات الخاص بـ Ollama، إذا لم يتم تحديده محليًا، يمكن تركه فارغًا",
@@ -171,106 +89,20 @@
         "windowsTab": "Windows (نسخة معاينة)"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "استخدم مفتاح OpenAI الخاص بك",
-      "placeholder": "OpenAI API Key",
-      "title": "مفتاح OpenAI"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في OpenAI لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ OpenAI المخصص"
-    }
-  },
-  "openrouter": {
-    "checker": {
-      "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح"
-    },
-    "customModelName": {
-      "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
-      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-      "title": "أسماء النماذج المخصصة"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ OpenRouter AI",
-      "placeholder": "OpenRouter AI API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في OpenRouter لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ OpenRouter المخصص"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Perplexity AI",
-      "placeholder": "Perplexity AI API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Perplexity لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Perplexity المخصص"
-    }
-  },
-  "qwen": {
-    "title": "Qwen",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Qwen",
-      "placeholder": "Qwen API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Qwen لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Qwen المخصص"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح"
-    },
-    "customModelName": {
-      "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-      "title": "أسماء النماذج المخصصة"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ TogetherAI AI",
-      "placeholder": "TogetherAI AI API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في TogetherAI لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ TogetherAI المخصص"
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
     }
   },
   "zeroone": {
-    "title": "01.AI الأشياء الصغرى",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ 01.AI الأشياء الصغرى",
-      "placeholder": "01.AI الأشياء الصغرى API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في ZeroOne لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ ZeroOne المخصص"
-    }
+    "title": "01.AI الأشياء الصغرى"
   },
   "zhipu": {
-    "title": "Zhipu",
-    "token": {
-      "desc": "أدخل مفتاح API الخاص بـ Zhipu",
-      "placeholder": "Zhipu API Key",
-      "title": "مفتاح API"
-    },
-    "unlock": {
-      "description": "أدخل مفتاح API الخاص بك في Zhipu لبدء الجلسة. لن يتم تسجيل مفتاح الخاص بك من قبل التطبيق",
-      "title": "استخدام مفتاح API الخاص بـ Zhipu المخصص"
-    }
+    "title": "Zhipu"
   }
 }

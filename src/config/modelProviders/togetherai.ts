@@ -70,7 +70,10 @@ const TogetherAI: ModelProviderCard = {
       tokens: 32_768,
     },
   ],
+  checkModel: 'togethercomputer/alpaca-7b',
   id: 'togetherai',
+  modelList: { showModelFetcher: true },
+  name: 'Together AI',
 };
 
 export default TogetherAI;
