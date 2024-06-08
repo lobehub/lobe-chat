@@ -52,7 +52,7 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): Stream
     return { data: item.finish_reason, id: chunk.id, type: 'stop' };
   }
 
-  if (item.delta.content === null) {
+  if (item.delta?.content === null) {
     return { data: item.delta, id: chunk.id, type: 'data' };
   }
 

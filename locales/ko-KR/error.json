@@ -54,39 +54,15 @@
     "503": "죄송합니다. 서버가 현재 요청을 처리할 수 없습니다. 과부하 또는 유지 보수 중일 수 있습니다. 잠시 후에 다시 시도해주세요.",
     "504": "죄송합니다. 서버가 상위 서버의 응답을 기다리지 못했습니다. 잠시 후에 다시 시도해주세요.",
     "AgentRuntimeError": "Lobe 언어 모델 실행 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
-    "AnthropicBizError": "Anthropic AI 서비스 요청 중 오류가 발생했습니다. 다음 정보를 확인하고 다시 시도하십시오.",
-    "AzureBizError": "Azure AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
-    "BedrockBizError": "Bedrock 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
-    "DeepSeekBizError": "DeepSeek 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
-    "GoogleBizError": "Google 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
-    "GroqBizError": "Groq 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "InvalidAccessCode": "액세스 코드가 잘못되었거나 비어 있습니다. 올바른 액세스 코드를 입력하거나 사용자 지정 API 키를 추가하십시오.",
-    "InvalidAnthropicAPIKey": "Anthropic API 키가 잘못되었거나 비어 있습니다. Anthropic API 키를 확인하고 다시 시도하십시오.",
-    "InvalidAzureAPIKey": "잘못된 또는 비어 있는 Azure API Key입니다. Azure API Key를 확인한 후 다시 시도하십시오.",
     "InvalidBedrockCredentials": "Bedrock 인증에 실패했습니다. AccessKeyId/SecretAccessKey를 확인한 후 다시 시도하십시오.",
     "InvalidClerkUser": "죄송합니다. 현재 로그인되어 있지 않습니다. 계속하려면 먼저 로그인하거나 계정을 등록해주세요.",
-    "InvalidDeepSeekAPIKey": "DeepSeek API 키가 잘못되었거나 비어 있습니다. DeepSeek API 키를 확인한 후 다시 시도하십시오.",
-    "InvalidGoogleAPIKey": "잘못된 또는 비어 있는 Google API Key입니다. Google API Key를 확인한 후 다시 시도하십시오.",
-    "InvalidGroqAPIKey": "잘못된 또는 비어 있는 Groq API Key입니다. Groq API Key를 확인한 후 다시 시도하십시오.",
-    "InvalidMinimaxAPIKey": "잘못된 Minimax API 키이거나 비어 있습니다. Minimax API 키를 확인한 후 다시 시도해주세요.",
-    "InvalidMistralAPIKey": "Mistral AI API 키가 잘못되었거나 비어 있습니다. Mistral API 키를 확인한 후 다시 시도해주세요.",
-    "InvalidMoonshotAPIKey": "Moonshot AI API 키가 잘못되었거나 비어 있습니다. Moonshot API 키를 확인한 후 다시 시도해주세요.",
     "InvalidOllamaArgs": "Ollama 구성이 잘못되었습니다. Ollama 구성을 확인한 후 다시 시도하십시오.",
-    "InvalidOpenRouterAPIKey": "OpenRouter API 키가 잘못되었거나 비어 있습니다. OpenRouter API 키를 확인한 후 다시 시도하십시오.",
-    "InvalidPerplexityAPIKey": "Perplexity API 키가 잘못되었거나 비어 있습니다. Perplexity API 키를 확인한 후 다시 시도하십시오.",
-    "InvalidTogetherAIAPIKey": "TogetherAI API 키가 잘못되었거나 비어 있습니다. TogetherAI API 키를 확인한 후 다시 시도하십시오.",
-    "InvalidZeroOneAPIKey": "잘못된 또는 빈 제로원물 API 키입니다. 제로원물 API 키를 확인하고 다시 시도해주세요.",
-    "InvalidZhipuAPIKey": "잘못된 또는 비어 있는 Zhipu API Key입니다. Zhipu API Key를 확인한 후 다시 시도하십시오.",
+    "InvalidProviderAPIKey": "{{provider}} API 키가 잘못되었거나 비어 있습니다. {{provider}} API 키를 확인하고 다시 시도하십시오.",
     "LocationNotSupportError": "죄송합니다. 귀하의 현재 위치는 해당 모델 서비스를 지원하지 않습니다. 지역 제한 또는 서비스 미개통으로 인한 것일 수 있습니다. 현재 위치가 해당 서비스를 지원하는지 확인하거나 다른 위치 정보를 사용해 보십시오.",
-    "MinimaxBizError": "Minimax 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하거나 다시 시도해주세요.",
-    "MistralBizError": "Mistral AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
-    "MoonshotBizError": "요청한 문샷 비즈니스에 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "NoOpenAIAPIKey": "OpenAI API 키가 비어 있습니다. 사용자 정의 OpenAI API 키를 추가해주세요.",
     "OllamaBizError": "Ollama 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "OllamaServiceUnavailable": "Ollama 서비스를 사용할 수 없습니다. Ollama가 올바르게 작동하는지 또는 Ollama의 교차 도메인 구성이 올바르게 설정되었는지 확인하십시오.",
-    "OpenAIBizError": "OpenAI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 문제를 해결하거나 다시 시도해주세요.",
-    "OpenRouterBizError": "OpenRouter AI 서비스 요청 중 오류가 발생했습니다. 다음 정보를 확인하고 다시 시도하십시오.",
-    "PerplexityBizError": "Perplexity AI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "PluginApiNotFound": "죄송합니다. 플러그인 설명서에 해당 API가 없습니다. 요청 메서드와 플러그인 설명서 API가 일치하는지 확인해주세요.",
     "PluginApiParamsError": "죄송합니다. 플러그인 요청의 입력 매개변수 유효성 검사에 실패했습니다. 입력 매개변수와 API 설명 정보가 일치하는지 확인해주세요.",
     "PluginGatewayError": "죄송합니다. 플러그인 게이트웨이에 오류가 발생했습니다. 플러그인 게이트웨이 구성을 확인해주세요.",
@@ -99,9 +75,7 @@
     "PluginOpenApiInitError": "죄송합니다. OpenAPI 클라이언트 초기화에 실패했습니다. OpenAPI 구성 정보를 확인해주세요.",
     "PluginServerError": "플러그인 서버 요청이 오류로 반환되었습니다. 플러그인 설명 파일, 플러그인 구성 또는 서버 구현을 확인해주세요.",
     "PluginSettingsInvalid": "플러그인을 사용하려면 올바른 구성이 필요합니다. 구성이 올바른지 확인해주세요.",
-    "TogetherAIBizError": "TogetherAI AI 서비스 요청 중 오류가 발생했습니다. 다음 정보를 확인하고 다시 시도하십시오.",
-    "ZeroOneBizError": "제로원물 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
-    "ZhipuBizError": "Zhipu 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오."
+    "ProviderBizAPIKey": "{{provider}} 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하거나 다시 시도하십시오."
   },
   "stt": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."
@@ -111,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "OpenAI 프록시 주소 추가(선택 사항)",
+    "apiKey": {
+      "description": "{{name}} API 키를 입력하면 세션을 시작할 수 있습니다.",
+      "title": "사용자 정의 {{name}} API 키 사용"
+    },
     "closeMessage": "알림 닫기",
     "confirm": "확인 및 다시 시도",
     "oauth": {
@@ -118,14 +96,6 @@
       "success": "로그인 성공",
       "title": "계정 로그인",
       "welcome": "환영합니다!"
-    },
-    "ollama": {
-      "cancel": "다운로드 취소",
-      "confirm": "다운로드",
-      "description": "Ollama 모델 태그를 입력하여 세션을 계속하세요.",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "다운로드 시작 중...",
-      "title": "지정된 Ollama 모델 다운로드"
     },
     "password": {
       "description": "관리자가 애플리케이션 암호화를 활성화했습니다. 애플리케이션을 잠금 해제하려면 애플리케이션 비밀번호를 입력하십시오. 비밀번호는 한 번만 입력하면 됩니다.",
