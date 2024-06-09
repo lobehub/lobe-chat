@@ -17,7 +17,10 @@ const DeepSeek: ModelProviderCard = {
       tokens: 16_384,
     },
   ],
+  checkModel: 'deepseek-chat',
   id: 'deepseek',
+  modelList: { showModelFetcher: true },
+  name: 'DeepSeek',
 };
 
 export default DeepSeek;

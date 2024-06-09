@@ -54,40 +54,15 @@
     "503": "Désolé, le serveur ne peut actuellement pas traiter votre requête, probablement en raison d'une surcharge ou de travaux de maintenance. Veuillez réessayer plus tard",
     "504": "Désolé, le serveur n'a pas reçu de réponse de la part du serveur amont. Veuillez réessayer plus tard",
     "AgentRuntimeError": "Erreur d'exécution du modèle linguistique Lobe, veuillez vérifier les informations ci-dessous ou réessayer",
-    "AnthropicBizError": "Erreur commerciale lors de la demande de service Anthropic AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
-    "AzureBizError": "Erreur lors de la demande de service Azure AI, veuillez vérifier les informations ci-dessous ou réessayer",
-    "BedrockBizError": "Erreur lors de la demande de service Bedrock, veuillez vérifier les informations ci-dessous ou réessayer",
-    "DeepSeekBizError": "Erreur commerciale lors de la demande de service DeepSeek, veuillez suivre les informations ci-dessous pour dépanner ou réessayer",
-    "GoogleBizError": "Erreur lors de la demande de service Google, veuillez vérifier les informations ci-dessous ou réessayer",
-    "GroqBizError": "Une erreur s'est produite lors de la demande de service Groq. Veuillez vérifier les informations ci-dessous ou réessayer.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
-    "InvalidAnthropicAPIKey": "La clé API Anthropic est incorrecte ou manquante. Veuillez vérifier la clé API Anthropic et réessayer.",
-    "InvalidAzureAPIKey": "Clé API Azure incorrecte ou vide, veuillez vérifier la clé API Azure et réessayer",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidClerkUser": "Désolé, vous n'êtes pas actuellement connecté. Veuillez vous connecter ou vous inscrire avant de continuer.",
-    "InvalidDeepSeekAPIKey": "Clé d'API DeepSeek incorrecte ou manquante, veuillez vérifier la clé d'API DeepSeek et réessayer",
-    "InvalidGoogleAPIKey": "Clé API Google incorrecte ou vide, veuillez vérifier la clé API Google et réessayer",
-    "InvalidGroqAPIKey": "Clé API Groq incorrecte ou vide, veuillez vérifier la clé API Groq et réessayer",
-    "InvalidMinimaxAPIKey": "Clé API Minimax incorrecte ou vide, veuillez vérifier la clé API Minimax et réessayer",
-    "InvalidMistralAPIKey": "Clé API Mistral AI incorrecte ou manquante. Veuillez vérifier la clé API Mistral et réessayer.",
-    "InvalidMoonshotAPIKey": "Clé API Moonshot AI incorrecte ou manquante. Veuillez vérifier la clé API Moonshot et réessayer.",
     "InvalidOllamaArgs": "La configuration d'Ollama n'est pas valide, veuillez vérifier la configuration d'Ollama et réessayer",
-    "InvalidOpenRouterAPIKey": "La clé d'API OpenRouter est incorrecte ou manquante. Veuillez vérifier la clé d'API OpenRouter et réessayer.",
-    "InvalidPerplexityAPIKey": "La clé API Perplexity est incorrecte ou vide. Veuillez vérifier la clé API Perplexity et réessayer.",
-    "InvalidQwenAPIKey": "Clé API Qwen incorrecte ou vide, veuillez vérifier la clé API Zhipu et réessayer",
-    "InvalidTogetherAIAPIKey": "La clé d'API TogetherAI est incorrecte ou manquante. Veuillez vérifier la clé d'API TogetherAI et réessayer.",
-    "InvalidZeroOneAPIKey": "La clé d'API ZeroOne est incorrecte ou vide, veuillez vérifier la clé d'API ZeroOne et réessayer",
-    "InvalidZhipuAPIKey": "Clé API Zhipu incorrecte ou vide, veuillez vérifier la clé API Zhipu et réessayer",
+    "InvalidProviderAPIKey": "{{provider}} API Key incorrect or missing, please check {{provider}} API Key and try again",
     "LocationNotSupportError": "Désolé, votre emplacement actuel ne prend pas en charge ce service de modèle, peut-être en raison de restrictions géographiques ou de services non disponibles. Veuillez vérifier si votre emplacement actuel prend en charge ce service ou essayer avec une autre localisation.",
-    "MinimaxBizError": "Erreur de service Minimax, veuillez vérifier les informations suivantes ou réessayer",
-    "MistralBizError": "Erreur de service Mistral AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
-    "MoonshotBizError": "Erreur de service Moonshot : une erreur s'est produite lors de la demande du service Côté Obscur de la Lune. Veuillez vérifier les informations suivantes ou réessayer.",
     "NoOpenAIAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
     "OllamaServiceUnavailable": "Le service Ollama n'est pas disponible. Veuillez vérifier si Ollama fonctionne correctement ou si la configuration de la communication inter-domaines d'Ollama est correcte.",
-    "OpenAIBizError": "Erreur de service OpenAI. Veuillez diagnostiquer ou réessayer en fonction des informations ci-dessous",
-    "OpenRouterBizError": "Erreur commerciale lors de la demande de service OpenRouter AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
-    "PerplexityBizError": "Erreur commerciale lors de la demande de service Perplexity AI. Veuillez vérifier les informations suivantes ou réessayer.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
     "PluginGatewayError": "Désolé, une erreur est survenue avec la passerelle du plugin. Veuillez vérifier la configuration de la passerelle du plugin.",
@@ -100,10 +75,7 @@
     "PluginOpenApiInitError": "Désolé, l'initialisation du client OpenAPI a échoué. Veuillez vérifier les informations de configuration d'OpenAPI.",
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
-    "QwenBizError": "Erreur lors de la demande de service Qwen, veuillez vérifier les informations ci-dessous ou réessayer",
-    "TogetherAIBizError": "Erreur commerciale lors de la demande de service TogetherAI AI. Veuillez vérifier les informations ci-dessous ou réessayer.",
-    "ZeroOneBizError": "请求零一万物服务出错，请根据以下信息排查或重试",
-    "ZhipuBizError": "Erreur lors de la demande de service Zhipu, veuillez vérifier les informations ci-dessous ou réessayer"
+    "ProviderBizAPIKey": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information"
   },
   "stt": {
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"
@@ -113,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "Ajouter une adresse de proxy OpenAI (facultatif)",
+    "apiKey": {
+      "description": "Enter your {{name}} API Key to start the session",
+      "title": "Use custom {{name}} API Key"
+    },
     "closeMessage": "Fermer le message",
     "confirm": "Confirmer et réessayer",
     "oauth": {
@@ -120,14 +96,6 @@
       "success": "Connexion réussie",
       "title": "Se connecter",
       "welcome": "Bienvenue !"
-    },
-    "ollama": {
-      "cancel": "Annuler le téléchargement",
-      "confirm": "Télécharger",
-      "description": "Entrez vos balises de modèle Ollama pour continuer la session",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Début du téléchargement...",
-      "title": "Télécharger le modèle Ollama spécifié"
     },
     "password": {
       "description": "L'administrateur a activé le cryptage de l'application. Entrez le mot de passe de l'application pour déverrouiller. Le mot de passe ne doit être saisi qu'une seule fois.",

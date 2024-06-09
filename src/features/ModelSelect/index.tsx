@@ -46,7 +46,7 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange }) => {
     }
 
     return enabledList.map((provider) => ({
-      label: <ProviderItemRender provider={provider.id} />,
+      label: <ProviderItemRender name={provider.name} provider={provider.id} />,
       options: getChatModels(provider),
     }));
   }, [enabledList]);

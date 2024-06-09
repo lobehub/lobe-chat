@@ -54,40 +54,15 @@
     "503": "Üzgünüm, sunucu şu anda isteğinizi işleyemiyor, muhtemelen aşırı yüklenme veya bakım nedeniyle. Lütfen daha sonra tekrar deneyin.",
     "504": "Üzgünüm, sunucu yukarı akış sunucusundan bir yanıt alamadı. Lütfen daha sonra tekrar deneyin.",
     "AgentRuntimeError": "Lobe dil modeli çalışma zamanı hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "AnthropicBizError": "Anthropic AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "AzureBizError": "Azure AI servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "BedrockBizError": "Bedrock servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "DeepSeekBizError": "DeepSeek hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "GoogleBizError": "Google servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "GroqBizError": "Groq hizmeti isteği sırasında bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "InvalidAccessCode": "Geçersiz Erişim Kodu: Geçersiz veya boş bir şifre girdiniz. Lütfen doğru erişim şifresini girin veya özel API Anahtarı ekleyin.",
-    "InvalidAnthropicAPIKey": "Anthropic API Key geçersiz veya boş, lütfen Anthropic API Key'inizi kontrol edip tekrar deneyin",
-    "InvalidAzureAPIKey": "Azure API Anahtarı yanlış veya boş, lütfen Azure API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması geçersiz, lütfen AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
     "InvalidClerkUser": "Üzgünüz, şu anda giriş yapmadınız. Lütfen işlemlere devam etmeden önce giriş yapın veya hesap oluşturun",
-    "InvalidDeepSeekAPIKey": "DeepSeek API Anahtarı geçersiz veya boş, lütfen DeepSeek API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidGoogleAPIKey": "Google API Anahtarı yanlış veya boş, lütfen Google API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidGroqAPIKey": "Groq API Anahtarı yanlış veya boş, lütfen Groq API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidMinimaxAPIKey": "Minimax API Anahtarı geçersiz veya boş, lütfen Minimax API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidMistralAPIKey": "Mistral AI API Anahtarı geçersiz veya boş. Lütfen Mistral API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidMoonshotAPIKey": "Geçersiz veya boş Moonshot AI API Anahtarı, lütfen Moonshot API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
-    "InvalidOpenRouterAPIKey": "OpenRouter API Anahtarı geçersiz veya boş, lütfen OpenRouter API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidPerplexityAPIKey": "Perplexity API Key geçersiz veya boş, lütfen Perplexity API Key'inizi kontrol edip tekrar deneyin",
-    "InvalidQwenAPIKey": "Qwen API Anahtarı yanlış veya boş, lütfen Qwen API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidTogetherAIAPIKey": "TogetherAI API Anahtarı geçersiz veya boş, lütfen TogetherAI API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidZeroOneAPIKey": "SıfırBirIoT API Anahtarı geçersiz veya boş. Lütfen SıfırBirIoT API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidZhipuAPIKey": "Zhipu API Anahtarı yanlış veya boş, lütfen Zhipu API Anahtarınızı kontrol edip tekrar deneyin",
+    "InvalidProviderAPIKey": "{{provider}} API Anahtarı geçersiz veya boş, lütfen {{provider}} API Anahtarını kontrol edip tekrar deneyin",
     "LocationNotSupportError": "Üzgünüz, bulunduğunuz konum bu model hizmetini desteklemiyor, muhtemelen bölge kısıtlamaları veya hizmetin henüz açılmamış olması nedeniyle. Lütfen mevcut konumun bu hizmeti kullanmaya uygun olup olmadığını doğrulayın veya başka bir konum bilgisi kullanmayı deneyin.",
-    "MinimaxBizError": "Minimax hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
-    "MistralBizError": "Mistral AI hizmeti isteği sırasında bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
-    "MoonshotBizError": "Moonshot hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "OllamaServiceUnavailable": "Ollama servisi kullanılamıyor, lütfen Ollama'nın düzgün çalışıp çalışmadığını kontrol edin veya Ollama'nın çapraz kaynak yapılandırmasının doğru olup olmadığını kontrol edin",
-    "OpenAIBizError": "OpenAI hizmeti talep ederken hata oluştu. Aşağıdaki bilgilere dayanarak sorun giderin veya tekrar deneyin.",
-    "OpenRouterBizError": "OpenRouter AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "PerplexityBizError": "Perplexity AI hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
     "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",
     "PluginGatewayError": "Üzgünüz, eklenti ağ geçidinde bir hata oluştu, lütfen eklenti ağ geçidi yapılandırmasını kontrol edin",
@@ -100,10 +75,7 @@
     "PluginOpenApiInitError": "Üzgünüz, OpenAPI istemci başlatma hatası, lütfen OpenAPI yapılandırma bilgilerini kontrol edin",
     "PluginServerError": "Eklenti sunucusu isteği bir hata ile döndü. Lütfen aşağıdaki hata bilgilerine dayanarak eklenti bildirim dosyanızı, eklenti yapılandırmanızı veya sunucu uygulamanızı kontrol edin",
     "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin",
-    "QwenBizError": "Qwen servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "TogetherAIBizError": "TogetherAI AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "ZeroOneBizError": "SıfırBirIoT hizmetine yapılan istekte bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "ZhipuBizError": "Zhipu servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin"
+    "ProviderBizAPIKey": "{{provider}} hizmetine yönelik istekte hata oluştu, aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin"
   },
   "stt": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
@@ -113,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "OpenAI vekil adresi ekle (isteğe bağlı)",
+    "apiKey": {
+      "description": "{{name}} API Anahtarınızı girerek oturumu başlatabilirsiniz",
+      "title": "Özel {{name}} API Anahtarını kullan"
+    },
     "closeMessage": "Mesajı kapat",
     "confirm": "Onayla ve Yeniden Dene",
     "oauth": {
@@ -120,14 +96,6 @@
       "success": "Giriş başarılı",
       "title": "Hesaba giriş yap",
       "welcome": "Hoş geldiniz!"
-    },
-    "ollama": {
-      "cancel": "İptal",
-      "confirm": "Onayla",
-      "description": "Ollama model etiketinizi girin ve sohbeti devam ettirmek için tamamlayın",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "İndirme başlıyor...",
-      "title": "Belirtilen Ollama modelini indir"
     },
     "password": {
       "description": "Uygulama şifrelemesi yönetici tarafından etkinleştirilmiştir. Uygulamayı açmak için uygulama şifresini girin. Şifre sadece bir kez doldurulmalıdır.",

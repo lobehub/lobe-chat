@@ -9,14 +9,23 @@ import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 import ListItem from '../ListItem';
+import { useSwitchSession } from '../useSwitchSession';
 
 const Inbox = memo(() => {
   const { t } = useTranslation('chat');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const activeId = useSessionStore((s) => s.activeId);
+  const switchSession = useSwitchSession();
 
   return (
-    <Link aria-label={t('inbox.title')} href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}>
+    <Link
+      aria-label={t('inbox.title')}
+      href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
+      onClick={(e) => {
+        e.preventDefault();
+        switchSession(INBOX_SESSION_ID);
+      }}
+    >
       <ListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
