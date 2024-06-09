@@ -13,6 +13,7 @@ const MobileLayout = ({ children }: PropsWithChildren) => {
       </div>
       {children}
       {/* ↓ cloud slot ↓ */}
+
       {/* ↑ cloud slot ↑ */}
     </MobileContentLayout>
   );
