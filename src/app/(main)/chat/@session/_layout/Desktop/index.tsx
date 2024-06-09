@@ -8,6 +8,8 @@ const DesktopLayout = ({ children }: PropsWithChildren) => {
     <>
       <Header />
       <PanelBody>{children}</PanelBody>
+      {/* ↓ cloud slot ↓ */}
+      {/* ↑ cloud slot ↑ */}
     </>
   );
 };

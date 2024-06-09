@@ -27,7 +27,6 @@ const DesktopLayout = ({ children }: PropsWithChildren) => {
         </Flexbox>
       </Flexbox>
       {/* ↓ cloud slot ↓ */}
-
       {/* ↑ cloud slot ↑ */}
     </>
   );
