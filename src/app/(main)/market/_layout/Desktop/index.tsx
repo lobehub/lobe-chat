@@ -35,6 +35,7 @@ const Layout = ({ children, detail }: LayoutProps) => {
         </Flexbox>
       </Flexbox>
       {/* ↓ cloud slot ↓ */}
+
       {/* ↑ cloud slot ↑ */}
     </>
   );
