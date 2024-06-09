@@ -18,7 +18,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
   constructor(endpoint?: string, apikey?: string, apiVersion?: string) {
     if (!apikey || !endpoint)
-      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidAzureAPIKey);
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new OpenAIClient(endpoint, new AzureKeyCredential(apikey), { apiVersion });
 
@@ -68,7 +68,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
       }
 
       const errorType = error.code
-        ? AgentRuntimeErrorType.AzureBizError
+        ? AgentRuntimeErrorType.ProviderBizError
         : AgentRuntimeErrorType.AgentRuntimeError;
 
       throw AgentRuntimeError.chat({

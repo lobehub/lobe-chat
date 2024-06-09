@@ -16,6 +16,7 @@ import {
   LobeOpenAI,
   LobeOpenRouterAI,
   LobePerplexityAI,
+  LobeQwenAI,
   LobeRuntimeAI,
   LobeTogetherAI,
   LobeZeroOneAI,
@@ -49,6 +50,7 @@ vi.mock('@/config/llm', () => ({
     MISTRAL_API_KEY: 'test-mistral-key',
     OPENROUTER_API_KEY: 'test-openrouter-key',
     TOGETHERAI_API_KEY: 'test-togetherai-key',
+    QWEN_API_KEY: 'test-qwen-key',
   })),
 }));
 
@@ -99,6 +101,13 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Moonshot, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
+    });
+
+    it('Qwen AI provider: with apikey', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-qwen-key' };
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
     it('Bedrock AI provider: with apikey, awsAccessKeyId, awsSecretAccessKey, awsRegion', async () => {
@@ -230,6 +239,14 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
       // 假设 LobeMoonshotAI 是 Moonshot 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
+    });
+
+    it('Qwen AI provider: without apikey', async () => {
+      const jwtPayload: JWTPayload = {};
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Qwen, jwtPayload);
+
+      // 假设 LobeQwenAI 是 Qwen 提供者的实现类
+      expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
     });
 
     it('Bedrock AI provider: without apikey', async () => {

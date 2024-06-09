@@ -43,6 +43,11 @@
     "title": "Ustawienia"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Proszę wprowadź swój klucz API {{name}}",
+      "placeholder": "{{name}} klucz API",
+      "title": "Klucz API"
+    },
     "checker": {
       "button": "Sprawdź",
       "desc": "Sprawdź poprawność wypełnienia klucza API i adresu proxy",
@@ -108,14 +113,6 @@
       "title": "Adres proxy API"
     },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama pobiera ten model. Prosimy nie zamykać tej strony. Gdy pobieranie zostanie wznowione, będzie kontynuowane od miejsca przerwania.",
-      "remainingTime": "Czas pozostały",
-      "speed": "Prędkość pobierania",
-      "title": "Pobieranie modelu {{model}}"
-    }
   },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",
@@ -388,7 +385,7 @@
     "experiment": "Eksperyment",
     "llm": "Model językowy",
     "sync": "Synchronizacja w chmurze",
-    "system-agent": "System Assistant",
+    "system-agent": "System Agent",
     "tts": "Usługa głosowa"
   },
   "tools": {

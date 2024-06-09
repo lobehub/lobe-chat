@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface ChatModelCard {
   /**
    * only used in azure
@@ -43,8 +45,28 @@ export interface ChatModelCard {
 
 export interface ModelProviderCard {
   chatModels: ChatModelCard[];
+  /**
+   * the default model that used for connection check
+   */
+  checkModel?: string;
   enabled?: boolean;
   id: string;
+  modelList?: {
+    azureDeployName?: boolean;
+    notFoundContent?: ReactNode;
+    placeholder?: string;
+    showModelFetcher?: boolean;
+  };
+  name: string;
+  proxyUrl?:
+    | {
+        desc?: string;
+        placeholder: string;
+        title?: string;
+      }
+    | false;
+  showApiKey?: boolean;
+  showBrowserRequest?: boolean;
 }
 
 // 语言模型的设置参数
