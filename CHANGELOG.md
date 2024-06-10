@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.162.21](https://github.com/lobehub/lobe-chat/compare/v0.162.20...v0.162.21)
+
+<sup>Released on **2024-06-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Do not show noDescription in new sesstion.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Do not show noDescription in new sesstion, closes [#2749](https://github.com/lobehub/lobe-chat/issues/2749) ([30b00aa](https://github.com/lobehub/lobe-chat/commit/30b00aa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.20](https://github.com/lobehub/lobe-chat/compare/v0.162.19...v0.162.20)
 
 <sup>Released on **2024-06-08**</sup>
