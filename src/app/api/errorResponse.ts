@@ -7,6 +7,7 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
 
   switch (errorType) {
     // TODO: Need to refactor to Invalid OpenAI API Key
+    case AgentRuntimeErrorType.InvalidProviderAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return 401;
     }
@@ -19,56 +20,18 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.AgentRuntimeError: {
       return 470;
     }
+
+    case AgentRuntimeErrorType.ProviderBizError:
     case AgentRuntimeErrorType.OpenAIBizError: {
       return 471;
     }
-    case AgentRuntimeErrorType.AzureBizError: {
-      return 472;
-    }
-    case AgentRuntimeErrorType.ZhipuBizError: {
-      return 473;
-    }
-    case AgentRuntimeErrorType.BedrockBizError: {
-      return 474;
-    }
-    case AgentRuntimeErrorType.GoogleBizError: {
-      return 475;
-    }
-    case AgentRuntimeErrorType.MoonshotBizError: {
-      return 476;
-    }
-    case AgentRuntimeErrorType.OpenRouterBizError: {
-      return 477;
-    }
+
     case ChatErrorType.OllamaServiceUnavailable:
     case AgentRuntimeErrorType.OllamaBizError: {
-      return 478;
-    }
-    case AgentRuntimeErrorType.PerplexityBizError: {
-      return 479;
-    }
-    case AgentRuntimeErrorType.AnthropicBizError: {
-      return 480;
-    }
-    case AgentRuntimeErrorType.MistralBizError: {
-      return 481;
-    }
-    case AgentRuntimeErrorType.GroqBizError: {
-      return 482;
-    }
-    case AgentRuntimeErrorType.ZeroOneBizError: {
-      return 483;
-    }
-    case AgentRuntimeErrorType.TogetherAIBizError: {
-      return 484;
-    }
-    case AgentRuntimeErrorType.MinimaxBizError: {
-      return 485;
-    }
-    case AgentRuntimeErrorType.DeepSeekBizError: {
-      return 486;
+      return 472;
     }
   }
+
   return errorType as number;
 };
 

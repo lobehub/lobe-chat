@@ -54,39 +54,15 @@
     "503": "Entschuldigung, der Server kann Ihre Anfrage derzeit nicht verarbeiten. Möglicherweise aufgrund von Überlastung oder Wartungsarbeiten. Bitte versuchen Sie es später erneut",
     "504": "Entschuldigung, der Server hat keine Antwort vom Upstream-Server erhalten. Bitte versuchen Sie es später erneut",
     "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "AnthropicBizError": "Fehler beim Anfordern des Anthropic AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "AzureBizError": "Es ist ein Fehler bei der Anforderung des Azure AI-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "BedrockBizError": "Es ist ein Fehler bei der Anforderung des Bedrock-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "DeepSeekBizError": "Fehler bei der Anforderung des DeepSeek-Dienstes. Bitte überprüfen Sie die folgenden Informationen und versuchen Sie es erneut.",
-    "GoogleBizError": "Es ist ein Fehler bei der Anforderung des Google-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "GroqBizError": "Die Anfrage an den Groq-Dienst ist fehlgeschlagen. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
-    "InvalidAnthropicAPIKey": "Ungültiger oder leerer Anthropic API-Schlüssel. Bitte überprüfen Sie den Anthropic API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidAzureAPIKey": "Der Azure API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Azure API-Schlüssel und versuchen Sie es erneut.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidClerkUser": "Entschuldigung, du bist derzeit nicht angemeldet. Bitte melde dich an oder registriere ein Konto, um fortzufahren.",
-    "InvalidDeepSeekAPIKey": "DeepSeek-API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den DeepSeek-API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidGoogleAPIKey": "Der Google API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Google API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidGroqAPIKey": "Der Groq API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Groq API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidMinimaxAPIKey": "Ungültiger oder leerer Minimax-API-Schlüssel. Bitte überprüfen Sie den Minimax-API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidMistralAPIKey": "Der Mistral AI-API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Mistral-API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidMoonshotAPIKey": "Ungültiger oder leerer Moonshot AI API-Schlüssel. Bitte überprüfen Sie den Moonshot API-Schlüssel und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
-    "InvalidOpenRouterAPIKey": "OpenRouter API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den OpenRouter API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidPerplexityAPIKey": "Perplexity API Key ist ungültig oder leer. Bitte überprüfen Sie den Perplexity API Key und versuchen Sie es erneut.",
-    "InvalidTogetherAIAPIKey": "TogetherAI API-Schlüssel ungültig oder leer. Bitte überprüfen Sie den TogetherAI API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidZeroOneAPIKey": "Ungültiger oder leerer ZeroOne-API-Schlüssel. Bitte überprüfen Sie den ZeroOne-API-Schlüssel und versuchen Sie es erneut.",
-    "InvalidZhipuAPIKey": "Der Zhipu API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den Zhipu API-Schlüssel und versuchen Sie es erneut.",
+    "InvalidProviderAPIKey": "{{provider}} API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den {{provider}} API-Schlüssel und versuchen Sie es erneut.",
     "LocationNotSupportError": "Entschuldigung, Ihr Standort unterstützt diesen Modellservice möglicherweise aufgrund von regionalen Einschränkungen oder nicht aktivierten Diensten nicht. Bitte überprüfen Sie, ob der aktuelle Standort die Verwendung dieses Dienstes unterstützt, oder versuchen Sie, andere Standortinformationen zu verwenden.",
-    "MinimaxBizError": "Fehler beim Abrufen des Minimax-Dienstes. Bitte überprüfen Sie die folgenden Informationen und versuchen Sie es erneut.",
-    "MistralBizError": "Beim Anfordern des Mistral AI-Dienstes ist ein Fehler aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "MoonshotBizError": "Fehler beim Abrufen des Dark Side of the Moon-Services. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "OllamaServiceUnavailable": "Der Ollama-Dienst ist nicht verfügbar. Bitte überprüfen Sie, ob Ollama ordnungsgemäß ausgeführt wird und ob die CORS-Konfiguration von Ollama korrekt ist.",
-    "OpenAIBizError": "Fehler bei der OpenAI-Serviceanfrage. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut",
-    "OpenRouterBizError": "Fehler bei der Anforderung des OpenRouter AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "PerplexityBizError": "Fehler bei der Anforderung des Perplexity AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
     "PluginGatewayError": "Entschuldigung, es ist ein Fehler im Plugin-Gateway aufgetreten. Bitte überprüfen Sie die Plugin-Gateway-Konfiguration auf Richtigkeit",
@@ -99,9 +75,7 @@
     "PluginOpenApiInitError": "Entschuldigung, die Initialisierung des OpenAPI-Clients ist fehlgeschlagen. Bitte überprüfen Sie die Konfigurationsinformationen des OpenAPI auf Richtigkeit",
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
     "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
-    "TogetherAIBizError": "Fehler bei der Anforderung des TogetherAI AI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "ZeroOneBizError": "Anfrage an ZeroOneBiz-Dienst fehlgeschlagen. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "ZhipuBizError": "Es ist ein Fehler bei der Anforderung des Zhipu-Dienstes aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
+    "ProviderBizAPIKey": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
   },
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
@@ -111,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "Fügen Sie die OpenAI-Proxy-URL hinzu (optional)",
+    "apiKey": {
+      "description": "Geben Sie Ihren {{name}} API-Schlüssel ein, um die Sitzung zu starten.",
+      "title": "Verwenden Sie Ihren benutzerdefinierten {{name}} API-Schlüssel"
+    },
     "closeMessage": "Hinweis schließen",
     "confirm": "Bestätigen und erneut versuchen",
     "oauth": {
@@ -118,14 +96,6 @@
       "success": "Anmeldung erfolgreich",
       "title": "Anmelden",
       "welcome": "Willkommen!"
-    },
-    "ollama": {
-      "cancel": "Abbrechen",
-      "confirm": "Herunterladen",
-      "description": "Geben Sie Ihre Ollama-Modellkennung ein, um fortzufahren",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Download startet...",
-      "title": "Bestimmtes Ollama-Modell herunterladen"
     },
     "password": {
       "description": "Der Administrator hat die App-Verschlüsselung aktiviert. Gib das App-Passwort ein, um die App zu entsperren. Das Passwort muss nur einmal eingegeben werden.",
