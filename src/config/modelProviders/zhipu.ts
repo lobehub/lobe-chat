@@ -29,7 +29,9 @@ const ZhiPu: ModelProviderCard = {
       tokens: 128_000,
     },
   ],
+  checkModel: 'glm-3-turbo',
   id: 'zhipu',
+  name: 'ZhiPu',
 };
 
 export default ZhiPu;

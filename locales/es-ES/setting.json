@@ -43,6 +43,11 @@
     "title": "Configuración"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Por favor, introduce tu clave de API de {{name}}",
+      "placeholder": "Clave de API de {{name}}",
+      "title": "Clave de API"
+    },
     "checker": {
       "button": "Comprobar",
       "desc": "Comprueba si la clave API y la dirección del proxy están escritas correctamente",
@@ -108,14 +113,6 @@
       "title": "Dirección del proxy de la API"
     },
     "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos! ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama está descargando este modelo. Por favor, no cierres esta página. La descarga se reanudará desde donde se detuvo si se reinicia.",
-      "remainingTime": "Tiempo restante",
-      "speed": "Velocidad de descarga",
-      "title": "Descargando el modelo {{model}}"
-    }
   },
   "plugin": {
     "addTooltip": "Agregar complemento personalizado",

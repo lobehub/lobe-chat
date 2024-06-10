@@ -7,8 +7,9 @@ import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
 import { LobeMinimaxAI } from './index';
 
 const provider = ModelProvider.Minimax;
-const bizErrorType = 'MinimaxBizError';
-const invalidErrorType = 'InvalidMinimaxAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
+
 const encoder = new TextEncoder();
 
 // Mock the console.error to avoid polluting test output
