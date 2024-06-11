@@ -37,6 +37,7 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'Qwen2 7B',
+      enabled: true,
       id: 'qwen2',
       tokens: 128_000,
     },
@@ -124,12 +125,6 @@ const Ollama: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      displayName: 'Phi3-Instruct 3.8B',
-      enabled: true,
-      id: 'phi3:instruct',
-      tokens: 131_072, // https://huggingface.co/microsoft/Phi-3-mini-128k-instruct/blob/main/config.json
-    },
-    {
       displayName: 'Mistral',
       enabled: true,
       id: 'mistral',
@@ -153,7 +148,6 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'Qwen Chat 7B',
-      enabled: true,
       id: 'qwen:7b',
       tokens: 32_768,
     },
