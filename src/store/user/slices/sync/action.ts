@@ -143,7 +143,11 @@ export const createSyncSlice: StateCreator<
         if (!userId) return false;
 
         // if user disabled all sync channel, stop sync
-        if (Object.values(userEnableSync).every((x) => !x)) return syncService.disableSync();
+        syncService.disableSync(userEnableSync);
+
+        if (!userEnableSync.liveblocks && !userEnableSync.webrtc) {
+          return false;
+        }
 
         return get().triggerEnableSync(userId, onEvent);
       },

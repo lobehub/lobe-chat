@@ -1,5 +1,5 @@
 import { dataSync } from '@/database/client/core';
-import { StartDataSyncParams } from '@/types/sync';
+import { StartDataSyncParams, SyncMethod } from '@/types/sync';
 
 class SyncService {
   enabledSync = async (params: StartDataSyncParams) => {
@@ -9,9 +9,11 @@ class SyncService {
     return true;
   };
 
-  disableSync = async () => {
-    await dataSync.disconnect();
+  disableSync = async (params: Record<SyncMethod, boolean>) => {
+    if (typeof window === 'undefined') return false;
 
+    if (params.liveblocks) await dataSync.cleanWebrtcConnection();
+    if (params.webrtc) await dataSync.cleanLiveblocksConnection();
     return false;
   };
 }

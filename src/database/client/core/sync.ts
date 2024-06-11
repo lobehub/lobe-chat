@@ -1,6 +1,6 @@
 import type { BaseUserMeta, Client as LiveBlocksClient, LsonObject } from '@liveblocks/client';
 import type LiveblocksProvider from '@liveblocks/yjs';
-import Debug from 'debug';
+// import Debug from 'debug';
 import { throttle, uniqBy } from 'lodash-es';
 import type { WebrtcProvider } from 'y-webrtc';
 import type { Doc, Transaction } from 'yjs';
@@ -19,7 +19,7 @@ import {
 
 import { LobeDBSchemaMap, browserDB } from './db';
 
-const LOG_NAME_SPACE = 'DataSync';
+// const LOG_NAME_SPACE = 'DataSync';
 
 class DataSync {
   private _ydoc: Doc | null = null;
@@ -37,7 +37,7 @@ class DataSync {
 
   private waitForConnecting: any;
 
-  logger = Debug(LOG_NAME_SPACE);
+  logger = console.debug;
 
   transact(fn: (transaction: Transaction) => unknown) {
     this._ydoc?.transact(fn);
@@ -54,7 +54,7 @@ class DataSync {
     // 开发时由于存在 fast refresh 全局实例会缓存在运行时中
     // 因此需要在每次重新连接时清理上一次的实例
     if (window.__ONLY_USE_FOR_CLEANUP_IN_DEV) {
-      await this.cleanWebrtcConnection(window.__ONLY_USE_FOR_CLEANUP_IN_DEV);
+      await this.cleanWebrtcConnection(true);
     }
 
     await this.connect(params);
@@ -171,8 +171,6 @@ class DataSync {
             const { status } = response;
 
             if (status !== 200) {
-              // throw new Error(`Failed to authorize room: ${room}`);
-              onSyncStatusChange?.(PeerSyncStatus.Unconnected);
               return {
                 error: 'forbidden',
                 reason: 'User is not authorized to access Lobechat',
@@ -184,38 +182,43 @@ class DataSync {
         });
 
     // ====== 3. join liveblocks room ====== //
-    const { room } = this.liveblocksClient.enterRoom(hashedRoomName, {
-      autoConnect: true,
-      initialPresence: {},
-    });
+    try {
+      const { room } = this.liveblocksClient.enterRoom(hashedRoomName, {
+        autoConnect: true,
+        initialPresence: {},
+      });
 
-    const LiveblocksProvider = await import('@liveblocks/yjs');
+      const LiveblocksProvider = await import('@liveblocks/yjs');
 
-    this.liveblocksProvider = new LiveblocksProvider.default(room, this._ydoc!);
-    this.logger(`[Liveblocks] provider init success`);
+      this.liveblocksProvider = new LiveblocksProvider.default(room, this._ydoc!);
+      this.logger(`[Liveblocks] provider init success`);
+      // ====== 4. handle data sync  ====== //
+      // Does nothing for connection, which is handled by Liveblocks client
 
-    // ====== 4. handle data sync  ====== //
-    // Does nothing for connection, which is handled by Liveblocks client
-
-    this.liveblocksProvider.on('sync', async (synced: boolean) => {
-      this.logger('[Liveblocks] server sync status:', synced);
-      if (synced === true) {
-        // Yjs content is synchronized and ready
-        this.logger('[Liveblocks] start to init yjs data...');
-        onSyncStatusChange?.(PeerSyncStatus.Syncing);
-        await this.initSync();
-        onSyncStatusChange?.(PeerSyncStatus.Synced);
-        this.logger('[Liveblocks] yjs data init success');
-      } else {
-        // Yjs content is not synchronized
-        this.logger('[Liveblocks] data not sync, try to reconnect in 1s...');
-        // await this.reconnect(params);
-        setTimeout(() => {
+      this.liveblocksProvider.on('sync', async (synced: boolean) => {
+        this.logger('[Liveblocks] server sync status:', synced);
+        if (synced === true) {
+          // Yjs content is synchronized and ready
+          this.logger('[Liveblocks] start to init yjs data...');
           onSyncStatusChange?.(PeerSyncStatus.Syncing);
-          this.reconnect(params);
-        }, 1000);
-      }
-    });
+          await this.initSync();
+          onSyncStatusChange?.(PeerSyncStatus.Synced);
+          this.logger('[Liveblocks] yjs data init success');
+        } else {
+          // Yjs content is not synchronized
+          this.logger('[Liveblocks] data not sync, try to reconnect in 1s...');
+          // await this.reconnect(params);
+          setTimeout(() => {
+            onSyncStatusChange?.(PeerSyncStatus.Syncing);
+            this.reconnect(params);
+          }, 1000);
+        }
+      });
+    } catch (error) {
+      this.logger(`[Liveblocks] failed to join room: ${hashedRoomName}, error: ${error}`);
+      onSyncStatusChange?.(PeerSyncStatus.Unconnected);
+      await this.cleanLiveblocksConnection();
+    }
   }
 
   connect = async (params: StartDataSyncParams) => {
@@ -240,14 +243,13 @@ class DataSync {
   };
 
   reconnect = async (params: StartDataSyncParams) => {
-    await this.cleanWebrtcConnection(this.webrtcProvider);
-    await this.cleanLiveblocksConnection();
+    await this.disconnect();
 
     await this.connect(params);
   };
 
   async disconnect() {
-    await this.cleanWebrtcConnection(this.webrtcProvider);
+    await this.cleanWebrtcConnection();
     await this.cleanLiveblocksConnection();
   }
 
@@ -259,7 +261,8 @@ class DataSync {
     this._ydoc = new Doc();
   };
 
-  private async cleanWebrtcConnection(provider: WebrtcProvider | null) {
+  async cleanWebrtcConnection(isDev = false) {
+    const provider = isDev ? window.__ONLY_USE_FOR_CLEANUP_IN_DEV : this.webrtcProvider;
     if (provider) {
       this.logger(`[WebRTC] clean Connection...`);
       this.logger(`[WebRTC] clean awareness...`);
@@ -280,7 +283,7 @@ class DataSync {
     }
   }
 
-  private async cleanLiveblocksConnection() {
+  async cleanLiveblocksConnection() {
     this.logger(`[Liveblocks] clean Connection...`);
     // provider.disconnect();
     this.liveblocksClient?.logout();

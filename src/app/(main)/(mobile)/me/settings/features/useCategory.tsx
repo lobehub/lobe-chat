@@ -12,7 +12,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 export const useCategory = () => {
   const router = useRouter();
   const { t } = useTranslation('setting');
-  const { enableWebrtc, showLLM } = useServerConfigStore(featureFlagsSelectors);
+  const { enableSync, showLLM } = useServerConfigStore(featureFlagsSelectors);
 
   const items: CellProps[] = [
     {
@@ -20,7 +20,7 @@ export const useCategory = () => {
       key: SettingsTabs.Common,
       label: t('tab.common'),
     },
-    enableWebrtc && {
+    enableSync && {
       icon: Cloudy,
       key: SettingsTabs.Sync,
       label: (
