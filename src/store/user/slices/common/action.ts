@@ -92,10 +92,7 @@ export const createCommonSlice: StateCreator<
             const preference = isEmpty ? DEFAULT_PREFERENCE : data.preference;
 
             // if there is avatar or userId (from client DB), update it into user
-            const user =
-              data.avatar || data.userId
-                ? merge(get().user, { avatar: data.avatar, id: data.userId })
-                : get().user;
+            const user = data.avatar ? merge(get().user, { avatar: data.avatar }) : get().user;
 
             set(
               {
