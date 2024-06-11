@@ -46,7 +46,7 @@ export const useEnabledDataSync = () => {
     ],
   );
 
-  const { enableWebrtc: enableSync } = useServerConfigStore(featureFlagsSelectors);
+  const { enableSync } = useServerConfigStore(featureFlagsSelectors);
   const syncEvent = useSyncEvent();
 
   useEnabledSync(enableSync, {

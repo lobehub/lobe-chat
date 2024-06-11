@@ -16,8 +16,8 @@ export const generateMetadata = async () => {
   });
 };
 export default () => {
-  const enableWebrtc = serverFeatureFlags().enableWebrtc;
-  if (!enableWebrtc) return notFound();
+  const enableSync = serverFeatureFlags().enableSync;
+  if (!enableSync) return notFound();
 
   const isMobile = isMobileDevice();
   const { os, browser } = gerServerDeviceInfo();

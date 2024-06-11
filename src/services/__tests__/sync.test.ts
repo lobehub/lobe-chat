@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { dataSync } from '@/database/client/core';
-import { StartDataSyncParams } from '@/types/sync';
+import { StartDataSyncParams, SyncMethod } from '@/types/sync';
 
 import { syncService } from '../sync';
 
@@ -47,7 +47,10 @@ describe('SyncService', () => {
 
   describe('disableSync', () => {
     it('should disconnect data sync and return false', async () => {
-      const result = await syncService.disableSync();
+      const result = await syncService.disableSync({
+        webrtc: true,
+        liveblocks: true,
+      });
 
       expect(result).toBe(false);
       expect(dataSync.disconnect).toHaveBeenCalled();

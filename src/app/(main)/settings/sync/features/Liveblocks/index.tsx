@@ -16,6 +16,7 @@ import {
   authSelectors,
   keyVaultsConfigSelectors,
   syncSettingsSelectors,
+  userProfileSelectors,
 } from '@/store/user/selectors';
 import { SyncMethod } from '@/types/sync';
 
@@ -52,6 +53,7 @@ const Liveblocks = memo(() => {
     isAccessCodeFilled,
     isLoginWithAuth,
     userId,
+    profile,
     enableAuth,
     setSettings,
   ] = useUserStore((s) => [
@@ -59,7 +61,8 @@ const Liveblocks = memo(() => {
     syncSettingsSelectors.liveblocksConfig(s).customApiKey,
     !!keyVaultsConfigSelectors.password(s),
     authSelectors.isLoginWithAuth(s),
-    s.user?.id,
+    userProfileSelectors.userId(s),
+    userProfileSelectors.userProfile(s),
     s.enableAuth(),
     s.setSettings,
   ]);
@@ -70,10 +73,11 @@ const Liveblocks = memo(() => {
 
   useEffect(() => {
     // Fix for the first time setting up
-    if (userId && !customName && !roomName) {
+    if (!customName) {
       form.setFieldValue(['sync', 'liveblocks', 'roomName'], userId);
       form.submit();
     }
+    console.log(profile);
   }, [userId]);
 
   const config: SettingItemGroup = {

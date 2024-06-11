@@ -30,7 +30,7 @@ const Header = memo(() => {
   const { styles } = useStyles();
   const { t } = useTranslation('chat');
   const [createSession] = useSessionStore((s) => [s.createSession]);
-  const { enableWebrtc, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { enableSync, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   const { mutate, isValidating } = useActionSWR('session.createSession', () => createSession());
 
@@ -39,7 +39,7 @@ const Header = memo(() => {
       <Flexbox distribution={'space-between'} horizontal>
         <Flexbox align={'center'} gap={4} horizontal>
           <Logo className={styles.logo} size={36} type={'text'} />
-          {enableWebrtc && <SyncStatusTag method={SyncMethod.WebRTC} />}
+          {enableSync && <SyncStatusTag method={SyncMethod.WebRTC} />}
         </Flexbox>
         {showCreateSession && (
           <ActionIcon
