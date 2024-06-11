@@ -1,25 +1,77 @@
 'use client';
 
-import { Divider } from 'antd';
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { PropsWithChildren, memo } from 'react';
-import { Center } from 'react-layout-kit';
+import { MessageSquareHeart } from 'lucide-react';
+import { PropsWithChildren, memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
+
+import GuideModal from '@/components/GuideModal';
+import GuideVideo from '@/components/GuideVideo';
+import { GITHUB, GITHUB_ISSUES, getR2Url } from '@/const/url';
+import { isOnServerSide } from '@/utils/env';
 
 const useStyles = createStyles(
   ({ css, token }) => css`
     font-size: 12px;
-    color: ${token.colorTextQuaternary};
+    color: ${token.colorTextSecondary};
   `,
 );
 
-const Footer = memo<PropsWithChildren>(({ children }) => {
+const Footer = memo<PropsWithChildren>(() => {
+  const { t } = useTranslation('common');
+  const [openStar, setOpenStar] = useState(false);
+  const [openFeedback, setOpenFeedback] = useState(false);
   const { styles } = useStyles();
   return (
-    <Center style={{ maxWidth: 600, paddingInline: 16, width: '100%' }}>
-      <Divider>
-        <span className={styles}>{children}</span>
-      </Divider>
-    </Center>
+    <>
+      <Flexbox flex={1} />
+      <Flexbox
+        align={'center'}
+        as={'footer'}
+        className={styles}
+        flex={'none'}
+        horizontal
+        justify={'center'}
+        padding={16}
+        width={'100%'}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <Icon icon={MessageSquareHeart} /> {`${t('footer.title')} `}
+          <a onClick={() => setOpenStar(true)}>{t('footer.action.star')}</a>
+          {` ${t('footer.and')} `}
+          <a onClick={() => setOpenFeedback(true)}>{t('footer.action.feedback')}</a>
+          {' !'}
+        </div>
+      </Flexbox>
+      <GuideModal
+        cancelText={t('footer.later')}
+        cover={<GuideVideo height={269} src={getR2Url('/assets/star.mp4')} width={358} />}
+        desc={t('footer.star.desc')}
+        okText={t('footer.star.action')}
+        onCancel={() => setOpenStar(false)}
+        onOk={() => {
+          if (isOnServerSide) return;
+          window.open(GITHUB, '__blank');
+        }}
+        open={openStar}
+        title={t('footer.star.title')}
+      />
+      <GuideModal
+        cancelText={t('footer.later')}
+        cover={<GuideVideo height={269} src={getR2Url('/assets/feedback.mp4')} width={358} />}
+        desc={t('footer.feedback.desc')}
+        okText={t('footer.feedback.action')}
+        onCancel={() => setOpenFeedback(false)}
+        onOk={() => {
+          if (isOnServerSide) return;
+          window.open(GITHUB_ISSUES, '__blank');
+        }}
+        open={openFeedback}
+        title={t('footer.feedback.title')}
+      />
+    </>
   );
 });
 
