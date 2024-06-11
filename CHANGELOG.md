@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 0.162.22](https://github.com/lobehub/lobe-chat/compare/v0.162.21...v0.162.22)
+
+<sup>Released on **2024-06-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Expand `Clear` tooltip maxWidth.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Expand `Clear` tooltip maxWidth, closes [#2822](https://github.com/lobehub/lobe-chat/issues/2822) ([a5c3d6f](https://github.com/lobehub/lobe-chat/commit/a5c3d6f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.21](https://github.com/lobehub/lobe-chat/compare/v0.162.20...v0.162.21)
 
 <sup>Released on **2024-06-09**</sup>
