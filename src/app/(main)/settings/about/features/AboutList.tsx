@@ -18,7 +18,7 @@ const AboutList = memo<AboutListProps>(({ grid, items, ItemRender }) => {
   if (!grid) return <Flexbox gap={8}>{content}</Flexbox>;
 
   return (
-    <Grid maxItemWidth={160} rows={5} width={'100%'}>
+    <Grid gap={8} maxItemWidth={160} rows={5} width={'100%'}>
       {content}
     </Grid>
   );

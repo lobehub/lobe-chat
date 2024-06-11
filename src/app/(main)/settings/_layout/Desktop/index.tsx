@@ -46,12 +46,12 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
       <Flexbox
         align={'center'}
         height={'100%'}
+        paddingBlock={mobile ? undefined : 32}
         style={{ overflowX: 'hidden', overflowY: 'auto' }}
         width={'100%'}
       >
         <Flexbox
           gap={64}
-          paddingBlock={mobile ? undefined : 32}
           paddingInline={mobile ? undefined : 24}
           style={{
             maxWidth: 1024,

@@ -3,9 +3,10 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { MessageSquareHeart } from 'lucide-react';
+import Link from 'next/link';
 import { PropsWithChildren, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import GuideModal from '@/components/GuideModal';
 import GuideVideo from '@/components/GuideVideo';
@@ -26,24 +27,41 @@ const Footer = memo<PropsWithChildren>(() => {
   const { styles } = useStyles();
   return (
     <>
-      <Flexbox flex={1} />
-      <Flexbox
-        align={'center'}
-        as={'footer'}
-        className={styles}
-        flex={'none'}
-        horizontal
-        justify={'center'}
-        padding={16}
-        width={'100%'}
-      >
-        <div style={{ textAlign: 'center' }}>
-          <Icon icon={MessageSquareHeart} /> {`${t('footer.title')} `}
-          <a onClick={() => setOpenStar(true)}>{t('footer.action.star')}</a>
-          {` ${t('footer.and')} `}
-          <a onClick={() => setOpenFeedback(true)}>{t('footer.action.feedback')}</a>
-          {' !'}
-        </div>
+      <Flexbox flex={1} justify={'flex-end'}>
+        <Center
+          as={'footer'}
+          className={styles}
+          flex={'none'}
+          horizontal
+          padding={16}
+          width={'100%'}
+        >
+          <div style={{ textAlign: 'center' }}>
+            <Icon icon={MessageSquareHeart} /> {`${t('footer.title')} `}
+            <Link
+              aria-label={'star'}
+              href={GITHUB}
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenStar(true);
+              }}
+            >
+              {t('footer.action.star')}
+            </Link>
+            {` ${t('footer.and')} `}
+            <Link
+              aria-label={'feedback'}
+              href={GITHUB_ISSUES}
+              onClick={(e) => {
+                e.preventDefault();
+                setOpenFeedback(true);
+              }}
+            >
+              {t('footer.action.feedback')}
+            </Link>
+            {' !'}
+          </div>
+        </Center>
       </Flexbox>
       <GuideModal
         cancelText={t('footer.later')}

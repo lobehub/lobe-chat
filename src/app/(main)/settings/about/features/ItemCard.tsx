@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, token, responsive, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   card: css`
     cursor: pointer;
 
-    padding: 16px 20px;
+    padding: 12px 16px;
 
     background: ${isDarkMode ? token.colorFillTertiary : token.colorBgContainer};
     border: 1px solid ${token.colorFillSecondary};
@@ -18,10 +18,6 @@ const useStyles = createStyles(({ css, token, responsive, isDarkMode }) => ({
     &:hover {
       background: ${isDarkMode ? token.colorFillSecondary : token.colorBgContainer};
       border: 1px solid ${token.colorFill};
-    }
-
-    ${responsive.mobile} {
-      padding: 12px 16px;
     }
   `,
 }));
@@ -38,8 +34,8 @@ const ItemCard = memo<ItemCardProps>(({ label, icon, href }) => {
 
   return (
     <Link href={href} style={{ color: 'inherit' }} target={'_blank'}>
-      <Flexbox className={styles.card} gap={8} horizontal>
-        {icon && <Icon fill={theme.colorText} icon={icon} size={{ fontSize: 20 }} />}
+      <Flexbox className={styles.card} gap={12} horizontal>
+        {icon && <Icon fill={theme.colorText} icon={icon} size={{ fontSize: 18 }} />}
         {label}
       </Flexbox>
     </Link>
