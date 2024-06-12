@@ -27,6 +27,7 @@ const Cohere: ModelProviderCard = {
     }
   ], // TODO: what about embed models? I only see chatModels on other modelProviders
   id: 'cohere',
+  name: 'Cohere',
 };
 
 export default Cohere;

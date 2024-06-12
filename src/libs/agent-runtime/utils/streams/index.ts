@@ -1,6 +1,7 @@
 export * from './anthropic';
 export * from './azureOpenai';
 export * from './bedrock';
+export * from './cohere';
 export * from './google-ai';
 export * from './minimax';
 export * from './ollama';

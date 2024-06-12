@@ -1,33 +1,33 @@
 import { parseDataUri } from './uriParser';
 import { OpenAIChatMessage, UserMessageContentPart } from '../types';
-import Cohere from 'cohere-ai';
+import OpenAI from 'openai';
 
 export const buildCohereBlock = (
   content: UserMessageContentPart,
-): { type: string; content?: string; data?: string; mime_type?: string } => {
+): { content?: string; data?: string; mime_type?: string; type: string } => {
   switch (content.type) {
     case 'text': {
-      return { type: 'text', content: content.text };
+      return { content: content.text, type: 'text' };
     }
 
     case 'image_url': {
       const { mimeType, base64 } = parseDataUri(content.image_url.url);
       return {
-        type: 'image',
-        data: base64,
-        mime_type: mimeType,
+        data: base64 ?? undefined,
+        mime_type: mimeType ?? undefined,
+        type: 'image'
       };
     }
 
     default: {
-      throw new Error(`Unsupported content type: ${content.type}`);
+      throw new Error(`Unsupported content type: ${(content as any).type}`);
     }
   }
 };
 
 export const buildCohereMessage = (
   message: OpenAIChatMessage,
-): { role: string; content: string | object } => {
+): { content: string | object; role: string } => {
   const content = message.content as string | UserMessageContentPart[];
 
   switch (message.role) {
@@ -35,8 +35,8 @@ export const buildCohereMessage = (
     case 'user':
     case 'assistant': {
       return {
+        content: typeof content === 'string' ? content : content.map(part => buildCohereBlock(part)),
         role: message.role,
-        content: typeof content === 'string' ? content : content.map(buildCohereBlock),
       };
     }
 
@@ -48,13 +48,16 @@ export const buildCohereMessage = (
 
 export const buildCohereMessages = (
   oaiMessages: OpenAIChatMessage[],
-): { role: string; content: string | object }[] => {
-  return oaiMessages.map(buildCohereMessage);
+): { content: string | object; role: string }[] => {
+  return oaiMessages.map(message => buildCohereMessage(message));
 };
 
-export const buildCohereTools = (tools?: OpenAI.ChatCompletionTool[]) =>
-  tools?.map(tool => ({
-    name: tool.function.name,
-    description: tool.function.description,
-    input_schema: tool.function.parameters,
+export function buildCohereTools(tools: any[]): any[] | undefined {
+  if (!tools) return undefined;
+
+  return tools.map((tool) => ({
+    name: tool.name,
+    description: tool.description ?? '',
+    parameterDefinitions: tool.input_schema ?? {},
   }));
+}

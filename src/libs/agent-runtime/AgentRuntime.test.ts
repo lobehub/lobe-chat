@@ -210,7 +210,7 @@ describe('AgentRuntime', () => {
       it('should initialize correctly', async () => {
         const jwtPayload: JWTPayload = { apiKey: 'user-cohere-key' };
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Cohere, {
-          anthropic: jwtPayload,
+          cohere: jwtPayload,
         });
 
         // 假设 LobeCohereAI 是 Cohere 提供者的实现类
