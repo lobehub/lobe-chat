@@ -342,6 +342,44 @@
       "unknownBrowser": "Unknown Browser",
       "unknownOS": "Unknown OS"
     },
+    "liveblocks": {
+      "customApiKey": {
+        "desc": "Use Liveblocks service configured on the server by default",
+        "title": "Custom Service"
+      },
+      "customName": {
+        "desc": "Automatically assign a room name after logging in to LobeChat",
+        "title": "Custom Room Name"
+      },
+      "desc": "Synchronisation across multiple devices through a real-time collaboration platform, without the need for other devices to be online",
+      "enabled": {
+        "invalid": "Please enter a sync room name before enabling",
+        "title": "Enable Sync"
+      },
+      "publicApiKey": {
+        "desc": "Use a custom Liveblocks service instead of storing data in the server-configured sync database",
+        "placeholder": "Enter public key",
+        "title": "Liveblocks Public Key"
+      },
+      "roomName": {
+        "desc": "Customize the Liveblocks sync room name",
+        "placeholder": "Enter sync room name",
+        "reset": "Reset",
+        "shuffle": "Generate Randomly",
+        "title": "Sync Room Name"
+      },
+      "roomPassword": {
+        "desc": "Add a password to encrypt the sync room name, data can only be correctly synchronized when the password is correct",
+        "placeholder": "Enter sync room password",
+        "title": "Sync Room Password"
+      },
+      "title": "Liveblocks Online Sync",
+      "warning": {
+        "accessCodeRequired": "The server is enabled with an access code, you need to configure the access code in Common Settings first, or enter a public key to use a custom service, otherwise you will not be able to synchronise the data.",
+        "authRequired": "The server has enabled authentication. You need to sign in first to enable Liveblocks sync or enter a public key to use custom service, otherwise you will not be able to synchronise the data.",
+        "keyRequired": "The server has not configured Liveblocks service. You need to provide a public key to use custom service, otherwise you will not be able to synchronise the data."
+      }
+    },
     "warning": {
       "message": "This feature is currently experimental and may have unexpected or unstable behavior. If you encounter any issues, please submit feedback promptly."
     },

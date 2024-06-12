@@ -1,13 +1,22 @@
-import { PeerSyncStatus, SyncAwarenessState } from '@/types/sync';
+import { PeerSyncStatus, SyncAwarenessState, SyncMethod } from '@/types/sync';
 
-export interface UserSyncState {
-  syncAwareness: SyncAwarenessState[];
-  syncEnabled: boolean;
-  syncStatus: PeerSyncStatus;
-}
+export type UserSyncState = {
+  [K in SyncMethod]: {
+    awareness: SyncAwarenessState[];
+    enabled: boolean;
+    status: PeerSyncStatus;
+  };
+};
 
 export const initialSyncState: UserSyncState = {
-  syncAwareness: [],
-  syncEnabled: false,
-  syncStatus: PeerSyncStatus.Disabled,
+  liveblocks: {
+    awareness: [],
+    enabled: false,
+    status: PeerSyncStatus.Disabled,
+  },
+  webrtc: {
+    awareness: [],
+    enabled: false,
+    status: PeerSyncStatus.Disabled,
+  },
 };

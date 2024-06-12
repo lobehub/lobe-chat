@@ -10,7 +10,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useUserStore } from '@/store/user';
-import { syncSettingsSelectors } from '@/store/user/selectors';
+import { channelSyncConfig } from '@/store/user/slices/sync/action';
+import type { SyncMethod } from '@/types/sync';
+import { LiveblocksSyncConfig, WebRTCSyncConfig } from '@/types/user/settings/sync';
 import { pathString } from '@/utils/url';
 
 import EnableTag from './EnableTag';
@@ -32,25 +34,26 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
 
 interface EnableSyncProps {
   hiddenActions?: boolean;
+  method: SyncMethod;
   placement?: TooltipPlacement;
 }
 
-const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLeft' }) => {
+const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLeft', method }) => {
   const { t } = useTranslation('common');
 
   const { styles, theme } = useStyles();
-  const [syncStatus, isSyncing, channelName, enableWebRTC, setSettings] = useUserStore((s) => [
-    s.syncStatus,
-    s.syncStatus === 'syncing',
-    syncSettingsSelectors.webrtcChannelName(s),
-    syncSettingsSelectors.enableWebRTC(s),
+  const [syncStatus, isSyncing, channelConfig, enabled, setSettings] = useUserStore((s) => [
+    s[method].status,
+    s[method].status === 'syncing',
+    channelSyncConfig(method)(s),
+    channelSyncConfig(method)(s).enabled,
     s.setSettings,
   ]);
 
-  const users = useUserStore((s) => s.syncAwareness, isEqual);
+  const users = useUserStore((s) => s[method].awareness, isEqual);
 
   const switchSync = (enabled: boolean) => {
-    setSettings({ sync: { webrtc: { enabled } } });
+    setSettings({ sync: { [method]: { enabled } } });
   };
 
   return (
@@ -68,13 +71,14 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
             >
               {t('sync.channel')}
               <Text className={styles.text} copyable>
-                {channelName}
+                {(channelConfig as WebRTCSyncConfig).channelName ||
+                  (channelConfig as LiveblocksSyncConfig).roomName}
               </Text>
             </Flexbox>
           </Flexbox>
           <Divider dashed style={{ margin: 0 }} />
           <Flexbox gap={12}>
-            {users.map((user) => (
+            {users?.map((user) => (
               <Flexbox gap={12} horizontal key={user.clientID}>
                 <Avatar
                   avatar={
@@ -114,9 +118,7 @@ const EnableSync = memo<EnableSyncProps>(({ hiddenActions, placement = 'bottomLe
           <Flexbox align={'center'} gap={8} horizontal>
             <Icon icon={LucideCloudy} />
             {t('sync.title')}
-            {!hiddenActions && (
-              <Switch checked={enableWebRTC} onChange={switchSync} size={'small'} />
-            )}
+            {!hiddenActions && <Switch checked={enabled} onChange={switchSync} size={'small'} />}
           </Flexbox>
           {!hiddenActions && (
             <Link href={pathString('/settings/sync')}>
