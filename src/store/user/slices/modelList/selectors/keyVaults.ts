@@ -23,7 +23,7 @@ const getVaultByProvider = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
 
 const isProviderEndpointNotEmpty = (provider: string) => (s: UserStore) => {
   const vault = getVaultByProvider(provider as GlobalLLMProviderKey)(s);
-  return !!vault?.baseURL || !!vault?.endpoint || !!vault?.region;
+  return !!vault?.baseURL || !!vault?.endpoint;
 };
 
 const isProviderApiKeyNotEmpty = (provider: string) => (s: UserStore) => {

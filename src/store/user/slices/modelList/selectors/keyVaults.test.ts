@@ -69,8 +69,9 @@ describe('keyVaultsConfigSelectors', () => {
       });
     });
 
+    // Always return false for AWSBedrockKeyVault
     describe('AWSBedrockKeyVault', () => {
-      it('should return true if provider region is not empty for AWSBedrockKeyVault', () => {
+      it('should return false if provider region is not empty for AWSBedrockKeyVault', () => {
         const s = merge(initialSettingsState, {
           settings: {
             keyVaults: {
@@ -80,7 +81,7 @@ describe('keyVaultsConfigSelectors', () => {
             },
           },
         }) as unknown as UserStore;
-        expect(keyVaultsConfigSelectors.isProviderEndpointNotEmpty('bedrock')(s)).toBe(true);
+        expect(keyVaultsConfigSelectors.isProviderEndpointNotEmpty('bedrock')(s)).toBe(false);
       });
 
       it('should return false if provider region is empty for AWSBedrockKeyVault', () => {
