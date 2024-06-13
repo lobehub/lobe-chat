@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { enableAuth } from '@/const/auth';
 import DataStatistics from '@/features/User/DataStatistics';
 import UserInfo from '@/features/User/UserInfo';
 import UserLoginOrSignup from '@/features/User/UserLoginOrSignup';
@@ -14,7 +13,14 @@ import { authSelectors } from '@/store/user/selectors';
 const UserBanner = memo(() => {
   const router = useRouter();
   const isLoginWithAuth = useUserStore(authSelectors.isLoginWithAuth);
-
+  const [openSignIn, enableAuth] = useUserStore((s) => [
+    s.openLogin,
+    s.enableAuth()
+  ]);
+  const handleSignIn = () => {
+    openSignIn();
+  };
+  
   return (
     <Flexbox gap={12} paddingBlock={8}>
       {!enableAuth ? (
@@ -28,7 +34,7 @@ const UserBanner = memo(() => {
           <DataStatistics paddingInline={12} />
         </>
       ) : (
-        <UserLoginOrSignup onClick={() => router.push('/login')} />
+        <UserLoginOrSignup onClick={handleSignIn} />
       )}
     </Flexbox>
   );
