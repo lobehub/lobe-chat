@@ -14,8 +14,8 @@ import { LobeOpenAICompatibleFactory } from './index';
 
 const provider = 'groq';
 const defaultBaseURL = 'https://api.groq.com/openai/v1';
-const bizErrorType = 'GroqBizError';
-const invalidErrorType = 'InvalidGroqAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -33,10 +33,6 @@ const LobeMockProvider = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_MOCKPROVIDER_CHAT_COMPLETION === '1',
-  },
-  errorType: {
-    bizError: AgentRuntimeErrorType.GroqBizError,
-    invalidAPIKey: AgentRuntimeErrorType.InvalidGroqAPIKey,
   },
   provider: ModelProvider.Groq,
 });
@@ -146,6 +142,127 @@ describe('LobeOpenAICompatibleFactory', () => {
         expect(decoder.decode((await reader.read()).value)).toEqual('event: text\n');
         expect(decoder.decode((await reader.read()).value)).toEqual('data: "hello"\n\n');
         expect((await reader.read()).done).toBe(true);
+      });
+
+      // https://github.com/lobehub/lobe-chat/issues/2752
+      it('should handle burn hair data chunks correctly', async () => {
+        const chunks = [
+          {
+            choices: [],
+            created: 0,
+            id: '',
+            model: '',
+            object: '',
+            prompt_filter_results: [
+              {
+                prompt_index: 0,
+                content_filter_results: {
+                  hate: { filtered: false, severity: 'safe' },
+                  self_harm: { filtered: false, severity: 'safe' },
+                  sexual: { filtered: false, severity: 'safe' },
+                  violence: { filtered: false, severity: 'safe' },
+                },
+              },
+            ],
+          },
+          {
+            choices: [
+              {
+                delta: { content: '', role: 'assistant' },
+                finish_reason: null,
+                index: 0,
+                logprobs: null,
+              },
+            ],
+            created: 1717249403,
+            id: 'chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
+            model: 'gpt-4o-2024-05-13',
+            object: 'chat.completion.chunk',
+            system_fingerprint: 'fp_5f4bad809a',
+          },
+          {
+            choices: [{ delta: { content: '1' }, finish_reason: null, index: 0, logprobs: null }],
+            created: 1717249403,
+            id: 'chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
+            model: 'gpt-4o-2024-05-13',
+            object: 'chat.completion.chunk',
+            system_fingerprint: 'fp_5f4bad809a',
+          },
+          {
+            choices: [{ delta: {}, finish_reason: 'stop', index: 0, logprobs: null }],
+            created: 1717249403,
+            id: 'chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
+            model: 'gpt-4o-2024-05-13',
+            object: 'chat.completion.chunk',
+            system_fingerprint: 'fp_5f4bad809a',
+          },
+          {
+            choices: [
+              {
+                content_filter_offsets: { check_offset: 35, start_offset: 35, end_offset: 36 },
+                content_filter_results: {
+                  hate: { filtered: false, severity: 'safe' },
+                  self_harm: { filtered: false, severity: 'safe' },
+                  sexual: { filtered: false, severity: 'safe' },
+                  violence: { filtered: false, severity: 'safe' },
+                },
+                finish_reason: null,
+                index: 0,
+              },
+            ],
+            created: 0,
+            id: '',
+            model: '',
+            object: '',
+          },
+        ];
+        const mockStream = new ReadableStream({
+          start(controller) {
+            chunks.forEach((item) => {
+              controller.enqueue(item);
+            });
+
+            controller.close();
+          },
+        });
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockStream as any,
+        );
+
+        const stream: string[] = [];
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'gpt-3.5-turbo',
+          temperature: 0,
+        });
+        const decoder = new TextDecoder();
+        const reader = result.body!.getReader();
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
+
+        expect(stream).toEqual(
+          [
+            'id: ',
+            'event: data',
+            'data: {"choices":[],"created":0,"id":"","model":"","object":"","prompt_filter_results":[{"prompt_index":0,"content_filter_results":{"hate":{"filtered":false,"severity":"safe"},"self_harm":{"filtered":false,"severity":"safe"},"sexual":{"filtered":false,"severity":"safe"},"violence":{"filtered":false,"severity":"safe"}}}]}\n',
+            'id: chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
+            'event: text',
+            'data: ""\n',
+            'id: chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
+            'event: text',
+            'data: "1"\n',
+            'id: chatcmpl-9VJIxA3qNM2C2YdAnNYA2KgDYfFnX',
+            'event: stop',
+            'data: "stop"\n',
+            'id: ',
+            'event: data',
+            'data: {"id":"","index":0}\n',
+          ].map((item) => `${item}\n`),
+        );
       });
 
       it('should transform non-streaming response to stream correctly', async () => {

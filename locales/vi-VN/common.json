@@ -39,6 +39,10 @@
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
   "importModal": {
+    "error": {
+      "desc": "Xin lỗi vì quá trình nhập dữ liệu gặp sự cố. Vui lòng thử nhập lại hoặc <1>gửi vấn đề</1>, chúng tôi sẽ kiểm tra vấn đề ngay lập tức.",
+      "title": "Nhập dữ liệu thất bại"
+    },
     "finish": {
       "onlySettings": "Nhập cài đặt hệ thống thành công",
       "start": "Bắt đầu sử dụng",
@@ -46,6 +50,7 @@
       "title": "Hoàn tất nhập dữ liệu"
     },
     "loading": "Đang nhập dữ liệu, vui lòng chờ...",
+    "preparing": "Đang chuẩn bị mô-đun nhập dữ liệu...",
     "result": {
       "added": "Nhập thành công",
       "errors": "Lỗi nhập",
@@ -56,7 +61,12 @@
       "topics": "Chủ đề",
       "type": "Loại dữ liệu"
     },
-    "title": "Nhập dữ liệu"
+    "title": "Nhập dữ liệu",
+    "uploading": {
+      "desc": "Tập tin hiện tại quá lớn, đang cố gắng tải lên...",
+      "restTime": "Thời gian còn lại",
+      "speed": "Tốc độ tải lên"
+    }
   },
   "installPWA": "Cài đặt ứng dụng trình duyệt",
   "lang": {

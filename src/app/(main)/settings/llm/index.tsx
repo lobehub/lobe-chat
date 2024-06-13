@@ -2,44 +2,17 @@
 
 import { Flexbox } from 'react-layout-kit';
 
-import Anthropic from './Anthropic';
-import Azure from './Azure';
-import Bedrock from './Bedrock';
-import DeepSeek from './DeepSeek';
-import Google from './Google';
-import Groq from './Groq';
-import Minimax from './Minimax';
-import Mistral from './Mistral';
-import Moonshot from './Moonshot';
-import Ollama from './Ollama';
-import OpenAI from './OpenAI';
-import OpenRouter from './OpenRouter';
-import Perplexity from './Perplexity';
-import TogetherAI from './TogetherAI';
-import ZeroOne from './ZeroOne';
-import Zhipu from './Zhipu';
-import Footer from './components/Footer';
+import { useProviderList } from './ProviderList/providers';
+import ProviderConfig from './components/ProviderConfig';
 
 const Page = () => {
+  const list = useProviderList();
+
   return (
     <Flexbox gap={24} width={'100%'}>
-      <OpenAI />
-      <Ollama />
-      <Azure />
-      <Google />
-      <Anthropic />
-      <Bedrock />
-      <DeepSeek />
-      <OpenRouter />
-      <TogetherAI />
-      <Groq />
-      <Perplexity />
-      <Minimax />
-      <Mistral />
-      <Moonshot />
-      <Zhipu />
-      <ZeroOne />
-      <Footer />
+      {list.map(({ id, ...res }) => (
+        <ProviderConfig id={id as any} key={id} {...res} />
+      ))}
     </Flexbox>
   );
 };

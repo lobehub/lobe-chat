@@ -88,7 +88,9 @@ const Bedrock: ModelProviderCard = {
       tokens: 4096,
     },
   ],
+  checkModel: 'anthropic.claude-instant-v1',
   id: 'bedrock',
+  name: 'Bedrock',
 };
 
 export default Bedrock;

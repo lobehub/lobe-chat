@@ -5,7 +5,6 @@ import { memo, useEffect } from 'react';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { LOBE_URL_IMPORT_NAME } from '@/const/url';
-import { useImportConfig } from '@/hooks/useImportConfig';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
@@ -17,9 +16,10 @@ import { authSelectors } from '@/store/user/selectors';
 const StoreInitialization = memo(() => {
   const router = useRouter();
 
-  const [useInitUserState, isLogin] = useUserStore((s) => [
-    s.useInitUserState,
+  const [isLogin, useInitUserState, importUrlShareSettings] = useUserStore((s) => [
     authSelectors.isLogin(s),
+    s.useInitUserState,
+    s.importUrlShareSettings,
   ]);
 
   const { serverConfig } = useServerConfigStore();
@@ -52,10 +52,9 @@ const StoreInitialization = memo(() => {
   useStoreUpdater('router', router);
 
   // Import settings from the url
-  const { importSettings } = useImportConfig();
   const searchParam = useSearchParams().get(LOBE_URL_IMPORT_NAME);
   useEffect(() => {
-    importSettings(searchParam);
+    importUrlShareSettings(searchParam);
   }, [searchParam]);
 
   // useEffect(() => {

@@ -99,6 +99,10 @@ export const useMenu = () => {
     },
   ];
 
+  /* ↓ cloud slot ↓ */
+
+  /* ↑ cloud slot ↑ */
+
   const pwa: MenuProps['items'] = [
     {
       icon: <Icon icon={Download} />,
@@ -207,6 +211,9 @@ export const useMenu = () => {
     },
     ...(isLoginWithClerk ? profile : []),
     ...(isLogin ? settings : []),
+    /* ↓ cloud slot ↓ */
+
+    /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
     ...(isLogin ? data : []),
     ...helps,

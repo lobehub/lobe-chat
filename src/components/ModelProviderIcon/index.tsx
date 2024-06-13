@@ -14,6 +14,7 @@ import {
   OpenRouter,
   Perplexity,
   Together,
+  Tongyi,
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
@@ -102,6 +103,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.TogetherAI: {
       return <Together size={20} />;
+    }
+
+    case ModelProvider.Qwen: {
+      return <Tongyi size={20} />;
     }
 
     default: {

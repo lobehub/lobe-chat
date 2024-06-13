@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "Voer de API Key van Anthropic in",
-      "placeholder": "Anthropic API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Anthropic API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Anthropic API-sleutel"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "De API-versie van Azure, volgt het formaat YYYY-MM-DD, raadpleeg [de nieuwste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
@@ -29,10 +17,6 @@
       "desc": "Dit waarde kan gevonden worden in de 'Sleutels en eindpunt' sectie wanneer je een bron in Azure Portal controleert. Je kunt KEY1 of KEY2 gebruiken",
       "placeholder": "Azure API Key",
       "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Azure OpenAI API-sleutel in om een sessie te starten",
-      "title": "Gebruik aangepaste Azure OpenAI API-sleutel"
     }
   },
   "bedrock": {
@@ -61,78 +45,6 @@
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "Fill in your API Key from DeepSeek",
-      "placeholder": "DeepSeek API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your DeepSeek API Key to start the session. The app will not store your API Key.",
-      "title": "Use Custom DeepSeek API Key"
-    }
-  },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "Voer de API Key van Google in",
-      "placeholder": "Google API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Google API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Google API-sleutel"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "Voer de API Key van Groq in",
-      "placeholder": "Groq API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Groq API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Groq API-sleutel"
-    }
-  },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "Voer de API Key van Minimax AI in",
-      "placeholder": "Minimax API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Minimax AI API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Minimax AI API-sleutel"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "Voer de API Key van Mistral AI in",
-      "placeholder": "Mistral AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Mistral AI API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Mistral AI API-sleutel"
-    }
-  },
-  "moonshot": {
-    "title": "De Donkere Kant van de Maan",
-    "token": {
-      "desc": "Voer de API Key van Moonshot AI in",
-      "placeholder": "Moonshot AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Moonshot AI API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Moonshot AI API-sleutel"
-    }
-  },
   "ollama": {
     "checker": {
       "desc": "Test of het proxyadres correct is ingevuld",
@@ -142,6 +54,12 @@
       "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "Aangepaste Modelnamen"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
     },
     "endpoint": {
       "desc": "Voer het Ollama interface proxyadres in, laat leeg indien niet specifiek aangegeven",
@@ -171,94 +89,20 @@
         "windowsTab": "Windows (Preview)"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "Gebruik je eigen OpenAI Key",
-      "placeholder": "OpenAI API Key",
-      "title": "OpenAI API Key"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "Voer uw OpenAI API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste OpenAI API-sleutel"
-    }
-  },
-  "openrouter": {
-    "checker": {
-      "desc": "Test of het proxyadres correct is ingevuld"
-    },
-    "customModelName": {
-      "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
-      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-      "title": "Aangepaste Modelnamen"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "Voer de API Key van OpenRouter AI in",
-      "placeholder": "OpenRouter AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw OpenRouter API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste OpenRouter API-sleutel"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "Voer de API Key van Perplexity AI in",
-      "placeholder": "Perplexity AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Perplexity API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Perplexity API-sleutel"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "Test of het proxyadres correct is ingevuld"
-    },
-    "customModelName": {
-      "desc": "Voeg aangepaste modellen toe, gebruik een komma (,) om meerdere modellen te scheiden",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-      "title": "Aangepaste Modelnamen"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "Voer de API Key van TogetherAI AI in",
-      "placeholder": "TogetherAI AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw TogetherAI API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste TogetherAI API-sleutel"
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
     }
   },
   "zeroone": {
-    "title": "01.AI Nul Een Alles",
-    "token": {
-      "desc": "Voer de API Key van 01.AI Nul Een Alles in",
-      "placeholder": "01.AI Nul Een Alles API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw ZeroOne API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste ZeroOne API-sleutel"
-    }
+    "title": "01.AI Nul Een Alles"
   },
   "zhipu": {
-    "title": "Intelligent Spectrum",
-    "token": {
-      "desc": "Voer de API Key van Intelligent Spectrum in",
-      "placeholder": "Zhipu API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Voer uw Zhipu API-sleutel in om een sessie te starten. De app zal uw API-sleutel niet opslaan",
-      "title": "Gebruik aangepaste Zhipu API-sleutel"
-    }
+    "title": "Intelligent Spectrum"
   }
 }

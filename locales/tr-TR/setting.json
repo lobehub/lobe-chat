@@ -43,6 +43,11 @@
     "title": "Ayarlar"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Lütfen {{name}} API Anahtarınızı girin",
+      "placeholder": "{{name}} API Anahtarı",
+      "title": "API Anahtarı"
+    },
     "checker": {
       "button": "Kontrol Et",
       "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
@@ -108,14 +113,6 @@
       "title": "API Proxy Adresi"
     },
     "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama bu modeli indiriyor, lütfen bu sayfayı kapatmamaya çalışın. Yeniden indirme durumunda kaldığı yerden devam edecektir.",
-      "remainingTime": "Kalan Zaman",
-      "speed": "İndirme Hızı",
-      "title": "{{model}} Modeli İndiriliyor"
-    }
   },
   "plugin": {
     "addTooltip": "Eklenti Ekle",

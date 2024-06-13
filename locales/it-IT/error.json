@@ -54,39 +54,15 @@
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
-    "AnthropicBizError": "Si è verificato un errore durante la richiesta del servizio Anthropic AI. Si prega di controllare le informazioni seguenti o riprovare.",
-    "AzureBizError": "Errore nella richiesta del servizio Azure AI, controlla le informazioni seguenti o riprova",
-    "BedrockBizError": "Errore nella richiesta del servizio Bedrock, controlla le informazioni seguenti o riprova",
-    "DeepSeekBizError": "Errore di business DeepSeek, controlla le informazioni seguenti o riprova",
-    "GoogleBizError": "Errore nella richiesta del servizio Google, controlla le informazioni seguenti o riprova",
-    "GroqBizError": "Errore del servizio Groq, controlla le informazioni seguenti o riprova",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
-    "InvalidAnthropicAPIKey": "La chiave API Anthropic non è valida o è vuota. Si prega di controllare la chiave API Anthropic e riprovare.",
-    "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
-    "InvalidDeepSeekAPIKey": "Chiave API DeepSeek non valida o vuota, controlla la chiave API DeepSeek e riprova",
-    "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
-    "InvalidGroqAPIKey": "Chiave API Groq non valida o vuota, controlla la chiave API Groq e riprova",
-    "InvalidMinimaxAPIKey": "Chiave API Minimax non valida o vuota, controllare la chiave API Minimax e riprovare",
-    "InvalidMistralAPIKey": "Chiave API Mistral AI non valida o vuota. Si prega di controllare la chiave API Mistral e riprovare.",
-    "InvalidMoonshotAPIKey": "La chiave API di Moonshot AI non è corretta o è vuota, si prega di controllare la chiave API di Moonshot e riprovare",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
-    "InvalidOpenRouterAPIKey": "La chiave API di OpenRouter non è valida o è vuota. Si prega di controllare la chiave API di OpenRouter e riprovare.",
-    "InvalidPerplexityAPIKey": "Chiave API Perplexity non valida o vuota, controlla la chiave API Perplexity e riprova",
-    "InvalidTogetherAIAPIKey": "La chiave API di TogetherAI non è valida o è vuota. Si prega di controllare la chiave API di TogetherAI e riprovare.",
-    "InvalidZeroOneAPIKey": "La chiave API ZeroOne non è corretta o è vuota, si prega di controllare la chiave API ZeroOne e riprovare",
-    "InvalidZhipuAPIKey": "Chiave API Zhipu non corretta o vuota, controlla la chiave API Zhipu e riprova",
+    "InvalidProviderAPIKey": "{{provider}} Chiave API non valida o vuota, controlla la Chiave API di {{provider}} e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
-    "MinimaxBizError": "Errore di servizio Minimax, controllare le informazioni seguenti o riprovare",
-    "MistralBizError": "Errore di richiesta del servizio Mistral AI. Si prega di controllare le informazioni seguenti o riprovare.",
-    "MoonshotBizError": "Si è verificato un errore nel servizio Moonshot, si prega di controllare le informazioni seguenti o riprovare",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
     "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controllare che Ollama sia in esecuzione correttamente o che la configurazione di cross-origin di Ollama sia corretta",
-    "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
-    "OpenRouterBizError": "Errore di richiesta del servizio OpenRouter AI. Si prega di controllare le informazioni seguenti o riprovare.",
-    "PerplexityBizError": "Errore di business nella richiesta del servizio Perplexity AI, controlla le informazioni seguenti o riprova",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
     "PluginGatewayError": "Spiacenti, si è verificato un errore nel gateway del plugin. Verifica che la configurazione del gateway del plugin sia corretta",
@@ -99,9 +75,7 @@
     "PluginOpenApiInitError": "Spiacenti, inizializzazione fallita del client OpenAPI. Verifica che le informazioni di configurazione di OpenAPI siano corrette",
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
     "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
-    "TogetherAIBizError": "Errore di richiesta del servizio TogetherAI AI. Si prega di controllare le informazioni seguenti o riprovare.",
-    "ZeroOneBizError": "Si è verificato un errore nel servizio ZeroOneBiz, si prega di controllare le informazioni seguenti o riprovare",
-    "ZhipuBizError": "Errore nella richiesta del servizio Zhipu, controlla le informazioni seguenti o riprova"
+    "ProviderBizAPIKey": "Errore nella richiesta del servizio {{provider}}, controlla le informazioni seguenti o riprova"
   },
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
@@ -111,6 +85,10 @@
   },
   "unlock": {
     "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
+    "apiKey": {
+      "description": "Inserisci la tua Chiave API {{name}} per iniziare la sessione",
+      "title": "Usa la tua Chiave API personalizzata {{name}}"
+    },
     "closeMessage": "Chiudi messaggio",
     "confirm": "Conferma e riprova",
     "oauth": {
@@ -118,14 +96,6 @@
       "success": "Accesso riuscito",
       "title": "Accedi all'account",
       "welcome": "Benvenuto!"
-    },
-    "ollama": {
-      "cancel": "Annulla il download",
-      "confirm": "Scarica",
-      "description": "Inserisci l'etichetta del tuo modello Ollama per continuare la sessione",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Inizio download...",
-      "title": "Scarica il modello Ollama specificato"
     },
     "password": {
       "description": "L'amministratore ha attivato la crittografia dell'applicazione. Inserisci la password dell'applicazione per sbloccarla. La password va inserita solo una volta.",
