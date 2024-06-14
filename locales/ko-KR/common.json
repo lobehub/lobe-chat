@@ -9,6 +9,7 @@
   "cancel": "취소",
   "changelog": "변경 로그",
   "close": "닫기",
+  "contact": "연락처",
   "copy": "복사",
   "copyFail": "복사 실패",
   "copySuccess": "복사 성공",
@@ -35,6 +36,25 @@
   },
   "feedback": "피드백 및 제안",
   "follow": "{{name}}에서 우리를 팔로우하세요",
+  "footer": {
+    "action": {
+      "feedback": "소중한 의견 공유",
+      "star": "GitHub에서 별표 추가"
+    },
+    "and": "및",
+    "feedback": {
+      "action": "피드백 공유",
+      "desc": "귀하의 모든 아이디어와 제안은 저희에게 귀중합니다. 귀하의 의견을 알고 싶어 합니다! 제품 기능 및 사용 경험 피드백을 제공하여 LobeChat을 더 나아지게 하는 데 도움을 주십시오.",
+      "title": "GitHub에서 소중한 피드백 공유"
+    },
+    "later": "나중에",
+    "star": {
+      "action": "별표 표시",
+      "desc": "만약 당신이 우리 제품을 좋아하고 우리를 지원하고 싶다면, GitHub에서 우리에게 별표를 주실 수 있을까요? 이 작은 행동은 우리에게 큰 의미가 있으며, 지속적으로 특별한 경험을 제공할 수 있도록 우리를 격려할 수 있습니다.",
+      "title": "GitHub에서 우리에게 별표 표시"
+    },
+    "title": "우리 제품을 좋아하십니까?"
+  },
   "fullscreen": "전체 화면",
   "historyRange": "기록 범위",
   "import": "가져오기",
@@ -68,6 +88,7 @@
       "speed": "업로드 속도"
     }
   },
+  "information": "커뮤니티 및 정보",
   "installPWA": "브라우저 앱 설치",
   "lang": {
     "ar": "아랍어",
@@ -107,6 +128,11 @@
     "zh-TW": "중국어(번체)"
   },
   "layoutInitializing": "레이아웃을 불러오는 중...",
+  "legal": "법적 고지",
+  "mail": {
+    "business": "비즈니스 협력",
+    "support": "이메일 지원"
+  },
   "noDescription": "설명 없음",
   "oauth": "SSO 로그인",
   "officialSite": "공식 사이트",
@@ -193,5 +219,6 @@
     "profile": "계정 관리",
     "setting": "앱 설정",
     "usages": "사용량 통계"
-  }
+  },
+  "version": "버전"
 }
