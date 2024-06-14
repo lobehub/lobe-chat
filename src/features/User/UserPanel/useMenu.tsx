@@ -20,7 +20,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
-import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES } from '@/const/url';
+import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES, mailTo } from '@/const/url';
 import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
@@ -190,7 +190,7 @@ export const useMenu = () => {
           icon: <Icon icon={Mail} />,
           key: 'email',
           label: (
-            <Link href={`mailto:${EMAIL_SUPPORT}`} target={'_blank'}>
+            <Link href={mailTo(EMAIL_SUPPORT)} target={'_blank'}>
               {t('userPanel.email')}
             </Link>
           ),
