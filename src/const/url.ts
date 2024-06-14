@@ -12,7 +12,7 @@ export const OFFICIAL_SITE = 'https://lobehub.com/';
 export const getCanonicalUrl = (path: string) => urlJoin(OFFICIAL_URL, path);
 
 export const GITHUB = pkg.homepage;
-export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new');
+export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
 export const CHANGELOG = urlJoin(GITHUB, 'blob/main/CHANGELOG.md');
 export const DOCKER_IMAGE = 'https://hub.docker.com/r/lobehub/lobe-chat';
 
@@ -55,3 +55,8 @@ export const EMAIL_BUSINESS = 'hello@lobehub.com';
 export const MEDIDUM = 'https://medium.com/@lobehub';
 export const X = 'https://x.com/lobehub';
 export const RELEASES_URL = urlJoin(GITHUB, 'releases');
+
+export const R2_CDN_URL = 'https://hub-apac-1.lobeobjects.space/';
+
+export const getR2Url = (filename: string) => urlJoin(R2_CDN_URL, filename);
+export const mailTo = (email: string) => `mailto:${email}`;
