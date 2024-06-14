@@ -9,6 +9,7 @@
   "cancel": "Cancelar",
   "changelog": "Registro de cambios",
   "close": "Cerrar",
+  "contact": "Contacto",
   "copy": "Copiar",
   "copyFail": "Fallo al copiar",
   "copySuccess": "¡Copia exitosa!",
@@ -35,6 +36,25 @@
   },
   "feedback": "Comentarios y sugerencias",
   "follow": "Síguenos en {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Comparte tus valiosas sugerencias",
+      "star": "Agrega una estrella en GitHub"
+    },
+    "and": "y",
+    "feedback": {
+      "action": "Compartir retroalimentación",
+      "desc": "Cada idea y sugerencia que nos brindes es invaluable. ¡Estamos ansiosos por conocer tu opinión! Siéntete libre de contactarnos para proporcionar comentarios sobre las funciones del producto y la experiencia de uso, ¡ayúdanos a mejorar LobeChat!",
+      "title": "Comparte tu valiosa retroalimentación en GitHub"
+    },
+    "later": "Más tarde",
+    "star": {
+      "action": "Destacar con una estrella",
+      "desc": "¿Te encanta nuestro producto y deseas apoyarnos? ¿Podrías agregar una estrella en GitHub? Este pequeño gesto significa mucho para nosotros y nos motiva a seguir brindándote una experiencia de características excepcional.",
+      "title": "Destaca con una estrella en GitHub"
+    },
+    "title": "¿Te gusta nuestro producto?"
+  },
   "fullscreen": "Pantalla completa",
   "historyRange": "Rango de historial",
   "import": "Importar configuración",
@@ -68,6 +88,7 @@
       "speed": "Velocidad de carga"
     }
   },
+  "information": "Comunidad e Información",
   "installPWA": "Instalar la aplicación del navegador",
   "lang": {
     "ar": "árabe",
@@ -107,6 +128,11 @@
     "zh-TW": "Chino tradicional"
   },
   "layoutInitializing": "Inicializando diseño...",
+  "legal": "Aviso Legal",
+  "mail": {
+    "business": "Colaboración Comercial",
+    "support": "Soporte por Correo"
+  },
   "noDescription": "Sin descripción",
   "oauth": "Inicio de sesión SSO",
   "officialSite": "Sitio oficial",
@@ -193,5 +219,6 @@
     "profile": "Gestión de cuenta",
     "setting": "Configuración de la aplicación",
     "usages": "Estadísticas de uso"
-  }
+  },
+  "version": "Versión"
 }

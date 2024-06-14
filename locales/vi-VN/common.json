@@ -9,6 +9,7 @@
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
   "close": "Đóng",
+  "contact": "Liên hệ chúng tôi",
   "copy": "Sao chép",
   "copyFail": "Sao chép thất bại",
   "copySuccess": "Sao chép thành công",
@@ -35,6 +36,25 @@
   },
   "feedback": "Phản hồi và đề xuất",
   "follow": "Theo dõi chúng tôi trên {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Chia sẻ ý kiến quý báu của bạn",
+      "star": "Đánh giá sao trên GitHub"
+    },
+    "and": "và",
+    "feedback": {
+      "action": "Chia sẻ phản hồi",
+      "desc": "Mỗi ý tưởng và đề xuất của bạn đều rất quý giá đối với chúng tôi, chúng tôi rất mong muốn biết ý kiến của bạn! Hãy liên hệ với chúng tôi để cung cấp phản hồi về tính năng và trải nghiệm sử dụng sản phẩm, giúp chúng tôi phát triển LobeChat tốt hơn.",
+      "title": "Chia sẻ phản hồi quý báu của bạn trên GitHub"
+    },
+    "later": "Sau",
+    "star": {
+      "action": "Đánh giá sao",
+      "desc": "Nếu bạn yêu thích sản phẩm của chúng tôi và muốn ủng hộ chúng tôi, hãy đánh giá sao cho chúng tôi trên GitHub nhé? Hành động nhỏ này có ý nghĩa lớn đối với chúng tôi, giúp chúng tôi tiếp tục cung cấp trải nghiệm sản phẩm tốt cho bạn.",
+      "title": "Đánh giá sao cho chúng tôi trên GitHub"
+    },
+    "title": "Yêu thích sản phẩm của chúng tôi?"
+  },
   "fullscreen": "Chế độ toàn màn hình",
   "historyRange": "Phạm vi lịch sử",
   "import": "Nhập cấu hình",
@@ -68,6 +88,7 @@
       "speed": "Tốc độ tải lên"
     }
   },
+  "information": "Cộng đồng và Thông tin",
   "installPWA": "Cài đặt ứng dụng trình duyệt",
   "lang": {
     "ar": "Tiếng Ả Rập",
@@ -107,6 +128,11 @@
     "zh-TW": "Tiếng Trung (phồn thể)"
   },
   "layoutInitializing": "Đang tải bố cục...",
+  "legal": "Tuyên bố về pháp lý",
+  "mail": {
+    "business": "Hợp tác kinh doanh",
+    "support": "Hỗ trợ qua email"
+  },
   "noDescription": "Chưa có mô tả",
   "oauth": "Đăng nhập SSO",
   "officialSite": "Trang web chính thức",
@@ -193,5 +219,6 @@
     "profile": "Quản lý tài khoản",
     "setting": "Cài đặt ứng dụng",
     "usages": "Thống kê sử dụng"
-  }
+  },
+  "version": "Phiên bản"
 }

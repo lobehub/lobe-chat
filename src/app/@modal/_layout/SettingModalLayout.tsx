@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import Header from '@/app/(main)/settings/_layout/Desktop/Header';
 import SideBar from '@/app/(main)/settings/_layout/Desktop/SideBar';
+import Footer from '@/app/(main)/settings/features/Footer';
 
 interface SettingLayoutProps {
   activeTitle?: ReactNode;
@@ -42,6 +43,7 @@ const SettingModalLayout = memo<SettingLayoutProps>(
         <Flexbox
           align={'center'}
           gap={mobile ? 0 : 64}
+          paddingInline={mobile ? 0 : 56}
           ref={ref}
           style={{
             background: mobile
@@ -52,12 +54,12 @@ const SettingModalLayout = memo<SettingLayoutProps>(
             minHeight: '100%',
             overflowX: 'hidden',
             overflowY: 'auto',
-            paddingBlock: mobile ? 0 : 40,
-            paddingInline: mobile ? 0 : 56,
+            paddingTop: mobile ? 0 : 40,
           }}
           width={'100%'}
         >
           {children}
+          <Footer />
         </Flexbox>
       </Flexbox>
     );

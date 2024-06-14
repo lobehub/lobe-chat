@@ -6,6 +6,7 @@ import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import Footer from '@/app/(main)/settings/features/Footer';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
 
@@ -45,19 +46,21 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
       <Flexbox
         align={'center'}
         height={'100%'}
+        paddingBlock={mobile ? undefined : 32}
         style={{ overflowX: 'hidden', overflowY: 'auto' }}
         width={'100%'}
       >
         <Flexbox
           gap={64}
+          paddingInline={mobile ? undefined : 24}
           style={{
             maxWidth: 1024,
-            padding: mobile ? undefined : '32px 24px',
           }}
           width={'100%'}
         >
           {children}
         </Flexbox>
+        <Footer />
       </Flexbox>
     </Flexbox>
   );
