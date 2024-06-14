@@ -9,6 +9,7 @@
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
   "close": "Sluiten",
+  "contact": "Contacteer ons",
   "copy": "Kopiëren",
   "copyFail": "Kopiëren mislukt",
   "copySuccess": "Kopiëren gelukt",
@@ -35,6 +36,25 @@
   },
   "feedback": "Feedback en suggesties",
   "follow": "Volg ons op {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Deel uw waardevolle feedback",
+      "star": "Voeg een ster toe op GitHub"
+    },
+    "and": "en",
+    "feedback": {
+      "action": "Feedback delen",
+      "desc": "Elk van uw ideeën en suggesties is van onschatbare waarde. We horen graag uw mening! Neem gerust contact met ons op voor feedback over productfuncties en gebruikerservaring om LobeChat te helpen verbeteren.",
+      "title": "Deel uw waardevolle feedback op GitHub"
+    },
+    "later": "Later",
+    "star": {
+      "action": "Geef een ster",
+      "desc": "Als u van ons product houdt en ons wilt steunen, kunt u ons dan een ster geven op GitHub? Deze kleine daad is voor ons van grote betekenis en zal ons motiveren om u voortdurend een geweldige ervaring te bieden.",
+      "title": "Geef ons een ster op GitHub"
+    },
+    "title": "Houdt u van ons product?"
+  },
   "fullscreen": "Volledig scherm",
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
@@ -68,6 +88,7 @@
       "speed": "Uploadsnelheid"
     }
   },
+  "information": "Gemeenschap en Informatie",
   "installPWA": "Installeer de browser-app",
   "lang": {
     "ar": "Arabisch",
@@ -107,6 +128,11 @@
     "zh-TW": "Traditioneel Chinees"
   },
   "layoutInitializing": "Lay-out wordt geladen...",
+  "legal": "Juridisch",
+  "mail": {
+    "business": "Zakelijke samenwerking",
+    "support": "E-mailondersteuning"
+  },
   "noDescription": "Geen beschrijving beschikbaar",
   "oauth": "SSO inloggen",
   "officialSite": "Officiële website",
@@ -193,5 +219,6 @@
     "profile": "accountbeheer",
     "setting": "app-instellingen",
     "usages": "gebruiksstatistieken"
-  }
+  },
+  "version": "Versie"
 }
