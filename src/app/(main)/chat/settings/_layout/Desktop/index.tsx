@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
-import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/app/(main)/settings/features/Footer';
+import SettingContainer from '@/app/(main)/settings/features/SettingContainer';
 import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 
@@ -10,18 +10,9 @@ import Header from './Header';
 const Layout = ({ children }: PropsWithChildren) => (
   <>
     <Header />
-    <Flexbox
-      align={'center'}
-      height={'100%'}
-      style={{ overflowX: 'hidden', overflowY: 'auto' }}
-      width={'100%'}
-    >
-      <SafeSpacing height={HEADER_HEIGHT - 16} />
-      <Flexbox gap={64} style={{ maxWidth: 1024, padding: '32px 24px' }} width={'100%'}>
-        {children}
-      </Flexbox>
-      <Footer />
-    </Flexbox>
+    <SettingContainer addonAfter={<Footer />} addonBefore={<SafeSpacing height={HEADER_HEIGHT} />}>
+      {children}
+    </SettingContainer>
   </>
 );
 

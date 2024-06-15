@@ -10,13 +10,14 @@ import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
 
 import Footer from '../../features/Footer';
+import SettingContainer from '../../features/SettingContainer';
 import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
 
 const Layout = memo<LayoutProps>(({ children, category }) => {
   const ref = useRef<any>(null);
-  const { md = true, mobile = false } = useResponsive();
+  const { md = true } = useResponsive();
   const { t } = useTranslation('setting');
   const activeKey = useActiveSettingsKey();
 
@@ -43,25 +44,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
           {category}
         </Header>
       )}
-      <Flexbox
-        align={'center'}
-        height={'100%'}
-        paddingBlock={mobile ? undefined : 32}
-        style={{ overflowX: 'hidden', overflowY: 'auto' }}
-        width={'100%'}
-      >
-        <Flexbox
-          gap={64}
-          paddingInline={mobile ? undefined : 24}
-          style={{
-            maxWidth: 1024,
-          }}
-          width={'100%'}
-        >
-          {children}
-        </Flexbox>
-        <Footer />
-      </Flexbox>
+      <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
     </Flexbox>
   );
 });
