@@ -9,6 +9,7 @@
   "cancel": "İptal",
   "changelog": "Changelog",
   "close": "Kapat",
+  "contact": "Bize Ulaşın",
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
@@ -35,6 +36,25 @@
   },
   "feedback": "Feedback",
   "follow": "Bizi {{name}} üzerinde takip edin",
+  "footer": {
+    "action": {
+      "feedback": "Geri Bildirimde Bulun",
+      "star": "GitHub'da Yıldız Ekleyin"
+    },
+    "and": "ve",
+    "feedback": {
+      "action": "Geri Bildirim Paylaş",
+      "desc": "Her fikir ve öneriniz bizim için değerlidir, görüşlerinizi duymak için sabırsızlanıyoruz! LobeChat'in ürün özellikleri ve kullanıcı deneyimi hakkında geri bildirim sağlayarak bize yardımcı olun ve platformumuzu daha da geliştirmemize katkıda bulunun.",
+      "title": "GitHub'da Değerli Geri Bildiriminizi Paylaşın"
+    },
+    "later": "Daha Sonra",
+    "star": {
+      "action": "Yıldız Ekleyin",
+      "desc": "Ürünümüzü beğendiyseniz ve bizi desteklemek istiyorsanız, GitHub'da bize bir yıldız verebilir misiniz? Bu küçük jest bizim için büyük anlam taşır ve sizin için özellikler sunmamızı teşvik eder.",
+      "title": "GitHub'da Bize Yıldız Ekleyin"
+    },
+    "title": "Ürünümüzü Beğendiniz mi?"
+  },
   "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
@@ -68,6 +88,7 @@
       "speed": "Yükleme Hızı"
     }
   },
+  "information": "Topluluk ve Bilgi",
   "installPWA": "Tarayıcı Uygulamasını Yükle",
   "lang": {
     "ar": "Arapça",
@@ -107,6 +128,11 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
+  "legal": "Hukuki Bildirim",
+  "mail": {
+    "business": "İşbirliği",
+    "support": "E-posta Desteği"
+  },
   "noDescription": "Açıklama yok",
   "oauth": "SSO Girişi",
   "officialSite": "Resmi Site",
@@ -193,5 +219,6 @@
     "profile": "Hesap Yönetimi",
     "setting": "Uygulama Ayarları",
     "usages": "Kullanım İstatistikleri"
-  }
+  },
+  "version": "Sürüm"
 }

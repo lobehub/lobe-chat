@@ -36,7 +36,7 @@ const Analytics = memo(() => {
     title: t('analytics.title'),
   };
 
-  return <Form items={[items]} itemsType={'group'} {...FORM_STYLE} />;
+  return <Form items={[items]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />;
 });
 
 export default Analytics;

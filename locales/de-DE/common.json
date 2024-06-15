@@ -9,6 +9,7 @@
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
   "close": "Schließen",
+  "contact": "Kontakt",
   "copy": "Kopieren",
   "copyFail": "Kopieren fehlgeschlagen",
   "copySuccess": "Kopieren erfolgreich",
@@ -35,6 +36,25 @@
   },
   "feedback": "Feedback und Vorschläge",
   "follow": "Folge uns auf {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Teilen Sie uns Ihr wertvolles Feedback mit",
+      "star": "Geben Sie uns auf GitHub einen Stern"
+    },
+    "and": "und",
+    "feedback": {
+      "action": "Feedback teilen",
+      "desc": "Jede Ihrer Ideen und Vorschläge sind für uns von unschätzbarem Wert. Wir sind gespannt auf Ihre Meinung! Kontaktieren Sie uns gerne, um Feedback zu Produktfunktionen und Benutzererfahrungen zu geben und helfen Sie uns, LobeChat weiter zu verbessern.",
+      "title": "Teilen Sie uns Ihr wertvolles Feedback auf GitHub mit"
+    },
+    "later": "Später",
+    "star": {
+      "action": "Stern hinzufügen",
+      "desc": "Wenn Sie unser Produkt mögen und uns unterstützen möchten, könnten Sie uns auf GitHub einen Stern geben? Diese kleine Geste bedeutet uns viel und motiviert uns, Ihnen weiterhin besondere Erlebnisse zu bieten.",
+      "title": "Geben Sie uns auf GitHub einen Stern"
+    },
+    "title": "Mögen Sie unser Produkt?"
+  },
   "fullscreen": "Vollbildmodus",
   "historyRange": "Verlaufsbereich",
   "import": "Importieren",
@@ -68,6 +88,7 @@
       "speed": "Upload-Geschwindigkeit"
     }
   },
+  "information": "Community und Informationen",
   "installPWA": "Installiere die Browser-App",
   "lang": {
     "ar": "Arabisch",
@@ -107,6 +128,11 @@
     "zh-TW": "Chinesisch (traditionell)"
   },
   "layoutInitializing": "Layout wird geladen...",
+  "legal": "Rechtliches",
+  "mail": {
+    "business": "Geschäftliche Zusammenarbeit",
+    "support": "E-Mail-Support"
+  },
   "noDescription": "Keine Beschreibung vorhanden",
   "oauth": "SSO-Anmeldung",
   "officialSite": "Offizielle Website",
@@ -193,5 +219,6 @@
     "profile": "Kontoverwaltung",
     "setting": "App-Einstellungen",
     "usages": "Nutzungsstatistiken"
-  }
+  },
+  "version": "Version"
 }
