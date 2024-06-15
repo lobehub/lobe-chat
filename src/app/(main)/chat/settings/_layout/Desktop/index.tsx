@@ -1,6 +1,7 @@
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import Footer from '@/app/(main)/settings/features/Footer';
 import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
 
@@ -19,6 +20,7 @@ const Layout = ({ children }: PropsWithChildren) => (
       <Flexbox gap={64} style={{ maxWidth: 1024, padding: '32px 24px' }} width={'100%'}>
         {children}
       </Flexbox>
+      <Footer />
     </Flexbox>
   </>
 );

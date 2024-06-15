@@ -6,10 +6,10 @@ import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import Footer from '@/app/(main)/settings/features/Footer';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
 
+import Footer from '../../features/Footer';
 import { LayoutProps } from '../type';
 import Header from './Header';
 import SideBar from './SideBar';
