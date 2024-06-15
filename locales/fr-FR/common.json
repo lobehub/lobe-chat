@@ -9,6 +9,7 @@
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "close": "Fermer",
+  "contact": "Nous contacter",
   "copy": "Copier",
   "copyFail": "Échec de la copie",
   "copySuccess": "Copie réussie",
@@ -35,6 +36,25 @@
   },
   "feedback": "Retour d'information et suggestions",
   "follow": "Suivez-nous sur {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Partager vos précieux commentaires",
+      "star": "Ajouter une étoile sur GitHub"
+    },
+    "and": "et",
+    "feedback": {
+      "action": "Partager des commentaires",
+      "desc": "Chaque idée et suggestion que vous avez est précieuse pour nous. Nous sommes impatients de connaître votre avis ! N'hésitez pas à nous contacter pour nous faire part de vos retours sur les fonctionnalités et l'expérience d'utilisation du produit, afin de nous aider à améliorer LobeChat.",
+      "title": "Partagez vos précieux commentaires sur GitHub"
+    },
+    "later": "Plus tard",
+    "star": {
+      "action": "Ajouter une étoile",
+      "desc": "Si vous aimez notre produit et souhaitez nous soutenir, pourriez-vous nous donner une étoile sur GitHub ? Ce petit geste est très important pour nous et nous encourage à continuer à vous offrir une expérience exceptionnelle.",
+      "title": "Ajoutez une étoile sur GitHub pour nous"
+    },
+    "title": "Vous aimez notre produit ?"
+  },
   "fullscreen": "Mode plein écran",
   "historyRange": "Plage d'historique",
   "import": "Importer",
@@ -68,6 +88,7 @@
       "speed": "Vitesse de téléchargement"
     }
   },
+  "information": "Communauté et Informations",
   "installPWA": "Installer l'application du navigateur",
   "lang": {
     "ar": "arabe",
@@ -107,6 +128,11 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "legal": "Mentions légales",
+  "mail": {
+    "business": "Partenariats commerciaux",
+    "support": "Support par e-mail"
+  },
   "noDescription": "Aucune description disponible",
   "oauth": "Connexion SSO",
   "officialSite": "Site officiel",
@@ -193,5 +219,6 @@
     "profile": "Gestion du compte",
     "setting": "Paramètres de l'application",
     "usages": "Statistiques d'utilisation"
-  }
+  },
+  "version": "Version"
 }
