@@ -32,6 +32,7 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL Plus',
       id: 'qwen-vl-plus',
       tokens: 8000,
+      vision: true,
     },
     {
       description: '通义千问超大规模视觉语言模型',
@@ -39,6 +40,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       id: 'qwen-vl-max',
       tokens: 8000,
+      vision: true,
     },
     {
       description: '通义千问2对外开源的7B规模的模型',
