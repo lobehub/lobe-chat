@@ -31,10 +31,11 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
   const defaultTab = isEnabledOAuth ? Tab.Oauth : Tab.Password;
   const [mode, setMode] = useState<Tab>(defaultTab);
   const { showOpenAIApiKey } = useServerConfigStore(featureFlagsSelectors);
+  const isEnabledTab = showOpenAIApiKey || isEnabledOAuth;
 
   return (
     <ErrorActionContainer>
-      {(showOpenAIApiKey || isEnabledOAuth) && (
+      {isEnabledTab && (
         <Segmented
           block
           onChange={(value) => setMode(value as Tab)}
