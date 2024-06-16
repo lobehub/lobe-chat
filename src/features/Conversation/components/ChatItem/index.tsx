@@ -108,12 +108,14 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
         <HistoryDivider enable={enableHistoryDivider} />
         <ChatItem
           actions={
-            <ActionsBar
-              index={index}
-              setEditing={(edit) => {
-                toggleMessageEditing(id, edit);
-              }}
-            />
+            <div style={{ zIndex: 1 }}>
+              <ActionsBar
+                index={index}
+                setEditing={(edit) => {
+                  toggleMessageEditing(id, edit);
+                }}
+              />
+            </div>
           }
           avatar={item.meta}
           className={cx(styles.message, isMessageLoading && styles.loading)}
