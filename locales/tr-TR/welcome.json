@@ -1,7 +1,42 @@
 {
   "button": {
     "import": "İçe Aktar",
+    "market": "Pazara Göz At",
     "start": "Başla"
+  },
+  "guide": {
+    "agents": {
+      "replaceBtn": "Başka bir grup",
+      "title": "Yeni Asistan Önerileri:"
+    },
+    "defaultMessage": "Ben sizin kişisel akıllı asistanınız LobeChat'ım, şu anda size nasıl yardımcı olabilirim?\nDaha profesyonel veya özelleştirilmiş bir asistana ihtiyacınız varsa, özel bir asistan oluşturmak için `+` simgesine tıklayabilirsiniz",
+    "qa": {
+      "q01": "LobeHub nedir?",
+      "q02": "LobeChat nedir?",
+      "q03": "LobeChat topluluk desteği var mı?",
+      "q04": "LobeChat hangi özellikleri destekliyor?",
+      "q05": "LobeChat nasıl dağıtılır ve kullanılır?",
+      "q06": "LobeChat'in fiyatlandırması nasıl?",
+      "q07": "LobeChat ücretsiz mi?",
+      "q08": "Bulut tabanlı hizmet sürümü var mı?",
+      "q09": "Yerel dil modellerini destekliyor mu?",
+      "q10": "Görüntü tanıma ve oluşturma desteği var mı?",
+      "q11": "Konuşma sentezi ve konuşma tanıma desteği var mı?",
+      "q12": "Eklenti sistemini destekliyor mu?",
+      "q13": "Kendi GPT'lerini almak için bir pazarı var mı?",
+      "q14": "Çeşitli yapay zeka hizmet sağlayıcılarını destekliyor mu?",
+      "q15": "Sorun yaşarsam ne yapmalıyım?"
+    },
+    "questions": {
+      "moreBtn": "Daha Fazla Bilgi",
+      "title": "Herkesin Sorduğu Sorular:"
+    },
+    "welcome": {
+      "afternoon": "İyi akşamlar",
+      "morning": "Günaydın",
+      "night": "İyi geceler",
+      "noon": "Tünaydın"
+    }
   },
   "header": "Hoş geldiniz",
   "pickAgent": "Veya aşağıdaki asistan şablonlarından birini seçin",

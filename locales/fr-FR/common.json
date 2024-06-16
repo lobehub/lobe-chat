@@ -4,12 +4,21 @@
   "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
+  "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
+  "blog": "Blog des produits",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "close": "Fermer",
+  "contact": "Nous contacter",
   "copy": "Copier",
   "copyFail": "Échec de la copie",
   "copySuccess": "Copie réussie",
+  "dataStatistics": {
+    "messages": "Messages",
+    "sessions": "Sessions",
+    "today": "Aujourd'hui",
+    "topics": "Sujets"
+  },
   "defaultAgent": "Agent par défaut",
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
@@ -26,9 +35,34 @@
     "globalSetting": "Exporter les paramètres globaux"
   },
   "feedback": "Retour d'information et suggestions",
+  "follow": "Suivez-nous sur {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Partager vos précieux commentaires",
+      "star": "Ajouter une étoile sur GitHub"
+    },
+    "and": "et",
+    "feedback": {
+      "action": "Partager des commentaires",
+      "desc": "Chaque idée et suggestion que vous avez est précieuse pour nous. Nous sommes impatients de connaître votre avis ! N'hésitez pas à nous contacter pour nous faire part de vos retours sur les fonctionnalités et l'expérience d'utilisation du produit, afin de nous aider à améliorer LobeChat.",
+      "title": "Partagez vos précieux commentaires sur GitHub"
+    },
+    "later": "Plus tard",
+    "star": {
+      "action": "Ajouter une étoile",
+      "desc": "Si vous aimez notre produit et souhaitez nous soutenir, pourriez-vous nous donner une étoile sur GitHub ? Ce petit geste est très important pour nous et nous encourage à continuer à vous offrir une expérience exceptionnelle.",
+      "title": "Ajoutez une étoile sur GitHub pour nous"
+    },
+    "title": "Vous aimez notre produit ?"
+  },
+  "fullscreen": "Mode plein écran",
   "historyRange": "Plage d'historique",
   "import": "Importer",
   "importModal": {
+    "error": {
+      "desc": "Désolé, une erreur s'est produite lors de l'importation des données. Veuillez réessayer l'importation ou <1> soumettre un problème </1>, nous vous aiderons à résoudre le problème dès que possible.",
+      "title": "Échec de l'importation des données"
+    },
     "finish": {
       "onlySettings": "Importation des paramètres système réussie",
       "start": "Commencer à utiliser",
@@ -36,6 +70,7 @@
       "title": "Importation des données terminée"
     },
     "loading": "Importation des données en cours, veuillez patienter...",
+    "preparing": "Préparation du module d'importation des données en cours...",
     "result": {
       "added": "Importation réussie",
       "errors": "Erreurs d'importation",
@@ -46,8 +81,15 @@
       "topics": "Sujets",
       "type": "Type de données"
     },
-    "title": "Importer des données"
+    "title": "Importer des données",
+    "uploading": {
+      "desc": "Le fichier en cours est volumineux, veuillez patienter pendant le téléchargement...",
+      "restTime": "Temps restant",
+      "speed": "Vitesse de téléchargement"
+    }
   },
+  "information": "Communauté et Informations",
+  "installPWA": "Installer l'application du navigateur",
   "lang": {
     "ar": "arabe",
     "bg-BG": "Bulgare",
@@ -86,12 +128,19 @@
     "zh-TW": "Chinois traditionnel"
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
+  "legal": "Mentions légales",
+  "mail": {
+    "business": "Partenariats commerciaux",
+    "support": "Support par e-mail"
+  },
   "noDescription": "Aucune description disponible",
   "oauth": "Connexion SSO",
+  "officialSite": "Site officiel",
   "ok": "OK",
   "password": "Mot de passe",
   "pin": "Épingler",
   "pinOff": "Désactiver l'épinglage",
+  "privacy": "Politique de confidentialité",
   "regenerate": "Régénérer",
   "rename": "Renommer",
   "reset": "Réinitialiser",
@@ -136,6 +185,7 @@
   "tab": {
     "chat": "Conversation",
     "market": "Découvrir",
+    "me": "moi",
     "setting": "Paramètre"
   },
   "telemetry": {
@@ -146,10 +196,29 @@
     "title": "Aider LobeChat à s'améliorer"
   },
   "temp": "Temporaire",
+  "terms": "Conditions de service",
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upgradeVersion": {
     "action": "Mettre à jour",
     "hasNew": "Nouvelle mise à jour disponible",
     "newVersion": "Nouvelle version disponible : {{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "Utilisateur anonyme",
+    "billing": "Gestion de la facturation",
+    "data": "Stockage des données",
+    "defaultNickname": "Utilisateur de la version communautaire",
+    "discord": "Support de la communauté",
+    "docs": "Documentation d'utilisation",
+    "email": "Support par e-mail",
+    "feedback": "Retours et suggestions",
+    "help": "Centre d'aide",
+    "moveGuide": "Le bouton de configuration a été déplacé ici",
+    "plans": "Forfaits d'abonnement",
+    "preview": "Aperçu",
+    "profile": "Gestion du compte",
+    "setting": "Paramètres de l'application",
+    "usages": "Statistiques d'utilisation"
+  },
+  "version": "Version"
 }

@@ -4,23 +4,31 @@
   },
   "agentDefaultMessage": "Hola, soy **{{name}}**, puedes comenzar a chatear conmigo de inmediato o ir a [Configuración del asistente](/chat/settings#session={{id}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
+  "agentsAndConversations": "agentesYConversaciones",
   "backToBottom": "Volver al fondo",
   "clearCurrentMessages": "Borrar mensajes actuales",
   "confirmClearCurrentMessages": "Estás a punto de borrar los mensajes de esta sesión. Una vez borrados, no se podrán recuperar. Por favor, confirma tu acción.",
   "confirmRemoveSessionItemAlert": "Estás a punto de eliminar este asistente. Una vez eliminado, no se podrá recuperar. Por favor, confirma tu acción.",
+  "confirmRemoveSessionSuccess": "Asistente eliminado con éxito",
   "defaultAgent": "Asistente predeterminado",
   "defaultList": "Lista predeterminada",
   "defaultSession": "Asistente predeterminado",
+  "duplicateSession": {
+    "loading": "Cargando duplicado...",
+    "success": "Duplicado exitoso",
+    "title": "{{title}} Copia"
+  },
   "duplicateTitle": "{{title}} Copia",
+  "emptyAgent": "No hay asistente disponible",
   "historyRange": "Rango de historial",
   "inbox": {
-    "defaultMessage": "Hola, soy tu asistente virtual, puedes preguntarme cualquier cosa y haré todo lo posible para responderte. Si necesitas un asistente más profesional o personalizado, haz clic en `+` para crear un asistente personalizado.",
     "desc": "Despierta la mente con el poder del cerebro colectivo. Tu asistente inteligente está aquí para conversar contigo sobre cualquier cosa.",
     "title": "Charla casual"
   },
   "input": {
+    "addAi": "Agregar un mensaje de IA",
+    "addUser": "Agregar un mensaje de usuario",
     "more": "más",
-    "onlyAdd": "Añadir solo",
     "send": "Enviar",
     "sendWithCmdEnter": "Enviar con {{meta}} + Enter",
     "sendWithEnter": "Enviar con Enter",
@@ -42,13 +50,17 @@
   "sessionGroup": {
     "config": "Gestión de grupos",
     "confirmRemoveGroupAlert": "Estás a punto de eliminar este grupo. Una vez eliminado, los asistentes de este grupo se moverán a la lista predeterminada. Por favor, confirma tu acción.",
+    "createAgentSuccess": "Asistente creado con éxito",
     "createGroup": "Crear nuevo grupo",
     "createSuccess": "Grupo creado con éxito",
+    "creatingAgent": "Creando asistente...",
     "inputPlaceholder": "Introduce el nombre del grupo...",
     "moveGroup": "Mover al grupo",
     "newGroup": "Nuevo grupo",
     "rename": "Renombrar grupo",
     "renameSuccess": "Grupo renombrado con éxito",
+    "sortSuccess": "Reordenación exitosa",
+    "sorting": "Actualizando orden de grupos...",
     "tooLong": "El nombre del grupo debe tener entre 1 y 20 caracteres"
   },
   "shareModal": {
@@ -72,6 +84,7 @@
     "chats": "Mensajes de chat",
     "rest": "Restante",
     "systemRole": "Rol del sistema",
+    "title": "Detalles del token",
     "tools": "Herramientas",
     "total": "Total",
     "used": "Utilizado"
@@ -91,6 +104,8 @@
     "confirmRemoveTopic": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, procede con precaución.",
     "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
     "defaultTitle": "Tema predeterminado",
+    "duplicateLoading": "Duplicando tema...",
+    "duplicateSuccess": "Tema duplicado exitosamente",
     "guide": {
       "desc": "Haz clic en el botón izquierdo para guardar la conversación actual como un tema histórico y comenzar una nueva sesión",
       "title": "Lista de temas"
@@ -112,9 +127,12 @@
   },
   "updateAgent": "Actualizar información del asistente",
   "upload": {
+    "actionFiletip": "Sube el archivo",
     "actionTooltip": "Subir imagen",
     "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función",
     "dragDesc": "Arrastra y suelta archivos aquí, admite la carga de varias imágenes. Mantén presionada la tecla Shift para enviar las imágenes directamente.",
+    "dragFileDesc": "Arrastre imágenes y archivos aquí para admitir la carga de varias imágenes y archivos. Mantenga presionada la tecla Mayús para enviar una imagen o un archivo directamente.",
+    "dragFileTitle": "Sube el archivo",
     "dragTitle": "Subir imagen"
   }
 }

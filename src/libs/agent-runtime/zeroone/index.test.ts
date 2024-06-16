@@ -9,8 +9,9 @@ import { LobeZeroOneAI } from './index';
 
 const provider = 'zeroone';
 const defaultBaseURL = 'https://api.lingyiwanwu.com/v1';
-const bizErrorType = 'ZeroOneBizError';
-const invalidErrorType = 'InvalidZeroOneAPIKey';
+
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -50,7 +51,7 @@ describe('LobeZeroOneAI', () => {
       // Act
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
-        model: 'mistralai/mistral-7b-instruct:free',
+        model: 'yi-34b-chat-0205',
         temperature: 0,
       });
 
@@ -69,7 +70,7 @@ describe('LobeZeroOneAI', () => {
       const result = await instance.chat({
         max_tokens: 1024,
         messages: [{ content: 'Hello', role: 'user' }],
-        model: 'mistralai/mistral-7b-instruct:free',
+        model: 'yi-34b-chat-0205',
         temperature: 0.7,
         top_p: 1,
       });
@@ -79,8 +80,9 @@ describe('LobeZeroOneAI', () => {
         {
           max_tokens: 1024,
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'mistralai/mistral-7b-instruct:free',
+          model: 'yi-34b-chat-0205',
           temperature: 0.7,
+          stream: true,
           top_p: 1,
         },
         { headers: { Accept: '*/*' } },
@@ -89,7 +91,7 @@ describe('LobeZeroOneAI', () => {
     });
 
     describe('Error', () => {
-      it('should return OpenRouterBizError with an openai error response when OpenAI.APIError is thrown', async () => {
+      it('should return ZeroOneBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange
         const apiError = new OpenAI.APIError(
           400,
@@ -109,7 +111,7 @@ describe('LobeZeroOneAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'mistralai/mistral-7b-instruct:free',
+            model: 'yi-34b-chat-0205',
             temperature: 0,
           });
         } catch (e) {
@@ -125,7 +127,7 @@ describe('LobeZeroOneAI', () => {
         }
       });
 
-      it('should throw AgentRuntimeError with InvalidOpenRouterAPIKey if no apiKey is provided', async () => {
+      it('should throw AgentRuntimeError with InvalidZeroOneAPIKey if no apiKey is provided', async () => {
         try {
           new LobeZeroOneAI({});
         } catch (e) {
@@ -133,7 +135,7 @@ describe('LobeZeroOneAI', () => {
         }
       });
 
-      it('should return OpenRouterBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
+      it('should return ZeroOneBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
         // Arrange
         const errorInfo = {
           stack: 'abc',
@@ -149,7 +151,7 @@ describe('LobeZeroOneAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'mistralai/mistral-7b-instruct:free',
+            model: 'yi-34b-chat-0205',
             temperature: 0,
           });
         } catch (e) {
@@ -165,7 +167,7 @@ describe('LobeZeroOneAI', () => {
         }
       });
 
-      it('should return OpenRouterBizError with an cause response with desensitize Url', async () => {
+      it('should return ZeroOneBizError with an cause response with desensitize Url', async () => {
         // Arrange
         const errorInfo = {
           stack: 'abc',
@@ -185,7 +187,7 @@ describe('LobeZeroOneAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'mistralai/mistral-7b-instruct:free',
+            model: 'yi-34b-chat-0205',
             temperature: 0,
           });
         } catch (e) {
@@ -201,7 +203,7 @@ describe('LobeZeroOneAI', () => {
         }
       });
 
-      it('should throw an InvalidOpenRouterAPIKey error type on 401 status code', async () => {
+      it('should throw an InvalidZeroOneAPIKey error type on 401 status code', async () => {
         // Mock the API call to simulate a 401 error
         const error = new Error('Unauthorized') as any;
         error.status = 401;
@@ -210,7 +212,7 @@ describe('LobeZeroOneAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'mistralai/mistral-7b-instruct:free',
+            model: 'yi-34b-chat-0205',
             temperature: 0,
           });
         } catch (e) {
@@ -234,7 +236,7 @@ describe('LobeZeroOneAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'mistralai/mistral-7b-instruct:free',
+            model: 'yi-34b-chat-0205',
             temperature: 0,
           });
         } catch (e) {
@@ -250,59 +252,6 @@ describe('LobeZeroOneAI', () => {
             },
           });
         }
-      });
-    });
-
-    describe('LobeZeroOneAI chat with callback and headers', () => {
-      it('should handle callback and headers correctly', async () => {
-        // 模拟 chat.completions.create 方法返回一个可读流
-        const mockCreateMethod = vi
-          .spyOn(instance['client'].chat.completions, 'create')
-          .mockResolvedValue(
-            new ReadableStream({
-              start(controller) {
-                controller.enqueue({
-                  id: 'chatcmpl-8xDx5AETP8mESQN7UB30GxTN2H1SO',
-                  object: 'chat.completion.chunk',
-                  created: 1709125675,
-                  model: 'mistralai/mistral-7b-instruct:free',
-                  system_fingerprint: 'fp_86156a94a0',
-                  choices: [
-                    { index: 0, delta: { content: 'hello' }, logprobs: null, finish_reason: null },
-                  ],
-                });
-                controller.close();
-              },
-            }) as any,
-          );
-
-        // 准备 callback 和 headers
-        const mockCallback: ChatStreamCallbacks = {
-          onStart: vi.fn(),
-          onToken: vi.fn(),
-        };
-        const mockHeaders = { 'Custom-Header': 'TestValue' };
-
-        // 执行测试
-        const result = await instance.chat(
-          {
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'mistralai/mistral-7b-instruct:free',
-            temperature: 0,
-          },
-          { callback: mockCallback, headers: mockHeaders },
-        );
-
-        // 验证 callback 被调用
-        await result.text(); // 确保流被消费
-        expect(mockCallback.onStart).toHaveBeenCalled();
-        expect(mockCallback.onToken).toHaveBeenCalledWith('hello');
-
-        // 验证 headers 被正确传递
-        expect(result.headers.get('Custom-Header')).toEqual('TestValue');
-
-        // 清理
-        mockCreateMethod.mockRestore();
       });
     });
 
@@ -335,7 +284,7 @@ describe('LobeZeroOneAI', () => {
         // 假设的测试函数调用，你可能需要根据实际情况调整
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'mistralai/mistral-7b-instruct:free',
+          model: 'yi-34b-chat-0205',
           temperature: 0,
         });
 

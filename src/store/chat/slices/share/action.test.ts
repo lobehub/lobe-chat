@@ -1,18 +1,17 @@
 import { act, renderHook } from '@testing-library/react';
 
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
-import { shareGPTService } from '@/services/share';
+import { shareService } from '@/services/share';
 import { useChatStore } from '@/store/chat';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatMessage } from '@/types/message';
 
 describe('shareSlice actions', () => {
-  let shareGPTServiceSpy: any;
+  let shareServiceSpy: any;
   let windowOpenSpy;
 
   beforeEach(() => {
-    shareGPTServiceSpy = vi
-      .spyOn(shareGPTService, 'createShareGPTUrl')
-      .mockResolvedValue('test-url');
+    shareServiceSpy = vi.spyOn(shareService, 'createShareGPTUrl').mockResolvedValue('test-url');
     windowOpenSpy = vi.spyOn(window, 'open');
   });
 
@@ -23,7 +22,7 @@ describe('shareSlice actions', () => {
   describe('shareToShareGPT', () => {
     it('should share to ShareGPT and open a new window', async () => {
       const { result } = renderHook(() => useChatStore());
-      const shareGPTServiceSpy = vi.spyOn(shareGPTService, 'createShareGPTUrl');
+      const shareServiceSpy = vi.spyOn(shareService, 'createShareGPTUrl');
       const windowOpenSpy = vi.spyOn(window, 'open');
       const avatar = 'avatar-url';
       const withPluginInfo = true;
@@ -33,7 +32,7 @@ describe('shareSlice actions', () => {
         await result.current.shareToShareGPT({ avatar, withPluginInfo, withSystemRole });
       });
 
-      expect(shareGPTServiceSpy).toHaveBeenCalled();
+      expect(shareServiceSpy).toHaveBeenCalled();
       expect(windowOpenSpy).toHaveBeenCalled();
     });
     it('should handle messages from different roles correctly', async () => {
@@ -67,7 +66,7 @@ describe('shareSlice actions', () => {
         await result.current.shareToShareGPT({});
       });
 
-      expect(shareGPTServiceSpy).toHaveBeenCalledWith(
+      expect(shareServiceSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           avatarUrl: DEFAULT_USER_AVATAR_URL,
         }),
@@ -87,7 +86,7 @@ describe('shareSlice actions', () => {
     it('should include plugin information when withPluginInfo is true', async () => {
       // 模拟带有插件信息的消息
       const pluginMessage = {
-        role: 'function',
+        role: 'tool',
         content: 'plugin content',
         plugin: {
           type: 'default',
@@ -99,14 +98,19 @@ describe('shareSlice actions', () => {
       } as ChatMessage;
 
       act(() => {
-        useChatStore.setState({ messages: [pluginMessage] });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('abc')]: [pluginMessage],
+          },
+          activeId: 'abc',
+        });
       });
 
       const { result } = renderHook(() => useChatStore());
       await act(async () => {
         result.current.shareToShareGPT({ withPluginInfo: true });
       });
-      expect(shareGPTServiceSpy).toHaveBeenCalledWith(
+      expect(shareServiceSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           items: expect.arrayContaining([
             expect.objectContaining({
@@ -120,7 +124,7 @@ describe('shareSlice actions', () => {
 
     it('should not include plugin information when withPluginInfo is false', async () => {
       const pluginMessage = {
-        role: 'function',
+        role: 'tool',
         content: 'plugin content',
         plugin: {
           type: 'default',
@@ -132,14 +136,19 @@ describe('shareSlice actions', () => {
       } as ChatMessage;
 
       act(() => {
-        useChatStore.setState({ messages: [pluginMessage] });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('abc')]: [pluginMessage],
+          },
+          activeId: 'abc',
+        });
       });
 
       const { result } = renderHook(() => useChatStore());
       await act(async () => {
         result.current.shareToShareGPT({ withPluginInfo: false });
       });
-      expect(shareGPTServiceSpy).toHaveBeenCalledWith(
+      expect(shareServiceSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           items: expect.not.arrayContaining([
             expect.objectContaining({
@@ -156,7 +165,7 @@ describe('shareSlice actions', () => {
         { role: 'user', content: 'user message', id: '1' },
         { role: 'assistant', content: 'assistant message', id: '2' },
         {
-          role: 'function',
+          role: 'tool',
           content: 'plugin content',
           plugin: {
             type: 'default',
@@ -169,7 +178,12 @@ describe('shareSlice actions', () => {
       ] as ChatMessage[];
 
       act(() => {
-        useChatStore.setState({ messages });
+        useChatStore.setState({
+          messagesMap: {
+            [messageMapKey('abc')]: messages,
+          },
+          activeId: 'abc',
+        });
       });
 
       const { result } = renderHook(() => useChatStore());
@@ -180,7 +194,7 @@ describe('shareSlice actions', () => {
         });
       });
 
-      expect(shareGPTServiceSpy).toHaveBeenCalledWith(
+      expect(shareServiceSpy).toHaveBeenCalledWith(
         expect.objectContaining({
           items: [
             expect.objectContaining({ from: 'gpt' }), // Agent meta info

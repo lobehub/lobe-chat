@@ -2,6 +2,14 @@
   "about": {
     "title": "关于"
   },
+  "agentTab": {
+    "chat": "聊天偏好",
+    "meta": "助手信息",
+    "modal": "模型设置",
+    "plugin": "插件设置",
+    "prompt": "角色设定",
+    "tts": "语音服务"
+  },
   "analytics": {
     "telemetry": {
       "desc": "通过选择发送遥测数据，你可以帮助我们改善 LobeChat 整体用户体验",
@@ -21,20 +29,28 @@
       "action": "立即重置",
       "confirm": "确认重置所有设置？",
       "currentVersion": "当前版本",
-      "desc": "重置所有设置项回默认值",
+      "desc": "重置所有设置，使用默认值",
+      "success": "已重置所有设置",
       "title": "重置所有设置"
     }
   },
   "header": {
+    "desc": "偏好与模型设置",
     "global": "全局设置",
     "session": "会话设置",
-    "sessionWithName": "会话设置 · {{name}}"
+    "sessionDesc": "角色设定与会话偏好",
+    "sessionWithName": "会话设置 · {{name}}",
+    "title": "设置"
   },
   "llm": {
+    "apiKey": {
+      "desc": "请填写你的 {{name}} API Key",
+      "placeholder": "{{name}} API Key",
+      "title": "API Key"
+    },
     "checker": {
       "button": "检查",
       "desc": "测试 Api Key 与代理地址是否正确填写",
-      "ollamaDesc": "测试代理地址是否正确填写",
       "pass": "检查通过",
       "title": "连通性检查"
     },
@@ -67,13 +83,18 @@
         },
         "modalTitle": "自定义模型配置",
         "tokens": {
-          "title": "最大 token 数"
+          "title": "最大 token 数",
+          "unlimited": "无限制"
         },
         "vision": {
           "extra": "此配置将仅开启 LobeChat 中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性",
           "title": "支持视觉识别"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "客户端请求模式将从浏览器直接发起会话请求，可提升响应速度",
+      "title": "使用客户端请求模式"
     },
     "fetcher": {
       "fetch": "获取模型列表",
@@ -87,15 +108,11 @@
       "title": "模型列表",
       "total": "共 {{count}} 个模型可用"
     },
+    "proxyUrl": {
+      "desc": "除默认地址外，必须包含 http(s)://",
+      "title": "API 代理地址"
+    },
     "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待 ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续",
-      "remainingTime": "剩余时间",
-      "speed": "下载速度",
-      "title": "正在下载模型 {{model}} "
-    }
   },
   "plugin": {
     "addTooltip": "自定义插件",
@@ -162,6 +179,7 @@
     "enableHistoryCount": {
       "alias": "不限制",
       "limited": "只包含 {{number}} 条会话消息",
+      "setlimited": "使用历史消息数",
       "title": "限制历史消息数",
       "unlimited": "不限历史消息数"
     },
@@ -347,6 +365,19 @@
       "title": "WebRTC 同步"
     }
   },
+  "systemAgent": {
+    "title": "系统助手",
+    "topic": {
+      "label": "话题命名模型",
+      "modelDesc": "指定用于话题自动重命名的模型",
+      "title": "话题自动命名"
+    },
+    "translation": {
+      "label": "翻译模型",
+      "modelDesc": "指定用于翻译的模型",
+      "title": "消息内容翻译"
+    }
+  },
   "tab": {
     "about": "关于",
     "agent": "默认助手",
@@ -354,6 +385,7 @@
     "experiment": "实验",
     "llm": "语言模型",
     "sync": "云端同步",
+    "system-agent": "系统助手",
     "tts": "语音服务"
   },
   "tools": {

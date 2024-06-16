@@ -54,9 +54,7 @@
             {
               "displayName": "deerercsds",
               "enabled": true,
-              "functionCall": true,
-              "id": "deerercsds",
-              "vision": true
+              "id": "deerercsds"
             }
           ]
         }

@@ -1,7 +1,42 @@
 {
   "button": {
     "import": "Nhập Cấu Hình",
+    "market": "Thăm Thị trường",
     "start": "Bắt Đầu Ngay"
+  },
+  "guide": {
+    "agents": {
+      "replaceBtn": "Thay đổi",
+      "title": "Đề xuất trợ lý mới: "
+    },
+    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn, LobeChat. Bạn cần giúp đỡ gì bây giờ?\nNếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn vào dấu `+` để tạo trợ lý cá nhân",
+    "qa": {
+      "q01": "LobeHub là gì?",
+      "q02": "LobeChat là gì?",
+      "q03": "LobeChat có hỗ trợ cộng đồng không?",
+      "q04": "LobeChat hỗ trợ những chức năng nào?",
+      "q05": "LobeChat cách triển khai và sử dụng như thế nào?",
+      "q06": "Giá của LobeChat như thế nào?",
+      "q07": "LobeChat có miễn phí không?",
+      "q08": "Có phiên bản dịch vụ đám mây không?",
+      "q09": "Có hỗ trợ mô hình ngôn ngữ địa phương không?",
+      "q10": "Có hỗ trợ nhận diện và tạo hình ảnh không?",
+      "q11": "Có hỗ trợ tổng hợp giọng nói và nhận diện giọng nói không?",
+      "q12": "Có hỗ trợ hệ thống plugin không?",
+      "q13": "Có thị trường riêng để lấy GPTs không?",
+      "q14": "Có hỗ trợ nhiều nhà cung cấp dịch vụ AI không?",
+      "q15": "Nếu gặp vấn đề khi sử dụng, tôi nên làm gì?"
+    },
+    "questions": {
+      "moreBtn": "Tìm hiểu thêm",
+      "title": "Mọi người đều đặt câu hỏi: "
+    },
+    "welcome": {
+      "afternoon": "Chào buổi chiều",
+      "morning": "Chào buổi sáng",
+      "night": "Chào buổi tối",
+      "noon": "Chào buổi trưa"
+    }
   },
   "header": "Chào Mừng",
   "pickAgent": "Hoặc chọn từ các mẫu đại lý sau",

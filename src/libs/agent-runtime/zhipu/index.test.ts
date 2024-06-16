@@ -1,15 +1,15 @@
 // @vitest-environment node
-import { StreamingTextResponse } from 'ai';
 import { OpenAI } from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatStreamCallbacks, LobeOpenAI } from '@/libs/agent-runtime';
 import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
 
-import { AgentRuntimeErrorType } from '../error';
-import { ModelProvider } from '../types';
 import * as authTokenModule from './authToken';
 import { LobeZhipuAI } from './index';
+
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock相关依赖
 vi.mock('./authToken');
@@ -36,7 +36,7 @@ describe('LobeZhipuAI', () => {
       try {
         await LobeZhipuAI.fromAPIKey({ apiKey: 'asd' });
       } catch (e) {
-        expect(e).toEqual({ errorType: 'InvalidZhipuAPIKey' });
+        expect(e).toEqual({ errorType: invalidErrorType });
       }
     });
   });
@@ -61,7 +61,7 @@ describe('LobeZhipuAI', () => {
         model: 'glm-4',
         temperature: 0,
       });
-      expect(result).toBeInstanceOf(StreamingTextResponse);
+      expect(result).toBeInstanceOf(Response);
     });
 
     it('should handle callback and headers correctly', async () => {
@@ -167,7 +167,7 @@ describe('LobeZhipuAI', () => {
               error: { message: 'Bad Request' },
               status: 400,
             },
-            errorType: 'ZhipuBizError',
+            errorType: bizErrorType,
             provider: 'zhipu',
           });
         }
@@ -177,7 +177,7 @@ describe('LobeZhipuAI', () => {
         try {
           await LobeZhipuAI.fromAPIKey({ apiKey: '' });
         } catch (e) {
-          expect(e).toEqual({ errorType: 'InvalidZhipuAPIKey' });
+          expect(e).toEqual({ errorType: invalidErrorType });
         }
       });
 
@@ -207,7 +207,7 @@ describe('LobeZhipuAI', () => {
               cause: { message: 'api is undefined' },
               stack: 'abc',
             },
-            errorType: 'ZhipuBizError',
+            errorType: bizErrorType,
             provider: 'zhipu',
           });
         }
@@ -243,7 +243,7 @@ describe('LobeZhipuAI', () => {
               cause: { message: 'api is undefined' },
               stack: 'abc',
             },
-            errorType: 'ZhipuBizError',
+            errorType: bizErrorType,
             provider: 'zhipu',
           });
         }

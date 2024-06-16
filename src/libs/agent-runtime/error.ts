@@ -4,48 +4,22 @@ export const AgentRuntimeErrorType = {
   AgentRuntimeError: 'AgentRuntimeError', // Agent Runtime 模块运行时错误
   LocationNotSupportError: 'LocationNotSupportError',
 
-  OpenAIBizError: 'OpenAIBizError',
-
-  NoOpenAIAPIKey: 'NoOpenAIAPIKey',
-
-  InvalidAzureAPIKey: 'InvalidAzureAPIKey',
-  AzureBizError: 'AzureBizError',
-
-  InvalidZhipuAPIKey: 'InvalidZhipuAPIKey',
-  ZhipuBizError: 'ZhipuBizError',
-
-  InvalidGoogleAPIKey: 'InvalidGoogleAPIKey',
-  GoogleBizError: 'GoogleBizError',
-
-  InvalidBedrockCredentials: 'InvalidBedrockCredentials',
-  BedrockBizError: 'BedrockBizError',
-
-  InvalidMistralAPIKey: 'InvalidMistralAPIKey',
-  MistralBizError: 'MistralBizError',
-
-  InvalidMoonshotAPIKey: 'InvalidMoonshotAPIKey',
-  MoonshotBizError: 'MoonshotBizError',
+  InvalidProviderAPIKey: 'InvalidProviderAPIKey',
+  ProviderBizError: 'ProviderBizError',
 
   InvalidOllamaArgs: 'InvalidOllamaArgs',
   OllamaBizError: 'OllamaBizError',
 
-  InvalidPerplexityAPIKey: 'InvalidPerplexityAPIKey',
-  PerplexityBizError: 'PerplexityBizError',
+  InvalidBedrockCredentials: 'InvalidBedrockCredentials',
 
-  InvalidAnthropicAPIKey: 'InvalidAnthropicAPIKey',
-  AnthropicBizError: 'AnthropicBizError',
-
-  InvalidGroqAPIKey: 'InvalidGroqAPIKey',
-  GroqBizError: 'GroqBizError',
-
-  InvalidZeroOneAPIKey: 'InvalidZeroOneAPIKey',
-  ZeroOneBizError: 'ZeroOneBizError',
-
-  InvalidOpenRouterAPIKey: 'InvalidOpenRouterAPIKey',
-  OpenRouterBizError: 'OpenRouterBizError',
-
-  InvalidTogetherAIAPIKey: 'InvalidTogetherAIAPIKey',
-  TogetherAIBizError: 'TogetherAIBizError',
+  /**
+   * @deprecated
+   */
+  NoOpenAIAPIKey: 'NoOpenAIAPIKey',
+  /**
+   * @deprecated
+   */
+  OpenAIBizError: 'OpenAIBizError',
 } as const;
 
 export type ILobeAgentRuntimeErrorType =

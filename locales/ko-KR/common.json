@@ -4,12 +4,21 @@
   "appInitializing": "LobeChat이 초기화 중입니다. 잠시 기다려주세요...",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
+  "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
+  "blog": "제품 블로그",
   "cancel": "취소",
   "changelog": "변경 로그",
   "close": "닫기",
+  "contact": "연락처",
   "copy": "복사",
   "copyFail": "복사 실패",
   "copySuccess": "복사 성공",
+  "dataStatistics": {
+    "messages": "메시지",
+    "sessions": "세션",
+    "today": "오늘",
+    "topics": "주제"
+  },
   "defaultAgent": "기본 에이전트",
   "defaultSession": "기본 세션",
   "delete": "삭제",
@@ -26,9 +35,34 @@
     "globalSetting": "전역 설정 내보내기"
   },
   "feedback": "피드백 및 제안",
+  "follow": "{{name}}에서 우리를 팔로우하세요",
+  "footer": {
+    "action": {
+      "feedback": "소중한 의견 공유",
+      "star": "GitHub에서 별표 추가"
+    },
+    "and": "및",
+    "feedback": {
+      "action": "피드백 공유",
+      "desc": "귀하의 모든 아이디어와 제안은 저희에게 귀중합니다. 귀하의 의견을 알고 싶어 합니다! 제품 기능 및 사용 경험 피드백을 제공하여 LobeChat을 더 나아지게 하는 데 도움을 주십시오.",
+      "title": "GitHub에서 소중한 피드백 공유"
+    },
+    "later": "나중에",
+    "star": {
+      "action": "별표 표시",
+      "desc": "만약 당신이 우리 제품을 좋아하고 우리를 지원하고 싶다면, GitHub에서 우리에게 별표를 주실 수 있을까요? 이 작은 행동은 우리에게 큰 의미가 있으며, 지속적으로 특별한 경험을 제공할 수 있도록 우리를 격려할 수 있습니다.",
+      "title": "GitHub에서 우리에게 별표 표시"
+    },
+    "title": "우리 제품을 좋아하십니까?"
+  },
+  "fullscreen": "전체 화면",
   "historyRange": "기록 범위",
   "import": "가져오기",
   "importModal": {
+    "error": {
+      "desc": "데이터 가져오기 중에 문제가 발생했습니다. 다시 시도하거나 <1>문제 제출</1>을 클릭하여 문제를 보고하면 우리가 즉시 도와드리겠습니다.",
+      "title": "데이터 가져오기 실패"
+    },
     "finish": {
       "onlySettings": "시스템 설정 가져오기 성공",
       "start": "시작하기",
@@ -36,6 +70,7 @@
       "title": "데이터 가져오기 완료"
     },
     "loading": "데이터 가져오는 중입니다. 잠시 기다려주세요...",
+    "preparing": "데이터 가져오기 모듈 준비 중...",
     "result": {
       "added": "가져오기 성공",
       "errors": "가져오기 오류",
@@ -46,8 +81,15 @@
       "topics": "주제",
       "type": "데이터 유형"
     },
-    "title": "데이터 가져오기"
+    "title": "데이터 가져오기",
+    "uploading": {
+      "desc": "현재 파일이 크기 때문에 업로드 중입니다...",
+      "restTime": "남은 시간",
+      "speed": "업로드 속도"
+    }
   },
+  "information": "커뮤니티 및 정보",
+  "installPWA": "브라우저 앱 설치",
   "lang": {
     "ar": "아랍어",
     "bg-BG": "불가리아어",
@@ -86,12 +128,19 @@
     "zh-TW": "중국어(번체)"
   },
   "layoutInitializing": "레이아웃을 불러오는 중...",
+  "legal": "법적 고지",
+  "mail": {
+    "business": "비즈니스 협력",
+    "support": "이메일 지원"
+  },
   "noDescription": "설명 없음",
   "oauth": "SSO 로그인",
+  "officialSite": "공식 사이트",
   "ok": "확인",
   "password": "비밀번호",
   "pin": "고정",
   "pinOff": "고정 해제",
+  "privacy": "개인정보 보호 정책",
   "regenerate": "재생성",
   "rename": "이름 바꾸기",
   "reset": "재설정",
@@ -136,6 +185,7 @@
   "tab": {
     "chat": "채팅",
     "market": "발견",
+    "me": "나",
     "setting": "설정"
   },
   "telemetry": {
@@ -146,10 +196,29 @@
     "title": "LobeChat을 더 나아지게 하는 데 도와주세요"
   },
   "temp": "임시",
+  "terms": "이용 약관",
   "updateAgent": "에이전트 정보 업데이트",
   "upgradeVersion": {
     "action": "업그레이드",
     "hasNew": "사용 가능한 업데이트가 있습니다",
     "newVersion": "새 버전 사용 가능: {{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "익명 사용자",
+    "billing": "결제 관리",
+    "data": "데이터 저장",
+    "defaultNickname": "커뮤니티 사용자",
+    "discord": "커뮤니티 지원",
+    "docs": "사용 설명서",
+    "email": "이메일 지원",
+    "feedback": "피드백 및 제안",
+    "help": "도움말 센터",
+    "moveGuide": "설정 버튼을 여기로 이동했습니다",
+    "plans": "요금제",
+    "preview": "미리보기",
+    "profile": "계정 관리",
+    "setting": "앱 설정",
+    "usages": "사용량 통계"
+  },
+  "version": "버전"
 }

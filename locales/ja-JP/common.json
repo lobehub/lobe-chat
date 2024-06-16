@@ -4,12 +4,21 @@
   "appInitializing": "LobeChatを初期化中です。しばらくお待ちください...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
+  "autoGenerateTooltipDisabled": "ツールチップを入力してから自動生成機能を使用してください",
+  "blog": "製品ブログ",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
   "close": "閉じる",
+  "contact": "お問い合わせ",
   "copy": "コピー",
   "copyFail": "コピーに失敗しました",
   "copySuccess": "コピーが成功しました",
+  "dataStatistics": {
+    "messages": "メッセージ",
+    "sessions": "セッション",
+    "today": "今日の追加",
+    "topics": "トピック"
+  },
   "defaultAgent": "デフォルトエージェント",
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
@@ -26,9 +35,34 @@
     "globalSetting": "グローバル設定のエクスポート"
   },
   "feedback": "フィードバック",
+  "follow": " {{name}} で私たちをフォローする",
+  "footer": {
+    "action": {
+      "feedback": "貴重なフィードバックを共有する",
+      "star": "GitHub でスターを付ける"
+    },
+    "and": "および",
+    "feedback": {
+      "action": "フィードバックを共有",
+      "desc": "あなたのすべてのアイデアと提案は私たちにとって非常に貴重です。私たちはあなたの意見を知りたくてたまりません！製品の機能や使用体験に関するフィードバックを提供していただければ幸いです。LobeChat をより良くするためのお手伝いをしていただけると嬉しいです。",
+      "title": "GitHub で貴重なフィードバックを共有"
+    },
+    "later": "後で",
+    "star": {
+      "action": "スターを付ける",
+      "desc": "当社の製品が気に入っていただけた場合、GitHub でスターを付けていただけますか？この小さな行動が大きな意味を持ち、私たちが継続的に特性体験を提供する励みとなります。",
+      "title": "GitHub で私たちにスターを付ける"
+    },
+    "title": "当社の製品がお気に入りですか？"
+  },
+  "fullscreen": "フルスクリーンモード",
   "historyRange": "履歴範囲",
   "import": "インポート",
   "importModal": {
+    "error": {
+      "desc": "データのインポート中にエラーが発生しました。再度インポートを試すか、<1>問題を報告</1>してください。問題を迅速に解決いたします。",
+      "title": "データのインポートに失敗しました"
+    },
     "finish": {
       "onlySettings": "システム設定のインポートが完了しました",
       "start": "開始",
@@ -36,6 +70,7 @@
       "title": "データのインポートが完了しました"
     },
     "loading": "データをインポート中です。しばらくお待ちください...",
+    "preparing": "データのインポートモジュールを準備中...",
     "result": {
       "added": "インポートが成功しました",
       "errors": "インポートエラー",
@@ -46,8 +81,15 @@
       "topics": "トピック",
       "type": "データタイプ"
     },
-    "title": "データのインポート"
+    "title": "データのインポート",
+    "uploading": {
+      "desc": "現在のファイルは大きすぎて、アップロード中です...",
+      "restTime": "残り時間",
+      "speed": "アップロード速度"
+    }
   },
+  "information": "コミュニティと情報",
+  "installPWA": "PWAをインストール",
   "lang": {
     "ar": "アラビア語",
     "bg-BG": "ブルガリア語",
@@ -86,12 +128,19 @@
     "zh-TW": "繁体字中国語"
   },
   "layoutInitializing": "レイアウトを初期化中...",
+  "legal": "法的声明",
+  "mail": {
+    "business": "ビジネス提携",
+    "support": "メールサポート"
+  },
   "noDescription": "説明はありません",
   "oauth": "SSO ログイン",
+  "officialSite": "公式サイト",
   "ok": "OK",
   "password": "パスワード",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
+  "privacy": "プライバシーポリシー",
   "regenerate": "再生成",
   "rename": "名前を変更",
   "reset": "リセット",
@@ -136,6 +185,7 @@
   "tab": {
     "chat": "チャット",
     "market": "探す",
+    "me": "私",
     "setting": "設定"
   },
   "telemetry": {
@@ -146,10 +196,29 @@
     "title": "LobeChat の改善にご協力ください"
   },
   "temp": "一時的",
+  "terms": "利用規約",
   "updateAgent": "エージェント情報を更新",
   "upgradeVersion": {
     "action": "アップグレード",
     "hasNew": "利用可能な更新があります",
     "newVersion": "新しいバージョンが利用可能です：{{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "匿名ユーザー",
+    "billing": "請求管理",
+    "data": "データストレージ",
+    "defaultNickname": "コミュニティユーザー",
+    "discord": "コミュニティサポート",
+    "docs": "使用文書",
+    "email": "メールサポート",
+    "feedback": "フィードバックと提案",
+    "help": "ヘルプセンター",
+    "moveGuide": "設定ボタンがこちらに移動しました",
+    "plans": "サブスクリプションプラン",
+    "preview": "プレビュー",
+    "profile": "アカウント管理",
+    "setting": "アプリ設定",
+    "usages": "利用量統計"
+  },
+  "version": "バージョン"
 }

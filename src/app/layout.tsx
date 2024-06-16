@@ -1,17 +1,24 @@
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { ResolvingViewport } from 'next';
 import { cookies } from 'next/headers';
-import { PropsWithChildren } from 'react';
+import { ReactNode } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
-import GlobalLayout from '@/layout/GlobalLayout';
 import GlobalProvider from '@/layout/GlobalProvider';
 import { isMobileDevice } from '@/utils/responsive';
 
-const RootLayout = async ({ children }: PropsWithChildren) => {
+const inVercel = process.env.VERCEL === '1';
+
+type RootLayoutProps = {
+  children: ReactNode;
+  modal: ReactNode;
+};
+
+const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const cookieStore = cookies();
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
@@ -22,11 +29,13 @@ const RootLayout = async ({ children }: PropsWithChildren) => {
       <body>
         <GlobalProvider>
           <AuthProvider>
-            <GlobalLayout>{children}</GlobalLayout>
+            {children}
+            {modal}
           </AuthProvider>
+          <PWAInstall />
         </GlobalProvider>
         <Analytics />
-        <SpeedInsights />
+        {inVercel && <SpeedInsights />}
       </body>
     </html>
   );
@@ -34,7 +43,7 @@ const RootLayout = async ({ children }: PropsWithChildren) => {
 
 export default RootLayout;
 
-export { default as metadata } from './metadata';
+export { generateMetadata } from './metadata';
 
 export const generateViewport = async (): ResolvingViewport => {
   const isMobile = isMobileDevice();

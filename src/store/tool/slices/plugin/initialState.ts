@@ -6,6 +6,7 @@ export interface PluginState {
   installedPlugins: LobeTool[];
   loadingInstallPlugins: boolean;
   pluginsSettings: PluginsSettings;
+  updatePluginSettingsSignal?: AbortController;
 }
 
 export const initialPluginState: PluginState = {

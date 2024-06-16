@@ -1,4 +1,6 @@
 // @vitest-environment edge-runtime
+import { FunctionDeclarationSchemaType } from '@google/generative-ai';
+import { JSONSchema7 } from 'json-schema';
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -8,9 +10,8 @@ import * as debugStreamModule from '../utils/debugStream';
 import { LobeGoogleAI } from './index';
 
 const provider = 'google';
-const defaultBaseURL = 'https://api.moonshot.cn/v1';
-const bizErrorType = 'GoogleBizError';
-const invalidErrorType = 'InvalidGoogleAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -289,7 +290,7 @@ describe('LobeGoogleAI', () => {
           });
         } catch (e) {
           expect(e).toEqual({
-            errorType: 'GoogleBizError',
+            errorType: bizErrorType,
             provider,
             error: {
               message: 'Generic Error',
@@ -424,6 +425,177 @@ describe('LobeGoogleAI', () => {
         const model = instance['convertModel']('gemini-pro-vision', messages);
 
         expect(model).toEqual('gemini-pro-vision');
+      });
+    });
+
+    describe('buildGoogleTools', () => {
+      it('should return undefined when tools is undefined or empty', () => {
+        expect(instance['buildGoogleTools'](undefined)).toBeUndefined();
+        expect(instance['buildGoogleTools']([])).toBeUndefined();
+      });
+
+      it('should correctly convert ChatCompletionTool to GoogleFunctionCallTool', () => {
+        const tools: OpenAI.ChatCompletionTool[] = [
+          {
+            function: {
+              name: 'testTool',
+              description: 'A test tool',
+              parameters: {
+                type: 'object',
+                properties: {
+                  param1: { type: 'string' },
+                  param2: { type: 'number' },
+                },
+                required: ['param1'],
+              },
+            },
+            type: 'function',
+          },
+        ];
+
+        const googleTools = instance['buildGoogleTools'](tools);
+
+        expect(googleTools).toHaveLength(1);
+        expect(googleTools![0].functionDeclarations![0]).toEqual({
+          name: 'testTool',
+          description: 'A test tool',
+          parameters: {
+            type: FunctionDeclarationSchemaType.OBJECT,
+            properties: {
+              param1: { type: FunctionDeclarationSchemaType.STRING },
+              param2: { type: FunctionDeclarationSchemaType.NUMBER },
+            },
+            required: ['param1'],
+          },
+        });
+      });
+    });
+
+    describe('convertSchemaObject', () => {
+      it('should correctly convert object schema', () => {
+        const schema: JSONSchema7 = {
+          type: 'object',
+          properties: {
+            prop1: { type: 'string' },
+            prop2: { type: 'number' },
+          },
+        };
+
+        const converted = instance['convertSchemaObject'](schema);
+
+        expect(converted).toEqual({
+          type: FunctionDeclarationSchemaType.OBJECT,
+          properties: {
+            prop1: { type: FunctionDeclarationSchemaType.STRING },
+            prop2: { type: FunctionDeclarationSchemaType.NUMBER },
+          },
+        });
+      });
+
+      // 类似地添加 array/string/number/boolean 类型schema的测试用例
+      // ...
+
+      it('should correctly convert nested schema', () => {
+        const schema: JSONSchema7 = {
+          type: 'object',
+          properties: {
+            nested: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  prop: { type: 'string' },
+                },
+              },
+            },
+          },
+        };
+
+        const converted = instance['convertSchemaObject'](schema);
+
+        expect(converted).toEqual({
+          type: FunctionDeclarationSchemaType.OBJECT,
+          properties: {
+            nested: {
+              type: FunctionDeclarationSchemaType.ARRAY,
+              items: {
+                type: FunctionDeclarationSchemaType.OBJECT,
+                properties: {
+                  prop: { type: FunctionDeclarationSchemaType.STRING },
+                },
+              },
+            },
+          },
+        });
+      });
+    });
+
+    describe('convertOAIMessagesToGoogleMessage', () => {
+      it('should correctly convert assistant message', () => {
+        const message: OpenAIChatMessage = {
+          role: 'assistant',
+          content: 'Hello',
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'model',
+          parts: [{ text: 'Hello' }],
+        });
+      });
+
+      it('should correctly convert user message', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: 'Hi',
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'user',
+          parts: [{ text: 'Hi' }],
+        });
+      });
+
+      it('should correctly convert message with inline base64 image parts', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Check this image:' },
+            { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
+          ],
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'user',
+          parts: [
+            { text: 'Check this image:' },
+            { inlineData: { data: '...', mimeType: 'image/png' } },
+          ],
+        });
+      });
+      it.skip('should correctly convert message with image url parts', () => {
+        const message: OpenAIChatMessage = {
+          role: 'user',
+          content: [
+            { type: 'text', text: 'Check this image:' },
+            { type: 'image_url', image_url: { url: 'https://image-file.com' } },
+          ],
+        };
+
+        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+
+        expect(converted).toEqual({
+          role: 'user',
+          parts: [
+            { text: 'Check this image:' },
+            { inlineData: { data: '...', mimeType: 'image/png' } },
+          ],
+        });
       });
     });
   });

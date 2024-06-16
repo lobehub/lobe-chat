@@ -5,7 +5,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useChatStore } from '@/store/chat';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import BedrockForm from './Bedrock';
 import ProviderApiKeyForm from './ProviderApiKeyForm';
@@ -19,7 +19,7 @@ interface APIKeyFormProps {
 const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
   const { t } = useTranslation('error');
 
-  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
 
   const apiKeyPlaceholder = useMemo(() => {
     switch (provider) {
@@ -41,6 +41,14 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
 
       case ModelProvider.Groq: {
         return 'gsk_*****************************';
+      }
+
+      case ModelProvider.DeepSeek: {
+        return 'sk_******************************';
+      }
+
+      case ModelProvider.Qwen: {
+        return 'sk-********************************';
       }
 
       default: {

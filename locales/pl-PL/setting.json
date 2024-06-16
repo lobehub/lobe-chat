@@ -2,6 +2,14 @@
   "about": {
     "title": "O nas"
   },
+  "agentTab": {
+    "chat": "Preferencje czatu",
+    "meta": "Informacje o asystencie",
+    "modal": "Ustawienia modalne",
+    "plugin": "Ustawienia wtyczki",
+    "prompt": "Ustawienia roli",
+    "tts": "Usługi głosowe"
+  },
   "analytics": {
     "telemetry": {
       "desc": "Poprzez wybór wysyłania danych telemetrycznych możesz pomóc nam poprawić ogólny użytkowy interfejs LobeChat",
@@ -22,19 +30,27 @@
       "confirm": "Potwierdź zresetowanie wszystkich ustawień?",
       "currentVersion": "Aktualna wersja",
       "desc": "Zresetuj wszystkie ustawienia do wartości domyślnych",
+      "success": "Wszystkie ustawienia zostały zresetowane",
       "title": "Zresetuj wszystkie ustawienia"
     }
   },
   "header": {
+    "desc": "Preferencje i ustawienia modelu.",
     "global": "Ustawienia globalne",
     "session": "Ustawienia sesji",
-    "sessionWithName": "Ustawienia sesji · {{name}}"
+    "sessionDesc": "Ustawienia postaci i preferencje sesji.",
+    "sessionWithName": "Ustawienia sesji · {{name}}",
+    "title": "Ustawienia"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Proszę wprowadź swój klucz API {{name}}",
+      "placeholder": "{{name}} klucz API",
+      "title": "Klucz API"
+    },
     "checker": {
       "button": "Sprawdź",
       "desc": "Sprawdź poprawność wypełnienia klucza API i adresu proxy",
-      "ollamaDesc": "Sprawdź, czy adres proxy został poprawnie wprowadzony",
       "pass": "Połączenie udane",
       "title": "Test połączenia"
     },
@@ -67,13 +83,18 @@
         },
         "modalTitle": "Konfiguracja niestandardowego modelu",
         "tokens": {
-          "title": "Maksymalna liczba tokenów"
+          "title": "Maksymalna liczba tokenów",
+          "unlimited": "Nieograniczony"
         },
         "vision": {
           "extra": "Ta konfiguracja aktywuje tylko możliwość przesyłania obrazów w LobeChat. Możliwość rozpoznawania zależy wyłącznie od modelu. Proszę przetestować dostępność rozpoznawania wizyjnego tego modelu",
           "title": "Obsługa rozpoznawania wizyjnego"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "使用客户端请求模式，浏览器将直接发起会话请求，以提升响应速度",
+      "title": "使用客户端请求模式"
     },
     "fetcher": {
       "fetch": "Pobierz listę modeli",
@@ -87,15 +108,11 @@
       "title": "Lista modeli",
       "total": "Razem dostępne są {{count}} modele"
     },
+    "proxyUrl": {
+      "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
+      "title": "Adres proxy API"
+    },
     "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama pobiera ten model. Prosimy nie zamykać tej strony. Gdy pobieranie zostanie wznowione, będzie kontynuowane od miejsca przerwania.",
-      "remainingTime": "Czas pozostały",
-      "speed": "Prędkość pobierania",
-      "title": "Pobieranie modelu {{model}}"
-    }
   },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",
@@ -162,6 +179,7 @@
     "enableHistoryCount": {
       "alias": "Bez limitu",
       "limited": "Zawiera tylko {{number}} wiadomości",
+      "setlimited": "Ustaw limit wiadomości historycznych",
       "title": "Ograniczenie liczby wiadomości w historii",
       "unlimited": "Bez limitu wiadomości w historii"
     },
@@ -316,44 +334,58 @@
   "sync": {
     "device": {
       "deviceName": {
-        "hint": "添加名称以便于识别",
-        "placeholder": "请输入设备名称",
-        "title": "设备名称"
+        "hint": "Dodaj nazwę, aby ułatwić identyfikację",
+        "placeholder": "Wprowadź nazwę urządzenia",
+        "title": "Nazwa urządzenia"
       },
-      "title": "设备信息",
-      "unknownBrowser": "未知浏览器",
-      "unknownOS": "未知系统"
+      "title": "Informacje o urządzeniu",
+      "unknownBrowser": "Nieznana przeglądarka",
+      "unknownOS": "Nieznany system"
     },
     "warning": {
-      "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
+      "message": "Ta funkcja jest obecnie eksperymentalna i może działać nieprzewidywalnie lub niestabilnie. W przypadku problemów prosimy o natychmiastowe zgłoszenie opinii."
     },
     "webrtc": {
       "channelName": {
-        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
-        "placeholder": "请输入同步频道名称",
-        "shuffle": "随机生成",
-        "title": "同步频道名称"
+        "desc": "WebRTC użyje tej nazwy do utworzenia kanału synchronizacji, upewnij się, że nazwa kanału jest unikalna",
+        "placeholder": "Wprowadź nazwę kanału synchronizacji",
+        "shuffle": "Wygeneruj losowo",
+        "title": "Nazwa kanału synchronizacji"
       },
       "channelPassword": {
-        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
-        "placeholder": "请输入同步频道密码",
-        "title": "同步频道密码"
+        "desc": "Dodaj hasło, aby zapewnić prywatność kanału. Tylko urządzenia z poprawnym hasłem mogą dołączyć do kanału",
+        "placeholder": "Wprowadź hasło kanału synchronizacji",
+        "title": "Hasło kanału synchronizacji"
       },
-      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "desc": "Bezpośrednia, punkt-do-punktu komunikacja danych w czasie rzeczywistym, wymaga jednoczesnej obecności urządzeń online do synchronizacji",
       "enabled": {
-        "invalid": "请填写同步频道名称后再开启",
-        "title": "开启同步"
+        "invalid": "Wprowadź nazwę kanału synchronizacji przed włączeniem",
+        "title": "Włącz synchronizację"
       },
-      "title": "WebRTC 同步"
+      "title": "Synchronizacja WebRTC"
+    }
+  },
+  "systemAgent": {
+    "title": "Asystent Systemowy",
+    "topic": {
+      "label": "Model nazewnictwa tematów",
+      "modelDesc": "Określa model używany do automatycznego zmieniania nazw tematów",
+      "title": "Automatyczne nadawanie nazw tematom"
+    },
+    "translation": {
+      "label": "Model Tłumaczenia",
+      "modelDesc": "Określ model używany do tłumaczenia",
+      "title": "Ustawienia Asystenta Tłumaczenia"
     }
   },
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
-    "experiment": "实验",
+    "experiment": "Eksperyment",
     "llm": "Model językowy",
-    "sync": "云端同步",
+    "sync": "Synchronizacja w chmurze",
+    "system-agent": "System Agent",
     "tts": "Usługa głosowa"
   },
   "tools": {

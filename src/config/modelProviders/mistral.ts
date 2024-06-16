@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://docs.mistral.ai/getting-started/models/
 const Mistral: ModelProviderCard = {
   chatModels: [
     {
@@ -15,25 +16,34 @@ const Mistral: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'Mistral Small (2402)',
+      displayName: 'Mixtral 8x22B',
       enabled: true,
-      id: 'mistral-small-2402',
+      functionCall: true,
+      id: 'open-mixtral-8x22b',
+      tokens: 65_536,
+    },
+    {
+      displayName: 'Mistral Small',
+      enabled: true,
+      id: 'mistral-small-latest',
       tokens: 32_768,
     },
     {
-      displayName: 'Mistral Medium (2312)',
+      displayName: 'Mistral Medium',
       enabled: true,
-      id: 'mistral-medium-2312',
+      id: 'mistral-medium-latest',
       tokens: 32_768,
     },
     {
-      displayName: 'Mistral Large (2402)',
+      displayName: 'Mistral Large',
       enabled: true,
-      id: 'mistral-large-2402',
+      id: 'mistral-large-latest',
       tokens: 32_768,
     },
   ],
+  checkModel: 'open-mistral-7b',
   id: 'mistral',
+  name: 'Mistral',
 };
 
 export default Mistral;

@@ -4,23 +4,31 @@
   },
   "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến [Cài đặt trợ lý](/chat/settings#session={{id}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
+  "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
   "backToBottom": "Quay về dưới cùng",
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
+  "confirmRemoveSessionSuccess": "Xóa trợ lý thành công",
   "defaultAgent": "Trợ lý mặc định",
   "defaultList": "Danh sách mặc định",
   "defaultSession": "Trợ lý mặc định",
+  "duplicateSession": {
+    "loading": "Đang sao chép...",
+    "success": "Sao chép thành công",
+    "title": "{{title}} Bản sao"
+  },
   "duplicateTitle": "{{title}} Bản sao",
+  "emptyAgent": "Không có trợ lý",
   "historyRange": "Phạm vi lịch sử",
   "inbox": {
-    "defaultMessage": "Xin chào, tôi là trợ lý thông minh của bạn, bạn có thể hỏi tôi bất kỳ câu hỏi nào và tôi sẽ cố gắng trả lời. Nếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn `+` để tạo trợ lý tùy chỉnh.",
     "desc": "Kích hoạt cụm não, khơi dậy tia lửa tư duy. Trợ lý thông minh của bạn, ở đây để trò chuyện với bạn về mọi thứ.",
     "title": "Chuyện phiếm"
   },
   "input": {
+    "addAi": "Thêm một tin nhắn AI",
+    "addUser": "Thêm một tin nhắn người dùng",
     "more": "Thêm",
-    "onlyAdd": "Chỉ thêm tin nhắn",
     "send": "Gửi",
     "sendWithCmdEnter": "Nhấn {{meta}} + Enter để gửi",
     "sendWithEnter": "Nhấn Enter để gửi",
@@ -42,13 +50,17 @@
   "sessionGroup": {
     "config": "Quản lý nhóm",
     "confirmRemoveGroupAlert": "Bạn sẽ xóa nhóm này, sau khi xóa, trợ lý của nhóm sẽ được di chuyển vào danh sách mặc định, vui lòng xác nhận hành động của bạn",
+    "createAgentSuccess": "Tạo trợ lý thành công",
     "createGroup": "Thêm nhóm mới",
     "createSuccess": "Tạo thành công",
+    "creatingAgent": "Đang tạo trợ lý...",
     "inputPlaceholder": "Vui lòng nhập tên nhóm...",
     "moveGroup": "Di chuyển vào nhóm",
     "newGroup": "Nhóm mới",
     "rename": "Đổi tên nhóm",
     "renameSuccess": "Đổi tên thành công",
+    "sortSuccess": "Sắp xếp lại thành công",
+    "sorting": "Đang cập nhật sắp xếp nhóm...",
     "tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự"
   },
   "shareModal": {
@@ -72,6 +84,7 @@
     "chats": "Tin nhắn trò chuyện",
     "rest": "Còn lại",
     "systemRole": "Vai trò hệ thống",
+    "title": "Chi tiết Ngữ cảnh",
     "tools": "Công cụ",
     "total": "Tổng cộng",
     "used": "Đã sử dụng"
@@ -91,6 +104,8 @@
     "confirmRemoveTopic": "Bạn sắp xóa chủ đề này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
     "confirmRemoveUnstarred": "Bạn sắp xóa các chủ đề chưa được đánh dấu. Hành động này không thể hoàn tác, vui lòng xác nhận.",
     "defaultTitle": "Chủ đề mặc định",
+    "duplicateLoading": "Đang sao chép chủ đề...",
+    "duplicateSuccess": "Chủ đề đã được sao chép thành công",
     "guide": {
       "desc": "Nhấn vào nút bên trái để lưu cuộc trò chuyện hiện tại như một chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới",
       "title": "Danh sách chủ đề"
@@ -112,9 +127,12 @@
   },
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
+    "actionFiletip": "Tải lên tập tin",
     "actionTooltip": "Tải lên hình ảnh",
     "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng",
     "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh. Giữ phím Shift để gửi hình ảnh trực tiếp",
+    "dragFileDesc": "Kéo ảnh và tệp vào đây để hỗ trợ tải lên nhiều ảnh và tệp. Giữ phím Shift để gửi hình ảnh hoặc tập tin trực tiếp",
+    "dragFileTitle": "Tải lên tập tin",
     "dragTitle": "Tải lên hình ảnh"
   }
 }

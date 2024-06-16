@@ -2,8 +2,11 @@ import {
   Anthropic,
   Azure,
   Bedrock,
+  DeepSeek,
   Google,
   Groq,
+  LobeHub,
+  Minimax,
   Mistral,
   Moonshot,
   Ollama,
@@ -11,6 +14,7 @@ import {
   OpenRouter,
   Perplexity,
   Together,
+  Tongyi,
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
@@ -25,12 +29,20 @@ interface ModelProviderIconProps {
 
 const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
   switch (provider) {
+    case 'lobehub': {
+      return <LobeHub size={20} />;
+    }
+
     case ModelProvider.ZhiPu: {
       return <Zhipu size={20} />;
     }
 
     case ModelProvider.Bedrock: {
       return <Bedrock size={20} />;
+    }
+
+    case ModelProvider.DeepSeek: {
+      return <DeepSeek size={20} />;
     }
 
     case ModelProvider.Google: {
@@ -65,6 +77,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
       return <Perplexity size={20} />;
     }
 
+    case ModelProvider.Minimax: {
+      return <Minimax size={20} />;
+    }
+
     case ModelProvider.Mistral: {
       return <Mistral size={20} />;
     }
@@ -87,6 +103,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.TogetherAI: {
       return <Together size={20} />;
+    }
+
+    case ModelProvider.Qwen: {
+      return <Tongyi size={20} />;
     }
 
     default: {

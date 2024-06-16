@@ -6,6 +6,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
+import { toolService } from '@/services/tool';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
 import { LobeTool } from '@/types/tool';
 import { PluginInstallError } from '@/types/tool/plugin';
@@ -43,12 +44,13 @@ export const createPluginStoreSlice: StateCreator<
     const { updateInstallLoadingState, refreshPlugins } = get();
     try {
       updateInstallLoadingState(name, true);
-      const data = await pluginService.getPluginManifest(plugin.manifest);
-      updateInstallLoadingState(name, undefined);
+      const data = await toolService.getPluginManifest(plugin.manifest);
 
       // 4. 存储 manifest 信息
       await pluginService.installPlugin({ identifier: plugin.identifier, manifest: data, type });
       await refreshPlugins();
+
+      updateInstallLoadingState(name, undefined);
     } catch (error) {
       console.error(error);
       updateInstallLoadingState(name, undefined);
@@ -66,7 +68,7 @@ export const createPluginStoreSlice: StateCreator<
     await Promise.all(plugins.map((identifier) => installPlugin(identifier)));
   },
   loadPluginStore: async () => {
-    const pluginMarketIndex = await pluginService.getPluginList();
+    const pluginMarketIndex = await toolService.getPluginList();
 
     set({ pluginStoreList: pluginMarketIndex.plugins }, false, n('loadPluginList'));
 
@@ -90,6 +92,7 @@ export const createPluginStoreSlice: StateCreator<
   },
   useFetchInstalledPlugins: () =>
     useSWR<LobeTool[]>(INSTALLED_PLUGINS, pluginService.getInstalledPlugins, {
+      fallbackData: [],
       onSuccess: (data) => {
         set(
           { installedPlugins: data, loadingInstallPlugins: false },
@@ -98,7 +101,12 @@ export const createPluginStoreSlice: StateCreator<
         );
       },
       revalidateOnFocus: false,
+      suspense: true,
     }),
   useFetchPluginStore: () =>
-    useSWR<LobeChatPluginsMarketIndex>('loadPluginStore', get().loadPluginStore),
+    useSWR<LobeChatPluginsMarketIndex>('loadPluginStore', get().loadPluginStore, {
+      fallbackData: { plugins: [], schemaVersion: 1 },
+      revalidateOnFocus: false,
+      suspense: true,
+    }),
 });

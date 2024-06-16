@@ -4,12 +4,21 @@
   "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
+  "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
   "close": "Kapat",
+  "contact": "Bize Ulaşın",
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
+  "dataStatistics": {
+    "messages": "Mesajlar",
+    "sessions": "Oturumlar",
+    "today": "Bugün",
+    "topics": "Konular"
+  },
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
@@ -26,9 +35,34 @@
     "globalSetting": "Ayarları Dışa Aktar"
   },
   "feedback": "Feedback",
+  "follow": "Bizi {{name}} üzerinde takip edin",
+  "footer": {
+    "action": {
+      "feedback": "Geri Bildirimde Bulun",
+      "star": "GitHub'da Yıldız Ekleyin"
+    },
+    "and": "ve",
+    "feedback": {
+      "action": "Geri Bildirim Paylaş",
+      "desc": "Her fikir ve öneriniz bizim için değerlidir, görüşlerinizi duymak için sabırsızlanıyoruz! LobeChat'in ürün özellikleri ve kullanıcı deneyimi hakkında geri bildirim sağlayarak bize yardımcı olun ve platformumuzu daha da geliştirmemize katkıda bulunun.",
+      "title": "GitHub'da Değerli Geri Bildiriminizi Paylaşın"
+    },
+    "later": "Daha Sonra",
+    "star": {
+      "action": "Yıldız Ekleyin",
+      "desc": "Ürünümüzü beğendiyseniz ve bizi desteklemek istiyorsanız, GitHub'da bize bir yıldız verebilir misiniz? Bu küçük jest bizim için büyük anlam taşır ve sizin için özellikler sunmamızı teşvik eder.",
+      "title": "GitHub'da Bize Yıldız Ekleyin"
+    },
+    "title": "Ürünümüzü Beğendiniz mi?"
+  },
+  "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
   "importModal": {
+    "error": {
+      "desc": "Üzgünüz, veri aktarımı sırasında bir hata oluştu. Lütfen tekrar deneyin veya <1>bir sorun bildirin</1>, sorunu çözmek için elimizden geleni yapacağız.",
+      "title": "Veri Aktarımı Başarısız"
+    },
     "finish": {
       "onlySettings": "Sistem ayarları başarıyla içe aktarıldı",
       "start": "Başla",
@@ -36,6 +70,7 @@
       "title": "Veri başarıyla aktarıldı"
     },
     "loading": "Veri aktarılıyor, lütfen bekleyin...",
+    "preparing": "Veri aktarımı modülü hazırlanıyor...",
     "result": {
       "added": "Başarıyla içe aktarıldı",
       "errors": "İçe Aktarma Hataları",
@@ -46,8 +81,15 @@
       "topics": "Konular",
       "type": "Tip"
     },
-    "title": "Veri İçe Aktar"
+    "title": "Veri İçe Aktar",
+    "uploading": {
+      "desc": "Dosya şu anda büyük olduğundan, yüklenmeye çalışılıyor...",
+      "restTime": "Kalan Zaman",
+      "speed": "Yükleme Hızı"
+    }
   },
+  "information": "Topluluk ve Bilgi",
+  "installPWA": "Tarayıcı Uygulamasını Yükle",
   "lang": {
     "ar": "Arapça",
     "bg-BG": "Bulgarca",
@@ -86,12 +128,19 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
+  "legal": "Hukuki Bildirim",
+  "mail": {
+    "business": "İşbirliği",
+    "support": "E-posta Desteği"
+  },
   "noDescription": "Açıklama yok",
   "oauth": "SSO Girişi",
+  "officialSite": "Resmi Site",
   "ok": "Tamam",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Gizlilik Politikası",
   "regenerate": "Tekrarla",
   "rename": "Yeniden İsimlendir",
   "reset": "Reset",
@@ -136,6 +185,7 @@
   "tab": {
     "chat": "Chat",
     "market": "Keşfet",
+    "me": "ben",
     "setting": "Ayarlar"
   },
   "telemetry": {
@@ -146,10 +196,29 @@
     "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
   },
   "temp": "Geçici",
+  "terms": "Hizmet Koşulları",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upgradeVersion": {
     "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
     "newVersion": "Yeni sürüm mevcut: {{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonim Kullanıcı",
+    "billing": "Fatura Yönetimi",
+    "data": "Veri Depolama",
+    "defaultNickname": "Topluluk Kullanıcısı",
+    "discord": "Topluluk Destek",
+    "docs": "Belgeler",
+    "email": "E-posta Destek",
+    "feedback": "Geribildirim ve Öneriler",
+    "help": "Yardım Merkezi",
+    "moveGuide": "Ayarlar düğmesini buraya taşıyın",
+    "plans": "Planlar",
+    "preview": "Önizleme",
+    "profile": "Hesap Yönetimi",
+    "setting": "Uygulama Ayarları",
+    "usages": "Kullanım İstatistikleri"
+  },
+  "version": "Sürüm"
 }

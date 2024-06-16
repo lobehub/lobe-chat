@@ -1,0 +1,38 @@
+import { createStyles } from 'antd-style';
+import { type ReactNode, memo } from 'react';
+import { Flexbox } from 'react-layout-kit';
+
+const useStyles = createStyles(({ css }) => ({
+  header: css`
+    z-index: 10;
+  `,
+}));
+
+interface SidebarHeaderProps {
+  actions?: ReactNode;
+  title: ReactNode;
+}
+
+const SidebarHeader = memo<SidebarHeaderProps>(({ title, actions }) => {
+  const { styles } = useStyles();
+
+  return (
+    <Flexbox
+      align={'center'}
+      className={styles.header}
+      distribution={'space-between'}
+      horizontal
+      padding={14}
+      paddingInline={16}
+    >
+      <Flexbox align={'center'} gap={4} horizontal>
+        {title}
+      </Flexbox>
+      <Flexbox align={'center'} gap={2} horizontal>
+        {actions}
+      </Flexbox>
+    </Flexbox>
+  );
+});
+
+export default SidebarHeader;

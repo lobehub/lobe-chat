@@ -4,12 +4,21 @@
   "appInitializing": "LobeChat 初始化中，請耐心等候...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
+  "autoGenerateTooltipDisabled": "請填寫提示詞後使用自動補全功能",
+  "blog": "產品部落格",
   "cancel": "取消",
   "changelog": "變更日誌",
   "close": "關閉",
+  "contact": "聯繫我們",
   "copy": "複製",
   "copyFail": "複製失敗",
   "copySuccess": "複製成功",
+  "dataStatistics": {
+    "messages": "消息",
+    "sessions": "助手",
+    "today": "今日新增",
+    "topics": "話題"
+  },
   "defaultAgent": "預設助手",
   "defaultSession": "預設助手",
   "delete": "刪除",
@@ -26,9 +35,34 @@
     "globalSetting": "匯出全域設定"
   },
   "feedback": "回饋與建議",
+  "follow": "在 {{name}} 上關注我們",
+  "footer": {
+    "action": {
+      "feedback": "分享您寶貴的建議",
+      "star": "在 GitHub 給添加星標"
+    },
+    "and": "並",
+    "feedback": {
+      "action": "分享反饋",
+      "desc": "您的每一個想法和建議對我們來說都弥足珍貴，我們迫不及待地想知道您的看法！歡迎聯繫我們提供產品功能和使用體驗反饋，幫助我們將 LobeChat 建設得更好。",
+      "title": "在 GitHub 分享您寶貴的反饋"
+    },
+    "later": "稍後",
+    "star": {
+      "action": "點亮星標",
+      "desc": "如果您喜愛我們的產品，並希望支持我們，可以去 GitHub 給我們點一顆星嗎？這個小小的動作對我們來說意義重大，能激勵我們為您持續提供特性體驗。",
+      "title": "在 GitHub 為我們點亮星標"
+    },
+    "title": "喜歡我們的產品？"
+  },
+  "fullscreen": "全螢幕模式",
   "historyRange": "歷史範圍",
   "import": "匯入設定",
   "importModal": {
+    "error": {
+      "desc": "非常抱歉，資料匯入過程發生異常。請嘗試重新匯入，或 <1>提交問題</1>，我們將會第一時間幫你排查問題。",
+      "title": "資料匯入失敗"
+    },
     "finish": {
       "onlySettings": "系統設定匯入成功",
       "start": "開始使用",
@@ -36,6 +70,7 @@
       "title": "資料匯入完成"
     },
     "loading": "資料匯入中，請耐心等候...",
+    "preparing": "資料匯入模組準備中...",
     "result": {
       "added": "匯入成功",
       "errors": "匯入出錯",
@@ -46,8 +81,15 @@
       "topics": "話題",
       "type": "資料類型"
     },
-    "title": "匯入資料"
+    "title": "匯入資料",
+    "uploading": {
+      "desc": "當前檔案較大，正在努力上傳中...",
+      "restTime": "剩餘時間",
+      "speed": "上傳速度"
+    }
   },
+  "information": "社群與資訊",
+  "installPWA": "安裝瀏覽器應用 (PWA)",
   "lang": {
     "ar": "阿拉伯語",
     "bg-BG": "保加利亞語",
@@ -86,12 +128,19 @@
     "zh-TW": "繁體中文"
   },
   "layoutInitializing": "正在載入版面配置...",
+  "legal": "法律聲明",
+  "mail": {
+    "business": "商務合作",
+    "support": "郵件支持"
+  },
   "noDescription": "暫無描述",
   "oauth": "單一登錄（SSO）",
+  "officialSite": "官方網站",
   "ok": "確定",
   "password": "密碼",
   "pin": "置頂",
   "pinOff": "取消置頂",
+  "privacy": "隱私政策",
   "regenerate": "重新生成",
   "rename": "重新命名",
   "reset": "重置",
@@ -136,6 +185,7 @@
   "tab": {
     "chat": "對話",
     "market": "發現",
+    "me": "我",
     "setting": "設定"
   },
   "telemetry": {
@@ -146,10 +196,29 @@
     "title": "幫助 LobeChat 做得更好"
   },
   "temp": "臨時",
+  "terms": "服務條款",
   "updateAgent": "更新助理資訊",
   "upgradeVersion": {
     "action": "升級",
     "hasNew": "有可用更新",
     "newVersion": "有新版本可用：{{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "匿名使用者",
+    "billing": "帳單管理",
+    "data": "資料儲存",
+    "defaultNickname": "社群版使用者",
+    "discord": "社區支援",
+    "docs": "使用文件",
+    "email": "郵件支援",
+    "feedback": "反饋與建議",
+    "help": "幫助中心",
+    "moveGuide": "設置按鈕搬到這裡啦",
+    "plans": "訂閱方案",
+    "preview": "預覽",
+    "profile": "帳戶管理",
+    "setting": "應用設定",
+    "usages": "用量統計"
+  },
+  "version": "版本"
 }

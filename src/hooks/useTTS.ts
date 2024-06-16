@@ -11,10 +11,10 @@ import isEqual from 'fast-deep-equal';
 
 import { createHeaderWithOpenAI } from '@/services/_header';
 import { API_ENDPOINTS } from '@/services/_url';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/slices/chat';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { TTSServer } from '@/types/agent';
 
 interface TTSConfig extends TTSOptions {
@@ -24,10 +24,10 @@ interface TTSConfig extends TTSOptions {
 }
 
 export const useTTS = (content: string, config?: TTSConfig) => {
-  const ttsSettings = useGlobalStore(settingsSelectors.currentTTS, isEqual);
-  const ttsAgentSettings = useSessionStore(agentSelectors.currentAgentTTS, isEqual);
-  const lang = useGlobalStore(settingsSelectors.currentLanguage);
-  const voice = useSessionStore(agentSelectors.currentAgentTTSVoice(lang));
+  const ttsSettings = useUserStore(settingsSelectors.currentTTS, isEqual);
+  const ttsAgentSettings = useAgentStore(agentSelectors.currentAgentTTS, isEqual);
+  const lang = useUserStore(userGeneralSettingsSelectors.currentLanguage);
+  const voice = useAgentStore(agentSelectors.currentAgentTTSVoice(lang));
   let useSelectedTTS;
   let options: any = {};
   switch (config?.server || ttsAgentSettings.ttsService) {

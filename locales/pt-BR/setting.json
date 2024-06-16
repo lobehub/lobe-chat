@@ -2,6 +2,14 @@
   "about": {
     "title": "Sobre"
   },
+  "agentTab": {
+    "chat": "Preferências de bate-papo",
+    "meta": "Informações do assistente",
+    "modal": "Configurações do modelo",
+    "plugin": "Configurações do plug-in",
+    "prompt": "Configuração de personagem",
+    "tts": "Serviço de voz"
+  },
   "analytics": {
     "telemetry": {
       "desc": "Ao optar por enviar dados de telemetria, você pode nos ajudar a melhorar a experiência do usuário do LobeChat como um todo",
@@ -22,19 +30,27 @@
       "confirm": "Confirmar a redefinição de todas as configurações?",
       "currentVersion": "Versão Atual",
       "desc": "Redefinir todas as configurações para os valores padrão",
+      "success": "Todas as configurações foram redefinidas com sucesso",
       "title": "Redefinir Todas as Configurações"
     }
   },
   "header": {
+    "desc": "Preferências e configurações do modelo.",
     "global": "Configurações Globais",
     "session": "Configurações de Sessão",
-    "sessionWithName": "Configurações de Sessão · {{name}}"
+    "sessionDesc": "Configurações de personagem e preferências de sessão.",
+    "sessionWithName": "Configurações de Sessão · {{name}}",
+    "title": "Configurações"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Por favor, insira sua chave de API {{name}}",
+      "placeholder": "Chave de API {{name}}",
+      "title": "Chave de API"
+    },
     "checker": {
       "button": "Verificar",
       "desc": "Verifica se a Api Key e o endereço do proxy estão preenchidos corretamente",
-      "ollamaDesc": "Verifique se o endereço do proxy está preenchido corretamente",
       "pass": "Verificação aprovada",
       "title": "Verificação de Conectividade"
     },
@@ -67,13 +83,18 @@
         },
         "modalTitle": "Configuração de Modelo Personalizado",
         "tokens": {
-          "title": "Número Máximo de Tokens"
+          "title": "Número Máximo de Tokens",
+          "unlimited": "ilimitado"
         },
         "vision": {
           "extra": "Esta configuração ativará apenas a configuração de upload de imagens no LobeChat. A capacidade de reconhecimento depende inteiramente do modelo em si. Por favor, teste a disponibilidade da capacidade de reconhecimento visual deste modelo.",
           "title": "Suporte a Reconhecimento Visual"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "O modo de solicitação do cliente iniciará diretamente a solicitação da sessão a partir do navegador, melhorando a velocidade de resposta",
+      "title": "Usar o modo de solicitação do cliente"
     },
     "fetcher": {
       "fetch": "Obter lista de modelos",
@@ -87,15 +108,11 @@
       "title": "Lista de Modelos",
       "total": "Total de {{count}} modelos disponíveis"
     },
+    "proxyUrl": {
+      "desc": "Além do endereço padrão, deve incluir http(s)://",
+      "title": "Endereço do Proxy da API"
+    },
     "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama está baixando este modelo. Por favor, evite fechar esta página. O download será retomado do ponto em que parou, caso seja reiniciado.",
-      "remainingTime": "Tempo restante",
-      "speed": "Velocidade de download",
-      "title": "Baixando modelo {{model}}"
-    }
   },
   "plugin": {
     "addTooltip": "Adicionar plug-in personalizado",
@@ -162,6 +179,7 @@
     "enableHistoryCount": {
       "alias": "Sem limite",
       "limited": "Incluir apenas {{number}} mensagens de conversa",
+      "setlimited": "Definir número de mensagens de histórico",
       "title": "Limitar número de mensagens de histórico",
       "unlimited": "Sem limite de mensagens de histórico"
     },
@@ -347,6 +365,19 @@
       "title": "Sincronização WebRTC"
     }
   },
+  "systemAgent": {
+    "title": "Assistente do Sistema",
+    "topic": {
+      "label": "Modelo de Nomeação de Tópicos",
+      "modelDesc": "Especifica o modelo usado para renomeação automática de tópicos",
+      "title": "Renomeação Automática de Tópicos"
+    },
+    "translation": {
+      "label": "Modelo de Tradução",
+      "modelDesc": "Especifica o modelo usado para tradução",
+      "title": "Configurações do Assistente de Tradução"
+    }
+  },
   "tab": {
     "about": "Sobre",
     "agent": "Assistente Padrão",
@@ -354,6 +385,7 @@
     "experiment": "Experimento",
     "llm": "Modelo de Linguagem",
     "sync": "Sincronização na nuvem",
+    "system-agent": "Assistente do Sistema",
     "tts": "Serviço de Voz"
   },
   "tools": {

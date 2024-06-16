@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
 import { FormAction } from './style';
 
@@ -15,11 +15,11 @@ interface AccessCodeFormProps {
 
 const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
   const { t } = useTranslation('error');
-  const [password, setSettings] = useGlobalStore((s) => [
-    settingsSelectors.currentSettings(s).password,
-    s.setSettings,
+  const [password, updateKeyVaults] = useUserStore((s) => [
+    keyVaultsConfigSelectors.password(s),
+    s.updateKeyVaults,
   ]);
-  const [resend, deleteMessage] = useChatStore((s) => [s.internalResendMessage, s.deleteMessage]);
+  const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
 
   return (
     <>
@@ -31,7 +31,7 @@ const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
         <Input.Password
           autoComplete={'new-password'}
           onChange={(e) => {
-            setSettings({ password: e.target.value });
+            updateKeyVaults({ password: e.target.value });
           }}
           placeholder={t('unlock.password.placeholder')}
           type={'block'}

@@ -1,15 +1,17 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors, settingsSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 import { createJWT } from '@/utils/jwt';
 
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
-      const { accessKeyId, region, secretAccessKey } = modelConfigSelectors.bedrockConfig(
-        useGlobalStore.getState(),
+      const { accessKeyId, region, secretAccessKey } = keyVaultsConfigSelectors.bedrockConfig(
+        useUserStore.getState(),
       );
+
       const awsSecretAccessKey = secretAccessKey;
       const awsAccessKeyId = accessKeyId;
 
@@ -19,7 +21,7 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Azure: {
-      const azure = modelConfigSelectors.azureConfig(useGlobalStore.getState());
+      const azure = keyVaultsConfigSelectors.azureConfig(useUserStore.getState());
 
       return {
         apiKey: azure.apiKey,
@@ -29,25 +31,26 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Ollama: {
-      const config = modelConfigSelectors.ollamaConfig(useGlobalStore.getState());
+      const config = keyVaultsConfigSelectors.ollamaConfig(useUserStore.getState());
 
-      return { endpoint: config?.endpoint };
+      return { endpoint: config?.baseURL };
     }
 
     default: {
-      const config = modelConfigSelectors.getConfigByProviderId(provider)(
-        useGlobalStore.getState(),
+      const config = keyVaultsConfigSelectors.getVaultByProvider(provider as GlobalLLMProviderKey)(
+        useUserStore.getState(),
       );
 
-      return { apiKey: config?.apiKey, endpoint: config?.endpoint };
+      return { apiKey: config?.apiKey, endpoint: config?.baseURL };
     }
   }
 };
 
 const createAuthTokenWithPayload = async (payload = {}) => {
-  const accessCode = settingsSelectors.password(useGlobalStore.getState());
+  const accessCode = keyVaultsConfigSelectors.password(useUserStore.getState());
+  const userId = userProfileSelectors.userId(useUserStore.getState());
 
-  return await createJWT<JWTPayload>({ accessCode, ...payload });
+  return await createJWT<JWTPayload>({ accessCode, userId, ...payload });
 };
 
 interface AuthParams {

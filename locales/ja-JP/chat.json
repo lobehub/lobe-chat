@@ -4,23 +4,31 @@
   },
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐにチャットを開始するか、[エージェント設定](/chat/settings#session={{id}}) に移動して私の情報を完全にすることができます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
+  "agentsAndConversations": "エージェントと会話",
   "backToBottom": "現在に戻る",
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
+  "confirmRemoveSessionSuccess": "セッションが正常に削除されました",
   "defaultAgent": "デフォルトエージェント",
   "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
+  "duplicateSession": {
+    "loading": "複製中...",
+    "success": "複製に成功しました",
+    "title": "{{title}} のコピー"
+  },
   "duplicateTitle": "{{title}} のコピー",
+  "emptyAgent": "エージェントがいません",
   "historyRange": "履歴範囲",
   "inbox": {
-    "defaultMessage": "こんにちは、私はあなたのスマートアシスタントです。何か質問があれば遠慮なく聞いてください。より専門的でカスタマイズされたアシスタントが必要な場合は、`+` をクリックしてカスタムエージェントを作成できます。",
     "desc": "脳のクラスターを起動し、創造性を引き出しましょう。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
     "title": "気軽におしゃべり"
   },
   "input": {
+    "addAi": "AIメッセージを追加",
+    "addUser": "ユーザーメッセージを追加",
     "more": "もっと",
-    "onlyAdd": "メッセージのみ追加",
     "send": "送信",
     "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
     "sendWithEnter": "Enter キーで送信",
@@ -42,13 +50,17 @@
   "sessionGroup": {
     "config": "グループ設定",
     "confirmRemoveGroupAlert": "このグループを削除します。削除後、このグループのアシスタントはデフォルトリストに移動されます。操作を確認してください。",
+    "createAgentSuccess": "エージェントの作成に成功しました",
     "createGroup": "新しいグループを作成",
     "createSuccess": "作成が成功しました",
+    "creatingAgent": "エージェントの作成中...",
     "inputPlaceholder": "グループ名を入力してください...",
     "moveGroup": "グループに移動",
     "newGroup": "新しいグループ",
     "rename": "グループ名を変更",
     "renameSuccess": "名前の変更が成功しました",
+    "sortSuccess": "並び替えに成功しました",
+    "sorting": "グループの並び替えを更新中...",
     "tooLong": "グループ名は1〜20文字で入力してください"
   },
   "shareModal": {
@@ -72,6 +84,7 @@
     "chats": "チャットメッセージ",
     "rest": "残り利用可能",
     "systemRole": "システムロール設定",
+    "title": "コンテキストの詳細",
     "tools": "ツール設定",
     "total": "合計利用可能",
     "used": "合計使用"
@@ -91,6 +104,8 @@
     "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "defaultTitle": "デフォルトトピック",
+    "duplicateLoading": "トピックを複製中...",
+    "duplicateSuccess": "トピックの複製に成功しました",
     "guide": {
       "desc": "左側のボタンをクリックして、現在の会話を保存し、新しい会話を開始できます",
       "title": "トピックリスト"
@@ -112,9 +127,12 @@
   },
   "updateAgent": "エージェント情報を更新",
   "upload": {
+    "actionFiletip": "ファイルをアップロードする",
     "actionTooltip": "画像をアップロード",
     "disabled": "現在のモデルはビジュアル認識をサポートしていません。モデルを切り替えて使用してください",
     "dragDesc": "ファイルをここにドラッグしてください。複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信することもできます。",
+    "dragFileDesc": "複数の写真やファイルのアップロードをサポートするには、ここに写真やファイルをドラッグします。 Shift キーを押しながら画像またはファイルを直接送信します。",
+    "dragFileTitle": "ファイルをアップロードする",
     "dragTitle": "画像をアップロード"
   }
 }

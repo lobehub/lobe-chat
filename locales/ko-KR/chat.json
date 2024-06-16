@@ -4,23 +4,31 @@
   },
   "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 즉시 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 내 정보를 완성할 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
+  "agentsAndConversations": "에이전트 및 대화",
   "backToBottom": "하단으로 이동",
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
+  "confirmRemoveSessionSuccess": "도우미가 성공적으로 삭제되었습니다",
   "defaultAgent": "기본 도우미",
   "defaultList": "기본 목록",
   "defaultSession": "기본 도우미",
+  "duplicateSession": {
+    "loading": "복사 중...",
+    "success": "복사 성공",
+    "title": "{{title}} 복사본"
+  },
   "duplicateTitle": "{{title}} 복사본",
+  "emptyAgent": "도우미가 없습니다",
   "historyRange": "대화 기록 범위",
   "inbox": {
-    "defaultMessage": "안녕하세요, 저는 당신의 인공지능 도우미입니다. 어떤 질문이든 물어보세요. 최선을 다해 답변해 드리겠습니다. 더 전문적이거나 맞춤형 도우미가 필요하다면 `+`를 클릭하여 사용자 정의 도우미를 만들 수 있습니다.",
     "desc": "뇌 클러스터를 활성화하여 창의적인 아이디어를 끌어내는 인공지능 비서입니다. 여기서 모든 것에 대해 대화합니다.",
     "title": "무작위 대화"
   },
   "input": {
+    "addAi": "AI 메시지 추가",
+    "addUser": "사용자 메시지 추가",
     "more": "더 많은",
-    "onlyAdd": "메시지만 추가",
     "send": "전송",
     "sendWithCmdEnter": "{{meta}} + Enter 키로 전송",
     "sendWithEnter": "Enter 키로 전송",
@@ -42,13 +50,17 @@
   "sessionGroup": {
     "config": "그룹 설정",
     "confirmRemoveGroupAlert": "이 그룹을 삭제하려고 합니다. 삭제 후 이 그룹의 도우미는 기본 목록으로 이동됩니다. 작업을 확인하십시오.",
+    "createAgentSuccess": "에이전트 생성 성공",
     "createGroup": "새 그룹 추가",
     "createSuccess": "생성 성공",
+    "creatingAgent": "에이전트 생성 중...",
     "inputPlaceholder": "그룹 이름을 입력하세요...",
     "moveGroup": "그룹으로 이동",
     "newGroup": "새 그룹",
     "rename": "그룹 이름 변경",
     "renameSuccess": "이름 변경 성공",
+    "sortSuccess": "다시 정렬 성공",
+    "sorting": "그룹 정렬 업데이트 중...",
     "tooLong": "그룹 이름은 1-20자여야 합니다"
   },
   "shareModal": {
@@ -72,6 +84,7 @@
     "chats": "채팅 메시지",
     "rest": "남은 사용량",
     "systemRole": "시스템 역할",
+    "title": "컨텍스트 세부 정보",
     "tools": "도구 설정",
     "total": "총 사용량",
     "used": "총 사용"
@@ -91,6 +104,8 @@
     "confirmRemoveTopic": "이 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
     "confirmRemoveUnstarred": "별표가 없는 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
     "defaultTitle": "기본 주제",
+    "duplicateLoading": "주제 복사 중...",
+    "duplicateSuccess": "주제 복사 성공",
     "guide": {
       "desc": "현재 대화를 히스토리 토픽으로 저장하고 새 대화를 시작하려면 왼쪽 버튼을 클릭하세요.",
       "title": "토픽 목록"
@@ -112,9 +127,12 @@
   },
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
+    "actionFiletip": "파일 업로드",
     "actionTooltip": "이미지 업로드",
     "disabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 전환한 후 사용해주세요.",
     "dragDesc": "여기로 파일을 끌어다 놓거나 여러 이미지를 업로드할 수 있습니다. Shift를 누른 채로 이미지를 직접 보내기",
+    "dragFileDesc": "여러 사진과 파일 업로드를 지원하려면 여기로 사진과 파일을 드래그하세요. 이미지나 파일을 직접 보내려면 Shift 키를 누르세요",
+    "dragFileTitle": "파일 업로드",
     "dragTitle": "이미지 업로드"
   }
 }

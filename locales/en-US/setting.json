@@ -2,6 +2,14 @@
   "about": {
     "title": "About"
   },
+  "agentTab": {
+    "chat": "Chat Preferences",
+    "meta": "Agent Info",
+    "modal": "Model Settings",
+    "plugin": "Plugin Settings",
+    "prompt": "Role Configuration",
+    "tts": "Voice Service"
+  },
   "analytics": {
     "telemetry": {
       "desc": "By opting to send telemetry data, you can help us improve the overall user experience of LobeChat",
@@ -22,19 +30,27 @@
       "confirm": "Confirm to reset all settings?",
       "currentVersion": "Current Version",
       "desc": "Reset all settings to default values",
+      "success": "All settings have been reset",
       "title": "Reset All Settings"
     }
   },
   "header": {
+    "desc": "Preferences and model settings.",
     "global": "Global Settings",
     "session": "Session Settings",
-    "sessionWithName": "Session Settings · {{name}}"
+    "sessionDesc": "Role settings and session preferences.",
+    "sessionWithName": "Session Settings · {{name}}",
+    "title": "Settings"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Please enter your {{name}} API Key",
+      "placeholder": "{{name}} API Key",
+      "title": "API Key"
+    },
     "checker": {
       "button": "Check",
       "desc": "Test if the Api Key and proxy address are filled in correctly",
-      "ollamaDesc": "Check if the proxy address is filled in correctly",
       "pass": "Check Passed",
       "title": "Connectivity Check"
     },
@@ -67,13 +83,18 @@
         },
         "modalTitle": "Custom Model Configuration",
         "tokens": {
-          "title": "Maximum Token Count"
+          "title": "Maximum Token Count",
+          "unlimited": "unlimited"
         },
         "vision": {
           "extra": "This configuration will only enable the image upload configuration in LobeChat. Whether recognition is supported depends entirely on the model itself. Please test the availability of visual recognition in this model on your own.",
           "title": "Support Visual Recognition"
         }
       }
+    },
+    "fetchOnClient": {
+      "desc": "Client-side fetching mode initiates session requests directly from the browser, improving response speed.",
+      "title": "Use Client-Side Fetching Mode"
     },
     "fetcher": {
       "fetch": "Get Model List",
@@ -87,15 +108,11 @@
       "title": "Model List",
       "total": "{{count}} models available in total"
     },
+    "proxyUrl": {
+      "desc": "Must include http(s):// in addition to the default address",
+      "title": "API Proxy Address"
+    },
     "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama is currently downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
-    }
   },
   "plugin": {
     "addTooltip": "Custom Plugin",
@@ -162,6 +179,7 @@
     "enableHistoryCount": {
       "alias": "Unlimited",
       "limited": "Include only {{number}} conversation messages",
+      "setlimited": "Set limited history messages",
       "title": "Limit History Message Count",
       "unlimited": "Unlimited history message count"
     },
@@ -347,6 +365,19 @@
       "title": "WebRTC Sync"
     }
   },
+  "systemAgent": {
+    "title": "System Agents",
+    "topic": {
+      "label": "Topic Naming Model",
+      "modelDesc": "Model designated for automatic topic renaming",
+      "title": "Automatic Topic Naming"
+    },
+    "translation": {
+      "label": "Translation Agent",
+      "modelDesc": "Specific model for translate message",
+      "title": "Translation Settings"
+    }
+  },
   "tab": {
     "about": "About",
     "agent": "Default Agent",
@@ -354,6 +385,7 @@
     "experiment": "Experiment",
     "llm": "Language Model",
     "sync": "Cloud Sync",
+    "system-agent": "System Agent",
     "tts": "Text-to-Speech"
   },
   "tools": {

@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useServerConfigStore } from '@/store/serverConfig';
 import { useToolStore } from '@/store/tool';
 
 import InstalledPluginList from './InstalledPluginList';
@@ -15,7 +16,7 @@ interface PluginStoreProps {
 }
 export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
   const { t } = useTranslation('plugin');
-
+  const mobile = useServerConfigStore((s) => s.isMobile);
   const [listType] = useToolStore((s) => [s.listType]);
 
   return (
@@ -26,10 +27,15 @@ export const PluginStore = memo<PluginStoreProps>(({ setOpen, open }) => {
         setOpen(false);
       }}
       open={open}
+      styles={{ body: { overflow: 'hidden' } }}
       title={t('store.title')}
       width={800}
     >
-      <Flexbox gap={16} width={'100%'}>
+      <Flexbox 
+        gap={ mobile ? 8 : 16 } 
+        style={{ maxHeight: mobile ? '-webkit-fill-available' : 'inherit' }}
+        width={'100%'}
+      >
         <Segmented
           block
           onChange={(v) => {

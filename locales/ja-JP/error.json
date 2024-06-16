@@ -1,4 +1,24 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "続ける",
+      "desc": "{{greeting}}、続けてサービスを提供できて嬉しいです。前回の話題に戻りましょう",
+      "title": "おかえりなさい、{{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "ホームに戻る",
+    "desc": "後で試してみるか、既知の世界に戻る",
+    "retry": "再読み込み",
+    "title": "ページに問題が発生しました.."
+  },
+  "fetchError": "リクエストが失敗しました",
+  "fetchErrorDetail": "エラーの詳細",
+  "notFound": {
+    "backHome": "ホームに戻る",
+    "desc": "お探しのページが見つかりません。リンクが正しいかどうかをご確認ください",
+    "title": "未知の領域に入りましたか？"
+  },
   "pluginSettings": {
     "desc": "以下の設定を完了すると、プラグインを使用することができます",
     "title": "{{name}} プラグイン設定"
@@ -34,34 +54,15 @@
     "503": "申し訳ありませんが、サーバーは現在、リクエストを処理できません。オーバーロードまたはメンテナンス中の可能性があります。しばらくしてから再試行してください",
     "504": "申し訳ありませんが、サーバーは上位サーバーからの応答を待っていません。しばらくしてから再試行してください",
     "AgentRuntimeError": "Lobe言語モデルの実行時にエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。",
-    "AnthropicBizError": "Anthropic AIサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再度お試しください。",
-    "AzureBizError": "Azure AIサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。",
-    "BedrockBizError": "Bedrockサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。",
-    "GoogleBizError": "Googleサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。",
-    "GroqBizError": "Groqサービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "InvalidAccessCode": "パスワードが正しくないか空です。正しいアクセスパスワードを入力するか、カスタムAPIキーを追加してください",
-    "InvalidAnthropicAPIKey": "Anthropic APIキーが正しくないか空です。Anthropic APIキーを確認してもう一度お試しください。",
-    "InvalidAzureAPIKey": "Azure APIキーが正しくないか空です。Azure APIキーを確認してから再試行してください。",
     "InvalidBedrockCredentials": "Bedrockの認証に失敗しました。AccessKeyId/SecretAccessKeyを確認してから再試行してください。",
-    "InvalidGoogleAPIKey": "Google APIキーが正しくないか空です。Google APIキーを確認してから再試行してください。",
-    "InvalidGroqAPIKey": "Groq APIキーが正しくないか空です。Groq APIキーを確認して再試行してください。",
-    "InvalidMistralAPIKey": "Mistral AI API キーが正しくないか空です。Mistral API キーを確認して再試行してください。",
-    "InvalidMoonshotAPIKey": "Moonshot AI APIキーが正しくないか空です。Moonshot APIキーを確認して再試行してください。",
+    "InvalidClerkUser": "申し訳ありませんが、現在ログインしていません。続行するにはログインまたはアカウント登録を行ってください",
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
-    "InvalidOpenRouterAPIKey": "OpenRouter API キーが正しくないか空です。OpenRouter API キーを確認してもう一度お試しください。",
-    "InvalidPerplexityAPIKey": "Perplexity APIキーが正しくないか空です。Perplexity APIキーを確認してもう一度お試しください",
-    "InvalidTogetherAIAPIKey": "TogetherAI API キーが正しくないか空です。TogetherAI API キーを確認してもう一度お試しください。",
-    "InvalidZeroOneAPIKey": "ZeroOne APIキーが正しくないか空です。ZeroOne APIキーを確認して再試行してください。",
-    "InvalidZhipuAPIKey": "Zhipu APIキーが正しくないか空です。Zhipu APIキーを確認してから再試行してください。",
+    "InvalidProviderAPIKey": "{{provider}} APIキーが正しくないか空です。{{provider}} APIキーを確認して再試行してください。",
     "LocationNotSupportError": "申し訳ありませんが、お住まいの地域ではこのモデルサービスをサポートしていません。地域制限またはサービスが利用できない可能性があります。現在の位置がこのサービスをサポートしているかどうかを確認するか、他の位置情報を使用してみてください。",
-    "MistralBizError": "Mistral AI サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
-    "MoonshotBizError": "月の裏側サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。",
     "NoOpenAIAPIKey": "OpenAI APIキーが空です。カスタムOpenAI APIキーを追加してください。",
     "OllamaBizError": "Ollamaサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再度お試しください",
-    "OllamaServiceUnavailable": "Ollamaサービスが利用できません。正常に起動しているかどうかを確認してください",
-    "OpenAIBizError": "OpenAIサービスのリクエストエラーが発生しました。以下の情報に基づいて問題を解決したり、再試行したりしてください",
-    "OpenRouterBizError": "OpenRouter AI サービスのリクエスト中にエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、もう一度お試しください。",
-    "PerplexityBizError": "Perplexity AIサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングするか、再度お試しください",
+    "OllamaServiceUnavailable": "Ollamaサービスが利用できません。Ollamaが正常に動作しているか、またはOllamaのクロスオリジン設定が正しく行われているかを確認してください",
     "PluginApiNotFound": "申し訳ありませんが、プラグインのマニフェストに指定されたAPIが見つかりませんでした。リクエストメソッドとプラグインのマニフェストのAPIが一致しているかどうかを確認してください",
     "PluginApiParamsError": "申し訳ありませんが、プラグインのリクエストパラメータの検証に失敗しました。パラメータとAPIの説明が一致しているかどうか確認してください",
     "PluginGatewayError": "申し訳ありませんが、プラグインゲートウェイでエラーが発生しました。プラグインゲートウェイの設定を確認してください。",
@@ -74,9 +75,7 @@
     "PluginOpenApiInitError": "申し訳ありませんが、OpenAPIクライアントの初期化に失敗しました。OpenAPIの設定情報を確認してください。",
     "PluginServerError": "プラグインサーバーのリクエストエラーが発生しました。以下のエラーメッセージを参考に、プラグインのマニフェストファイル、設定、サーバー実装を確認してください",
     "PluginSettingsInvalid": "このプラグインを使用するには、正しい設定が必要です。設定が正しいかどうか確認してください",
-    "TogetherAIBizError": "TogetherAI AI サービスのリクエスト中にエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、もう一度お試しください。",
-    "ZeroOneBizError": "リクエストがZeroOneサービスでエラーが発生しました。以下の情報を確認して再試行してください。",
-    "ZhipuBizError": "Zhipuサービスのリクエストでエラーが発生しました。以下の情報に基づいてトラブルシューティングを行うか、再試行してください。"
+    "ProviderBizAPIKey": "{{provider}}サービスのリクエストでエラーが発生しました。以下の情報を確認して再試行してください。"
   },
   "stt": {
     "responseError": "サービスリクエストが失敗しました。設定を確認するか、もう一度お試しください"
@@ -86,15 +85,12 @@
   },
   "unlock": {
     "addProxyUrl": "OpenAI 代理アドレスを追加する（オプション）",
+    "apiKey": {
+      "description": "{{name}} APIキーを入力してセッションを開始します。",
+      "title": "カスタム{{name}} APIキーを使用"
+    },
     "closeMessage": "ヒントを閉じる",
     "confirm": "確認して再試行",
-    "model": {
-      "Ollama": {
-        "confirm": "ダウンロード",
-        "description": "Ollamaモデルのラベルを入力して、会話を続行してください",
-        "title": "指定のOllamaモデルをダウンロード"
-      }
-    },
     "oauth": {
       "description": "管理者が統一ログイン認証を有効にしました。下のボタンをクリックしてログインすると、アプリがロック解除されます。",
       "success": "ログインに成功しました",
@@ -110,5 +106,9 @@
       "apiKey": "カスタムAPIキー",
       "password": "パスワード"
     }
+  },
+  "upload": {
+    "desc": "詳細: {{detail}}",
+    "title": "ファイルのアップロードに失敗しました。ネットワーク接続を確認するか、後でもう一度お試しください"
   }
 }

@@ -4,7 +4,9 @@ export default {
     function_call: '函数调用',
     off: '关闭调试',
     on: '查看插件调用信息',
+    payload: '插件载荷',
     response: '返回结果',
+    tool_call: '工具调用请求',
   },
   detailModal: {
     info: {
@@ -129,10 +131,6 @@ export default {
     plugin: '插件运行中...',
   },
   pluginList: '插件列表',
-  plugins: {
-    loading: '工具检测中...',
-    unknown: '未知工具',
-  },
   setting: '插件设置',
   settings: {
     indexUrl: {
@@ -164,4 +162,5 @@ export default {
     },
     title: '插件商店',
   },
+  unknownPlugin: '未知插件',
 };

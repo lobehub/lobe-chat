@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// refs to: https://platform.openai.com/docs/models/gpt-4-and-gpt-4-turbo
+// ref https://platform.openai.com/docs/models
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
@@ -29,8 +29,10 @@ const OpenAI: ModelProviderCard = {
       tokens: 4096,
     },
     {
+      description: 'Currently points to gpt-3.5-turbo-16k-0613',
       displayName: 'GPT-3.5 Turbo 16K',
       id: 'gpt-3.5-turbo-16k',
+      legacy: true,
       tokens: 16_385,
     },
     {
@@ -43,11 +45,11 @@ const OpenAI: ModelProviderCard = {
       displayName: 'GPT-3.5 Turbo 16K (0613)',
       id: 'gpt-3.5-turbo-16k-0613',
       legacy: true,
-      tokens: 4096,
+      tokens: 16_385,
     },
     {
+      description: 'Currently points to gpt-4-0125-preview',
       displayName: 'GPT-4 Turbo Preview',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4-turbo-preview',
       tokens: 128_000,
@@ -59,9 +61,8 @@ const OpenAI: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      description: 'GPT-4 视觉预览版，支持视觉任务',
+      description: 'Currently points to gpt-4-1106-vision-preview',
       displayName: 'GPT-4 Turbo Vision Preview',
-      enabled: true,
       id: 'gpt-4-vision-preview',
       tokens: 128_000,
       vision: true,
@@ -79,6 +80,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 128_000,
     },
     {
+      description: 'Currently points to gpt-4-0613',
       displayName: 'GPT-4',
       functionCall: true,
       id: 'gpt-4',
@@ -91,6 +93,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      description: 'Currently points to gpt-4-32k-0613',
       displayName: 'GPT-4 32K',
       functionCall: true,
       id: 'gpt-4-32k',
@@ -103,16 +106,37 @@ const OpenAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'GPT-4 ALL',
-      files: true,
+      description: 'GPT-4 Turbo with Vision',
+      displayName: 'GPT-4 Turbo',
+      enabled: true,
       functionCall: true,
-      id: 'gpt-4-all',
-      tokens: 32_768,
+      id: 'gpt-4-turbo',
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description: 'GPT-4 Turbo 视觉版 (240409)',
+      displayName: 'GPT-4 Turbo Vision (240409)',
+      functionCall: true,
+      id: 'gpt-4-turbo-2024-04-09',
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description: 'Currently points to gpt-4o-2024-05-13',
+      displayName: 'GPT-4o',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-4o',
+      tokens: 128_000,
       vision: true,
     },
   ],
+  checkModel: 'gpt-3.5-turbo',
   enabled: true,
   id: 'openai',
+  modelList: { showModelFetcher: true },
+  name: 'OpenAI',
 };
 
 export default OpenAI;

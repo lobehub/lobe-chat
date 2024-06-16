@@ -4,9 +4,10 @@ import { Network } from 'lucide-react';
 import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useGlobalStore } from '@/store/global';
-import { modelConfigSelectors } from '@/store/global/selectors';
-import { GlobalLLMProviderKey } from '@/types/settings';
+import { useProviderName } from '@/hooks/useProviderName';
+import { useUserStore } from '@/store/user';
+import { keyVaultsConfigSelectors } from '@/store/user/selectors';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { FormAction } from '../style';
 
@@ -19,21 +20,23 @@ interface ProviderApiKeyFormProps {
 
 const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
   ({ provider, avatar, showEndpoint = false, apiKeyPlaceholder }) => {
-    const { t } = useTranslation('modelProvider');
+    const { t } = useTranslation(['modelProvider', 'error']);
     const { t: errorT } = useTranslation('error');
     const [showProxy, setShow] = useState(false);
 
-    const [apiKey, proxyUrl, setConfig] = useGlobalStore((s) => [
-      modelConfigSelectors.getConfigByProviderId(provider)(s)?.apiKey,
-      modelConfigSelectors.getConfigByProviderId(provider)(s)?.endpoint,
-      s.setModelProviderConfig,
+    const [apiKey, proxyUrl, setConfig] = useUserStore((s) => [
+      keyVaultsConfigSelectors.getVaultByProvider(provider)(s)?.apiKey,
+      keyVaultsConfigSelectors.getVaultByProvider(provider)(s)?.baseURL,
+      s.updateKeyVaultConfig,
     ]);
+
+    const providerName = useProviderName(provider);
 
     return (
       <FormAction
         avatar={avatar}
-        description={t(`${provider}.unlock.description` as any)}
-        title={t(`${provider}.unlock.title` as any)}
+        description={t(`unlock.apiKey.description`, { name: providerName, ns: 'error' })}
+        title={t(`unlock.apiKey.title`, { name: providerName, ns: 'error' })}
       >
         <Input.Password
           autoComplete={'new-password'}
@@ -48,7 +51,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
           (showProxy ? (
             <Input
               onChange={(e) => {
-                setConfig(provider, { endpoint: e.target.value });
+                setConfig(provider, { baseURL: e.target.value });
               }}
               placeholder={'https://api.openai.com/v1'}
               type={'block'}
