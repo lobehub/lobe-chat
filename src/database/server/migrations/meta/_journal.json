@@ -1,0 +1,27 @@
+{
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1716982944425,
+      "tag": "0000_init",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1717153686544,
+      "tag": "0001_add_client_id",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1717587734458,
+      "tag": "0002_amusing_puma",
+      "breakpoints": true
+    }
+  ],
+  "version": "6"
+}

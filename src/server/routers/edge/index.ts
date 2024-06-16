@@ -1,10 +1,10 @@
 /**
- * This file contains the root router of lobe chat tRPC-backend
+ * This file contains the root router of Lobe Chat tRPC-backend
  */
 import { publicProcedure, router } from '@/libs/trpc';
 
-import { configRouter } from './edge/config';
-import { uploadRouter } from './edge/upload';
+import { configRouter } from './config';
+import { uploadRouter } from './upload';
 
 export const edgeRouter = router({
   config: configRouter,
