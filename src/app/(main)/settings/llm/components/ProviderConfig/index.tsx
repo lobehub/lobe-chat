@@ -157,6 +157,10 @@ const ProviderConfig = memo<ProviderConfigProps>(
       },
     ].filter(Boolean) as FormItemProps[];
 
+    /* ↓ cloud slot ↓ */
+
+    /* ↑ cloud slot ↑ */
+
     const model: ItemGroup = {
       children: formItems,
 
