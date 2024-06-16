@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useServerConfigStore } from '@/store/serverConfig';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
+import { featureFlagsSelectors, serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import APIKeyForm from './APIKeyForm';
 import AccessCodeForm from './AccessCodeForm';
@@ -30,7 +30,7 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
   const isEnabledOAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
   const defaultTab = isEnabledOAuth ? Tab.Oauth : Tab.Password;
   const [mode, setMode] = useState<Tab>(defaultTab);
-
+  const { showOpenAIApiKey } = useServerConfigStore(featureFlagsSelectors);
   return (
     <ErrorActionContainer>
       <Segmented
@@ -50,7 +50,11 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
               label: t('unlock.tabs.password'),
               value: Tab.Password,
             },
-            { icon: <Icon icon={KeySquare} />, label: t('unlock.tabs.apiKey'), value: Tab.Api },
+            showOpenAIApiKey && {
+              icon: <Icon icon={KeySquare} />,
+              label: t('unlock.tabs.apiKey'),
+              value: Tab.Api,
+            },
           ].filter(Boolean) as SegmentedLabeledOption[]
         }
         style={{ width: '100%' }}
@@ -58,7 +62,7 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
       />
       <Flexbox gap={24}>
         {mode === Tab.Password && <AccessCodeForm id={id} />}
-        {mode === Tab.Api && <APIKeyForm id={id} provider={provider} />}
+        {showOpenAIApiKey && mode === Tab.Api && <APIKeyForm id={id} provider={provider} />}
         {isEnabledOAuth && mode === Tab.Oauth && <OAuthForm id={id} />}
       </Flexbox>
     </ErrorActionContainer>
