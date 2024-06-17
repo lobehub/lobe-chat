@@ -3,7 +3,7 @@ export interface OpenAICompatibleKeyVault {
   baseURL?: string;
 }
 
-interface AzureOpenAIKeyVault {
+export interface AzureOpenAIKeyVault {
   apiKey?: string;
   apiVersion?: string;
   endpoint?: string;

@@ -27,10 +27,9 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
     <Flexbox
       align={'center'}
       gap={16}
-      horizontal
+      horizontal={!mobile}
       justify={'space-between'}
       width={'100%'}
-      wrap={'wrap'}
     >
       <Flexbox align={'center'} flex={'none'} gap={16} horizontal>
         <Link href={OFFICIAL_SITE} target={'_blank'}>
