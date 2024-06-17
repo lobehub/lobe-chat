@@ -251,14 +251,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                     | 助手说明                                                                                                                      |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| [Mysql 好先生](https://chat-preview.lobehub.com/market?agent=mysql-haoteacher)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-06-09**</sup>         | mysql 好先生是帮助所有人学习 mysql 的好老师<br/>`mysql` `编程` `学习`                                                         |
-| [通俗科普创作助手](https://chat-preview.lobehub.com/market?agent=popular-science-writer)<br/><sup>By **[ShinChven](https://github.com/ShinChven)** on **2024-06-08**</sup>   | 通俗科普创作助手，用生活化语言讲科学概念，讲故事、使用例子和比喻，激发兴趣，强调重要性。<br/>`科普写作` `科学普及` `创意表达` |
-| [审稿回复专家](https://chat-preview.lobehub.com/market?agent=academic-editor-en)<br/><sup>By **[Starlitnightly](https://github.com/Starlitnightly)** on **2024-06-03**</sup> | 擅长自然学术编辑，协助作者回复审稿人意见，科学、礼貌、逐点回应。<br/>`学术编辑` `审稿意见回复` `科学写作`                     |
-| [小说翻译 英译中](https://chat-preview.lobehub.com/market?agent=noveltranslation)<br/><sup>By **[xbtachlb](https://github.com/xbtachlb)** on **2024-06-03**</sup>            | 小说二次翻译<br/>`翻译`                                                                                                       |
+| 最近新增                                                                                                                                                                             | 助手说明                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------- |
+| [伪代码提示词生成专家](https://chat-preview.lobehub.com/market?agent=pseudocode-prompt-master)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-06-16**</sup> | 伪代码提示词生成专家，用户直接输入提示词设计需求，直接返还设计的伪代码提示词<br/>`prompt` `提示词` `伪代码`                   |
+| [Mysql 好先生](https://chat-preview.lobehub.com/market?agent=mysql-haoteacher)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-06-09**</sup>                 | mysql 好先生是帮助所有人学习 mysql 的好老师<br/>`mysql` `编程` `学习`                                                         |
+| [通俗科普创作助手](https://chat-preview.lobehub.com/market?agent=popular-science-writer)<br/><sup>By **[ShinChven](https://github.com/ShinChven)** on **2024-06-08**</sup>           | 通俗科普创作助手，用生活化语言讲科学概念，讲故事、使用例子和比喻，激发兴趣，强调重要性。<br/>`科普写作` `科学普及` `创意表达` |
+| [审稿回复专家](https://chat-preview.lobehub.com/market?agent=academic-editor-en)<br/><sup>By **[Starlitnightly](https://github.com/Starlitnightly)** on **2024-06-03**</sup>         | 擅长自然学术编辑，协助作者回复审稿人意见，科学、礼貌、逐点回应。<br/>`学术编辑` `审稿意见回复` `科学写作`                     |
 
-> 📊 Total agents: [<kbd>**287**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**288**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
