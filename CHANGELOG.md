@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 0.163.0](https://github.com/lobehub/lobe-chat/compare/v0.162.25...v0.163.0)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Support server db mode with Postgres / Drizzle ORM / tRPC.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support server db mode with Postgres / Drizzle ORM / tRPC, closes [#2556](https://github.com/lobehub/lobe-chat/issues/2556) ([b26afbf](https://github.com/lobehub/lobe-chat/commit/b26afbf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.25](https://github.com/lobehub/lobe-chat/compare/v0.162.24...v0.162.25)
 
 <sup>Released on **2024-06-16**</sup>
