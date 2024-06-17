@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import Header from '@/app/(main)/settings/_layout/Desktop/Header';
 import SideBar from '@/app/(main)/settings/_layout/Desktop/SideBar';
-import Footer from '@/app/(main)/settings/features/Footer';
+import Footer from '@/features/Setting/Footer';
 
 interface SettingLayoutProps {
   activeTitle?: ReactNode;
