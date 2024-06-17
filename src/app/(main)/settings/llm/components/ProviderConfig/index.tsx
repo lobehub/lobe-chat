@@ -130,21 +130,21 @@ const ProviderConfig = memo<ProviderConfigProps>(
        * 2. Provider allow to edit endpoint and the value of endpoint is not empty
        * 3. There is an apikey provided by user
        */
-      (showBrowserRequest ||
-        (showEndpoint && isProviderEndpointNotEmpty) ||
-        (showApiKey && isProviderApiKeyNotEmpty)) && {
-        children: (
-          <Switch
-            onChange={(enabled) => {
-              setSettings({ [LLMProviderConfigKey]: { [id]: { fetchOnClient: enabled } } });
-            }}
-            value={isFetchOnClient}
-          />
-        ),
-        desc: t('llm.fetchOnClient.desc'),
-        label: t('llm.fetchOnClient.title'),
-        minWidth: undefined,
-      },
+      showBrowserRequest &&
+        ((showEndpoint && isProviderEndpointNotEmpty) ||
+          (showApiKey && isProviderApiKeyNotEmpty)) && {
+          children: (
+            <Switch
+              onChange={(enabled) => {
+                setSettings({ [LLMProviderConfigKey]: { [id]: { fetchOnClient: enabled } } });
+              }}
+              value={isFetchOnClient}
+            />
+          ),
+          desc: t('llm.fetchOnClient.desc'),
+          label: t('llm.fetchOnClient.title'),
+          minWidth: undefined,
+        },
       {
         children: (
           <ProviderModelListSelect
