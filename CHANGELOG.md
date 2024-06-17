@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.0.6](https://github.com/lobehub/lobe-chat/compare/v1.0.5...v1.0.6)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix footer being cut on wide screen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix footer being cut on wide screen, closes [#2905](https://github.com/lobehub/lobe-chat/issues/2905) ([3a1e0cf](https://github.com/lobehub/lobe-chat/commit/3a1e0cf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.0.5](https://github.com/lobehub/lobe-chat/compare/v1.0.4...v1.0.5)
 
 <sup>Released on **2024-06-17**</sup>
