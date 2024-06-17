@@ -10,6 +10,7 @@ import {
   Moonshot,
   OpenRouter,
   Perplexity,
+  Stepfun,
   Together,
   Tongyi,
   ZeroOne,
@@ -31,6 +32,7 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  StepfunProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -134,6 +136,10 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...ZeroOneProviderCard,
         title: <ZeroOne.Text size={20} />,
+      },
+      {
+        ...StepfunProviderCard,
+        title: <Stepfun.Combine size={20} type={'color'} />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
