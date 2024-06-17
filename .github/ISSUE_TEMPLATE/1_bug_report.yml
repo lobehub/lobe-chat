@@ -3,7 +3,7 @@ description: 'Report an bug'
 title: '[Bug] '
 labels: ['🐛 Bug']
 body:
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: '📦 Environment'
       options:
@@ -20,7 +20,7 @@ body:
     validations:
       required: true
   
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: '💻 Operating System'
       options:
@@ -33,7 +33,7 @@ body:
         - label: 'Other'
     validations:
       required: true
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: '🌐 Browser'
       options:
