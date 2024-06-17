@@ -13,6 +13,7 @@ export const config = {
     // include the /
     '/',
     '/chat(.*)',
+    // ↓ cloud ↓
   ],
 };
 
