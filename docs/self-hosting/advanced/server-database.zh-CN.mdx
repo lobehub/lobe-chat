@@ -1,0 +1,108 @@
+# 使用服务端数据库部署
+
+## 在 Vercel 中部署服务端 LobeChat
+
+本文将详细介绍如何在 Vercel 上部署 Server 版 LobeChat，包括数据库配置、身份验证服务和 S3 存储服务的设置步骤。
+
+## 服务端配置
+
+LobeChat 采用了 Postgres 数据库作为数据存储后端。在部署之前，请确保你已经准备好 Postgres 数据库实例。
+
+### 使用 Serverless Postgres 实例
+
+<Steps>
+  ### 1. 准备服务端数据库实例，获取连接 URL
+
+  使用 Vercel / Neon 的 serverless Postgres 实例
+  使用 Docker 等自部署 postgres 实例
+
+  1. 前往 [Neon](https://neon.tech) 并注册账号。
+  2. 创建一个新的 Postgres 数据库实例。
+  3. 复制数据库连接 URL（通常格式为 `postgres://username:password@host:port/database`）。
+
+  ### 在 Vercel 中配置环境变量
+
+  在 vercel 的环境变量中，添加 `DATABASE_URL` 环境变量
+
+</Steps>
+
+### 使用 Serverless Postgres 实例
+
+## 部署步骤
+
+### 1. 配置数据库
+
+首先，确保你已经在 [Neon](https://neon.tech) 上创建了 Postgres 数据库，并获取到连接 URL。将该 URL 填入 `.env` 文件中的 `DATABASE_URL`。
+
+**步骤：**
+
+### 2. 配置 Clerk
+
+前往 [Clerk](https://clerk.dev) 注册并创建应用，获取 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`、`CLERK_SECRET_KEY` 和 `CLERK_WEBHOOK_SECRET`，并将它们填入 `.env` 文件中相应的位置。
+
+**步骤：**
+
+1. 访问 [Clerk](https://clerk.dev) 并注册账号。
+2. 创建一个新的 Clerk 应用。
+3. 在应用的设置页面中，找到并复制 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`、`CLERK_SECRET_KEY` 和 `CLERK_WEBHOOK_SECRET`。
+4. 将这些值填入 `.env` 文件中的相应字段。
+
+### 3. 配置 S3
+
+如果你的应用需要上传图片，请确保你已经配置好 S3 存储，并将 `NEXT_PUBLIC_S3_DOMAIN`、`S3_ACCESS_KEY_ID`、`S3_SECRET_ACCESS_KEY`、`S3_ENDPOINT` 和 `S3_BUCKET` 填入 `.env` 文件。
+
+**步骤：**
+
+1. 前往你的 S3 服务提供商（如 AWS S3、MinIO 等）并创建一个新的存储桶（Bucket）。
+2. 获取 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY`。
+3. 设置存储桶的域名（`NEXT_PUBLIC_S3_DOMAIN`）和终端节点（`S3_ENDPOINT`）。
+4. 将这些值填入 `.env` 文件中的相应字段。
+
+### 4. 部署到 Vercel
+
+**步骤：**
+
+1. 确保你已经将 LobeChat 项目代码推送到 GitHub 仓库。
+2. 访问 [Vercel](https://vercel.com) 并登录。
+3. 点击 “New Project” 并选择你的 GitHub 仓库。
+4. 在项目设置中，添加环境变量，将 `.env` 文件中的配置逐项添加到 Vercel 的环境变量设置中：
+
+- 前往 Vercel 项目的 “Settings” 页面。
+- 点击 “Environment Variables”。
+- 逐项添加 `.env` 文件中的每个变量及其值。
+
+5. 点击 “Deploy” 按钮，Vercel 将自动开始部署你的项目。
+
+### 5. 验证部署
+
+部署完成后，访问你的 Vercel 项目 URL，确保应用能够正常运行。如果遇到任何问题，请检查 Vercel 的日志输出，并根据提示进行修复。
+
+**步骤：**
+
+1. 部署完成后，访问 Vercel 分配的项目 URL。
+2. 检查应用的各项功能是否正常运行，如数据库连接、用户身份验证和图片上传等。
+3. 如遇到问题，前往 Vercel 项目的 “Logs” 页面查看详细的错误日志。
+
+至此，你已经成功在 Vercel 上部署了 Server 版 LobeChat。如果你有任何问题或建议，欢迎在 GitHub 仓库中提出讨论。
+
+在开始部署之前，请先准备好以下环境变量配置：
+
+```env
+# Postgres 数据库 URL
+DATABASE_URL=
+
+# 指定服务模式为 server
+NEXT_PUBLIC_SERVICE_MODE=server
+
+# Clerk 相关配置
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+CLERK_WEBHOOK_SECRET=
+
+# S3 相关配置（上传图片必须）
+NEXT_PUBLIC_S3_DOMAIN=
+S3_ACCESS_KEY_ID=
+S3_SECRET_ACCESS_KEY=
+S3_ENDPOINT=
+S3_BUCKET=
+```
