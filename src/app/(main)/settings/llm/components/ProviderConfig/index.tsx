@@ -74,7 +74,8 @@ const ProviderConfig = memo<ProviderConfigProps>(
     title,
     checkerItem,
     modelList,
-    showBrowserRequest,
+    defaultShowBrowserRequest,
+    disableBrowserRequest,
     className,
     name,
   }) => {
@@ -126,25 +127,27 @@ const ProviderConfig = memo<ProviderConfigProps>(
       },
       /*
        * Conditions to show Client Fetch Switch
-       * 1. Component props
-       * 2. Provider allow to edit endpoint and the value of endpoint is not empty
-       * 3. There is an apikey provided by user
+       * 1. provider is not disabled browser request
+       * 2. provider show browser request by default
+       * 3. Provider allow to edit endpoint and the value of endpoint is not empty
+       * 4. There is an apikey provided by user
        */
-      (showBrowserRequest ||
-        (showEndpoint && isProviderEndpointNotEmpty) ||
-        (showApiKey && isProviderApiKeyNotEmpty)) && {
-        children: (
-          <Switch
-            onChange={(enabled) => {
-              setSettings({ [LLMProviderConfigKey]: { [id]: { fetchOnClient: enabled } } });
-            }}
-            value={isFetchOnClient}
-          />
-        ),
-        desc: t('llm.fetchOnClient.desc'),
-        label: t('llm.fetchOnClient.title'),
-        minWidth: undefined,
-      },
+      !disableBrowserRequest &&
+        (defaultShowBrowserRequest ||
+          (showEndpoint && isProviderEndpointNotEmpty) ||
+          (showApiKey && isProviderApiKeyNotEmpty)) && {
+          children: (
+            <Switch
+              onChange={(enabled) => {
+                setSettings({ [LLMProviderConfigKey]: { [id]: { fetchOnClient: enabled } } });
+              }}
+              value={isFetchOnClient}
+            />
+          ),
+          desc: t('llm.fetchOnClient.desc'),
+          label: t('llm.fetchOnClient.title'),
+          minWidth: undefined,
+        },
       {
         children: (
           <ProviderModelListSelect
