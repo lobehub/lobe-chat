@@ -1,28 +1,67 @@
 # 使用服务端数据库部署
 
+LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用服务端数据库。LobeChat 采用了 Postgres 作为后端存储数据库。【需要一个 Postgres 简介，50字左右】
+
+本文将详细介绍如何在部署服务端数据库版 LobeChat，包括数据库配置、身份验证服务和 S3 存储服务的设置步骤。
+
+<Callout type={'info'}>
+  限于工作量原因，目前仅支持在 Vercel 中部署使用服务端数据库版本，Docker 版本将会在后续迭代中支持。
+</Callout>
+
 ## 在 Vercel 中部署服务端 LobeChat
 
-本文将详细介绍如何在 Vercel 上部署 Server 版 LobeChat，包括数据库配置、身份验证服务和 S3 存储服务的设置步骤。
-
-## 服务端配置
-
-LobeChat 采用了 Postgres 数据库作为数据存储后端。在部署之前，请确保你已经准备好 Postgres 数据库实例。
-
-### 使用 Serverless Postgres 实例
-
 <Steps>
-  ### 1. 准备服务端数据库实例，获取连接 URL
 
-  使用 Vercel / Neon 的 serverless Postgres 实例
-  使用 Docker 等自部署 postgres 实例
+### 1. 准备服务端数据库实例，获取连接 URL
 
-  1. 前往 [Neon](https://neon.tech) 并注册账号。
-  2. 创建一个新的 Postgres 数据库实例。
-  3. 复制数据库连接 URL（通常格式为 `postgres://username:password@host:port/database`）。
+在部署之前，请确保你已经准备好 Postgres 数据库实例。一般来说，数据库连接 URL 的通常格式为 `postgres://username:password@host:port/database`。
 
-  ### 在 Vercel 中配置环境变量
+你可以选择以下任一方式：
 
-  在 vercel 的环境变量中，添加 `DATABASE_URL` 环境变量
+- `A.` 使用 Vercel / Neon 等 Serverless Postgres 实例；
+- `B.` 使用 Docker 等自部署 Postgres 实例。
+
+两者的配置方式略有不同，在下一步会有所区分。
+
+### 2. 在 Vercel 中添加环境变量
+
+在 Vercel 的部署环境变量中，添加 `DATABASE_URL` 环境变量，将 Postgres 数据库连接 URL 填入其中。
+
+  <Tabs items={['Serverless Postgres', 'Node Postgres']}>
+
+    <Tab>
+
+      ```env
+      # Serverless Postgres DB Url
+      DATABASE_URL=
+
+      # 指定 service mode 为 server，否则不会进入服务端数据库
+      NEXT_PUBLIC_SERVICE_MODE=server
+      ```
+
+      <Image alt={'添加 Serverless Postgres DATABASE_URL'} src={'https://github.com/lobehub/lobe-chat/assets/28616219/d4a710cd-6404-4196-90d0-cd08ca385074'}></Image>
+
+   
+</Tab>
+
+    <Tab>
+
+      ```env
+      # Node Postgres DB Url
+      DATABASE_URL=
+
+      # 指定 Postgres database driver 为 node
+      DATABASE_DRIVER=node
+
+      # 指定 service mode 为 server，否则不会进入服务端数据库
+      NEXT_PUBLIC_SERVICE_MODE=server
+      ```
+
+   
+</Tab>
+
+ 
+</Tabs>
 
 </Steps>
 
