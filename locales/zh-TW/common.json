@@ -9,6 +9,7 @@
   "cancel": "取消",
   "changelog": "變更日誌",
   "close": "關閉",
+  "contact": "聯繫我們",
   "copy": "複製",
   "copyFail": "複製失敗",
   "copySuccess": "複製成功",
@@ -35,6 +36,25 @@
   },
   "feedback": "回饋與建議",
   "follow": "在 {{name}} 上關注我們",
+  "footer": {
+    "action": {
+      "feedback": "分享您寶貴的建議",
+      "star": "在 GitHub 給添加星標"
+    },
+    "and": "並",
+    "feedback": {
+      "action": "分享反饋",
+      "desc": "您的每一個想法和建議對我們來說都弥足珍貴，我們迫不及待地想知道您的看法！歡迎聯繫我們提供產品功能和使用體驗反饋，幫助我們將 LobeChat 建設得更好。",
+      "title": "在 GitHub 分享您寶貴的反饋"
+    },
+    "later": "稍後",
+    "star": {
+      "action": "點亮星標",
+      "desc": "如果您喜愛我們的產品，並希望支持我們，可以去 GitHub 給我們點一顆星嗎？這個小小的動作對我們來說意義重大，能激勵我們為您持續提供特性體驗。",
+      "title": "在 GitHub 為我們點亮星標"
+    },
+    "title": "喜歡我們的產品？"
+  },
   "fullscreen": "全螢幕模式",
   "historyRange": "歷史範圍",
   "import": "匯入設定",
@@ -68,6 +88,7 @@
       "speed": "上傳速度"
     }
   },
+  "information": "社群與資訊",
   "installPWA": "安裝瀏覽器應用 (PWA)",
   "lang": {
     "ar": "阿拉伯語",
@@ -107,6 +128,11 @@
     "zh-TW": "繁體中文"
   },
   "layoutInitializing": "正在載入版面配置...",
+  "legal": "法律聲明",
+  "mail": {
+    "business": "商務合作",
+    "support": "郵件支持"
+  },
   "noDescription": "暫無描述",
   "oauth": "單一登錄（SSO）",
   "officialSite": "官方網站",
@@ -193,5 +219,6 @@
     "profile": "帳戶管理",
     "setting": "應用設定",
     "usages": "用量統計"
-  }
+  },
+  "version": "版本"
 }

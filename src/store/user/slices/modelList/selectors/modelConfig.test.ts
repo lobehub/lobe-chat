@@ -35,6 +35,7 @@ describe('modelConfigSelectors', () => {
   });
 
   describe('isProviderFetchOnClient', () => {
+    // The next 4 case are base on the rules on https://github.com/lobehub/lobe-chat/pull/2753
     it('client fetch should disabled on default', () => {
       const s = merge(initialSettingsState, {
         settings: {
@@ -46,15 +47,42 @@ describe('modelConfigSelectors', () => {
           },
         },
       } as UserSettingsState) as unknown as UserStore;
-
       expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(false);
     });
 
-    it('client fetch should enabled if user set it enabled', () => {
+    it('client fetch should disabled if no apikey or endpoint provided even user set it enabled', () => {
       const s = merge(initialSettingsState, {
         settings: {
           languageModel: {
             azure: { fetchOnClient: true },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+      expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(false);
+    });
+
+    it('client fetch should enable if only endpoint provided', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            azure: { fetchOnClient: false },
+          },
+          keyVaults: {
+            azure: { endpoint: 'https://example.com' },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+      expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(true);
+    });
+
+    it('client fetch should control by user when a apikey or endpoint provided', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            azure: { fetchOnClient: true },
+          },
+          keyVaults: {
+            azure: { apiKey: 'some-key' },
           },
         },
       } as UserSettingsState) as unknown as UserStore;
