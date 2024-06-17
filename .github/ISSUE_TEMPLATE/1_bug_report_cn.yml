@@ -3,7 +3,7 @@ description: '反馈一个问题缺陷'
 title: '[Bug] '
 labels: ['🐛 Bug']
 body:
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: '📦 部署环境'
       multiple: true
@@ -23,7 +23,7 @@ body:
     validations:
       required: true
 
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: '💻 系统环境'
       multiple: true
@@ -37,7 +37,7 @@ body:
         - 'Other'
     validations:
       required: true
-  - type: checkboxes
+  - type: dropdown
     attributes:
       label: '🌐 浏览器'
       multiple: true
