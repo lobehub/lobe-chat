@@ -28,7 +28,8 @@ export const userRouter = router({
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: messageCount > 0 || sessionCount > 1,
 
-      isOnboard: state.isOnboarded || false,
+      // always return true for community version
+      isOnboard: state.isOnboarded || true,
       preference: state.preference as UserPreference,
       settings: state.settings,
       userId: ctx.userId,
