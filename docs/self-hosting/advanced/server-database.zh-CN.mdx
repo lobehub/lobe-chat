@@ -2,21 +2,19 @@
 
 LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用服务端数据库。LobeChat 采用了 Postgres 作为后端存储数据库。【需要一个 Postgres 简介，50字左右】
 
-本文将详细介绍如何在 Vercel 中部署服务端数据库版 LobeChat，包括数据库配置、身份验证服务和 S3 存储服务的设置步骤。
+本文将详细介绍如何在 Vercel 中部署服务端数据库版 LobeChat，包括： 1）数据库配置；2）身份验证服务配置；3） S3 存储服务的设置步骤。
 
 <Callout type={'info'}>
   限于工作量原因，目前仅支持在 Vercel 中部署使用服务端数据库版本，Docker 版本将会在后续迭代中支持。
 </Callout>
 
-## 一. 配置数据库
+## 一、 配置数据库
 
 <Steps>
 
 ### 准备服务端数据库实例，获取连接 URL
 
-在部署之前，请确保你已经准备好 Postgres 数据库实例。一般来说，数据库连接 URL 的通常格式为 `postgres://username:password@host:port/database`。
-
-你可以选择以下任一方式：
+在部署之前，请确保你已经准备好 Postgres 数据库实例，你可以选择以下任一方式：
 
 - `A.` 使用 Vercel / Neon 等 Serverless Postgres 实例；
 - `B.` 使用 Docker 等自部署 Postgres 实例。
@@ -25,7 +23,7 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
 
 ### 在 Vercel 中添加环境变量
 
-在 Vercel 的部署环境变量中，添加 `DATABASE_URL` 等环境变量，将上一步准备好的 Postgres 数据库连接 URL 填入其中。
+在 Vercel 的部署环境变量中，添加 `DATABASE_URL` 等环境变量，将上一步准备好的 Postgres 数据库连接 URL 填入其中。数据库连接 URL 的通常格式为 `postgres://username:password@host:port/database`。
 
   <Tabs items={['Serverless Postgres', 'Node Postgres']}>
 
@@ -71,12 +69,12 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
 
 </Steps>
 
-## 二. 配置身份验证服务
+## 二、 配置身份验证服务
 
 服务端数据库需要搭配用户身份验证服务才可以正常使用。因此需要配置对应的身份验证服务。
 
 <Callout type={'warning'}>
-  同样由于工作量原因，目前仅支持 Clerk 作为身份验证服务方案， Next-Auth 的服务端数据库集成有待开发。
+  同样由于工作量原因，目前仅支持 Clerk 作为身份验证服务方案， Next-Auth 的服务端数据库集成有待开发
 </Callout>
 
 <Steps>
@@ -99,14 +97,14 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/89883703-7a1a-4a11-b944-5d804544e57c'}
 ></Image>
 
-对应的环境变量如下：
+此步骤所需的环境变量如下：
 
 ```env
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxx
 CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 ```
 
-添加到 vercel 的环境变量中：
+添加上述变量到 Vercel 中：
 
 <Image
   alt={'在 Vercel 中添加 Clerk 公私钥环境变量'}
@@ -115,7 +113,7 @@ CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 
 ### 在 Clerk 中创建并配置 Webhook
 
-由于我们完全让 Clerk 完成了用户鉴权与管理，因此我们需要在Clerk 用户生命周期变更时（创建、更新、删除）中通知我们的应用。我们通过 Clerk 提供的 Webhook 来实现这一需求。
+由于我们让 Clerk 完全接管用户鉴权与管理，因此我们需要在 Clerk 用户生命周期变更时（创建、更新、删除）中通知我们的应用并存储落库。我们通过 Clerk 提供的 Webhook 来实现这一诉求。
 
 我们需要在 Clerk 的 Webhooks 中添加一个端点（Endpoint），告诉 Clerk 当用户发生变更时，向这个端点发送通知。
 
@@ -123,6 +121,33 @@ CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
   alt={'Clerk 添加 Webhooks 端点'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/f50f47fb-5e8e-4930-bf4e-8cf6f5b8afb9'}
 ></Image>
+
+在 endppint 中填写你的 Vercel 项目的 URL，如 `https://your-project.vercel.app/api/webhooks/clerk`。然后在订阅事件（Subscribe to events）中，勾选 user 的三个事件（`user.created` 、`user.deleted`、`user.updated`），然后点击创建。
+
+<Image
+  alt={'添加 Clerk Webhooks 时，配置 URL 和用户事件'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/0249ea56-ab17-4aa9-a56c-9ebd556c2645'}
+></Image>
+
+### 将 Webhook 秘钥添加到 Vercel 环境变量
+
+创建完毕后，可以在右下角找到该 Webhook 的秘钥：
+
+<Image
+  alt={'查看 Clerk Webhooks 秘钥'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/fab4abb2-584b-49de-9340-813382951635'}
+></Image>
+
+  将这个秘钥所对应的环境变量名为 `CLERK_WEBHOOK_SECRET`，将其添加到 Vercel 的环境变量中：
+
+  ```env
+  CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
+  ```
+
+  <Image
+    alt={'在 Vercel 中 添加 Clerk Webhooks 秘钥'}
+    src={'https://github.com/lobehub/lobe-chat/assets/28616219/5fdc9479-007f-46ab-9d6e-a9603e949116'}
+  ></Image>
 
 </Steps>
 
@@ -139,7 +164,6 @@ LobeChat 在很早以前就支持了多模态 的 AI 会话，其中涉及到图
 3. 设置存储桶的域名（`NEXT_PUBLIC_S3_DOMAIN`）和终端节点（`S3_ENDPOINT`）。
 4. 将这些值填入 `.env` 文件中的相应字段。
 
- 
 </Steps>
 
 ### 3. 配置 S3
