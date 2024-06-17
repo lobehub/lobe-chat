@@ -12,6 +12,7 @@ export const config = {
     '/(api|trpc)(.*)',
     // include the /
     '/',
+    '/chat(.*)',
   ],
 };
 
