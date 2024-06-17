@@ -5,6 +5,7 @@ import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useProviderName } from '@/hooks/useProviderName';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -29,7 +30,7 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
       keyVaultsConfigSelectors.getVaultByProvider(provider)(s)?.baseURL,
       s.updateKeyVaultConfig,
     ]);
-
+    const { showOpenAIProxyUrl } = useServerConfigStore(featureFlagsSelectors);
     const providerName = useProviderName(provider);
 
     return (
@@ -47,7 +48,9 @@ const ProviderApiKeyForm = memo<ProviderApiKeyFormProps>(
           type={'block'}
           value={apiKey}
         />
+
         {showEndpoint &&
+          showOpenAIProxyUrl &&
           (showProxy ? (
             <Input
               onChange={(e) => {

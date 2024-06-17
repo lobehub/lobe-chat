@@ -60,6 +60,9 @@ const nextConfig = {
       },
     });
 
+    // https://github.com/pinojs/pino/issues/688#issuecomment-637763276
+    config.externals.push('pino-pretty');
+
     return config;
   },
 };

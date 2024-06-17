@@ -75,6 +75,7 @@ export const getAuthConfig = () => {
     server: {
       // Clerk
       CLERK_SECRET_KEY: z.string().optional(),
+      CLERK_WEBHOOK_SECRET: z.string().optional(),
 
       // NEXT-AUTH
       NEXT_AUTH_SECRET: z.string().optional(),
@@ -110,6 +111,7 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_ENABLE_CLERK_AUTH: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
       CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+      CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
       // Next Auth
       NEXT_PUBLIC_ENABLE_NEXT_AUTH:
