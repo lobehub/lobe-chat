@@ -1,6 +1,6 @@
 import MobileContentLayout from '@/components/server/MobileNavLayout';
+import Footer from '@/features/Setting/Footer';
 
-import Footer from '../../features/Footer';
 import { LayoutProps } from '../type';
 import Header from './Header';
 

@@ -1,9 +1,9 @@
 import { PropsWithChildren } from 'react';
 
-import Footer from '@/app/(main)/settings/features/Footer';
-import SettingContainer from '@/app/(main)/settings/features/SettingContainer';
 import SafeSpacing from '@/components/SafeSpacing';
 import { HEADER_HEIGHT } from '@/const/layoutTokens';
+import Footer from '@/features/Setting/Footer';
+import SettingContainer from '@/features/Setting/SettingContainer';
 
 import Header from './Header';
 

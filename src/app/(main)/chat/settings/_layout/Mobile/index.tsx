@@ -2,8 +2,8 @@
 
 import { PropsWithChildren } from 'react';
 
-import Footer from '@/app/(main)/settings/features/Footer';
 import MobileContentLayout from '@/components/server/MobileNavLayout';
+import Footer from '@/features/Setting/Footer';
 
 import Header from './Header';
 
