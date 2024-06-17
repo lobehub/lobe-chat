@@ -1,5 +1,6 @@
 import { ActionIcon, DiscordIcon, Icon } from '@lobehub/ui';
 import { Badge } from 'antd';
+import { ItemType } from 'antd/es/menu/interface';
 import {
   Book,
   CircleUserRound,
@@ -21,6 +22,7 @@ import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
 import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES, mailTo } from '@/const/url';
+import { isServerMode } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
@@ -115,46 +117,50 @@ export const useMenu = () => {
     },
   ];
 
-  const data: MenuProps['items'] = [
-    {
-      icon: <Icon icon={HardDriveUpload} />,
-      key: 'import',
-      label: <DataImporter>{t('import')}</DataImporter>,
-    },
-    {
-      children: [
+  const data = !isLogin
+    ? []
+    : ([
         {
-          key: 'allAgent',
-          label: t('exportType.allAgent'),
-          onClick: configService.exportAgents,
+          icon: <Icon icon={HardDriveDownload} />,
+          key: 'import',
+          label: <DataImporter>{t('import')}</DataImporter>,
         },
-        {
-          key: 'allAgentWithMessage',
-          label: t('exportType.allAgentWithMessage'),
-          onClick: configService.exportSessions,
-        },
-        {
-          key: 'globalSetting',
-          label: t('exportType.globalSetting'),
-          onClick: configService.exportSettings,
-        },
+        isServerMode
+          ? null
+          : {
+              children: [
+                {
+                  key: 'allAgent',
+                  label: t('exportType.allAgent'),
+                  onClick: configService.exportAgents,
+                },
+                {
+                  key: 'allAgentWithMessage',
+                  label: t('exportType.allAgentWithMessage'),
+                  onClick: configService.exportSessions,
+                },
+                {
+                  key: 'globalSetting',
+                  label: t('exportType.globalSetting'),
+                  onClick: configService.exportSettings,
+                },
+                {
+                  type: 'divider',
+                },
+                {
+                  key: 'all',
+                  label: t('exportType.all'),
+                  onClick: configService.exportAll,
+                },
+              ],
+              icon: <Icon icon={HardDriveUpload} />,
+              key: 'export',
+              label: t('export'),
+            },
         {
           type: 'divider',
         },
-        {
-          key: 'all',
-          label: t('exportType.all'),
-          onClick: configService.exportAll,
-        },
-      ],
-      icon: <Icon icon={HardDriveDownload} />,
-      key: 'export',
-      label: t('export'),
-    },
-    {
-      type: 'divider',
-    },
-  ];
+      ].filter(Boolean) as ItemType[]);
 
   const helps: MenuProps['items'] = [
     {
@@ -209,13 +215,13 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-    ...(isLoginWithClerk ? profile : []),
     ...(isLogin ? settings : []),
+    ...(isLoginWithClerk ? profile : []),
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
-    ...(isLogin ? data : []),
+    ...data,
     ...helps,
   ].filter(Boolean) as MenuProps['items'];
 
