@@ -33,6 +33,9 @@ const Stepfun: ModelProviderCard = {
   id: 'stepfun',
   modelList: { showModelFetcher: true },
   name: '阶跃星辰',
+  // after test, currently https://api.stepfun.com/v1/chat/completions has the CORS issue
+  // So we should close the browser request mode
+  showBrowserRequest: false,
 };
 
 export default Stepfun;
