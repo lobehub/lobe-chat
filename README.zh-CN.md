@@ -274,6 +274,13 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 ### `8` [支持本地 / 远程数据库][docs-feat-database]
 
+LobeChat 支持同时使用服务端数据库和本地数据库。根据您的需求，您可以选择合适的部署方案：
+
+- 本地数据库：适合希望对数据有更多掌控感和隐私保护的用户。LobeChat 采用了 CRDT (Conflict-Free Replicated Data Type) 技术，实现了多端同步功能。这是一项实验性功能，旨在提供无缝的数据同步体验。
+- 服务端数据库：适合希望更便捷使用体验的用户。LobeChat 支持 PostgreSQL 作为服务端数据库。关于如何配置服务端数据库的详细文档，请前往 [配置服务端数据库](https://lobehub.com/zh/docs/self-hosting/advanced/server-database)。
+
+无论您选择哪种数据库，LobeChat 都能为您提供卓越的用户体验。
+
 <div align="right">
 
 [![][back-to-top]](#readme-top)
