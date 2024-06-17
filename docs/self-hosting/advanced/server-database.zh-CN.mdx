@@ -31,7 +31,7 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
 
       Serverless Postgres 需要填写的变量如下：
 
-      ```env
+      ```shell
       # Serverless Postgres DB Url
       DATABASE_URL=
 
@@ -48,7 +48,7 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
     <Tab>
       Node Postgres 需要填写的变量如下：
 
-      ```env
+      ```shell
       # Node Postgres DB Url
       DATABASE_URL=
 
@@ -71,7 +71,7 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
 
 在完成数据库 DATABASE_URL 环境变量添加后，需要添加一个 `KEY_VAULTS_SECRET` 环境变量。该变量用于加密用户存储的 apikey 等敏感信息。你可以使用 `openssl rand -base64 32` 生成一个随机的 32 位字符串作为密钥。
 
-```env
+```shell
 KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 ```
 
@@ -109,7 +109,7 @@ KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 
 此步骤所需的环境变量如下：
 
-```env
+```shell
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxx
 CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 ```
@@ -150,7 +150,7 @@ CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
 
 这个秘钥所对应的环境变量名为 `CLERK_WEBHOOK_SECRET`：
 
-```env
+```shell
 CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
 ```
 
@@ -201,7 +201,7 @@ LobeChat 在很早以前就支持了多模态 的 AI 会话，其中涉及到图
 
 其对应的环境变量为：
 
-```env
+```shell
 # 存储桶的名称
 S3_BUCKET=lobechat
 # 存储桶的请求端点
@@ -242,7 +242,7 @@ NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
 
     其对应的环境变量为：
 
-```env
+```shell
 S3_ACCESS_KEY_ID=9998d6757e276cf9f1edbd325b7083a6
 S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f497ac2
 ```
@@ -251,7 +251,7 @@ S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f4
 
     不同 S3 服务商获取所需环境变量的步骤可能有所不同，但最终获得到的环境变量应该都是一致的：
 
-```env
+```shell
 # S3 秘钥
 S3_ACCESS_KEY_ID=9998d6757e276cf9f1edbd325b7083a6
 S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f497ac2
@@ -308,33 +308,43 @@ NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
 
 </Steps>
 
-### 四、部署并验证
+## 四、部署并验证
 
-  <Steps>
+通过上述步骤之后，我们应该就完成了服务端数据库的配置。接下来我们可以将 LobeChat 部署到 Vercel 上，然后访问你的 Vercel 链接，验证服务端数据库是否正常工作。
 
- 
+<Steps>
+  ### 重新部署最新的 commit
+
+### 查看
+
 </Steps>
 
 ## 服务端数据库所需环境变量
 
-请先准备好以下环境变量配置：
-
-```env
-# Postgres 数据库 URL
-DATABASE_URL=
-
+```shell
 # 指定服务模式为 server
 NEXT_PUBLIC_SERVICE_MODE=server
 
-# Clerk 相关配置
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-CLERK_WEBHOOK_SECRET=
+# Postgres 数据库 URL
+DATABASE_URL=
+KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 
-# S3 相关配置（上传图片必须）
-NEXT_PUBLIC_S3_DOMAIN=
-S3_ACCESS_KEY_ID=
-S3_SECRET_ACCESS_KEY=
-S3_ENDPOINT=
-S3_BUCKET=
+# Clerk 相关配置
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_xxxxxxxxxxx
+CLERK_SECRET_KEY=sk_live_xxxxxxxxxxxxxxxxxxxxxx
+CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
+
+# S3 相关配置
+# S3 秘钥
+S3_ACCESS_KEY_ID=9998d6757e276cf9f1edbd325b7083a6
+S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f497ac2
+
+# 存储桶的名称
+S3_BUCKET=lobechat
+# 存储桶的请求端点
+S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
+# 存储桶对外的访问域名
+NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
+# 桶的区域，如 us-west-1，一般来说不需要添加，但某些服务商则需要配置
+# S3_REGION=us-west-1
 ```
