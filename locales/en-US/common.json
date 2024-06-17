@@ -9,6 +9,7 @@
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
+  "contact": "Contact Us",
   "copy": "Copy",
   "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
@@ -35,6 +36,25 @@
   },
   "feedback": "Feedback",
   "follow": "Follow us on {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Share Your Valuable Feedback",
+      "star": "Star on GitHub"
+    },
+    "and": "and",
+    "feedback": {
+      "action": "Share Feedback",
+      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make LobeChat even better.",
+      "title": "Share Your Valuable Feedback on GitHub"
+    },
+    "later": "Later",
+    "star": {
+      "action": "Star It",
+      "desc": "If you love our product and want to support us, could you go to GitHub and give us a star? This small gesture means a lot to us and motivates us to continue providing you with great experiences.",
+      "title": "Star Us on GitHub"
+    },
+    "title": "Like Our Product?"
+  },
   "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
@@ -68,6 +88,7 @@
       "speed": "Upload speed"
     }
   },
+  "information": "Community and News",
   "installPWA": "Install browser app",
   "lang": {
     "ar": "Arabic",
@@ -107,6 +128,11 @@
     "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
+  "legal": "Legal Disclaimer",
+  "mail": {
+    "business": "Business Cooperation",
+    "support": "Email Support"
+  },
   "noDescription": "No description available",
   "oauth": "SSO Login",
   "officialSite": "Official Website",
@@ -193,5 +219,6 @@
     "profile": "Account Management",
     "setting": "App Settings",
     "usages": "Usage Statistics"
-  }
+  },
+  "version": "Version"
 }

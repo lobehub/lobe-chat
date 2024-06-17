@@ -14,6 +14,39 @@ const Ollama: ModelProviderCard = {
       tokens: 8000,
     },
     {
+      displayName: 'Phi-3 3.8B',
+      enabled: true,
+      id: 'phi3',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Phi-3 14B',
+      id: 'phi3:14b',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Aya 23 8B',
+      enabled: true,
+      id: 'aya',
+      tokens: 8192, // https://cohere.com/research/papers/aya-command-23-8b-and-35b-technical-report-2024-05-23
+    },
+    {
+      displayName: 'Aya 23 35B',
+      id: 'aya:35b',
+      tokens: 8192,
+    },
+    {
+      displayName: 'Qwen2 7B',
+      enabled: true,
+      id: 'qwen2',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Qwen2 72B',
+      id: 'qwen2:72b',
+      tokens: 128_000,
+    },
+    {
       displayName: 'Command R 35B',
       enabled: true,
       id: 'command-r',
@@ -92,12 +125,6 @@ const Ollama: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      displayName: 'Phi3-Instruct 3.8B',
-      enabled: true,
-      id: 'phi3:instruct',
-      tokens: 131_072, // https://huggingface.co/microsoft/Phi-3-mini-128k-instruct/blob/main/config.json
-    },
-    {
       displayName: 'Mistral',
       enabled: true,
       id: 'mistral',
@@ -121,7 +148,6 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'Qwen Chat 7B',
-      enabled: true,
       id: 'qwen:7b',
       tokens: 32_768,
     },
