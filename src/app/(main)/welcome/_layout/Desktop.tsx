@@ -18,7 +18,11 @@ const DesktopLayout = ({ children }: PropsWithChildren) => {
         width={'100%'}
       >
         <Logo size={36} style={{ alignSelf: 'flex-start' }} type={'text'} />
-        <GridShowcase innerProps={{ gap: 24 }} style={{ maxWidth: 1024 }} width={'100%'}>
+        <GridShowcase
+          innerProps={{ gap: 24 }}
+          style={{ maxHeight: 'calc(100% - 104px)', maxWidth: 1024 }}
+          width={'100%'}
+        >
           {children}
         </GridShowcase>
         <Flexbox align={'center'} horizontal justify={'space-between'}>
