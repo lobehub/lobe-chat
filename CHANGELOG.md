@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.0.7](https://github.com/lobehub/lobe-chat/compare/v1.0.6...v1.0.7)
+
+<sup>Released on **2024-06-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove some i18n text.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove some i18n text, closes [#2862](https://github.com/lobehub/lobe-chat/issues/2862) ([1fd7d76](https://github.com/lobehub/lobe-chat/commit/1fd7d76))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.0.6](https://github.com/lobehub/lobe-chat/compare/v1.0.5...v1.0.6)
 
 <sup>Released on **2024-06-17**</sup>
