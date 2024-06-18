@@ -129,8 +129,7 @@ describe('LobeQwenAI', () => {
 
         instance = new LobeQwenAI({
           apiKey: 'test',
-
-          baseURL: 'https://api.abc.com/v1',
+          baseURL: defaultBaseURL,
         });
 
         vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
@@ -144,7 +143,8 @@ describe('LobeQwenAI', () => {
           });
         } catch (e) {
           expect(e).toEqual({
-            endpoint: 'https://api.***.com/v1',
+            /* Desensitizing is unnecessary for a public-accessible gateway endpoint. */
+            endpoint: defaultBaseURL,
             error: {
               cause: { message: 'api is undefined' },
               stack: 'abc',
