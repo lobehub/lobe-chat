@@ -22,7 +22,7 @@ export const FeatureFlagsSchema = z.object({
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
-  webrtc_sync: true,
+  webrtc_sync: false,
 
   language_model_settings: true,
 
