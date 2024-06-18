@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.0.8](https://github.com/lobehub/lobe-chat/compare/v1.0.7...v1.0.8)
+
+<sup>Released on **2024-06-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix hydration mismatch on macOS.
+
+#### 💄 Styles
+
+- **misc**: Update brand and improve docs.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix hydration mismatch on macOS, closes [#2913](https://github.com/lobehub/lobe-chat/issues/2913) ([cd9a143](https://github.com/lobehub/lobe-chat/commit/cd9a143))
+
+#### Styles
+
+- **misc**: Update brand and improve docs, closes [#2917](https://github.com/lobehub/lobe-chat/issues/2917) ([2b54cae](https://github.com/lobehub/lobe-chat/commit/2b54cae))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.0.7](https://github.com/lobehub/lobe-chat/compare/v1.0.6...v1.0.7)
 
 <sup>Released on **2024-06-18**</sup>

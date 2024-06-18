@@ -1,3 +1,16 @@
+---
+title: 使用服务端数据库部署 - 配置 Postgres、Clerk 和 S3 存储服务
+description: 本文详细介绍如何在 Vercel 中部署服务端数据库版 LobeChat，包括数据库配置、身份验证服务配置和 S3 存储服务的设置步骤。
+tags:
+  - 服务端数据库
+  - Postgres
+  - Clerk
+  - S3存储服务
+  - Vercel部署
+  - 数据库配置
+  - 身份验证服务
+  - 环境变量配置
+---
 # 使用服务端数据库部署
 
 LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用服务端数据库。LobeChat 采用了 Postgres 作为后端存储数据库。PostgreSQL是一种强大的开源关系型数据库管理系统，具备高度扩展性和标准SQL支持。它提供了丰富的数据类型、并发处理、数据完整性、安全性及可编程性，适用于复杂应用和大规模数据管理。
@@ -210,7 +223,7 @@ S3_BUCKET=lobechat
 # 存储桶的请求端点
 S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 # 存储桶对外的访问域名
-NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
+NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
 ```
 
     ### 获取 S3 密钥环境变量
@@ -370,7 +383,7 @@ S3_BUCKET=lobechat
 # 存储桶的请求端点
 S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 # 存储桶对外的访问域名
-NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
+NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
 # 桶的区域，如 us-west-1，一般来说不需要添加，但某些服务商则需要配置
 # S3_REGION=us-west-1
 ```
