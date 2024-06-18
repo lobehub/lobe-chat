@@ -60,7 +60,7 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
   - [`6` Plugin System (Function Calling)](#6-plugin-system-function-calling)
   - [`7` Agent Market (GPTs)](#7-agent-market-gpts)
   - [`8` Support Local / Remote Database](#8-support-local--remote-database)
-  - [`9` Support Clerk / NextAuth user auth systems](#9-support-clerk--nextauth-user-auth-systems)
+  - [`9` Support Multi-User Management](#9-support-multi-user-management)
   - [`10` Progressive Web App (PWA)](#10-progressive-web-app-pwa)
   - [`11` Mobile Device Adaptation](#11-mobile-device-adaptation)
   - [`12` Custom Themes](#12-custom-themes)
