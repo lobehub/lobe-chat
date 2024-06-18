@@ -1,23 +1,11 @@
----
-title: 多用户管理支持
-description: LobeChat 提供了多种用户认证和管理方案，以满足不同用户的需求。
-tags:
-  - LobeChat
-  - 用户管理
-  - next-auth
-  - Clerk
-  - 身份验证
-  - 多因素认证
----
-# Identity Verification System / Multi-User Management Support
+# Support Multi-User Management
 
-```markdown
+
 <Image
 alt={'Identity Verification System'}
 cover
-src={'<https://github.com/lobehub/lobe-chat/assets/17870709/8ce70e15-40df-451e-b700-66090fe5b8c2'}>
+src={'https://github.com/lobehub/lobe-chat/assets/17870709/8ce70e15-40df-451e-b700-66090fe5b8c2'}
 />
-```
 
 In modern applications, user management and identity verification are essential functions. To meet the diverse needs of different users, LobeChat provides two main user authentication and management solutions: `next-auth` and `Clerk`. Whether you are looking for simple user registration and login or need advanced multi-factor authentication and user management, LobeChat can flexibly accommodate your requirements.
 
@@ -30,15 +18,12 @@ LobeChat integrates `next-auth`, a flexible and powerful identity verification l
 - **Social Login**: Support quick login via various social platforms.
 - **Data Security**: Ensure the security and privacy of user data.
 
-```markdown
+
 <Callout type={'warning'}>
 Due to workload constraints, integration of next-auth with a server-side database has not been implemented yet. If you need to use a server-side database, please use Clerk. </Callout>
-```
 
-```markdown
 <Callout type={'info'}>
 For information on using Next-Auth, you can refer to [Authentication Services - Next Auth](/en-US/docs/self-hosting/advanced/authentication#next-auth). </Callout>
-```
 
 ## Clerk: Modern User Management Platform
 
@@ -49,13 +34,11 @@ For users requiring advanced user management features, LobeChat also supports [C
 - **Login Activity Monitoring**: Real-time monitoring of user login activities to ensure account security.
 - **Scalability**: Supports complex user management requirements.
 
-```markdown
 <Callout type={'info'}>
 For information on using Clerk, you can refer to [Authentication Services - Clerk](/en-US/docs/self-hosting/advanced/authentication#clerk). </Callout>
-```
 
-```markdown
+
 <Callout type={'tip'}>
 If you need to use Clerk in conjunction with a server-side database, you can refer to the "Configuring Authentication Services" section in [Deploying with a Server-Side Database](/en-US/docs/self-hosting/advanced/server-database). </Callout>
-```
+
 
