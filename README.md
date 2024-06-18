@@ -286,6 +286,13 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 ### `8` [Support Local / Remote Database][docs-feat-database]
 
+LobeChat supports the use of both server-side and local databases. Depending on your needs, you can choose the appropriate deployment solution:
+
+- **Local database**: suitable for users who want more control over their data and privacy protection. LobeChat uses CRDT (Conflict-Free Replicated Data Type) technology to achieve multi-device synchronization. This is an experimental feature aimed at providing a seamless data synchronization experience.
+- **Server-side database**: suitable for users who want a more convenient user experience. LobeChat supports PostgreSQL as a server-side database. For detailed documentation on how to configure the server-side database, please visit [Configure Server-side Database](https://lobehub.com/docs/self-hosting/advanced/server-database).
+
+Regardless of which database you choose, LobeChat can provide you with an excellent user experience.
+
 <div align="right">
 
 [![][back-to-top]](#readme-top)
@@ -294,7 +301,15 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 [![][image-feat-auth]][docs-feat-auth]
 
-### `9` [Support Clerk / NextAuth user auth systems][docs-feat-auth]
+### `9` [Support Multi-User Management][docs-feat-auth]
+
+LobeChat supports multi-user management and provides two main user authentication and management solutions to meet different needs:
+
+- **next-auth**: LobeChat integrates `next-auth`, a flexible and powerful identity verification library that supports multiple authentication methods, including OAuth, email login, credential login, etc. With `next-auth`, you can easily implement user registration, login, session management, social login, and other functions to ensure the security and privacy of user data.
+
+- **Clerk**: For users who need more advanced user management features, LobeChat also supports `Clerk`, a modern user management platform. `Clerk` provides richer functions, such as multi-factor authentication (MFA), user profile management, login activity monitoring, etc. With `Clerk`, you can get higher security and flexibility, and easily cope with complex user management needs.
+
+Regardless of which user management solution you choose, LobeChat can provide you with an excellent user experience and powerful functional support.
 
 <div align="right">
 
