@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useServerConfigStore } from '@/store/serverConfig';
-import { serverConfigSelectors } from '@/store/serverConfig/selectors';
+import { featureFlagsSelectors, serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import APIKeyForm from './APIKeyForm';
 import AccessCodeForm from './AccessCodeForm';
@@ -30,35 +30,46 @@ const InvalidAccessCode = memo<InvalidAccessCodeProps>(({ id, provider }) => {
   const isEnabledOAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
   const defaultTab = isEnabledOAuth ? Tab.Oauth : Tab.Password;
   const [mode, setMode] = useState<Tab>(defaultTab);
+  const { showOpenAIApiKey } = useServerConfigStore(featureFlagsSelectors);
+  const isEnabledTab = showOpenAIApiKey || isEnabledOAuth;
 
   return (
     <ErrorActionContainer>
-      <Segmented
-        block
-        onChange={(value) => setMode(value as Tab)}
-        options={
-          [
-            isEnabledOAuth
-              ? {
-                  icon: <Icon icon={ScanFace} />,
-                  label: t('oauth', { ns: 'common' }),
-                  value: Tab.Oauth,
-                }
-              : undefined,
-            {
-              icon: <Icon icon={AsteriskSquare} />,
-              label: t('unlock.tabs.password'),
-              value: Tab.Password,
-            },
-            { icon: <Icon icon={KeySquare} />, label: t('unlock.tabs.apiKey'), value: Tab.Api },
-          ].filter(Boolean) as SegmentedLabeledOption[]
-        }
-        style={{ width: '100%' }}
-        value={mode}
-      />
+      {isEnabledTab && (
+        <Segmented
+          block
+          onChange={(value) => setMode(value as Tab)}
+          options={
+            [
+              isEnabledOAuth
+                ? {
+                    icon: <Icon icon={ScanFace} />,
+                    label: t('oauth', { ns: 'common' }),
+                    value: Tab.Oauth,
+                  }
+                : undefined,
+              {
+                icon: <Icon icon={AsteriskSquare} />,
+                label: t('unlock.tabs.password'),
+                value: Tab.Password,
+              },
+              showOpenAIApiKey
+                ? {
+                    icon: <Icon icon={KeySquare} />,
+                    label: t('unlock.tabs.apiKey'),
+                    value: Tab.Api,
+                  }
+                : undefined,
+            ].filter(Boolean) as SegmentedLabeledOption[]
+          }
+          style={{ width: '100%' }}
+          value={mode}
+        />
+      )}
+
       <Flexbox gap={24}>
         {mode === Tab.Password && <AccessCodeForm id={id} />}
-        {mode === Tab.Api && <APIKeyForm id={id} provider={provider} />}
+        {showOpenAIApiKey && mode === Tab.Api && <APIKeyForm id={id} provider={provider} />}
         {isEnabledOAuth && mode === Tab.Oauth && <OAuthForm id={id} />}
       </Flexbox>
     </ErrorActionContainer>
