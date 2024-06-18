@@ -8,6 +8,17 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s  --health-retries 5
+        ports:
+          - 5432:5432
+          
     steps:
       - uses: actions/checkout@v4
 
@@ -22,8 +33,16 @@ jobs:
       - name: Lint
         run: bun run lint
 
-      - name: Test
-        run: bun run test
+      - name: Test Server Coverage
+        run: bun run test-server:coverage
+        env:
+          DATABASE_TEST_URL: postgresql://postgres:postgres@localhost:5432/postgres
+          DATABASE_DRIVER: node
+          NEXT_PUBLIC_SERVICE_MODE: server
+          KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
+
+      - name: Test App Coverage
+        run: bun run test-app:coverage
 
       - name: Release
         run: bun run release

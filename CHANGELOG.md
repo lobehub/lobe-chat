@@ -2,6 +2,269 @@
 
 # Changelog
 
+### [Version 1.0.7](https://github.com/lobehub/lobe-chat/compare/v1.0.6...v1.0.7)
+
+<sup>Released on **2024-06-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove some i18n text.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove some i18n text, closes [#2862](https://github.com/lobehub/lobe-chat/issues/2862) ([1fd7d76](https://github.com/lobehub/lobe-chat/commit/1fd7d76))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.0.6](https://github.com/lobehub/lobe-chat/compare/v1.0.5...v1.0.6)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix footer being cut on wide screen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix footer being cut on wide screen, closes [#2905](https://github.com/lobehub/lobe-chat/issues/2905) ([3a1e0cf](https://github.com/lobehub/lobe-chat/commit/3a1e0cf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.0.5](https://github.com/lobehub/lobe-chat/compare/v1.0.4...v1.0.5)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix onboard and auth for community version.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix onboard and auth for community version, closes [#2908](https://github.com/lobehub/lobe-chat/issues/2908) ([b02020d](https://github.com/lobehub/lobe-chat/commit/b02020d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.0.4](https://github.com/lobehub/lobe-chat/compare/v1.0.3...v1.0.4)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add stepfun as a new provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add stepfun as a new provider, closes [#2803](https://github.com/lobehub/lobe-chat/issues/2803) ([e1989a1](https://github.com/lobehub/lobe-chat/commit/e1989a1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.0.3](https://github.com/lobehub/lobe-chat/compare/v1.0.2...v1.0.3)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix clerk `UNAUTHORIZED` auth error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix clerk `UNAUTHORIZED` auth error, closes [#2907](https://github.com/lobehub/lobe-chat/issues/2907) ([bb33ba4](https://github.com/lobehub/lobe-chat/commit/bb33ba4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.0.2](https://github.com/lobehub/lobe-chat/compare/v1.0.1...v1.0.2)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Openai key and openai proxy are invalid in feature flags.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Openai key and openai proxy are invalid in feature flags, closes [#2886](https://github.com/lobehub/lobe-chat/issues/2886) ([ec4f481](https://github.com/lobehub/lobe-chat/commit/ec4f481))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.0.1](https://github.com/lobehub/lobe-chat/compare/v1.0.0...v1.0.1)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Remove r2 cdn url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Remove r2 cdn url, closes [#2878](https://github.com/lobehub/lobe-chat/issues/2878) ([19fd4d5](https://github.com/lobehub/lobe-chat/commit/19fd4d5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.164.0](https://github.com/lobehub/lobe-chat/compare/v0.163.0...v0.164.0)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Release LobeChat 1.0.
+
+#### 🔧 Chores
+
+- **misc**: Bump version.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Release LobeChat 1.0, closes [#2897](https://github.com/lobehub/lobe-chat/issues/2897) ([97bb377](https://github.com/lobehub/lobe-chat/commit/97bb377))
+
+#### Chores
+
+- **misc**: Bump version, closes [#2896](https://github.com/lobehub/lobe-chat/issues/2896) ([6e2d03b](https://github.com/lobehub/lobe-chat/commit/6e2d03b))
+
+</details>
+
+#### 💥 BREAKING CHANGES
+
+- **misc**: Update LICENSE to Apache 2.0
+- **misc**: update to 1.0.0
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 0.163.0](https://github.com/lobehub/lobe-chat/compare/v0.162.25...v0.163.0)
+
+<sup>Released on **2024-06-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Support server db mode with Postgres / Drizzle ORM / tRPC.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support server db mode with Postgres / Drizzle ORM / tRPC, closes [#2556](https://github.com/lobehub/lobe-chat/issues/2556) ([b26afbf](https://github.com/lobehub/lobe-chat/commit/b26afbf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 0.162.25](https://github.com/lobehub/lobe-chat/compare/v0.162.24...v0.162.25)
+
+<sup>Released on **2024-06-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix issues for client fetch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix issues for client fetch, closes [#2753](https://github.com/lobehub/lobe-chat/issues/2753) ([6f5be5d](https://github.com/lobehub/lobe-chat/commit/6f5be5d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 0.162.24](https://github.com/lobehub/lobe-chat/compare/v0.162.23...v0.162.24)
 
 <sup>Released on **2024-06-14**</sup>

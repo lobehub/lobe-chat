@@ -74,7 +74,8 @@ const ProviderConfig = memo<ProviderConfigProps>(
     title,
     checkerItem,
     modelList,
-    showBrowserRequest,
+    defaultShowBrowserRequest,
+    disableBrowserRequest,
     className,
     name,
   }) => {
@@ -87,12 +88,14 @@ const ProviderConfig = memo<ProviderConfigProps>(
       enabled,
       isFetchOnClient,
       isProviderEndpointNotEmpty,
+      isProviderApiKeyNotEmpty,
     ] = useUserStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
       modelConfigSelectors.isProviderEnabled(id)(s),
       modelConfigSelectors.isProviderFetchOnClient(id)(s),
       keyVaultsConfigSelectors.isProviderEndpointNotEmpty(id)(s),
+      keyVaultsConfigSelectors.isProviderApiKeyNotEmpty(id)(s),
     ]);
 
     useSyncSettings(form);
@@ -122,19 +125,29 @@ const ProviderConfig = memo<ProviderConfigProps>(
         label: proxyUrl?.title || t('llm.proxyUrl.title'),
         name: [KeyVaultsConfigKey, id, LLMProviderBaseUrlKey],
       },
-      (showBrowserRequest || (showEndpoint && isProviderEndpointNotEmpty)) && {
-        children: (
-          <Switch
-            onChange={(enabled) => {
-              setSettings({ [LLMProviderConfigKey]: { [id]: { fetchOnClient: enabled } } });
-            }}
-            value={isFetchOnClient}
-          />
-        ),
-        desc: t('llm.fetchOnClient.desc'),
-        label: t('llm.fetchOnClient.title'),
-        minWidth: undefined,
-      },
+      /*
+       * Conditions to show Client Fetch Switch
+       * 1. provider is not disabled browser request
+       * 2. provider show browser request by default
+       * 3. Provider allow to edit endpoint and the value of endpoint is not empty
+       * 4. There is an apikey provided by user
+       */
+      !disableBrowserRequest &&
+        (defaultShowBrowserRequest ||
+          (showEndpoint && isProviderEndpointNotEmpty) ||
+          (showApiKey && isProviderApiKeyNotEmpty)) && {
+          children: (
+            <Switch
+              onChange={(enabled) => {
+                setSettings({ [LLMProviderConfigKey]: { [id]: { fetchOnClient: enabled } } });
+              }}
+              value={isFetchOnClient}
+            />
+          ),
+          desc: t('llm.fetchOnClient.desc'),
+          label: t('llm.fetchOnClient.title'),
+          minWidth: undefined,
+        },
       {
         children: (
           <ProviderModelListSelect
