@@ -7,7 +7,7 @@ export interface ArgumentsProps {
   arguments?: string;
 }
 
-const Arguments = memo<ArgumentsProps>(({ arguments: args = '{}' }) => {
+const Arguments = memo<ArgumentsProps>(({ arguments: args = '' }) => {
   const yaml = useYamlArguments(args);
 
   return (
