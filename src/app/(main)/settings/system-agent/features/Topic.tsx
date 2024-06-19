@@ -30,6 +30,7 @@ const Topic = memo(() => {
             onChange={(props) => {
               updateSystemAgent('topic', props);
             }}
+            showAbility={false}
           />
         ),
         desc: t('systemAgent.topic.modelDesc'),

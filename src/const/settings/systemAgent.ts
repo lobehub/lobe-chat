@@ -8,6 +8,7 @@ export const DEFAULT_SYSTEM_AGENT_ITEM: SystemAgentItem = {
 };
 
 export const DEFAULT_SYSTEM_AGENT_CONFIG: UserSystemAgentConfig = {
+  agentMeta: DEFAULT_SYSTEM_AGENT_ITEM,
   topic: DEFAULT_SYSTEM_AGENT_ITEM,
   translation: DEFAULT_SYSTEM_AGENT_ITEM,
 };

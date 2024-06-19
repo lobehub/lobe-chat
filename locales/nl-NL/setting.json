@@ -366,6 +366,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Assistentmetadata-generatiemodel",
+      "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
+      "title": "Automatisch assistentinformatie genereren"
+    },
     "title": "Systeemassistent",
     "topic": {
       "label": "Onderwerp Naamgevingsmodel",
