@@ -1,3 +1,6 @@
-import { ClientService } from './client';
+import { isServerMode } from '@/const/version';
 
-export const importService = new ClientService();
+import { ClientService } from './client';
+import { ServerService } from './server';
+
+export const importService = isServerMode ? new ServerService() : new ClientService();

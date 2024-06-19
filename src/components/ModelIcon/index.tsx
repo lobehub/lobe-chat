@@ -26,6 +26,7 @@ import {
   Rwkv,
   Spark,
   Stability,
+  Stepfun,
   Tongyi,
   Wenxin,
   Yi,
@@ -64,6 +65,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.startsWith('openchat')) return <OpenChat.Avatar size={size} />;
   if (model.includes('command')) return <Cohere.Avatar size={size} />;
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
+  if (model.includes('step')) return <Stepfun.Avatar size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))

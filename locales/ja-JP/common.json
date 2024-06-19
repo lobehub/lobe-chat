@@ -1,7 +1,7 @@
 {
   "about": "概要",
   "advanceSettings": "高度な設定",
-  "appInitializing": "LobeChatを初期化中です。しばらくお待ちください...",
+  "appInitializing": "アプリケーションを初期化しています。しばらくお待ちください...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
   "autoGenerateTooltipDisabled": "ツールチップを入力してから自動生成機能を使用してください",
@@ -133,7 +133,6 @@
     "business": "ビジネス提携",
     "support": "メールサポート"
   },
-  "noDescription": "説明はありません",
   "oauth": "SSO ログイン",
   "officialSite": "公式サイト",
   "ok": "OK",
