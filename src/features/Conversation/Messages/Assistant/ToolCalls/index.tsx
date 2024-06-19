@@ -1,4 +1,4 @@
-import { Avatar, Highlighter, Icon } from '@lobehub/ui';
+import { Avatar, Icon } from '@lobehub/ui';
 import isEqual from 'fast-deep-equal';
 import { Loader2, LucideChevronDown, LucideChevronRight, LucideToyBrick } from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
@@ -10,6 +10,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
+import Arguments from '../../components/Arguments';
 import { useStyles } from './style';
 
 export interface InspectorProps {
@@ -64,7 +65,7 @@ const CallItem = memo<InspectorProps>(
           </Flexbox>
           <Icon icon={open ? LucideChevronDown : LucideChevronRight} />
         </Flexbox>
-        {(open || loading) && <Highlighter language={'json'}>{requestArgs}</Highlighter>}
+        {(open || loading) && <Arguments arguments={requestArgs} />}
       </Flexbox>
     );
   },
