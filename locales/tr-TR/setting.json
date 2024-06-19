@@ -366,6 +366,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Asistan Meta Veri Oluşturma Modeli",
+      "modelDesc": "Asistan adı, açıklaması, avatar ve etiket oluşturmak için belirlenen model",
+      "title": "Asistan Bilgilerini Otomatik Oluştur"
+    },
     "title": "Sistem Asistanı",
     "topic": {
       "label": "Konu Adlandırma Modeli",
