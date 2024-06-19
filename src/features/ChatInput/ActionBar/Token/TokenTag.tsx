@@ -32,6 +32,12 @@ const Token = memo(() => {
     agentSelectors.currentAgentModel(s) as string,
   ]);
 
+  //just observe the changes of setting history in order to refresh totalToken immediately
+  useAgentStore((s) => {
+    const config = agentSelectors.currentAgentChatConfig(s);
+    return [config.historyCount, !config.enableHistoryCount];
+  });
+
   const maxTokens = useUserStore(modelProviderSelectors.modelMaxToken(model));
 
   // Tool usage token
