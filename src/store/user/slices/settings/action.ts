@@ -8,7 +8,13 @@ import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
 import { LocaleMode } from '@/types/locale';
 import { LobeAgentSettings } from '@/types/session';
-import { UserGeneralConfig, UserKeyVaults, UserSettings } from '@/types/user/settings';
+import {
+  SystemAgentItem,
+  UserGeneralConfig,
+  UserKeyVaults,
+  UserSettings,
+  UserSystemAgentConfigKey,
+} from '@/types/user/settings';
 import { switchLang } from '@/utils/client/switchLang';
 import { difference } from '@/utils/difference';
 import { merge } from '@/utils/merge';
@@ -25,7 +31,7 @@ export interface UserSettingsAction {
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
 
-  updateSystemAgent: (key: string, value: { model: string; provider: string }) => Promise<void>;
+  updateSystemAgent: (key: UserSystemAgentConfigKey, value: SystemAgentItem) => Promise<void>;
 }
 
 export const createSettingsSlice: StateCreator<

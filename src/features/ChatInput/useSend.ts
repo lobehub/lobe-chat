@@ -31,5 +31,13 @@ export const useSendMessage = () => {
 
     updateInputMessage('');
     useFileStore.getState().clearImageList();
+
+    // const hasSystemRole = agentSelectors.hasSystemRole(useAgentStore.getState());
+    // const agentSetting = useAgentStore.getState().agentSettingInstance;
+
+    // // if there is a system role, then we need to use agent setting instance to autocomplete agent meta
+    // if (hasSystemRole && !!agentSetting) {
+    //   agentSetting.autocompleteAllMeta();
+    // }
   }, []);
 };

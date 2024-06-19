@@ -366,6 +366,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Mô hình tạo siêu dữ liệu trợ lý",
+      "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
+      "title": "Tự động tạo thông tin trợ lý"
+    },
     "title": "Trợ lý hệ thống",
     "topic": {
       "label": "Mô hình đặt tên chủ đề",

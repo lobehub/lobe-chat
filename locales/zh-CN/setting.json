@@ -366,6 +366,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "助理元数据生成模型",
+      "modelDesc": "指定用于生成助理名称、描述、头像、标签的模型",
+      "title": "自动生成助理信息"
+    },
     "title": "系统助手",
     "topic": {
       "label": "话题命名模型",
