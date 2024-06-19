@@ -85,7 +85,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
     return <Stability size={size} />;
 
   if (model.includes('wizardlm')) return <Azure size={size} />;
-  if (model.includes('phi3')) return <Azure size={size} />;
+  if (model.includes('phi3') || model.includes('phi-3')) return <Azure size={size} />;
   if (model.includes('firefly')) return <AdobeFirefly size={size} />;
   if (model.includes('jamba') || model.includes('j2-')) return <Ai21 size={size} />;
 });
