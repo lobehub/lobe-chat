@@ -112,7 +112,7 @@ describe('ChatPluginAction', () => {
 
       vi.spyOn(storeState, 'refreshMessages');
       vi.spyOn(storeState, 'triggerAIMessage').mockResolvedValue(undefined);
-      vi.spyOn(storeState, 'internal_toggleChatLoading').mockReturnValue(undefined);
+      vi.spyOn(storeState, 'internal_togglePluginApiCalling').mockReturnValue(undefined);
 
       const runSpy = vi.spyOn(chatService, 'runPluginApi').mockResolvedValue({
         text: pluginApiResponse,
@@ -125,7 +125,7 @@ describe('ChatPluginAction', () => {
         await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
-      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
+      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
@@ -135,7 +135,7 @@ describe('ChatPluginAction', () => {
         content: pluginApiResponse,
       });
       expect(storeState.refreshMessages).toHaveBeenCalled();
-      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
+      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         false,
         'message-id',
         'plugin/fetchPlugin/end',
@@ -150,7 +150,7 @@ describe('ChatPluginAction', () => {
       const storeState = useChatStore.getState();
       vi.spyOn(storeState, 'refreshMessages');
       vi.spyOn(storeState, 'triggerAIMessage').mockResolvedValue(undefined);
-      vi.spyOn(storeState, 'internal_toggleChatLoading').mockReturnValue(undefined);
+      vi.spyOn(storeState, 'internal_togglePluginApiCalling').mockReturnValue(undefined);
 
       vi.spyOn(chatService, 'runPluginApi').mockRejectedValue(error);
 
@@ -159,7 +159,7 @@ describe('ChatPluginAction', () => {
         await result.current.invokeDefaultTypePlugin(messageId, pluginPayload);
       });
 
-      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
+      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
@@ -167,7 +167,7 @@ describe('ChatPluginAction', () => {
       expect(chatService.runPluginApi).toHaveBeenCalledWith(pluginPayload, { trace: {} });
       expect(messageService.updateMessageError).toHaveBeenCalledWith(messageId, error);
       expect(storeState.refreshMessages).toHaveBeenCalled();
-      expect(storeState.internal_toggleChatLoading).toHaveBeenCalledWith(
+      expect(storeState.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         false,
         'message-id',
         'plugin/fetchPlugin/end',
@@ -467,7 +467,7 @@ describe('ChatPluginAction', () => {
       });
 
       useChatStore.setState({
-        internal_toggleChatLoading: vi.fn(),
+        internal_togglePluginApiCalling: vi.fn(),
         internal_updateMessageContent: vi.fn(),
         text2image: vi.fn(),
       });
@@ -491,12 +491,12 @@ describe('ChatPluginAction', () => {
       );
 
       // Verify that loading was toggled correctly
-      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(
+      expect(result.current.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
       );
-      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(result.current.internal_togglePluginApiCalling).toHaveBeenCalledWith(false);
       expect(useChatStore.getState().text2image).toHaveBeenCalled();
     });
 
@@ -516,7 +516,7 @@ describe('ChatPluginAction', () => {
         });
 
         useChatStore.setState({
-          internal_toggleChatLoading: vi.fn(),
+          internal_togglePluginApiCalling: vi.fn(),
           text2image: vi.fn(),
           internal_updateMessageContent: vi.fn(),
         });
@@ -540,12 +540,12 @@ describe('ChatPluginAction', () => {
       );
 
       // Verify that loading was toggled correctly
-      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(
+      expect(result.current.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
       );
-      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(result.current.internal_togglePluginApiCalling).toHaveBeenCalledWith(false);
       expect(useChatStore.getState().text2image).not.toHaveBeenCalled();
     });
 
@@ -563,7 +563,7 @@ describe('ChatPluginAction', () => {
       });
 
       useChatStore.setState({
-        internal_toggleChatLoading: vi.fn(),
+        internal_togglePluginApiCalling: vi.fn(),
         internal_updateMessageContent: vi.fn(),
         text2image: vi.fn(),
         refreshMessages: vi.fn(),
@@ -576,12 +576,12 @@ describe('ChatPluginAction', () => {
       });
 
       // Verify that loading was toggled correctly
-      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(
+      expect(result.current.internal_togglePluginApiCalling).toHaveBeenCalledWith(
         true,
         messageId,
         expect.any(String),
       );
-      expect(result.current.internal_toggleChatLoading).toHaveBeenCalledWith(false);
+      expect(result.current.internal_togglePluginApiCalling).toHaveBeenCalledWith(false);
 
       // Verify that the message content was not updated
       expect(result.current.internal_updateMessageContent).not.toHaveBeenCalled();
