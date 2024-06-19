@@ -6,7 +6,7 @@ export const generateMetadata = async () => {
 
   return metadataModule.generate({
     description: t('header.desc'),
-    title: t('tab.systemAgent'),
+    title: t('tab.system-agent'),
     url: '/settings/system-agent',
   });
 };

@@ -9,8 +9,10 @@ const currentSystemAgent = (s: UserStore) =>
 
 const translation = (s: UserStore) => currentSystemAgent(s).translation;
 const topic = (s: UserStore) => currentSystemAgent(s).topic;
+const agentMeta = (s: UserStore) => currentSystemAgent(s).agentMeta;
 
 export const systemAgentSelectors = {
+  agentMeta,
   topic,
   translation,
 };
