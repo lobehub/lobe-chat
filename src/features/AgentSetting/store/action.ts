@@ -21,10 +21,7 @@ import { State, initialState } from './initialState';
 import { ConfigDispatch, configReducer } from './reducers/config';
 import { MetaDataDispatch, metaDataReducer } from './reducers/meta';
 
-/**
- * 设置操作
- */
-export interface Action {
+export interface PublicAction {
   /**
    * 自动选择表情
    * @param id - 表情的 ID
@@ -48,6 +45,9 @@ export interface Action {
    */
   autocompleteAllMeta: (replace?: boolean) => void;
   autocompleteMeta: (key: keyof MetaData) => void;
+}
+
+export interface Action extends PublicAction {
   dispatchConfig: (payload: ConfigDispatch) => void;
   dispatchMeta: (payload: MetaDataDispatch) => void;
   getCurrentTracePayload: (data: Partial<TracePayload>) => TracePayload;
