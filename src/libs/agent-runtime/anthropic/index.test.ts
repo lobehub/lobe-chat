@@ -259,30 +259,6 @@ describe('LobeAnthropicAI', () => {
         expect(instance['client'].messages.create).toHaveBeenCalled();
         expect(spyOn).toHaveBeenCalledWith(tools);
       });
-
-      it('should handle text and tool_use content correctly in transformResponseToStream', async () => {
-        // Arrange
-        const mockResponse = {
-          content: [
-            { type: 'text', text: 'Hello' },
-            { type: 'tool_use', id: 'tool1', name: 'tool1', input: 'input1' },
-          ],
-        };
-        // @ts-ignore
-        vi.spyOn(instance, 'transformResponseToStream').mockReturnValue(new ReadableStream());
-        vi.spyOn(instance['client'].messages, 'create').mockResolvedValue(mockResponse as any);
-
-        // Act
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'claude-3-haiku-20240307',
-          temperature: 0,
-          tools: [{ function: { name: 'tool1', description: 'desc1' }, type: 'function' }],
-        });
-
-        // Assert
-        // expect(instance['transformResponseToStream']).toHaveBeenCalledWith(mockResponse);
-      });
     });
 
     describe('Error', () => {
