@@ -81,7 +81,7 @@ export const chatPlugin: StateCreator<
     internal_togglePluginApiCalling(true, id, n('invokeBuiltinTool') as string);
     let data;
     try {
-      data = await useToolStore.getState().invokeBuiltinTool(payload.apiName, params);
+      data = await useToolStore.getState().transformApiArgumentsToAiState(payload.apiName, params);
     } catch (error) {
       console.log(error);
     }
@@ -91,6 +91,7 @@ export const chatPlugin: StateCreator<
 
     await internal_updateMessageContent(id, data);
 
+    // run tool api call
     // postToolCalling
     // @ts-ignore
     const { [payload.apiName]: action } = get();
@@ -147,7 +148,10 @@ export const chatPlugin: StateCreator<
     const message = chatSelectors.getMessageById(id)(get());
     if (!message || message.role !== 'tool' || !message.plugin) return;
 
-    get().internal_updateMessageError(id, null);
+    // if there is error content, then clear the error
+    if (!!message.error) {
+      get().internal_updateMessageError(id, null);
+    }
 
     const payload: ChatToolPayload = { ...message.plugin, id: message.tool_call_id! };
 

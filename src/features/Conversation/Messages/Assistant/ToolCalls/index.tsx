@@ -22,7 +22,7 @@ export interface InspectorProps {
 }
 
 const CallItem = memo<InspectorProps>(
-  ({ arguments: requestArgs = '{}', messageId, index, identifier, style }) => {
+  ({ arguments: requestArgs, messageId, index, identifier, style }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);

@@ -463,7 +463,7 @@ describe('ChatPluginAction', () => {
       const toolResponse = JSON.stringify({ abc: 'data' });
 
       useToolStore.setState({
-        invokeBuiltinTool: vi.fn().mockResolvedValue(toolResponse),
+        transformApiArgumentsToAiState: vi.fn().mockResolvedValue(toolResponse),
       });
 
       useChatStore.setState({
@@ -479,7 +479,7 @@ describe('ChatPluginAction', () => {
       });
 
       // Verify that the builtin tool was invoked with the correct arguments
-      expect(useToolStore.getState().invokeBuiltinTool).toHaveBeenCalledWith(
+      expect(useToolStore.getState().transformApiArgumentsToAiState).toHaveBeenCalledWith(
         payload.apiName,
         JSON.parse(payload.arguments),
       );
@@ -511,7 +511,7 @@ describe('ChatPluginAction', () => {
 
       act(() => {
         useToolStore.setState({
-          invokeBuiltinTool: vi.fn().mockResolvedValue(toolResponse),
+          transformApiArgumentsToAiState: vi.fn().mockResolvedValue(toolResponse),
           text2image: vi.fn(),
         });
 
@@ -528,7 +528,7 @@ describe('ChatPluginAction', () => {
       });
 
       // Verify that the builtin tool was invoked with the correct arguments
-      expect(useToolStore.getState().invokeBuiltinTool).toHaveBeenCalledWith(
+      expect(useToolStore.getState().transformApiArgumentsToAiState).toHaveBeenCalledWith(
         payload.apiName,
         JSON.parse(payload.arguments),
       );
@@ -559,7 +559,7 @@ describe('ChatPluginAction', () => {
       const error = new Error('Builtin tool failed');
 
       useToolStore.setState({
-        invokeBuiltinTool: vi.fn().mockRejectedValue(error),
+        transformApiArgumentsToAiState: vi.fn().mockRejectedValue(error),
       });
 
       useChatStore.setState({
