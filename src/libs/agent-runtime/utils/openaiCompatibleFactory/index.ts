@@ -83,46 +83,43 @@ export const LobeOpenAICompatibleFactory = ({
               ...payload,
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
-
+          
         const response = await this.client.chat.completions.create(
           { ...postPayload, user: options?.user },
           {
-            // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*' },
             signal: options?.signal,
           },
         );
-
+      
+        // Check if streaming is enabled
         if (postPayload.stream) {
           const [prod, useForDebug] = response.tee();
-
+        
           if (debug?.chatCompletion?.()) {
             debugStream(useForDebug.toReadableStream()).catch(console.error);
           }
-
+        
           return StreamingResponse(OpenAIStream(prod, options?.callback), {
             headers: options?.headers,
           });
+        } else {
+          // Handle non-stream response
+          if (debug?.chatCompletion?.()) {
+            console.log('\n[no stream response]\n');
+            console.log(JSON.stringify(response) + '\n');
+          }
+        
+          // Return a non-stream response directly without transforming it into a stream
+          return response;
         }
-
-        if (debug?.chatCompletion?.()) {
-          console.log('\n[no stream response]\n');
-          console.log(JSON.stringify(response) + '\n');
-        }
-
-        const stream = this.transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
-
-        return StreamingResponse(OpenAIStream(stream, options?.callback), {
-          headers: options?.headers,
-        });
       } catch (error) {
         let desensitizedEndpoint = this.baseURL;
-
-        // refs: https://github.com/lobehub/lobe-chat/issues/842
+      
         if (this.baseURL !== DEFAULT_BASE_URL) {
           desensitizedEndpoint = desensitizeUrl(this.baseURL);
         }
-
+      
         if ('status' in (error as any)) {
           switch ((error as Response).status) {
             case 401: {
@@ -133,25 +130,25 @@ export const LobeOpenAICompatibleFactory = ({
                 provider: provider as any,
               });
             }
-
+          
             default: {
               break;
             }
           }
         }
-
+      
         if (chatCompletion?.handleError) {
           const errorResult = chatCompletion.handleError(error);
-
+        
           if (errorResult)
             throw AgentRuntimeError.chat({
               ...errorResult,
               provider,
             } as ChatCompletionErrorPayload);
         }
-
+      
         const { errorResult, RuntimeError } = handleOpenAIError(error);
-
+      
         throw AgentRuntimeError.chat({
           endpoint: desensitizedEndpoint,
           error: errorResult,
