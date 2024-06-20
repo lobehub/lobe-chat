@@ -235,7 +235,7 @@
     "dotenv": "^16.4.5",
     "dpdm": "^3.14.0",
     "drizzle-kit": "^0.22.7",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-mdx": "^2.3.4",
     "fake-indexeddb": "^6.0.0",
     "glob": "^10.4.2",
