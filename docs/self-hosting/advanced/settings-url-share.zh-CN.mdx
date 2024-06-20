@@ -11,6 +11,7 @@ tags:
   - URL 导入
   - URL 导出
 ---
+
 # URL 分享设置参数
 
 LobeChat 支持从外部 URL 导入设置参数，以便于快速设置 LobeChat 的配置。
@@ -69,8 +70,8 @@ console.log(url);
 
 - 参数及其类型
 
-| 参数名称   | 类型                     |
-| ---------- | ------------------------ |
+| 参数名称   | 类型                       |
+| ---------- | -------------------------- |
 | anthropic  | `OpenAICompatibleKeyVault` |
 | azure      | `AzureOpenAIKeyVault`      |
 | bedrock    | `AWSBedrockKeyVault`       |
@@ -116,8 +117,8 @@ console.log(url);
 export type UserModelProviderConfig = Record<string, ProviderConfig>;
 ```
 
-| 参数名称   | 类型           |
-| ---------- | -------------- |
+| 参数名称   | 类型             |
+| ---------- | ---------------- |
 | anthropic  | `ProviderConfig` |
 | azure      | `ProviderConfig` |
 | bedrock    | `ProviderConfig` |

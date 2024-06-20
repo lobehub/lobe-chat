@@ -67,7 +67,6 @@ services:
       OPENAI_API_KEY: sk-xxxx
       OPENAI_PROXY_URL: https://api-proxy.com/v1
       ACCESS_CODE: lobe66
-
 ```
 
 运行以下命令启动 Lobe Chat 服务：
@@ -92,7 +91,7 @@ output=$(docker pull lobehub/lobe-chat:latest 2>&1)
 
 # Check if the pull command was executed successfully
 if [ $? -ne 0 ]; then
-exit 1
+  exit 1
 fi
 
 # Check if the output contains a specific string
@@ -100,7 +99,7 @@ echo "$output" | grep -q "Image is up to date for lobehub/lobe-chat:latest"
 
 # If the image is already up to date, do nothing
 if [ $? -eq 0 ]; then
-exit 0
+  exit 0
 fi
 
 echo "Detected Lobe-Chat update"

@@ -122,7 +122,7 @@ export const useProviderList = (): ProviderItem[] => {
       },
       {
         ...TogetherAIProviderCard,
-        docUrl: urlJoin(BASE_DOC_URL, 'together_ai'),
+        docUrl: urlJoin(BASE_DOC_URL, 'togetherai'),
         title: <Together.Combine size={26} type={'color'} />,
       },
       {
@@ -162,7 +162,7 @@ export const useProviderList = (): ProviderItem[] => {
       },
       {
         ...ZeroOneProviderCard,
-        docUrl: urlJoin(BASE_DOC_URL, 'zeroone'),
+        docUrl: urlJoin(BASE_DOC_URL, '01ai'),
         title: <ZeroOne.Text size={20} />,
       },
       {
