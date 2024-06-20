@@ -17,7 +17,7 @@ export interface CreateMessageParams
   traceId?: string;
   topicId?: string;
   content: string;
-  error?: ChatMessageError;
+  error?: ChatMessageError | null;
   role: MessageRoleType;
 }
 
