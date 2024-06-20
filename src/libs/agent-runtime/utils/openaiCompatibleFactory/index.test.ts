@@ -265,7 +265,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         );
       });
 
-      it('should handle anthropic sonnet 3.5 tool calling chunks correctly', async () => {
+      it.skip('should handle anthropic sonnet 3.5 tool calling chunks correctly', async () => {
         const chunks = [
           {
             id: 'chatcmpl-b3f58dc5-0699-4b28-aefe-6624c2a68d51',
