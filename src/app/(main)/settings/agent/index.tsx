@@ -4,7 +4,7 @@ import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 
 import { INBOX_SESSION_ID } from '@/const/session';
-import AgentSettings from '@/features/AgentSetting';
+import { AgentSettings } from '@/features/AgentSetting';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
 

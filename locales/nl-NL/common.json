@@ -1,7 +1,7 @@
 {
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
-  "appInitializing": "LobeChat wordt geïnitialiseerd, even geduld a.u.b...",
+  "appInitializing": "Applicatie wordt gestart, gelieve geduld te hebben...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
   "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
@@ -133,7 +133,6 @@
     "business": "Zakelijke samenwerking",
     "support": "E-mailondersteuning"
   },
-  "noDescription": "Geen beschrijving beschikbaar",
   "oauth": "SSO inloggen",
   "officialSite": "Officiële website",
   "ok": "Oké",

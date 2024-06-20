@@ -2,17 +2,17 @@
   "ModelSwitch": {
     "title": "Model"
   },
-  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Agent Settings](/chat/settings#session={{id}}) to complete my information.",
+  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Assistant Settings](/chat/settings#session={{id}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
-  "agentsAndConversations": "Agents and Conversations",
+  "agentsAndConversations": "Assistants and Conversations",
   "backToBottom": "Back to bottom",
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
-  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be retrieved. Please confirm your action.",
-  "confirmRemoveSessionSuccess": "Agent removed successfully",
-  "defaultAgent": "Default Agent",
+  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
+  "confirmRemoveSessionSuccess": "Assistant removed successfully",
+  "defaultAgent": "Default Assistant",
   "defaultList": "Default List",
-  "defaultSession": "Default Agent",
+  "defaultSession": "Default Assistant",
   "duplicateSession": {
     "loading": "Copying...",
     "success": "Copy successful",
@@ -22,7 +22,7 @@
   "emptyAgent": "No assistant available",
   "historyRange": "History Range",
   "inbox": {
-    "desc": "Activate the brain cluster and spark creative thinking. Your virtual agent is here to communicate with you about everything.",
+    "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
     "title": "Just Chat"
   },
   "input": {
@@ -39,21 +39,20 @@
     "delAndRegenerate": "Delete and Regenerate",
     "regenerate": "Regenerate"
   },
-  "newAgent": "New Agent",
-  "noDescription": "No description available",
+  "newAgent": "New Assistant",
   "pin": "Pin",
   "pinOff": "Unpin",
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
-  "searchAgentPlaceholder": "Search agents and conversations...",
+  "searchAgentPlaceholder": "Search assistants and conversations...",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",
-    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the agents in this group will be moved to the default list. Please confirm your operation.",
-    "createAgentSuccess": "Agent created successfully",
+    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
+    "createAgentSuccess": "Assistant created successfully",
     "createGroup": "Add New Group",
     "createSuccess": "Created successfully",
-    "creatingAgent": "Creating agent...",
+    "creatingAgent": "Creating assistant...",
     "inputPlaceholder": "Please enter group name...",
     "moveGroup": "Move to Group",
     "newGroup": "New Group",
@@ -72,7 +71,7 @@
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
-    "withSystemRole": "Include Agent Role Setting"
+    "withSystemRole": "Include Assistant Role Setting"
   },
   "stt": {
     "action": "Voice Input",
@@ -125,7 +124,7 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
-  "updateAgent": "Update Agent Information",
+  "updateAgent": "Update Assistant Information",
   "upload": {
     "actionFiletip": "Update File",
     "actionTooltip": "Upload Image",

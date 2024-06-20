@@ -41,7 +41,6 @@ export default {
     regenerate: '重新生成',
   },
   newAgent: '新建助手',
-  noDescription: '暂无描述',
   pin: '置顶',
   pinOff: '取消置顶',
   regenerate: '重新生成',

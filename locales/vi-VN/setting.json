@@ -102,6 +102,7 @@
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
       "noLatestTime": "Chưa có danh sách nào được lấy"
     },
+    "helpDoc": "Hướng dẫn cấu hình",
     "modelList": {
       "desc": "Chọn mô hình hiển thị trong cuộc trò chuyện, mô hình đã chọn sẽ được hiển thị trong danh sách mô hình",
       "placeholder": "Vui lòng chọn mô hình từ danh sách",
@@ -366,6 +367,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Mô hình tạo siêu dữ liệu trợ lý",
+      "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
+      "title": "Tự động tạo thông tin trợ lý"
+    },
     "title": "Trợ lý hệ thống",
     "topic": {
       "label": "Mô hình đặt tên chủ đề",

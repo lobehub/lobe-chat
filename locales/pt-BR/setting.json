@@ -102,6 +102,7 @@
       "latestTime": "Última atualização: {{time}}",
       "noLatestTime": "Lista não disponível"
     },
+    "helpDoc": "Tutorial de configuração",
     "modelList": {
       "desc": "Escolha os modelos a serem exibidos na conversa. Os modelos selecionados serão exibidos na lista de modelos.",
       "placeholder": "Selecione um modelo da lista",
@@ -366,6 +367,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modelo de Geração de Metadados do Assistente",
+      "modelDesc": "Especifica o modelo usado para gerar o nome, descrição, avatar e tags do assistente",
+      "title": "Geração Automática de Informações do Assistente"
+    },
     "title": "Assistente do Sistema",
     "topic": {
       "label": "Modelo de Nomeação de Tópicos",

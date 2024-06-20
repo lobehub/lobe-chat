@@ -102,6 +102,7 @@
       "latestTime": "Laatst bijgewerkt: {{time}}",
       "noLatestTime": "Geen lijst beschikbaar op dit moment"
     },
+    "helpDoc": "configuratiehandleiding",
     "modelList": {
       "desc": "Selecteer het model dat in de sessie moet worden weergegeven. Het geselecteerde model wordt weergegeven in de modellijst.",
       "placeholder": "Selecteer een model uit de lijst",
@@ -366,6 +367,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Assistentmetadata-generatiemodel",
+      "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
+      "title": "Automatisch assistentinformatie genereren"
+    },
     "title": "Systeemassistent",
     "topic": {
       "label": "Onderwerp Naamgevingsmodel",

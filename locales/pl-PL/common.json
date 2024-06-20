@@ -1,7 +1,7 @@
 {
   "about": "O nas",
   "advanceSettings": "Zaawansowane ustawienia",
-  "appInitializing": "LobeChat inicjuje, proszę czekać...",
+  "appInitializing": "Inicjowanie aplikacji, prosimy o cierpliwość...",
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
   "autoGenerateTooltipDisabled": "Proszę wprowadzić słowo kluczowe przed użyciem funkcji automatycznego uzupełniania",
@@ -133,7 +133,6 @@
     "business": "Współpraca biznesowa",
     "support": "Wsparcie mailowe"
   },
-  "noDescription": "Brak opisu",
   "oauth": "Logowanie SSO",
   "officialSite": "Oficjalna strona internetowa",
   "ok": "OK",
