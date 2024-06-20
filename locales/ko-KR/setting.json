@@ -102,6 +102,7 @@
       "latestTime": "마지막 업데이트 시간: {{time}}",
       "noLatestTime": "목록을 아직 가져오지 않았습니다"
     },
+    "helpDoc": "구성 안내",
     "modelList": {
       "desc": "대화에서 표시할 모델을 선택하세요. 선택한 모델은 모델 목록에 표시됩니다",
       "placeholder": "모델을 선택하세요",

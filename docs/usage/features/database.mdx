@@ -1,20 +1,25 @@
 ---
-title: LobeChat 支持本地 / 云端数据库存储
-description: LobeChat 支持本地 / 云端数据存储，既能实现 Local First，同时支持数据云同步。
+title: Local / Cloud Database Solutions for LobeChat
+description: >-
+  Explore the options of local and server-side databases for LobeChat, offering
+  data control, privacy protection, and convenient user experiences.
 tags:
-  - LobeChat
-  - IndexedDB
-  - Postgres
-  - Local First
-  - 数据云同步
-  - 数据库
+  - Local Database
+  - Server-Side Database
+  - Data Privacy
+  - Data Control
+  - CRDT Technology
+  - PostgreSQL
+  - Dirzzle ORM
+  - Clerk Authentication
 ---
-# Local / Cloud Data Storage
+
+# Local / Cloud Database
 
 <Image
-alt={'Local / Cloud Data Storage'}
-cover
-src={'https://github.com/lobehub/lobe-chat/assets/17870709/acf39ea2-74b3-46ae-8eb8-54a51f7f1d36'}
+  alt={'Local / Cloud Database'}
+  cover
+  src={'https://github.com/lobehub/lobe-chat/assets/17870709/c27a0234-a4e9-40e5-8bcb-42d5ce7e40f9'}
 />
 
 In modern application development, the choice of data storage solution is crucial. To meet the needs of different users, LobeChat offers flexible configurations that support both local and server-side databases. Whether you prioritize data privacy and control or seek a convenient user experience, LobeChat can provide excellent solutions for you.
@@ -25,7 +30,9 @@ For users who prefer more control over their data and value privacy protection, 
 
 Additionally, we have introduced Conflict-Free Replicated Data Type (CRDT) technology to ensure a seamless multi-device synchronization experience. This experimental feature aims to provide users with greater autonomy and data security.
 
-<Callout type={'info'}>LobeChat defaults to the local database solution to reduce the onboarding cost for new users.</Callout>
+<Callout type={'info'}>
+  LobeChat defaults to the local database solution to reduce the onboarding cost for new users.
+</Callout>
 
 Furthermore, we have attempted to introduce CRDT technology to achieve cross-device synchronization based on the local database. This experimental feature aims to provide users with greater autonomy and data security.
 
@@ -51,4 +58,3 @@ The local database solution is suitable for users who wish to have strict contro
 The server-side database solution is ideal for users who want to simplify data management processes and enjoy a convenient user experience. Through server-side databases and user authentication, LobeChat can ensure the security and efficiency of data. If you want to learn how to configure a server-side database, please refer to our [detailed documentation](/docs/self-hosting/advanced/server-database).
 
 Whether you choose a local database or a server-side database, LobeChat can provide you with an excellent user experience.
-
