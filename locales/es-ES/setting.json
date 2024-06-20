@@ -366,6 +366,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modelo de generación de metadatos de asistente",
+      "modelDesc": "Modelo designado para generar el nombre, descripción, avatar y etiquetas del asistente",
+      "title": "Generación automática de información del asistente"
+    },
     "title": "Asistente del sistema",
     "topic": {
       "label": "Modelo de nombramiento de temas",

@@ -27,19 +27,21 @@ All features are controlled by the `FEATURE_FLAGS` variable as the sole configur
 You can achieve various feature combinations using the above configuration syntax. All feature flags are Boolean values, enabled with `+` and disabled with `-`.
 
 <Callout type={'tip'}>
-Attention: Unlike the `OPENAI_MODEL_LIST` variable, the `FEATURE_FLAGS` variable does not support the `all` keyword. You need to manually control all feature flags (otherwise, they will adopt their default values).
+  Attention: Unlike the `OPENAI_MODEL_LIST` variable, the `FEATURE_FLAGS` variable does not support
+  the `all` keyword. You need to manually control all feature flags (otherwise, they will adopt
+  their default values).
 </Callout>
 
-| Configuration Item        | Description                       | Default Value |
-| ------------------------- | --------------------------------- | ------------- |
-| `webrtc_sync`             | Enables WebRTC sync functionality.| Enabled       |
-| `language_model_settings` | Enables language model settings.  | Enabled       |
-| `openai_api_key`          | Allows users to customize the OpenAI API Key. | Enabled       |
+| Configuration Item        | Description                                     | Default Value |
+| ------------------------- | ----------------------------------------------- | ------------- |
+| `webrtc_sync`             | Enables WebRTC sync functionality.              | Disabled      |
+| `language_model_settings` | Enables language model settings.                | Enabled       |
+| `openai_api_key`          | Allows users to customize the OpenAI API Key.   | Enabled       |
 | `openai_proxy_url`        | Allows users to customize the OpenAI proxy URL. | Enabled       |
-| `create_session`          | Allows users to create sessions.  | Enabled       |
-| `edit_agent`              | Allows users to edit assistants.  | Enabled       |
-| `dalle`                   | Enables the DALL-E functionality. | Enabled       |
-| `check_updates`           | Allows checking for updates.      | Enabled       |
-| `welcome_suggest`         | Displays welcome suggestions.     | Enabled       |
+| `create_session`          | Allows users to create sessions.                | Enabled       |
+| `edit_agent`              | Allows users to edit assistants.                | Enabled       |
+| `dalle`                   | Enables the DALL-E functionality.               | Enabled       |
+| `check_updates`           | Allows checking for updates.                    | Enabled       |
+| `welcome_suggest`         | Displays welcome suggestions.                   | Enabled       |
 
 You can always check the [featureFlags](https://github.com/lobehub/lobe-chat/blob/main/src/config/featureFlags/schema.ts) to get the latest list of feature flags.

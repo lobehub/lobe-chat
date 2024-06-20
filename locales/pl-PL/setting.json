@@ -366,6 +366,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Model generowania metadanych asystenta",
+      "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
+      "title": "Automatyczne generowanie informacji o asystencie"
+    },
     "title": "Asystent Systemowy",
     "topic": {
       "label": "Model nazewnictwa tematów",

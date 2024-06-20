@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import PageTitle from '@/components/PageTitle';
-import AgentSetting from '@/features/AgentSetting';
+import { AgentSettings } from '@/features/AgentSetting';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
@@ -26,7 +26,7 @@ const EditPage = memo(() => {
   return (
     <>
       <PageTitle title={t('header.sessionWithName', { name: title })} />
-      <AgentSetting
+      <AgentSettings
         config={config}
         id={id}
         meta={meta}

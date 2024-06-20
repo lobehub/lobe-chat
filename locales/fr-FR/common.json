@@ -1,7 +1,7 @@
 {
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
-  "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
+  "appInitializing": "L'application est en cours de démarrage, veuillez patienter...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
@@ -133,7 +133,6 @@
     "business": "Partenariats commerciaux",
     "support": "Support par e-mail"
   },
-  "noDescription": "Aucune description disponible",
   "oauth": "Connexion SSO",
   "officialSite": "Site officiel",
   "ok": "OK",
