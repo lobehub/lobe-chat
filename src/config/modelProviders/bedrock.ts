@@ -52,6 +52,15 @@ const Bedrock: ModelProviderCard = {
     },
     {
       description:
+        'Claude 3.5 Sonnet 提高了行业的智能标准, 在广泛的基准测试中超越了竞争对手模型以及 Claude 3 Opus, 以中端模型的速度和成本，展现出卓越性能。 Claude 3.5 Sonnet 可以处理图像和返回文本输出，并且提供 200K 上下文窗口。',
+      displayName: 'Claude 3.5 Sonnet',
+      enabled: true,
+      id: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
         'Claude 3 Haiku 是 Anthropic 最快速、最紧凑的模型，具有近乎即时的响应能力。该模型可以快速回答简单的查询和请求。客户将能够构建模仿人类交互的无缝人工智能体验。 Claude 3 Haiku 可以处理图像和返回文本输出，并且提供 200K 上下文窗口。',
       displayName: 'Claude 3 Haiku',
       enabled: true,
