@@ -27,6 +27,7 @@
   "submitAgent": "上傳助理",
   "title": {
     "allAgents": "所有助理",
+    "findAgents": "尋找並使用最佳助手",
     "recentSubmits": "最新上傳"
   }
 }

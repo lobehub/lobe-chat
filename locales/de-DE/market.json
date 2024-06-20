@@ -27,6 +27,7 @@
   "submitAgent": "Helfer einreichen",
   "title": {
     "allAgents": "Alle Helfer",
+    "findAgents": "Finde und nutze die besten Helfer",
     "recentSubmits": "Kürzlich hinzugefügt"
   }
 }

@@ -27,6 +27,7 @@
   "submitAgent": "エージェントを提出する",
   "title": {
     "allAgents": "すべてのエージェント",
+    "findAgents": "最適なエージェントを見つけて利用する",
     "recentSubmits": "最近の追加"
   }
 }

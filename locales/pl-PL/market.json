@@ -27,6 +27,7 @@
   "submitAgent": "Zatwierdź asystenta",
   "title": {
     "allAgents": "Wszyscy asystenci",
+    "findAgents": "Znajdź i użyj najlepszych agentów",
     "recentSubmits": "Ostatnie dodane"
   }
 }

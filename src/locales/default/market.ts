@@ -27,6 +27,7 @@ export default {
   submitAgent: '提交助手',
   title: {
     allAgents: '全部助手',
+    findAgents: '寻找并使用最佳助手',
     recentSubmits: '最近新增',
   },
 };

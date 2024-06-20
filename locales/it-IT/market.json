@@ -27,6 +27,7 @@
   "submitAgent": "Invia assistente",
   "title": {
     "allAgents": "Tutti gli assistenti",
+    "findAgents": "Trova e utilizza i migliori assistenti",
     "recentSubmits": "Aggiunte recenti"
   }
 }

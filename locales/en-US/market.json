@@ -27,6 +27,7 @@
   "submitAgent": "Submit Assistant",
   "title": {
     "allAgents": "All Assistants",
+    "findAgents": "Find & Use The Best Assistants",
     "recentSubmits": "Recent Submits"
   }
 }

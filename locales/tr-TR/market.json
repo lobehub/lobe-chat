@@ -27,6 +27,7 @@
   "submitAgent": "Asistan Ekle",
   "title": {
     "allAgents": "Tüm Asistanlar",
+    "findAgents": "En İyi Yardımcıları Bul",
     "recentSubmits": "Son Eklenenler"
   }
 }

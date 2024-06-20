@@ -27,6 +27,7 @@
   "submitAgent": "تقديم الوكيل",
   "title": {
     "allAgents": "جميع الوكلاء",
+    "findAgents": "البحث واستخدام أفضل الوكلاء",
     "recentSubmits": "الإضافات الأخيرة"
   }
 }
