@@ -11,9 +11,11 @@ const Arguments = memo<ArgumentsProps>(({ arguments: args = '' }) => {
   const yaml = useYamlArguments(args);
 
   return (
-    <Highlighter language={'yaml'} showLanguage={false}>
-      {yaml}
-    </Highlighter>
+    !!yaml && (
+      <Highlighter language={'yaml'} showLanguage={false}>
+        {yaml}
+      </Highlighter>
+    )
   );
 });
 
