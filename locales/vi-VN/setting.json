@@ -102,6 +102,7 @@
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
       "noLatestTime": "Chưa có danh sách nào được lấy"
     },
+    "helpDoc": "Hướng dẫn cấu hình",
     "modelList": {
       "desc": "Chọn mô hình hiển thị trong cuộc trò chuyện, mô hình đã chọn sẽ được hiển thị trong danh sách mô hình",
       "placeholder": "Vui lòng chọn mô hình từ danh sách",

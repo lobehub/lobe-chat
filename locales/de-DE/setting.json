@@ -102,6 +102,7 @@
       "latestTime": "Letzte Aktualisierung: {{time}}",
       "noLatestTime": "Liste noch nicht abgerufen"
     },
+    "helpDoc": "Konfigurationsanleitung",
     "modelList": {
       "desc": "Wählen Sie die Modelle aus, die in der Sitzung angezeigt werden sollen. Die ausgewählten Modelle werden in der Modellliste angezeigt.",
       "placeholder": "Wählen Sie ein Modell aus der Liste aus",

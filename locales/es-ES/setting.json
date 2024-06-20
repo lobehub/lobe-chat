@@ -102,6 +102,7 @@
       "latestTime": "Última actualización: {{time}}",
       "noLatestTime": "Lista no disponible actualmente"
     },
+    "helpDoc": "Tutorial de configuración",
     "modelList": {
       "desc": "Selecciona los modelos que se mostrarán en la conversación. Los modelos seleccionados se mostrarán en la lista de modelos.",
       "placeholder": "Selecciona un modelo de la lista",
