@@ -75,7 +75,7 @@ export const LobeOpenAICompatibleFactory = ({
       this.baseURL = this.client.baseURL;
     }
 
-    async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response> {
       try {
         const postPayload = chatCompletion?.handlePayload
           ? chatCompletion.handlePayload(payload)
@@ -83,7 +83,7 @@ export const LobeOpenAICompatibleFactory = ({
               ...payload,
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
-          
+
         const response = await this.client.chat.completions.create(
           { ...postPayload, user: options?.user },
           {
@@ -91,15 +91,15 @@ export const LobeOpenAICompatibleFactory = ({
             signal: options?.signal,
           },
         );
-      
+
         // Check if streaming is enabled
         if (postPayload.stream) {
           const [prod, useForDebug] = response.tee();
-        
+
           if (debug?.chatCompletion?.()) {
             debugStream(useForDebug.toReadableStream()).catch(console.error);
           }
-        
+
           return StreamingResponse(OpenAIStream(prod, options?.callback), {
             headers: options?.headers,
           });
@@ -109,17 +109,30 @@ export const LobeOpenAICompatibleFactory = ({
             console.log('\n[no stream response]\n');
             console.log(JSON.stringify(response) + '\n');
           }
-        
-          // Return a non-stream response directly without transforming it into a stream
-          return response;
+
+          // Convert the response data to a JSON string and then to a Blob
+          const responseBody = new Blob([JSON.stringify(response)], { type: 'application/json' });
+
+          // Create a new Response object with the responseBody
+          const responseToReturn = new Response(responseBody, {
+            headers: {
+              'Content-Type': 'application/json',
+              // Include any other necessary headers
+            },
+            status: 200, // Assuming the request was successful; adjust as necessary
+            statusText: 'OK',
+          });
+
+          // Return the newly created Response object
+          return responseToReturn;
         }
       } catch (error) {
         let desensitizedEndpoint = this.baseURL;
-      
+
         if (this.baseURL !== DEFAULT_BASE_URL) {
           desensitizedEndpoint = desensitizeUrl(this.baseURL);
         }
-      
+
         if ('status' in (error as any)) {
           switch ((error as Response).status) {
             case 401: {
@@ -130,25 +143,25 @@ export const LobeOpenAICompatibleFactory = ({
                 provider: provider as any,
               });
             }
-          
+
             default: {
               break;
             }
           }
         }
-      
+
         if (chatCompletion?.handleError) {
           const errorResult = chatCompletion.handleError(error);
-        
+
           if (errorResult)
             throw AgentRuntimeError.chat({
               ...errorResult,
               provider,
             } as ChatCompletionErrorPayload);
         }
-      
+
         const { errorResult, RuntimeError } = handleOpenAIError(error);
-      
+
         throw AgentRuntimeError.chat({
           endpoint: desensitizedEndpoint,
           error: errorResult,
