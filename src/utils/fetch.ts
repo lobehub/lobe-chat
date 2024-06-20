@@ -406,109 +406,105 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   return response;
 };
 
-
 /**
  * Fetch data using JSON method with smooth animation
  * Clones the functionality of fetchSSE but works with JSON responses.
  */
-export const fetchJSON = async <T>(
-  url: string,
-  options: RequestInit & FetchJSONOptions = {},
-) => {
-  let output = '';
-  let toolCalls: undefined | MessageToolCall[];
-  let finishedType: SSEFinishType = 'done';
-  let response!: Response;
+// export const fetchJSON = async <T>(url: string, options: RequestInit & FetchJSONOptions = {}) => { // eslint-disable-line no-undef
+//   let output = '';
+//   let toolCalls: undefined | MessageToolCall[];
+//   let finishedType: SSEFinishType = 'done';
+//   let response!: Response;
 
-  const { smoothing = true } = options;
+//   const { smoothing = true } = options;
 
-  const textController = createSmoothMessage({
-    onTextUpdate: (delta, text) => {
-      output = text;
-      options.onMessageHandle?.({ text: delta, type: 'text' });
-    },
-  });
+//   const textController = createSmoothMessage({
+//     onTextUpdate: (delta, text) => {
+//       output = text;
+//       options.onMessageHandle?.({ text: delta, type: 'text' });
+//     },
+//   });
 
-  const toolCallsController = createSmoothToolCalls({
-    onToolCallsUpdate: (toolCalls, isAnimationActives) => {
-      options.onMessageHandle?.({ isAnimationActives, tool_calls: toolCalls, type: 'tool_calls' });
-    },
-  });
+//   const toolCallsController = createSmoothToolCalls({
+//     onToolCallsUpdate: (toolCalls, isAnimationActives) => {
+//       options.onMessageHandle?.({ isAnimationActives, tool_calls: toolCalls, type: 'tool_calls' });
+//     },
+//   });
 
-  try {
-    response = await (options.fetcher || fetch)(url, options);
+//   try {
+//     response = await (options.fetcher || fetch)(url, options);
 
-    if (!response.ok) {
-      throw await getMessageError(response);
-    }
+//     if (!response.ok) {
+//       throw await getMessageError(response);
+//     }
 
-    const data = await response.json() as T;
+//     const data = (await response.json()) as T;
 
-    if (data.choices) {
-      data.choices.forEach((choice) => {
-        if (smoothing) {
-          textController.pushToQueue(choice.message.content);
+//     if (data.choices) {
+//       data.choices.forEach((choice) => {
+//         if (smoothing) {
+//           textController.pushToQueue(choice.message.content);
 
-          if (!textController.isAnimationActive) textController.startAnimation();
-        } else {
-          output += choice.message.content;
-          options.onMessageHandle?.({ text: choice.message.content, type: 'text' });
-        }
+//           if (!textController.isAnimationActive) textController.startAnimation();
+//         } else {
+//           output += choice.message.content;
+//           options.onMessageHandle?.({ text: choice.message.content, type: 'text' });
+//         }
 
-        if (choice.message.tool_calls) {
-          // get finial
-          // if there is no tool calls, we should initialize the tool calls
-          if (!toolCalls) toolCalls = [];
-          toolCalls = parseToolCalls(toolCalls, choice.message.tool_calls);
+//         if (choice.message.tool_calls) {
+//           // get finial
+//           // if there is no tool calls, we should initialize the tool calls
+//           if (!toolCalls) toolCalls = [];
+//           toolCalls = parseToolCalls(toolCalls, choice.message.tool_calls);
 
-          if (smoothing) {
-            // make the tool calls smooth
+//           if (smoothing) {
+//             // make the tool calls smooth
 
-            // push the tool calls to the smooth queue
-            toolCallsController.pushToQueue(choice.message.tool_calls);
-            // if there is no animation active, we should start the animation
-            if (toolCallsController.isAnimationActives.some((value) => !value)) {
-              toolCallsController.startAnimations();
-            }
-          } else {
-            options.onMessageHandle?.({
-              tool_calls: toolCalls,
-              type: 'tool_calls',
-            });
-          }
-        }
-      });
-    } else {
-      console.warn('No choices found in response data:', data);
-    }
+//             // push the tool calls to the smooth queue
+//             toolCallsController.pushToQueue(choice.message.tool_calls);
+//             // if there is no animation active, we should start the animation
+//             if (toolCallsController.isAnimationActives.some((value) => !value)) {
+//               toolCallsController.startAnimations();
+//             }
+//           } else {
+//             options.onMessageHandle?.({
+//               tool_calls: toolCalls,
+//               type: 'tool_calls',
+//             });
+//           }
+//         }
+//       });
+//     } else {
+//       console.warn('No choices found in response data:', data);
+//     }
 
-    textController.stopAnimation();
-    toolCallsController.stopAnimations();
+//     textController.stopAnimation();
+//     toolCallsController.stopAnimations();
 
-    const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
-    const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
+//     const traceId = response.headers.get(LOBE_CHAT_TRACE_ID);
+//     const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
 
-    if (textController.isTokenRemain()) {
-      await textController.startAnimation(15);
-    }
+//     if (textController.isTokenRemain()) {
+//       await textController.startAnimation(15);
+//     }
 
-    if (toolCallsController.isTokenRemain()) {
-      await toolCallsController.startAnimations(15);
-    }
+//     if (toolCallsController.isTokenRemain()) {
+//       await toolCallsController.startAnimations(15);
+//     }
 
-    await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
-  } catch (error) {
-    if ((error as TypeError).name === 'AbortError') {
-      finishedType = 'abort';
-      options?.onAbort?.(output);
-      textController.stopAnimation();
-    } else {
-      finishedType = 'error';
-      options.onErrorHandle?.(error);
-    }
+//     await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
+//   } catch (error) {
+//     if ((error as TypeError).name === 'AbortError') {
+//       finishedType = 'abort';
+//       options?.onAbort?.(output);
+//       textController.stopAnimation();
+//     } else {
+//       finishedType = 'error';
+//       options.onErrorHandle?.(error);
+//     }
 
-    throw new Error(error);
-  }
+//     throw new Error(error);
+//   }
 
-  return response;
-};
+//   return response;
+// };
