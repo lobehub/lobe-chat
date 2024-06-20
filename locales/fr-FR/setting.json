@@ -102,6 +102,7 @@
       "latestTime": "Dernière mise à jour : {{time}}",
       "noLatestTime": "Aucune mise à jour disponible"
     },
+    "helpDoc": "Guide de configuration",
     "modelList": {
       "desc": "Sélectionnez les modèles à afficher dans la session. Les modèles sélectionnés seront affichés dans la liste des modèles.",
       "placeholder": "Veuillez sélectionner un modèle dans la liste",

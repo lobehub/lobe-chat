@@ -102,6 +102,7 @@
       "latestTime": "上次更新時間：{{time}}",
       "noLatestTime": "暫未獲取列表"
     },
+    "helpDoc": "配置說明文件",
     "modelList": {
       "desc": "選擇在會話中展示的模型，選擇的模型會在模型列表中展示",
       "placeholder": "請從列表中選擇模型",

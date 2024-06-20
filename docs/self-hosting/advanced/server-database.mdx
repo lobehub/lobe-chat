@@ -12,6 +12,7 @@ tags:
   - S3 Storage Service
   - Configuration Guide
 ---
+
 # Deploying Server-Side Database
 
 LobeChat defaults to using a client-side database (IndexedDB) but also supports using a server-side database. LobeChat uses Postgres as the backend storage database. PostgreSQL is a powerful open-source relational database management system with high scalability and standard SQL support. It provides rich data types, concurrency control, data integrity, security, and programmability, making it suitable for complex applications and large-scale data management.
@@ -195,9 +196,9 @@ You have now successfully configured the Clerk identity authentication service. 
 LobeChat has long supported multimodal AI conversations, involving the function of uploading images to AI. In the client-side database solution, image files are stored as binary data in the browser's indexedDB database. However, this solution is not feasible in the server-side database. We need to configure the S3 storage service to store a large number of image files, and S3 can also serve as a storage solution for file uploads.
 
 <Callout type={'info'}>
-    In this article, S3 refers to a compatible S3 storage solution, which supports object storage systems
-  that comply with the Amazon S3 API. Common examples include Cloudflare R2 etc., all of which support
-  S3-compatible APIs.
+  In this article, S3 refers to a compatible S3 storage solution, which supports object storage
+  systems that comply with the Amazon S3 API. Common examples include Cloudflare R2 etc., all of
+  which support S3-compatible APIs.
 </Callout>
 
 <Steps>

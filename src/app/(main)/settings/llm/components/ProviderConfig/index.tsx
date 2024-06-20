@@ -1,12 +1,13 @@
 'use client';
 
-import { Form, type FormItemProps, type ItemGroup } from '@lobehub/ui';
+import { Form, type FormItemProps, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
+import Link from 'next/link';
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import {
@@ -25,7 +26,7 @@ import { GlobalLLMProviderKey } from '@/types/user/settings';
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
 
-const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
+const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
   form: css`
     .${prefixCls}-form-item-control:has(.${prefixCls}-input,.${prefixCls}-select) {
       flex: none;
@@ -40,6 +41,19 @@ const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
       font-size: 12px;
     }
   `,
+  help: css`
+    font-size: 12px;
+    font-weight: 500;
+    color: ${token.colorTextDescription};
+
+    background: ${token.colorFillTertiary};
+    border-radius: 50%;
+
+    &:hover {
+      color: ${token.colorText};
+      background: ${token.colorFill};
+    }
+  `,
   safariIconWidthFix: css`
     svg {
       width: unset !important;
@@ -52,6 +66,7 @@ export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id'> {
   canDeactivate?: boolean;
   checkerItem?: FormItemProps;
   className?: string;
+  docUrl?: string;
   hideSwitch?: boolean;
   id: GlobalLLMProviderKey;
   modelList?: {
@@ -78,6 +93,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     disableBrowserRequest,
     className,
     name,
+    docUrl,
   }) => {
     const { t } = useTranslation('setting');
     const [form] = Form.useForm();
@@ -178,14 +194,28 @@ const ProviderConfig = memo<ProviderConfigProps>(
       children: formItems,
 
       defaultActive: canDeactivate ? enabled : undefined,
-      extra: canDeactivate ? (
-        <Switch
-          onChange={(enabled) => {
-            toggleProviderEnabled(id, enabled);
-          }}
-          value={enabled}
-        />
-      ) : undefined,
+
+      extra: (
+        <Flexbox align={'center'} gap={8} horizontal>
+          {docUrl && (
+            <Tooltip title={t('llm.helpDoc')}>
+              <Link href={docUrl} onClick={(e) => e.stopPropagation()} target={'_blank'}>
+                <Center className={styles.help} height={20} width={20}>
+                  ?
+                </Center>
+              </Link>
+            </Tooltip>
+          )}
+          {canDeactivate ? (
+            <Switch
+              onChange={(enabled) => {
+                toggleProviderEnabled(id, enabled);
+              }}
+              value={enabled}
+            />
+          ) : undefined}
+        </Flexbox>
+      ),
       title: (
         <Flexbox
           align={'center'}

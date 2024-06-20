@@ -12,6 +12,7 @@ tags:
   - LobeChat
   - Parameter Schema
 ---
+
 # Share settings via URL
 
 LobeChat support import settings from external URL to quickly set up LobeChat configuration.
@@ -71,8 +72,8 @@ console.log(url);
 
 - Property name and type
 
-| Property name | Type                     |
-| ------------- | ------------------------ |
+| Property name | Type                       |
+| ------------- | -------------------------- |
 | anthropic     | `OpenAICompatibleKeyVault` |
 | azure         | `AzureOpenAIKeyVault`      |
 | bedrock       | `AWSBedrockKeyVault`       |
@@ -118,8 +119,8 @@ console.log(url);
 export type UserModelProviderConfig = Record<string, ProviderConfig>;
 ```
 
-| Property name | Type           |
-| ------------- | -------------- |
+| Property name | Type             |
+| ------------- | ---------------- |
 | anthropic     | `ProviderConfig` |
 | azure         | `ProviderConfig` |
 | bedrock       | `ProviderConfig` |
