@@ -102,6 +102,7 @@
       "latestTime": "Ostatnia aktualizacja: {{time}}",
       "noLatestTime": "Brak dostępnej listy"
     },
+    "helpDoc": "Poradnik konfiguracji",
     "modelList": {
       "desc": "Wybierz modele do wyświetlenia w sesji. Wybrane modele będą widoczne na liście modeli",
       "placeholder": "Wybierz model z listy",

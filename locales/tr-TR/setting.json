@@ -102,6 +102,7 @@
       "latestTime": "Son güncelleme zamanı: {{time}}",
       "noLatestTime": "Liste henüz alınamadı"
     },
+    "helpDoc": "Yardım Belgeleri",
     "modelList": {
       "desc": "Görüntülenecek modeli seçin, seçilen model model listesinde görüntülenecektir",
       "placeholder": "Lütfen listeden bir model seçin",

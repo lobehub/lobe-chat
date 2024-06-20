@@ -102,6 +102,7 @@
       "latestTime": "Laatst bijgewerkt: {{time}}",
       "noLatestTime": "Geen lijst beschikbaar op dit moment"
     },
+    "helpDoc": "configuratiehandleiding",
     "modelList": {
       "desc": "Selecteer het model dat in de sessie moet worden weergegeven. Het geselecteerde model wordt weergegeven in de modellijst.",
       "placeholder": "Selecteer een model uit de lijst",
