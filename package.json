@@ -110,7 +110,7 @@
     "@lobehub/chat-plugins-gateway": "^1.9.0",
     "@lobehub/icons": "^1.23.0",
     "@lobehub/tts": "^1.24.1",
-    "@lobehub/ui": "^1.143.5",
+    "@lobehub/ui": "^1.144.3",
     "@microsoft/fetch-event-source": "^2.0.1",
     "@neondatabase/serverless": "^0.9.3",
     "@next/third-parties": "^14.2.4",
