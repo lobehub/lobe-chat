@@ -2,6 +2,7 @@ import {
   Anthropic,
   Azure,
   Bedrock,
+  Cloudflare,
   DeepSeek,
   Google,
   Groq,
@@ -112,6 +113,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Stepfun: {
       return <Stepfun size={20} />;
+    }
+
+    case ModelProvider.Cloudflare: {
+      return <Cloudflare size={20} />;
     }
 
     default: {
