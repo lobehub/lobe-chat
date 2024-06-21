@@ -229,13 +229,18 @@ Create images from a text-only prompt.
 
 根据以上的测试任务，我们对支持 Tools Calling 的模型进行了测试，评测结果如下：
 
-### 基础能力
+### API 基础能力
 
-| 模型          | 服务商 | 支持 Tool Calling | 流式 Tool Calling | 并发调用 |
-| ------------- | ------ | ----------------- | ----------------- | -------- |
-| GPT-3.5-turbo | OpenAI | ✅                | ✅                | ✅       |
-| GPT-4-turbo   | OpenAI | ✅                | ✅                | ✅       |
-| GPT-4o        | OpenAI | ✅                | ✅                | ✅       |
+| 模型              | 服务商    | 支持 Tool Calling | 流式 Tool Calling | 并发调用 |
+| ----------------- | --------- | ----------------- | ----------------- | -------- |
+| GPT-3.5-turbo     | OpenAI    | ✅                | ✅                | ✅       |
+| GPT-4-turbo       | OpenAI    | ✅                | ✅                | ✅       |
+| GPT-4o            | OpenAI    | ✅                | ✅                | ✅       |
+| Claude 3 Haiku    | Anthropic | ✅                | ✅                | ❌       |
+| Claude 3 Sonnet   | Anthropic | ✅                | ✅                | ❌       |
+| Claude 3.5 Sonnet | Anthropic | ✅                | ✅                | ❌       |
+| Claude 3 Opus     | Anthropic | ✅                | ✅                | ❌       |
+| Gemini-1.5-pro    | Google    | ✅                | ❌                | ❌       |
 
 ### 简单指令·天气查询
 
