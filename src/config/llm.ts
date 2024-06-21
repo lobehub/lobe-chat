@@ -123,6 +123,7 @@ export const getLLMConfig = () => {
 
       ENABLED_CF: z.boolean(),
       CF_API_KEY: z.string().optional(),
+      CF_ACCOUNT_ID: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
