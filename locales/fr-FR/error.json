@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
     "OllamaServiceUnavailable": "Le service Ollama n'est pas disponible. Veuillez vérifier si Ollama fonctionne correctement ou si la configuration de la communication inter-domaines d'Ollama est correcte.",
+    "OpenAIBizError": "Erreur de service OpenAI. Veuillez vérifier les informations suivantes ou réessayer.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
     "PluginGatewayError": "Désolé, une erreur est survenue avec la passerelle du plugin. Veuillez vérifier la configuration de la passerelle du plugin.",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "Désolé, l'initialisation du client OpenAPI a échoué. Veuillez vérifier les informations de configuration d'OpenAPI.",
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
-    "ProviderBizAPIKey": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information"
+    "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer."
   },
   "stt": {
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"

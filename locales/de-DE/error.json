@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "OllamaServiceUnavailable": "Der Ollama-Dienst ist nicht verfügbar. Bitte überprüfen Sie, ob Ollama ordnungsgemäß ausgeführt wird und ob die CORS-Konfiguration von Ollama korrekt ist.",
+    "OpenAIBizError": "Fehler bei der Anforderung des OpenAI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
     "PluginGatewayError": "Entschuldigung, es ist ein Fehler im Plugin-Gateway aufgetreten. Bitte überprüfen Sie die Plugin-Gateway-Konfiguration auf Richtigkeit",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "Entschuldigung, die Initialisierung des OpenAPI-Clients ist fehlgeschlagen. Bitte überprüfen Sie die Konfigurationsinformationen des OpenAPI auf Richtigkeit",
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
     "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
-    "ProviderBizAPIKey": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
+    "ProviderBizError": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
   },
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"

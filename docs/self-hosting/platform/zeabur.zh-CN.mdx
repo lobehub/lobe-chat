@@ -37,10 +37,9 @@ tags:
 
 # 使用 Zeabur 将 LobeChat 部署为无服务器函数
 
->**注意：** 仍然存在关于 [Zeabur 上 next.js 的中间件和重写问题](https://github.com/lobehub/lobe-chat/pull/2775?notification_referrer_id=NT_kwDOAdi2DrQxMDkyODQ4MDc2NTozMDk3OTU5OA#issuecomment-2146713899)，请自担风险！
+> **注意：** 仍然存在关于 [Zeabur 上 next.js 的中间件和重写问题](https://github.com/lobehub/lobe-chat/pull/2775?notification_referrer_id=NT_kwDOAdi2DrQxMDkyODQ4MDc2NTozMDk3OTU5OA#issuecomment-2146713899)，请自担风险！
 
-由于 Zeabur 并未官方支持免费用户部署容器化服务，您可能希望将 LobeChat 部署为无服务器函数服务。
-要在 Zeabur 上将 LobeChat 部署为无服务器函数服务，您可以按照以下步骤操作：
+由于 Zeabur 并未官方支持免费用户部署容器化服务，您可能希望将 LobeChat 部署为无服务器函数服务。要在 Zeabur 上将 LobeChat 部署为无服务器函数服务，您可以按照以下步骤操作：
 
 ## Zeabur 部署流程
 
@@ -51,10 +50,11 @@ tags:
 ### 添加 Zeabur 打包配置文件
 
 在您的分支的根目录下添加一个 `zbpack.json` 配置文件，内容如下：
+
 ```json
 {
-  "serverless": true,
-  "ignore_dockerfile": true
+  "ignore_dockerfile": true,
+  "serverless": true
 }
 ```
 
@@ -72,8 +72,7 @@ tags:
 
 ### 将您的 LobeChat 分支链接到刚创建的 Zeabur 服务。
 
-在添加服务时，选择 github。
-这可能会触发一个 oAuth，取决于诸如您如何登录到 Zeabur以及您是否已经授权 Zeabur 访问所有您的存储库等各种因素。
+在添加服务时，选择 github。这可能会触发一个 oAuth，取决于诸如您如何登录到 Zeabur以及您是否已经授权 Zeabur 访问所有您的存储库等各种因素。
 
 ### 绑定自定义域名（可选）
 
