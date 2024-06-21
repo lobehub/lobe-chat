@@ -11,6 +11,10 @@ export const LobeCloudflareAI = LobeOpenAICompatibleFactory({
   chatCompletion: {
     handlePayload: (payload) => ({
       ...payload,
+      messages: payload.messages.map(message => ({
+        ...message,
+        role: 'assistant' as const,
+      })),
       stream: true,
     }),
   },
