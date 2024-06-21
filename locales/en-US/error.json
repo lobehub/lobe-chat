@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "OpenAI API Key is empty, please add a custom OpenAI API Key",
     "OllamaBizError": "Error requesting Ollama service, please troubleshoot or retry based on the following information",
     "OllamaServiceUnavailable": "Ollama service is unavailable. Please check if Ollama is running properly or if the cross-origin configuration of Ollama is set correctly.",
+    "OpenAIBizError": "Error requesting OpenAI service, please troubleshoot or retry based on the following information",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
     "PluginGatewayError": "Sorry, there was an error with the plugin gateway. Please check if the plugin gateway configuration is correct.",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
-    "ProviderBizAPIKey": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information"
+    "ProviderBizError": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information"
   },
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"

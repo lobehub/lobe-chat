@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
     "OllamaServiceUnavailable": "El servicio Ollama no está disponible. Por favor, verifica si Ollama está funcionando correctamente o si la configuración de Ollama para el acceso entre dominios está configurada correctamente.",
+    "OpenAIBizError": "Se produjo un error al solicitar el servicio de OpenAI, por favor, revise la siguiente información o inténtelo de nuevo",
     "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
     "PluginApiParamsError": "Lo sentimos, la validación de los parámetros de entrada de la solicitud del complemento no ha pasado. Verifique si los parámetros de entrada coinciden con la información de descripción del API",
     "PluginGatewayError": "Lo sentimos, se ha producido un error en la puerta de enlace del complemento. Verifique si la configuración de la puerta de enlace del complemento es correcta",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "Lo sentimos, la inicialización del cliente OpenAPI ha fallado. Verifique si la información de configuración de OpenAPI es correcta",
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
-    "ProviderBizAPIKey": "Error al solicitar el servicio de {{provider}}, por favor revisa la siguiente información o inténtalo de nuevo"
+    "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo"
   },
   "stt": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
