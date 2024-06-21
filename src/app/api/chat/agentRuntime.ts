@@ -171,7 +171,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const apiKey = apiKeyManager.pick(payload?.apiKey || CF_API_KEY);
       const accountID = CF_ACCOUNT_ID;
 
-      return { apiKey, accountID };
+      return { accountID, apiKey  };
     }
   }
 };
