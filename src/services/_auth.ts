@@ -40,8 +40,8 @@ export const getProviderAuthPayload = (provider: string) => {
       const config = keyVaultsConfigSelectors.cloudflareConfig(useUserStore.getState());
 
       return { 
-        cloudflareAccountID: config?.accountID, 
         apiKey: config?.apiKey, 
+        cloudflareAccountID: config?.accountID, 
       };
     }
 

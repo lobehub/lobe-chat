@@ -26,7 +26,6 @@ import urlJoin from 'url-join';
 
 import {
   AnthropicProviderCard,
-  CloudflareProviderCard,
   DeepSeekProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
@@ -45,6 +44,7 @@ import {
 import { ProviderItem } from '../type';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
+import { useCloudflareProvider } from './Cloudflare';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 
@@ -79,7 +79,7 @@ const GoogleBrand = () => (
   </Flexbox>
 );
 
-const CloudflareBrand = () => (
+export const CloudflareBrand = () => (
   <Flexbox align={'center'} gap={8} horizontal>
     <Cloudflare.Combine size={22} type={'color'} />
     <Divider style={{ margin: '0 4px' }} type={'vertical'} />
@@ -92,6 +92,7 @@ export const useProviderList = (): ProviderItem[] => {
   const ollamaProvider = useOllamaProvider();
   const openAIProvider = useOpenAIProvider();
   const bedrockProvider = useBedrockProvider();
+  const cloudflareProvider = useCloudflareProvider();
 
   return useMemo(
     () => [
@@ -182,11 +183,10 @@ export const useProviderList = (): ProviderItem[] => {
         title: <Stepfun.Combine size={20} type={'color'} />,
       },
       {
-        ...CloudflareProviderCard,
+        ...cloudflareProvider,
         docUrl: urlJoin(BASE_DOC_URL, 'cloudflare'),
-        title: <CloudflareBrand />,
       },
     ],
-    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
+    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider, cloudflareProvider],
   );
 };

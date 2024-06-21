@@ -46,6 +46,18 @@ export default {
       title: '使用自定义 Bedrock 鉴权信息',
     },
   },
+  cloudflare: {
+    accountID: {
+      desc: '填入 Cloudflare 账户 ID',
+      placeholder: 'Cloudflare Account ID',
+      title: 'Cloudflare Account ID',
+    },
+    apiKey: {
+      desc: '填入 Cloudflare API Key',
+      placeholder: 'Cloudflare API Key',
+      title: 'Cloudflare API Key',
+    },
+  },
   ollama: {
     checker: {
       desc: '测试代理地址是否正确填写',
