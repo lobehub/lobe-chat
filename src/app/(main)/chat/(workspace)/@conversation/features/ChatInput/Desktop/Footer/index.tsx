@@ -1,9 +1,9 @@
 import { Icon } from '@lobehub/ui';
-import { Button, Space } from 'antd';
+import { Button, Skeleton, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronUp, CornerDownLeft, LucideCommand } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -13,7 +13,7 @@ import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { filesSelectors, useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors, preferenceSelectors } from '@/store/user/selectors';
@@ -50,8 +50,6 @@ const useStyles = createStyles(({ css, prefixCls, token }) => {
   };
 });
 
-const isMac = isMacOS();
-
 interface FooterProps {
   setExpand?: (expand: boolean) => void;
 }
@@ -61,10 +59,20 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
 
   const { theme, styles } = useStyles();
 
-  const [isAIGenerating, stopGenerateMessage] = useChatStore((s) => [
+  const [
+    isAIGenerating,
+    isHasMessageLoading,
+    isCreatingMessage,
+    isCreatingTopic,
+    stopGenerateMessage,
+  ] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
+    chatSelectors.isHasMessageLoading(s),
+    chatSelectors.isCreatingMessage(s),
+    topicSelectors.isCreatingTopic(s),
     s.stopGenerateMessage,
   ]);
+
   const isImageUploading = useFileStore(filesSelectors.isImageUploading);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
@@ -76,9 +84,20 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
 
   const sendMessage = useSendMessage();
 
+  const [isMac, setIsMac] = useState<boolean>();
+  useEffect(() => {
+    setIsMac(isMacOS());
+  }, [setIsMac]);
+
   const cmdEnter = (
     <Flexbox gap={2} horizontal>
-      <Icon icon={isMac ? LucideCommand : ChevronUp} />
+      {typeof isMac === 'boolean' ? (
+        <Icon icon={isMac ? LucideCommand : ChevronUp} />
+      ) : (
+        <Skeleton.Node active style={{ height: '100%', width: 12 }}>
+          {' '}
+        </Skeleton.Node>
+      )}
       <Icon icon={CornerDownLeft} />
     </Flexbox>
   );
@@ -92,6 +111,9 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
   const sendShortcut = useCmdEnterToSend ? cmdEnter : enter;
 
   const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
+
+  const buttonDisabled =
+    isImageUploading || isHasMessageLoading || isCreatingTopic || isCreatingMessage;
 
   return (
     <Flexbox
@@ -136,7 +158,8 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
           ) : (
             <Space.Compact>
               <Button
-                disabled={isImageUploading}
+                disabled={buttonDisabled}
+                loading={buttonDisabled}
                 onClick={() => {
                   sendMessage();
                   setExpand?.(false);
@@ -145,7 +168,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
               >
                 {t('input.send')}
               </Button>
-              <SendMore disabled={isImageUploading} />
+              <SendMore disabled={buttonDisabled} isMac={isMac} />
             </Space.Compact>
           )}
         </Flexbox>

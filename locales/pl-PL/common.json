@@ -1,7 +1,7 @@
 {
   "about": "O nas",
   "advanceSettings": "Zaawansowane ustawienia",
-  "appInitializing": "LobeChat inicjuje, proszę czekać...",
+  "appInitializing": "Inicjowanie aplikacji, prosimy o cierpliwość...",
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
   "autoGenerateTooltipDisabled": "Proszę wprowadzić słowo kluczowe przed użyciem funkcji automatycznego uzupełniania",
@@ -9,6 +9,7 @@
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
   "close": "Zamknij",
+  "contact": "Skontaktuj się z nami",
   "copy": "Kopiuj",
   "copyFail": "Nie udało się skopiować",
   "copySuccess": "Skopiowano pomyślnie",
@@ -35,10 +36,33 @@
   },
   "feedback": "Opinie i sugestie",
   "follow": "Zaobserwuj nas na {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Podziel się swoją cenną opinią",
+      "star": "Dodaj gwiazdkę na GitHubie"
+    },
+    "and": "i",
+    "feedback": {
+      "action": "Podziel się opinią",
+      "desc": "Każdy twój pomysł i sugestia są dla nas bezcenne, nie możemy się doczekać, aby poznać twoją opinię! Skontaktuj się z nami, aby podzielić się opinią na temat funkcji produktu i doświadczeń z jego użytkowania, pomóż nam ulepszyć LobeChat.",
+      "title": "Podziel się swoją cenną opinią na GitHubie"
+    },
+    "later": "Później",
+    "star": {
+      "action": "Dodaj gwiazdkę",
+      "desc": "Jeśli podoba ci się nasz produkt i chcesz nas wesprzeć, czy mógłbyś dodać gwiazdkę na GitHubie? To małe działanie ma ogromne znaczenie dla nas i motywuje nas do ciągłego zapewniania ci wyjątkowego doświadczenia.",
+      "title": "Dodaj gwiazdkę na GitHubie"
+    },
+    "title": "Podoba ci się nasz produkt?"
+  },
   "fullscreen": "Tryb pełnoekranowy",
   "historyRange": "Zakres historii",
   "import": "Importuj ustawienia",
   "importModal": {
+    "error": {
+      "desc": "Przepraszamy, wystąpił błąd podczas importowania danych. Spróbuj ponownie zaimportować, lub <1>zgłoś problem</1>, a my postaramy się jak najszybciej rozwiązać problem.",
+      "title": "Import danych nie powiódł się"
+    },
     "finish": {
       "onlySettings": "Pomyślnie zaimportowano ustawienia systemowe",
       "start": "Rozpocznij korzystanie",
@@ -46,6 +70,7 @@
       "title": "Zakończono import danych"
     },
     "loading": "Trwa import danych, proszę czekać...",
+    "preparing": "Przygotowywanie modułu importu danych...",
     "result": {
       "added": "Pomyślnie zaimportowano",
       "errors": "Błędy importu",
@@ -56,8 +81,14 @@
       "topics": "Tematy",
       "type": "Typ danych"
     },
-    "title": "Import danych"
+    "title": "Import danych",
+    "uploading": {
+      "desc": "Obecny plik jest duży, trwa wysyłanie...",
+      "restTime": "Pozostały czas",
+      "speed": "Prędkość wysyłania"
+    }
   },
+  "information": "Społeczność i informacje",
   "installPWA": "Zainstaluj aplikację przeglądarki",
   "lang": {
     "ar": "arabski",
@@ -97,7 +128,11 @@
     "zh-TW": "Chiński tradycyjny"
   },
   "layoutInitializing": "Inicjowanie układu...",
-  "noDescription": "Brak opisu",
+  "legal": "Oświadczenie prawne",
+  "mail": {
+    "business": "Współpraca biznesowa",
+    "support": "Wsparcie mailowe"
+  },
   "oauth": "Logowanie SSO",
   "officialSite": "Oficjalna strona internetowa",
   "ok": "OK",
@@ -183,5 +218,6 @@
     "profile": "Zarządzanie kontem",
     "setting": "Ustawienia aplikacji",
     "usages": "Statystyki użycia"
-  }
+  },
+  "version": "Wersja"
 }

@@ -1,7 +1,7 @@
 {
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
-  "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
+  "appInitializing": "Inizializzazione dell'app in corso, attendere pazientemente...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
   "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
@@ -9,6 +9,7 @@
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "close": "Chiudi",
+  "contact": "Contattaci",
   "copy": "Copia",
   "copyFail": "Copia non riuscita",
   "copySuccess": "Copia riuscita",
@@ -35,10 +36,33 @@
   },
   "feedback": "Feedback e suggerimenti",
   "follow": "Seguici su {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Condividi i tuoi preziosi suggerimenti",
+      "star": "Aggiungi una stella su GitHub"
+    },
+    "and": "e",
+    "feedback": {
+      "action": "Condividi feedback",
+      "desc": "Ogni tua idea e suggerimento è prezioso per noi, non vediamo l'ora di conoscere la tua opinione! Contattaci per fornire feedback sulle funzionalità del prodotto e sull'esperienza utente, aiutandoci a migliorare LobeChat.",
+      "title": "Condividi il tuo prezioso feedback su GitHub"
+    },
+    "later": "Più tardi",
+    "star": {
+      "action": "Aggiungi una stella",
+      "desc": "Se ami il nostro prodotto e desideri supportarci, potresti aggiungerci una stella su GitHub? Questo piccolo gesto è di grande significato per noi e ci motiva a continuare a offrirti un'esperienza di qualità.",
+      "title": "Aggiungi una stella su GitHub per supportarci"
+    },
+    "title": "Ti piace il nostro prodotto?"
+  },
   "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
+    "error": {
+      "desc": "Ci dispiace molto, si è verificato un errore durante il processo di importazione dei dati. Si prega di provare a importare nuovamente, o <1>invia un problema</1>, saremo pronti ad aiutarti a risolvere il problema al più presto.",
+      "title": "Importazione dei dati fallita"
+    },
     "finish": {
       "onlySettings": "Impostazioni di sistema importate con successo",
       "start": "Inizia utilizzo",
@@ -46,6 +70,7 @@
       "title": "Importazione dati completata"
     },
     "loading": "Importazione dati in corso, attendere prego...",
+    "preparing": "Preparazione del modulo di importazione dei dati in corso...",
     "result": {
       "added": "Importazione riuscita",
       "errors": "Errori di importazione",
@@ -56,8 +81,14 @@
       "topics": "Argomenti",
       "type": "Tipo di dati"
     },
-    "title": "Importa dati"
+    "title": "Importa dati",
+    "uploading": {
+      "desc": "Il file attuale è troppo grande, sta venendo caricato con impegno...",
+      "restTime": "Tempo rimanente",
+      "speed": "Velocità di caricamento"
+    }
   },
+  "information": "Comunità e informazioni",
   "installPWA": "Installa l'applicazione del browser",
   "lang": {
     "ar": "Arabo",
@@ -97,7 +128,11 @@
     "zh-TW": "Cinese tradizionale"
   },
   "layoutInitializing": "Inizializzazione layout in corso...",
-  "noDescription": "Nessuna descrizione disponibile",
+  "legal": "Avviso legale",
+  "mail": {
+    "business": "Collaborazioni commerciali",
+    "support": "Supporto via email"
+  },
   "oauth": "Accesso SSO",
   "officialSite": "Sito ufficiale",
   "ok": "OK",
@@ -183,5 +218,6 @@
     "profile": "Gestione account",
     "setting": "Impostazioni app",
     "usages": "Statistiche di utilizzo"
-  }
+  },
+  "version": "Versione"
 }

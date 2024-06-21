@@ -12,6 +12,7 @@ export interface ChatMessageState {
    */
   chatLoadingIds: string[];
   inputMessage: string;
+  isCreatingMessage: boolean;
   /**
    * is the message is editing
    */
@@ -25,6 +26,7 @@ export interface ChatMessageState {
    */
   messagesInit: boolean;
   messagesMap: Record<string, ChatMessage[]>;
+  pluginApiLoadingIds: string[];
   /**
    * the tool calling stream ids
    */
@@ -35,9 +37,11 @@ export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
   chatLoadingIds: [],
   inputMessage: '',
+  isCreatingMessage: false,
   messageEditingIds: [],
   messageLoadingIds: [],
   messagesInit: false,
   messagesMap: {},
+  pluginApiLoadingIds: [],
   toolCallingStreamIds: {},
 };

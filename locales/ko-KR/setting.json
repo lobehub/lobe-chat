@@ -43,6 +43,11 @@
     "title": "설정"
   },
   "llm": {
+    "apiKey": {
+      "desc": "당신의 {{name}} API 키를 입력해주세요",
+      "placeholder": "{{name}} API 키",
+      "title": "API 키"
+    },
     "checker": {
       "button": "확인",
       "desc": "API Key 및 프록시 주소가 올바르게 입력되었는지 테스트합니다",
@@ -97,6 +102,7 @@
       "latestTime": "마지막 업데이트 시간: {{time}}",
       "noLatestTime": "목록을 아직 가져오지 않았습니다"
     },
+    "helpDoc": "구성 안내",
     "modelList": {
       "desc": "대화에서 표시할 모델을 선택하세요. 선택한 모델은 모델 목록에 표시됩니다",
       "placeholder": "모델을 선택하세요",
@@ -108,14 +114,6 @@
       "title": "API 프록시 주소"
     },
     "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요 ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama 모델을 다운로드 중입니다. 이 페이지를 닫지 말아주세요. 다시 다운로드하면 중단된 곳부터 계속됩니다.",
-      "remainingTime": "남은 시간",
-      "speed": "다운로드 속도",
-      "title": "{{model}} 모델 다운로드 중"
-    }
   },
   "plugin": {
     "addTooltip": "플러그인 추가",
@@ -369,6 +367,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "어시스턴트 메타 생성 모델",
+      "modelDesc": "어시스턴트 이름, 설명, 프로필 이미지, 레이블을 생성하는 데 사용되는 모델을 지정합니다.",
+      "title": "어시스턴트 정보 자동 생성"
+    },
     "title": "시스템 도우미",
     "topic": {
       "label": "주제 명명 모델",
