@@ -8,7 +8,7 @@ export interface LobeCloudflareParams {
   }
 
 export const LobeCloudflareAI = LobeOpenAICompatibleFactory({
-  baseURL: `https://api.cloudflare.com/client/v4/accounts/${llmEnv.runtimeEnv.CLOUDFLARE_ACCOUNT_ID}/ai/v1`,
+  baseURL: `https://api.cloudflare.com/client/v4/accounts/${llmEnv.CLOUDFLARE_ACCOUNT_ID}/ai/v1`,
   debug: {
     chatCompletion: () => process.env.DEBUG_CLOUDFLARE_CHAT_COMPLETION === '1',
   },
