@@ -2,8 +2,8 @@ import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 export interface LobeCloudflareParams {
-    apiKey?: string;
     accountID?: string;
+    apiKey?: string;
   }
 
 export const LobeCloudflareAI = LobeOpenAICompatibleFactory({
