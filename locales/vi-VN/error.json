@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem Ollama có hoạt động bình thường không, hoặc xem xét cấu hình chéo đúng của Ollama",
+    "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
     "PluginGatewayError": "Xin lỗi, cổng plugin gặp lỗi, vui lòng kiểm tra cấu hình cổng plugin có đúng không",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "Xin lỗi, khởi tạo khách hàng OpenAPI thất bại, vui lòng kiểm tra thông tin cấu hình OpenAPI có đúng không",
     "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
-    "ProviderBizAPIKey": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại"
+    "ProviderBizError": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại"
   },
   "stt": {
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
