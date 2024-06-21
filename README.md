@@ -233,7 +233,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>            | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                              |
 | [Search Google via Serper](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Barry** on **2024-04-30**</sup> | Google search engine via Serper.dev free API (2500x🆓/month)<br/>`web` `search`                                            |
 
-> 📊 Total plugins: [<kbd>**54**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**53**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
