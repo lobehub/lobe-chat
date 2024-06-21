@@ -226,7 +226,7 @@ class AgentRuntime {
         runtimeModel = new LobeCloudflareAI(params.cloudflare ?? {});
         break;
     }
-
+  }
     return new AgentRuntime(runtimeModel);
   }
 }

@@ -1,7 +1,7 @@
 import {
   AnthropicProviderCard,
   BedrockProviderCard,
-  CloudflareProviderCard
+  CloudflareProviderCard,
   DeepSeekProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
