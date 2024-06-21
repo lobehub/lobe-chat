@@ -120,6 +120,9 @@ export const getLLMConfig = () => {
 
       ENABLED_STEPFUN: z.boolean(),
       STEPFUN_API_KEY: z.string().optional(),
+
+      ENABLED_CF: z.boolean(),
+      CF_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -194,6 +197,10 @@ export const getLLMConfig = () => {
 
       ENABLED_STEPFUN: !!process.env.STEPFUN_API_KEY,
       STEPFUN_API_KEY: process.env.STEPFUN_API_KEY,
+
+      ENABLED_CF: !!process.env.CF_API_KEY && !!process.env.CF_ACCOUNT_ID,
+      CF_API_KEY: process.env.CF_API_KEY,
+      CF_ACCOUNT_ID: process.env.CF_ACCOUNT_ID,
     },
   });
 };
