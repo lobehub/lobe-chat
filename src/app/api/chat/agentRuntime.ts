@@ -165,13 +165,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Stepfun: {
+      const { STEPFUN_API_KEY } = getLLMConfig();
+      
+      const apiKey = apiKeyManager.pick(payload?.apiKey || STEPFUN_API_KEY);
+
+      return { apiKey };
+    }
     case ModelProvider.Cloudflare: {
       const { CLOUDFLARE_API_KEY, CLOUDFLARE_ACCOUNT_ID } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || CLOUDFLARE_API_KEY);
       const accountID = CLOUDFLARE_ACCOUNT_ID;
 
-      return { accountID, apiKey  };
+      return { accountID, apiKey };
     }
   }
 };
