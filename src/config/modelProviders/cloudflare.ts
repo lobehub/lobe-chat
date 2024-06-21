@@ -14,7 +14,7 @@ const Cloudflare: ModelProviderCard = {
   ],
   checkModel: '@cf/meta/llama-2-7b-chat-fp16',
   id: 'cloudflare',
-  name: 'Cloudflare',
+  name: 'Cloudflare Workers AI',
 };
 
 export default Cloudflare;
