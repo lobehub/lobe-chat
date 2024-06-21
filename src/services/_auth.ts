@@ -36,6 +36,15 @@ export const getProviderAuthPayload = (provider: string) => {
       return { endpoint: config?.baseURL };
     }
 
+    case ModelProvider.Cloudflare: {
+      const config = keyVaultsConfigSelectors.cloudflareConfig(useUserStore.getState());
+
+      return { 
+        cloudflareAccountID: config?.accountID, 
+        apiKey: config?.apiKey, 
+      };
+    }
+
     default: {
       const config = keyVaultsConfigSelectors.getVaultByProvider(provider as GlobalLLMProviderKey)(
         useUserStore.getState(),

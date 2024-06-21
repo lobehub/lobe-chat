@@ -176,7 +176,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { CLOUDFLARE_API_KEY, CLOUDFLARE_ACCOUNT_ID } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || CLOUDFLARE_API_KEY);
-      const accountID = CLOUDFLARE_ACCOUNT_ID;
+      const accountID = payload.apiKey && payload.cloudflareAccountID ? payload.cloudflareAccountID : CLOUDFLARE_ACCOUNT_ID;
 
       return { accountID, apiKey };
     }
