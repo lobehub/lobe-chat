@@ -229,8 +229,26 @@ Create images from a text-only prompt.
 
 根据以上的测试任务，我们对支持 Tools Calling 的模型进行了测试，评测结果如下：
 
-| 模型 | 服务商 | 支持 Tool Calling | 流式 Tool Calling | 天气查询·指令 ① | 天气查询·指令 ② | 天气查询·指令 ③ | 文生图·指令 ① | 文生图·指令 ② | 评测链接 |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| GPT-3.5-turbo | OpenAI | ✅ | ✅ | ✅ | ✅ | ✅ | ✅<br />🌟🌟 | ✅ | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-3-5-turbo) |
-| GPT-4-turbo | OpenAI | ✅ | ✅ | <br /> | <br /> | <br /> | <br /> | <br /> | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-4-turbo) |
-| GPT-4o | OpenAI | ✅ | ✅ | <br /> | <br /> | <br /> | <br /> | <br /> | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-4o) |
+### 基础能力
+
+| 模型          | 服务商 | 支持 Tool Calling | 流式 Tool Calling | 并发调用 |
+| ------------- | ------ | ----------------- | ----------------- | -------- |
+| GPT-3.5-turbo | OpenAI | ✅                | ✅                | ✅       |
+| GPT-4-turbo   | OpenAI | ✅                | ✅                | ✅       |
+| GPT-4o        | OpenAI | ✅                | ✅                | ✅       |
+
+### 简单指令·天气查询
+
+| 模型 | 服务商 | 天气查询·指令 ① | 天气查询·指令 ② | 天气查询·指令 ③ | 评测链接 |
+| --- | --- | --- | --- | --- | --- |
+| GPT-3.5-turbo | OpenAI | ✅ | ✅ | ✅ | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-3-5-turbo) |
+| GPT-4-turbo | OpenAI | ✅ | ✅ | ✅ | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-4-turbo) |
+| GPT-4o | OpenAI | ✅ | ✅ | ✅ | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-4o) |
+
+### 复杂指令·文生图
+
+| 模型 | 服务商 | 文生图·指令 ① | 文生图·指令 ② | 评测链接 |
+| --- | --- | --- | --- | --- | --- |
+| GPT-3.5-turbo | OpenAI | ✅<br />🌟🌟 | ✅ | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-3-5-turbo) |
+| GPT-4-turbo | OpenAI | <br /> | <br /> | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-4-turbo) |
+| GPT-4o | OpenAI | ✅ | <br /> | <br /> | [查看详情](/zh/docs/usage/tools-calling/openai#gpt-4o) |
