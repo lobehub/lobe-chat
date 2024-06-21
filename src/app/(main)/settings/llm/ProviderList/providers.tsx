@@ -76,7 +76,7 @@ const GoogleBrand = () => (
 
 const CloudflareBrand = () => (
   <Flexbox align={'center'} gap={8} horizontal>
-    <Cloudflare.BrandColor size={22} type={'color'} />
+    <Cloudflare.Combine size={22} type={'color'} />
     <Divider style={{ margin: '0 4px' }} type={'vertical'} />
     <WorkersAI.Combine size={22} type={'color'} />
   </Flexbox>
