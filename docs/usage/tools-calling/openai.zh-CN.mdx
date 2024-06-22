@@ -311,14 +311,69 @@ OpenAI GPT 系列模型 Tool Calling 能力一览：
 
 </details>
 
-## GPT 4-turbo
+## GPT-4 Turbo
 
 ### 简单调用指令：天气查询
 
-TODO
+测试指令：指令 ①
+
+<Video src="https://github.com/lobehub/lobe-chat/assets/28616219/f865d91b-b84a-4258-ae09-9d1e15eeb43d" />
+
+<Image
+  alt="GPT-4 Turbo 简单指令的 Tool Calling"
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/19298693-7a9b-4b54-9e28-c46b541b4f41"
+/>
+
+GPT-4 Turbo 在调用 Tool Calling 时并没有像 GPT-3.5 Turbo 一样回复好的，经过多次测试始终一样，因此在这一条复合指令的跟随中反而不如 GPT-3.5 Turbo。当然也有可能是因为 GPT-4 Turbo 的模型更加有“自主意识”，认为不需要输出这一句“好的”。
+
+<details>
+<summary>流式 Tool Calling 原始输出：</summary>
+
+```yml
+
+[stream start] 2024-6-22 17:33:28.818
+
+[chunk 0] 2024-6-22 17:33:28.823
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"role":"assistant","content":null},"logprobs":null,"finish_reason":null}]}
+
+[chunk 1] 2024-6-22 17:33:28.823
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"id":"call_hKvHwh1w2NEjnpTyJdQYNd2c","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":""}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 2] 2024-6-22 17:33:28.823
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"{\"ci"}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 3] 2024-6-22 17:33:28.823
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"ty\": "}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 4] 2024-6-22 17:33:28.824
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":0,"function":{"arguments":"\"杭州\"}"}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 5] 2024-6-22 17:33:28.824
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"id":"call_eq0GZi5bPMhjcahClrmObeUM","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":""}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 6] 2024-6-22 17:33:28.825
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"function":{"arguments":"{\"ci"}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 7] 2024-6-22 17:33:28.825
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"function":{"arguments":"ty\": "}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 8] 2024-6-22 17:33:28.826
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{"tool_calls":[{"index":1,"function":{"arguments":"\"北京\"}"}}]},"logprobs":null,"finish_reason":null}]}
+
+[chunk 9] 2024-6-22 17:33:28.826
+{"id":"chatcmpl-9crPbkOImn4LxnDRSBsrTyOTr1saK","object":"chat.completion.chunk","created":1719048807,"model":"gpt-4-turbo-2024-04-09","system_fingerprint":"fp_9d7f5c6195","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"tool_calls"}]}
+
+[stream finished] total chunks: 10
+```
+
+</details>
 
 ## GPT 4o
 
 ### 简单调用指令：天气查询
 
 TODO
+
+```
+
+```
