@@ -18,11 +18,13 @@ import {
   LLMProviderModelListKey,
 } from '@/app/(main)/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { isServerMode } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, modelConfigSelectors } from '@/store/user/selectors';
 import { ModelProviderCard } from '@/types/llm';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
+import { addAesGcmNotice } from '../../features/addAesGcmNotice';
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
 
@@ -134,7 +136,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     const showEndpoint = !!proxyUrl;
     const formItems = [
-      ...apiKeyItem,
+      ...(isServerMode ? addAesGcmNotice(apiKeyItem) : apiKeyItem),
       showEndpoint && {
         children: <Input allowClear placeholder={proxyUrl?.placeholder} />,
         desc: proxyUrl?.desc || t('llm.proxyUrl.desc'),
