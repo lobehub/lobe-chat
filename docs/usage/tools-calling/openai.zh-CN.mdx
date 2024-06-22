@@ -392,7 +392,7 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 <details>
     <summary>流式 Tool Calling 原始输出：</summary>
 
-```yml
+````yaml
 [stream start] 2024-6-22 17:55:15.541
 
 [chunk 0] 2024-6-22 17:55:15.545
@@ -474,8 +474,7 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 {"id":"chatcmpl-9crkh8Js4rzPsOr2CUiXXkJzntcUs","object":"chat.completion.chunk","created":1719050115,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_3e7d703517","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"tool_calls"}]}
 
 [stream finished] total chunks: 26
-
-```
+````
 
 </details>
 
@@ -483,51 +482,48 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 
 测试指令：指令 ②
 
+<Video src="https://github.com/lobehub/lobe-chat/assets/28616219/c77b65ab-0854-4e1f-a25b-ff43275bd318" />
+
+<Image
+  alt="GPT-4o 复杂指令的 Tool Calling"
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/8329c1b2-5e36-4457-946c-ce3781b05afd"
+/>
+
 <details>
     <summary>流式 Tool Calling 原始输出：</summary>
 
-```yml
-    [stream start] 2024-6-22 18:8:5.300
+````yml
+[stream start] 2024-6-22 18:8:5.300
 
-    [chunk 0] 2024-6-22 18:8:5.304
-
+[chunk 0] 2024-6-22 18:8:5.304
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"role":"assistant","content":""},"logprobs":null,"finish_reason":null}]}
 
-    [chunk 1] 2024-6-22 18:8:5.305
-
+[chunk 1] 2024-6-22 18:8:5.305
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"画"},"logprobs":null,"finish_reson":null}]}
 
-    [chunk 2] 2024-6-22 18:8:5.305
-
+[chunk 2] 2024-6-22 18:8:5.305
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"一"},"logprobs":null,"finish_reson":null}]}
 
-    [chunk 3] 2024-6-22 18:8:5.306
-
+[chunk 3] 2024-6-22 18:8:5.306
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"只"},"logprobs":null,"finish_reson":null}]}
 
-    [chunk 4] 2024-6-22 18:8:5.307
-
+[chunk 4] 2024-6-22 18:8:5.307
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"可"},"logprobs":null,"finish_reson":null}]}
 
-    [chunk 5] 2024-6-22 18:8:5.307
-
+[chunk 5] 2024-6-22 18:8:5.307
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"爱"},"logprobs":null,"finish_reson":null}]}
 
-    [chunk 6] 2024-6-22 18:8:5.307
-
+[chunk 6] 2024-6-22 18:8:5.307
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"小"},"logprobs":null,"finish_reson":null}]}
 
-    [chunk 7] 2024-6-22 18:8:5.308
-
+[chunk 7] 2024-6-22 18:8:5.308
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{"content":"狗"},"logprobs":null,"finish_reson":null}]}
 
-    [chunk 8] 2024-6-22 18:8:5.308
-
+[chunk 8] 2024-6-22 18:8:5.308
 {"id":"chatcmpl-9crx5O40BAahDC0TlaFBtIScSX8IJ","object":"chat.completion.chunk","created":1719050883,"model":"gpt-3.5-turbo-0125","system_fingerprint":null,"choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"stop"}]}
 
-    [stream finished] total chunks: 9
+[stream finished] total chunks: 9
 
-```
+````
 
 </details>
-
