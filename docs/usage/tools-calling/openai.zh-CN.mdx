@@ -15,9 +15,9 @@ OpenAI GPT 系列模型 Tool Calling 能力一览：
 
 | 模型          | 支持 Tool Calling | 流式 （Stream） | 并发（Parallel） | 简单指令得分 | 复杂指令 |
 | ------------- | ----------------- | --------------- | ---------------- | ------------ | -------- |
-| GPT-3.5-turbo | ✅                | ✅              | ✅               | 3            | ✅       |
-| GPT-4-turbo   | ✅                | ✅              | ✅               | 2            | ✅       |
-| GPT-4o        | ✅                | ✅              | ✅               | ✅           | ✅       |
+| GPT-3.5-turbo | ✅                | ✅              | ✅               | 🌟🌟🌟       | ✅       |
+| GPT-4-turbo   | ✅                | ✅              | ✅               | 🌟🌟         | ✅       |
+| GPT-4o        | ✅                | ✅              | ✅               | 🌟🌟🌟       | ✅       |
 
 <Callout type={'info'}>
   关于测试指令，详见 [工具调用 Tools Calling -
@@ -392,7 +392,7 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 <details>
     <summary>流式 Tool Calling 原始输出：</summary>
 
-````yaml
+```yaml
 [stream start] 2024-6-22 17:55:15.541
 
 [chunk 0] 2024-6-22 17:55:15.545
@@ -474,7 +474,7 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 {"id":"chatcmpl-9crkh8Js4rzPsOr2CUiXXkJzntcUs","object":"chat.completion.chunk","created":1719050115,"model":"gpt-4o-2024-05-13","system_fingerprint":"fp_3e7d703517","choices":[{"index":0,"delta":{},"logprobs":null,"finish_reason":"tool_calls"}]}
 
 [stream finished] total chunks: 26
-````
+```
 
 </details>
 
@@ -482,7 +482,7 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 
 测试指令：指令 ②
 
-<Video src="https://github.com/lobehub/lobe-chat/assets/28616219/c77b65ab-0854-4e1f-a25b-ff43275bd318" />
+<Video src="https://github.com/lobehub/lobe-chat/assets/28616219/714bd86a-3b58-4941-8323-186c3fa4c6ea" />
 
 <Image
   alt="GPT-4o 复杂指令的 Tool Calling"
@@ -492,7 +492,7 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 <details>
     <summary>流式 Tool Calling 原始输出：</summary>
 
-````yml
+```yml
 [stream start] 2024-6-22 18:8:5.300
 
 [chunk 0] 2024-6-22 18:8:5.304
@@ -524,6 +524,6 @@ GPT-4o 和 3.5 一样，在简单调用指令中，能够达到非常不错的�
 
 [stream finished] total chunks: 9
 
-````
+```
 
 </details>
