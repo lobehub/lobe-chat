@@ -11,6 +11,12 @@ import { merge } from '@/utils/merge';
 import { NewUser, UserItem, userSettings, users } from '../schemas/lobechat';
 import { SessionModel } from './session';
 
+export class UserNotFoundError extends TRPCError {
+  constructor() {
+    super({ code: 'UNAUTHORIZED', message: 'user not found' });
+  }
+}
+
 export class UserModel {
   createUser = async (params: NewUser) => {
     const [user] = await serverDB
@@ -51,7 +57,7 @@ export class UserModel {
       .leftJoin(userSettings, eq(users.id, userSettings.id));
 
     if (!result || !result[0]) {
-      throw new TRPCError({ code: 'UNAUTHORIZED', message: 'user not found' });
+      throw new UserNotFoundError();
     }
 
     const state = result[0];
