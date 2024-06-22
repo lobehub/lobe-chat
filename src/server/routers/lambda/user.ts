@@ -1,8 +1,10 @@
+import { currentUser } from '@clerk/nextjs/server';
 import { z } from 'zod';
 
+import { enableClerk } from '@/const/auth';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
-import { UserModel } from '@/database/server/models/user';
+import { UserModel, UserNotFoundError } from '@/database/server/models/user';
 import { authedProcedure, router } from '@/libs/trpc';
 import { UserInitializationState, UserPreference } from '@/types/user';
 
@@ -14,7 +16,38 @@ const userProcedure = authedProcedure.use(async (opts) => {
 
 export const userRouter = router({
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
-    const state = await ctx.userModel.getUserState(ctx.userId);
+    let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
+
+    // get or create first-time user
+    while (!state) {
+      try {
+        state = await ctx.userModel.getUserState(ctx.userId);
+      } catch (error) {
+        if (enableClerk && error instanceof UserNotFoundError) {
+          const user = await currentUser();
+          if (user) {
+            const email =
+              user.primaryEmailAddress ??
+              user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId);
+            const phone =
+              user.primaryPhoneNumber ??
+              user.phoneNumbers.find((e) => e.id === user.primaryPhoneNumberId);
+            await ctx.userModel.createUser({
+              avatar: user.imageUrl,
+              clerkCreatedAt: new Date(user.createdAt),
+              email: email?.emailAddress,
+              firstName: user.firstName,
+              id: user.id,
+              lastName: user.lastName,
+              phone: phone?.phoneNumber,
+              username: user.username,
+            });
+            continue;
+          }
+        }
+        throw error;
+      }
+    }
 
     const messageModel = new MessageModel(ctx.userId);
     const messageCount = await messageModel.count();
