@@ -2,45 +2,7 @@
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace NodeJS {
-    interface ProcessEnv {
-      /**
-       * @deprecated
-       */
-      CUSTOM_MODELS?: string;
-      /**
-       * @deprecated
-       */
-      OLLAMA_CUSTOM_MODELS?: string;
-      /**
-       * @deprecated
-       */
-      OPENROUTER_CUSTOM_MODELS?: string;
-    }
-  }
-}
-
 export const getLLMConfig = () => {
-  if (process.env.CUSTOM_MODELS) {
-    console.warn(
-      'DEPRECATED: `CUSTOM_MODELS` is deprecated, please use `OPENAI_MODEL_LIST` instead, we will remove `CUSTOM_MODELS` in the LobeChat 1.0',
-    );
-  }
-
-  if (process.env.OLLAMA_CUSTOM_MODELS) {
-    console.warn(
-      'DEPRECATED: `OLLAMA_CUSTOM_MODELS` is deprecated, please use `OLLAMA_MODEL_LIST` instead, we will remove `OLLAMA_CUSTOM_MODELS` in the LobeChat 1.0',
-    );
-  }
-
-  if (process.env.OPENROUTER_CUSTOM_MODELS) {
-    console.warn(
-      'DEPRECATED: `OPENROUTER_CUSTOM_MODELS` is deprecated, please use `OPENROUTER_MODEL_LIST` instead, we will remove `OPENROUTER_CUSTOM_MODELS` in the LobeChat 1.0',
-    );
-  }
-
   // region format: iad1,sfo1
   let regions: string[] = [];
   if (process.env.OPENAI_FUNCTION_REGIONS) {
@@ -127,7 +89,7 @@ export const getLLMConfig = () => {
       ENABLED_OPENAI: process.env.ENABLED_OPENAI !== '0',
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,
       OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
-      OPENAI_MODEL_LIST: process.env.OPENAI_MODEL_LIST || process.env.CUSTOM_MODELS,
+      OPENAI_MODEL_LIST: process.env.OPENAI_MODEL_LIST,
       OPENAI_FUNCTION_REGIONS: regions as any,
 
       ENABLED_AZURE_OPENAI: !!process.env.AZURE_API_KEY,
@@ -162,8 +124,7 @@ export const getLLMConfig = () => {
 
       ENABLED_OPENROUTER: !!process.env.OPENROUTER_API_KEY,
       OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
-      OPENROUTER_MODEL_LIST:
-        process.env.OPENROUTER_MODEL_LIST || process.env.OPENROUTER_CUSTOM_MODELS,
+      OPENROUTER_MODEL_LIST: process.env.OPENROUTER_MODEL_LIST,
 
       ENABLED_TOGETHERAI: !!process.env.TOGETHERAI_API_KEY,
       TOGETHERAI_API_KEY: process.env.TOGETHERAI_API_KEY,
@@ -187,7 +148,7 @@ export const getLLMConfig = () => {
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
       OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
-      OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST || process.env.OLLAMA_CUSTOM_MODELS,
+      OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST,
 
       ENABLED_QWEN: !!process.env.QWEN_API_KEY,
       QWEN_API_KEY: process.env.QWEN_API_KEY,
