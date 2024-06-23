@@ -1,7 +1,7 @@
 {
   "about": "关于",
   "advanceSettings": "高级设置",
-  "appInitializing": "LobeChat 启动中，请耐心等待...",
+  "appInitializing": "应用启动中，请耐心等待...",
   "autoGenerate": "自动补全",
   "autoGenerateTooltip": "基于提示词自动补全助手描述",
   "autoGenerateTooltipDisabled": "请填写提示词后使用自动补全功能",
@@ -133,7 +133,6 @@
     "business": "商务合作",
     "support": "邮件支持"
   },
-  "noDescription": "暂无描述",
   "oauth": "SSO 登录",
   "officialSite": "官方网站",
   "ok": "确定",

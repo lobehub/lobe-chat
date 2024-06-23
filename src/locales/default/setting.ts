@@ -105,6 +105,7 @@ export default {
       latestTime: '上次更新时间：{{time}}',
       noLatestTime: '暂未获取列表',
     },
+    helpDoc: '配置教程',
     modelList: {
       desc: '选择在会话中展示的模型，选择的模型会在模型列表中展示',
       placeholder: '请从列表中选择模型',
@@ -370,6 +371,11 @@ export default {
     },
   },
   systemAgent: {
+    agentMeta: {
+      label: '助理元数据生成模型',
+      modelDesc: '指定用于生成助理名称、描述、头像、标签的模型',
+      title: '自动生成助理信息',
+    },
     title: '系统助手',
     topic: {
       label: '话题命名模型',

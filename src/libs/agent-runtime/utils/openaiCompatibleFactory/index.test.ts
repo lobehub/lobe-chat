@@ -265,6 +265,82 @@ describe('LobeOpenAICompatibleFactory', () => {
         );
       });
 
+      it.skip('should handle anthropic sonnet 3.5 tool calling chunks correctly', async () => {
+        const chunks = [
+          {
+            id: 'chatcmpl-b3f58dc5-0699-4b28-aefe-6624c2a68d51',
+            created: 1718909418,
+            model: 'claude-3-5-sonnet-20240620',
+            object: 'chat.completion.chunk',
+
+            choices: [
+              {
+                index: 0,
+                delta: {
+                  content:
+                    '好的,我可以帮您查询杭州的天气情况。让我使用实时天气工具来获取杭州的当前天气信息。',
+                  id: 'rolu_01JXyRw6Ti78mR2dn6U5h1pa',
+                  function: {
+                    arguments: '{"city": "杭州"}',
+                    name: 'realtime-weather____fetchCurrentWeather',
+                  },
+                  type: 'function',
+                  index: 0,
+                },
+              },
+            ],
+          },
+          {
+            id: 'chatcmpl-b3f58dc5-0699-4b28-aefe-6624c2a68d51',
+            choices: [{ finish_reason: 'stop', index: 0, delta: {} }],
+            created: 1718909418,
+            model: 'claude-3-5-sonnet-20240620',
+            object: 'chat.completion.chunk',
+          },
+        ];
+        const mockStream = new ReadableStream({
+          start(controller) {
+            chunks.forEach((item) => {
+              controller.enqueue(item);
+            });
+
+            controller.close();
+          },
+        });
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockStream as any,
+        );
+
+        const stream: string[] = [];
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'gpt-3.5-turbo',
+          temperature: 0,
+        });
+        const decoder = new TextDecoder();
+        const reader = result.body!.getReader();
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
+
+        expect(stream).toEqual(
+          [
+            'id: chatcmpl-b3f58dc5-0699-4b28-aefe-6624c2a68d51',
+            'event: text',
+            'data: "好的,我可以帮您查询杭州的天气情况。让我使用实时天气工具来获取杭州的当前天气信息。"\n',
+            'id: chatcmpl-b3f58dc5-0699-4b28-aefe-6624c2a68d51',
+            'event: tool_calls',
+            'data: ""\n',
+            'id: chatcmpl-b3f58dc5-0699-4b28-aefe-6624c2a68d51',
+            'event: stop',
+            'data: "stop"\n',
+          ].map((item) => `${item}\n`),
+        );
+      });
+
       it('should transform non-streaming response to stream correctly', async () => {
         const mockResponse: OpenAI.ChatCompletion = {
           id: 'a',

@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "OpenAI API 키가 비어 있습니다. 사용자 정의 OpenAI API 키를 추가해주세요.",
     "OllamaBizError": "Ollama 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도하십시오.",
     "OllamaServiceUnavailable": "Ollama 서비스를 사용할 수 없습니다. Ollama가 올바르게 작동하는지 또는 Ollama의 교차 도메인 구성이 올바르게 설정되었는지 확인하십시오.",
+    "OpenAIBizError": "OpenAI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "PluginApiNotFound": "죄송합니다. 플러그인 설명서에 해당 API가 없습니다. 요청 메서드와 플러그인 설명서 API가 일치하는지 확인해주세요.",
     "PluginApiParamsError": "죄송합니다. 플러그인 요청의 입력 매개변수 유효성 검사에 실패했습니다. 입력 매개변수와 API 설명 정보가 일치하는지 확인해주세요.",
     "PluginGatewayError": "죄송합니다. 플러그인 게이트웨이에 오류가 발생했습니다. 플러그인 게이트웨이 구성을 확인해주세요.",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "죄송합니다. OpenAPI 클라이언트 초기화에 실패했습니다. OpenAPI 구성 정보를 확인해주세요.",
     "PluginServerError": "플러그인 서버 요청이 오류로 반환되었습니다. 플러그인 설명 파일, 플러그인 구성 또는 서버 구현을 확인해주세요.",
     "PluginSettingsInvalid": "플러그인을 사용하려면 올바른 구성이 필요합니다. 구성이 올바른지 확인해주세요.",
-    "ProviderBizAPIKey": "{{provider}} 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하거나 다시 시도하십시오."
+    "ProviderBizError": "요청한 {{provider}} 서비스에서 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요."
   },
   "stt": {
     "responseError": "서비스 요청이 실패했습니다. 구성을 확인하거나 다시 시도해주세요."

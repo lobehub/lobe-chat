@@ -30,7 +30,7 @@ const Hero = memo(() => {
   const { theme, styles } = useStyles();
   return (
     <Center>
-      <h1 className={styles.title}>Find & Use The Best Agents</h1>
+      <h1 className={styles.title}>Find & Use The Best Assistants</h1>
       <GridBackground animation className={styles.background} colorFront={theme.colorText} random />
     </Center>
   );

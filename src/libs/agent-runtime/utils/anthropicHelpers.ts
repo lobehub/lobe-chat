@@ -112,9 +112,9 @@ export const buildAnthropicMessages = (
 
 export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
   tools?.map(
-    (tool): Anthropic.Beta.Tools.Tool => ({
+    (tool): Anthropic.Tool => ({
       description: tool.function.description,
-      input_schema: tool.function.parameters as Anthropic.Beta.Tools.Tool.InputSchema,
+      input_schema: tool.function.parameters as Anthropic.Tool.InputSchema,
       name: tool.function.name,
     }),
   );

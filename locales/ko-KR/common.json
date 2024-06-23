@@ -1,7 +1,7 @@
 {
   "about": "소개",
   "advanceSettings": "고급 설정",
-  "appInitializing": "LobeChat이 초기화 중입니다. 잠시 기다려주세요...",
+  "appInitializing": "앱을 시작하는 중입니다. 잠시 기다려주세요...",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
   "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
@@ -133,7 +133,6 @@
     "business": "비즈니스 협력",
     "support": "이메일 지원"
   },
-  "noDescription": "설명 없음",
   "oauth": "SSO 로그인",
   "officialSite": "공식 사이트",
   "ok": "확인",

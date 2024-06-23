@@ -1,5 +1,7 @@
 import { UserStore } from '@/store/user';
 import {
+  AWSBedrockKeyVault,
+  AzureOpenAIKeyVault,
   GlobalLLMProviderKey,
   OpenAICompatibleKeyVault,
   UserKeyVaults,
@@ -15,10 +17,19 @@ const bedrockConfig = (s: UserStore) => keyVaultsSettings(s).bedrock || {};
 const ollamaConfig = (s: UserStore) => keyVaultsSettings(s).ollama || {};
 const azureConfig = (s: UserStore) => keyVaultsSettings(s).azure || {};
 const getVaultByProvider = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
-  (keyVaultsSettings(s)[provider] || {}) as OpenAICompatibleKeyVault;
+  (keyVaultsSettings(s)[provider] || {}) as OpenAICompatibleKeyVault &
+    AzureOpenAIKeyVault &
+    AWSBedrockKeyVault;
 
-const isProviderEndpointNotEmpty = (provider: string) => (s: UserStore) =>
-  !!getVaultByProvider(provider as GlobalLLMProviderKey)(s)?.baseURL;
+const isProviderEndpointNotEmpty = (provider: string) => (s: UserStore) => {
+  const vault = getVaultByProvider(provider as GlobalLLMProviderKey)(s);
+  return !!vault?.baseURL || !!vault?.endpoint;
+};
+
+const isProviderApiKeyNotEmpty = (provider: string) => (s: UserStore) => {
+  const vault = getVaultByProvider(provider as GlobalLLMProviderKey)(s);
+  return !!vault?.apiKey || !!vault?.accessKeyId || !!vault?.secretAccessKey;
+};
 
 const password = (s: UserStore) => keyVaultsSettings(s).password || '';
 
@@ -26,6 +37,7 @@ export const keyVaultsConfigSelectors = {
   azureConfig,
   bedrockConfig,
   getVaultByProvider,
+  isProviderApiKeyNotEmpty,
   isProviderEndpointNotEmpty,
   ollamaConfig,
   openAIConfig,

@@ -10,7 +10,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { checkAuthMethod, getJWTPayload } from './utils';
 
 type CreateRuntime = (jwtPayload: JWTPayload) => AgentRuntime;
-type RequestOptions = { createRuntime?: CreateRuntime, params: { provider: string }; };
+type RequestOptions = { createRuntime?: CreateRuntime; params: { provider: string } };
 
 export type RequestHandler = (
   req: Request,

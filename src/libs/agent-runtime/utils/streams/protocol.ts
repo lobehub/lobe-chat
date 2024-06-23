@@ -2,6 +2,11 @@ import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 
 export interface StreamStack {
   id: string;
+  tool?: {
+    id: string;
+    index: number;
+    name: string;
+  };
 }
 
 export interface StreamProtocolChunk {
@@ -15,7 +20,7 @@ export interface StreamToolCallChunkData {
     arguments?: string;
     name?: string | null;
   };
-  id: string;
+  id?: string;
   index: number;
   type: 'function' | string;
 }

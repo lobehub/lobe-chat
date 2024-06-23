@@ -1,9 +1,9 @@
 import { Icon } from '@lobehub/ui';
-import { Button, Space } from 'antd';
+import { Button, Skeleton, Space } from 'antd';
 import { createStyles } from 'antd-style';
 import { ChevronUp, CornerDownLeft, LucideCommand } from 'lucide-react';
 import { rgba } from 'polished';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -50,8 +50,6 @@ const useStyles = createStyles(({ css, prefixCls, token }) => {
   };
 });
 
-const isMac = isMacOS();
-
 interface FooterProps {
   setExpand?: (expand: boolean) => void;
 }
@@ -86,9 +84,20 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
 
   const sendMessage = useSendMessage();
 
+  const [isMac, setIsMac] = useState<boolean>();
+  useEffect(() => {
+    setIsMac(isMacOS());
+  }, [setIsMac]);
+
   const cmdEnter = (
     <Flexbox gap={2} horizontal>
-      <Icon icon={isMac ? LucideCommand : ChevronUp} />
+      {typeof isMac === 'boolean' ? (
+        <Icon icon={isMac ? LucideCommand : ChevronUp} />
+      ) : (
+        <Skeleton.Node active style={{ height: '100%', width: 12 }}>
+          {' '}
+        </Skeleton.Node>
+      )}
       <Icon icon={CornerDownLeft} />
     </Flexbox>
   );
@@ -159,7 +168,7 @@ const Footer = memo<FooterProps>(({ setExpand }) => {
               >
                 {t('input.send')}
               </Button>
-              <SendMore disabled={buttonDisabled} />
+              <SendMore disabled={buttonDisabled} isMac={isMac} />
             </Space.Compact>
           )}
         </Flexbox>

@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
     "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy Ollama działa poprawnie, lub czy poprawnie skonfigurowano ustawienia przekraczania domeny Ollama",
+    "OpenAIBizError": "Wystąpił błąd usługi OpenAI, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
     "PluginGatewayError": "Przepraszamy, wystąpił błąd bramy wtyczki. Proszę sprawdź, czy konfiguracja bramy wtyczki jest poprawna",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "Przepraszamy, inicjalizacja klienta OpenAPI nie powiodła się. Proszę sprawdź, czy informacje konfiguracyjne OpenAPI są poprawne",
     "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
     "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna",
-    "ProviderBizAPIKey": "Wystąpił błąd podczas żądania usługi {{provider}}. Sprawdź poniższe informacje lub spróbuj ponownie."
+    "ProviderBizError": "Wystąpił błąd usługi {{provider}}, proszę sprawdzić poniższe informacje lub spróbować ponownie"
   },
   "stt": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"

@@ -1,7 +1,7 @@
-import ChatHydration from '@/components/StoreHydration/ChatHydration';
 import Conversation from '@/features/Conversation';
 import { isMobileDevice } from '@/utils/responsive';
 
+import ChatHydration from './features/ChatHydration';
 import DesktopChatInput from './features/ChatInput/Desktop';
 import MobileChatInput from './features/ChatInput/Mobile';
 

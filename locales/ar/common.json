@@ -1,7 +1,7 @@
 {
   "about": "حول",
   "advanceSettings": "إعدادات متقدمة",
-  "appInitializing": "جاري تهيئة LobeChat، يرجى الانتظار ...",
+  "appInitializing": "جاري تشغيل التطبيق، يرجى الانتظار...",
   "autoGenerate": "توليد تلقائي",
   "autoGenerateTooltip": "إكمال تلقائي بناءً على الكلمات المقترحة لوصف المساعد",
   "autoGenerateTooltipDisabled": "الرجاء إدخال كلمة تلميح قبل تفعيل وظيفة الإكمال التلقائي",
@@ -133,7 +133,6 @@
     "business": "شراكات تجارية",
     "support": "الدعم عبر البريد الإلكتروني"
   },
-  "noDescription": "لا توجد وصف",
   "oauth": "تسجيل الدخول SSO",
   "officialSite": "الموقع الرسمي",
   "ok": "موافق",

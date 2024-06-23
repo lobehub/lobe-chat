@@ -7,7 +7,7 @@ export class Meta {
   public generate({
     description = 'LobeChat offers you the best ChatGPT, OLLaMA, Gemini, Claude WebUI user experience',
     title,
-    image = '/og/cover.png',
+    image = '/og/cover.png?v=1',
     url,
     type = 'website',
     tags,

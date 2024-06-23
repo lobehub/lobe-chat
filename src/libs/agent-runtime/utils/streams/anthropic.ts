@@ -22,27 +22,39 @@ export const transformAnthropicStream = (
       stack.id = chunk.message.id;
       return { data: chunk.message, id: chunk.message.id, type: 'data' };
     }
+    case 'content_block_start': {
+      if (chunk.content_block.type === 'tool_use') {
+        const toolChunk = chunk.content_block;
 
-    // case 'content_block_start': {
-    //   return { data: chunk.content_block.text, id: stack.id, type: 'data' };
-    // }
+        const toolCall: StreamToolCallChunkData = {
+          function: {
+            arguments: '',
+            name: toolChunk.name,
+          },
+          id: toolChunk.id,
+          index: 0,
+          type: 'function',
+        };
+
+        stack.tool = { id: toolChunk.id, index: 0, name: toolChunk.name };
+
+        return { data: [toolCall], id: stack.id, type: 'tool_calls' };
+      }
+
+      return { data: chunk.content_block.text, id: stack.id, type: 'data' };
+    }
 
     case 'content_block_delta': {
-      switch (chunk.delta.type as string) {
-        default:
+      switch (chunk.delta.type) {
         case 'text_delta': {
           return { data: chunk.delta.text, id: stack.id, type: 'text' };
         }
 
-        // TODO: due to anthropic currently don't support streaming tool calling
-        // we need to add this new `tool_use` type to support streaming
-        // and maybe we need to update it when the feature is available
-        case 'tool_use': {
-          const delta = (chunk.delta as any).tool_use as Anthropic.Beta.Tools.ToolUseBlock;
+        case 'input_json_delta': {
+          const delta = chunk.delta.partial_json;
 
           const toolCall: StreamToolCallChunkData = {
-            function: { arguments: JSON.stringify(delta.input), name: delta.name },
-            id: delta.id,
+            function: { arguments: delta },
             index: 0,
             type: 'function',
           };
@@ -53,7 +65,12 @@ export const transformAnthropicStream = (
             type: 'tool_calls',
           } as StreamProtocolToolCallChunk;
         }
+
+        default: {
+          break;
+        }
       }
+      return { data: chunk, id: stack.id, type: 'data' };
     }
 
     case 'message_delta': {
