@@ -140,6 +140,10 @@ export function initializeWithClientStore(provider: string, payload: any) {
       break;
     }
     case ModelProvider.Groq: {
+      providerOptions = {
+        apikey: providerAuthPayload?.apiKey,
+        baseURL: providerAuthPayload?.endpoint,
+      };
       break;
     }
     case ModelProvider.DeepSeek: {
