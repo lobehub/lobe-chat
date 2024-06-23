@@ -44,27 +44,4 @@ describe('getAnalyticsConfig', () => {
       GOOGLE_ANALYTICS_MEASUREMENT_ID: 'ga_id',
     });
   });
-
-  it('should use deprecated env vars and log warnings', () => {
-    process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN = 'deprecated.com';
-    process.env.NEXT_PUBLIC_POSTHOG_KEY = 'deprecated_key';
-    process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID = 'deprecated_id';
-
-    const config = getAnalyticsConfig();
-
-    expect(config.ENABLED_PLAUSIBLE_ANALYTICS).toBeTruthy();
-    expect(config.ENABLED_POSTHOG_ANALYTICS).toBeTruthy();
-    expect(config.ENABLED_UMAMI_ANALYTICS).toBeTruthy();
-
-    expect(console.warn).toHaveBeenCalledTimes(3);
-    expect(console.warn).toHaveBeenCalledWith(
-      'NEXT_PUBLIC_PLAUSIBLE_DOMAIN is deprecated. Please use PLAUSIBLE_DOMAIN instead. We will remove it in LobeChat 1.0',
-    );
-    expect(console.warn).toHaveBeenCalledWith(
-      'NEXT_PUBLIC_POSTHOG_KEY is deprecated. Please use POSTHOG_KEY instead. We will remove it in LobeChat 1.0',
-    );
-    expect(console.warn).toHaveBeenCalledWith(
-      'NEXT_PUBLIC_UMAMI_WEBSITE_ID is deprecated. Please use UMAMI_WEBSITE_ID instead. We will remove it in LobeChat 1.0',
-    );
-  });
 });

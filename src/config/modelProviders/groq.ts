@@ -37,7 +37,12 @@ const Groq: ModelProviderCard = {
       tokens: 4096,
     },
   ],
+  checkModel: 'gemma-7b-it',
   id: 'groq',
+  name: 'Groq',
+  proxyUrl: {
+    placeholder: 'https://api.groq.com/openai/v1',
+  },
 };
 
 export default Groq;

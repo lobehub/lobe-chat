@@ -141,7 +141,7 @@ describe('SessionAction', () => {
       const sessionId = 'active-session-id';
 
       act(() => {
-        result.current.activeSession(sessionId);
+        result.current.switchSession(sessionId);
       });
 
       expect(result.current.activeId).toBe(sessionId);

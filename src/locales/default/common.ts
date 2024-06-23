@@ -1,7 +1,7 @@
 export default {
   about: '关于',
   advanceSettings: '高级设置',
-  appInitializing: 'LobeChat 启动中，请耐心等待...',
+  appInitializing: '应用启动中，请耐心等待...',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
   autoGenerateTooltipDisabled: '请填写提示词后使用自动补全功能',
@@ -9,6 +9,7 @@ export default {
   cancel: '取消',
   changelog: '更新日志',
   close: '关闭',
+  contact: '联系我们',
   copy: '复制',
   copyFail: '复制失败',
   copySuccess: '复制成功',
@@ -35,11 +36,33 @@ export default {
   },
   feedback: '反馈与建议',
   follow: '在 {{name}} 上关注我们',
+  footer: {
+    action: {
+      feedback: '分享您宝贵的建议',
+      star: '在 GitHub 给添加星标',
+    },
+    and: '并',
+    feedback: {
+      action: '分享反馈',
+      desc: '您的每一个想法和建议对我们来说都弥足珍贵，我们迫不及待地想知道您的看法！欢迎联系我们提供产品功能和使用体验反馈，帮助我们将 LobeChat 建设得更好。',
+      title: '在 GitHub 分享您宝贵的反馈',
+    },
+    later: '稍后',
+    star: {
+      action: '点亮星标',
+      desc: '如果您喜爱我们的产品，并希望支持我们，可以去 GitHub 给我们点一颗星吗？这个小小的动作对我们来说意义重大，能激励我们为您持续提供特性体验。',
+      title: '在 GitHub 为我们点亮星标',
+    },
+    title: '喜欢我们的产品？',
+  },
   fullscreen: '全屏模式',
-
   historyRange: '历史范围',
   import: '导入配置',
   importModal: {
+    error: {
+      desc: '非常抱歉，数据导入过程发生异常。请尝试重新导入，或 <1>提交问题</1>，我们将会第一时间帮你排查问题。',
+      title: '数据导入失败',
+    },
     finish: {
       onlySettings: '系统设置导入成功',
       start: '开始使用',
@@ -47,6 +70,7 @@ export default {
       title: '数据导入完成',
     },
     loading: '数据导入中，请耐心等待...',
+    preparing: '数据导入模块准备中...',
     result: {
       added: '导入成功',
       errors: '导入出错',
@@ -58,7 +82,13 @@ export default {
       type: '数据类型',
     },
     title: '导入数据',
+    uploading: {
+      desc: '当前文件较大，正在努力上传中...',
+      restTime: '剩余时间',
+      speed: '上传速度',
+    },
   },
+  information: '社区与资讯',
   installPWA: '安装浏览器应用 (PWA)',
   lang: {
     'ar': '阿拉伯语',
@@ -98,7 +128,11 @@ export default {
     'zh-TW': '繁体中文',
   },
   layoutInitializing: '正在加载布局...',
-  noDescription: '暂无描述',
+  legal: '法律声明',
+  mail: {
+    business: '商务合作',
+    support: '邮件支持',
+  },
   oauth: 'SSO 登录',
   officialSite: '官方网站',
   ok: '确定',
@@ -139,7 +173,6 @@ export default {
     title: '同步状态',
     unconnected: { tip: '信令服务器连接失败，将无法建立点对点通信频道，请检查网络后重试' },
   },
-
   tab: {
     chat: '会话',
     market: '发现',
@@ -178,4 +211,5 @@ export default {
     setting: '应用设置',
     usages: '用量统计',
   },
+  version: '版本',
 };

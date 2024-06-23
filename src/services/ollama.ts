@@ -42,8 +42,8 @@ export class OllamaService {
     this._client.abort();
   };
 
-  pullModel = async (model: string): Promise<AsyncGenerator<ProgressResponse>> => {
-    let response: Response | AsyncGenerator<ProgressResponse>;
+  pullModel = async (model: string): Promise<AsyncIterable<ProgressResponse>> => {
+    let response: Response | AsyncIterable<ProgressResponse>;
     try {
       response = await this.getOllamaClient().pull({ insecure: true, model, stream: true });
       return response;

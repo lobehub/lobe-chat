@@ -5,7 +5,7 @@ import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
-import { ILobeAgentRuntimeErrorType } from '../../error';
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugStream } from '../debugStream';
@@ -37,7 +37,7 @@ interface OpenAICompatibleFactoryOptions {
   debug?: {
     chatCompletion: () => boolean;
   };
-  errorType: {
+  errorType?: {
     bizError: ILobeAgentRuntimeErrorType;
     invalidAPIKey: ILobeAgentRuntimeErrorType;
   };
@@ -52,19 +52,24 @@ interface OpenAICompatibleFactoryOptions {
 export const LobeOpenAICompatibleFactory = ({
   provider,
   baseURL: DEFAULT_BASE_URL,
-  errorType: ErrorType,
+  errorType,
   debug,
   constructorOptions,
   chatCompletion,
   models,
-}: OpenAICompatibleFactoryOptions) =>
-  class LobeOpenAICompatibleAI implements LobeRuntimeAI {
+}: OpenAICompatibleFactoryOptions) => {
+  const ErrorType = {
+    bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
+    invalidAPIKey: errorType?.invalidAPIKey || AgentRuntimeErrorType.InvalidProviderAPIKey,
+  };
+
+  return class LobeOpenAICompatibleAI implements LobeRuntimeAI {
     client: OpenAI;
 
     baseURL: string;
 
     constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
-      if (!apiKey) throw AgentRuntimeError.createError(ErrorType.invalidAPIKey);
+      if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
       this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
       this.baseURL = this.client.baseURL;
@@ -286,3 +291,4 @@ export const LobeOpenAICompatibleFactory = ({
       });
     }
   };
+};

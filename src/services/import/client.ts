@@ -4,7 +4,7 @@ import { SessionGroupModel } from '@/database/client/models/sessionGroup';
 import { TopicModel } from '@/database/client/models/topic';
 import { ImportResult, ImportResults } from '@/services/config';
 import { useUserStore } from '@/store/user';
-import { ConfigStateSessions } from '@/types/exportConfig';
+import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
 import { UserSettings } from '@/types/user/settings';
 
 export class ClientService {
@@ -12,8 +12,14 @@ export class ClientService {
     await useUserStore.getState().importAppSettings(settings);
   };
 
-  importData = async (config: ConfigStateSessions): Promise<ImportResults> => {
-    const { messages, sessionGroups, sessions, topics } = config;
+  importData = async (
+    config: ImporterEntryData,
+    callbacks?: OnImportCallbacks,
+  ): Promise<ImportResults> => {
+    callbacks?.onStageChange?.(ImportStage.Importing);
+    const time = Date.now();
+
+    const { messages = [], sessionGroups = [], sessions = [], topics = [] } = config;
 
     let messageResult: ImportResult | undefined;
     let sessionResult: ImportResult | undefined;
@@ -21,7 +27,7 @@ export class ClientService {
     let topicResult: ImportResult | undefined;
 
     if (messages.length > 0) {
-      const res = await MessageModel.batchCreate(messages);
+      const res = await MessageModel.batchCreate(messages as any);
       messageResult = this.mapImportResult(res);
     }
 
@@ -36,16 +42,22 @@ export class ClientService {
     }
 
     if (sessions.length > 0) {
-      const data = await SessionModel.batchCreate(sessions);
+      const data = await SessionModel.batchCreate(sessions as any);
       sessionResult = this.mapImportResult(data);
     }
 
-    return {
+    const result = {
       messages: messageResult,
       sessionGroups: sessionGroupResult,
       sessions: sessionResult,
       topics: topicResult,
     };
+
+    const duration = Date.now() - time;
+    callbacks?.onStageChange?.(ImportStage.Success);
+    callbacks?.onSuccess?.(result, duration);
+
+    return result;
   };
 
   private mapImportResult = (input: {

@@ -30,6 +30,7 @@ const Translation = memo(() => {
             onChange={(props) => {
               updateSystemAgent('translation', props);
             }}
+            showAbility={false}
           />
         ),
         desc: t('systemAgent.translation.modelDesc'),

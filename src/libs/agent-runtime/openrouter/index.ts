@@ -1,6 +1,5 @@
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 
-import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { OpenRouterModelCard } from './type';
@@ -15,11 +14,6 @@ export const LobeOpenRouterAI = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_OPENROUTER_CHAT_COMPLETION === '1',
-  },
-
-  errorType: {
-    bizError: AgentRuntimeErrorType.OpenRouterBizError,
-    invalidAPIKey: AgentRuntimeErrorType.InvalidOpenRouterAPIKey,
   },
   models: {
     transformModel: (m) => {

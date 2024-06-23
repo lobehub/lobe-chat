@@ -3,6 +3,7 @@ import { ChatTopic } from '@/types/topic';
 export interface ChatTopicState {
   // TODO: need to add the null to the type
   activeTopicId?: string;
+  creatingTopic: boolean;
   isSearchingTopic: boolean;
   searchTopics: ChatTopic[];
   topicLoadingIds: string[];
@@ -17,6 +18,7 @@ export interface ChatTopicState {
 
 export const initialTopicState: ChatTopicState = {
   activeTopicId: null as any,
+  creatingTopic: false,
   isSearchingTopic: false,
   searchTopics: [],
   topicLoadingIds: [],

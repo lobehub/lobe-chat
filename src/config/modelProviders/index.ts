@@ -13,12 +13,15 @@ import OllamaProvider from './ollama';
 import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
+import QwenProvider from './qwen';
+import StepfunProvider from './stepfun';
 import TogetherAIProvider from './togetherai';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
 export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   OpenAIProvider.chatModels,
+  QwenProvider.chatModels,
   ZhiPuProvider.chatModels,
   BedrockProvider.chatModels,
   DeepSeekProvider.chatModels,
@@ -33,11 +36,13 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   PerplexityProvider.chatModels,
   AnthropicProvider.chatModels,
   ZeroOneProvider.chatModels,
+  StepfunProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,
   { ...AzureProvider, chatModels: [] },
+  QwenProvider,
   OllamaProvider,
   AnthropicProvider,
   DeepSeekProvider,
@@ -52,6 +57,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MoonshotProvider,
   ZeroOneProvider,
   ZhiPuProvider,
+  StepfunProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -71,6 +77,8 @@ export { default as OllamaProviderCard } from './ollama';
 export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
+export { default as QwenProviderCard } from './qwen';
+export { default as StepfunProviderCard } from './stepfun';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

@@ -21,6 +21,7 @@ const getTopicById =
   (id: string) =>
   (s: ChatStore): ChatTopic | undefined =>
     currentTopics(s)?.find((topic) => topic.id === id);
+const isCreatingTopic = (s: ChatStore) => s.creatingTopic;
 
 export const topicSelectors = {
   currentActiveTopic,
@@ -29,5 +30,6 @@ export const topicSelectors = {
   currentUnFavTopics,
   displayTopics,
   getTopicById,
+  isCreatingTopic,
   searchTopics,
 };

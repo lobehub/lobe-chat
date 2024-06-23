@@ -1,7 +1,7 @@
 {
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
-  "appInitializing": "LobeChat wordt geïnitialiseerd, even geduld a.u.b...",
+  "appInitializing": "Applicatie wordt gestart, gelieve geduld te hebben...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
   "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
@@ -9,6 +9,7 @@
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
   "close": "Sluiten",
+  "contact": "Contacteer ons",
   "copy": "Kopiëren",
   "copyFail": "Kopiëren mislukt",
   "copySuccess": "Kopiëren gelukt",
@@ -35,10 +36,33 @@
   },
   "feedback": "Feedback en suggesties",
   "follow": "Volg ons op {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Deel uw waardevolle feedback",
+      "star": "Voeg een ster toe op GitHub"
+    },
+    "and": "en",
+    "feedback": {
+      "action": "Feedback delen",
+      "desc": "Elk van uw ideeën en suggesties is van onschatbare waarde. We horen graag uw mening! Neem gerust contact met ons op voor feedback over productfuncties en gebruikerservaring om LobeChat te helpen verbeteren.",
+      "title": "Deel uw waardevolle feedback op GitHub"
+    },
+    "later": "Later",
+    "star": {
+      "action": "Geef een ster",
+      "desc": "Als u van ons product houdt en ons wilt steunen, kunt u ons dan een ster geven op GitHub? Deze kleine daad is voor ons van grote betekenis en zal ons motiveren om u voortdurend een geweldige ervaring te bieden.",
+      "title": "Geef ons een ster op GitHub"
+    },
+    "title": "Houdt u van ons product?"
+  },
   "fullscreen": "Volledig scherm",
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
   "importModal": {
+    "error": {
+      "desc": "Sorry, er is een uitzondering opgetreden tijdens het importeren van gegevens. Probeer opnieuw te importeren of <1>diend een probleem in</1>, we zullen het probleem zo snel mogelijk voor je onderzoeken.",
+      "title": "Gegevens importeren mislukt"
+    },
     "finish": {
       "onlySettings": "Systeeminstellingen succesvol geïmporteerd",
       "start": "Beginnen met gebruiken",
@@ -46,6 +70,7 @@
       "title": "Gegevensimport voltooid"
     },
     "loading": "Gegevens worden geïmporteerd, even geduld a.u.b...",
+    "preparing": "Voorbereiden van gegevensimportmodule...",
     "result": {
       "added": "Succesvol geïmporteerd",
       "errors": "Fouten bij importeren",
@@ -56,8 +81,14 @@
       "topics": "Onderwerpen",
       "type": "Gegevenstype"
     },
-    "title": "Gegevens importeren"
+    "title": "Gegevens importeren",
+    "uploading": {
+      "desc": "Het bestand is momenteel aan het uploaden vanwege de grote omvang...",
+      "restTime": "Resterende tijd",
+      "speed": "Uploadsnelheid"
+    }
   },
+  "information": "Gemeenschap en Informatie",
   "installPWA": "Installeer de browser-app",
   "lang": {
     "ar": "Arabisch",
@@ -97,7 +128,11 @@
     "zh-TW": "Traditioneel Chinees"
   },
   "layoutInitializing": "Lay-out wordt geladen...",
-  "noDescription": "Geen beschrijving beschikbaar",
+  "legal": "Juridisch",
+  "mail": {
+    "business": "Zakelijke samenwerking",
+    "support": "E-mailondersteuning"
+  },
   "oauth": "SSO inloggen",
   "officialSite": "Officiële website",
   "ok": "Oké",
@@ -183,5 +218,6 @@
     "profile": "accountbeheer",
     "setting": "app-instellingen",
     "usages": "gebruiksstatistieken"
-  }
+  },
+  "version": "Versie"
 }

@@ -43,6 +43,11 @@
     "title": "Configurações"
   },
   "llm": {
+    "apiKey": {
+      "desc": "Por favor, insira sua chave de API {{name}}",
+      "placeholder": "Chave de API {{name}}",
+      "title": "Chave de API"
+    },
     "checker": {
       "button": "Verificar",
       "desc": "Verifica se a Api Key e o endereço do proxy estão preenchidos corretamente",
@@ -97,6 +102,7 @@
       "latestTime": "Última atualização: {{time}}",
       "noLatestTime": "Lista não disponível"
     },
+    "helpDoc": "Tutorial de configuração",
     "modelList": {
       "desc": "Escolha os modelos a serem exibidos na conversa. Os modelos selecionados serão exibidos na lista de modelos.",
       "placeholder": "Selecione um modelo da lista",
@@ -108,14 +114,6 @@
       "title": "Endereço do Proxy da API"
     },
     "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama está baixando este modelo. Por favor, evite fechar esta página. O download será retomado do ponto em que parou, caso seja reiniciado.",
-      "remainingTime": "Tempo restante",
-      "speed": "Velocidade de download",
-      "title": "Baixando modelo {{model}}"
-    }
   },
   "plugin": {
     "addTooltip": "Adicionar plug-in personalizado",
@@ -369,6 +367,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modelo de Geração de Metadados do Assistente",
+      "modelDesc": "Especifica o modelo usado para gerar o nome, descrição, avatar e tags do assistente",
+      "title": "Geração Automática de Informações do Assistente"
+    },
     "title": "Assistente do Sistema",
     "topic": {
       "label": "Modelo de Nomeação de Tópicos",

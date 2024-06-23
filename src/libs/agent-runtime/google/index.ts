@@ -42,7 +42,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   baseURL?: string;
 
   constructor({ apiKey, baseURL }: { apiKey?: string; baseURL?: string }) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidGoogleAPIKey);
+    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.client = new GoogleGenerativeAI(apiKey);
     this.baseURL = baseURL;
@@ -218,7 +218,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   } {
     const defaultError = {
       error: { message },
-      errorType: AgentRuntimeErrorType.GoogleBizError,
+      errorType: AgentRuntimeErrorType.ProviderBizError,
     };
 
     if (message.includes('location is not supported'))
@@ -240,11 +240,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       switch (bizError.reason) {
         case 'API_KEY_INVALID': {
-          return { ...defaultError, errorType: AgentRuntimeErrorType.InvalidGoogleAPIKey };
+          return { ...defaultError, errorType: AgentRuntimeErrorType.InvalidProviderAPIKey };
         }
 
         default: {
-          return { error: json, errorType: AgentRuntimeErrorType.GoogleBizError };
+          return { error: json, errorType: AgentRuntimeErrorType.ProviderBizError };
         }
       }
     } catch {

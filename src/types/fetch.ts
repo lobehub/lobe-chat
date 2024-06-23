@@ -6,7 +6,9 @@ export const ChatErrorType = {
 
   InvalidAccessCode: 'InvalidAccessCode', // 密码无效
   InvalidClerkUser: 'InvalidClerkUser', // is not Clerk User
-  OpenAIBizError: 'OpenAIBizError', // OpenAI 返回的业务错误
+  /**
+   * @deprecated
+   */
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
   OllamaServiceUnavailable: 'OllamaServiceUnavailable', // 未启动/检测到 Ollama 服务
 
