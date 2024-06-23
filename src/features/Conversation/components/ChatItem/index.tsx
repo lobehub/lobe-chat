@@ -108,7 +108,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
         <HistoryDivider enable={enableHistoryDivider} />
         <ChatItem
           actions={
-            <div style={{ position: 'relative', WebkitTransform: 'translate3d(0, 0, 100px)', zIndex: 1 }}>
+            <div style={{ WebkitTransform: 'translate3d(0, 0, 1px)', position: 'relative', zIndex: 1 }}>
               <ActionsBar
                 index={index}
                 setEditing={(edit) => {
