@@ -3,7 +3,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import UserInfo from './UserInfo';
+import UserInfo from '../UserInfo';
 
 const UserLoginOrSignup = memo<{ onClick: () => void }>(({ onClick }) => {
   const { t } = useTranslation('auth');

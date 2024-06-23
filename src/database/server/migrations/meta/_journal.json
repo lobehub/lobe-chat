@@ -21,6 +21,13 @@
       "when": 1717587734458,
       "tag": "0002_amusing_puma",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1718460779230,
+      "tag": "0003_naive_echo",
+      "breakpoints": true
     }
   ],
   "version": "6"
