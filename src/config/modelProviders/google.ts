@@ -16,15 +16,6 @@ const Google: ModelProviderCard = {
     },
     {
       description: 'Fast and versatile multimodal model for scaling across diverse tasks',
-      displayName: 'Gemini 1.5 Flash',
-      functionCall: true,
-      id: 'gemini-1.5-flash',
-      maxOutput: 8192,
-      tokens: 1_048_576 + 8192,
-      vision: true,
-    },
-    {
-      description: 'Fast and versatile multimodal model for scaling across diverse tasks',
       displayName: 'Gemini 1.5 Flash 001',
       functionCall: true,
       id: 'gemini-1.5-flash-001',
@@ -44,15 +35,6 @@ const Google: ModelProviderCard = {
     },
     {
       description: 'Mid-size multimodal model that supports up to 1 million tokens',
-      displayName: 'Gemini 1.5 Pro',
-      functionCall: true,
-      id: 'gemini-1.5-pro',
-      maxOutput: 8192,
-      tokens: 1_048_576 + 8192,
-      vision: true,
-    },
-    {
-      description: 'Mid-size multimodal model that supports up to 1 million tokens',
       displayName: 'Gemini 1.5 Pro 001',
       functionCall: true,
       id: 'gemini-1.5-pro-001',
@@ -64,14 +46,6 @@ const Google: ModelProviderCard = {
       description: 'The best model for scaling across a wide range of tasks. This is the latest model.',
       displayName: 'Gemini 1.0 Pro Latest',
       id: 'gemini-1.0-pro-latest',
-      maxOutput: 2048,
-      tokens: 30_720 + 2048,
-    },
-    {
-      description: 'The best model for scaling across a wide range of tasks',
-      displayName: 'Gemini 1.0 Pro',
-      functionCall: true,
-      id: 'gemini-1.0-pro',
       maxOutput: 2048,
       tokens: 30_720 + 2048,
     },
@@ -104,15 +78,7 @@ const Google: ModelProviderCard = {
       legacy: true,
       maxOutput: 1024,
       // tokens: 4096 + 1024, // none tokens test
-    },
-    {
-      description: 'A legacy model that understands text and generates text as an output',
-      displayName: 'PaLM 2 (Legacy)',
-      id: 'text-bison-001',
-      legacy: true,
-      maxOutput: 1024,
-      tokens: 8196 + 1024,
-    },
+    }
   ],
   checkModel: 'gemini-1.5-flash',
   id: 'google',
