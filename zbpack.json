@@ -1,0 +1,4 @@
+{
+  "ignore_dockerfile": true,
+  "serverless": true
+}
