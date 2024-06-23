@@ -108,7 +108,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
         <HistoryDivider enable={enableHistoryDivider} />
         <ChatItem
           actions={
-            <div style={{ zIndex: 1, position: 'relative' }}>
+            <div style={{ position: 'relative', zIndex: 1 }}>
               <ActionsBar
                 index={index}
                 setEditing={(edit) => {
