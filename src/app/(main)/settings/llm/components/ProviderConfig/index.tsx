@@ -61,7 +61,7 @@ const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
   `,
 }));
 
-export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id'> {
+export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'chatModels'> {
   apiKeyItems?: FormItemProps[];
   canDeactivate?: boolean;
   checkerItem?: FormItemProps;
