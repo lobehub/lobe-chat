@@ -14,7 +14,6 @@ const Conversation = ({ mobile }: ConversationProps) => {
     <Flexbox
       flex={1}
       style={{
-        WebkitTransform: 'translate3d(0, 0, 0)',
         overflowX: 'hidden',
         overflowY: 'auto',
         position: 'relative',
