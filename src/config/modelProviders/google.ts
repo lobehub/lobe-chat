@@ -36,22 +36,6 @@ const Google: ModelProviderCard = {
       tokens: 30_720 + 2048,
     },
     {
-      description: 'The best image understanding model to handle a broad range of applications',
-      displayName: 'Gemini 1.0 Pro Vision Latest',
-      id: 'gemini-1.0-pro-vision-latest',
-      maxOutput: 4096,
-      tokens: 12_288 + 4096,
-      vision: true,
-    },
-    {
-      description: 'The best image understanding model to handle a broad range of applications',
-      displayName: 'Gemini 1.0 Pro Vision',
-      id: 'gemini-1.0-pro-vision',
-      maxOutput: 4096,
-      tokens: 12_288 + 4096,
-      vision: true,
-    },
-    {
       description: 'The best model for scaling across a wide range of tasks. This is a stable model that supports tuning.',
       displayName: 'Gemini 1.0 Pro 001 (Tuning)',
       functionCall: true,
@@ -130,7 +114,7 @@ const Google: ModelProviderCard = {
       tokens: 32_768,
     },
   ],
-  checkModel: 'gemini-pro',
+  checkModel: 'gemini-1.5-flash',
   id: 'google',
   name: 'Google',
   proxyUrl: {
