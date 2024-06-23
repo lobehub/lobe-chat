@@ -34,7 +34,7 @@ const Error = memo<{ error: ChatMessageError }>(({ error }) => {
             </Highlighter>
           </Flexbox>
         }
-        message={t(`response.InvalidProviderAPIKey`, { provider: providerName })}
+        message={t(`response.${error.type}` as any, { provider: providerName })}
         showIcon
         type={'error'}
       />
