@@ -1,9 +1,12 @@
 import NextAuth from 'next-auth';
 
+import { getServerDBConfig } from '@/config/db';
 import { serverDB } from '@/database/server';
 
 import { LobeNextAuthDbAdapter } from './adapter';
 import config from './auth.config';
+
+const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
 // Use split config to avoid db connection init on edge runtime
 // ref: https://authjs.dev/guides/edge-compatibility#split-config
@@ -11,7 +14,7 @@ import config from './auth.config';
 // NextAuth with DB
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...config,
-  adapter: LobeNextAuthDbAdapter(serverDB),
+  adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter(serverDB) : undefined,
   session: {
     strategy: 'jwt',
   },
