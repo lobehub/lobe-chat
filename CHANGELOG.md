@@ -2,6 +2,139 @@
 
 # Changelog
 
+### [Version 1.1.8](https://github.com/lobehub/lobe-chat/compare/v1.1.7...v1.1.8)
+
+<sup>Released on **2024-06-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix anthropic parallel tools calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix anthropic parallel tools calling, closes [#3010](https://github.com/lobehub/lobe-chat/issues/3010) ([1d891ac](https://github.com/lobehub/lobe-chat/commit/1d891ac))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.7](https://github.com/lobehub/lobe-chat/compare/v1.1.6...v1.1.7)
+
+<sup>Released on **2024-06-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add AES-GCM footer and tooltip.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add AES-GCM footer and tooltip, closes [#2976](https://github.com/lobehub/lobe-chat/issues/2976) ([5d9bef4](https://github.com/lobehub/lobe-chat/commit/5d9bef4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.6](https://github.com/lobehub/lobe-chat/compare/v1.1.5...v1.1.6)
+
+<sup>Released on **2024-06-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the server db implement.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix incorrect baseURL for Groq in client mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the server db implement, closes [#2991](https://github.com/lobehub/lobe-chat/issues/2991) ([fa78599](https://github.com/lobehub/lobe-chat/commit/fa78599))
+
+#### What's fixed
+
+- **misc**: Fix incorrect baseURL for Groq in client mode, closes [#2747](https://github.com/lobehub/lobe-chat/issues/2747) ([af14225](https://github.com/lobehub/lobe-chat/commit/af14225))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.5](https://github.com/lobehub/lobe-chat/compare/v1.1.4...v1.1.5)
+
+<sup>Released on **2024-06-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove deprecated env.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove deprecated env, closes [#2983](https://github.com/lobehub/lobe-chat/issues/2983) ([15a681f](https://github.com/lobehub/lobe-chat/commit/15a681f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.4](https://github.com/lobehub/lobe-chat/compare/v1.1.3...v1.1.4)
+
+<sup>Released on **2024-06-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Create first-time user on server db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Create first-time user on server db, closes [#2977](https://github.com/lobehub/lobe-chat/issues/2977) ([6f53f35](https://github.com/lobehub/lobe-chat/commit/6f53f35))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.1.3](https://github.com/lobehub/lobe-chat/compare/v1.1.2...v1.1.3)
 
 <sup>Released on **2024-06-21**</sup>

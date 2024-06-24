@@ -43,7 +43,7 @@ describe('UserModel', () => {
         email: 'test@example.com',
       };
 
-      await userModel.createUser(params);
+      await UserModel.createUser(params);
 
       const user = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
       expect(user).not.toBeNull();
@@ -60,7 +60,7 @@ describe('UserModel', () => {
     it('should delete a user', async () => {
       await serverDB.insert(users).values({ id: userId });
 
-      await userModel.deleteUser(userId);
+      await UserModel.deleteUser(userId);
 
       const user = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
       expect(user).toBeUndefined();
@@ -71,7 +71,7 @@ describe('UserModel', () => {
     it('should find a user by ID', async () => {
       await serverDB.insert(users).values({ id: userId, username: 'testuser' });
 
-      const user = await userModel.findById(userId);
+      const user = await UserModel.findById(userId);
 
       expect(user).not.toBeNull();
       expect(user?.id).toBe(userId);

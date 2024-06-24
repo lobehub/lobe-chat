@@ -1,7 +1,7 @@
 // no need to introduce a package to get the current time as this module is just a debug utility
 const getTime = () => {
   const date = new Date();
-  return `${date.getFullYear()}-${date.getDate()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}.${date.getMilliseconds()}`;
 };
 
 export const debugStream = async (stream: ReadableStream) => {

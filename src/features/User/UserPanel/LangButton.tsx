@@ -1,5 +1,5 @@
 import { ActionIcon } from '@lobehub/ui';
-import { Popover } from 'antd';
+import { Popover, type PopoverProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { Languages } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -10,7 +10,7 @@ import { localeOptions } from '@/locales/resources';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
-const LangButton = memo(() => {
+const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement = 'right' }) => {
   const theme = useTheme();
   const [language, switchLocale] = useUserStore((s) => [
     userGeneralSettingsSelectors.language(s),
@@ -42,7 +42,7 @@ const LangButton = memo(() => {
       overlayInnerStyle={{
         padding: 0,
       }}
-      placement={'right'}
+      placement={placement}
       trigger={['click', 'hover']}
     >
       <ActionIcon
