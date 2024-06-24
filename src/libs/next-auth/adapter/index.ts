@@ -1,5 +1,5 @@
 import { and, eq } from 'drizzle-orm';
-import { NeonDatabase } from 'drizzle-orm/neon-serverless';
+import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
 import { UserModel } from '@/database/server/models/user';

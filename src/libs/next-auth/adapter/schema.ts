@@ -4,12 +4,14 @@ import { AdapterAccount } from 'next-auth/adapters';
 
 import { users } from '@/database/server/schemas/lobechat';
 
+const LOBE_NEXTAUTH_TABLE_PREFIX = 'nextauth_';
+
 /**
  * This table stores nextauth accounts. This is used to link users to their sso profiles.
  * @see {@link https://authjs.dev/guides/creating-a-database-adapter#database-session-management | NextAuth Doc}
  */
 export const nextauthAccounts = pgTable(
-  'nextauth_accounts',
+  `${LOBE_NEXTAUTH_TABLE_PREFIX}accounts`,
   {
     access_token: text('access_token'),
     expires_at: integer('expires_at'),
@@ -38,7 +40,7 @@ export const nextauthAccounts = pgTable(
  * which will enable remote logout and other features.
  * @see {@link https://authjs.dev/guides/creating-a-database-adapter#database-session-management | NextAuth Doc}
  */
-export const nextauthSessions = pgTable('nextauth_sessions', {
+export const nextauthSessions = pgTable(`${LOBE_NEXTAUTH_TABLE_PREFIX}sessions`, {
   expires: timestamp('expires', { mode: 'date' }).notNull(),
   sessionToken: text('sessionToken').primaryKey(),
   userId: text('userId')
@@ -51,7 +53,7 @@ export const nextauthSessions = pgTable('nextauth_sessions', {
  * @see {@link https://authjs.dev/guides/creating-a-database-adapter#verification-tokens | NextAuth Doc}
  */
 export const nextauthVerificationTokens = pgTable(
-  'nextauth_verificationtokens',
+  `${LOBE_NEXTAUTH_TABLE_PREFIX}verificationtokens`,
   {
     expires: timestamp('expires', { mode: 'date' }).notNull(),
     identifier: text('identifier').notNull(),
@@ -69,7 +71,7 @@ export const nextauthVerificationTokens = pgTable(
  * @see {@link https://authjs.dev/reference/core/types#authenticator | NextAuth Doc }
  */
 export const nextauthAuthenticators = pgTable(
-  'nextauth_authenticators',
+  `${LOBE_NEXTAUTH_TABLE_PREFIX}authenticators`,
   {
     counter: integer('counter').notNull(),
     credentialBackedUp: boolean('credentialBackedUp').notNull(),
