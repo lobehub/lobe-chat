@@ -8,7 +8,7 @@ const Cloudflare: ModelProviderCard = {
       displayName: 'deepseek-coder-6.7b-instruct-awq',
       enabled: true,
       id: '@hf/thebloke/deepseek-coder-6.7b-instruct-awq',
-      tokens: 16384,
+      tokens: 16_384,
     },
     {
       displayName: 'deepseek-math-7b-instruct',
@@ -43,7 +43,7 @@ const Cloudflare: ModelProviderCard = {
       displayName: 'neural-chat-7b-v3-1-awq',
       enabled: true,
       id: '@hf/thebloke/neural-chat-7b-v3-1-awq',
-      tokens: 32768,
+      tokens: 32_768,
     },
     {
       displayName: 'openchat-3.5-0106',
@@ -54,13 +54,13 @@ const Cloudflare: ModelProviderCard = {
       displayName: 'openhermes-2.5-mistral-7b-awq',
       enabled: true,
       id: '@hf/thebloke/openhermes-2.5-mistral-7b-awq',
-      tokens: 32768,
+      tokens: 32_768,
     },
     {
       displayName: 'qwen1.5-14b-chat-awq',
       enabled: true,
       id: '@cf/qwen/qwen1.5-14b-chat-awq',
-      tokens: 32768,
+      tokens: 32_768,
     },
     {
       displayName: 'starling-lm-7b-beta',
@@ -72,7 +72,7 @@ const Cloudflare: ModelProviderCard = {
       displayName: 'zephyr-7b-beta-awq',
       enabled: true,
       id: '@hf/thebloke/zephyr-7b-beta-awq',
-      tokens: 32768,
+      tokens: 32_768,
     },
   ],
   checkModel: '@hf/thebloke/deepseek-coder-6.7b-instruct-awq',
