@@ -43,7 +43,7 @@
     "title": "設定"
   },
   "llm": {
-    "aesGcm": "キーは <1>AES-GCM</1> 技術を使用して暗号化されます",
+    "aesGcm": "キーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
     "apiKey": {
       "desc": "あなたの {{name}} API キーを入力してください",
       "placeholder": "{{name}} API キー",

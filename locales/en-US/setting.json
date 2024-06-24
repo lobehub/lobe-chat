@@ -43,7 +43,7 @@
     "title": "Settings"
   },
   "llm": {
-    "aesGcm": "Your key will be encrypted using <1>AES-GCM</1> technology",
+    "aesGcm": "Your keys and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
     "apiKey": {
       "desc": "Please enter your {{name}} API Key",
       "placeholder": "{{name}} API Key",

@@ -1,12 +1,13 @@
 'use client';
 
-import { Form, type FormItemProps, type ItemGroup, Tooltip } from '@lobehub/ui';
+import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
+import { LockIcon } from 'lucide-react';
 import Link from 'next/link';
 import { ReactNode, memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { Trans, useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
@@ -18,17 +19,38 @@ import {
   LLMProviderModelListKey,
 } from '@/app/(main)/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { AES_GCM_URL } from '@/const/url';
 import { isServerMode } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, modelConfigSelectors } from '@/store/user/selectors';
 import { ModelProviderCard } from '@/types/llm';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
-import { addAesGcmNotice } from '../../features/addAesGcmNotice';
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
 
 const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
+  aceGcm: css`
+    padding-block: 0 !important;
+    .${prefixCls}-form-item-label {
+      display: none;
+    }
+    .${prefixCls}-form-item-control {
+      width: 100%;
+
+      font-size: 12px;
+      color: ${token.colorTextSecondary};
+      text-align: center;
+
+      opacity: 0.66;
+
+      transition: opacity 0.2s ${token.motionEaseInOut};
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  `,
   form: css`
     .${prefixCls}-form-item-control:has(.${prefixCls}-input,.${prefixCls}-select) {
       flex: none;
@@ -69,6 +91,7 @@ export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'cha
   checkerItem?: FormItemProps;
   className?: string;
   docUrl?: string;
+  extra?: ReactNode;
   hideSwitch?: boolean;
   id: GlobalLLMProviderKey;
   modelList?: {
@@ -77,6 +100,7 @@ export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'cha
     placeholder?: string;
     showModelFetcher?: boolean;
   };
+  showAceGcm?: boolean;
   title: ReactNode;
 }
 
@@ -96,6 +120,8 @@ const ProviderConfig = memo<ProviderConfigProps>(
     className,
     name,
     docUrl,
+    showAceGcm = true,
+    extra,
   }) => {
     const { t } = useTranslation('setting');
     const [form] = Form.useForm();
@@ -134,9 +160,27 @@ const ProviderConfig = memo<ProviderConfigProps>(
           },
         ];
 
+    const aceGcmItem: FormItemProps = {
+      children: (
+        <>
+          <Icon icon={LockIcon} style={{ marginRight: 4 }} />
+          <Trans i18nKey="llm.aesGcm" ns={'setting'}>
+            您的秘钥与代理地址等将使用
+            <Link href={AES_GCM_URL} style={{ marginInline: 4 }} target={'_blank'}>
+              AES-GCM
+            </Link>
+            加密算法进行加密
+          </Trans>
+        </>
+      ),
+      className: styles.aceGcm,
+      minWidth: undefined,
+    };
+
     const showEndpoint = !!proxyUrl;
+
     const formItems = [
-      ...(isServerMode ? addAesGcmNotice(apiKeyItem) : apiKeyItem),
+      ...apiKeyItem,
       showEndpoint && {
         children: <Input allowClear placeholder={proxyUrl?.placeholder} />,
         desc: proxyUrl?.desc || t('llm.proxyUrl.desc'),
@@ -186,6 +230,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
         label: t('llm.checker.title'),
         minWidth: undefined,
       },
+      showAceGcm && isServerMode && aceGcmItem,
     ].filter(Boolean) as FormItemProps[];
 
     /* ↓ cloud slot ↓ */
@@ -199,6 +244,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
       extra: (
         <Flexbox align={'center'} gap={8} horizontal>
+          {extra}
           {docUrl && (
             <Tooltip title={t('llm.helpDoc')}>
               <Link href={docUrl} onClick={(e) => e.stopPropagation()} target={'_blank'}>

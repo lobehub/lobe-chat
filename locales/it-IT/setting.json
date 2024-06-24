@@ -43,7 +43,7 @@
     "title": "Impostazioni"
   },
   "llm": {
-    "aesGcm": "La tua chiave verrà crittografata utilizzando la tecnologia <1>AES-GCM</1>",
+    "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Inserisci la tua chiave API {{name}}",
       "placeholder": "Chiave API {{name}}",

@@ -43,7 +43,7 @@
     "title": "Ayarlar"
   },
   "llm": {
-    "aesGcm": "Anahtarınız <1>AES-GCM</1> teknolojisi kullanılarak şifrelenecektir",
+    "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> şifreleme algoritması kullanılarak şifrelenecektir",
     "apiKey": {
       "desc": "Lütfen {{name}} API Anahtarınızı girin",
       "placeholder": "{{name}} API Anahtarı",

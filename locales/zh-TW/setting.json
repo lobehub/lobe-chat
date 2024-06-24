@@ -43,7 +43,7 @@
     "title": "設定"
   },
   "llm": {
-    "aesGcm": "您的金鑰將使用 <1>AES-GCM</1> 技術進行加密",
+    "aesGcm": "您的金鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
     "apiKey": {
       "desc": "請填寫您的 {{name}} API 金鑰",
       "placeholder": "{{name}} API 金鑰",

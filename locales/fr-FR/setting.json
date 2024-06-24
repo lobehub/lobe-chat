@@ -43,7 +43,7 @@
     "title": "Paramètres"
   },
   "llm": {
-    "aesGcm": "Votre clé sera chiffrée en utilisant la technologie <1>AES-GCM</1>",
+    "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Veuillez saisir votre clé API {{name}}",
       "placeholder": "Clé API {{name}}",

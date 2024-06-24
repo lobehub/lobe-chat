@@ -43,7 +43,7 @@
     "title": "Configurações"
   },
   "llm": {
-    "aesGcm": "Sua chave será criptografada usando a técnica <1>AES-GCM</1>",
+    "aesGcm": "Suas chaves, endereço do agente, etc., serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Por favor, insira sua chave de API {{name}}",
       "placeholder": "Chave de API {{name}}",

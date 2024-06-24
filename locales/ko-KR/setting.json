@@ -43,7 +43,7 @@
     "title": "설정"
   },
   "llm": {
-    "aesGcm": "귀하의 키는 <1>AES-GCM</1> 기술을 사용하여 암호화됩니다.",
+    "aesGcm": "귀하의 키 및 프록시 주소는 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
     "apiKey": {
       "desc": "당신의 {{name}} API 키를 입력해주세요",
       "placeholder": "{{name}} API 키",

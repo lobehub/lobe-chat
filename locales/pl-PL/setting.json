@@ -43,7 +43,7 @@
     "title": "Ustawienia"
   },
   "llm": {
-    "aesGcm": "Twój klucz zostanie zaszyfrowany za pomocą technologii <1>AES-GCM</1>",
+    "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Proszę wprowadź swój klucz API {{name}}",
       "placeholder": "{{name}} klucz API",
