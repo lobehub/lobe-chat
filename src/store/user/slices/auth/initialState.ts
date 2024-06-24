@@ -16,6 +16,7 @@ export interface UserAuthState {
   clerkSignIn?: (props?: SignInProps) => void;
   clerkSignOut?: SignOut;
   clerkUser?: UserResource;
+  enabledNextAuth?: boolean;
 
   isLoaded?: boolean;
   isSignedIn?: boolean;

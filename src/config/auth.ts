@@ -12,7 +12,6 @@ declare global {
       CLERK_WEBHOOK_SECRET?: string;
 
       // ===== Next Auth ===== //
-      NEXT_PUBLIC_ENABLE_NEXT_AUTH?: string;
       /**
        * @deprecated
        */
@@ -50,7 +49,7 @@ declare global {
 export const getAuthConfig = () => {
   if (process.env.ENABLE_OAUTH_SSO) {
     console.warn(
-      '`ENABLE_OAUTH_SSO` is deprecated and will be removed in LobeChat 1.0. Set `NEXT_PUBLIC_ENABLE_NEXT_AUTH` instead',
+      '`ENABLE_OAUTH_SSO` is deprecated and will be removed in LobeChat 1.0. just set `NEXT_AUTH_SECRET` enough',
     );
   }
 
@@ -112,7 +111,8 @@ export const getAuthConfig = () => {
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
       // Next Auth
-      NEXT_PUBLIC_ENABLE_NEXT_AUTH: !!process.env.NEXT_PUBLIC_ENABLE_NEXT_AUTH,
+      NEXT_PUBLIC_ENABLE_NEXT_AUTH:
+        !!process.env.NEXT_AUTH_SECRET || !!process.env.ENABLE_OAUTH_SSO,
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS || process.env.SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
 
