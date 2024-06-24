@@ -51,7 +51,7 @@ export const users = pgTable('users', {
   clerkCreatedAt: timestamptz('clerk_created_at'),
 
   // Required by nextauth, all null allowed
-  emailVerified: timestamp('emailVerified', { mode: 'date' }),
+  emailVerified: timestamptz('email_verified'),
 
   preference: jsonb('preference').default(DEFAULT_PREFERENCE),
 

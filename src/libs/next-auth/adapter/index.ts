@@ -4,7 +4,6 @@ import { Adapter, AdapterAccount } from 'next-auth/adapters';
 
 import { UserModel } from '@/database/server/models/user';
 import * as schema from '@/database/server/schemas/lobechat';
-import { pino } from '@/libs/logger';
 import { merge } from '@/utils/merge';
 
 import {
@@ -28,8 +27,6 @@ const {
  * @returns {Adapter}
  */
 export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Adapter {
-  pino.info('creating LobeNextAuthDbAdapter');
-
   const userModel = new UserModel();
 
   return {
@@ -120,8 +117,12 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     getUser: async (id) => {
-      const lobeUser = await userModel.findById(id);
-      return mapLobeUserToAdapterUser(lobeUser) ?? null;
+      try {
+        const lobeUser = await userModel.findById(id);
+        return mapLobeUserToAdapterUser(lobeUser);
+      } catch {
+        return null;
+      }
     },
 
     getUserByAccount: async (account) => {
