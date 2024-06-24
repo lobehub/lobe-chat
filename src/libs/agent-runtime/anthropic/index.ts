@@ -91,8 +91,6 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
-    console.log(buildAnthropicMessages(user_messages));
-
     return {
       max_tokens,
       messages: buildAnthropicMessages(user_messages),
