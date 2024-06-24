@@ -43,6 +43,7 @@
     "title": "Settings"
   },
   "llm": {
+    "aesGcm": "Your keys and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
     "apiKey": {
       "desc": "Please enter your {{name}} API Key",
       "placeholder": "{{name}} API Key",
@@ -113,7 +114,7 @@
       "desc": "Must include http(s):// in addition to the default address",
       "title": "API Proxy Address"
     },
-    "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
+    "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
   "plugin": {
     "addTooltip": "Custom Plugin",

@@ -43,6 +43,7 @@
     "title": "Einstellungen"
   },
   "llm": {
+    "aesGcm": "Ihr Schlüssel und Ihre Proxy-Adresse werden mit dem <1>AES-GCM</1> Verschlüsselungsalgorithmus verschlüsselt.",
     "apiKey": {
       "desc": "Bitte geben Sie Ihren {{name}} API-Schlüssel ein",
       "placeholder": "{{name}} API-Schlüssel",
@@ -113,7 +114,7 @@
       "desc": "Außer der Standardadresse muss http(s):// enthalten sein",
       "title": "API-Proxy-Adresse"
     },
-    "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates ✨"
+    "waitingForMore": "Weitere Modelle werden <1>geplant</1>, bitte freuen Sie sich auf weitere Updates"
   },
   "plugin": {
     "addTooltip": "Benutzerdefiniertes Plugin",
