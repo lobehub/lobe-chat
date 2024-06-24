@@ -95,14 +95,14 @@ export const buildAnthropicMessages = (
 ): Anthropic.Messages.MessageParam[] => {
   const messages: Anthropic.Messages.MessageParam[] = [];
   let lastRole = 'assistant';
-  let pendingToolResults: Anthropic.ContentBlock[] = [];
+  let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
 
   oaiMessages.forEach((message, index) => {
     // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
     if (message.role === 'tool') {
       pendingToolResults.push({
-        content: message.content as string,
-        tool_use_id: message.tool_call_id,
+        content: [{ text: message.content as string, type: 'text' }],
+        tool_use_id: message.tool_call_id!,
         type: 'tool_result',
       });
 
