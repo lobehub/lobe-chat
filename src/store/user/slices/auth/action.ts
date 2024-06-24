@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { enableClerk } from '@/const/auth';
+import { enableClerk, enableNextAuth } from '@/const/auth';
 
 import { UserStore } from '../../store';
 
@@ -24,7 +24,7 @@ export const createAuthSlice: StateCreator<
   UserAuthAction
 > = (set, get) => ({
   enableAuth: () => {
-    return enableClerk || get()?.enabledNextAuth || false;
+    return enableClerk || enableNextAuth || false;
   },
   logout: async () => {
     if (enableClerk) {
@@ -33,7 +33,6 @@ export const createAuthSlice: StateCreator<
       return;
     }
 
-    const enableNextAuth = get().enabledNextAuth;
     if (enableNextAuth) {
       const { signOut } = await import('next-auth/react');
       signOut();
@@ -46,7 +45,6 @@ export const createAuthSlice: StateCreator<
       return;
     }
 
-    const enableNextAuth = get().enabledNextAuth;
     if (enableNextAuth) {
       const { signIn } = await import('next-auth/react');
       signIn();

@@ -20,14 +20,6 @@ export const initSSOProviders = () => {
 export default {
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
-    async jwt({ token, account }) {
-      // Auth.js will process the `providerAccountId` automatically
-      // ref: https://authjs.dev/reference/core/types#provideraccountid
-      if (account) {
-        token.userId = account.providerAccountId;
-      }
-      return token;
-    },
     async session({ session, token }) {
       // Pick userid from token
       if (session.user) {
