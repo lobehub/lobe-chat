@@ -26,17 +26,26 @@ export const transformAnthropicStream = (
       if (chunk.content_block.type === 'tool_use') {
         const toolChunk = chunk.content_block;
 
+        // if toolIndex is not defined, set it to 0
+        if (typeof stack.toolIndex === 'undefined') {
+          stack.toolIndex = 0;
+        }
+        // if toolIndex is defined, increment it
+        else {
+          stack.toolIndex += 1;
+        }
+
         const toolCall: StreamToolCallChunkData = {
           function: {
             arguments: '',
             name: toolChunk.name,
           },
           id: toolChunk.id,
-          index: 0,
+          index: stack.toolIndex,
           type: 'function',
         };
 
-        stack.tool = { id: toolChunk.id, index: 0, name: toolChunk.name };
+        stack.tool = { id: toolChunk.id, index: stack.toolIndex, name: toolChunk.name };
 
         return { data: [toolCall], id: stack.id, type: 'tool_calls' };
       }
@@ -55,7 +64,7 @@ export const transformAnthropicStream = (
 
           const toolCall: StreamToolCallChunkData = {
             function: { arguments: delta },
-            index: 0,
+            index: stack.toolIndex || 0,
             type: 'function',
           };
 
