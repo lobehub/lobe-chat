@@ -11,6 +11,7 @@ import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -53,6 +54,11 @@ const StoreInitialization = memo(() => {
 
   useStoreUpdater('isMobile', mobile);
   useStoreUpdater('router', router);
+
+  // Update NextAuth status
+  const useUserStoreUpdater = createStoreUpdater(useUserStore);
+  const enableNextAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
+  useUserStoreUpdater('enabledNextAuth', enableNextAuth);
 
   // Import settings from the url
   const searchParam = useSearchParams().get(LOBE_URL_IMPORT_NAME);

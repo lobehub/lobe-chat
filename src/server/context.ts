@@ -50,11 +50,13 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
   }
 
   if (enableNextAuth) {
-    const session = await getNextAuth();
-    if (session && session?.user?.id) {
-      auth = session.user;
-      userId = session.user.id;
-    }
+    try {
+      const session = await getNextAuth();
+      if (session && session?.user?.id) {
+        auth = session.user;
+        userId = session.user.id;
+      }
+    } catch {}
   }
 
   return createContextInner({ auth, authorizationHeader: authorization, userId });

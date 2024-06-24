@@ -100,6 +100,7 @@ export const createCommonSlice: StateCreator<
             set(
               {
                 defaultSettings,
+                enabledNextAuth: serverConfig.enabledOAuthSSO,
                 isOnboard: data.isOnboard,
                 isShowPWAGuide: data.canEnablePWAGuide,
                 isUserCanEnableTrace: data.canEnableTrace,
