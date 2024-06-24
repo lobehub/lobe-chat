@@ -60,3 +60,4 @@ sitemap*.xml
 robots.txt
 
 *.patch
+*.pdf
