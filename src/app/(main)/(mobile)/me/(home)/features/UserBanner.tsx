@@ -13,7 +13,11 @@ import { authSelectors } from '@/store/user/selectors';
 const UserBanner = memo(() => {
   const router = useRouter();
   const isLoginWithAuth = useUserStore(authSelectors.isLoginWithAuth);
-  const enableAuth = useUserStore((s) => s.enableAuth());
+  const [enableAuth, signIn, enabledNextAuth] = useUserStore((s) => [
+    s.enableAuth(),
+    s.openLogin,
+    authSelectors.enabledNextAuth(s),
+  ]);
 
   return (
     <Flexbox gap={12} paddingBlock={8}>
@@ -28,7 +32,16 @@ const UserBanner = memo(() => {
           <DataStatistics paddingInline={12} />
         </>
       ) : (
-        <UserLoginOrSignup onClick={() => router.push('/login')} />
+        <UserLoginOrSignup
+          onClick={() => {
+            // If use NextAuth, call openLogin method directly
+            if (enabledNextAuth) {
+              signIn();
+              return;
+            }
+            router.push('/login');
+          }}
+        />
       )}
     </Flexbox>
   );
