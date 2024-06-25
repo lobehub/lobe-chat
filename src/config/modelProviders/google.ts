@@ -6,7 +6,7 @@ const Google: ModelProviderCard = {
   chatModels: [
     {
       description: 'Fast and versatile multimodal model for scaling across diverse tasks',
-      displayName: 'Gemini 1.5 Flash Latest',
+      displayName: 'Gemini 1.5 Flash',
       enabled: true,
       functionCall: true,
       id: 'gemini-1.5-flash-latest',
@@ -25,7 +25,7 @@ const Google: ModelProviderCard = {
     },
     {
       description: 'Mid-size multimodal model that supports up to 1 million tokens',
-      displayName: 'Gemini 1.5 Pro Latest',
+      displayName: 'Gemini 1.5 Pro',
       enabled: true,
       functionCall: true,
       id: 'gemini-1.5-pro-latest',
@@ -44,7 +44,7 @@ const Google: ModelProviderCard = {
     },
     {
       description: 'The best model for scaling across a wide range of tasks. This is the latest model.',
-      displayName: 'Gemini 1.0 Pro Latest',
+      displayName: 'Gemini 1.0 Pro',
       id: 'gemini-1.0-pro-latest',
       maxOutput: 2048,
       tokens: 30_720 + 2048,
