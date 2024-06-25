@@ -1,9 +1,8 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
-import NextAuth from 'next-auth';
 import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
-import authConfig from '@/libs/next-auth/auth.config';
+import { auth } from '@/libs/next-auth/edge';
 
 import { OAUTH_AUTHORIZED } from './const/auth';
 
@@ -22,8 +21,7 @@ export const config = {
 const defaultMiddleware = () => NextResponse.next();
 
 // Initialize an Edge compatible NextAuth middleware
-const { auth: nextAuthEdgeMiddleware } = NextAuth(authConfig);
-const nextAuthMiddleware = nextAuthEdgeMiddleware((req) => {
+const nextAuthMiddleware = auth((req) => {
   // skip the '/' route
   if (req.nextUrl.pathname === '/') return NextResponse.next();
 
