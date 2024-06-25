@@ -4,7 +4,6 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { enableAuth } from '@/const/auth';
 import { DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
 import { isServerMode } from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
@@ -17,14 +16,12 @@ export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk, enabledNextAuth] = useUserStore((s) => [
+  const [isLogin, isLoginWithAuth, isLoginWithClerk, enableAuth] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
     authSelectors.isLoginWithClerk(s),
-    authSelectors.enabledNextAuth(s),
+    s.enableAuth(),
   ]);
-
-  const enabledAuth = enableAuth || enabledNextAuth;
 
   const profile: CellProps[] = [
     {
@@ -108,7 +105,7 @@ export const useCategory = () => {
       type: 'divider',
     },
     ...(isLoginWithClerk ? profile : []),
-    ...(enabledAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
+    ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */

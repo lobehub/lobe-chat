@@ -7,11 +7,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { enableAuth } from '@/const/auth';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
 import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/selectors';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 const Header = memo(() => {
@@ -20,8 +18,7 @@ const Header = memo(() => {
   const router = useRouter();
   const activeSettingsKey = useActiveSettingsKey();
 
-  const enabledNextAuth = useUserStore(authSelectors.enabledNextAuth);
-  const enabledAuth = enableAuth || enabledNextAuth;
+  const enableAuth = useUserStore((s) => s.enableAuth());
 
   return (
     <MobileNavBar
@@ -39,7 +36,7 @@ const Header = memo(() => {
           }
         />
       }
-      onBackClick={() => router.push(enabledAuth ? '/me/settings' : '/me')}
+      onBackClick={() => router.push(enableAuth ? '/me/settings' : '/me')}
       showBackButton
       style={mobileHeaderSticky}
     />
