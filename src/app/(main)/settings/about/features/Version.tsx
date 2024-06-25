@@ -21,15 +21,12 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const [hasNewVersion, latestVersion, useCheckLatestVersion] = useGlobalStore((s) => [
+  const [hasNewVersion, latestVersion] = useGlobalStore((s) => [
     s.hasNewVersion,
     s.latestVersion,
-    s.useCheckLatestVersion,
   ]);
   const { t } = useTranslation('common');
   const { styles, theme } = useStyles();
-
-  useCheckLatestVersion(serverFeatureFlags().enableCheckUpdates);
 
   return (
     <Flexbox
