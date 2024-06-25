@@ -15,9 +15,13 @@ const UserBanner = memo(() => {
   const router = useRouter();
   const isLoginWithAuth = useUserStore(authSelectors.isLoginWithAuth);
 
+  // NextAuth need to user store to check if enabled
+  const enabledNextAuth = useUserStore(authSelectors.enabledNextAuth);
+  const enabledAuth = enableAuth || enabledNextAuth;
+
   return (
     <Flexbox gap={12} paddingBlock={8}>
-      {!enableAuth ? (
+      {!enabledAuth ? (
         <>
           <UserInfo />
           <DataStatistics paddingInline={12} />
