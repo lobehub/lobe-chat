@@ -6,7 +6,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { serverFeatureFlags } from '@/config/featureFlags';
 import { MANUAL_UPGRADE_URL, OFFICIAL_SITE, RELEASES_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
 import { useGlobalStore } from '@/store/global';
