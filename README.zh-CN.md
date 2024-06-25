@@ -39,6 +39,7 @@
 <sup>探索私人生产力的未来。在个体崛起的时代中为你打造.</sup>
 
 [![][github-trending-shield]][github-trending-url]
+[![][github-hello-shield]][github-hello-url]
 
 [![][image-overview]][vercel-link]
 
@@ -752,6 +753,8 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [github-contributors-shield]: https://img.shields.io/github/contributors/lobehub/lobe-chat?color=c4f042&labelColor=black&style=flat-square
 [github-forks-link]: https://github.com/lobehub/lobe-chat/network/members
 [github-forks-shield]: https://img.shields.io/github/forks/lobehub/lobe-chat?color=8ae8ff&labelColor=black&style=flat-square
+[github-hello-shield]: https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=39701baf5a734cb894ec812248a5655a&claim_uid=HxYvFN34htJzGCD&theme=dark&theme=neutral&theme=dark&theme=neutral
+[github-hello-url]: https://hellogithub.com/repository/39701baf5a734cb894ec812248a5655a
 [github-issues-link]: https://github.com/lobehub/lobe-chat/issues
 [github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat?color=ff80eb&labelColor=black&style=flat-square
 [github-license-link]: https://github.com/lobehub/lobe-chat/blob/main/LICENSE
