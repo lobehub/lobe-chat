@@ -30,24 +30,24 @@ describe('formatSize', () => {
 
 describe('formatSpeed', () => {
   it('should format speed in KB/s correctly', () => {
-    expect(formatSpeed(10)).toBe('10.00KB/s');
-    expect(formatSpeed(999.99)).toBe('999.99KB/s');
+    expect(formatSpeed(10 * 1024)).toBe('10.00 KB/s');
+    expect(formatSpeed(999.99 * 1024)).toBe('999.99 KB/s');
   });
 
   it('should format speed in MB/s correctly', () => {
-    expect(formatSpeed(1024)).toBe('1.00MB/s');
-    expect(formatSpeed(10240)).toBe('10.00MB/s');
+    expect(formatSpeed(1024 * 1024)).toBe('1.00 MB/s');
+    expect(formatSpeed(10240 * 1024)).toBe('10.00 MB/s');
   });
 
   it('should format speed in GB/s correctly', () => {
-    expect(formatSpeed(1048576)).toBe('1.00GB/s');
-    expect(formatSpeed(10485760)).toBe('10.00GB/s');
+    expect(formatSpeed(1048576 * 1024)).toBe('1.00 GB/s');
+    expect(formatSpeed(10485760 * 1024)).toBe('10.00 GB/s');
   });
 
   it('should handle edge cases', () => {
-    expect(formatSpeed(0)).toBe('0.00KB/s');
-    expect(formatSpeed(1000)).toBe('1000.00KB/s');
-    expect(formatSpeed(1000.01)).toBe('0.98MB/s');
+    expect(formatSpeed(0)).toBe('0.00 Byte/s');
+    expect(formatSpeed(1000 * 1024)).toBe('1000.00 KB/s');
+    expect(formatSpeed(1000.01 * 1024)).toBe('0.98 MB/s');
   });
 });
 

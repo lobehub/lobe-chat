@@ -40,7 +40,7 @@ export const FileUploading = memo<FileUploadingProps>(({ progress = 0, speed = 0
               {t('importModal.uploading.restTime')}: {restTime ? formatTime(restTime) : '-'}
             </span>
             <span>
-              {t('importModal.uploading.speed')}: {formatSpeed(speed)}
+              {t('importModal.uploading.speed')}: {formatSpeed(speed * 1024)}
             </span>
           </Flexbox>
         </Flexbox>
