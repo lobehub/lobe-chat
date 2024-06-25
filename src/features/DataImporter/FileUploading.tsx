@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { formatSpeed, formatTime } from '@/utils/speed';
+import { formatSpeed, formatTime } from '@/utils/format';
 
 import DataLoading from './Loading';
 
