@@ -28,7 +28,7 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('common');
   const { styles, theme } = useStyles();
 
-  useCheckLatestVersion();
+  useCheckLatestVersion(enabledCheck);
 
   return (
     <Flexbox
