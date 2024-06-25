@@ -1,9 +1,13 @@
+import { UserJSON } from '@clerk/backend';
+import { currentUser } from '@clerk/nextjs/server';
 import { z } from 'zod';
 
+import { enableClerk } from '@/const/auth';
 import { MessageModel } from '@/database/server/models/message';
 import { SessionModel } from '@/database/server/models/session';
-import { UserModel } from '@/database/server/models/user';
+import { UserModel, UserNotFoundError } from '@/database/server/models/user';
 import { authedProcedure, router } from '@/libs/trpc';
+import { UserService } from '@/server/services/user';
 import { UserInitializationState, UserPreference } from '@/types/user';
 
 const userProcedure = authedProcedure.use(async (opts) => {
@@ -14,7 +18,43 @@ const userProcedure = authedProcedure.use(async (opts) => {
 
 export const userRouter = router({
   getUserState: userProcedure.query(async ({ ctx }): Promise<UserInitializationState> => {
-    const state = await ctx.userModel.getUserState(ctx.userId);
+    let state: Awaited<ReturnType<UserModel['getUserState']>> | undefined;
+
+    // get or create first-time user
+    while (!state) {
+      try {
+        state = await ctx.userModel.getUserState(ctx.userId);
+      } catch (error) {
+        if (enableClerk && error instanceof UserNotFoundError) {
+          const user = await currentUser();
+          if (user) {
+            const userService = new UserService();
+
+            await userService.createUser(user.id, {
+              created_at: user.createdAt,
+              email_addresses: user.emailAddresses.map((e) => ({
+                email_address: e.emailAddress,
+                id: e.id,
+              })),
+              first_name: user.firstName,
+              id: user.id,
+              image_url: user.imageUrl,
+              last_name: user.lastName,
+              phone_numbers: user.phoneNumbers.map((e) => ({
+                id: e.id,
+                phone_number: e.phoneNumber,
+              })),
+              primary_email_address_id: user.primaryEmailAddressId,
+              primary_phone_number_id: user.primaryPhoneNumberId,
+              username: user.username,
+            } as UserJSON);
+
+            continue;
+          }
+        }
+        throw error;
+      }
+    }
 
     const messageModel = new MessageModel(ctx.userId);
     const messageCount = await messageModel.count();
