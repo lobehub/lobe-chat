@@ -10,6 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 import { enableAuth } from '@/const/auth';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
+import { useUserStore } from '@/store/user';
+import { authSelectors } from '@/store/user/selectors';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
 
 const Header = memo(() => {
@@ -18,15 +20,15 @@ const Header = memo(() => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeSettingsKey = useActiveSettingsKey();
-
+  const enabledNextAuth = useUserStore(authSelectors.enabledNextAuth);
+  const enabledAuth = enableAuth || enabledNextAuth;
   const handleBackClick = () => {
     if (searchParams.has('session') && searchParams.has('showMobileWorkspace')) {
       router.push(`/chat?${searchParams.toString()}`);
     } else {
-      router.push(enableAuth ? '/me/settings' : '/me');
+      router.push(enabledAuth ? '/me/settings' : '/me');
     }
   };
-
   return (
     <MobileNavBar
       center={

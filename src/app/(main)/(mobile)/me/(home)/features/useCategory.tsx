@@ -17,11 +17,14 @@ export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk] = useUserStore((s) => [
+  const [isLogin, isLoginWithAuth, isLoginWithClerk, enabledNextAuth] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
     authSelectors.isLoginWithClerk(s),
+    authSelectors.enabledNextAuth(s),
   ]);
+
+  const enabledAuth = enableAuth || enabledNextAuth;
 
   const profile: CellProps[] = [
     {
@@ -105,7 +108,7 @@ export const useCategory = () => {
       type: 'divider',
     },
     ...(isLoginWithClerk ? profile : []),
-    ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
+    ...(enabledAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */
