@@ -4,7 +4,7 @@ import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
-import { auth as getNextAuth } from '@/libs/next-auth';
+import { auth as getNextAuth } from '@/libs/next-auth/edge';
 
 type ClerkAuth = ReturnType<typeof getAuth>;
 
