@@ -106,7 +106,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
 
   private maskSensitiveUrl = (url: string) => {
     // 使用正则表达式匹配 'https://' 后面和 '.openai.azure.com/' 前面的内容
-    const regex = /^(https:\/\/)([^.]+)(.openai\.azure\.com\/.*)$/;
+    const regex = /^(https:\/\/)([^.]+)(\.openai\.azure\.com\/.*)$/;
 
     // 使用替换函数
     return url.replace(regex, (match, protocol, subdomain, rest) => {
