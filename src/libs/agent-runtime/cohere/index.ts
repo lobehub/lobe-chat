@@ -35,14 +35,15 @@ export class LobeCohereAI implements LobeRuntimeAI {
 
       const stream = await this.client.chatStream(coherePayload);
 
+      return StreamingResponse(CohereStream(stream, options?.callback), {
+        headers: options?.headers,
+      });
+
         // TODO: FOR COHERE set env somewhere
         // if (process.env.DEBUG_COHERE_CHAT_COMPLETION === '1') {
         //   debugStream(debug.toReadableStream()).catch(console.error);
         // }
         // TODO: FOR COHERE
-      return StreamingResponse(CohereStream(stream, options?.callback), {
-        headers: options?.headers,
-      });
     } catch (error) {
       if (error instanceof CohereError) {
         switch (error.statusCode) {
@@ -71,7 +72,7 @@ export class LobeCohereAI implements LobeRuntimeAI {
       } else if (error instanceof CohereTimeoutError) {
         throw AgentRuntimeError.chat({
           error,
-          errorType: AgentRuntimeErrorType.ProviderTimeoutError,
+          errorType: AgentRuntimeErrorType.ProviderBizError,
           provider: ModelProvider.Cohere,
         });
       }
@@ -103,38 +104,7 @@ export class LobeCohereAI implements LobeRuntimeAI {
       temperature,
       // tools: buildCohereTools(tools),
     };
-  }  
-
-  private transformResponseToStream = (response: any) => {
-    return new ReadableStream<any>({
-      start(controller) {
-        response.content.forEach((content) => {
-          switch (content.type) {
-            case 'text': {
-              controller.enqueue({
-                delta: { text: content.text, type: 'text_delta' },
-                type: 'content_block_delta',
-              } as any);
-              break;
-            }
-            case 'tool_use': {
-              controller.enqueue({
-                delta: {
-                  tool_use: { id: content.id, input: content.input, name: content.name },
-                  type: 'tool_use',
-                },
-                type: 'content_block_delta',
-              } as any);
-            }
-          }
-        });
-
-        controller.enqueue({ type: 'message_stop' } as any);
-
-        controller.close();
-      },
-    });
-  };
+  }
 }
 
 export default LobeCohereAI;

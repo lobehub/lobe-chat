@@ -9,7 +9,7 @@ import {
   createSSEProtocolTransformer,
 } from './protocol';
 
-type CohereStreamEvent = Awaited<ReturnType<CohereClient["chatStream"]>>;
+type CohereStreamEvent = Awaited<ReturnType<CohereClient["chatStream"]>> extends AsyncIterable<infer T> ? T : never;
 
 const transformCohereStream = (
   chunk: CohereStreamEvent,
@@ -33,7 +33,7 @@ const chatStreamable = async function* (stream: AsyncIterable<CohereStreamEvent>
 
 
 export const CohereStream = (
-  stream: AsyncIterable<CohereStreamEvent> | ReadableStream,
+  stream: AsyncIterable<CohereStreamEvent>,
   callbacks?: ChatStreamCallbacks
 ) => {
   const streamStack: StreamStack = { id: '' };
