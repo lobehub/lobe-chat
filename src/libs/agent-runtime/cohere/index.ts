@@ -5,99 +5,78 @@ import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
-import { debugStream } from '../utils/debugStream';
-import { desensitizeUrl } from '../utils/desensitizeUrl';
-
-import { buildCohereTools } from '../utils/cohereHelpers';
-import { StreamingResponse } from '../utils/response';
-
 import { CohereStream } from '../utils/streams';
 
-const DEFAULT_BASE_URL = 'https://api.cohere.ai';
+// TODO: Add support for Cohere Tools
+// import { buildCohereTools } from '../utils/cohereHelpers';
+// https://docs.cohere.com/docs/tool-use
+import { StreamingResponse } from '../utils/response';
 
 export class LobeCohereAI implements LobeRuntimeAI {
   private client: CohereClient;
-  baseURL: string;
-  
-  constructor({ apiKey }: ClientOptions) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
+  // BaseURL is "built into" the cohere-ai npm package
+  // so there's no need to pass it in here.
+  constructor({ apiKey }: ClientOptions) {
+    if (!apiKey){
+      throw AgentRuntimeError.createError(
+        AgentRuntimeErrorType.InvalidProviderAPIKey
+      );
+    }
     this.client = new CohereClient({ token: apiKey });
-    this.baseURL = DEFAULT_BASE_URL;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(
+    payload: ChatStreamPayload, 
+    options?: ChatCompetitionOptions
+  ): Promise<Response> {
     try {
       const coherePayload = this.buildCoherePayload(payload);
 
-      if (!coherePayload.tools || coherePayload.tools.length === 0) {
-        const response = await this.client.chatStream(
-          { ...coherePayload },
-        );
-
-        const [prod, debug] = response.tee();
+      const stream = await this.client.chatStream(coherePayload);
 
         // TODO: FOR COHERE set env somewhere
-        if (process.env.DEBUG_COHERE_CHAT_COMPLETION === '1') {
-          debugStream(debug.toReadableStream()).catch(console.error);
-        }
+        // if (process.env.DEBUG_COHERE_CHAT_COMPLETION === '1') {
+        //   debugStream(debug.toReadableStream()).catch(console.error);
+        // }
         // TODO: FOR COHERE
-        return StreamingResponse(CohereStream(prod, options?.callback), {
-          headers: options?.headers,
-        });
-      }
-
-      const response = await this.client.chat({
-        ...coherePayload,
-        connectors: coherePayload.tools.map((tool) => ({ id: tool.name })),
-      });
-
-      if (process.env.DEBUG_COHERE_CHAT_COMPLETION === '1') {
-        console.log('\n[no stream response]\n');
-        console.log(JSON.stringify(response) + '\n');
-      }
-
-      const stream = this.transformResponseToStream(response);
-      // TODO: FOR COHERE
       return StreamingResponse(CohereStream(stream, options?.callback), {
         headers: options?.headers,
       });
     } catch (error) {
-      let desensitizedEndpoint = this.baseURL;
-
-      if (this.baseURL !== DEFAULT_BASE_URL) {
-        desensitizedEndpoint = desensitizeUrl(this.baseURL);
-      }
-
-      if ('status' in (error as any)) {
-        switch ((error as Response).status) {
+      if (error instanceof CohereError) {
+        switch (error.statusCode) {
           case 401: {
             throw AgentRuntimeError.chat({
-              endpoint: desensitizedEndpoint,
-              error: error as any,
-              // TODO: FOR COHERE
+              error,
               errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
               provider: ModelProvider.Cohere,
             });
           }
-
           case 403: {
             throw AgentRuntimeError.chat({
-              endpoint: desensitizedEndpoint,
-              error: error as any,
+              error,
               errorType: AgentRuntimeErrorType.LocationNotSupportError,
               provider: ModelProvider.Cohere,
             });
           }
           default: {
-            break;
+            throw AgentRuntimeError.chat({
+              error,
+              errorType: AgentRuntimeErrorType.ProviderBizError,
+              provider: ModelProvider.Cohere,
+            });
           }
         }
+      } else if (error instanceof CohereTimeoutError) {
+        throw AgentRuntimeError.chat({
+          error,
+          errorType: AgentRuntimeErrorType.ProviderTimeoutError,
+          provider: ModelProvider.Cohere,
+        });
       }
       throw AgentRuntimeError.chat({
-        endpoint: desensitizedEndpoint,
-        error: error as any,
-        // TODO: FOR COHERE
+        error: error as Error,
         errorType: AgentRuntimeErrorType.ProviderBizError,
         provider: ModelProvider.Cohere,
       });
@@ -122,7 +101,7 @@ export class LobeCohereAI implements LobeRuntimeAI {
       model,
       p,
       temperature,
-      tools: buildCohereTools(tools),
+      // tools: buildCohereTools(tools),
     };
   }  
 

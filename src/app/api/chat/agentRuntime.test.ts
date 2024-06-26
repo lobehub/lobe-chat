@@ -278,7 +278,6 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       const jwtPayload = {};
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Cohere, jwtPayload);
 
-      // 假设 LobeCohee AI 是 Mistral 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeCohereAI);
     });
 

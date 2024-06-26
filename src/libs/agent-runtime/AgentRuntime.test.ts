@@ -213,7 +213,6 @@ describe('AgentRuntime', () => {
           cohere: jwtPayload,
         });
 
-        // 假设 LobeCohereAI 是 Cohere 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeCohereAI);
       });
     });
