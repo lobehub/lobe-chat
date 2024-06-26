@@ -11,7 +11,7 @@ import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../typ
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { OpenAIStream } from '../utils/streams';
+import { AzureOpenAIStream } from '../utils/streams';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: OpenAIClient;
@@ -47,7 +47,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         debugStream(debug).catch(console.error);
       }
 
-      return StreamingResponse(OpenAIStream(prod, options?.callback), {
+      return StreamingResponse(AzureOpenAIStream(prod, options?.callback), {
         headers: options?.headers,
       });
     } catch (e) {
@@ -72,7 +72,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         : AgentRuntimeErrorType.AgentRuntimeError;
 
       throw AgentRuntimeError.chat({
-        endpoint: this.baseURL,
+        endpoint: this.maskSensitiveUrl(this.baseURL),
         error,
         errorType,
         provider: ModelProvider.Azure,
@@ -102,5 +102,16 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     return str
       .toLowerCase()
       .replaceAll(/(_[a-z])/g, (group) => group.toUpperCase().replace('_', ''));
+  };
+
+  private maskSensitiveUrl = (url: string) => {
+    // 使用正则表达式匹配 'https://' 后面和 '.openai.azure.com/' 前面的内容
+    const regex = /^(https:\/\/)([^.]+)(\.openai\.azure\.com\/.*)$/;
+
+    // 使用替换函数
+    return url.replace(regex, (match, protocol, subdomain, rest) => {
+      // 将子域名替换为 '***'
+      return `${protocol}***${rest}`;
+    });
   };
 }
