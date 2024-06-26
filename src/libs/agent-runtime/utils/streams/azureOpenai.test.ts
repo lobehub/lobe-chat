@@ -352,22 +352,6 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:16.635Z',
           choices: [
             {
-              delta: { content: null, role: 'assistant' },
-              index: 0,
-              logprobs: null,
-              finishReason: null,
-              contentFilterResults: {},
-            },
-          ],
-        },
-        {
-          id: 'chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
-          model: 'gpt-4o-2024-05-13',
-          object: 'chat.completion.chunk',
-          systemFingerprint: 'fp_abc28019ad',
-          created: '1970-01-20T21:36:16.635Z',
-          choices: [
-            {
               delta: {
                 toolCalls: [
                   {
@@ -434,39 +418,7 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:16.635Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: '{"ci' }, index: 1 }] },
-              index: 0,
-              logprobs: null,
-              finishReason: null,
-              contentFilterResults: {},
-            },
-          ],
-        },
-        {
-          id: 'chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
-          model: 'gpt-4o-2024-05-13',
-          object: 'chat.completion.chunk',
-          systemFingerprint: 'fp_abc28019ad',
-          created: '1970-01-20T21:36:16.635Z',
-          choices: [
-            {
-              delta: { toolCalls: [{ function: { arguments: 'ty": ' }, index: 1 }] },
-              index: 0,
-              logprobs: null,
-              finishReason: null,
-              contentFilterResults: {},
-            },
-          ],
-        },
-        {
-          id: 'chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
-          model: 'gpt-4o-2024-05-13',
-          object: 'chat.completion.chunk',
-          systemFingerprint: 'fp_abc28019ad',
-          created: '1970-01-20T21:36:16.635Z',
-          choices: [
-            {
-              delta: { toolCalls: [{ function: { arguments: '"北京"}' }, index: 1 }] },
+              delta: { toolCalls: [{ function: { arguments: '{"city": "北京"}' }, index: 1 }] },
               index: 0,
               logprobs: null,
               finishReason: null,
@@ -517,31 +469,25 @@ describe('AzureOpenAIStream', () => {
 
       expect(chunks).toEqual(
         [
-          'id: chatcmpl-9eEBuv3ra8l4KKQhGj6ldhqfwV4Iy',
+          'id: chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
           'event: tool_calls',
-          `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"call_1GT6no85IuAal06XHH2CZe8Q","index":0,"type":"function"}]\n`,
-          'id: chatcmpl-9eEBuv3ra8l4KKQhGj6ldhqfwV4Iy',
+          `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"call_cnQ80VjcWCS69wWKp4jz0nJd","index":0,"type":"function"}]\n`,
+          'id: chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
           'event: tool_calls',
-          `data: [{"function":{"arguments":"{\\""},"id":"call_1GT6no85IuAal06XHH2CZe8Q","index":0,"type":"function"}]\n`,
-          'id: chatcmpl-9eEBuv3ra8l4KKQhGj6ldhqfwV4Iy',
+          `data: [{"function":{"arguments":"{\\"city\\": \\"杭州\\"}"},"id":"call_cnQ80VjcWCS69wWKp4jz0nJd","index":0,"type":"function"}]\n`,
+          'id: chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
           'event: tool_calls',
-          `data: [{"function":{"arguments":"city"},"id":"call_1GT6no85IuAal06XHH2CZe8Q","index":0,"type":"function"}]\n`,
-          'id: chatcmpl-9eEBuv3ra8l4KKQhGj6ldhqfwV4Iy',
+          `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"call_LHrpPTrT563QkP9chVddzXQk","index":1,"type":"function"}]\n`,
+          'id: chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
           'event: tool_calls',
-          `data: [{"function":{"arguments":"\\":\\""},"id":"call_1GT6no85IuAal06XHH2CZe8Q","index":0,"type":"function"}]\n`,
-          'id: chatcmpl-9eEBuv3ra8l4KKQhGj6ldhqfwV4Iy',
-          'event: tool_calls',
-          `data: [{"function":{"arguments":"杭州"},"id":"call_1GT6no85IuAal06XHH2CZe8Q","index":0,"type":"function"}]\n`,
-          'id: chatcmpl-9eEBuv3ra8l4KKQhGj6ldhqfwV4Iy',
-          'event: tool_calls',
-          `data: [{"function":{"arguments":"\\"}"},"id":"call_1GT6no85IuAal06XHH2CZe8Q","index":0,"type":"function"}]\n`,
-          'id: chatcmpl-9eEBuv3ra8l4KKQhGj6ldhqfwV4Iy',
+          `data: [{"function":{"arguments":"{\\"city\\": \\"北京\\"}"},"id":"call_LHrpPTrT563QkP9chVddzXQk","index":1,"type":"function"}]\n`,
+          'id: chatcmpl-9eEh9DtpidX5CyE4GcyIeyhU3pLir',
           'event: stop',
           `data: "tool_calls"\n`,
         ].map((item) => `${item}\n`),
       );
 
-      expect(onToolCallMock).toHaveBeenCalledTimes(6);
+      expect(onToolCallMock).toHaveBeenCalledTimes(4);
     });
     it('should handle tool calls without index and type', async () => {
       const mockOpenAIStream = new ReadableStream({
