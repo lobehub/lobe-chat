@@ -28,7 +28,13 @@ const UserBanner = memo(() => {
         </>
       ) : isLoginWithAuth ? (
         <>
-          <UserInfo onClick={() => router.push('/me/profile')} />
+          <UserInfo
+            onClick={() => {
+              // Profile page only works with Clerk
+              if (enabledNextAuth) return;
+              router.push('/me/profile');
+            }}
+          />
           <DataStatistics paddingInline={12} />
         </>
       ) : (
