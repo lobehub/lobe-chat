@@ -11,7 +11,7 @@ import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../typ
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { OpenAIStream } from '../utils/streams';
+import { AzureOpenAIStream } from '../utils/streams';
 
 export class LobeAzureOpenAI implements LobeRuntimeAI {
   client: OpenAIClient;
@@ -47,7 +47,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         debugStream(debug).catch(console.error);
       }
 
-      return StreamingResponse(OpenAIStream(prod, options?.callback), {
+      return StreamingResponse(AzureOpenAIStream(prod, options?.callback), {
         headers: options?.headers,
       });
     } catch (e) {
