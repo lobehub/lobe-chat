@@ -58,8 +58,10 @@ jobs:
           git diff
           git config --global user.name "lobehubbot"
           git config --global user.email "i@lobehub.com"
+          git remote set-url origin https://x-access-token:${{ secrets.LOBE_CHAT_FORK_SECRET }}@github.com/${{ github.repository }}.git
           git add .
           git commit -m "📝 docs(bot): Auto sync agents & plugin to readme" || exit 0
           git push
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          LOBE_CHAT_FORK_SECRET: ${{ secrets.LOBE_CHAT_FORK_SECRET }}
