@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.1.12](https://github.com/lobehub/lobe-chat/compare/v1.1.11...v1.1.12)
+
+<sup>Released on **2024-06-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix azure tools calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix azure tools calling, closes [#3046](https://github.com/lobehub/lobe-chat/issues/3046) ([b929985](https://github.com/lobehub/lobe-chat/commit/b929985))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.1.11](https://github.com/lobehub/lobe-chat/compare/v1.1.10...v1.1.11)
 
 <sup>Released on **2024-06-25**</sup>
