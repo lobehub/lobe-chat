@@ -43,6 +43,7 @@
     "title": "Impostazioni"
   },
   "llm": {
+    "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Inserisci la tua chiave API {{name}}",
       "placeholder": "Chiave API {{name}}",
@@ -102,6 +103,7 @@
       "latestTime": "Ultimo aggiornamento: {{time}}",
       "noLatestTime": "Nessun elenco disponibile al momento"
     },
+    "helpDoc": "Guida alla configurazione",
     "modelList": {
       "desc": "Seleziona i modelli da visualizzare durante la sessione, i modelli selezionati verranno mostrati nell'elenco dei modelli",
       "placeholder": "Seleziona un modello dall'elenco",
@@ -112,7 +114,7 @@
       "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
       "title": "Indirizzo del proxy API"
     },
-    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
+    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
   },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",
@@ -366,6 +368,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modello di generazione metadati assistente",
+      "modelDesc": "Modello specificato per generare nome, descrizione, avatar e etichetta dell'assistente",
+      "title": "Genera automaticamente informazioni sull'assistente"
+    },
     "title": "Assistente di sistema",
     "topic": {
       "label": "Modello di denominazione degli argomenti",

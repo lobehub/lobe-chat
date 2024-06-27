@@ -43,6 +43,7 @@
     "title": "Cài đặt"
   },
   "llm": {
+    "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Vui lòng nhập {{name}} API Key của bạn",
       "placeholder": "{{name}} API Key",
@@ -102,6 +103,7 @@
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
       "noLatestTime": "Chưa có danh sách nào được lấy"
     },
+    "helpDoc": "Hướng dẫn cấu hình",
     "modelList": {
       "desc": "Chọn mô hình hiển thị trong cuộc trò chuyện, mô hình đã chọn sẽ được hiển thị trong danh sách mô hình",
       "placeholder": "Vui lòng chọn mô hình từ danh sách",
@@ -112,7 +114,7 @@
       "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
       "title": "Địa chỉ Proxy API"
     },
-    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
+    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
   "plugin": {
     "addTooltip": "Thêm tiện ích",
@@ -366,6 +368,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Mô hình tạo siêu dữ liệu trợ lý",
+      "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
+      "title": "Tự động tạo thông tin trợ lý"
+    },
     "title": "Trợ lý hệ thống",
     "topic": {
       "label": "Mô hình đặt tên chủ đề",

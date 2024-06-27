@@ -43,6 +43,7 @@
     "title": "设置"
   },
   "llm": {
+    "aesGcm": "您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密",
     "apiKey": {
       "desc": "请填写你的 {{name}} API Key",
       "placeholder": "{{name}} API Key",
@@ -102,6 +103,7 @@
       "latestTime": "上次更新时间：{{time}}",
       "noLatestTime": "暂未获取列表"
     },
+    "helpDoc": "配置教程",
     "modelList": {
       "desc": "选择在会话中展示的模型，选择的模型会在模型列表中展示",
       "placeholder": "请从列表中选择模型",
@@ -112,7 +114,7 @@
       "desc": "除默认地址外，必须包含 http(s)://",
       "title": "API 代理地址"
     },
-    "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待 ✨"
+    "waitingForMore": "更多模型正在 <1>计划接入</1> 中，敬请期待"
   },
   "plugin": {
     "addTooltip": "自定义插件",
@@ -366,6 +368,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "助理元数据生成模型",
+      "modelDesc": "指定用于生成助理名称、描述、头像、标签的模型",
+      "title": "自动生成助理信息"
+    },
     "title": "系统助手",
     "topic": {
       "label": "话题命名模型",

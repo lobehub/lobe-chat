@@ -24,6 +24,7 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
+import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
 
 import { initAgentRuntimeWithUserPayload } from './agentRuntime';
 
@@ -51,6 +52,7 @@ vi.mock('@/config/llm', () => ({
     OPENROUTER_API_KEY: 'test-openrouter-key',
     TOGETHERAI_API_KEY: 'test-togetherai-key',
     QWEN_API_KEY: 'test-qwen-key',
+    STEPFUN_API_KEY: 'test-stepfun-key',
   })),
 }));
 
@@ -192,6 +194,13 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeGroq);
     });
 
+    it('Stepfun AI provider: with apikey', async () => {
+      const jwtPayload = { apiKey: 'user-stepfun-key' };
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Stepfun, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeStepfunAI);
+    });
+
     it('Unknown Provider: with apikey and endpoint, should initialize to OpenAi', async () => {
       const jwtPayload: JWTPayload = {
         apiKey: 'user-unknown-key',
@@ -311,6 +320,14 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
       // 假设 LobeDeepSeekAI 是 DeepSeek 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
+    });
+
+    it('Stepfun AI provider: without apikey', async () => {
+      const jwtPayload = {};
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Stepfun, jwtPayload);
+
+      // 假设 LobeDeepSeekAI 是 DeepSeek 提供者的实现类
+      expect(runtime['_runtime']).toBeInstanceOf(LobeStepfunAI);
     });
 
     it('Together AI provider: without apikey', async () => {

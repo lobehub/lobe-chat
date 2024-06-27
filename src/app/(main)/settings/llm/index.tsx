@@ -2,10 +2,9 @@
 
 import { Flexbox } from 'react-layout-kit';
 
-import Footer from '@/app/(main)/settings/llm/components/Footer';
-
 import { useProviderList } from './ProviderList/providers';
 import ProviderConfig from './components/ProviderConfig';
+import Footer from './features/Footer';
 
 const Page = () => {
   const list = useProviderList();

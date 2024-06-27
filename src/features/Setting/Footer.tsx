@@ -65,7 +65,7 @@ const Footer = memo<PropsWithChildren>(() => {
       </Flexbox>
       <GuideModal
         cancelText={t('footer.later')}
-        cover={<GuideVideo height={269} src={'/videos/star.mp4'} width={358} />}
+        cover={<GuideVideo height={269} src={'/videos/star.mp4?v=1'} width={358} />}
         desc={t('footer.star.desc')}
         okText={t('footer.star.action')}
         onCancel={() => setOpenStar(false)}
@@ -78,7 +78,7 @@ const Footer = memo<PropsWithChildren>(() => {
       />
       <GuideModal
         cancelText={t('footer.later')}
-        cover={<GuideVideo height={269} src={'/videos/feedback.mp4'} width={358} />}
+        cover={<GuideVideo height={269} src={'/videos/feedback.mp4?v=1'} width={358} />}
         desc={t('footer.feedback.desc')}
         okText={t('footer.feedback.action')}
         onCancel={() => setOpenFeedback(false)}

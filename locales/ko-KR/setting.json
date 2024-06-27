@@ -43,6 +43,7 @@
     "title": "설정"
   },
   "llm": {
+    "aesGcm": "귀하의 키 및 프록시 주소는 <1>AES-GCM</1> 암호화 알고리즘을 사용하여 암호화됩니다",
     "apiKey": {
       "desc": "당신의 {{name}} API 키를 입력해주세요",
       "placeholder": "{{name}} API 키",
@@ -102,6 +103,7 @@
       "latestTime": "마지막 업데이트 시간: {{time}}",
       "noLatestTime": "목록을 아직 가져오지 않았습니다"
     },
+    "helpDoc": "구성 안내",
     "modelList": {
       "desc": "대화에서 표시할 모델을 선택하세요. 선택한 모델은 모델 목록에 표시됩니다",
       "placeholder": "모델을 선택하세요",
@@ -112,7 +114,7 @@
       "desc": "기본 주소 이외에 http(s)://를 포함해야 합니다.",
       "title": "API 프록시 주소"
     },
-    "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요 ✨"
+    "waitingForMore": "<1>계획에 따라 더 많은 모델이 추가될 예정</1>이니 기대해 주세요"
   },
   "plugin": {
     "addTooltip": "플러그인 추가",
@@ -366,6 +368,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "어시스턴트 메타 생성 모델",
+      "modelDesc": "어시스턴트 이름, 설명, 프로필 이미지, 레이블을 생성하는 데 사용되는 모델을 지정합니다.",
+      "title": "어시스턴트 정보 자동 생성"
+    },
     "title": "시스템 도우미",
     "topic": {
       "label": "주제 명명 모델",

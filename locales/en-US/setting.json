@@ -4,7 +4,7 @@
   },
   "agentTab": {
     "chat": "Chat Preferences",
-    "meta": "Agent Info",
+    "meta": "Assistant Info",
     "modal": "Model Settings",
     "plugin": "Plugin Settings",
     "prompt": "Role Configuration",
@@ -21,7 +21,7 @@
     "clear": {
       "action": "Clear Now",
       "confirm": "Confirm to clear all chat data?",
-      "desc": "This will clear all session data, including agent, files, messages, plugins, etc.",
+      "desc": "This will clear all session data, including assistant, files, messages, plugins, etc.",
       "success": "All session messages have been cleared",
       "title": "Clear All Session Messages"
     },
@@ -43,6 +43,7 @@
     "title": "Settings"
   },
   "llm": {
+    "aesGcm": "Your keys and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
     "apiKey": {
       "desc": "Please enter your {{name}} API Key",
       "placeholder": "{{name}} API Key",
@@ -102,6 +103,7 @@
       "latestTime": "Last Updated: {{time}}",
       "noLatestTime": "No list available yet"
     },
+    "helpDoc": "Configuration Guide",
     "modelList": {
       "desc": "Select the models to display in the session. The selected models will be displayed in the model list.",
       "placeholder": "Please select a model from the list",
@@ -112,7 +114,7 @@
       "desc": "Must include http(s):// in addition to the default address",
       "title": "API Proxy Address"
     },
-    "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
+    "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
   "plugin": {
     "addTooltip": "Custom Plugin",
@@ -136,11 +138,11 @@
       "title": "Background Color"
     },
     "description": {
-      "placeholder": "Enter agent description",
-      "title": "Agent Description"
+      "placeholder": "Enter assistant description",
+      "title": "Assistant Description"
     },
     "name": {
-      "placeholder": "Enter agent name",
+      "placeholder": "Enter assistant name",
       "title": "Name"
     },
     "prompt": {
@@ -151,7 +153,7 @@
       "placeholder": "Enter tag",
       "title": "Tag"
     },
-    "title": "Agent Information"
+    "title": "Assistant Information"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -288,7 +290,7 @@
       "title": "Text-to-Speech Service"
     },
     "voice": {
-      "desc": "Select a voice for the current agent, different TTS services support different voices",
+      "desc": "Select a voice for the current assistant, different TTS services support different voices",
       "preview": "Voice Preview",
       "title": "Text-to-Speech Voice"
     }
@@ -325,11 +327,11 @@
     "title": "Theme Settings"
   },
   "submitAgentModal": {
-    "button": "Submit Agent",
-    "identifier": "Agent Identifier",
-    "metaMiss": "Please complete the agent information before submitting. It should include name, description, and tags",
-    "placeholder": "Enter a unique identifier for the agent, e.g. web-development",
-    "tooltips": "Share to the agent marketplace"
+    "button": "Submit Assistant",
+    "identifier": "Assistant Identifier",
+    "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags",
+    "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
+    "tooltips": "Share to the assistant marketplace"
   },
   "sync": {
     "device": {
@@ -366,26 +368,31 @@
     }
   },
   "systemAgent": {
-    "title": "System Agents",
+    "agentMeta": {
+      "label": "Assistant Metadata Generation Model",
+      "modelDesc": "Model designated for generating assistant name, description, avatar, and tags",
+      "title": "Automatically Generate Assistant Information"
+    },
+    "title": "System Assistants",
     "topic": {
       "label": "Topic Naming Model",
       "modelDesc": "Model designated for automatic topic renaming",
       "title": "Automatic Topic Naming"
     },
     "translation": {
-      "label": "Translation Agent",
+      "label": "Translation Assistant",
       "modelDesc": "Specific model for translate message",
       "title": "Translation Settings"
     }
   },
   "tab": {
     "about": "About",
-    "agent": "Default Agent",
+    "agent": "Default Assistant",
     "common": "Common Settings",
     "experiment": "Experiment",
     "llm": "Language Model",
     "sync": "Cloud Sync",
-    "system-agent": "System Agent",
+    "system-agent": "System Assistant",
     "tts": "Text-to-Speech"
   },
   "tools": {

@@ -43,6 +43,7 @@
     "title": "Paramètres"
   },
   "llm": {
+    "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Veuillez saisir votre clé API {{name}}",
       "placeholder": "Clé API {{name}}",
@@ -102,6 +103,7 @@
       "latestTime": "Dernière mise à jour : {{time}}",
       "noLatestTime": "Aucune mise à jour disponible"
     },
+    "helpDoc": "Guide de configuration",
     "modelList": {
       "desc": "Sélectionnez les modèles à afficher dans la session. Les modèles sélectionnés seront affichés dans la liste des modèles.",
       "placeholder": "Veuillez sélectionner un modèle dans la liste",
@@ -112,7 +114,7 @@
       "desc": "Doit inclure http(s):// en plus de l'adresse par défaut",
       "title": "Adresse du proxy de l'API"
     },
-    "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute ✨"
+    "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute"
   },
   "plugin": {
     "addTooltip": "Ajouter un plugin personnalisé",
@@ -366,6 +368,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modèle de génération de métadonnées d'assistant",
+      "modelDesc": "Modèle spécifié pour générer le nom, la description, l'avatar et les balises de l'assistant",
+      "title": "Génération automatique des informations de l'assistant"
+    },
     "title": "Agent système",
     "topic": {
       "label": "Modèle de nommage des sujets",

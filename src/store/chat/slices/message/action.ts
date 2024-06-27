@@ -19,12 +19,14 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatStore } from '@/store/chat/store';
-import { ChatMessage, MessageToolCall } from '@/types/message';
+import { ChatMessage, ChatMessageError, MessageToolCall } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
 
+import type { ChatStoreState } from '../../initialState';
 import { chatSelectors, topicSelectors } from '../../selectors';
+import { preventLeavingFn, toggleBooleanList } from '../../utils';
 import { MessageDispatch, messagesReducer } from './reducer';
 
 const n = setNamespace('m');
@@ -84,6 +86,12 @@ export interface ChatMessageAction {
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+  internal_toggleLoadingArrays: (
+    key: keyof ChatStoreState,
+    loading: boolean,
+    id?: string,
+    action?: string,
+  ) => AbortController | undefined;
   internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
   internal_toggleMessageLoading: (loading: boolean, id: string) => void;
   /**
@@ -123,6 +131,7 @@ export interface ChatMessageAction {
     content: string,
     toolCalls?: MessageToolCall[],
   ) => Promise<void>;
+  internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
   internal_createMessage: (
     params: CreateMessageParams,
     context?: { tempMessageId?: string; skipRefresh?: boolean },
@@ -135,24 +144,6 @@ export interface ChatMessageAction {
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
 const getAgentChatConfig = () => agentSelectors.currentAgentChatConfig(useAgentStore.getState());
-
-const preventLeavingFn = (e: BeforeUnloadEvent) => {
-  // set returnValue to trigger alert modal
-  // Note: No matter what value is set, the browser will display the standard text
-  e.returnValue = '你有正在生成中的请求，确定要离开吗？';
-};
-
-const toggleBooleanList = (ids: string[], id: string, loading: boolean) => {
-  return produce(ids, (draft) => {
-    if (loading) {
-      draft.push(id);
-    } else {
-      const index = draft.indexOf(id);
-
-      if (index >= 0) draft.splice(index, 1);
-    }
-  });
-};
 
 export const chatMessage: StateCreator<
   ChatStore,
@@ -591,35 +582,7 @@ export const chatMessage: StateCreator<
     };
   },
   internal_toggleChatLoading: (loading, id, action) => {
-    if (loading) {
-      window.addEventListener('beforeunload', preventLeavingFn);
-
-      const abortController = new AbortController();
-      set(
-        {
-          abortController,
-          chatLoadingIds: toggleBooleanList(get().messageLoadingIds, id!, loading),
-        },
-        false,
-        action,
-      );
-
-      return abortController;
-    } else {
-      if (!id) {
-        set({ abortController: undefined, chatLoadingIds: [] }, false, action);
-      } else
-        set(
-          {
-            abortController: undefined,
-            chatLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
-          },
-          false,
-          action,
-        );
-
-      window.removeEventListener('beforeunload', preventLeavingFn);
-    }
+    return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
   },
   internal_toggleMessageLoading: (loading, id) => {
     set(
@@ -684,6 +647,11 @@ export const chatMessage: StateCreator<
     await internal_coreProcessMessage(contextMessages, latestMsg.id, { traceId });
   },
 
+  internal_updateMessageError: async (id, error) => {
+    get().internal_dispatchMessage({ id, type: 'updateMessages', value: { error } });
+    await messageService.updateMessage(id, { error });
+    await get().refreshMessages();
+  },
   internal_updateMessageContent: async (id, content, toolCalls) => {
     const { internal_dispatchMessage, refreshMessages, internal_transformToolCalls } = get();
 
@@ -760,6 +728,38 @@ export const chatMessage: StateCreator<
       traceService
         .traceEvent({ traceId, observationId, content: message.content, ...payload })
         .catch();
+    }
+  },
+
+  internal_toggleLoadingArrays: (key, loading, id, action) => {
+    if (loading) {
+      window.addEventListener('beforeunload', preventLeavingFn);
+
+      const abortController = new AbortController();
+      set(
+        {
+          abortController,
+          [key]: toggleBooleanList(get()[key] as string[], id!, loading),
+        },
+        false,
+        action,
+      );
+
+      return abortController;
+    } else {
+      if (!id) {
+        set({ abortController: undefined, [key]: [] }, false, action);
+      } else
+        set(
+          {
+            abortController: undefined,
+            [key]: toggleBooleanList(get()[key] as string[], id, loading),
+          },
+          false,
+          action,
+        );
+
+      window.removeEventListener('beforeunload', preventLeavingFn);
     }
   },
 });

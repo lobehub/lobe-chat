@@ -1,4 +1,4 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
@@ -12,6 +12,9 @@ export const config = {
     '/(api|trpc)(.*)',
     // include the /
     '/',
+    '/chat(.*)',
+    '/settings(.*)',
+    // ↓ cloud ↓
   ],
 };
 
@@ -40,8 +43,18 @@ const nextAuthMiddleware = auth((req) => {
   });
 });
 
+const isProtectedRoute = createRouteMatcher([
+  '/settings(.*)',
+  // ↓ cloud ↓
+]);
+
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
-  ? clerkMiddleware()
+  ? clerkMiddleware(
+      (auth, req) => {
+        if (isProtectedRoute(req)) auth().protect();
+      },
+      { signInUrl: '/login', signUpUrl: '/signup' },
+    )
   : authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
     ? nextAuthMiddleware
     : defaultMiddleware;

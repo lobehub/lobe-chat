@@ -26,6 +26,7 @@ export interface ChatMessageState {
    */
   messagesInit: boolean;
   messagesMap: Record<string, ChatMessage[]>;
+  pluginApiLoadingIds: string[];
   /**
    * the tool calling stream ids
    */
@@ -41,5 +42,6 @@ export const initialMessageState: ChatMessageState = {
   messageLoadingIds: [],
   messagesInit: false,
   messagesMap: {},
+  pluginApiLoadingIds: [],
   toolCallingStreamIds: {},
 };

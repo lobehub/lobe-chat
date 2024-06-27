@@ -32,6 +32,27 @@ describe('modelConfigSelectors', () => {
 
       expect(modelConfigSelectors.isProviderEnabled('perplexity')(s)).toBe(false);
     });
+
+    it('should follow the user settings if provider is in the whitelist', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            ollama: { enabled: false },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+
+      expect(modelConfigSelectors.isProviderEnabled('ollama')(s)).toBe(false);
+    });
+
+    it('ollama should be enabled by default', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {},
+        },
+      } as UserSettingsState) as unknown as UserStore;
+      expect(modelConfigSelectors.isProviderEnabled('ollama')(s)).toBe(true);
+    });
   });
 
   describe('isProviderFetchOnClient', () => {

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { memo, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { createStoreUpdater } from 'zustand-utils';
 
 import { LOBE_URL_IMPORT_NAME } from '@/const/url';
@@ -14,8 +15,10 @@ import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
 const StoreInitialization = memo(() => {
-  const router = useRouter();
+  // prefetch error ns to avoid don't show error content correctly
+  useTranslation('error');
 
+  const router = useRouter();
   const [isLogin, useInitUserState, importUrlShareSettings] = useUserStore((s) => [
     authSelectors.isLogin(s),
     s.useInitUserState,
@@ -57,21 +60,14 @@ const StoreInitialization = memo(() => {
     importUrlShareSettings(searchParam);
   }, [searchParam]);
 
-  // useEffect(() => {
-  //   router.prefetch('/chat');
-  //   router.prefetch('/market');
-  //
-  //   if (mobile) {
-  //     router.prefetch('/me');
-  //     router.prefetch('/chat/settings');
-  //     router.prefetch('/settings/common');
-  //     router.prefetch('/settings/agent');
-  //     router.prefetch('/settings/sync');
-  //   } else {
-  //     router.prefetch('/chat/settings/modal');
-  //     router.prefetch('/settings/modal');
-  //   }
-  // }, [router, mobile]);
+  useEffect(() => {
+    if (mobile) {
+      router.prefetch('/me');
+    } else {
+      router.prefetch('/chat/settings/modal');
+      router.prefetch('/settings/modal');
+    }
+  }, [router, mobile]);
 
   return null;
 });

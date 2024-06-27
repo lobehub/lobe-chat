@@ -30,41 +30,20 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const anthropicPayload = this.buildAnthropicPayload(payload);
-
-      // if there is no tool, we can use the normal chat API
-      if (!anthropicPayload.tools || anthropicPayload.tools.length === 0) {
-        const response = await this.client.messages.create(
-          { ...anthropicPayload, stream: true },
-          {
-            signal: options?.signal,
-          },
-        );
-
-        const [prod, debug] = response.tee();
-
-        if (process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION === '1') {
-          debugStream(debug.toReadableStream()).catch(console.error);
-        }
-
-        return StreamingResponse(AnthropicStream(prod, options?.callback), {
-          headers: options?.headers,
-        });
-      }
-
-      // or we should call the tool API
-      const response = await this.client.beta.tools.messages.create(
-        { ...anthropicPayload, stream: false },
-        { signal: options?.signal },
+      const response = await this.client.messages.create(
+        { ...anthropicPayload, stream: true },
+        {
+          signal: options?.signal,
+        },
       );
 
+      const [prod, debug] = response.tee();
+
       if (process.env.DEBUG_ANTHROPIC_CHAT_COMPLETION === '1') {
-        console.log('\n[no stream response]\n');
-        console.log(JSON.stringify(response) + '\n');
+        debugStream(debug.toReadableStream()).catch(console.error);
       }
 
-      const stream = this.transformResponseToStream(response);
-
-      return StreamingResponse(AnthropicStream(stream, options?.callback), {
+      return StreamingResponse(AnthropicStream(prod, options?.callback), {
         headers: options?.headers,
       });
     } catch (error) {
@@ -118,43 +97,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       model,
       system: system_message?.content as string,
       temperature,
-      // TODO: Anthropic sdk don't have tools interface currently
-      // @ts-ignore
       tools: buildAnthropicTools(tools),
       top_p,
     } satisfies Anthropic.MessageCreateParams;
   }
-
-  private transformResponseToStream = (response: Anthropic.Beta.Tools.ToolsBetaMessage) => {
-    return new ReadableStream<Anthropic.MessageStreamEvent>({
-      start(controller) {
-        response.content.forEach((content) => {
-          switch (content.type) {
-            case 'text': {
-              controller.enqueue({
-                delta: { text: content.text, type: 'text_delta' },
-                type: 'content_block_delta',
-              } as Anthropic.ContentBlockDeltaEvent);
-              break;
-            }
-            case 'tool_use': {
-              controller.enqueue({
-                delta: {
-                  tool_use: { id: content.id, input: content.input, name: content.name },
-                  type: 'tool_use',
-                },
-                type: 'content_block_delta',
-              } as any);
-            }
-          }
-        });
-
-        controller.enqueue({ type: 'message_stop' } as Anthropic.MessageStopEvent);
-
-        controller.close();
-      },
-    });
-  };
 }
 
 export default LobeAnthropicAI;

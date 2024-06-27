@@ -95,16 +95,37 @@ export const buildAnthropicMessages = (
 ): Anthropic.Messages.MessageParam[] => {
   const messages: Anthropic.Messages.MessageParam[] = [];
   let lastRole = 'assistant';
+  let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
 
-  oaiMessages.forEach((message) => {
-    const anthropicMessage = buildAnthropicMessage(message);
+  oaiMessages.forEach((message, index) => {
+    // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
+    if (message.role === 'tool') {
+      pendingToolResults.push({
+        content: [{ text: message.content as string, type: 'text' }],
+        tool_use_id: message.tool_call_id!,
+        type: 'tool_result',
+      });
 
-    if (lastRole === anthropicMessage.role) {
-      messages.push({ content: '_', role: lastRole === 'user' ? 'assistant' : 'user' });
+      // If this is the last message or the next message is not a 'tool' message,
+      // we add the accumulated tool results as a single 'user' message
+      if (index === oaiMessages.length - 1 || oaiMessages[index + 1].role !== 'tool') {
+        messages.push({
+          content: pendingToolResults,
+          role: 'user',
+        });
+        pendingToolResults = [];
+        lastRole = 'user';
+      }
+    } else {
+      const anthropicMessage = buildAnthropicMessage(message);
+
+      if (lastRole === anthropicMessage.role) {
+        messages.push({ content: '_', role: lastRole === 'user' ? 'assistant' : 'user' });
+      }
+
+      lastRole = anthropicMessage.role;
+      messages.push(anthropicMessage);
     }
-
-    lastRole = anthropicMessage.role;
-    messages.push(anthropicMessage);
   });
 
   return messages;
@@ -112,9 +133,9 @@ export const buildAnthropicMessages = (
 
 export const buildAnthropicTools = (tools?: OpenAI.ChatCompletionTool[]) =>
   tools?.map(
-    (tool): Anthropic.Beta.Tools.Tool => ({
+    (tool): Anthropic.Tool => ({
       description: tool.function.description,
-      input_schema: tool.function.parameters as Anthropic.Beta.Tools.Tool.InputSchema,
+      input_schema: tool.function.parameters as Anthropic.Tool.InputSchema,
       name: tool.function.name,
     }),
   );

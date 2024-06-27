@@ -43,6 +43,7 @@
     "title": "Configuración"
   },
   "llm": {
+    "aesGcm": "Su clave y dirección del agente se cifrarán utilizando el algoritmo de cifrado <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Por favor, introduce tu clave de API de {{name}}",
       "placeholder": "Clave de API de {{name}}",
@@ -102,6 +103,7 @@
       "latestTime": "Última actualización: {{time}}",
       "noLatestTime": "Lista no disponible actualmente"
     },
+    "helpDoc": "Tutorial de configuración",
     "modelList": {
       "desc": "Selecciona los modelos que se mostrarán en la conversación. Los modelos seleccionados se mostrarán en la lista de modelos.",
       "placeholder": "Selecciona un modelo de la lista",
@@ -112,7 +114,7 @@
       "desc": "Además de la dirección predeterminada, debe incluir http(s)://",
       "title": "Dirección del proxy de la API"
     },
-    "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos! ✨"
+    "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!"
   },
   "plugin": {
     "addTooltip": "Agregar complemento personalizado",
@@ -366,6 +368,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modelo de generación de metadatos de asistente",
+      "modelDesc": "Modelo designado para generar el nombre, descripción, avatar y etiquetas del asistente",
+      "title": "Generación automática de información del asistente"
+    },
     "title": "Asistente del sistema",
     "topic": {
       "label": "Modelo de nombramiento de temas",

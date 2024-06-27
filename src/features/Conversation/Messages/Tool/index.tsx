@@ -1,4 +1,3 @@
-import { Snippet } from '@lobehub/ui';
 import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -7,10 +6,11 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import PluginRender from '../../Plugins/Render';
+import Arguments from '../components/Arguments';
 import Inspector from './Inspector';
 
 export const ToolMessage = memo<ChatMessage>(({ id, content, plugin }) => {
-  const loading = useChatStore(chatSelectors.isMessageGenerating(id));
+  const loading = useChatStore(chatSelectors.isPluginApiInvoking(id));
 
   const [showRender, setShow] = useState(plugin?.type !== 'default');
 
@@ -35,9 +35,7 @@ export const ToolMessage = memo<ChatMessage>(({ id, content, plugin }) => {
           type={plugin?.type}
         />
       ) : (
-        <Flexbox>
-          <Snippet>{plugin?.arguments || ''}</Snippet>
-        </Flexbox>
+        <Arguments arguments={plugin?.arguments} />
       )}
     </Flexbox>
   );

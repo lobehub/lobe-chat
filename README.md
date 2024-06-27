@@ -8,7 +8,7 @@ An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
 Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
 One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/Ollama chat application.
 
-**English** · [简体中文](./README.zh-CN.md) · [Changelog](./CHANGELOG.md) · [Documents][docs] · [Report Bug][github-issues-link] · [Request Feature][github-issues-link]
+**English** · [简体中文](./README.zh-CN.md) · [Official Site][official-site] · [Changelog](./CHANGELOG.md) · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -39,7 +39,7 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 
 <sup>Pioneering the new age of thinking and creating. Built for you, the Super Individual.</sup>
 
-[![][github-trending-shield]][github-trending-url]
+[![][github-trending-shield]][github-trending-url] <a href="https://hellogithub.com/repository/39701baf5a734cb894ec812248a5655a" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=39701baf5a734cb894ec812248a5655a&claim_uid=HxYvFN34htJzGCD" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 [![][image-overview]][vercel-link]
 
@@ -59,9 +59,11 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
   - [`5` Text to Image Generation](#5-text-to-image-generation)
   - [`6` Plugin System (Function Calling)](#6-plugin-system-function-calling)
   - [`7` Agent Market (GPTs)](#7-agent-market-gpts)
-  - [`8` Progressive Web App (PWA)](#8-progressive-web-app-pwa)
-  - [`9` Mobile Device Adaptation](#9-mobile-device-adaptation)
-  - [`10` Custom Themes](#10-custom-themes)
+  - [`8` Support Local / Remote Database](#8-support-local--remote-database)
+  - [`9` Support Multi-User Management](#9-support-multi-user-management)
+  - [`10` Progressive Web App (PWA)](#10-progressive-web-app-pwa)
+  - [`11` Mobile Device Adaptation](#11-mobile-device-adaptation)
+  - [`12` Custom Themes](#12-custom-themes)
   - [`*` What's more](#-whats-more)
 - [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
@@ -224,14 +226,14 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                            | Description                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>         | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search` |
-| [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>      | Space data including NASA.<br/>`space` `nasa`                                                                              |
-| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>            | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                              |
-| [Search Google via Serper](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Barry** on **2024-04-30**</sup> | Google search engine via Serper.dev free API (2500x🆓/month)<br/>`web` `search`                                            |
+| Recent Submits                                                                                                         | Description                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                    |
+| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>      | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search` |
+| [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>   | Space data including NASA.<br/>`space` `nasa`                                                                              |
+| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>         | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                              |
 
-> 📊 Total plugins: [<kbd>**55**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**52**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -263,14 +265,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                                           | Description                                                                                                                                                                                                                                                |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Pseudo Code Prompt Word Generator Expert](https://chat-preview.lobehub.com/market?agent=pseudocode-prompt-master)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-06-16**</sup> | Pseudo Code Prompt Word Generator Expert allows users to directly input prompt word design requirements and returns designed pseudo code prompt words directly.<br/>`prompt` `prompt-word` `pseudo-code`                                                   |
-| [Mr. MySQL](https://chat-preview.lobehub.com/market?agent=mysql-haoteacher)<br/><sup>By **[yayoinoyume](https://github.com/yayoinoyume)** on **2024-06-09**</sup>                                        | Mr. MySQL is a great teacher to help everyone learn MySQL<br/>`mysql` `programming` `learning`                                                                                                                                                             |
-| [Popular Science Writing Assistant](https://chat-preview.lobehub.com/market?agent=popular-science-writer)<br/><sup>By **[ShinChven](https://github.com/ShinChven)** on **2024-06-08**</sup>              | The popular science writing assistant uses everyday language to explain scientific concepts, tells stories, uses examples and metaphors to spark interest, and emphasizes importance.<br/>`science-writing` `science-popularization` `creative-expression` |
-| [Expert Response to Reviewer](https://chat-preview.lobehub.com/market?agent=academic-editor-en)<br/><sup>By **[Starlitnightly](https://github.com/Starlitnightly)** on **2024-06-03**</sup>              | Specializing in natural academic editing, assisting authors in responding to reviewer comments in a scientific, courteous, and point-by-point manner.<br/>`academic-editing` `response-to-reviewer-comments` `scientific-writing`                          |
+| Recent Submits                                                                                                                                                                           | Description                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [AOSP Source Code Expert](https://chat-preview.lobehub.com/market?agent=aosp-development)<br/><sup>By **[viruscoding](https://github.com/viruscoding)** on **2024-06-24**</sup>          | An expert in AOSP (Android Open Source Project) for Android, with a deep understanding and analytical ability of the latest AOSP source code.<br/>`aosp`                                                                                                                                                                                                                                                             |
+| [Fastapi Project Development Assistant](https://chat-preview.lobehub.com/market?agent=fastapi-development)<br/><sup>By **[xwxw098](https://github.com/xwxw098)** on **2024-06-19**</sup> | Proficient in Python modular development, skilled in using FastAPI, PostgreSQL, Tortoise-ORM, and other technologies, able to provide clear code structure and detailed comments for large projects.<br/>`fast-api` `python` `modular-development`                                                                                                                                                                   |
+| [IT Systems Architect](https://chat-preview.lobehub.com/market?agent=it-system-architect)<br/><sup>By **[a562314](https://github.com/a562314)** on **2024-06-19**</sup>                  | Senior IT architect specializing in requirements analysis, system design, technology selection, and cross-platform system optimization. With over 5 years of experience, proficient in Windows, macOS, and Linux operating systems, skilled in troubleshooting, and security protection.<br/>`it-architecture-design` `problem-solving` `agile-development` `system-optimization` `cross-platform-skills` `teamwork` |
+| [Linux Kernel Expert](https://chat-preview.lobehub.com/market?agent=linux-kernel)<br/><sup>By **[wming126](https://github.com/wming126)** on **2024-06-19**</sup>                        | Role Description: I am an expert in Linux kernel, with a deep understanding and analytical ability of the latest kernel source code (as of June 2024). I can provide users with detailed and accurate information about the Linux kernel.<br/>`linux` `kernel`                                                                                                                                                       |
 
-> 📊 Total agents: [<kbd>**288**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**293**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -280,9 +282,44 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 </div>
 
+[![][image-feat-database]][docs-feat-database]
+
+### `8` [Support Local / Remote Database][docs-feat-database]
+
+LobeChat supports the use of both server-side and local databases. Depending on your needs, you can choose the appropriate deployment solution:
+
+- **Local database**: suitable for users who want more control over their data and privacy protection. LobeChat uses CRDT (Conflict-Free Replicated Data Type) technology to achieve multi-device synchronization. This is an experimental feature aimed at providing a seamless data synchronization experience.
+- **Server-side database**: suitable for users who want a more convenient user experience. LobeChat supports PostgreSQL as a server-side database. For detailed documentation on how to configure the server-side database, please visit [Configure Server-side Database](https://lobehub.com/docs/self-hosting/advanced/server-database).
+
+Regardless of which database you choose, LobeChat can provide you with an excellent user experience.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
+[![][image-feat-auth]][docs-feat-auth]
+
+### `9` [Support Multi-User Management][docs-feat-auth]
+
+LobeChat supports multi-user management and provides two main user authentication and management solutions to meet different needs:
+
+- **next-auth**: LobeChat integrates `next-auth`, a flexible and powerful identity verification library that supports multiple authentication methods, including OAuth, email login, credential login, etc. With `next-auth`, you can easily implement user registration, login, session management, social login, and other functions to ensure the security and privacy of user data.
+
+- **Clerk**: For users who need more advanced user management features, LobeChat also supports `Clerk`, a modern user management platform. `Clerk` provides richer functions, such as multi-factor authentication (MFA), user profile management, login activity monitoring, etc. With `Clerk`, you can get higher security and flexibility, and easily cope with complex user management needs.
+
+Regardless of which user management solution you choose, LobeChat can provide you with an excellent user experience and powerful functional support.
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 [![][image-feat-pwa]][docs-feat-pwa]
 
-### `8` [Progressive Web App (PWA)][docs-feat-pwa]
+### `10` [Progressive Web App (PWA)][docs-feat-pwa]
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -309,7 +346,7 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 [![][image-feat-mobile]][docs-feat-mobile]
 
-### `9` [Mobile Device Adaptation][docs-feat-mobile]
+### `11` [Mobile Device Adaptation][docs-feat-mobile]
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
@@ -321,7 +358,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 [![][image-feat-theme]][docs-feat-theme]
 
-### `10` [Custom Themes][docs-feat-theme]
+### `12` [Custom Themes][docs-feat-theme]
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
@@ -629,11 +666,12 @@ Every bit counts and your one-time donation sparkles in our galaxy of support! Y
 </details>
 
 Copyright © 2024 [LobeHub][profile-link]. <br />
-This project is [MIT](./LICENSE) licensed.
+This project is [Apache 2.0](./LICENSE) licensed.
 
 <!-- LINK GROUP -->
 
 [back-to-top]: https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square
+[blog]: https://lobehub.com/blog
 [chat-desktop]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/desktop/pagespeed.svg
 [chat-desktop-report]: https://lobehub.github.io/lobe-chat/lighthouse/chat/desktop/chat_preview_lobehub_com_chat.html
 [chat-mobile]: https://raw.githubusercontent.com/lobehub/lobe-chat/lighthouse/lighthouse/chat/mobile/pagespeed.svg
@@ -660,11 +698,13 @@ This project is [MIT](./LICENSE) licensed.
 [docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
 [docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat
 [docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat?color=369eff&labelColor=black&style=flat-square
-[docs]: https://lobehub.com/docs
+[docs]: https://lobehub.com/docs/usage/start
 [docs-dev-guide]: https://github.com/lobehub/lobe-chat/wiki/index
 [docs-docker]: https://lobehub.com/docs/self-hosting/platform/docker
 [docs-env-var]: https://lobehub.com/docs/self-hosting/environment-variables
 [docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
+[docs-feat-auth]: https://lobehub.com/docs/usage/features/auth
+[docs-feat-database]: https://lobehub.com/docs/usage/features/database
 [docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
 [docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
 [docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
@@ -674,7 +714,7 @@ This project is [MIT](./LICENSE) licensed.
 [docs-feat-theme]: https://lobehub.com/docs/usage/features/theme
 [docs-feat-tts]: https://lobehub.com/docs/usage/features/tts
 [docs-feat-vision]: https://lobehub.com/docs/usage/features/vision
-[docs-functionc-call]: https://platform.openai.com/docs/guides/function-calling
+[docs-functionc-call]: https://lobehub.com/blog/openai-function-call
 [docs-lighthouse]: https://github.com/lobehub/lobe-chat/wiki/Lighthouse
 [docs-plugin-dev]: https://lobehub.com/docs/usage/plugins/development
 [docs-self-hosting]: https://lobehub.com/docs/self-hosting/start
@@ -694,7 +734,7 @@ This project is [MIT](./LICENSE) licensed.
 [github-issues-link]: https://github.com/lobehub/lobe-chat/issues
 [github-issues-shield]: https://img.shields.io/github/issues/lobehub/lobe-chat?color=ff80eb&labelColor=black&style=flat-square
 [github-license-link]: https://github.com/lobehub/lobe-chat/blob/main/LICENSE
-[github-license-shield]: https://img.shields.io/github/license/lobehub/lobe-chat?color=white&labelColor=black&style=flat-square
+[github-license-shield]: https://img.shields.io/badge/license-apache%202.0-white?labelColor=black&style=flat-square
 [github-project-link]: https://github.com/lobehub/lobe-chat/projects
 [github-release-link]: https://github.com/lobehub/lobe-chat/releases
 [github-release-shield]: https://img.shields.io/github/v/release/lobehub/lobe-chat?color=369eff&labelColor=black&logo=github&style=flat-square
@@ -706,6 +746,8 @@ This project is [MIT](./LICENSE) licensed.
 [github-trending-url]: https://trendshift.io/repositories/2256
 [image-banner]: https://github.com/lobehub/lobe-chat/assets/28616219/9f155dff-4737-429f-9cad-a70a1a860c5f
 [image-feat-agent]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png
+[image-feat-auth]: https://github.com/lobehub/lobe-chat/assets/17870709/8ce70e15-40df-451e-b700-66090fe5b8c2
+[image-feat-database]: https://github.com/lobehub/lobe-chat/assets/17870709/c27a0234-a4e9-40e5-8bcb-42d5ce7e40f9
 [image-feat-local]: https://github.com/lobehub/lobe-chat/assets/28616219/ca9a21bc-ea6c-4c90-bf4a-fa53b4fb2b5c
 [image-feat-mobile]: https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp
 [image-feat-plugin]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png
@@ -735,6 +777,7 @@ This project is [MIT](./LICENSE) licensed.
 [lobe-ui-github]: https://github.com/lobehub/lobe-ui
 [lobe-ui-link]: https://www.npmjs.com/package/@lobehub/ui
 [lobe-ui-shield]: https://img.shields.io/npm/v/@lobehub/ui?color=369eff&labelColor=black&logo=npm&logoColor=white&style=flat-square
+[official-site]: https://lobehub.com
 [pr-welcome-link]: https://github.com/lobehub/lobe-chat/pulls
 [pr-welcome-shield]: https://img.shields.io/badge/🤯_pr_welcome-%E2%86%92-ffcb47?labelColor=black&style=for-the-badge
 [profile-link]: https://github.com/lobehub
@@ -759,5 +802,5 @@ This project is [MIT](./LICENSE) licensed.
 [submit-plugin-link]: https://github.com/lobehub/lobe-chat-plugins
 [submit-plugin-shield]: https://img.shields.io/badge/🧩/🏪_submit_plugin-%E2%86%92-95f3d9?labelColor=black&style=for-the-badge
 [vercel-link]: https://chat-preview.lobehub.com
-[vercel-shield]: https://img.shields.io/website?down_message=offline&label=vercel&labelColor=black&logo=vercel&style=flat-square&up_message=online&url=https%3A%2F%2Fchat-preview.lobehub.com
-[vercel-shield-badge]: https://img.shields.io/website?down_message=offline&label=try%20lobechat&labelColor=black&logo=vercel&style=for-the-badge&up_message=online&url=https%3A%2F%2Fchat-preview.lobehub.com
+[vercel-shield]: https://img.shields.io/badge/vercel-online-55b467?labelColor=black&logo=vercel&style=flat-square
+[vercel-shield-badge]: https://img.shields.io/badge/TRY%20LOBECHAT-ONLINE-55b467?labelColor=black&logo=vercel&style=for-the-badge

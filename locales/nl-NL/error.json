@@ -63,6 +63,7 @@
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",
+    "OpenAIBizError": "Er is een fout opgetreden bij het aanvragen van de OpenAI-service. Controleer de volgende informatie of probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
     "PluginGatewayError": "Sorry, er is een fout opgetreden in de plug-in gateway. Controleer of de plug-in gatewayconfiguratie juist is",
@@ -75,7 +76,7 @@
     "PluginOpenApiInitError": "Sorry, initialisatie van de OpenAPI-client is mislukt. Controleer of de configuratie van OpenAPI juist is",
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
-    "ProviderBizAPIKey": "Fout bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie en probeer het opnieuw."
+    "ProviderBizError": "Er is een fout opgetreden bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie of probeer het opnieuw."
   },
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"

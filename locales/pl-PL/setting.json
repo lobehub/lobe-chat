@@ -43,6 +43,7 @@
     "title": "Ustawienia"
   },
   "llm": {
+    "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Proszę wprowadź swój klucz API {{name}}",
       "placeholder": "{{name}} klucz API",
@@ -102,6 +103,7 @@
       "latestTime": "Ostatnia aktualizacja: {{time}}",
       "noLatestTime": "Brak dostępnej listy"
     },
+    "helpDoc": "Poradnik konfiguracji",
     "modelList": {
       "desc": "Wybierz modele do wyświetlenia w sesji. Wybrane modele będą widoczne na liście modeli",
       "placeholder": "Wybierz model z listy",
@@ -112,7 +114,7 @@
       "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
       "title": "Adres proxy API"
     },
-    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
+    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",
@@ -366,6 +368,11 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Model generowania metadanych asystenta",
+      "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
+      "title": "Automatyczne generowanie informacji o asystencie"
+    },
     "title": "Asystent Systemowy",
     "topic": {
       "label": "Model nazewnictwa tematów",

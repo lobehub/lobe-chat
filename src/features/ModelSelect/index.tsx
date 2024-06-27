@@ -10,11 +10,12 @@ import { ModelProviderCard } from '@/types/llm';
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   select: css`
-    .${prefixCls}-select-dropdown .${prefixCls}-select-item-option-grouped {
+    &.${prefixCls}-select-dropdown .${prefixCls}-select-item-option-grouped {
       padding-inline-start: 12px;
     }
   `,
 }));
+
 interface ModelOption {
   label: any;
   provider: string;
@@ -23,10 +24,11 @@ interface ModelOption {
 
 interface ModelSelectProps {
   onChange?: (props: { model: string; provider: string }) => void;
+  showAbility?: boolean;
   value?: string;
 }
 
-const ModelSelect = memo<ModelSelectProps>(({ value, onChange }) => {
+const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = true }) => {
   const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
 
   const { styles } = useStyles();
@@ -34,7 +36,7 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange }) => {
   const options = useMemo<SelectProps['options']>(() => {
     const getChatModels = (provider: ModelProviderCard) =>
       provider.chatModels.map((model) => ({
-        label: <ModelItemRender {...model} />,
+        label: <ModelItemRender {...model} showInfoTag={showAbility} />,
         provider: provider.id,
         value: model.id,
       }));
@@ -53,11 +55,11 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange }) => {
 
   return (
     <Select
-      className={styles.select}
       onChange={(model, option) => {
         onChange?.({ model, provider: (option as unknown as ModelOption).provider });
       }}
       options={options}
+      popupClassName={styles.select}
       popupMatchSelectWidth={false}
       value={value}
     />

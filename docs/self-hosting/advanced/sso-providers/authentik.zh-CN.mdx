@@ -49,9 +49,8 @@ https://your-domain/api/auth/callback/authentik
 
 | 环境变量 | 类型 | 描述 |
 | --- | --- | --- |
-| `ENABLE_OAUTH_SSO` | 必选 | 为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。 |
-| `NEXTAUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
-| `SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Authentik 请填写 `authentik`。 |
+| `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
+| `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Authentik 请填写 `authentik`。 |
 | `AUTHENTIK_CLIENT_ID` | 必选 | Authentik 提供程序详情页的 客户端 ID |
 | `AUTHENTIK_CLIENT_SECRET` | 必选 | Authentik 提供程序详情页的 客户端 Secret |
 | `AUTHENTIK_ISSUER` | 必选 | Authentik 提供程序详情页的 OpenID 配置颁发者 |

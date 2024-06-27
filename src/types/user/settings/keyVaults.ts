@@ -22,6 +22,7 @@ export interface UserKeyVaults {
   deepseek?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
+  lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;
   moonshot?: OpenAICompatibleKeyVault;
@@ -31,6 +32,7 @@ export interface UserKeyVaults {
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
+  stepfun?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;

@@ -37,9 +37,9 @@ const Azure: ModelProviderCard = {
       vision: true,
     },
   ],
+  defaultShowBrowserRequest: true,
   id: 'azure',
   name: 'Azure',
-  showBrowserRequest: true,
 };
 
 export default Azure;

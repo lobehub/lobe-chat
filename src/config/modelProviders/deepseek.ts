@@ -11,10 +11,10 @@ const DeepSeek: ModelProviderCard = {
     },
     {
       description: '擅长编程场景',
-      displayName: 'DeepSeek-coder',
+      displayName: 'DeepSeek-coder-V2',
       enabled: true,
       id: 'deepseek-coder',
-      tokens: 16_384,
+      tokens: 32_768,
     },
   ],
   checkModel: 'deepseek-chat',

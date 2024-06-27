@@ -54,9 +54,8 @@ When deploying LobeChat, you need to configure the following environment variabl
 
 | Environment Variable | Type | Description |
 | --- | --- | --- |
-| `ENABLE_OAUTH_SSO` | Required | Enable Single Sign-On (SSO) for LobeChat. Set to `1` to enable SSO. |
-| `NEXTAUTH_SECRET` | Required | The secret used to encrypt Auth.js session tokens. You can generate a secret using the following command: `openssl rand -base64 32` |
-| `SSO_PROVIDERS` | Required | Select the SSO provider for LoboChat. Use `authentik` for Authentik. |
+| `NEXT_AUTH_SECRET` | Required | The secret used to encrypt Auth.js session tokens. You can generate a secret using the following command: `openssl rand -base64 32` |
+| `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the SSO provider for LoboChat. Use `authentik` for Authentik. |
 | `AUTHENTIK_CLIENT_ID` | Required | The Client ID from the Authentik application provider details page |
 | `AUTHENTIK_CLIENT_SECRET` | Required | The Client Secret from the Authentik application provider details page |
 | `AUTHENTIK_ISSUER` | Required | The OpenID Configuration Issuer from the Authentik application provider details page |
