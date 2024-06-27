@@ -227,6 +227,162 @@ describe('AnthropicStream', () => {
 
     expect(onToolCallMock).toHaveBeenCalledTimes(5);
   });
+  it('should handle parallel tools use event and ReadableStream input', async () => {
+    const streams = [
+      {
+        type: 'message_start',
+        message: {
+          id: 'msg_0175ryA67RbGrnRrGBXFQEYK',
+          type: 'message',
+          role: 'assistant',
+          model: 'claude-3-5-sonnet-20240620',
+          content: [],
+          stop_reason: null,
+          stop_sequence: null,
+          usage: { input_tokens: 485, output_tokens: 4 },
+        },
+      },
+      { type: 'content_block_start', index: 0, content_block: { type: 'text', text: '' } },
+      {
+        type: 'content_block_delta',
+        index: 0,
+        delta: { type: 'text_delta', text: '好的,我会为您查询杭州和北京的天气情况。' },
+      },
+      {
+        type: 'content_block_delta',
+        index: 0,
+        delta: { type: 'text_delta', text: '请稍等,我现在开始获取这两个城市的天气信息。' },
+      },
+      { type: 'content_block_stop', index: 0 },
+      {
+        type: 'content_block_start',
+        index: 1,
+        content_block: {
+          type: 'tool_use',
+          id: 'toolu_011NuszmBcxskstLWe4z4z5B',
+          name: 'realtime-weather____fetchCurrentWeather',
+          input: {},
+        },
+      },
+      {
+        type: 'content_block_delta',
+        index: 1,
+        delta: { type: 'input_json_delta', partial_json: '' },
+      },
+      {
+        type: 'content_block_delta',
+        index: 1,
+        delta: { type: 'input_json_delta', partial_json: '{"city": "杭州"}' },
+      },
+      { type: 'content_block_stop', index: 1 },
+      {
+        type: 'content_block_start',
+        index: 2,
+        content_block: {
+          type: 'tool_use',
+          id: 'toolu_01HojNiibMiKnYFvLrJyfX3B',
+          name: 'realtime-weather____fetchCurrentWeather',
+          input: {},
+        },
+      },
+      {
+        type: 'content_block_delta',
+        index: 2,
+        delta: { type: 'input_json_delta', partial_json: '' },
+      },
+      {
+        type: 'content_block_delta',
+        index: 2,
+        delta: { type: 'input_json_delta', partial_json: '{"city": "北京"}' },
+      },
+      { type: 'content_block_stop', index: 2 },
+      {
+        type: 'message_delta',
+        delta: { stop_reason: 'tool_use', stop_sequence: null },
+        usage: { output_tokens: 150 },
+      },
+      { type: 'message_stop' },
+    ];
+
+    const mockReadableStream = new ReadableStream({
+      start(controller) {
+        streams.forEach((chunk) => {
+          controller.enqueue(chunk);
+        });
+        controller.close();
+      },
+    });
+
+    const onToolCallMock = vi.fn();
+
+    const protocolStream = AnthropicStream(mockReadableStream, {
+      onToolCall: onToolCallMock,
+    });
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: data',
+        'data: {"id":"msg_0175ryA67RbGrnRrGBXFQEYK","type":"message","role":"assistant","model":"claude-3-5-sonnet-20240620","content":[],"stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":485,"output_tokens":4}}\n',
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: data',
+        'data: ""\n',
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: text',
+        'data: "好的,我会为您查询杭州和北京的天气情况。"\n',
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: text',
+        'data: "请稍等,我现在开始获取这两个城市的天气信息。"\n',
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: data',
+        'data: {"type":"content_block_stop","index":0}\n',
+        // Tool calls
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: tool_calls',
+        `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"toolu_011NuszmBcxskstLWe4z4z5B","index":0,"type":"function"}]\n`,
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: tool_calls',
+        `data: [{"function":{"arguments":""},"index":0,"type":"function"}]\n`,
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: tool_calls',
+        `data: [{"function":{"arguments":"{\\"city\\": \\"杭州\\"}"},"index":0,"type":"function"}]\n`,
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: data',
+        `data: {"type":"content_block_stop","index":1}\n`,
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: tool_calls',
+        `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"toolu_01HojNiibMiKnYFvLrJyfX3B","index":1,"type":"function"}]\n`,
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: tool_calls',
+        `data: [{"function":{"arguments":""},"index":1,"type":"function"}]\n`,
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: tool_calls',
+        `data: [{"function":{"arguments":"{\\"city\\": \\"北京\\"}"},"index":1,"type":"function"}]\n`,
+
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: data',
+        'data: {"type":"content_block_stop","index":2}\n',
+
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: stop',
+        'data: "tool_use"\n',
+
+        'id: msg_0175ryA67RbGrnRrGBXFQEYK',
+        'event: stop',
+        'data: "message_stop"\n',
+      ].map((item) => `${item}\n`),
+    );
+
+    expect(onToolCallMock).toHaveBeenCalledTimes(6);
+  });
 
   it('should handle ReadableStream input', async () => {
     const mockReadableStream = new ReadableStream({

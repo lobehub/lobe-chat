@@ -25,7 +25,7 @@ const Footer = memo(() => {
           <Link aria-label={'todo'} href={MORE_MODEL_PROVIDER_REQUEST_URL} target="_blank">
             计划接入
           </Link>
-          中 ，敬请期待 ✨
+          中 ，敬请期待
         </Trans>
       </div>
     </Center>

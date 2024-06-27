@@ -43,6 +43,7 @@
     "title": "Instellingen"
   },
   "llm": {
+    "aesGcm": "Uw sleutel en proxy-adres zullen worden versleuteld met het <1>AES-GCM</1> encryptie-algoritme",
     "apiKey": {
       "desc": "Vul je {{name}} API-sleutel in",
       "placeholder": "{{name}} API-sleutel",
@@ -113,7 +114,7 @@
       "desc": "Moet http(s):// bevatten, naast het standaardadres",
       "title": "API Proxy Adres"
     },
-    "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte ✨"
+    "waitingForMore": "Meer modellen worden <1>gepland om te worden toegevoegd</1>, dus blijf op de hoogte"
   },
   "plugin": {
     "addTooltip": "Voeg aangepaste plug-in toe",

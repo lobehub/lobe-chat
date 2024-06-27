@@ -3,8 +3,8 @@
 import { Flexbox } from 'react-layout-kit';
 
 import { useProviderList } from './ProviderList/providers';
-import Footer from './components/Footer';
 import ProviderConfig from './components/ProviderConfig';
+import Footer from './features/Footer';
 
 const Page = () => {
   const list = useProviderList();

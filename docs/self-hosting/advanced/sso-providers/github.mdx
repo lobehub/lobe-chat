@@ -82,9 +82,8 @@ When deploying LobeChat, you need to configure the following environment variabl
 
 | Environment Variable | Type | Description |
 | --- | --- | --- |
-| `ENABLE_OAUTH_SSO` | Required | Enable Single Sign-On (SSO) for LobeChat. Set to `1` to enable SSO. |
-| `NEXTAUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate the key using the command: `openssl rand -base64 32` |
-| `SSO_PROVIDERS` | Required | Select the Single Sign-On provider for LobeChat. Use `github` for Github. |
+| `NEXT_AUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate the key using the command: `openssl rand -base64 32` |
+| `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the Single Sign-On provider for LobeChat. Use `github` for Github. |
 | `GITHUB_CLIENT_ID` | Required | Client ID in the Github App details page. |
 | `GITHUB_CLIENT_SECRET` | Required | Client Secret in the Github App details page. |
 | `ACCESS_CODE` | Required | Add a password for accessing this service. You can set a long random password to "disable" access code authorization. |

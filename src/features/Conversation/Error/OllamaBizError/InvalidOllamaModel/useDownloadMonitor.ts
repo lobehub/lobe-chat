@@ -1,23 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { formatTime } from '@/utils/speed';
-
-export const formatSize = (bytes: number): string => {
-  const kbSize = bytes / 1024;
-  if (kbSize < 1024) {
-    return `${kbSize.toFixed(1)} KB`;
-  } else if (kbSize < 1_048_576) {
-    const mbSize = kbSize / 1024;
-    return `${mbSize.toFixed(1)} MB`;
-  } else {
-    const gbSize = kbSize / 1_048_576;
-    return `${gbSize.toFixed(1)} GB`;
-  }
-};
-
-const formatSpeed = (speed: number): string => {
-  return `${formatSize(speed)}/s`;
-};
+import { formatSpeed, formatTime } from '@/utils/format';
 
 export const useDownloadMonitor = (totalSize: number, completedSize: number) => {
   const [downloadSpeed, setDownloadSpeed] = useState<string>('0 KB/s');

@@ -71,9 +71,8 @@ When deploying LobeChat, you need to configure the following environment variabl
 
 | Environment Variable | Type | Description |
 | --- | --- | --- |
-| `ENABLE_OAUTH_SSO` | Required | Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on. |
-| `NEXTAUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate the key using the following command: `openssl rand -base64 32` |
-| `SSO_PROVIDERS` | Required | Select the single sign-on provider for LoboChat. Use `azure-ad` for Microsoft Entra ID. |
+| `NEXT_AUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate the key using the following command: `openssl rand -base64 32` |
+| `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LoboChat. Use `azure-ad` for Microsoft Entra ID. |
 | `AZURE_AD_CLIENT_ID` | Required | Client ID of the Microsoft Entra ID application. |
 | `AZURE_AD_CLIENT_SECRET` | Required | Client Secret of the Microsoft Entra ID application. |
 | `AZURE_AD_TENANT_ID` | Required | Tenant ID of the Microsoft Entra ID application. |

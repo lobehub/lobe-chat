@@ -43,6 +43,7 @@
     "title": "Cài đặt"
   },
   "llm": {
+    "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Vui lòng nhập {{name}} API Key của bạn",
       "placeholder": "{{name}} API Key",
@@ -113,7 +114,7 @@
       "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
       "title": "Địa chỉ Proxy API"
     },
-    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
+    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
   "plugin": {
     "addTooltip": "Thêm tiện ích",

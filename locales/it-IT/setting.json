@@ -43,6 +43,7 @@
     "title": "Impostazioni"
   },
   "llm": {
+    "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Inserisci la tua chiave API {{name}}",
       "placeholder": "Chiave API {{name}}",
@@ -113,7 +114,7 @@
       "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
       "title": "Indirizzo del proxy API"
     },
-    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
+    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
   },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",

@@ -43,6 +43,7 @@
     "title": "Ustawienia"
   },
   "llm": {
+    "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Proszę wprowadź swój klucz API {{name}}",
       "placeholder": "{{name}} klucz API",
@@ -113,7 +114,7 @@
       "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
       "title": "Adres proxy API"
     },
-    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
+    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",

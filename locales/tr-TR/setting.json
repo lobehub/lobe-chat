@@ -43,6 +43,7 @@
     "title": "Ayarlar"
   },
   "llm": {
+    "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> şifreleme algoritması kullanılarak şifrelenecektir",
     "apiKey": {
       "desc": "Lütfen {{name}} API Anahtarınızı girin",
       "placeholder": "{{name}} API Anahtarı",
@@ -113,7 +114,7 @@
       "desc": "Varsayılan adres dışında, http(s):// içermelidir",
       "title": "API Proxy Adresi"
     },
-    "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
+    "waitingForMore": "Daha fazla model eklenmesi planlanıyor"
   },
   "plugin": {
     "addTooltip": "Eklenti Ekle",

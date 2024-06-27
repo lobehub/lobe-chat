@@ -43,6 +43,7 @@
     "title": "設定"
   },
   "llm": {
+    "aesGcm": "您的金鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
     "apiKey": {
       "desc": "請填寫您的 {{name}} API 金鑰",
       "placeholder": "{{name}} API 金鑰",
@@ -113,7 +114,7 @@
       "desc": "必須包含 http(s):// 以外的預設地址",
       "title": "API 代理位址"
     },
-    "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
+    "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
   },
   "plugin": {
     "addTooltip": "新增自訂外掛程式",

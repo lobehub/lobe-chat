@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { formatSpeed, formatTime } from '@/utils/speed';
+import { formatSpeed, formatTime } from '@/utils/format';
 
 import DataLoading from './Loading';
 
@@ -40,7 +40,7 @@ export const FileUploading = memo<FileUploadingProps>(({ progress = 0, speed = 0
               {t('importModal.uploading.restTime')}: {restTime ? formatTime(restTime) : '-'}
             </span>
             <span>
-              {t('importModal.uploading.speed')}: {formatSpeed(speed)}
+              {t('importModal.uploading.speed')}: {formatSpeed(speed * 1024)}
             </span>
           </Flexbox>
         </Flexbox>

@@ -1,4 +1,5 @@
 export * from './anthropic';
+export * from './azureOpenai';
 export * from './bedrock';
 export * from './google-ai';
 export * from './minimax';
