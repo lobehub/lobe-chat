@@ -43,6 +43,7 @@
     "title": "Configuración"
   },
   "llm": {
+    "aesGcm": "Su clave y dirección del agente se cifrarán utilizando el algoritmo de cifrado <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Por favor, introduce tu clave de API de {{name}}",
       "placeholder": "Clave de API de {{name}}",
@@ -113,7 +114,7 @@
       "desc": "Además de la dirección predeterminada, debe incluir http(s)://",
       "title": "Dirección del proxy de la API"
     },
-    "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos! ✨"
+    "waitingForMore": "Más modelos están en <1>planificación para su incorporación</1>, ¡estén atentos!"
   },
   "plugin": {
     "addTooltip": "Agregar complemento personalizado",

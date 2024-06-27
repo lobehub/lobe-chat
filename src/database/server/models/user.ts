@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import { eq } from 'drizzle-orm';
 import { DeepPartial } from 'utility-types';
 
-import { serverDB } from '@/database/server';
+import { serverDB } from '@/database/server/core/db';
 import { KeyVaultsGateKeeper } from '@/server/keyVaultsEncrypt';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
@@ -18,7 +18,7 @@ export class UserNotFoundError extends TRPCError {
 }
 
 export class UserModel {
-  createUser = async (params: NewUser) => {
+  static createUser = async (params: NewUser) => {
     const [user] = await serverDB
       .insert(users)
       .values({ ...params })
@@ -30,11 +30,11 @@ export class UserModel {
     await model.createInbox();
   };
 
-  deleteUser = async (id: string) => {
+  static deleteUser = async (id: string) => {
     return serverDB.delete(users).where(eq(users.id, id));
   };
 
-  findById = async (id: string) => {
+  static findById = async (id: string) => {
     return serverDB.query.users.findFirst({ where: eq(users.id, id) });
   };
 

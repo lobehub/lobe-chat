@@ -226,7 +226,7 @@ describe('LobeAzureOpenAI', () => {
         } catch (e) {
           // Assert
           expect(e).toEqual({
-            endpoint: 'https://test.openai.azure.com/',
+            endpoint: 'https://***.openai.azure.com/',
             error: {
               code: 'DeploymentNotFound',
               message: 'Deployment not found',
@@ -254,7 +254,7 @@ describe('LobeAzureOpenAI', () => {
         } catch (e) {
           // Assert
           expect(e).toEqual({
-            endpoint: 'https://test.openai.azure.com/',
+            endpoint: 'https://***.openai.azure.com/',
             errorType: 'AgentRuntimeError',
             provider: 'azure',
             error: {

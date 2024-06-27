@@ -50,7 +50,7 @@ export const chatToolSlice: StateCreator<
         toggleDallEImageLoading(messageId + params.prompt, false);
         errorArray[index] = e;
 
-        await get().updatePluginState(messageId, `error`, errorArray);
+        await get().updatePluginState(messageId, { error: errorArray });
       }
 
       if (!url) return;

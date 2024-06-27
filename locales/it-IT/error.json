@@ -54,6 +54,7 @@
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
+    "FreePlanLimit": "Attualmente sei un utente gratuito e non puoi utilizzare questa funzione. Per favore, passa a un piano a pagamento per continuare.",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
@@ -76,7 +77,8 @@
     "PluginOpenApiInitError": "Spiacenti, inizializzazione fallita del client OpenAPI. Verifica che le informazioni di configurazione di OpenAPI siano corrette",
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
     "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
-    "ProviderBizError": "Errore di business del fornitore {{provider}}. Si prega di controllare le informazioni seguenti o riprovare."
+    "ProviderBizError": "Errore di business del fornitore {{provider}}. Si prega di controllare le informazioni seguenti o riprovare.",
+    "SubscriptionPlanLimit": "Il tuo piano di abbonamento ha raggiunto il limite e non puoi utilizzare questa funzione. Per favore, passa a un piano superiore o acquista un pacchetto di risorse per continuare."
   },
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"

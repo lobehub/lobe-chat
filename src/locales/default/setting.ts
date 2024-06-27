@@ -43,6 +43,7 @@ export default {
     title: '设置',
   },
   llm: {
+    aesGcm: '您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',
     apiKey: {
       desc: '请填写你的 {{name}} API Key',
       placeholder: '{{name}} API Key',
@@ -116,7 +117,7 @@ export default {
       desc: '除默认地址外，必须包含 http(s)://',
       title: 'API 代理地址',
     },
-    waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
+    waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
   },
   plugin: {
     addTooltip: '自定义插件',
