@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { produce } from 'immer';
 import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
@@ -50,7 +51,7 @@ export const chatToolSlice: StateCreator<
         toggleDallEImageLoading(messageId + params.prompt, false);
         errorArray[index] = e;
 
-        await get().updatePluginState(messageId, `error`, errorArray);
+        await get().updatePluginState(messageId, { error: errorArray });
       }
 
       if (!url) return;
