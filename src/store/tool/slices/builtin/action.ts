@@ -38,11 +38,11 @@ export const createBuiltinToolSlice: StateCreator<
 
     if (builtinToolLoading[key]) return;
 
-    toggleBuiltinToolLoading(key, true);
-
     const { [key as keyof BuiltinToolAction]: action } = get();
 
-    if (!action) return;
+    if (!action) return JSON.stringify(params);
+
+    toggleBuiltinToolLoading(key, true);
 
     // @ts-ignore
     const result = await action(params);
