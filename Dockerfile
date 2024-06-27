@@ -50,30 +50,33 @@ ENV NODE_OPTIONS "--max-old-space-size=8192"
 # run build standalone for docker version
 RUN npm run build:docker
 
+## Application image, copy all the files for production
+FROM scratch AS app
+
+COPY --from=builder /app/public /app/public
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder /app/.next/standalone /app/
+COPY --from=builder /app/.next/static /app/.next/static
+COPY --from=sharp /app/node_modules/.pnpm /app/node_modules/.pnpm
+
 ## Production image, copy all the files and run next
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
-# https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-COPY --from=sharp --chown=nextjs:nodejs /app/node_modules/.pnpm ./node_modules/.pnpm
+# Add user nextjs to run the app
+RUN addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs
 
 USER nextjs
 
+# Copy all the files from app, set the correct permission for prerender cache
+COPY --from=app --chown=nextjs:nodejs /app /app
+
 EXPOSE 3210
+
+ENV NODE_ENV production
 
 # set hostname to localhost
 ENV HOSTNAME "0.0.0.0"
