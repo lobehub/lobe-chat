@@ -20,6 +20,7 @@ export interface UserKeyVaults {
   azure?: AzureOpenAIKeyVault;
   bedrock?: AWSBedrockKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
+  doubao?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
   lobehub?: any;

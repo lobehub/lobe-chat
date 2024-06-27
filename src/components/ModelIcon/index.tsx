@@ -10,6 +10,7 @@ import {
   Cohere,
   Dbrx,
   DeepSeek,
+  Doubao,
   FishAudio,
   Gemini,
   Gemma,
@@ -66,6 +67,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('command')) return <Cohere.Avatar size={size} />;
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
   if (model.includes('step')) return <Stepfun.Avatar size={size} />;
+  if (model.startsWith('doubao')) return <Doubao.Avatar size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))

@@ -2,6 +2,7 @@ import {
   Anthropic,
   Claude,
   DeepSeek,
+  Doubao,
   Gemini,
   Google,
   Groq,
@@ -25,6 +26,7 @@ import urlJoin from 'url-join';
 import {
   AnthropicProviderCard,
   DeepSeekProviderCard,
+  DoubaoProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -169,6 +171,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...StepfunProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'stepfun'),
         title: <Stepfun.Combine size={20} type={'color'} />,
+      },
+      {
+        ...DoubaoProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'doubao'),
+        title: <Doubao.Combine size={20} type={'color'} />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

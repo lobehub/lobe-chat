@@ -3,6 +3,7 @@ import {
   Azure,
   Bedrock,
   DeepSeek,
+  Doubao,
   Google,
   Groq,
   LobeHub,
@@ -112,6 +113,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Stepfun: {
       return <Stepfun size={20} />;
+    }
+
+    case ModelProvider.Doubao: {
+      return <Doubao size={20} />;
     }
 
     default: {
