@@ -36,7 +36,7 @@ export interface ChatPluginAction {
   triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
 
   triggerToolCalls: (id: string) => Promise<void>;
-  updatePluginState: (id: string, key: string, value: any) => Promise<void>;
+  updatePluginState: (id: string, value: any) => Promise<void>;
 
   internal_callPluginApi: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
   internal_invokeDifferentTypePlugin: (id: string, payload: ChatToolPayload) => Promise<any>;
@@ -200,10 +200,10 @@ export const chatPlugin: StateCreator<
 
     await get().triggerAIMessage({ traceId });
   },
-  updatePluginState: async (id, key, value) => {
+  updatePluginState: async (id, value) => {
     const { refreshMessages } = get();
 
-    await messageService.updateMessagePluginState(id, { [key]: value });
+    await messageService.updateMessagePluginState(id, value);
     await refreshMessages();
   },
 

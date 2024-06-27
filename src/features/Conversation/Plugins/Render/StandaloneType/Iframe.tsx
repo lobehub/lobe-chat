@@ -96,7 +96,7 @@ const IFrameRender = memo<IFrameRenderProps>(({ url, id, payload, width = 600, h
   // when plugin update state, we should update it to the message pluginState key
   const updatePluginState = useChatStore((s) => s.updatePluginState);
   useOnPluginStateUpdate((key, value) => {
-    updatePluginState(id, key, value);
+    updatePluginState(id, { [key]: value });
   });
 
   // when plugin wants to get plugin settings, send it to plugin

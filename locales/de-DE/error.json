@@ -54,6 +54,7 @@
     "503": "Entschuldigung, der Server kann Ihre Anfrage derzeit nicht verarbeiten. Möglicherweise aufgrund von Überlastung oder Wartungsarbeiten. Bitte versuchen Sie es später erneut",
     "504": "Entschuldigung, der Server hat keine Antwort vom Upstream-Server erhalten. Bitte versuchen Sie es später erneut",
     "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "FreePlanLimit": "Sie sind derzeit ein kostenloser Benutzer und können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein kostenpflichtiges Abonnement, um fortzufahren.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidClerkUser": "Entschuldigung, du bist derzeit nicht angemeldet. Bitte melde dich an oder registriere ein Konto, um fortzufahren.",
@@ -76,7 +77,8 @@
     "PluginOpenApiInitError": "Entschuldigung, die Initialisierung des OpenAPI-Clients ist fehlgeschlagen. Bitte überprüfen Sie die Konfigurationsinformationen des OpenAPI auf Richtigkeit",
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
     "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
-    "ProviderBizError": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
+    "ProviderBizError": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "SubscriptionPlanLimit": "Ihr Abonnementkontingent wurde aufgebraucht und Sie können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein höheres Abonnement oder kaufen Sie ein Ressourcenpaket, um fortzufahren."
   },
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
