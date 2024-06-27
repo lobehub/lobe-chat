@@ -67,7 +67,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('command')) return <Cohere.Avatar size={size} />;
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
   if (model.includes('step')) return <Stepfun.Avatar size={size} />;
-  if (model.startsWith('doubao')) return <Doubao.Avatar size={size} />;
+  if (model.startsWith('ep-')) return <Doubao.Avatar size={size} />; // https://www.volcengine.com/docs/82379/1263482
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))

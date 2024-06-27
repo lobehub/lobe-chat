@@ -175,7 +175,7 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...DoubaoProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'doubao'),
-        title: <Doubao.Combine size={20} type={'color'} />,
+        title: <Doubao.Combine size={30} type={'color'} />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

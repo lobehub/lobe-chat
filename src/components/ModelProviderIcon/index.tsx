@@ -116,7 +116,7 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
     }
 
     case ModelProvider.Doubao: {
-      return <Doubao size={20} />;
+      return <Doubao.Color size={20} />;
     }
 
     default: {
