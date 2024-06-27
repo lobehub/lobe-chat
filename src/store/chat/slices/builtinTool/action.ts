@@ -1,4 +1,3 @@
-/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { produce } from 'immer';
 import pMap from 'p-map';
 import { StateCreator } from 'zustand/vanilla';
