@@ -54,6 +54,7 @@
     "503": "Lo sentimos, el servidor no puede procesar su solicitud en este momento, posiblemente debido a una sobrecarga o mantenimiento. Por favor, inténtelo de nuevo más tarde",
     "504": "Lo sentimos, el servidor no recibió respuesta del servidor upstream. Por favor, inténtelo de nuevo más tarde",
     "AgentRuntimeError": "Se produjo un error en la ejecución del tiempo de ejecución del modelo de lenguaje Lobe, por favor, verifica la siguiente información o inténtalo de nuevo",
+    "FreePlanLimit": "Actualmente eres un usuario gratuito y no puedes utilizar esta función. Por favor, actualiza a un plan de pago para seguir utilizando.",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidClerkUser": "Lo siento mucho, actualmente no has iniciado sesión. Por favor, inicia sesión o regístrate antes de continuar.",
@@ -76,7 +77,8 @@
     "PluginOpenApiInitError": "Lo sentimos, la inicialización del cliente OpenAPI ha fallado. Verifique si la información de configuración de OpenAPI es correcta",
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
-    "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo"
+    "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
+    "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando."
   },
   "stt": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
