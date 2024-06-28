@@ -73,8 +73,6 @@ COPY --from=sharp /app/node_modules/.pnpm /app/node_modules/.pnpm
 ## Production image, copy all the files and run next
 FROM base
 
-WORKDIR /app
-
 # Copy all the files from app, set the correct permission for prerender cache
 COPY --from=app --chown=nextjs:nodejs /app /app
 
@@ -125,4 +123,4 @@ USER nextjs
 
 EXPOSE 3210/tcp
 
-CMD ["node", "server.js"]
+CMD ["node", "/app/server.js"]
