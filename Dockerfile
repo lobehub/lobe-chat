@@ -6,10 +6,14 @@ ARG USE_NPM_CN_MIRROR
 ENV PNPM_HOME="/pnpm" \
     PATH="$PNPM_HOME:$PATH"
 
-# If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
-RUN if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
+RUN \
+    # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
+    if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
         npm config set registry "https://registry.npmmirror.com/"; \
-    fi
+    fi \
+    # Add user nextjs to run the app
+    && addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs
 
 ## Sharp dependencies, copy all the files for production
 FROM base AS sharp
@@ -71,12 +75,6 @@ FROM base
 
 WORKDIR /app
 
-# Add user nextjs to run the app
-RUN addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs
-
-USER nextjs
-
 # Copy all the files from app, set the correct permission for prerender cache
 COPY --from=app --chown=nextjs:nodejs /app /app
 
@@ -122,6 +120,8 @@ ENV \
     ZEROONE_API_KEY="" \
     # Zhipu
     ZHIPU_API_KEY=""
+
+USER nextjs
 
 EXPOSE 3210/tcp
 
