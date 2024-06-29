@@ -54,7 +54,7 @@ export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
         if (isProtectedRoute(req)) auth().protect();
       },
       {
-        // https://clerk.com/docs/references/nextjs/clerk-middleware#clerk-middleware-options
+        // https://github.com/lobehub/lobe-chat/pull/3084
         clockSkewInMs: 60 * 60 * 1000,
         signInUrl: '/login',
         signUpUrl: '/signup',
