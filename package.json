@@ -115,7 +115,7 @@
     "@microsoft/fetch-event-source": "^2.0.1",
     "@neondatabase/serverless": "^0.9.3",
     "@next/third-parties": "^14.2.4",
-    "@sentry/nextjs": "^7.117.0",
+    "@sentry/nextjs": "^8.0.0",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@trpc/client": "next",
     "@trpc/next": "next",
