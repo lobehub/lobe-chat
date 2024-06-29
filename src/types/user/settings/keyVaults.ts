@@ -3,7 +3,7 @@ export interface OpenAICompatibleKeyVault {
   baseURL?: string;
 }
 
-interface AzureOpenAIKeyVault {
+export interface AzureOpenAIKeyVault {
   apiKey?: string;
   apiVersion?: string;
   endpoint?: string;
@@ -22,6 +22,7 @@ export interface UserKeyVaults {
   deepseek?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
+  lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;
   moonshot?: OpenAICompatibleKeyVault;
@@ -30,6 +31,8 @@ export interface UserKeyVaults {
   openrouter?: OpenAICompatibleKeyVault;
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
+  qwen?: OpenAICompatibleKeyVault;
+  stepfun?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;

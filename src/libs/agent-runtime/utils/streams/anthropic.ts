@@ -22,28 +22,49 @@ export const transformAnthropicStream = (
       stack.id = chunk.message.id;
       return { data: chunk.message, id: chunk.message.id, type: 'data' };
     }
+    case 'content_block_start': {
+      if (chunk.content_block.type === 'tool_use') {
+        const toolChunk = chunk.content_block;
 
-    // case 'content_block_start': {
-    //   return { data: chunk.content_block.text, id: stack.id, type: 'data' };
-    // }
+        // if toolIndex is not defined, set it to 0
+        if (typeof stack.toolIndex === 'undefined') {
+          stack.toolIndex = 0;
+        }
+        // if toolIndex is defined, increment it
+        else {
+          stack.toolIndex += 1;
+        }
+
+        const toolCall: StreamToolCallChunkData = {
+          function: {
+            arguments: '',
+            name: toolChunk.name,
+          },
+          id: toolChunk.id,
+          index: stack.toolIndex,
+          type: 'function',
+        };
+
+        stack.tool = { id: toolChunk.id, index: stack.toolIndex, name: toolChunk.name };
+
+        return { data: [toolCall], id: stack.id, type: 'tool_calls' };
+      }
+
+      return { data: chunk.content_block.text, id: stack.id, type: 'data' };
+    }
 
     case 'content_block_delta': {
-      switch (chunk.delta.type as string) {
-        default:
+      switch (chunk.delta.type) {
         case 'text_delta': {
           return { data: chunk.delta.text, id: stack.id, type: 'text' };
         }
 
-        // TODO: due to anthropic currently don't support streaming tool calling
-        // we need to add this new `tool_use` type to support streaming
-        // and maybe we need to update it when the feature is available
-        case 'tool_use': {
-          const delta = (chunk.delta as any).tool_use as Anthropic.Beta.Tools.ToolUseBlock;
+        case 'input_json_delta': {
+          const delta = chunk.delta.partial_json;
 
           const toolCall: StreamToolCallChunkData = {
-            function: { arguments: JSON.stringify(delta.input), name: delta.name },
-            id: delta.id,
-            index: 0,
+            function: { arguments: delta },
+            index: stack.toolIndex || 0,
             type: 'function',
           };
 
@@ -53,7 +74,12 @@ export const transformAnthropicStream = (
             type: 'tool_calls',
           } as StreamProtocolToolCallChunk;
         }
+
+        default: {
+          break;
+        }
       }
+      return { data: chunk, id: stack.id, type: 'data' };
     }
 
     case 'message_delta': {

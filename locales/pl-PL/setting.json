@@ -43,6 +43,12 @@
     "title": "Ustawienia"
   },
   "llm": {
+    "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
+    "apiKey": {
+      "desc": "Proszę wprowadź swój klucz API {{name}}",
+      "placeholder": "{{name}} klucz API",
+      "title": "Klucz API"
+    },
     "checker": {
       "button": "Sprawdź",
       "desc": "Sprawdź poprawność wypełnienia klucza API i adresu proxy",
@@ -97,6 +103,7 @@
       "latestTime": "Ostatnia aktualizacja: {{time}}",
       "noLatestTime": "Brak dostępnej listy"
     },
+    "helpDoc": "Poradnik konfiguracji",
     "modelList": {
       "desc": "Wybierz modele do wyświetlenia w sesji. Wybrane modele będą widoczne na liście modeli",
       "placeholder": "Wybierz model z listy",
@@ -107,15 +114,7 @@
       "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
       "title": "Adres proxy API"
     },
-    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama pobiera ten model. Prosimy nie zamykać tej strony. Gdy pobieranie zostanie wznowione, będzie kontynuowane od miejsca przerwania.",
-      "remainingTime": "Czas pozostały",
-      "speed": "Prędkość pobierania",
-      "title": "Pobieranie modelu {{model}}"
-    }
+    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",
@@ -182,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "Bez limitu",
       "limited": "Zawiera tylko {{number}} wiadomości",
+      "setlimited": "Ustaw limit wiadomości historycznych",
       "title": "Ograniczenie liczby wiadomości w historii",
       "unlimited": "Bez limitu wiadomości w historii"
     },
@@ -368,7 +368,17 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Model generowania metadanych asystenta",
+      "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
+      "title": "Automatyczne generowanie informacji o asystencie"
+    },
     "title": "Asystent Systemowy",
+    "topic": {
+      "label": "Model nazewnictwa tematów",
+      "modelDesc": "Określa model używany do automatycznego zmieniania nazw tematów",
+      "title": "Automatyczne nadawanie nazw tematom"
+    },
     "translation": {
       "label": "Model Tłumaczenia",
       "modelDesc": "Określ model używany do tłumaczenia",
@@ -382,7 +392,7 @@
     "experiment": "Eksperyment",
     "llm": "Model językowy",
     "sync": "Synchronizacja w chmurze",
-    "system-agent": "System Assistant",
+    "system-agent": "System Agent",
     "tts": "Usługa głosowa"
   },
   "tools": {

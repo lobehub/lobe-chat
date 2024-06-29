@@ -9,8 +9,8 @@ import { LobeMistralAI } from './index';
 
 const provider = 'mistral';
 const defaultBaseURL = 'https://api.mistral.ai/v1';
-const bizErrorType = 'MistralBizError';
-const invalidErrorType = 'InvalidMistralAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});

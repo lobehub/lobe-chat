@@ -126,13 +126,13 @@ if [ $? -eq 0 ]; then
   exit 0
 fi
 
-echo "Detected Lobe-Chat update"
+echo "Detected lobe-chat update"
 
 # Remove the old container
-echo "Removed: $(docker rm -f Lobe-Chat)"
+echo "Removed: $(docker rm -f lobe-chat)"
 
-# Run the new container
-echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
+# Run the new container(Please change the path to the env file)
+echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=lobe-chat --restart=always lobehub/lobe-chat)"
 
 # Print the update time and version
 echo "Update time: $(date)"

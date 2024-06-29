@@ -6,6 +6,9 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeAzureOpenAI } from './index';
 
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
+
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -34,7 +37,7 @@ describe('LobeAzureOpenAI', () => {
       try {
         new LobeAzureOpenAI();
       } catch (e) {
-        expect(e).toEqual({ errorType: 'InvalidAzureAPIKey' });
+        expect(e).toEqual({ errorType: invalidErrorType });
       }
     });
 
@@ -223,13 +226,13 @@ describe('LobeAzureOpenAI', () => {
         } catch (e) {
           // Assert
           expect(e).toEqual({
-            endpoint: 'https://test.openai.azure.com/',
+            endpoint: 'https://***.openai.azure.com/',
             error: {
               code: 'DeploymentNotFound',
               message: 'Deployment not found',
               deployId: 'text-davinci-003',
             },
-            errorType: 'AzureBizError',
+            errorType: bizErrorType,
             provider: 'azure',
           });
         }
@@ -251,7 +254,7 @@ describe('LobeAzureOpenAI', () => {
         } catch (e) {
           // Assert
           expect(e).toEqual({
-            endpoint: 'https://test.openai.azure.com/',
+            endpoint: 'https://***.openai.azure.com/',
             errorType: 'AgentRuntimeError',
             provider: 'azure',
             error: {

@@ -3,32 +3,41 @@ import { describe, expect, it } from 'vitest';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
+import { AgentState } from '@/store/agent/slices/chat/initialState';
+import { merge } from '@/utils/merge';
 
+import { initialState } from '../../initialState';
 import { agentSelectors } from './selectors';
 
 vi.mock('i18next', () => ({
   t: vi.fn((key) => key), // Simplified mock return value
 }));
 
-const mockSessionStore = {
+const agentConfig = DEFAULT_AGENT_CONFIG;
+
+const mockSessionStore = merge(initialState, {
   activeId: '1',
-  agentConfig: DEFAULT_AGENT_CONFIG,
-} as AgentStore;
+  agentMap: {
+    '1': agentConfig,
+  },
+} as Partial<AgentState>) as unknown as AgentStore;
 
 describe('agentSelectors', () => {
   describe('defaultAgentConfig', () => {
     it('should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly', () => {
       const s = {
-        defaultAgentConfig: {
-          systemRole: 'user',
-          model: 'gpt-3.5-turbo',
-          params: {
-            temperature: 0.7,
+        agentMap: {
+          inbox: {
+            systemRole: 'user',
+            model: 'gpt-3.5-turbo',
+            params: {
+              temperature: 0.7,
+            },
           },
         },
       } as unknown as AgentStore;
 
-      const result = agentSelectors.defaultAgentConfig(s);
+      const result = agentSelectors.inboxAgentConfig(s);
 
       expect(result).toMatchSnapshot();
     });
@@ -37,14 +46,14 @@ describe('agentSelectors', () => {
   describe('currentAgentConfig', () => {
     it('should return the merged default and session-specific agent config', () => {
       const config = agentSelectors.currentAgentConfig(mockSessionStore);
-      expect(config).toEqual(expect.objectContaining(mockSessionStore.agentConfig));
+      expect(config).toEqual(expect.objectContaining(agentConfig));
     });
   });
 
   describe('currentAgentModel', () => {
     it('should return the model from the agent config', () => {
       const model = agentSelectors.currentAgentModel(mockSessionStore);
-      expect(model).toBe(mockSessionStore.agentConfig.model);
+      expect(model).toBe(agentConfig.model);
     });
   });
 
@@ -55,13 +64,11 @@ describe('agentSelectors', () => {
     });
 
     it('should return false if the system role is not defined in the agent config', () => {
-      const modifiedSessionStore = {
-        ...mockSessionStore,
-        agentConfig: {
-          ...mockSessionStore.agentConfig,
-          systemRole: 'test',
+      const modifiedSessionStore = merge(mockSessionStore, {
+        agentMap: {
+          '1': { systemRole: 'test' },
         },
-      };
+      } as Partial<AgentState>);
       const hasRole = agentSelectors.hasSystemRole(modifiedSessionStore);
       expect(hasRole).toBe(true);
     });
@@ -70,7 +77,7 @@ describe('agentSelectors', () => {
   describe('currentAgentTTS', () => {
     it('should return the TTS config from the agent config', () => {
       const ttsConfig = agentSelectors.currentAgentTTS(mockSessionStore);
-      expect(ttsConfig).toEqual(mockSessionStore.agentConfig.tts);
+      expect(ttsConfig).toEqual(agentConfig.tts);
     });
 
     it('should return the default TTS config if none is defined in the agent config', () => {
@@ -78,9 +85,9 @@ describe('agentSelectors', () => {
         ...mockSessionStore,
         sessions: [
           {
-            ...mockSessionStore.agentConfig,
+            ...agentConfig,
             config: {
-              ...mockSessionStore.agentConfig,
+              ...agentConfig,
               tts: DEFAUTT_AGENT_TTS_CONFIG,
             },
           },
@@ -95,35 +102,30 @@ describe('agentSelectors', () => {
     it('should return the appropriate TTS voice based on the service and language', () => {
       const lang = 'en';
       const ttsVoice = agentSelectors.currentAgentTTSVoice(lang)(mockSessionStore);
-      expect(ttsVoice).toBe(mockSessionStore.agentConfig.tts?.voice?.openai);
+      expect(ttsVoice).toBe(agentConfig.tts?.voice?.openai);
     });
 
     it('should return the default voice for edge TTS service', () => {
-      const modifiedStore = {
-        ...mockSessionStore,
-        agentConfig: {
-          ...mockSessionStore.agentConfig,
-          tts: {
-            ...DEFAUTT_AGENT_TTS_CONFIG,
-            ttsService: 'edge',
+      const modifiedStore = merge(mockSessionStore, {
+        agentMap: {
+          '1': {
+            tts: { ttsService: 'edge' },
           },
         },
-      } as AgentStore;
+      } as Partial<AgentState>) as AgentStore;
       const ttsVoice = agentSelectors.currentAgentTTSVoice('en')(modifiedStore);
       expect(ttsVoice).toBe('ar-SA-HamedNeural');
     });
 
     it('should return the default voice for microsoft TTS service', () => {
-      const modifiedStore = {
-        ...mockSessionStore,
-        agentConfig: {
-          ...mockSessionStore.agentConfig,
-          tts: {
-            ...DEFAUTT_AGENT_TTS_CONFIG,
-            ttsService: 'microsoft',
+      const modifiedStore = merge(mockSessionStore, {
+        agentMap: {
+          '1': {
+            tts: { ttsService: 'microsoft' },
           },
         },
-      } as AgentStore;
+      } as Partial<AgentState>) as AgentStore;
+
       const ttsVoice = agentSelectors.currentAgentTTSVoice('en')(modifiedStore);
       expect(ttsVoice).toBe('ar-SA-HamedNeural');
     });
@@ -133,7 +135,7 @@ describe('agentSelectors', () => {
       const modifiedStore = {
         ...mockSessionStore,
         agentConfig: {
-          ...mockSessionStore.agentConfig,
+          ...agentConfig,
           tts: {
             ...DEFAUTT_AGENT_TTS_CONFIG,
             ttsService: 'avc',
@@ -151,14 +153,14 @@ describe('agentSelectors', () => {
   describe('currentAgentModelProvider', () => {
     it('should return the provider from the agent config', () => {
       const provider = agentSelectors.currentAgentModelProvider(mockSessionStore);
-      expect(provider).toBe(mockSessionStore.agentConfig.provider);
+      expect(provider).toBe(agentConfig.provider);
     });
 
     it('should fallback to openai if provider is not defined in the agent config', () => {
       const modifiedStore = {
         ...mockSessionStore,
         agentConfig: {
-          ...mockSessionStore.agentConfig,
+          ...agentConfig,
           provider: undefined,
         },
       };
@@ -170,14 +172,14 @@ describe('agentSelectors', () => {
   describe('currentAgentPlugins', () => {
     it('should return the plugins array from the agent config', () => {
       const plugins = agentSelectors.currentAgentPlugins(mockSessionStore);
-      expect(plugins).toEqual(mockSessionStore.agentConfig.plugins);
+      expect(plugins).toEqual(agentConfig.plugins);
     });
 
     it('should return an empty array if plugins are not defined in the agent config', () => {
       const modifiedStore = {
         ...mockSessionStore,
         agentConfig: {
-          ...mockSessionStore.agentConfig,
+          ...agentConfig,
           plugins: undefined,
         },
       };
@@ -189,17 +191,19 @@ describe('agentSelectors', () => {
   describe('currentAgentSystemRole', () => {
     it('should return the system role from the agent config', () => {
       const systemRole = agentSelectors.currentAgentSystemRole(mockSessionStore);
-      expect(systemRole).toBe(mockSessionStore.agentConfig.systemRole);
+      expect(systemRole).toBe(agentConfig.systemRole);
     });
 
     it('should return undefined if system role is not defined in the agent config', () => {
-      const modifiedStore = {
-        ...mockSessionStore,
-        agentConfig: {
-          ...mockSessionStore.agentConfig,
-          systemRole: undefined,
+      const modifiedStore = merge({}, {
+        activeId: '1',
+        agentMap: {
+          '1': {
+            systemRole: undefined,
+          },
         },
-      };
+      } as Partial<AgentState>) as AgentStore;
+
       const systemRole = agentSelectors.currentAgentSystemRole(modifiedStore);
       expect(systemRole).toBeUndefined();
     });

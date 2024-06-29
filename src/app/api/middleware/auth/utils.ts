@@ -40,7 +40,7 @@ export const getJWTPayload = async (token: string): Promise<JWTPayload> => {
 interface CheckAuthParams {
   accessCode?: string;
   apiKey?: string;
-  clerkAuth: AuthObject;
+  clerkAuth?: AuthObject;
   nextAuthAuthorized?: boolean;
 }
 /**

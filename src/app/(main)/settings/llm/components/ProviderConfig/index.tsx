@@ -1,12 +1,14 @@
 'use client';
 
-import { Form, type FormItemProps, type ItemGroup } from '@lobehub/ui';
+import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
 import { debounce } from 'lodash-es';
+import { LockIcon } from 'lucide-react';
+import Link from 'next/link';
 import { ReactNode, memo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Trans, useTranslation } from 'react-i18next';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import {
@@ -17,14 +19,38 @@ import {
   LLMProviderModelListKey,
 } from '@/app/(main)/settings/llm/const';
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { AES_GCM_URL } from '@/const/url';
+import { isServerMode } from '@/const/version';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, modelConfigSelectors } from '@/store/user/selectors';
+import { ModelProviderCard } from '@/types/llm';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import Checker from '../Checker';
 import ProviderModelListSelect from '../ProviderModelList';
 
-const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
+const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
+  aceGcm: css`
+    padding-block: 0 !important;
+    .${prefixCls}-form-item-label {
+      display: none;
+    }
+    .${prefixCls}-form-item-control {
+      width: 100%;
+
+      font-size: 12px;
+      color: ${token.colorTextSecondary};
+      text-align: center;
+
+      opacity: 0.66;
+
+      transition: opacity 0.2s ${token.motionEaseInOut};
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  `,
   form: css`
     .${prefixCls}-form-item-control:has(.${prefixCls}-input,.${prefixCls}-select) {
       flex: none;
@@ -39,6 +65,19 @@ const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
       font-size: 12px;
     }
   `,
+  help: css`
+    font-size: 12px;
+    font-weight: 500;
+    color: ${token.colorTextDescription};
+
+    background: ${token.colorFillTertiary};
+    border-radius: 50%;
+
+    &:hover {
+      color: ${token.colorText};
+      background: ${token.colorFill};
+    }
+  `,
   safariIconWidthFix: css`
     svg {
       width: unset !important;
@@ -46,36 +85,29 @@ const useStyles = createStyles(({ css, prefixCls, responsive }) => ({
   `,
 }));
 
-interface ProviderConfigProps {
+export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'chatModels'> {
   apiKeyItems?: FormItemProps[];
   canDeactivate?: boolean;
-  checkModel?: string;
   checkerItem?: FormItemProps;
   className?: string;
+  docUrl?: string;
+  extra?: ReactNode;
   hideSwitch?: boolean;
+  id: GlobalLLMProviderKey;
   modelList?: {
     azureDeployName?: boolean;
     notFoundContent?: ReactNode;
     placeholder?: string;
     showModelFetcher?: boolean;
   };
-  provider: GlobalLLMProviderKey;
-  proxyUrl?:
-    | {
-        desc?: string;
-        placeholder: string;
-        title?: string;
-      }
-    | false;
-  showApiKey?: boolean;
-  showBrowserRequest?: boolean;
+  showAceGcm?: boolean;
   title: ReactNode;
 }
 
 const ProviderConfig = memo<ProviderConfigProps>(
   ({
     apiKeyItems,
-    provider,
+    id,
     proxyUrl,
     showApiKey = true,
     checkModel,
@@ -83,11 +115,15 @@ const ProviderConfig = memo<ProviderConfigProps>(
     title,
     checkerItem,
     modelList,
-    showBrowserRequest,
+    defaultShowBrowserRequest,
+    disableBrowserRequest,
     className,
+    name,
+    docUrl,
+    showAceGcm = true,
+    extra,
   }) => {
     const { t } = useTranslation('setting');
-    const { t: modelT } = useTranslation('modelProvider');
     const [form] = Form.useForm();
     const { cx, styles } = useStyles();
     const [
@@ -96,12 +132,14 @@ const ProviderConfig = memo<ProviderConfigProps>(
       enabled,
       isFetchOnClient,
       isProviderEndpointNotEmpty,
+      isProviderApiKeyNotEmpty,
     ] = useUserStore((s) => [
       s.toggleProviderEnabled,
       s.setSettings,
-      modelConfigSelectors.isProviderEnabled(provider)(s),
-      modelConfigSelectors.isProviderFetchOnClient(provider)(s),
-      keyVaultsConfigSelectors.isProviderEndpointNotEmpty(provider)(s),
+      modelConfigSelectors.isProviderEnabled(id)(s),
+      modelConfigSelectors.isProviderFetchOnClient(id)(s),
+      keyVaultsConfigSelectors.isProviderEndpointNotEmpty(id)(s),
+      keyVaultsConfigSelectors.isProviderApiKeyNotEmpty(id)(s),
     ]);
 
     useSyncSettings(form);
@@ -113,71 +151,119 @@ const ProviderConfig = memo<ProviderConfigProps>(
             children: (
               <Input.Password
                 autoComplete={'new-password'}
-                placeholder={modelT(`${provider}.token.placeholder` as any)}
+                placeholder={t(`llm.apiKey.placeholder`, { name })}
               />
             ),
-            desc: modelT(`${provider}.token.desc` as any),
-            label: modelT(`${provider}.token.title` as any),
-            name: [KeyVaultsConfigKey, provider, LLMProviderApiTokenKey],
+            desc: t(`llm.apiKey.desc`, { name }),
+            label: t(`llm.apiKey.title`),
+            name: [KeyVaultsConfigKey, id, LLMProviderApiTokenKey],
           },
         ];
 
+    const aceGcmItem: FormItemProps = {
+      children: (
+        <>
+          <Icon icon={LockIcon} style={{ marginRight: 4 }} />
+          <Trans i18nKey="llm.aesGcm" ns={'setting'}>
+            您的秘钥与代理地址等将使用
+            <Link href={AES_GCM_URL} style={{ marginInline: 4 }} target={'_blank'}>
+              AES-GCM
+            </Link>
+            加密算法进行加密
+          </Trans>
+        </>
+      ),
+      className: styles.aceGcm,
+      minWidth: undefined,
+    };
+
     const showEndpoint = !!proxyUrl;
+
     const formItems = [
       ...apiKeyItem,
       showEndpoint && {
         children: <Input allowClear placeholder={proxyUrl?.placeholder} />,
         desc: proxyUrl?.desc || t('llm.proxyUrl.desc'),
         label: proxyUrl?.title || t('llm.proxyUrl.title'),
-        name: [KeyVaultsConfigKey, provider, LLMProviderBaseUrlKey],
+        name: [KeyVaultsConfigKey, id, LLMProviderBaseUrlKey],
       },
-      (showBrowserRequest || (showEndpoint && isProviderEndpointNotEmpty)) && {
-        children: (
-          <Switch
-            onChange={(enabled) => {
-              setSettings({ [LLMProviderConfigKey]: { [provider]: { fetchOnClient: enabled } } });
-            }}
-            value={isFetchOnClient}
-          />
-        ),
-        desc: t('llm.fetchOnClient.desc'),
-        label: t('llm.fetchOnClient.title'),
-        minWidth: undefined,
-      },
+      /*
+       * Conditions to show Client Fetch Switch
+       * 1. provider is not disabled browser request
+       * 2. provider show browser request by default
+       * 3. Provider allow to edit endpoint and the value of endpoint is not empty
+       * 4. There is an apikey provided by user
+       */
+      !disableBrowserRequest &&
+        (defaultShowBrowserRequest ||
+          (showEndpoint && isProviderEndpointNotEmpty) ||
+          (showApiKey && isProviderApiKeyNotEmpty)) && {
+          children: (
+            <Switch
+              onChange={(enabled) => {
+                setSettings({ [LLMProviderConfigKey]: { [id]: { fetchOnClient: enabled } } });
+              }}
+              value={isFetchOnClient}
+            />
+          ),
+          desc: t('llm.fetchOnClient.desc'),
+          label: t('llm.fetchOnClient.title'),
+          minWidth: undefined,
+        },
       {
         children: (
           <ProviderModelListSelect
             notFoundContent={modelList?.notFoundContent}
             placeholder={modelList?.placeholder ?? t('llm.modelList.placeholder')}
-            provider={provider}
+            provider={id}
             showAzureDeployName={modelList?.azureDeployName}
             showModelFetcher={modelList?.showModelFetcher}
           />
         ),
         desc: t('llm.modelList.desc'),
         label: t('llm.modelList.title'),
-        name: [LLMProviderConfigKey, provider, LLMProviderModelListKey],
+        name: [LLMProviderConfigKey, id, LLMProviderModelListKey],
       },
       checkerItem ?? {
-        children: <Checker model={checkModel!} provider={provider} />,
+        children: <Checker model={checkModel!} provider={id} />,
         desc: t('llm.checker.desc'),
         label: t('llm.checker.title'),
         minWidth: undefined,
       },
+      showAceGcm && isServerMode && aceGcmItem,
     ].filter(Boolean) as FormItemProps[];
+
+    /* ↓ cloud slot ↓ */
+
+    /* ↑ cloud slot ↑ */
 
     const model: ItemGroup = {
       children: formItems,
 
       defaultActive: canDeactivate ? enabled : undefined,
-      extra: canDeactivate ? (
-        <Switch
-          onChange={(enabled) => {
-            toggleProviderEnabled(provider, enabled);
-          }}
-          value={enabled}
-        />
-      ) : undefined,
+
+      extra: (
+        <Flexbox align={'center'} gap={8} horizontal>
+          {extra}
+          {docUrl && (
+            <Tooltip title={t('llm.helpDoc')}>
+              <Link href={docUrl} onClick={(e) => e.stopPropagation()} target={'_blank'}>
+                <Center className={styles.help} height={20} width={20}>
+                  ?
+                </Center>
+              </Link>
+            </Tooltip>
+          )}
+          {canDeactivate ? (
+            <Switch
+              onChange={(enabled) => {
+                toggleProviderEnabled(id, enabled);
+              }}
+              value={enabled}
+            />
+          ) : undefined}
+        </Flexbox>
+      ),
       title: (
         <Flexbox
           align={'center'}

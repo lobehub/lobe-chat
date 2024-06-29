@@ -6,6 +6,7 @@ import { UserSettings } from '@/types/user/settings';
 export interface UserSettingsState {
   defaultSettings: UserSettings;
   settings: DeepPartial<UserSettings>;
+  updateSettingsSignal?: AbortController;
 }
 
 export const initialSettingsState: UserSettingsState = {

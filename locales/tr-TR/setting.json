@@ -43,6 +43,12 @@
     "title": "Ayarlar"
   },
   "llm": {
+    "aesGcm": "Anahtarınız ve vekil adresiniz <1>AES-GCM</1> şifreleme algoritması kullanılarak şifrelenecektir",
+    "apiKey": {
+      "desc": "Lütfen {{name}} API Anahtarınızı girin",
+      "placeholder": "{{name}} API Anahtarı",
+      "title": "API Anahtarı"
+    },
     "checker": {
       "button": "Kontrol Et",
       "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
@@ -97,6 +103,7 @@
       "latestTime": "Son güncelleme zamanı: {{time}}",
       "noLatestTime": "Liste henüz alınamadı"
     },
+    "helpDoc": "Yardım Belgeleri",
     "modelList": {
       "desc": "Görüntülenecek modeli seçin, seçilen model model listesinde görüntülenecektir",
       "placeholder": "Lütfen listeden bir model seçin",
@@ -107,15 +114,7 @@
       "desc": "Varsayılan adres dışında, http(s):// içermelidir",
       "title": "API Proxy Adresi"
     },
-    "waitingForMore": "Daha fazla model eklenmesi planlanıyor ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama bu modeli indiriyor, lütfen bu sayfayı kapatmamaya çalışın. Yeniden indirme durumunda kaldığı yerden devam edecektir.",
-      "remainingTime": "Kalan Zaman",
-      "speed": "İndirme Hızı",
-      "title": "{{model}} Modeli İndiriliyor"
-    }
+    "waitingForMore": "Daha fazla model eklenmesi planlanıyor"
   },
   "plugin": {
     "addTooltip": "Eklenti Ekle",
@@ -182,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "Sınırsız",
       "limited": "Yalnızca {{number}} konuşma mesajını içerir",
+      "setlimited": "Kullanılan mesaj sayısı",
       "title": "Geçmiş Mesaj Sayısı Sınırlama",
       "unlimited": "Sınırsız geçmiş mesaj sayısı"
     },
@@ -368,7 +368,17 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Asistan Meta Veri Oluşturma Modeli",
+      "modelDesc": "Asistan adı, açıklaması, avatar ve etiket oluşturmak için belirlenen model",
+      "title": "Asistan Bilgilerini Otomatik Oluştur"
+    },
     "title": "Sistem Asistanı",
+    "topic": {
+      "label": "Konu Adlandırma Modeli",
+      "modelDesc": "Konuların otomatik olarak yeniden adlandırılması için belirlenen model",
+      "title": "Konu Otomatik Adlandırma"
+    },
     "translation": {
       "label": "Çeviri Modeli",
       "modelDesc": "Çeviri için belirlenen model",

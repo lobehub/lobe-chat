@@ -37,7 +37,11 @@ const Clear = memo(() => {
       placement={'topRight'}
       title={t('confirmClearCurrentMessages', { ns: 'chat' })}
     >
-      <ActionIcon icon={Eraser} placement={'bottom'} title={actionTitle} />
+      <ActionIcon 
+        icon={Eraser} 
+        overlayStyle={{ maxWidth: 'none' }}
+        placement={'bottom'} 
+        title={actionTitle} />
     </Popconfirm>
   );
 });

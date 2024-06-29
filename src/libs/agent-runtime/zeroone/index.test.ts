@@ -9,8 +9,9 @@ import { LobeZeroOneAI } from './index';
 
 const provider = 'zeroone';
 const defaultBaseURL = 'https://api.lingyiwanwu.com/v1';
-const bizErrorType = 'ZeroOneBizError';
-const invalidErrorType = 'InvalidZeroOneAPIKey';
+
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});

@@ -384,11 +384,14 @@ describe('topic action', () => {
       // Set up mock state with unstarred topics
       await act(async () => {
         useChatStore.setState({
-          topics: [
-            { id: 'topic-1', favorite: false },
-            { id: 'topic-2', favorite: true },
-            { id: 'topic-3', favorite: false },
-          ] as ChatTopic[],
+          activeId: 'abc',
+          topicMaps: {
+            abc: [
+              { id: 'topic-1', favorite: false },
+              { id: 'topic-2', favorite: true },
+              { id: 'topic-3', favorite: false },
+            ] as ChatTopic[],
+          },
         });
       });
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
@@ -431,7 +434,10 @@ describe('topic action', () => {
       });
 
       // Mock the `updateTopicTitleInSummary` and `refreshTopic` for spying
-      const updateTopicTitleInSummarySpy = vi.spyOn(result.current, 'updateTopicTitleInSummary');
+      const updateTopicTitleInSummarySpy = vi.spyOn(
+        result.current,
+        'internal_updateTopicTitleInSummary',
+      );
       const refreshTopicSpy = vi.spyOn(result.current, 'refreshTopic');
 
       // Mock the `chatService.fetchPresetTaskResult` to simulate the AI response

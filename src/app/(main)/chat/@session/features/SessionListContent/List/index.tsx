@@ -13,6 +13,7 @@ import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
 
 import SkeletonList from '../../SkeletonList';
+import { useSwitchSession } from '../useSwitchSession';
 import AddButton from './AddButton';
 import SessionItem from './Item';
 
@@ -28,19 +29,28 @@ interface SessionListProps {
 }
 const SessionList = memo<SessionListProps>(({ dataSource, groupId, showAddButton = true }) => {
   const { t } = useTranslation('chat');
-  const isInit = useSessionStore((s) => sessionSelectors.isSessionListInit(s));
-  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
-
   const { styles } = useStyles();
 
+  const isInit = useSessionStore(sessionSelectors.isSessionListInit);
+  const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
   const mobile = useServerConfigStore((s) => s.isMobile);
+
+  const switchSession = useSwitchSession();
+
   const isEmpty = !dataSource || dataSource.length === 0;
   return !isInit ? (
     <SkeletonList />
   ) : !isEmpty ? (
     dataSource.map(({ id }) => (
       <LazyLoad className={styles} key={id}>
-        <Link aria-label={id} href={SESSION_CHAT_URL(id, mobile)}>
+        <Link
+          aria-label={id}
+          href={SESSION_CHAT_URL(id, mobile)}
+          onClick={(e) => {
+            e.preventDefault();
+            switchSession(id);
+          }}
+        >
           <SessionItem id={id} />
         </Link>
       </LazyLoad>

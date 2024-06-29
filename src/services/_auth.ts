@@ -1,7 +1,7 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
-import { keyVaultsConfigSelectors, settingsSelectors } from '@/store/user/selectors';
+import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 import { createJWT } from '@/utils/jwt';
 
@@ -47,9 +47,10 @@ export const getProviderAuthPayload = (provider: string) => {
 };
 
 const createAuthTokenWithPayload = async (payload = {}) => {
-  const accessCode = settingsSelectors.password(useUserStore.getState());
+  const accessCode = keyVaultsConfigSelectors.password(useUserStore.getState());
+  const userId = userProfileSelectors.userId(useUserStore.getState());
 
-  return await createJWT<JWTPayload>({ accessCode, ...payload });
+  return await createJWT<JWTPayload>({ accessCode, userId, ...payload });
 };
 
 interface AuthParams {

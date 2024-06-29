@@ -1,8 +1,12 @@
-export interface GlobalTranslationConfig {
+export interface SystemAgentItem {
   model: string;
   provider: string;
 }
 
 export interface UserSystemAgentConfig {
-  translation: GlobalTranslationConfig;
+  agentMeta: SystemAgentItem;
+  topic: SystemAgentItem;
+  translation: SystemAgentItem;
 }
+
+export type UserSystemAgentConfigKey = keyof UserSystemAgentConfig;

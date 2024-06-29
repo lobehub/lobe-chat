@@ -6,6 +6,7 @@ import { SessionGroupModel } from '@/database/client/models/sessionGroup';
 import { UserModel } from '@/database/client/models/user';
 import { useUserStore } from '@/store/user';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
+import { MetaData } from '@/types/meta';
 import {
   ChatSessionList,
   LobeAgentSession,
@@ -109,6 +110,18 @@ export class ClientService implements ISessionService {
     }
 
     return SessionModel.updateConfig(activeId, config);
+  }
+
+  async updateSessionMeta(
+    activeId: string,
+    meta: Partial<MetaData>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _?: AbortSignal,
+  ) {
+    // inbox 不允许修改 meta
+    if (activeId === INBOX_SESSION_ID) return;
+
+    return SessionModel.update(activeId, { meta });
   }
 
   async updateSessionChatConfig(

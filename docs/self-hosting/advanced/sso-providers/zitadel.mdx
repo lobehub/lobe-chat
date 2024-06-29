@@ -57,7 +57,8 @@ http(s)://your-domain/api/auth/callback/zitadel
   - You can fill in or modify redirect URIs after creating the application, but make sure the filled
   URL is consistent with the deployed URL.
 
-  - Replace `http(s)://your-domain` with the actual URL that LobeChat is deployed to.
+- Replace `http(s)://your-domain` with the actual URL that LobeChat is deployed to.
+
 </Callout>
 
 Confirm the configuration and click **Create**.
@@ -76,8 +77,7 @@ Save the **ClientId** and **ClientSecret** for later use.
   src="https://github.com/lobehub/lobe-chat/assets/8692892/407b4eed-7f21-4aa6-b68f-9bae2faf09d0"
 />
 
-In the application settings page, navigate to the **Token Settings** tab, enable **User Info inside
-ID Token** option, and click **Save**.
+In the application settings page, navigate to the **Token Settings** tab, enable **User Info inside ID Token** option, and click **Save**.
 
 <Image
   alt="Create ZITADEL Application S7"
@@ -99,9 +99,8 @@ When deploying LobeChat, you need to configure the following environment variabl
 
 | Environment Variable | Type | Description |
 | --- | --- | --- |
-| `ENABLE_OAUTH_SSO` | Required | Enable single sign-on (SSO) for LobeChat. Set to `1` to enable single sign-on. |
-| `NEXTAUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate a key using the following command: `openssl rand -base64 32` |
-| `SSO_PROVIDERS` | Optional | Select the single sign-on provider for LoboChat. Use `zitadel` for ZITADEL. |
+| `NEXT_AUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate a key using the following command: `openssl rand -base64 32` |
+| `NEXT_AUTH_SSO_PROVIDERS` | Optional | Select the single sign-on provider for LoboChat. Use `zitadel` for ZITADEL. |
 | `ZITADEL_CLIENT_ID` | Required | Client ID (`ClientId` as shown in ZITADEL) of the ZITADEL application |
 | `ZITADEL_CLIENT_SECRET` | Required | Client Secret (`ClientSecret` as shown in ZITADEL) of the ZITADEL application |
 | `ZITADEL_ISSUER` | Required | Issuer URL of the ZITADEL application |

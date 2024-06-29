@@ -57,8 +57,8 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 | 数组 | `plugins=search-engine,lobe-image-designer` | 启用 `search-engine` 和 `lobe-image-designer` 插件。 |
 | 中文逗号 | `plugins=search-engine，lobe-image-designer` | 同上，演示支持中文逗号分隔。 |
 | 多个配置项 | `model=glm-4;provider=zhipu` | 设置模型为 `glm-4` 且模型服务商为 `zhipu`。 |
-| 数字值 | `params.max_tokens=300` | 设置最大令牌数为 `300`。 |
-| 布尔值 | `enableAutoCreateTopic=true` | 启用自动创建主题。 |
+| 数字值 | `params.max_tokens=300`, `chatConfig.historyCount=5` | 设置最大令牌数为 `300`，设置历史消息条数为5。 |
+| 布尔值 | `chatConfig.enableAutoCreateTopic=true`,`chatConfig.enableCompressThreshold=true`, `chatConfig.enableHistoryCount=true` | 启用自动创建主题，历史长度压缩阈值，历史记录条数。 |
 | 特殊字符 | `inputTemplate="Hello; I am a bot;"` | 设置输入模板为 `Hello; I am a bot;`。 |
 | 错误处理 | `model=gpt-4;maxToken` | 忽略无效条目 `maxToken`，仅解析出 `model=gpt-4`。 |
 | 值覆盖 | `model=gpt-4;model=gpt-4-1106-preview` | 如果键重复，使用最后一次出现的值，此处 `model` 的值为 `gpt-4-1106-preview`。 |

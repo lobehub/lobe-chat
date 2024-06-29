@@ -2,8 +2,9 @@ import { VoiceList } from '@lobehub/tts';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import {
-  DEFAULT_AGENT_CHAT_CONFIG,
   DEFAULT_AGENT_CONFIG,
+  DEFAULT_MODEL,
+  DEFAULT_PROVIDER,
   DEFAUTT_AGENT_TTS_CONFIG,
 } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
@@ -14,13 +15,15 @@ const isInboxSession = (s: AgentStore) => s.activeId === INBOX_SESSION_ID;
 
 // ==========   Config   ============== //
 
-const defaultAgentConfig = (s: AgentStore) => merge(DEFAULT_AGENT_CONFIG, s.defaultAgentConfig);
+const inboxAgentConfig = (s: AgentStore) =>
+  merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
+const inboxAgentModel = (s: AgentStore) => inboxAgentConfig(s).model;
 
 const currentAgentConfig = (s: AgentStore): LobeAgentConfig =>
-  merge(s.defaultAgentConfig, s.agentConfig);
+  merge(s.defaultAgentConfig, s.agentMap[s.activeId]);
 
 const currentAgentChatConfig = (s: AgentStore): LobeAgentChatConfig =>
-  currentAgentConfig(s).chatConfig || DEFAULT_AGENT_CHAT_CONFIG;
+  currentAgentConfig(s).chatConfig || {};
 
 const currentAgentSystemRole = (s: AgentStore) => {
   return currentAgentConfig(s).systemRole;
@@ -29,13 +32,13 @@ const currentAgentSystemRole = (s: AgentStore) => {
 const currentAgentModel = (s: AgentStore): string => {
   const config = currentAgentConfig(s);
 
-  return config?.model || 'gpt-3.5-turbo';
+  return config?.model || DEFAULT_MODEL;
 };
 
 const currentAgentModelProvider = (s: AgentStore) => {
   const config = currentAgentConfig(s);
 
-  return config?.provider || 'openai';
+  return config?.provider || DEFAULT_PROVIDER;
 };
 
 const currentAgentPlugins = (s: AgentStore) => {
@@ -88,7 +91,8 @@ export const agentSelectors = {
   currentAgentSystemRole,
   currentAgentTTS,
   currentAgentTTSVoice,
-  defaultAgentConfig,
   hasSystemRole,
+  inboxAgentConfig,
+  inboxAgentModel,
   isInboxSession,
 };

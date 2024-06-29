@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od Anthropic",
-      "placeholder": "Anthropic API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Anthropic, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API Anthropic"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "Wersja API Azure, stosuj format YYYY-MM-DD, zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
@@ -29,10 +17,6 @@
       "desc": "Wartość można znaleźć w sekcji 'Klucze i punkty końcowe' podczas sprawdzania zasobu w portalu Azure. Możesz użyć KEY1 lub KEY2",
       "placeholder": "Azure API Key",
       "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Azure OpenAI, aby rozpocząć sesję",
-      "title": "Użyj niestandardowego klucza API Azure OpenAI"
     }
   },
   "bedrock": {
@@ -61,78 +45,6 @@
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "Wprowadź klucz API DeepSeek",
-      "placeholder": "Klucz API DeepSeek",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API DeepSeek, aby rozpocząć sesję. Aplikacja nie zapisuje Twojego klucza API.",
-      "title": "Użyj niestandardowego klucza API DeepSeek"
-    }
-  },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od Google",
-      "placeholder": "Google API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Google, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API Google"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od Groq",
-      "placeholder": "Groq API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Groq, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API Groq"
-    }
-  },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "Wprowadź klucz API Minimax",
-      "placeholder": "Klucz API Minimax",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Minimax, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-      "title": "Użyj niestandardowego klucza API Minimax"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od Mistral AI",
-      "placeholder": "Mistral AI API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Mistral AI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API Mistral AI"
-    }
-  },
-  "moonshot": {
-    "title": "Mroczna Strona Księżyca",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od Moonshot AI",
-      "placeholder": "Moonshot AI API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Moonshot AI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API Moonshot AI"
-    }
-  },
   "ollama": {
     "checker": {
       "desc": "Test czy adres proxy jest poprawnie wypełniony",
@@ -142,6 +54,12 @@
       "desc": "Dodaj własny model, oddzielaj modele przecinkiem (,)",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "Nazwa własnego modelu"
+    },
+    "download": {
+      "desc": "Ollama is currently downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
     },
     "endpoint": {
       "desc": "Wprowadź adres rest API Ollama, jeśli lokalnie nie określono, pozostaw puste",
@@ -171,94 +89,20 @@
         "windowsTab": "Windows (Preview)"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "Użyj własnego klucza OpenAI",
-      "placeholder": "OpenAI API Key",
-      "title": "Klucz API OpenAI"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "Wprowadź swój klucz API OpenAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API OpenAI"
-    }
-  },
-  "openrouter": {
-    "checker": {
-      "desc": "Test czy adres proxy jest poprawnie wypełniony"
-    },
-    "customModelName": {
-      "desc": "Dodaj własny model, oddzielaj modele przecinkiem (,)",
-      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-      "title": "Nazwa własnego modelu"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od OpenRouter AI",
-      "placeholder": "OpenRouter AI API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API OpenRouter, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API OpenRouter"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od Perplexity AI",
-      "placeholder": "Perplexity AI API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Perplexity, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API Perplexity"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "Test czy adres proxy jest poprawnie wypełniony"
-    },
-    "customModelName": {
-      "desc": "Dodaj własny model, oddzielaj modele przecinkiem (,)",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B",
-      "title": "Nazwa własnego modelu"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od TogetherAI AI",
-      "placeholder": "TogetherAI AI API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API TogetherAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API TogetherAI"
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
     }
   },
   "zeroone": {
-    "title": "01.AI Zero Jeden Wszystko",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od 01.AI Zero Jeden Wszystko",
-      "placeholder": "01.AI Zero Jeden Wszystko API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API ZeroOne, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API ZeroOne"
-    }
+    "title": "01.AI Zero Jeden Wszystko"
   },
   "zhipu": {
-    "title": "Zhipu",
-    "token": {
-      "desc": "Wprowadź klucz API uzyskany od Zhipu",
-      "placeholder": "Zhipu API Key",
-      "title": "Klucz API"
-    },
-    "unlock": {
-      "description": "Wprowadź swój klucz API Zhipu, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API",
-      "title": "Użyj niestandardowego klucza API Zhipu"
-    }
+    "title": "Zhipu"
   }
 }

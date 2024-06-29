@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
 import { FormAction } from './style';
 
@@ -16,7 +16,7 @@ interface AccessCodeFormProps {
 const AccessCodeForm = memo<AccessCodeFormProps>(({ id }) => {
   const { t } = useTranslation('error');
   const [password, updateKeyVaults] = useUserStore((s) => [
-    settingsSelectors.password(s),
+    keyVaultsConfigSelectors.password(s),
     s.updateKeyVaults,
   ]);
   const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);

@@ -1,6 +1,7 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { merge } from 'lodash-es';
+import OpenAI from 'openai';
 import { describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -8,15 +9,17 @@ import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
+  LobeDeepSeekAI,
   LobeGoogleAI,
   LobeGroq,
-  LobeDeepSeekAI,
   LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
   LobeOpenAI,
+  LobeOpenAICompatibleRuntime,
   LobeOpenRouterAI,
   LobePerplexityAI,
+  LobeQwenAI,
   LobeTogetherAI,
   LobeZeroOneAI,
   LobeZhipuAI,
@@ -136,6 +139,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -193,6 +197,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -234,6 +239,7 @@ describe('ChatService', () => {
           useFileStore.setState({
             imagesMap: {
               file1: {
+                id: 'file1',
                 name: 'abc.png',
                 saveMode: 'url',
                 fileType: 'image/png',
@@ -859,19 +865,24 @@ describe('AgentRuntimeOnClient', () => {
         expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
       });
 
-      it('Groq provider: with apiKey', async () => {
+      it('Groq provider: with apiKey,endpoint', async () => {
         merge(initialSettingsState, {
           settings: {
             keyVaults: {
               groq: {
                 apiKey: 'user-groq-key',
+                baseURL: 'user-groq-endpoint',
               },
             },
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Groq, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
-        expect(runtime['_runtime']).toBeInstanceOf(LobeGroq);
+        const lobeOpenAICompatibleInstance = runtime['_runtime'] as LobeOpenAICompatibleRuntime;
+        expect(lobeOpenAICompatibleInstance).toBeInstanceOf(LobeGroq);
+        expect(lobeOpenAICompatibleInstance.baseURL).toBe('user-groq-endpoint');
+        expect(lobeOpenAICompatibleInstance.client).toBeInstanceOf(OpenAI);
+        expect(lobeOpenAICompatibleInstance.client.apiKey).toBe('user-groq-key');
       });
 
       it('DeepSeek provider: with apiKey', async () => {
@@ -887,6 +898,21 @@ describe('AgentRuntimeOnClient', () => {
         const runtime = await initializeWithClientStore(ModelProvider.DeepSeek, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
+      });
+
+      it('Qwen provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              qwen: {
+                apiKey: 'user-qwen-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Qwen, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
       });
 
       /**

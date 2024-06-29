@@ -1,6 +1,5 @@
 import OpenAI from 'openai';
 
-import { AgentRuntimeErrorType } from '../error';
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
@@ -27,10 +26,6 @@ export const LobePerplexityAI = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_PERPLEXITY_CHAT_COMPLETION === '1',
-  },
-  errorType: {
-    bizError: AgentRuntimeErrorType.PerplexityBizError,
-    invalidAPIKey: AgentRuntimeErrorType.InvalidPerplexityAPIKey,
   },
   provider: ModelProvider.Perplexity,
 });

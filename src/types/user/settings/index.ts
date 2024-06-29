@@ -25,7 +25,7 @@ export interface UserSettings {
   general: UserGeneralConfig;
   keyVaults: UserKeyVaults;
   languageModel: UserModelProviderConfig;
-  sync: UserSyncSettings;
+  sync?: UserSyncSettings;
   systemAgent: UserSystemAgentConfig;
   tool: UserToolConfig;
   tts: UserTTSConfig;

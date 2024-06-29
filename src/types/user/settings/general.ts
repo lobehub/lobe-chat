@@ -7,10 +7,6 @@ export interface UserGeneralConfig {
   fontSize: number;
   language: LocaleMode;
   neutralColor?: NeutralColors;
-  /**
-   * @deprecated
-   */
-  password: string;
   primaryColor?: PrimaryColors;
   themeMode: ThemeMode;
 }

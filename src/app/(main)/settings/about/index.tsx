@@ -1,43 +1,136 @@
 'use client';
 
-import { Logo, Tag } from '@lobehub/ui';
-import Link from 'next/link';
+import { SiDiscord, SiGithub, SiMedium, SiRss, SiX } from '@icons-pack/react-simple-icons';
+import { Form } from '@lobehub/ui';
+import { Divider } from 'antd';
+import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { OFFICIAL_SITE, RELEASES_URL } from '@/const/url';
-import { CURRENT_VERSION } from '@/const/version';
-import Follow from '@/features/Follow';
+import {
+  BLOG,
+  DISCORD,
+  EMAIL_BUSINESS,
+  EMAIL_SUPPORT,
+  GITHUB,
+  MEDIDUM,
+  OFFICIAL_SITE,
+  PRIVACY_URL,
+  TERMS_URL,
+  X,
+  mailTo,
+} from '@/const/url';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 
 import AboutList from './features/AboutList';
 import Analytics from './features/Analytics';
+import ItemCard from './features/ItemCard';
+import ItemLink from './features/ItemLink';
+import Version from './features/Version';
 
-const COPYRIGHT = `© 2023-${new Date().getFullYear()} LobeHub, LLC`;
+const useStyles = createStyles(({ css, token }) => ({
+  title: css`
+    font-size: 14px;
+    font-weight: bold;
+    color: ${token.colorTextSecondary};
+  `,
+}));
 
-const Page = memo(({ mobile }: { mobile?: boolean }) => {
+const Page = memo<{ mobile?: boolean }>(({ mobile }) => {
+  const { t } = useTranslation('common');
+  const { styles } = useStyles();
   const enabledTelemetryChat = useServerConfigStore(serverConfigSelectors.enabledTelemetryChat);
 
   return (
-    <Flexbox align={'center'} gap={12} paddingBlock={36} width={'100%'}>
-      <Link href={OFFICIAL_SITE} target={'_blank'}>
-        <Logo size={mobile ? 100 : 120} />
-      </Link>
-      <h1 style={{ fontSize: mobile ? 32 : 36, fontWeight: 900, lineHeight: 1, marginBottom: 0 }}>
-        LobeChat
-      </h1>
-      <Link href={RELEASES_URL} target={'_blank'}>
-        <Tag>v{CURRENT_VERSION}</Tag>
-      </Link>
-      <Flexbox gap={24} style={{ marginBlock: 48 }} width={'100%'}>
-        <AboutList />
-        {enabledTelemetryChat && <Analytics />}
-      </Flexbox>
-      <Follow />
-      <div>Empowering your AI dreams by LobeHub</div>
-      <div style={{ fontWeight: 400, opacity: 0.33 }}>{COPYRIGHT}</div>
-    </Flexbox>
+    <>
+      <Form.Group style={{ width: '100%' }} title={`${t('about')} LobeChat`} variant={'pure'}>
+        <Flexbox gap={20} paddingBlock={20} width={'100%'}>
+          <div className={styles.title}>{t('version')}</div>
+          <Version mobile={mobile} />
+          <Divider style={{ marginBlock: 0 }} />
+          <div className={styles.title}>{t('contact')}</div>
+          <AboutList
+            ItemRender={ItemLink}
+            items={[
+              {
+                href: OFFICIAL_SITE,
+                label: t('officialSite'),
+                value: 'officialSite',
+              },
+              {
+                href: mailTo(EMAIL_SUPPORT),
+                label: t('mail.support'),
+                value: 'support',
+              },
+              {
+                href: mailTo(EMAIL_BUSINESS),
+                label: t('mail.business'),
+                value: 'business',
+              },
+            ]}
+          />
+          <Divider style={{ marginBlock: 0 }} />
+          <div className={styles.title}>{t('information')}</div>
+          <AboutList
+            ItemRender={ItemCard}
+            grid
+            items={[
+              {
+                href: BLOG,
+                icon: SiRss,
+                label: t('blog'),
+                value: 'blog',
+              },
+              {
+                href: GITHUB,
+                icon: SiGithub,
+                label: 'GitHub',
+                value: 'feedback',
+              },
+              {
+                href: DISCORD,
+                icon: SiDiscord,
+                label: 'Discord',
+                value: 'discord',
+              },
+              {
+                href: X,
+                icon: SiX as any,
+                label: 'X / Twitter',
+                value: 'x',
+              },
+
+              {
+                href: MEDIDUM,
+                icon: SiMedium,
+                label: 'Medium',
+                value: 'medium',
+              },
+            ]}
+          />
+          <Divider style={{ marginBlock: 0 }} />
+          <div className={styles.title}>{t('legal')}</div>
+          <AboutList
+            ItemRender={ItemLink}
+            items={[
+              {
+                href: TERMS_URL,
+                label: t('terms'),
+                value: 'terms',
+              },
+              {
+                href: PRIVACY_URL,
+                label: t('privacy'),
+                value: 'privacy',
+              },
+            ]}
+          />
+        </Flexbox>
+      </Form.Group>
+      {enabledTelemetryChat && <Analytics />}
+    </>
   );
 });
 

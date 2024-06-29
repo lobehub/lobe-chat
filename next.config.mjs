@@ -60,7 +60,87 @@ const nextConfig = {
       },
     });
 
+    // https://github.com/pinojs/pino/issues/688#issuecomment-637763276
+    config.externals.push('pino-pretty');
+
     return config;
+  },
+
+  async headers() {
+    return [
+      {
+        source: '/icons/(.*).(png|jpe?g|gif|svg|ico|webp)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/images/(.*).(png|jpe?g|gif|svg|ico|webp)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/videos/(.*).(mp4|webm|ogg|avi|mov|wmv|flv|mkv)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/screenshots/(.*).(png|jpe?g|gif|svg|ico|webp)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/og/(.*).(png|jpe?g|gif|svg|ico|webp)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/favicon.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/favicon-32x32.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/apple-touch-icon.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
   },
 };
 

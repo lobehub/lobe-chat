@@ -8,9 +8,10 @@ import useSWR from 'swr';
 
 import { ollamaService } from '@/services/ollama';
 import { useChatStore } from '@/store/chat';
+import { formatSize } from '@/utils/format';
 
 import { ErrorActionContainer, FormAction } from '../../style';
-import { formatSize, useDownloadMonitor } from './useDownloadMonitor';
+import { useDownloadMonitor } from './useDownloadMonitor';
 
 interface OllamaModelFormProps {
   id: string;
@@ -18,8 +19,7 @@ interface OllamaModelFormProps {
 }
 
 const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
-  const { t } = useTranslation('error');
-  const { t: settingT } = useTranslation('setting');
+  const { t } = useTranslation(['modelProvider', 'error']);
 
   const [modelToPull, setModelToPull] = useState(model);
   const [completed, setCompleted] = useState(0);
@@ -60,13 +60,11 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
     <Center gap={16} style={{ maxWidth: 300, width: '100%' }}>
       <FormAction
         avatar={<Ollama color={theme.colorPrimary} size={64} />}
-        description={
-          isDownloading ? settingT('ollama.download.desc') : t('unlock.ollama.description')
-        }
+        description={isDownloading ? t('ollama.download.desc') : t('ollama.unlock.description')}
         title={
           isDownloading
-            ? settingT('ollama.download.title', { model: modelToPull })
-            : t('unlock.ollama.title')
+            ? t('ollama.download.title', { model: modelToPull })
+            : t('ollama.unlock.title')
         }
       >
         {!isDownloading && (
@@ -92,10 +90,10 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
             style={{ color: theme.colorTextDescription, fontSize: 12 }}
           >
             <span>
-              {settingT('ollama.download.remainingTime')}: {remainingTime}
+              {t('ollama.download.remainingTime')}: {remainingTime}
             </span>
             <span>
-              {settingT('ollama.download.speed')}: {downloadSpeed}
+              {t('ollama.download.speed')}: {downloadSpeed}
             </span>
           </Flexbox>
         </Flexbox>
@@ -111,11 +109,11 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
           type={'primary'}
         >
           {!isDownloading
-            ? t('unlock.ollama.confirm')
+            ? t('ollama.unlock.confirm')
             : // if total is 0, show starting, else show downloaded
               !total
-              ? t('unlock.ollama.starting')
-              : t('unlock.ollama.downloaded', {
+              ? t('ollama.unlock.starting')
+              : t('ollama.unlock.downloaded', {
                   completed: formatSize(completed),
                   total: formatSize(total),
                 })}
@@ -126,7 +124,7 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
               ollamaService.abort();
             }}
           >
-            {t('unlock.ollama.cancel')}
+            {t('ollama.unlock.cancel')}
           </Button>
         ) : (
           <Button
@@ -134,7 +132,7 @@ const OllamaModelForm = memo<OllamaModelFormProps>(({ id, model }) => {
               deleteMessage(id);
             }}
           >
-            {t('unlock.closeMessage')}
+            {t('unlock.closeMessage', { ns: 'error' })}
           </Button>
         )}
       </Flexbox>
