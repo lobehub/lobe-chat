@@ -9,8 +9,9 @@ import { LobeMoonshotAI } from './index';
 
 const provider = 'moonshot';
 const defaultBaseURL = 'https://api.moonshot.cn/v1';
-const bizErrorType = 'MoonshotBizError';
-const invalidErrorType = 'InvalidMoonshotAPIKey';
+
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});

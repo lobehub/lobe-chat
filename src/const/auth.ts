@@ -35,5 +35,11 @@ export interface JWTPayload {
   awsAccessKeyId?: string;
   awsRegion?: string;
   awsSecretAccessKey?: string;
+  /**
+   * user id
+   * in client db mode it's a uuid
+   * in server db mode it's a user id
+   */
+  userId?: string;
 }
 /* eslint-enable */

@@ -1,6 +1,6 @@
 import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
-import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { AgentRuntime, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
 import { getTracePayload } from '@/utils/trace';
@@ -12,12 +12,17 @@ export const runtime = 'edge';
 
 export const preferredRegion = getPreferredRegion();
 
-export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
+export const POST = checkAuth(async (req: Request, { params, jwtPayload, createRuntime }) => {
   const { provider } = params;
 
   try {
     // ============  1. init chat model   ============ //
-    const agentRuntime = await initAgentRuntimeWithUserPayload(provider, jwtPayload);
+    let agentRuntime: AgentRuntime;
+    if (createRuntime) {
+      agentRuntime = createRuntime(jwtPayload);
+    } else {
+      agentRuntime = await initAgentRuntimeWithUserPayload(provider, jwtPayload);
+    }
 
     // ============  2. create chat completion   ============ //
 
@@ -25,17 +30,16 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
 
     const tracePayload = getTracePayload(req);
 
+    let traceOptions = {};
     // If user enable trace
     if (tracePayload?.enabled) {
-      return await agentRuntime.chat(
-        data,
-        createTraceOptions(data, {
-          provider,
-          trace: tracePayload,
-        }),
-      );
+      traceOptions = createTraceOptions(data, {
+        provider,
+        trace: tracePayload,
+      });
     }
-    return await agentRuntime.chat(data);
+
+    return await agentRuntime.chat(data, { user: jwtPayload.userId, ...traceOptions });
   } catch (e) {
     const {
       errorType = ChatErrorType.InternalServerError,

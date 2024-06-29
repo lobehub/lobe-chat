@@ -25,6 +25,7 @@ export const getAppConfig = () => {
       AGENTS_INDEX_URL: z.string().url(),
 
       DEFAULT_AGENT_CONFIG: z.string(),
+      SYSTEM_AGENT: z.string().optional(),
 
       PLUGINS_INDEX_URL: z.string().url(),
       PLUGIN_SETTINGS: z.string().optional(),
@@ -44,6 +45,7 @@ export const getAppConfig = () => {
         : 'https://chat-agents.lobehub.com',
 
       DEFAULT_AGENT_CONFIG: process.env.DEFAULT_AGENT_CONFIG || '',
+      SYSTEM_AGENT: process.env.SYSTEM_AGENT,
 
       PLUGINS_INDEX_URL: !!process.env.PLUGINS_INDEX_URL
         ? process.env.PLUGINS_INDEX_URL

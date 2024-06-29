@@ -419,13 +419,17 @@ describe('chatMessage actions', () => {
         const { result } = renderHook(() => useChatStore());
         act(() => {
           useAgentStore.setState({
-            agentConfig: {
-              chatConfig: {
-                enableAutoCreateTopic: false,
-                autoCreateTopicThreshold: 1,
+            activeId: 'abc',
+            agentMap: {
+              abc: {
+                chatConfig: {
+                  enableAutoCreateTopic: false,
+                  autoCreateTopicThreshold: 1,
+                },
               },
             },
           });
+
           useChatStore.setState({
             // Mock the currentChats selector to return a list that does not reach the threshold
             messagesMap: {

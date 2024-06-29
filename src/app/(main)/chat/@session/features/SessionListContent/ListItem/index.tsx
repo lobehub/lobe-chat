@@ -11,7 +11,7 @@ const ListItem = memo<ActionProps & ListItemProps & { avatar: string; avatarBack
     const items = useDropdownItems(id, group, openCreateGroupModal);
 
     return (
-      <Dropdown
+<Dropdown
         arrow={false}
         menu={{
           items,

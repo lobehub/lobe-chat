@@ -1,7 +1,11 @@
 import { DeepPartial } from 'utility-types';
 
 import { ChatModelCard } from '@/types/llm';
-import { UserDefaultAgent, GlobalLLMProviderKey } from '@/types/user/settings';
+import {
+  GlobalLLMProviderKey,
+  UserDefaultAgent,
+  UserSystemAgentConfig,
+} from '@/types/user/settings';
 
 export interface ServerModelProviderConfig {
   enabled?: boolean;
@@ -21,6 +25,7 @@ export interface GlobalServerConfig {
   enabledAccessCode?: boolean;
   enabledOAuthSSO?: boolean;
   languageModel?: ServerLanguageModel;
+  systemAgent?: DeepPartial<UserSystemAgentConfig>;
   telemetry: {
     langfuse?: boolean;
   };

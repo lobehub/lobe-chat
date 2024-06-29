@@ -41,7 +41,9 @@ const Mistral: ModelProviderCard = {
       tokens: 32_768,
     },
   ],
+  checkModel: 'open-mistral-7b',
   id: 'mistral',
+  name: 'Mistral',
 };
 
 export default Mistral;

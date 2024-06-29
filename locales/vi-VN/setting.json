@@ -43,6 +43,12 @@
     "title": "Cài đặt"
   },
   "llm": {
+    "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",
+    "apiKey": {
+      "desc": "Vui lòng nhập {{name}} API Key của bạn",
+      "placeholder": "{{name}} API Key",
+      "title": "API Key"
+    },
     "checker": {
       "button": "Kiểm tra",
       "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
@@ -97,6 +103,7 @@
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
       "noLatestTime": "Chưa có danh sách nào được lấy"
     },
+    "helpDoc": "Hướng dẫn cấu hình",
     "modelList": {
       "desc": "Chọn mô hình hiển thị trong cuộc trò chuyện, mô hình đã chọn sẽ được hiển thị trong danh sách mô hình",
       "placeholder": "Vui lòng chọn mô hình từ danh sách",
@@ -107,15 +114,7 @@
       "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
       "title": "Địa chỉ Proxy API"
     },
-    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama đang tải xuống mô hình này, vui lòng không đóng trang này. Quá trình tải xuống sẽ tiếp tục từ nơi đã bị gián đoạn khi tải lại",
-      "remainingTime": "Thời gian còn lại",
-      "speed": "Tốc độ tải xuống",
-      "title": "Đang tải xuống mô hình {{model}}"
-    }
+    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
   "plugin": {
     "addTooltip": "Thêm tiện ích",
@@ -182,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "Không giới hạn",
       "limited": "Chỉ chứa {{number}} tin nhắn trò chuyện",
+      "setlimited": "Thiết lập số lượng tin nhắn lịch sử",
       "title": "Giới hạn số lượng tin nhắn lịch sử",
       "unlimited": "Không giới hạn số lượng tin nhắn lịch sử"
     },
@@ -368,7 +368,17 @@
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Mô hình tạo siêu dữ liệu trợ lý",
+      "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
+      "title": "Tự động tạo thông tin trợ lý"
+    },
     "title": "Trợ lý hệ thống",
+    "topic": {
+      "label": "Mô hình đặt tên chủ đề",
+      "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề",
+      "title": "Tự động đặt tên chủ đề"
+    },
     "translation": {
       "label": "Mô hình dịch",
       "modelDesc": "Chọn mô hình để dịch",

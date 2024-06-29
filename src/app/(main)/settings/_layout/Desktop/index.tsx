@@ -6,6 +6,8 @@ import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import SettingContainer from '@/features/Setting//SettingContainer';
+import Footer from '@/features/Setting/Footer';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
 
@@ -15,7 +17,7 @@ import SideBar from './SideBar';
 
 const Layout = memo<LayoutProps>(({ children, category }) => {
   const ref = useRef<any>(null);
-  const { md = true, mobile = false } = useResponsive();
+  const { md = true } = useResponsive();
   const { t } = useTranslation('setting');
   const activeKey = useActiveSettingsKey();
 
@@ -42,23 +44,7 @@ const Layout = memo<LayoutProps>(({ children, category }) => {
           {category}
         </Header>
       )}
-      <Flexbox
-        align={'center'}
-        height={'100%'}
-        style={{ overflowX: 'hidden', overflowY: 'auto' }}
-        width={'100%'}
-      >
-        <Flexbox
-          gap={64}
-          style={{
-            maxWidth: 1024,
-            padding: mobile ? undefined : '32px 24px',
-          }}
-          width={'100%'}
-        >
-          {children}
-        </Flexbox>
-      </Flexbox>
+      <SettingContainer addonAfter={<Footer />}>{children}</SettingContainer>
     </Flexbox>
   );
 });

@@ -16,9 +16,9 @@ interface Text2ImageParams extends Pick<OpenAIImagePayload, 'quality' | 'style' 
  * 代理行为接口
  */
 export interface BuiltinToolAction {
-  invokeBuiltinTool: (key: string, params: any) => Promise<string | undefined>;
-  text2image: (params: Text2ImageParams, messageId: string) => DallEImageItem[];
+  text2image: (params: Text2ImageParams) => DallEImageItem[];
   toggleBuiltinToolLoading: (key: string, value: boolean) => void;
+  transformApiArgumentsToAiState: (key: string, params: any) => Promise<string | undefined>;
 }
 
 export const createBuiltinToolSlice: StateCreator<
@@ -27,16 +27,22 @@ export const createBuiltinToolSlice: StateCreator<
   [],
   BuiltinToolAction
 > = (set, get) => ({
-  invokeBuiltinTool: async (key, params) => {
+  text2image: ({ prompts, size = '1024x1024' as const, quality = 'standard', style = 'vivid' }) =>
+    prompts.map((p) => ({ prompt: p, quality, size, style })),
+  toggleBuiltinToolLoading: (key, value) => {
+    set({ builtinToolLoading: { [key]: value } }, false, n('toggleBuiltinToolLoading'));
+  },
+
+  transformApiArgumentsToAiState: async (key, params) => {
     const { builtinToolLoading, toggleBuiltinToolLoading } = get();
 
     if (builtinToolLoading[key]) return;
 
-    toggleBuiltinToolLoading(key, true);
-
     const { [key as keyof BuiltinToolAction]: action } = get();
 
-    if (!action) return;
+    if (!action) return JSON.stringify(params);
+
+    toggleBuiltinToolLoading(key, true);
 
     // @ts-ignore
     const result = await action(params);
@@ -44,11 +50,5 @@ export const createBuiltinToolSlice: StateCreator<
     toggleBuiltinToolLoading(key, false);
 
     return JSON.stringify(result);
-  },
-  text2image: ({ prompts, size = '1024x1024' as const, quality = 'standard', style = 'vivid' }) =>
-    prompts.map((p) => ({ prompt: p, quality, size, style })),
-
-  toggleBuiltinToolLoading: (key, value) => {
-    set({ builtinToolLoading: { [key]: value } }, false, n('toggleBuiltinToolLoading'));
   },
 });

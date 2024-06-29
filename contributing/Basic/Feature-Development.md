@@ -4,14 +4,14 @@ This document aims to guide developers on how to develop a complete feature requ
 
 We will use the implementation of sessionGroup as an example: [✨ feat: add session group manager](https://github.com/lobehub/lobe-chat/pull/1055), and explain the complete implementation process through the following six main sections:
 
-1. Data Model / Database Definition
-2. Service Implementation / Model Implementation
-3. Frontend Data Flow Store Implementation
-4. UI Implementation and Action Binding
-5. Data Migration
-6. Data Import and Export
+1. [Data Model / Database Definition](#1-data-model--database-definition)
+2. [Service Implementation / Model Implementation](#2-service-implementation--model-implementation)
+3. [Frontend Data Flow Store Implementation](#3-frontend-data-flow-store-implementation)
+4. [UI Implementation and Action Binding](#4-ui-implementation-and-action-binding)
+5. [Data Migration](#5-data-migration)
+6. [Data Import and Export](#6-data-import-and-export)
 
-## 1. Database Section
+## 1. Data Model / Database Definition
 
 To implement the Session Group feature, it is necessary to define the relevant data model and indexes at the database level.
 
@@ -119,7 +119,7 @@ As a result, you can now view the `sessionGroups` table in the `LOBE_CHAT_DB` in
 
 ![](https://github.com/lobehub/lobe-chat/assets/28616219/aea50f66-4060-4a32-88c8-b3c672d05be8)
 
-## 2. Model and Service Section
+## 2. Service Implementation / Model Implementation
 
 ### Define Model
 
@@ -176,7 +176,7 @@ class SessionService {
 }
 ```
 
-## 3. Store Action Section
+## 3. Frontend Data Flow Store Implementation
 
 In the LobeChat application, the Store module is used to manage the frontend state of the application. The Actions within it are functions that trigger state updates, usually by calling methods in the service layer to perform actual data processing operations and then updating the state in the Store. We use `zustand` as the underlying dependency for the Store module. For a detailed practical introduction to state management, you can refer to [📘 Best Practices for State Management](../State-Management/State-Management-Intro.zh-CN.md).
 
@@ -351,7 +351,7 @@ Since all data retrieval in the UI is implemented using syntax like `useSessionS
 >
 > If you are not familiar with the concept and functionality of selectors, you can refer to the section [📘 Data Storage and Retrieval Module](./State-Management-Selectors.en-US) for relevant information.
 
-## IV. UI Section
+## 4. UI Implementation and Action Binding
 
 Bind Store Action in the UI component to implement interactive logic, for example `CreateGroupModal`:
 
@@ -570,7 +570,7 @@ export class LocalDB extends Dexie {
 
 This is our data migration strategy. When performing the migration, it is essential to ensure the correctness of the migration script and validate the migration results through thorough testing.
 
-## VI. Data Import and Export
+## 6. Data Import and Export
 
 In LobeChat, the data import and export feature is designed to ensure that users can migrate their data between different devices. This includes session, topic, message, and settings data. In the implementation of the Session Group feature, we also need to handle data import and export to ensure that the complete exported data can be restored exactly the same on other devices.
 

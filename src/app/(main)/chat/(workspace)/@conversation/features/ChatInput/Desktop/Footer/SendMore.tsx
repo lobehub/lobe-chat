@@ -13,7 +13,6 @@ import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
-import { isMacOS } from '@/utils/platform';
 
 const useStyles = createStyles(({ css, prefixCls }) => {
   return {
@@ -25,9 +24,12 @@ const useStyles = createStyles(({ css, prefixCls }) => {
   };
 });
 
-const isMac = isMacOS();
+interface SendMoreProps {
+  disabled?: boolean;
+  isMac?: boolean;
+}
 
-const SendMore = memo(() => {
+const SendMore = memo<SendMoreProps>(({ disabled, isMac }) => {
   const { t } = useTranslation('chat');
 
   const { styles } = useStyles();
@@ -55,6 +57,7 @@ const SendMore = memo(() => {
 
   return (
     <Dropdown
+      disabled={disabled}
       menu={{
         items: [
           {
@@ -69,7 +72,7 @@ const SendMore = memo(() => {
             icon: useCmdEnterToSend ? <Icon icon={LucideCheck} /> : <div />,
             key: 'sendWithCmdEnter',
             label: t('input.sendWithCmdEnter', {
-              meta: isMac ? 'Cmd' : 'Ctrl',
+              meta: typeof isMac === 'boolean' ? (isMac ? '⌘' : 'Ctrl') : '…',
             }),
             onClick: () => {
               updatePreference({ useCmdEnterToSend: true });

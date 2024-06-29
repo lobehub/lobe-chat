@@ -35,7 +35,7 @@ function throwIfErrorResponse(data: MinimaxResponse) {
         code: data.base_resp.status_code,
         message: data.base_resp.status_msg,
       },
-      errorType: AgentRuntimeErrorType.InvalidMinimaxAPIKey,
+      errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
       provider: ModelProvider.Minimax,
     });
   }
@@ -44,7 +44,7 @@ function throwIfErrorResponse(data: MinimaxResponse) {
       code: data.base_resp.status_code,
       message: data.base_resp.status_msg,
     },
-    errorType: AgentRuntimeErrorType.MinimaxBizError,
+    errorType: AgentRuntimeErrorType.ProviderBizError,
     provider: ModelProvider.Minimax,
   });
 }
@@ -64,7 +64,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
   apiKey: string;
 
   constructor({ apiKey }: { apiKey?: string }) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidMinimaxAPIKey);
+    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.apiKey = apiKey;
   }
@@ -85,7 +85,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
             status: response.status,
             statusText: response.statusText,
           },
-          errorType: AgentRuntimeErrorType.MinimaxBizError,
+          errorType: AgentRuntimeErrorType.ProviderBizError,
           provider: ModelProvider.Minimax,
         });
       }
@@ -115,7 +115,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
       };
       throw AgentRuntimeError.chat({
         error: errorResult,
-        errorType: AgentRuntimeErrorType.MinimaxBizError,
+        errorType: AgentRuntimeErrorType.ProviderBizError,
         provider: ModelProvider.Minimax,
       });
     }

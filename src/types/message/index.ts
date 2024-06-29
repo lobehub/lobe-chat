@@ -32,13 +32,13 @@ export * from './tools';
 
 export interface ChatMessage extends BaseDataModel {
   content: string;
-  error?: ChatMessageError;
+  error?: ChatMessageError | null;
   // 扩展字段
   extra?: {
     fromModel?: string;
     fromProvider?: string;
     // 翻译
-    translate?: ChatTranslate | false;
+    translate?: ChatTranslate | false | null;
     // TTS
     tts?: ChatTTS;
   } & Record<string, any>;

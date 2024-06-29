@@ -125,7 +125,12 @@ const isCurrentChatLoaded = (s: ChatStore) => !!s.messagesMap[currentChatKey(s)]
 
 const isMessageEditing = (id: string) => (s: ChatStore) => s.messageEditingIds.includes(id);
 const isMessageLoading = (id: string) => (s: ChatStore) => s.messageLoadingIds.includes(id);
+const isHasMessageLoading = (s: ChatStore) => s.messageLoadingIds.length > 0;
+const isCreatingMessage = (s: ChatStore) => s.isCreatingMessage;
+
 const isMessageGenerating = (id: string) => (s: ChatStore) => s.chatLoadingIds.includes(id);
+const isPluginApiInvoking = (id: string) => (s: ChatStore) => s.pluginApiLoadingIds.includes(id);
+
 const isToolCallStreaming = (id: string, index: number) => (s: ChatStore) => {
   const isLoading = s.toolCallingStreamIds[id];
 
@@ -146,10 +151,13 @@ export const chatSelectors = {
   getMessageById,
   getTraceIdByMessageId,
   isAIGenerating,
+  isCreatingMessage,
   isCurrentChatLoaded,
+  isHasMessageLoading,
   isMessageEditing,
   isMessageGenerating,
   isMessageLoading,
+  isPluginApiInvoking,
   isToolCallStreaming,
   latestMessage,
   showInboxWelcome,

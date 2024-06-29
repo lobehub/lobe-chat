@@ -1,4 +1,9 @@
-import { ListObjectsCommand, PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  ListObjectsCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { z } from 'zod';
 
@@ -44,6 +49,21 @@ export class S3 {
 
     const res = await this.client.send(command);
     return listFileSchema.parse(res.Contents);
+  }
+
+  public async getFileContent(key: string): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+
+    const response = await this.client.send(command);
+
+    if (!response.Body) {
+      throw new Error(`No body in response with ${key}`);
+    }
+
+    return response.Body.transformToString();
   }
 
   public async createPreSignedUrl(key: string): Promise<string> {
