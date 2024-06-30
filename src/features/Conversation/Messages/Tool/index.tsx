@@ -5,11 +5,11 @@ import { LucideSquareArrowLeft, LucideSquareArrowRight } from 'lucide-react';
 import { memo, useContext, useState } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
 import { chatDockSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
-import PluginRender from '../../Plugins/Render';
 import Arguments from '../components/Arguments';
 import Inspector from './Inspector';
 
