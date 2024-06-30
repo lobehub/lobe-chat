@@ -50,7 +50,7 @@ jobs:
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
         env:
           REPO_BRANCH: ${{ matrix.REPO_BRANCH || env.REPO_BRANCH }}
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v2
         with:
           repository: ${{ env.REPOSITORY }}
           token: ${{ secrets[matrix.TOKEN_NAME] || secrets[env.TOKEN_NAME] }}
