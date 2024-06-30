@@ -25,7 +25,7 @@ const AgentMeta = memo(() => {
   const [form] = AntForm.useForm();
   useEffect(() => {
     form.setFieldsValue(settings);
-  }, [settings, form]);
+  }, [settings]);
 
   const systemAgentSettings: SettingItemGroup = {
     children: [
