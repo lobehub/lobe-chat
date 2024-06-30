@@ -25,6 +25,7 @@ vi.mock('@/database/client/models/message', () => {
       delete: vi.fn(),
       queryBySessionId: vi.fn(),
       update: vi.fn(),
+      updatePlugin: vi.fn(),
       batchDelete: vi.fn(),
       clearTable: vi.fn(),
       batchUpdate: vi.fn(),
@@ -247,6 +248,40 @@ describe('MessageClientService', () => {
       // Assert
       expect(MessageModel.updatePluginState).toHaveBeenCalledWith(mockMessageId, { key: value });
       expect(result).toEqual({ ...mockMessage, pluginState: newPluginState });
+    });
+  });
+
+  describe('updateMessagePluginArguments', () => {
+    it('should update the plugin arguments object of a message', async () => {
+      // Setup
+      const key = 'stateKey';
+      const value = 'stateValue';
+      (MessageModel.updatePlugin as Mock).mockResolvedValue({});
+
+      // Execute
+      await messageService.updateMessagePluginArguments(mockMessageId, { key: value });
+
+      // Assert
+      expect(MessageModel.updatePlugin).toHaveBeenCalledWith(mockMessageId, {
+        arguments: '{"key":"stateValue"}',
+      });
+    });
+    it('should update the plugin arguments string of a message', async () => {
+      // Setup
+      const key = 'stateKey';
+      const value = 'stateValue';
+      (MessageModel.updatePlugin as Mock).mockResolvedValue({});
+
+      // Execute
+      await messageService.updateMessagePluginArguments(
+        mockMessageId,
+        JSON.stringify({ key: value }),
+      );
+
+      // Assert
+      expect(MessageModel.updatePlugin).toHaveBeenCalledWith(mockMessageId, {
+        arguments: '{"key":"stateValue"}',
+      });
     });
   });
 
