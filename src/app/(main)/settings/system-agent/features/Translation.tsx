@@ -15,6 +15,7 @@ import { useSyncSystemAgent } from './useSync';
 
 type SettingItemGroup = ItemGroup;
 
+const systemAgentKey = 'translation'
 const Translation = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = AntForm.useForm();
@@ -28,17 +29,17 @@ const Translation = memo(() => {
         children: (
           <ModelSelect
             onChange={(props) => {
-              updateSystemAgent('translation', props);
+              updateSystemAgent(systemAgentKey, props);
             }}
             showAbility={false}
           />
         ),
-        desc: t('systemAgent.translation.modelDesc'),
-        label: t('systemAgent.translation.label'),
-        name: ['translation', 'model'],
+        desc: t(`systemAgent.${systemAgentKey}.modelDesc`),
+        label: t(`systemAgent.${systemAgentKey}.label`),
+        name: [systemAgentKey, 'model'],
       },
     ],
-    title: t('systemAgent.translation.title'),
+    title: t(`systemAgent.${systemAgentKey}.title`),
   };
 
   useSyncSystemAgent(form);
