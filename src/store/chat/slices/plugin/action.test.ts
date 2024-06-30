@@ -941,4 +941,26 @@ describe('ChatPluginAction', () => {
       expect(transformed[0].apiName).toBe(apiName);
     });
   });
+
+  describe('internal_updatePluginError', () => {
+    it('should update plugin error and refresh messages', async () => {
+      const messageId = 'message-id';
+      const error = { message: 'Plugin error' };
+
+      act(() => {
+        useChatStore.setState({
+          refreshMessages: vi.fn(),
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.internal_updatePluginError(messageId, error);
+      });
+
+      expect(messageService.updateMessage).toHaveBeenCalledWith(messageId, { pluginError: error });
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+    });
+  });
 });

@@ -5,16 +5,9 @@ import { CreateMessageParams } from '@/services/message';
 import { ChatMessage, ChatPluginPayload } from '@/types/message';
 import { merge } from '@/utils/merge';
 
-interface UpdateMessage {
-  id: string;
-  key: keyof ChatMessage;
-  type: 'updateMessage';
-  value: ChatMessage[keyof ChatMessage];
-}
-
 interface UpdateMessages {
   id: string;
-  type: 'updateMessages';
+  type: 'updateMessage';
   value: Partial<ChatMessage>;
 }
 
@@ -57,7 +50,6 @@ interface UpdateMessageExtra {
 
 export type MessageDispatch =
   | CreateMessage
-  | UpdateMessage
   | UpdateMessages
   | UpdatePluginState
   | UpdateMessageExtra
@@ -68,17 +60,6 @@ export type MessageDispatch =
 export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
   switch (payload.type) {
     case 'updateMessage': {
-      return produce(state, (draftState) => {
-        const { id, key, value } = payload;
-        const message = draftState.find((i) => i.id === id);
-        if (!message) return;
-
-        // @ts-ignore
-        message[key] = value;
-        message.updatedAt = Date.now();
-      });
-    }
-    case 'updateMessages': {
       return produce(state, (draftState) => {
         const { id, value } = payload;
         const index = draftState.findIndex((i) => i.id === id);

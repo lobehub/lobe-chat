@@ -208,7 +208,7 @@ export const chatPlugin: StateCreator<
     const { refreshMessages } = get();
 
     // optimistic update
-    get().internal_dispatchMessage({ id, type: 'updateMessages', value: { pluginState: value } });
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState: value } });
 
     await messageService.updateMessagePluginState(id, value);
     await refreshMessages();
@@ -364,7 +364,7 @@ export const chatPlugin: StateCreator<
   internal_updatePluginError: async (id, error) => {
     const { refreshMessages } = get();
 
-    get().internal_dispatchMessage({ id, type: 'updateMessages', value: { error } });
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
     await messageService.updateMessage(id, { pluginError: error });
     await refreshMessages();
   },
