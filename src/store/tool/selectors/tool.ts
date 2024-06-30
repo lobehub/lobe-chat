@@ -100,11 +100,23 @@ const getManifestLoadingStatus = (id: string) => (s: ToolStoreState) => {
   if (!!manifest) return 'success';
 };
 
+const isToolHasUI = (id: string) => (s: ToolStoreState) => {
+  const manifest = getManifestById(id)(s);
+  if (!manifest) return false;
+
+  if ((manifest?.type as string) === 'builtin') {
+    return true;
+  }
+
+  return !!manifest.ui;
+};
+
 export const toolSelectors = {
   enabledSchema,
   enabledSystemRoles,
   getManifestById,
   getManifestLoadingStatus,
   getMetaById,
+  isToolHasUI,
   metaList,
 };
