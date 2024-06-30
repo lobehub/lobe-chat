@@ -38,8 +38,8 @@ const Topic = memo(() => {
             showAbility={false}
           />
         ),
-        desc: t(`systemAgent.${ systemAgentKey }.modelDesc`),
-        label: t(`systemAgent.${ systemAgentKey }.label`),
+        desc: t(`systemAgent.${systemAgentKey}.modelDesc`),
+        label: t(`systemAgent.${systemAgentKey}.label`),
         name: [systemAgentKey, 'model'],
       },
     ],
