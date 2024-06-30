@@ -24,7 +24,7 @@ vi.mock('../../settings/features/useCategory', () => ({
 
 // 定义一个变量来存储 enableAuth 的值
 let enableAuth = true;
-let enableClerk = true;
+let enableClerk = false;
 // 模拟 @/const/auth 模块
 vi.mock('@/const/auth', () => ({
   get enableAuth() {
@@ -37,16 +37,14 @@ vi.mock('@/const/auth', () => ({
 
 afterEach(() => {
   enableAuth = true;
-  enableClerk = true;
+  enableClerk = false;
 });
 
 describe('useCategory', () => {
   it('should return correct items when the user is logged in with authentication', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: true });
+      useUserStore.setState({ isSignedIn: true, enableAuth: () => true });
     });
-    enableAuth = true;
-    enableClerk = false;
 
     const { result } = renderHook(() => useCategory());
 
@@ -65,7 +63,6 @@ describe('useCategory', () => {
     act(() => {
       useUserStore.setState({ isSignedIn: true });
     });
-    enableAuth = true;
     enableClerk = true;
 
     const { result } = renderHook(() => useCategory());
@@ -102,9 +99,9 @@ describe('useCategory', () => {
 
   it('should handle settings for non-authenticated users', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false });
+      useUserStore.setState({ isSignedIn: false, enableAuth: () => false });
     });
-    enableAuth = false;
+    enableClerk = false;
 
     const { result } = renderHook(() => useCategory());
 
