@@ -103,8 +103,9 @@ const getManifestLoadingStatus = (id: string) => (s: ToolStoreState) => {
 const isToolHasUI = (id: string) => (s: ToolStoreState) => {
   const manifest = getManifestById(id)(s);
   if (!manifest) return false;
+  const builtinTool = s.builtinTools.find((tool) => tool.identifier === id);
 
-  if ((manifest?.type as string) === 'builtin') {
+  if (builtinTool && builtinTool.type === 'builtin') {
     return true;
   }
 
