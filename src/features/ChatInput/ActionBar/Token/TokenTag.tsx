@@ -2,7 +2,7 @@ import { TokenTag, Tooltip } from '@lobehub/ui';
 import { Popover } from 'antd';
 import { useTheme } from 'antd-style';
 import numeral from 'numeral';
-import { memo, useEffect } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
