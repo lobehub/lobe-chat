@@ -17,6 +17,7 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
+import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTogetherAI } from './togetherai';
 import {
@@ -115,6 +116,7 @@ class AgentRuntime {
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
+      siliconcloud: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
@@ -218,6 +220,11 @@ class AgentRuntime {
       case ModelProvider.Stepfun: {
         runtimeModel = new LobeStepfunAI(params.stepfun ?? {});
         break;
+      }
+
+      case ModelProvider.SiliconCloud: {
+        runtimeModel = new LobeSiliconCloudAI(params.siliconcloud ?? {});
+        break
       }
     }
 
