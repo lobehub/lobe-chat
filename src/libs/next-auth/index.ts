@@ -8,20 +8,26 @@ import config from './auth.config';
 
 const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
-// Use split config to avoid db connection init on edge runtime
-// ref: https://authjs.dev/guides/edge-compatibility#split-config
-
-// NextAuth with DB
-export const { handlers, auth, signIn, signOut } = NextAuth({
+/**
+ * NextAuth initialization with Database adapter
+ *
+ * @example
+ * ```ts
+ * import NextAuthNode from '@/libs/next-auth';
+ * const { handlers } = NextAuthNode;
+ * ```
+ *
+ * @note
+ * If you meet the edge runtime compatible problem,
+ * you can import from `@/libs/next-auth/edge` which is not initial with the database adapter.
+ *
+ * The difference and usage of the two different NextAuth modules is can be
+ * ref to: https://github.com/lobehub/lobe-chat/pull/2935
+ */
+export default NextAuth({
   ...config,
   adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter(serverDB) : undefined,
   session: {
     strategy: 'jwt',
   },
 });
-
-// The middleware no longer export from here for 2 reasons:
-// 1. NextAuth middleware only run on edge runtime.
-// 2. LobeNextAuthDbAdapter use db instance which not available on edge runtime
-// So the initialize at `src/middleware.ts` with the config defined at `./auth.config.ts`,
-// Ref: https://authjs.dev/guides/edge-compatibility#middleware
