@@ -1,104 +1,109 @@
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
-import { fileService } from '@/services/file';
-import { imageGenerationService } from '@/services/textToImage';
-import { uploadService } from '@/services/upload';
-import { chatSelectors } from '@/store/chat/selectors';
-import { ChatMessage } from '@/types/message';
-import { DallEImageItem } from '@/types/tool/dalle';
+import { useChatStore } from '@/store/chat';
 
-import { useChatStore } from '../../store';
+vi.mock('zustand/traditional');
 
-describe('chatToolSlice', () => {
-  describe('generateImageFromPrompts', () => {
-    it('should generate images from prompts, update items, and upload images', async () => {
+describe('chatDockSlice', () => {
+  describe('closeToolUI', () => {
+    it('should set dockToolMessage to undefined', () => {
       const { result } = renderHook(() => useChatStore());
 
-      const initialMessageContent = JSON.stringify([
-        { prompt: 'test prompt', previewUrl: 'old-url', imageId: 'old-id' },
-      ]);
-
-      vi.spyOn(chatSelectors, 'getMessageById').mockImplementationOnce(
-        (id) => () =>
-          ({
-            id,
-            content: initialMessageContent,
-          }) as ChatMessage,
-      );
-
-      const messageId = 'message-id';
-      const prompts = [
-        { prompt: 'test prompt 1' },
-        { prompt: 'test prompt 2' },
-      ] as DallEImageItem[];
-      const mockUrl = 'https://example.com/image.png';
-      const mockId = 'image-id';
-
-      vi.spyOn(imageGenerationService, 'generateImage').mockResolvedValue(mockUrl);
-      vi.spyOn(uploadService, 'uploadImageByUrl').mockResolvedValue({} as any);
-      vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: mockId });
-      vi.spyOn(result.current, 'toggleDallEImageLoading');
-
-      await act(async () => {
-        await result.current.generateImageFromPrompts(prompts, messageId);
+      act(() => {
+        result.current.openToolUI('test-id', 'test-identifier');
       });
-      // For each prompt, loading is toggled on and then off
-      expect(imageGenerationService.generateImage).toHaveBeenCalledTimes(prompts.length);
-      expect(uploadService.uploadImageByUrl).toHaveBeenCalledTimes(prompts.length);
 
-      expect(result.current.toggleDallEImageLoading).toHaveBeenCalledTimes(prompts.length * 2);
+      expect(result.current.dockToolMessage).toEqual({
+        id: 'test-id',
+        identifier: 'test-identifier',
+      });
+
+      act(() => {
+        result.current.closeToolUI();
+      });
+
+      expect(result.current.dockToolMessage).toBeUndefined();
     });
   });
 
-  describe('updateImageItem', () => {
-    it('should update image item correctly', async () => {
+  describe('openToolUI', () => {
+    it('should set dockToolMessage and open dock if it is closed', () => {
       const { result } = renderHook(() => useChatStore());
-      const messageId = 'message-id';
-      const initialMessageContent = JSON.stringify([
-        { prompt: 'test prompt', previewUrl: 'old-url', imageId: 'old-id' },
-      ]);
-      const updateFunction = (draft: any) => {
-        draft[0].previewUrl = 'new-url';
-        draft[0].imageId = 'new-id';
-      };
-      vi.spyOn(result.current, 'internal_updateMessageContent');
 
-      // 模拟 getMessageById 返回消息内容
-      vi.spyOn(chatSelectors, 'getMessageById').mockImplementationOnce(
-        (id) => () =>
-          ({
-            id,
-            content: initialMessageContent,
-          }) as ChatMessage,
-      );
+      expect(result.current.showDock).toBe(false);
 
-      await act(async () => {
-        await result.current.updateImageItem(messageId, updateFunction);
+      act(() => {
+        result.current.openToolUI('test-id', 'test-identifier');
       });
 
-      // 验证 internal_updateMessageContent 是否被正确调用以更新内容
-      expect(result.current.internal_updateMessageContent).toHaveBeenCalledWith(
-        messageId,
-        JSON.stringify([{ prompt: 'test prompt', previewUrl: 'new-url', imageId: 'new-id' }]),
-      );
+      expect(result.current.dockToolMessage).toEqual({
+        id: 'test-id',
+        identifier: 'test-identifier',
+      });
+      expect(result.current.showDock).toBe(true);
+    });
+
+    it('should not change dock state if it is already open', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.toggleDock(true);
+      });
+
+      expect(result.current.showDock).toBe(true);
+
+      act(() => {
+        result.current.openToolUI('test-id', 'test-identifier');
+      });
+
+      expect(result.current.dockToolMessage).toEqual({
+        id: 'test-id',
+        identifier: 'test-identifier',
+      });
+      expect(result.current.showDock).toBe(true);
     });
   });
 
-  describe('text2image', () => {
-    it('should call generateImageFromPrompts with provided data', async () => {
+  describe('toggleDock', () => {
+    it('should toggle dock state when no argument is provided', () => {
       const { result } = renderHook(() => useChatStore());
-      const id = 'message-id';
-      const data = [{ prompt: 'prompt 1' }, { prompt: 'prompt 2' }] as DallEImageItem[];
 
-      // Mock generateImageFromPrompts
-      const generateImageFromPromptsMock = vi.spyOn(result.current, 'generateImageFromPrompts');
+      expect(result.current.showDock).toBe(false);
 
-      await act(async () => {
-        await result.current.text2image(id, data);
+      act(() => {
+        result.current.toggleDock();
       });
 
-      expect(generateImageFromPromptsMock).toHaveBeenCalledWith(data, id);
+      expect(result.current.showDock).toBe(true);
+
+      act(() => {
+        result.current.toggleDock();
+      });
+
+      expect(result.current.showDock).toBe(false);
+    });
+
+    it('should set dock state to the provided value', () => {
+      const { result } = renderHook(() => useChatStore());
+
+      act(() => {
+        result.current.toggleDock(true);
+      });
+
+      expect(result.current.showDock).toBe(true);
+
+      act(() => {
+        result.current.toggleDock(false);
+      });
+
+      expect(result.current.showDock).toBe(false);
+
+      act(() => {
+        result.current.toggleDock(true);
+      });
+
+      expect(result.current.showDock).toBe(true);
     });
   });
 });
