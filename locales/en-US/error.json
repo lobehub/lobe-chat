@@ -54,6 +54,7 @@
     "503": "Sorry, the server is currently unable to process your request, possibly due to overload or maintenance. Please try again later.",
     "504": "Sorry, the server did not receive a response from the upstream server. Please try again later.",
     "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
+    "FreePlanLimit": "You are currently a free user and cannot use this feature. Please upgrade to a paid plan to continue using it.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
@@ -76,7 +77,8 @@
     "PluginOpenApiInitError": "Sorry, the OpenAPI client failed to initialize. Please check if the OpenAPI configuration information is correct.",
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
-    "ProviderBizError": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information"
+    "ProviderBizError": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information",
+    "SubscriptionPlanLimit": "Your subscription limit has been reached, and you cannot use this feature. Please upgrade to a higher plan or purchase a resource pack to continue using it."
   },
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"

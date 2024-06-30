@@ -23,18 +23,27 @@ export interface PluginRenderProps {
   identifier?: string;
   loading?: boolean;
   payload?: PluginRequestPayload;
+  pluginState?: any;
   type?: LobeToolRenderType;
 }
 
 const PluginRender = memo<PluginRenderProps>(
-  ({ content, id, payload, identifier, type, loading }) => {
+  ({ content, id, payload, pluginState, identifier, type, loading }) => {
     switch (type) {
       case 'standalone': {
         return <Standalone id={id} name={identifier} payload={payload} />;
       }
 
       case 'builtin': {
-        return <BuiltinType content={content} id={id} identifier={identifier} loading={loading} />;
+        return (
+          <BuiltinType
+            content={content}
+            id={id}
+            identifier={identifier}
+            loading={loading}
+            pluginState={pluginState}
+          />
+        );
       }
 
       case 'markdown': {

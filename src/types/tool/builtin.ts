@@ -27,10 +27,11 @@ export interface LobeBuiltinTool {
   type: 'builtin';
 }
 
-export interface BuiltinRenderProps<Result = any> {
-  content: Result;
+export interface BuiltinRenderProps<Content = any, State = any> {
+  content: Content;
   identifier?: string;
   messageId: string;
+  pluginState?: State;
 }
 
 export type BuiltinRender = <T = any>(props: BuiltinRenderProps<T>) => ReactNode;

@@ -11,6 +11,8 @@ export const OFFICIAL_SITE = 'https://lobehub.com/';
 
 export const getCanonicalUrl = (path: string) => urlJoin(OFFICIAL_URL, path);
 
+export const OG_URL = '/og/cover.png?v=1';
+
 export const GITHUB = pkg.homepage;
 export const GITHUB_ISSUES = urlJoin(GITHUB, 'issues/new/choose');
 export const CHANGELOG = urlJoin(GITHUB, 'blob/main/CHANGELOG.md');
