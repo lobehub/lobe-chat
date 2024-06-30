@@ -145,7 +145,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     getUserByEmail: async (email) => {
-      const lobeUser = await userModel.findByEmail(email);
+      const lobeUser = await UserModel.findByEmail(email);
       return mapLobeUserToAdapterUser(lobeUser) ?? null;
     },
 
