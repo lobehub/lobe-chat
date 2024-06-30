@@ -40,6 +40,8 @@ afterEach(() => {
   enableClerk = false;
 });
 
+// 目前对 enableAuth 的判定是在 useUserStore 中，所以需要 mock useUserStore
+// 类型定义： enableAuth: () => boolean
 describe('useCategory', () => {
   it('should return correct items when the user is logged in with authentication', () => {
     act(() => {
@@ -78,11 +80,29 @@ describe('useCategory', () => {
     });
   });
 
+  it('should return correct items when the user is logged in with NextAuth', () => {
+    act(() => {
+      useUserStore.setState({ isSignedIn: true, enableAuth: () => true, enabledNextAuth: true });
+    });
+
+    const { result } = renderHook(() => useCategory());
+
+    act(() => {
+      const items = result.current;
+      // Should not render profile for NextAuth, it's Clerk only
+      expect(items.some((item) => item.key === 'profile')).toBe(false);
+      expect(items.some((item) => item.key === 'setting')).toBe(true);
+      expect(items.some((item) => item.key === 'data')).toBe(true);
+      expect(items.some((item) => item.key === 'docs')).toBe(true);
+      expect(items.some((item) => item.key === 'feedback')).toBe(true);
+      expect(items.some((item) => item.key === 'discord')).toBe(true);
+    });
+  });
+
   it('should return correct items when the user is not logged in', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false });
+      useUserStore.setState({ isSignedIn: false, enableAuth: () => true });
     });
-    enableAuth = true;
 
     const { result } = renderHook(() => useCategory());
 
