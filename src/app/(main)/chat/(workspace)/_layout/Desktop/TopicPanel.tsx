@@ -7,6 +7,8 @@ import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
+import { useChatStore } from '@/store/chat';
+import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -32,6 +34,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
     systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
   ]);
+  const showInspector = useChatStore(chatPortalSelectors.showDock);
 
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showAgentSettings));
 
@@ -47,30 +50,32 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   }, [lg, cacheExpand]);
 
   return (
-    <DraggablePanel
-      className={styles.drawer}
-      classNames={{
-        content: styles.content,
-      }}
-      expand={showAgentSettings}
-      minWidth={CHAT_SIDEBAR_WIDTH}
-      mode={md ? 'fixed' : 'float'}
-      onExpandChange={handleExpand}
-      placement={'right'}
-      showHandlerWideArea={false}
-    >
-      <DraggablePanelContainer
-        style={{
-          flex: 'none',
-          height: '100%',
-          maxHeight: '100vh',
-          minWidth: CHAT_SIDEBAR_WIDTH,
+    !showInspector && (
+      <DraggablePanel
+        className={styles.drawer}
+        classNames={{
+          content: styles.content,
         }}
+        expand={showAgentSettings}
+        minWidth={CHAT_SIDEBAR_WIDTH}
+        mode={md ? 'fixed' : 'float'}
+        onExpandChange={handleExpand}
+        placement={'right'}
+        showHandlerWideArea={false}
       >
-        <SafeSpacing />
-        {children}
-      </DraggablePanelContainer>
-    </DraggablePanel>
+        <DraggablePanelContainer
+          style={{
+            flex: 'none',
+            height: '100%',
+            maxHeight: '100vh',
+            minWidth: CHAT_SIDEBAR_WIDTH,
+          }}
+        >
+          <SafeSpacing />
+          {children}
+        </DraggablePanelContainer>
+      </DraggablePanel>
+    )
   );
 });
 

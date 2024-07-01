@@ -83,6 +83,9 @@ export const getLLMConfig = () => {
       ENABLED_STEPFUN: z.boolean(),
       STEPFUN_API_KEY: z.string().optional(),
 
+      ENABLED_BAICHUAN: z.boolean(),
+      BAICHUAN_API_KEY: z.string().optional(),
+
       ENABLED_SILICONCLOUD: z.boolean(),
       SILICONCLOUD_API_KEY: z.string().optional(),
     },
@@ -158,6 +161,9 @@ export const getLLMConfig = () => {
 
       ENABLED_STEPFUN: !!process.env.STEPFUN_API_KEY,
       STEPFUN_API_KEY: process.env.STEPFUN_API_KEY,
+
+      ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
+      BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
 
       ENABLED_SILICONCLOUD: !!process.env.SILICONCLOUD_API_KEY,
       SILICONCLOUD_API_KEY: process.env.SILICONCLOUD_API_KEY,
