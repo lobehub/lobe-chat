@@ -223,7 +223,11 @@ class AgentRuntime {
       }
 
       case ModelProvider.Cloudflare: {
-        runtimeModel = new LobeCloudflareAI(params.cloudflare ?? {});
+        const cloudflareParams = params.cloudflare ?? {};
+        runtimeModel = new LobeCloudflareAI({
+          ...cloudflareParams,
+          baseURL: `https://api.cloudflare.com/client/v4/accounts/${params.cloudflare?.accountID}/ai/v1`
+        });
         break;
     }
   }

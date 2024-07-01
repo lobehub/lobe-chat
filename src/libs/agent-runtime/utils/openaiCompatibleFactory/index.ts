@@ -28,7 +28,7 @@ const CHAT_MODELS_BLOCK_LIST = [
 ];
 
 interface OpenAICompatibleFactoryOptions {
-  baseURL?: string;
+  baseURL?: string | ((params: { cfAccountID: string }) => string);
   chatCompletion?: {
     handleError?: (error: any) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
     handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
@@ -68,10 +68,12 @@ export const LobeOpenAICompatibleFactory = ({
 
     baseURL: string;
 
-    constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
+    constructor({ apiKey, baseURL = DEFAULT_BASE_URL, cfAccountID, ...res }: ClientOptions & { cfAccountID?: string }) {
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
-      this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
+      const finalBaseURL = typeof baseURL === 'function' ? baseURL({ accountId: cfAccountID ?? '' }) : baseURL;
+
+      this.client = new OpenAI({ apiKey, baseURL: finalBaseURL, ...constructorOptions, ...res });
       this.baseURL = this.client.baseURL;
     }
 
