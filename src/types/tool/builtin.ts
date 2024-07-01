@@ -27,7 +27,8 @@ export interface LobeBuiltinTool {
   type: 'builtin';
 }
 
-export interface BuiltinRenderProps<Content = any, State = any> {
+export interface BuiltinRenderProps<Content = any, Arguments = any, State = any> {
+  args: Arguments;
   content: Content;
   identifier?: string;
   messageId: string;
@@ -35,3 +36,12 @@ export interface BuiltinRenderProps<Content = any, State = any> {
 }
 
 export type BuiltinRender = <T = any>(props: BuiltinRenderProps<T>) => ReactNode;
+
+export interface BuiltinDockProps<Arguments = Record<string, any>, State = any> {
+  arguments: Arguments;
+  identifier: string;
+  messageId: string;
+  state: State;
+}
+
+export type BuiltinDock = <T = any>(props: BuiltinDockProps<T>) => ReactNode;

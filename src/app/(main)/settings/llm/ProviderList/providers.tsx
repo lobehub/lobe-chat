@@ -1,5 +1,6 @@
 import {
   Anthropic,
+  Baichuan,
   Claude,
   DeepSeek,
   Gemini,
@@ -24,6 +25,7 @@ import urlJoin from 'url-join';
 
 import {
   AnthropicProviderCard,
+  BaichuanProviderCard,
   DeepSeekProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
@@ -169,6 +171,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...StepfunProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'stepfun'),
         title: <Stepfun.Combine size={20} type={'color'} />,
+      },
+      {
+        ...BaichuanProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
+        title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

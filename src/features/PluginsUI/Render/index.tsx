@@ -18,6 +18,7 @@ const Standalone = dynamic(() => import('./StandaloneType'), { loading });
 const BuiltinType = dynamic(() => import('./BuiltinType'), { loading });
 
 export interface PluginRenderProps {
+  arguments?: string;
   content: string;
   id: string;
   identifier?: string;
@@ -28,7 +29,16 @@ export interface PluginRenderProps {
 }
 
 const PluginRender = memo<PluginRenderProps>(
-  ({ content, id, payload, pluginState, identifier, type, loading }) => {
+  ({
+    content,
+    arguments: argumentsStr = '',
+    id,
+    payload,
+    pluginState,
+    identifier,
+    type,
+    loading,
+  }) => {
     switch (type) {
       case 'standalone': {
         return <Standalone id={id} name={identifier} payload={payload} />;
@@ -37,6 +47,7 @@ const PluginRender = memo<PluginRenderProps>(
       case 'builtin': {
         return (
           <BuiltinType
+            arguments={argumentsStr}
             content={content}
             id={id}
             identifier={identifier}

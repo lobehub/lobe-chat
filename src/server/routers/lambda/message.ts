@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/server/models/message';
+import { updateMessagePluginSchema } from '@/database/server/schemas/lobechat';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { ChatMessage } from '@/types/message';
 import { BatchTaskResult } from '@/types/service';
@@ -106,6 +107,17 @@ export const messageRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       return ctx.messageModel.update(input.id, input.value);
+    }),
+
+  updateMessagePlugin: messageProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        value: updateMessagePluginSchema.partial(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.updateMessagePlugin(input.id, input.value);
     }),
 
   updatePluginState: messageProcedure
