@@ -55,7 +55,7 @@ class _MessageModel extends BaseModel {
     const finalList: ChatMessage[] = [];
 
     const addItem = (item: ChatMessage) => {
-      const isExist = finalList.findIndex((i) => item.id === i.id) > -1;
+      const isExist = finalList.some((i) => item.id === i.id);
       if (!isExist) {
         finalList.push(item);
       }

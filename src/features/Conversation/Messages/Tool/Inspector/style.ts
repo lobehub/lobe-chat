@@ -5,7 +5,8 @@ export const useStyles = createStyles(({ css, token }) => ({
     cursor: pointer;
 
     width: fit-content;
-    padding: 6px 8px;
+    padding-block: 6px;
+    padding-inline: 8px;
     padding-inline-end: 12px;
 
     color: ${token.colorText};

@@ -8,7 +8,8 @@ import BrandWatermark from '@/components/BrandWatermark';
 
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
-    padding: 24px 12px 16px;
+    padding-block: 24px 16px;
+    padding-inline: 12px;
     background: ${token.colorBgContainer};
     border-inline-end: 1px solid ${token.colorBorder};
   `,
@@ -17,7 +18,8 @@ const useStyles = createStyles(({ token, css }) => ({
     color: ${token.colorTextDescription};
   `,
   header: css`
-    padding: 0 0.75rem;
+    padding-block: 0;
+    padding-inline: 0.75rem;
   `,
   logo: css`
     fill: ${token.colorText};
