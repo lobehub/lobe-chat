@@ -140,7 +140,7 @@ export default {
     modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
     title: '设置插件市场',
   },
-  showInPortal: '请在扩展窗中查看详情',
+  showInPortal: '请在工作区中查看详情',
   store: {
     actions: {
       confirmUninstall: '即将卸载该插件，卸载后将清除该插件配置，请确认你的操作',
