@@ -11,13 +11,13 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   cancelIcon: css`
     position: absolute;
     z-index: 100;
-    top: 8px;
-    right: 8px;
+    inset-block-start: 8px;
+    inset-inline-end: 8px;
   `,
   container: css`
     position: absolute;
     z-index: 1100;
-    bottom: 16px;
+    inset-block-end: 16px;
     inset-inline-end: 20px;
 
     overflow: hidden;
@@ -28,7 +28,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     box-shadow: ${token.boxShadowSecondary};
   `,
   mobileContainer: css`
-    bottom: 8px;
+    inset-block-end: 8px;
     inset-inline-start: 8px;
   `,
   wrapper: css`

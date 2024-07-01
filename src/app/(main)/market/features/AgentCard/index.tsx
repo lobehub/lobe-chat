@@ -39,7 +39,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   desc: css`
     min-height: 44px;
-    margin-bottom: 0 !important;
+    margin-block-end: 0 !important;
     color: ${token.colorTextDescription};
   `,
   inner: css`
@@ -49,7 +49,7 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     color: ${token.colorTextDescription};
   `,
   title: css`
-    margin-bottom: 0 !important;
+    margin-block-end: 0 !important;
     font-size: 18px !important;
     font-weight: bold;
   `,

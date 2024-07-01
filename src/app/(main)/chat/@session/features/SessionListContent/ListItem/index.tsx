@@ -11,16 +11,13 @@ const useStyles = createStyles(({ css, token }) => {
   return {
     container: css`
       position: relative;
-
       margin-block: 2px;
-      padding-right: 16px;
-      padding-left: 8px;
-
+      padding-inline: 8px 16px;
       border-radius: ${token.borderRadius}px;
     `,
     mobile: css`
       margin-block: 0;
-      padding-left: 12px;
+      padding-inline-start: 12px;
       border-radius: 0;
     `,
     title: css`
