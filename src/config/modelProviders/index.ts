@@ -38,6 +38,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   AnthropicProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
+  BaichuanProvider.chatModels,
   DoubaoProvider.chatModels,
 ].flat();
 
@@ -60,6 +61,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZeroOneProvider,
   ZhiPuProvider,
   StepfunProvider,
+  BaichuanProvider,
   DoubaoProvider,
 ];
 
@@ -69,6 +71,7 @@ export const filterEnabledModels = (provider: ModelProviderCard) => {
 
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
+export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as DoubaoProviderCard } from './doubao';

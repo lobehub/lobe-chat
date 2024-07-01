@@ -24,7 +24,12 @@ This article will detail how to deploy the server-side database version of LobeC
   version is supported, with Docker version support planned for future iterations.
 </Callout>
 
-<Callout type={'warning'}>Before deploying the server, please export your backup!</Callout>
+<Callout type={'warning'}>
+Before proceeding, please ensure the following
+  - **Export all data.** After deploying the server-side database, the original user data cannot be migrated automatically. You must back it up in advance and import it manually!
+  - **The `ACCESS_CODE` environment variable is set.** It should not be empty or cleared!
+  - **It is crucial to fill in all the environment variables required for the server-side database configuration before deployment.** Failure to do so may result in database migration issues!
+</Callout>
 
 ## 1. Configure the Database
 
@@ -42,6 +47,10 @@ The configuration for both methods is slightly different, which will be distingu
 ### Add Environment Variables in Vercel
 
 In Vercel's deployment environment variables, add the `DATABASE_URL` and other environment variables. Fill in the prepared Postgres database connection URL. The typical format for the database connection URL is `postgres://username:password@host:port/database`.
+
+<Callout type={'warning'}>
+Confirm the type of `Postgres` your provider offers. If it's `Node Postgres`, you must add the environment variable `DATABASE_DRIVER=node`.
+</Callout>
 
 <Tabs items={['Serverless Postgres', 'Node Postgres']}>
 
@@ -90,6 +99,10 @@ An example of how to fill in Vercel is shown below:
 </Tab>
 
 </Tabs>
+
+<Callout type={'info'}>
+  To connect to the database using SSL, please refer to this [link](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode) for instructions on how to configure it.
+</Callout>
 
 ### Add the `KEY_VAULTS_SECRET` Environment Variable
 
@@ -160,6 +173,8 @@ We need to add an endpoint in Clerk's Webhooks to inform Clerk to send notificat
 </Image>
 
 Fill in your Vercel project's URL in the endpoint, such as `https://your-project.vercel.app/api/webhooks/clerk`. Then, in the Subscribe to events section, check the three user events (`user.created`, `user.deleted`, `user.updated`), and click create.
+
+<Callout type={'warning'}>Ensure that the URL includes the `https://` prefix. Maintaining the integrity of the URL is crucial.</Callout>
 
 <Image
   alt={'Configure URL and user events when adding Clerk Webhooks'}
@@ -237,11 +252,13 @@ The corresponding environment variables are:
 ```shell
 # Bucket name
 S3_BUCKET=lobechat
-# Bucket request endpoint(Be sure to delete /lobechat and do not copy directly.)
+# Bucket request endpoint(note that the path of this link contains the bucket name, you must remove the path, or use the link provided on the "Apply for S3 API Token" page)
 S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 # Public domain for accessing the bucket
 NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
 ```
+
+<Callout type={'warning'}>The path must be removed from the `S3_ENDPOINT`, otherwise, uploaded files will be inaccessible.</Callout>
 
 ### Obtain S3 Key Environment Variables
 
@@ -259,7 +276,9 @@ Click the button in the upper right corner to create an API token, then enter th
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/7b0ea46c-5157-40a8-888f-f47664a4884f'}
 ></Image>
 
-Since our server-side database needs to read and write to the S3 storage service, the permissions need to be set to read and write, and only select the bucket we created, then click create.
+Since our server-side database needs to read and write to the S3 storage service, the permission needs to be set to `Administrator Read and Write`. Then, click Create.
+
+<Callout type={'warning'}>The permission must be set to `Administrator Read and Write`, otherwise, uploading photos and other files will not be possible.</Callout>
 
 <Image
   alt={'Configure API Token Permissions'}
@@ -283,6 +302,8 @@ S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f4
 ### Add the Corresponding Environment Variables in Vercel
 
 The steps to obtain the required environment variables may vary for different S3 service providers, but the obtained environment variables should be consistent in the end:
+
+<Callout type={'warning'}>Ensure that the `S3_ENDPOINT` includes the `https://` prefix. Maintaining the integrity of the URL is crucial.</Callout>
 
 ```shell
 # S3 Key
@@ -373,7 +394,7 @@ If you click on the login button in the top left corner and the login popup appe
 
 ### Overview of Server Database Environment Variables
 
-For easy copying, here is a summary of the environment variables required to configure the server data:
+For easy copying, here is a summary of the environment variables required to configure the server database:
 
 ```shell
 # Specify the service mode as server
