@@ -139,6 +139,7 @@
     "modalDesc": "Une fois l'adresse du marché des plugins configurée, vous pourrez utiliser un marché de plugins personnalisé.",
     "title": "Paramètres du marché des plugins"
   },
+  "showInPortal": "Veuillez consulter les détails dans la fenêtre d'extension",
   "store": {
     "actions": {
       "confirmUninstall": "Vous êtes sur le point de désinstaller ce plugin. Une fois désinstallé, sa configuration sera effacée. Veuillez confirmer votre action.",

@@ -7,6 +7,10 @@ export const CHAT_TEXTAREA_MAX_HEIGHT = 800;
 export const CHAT_TEXTAREA_HEIGHT = 230;
 export const CHAT_TEXTAREA_HEIGHT_MOBILE = 108;
 export const CHAT_SIDEBAR_WIDTH = 280;
+
+export const CHAT_DOCK_WIDTH = 400;
+export const CHAT_DOCK_TOOL_UI_WIDTH = 800;
+
 export const MARKET_SIDEBAR_WIDTH = 400;
 export const FOLDER_WIDTH = 270;
 export const MAX_WIDTH = 1024;
