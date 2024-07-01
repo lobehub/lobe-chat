@@ -45,6 +45,18 @@
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Voer Cloudflare Account ID in",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Voer Cloudflare API Key in",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Test of het proxyadres correct is ingevuld",

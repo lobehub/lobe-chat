@@ -45,6 +45,18 @@
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Wprowadź klucz Cloudflare Account ID",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Wprowadź klucz Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Test czy adres proxy jest poprawnie wypełniony",

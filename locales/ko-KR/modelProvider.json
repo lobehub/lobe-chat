@@ -45,6 +45,18 @@
       "title": "사용자 정의 Bedrock 인증 정보 사용"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Cloudflare Account ID 를 작성해 주세요.",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Cloudflare API Key 를 작성해 주세요.",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",

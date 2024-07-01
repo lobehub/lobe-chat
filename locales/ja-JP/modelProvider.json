@@ -45,6 +45,18 @@
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Cloudflare Account ID を入力してください",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Cloudflare API Key を入力してください",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "プロキシアドレスが正しく入力されているかをテストします",

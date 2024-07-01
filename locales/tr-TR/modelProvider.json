@@ -45,6 +45,18 @@
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Lütfen doldurun Cloudflare Account ID",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Lütfen doldurun Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Proxy adresinin doğru girilip girilmediğini test edin",
