@@ -22,9 +22,7 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   const [confirmOpened, setConfirmOpened] = useState(false);
 
   const icon = hasTopic ? LucideMessageSquarePlus : LucideGalleryVerticalEnd;
-  const Render = mobile ? ActionIcon : Button;
-  const iconRender: any = mobile ? icon : <Icon icon={icon} />;
-  const desc = mobile ? '' : t(hasTopic ? 'topic.openNewTopic' : 'topic.saveCurrentMessages');
+  const desc = t(hasTopic ? 'topic.openNewTopic' : 'topic.saveCurrentMessages');
 
   const hotkeys = [ALT_KEY, SAVE_TOPIC_KEY].join('+');
 
@@ -44,15 +42,17 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
         placement={'topRight'}
         title={
           <div style={{ alignItems: 'center', display: 'flex' }}>
-            <div style={{ marginRight: '16px' }}>{t('topic.checkOpenNewTopic')}</div>
-            <HotKeys desc="" inverseTheme={false} keys={hotkeys} />
+            <div style={{ marginRight: '16px' }}>
+              {t(hasTopic ? 'topic.checkOpenNewTopic' : 'topic.checkSaveCurrentMessages')}
+            </div>
+            <HotKeys inverseTheme={false} keys={hotkeys} />
           </div>
         }
       >
-        <Tooltip title={desc}>
-          <Render
+        <Tooltip>
+          <ActionIcon
             aria-label={desc}
-            icon={iconRender}
+            icon={icon}
             loading={isValidating}
             onClick={() => setConfirmOpened(true)}
           />
@@ -62,9 +62,9 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
   } else {
     return (
       <Tooltip title={<HotKeys desc={desc} inverseTheme keys={hotkeys} />}>
-        <Render
+        <Button
           aria-label={desc}
-          icon={iconRender}
+          icon={<Icon icon={icon} />}
           loading={isValidating}
           onClick={() => mutate()}
         />
