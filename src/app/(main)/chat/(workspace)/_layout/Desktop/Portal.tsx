@@ -21,7 +21,7 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorBgLayout};
   `,
   header: css`
-    border-bottom: 1px solid ${token.colorBorder};
+    border-block-end: 1px solid ${token.colorBorder};
   `,
   panel: css`
     overflow: hidden;
