@@ -5,6 +5,7 @@ import type { TracePayload } from '@/const/trace';
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
+import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeDeepSeekAI } from './deepseek';
 import { LobeGoogleAI } from './google';
@@ -103,6 +104,7 @@ class AgentRuntime {
     params: Partial<{
       anthropic: Partial<ClientOptions>;
       azure: { apiVersion?: string; apikey?: string; endpoint?: string };
+      baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       deepseek: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
@@ -218,6 +220,11 @@ class AgentRuntime {
       case ModelProvider.Stepfun: {
         runtimeModel = new LobeStepfunAI(params.stepfun ?? {});
         break;
+      }
+
+      case ModelProvider.Baichuan: {
+        runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
+        break
       }
     }
 
