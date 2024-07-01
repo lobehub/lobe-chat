@@ -230,4 +230,18 @@ describe('toolSelectors', () => {
       expect(toolSelectors.getManifestLoadingStatus('non-existent')(mockState)).toBe('error');
     });
   });
+
+  describe('isToolHasUI', () => {
+    it('should return false if the tool has no UI', () => {
+      expect(toolSelectors.isToolHasUI('plugin-1')(mockState)).toBe(false);
+    });
+
+    it('should return true if the tool has UI', () => {
+      expect(toolSelectors.isToolHasUI('builtin-1')(mockState)).toBe(true);
+    });
+
+    it('should return false if the tool does not exist', () => {
+      expect(toolSelectors.isToolHasUI('non-existent')(mockState)).toBe(false);
+    });
+  });
 });

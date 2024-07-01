@@ -1,7 +1,9 @@
 import { parse } from 'partial-json';
 import { stringify } from 'yaml';
 
-export const useYamlArguments = (args: string) => {
+export const useYamlArguments = (args?: string) => {
+  if (!args) return '';
+
   try {
     const obj = parse(args);
 

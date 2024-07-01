@@ -15,7 +15,7 @@ import {
   uniqueIndex,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { createInsertSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { LobeAgentChatConfig, LobeAgentTTSConfig } from '@/types/agent';
@@ -451,6 +451,8 @@ export const messagePlugins = pgTable('message_plugins', {
   state: jsonb('state'),
   error: jsonb('error'),
 });
+export type MessagePluginItem = typeof messagePlugins.$inferSelect;
+export const updateMessagePluginSchema = createSelectSchema(messagePlugins);
 
 export const messageTTS = pgTable('message_tts', {
   id: text('id')

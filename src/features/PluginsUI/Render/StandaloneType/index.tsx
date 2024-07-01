@@ -22,7 +22,14 @@ const PluginDefaultType = memo<PluginStandaloneTypeProps>(({ payload, id, name =
   if (!ui.url) return;
 
   return (
-    <IFrameRender height={ui.height} id={id} payload={payload} url={ui.url} width={ui.width} />
+    <IFrameRender
+      height={ui.height}
+      id={id}
+      key={id}
+      payload={payload}
+      url={ui.url}
+      width={ui.width}
+    />
   );
 });
 
