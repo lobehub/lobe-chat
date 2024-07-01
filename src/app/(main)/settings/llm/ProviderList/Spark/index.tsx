@@ -14,7 +14,7 @@ import { ProviderItem } from '../../type';
 const providerKey: GlobalLLMProviderKey = 'spark';
 
 const SparkBrand = () => (
-  <Spark.Combine size={ 20 } type={ 'color' } />
+  <Spark.Combine size={ 22 } type={ 'color' } />
 );
 
 export const useSparkProvider = (): ProviderItem => {
