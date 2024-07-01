@@ -1,5 +1,5 @@
-import { createStyles } from 'antd-style';
-import { memo, useState } from 'react';
+import { createStyles, useResponsive } from 'antd-style';
+import { memo, useEffect, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -48,9 +48,14 @@ export interface ConfigCellProps {
 
 const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
   const { styles, cx } = useStyles();
+  const { mobile } = useResponsive();
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const [toggleTopic] = useChatStore((s) => [s.switchTopic]);
   const [isHover, setHovering] = useState(false);
+
+  useEffect(() => {
+    setHovering(mobile ?? false);
+  }, [mobile]);
 
   return (
     <Flexbox
@@ -62,12 +67,8 @@ const TopicItem = memo<ConfigCellProps>(({ title, active, id, fav }) => {
         toggleTopic(id);
         toggleConfig(false);
       }}
-      onMouseEnter={() => {
-        setHovering(true);
-      }}
-      onMouseLeave={() => {
-        setHovering(false);
-      }}
+      onMouseEnter={() => !mobile && setHovering(true)}
+      onMouseLeave={() => !mobile && setHovering(false)}
     >
       {!id ? (
         <DefaultContent />

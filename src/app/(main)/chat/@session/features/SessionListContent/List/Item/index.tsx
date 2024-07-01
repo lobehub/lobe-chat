@@ -52,7 +52,13 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         group={group}
         id={id}
         openCreateGroupModal={() => setCreateGroupModalOpen(true)}
-        setOpen={setOpen}
+        setOpen={(open) => {
+          if (!open) {
+            setTimeout(() => setOpen(open), 300);
+          } else {
+            setOpen(open);
+          }
+        }}
       />
     ),
     [group, id],
@@ -78,8 +84,18 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         avatarBackground={avatarBackground}
         date={updateAt?.valueOf()}
         description={description}
+        group={group}
+        id={id}
         loading={loading}
+        openCreateGroupModal={() => setCreateGroupModalOpen(true)}
         pin={pin}
+        setOpen={(open) => {
+          if (!open) {
+            setTimeout(() => setOpen(open), 300);
+          } else {
+            setOpen(open);
+          }
+        }}
         showAction={open}
         title={title}
       />
