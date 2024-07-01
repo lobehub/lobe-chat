@@ -15,17 +15,17 @@ export const chatPortalSlice: StateCreator<
   ChatPortalAction
 > = (set, get) => ({
   closeToolUI: () => {
-    set({ dockToolMessage: undefined }, false, 'openToolUI');
+    set({ portalToolMessage: undefined }, false, 'openToolUI');
   },
   openToolUI: (id, identifier) => {
-    if (!get().showDock) {
+    if (!get().showPortal) {
       get().toggleDock(true);
     }
 
-    set({ dockToolMessage: { id, identifier } }, false, 'openToolUI');
+    set({ portalToolMessage: { id, identifier } }, false, 'openToolUI');
   },
   toggleDock: (open) => {
-    const showInspector = open === undefined ? !get().showDock : open;
-    set({ showDock: showInspector }, false, 'toggleInspector');
+    const showInspector = open === undefined ? !get().showPortal : open;
+    set({ showPortal: showInspector }, false, 'toggleInspector');
   },
 });

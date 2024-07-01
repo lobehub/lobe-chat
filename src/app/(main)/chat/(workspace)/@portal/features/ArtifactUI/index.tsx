@@ -9,7 +9,7 @@ import Footer from './Footer';
 import ToolRender from './ToolRender';
 
 const ToolUI = () => {
-  const messageId = useChatStore(chatPortalSelectors.toolUIMessageId);
+  const messageId = useChatStore(chatPortalSelectors.artifactMessageId);
   const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
 
   // make sure the message and id is valid
@@ -26,7 +26,7 @@ const ToolUI = () => {
 
   return (
     <>
-      <Flexbox height={'100%'} paddingInline={12}>
+      <Flexbox flex={1} height={'100%'} paddingInline={12}>
         <ToolRender />
       </Flexbox>
       <Footer />

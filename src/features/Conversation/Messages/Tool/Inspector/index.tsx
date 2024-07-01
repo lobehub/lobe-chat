@@ -47,11 +47,11 @@ const Inspector = memo<InspectorProps>(
     identifier = 'unknown',
     id,
   }) => {
-    const { t } = useTranslation('plugin');
+    const { t } = useTranslation(['plugin', 'portal']);
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
     const [isMessageToolUIOpen, openToolUI, toggleInspector] = useChatStore((s) => [
-      chatPortalSelectors.isMessageToolUIOpen(id)(s),
+      chatPortalSelectors.isArtifactMessageUIOpen(id)(s),
       s.openToolUI,
       s.toggleDock,
     ]);
@@ -105,7 +105,7 @@ const Inspector = memo<InspectorProps>(
           </Flexbox>
 
           <Flexbox horizontal>
-            {showRightAction && false && (
+            {showRightAction && (
               <ActionIcon
                 icon={InspectionPanel}
                 onClick={() => {
@@ -115,7 +115,7 @@ const Inspector = memo<InspectorProps>(
                   }
                 }}
                 size={DESKTOP_HEADER_ICON_SIZE}
-                title={'inspector'}
+                title={t('title', { ns: 'portal' })}
               />
             )}
             <ActionIcon

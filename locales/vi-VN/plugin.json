@@ -139,7 +139,7 @@
     "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
     "title": "Cài đặt thị trường plugin"
   },
-  "showInPortal": "Vui lòng xem chi tiết trong cửa sổ mở rộng",
+  "showInPortal": "Vui lòng xem chi tiết trong khu vực làm việc",
   "store": {
     "actions": {
       "confirmUninstall": "Sắp gỡ bỏ plugin này, sau khi gỡ bỏ sẽ xóa cấu hình của plugin này, vui lòng xác nhận hành động của bạn",
