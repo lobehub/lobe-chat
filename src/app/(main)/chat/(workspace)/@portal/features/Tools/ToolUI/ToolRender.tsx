@@ -2,12 +2,12 @@ import isEqual from 'fast-deep-equal';
 
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { BuiltinToolsDocks } from '@/tools/docks';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 const ToolRender = () => {
-  const messageId = useChatStore(chatDockSelectors.toolUIMessageId);
+  const messageId = useChatStore(chatPortalSelectors.toolUIMessageId);
   const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
 
   // make sure the message and id is valid

@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_DOCK_TOOL_UI_WIDTH, CHAT_DOCK_WIDTH, MAX_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors } from '@/store/chat/slices/dock/selectors';
+import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
   content: css`
@@ -35,13 +35,13 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const DockPanel = memo(({ children }: PropsWithChildren) => {
+const PortalPanel = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const { md = true } = useResponsive();
 
   const [showInspector, showToolUI] = useChatStore((s) => [
-    chatDockSelectors.showDock(s),
-    chatDockSelectors.showToolUI(s),
+    chatPortalSelectors.showDock(s),
+    chatPortalSelectors.showToolUI(s),
   ]);
 
   return (
@@ -76,4 +76,4 @@ const DockPanel = memo(({ children }: PropsWithChildren) => {
   );
 });
 
-export default DockPanel;
+export default PortalPanel;

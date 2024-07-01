@@ -11,16 +11,16 @@ import { Flexbox } from 'react-layout-kit';
 import SidebarHeader from '@/components/SidebarHeader';
 import PluginAvatar from '@/features/PluginAvatar';
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
 const Header = memo(() => {
   const [showToolUI, toggleInspector, closeToolUI, toolUIIdentifier = ''] = useChatStore((s) => [
-    chatDockSelectors.showToolUI(s),
+    chatPortalSelectors.showToolUI(s),
     s.toggleDock,
     s.closeToolUI,
-    chatDockSelectors.toolUIIdentifier(s),
+    chatPortalSelectors.toolUIIdentifier(s),
   ]);
 
   const { t } = useTranslation('plugin');

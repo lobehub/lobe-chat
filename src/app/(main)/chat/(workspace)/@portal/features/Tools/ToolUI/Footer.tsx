@@ -4,11 +4,11 @@ import { LucideBotMessageSquare } from 'lucide-react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 
 const Footer = () => {
   const [messageId, triggerAIMessage, isAIGenerating] = useChatStore((s) => [
-    chatDockSelectors.toolUIMessageId(s),
+    chatPortalSelectors.toolUIMessageId(s),
     s.triggerAIMessage,
     chatSelectors.isAIGenerating(s),
   ]);

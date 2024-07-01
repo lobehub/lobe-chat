@@ -8,7 +8,7 @@ import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors } from '@/store/chat/slices/dock/selectors';
+import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -34,7 +34,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
     systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
   ]);
-  const showInspector = useChatStore(chatDockSelectors.showDock);
+  const showInspector = useChatStore(chatPortalSelectors.showDock);
 
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showAgentSettings));
 

@@ -3,6 +3,6 @@ import { ReactNode } from 'react';
 export interface LayoutProps {
   children: ReactNode;
   conversation: ReactNode;
-  dock: ReactNode;
+  portal: ReactNode;
   topic: ReactNode;
 }

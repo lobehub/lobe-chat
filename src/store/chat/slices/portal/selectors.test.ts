@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import type { ChatStoreState } from '@/store/chat';
 
-import { chatDockSelectors } from './selectors';
+import { chatPortalSelectors } from './selectors';
 
 describe('chatDockSelectors', () => {
   const createState = (overrides?: Partial<ChatStoreState>) =>
@@ -14,19 +14,19 @@ describe('chatDockSelectors', () => {
 
   describe('showDock', () => {
     it('should return the showDock state', () => {
-      expect(chatDockSelectors.showDock(createState({ showDock: true }))).toBe(true);
-      expect(chatDockSelectors.showDock(createState({ showDock: false }))).toBe(false);
+      expect(chatPortalSelectors.showDock(createState({ showDock: true }))).toBe(true);
+      expect(chatPortalSelectors.showDock(createState({ showDock: false }))).toBe(false);
     });
   });
 
   describe('toolUIMessageId', () => {
     it('should return undefined when dockToolMessage is not set', () => {
-      expect(chatDockSelectors.toolUIMessageId(createState())).toBeUndefined();
+      expect(chatPortalSelectors.toolUIMessageId(createState())).toBeUndefined();
     });
 
     it('should return the id when dockToolMessage is set', () => {
       const state = createState({ dockToolMessage: { id: 'test-id', identifier: 'test' } });
-      expect(chatDockSelectors.toolUIMessageId(state)).toBe('test-id');
+      expect(chatPortalSelectors.toolUIMessageId(state)).toBe('test-id');
     });
   });
 
@@ -36,8 +36,8 @@ describe('chatDockSelectors', () => {
         dockToolMessage: { id: 'test-id', identifier: 'test' },
         showDock: false,
       });
-      expect(chatDockSelectors.isMessageToolUIOpen('test-id')(state)).toBe(false);
-      expect(chatDockSelectors.isMessageToolUIOpen('other-id')(state)).toBe(false);
+      expect(chatPortalSelectors.isMessageToolUIOpen('test-id')(state)).toBe(false);
+      expect(chatPortalSelectors.isMessageToolUIOpen('other-id')(state)).toBe(false);
     });
 
     it('should return true when id matches and showDock is true', () => {
@@ -45,29 +45,29 @@ describe('chatDockSelectors', () => {
         dockToolMessage: { id: 'test-id', identifier: 'test' },
         showDock: true,
       });
-      expect(chatDockSelectors.isMessageToolUIOpen('test-id')(state)).toBe(true);
+      expect(chatPortalSelectors.isMessageToolUIOpen('test-id')(state)).toBe(true);
     });
   });
 
   describe('showToolUI', () => {
     it('should return false when dockToolMessage is not set', () => {
-      expect(chatDockSelectors.showToolUI(createState())).toBe(false);
+      expect(chatPortalSelectors.showToolUI(createState())).toBe(false);
     });
 
     it('should return true when dockToolMessage is set', () => {
       const state = createState({ dockToolMessage: { id: 'test-id', identifier: 'test' } });
-      expect(chatDockSelectors.showToolUI(state)).toBe(true);
+      expect(chatPortalSelectors.showToolUI(state)).toBe(true);
     });
   });
 
   describe('toolUIIdentifier', () => {
     it('should return undefined when dockToolMessage is not set', () => {
-      expect(chatDockSelectors.toolUIIdentifier(createState())).toBeUndefined();
+      expect(chatPortalSelectors.toolUIIdentifier(createState())).toBeUndefined();
     });
 
     it('should return the identifier when dockToolMessage is set', () => {
       const state = createState({ dockToolMessage: { id: 'test-id', identifier: 'test' } });
-      expect(chatDockSelectors.toolUIIdentifier(state)).toBe('test');
+      expect(chatPortalSelectors.toolUIIdentifier(state)).toBe('test');
     });
   });
 });

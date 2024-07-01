@@ -7,7 +7,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors, chatSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import Arguments from '../components/Arguments';
@@ -16,7 +16,7 @@ import Inspector from './Inspector';
 export const ToolMessage = memo<ChatMessage>(({ id, content, pluginState, plugin }) => {
   const [loading, isMessageToolUIOpen] = useChatStore((s) => [
     chatSelectors.isPluginApiInvoking(id)(s),
-    chatDockSelectors.isMessageToolUIOpen(id)(s),
+    chatPortalSelectors.isMessageToolUIOpen(id)(s),
   ]);
   const { direction } = useContext(ConfigProvider.ConfigContext);
 

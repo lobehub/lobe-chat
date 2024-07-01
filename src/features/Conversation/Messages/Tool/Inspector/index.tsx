@@ -16,7 +16,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors } from '@/store/chat/slices/dock/selectors';
+import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/message';
@@ -51,7 +51,7 @@ const Inspector = memo<InspectorProps>(
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
     const [isMessageToolUIOpen, openToolUI, toggleInspector] = useChatStore((s) => [
-      chatDockSelectors.isMessageToolUIOpen(id)(s),
+      chatPortalSelectors.isMessageToolUIOpen(id)(s),
       s.openToolUI,
       s.toggleDock,
     ]);

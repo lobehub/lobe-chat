@@ -4,13 +4,13 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatDockSelectors } from '@/store/chat/selectors';
+import { chatPortalSelectors } from '@/store/chat/selectors';
 
 import ToolList from './features/Tools/ToolList';
 import ToolUI from './features/Tools/ToolUI';
 
 const Inspector = memo(() => {
-  const showToolUI = useChatStore(chatDockSelectors.showToolUI);
+  const showToolUI = useChatStore(chatPortalSelectors.showToolUI);
 
   return <Flexbox height={'100%'}>{showToolUI ? <ToolUI /> : <ToolList />}</Flexbox>;
 });

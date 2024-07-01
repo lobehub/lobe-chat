@@ -2,17 +2,17 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { ChatStore } from '@/store/chat/store';
 
-export interface ChatDockAction {
+export interface ChatPortalAction {
   closeToolUI: () => void;
   openToolUI: (messageId: string, identifier: string) => void;
   toggleDock: (open?: boolean) => void;
 }
 
-export const chatDockSlice: StateCreator<
+export const chatPortalSlice: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatDockAction
+  ChatPortalAction
 > = (set, get) => ({
   closeToolUI: () => {
     set({ dockToolMessage: undefined }, false, 'openToolUI');

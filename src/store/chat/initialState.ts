@@ -1,6 +1,6 @@
 // sort-imports-ignore
 import { ChatToolState, initialToolState } from './slices/builtinTool/initialState';
-import { ChatDockState, initialChatDockState } from './slices/dock/initialState';
+import { ChatDockState, initialChatDockState } from '@/store/chat/slices/portal/initialState';
 import { ChatMessageState, initialMessageState } from './slices/message/initialState';
 import { ChatShareState, initialShareState } from './slices/share/initialState';
 import { ChatTopicState, initialTopicState } from './slices/topic/initialState';
