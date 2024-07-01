@@ -1,7 +1,6 @@
 'use client';
 
 import { Spark } from '@lobehub/icons';
-import { useTheme } from 'antd-style';
 
 import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -14,15 +13,9 @@ import { ProviderItem } from '../../type';
 
 const providerKey: GlobalLLMProviderKey = 'spark';
 
-const SparkBrand = () => {
-  const theme = useTheme();
-  return (
-    <Spark.Combine
-      color={theme.isDarkMode ? theme.colorText : Spark.colorPrimary}
-      size={22}
-    />
-  );
-};
+const SparkBrand = () => (
+  <Spark.Combine size={ 20 } type={ 'color' } />
+);
 
 export const useSparkProvider = (): ProviderItem => {
   const { t } = useTranslation('modelProvider');
