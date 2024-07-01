@@ -39,7 +39,7 @@ const Spark: ModelProviderCard = {
       description: '最强大的星火大模型版本，效果极佳 全方位提升效果，引领智能巅峰 优化联网搜索链路，提供精准回答 强化文本总结能力，提升办公生产力',
       displayName: 'Spark4.0 Ultra',
       enabled: true,
-      functionCall: false,
+      functionCall: true,
       id: '4.0Ultra',
       maxOutput: 8192,
     },
