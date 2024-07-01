@@ -15,11 +15,17 @@ export interface AWSBedrockKeyVault {
   secretAccessKey?: string;
 }
 
+export interface CloudflareKeyVault {
+  accountID?: string;
+  apiKey?: string;
+}
+
 export interface UserKeyVaults {
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
+  cloudflare?: CloudflareKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;

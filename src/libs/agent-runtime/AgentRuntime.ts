@@ -7,6 +7,7 @@ import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
+import { LobeCloudflareAI, LobeCloudflareParams } from './cloudflare';
 import { LobeDeepSeekAI } from './deepseek';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
@@ -106,6 +107,7 @@ class AgentRuntime {
       azure: { apiVersion?: string; apikey?: string; endpoint?: string };
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
+      cloudflare: Partial<LobeCloudflareParams>;
       deepseek: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
@@ -224,10 +226,18 @@ class AgentRuntime {
 
       case ModelProvider.Baichuan: {
         runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
-        break
+        break;
+      }
+
+      case ModelProvider.Cloudflare: {
+        const cloudflareParams = params.cloudflare ?? {};
+        runtimeModel = new LobeCloudflareAI({
+          ...cloudflareParams,
+          baseURL: `https://api.cloudflare.com/client/v4/accounts/${params.cloudflare?.accountID}/ai/v1`,
+        });
+        break;
       }
     }
-
     return new AgentRuntime(runtimeModel);
   }
 }

@@ -45,6 +45,18 @@
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Vui lòng nhập Cloudflare Account ID",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Vui lòng nhập Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",

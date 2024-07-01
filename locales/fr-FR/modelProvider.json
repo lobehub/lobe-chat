@@ -45,6 +45,18 @@
       "title": "Utiliser des informations d'authentification Bedrock personnalisées"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Veuillez remplir l'Cloudflare Account ID",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Veuillez remplir l'Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Vérifiez si l'adresse du proxy est correctement saisie",

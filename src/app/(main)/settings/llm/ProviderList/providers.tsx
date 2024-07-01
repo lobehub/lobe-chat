@@ -2,6 +2,7 @@ import {
   Anthropic,
   Baichuan,
   Claude,
+  Cloudflare,
   DeepSeek,
   Gemini,
   Google,
@@ -14,6 +15,7 @@ import {
   Stepfun,
   Together,
   Tongyi,
+  WorkersAI,
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
@@ -44,6 +46,7 @@ import {
 import { ProviderItem } from '../type';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
+import { useCloudflareProvider } from './Cloudflare';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 
@@ -78,11 +81,20 @@ const GoogleBrand = () => (
   </Flexbox>
 );
 
+export const CloudflareBrand = () => (
+  <Flexbox align={'center'} gap={8} horizontal>
+    <Cloudflare.Combine size={22} type={'color'} />
+    <Divider style={{ margin: '0 4px' }} type={'vertical'} />
+    <WorkersAI.Combine size={22} type={'color'} />
+  </Flexbox>
+);
+
 export const useProviderList = (): ProviderItem[] => {
   const azureProvider = useAzureProvider();
   const ollamaProvider = useOllamaProvider();
   const openAIProvider = useOpenAIProvider();
   const bedrockProvider = useBedrockProvider();
+  const cloudflareProvider = useCloudflareProvider();
 
   return useMemo(
     () => [
@@ -175,9 +187,13 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...BaichuanProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
-        title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
+        title: <Baichuan.Combine size={20} type={'color'} />,
+      },
+      {
+        ...cloudflareProvider,
+        docUrl: urlJoin(BASE_DOC_URL, 'cloudflare'),
       },
     ],
-    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
+    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider, cloudflareProvider],
   );
 };

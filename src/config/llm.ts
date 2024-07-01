@@ -85,6 +85,10 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
+
+      ENABLED_CLOUDFLARE: z.boolean(),
+      CLOUDFLARE_API_KEY: z.string().optional(),
+      CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -161,6 +165,10 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
+
+      ENABLED_CLOUDFLARE: !!process.env.CLOUDFLARE_API_KEY && !!process.env.CLOUDFLARE_ACCOUNT_ID,
+      CLOUDFLARE_API_KEY: process.env.CLOUDFLARE_API_KEY,
+      CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
     },
   });
 };

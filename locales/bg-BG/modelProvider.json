@@ -45,6 +45,18 @@
       "title": "Използване на персонализирана информация за удостоверяване на Bedrock"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Моля, въведете Cloudflare Account ID",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Моля, въведете Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Тестване дали адресът на прокси е попълнен правилно",

@@ -2,8 +2,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { LayoutProps } from '../type';
 import ChatHeader from './ChatHeader';
-import Inspector from './Portal';
 import HotKeys from './HotKeys';
+import Inspector from './Portal';
 import TopicPanel from './TopicPanel';
 
 const Layout = ({ children, topic, conversation, portal }: LayoutProps) => {

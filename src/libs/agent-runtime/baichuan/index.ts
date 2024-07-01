@@ -22,7 +22,10 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
         // If between 1 and 2, keep the original value
       }
 
-      return { ...rest, frequency_penalty: adjustedFrequencyPenalty } as OpenAI.ChatCompletionCreateParamsStreaming;
+      return {
+        ...rest,
+        frequency_penalty: adjustedFrequencyPenalty,
+      } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
   },
   debug: {

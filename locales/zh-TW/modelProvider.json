@@ -45,6 +45,18 @@
       "title": "使用自定義 Bedrock 驗證資訊"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "請填入 Cloudflare 帳戶 ID",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "請填入 Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "測試代理地址是否正確填寫",

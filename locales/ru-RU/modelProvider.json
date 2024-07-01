@@ -45,6 +45,18 @@
       "title": "Использовать пользовательскую информацию аутентификации Bedrock"
     }
   },
+  "cloudflare": {
+    "accountID": {
+      "desc": "Пожалуйста, заполните Cloudflare Account ID",
+      "placeholder": "Cloudflare Account ID",
+      "title": "Cloudflare Account ID"
+    },
+    "apiKey": {
+      "desc": "Пожалуйста, заполните Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Проверить правильность адреса прокси",
