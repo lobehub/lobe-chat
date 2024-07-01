@@ -10,20 +10,20 @@ import { FORM_STYLE } from '@/const/layoutTokens';
 import ModelSelect from '@/features/ModelSelect';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors } from '@/store/user/selectors';
+import { type UserSystemAgentConfigKey } from '@/types/user/settings';
 
 import { useSyncSystemAgent } from './useSync';
 
 type SettingItemGroup = ItemGroup;
 
-const systemAgentKey = 'agentMeta';
-const AgentMeta = memo(() => {
+const SystemAgentForm = memo(({ systemAgentKey }: { systemAgentKey: UserSystemAgentConfigKey }) => {
   const { t } = useTranslation('setting');
 
   const settings = useUserStore(settingsSelectors.currentSystemAgent, isEqual);
   const [updateSystemAgent] = useUserStore((s) => [s.updateSystemAgent]);
 
   const [form] = AntForm.useForm();
-  
+
   const systemAgentSettings: SettingItemGroup = {
     children: [
       {
@@ -56,4 +56,4 @@ const AgentMeta = memo(() => {
   );
 });
 
-export default AgentMeta;
+export default SystemAgentForm;
