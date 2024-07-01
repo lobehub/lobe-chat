@@ -3,7 +3,7 @@ import isEqual from 'fast-deep-equal';
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
-import { BuiltinToolsDocks } from '@/tools/docks';
+import { BuiltinToolsPortals } from '@/tools/portals';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 const ToolRender = () => {
@@ -22,7 +22,7 @@ const ToolRender = () => {
 
   if (!args) return;
 
-  const Render = BuiltinToolsDocks[plugin.identifier];
+  const Render = BuiltinToolsPortals[plugin.identifier];
 
   if (!Render)
     return (
