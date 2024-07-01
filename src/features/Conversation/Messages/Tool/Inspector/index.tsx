@@ -105,7 +105,7 @@ const Inspector = memo<InspectorProps>(
           </Flexbox>
 
           <Flexbox horizontal>
-            {showRightAction && (
+            {showRightAction && false && (
               <ActionIcon
                 icon={InspectionPanel}
                 onClick={() => {

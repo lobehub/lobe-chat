@@ -3,6 +3,7 @@ import { ConfigProvider, Empty } from 'antd';
 import { useTheme } from 'antd-style';
 import { LucideSquareArrowLeft, LucideSquareArrowRight } from 'lucide-react';
 import { memo, useContext, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import PluginRender from '@/features/PluginsUI/Render';
@@ -19,6 +20,7 @@ export const ToolMessage = memo<ChatMessage>(({ id, content, pluginState, plugin
     chatPortalSelectors.isMessageToolUIOpen(id)(s),
   ]);
   const { direction } = useContext(ConfigProvider.ConfigContext);
+  const { t } = useTranslation('plugin');
 
   const theme = useTheme();
   const [showRender, setShow] = useState(plugin?.type !== 'default');
@@ -38,7 +40,7 @@ export const ToolMessage = memo<ChatMessage>(({ id, content, pluginState, plugin
       {isMessageToolUIOpen ? (
         <Center paddingBlock={8} style={{ background: theme.colorFillQuaternary, borderRadius: 4 }}>
           <Empty
-            description={'请在 Inspector 里查看详情'}
+            description={t('showInPortal')}
             image={
               <Icon
                 color={theme.colorTextQuaternary}

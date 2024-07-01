@@ -1,8 +1,8 @@
-export interface ChatDockState {
+export interface ChatPortalState {
   dockToolMessage?: { id: string; identifier: string };
   showDock: boolean;
 }
 
-export const initialChatDockState: ChatDockState = {
+export const initialChatPortalState: ChatPortalState = {
   showDock: false,
 };

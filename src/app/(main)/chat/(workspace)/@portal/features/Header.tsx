@@ -23,7 +23,7 @@ const Header = memo(() => {
     chatPortalSelectors.toolUIIdentifier(s),
   ]);
 
-  const { t } = useTranslation('plugin');
+  const { t } = useTranslation(['plugin', 'portal']);
   const pluginMeta = useToolStore(toolSelectors.getMetaById(toolUIIdentifier), isEqual);
   const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
@@ -41,7 +41,7 @@ const Header = memo(() => {
           </Flexbox>
         ) : (
           <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
-            Inspector
+            {t('portal:title')}
           </Typography.Text>
         )
       }
