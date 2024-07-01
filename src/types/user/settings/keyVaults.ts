@@ -32,6 +32,7 @@ export interface UserKeyVaults {
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
+  spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;

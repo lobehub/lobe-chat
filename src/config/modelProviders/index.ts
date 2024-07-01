@@ -14,6 +14,7 @@ import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
+import SparkProvider from './spark';
 import StepfunProvider from './stepfun';
 import TogetherAIProvider from './togetherai';
 import ZeroOneProvider from './zeroone';
@@ -37,6 +38,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   AnthropicProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
+  SparkProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -58,6 +60,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZeroOneProvider,
   ZhiPuProvider,
   StepfunProvider,
+  SparkProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -78,6 +81,7 @@ export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
+export { default as SparkProviderCard } from './spark';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as ZeroOneProviderCard } from './zeroone';
