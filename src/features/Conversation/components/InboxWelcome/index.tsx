@@ -23,13 +23,11 @@ const useStyles = createStyles(({ css, responsive }) => ({
     font-size: 14px;
     text-align: center;
     ${responsive.mobile} {
-      text-align: left;
+      text-align: start;
     }
   `,
   title: css`
-    margin-top: 0.2em;
-    margin-bottom: 0;
-
+    margin-block: 0.2em 0;
     font-size: 32px;
     font-weight: bolder;
     line-height: 1;
@@ -56,12 +54,12 @@ const InboxWelcome = memo(() => {
         <Markdown className={styles.desc} variant={'chat'}>
           {t('guide.defaultMessage')}
         </Markdown>
-        {
-          showWelcomeSuggest && <>
+        {showWelcomeSuggest && (
+          <>
             <AgentsSuggest mobile={mobile} />
             <QuestionSuggest mobile={mobile} />
           </>
-        }
+        )}
       </Flexbox>
     </Center>
   );

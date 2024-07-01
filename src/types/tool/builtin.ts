@@ -37,11 +37,11 @@ export interface BuiltinRenderProps<Content = any, Arguments = any, State = any>
 
 export type BuiltinRender = <T = any>(props: BuiltinRenderProps<T>) => ReactNode;
 
-export interface BuiltinDockProps<Arguments = Record<string, any>, State = any> {
+export interface BuiltinPortalProps<Arguments = Record<string, any>, State = any> {
   arguments: Arguments;
   identifier: string;
   messageId: string;
   state: State;
 }
 
-export type BuiltinDock = <T = any>(props: BuiltinDockProps<T>) => ReactNode;
+export type BuiltinPortal = <T = any>(props: BuiltinPortalProps<T>) => ReactNode;
