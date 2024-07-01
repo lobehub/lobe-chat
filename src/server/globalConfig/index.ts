@@ -34,6 +34,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_MISTRAL,
     ENABLED_QWEN,
     ENABLED_STEPFUN,
+    ENABLED_BAICHUAN,
     ENABLED_CLOUDFLARE,
 
     ENABLED_AZURE_OPENAI,
@@ -71,6 +72,7 @@ export const getServerGlobalConfig = () => {
           withDeploymentName: true,
         }),
       },
+      baichuan: { enabled: ENABLED_BAICHUAN },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       cloudflare: { enabled: ENABLED_CLOUDFLARE },
       deepseek: { enabled: ENABLED_DEEPSEEK },

@@ -48,6 +48,15 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.update.mutate({ id, value: { pluginError: error } });
   }
 
+  async updateMessagePluginArguments(
+    id: string,
+    value: string | Record<string, any>,
+  ): Promise<any> {
+    const args = typeof value === 'string' ? value : JSON.stringify(value);
+
+    return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
+  }
+
   updateMessage(id: string, message: Partial<ChatMessage>): Promise<any> {
     return lambdaClient.message.update.mutate({ id, value: message });
   }

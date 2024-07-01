@@ -2,6 +2,283 @@
 
 # Changelog
 
+## [Version 1.2.0](https://github.com/lobehub/lobe-chat/compare/v1.1.18...v1.2.0)
+
+<sup>Released on **2024-07-01**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Baichuan model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Baichuan model provider, closes [#3097](https://github.com/lobehub/lobe-chat/issues/3097) ([378cf02](https://github.com/lobehub/lobe-chat/commit/378cf02))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.18](https://github.com/lobehub/lobe-chat/compare/v1.1.17...v1.1.18)
+
+<sup>Released on **2024-07-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Gemini 1.5 stable version model & 2M context window.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Gemini 1.5 stable version model & 2M context window, closes [#2744](https://github.com/lobehub/lobe-chat/issues/2744) ([a35143b](https://github.com/lobehub/lobe-chat/commit/a35143b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.17](https://github.com/lobehub/lobe-chat/compare/v1.1.16...v1.1.17)
+
+<sup>Released on **2024-07-01**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to prepare for Chat Portal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to prepare for Chat Portal, closes [#3093](https://github.com/lobehub/lobe-chat/issues/3093) ([e7c1ba8](https://github.com/lobehub/lobe-chat/commit/e7c1ba8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.16](https://github.com/lobehub/lobe-chat/compare/v1.1.15...v1.1.16)
+
+<sup>Released on **2024-06-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix clerk `UNAUTHORIZED` error after long-time hang-up.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix clerk `UNAUTHORIZED` error after long-time hang-up, closes [#3084](https://github.com/lobehub/lobe-chat/issues/3084) ([a148c3b](https://github.com/lobehub/lobe-chat/commit/a148c3b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.15](https://github.com/lobehub/lobe-chat/compare/v1.1.14...v1.1.15)
+
+<sup>Released on **2024-06-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `@azure/core-rest-pipeline@1.16.0` to fix azure openai issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `@azure/core-rest-pipeline@1.16.0` to fix azure openai issue, closes [#3066](https://github.com/lobehub/lobe-chat/issues/3066) ([f3b29f6](https://github.com/lobehub/lobe-chat/commit/f3b29f6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.14](https://github.com/lobehub/lobe-chat/compare/v1.1.13...v1.1.14)
+
+<sup>Released on **2024-06-27**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor plugin state.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor plugin state, closes [#3059](https://github.com/lobehub/lobe-chat/issues/3059) ([6448570](https://github.com/lobehub/lobe-chat/commit/6448570))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.13](https://github.com/lobehub/lobe-chat/compare/v1.1.12...v1.1.13)
+
+<sup>Released on **2024-06-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: -check_updates cannot be set by FEATURE_FLAGS.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: -check_updates cannot be set by FEATURE_FLAGS, closes [#3038](https://github.com/lobehub/lobe-chat/issues/3038) ([bdadfee](https://github.com/lobehub/lobe-chat/commit/bdadfee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.12](https://github.com/lobehub/lobe-chat/compare/v1.1.11...v1.1.12)
+
+<sup>Released on **2024-06-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix azure tools calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix azure tools calling, closes [#3046](https://github.com/lobehub/lobe-chat/issues/3046) ([b929985](https://github.com/lobehub/lobe-chat/commit/b929985))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.11](https://github.com/lobehub/lobe-chat/compare/v1.1.10...v1.1.11)
+
+<sup>Released on **2024-06-25**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor format utils.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor format utils, closes [#3034](https://github.com/lobehub/lobe-chat/issues/3034) ([8e54ca0](https://github.com/lobehub/lobe-chat/commit/8e54ca0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.10](https://github.com/lobehub/lobe-chat/compare/v1.1.9...v1.1.10)
+
+<sup>Released on **2024-06-24**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.1.9](https://github.com/lobehub/lobe-chat/compare/v1.1.8...v1.1.9)
+
+<sup>Released on **2024-06-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix agent tags.
+
+#### 💄 Styles
+
+- **ui**: Fixed incorrect text display on connect check.
+- **misc**: Always show action on mobile.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix agent tags, closes [#3015](https://github.com/lobehub/lobe-chat/issues/3015) ([01e965b](https://github.com/lobehub/lobe-chat/commit/01e965b))
+
+#### Styles
+
+- **ui**: Fixed incorrect text display on connect check, closes [#2994](https://github.com/lobehub/lobe-chat/issues/2994) ([5160f23](https://github.com/lobehub/lobe-chat/commit/5160f23))
+- **misc**: Always show action on mobile, closes [#1863](https://github.com/lobehub/lobe-chat/issues/1863) ([f40292e](https://github.com/lobehub/lobe-chat/commit/f40292e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.1.8](https://github.com/lobehub/lobe-chat/compare/v1.1.7...v1.1.8)
 
 <sup>Released on **2024-06-24**</sup>

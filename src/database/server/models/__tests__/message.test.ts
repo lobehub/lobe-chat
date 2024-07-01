@@ -544,6 +544,47 @@ describe('MessageModel', () => {
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
       expect(result[0].content).toBe('message 1');
     });
+
+    it('should update message tools', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        {
+          id: '1',
+          userId,
+          role: 'user',
+          content: 'message 1',
+          tools: [
+            {
+              id: 'call_Z8UU8LedZcoJHFGkfqYecjmT',
+              type: 'builtin',
+              apiName: 'searchWithSearXNG',
+              arguments:
+                '{"query":"杭州洪水 2023","searchEngines":["google","bing","baidu","duckduckgo","brave"]}',
+              identifier: 'lobe-web-browsing',
+            },
+          ],
+        },
+      ]);
+
+      // 调用 updateMessage 方法
+      await messageModel.update('1', {
+        tools: [
+          {
+            id: 'call_Z8UU8LedZcoJHFGkfqYecjmT',
+            type: 'builtin',
+            apiName: 'searchWithSearXNG',
+            arguments: '{"query":"2024 杭州暴雨","searchEngines":["duckduckgo","google","brave"]}',
+            identifier: 'lobe-web-browsing',
+          },
+        ],
+      });
+
+      // 断言结果
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      expect(result[0].tools[0].arguments).toBe(
+        '{"query":"2024 杭州暴雨","searchEngines":["duckduckgo","google","brave"]}',
+      );
+    });
   });
 
   describe('deleteMessage', () => {
@@ -653,6 +694,35 @@ describe('MessageModel', () => {
         .where(eq(messagePlugins.id, '1'))
         .execute();
       expect(result[0].state).toEqual({ key1: 'value1', key2: 'value2' });
+    });
+
+    it('should throw an error if plugin does not exist', async () => {
+      // 调用 updatePluginState 方法
+      await expect(messageModel.updatePluginState('1', { key: 'value' })).rejects.toThrowError(
+        'Plugin not found',
+      );
+    });
+  });
+  describe('updateMessagePlugin', () => {
+    it('should update the state field in messagePlugins table', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values({ id: '1', content: 'abc', role: 'user', userId });
+      await serverDB
+        .insert(messagePlugins)
+        .values([
+          { id: '1', toolCallId: 'tool1', identifier: 'plugin1', state: { key1: 'value1' } },
+        ]);
+
+      // 调用 updatePluginState 方法
+      await messageModel.updateMessagePlugin('1', { identifier: 'plugin2' });
+
+      // 断言结果
+      const result = await serverDB
+        .select()
+        .from(messagePlugins)
+        .where(eq(messagePlugins.id, '1'))
+        .execute();
+      expect(result[0].identifier).toEqual('plugin2');
     });
 
     it('should throw an error if plugin does not exist', async () => {

@@ -8,6 +8,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import { MANUAL_UPGRADE_URL, OFFICIAL_SITE, RELEASES_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
+import { useNewVersion } from '@/features/User/UserPanel/useNewVersion';
 import { useGlobalStore } from '@/store/global';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -20,15 +21,10 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const [hasNewVersion, latestVersion, useCheckLatestVersion] = useGlobalStore((s) => [
-    s.hasNewVersion,
-    s.latestVersion,
-    s.useCheckLatestVersion,
-  ]);
+  const hasNewVersion = useNewVersion();
+  const [latestVersion] = useGlobalStore((s) => [s.latestVersion]);
   const { t } = useTranslation('common');
   const { styles, theme } = useStyles();
-
-  useCheckLatestVersion();
 
   return (
     <Flexbox

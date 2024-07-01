@@ -139,6 +139,7 @@
     "modalDesc": "Eklenti pazarı adresini yapılandırdıktan sonra, özel bir eklenti pazarı kullanabilirsiniz.",
     "title": "Eklenti Pazarı Ayarla"
   },
+  "showInPortal": "Detayları genişletme penceresinde görüntüleyin",
   "store": {
     "actions": {
       "confirmUninstall": "Bu eklentiyi kaldırmak üzeresiniz, kaldırdıktan sonra eklenti yapılandırması temizlenecektir, işleminizi onaylayın",

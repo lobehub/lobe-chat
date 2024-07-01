@@ -23,6 +23,7 @@ export interface CloudflareKeyVault {
 export interface UserKeyVaults {
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
+  baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   cloudflare?: CloudflareKeyVault;
   deepseek?: OpenAICompatibleKeyVault;

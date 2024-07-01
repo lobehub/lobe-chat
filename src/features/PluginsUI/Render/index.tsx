@@ -18,23 +18,43 @@ const Standalone = dynamic(() => import('./StandaloneType'), { loading });
 const BuiltinType = dynamic(() => import('./BuiltinType'), { loading });
 
 export interface PluginRenderProps {
+  arguments?: string;
   content: string;
   id: string;
   identifier?: string;
   loading?: boolean;
   payload?: PluginRequestPayload;
+  pluginState?: any;
   type?: LobeToolRenderType;
 }
 
 const PluginRender = memo<PluginRenderProps>(
-  ({ content, id, payload, identifier, type, loading }) => {
+  ({
+    content,
+    arguments: argumentsStr = '',
+    id,
+    payload,
+    pluginState,
+    identifier,
+    type,
+    loading,
+  }) => {
     switch (type) {
       case 'standalone': {
         return <Standalone id={id} name={identifier} payload={payload} />;
       }
 
       case 'builtin': {
-        return <BuiltinType content={content} id={id} identifier={identifier} loading={loading} />;
+        return (
+          <BuiltinType
+            arguments={argumentsStr}
+            content={content}
+            id={id}
+            identifier={identifier}
+            loading={loading}
+            pluginState={pluginState}
+          />
+        );
       }
 
       case 'markdown': {

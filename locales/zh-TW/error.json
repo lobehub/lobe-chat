@@ -54,6 +54,7 @@
     "503": "抱歉，伺服器目前無法處理您的請求，可能是因為過載或正在進行維護。請稍後再試。",
     "504": "抱歉，伺服器沒有收到上游伺服器的回應。請稍後再試。",
     "AgentRuntimeError": "Lobe 語言模型運行時執行出錯，請根據以下信息排查或重試",
+    "FreePlanLimit": "目前為免費用戶，無法使用該功能，請升級到付費計劃後繼續使用",
     "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或添加自定義 API 金鑰",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidClerkUser": "很抱歉，你當前尚未登錄，請先登錄或註冊帳號後繼續操作",
@@ -76,7 +77,8 @@
     "PluginOpenApiInitError": "很抱歉，OpenAPI 客戶端初始化失敗，請檢查 OpenAPI 的配置信息是否正確",
     "PluginServerError": "外掛伺服器請求回傳錯誤。請根據下面的錯誤資訊檢查您的外掛描述檔案、外掛設定或伺服器實作",
     "PluginSettingsInvalid": "該外掛需要正確設定後才可以使用。請檢查您的設定是否正確",
-    "ProviderBizError": "請求 {{provider}} 服務出錯，請根據以下資訊排查或重試"
+    "ProviderBizError": "請求 {{provider}} 服務出錯，請根據以下資訊排查或重試",
+    "SubscriptionPlanLimit": "您的訂閱額度已用盡，無法使用該功能，請升級到更高的計劃，或購買資源包後繼續使用"
   },
   "stt": {
     "responseError": "服務請求失敗，請檢查配置或重試"

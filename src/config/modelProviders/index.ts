@@ -2,6 +2,7 @@ import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
+import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import CloudflareProvider from './cloudflare';
 import DeepSeekProvider from './deepseek';
@@ -38,6 +39,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   AnthropicProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
+  BaichuanProvider.chatModels,
   CloudflareProvider.chatModels,
 ].flat();
 
@@ -60,6 +62,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZeroOneProvider,
   ZhiPuProvider,
   StepfunProvider,
+  BaichuanProvider,
   CloudflareProvider,
 ];
 
@@ -69,6 +72,7 @@ export const filterEnabledModels = (provider: ModelProviderCard) => {
 
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
+export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as DeepSeekProviderCard } from './deepseek';

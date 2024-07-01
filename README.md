@@ -39,7 +39,7 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 
 <sup>Pioneering the new age of thinking and creating. Built for you, the Super Individual.</sup>
 
-[![][github-trending-shield]][github-trending-url]
+[![][github-trending-shield]][github-trending-url] <a href="https://hellogithub.com/repository/39701baf5a734cb894ec812248a5655a" target="_blank"><img src="https://abroad.hellogithub.com/v1/widgets/recommend.svg?rid=39701baf5a734cb894ec812248a5655a&claim_uid=HxYvFN34htJzGCD" alt="Featured｜HelloGitHub" style="width: 250px; height: 54px;" width="250" height="54" /></a>
 
 [![][image-overview]][vercel-link]
 
@@ -226,12 +226,12 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                            | Description                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>         | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search` |
-| [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>      | Space data including NASA.<br/>`space` `nasa`                                                                              |
-| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>            | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                              |
-| [Search Google via Serper](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **Barry** on **2024-04-30**</sup> | Google search engine via Serper.dev free API (2500x🆓/month)<br/>`web` `search`                                            |
+| Recent Submits                                                                                                         | Description                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                    |
+| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>      | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search` |
+| [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>   | Space data including NASA.<br/>`space` `nasa`                                                                              |
+| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>         | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                              |
 
 > 📊 Total plugins: [<kbd>**52**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
