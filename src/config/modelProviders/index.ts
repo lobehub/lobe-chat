@@ -2,6 +2,7 @@ import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
+import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import DeepSeekProvider from './deepseek';
 import DoubaoProvider from './doubao';
