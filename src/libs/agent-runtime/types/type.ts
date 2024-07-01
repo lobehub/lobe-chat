@@ -24,6 +24,7 @@ export interface CreateChatCompletionOptions {
 export enum ModelProvider {
   Anthropic = 'anthropic',
   Azure = 'azure',
+  Baichuan = 'baichuan',
   Bedrock = 'bedrock',
   Cohere = 'cohere',
   DeepSeek = 'deepseek',

@@ -751,7 +751,7 @@ describe('chatMessage actions', () => {
 
       expect(internal_dispatchMessageSpy).toHaveBeenCalledWith({
         id: messageId,
-        type: 'updateMessages',
+        type: 'updateMessage',
         value: { content: newContent },
       });
     });
