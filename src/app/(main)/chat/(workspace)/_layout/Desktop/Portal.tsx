@@ -2,6 +2,7 @@
 
 import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
+import { rgba } from 'polished';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
@@ -10,7 +11,7 @@ import { CHAT_DOCK_TOOL_UI_WIDTH, CHAT_DOCK_WIDTH, MAX_WIDTH } from '@/const/lay
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   content: css`
     display: flex;
     flex-direction: column;
@@ -27,10 +28,9 @@ const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
 
     height: 100%;
-    margin: 12px;
+    margin: 4px;
 
-    background: ${token.colorBgContainer};
-    border: 1px solid ${token.colorPrimaryActive};
+    background: ${isDarkMode ? rgba(token.colorBgElevated, 0.8) : token.colorBgElevated};
     border-radius: 8px;
   `,
 }));
@@ -40,8 +40,8 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
   const { md = true } = useResponsive();
 
   const [showInspector, showToolUI] = useChatStore((s) => [
-    chatPortalSelectors.showDock(s),
-    chatPortalSelectors.showToolUI(s),
+    chatPortalSelectors.showPortal(s),
+    chatPortalSelectors.showArtifactUI(s),
   ]);
 
   return (
