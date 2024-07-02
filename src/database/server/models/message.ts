@@ -354,7 +354,9 @@ export class MessageModel {
   }
 
   async deleteMessages(ids: string[]) {
-    return serverDB.delete(messages).where(inArray(messages.id, ids));
+    return serverDB
+      .delete(messages)
+      .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
   }
 
   async deleteMessageTranslate(id: string) {
