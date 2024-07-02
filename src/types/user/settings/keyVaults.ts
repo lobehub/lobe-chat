@@ -15,6 +15,11 @@ export interface AWSBedrockKeyVault {
   secretAccessKey?: string;
 }
 
+export interface WenxinKeyVault {
+  accessKey?: string;
+  secretKey?: string;
+}
+
 export interface UserKeyVaults {
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
@@ -35,6 +40,7 @@ export interface UserKeyVaults {
   qwen?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
+  wenxin?: WenxinKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
 }

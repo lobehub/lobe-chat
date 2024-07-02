@@ -46,6 +46,7 @@ import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
+import { useWenxinProvider } from './Wenxin';
 
 const BASE_DOC_URL = 'https://lobehub.com/docs/usage/providers';
 
@@ -83,6 +84,7 @@ export const useProviderList = (): ProviderItem[] => {
   const ollamaProvider = useOllamaProvider();
   const openAIProvider = useOpenAIProvider();
   const bedrockProvider = useBedrockProvider();
+    const wenxinProvider = useWenxinProvider();
 
   return useMemo(
     () => [
@@ -157,7 +159,8 @@ export const useProviderList = (): ProviderItem[] => {
         docUrl: urlJoin(BASE_DOC_URL, 'perplexity'),
         title: <Perplexity.Combine size={24} type={'color'} />,
       },
-      {
+        wenxinProvider,
+        {
         ...ZhiPuProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'zhipu'),
         title: <Zhipu.Combine size={32} type={'color'} />,
