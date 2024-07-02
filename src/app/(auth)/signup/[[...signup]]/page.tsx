@@ -1,5 +1,7 @@
 import { SignUp } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
+import { authEnv } from '@/config/auth';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 
@@ -13,6 +15,10 @@ export const generateMetadata = async () => {
 };
 
 const Page = () => {
+  if (authEnv.NEXT_PUBLIC_DISABLE_CLERK_SIGN_UP) {
+    redirect('/login');
+  }
+
   return <SignUp path="/signup" />;
 };
 
