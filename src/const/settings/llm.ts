@@ -3,6 +3,7 @@ import {
   BaichuanProviderCard,
   BedrockProviderCard,
   DeepSeekProviderCard,
+  DoubaoProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -41,6 +42,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   deepseek: {
     enabled: false,
     enabledModels: filterEnabledModels(DeepSeekProviderCard),
+  },
+  doubao: {
+    enabled: false,
+    enabledModels: filterEnabledModels(DoubaoProviderCard),
   },
   google: {
     enabled: false,

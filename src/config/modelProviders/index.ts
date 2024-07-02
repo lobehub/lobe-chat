@@ -5,6 +5,7 @@ import AzureProvider from './azure';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import DeepSeekProvider from './deepseek';
+import DoubaoProvider from './doubao';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
 import MinimaxProvider from './minimax';
@@ -39,6 +40,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   BaichuanProvider.chatModels,
+  DoubaoProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -61,6 +63,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZhiPuProvider,
   StepfunProvider,
   BaichuanProvider,
+  DoubaoProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -72,6 +75,7 @@ export { default as AzureProviderCard } from './azure';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as DeepSeekProviderCard } from './deepseek';
+export { default as DoubaoProviderCard } from './doubao';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
 export { default as MinimaxProviderCard } from './minimax';
