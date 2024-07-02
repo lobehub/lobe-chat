@@ -80,7 +80,11 @@
     "*.json": [
       "prettier --write --no-error-on-unmatched-pattern"
     ],
-    "*.{js,jsx,mjs,cjs}": [
+    "*.{mjs,cjs}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{js,jsx}": [
       "prettier --write",
       "stylelint --fix",
       "eslint --fix"
