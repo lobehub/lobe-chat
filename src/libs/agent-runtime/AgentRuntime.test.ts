@@ -14,6 +14,7 @@ import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
+  LobeCohereAI,
   LobeGoogleAI,
   LobeMistralAI,
   LobeMoonshotAI,
@@ -41,6 +42,7 @@ vi.mock('@/config/server', () => ({
     AZURE_API_KEY: 'test-azure-key',
     AZURE_ENDPOINT: 'endpoint',
 
+    COHERE_API_KEY: 'test-cohere-key',
     ZHIPU_API_KEY: 'test.zhipu-key',
     MOONSHOT_API_KEY: 'test-moonshot-key',
     AWS_SECRET_ACCESS_KEY: 'test-aws-secret',
@@ -201,6 +203,17 @@ describe('AgentRuntime', () => {
 
         // 假设 LobeAnthropicAI 是 Anthropic 提供者的实现类
         expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
+      });
+    });
+
+    describe('Cohere AI provider', () => {
+      it('should initialize correctly', async () => {
+        const jwtPayload: JWTPayload = { apiKey: 'user-cohere-key' };
+        const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Cohere, {
+          cohere: jwtPayload,
+        });
+
+        expect(runtime['_runtime']).toBeInstanceOf(LobeCohereAI);
       });
     });
 

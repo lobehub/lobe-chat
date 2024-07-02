@@ -39,7 +39,8 @@ const Clear = memo(() => {
     >
       <ActionIcon 
         icon={Eraser} 
-        overlayStyle={{ maxWidth: 'none' }}
+        // TODO: this property caused validation errors
+        // overlayStyle={{ maxWidth: 'none' }}
         placement={'bottom'} 
         title={actionTitle} />
     </Popconfirm>

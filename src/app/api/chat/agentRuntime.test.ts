@@ -6,6 +6,7 @@ import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
+  LobeCohereAI,
   LobeDeepSeekAI,
   LobeGoogleAI,
   LobeGroq,
@@ -37,7 +38,7 @@ vi.mock('@/config/llm', () => ({
 
     AZURE_API_KEY: 'test-azure-key',
     AZURE_ENDPOINT: 'endpoint',
-
+    COHERE_API_KEY: 'test-cohere-key',
     ZHIPU_API_KEY: 'test.zhipu-key',
     MOONSHOT_API_KEY: 'test-moonshot-key',
     AWS_SECRET_ACCESS_KEY: 'test-aws-secret',
@@ -143,6 +144,13 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Anthropic, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
       expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
+    });
+
+    it('Cohere AI provider: with apikey', async () => {
+      const jwtPayload: JWTPayload = { apiKey: 'user-cohere-key' };
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Cohere, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeCohereAI);
     });
 
     it('Minimax AI provider: with apikey', async () => {
@@ -264,6 +272,13 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
       // 假设 LobeBedrockAI 是 Bedrock 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
+    });
+
+    it('Cohere AI provider: without apikey', async () => {
+      const jwtPayload = {};
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Cohere, jwtPayload);
+
+      expect(runtime['_runtime']).toBeInstanceOf(LobeCohereAI);
     });
 
     it('Ollama provider: without endpoint', async () => {
