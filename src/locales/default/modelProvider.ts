@@ -102,6 +102,18 @@ export default {
       title: '下载指定的 Ollama 模型',
     },
   },
+  spark: {
+    sparkApiKey: {
+      desc: '填入 Spark API Key',
+      placeholder: 'Spark API Key',
+      title: 'Spark API Key',
+    },
+    sparkApiSecret: {
+      desc: '填入 Spark API Secret',
+      placeholder: 'Spark API Secret',
+      title: 'Spark API Secret',
+    },
+  },
   zeroone: {
     title: '01.AI 零一万物',
   },
