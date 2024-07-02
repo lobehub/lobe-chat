@@ -35,6 +35,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_QWEN,
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
+    ENABLED_SPARK,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -107,6 +108,7 @@ export const getServerGlobalConfig = () => {
       perplexity: { enabled: ENABLED_PERPLEXITY },
       qwen: { enabled: ENABLED_QWEN },
 
+      spark: { enabled: ENABLED_SPARK },
       stepfun: { enabled: ENABLED_STEPFUN },
 
       togetherai: {

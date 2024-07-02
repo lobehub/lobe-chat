@@ -14,6 +14,7 @@ import {
   OpenAI,
   OpenRouter,
   Perplexity,
+  Spark,
   Stepfun,
   Together,
   Tongyi,
@@ -117,6 +118,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Baichuan: {
       return <Baichuan size={20} />;
+    }
+
+    case ModelProvider.Spark: {
+      return <Spark size={20} />;
     }
 
     default: {
