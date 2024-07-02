@@ -12,7 +12,7 @@ import { CreateMessageParams, messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { ChatToolPayload, MessageToolCall } from '@/types/message';
+import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
@@ -37,6 +37,7 @@ export interface ChatPluginAction {
 
   reInvokeToolMessage: (id: string) => Promise<void>;
   triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
+  summaryPluginContent: (id: string) => Promise<void>;
 
   triggerToolCalls: (id: string) => Promise<void>;
   updatePluginState: (id: string, value: any) => Promise<void>;
@@ -167,6 +168,29 @@ export const chatPlugin: StateCreator<
     const chats = chatSelectors.currentChats(get());
     await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, { traceId });
   },
+
+  summaryPluginContent: async (id) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message || message.role !== 'tool') return;
+
+    await get().internal_coreProcessMessage(
+      [
+        {
+          role: 'assistant',
+          content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
+        },
+        {
+          ...message,
+          content: message.content,
+          role: 'assistant',
+          name: undefined,
+          tool_call_id: undefined,
+        },
+      ] as ChatMessage[],
+      message.id,
+    );
+  },
+
   triggerToolCalls: async (assistantId) => {
     const message = chatSelectors.getMessageById(assistantId)(get());
     if (!message || !message.tools) return;

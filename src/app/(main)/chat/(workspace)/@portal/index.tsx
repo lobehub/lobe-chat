@@ -6,13 +6,19 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 
-import ToolList from './features/Tools/ToolList';
-import ToolUI from './features/Tools/ToolUI';
+import ToolUI from './features/ArtifactUI';
+import Artifacts from './features/Artifacts';
 
-const Inspector = memo(() => {
-  const showToolUI = useChatStore(chatPortalSelectors.showToolUI);
+const PortalView = memo(() => {
+  const showToolUI = useChatStore(chatPortalSelectors.showArtifactUI);
 
-  return <Flexbox height={'100%'}>{showToolUI ? <ToolUI /> : <ToolList />}</Flexbox>;
+  if (showToolUI) return <ToolUI />;
+
+  return (
+    <Flexbox height={'100%'}>
+      <Artifacts />
+    </Flexbox>
+  );
 });
 
-export default Inspector;
+export default PortalView;

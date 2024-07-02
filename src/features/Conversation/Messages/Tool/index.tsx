@@ -17,7 +17,7 @@ import Inspector from './Inspector';
 export const ToolMessage = memo<ChatMessage>(({ id, content, pluginState, plugin }) => {
   const [loading, isMessageToolUIOpen] = useChatStore((s) => [
     chatSelectors.isPluginApiInvoking(id)(s),
-    chatPortalSelectors.isMessageToolUIOpen(id)(s),
+    chatPortalSelectors.isArtifactMessageUIOpen(id)(s),
   ]);
   const { direction } = useContext(ConfigProvider.ConfigContext);
   const { t } = useTranslation('plugin');

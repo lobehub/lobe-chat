@@ -11,7 +11,7 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     color: ${token.colorText};
 
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgElevated};
     border-radius: 8px;
 
     &:hover {
