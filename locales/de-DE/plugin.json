@@ -139,7 +139,7 @@
     "modalDesc": "Nachdem Sie die Adresse des Plugin-Marktes konfiguriert haben, können Sie den benutzerdefinierten Plugin-Markt verwenden.",
     "title": "Plugin-Markteinstellungen"
   },
-  "showInPortal": "Bitte überprüfen Sie die Details im Erweiterungsfenster",
+  "showInPortal": "Bitte überprüfen Sie die Details im Portal",
   "store": {
     "actions": {
       "confirmUninstall": "Das Plugin wird deinstalliert und alle Konfigurationen werden gelöscht. Bitte bestätigen Sie Ihre Aktion.",
