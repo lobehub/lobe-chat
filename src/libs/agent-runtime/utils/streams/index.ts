@@ -6,3 +6,4 @@ export * from './minimax';
 export * from './ollama';
 export * from './openai';
 export * from './protocol';
+export * from './qwen';
