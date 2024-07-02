@@ -1,0 +1,10 @@
+{
+  "Artifacts": "アーティファクト",
+  "actions": {
+    "genAiMessage": "AIメッセージを生成",
+    "summary": "サマリー",
+    "summaryTooltip": "現在の内容を要約"
+  },
+  "emptyArtifactList": "現在、アーティファクトリストは空です。プラグインを使用してセッション中に追加してください。",
+  "title": "拡張ウィンドウ"
+}

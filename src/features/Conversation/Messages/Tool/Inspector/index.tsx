@@ -3,6 +3,7 @@ import { ActionIcon, Avatar, Highlighter, Icon, Tag } from '@lobehub/ui';
 import { Tabs } from 'antd';
 import isEqual from 'fast-deep-equal';
 import {
+  InspectionPanel,
   LucideBug,
   LucideBugOff,
   LucideChevronDown,
@@ -13,8 +14,11 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useChatStore } from '@/store/chat';
+import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
-import { pluginSelectors, toolSelectors } from '@/store/tool/selectors';
+import { toolSelectors } from '@/store/tool/selectors';
 import { ChatPluginPayload } from '@/types/message';
 
 import PluginResult from './PluginResultJSON';
@@ -24,6 +28,7 @@ import { useStyles } from './style';
 export interface InspectorProps {
   arguments?: string;
   content: string;
+  id: string;
   identifier?: string;
   loading?: boolean;
   payload?: ChatPluginPayload;
@@ -40,14 +45,20 @@ const Inspector = memo<InspectorProps>(
     setShow,
     content,
     identifier = 'unknown',
+    id,
   }) => {
-    const { t } = useTranslation('plugin');
+    const { t } = useTranslation(['plugin', 'portal']);
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
+    const [isMessageToolUIOpen, openToolUI, toggleInspector] = useChatStore((s) => [
+      chatPortalSelectors.isArtifactMessageUIOpen(id)(s),
+      s.openToolUI,
+      s.toggleDock,
+    ]);
 
     const pluginMeta = useToolStore(toolSelectors.getMetaById(identifier), isEqual);
 
-    const showRightAction = useToolStore(pluginSelectors.isPluginHasUI(identifier));
+    const showRightAction = useToolStore(toolSelectors.isToolHasUI(identifier));
     const pluginAvatar = pluginHelpers.getPluginAvatar(pluginMeta);
 
     const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
@@ -94,6 +105,19 @@ const Inspector = memo<InspectorProps>(
           </Flexbox>
 
           <Flexbox horizontal>
+            {showRightAction && (
+              <ActionIcon
+                icon={InspectionPanel}
+                onClick={() => {
+                  if (!isMessageToolUIOpen) openToolUI(id, identifier);
+                  else {
+                    toggleInspector(false);
+                  }
+                }}
+                size={DESKTOP_HEADER_ICON_SIZE}
+                title={t('title', { ns: 'portal' })}
+              />
+            )}
             <ActionIcon
               icon={open ? LucideBugOff : LucideBug}
               onClick={() => {
