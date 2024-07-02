@@ -351,7 +351,7 @@ describe('topic action', () => {
         await result.current.removeTopic(topicId);
       });
 
-      expect(messageService.removeMessages).toHaveBeenCalledWith(activeId, topicId);
+      expect(messageService.removeMessagesByAssistant).toHaveBeenCalledWith(activeId, topicId);
       expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).toHaveBeenCalled();
@@ -372,7 +372,7 @@ describe('topic action', () => {
         await result.current.removeTopic(topicId);
       });
 
-      expect(messageService.removeMessages).toHaveBeenCalledWith(activeId, topicId);
+      expect(messageService.removeMessagesByAssistant).toHaveBeenCalledWith(activeId, topicId);
       expect(topicService.removeTopic).toHaveBeenCalledWith(topicId);
       expect(refreshTopicSpy).toHaveBeenCalled();
       expect(switchTopicSpy).not.toHaveBeenCalled();

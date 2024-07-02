@@ -491,6 +491,75 @@ describe('MessageModel', () => {
       expect(pluginResult).toHaveLength(1);
       expect(pluginResult[0].identifier).toBe('plugin1');
     });
+
+    it('should create tool message ', async () => {
+      // 调用 create 方法
+      const state = {
+        query: 'Composio',
+        answers: [],
+        results: [
+          {
+            url: 'https://www.composio.dev/',
+            score: 16,
+            title: 'Composio - Connect 90+ tools to your AI agents',
+            engine: 'bing',
+            content:
+              'Faster DevelopmentHigher ReliabilityBetter Integrations. Get Started Now. Our platform lets you ditch the specs and seamlessly integrate any tool you need in less than 5 mins.',
+            engines: ['bing', 'qwant', 'brave', 'duckduckgo'],
+            category: 'general',
+            template: 'default.html',
+            positions: [1, 1, 1, 1],
+            thumbnail: '',
+            parsed_url: ['https', 'www.composio.dev', '/', '', '', ''],
+            publishedDate: null,
+          },
+          {
+            url: 'https://www.composio.co/',
+            score: 10.75,
+            title: 'Composio',
+            engine: 'bing',
+            content:
+              'Composio was created to help streamline the entire book creation process! Writing. Take time out to write / Make a schedule to write consistently. We have writing software that optimizes your books for printing or ebook format. Figure out what you want to write. Collaborate and write with others. Professional editing is a necessity.',
+            engines: ['qwant', 'duckduckgo', 'google', 'bing', 'brave'],
+            category: 'general',
+            template: 'default.html',
+            positions: [5, 2, 1, 5, 4],
+            thumbnail: null,
+            parsed_url: ['https', 'www.composio.co', '/', '', '', ''],
+            publishedDate: null,
+          },
+        ],
+        unresponsive_engines: [],
+      };
+      const result = await messageModel.create({
+        content: '[{}]',
+        plugin: {
+          apiName: 'searchWithSearXNG',
+          arguments: '{\n  "query": "Composio"\n}',
+          identifier: 'lobe-web-browsing',
+          type: 'builtin',
+        },
+        pluginState: state,
+        role: 'tool',
+        tool_call_id: 'tool_call_ymxXC2J0',
+        sessionId: '1',
+      });
+
+      // 断言结果
+      expect(result.id).toBeDefined();
+      expect(result.content).toBe('[{}]');
+      expect(result.role).toBe('tool');
+      expect(result.sessionId).toBe(null);
+
+      const pluginResult = await serverDB
+        .select()
+        .from(messagePlugins)
+        .where(eq(messagePlugins.id, result.id))
+        .execute();
+      expect(pluginResult).toHaveLength(1);
+      expect(pluginResult[0].identifier).toBe('lobe-web-browsing');
+      expect(pluginResult[0].state!).toMatchObject(state);
+    });
   });
 
   describe('batchCreateMessages', () => {

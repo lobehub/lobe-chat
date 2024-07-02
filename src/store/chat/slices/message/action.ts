@@ -66,6 +66,7 @@ export interface ChatMessageAction {
    */
   clearMessage: () => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  deleteToolMessage: (id: string) => Promise<void>;
   delAndRegenerateMessage: (id: string) => Promise<void>;
   clearAllMessages: () => Promise<void>;
   // update
@@ -137,6 +138,8 @@ export interface ChatMessageAction {
     context?: { tempMessageId?: string; skipRefresh?: boolean },
   ) => Promise<string>;
   internal_createTmpMessage: (params: CreateMessageParams) => string;
+  internal_deleteMessage: (id: string) => Promise<void>;
+
   internal_fetchMessages: () => Promise<void>;
   internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
@@ -155,30 +158,42 @@ export const chatMessage: StateCreator<
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
-    const deleteFn = async (id: string) => {
-      get().internal_dispatchMessage({ type: 'deleteMessage', id });
-      await messageService.removeMessage(id);
-    };
+    let ids = [message.id];
 
     // if the message is a tool calls, then delete all the related messages
-    // TODO: maybe we need to delete it in the DB?
     if (message.tools) {
-      const pools = message.tools
-        .flatMap((tool) => {
-          const messages = chatSelectors
-            .currentChats(get())
-            .filter((m) => m.tool_call_id === tool.id);
+      const toolMessageIds = message.tools.flatMap((tool) => {
+        const messages = chatSelectors
+          .currentChats(get())
+          .filter((m) => m.tool_call_id === tool.id);
 
-          return messages.map((m) => m.id);
-        })
-        .map((i) => deleteFn(i));
-
-      await Promise.all(pools);
+        return messages.map((m) => m.id);
+      });
+      ids = ids.concat(toolMessageIds);
     }
 
-    await deleteFn(id);
+    get().internal_dispatchMessage({ type: 'deleteMessages', ids });
+    await messageService.removeMessages(ids);
     await get().refreshMessages();
   },
+
+  deleteToolMessage: async (id) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message || message.role !== 'tool') return;
+
+    const removeToolInAssistantMessage = async () => {
+      if (!message.parentId) return;
+      await get().internal_removeToolToAssistantMessage(message.parentId, message.tool_call_id);
+    };
+
+    await Promise.all([
+      // 1. remove tool message
+      get().internal_deleteMessage(id),
+      // 2. remove the tool item in the assistant tools
+      removeToolInAssistantMessage(),
+    ]);
+  },
+
   delAndRegenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
     get().internal_resendMessage(id, traceId);
@@ -197,7 +212,7 @@ export const chatMessage: StateCreator<
   clearMessage: async () => {
     const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
 
-    await messageService.removeMessages(activeId, activeTopicId);
+    await messageService.removeMessagesByAssistant(activeId, activeTopicId);
 
     if (activeTopicId) {
       await topicService.removeTopic(activeTopicId);
@@ -715,7 +730,11 @@ export const chatMessage: StateCreator<
 
     return tempId;
   },
-
+  internal_deleteMessage: async (id: string) => {
+    get().internal_dispatchMessage({ type: 'deleteMessage', id });
+    await messageService.removeMessage(id);
+    await get().refreshMessages();
+  },
   internal_traceMessage: async (id, payload) => {
     // tracing the diff of update
     const message = chatSelectors.getMessageById(id)(get());
