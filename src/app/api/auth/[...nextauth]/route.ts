@@ -1,3 +1,3 @@
-export { GET, POST } from '@/libs/next-auth';
+import NextAuthNode from '@/libs/next-auth';
 
-export const runtime = 'edge'; // optional
+export const { GET, POST } = NextAuthNode.handlers;

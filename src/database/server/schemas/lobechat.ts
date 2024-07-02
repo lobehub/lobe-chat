@@ -23,6 +23,9 @@ import { CustomPluginParams } from '@/types/tool/plugin';
 
 import { idGenerator, randomSlug } from '../utils/idGenerator';
 
+// Schema for nextauth
+export * from '@/libs/next-auth/adapter/schema';
+
 const timestamptz = (name: string) => timestamp(name, { withTimezone: true });
 
 const createdAt = () => timestamptz('created_at').notNull().defaultNow();
@@ -46,6 +49,9 @@ export const users = pgTable('users', {
   isOnboarded: boolean('is_onboarded').default(false),
   // Time user was created in Clerk
   clerkCreatedAt: timestamptz('clerk_created_at'),
+
+  // Required by nextauth, all null allowed
+  emailVerified: timestamptz('email_verified'),
 
   preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
 

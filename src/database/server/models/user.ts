@@ -38,6 +38,10 @@ export class UserModel {
     return serverDB.query.users.findFirst({ where: eq(users.id, id) });
   };
 
+  static findByEmail = async (email: string) => {
+    return serverDB.query.users.findFirst({ where: eq(users.email, email) });
+  };
+
   getUserState = async (id: string) => {
     const result = await serverDB
       .select({

@@ -26,11 +26,15 @@ vi.mock('@/features/User/UserLoginOrSignup/Community', () => ({
 
 // 定义一个变量来存储 enableAuth 的值
 let enableAuth = true;
+let enableClerk = false;
 
 // 模拟 @/const/auth 模块
 vi.mock('@/const/auth', () => ({
   get enableAuth() {
     return enableAuth;
+  },
+  get enableClerk() {
+    return enableClerk;
   },
 }));
 
@@ -41,9 +45,8 @@ afterEach(() => {
 describe('UserBanner', () => {
   it('should render UserInfo and DataStatistics when auth is disabled', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false });
+      useUserStore.setState({ isSignedIn: false, enableAuth: () => false });
     });
-    enableAuth = false;
 
     render(<UserBanner />);
 
@@ -56,7 +59,8 @@ describe('UserBanner', () => {
     act(() => {
       useUserStore.setState({ isSignedIn: true });
     });
-    enableAuth = true;
+
+    enableClerk = true;
 
     render(<UserBanner />);
 
@@ -67,9 +71,9 @@ describe('UserBanner', () => {
 
   it('should render UserLoginOrSignup when user is not logged in with auth enabled', () => {
     act(() => {
-      useUserStore.setState({ isSignedIn: false });
+      useUserStore.setState({ isSignedIn: false, enableAuth: () => true });
     });
-    enableAuth = true;
+    enableClerk = true;
 
     render(<UserBanner />);
 
