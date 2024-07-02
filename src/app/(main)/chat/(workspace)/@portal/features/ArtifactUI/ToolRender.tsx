@@ -1,13 +1,14 @@
 import isEqual from 'fast-deep-equal';
+import { memo } from 'react';
 
 import PluginRender from '@/features/PluginsUI/Render';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
-import { BuiltinToolsDocks } from '@/tools/docks';
+import { BuiltinToolsPortals } from '@/tools/portals';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
-const ToolRender = () => {
-  const messageId = useChatStore(chatPortalSelectors.toolUIMessageId);
+const ToolRender = memo(() => {
+  const messageId = useChatStore(chatPortalSelectors.artifactMessageId);
   const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
 
   // make sure the message and id is valid
@@ -22,7 +23,7 @@ const ToolRender = () => {
 
   if (!args) return;
 
-  const Render = BuiltinToolsDocks[plugin.identifier];
+  const Render = BuiltinToolsPortals[plugin.identifier];
 
   if (!Render)
     return (
@@ -45,6 +46,6 @@ const ToolRender = () => {
       state={pluginState}
     />
   );
-};
+});
 
 export default ToolRender;

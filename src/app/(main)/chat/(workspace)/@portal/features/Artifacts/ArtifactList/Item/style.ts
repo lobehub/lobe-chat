@@ -5,12 +5,13 @@ export const useStyles = createStyles(({ css, token }) => ({
     cursor: pointer;
 
     width: 100%;
-    padding: 10px 8px;
+    padding-block: 10px;
+    padding-inline: 8px;
     padding-inline-end: 12px;
 
     color: ${token.colorText};
 
-    background: ${token.colorBgContainer};
+    background: ${token.colorBgElevated};
     border-radius: 8px;
 
     &:hover {
