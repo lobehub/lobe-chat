@@ -129,6 +129,10 @@ class _MessageModel extends BaseModel {
     return super._deleteWithSync(id);
   }
 
+  async bulkDelete(ids: string[]) {
+    return super._bulkDeleteWithSync(ids);
+  }
+
   async clearTable() {
     return this._clearWithSync();
   }

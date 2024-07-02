@@ -303,4 +303,29 @@ describe('messagesReducer', () => {
       expect(newState).toEqual(initialState);
     });
   });
+
+  describe('deleteMessages', () => {
+    it('should remove 2 messages from the state', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessages',
+        ids: ['message1', 'message2'],
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState.length).toBe(0);
+      expect(newState.find((m) => m.id === 'message1')).toBeUndefined();
+      expect(newState.find((m) => m.id === 'message2')).toBeUndefined();
+    });
+
+    it('should not modify state if message to delete is not found', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessage',
+        id: 'nonexistentMessage',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+  });
 });

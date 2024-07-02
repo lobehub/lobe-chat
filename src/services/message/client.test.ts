@@ -140,7 +140,7 @@ describe('MessageClientService', () => {
       (MessageModel.batchDelete as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await messageService.removeMessages(assistantId, topicId);
+      const result = await messageService.removeMessagesByAssistant(assistantId, topicId);
 
       // Assert
       expect(MessageModel.batchDelete).toHaveBeenCalledWith(assistantId, topicId);

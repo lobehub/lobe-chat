@@ -82,6 +82,12 @@ export const messageRouter = router({
     }),
 
   removeMessages: messageProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.deleteMessages(input.ids);
+    }),
+
+  removeMessagesByAssistant: messageProcedure
     .input(
       z.object({
         sessionId: z.string().nullable().optional(),
@@ -89,7 +95,7 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessages(input.sessionId, input.topicId);
+      return ctx.messageModel.deleteMessagesBySession(input.sessionId, input.topicId);
     }),
 
   searchMessages: messageProcedure

@@ -48,7 +48,7 @@ describe('chatDockSlice', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        result.current.toggleDock(true);
+        result.current.togglePortal(true);
       });
 
       expect(result.current.showPortal).toBe(true);
@@ -72,13 +72,13 @@ describe('chatDockSlice', () => {
       expect(result.current.showPortal).toBe(false);
 
       act(() => {
-        result.current.toggleDock();
+        result.current.togglePortal();
       });
 
       expect(result.current.showPortal).toBe(true);
 
       act(() => {
-        result.current.toggleDock();
+        result.current.togglePortal();
       });
 
       expect(result.current.showPortal).toBe(false);
@@ -88,19 +88,19 @@ describe('chatDockSlice', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        result.current.toggleDock(true);
+        result.current.togglePortal(true);
       });
 
       expect(result.current.showPortal).toBe(true);
 
       act(() => {
-        result.current.toggleDock(false);
+        result.current.togglePortal(false);
       });
 
       expect(result.current.showPortal).toBe(false);
 
       act(() => {
-        result.current.toggleDock(true);
+        result.current.togglePortal(true);
       });
 
       expect(result.current.showPortal).toBe(true);

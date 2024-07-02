@@ -1,6 +1,16 @@
 import { createStyles } from 'antd-style';
 
 export const useStyles = createStyles(({ css, token }) => ({
+  apiName: css`
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+
+    font-size: 12px;
+    text-overflow: ellipsis;
+
+    -webkit-line-clamp: 1;
+  `,
   container: css`
     cursor: pointer;
 
