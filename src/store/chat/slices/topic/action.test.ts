@@ -33,6 +33,7 @@ vi.mock('@/services/topic', () => ({
 vi.mock('@/services/message', () => ({
   messageService: {
     removeMessages: vi.fn(),
+    removeMessagesByAssistant: vi.fn(),
     getMessages: vi.fn(),
   },
 }));

@@ -549,7 +549,7 @@ describe('MessageModel', () => {
       expect(result.id).toBeDefined();
       expect(result.content).toBe('[{}]');
       expect(result.role).toBe('tool');
-      expect(result.sessionId).toBe(null);
+      expect(result.sessionId).toBe('1');
 
       const pluginResult = await serverDB
         .select()
@@ -707,6 +707,40 @@ describe('MessageModel', () => {
 
       // 调用 deleteMessage 方法
       await messageModel.deleteMessage('1');
+
+      // 断言结果
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      expect(result).toHaveLength(1);
+    });
+  });
+
+  describe('deleteMessages', () => {
+    it('should delete 2 messages', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        { id: '1', userId, role: 'user', content: 'message 1' },
+        { id: '2', userId, role: 'user', content: 'message 2' },
+      ]);
+
+      // 调用 deleteMessage 方法
+      await messageModel.deleteMessages(['1', '2']);
+
+      // 断言结果
+      const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();
+      expect(result).toHaveLength(0);
+      const result2 = await serverDB.select().from(messages).where(eq(messages.id, '2')).execute();
+      expect(result2).toHaveLength(0);
+    });
+
+    it('should only delete messages belonging to the user', async () => {
+      // 创建测试数据
+      await serverDB.insert(messages).values([
+        { id: '1', userId: '456', role: 'user', content: 'message 1' },
+        { id: '2', userId: '456', role: 'user', content: 'message 1' },
+      ]);
+
+      // 调用 deleteMessage 方法
+      await messageModel.deleteMessages(['1', '2']);
 
       // 断言结果
       const result = await serverDB.select().from(messages).where(eq(messages.id, '1')).execute();

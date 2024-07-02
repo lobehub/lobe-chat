@@ -30,6 +30,7 @@ vi.mock('@/services/message', () => ({
     getMessages: vi.fn(),
     updateMessageError: vi.fn(),
     removeMessage: vi.fn(),
+    removeMessagesByAssistant: vi.fn(),
     removeMessages: vi.fn(() => Promise.resolve()),
     createMessage: vi.fn(() => Promise.resolve('new-message-id')),
     updateMessage: vi.fn(),
