@@ -4,7 +4,6 @@ import { NextResponse } from 'next/server';
 import { authEnv } from '@/config/auth';
 import { auth } from '@/libs/next-auth';
 
-import { serverFeatureFlags } from './config/featureFlags';
 import { OAUTH_AUTHORIZED } from './const/auth';
 
 export const config = {
@@ -52,14 +51,7 @@ const isProtectedRoute = createRouteMatcher([
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   ? clerkMiddleware(
       (auth, req) => {
-        const enableClerkSignUp = serverFeatureFlags().enableClerkSignUp;
-        if (!enableClerkSignUp && req.nextUrl.pathname === '/signup') {
-          return NextResponse.redirect('/login');
-        }
-
         if (isProtectedRoute(req)) auth().protect();
-
-        return NextResponse.next();
       },
       {
         // https://github.com/lobehub/lobe-chat/pull/3084
