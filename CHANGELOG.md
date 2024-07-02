@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.2.5](https://github.com/lobehub/lobe-chat/compare/v1.2.4...v1.2.5)
+
+<sup>Released on **2024-07-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix clerk appearance is not applied correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix clerk appearance is not applied correctly, closes [#3105](https://github.com/lobehub/lobe-chat/issues/3105) ([cf9c145](https://github.com/lobehub/lobe-chat/commit/cf9c145))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.2.4](https://github.com/lobehub/lobe-chat/compare/v1.2.3...v1.2.4)
+
+<sup>Released on **2024-07-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update ProviderAvatar for Baichuan & Stepfun.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update ProviderAvatar for Baichuan & Stepfun, closes [#3112](https://github.com/lobehub/lobe-chat/issues/3112) ([ae5987a](https://github.com/lobehub/lobe-chat/commit/ae5987a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.2.3](https://github.com/lobehub/lobe-chat/compare/v1.2.2...v1.2.3)
 
 <sup>Released on **2024-07-01**</sup>
