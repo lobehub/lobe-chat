@@ -99,6 +99,8 @@
       "duplicate": "복사본 만들기",
       "export": "주제 내보내기"
     },
+    "checkOpenNewTopic": "새 주제를 열까요?",
+    "checkSaveCurrentMessages": "현재 대화를 주제로 저장하시겠습니까?",
     "confirmRemoveAll": "모든 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
     "confirmRemoveTopic": "이 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
     "confirmRemoveUnstarred": "별표가 없는 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",

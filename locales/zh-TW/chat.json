@@ -99,6 +99,8 @@
       "duplicate": "建立副本",
       "export": "匯出主題"
     },
+    "checkOpenNewTopic": "是否開啟新主題?",
+    "checkSaveCurrentMessages": "是否將當前對話保存為話題？",
     "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",

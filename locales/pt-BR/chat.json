@@ -99,6 +99,8 @@
       "duplicate": "Criar Cópia",
       "export": "Exportar Tópico"
     },
+    "checkOpenNewTopic": "Deseja abrir um novo tópico?",
+    "checkSaveCurrentMessages": "Salvar a conversa atual como tópico?",
     "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
     "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
     "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",

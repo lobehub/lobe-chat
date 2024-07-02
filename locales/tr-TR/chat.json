@@ -99,6 +99,8 @@
       "duplicate": "Kopya Oluştur",
       "export": "Konuyu Dışa Aktar"
     },
+    "checkOpenNewTopic": "Yeni bir konu açılsın mı?",
+    "checkSaveCurrentMessages": "Mevcut sohbeti konu olarak kaydetmek istiyor musunuz?",
     "confirmRemoveAll": "Tüm konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveTopic": "Bu konuyu silmek üzeresiniz. Bir kere silindiğinde, geri alınamaz. Lütfen dikkatli bir şekilde devam edin.",
     "confirmRemoveUnstarred": "Yıldızlanmamış konuları silmek üzeresiniz. Bir kere silindiğinde, geri alınamazlar. Lütfen dikkatli bir şekilde devam edin.",

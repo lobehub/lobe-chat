@@ -99,6 +99,8 @@
       "duplicate": "Crear copia",
       "export": "Exportar tema"
     },
+    "checkOpenNewTopic": "¿Abrir un nuevo tema?",
+    "checkSaveCurrentMessages": "¿Desea guardar la conversación actual como tema?",
     "confirmRemoveAll": "Estás a punto de eliminar todos los temas. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
     "confirmRemoveTopic": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, procede con precaución.",
     "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",

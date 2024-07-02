@@ -99,6 +99,8 @@
       "duplicate": "Créer une copie",
       "export": "Exporter le sujet"
     },
+    "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
+    "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
     "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",

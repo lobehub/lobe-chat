@@ -99,6 +99,8 @@
       "duplicate": "コピーを作成",
       "export": "トピックをエクスポート"
     },
+    "checkOpenNewTopic": "新しいトピックを開始しますか？",
+    "checkSaveCurrentMessages": "現在の会話をトピックとして保存しますか？",
     "confirmRemoveAll": "すべてのトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",

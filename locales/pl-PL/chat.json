@@ -99,6 +99,8 @@
       "duplicate": "Utwórz kopię",
       "export": "Eksportuj temat"
     },
+    "checkOpenNewTopic": "Czy otworzyć nowy temat?",
+    "checkSaveCurrentMessages": "Czy zapisać bieżącą rozmowę jako temat?",
     "confirmRemoveAll": "Czy na pewno chcesz usunąć wszystkie tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveTopic": "Czy na pewno chcesz usunąć ten temat? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
     "confirmRemoveUnstarred": "Czy na pewno chcesz usunąć nieoznaczone tematy? Tej operacji nie można cofnąć. Proszę potwierdź swoją decyzję.",
