@@ -4,7 +4,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { authEnv } from '@/config/auth';
+import { serverFeatureFlags } from '@/config/featureFlags';
 
 import UserUpdater from './UserUpdater';
 import { useAppearance } from './useAppearance';
@@ -18,7 +18,7 @@ const Clerk = memo(({ children }: PropsWithChildren) => {
   } = useTranslation('clerk');
 
   const localization = useMemo(() => getResourceBundle(language, 'clerk'), [language]);
-  const isSignUpDisabled = authEnv.NEXT_PUBLIC_DISABLE_CLERK_SIGN_UP;
+  const enableClerkSignUp = serverFeatureFlags().enableClerkSignUp;
 
   return (
     <ClerkProvider
@@ -26,11 +26,11 @@ const Clerk = memo(({ children }: PropsWithChildren) => {
         ...appearance,
         elements: {
           ...appearance.elements,
-          footerAction: isSignUpDisabled ? { display: 'none' } : {}, // Conditionally hide sign-up link
+          footerAction: !enableClerkSignUp ? { display: 'none' } : {}, // Conditionally hide sign-up link
         },
       }}
       localization={localization}
-      signUpUrl={isSignUpDisabled ? '/sign-in' : '/sign-up'} // Redirect sign-up to sign-in if disabled
+      signUpUrl={!enableClerkSignUp ? '/sign-in' : '/sign-up'} // Redirect sign-up to sign-in if disabled
     >
       {children}
       <UserUpdater />

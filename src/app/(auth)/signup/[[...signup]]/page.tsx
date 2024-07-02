@@ -1,7 +1,7 @@
 import { SignUp } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
-import { authEnv } from '@/config/auth';
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 
@@ -15,7 +15,9 @@ export const generateMetadata = async () => {
 };
 
 const Page = () => {
-  if (authEnv.NEXT_PUBLIC_DISABLE_CLERK_SIGN_UP) {
+  const enableClerkSignUp = serverFeatureFlags().enableClerkSignUp;
+
+  if (!enableClerkSignUp) {
     redirect('/login');
   }
 
