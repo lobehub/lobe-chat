@@ -4,7 +4,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import { PropsWithChildren, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { serverFeatureFlags } from '@/config/featureFlags';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import UserUpdater from './UserUpdater';
 import { useAppearance } from './useAppearance';
@@ -12,13 +12,13 @@ import { useAppearance } from './useAppearance';
 // Adjust the path as necessary
 
 const Clerk = memo(({ children }: PropsWithChildren) => {
+  const { enableClerkSignUp } = useServerConfigStore(featureFlagsSelectors);
   const appearance = useAppearance();
   const {
     i18n: { language, getResourceBundle },
   } = useTranslation('clerk');
 
   const localization = useMemo(() => getResourceBundle(language, 'clerk'), [language]);
-  const enableClerkSignUp = serverFeatureFlags().enableClerkSignUp;
 
   return (
     <ClerkProvider
