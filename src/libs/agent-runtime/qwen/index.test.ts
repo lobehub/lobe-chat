@@ -17,7 +17,7 @@ const invalidErrorType = AgentRuntimeErrorType.InvalidProviderAPIKey;
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
-let instance: LobeOpenAICompatibleRuntime;
+let instance: LobeQwenAI;
 
 beforeEach(() => {
   instance = new LobeQwenAI({ apiKey: 'test' });
@@ -41,7 +41,70 @@ describe('LobeQwenAI', () => {
     });
   });
 
+  describe('models', () => {
+    it('should correctly list available models', async () => {
+      const instance = new LobeQwenAI({ apiKey: 'test_api_key' });
+      const models = await instance.models();
+      expect(models).toMatchSnapshot();
+    });
+  });
+
   describe('chat', () => {
+    describe('Params', () => {
+      it('should call llms with proper options', async () => {
+        const mockStream = new ReadableStream();
+        const mockResponse = Promise.resolve(mockStream);
+
+        (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'qwen-turbo',
+          temperature: 0.6,
+          top_p: 0.7,
+        });
+
+        // Assert
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'qwen-turbo',
+            temperature: 0.6,
+            stream: true,
+            top_p: 0.7,
+            result_format: 'message',
+          },
+          { headers: { Accept: '*/*' } },
+        );
+        expect(result).toBeInstanceOf(Response);
+      });
+
+      it('should call vlms with proper options', async () => {
+        const mockStream = new ReadableStream();
+        const mockResponse = Promise.resolve(mockStream);
+
+        (instance['client'].chat.completions.create as Mock).mockResolvedValue(mockResponse);
+
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'qwen-vl-plus',
+          temperature: 0.6,
+          top_p: 0.7,
+        });
+
+        // Assert
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'qwen-vl-plus',
+            stream: true,
+          },
+          { headers: { Accept: '*/*' } },
+        );
+        expect(result).toBeInstanceOf(Response);
+      });
+    });
+
     describe('Error', () => {
       it('should return QwenBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange

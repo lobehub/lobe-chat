@@ -9,6 +9,7 @@ import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../typ
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { handleOpenAIError } from '../utils/handleOpenAIError';
+import { transformResponseToStream } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
 import { QwenAIStream } from '../utils/streams';
 
@@ -42,7 +43,7 @@ export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRunti
       const params = this.buildCompletionParamsByModel(payload);
 
       const response = await this.client.chat.completions.create(
-        params as OpenAI.ChatCompletionCreateParamsStreaming,
+        params as OpenAI.ChatCompletionCreateParamsStreaming & { result_format: string },
         {
           headers: { Accept: '*/*' },
           signal: options?.signal,
@@ -61,7 +62,7 @@ export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRunti
         });
       }
 
-      const stream = this.transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+      const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
       return StreamingResponse(QwenAIStream(stream, options?.callback), {
         headers: options?.headers,
@@ -119,58 +120,5 @@ export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRunti
           'top_p',
         )
       : params;
-  }
-
-  /* Identical transform method to the same-name method in LobeOpenAICompatibleAI */
-  private transformResponseToStream(data: OpenAI.ChatCompletion) {
-    return new ReadableStream({
-      start(controller) {
-        const chunk: OpenAI.ChatCompletionChunk = {
-          choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => {
-            return {
-              delta: {
-                content: choice.message.content,
-                role: choice.message.role,
-                tool_calls: choice.message.tool_calls?.map(
-                  (tool, index): OpenAI.ChatCompletionChunk.Choice.Delta.ToolCall => ({
-                    function: tool.function,
-                    id: tool.id,
-                    index,
-                    type: tool.type,
-                  }),
-                ),
-              },
-              finish_reason: null,
-              index: choice.index,
-              logprobs: choice.logprobs,
-            };
-          }),
-          created: data.created,
-          id: data.id,
-          model: data.model,
-          object: 'chat.completion.chunk',
-        };
-
-        controller.enqueue(chunk);
-
-        controller.enqueue({
-          choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
-            delta: {
-              content: choice.message.content,
-              role: choice.message.role,
-            },
-            finish_reason: choice.finish_reason,
-            index: choice.index,
-            logprobs: choice.logprobs,
-          })),
-          created: data.created,
-          id: data.id,
-          model: data.model,
-          object: 'chat.completion.chunk',
-          system_fingerprint: data.system_fingerprint,
-        } as OpenAI.ChatCompletionChunk);
-        controller.close();
-      },
-    });
   }
 }
