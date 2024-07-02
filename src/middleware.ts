@@ -51,7 +51,13 @@ const isProtectedRoute = createRouteMatcher([
 export default authEnv.NEXT_PUBLIC_ENABLE_CLERK_AUTH
   ? clerkMiddleware(
       (auth, req) => {
+        if (authEnv.NEXT_PUBLIC_DISABLE_CLERK_SIGN_UP && req.nextUrl.pathname === '/signup') {
+          return NextResponse.redirect('/login');
+        }
+
         if (isProtectedRoute(req)) auth().protect();
+
+        return NextResponse.next();
       },
       {
         // https://github.com/lobehub/lobe-chat/pull/3084
