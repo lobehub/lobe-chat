@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, token, isDarkMode, responsive }) => ({
   intro: css`
     ${responsive.mobile} {
       width: 350px;
-      margin-top: 24px;
+      margin-block-start: 24px;
       line-height: ${token.lineHeight};
     }
   `,

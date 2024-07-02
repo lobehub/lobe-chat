@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 import { PluginErrorType } from '@lobehub/chat-plugin-sdk';
+import isEqual from 'fast-deep-equal';
 import { t } from 'i18next';
 import { Md5 } from 'ts-md5';
 import { StateCreator } from 'zustand/vanilla';
@@ -11,7 +12,9 @@ import { CreateMessageParams, messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { ChatToolPayload, MessageToolCall } from '@/types/message';
+import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';
+import { merge } from '@/utils/merge';
+import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors } from '../../slices/message/selectors';
@@ -34,9 +37,11 @@ export interface ChatPluginAction {
 
   reInvokeToolMessage: (id: string) => Promise<void>;
   triggerAIMessage: (params: { parentId?: string; traceId?: string }) => Promise<void>;
+  summaryPluginContent: (id: string) => Promise<void>;
 
   triggerToolCalls: (id: string) => Promise<void>;
   updatePluginState: (id: string, value: any) => Promise<void>;
+  updatePluginArguments: <T = any>(id: string, value: T) => Promise<void>;
 
   internal_callPluginApi: (id: string, payload: ChatToolPayload) => Promise<string | undefined>;
   internal_invokeDifferentTypePlugin: (id: string, payload: ChatToolPayload) => Promise<any>;
@@ -163,6 +168,29 @@ export const chatPlugin: StateCreator<
     const chats = chatSelectors.currentChats(get());
     await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, { traceId });
   },
+
+  summaryPluginContent: async (id) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message || message.role !== 'tool') return;
+
+    await get().internal_coreProcessMessage(
+      [
+        {
+          role: 'assistant',
+          content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
+        },
+        {
+          ...message,
+          content: message.content,
+          role: 'assistant',
+          name: undefined,
+          tool_call_id: undefined,
+        },
+      ] as ChatMessage[],
+      message.id,
+    );
+  },
+
   triggerToolCalls: async (assistantId) => {
     const message = chatSelectors.getMessageById(assistantId)(get());
     if (!message || !message.tools) return;
@@ -203,7 +231,53 @@ export const chatPlugin: StateCreator<
   updatePluginState: async (id, value) => {
     const { refreshMessages } = get();
 
+    // optimistic update
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { pluginState: value } });
+
     await messageService.updateMessagePluginState(id, value);
+    await refreshMessages();
+  },
+
+  updatePluginArguments: async (id, value) => {
+    const { refreshMessages } = get();
+    const toolMessage = chatSelectors.getMessageById(id)(get());
+    if (!toolMessage || !toolMessage?.tool_call_id) return;
+
+    let assistantMessage = chatSelectors.getMessageById(toolMessage?.parentId || '')(get());
+
+    const prevArguments = toolMessage?.plugin?.arguments;
+    const prevJson = safeParseJSON(prevArguments || '');
+    const nextValue = merge(prevJson || {}, value);
+    if (isEqual(prevJson, nextValue)) return;
+
+    // optimistic update
+    get().internal_dispatchMessage({
+      id,
+      type: 'updateMessagePlugin',
+      value: { arguments: JSON.stringify(nextValue) },
+    });
+
+    // 同样需要更新 assistantMessage 的 pluginArguments
+    if (assistantMessage) {
+      get().internal_dispatchMessage({
+        id: assistantMessage.id,
+        type: 'updateMessageTools',
+        tool_call_id: toolMessage?.tool_call_id,
+        value: { arguments: JSON.stringify(nextValue) },
+      });
+      assistantMessage = chatSelectors.getMessageById(assistantMessage?.id)(get());
+    }
+
+    const updateAssistantMessage = async () => {
+      if (!assistantMessage) return;
+      await messageService.updateMessage(assistantMessage!.id, { tools: assistantMessage?.tools });
+    };
+
+    await Promise.all([
+      messageService.updateMessagePluginArguments(id, nextValue),
+      updateAssistantMessage(),
+    ]);
+
     await refreshMessages();
   },
 
@@ -314,7 +388,7 @@ export const chatPlugin: StateCreator<
   internal_updatePluginError: async (id, error) => {
     const { refreshMessages } = get();
 
-    get().internal_dispatchMessage({ id, type: 'updateMessages', value: { error } });
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
     await messageService.updateMessage(id, { pluginError: error });
     await refreshMessages();
   },

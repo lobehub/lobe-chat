@@ -1,0 +1,10 @@
+{
+  "Artifacts": "Artifacts",
+  "actions": {
+    "genAiMessage": "Créer un message d'assistant",
+    "summary": "Résumé",
+    "summaryTooltip": "Résumé du contenu actuel"
+  },
+  "emptyArtifactList": "La liste des Artifacts est actuellement vide. Veuillez utiliser les plugins dans la conversation avant de consulter à nouveau.",
+  "title": "Fenêtre d'extension"
+}

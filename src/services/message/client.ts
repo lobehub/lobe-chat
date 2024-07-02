@@ -60,6 +60,12 @@ export class ClientService implements IMessageService {
     return MessageModel.updatePluginState(id, value);
   }
 
+  async updateMessagePluginArguments(id: string, value: string | Record<string, any>) {
+    const args = typeof value === 'string' ? value : JSON.stringify(value);
+
+    return MessageModel.updatePlugin(id, { arguments: args });
+  }
+
   async bindMessagesToTopic(topicId: string, messageIds: string[]) {
     return MessageModel.batchUpdate(messageIds, { topicId });
   }

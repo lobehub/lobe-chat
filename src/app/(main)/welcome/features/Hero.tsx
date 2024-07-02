@@ -16,7 +16,7 @@ const useStyles = createStyles(({ css, token }) => {
       text-wrap: balance;
     `,
     title: css`
-      margin-bottom: 0;
+      margin-block-end: 0;
 
       font-size: min(56px, 7vw);
       font-weight: 800;

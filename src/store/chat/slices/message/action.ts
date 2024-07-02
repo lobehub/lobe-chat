@@ -554,7 +554,7 @@ export const chatMessage: StateCreator<
             output += chunk.text;
             internal_dispatchMessage({
               id: assistantId,
-              type: 'updateMessages',
+              type: 'updateMessage',
               value: { content: output },
             });
             break;
@@ -565,7 +565,7 @@ export const chatMessage: StateCreator<
             internal_toggleToolCallingStreaming(assistantId, chunk.isAnimationActives);
             internal_dispatchMessage({
               id: assistantId,
-              type: 'updateMessages',
+              type: 'updateMessage',
               value: { tools: get().internal_transformToolCalls(chunk.tool_calls) },
             });
             isFunctionCall = true;
@@ -640,7 +640,7 @@ export const chatMessage: StateCreator<
 
     const { internal_coreProcessMessage } = get();
 
-    const latestMsg = contextMessages.filter((s) => s.role === 'user').at(-1);
+    const latestMsg = contextMessages.findLast((s) => s.role === 'user');
 
     if (!latestMsg) return;
 
@@ -648,7 +648,7 @@ export const chatMessage: StateCreator<
   },
 
   internal_updateMessageError: async (id, error) => {
-    get().internal_dispatchMessage({ id, type: 'updateMessages', value: { error } });
+    get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
     await messageService.updateMessage(id, { error });
     await get().refreshMessages();
   },
@@ -661,11 +661,11 @@ export const chatMessage: StateCreator<
     if (toolCalls) {
       internal_dispatchMessage({
         id,
-        type: 'updateMessages',
+        type: 'updateMessage',
         value: { tools: internal_transformToolCalls(toolCalls) },
       });
     } else {
-      internal_dispatchMessage({ id, type: 'updateMessages', value: { content } });
+      internal_dispatchMessage({ id, type: 'updateMessage', value: { content } });
     }
 
     await messageService.updateMessage(id, {

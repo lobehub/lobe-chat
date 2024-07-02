@@ -10,6 +10,7 @@ import { merge } from '@/utils/merge';
 
 import {
   MessageItem,
+  MessagePluginItem,
   filesToMessages,
   messagePlugins,
   messageTTS,
@@ -269,6 +270,15 @@ export class MessageModel {
       .update(messagePlugins)
       .set({ state: merge(item.state || {}, state) })
       .where(eq(messagePlugins.id, id));
+  }
+
+  async updateMessagePlugin(id: string, value: Partial<MessagePluginItem>) {
+    const item = await serverDB.query.messagePlugins.findFirst({
+      where: eq(messagePlugins.id, id),
+    });
+    if (!item) throw new Error('Plugin not found');
+
+    return serverDB.update(messagePlugins).set(value).where(eq(messagePlugins.id, id));
   }
 
   async updateTranslate(id: string, translate: Partial<MessageItem>) {
