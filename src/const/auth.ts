@@ -41,5 +41,8 @@ export interface JWTPayload {
    * in server db mode it's a user id
    */
   userId?: string;
+
+  sparkApiKey?: string;
+  sparkApiSecret?: string;
 }
 /* eslint-enable */

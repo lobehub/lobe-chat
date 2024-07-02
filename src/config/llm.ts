@@ -85,6 +85,10 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
+
+      ENABLED_SPARK: z.boolean(),
+      SPARK_API_KEY: z.string().optional(),
+      SPARK_API_SECRET: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -161,6 +165,10 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
+
+      ENABLED_SPARK: !!process.env.SPARK_API_KEY && !!process.env.SPARK_API_SECRET,
+      SPARK_API_KEY: process.env.SPARK_API_KEY,
+      SPARK_API_SECRET: process.env.SPARK_API_SECRET,
     },
   });
 };
