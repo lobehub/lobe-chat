@@ -103,6 +103,50 @@ describe('LobeQwenAI', () => {
         );
         expect(result).toBeInstanceOf(Response);
       });
+
+      it('should transform non-streaming response to stream correctly', async () => {
+        const mockResponse: OpenAI.ChatCompletion = {
+          id: 'chatcmpl-fc539f49-51a8-94be-8061',
+          object: 'chat.completion',
+          created: 1719901794,
+          model: 'qwen-turbo',
+          choices: [
+            {
+              index: 0,
+              message: { role: 'assistant', content: 'Hello' },
+              finish_reason: 'stop',
+              logprobs: null,
+            },
+          ],
+        };
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          mockResponse as any,
+        );
+
+        const result = await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'qwen-turbo',
+          temperature: 0.6,
+          stream: false,
+        });
+
+        const decoder = new TextDecoder();
+
+        const reader = result.body!.getReader();
+        expect(decoder.decode((await reader.read()).value)).toContain(
+          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
+        );
+        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
+        expect(decoder.decode((await reader.read()).value)).toContain('data: "Hello"\n\n');
+
+        expect(decoder.decode((await reader.read()).value)).toContain(
+          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
+        );
+        expect(decoder.decode((await reader.read()).value)).toContain('event: stop\n');
+        expect(decoder.decode((await reader.read()).value)).toContain('');
+
+        expect((await reader.read()).done).toBe(true);
+      });
     });
 
     describe('Error', () => {
