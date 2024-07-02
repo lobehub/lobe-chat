@@ -15,13 +15,13 @@ import { ChatPluginPayload } from '@/types/message';
 
 import { useStyles } from './style';
 
-export interface InspectorProps {
+export interface ArtifactItemProps {
   identifier?: string;
   messageId: string;
   payload?: ChatPluginPayload;
 }
 
-const Inspector = memo<InspectorProps>(({ payload, messageId, identifier = 'unknown' }) => {
+const ArtifactItem = memo<ArtifactItemProps>(({ payload, messageId, identifier = 'unknown' }) => {
   const { t } = useTranslation('plugin');
   const { styles, cx } = useStyles();
 
@@ -71,4 +71,4 @@ const Inspector = memo<InspectorProps>(({ payload, messageId, identifier = 'unkn
   );
 });
 
-export default Inspector;
+export default ArtifactItem;

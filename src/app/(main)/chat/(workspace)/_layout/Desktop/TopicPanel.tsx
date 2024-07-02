@@ -34,7 +34,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
     systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
   ]);
-  const showInspector = useChatStore(chatPortalSelectors.showDock);
+  const showPortal = useChatStore(chatPortalSelectors.showPortal);
 
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showAgentSettings));
 
@@ -50,7 +50,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   }, [lg, cacheExpand]);
 
   return (
-    !showInspector && (
+    !showPortal && (
       <DraggablePanel
         className={styles.drawer}
         classNames={{

@@ -1,4 +1,10 @@
 {
-  "aiSummary": "Riepilogo assistente",
+  "Artifacts": "Artefatti",
+  "actions": {
+    "genAiMessage": "Genera messaggio AI",
+    "summary": "Sommario",
+    "summaryTooltip": "Sommario del contenuto attuale"
+  },
+  "emptyArtifactList": "La lista degli Artefatti attuale è vuota, si prega di utilizzare i plugin necessari durante la sessione e poi controllare di nuovo",
   "title": "Finestra di espansione"
 }
