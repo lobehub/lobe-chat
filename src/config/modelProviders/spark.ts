@@ -11,6 +11,7 @@ const Spark: ModelProviderCard = {
       functionCall: false,
       id: 'general',
       maxOutput: 4096,
+      tokens: 8192,
     },
     {
       displayName: 'Spark v2.0',
@@ -18,6 +19,7 @@ const Spark: ModelProviderCard = {
       functionCall: false,
       id: 'generalv2',
       maxOutput: 4096,
+      tokens: 8192,
     },
     {
       description: '专业级大语言模型，兼顾模型效果与性能 数学、代码、医疗、教育等场景专项优化 支持联网搜索、天气、日期等多个内置插件 覆盖大部分知识问答、语言理解、文本创作等多个场景',
@@ -26,6 +28,7 @@ const Spark: ModelProviderCard = {
       functionCall: false,
       id: 'generalv3',
       maxOutput: 8192,
+      tokens: 8192,
     },
     {
       description: '最全面的星火大模型版本，功能丰富 支持联网搜索、天气、日期等多个内置插件 核心能力全面升级，各场景应用效果普遍提升 支持System角色人设与FunctionCall函数调用',
@@ -34,6 +37,7 @@ const Spark: ModelProviderCard = {
       functionCall: false,
       id: 'generalv3.5',
       maxOutput: 8192,
+      tokens: 8192,
     },
     {
       description: '最强大的星火大模型版本，效果极佳 全方位提升效果，引领智能巅峰 优化联网搜索链路，提供精准回答 强化文本总结能力，提升办公生产力',
@@ -42,6 +46,7 @@ const Spark: ModelProviderCard = {
       functionCall: false,
       id: '4.0Ultra',
       maxOutput: 8192,
+      tokens: 8192,
     },
   ],
   checkModel: 'generalv3',
