@@ -2,6 +2,131 @@
 
 # Changelog
 
+### [Version 1.2.8](https://github.com/lobehub/lobe-chat/compare/v1.2.7...v1.2.8)
+
+<sup>Released on **2024-07-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Allow builtin tools to trigger AI message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Allow builtin tools to trigger AI message, closes [#3135](https://github.com/lobehub/lobe-chat/issues/3135) ([6c4c8f7](https://github.com/lobehub/lobe-chat/commit/6c4c8f7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.2.7](https://github.com/lobehub/lobe-chat/compare/v1.2.6...v1.2.7)
+
+<sup>Released on **2024-07-03**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve delete assistant message with tools.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve delete assistant message with tools, closes [#3127](https://github.com/lobehub/lobe-chat/issues/3127) ([1230777](https://github.com/lobehub/lobe-chat/commit/1230777))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.2.6](https://github.com/lobehub/lobe-chat/compare/v1.2.5...v1.2.6)
+
+<sup>Released on **2024-07-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Clerk provider refreshes continously.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Clerk provider refreshes continously, closes [#3131](https://github.com/lobehub/lobe-chat/issues/3131) ([ffbb399](https://github.com/lobehub/lobe-chat/commit/ffbb399))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.2.5](https://github.com/lobehub/lobe-chat/compare/v1.2.4...v1.2.5)
+
+<sup>Released on **2024-07-02**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix clerk appearance is not applied correctly.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix clerk appearance is not applied correctly, closes [#3105](https://github.com/lobehub/lobe-chat/issues/3105) ([cf9c145](https://github.com/lobehub/lobe-chat/commit/cf9c145))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.2.4](https://github.com/lobehub/lobe-chat/compare/v1.2.3...v1.2.4)
+
+<sup>Released on **2024-07-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update ProviderAvatar for Baichuan & Stepfun.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update ProviderAvatar for Baichuan & Stepfun, closes [#3112](https://github.com/lobehub/lobe-chat/issues/3112) ([ae5987a](https://github.com/lobehub/lobe-chat/commit/ae5987a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.2.3](https://github.com/lobehub/lobe-chat/compare/v1.2.2...v1.2.3)
 
 <sup>Released on **2024-07-01**</sup>
