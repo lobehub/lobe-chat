@@ -69,6 +69,19 @@ describe('createPreferenceSlice', () => {
     });
   });
 
+  describe('toggleMobilePortal', () => {
+    it('should toggle mobile topic', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
+        result.current.toggleMobilePortal();
+      });
+
+      expect(result.current.status.mobileShowPortal).toBe(true);
+    });
+  });
+
   describe('toggleSystemRole', () => {
     it('should toggle system role', () => {
       const { result } = renderHook(() => useGlobalStore());

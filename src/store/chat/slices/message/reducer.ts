@@ -2,7 +2,7 @@ import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 
 import { CreateMessageParams } from '@/services/message';
-import { ChatMessage, ChatPluginPayload } from '@/types/message';
+import { ChatMessage, ChatPluginPayload, ChatToolPayload } from '@/types/message';
 import { merge } from '@/utils/merge';
 
 interface UpdateMessages {
@@ -16,9 +16,15 @@ interface CreateMessage {
   type: 'createMessage';
   value: CreateMessageParams;
 }
+
 interface DeleteMessage {
   id: string;
   type: 'deleteMessage';
+}
+
+interface DeleteMessages {
+  ids: string[];
+  type: 'deleteMessages';
 }
 
 interface UpdatePluginState {
@@ -41,6 +47,17 @@ interface UpdateMessageTools {
   value: Partial<ChatPluginPayload>;
 }
 
+interface AddMessageTool {
+  id: string;
+  type: 'addMessageTool';
+  value: ChatToolPayload;
+}
+interface DeleteMessageTool {
+  id: string;
+  tool_call_id: string;
+  type: 'deleteMessageTool';
+}
+
 interface UpdateMessageExtra {
   id: string;
   key: string;
@@ -55,7 +72,10 @@ export type MessageDispatch =
   | UpdateMessageExtra
   | DeleteMessage
   | UpdateMessagePlugin
-  | UpdateMessageTools;
+  | UpdateMessageTools
+  | AddMessageTool
+  | DeleteMessageTool
+  | DeleteMessages;
 
 export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch): ChatMessage[] => {
   switch (payload.type) {
@@ -116,6 +136,37 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
       });
     }
 
+    case 'addMessageTool': {
+      return produce(state, (draftState) => {
+        const { id, value } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message || message.role !== 'assistant') return;
+
+        if (!message.tools) {
+          message.tools = [value];
+        } else {
+          const index = message.tools.findIndex((tool) => tool.id === value.id);
+
+          if (index > 0) return;
+          message.tools.push(value);
+        }
+
+        message.updatedAt = Date.now();
+      });
+    }
+
+    case 'deleteMessageTool': {
+      return produce(state, (draftState) => {
+        const { id, tool_call_id } = payload;
+        const message = draftState.find((i) => i.id === id);
+        if (!message || message.role !== 'assistant' || !message.tools) return;
+
+        message.tools = message.tools.filter((tool) => tool.id !== tool_call_id);
+
+        message.updatedAt = Date.now();
+      });
+    }
+
     case 'updateMessageTools': {
       return produce(state, (draftState) => {
         const { id, value, tool_call_id } = payload;
@@ -145,6 +196,15 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
         const index = draft.findIndex((m) => m.id === id);
 
         if (index >= 0) draft.splice(index, 1);
+      });
+    }
+    case 'deleteMessages': {
+      return produce(state, (draft) => {
+        const { ids } = payload;
+
+        return draft.filter((item) => {
+          return !ids.includes(item.id);
+        });
       });
     }
     default: {
