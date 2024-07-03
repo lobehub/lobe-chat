@@ -34,6 +34,7 @@ export interface SystemStatus {
   expandSessionGroupKeys: string[];
   hidePWAInstaller?: boolean;
   inputHeight: number;
+  mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   sessionsWidth: number;
   showChatSideBar?: boolean;
