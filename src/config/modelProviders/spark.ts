@@ -7,17 +7,9 @@ const Spark: ModelProviderCard = {
     {
       description: '轻量级大语言模型，低延迟，全免费 支持在线联网搜索功能 响应快速、便捷，全面免费开放 适用于低算力推理与模型精调等定制化场景',
       displayName: 'Spark Lite',
-      enabled: false,
+      enabled: true,
       functionCall: false,
       id: 'general',
-      maxOutput: 4096,
-      tokens: 8192,
-    },
-    {
-      displayName: 'Spark v2.0',
-      enabled: false,
-      functionCall: false,
-      id: 'generalv2',
       maxOutput: 4096,
       tokens: 8192,
     },
