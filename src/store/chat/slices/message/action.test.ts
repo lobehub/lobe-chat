@@ -148,6 +148,96 @@ describe('chatMessage actions', () => {
       expect(deleteSpy).toHaveBeenCalledWith(messageId);
       expect(result.current.refreshMessages).toHaveBeenCalled();
     });
+
+    it('deleteMessage should remove messages with tools', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const removeMessagesSpy = vi.spyOn(messageService, 'removeMessages');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: messageId, tools: [{ id: 'tool1' }, { id: 'tool2' }] } as ChatMessage,
+              { id: '2', tool_call_id: 'tool1', role: 'tool' } as ChatMessage,
+              { id: '3', tool_call_id: 'tool2', role: 'tool' } as ChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteMessage(messageId);
+      });
+
+      expect(removeMessagesSpy).toHaveBeenCalledWith([messageId, '2', '3']);
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteToolMessage', () => {
+    it('deleteMessage should remove a message by id', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const updateMessageSpy = vi.spyOn(messageService, 'updateMessage');
+      const removeMessageSpy = vi.spyOn(messageService, 'removeMessage');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              {
+                id: messageId,
+                role: 'assistant',
+                tools: [{ id: 'tool1' }, { id: 'tool2' }],
+              } as ChatMessage,
+              { id: '2', parentId: messageId, tool_call_id: 'tool1', role: 'tool' } as ChatMessage,
+              { id: '3', tool_call_id: 'tool2', role: 'tool' } as ChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.deleteToolMessage('2');
+      });
+
+      expect(removeMessageSpy).toHaveBeenCalled();
+      expect(updateMessageSpy).toHaveBeenCalledWith('message-id', {
+        tools: [{ id: 'tool2' }],
+      });
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+    });
+  });
+
+  describe('delAndRegenerateMessage', () => {
+    it('should remove a message and create a new message', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const deleteMessageSpy = vi.spyOn(result.current, 'deleteMessage');
+      const resendMessageSpy = vi.spyOn(result.current, 'internal_resendMessage');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              { id: messageId, tools: [{ id: 'tool1' }, { id: 'tool2' }] } as ChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.delAndRegenerateMessage(messageId);
+      });
+
+      expect(deleteMessageSpy).toHaveBeenCalledWith(messageId);
+      expect(resendMessageSpy).toHaveBeenCalled();
+      expect(result.current.refreshMessages).toHaveBeenCalled();
+    });
   });
 
   describe('clearAllMessages', () => {

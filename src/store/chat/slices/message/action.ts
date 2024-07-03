@@ -82,19 +82,7 @@ export interface ChatMessageAction {
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
-  internal_toggleChatLoading: (
-    loading: boolean,
-    id?: string,
-    action?: string,
-  ) => AbortController | undefined;
-  internal_toggleLoadingArrays: (
-    key: keyof ChatStoreState,
-    loading: boolean,
-    id?: string,
-    action?: string,
-  ) => AbortController | undefined;
-  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
-  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
+
   /**
    * update message at the frontend point
    * this method will not update messages to database
@@ -143,6 +131,20 @@ export interface ChatMessageAction {
   internal_fetchMessages: () => Promise<void>;
   internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
+
+  internal_toggleChatLoading: (
+    loading: boolean,
+    id?: string,
+    action?: string,
+  ) => AbortController | undefined;
+  internal_toggleLoadingArrays: (
+    key: keyof ChatStoreState,
+    loading: boolean,
+    id?: string,
+    action?: string,
+  ) => AbortController | undefined;
+  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
+  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
@@ -596,34 +598,7 @@ export const chatMessage: StateCreator<
       traceId: msgTraceId,
     };
   },
-  internal_toggleChatLoading: (loading, id, action) => {
-    return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
-  },
-  internal_toggleMessageLoading: (loading, id) => {
-    set(
-      {
-        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
-      },
-      false,
-      'internal_toggleMessageLoading',
-    );
-  },
-  internal_toggleToolCallingStreaming: (id, streaming) => {
-    set(
-      {
-        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
-          if (!!streaming) {
-            draft[id] = streaming;
-          } else {
-            delete draft[id];
-          }
-        }),
-      },
 
-      false,
-      'toggleToolCallingStreaming',
-    );
-  },
   internal_resendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
     const chats = chatSelectors.currentChats(get());
@@ -750,6 +725,35 @@ export const chatMessage: StateCreator<
     }
   },
 
+  // ----- Loading ------- //
+  internal_toggleMessageLoading: (loading, id) => {
+    set(
+      {
+        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
+      },
+      false,
+      'internal_toggleMessageLoading',
+    );
+  },
+  internal_toggleChatLoading: (loading, id, action) => {
+    return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
+  },
+  internal_toggleToolCallingStreaming: (id, streaming) => {
+    set(
+      {
+        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
+          if (!!streaming) {
+            draft[id] = streaming;
+          } else {
+            delete draft[id];
+          }
+        }),
+      },
+
+      false,
+      'toggleToolCallingStreaming',
+    );
+  },
   internal_toggleLoadingArrays: (key, loading, id, action) => {
     if (loading) {
       window.addEventListener('beforeunload', preventLeavingFn);
