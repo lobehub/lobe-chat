@@ -66,6 +66,7 @@ export interface ChatMessageAction {
    */
   clearMessage: () => Promise<void>;
   deleteMessage: (id: string) => Promise<void>;
+  deleteToolMessage: (id: string) => Promise<void>;
   delAndRegenerateMessage: (id: string) => Promise<void>;
   clearAllMessages: () => Promise<void>;
   // update
@@ -81,19 +82,7 @@ export interface ChatMessageAction {
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
   // ========================================== //
-  internal_toggleChatLoading: (
-    loading: boolean,
-    id?: string,
-    action?: string,
-  ) => AbortController | undefined;
-  internal_toggleLoadingArrays: (
-    key: keyof ChatStoreState,
-    loading: boolean,
-    id?: string,
-    action?: string,
-  ) => AbortController | undefined;
-  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
-  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
+
   /**
    * update message at the frontend point
    * this method will not update messages to database
@@ -108,9 +97,7 @@ export interface ChatMessageAction {
     params?: ProcessMessageParams,
   ) => Promise<void>;
   /**
-   * 实际获取 AI 响应
-   * @param messages - 聊天消息数组
-   * @param options - 获取 SSE 选项
+   * the method to fetch the AI message
    */
   internal_fetchAIChatMessage: (
     messages: ChatMessage[],
@@ -122,24 +109,66 @@ export interface ChatMessageAction {
   }>;
 
   /**
+   * update the message content with optimistic update
    * a method used by other action
-   * @param id
-   * @param content
    */
   internal_updateMessageContent: (
     id: string,
     content: string,
     toolCalls?: MessageToolCall[],
   ) => Promise<void>;
+  /**
+   * update the message error with optimistic update
+   */
   internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
+  /**
+   * create a message with optimistic update
+   */
   internal_createMessage: (
     params: CreateMessageParams,
     context?: { tempMessageId?: string; skipRefresh?: boolean },
   ) => Promise<string>;
+  /**
+   * create a temp message for optimistic update
+   * otherwise the message will be too slow to show
+   */
   internal_createTmpMessage: (params: CreateMessageParams) => string;
-  internal_fetchMessages: () => Promise<void>;
+  /**
+   * delete the message content with optimistic update
+   */
+  internal_deleteMessage: (id: string) => Promise<void>;
   internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
+
+  internal_fetchMessages: () => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
+
+  /**
+   * method to toggle message create loading state
+   * the AI message status is creating -> generating
+   * other message role like user and tool , only this method need to be called
+   */
+  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
+  /**
+   * method to toggle ai message generating loading
+   */
+  internal_toggleChatLoading: (
+    loading: boolean,
+    id?: string,
+    action?: string,
+  ) => AbortController | undefined;
+  /**
+   * method to toggle the tool calling loading state
+   */
+  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
+  /**
+   * helper to toggle the loading state of the array,used by these three toggleXXXLoading
+   */
+  internal_toggleLoadingArrays: (
+    key: keyof ChatStoreState,
+    loading: boolean,
+    id?: string,
+    action?: string,
+  ) => AbortController | undefined;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
@@ -155,30 +184,42 @@ export const chatMessage: StateCreator<
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
 
-    const deleteFn = async (id: string) => {
-      get().internal_dispatchMessage({ type: 'deleteMessage', id });
-      await messageService.removeMessage(id);
-    };
+    let ids = [message.id];
 
     // if the message is a tool calls, then delete all the related messages
-    // TODO: maybe we need to delete it in the DB?
     if (message.tools) {
-      const pools = message.tools
-        .flatMap((tool) => {
-          const messages = chatSelectors
-            .currentChats(get())
-            .filter((m) => m.tool_call_id === tool.id);
+      const toolMessageIds = message.tools.flatMap((tool) => {
+        const messages = chatSelectors
+          .currentChats(get())
+          .filter((m) => m.tool_call_id === tool.id);
 
-          return messages.map((m) => m.id);
-        })
-        .map((i) => deleteFn(i));
-
-      await Promise.all(pools);
+        return messages.map((m) => m.id);
+      });
+      ids = ids.concat(toolMessageIds);
     }
 
-    await deleteFn(id);
+    get().internal_dispatchMessage({ type: 'deleteMessages', ids });
+    await messageService.removeMessages(ids);
     await get().refreshMessages();
   },
+
+  deleteToolMessage: async (id) => {
+    const message = chatSelectors.getMessageById(id)(get());
+    if (!message || message.role !== 'tool') return;
+
+    const removeToolInAssistantMessage = async () => {
+      if (!message.parentId) return;
+      await get().internal_removeToolToAssistantMessage(message.parentId, message.tool_call_id);
+    };
+
+    await Promise.all([
+      // 1. remove tool message
+      get().internal_deleteMessage(id),
+      // 2. remove the tool item in the assistant tools
+      removeToolInAssistantMessage(),
+    ]);
+  },
+
   delAndRegenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
     get().internal_resendMessage(id, traceId);
@@ -197,7 +238,7 @@ export const chatMessage: StateCreator<
   clearMessage: async () => {
     const { activeId, activeTopicId, refreshMessages, refreshTopic, switchTopic } = get();
 
-    await messageService.removeMessages(activeId, activeTopicId);
+    await messageService.removeMessagesByAssistant(activeId, activeTopicId);
 
     if (activeTopicId) {
       await topicService.removeTopic(activeTopicId);
@@ -581,34 +622,7 @@ export const chatMessage: StateCreator<
       traceId: msgTraceId,
     };
   },
-  internal_toggleChatLoading: (loading, id, action) => {
-    return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
-  },
-  internal_toggleMessageLoading: (loading, id) => {
-    set(
-      {
-        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
-      },
-      false,
-      'internal_toggleMessageLoading',
-    );
-  },
-  internal_toggleToolCallingStreaming: (id, streaming) => {
-    set(
-      {
-        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
-          if (!!streaming) {
-            draft[id] = streaming;
-          } else {
-            delete draft[id];
-          }
-        }),
-      },
 
-      false,
-      'toggleToolCallingStreaming',
-    );
-  },
   internal_resendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
     const chats = chatSelectors.currentChats(get());
@@ -715,7 +729,11 @@ export const chatMessage: StateCreator<
 
     return tempId;
   },
-
+  internal_deleteMessage: async (id: string) => {
+    get().internal_dispatchMessage({ type: 'deleteMessage', id });
+    await messageService.removeMessage(id);
+    await get().refreshMessages();
+  },
   internal_traceMessage: async (id, payload) => {
     // tracing the diff of update
     const message = chatSelectors.getMessageById(id)(get());
@@ -731,6 +749,35 @@ export const chatMessage: StateCreator<
     }
   },
 
+  // ----- Loading ------- //
+  internal_toggleMessageLoading: (loading, id) => {
+    set(
+      {
+        messageLoadingIds: toggleBooleanList(get().messageLoadingIds, id, loading),
+      },
+      false,
+      'internal_toggleMessageLoading',
+    );
+  },
+  internal_toggleChatLoading: (loading, id, action) => {
+    return get().internal_toggleLoadingArrays('chatLoadingIds', loading, id, action);
+  },
+  internal_toggleToolCallingStreaming: (id, streaming) => {
+    set(
+      {
+        toolCallingStreamIds: produce(get().toolCallingStreamIds, (draft) => {
+          if (!!streaming) {
+            draft[id] = streaming;
+          } else {
+            delete draft[id];
+          }
+        }),
+      },
+
+      false,
+      'toggleToolCallingStreaming',
+    );
+  },
   internal_toggleLoadingArrays: (key, loading, id, action) => {
     if (loading) {
       window.addEventListener('beforeunload', preventLeavingFn);
