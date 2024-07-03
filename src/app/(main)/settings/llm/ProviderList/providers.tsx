@@ -12,6 +12,7 @@ import {
   OpenRouter,
   Perplexity,
   Stepfun,
+  // Taichu,
   Together,
   Tongyi,
   ZeroOne,
@@ -36,6 +37,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   StepfunProviderCard,
+  TaichuProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -176,6 +178,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...BaichuanProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
         title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
+      },
+      {
+        ...TaichuProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
+        title: <Baichuan.Combine size={ 20 } type={ 'color' } />, // TODO: change icon to Taichu
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

@@ -15,6 +15,7 @@ import {
   OpenRouter,
   Perplexity,
   Stepfun,
+  // Taichu,
   Together,
   Tongyi,
   ZeroOne,
@@ -117,6 +118,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Baichuan: {
       return <Baichuan size={20} />;
+    }
+
+    case ModelProvider.Taichu: {
+      return <Baichuan size={20} />; // TODO: change icon to Taichu
     }
 
     default: {

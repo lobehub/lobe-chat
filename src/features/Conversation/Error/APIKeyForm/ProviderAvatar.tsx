@@ -11,6 +11,7 @@ import {
   OpenRouter,
   Perplexity,
   Stepfun,
+  // Taichu,
   Together,
   Tongyi,
   ZeroOne,
@@ -79,6 +80,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.Stepfun: {
       return <Stepfun color={Stepfun.colorPrimary} size={56} />;
+    }
+
+    case ModelProvider.Taichu: {
+      return <Baichuan color={Baichuan.colorPrimary} size={56} />; // TODO: change icon to Taichu
     }
 
     case ModelProvider.TogetherAI: {

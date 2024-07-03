@@ -27,6 +27,7 @@ import {
   Spark,
   Stability,
   Stepfun,
+  // Taichu,
   Tongyi,
   Wenxin,
   Yi,
@@ -66,6 +67,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('command')) return <Cohere.Avatar size={size} />;
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
   if (model.includes('step')) return <Stepfun.Avatar size={size} />;
+  if (model.includes('taichu')) return <Baichuan.Avatar size={size} />; // TODO: change icon to Taichu
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))
