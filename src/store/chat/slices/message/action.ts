@@ -109,6 +109,7 @@ export interface ChatMessageAction {
   }>;
 
   /**
+   * update the message content with optimistic update
    * a method used by other action
    */
   internal_updateMessageContent: (
@@ -136,9 +137,9 @@ export interface ChatMessageAction {
    * delete the message content with optimistic update
    */
   internal_deleteMessage: (id: string) => Promise<void>;
+  internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
 
   internal_fetchMessages: () => Promise<void>;
-  internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 
   /**
