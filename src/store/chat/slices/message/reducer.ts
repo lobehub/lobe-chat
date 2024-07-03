@@ -140,12 +140,16 @@ export const messagesReducer = (state: ChatMessage[], payload: MessageDispatch):
       return produce(state, (draftState) => {
         const { id, value } = payload;
         const message = draftState.find((i) => i.id === id);
-        if (!message || message.role !== 'assistant' || !message.tools) return;
+        if (!message || message.role !== 'assistant') return;
 
-        const index = message.tools.findIndex((tool) => tool.id === value.id);
+        if (!message.tools) {
+          message.tools = [value];
+        } else {
+          const index = message.tools.findIndex((tool) => tool.id === value.id);
 
-        if (index > 0) return;
-        message.tools.push(value);
+          if (index > 0) return;
+          message.tools.push(value);
+        }
 
         message.updatedAt = Date.now();
       });
