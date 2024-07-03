@@ -97,9 +97,7 @@ export interface ChatMessageAction {
     params?: ProcessMessageParams,
   ) => Promise<void>;
   /**
-   * 实际获取 AI 响应
-   * @param messages - 聊天消息数组
-   * @param options - 获取 SSE 选项
+   * the method to fetch the AI message
    */
   internal_fetchAIChatMessage: (
     messages: ChatMessage[],
@@ -112,39 +110,64 @@ export interface ChatMessageAction {
 
   /**
    * a method used by other action
-   * @param id
-   * @param content
    */
   internal_updateMessageContent: (
     id: string,
     content: string,
     toolCalls?: MessageToolCall[],
   ) => Promise<void>;
+  /**
+   * update the message error with optimistic update
+   */
   internal_updateMessageError: (id: string, error: ChatMessageError | null) => Promise<void>;
+  /**
+   * create a message with optimistic update
+   */
   internal_createMessage: (
     params: CreateMessageParams,
     context?: { tempMessageId?: string; skipRefresh?: boolean },
   ) => Promise<string>;
+  /**
+   * create a temp message for optimistic update
+   * otherwise the message will be too slow to show
+   */
   internal_createTmpMessage: (params: CreateMessageParams) => string;
+  /**
+   * delete the message content with optimistic update
+   */
   internal_deleteMessage: (id: string) => Promise<void>;
 
   internal_fetchMessages: () => Promise<void>;
   internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
   internal_traceMessage: (id: string, payload: TraceEventPayloads) => Promise<void>;
 
+  /**
+   * method to toggle message create loading state
+   * the AI message status is creating -> generating
+   * other message role like user and tool , only this method need to be called
+   */
+  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
+  /**
+   * method to toggle ai message generating loading
+   */
   internal_toggleChatLoading: (
     loading: boolean,
     id?: string,
     action?: string,
   ) => AbortController | undefined;
+  /**
+   * method to toggle the tool calling loading state
+   */
+  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
+  /**
+   * helper to toggle the loading state of the array,used by these three toggleXXXLoading
+   */
   internal_toggleLoadingArrays: (
     key: keyof ChatStoreState,
     loading: boolean,
     id?: string,
     action?: string,
   ) => AbortController | undefined;
-  internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
-  internal_toggleMessageLoading: (loading: boolean, id: string) => void;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
