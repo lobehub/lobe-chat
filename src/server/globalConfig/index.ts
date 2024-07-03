@@ -35,6 +35,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_QWEN,
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
+    ENABLED_ZHINAO,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -118,6 +119,7 @@ export const getServerGlobalConfig = () => {
         }),
       },
       zeroone: { enabled: ENABLED_ZEROONE },
+      zhinao: { enabled: ENABLED_ZHINAO },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),

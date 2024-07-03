@@ -30,6 +30,7 @@ import {
   Tongyi,
   Wenxin,
   Yi,
+  // Zhinao,
 } from '@lobehub/icons';
 import { memo } from 'react';
 
@@ -66,6 +67,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('command')) return <Cohere.Avatar size={size} />;
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
   if (model.includes('step')) return <Stepfun.Avatar size={size} />;
+  if (model.includes('360gpt')) return <Baichuan.Avatar size={size} />; // TODO: change icon to Zhinao
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))

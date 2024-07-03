@@ -18,6 +18,7 @@ import QwenProvider from './qwen';
 import StepfunProvider from './stepfun';
 import TogetherAIProvider from './togetherai';
 import ZeroOneProvider from './zeroone';
+import ZhinaoProvider from './zhinao';
 import ZhiPuProvider from './zhipu';
 
 export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
@@ -39,6 +40,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   BaichuanProvider.chatModels,
+  ZhinaoProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -61,6 +63,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZhiPuProvider,
   StepfunProvider,
   BaichuanProvider,
+  ZhinaoProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -85,4 +88,5 @@ export { default as QwenProviderCard } from './qwen';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as ZeroOneProviderCard } from './zeroone';
+export { default as ZhinaoProviderCard } from './zhinao';
 export { default as ZhiPuProviderCard } from './zhipu';

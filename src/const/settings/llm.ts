@@ -16,6 +16,7 @@ import {
   StepfunProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
+  ZhinaoProviderCard,
   ZhiPuProviderCard,
   filterEnabledModels,
 } from '@/config/modelProviders';
@@ -94,6 +95,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   zeroone: {
     enabled: false,
     enabledModels: filterEnabledModels(ZeroOneProviderCard),
+  },
+  zhinao: {
+    enabled: false,
+    enabledModels: filterEnabledModels(ZhinaoProviderCard),
   },
   zhipu: {
     enabled: false,

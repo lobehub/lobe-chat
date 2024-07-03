@@ -14,6 +14,7 @@ import {
   Together,
   Tongyi,
   ZeroOne,
+  // Zhinao,
   Zhipu,
 } from '@lobehub/icons';
 import { useTheme } from 'antd-style';
@@ -87,6 +88,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.ZeroOne: {
       return <ZeroOne color={ZeroOne.colorPrimary} size={56} />;
+    }
+
+    case ModelProvider.Zhinao: {
+      return <Baichuan color={Baichuan.colorPrimary} size={56} />; // TODO: change icon to Zhinao
     }
 
     default:

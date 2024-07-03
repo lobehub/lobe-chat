@@ -179,6 +179,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Zhinao: {
+      const { ZHINAO_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || ZHINAO_API_KEY);
+
+      return { apiKey };
+    }
   }
 };
 

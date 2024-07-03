@@ -20,6 +20,7 @@ import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTogetherAI } from './togetherai';
+import { LobeZhinaoAI } from './zhinao';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
@@ -120,6 +121,7 @@ class AgentRuntime {
       stepfun: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
+      zhinao: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
     }>,
   ) {
@@ -224,6 +226,11 @@ class AgentRuntime {
 
       case ModelProvider.Baichuan: {
         runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
+        break
+      }
+
+      case ModelProvider.Zhinao: {
+        runtimeModel = new LobeZhinaoAI(params.zhinao ?? {});
         break
       }
     }

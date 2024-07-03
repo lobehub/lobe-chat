@@ -18,6 +18,7 @@ import {
   Together,
   Tongyi,
   ZeroOne,
+  // Zhinao,
   Zhipu,
 } from '@lobehub/icons';
 import { memo } from 'react';
@@ -117,6 +118,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Baichuan: {
       return <Baichuan size={20} />;
+    }
+
+    case ModelProvider.Zhinao: {
+      return <Baichuan size={20} />; // TODO: change icon to Zhinao
     }
 
     default: {

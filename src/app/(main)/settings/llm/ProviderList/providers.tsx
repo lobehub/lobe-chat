@@ -15,6 +15,7 @@ import {
   Together,
   Tongyi,
   ZeroOne,
+  // Zhinao,
   Zhipu,
 } from '@lobehub/icons';
 import { Divider } from 'antd';
@@ -38,6 +39,7 @@ import {
   StepfunProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
+  ZhinaoProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
 
@@ -176,6 +178,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...BaichuanProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
         title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
+      },
+      {
+        ...ZhinaoProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'zhinao'),
+        title: <Baichuan.Combine size={ 20 } type={ 'color' } />, // TODO: change icon to Zhinao
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
