@@ -117,7 +117,7 @@ export const chatPlugin: StateCreator<
 
     if (!content) return;
 
-    await action(id, content);
+    return await action(id, content);
   },
 
   invokeDefaultTypePlugin: async (id, payload) => {
@@ -220,7 +220,7 @@ export const chatPlugin: StateCreator<
       // trigger the plugin call
       const data = await get().internal_invokeDifferentTypePlugin(id, payload);
 
-      if (payload.type === 'default' && data) {
+      if ((payload.type === 'default' || payload.type === 'builtin') && data) {
         shouldCreateMessage = true;
         latestToolId = id;
       }
