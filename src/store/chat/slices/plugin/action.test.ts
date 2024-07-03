@@ -964,4 +964,46 @@ describe('ChatPluginAction', () => {
       expect(result.current.refreshMessages).toHaveBeenCalled();
     });
   });
+
+  describe('internal_addToolToAssistantMessage', () => {
+    it('should add too to assistant messages', async () => {
+      const { result } = renderHook(() => useChatStore());
+
+      const messageId = 'message-id';
+      const toolCallId = 'tool-call-id';
+      const identifier = 'plugin';
+
+      const refreshToUpdateMessageToolsSpy = vi.spyOn(
+        result.current,
+        'internal_refreshToUpdateMessageTools',
+      );
+
+      const assistantMessage = {
+        id: messageId,
+        role: 'assistant',
+        content: 'Assistant content',
+        tools: [{ identifier: identifier, arguments: '{"oldKey":"oldValue"}', id: toolCallId }],
+      } as ChatMessage;
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'anbccfdd',
+          messagesMap: { [messageMapKey('anbccfdd')]: [assistantMessage] },
+          refreshMessages: vi.fn(),
+        });
+      });
+
+      await act(async () => {
+        await result.current.internal_addToolToAssistantMessage(messageId, {
+          identifier,
+          arguments: '{"oldKey":"oldValue"}',
+          id: 'newId',
+          apiName: 'test',
+          type: 'default',
+        });
+      });
+
+      expect(refreshToUpdateMessageToolsSpy).toHaveBeenCalledWith(messageId);
+    });
+  });
 });

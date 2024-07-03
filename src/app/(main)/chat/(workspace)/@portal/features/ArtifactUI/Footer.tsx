@@ -35,7 +35,7 @@ const Footer = () => {
 
           summaryPluginContent(messageId);
         }}
-        title={'actions.summaryTooltip'}
+        title={t('actions.summaryTooltip')}
       />
     </Flexbox>
   );
