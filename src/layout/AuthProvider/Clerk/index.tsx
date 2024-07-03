@@ -9,8 +9,6 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 import UserUpdater from './UserUpdater';
 import { useAppearance } from './useAppearance';
 
-// Adjust the path as necessary
-
 const Clerk = memo(({ children }: PropsWithChildren) => {
   const { enableClerkSignUp } = useServerConfigStore(featureFlagsSelectors);
   const appearance = useAppearance();
@@ -20,15 +18,20 @@ const Clerk = memo(({ children }: PropsWithChildren) => {
 
   const localization = useMemo(() => getResourceBundle(language, 'clerk'), [language]);
 
+  const updatedAppearance = useMemo(
+    () => ({
+      ...appearance,
+      elements: {
+        ...appearance.elements,
+        ...(!enableClerkSignUp ? { footerAction: { display: 'none' } } : {}),
+      },
+    }),
+    [appearance, enableClerkSignUp],
+  );
+
   return (
     <ClerkProvider
-      appearance={{
-        ...appearance,
-        elements: {
-          ...appearance.elements,
-          footerAction: !enableClerkSignUp ? { display: 'none' } : {}, // Conditionally hide sign-up link
-        },
-      }}
+      appearance={updatedAppearance}
       localization={localization}
       signUpUrl={!enableClerkSignUp ? '/login' : '/signup'} // Redirect sign-up to sign-in if disabled
     >
