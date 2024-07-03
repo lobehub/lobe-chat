@@ -239,6 +239,34 @@ describe('chatMessage actions', () => {
       expect(result.current.refreshMessages).toHaveBeenCalled();
     });
   });
+  describe('regenerateMessage', () => {
+    it('should create a new message', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+      const resendMessageSpy = vi.spyOn(result.current, 'internal_resendMessage');
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          activeTopicId: undefined,
+          messagesMap: {
+            [messageMapKey('session-id')]: [
+              {
+                id: messageId,
+                tools: [{ id: 'tool1' }, { id: 'tool2' }],
+                traceId: 'abc',
+              } as ChatMessage,
+            ],
+          },
+        });
+      });
+      await act(async () => {
+        await result.current.regenerateMessage(messageId);
+      });
+
+      expect(resendMessageSpy).toHaveBeenCalledWith(messageId, 'abc');
+    });
+  });
 
   describe('clearAllMessages', () => {
     it('clearAllMessages should remove all messages', async () => {
@@ -1232,6 +1260,31 @@ describe('chatMessage actions', () => {
       });
 
       expect(result.current.messageLoadingIds).not.toContain(messageId);
+    });
+  });
+
+  describe('internal_toggleToolCallingStreaming action', () => {
+    it('should add message id to messageLoadingIds when loading is true', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'message-id';
+
+      act(() => {
+        result.current.internal_toggleToolCallingStreaming(messageId, [true]);
+      });
+
+      expect(result.current.toolCallingStreamIds[messageId]).toEqual([true]);
+    });
+
+    it('should remove message id from messageLoadingIds when loading is false', () => {
+      const { result } = renderHook(() => useChatStore());
+      const messageId = 'ddd-id';
+
+      act(() => {
+        result.current.internal_toggleToolCallingStreaming(messageId, [true]);
+        result.current.internal_toggleToolCallingStreaming(messageId, undefined);
+      });
+
+      expect(result.current.toolCallingStreamIds[messageId]).toBeUndefined();
     });
   });
 
