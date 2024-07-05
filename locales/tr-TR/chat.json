@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Merhaba, Ben **{{name}}**. Hemen benimle sohbet etmeye başlayabilirsiniz veya [Asistan Ayarları](/chat/settings#session={{id}}) sayfasına giderek bilgilerimi tamamlayabilirsiniz.",
   "agentDefaultMessageWithSystemRole": "Merhaba, Ben **{{name}}**, {{systemRole}}. Hemen sohbet etmeye başlayalım!",
+  "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Konuşmaya başlayalım!",
   "agentsAndConversations": "Ajanlar ve Konuşmalar",
   "backToBottom": "En alta git",
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",

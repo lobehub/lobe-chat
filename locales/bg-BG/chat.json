@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Здравей, аз съм **{{name}}**. Можеш да започнеш да чатиш с мен веднага, или да отидеш в [Настройки на агента](/chat/settings#session={{id}}) за да попълниш информацията ми.",
   "agentDefaultMessageWithSystemRole": "Здравей, аз съм **{{name}}**, {{systemRole}}. Нека започнем да чатим!",
+  "agentDefaultMessageWithoutEdit": "Здравей, аз съм **{{name}}** и нека започнем разговора!",
   "agentsAndConversations": "агенти и разговори",
   "backToBottom": "Върни се в началото",
   "clearCurrentMessages": "Изчисти съобщенията от текущата сесия",

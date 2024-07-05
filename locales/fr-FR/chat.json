@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**. Vous pouvez commencer à discuter avec moi dès maintenant ou aller dans [Paramètres de l'agent](/chat/settings#session={{id}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
+  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
   "agentsAndConversations": "Agents et conversations",
   "backToBottom": "Retour en bas",
   "clearCurrentMessages": "Effacer les messages actuels",

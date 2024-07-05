@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Assistant Settings](/chat/settings#session={{id}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
+  "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
   "agentsAndConversations": "Assistants and Conversations",
   "backToBottom": "Back to bottom",
   "clearCurrentMessages": "Clear current session messages",

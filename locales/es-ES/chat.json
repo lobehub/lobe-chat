@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Hola, soy **{{name}}**, puedes comenzar a chatear conmigo de inmediato o ir a [Configuración del asistente](/chat/settings#session={{id}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
+  "agentDefaultMessageWithoutEdit": "¡Hola, soy **{{name}}**! Comencemos nuestra conversación.",
   "agentsAndConversations": "agentesYConversaciones",
   "backToBottom": "Volver al fondo",
   "clearCurrentMessages": "Borrar mensajes actuales",
