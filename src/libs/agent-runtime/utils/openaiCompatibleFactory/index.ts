@@ -32,6 +32,7 @@ interface OpenAICompatibleFactoryOptions {
   chatCompletion?: {
     handleError?: (error: any) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
     handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
+    noUserId?: boolean;
   };
   constructorOptions?: ClientOptions;
   debug?: {
@@ -85,7 +86,10 @@ export const LobeOpenAICompatibleFactory = ({
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
         const response = await this.client.chat.completions.create(
-          { ...postPayload, user: options?.user },
+          {
+            ...postPayload,
+            ...(chatCompletion?.noUserId ? {} : { user: options?.user }) 
+          },
           {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*' },
