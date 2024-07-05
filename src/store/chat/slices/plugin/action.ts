@@ -12,7 +12,9 @@ import { CreateMessageParams, messageService } from '@/services/message';
 import { ChatStore } from '@/store/chat/store';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
-import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';
+import { builtinTools } from '@/tools';
+import { ChatErrorType } from '@/types/fetch';
+import { ChatMessage, ChatMessageError, ChatToolPayload, MessageToolCall } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 import { setNamespace } from '@/utils/storeDebug';
@@ -58,7 +60,7 @@ export interface ChatPluginAction {
     action?: string,
   ) => AbortController | undefined;
   internal_transformToolCalls: (toolCalls: MessageToolCall[]) => ChatToolPayload[];
-  internal_updatePluginError: (id: string, error: any) => Promise<void>;
+  internal_updatePluginError: (id: string, error: ChatMessageError) => Promise<void>;
 }
 
 export const chatPlugin: StateCreator<
@@ -88,16 +90,36 @@ export const chatPlugin: StateCreator<
     if (triggerAiMessage) await triggerAIMessage({ parentId: id });
   },
   invokeBuiltinTool: async (id, payload) => {
-    const { internal_togglePluginApiCalling, internal_updateMessageContent } = get();
+    const {
+      internal_togglePluginApiCalling,
+      internal_updateMessageContent,
+      internal_updatePluginError,
+    } = get();
     const params = JSON.parse(payload.arguments);
-    internal_togglePluginApiCalling(true, id, n('invokeBuiltinTool') as string);
+    internal_togglePluginApiCalling(true, id, n('invokeBuiltinTool/start') as string);
     let data;
     try {
       data = await useToolStore.getState().transformApiArgumentsToAiState(payload.apiName, params);
     } catch (error) {
-      console.log(error);
+      const err = error as Error;
+      console.error(err);
+
+      const tool = builtinTools.find((tool) => tool.identifier === payload.identifier);
+      const schema = tool?.manifest?.api.find((api) => api.name === payload.apiName)?.parameters;
+
+      await internal_updatePluginError(id, {
+        type: ChatErrorType.PluginFailToTransformArguments,
+        body: {
+          message:
+            "[plugin] fail to transform plugin arguments to ai state, it may due to model's limited tools calling capacity. You can refer to https://lobehub.com/docs/usage/tools-calling for more detail.",
+          stack: err.stack,
+          arguments: params,
+          schema,
+        },
+        message: '',
+      });
     }
-    internal_togglePluginApiCalling(false);
+    internal_togglePluginApiCalling(false, id, n('invokeBuiltinTool/end') as string);
 
     if (!data) return;
 
@@ -435,7 +457,7 @@ export const chatPlugin: StateCreator<
     const { refreshMessages } = get();
 
     get().internal_dispatchMessage({ id, type: 'updateMessage', value: { error } });
-    await messageService.updateMessage(id, { pluginError: error });
+    await messageService.updateMessage(id, { error });
     await refreshMessages();
   },
 });
