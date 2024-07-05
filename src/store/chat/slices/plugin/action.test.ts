@@ -946,7 +946,7 @@ describe('ChatPluginAction', () => {
   describe('internal_updatePluginError', () => {
     it('should update plugin error and refresh messages', async () => {
       const messageId = 'message-id';
-      const error = { message: 'Plugin error' };
+      const error = { message: 'Plugin error' } as any;
 
       act(() => {
         useChatStore.setState({
