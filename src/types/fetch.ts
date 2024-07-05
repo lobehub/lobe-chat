@@ -4,13 +4,14 @@ import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 export const ChatErrorType = {
   // ******* 业务错误语义 ******* //
 
-  InvalidAccessCode: 'InvalidAccessCode', // 密码无效
+  InvalidAccessCode: 'InvalidAccessCode', // is in valid password
   InvalidClerkUser: 'InvalidClerkUser', // is not Clerk User
   /**
    * @deprecated
    */
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
   OllamaServiceUnavailable: 'OllamaServiceUnavailable', // 未启动/检测到 Ollama 服务
+  PluginFailToTransformArguments: 'PluginFailToTransformArguments',
 
   // ******* 客户端错误 ******* //
   BadRequest: 400,
@@ -20,7 +21,7 @@ export const ChatErrorType = {
   MethodNotAllowed: 405, // 不支持
   TooManyRequests: 429,
 
-  // ******* 服务端错误 ******* //
+  // ******* 服务端错误 ******* //InvalidPluginArgumentsTransform
   InternalServerError: 500,
   BadGateway: 502,
   ServiceUnavailable: 503,
