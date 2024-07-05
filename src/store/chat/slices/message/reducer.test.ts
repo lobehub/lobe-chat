@@ -1,4 +1,4 @@
-import { ChatMessage } from '@/types/message';
+import { ChatMessage, ChatToolPayload } from '@/types/message';
 
 import { MessageDispatch, messagesReducer } from './reducer';
 
@@ -94,6 +94,35 @@ describe('messagesReducer', () => {
       const updatedMessage = newState.find((m) => m.id === 'message1');
 
       expect(updatedMessage?.extra).toEqual({ testKey: 'testValue' });
+      expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
+    });
+
+    it('should update the extra field of a message if extra exist', () => {
+      const payload: MessageDispatch = {
+        type: 'updateMessageExtra',
+        id: 'data',
+        key: 'abc',
+        value: '2',
+      };
+
+      const newState = messagesReducer(
+        [
+          {
+            id: 'data',
+            content: 'Hello World',
+            createdAt: 1629264000000,
+            updatedAt: 1629264000000,
+            role: 'user',
+            meta: {},
+            extra: { abc: '1' },
+          } as ChatMessage,
+          ...initialState,
+        ],
+        payload,
+      );
+      const updatedMessage = newState.find((m) => m.id === 'data');
+
+      expect(updatedMessage?.extra).toEqual({ abc: '2' });
       expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
     });
 
@@ -255,6 +284,151 @@ describe('messagesReducer', () => {
     });
   });
 
+  describe('addMessageTool', () => {
+    it('should add a tool to the specified assistant message if it dont have tools', () => {
+      const messageId = '1';
+      const toolPayload: ChatToolPayload = {
+        id: 'tc_1',
+        type: 'default',
+        identifier: 'tool1',
+        apiName: 'testFunction',
+        arguments: '{"arg1": "value1"}',
+      };
+
+      const payload: MessageDispatch = {
+        type: 'addMessageTool',
+        id: messageId,
+        value: toolPayload,
+      };
+
+      const newState = messagesReducer(
+        [...initialState, { id: messageId, role: 'assistant', content: '' } as ChatMessage],
+        payload,
+      );
+      const updatedMessage = newState.find((m) => m.id === messageId);
+
+      expect(updatedMessage).not.toBeUndefined();
+      expect(updatedMessage?.tools).toHaveLength(1);
+      expect(updatedMessage?.tools?.[0]).toEqual(toolPayload);
+      expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
+    });
+
+    it('should add a tool to the specified assistant message', () => {
+      const messageId = 'message2';
+      const toolPayload: ChatToolPayload = {
+        id: 'tc_1',
+        type: 'default',
+        identifier: 'tool1',
+        apiName: 'testFunction',
+        arguments: '{"arg1": "value1"}',
+      };
+
+      const payload: MessageDispatch = {
+        type: 'addMessageTool',
+        id: messageId,
+        value: toolPayload,
+      };
+
+      const newState = messagesReducer(
+        [...initialState, { id: messageId, role: 'assistant', content: '' } as ChatMessage],
+        payload,
+      );
+      const updatedMessage = newState.find((m) => m.id === messageId);
+
+      expect(updatedMessage).not.toBeUndefined();
+      expect(updatedMessage?.tools).toHaveLength(2);
+      expect(updatedMessage?.tools?.[1]).toEqual(toolPayload);
+    });
+
+    it('should not modify the state if the message is not found', () => {
+      const toolPayload: ChatToolPayload = {
+        id: 'tc_1',
+        type: 'default',
+        identifier: 'tool1',
+        apiName: 'testFunction',
+        arguments: '{"arg1": "value1"}',
+      };
+
+      const payload: MessageDispatch = {
+        type: 'addMessageTool',
+        id: 'nonexistentMessage',
+        value: toolPayload,
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+
+    it('should not add a tool if the message is not an assistant message', () => {
+      const toolPayload: ChatToolPayload = {
+        id: 'tc_1',
+        type: 'default',
+        identifier: 'tool1',
+        apiName: 'testFunction',
+        arguments: '{"arg1": "value1"}',
+      };
+
+      const payload: MessageDispatch = {
+        type: 'addMessageTool',
+        id: 'message1', // This is a user message
+        value: toolPayload,
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+  });
+
+  describe('deleteMessageTool', () => {
+    it('should delete the specified tool from the message', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessageTool',
+        id: 'message2',
+        tool_call_id: 'abc',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      const updatedMessage = newState.find((m) => m.id === 'message2');
+
+      expect(updatedMessage).not.toBeUndefined();
+      expect(updatedMessage?.tools).toHaveLength(0);
+      expect(updatedMessage?.updatedAt).toBeGreaterThan(initialState[0].updatedAt);
+    });
+
+    it('should not modify the state if the message is not found', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessageTool',
+        id: 'nonexistentMessage',
+        tool_call_id: 'tool1',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+
+    it('should not modify the state if the tool is not found', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessageTool',
+        id: 'message1',
+        tool_call_id: 'nonexistentTool',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+
+    it('should not delete a tool if the message is not an assistant message', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessageTool',
+        id: 'message1', // This is a user message
+        tool_call_id: 'tool1',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+  });
+
   describe('createMessage', () => {
     it('should add a new message to the state', () => {
       const payload: MessageDispatch = {
@@ -291,6 +465,31 @@ describe('messagesReducer', () => {
 
       expect(newState.length).toBe(initialState.length - 1);
       expect(newState.find((m) => m.id === 'message1')).toBeUndefined();
+    });
+
+    it('should not modify state if message to delete is not found', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessage',
+        id: 'nonexistentMessage',
+      };
+
+      const newState = messagesReducer(initialState, payload);
+      expect(newState).toEqual(initialState);
+    });
+  });
+
+  describe('deleteMessages', () => {
+    it('should remove 2 messages from the state', () => {
+      const payload: MessageDispatch = {
+        type: 'deleteMessages',
+        ids: ['message1', 'message2'],
+      };
+
+      const newState = messagesReducer(initialState, payload);
+
+      expect(newState.length).toBe(0);
+      expect(newState.find((m) => m.id === 'message1')).toBeUndefined();
+      expect(newState.find((m) => m.id === 'message2')).toBeUndefined();
     });
 
     it('should not modify state if message to delete is not found', () => {
