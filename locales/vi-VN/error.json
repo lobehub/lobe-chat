@@ -67,6 +67,7 @@
     "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
+    "PluginFailToTransformArguments": "Xin lỗi, không thể chuyển đổi đối số của plugin, vui lòng thử tạo lại tin nhắn trợ giúp hoặc thay đổi mô hình AI có khả năng gọi Tools mạnh hơn và thử lại",
     "PluginGatewayError": "Xin lỗi, cổng plugin gặp lỗi, vui lòng kiểm tra cấu hình cổng plugin có đúng không",
     "PluginManifestInvalid": "Xin lỗi, kiểm tra mô tả plugin không thông qua, vui lòng kiểm tra định dạng mô tả có đúng không",
     "PluginManifestNotFound": "Xin lỗi, máy chủ không tìm thấy tệp mô tả plugin (manifest.json), vui lòng kiểm tra địa chỉ tệp mô tả plugin có đúng không",

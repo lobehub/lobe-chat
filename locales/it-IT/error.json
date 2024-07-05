@@ -67,6 +67,7 @@
     "OpenAIBizError": "Errore di business di OpenAI. Si prega di controllare le informazioni seguenti o riprovare.",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
+    "PluginFailToTransformArguments": "Spiacenti, la trasformazione degli argomenti della chiamata al plugin non è riuscita. Si prega di provare a rigenerare il messaggio dell'assistente o riprovare dopo aver cambiato il modello AI di Tools Calling con capacità più avanzate.",
     "PluginGatewayError": "Spiacenti, si è verificato un errore nel gateway del plugin. Verifica che la configurazione del gateway del plugin sia corretta",
     "PluginManifestInvalid": "Spiacenti, la convalida del manifesto descrittivo del plugin non è riuscita. Verifica che il formato del manifesto descrittivo sia conforme alle specifiche",
     "PluginManifestNotFound": "Spiacenti, il server non trova il manifesto descrittivo del plugin (manifest.json). Verifica che l'indirizzo del file descrittivo del plugin sia corretto",
