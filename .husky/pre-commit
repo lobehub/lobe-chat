@@ -1,2 +1,5 @@
-npm run type-check
-npx --no-install lint-staged
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+bun run type-check
+bun run lint-staged
