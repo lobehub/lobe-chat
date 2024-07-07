@@ -65,11 +65,10 @@ tags:
 
 测试指令：指令 ①
 
-
 <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/0e120fa2-8410-4552-a947-5ab7a91d994d" />
 
 从上述视频中看到：
-1. Claude 3 Opus 在调用 Tools 的起点会输出一段 <thinking> 标签的内容，这段内容对于用户来说几乎没有什么帮助，反而带来了较多的 Token 消耗；
+1. Claude 3 Opus 在调用 Tools 的起点会输出一段 `<thinking>` 标签的内容，这段内容对于用户来说几乎没有什么帮助，反而带来了较多的 Token 消耗；
 2. Opus 会触发两次 Tools Calling，说明它并不支持 Parallel Tools Calling；
 3. 从 Tools Calling 的原始输出来看， Opus 也是支持流式 Tools Calling 的
 
@@ -78,14 +77,10 @@ tags:
   src="https://github.com/lobehub/lobe-chat/assets/28616219/fa2f89bc-b9d5-43e3-a15e-1e79174d002c"
 />
 
-
-
   <details>
     <summary>Tools Calling 原始输出：</summary>
 
-
 </details>
-
 
 ### 复杂调用指令：文生图
 
@@ -94,7 +89,7 @@ tags:
 <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/b2dc8cd9-2582-43fe-9121-29c20a1cdc7b" />
 
 从上述视频中看到：
-1. 结合简单任务， Opus 的工具调用一定会输出 <thinking> 标签，这其实对体验影响非常大
+1. 结合简单任务， Opus 的工具调用一定会输出 `<thinking>` 标签，这其实对体验影响非常大
 2. Opus 输出的 prompts 字段是字符串，而不是数组，导致报错，无法正常调用插件。
 
 <Image
@@ -104,7 +99,6 @@ tags:
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
-
 
 </details>
 
@@ -123,17 +117,14 @@ tags:
   src="https://github.com/lobehub/lobe-chat/assets/28616219/e82f5c69-7607-488f-8c10-0482fb380c6c"
 />
 
-
 <details>
   <summary>Tools Calling 原始输出：</summary>
-
 
 </details>
 
 ### 复杂调用指令：文生图
 
 测试指令：指令 ②
-
 
 <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/c150aa5f-36bc-40f2-a779-9c4fdcf2cd4c" />
 
@@ -147,12 +138,9 @@ tags:
 <details>
   <summary>Tools Calling 原始输出：</summary>
 
-
-
 </details>
 
 ## Claude 3 Haiku
-
 
 <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/02b3e872-735a-4928-8245-a90786acea8b" />
 
@@ -161,17 +149,14 @@ tags:
 1. Claude 3 Haiku 会调用两次 Tools Calling，说明它也不支持 Parallel Tools Calling；
 2. Haiku 并没有回答好的，也是直接调用的工具；
 
-
 <Image
   alt="Claude 3 Haiku 简单指令的 Tools Calling"
   src="https://github.com/lobehub/lobe-chat/assets/28616219/9081b586-cf43-440f-8ef8-1de5d8658694"
 />
 
-
 ### 复杂调用指令：文生图
 
 测试指令：指令 ②
-
 
 <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/d1e3f804-0b89-4b90-9d78-69aee0db1c4d" />
 
@@ -184,7 +169,5 @@ tags:
 
 <details>
   <summary>Tools Calling 原始输出：</summary>
-
-
 
 </details>
