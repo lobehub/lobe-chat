@@ -38,7 +38,7 @@ interface ModelIconProps {
   size?: number;
 }
 
-const ModelIcon = memo<ModelIconProps>(({ originModel, size = 12 }) => {
+const ModelIcon = memo<ModelIconProps>(({ model: originModel, size = 12 }) => {
   if (!originModel) return;
 
   // lower case the origin model so to better match more model id case
