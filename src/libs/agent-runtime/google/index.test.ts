@@ -1,5 +1,5 @@
 // @vitest-environment edge-runtime
-import { FunctionDeclarationSchemaType } from '@google/generative-ai';
+import { FunctionDeclarationSchemaType, FunctionDeclarationsTool } from '@google/generative-ai';
 import { JSONSchema7 } from 'json-schema';
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -456,7 +456,7 @@ describe('LobeGoogleAI', () => {
         const googleTools = instance['buildGoogleTools'](tools);
 
         expect(googleTools).toHaveLength(1);
-        expect(googleTools![0].functionDeclarations![0]).toEqual({
+        expect((googleTools![0] as FunctionDeclarationsTool).functionDeclarations![0]).toEqual({
           name: 'testTool',
           description: 'A test tool',
           parameters: {
