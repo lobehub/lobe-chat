@@ -26,6 +26,7 @@ import {
   Rwkv,
   Spark,
   Stability,
+  Stepfun,
   Tongyi,
   Wenxin,
   Yi,
@@ -37,8 +38,11 @@ interface ModelIconProps {
   size?: number;
 }
 
-const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
-  if (!model) return;
+const ModelIcon = memo<ModelIconProps>(({ originModel, size = 12 }) => {
+  if (!originModel) return;
+
+  // lower case the origin model so to better match more model id case
+  const model = originModel.toLowerCase();
 
   // currently supported models, maybe not in its own provider
   if (model.startsWith('gpt')) return <OpenAI size={size} />;
@@ -61,12 +65,15 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
+  if (model.includes('step')) return <Stepfun size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan')) return <Baichuan size={size} />;
   if (model.includes('rwkv')) return <Rwkv size={size} />;
   if (model.includes('ernie')) return <Wenxin size={size} />;
-  if (model.includes('spark')) return <Spark size={size} />;
+  // ref https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html#_3-%E8%AF%B7%E6%B1%82%E8%AF%B4%E6%98%8E
+  if (model.includes('spark') || model.startsWith('general') || model.startsWith('4.0ultra'))
+    return <Spark size={size} />;
   if (model.includes('hunyuan')) return <Hunyuan size={size} />;
   // ref https://github.com/fishaudio/Bert-VITS2/blob/master/train_ms.py#L702
   if (model.startsWith('d_') || model.startsWith('g_') || model.startsWith('wd_'))
