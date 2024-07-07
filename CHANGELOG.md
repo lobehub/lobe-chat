@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.2.13](https://github.com/lobehub/lobe-chat/compare/v1.2.12...v1.2.13)
+
+<sup>Released on **2024-07-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix tool message order.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix tool message order, closes [#3155](https://github.com/lobehub/lobe-chat/issues/3155) ([6171b2a](https://github.com/lobehub/lobe-chat/commit/6171b2a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.2.12](https://github.com/lobehub/lobe-chat/compare/v1.2.11...v1.2.12)
 
 <sup>Released on **2024-07-07**</sup>
