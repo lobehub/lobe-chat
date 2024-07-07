@@ -409,6 +409,92 @@ describe('LobeOpenAICompatibleFactory', () => {
       });
     });
 
+    describe('noUserId option', () => {
+      it('should not add user to payload when noUserId is true', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://spark-api-open.xf-yun.com/v1',
+          chatCompletion: {
+            noUserId: true,
+          },
+          provider: ModelProvider.Spark,
+        });
+    
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
+    
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'general',
+            temperature: 0,
+          },
+          { user: 'testUser' }
+        );
+    
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.not.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything()
+        );
+      });
+    
+      it('should add user to payload when noUserId is false', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://spark-api-open.xf-yun.com/v1',
+          chatCompletion: {
+            noUserId: false,
+          },
+          provider: ModelProvider.Spark,
+        });
+    
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
+    
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'general',
+            temperature: 0,
+          },
+          { user: 'testUser' }
+        );
+    
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything()
+        );
+      });
+    
+      it('should add user to payload when noUserId is not set in chatCompletion', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://spark-api-open.xf-yun.com/v1',
+          provider: ModelProvider.Spark,
+        });
+    
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
+    
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'general',
+            temperature: 0,
+          },
+          { user: 'testUser' }
+        );
+    
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything()
+        );
+      });
+    });
+
     describe('cancel request', () => {
       it('should cancel ongoing request correctly', async () => {
         const controller = new AbortController();
