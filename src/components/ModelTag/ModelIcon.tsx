@@ -29,6 +29,7 @@ import {
   Tongyi,
   Wenxin,
   Yi,
+  // Zhinao,
 } from '@lobehub/icons';
 import { memo } from 'react';
 
@@ -61,6 +62,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
+  if (model.includes('360gpt')) return <Baichuan size={size} />; // TODO: change icon to Zhinao
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan')) return <Baichuan size={size} />;
