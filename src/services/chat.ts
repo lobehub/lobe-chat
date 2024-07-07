@@ -528,6 +528,7 @@ class ChatService {
 
   /**
    * Reorder tool messages to ensure that tool messages are displayed in the correct order.
+   * see https://github.com/lobehub/lobe-chat/pull/3155
    */
   private reorderToolMessages = (messages: OpenAIChatMessage[]): OpenAIChatMessage[] => {
     const reorderedMessages: OpenAIChatMessage[] = [];
@@ -560,11 +561,6 @@ class ChatService {
           }
         });
       }
-    });
-
-    // 添加任何剩余的 tool 消息（以防有孤立的 tool 消息）
-    Object.values(toolMessages).forEach((message) => {
-      reorderedMessages.push(message);
     });
 
     return reorderedMessages;
