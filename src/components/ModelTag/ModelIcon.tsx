@@ -26,6 +26,7 @@ import {
   Rwkv,
   Spark,
   Stability,
+  // Taichu,
   Tongyi,
   Wenxin,
   Yi,
@@ -61,6 +62,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
+  if (model.includes('taichu')) return <Baichuan size={size} />; // TODO: change icon to Taichu
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan')) return <Baichuan size={size} />;
