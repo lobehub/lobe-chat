@@ -1,8 +1,8 @@
 ---
 title: Google Gemini 系列 Tool Calling  评测
 description: >-
-使用 LobeChat 测试 Google Gemini 系列模型（Gemini 1.5 Pro / Gemini 1.5 Flash） 的工具调用（Function Calling）能力，并展现评测结果
-
+  使用 LobeChat 测试 Google Gemini 系列模型（Gemini 1.5 Pro / Gemini 1.5 Flash）
+  的工具调用（Function Calling）能力，并展现评测结果
 tags:
   - Tools Calling
   - Benchmark
@@ -100,14 +100,11 @@ stream start] 2024-7-7 19:4:50.936
 [chunk 0] 2024-7-7 19:4:50.943
 {"candidates":[{"content":{"parts":[{"text":"好的"}],"role":"model"},"finishReason":"STOP","index":0}],"usageMetadata":{"promptTokenCount":96,"candidatesTokenCount":1,"totalTokenCount":97}}
 
-
 [chunk 1] 2024-7-7 19:4:52.209
 {"candidates":[{"content":{"parts":[{"text":"，请稍等，我正在查询杭州和北京的天气信息。 "}],"role":"model"},"finishReason":"STOP","index":0,"safetyRatings":[{"category":"HARM_CATEGORY_SEXUALLY_EXPLICIT","probability":"NEGLIGIBLE"ATEGORY_HATE_SPEECH","probability":"NEGLIGIBLE"},{"category":"HARM_CATEGORY_HARASSMENT","probability":"NEGLIGIBLE"},{"category":"HARM_CATEGORY_DANGEROUS_CONTENT","probability":"NEGLIGIBLE"}]}],"usageMetadata":{"promptTokenCount":96,"candidatesTokenCount":16,"totalTokenCount":112}}
 
-
 [chunk 2] 2024-7-7 19:4:53.288
 {"candidates":[{"content":{"parts":[{"text":"\n"}],"role":"model"},"finishReason":"STOP","index":0,"safetyRatings":[{"category":"HARM_CATEGORY_SEXUALLY_EXPLICIT","probability":"NEGLIGIBLE"},{"category":"HARM_CATEGORY_HATE_SPEECH","probability":"NEGLIGIBLE"},{"category":"HARM_CATEGORY_HARASSMENT","probability":"NEGLIGIBLE"},{"category":"HARM_CATEGORY_DANGEROUS_CONTENT","probability":"NEGLIGIBLE"}]}],"usageMetadata":{"promptTokenCount":96,"candidatesTokenCount":16,"totalTokenCount":112}}
-
 
 [stream finished] total chunks: 3
 ```
