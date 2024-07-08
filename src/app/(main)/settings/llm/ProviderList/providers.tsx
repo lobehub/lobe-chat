@@ -1,4 +1,5 @@
 import {
+  Ai360,
   Anthropic,
   Baichuan,
   Claude,
@@ -15,7 +16,6 @@ import {
   Together,
   Tongyi,
   ZeroOne,
-  // Zhinao,
   Zhipu,
 } from '@lobehub/icons';
 import { Divider } from 'antd';
@@ -182,7 +182,7 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...ZhinaoProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'zhinao'),
-        title: <Baichuan.Combine size={ 20 } type={ 'color' } />, // TODO: change icon to Zhinao
+        title: <Ai360.Combine size={ 20 } type={ 'color' } />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

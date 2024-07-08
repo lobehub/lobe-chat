@@ -1,4 +1,5 @@
 import {
+  Ai360,
   Anthropic,
   Azure,
   Baichuan,
@@ -18,7 +19,6 @@ import {
   Together,
   Tongyi,
   ZeroOne,
-  // Zhinao,
   Zhipu,
 } from '@lobehub/icons';
 import { memo } from 'react';
@@ -121,7 +121,7 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
     }
 
     case ModelProvider.Zhinao: {
-      return <Baichuan size={20} />; // TODO: change icon to Zhinao
+      return <Ai360 size={20} />;
     }
 
     default: {

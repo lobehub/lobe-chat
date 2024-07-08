@@ -1,4 +1,5 @@
 import {
+  Ai360,
   Anthropic,
   Baichuan,
   DeepSeek,
@@ -91,7 +92,7 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
     }
 
     case ModelProvider.Zhinao: {
-      return <Baichuan color={Baichuan.colorPrimary} size={56} />; // TODO: change icon to Zhinao
+      return <Ai360 color={Baichuan.colorPrimary} size={56} />;
     }
 
     default:
