@@ -2,13 +2,62 @@
 title: Groq Tool Calling
 ---
 
-# Groq Tool Calling
+# Groq 平台大模型 Tools Calling 评测（Llama 3/Qwen2/Mistral/...）
 
-## LLAMA3-70B
+由于 Groq 本身不支持 stream，因此 Tools Calling 的调用都是以单次请求的方式进行的。
 
-TODO
+## LLAMA3 70B
 
-## LLAMA3-8B
+### 简单调用指令：天气查询
+
+测试指令：指令 ①
+
+<Video src="https://github.com/lobehub/lobe-chat/assets/28616219/a509d3f4-20b5-40a4-a2dc-adf11e1789e8" />
+
+从上述视频中可以看到 LLAMA3 70B 支持并发 Tools Calling，可以同时调用多次天气查询。
+
+<Image
+  alt="LLAMA3 70B 简单指令的 Tools Calling"
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/f9cd0d4d-0e44-4bff-98cc-560f11259a60"
+/>
+
+<details>
+  <summary>Tools Calling 原始输出：</summary>
+
+````yml
+[no stream response] 2024-7-8 15:50:40.166
+
+{"id":"chatcmpl-ec4b6c0b-1078-4f50-a39c-e58b3b1f9c31","object":"chat.completion","created":1720425030,"model":"llama3-70b-8192","choices":[{"index":0,"message":{"role":"assistant","tool_calls":[{"id":"call_v89g","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\":\"杭州\"}"}},{"id":"call_jxwk","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\":\"北京}}]},"logprobs":null,"finish_reason":"tool_calls"}],"usage":{"prompt_tokens":969,"prompt_time":0.224209489,"completion_tokens":68,"completion_time":0.194285714,"total_tokens":1037,"total_time":0.418495203},"system_fingerprint":"fp_87cbfbbc4d","x_groq":{"id":"req_01j28n57x9e78a6bfbn9sdn139"}}
+
+````
+
+</details>
+
+### 复杂调用指令：文生图
+
+测试指令：指令 ②
+
+    <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/a509d3f4-20b5-40a4-a2dc-adf11e1789e8" />
+
+    <details>
+    <summary>Tools Calling 原始输出：</summary>
+
+    ````yml
+
+
+  [no stream response] 2024-7-8 18:0:34.811
+
+  {"id":"chatcmpl-e3b59ca9-1172-4ae2-96c7-3d6997a1f8a8","object":"chat.completion","created":1720432834,"model":"llama3-70b-8192","choices":[{"index":0,"message":{"role":"assistant","tool_calls":[{"id":"call_azm9","type":"function","function":{"name":"lobe-image-designer____text2image____builtin","arguments":"{\"prompts\":[\"A small, fluffy, and playful golden retriever puppy with a white patch on its forehead, sitting on a green grass field with a bright blue sky in the background, photo.\",\"A cute, little, brown and white Dalmatian puppy with a red collar, running around in a park with a sunny day, illustration.\",\"A tiny, grey and white Poodle puppy with a pink ribbon, sitting on a white couch with a few toys surrounding it, watercolor painting.\",\"A sweet, small, black and white Chihuahua puppy with a pink bow, lying on a soft, white blanket with a few stuffed animals nearby, oil painting.\"],\"quality\":\"standard\",\"seeds\":[],\"size\":\"1024x1024\",\"style\":\"vivid\"}"}}]},"logprobs":null,"finish_reason":"tool_calls"}],"usage":{"prompt_tokens":2305,"prompt_time":3.027052298,"completion_tokens":246,"completion_time":0.702857143,"total_tokens":2551,"total_time":3.729909441},"system_fingerprint":"fp_7ab5f7e105","x_groq":{"id":"req_01j28wk2q0efvs22qatw7rd0ds"}}
+
+  POST /api/chat/groq 200 in 17462ms
+
+
+  ````
+
+  </details>
+
+
+  ## LLAMA3-8B
 
 TODO
 
