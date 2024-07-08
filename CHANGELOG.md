@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.2.14](https://github.com/lobehub/lobe-chat/compare/v1.2.13...v1.2.14)
+
+<sup>Released on **2024-07-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Provider changes with model in model settings.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Provider changes with model in model settings, closes [#3146](https://github.com/lobehub/lobe-chat/issues/3146) ([e53bb5a](https://github.com/lobehub/lobe-chat/commit/e53bb5a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.2.13](https://github.com/lobehub/lobe-chat/compare/v1.2.12...v1.2.13)
 
 <sup>Released on **2024-07-07**</sup>
