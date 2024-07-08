@@ -1,6 +1,7 @@
 import {
   Anthropic,
   Azure,
+  Baichuan,
   Bedrock,
   DeepSeek,
   Google,
@@ -117,6 +118,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Novita: {
       return <Novita size={20} />;
+    }
+
+    case ModelProvider.Baichuan: {
+      return <Baichuan size={20} />;
     }
 
     default: {

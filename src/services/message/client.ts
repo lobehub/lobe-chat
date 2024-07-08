@@ -60,6 +60,12 @@ export class ClientService implements IMessageService {
     return MessageModel.updatePluginState(id, value);
   }
 
+  async updateMessagePluginArguments(id: string, value: string | Record<string, any>) {
+    const args = typeof value === 'string' ? value : JSON.stringify(value);
+
+    return MessageModel.updatePlugin(id, { arguments: args });
+  }
+
   async bindMessagesToTopic(topicId: string, messageIds: string[]) {
     return MessageModel.batchUpdate(messageIds, { topicId });
   }
@@ -68,7 +74,11 @@ export class ClientService implements IMessageService {
     return MessageModel.delete(id);
   }
 
-  async removeMessages(assistantId: string, topicId?: string) {
+  async removeMessages(ids: string[]) {
+    return MessageModel.bulkDelete(ids);
+  }
+
+  async removeMessagesByAssistant(assistantId: string, topicId?: string) {
     return MessageModel.batchDelete(assistantId, topicId);
   }
 

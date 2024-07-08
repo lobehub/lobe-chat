@@ -12,15 +12,8 @@ declare global {
       CLERK_WEBHOOK_SECRET?: string;
 
       // ===== Next Auth ===== //
-      /**
-       * @deprecated
-       */
-      ENABLE_OAUTH_SSO?: string;
       NEXT_AUTH_SECRET?: string;
-      /**
-       * @deprecated
-       */
-      SSO_PROVIDERS?: string;
+
       NEXT_AUTH_SSO_PROVIDERS?: string;
 
       AUTH0_CLIENT_ID?: string;
@@ -50,18 +43,6 @@ declare global {
 }
 
 export const getAuthConfig = () => {
-  if (process.env.ENABLE_OAUTH_SSO) {
-    console.warn(
-      '`ENABLE_OAUTH_SSO` is deprecated and will be removed in LobeChat 1.0. just set `NEXT_AUTH_SECRET` enough',
-    );
-  }
-
-  if (process.env.SSO_PROVIDERS) {
-    console.warn(
-      '`SSO_PROVIDERS` is deprecated and will be removed in LobeChat 1.0. Please replace with `NEXT_AUTH_SSO_PROVIDERS`',
-    );
-  }
-
   return createEnv({
     client: {
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
@@ -114,9 +95,8 @@ export const getAuthConfig = () => {
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
       // Next Auth
-      NEXT_PUBLIC_ENABLE_NEXT_AUTH:
-        !!process.env.NEXT_AUTH_SECRET || !!process.env.ENABLE_OAUTH_SSO,
-      NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS || process.env.SSO_PROVIDERS,
+      NEXT_PUBLIC_ENABLE_NEXT_AUTH: !!process.env.NEXT_AUTH_SECRET,
+      NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
 
       // Auth0

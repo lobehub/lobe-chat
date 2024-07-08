@@ -7,6 +7,7 @@ export interface StreamStack {
     index: number;
     name: string;
   };
+  toolIndex?: number;
 }
 
 export interface StreamProtocolChunk {

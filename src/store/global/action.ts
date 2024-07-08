@@ -24,6 +24,7 @@ export interface GlobalStoreAction {
   switchBackToChat: (sessionId?: string) => void;
   toggleChatSideBar: (visible?: boolean) => void;
   toggleExpandSessionGroup: (id: string, expand: boolean) => void;
+  toggleMobilePortal: (visible?: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
@@ -58,6 +59,12 @@ export const globalActionSlice: StateCreator<
       }
     });
     get().updateSystemStatus({ expandSessionGroupKeys: nextExpandSessionGroup });
+  },
+  toggleMobilePortal: (newValue) => {
+    const mobileShowPortal =
+      typeof newValue === 'boolean' ? newValue : !get().status.mobileShowPortal;
+
+    get().updateSystemStatus({ mobileShowPortal }, n('toggleMobilePortal', newValue));
   },
   toggleMobileTopic: (newValue) => {
     const mobileShowTopic =

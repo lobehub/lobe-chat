@@ -26,6 +26,7 @@ describe('featureFlagsSelectors', () => {
       showOpenAIProxyUrl: true,
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
+      enableClerkSignUp: true,
     });
   });
 });

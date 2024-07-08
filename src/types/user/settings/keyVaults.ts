@@ -18,10 +18,12 @@ export interface AWSBedrockKeyVault {
 export interface UserKeyVaults {
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
+  baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
+  lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;
   moonshot?: OpenAICompatibleKeyVault;

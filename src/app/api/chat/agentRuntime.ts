@@ -179,6 +179,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Baichuan: {
+      const { BAICHUAN_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || BAICHUAN_API_KEY);
+
+      return { apiKey };
+    }
   }
 };
 

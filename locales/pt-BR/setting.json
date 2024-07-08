@@ -43,6 +43,7 @@
     "title": "Configurações"
   },
   "llm": {
+    "aesGcm": "Suas chaves, endereço do agente, etc., serão criptografados usando o algoritmo de criptografia <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Por favor, insira sua chave de API {{name}}",
       "placeholder": "Chave de API {{name}}",
@@ -113,7 +114,7 @@
       "desc": "Além do endereço padrão, deve incluir http(s)://",
       "title": "Endereço do Proxy da API"
     },
-    "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente ✨"
+    "waitingForMore": "Mais modelos estão sendo <1>planejados para serem adicionados</1>, aguarde ansiosamente"
   },
   "plugin": {
     "addTooltip": "Adicionar plug-in personalizado",
@@ -208,7 +209,7 @@
       "title": "Limite de resposta única"
     },
     "model": {
-      "desc": "Modelo ChatGPT",
+      "desc": "{{provider}} modelo",
       "list": {
         "gpt-3.5-turbo": "GPT 3.5",
         "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",

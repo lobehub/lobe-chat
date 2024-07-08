@@ -8,9 +8,10 @@ import useSWR from 'swr';
 
 import { ollamaService } from '@/services/ollama';
 import { useChatStore } from '@/store/chat';
+import { formatSize } from '@/utils/format';
 
 import { ErrorActionContainer, FormAction } from '../../style';
-import { formatSize, useDownloadMonitor } from './useDownloadMonitor';
+import { useDownloadMonitor } from './useDownloadMonitor';
 
 interface OllamaModelFormProps {
   id: string;
