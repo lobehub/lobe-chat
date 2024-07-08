@@ -240,6 +240,11 @@ class AgentRuntime {
         runtimeModel = new LobeTaichuAI(params.taichu);
         break;
       }
+
+      case ModelProvider.Novita: {
+        runtimeModel = new LobeNovitaAI(params.novita ?? {});
+        break;
+      }
     }
 
     return new AgentRuntime(runtimeModel);
