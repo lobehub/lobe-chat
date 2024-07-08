@@ -108,7 +108,7 @@
     "@khmyznikov/pwa-install": "^0.3.9",
     "@lobehub/chat-plugin-sdk": "^1.32.3",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
-    "@lobehub/icons": "^1.23.0",
+    "@lobehub/icons": "^1.26.0",
     "@lobehub/tts": "^1.24.1",
     "@lobehub/ui": "^1.143.5",
     "@microsoft/fetch-event-source": "^2.0.1",
