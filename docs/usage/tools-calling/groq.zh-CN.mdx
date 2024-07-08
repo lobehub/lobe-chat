@@ -2,9 +2,16 @@
 title: Groq Tool Calling
 ---
 
-# Groq 平台大模型 Tools Calling 评测（Llama 3/Qwen2/Mistral/...）
+# Groq 平台模型 Tools Calling 评测（Llama 3/Mistral）
 
 由于 Groq 本身不支持 stream，因此 Tools Calling 的调用都是以单次请求的方式进行的。
+
+Groq 平台的模型 Tools Calling 能力一览
+
+| 模型         | 支持 Tools Calling | 流式 （Stream） | 并发（Parallel） | 简单指令得分 | 复杂指令 |
+| ------------ | ------------------ | --------------- | ---------------- | ------------ | -------- |
+| LLAMA3 70B   | ✅                 | ❌              | ✅               | 🌟🌟         | 🌟🌟     |
+| Mixtral-8x7B | ❌                 | ❌              | ❌               | ⛔           | ⛔       |
 
 ## LLAMA3 70B
 
@@ -24,12 +31,12 @@ title: Groq Tool Calling
 <details>
   <summary>Tools Calling 原始输出：</summary>
 
-````yml
+```yml
 [no stream response] 2024-7-8 15:50:40.166
 
 {"id":"chatcmpl-ec4b6c0b-1078-4f50-a39c-e58b3b1f9c31","object":"chat.completion","created":1720425030,"model":"llama3-70b-8192","choices":[{"index":0,"message":{"role":"assistant","tool_calls":[{"id":"call_v89g","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\":\"杭州\"}"}},{"id":"call_jxwk","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\":\"北京}}]},"logprobs":null,"finish_reason":"tool_calls"}],"usage":{"prompt_tokens":969,"prompt_time":0.224209489,"completion_tokens":68,"completion_time":0.194285714,"total_tokens":1037,"total_time":0.418495203},"system_fingerprint":"fp_87cbfbbc4d","x_groq":{"id":"req_01j28n57x9e78a6bfbn9sdn139"}}
 
-````
+```
 
 </details>
 
@@ -37,30 +44,61 @@ title: Groq Tool Calling
 
 测试指令：指令 ②
 
-    <Video src="https://github.com/lobehub/lobe-chat/assets/28616219/b790f5d8-e797-4325-a974-436505b16fba" />
+<Video src="https://github.com/lobehub/lobe-chat/assets/28616219/b790f5d8-e797-4325-a974-436505b16fba" />
 
-https://github.com/lobehub/lobe-chat/assets/28616219/082170fa-6d09-4602-8e23-eb678024305f
+<Image
+  alt="LLAMA3 70B 复杂指令的 Tools Calling"
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/082170fa-6d09-4602-8e23-eb678024305f"
+/>
 
-    <details>
-    <summary>Tools Calling 原始输出：</summary>
+<details>
+<summary>Tools Calling 原始输出：</summary>
 
-    ````yml
+```yml
+[no stream response] 2024-7-8 18:0:34.811
 
+{"id":"chatcmpl-e3b59ca9-1172-4ae2-96c7-3d6997a1f8a8","object":"chat.completion","created":1720432834,"model":"llama3-70b-8192","choices":[{"index":0,"message":{"role":"assistant","tool_calls":[{"id":"call_azm9","type":"function","function":{"name":"lobe-image-designer____text2image____builtin","arguments":"{\"prompts\":[\"A small, fluffy, and playful golden retriever puppy with a white patch on its forehead, sitting on a green grass field with a bright blue sky in the background, photo.\",\"A cute, little, brown and white Dalmatian puppy with a red collar, running around in a park with a sunny day, illustration.\",\"A tiny, grey and white Poodle puppy with a pink ribbon, sitting on a white couch with a few toys surrounding it, watercolor painting.\",\"A sweet, small, black and white Chihuahua puppy with a pink bow, lying on a soft, white blanket with a few stuffed animals nearby, oil painting.\"],\"quality\":\"standard\",\"seeds\":[],\"size\":\"1024x1024\",\"style\":\"vivid\"}"}}]},"logprobs":null,"finish_reason":"tool_calls"}],"usage":{"prompt_tokens":2305,"prompt_time":3.027052298,"completion_tokens":246,"completion_time":0.702857143,"total_tokens":2551,"total_time":3.729909441},"system_fingerprint":"fp_7ab5f7e105","x_groq":{"id":"req_01j28wk2q0efvs22qatw7rd0ds"}}
 
-  [no stream response] 2024-7-8 18:0:34.811
+POST /api/chat/groq 200 in 17462ms
+```
 
-  {"id":"chatcmpl-e3b59ca9-1172-4ae2-96c7-3d6997a1f8a8","object":"chat.completion","created":1720432834,"model":"llama3-70b-8192","choices":[{"index":0,"message":{"role":"assistant","tool_calls":[{"id":"call_azm9","type":"function","function":{"name":"lobe-image-designer____text2image____builtin","arguments":"{\"prompts\":[\"A small, fluffy, and playful golden retriever puppy with a white patch on its forehead, sitting on a green grass field with a bright blue sky in the background, photo.\",\"A cute, little, brown and white Dalmatian puppy with a red collar, running around in a park with a sunny day, illustration.\",\"A tiny, grey and white Poodle puppy with a pink ribbon, sitting on a white couch with a few toys surrounding it, watercolor painting.\",\"A sweet, small, black and white Chihuahua puppy with a pink bow, lying on a soft, white blanket with a few stuffed animals nearby, oil painting.\"],\"quality\":\"standard\",\"seeds\":[],\"size\":\"1024x1024\",\"style\":\"vivid\"}"}}]},"logprobs":null,"finish_reason":"tool_calls"}],"usage":{"prompt_tokens":2305,"prompt_time":3.027052298,"completion_tokens":246,"completion_time":0.702857143,"total_tokens":2551,"total_time":3.729909441},"system_fingerprint":"fp_7ab5f7e105","x_groq":{"id":"req_01j28wk2q0efvs22qatw7rd0ds"}}
+</details>
 
-  POST /api/chat/groq 200 in 17462ms
-
-
-  ````
-
-  </details>
-
-
-  ## LLAMA3-8B
+## LLAMA3-8B
 
 TODO
 
 ## Mixtral-8x7B
+
+### 简单调用指令：天气查询
+
+测试指令：指令 ①
+
+<Video src="https://github.com/lobehub/lobe-chat/assets/28616219/70b887fa-0e16-4ed2-892e-db52dcecf71d" />
+
+从上述视频中可以看到 Mixtral-8x7B 对于天气插件的查询输出的参数有问题，导致无法正常调用插件。
+
+<Image
+  alt="Mixtral-8x7B 简单指令的 Tools Calling"
+  src="https://github.com/lobehub/lobe-chat/assets/28616219/1b7bf28e-fa31-4838-ae92-9100a4bbb71c"
+/>
+
+<details>
+  <summary>Tools Calling 原始输出：</summary>
+
+```yml
+
+[no stream response] 2024-7-8 22:18:19.682
+
+{"id":"chatcmpl-9f89d669-5642-48be-b5cd-7a29756800c0","object":"chat.completion","created":1720448299,"model":"mixtral-8x7b-32768","choices":[{"index":0,"message":{"role":"assistant","tool_calls":[{"id":"call_719t","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\":\"Hangzhou,Beijing\"}"}}]},"logprobs":null,"finish_reason":"tool_calls"}],"usage":{"prompt_tokens":1262,"prompt_time":0.116684046,"completion_tokens":102,"completion_time":0.163113006,"total_tokens":1364,"total_time":0.279797052},"system_fingerprint":"fp_c5f20b5bb1","x_groq":{"id":"req_01j29bbc8xen2s3thp9qen5bys"}}
+
+POST /api/chat/groq 200 in 4860ms
+```
+
+</details>
+
+### 复杂调用指令：文生图
+
+测试指令：指令 ②
+
+TODO
