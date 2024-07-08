@@ -1,4 +1,5 @@
 import {
+  AiMass,
   Anthropic,
   Baichuan,
   DeepSeek,
@@ -11,7 +12,6 @@ import {
   OpenRouter,
   Perplexity,
   Stepfun,
-  // Taichu,
   Together,
   Tongyi,
   ZeroOne,
@@ -83,7 +83,7 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
     }
 
     case ModelProvider.Taichu: {
-      return <Baichuan color={Baichuan.colorPrimary} size={56} />; // TODO: change icon to Taichu
+      return <AiMass color={AiMass.colorPrimary} size={56} />;
     }
 
     case ModelProvider.TogetherAI: {

@@ -1,4 +1,5 @@
 import {
+  AiMass,
   Anthropic,
   Azure,
   Baichuan,
@@ -15,7 +16,6 @@ import {
   OpenRouter,
   Perplexity,
   Stepfun,
-  // Taichu,
   Together,
   Tongyi,
   ZeroOne,
@@ -121,7 +121,7 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
     }
 
     case ModelProvider.Taichu: {
-      return <Baichuan size={20} />; // TODO: change icon to Taichu
+      return <AiMass size={20} />;
     }
 
     default: {

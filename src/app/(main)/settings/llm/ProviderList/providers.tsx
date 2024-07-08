@@ -1,4 +1,5 @@
 import {
+  AiMass,
   Anthropic,
   Baichuan,
   Claude,
@@ -12,7 +13,6 @@ import {
   OpenRouter,
   Perplexity,
   Stepfun,
-  // Taichu,
   Together,
   Tongyi,
   ZeroOne,
@@ -182,7 +182,7 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...TaichuProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
-        title: <Baichuan.Combine size={ 20 } type={ 'color' } />, // TODO: change icon to Taichu
+        title: <AiMass.Combine size={ 20 } type={ 'color' } />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
