@@ -92,7 +92,7 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
     }
 
     case ModelProvider.Zhinao: {
-      return <Ai360 color={Baichuan.colorPrimary} size={56} />;
+      return <Ai360 color={Ai360.colorPrimary} size={56} />;
     }
 
     default:
