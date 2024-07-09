@@ -15,7 +15,6 @@ import {
   Together,
   Tongyi,
   ZeroOne,
-  // Zhinao,
   Zhipu,
 } from '@lobehub/icons';
 import { useTheme } from 'antd-style';
