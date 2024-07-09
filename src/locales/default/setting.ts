@@ -348,7 +348,7 @@ export default {
       unknownOS: '未知系统',
     },
     warning: {
-      message: '本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。',
+      tip: '经过较长一段时间社区公测，WebRTC 同步可能无法稳定满足通用的数据同步诉求。请自行 <1>部署信令服务器</1> 后使用。',
     },
     webrtc: {
       channelName: {
@@ -364,9 +364,13 @@ export default {
       },
       desc: '实时、点对点的数据通信，需设备同时在线才可同步',
       enabled: {
-        invalid: '请填写同步频道名称后再开启',
-        // desc: 'WebRTC 将使用此名创建同步频道，确保频道名称唯一',
+        invalid: '请填写信令服务器和同步频道名称后再开启',
         title: '开启同步',
+      },
+      signaling: {
+        desc: 'WebRTC 将使用该地址进行同步',
+        placeholder: '请输入信令服务器地址',
+        title: '信令服务器',
       },
       title: 'WebRTC 同步',
     },

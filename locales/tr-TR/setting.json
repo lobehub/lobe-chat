@@ -345,7 +345,7 @@
       "unknownOS": "Bilinmeyen Sistem"
     },
     "warning": {
-      "message": "Bu özellik şu anda deneysel bir özellik olup, beklenmedik veya kararsız durumlar yaşanabilir. Sorunla karşılaşırsanız lütfen geri bildirimde bulunun."
+      "tip": "WebRTC'nin uzun bir topluluk beta testinden sonra, genel veri senkronizasyon ihtiyaçlarını kararlı bir şekilde karşılayamayabileceği uyarısı. Lütfen <1> sinyal sunucusunu dağıtın </1> ve ardından kullanın."
     },
     "webrtc": {
       "channelName": {
@@ -361,8 +361,13 @@
       },
       "desc": "Gerçek zamanlı, noktadan noktaya veri iletişimi, senkronizasyon için cihazların aynı anda çevrimiçi olması gerekir",
       "enabled": {
-        "invalid": "Lütfen senkronizasyon kanalı adını girdikten sonra etkinleştirin",
+        "invalid": "Lütfen sinyal sunucusu ve senkronizasyon kanal adını girerek etkinleştirin",
         "title": "Senkronizasyonu Etkinleştir"
+      },
+      "signaling": {
+        "desc": "WebRTC senkronizasyon için bu adresi kullanacak",
+        "placeholder": "Lütfen sinyal sunucusu adresini girin",
+        "title": "Sinyal Sunucusu"
       },
       "title": "WebRTC Senkronizasyonu"
     }
