@@ -71,6 +71,9 @@ export default {
     PluginGatewayError: '很抱歉，插件网关出现错误，请检查插件网关配置是否正确',
     PluginOpenApiInitError: '很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确',
 
+    PluginFailToTransformArguments:
+      '很抱歉，插件调用参数解析失败，请尝试重新生成助手消息，或更换 Tools Calling 能力更强的 AI 模型后重试',
+
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
     InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
     LocationNotSupportError:

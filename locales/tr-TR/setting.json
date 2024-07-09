@@ -209,7 +209,7 @@
       "title": "Max Token Sınırlaması"
     },
     "model": {
-      "desc": "ChatGPT modeli",
+      "desc": "{{provider}} Model",
       "list": {
         "gpt-3.5-turbo": "GPT 3.5",
         "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",

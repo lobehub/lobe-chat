@@ -46,3 +46,8 @@ export const debugStream = async (stream: ReadableStream) => {
     }
   }
 };
+
+export const debugResponse = (response: any) => {
+  console.log(`\n[no stream response] ${getTime()}\n`);
+  console.log(JSON.stringify(response) + '\n');
+};
