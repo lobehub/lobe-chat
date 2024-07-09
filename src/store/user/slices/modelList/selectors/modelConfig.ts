@@ -19,11 +19,12 @@ const providerWhitelist = new Set(['ollama']);
 const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: UserStore) => {
   const config = getProviderConfigById(provider)(s);
 
+  // If the provider already disable broswer request in model config, force on Server.
+  if (isProviderDisableBroswerRequest(provider)) return false;
+
   // If the provider in the whitelist, follow the user settings
   if (providerWhitelist.has(provider) && typeof config?.fetchOnClient !== 'undefined')
     return config?.fetchOnClient;
-  // If the provider already disable broswer request in model config, force on Server.
-  if (isProviderDisableBroswerRequest(provider)) return false;
 
   // 1. If no baseUrl and apikey input, force on Server.
   const isProviderEndpointNotEmpty =
