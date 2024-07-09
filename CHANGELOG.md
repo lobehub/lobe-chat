@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.3.4](https://github.com/lobehub/lobe-chat/compare/v1.3.3...v1.3.4)
+
+<sup>Released on **2024-07-09**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Support disable clientFetch by default.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Support disable clientFetch by default, closes [#3133](https://github.com/lobehub/lobe-chat/issues/3133) [#3108](https://github.com/lobehub/lobe-chat/issues/3108) ([4415652](https://github.com/lobehub/lobe-chat/commit/4415652))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.3.3](https://github.com/lobehub/lobe-chat/compare/v1.3.2...v1.3.3)
 
 <sup>Released on **2024-07-09**</sup>
