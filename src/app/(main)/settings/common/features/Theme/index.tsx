@@ -12,7 +12,7 @@ import { enableAuth } from '@/const/auth';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
-import { localeOptions } from '@/locales/resources';
+import { Locales, localeOptions } from '@/locales/resources';
 import { useUserStore } from '@/store/user';
 import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
 import { switchLang } from '@/utils/client/switchLang';
@@ -20,6 +20,11 @@ import { switchLang } from '@/utils/client/switchLang';
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
 
 type SettingItemGroup = ItemGroup;
+
+const handleLangChange = (value: Locales) => {
+  switchLang(value);
+  window.location.reload();
+};
 
 const Theme = memo(() => {
   const { t } = useTranslation('setting');
@@ -74,7 +79,7 @@ const Theme = memo(() => {
       {
         children: (
           <Select
-            onChange={switchLang}
+            onChange={handleLangChange}
             options={[{ label: t('settingTheme.lang.autoMode'), value: 'auto' }, ...localeOptions]}
           />
         ),
