@@ -4,6 +4,7 @@ import { Form, type ItemGroup, SelectWithImg, SliderWithInput } from '@lobehub/u
 import { Select } from 'antd';
 import isEqual from 'fast-deep-equal';
 import { Monitor, Moon, Sun } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -21,19 +22,20 @@ import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
 
 type SettingItemGroup = ItemGroup;
 
-const handleLangChange = (value: Locales) => {
-  switchLang(value);
-  window.location.reload();
-};
-
 const Theme = memo(() => {
   const { t } = useTranslation('setting');
+  const router = useRouter();
   const [form] = Form.useForm();
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
   const themeMode = useUserStore(userGeneralSettingsSelectors.currentThemeMode);
   const [setThemeMode, setSettings] = useUserStore((s) => [s.switchThemeMode, s.setSettings]);
 
   useSyncSettings(form);
+
+  const handleLangChange = (value: Locales) => {
+    switchLang(value);
+    router.refresh();
+  };
 
   const theme: SettingItemGroup = {
     children: [
