@@ -15,6 +15,7 @@ import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { Locales, localeOptions } from '@/locales/resources';
 import { useUserStore } from '@/store/user';
 import {
+  authSelectors,
   settingsSelectors,
   userGeneralSettingsSelectors,
 } from '@/store/user/selectors';
@@ -33,7 +34,7 @@ const Theme = memo(() => {
   const [setThemeMode, setSettings, enableAuth] = useUserStore((s) => [
     s.switchThemeMode,
     s.setSettings,
-    s.enableAuth(),
+    authSelectors.enabledAuth(s),
   ]);
 
   useSyncSettings(form);
