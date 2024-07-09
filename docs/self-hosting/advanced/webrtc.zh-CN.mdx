@@ -1,4 +1,4 @@
-# LobeChat WebRTC 同步功能使用指南
+# LobeChat WebRTC 同步
 
 ## WebRTC 简介
 
@@ -12,7 +12,9 @@ WebRTC (Web Real-Time Communication) 是一项实现浏览器之间点对点通�
 
 ### 部署信令服务器
 
-使用 Zeabur 平台一键部署 WebRTC 信令服务器： [![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/MY0JZG?referralCode=arvinxx)
+使用 Zeabur 平台一键部署 WebRTC 信令服务器：
+
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/MY0JZG?referralCode=arvinxx)
 
 或者查看 [源码](https://github.com/lobehub/y-webrtc-signaling) 自行部署。
 
@@ -20,13 +22,18 @@ WebRTC (Web Real-Time Communication) 是一项实现浏览器之间点对点通�
 
 ### 在部署实例中开启 WebRTC 同步
 
-LobeChat 默认隐藏了 WebRTC 同步功能，需要通过配置环境变量 `FEATURE_FLAGS=+webrtc_sync` 开启 WebRTC 同步的特性。
+LobeChat 默认隐藏了 WebRTC 同步功能，需要通过添加环境变量 `FEATURE_FLAGS=+webrtc_sync` 来开启 WebRTC 同步特性。
 
 ### 配置 LobeChat 的 WebRTC 同步设置
 
-- 打开 LobeChat 设置
-- 在同步设置中添加第一步中获得的信令服务器地址；
-- 设置同步频道名称和密码
+<Image
+  alt={'LobeChat 数据同步设置页'}
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/bf86bf1e-87fb-4015-8587-15ff28bb9c24'}
+/>
+
+1. 打开 LobeChat 设置 -> 数据同步
+2. 在 WebRTC 同步中填写信令服务器地址；
+3. 设置同步频道名称和密码
 
 ### 在需要同步的设备上重复以上配置
 
@@ -53,8 +60,6 @@ WebRTC 要求设备同时在线才能进行同步，这意味着无法在一台�
 - 在 PC 上可以互相同步、 手机 sim 卡无法和 PC 同步、但是换成和PC一样的WIFI可以和 PC 同步；
 - 任何切换网络都无法同步；
 
-### 浏览器兼容性问题
-
 ### 稳定性与性能问题
 
 - 部分用户报告在 Firefox 浏览器上遇到 ICE 连接失败的问题：[WebRTC Data Sync Feedback](https://github.com/lobehub/lobe-chat/issues/1683#issuecomment-2094745907)
@@ -68,5 +73,5 @@ WebRTC 要求设备同时在线才能进行同步，这意味着无法在一台�
 
 <Callout type={'warning'}>
   请注意，我们已经在 [PR 3182](https://github.com/lobehub/lobe-chat/pull/3182)
-  中正式宣布归档该同步特性，以上问题将不再作为修复的问题。
+  中正式宣布归档该同步特性，上述问题将不再考虑进行修复。
 </Callout>
