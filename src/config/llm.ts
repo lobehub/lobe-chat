@@ -85,6 +85,9 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
+
+      ENABLED_DOUBAO: z.boolean(),
+      ARK_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -161,6 +164,9 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
+
+      ENABLED_DOUBAO: !!process.env.ARK_API_KEY,
+      ARK_API_KEY: process.env.ARK_API_KEY,
     },
   });
 };

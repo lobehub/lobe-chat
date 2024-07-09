@@ -27,6 +27,7 @@ export enum ModelProvider {
   Baichuan = 'baichuan',
   Bedrock = 'bedrock',
   DeepSeek = 'deepseek',
+  Doubao = 'doubao',
   Google = 'google',
   Groq = 'groq',
   Minimax = 'minimax',

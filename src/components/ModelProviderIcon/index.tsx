@@ -4,6 +4,7 @@ import {
   Baichuan,
   Bedrock,
   DeepSeek,
+  Doubao,
   Google,
   Groq,
   LobeHub,
@@ -117,6 +118,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Baichuan: {
       return <Baichuan size={20} />;
+    }
+
+    case ModelProvider.Doubao: {
+      return <Doubao.Color size={20} />;
     }
 
     default: {
