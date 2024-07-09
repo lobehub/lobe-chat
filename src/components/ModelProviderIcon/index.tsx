@@ -1,4 +1,5 @@
 import {
+  AiMass,
   Anthropic,
   Azure,
   Baichuan,
@@ -122,6 +123,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Baichuan: {
       return <Baichuan size={20} />;
+    }
+
+    case ModelProvider.Taichu: {
+      return <AiMass size={20} />;
     }
 
     default: {
