@@ -20,7 +20,7 @@ export const useCategory = () => {
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
     authSelectors.isLoginWithClerk(s),
-    s.enableAuth(),
+    authSelectors.enabledAuth(s),
   ]);
 
   const profile: CellProps[] = [

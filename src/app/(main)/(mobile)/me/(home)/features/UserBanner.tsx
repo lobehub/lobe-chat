@@ -14,7 +14,7 @@ const UserBanner = memo(() => {
   const router = useRouter();
   const isLoginWithAuth = useUserStore(authSelectors.isLoginWithAuth);
   const [enableAuth, signIn, enabledNextAuth] = useUserStore((s) => [
-    s.enableAuth(),
+    authSelectors.enabledAuth(s),
     s.openLogin,
     authSelectors.enabledNextAuth(s),
   ]);

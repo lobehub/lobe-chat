@@ -21,7 +21,7 @@ const PanelContent = memo<{ closePopover: () => void }>(({ closePopover }) => {
     s.openLogin,
     s.logout,
     s.openUserProfile,
-    s.enableAuth(),
+    authSelectors.enabledAuth(s),
     authSelectors.enabledNextAuth(s),
   ]);
   const { mainItems, logoutItems } = useMenu();

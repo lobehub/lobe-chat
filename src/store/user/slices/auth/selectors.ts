@@ -41,6 +41,7 @@ const isLogin = (s: UserStore) => {
 };
 
 export const authSelectors = {
+  enabledAuth: (s: UserStore): boolean => s.enableAuth(),
   enabledNextAuth: (s: UserStore): boolean => !!s.enabledNextAuth,
   isLoaded: (s: UserStore) => s.isLoaded,
   isLogin,
