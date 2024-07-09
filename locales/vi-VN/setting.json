@@ -345,7 +345,7 @@
       "unknownOS": "Hệ điều hành không xác định"
     },
     "warning": {
-      "message": "Chức năng này hiện vẫn đang trong thử nghiệm, có thể gặp phải tình huống ngoài dự kiến hoặc không ổn định, nếu gặp vấn đề vui lòng gửi phản hồi ngay lập tức."
+      "tip": "经过较长一段时间社区公测，WebRTC 同步可能无法稳定满足通用的数据同步诉求。请自行 <1>部署信令服务器</1> 后使用。"
     },
     "webrtc": {
       "channelName": {
@@ -361,7 +361,6 @@
       },
       "desc": "Truyền thông dữ liệu thời gian thực, điểm-điểm, cần thiết bị cùng online mới có thể đồng bộ",
       "enabled": {
-        "invalid": "Vui lòng nhập tên kênh đồng bộ trước khi bật",
         "title": "Bật đồng bộ"
       },
       "title": "WebRTC Đồng bộ"
@@ -407,5 +406,15 @@
       "store": "Cửa hàng tiện ích"
     },
     "title": "Công cụ mở rộng"
+  },
+  "webrtc": {
+    "enabled": {
+      "invalid": "请填写信令服务器和同步频道名称后再开启"
+    },
+    "signaling": {
+      "desc": "WebRTC sẽ sử dụng địa chỉ này để đồng bộ",
+      "placeholder": "Vui lòng nhập địa chỉ máy chủ tín hiệu",
+      "title": "Máy chủ tín hiệu"
+    }
   }
 }

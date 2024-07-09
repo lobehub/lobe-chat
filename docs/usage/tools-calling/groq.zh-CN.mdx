@@ -1,12 +1,19 @@
 ---
-title: Groq Tool Calling
+title: Groq Tools Calling
+description: >-
+  了解 Groq 平台模型 Tools Calling的能力一览，包括LLAMA3 70B、LLAMA3
+  8B和Mixtral-8x7B的简单和复杂指令调用情况。
+tags:
+  - Groq 平台模型
+  - Tools Calling
+  - LLAMA3 70B
+  - LLAMA3 8B
+  - Mixtral-8x7B
 ---
 
 # Groq 平台模型 Tools Calling 评测（Llama 3/Mistral）
 
-<Callout type={'info'}>
-  由于 Groq 本身不支持 stream，因此 Tools Calling 的调用是普通请求。
-</Callout>
+<Callout type={'info'}>由于 Groq 本身不支持 stream，因此 Tools Calling 的调用是普通请求。</Callout>
 
 Groq 平台的模型 Tools Calling 能力一览：
 
@@ -15,7 +22,6 @@ Groq 平台的模型 Tools Calling 能力一览：
 | LLAMA3 70B   | ✅                 | ❌              | ✅               | 🌟🌟         | 🌟🌟     |
 | LLAMA3 8B    | ✅                 | ❌              | ✅               | 🌟🌟         | 🌟       |
 | Mixtral-8x7B | ✅                 | ❌              | ✅               | ⛔           | 🌟🌟     |
-
 
 ## LLAMA3 70B
 
@@ -120,7 +126,7 @@ LLAMA3 8B 在 DallE 的输出场景下，只会输出 1 张图片，而不是像
 POST /api/chat/groq 200 in 2517ms
 ```
 
-  </details>
+</details>
 
 ## Mixtral-8x7B
 

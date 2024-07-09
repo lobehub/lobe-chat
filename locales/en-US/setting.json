@@ -345,7 +345,7 @@
       "unknownOS": "Unknown OS"
     },
     "warning": {
-      "message": "This feature is currently experimental and may have unexpected or unstable behavior. If you encounter any issues, please submit feedback promptly."
+      "tip": "After a long period of community testing, WebRTC synchronization may not reliably meet general data synchronization needs. Please <1>deploy a signaling server</1> before use."
     },
     "webrtc": {
       "channelName": {
@@ -361,8 +361,13 @@
       },
       "desc": "Real-time, peer-to-peer data communication requires all devices to be online for synchronization.",
       "enabled": {
-        "invalid": "Please enter a sync channel name before enabling",
+        "invalid": "Please fill in the signaling server and synchronization channel name before enabling.",
         "title": "Enable Sync"
+      },
+      "signaling": {
+        "desc": "WebRTC will use this address for synchronization",
+        "placeholder": "Enter signaling server address",
+        "title": "Signaling Server"
       },
       "title": "WebRTC Sync"
     }
