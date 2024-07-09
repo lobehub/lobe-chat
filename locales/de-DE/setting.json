@@ -345,7 +345,7 @@
       "unknownOS": "Unbekanntes Betriebssystem"
     },
     "warning": {
-      "message": "Diese Funktion ist derzeit experimentell und kann unerwartete oder instabile Situationen aufweisen. Bitte geben Sie bei Problemen rechtzeitig Feedback ab."
+      "tip": "Nach einer längeren Phase des Community-Tests kann die WebRTC-Synchronisierung möglicherweise nicht stabil genug sein, um allgemeine Synchronisierungsanforderungen zu erfüllen. Bitte <1>richten Sie einen Signalisierungsserver ein</1> und verwenden Sie ihn dann."
     },
     "webrtc": {
       "channelName": {
@@ -361,8 +361,13 @@
       },
       "desc": "Echtzeit, Punkt-zu-Punkt-Datenkommunikation, bei der die Geräte gleichzeitig online sein müssen, um synchronisiert zu werden",
       "enabled": {
-        "invalid": "Bitte geben Sie zuerst den Synchronisierungskanalnamen ein, bevor Sie die Synchronisierung aktivieren",
+        "invalid": "Bitte geben Sie zuerst den Signalisierungsserver und den Synchronisierungskanal an, bevor Sie dies aktivieren.",
         "title": "Synchronisierung aktivieren"
+      },
+      "signaling": {
+        "desc": "WebRTC wird diese Adresse für die Synchronisierung verwenden",
+        "placeholder": "Bitte geben Sie die Adresse des Signalisierungsservers ein",
+        "title": "Signalisierungsserver"
       },
       "title": "WebRTC-Synchronisierung"
     }
