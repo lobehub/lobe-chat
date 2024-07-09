@@ -7,8 +7,6 @@ import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
-import { useSessionStore } from '@/store/session';
-import { useUserStore } from '@/store/user';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
@@ -288,6 +286,139 @@ describe('chatSelectors', () => {
       });
       const result = chatSelectors.showInboxWelcome(state);
       expect(result).toBe(true);
+    });
+  });
+
+  describe('currentToolMessages', () => {
+    it('should return only tool messages', () => {
+      const messages = [
+        { id: '1', role: 'user', content: 'Hello' },
+        { id: '2', role: 'assistant', content: 'Hi' },
+        { id: '3', role: 'tool', content: 'Tool message 1' },
+        { id: '4', role: 'user', content: 'Query' },
+        { id: '5', role: 'tool', tools: [] },
+      ] as ChatMessage[];
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
+      };
+      const result = chatSelectors.currentToolMessages(state as ChatStore);
+      expect(result).toHaveLength(2);
+      expect(result.every((msg) => msg.role === 'tool')).toBe(true);
+    });
+
+    it('should return an empty array when no tool messages exist', () => {
+      const messages = [
+        { id: '1', role: 'user', content: 'Hello' },
+        { id: '2', role: 'assistant', content: 'Hi' },
+      ] as ChatMessage[];
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
+      };
+      const result = chatSelectors.currentToolMessages(state as ChatStore);
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('currentChatKey', () => {
+    it('should generate correct key with activeId only', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'testId',
+        activeTopicId: undefined,
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey('testId', undefined));
+    });
+
+    it('should generate correct key with both activeId and activeTopicId', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'testId',
+        activeTopicId: 'topicId',
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey('testId', 'topicId'));
+    });
+
+    it('should generate key with undefined activeId', () => {
+      const state: Partial<ChatStore> = {
+        activeId: undefined,
+        activeTopicId: 'topicId',
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey(undefined as any, 'topicId'));
+    });
+
+    it('should generate key with empty string activeId', () => {
+      const state: Partial<ChatStore> = {
+        activeId: '',
+        activeTopicId: undefined,
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey('', undefined));
+    });
+  });
+
+  describe('currentChatIDsWithGuideMessage', () => {
+    it('should return message IDs including guide message for empty chat', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [],
+        },
+      };
+      const result = chatSelectors.currentChatIDsWithGuideMessage(state as ChatStore);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBe('default');
+    });
+
+    it('should return existing message IDs for non-empty chat', () => {
+      const messages = [
+        { id: '1', role: 'user', content: 'Hello' },
+        { id: '2', role: 'assistant', content: 'Hi' },
+      ] as ChatMessage[];
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
+      };
+      const result = chatSelectors.currentChatIDsWithGuideMessage(state as ChatStore);
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(['1', '2']);
+    });
+  });
+
+  describe('isToolCallStreaming', () => {
+    it('should return true when tool call is streaming for given message and index', () => {
+      const state: Partial<ChatStore> = {
+        toolCallingStreamIds: {
+          'msg-1': [true, false, true],
+        },
+      };
+      expect(chatSelectors.isToolCallStreaming('msg-1', 0)(state as ChatStore)).toBe(true);
+      expect(chatSelectors.isToolCallStreaming('msg-1', 2)(state as ChatStore)).toBe(true);
+    });
+
+    it('should return false when tool call is not streaming for given message and index', () => {
+      const state: Partial<ChatStore> = {
+        toolCallingStreamIds: {
+          'msg-1': [true, false, true],
+        },
+      };
+      expect(chatSelectors.isToolCallStreaming('msg-1', 1)(state as ChatStore)).toBe(false);
+      expect(chatSelectors.isToolCallStreaming('msg-2', 0)(state as ChatStore)).toBe(false);
+    });
+
+    it('should return false when no streaming data exists for the message', () => {
+      const state: Partial<ChatStore> = {
+        toolCallingStreamIds: {},
+      };
+      expect(chatSelectors.isToolCallStreaming('msg-1', 0)(state as ChatStore)).toBe(false);
     });
   });
 });

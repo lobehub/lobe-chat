@@ -139,6 +139,7 @@
     "modalDesc": "Después de configurar la dirección del mercado de complementos, puede utilizar un mercado personalizado de complementos.",
     "title": "Configuración del mercado de complementos"
   },
+  "showInPortal": "Por favor, consulta los detalles en el portal de trabajo",
   "store": {
     "actions": {
       "confirmUninstall": "Está a punto de desinstalar este complemento. Se eliminará la configuración del complemento. Confirme su acción.",

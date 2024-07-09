@@ -209,7 +209,7 @@
       "title": "Max Tokens Limit"
     },
     "model": {
-      "desc": "ChatGPT model",
+      "desc": "{{provider}} model",
       "list": {
         "gpt-3.5-turbo": "GPT 3.5",
         "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",

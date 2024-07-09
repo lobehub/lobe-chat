@@ -1,0 +1,10 @@
+{
+  "Artifacts": "Tác Phẩm",
+  "actions": {
+    "genAiMessage": "Tạo tin nhắn trợ giúp",
+    "summary": "Tóm tắt",
+    "summaryTooltip": "Tóm tắt nội dung hiện tại"
+  },
+  "emptyArtifactList": "Danh sách Tác Phẩm hiện tại đang trống, vui lòng sử dụng các plugin trong cuộc trò chuyện trước khi xem lại",
+  "title": "Cửa sổ mở rộng"
+}

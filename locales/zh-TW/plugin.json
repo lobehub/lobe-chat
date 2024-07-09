@@ -139,6 +139,7 @@
     "modalDesc": "設定外掛市集的網址後，您可以使用自訂的外掛市集",
     "title": "設定外掛市集"
   },
+  "showInPortal": "請在入口網站中查看",
   "store": {
     "actions": {
       "confirmUninstall": "即將卸載該插件，卸載後將清除該插件配置，請確認你的操作",
