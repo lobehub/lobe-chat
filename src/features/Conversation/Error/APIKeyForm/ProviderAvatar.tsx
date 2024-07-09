@@ -1,4 +1,5 @@
 import {
+  AiMass,
   Anthropic,
   Baichuan,
   DeepSeek,
@@ -79,6 +80,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.Stepfun: {
       return <Stepfun color={Stepfun.colorPrimary} size={56} />;
+    }
+
+    case ModelProvider.Taichu: {
+      return <AiMass.Color size={56} />;
     }
 
     case ModelProvider.TogetherAI: {
