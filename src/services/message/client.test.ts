@@ -23,6 +23,7 @@ vi.mock('@/database/client/models/message', () => {
       count: vi.fn(),
       query: vi.fn(),
       delete: vi.fn(),
+      bulkDelete: vi.fn(),
       queryBySessionId: vi.fn(),
       update: vi.fn(),
       updatePlugin: vi.fn(),
@@ -100,6 +101,19 @@ describe('MessageClientService', () => {
       expect(result).toBe(true);
     });
   });
+  describe('removeMessages', () => {
+    it('should remove a message by id', async () => {
+      // Setup
+      (MessageModel.bulkDelete as Mock).mockResolvedValue(true);
+
+      // Execute
+      const result = await messageService.removeMessages([mockMessageId]);
+
+      // Assert
+      expect(MessageModel.bulkDelete).toHaveBeenCalledWith([mockMessageId]);
+      expect(result).toBe(true);
+    });
+  });
 
   describe('getMessages', () => {
     it('should retrieve messages by sessionId and topicId', async () => {
@@ -132,7 +146,7 @@ describe('MessageClientService', () => {
     });
   });
 
-  describe('removeMessages', () => {
+  describe('removeMessagesByAssistant', () => {
     it('should batch remove messages by assistantId and topicId', async () => {
       // Setup
       const assistantId = 'assistant-id';
@@ -140,7 +154,7 @@ describe('MessageClientService', () => {
       (MessageModel.batchDelete as Mock).mockResolvedValue(true);
 
       // Execute
-      const result = await messageService.removeMessages(assistantId, topicId);
+      const result = await messageService.removeMessagesByAssistant(assistantId, topicId);
 
       // Assert
       expect(MessageModel.batchDelete).toHaveBeenCalledWith(assistantId, topicId);

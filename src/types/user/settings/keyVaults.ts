@@ -40,6 +40,7 @@ export interface UserKeyVaults {
   qwen?: OpenAICompatibleKeyVault;
   spark?: SparkKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
+  taichu?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;

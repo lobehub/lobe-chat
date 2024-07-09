@@ -17,6 +17,7 @@ import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
 import SparkProvider from './spark';
 import StepfunProvider from './stepfun';
+import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
@@ -40,6 +41,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   BaichuanProvider.chatModels,
+  TaichuProvider.chatModels,
   SparkProvider.chatModels,
 ].flat();
 
@@ -63,11 +65,17 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZhiPuProvider,
   StepfunProvider,
   BaichuanProvider,
+  TaichuProvider,
   SparkProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
   return provider.chatModels.filter((v) => v.enabled).map((m) => m.id);
+};
+
+export const isProviderDisableBroswerRequest = (id: string) => {
+  const provider = DEFAULT_MODEL_PROVIDER_LIST.find((v) => v.id === id && v.disableBrowserRequest);
+  return !!provider;
 };
 
 export { default as AnthropicProviderCard } from './anthropic';
@@ -87,6 +95,7 @@ export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
 export { default as SparkProviderCard } from './spark';
 export { default as StepfunProviderCard } from './stepfun';
+export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

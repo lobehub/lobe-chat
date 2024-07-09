@@ -1,6 +1,7 @@
 import {
   AdobeFirefly,
   Ai21,
+  AiMass,
   Aws,
   Azure,
   Baichuan,
@@ -66,6 +67,7 @@ const ModelIcon = memo<ModelIconProps>(({ model: originModel, size = 12 }) => {
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
   if (model.includes('step')) return <Stepfun size={size} />;
+  if (model.includes('taichu')) return <AiMass size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan')) return <Baichuan size={size} />;

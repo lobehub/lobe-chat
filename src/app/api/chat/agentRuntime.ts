@@ -179,6 +179,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Taichu: {
+      const { TAICHU_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || TAICHU_API_KEY);
+
+      return { apiKey };
+    }
     case ModelProvider.Spark: {
       const { SPARK_API_KEY, SPARK_API_SECRET } = getLLMConfig();
 
@@ -186,7 +193,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const sparkApiSecret = payload?.sparkApiSecret || SPARK_API_SECRET;
 
       const apiKey = sparkApiKey + ':' + sparkApiSecret;
-      
+
       return { apiKey };
     }
   }

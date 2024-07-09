@@ -67,6 +67,7 @@
     "OpenAIBizError": "Erreur de service OpenAI. Veuillez vérifier les informations suivantes ou réessayer.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
+    "PluginFailToTransformArguments": "Désolé, échec de la transformation des arguments de l'appel du plugin. Veuillez essayer de régénérer le message d'assistance ou de changer de modèle d'IA avec une capacité d'appel d'outils plus puissante, puis réessayer.",
     "PluginGatewayError": "Désolé, une erreur est survenue avec la passerelle du plugin. Veuillez vérifier la configuration de la passerelle du plugin.",
     "PluginManifestInvalid": "Désolé, la validation du manifeste de ce plugin a échoué. Veuillez vérifier le format du manifeste",
     "PluginManifestNotFound": "Désolé, le serveur n'a pas trouvé le manifeste de description de ce plugin (manifest.json). Veuillez vérifier l'adresse du fichier de description du plugin",

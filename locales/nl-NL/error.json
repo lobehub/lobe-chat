@@ -67,6 +67,7 @@
     "OpenAIBizError": "Er is een fout opgetreden bij het aanvragen van de OpenAI-service. Controleer de volgende informatie of probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
+    "PluginFailToTransformArguments": "Sorry, the plugin failed to parse the arguments. Please try regenerating the assistant message or retry with a more powerful AI model with Tools Calling capability.",
     "PluginGatewayError": "Sorry, er is een fout opgetreden in de plug-in gateway. Controleer of de plug-in gatewayconfiguratie juist is",
     "PluginManifestInvalid": "Sorry, de validatie van de beschrijvingslijst van de plug-in is mislukt. Controleer of het formaat van de beschrijvingslijst correct is",
     "PluginManifestNotFound": "Sorry, de server kon de beschrijvingslijst (manifest.json) van de plug-in niet vinden. Controleer of het adres van de plug-inbeschrijvingsbestand juist is",

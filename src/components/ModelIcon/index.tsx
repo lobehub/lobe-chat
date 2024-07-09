@@ -1,4 +1,5 @@
 import {
+  AiMass,
   Adobe,
   Ai21,
   Aws,
@@ -66,6 +67,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('command')) return <Cohere.Avatar size={size} />;
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
   if (model.includes('step')) return <Stepfun.Avatar size={size} />;
+  if (model.includes('taichu')) return <AiMass.Avatar size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))
