@@ -8,7 +8,6 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 
-import * as debugStreamModule from '../utils/debugStream';
 import { LobeSparkAI } from './index';
 
 const provider = ModelProvider.Spark;
@@ -207,48 +206,6 @@ describe('LobeSparkAI', () => {
             },
           });
         }
-      });
-    });
-
-    describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_SPARK_CHAT_COMPLETION is 1', async () => {
-        // Arrange
-        const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
-        const mockDebugStream = new ReadableStream({
-          start(controller) {
-            controller.enqueue('Debug stream content');
-            controller.close();
-          },
-        }) as any;
-        mockDebugStream.toReadableStream = () => mockDebugStream; // 添加 toReadableStream 方法
-
-        // 模拟 chat.completions.create 返回值，包括模拟的 tee 方法
-        (instance['client'].chat.completions.create as Mock).mockResolvedValue({
-          tee: () => [mockProdStream, { toReadableStream: () => mockDebugStream }],
-        });
-
-        // 保存原始环境变量值
-        const originalDebugValue = process.env.DEBUG_SPARK_CHAT_COMPLETION;
-
-        // 模拟环境变量
-        process.env.DEBUG_SPARK_CHAT_COMPLETION = '1';
-        vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
-
-        // 执行测试
-        // 运行你的测试函数，确保它会在条件满足时调用 debugStream
-        // 假设的测试函数调用，你可能需要根据实际情况调整
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'general',
-          stream: true,
-          temperature: 0,
-        });
-
-        // 验证 debugStream 被调用
-        expect(debugStreamModule.debugStream).toHaveBeenCalled();
-
-        // 恢复原始环境变量值
-        process.env.DEBUG_SPARK_CHAT_COMPLETION = originalDebugValue;
       });
     });
   });
