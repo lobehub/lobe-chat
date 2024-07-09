@@ -18,14 +18,16 @@ const Qwen: ModelProviderCard = {
       tokens: 32_000,
     },
     {
-      description: '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型',
+      description:
+        '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，当前通义千问2.5产品版本背后的API模型',
       displayName: 'Qwen Max',
       enabled: true,
       id: 'qwen-max',
       tokens: 8000,
     },
     {
-      description: '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，扩展了上下文窗口',
+      description:
+        '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，扩展了上下文窗口',
       displayName: 'Qwen Max LongContext',
       id: 'qwen-max-longcontext',
       tokens: 30_000,
@@ -50,6 +52,7 @@ const Qwen: ModelProviderCard = {
     },
   ],
   checkModel: 'qwen-turbo',
+  disableBrowserRequest: true,
   id: 'qwen',
   modelList: { showModelFetcher: true },
   name: 'Qwen',
