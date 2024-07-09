@@ -8,7 +8,7 @@ import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
 import { AgentRuntimeError } from '../createError';
-import { debugStream } from '../debugStream';
+import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
 import { StreamingResponse } from '../response';
@@ -106,8 +106,7 @@ export const LobeOpenAICompatibleFactory = ({
         }
 
         if (debug?.chatCompletion?.()) {
-          console.log('\n[no stream response]\n');
-          console.log(JSON.stringify(response) + '\n');
+          debugResponse(response);
         }
 
         const stream = this.transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
