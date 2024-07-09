@@ -20,11 +20,12 @@ export interface AuthContext {
  * This is useful for testing when we don't want to mock Next.js' request/response
  */
 export const createContextInner = async (params?: {
-  auth?: ClerkAuth | User;
   authorizationHeader?: string | null;
+  clerkAuth?: ClerkAuth;
+  nextAuth?: User;
   userId?: string | null;
 }): Promise<AuthContext> => ({
-  auth: params?.auth,
+  auth: params?.clerkAuth || params?.nextAuth,
   authorizationHeader: params?.authorizationHeader,
   userId: params?.userId,
 });
@@ -47,6 +48,7 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
     auth = getAuth(request);
 
     userId = auth.userId;
+    return createContextInner({ authorizationHeader: authorization, clerkAuth: auth, userId });
   }
 
   if (enableNextAuth) {
@@ -56,8 +58,9 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
         auth = session.user;
         userId = session.user.id;
       }
+      return createContextInner({ authorizationHeader: authorization, nextAuth: auth, userId });
     } catch {}
   }
 
-  return createContextInner({ auth, authorizationHeader: authorization, userId });
+  return createContextInner({ authorizationHeader: authorization });
 };
