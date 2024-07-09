@@ -345,7 +345,7 @@
       "unknownOS": "Nieznany system"
     },
     "warning": {
-      "message": "Ta funkcja jest obecnie eksperymentalna i może działać nieprzewidywalnie lub niestabilnie. W przypadku problemów prosimy o natychmiastowe zgłoszenie opinii."
+      "tip": "After a long period of community testing, WebRTC synchronization may not be able to reliably meet general data synchronization needs. Please <1>deploy a signaling server</1> before use."
     },
     "webrtc": {
       "channelName": {
@@ -361,8 +361,13 @@
       },
       "desc": "Bezpośrednia, punkt-do-punktu komunikacja danych w czasie rzeczywistym, wymaga jednoczesnej obecności urządzeń online do synchronizacji",
       "enabled": {
-        "invalid": "Wprowadź nazwę kanału synchronizacji przed włączeniem",
+        "invalid": "Please fill in the signaling server and synchronization channel name before enabling.",
         "title": "Włącz synchronizację"
+      },
+      "signaling": {
+        "desc": "WebRTC will use this address for synchronization",
+        "placeholder": "Enter signaling server address",
+        "title": "Signaling Server"
       },
       "title": "Synchronizacja WebRTC"
     }

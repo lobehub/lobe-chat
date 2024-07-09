@@ -345,7 +345,7 @@
       "unknownOS": "Onbekend besturingssysteem"
     },
     "warning": {
-      "message": "Deze functie is momenteel experimenteel en kan onverwachte of onstabiele situaties veroorzaken. Als u problemen ondervindt, geef dan tijdig feedback."
+      "tip": "Na een lange periode van openbare tests in de community, kan WebRTC-synchronisatie mogelijk niet stabiel voldoen aan algemene synchronisatiebehoeften. Gelieve zelf een <1>signaleringsserver implementeren</1> voordat u het gebruikt."
     },
     "webrtc": {
       "channelName": {
@@ -361,8 +361,13 @@
       },
       "desc": "Realtime, point-to-point datacommunicatie, apparaten moeten tegelijkertijd online zijn om te synchroniseren",
       "enabled": {
-        "invalid": "Schakel de synchronisatie in nadat u de synchronisatiekanaalnaam heeft ingevuld",
+        "invalid": "Vul eerst de signaleringsserver en synchronisatiekanaalnaam in voordat u deze inschakelt",
         "title": "Synchronisatie inschakelen"
+      },
+      "signaling": {
+        "desc": "WebRTC zal dit adres gebruiken voor synchronisatie",
+        "placeholder": "Voer het adres van de signaleringsserver in",
+        "title": "Signaleringsserver"
       },
       "title": "WebRTC Synchronisatie"
     }
