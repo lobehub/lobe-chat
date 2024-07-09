@@ -114,7 +114,18 @@ describe('modelConfigSelectors', () => {
     // Issue: https://github.com/lobehub/lobe-chat/issues/3108
     // PR: https://github.com/lobehub/lobe-chat/pull/3133
     it('client fecth should be disabled if provider is disable broswer request', () => {
-      const s = merge(initialSettingsState, {}) as unknown as UserStore;
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            qwen: { fetchOnClient: true },
+          },
+          keyVaults: {
+            qwen: {
+              apiKey: 'apikey',
+            },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
       expect(modelConfigSelectors.isAutoFetchModelsEnabled('qwen')(s)).toBe(false);
     });
   });
