@@ -1,3 +1,4 @@
+import { isProviderDisableBroswerRequest } from '@/config/modelProviders';
 import { UserStore } from '@/store/user';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
@@ -21,6 +22,8 @@ const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s:
   // If the provider in the whitelist, follow the user settings
   if (providerWhitelist.has(provider) && typeof config?.fetchOnClient !== 'undefined')
     return config?.fetchOnClient;
+  // If the provider already disable broswer request in model config, force on Server.
+  if (isProviderDisableBroswerRequest(provider)) return false;
 
   // 1. If no baseUrl and apikey input, force on Server.
   const isProviderEndpointNotEmpty =
