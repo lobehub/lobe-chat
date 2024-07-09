@@ -16,6 +16,7 @@ import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
 import StepfunProvider from './stepfun';
+import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
 import ZeroOneProvider from './zeroone';
 import ZhinaoProvider from './zhinao';
@@ -40,6 +41,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   BaichuanProvider.chatModels,
+  TaichuProvider.chatModels,
   ZhinaoProvider.chatModels,
 ].flat();
 
@@ -63,6 +65,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   ZhiPuProvider,
   StepfunProvider,
   BaichuanProvider,
+  TaichuProvider,
   ZhinaoProvider,
 ];
 
@@ -86,6 +89,7 @@ export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
 export { default as StepfunProviderCard } from './stepfun';
+export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhinaoProviderCard } from './zhinao';

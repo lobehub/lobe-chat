@@ -19,6 +19,7 @@ import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
 import { LobeStepfunAI } from './stepfun';
+import { LobeTaichuAI } from './taichu';
 import { LobeTogetherAI } from './togetherai';
 import { LobeZhinaoAI } from './zhinao';
 import {
@@ -119,6 +120,7 @@ class AgentRuntime {
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
+      taichu: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
       zhinao: Partial<ClientOptions>;
@@ -226,6 +228,11 @@ class AgentRuntime {
 
       case ModelProvider.Baichuan: {
         runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
+        break
+      }
+
+      case ModelProvider.Taichu: {
+        runtimeModel = new LobeTaichuAI(params.taichu ?? {});
         break
       }
 

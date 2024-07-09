@@ -250,6 +250,19 @@ describe('MessageModel', () => {
     });
   });
 
+  describe('bulkDelete', () => {
+    it('should delete many messages', async () => {
+      const createdMessage = await MessageModel.create(messageData);
+      const createdMessage2 = await MessageModel.create(messageData);
+      await MessageModel.bulkDelete([createdMessage.id, createdMessage2.id]);
+
+      const messageInDb1 = await MessageModel.findById(createdMessage.id);
+      const messageInDb2 = await MessageModel.findById(createdMessage2.id);
+      expect(messageInDb1).toBeUndefined();
+      expect(messageInDb2).toBeUndefined();
+    });
+  });
+
   describe('update', () => {
     it('should update a message', async () => {
       const createdMessage = await MessageModel.create(messageData);
