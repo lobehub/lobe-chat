@@ -1,12 +1,16 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { dataSync } from '@/database/client/core';
+import { liveblocksDataSync, webrtcDataSync } from '@/database/client/core';
 import { StartDataSyncParams, SyncMethod } from '@/types/sync';
 
 import { syncService } from '../sync';
 
 vi.mock('@/database/client/core', () => ({
-  dataSync: {
+  liveblocksDataSync: {
+    startDataSync: vi.fn(),
+    disconnect: vi.fn(),
+  },
+  webrtcDataSync: {
     startDataSync: vi.fn(),
     disconnect: vi.fn(),
   },
@@ -29,7 +33,8 @@ describe('SyncService', () => {
       const result = await syncService.enabledSync(params);
 
       expect(result).toBe(false);
-      expect(dataSync.startDataSync).not.toHaveBeenCalled();
+      expect(liveblocksDataSync.startDataSync).not.toHaveBeenCalled();
+      expect(webrtcDataSync.startDataSync).not.toHaveBeenCalled();
 
       // reset
       global.window = origin;
@@ -41,7 +46,8 @@ describe('SyncService', () => {
       const result = await syncService.enabledSync(params);
 
       expect(result).toBe(true);
-      expect(dataSync.startDataSync).toHaveBeenCalledWith(params);
+      expect(liveblocksDataSync.startDataSync).toHaveBeenCalledWith(params);
+      expect(webrtcDataSync.startDataSync).toHaveBeenCalledWith(params);
     });
   });
 
@@ -53,7 +59,8 @@ describe('SyncService', () => {
       });
 
       expect(result).toBe(false);
-      expect(dataSync.disconnect).toHaveBeenCalled();
+      expect(liveblocksDataSync.disconnect).toHaveBeenCalled();
+      expect(webrtcDataSync.disconnect).toHaveBeenCalled();
     });
   });
 });

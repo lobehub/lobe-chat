@@ -4,7 +4,7 @@ import { ZodObject } from 'zod';
 import { nanoid } from '@/utils/uuid';
 
 import { BrowserDB, BrowserDBSchema, browserDB } from './db';
-import { dataSync } from './sync';
+import { liveblocksDataSync, webrtcDataSync } from './sync';
 import { DBBaseFieldsSchema } from './types/db';
 
 export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchema[N]['table']> {
@@ -22,8 +22,11 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     return this.db[this._tableName] as Dexie.Table;
   }
 
-  get yMap() {
-    return dataSync.getYMap(this._tableName);
+  get yMaps() {
+    return {
+      liveblocks: liveblocksDataSync.getYMap(this._tableName),
+      webrtc: webrtcDataSync.getYMap(this._tableName),
+    };
   }
 
   // **************** Create *************** //
@@ -142,7 +145,13 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
       await this.table.bulkAdd(validatedData);
 
       if (withSync) {
-        dataSync.transact(() => {
+        webrtcDataSync.transact(() => {
+          const pools = validatedData.map(async (item) => {
+            await this.updateYMapItem(item.id);
+          });
+          Promise.all(pools);
+        });
+        liveblocksDataSync.transact(() => {
           const pools = validatedData.map(async (item) => {
             await this.updateYMapItem(item.id);
           });
@@ -176,7 +185,8 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
   protected async _deleteWithSync(id: string) {
     const result = await this.table.delete(id);
     // sync delete data to yjs data map
-    this.yMap?.delete(id);
+    this.yMaps?.liveblocks?.delete(id);
+    this.yMaps?.webrtc?.delete(id);
     return result;
   }
 
@@ -184,9 +194,14 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
     await this.table.bulkDelete(keys);
     // sync delete data to yjs data map
 
-    dataSync.transact(() => {
+    webrtcDataSync.transact(() => {
       keys.forEach((id) => {
-        this.yMap?.delete(id);
+        this._deleteWithSync(id);
+      });
+    });
+    liveblocksDataSync.transact(() => {
+      keys.forEach((id) => {
+        this._deleteWithSync(id);
       });
     });
   }
@@ -194,7 +209,8 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
   protected async _clearWithSync() {
     const result = await this.table.clear();
     // sync clear data to yjs data map
-    this.yMap?.clear();
+    this.yMaps?.liveblocks?.clear();
+    this.yMaps?.webrtc?.clear();
     return result;
   }
 
@@ -236,7 +252,13 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
   protected async _bulkPutWithSync(items: T[]) {
     await this.table.bulkPut(items);
 
-    await dataSync.transact(() => {
+    webrtcDataSync.transact(() => {
+      items.forEach((items) => {
+        this.updateYMapItem((items as any).id);
+      });
+    });
+
+    liveblocksDataSync.transact(() => {
       items.forEach((items) => {
         this.updateYMapItem((items as any).id);
       });
@@ -247,6 +269,7 @@ export class BaseModel<N extends keyof BrowserDBSchema = any, T = BrowserDBSchem
 
   private updateYMapItem = async (id: string) => {
     const newData = await this.table.get(id);
-    this.yMap?.set(id, newData);
+    this.yMaps?.webrtc?.set(id, newData);
+    this.yMaps?.liveblocks?.set(id, newData);
   };
 }

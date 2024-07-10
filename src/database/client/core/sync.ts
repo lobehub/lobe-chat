@@ -1,6 +1,6 @@
 import type { BaseUserMeta, Client as LiveBlocksClient, LsonObject } from '@liveblocks/client';
 import type LiveblocksProvider from '@liveblocks/yjs';
-// import Debug from 'debug';
+import Debug from 'debug';
 import { throttle, uniqBy } from 'lodash-es';
 import type { WebrtcProvider } from 'y-webrtc';
 import type { Doc, Transaction } from 'yjs';
@@ -8,36 +8,28 @@ import type { Doc, Transaction } from 'yjs';
 import { createSyncAuthHeader, hashRoomName } from '@/libs/sync/liveblocks/utils';
 import { API_ENDPOINTS } from '@/services/_url';
 import {
+  LiveblocksSyncParams,
   OnAwarenessChange,
   OnSyncEvent,
   OnSyncStatusChange,
   PeerSyncStatus,
-  StartDataSyncParams,
   SyncAwarenessState,
   SyncUserInfo,
+  WebRTCSyncParams,
 } from '@/types/sync';
 
 import { LobeDBSchemaMap, browserDB } from './db';
 
-// const LOG_NAME_SPACE = 'DataSync';
+const LOG_NAME_SPACE = 'DataSync';
 
 class DataSync {
-  private _ydoc: Doc | null = null;
-  private webrtcProvider: WebrtcProvider | null = null;
-  private liveblocksProvider: LiveblocksProvider<
-    SyncUserInfo,
-    LsonObject,
-    BaseUserMeta,
-    never
-  > | null = null;
-  private liveblocksClient: LiveBlocksClient<BaseUserMeta> | null = null;
+  _user: SyncUserInfo | null = null;
+  _ydoc: Doc | null = null;
+  onAwarenessChange!: OnAwarenessChange;
+  onSyncEvent!: OnSyncEvent;
+  onSyncStatusChange!: OnSyncStatusChange;
 
-  private syncParams!: StartDataSyncParams;
-  private onAwarenessChange!: OnAwarenessChange;
-
-  private waitForConnecting: any;
-
-  logger = console.debug;
+  logger = Debug(LOG_NAME_SPACE);
 
   transact(fn: (transaction: Transaction) => unknown) {
     this._ydoc?.transact(fn);
@@ -47,213 +39,7 @@ class DataSync {
     return this._ydoc?.getMap(tableKey);
   };
 
-  startDataSync = async (params: StartDataSyncParams) => {
-    this.syncParams = params;
-    this.onAwarenessChange = params.onAwarenessChange;
-
-    // 开发时由于存在 fast refresh 全局实例会缓存在运行时中
-    // 因此需要在每次重新连接时清理上一次的实例
-    if (window.__ONLY_USE_FOR_CLEANUP_IN_DEV) {
-      await this.cleanWebrtcConnection(true);
-    }
-
-    await this.connect(params);
-  };
-
-  private async connectWithWebrtc(params: StartDataSyncParams) {
-    const { onSyncStatusChange } = params;
-    const {
-      name,
-      password,
-      signaling = 'wss://y-webrtc-signaling.lobehub.com',
-    } = params.channel.webrtc;
-
-    // ====== init webrtc provider ====== //
-    this.logger(`[WebRTC] init provider... room: ${name}`);
-    const { WebrtcProvider } = await import('y-webrtc');
-
-    // clients connected to the same room-name share document updates
-    this.webrtcProvider = new WebrtcProvider(name, this._ydoc!, {
-      password: password,
-      signaling: [signaling],
-    });
-
-    // when fast refresh in dev, the provider will be cached in window
-    // so we need to clean it in destory
-    if (process.env.NODE_ENV === 'development') {
-      window.__ONLY_USE_FOR_CLEANUP_IN_DEV = this.webrtcProvider;
-    }
-
-    this.logger(`[WebRTC] provider init success`);
-
-    // ====== 3. check signaling server connection  ====== //
-
-    // 当本地设备正确连接到 WebRTC Provider 后，触发 status 事件
-    // 当开始连接，则开始监听事件
-    this.webrtcProvider.on('status', async ({ connected }) => {
-      this.logger('[WebRTC] peer status:', connected);
-      if (connected) {
-        // this.initObserve(onSyncEvent, onSyncStatusChange);
-        onSyncStatusChange?.(PeerSyncStatus.Connecting);
-      }
-    });
-    // check the connection with signaling server
-    let connectionCheckCount = 0;
-
-    this.waitForConnecting = setInterval(() => {
-      const signalingConnection: IWebsocketClient = this.webrtcProvider!.signalingConns[0];
-
-      if (signalingConnection.connected) {
-        onSyncStatusChange?.(PeerSyncStatus.Ready);
-        clearInterval(this.waitForConnecting);
-        return;
-      }
-
-      connectionCheckCount += 1;
-
-      // check for 5 times, or make it failed
-      if (connectionCheckCount > 5) {
-        onSyncStatusChange?.(PeerSyncStatus.Unconnected);
-        clearInterval(this.waitForConnecting);
-      }
-    }, 2000);
-    // ====== 4. handle data sync  ====== //
-
-    // 当各方的数据均完成同步后，YJS 对象之间的数据已经一致时，触发 synced 事件
-    this.webrtcProvider.on('synced', async ({ synced }) => {
-      this.logger('[WebRTC] peer sync status:', synced);
-      if (synced) {
-        this.logger('[WebRTC] start to init yjs data...');
-        onSyncStatusChange?.(PeerSyncStatus.Syncing);
-        await this.initSync();
-        onSyncStatusChange?.(PeerSyncStatus.Synced);
-        this.logger('[WebRTC] yjs data init success');
-      } else {
-        this.logger('[WebRTC] data not sync, try to reconnect in 1s...');
-        // await this.reconnect(params);
-        setTimeout(() => {
-          onSyncStatusChange?.(PeerSyncStatus.Syncing);
-          this.reconnect(params);
-        }, 1000);
-      }
-    });
-  }
-
-  private async connectWithLiveblocks(params: StartDataSyncParams) {
-    const { onSyncStatusChange } = params;
-    const { name, password, publicApiKey, accessCode } = params.channel.liveblocks;
-    // ====== 2. init liveblocks provider ====== //
-    const hashedRoomName = hashRoomName(name, password);
-
-    this.logger(`[Liveblocks] init provider... room name: ${hashedRoomName}`);
-
-    const { createClient } = await import('@liveblocks/client');
-
-    this.liveblocksClient = publicApiKey
-      ? createClient({
-          publicApiKey,
-        })
-      : createClient({
-          authEndpoint: async () => {
-            const headers = await createSyncAuthHeader(accessCode, {
-              'Content-Type': 'application/json',
-            });
-
-            const response = await fetch(API_ENDPOINTS.syncAuth, {
-              body: JSON.stringify({
-                name,
-                password,
-              }),
-              headers,
-              method: 'POST',
-            });
-
-            const { status } = response;
-
-            if (status !== 200) {
-              return {
-                error: 'forbidden',
-                reason: 'User is not authorized to access Lobechat',
-              };
-            }
-
-            return await response.json();
-          },
-        });
-
-    // ====== 3. join liveblocks room ====== //
-    try {
-      const { room } = this.liveblocksClient.enterRoom(hashedRoomName, {
-        autoConnect: true,
-        initialPresence: {},
-      });
-
-      const LiveblocksProvider = await import('@liveblocks/yjs');
-
-      this.liveblocksProvider = new LiveblocksProvider.default(room, this._ydoc!);
-      this.logger(`[Liveblocks] provider init success`);
-      // ====== 4. handle data sync  ====== //
-      // Does nothing for connection, which is handled by Liveblocks client
-
-      this.liveblocksProvider.on('sync', async (synced: boolean) => {
-        this.logger('[Liveblocks] server sync status:', synced);
-        if (synced === true) {
-          // Yjs content is synchronized and ready
-          this.logger('[Liveblocks] start to init yjs data...');
-          onSyncStatusChange?.(PeerSyncStatus.Syncing);
-          await this.initSync();
-          onSyncStatusChange?.(PeerSyncStatus.Synced);
-          this.logger('[Liveblocks] yjs data init success');
-        } else {
-          // Yjs content is not synchronized
-          this.logger('[Liveblocks] data not sync, try to reconnect in 1s...');
-          // await this.reconnect(params);
-          setTimeout(() => {
-            onSyncStatusChange?.(PeerSyncStatus.Syncing);
-            this.reconnect(params);
-          }, 1000);
-        }
-      });
-    } catch (error) {
-      this.logger(`[Liveblocks] failed to join room: ${hashedRoomName}, error: ${error}`);
-      onSyncStatusChange?.(PeerSyncStatus.Unconnected);
-      await this.cleanLiveblocksConnection();
-    }
-  }
-
-  connect = async (params: StartDataSyncParams) => {
-    const { channel, onSyncEvent, onSyncStatusChange, user, onAwarenessChange } = params;
-    // ====== 1. init yjs doc ====== //
-
-    await this.initYDoc();
-
-    this.logger('[YJS] start to listen sync event...');
-    this.initYjsObserve(onSyncEvent, onSyncStatusChange);
-
-    if (channel.webrtc.enabled) {
-      await this.connectWithWebrtc(params);
-    }
-
-    if (channel.liveblocks.enabled) {
-      await this.connectWithLiveblocks(params);
-    }
-
-    // ====== 5. handle awareness  ====== //
-    this.initAwareness({ onAwarenessChange, user });
-  };
-
-  reconnect = async (params: StartDataSyncParams) => {
-    await this.disconnect();
-
-    await this.connect(params);
-  };
-
-  async disconnect() {
-    await this.cleanWebrtcConnection();
-    await this.cleanLiveblocksConnection();
-  }
-
-  private initYDoc = async () => {
+  initYDoc = async () => {
     if (typeof window === 'undefined') return;
 
     this.logger('[YJS] init YDoc...');
@@ -261,43 +47,7 @@ class DataSync {
     this._ydoc = new Doc();
   };
 
-  async cleanWebrtcConnection(isDev = false) {
-    const provider = isDev ? window.__ONLY_USE_FOR_CLEANUP_IN_DEV : this.webrtcProvider;
-    if (provider) {
-      this.logger(`[WebRTC] clean Connection...`);
-      this.logger(`[WebRTC] clean awareness...`);
-      provider.awareness.destroy();
-
-      this.logger(`[WebRTC] clean room...`);
-      provider.room?.disconnect();
-      provider.room?.destroy();
-
-      this.logger(`[WebRTC] clean provider...`);
-      provider.disconnect();
-      provider.destroy();
-
-      this.logger(`[WebRTC] clean yjs doc...`);
-      this._ydoc?.destroy();
-
-      this.logger(`[WebRTC] -------------------`);
-    }
-  }
-
-  async cleanLiveblocksConnection() {
-    this.logger(`[Liveblocks] clean Connection...`);
-    // provider.disconnect();
-    this.liveblocksClient?.logout();
-
-    this.logger(`[Liveblocks] clean provider...`);
-    this.liveblocksProvider?.destroy();
-
-    this.logger(`[Liveblocks] clean yjs doc...`);
-    this._ydoc?.destroy();
-
-    this.logger(`[Liveblocks] -------------------`);
-  }
-
-  private initSync = async () => {
+  initSync = async () => {
     await Promise.all(
       ['sessions', 'sessionGroups', 'topics', 'messages', 'plugins'].map(async (tableKey) =>
         this.loadDataFromDBtoYjs(tableKey as keyof LobeDBSchemaMap),
@@ -305,14 +55,14 @@ class DataSync {
     );
   };
 
-  private initYjsObserve = (onEvent: OnSyncEvent, onSyncStatusChange: OnSyncStatusChange) => {
+  initYjsObserve = (onEvent: OnSyncEvent, onSyncStatusChange: OnSyncStatusChange) => {
     ['sessions', 'sessionGroups', 'topics', 'messages', 'plugins'].forEach((tableKey) => {
       // listen yjs change
       this.observeYMapChange(tableKey as keyof LobeDBSchemaMap, onEvent, onSyncStatusChange);
     });
   };
 
-  private observeYMapChange = (
+  observeYMapChange = (
     tableKey: keyof LobeDBSchemaMap,
     onEvent: OnSyncEvent,
     onSyncStatusChange: OnSyncStatusChange,
@@ -364,7 +114,7 @@ class DataSync {
     });
   };
 
-  private loadDataFromDBtoYjs = async (tableKey: keyof LobeDBSchemaMap) => {
+  loadDataFromDBtoYjs = async (tableKey: keyof LobeDBSchemaMap) => {
     const table = browserDB[tableKey];
     const items = await table.toArray();
     const yItemMap = this.getYMap(tableKey);
@@ -393,68 +143,342 @@ class DataSync {
 
     this.logger('[DB]:', tableKey, yItemMap?.size);
   };
+}
 
-  private initAwareness = ({ user }: Pick<StartDataSyncParams, 'user' | 'onAwarenessChange'>) => {
-    if (!this.webrtcProvider && !this.liveblocksProvider) return;
+class WebRTCDataSync extends DataSync {
+  private syncParams!: WebRTCSyncParams;
+  private provider: WebrtcProvider | null = null;
 
-    const webrtcAwareness = this.webrtcProvider?.awareness;
-    const liveblocksAwareness = this.liveblocksProvider?.awareness;
+  private waitForConnecting: any;
+
+  startDataSync = async (user: SyncUserInfo, params: WebRTCSyncParams) => {
+    this._user = user;
+    this.syncParams = params;
+    this.onAwarenessChange = params.onAwarenessChange;
+
+    // 开发时由于存在 fast refresh 全局实例会缓存在运行时中
+    // 因此需要在每次重新连接时清理上一次的实例
+    if (window.__ONLY_USE_FOR_CLEANUP_IN_DEV) {
+      await this.cleanConnection(true);
+    }
+
+    await this.connect();
+  };
+
+  private async connect() {
+    const { onSyncEvent, onSyncStatusChange } = this.syncParams;
+
+    await this.initYDoc();
+
+    this.logger('[YJS] start to listen sync event...');
+    this.initYjsObserve(onSyncEvent, onSyncStatusChange);
+
+    const { name, password, signaling = 'wss://y-webrtc-signaling.lobehub.com' } = this.syncParams;
+
+    // ====== init webrtc provider ====== //
+    this.logger(`[WebRTC] init provider... room: ${name}`);
+    const { WebrtcProvider } = await import('y-webrtc');
+
+    // clients connected to the same room-name share document updates
+    this.provider = new WebrtcProvider(name, this._ydoc!, {
+      password: password,
+      signaling: [signaling],
+    });
+
+    // when fast refresh in dev, the provider will be cached in window
+    // so we need to clean it in destory
+    if (process.env.NODE_ENV === 'development') {
+      window.__ONLY_USE_FOR_CLEANUP_IN_DEV = this.provider;
+    }
+
+    this.logger(`[WebRTC] provider init success`);
+
+    // ====== 3. check signaling server connection  ====== //
+
+    // 当本地设备正确连接到 WebRTC Provider 后，触发 status 事件
+    // 当开始连接，则开始监听事件
+    this.provider.on('status', async ({ connected }) => {
+      this.logger('[WebRTC] peer status:', connected);
+      if (connected) {
+        // this.initObserve(onSyncEvent, onSyncStatusChange);
+        onSyncStatusChange?.(PeerSyncStatus.Connecting);
+      }
+    });
+    // check the connection with signaling server
+    let connectionCheckCount = 0;
+
+    this.waitForConnecting = setInterval(() => {
+      const signalingConnection: IWebsocketClient = this.provider!.signalingConns[0];
+
+      if (signalingConnection.connected) {
+        onSyncStatusChange?.(PeerSyncStatus.Ready);
+        clearInterval(this.waitForConnecting);
+        return;
+      }
+
+      connectionCheckCount += 1;
+
+      // check for 5 times, or make it failed
+      if (connectionCheckCount > 5) {
+        onSyncStatusChange?.(PeerSyncStatus.Unconnected);
+        clearInterval(this.waitForConnecting);
+      }
+    }, 2000);
+    // ====== 4. handle data sync  ====== //
+
+    // 当各方的数据均完成同步后，YJS 对象之间的数据已经一致时，触发 synced 事件
+    this.provider.on('synced', async ({ synced }) => {
+      this.logger('[WebRTC] peer sync status:', synced);
+      if (synced) {
+        this.logger('[WebRTC] start to init yjs data...');
+        onSyncStatusChange?.(PeerSyncStatus.Syncing);
+        await this.initSync();
+        onSyncStatusChange?.(PeerSyncStatus.Synced);
+        this.logger('[WebRTC] yjs data init success');
+      } else {
+        this.logger('[WebRTC] data not sync, try to reconnect in 1s...');
+        // await this.reconnect(params);
+        setTimeout(() => {
+          onSyncStatusChange?.(PeerSyncStatus.Syncing);
+          this.reconnect();
+        }, 1000);
+      }
+    });
+
+    this.initAwareness();
+  }
+
+  reconnect = async () => {
+    await this.disconnect();
+    await this.connect();
+  };
+
+  async disconnect() {
+    await this.cleanConnection();
+  }
+
+  private async cleanConnection(isDev = false) {
+    const provider = isDev ? window.__ONLY_USE_FOR_CLEANUP_IN_DEV : this.provider;
+    if (provider) {
+      this.logger(`[WebRTC] clean Connection...`);
+      this.logger(`[WebRTC] clean awareness...`);
+      provider.awareness.destroy();
+
+      this.logger(`[WebRTC] clean room...`);
+      provider.room?.disconnect();
+      provider.room?.destroy();
+
+      this.logger(`[WebRTC] clean provider...`);
+      provider.disconnect();
+      provider.destroy();
+
+      this.logger(`[WebRTC] clean yjs doc...`);
+      this._ydoc?.destroy();
+
+      this.logger(`[WebRTC] -------------------`);
+    }
+  }
+
+  private initAwareness = () => {
+    if (!this.provider) return;
+
+    const user = this._user!;
+    const awareness = this.provider?.awareness;
 
     const syncAwarenessStates: SyncAwarenessState[] = [];
 
-    if (webrtcAwareness) {
-      webrtcAwareness.setLocalState({ clientID: webrtcAwareness.clientID, user });
-      syncAwarenessStates.push({ ...user, clientID: webrtcAwareness.clientID, current: true });
-      webrtcAwareness.on('change', () => this.syncAwarenessToUI());
-    }
-
-    if (liveblocksAwareness) {
-      liveblocksAwareness.setLocalState({ clientID: liveblocksAwareness.doc.clientID, user });
-      syncAwarenessStates.push({
-        ...user,
-        clientID: liveblocksAwareness.doc.clientID,
-        current: true,
-      });
-      liveblocksAwareness.on('change', () => this.syncAwarenessToUI());
+    if (awareness) {
+      awareness.setLocalState({ clientID: awareness.clientID, user });
+      syncAwarenessStates.push({ ...user, clientID: awareness.clientID, current: true });
+      awareness.on('change', () => this.syncAwarenessToUI());
     }
 
     this.onAwarenessChange?.(syncAwarenessStates);
   };
 
   private syncAwarenessToUI = async () => {
-    const webrtcAwareness = this.webrtcProvider?.awareness;
-    const liveblocksAwareness = this.liveblocksProvider?.awareness;
+    const awareness = this.provider?.awareness;
 
-    if (!webrtcAwareness && !liveblocksAwareness) return;
+    if (!awareness) return;
 
     const syncAwarenessStates: SyncAwarenessState[] = [];
 
-    if (webrtcAwareness) {
-      const state: SyncAwarenessState[] = Array.from(webrtcAwareness.getStates().values()).map(
-        (s) => ({
-          ...s.user,
-          clientID: s.clientID,
-          current: s.clientID === webrtcAwareness.clientID,
-        }),
-      );
-      syncAwarenessStates.push(...state);
-    }
+    const state: SyncAwarenessState[] = Array.from(awareness.getStates().values()).map((s) => ({
+      ...s.user,
+      clientID: s.clientID,
+      current: s.clientID === awareness.clientID,
+    }));
+    syncAwarenessStates.push(...state);
 
-    if (liveblocksAwareness) {
-      const currentStates: Map<number, any> = liveblocksAwareness.getStates();
-      const state = Array.from(currentStates.values()).map((s) => ({
-        ...s.user,
-        clientID: s.clientID,
-        current: s.clientID === liveblocksAwareness.doc.clientID,
-      }));
-      syncAwarenessStates.push(...state);
-    }
-
-    this.onAwarenessChange?.(uniqBy(syncAwarenessStates, 'id'));
+    this.onAwarenessChange?.(uniqBy(syncAwarenessStates, 'clientID'));
   };
 }
 
-export const dataSync = new DataSync();
+class LiveblocksDataSync extends DataSync {
+  private syncParams!: LiveblocksSyncParams;
+  private provider: LiveblocksProvider<SyncUserInfo, LsonObject, BaseUserMeta, never> | null = null;
+  private client: LiveBlocksClient<BaseUserMeta> | null = null;
+
+  private leave?: () => void;
+
+  startDataSync = async (user: SyncUserInfo, params: LiveblocksSyncParams) => {
+    this._user = user;
+    this.syncParams = params;
+    this.onAwarenessChange = params.onAwarenessChange;
+
+    await this.connect();
+  };
+
+  private async connect() {
+    const { onSyncEvent, onSyncStatusChange } = this.syncParams;
+
+    await this.initYDoc();
+
+    this.logger('[YJS] start to listen sync event...');
+    this.initYjsObserve(onSyncEvent, onSyncStatusChange);
+
+    const { name, password, publicApiKey, accessCode } = this.syncParams;
+    const hashedRoomName = hashRoomName(name, password);
+
+    this.logger(`[Liveblocks] init provider... room name: ${hashedRoomName}`);
+
+    const { createClient } = await import('@liveblocks/client');
+
+    this.client = publicApiKey
+      ? createClient({
+          publicApiKey,
+        })
+      : createClient({
+          authEndpoint: async () => {
+            const headers = await createSyncAuthHeader(accessCode, {
+              'Content-Type': 'application/json',
+            });
+
+            const response = await fetch(API_ENDPOINTS.syncAuth, {
+              body: JSON.stringify({
+                name,
+                password,
+              }),
+              headers,
+              method: 'POST',
+            });
+
+            const { status } = response;
+
+            if (status !== 200) {
+              return {
+                error: 'forbidden',
+                reason: 'User is not authorized to access Lobechat',
+              };
+            }
+
+            return await response.json();
+          },
+        });
+    try {
+      const { room, leave } = this.client.enterRoom(hashedRoomName, {
+        autoConnect: true,
+        initialPresence: {},
+      });
+      this.leave = leave;
+
+      const provider = await import('@liveblocks/yjs');
+
+      this.provider = new provider.default(room, this._ydoc!);
+      this.logger(`[Liveblocks] provider init success`);
+      // ====== 4. handle data sync  ====== //
+      // Does nothing for connection, which is handled by Liveblocks client
+
+      this.provider.on('sync', async (synced: boolean) => {
+        this.logger('[Liveblocks] server sync status:', synced);
+        if (synced === true) {
+          // Yjs content is synchronized and ready
+          this.logger('[Liveblocks] start to init yjs data...');
+          onSyncStatusChange?.(PeerSyncStatus.Syncing);
+          await this.initSync();
+          onSyncStatusChange?.(PeerSyncStatus.Synced);
+          this.logger('[Liveblocks] yjs data init success');
+        } else {
+          // Yjs content is not synchronized
+          this.logger('[Liveblocks] data not sync, try to reconnect in 1s...');
+          // await this.reconnect(params);
+          setTimeout(() => {
+            onSyncStatusChange?.(PeerSyncStatus.Syncing);
+            this.reconnect();
+          }, 1000);
+        }
+      });
+    } catch (error) {
+      this.logger(`[Liveblocks] failed to join room: ${hashedRoomName}, error: ${error}`);
+      onSyncStatusChange?.(PeerSyncStatus.Unconnected);
+      await this.cleanConnection();
+    }
+    this.initAwareness();
+  }
+
+  reconnect = async () => {
+    await this.disconnect();
+    await this.connect();
+  };
+
+  async disconnect() {
+    await this.cleanConnection();
+  }
+
+  private async cleanConnection() {
+    this.logger(`[Liveblocks] leave room...`);
+    this.leave?.();
+
+    this.logger(`[Liveblocks] clean Connection...`);
+    // provider.disconnect();
+    this.client?.logout();
+
+    this.logger(`[Liveblocks] clean provider...`);
+    this.provider?.destroy();
+
+    this.logger(`[Liveblocks] clean yjs doc...`);
+    this._ydoc?.destroy();
+
+    this.logger(`[Liveblocks] -------------------`);
+  }
+
+  private initAwareness = () => {
+    if (!this.provider) return;
+
+    const user = this._user!;
+    const awareness = this.provider?.awareness;
+
+    const syncAwarenessStates: SyncAwarenessState[] = [];
+
+    if (awareness) {
+      awareness.setLocalState({ clientID: awareness.doc.clientID, user });
+      syncAwarenessStates.push({ ...user, clientID: awareness.doc.clientID, current: true });
+      awareness.on('change', () => this.syncAwarenessToUI());
+    }
+
+    this.onAwarenessChange?.(syncAwarenessStates);
+  };
+
+  private syncAwarenessToUI = async () => {
+    const awareness = this.provider?.awareness;
+
+    if (!awareness) return;
+
+    const syncAwarenessStates: SyncAwarenessState[] = [];
+    const currentStates: Map<number, any> = awareness.getStates();
+    const state: SyncAwarenessState[] = Array.from(currentStates.values()).map((s) => ({
+      ...s.user,
+      clientID: s.clientID,
+      current: s.clientID === awareness.doc.clientID,
+    }));
+    syncAwarenessStates.push(...state);
+
+    this.onAwarenessChange?.(uniqBy(syncAwarenessStates, 'clientID'));
+  };
+}
+
+export const webrtcDataSync = new WebRTCDataSync();
+export const liveblocksDataSync = new LiveblocksDataSync();
 
 interface IWebsocketClient {
   binaryType: 'arraybuffer' | 'blob' | null;

@@ -15,25 +15,32 @@ export enum PeerSyncStatus {
   Unconnected = 'unconnected',
 }
 
-export interface StartDataSyncParams {
-  channel: {
-    liveblocks: {
-      accessCode?: string;
-      enabled: boolean;
-      name: string;
-      password?: string;
-      publicApiKey?: string;
-    };
-    webrtc: {
-      enabled: boolean;
-      name: string;
-      password?: string;
-      signaling?: string;
-    };
-  };
+interface CommonSyncParams {
   onAwarenessChange: OnAwarenessChange;
   onSyncEvent: OnSyncEvent;
   onSyncStatusChange: OnSyncStatusChange;
+}
+
+export interface LiveblocksSyncParams extends CommonSyncParams {
+  accessCode?: string;
+  enabled: boolean;
+  name: string;
+  password?: string;
+  publicApiKey?: string;
+}
+
+export interface WebRTCSyncParams extends CommonSyncParams {
+  enabled: boolean;
+  name: string;
+  password?: string;
+  signaling?: string;
+}
+
+export interface StartDataSyncParams {
+  channel: {
+    liveblocks: LiveblocksSyncParams;
+    webrtc: WebRTCSyncParams;
+  };
   user: SyncUserInfo;
 }
 

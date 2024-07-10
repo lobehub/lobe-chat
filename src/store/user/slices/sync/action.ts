@@ -91,40 +91,49 @@ export const createSyncSlice: StateCreator<
           accessCode: accessCode,
           enabled: liveblocksConfig.enabled && !!liveblocksConfig.roomName,
           name: liveblocksConfig.roomName || '',
+          onAwarenessChange(state) {
+            set({
+              liveblocks: {
+                ...get().liveblocks,
+                awareness: state,
+              },
+            });
+          },
+          onSyncEvent: onEvent,
+          onSyncStatusChange: (status) => {
+            set({
+              liveblocks: {
+                ...get().liveblocks,
+                status,
+              },
+            });
+          },
           password: liveblocksConfig.roomPassword,
           publicApiKey: liveblocksConfig.publicApiKey,
         },
         webrtc: {
           enabled: webrtcConfig.enabled && !!webrtcConfig.channelName,
           name: webrtcConfig.channelName || '',
+          onAwarenessChange(state) {
+            set({
+              webrtc: {
+                ...get().webrtc,
+                awareness: state,
+              },
+            });
+          },
+          onSyncEvent: onEvent,
+          onSyncStatusChange: (status) => {
+            set({
+              webrtc: {
+                ...get().webrtc,
+                status,
+              },
+            });
+          },
           password: webrtcConfig.channelPassword,
           signaling: webrtcConfig.signaling,
         },
-      },
-      onAwarenessChange(state) {
-        set({
-          liveblocks: {
-            ...get().liveblocks,
-            awareness: state,
-          },
-          webrtc: {
-            ...get().webrtc,
-            awareness: state,
-          },
-        });
-      },
-      onSyncEvent: onEvent,
-      onSyncStatusChange: (status) => {
-        set({
-          liveblocks: {
-            ...get().liveblocks,
-            status,
-          },
-          webrtc: {
-            ...get().webrtc,
-            status,
-          },
-        });
       },
       user: {
         id: userId,
