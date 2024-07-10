@@ -122,14 +122,14 @@ export const useProviderList = (): ProviderItem[] => {
         title: <GroqBrand />,
       },
       {
-        ...NovitaProviderCard,
-        docUrl: urlJoin(BASE_DOC_URL, 'novita'),
-        title: <Novita.Combine size={20} type={'color'} />,
-      },
-      {
         ...OpenRouterProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'openrouter'),
         title: <OpenRouter.Combine iconProps={{ color: OpenRouter.colorPrimary }} size={20} />,
+      },
+      {
+        ...NovitaProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'novita'),
+        title: <Novita.Combine size={20} type={'color'} />,
       },
       {
         ...TogetherAIProviderCard,
@@ -189,7 +189,7 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...TaichuProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
-        title: <AiMass.Combine size={ 28 } type={ 'color' } />,
+        title: <AiMass.Combine size={28} type={'color'} />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
