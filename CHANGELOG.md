@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.3.5](https://github.com/lobehub/lobe-chat/compare/v1.3.4...v1.3.5)
+
+<sup>Released on **2024-07-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix assistant meta change race issue.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix assistant meta change race issue, closes [#3184](https://github.com/lobehub/lobe-chat/issues/3184) ([6335be4](https://github.com/lobehub/lobe-chat/commit/6335be4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.3.4](https://github.com/lobehub/lobe-chat/compare/v1.3.3...v1.3.4)
 
 <sup>Released on **2024-07-09**</sup>
