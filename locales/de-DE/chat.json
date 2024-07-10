@@ -99,6 +99,8 @@
       "duplicate": "Kopie erstellen",
       "export": "Thema exportieren"
     },
+    "checkOpenNewTopic": "Soll ein neues Thema eröffnet werden?",
+    "checkSaveCurrentMessages": "Möchten Sie die aktuelle Konversation als Thema speichern?",
     "confirmRemoveAll": "Möchtest du wirklich alle Themen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "confirmRemoveTopic": "Möchtest du dieses Thema wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
     "confirmRemoveUnstarred": "Möchtest du die nicht markierten Themen wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
