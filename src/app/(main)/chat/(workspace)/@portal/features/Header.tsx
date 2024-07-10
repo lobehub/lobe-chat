@@ -17,8 +17,8 @@ import { toolSelectors } from '@/store/tool/selectors';
 
 const Header = memo(() => {
   const [showToolUI, toggleInspector, closeToolUI, toolUIIdentifier = ''] = useChatStore((s) => [
-    chatPortalSelectors.showToolUI(s),
-    s.toggleDock,
+    chatPortalSelectors.showArtifactUI(s),
+    s.togglePortal,
     s.closeToolUI,
     chatPortalSelectors.toolUIIdentifier(s),
   ]);

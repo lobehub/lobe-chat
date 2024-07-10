@@ -35,6 +35,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_QWEN,
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
+    ENABLED_TAICHU,
     ENABLED_CLOUDFLARE,
 
     ENABLED_AZURE_OPENAI,
@@ -111,6 +112,7 @@ export const getServerGlobalConfig = () => {
 
       stepfun: { enabled: ENABLED_STEPFUN },
 
+      taichu: { enabled: ENABLED_TAICHU },
       togetherai: {
         enabled: ENABLED_TOGETHERAI,
         enabledModels: extractEnabledModels(TOGETHERAI_MODEL_LIST),

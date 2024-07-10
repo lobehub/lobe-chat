@@ -86,6 +86,9 @@ export const getLLMConfig = () => {
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
 
+      ENABLED_TAICHU: z.boolean(),
+      TAICHU_API_KEY: z.string().optional(),
+
       ENABLED_CLOUDFLARE: z.boolean(),
       CLOUDFLARE_API_KEY: z.string().optional(),
       CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
@@ -165,6 +168,9 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
+
+      ENABLED_TAICHU: !!process.env.TAICHU_API_KEY,
+      TAICHU_API_KEY: process.env.TAICHU_API_KEY,
 
       ENABLED_CLOUDFLARE: !!process.env.CLOUDFLARE_API_KEY && !!process.env.CLOUDFLARE_ACCOUNT_ID,
       CLOUDFLARE_API_KEY: process.env.CLOUDFLARE_API_KEY,

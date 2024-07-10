@@ -35,7 +35,6 @@ export const createBuiltinToolSlice: StateCreator<
 
   transformApiArgumentsToAiState: async (key, params) => {
     const { builtinToolLoading, toggleBuiltinToolLoading } = get();
-
     if (builtinToolLoading[key]) return;
 
     const { [key as keyof BuiltinToolAction]: action } = get();
@@ -44,11 +43,16 @@ export const createBuiltinToolSlice: StateCreator<
 
     toggleBuiltinToolLoading(key, true);
 
-    // @ts-ignore
-    const result = await action(params);
+    try {
+      // @ts-ignore
+      const result = await action(params);
 
-    toggleBuiltinToolLoading(key, false);
+      toggleBuiltinToolLoading(key, false);
 
-    return JSON.stringify(result);
+      return JSON.stringify(result);
+    } catch (e) {
+      toggleBuiltinToolLoading(key, false);
+      throw e;
+    }
   },
 });

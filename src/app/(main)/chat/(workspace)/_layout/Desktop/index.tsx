@@ -3,7 +3,7 @@ import { Flexbox } from 'react-layout-kit';
 import { LayoutProps } from '../type';
 import ChatHeader from './ChatHeader';
 import HotKeys from './HotKeys';
-import Inspector from './Portal';
+import Portal from './Portal';
 import TopicPanel from './TopicPanel';
 
 const Layout = ({ children, topic, conversation, portal }: LayoutProps) => {
@@ -24,7 +24,7 @@ const Layout = ({ children, topic, conversation, portal }: LayoutProps) => {
           {conversation}
         </Flexbox>
         {children}
-        <Inspector>{portal}</Inspector>
+        <Portal>{portal}</Portal>
         <TopicPanel>{topic}</TopicPanel>
       </Flexbox>
       <HotKeys />

@@ -139,7 +139,7 @@
     "modalDesc": "Po skonfigurowaniu adresu sklepu wtyczek możesz korzystać z niestandardowego sklepu wtyczek",
     "title": "Skonfiguruj sklep wtyczek"
   },
-  "showInPortal": "Proszę sprawdzić szczegóły w oknie rozszerzenia",
+  "showInPortal": "Proszę sprawdzić szczegóły w obszarze roboczym",
   "store": {
     "actions": {
       "confirmUninstall": "Wtyczka zostanie odinstalowana. Po odinstalowaniu konfiguracja wtyczki zostanie wyczyszczona. Potwierdź swoje działanie.",

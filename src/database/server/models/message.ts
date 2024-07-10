@@ -206,7 +206,7 @@ export class MessageModel {
   // **************** Create *************** //
 
   async create(
-    { fromModel, fromProvider, files, ...message }: CreateMessageParams,
+    { fromModel, fromProvider, files, plugin, pluginState, ...message }: CreateMessageParams,
     id: string = this.genId(),
   ): Promise<MessageItem> {
     return serverDB.transaction(async (trx) => {
@@ -224,12 +224,13 @@ export class MessageModel {
       // Insert the plugin data if the message is a tool
       if (message.role === 'tool') {
         await trx.insert(messagePlugins).values({
-          apiName: message.plugin?.apiName,
-          arguments: message.plugin?.arguments,
+          apiName: plugin?.apiName,
+          arguments: plugin?.arguments,
           id,
-          identifier: message.plugin?.identifier,
+          identifier: plugin?.identifier,
+          state: pluginState,
           toolCallId: message.tool_call_id,
-          type: message.plugin?.type,
+          type: plugin?.type,
         });
       }
 
@@ -352,6 +353,12 @@ export class MessageModel {
     });
   }
 
+  async deleteMessages(ids: string[]) {
+    return serverDB
+      .delete(messages)
+      .where(and(eq(messages.userId, this.userId), inArray(messages.id, ids)));
+  }
+
   async deleteMessageTranslate(id: string) {
     return serverDB.delete(messageTranslates).where(and(eq(messageTranslates.id, id)));
   }
@@ -360,7 +367,7 @@ export class MessageModel {
     return serverDB.delete(messageTTS).where(and(eq(messageTTS.id, id)));
   }
 
-  async deleteMessages(sessionId?: string | null, topicId?: string | null) {
+  async deleteMessagesBySession(sessionId?: string | null, topicId?: string | null) {
     return serverDB
       .delete(messages)
       .where(

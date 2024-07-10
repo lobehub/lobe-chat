@@ -25,13 +25,13 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
   ),
   footer: css`
     padding: 16px;
-    border-top: 1px solid ${token.colorBorder};
+    border-block-start: 1px solid ${token.colorBorder};
   `,
   header: css`
-    margin-bottom: -24px;
+    margin-block-end: -24px;
     padding: 16px;
     background: ${token.colorBgContainer};
-    border-bottom: 1px solid ${token.colorBorder};
+    border-block-end: 1px solid ${token.colorBorder};
   `,
   preview: cx(
     stylish.noScrollbar,
@@ -56,10 +56,10 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
     `,
   ),
   role: css`
-    margin-top: 12px;
-    padding-top: 12px;
+    margin-block-start: 12px;
+    padding-block-start: 12px;
     opacity: 0.75;
-    border-top: 1px dashed ${token.colorBorderSecondary};
+    border-block-start: 1px dashed ${token.colorBorderSecondary};
 
     * {
       font-size: 12px !important;

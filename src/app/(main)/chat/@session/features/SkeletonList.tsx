@@ -8,7 +8,7 @@ import { Flexbox } from 'react-layout-kit';
 const useStyles = createStyles(({ css }) => ({
   paragraph: css`
     height: 12px !important;
-    margin-top: 12px !important;
+    margin-block-start: 12px !important;
 
     > li {
       height: 12px !important;
@@ -16,8 +16,7 @@ const useStyles = createStyles(({ css }) => ({
   `,
   title: css`
     height: 14px !important;
-    margin-top: 4px !important;
-    margin-bottom: 12px !important;
+    margin-block: 4px 12px !important;
 
     > li {
       height: 14px !important;
