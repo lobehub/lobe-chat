@@ -18,6 +18,7 @@ import QwenProvider from './qwen';
 import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
+import XverseProvider from './xverse';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -41,6 +42,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   StepfunProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
+  XverseProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -64,6 +66,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   StepfunProvider,
   BaichuanProvider,
   TaichuProvider,
+  XverseProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -93,5 +96,6 @@ export { default as QwenProviderCard } from './qwen';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
+export { default as XverseProviderCard } from './xverse';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

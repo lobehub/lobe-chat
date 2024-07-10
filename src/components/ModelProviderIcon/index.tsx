@@ -18,6 +18,7 @@ import {
   Stepfun,
   Together,
   Tongyi,
+  // Xverse, // TODO: change the icon to xverse
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
@@ -122,6 +123,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Taichu: {
       return <AiMass size={20} />;
+    }
+
+    case ModelProvider.Xverse: {
+      return <Baichuan size={20} />; // TODO: change icon to xverse
     }
 
     default: {

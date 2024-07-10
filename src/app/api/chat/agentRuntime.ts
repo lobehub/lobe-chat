@@ -186,6 +186,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Xverse: {
+      const { XVERSE_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || XVERSE_API_KEY);
+
+      return { apiKey };
+    }
   }
 };
 

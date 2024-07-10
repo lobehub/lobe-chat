@@ -15,6 +15,7 @@ import {
   Stepfun,
   Together,
   Tongyi,
+  // Xverse, // TODO: Change to xverse
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
@@ -39,6 +40,7 @@ import {
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
+  XverseProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
@@ -183,6 +185,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...TaichuProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
         title: <AiMass.Combine size={ 28 } type={ 'color' } />,
+      },
+      {
+        ...XverseProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'xverse'),
+        title: <Baichuan.Combine size={ 28 } type={ 'color' } />, // TODO: change icon to xverse
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

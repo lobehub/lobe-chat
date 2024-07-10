@@ -30,6 +30,7 @@ import {
   Stepfun,
   Tongyi,
   Wenxin,
+  // Xverse, // TODO: change icon to xverse
   Yi,
 } from '@lobehub/icons';
 import { memo } from 'react';
@@ -68,6 +69,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
   if (model.includes('step')) return <Stepfun.Avatar size={size} />;
   if (model.includes('taichu')) return <AiMass.Avatar size={size} />;
+  if (model.includes('xverse')) return <Baichuan.Avatar size={size} />; // TODO: change icon to xverse
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))

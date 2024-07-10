@@ -36,6 +36,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
+    ENABLED_XVERSE,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -119,6 +120,7 @@ export const getServerGlobalConfig = () => {
           modelString: TOGETHERAI_MODEL_LIST,
         }),
       },
+      xverse: { enabled: ENABLED_XVERSE },
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },
     },

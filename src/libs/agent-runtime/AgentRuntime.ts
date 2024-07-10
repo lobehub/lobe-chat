@@ -27,6 +27,7 @@ import {
   ModelProvider,
   TextToImagePayload,
 } from './types';
+import { LobeXverseAI } from './xverse';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
 
@@ -121,6 +122,7 @@ class AgentRuntime {
       stepfun: Partial<ClientOptions>;
       taichu: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
+      xverse: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
     }>,
@@ -231,6 +233,11 @@ class AgentRuntime {
 
       case ModelProvider.Taichu: {
         runtimeModel = new LobeTaichuAI(params.taichu ?? {});
+        break
+      }
+
+      case ModelProvider.Xverse: {
+        runtimeModel = new LobeXverseAI(params.xverse ?? {});
         break
       }
     }

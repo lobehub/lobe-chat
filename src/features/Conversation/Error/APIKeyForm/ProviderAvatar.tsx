@@ -14,6 +14,7 @@ import {
   Stepfun,
   Together,
   Tongyi,
+  // Xverse, // TODO: change icon to xverse
   ZeroOne,
   Zhipu,
 } from '@lobehub/icons';
@@ -88,6 +89,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.TogetherAI: {
       return <Together color={Together.colorPrimary} size={56} />;
+    }
+
+    case ModelProvider.Xverse: {
+      return <Baichuan color={Baichuan.colorPrimary} size={56} />; // TODO: Change icon to xverse
     }
 
     case ModelProvider.ZeroOne: {

@@ -16,6 +16,7 @@ import {
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
+  XverseProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
   filterEnabledModels,
@@ -95,6 +96,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   togetherai: {
     enabled: false,
     enabledModels: filterEnabledModels(TogetherAIProviderCard),
+  },
+  xverse: {
+    enabled: false,
+    enabledModels: filterEnabledModels(XverseProviderCard),
   },
   zeroone: {
     enabled: false,
