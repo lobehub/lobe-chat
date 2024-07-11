@@ -35,14 +35,14 @@ const SaveTopic = memo<{ mobile?: boolean }>(({ mobile }) => {
     return (
       <Popconfirm
         arrow={false}
-        okButtonProps={{ danger: true, type: 'primary' }}
+        okButtonProps={{ danger: false, type: 'primary' }}
         onConfirm={() => mutate()}
         onOpenChange={setConfirmOpened}
         open={confirmOpened}
-        placement={'topRight'}
+        placement={'top'}
         title={
-          <div style={{ alignItems: 'center', display: 'flex' }}>
-            <div style={{ marginRight: '16px' }}>
+          <div style={{ alignItems: 'center', display: 'flex', marginBottom: '8px' }}>
+            <div style={{ marginRight: '16px', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
               {t(hasTopic ? 'topic.checkOpenNewTopic' : 'topic.checkSaveCurrentMessages')}
             </div>
             <HotKeys inverseTheme={false} keys={hotkeys} />

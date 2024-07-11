@@ -34,14 +34,19 @@ const Clear = memo(() => {
       onConfirm={resetConversation}
       onOpenChange={updateConfirmOpened}
       open={confirmOpened}
-      placement={'topRight'}
-      title={t('confirmClearCurrentMessages', { ns: 'chat' })}
+      placement={'top'}
+      title={
+        <div style={{ marginBottom: '8px', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
+          {t('confirmClearCurrentMessages', { ns: 'chat' })}
+        </div>
+      }
     >
-      <ActionIcon 
-        icon={Eraser} 
+      <ActionIcon
+        icon={Eraser}
         overlayStyle={{ maxWidth: 'none' }}
-        placement={'bottom'} 
-        title={actionTitle} />
+        placement={'bottom'}
+        title={actionTitle}
+      />
     </Popconfirm>
   );
 });
