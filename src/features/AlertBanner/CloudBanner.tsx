@@ -77,7 +77,9 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Center className={styles.wrapper} gap={16} horizontal width={'100%'}>
         {isTruncated ? <Marquee pauseOnHover>{content}</Marquee> : content}
         <Link href={OFFICIAL_URL} target={'_blank'}>
-          <Button type="primary">{t('alert.cloud.action')}</Button>
+          <Button size={mobile ? 'small' : undefined} type="primary">
+            {t('alert.cloud.action')}
+          </Button>
         </Link>
       </Center>
     </Center>
