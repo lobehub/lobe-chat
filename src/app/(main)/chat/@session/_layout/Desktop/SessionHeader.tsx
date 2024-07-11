@@ -8,11 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
-import SyncStatusTag from '@/features/SyncStatusInspector';
+import SyncStatusInspector from '@/features/SyncStatusInspector';
 import { useActionSWR } from '@/libs/swr';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
-import { SyncMethod } from '@/types/sync';
 
 import SessionSearchBar from '../../features/SessionSearchBar';
 
@@ -39,7 +38,7 @@ const Header = memo(() => {
       <Flexbox distribution={'space-between'} horizontal>
         <Flexbox align={'center'} gap={4} horizontal>
           <Logo className={styles.logo} size={36} type={'text'} />
-          {enableSync && <SyncStatusTag method={SyncMethod.WebRTC} />}
+          {enableSync && <SyncStatusInspector />}
         </Flexbox>
         {showCreateSession && (
           <ActionIcon

@@ -1,5 +1,5 @@
 import type { BaseUserMeta, Client as LiveBlocksClient, LsonObject } from '@liveblocks/client';
-import type LiveblocksProvider from '@liveblocks/yjs';
+import type { LiveblocksYjsProvider } from '@liveblocks/yjs';
 import Debug from 'debug';
 import { throttle, uniqBy } from 'lodash-es';
 import type { WebrtcProvider } from 'y-webrtc';
@@ -158,7 +158,7 @@ class WebRTCDataSync extends DataSync {
 
     // 开发时由于存在 fast refresh 全局实例会缓存在运行时中
     // 因此需要在每次重新连接时清理上一次的实例
-    if (window.__ONLY_USE_FOR_CLEANUP_IN_DEV) {
+    if (window.__ONLY_USE_FOR_CLEANUP_IN_DEV_WEBRTC) {
       await this.cleanConnection(true);
     }
 
@@ -188,7 +188,7 @@ class WebRTCDataSync extends DataSync {
     // when fast refresh in dev, the provider will be cached in window
     // so we need to clean it in destory
     if (process.env.NODE_ENV === 'development') {
-      window.__ONLY_USE_FOR_CLEANUP_IN_DEV = this.provider;
+      window.__ONLY_USE_FOR_CLEANUP_IN_DEV_WEBRTC = this.provider;
     }
 
     this.logger(`[WebRTC] provider init success`);
@@ -258,7 +258,7 @@ class WebRTCDataSync extends DataSync {
   }
 
   private async cleanConnection(isDev = false) {
-    const provider = isDev ? window.__ONLY_USE_FOR_CLEANUP_IN_DEV : this.provider;
+    const provider = isDev ? window.__ONLY_USE_FOR_CLEANUP_IN_DEV_WEBRTC : this.provider;
     if (provider) {
       this.logger(`[WebRTC] clean Connection...`);
       this.logger(`[WebRTC] clean awareness...`);
@@ -316,7 +316,8 @@ class WebRTCDataSync extends DataSync {
 
 class LiveblocksDataSync extends DataSync {
   private syncParams!: LiveblocksSyncParams;
-  private provider: LiveblocksProvider<SyncUserInfo, LsonObject, BaseUserMeta, never> | null = null;
+  private provider: LiveblocksYjsProvider<SyncUserInfo, LsonObject, BaseUserMeta, never> | null =
+    null;
   private client: LiveBlocksClient<BaseUserMeta> | null = null;
 
   private leave?: () => void;
@@ -325,6 +326,12 @@ class LiveblocksDataSync extends DataSync {
     this._user = user;
     this.syncParams = params;
     this.onAwarenessChange = params.onAwarenessChange;
+
+    // 开发时由于存在 fast refresh 全局实例会缓存在运行时中
+    // 因此需要在每次重新连接时清理上一次的实例
+    if (window.__ONLY_USE_FOR_CLEANUP_IN_DEV_LIVEBLOCKS) {
+      await this.cleanConnection(true);
+    }
 
     await this.connect();
   };
@@ -382,9 +389,16 @@ class LiveblocksDataSync extends DataSync {
       });
       this.leave = leave;
 
-      const provider = await import('@liveblocks/yjs');
+      const { LiveblocksYjsProvider } = await import('@liveblocks/yjs');
 
-      this.provider = new provider.default(room, this._ydoc!);
+      this.provider = new LiveblocksYjsProvider(room, this._ydoc!);
+
+      // when fast refresh in dev, the provider will be cached in window
+      // so we need to clean it in destory
+      if (process.env.NODE_ENV === 'development') {
+        window.__ONLY_USE_FOR_CLEANUP_IN_DEV_LIVEBLOCKS = this.provider;
+      }
+
       this.logger(`[Liveblocks] provider init success`);
       // ====== 4. handle data sync  ====== //
       // Does nothing for connection, which is handled by Liveblocks client
@@ -425,21 +439,24 @@ class LiveblocksDataSync extends DataSync {
     await this.cleanConnection();
   }
 
-  private async cleanConnection() {
-    this.logger(`[Liveblocks] leave room...`);
-    this.leave?.();
+  private async cleanConnection(isDev = false) {
+    const provider = isDev ? window.__ONLY_USE_FOR_CLEANUP_IN_DEV_LIVEBLOCKS : this.provider;
+    if (provider) {
+      this.logger(`[Liveblocks] leave room...`);
+      this.leave?.();
 
-    this.logger(`[Liveblocks] clean Connection...`);
-    // provider.disconnect();
-    this.client?.logout();
+      this.logger(`[Liveblocks] clean Connection...`);
+      // provider.disconnect();
+      this.client?.logout();
 
-    this.logger(`[Liveblocks] clean provider...`);
-    this.provider?.destroy();
+      this.logger(`[Liveblocks] clean provider...`);
+      this.provider?.destroy();
 
-    this.logger(`[Liveblocks] clean yjs doc...`);
-    this._ydoc?.destroy();
+      this.logger(`[Liveblocks] clean yjs doc...`);
+      this._ydoc?.destroy();
 
-    this.logger(`[Liveblocks] -------------------`);
+      this.logger(`[Liveblocks] -------------------`);
+    }
   }
 
   private initAwareness = () => {
@@ -497,6 +514,12 @@ interface IWebsocketClient {
 
 declare global {
   interface Window {
-    __ONLY_USE_FOR_CLEANUP_IN_DEV?: WebrtcProvider | null;
+    __ONLY_USE_FOR_CLEANUP_IN_DEV_LIVEBLOCKS?: LiveblocksYjsProvider<
+      SyncUserInfo,
+      LsonObject,
+      BaseUserMeta,
+      never
+    > | null;
+    __ONLY_USE_FOR_CLEANUP_IN_DEV_WEBRTC?: WebrtcProvider | null;
   }
 }

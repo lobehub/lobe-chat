@@ -2,13 +2,13 @@
 
 import { Alert, Form, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Form as AntForm, Input, Switch, Typography } from 'antd';
-import { SVGProps, memo, useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
 import { FORM_STYLE } from '@/const/layoutTokens';
-import SyncStatusInspector from '@/features/SyncStatusInspector';
+import SyncStatusTag from '@/features/SyncStatusInspector/Tag';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
@@ -20,23 +20,10 @@ import {
 } from '@/store/user/selectors';
 import { SyncMethod } from '@/types/sync';
 
+import LiveblocksIcon from './LiveblocksIcon';
 import RoomNameInput from './RoomNameInput';
 
 type SettingItemGroup = ItemGroup;
-
-// eslint-disable-next-line no-undef
-const LiveblocksIcon = (props: JSX.IntrinsicAttributes & SVGProps<SVGSVGElement>) => {
-  return (
-    <svg fill="none" height={32} width={32} xmlns="http://www.w3.org/2000/svg" {...props}>
-      <path
-        clipRule="evenodd"
-        d="M21.657 8H2l5.657 5.6v7.733L21.657 8ZM10.343 24H30l-5.657-5.6v-7.733L10.343 24Z"
-        fill="#000"
-        fillRule="evenodd"
-      />
-    </svg>
-  );
-};
 
 const Liveblocks = memo(() => {
   const { t } = useTranslation('setting');
@@ -199,7 +186,7 @@ const Liveblocks = memo(() => {
           e.stopPropagation();
         }}
       >
-        <SyncStatusInspector hiddenActions hiddenEnableGuide method={SyncMethod.Liveblocks} />
+        <SyncStatusTag hiddenActions hiddenEnableGuide hiddenName method={SyncMethod.Liveblocks} />
       </div>
     ),
     title: (

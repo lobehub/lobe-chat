@@ -12,7 +12,6 @@ import UserAvatar from '@/features/User/UserAvatar';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { mobileHeaderSticky } from '@/styles/mobileHeader';
-import { SyncMethod } from '@/types/sync';
 
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
@@ -25,7 +24,7 @@ const Header = memo(() => {
         <Flexbox align={'center'} gap={8} horizontal style={{ marginLeft: 8 }}>
           <UserAvatar onClick={() => router.push('/me')} size={32} />
           <Logo type={'text'} />
-          {enableSync && <SyncStatusInspector method={SyncMethod.WebRTC} placement={'bottom'} />}
+          {enableSync && <SyncStatusInspector />}
         </Flexbox>
       }
       right={
