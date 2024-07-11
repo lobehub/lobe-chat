@@ -4,6 +4,7 @@ import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
 
+import CloudVersionModal from '../features/CloudVersionModal';
 import PageTitle from '../features/PageTitle';
 import TelemetryNotification from './features/TelemetryNotification';
 
@@ -30,6 +31,7 @@ const Page = async () => {
       <StructuredData ld={ld} />
       <PageTitle />
       <TelemetryNotification mobile={mobile} />
+      <CloudVersionModal />
     </>
   );
 };

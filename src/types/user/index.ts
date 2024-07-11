@@ -18,7 +18,14 @@ export interface UserGuide {
    */
   moveSettingsToAvatar?: boolean;
 
-  // Topic 引导
+  /**
+   * LobeChat Public Test Guide
+   */
+  publicTest?: boolean;
+
+  /**
+   * Topic Guide
+   */
   topic?: boolean;
 }
 
