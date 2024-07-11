@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation';
 import qs from 'query-string';
 import { memo } from 'react';
 
+import CloudBanner from '@/features/AlertBanner/CloudBanner';
 import { useQuery } from '@/hooks/useQuery';
 
 import { LayoutProps } from './type';
@@ -16,8 +17,12 @@ const Layout = memo(({ children, nav }: LayoutProps) => {
   const { url } = qs.parseUrl(pathname);
   const showNav = !showMobileWorkspace && MOBILE_NAV_ROUTES.has(url);
 
+  // TODO: Add feature flag
+  const showCloudBanner = true;
+
   return (
     <>
+      {showCloudBanner && <CloudBanner mobile />}
       {children}
       {showNav && nav}
     </>

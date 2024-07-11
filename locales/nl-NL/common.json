@@ -1,6 +1,14 @@
 {
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
+  "alert": {
+    "cloud": {
+      "action": "Gratis proberen",
+      "desc": "We bieden alle geregistreerde gebruikers {{credit}} gratis rekenpunten aan, zonder ingewikkelde configuratie, direct klaar voor gebruik. Ondersteunt onbeperkte chatgeschiedenis en wereldwijde cloudsynchronisatie. Ontdek samen meer geavanceerde functies.",
+      "descOnMobile": "We bieden alle geregistreerde gebruikers {{credit}} gratis rekenpunten aan, zonder ingewikkelde configuratie direct klaar voor gebruik.",
+      "title": "Welkom bij {{name}}"
+    }
+  },
   "appInitializing": "Applicatie wordt gestart, gelieve geduld te hebben...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "anonieme gebruiker",
     "billing": "facturatie",
+    "cloud": "Ervaar {{name}}",
     "data": "gegevensopslag",
     "defaultNickname": "communitygebruiker",
     "discord": "communityondersteuning",

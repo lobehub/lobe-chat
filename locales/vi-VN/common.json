@@ -1,6 +1,14 @@
 {
   "about": "Giới thiệu",
   "advanceSettings": "Cài đặt nâng cao",
+  "alert": {
+    "cloud": {
+      "action": "Trải nghiệm miễn phí",
+      "desc": "Chúng tôi cung cấp {{credit}} điểm tính toán miễn phí cho tất cả người dùng đăng ký, không cần cấu hình phức tạp, sẵn sàng sử dụng ngay, hỗ trợ lưu trữ vô hạn lịch sử trò chuyện và đồng bộ toàn cầu, cùng nhiều tính năng cao cấp khác đang chờ bạn khám phá.",
+      "descOnMobile": "Chúng tôi cung cấp {{credit}} điểm tính toán miễn phí cho tất cả người dùng đăng ký, không cần cấu hình phức tạp, sẵn sàng sử dụng ngay.",
+      "title": "Chào mừng bạn trải nghiệm {{name}}"
+    }
+  },
   "appInitializing": "Ứng dụng đang khởi động, vui lòng chờ...",
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Người dùng ẩn danh",
     "billing": "Quản lý hóa đơn",
+    "cloud": "Trải nghiệm {{name}}",
     "data": "Lưu trữ dữ liệu",
     "defaultNickname": "Người dùng phiên bản cộng đồng",
     "discord": "Hỗ trợ cộng đồng",

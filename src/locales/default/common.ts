@@ -1,6 +1,14 @@
 export default {
   about: '关于',
   advanceSettings: '高级设置',
+  alert: {
+    cloud: {
+      action: '免费体验',
+      desc: '我们为所有注册用户提供了 {{credit}} 免费的计算积分，无需复杂配置开箱即用, 支持无限对话历史记录与全局云同步，更多高级特性等你一起探索。',
+      descOnMobile: '我们为所有注册用户提供了 {{credit}} 免费的计算积分，无需复杂配置开箱即用。',
+      title: '欢迎体验 {{name}}',
+    },
+  },
   appInitializing: '应用启动中，请耐心等待...',
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
@@ -48,11 +56,6 @@ export default {
       title: '在 GitHub 分享您宝贵的反馈',
     },
     later: '稍后',
-    publicTest: {
-      action: '免费体验',
-      desc: '我们为所有注册用户提供了 500 免费的计算积分，无需复杂配置开箱即用, 支持无限对话历史记录与全局云同步，更多高级特性等你一起探索。',
-      title: '欢迎体验 {{name}} 公测版',
-    },
     star: {
       action: '点亮星标',
       desc: '如果您喜爱我们的产品，并希望支持我们，可以去 GitHub 给我们点一颗星吗？这个小小的动作对我们来说意义重大，能激励我们为您持续提供特性体验。',
@@ -203,7 +206,7 @@ export default {
   userPanel: {
     anonymousNickName: '匿名用户',
     billing: '账单管理',
-    cloud: '升级云服务版',
+    cloud: '体验 {{name}}',
     data: '数据存储',
     defaultNickname: '社区版用户',
     discord: '社区支持',

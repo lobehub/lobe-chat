@@ -1,6 +1,14 @@
 {
   "about": "소개",
   "advanceSettings": "고급 설정",
+  "alert": {
+    "cloud": {
+      "action": "무료 체험",
+      "desc": "우리는 모든 등록 사용자에게 {{credit}}의 무료 계산 포인트를 제공합니다. 복잡한 설정이 필요 없이 즉시 사용할 수 있으며, 무제한 대화 기록 및 전역 클라우드 동기화를 지원합니다. 더 많은 고급 기능을 함께 탐험해 보세요.",
+      "descOnMobile": "모든 등록 사용자에게 {{credit}}의 무료 계산 포인트를 제공하며, 복잡한 설정 없이 즉시 사용할 수 있습니다.",
+      "title": "환영합니다 {{name}}"
+    }
+  },
   "appInitializing": "앱을 시작하는 중입니다. 잠시 기다려주세요...",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "익명 사용자",
     "billing": "결제 관리",
+    "cloud": "체험 {{name}}",
     "data": "데이터 저장",
     "defaultNickname": "커뮤니티 사용자",
     "discord": "커뮤니티 지원",

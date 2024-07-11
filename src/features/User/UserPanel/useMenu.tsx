@@ -77,6 +77,9 @@ export const useMenu = () => {
     s.openUserProfile,
   ]);
 
+  // TODO: Add feature flag
+  const showCloudLaunch = true;
+
   const profile: MenuProps['items'] = [
     {
       icon: <Icon icon={CircleUserRound} />,
@@ -171,13 +174,12 @@ export const useMenu = () => {
       ].filter(Boolean) as ItemType[]);
 
   const helps: MenuProps['items'] = [
-    // TODO: Add feature flag
-    {
+    showCloudLaunch && {
       icon: <Icon icon={Cloudy} />,
       key: 'cloud',
       label: (
         <Link href={OFFICIAL_URL} target={'_blank'}>
-          {t('userPanel.cloud')}
+          {t('userPanel.cloud', { name: 'LobeChat Cloud' })}
         </Link>
       ),
     },

@@ -170,6 +170,7 @@
     "random-words": "^2.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-fast-marquee": "^1.6.5",
     "react-hotkeys-hook": "^4.5.0",
     "react-i18next": "14.0.2",
     "react-layout-kit": "^1.9.0",
