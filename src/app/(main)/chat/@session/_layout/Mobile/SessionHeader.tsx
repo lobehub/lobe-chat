@@ -16,7 +16,7 @@ import { mobileHeaderSticky } from '@/styles/mobileHeader';
 const Header = memo(() => {
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const router = useRouter();
-  const { enableSync, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { showSyncSettings, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <MobileNavBar
@@ -24,7 +24,7 @@ const Header = memo(() => {
         <Flexbox align={'center'} gap={8} horizontal style={{ marginLeft: 8 }}>
           <UserAvatar onClick={() => router.push('/me')} size={32} />
           <Logo type={'text'} />
-          {enableSync && <SyncStatusInspector />}
+          {showSyncSettings && <SyncStatusInspector />}
         </Flexbox>
       }
       right={

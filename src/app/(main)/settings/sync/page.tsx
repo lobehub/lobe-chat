@@ -16,8 +16,8 @@ export const generateMetadata = async () => {
   });
 };
 export default () => {
-  const enableSync = serverFeatureFlags().enableSync;
-  if (!enableSync) return notFound();
+  const showSyncSettings = serverFeatureFlags().showSyncSettings;
+  if (!showSyncSettings) return notFound();
 
   const isMobile = isMobileDevice();
   const { os, browser } = gerServerDeviceInfo();

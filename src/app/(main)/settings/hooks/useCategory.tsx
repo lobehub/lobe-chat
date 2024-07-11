@@ -12,7 +12,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 
 export const useCategory = () => {
   const { t } = useTranslation('setting');
-  const { enableSync, showLLM } = useServerConfigStore(featureFlagsSelectors);
+  const { showSyncSettings, showLLM } = useServerConfigStore(featureFlagsSelectors);
 
   const cateItems: MenuProps['items'] = useMemo(
     () =>
@@ -35,7 +35,7 @@ export const useCategory = () => {
             </Link>
           ),
         },
-        enableSync && {
+        showSyncSettings && {
           icon: <Icon icon={Cloudy} />,
           key: SettingsTabs.Sync,
           label: (
@@ -87,7 +87,7 @@ export const useCategory = () => {
           ),
         },
       ].filter(Boolean) as MenuProps['items'],
-    [t, enableSync, showLLM],
+    [t, showSyncSettings, showLLM],
   );
 
   return cateItems;

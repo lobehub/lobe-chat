@@ -1,22 +1,19 @@
 import { memo } from 'react';
 
-import { useUserStore } from '@/store/user';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { SyncMethod } from '@/types/sync';
 
 import MultipleChannelTag from './MultipleTag';
 import SyncStatusTag from './Tag';
 
 const SyncStatusInspector = memo(() => {
-  const [webrtcEnabled, liveblocksEnabled] = useUserStore((s) => [
-    s.webrtc.enabled,
-    s.liveblocks.enabled,
-  ]);
+  const { enableWebrtc, enableLiveblocks } = useServerConfigStore(featureFlagsSelectors);
 
-  if (webrtcEnabled && !liveblocksEnabled) {
+  if (enableWebrtc && !enableLiveblocks) {
     return <SyncStatusTag method={SyncMethod.WebRTC} />;
   }
 
-  if (liveblocksEnabled && !webrtcEnabled) {
+  if (enableLiveblocks && !enableWebrtc) {
     return <SyncStatusTag hiddenName method={SyncMethod.Liveblocks} />;
   }
 

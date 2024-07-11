@@ -46,10 +46,10 @@ export const useEnabledDataSync = () => {
     ],
   );
 
-  const { enableSync } = useServerConfigStore(featureFlagsSelectors);
+  const { showSyncSettings } = useServerConfigStore(featureFlagsSelectors);
   const syncEvent = useSyncEvent();
 
-  useEnabledSync(enableSync, {
+  useEnabledSync(showSyncSettings, {
     onEvent: syncEvent,
     userEnableSync: {
       liveblocks: userEnableLiveblocksSync,
