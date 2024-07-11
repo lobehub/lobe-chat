@@ -226,12 +226,12 @@ class AgentRuntime {
 
       case ModelProvider.Baichuan: {
         runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
-        break
+        break;
       }
 
       case ModelProvider.Taichu: {
         runtimeModel = new LobeTaichuAI(params.taichu ?? {});
-        break
+        break;
       }
     }
 
