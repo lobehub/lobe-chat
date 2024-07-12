@@ -9,7 +9,7 @@ import { ALT_KEY, CLEAN_MESSAGE_KEY, META_KEY } from '@/const/hotkeys';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 
-const Clear = memo(() => {
+const Clear = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('setting');
   const [clearMessage] = useChatStore((s) => [s.clearMessage]);
   const [clearImageList] = useFileStore((s) => [s.clearImageList]);
@@ -27,6 +27,8 @@ const Clear = memo(() => {
     <HotKeys desc={t('clearCurrentMessages', { ns: 'chat' })} inverseTheme keys={hotkeys} />
   );
 
+  const popconfirmPlacement = mobile ? 'top' : 'topRight';
+
   return (
     <Popconfirm
       arrow={false}
@@ -34,7 +36,7 @@ const Clear = memo(() => {
       onConfirm={resetConversation}
       onOpenChange={updateConfirmOpened}
       open={confirmOpened}
-      placement={'top'}
+      placement={popconfirmPlacement}
       title={
         <div style={{ marginBottom: '8px', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
           {t('confirmClearCurrentMessages', { ns: 'chat' })}
