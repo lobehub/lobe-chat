@@ -26,11 +26,12 @@ const nextAuthMiddleware = auth((req) => {
 
   // Just check if session exists
   const session = req.auth;
-  console.log(`session`, session)
+  const validDomain = process.env.WHITE_LIST_DOMAIN || ""
+  const isValidEmail = session?.user?.email ? session.user.email.endsWith(validDomain) : false;
 
   // Check if next-auth throws errors
   // refs: https://github.com/lobehub/lobe-chat/pull/1323
-  const isLoggedIn = !!session?.expires;
+  const isLoggedIn = !!session?.expires && isValidEmail;
 
   // Remove & amend OAuth authorized header
   const requestHeaders = new Headers(req.headers);
