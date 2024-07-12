@@ -27,7 +27,11 @@ export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRunti
   client: OpenAI;
   baseURL: string;
 
-  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
+  constructor({
+    apiKey,
+    baseURL = DEFAULT_BASE_URL,
+    ...res
+  }: ClientOptions & Record<string, any> = {}) {
     super();
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
     this.client = new OpenAI({ apiKey, baseURL, ...res });
