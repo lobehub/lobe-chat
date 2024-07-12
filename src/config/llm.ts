@@ -89,6 +89,9 @@ export const getLLMConfig = () => {
       ENABLED_TAICHU: z.boolean(),
       TAICHU_API_KEY: z.string().optional(),
 
+      ENABLED_AI360: z.boolean(),
+      AI360_API_KEY: z.string().optional(),
+
       ENABLED_SPARK: z.boolean(),
       SPARK_API_KEY: z.string().optional(),
       SPARK_API_SECRET: z.string().optional(),
@@ -171,6 +174,9 @@ export const getLLMConfig = () => {
 
       ENABLED_TAICHU: !!process.env.TAICHU_API_KEY,
       TAICHU_API_KEY: process.env.TAICHU_API_KEY,
+
+      ENABLED_AI360: !!process.env.AI360_API_KEY,
+      AI360_API_KEY: process.env.AI360_API_KEY,
 
       ENABLED_SPARK: !!process.env.SPARK_API_KEY && !!process.env.SPARK_API_SECRET,
       SPARK_API_KEY: process.env.SPARK_API_KEY,

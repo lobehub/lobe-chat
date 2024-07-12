@@ -36,6 +36,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
+    ENABLED_AI360,
     ENABLED_SPARK,
 
     ENABLED_AZURE_OPENAI,
@@ -61,6 +62,7 @@ export const getServerGlobalConfig = () => {
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
     languageModel: {
+      ai360: { enabled: ENABLED_AI360 },
       anthropic: {
         enabled: ENABLED_ANTHROPIC,
       },

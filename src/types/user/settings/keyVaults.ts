@@ -21,6 +21,7 @@ export interface SparkKeyVault {
 }
 
 export interface UserKeyVaults {
+  ai360?: OpenAICompatibleKeyVault;
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
   baichuan?: OpenAICompatibleKeyVault;
