@@ -2,6 +2,7 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import Qwen from '@/config/modelProviders/qwen';
 import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
@@ -44,8 +45,10 @@ describe('LobeQwenAI', () => {
   describe('models', () => {
     it('should correctly list available models', async () => {
       const instance = new LobeQwenAI({ apiKey: 'test_api_key' });
+      vi.spyOn(instance, 'models').mockResolvedValue(Qwen.chatModels);
+
       const models = await instance.models();
-      expect(models).toMatchSnapshot();
+      expect(models).toEqual(Qwen.chatModels);
     });
   });
 

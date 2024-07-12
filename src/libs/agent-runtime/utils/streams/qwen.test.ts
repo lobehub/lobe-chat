@@ -134,7 +134,7 @@ describe('QwenAIStream', () => {
     expect(onToolCallMock).toHaveBeenCalledTimes(1);
   });
 
-  it('should haneld empty stream', async () => {
+  it('should handle empty stream', async () => {
     const mockStream = new ReadableStream({
       start(controller) {
         controller.close();
@@ -152,6 +152,31 @@ describe('QwenAIStream', () => {
     }
 
     expect(chunks).toEqual([]);
+  });
+
+  it('should handle chunk with no choices', async () => {
+    const mockStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          choices: [],
+          id: '1',
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = QwenAIStream(mockStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(['id: 1\n', 'event: data\n', 'data: {"choices":[],"id":"1"}\n\n']);
   });
 
   it('should handle vision model stream', async () => {

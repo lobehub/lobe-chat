@@ -9,6 +9,7 @@ import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
   StreamToolCallChunkData,
+  chatStreamable,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
@@ -78,12 +79,6 @@ export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamPr
     id: chunk.id,
     type: 'data',
   };
-};
-
-const chatStreamable = async function* (stream: AsyncIterable<OpenAI.ChatCompletionChunk>) {
-  for await (const response of stream) {
-    yield response;
-  }
 };
 
 export const QwenAIStream = (
