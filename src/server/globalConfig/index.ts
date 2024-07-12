@@ -51,6 +51,8 @@ export const getServerGlobalConfig = () => {
     ENABLED_ZEROONE,
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
+
+    ENABLED_WENXIN,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -121,6 +123,7 @@ export const getServerGlobalConfig = () => {
           modelString: TOGETHERAI_MODEL_LIST,
         }),
       },
+      wenxin: { enabled: ENABLED_WENXIN },
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },
     },

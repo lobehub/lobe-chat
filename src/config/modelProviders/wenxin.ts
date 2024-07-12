@@ -4,6 +4,7 @@ import { ModelProviderCard } from '@/types/llm';
 const BaiduWenxin: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'ERNIE-4.0-8K',
       enabled: true,
       id: 'ERNIE-4.0-8K',
       tokens: 8192,
@@ -72,6 +73,7 @@ const BaiduWenxin: ModelProviderCard = {
     },
   ],
   checkModel: 'ERNIE-4.0-8K',
+  disableBrowserRequest: true,
   id: 'wenxin',
   name: 'Wenxin',
 };

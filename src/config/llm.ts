@@ -73,6 +73,7 @@ export const getLLMConfig = () => {
       AWS_ACCESS_KEY_ID: z.string().optional(),
       AWS_SECRET_ACCESS_KEY: z.string().optional(),
 
+      ENABLED_WENXIN: z.boolean(),
       WENXIN_ACCESS_KEY: z.string().optional(),
       WENXIN_SECRET_KEY: z.string().optional(),
 
@@ -158,6 +159,7 @@ export const getLLMConfig = () => {
       AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
       AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
 
+      ENABLED_WENXIN: !!process.env.WENXIN_ACCESS_KEY && !!process.env.WENXIN_SECRET_KEY,
       WENXIN_ACCESS_KEY: process.env.WENXIN_ACCESS_KEY,
       WENXIN_SECRET_KEY: process.env.WENXIN_SECRET_KEY,
 

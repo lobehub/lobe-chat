@@ -19,6 +19,7 @@ import QwenProvider from './qwen';
 import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
+import WenxinProvider from './wenxin';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -60,6 +61,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MinimaxProvider,
   MistralProvider,
   GroqProvider,
+  WenxinProvider,
   MoonshotProvider,
   ZeroOneProvider,
   ZhiPuProvider,
