@@ -6,15 +6,17 @@ import { useTranslation } from 'react-i18next';
 
 import HotKeys from '@/components/HotKeys';
 import { ALT_KEY, CLEAN_MESSAGE_KEY, META_KEY } from '@/const/hotkeys';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 
-const Clear = memo<{ mobile?: boolean }>(({ mobile }) => {
+const Clear = memo(() => {
   const { t } = useTranslation('setting');
   const [clearMessage] = useChatStore((s) => [s.clearMessage]);
   const [clearImageList] = useFileStore((s) => [s.clearImageList]);
   const hotkeys = [META_KEY, ALT_KEY, CLEAN_MESSAGE_KEY].join('+');
   const [confirmOpened, updateConfirmOpened] = useState(false);
+  const mobile = useIsMobile();
 
   const resetConversation = useCallback(async () => {
     await clearMessage();
