@@ -28,7 +28,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret }: LobeBedrockAIParams) {
+  constructor({ region, accessKeyId, accessKeySecret }: LobeBedrockAIParams = {}) {
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
 

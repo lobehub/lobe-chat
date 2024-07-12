@@ -80,8 +80,13 @@ export class ServerService implements IMessageService {
   removeMessage(id: string): Promise<any> {
     return lambdaClient.message.removeMessage.mutate({ id });
   }
-  removeMessages(sessionId: string, topicId?: string | undefined): Promise<any> {
-    return lambdaClient.message.removeMessages.mutate({
+
+  removeMessages(ids: string[]): Promise<any> {
+    return lambdaClient.message.removeMessages.mutate({ ids });
+  }
+
+  removeMessagesByAssistant(sessionId: string, topicId?: string | undefined): Promise<any> {
+    return lambdaClient.message.removeMessagesByAssistant.mutate({
       sessionId: this.toDbSessionId(sessionId),
       topicId,
     });

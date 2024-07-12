@@ -1,4 +1,5 @@
 import {
+  AiMass,
   Anthropic,
   Baichuan,
   Claude,
@@ -36,6 +37,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   StepfunProviderCard,
+  TaichuProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -176,6 +178,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...BaichuanProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
         title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
+      },
+      {
+        ...TaichuProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
+        title: <AiMass.Combine size={ 28 } type={ 'color' } />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
