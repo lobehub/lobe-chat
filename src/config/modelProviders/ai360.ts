@@ -32,7 +32,7 @@ const Ai360: ModelProviderCard = {
   disableBrowserRequest: true,
   id: 'ai360',
   modelList: { showModelFetcher: true },
-  name: '360 智脑',
+  name: '360智脑',
 };
 
 export default Ai360;
