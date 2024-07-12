@@ -1,5 +1,6 @@
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
+import Ai360Provider from './ai360';
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
 import BaichuanProvider from './baichuan';
@@ -19,7 +20,6 @@ import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
 import ZeroOneProvider from './zeroone';
-import ZhinaoProvider from './zhinao';
 import ZhiPuProvider from './zhipu';
 
 export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
@@ -42,7 +42,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   StepfunProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
-  ZhinaoProvider.chatModels,
+  Ai360Provider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -66,7 +66,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   StepfunProvider,
   BaichuanProvider,
   TaichuProvider,
-  ZhinaoProvider,
+  Ai360Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -78,6 +78,7 @@ export const isProviderDisableBroswerRequest = (id: string) => {
   return !!provider;
 };
 
+export { default as Ai360ProviderCard } from './ai360';
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
 export { default as BaichuanProviderCard } from './baichuan';
@@ -97,5 +98,4 @@ export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as ZeroOneProviderCard } from './zeroone';
-export { default as ZhinaoProviderCard } from './zhinao';
 export { default as ZhiPuProviderCard } from './zhipu';

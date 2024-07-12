@@ -125,7 +125,7 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
       return <AiMass size={20} />;
     }
 
-    case ModelProvider.Zhinao: {
+    case ModelProvider.Ai360: {
       return <Ai360 size={20} />;
     }
 

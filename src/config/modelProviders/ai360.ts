@@ -1,7 +1,7 @@
 import { ModelProviderCard } from '@/types/llm';
 
 // ref https://ai.360.cn/platform/docs/overview
-const Zhinao: ModelProviderCard = {
+const Ai360: ModelProviderCard = {
   chatModels: [
     {
       displayName: '360GPT Pro',
@@ -29,9 +29,10 @@ const Zhinao: ModelProviderCard = {
     },
   ],
   checkModel: '360gpt-turbo',
-  id: 'zhinao',
+  disableBrowserRequest: true,
+  id: 'ai360',
   modelList: { showModelFetcher: true },
-  name: 'Zhinao',
+  name: '360 智脑',
 };
 
-export default Zhinao;
+export default Ai360;

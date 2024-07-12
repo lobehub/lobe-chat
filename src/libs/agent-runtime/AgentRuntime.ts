@@ -3,6 +3,7 @@ import { ClientOptions } from 'openai';
 import type { TracePayload } from '@/const/trace';
 
 import { LobeRuntimeAI } from './BaseAI';
+import { LobeAi360AI } from './ai360';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeBaichuanAI } from './baichuan';
@@ -21,7 +22,6 @@ import { LobeQwenAI } from './qwen';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
 import { LobeTogetherAI } from './togetherai';
-import { LobeZhinaoAI } from './zhinao';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
@@ -104,6 +104,7 @@ class AgentRuntime {
   static async initializeWithProviderOptions(
     provider: string,
     params: Partial<{
+      ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
       azure: { apiVersion?: string; apikey?: string; endpoint?: string };
       baichuan: Partial<ClientOptions>;
@@ -123,7 +124,6 @@ class AgentRuntime {
       taichu: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
-      zhinao: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
     }>,
   ) {
@@ -236,8 +236,8 @@ class AgentRuntime {
         break;
       }
 
-      case ModelProvider.Zhinao: {
-        runtimeModel = new LobeZhinaoAI(params.zhinao ?? {});
+      case ModelProvider.Ai360: {
+        runtimeModel = new LobeAi360AI(params.ai360 ?? {});
         break
       }
     }

@@ -1,4 +1,5 @@
 import {
+  Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
   BedrockProviderCard,
@@ -17,7 +18,6 @@ import {
   TaichuProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
-  ZhinaoProviderCard,
   ZhiPuProviderCard,
   filterEnabledModels,
 } from '@/config/modelProviders';
@@ -25,6 +25,10 @@ import { ModelProvider } from '@/libs/agent-runtime';
 import { UserModelProviderConfig } from '@/types/user/settings';
 
 export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
+  ai360: {
+    enabled: false,
+    enabledModels: filterEnabledModels(Ai360ProviderCard),
+  },
   anthropic: {
     enabled: false,
     enabledModels: filterEnabledModels(AnthropicProviderCard),
@@ -100,10 +104,6 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   zeroone: {
     enabled: false,
     enabledModels: filterEnabledModels(ZeroOneProviderCard),
-  },
-  zhinao: {
-    enabled: false,
-    enabledModels: filterEnabledModels(ZhinaoProviderCard),
   },
   zhipu: {
     enabled: false,

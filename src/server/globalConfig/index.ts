@@ -36,7 +36,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
-    ENABLED_ZHINAO,
+    ENABLED_AI360,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -61,6 +61,7 @@ export const getServerGlobalConfig = () => {
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
     languageModel: {
+      ai360: { enabled: ENABLED_AI360 },
       anthropic: {
         enabled: ENABLED_ANTHROPIC,
       },
@@ -121,7 +122,6 @@ export const getServerGlobalConfig = () => {
         }),
       },
       zeroone: { enabled: ENABLED_ZEROONE },
-      zhinao: { enabled: ENABLED_ZHINAO },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),

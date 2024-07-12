@@ -9,9 +9,9 @@ import {
 } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
-import { LobeZhinaoAI } from './index';
+import { LobeAi360AI } from './index';
 
-const provider = ModelProvider.Zhinao;
+const provider = ModelProvider.Ai360;
 const defaultBaseURL = 'https://ai.360.cn/v1';
 
 const bizErrorType = 'ProviderBizError';
@@ -23,7 +23,7 @@ vi.spyOn(console, 'error').mockImplementation(() => {});
 let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
-  instance = new LobeZhinaoAI({ apiKey: 'test' });
+  instance = new LobeAi360AI({ apiKey: 'test' });
 
   // 使用 vi.spyOn 来模拟 chat.completions.create 方法
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
@@ -35,11 +35,11 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('LobeZhinaoAI', () => {
+describe('LobeAi360AI', () => {
   describe('init', () => {
     it('should correctly initialize with an API key', async () => {
-      const instance = new LobeZhinaoAI({ apiKey: 'test_api_key' });
-      expect(instance).toBeInstanceOf(LobeZhinaoAI);
+      const instance = new LobeAi360AI({ apiKey: 'test_api_key' });
+      expect(instance).toBeInstanceOf(LobeAi360AI);
       expect(instance.baseURL).toEqual(defaultBaseURL);
     });
   });
@@ -66,7 +66,7 @@ describe('LobeZhinaoAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'Zhinao4',
+            model: '360gpt-turbo',
             temperature: 0,
           });
         } catch (e) {
@@ -84,7 +84,7 @@ describe('LobeZhinaoAI', () => {
 
       it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
         try {
-          new LobeZhinaoAI({});
+          new LobeAi360AI({});
         } catch (e) {
           expect(e).toEqual({ errorType: invalidErrorType });
         }
@@ -106,7 +106,7 @@ describe('LobeZhinaoAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'Zhinao4',
+            model: '360gpt-turbo',
             temperature: 0,
           });
         } catch (e) {
@@ -130,7 +130,7 @@ describe('LobeZhinaoAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        instance = new LobeZhinaoAI({
+        instance = new LobeAi360AI({
           apiKey: 'test',
 
           baseURL: 'https://api.abc.com/v1',
@@ -142,7 +142,7 @@ describe('LobeZhinaoAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'Zhinao4',
+            model: '360gpt-turbo',
             temperature: 0,
           });
         } catch (e) {
@@ -158,7 +158,7 @@ describe('LobeZhinaoAI', () => {
         }
       });
 
-      it('should throw an InvalidZhinaoAPIKey error type on 401 status code', async () => {
+      it('should throw an InvalidAi360APIKey error type on 401 status code', async () => {
         // Mock the API call to simulate a 401 error
         const error = new Error('Unauthorized') as any;
         error.status = 401;
@@ -167,11 +167,11 @@ describe('LobeZhinaoAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'Zhinao4',
+            model: '360gpt-turbo',
             temperature: 0,
           });
         } catch (e) {
-          // Expect the chat method to throw an error with InvalidZhinaoAPIKey
+          // Expect the chat method to throw an error with InvalidAi360APIKey
           expect(e).toEqual({
             endpoint: defaultBaseURL,
             error: new Error('Unauthorized'),
@@ -191,7 +191,7 @@ describe('LobeZhinaoAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'Zhinao4',
+            model: '360gpt-turbo',
             temperature: 0,
           });
         } catch (e) {
@@ -211,7 +211,7 @@ describe('LobeZhinaoAI', () => {
     });
 
     describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_ZHINAO_CHAT_COMPLETION is 1', async () => {
+      it('should call debugStream and return StreamingTextResponse when DEBUG_AI360_CHAT_COMPLETION is 1', async () => {
         // Arrange
         const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
         const mockDebugStream = new ReadableStream({
@@ -228,10 +228,10 @@ describe('LobeZhinaoAI', () => {
         });
 
         // 保存原始环境变量值
-        const originalDebugValue = process.env.DEBUG_ZHINAO_CHAT_COMPLETION;
+        const originalDebugValue = process.env.DEBUG_AI360_CHAT_COMPLETION;
 
         // 模拟环境变量
-        process.env.DEBUG_ZHINAO_CHAT_COMPLETION = '1';
+        process.env.DEBUG_AI360_CHAT_COMPLETION = '1';
         vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
 
         // 执行测试
@@ -239,7 +239,7 @@ describe('LobeZhinaoAI', () => {
         // 假设的测试函数调用，你可能需要根据实际情况调整
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'Zhinao4',
+          model: '360gpt-turbo',
           stream: true,
           temperature: 0,
         });
@@ -248,7 +248,7 @@ describe('LobeZhinaoAI', () => {
         expect(debugStreamModule.debugStream).toHaveBeenCalled();
 
         // 恢复原始环境变量值
-        process.env.DEBUG_ZHINAO_CHAT_COMPLETION = originalDebugValue;
+        process.env.DEBUG_AI360_CHAT_COMPLETION = originalDebugValue;
       });
     });
   });

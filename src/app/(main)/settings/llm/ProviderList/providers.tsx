@@ -26,6 +26,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import {
+  Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
   DeepSeekProviderCard,
@@ -41,7 +42,6 @@ import {
   TaichuProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
-  ZhinaoProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
 
@@ -187,8 +187,8 @@ export const useProviderList = (): ProviderItem[] => {
         title: <AiMass.Combine size={ 28 } type={ 'color' } />,
       },
       {
-        ...ZhinaoProviderCard,
-        docUrl: urlJoin(BASE_DOC_URL, 'zhinao'),
+        ...Ai360ProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'ai360'),
         title: <Ai360.Combine size={ 20 } type={ 'color' } />,
       },
     ],
