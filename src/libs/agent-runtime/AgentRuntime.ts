@@ -241,10 +241,7 @@ class AgentRuntime {
         break;
       }
 
-      case ModelProvider.Novita: {
-        runtimeModel = new LobeNovitaAI(params.novita ?? {});
-        break;
-      }
+      
     }
 
     return new AgentRuntime(runtimeModel);
