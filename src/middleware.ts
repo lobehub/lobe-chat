@@ -26,6 +26,7 @@ const nextAuthMiddleware = auth((req) => {
 
   // Just check if session exists
   const session = req.auth;
+  console.log(`session`, session)
 
   // Check if next-auth throws errors
   // refs: https://github.com/lobehub/lobe-chat/pull/1323
