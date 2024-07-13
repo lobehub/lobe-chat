@@ -99,6 +99,8 @@
       "duplicate": "Dupliceren",
       "export": "Exporteren"
     },
+    "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
+    "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
     "confirmRemoveAll": "Alle onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveTopic": "Dit onderwerp wordt verwijderd en kan niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveUnstarred": "Niet-gefavoriseerde onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",

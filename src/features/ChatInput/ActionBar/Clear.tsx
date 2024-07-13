@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import HotKeys from '@/components/HotKeys';
 import { ALT_KEY, CLEAN_MESSAGE_KEY, META_KEY } from '@/const/hotkeys';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
 
@@ -15,6 +16,7 @@ const Clear = memo(() => {
   const [clearImageList] = useFileStore((s) => [s.clearImageList]);
   const hotkeys = [META_KEY, ALT_KEY, CLEAN_MESSAGE_KEY].join('+');
   const [confirmOpened, updateConfirmOpened] = useState(false);
+  const mobile = useIsMobile();
 
   const resetConversation = useCallback(async () => {
     await clearMessage();
@@ -27,6 +29,8 @@ const Clear = memo(() => {
     <HotKeys desc={t('clearCurrentMessages', { ns: 'chat' })} inverseTheme keys={hotkeys} />
   );
 
+  const popconfirmPlacement = mobile ? 'top' : 'topRight';
+
   return (
     <Popconfirm
       arrow={false}
@@ -34,14 +38,19 @@ const Clear = memo(() => {
       onConfirm={resetConversation}
       onOpenChange={updateConfirmOpened}
       open={confirmOpened}
-      placement={'topRight'}
-      title={t('confirmClearCurrentMessages', { ns: 'chat' })}
+      placement={popconfirmPlacement}
+      title={
+        <div style={{ marginBottom: '8px', whiteSpace: 'pre-line', wordBreak: 'break-word' }}>
+          {t('confirmClearCurrentMessages', { ns: 'chat' })}
+        </div>
+      }
     >
-      <ActionIcon 
-        icon={Eraser} 
+      <ActionIcon
+        icon={Eraser}
         overlayStyle={{ maxWidth: 'none' }}
-        placement={'bottom'} 
-        title={actionTitle} />
+        placement={'bottom'}
+        title={actionTitle}
+      />
     </Popconfirm>
   );
 });
