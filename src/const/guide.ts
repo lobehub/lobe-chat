@@ -44,7 +44,7 @@ and offers a one-click FREE deployment for a private ChatGPT chat application, m
 
 LobeChat is currently available as a community preview version, completely open-source and free of charge.
 
-In the LobeChat Cloud version, we provide 500 free computing points to all registered users. It is ready to use without complex configurations.
+In the LobeChat Cloud version, we provide 500,000 free computing credits to all registered users. It is ready to use without complex configurations.
 If you require more usage, you can subscribe to the Basic, Advanced, or Professional versions for a fee.
 
 ### Self Hosting
