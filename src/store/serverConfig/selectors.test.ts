@@ -22,6 +22,7 @@ describe('featureFlagsSelectors', () => {
       showCreateSession: true,
       showDalle: true,
       showLLM: false,
+      showCloudPromotion: false,
       showOpenAIApiKey: true,
       showOpenAIProxyUrl: true,
       enableCheckUpdates: true,
