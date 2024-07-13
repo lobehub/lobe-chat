@@ -1,6 +1,14 @@
 {
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
+  "alert": {
+    "cloud": {
+      "action": "Kostenlose Testversion",
+      "desc": "Wir bieten allen registrierten Benutzern {{credit}} kostenlose Berechnungspunkte an, ohne komplizierte Konfiguration, sofort einsatzbereit, unterstützt unbegrenzte Chat-Verlaufsprotokolle und globale Cloud-Synchronisierung. Entdecken Sie gemeinsam weitere fortschrittliche Funktionen.",
+      "descOnMobile": "Wir bieten allen registrierten Benutzern {{credit}} kostenlose Rechenpunkte, die ohne komplizierte Konfiguration sofort einsatzbereit sind.",
+      "title": "Willkommen bei {{name}}"
+    }
+  },
   "appInitializing": "Die App wird gestartet, bitte haben Sie etwas Geduld...",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Anonymer Benutzer",
     "billing": "Abrechnung verwalten",
+    "cloud": "Erleben Sie {{name}}",
     "data": "Daten speichern",
     "defaultNickname": "Community User",
     "discord": "Community-Support",

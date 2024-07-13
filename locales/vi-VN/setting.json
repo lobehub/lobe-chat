@@ -361,7 +361,13 @@
       },
       "desc": "Truyền thông dữ liệu thời gian thực, điểm-điểm, cần thiết bị cùng online mới có thể đồng bộ",
       "enabled": {
+        "invalid": "Vui lòng nhập địa chỉ máy chủ tín hiệu và tên kênh đồng bộ trước khi bật",
         "title": "Bật đồng bộ"
+      },
+      "signaling": {
+        "desc": "WebRTC sẽ sử dụng địa chỉ này để đồng bộ",
+        "placeholder": "Vui lòng nhập địa chỉ máy chủ tín hiệu",
+        "title": "Máy chủ tín hiệu"
       },
       "title": "WebRTC Đồng bộ"
     }
@@ -406,15 +412,5 @@
       "store": "Cửa hàng tiện ích"
     },
     "title": "Công cụ mở rộng"
-  },
-  "webrtc": {
-    "enabled": {
-      "invalid": "请填写信令服务器和同步频道名称后再开启"
-    },
-    "signaling": {
-      "desc": "WebRTC sẽ sử dụng địa chỉ này để đồng bộ",
-      "placeholder": "Vui lòng nhập địa chỉ máy chủ tín hiệu",
-      "title": "Máy chủ tín hiệu"
-    }
   }
 }
