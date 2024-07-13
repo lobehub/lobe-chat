@@ -1,4 +1,3 @@
 {
-  "installCommand": "bun install",
-  "regions": [ "sin1", "kix1" ]
+  "installCommand": "bun install"
 }
