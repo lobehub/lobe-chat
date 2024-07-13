@@ -14,6 +14,7 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css }) => ({
@@ -40,6 +41,8 @@ interface TopicContentProps {
 
 const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   const { t } = useTranslation('common');
+
+  const mobile = useIsMobile();
 
   const [
     editing,
@@ -183,7 +186,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           value={title}
         />
       )}
-      {showMore && !editing && (
+      {(showMore || mobile) && !editing && (
         <Dropdown
           arrow={false}
           menu={{

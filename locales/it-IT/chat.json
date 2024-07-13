@@ -99,6 +99,8 @@
       "duplicate": "Crea copia",
       "export": "Esporta argomento"
     },
+    "checkOpenNewTopic": "Abilitare un nuovo argomento?",
+    "checkSaveCurrentMessages": "Vuoi salvare la conversazione attuale come argomento?",
     "confirmRemoveAll": "Stai per rimuovere tutti gli argomenti, questa operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveTopic": "Stai per rimuovere questo argomento, l'operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveUnstarred": "Stai per rimuovere gli argomenti non contrassegnati, questa operazione non potrà essere annullata. Procedere con cautela.",
