@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import CloudBanner, { BANNER_HEIGHT } from '@/features/AlertBanner/CloudBanner';
 import { usePlatform } from '@/hooks/usePlatform';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { LayoutProps } from './type';
 
@@ -13,14 +14,13 @@ const Layout = memo<LayoutProps>(({ children, nav }) => {
   const { isPWA } = usePlatform();
   const theme = useTheme();
 
-  // TODO: Add feature flag
-  const showCloudBanner = true;
+  const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <>
-      {showCloudBanner && <CloudBanner />}
+      {showCloudPromotion && <CloudBanner />}
       <Flexbox
-        height={showCloudBanner ? `calc(100% - ${BANNER_HEIGHT}px)` : '100%'}
+        height={showCloudPromotion ? `calc(100% - ${BANNER_HEIGHT}px)` : '100%'}
         horizontal
         style={{
           borderTop: isPWA ? `1px solid ${theme.colorBorder}` : undefined,

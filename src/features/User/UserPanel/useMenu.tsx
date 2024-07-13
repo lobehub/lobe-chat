@@ -37,6 +37,7 @@ import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { configService } from '@/services/config';
 import { SettingsTabs } from '@/store/global/initialState';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -70,15 +71,13 @@ export const useMenu = () => {
   const hasNewVersion = useNewVersion();
   const openSettings = useOpenSettings();
   const { t } = useTranslation(['common', 'setting', 'auth']);
+  const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
   const [isLogin, isLoginWithAuth, isLoginWithClerk, openUserProfile] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
     authSelectors.isLoginWithClerk(s),
     s.openUserProfile,
   ]);
-
-  // TODO: Add feature flag
-  const showCloudLaunch = true;
 
   const profile: MenuProps['items'] = [
     {
@@ -174,7 +173,7 @@ export const useMenu = () => {
       ].filter(Boolean) as ItemType[]);
 
   const helps: MenuProps['items'] = [
-    showCloudLaunch && {
+    showCloudPromotion && {
       icon: <Icon icon={Cloudy} />,
       key: 'cloud',
       label: (
