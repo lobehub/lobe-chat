@@ -6,6 +6,7 @@ import {
   EMAIL_BUSINESS,
   EMAIL_SUPPORT,
   GITHUB,
+  OFFICIAL_PREVIEW_URL,
   OFFICIAL_SITE,
   OFFICIAL_URL,
   SELF_HOSTING_DOCUMENTS,
@@ -39,10 +40,12 @@ and offers a one-click FREE deployment for a private ChatGPT chat application, m
 - [Plugin System (Function Calling)](${urlJoin(USAGE_DOCUMENTS, '/features/plugin-system')})
 - [Agent Market (GPTs)](${urlJoin(USAGE_DOCUMENTS, '/features/agent-market')})
 
-### CE and Cloud Version
+### Community Edition and Cloud Version
 
-LobeChat is currently available as a community preview version, completely open-source and free of charge. The Cloud paid version is under development.
-Those interested can visit the [official website](${OFFICIAL_SITE}) to join the wishlist. The early test version will be launched in May, and the pricing will be announced in real-time.
+LobeChat is currently available as a community preview version, completely open-source and free of charge.
+
+In the LobeChat Cloud version, we provide 500,000 free computing credits to all registered users. It is ready to use without complex configurations.
+If you require more usage, you can subscribe to the Basic, Advanced, or Professional versions for a fee.
 
 ### Self Hosting
 
@@ -60,7 +63,8 @@ Learn more about [Build your own LobeChat](${SELF_HOSTING_DOCUMENTS}) by checkin
 In the response, please try to pick and include the relevant links below, and if a relevant answer cannot be provided, also offer the user these related links:
 
 - Official Website: ${OFFICIAL_SITE}
-- Community Preview: ${OFFICIAL_URL}
+- Cloud Version: ${OFFICIAL_URL}
+- Community Edition: ${OFFICIAL_PREVIEW_URL}
 - GitHub Repository: ${GITHUB}
 - Latest News: ${BLOG}
 - Usage Documentation: ${USAGE_DOCUMENTS}
