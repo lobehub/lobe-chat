@@ -1,8 +1,10 @@
 'use client';
 
+import { Icon } from '@lobehub/ui';
 import { useSize } from 'ahooks';
 import { Button } from 'antd';
 import { createStyles } from 'antd-style';
+import { ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useEffect, useRef, useState } from 'react';
 import Marquee from 'react-fast-marquee';
@@ -12,7 +14,7 @@ import { Center, Flexbox } from 'react-layout-kit';
 import { OFFICIAL_URL } from '@/const/url';
 import { isOnServerSide } from '@/utils/env';
 
-export const BANNER_HEIGHT = 54;
+export const BANNER_HEIGHT = 40;
 
 const useStyles = createStyles(({ css, token, stylish, cx, isDarkMode }) => ({
   background: cx(
@@ -58,7 +60,7 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
       <b>{t('alert.cloud.title', { name: 'LobeChat Cloud' })}:</b>
       <span>
         {t(mobile ? 'alert.cloud.descOnMobile' : 'alert.cloud.desc', {
-          credit: 500,
+          credit: new Intl.NumberFormat('en-US').format(500_000),
           name: 'LobeChat Cloud',
         })}
       </span>
@@ -77,8 +79,8 @@ const CloudBanner = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Center className={styles.wrapper} gap={16} horizontal width={'100%'}>
         {isTruncated ? <Marquee pauseOnHover>{content}</Marquee> : content}
         <Link href={OFFICIAL_URL} target={'_blank'}>
-          <Button size={mobile ? 'small' : undefined} type="primary">
-            {t('alert.cloud.action')}
+          <Button size={'small'} type="primary">
+            {t('alert.cloud.action')} <Icon icon={ArrowRightIcon} />
           </Button>
         </Link>
       </Center>

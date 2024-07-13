@@ -3,10 +3,11 @@ export default {
   advanceSettings: '高级设置',
   alert: {
     cloud: {
-      action: '免费体验',
-      desc: '我们为所有注册用户提供了 {{credit}} 免费的计算积分，无需复杂配置开箱即用, 支持无限对话历史记录与全局云同步，更多高级特性等你一起探索。',
-      descOnMobile: '我们为所有注册用户提供了 {{credit}} 免费的计算积分，无需复杂配置开箱即用。',
-      title: '欢迎体验 {{name}}',
+      action: '立即体验',
+      desc: '我们为所有注册用户提供了免费的 {{credit}} 额度计算积分，无需复杂配置开箱即用, 支持全局云同步与进阶联网查询，更多高级特性等你探索。',
+      descOnMobile:
+        '我们为所有注册用户提供了免费的 {{credit}} 额度计算积分，无需复杂配置开箱即用。',
+      title: '{{name}} 开始公测',
     },
   },
   appInitializing: '应用启动中，请耐心等待...',

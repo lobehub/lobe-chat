@@ -4,7 +4,7 @@ const isVercelPreview = process.env.VERCEL === '1' && process.env.VERCEL_ENV !==
 
 const vercelPreviewUrl = `https://${process.env.VERCEL_URL}`;
 
-const siteUrl = isVercelPreview ? vercelPreviewUrl : 'https://chat-preview.lobehub.com';
+const siteUrl = isVercelPreview ? vercelPreviewUrl : 'https://lobechat.com';
 
 /** @type {import('next-sitemap').IConfig} */
 const config = {
@@ -46,8 +46,8 @@ const config = {
 
     return paths;
   },
-  siteUrl,
   generateRobotsTxt: true,
+  siteUrl,
 };
 
 export default config;
