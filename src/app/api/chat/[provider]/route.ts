@@ -10,7 +10,7 @@ import { createTraceOptions, initAgentRuntimeWithUserPayload } from '../agentRun
 
 export const runtime = 'edge';
 
-export const preferredRegion = getPreferredRegion();
+export const preferredRegion = [ 'sin1', 'kix1' ]//getPreferredRegion();
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload, createRuntime }) => {
   console.log("getPreferredRegion()", getPreferredRegion())
