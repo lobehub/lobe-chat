@@ -1,11 +1,12 @@
 import { OpenAISTTPayload } from '@lobehub/tts';
 import { createOpenaiAudioTranscriptions } from '@lobehub/tts/server';
 
-import { getPreferredRegion } from '../../config';
-import { createBizOpenAI } from '../createBizOpenAI';
+import { openAiPreferredRegion } from '@/app/api/openai/config';
+import { createBizOpenAI } from '@/app/api/openai/createBizOpenAI';
 
 export const runtime = 'edge';
-export const preferredRegion = getPreferredRegion();
+
+export const preferredRegion = openAiPreferredRegion();
 
 export const POST = async (req: Request) => {
   const formData = await req.formData();

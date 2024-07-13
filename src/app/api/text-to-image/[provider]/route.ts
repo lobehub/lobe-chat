@@ -1,17 +1,16 @@
 import { NextResponse } from 'next/server';
 
-import { getPreferredRegion } from '@/app/api/config';
+import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
 import { createErrorResponse } from '@/app/api/errorResponse';
+import { checkAuth } from '@/app/api/middleware/auth';
+import { openAiPreferredRegion } from '@/app/api/openai/config';
 import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { TextToImagePayload } from '@/libs/agent-runtime/types';
 import { ChatErrorType } from '@/types/fetch';
 
-import { initAgentRuntimeWithUserPayload } from '../../chat/agentRuntime';
-import { checkAuth } from '../../middleware/auth';
-
 export const runtime = 'edge';
 
-export const preferredRegion = getPreferredRegion();
+export const preferredRegion = openAiPreferredRegion();
 
 // return NextResponse.json(
 //   {
