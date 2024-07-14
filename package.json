@@ -206,7 +206,7 @@
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
     "@ducanh2912/next-pwa": "^10.2.7",
-    "@edge-runtime/vm": "^3.2.0",
+    "@edge-runtime/vm": "^4.0.0",
     "@lobehub/i18n-cli": "^1.18.1",
     "@lobehub/lint": "^1.24.3",
     "@lobehub/seo-cli": "^1.4.1",
