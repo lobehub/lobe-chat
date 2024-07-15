@@ -16,8 +16,8 @@ class SyncService {
   disableSync = async (params: Record<SyncMethod, boolean>) => {
     if (typeof window === 'undefined') return false;
 
-    if (params.webrtc) await webrtcDataSync.disconnect();
-    if (params.liveblocks) await liveblocksDataSync.disconnect();
+    if (!params.webrtc) await webrtcDataSync.disconnect();
+    if (!params.liveblocks) await liveblocksDataSync.disconnect();
 
     return false;
   };

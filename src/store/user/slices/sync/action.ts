@@ -92,21 +92,21 @@ export const createSyncSlice: StateCreator<
           enabled: liveblocksConfig.enabled && !!liveblocksConfig.roomName,
           name: liveblocksConfig.roomName || '',
           onAwarenessChange(state) {
-            set({
+            set((current) => ({
               liveblocks: {
-                ...get().liveblocks,
+                ...current.liveblocks,
                 awareness: state,
               },
-            });
+            }));
           },
           onSyncEvent: onEvent,
           onSyncStatusChange: (status) => {
-            set({
+            set((current) => ({
               liveblocks: {
-                ...get().liveblocks,
-                status,
+                ...current.liveblocks,
+                status: status,
               },
-            });
+            }));
           },
           password: liveblocksConfig.roomPassword,
           publicApiKey: liveblocksConfig.publicApiKey,
@@ -115,21 +115,21 @@ export const createSyncSlice: StateCreator<
           enabled: webrtcConfig.enabled && !!webrtcConfig.channelName,
           name: webrtcConfig.channelName || '',
           onAwarenessChange(state) {
-            set({
+            set((current) => ({
               webrtc: {
-                ...get().webrtc,
+                ...current.webrtc,
                 awareness: state,
               },
-            });
+            }));
           },
           onSyncEvent: onEvent,
           onSyncStatusChange: (status) => {
-            set({
+            set((current) => ({
               webrtc: {
-                ...get().webrtc,
-                status,
+                ...current.webrtc,
+                status: status,
               },
-            });
+            }));
           },
           password: webrtcConfig.channelPassword,
           signaling: webrtcConfig.signaling,
