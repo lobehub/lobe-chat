@@ -24,9 +24,6 @@ export default defineConfig({
       reporter: ['text', 'json', 'lcov', 'text-summary'],
       reportsDirectory: './coverage/app',
     },
-    deps: {
-      inline: ['vitest-canvas-mock'],
-    },
     environment: 'happy-dom',
     exclude: [
       '**/node_modules/**',
@@ -36,6 +33,11 @@ export default defineConfig({
       'src/server/modules/**/**',
     ],
     globals: true,
+    server: {
+      deps: {
+        inline: ['vitest-canvas-mock'],
+      },
+    },
     setupFiles: './tests/setup.ts',
   },
 });
