@@ -48,7 +48,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
     createUser: async (user) => {
       const { id, name, email, emailVerified, image } = user;
-      await userModel.createUser(
+      await UserModel.createUser(
         mapAdapterUserToLobeUser({ email, emailVerified, id, image, name }),
       );
       return user;
@@ -67,10 +67,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     deleteUser: async (id) => {
-      const user = await userModel.findById(id);
+      const user = await UserModel.findById(id);
       if (!user) throw new Error('NextAuth: Delete User not found');
 
-      await userModel.deleteUser(id);
+      await UserModel.deleteUser(id);
     },
 
     async getAccount(providerAccountId, provider) {
@@ -118,7 +118,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
 
     getUser: async (id) => {
       try {
-        const lobeUser = await userModel.findById(id);
+        const lobeUser = await UserModel.findById(id);
         return mapLobeUserToAdapterUser(lobeUser);
       } catch {
         return null;
@@ -202,7 +202,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     updateUser: async (user) => {
-      const lobeUser = await userModel.findById(user?.id);
+      const lobeUser = await UserModel.findById(user?.id);
       if (!lobeUser) throw new Error('NextAuth: User not found');
 
       const updatedUser = await userModel.updateUser(user.id, {
