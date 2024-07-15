@@ -99,6 +99,8 @@
       "duplicate": "Create Copy",
       "export": "Export Topic"
     },
+    "checkOpenNewTopic": "Enable new topic?",
+    "checkSaveCurrentMessages": "Do you want to save the current conversation as a topic?",
     "confirmRemoveAll": "You are about to delete all topics. Once deleted, they cannot be recovered. Please proceed with caution.",
     "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
     "confirmRemoveUnstarred": "You are about to delete unstarred topics. Once deleted, they cannot be recovered. Please proceed with caution.",

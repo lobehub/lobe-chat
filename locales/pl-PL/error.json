@@ -67,6 +67,7 @@
     "OpenAIBizError": "Wystąpił błąd usługi OpenAI, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
+    "PluginFailToTransformArguments": "Przepraszamy, nie udało się przekształcić argumentów wywołania wtyczki. Spróbuj ponownie wygenerować wiadomość pomocnika lub zmień model AI o większej zdolności do wywoływania narzędzi i spróbuj ponownie",
     "PluginGatewayError": "Przepraszamy, wystąpił błąd bramy wtyczki. Proszę sprawdź, czy konfiguracja bramy wtyczki jest poprawna",
     "PluginManifestInvalid": "Przepraszamy, walidacja manifestu opisowego wtyczki nie powiodła się. Proszę sprawdź, czy format pliku opisowego wtyczki jest zgodny z normami",
     "PluginManifestNotFound": "Przepraszamy, serwer nie odnalazł manifestu opisowego wtyczki (manifest.json). Proszę sprawdź, czy adres pliku opisowego wtyczki jest poprawny",

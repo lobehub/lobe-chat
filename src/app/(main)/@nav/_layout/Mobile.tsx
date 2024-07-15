@@ -20,9 +20,8 @@ const useStyles = createStyles(({ css, token }) => ({
   container: css`
     position: fixed;
     z-index: 100;
-    right: 0;
-    bottom: 0;
-    left: 0;
+    inset-block-end: 0;
+    inset-inline: 0 0;
   `,
 }));
 

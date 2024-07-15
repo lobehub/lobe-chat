@@ -1,4 +1,10 @@
 {
-  "aiSummary": "Asistanın özetlemesine izin ver",
+  "Artifacts": "Artefaktlar",
+  "actions": {
+    "genAiMessage": "Yapay Zeka Mesajı Oluştur",
+    "summary": "Özet",
+    "summaryTooltip": "Mevcut içeriği özetle"
+  },
+  "emptyArtifactList": "Mevcut Artefakt listesi boş, lütfen eklentileri kullanarak oturumda gerektiğinde göz atın",
   "title": "Genişletme Penceresi"
 }

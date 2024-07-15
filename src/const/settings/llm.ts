@@ -1,4 +1,5 @@
 import {
+  Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
   BedrockProviderCard,
@@ -15,6 +16,7 @@ import {
   QwenProviderCard,
   SiliconCloudProviderCard,
   StepfunProviderCard,
+  TaichuProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -24,6 +26,10 @@ import { ModelProvider } from '@/libs/agent-runtime';
 import { UserModelProviderConfig } from '@/types/user/settings';
 
 export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
+  ai360: {
+    enabled: false,
+    enabledModels: filterEnabledModels(Ai360ProviderCard),
+  },
   anthropic: {
     enabled: false,
     enabledModels: filterEnabledModels(AnthropicProviderCard),
@@ -91,6 +97,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   stepfun: {
     enabled: false,
     enabledModels: filterEnabledModels(StepfunProviderCard),
+  },
+  taichu: {
+    enabled: false,
+    enabledModels: filterEnabledModels(TaichuProviderCard),
   },
   togetherai: {
     enabled: false,

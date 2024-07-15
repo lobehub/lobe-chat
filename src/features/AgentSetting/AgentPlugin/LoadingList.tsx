@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 const useStyles = createStyles(({ css, prefixCls }) => ({
   avatar: css`
     .${prefixCls}-skeleton-header {
-      padding-right: 0;
+      padding-inline-end: 0;
     }
   `,
   label: css`

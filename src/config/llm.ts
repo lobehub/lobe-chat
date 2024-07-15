@@ -86,6 +86,12 @@ export const getLLMConfig = () => {
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
 
+      ENABLED_TAICHU: z.boolean(),
+      TAICHU_API_KEY: z.string().optional(),
+
+      ENABLED_AI360: z.boolean(),
+      AI360_API_KEY: z.string().optional(),
+
       ENABLED_SILICONCLOUD: z.boolean(),
       SILICONCLOUD_API_KEY: z.string().optional(),
     },
@@ -164,6 +170,12 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
+
+      ENABLED_TAICHU: !!process.env.TAICHU_API_KEY,
+      TAICHU_API_KEY: process.env.TAICHU_API_KEY,
+
+      ENABLED_AI360: !!process.env.AI360_API_KEY,
+      AI360_API_KEY: process.env.AI360_API_KEY,
 
       ENABLED_SILICONCLOUD: !!process.env.SILICONCLOUD_API_KEY,
       SILICONCLOUD_API_KEY: process.env.SILICONCLOUD_API_KEY,

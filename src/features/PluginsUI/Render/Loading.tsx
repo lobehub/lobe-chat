@@ -20,8 +20,8 @@ const useStyles = createStyles(
       content: '';
 
       position: absolute;
-      top: 0;
-      left: 0;
+      inset-block-start: 0;
+      inset-inline-start: 0;
 
       box-sizing: border-box;
       width: 40%;
@@ -34,12 +34,12 @@ const useStyles = createStyles(
 
     @keyframes animloader {
       0% {
-        left: 0;
+        inset-inline-start: 0;
         transform: translateX(-100%);
       }
 
       100% {
-        left: 100%;
+        inset-inline-start: 100%;
         transform: translateX(0%);
       }
     }

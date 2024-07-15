@@ -1,6 +1,6 @@
 ---
 title: 大模型工具调用（Tools Calling）评测
-description: 基于 LobeChat 测试主流支持工具调用（Tool Calling） 的大模型，并客观呈现评测结果
+description: 基于 LobeChat 测试主流支持工具调用（Tools Calling） 的大模型，并客观呈现评测结果
 tags:
   - Tools Calling
   - Benchmark
@@ -11,16 +11,16 @@ tags:
 
 # 大模型工具调用（Tools Calling）评测
 
-Tool Calling 是大语言模型的高级能力。你可以通过在 API 请求中传入一组工具列表，让模型智能地选择具体使用哪个工具，并在返回请求中输出工具调用的 JSON 参数。
+Tools Calling 是大语言模型的高级能力。你可以通过在 API 请求中传入一组工具列表，让模型智能地选择具体使用哪个工具，并在返回请求中输出工具调用的 JSON 参数。
 
 <Callout type="info">
   如果你之前没有了解过 Tools Calling， 可以查看 [Function Call： Chat
   应用的插件基石与交互技术的变革黎明](https://lobehub.com/zh/blog/openai-function-call) 这篇文章。
 </Callout>
 
-随着社区中越来越多的大语言模型支持了 Tool Calling 能力，同时得益于 LobeChat 的 Agent Runtime 架构，我们几乎实现了所有主流大语言模型（ OpenAI 、Claude 、Gemini 等等）的 Tool Calling 调用能力。
+随着社区中越来越多的大语言模型支持了 Tools Calling 能力，同时得益于 LobeChat 的 Agent Runtime 架构，我们几乎实现了所有主流大语言模型（ OpenAI 、Claude 、Gemini 等等）的 Tools Calling 调用能力。
 
-LobeChat 的插件实现基于模型的 Tools Calling 能力，模型本身的 Tool Calling 能力决定插件调用是否正常。作为上层应用，我们针对各个模型的 Tool Calling 做了较为完善的测试，以便帮助我们的用户了解现有的模型能力，更好地进行抉择。
+LobeChat 的插件实现基于模型的 Tools Calling 能力，模型本身的 Tools Calling 能力决定插件调用是否正常。作为上层应用，我们针对各个模型的 Tools Calling 做了较为完善的测试，以便帮助我们的用户了解现有的模型能力，更好地进行抉择。
 
 ## 评测任务介绍
 
@@ -95,7 +95,7 @@ Create images from a text-only prompt.
 
 如上所示，简单调用指令在插件调用时它的系统描述(system role)相对简单，复杂调用指令的系统描述会复杂很多。这两组不同复杂度的指令可以比较好地区分出模型对于系统指令的遵循能力：
 
-- **天气查询可以测试模型的基础 Tool Calling 能力，确认模型是否存在「虚假宣传」的情况。** 就我们实际的测试来看，的确存在一些模型号称具有 Tools Calling 能力，但是处于完全不可用的状态；
+- **天气查询可以测试模型的基础 Tools Calling 能力，确认模型是否存在「虚假宣传」的情况。** 就我们实际的测试来看，的确存在一些模型号称具有 Tools Calling 能力，但是处于完全不可用的状态；
 - **文生图可以测试模型指令跟随能力的上限。** 例如基础模型（例如 GPT-3.5）可能只能生成 1 张图片的 prompt，而高级模型（例如 GPT-4o）则能够生成 1~4 张图片的 prompt。
 
 ### 简单调用指令：天气查询
@@ -126,7 +126,7 @@ Create images from a text-only prompt.
 
 针对这一个工具，我们构建的测试组中包含了三个指令：
 
-| 指令编号 | 指令内容 | 基础 Tool Calling 调用 | 并发调用 | 复合指令跟随 |
+| 指令编号 | 指令内容 | 基础 Tools Calling 调用 | 并发调用 | 复合指令跟随 |
 | --- | --- | --- | --- | --- |
 | 指令 ① | 告诉我杭州和北京的天气，先回答我好的 | 🟢 | 🟢 | 🟢 |
 | 指令 ② | 告诉我杭州和北京的天气 | 🟢 | 🟢 | - |
@@ -134,9 +134,9 @@ Create images from a text-only prompt.
 
 上述三个指令的复杂度逐渐递减，我们可以通过这三个指令来测试模型对于简单指令的处理能力。
 
-- 指令 ① 测试的能力项包含 「基础 Tool Calling 调用」、「并发调用」、「复合指令跟随」三项。
-- 指令 ② 测试的能力项包含 「基础 Tool Calling 调用」、「并发调用」 两项。
-- 指令 ③ 测试的能力项仅包含「基础 Tool Calling 调用」。
+- 指令 ① 测试的能力项包含 「基础 Tools Calling 调用」、「并发调用」、「复合指令跟随」三项。
+- 指令 ② 测试的能力项包含 「基础 Tools Calling 调用」、「并发调用」 两项。
+- 指令 ③ 测试的能力项仅包含「基础 Tools Calling 调用」。
 
 <Callout type={'info'}>
   将指令 ① 、② 、③ 按照难度递减的方式排序的目的，是为了降低测试的成本。因为当模型能通过指令 ①
@@ -175,7 +175,7 @@ Create images from a text-only prompt.
 
 ### 复杂调用指令：文生图
 
-文生图的 Tool Calling 基本照搬了 ChatGPT Plus 的指令，它的复杂度相对较高，可以测试模型对于复杂指令的跟随能力。工具定义如下：
+文生图的 Tools Calling 基本照搬了 ChatGPT Plus 的指令，它的复杂度相对较高，可以测试模型对于复杂指令的跟随能力。工具定义如下：
 
 ```json
 {
@@ -229,12 +229,12 @@ Create images from a text-only prompt.
 
 针对这一个工具，我们构建的测试组中包含了两个指令：
 
-| 指令编号 | 指令内容 | 流式调用 | 复杂 Tool Calling 调用 | 并发调用 | 复合指令跟随 |
+| 指令编号 | 指令内容 | 流式调用 | 复杂 Tools Calling 调用 | 并发调用 | 复合指令跟随 |
 | --- | --- | --- | --- | --- | --- |
 | 指令 ① | 我要画 3 幅画，第一幅画的主体为一只达芬奇风格的小狗，第二幅是毕加索风格的大雁，最后一幅是莫奈风格的狮子。每一幅都需要产出 2 个 prompts。请先说明你的构思，然后开始生成相应的图片。 | 🟢 | 🟢 | 🟢 | 🟢 |
 | 指令 ② | 画一只小狗 | 🟢 | 🟢 | - | - |
 
-此外，由于文生图的 prompts 的生成时间较长，这一组指令也可以清晰地测试出模型的 API 是否支持流式 Tool Calling。
+此外，由于文生图的 prompts 的生成时间较长，这一组指令也可以清晰地测试出模型的 API 是否支持流式 Tools Calling。
 
 ## 评测结果
 
@@ -243,11 +243,12 @@ Create images from a text-only prompt.
 <Cards>
   <Card href={'/docs/usage/tools-calling/openai'} title={'OpenAI GPT 系列'} />
   <Card href={'/docs/usage/tools-calling/anthropic'} title={'Anthropic Claude 系列'} />
-  <Card href={'/docs/usage/tools-calling/google'} title={'【TODO】Google Gemini 系列'} />
+  <Card href={'/docs/usage/tools-calling/google'} title={'Google Gemini 系列'} />
   <Card
     href={'/docs/usage/tools-calling/groq'}
-    title={'【TODO】Groq 部署的开源模型（Llama 3/Qwen2/Mistral 等）'}
+    title={'【TODO】Groq 部署的开源模型（Llama 3/Qwen2/Mistral/...）'}
   />
+  <Card href={'/docs/usage/tools-calling/moonshot'} title={'【TODO】Moonshot 系列'} />
 </Cards>
 
 ### 结果汇总

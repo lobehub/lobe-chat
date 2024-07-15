@@ -1,8 +1,8 @@
 import { Icon } from '@lobehub/ui';
-import { ConfigProvider, Empty } from 'antd';
+import { ConfigProvider, Empty, Skeleton } from 'antd';
 import { useTheme } from 'antd-style';
 import { LucideSquareArrowLeft, LucideSquareArrowRight } from 'lucide-react';
-import { memo, useContext, useState } from 'react';
+import { Suspense, memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -14,10 +14,10 @@ import { ChatMessage } from '@/types/message';
 import Arguments from '../components/Arguments';
 import Inspector from './Inspector';
 
-export const ToolMessage = memo<ChatMessage>(({ id, content, pluginState, plugin }) => {
+const Message = memo<ChatMessage>(({ id, content, pluginState, plugin }) => {
   const [loading, isMessageToolUIOpen] = useChatStore((s) => [
     chatSelectors.isPluginApiInvoking(id)(s),
-    chatPortalSelectors.isMessageToolUIOpen(id)(s),
+    chatPortalSelectors.isArtifactMessageUIOpen(id)(s),
   ]);
   const { direction } = useContext(ConfigProvider.ConfigContext);
   const { t } = useTranslation('plugin');
@@ -68,3 +68,11 @@ export const ToolMessage = memo<ChatMessage>(({ id, content, pluginState, plugin
     </Flexbox>
   );
 });
+
+export const ToolMessage = memo<ChatMessage>((props) => (
+  <Suspense
+    fallback={<Skeleton.Button active style={{ height: 46, minWidth: 200, width: '100%' }} />}
+  >
+    <Message {...props} />
+  </Suspense>
+));

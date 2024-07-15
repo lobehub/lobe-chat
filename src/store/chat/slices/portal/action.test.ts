@@ -14,7 +14,7 @@ describe('chatDockSlice', () => {
         result.current.openToolUI('test-id', 'test-identifier');
       });
 
-      expect(result.current.dockToolMessage).toEqual({
+      expect(result.current.portalToolMessage).toEqual({
         id: 'test-id',
         identifier: 'test-identifier',
       });
@@ -23,7 +23,7 @@ describe('chatDockSlice', () => {
         result.current.closeToolUI();
       });
 
-      expect(result.current.dockToolMessage).toBeUndefined();
+      expect(result.current.portalToolMessage).toBeUndefined();
     });
   });
 
@@ -31,37 +31,37 @@ describe('chatDockSlice', () => {
     it('should set dockToolMessage and open dock if it is closed', () => {
       const { result } = renderHook(() => useChatStore());
 
-      expect(result.current.showDock).toBe(false);
+      expect(result.current.showPortal).toBe(false);
 
       act(() => {
         result.current.openToolUI('test-id', 'test-identifier');
       });
 
-      expect(result.current.dockToolMessage).toEqual({
+      expect(result.current.portalToolMessage).toEqual({
         id: 'test-id',
         identifier: 'test-identifier',
       });
-      expect(result.current.showDock).toBe(true);
+      expect(result.current.showPortal).toBe(true);
     });
 
     it('should not change dock state if it is already open', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        result.current.toggleDock(true);
+        result.current.togglePortal(true);
       });
 
-      expect(result.current.showDock).toBe(true);
+      expect(result.current.showPortal).toBe(true);
 
       act(() => {
         result.current.openToolUI('test-id', 'test-identifier');
       });
 
-      expect(result.current.dockToolMessage).toEqual({
+      expect(result.current.portalToolMessage).toEqual({
         id: 'test-id',
         identifier: 'test-identifier',
       });
-      expect(result.current.showDock).toBe(true);
+      expect(result.current.showPortal).toBe(true);
     });
   });
 
@@ -69,41 +69,41 @@ describe('chatDockSlice', () => {
     it('should toggle dock state when no argument is provided', () => {
       const { result } = renderHook(() => useChatStore());
 
-      expect(result.current.showDock).toBe(false);
+      expect(result.current.showPortal).toBe(false);
 
       act(() => {
-        result.current.toggleDock();
+        result.current.togglePortal();
       });
 
-      expect(result.current.showDock).toBe(true);
+      expect(result.current.showPortal).toBe(true);
 
       act(() => {
-        result.current.toggleDock();
+        result.current.togglePortal();
       });
 
-      expect(result.current.showDock).toBe(false);
+      expect(result.current.showPortal).toBe(false);
     });
 
     it('should set dock state to the provided value', () => {
       const { result } = renderHook(() => useChatStore());
 
       act(() => {
-        result.current.toggleDock(true);
+        result.current.togglePortal(true);
       });
 
-      expect(result.current.showDock).toBe(true);
+      expect(result.current.showPortal).toBe(true);
 
       act(() => {
-        result.current.toggleDock(false);
+        result.current.togglePortal(false);
       });
 
-      expect(result.current.showDock).toBe(false);
+      expect(result.current.showPortal).toBe(false);
 
       act(() => {
-        result.current.toggleDock(true);
+        result.current.togglePortal(true);
       });
 
-      expect(result.current.showDock).toBe(true);
+      expect(result.current.showPortal).toBe(true);
     });
   });
 });

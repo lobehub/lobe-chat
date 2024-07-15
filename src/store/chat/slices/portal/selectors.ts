@@ -1,15 +1,15 @@
 import type { ChatStoreState } from '@/store/chat';
 
-const toolUIMessageId = (s: ChatStoreState) => s.dockToolMessage?.id;
-const showDock = (s: ChatStoreState) => s.showDock;
+const artifactMessageId = (s: ChatStoreState) => s.portalToolMessage?.id;
+const showPortal = (s: ChatStoreState) => s.showPortal;
 
-const isMessageToolUIOpen = (id: string) => (s: ChatStoreState) =>
-  toolUIMessageId(s) === id && showDock(s);
+const isArtifactMessageUIOpen = (id: string) => (s: ChatStoreState) =>
+  artifactMessageId(s) === id && showPortal(s);
 
 export const chatPortalSelectors = {
-  isMessageToolUIOpen,
-  showDock,
-  showToolUI: (state: ChatStoreState) => !!state.dockToolMessage,
-  toolUIIdentifier: (state: ChatStoreState) => state.dockToolMessage?.identifier,
-  toolUIMessageId,
+  artifactMessageId,
+  isArtifactMessageUIOpen,
+  showArtifactUI: (state: ChatStoreState) => !!state.portalToolMessage,
+  showPortal,
+  toolUIIdentifier: (state: ChatStoreState) => state.portalToolMessage?.identifier,
 };
