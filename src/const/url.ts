@@ -6,7 +6,8 @@ import { withBasePath } from '@/utils/basePath';
 import pkg from '../../package.json';
 import { INBOX_SESSION_ID } from './session';
 
-export const OFFICIAL_URL = 'https://chat-preview.lobehub.com/';
+export const OFFICIAL_URL = 'https://lobechat.com/';
+export const OFFICIAL_PREVIEW_URL = 'https://chat-preview.lobehub.com/';
 export const OFFICIAL_SITE = 'https://lobehub.com/';
 
 export const getCanonicalUrl = (path: string) => urlJoin(OFFICIAL_URL, path);

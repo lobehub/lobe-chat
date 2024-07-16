@@ -186,6 +186,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Ai360: {
+      const { AI360_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || AI360_API_KEY);
+
+      return { apiKey };
+    }
   }
 };
 
