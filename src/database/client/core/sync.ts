@@ -3,7 +3,7 @@ import {
   BaseUserMeta,
   Json,
   Client as LiveBlocksClient,
-  LiveList,
+  LiveMap,
   LiveObject,
   Room,
 } from '@liveblocks/client';
@@ -313,7 +313,7 @@ class WebRTCDataSync extends DataSync {
     this.onAwarenessChange?.(syncAwarenessStates);
   };
 
-  private syncAwarenessToUI = async () => {
+  private syncAwarenessToUI = () => {
     const awareness = this.provider?.awareness;
 
     if (!awareness) return;
@@ -345,9 +345,10 @@ class LiveblocksDataSync extends DataSync {
     await this.room?.batch(fn);
   };
 
-  getLiveList = (tableKey: keyof LobeDBSchemaMap) => {
+  getLiveMap = (tableKey: keyof LobeDBSchemaMap) => {
     if (['files', 'users'].includes(tableKey)) return;
-    return this._root?.get(tableKey as LiveSyncLobeDBSchemaKeys) as LiveList<
+    return this._root?.get(tableKey as LiveSyncLobeDBSchemaKeys) as LiveMap<
+      string,
       DBModel<LobeDBSchemaMap[LiveSyncLobeDBSchemaKeys]>
     >;
   };
@@ -494,7 +495,7 @@ class LiveblocksDataSync extends DataSync {
           },
         });
     try {
-      const initialStorage = await this.getInitDBStorage();
+      const initialStorage = this.getInitDBStorage();
 
       // TODO: SyncUserInfo
       const { room } = this.client.enterRoom<SyncUserInfo, LiveblocksSyncDB, Json, BaseMetadata>(
@@ -507,7 +508,6 @@ class LiveblocksDataSync extends DataSync {
       );
 
       this.room = room;
-
       this.room.updatePresence(this._user!);
 
       const { root } = await room.getStorage();
@@ -563,26 +563,13 @@ class LiveblocksDataSync extends DataSync {
   private initAwareness = () => {
     if (!this.room) return;
 
-    // Port to Liveblocks presence
-    const self = this.room.getSelf();
-    if (!self) return;
+    // Call sync awareness when room is ready
+    this.syncAwarenessToUI();
 
-    const user = this._user!;
-
-    const syncAwarenessStates: SyncAwarenessState[] = [];
-
-    const currentSyncAwarenessState: SyncAwarenessState = {
-      ...user,
-      clientID: self.connectionId,
-      current: true,
-    };
-    syncAwarenessStates.push(currentSyncAwarenessState);
     this.room.subscribe('others', () => this.syncAwarenessToUI());
-
-    this.onAwarenessChange?.(syncAwarenessStates);
   };
 
-  private syncAwarenessToUI = async () => {
+  private syncAwarenessToUI = () => {
     if (!this.room) return;
 
     const self = this.room.getSelf();
@@ -614,8 +601,9 @@ class LiveblocksDataSync extends DataSync {
     const table: Dexie.Table<DBModel<LobeDBSchemaMap[typeof tableKey]>, string> = browserDB[
       tableKey
     ];
-    const list = this._root?.get(tableKey) as LiveList<
-      GetListItemType<LiveblocksSyncDB, typeof tableKey>
+    const map = this._root?.get(tableKey) as LiveMap<
+      string,
+      GetMapItemType<LiveblocksSyncDB, typeof tableKey>
     >;
 
     const updateSyncEvent = throttle(onEvent, 1000);
@@ -627,6 +615,8 @@ class LiveblocksDataSync extends DataSync {
     /**
      * Change from local DB
      **/
+
+    /*
 
     table.hook('creating', (primaryKey, obj) => {
       clearTimeout(debounceTimer);
@@ -677,15 +667,17 @@ class LiveblocksDataSync extends DataSync {
       }, 2000);
     });
 
+    */
+
     /**
      * Change from Liveblocks
      */
-    this.room?.subscribe(list, (updatedList) => {
+    this.room?.subscribe(map, (updatedMap) => {
       clearTimeout(debounceTimer);
       onSyncStatusChange(PeerSyncStatus.Syncing);
       // New Item from remote
       (async () => {
-        const remoteItems = updatedList.toImmutable();
+        const remoteItems = Array.from(updatedMap.values());
         const localItems = await table.toArray();
         const newItems = differenceBy(remoteItems, localItems, 'id');
         await table.bulkPut(newItems);
@@ -698,19 +690,24 @@ class LiveblocksDataSync extends DataSync {
     });
   };
 
-  getInitDBStorage = async (): Promise<LiveblocksSyncDB> => {
-    const sessions = await browserDB.sessions.toArray();
-    const sessionGroups = await browserDB.sessionGroups.toArray();
-    const topics = await browserDB.topics.toArray();
-    const messages = await browserDB.messages.toArray();
-    const plugins = await browserDB.plugins.toArray();
+  convertTableToLiveMap = (tableKey: LiveSyncLobeDBSchemaKeys) => {
+    const table: Dexie.Table<DBModel<LobeDBSchemaMap[typeof tableKey]>, string> = browserDB[
+      tableKey
+    ];
+    const map = new LiveMap<string, GetMapItemType<LiveblocksSyncDB, typeof tableKey>>();
+    table.each((item) => {
+      map.set(item.id, item);
+    });
+    return map;
+  };
 
-    const initStorage = {
-      messages: new LiveList(messages),
-      plugins: new LiveList(plugins),
-      sessionGroups: new LiveList(sessionGroups),
-      sessions: new LiveList(sessions),
-      topics: new LiveList(topics),
+  getInitDBStorage = (): LiveblocksSyncDB => {
+    const initStorage: LiveblocksSyncDB = {
+      messages: new LiveMap() as LiveMap<string, DBModel<LobeDBSchemaMap['messages']>>,
+      plugins: new LiveMap() as LiveMap<string, DBModel<LobeDBSchemaMap['plugins']>>,
+      sessionGroups: new LiveMap() as LiveMap<string, DBModel<LobeDBSchemaMap['sessionGroups']>>,
+      sessions: new LiveMap() as LiveMap<string, DBModel<LobeDBSchemaMap['sessions']>>,
+      topics: new LiveMap() as LiveMap<string, DBModel<LobeDBSchemaMap['topics']>>,
     };
 
     return initStorage;
@@ -724,25 +721,26 @@ class LiveblocksDataSync extends DataSync {
     const table: Dexie.Table<DBModel<LobeDBSchemaMap[typeof tableKey]>, string> = browserDB[
       tableKey
     ];
-    const list = this._root!.get(tableKey) as LiveList<
-      GetListItemType<LiveblocksSyncDB, typeof tableKey>
+    const map = this._root!.get(tableKey) as LiveMap<
+      string,
+      GetMapItemType<LiveblocksSyncDB, typeof tableKey>
     >;
 
     const localItems = await table.toArray();
     // Local -> Liveblocks
     if (localItems.length > 0) {
-      const insertedItems = differenceBy(localItems, list.toImmutable(), 'id');
-      insertedItems.forEach((item) => list.push(item));
+      const insertedItems = localItems.filter((item) => !map.has(item.id));
+      insertedItems.forEach((item) => map.set(item.id, item));
       this.logger(`[Liveblocks] ${insertedItems.length} ${tableKey} updated from local db`);
     }
 
-    const remoteItems = list.toImmutable();
+    const remoteItems = Array.from(map.values());
     if (remoteItems.length > 0) {
       await table.bulkPut(remoteItems);
       this.logger(`[DB] ${remoteItems.length} ${tableKey} updated from liveblocks`);
     }
 
-    this.logger(`[Liveblocks] ${list.length} ${tableKey} merged.`);
+    this.logger(`[Liveblocks] ${remoteItems.length} ${tableKey} merged.`);
   };
 }
 
@@ -770,11 +768,11 @@ type LiveSyncLobeDBSchemaMap = {
 
 type LiveSyncLobeDBSchemaKeys = keyof LiveSyncLobeDBSchemaMap;
 
-type GetListItemType<T extends LiveblocksSyncDB, K extends keyof T> =
-  T[K] extends LiveList<infer U> ? U : never;
+type GetMapItemType<T extends LiveblocksSyncDB, K extends keyof T> =
+  T[K] extends LiveMap<string, infer U> ? U : never;
 
 type LiveblocksSyncDB = {
-  [K in keyof LiveSyncLobeDBSchemaMap]: LiveList<DBModel<LiveSyncLobeDBSchemaMap[K]>>;
+  [K in keyof LiveSyncLobeDBSchemaMap]: LiveMap<string, DBModel<LiveSyncLobeDBSchemaMap[K]>>;
 };
 
 declare global {

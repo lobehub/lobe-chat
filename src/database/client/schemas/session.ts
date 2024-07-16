@@ -24,7 +24,7 @@ const ttsSchema = z.object({
 });
 
 export const AgentSchema = z.object({
-  chatConfig: AgentChatConfigSchema,
+  chatConfig: AgentChatConfigSchema.optional(),
   fewShots: fewShotsSchema.optional(),
   model: z.string().default('gpt-3.5-turbo'),
   params: z.object({
