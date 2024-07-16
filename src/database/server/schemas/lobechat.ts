@@ -53,7 +53,7 @@ export const users = pgTable('users', {
   // Required by nextauth, all null allowed
   emailVerified: timestamptz('email_verified'),
 
-  preference: jsonb('preference').default(DEFAULT_PREFERENCE),
+  preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
 
   createdAt: createdAt(),
   updatedAt: updatedAt(),
