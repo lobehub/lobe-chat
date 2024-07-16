@@ -1,3 +1,9 @@
+import type {
+  AdapterAuthenticator,
+  AdapterSession,
+  AdapterUser,
+  VerificationToken,
+} from '@auth/core/adapters';
 import { and, eq } from 'drizzle-orm';
 import type { NeonDatabase } from 'drizzle-orm/neon-serverless';
 import { Adapter, AdapterAccount } from 'next-auth/adapters';
@@ -30,7 +36,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
   const userModel = new UserModel();
 
   return {
-    async createAuthenticator(authenticator) {
+    async createAuthenticator(authenticator): Promise<AdapterAuthenticator> {
       const result = await serverDB
         .insert(nextauthAuthenticators)
         .values(authenticator)
@@ -39,41 +45,42 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       if (!result) throw new Error('LobeNextAuthDbAdapter: Failed to create authenticator');
       return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
     },
-    createSession: async (data) => {
+    async createSession(data): Promise<AdapterSession> {
       return serverDB
         .insert(nextauthSessions)
         .values(data)
         .returning()
         .then((res) => res[0]);
     },
-    createUser: async (user) => {
+    async createUser(user): Promise<AdapterUser> {
       const { id, name, email, emailVerified, image } = user;
       await UserModel.createUser(
         mapAdapterUserToLobeUser({ email, emailVerified, id, image, name }),
       );
       return user;
     },
-    createVerificationToken: async (data) => {
+    async createVerificationToken(data): Promise<VerificationToken | null | undefined> {
       return serverDB
         .insert(nextauthVerificationTokens)
         .values(data)
         .returning()
         .then((res) => res[0]);
     },
-    deleteSession: async (sessionToken) => {
+    async deleteSession(sessionToken): Promise<AdapterSession | null | undefined> {
       await serverDB
         .delete(nextauthSessions)
         .where(eq(nextauthSessions.sessionToken, sessionToken));
+      return;
     },
-
-    deleteUser: async (id) => {
+    async deleteUser(id): Promise<AdapterUser | null | undefined> {
       const user = await UserModel.findById(id);
       if (!user) throw new Error('NextAuth: Delete User not found');
 
       await UserModel.deleteUser(id);
+      return;
     },
 
-    async getAccount(providerAccountId, provider) {
+    async getAccount(providerAccountId, provider): Promise<AdapterAccount | null> {
       return serverDB
         .select()
         .from(nextauthAccounts)
@@ -86,7 +93,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
         .then((res) => res[0] ?? null) as Promise<AdapterAccount | null>;
     },
 
-    async getAuthenticator(credentialID) {
+    async getAuthenticator(credentialID): Promise<AdapterAuthenticator | null> {
       const result = await serverDB
         .select()
         .from(nextauthAuthenticators)
@@ -96,7 +103,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
     },
 
-    getSessionAndUser: async (sessionToken) => {
+    async getSessionAndUser(sessionToken): Promise<{
+      session: AdapterSession;
+      user: AdapterUser;
+    } | null> {
       const result = await serverDB
         .select({
           session: nextauthSessions,
@@ -116,7 +126,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       };
     },
 
-    getUser: async (id) => {
+    async getUser(id): Promise<AdapterUser | null> {
       try {
         const lobeUser = await UserModel.findById(id);
         return mapLobeUserToAdapterUser(lobeUser);
@@ -125,7 +135,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       }
     },
 
-    getUserByAccount: async (account) => {
+    async getUserByAccount(account): Promise<AdapterUser | null> {
       const result = await serverDB
         .select({
           account: nextauthAccounts,
@@ -144,12 +154,12 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return result?.users ? mapLobeUserToAdapterUser(result.users) : null;
     },
 
-    getUserByEmail: async (email) => {
+    async getUserByEmail(email): Promise<AdapterUser | null> {
       const lobeUser = await UserModel.findByEmail(email);
       return mapLobeUserToAdapterUser(lobeUser) ?? null;
     },
 
-    linkAccount: async (data) => {
+    async linkAccount(data): Promise<AdapterAccount | null | undefined> {
       const [account] = await serverDB
         .insert(nextauthAccounts)
         .values(data as any)
@@ -159,7 +169,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return account as any;
     },
 
-    async listAuthenticatorsByUserId(userId) {
+    async listAuthenticatorsByUserId(userId): Promise<AdapterAuthenticator[]> {
       const result = await serverDB
         .select()
         .from(nextauthAuthenticators)
@@ -170,7 +180,8 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return result.map((r) => mapAuthenticatorQueryResutlToAdapterAuthenticator(r));
     },
 
-    unlinkAccount: async (account) => {
+    // @ts-ignore: The return type is {Promise<void> | Awaitable<AdapterAccount | undefined>}
+    async unlinkAccount(account): Promise<void | AdapterAccount | undefined> {
       await serverDB
         .delete(nextauthAccounts)
         .where(
@@ -181,7 +192,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
         );
     },
 
-    updateAuthenticatorCounter: async (credentialID, counter) => {
+    async updateAuthenticatorCounter(credentialID, counter): Promise<AdapterAuthenticator> {
       const result = await serverDB
         .update(nextauthAuthenticators)
         .set({ counter })
@@ -192,7 +203,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return mapAuthenticatorQueryResutlToAdapterAuthenticator(result);
     },
 
-    updateSession: async (data) => {
+    async updateSession(data): Promise<AdapterSession | null | undefined> {
       const res = await serverDB
         .update(nextauthSessions)
         .set(data)
@@ -201,7 +212,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return res[0];
     },
 
-    updateUser: async (user) => {
+    async updateUser(user): Promise<AdapterUser> {
       const lobeUser = await UserModel.findById(user?.id);
       if (!lobeUser) throw new Error('NextAuth: User not found');
 
@@ -219,7 +230,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       return merge(user, newAdapterUser);
     },
 
-    async useVerificationToken(identifier_token) {
+    async useVerificationToken(identifier_token): Promise<VerificationToken | null> {
       // Use token with 2 steps: find and remove,
       //   1. if not found, will throw error
       //   2. else means exists, invalidate it
