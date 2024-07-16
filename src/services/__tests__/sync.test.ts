@@ -41,21 +41,37 @@ describe('SyncService', () => {
     });
 
     it('should start data sync and return true when running on client side', async () => {
-      const params = { user: { id: '123' }, authToken: 'abc' } as unknown as StartDataSyncParams;
+      const params = {
+        user: { id: '123' },
+        channel: {
+          liveblocks: {
+            enabled: true,
+            name: 'test',
+          },
+          webrtc: {
+            enabled: true,
+            password: 'channel-password',
+            name: 'test',
+          },
+        },
+      } as unknown as StartDataSyncParams;
 
       const result = await syncService.enabledSync(params);
 
       expect(result).toBe(true);
-      expect(liveblocksDataSync.startDataSync).toHaveBeenCalledWith(params);
-      expect(webrtcDataSync.startDataSync).toHaveBeenCalledWith(params);
+      expect(liveblocksDataSync.startDataSync).toHaveBeenCalledWith(
+        params.user,
+        params.channel.liveblocks,
+      );
+      expect(webrtcDataSync.startDataSync).toHaveBeenCalledWith(params.user, params.channel.webrtc);
     });
   });
 
   describe('disableSync', () => {
     it('should disconnect data sync and return false', async () => {
       const result = await syncService.disableSync({
-        webrtc: true,
-        liveblocks: true,
+        webrtc: false,
+        liveblocks: false,
       });
 
       expect(result).toBe(false);

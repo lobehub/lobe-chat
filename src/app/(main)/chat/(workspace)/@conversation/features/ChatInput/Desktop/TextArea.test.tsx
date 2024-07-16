@@ -149,7 +149,7 @@ describe('<InputArea />', () => {
       const addEventListenerSpy = vi.spyOn(window, 'addEventListener');
       const beforeUnloadHandler = vi.fn();
 
-      addEventListenerSpy.mockImplementation((event, handler) => {
+      addEventListenerSpy.mockImplementation((event: string, handler: any) => {
         if (event === 'beforeunload') {
           beforeUnloadHandler.mockImplementation(handler as any);
         }

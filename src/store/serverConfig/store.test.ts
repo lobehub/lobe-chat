@@ -23,20 +23,23 @@ describe('createServerConfigStore', () => {
 
     expect(store.getState()).toEqual({
       featureFlags: DEFAULT_FEATURE_FLAGS,
-      serverConfig: { telemetry: {} },
+      serverConfig: { telemetry: {}, sync: {} },
     });
   });
 
   it('should initialize store with custom initial state', () => {
     const initialState: Partial<ServerConfigStore> = {
       featureFlags: { edit_agent: false },
-      serverConfig: { sync: {}, telemetry: { langfuse: true } },
+      serverConfig: { sync: { liveblocks: false }, telemetry: { langfuse: true } },
     };
 
     const store = initServerConfigStore(initialState);
 
     expect(store.getState().featureFlags.edit_agent).toBeFalsy();
     expect(store.getState().serverConfig).toEqual({
+      sync: {
+        liveblocks: false,
+      },
       telemetry: { langfuse: true },
     });
   });

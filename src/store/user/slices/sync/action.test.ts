@@ -6,6 +6,7 @@ import { syncService } from '@/services/sync';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
 import { syncSettingsSelectors } from '@/store/user/selectors';
+import { StartDataSyncParams } from '@/types/sync';
 
 vi.mock('zustand/traditional');
 
@@ -72,9 +73,10 @@ describe('createSyncSlice', () => {
       expect(data).toBe(false);
     });
 
-    it('should call globalService.enabledSync when sync.channelName exists', async () => {
+    it('should call globalService.enabledSync when sync.webrtc.channelName and sync.liveblocks.channelName exists', async () => {
       const userId = 'user-id';
       const onEvent = vi.fn();
+      const roomName = 'room-name';
       const channelName = 'channel-name';
       const channelPassword = 'channel-password';
       const deviceName = 'device-name';
@@ -86,6 +88,10 @@ describe('createSyncSlice', () => {
         signaling,
         enabled: true,
       });
+      vi.spyOn(syncSettingsSelectors, 'liveblocksConfig').mockReturnValueOnce({
+        roomName,
+        enabled: true,
+      });
       vi.spyOn(syncSettingsSelectors, 'deviceName').mockReturnValueOnce(deviceName);
       const enabledSyncSpy = vi.spyOn(syncService, 'enabledSync').mockResolvedValueOnce(true);
       const { result } = renderHook(() => useUserStore());
@@ -95,11 +101,25 @@ describe('createSyncSlice', () => {
       });
 
       expect(enabledSyncSpy).toHaveBeenCalledWith({
-        channel: { name: channelName, password: channelPassword },
-        onAwarenessChange: expect.any(Function),
-        onSyncEvent: onEvent,
-        onSyncStatusChange: expect.any(Function),
-        signaling,
+        channel: {
+          webrtc: {
+            enabled: true,
+            name: channelName,
+            password: channelPassword,
+            onAwarenessChange: expect.any(Function),
+            onSyncEvent: onEvent,
+            onSyncStatusChange: expect.any(Function),
+            signaling,
+          },
+          liveblocks: {
+            enabled: true,
+            accessCode: '',
+            name: roomName,
+            onSyncEvent: onEvent,
+            onSyncStatusChange: expect.any(Function),
+            onAwarenessChange: expect.any(Function),
+          },
+        },
         user: expect.objectContaining({ id: userId, name: deviceName }),
       });
       expect(data).toBe(true);

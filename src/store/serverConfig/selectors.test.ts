@@ -18,6 +18,7 @@ describe('featureFlagsSelectors', () => {
 
     expect(result).toEqual({
       enableWebrtc: false,
+      enableLiveblocks: false,
       isAgentEditable: false,
       showCreateSession: true,
       showDalle: true,
@@ -25,6 +26,7 @@ describe('featureFlagsSelectors', () => {
       showCloudPromotion: false,
       showOpenAIApiKey: true,
       showOpenAIProxyUrl: true,
+      showSyncSettings: false,
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
       enableClerkSignUp: true,
