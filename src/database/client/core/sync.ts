@@ -7,8 +7,9 @@ import {
   LiveObject,
   Room,
 } from '@liveblocks/client';
+import Dexie from 'dexie';
 // import Debug from 'debug';
-import { throttle, uniqBy } from 'lodash-es';
+import { differenceBy, throttle, uniqBy } from 'lodash-es';
 import type { WebrtcProvider } from 'y-webrtc';
 import type { Doc, Transaction } from 'yjs';
 
@@ -38,6 +39,13 @@ class DataSync {
   onSyncStatusChange!: OnSyncStatusChange;
 
   logger = console.debug;
+}
+
+class WebRTCDataSync extends DataSync {
+  private syncParams!: WebRTCSyncParams;
+  private provider: WebrtcProvider | null = null;
+
+  private waitForConnecting: any;
 
   transact(fn: (transaction: Transaction) => unknown) {
     this._ydoc?.transact(fn);
@@ -55,11 +63,10 @@ class DataSync {
     this._ydoc = new Doc();
   };
 
-  initSync = async (initial?: boolean) => {
+  initSync = async () => {
     await Promise.all(
       ['sessions', 'sessionGroups', 'topics', 'messages', 'plugins'].map(
-        async (tableKey) =>
-          await this.loadDataFromDBtoYjs(tableKey as keyof LobeDBSchemaMap, initial),
+        async (tableKey) => await this.loadDataFromDBtoYjs(tableKey as keyof LobeDBSchemaMap),
       ),
     );
   };
@@ -123,22 +130,20 @@ class DataSync {
     });
   };
 
-  loadDataFromDBtoYjs = async (tableKey: keyof LobeDBSchemaMap, initial = false) => {
+  loadDataFromDBtoYjs = async (tableKey: keyof LobeDBSchemaMap) => {
     const table = browserDB[tableKey];
     const items = await table.toArray();
     const yItemMap = this.getYMap(tableKey);
 
-    const transactionItems = initial ? items.filter((item) => !yItemMap?.has(item.id)) : items;
-
     this.logger('[YJS] Remote:', tableKey, yItemMap?.size);
     this.logger('[DB] Local:', tableKey, items.length);
-    this.logger('[DB -> YJS] Update: ', tableKey, transactionItems.length);
+    this.logger('[DB -> YJS] Update: ', tableKey, items.length);
 
     // 定义每批次最多包含的数据条数
     const batchSize = 100;
 
     // 计算总批次数
-    const totalBatches = Math.ceil(transactionItems.length / batchSize);
+    const totalBatches = Math.ceil(items.length / batchSize);
 
     for (let i = 0; i < totalBatches; i++) {
       // 计算当前批次的起始和结束索引
@@ -146,7 +151,7 @@ class DataSync {
       const end = start + batchSize;
 
       // 获取当前批次的数据
-      const batchItems = transactionItems.slice(start, end);
+      const batchItems = items.slice(start, end);
 
       // 将当前批次的数据推送到 Yjs 中
       this._ydoc?.transact(() => {
@@ -156,19 +161,12 @@ class DataSync {
       });
     }
 
-    for (const item of transactionItems) {
+    for (const item of items) {
       yItemMap?.set(item.id, item);
     }
 
     this.logger('[YJS] Synced:', tableKey, yItemMap?.size);
   };
-}
-
-class WebRTCDataSync extends DataSync {
-  private syncParams!: WebRTCSyncParams;
-  private provider: WebrtcProvider | null = null;
-
-  private waitForConnecting: any;
 
   startDataSync = async (user: SyncUserInfo, params: WebRTCSyncParams) => {
     this._user = user;
@@ -341,17 +339,107 @@ class LiveblocksDataSync extends DataSync {
     null;
 
   private leave?: () => void;
-  private unsubscribes?: [() => void];
   private _root: LiveObject<LiveblocksSyncDB> | null = null;
+
+  batch = async (fn: () => Promise<void>) => {
+    await this.room?.batch(fn);
+  };
+
+  getLiveList = (tableKey: keyof LobeDBSchemaMap) => {
+    if (['files', 'users'].includes(tableKey)) return;
+    return this._root?.get(tableKey as LiveSyncLobeDBSchemaKeys) as LiveList<
+      DBModel<LobeDBSchemaMap[LiveSyncLobeDBSchemaKeys]>
+    >;
+  };
 
   initLiveStorage = async () => {
     if (typeof window === 'undefined') return;
 
-    if (this._root) return;
-
     this.logger('[Liveblocks] init Liveblock storage...');
     const root: LiveObject<LiveblocksSyncDB> = new LiveObject();
     this._root = root;
+  };
+
+  initSync = async () => {
+    await Promise.all(
+      ['sessions', 'sessionGroups', 'topics', 'messages', 'plugins'].map(
+        async (tableKey) => await this.mergeDBStorage(tableKey as LiveSyncLobeDBSchemaKeys),
+      ),
+    );
+  };
+
+  initLiveObserve = async (onEvent: OnSyncEvent, onSyncStatusChange: OnSyncStatusChange) => {
+    ['sessions', 'sessionGroups', 'topics', 'messages', 'plugins'].forEach((tableKey) => {
+      this.observeLiveChange(tableKey as LiveSyncLobeDBSchemaKeys, onEvent, onSyncStatusChange);
+    });
+  };
+
+  subscribeRoomStatus = (onSyncStatusChange: OnSyncStatusChange) => {
+    this.room!.subscribe('lost-connection', (status) => {
+      this.logger(`[Liveblocks] network connection lost, status: ${status}`);
+      switch (status) {
+        case 'lost': {
+          onSyncStatusChange?.(PeerSyncStatus.Connecting);
+          break;
+        }
+        case 'restored': {
+          onSyncStatusChange?.(PeerSyncStatus.Ready);
+          break;
+        }
+        case 'failed': {
+          onSyncStatusChange?.(PeerSyncStatus.Unconnected);
+          break;
+        }
+      }
+    });
+
+    this.room!.subscribe('status', (status) => {
+      this.logger(`[Liveblocks] room status changed: ${status}`);
+      switch (status) {
+        case 'initial': {
+          onSyncStatusChange?.(PeerSyncStatus.Ready);
+          break;
+        }
+        case 'connecting': {
+          onSyncStatusChange?.(PeerSyncStatus.Connecting);
+          break;
+        }
+        case 'connected': {
+          onSyncStatusChange?.(PeerSyncStatus.Ready);
+          break;
+        }
+        case 'reconnecting': {
+          onSyncStatusChange?.(PeerSyncStatus.Connecting);
+          break;
+        }
+        case 'disconnected': {
+          onSyncStatusChange?.(PeerSyncStatus.Unconnected);
+          break;
+        }
+      }
+    });
+
+    this.room!.subscribe('storage-status', async (status) => {
+      this.logger(`[Liveblocks] room storage status changed: ${status}`);
+      switch (status) {
+        case 'not-loaded': {
+          onSyncStatusChange?.(PeerSyncStatus.Unconnected);
+          break;
+        }
+        case 'loading': {
+          onSyncStatusChange?.(PeerSyncStatus.Connecting);
+          break;
+        }
+        case 'synchronizing': {
+          onSyncStatusChange(PeerSyncStatus.Syncing);
+          break;
+        }
+        case 'synchronized': {
+          onSyncStatusChange(PeerSyncStatus.Synced);
+          break;
+        }
+      }
+    });
   };
 
   startDataSync = async (user: SyncUserInfo, params: LiveblocksSyncParams) => {
@@ -366,9 +454,6 @@ class LiveblocksDataSync extends DataSync {
     const { onSyncEvent, onSyncStatusChange } = this.syncParams;
 
     await this.initLiveStorage();
-
-    this.logger('[Liveblocks] start to listen sync event...');
-    this.initYjsObserve(onSyncEvent, onSyncStatusChange);
 
     const { name, password, publicApiKey, accessCode } = this.syncParams;
     const hashedRoomName = hashRoomName(name, password);
@@ -423,151 +508,25 @@ class LiveblocksDataSync extends DataSync {
 
       this.room = room;
 
+      this.room.updatePresence(this._user!);
+
       const { root } = await room.getStorage();
       this._root = root;
 
       this.logger(`[Liveblocks] sync room init success`);
-      // ====== 4. handle data sync  ====== //
-      // Does nothing for connection, which is handled by Liveblocks client
-      // await this.initSync();
+      onSyncStatusChange?.(PeerSyncStatus.Ready);
 
-      // Sync from Liveblocks to Db
-      const unsubscribeRoot = this.room.subscribe(root, async (updatedRoot) => {
-        this.logger('[Liveblocks] storage updated.');
+      // Merge local and remote databases;
+      this.logger(`[Liveblocks] start to merge local and remote databases...`);
+      onSyncStatusChange(PeerSyncStatus.Syncing);
+      await this.initSync();
+      onSyncStatusChange(PeerSyncStatus.Synced);
 
-        onSyncStatusChange(PeerSyncStatus.Syncing);
+      this.logger('[Liveblocks] start to listen sync event...');
+      this.initLiveObserve(onSyncEvent, onSyncStatusChange);
 
-        const sessions = await browserDB.sessions.toArray();
-        const sessionsKeys = sessions.map((s) => s.id);
-        const updatedSessions = updatedRoot.get('sessions').toImmutable();
-        const updatedSessionsKeys = updatedSessions.map((s) => s.id);
-        const deletedSessionKeys = sessionsKeys.filter((key) => !updatedSessionsKeys.includes(key));
-        await browserDB.sessions.bulkPut(updatedSessions);
-        await browserDB.sessions.bulkDelete(deletedSessionKeys);
-        this.logger(
-          `[Liveblocks] ${updatedSessionsKeys.length} sessions updated. ${deletedSessionKeys.length} deleted.`,
-        );
-
-        const sessionGroups = await browserDB.sessionGroups.toArray();
-        const sessionGroupsKeys = sessionGroups.map((s) => s.id);
-        const updatedSessionGroups = updatedRoot.get('sessionGroups').toImmutable();
-        const updatedSessionGroupsKeys = updatedSessionGroups.map((s) => s.id);
-        const deletedSessionGroupKeys = sessionGroupsKeys.filter(
-          (key) => !updatedSessionGroupsKeys.includes(key),
-        );
-        await browserDB.sessionGroups.bulkPut(updatedSessionGroups);
-        await browserDB.sessionGroups.bulkDelete(deletedSessionGroupKeys);
-        this.logger(
-          `[Liveblocks] ${updatedSessionGroupsKeys.length} sessionGroups updated. ${deletedSessionGroupKeys.length} deleted.`,
-        );
-
-        const topics = await browserDB.topics.toArray();
-        const topicsKeys = topics.map((s) => s.id);
-        const updatedTopics = updatedRoot.get('topics').toImmutable();
-        const updatedTopicsKeys = updatedTopics.map((s) => s.id);
-        const deletedTopicKeys = topicsKeys.filter((key) => !updatedTopicsKeys.includes(key));
-        await browserDB.topics.bulkPut(updatedTopics);
-        await browserDB.topics.bulkDelete(deletedTopicKeys);
-        this.logger(
-          `[Liveblocks] ${updatedTopicsKeys.length} topics updated. ${deletedTopicKeys.length} deleted.`,
-        );
-
-        const messages = await browserDB.messages.toArray();
-        const messagesKeys = messages.map((s) => s.id);
-        const updatedMessages = updatedRoot.get('messages').toImmutable();
-        const updatedMessagesKeys = updatedMessages.map((s) => s.id);
-        const deletedMessageKeys = messagesKeys.filter((key) => !updatedMessagesKeys.includes(key));
-        await browserDB.messages.bulkPut(updatedMessages);
-        await browserDB.messages.bulkDelete(deletedMessageKeys);
-        this.logger(
-          `[Liveblocks] ${updatedMessagesKeys.length} messages updated. ${deletedMessageKeys.length} deleted.`,
-        );
-
-        const plugins = await browserDB.plugins.toArray();
-        const pluginsKeys = plugins.map((s) => s.id);
-        const updatedPlugins = updatedRoot.get('plugins').toImmutable();
-        const updatedPluginsKeys = updatedPlugins.map((s) => s.id);
-        const deletedPluginKeys = pluginsKeys.filter((key) => !updatedPluginsKeys.includes(key));
-        await browserDB.plugins.bulkPut(updatedPlugins);
-        await browserDB.plugins.bulkDelete(deletedPluginKeys);
-        this.logger(
-          `[Liveblocks] ${updatedPluginsKeys.length} plugins updated. ${deletedPluginKeys.length} deleted.`,
-        );
-
-        onSyncStatusChange(PeerSyncStatus.Synced);
-      });
-      this.unsubscribes?.push(unsubscribeRoot);
-
-      const unsubscribeConnection = this.room.subscribe('lost-connection', (status) => {
-        this.logger(`[Liveblocks] network connection lost, status: ${status}`);
-        switch (status) {
-          case 'lost': {
-            onSyncStatusChange?.(PeerSyncStatus.Connecting);
-            break;
-          }
-          case 'restored': {
-            onSyncStatusChange?.(PeerSyncStatus.Ready);
-            break;
-          }
-          case 'failed': {
-            onSyncStatusChange?.(PeerSyncStatus.Unconnected);
-            break;
-          }
-        }
-      });
-      this.unsubscribes?.push(unsubscribeConnection);
-
-      const unsubscribeStatus = this.room.subscribe('status', (status) => {
-        this.logger(`[Liveblocks] room status changed: ${status}`);
-        switch (status) {
-          case 'initial': {
-            onSyncStatusChange?.(PeerSyncStatus.Ready);
-            break;
-          }
-          case 'connecting': {
-            onSyncStatusChange?.(PeerSyncStatus.Connecting);
-            break;
-          }
-          case 'connected': {
-            onSyncStatusChange?.(PeerSyncStatus.Ready);
-            break;
-          }
-          case 'reconnecting': {
-            onSyncStatusChange?.(PeerSyncStatus.Connecting);
-            break;
-          }
-          case 'disconnected': {
-            onSyncStatusChange?.(PeerSyncStatus.Unconnected);
-            break;
-          }
-        }
-      });
-      this.unsubscribes?.push(unsubscribeStatus);
-
-      const unsubscribeStorage = this.room.subscribe('storage-status', async (status) => {
-        switch (status) {
-          case 'not-loaded': {
-            onSyncStatusChange?.(PeerSyncStatus.Unconnected);
-            break;
-          }
-          case 'loading': {
-            onSyncStatusChange?.(PeerSyncStatus.Connecting);
-            break;
-          }
-          case 'synchronizing': {
-            onSyncStatusChange(PeerSyncStatus.Syncing);
-            break;
-          }
-          case 'synchronized': {
-            onSyncStatusChange(PeerSyncStatus.Syncing);
-            await this.loadDataFromDBtoLiveStorage();
-            onSyncStatusChange(PeerSyncStatus.Synced);
-            break;
-          }
-        }
-      });
-
-      this.unsubscribes?.push(unsubscribeStorage);
+      this.logger('[Liveblocks] start to subscribe connection status...');
+      this.subscribeRoomStatus(onSyncStatusChange);
     } catch (error) {
       this.logger(`[Liveblocks] failed to join room: ${hashedRoomName}, error: ${error}`);
       onSyncStatusChange?.(PeerSyncStatus.Unconnected);
@@ -586,9 +545,6 @@ class LiveblocksDataSync extends DataSync {
   }
 
   private async cleanConnection() {
-    this.logger(`[Liveblocks] unsubscribe update...`);
-    this.unsubscribes?.forEach((unsubscribe) => unsubscribe());
-
     this.logger(`[Liveblocks] leave room...`);
     this.leave?.();
 
@@ -597,6 +553,9 @@ class LiveblocksDataSync extends DataSync {
 
     this.logger(`[Liveblocks] clean sync db...`);
     this._root = null;
+
+    this.logger(`[Liveblocks] logout session...`);
+    this.client?.logout();
 
     this.logger(`[Liveblocks] -------------------`);
   }
@@ -647,6 +606,98 @@ class LiveblocksDataSync extends DataSync {
     this.onAwarenessChange?.(uniqBy(syncAwarenessStates, 'clientID'));
   };
 
+  observeLiveChange = (
+    tableKey: LiveSyncLobeDBSchemaKeys,
+    onEvent: OnSyncEvent,
+    onSyncStatusChange: OnSyncStatusChange,
+  ) => {
+    const table: Dexie.Table<DBModel<LobeDBSchemaMap[typeof tableKey]>, string> = browserDB[
+      tableKey
+    ];
+    const list = this._root?.get(tableKey) as LiveList<
+      GetListItemType<LiveblocksSyncDB, typeof tableKey>
+    >;
+
+    const updateSyncEvent = throttle(onEvent, 1000);
+
+    // 定义一个变量来保存定时器的ID
+    // eslint-disable-next-line no-undef
+    let debounceTimer: NodeJS.Timeout;
+
+    /**
+     * Change from local DB
+     **/
+
+    table.hook('creating', (primaryKey, obj) => {
+      clearTimeout(debounceTimer);
+      onSyncStatusChange(PeerSyncStatus.Syncing);
+      if (list.some((item) => item.id === primaryKey)) {
+        // Key maybe conflicted, update liveblocks records
+        const index = list.findIndex((item) => item.id === primaryKey);
+        list.set(index, obj);
+        this.logger(`[Liveblocks] ${tableKey} record updated: ${primaryKey}`);
+      } else {
+        list.push(obj);
+        this.logger(`[Liveblocks] ${tableKey} record created: ${primaryKey}`);
+      }
+      updateSyncEvent(tableKey);
+      debounceTimer = setTimeout(() => {
+        onSyncStatusChange(PeerSyncStatus.Synced);
+      }, 2000);
+    });
+
+    table.hook('updating', (_modifications, primaryKey, obj) => {
+      clearTimeout(debounceTimer);
+      onSyncStatusChange(PeerSyncStatus.Syncing);
+      const index = list.findIndex((item) => item.id === primaryKey);
+      if (index > -1) {
+        list.set(index, obj);
+        this.logger(`[Liveblocks] ${tableKey} record updated: ${primaryKey}`);
+      } else {
+        // Key maybe not existed, creating
+        list.push(obj);
+        this.logger(`[Liveblocks] ${tableKey} record created: ${primaryKey}`);
+      }
+      updateSyncEvent(tableKey);
+      debounceTimer = setTimeout(() => {
+        onSyncStatusChange(PeerSyncStatus.Synced);
+      }, 2000);
+    });
+
+    table.hook('deleting', (primaryKey) => {
+      clearTimeout(debounceTimer);
+      onSyncStatusChange(PeerSyncStatus.Syncing);
+      const index = list.findIndex((item) => item.id === primaryKey);
+      if (index === -1) return;
+      list.delete(index);
+      this.logger(`[Liveblocks] ${tableKey} record deleted: ${primaryKey}`);
+      updateSyncEvent(tableKey);
+      debounceTimer = setTimeout(() => {
+        onSyncStatusChange(PeerSyncStatus.Synced);
+      }, 2000);
+    });
+
+    /**
+     * Change from Liveblocks
+     */
+    this.room?.subscribe(list, (updatedList) => {
+      clearTimeout(debounceTimer);
+      onSyncStatusChange(PeerSyncStatus.Syncing);
+      // New Item from remote
+      (async () => {
+        const remoteItems = updatedList.toImmutable();
+        const localItems = await table.toArray();
+        const newItems = differenceBy(remoteItems, localItems, 'id');
+        await table.bulkPut(newItems);
+        this.logger(`[DB] ${tableKey} records updated: ${newItems.length}`);
+      })();
+      updateSyncEvent(tableKey);
+      debounceTimer = setTimeout(() => {
+        onSyncStatusChange(PeerSyncStatus.Synced);
+      }, 2000);
+    });
+  };
+
   getInitDBStorage = async (): Promise<LiveblocksSyncDB> => {
     const sessions = await browserDB.sessions.toArray();
     const sessionGroups = await browserDB.sessionGroups.toArray();
@@ -665,16 +716,33 @@ class LiveblocksDataSync extends DataSync {
     return initStorage;
   };
 
-  loadDataFromDBtoLiveStorage = async () => {
-    const { sessions, sessionGroups, topics, messages, plugins } = await this.getInitDBStorage();
+  /**
+   * 合并 Liveblocks 与 Local DB 的表数据，只在同步开始时运行一次，不删除数据
+   * @param tableKey
+   */
+  mergeDBStorage = async (tableKey: LiveSyncLobeDBSchemaKeys) => {
+    const table: Dexie.Table<DBModel<LobeDBSchemaMap[typeof tableKey]>, string> = browserDB[
+      tableKey
+    ];
+    const list = this._root!.get(tableKey) as LiveList<
+      GetListItemType<LiveblocksSyncDB, typeof tableKey>
+    >;
 
-    this._root?.set('sessions', sessions);
-    this._root?.set('sessionGroups', sessionGroups);
-    this._root?.set('topics', topics);
-    this._root?.set('messages', messages);
-    this._root?.set('plugins', plugins);
+    const localItems = await table.toArray();
+    // Local -> Liveblocks
+    if (localItems.length > 0) {
+      const insertedItems = differenceBy(localItems, list.toImmutable(), 'id');
+      insertedItems.forEach((item) => list.push(item));
+      this.logger(`[Liveblocks] ${insertedItems.length} ${tableKey} updated from local db`);
+    }
 
-    this.logger('[Liveblocks] Synced data from DB to Liveblocks');
+    const remoteItems = list.toImmutable();
+    if (remoteItems.length > 0) {
+      await table.bulkPut(remoteItems);
+      this.logger(`[DB] ${remoteItems.length} ${tableKey} updated from liveblocks`);
+    }
+
+    this.logger(`[Liveblocks] ${list.length} ${tableKey} merged.`);
   };
 }
 
@@ -696,12 +764,17 @@ interface IWebsocketClient {
   ws: WebSocket;
 }
 
+type LiveSyncLobeDBSchemaMap = {
+  [K in Exclude<keyof LobeDBSchemaMap, 'files' | 'users'>]: LobeDBSchemaMap[K];
+};
+
+type LiveSyncLobeDBSchemaKeys = keyof LiveSyncLobeDBSchemaMap;
+
+type GetListItemType<T extends LiveblocksSyncDB, K extends keyof T> =
+  T[K] extends LiveList<infer U> ? U : never;
+
 type LiveblocksSyncDB = {
-  messages: LiveList<DBModel<LobeDBSchemaMap['messages']>>;
-  plugins: LiveList<DBModel<LobeDBSchemaMap['plugins']>>;
-  sessionGroups: LiveList<DBModel<LobeDBSchemaMap['sessionGroups']>>;
-  sessions: LiveList<DBModel<LobeDBSchemaMap['sessions']>>;
-  topics: LiveList<DBModel<LobeDBSchemaMap['topics']>>;
+  [K in keyof LiveSyncLobeDBSchemaMap]: LiveList<DBModel<LiveSyncLobeDBSchemaMap[K]>>;
 };
 
 declare global {
