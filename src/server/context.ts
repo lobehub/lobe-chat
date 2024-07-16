@@ -9,9 +9,10 @@ import NextAuthEdge from '@/libs/next-auth/edge';
 type ClerkAuth = ReturnType<typeof getAuth>;
 
 export interface AuthContext {
-  auth?: ClerkAuth | User;
   authorizationHeader?: string | null;
+  clerkAuth?: ClerkAuth;
   jwtPayload?: JWTPayload | null;
+  nextAuth?: User;
   userId?: string | null;
 }
 
@@ -25,8 +26,9 @@ export const createContextInner = async (params?: {
   nextAuth?: User;
   userId?: string | null;
 }): Promise<AuthContext> => ({
-  auth: params?.clerkAuth || params?.nextAuth,
   authorizationHeader: params?.authorizationHeader,
+  clerkAuth: params?.clerkAuth,
+  nextAuth: params?.nextAuth,
   userId: params?.userId,
 });
 
@@ -62,5 +64,5 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
     } catch {}
   }
 
-  return createContextInner({ authorizationHeader: authorization });
+  return createContextInner({ authorizationHeader: authorization, userId });
 };
