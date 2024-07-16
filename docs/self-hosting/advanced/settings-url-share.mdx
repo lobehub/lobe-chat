@@ -1,3 +1,18 @@
+---
+title: Share Settings via URL - Import and Export Configuration Settings
+description: >-
+  Learn how to import and export configuration settings for LobeChat via URL.
+  Understand the supported settings, URL format, and parameter schema for
+  keyVaults and languageModel.
+tags:
+  - Share Settings
+  - URL Import
+  - URL Export
+  - Configuration Settings
+  - LobeChat
+  - Parameter Schema
+---
+
 # Share settings via URL
 
 LobeChat support import settings from external URL to quickly set up LobeChat configuration.
@@ -57,8 +72,8 @@ console.log(url);
 
 - Property name and type
 
-| Property name | Type                     |
-| ------------- | ------------------------ |
+| Property name | Type                       |
+| ------------- | -------------------------- |
 | anthropic     | `OpenAICompatibleKeyVault` |
 | azure         | `AzureOpenAIKeyVault`      |
 | bedrock       | `AWSBedrockKeyVault`       |
@@ -104,8 +119,8 @@ console.log(url);
 export type UserModelProviderConfig = Record<string, ProviderConfig>;
 ```
 
-| Property name | Type           |
-| ------------- | -------------- |
+| Property name | Type             |
+| ------------- | ---------------- |
 | anthropic     | `ProviderConfig` |
 | azure         | `ProviderConfig` |
 | bedrock       | `ProviderConfig` |

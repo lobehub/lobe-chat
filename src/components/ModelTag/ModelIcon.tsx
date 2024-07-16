@@ -1,6 +1,8 @@
 import {
   AdobeFirefly,
   Ai21,
+  Ai360,
+  AiMass,
   Aws,
   Azure,
   Baichuan,
@@ -61,6 +63,8 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
+  if (model.includes('taichu')) return <AiMass size={size} />;
+  if (model.includes('360gpt')) return <Ai360 size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan')) return <Baichuan size={size} />;
@@ -85,7 +89,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
     return <Stability size={size} />;
 
   if (model.includes('wizardlm')) return <Azure size={size} />;
-  if (model.includes('phi3')) return <Azure size={size} />;
+  if (model.includes('phi3') || model.includes('phi-3')) return <Azure size={size} />;
   if (model.includes('firefly')) return <AdobeFirefly size={size} />;
   if (model.includes('jamba') || model.includes('j2-')) return <Ai21 size={size} />;
 });

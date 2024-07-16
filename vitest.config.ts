@@ -22,13 +22,22 @@ export default defineConfig({
       ],
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],
+      reportsDirectory: './coverage/app',
     },
-    deps: {
-      inline: ['vitest-canvas-mock'],
-    },
-    // threads: false,
     environment: 'happy-dom',
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/build/**',
+      'src/database/server/**/**',
+      'src/server/modules/**/**',
+    ],
     globals: true,
+    server: {
+      deps: {
+        inline: ['vitest-canvas-mock'],
+      },
+    },
     setupFiles: './tests/setup.ts',
   },
 });

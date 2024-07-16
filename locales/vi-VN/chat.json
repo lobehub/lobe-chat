@@ -40,7 +40,6 @@
     "regenerate": "Tạo lại"
   },
   "newAgent": "Tạo trợ lý mới",
-  "noDescription": "Chưa có mô tả",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
   "regenerate": "Tạo lại",
@@ -100,6 +99,8 @@
       "duplicate": "Tạo bản sao",
       "export": "Xuất chủ đề"
     },
+    "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",
+    "checkSaveCurrentMessages": "Bạn có muốn lưu cuộc trò chuyện hiện tại thành chủ đề không?",
     "confirmRemoveAll": "Bạn sắp xóa tất cả chủ đề. Hành động này không thể hoàn tác, vui lòng xác nhận.",
     "confirmRemoveTopic": "Bạn sắp xóa chủ đề này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
     "confirmRemoveUnstarred": "Bạn sắp xóa các chủ đề chưa được đánh dấu. Hành động này không thể hoàn tác, vui lòng xác nhận.",

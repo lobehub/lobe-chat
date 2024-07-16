@@ -32,6 +32,27 @@ describe('modelConfigSelectors', () => {
 
       expect(modelConfigSelectors.isProviderEnabled('perplexity')(s)).toBe(false);
     });
+
+    it('should follow the user settings if provider is in the whitelist', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            ollama: { enabled: false },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+
+      expect(modelConfigSelectors.isProviderEnabled('ollama')(s)).toBe(false);
+    });
+
+    it('ollama should be enabled by default', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {},
+        },
+      } as UserSettingsState) as unknown as UserStore;
+      expect(modelConfigSelectors.isProviderEnabled('ollama')(s)).toBe(true);
+    });
   });
 
   describe('isProviderFetchOnClient', () => {
@@ -87,6 +108,25 @@ describe('modelConfigSelectors', () => {
         },
       } as UserSettingsState) as unknown as UserStore;
       expect(modelConfigSelectors.isProviderFetchOnClient('azure')(s)).toBe(true);
+    });
+
+    // Qwen provider not work in broswer request. Please skip this case if it work in future.
+    // Issue: https://github.com/lobehub/lobe-chat/issues/3108
+    // PR: https://github.com/lobehub/lobe-chat/pull/3133
+    it('client fecth should be disabled if provider is disable broswer request', () => {
+      const s = merge(initialSettingsState, {
+        settings: {
+          languageModel: {
+            qwen: { fetchOnClient: true },
+          },
+          keyVaults: {
+            qwen: {
+              apiKey: 'apikey',
+            },
+          },
+        },
+      } as UserSettingsState) as unknown as UserStore;
+      expect(modelConfigSelectors.isAutoFetchModelsEnabled('qwen')(s)).toBe(false);
     });
   });
 

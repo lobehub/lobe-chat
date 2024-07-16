@@ -1,7 +1,15 @@
 {
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
-  "appInitializing": "LobeChat est en cours de démarrage, veuillez patienter...",
+  "alert": {
+    "cloud": {
+      "action": "Découvrir gratuitement",
+      "desc": "Nous offrons {{credit}} crédits de calcul gratuits à tous les utilisateurs inscrits, sans configuration compliquée, prêts à l'emploi, prenant en charge l'historique des conversations illimité et la synchronisation cloud globale. Découvrez davantage de fonctionnalités avancées ensemble.",
+      "descOnMobile": "Nous offrons {{credit}} crédits de calcul gratuits à tous les utilisateurs inscrits, sans configuration compliquée, prêts à l'emploi.",
+      "title": "Bienvenue à {{name}}"
+    }
+  },
+  "appInitializing": "L'application est en cours de démarrage, veuillez patienter...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
@@ -129,11 +137,11 @@
   },
   "layoutInitializing": "Initialisation de la mise en page en cours...",
   "legal": "Mentions légales",
+  "loading": "Chargement en cours...",
   "mail": {
     "business": "Partenariats commerciaux",
     "support": "Support par e-mail"
   },
-  "noDescription": "Aucune description disponible",
   "oauth": "Connexion SSO",
   "officialSite": "Site officiel",
   "ok": "OK",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Utilisateur anonyme",
     "billing": "Gestion de la facturation",
+    "cloud": "Découvrir {{name}}",
     "data": "Stockage des données",
     "defaultNickname": "Utilisateur de la version communautaire",
     "discord": "Support de la communauté",

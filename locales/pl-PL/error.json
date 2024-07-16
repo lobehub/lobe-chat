@@ -54,6 +54,7 @@
     "503": "Przepraszamy, serwer tymczasowo nie może przetworzyć Twojego żądania, prawdopodobnie z powodu przeciążenia lub konserwacji. Proszę spróbuj ponownie później",
     "504": "Przepraszamy, serwer nie otrzymał odpowiedzi od serwera nadrzędnego. Proszę spróbuj ponownie później",
     "AgentRuntimeError": "Wystąpił błąd wykonania modelu językowego Lobe, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
+    "FreePlanLimit": "Jesteś obecnie użytkownikiem darmowej wersji, nie możesz korzystać z tej funkcji. Proszę uaktualnić do planu płatnego, aby kontynuować korzystanie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidClerkUser": "Przepraszamy, nie jesteś obecnie zalogowany. Proszę najpierw zalogować się lub zarejestrować, aby kontynuować.",
@@ -63,8 +64,10 @@
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
     "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy Ollama działa poprawnie, lub czy poprawnie skonfigurowano ustawienia przekraczania domeny Ollama",
+    "OpenAIBizError": "Wystąpił błąd usługi OpenAI, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
+    "PluginFailToTransformArguments": "Przepraszamy, nie udało się przekształcić argumentów wywołania wtyczki. Spróbuj ponownie wygenerować wiadomość pomocnika lub zmień model AI o większej zdolności do wywoływania narzędzi i spróbuj ponownie",
     "PluginGatewayError": "Przepraszamy, wystąpił błąd bramy wtyczki. Proszę sprawdź, czy konfiguracja bramy wtyczki jest poprawna",
     "PluginManifestInvalid": "Przepraszamy, walidacja manifestu opisowego wtyczki nie powiodła się. Proszę sprawdź, czy format pliku opisowego wtyczki jest zgodny z normami",
     "PluginManifestNotFound": "Przepraszamy, serwer nie odnalazł manifestu opisowego wtyczki (manifest.json). Proszę sprawdź, czy adres pliku opisowego wtyczki jest poprawny",
@@ -75,7 +78,8 @@
     "PluginOpenApiInitError": "Przepraszamy, inicjalizacja klienta OpenAPI nie powiodła się. Proszę sprawdź, czy informacje konfiguracyjne OpenAPI są poprawne",
     "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
     "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna",
-    "ProviderBizAPIKey": "Wystąpił błąd podczas żądania usługi {{provider}}. Sprawdź poniższe informacje lub spróbuj ponownie."
+    "ProviderBizError": "Wystąpił błąd usługi {{provider}}, proszę sprawdzić poniższe informacje lub spróbować ponownie",
+    "SubscriptionPlanLimit": "Wykorzystałeś limit swojego abonamentu i nie możesz korzystać z tej funkcji. Proszę uaktualnić do wyższego planu lub zakupić dodatkowy pakiet zasobów, aby kontynuować korzystanie."
   },
   "stt": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"

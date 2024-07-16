@@ -8,7 +8,8 @@ import { Center } from 'react-layout-kit';
 const useStyles = createStyles(({ css, responsive }) => ({
   background: css`
     width: 80%;
-    margin: -60px 0 -20px;
+    margin-block: -60px -20px;
+    margin-inline: 0;
 
     ${responsive.md} {
       display: none;
@@ -17,7 +18,7 @@ const useStyles = createStyles(({ css, responsive }) => ({
   title: css`
     z-index: 2;
 
-    margin-top: 24px;
+    margin-block-start: 24px;
 
     font-size: min(56px, 5vw);
     font-weight: 800;
@@ -30,7 +31,7 @@ const Hero = memo(() => {
   const { theme, styles } = useStyles();
   return (
     <Center>
-      <h1 className={styles.title}>Find & Use The Best Agents</h1>
+      <h1 className={styles.title}>Find & Use The Best Assistants</h1>
       <GridBackground animation className={styles.background} colorFront={theme.colorText} random />
     </Center>
   );

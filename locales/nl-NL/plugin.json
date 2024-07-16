@@ -139,6 +139,7 @@
     "modalDesc": "Na het instellen van de marktlocatie voor plugins, kunt u een aangepaste pluginmarkt gebruiken.",
     "title": "Instellingen voor pluginmarkt"
   },
+  "showInPortal": "Gelieve de details in het portaal te bekijken",
   "store": {
     "actions": {
       "confirmUninstall": "Deze plugin wordt binnenkort verwijderd. Na verwijdering worden de configuraties gewist. Weet u zeker dat u door wilt gaan?",

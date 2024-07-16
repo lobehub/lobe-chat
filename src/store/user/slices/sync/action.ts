@@ -61,7 +61,8 @@ export const createSyncSlice: StateCreator<
 
     const accessCode = keyVaultsConfigSelectors.password(get());
 
-    if (!webrtcConfig.channelName && !liveblocksConfig.roomName) return false;
+    if ((!webrtcConfig.channelName || !webrtcConfig.signaling) && !liveblocksConfig.roomName)
+      return false;
 
     const name = syncSettingsSelectors.deviceName(get());
 

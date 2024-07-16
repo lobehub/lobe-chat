@@ -17,7 +17,7 @@ export interface CreateMessageParams
   traceId?: string;
   topicId?: string;
   content: string;
-  error?: ChatMessageError;
+  error?: ChatMessageError | null;
   role: MessageRoleType;
 }
 
@@ -39,7 +39,8 @@ export interface IMessageService {
   bindMessagesToTopic(topicId: string, messageIds: string[]): Promise<any>;
 
   removeMessage(id: string): Promise<any>;
-  removeMessages(assistantId: string, topicId?: string): Promise<any>;
+  removeMessages(ids: string[]): Promise<any>;
+  removeMessagesByAssistant(assistantId: string, topicId?: string): Promise<any>;
   removeAllMessages(): Promise<any>;
 
   hasMessages(): Promise<boolean>;

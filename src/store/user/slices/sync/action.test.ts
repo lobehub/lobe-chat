@@ -61,6 +61,7 @@ describe('createSyncSlice', () => {
 
       vi.spyOn(syncSettingsSelectors, 'webrtcConfig').mockReturnValueOnce({
         channelName: '',
+        signaling: '',
         enabled: true,
       });
 
@@ -157,10 +158,15 @@ describe('createSyncSlice', () => {
       result.current.triggerEnableSync = triggerEnableSyncSpy;
 
       const { result: swrResult } = renderHook(
-        () => result.current.useEnabledSync(true, { userEnableSync: {
-          liveblocks: true,
-          webrtc: true,
-        }, userId, onEvent }),
+        () =>
+          result.current.useEnabledSync(true, {
+            userEnableSync: {
+              liveblocks: true,
+              webrtc: true,
+            },
+            userId,
+            onEvent,
+          }),
         {
           wrapper: withSWR,
         },

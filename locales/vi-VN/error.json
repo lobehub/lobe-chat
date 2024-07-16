@@ -54,6 +54,7 @@
     "503": "Xin lỗi, máy chủ hiện không thể xử lý yêu cầu của bạn, có thể do quá tải hoặc đang bảo trì, vui lòng thử lại sau",
     "504": "Xin lỗi, máy chủ không đợi được phản hồi từ máy chủ upstream, vui lòng thử lại sau",
     "AgentRuntimeError": "Lobe mô hình ngôn ngữ thực thi gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
+    "FreePlanLimit": "Hiện tại bạn đang sử dụng tài khoản miễn phí, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói trả phí để tiếp tục sử dụng.",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidClerkUser": "Xin lỗi, bạn chưa đăng nhập. Vui lòng đăng nhập hoặc đăng ký tài khoản trước khi tiếp tục.",
@@ -63,8 +64,10 @@
     "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem Ollama có hoạt động bình thường không, hoặc xem xét cấu hình chéo đúng của Ollama",
+    "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
+    "PluginFailToTransformArguments": "Xin lỗi, không thể chuyển đổi đối số của plugin, vui lòng thử tạo lại tin nhắn trợ giúp hoặc thay đổi mô hình AI có khả năng gọi Tools mạnh hơn và thử lại",
     "PluginGatewayError": "Xin lỗi, cổng plugin gặp lỗi, vui lòng kiểm tra cấu hình cổng plugin có đúng không",
     "PluginManifestInvalid": "Xin lỗi, kiểm tra mô tả plugin không thông qua, vui lòng kiểm tra định dạng mô tả có đúng không",
     "PluginManifestNotFound": "Xin lỗi, máy chủ không tìm thấy tệp mô tả plugin (manifest.json), vui lòng kiểm tra địa chỉ tệp mô tả plugin có đúng không",
@@ -75,7 +78,8 @@
     "PluginOpenApiInitError": "Xin lỗi, khởi tạo khách hàng OpenAPI thất bại, vui lòng kiểm tra thông tin cấu hình OpenAPI có đúng không",
     "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
-    "ProviderBizAPIKey": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại"
+    "ProviderBizError": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
+    "SubscriptionPlanLimit": "Số lượng đăng ký của bạn đã hết, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói cao hơn hoặc mua gói tài nguyên để tiếp tục sử dụng."
   },
   "stt": {
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"

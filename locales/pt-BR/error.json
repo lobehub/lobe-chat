@@ -54,6 +54,7 @@
     "503": "Desculpe, o servidor não pode processar sua solicitação no momento, possivelmente devido a sobrecarga ou manutenção. Por favor, tente novamente mais tarde",
     "504": "Desculpe, o servidor não recebeu resposta do servidor upstream. Por favor, tente novamente mais tarde",
     "AgentRuntimeError": "Erro de execução do modelo de linguagem Lobe, por favor, verifique as informações abaixo ou tente novamente",
+    "FreePlanLimit": "Atualmente, você é um usuário gratuito e não pode usar essa função. Por favor, faça upgrade para um plano pago para continuar usando.",
     "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
     "InvalidClerkUser": "Desculpe, você ainda não fez login. Por favor, faça login ou registre uma conta antes de continuar.",
@@ -63,8 +64,10 @@
     "NoOpenAIAPIKey": "A chave de API do OpenAI está em branco. Adicione uma chave de API personalizada do OpenAI",
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
     "OllamaServiceUnavailable": "O serviço Ollama não está disponível. Verifique se o Ollama está em execução corretamente ou se a configuração de CORS do Ollama está correta",
+    "OpenAIBizError": "Erro no serviço OpenAI solicitado. Por favor, verifique as informações abaixo ou tente novamente.",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
     "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",
+    "PluginFailToTransformArguments": "Desculpe, falha ao transformar os argumentos da chamada do plugin. Por favor, tente regerar a mensagem do assistente ou tente novamente com um modelo de IA de chamada de ferramentas mais robusto.",
     "PluginGatewayError": "Desculpe, ocorreu um erro no gateway do plugin. Verifique se a configuração do gateway do plugin está correta",
     "PluginManifestInvalid": "Desculpe, a validação do manifesto de descrição do plugin falhou. Verifique se o formato do manifesto de descrição está correto",
     "PluginManifestNotFound": "Desculpe, o servidor não encontrou o manifesto de descrição do plugin (manifest.json). Verifique se o endereço do arquivo de descrição do plugin está correto",
@@ -75,7 +78,8 @@
     "PluginOpenApiInitError": "Desculpe, a inicialização do cliente OpenAPI falhou. Verifique se as informações de configuração do OpenAPI estão corretas",
     "PluginServerError": "Erro na resposta do servidor do plugin. Verifique o arquivo de descrição do plugin, a configuração do plugin ou a implementação do servidor de acordo com as informações de erro abaixo",
     "PluginSettingsInvalid": "Este plugin precisa ser configurado corretamente antes de ser usado. Verifique se sua configuração está correta",
-    "ProviderBizAPIKey": "Erro ao solicitar o serviço {{provider}}, por favor, verifique as informações abaixo ou tente novamente"
+    "ProviderBizError": "Erro no serviço {{provider}} solicitado. Por favor, verifique as informações abaixo ou tente novamente.",
+    "SubscriptionPlanLimit": "Você atingiu o limite de sua assinatura e não pode usar essa função. Por favor, faça upgrade para um plano superior ou compre um pacote de recursos para continuar usando."
   },
   "stt": {
     "responseError": "Falha na solicitação de serviço. Verifique a configuração ou tente novamente"

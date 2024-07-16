@@ -1,9 +1,17 @@
 {
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "appInitializing": "LobeChat is initializing, please wait...",
+  "alert": {
+    "cloud": {
+      "action": "Free Trial",
+      "desc": "We offer {{credit}} free computing credits to all registered users, no complex configuration required, ready to use out of the box, support unlimited conversation history and global cloud synchronization.",
+      "descOnMobile": "We provide {{credit}} free computing credits for all registered users, ready to use without complex configuration.",
+      "title": "Launch {{name}}"
+    }
+  },
+  "appInitializing": "The application is initializing, please wait for a moment...",
   "autoGenerate": "Auto Generate",
-  "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
   "blog": "Product Blog",
   "cancel": "Cancel",
@@ -15,23 +23,23 @@
   "copySuccess": "Copied successfully",
   "dataStatistics": {
     "messages": "Messages",
-    "sessions": "Agents",
+    "sessions": "Assistants",
     "today": "Today's New",
     "topics": "Topics"
   },
-  "defaultAgent": "Default Agent",
-  "defaultSession": "Default Agent",
+  "defaultAgent": "Default Assistant",
+  "defaultSession": "Default Assistant",
   "delete": "Delete",
   "document": "User Manual",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
   "exportType": {
-    "agent": "Export Agent Settings",
-    "agentWithMessage": "Export Agent and Messages",
-    "all": "Export Global Settings and All Agent Data",
-    "allAgent": "Export All Agent Settings",
-    "allAgentWithMessage": "Export All Agents and Messages",
+    "agent": "Export Assistant Settings",
+    "agentWithMessage": "Export Assistant and Messages",
+    "all": "Export Global Settings and All Assistant Data",
+    "allAgent": "Export All Assistant Settings",
+    "allAgentWithMessage": "Export All Assistants and Messages",
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
@@ -76,7 +84,7 @@
       "errors": "Import errors",
       "messages": "Messages",
       "sessionGroups": "Groups",
-      "sessions": "Agents",
+      "sessions": "Assistants",
       "skips": "Duplicates skipped",
       "topics": "Topics",
       "type": "Data Type"
@@ -129,11 +137,11 @@
   },
   "layoutInitializing": "Initializing layout...",
   "legal": "Legal Disclaimer",
+  "loading": "Loading...",
   "mail": {
     "business": "Business Cooperation",
     "support": "Email Support"
   },
-  "noDescription": "No description available",
   "oauth": "SSO Login",
   "officialSite": "Official Website",
   "ok": "OK",
@@ -197,7 +205,7 @@
   },
   "temp": "Temporary",
   "terms": "Terms of Service",
-  "updateAgent": "Update Agent Information",
+  "updateAgent": "Update Assistant Information",
   "upgradeVersion": {
     "action": "Upgrade",
     "hasNew": "New update available",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Anonymous User",
     "billing": "Billing Management",
+    "cloud": "Launch {{name}}",
     "data": "Data Storage",
     "defaultNickname": "Community User",
     "discord": "Community Support",
@@ -217,7 +226,7 @@
     "plans": "Subscription Plans",
     "preview": "Preview",
     "profile": "Account Management",
-    "setting": "App Settings",
+    "setting": "Settings",
     "usages": "Usage Statistics"
   },
   "version": "Version"

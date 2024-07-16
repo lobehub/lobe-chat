@@ -4,8 +4,8 @@
     "title": "LobeChat: Personal LLM Productivity Tool, Give Yourself a Smarter Brain"
   },
   "market": {
-    "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, smart agents, automation workflows, customize your own AI / GPTs / OLLaMA intelligent agent",
-    "title": "Agent Market"
+    "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, smart assistants, automation workflows, customize your own AI / GPTs / OLLaMA intelligent assistant",
+    "title": "Assistant Market"
   },
   "plugins": {
     "description": "Search, chart generation, academic, image generation, video generation, voice generation, automation workflows, customize ChatGPT / OLLaMA exclusive ToolCall plugin capabilities",

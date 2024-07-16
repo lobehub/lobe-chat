@@ -54,6 +54,7 @@
     "503": "Entschuldigung, der Server kann Ihre Anfrage derzeit nicht verarbeiten. Möglicherweise aufgrund von Überlastung oder Wartungsarbeiten. Bitte versuchen Sie es später erneut",
     "504": "Entschuldigung, der Server hat keine Antwort vom Upstream-Server erhalten. Bitte versuchen Sie es später erneut",
     "AgentRuntimeError": "Es ist ein Fehler bei der Ausführung des Lobe-Sprachmodells aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "FreePlanLimit": "Sie sind derzeit ein kostenloser Benutzer und können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein kostenpflichtiges Abonnement, um fortzufahren.",
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidClerkUser": "Entschuldigung, du bist derzeit nicht angemeldet. Bitte melde dich an oder registriere ein Konto, um fortzufahren.",
@@ -63,8 +64,10 @@
     "NoOpenAIAPIKey": "Der OpenAI-API-Schlüssel ist leer. Bitte fügen Sie einen benutzerdefinierten OpenAI-API-Schlüssel hinzu",
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "OllamaServiceUnavailable": "Der Ollama-Dienst ist nicht verfügbar. Bitte überprüfen Sie, ob Ollama ordnungsgemäß ausgeführt wird und ob die CORS-Konfiguration von Ollama korrekt ist.",
+    "OpenAIBizError": "Fehler bei der Anforderung des OpenAI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
+    "PluginFailToTransformArguments": "Es tut uns leid, die Plugin-Aufrufargumente konnten nicht transformiert werden. Bitte versuchen Sie, die Assistentennachricht erneut zu generieren, oder wechseln Sie zu einem leistungsstärkeren AI-Modell mit Tools Calling-Fähigkeiten und versuchen Sie es erneut.",
     "PluginGatewayError": "Entschuldigung, es ist ein Fehler im Plugin-Gateway aufgetreten. Bitte überprüfen Sie die Plugin-Gateway-Konfiguration auf Richtigkeit",
     "PluginManifestInvalid": "Entschuldigung, das Manifest des Plugins hat die Überprüfung nicht bestanden. Bitte überprüfen Sie das Format des Manifests",
     "PluginManifestNotFound": "Entschuldigung, der Server konnte das Manifest (manifest.json) des Plugins nicht finden. Bitte überprüfen Sie die Adresse der Plugin-Beschreibungsdatei",
@@ -75,7 +78,8 @@
     "PluginOpenApiInitError": "Entschuldigung, die Initialisierung des OpenAPI-Clients ist fehlgeschlagen. Bitte überprüfen Sie die Konfigurationsinformationen des OpenAPI auf Richtigkeit",
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
     "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
-    "ProviderBizAPIKey": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
+    "ProviderBizError": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "SubscriptionPlanLimit": "Ihr Abonnementkontingent wurde aufgebraucht und Sie können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein höheres Abonnement oder kaufen Sie ein Ressourcenpaket, um fortzufahren."
   },
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"

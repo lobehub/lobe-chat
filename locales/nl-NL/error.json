@@ -54,6 +54,7 @@
     "503": "Sorry, de server kan uw verzoek momenteel niet verwerken vanwege overbelasting of onderhoud. Probeer het later opnieuw",
     "504": "Sorry, de server heeft geen reactie ontvangen van de upstream server. Probeer het later opnieuw",
     "AgentRuntimeError": "Lobe language model runtime execution error, please troubleshoot or retry based on the following information",
+    "FreePlanLimit": "U bent momenteel een gratis gebruiker en kunt deze functie niet gebruiken. Upgrade naar een betaald plan om door te gaan met gebruiken.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
@@ -63,8 +64,10 @@
     "NoOpenAIAPIKey": "OpenAI API-sleutel ontbreekt. Voeg een aangepaste OpenAI API-sleutel toe",
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",
+    "OpenAIBizError": "Er is een fout opgetreden bij het aanvragen van de OpenAI-service. Controleer de volgende informatie of probeer het opnieuw.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
+    "PluginFailToTransformArguments": "Sorry, the plugin failed to parse the arguments. Please try regenerating the assistant message or retry with a more powerful AI model with Tools Calling capability.",
     "PluginGatewayError": "Sorry, er is een fout opgetreden in de plug-in gateway. Controleer of de plug-in gatewayconfiguratie juist is",
     "PluginManifestInvalid": "Sorry, de validatie van de beschrijvingslijst van de plug-in is mislukt. Controleer of het formaat van de beschrijvingslijst correct is",
     "PluginManifestNotFound": "Sorry, de server kon de beschrijvingslijst (manifest.json) van de plug-in niet vinden. Controleer of het adres van de plug-inbeschrijvingsbestand juist is",
@@ -75,7 +78,8 @@
     "PluginOpenApiInitError": "Sorry, initialisatie van de OpenAPI-client is mislukt. Controleer of de configuratie van OpenAPI juist is",
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
-    "ProviderBizAPIKey": "Fout bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie en probeer het opnieuw."
+    "ProviderBizError": "Er is een fout opgetreden bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie of probeer het opnieuw.",
+    "SubscriptionPlanLimit": "Uw abonnementslimiet is bereikt en u kunt deze functie niet gebruiken. Upgrade naar een hoger plan of koop een resourcepakket om door te gaan met gebruiken."
   },
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"

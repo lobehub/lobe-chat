@@ -1,27 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`configRouter > getGlobalConfig > Model Provider env > CUSTOM_MODELS > custom deletion, addition, and renaming of models 1`] = `
-[
-  {
-    "displayName": "llama",
-    "enabled": true,
-    "id": "llama",
-  },
-  {
-    "displayName": "claude-2",
-    "enabled": true,
-    "id": "claude-2",
-  },
-  {
-    "displayName": "gpt-4-32k",
-    "enabled": true,
-    "functionCall": true,
-    "id": "gpt-4-0125-preview",
-    "tokens": 128000,
-  },
-]
-`;
-
 exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
 {
   "enabled": true,

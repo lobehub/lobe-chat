@@ -33,7 +33,7 @@ export interface WebRTCSyncParams extends CommonSyncParams {
   enabled: boolean;
   name: string;
   password?: string;
-  signaling?: string;
+  signaling: string;
 }
 
 export interface StartDataSyncParams {

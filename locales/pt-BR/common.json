@@ -1,7 +1,15 @@
 {
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
-  "appInitializing": "LobeChat inicializando, por favor aguarde...",
+  "alert": {
+    "cloud": {
+      "action": "Experimente de graça",
+      "desc": "Oferecemos {{credit}} pontos de computação gratuitos para todos os usuários registrados, sem necessidade de configuração complicada, pronto para uso, suporta histórico de conversas ilimitado e sincronização em nuvem global. Mais recursos avançados esperam por você para explorar.",
+      "descOnMobile": "Oferecemos {{credit}} créditos de computação gratuitos para todos os usuários registrados, sem necessidade de configurações complicadas, pronto para uso.",
+      "title": "Bem-vindo para experimentar {{name}}"
+    }
+  },
+  "appInitializing": "Inicializando o aplicativo, por favor, aguarde...",
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
   "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
@@ -129,11 +137,11 @@
   },
   "layoutInitializing": "Inicializando layout...",
   "legal": "Aviso Legal",
+  "loading": "Carregando...",
   "mail": {
     "business": "Parcerias Comerciais",
     "support": "Suporte por E-mail"
   },
-  "noDescription": "Sem descrição",
   "oauth": "Login SSO",
   "officialSite": "Site Oficial",
   "ok": "OK",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Usuário Anônimo",
     "billing": "Gerenciamento de faturas",
+    "cloud": "Experimente {{name}}",
     "data": "Armazenamento de dados",
     "defaultNickname": "Usuário da Comunidade",
     "discord": "Suporte da Comunidade",

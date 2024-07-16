@@ -43,6 +43,7 @@
     "title": "Paramètres"
   },
   "llm": {
+    "aesGcm": "Votre clé, votre adresse de proxy, etc. seront cryptées à l'aide de l'algorithme de chiffrement <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Veuillez saisir votre clé API {{name}}",
       "placeholder": "Clé API {{name}}",
@@ -102,6 +103,7 @@
       "latestTime": "Dernière mise à jour : {{time}}",
       "noLatestTime": "Aucune mise à jour disponible"
     },
+    "helpDoc": "Guide de configuration",
     "modelList": {
       "desc": "Sélectionnez les modèles à afficher dans la session. Les modèles sélectionnés seront affichés dans la liste des modèles.",
       "placeholder": "Veuillez sélectionner un modèle dans la liste",
@@ -112,7 +114,7 @@
       "desc": "Doit inclure http(s):// en plus de l'adresse par défaut",
       "title": "Adresse du proxy de l'API"
     },
-    "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute ✨"
+    "waitingForMore": "Plus de modèles sont en cours de <1>planification pour être ajoutés</1>, restez à l'écoute"
   },
   "plugin": {
     "addTooltip": "Ajouter un plugin personnalisé",
@@ -207,7 +209,7 @@
       "title": "Limite de tokens par réponse"
     },
     "model": {
-      "desc": "Modèle ChatGPT",
+      "desc": "Modèle {{provider}}",
       "list": {
         "gpt-3.5-turbo": "GPT 3.5",
         "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
@@ -381,7 +383,7 @@
       }
     },
     "warning": {
-      "message": "Cette fonctionnalité est actuellement expérimentale et peut présenter des comportements inattendus ou instables. En cas de problème, veuillez soumettre vos commentaires rapidement."
+      "tip": "Après une longue période de test communautaire, la synchronisation WebRTC peut ne pas répondre de manière stable aux besoins généraux de synchronisation des données. Veuillez <1>déployer votre propre serveur de signalisation</1> avant utilisation."
     },
     "webrtc": {
       "channelName": {
@@ -397,13 +399,23 @@
       },
       "desc": "Communication de données en temps réel et en pair-à-pair. Les appareils doivent être en ligne simultanément pour se synchroniser",
       "enabled": {
-        "invalid": "Veuillez entrer un nom de canal de synchronisation avant d'activer",
+        "invalid": "Veuillez saisir l'adresse du serveur de signalisation et le nom du canal de synchronisation avant d'activer.",
         "title": "Activer la synchronisation"
+      },
+      "signaling": {
+        "desc": "WebRTC utilisera cette adresse pour la synchronisation",
+        "placeholder": "Veuillez entrer l'adresse du serveur de signalisation",
+        "title": "Serveur de signalisation"
       },
       "title": "Synchronisation WebRTC"
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modèle de génération de métadonnées d'assistant",
+      "modelDesc": "Modèle spécifié pour générer le nom, la description, l'avatar et les balises de l'assistant",
+      "title": "Génération automatique des informations de l'assistant"
+    },
     "title": "Agent système",
     "topic": {
       "label": "Modèle de nommage des sujets",

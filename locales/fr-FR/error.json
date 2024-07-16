@@ -54,6 +54,7 @@
     "503": "Désolé, le serveur ne peut actuellement pas traiter votre requête, probablement en raison d'une surcharge ou de travaux de maintenance. Veuillez réessayer plus tard",
     "504": "Désolé, le serveur n'a pas reçu de réponse de la part du serveur amont. Veuillez réessayer plus tard",
     "AgentRuntimeError": "Erreur d'exécution du modèle linguistique Lobe, veuillez vérifier les informations ci-dessous ou réessayer",
+    "FreePlanLimit": "Vous êtes actuellement un utilisateur gratuit et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan payant pour continuer à l'utiliser.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
     "InvalidClerkUser": "Désolé, vous n'êtes pas actuellement connecté. Veuillez vous connecter ou vous inscrire avant de continuer.",
@@ -63,8 +64,10 @@
     "NoOpenAIAPIKey": "La clé API OpenAI est vide. Veuillez ajouter une clé API OpenAI personnalisée",
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
     "OllamaServiceUnavailable": "Le service Ollama n'est pas disponible. Veuillez vérifier si Ollama fonctionne correctement ou si la configuration de la communication inter-domaines d'Ollama est correcte.",
+    "OpenAIBizError": "Erreur de service OpenAI. Veuillez vérifier les informations suivantes ou réessayer.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
+    "PluginFailToTransformArguments": "Désolé, échec de la transformation des arguments de l'appel du plugin. Veuillez essayer de régénérer le message d'assistance ou de changer de modèle d'IA avec une capacité d'appel d'outils plus puissante, puis réessayer.",
     "PluginGatewayError": "Désolé, une erreur est survenue avec la passerelle du plugin. Veuillez vérifier la configuration de la passerelle du plugin.",
     "PluginManifestInvalid": "Désolé, la validation du manifeste de ce plugin a échoué. Veuillez vérifier le format du manifeste",
     "PluginManifestNotFound": "Désolé, le serveur n'a pas trouvé le manifeste de description de ce plugin (manifest.json). Veuillez vérifier l'adresse du fichier de description du plugin",
@@ -75,7 +78,8 @@
     "PluginOpenApiInitError": "Désolé, l'initialisation du client OpenAPI a échoué. Veuillez vérifier les informations de configuration d'OpenAPI.",
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
-    "ProviderBizAPIKey": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information"
+    "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
+    "SubscriptionPlanLimit": "Vous avez atteint votre limite d'abonnement et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan supérieur ou acheter un pack de ressources pour continuer à l'utiliser."
   },
   "stt": {
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"

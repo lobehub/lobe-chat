@@ -1,6 +1,9 @@
 import {
+  Ai360,
+  AiMass,
   Anthropic,
   Azure,
+  Baichuan,
   Bedrock,
   DeepSeek,
   Google,
@@ -13,6 +16,7 @@ import {
   OpenAI,
   OpenRouter,
   Perplexity,
+  Stepfun,
   Together,
   Tongyi,
   ZeroOne,
@@ -30,7 +34,7 @@ interface ModelProviderIconProps {
 const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
   switch (provider) {
     case 'lobehub': {
-      return <LobeHub size={20} />;
+      return <LobeHub.Color size={20} />;
     }
 
     case ModelProvider.ZhiPu: {
@@ -107,6 +111,22 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Qwen: {
       return <Tongyi size={20} />;
+    }
+
+    case ModelProvider.Stepfun: {
+      return <Stepfun size={20} />;
+    }
+
+    case ModelProvider.Baichuan: {
+      return <Baichuan size={20} />;
+    }
+
+    case ModelProvider.Taichu: {
+      return <AiMass size={20} />;
+    }
+
+    case ModelProvider.Ai360: {
+      return <Ai360 size={20} />;
     }
 
     default: {
