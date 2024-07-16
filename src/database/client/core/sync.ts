@@ -7,8 +7,8 @@ import {
   LiveObject,
   Room,
 } from '@liveblocks/client';
+import Debug from 'debug';
 import Dexie from 'dexie';
-// import Debug from 'debug';
 import { differenceBy, throttle, uniqBy } from 'lodash-es';
 import type { WebrtcProvider } from 'y-webrtc';
 import type { Doc, Transaction } from 'yjs';
@@ -29,7 +29,7 @@ import {
 import { LobeDBSchemaMap, browserDB } from './db';
 import { DBModel } from './types/db';
 
-// const LOG_NAME_SPACE = 'DataSync';
+const LOG_NAME_SPACE = 'DataSync';
 
 class DataSync {
   _user: SyncUserInfo | null = null;
@@ -38,7 +38,7 @@ class DataSync {
   onSyncEvent!: OnSyncEvent;
   onSyncStatusChange!: OnSyncStatusChange;
 
-  logger = console.debug;
+  logger = Debug(LOG_NAME_SPACE);
 }
 
 class WebRTCDataSync extends DataSync {
