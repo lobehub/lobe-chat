@@ -2,4 +2,4 @@
 
 import dynamic from 'next/dynamic';
 
-export default dynamic(() => import('@/components/NextAuth/AuthErrorPage'));
+export default dynamic(() => import('./AuthErrorPage'));
