@@ -7,7 +7,7 @@ export const mapAdapterUserToLobeUser = (adapterUser: AdapterUser): NewUser => {
   return {
     avatar: image,
     email,
-    emailVerified: emailVerified ? new Date(emailVerified) : undefined,
+    emailVerifiedAt: emailVerified ? new Date(emailVerified) : undefined,
     id,
     username: name,
   };
@@ -23,7 +23,7 @@ export const partialMapAdapterUserToLobeUser = ({
   return {
     avatar: image,
     email,
-    emailVerified: emailVerified ? new Date(emailVerified) : undefined,
+    emailVerifiedAt: emailVerified ? new Date(emailVerified) : undefined,
     id,
     username: name,
   };
@@ -31,10 +31,10 @@ export const partialMapAdapterUserToLobeUser = ({
 
 export const mapLobeUserToAdapterUser = (lobeUser: NewUser | undefined): AdapterUser | null => {
   if (!lobeUser?.email) return null;
-  const { id, username, email, avatar, emailVerified } = lobeUser;
+  const { id, username, email, avatar, emailVerifiedAt } = lobeUser;
   return {
     email,
-    emailVerified: emailVerified ? new Date(emailVerified) : null,
+    emailVerified: emailVerifiedAt ? new Date(emailVerifiedAt) : null,
     id,
     image: avatar,
     name: username,
