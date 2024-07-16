@@ -24,7 +24,7 @@ import { CustomPluginParams } from '@/types/tool/plugin';
 import { idGenerator, randomSlug } from '../utils/idGenerator';
 
 // Schema for nextauth
-export * from '@/libs/next-auth/adapter/schema';
+export * from './nextauth';
 
 const timestamptz = (name: string) => timestamp(name, { withTimezone: true });
 
