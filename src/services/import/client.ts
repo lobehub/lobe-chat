@@ -2,12 +2,37 @@ import { MessageModel } from '@/database/client/models/message';
 import { SessionModel } from '@/database/client/models/session';
 import { SessionGroupModel } from '@/database/client/models/sessionGroup';
 import { TopicModel } from '@/database/client/models/topic';
-import { ImportResult, ImportResults } from '@/services/config';
+import { ImportResult } from '@/services/import';
+import { IImportService } from '@/services/import/type';
 import { useUserStore } from '@/store/user';
-import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
+import { ConfigFile } from '@/types/exportConfig';
+import { ImportResults, ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
 import { UserSettings } from '@/types/user/settings';
 
-export class ClientService {
+export class ClientService implements IImportService {
+  importConfigState = async (config: ConfigFile, callbacks?: OnImportCallbacks): Promise<void> => {
+    if (config.exportType === 'settings') {
+      await this.importSettings(config.state.settings);
+      callbacks?.onStageChange?.(ImportStage.Success);
+      return;
+    }
+
+    if (config.exportType === 'all') {
+      await this.importSettings(config.state.settings);
+    }
+
+    await this.importData(
+      {
+        messages: (config.state as any).messages || [],
+        sessionGroups: (config.state as any).sessionGroups || [],
+        sessions: (config.state as any).sessions || [],
+        topics: (config.state as any).topics || [],
+        version: config.version,
+      },
+      callbacks,
+    );
+  };
+
   importSettings = async (settings: UserSettings) => {
     await useUserStore.getState().importAppSettings(settings);
   };

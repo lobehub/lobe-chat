@@ -4,7 +4,7 @@ import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Migration } from '@/migrations';
-import { configService } from '@/services/config';
+import { importService } from '@/services/import';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
 
@@ -35,7 +35,7 @@ const UpgradeButton = memo<UpgradeButtonProps>(
 
         setUpgradeStatus(UpgradeStatus.UPGRADING);
 
-        await configService.importConfigState({
+        await importService.importConfigState({
           exportType: 'sessions',
           state: data.state,
           version: 2,

@@ -13,7 +13,6 @@ import {
   users,
 } from '@/database/server/schemas/lobechat';
 import { CURRENT_CONFIG_VERSION } from '@/migrations';
-import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';
 
 import { DataImporterService } from '../index';

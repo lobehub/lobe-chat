@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 import { HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { isServerMode } from '@/const/version';
-import { configService } from '@/services/config';
+import { exportService } from '@/services/export';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
@@ -29,7 +29,7 @@ export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ moda
               onClick: () => {
                 if (!id) return;
 
-                configService.exportSingleAgent(id);
+                exportService.exportSingleAgent(id);
               },
             },
             {
@@ -38,7 +38,7 @@ export const HeaderContent = memo<{ mobile?: boolean; modal?: boolean }>(({ moda
               onClick: () => {
                 if (!id) return;
 
-                configService.exportSingleSession(id);
+                exportService.exportSingleSession(id);
               },
             },
           ],

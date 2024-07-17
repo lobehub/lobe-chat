@@ -12,7 +12,7 @@ import {
   sessions,
   topics,
 } from '@/database/server/schemas/lobechat';
-import { ImportResult } from '@/services/config';
+import { ImportResult } from '@/services/import';
 import { ImporterEntryData } from '@/types/importer';
 
 export class DataImporterService {

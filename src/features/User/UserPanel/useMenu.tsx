@@ -36,7 +36,7 @@ import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
-import { configService } from '@/services/config';
+import { exportService } from '@/services/export';
 import { SettingsTabs } from '@/store/global/initialState';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
@@ -143,17 +143,17 @@ export const useMenu = () => {
                 {
                   key: 'allAgent',
                   label: t('exportType.allAgent'),
-                  onClick: configService.exportAgents,
+                  onClick: exportService.exportAgents,
                 },
                 {
                   key: 'allAgentWithMessage',
                   label: t('exportType.allAgentWithMessage'),
-                  onClick: configService.exportSessions,
+                  onClick: exportService.exportSessions,
                 },
                 {
                   key: 'globalSetting',
                   label: t('exportType.globalSetting'),
-                  onClick: configService.exportSettings,
+                  onClick: exportService.exportSettings,
                 },
                 {
                   type: 'divider',
@@ -161,7 +161,7 @@ export const useMenu = () => {
                 {
                   key: 'all',
                   label: t('exportType.all'),
-                  onClick: configService.exportAll,
+                  onClick: exportService.exportAll,
                 },
               ],
               icon: <Icon icon={HardDriveUpload} />,
