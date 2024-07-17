@@ -25,6 +25,7 @@
   "license": "MIT",
   "author": "LobeHub <i@lobehub.com>",
   "sideEffects": false,
+  "packageManager": "pnpm@9.5.0",
   "scripts": {
     "build": "next build",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
