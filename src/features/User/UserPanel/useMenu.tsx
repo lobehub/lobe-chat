@@ -25,9 +25,11 @@ import type { MenuProps } from '@/components/Menu';
 import {
   DISCORD,
   DOCUMENTS,
+  DOCUMENTS_REFER_URL,
   EMAIL_SUPPORT,
   GITHUB_ISSUES,
   OFFICIAL_URL,
+  UTM_SOURCE,
   mailTo,
 } from '@/const/url';
 import { isServerMode } from '@/const/version';
@@ -177,7 +179,7 @@ export const useMenu = () => {
       icon: <Icon icon={Cloudy} />,
       key: 'cloud',
       label: (
-        <Link href={OFFICIAL_URL} target={'_blank'}>
+        <Link href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`} target={'_blank'}>
           {t('userPanel.cloud', { name: 'LobeChat Cloud' })}
         </Link>
       ),
@@ -197,7 +199,7 @@ export const useMenu = () => {
           icon: <Icon icon={Book} />,
           key: 'docs',
           label: (
-            <Link href={DOCUMENTS} target={'_blank'}>
+            <Link href={DOCUMENTS_REFER_URL} target={'_blank'}>
               {t('userPanel.docs')}
             </Link>
           ),
