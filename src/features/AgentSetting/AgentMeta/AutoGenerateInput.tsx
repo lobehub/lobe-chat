@@ -53,6 +53,7 @@ const AutoGenerateInput = memo<AutoGenerateInputProps>(
         type="block"
         {...props}
         onBlur={() => {
+          updateValue();
           isFocusing.current = false;
         }}
         onChange={(e) => {
