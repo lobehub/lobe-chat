@@ -1,0 +1,64 @@
+# Using Liveblocks Client Sync in LobeChat
+
+## Introduction to Liveblocks
+
+[Liveblocks](https://liveblocks.io) is a service that provides real-time collaboration and data synchronization. In LobeChat, we have successfully integrated Liveblocks to enhance offline data synchronization capabilities between devices, without requiring multiple clients to be online simultaneously like the WebRTC solution.
+
+## Configuring Liveblocks and Implementing Sync
+
+To use LobeChat's Liveblocks sync feature, you need to complete the following steps:
+
+<Steps>
+
+### Obtain Liveblocks Project API Key
+
+First, you need to register for a Liveblocks account and log in to the [Dashboard](https://liveblocks.io/dashboard/)
+
+Select or create a new production environment project, enter the project details, click on API Key in the sidebar, and obtain your project's Secret Key
+
+<Image
+  alt={'Obtain Liveblocks API Key'}
+  inStep
+  src={'https://github.com/user-attachments/assets/94c97c2b-c271-4c77-8038-02b42934fd88'}
+/>
+
+### Enable Liveblocks Sync in Deployment Instance
+
+The Liveblocks sync feature in LobeChat is hidden by default. You need to add the environment variable `FEATURE_FLAGS=+liveblocks_sync` to enable the Liveblocks sync feature.
+
+Additionally, you need to add the `LIVEBLOCKS_SECRET_KEY` environment variable, with the value being your Liveblocks project's Secret Key. If this environment variable is not configured, users will need to provide their own registered Public Key to use their own Liveblocks project.
+
+<Callout type={'warning'}>
+  Since the WebRTC sync feature has been archived in [PR 3182](https://github.com/lobehub/lobe-chat/pull/3182)
+  Although Liveblocks can be used simultaneously with WebRTC sync, it is recommended to enable only one sync feature.
+</Callout>
+
+### Configure LobeChat's Liveblocks Sync Settings
+
+The Liveblocks sync settings differ based on the deployment configuration:
+
+- With Auth Provider: If LobeChat's authentication service is enabled, you can directly enable it after logging in. The default sync room will be linked to your account without additional configuration.
+- With Access code: You need to set an additional sync room name
+- No `LIVEBLOCKS_SECRET_KEY` configuration: In addition to the room name, users need to configure their own Liveblocks project's Public Key
+
+Furthermore, you can set an additional room password in the interface to encrypt the room name. If the password is incorrect, other clients cannot enter the room and sync data.
+
+<Image
+  alt={'Configure Liveblocks Sync'}
+  inStep
+  src={'https://github.com/user-attachments/assets/e0c50e17-c666-4028-bafb-24eb20732be2'}
+/>
+
+</Steps>
+
+## Usage Limitations
+
+Liveblocks' free service only provides 10MB of storage space for each sync room (approximately 7000 messages and 1600 topics), and supports 10 clients online simultaneously.
+
+For more limitations on Liveblocks, please read the [Fair Use Policy](https://liveblocks.io/docs/platform/limits/fair-use-policy)
+
+## Our Recommendations
+
+Given the limitations of Liveblocks and the fact that data is stored on a third-party service, we recommend using it only for small-scale teams or individuals as a backup storage solution.
+
+LobeChat 1.0 has released a more stable and user-friendly server-side database sync solution ([Deployment Guide](/zh/docs/self-hosting/advanced/server-database)). We recommend users to prioritize using the server-side database sync solution.
