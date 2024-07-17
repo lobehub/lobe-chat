@@ -19,6 +19,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatStore } from '@/store/chat/store';
+import { useSessionStore } from '@/store/session';
 import { ChatMessage, ChatMessageError, MessageToolCall } from '@/types/message';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
@@ -319,6 +320,8 @@ export const chatMessage: StateCreator<
         }
       }
     }
+    //  update assistant update to make it rerank
+    useSessionStore.getState().triggerSessionUpdate(get().activeId);
 
     const id = await get().internal_createMessage(newMessage, {
       tempMessageId,
