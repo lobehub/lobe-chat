@@ -3,12 +3,6 @@ import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
 export const getLLMConfig = () => {
-  // region format: iad1,sfo1
-  let regions: string[] = [];
-  if (process.env.OPENAI_FUNCTION_REGIONS) {
-    regions = process.env.OPENAI_FUNCTION_REGIONS.split(',');
-  }
-
   return createEnv({
     server: {
       API_KEY_SELECT_MODE: z.string().optional(),
@@ -17,7 +11,6 @@ export const getLLMConfig = () => {
       OPENAI_API_KEY: z.string().optional(),
       OPENAI_PROXY_URL: z.string().optional(),
       OPENAI_MODEL_LIST: z.string().optional(),
-      OPENAI_FUNCTION_REGIONS: z.array(z.string()),
 
       ENABLED_AZURE_OPENAI: z.boolean(),
       AZURE_API_KEY: z.string().optional(),
@@ -99,7 +92,6 @@ export const getLLMConfig = () => {
       OPENAI_API_KEY: process.env.OPENAI_API_KEY,
       OPENAI_PROXY_URL: process.env.OPENAI_PROXY_URL,
       OPENAI_MODEL_LIST: process.env.OPENAI_MODEL_LIST,
-      OPENAI_FUNCTION_REGIONS: regions as any,
 
       ENABLED_AZURE_OPENAI: !!process.env.AZURE_API_KEY,
       AZURE_API_KEY: process.env.AZURE_API_KEY,
