@@ -43,7 +43,6 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   NovitaProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
-  NovitaProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -68,7 +67,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   NovitaProvider,
   BaichuanProvider,
   TaichuProvider,
-  NovitaProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {

@@ -91,9 +91,6 @@ export const getLLMConfig = () => {
 
       ENABLED_TAICHU: z.boolean(),
       TAICHU_API_KEY: z.string().optional(),
-
-      ENABLED_NOVITA: z.boolean(),
-      NOVITA_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -176,9 +173,6 @@ export const getLLMConfig = () => {
 
       ENABLED_TAICHU: !!process.env.TAICHU_API_KEY,
       TAICHU_API_KEY: process.env.TAICHU_API_KEY,
-
-      ENABLED_NOVITA: !!process.env.NOVITA_API_KEY,
-      NOVITA_API_KEY: process.env.NOVITA_API_KEY,
     },
   });
 };

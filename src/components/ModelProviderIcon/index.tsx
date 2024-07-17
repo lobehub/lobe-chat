@@ -129,10 +129,6 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
       return <AiMass size={20} />;
     }
 
-    case ModelProvider.Novita: {
-      return <Novita size={20} />;
-    }
-
     default: {
       return null;
     }

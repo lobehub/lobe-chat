@@ -122,11 +122,6 @@ export const useProviderList = (): ProviderItem[] => {
         title: <GroqBrand />,
       },
       {
-        ...NovitaProviderCard,
-        docUrl: urlJoin(BASE_DOC_URL, 'novita'),
-        title: <Novita.Combine size={20} type={'color'} />,
-      },
-      {
         ...OpenRouterProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'openrouter'),
         title: <OpenRouter.Combine iconProps={{ color: OpenRouter.colorPrimary }} size={20} />,

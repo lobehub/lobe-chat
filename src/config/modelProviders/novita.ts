@@ -81,7 +81,7 @@ const Novita: ModelProviderCard = {
       tokens: 65_535,
     },
   ],
-  checkModel: 'meta-llama/llama-3-8b-instruct',
+  checkModel: 'meta-llama/llama-3-70b-instruct',
   id: 'novita',
   modelList: { showModelFetcher: true },
   name: 'Novita',
