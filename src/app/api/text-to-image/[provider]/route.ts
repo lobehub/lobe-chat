@@ -3,14 +3,14 @@ import { NextResponse } from 'next/server';
 import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { checkAuth } from '@/app/api/middleware/auth';
-import { openAiPreferredRegion } from '@/app/api/openai/config';
+
 import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { TextToImagePayload } from '@/libs/agent-runtime/types';
 import { ChatErrorType } from '@/types/fetch';
 
 export const runtime = 'edge';
 
-export const preferredRegion = openAiPreferredRegion();
+
 
 // return NextResponse.json(
 //   {
@@ -58,3 +58,5 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
     return createErrorResponse(errorType, { error, ...res, provider });
   }
 });
+
+export {openAiPreferredRegion as preferredRegion} from '@/app/api/openai/config';

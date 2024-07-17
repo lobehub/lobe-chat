@@ -19,7 +19,7 @@ describe('Configuration tests', () => {
   });
 });
 
-describe('Google POST function tests', () => {
+describe('OpenAI POST function tests', () => {
   it('should call UniverseRoute with correct parameters', async () => {
     const mockRequest = new Request('https://example.com', { method: 'POST' });
     await POST(mockRequest);

@@ -1,12 +1,12 @@
 import { OpenAITTSPayload } from '@lobehub/tts';
 import { createOpenaiAudioSpeech } from '@lobehub/tts/server';
 
-import { openAiPreferredRegion } from '@/app/api/openai/config';
+
 import { createBizOpenAI } from '@/app/api/openai/createBizOpenAI';
 
 export const runtime = 'edge';
 
-export const preferredRegion = openAiPreferredRegion();
+
 
 export const POST = async (req: Request) => {
   const payload = (await req.json()) as OpenAITTSPayload;
@@ -18,3 +18,5 @@ export const POST = async (req: Request) => {
 
   return await createOpenaiAudioSpeech({ openai: openaiOrErrResponse, payload });
 };
+
+export {openAiPreferredRegion as preferredRegion} from '@/app/api/openai/config';

@@ -1,6 +1,6 @@
 // due to OpenAi is not available in Hong Kong, we need to set the preferred region to exclude "Hong Kong (hkg1)".
 // refs: https://platform.openai.com/docs/supported-countries
-export const openAiPreferredRegion = () => [
+export const openAiPreferredRegion = [
   'arn1',
   'bom1',
   'cdg1',
