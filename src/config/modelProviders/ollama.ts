@@ -69,6 +69,16 @@ const Ollama: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      displayName: 'Gemma 7B',
+      id: 'gemma',
+      tokens: 8192, // https://huggingface.co/google/gemma-7b-it/discussions/73#65e9678c0cda621164a95bad
+    },
+    {
+      displayName: 'Gemma 2B',
+      id: 'gemma:2b',
+      tokens: 8192,
+    },
+    {
       displayName: 'Llama2 Chat 13B',
       id: 'llama2:13b',
       tokens: 4096, // https://llama.meta.com/llama2/
