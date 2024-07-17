@@ -3,14 +3,31 @@ import { NextResponse } from 'next/server';
 import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { checkAuth } from '@/app/api/middleware/auth';
-
 import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { TextToImagePayload } from '@/libs/agent-runtime/types';
 import { ChatErrorType } from '@/types/fetch';
 
 export const runtime = 'edge';
 
-
+export const preferredRegion = [
+  'arn1',
+  'bom1',
+  'cdg1',
+  'cle1',
+  'cpt1',
+  'dub1',
+  'fra1',
+  'gru1',
+  'hnd1',
+  'iad1',
+  'icn1',
+  'kix1',
+  'lhr1',
+  'pdx1',
+  'sfo1',
+  'sin1',
+  'syd1',
+];
 
 // return NextResponse.json(
 //   {
@@ -58,5 +75,3 @@ export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
     return createErrorResponse(errorType, { error, ...res, provider });
   }
 });
-
-export {openAiPreferredRegion as preferredRegion} from '@/app/api/openai/config';
