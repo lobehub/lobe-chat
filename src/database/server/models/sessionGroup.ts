@@ -29,7 +29,7 @@ export class SessionGroupModel {
   };
 
   deleteAll = async () => {
-    return serverDB.delete(sessionGroups);
+    return serverDB.delete(sessionGroups).where(and(eq(sessionGroups.userId, this.userId)));
   };
 
   query = async () => {
