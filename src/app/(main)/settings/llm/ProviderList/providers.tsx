@@ -1,4 +1,5 @@
 import {
+  Ai360,
   AiMass,
   Anthropic,
   Baichuan,
@@ -26,6 +27,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import {
+  Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
   DeepSeekProviderCard,
@@ -190,6 +192,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...TaichuProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
         title: <AiMass.Combine size={28} type={'color'} />,
+      },
+      {
+        ...Ai360ProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'ai360'),
+        title: <Ai360.Combine size={ 20 } type={ 'color' } />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

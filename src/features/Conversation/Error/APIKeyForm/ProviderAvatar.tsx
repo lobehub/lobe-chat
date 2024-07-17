@@ -1,4 +1,5 @@
 import {
+  Ai360,
   AiMass,
   Anthropic,
   Baichuan,
@@ -96,6 +97,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
     }
     case ModelProvider.Novita: {
       return <Novita color={Novita.colorPrimary} size={56} />;
+    }
+
+    case ModelProvider.Ai360: {
+      return <Ai360 color={Ai360.colorPrimary} size={56} />;
     }
 
     default:

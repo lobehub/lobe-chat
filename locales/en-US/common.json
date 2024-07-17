@@ -1,7 +1,15 @@
 {
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "appInitializing": "The application is initializing, please wait patiently...",
+  "alert": {
+    "cloud": {
+      "action": "Free Trial",
+      "desc": "We offer {{credit}} free computing credits to all registered users, no complex configuration required, ready to use out of the box, support unlimited conversation history and global cloud synchronization.",
+      "descOnMobile": "We provide {{credit}} free computing credits for all registered users, ready to use without complex configuration.",
+      "title": "Launch {{name}}"
+    }
+  },
+  "appInitializing": "The application is initializing, please wait for a moment...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Anonymous User",
     "billing": "Billing Management",
+    "cloud": "Launch {{name}}",
     "data": "Data Storage",
     "defaultNickname": "Community User",
     "discord": "Community Support",
@@ -217,7 +226,7 @@
     "plans": "Subscription Plans",
     "preview": "Preview",
     "profile": "Account Management",
-    "setting": "App Settings",
+    "setting": "Settings",
     "usages": "Usage Statistics"
   },
   "version": "Version"

@@ -2,6 +2,133 @@
 
 # Changelog
 
+## [Version 1.5.0](https://github.com/lobehub/lobe-chat/compare/v1.4.3...v1.5.0)
+
+<sup>Released on **2024-07-17**</sup>
+
+#### ✨ Features
+
+- **misc**: Spport qwen-vl and tool call for qwen.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Spport qwen-vl and tool call for qwen, closes [#3114](https://github.com/lobehub/lobe-chat/issues/3114) ([5216a85](https://github.com/lobehub/lobe-chat/commit/5216a85))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.4.3](https://github.com/lobehub/lobe-chat/compare/v1.4.2...v1.4.3)
+
+<sup>Released on **2024-07-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Save assistant info on blur.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Save assistant info on blur, closes [#3223](https://github.com/lobehub/lobe-chat/issues/3223) ([0987a42](https://github.com/lobehub/lobe-chat/commit/0987a42))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.4.2](https://github.com/lobehub/lobe-chat/compare/v1.4.1...v1.4.2)
+
+<sup>Released on **2024-07-13**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove code related to `gemini-pro-vision`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove code related to `gemini-pro-vision`, closes [#2860](https://github.com/lobehub/lobe-chat/issues/2860) ([e2ba302](https://github.com/lobehub/lobe-chat/commit/e2ba302))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.4.1](https://github.com/lobehub/lobe-chat/compare/v1.4.0...v1.4.1)
+
+<sup>Released on **2024-07-13**</sup>
+
+#### 💄 Styles
+
+- **ui**: Confirmation when `adding a new topic`.
+- **misc**: Add cloud promotion banner.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **ui**: Confirmation when `adding a new topic`, closes [#3030](https://github.com/lobehub/lobe-chat/issues/3030) ([dc38cd4](https://github.com/lobehub/lobe-chat/commit/dc38cd4))
+- **misc**: Add cloud promotion banner, closes [#3194](https://github.com/lobehub/lobe-chat/issues/3194) ([62db0f8](https://github.com/lobehub/lobe-chat/commit/62db0f8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.4.0](https://github.com/lobehub/lobe-chat/compare/v1.3.6...v1.4.0)
+
+<sup>Released on **2024-07-12**</sup>
+
+#### ✨ Features
+
+- **misc**: Add 360AI model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add 360AI model provider, closes [#3130](https://github.com/lobehub/lobe-chat/issues/3130) ([79c5f86](https://github.com/lobehub/lobe-chat/commit/79c5f86))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.3.6](https://github.com/lobehub/lobe-chat/compare/v1.3.5...v1.3.6)
 
 <sup>Released on **2024-07-11**</sup>
