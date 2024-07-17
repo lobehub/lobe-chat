@@ -5,11 +5,10 @@ export const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
 
     font-size: 12px;
     text-overflow: ellipsis;
-
-    -webkit-line-clamp: 1;
   `,
   container: css`
     cursor: pointer;
