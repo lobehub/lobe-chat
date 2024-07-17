@@ -254,14 +254,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                | 助手说明                                                                                                                                                         |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [外贸高情商回复](https://chat-preview.lobehub.com/market?agent=reply-agent)<br/><sup>By **[zhushen12580](https://github.com/zhushen12580)** on **2024-07-13**</sup>     | 我的目标是提供具有高情商的专业回复，帮助解决各种外贸相关的问题。<br/>`润色` `高情商` `回复`                                                                      |
-| [小黄鸭编程助手](https://chat-preview.lobehub.com/market?agent=rubber-duck-programming)<br/><sup>By **[JiyuShao](https://github.com/JiyuShao)** on **2024-07-10**</sup> | 小黄鸭编程助手<br/>`programming`                                                                                                                                 |
-| [AOSP 源码专家](https://chat-preview.lobehub.com/market?agent=aosp-development)<br/><sup>By **[viruscoding](https://github.com/viruscoding)** on **2024-06-24**</sup>   | 一位精通 AOSP（Android Open Source Project）安卓的专家，对最新 AOSP 源代码有着深入的理解和分析能力。<br/>`aosp`                                                  |
-| [Fastapi 项目开发助手](https://chat-preview.lobehub.com/market?agent=fastapi-development)<br/><sup>By **[xwxw098](https://github.com/xwxw098)** on **2024-06-19**</sup> | 擅长 Python 模块化开发，熟练运用 FastAPI、PostgreSQL、Tortoise-ORM 等技术栈，能为大型项目提供清晰的代码结构并添加详细注释。<br/>`fast-api` `python` `模块化开发` |
+| 最近新增                                                                                                                                                                     | 助手说明                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| [SQL 表结构转 Dao 和 Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | 给与一个表结构，生成表的实体和 MyBatis 的 Mapper<br/>`sql` `sql` `mybatis`                  |
+| [外贸高情商回复](https://chat-preview.lobehub.com/market?agent=reply-agent)<br/><sup>By **[zhushen12580](https://github.com/zhushen12580)** on **2024-07-13**</sup>          | 我的目标是提供具有高情商的专业回复，帮助解决各种外贸相关的问题。<br/>`润色` `高情商` `回复` |
+| [小黄鸭编程助手](https://chat-preview.lobehub.com/market?agent=rubber-duck-programming)<br/><sup>By **[JiyuShao](https://github.com/JiyuShao)** on **2024-07-10**</sup>      | 小黄鸭编程助手<br/>`programming`                                                            |
+| [B1 级德语会话伙伴](https://chat-preview.lobehub.com/market?agent=deutsche-b-1)<br/><sup>By **[tayhe](https://github.com/tayhe)** on **2024-07-08**</sup>                    | 为 B1 级学习者提供流利的德语会话伙伴<br/>`语言交流` `学习支持` `教育` `德语学习`            |
 
-> 📊 Total agents: [<kbd>**295**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**298**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
