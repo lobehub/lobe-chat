@@ -380,7 +380,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         expect(decoder.decode((await reader.read()).value)).toContain('data: "Hello"\n\n');
 
         expect(decoder.decode((await reader.read()).value)).toContain('id: a\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
+        expect(decoder.decode((await reader.read()).value)).toContain('event: stop\n');
         expect(decoder.decode((await reader.read()).value)).toContain('');
 
         expect((await reader.read()).done).toBe(true);

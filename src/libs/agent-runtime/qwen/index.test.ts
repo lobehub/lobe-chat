@@ -136,17 +136,18 @@ describe('LobeQwenAI', () => {
         const decoder = new TextDecoder();
 
         const reader = result.body!.getReader();
-        expect(decoder.decode((await reader.read()).value)).toContain(
-          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
-        );
-        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('data: "Hello"\n\n');
 
-        expect(decoder.decode((await reader.read()).value)).toContain(
+        expect(decoder.decode((await reader.read()).value)).toBe(
           'id: chatcmpl-fc539f49-51a8-94be-8061\n',
         );
-        expect(decoder.decode((await reader.read()).value)).toContain('event: stop\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('');
+        expect(decoder.decode((await reader.read()).value)).toBe('event: text\n');
+        expect(decoder.decode((await reader.read()).value)).toBe('data: "Hello"\n\n');
+
+        expect(decoder.decode((await reader.read()).value)).toBe(
+          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
+        );
+        expect(decoder.decode((await reader.read()).value)).toBe('event: stop\n');
+        expect(decoder.decode((await reader.read()).value)).toBe('data: "stop"\n\n');
 
         expect((await reader.read()).done).toBe(true);
       });
