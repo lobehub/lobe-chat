@@ -221,7 +221,6 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       });
       if (!updatedUser) throw new Error('NextAuth: Failed to update user');
 
-      // Cause the neon adapter not support update result returning
       // merge new user data with old user data
       const newAdapterUser = mapLobeUserToAdapterUser(lobeUser);
       if (!newAdapterUser) {

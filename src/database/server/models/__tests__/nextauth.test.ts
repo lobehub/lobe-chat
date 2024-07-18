@@ -252,6 +252,31 @@ describe('LobeNextAuthDbAdapter', () => {
         expect(updatedAuthenticator.counter).toBe(2);
       });
     });
+
+    describe('listAuthenticatorsByUserId', () => {
+      it('should list authenticators by user id', async () => {
+        // Create an authenticator and link to the exists user
+        const params: AdapterAuthenticator = {
+          credentialBackedUp: false,
+          credentialDeviceType: 'type',
+          credentialID: 'some-id',
+          credentialPublicKey: 'some-key',
+          userId: userId,
+          providerAccountId: 'provider-account-id',
+          counter: 1,
+        };
+        // @ts-expect-error: createAuthenticator is defined
+        await nextAuthAdapter.createAuthenticator(params);
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.listAuthenticatorsByUserId).toBeDefined();
+        // @ts-expect-error: listAuthenticatorsByUserId is defined
+        const authenticators = await nextAuthAdapter.listAuthenticatorsByUserId(userId);
+        expect(authenticators).toBeDefined();
+        expect(authenticators.length).toBeGreaterThan(0);
+        expect(authenticators[0].userId).toBe(params.userId);
+        expect(authenticators[0].providerAccountId).toBe(params.providerAccountId);
+      });
+    });
   });
 
   describe('session', () => {
@@ -272,6 +297,29 @@ describe('LobeNextAuthDbAdapter', () => {
         expect(session.sessionToken).toBe(data.sessionToken);
         expect(session.userId).toBe(data.userId);
         expect(session.expires).toEqual(data.expires);
+      });
+    });
+
+    describe('updateSession', () => {
+      it('should update a session', async () => {
+        const data: AdapterSession = {
+          sessionToken,
+          userId: userId,
+          expires: new Date(),
+        };
+        // @ts-expect-error: createSession is defined
+        await nextAuthAdapter.createSession(data);
+        const updatedExpires = new Date();
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.updateSession).toBeDefined();
+        // @ts-expect-error: updateSession is defined
+        const updatedSession = await nextAuthAdapter.updateSession({
+          sessionToken,
+          expires: updatedExpires,
+        });
+        expect(updatedSession).toBeDefined();
+        expect(updatedSession?.sessionToken).toBe(data.sessionToken);
+        expect(updatedSession?.expires).toEqual(updatedExpires);
       });
     });
 
