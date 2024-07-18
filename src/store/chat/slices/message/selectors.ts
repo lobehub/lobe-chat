@@ -44,6 +44,12 @@ const currentChats = (s: ChatStore): ChatMessage[] => {
   return messages.map((i) => ({ ...i, meta: getMeta(i) }));
 };
 
+const currentToolMessages = (s: ChatStore) => {
+  const messages = currentChats(s);
+
+  return messages.filter((m) => m.role === 'tool');
+};
+
 const initTime = Date.now();
 
 const showInboxWelcome = (s: ChatStore): boolean => {
@@ -143,6 +149,7 @@ export const chatSelectors = {
   currentChats,
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
+  currentToolMessages,
   getMessageById,
   getTraceIdByMessageId,
   isAIGenerating,

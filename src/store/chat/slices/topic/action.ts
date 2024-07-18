@@ -249,7 +249,7 @@ export const chatTopic: StateCreator<
 
     // remove messages in the topic
     // TODO: Need to remove because server service don't need to call it
-    await messageService.removeMessages(activeId, id);
+    await messageService.removeMessagesByAssistant(activeId, id);
 
     // remove topic
     await topicService.removeTopic(id);

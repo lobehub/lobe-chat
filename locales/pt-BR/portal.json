@@ -1,0 +1,10 @@
+{
+  "Artifacts": "Artefatos",
+  "actions": {
+    "genAiMessage": "Gerar mensagem de IA",
+    "summary": "Resumo",
+    "summaryTooltip": "Resumir o conteúdo atual"
+  },
+  "emptyArtifactList": "A lista de Artefatos atual está vazia. Por favor, use os plugins conforme necessário durante a sessão e depois verifique novamente.",
+  "title": "Janela de Expansão"
+}

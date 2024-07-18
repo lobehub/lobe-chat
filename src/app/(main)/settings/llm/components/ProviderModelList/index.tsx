@@ -33,7 +33,7 @@ const styles = {
   reset: css`
     position: absolute;
     z-index: 20;
-    top: 50%;
+    inset-block-start: 50%;
     inset-inline-end: 28px;
     transform: translateY(-50%);
   `,

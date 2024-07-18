@@ -1,6 +1,14 @@
 {
   "about": "关于",
   "advanceSettings": "高级设置",
+  "alert": {
+    "cloud": {
+      "action": "立即体验",
+      "desc": "我们为所有注册用户提供了免费的 {{credit}} 额度计算积分，无需复杂配置开箱即用, 支持全局云同步与进阶联网查询，更多高级特性等你探索。",
+      "descOnMobile": "我们为所有注册用户提供了免费的 {{credit}} 额度计算积分，无需复杂配置开箱即用。",
+      "title": "{{name}} 开始公测"
+    }
+  },
   "appInitializing": "应用启动中，请耐心等待...",
   "autoGenerate": "自动补全",
   "autoGenerateTooltip": "基于提示词自动补全助手描述",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "匿名用户",
     "billing": "账单管理",
+    "cloud": "体验 {{name}}",
     "data": "数据存储",
     "defaultNickname": "社区版用户",
     "discord": "社区支持",

@@ -8,7 +8,7 @@ import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
 import { AgentRuntimeError } from '../createError';
-import { debugStream } from '../debugStream';
+import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
 import { StreamingResponse } from '../response';
@@ -27,13 +27,18 @@ const CHAT_MODELS_BLOCK_LIST = [
   'dall-e',
 ];
 
-interface OpenAICompatibleFactoryOptions {
+type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
+
+interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
   baseURL?: string;
   chatCompletion?: {
-    handleError?: (error: any) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
+    handleError?: (
+      error: any,
+      options: ConstructorOptions<T>,
+    ) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
     handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
   };
-  constructorOptions?: ClientOptions;
+  constructorOptions?: ConstructorOptions<T>;
   debug?: {
     chatCompletion: () => boolean;
   };
@@ -49,7 +54,60 @@ interface OpenAICompatibleFactoryOptions {
   provider: string;
 }
 
-export const LobeOpenAICompatibleFactory = ({
+/**
+ * make the OpenAI response data as a stream
+ */
+export function transformResponseToStream(data: OpenAI.ChatCompletion) {
+  return new ReadableStream({
+    start(controller) {
+      const chunk: OpenAI.ChatCompletionChunk = {
+        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+          delta: {
+            content: choice.message.content,
+            role: choice.message.role,
+            tool_calls: choice.message.tool_calls?.map(
+              (tool, index): OpenAI.ChatCompletionChunk.Choice.Delta.ToolCall => ({
+                function: tool.function,
+                id: tool.id,
+                index,
+                type: tool.type,
+              }),
+            ),
+          },
+          finish_reason: null,
+          index: choice.index,
+          logprobs: choice.logprobs,
+        })),
+        created: data.created,
+        id: data.id,
+        model: data.model,
+        object: 'chat.completion.chunk',
+      };
+
+      controller.enqueue(chunk);
+
+      controller.enqueue({
+        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+          delta: {
+            content: choice.message.content,
+            role: choice.message.role,
+          },
+          finish_reason: choice.finish_reason,
+          index: choice.index,
+          logprobs: choice.logprobs,
+        })),
+        created: data.created,
+        id: data.id,
+        model: data.model,
+        object: 'chat.completion.chunk',
+        system_fingerprint: data.system_fingerprint,
+      } as OpenAI.ChatCompletionChunk);
+      controller.close();
+    },
+  });
+}
+
+export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>({
   provider,
   baseURL: DEFAULT_BASE_URL,
   errorType,
@@ -57,7 +115,7 @@ export const LobeOpenAICompatibleFactory = ({
   constructorOptions,
   chatCompletion,
   models,
-}: OpenAICompatibleFactoryOptions) => {
+}: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
     invalidAPIKey: errorType?.invalidAPIKey || AgentRuntimeErrorType.InvalidProviderAPIKey,
@@ -67,8 +125,11 @@ export const LobeOpenAICompatibleFactory = ({
     client: OpenAI;
 
     baseURL: string;
+    private _options: ConstructorOptions<T>;
 
-    constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions) {
+    constructor(options: ClientOptions & Record<string, any> = {}) {
+      const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = options;
+      this._options = options as ConstructorOptions<T>;
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
       this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
@@ -106,58 +167,16 @@ export const LobeOpenAICompatibleFactory = ({
         }
 
         if (debug?.chatCompletion?.()) {
-          console.log('\n[no stream response]\n');
-          console.log(JSON.stringify(response) + '\n');
+          debugResponse(response);
         }
 
-        const stream = this.transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+        const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
         return StreamingResponse(OpenAIStream(stream, options?.callback), {
           headers: options?.headers,
         });
       } catch (error) {
-        let desensitizedEndpoint = this.baseURL;
-
-        // refs: https://github.com/lobehub/lobe-chat/issues/842
-        if (this.baseURL !== DEFAULT_BASE_URL) {
-          desensitizedEndpoint = desensitizeUrl(this.baseURL);
-        }
-
-        if ('status' in (error as any)) {
-          switch ((error as Response).status) {
-            case 401: {
-              throw AgentRuntimeError.chat({
-                endpoint: desensitizedEndpoint,
-                error: error as any,
-                errorType: ErrorType.invalidAPIKey,
-                provider: provider as any,
-              });
-            }
-
-            default: {
-              break;
-            }
-          }
-        }
-
-        if (chatCompletion?.handleError) {
-          const errorResult = chatCompletion.handleError(error);
-
-          if (errorResult)
-            throw AgentRuntimeError.chat({
-              ...errorResult,
-              provider,
-            } as ChatCompletionErrorPayload);
-        }
-
-        const { errorResult, RuntimeError } = handleOpenAIError(error);
-
-        throw AgentRuntimeError.chat({
-          endpoint: desensitizedEndpoint,
-          error: errorResult,
-          errorType: RuntimeError || ErrorType.bizError,
-          provider: provider as any,
-        });
+        throw this.handleError(error);
       }
     }
 
@@ -192,102 +211,52 @@ export const LobeOpenAICompatibleFactory = ({
         const res = await this.client.images.generate(payload);
         return res.data.map((o) => o.url) as string[];
       } catch (error) {
-        let desensitizedEndpoint = this.baseURL;
-
-        // refs: https://github.com/lobehub/lobe-chat/issues/842
-        if (this.baseURL !== DEFAULT_BASE_URL) {
-          desensitizedEndpoint = desensitizeUrl(this.baseURL);
-        }
-
-        if ('status' in (error as any)) {
-          switch ((error as Response).status) {
-            case 401: {
-              throw AgentRuntimeError.chat({
-                endpoint: desensitizedEndpoint,
-                error: error as any,
-                errorType: ErrorType.invalidAPIKey,
-                provider: provider as any,
-              });
-            }
-
-            default: {
-              break;
-            }
-          }
-        }
-
-        if (chatCompletion?.handleError) {
-          const errorResult = chatCompletion.handleError(error);
-
-          if (errorResult)
-            throw AgentRuntimeError.chat({
-              ...errorResult,
-              provider,
-            } as ChatCompletionErrorPayload);
-        }
-
-        const { errorResult, RuntimeError } = handleOpenAIError(error);
-
-        throw AgentRuntimeError.chat({
-          endpoint: desensitizedEndpoint,
-          error: errorResult,
-          errorType: RuntimeError || ErrorType.bizError,
-          provider: provider as any,
-        });
+        throw this.handleError(error);
       }
     }
 
-    /**
-     * make the OpenAI response data as a stream
-     * @private
-     */
-    private transformResponseToStream(data: OpenAI.ChatCompletion) {
-      return new ReadableStream({
-        start(controller) {
-          const chunk: OpenAI.ChatCompletionChunk = {
-            choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
-              delta: {
-                content: choice.message.content,
-                role: choice.message.role,
-                tool_calls: choice.message.tool_calls?.map(
-                  (tool, index): OpenAI.ChatCompletionChunk.Choice.Delta.ToolCall => ({
-                    function: tool.function,
-                    id: tool.id,
-                    index,
-                    type: tool.type,
-                  }),
-                ),
-              },
-              finish_reason: null,
-              index: choice.index,
-              logprobs: choice.logprobs,
-            })),
-            created: data.created,
-            id: data.id,
-            model: data.model,
-            object: 'chat.completion.chunk',
-          };
+    private handleError(error: any): ChatCompletionErrorPayload {
+      let desensitizedEndpoint = this.baseURL;
 
-          controller.enqueue(chunk);
+      // refs: https://github.com/lobehub/lobe-chat/issues/842
+      if (this.baseURL !== DEFAULT_BASE_URL) {
+        desensitizedEndpoint = desensitizeUrl(this.baseURL);
+      }
 
-          controller.enqueue({
-            choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
-              delta: {
-                content: choice.message.content,
-                role: choice.message.role,
-              },
-              finish_reason: choice.finish_reason,
-              index: choice.index,
-              logprobs: choice.logprobs,
-            })),
-            created: data.created,
-            id: data.id,
-            model: data.model,
-            object: 'chat.completion.chunk',
-            system_fingerprint: data.system_fingerprint,
-          } as OpenAI.ChatCompletionChunk);
-          controller.close();
-        },
+      if (chatCompletion?.handleError) {
+        const errorResult = chatCompletion.handleError(error, this._options);
+
+        if (errorResult)
+          return AgentRuntimeError.chat({
+            ...errorResult,
+            provider,
+          } as ChatCompletionErrorPayload);
+      }
+
+      if ('status' in (error as any)) {
+        switch ((error as Response).status) {
+          case 401: {
+            return AgentRuntimeError.chat({
+              endpoint: desensitizedEndpoint,
+              error: error as any,
+              errorType: ErrorType.invalidAPIKey,
+              provider: provider as any,
+            });
+          }
+
+          default: {
+            break;
+          }
+        }
+      }
+
+      const { errorResult, RuntimeError } = handleOpenAIError(error);
+
+      return AgentRuntimeError.chat({
+        endpoint: desensitizedEndpoint,
+        error: errorResult,
+        errorType: RuntimeError || ErrorType.bizError,
+        provider: provider as any,
       });
     }
   };

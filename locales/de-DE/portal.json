@@ -1,0 +1,10 @@
+{
+  "Artifacts": "Artefakte",
+  "actions": {
+    "genAiMessage": "Assistenten-Nachricht erstellen",
+    "summary": "Zusammenfassung",
+    "summaryTooltip": "Zusammenfassung des aktuellen Inhalts"
+  },
+  "emptyArtifactList": "Die Liste der Artefakte ist derzeit leer. Bitte verwenden Sie Plugins in der Sitzung und überprüfen Sie sie erneut.",
+  "title": "Erweiterungsfenster"
+}

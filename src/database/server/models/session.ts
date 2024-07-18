@@ -173,8 +173,11 @@ export class SessionModel {
     const { agent, ...session } = result;
     const sessionId = this.genId();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: _, slug: __, ...config } = agent;
+
     return this.create({
-      config: agent,
+      config: config,
       id: sessionId,
       session: {
         ...session,

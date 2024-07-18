@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 import { MessageModel } from '@/database/server/models/message';
+import { updateMessagePluginSchema } from '@/database/server/schemas/lobechat';
 import { authedProcedure, publicProcedure, router } from '@/libs/trpc';
 import { ChatMessage } from '@/types/message';
 import { BatchTaskResult } from '@/types/service';
@@ -81,6 +82,12 @@ export const messageRouter = router({
     }),
 
   removeMessages: messageProcedure
+    .input(z.object({ ids: z.array(z.string()) }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.deleteMessages(input.ids);
+    }),
+
+  removeMessagesByAssistant: messageProcedure
     .input(
       z.object({
         sessionId: z.string().nullable().optional(),
@@ -88,7 +95,7 @@ export const messageRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      return ctx.messageModel.deleteMessages(input.sessionId, input.topicId);
+      return ctx.messageModel.deleteMessagesBySession(input.sessionId, input.topicId);
     }),
 
   searchMessages: messageProcedure
@@ -106,6 +113,17 @@ export const messageRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       return ctx.messageModel.update(input.id, input.value);
+    }),
+
+  updateMessagePlugin: messageProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        value: updateMessagePluginSchema.partial(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.updateMessagePlugin(input.id, input.value);
     }),
 
   updatePluginState: messageProcedure
