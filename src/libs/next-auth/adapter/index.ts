@@ -227,13 +227,10 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       if (!newAdapterUser) {
         throw new Error('NextAuth: Failed to map user data to adapter user');
       }
-      return merge(user, newAdapterUser);
+      return merge(newAdapterUser, user);
     },
 
     async useVerificationToken(identifier_token): Promise<VerificationToken | null> {
-      // Use token with 2 steps: find and remove,
-      //   1. if not found, will throw error
-      //   2. else means exists, invalidate it
       return serverDB
         .delete(nextauthVerificationTokens)
         .where(
