@@ -32,6 +32,7 @@ const Google: ModelProviderCard = {
       maxOutput: 8192,
       tokens: 2_097_152 + 8192,
       vision: true,
+      file:true,
     },
     {
       description: 'Mid-size multimodal model that supports up to 1 million tokens',
