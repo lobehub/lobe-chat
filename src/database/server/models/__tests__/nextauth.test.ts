@@ -5,8 +5,7 @@ import type {
   AdapterUser,
   VerificationToken,
 } from '@auth/core/adapters';
-import { eq, inArray } from 'drizzle-orm';
-import { d } from 'node_modules/nuqs/dist/serializer-C_l8WgvO';
+import { eq } from 'drizzle-orm';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
@@ -217,7 +216,7 @@ describe('LobeNextAuthDbAdapter', () => {
           counter: 1,
         };
         // @ts-expect-error: createAuthenticator is defined
-        const createdAuthenticator = await nextAuthAdapter.createAuthenticator(params);
+        await nextAuthAdapter.createAuthenticator(params);
         expect(nextAuthAdapter).toBeDefined();
         expect(nextAuthAdapter.getAuthenticator).toBeDefined();
         // @ts-expect-error: getAuthenticator is defined
@@ -227,12 +226,38 @@ describe('LobeNextAuthDbAdapter', () => {
         expect(fetchedAuthenticator?.providerAccountId).toBe(params.providerAccountId);
       });
     });
+
+    describe('updateAuthenticatorCounter', () => {
+      it('should update an authenticator counter', async () => {
+        // Create an authenticator and link to the exists user
+        const params: AdapterAuthenticator = {
+          credentialBackedUp: false,
+          credentialDeviceType: 'type',
+          credentialID: 'some-id',
+          credentialPublicKey: 'some-key',
+          userId: userId,
+          providerAccountId: 'provider-account-id',
+          counter: 1,
+        };
+        // @ts-expect-error: createAuthenticator is defined
+        await nextAuthAdapter.createAuthenticator(params);
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.updateAuthenticatorCounter).toBeDefined();
+        // @ts-expect-error: updateAuthenticatorCounter is defined
+        const updatedAuthenticator = await nextAuthAdapter.updateAuthenticatorCounter(
+          params.credentialID,
+          2,
+        );
+        expect(updatedAuthenticator).toBeDefined();
+        expect(updatedAuthenticator.counter).toBe(2);
+      });
+    });
   });
 
   describe('session', () => {
     describe('createSession', () => {
       it('should create a new session', async () => {
-        const data = {
+        const data: AdapterSession = {
           sessionToken,
           userId: userId,
           expires: new Date(),
