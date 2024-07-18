@@ -10,9 +10,9 @@ const Google: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gemini-1.5-flash-latest',
+      file:true,
       maxOutput: 8192,
       tokens: 1_048_576 + 8192,
-      file:true,
       vision: true,
     },
     {
@@ -20,9 +20,9 @@ const Google: ModelProviderCard = {
       displayName: 'Gemini 1.5 Flash 001',
       functionCall: true,
       id: 'gemini-1.5-flash-001',
+      file:true,
       maxOutput: 8192,
       tokens: 1_048_576 + 8192,
-      file:true,
       vision: true,
     },
     {
@@ -31,9 +31,9 @@ const Google: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gemini-1.5-pro-latest',
+      file:true,
       maxOutput: 8192,
       tokens: 2_097_152 + 8192,
-      file:true,
       vision: true,
     },
     {
@@ -41,9 +41,9 @@ const Google: ModelProviderCard = {
       displayName: 'Gemini 1.5 Pro 001',
       functionCall: true,
       id: 'gemini-1.5-pro-001',
+      file:true,
       maxOutput: 8192,
       tokens: 2_097_152 + 8192,
-      file:true,
       vision: true,
     },
     {
