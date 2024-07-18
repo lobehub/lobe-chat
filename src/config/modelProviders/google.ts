@@ -28,8 +28,8 @@ const Google: ModelProviderCard = {
     {
       description: 'Mid-size multimodal model that supports up to 1 million tokens',
       displayName: 'Gemini 1.5 Pro',
-      file: true,
       enabled: true,
+      file: true,
       functionCall: true,
       id: 'gemini-1.5-pro-latest',
       maxOutput: 8192,
