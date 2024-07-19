@@ -131,7 +131,13 @@ describe('chatSelectors', () => {
         activeId: 'abc',
       });
 
-      const config = {autoCreateTopicThreshold: 2, displayMode: "chat" as "chat", enableAutoCreateTopic: true, historyCount: 1, enableHistoryCount: true}
+      const config = {
+        autoCreateTopicThreshold: 2,
+        displayMode: 'chat' as 'chat',
+        enableAutoCreateTopic: true,
+        historyCount: 3,
+        enableHistoryCount: true,
+      };
       const chats = chatSelectors.currentChatsWithHistoryConfig(state, config);
       expect(chats).toHaveLength(3);
       expect(chats).toEqual(mockedChats);
@@ -158,7 +164,13 @@ describe('chatSelectors', () => {
         });
       });
 
-      const config = {autoCreateTopicThreshold: 2, displayMode: "chat" as "chat", enableAutoCreateTopic: true, historyCount: 1, enableHistoryCount: true}
+      const config = {
+        autoCreateTopicThreshold: 2,
+        displayMode: 'chat' as 'chat',
+        enableAutoCreateTopic: true,
+        historyCount: 2,
+        enableHistoryCount: true,
+      };
       const chats = chatSelectors.currentChatsWithHistoryConfig(state, config);
 
       expect(chats).toHaveLength(2);
@@ -255,7 +267,13 @@ describe('chatSelectors', () => {
         .join('');
 
       // Call the selector and verify the result
-      const config = {autoCreateTopicThreshold: 2, displayMode: "chat" as "chat", enableAutoCreateTopic: true, historyCount: 1, enableHistoryCount: true}
+      const config = {
+        autoCreateTopicThreshold: 2,
+        displayMode: 'chat' as 'chat',
+        enableAutoCreateTopic: true,
+        historyCount: 2,
+        enableHistoryCount: true,
+      };
       const concatenatedString = chatSelectors.chatsMessageString(state, config);
       expect(concatenatedString).toBe(expectedString);
 
