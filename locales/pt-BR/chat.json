@@ -130,10 +130,6 @@
   "upload": {
     "actionFiletip": "Enviar arquivo",
     "actionTooltip": "Enviar Imagem",
-    "disabled": "O modelo atual não suporta reconhecimento visual. Por favor, altere o modelo antes de usar.",
-    "dragDesc": "Arraste os arquivos aqui, suporta o envio de várias imagens. Pressione Shift para enviar as imagens diretamente.",
-    "dragFileDesc": "Arraste fotos e arquivos aqui para suportar o upload de várias fotos e arquivos. Mantenha pressionada a tecla Shift para enviar uma imagem ou arquivo diretamente.",
-    "dragFileTitle": "Enviar arquivo",
-    "dragTitle": "Enviar Imagem"
+    "disabled": "O modelo atual não suporta reconhecimento visual. Por favor, altere o modelo antes de usar."
   }
 }
