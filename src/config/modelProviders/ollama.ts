@@ -58,8 +58,18 @@ const Ollama: ModelProviderCard = {
       tokens: 131_072, // https://huggingface.co/CohereForAI/c4ai-command-r-plus/blob/main/config.json
     },
     {
-      displayName: 'Gemma 7B',
+      displayName: 'Gemma2 9B',
       enabled: true,
+      id: 'gemma2',
+      tokens: 8192, // https://huggingface.co/blog/zh/gemma2
+    },
+    {
+      displayName: 'Gemma2 27B',
+      id: 'gemma2:27b',
+      tokens: 8192,
+    },
+    {
+      displayName: 'Gemma 7B',
       id: 'gemma',
       tokens: 8192, // https://huggingface.co/google/gemma-7b-it/discussions/73#65e9678c0cda621164a95bad
     },

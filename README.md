@@ -226,12 +226,12 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                         | Description                                                                                                                |
-| ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                    |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>      | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search` |
-| [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>   | Space data including NASA.<br/>`space` `nasa`                                                                              |
-| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>         | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                              |
+| Recent Submits                                                                                                          | Description                                                                                                                               |
+| ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [Shopping tools](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **shoppingtools** on **2024-07-19**</sup> | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
+| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup>  | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                                   |
+| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>       | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                |
+| [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>    | Space data including NASA.<br/>`space` `nasa`                                                                                             |
 
 > 📊 Total plugins: [<kbd>**52**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
@@ -268,11 +268,11 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 | Recent Submits                                                                                                                                                                                  | Description                                                                                                                                                            |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [Convert SQL Table Structure to Dao and Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | Generate entity class and MyBatis Mapper based on a table structure<br/>`sql` `sql` `mybatis`                                                                          |
+| [Auto Extraction Data](https://chat-preview.lobehub.com/market?agent=the-20-autoextract)<br/><sup>By **[vkhoilq](https://github.com/vkhoilq)** on **2024-07-17**</sup>                          | The20 Auto Extraction Data<br/>`the-20` `autoextract`                                                                                                                  |
 | [Foreign Trade High EQ Response](https://chat-preview.lobehub.com/market?agent=reply-agent)<br/><sup>By **[zhushen12580](https://github.com/zhushen12580)** on **2024-07-13**</sup>             | My goal is to provide professional responses with high emotional intelligence to help solve various foreign trade-related issues.<br/>`polishing` `high-eq` `response` |
 | [Ducky Programming Assistant](https://chat-preview.lobehub.com/market?agent=rubber-duck-programming)<br/><sup>By **[JiyuShao](https://github.com/JiyuShao)** on **2024-07-10**</sup>            | Ducky Programming Assistant<br/>`programming`                                                                                                                          |
-| [B1 Level German Conversation Partner](https://chat-preview.lobehub.com/market?agent=deutsche-b-1)<br/><sup>By **[tayhe](https://github.com/tayhe)** on **2024-07-08**</sup>                    | Provides fluent German conversation partners for B1 level learners<br/>`language-exchange` `learning-support` `education` `german-learning`                            |
 
-> 📊 Total agents: [<kbd>**298**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**299**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

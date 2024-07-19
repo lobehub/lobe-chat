@@ -219,12 +219,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- PLUGIN LIST -->
 
-| 最近新增                                                                                                               | 插件描述                                                                            |
-| ---------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | 实时股票、加密货币和其他投资数据。<br/>`股票` `分析`                                |
-| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>           | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索` |
-| [空间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>    | 包括 NASA 的空间数据。<br/>`空间` `nasa`                                            |
-| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>         | 搜索聚合服务，专为 LLMs 设计<br/>`web` `search`                                     |
+| 最近新增                                                                                                               | 插件描述                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| [购物工具](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **shoppingtools** on **2024-07-19**</sup>      | 在 eBay 和 AliExpress 上搜索产品，查找 eBay 活动和优惠券。获取快速示例。<br/>`购物` `e-bay` `ali-express` `优惠券` |
+| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | 实时股票、加密货币和其他投资数据。<br/>`股票` `分析`                                                               |
+| [社交搜索](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>           | 社交搜索提供访问推文、用户、关注者、图片、媒体等功能。<br/>`社交` `推特` `x` `搜索`                                |
+| [空间](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>    | 包括 NASA 的空间数据。<br/>`空间` `nasa`                                                                           |
 
 > 📊 Total plugins: [<kbd>**52**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
@@ -257,11 +257,11 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | 最近新增                                                                                                                                                                     | 助手说明                                                                                    |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
 | [SQL 表结构转 Dao 和 Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | 给与一个表结构，生成表的实体和 MyBatis 的 Mapper<br/>`sql` `sql` `mybatis`                  |
+| [自动提取数据](https://chat-preview.lobehub.com/market?agent=the-20-autoextract)<br/><sup>By **[vkhoilq](https://github.com/vkhoilq)** on **2024-07-17**</sup>               | The20 自动提取数据<br/>`the-20` `autoextract`                                               |
 | [外贸高情商回复](https://chat-preview.lobehub.com/market?agent=reply-agent)<br/><sup>By **[zhushen12580](https://github.com/zhushen12580)** on **2024-07-13**</sup>          | 我的目标是提供具有高情商的专业回复，帮助解决各种外贸相关的问题。<br/>`润色` `高情商` `回复` |
 | [小黄鸭编程助手](https://chat-preview.lobehub.com/market?agent=rubber-duck-programming)<br/><sup>By **[JiyuShao](https://github.com/JiyuShao)** on **2024-07-10**</sup>      | 小黄鸭编程助手<br/>`programming`                                                            |
-| [B1 级德语会话伙伴](https://chat-preview.lobehub.com/market?agent=deutsche-b-1)<br/><sup>By **[tayhe](https://github.com/tayhe)** on **2024-07-08**</sup>                    | 为 B1 级学习者提供流利的德语会话伙伴<br/>`语言交流` `学习支持` `教育` `德语学习`            |
 
-> 📊 Total agents: [<kbd>**298**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**299**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
