@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Arrastra los archivos aquí, se admite la carga de múltiples imágenes.",
+    "dragFileDesc": "Arrastra imágenes y archivos aquí, se admite la carga de múltiples imágenes y archivos.",
+    "dragFileTitle": "Subir archivo",
+    "dragTitle": "Subir imagen"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modelo personalizado: admite llamadas de función y reconocimiento visual. Verifique la disponibilidad de estas capacidades según sea necesario.",
