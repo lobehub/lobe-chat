@@ -130,10 +130,6 @@
   "upload": {
     "actionFiletip": "Sube el archivo",
     "actionTooltip": "Subir imagen",
-    "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función",
-    "dragDesc": "Arrastra y suelta archivos aquí, admite la carga de varias imágenes. Mantén presionada la tecla Shift para enviar las imágenes directamente.",
-    "dragFileDesc": "Arrastre imágenes y archivos aquí para admitir la carga de varias imágenes y archivos. Mantenga presionada la tecla Mayús para enviar una imagen o un archivo directamente.",
-    "dragFileTitle": "Sube el archivo",
-    "dragTitle": "Subir imagen"
+    "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función"
   }
 }

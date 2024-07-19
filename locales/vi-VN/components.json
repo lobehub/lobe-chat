@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Kéo và thả tệp vào đây, hỗ trợ tải lên nhiều hình ảnh.",
+    "dragFileDesc": "Kéo và thả hình ảnh và tệp vào đây, hỗ trợ tải lên nhiều hình ảnh và tệp.",
+    "dragFileTitle": "Tải lên tệp",
+    "dragTitle": "Tải lên hình ảnh"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện hình ảnh, vui lòng xác minh khả năng sử dụng của chúng theo tình hình cụ thể",

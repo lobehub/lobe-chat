@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Trascina i file qui, supporta il caricamento di più immagini.",
+    "dragFileDesc": "Trascina immagini e file qui, supporta il caricamento di più immagini e file.",
+    "dragFileTitle": "Carica file",
+    "dragTitle": "Carica immagini"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modello personalizzato: di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Verifica l'effettiva disponibilità di tali funzionalità.",
