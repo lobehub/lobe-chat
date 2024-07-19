@@ -130,10 +130,6 @@
   "upload": {
     "actionFiletip": "Télécharger le fichier",
     "actionTooltip": "Télécharger une image",
-    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité.",
-    "dragDesc": "Faites glisser les fichiers ici pour télécharger plusieurs images. Maintenez la touche Maj enfoncée pour envoyer directement les images.",
-    "dragFileDesc": "Faites glisser les images et les fichiers ici pour prendre en charge le téléchargement de plusieurs images et fichiers. Maintenez la touche Shift enfoncée pour envoyer directement une image ou un fichier.",
-    "dragFileTitle": "Télécharger le fichier",
-    "dragTitle": "Télécharger une image"
+    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité."
   }
 }

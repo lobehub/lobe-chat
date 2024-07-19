@@ -130,10 +130,6 @@
   "upload": {
     "actionFiletip": "Laden Sie die Datei hoch",
     "actionTooltip": "Bild hochladen",
-    "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um es zu verwenden.",
-    "dragDesc": "Dateien hierher ziehen, um mehrere Bilder hochzuladen. Halte die Umschalttaste gedrückt, um Bilder direkt zu senden.",
-    "dragFileDesc": "Ziehen Sie Bilder und Dateien hierher, um das Hochladen mehrerer Bilder und Dateien zu unterstützen. Halten Sie die Umschalttaste gedrückt, um ein Bild oder eine Datei direkt zu senden.",
-    "dragFileTitle": "Laden Sie die Datei hoch",
-    "dragTitle": "Bild hochladen"
+    "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um es zu verwenden."
   }
 }

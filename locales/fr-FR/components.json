@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Faites glisser des fichiers ici, plusieurs images peuvent être téléchargées.",
+    "dragFileDesc": "Faites glisser des images et des fichiers ici, plusieurs images et fichiers peuvent être téléchargés.",
+    "dragFileTitle": "Télécharger des fichiers",
+    "dragTitle": "Télécharger des images"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modèle personnalisé par défaut prenant en charge à la fois les appels de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités en fonction de vos besoins réels.",
