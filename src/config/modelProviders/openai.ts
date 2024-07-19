@@ -4,6 +4,15 @@ import { ModelProviderCard } from '@/types/llm';
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
+      description: 'Currently points to gpt-4o-mini-2024-07-18',
+      displayName: 'GPT-4o mini',
+      enabled: true,
+      functionCall: true,
+      id: 'gpt-4o-mini',
+      tokens: 128_000,
+      vision: true,
+    },
+    {
       description: 'Currently points to gpt-4o-2024-05-13',
       displayName: 'GPT-4o',
       enabled: true,
@@ -86,15 +95,6 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4-32k-0613',
       tokens: 32_768,
-    },
-    {
-      description: 'Currently points to gpt-4o-mini-2024-07-18',
-      displayName: 'GPT-4o mini',
-      enabled: true,
-      functionCall: true,
-      id: 'gpt-4o-mini',
-      tokens: 128_000,
-      vision: true,
     },
     {
       description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务',
