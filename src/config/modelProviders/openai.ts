@@ -9,6 +9,7 @@ const OpenAI: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'gpt-4o-mini',
+      maxOutput: 16_385,
       tokens: 128_000,
       vision: true,
     },
