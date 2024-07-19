@@ -33,7 +33,7 @@ This project is led by [qnguyen3](https://twitter.com/stablequan) and [teknium](
 
 Updated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/gpt-3.5). Training data up to Sep 2021.",
     "displayName": "OpenAI: GPT-3.5 Turbo",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "openai/gpt-3.5-turbo",
     "maxTokens": 4096,

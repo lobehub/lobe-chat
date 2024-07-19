@@ -130,10 +130,6 @@
   "upload": {
     "actionFiletip": "上傳文件",
     "actionTooltip": "上傳圖片",
-    "disabled": "當前模型不支援視覺識別，請切換模型後使用",
-    "dragDesc": "拖拽文件到這裡，支持上傳多個圖片。按住 Shift 直接發送圖片",
-    "dragFileDesc": "拖曳圖片和文件至此，支援上傳多張圖片和文件。按住 Shift 直接傳送圖片或文件",
-    "dragFileTitle": "上傳文件",
-    "dragTitle": "上傳圖片"
+    "disabled": "當前模型不支援視覺識別，請切換模型後使用"
   }
 }
