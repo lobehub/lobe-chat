@@ -1,4 +1,3 @@
-import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { AgentRuntime, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
@@ -9,8 +8,6 @@ import { checkAuth } from '../../middleware/auth';
 import { createTraceOptions, initAgentRuntimeWithUserPayload } from '../agentRuntime';
 
 export const runtime = 'edge';
-
-export const preferredRegion = getPreferredRegion();
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload, createRuntime }) => {
   const { provider } = params;
