@@ -130,10 +130,6 @@
   "upload": {
     "actionFiletip": "Prześlij plik",
     "actionTooltip": "Prześlij obraz",
-    "disabled": "Obecny model nie obsługuje rozpoznawania wizyjnego. Proszę przełączyć model.",
-    "dragDesc": "Przeciągnij pliki tutaj, obsługiwane jest przesyłanie wielu obrazów. Naciśnij klawisz Shift, aby wysłać obraz bezpośrednio",
-    "dragFileDesc": "Przeciągnij zdjęcia i pliki tutaj, aby umożliwić przesyłanie wielu zdjęć i plików. Przytrzymaj klawisz Shift, aby bezpośrednio wysłać obraz lub plik",
-    "dragFileTitle": "Prześlij plik",
-    "dragTitle": "Prześlij obraz"
+    "disabled": "Obecny model nie obsługuje rozpoznawania wizyjnego. Proszę przełączyć model."
   }
 }
