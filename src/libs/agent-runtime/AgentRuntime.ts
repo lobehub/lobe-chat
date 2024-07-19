@@ -146,6 +146,11 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.GenericOpenAI: {
+        runtimeModel = new LobeOpenAI(params.openai ?? (params as any)[provider]);
+        break;
+      }
+
       case ModelProvider.ZhiPu: {
         runtimeModel = await LobeZhipuAI.fromAPIKey(params.zhipu);
         break;
@@ -238,7 +243,7 @@ class AgentRuntime {
 
       case ModelProvider.Ai360: {
         runtimeModel = new LobeAi360AI(params.ai360 ?? {});
-        break
+        break;
       }
     }
 

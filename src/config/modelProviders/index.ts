@@ -6,6 +6,7 @@ import AzureProvider from './azure';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import DeepSeekProvider from './deepseek';
+import GenericOpenAIProvider from './genericopenai';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
 import MinimaxProvider from './minimax';
@@ -24,6 +25,7 @@ import ZhiPuProvider from './zhipu';
 
 export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   OpenAIProvider.chatModels,
+  GenericOpenAIProvider.chatModels,
   QwenProvider.chatModels,
   ZhiPuProvider.chatModels,
   BedrockProvider.chatModels,
@@ -48,6 +50,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,
   { ...AzureProvider, chatModels: [] },
+  GenericOpenAIProvider,
   QwenProvider,
   OllamaProvider,
   AnthropicProvider,
@@ -84,6 +87,7 @@ export { default as AzureProviderCard } from './azure';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as DeepSeekProviderCard } from './deepseek';
+export { default as GenericOpenAIProviderCard } from './genericopenai';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
 export { default as MinimaxProviderCard } from './minimax';
