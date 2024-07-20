@@ -50,7 +50,7 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
     enabledModels: filterEnabledModels(DeepSeekProviderCard),
   },
   genericopenai: {
-    enabled: true,
+    enabled: false,
     enabledModels: filterEnabledModels(GenericOpenAIProviderCard),
   },
   google: {
