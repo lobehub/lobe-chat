@@ -3,9 +3,7 @@ import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import Qwen from '@/config/modelProviders/qwen';
-import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
-import { ModelProvider } from '@/libs/agent-runtime';
-import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType, ModelProvider } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeQwenAI } from './index';
@@ -134,20 +132,23 @@ describe('LobeQwenAI', () => {
         });
 
         const decoder = new TextDecoder();
-
         const reader = result.body!.getReader();
+        const stream: string[] = [];
 
-        expect(decoder.decode((await reader.read()).value)).toBe(
-          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
-        );
-        expect(decoder.decode((await reader.read()).value)).toBe('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toBe('data: "Hello"\n\n');
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
 
-        expect(decoder.decode((await reader.read()).value)).toBe(
+        expect(stream).toEqual([
           'id: chatcmpl-fc539f49-51a8-94be-8061\n',
-        );
-        expect(decoder.decode((await reader.read()).value)).toBe('event: stop\n');
-        expect(decoder.decode((await reader.read()).value)).toBe('data: "stop"\n\n');
+          'event: text\n',
+          'data: "Hello"\n\n',
+          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
+          'event: stop\n',
+          'data: "stop"\n\n',
+        ]);
 
         expect((await reader.read()).done).toBe(true);
       });
