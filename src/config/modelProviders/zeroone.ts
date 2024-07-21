@@ -8,7 +8,15 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large',
       enabled: true,
       id: 'yi-large',
-      tokens: 16_384,
+      tokens: 32_768,
+    },
+    {
+      description: '在 yi-large 模型的基础上支持并强化了工具调用的能力，适用于各种需要搭建 agent 或 workflow 的业务场景。',
+      displayName: 'Yi Large FC',
+      enabled: true,
+      functionCall: true,
+      id: 'yi-large-fc',
+      tokens: 32_768,
     },
     {
       description: '中型尺寸模型升级微调，能力均衡，性价比高。深度优化指令遵循能力。',
@@ -22,7 +30,7 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Vision',
       enabled: true,
       id: 'yi-vision',
-      tokens: 4096,
+      tokens: 16_384,
     },
     {
       description: '200K 超长上下文窗口，提供长文本深度理解和生成能力。',
@@ -66,7 +74,7 @@ const ZeroOne: ModelProviderCard = {
       tokens: 16_384,
     },
   ],
-  checkModel: 'yi-34b-chat-0205',
+  checkModel: 'yi-large',
   id: 'zeroone',
   name: '01.AI',
 };
