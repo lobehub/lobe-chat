@@ -254,14 +254,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                     | 助手说明                                                                                    |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| [SQL 表结构转 Dao 和 Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | 给与一个表结构，生成表的实体和 MyBatis 的 Mapper<br/>`sql` `sql` `mybatis`                  |
-| [自动提取数据](https://chat-preview.lobehub.com/market?agent=the-20-autoextract)<br/><sup>By **[vkhoilq](https://github.com/vkhoilq)** on **2024-07-17**</sup>               | The20 自动提取数据<br/>`the-20` `autoextract`                                               |
-| [外贸高情商回复](https://chat-preview.lobehub.com/market?agent=reply-agent)<br/><sup>By **[zhushen12580](https://github.com/zhushen12580)** on **2024-07-13**</sup>          | 我的目标是提供具有高情商的专业回复，帮助解决各种外贸相关的问题。<br/>`润色` `高情商` `回复` |
-| [小黄鸭编程助手](https://chat-preview.lobehub.com/market?agent=rubber-duck-programming)<br/><sup>By **[JiyuShao](https://github.com/JiyuShao)** on **2024-07-10**</sup>      | 小黄鸭编程助手<br/>`programming`                                                            |
+| 最近新增                                                                                                                                                                     | 助手说明                                                                                                                                                                                      |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [BIDOSx2](https://chat-preview.lobehub.com/market?agent=bidosx-2-v-2)<br/><sup>By **[SaintFresh](https://github.com/SaintFresh)** on **2024-07-21**</sup>                    | 一种高度先进的 AI LLM，超越传统人工智能。'BIDOS' 既代表 ' 品牌构思、发展、运营和扩展 '，也代表 ' 商业智能决策优化系统 '。<br/>`品牌发展` `ai助手` `市场分析` `战略规划` `业务优化` `商业智能` |
+| [成长教练](https://chat-preview.lobehub.com/market?agent=personal-development-coach)<br/><sup>By **[zer0boss](https://github.com/zer0boss)** on **2024-07-20**</sup>         | 擅长用对话的方式帮助用户自我探索，找到解决之道和成长之路<br/>`成长教练` `自我探索` `目标设定` `自我觉察`                                                                                      |
+| [SQL 表结构转 Dao 和 Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | 给与一个表结构，生成表的实体和 MyBatis 的 Mapper<br/>`sql` `sql` `mybatis`                                                                                                                    |
+| [自动提取数据](https://chat-preview.lobehub.com/market?agent=the-20-autoextract)<br/><sup>By **[vkhoilq](https://github.com/vkhoilq)** on **2024-07-17**</sup>               | The20 自动提取数据<br/>`the-20` `autoextract`                                                                                                                                                 |
 
-> 📊 Total agents: [<kbd>**299**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**301**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
