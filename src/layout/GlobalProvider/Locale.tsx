@@ -24,11 +24,11 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
     i18n.init();
 
     // load the dayjs locale
-    if (lang) {
-      const dayJSLocale = require(`dayjs/locale/${lang!.toLowerCase()}.js`);
-
-      dayjs.locale(dayJSLocale);
-    }
+    // if (lang) {
+    //   const dayJSLocale = require(`dayjs/locale/${lang!.toLowerCase()}.js`);
+    //
+    //   dayjs.locale(dayJSLocale);
+    // }
   } else {
     // if on browser side, init i18n instance only once
     if (!i18n.instance.isInitialized)
