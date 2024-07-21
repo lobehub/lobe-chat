@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.6.4](https://github.com/lobehub/lobe-chat/compare/v1.6.3...v1.6.4)
+
+<sup>Released on **2024-07-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add trpc query client with react-query.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add trpc query client with react-query, closes [#3282](https://github.com/lobehub/lobe-chat/issues/3282) ([013ee54](https://github.com/lobehub/lobe-chat/commit/013ee54))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.3](https://github.com/lobehub/lobe-chat/compare/v1.6.2...v1.6.3)
 
 <sup>Released on **2024-07-21**</sup>
