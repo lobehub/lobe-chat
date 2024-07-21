@@ -9,6 +9,7 @@ import {
   ByteDance,
   ChatGLM,
   Claude,
+  CodeGeeX,
   Cohere,
   Dbrx,
   DeepSeek,
@@ -50,6 +51,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('gpt-3')) return <OpenAI.Avatar size={size} type={'gpt3'} />;
   if (model.includes('gpt-4')) return <OpenAI.Avatar size={size} type={'gpt4'} />;
   if (model.startsWith('glm') || model.includes('chatglm')) return <ChatGLM.Avatar size={size} />;
+  if (model.startsWith('codegeex')) return <CodeGeeX.Avatar size={size} />;
   if (model.includes('deepseek')) return <DeepSeek.Avatar size={size} />;
   if (model.includes('claude')) return <Claude.Avatar size={size} />;
   if (model.includes('titan')) return <Aws.Avatar size={size} />;
