@@ -28,6 +28,8 @@ describe('featureFlagsSelectors', () => {
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
       enableClerkSignUp: true,
+      showMarket: true,
+      enableSTT: true,
     });
   });
 });
