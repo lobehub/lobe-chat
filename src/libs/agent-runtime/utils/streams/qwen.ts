@@ -62,12 +62,12 @@ export const transformQwenStream = (chunk: OpenAI.ChatCompletionChunk): StreamPr
     } as StreamProtocolToolCallChunk;
   }
 
-  if (item.finish_reason) {
-    return { data: item.finish_reason, id: chunk.id, type: 'stop' };
-  }
-
   if (typeof item.delta?.content === 'string') {
     return { data: item.delta.content, id: chunk.id, type: 'text' };
+  }
+
+  if (item.finish_reason) {
+    return { data: item.finish_reason, id: chunk.id, type: 'stop' };
   }
 
   if (item.delta?.content === null) {

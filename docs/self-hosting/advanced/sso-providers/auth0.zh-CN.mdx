@@ -15,7 +15,7 @@ tags:
 <Steps>
   ### 创建 Auth0 应用
 
-注册并登录 [Auth0][auth0-client-page]，点击左侧导航栏的「Applications」，切换到应用管理界面，点击右上角「Create Application」以创建应用。
+注册并登录 [Auth0](https://manage.auth0.com/dashboard)，点击左侧导航栏的「Applications」，切换到应用管理界面，点击右上角「Create Application」以创建应用。
 
 <Image
   alt="创建 Auth0 应用 S1"
@@ -80,7 +80,7 @@ http(s)://your-domain/api/auth/callback/auth0
 | `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 
   <Callout type={'tip'}>
-    前往 [📘 环境变量](/docs/self-hosting/environment-variable#auth0) 可查阅相关变量详情。
+    前往 [📘 环境变量](/zh/docs/self-hosting/environment-variables/auth#auth-0) 可查阅相关变量详情。
 
 </Callout>
 </Steps>
@@ -95,7 +95,7 @@ http(s)://your-domain/api/auth/callback/auth0
 
 如果你的企业或组织已有现有的统一身份认证设施，可在 Applications -> SSO Integrations 中，连接现有的单点登录服务。
 
-Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zoom 等单点登录服务，详细支持列表可参考 [这里][auth0-sso-integrations]
+Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zoom 等单点登录服务，详细支持列表可参考 [这里](https://marketplace.auth0.com/features/sso-integrations)
 
 <Image
   alt="Connecting to an Existing Single Sign-On Service"
@@ -117,9 +117,5 @@ Auth0 支持 Azure Active Directory / Slack / Google Workspace / Office 365 / Zo
 
 <Callout>
   如果你需要限制登录人员，务必配置 **阻止策略**： 请在打开社交登录选项后，参考
-  [这篇文章][auth0-login-actions-manual] 创建 Action 来设置阻止 / 允许列表。
+  [这篇文章](https://auth0.com/blog/permit-or-deny-login-requests-using-auth0-actions/) 创建 Action 来设置阻止 / 允许列表。
 </Callout>
-
-[auth0-client-page]: https://manage.auth0.com/dashboard
-[auth0-login-actions-manual]: https://auth0.com/blog/permit-or-deny-login-requests-using-auth0-actions/
-[auth0-sso-integrations]: https://marketplace.auth0.com/features/sso-integrations
