@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Przeciągnij pliki tutaj, aby przesłać wiele obrazów.",
+    "dragFileDesc": "Przeciągnij obrazy i pliki tutaj, aby przesłać wiele obrazów i plików.",
+    "dragFileTitle": "Prześlij plik",
+    "dragTitle": "Prześlij obraz"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",

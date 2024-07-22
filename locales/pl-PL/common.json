@@ -1,6 +1,14 @@
 {
   "about": "O nas",
   "advanceSettings": "Zaawansowane ustawienia",
+  "alert": {
+    "cloud": {
+      "action": "Darmowa wersja próbna",
+      "desc": "Dla wszystkich zarejestrowanych użytkowników mamy {{credit}} bezpłatnych punktów obliczeniowych, gotowych do użycia bez konieczności skomplikowanej konfiguracji. Wsparcie dla nieograniczonej historii rozmów i globalnej synchronizacji w chmurze. Czekają na Ciebie zaawansowane funkcje do odkrycia.",
+      "descOnMobile": "Dla wszystkich zarejestrowanych użytkowników oferujemy {{credit}} bezpłatnych punktów obliczeniowych, gotowych do użycia bez konieczności skomplikowanej konfiguracji.",
+      "title": "Witaj w {{name}}"
+    }
+  },
   "appInitializing": "Inicjowanie aplikacji, prosimy o cierpliwość...",
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Użytkownik Anonimowy",
     "billing": "Zarządzanie rachunkami",
+    "cloud": "Wypróbuj {{name}}",
     "data": "Przechowywanie danych",
     "defaultNickname": "Użytkownik Wersji Społecznościowej",
     "discord": "Wsparcie społeczności",

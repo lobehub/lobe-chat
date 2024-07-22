@@ -46,7 +46,7 @@ export const createSyncSlice: StateCreator<
     // double-check the sync ability
     // if there is no channelName, don't start sync
     const sync = syncSettingsSelectors.webrtcConfig(get());
-    if (!sync.channelName) return false;
+    if (!sync.channelName || !sync.signaling) return false;
 
     const name = syncSettingsSelectors.deviceName(get());
 

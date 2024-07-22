@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Drag and drop files here to upload multiple images.",
+    "dragFileDesc": "Drag and drop images and files here to upload multiple images and files.",
+    "dragFileTitle": "Upload Files",
+    "dragTitle": "Upload Images"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
