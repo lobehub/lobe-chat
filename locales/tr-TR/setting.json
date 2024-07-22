@@ -209,13 +209,7 @@
       "title": "Max Token Sınırlaması"
     },
     "model": {
-      "desc": "ChatGPT modeli",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "{{provider}} Model",
       "title": "Model"
     },
     "presencePenalty": {
@@ -345,7 +339,7 @@
       "unknownOS": "Bilinmeyen Sistem"
     },
     "warning": {
-      "message": "Bu özellik şu anda deneysel bir özellik olup, beklenmedik veya kararsız durumlar yaşanabilir. Sorunla karşılaşırsanız lütfen geri bildirimde bulunun."
+      "tip": "WebRTC'nin uzun bir topluluk beta testinden sonra, genel veri senkronizasyon ihtiyaçlarını kararlı bir şekilde karşılayamayabileceği uyarısı. Lütfen <1> sinyal sunucusunu dağıtın </1> ve ardından kullanın."
     },
     "webrtc": {
       "channelName": {
@@ -361,8 +355,13 @@
       },
       "desc": "Gerçek zamanlı, noktadan noktaya veri iletişimi, senkronizasyon için cihazların aynı anda çevrimiçi olması gerekir",
       "enabled": {
-        "invalid": "Lütfen senkronizasyon kanalı adını girdikten sonra etkinleştirin",
+        "invalid": "Lütfen sinyal sunucusu ve senkronizasyon kanal adını girerek etkinleştirin",
         "title": "Senkronizasyonu Etkinleştir"
+      },
+      "signaling": {
+        "desc": "WebRTC senkronizasyon için bu adresi kullanacak",
+        "placeholder": "Lütfen sinyal sunucusu adresini girin",
+        "title": "Sinyal Sunucusu"
       },
       "title": "WebRTC Senkronizasyonu"
     }
