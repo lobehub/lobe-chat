@@ -4,7 +4,7 @@ import { ModelProviderCard } from '@/types/llm';
 const Perplexity: ModelProviderCard = {
   chatModels: [
     {
-      displayName: 'Perplexity 7B Chat',
+      displayName: 'Perplexity 8B Chat',
       id: 'llama-3-sonar-small-32k-chat',
       tokens: 32_768,
     },
@@ -15,7 +15,7 @@ const Perplexity: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'Perplexity 7B Online',
+      displayName: 'Perplexity 8B Online',
       id: 'llama-3-sonar-small-32k-online',
       tokens: 28_000,
     },
@@ -41,7 +41,7 @@ const Perplexity: ModelProviderCard = {
       tokens: 16_384,
     },
   ],
-  checkModel: 'pplx-7b-chat',
+  checkModel: 'llama-3-8b-instruct',
   id: 'perplexity',
   name: 'Perplexity',
   proxyUrl: {

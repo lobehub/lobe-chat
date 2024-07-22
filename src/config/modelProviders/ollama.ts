@@ -1,5 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
+// ref https://ollama.com/library
 const Ollama: ModelProviderCard = {
   chatModels: [
     {
@@ -79,6 +80,28 @@ const Ollama: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      displayName: 'Deepseek V2 16B',
+      enabled: true,
+      id: 'deepseek-v2',
+      tokens: 32_000,
+    },
+    {
+      displayName: 'Deepseek V2 236B',
+      id: 'deepseek-v2:236b',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Deepseek Coder V2 16B', // https://huggingface.co/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
+      enabled: true,
+      id: 'deepseek-coder-v2',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Deepseek Coder V2 236B', // https://huggingface.co/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
+      id: 'deepseek-coder-v2:236b',
+      tokens: 128_000,
+    },
+    {
       displayName: 'Llama2 Chat 13B',
       id: 'llama2:13b',
       tokens: 4096, // https://llama.meta.com/llama2/
@@ -135,10 +158,10 @@ const Ollama: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      displayName: 'Mistral',
+      displayName: 'MathΣtral',
       enabled: true,
-      id: 'mistral',
-      tokens: 32_768, // https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.2/blob/main/config.json
+      id: 'mathstral',
+      tokens: 32_000, // https://huggingface.co/mistralai/mathstral-7B-v0.1
     },
     {
       displayName: 'Mixtral 8x7B',
