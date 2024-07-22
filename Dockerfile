@@ -1,30 +1,37 @@
 ## Base image for all the stages
 FROM node:20-alpine AS base
 
+RUN \
+    # Add user nextjs to run the app
+    addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs
+
+## Install pnpm globally, set the registry to use the mirror in China if needed
+FROM base AS pnpm
+
 ARG USE_NPM_CN_MIRROR
 
 ENV PNPM_HOME="/pnpm" \
     PATH="$PNPM_HOME:$PATH"
+
+WORKDIR /app
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
     if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
         npm config set registry "https://registry.npmmirror.com/"; \
     fi \
-    # Add user nextjs to run the app
-    && addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs
+    && npm install -g pnpm
 
 ## Sharp dependencies, copy all the files for production
-FROM base AS sharp
+FROM pnpm AS sharp
 
 WORKDIR /app
 
-RUN corepack enable \
-    && pnpm add sharp
+RUN pnpm add sharp
 
 ## Install dependencies only when needed
-FROM base AS builder
+FROM pnpm AS builder
 
 WORKDIR /app
 
@@ -51,8 +58,7 @@ ENV NODE_OPTIONS="--max-old-space-size=8192"
 COPY package.json ./
 COPY .npmrc ./
 
-RUN corepack enable \
-    && pnpm i
+RUN pnpm i
 
 COPY . .
 
