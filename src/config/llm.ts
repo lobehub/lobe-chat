@@ -104,8 +104,8 @@ export const getLLMConfig = () => {
       AZURE_MODEL_LIST: process.env.AZURE_MODEL_LIST,
 
       ENABLED_GENERIC_OPENAI: !!process.env.GENERIC_OPENAI_KEY,
-      GENERIC_OPENAI_KEY: process.env.GENERIC_OPENAI_KEY,
-      GENEROC_OPENAI_PROXY_URL: process.env.GENERIC_OPENAI_PROXY_URL,
+      GENERIC_OPENAI_API_KEY: process.env.GENERIC_OPENAI_KEY,
+      GENERIC_OPENAI_PROXY_URL: process.env.GENERIC_OPENAI_PROXY_URL,
 
       ENABLED_ZHIPU: !!process.env.ZHIPU_API_KEY,
       ZHIPU_API_KEY: process.env.ZHIPU_API_KEY,
