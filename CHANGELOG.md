@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 1.6.4](https://github.com/lobehub/lobe-chat/compare/v1.6.3...v1.6.4)
+
+<sup>Released on **2024-07-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add trpc query client with react-query.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add trpc query client with react-query, closes [#3282](https://github.com/lobehub/lobe-chat/issues/3282) ([013ee54](https://github.com/lobehub/lobe-chat/commit/013ee54))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.3](https://github.com/lobehub/lobe-chat/compare/v1.6.2...v1.6.3)
+
+<sup>Released on **2024-07-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Zhipu models (GLM-4-AllTools & CodeGeeX-4).
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Zhipu models (GLM-4-AllTools & CodeGeeX-4), closes [#3255](https://github.com/lobehub/lobe-chat/issues/3255) ([a92939f](https://github.com/lobehub/lobe-chat/commit/a92939f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.2](https://github.com/lobehub/lobe-chat/compare/v1.6.1...v1.6.2)
+
+<sup>Released on **2024-07-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix dayjs render on server.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix dayjs render on server, closes [#3278](https://github.com/lobehub/lobe-chat/issues/3278) ([8c08dd5](https://github.com/lobehub/lobe-chat/commit/8c08dd5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.1](https://github.com/lobehub/lobe-chat/compare/v1.6.0...v1.6.1)
 
 <sup>Released on **2024-07-19**</sup>
