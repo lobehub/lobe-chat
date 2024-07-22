@@ -82,6 +82,7 @@ const Novita: ModelProviderCard = {
     },
   ],
   checkModel: 'meta-llama/llama-3-70b-instruct',
+  disableBrowserRequest: true,
   id: 'novita',
   modelList: { showModelFetcher: true },
   name: 'Novita',
