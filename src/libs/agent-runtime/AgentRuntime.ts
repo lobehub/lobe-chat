@@ -110,6 +110,7 @@ class AgentRuntime {
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       deepseek: Partial<ClientOptions>;
+      genericopenai: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;

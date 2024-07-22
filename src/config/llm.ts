@@ -18,6 +18,10 @@ export const getLLMConfig = () => {
       AZURE_ENDPOINT: z.string().optional(),
       AZURE_MODEL_LIST: z.string().optional(),
 
+      ENABLED_GENERIC_OPENAI: z.boolean(),
+      GENERIC_OPENAI_API_KEY: z.string().optional(),
+      GENERIC_OPENAI_PROXY_URL: z.string().optional(),
+
       ENABLED_ZHIPU: z.boolean(),
       ZHIPU_API_KEY: z.string().optional(),
 
@@ -98,6 +102,10 @@ export const getLLMConfig = () => {
       AZURE_API_VERSION: process.env.AZURE_API_VERSION,
       AZURE_ENDPOINT: process.env.AZURE_ENDPOINT,
       AZURE_MODEL_LIST: process.env.AZURE_MODEL_LIST,
+
+      ENABLED_GENERIC_OPENAI: !!process.env.GENERIC_OPENAI_KEY,
+      GENERIC_OPENAI_KEY: process.env.GENERIC_OPENAI_KEY,
+      GENEROC_OPENAI_PROXY_URL: process.env.GENERIC_OPENAI_PROXY_URL,
 
       ENABLED_ZHIPU: !!process.env.ZHIPU_API_KEY,
       ZHIPU_API_KEY: process.env.ZHIPU_API_KEY,
