@@ -2,9 +2,12 @@ import AzureAD from 'next-auth/providers/azure-ad';
 
 import { authEnv } from '@/config/auth';
 
+import { CommonProviderConfig } from './sso.config';
+
 const provider = {
   id: 'azure-ad',
   provider: AzureAD({
+    ...CommonProviderConfig,
     // Specify auth scope, at least include 'openid email'
     // all scopes in Azure AD ref: https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc#openid-connect-scopes
     authorization: { params: { scope: 'openid email profile' } },

@@ -93,6 +93,17 @@ describe('LobeNextAuthDbAdapter', () => {
         expect(createdUser.emailVerified).toBe(user.emailVerified);
         expect(createdUser.image).toBe(user.image);
       });
+
+      it('should not create a user if it already exists', async () => {
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.createUser).toBeDefined();
+        // @ts-expect-error: createUser is defined
+        await nextAuthAdapter.createUser(user);
+        // Should not create a new user if it already exists
+        expect(
+          await serverDB.query.users.findMany({ where: eq(users.email, user.email) }),
+        ).toHaveLength(1);
+      });
     });
 
     describe('deleteUser', () => {

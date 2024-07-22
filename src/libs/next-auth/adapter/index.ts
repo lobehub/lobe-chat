@@ -54,6 +54,15 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
     async createUser(user): Promise<AdapterUser> {
       const { id, name, email, emailVerified, image } = user;
+      // return the user if it already exists
+      const existingUser = await UserModel.findByEmail(email);
+      if (existingUser) {
+        const adapterUser = mapLobeUserToAdapterUser(existingUser);
+        if (!adapterUser)
+          throw new Error('NextAuth: Failed to map user data to adapter user, email should exist');
+        return adapterUser;
+      }
+      // create a new user if it does not exist
       await UserModel.createUser(
         mapAdapterUserToLobeUser({ email, emailVerified, id, image, name }),
       );
