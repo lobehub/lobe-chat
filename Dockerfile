@@ -21,7 +21,9 @@ RUN \
     if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
         npm config set registry "https://registry.npmmirror.com/"; \
     fi \
-    && npm install -g pnpm
+    && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
+    && corepack enable \
+    && corepack use pnpm
 
 ## Sharp dependencies, copy all the files for production
 FROM pnpm AS sharp
