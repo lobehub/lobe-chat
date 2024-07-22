@@ -59,7 +59,7 @@ Updated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/g
 
 Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
     "displayName": "Google: Gemma 7B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemma-7b-it",
     "maxTokens": undefined,
