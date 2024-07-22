@@ -5,6 +5,8 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
+import { featureFlagsSelectors } from '@/store/serverConfig';
+import { createServerConfigStore } from '@/store/serverConfig/store';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -69,6 +71,8 @@ const currentChatsWithGuideMessage =
   (s: ChatStore): ChatMessage[] => {
     const data = currentChats(s);
 
+    const { isAgentEditable } = featureFlagsSelectors(createServerConfigStore().getState());
+
     const isBrandNewChat = data.length === 0;
 
     if (!isBrandNewChat) return data;
@@ -81,7 +85,7 @@ const currentChatsWithGuideMessage =
       ns: 'chat',
       systemRole: meta.description,
     });
-    const agentMsg = t('agentDefaultMessage', {
+    const agentMsg = t(isAgentEditable ? 'agentDefaultMessage' : 'agentDefaultMessageWithoutEdit', {
       id: activeId,
       name: meta.title || t('defaultAgent'),
       ns: 'chat',
