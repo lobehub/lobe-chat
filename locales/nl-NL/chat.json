@@ -99,6 +99,8 @@
       "duplicate": "Dupliceren",
       "export": "Exporteren"
     },
+    "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
+    "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
     "confirmRemoveAll": "Alle onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveTopic": "Dit onderwerp wordt verwijderd en kan niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveUnstarred": "Niet-gefavoriseerde onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
@@ -128,10 +130,6 @@
   "upload": {
     "actionFiletip": "Upload het bestand",
     "actionTooltip": "Upload afbeelding",
-    "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken.",
-    "dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden. Houd Shift ingedrukt om afbeeldingen direct te verzenden",
-    "dragFileDesc": "Sleep afbeeldingen en bestanden hierheen om het uploaden van meerdere afbeeldingen en bestanden te ondersteunen. Houd Shift ingedrukt om een ​​afbeelding of bestand rechtstreeks te verzenden",
-    "dragFileTitle": "Upload het bestand",
-    "dragTitle": "Upload afbeelding"
+    "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken."
   }
 }

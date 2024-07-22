@@ -420,7 +420,7 @@ class ChatService {
       ] as UserMessageContentPart[];
     };
 
-    const postMessages = messages.map((m): OpenAIChatMessage => {
+    let postMessages = messages.map((m): OpenAIChatMessage => {
       switch (m.role) {
         case 'user': {
           return { content: getContent(m), role: m.role };
@@ -458,7 +458,7 @@ class ChatService {
       }
     });
 
-    return produce(postMessages, (draft) => {
+    postMessages = produce(postMessages, (draft) => {
       // if it's a welcome question, inject InboxGuide SystemRole
       const inboxGuideSystemRole =
         options?.isWelcomeQuestion &&
@@ -492,6 +492,8 @@ class ChatService {
         });
       }
     });
+
+    return this.reorderToolMessages(postMessages);
   };
 
   private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
@@ -522,6 +524,46 @@ class ChatService {
     const data = params.payload as ChatStreamPayload;
 
     return agentRuntime.chat(data, { signal: params.signal });
+  };
+
+  /**
+   * Reorder tool messages to ensure that tool messages are displayed in the correct order.
+   * see https://github.com/lobehub/lobe-chat/pull/3155
+   */
+  private reorderToolMessages = (messages: OpenAIChatMessage[]): OpenAIChatMessage[] => {
+    const reorderedMessages: OpenAIChatMessage[] = [];
+    const toolMessages: Record<string, OpenAIChatMessage> = {};
+
+    // 1. collect all tool messages
+    messages.forEach((message) => {
+      if (message.role === 'tool' && message.tool_call_id) {
+        toolMessages[message.tool_call_id] = message;
+      }
+    });
+
+    // 2. reorder messages
+    messages.forEach((message) => {
+      const hasPushed = reorderedMessages.some(
+        (m) => !!message.tool_call_id && m.tool_call_id === message.tool_call_id,
+      );
+
+      if (hasPushed) return;
+
+      reorderedMessages.push(message);
+
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall) => {
+          const correspondingToolMessage = toolMessages[toolCall.id];
+          if (correspondingToolMessage) {
+            reorderedMessages.push(correspondingToolMessage);
+            // 从 toolMessages 中删除已处理的消息，避免重复
+            delete toolMessages[toolCall.id];
+          }
+        });
+      }
+    });
+
+    return reorderedMessages;
   };
 }
 

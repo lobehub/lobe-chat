@@ -1,5 +1,8 @@
 import {
+  Ai360,
+  AiMass,
   Anthropic,
+  Baichuan,
   Claude,
   DeepSeek,
   Gemini,
@@ -23,7 +26,9 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import {
+  Ai360ProviderCard,
   AnthropicProviderCard,
+  BaichuanProviderCard,
   DeepSeekProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
@@ -34,6 +39,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   StepfunProviderCard,
+  TaichuProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -169,6 +175,21 @@ export const useProviderList = (): ProviderItem[] => {
         ...StepfunProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'stepfun'),
         title: <Stepfun.Combine size={20} type={'color'} />,
+      },
+      {
+        ...BaichuanProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
+        title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
+      },
+      {
+        ...TaichuProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
+        title: <AiMass.Combine size={ 28 } type={ 'color' } />,
+      },
+      {
+        ...Ai360ProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'ai360'),
+        title: <Ai360.Combine size={ 20 } type={ 'color' } />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

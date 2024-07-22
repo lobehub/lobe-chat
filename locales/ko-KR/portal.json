@@ -1,0 +1,10 @@
+{
+  "Artifacts": "아티팩트",
+  "actions": {
+    "genAiMessage": "AI 메시지 생성",
+    "summary": "요약",
+    "summaryTooltip": "현재 콘텐츠를 요약합니다"
+  },
+  "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 플러그인을 사용한 후에 다시 확인해주세요.",
+  "title": "확장 창"
+}

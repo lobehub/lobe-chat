@@ -18,7 +18,7 @@ export class LobeOllamaAI implements LobeRuntimeAI {
 
   baseURL?: string;
 
-  constructor({ baseURL }: ClientOptions) {
+  constructor({ baseURL }: ClientOptions = {}) {
     try {
       if (baseURL) new URL(baseURL);
     } catch {

@@ -139,6 +139,7 @@
     "modalDesc": "After configuring the address of the plugin marketplace, you can use a custom plugin marketplace",
     "title": "Configure Plugin Marketplace"
   },
+  "showInPortal": "Please check the details in the Portal view",
   "store": {
     "actions": {
       "confirmUninstall": "The plugin is about to be uninstalled. After uninstalling, the plugin configuration will be cleared. Please confirm your operation.",

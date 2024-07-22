@@ -10,7 +10,7 @@ export const useStyles = createStyles(({ css, token }) => ({
     overflow: hidden;
 
     height: 64px;
-    margin-bottom: -56px;
+    margin-block-end: -56px;
 
     background: ${token.colorFillSecondary};
   `,

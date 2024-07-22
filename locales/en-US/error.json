@@ -67,6 +67,7 @@
     "OpenAIBizError": "Error requesting OpenAI service, please troubleshoot or retry based on the following information",
     "PluginApiNotFound": "Sorry, the API does not exist in the plugin's manifest. Please check if your request method matches the plugin manifest API",
     "PluginApiParamsError": "Sorry, the input parameter validation for the plugin request failed. Please check if the input parameters match the API description",
+    "PluginFailToTransformArguments": "Sorry, the plugin failed to parse the arguments. Please try regenerating the assistant message or switch to a more powerful AI model with Tools Calling capability and try again",
     "PluginGatewayError": "Sorry, there was an error with the plugin gateway. Please check if the plugin gateway configuration is correct.",
     "PluginManifestInvalid": "Sorry, the plugin's manifest validation failed. Please check if the manifest format is correct",
     "PluginManifestNotFound": "Sorry, the server could not find the plugin's manifest file (manifest.json). Please check if the plugin manifest file address is correct",

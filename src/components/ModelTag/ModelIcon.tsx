@@ -1,12 +1,15 @@
 import {
   AdobeFirefly,
   Ai21,
+  Ai360,
+  AiMass,
   Aws,
   Azure,
   Baichuan,
   ByteDance,
   ChatGLM,
   Claude,
+  CodeGeeX,
   Cohere,
   Dbrx,
   DeepSeek,
@@ -43,6 +46,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   // currently supported models, maybe not in its own provider
   if (model.startsWith('gpt')) return <OpenAI size={size} />;
   if (model.startsWith('glm') || model.includes('chatglm')) return <ChatGLM size={size} />;
+  if (model.includes('codegeex')) return <CodeGeeX size={size} />;
   if (model.includes('claude')) return <Claude size={size} />;
   if (model.includes('deepseek')) return <DeepSeek size={size} />;
   if (model.includes('titan')) return <Aws size={size} />;
@@ -61,6 +65,8 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
+  if (model.includes('taichu')) return <AiMass size={size} />;
+  if (model.includes('360gpt')) return <Ai360 size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan')) return <Baichuan size={size} />;

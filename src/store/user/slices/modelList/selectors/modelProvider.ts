@@ -49,7 +49,7 @@ export const getDefaultModeProviderById = (provider: string) => (s: UserStore) =
 /**
  * get the default enabled models for a provider
  * it's a default enabled model list by Lobe Chat
- * e.g. openai is ['gpt-3.5-turbo','gpt-4-turbo']
+ * e.g. openai is ['gpt-4o-mini','gpt-4o','gpt-4-turbo']
  */
 const getDefaultEnabledModelsById = (provider: string) => (s: UserStore) => {
   const modelProvider = getDefaultModeProviderById(provider)(s);

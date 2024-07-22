@@ -1,5 +1,7 @@
 import {
+  Ai360ProviderCard,
   AnthropicProviderCard,
+  BaichuanProviderCard,
   BedrockProviderCard,
   DeepSeekProviderCard,
   GoogleProviderCard,
@@ -13,6 +15,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   StepfunProviderCard,
+  TaichuProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
@@ -22,12 +25,20 @@ import { ModelProvider } from '@/libs/agent-runtime';
 import { UserModelProviderConfig } from '@/types/user/settings';
 
 export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
+  ai360: {
+    enabled: false,
+    enabledModels: filterEnabledModels(Ai360ProviderCard),
+  },
   anthropic: {
     enabled: false,
     enabledModels: filterEnabledModels(AnthropicProviderCard),
   },
   azure: {
     enabled: false,
+  },
+  baichuan: {
+    enabled: false,
+    enabledModels: filterEnabledModels(BaichuanProviderCard),
   },
   bedrock: {
     enabled: false,
@@ -82,6 +93,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
     enabled: false,
     enabledModels: filterEnabledModels(StepfunProviderCard),
   },
+  taichu: {
+    enabled: false,
+    enabledModels: filterEnabledModels(TaichuProviderCard),
+  },
   togetherai: {
     enabled: false,
     enabledModels: filterEnabledModels(TogetherAIProviderCard),
@@ -96,6 +111,6 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   },
 };
 
-export const DEFAULT_MODEL = 'gpt-3.5-turbo';
+export const DEFAULT_MODEL = 'gpt-4o-mini';
 
 export const DEFAULT_PROVIDER = ModelProvider.OpenAI;

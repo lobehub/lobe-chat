@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden.",
+    "dragFileDesc": "Sleep afbeeldingen en bestanden hierheen om meerdere afbeeldingen en bestanden te uploaden.",
+    "dragFileTitle": "Bestanden uploaden",
+    "dragTitle": "Afbeeldingen uploaden"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual needs.",

@@ -1,0 +1,10 @@
+{
+  "Artifacts": "Artifacts",
+  "actions": {
+    "genAiMessage": "Generate Assistant Message",
+    "summary": "Summary",
+    "summaryTooltip": "Summarize current content"
+  },
+  "emptyArtifactList": "The current Artifacts list is empty. Please use plugins in the session as needed before viewing.",
+  "title": "Portal View"
+}
