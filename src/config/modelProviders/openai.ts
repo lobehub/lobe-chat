@@ -1,6 +1,8 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://platform.openai.com/docs/models
+// ref:
+// https://platform.openai.com/docs/models
+// https://platform.openai.com/docs/deprecations
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
@@ -53,14 +55,14 @@ const OpenAI: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      description: 'Currently points to gpt-4-1106-vision-preview',
+      description: 'Currently points to gpt-4-1106-vision-preview', // Will be discontinued on December 6, 2024
       displayName: 'GPT-4 Turbo Vision Preview',
       id: 'gpt-4-vision-preview',
       tokens: 128_000,
       vision: true,
     },
     {
-      displayName: 'GPT-4 Turbo Vision Preview (1106)',
+      displayName: 'GPT-4 Turbo Vision Preview (1106)', // Will be discontinued on December 6, 2024
       id: 'gpt-4-1106-vision-preview',
       tokens: 128_000,
       vision: true,
@@ -85,20 +87,21 @@ const OpenAI: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: 'Currently points to gpt-4-32k-0613',
+      description: 'Currently points to gpt-4-32k-0613', // Will be discontinued on June 6, 2025
       displayName: 'GPT-4 32K',
       functionCall: true,
       id: 'gpt-4-32k',
       tokens: 32_768,
     },
     {
-      displayName: 'GPT-4 32K (0613)',
+      displayName: 'GPT-4 32K (0613)', // Will be discontinued on June 6, 2025
       functionCall: true,
       id: 'gpt-4-32k-0613',
       tokens: 32_768,
     },
     {
-      description: 'GPT 3.5 Turbo，适用于各种文本生成和理解任务',
+      description:
+        'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
       displayName: 'GPT-3.5 Turbo',
       functionCall: true,
       id: 'gpt-3.5-turbo',
@@ -122,20 +125,20 @@ const OpenAI: ModelProviderCard = {
       tokens: 4096,
     },
     {
-      description: 'Currently points to gpt-3.5-turbo-16k-0613',
+      description: 'Currently points to gpt-3.5-turbo-16k-0613', // Will be discontinued on September 13, 2024
       displayName: 'GPT-3.5 Turbo 16K',
       id: 'gpt-3.5-turbo-16k',
       legacy: true,
       tokens: 16_385,
     },
     {
-      displayName: 'GPT-3.5 Turbo (0613)',
+      displayName: 'GPT-3.5 Turbo (0613)', // Will be discontinued on September 13, 2024
       id: 'gpt-3.5-turbo-0613',
       legacy: true,
       tokens: 4096,
     },
     {
-      displayName: 'GPT-3.5 Turbo 16K (0613)',
+      description: 'Currently points to gpt-3.5-turbo-16k-0613', // Will be discontinued on September 13, 2024
       id: 'gpt-3.5-turbo-16k-0613',
       legacy: true,
       tokens: 16_385,
