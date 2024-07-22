@@ -15,6 +15,7 @@ import {
   SessionGroupItem,
   SessionGroups,
 } from '@/types/session';
+import { merge } from '@/utils/merge';
 
 import { ISessionService } from './type';
 
@@ -94,7 +95,9 @@ export class ClientService implements ISessionService {
     data: Partial<Pick<LobeAgentSession, 'group' | 'meta' | 'pinned'>>,
   ) {
     const pinned = typeof data.pinned === 'boolean' ? (data.pinned ? 1 : 0) : undefined;
-    return SessionModel.update(id, { ...data, pinned });
+    const prev = await SessionModel.findById(id);
+
+    return SessionModel.update(id, merge(prev, { ...data, pinned }));
   }
 
   async updateSessionConfig(

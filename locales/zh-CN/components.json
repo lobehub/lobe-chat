@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "拖拽文件到这里，支持上传多个图片。",
+    "dragFileDesc": "拖拽图片和文件到这里，支持上传多个图片和文件。",
+    "dragFileTitle": "上传文件",
+    "dragTitle": "上传图片"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "自定义模型，默认设定同时支持函数调用与视觉识别，请根据实际情况验证上述能力的可用性",

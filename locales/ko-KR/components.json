@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "여기에 파일을 드래그하여 여러 이미지를 업로드할 수 있습니다.",
+    "dragFileDesc": "여기에 이미지와 파일을 드래그하여 여러 이미지와 파일을 업로드할 수 있습니다.",
+    "dragFileTitle": "파일 업로드",
+    "dragTitle": "이미지 업로드"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "사용자 정의 모델, 기본적으로 함수 호출 및 시각 인식을 모두 지원하며, 실제 기능을 확인하세요",

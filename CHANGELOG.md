@@ -2,6 +2,307 @@
 
 # Changelog
 
+### [Version 1.6.6](https://github.com/lobehub/lobe-chat/compare/v1.6.5...v1.6.6)
+
+<sup>Released on **2024-07-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **model**: Clear and add models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **model**: Clear and add models, closes [#3208](https://github.com/lobehub/lobe-chat/issues/3208) ([ef54191](https://github.com/lobehub/lobe-chat/commit/ef54191))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.5](https://github.com/lobehub/lobe-chat/compare/v1.6.4...v1.6.5)
+
+<sup>Released on **2024-07-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Content lost unexpectedly on Qwen provider when `finish_reason` is `stop`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Content lost unexpectedly on Qwen provider when `finish_reason` is `stop`, closes [#3252](https://github.com/lobehub/lobe-chat/issues/3252) ([d35c5b0](https://github.com/lobehub/lobe-chat/commit/d35c5b0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.4](https://github.com/lobehub/lobe-chat/compare/v1.6.3...v1.6.4)
+
+<sup>Released on **2024-07-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Add trpc query client with react-query.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Add trpc query client with react-query, closes [#3282](https://github.com/lobehub/lobe-chat/issues/3282) ([013ee54](https://github.com/lobehub/lobe-chat/commit/013ee54))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.3](https://github.com/lobehub/lobe-chat/compare/v1.6.2...v1.6.3)
+
+<sup>Released on **2024-07-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Zhipu models (GLM-4-AllTools & CodeGeeX-4).
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Zhipu models (GLM-4-AllTools & CodeGeeX-4), closes [#3255](https://github.com/lobehub/lobe-chat/issues/3255) ([a92939f](https://github.com/lobehub/lobe-chat/commit/a92939f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.2](https://github.com/lobehub/lobe-chat/compare/v1.6.1...v1.6.2)
+
+<sup>Released on **2024-07-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix dayjs render on server.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix dayjs render on server, closes [#3278](https://github.com/lobehub/lobe-chat/issues/3278) ([8c08dd5](https://github.com/lobehub/lobe-chat/commit/8c08dd5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.1](https://github.com/lobehub/lobe-chat/compare/v1.6.0...v1.6.1)
+
+<sup>Released on **2024-07-19**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the DragUpload.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the DragUpload, closes [#3263](https://github.com/lobehub/lobe-chat/issues/3263) ([19186eb](https://github.com/lobehub/lobe-chat/commit/19186eb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.6.0](https://github.com/lobehub/lobe-chat/compare/v1.5.5...v1.6.0)
+
+<sup>Released on **2024-07-19**</sup>
+
+#### ✨ Features
+
+- **misc**: Add `gpt-4o-mini` in OpenAI Provider and set it as the default model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add `gpt-4o-mini` in OpenAI Provider and set it as the default model, closes [#3256](https://github.com/lobehub/lobe-chat/issues/3256) ([a84d807](https://github.com/lobehub/lobe-chat/commit/a84d807))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.5.5](https://github.com/lobehub/lobe-chat/compare/v1.5.4...v1.5.5)
+
+<sup>Released on **2024-07-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Added Gemma2 instead of outdated Gemma.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Added Gemma2 instead of outdated Gemma, closes [#3231](https://github.com/lobehub/lobe-chat/issues/3231) ([03173b7](https://github.com/lobehub/lobe-chat/commit/03173b7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.5.4](https://github.com/lobehub/lobe-chat/compare/v1.5.3...v1.5.4)
+
+<sup>Released on **2024-07-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix delete session group.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix delete session group, closes [#3245](https://github.com/lobehub/lobe-chat/issues/3245) ([8f7167d](https://github.com/lobehub/lobe-chat/commit/8f7167d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.5.3](https://github.com/lobehub/lobe-chat/compare/v1.5.2...v1.5.3)
+
+<sup>Released on **2024-07-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `OpenAI` deployment restrictions, fix cant duplicate assistant.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `OpenAI` deployment restrictions, closes [#3206](https://github.com/lobehub/lobe-chat/issues/3206) ([3d7a35d](https://github.com/lobehub/lobe-chat/commit/3d7a35d))
+- **misc**: Fix cant duplicate assistant, closes [#3242](https://github.com/lobehub/lobe-chat/issues/3242) ([0edc851](https://github.com/lobehub/lobe-chat/commit/0edc851))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.5.2](https://github.com/lobehub/lobe-chat/compare/v1.5.1...v1.5.2)
+
+<sup>Released on **2024-07-17**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix session not reorder after send message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix session not reorder after send message, closes [#3239](https://github.com/lobehub/lobe-chat/issues/3239) ([7245a08](https://github.com/lobehub/lobe-chat/commit/7245a08))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.5.1](https://github.com/lobehub/lobe-chat/compare/v1.5.0...v1.5.1)
+
+<sup>Released on **2024-07-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve brand url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve brand url, closes [#3238](https://github.com/lobehub/lobe-chat/issues/3238) ([eef066f](https://github.com/lobehub/lobe-chat/commit/eef066f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.5.0](https://github.com/lobehub/lobe-chat/compare/v1.4.3...v1.5.0)
 
 <sup>Released on **2024-07-17**</sup>

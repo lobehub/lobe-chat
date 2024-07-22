@@ -123,6 +123,6 @@ export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRunti
           'result_format',
           'top_p',
         )
-      : params;
+      : omit(params, 'frequency_penalty');
   }
 }

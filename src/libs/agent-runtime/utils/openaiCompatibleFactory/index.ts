@@ -89,7 +89,7 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
       controller.enqueue({
         choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
           delta: {
-            content: choice.message.content,
+            content: null,
             role: choice.message.role,
           },
           finish_reason: choice.finish_reason,
