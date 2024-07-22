@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.6.5](https://github.com/lobehub/lobe-chat/compare/v1.6.4...v1.6.5)
+
+<sup>Released on **2024-07-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Content lost unexpectedly on Qwen provider when `finish_reason` is `stop`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Content lost unexpectedly on Qwen provider when `finish_reason` is `stop`, closes [#3252](https://github.com/lobehub/lobe-chat/issues/3252) ([d35c5b0](https://github.com/lobehub/lobe-chat/commit/d35c5b0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.4](https://github.com/lobehub/lobe-chat/compare/v1.6.3...v1.6.4)
 
 <sup>Released on **2024-07-21**</sup>
