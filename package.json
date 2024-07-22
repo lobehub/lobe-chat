@@ -241,7 +241,7 @@
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
     "dpdm": "^3.14.0",
-    "drizzle-kit": "^0.22.8",
+    "drizzle-kit": "^0.23.0",
     "eslint": "^8.57.0",
     "eslint-plugin-mdx": "^2.3.4",
     "fake-indexeddb": "^6.0.0",
