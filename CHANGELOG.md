@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.6.6](https://github.com/lobehub/lobe-chat/compare/v1.6.5...v1.6.6)
+
+<sup>Released on **2024-07-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **model**: Clear and add models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **model**: Clear and add models, closes [#3208](https://github.com/lobehub/lobe-chat/issues/3208) ([ef54191](https://github.com/lobehub/lobe-chat/commit/ef54191))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.5](https://github.com/lobehub/lobe-chat/compare/v1.6.4...v1.6.5)
 
 <sup>Released on **2024-07-22**</sup>
