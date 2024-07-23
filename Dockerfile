@@ -56,7 +56,7 @@ COPY . .
 RUN npm run build:docker
 
 ## Application image, copy all the files for production
-FROM scratch as app
+FROM scratch AS app
 
 COPY --from=builder /app/public /app/public
 
