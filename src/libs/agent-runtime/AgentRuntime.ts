@@ -14,6 +14,7 @@ import { LobeGroq } from './groq';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
+import { LobeNovitaAI } from './novita';
 import { LobeOllamaAI } from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
@@ -115,6 +116,7 @@ class AgentRuntime {
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
+      novita: Partial<ClientOptions>;
       ollama: Partial<ClientOptions>;
       openai: Partial<ClientOptions>;
       openrouter: Partial<ClientOptions>;
@@ -226,8 +228,13 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.Novita: {
+        runtimeModel = new LobeNovitaAI(params.novita ?? {});
+        break;
+      }
+
       case ModelProvider.Baichuan: {
-        runtimeModel = new LobeBaichuanAI(params.baichuan);
+        runtimeModel = new LobeBaichuanAI(params.baichuan ?? {});
         break;
       }
 
