@@ -16,7 +16,7 @@ import { CURRENT_CONFIG_VERSION } from '@/migrations';
 import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';
 
-import { DataImporter } from '../index';
+import { DataImporterService } from '../index';
 import mockImportData from './fixtures/messages.json';
 
 let serverDB = await getTestDBInstance();
@@ -28,7 +28,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'test-user-id';
-let importer: DataImporter;
+let importer: DataImporterService;
 
 beforeEach(async () => {
   await serverDB.delete(users);
@@ -38,7 +38,7 @@ beforeEach(async () => {
     await tx.insert(users).values({ id: userId });
   });
 
-  importer = new DataImporter(userId);
+  importer = new DataImporterService(userId);
 });
 
 describe('DataImporter', () => {
