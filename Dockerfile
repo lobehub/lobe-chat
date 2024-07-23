@@ -123,6 +123,8 @@ ENV \
     PERPLEXITY_API_KEY="" PERPLEXITY_PROXY_URL="" \
     # Qwen
     QWEN_API_KEY="" \
+    # Spark
+    SPARK_API_KEY="" SPARK_API_SECRET="" \
     # Stepfun
     STEPFUN_API_KEY="" \
     # Taichu
