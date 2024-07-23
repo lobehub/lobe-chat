@@ -45,18 +45,18 @@ RUN \
     && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
     # Enable corepack
     && corepack enable \
+    # Use pnpm for corepack
+    && corepack use pnpm \
     # Install the dependencies
-    && pnpm i
+    && pnpm i \
+    # Add sharp dependencies
+    && mkdir -p /sharp \
+    && pnpm add sharp --prefix /sharp
 
 COPY . .
 
 # run build standalone for docker version
 RUN npm run build:docker
-
-WORKDIR /sharp
-
-# Add sharp dependencies
-RUN pnpm add sharp --prefix .
 
 ## Application image, copy all the files for production
 FROM scratch AS app
