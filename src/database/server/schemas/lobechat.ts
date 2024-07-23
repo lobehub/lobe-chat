@@ -45,6 +45,7 @@ export const users = pgTable('users', {
   phone: text('phone'),
   firstName: text('first_name'),
   lastName: text('last_name'),
+  fullName: text('full_name'),
 
   isOnboarded: boolean('is_onboarded').default(false),
   // Time user was created in Clerk

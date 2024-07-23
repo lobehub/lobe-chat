@@ -3,13 +3,13 @@ import { AdapterAuthenticator, AdapterUser } from 'next-auth/adapters';
 import { NewUser } from '@/database/server/schemas/lobechat';
 
 export const mapAdapterUserToLobeUser = (adapterUser: AdapterUser): NewUser => {
-  const { id, name, email, image, emailVerified } = adapterUser;
+  const { id, email, name, image, emailVerified } = adapterUser;
   return {
     avatar: image,
     email,
     emailVerifiedAt: emailVerified ? new Date(emailVerified) : undefined,
+    fullName: name,
     id,
-    username: name,
   };
 };
 
@@ -24,20 +24,20 @@ export const partialMapAdapterUserToLobeUser = ({
     avatar: image,
     email,
     emailVerifiedAt: emailVerified ? new Date(emailVerified) : undefined,
+    fullName: name,
     id,
-    username: name,
   };
 };
 
 export const mapLobeUserToAdapterUser = (lobeUser: NewUser | undefined): AdapterUser | null => {
   if (!lobeUser?.email) return null;
-  const { id, username, email, avatar, emailVerifiedAt } = lobeUser;
+  const { id, fullName, email, avatar, emailVerifiedAt } = lobeUser;
   return {
     email,
     emailVerified: emailVerifiedAt ? new Date(emailVerifiedAt) : null,
     id,
     image: avatar,
-    name: username,
+    name: fullName,
   };
 };
 
