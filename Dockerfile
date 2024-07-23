@@ -6,32 +6,10 @@ RUN \
     addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs
 
-## Corepack image, enable corepack
-FROM base AS corepack
+## Builder image, install all the dependencies and build the app
+FROM base AS builder
 
 ARG USE_NPM_CN_MIRROR
-
-WORKDIR /app
-
-RUN \
-    # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
-    if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
-        npm config set registry "https://registry.npmmirror.com/"; \
-    fi \
-    && corepack enable
-
-## Sharp dependencies, copy all the files for production
-FROM corepack AS sharp
-
-WORKDIR /app
-
-RUN export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
-    && pnpm add sharp
-
-## Install dependencies only when needed
-FROM corepack AS builder
-
-WORKDIR /app
 
 ENV NEXT_PUBLIC_BASE_PATH=""
 
@@ -53,16 +31,32 @@ ENV NEXT_PUBLIC_ANALYTICS_UMAMI="" \
 # Node
 ENV NODE_OPTIONS="--max-old-space-size=8192"
 
+WORKDIR /app
+
 COPY package.json ./
 COPY .npmrc ./
 
-RUN export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
+RUN \
+    # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
+    if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
+        npm config set registry "https://registry.npmmirror.com/"; \
+    fi \
+    # Set the registry for corepack
+    && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
+    # Enable corepack
+    && corepack enable \
+    # Install the dependencies
     && pnpm i
 
 COPY . .
 
 # run build standalone for docker version
 RUN npm run build:docker
+
+WORKDIR /sharp
+
+# Add sharp dependencies
+RUN pnpm add sharp --prefix .
 
 ## Application image, copy all the files for production
 FROM scratch AS app
@@ -73,7 +67,7 @@ COPY --from=builder /app/public /app/public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=sharp /app/node_modules/.pnpm /app/node_modules/.pnpm
+COPY --from=builder /sharp/node_modules/.pnpm /app/node_modules/.pnpm
 
 ## Production image, copy all the files and run next
 FROM base
