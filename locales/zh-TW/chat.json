@@ -99,6 +99,8 @@
       "duplicate": "建立副本",
       "export": "匯出主題"
     },
+    "checkOpenNewTopic": "是否開啟新主題?",
+    "checkSaveCurrentMessages": "是否將當前對話保存為話題？",
     "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
     "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
@@ -128,10 +130,6 @@
   "upload": {
     "actionFiletip": "上傳文件",
     "actionTooltip": "上傳圖片",
-    "disabled": "當前模型不支援視覺識別，請切換模型後使用",
-    "dragDesc": "拖拽文件到這裡，支持上傳多個圖片。按住 Shift 直接發送圖片",
-    "dragFileDesc": "拖曳圖片和文件至此，支援上傳多張圖片和文件。按住 Shift 直接傳送圖片或文件",
-    "dragFileTitle": "上傳文件",
-    "dragTitle": "上傳圖片"
+    "disabled": "當前模型不支援視覺識別，請切換模型後使用"
   }
 }

@@ -50,7 +50,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
-      const model = this.convertModel(payload.model, payload.messages);
+      const model = payload.model;
 
       const contents = this.buildGoogleMessages(payload.messages, model);
 
@@ -195,21 +195,6 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
 
     return contents;
-  };
-
-  private convertModel = (model: string, messages: OpenAIChatMessage[]) => {
-    let finalModel: string = model;
-
-    if (model.includes('pro-vision')) {
-      // if message are all text message, use vision will return an error:
-      // "[400 Bad Request] Add an image to use models/gemini-pro-vision, or switch your model to a text model."
-      const noNeedVision = messages.every((m) => typeof m.content === 'string');
-
-      // so we need to downgrade to gemini-pro
-      if (noNeedVision) finalModel = 'gemini-pro';
-    }
-
-    return finalModel;
   };
 
   private parseErrorMessage(message: string): {

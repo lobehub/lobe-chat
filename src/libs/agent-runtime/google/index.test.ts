@@ -2,9 +2,9 @@
 import { FunctionDeclarationSchemaType, FunctionDeclarationsTool } from '@google/generative-ai';
 import { JSONSchema7 } from 'json-schema';
 import OpenAI from 'openai';
-import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, OpenAIChatMessage } from '@/libs/agent-runtime';
+import { OpenAIChatMessage } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeGoogleAI } from './index';
@@ -383,7 +383,7 @@ describe('LobeGoogleAI', () => {
             role: 'user',
           },
         ];
-        const model = 'gemini-pro-vision';
+        const model = 'gemini-1.5-flash-latest';
 
         // 调用 buildGoogleMessages 方法
         const contents = instance['buildGoogleMessages'](messages, model);
@@ -395,36 +395,6 @@ describe('LobeGoogleAI', () => {
             role: 'user',
           },
         ]);
-      });
-    });
-
-    describe('convertModel', () => {
-      it('should use default text model when no images are included in messages', () => {
-        const messages: OpenAIChatMessage[] = [
-          { content: 'Hello', role: 'user' },
-          { content: 'Hi', role: 'assistant' },
-        ];
-
-        // 调用 buildGoogleMessages 方法
-        const model = instance['convertModel']('gemini-pro-vision', messages);
-
-        expect(model).toEqual('gemini-pro'); // 假设 'gemini-pro' 是默认文本模型
-      });
-
-      it('should use specified model when images are included in messages', () => {
-        const messages: OpenAIChatMessage[] = [
-          {
-            content: [
-              { type: 'text', text: 'Hello' },
-              { type: 'image_url', image_url: { url: 'data:image/png;base64,...' } },
-            ],
-            role: 'user',
-          },
-        ];
-
-        const model = instance['convertModel']('gemini-pro-vision', messages);
-
-        expect(model).toEqual('gemini-pro-vision');
       });
     });
 

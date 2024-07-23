@@ -15,7 +15,7 @@ import {
 import { ImportResult } from '@/services/config';
 import { ImporterEntryData } from '@/types/importer';
 
-export class DataImporter {
+export class DataImporterService {
   private userId: string;
 
   /**

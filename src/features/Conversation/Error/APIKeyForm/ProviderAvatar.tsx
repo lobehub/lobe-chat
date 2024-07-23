@@ -9,6 +9,7 @@ import {
   Minimax,
   Mistral,
   Moonshot,
+  Novita,
   OpenAI,
   OpenRouter,
   Perplexity,
@@ -98,6 +99,9 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.ZeroOne: {
       return <ZeroOne color={ZeroOne.colorPrimary} size={56} />;
+    }
+    case ModelProvider.Novita: {
+      return <Novita color={Novita.colorPrimary} size={56} />;
     }
 
     case ModelProvider.Ai360: {
