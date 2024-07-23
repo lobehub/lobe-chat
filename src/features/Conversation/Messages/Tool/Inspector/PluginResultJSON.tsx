@@ -15,7 +15,7 @@ const PluginResult = memo<FunctionMessageProps>(({ content }) => {
   }
 
   return (
-    <Highlighter language={'json'} style={{ maxHeight: 200, maxWidth: 800 }}>
+    <Highlighter language={'json'} style={{ maxHeight: 200, maxWidth: 800, overflow: 'scroll' }}>
       {data}
     </Highlighter>
   );
