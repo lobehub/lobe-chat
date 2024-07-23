@@ -39,6 +39,7 @@ COPY .npmrc ./
 RUN \
     # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
     if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
+        export SENTRYCLI_CDNURL="https://npmmirror.com/mirrors/sentry-cli"; \
         npm config set registry "https://registry.npmmirror.com/"; \
     fi \
     # Set the registry for corepack
