@@ -77,7 +77,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('rwkv')) return <Rwkv.Avatar size={size} />;
   if (model.includes('ernie')) return <Wenxin.Avatar size={size} />;
   // ref https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html#_3-%E8%AF%B7%E6%B1%82%E8%AF%B4%E6%98%8E
-  if (model.includes('spark') || model.startsWith('general') || model.startsWith('4.0ultra'))
+  if (model.includes('spark') || model.startsWith('general') || model.startsWith('4.0ultra') || model.startsWith('pro-128k'))
     return <Spark.Avatar size={size} />;
   if (model.includes('hunyuan')) return <Hunyuan.Avatar size={size} />;
   // ref https://github.com/fishaudio/Bert-VITS2/blob/master/train_ms.py#L702

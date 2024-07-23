@@ -23,8 +23,17 @@ const Spark: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      description: '支持最长上下文的星火大模型，长文无忧 128K星火大模型强势来袭 通读全文，旁征博引 沟通无界，逻辑连贯',
+      displayName: 'Spark Pro-128K',
+      enabled: true,
+      functionCall: false,
+      id: 'pro-128k',
+      maxOutput: 4096,
+      tokens: 128_000,
+    },
+    {
       description: '最全面的星火大模型版本，功能丰富 支持联网搜索、天气、日期等多个内置插件 核心能力全面升级，各场景应用效果普遍提升 支持System角色人设与FunctionCall函数调用',
-      displayName: 'Spark Max',
+      displayName: 'Spark3.5 Max',
       enabled: true,
       functionCall: false,
       id: 'generalv3.5',
