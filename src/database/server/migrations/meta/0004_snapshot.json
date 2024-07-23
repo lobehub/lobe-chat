@@ -6,9 +6,10 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "8946c1a0-243b-4de8-9b84-a928613559e1",
+  "id": "e5b1a3aa-e810-43cc-bd62-984895d40a96",
   "prevId": "e8666496-0cbd-49c0-a4b3-ba7c1f6ef262",
   "schemas": {},
+  "sequences": {},
   "tables": {
     "public.agents": {
       "name": "agents",
@@ -1811,6 +1812,12 @@
         },
         "last_name": {
           "name": "last_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "full_name": {
+          "name": "full_name",
           "type": "text",
           "primaryKey": false,
           "notNull": false
