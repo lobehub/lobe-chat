@@ -11,6 +11,7 @@ import {
   Minimax,
   Mistral,
   Moonshot,
+  Novita,
   OpenRouter,
   Perplexity,
   Stepfun,
@@ -35,6 +36,7 @@ import {
   MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
+  NovitaProviderCard,
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
@@ -127,6 +129,11 @@ export const useProviderList = (): ProviderItem[] => {
         title: <OpenRouter.Combine iconProps={{ color: OpenRouter.colorPrimary }} size={20} />,
       },
       {
+        ...NovitaProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'novita'),
+        title: <Novita.Combine size={20} type={'color'} />,
+      },
+      {
         ...TogetherAIProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'togetherai'),
         title: <Together.Combine size={26} type={'color'} />,
@@ -179,12 +186,12 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...BaichuanProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
-        title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
+        title: <Baichuan.Combine size={20} type={'color'} />,
       },
       {
         ...TaichuProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'taichu'),
-        title: <AiMass.Combine size={ 28 } type={ 'color' } />,
+        title: <AiMass.Combine size={28} type={'color'} />,
       },
       {
         ...Ai360ProviderCard,
