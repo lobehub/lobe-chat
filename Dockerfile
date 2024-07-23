@@ -56,7 +56,7 @@ COPY . .
 RUN npm run build:docker
 
 ## Application image, copy all the files for production
-FROM scratch
+FROM scratch as app
 
 COPY --from=builder /app/public /app/public
 
@@ -86,7 +86,7 @@ ENV ACCESS_CODE="" \
 # Model Variables
 ENV \
     # Ai360
-    AI360_API_KEY ENABLED_AI360="" \
+    AI360_API_KEY="" ENABLED_AI360="" \
     # Anthropic
     ANTHROPIC_API_KEY="" ANTHROPIC_PROXY_URL="" ENABLED_ANTHROPIC="" \
     # Amazon Bedrock
