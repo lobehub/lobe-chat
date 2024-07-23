@@ -10,6 +10,7 @@ import {
   MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
+  NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
   OpenRouterProviderCard,
@@ -72,6 +73,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   moonshot: {
     enabled: false,
     enabledModels: filterEnabledModels(MoonshotProviderCard),
+  },
+  novita: {
+    enabled: false,
+    enabledModels: filterEnabledModels(NovitaProviderCard),
   },
   ollama: {
     enabled: true,

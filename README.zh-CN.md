@@ -261,7 +261,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [SQL 表结构转 Dao 和 Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | 给与一个表结构，生成表的实体和 MyBatis 的 Mapper<br/>`sql` `sql` `mybatis`                                                                                                                    |
 | [自动提取数据](https://chat-preview.lobehub.com/market?agent=the-20-autoextract)<br/><sup>By **[vkhoilq](https://github.com/vkhoilq)** on **2024-07-17**</sup>               | The20 自动提取数据<br/>`the-20` `autoextract`                                                                                                                                                 |
 
-> 📊 Total agents: [<kbd>**301**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**304**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

@@ -93,19 +93,25 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENROUTER_MODEL_
 {
   "enabled": false,
   "enabledModels": [
-    "google/gemma-7b-it",
-    "mistralai/mistral-7b-instruct",
+    "google/gemma-7b-it:free",
+    "mistralai/mistral-7b-instruct:free",
   ],
   "serverModelCards": [
     {
-      "displayName": "google/gemma-7b-it",
+      "displayName": "Google: Gemma 7B (free)",
       "enabled": true,
-      "id": "google/gemma-7b-it",
+      "functionCall": false,
+      "id": "google/gemma-7b-it:free",
+      "tokens": 8192,
+      "vision": false,
     },
     {
-      "displayName": "Mistral-7B-Instruct",
+      "displayName": "Mistral 7B Instruct (free)",
       "enabled": true,
-      "id": "mistralai/mistral-7b-instruct",
+      "functionCall": false,
+      "id": "mistralai/mistral-7b-instruct:free",
+      "tokens": 32768,
+      "vision": false,
     },
   ],
 }
