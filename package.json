@@ -53,7 +53,7 @@
     "prettier": "prettier -c --write \"**/**\"",
     "pull": "git pull",
     "release": "semantic-release",
-    "start": "next start",
+    "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",
     "test-app": "vitest run --config vitest.config.ts",
