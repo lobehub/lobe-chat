@@ -6,10 +6,32 @@ RUN \
     addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs
 
-## Builder image, install all the dependencies and build the app
-FROM base AS builder
+## Corepack image, enable corepack
+FROM base AS corepack
 
 ARG USE_NPM_CN_MIRROR
+
+WORKDIR /app
+
+RUN \
+    # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
+    if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
+        npm config set registry "https://registry.npmmirror.com/"; \
+    fi \
+    && corepack enable
+
+## Sharp dependencies, copy all the files for production
+FROM corepack AS sharp
+
+WORKDIR /app
+
+RUN export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
+    && pnpm add sharp
+
+## Install dependencies only when needed
+FROM corepack AS builder
+
+WORKDIR /app
 
 ENV NEXT_PUBLIC_BASE_PATH=""
 
@@ -31,23 +53,10 @@ ENV NEXT_PUBLIC_ANALYTICS_UMAMI="" \
 # Node
 ENV NODE_OPTIONS="--max-old-space-size=8192"
 
-WORKDIR /app
-
 COPY package.json ./
 COPY .npmrc ./
 
-RUN \
-    # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
-    if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
-        npm config set registry "https://registry.npmmirror.com/"; \
-    fi \
-    # Set the registry for corepack
-    && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
-    # Enable corepack
-    && corepack enable \
-    # Add sharp dependencies
-    && pnpm add sharp \
-    # Install the dependencies
+RUN export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
     && pnpm i
 
 COPY . .
@@ -64,7 +73,7 @@ COPY --from=builder /app/public /app/public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=builder /app/node_modules/.pnpm /app/node_modules/.pnpm
+COPY --from=sharp /app/node_modules/.pnpm /app/node_modules/.pnpm
 
 ## Production image, copy all the files and run next
 FROM base
