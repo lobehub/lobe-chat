@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.6.11](https://github.com/lobehub/lobe-chat/compare/v1.6.10...v1.6.11)
+
+<sup>Released on **2024-07-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `UNAUTHORIZED` issue with clerk auth provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `UNAUTHORIZED` issue with clerk auth provider, closes [#3299](https://github.com/lobehub/lobe-chat/issues/3299) ([97bea09](https://github.com/lobehub/lobe-chat/commit/97bea09))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.10](https://github.com/lobehub/lobe-chat/compare/v1.6.9...v1.6.10)
 
 <sup>Released on **2024-07-23**</sup>
