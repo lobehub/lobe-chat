@@ -110,7 +110,7 @@
     "@clerk/localizations": "2.0.0",
     "@clerk/nextjs": "^5.2.6",
     "@clerk/themes": "^2.1.10",
-    "@google/generative-ai": "^0.14.1",
+    "@google/generative-ai": "^0.16.0",
     "@icons-pack/react-simple-icons": "^9.6.0",
     "@khmyznikov/pwa-install": "^0.3.9",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
