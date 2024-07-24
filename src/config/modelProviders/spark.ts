@@ -27,7 +27,7 @@ const Spark: ModelProviderCard = {
       displayName: 'Spark Pro-128K',
       enabled: true,
       functionCall: false,
-      id: 'pro-128k',
+      id: 'Pro-128k',
       maxOutput: 4096,
       tokens: 128_000,
     },
