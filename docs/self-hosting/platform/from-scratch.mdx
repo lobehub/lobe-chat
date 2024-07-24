@@ -1,0 +1,61 @@
+---
+title: Deploy LobeChat from Scratch
+description: Learn how to deploy LobeChat from scratch, including installing dependencies, building, and starting the server.
+tags:
+  - LobeChat
+  - Deployment
+  - pnpm
+  - From Scratch
+---
+
+# Deploy LobeChat from Scratch
+
+This tutorial will guide you through deploying LobeChat from scratch. We will use `pnpm` for dependency installation and server startup.
+
+<Steps>
+
+### Prerequisites
+
+Before you begin, ensure that your system has the following tools installed:
+
+- [Node.js](https://nodejs.org/) (recommended to use the latest LTS version)
+- [pnpm](https://pnpm.io/) (can be installed via `npm`: `npm install -g pnpm`)
+
+### Clone the Repository
+
+First, clone the LobeChat repository to your local machine:
+
+```bash
+git clone https://github.com/lobehub/lobe-chat.git
+cd lobe-chat
+```
+
+### Install Dependencies
+
+Use `pnpm` to install the required dependencies for the project:
+
+```bash
+pnpm install
+```
+
+### Build the Project
+
+Before starting the server, you need to build the project:
+
+```bash
+pnpm build
+```
+
+### Start the Server
+
+Start the LobeChat server using the following command:
+
+```bash
+pnpm start
+```
+
+### Access the Application
+
+Once the server is running, you can access the LobeChat welcome page in your browser at `http://localhost:3210`.
+
+</Steps>

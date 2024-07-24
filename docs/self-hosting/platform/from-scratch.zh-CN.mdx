@@ -1,0 +1,69 @@
+---
+title: 从头开始部署 LobeChat
+description: 了解如何从头开始部署 LobeChat，包括安装依赖、构建和启动服务器的详细步骤。
+tags:
+  - LobeChat
+  - 部署
+  - pnpm
+  - 从头开始
+---
+
+# 从头开始部署 LobeChat
+
+本教程将指导你如何从头开始部署 LobeChat。我们将使用 `pnpm` 进行依赖安装和服务器启动。
+
+<Steps>
+
+### 准备工作
+
+在开始之前，请确保你的系统中已经安装了以下工具：
+
+- [Node.js](https://nodejs.org/)（建议使用最新的 LTS 版本）
+- [pnpm](https://pnpm.io/)（可以通过 `npm` 安装：`npm install -g pnpm`）
+
+### 克隆代码库
+
+首先，克隆 LobeChat 的代码库到本地：
+
+```bash
+git clone https://github.com/lobehub/lobe-chat.git
+cd lobe-chat
+```
+
+### 安装依赖
+
+使用 `pnpm` 安装项目所需的依赖：
+
+```bash
+pnpm install
+```
+
+### 配置环境变量
+
+在构建项目之前，需要配置环境变量。你可以复制 `.env.example` 文件并重命名为 `.env`，然后根据需要修改其中的环境变量：
+
+```bash
+cp .env.example .env
+```
+
+### 构建项目
+
+在启动服务器之前，需要先构建项目：
+
+```bash
+pnpm build
+```
+
+### 启动服务器
+
+使用以下命令启动 LobeChat 服务器：
+
+```bash
+pnpm start
+```
+
+### 访问应用
+
+服务器启动后，你可以在浏览器中访问 `http://localhost:3210` 查看 LobeChat 的欢迎页面。
+
+</Steps>
