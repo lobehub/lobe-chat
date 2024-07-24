@@ -4,6 +4,27 @@ import { ModelProviderCard } from '@/types/llm';
 const Groq: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'LLaMA3.1 405B',
+      enabled: true,
+      functionCall: true,
+      id: 'llama-3-1-405b-reasoning',
+      tokens: 131_072,
+    },
+    {
+      displayName: 'LLaMA3.1 70B',
+      enabled: true,
+      functionCall: true,
+      id: 'llama-3-1-70b-versatile',
+      tokens: 131_072,
+    },
+    {
+      displayName: 'LLaMA3.1 8B',
+      enabled: true,
+      functionCall: true,
+      id: 'llama-3-1-8b-instant',
+      tokens: 131_072,
+    },
+    {
       displayName: 'LLaMA3 70B',
       enabled: true,
       functionCall: true,
