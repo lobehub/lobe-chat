@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.6.6",
+  "version": "1.6.11",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -53,7 +53,9 @@
     "prettier": "prettier -c --write \"**/**\"",
     "pull": "git pull",
     "release": "semantic-release",
-    "start": "next start",
+    "self-hosting:docker": "docker build -t lobe-chat:local .",
+    "self-hosting:docker-cn": "docker build -t lobe-chat:local --build-arg USE_NPM_CN_MIRROR=true .",
+    "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",
     "test-app": "vitest run --config vitest.config.ts",
@@ -106,7 +108,7 @@
     "@azure/openai": "1.0.0-beta.12",
     "@cfworker/json-schema": "^1.12.8",
     "@clerk/localizations": "2.0.0",
-    "@clerk/nextjs": "^5.2.2",
+    "@clerk/nextjs": "^5.2.6",
     "@clerk/themes": "^2.1.10",
     "@google/generative-ai": "^0.14.1",
     "@icons-pack/react-simple-icons": "^9.6.0",
