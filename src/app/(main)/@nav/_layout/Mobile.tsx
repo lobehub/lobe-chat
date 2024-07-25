@@ -47,7 +47,7 @@ const Nav = memo(() => {
           },
           title: t('tab.chat'),
         },
-        {
+        showMarket && {
           icon: (active: boolean) => (
             <Icon className={active ? styles.active : undefined} icon={Compass} />
           ),
@@ -67,7 +67,7 @@ const Nav = memo(() => {
           },
           title: t('tab.me'),
         },
-      ].filter((item) => showMarket || item.key !== SidebarTabKey.Market),
+      ].filter(Boolean) as MobileTabBarProps['items'],
     [t],
   );
 
