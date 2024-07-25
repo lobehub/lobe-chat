@@ -11,7 +11,7 @@ const Groq: ModelProviderCard = {
       tokens: 16_000,
     },
     {
-      displayName: 'LLama 3.1 70B (Preview)',
+      displayName: 'LLaMA 3.1 70B (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama-3.1-70b-versatile',
@@ -25,14 +25,14 @@ const Groq: ModelProviderCard = {
       tokens: 8000,
     },
     {
-      displayName: 'Llama 3 Groq 70b Tool Use (preview)',
+      displayName: 'LLaMA 3 Groq 70b Tool Use (preview)',
       enabled: true,
       functionCall: true,
       id: 'llama3-groq-70b-8192-tool-use-preview',
       tokens: 8192,
     },
     {
-      displayName: 'Llama 3 Groq 8b Tool Use (preview)',
+      displayName: 'LLaMA 3 Groq 8b Tool Use (preview)',
       enabled: true,
       functionCall: true,
       id: 'llama3-groq-8b-8192-tool-use-preview',
