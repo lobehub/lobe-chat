@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Arraste os arquivos para cá, suportando o upload de várias imagens.",
+    "dragFileDesc": "Arraste imagens e arquivos para cá, suportando o upload de várias imagens e arquivos.",
+    "dragFileTitle": "Enviar arquivo",
+    "dragTitle": "Enviar imagem"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modelo personalizado, por padrão, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",

@@ -100,6 +100,8 @@ export default {
       duplicate: '创建副本',
       export: '导出话题',
     },
+    checkOpenNewTopic: '是否开启新话题?',
+    checkSaveCurrentMessages: '是否保存当前会话为话题?',
     confirmRemoveAll: '即将删除全部话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveTopic: '即将删除该话题，删除后将不可恢复，请谨慎操作。',
     confirmRemoveUnstarred: '即将删除未收藏话题，删除后将不可恢复，请谨慎操作。',
@@ -130,9 +132,5 @@ export default {
     actionFiletip: '上传文件',
     actionTooltip: '上传图片',
     disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
-    dragDesc: '拖拽文件到这里，支持上传多个图片。按住 Shift 直接发送图片',
-    dragFileDesc: '拖拽图片和文件到这里，支持上传多个图片和文件。按住 Shift 直接发送图片或文件',
-    dragFileTitle: '上传文件',
-    dragTitle: '上传图片',
   },
 };

@@ -1,6 +1,14 @@
 {
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
+  "alert": {
+    "cloud": {
+      "action": "Provalo gratuitamente",
+      "desc": "Abbiamo fornito a tutti gli utenti registrati {{credit}} crediti di calcolo gratuiti, senza la necessità di configurazioni complesse, pronto all'uso, supporta la cronologia delle conversazioni illimitata e la sincronizzazione cloud globale. Ci sono molte altre funzionalità avanzate che ti aspettano da scoprire.",
+      "descOnMobile": "Offriamo a tutti gli utenti registrati {{credit}} crediti di calcolo gratuiti, pronti all'uso senza configurazioni complesse.",
+      "title": "Benvenuto a {{name}}"
+    }
+  },
   "appInitializing": "Inizializzazione dell'app in corso, attendere pazientemente...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
@@ -206,6 +214,7 @@
   "userPanel": {
     "anonymousNickName": "Utente Anonimo",
     "billing": "Gestione fatturazione",
+    "cloud": "Prova {{name}}",
     "data": "Archiviazione dati",
     "defaultNickname": "Utente Community",
     "discord": "Supporto della community",
