@@ -14,6 +14,14 @@ const provider = {
     clientId: authEnv.AUTH0_CLIENT_ID,
     clientSecret: authEnv.AUTH0_CLIENT_SECRET,
     issuer: authEnv.AUTH0_ISSUER,
+    profile(profile) {
+      return {
+        email: profile.email,
+        image: profile.picture,
+        name: profile.name,
+        username: profile.user_id,
+      };
+    },
   }),
 };
 

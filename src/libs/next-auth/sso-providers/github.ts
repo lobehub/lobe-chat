@@ -12,6 +12,14 @@ const provider = {
     authorization: { params: { scope: 'read:user user:email' } },
     clientId: authEnv.GITHUB_CLIENT_ID,
     clientSecret: authEnv.GITHUB_CLIENT_SECRET,
+    profile: (profile) => {
+      return {
+        email: profile.email,
+        image: profile.avatar_url,
+        name: profile.name,
+        username: profile.id.toString(),
+      };
+    },
   }),
 };
 

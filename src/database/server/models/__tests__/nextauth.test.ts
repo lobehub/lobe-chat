@@ -34,6 +34,7 @@ const user: AdapterUser = {
   email: 'john.doe@example.com',
   emailVerified: new Date(),
   image: 'https://example.com/avatar.jpg',
+  username: 'johndoe',
 };
 
 const sessionToken = 'session-token';
@@ -102,6 +103,40 @@ describe('LobeNextAuthDbAdapter', () => {
         // Should not create a new user if it already exists
         expect(
           await serverDB.query.users.findMany({ where: eq(users.email, user.email) }),
+        ).toHaveLength(1);
+      });
+
+      it('should not create a user if email exist', async () => {
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.createUser).toBeDefined();
+        const anotherUserId = 'user-db-2';
+        const anotherUserName = 'John Doe 2';
+        // @ts-expect-error: createUser is defined
+        await nextAuthAdapter.createUser({
+          ...user,
+          id: anotherUserId,
+          name: anotherUserName,
+        });
+        // Should not create a new user if email already exists
+        expect(
+          await serverDB.query.users.findMany({ where: eq(users.email, user.email) }),
+        ).toHaveLength(1);
+      });
+
+      it('should not create a user if username exist', async () => {
+        expect(nextAuthAdapter).toBeDefined();
+        expect(nextAuthAdapter.createUser).toBeDefined();
+        const anotherUserId = 'user-db-2';
+        const anotherUserName = 'another';
+        // @ts-expect-error: createUser is defined
+        await nextAuthAdapter.createUser({
+          ...user,
+          id: anotherUserId,
+          username: anotherUserName,
+        });
+        // Should not create a new user if username already exists
+        expect(
+          await serverDB.query.users.findMany({ where: eq(users.username, anotherUserName) }),
         ).toHaveLength(1);
       });
     });

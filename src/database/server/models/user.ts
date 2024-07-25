@@ -42,6 +42,10 @@ export class UserModel {
     return serverDB.query.users.findFirst({ where: eq(users.email, email) });
   };
 
+  static findByUsername = async (username: string) => {
+    return serverDB.query.users.findFirst({ where: eq(users.username, username) });
+  };
+
   getUserState = async (id: string) => {
     const result = await serverDB
       .select({

@@ -14,6 +14,15 @@ const provider = {
     clientId: authEnv.AZURE_AD_CLIENT_ID,
     clientSecret: authEnv.AZURE_AD_CLIENT_SECRET,
     tenantId: authEnv.AZURE_AD_TENANT_ID,
+    // TODO(NextAuth): map unique user id to `username` field
+    // profile(profile) {
+    //   return {
+    //     username: profile.user_id,
+    //     name: profile.name,
+    //     email: profile.email,
+    //     image: profile.picture,
+    //   }
+    // }
   }),
 };
 

@@ -3,13 +3,14 @@ import { AdapterAuthenticator, AdapterUser } from 'next-auth/adapters';
 import { NewUser } from '@/database/server/schemas/lobechat';
 
 export const mapAdapterUserToLobeUser = (adapterUser: AdapterUser): NewUser => {
-  const { id, email, name, image, emailVerified } = adapterUser;
+  const { id, email, name, image, emailVerified, username } = adapterUser;
   return {
     avatar: image,
     email,
     emailVerifiedAt: emailVerified ? new Date(emailVerified) : undefined,
     fullName: name,
     id,
+    username,
   };
 };
 
@@ -19,6 +20,7 @@ export const partialMapAdapterUserToLobeUser = ({
   email,
   image,
   emailVerified,
+  username,
 }: Partial<AdapterUser>): Partial<NewUser> => {
   return {
     avatar: image,
@@ -26,18 +28,20 @@ export const partialMapAdapterUserToLobeUser = ({
     emailVerifiedAt: emailVerified ? new Date(emailVerified) : undefined,
     fullName: name,
     id,
+    username,
   };
 };
 
-export const mapLobeUserToAdapterUser = (lobeUser: NewUser | undefined): AdapterUser | null => {
-  if (!lobeUser?.email) return null;
-  const { id, fullName, email, avatar, emailVerifiedAt } = lobeUser;
+export const mapLobeUserToAdapterUser = (lobeUser: NewUser): AdapterUser => {
+  const { id, fullName, email, avatar, emailVerifiedAt, username } = lobeUser;
   return {
-    email,
+    // In LobeUser, email is nullable
+    email: email ?? '',
     emailVerified: emailVerifiedAt ? new Date(emailVerifiedAt) : null,
     id,
     image: avatar,
     name: fullName,
+    username: username ?? undefined,
   };
 };
 

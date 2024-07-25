@@ -10,6 +10,15 @@ const provider = {
     clientId: authEnv.ZITADEL_CLIENT_ID,
     clientSecret: authEnv.ZITADEL_CLIENT_SECRET,
     issuer: authEnv.ZITADEL_ISSUER,
+    // TODO(NextAuth): map unique user id to `username` field
+    // profile(profile) {
+    //   return {
+    //     username: profile.user_id,
+    //     name: profile.name,
+    //     email: profile.email,
+    //     image: profile.picture,
+    //   }
+    // }
   }),
 };
 

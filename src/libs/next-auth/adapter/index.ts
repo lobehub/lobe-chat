@@ -53,18 +53,20 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
         .then((res) => res[0]);
     },
     async createUser(user): Promise<AdapterUser> {
-      const { id, name, email, emailVerified, image } = user;
+      const { id, name, email, emailVerified, image, username } = user;
       // return the user if it already exists
-      const existingUser = await UserModel.findByEmail(email);
+      let existingUser = await UserModel.findByEmail(email);
+      // If the user is not found by email, try to find by providerAccountId
+      if (!existingUser && username) {
+        existingUser = await UserModel.findByUsername(username);
+      }
       if (existingUser) {
         const adapterUser = mapLobeUserToAdapterUser(existingUser);
-        if (!adapterUser)
-          throw new Error('NextAuth: Failed to map user data to adapter user, email should exist');
         return adapterUser;
       }
       // create a new user if it does not exist
       await UserModel.createUser(
-        mapAdapterUserToLobeUser({ email, emailVerified, id, image, name }),
+        mapAdapterUserToLobeUser({ email, emailVerified, id, image, name, username }),
       );
       return user;
     },
@@ -138,6 +140,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     async getUser(id): Promise<AdapterUser | null> {
       try {
         const lobeUser = await UserModel.findById(id);
+        if (!lobeUser) return null;
         return mapLobeUserToAdapterUser(lobeUser);
       } catch {
         return null;
@@ -165,7 +168,7 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
 
     async getUserByEmail(email): Promise<AdapterUser | null> {
       const lobeUser = await UserModel.findByEmail(email);
-      return mapLobeUserToAdapterUser(lobeUser) ?? null;
+      return lobeUser ? mapLobeUserToAdapterUser(lobeUser) : null;
     },
 
     async linkAccount(data): Promise<AdapterAccount | null | undefined> {
