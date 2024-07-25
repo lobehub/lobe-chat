@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 
-import { getPreferredRegion } from '@/app/api/config';
 import { createErrorResponse } from '@/app/api/errorResponse';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
@@ -9,8 +8,6 @@ import { checkAuth } from '../../../middleware/auth';
 import { initAgentRuntimeWithUserPayload } from '../../agentRuntime';
 
 export const runtime = 'edge';
-
-export const preferredRegion = getPreferredRegion();
 
 const noNeedAPIKey = (provider: string) =>
   [ModelProvider.OpenRouter, ModelProvider.TogetherAI].includes(provider as any);

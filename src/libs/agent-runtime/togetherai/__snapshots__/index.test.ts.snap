@@ -135,7 +135,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Qwen1.5 is the beta version of Qwen2, a transformer-based decoder-only language model pretrained on a large amount of data. In comparison with the previous released Qwen.",
     "displayName": "Qwen 1.5 Chat (14B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "Qwen/Qwen1.5-14B-Chat",
     "maxOutput": 32768,
@@ -145,7 +145,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Qwen1.5 is the beta version of Qwen2, a transformer-based decoder-only language model pretrained on a large amount of data. In comparison with the previous released Qwen.",
     "displayName": "Qwen 1.5 Chat (32B)",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "Qwen/Qwen1.5-32B-Chat",
     "maxOutput": 32768,
@@ -335,7 +335,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Gemma is a family of lightweight, state-of-the-art open models from Google, built from the same research and technology used to create the Gemini models.",
     "displayName": "Gemma Instruct (7B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemma-7b-it",
     "maxOutput": 8192,

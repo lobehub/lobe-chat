@@ -7,12 +7,6 @@ import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
-import { useFileStore } from '@/store/file';
-import { useUserStore } from '@/store/user';
-import { modelProviderSelectors } from '@/store/user/selectors';
-
 const DRAGGING_ROOT_ID = 'dragging-root';
 const getContainer = () => document.querySelector(`#${DRAGGING_ROOT_ID}`);
 const BLOCK_SIZE = 64;
@@ -33,10 +27,12 @@ const useStyles = createStyles(({ css, token }) => {
       height: 100%;
       padding: 16px;
 
-      border: 1.5px dashed ${token.colorBorder};
+      border: 1.5px dashed #fff;
       border-radius: ${token.borderRadiusLG}px;
     `,
     desc: css`
+      font-size: 14px;
+      line-height: 22px;
       color: #fff;
     `,
     icon: css`
@@ -77,32 +73,19 @@ const handleDragOver = (e: DragEvent) => {
   }
 };
 
-const DragUpload = memo(() => {
+interface DragUploadProps {
+  enabledFiles?: boolean;
+  onUploadFiles: (files?: FileList) => Promise<void>;
+}
+
+const DragUpload = memo<DragUploadProps>(({ enabledFiles = true, onUploadFiles }) => {
   const { styles, theme } = useStyles();
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation('components');
   const [isDragging, setIsDragging] = useState(false);
   // When a file is dragged to a different area, the 'dragleave' event may be triggered,
   // causing isDragging to be mistakenly set to false.
   // to fix this issue, use a counter to ensure the status change only when drag event left the browser window .
   const dragCounter = useRef(0);
-
-  const uploadFile = useFileStore((s) => s.uploadFile);
-
-  const model = useAgentStore(agentSelectors.currentAgentModel);
-
-  const enabledFiles = useUserStore(modelProviderSelectors.isModelEnabledFiles(model));
-
-  const uploadImages = async (fileList: FileList | undefined) => {
-    if (!fileList || fileList.length === 0) return;
-
-    const pools = Array.from(fileList).map(async (file) => {
-      // skip none-file items
-      if (!file.type.startsWith('image') && !enabledFiles) return;
-      await uploadFile(file);
-    });
-
-    await Promise.all(pools);
-  };
 
   const handleDragEnter = (e: DragEvent) => {
     if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
@@ -148,7 +131,7 @@ const DragUpload = memo(() => {
       const files = e.dataTransfer?.files;
 
       // upload files
-      uploadImages(files);
+      onUploadFiles(files);
     }
   };
 
@@ -156,7 +139,7 @@ const DragUpload = memo(() => {
     // get files from clipboard
     const files = event.clipboardData?.files;
 
-    uploadImages(files);
+    onUploadFiles(files);
   };
 
   useEffect(() => {
@@ -229,10 +212,10 @@ const DragUpload = memo(() => {
           </Flexbox>
           <Flexbox align={'center'} gap={8} style={{ textAlign: 'center' }}>
             <Flexbox className={styles.title}>
-              {t(enabledFiles ? 'upload.dragFileTitle' : 'upload.dragTitle')}
+              {t(enabledFiles ? 'DragUpload.dragFileTitle' : 'DragUpload.dragTitle')}
             </Flexbox>
             <Flexbox className={styles.desc}>
-              {t(enabledFiles ? 'upload.dragFileDesc' : 'upload.dragDesc')}
+              {t(enabledFiles ? 'DragUpload.dragFileDesc' : 'DragUpload.dragDesc')}
             </Flexbox>
           </Flexbox>
         </Center>
