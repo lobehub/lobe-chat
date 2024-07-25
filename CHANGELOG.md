@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 1.6.13](https://github.com/lobehub/lobe-chat/compare/v1.6.12...v1.6.13)
+
+<sup>Released on **2024-07-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Updated Groq model list to include llama-3.1 and llama3-Groq.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Updated Groq model list to include llama-3.1 and llama3-Groq, closes [#3313](https://github.com/lobehub/lobe-chat/issues/3313) ([a9cfad6](https://github.com/lobehub/lobe-chat/commit/a9cfad6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.12](https://github.com/lobehub/lobe-chat/compare/v1.6.11...v1.6.12)
+
+<sup>Released on **2024-07-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add new models to groq which are llama 3.1.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add new models to groq which are llama 3.1, closes [#3301](https://github.com/lobehub/lobe-chat/issues/3301) ([ec20fd0](https://github.com/lobehub/lobe-chat/commit/ec20fd0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.11](https://github.com/lobehub/lobe-chat/compare/v1.6.10...v1.6.11)
+
+<sup>Released on **2024-07-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `UNAUTHORIZED` issue with clerk auth provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `UNAUTHORIZED` issue with clerk auth provider, closes [#3299](https://github.com/lobehub/lobe-chat/issues/3299) ([97bea09](https://github.com/lobehub/lobe-chat/commit/97bea09))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.10](https://github.com/lobehub/lobe-chat/compare/v1.6.9...v1.6.10)
 
 <sup>Released on **2024-07-23**</sup>
