@@ -273,7 +273,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 | [Convert SQL Table Structure to Dao and Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | Generate entity class and MyBatis Mapper based on a table structure<br/>`sql` `sql` `mybatis`                                                                                                                                                                                                                                 |
 | [Auto Extraction Data](https://chat-preview.lobehub.com/market?agent=the-20-autoextract)<br/><sup>By **[vkhoilq](https://github.com/vkhoilq)** on **2024-07-17**</sup>                          | The20 Auto Extraction Data<br/>`the-20` `autoextract`                                                                                                                                                                                                                                                                         |
 
-> 📊 Total agents: [<kbd>**302**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**304**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

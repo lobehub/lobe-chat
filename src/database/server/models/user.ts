@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm';
 import { DeepPartial } from 'utility-types';
 
 import { serverDB } from '@/database/server/core/db';
-import { KeyVaultsGateKeeper } from '@/server/keyVaultsEncrypt';
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';

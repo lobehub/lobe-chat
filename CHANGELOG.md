@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 1.6.11](https://github.com/lobehub/lobe-chat/compare/v1.6.10...v1.6.11)
+
+<sup>Released on **2024-07-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `UNAUTHORIZED` issue with clerk auth provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `UNAUTHORIZED` issue with clerk auth provider, closes [#3299](https://github.com/lobehub/lobe-chat/issues/3299) ([97bea09](https://github.com/lobehub/lobe-chat/commit/97bea09))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.10](https://github.com/lobehub/lobe-chat/compare/v1.6.9...v1.6.10)
+
+<sup>Released on **2024-07-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Upgrade snapshot version.
+
+#### 💄 Styles
+
+- **misc**: Fix the scrolling of the return result area of function calling.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Upgrade snapshot version, closes [#3296](https://github.com/lobehub/lobe-chat/issues/3296) ([2c14fef](https://github.com/lobehub/lobe-chat/commit/2c14fef))
+
+#### Styles
+
+- **misc**: Fix the scrolling of the return result area of function calling, closes [#3295](https://github.com/lobehub/lobe-chat/issues/3295) ([9c8f469](https://github.com/lobehub/lobe-chat/commit/9c8f469))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.9](https://github.com/lobehub/lobe-chat/compare/v1.6.8...v1.6.9)
+
+<sup>Released on **2024-07-23**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.8](https://github.com/lobehub/lobe-chat/compare/v1.6.7...v1.6.8)
+
+<sup>Released on **2024-07-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move server modules.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move server modules, closes [#3291](https://github.com/lobehub/lobe-chat/issues/3291) ([c7c9f39](https://github.com/lobehub/lobe-chat/commit/c7c9f39))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.7](https://github.com/lobehub/lobe-chat/compare/v1.6.6...v1.6.7)
 
 <sup>Released on **2024-07-23**</sup>
