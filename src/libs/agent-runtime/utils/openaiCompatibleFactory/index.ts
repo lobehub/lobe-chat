@@ -128,8 +128,10 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     private _options: ConstructorOptions<T>;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
-      const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = options;
-      this._options = options as ConstructorOptions<T>;
+      const _options = { ...options, baseURL: options.baseURL?.trim() || DEFAULT_BASE_URL };
+      const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
+      this._options = _options as ConstructorOptions<T>;
+
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
       this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
