@@ -34,7 +34,9 @@ export const AssistantMessage = memo<
         <Flexbox gap={8} horizontal>
           {tools.map((toolCall, index) => (
             <ToolCall
+              apiName={toolCall.apiName}
               arguments={toolCall.arguments}
+              id={toolCall.id}
               identifier={toolCall.identifier}
               index={index}
               key={toolCall.id}
