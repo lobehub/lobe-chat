@@ -43,7 +43,7 @@ export default memo<Props>(({ className, tabBarKey }) => {
           },
           title: t('tab.chat'),
         },
-        {
+        showMarket && {
           icon: (active: boolean) => (
             <Icon className={active ? styles.active : undefined} icon={Bot} />
           ),
@@ -61,7 +61,7 @@ export default memo<Props>(({ className, tabBarKey }) => {
           onClick: openSettings,
           title: t('tab.setting'),
         },
-      ].filter((item) => showMarket || item.key !== SidebarTabKey.Market),
+      ].filter(Boolean) as MobileTabBarProps['items'],
     [t],
   );
 
