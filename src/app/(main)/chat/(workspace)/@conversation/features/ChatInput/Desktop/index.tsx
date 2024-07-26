@@ -9,6 +9,7 @@ import {
   CHAT_TEXTAREA_MAX_HEIGHT,
   HEADER_HEIGHT,
 } from '@/const/layoutTokens';
+import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -24,10 +25,11 @@ const DesktopChatInput = memo(() => {
     systemStatusSelectors.inputHeight(s),
     s.updateSystemStatus,
   ]);
+  const showFileList = useFileStore((s) => s.inputFilesList.length > 0);
 
   return (
     <>
-      {!expand && <LocalFiles padding={'8px 16px'} />}
+      {!expand && <LocalFiles padding={showFileList ? '8px 16px' : 0} />}
       <DraggablePanel
         fullscreen={expand}
         headerHeight={HEADER_HEIGHT}
