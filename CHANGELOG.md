@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.6.14](https://github.com/lobehub/lobe-chat/compare/v1.6.13...v1.6.14)
+
+<sup>Released on **2024-07-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve input file upload.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve input file upload, closes [#3314](https://github.com/lobehub/lobe-chat/issues/3314) ([de85553](https://github.com/lobehub/lobe-chat/commit/de85553))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.13](https://github.com/lobehub/lobe-chat/compare/v1.6.12...v1.6.13)
 
 <sup>Released on **2024-07-25**</sup>
