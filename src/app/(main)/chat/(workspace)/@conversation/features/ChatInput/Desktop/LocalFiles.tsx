@@ -8,7 +8,11 @@ import { useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
 
-const LocalFiles = memo(() => {
+interface LocalFilesProps {
+  padding?: number | string;
+}
+
+const LocalFiles = memo<LocalFilesProps>(({ padding }) => {
   const model = useAgentStore(agentSelectors.currentAgentModel);
 
   const enabledFiles = useUserStore(modelProviderSelectors.isModelEnabledFiles(model));
@@ -33,7 +37,7 @@ const LocalFiles = memo(() => {
     canUpload && (
       <>
         <DragUpload enabledFiles={enabledFiles} onUploadFiles={uploadImages} />
-        <EditableFileList items={inputFilesList} padding={0} />
+        <EditableFileList items={inputFilesList} padding={padding ?? 0} />
       </>
     )
   );
