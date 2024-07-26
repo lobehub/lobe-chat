@@ -302,9 +302,7 @@ describe('LobeOpenRouterAI', () => {
   describe('models', () => {
     it('should get models', async () => {
       // mock the models.list method
-      const mock = instance['client'].models.list as Mock;
-
-      mock.mockResolvedValue({ data: models });
+      (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
 
       const list = await instance.models();
 
