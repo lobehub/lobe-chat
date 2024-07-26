@@ -36,7 +36,10 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       error: any,
       options: ConstructorOptions<T>,
     ) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
-    handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
+    handlePayload?: (
+      payload: ChatStreamPayload,
+      options: ConstructorOptions<T>,
+    ) => OpenAI.ChatCompletionCreateParamsStreaming;
   };
   constructorOptions?: ConstructorOptions<T>;
   debug?: {
@@ -141,7 +144,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
       try {
         const postPayload = chatCompletion?.handlePayload
-          ? chatCompletion.handlePayload(payload)
+          ? chatCompletion.handlePayload(payload, this._options)
           : ({
               ...payload,
               stream: payload.stream ?? true,
