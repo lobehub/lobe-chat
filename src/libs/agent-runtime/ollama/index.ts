@@ -1,4 +1,5 @@
-import { Ollama } from 'ollama/browser';
+import { readableFromAsyncIterable } from 'ai';
+import { Ollama, Tool } from 'ollama/browser';
 import { ClientOptions } from 'openai';
 
 import { OpenAIChatMessage } from '@/libs/agent-runtime';
@@ -8,8 +9,9 @@ import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
+import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { OllamaStream } from '../utils/streams';
+import { OllamaStream, chatStreamable } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 import { OllamaMessage } from './type';
 
@@ -52,9 +54,17 @@ export class LobeOllamaAI implements LobeRuntimeAI {
           top_p: payload.top_p,
         },
         stream: true,
+        tools: payload.tools as Tool[],
       });
 
-      return StreamingResponse(OllamaStream(response, options?.callback), {
+      const stream = readableFromAsyncIterable(chatStreamable(response));
+      const [prod, debug] = stream.tee();
+
+      if (process.env.DEBUG_OLLAMA_CHAT_COMPLETION === '1') {
+        debugStream(debug).catch(console.error);
+      }
+
+      return StreamingResponse(OllamaStream(prod, options?.callback), {
         headers: options?.headers,
       });
     } catch (error) {

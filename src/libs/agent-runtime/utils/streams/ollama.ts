@@ -21,12 +21,12 @@ const transformOllamaStream = (chunk: ChatResponse, stack: StreamStack): StreamP
 };
 
 export const OllamaStream = (
-  res: AsyncIterable<ChatResponse>,
+  res: ReadableStream<ChatResponse>,
   cb?: ChatStreamCallbacks,
 ): ReadableStream<string> => {
   const streamStack: StreamStack = { id: 'chat_' + nanoid() };
 
-  return convertIterableToStream(res)
+  return res
     .pipeThrough(createSSEProtocolTransformer(transformOllamaStream, streamStack))
     .pipeThrough(createCallbacksTransformer(cb));
 };

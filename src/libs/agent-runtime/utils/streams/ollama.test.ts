@@ -9,14 +9,15 @@ describe('OllamaStream', () => {
   it('should transform Ollama stream to protocol stream', async () => {
     vi.spyOn(uuidModule, 'nanoid').mockReturnValueOnce('1');
 
-    const mockOllamaStream: AsyncIterable<ChatResponse> = {
-      // @ts-ignore
-      async *[Symbol.asyncIterator]() {
-        yield { message: { content: 'Hello' }, done: false };
-        yield { message: { content: ' world!' }, done: false };
-        yield { message: { content: '' }, done: true };
+    const mockOllamaStream = new ReadableStream<ChatResponse>({
+      start(controller) {
+        controller.enqueue({ message: { content: 'Hello' }, done: false } as ChatResponse);
+        controller.enqueue({ message: { content: ' world!' }, done: false } as ChatResponse);
+        controller.enqueue({ message: { content: '' }, done: true } as ChatResponse);
+
+        controller.close();
       },
-    };
+    });
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
@@ -58,9 +59,11 @@ describe('OllamaStream', () => {
   });
 
   it('should handle empty stream', async () => {
-    const mockOllamaStream = {
-      async *[Symbol.asyncIterator]() {},
-    };
+    const mockOllamaStream = new ReadableStream<ChatResponse>({
+      start(controller) {
+        controller.close();
+      },
+    });
 
     const protocolStream = OllamaStream(mockOllamaStream);
 
