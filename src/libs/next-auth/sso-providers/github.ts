@@ -17,7 +17,7 @@ const provider = {
         email: profile.email,
         image: profile.avatar_url,
         name: profile.name,
-        username: profile.id.toString(),
+        providerAccountId: profile.id.toString(),
       };
     },
   }),

@@ -14,15 +14,15 @@ const provider = {
     clientId: authEnv.AUTHENTIK_CLIENT_ID,
     clientSecret: authEnv.AUTHENTIK_CLIENT_SECRET,
     issuer: authEnv.AUTHENTIK_ISSUER,
-    // TODO(NextAuth): map unique user id to `username` field
-    // profile(profile) {
+    // TODO(NextAuth): map unique user id to `providerAccountId` field
+    //  profile(profile) {
     //   return {
-    //     username: profile.user_id,
-    //     name: profile.name,
     //     email: profile.email,
     //     image: profile.picture,
-    //   }
-    // }
+    //     name: profile.name,
+    //     providerAccountId: profile.user_id,
+    //   };
+    // },
   }),
 };
 

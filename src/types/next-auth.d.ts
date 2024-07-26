@@ -10,7 +10,7 @@ declare module 'next-auth' {
     } & DefaultSession['user'];
   }
   interface User {
-    username?: string;
+    providerAccountId?: string;
   }
   /**
    * More types can be extends here

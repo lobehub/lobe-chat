@@ -53,12 +53,12 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
         .then((res) => res[0]);
     },
     async createUser(user): Promise<AdapterUser> {
-      const { id, name, email, emailVerified, image, username } = user;
+      const { id, name, email, emailVerified, image, providerAccountId } = user;
       // return the user if it already exists
       let existingUser = await UserModel.findByEmail(email);
       // If the user is not found by email, try to find by providerAccountId
-      if (!existingUser && username) {
-        existingUser = await UserModel.findByUsername(username);
+      if (!existingUser && providerAccountId) {
+        existingUser = await UserModel.findById(providerAccountId);
       }
       if (existingUser) {
         const adapterUser = mapLobeUserToAdapterUser(existingUser);
@@ -66,9 +66,16 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
       }
       // create a new user if it does not exist
       await UserModel.createUser(
-        mapAdapterUserToLobeUser({ email, emailVerified, id, image, name, username }),
+        mapAdapterUserToLobeUser({
+          email,
+          emailVerified,
+          // Use providerAccountId as userid to identify if the user exists in a SSO provider
+          id: providerAccountId ?? id,
+          image,
+          name,
+        }),
       );
-      return user;
+      return { ...user, id: providerAccountId ?? id };
     },
     async createVerificationToken(data): Promise<VerificationToken | null | undefined> {
       return serverDB

@@ -19,7 +19,7 @@ const provider = {
         email: profile.email,
         image: profile.picture,
         name: profile.name,
-        username: profile.user_id,
+        providerAccountId: profile.sub,
       };
     },
   }),
