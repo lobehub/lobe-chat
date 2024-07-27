@@ -4,6 +4,14 @@ import { ModelProviderCard } from '@/types/llm';
 const Ai360: ModelProviderCard = {
   chatModels: [
     {
+      displayName: '360GPT2 Pro',
+      enabled: true,
+      functionCall: false,
+      id: '360gpt2-pro',
+      maxOutput: 7000,
+      tokens: 8192,
+    },
+    {
       displayName: '360GPT Pro',
       enabled: true,
       functionCall: false,
