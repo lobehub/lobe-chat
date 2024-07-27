@@ -13,7 +13,7 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Pro',
-      enabled: true,
+      enabled: false,
       functionCall: false,
       id: '360gpt-pro',
       maxOutput: 7000,
