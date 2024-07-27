@@ -36,7 +36,10 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       error: any,
       options: ConstructorOptions<T>,
     ) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
-    handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
+    handlePayload?: (
+      payload: ChatStreamPayload,
+      options: ConstructorOptions<T>,
+    ) => OpenAI.ChatCompletionCreateParamsStreaming;
   };
   constructorOptions?: ConstructorOptions<T>;
   debug?: {
@@ -128,8 +131,10 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     private _options: ConstructorOptions<T>;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
-      const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = options;
-      this._options = options as ConstructorOptions<T>;
+      const _options = { ...options, baseURL: options.baseURL?.trim() || DEFAULT_BASE_URL };
+      const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
+      this._options = _options as ConstructorOptions<T>;
+
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
       this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
@@ -139,7 +144,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
       try {
         const postPayload = chatCompletion?.handlePayload
-          ? chatCompletion.handlePayload(payload)
+          ? chatCompletion.handlePayload(payload, this._options)
           : ({
               ...payload,
               stream: payload.stream ?? true,
