@@ -11,25 +11,25 @@
     },
     "defaultMessage": "Ich bin Ihr persönlicher intelligenter Assistent LobeChat. Wie kann ich Ihnen jetzt helfen?\nWenn Sie einen professionelleren oder maßgeschneiderten Assistenten benötigen, klicken Sie auf `+`, um einen benutzerdefinierten Assistenten zu erstellen.",
     "qa": {
-      "q01": "Was ist LobeHub?",
-      "q02": "Was ist LobeChat?",
-      "q03": "Hat LobeChat Community-Support?",
-      "q04": "Welche Funktionen unterstützt LobeChat?",
-      "q05": "Wie wird LobeChat bereitgestellt und verwendet?",
-      "q06": "Wie sind die Preise für LobeChat?",
-      "q07": "Ist LobeChat kostenlos?",
-      "q08": "Gibt es eine Cloud-Service-Version?",
-      "q09": "Unterstützt LobeChat lokale Sprachmodelle?",
-      "q10": "Unterstützt LobeChat Bilderkennung und -erstellung?",
-      "q11": "Unterstützt LobeChat Sprachsynthese und Spracherkennung?",
-      "q12": "Unterstützt LobeChat ein Plugin-System?",
-      "q13": "Gibt es einen eigenen Markt, um GPTs zu erhalten?",
-      "q14": "Unterstützt LobeChat verschiedene KI-Service-Anbieter?",
-      "q15": "Was soll ich tun, wenn ich beim Gebrauch auf Probleme stoße?"
+      "q01": "‎",
+      "q02": "‎",
+      "q03": "‎",
+      "q04": "‎",
+      "q05": "‎",
+      "q06": "‎",
+      "q07": "‎",
+      "q08": "‎",
+      "q09": "‎",
+      "q10": "‎",
+      "q11": "‎",
+      "q12": "‎",
+      "q13": "‎",
+      "q14": "‎",
+      "q15": "‎"
     },
     "questions": {
-      "moreBtn": "Mehr erfahren",
-      "title": "Häufig gestellte Fragen:"
+      "moreBtn": "‎",
+      "title": "‎"
     },
     "welcome": {
       "afternoon": "Guten Nachmittag",
