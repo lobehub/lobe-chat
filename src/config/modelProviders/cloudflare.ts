@@ -35,6 +35,11 @@ const Cloudflare: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      displayName: 'llama-3.1-8b-instruct',
+      id: '@cf/meta/llama-3.1-8b-instruct',
+      tokens: 128_000,
+    },
+    {
       displayName: 'mistral-7b-instruct-v0.2',
       id: '@hf/mistral/mistral-7b-instruct-v0.2',
       tokens: 4096,
