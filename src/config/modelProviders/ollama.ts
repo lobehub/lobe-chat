@@ -4,6 +4,18 @@ import { ModelProviderCard } from '@/types/llm';
 const Ollama: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'Llama3.1 8B Instruct (Q8_0)',
+      enabled: true,
+      id: 'llama3.1:8b-instruct-q8_0',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Llama3.1 8B',
+      enabled: true,
+      id: 'llama3.1',
+      tokens: 128_000,
+    },
+    {
       displayName: 'Llama3 8B',
       enabled: true,
       id: 'llama3',
@@ -11,8 +23,21 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'Llama3 70B',
+      enabled: true,
       id: 'llama3:70b',
       tokens: 8000,
+    },
+    {
+      displayName: 'Llama3.1 70B',
+      enabled: true,
+      id: 'llama3.1:70b',
+      tokens: 128_000,
+    },
+    {
+      displayName: 'Llama3.1 70B Instruct (Q5_K_M)',
+      enabled: true,
+      id: 'llama3.1:70b-instruct-q5_K_M',
+      tokens: 128_000,
     },
     {
       displayName: 'Phi-3 3.8B',
@@ -69,6 +94,12 @@ const Ollama: ModelProviderCard = {
       id: 'gemma2:27b',
       tokens: 8192,
     },
+    {
+      displayName: 'Gemma2 27B Instruct (Q8_0)',
+      id: 'gemma2:27b-instruct-q8_0',
+      tokens: 8192,
+    },
+
     {
       displayName: 'Gemma 7B',
       id: 'gemma',
@@ -162,6 +193,12 @@ const Ollama: ModelProviderCard = {
       enabled: true,
       id: 'mathstral',
       tokens: 32_000, // https://huggingface.co/mistralai/mathstral-7B-v0.1
+    },
+    {
+      displayName: 'Mistral-Large',
+      enabled: true,
+      id: 'mistral-large',
+      tokens: 128_000,
     },
     {
       displayName: 'Mixtral 8x7B',
