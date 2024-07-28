@@ -100,8 +100,10 @@ export class LobeZhipuAI implements LobeRuntimeAI {
           ? Math.max(0.01, Math.min(0.99, top_p)) 
           : undefined,
       } : {
-        temperature: temperature ? Math.min(1, temperature) : undefined,
-      }
+        temperature: temperature 
+          ? Math.min(1, temperature) 
+          : undefined,
+      }),
     };
   }
 
