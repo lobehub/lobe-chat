@@ -11,8 +11,10 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
         return { error, errorType: AgentRuntimeErrorType.LocationNotSupportError };
     },
     handlePayload: (payload) => {
+      const { temperature, ...restPayload } = payload;
       return {
-        ...payload,
+        ...restPayload,
+        temperature: temperature <= 0 ? undefined : temperature,
         // disable stream for tools due to groq dont support
         stream: !payload.tools,
       } as any;

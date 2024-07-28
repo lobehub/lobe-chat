@@ -9,7 +9,10 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
       messages: payload.messages as any,
       model: payload.model,
       stream: true,
-      temperature: Math.min(payload.temperature, 1),
+      temperature: 
+        payload.temperature !== undefined 
+        ? Math.min(payload.temperature, 1) 
+        : undefined,
       tools: payload.tools,
       top_p: payload.top_p,
     }),
