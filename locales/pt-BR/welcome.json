@@ -10,6 +10,7 @@
       "title": "Recomendação de assistentes adicionais:"
     },
     "defaultMessage": "Eu sou o seu assistente de IA pessoal, LobeChat. Como posso ajudar você agora?\nSe precisar de assistência mais profissional ou personalizada, clique em `+` para criar um assistente personalizado",
+    "defaultMessageWithoutCreate": "Sou seu assistente pessoal de inteligência artificial, LobeChat. Em que posso ajudar você agora?",
     "qa": {
       "q01": "O que é o LobeHub?",
       "q02": "O que é o LobeChat?",
