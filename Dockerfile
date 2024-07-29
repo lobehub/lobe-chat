@@ -153,6 +153,9 @@ EXPOSE 3210/tcp
 
 CMD \
     if [ -n "$PROXY_URL" ]; then \
+        # Set proxychains command
+        PROXYCHAINS="proxychains -q"; \
+        # Parse the proxy URL
         host_with_port="${PROXY_URL#*//}"; \
         host="${host_with_port%%:*}"; \
         port="${PROXY_URL##*:}"; \
@@ -161,6 +164,7 @@ CMD \
         if [ ! -z "$nslookup" ]; then \
             host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
         fi; \
+        # Generate proxychains configuration file
         printf "%s\n" \
             'localnet 127.0.0.0/255.0.0.0' \
             'localnet ::1/128' \
@@ -172,7 +176,6 @@ CMD \
             '[ProxyList]' \
             "$protocol $host $port" \
         > "/etc/proxychains/proxychains.conf"; \
-        proxychains -q node /app/server.js; \
-    else \
-        node /app/server.js; \
-    fi
+    fi; \
+    # Run the server
+    ${PROXYCHAINS} node /app/server.js;
