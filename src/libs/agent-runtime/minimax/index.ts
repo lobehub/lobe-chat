@@ -142,9 +142,9 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
       max_tokens: this.getMaxTokens(payload.model),
       stream: true,
       temperature: 
-            payload.temperature === undefined || payload.temperature <= 0
+            temperature === undefined || temperature <= 0
             ? undefined
-            : payload.temperature / 2,
+            : temperature / 2,
 
       tools: params.tools?.map((tool) => ({
         function: {

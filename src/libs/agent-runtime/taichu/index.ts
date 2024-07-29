@@ -1,4 +1,6 @@
-import { ModelProvider } from '../types';
+import OpenAI from 'openai';
+
+import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 export const LobeTaichuAI = LobeOpenAICompatibleFactory({
@@ -10,12 +12,12 @@ export const LobeTaichuAI = LobeOpenAICompatibleFactory({
       return { 
         ...rest, 
         temperature: 
-          payload.temperature !== undefined 
-          ? Math.max(payload.temperature / 2, 0.01)
+          temperature !== undefined 
+          ? Math.max(temperature / 2, 0.01)
           : undefined,
         top_p:
-          payload.top_p !== undefined
-          ? Math.min(9.9, Math.max(payload.top_p / 2, 0.1))
+          top_p !== undefined
+          ? Math.min(9.9, Math.max(top_p / 2, 0.1))
           : undefined
       } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
