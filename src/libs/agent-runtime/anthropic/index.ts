@@ -98,7 +98,7 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       system: system_message?.content as string,
       temperature: 
         payload.temperature !== undefined 
-        ? Math.min(temperature, 1) 
+        ? temperature / 2
         : undefined,
       tools: buildAnthropicTools(tools),
       top_p,

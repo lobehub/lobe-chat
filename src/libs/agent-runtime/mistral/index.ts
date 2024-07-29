@@ -11,7 +11,7 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
       stream: true,
       temperature: 
         payload.temperature !== undefined 
-        ? Math.min(payload.temperature, 1) 
+        ? payload.temperature / 2
         : undefined,
       tools: payload.tools,
       top_p: payload.top_p,

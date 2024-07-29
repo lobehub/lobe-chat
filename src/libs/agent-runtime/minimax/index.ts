@@ -144,7 +144,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
       temperature: 
             payload.temperature === undefined || payload.temperature <= 0
             ? undefined
-            : Math.min(payload.temperature, 1),
+            : payload.temperature / 2,
 
       tools: params.tools?.map((tool) => ({
         function: {
