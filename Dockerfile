@@ -153,6 +153,8 @@ EXPOSE 3210/tcp
 
 CMD \
     if [ -n "$PROXY_URL" ]; then \
+        # Set regex for IPv4
+        IP_REGEX="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$"; \
         # Set proxychains command
         PROXYCHAINS="proxychains -q"; \
         # Parse the proxy URL
@@ -161,7 +163,6 @@ CMD \
         port="${PROXY_URL##*:}"; \
         protocol="${PROXY_URL%%://*}"; \
         # Resolve the host to IP address, if it's a domain
-        IP_REGEX="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$"; \
         if ! [[ "$host" =~ $IP_REGEX ]]; then \
             nslookup=$(nslookup -q="A" "$host" | tail -n +3 | grep 'Address:'); \
             if [ ! -z "$nslookup" ]; then \
