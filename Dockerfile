@@ -160,7 +160,8 @@ CMD \
         host="${host_with_port%%:*}"; \
         port="${PROXY_URL##*:}"; \
         protocol="${PROXY_URL%%://*}"; \
-        nslookup=$(nslookup -q=A "$host" | tail -n +3 | grep 'Address:'); \
+        # Resolve the host to IP address, if it's a domain
+        nslookup=$(nslookup -q="A" "$host" | tail -n +3 | grep 'Address:'); \
         if [ ! -z "$nslookup" ]; then \
             host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
         fi; \
@@ -178,4 +179,4 @@ CMD \
         > "/etc/proxychains/proxychains.conf"; \
     fi; \
     # Run the server
-    ${PROXYCHAINS} node /app/server.js;
+    ${PROXYCHAINS} node "/app/server.js";
