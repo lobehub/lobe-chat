@@ -1,12 +1,15 @@
 import {
+  AiMass,
   Adobe,
   Ai21,
+  Ai360,
   Aws,
   Azure,
   Baichuan,
   ByteDance,
   ChatGLM,
   Claude,
+  CodeGeeX,
   Cohere,
   Dbrx,
   DeepSeek,
@@ -48,6 +51,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('gpt-3')) return <OpenAI.Avatar size={size} type={'gpt3'} />;
   if (model.includes('gpt-4')) return <OpenAI.Avatar size={size} type={'gpt4'} />;
   if (model.startsWith('glm') || model.includes('chatglm')) return <ChatGLM.Avatar size={size} />;
+  if (model.startsWith('codegeex')) return <CodeGeeX.Avatar size={size} />;
   if (model.includes('deepseek')) return <DeepSeek.Avatar size={size} />;
   if (model.includes('claude')) return <Claude.Avatar size={size} />;
   if (model.includes('titan')) return <Aws.Avatar size={size} />;
@@ -66,6 +70,8 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('command')) return <Cohere.Avatar size={size} />;
   if (model.includes('dbrx')) return <Dbrx.Avatar size={size} />;
   if (model.includes('step')) return <Stepfun.Avatar size={size} />;
+  if (model.includes('taichu')) return <AiMass.Avatar size={size} />;
+  if (model.includes('360gpt')) return <Ai360.Avatar size={size} />;
 
   // below: To be supported in providers, move up if supported
   if (model.includes('baichuan'))

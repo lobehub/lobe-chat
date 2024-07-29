@@ -1,13 +1,13 @@
 import { Metadata } from 'next';
 
-import { getCanonicalUrl } from '@/const/url';
+import { OG_URL, getCanonicalUrl } from '@/const/url';
 import { formatDescLength, formatTitleLength } from '@/utils/genOG';
 
 export class Meta {
   public generate({
     description = 'LobeChat offers you the best ChatGPT, OLLaMA, Gemini, Claude WebUI user experience',
     title,
-    image = '/og/cover.png?v=1',
+    image = OG_URL,
     url,
     type = 'website',
     tags,

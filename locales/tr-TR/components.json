@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Dosyaları buraya sürükleyin, birden fazla resim yüklemeyi destekler.",
+    "dragFileDesc": "Resimleri ve dosyaları buraya sürükleyin, birden fazla resim ve dosya yüklemeyi destekler.",
+    "dragFileTitle": "Dosya Yükle",
+    "dragTitle": "Resim Yükle"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, yukarıdaki yeteneklerin kullanılabilirliğini doğrulamak için lütfen gerçek durumu kontrol edin",

@@ -5,7 +5,8 @@ import { useTokenCount } from '@/hooks/useTokenCount';
 
 const useStyles = createStyles(
   ({ css, token }) => css`
-    padding: 2px 5px;
+    padding-block: 2px;
+    padding-inline: 5px;
 
     font-size: 12px;
     line-height: 1;
