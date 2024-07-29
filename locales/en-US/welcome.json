@@ -10,27 +10,26 @@
       "title": "New Assistant Recommendations:"
     },
     "defaultMessage": "I am your personal intelligent assistant LobeChat, how can I help you now?\nIf you need a more professional or customized assistant, you can click on `+` to create a custom assistant",
-    "defaultMessageWithoutCreate": "I am your personal AI assistant, LobeChat. How can I assist you now?",
     "qa": {
-      "q01": "What is LobeHub?",
-      "q02": "What is LobeChat?",
-      "q03": "Does LobeChat have community support?",
-      "q04": "What functions does LobeChat support?",
-      "q05": "How to deploy and use LobeChat?",
-      "q06": "What is the pricing of LobeChat?",
-      "q07": "Is LobeChat free?",
-      "q08": "Is there a cloud service version?",
-      "q09": "Does LobeChat support local language models?",
-      "q10": "Does LobeChat support image recognition and generation?",
-      "q11": "Does LobeChat support speech synthesis and speech recognition?",
-      "q12": "Does LobeChat support a plugin system?",
-      "q13": "Is there a marketplace to obtain GPTs?",
-      "q14": "Does LobeChat support multiple AI service providers?",
-      "q15": "What should I do if I encounter problems while using it?"
+      "q01": "‎",
+      "q02": "‎",
+      "q03": "‎",
+      "q04": "‎",
+      "q05": "‎",
+      "q06": "‎",
+      "q07": "‎",
+      "q08": "‎",
+      "q09": "‎",
+      "q10": "‎",
+      "q11": "‎",
+      "q12": "‎",
+      "q13": "‎",
+      "q14": "‎",
+      "q15": "‎"
     },
     "questions": {
-      "moreBtn": "Learn More",
-      "title": "Frequently Asked Questions:"
+      "moreBtn": "‎",
+      "title": "‎"
     },
     "welcome": {
       "afternoon": "Good Afternoon",
