@@ -4,7 +4,8 @@ FROM node:20-alpine AS base
 RUN \
     # Add user nextjs to run the app
     addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs
+    && adduser --system --uid 1001 nextjs \
+    && apk add --no-cache proxychains-ng
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
@@ -85,7 +86,8 @@ ENV HOSTNAME="0.0.0.0" \
 # General Variables
 ENV ACCESS_CODE="" \
     API_KEY_SELECT_MODE="" \
-    FEATURE_FLAGS=""
+    FEATURE_FLAGS="" \
+    PROXY_URL=""
 
 # Model Variables
 ENV \
@@ -138,4 +140,10 @@ USER nextjs
 
 EXPOSE 3210/tcp
 
-CMD ["node", "/app/server.js"]
+CMD \
+    if [ -n "$PROXY_URL" ]; then \
+        echo -e "localnet 127.0.0.0/255.0.0.0\nlocalnet ::1/128\nproxy_dns\nremote_dns_subnet 224\nstrict_chain\ntcp_connect_time_out 8000\ntcp_read_time_out 15000\n[ProxyList]\n$(echo $PROXY_URL | cut -d: -f1) $(echo $PROXY_URL | cut -d/ -f3 | cut -d: -f1) $(echo $PROXY_URL | cut -d: -f3)" > /etc/proxychains/proxychains.conf; \
+        proxychains -q node /opt/lobechat/server.js; \
+    else \
+        node /opt/lobechat/server.js; \
+    fi
