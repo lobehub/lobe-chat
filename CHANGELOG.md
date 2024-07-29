@@ -2,6 +2,289 @@
 
 # Changelog
 
+### [Version 1.7.6](https://github.com/lobehub/lobe-chat/compare/v1.7.5...v1.7.6)
+
+<sup>Released on **2024-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disable anthropic browser request.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disable anthropic browser request, closes [#3359](https://github.com/lobehub/lobe-chat/issues/3359) ([a519837](https://github.com/lobehub/lobe-chat/commit/a519837))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.5](https://github.com/lobehub/lobe-chat/compare/v1.7.4...v1.7.5)
+
+<sup>Released on **2024-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `create_session ` `edit_agent` feature flags and add more flags.
+
+#### 💄 Styles
+
+- **misc**: Update 360GPT model (360GPT2 Pro).
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `create_session ` `edit_agent` feature flags and add more flags, closes [#3289](https://github.com/lobehub/lobe-chat/issues/3289) ([ebfd3cf](https://github.com/lobehub/lobe-chat/commit/ebfd3cf))
+
+#### Styles
+
+- **misc**: Update 360GPT model (360GPT2 Pro), closes [#3339](https://github.com/lobehub/lobe-chat/issues/3339) ([c8ed85e](https://github.com/lobehub/lobe-chat/commit/c8ed85e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.4](https://github.com/lobehub/lobe-chat/compare/v1.7.3...v1.7.4)
+
+<sup>Released on **2024-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve remote model list fetching for Novita AI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve remote model list fetching for Novita AI, closes [#3311](https://github.com/lobehub/lobe-chat/issues/3311) ([67b9ff0](https://github.com/lobehub/lobe-chat/commit/67b9ff0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.3](https://github.com/lobehub/lobe-chat/compare/v1.7.2...v1.7.3)
+
+<sup>Released on **2024-07-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update minimax models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update minimax models, closes [#3354](https://github.com/lobehub/lobe-chat/issues/3354) ([8113729](https://github.com/lobehub/lobe-chat/commit/8113729))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.2](https://github.com/lobehub/lobe-chat/compare/v1.7.1...v1.7.2)
+
+<sup>Released on **2024-07-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Avoid baseURL being an empty string, resulting in incorrect client fetch.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Avoid baseURL being an empty string, resulting in incorrect client fetch, closes [#3308](https://github.com/lobehub/lobe-chat/issues/3308) ([15a9bc1](https://github.com/lobehub/lobe-chat/commit/15a9bc1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.1](https://github.com/lobehub/lobe-chat/compare/v1.7.0...v1.7.1)
+
+<sup>Released on **2024-07-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix dalle tools calling prompts to avoid content risk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix dalle tools calling prompts to avoid content risk, closes [#3325](https://github.com/lobehub/lobe-chat/issues/3325) ([3e21240](https://github.com/lobehub/lobe-chat/commit/3e21240))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.7.0](https://github.com/lobehub/lobe-chat/compare/v1.6.15...v1.7.0)
+
+<sup>Released on **2024-07-26**</sup>
+
+#### ✨ Features
+
+- **misc**: Enabled function calling on Deepseek models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Enabled function calling on Deepseek models, closes [#3312](https://github.com/lobehub/lobe-chat/issues/3312) ([35f31cb](https://github.com/lobehub/lobe-chat/commit/35f31cb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.15](https://github.com/lobehub/lobe-chat/compare/v1.6.14...v1.6.15)
+
+<sup>Released on **2024-07-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix file upload height.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix file upload height, closes [#3319](https://github.com/lobehub/lobe-chat/issues/3319) ([8343f35](https://github.com/lobehub/lobe-chat/commit/8343f35))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.14](https://github.com/lobehub/lobe-chat/compare/v1.6.13...v1.6.14)
+
+<sup>Released on **2024-07-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve input file upload.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve input file upload, closes [#3314](https://github.com/lobehub/lobe-chat/issues/3314) ([de85553](https://github.com/lobehub/lobe-chat/commit/de85553))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.13](https://github.com/lobehub/lobe-chat/compare/v1.6.12...v1.6.13)
+
+<sup>Released on **2024-07-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Updated Groq model list to include llama-3.1 and llama3-Groq.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Updated Groq model list to include llama-3.1 and llama3-Groq, closes [#3313](https://github.com/lobehub/lobe-chat/issues/3313) ([a9cfad6](https://github.com/lobehub/lobe-chat/commit/a9cfad6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.6.12](https://github.com/lobehub/lobe-chat/compare/v1.6.11...v1.6.12)
+
+<sup>Released on **2024-07-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add new models to groq which are llama 3.1.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add new models to groq which are llama 3.1, closes [#3301](https://github.com/lobehub/lobe-chat/issues/3301) ([ec20fd0](https://github.com/lobehub/lobe-chat/commit/ec20fd0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.6.11](https://github.com/lobehub/lobe-chat/compare/v1.6.10...v1.6.11)
 
 <sup>Released on **2024-07-24**</sup>
