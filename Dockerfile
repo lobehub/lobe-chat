@@ -1,6 +1,8 @@
 ## Base image for all the stages
 FROM node:20-alpine AS base
 
+ARG USE_CN_MIRROR
+
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
