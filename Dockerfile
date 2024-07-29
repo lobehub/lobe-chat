@@ -167,7 +167,7 @@ CMD \
             '[ProxyList]' \
             "$protocol ${host%%:*} $port" \
         > "/etc/proxychains/proxychains.conf"; \
-        proxychains -q node /opt/lobechat/server.js; \
+        proxychains -q node /app/server.js; \
     else \
-        node /opt/lobechat/server.js; \
+        node /app/server.js; \
     fi
