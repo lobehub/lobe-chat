@@ -5,7 +5,8 @@ RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
         sed -i "s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g" "/etc/apk/repositories"; \
-    fi; \
+    fi \
+    # Add proxychains-ng package & update base package
     && apk update \
     && apk add --no-cache proxychains-ng \
     && apk upgrade --no-cache \
