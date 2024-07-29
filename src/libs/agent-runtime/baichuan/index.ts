@@ -13,7 +13,7 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
         ...rest, 
         temperature: 
           payload.temperature !== undefined 
-          ? Math.min(payload.temperature / 2, 1) 
+          ? payload.temperature / 2
           : undefined,
       } as OpenAI.ChatCompletionCreateParamsStreaming;
     },
