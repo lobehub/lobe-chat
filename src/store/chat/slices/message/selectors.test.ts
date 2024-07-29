@@ -7,6 +7,7 @@ import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
+import { createServerConfigStore } from '@/store/serverConfig/store';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
@@ -92,6 +93,14 @@ const mockChatStore = {
   },
   activeId: 'abc',
 } as ChatStore;
+
+beforeAll(() => {
+  createServerConfigStore();
+});
+
+afterEach(() => {
+  createServerConfigStore().setState({ featureFlags: { edit_agent: true } });
+});
 
 describe('chatSelectors', () => {
   describe('getMessageById', () => {
@@ -233,6 +242,19 @@ describe('chatSelectors', () => {
       const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
 
       expect(chats[0].content).toMatch('agentDefaultMessage'); // Assuming translation returns a string containing this
+    });
+
+    it('should use agent default message without edit button for non-inbox sessions when agent is not editable', () => {
+      act(() => {
+        createServerConfigStore().setState({ featureFlags: { edit_agent: false } });
+      });
+
+      const state = merge(initialStore, { messages: [], activeId: 'someActiveId' });
+      const metaData = { title: 'Mock Agent' };
+
+      const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
+
+      expect(chats[0].content).toMatch('agentDefaultMessageWithoutEdit');
     });
   });
 

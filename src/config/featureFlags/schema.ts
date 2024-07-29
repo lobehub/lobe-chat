@@ -20,6 +20,9 @@ export const FeatureFlagsSchema = z.object({
   clerk_sign_up: z.boolean().optional(),
 
   cloud_promotion: z.boolean().optional(),
+
+  market: z.boolean().optional(),
+  speech_to_text: z.boolean().optional(),
 });
 
 // TypeScript 类型，从 Zod schema 生成
@@ -44,6 +47,9 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   clerk_sign_up: true,
 
   cloud_promotion: false,
+
+  market: true,
+  speech_to_text: true,
 };
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
@@ -65,5 +71,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
     enableClerkSignUp: config.clerk_sign_up,
 
     showCloudPromotion: config.cloud_promotion,
+
+    showMarket: config.market,
+    enableSTT: config.speech_to_text,
   };
 };
