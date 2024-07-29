@@ -10,6 +10,7 @@
       "title": "Yeni Asistan Önerileri:"
     },
     "defaultMessage": "Ben sizin kişisel akıllı asistanınız LobeChat'ım, şu anda size nasıl yardımcı olabilirim?\nDaha profesyonel veya özelleştirilmiş bir asistana ihtiyacınız varsa, özel bir asistan oluşturmak için `+` simgesine tıklayabilirsiniz",
+    "defaultMessageWithoutCreate": "Ben size nasıl yardımcı olabilirim? ben LobeChat, kişisel yapay zeka asistanıyım.",
     "qa": {
       "q01": "LobeHub nedir?",
       "q02": "LobeChat nedir?",

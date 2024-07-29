@@ -5,6 +5,7 @@ import { MoreVertical, PencilLine, Plus, Settings2, Trash } from 'lucide-react';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 const useStyles = createStyles(({ css }) => ({
@@ -34,6 +35,8 @@ const Actions = memo<ActionsProps>(
       s.removeSessionGroup,
     ]);
 
+    const { showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+
     const sessionGroupConfigPublicItem: MenuItemType = {
       icon: <Icon icon={Settings2} />,
       key: 'config',
@@ -62,10 +65,6 @@ const Actions = memo<ActionsProps>(
 
     const customGroupItems: MenuProps['items'] = useMemo(
       () => [
-        newAgentPublicItem,
-        {
-          type: 'divider',
-        },
         {
           icon: <Icon icon={PencilLine} />,
           key: 'rename',
@@ -102,22 +101,20 @@ const Actions = memo<ActionsProps>(
       [],
     );
 
-    const defaultItems: MenuProps['items'] = useMemo(
-      () => [
-        newAgentPublicItem,
-        {
-          type: 'divider',
-        },
-        sessionGroupConfigPublicItem,
-      ],
-      [],
+    const defaultItems: MenuProps['items'] = useMemo(() => [sessionGroupConfigPublicItem], []);
+
+    const tailItems = useMemo(
+      () => (isCustomGroup ? customGroupItems : defaultItems),
+      [isCustomGroup, customGroupItems, defaultItems],
     );
 
     return (
       <Dropdown
         arrow={false}
         menu={{
-          items: isCustomGroup ? customGroupItems : defaultItems,
+          items: showCreateSession
+            ? [newAgentPublicItem, { type: 'divider' }, ...tailItems]
+            : tailItems,
           onClick: ({ domEvent }) => {
             domEvent.stopPropagation();
           },

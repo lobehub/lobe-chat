@@ -7,6 +7,7 @@ import { ModelProvider } from '@/libs/agent-runtime';
 import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
+import models from './fixtures/models.json';
 import { LobeNovitaAI } from './index';
 
 const provider = ModelProvider.Novita;
@@ -26,6 +27,7 @@ beforeEach(() => {
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
     new ReadableStream() as any,
   );
+  vi.spyOn(instance['client'].models, 'list').mockResolvedValue({ data: [] } as any);
 });
 
 afterEach(() => {
@@ -246,6 +248,17 @@ describe('NovitaAI', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_NOVITA_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should get models', async () => {
+      // mock the models.list method
+      (instance['client'].models.list as Mock).mockResolvedValue({ data: models });
+
+      const list = await instance.models();
+
+      expect(list).toMatchSnapshot();
     });
   });
 });
