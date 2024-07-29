@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useActiveTabKey } from '@/hooks/useActiveTabKey';
 import { SidebarTabKey } from '@/store/global/initialState';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 const useStyles = createStyles(({ css, token }) => ({
   active: css`
@@ -30,35 +31,43 @@ const Nav = memo(() => {
   const { styles } = useStyles();
   const activeKey = useActiveTabKey();
   const router = useRouter();
+
+  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
+
   const items: MobileTabBarProps['items'] = useMemo(
-    () => [
-      {
-        icon: (active) => (
-          <Icon className={active ? styles.active : undefined} icon={MessageSquare} />
-        ),
-        key: SidebarTabKey.Chat,
-        onClick: () => {
-          router.push('/chat');
+    () =>
+      [
+        {
+          icon: (active: boolean) => (
+            <Icon className={active ? styles.active : undefined} icon={MessageSquare} />
+          ),
+          key: SidebarTabKey.Chat,
+          onClick: () => {
+            router.push('/chat');
+          },
+          title: t('tab.chat'),
         },
-        title: t('tab.chat'),
-      },
-      {
-        icon: (active) => <Icon className={active ? styles.active : undefined} icon={Compass} />,
-        key: SidebarTabKey.Market,
-        onClick: () => {
-          router.push('/market');
+        showMarket && {
+          icon: (active: boolean) => (
+            <Icon className={active ? styles.active : undefined} icon={Compass} />
+          ),
+          key: SidebarTabKey.Market,
+          onClick: () => {
+            router.push('/market');
+          },
+          title: t('tab.market'),
         },
-        title: t('tab.market'),
-      },
-      {
-        icon: (active) => <Icon className={active ? styles.active : undefined} icon={User} />,
-        key: SidebarTabKey.Me,
-        onClick: () => {
-          router.push('/me');
+        {
+          icon: (active: boolean) => (
+            <Icon className={active ? styles.active : undefined} icon={User} />
+          ),
+          key: SidebarTabKey.Me,
+          onClick: () => {
+            router.push('/me');
+          },
+          title: t('tab.me'),
         },
-        title: t('tab.me'),
-      },
-    ],
+      ].filter(Boolean) as MobileTabBarProps['items'],
     [t],
   );
 

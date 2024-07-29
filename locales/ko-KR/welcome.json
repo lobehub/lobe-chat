@@ -10,6 +10,7 @@
       "title": "새로운 보조 추천: "
     },
     "defaultMessage": "저는 여러분의 개인 인공 지능 비서 LobeChat입니다. 지금 무엇을 도와드릴까요?\n더 전문적이거나 맞춤형 비서가 필요하다면 `+`를 클릭하여 사용자 정의 비서를 만들 수 있습니다.",
+    "defaultMessageWithoutCreate": "저는 당신의 개인 인공지능 어시스턴트 LobeChat입니다. 지금 무엇을 도와드릴까요?",
     "qa": {
       "q01": "LobeHub은 무엇인가요?",
       "q02": "LobeChat은 무엇인가요?",
