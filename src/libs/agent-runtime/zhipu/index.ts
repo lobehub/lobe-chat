@@ -101,7 +101,7 @@ export class LobeZhipuAI implements LobeRuntimeAI {
           : undefined,
       } : {
         temperature: temperature === undefined 
-          ? Math.min(1, temperature / 2) 
+          ? temperature / 2
           : undefined,
       }),
     };
