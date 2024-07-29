@@ -153,9 +153,14 @@ EXPOSE 3210/tcp
 
 CMD \
     if [ -n "$PROXY_URL" ]; then \
-        host="${PROXY_URL#*//}"; \
+        host_with_port="${PROXY_URL#*//}"; \
+        host="${host_with_port%%:*}"; \
         port="${PROXY_URL##*:}"; \
         protocol="${PROXY_URL%%://*}"; \
+        nslookup=$(nslookup -q=A "$host" | tail -n +3 | grep 'Address:'); \
+        if [ ! -z "$nslookup" ]; then \
+            host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
+        fi; \
         printf "%s\n" \
             'localnet 127.0.0.0/255.0.0.0' \
             'localnet ::1/128' \
@@ -165,7 +170,7 @@ CMD \
             'tcp_connect_time_out 8000' \
             'tcp_read_time_out 15000' \
             '[ProxyList]' \
-            "$protocol ${host%%:*} $port" \
+            "$protocol $host $port" \
         > "/etc/proxychains/proxychains.conf"; \
         proxychains -q node /app/server.js; \
     else \
