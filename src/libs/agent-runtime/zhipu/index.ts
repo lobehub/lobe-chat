@@ -94,14 +94,14 @@ export class LobeZhipuAI implements LobeRuntimeAI {
       stream: true,
       ...(model === "glm-4-alltools" ? {
         temperature: temperature 
-          ? Math.max(0.01, Math.min(0.99, temperature)) 
+          ? Math.max(0.01, Math.min(0.99, temperature / 2)) 
           : undefined,
         top_p: top_p 
           ? Math.max(0.01, Math.min(0.99, top_p)) 
           : undefined,
       } : {
         temperature: temperature === undefined 
-          ? Math.min(1, temperature) 
+          ? Math.min(1, temperature / 2) 
           : undefined,
       }),
     };
