@@ -48,6 +48,15 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.update.mutate({ id, value: { pluginError: error } });
   }
 
+  async updateMessagePluginArguments(
+    id: string,
+    value: string | Record<string, any>,
+  ): Promise<any> {
+    const args = typeof value === 'string' ? value : JSON.stringify(value);
+
+    return lambdaClient.message.updateMessagePlugin.mutate({ id, value: { arguments: args } });
+  }
+
   updateMessage(id: string, message: Partial<ChatMessage>): Promise<any> {
     return lambdaClient.message.update.mutate({ id, value: message });
   }
@@ -71,8 +80,13 @@ export class ServerService implements IMessageService {
   removeMessage(id: string): Promise<any> {
     return lambdaClient.message.removeMessage.mutate({ id });
   }
-  removeMessages(sessionId: string, topicId?: string | undefined): Promise<any> {
-    return lambdaClient.message.removeMessages.mutate({
+
+  removeMessages(ids: string[]): Promise<any> {
+    return lambdaClient.message.removeMessages.mutate({ ids });
+  }
+
+  removeMessagesByAssistant(sessionId: string, topicId?: string | undefined): Promise<any> {
+    return lambdaClient.message.removeMessagesByAssistant.mutate({
       sessionId: this.toDbSessionId(sessionId),
       topicId,
     });

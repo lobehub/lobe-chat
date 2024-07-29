@@ -67,6 +67,7 @@
     "OpenAIBizError": "OpenAI 서비스 요청 중 오류가 발생했습니다. 아래 정보를 확인하고 다시 시도해주세요.",
     "PluginApiNotFound": "죄송합니다. 플러그인 설명서에 해당 API가 없습니다. 요청 메서드와 플러그인 설명서 API가 일치하는지 확인해주세요.",
     "PluginApiParamsError": "죄송합니다. 플러그인 요청의 입력 매개변수 유효성 검사에 실패했습니다. 입력 매개변수와 API 설명 정보가 일치하는지 확인해주세요.",
+    "PluginFailToTransformArguments": "죄송합니다. 플러그인 호출 인수 변환에 실패했습니다. 도우미 메시지를 다시 생성하거나 더 강력한 AI 모델로 Tools Calling 능력을 변경한 후 다시 시도해주세요.",
     "PluginGatewayError": "죄송합니다. 플러그인 게이트웨이에 오류가 발생했습니다. 플러그인 게이트웨이 구성을 확인해주세요.",
     "PluginManifestInvalid": "죄송합니다. 해당 플러그인의 설명서 유효성 검사에 실패했습니다. 설명서 형식이 올바른지 확인해주세요.",
     "PluginManifestNotFound": "죄송합니다. 서버에서 해당 플러그인의 설명서 (manifest.json)를 찾을 수 없습니다. 플러그인 설명 파일 주소가 올바른지 확인해주세요.",

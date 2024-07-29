@@ -23,13 +23,11 @@ const useStyles = createStyles(({ css, responsive }) => ({
     font-size: 14px;
     text-align: center;
     ${responsive.mobile} {
-      text-align: left;
+      text-align: start;
     }
   `,
   title: css`
-    margin-top: 0.2em;
-    margin-bottom: 0;
-
+    margin-block: 0.2em 0;
     font-size: 32px;
     font-weight: bolder;
     line-height: 1;
@@ -44,7 +42,7 @@ const InboxWelcome = memo(() => {
   const { styles } = useStyles();
   const mobile = useServerConfigStore((s) => s.isMobile);
   const greeting = useGreeting();
-  const { showWelcomeSuggest } = useServerConfigStore(featureFlagsSelectors);
+  const { showWelcomeSuggest, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Center padding={16} width={'100%'}>
@@ -54,14 +52,14 @@ const InboxWelcome = memo(() => {
           <h1 className={styles.title}>{greeting}</h1>
         </Flexbox>
         <Markdown className={styles.desc} variant={'chat'}>
-          {t('guide.defaultMessage')}
+          {t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate')}
         </Markdown>
-        {
-          showWelcomeSuggest && <>
+        {showWelcomeSuggest && (
+          <>
             <AgentsSuggest mobile={mobile} />
             <QuestionSuggest mobile={mobile} />
           </>
-        }
+        )}
       </Flexbox>
     </Center>
   );

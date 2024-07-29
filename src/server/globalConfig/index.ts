@@ -32,8 +32,12 @@ export const getServerGlobalConfig = () => {
     ENABLED_ANTHROPIC,
     ENABLED_MINIMAX,
     ENABLED_MISTRAL,
+    ENABLED_NOVITA,
     ENABLED_QWEN,
     ENABLED_STEPFUN,
+    ENABLED_BAICHUAN,
+    ENABLED_TAICHU,
+    ENABLED_AI360,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -58,6 +62,7 @@ export const getServerGlobalConfig = () => {
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
     languageModel: {
+      ai360: { enabled: ENABLED_AI360 },
       anthropic: {
         enabled: ENABLED_ANTHROPIC,
       },
@@ -70,6 +75,7 @@ export const getServerGlobalConfig = () => {
           withDeploymentName: true,
         }),
       },
+      baichuan: { enabled: ENABLED_BAICHUAN },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       deepseek: { enabled: ENABLED_DEEPSEEK },
       google: { enabled: ENABLED_GOOGLE },
@@ -77,6 +83,7 @@ export const getServerGlobalConfig = () => {
       minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
+      novita: { enabled: ENABLED_NOVITA },
       ollama: {
         enabled: ENABLED_OLLAMA,
         fetchOnClient: !OLLAMA_PROXY_URL,
@@ -107,6 +114,7 @@ export const getServerGlobalConfig = () => {
 
       stepfun: { enabled: ENABLED_STEPFUN },
 
+      taichu: { enabled: ENABLED_TAICHU },
       togetherai: {
         enabled: ENABLED_TOGETHERAI,
         enabledModels: extractEnabledModels(TOGETHERAI_MODEL_LIST),

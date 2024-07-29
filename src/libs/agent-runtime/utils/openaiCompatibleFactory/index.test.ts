@@ -373,15 +373,23 @@ describe('LobeOpenAICompatibleFactory', () => {
         });
 
         const decoder = new TextDecoder();
-
         const reader = result.body!.getReader();
-        expect(decoder.decode((await reader.read()).value)).toContain('id: a\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('data: "Hello"\n\n');
+        const stream: string[] = [];
 
-        expect(decoder.decode((await reader.read()).value)).toContain('id: a\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('');
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
+
+        expect(stream).toEqual([
+          'id: a\n',
+          'event: text\n',
+          'data: "Hello"\n\n',
+          'id: a\n',
+          'event: stop\n',
+          'data: "stop"\n\n',
+        ]);
 
         expect((await reader.read()).done).toBe(true);
       });

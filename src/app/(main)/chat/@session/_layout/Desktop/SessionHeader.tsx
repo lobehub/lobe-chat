@@ -22,7 +22,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
   top: css`
     position: sticky;
-    top: 0;
+    inset-block-start: 0;
   `,
 }));
 

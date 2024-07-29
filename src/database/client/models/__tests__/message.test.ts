@@ -250,6 +250,19 @@ describe('MessageModel', () => {
     });
   });
 
+  describe('bulkDelete', () => {
+    it('should delete many messages', async () => {
+      const createdMessage = await MessageModel.create(messageData);
+      const createdMessage2 = await MessageModel.create(messageData);
+      await MessageModel.bulkDelete([createdMessage.id, createdMessage2.id]);
+
+      const messageInDb1 = await MessageModel.findById(createdMessage.id);
+      const messageInDb2 = await MessageModel.findById(createdMessage2.id);
+      expect(messageInDb1).toBeUndefined();
+      expect(messageInDb2).toBeUndefined();
+    });
+  });
+
   describe('update', () => {
     it('should update a message', async () => {
       const createdMessage = await MessageModel.create(messageData);
@@ -390,21 +403,18 @@ describe('MessageModel', () => {
       expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
     });
   });
-  describe('clearTable', () => {
-    it('should clear the table', async () => {
-      await MessageModel.create(messageData);
-      await MessageModel.clearTable();
-      const messages = await MessageModel.queryAll();
-      expect(messages).toHaveLength(0);
-    });
-  });
 
-  describe('updatePluginState', () => {
-    it('should update plugin state', async () => {
+  describe('updatePlugin', () => {
+    it('should update plugin', async () => {
+      const value = {
+        identifier: 'testValue',
+        arguments: 'abc',
+        apiName: 'abc',
+      };
       const createdMessage = await MessageModel.create(messageData);
-      await MessageModel.updatePluginState(createdMessage.id, { testKey: 'testValue' });
+      await MessageModel.updatePlugin(createdMessage.id, value);
       const updatedMessage = await MessageModel.findById(createdMessage.id);
-      expect(updatedMessage.pluginState).toHaveProperty('testKey', 'testValue');
+      expect(updatedMessage.plugin).toEqual(value);
     });
   });
 
