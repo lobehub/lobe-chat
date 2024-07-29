@@ -5,6 +5,7 @@ RUN \
     # Add user nextjs to run the app
     addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs \
+    && apk update \
     && apk add --no-cache proxychains-ng \
     && apk upgrade --no-cache \
     && rm -rf /tmp/* /var/cache/apk/*
@@ -147,15 +148,16 @@ CMD \
         host="${PROXY_URL#*//}"; \
         port="${PROXY_URL##*:}"; \
         protocol="${PROXY_URL%%://*}"; \
-        printf "%s\n" 'localnet 127.0.0.0/255.0.0.0' \
-                      'localnet ::1/128' \
-                      'proxy_dns' \
-                      'remote_dns_subnet 224' \
-                      'strict_chain' \
-                      'tcp_connect_time_out 8000' \
-                      'tcp_read_time_out 15000' \
-                      '[ProxyList]' \
-                      "$protocol ${host%%:*} $port" \
+        printf "%s\n" \
+            'localnet 127.0.0.0/255.0.0.0' \
+            'localnet ::1/128' \
+            'proxy_dns' \
+            'remote_dns_subnet 224' \
+            'strict_chain' \
+            'tcp_connect_time_out 8000' \
+            'tcp_read_time_out 15000' \
+            '[ProxyList]' \
+            "$protocol ${host%%:*} $port" \
         > "/etc/proxychains/proxychains.conf"; \
         proxychains -q node /opt/lobechat/server.js; \
     else \
