@@ -88,6 +88,14 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
+      tokens: 32_768,
+    },
+    {
       id: 'meta-llama/Meta-Llama-3-70B-Instruct',
       tokens: 8192,
     },
