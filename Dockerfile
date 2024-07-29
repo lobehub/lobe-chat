@@ -2,18 +2,22 @@
 FROM node:20-alpine AS base
 
 RUN \
-    # Add user nextjs to run the app
-    addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs \
+    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
+    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
+        sed -i "s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g" "/etc/apk/repositories"; \
+    fi; \
     && apk update \
     && apk add --no-cache proxychains-ng \
     && apk upgrade --no-cache \
+    # Add user nextjs to run the app
+    && addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs \
     && rm -rf /tmp/* /var/cache/apk/*
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
 
-ARG USE_NPM_CN_MIRROR
+ARG USE_CN_MIRROR
 
 ENV NEXT_PUBLIC_BASE_PATH=""
 
@@ -41,8 +45,8 @@ COPY package.json ./
 COPY .npmrc ./
 
 RUN \
-    # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
-    if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
+    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
+    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
         export SENTRYCLI_CDNURL="https://npmmirror.com/mirrors/sentry-cli"; \
         npm config set registry "https://registry.npmmirror.com/"; \
     fi \
