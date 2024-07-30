@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.7.8](https://github.com/lobehub/lobe-chat/compare/v1.7.7...v1.7.8)
+
+<sup>Released on **2024-07-30**</sup>
+
+#### 💄 Styles
+
+- **ui**: Modify and repair UI layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **ui**: Modify and repair UI layout, closes [#3321](https://github.com/lobehub/lobe-chat/issues/3321) ([cda776f](https://github.com/lobehub/lobe-chat/commit/cda776f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.7.7](https://github.com/lobehub/lobe-chat/compare/v1.7.6...v1.7.7)
 
 <sup>Released on **2024-07-30**</sup>
