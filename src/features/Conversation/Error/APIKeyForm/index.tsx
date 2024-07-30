@@ -10,6 +10,7 @@ import { GlobalLLMProviderKey } from '@/types/user/settings';
 import BedrockForm from './Bedrock';
 import ProviderApiKeyForm from './ProviderApiKeyForm';
 import ProviderAvatar from './ProviderAvatar';
+import SparkForm from './Spark';
 
 interface APIKeyFormProps {
   id: string;
@@ -59,16 +60,23 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
 
   return (
     <Center gap={16} style={{ maxWidth: 300 }}>
-      {provider === ModelProvider.Bedrock ? (
-        <BedrockForm />
-      ) : (
-        <ProviderApiKeyForm
-          apiKeyPlaceholder={apiKeyPlaceholder}
-          avatar={<ProviderAvatar provider={provider as ModelProvider} />}
-          provider={provider as GlobalLLMProviderKey}
-          showEndpoint={provider === ModelProvider.OpenAI}
-        />
-      )}
+      switch (provider) {
+        case ModelProvider.Bedrock:
+          ProviderForm = <BedrockForm />;
+          break;
+        case ModelProvider.Spark:
+          ProviderForm = <SparkForm />;
+          break;
+        default:
+          ProviderForm = (
+            <ProviderApiKeyForm
+              apiKeyPlaceholder={apiKeyPlaceholder}
+              avatar={<ProviderAvatar provider={provider as ModelProvider} />}
+              provider={provider as GlobalLLMProviderKey}
+              showEndpoint={provider === ModelProvider.OpenAI}
+            />
+          );
+      }
       <Flexbox gap={12} width={'100%'}>
         <Button
           block
