@@ -60,23 +60,18 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
 
   return (
     <Center gap={16} style={{ maxWidth: 300 }}>
-      switch (provider) {
-        case ModelProvider.Bedrock:
-          ProviderForm = <BedrockForm />;
-          break;
-        case ModelProvider.Spark:
-          ProviderForm = <SparkForm />;
-          break;
-        default:
-          ProviderForm = (
-            <ProviderApiKeyForm
-              apiKeyPlaceholder={apiKeyPlaceholder}
-              avatar={<ProviderAvatar provider={provider as ModelProvider} />}
-              provider={provider as GlobalLLMProviderKey}
-              showEndpoint={provider === ModelProvider.OpenAI}
-            />
-          );
-      }
+      {provider === ModelProvider.Bedrock ? (
+        <BedrockForm />
+      ) : provider === ModelProvider.Spark ? (
+        <SparkForm />
+      ) : (
+        <ProviderApiKeyForm
+          apiKeyPlaceholder={apiKeyPlaceholder}
+          avatar={<ProviderAvatar provider={provider as ModelProvider} />}
+          provider={provider as GlobalLLMProviderKey}
+          showEndpoint={provider === ModelProvider.OpenAI}
+        />
+      )}
       <Flexbox gap={12} width={'100%'}>
         <Button
           block
