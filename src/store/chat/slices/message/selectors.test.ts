@@ -131,6 +131,36 @@ describe('chatSelectors', () => {
     });
   });
 
+  describe('getMessageByToolCallId', () => {
+    it('should return undefined if the message with the given id does not exist', () => {
+      const message = chatSelectors.getMessageByToolCallId('non-existent-id')(initialStore);
+      expect(message).toBeUndefined();
+    });
+
+    it('should return the message object with the matching tool_call_id', () => {
+      const toolMessage = {
+        id: 'msg3',
+        content: 'Function Message',
+        role: 'tool',
+        tool_call_id: 'ttt',
+        plugin: {
+          arguments: 'arg1',
+          identifier: 'func1',
+          apiName: 'ttt',
+          type: 'default',
+        },
+      } as ChatMessage;
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: [...mockMessages, toolMessage],
+        },
+        activeId: 'abc',
+      });
+      const message = chatSelectors.getMessageByToolCallId('ttt')(state);
+      expect(message).toMatchObject(toolMessage);
+    });
+  });
+
   describe('currentChatsWithHistoryConfig', () => {
     it('should slice the messages according to the current agent config', () => {
       const state = merge(initialStore, {
@@ -203,7 +233,7 @@ describe('chatSelectors', () => {
   });
 
   describe('currentChatsWithGuideMessage', () => {
-    it('should return existing messages if there are any', () => {
+    it('should return existing messages except tool message', () => {
       const state = merge(initialStore, {
         messagesMap: {
           [messageMapKey('someActiveId')]: mockMessages,
@@ -211,7 +241,7 @@ describe('chatSelectors', () => {
         activeId: 'someActiveId',
       });
       const chats = chatSelectors.currentChatsWithGuideMessage({} as MetaData)(state);
-      expect(chats).toEqual(mockedChats);
+      expect(chats).toEqual(mockedChats.slice(0, 2));
     });
 
     it('should add a guide message if the chat is brand new', () => {
