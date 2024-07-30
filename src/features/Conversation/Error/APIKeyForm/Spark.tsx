@@ -14,7 +14,6 @@ import { FormAction } from '../style';
 
 const SparkForm = memo(() => {
   const { t } = useTranslation('modelProvider');
-  const [setShow] = useState(false);
 
   const [sparkApiKey, sparkApiSecret, setConfig] = useUserStore((s) => [
     keyVaultsConfigSelectors.sparkConfig(s).sparkApiKey,
