@@ -65,11 +65,12 @@ const showInboxWelcome = (s: ChatStore): boolean => {
   return isBrandNewChat;
 };
 
-// 针对新助手添加初始化时的自定义消息
+// Custom message for new assistant initialization
 const currentChatsWithGuideMessage =
   (meta: MetaData) =>
   (s: ChatStore): ChatMessage[] => {
-    const data = currentChats(s);
+    // skip tool message
+    const data = currentChats(s).filter((m) => m.role !== 'tool');
 
     const { isAgentEditable } = featureFlagsSelectors(createServerConfigStore().getState());
 
@@ -125,6 +126,10 @@ const chatsMessageString = (s: ChatStore): string => {
 const getMessageById = (id: string) => (s: ChatStore) =>
   chatHelpers.getMessageById(currentChats(s), id);
 
+const getMessageByToolCallId = (id: string) => (s: ChatStore) => {
+  const messages = currentChats(s);
+  return messages.find((m) => m.tool_call_id === id);
+};
 const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(id)(s)?.traceId;
 
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
@@ -160,6 +165,7 @@ export const chatSelectors = {
   currentChatsWithHistoryConfig,
   currentToolMessages,
   getMessageById,
+  getMessageByToolCallId,
   getTraceIdByMessageId,
   isAIGenerating,
   isCreatingMessage,
