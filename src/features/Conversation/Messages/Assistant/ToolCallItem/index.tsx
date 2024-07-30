@@ -1,8 +1,7 @@
 import { Loading3QuartersOutlined } from '@ant-design/icons';
-import { Icon, Tag } from '@lobehub/ui';
+import { Tag } from '@lobehub/ui';
 import { Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { LucideChevronDown, LucideChevronRight } from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -25,7 +24,7 @@ export interface InspectorProps {
   identifier: string;
   index: number;
   messageId: string;
-  style: CSSProperties;
+  style?: CSSProperties;
 }
 
 const CallItem = memo<InspectorProps>(
@@ -41,7 +40,10 @@ const CallItem = memo<InspectorProps>(
 
     const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
 
-    return (
+    // when tool calling stop streaming, we should show the tool message
+    return !loading && toolMessage ? (
+      <ToolMessage {...toolMessage} />
+    ) : (
       <Flexbox gap={8} style={style}>
         <Flexbox
           align={'center'}
@@ -75,11 +77,8 @@ const CallItem = memo<InspectorProps>(
               </>
             )}
           </Flexbox>
-
-          <Icon icon={open ? LucideChevronDown : LucideChevronRight} />
         </Flexbox>
-        {(open || loading) && <Arguments arguments={requestArgs} />}
-        {!loading && toolMessage && <ToolMessage {...toolMessage} />}
+        {loading && <Arguments arguments={requestArgs} />}
       </Flexbox>
     );
   },
