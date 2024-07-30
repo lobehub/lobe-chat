@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { ChatTranslate } from '@/types/message';
 
-import BubblesLoading from '../components/BubblesLoading';
+import BubblesLoading from '../../../components/BubblesLoading';
 
 interface TranslateProps extends ChatTranslate {
   id: string;

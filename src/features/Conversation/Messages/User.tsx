@@ -5,7 +5,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { FileListPreviewer } from '@/features/FileList';
 import { ChatMessage } from '@/types/message';
 
-import BubblesLoading from '../components/BubblesLoading';
+import BubblesLoading from '../../../components/BubblesLoading';
 
 export const UserMessage = memo<
   ChatMessage & {
