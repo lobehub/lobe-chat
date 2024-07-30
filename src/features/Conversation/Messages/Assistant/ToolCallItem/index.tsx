@@ -1,7 +1,7 @@
-import { Loading3QuartersOutlined } from '@ant-design/icons';
-import { Tag } from '@lobehub/ui';
+import { Icon, Tag } from '@lobehub/ui';
 import { Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
+import { Loader2 } from 'lucide-react';
 import { CSSProperties, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -58,7 +58,7 @@ const CallItem = memo<InspectorProps>(
           <Flexbox align={'center'} gap={8} horizontal>
             {loading ? (
               <div>
-                <Loading3QuartersOutlined spin />
+                <Icon icon={Loader2} spin />
               </div>
             ) : (
               <PluginAvatar identifier={identifier} size={isMobile ? 36 : undefined} />
