@@ -1,6 +1,5 @@
 import { Spark } from '@lobehub/icons';
 import { Input } from 'antd';
-import { useTheme } from 'antd-style';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,12 +18,11 @@ const SparkForm = memo(() => {
     s.updateKeyVaultConfig,
   ]);
 
-  const theme = useTheme();
   return (
     <FormAction
       avatar={<Spark color={Spark.colorPrimary} size={56} />}
-      description={t('spark.sparkApiKey.desc')}
-      title={t('spark.sparkApiKey.title')}
+      description={t('spark.unlock.description')}
+      title={t('spark.unlock.title')}
     >
       <Input.Password
         autoComplete={'new-password'}

@@ -13,7 +13,6 @@ import {
   OpenAI,
   OpenRouter,
   Perplexity,
-  Spark,
   Stepfun,
   Together,
   Tongyi,
@@ -79,10 +78,6 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.Qwen: {
       return <Tongyi color={Tongyi.colorPrimary} size={56} />;
-    }
-
-    case ModelProvider.Spark: {
-      return <Spark color={Spark.colorPrimary} size={56} />;
     }
 
     case ModelProvider.Stepfun: {
