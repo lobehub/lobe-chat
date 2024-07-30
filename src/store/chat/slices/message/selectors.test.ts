@@ -203,7 +203,7 @@ describe('chatSelectors', () => {
   });
 
   describe('currentChatsWithGuideMessage', () => {
-    it('should return existing messages if there are any', () => {
+    it('should return existing messages except tool message', () => {
       const state = merge(initialStore, {
         messagesMap: {
           [messageMapKey('someActiveId')]: mockMessages,
@@ -211,7 +211,7 @@ describe('chatSelectors', () => {
         activeId: 'someActiveId',
       });
       const chats = chatSelectors.currentChatsWithGuideMessage({} as MetaData)(state);
-      expect(chats).toEqual(mockedChats);
+      expect(chats).toEqual(mockedChats.slice(0, 2));
     });
 
     it('should add a guide message if the chat is brand new', () => {
