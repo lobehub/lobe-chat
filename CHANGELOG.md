@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.7.7](https://github.com/lobehub/lobe-chat/compare/v1.7.6...v1.7.7)
+
+<sup>Released on **2024-07-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve tools calling UI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve tools calling UI, closes [#3326](https://github.com/lobehub/lobe-chat/issues/3326) ([36cabc0](https://github.com/lobehub/lobe-chat/commit/36cabc0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.7.6](https://github.com/lobehub/lobe-chat/compare/v1.7.5...v1.7.6)
 
 <sup>Released on **2024-07-29**</sup>

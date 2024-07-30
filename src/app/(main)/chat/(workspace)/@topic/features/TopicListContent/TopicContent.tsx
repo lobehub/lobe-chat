@@ -14,6 +14,8 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import BubblesLoading from '@/components/BubblesLoading';
+import { LOADING_FLAT } from '@/const/message';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 
@@ -160,13 +162,19 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         spin={isLoading}
       />
       {!editing ? (
-        <Paragraph
-          className={styles.title}
-          ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
-          style={{ margin: 0 }}
-        >
-          {title}
-        </Paragraph>
+        title === LOADING_FLAT ? (
+          <Flexbox flex={1} height={28} justify={'center'}>
+            <BubblesLoading />
+          </Flexbox>
+        ) : (
+          <Paragraph
+            className={styles.title}
+            ellipsis={{ rows: 1, tooltip: { placement: 'left', title } }}
+            style={{ margin: 0 }}
+          >
+            {title}
+          </Paragraph>
+        )
       ) : (
         <EditableText
           editing={editing}
