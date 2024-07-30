@@ -163,7 +163,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       />
       {!editing ? (
         title === LOADING_FLAT ? (
-          <Flexbox justify={'center'} flex={1} height={28}>
+          <Flexbox flex={1} height={28} justify={'center'}>
             <BubblesLoading />
           </Flexbox>
         ) : (
