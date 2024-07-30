@@ -1,4 +1,5 @@
 import { Icon, Tooltip } from '@lobehub/ui';
+import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
@@ -142,7 +143,9 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
     <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
       <Flexbox align={'center'} gap={8} horizontal>
         <ModelIcon model={model.id} size={20} />
-        {model.displayName || model.id}
+        <Typography.Paragraph ellipsis={false} style={{ marginBottom: 0 }}>
+          {model.displayName || model.id}
+        </Typography.Paragraph>
       </Flexbox>
 
       {showInfoTag && <ModelInfoTags {...model} />}
