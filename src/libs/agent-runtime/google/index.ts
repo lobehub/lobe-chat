@@ -51,8 +51,43 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
       const model = payload.model;
+      
+      // TODO: 应先检测 Env 是否启用 S3
+      // url -> base64, currently Gemini don't support image url.
+      var messages: OpenAIChatMessage[] = [];
+      const urlPattern = /^(https?):\/\/[^\s/$.?#].[^\s]*$/i;
 
-      const contents = this.buildGoogleMessages(payload.messages, model);
+      for (const message of payload.messages) {
+        if (Array.isArray(message.content)) {
+          const newContent = await Promise.all(message.content.map(async (content) => {
+            if (content.type === 'image_url' && urlPattern.test(content.image_url?.url)) {
+              const response = await fetch(content.image_url.url);
+              const blob = await response.blob();
+              const reader = new FileReader();
+              return new Promise<UserMessageContentPart>((resolve) => {
+                reader.readAsDataURL(blob);
+                reader.onloadend = () => {
+                  if (typeof reader.result === 'string') {
+                    resolve({ ...content, image_url: { ...content.image_url, url: reader.result } });
+                  } else {
+                    resolve(content);
+                  }
+                };
+              });
+            } else {
+              return content as UserMessageContentPart;
+            }
+          }));
+          messages.push({ ...message, content: newContent as UserMessageContentPart[] });
+        } else {
+          messages.push(message as OpenAIChatMessage);
+        }
+      }
+      
+      if (messages.length === 0) {
+        messages = payload.messages;
+      }
+      const contents = this.buildGoogleMessages(messages, model);
 
       const geminiStreamResult = await this.client
         .getGenerativeModel(
