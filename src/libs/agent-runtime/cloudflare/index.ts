@@ -1,4 +1,5 @@
 import { ChatModelCard } from '@/types/llm';
+
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
@@ -40,7 +41,8 @@ function getModelBeta(model: any): boolean {
       (property: any) => property[CF_PROPERTY_NAME] === 'beta',
     );
     if (betaProperty.length === 1) {
-      return betaProperty[0]['value'].toLowerCase() === "true"; // This is a string now.
+      // eslint-disable-next-line eqeqeq
+      return betaProperty[0]['value'] == true; // This is a string now.
     }
     return false;
   } catch {
@@ -63,7 +65,8 @@ function getModelFunctionCalling(model: any): boolean {
       (property: any) => property[CF_PROPERTY_NAME] === 'function_calling',
     );
     if (fcProperty.length === 1) {
-      return fcProperty[0]['value'].toLowerCase() === "true";
+      // eslint-disable-next-line eqeqeq
+      return fcProperty[0]['value'] == true;
     }
     return false;
   } catch {
@@ -111,9 +114,9 @@ class CloudflareStreamTransformer {
       this.parseChunk(splits[i], controller);
     }
     const lastChunk = splits.at(-1)!;
-    if (lastChunk.trim() !== '') { // else drop.
+    if (lastChunk.trim() !== '') {
       this.buffer += lastChunk; // does not need to be trimmed.
-    }
+    } // else drop.
   }
 }
 
@@ -128,8 +131,8 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
     //  // Try get accountID from baseURL
     //  this.accountID = baseURLOrAccountID.replaceAll(/^.*\/([\dA-Fa-f]{32})\/.*$/g, '$1');
     //} else {
-      this.accountID = accountID!;
-      this.baseURL = fillUrl(accountID!);
+    this.accountID = accountID!;
+    this.baseURL = fillUrl(accountID!);
     //}
     this.apiKey = apiKey;
   }
@@ -169,7 +172,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
       }
 
       return StreamingResponse(
-        response.body!.pipeThrough(new TransformStream(new CloudflareStreamTransformer()))
+        response.body!.pipeThrough(new TransformStream(new CloudflareStreamTransformer())),
       );
     } catch (error) {
       const desensitizedEndpoint = desensitizeCloudflareUrl(this.baseURL);

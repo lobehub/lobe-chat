@@ -233,15 +233,11 @@ class AgentRuntime {
 
       case ModelProvider.Taichu: {
         runtimeModel = new LobeTaichuAI(params.taichu ?? {});
-        break
+        break;
       }
 
       case ModelProvider.Cloudflare: {
-        const cloudflareParams = params.cloudflare ?? {};
-        runtimeModel = new LobeCloudflareAI({
-          ...cloudflareParams,
-          baseURL: `https://api.cloudflare.com/client/v4/accounts/${params.cloudflare?.accountID}/ai/v1`,
-        });
+        runtimeModel = new LobeCloudflareAI(params.cloudflare ?? {});
         break;
       }
     }
