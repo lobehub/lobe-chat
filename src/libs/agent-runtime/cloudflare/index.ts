@@ -189,33 +189,29 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   }
 
   async models(): Promise<ChatModelCard[]> {
-    try {
-      const url = `${DEFAULT_BASE_URL_PREFIX}/client/v4/accounts/${this.accountID}/ai/models/search`;
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        method: 'GET',
-      });
-      const j = await response.json();
-      const models: any[] = j['result'].filter(
-        (model: any) => model['task']['name'] === 'Text Generation',
-      );
-      const chatModels: ChatModelCard[] = models.map((model) => {
-        const modelBeta = getModelBeta(model);
-        return {
-          description: model['description'],
-          displayName: getModelDisplayName(model, modelBeta),
-          enabled: !modelBeta,
-          functionCall: getModelFunctionCalling(model),
-          id: model['name'],
-          tokens: getModelTokens(model),
-        };
-      });
-      return chatModels;
-    } catch {
-      return [];
-    }
+    const url = `${DEFAULT_BASE_URL_PREFIX}/client/v4/accounts/${this.accountID}/ai/models/search`;
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      method: 'GET',
+    });
+    const j = await response.json();
+    const models: any[] = j['result'].filter(
+      (model: any) => model['task']['name'] === 'Text Generation',
+    );
+    const chatModels: ChatModelCard[] = models.map((model) => {
+      const modelBeta = getModelBeta(model);
+      return {
+        description: model['description'],
+        displayName: getModelDisplayName(model, modelBeta),
+        enabled: !modelBeta,
+        functionCall: getModelFunctionCalling(model),
+        id: model['name'],
+        tokens: getModelTokens(model),
+      };
+    });
+    return chatModels;
   }
 }
