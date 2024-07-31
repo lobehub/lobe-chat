@@ -74,9 +74,20 @@ const Cloudflare: ModelProviderCard = {
       id: '@hf/thebloke/zephyr-7b-beta-awq',
       tokens: 32_768,
     },
+    {
+      description:
+        'Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning.\t',
+      displayName: 'meta-llama-3-8b-instruct',
+      enabled: true,
+      functionCall: false,
+      id: '@hf/meta-llama/meta-llama-3-8b-instruct',
+    },
   ],
-  checkModel: '@hf/thebloke/deepseek-coder-6.7b-instruct-awq',
+  checkModel: '@hf/meta-llama/meta-llama-3-8b-instruct',
   id: 'cloudflare',
+  modelList: {
+    showModelFetcher: true,
+  },
   name: 'Cloudflare Workers AI',
 };
 
