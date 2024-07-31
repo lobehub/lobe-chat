@@ -160,8 +160,8 @@ export function initializeWithClientStore(provider: string, payload: any) {
     }
     case ModelProvider.Cloudflare: {
       providerOptions = {
-        accountID: providerAuthPayload?.cloudflareAccountID,
         apikey: providerAuthPayload?.apiKey,
+        baseURLOrAccountID: providerAuthPayload?.cloudflareBaseURLOrAccountID,
       };
       break;
     }

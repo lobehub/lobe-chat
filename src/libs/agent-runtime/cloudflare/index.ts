@@ -10,8 +10,8 @@ import { StreamingResponse } from '../utils/response';
 const DEFAULT_BASE_URL_PREFIX = 'https://api.cloudflare.com';
 
 export interface LobeCloudflareParams {
-  accountID?: string;
   apiKey?: string;
+  baseURLOrAccountID?: string,
 }
 
 function fillUrl(accountID: string): string {
@@ -127,15 +127,18 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   accountID: string;
   apiKey?: string;
 
-  constructor({ accountID, apiKey }: LobeCloudflareParams) {
-    //if (baseURLOrAccountID.startsWith('http')) {
-    //  this.baseURL = baseURLOrAccountID;
-    //  // Try get accountID from baseURL
-    //  this.accountID = baseURLOrAccountID.replaceAll(/^.*\/([\dA-Fa-f]{32})\/.*$/g, '$1');
-    //} else {
-    this.accountID = accountID!;
-    this.baseURL = fillUrl(accountID!);
-    //}
+  constructor({ apiKey, baseURLOrAccountID }: LobeCloudflareParams) {
+    if (!baseURLOrAccountID) {
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
+    }
+    if (baseURLOrAccountID.startsWith('http')) {
+      this.baseURL = baseURLOrAccountID.endsWith('/') ? baseURLOrAccountID : baseURLOrAccountID + '/';
+      // Try get accountID from baseURL
+      this.accountID = baseURLOrAccountID.replaceAll(/^.*\/([\dA-Fa-f]{32})\/.*$/g, '$1');
+    } else {
+      this.accountID = baseURLOrAccountID;
+      this.baseURL = fillUrl(baseURLOrAccountID);
+    }
     this.apiKey = apiKey;
   }
 

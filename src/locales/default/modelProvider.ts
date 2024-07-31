@@ -47,15 +47,15 @@ export default {
     },
   },
   cloudflare: {
-    accountID: {
-      desc: '请填写 Cloudflare 账户 ID',
-      placeholder: 'Cloudflare Account ID',
-      title: 'Cloudflare Account ID',
-    },
     apiKey: {
       desc: '请填写 Cloudflare API Key',
       placeholder: 'Cloudflare API Key',
       title: 'Cloudflare API Key',
+    },
+    baseURLOrAccountID: {
+      desc: '填入 Cloudflare 账户 ID 或 自定义 API 地址',
+      placeholder: 'Cloudflare Account ID / custom API URL',
+      title: 'Cloudflare 账户 ID / API 地址',
     },
   },
   ollama: {

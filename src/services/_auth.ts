@@ -39,9 +39,9 @@ export const getProviderAuthPayload = (provider: string) => {
     case ModelProvider.Cloudflare: {
       const config = keyVaultsConfigSelectors.cloudflareConfig(useUserStore.getState());
 
-      return { 
-        apiKey: config?.apiKey, 
-        cloudflareAccountID: config?.accountID, 
+      return {
+        apiKey: config?.apiKey,
+        cloudflareBaseURLOrAccountID: config?.baseURLOrAccountID,
       };
     }
 

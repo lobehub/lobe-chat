@@ -31,14 +31,13 @@ export const useCloudflareProvider = (): ProviderItem => {
       },
       {
         children: (
-          <Input.Password
-            autoComplete={'new-password'}
-            placeholder={t(`${providerKey}.accountID.placeholder`)}
+          <Input
+            placeholder={t(`${providerKey}.baseURLOrAccountID.placeholder`)}
           />
         ),
-        desc: t(`${providerKey}.accountID.desc`),
-        label: t(`${providerKey}.accountID.title`),
-        name: [KeyVaultsConfigKey, providerKey, 'accountID'],
+        desc: t(`${providerKey}.baseURLOrAccountID.desc`),
+        label: t(`${providerKey}.baseURLOrAccountID.title`),
+        name: [KeyVaultsConfigKey, providerKey, 'baseURLOrAccountID'],
       },
     ],
     title: <CloudflareBrand />,

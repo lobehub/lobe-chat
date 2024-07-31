@@ -16,8 +16,8 @@ export interface AWSBedrockKeyVault {
 }
 
 export interface CloudflareKeyVault {
-  accountID?: string;
   apiKey?: string;
+  baseURLOrAccountID?: string;
 }
 
 export interface UserKeyVaults {
