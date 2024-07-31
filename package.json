@@ -100,7 +100,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
     "@anthropic-ai/sdk": "^0.24.3",
-    "@auth/core": "link:lib/next-auth/packages/core",
+    "@auth/core": "link:../next-auth/packages/core",
     "@aws-sdk/client-bedrock-runtime": "^3.609.0",
     "@aws-sdk/client-s3": "^3.609.0",
     "@aws-sdk/s3-request-presigner": "^3.609.0",
@@ -158,7 +158,7 @@
     "modern-screenshot": "^4.4.39",
     "nanoid": "^5.0.7",
     "next": "^14.2.4",
-    "next-auth": "link:lib/next-auth/packages/next-auth",
+    "next-auth": "link:../next-auth/packages/next-auth",
     "next-sitemap": "^4.2.3",
     "numeral": "^2.0.6",
     "nuqs": "^1.17.4",

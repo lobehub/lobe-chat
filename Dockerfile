@@ -44,6 +44,30 @@ RUN \
     fi \
     # Set the registry for corepack
     && export COREPACK_NPM_REGISTRY=$(npm config get registry | sed 's/\/$//') \
+    && ( \
+      cd /tmp \
+      && NEXT_AUTH_VERSION="5.0.0-beta.20" \
+      && wget -O next-auth.tar.gz "https://github.com/kenxx/next-auth/archive/refs/tags/v${NEXT_AUTH_VERSION}.tar.gz" \
+      && tar xf next-auth.tar.gz \
+      && mv "next-auth-${NEXT_AUTH_VERSION}" /next-auth \
+      && ( \
+        cd /next-auth \
+        && corepack enable pnpm \
+        && pnpm install \
+        && ( \
+          cd packages/core \
+          && corepack enable pnpm \
+          && pnpm install \
+          && pnpm build \
+        ) \
+        && ( \
+          cd packages/next-auth \
+          && corepack enable pnpm \
+          && pnpm install \
+          && pnpm build \
+        ) \
+      ) \
+    ) \
     # Enable corepack
     && corepack enable \
     # Use pnpm for corepack
