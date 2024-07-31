@@ -162,8 +162,8 @@ CMD \
         host="${host_with_port%%:*}"; \
         port="${PROXY_URL##*:}"; \
         protocol="${PROXY_URL%%://*}"; \
-        # Resolve the host to IP address, if it's a domain
-        if ! [[ "$host" =~ $IP_REGEX ]]; then \
+        # Resolve to IP address if the host is a domain
+        if ! [[ "$host" =~ "$IP_REGEX" ]]; then \
             nslookup=$(nslookup -q="A" "$host" | tail -n +3 | grep 'Address:'); \
             if [ -n "$nslookup" ]; then \
                 host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
