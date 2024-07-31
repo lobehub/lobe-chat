@@ -38,6 +38,10 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
+
+      // FEISHU
+      FEISHU_CLIENT_ID?: string;
+      FEISHU_CLIENT_SECRET?: string;
     }
   }
 }
@@ -85,6 +89,10 @@ export const getAuthConfig = () => {
       ZITADEL_CLIENT_ID: z.string().optional(),
       ZITADEL_CLIENT_SECRET: z.string().optional(),
       ZITADEL_ISSUER: z.string().optional(),
+
+      // FEISHU
+      FEISHU_CLIENT_ID: z.string().optional(),
+      FEISHU_CLIENT_SECRET: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -122,6 +130,10 @@ export const getAuthConfig = () => {
       ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
       ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
       ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
+
+      // FEISHU
+      FEISHU_CLIENT_ID: process.env.FEISHU_CLIENT_ID,
+      FEISHU_CLIENT_SECRET: process.env.FEISHU_CLIENT_SECRET,
     },
   });
 };
