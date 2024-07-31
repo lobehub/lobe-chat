@@ -60,6 +60,8 @@ function getModelDisplayName(model: any, beta: boolean): string {
 }
 
 function getModelFunctionCalling(model: any): boolean {
+  return false;
+  // eslint-disable-next-line no-unreachable
   try {
     const fcProperty = model['properties'].filter(
       (property: any) => property[CF_PROPERTY_NAME] === 'function_calling',
