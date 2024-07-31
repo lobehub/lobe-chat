@@ -55,7 +55,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       // TODO: 应先检测 Env 是否启用 S3
       // url -> base64, currently Gemini don't support image url.
       var messages: OpenAIChatMessage[] = [];
-      const urlPattern = /^(https?):\/\/[^\s/$.?#].[^\s]*$/i;
+      const urlPattern = /^(https?):\/\/[^\s#$./?].\S*$/i;
 
       for (const message of payload.messages) {
         if (Array.isArray(message.content)) {
