@@ -91,7 +91,7 @@ export const getLLMConfig = () => {
 
       ENABLED_CLOUDFLARE: z.boolean(),
       CLOUDFLARE_API_KEY: z.string().optional(),
-      CLOUDFLARE_ACCOUNT_ID: z.string().optional(),
+      CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -172,9 +172,10 @@ export const getLLMConfig = () => {
       ENABLED_TAICHU: !!process.env.TAICHU_API_KEY,
       TAICHU_API_KEY: process.env.TAICHU_API_KEY,
 
-      ENABLED_CLOUDFLARE: !!process.env.CLOUDFLARE_API_KEY && !!process.env.CLOUDFLARE_ACCOUNT_ID,
+      ENABLED_CLOUDFLARE:
+        !!process.env.CLOUDFLARE_API_KEY && !!process.env.CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID,
       CLOUDFLARE_API_KEY: process.env.CLOUDFLARE_API_KEY,
-      CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
+      CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID: process.env.CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID,
     },
   });
 };
