@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "拖曳檔案到這裡，支援上傳多個圖片。",
+    "dragFileDesc": "拖曳圖片和檔案到這裡，支援上傳多個圖片和檔案。",
+    "dragFileTitle": "上傳檔案",
+    "dragTitle": "上傳圖片"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "自訂模型，預設支援函式呼叫與視覺辨識，請根據實際情況驗證上述能力的可用性",

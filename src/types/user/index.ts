@@ -18,7 +18,9 @@ export interface UserGuide {
    */
   moveSettingsToAvatar?: boolean;
 
-  // Topic 引导
+  /**
+   * Topic Guide
+   */
   topic?: boolean;
 }
 

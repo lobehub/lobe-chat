@@ -49,14 +49,14 @@ describe('parseModelString', () => {
 
     it('multi models', () => {
       const result = parseModelString(
-        'gemini-pro-vision=Gemini Pro Vision<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',
+        'gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',
       );
 
       expect(result.add).toEqual([
         {
-          displayName: 'Gemini Pro Vision',
+          displayName: 'Gemini 1.5 Flash',
           vision: true,
-          id: 'gemini-pro-vision',
+          id: 'gemini-1.5-flash-latest',
           tokens: 16000,
         },
         {

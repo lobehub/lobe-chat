@@ -3,6 +3,7 @@ import { ClientOptions } from 'openai';
 import type { TracePayload } from '@/const/trace';
 
 import { LobeRuntimeAI } from './BaseAI';
+import { LobeAi360AI } from './ai360';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeBaichuanAI } from './baichuan';
@@ -14,6 +15,7 @@ import { LobeGroq } from './groq';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
+import { LobeNovitaAI } from './novita';
 import { LobeOllamaAI } from './ollama';
 import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
@@ -104,6 +106,7 @@ class AgentRuntime {
   static async initializeWithProviderOptions(
     provider: string,
     params: Partial<{
+      ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
       azure: { apiVersion?: string; apikey?: string; endpoint?: string };
       baichuan: Partial<ClientOptions>;
@@ -115,6 +118,7 @@ class AgentRuntime {
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
+      novita: Partial<ClientOptions>;
       ollama: Partial<ClientOptions>;
       openai: Partial<ClientOptions>;
       openrouter: Partial<ClientOptions>;
@@ -147,82 +151,87 @@ class AgentRuntime {
       }
 
       case ModelProvider.ZhiPu: {
-        runtimeModel = await LobeZhipuAI.fromAPIKey(params.zhipu ?? {});
+        runtimeModel = await LobeZhipuAI.fromAPIKey(params.zhipu);
         break;
       }
 
       case ModelProvider.Google: {
-        runtimeModel = new LobeGoogleAI(params.google ?? {});
+        runtimeModel = new LobeGoogleAI(params.google);
         break;
       }
 
       case ModelProvider.Moonshot: {
-        runtimeModel = new LobeMoonshotAI(params.moonshot ?? {});
+        runtimeModel = new LobeMoonshotAI(params.moonshot);
         break;
       }
 
       case ModelProvider.Bedrock: {
-        runtimeModel = new LobeBedrockAI(params.bedrock ?? {});
+        runtimeModel = new LobeBedrockAI(params.bedrock);
         break;
       }
 
       case ModelProvider.Ollama: {
-        runtimeModel = new LobeOllamaAI(params.ollama ?? {});
+        runtimeModel = new LobeOllamaAI(params.ollama);
         break;
       }
 
       case ModelProvider.Perplexity: {
-        runtimeModel = new LobePerplexityAI(params.perplexity ?? {});
+        runtimeModel = new LobePerplexityAI(params.perplexity);
         break;
       }
 
       case ModelProvider.Anthropic: {
-        runtimeModel = new LobeAnthropicAI(params.anthropic ?? {});
+        runtimeModel = new LobeAnthropicAI(params.anthropic);
         break;
       }
 
       case ModelProvider.DeepSeek: {
-        runtimeModel = new LobeDeepSeekAI(params.deepseek ?? {});
+        runtimeModel = new LobeDeepSeekAI(params.deepseek);
         break;
       }
 
       case ModelProvider.Minimax: {
-        runtimeModel = new LobeMinimaxAI(params.minimax ?? {});
+        runtimeModel = new LobeMinimaxAI(params.minimax);
         break;
       }
 
       case ModelProvider.Mistral: {
-        runtimeModel = new LobeMistralAI(params.mistral ?? {});
+        runtimeModel = new LobeMistralAI(params.mistral);
         break;
       }
 
       case ModelProvider.Groq: {
-        runtimeModel = new LobeGroq(params.groq ?? {});
+        runtimeModel = new LobeGroq(params.groq);
         break;
       }
 
       case ModelProvider.OpenRouter: {
-        runtimeModel = new LobeOpenRouterAI(params.openrouter ?? {});
+        runtimeModel = new LobeOpenRouterAI(params.openrouter);
         break;
       }
 
       case ModelProvider.TogetherAI: {
-        runtimeModel = new LobeTogetherAI(params.togetherai ?? {});
+        runtimeModel = new LobeTogetherAI(params.togetherai);
         break;
       }
 
       case ModelProvider.ZeroOne: {
-        runtimeModel = new LobeZeroOneAI(params.zeroone ?? {});
+        runtimeModel = new LobeZeroOneAI(params.zeroone);
         break;
       }
 
       case ModelProvider.Qwen: {
-        runtimeModel = new LobeQwenAI(params.qwen ?? {});
+        runtimeModel = new LobeQwenAI(params.qwen);
         break;
       }
 
       case ModelProvider.Stepfun: {
-        runtimeModel = new LobeStepfunAI(params.stepfun ?? {});
+        runtimeModel = new LobeStepfunAI(params.stepfun);
+        break;
+      }
+
+      case ModelProvider.Novita: {
+        runtimeModel = new LobeNovitaAI(params.novita ?? {});
         break;
       }
 
@@ -232,7 +241,12 @@ class AgentRuntime {
       }
 
       case ModelProvider.Taichu: {
-        runtimeModel = new LobeTaichuAI(params.taichu ?? {});
+        runtimeModel = new LobeTaichuAI(params.taichu);
+        break;
+      }
+
+      case ModelProvider.Ai360: {
+        runtimeModel = new LobeAi360AI(params.ai360 ?? {});
         break
       }
 

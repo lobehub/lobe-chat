@@ -34,14 +34,14 @@ const AgentMeta = memo(() => {
       Render: AutoGenerateInput,
       key: 'title',
       label: t('settingAgent.name.title'),
-      onChange: (e: any) => updateMeta({ title: e.target.value }),
+      onChange: (value: string) => updateMeta({ title: value }),
       placeholder: t('settingAgent.name.placeholder'),
     },
     {
       Render: AutoGenerateInput,
       key: 'description',
       label: t('settingAgent.description.title'),
-      onChange: (e: any) => updateMeta({ description: e.target.value }),
+      onChange: (value: string) => updateMeta({ description: value }),
       placeholder: t('settingAgent.description.placeholder'),
     },
     {
