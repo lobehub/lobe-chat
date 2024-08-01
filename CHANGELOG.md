@@ -2,6 +2,40 @@
 
 # Changelog
 
+### [Version 1.7.9](https://github.com/lobehub/lobe-chat/compare/v1.7.8...v1.7.9)
+
+<sup>Released on **2024-08-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Mistral models calling & update model info.
+
+#### 💄 Styles
+
+- **misc**: Fix stepfun & baichuan model tag icon missing, update Perplexity models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Mistral models calling & update model info, closes [#3377](https://github.com/lobehub/lobe-chat/issues/3377) [#3098](https://github.com/lobehub/lobe-chat/issues/3098) ([66274d0](https://github.com/lobehub/lobe-chat/commit/66274d0))
+
+#### Styles
+
+- **misc**: Fix stepfun & baichuan model tag icon missing, closes [#3379](https://github.com/lobehub/lobe-chat/issues/3379) ([e283ef4](https://github.com/lobehub/lobe-chat/commit/e283ef4))
+- **misc**: Update Perplexity models, closes [#3380](https://github.com/lobehub/lobe-chat/issues/3380) ([06cb946](https://github.com/lobehub/lobe-chat/commit/06cb946))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.7.8](https://github.com/lobehub/lobe-chat/compare/v1.7.7...v1.7.8)
 
 <sup>Released on **2024-07-30**</sup>
