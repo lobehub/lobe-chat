@@ -48,7 +48,7 @@ const Mistral: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'mistral-large-latest',
-      tokens: 32_768,
+      tokens: 128_000,
     },
     {
       displayName: 'Codestral',
@@ -60,7 +60,7 @@ const Mistral: ModelProviderCard = {
       displayName: 'Codestral Mamba',
       enabled: true,
       id: 'open-codestral-mamba',
-      tokens: 32_768,
+      tokens: 256_000,
     },
   ],
   checkModel: 'open-mistral-7b',
