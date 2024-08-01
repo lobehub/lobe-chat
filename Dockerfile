@@ -97,6 +97,8 @@ ENV HOSTNAME="0.0.0.0" \
 # General Variables
 ENV ACCESS_CODE="" \
     API_KEY_SELECT_MODE="" \
+    DEFAULT_AGENT_CONFIG="" \
+    SYSTEM_AGENT="" \
     FEATURE_FLAGS="" \
     PROXY_URL=""
 
