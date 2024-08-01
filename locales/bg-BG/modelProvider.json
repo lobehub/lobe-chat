@@ -46,15 +46,15 @@
     }
   },
   "cloudflare": {
-    "accountID": {
-      "desc": "Моля, въведете Cloudflare Account ID",
-      "placeholder": "Cloudflare Account ID",
-      "title": "Cloudflare Account ID"
-    },
     "apiKey": {
       "desc": "Моля, въведете Cloudflare API Key",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Въведете ID на Cloudflare или личен API адрес",
+      "placeholder": "ID на Cloudflare / личен API адрес",
+      "title": "ID на Cloudflare / API адрес"
     }
   },
   "ollama": {

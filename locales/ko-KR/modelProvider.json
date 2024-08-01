@@ -46,15 +46,15 @@
     }
   },
   "cloudflare": {
-    "accountID": {
-      "desc": "Cloudflare Account ID 를 작성해 주세요.",
-      "placeholder": "Cloudflare Account ID",
-      "title": "Cloudflare Account ID"
-    },
     "apiKey": {
       "desc": "Cloudflare API Key 를 작성해 주세요.",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "클라우드 플레어 계정 ID 또는 사용자 지정 API 주소 입력",
+      "placeholder": "클라우드 플레어 계정 ID / 사용자 지정 API 주소",
+      "title": "클라우드 플레어 계정 ID / API 주소"
     }
   },
   "ollama": {

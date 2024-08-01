@@ -46,15 +46,15 @@
     }
   },
   "cloudflare": {
-    "accountID": {
-      "desc": "Lütfen doldurun Cloudflare Account ID",
-      "placeholder": "Cloudflare Account ID",
-      "title": "Cloudflare Account ID"
-    },
     "apiKey": {
       "desc": "Lütfen doldurun Cloudflare API Key",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Cloudflare hesabınızın ID'sini veya özel API adresinizi girin",
+      "placeholder": "Cloudflare Hesap ID / Özel API Adresi",
+      "title": "Cloudflare Hesap ID / API Adresi"
     }
   },
   "ollama": {

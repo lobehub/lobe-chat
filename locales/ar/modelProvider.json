@@ -46,15 +46,15 @@
     }
   },
   "cloudflare": {
-    "accountID": {
-      "desc": "يرجى ملء Cloudflare Account ID",
-      "placeholder": "Cloudflare Account ID",
-      "title": "Cloudflare Account ID"
-    },
     "apiKey": {
       "desc": "يرجى ملء Cloudflare API Key",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "أدخل رقم حساب Cloudflare أو عنوان URL API المخصص",
+      "placeholder": "رقم حساب Cloudflare / عنوان URL API المخصص",
+      "title": "رقم حساب Cloudflare / عنوان URL API"
     }
   },
   "ollama": {

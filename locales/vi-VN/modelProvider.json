@@ -46,15 +46,15 @@
     }
   },
   "cloudflare": {
-    "accountID": {
-      "desc": "Vui lòng nhập Cloudflare Account ID",
-      "placeholder": "Cloudflare Account ID",
-      "title": "Cloudflare Account ID"
-    },
     "apiKey": {
       "desc": "Vui lòng nhập Cloudflare API Key",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Nhập ID tài khoản Cloudflare hoặc địa chỉ API tùy chỉnh",
+      "placeholder": "ID tài khoản Cloudflare / địa chỉ API tùy chỉnh",
+      "title": "ID tài khoản Cloudflare / địa chỉ API"
     }
   },
   "ollama": {

@@ -46,15 +46,15 @@
     }
   },
   "cloudflare": {
-    "accountID": {
-      "desc": "Compila l'Cloudflare Account ID",
-      "placeholder": "Cloudflare Account ID",
-      "title": "Cloudflare Account ID"
-    },
     "apiKey": {
       "desc": "Compila l'Cloudflare API Key",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Inserisci l'ID dell'account Cloudflare o l'indirizzo API personalizzato",
+      "placeholder": "ID account Cloudflare / URL API personalizzato",
+      "title": "ID account Cloudflare / indirizzo API"
     }
   },
   "ollama": {

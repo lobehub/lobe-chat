@@ -46,15 +46,15 @@
     }
   },
   "cloudflare": {
-    "accountID": {
-      "desc": "Cloudflare Account ID を入力してください",
-      "placeholder": "Cloudflare Account ID",
-      "title": "Cloudflare Account ID"
-    },
     "apiKey": {
       "desc": "Cloudflare API Key を入力してください",
       "placeholder": "Cloudflare API Key",
       "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Cloudflare アカウント ID またはカスタム API アドレスを入力してください。",
+      "placeholder": "Cloudflare アカウント ID / カスタム API URL",
+      "title": "Cloudflare アカウント ID / API アドレス"
     }
   },
   "ollama": {
