@@ -29,6 +29,7 @@ import {
   Rwkv,
   Spark,
   Stability,
+  Stepfun,
   Tongyi,
   Wenxin,
   Yi,
@@ -40,9 +41,12 @@ interface ModelIconProps {
   size?: number;
 }
 
-const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
-  if (!model) return;
+const ModelIcon = memo<ModelIconProps>(({ model: originModel, size = 12 }) => {
+  if (!originModel) return;
 
+  // lower case the origin model so to better match more model id case
+  const model = originModel.toLowerCase();
+  
   // currently supported models, maybe not in its own provider
   if (model.startsWith('gpt')) return <OpenAI size={size} />;
   if (model.startsWith('glm') || model.includes('chatglm')) return <ChatGLM size={size} />;
@@ -65,6 +69,7 @@ const ModelIcon = memo<ModelIconProps>(({ model, size = 12 }) => {
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
+  if (model.includes('step')) return <Stepfun size={size} />;
   if (model.includes('taichu')) return <AiMass size={size} />;
   if (model.includes('360gpt')) return <Ai360 size={size} />;
 
