@@ -90,14 +90,15 @@ function getModelTokens(model: any): number | undefined {
 
 class CloudflareStreamTransformer {
   private textDecoder = new TextDecoder();
+  private textEncoder = new TextEncoder();
   private buffer: string = '';
 
   private parseChunk(chunk: string, controller: TransformStreamDefaultController) {
     const dataPrefix = /^data: /;
     const json = chunk.replace(dataPrefix, '');
     const parsedChunk = JSON.parse(json);
-    controller.enqueue(`event: text\n`);
-    controller.enqueue(`data: ${JSON.stringify(parsedChunk.response)}\n\n`);
+    controller.enqueue(this.textEncoder.encode(`event: text\n`));
+    controller.enqueue(this.textEncoder.encode(`data: ${JSON.stringify(parsedChunk.response)}\n\n`));
   }
 
   public async transform(chunk: Uint8Array, controller: TransformStreamDefaultController) {
