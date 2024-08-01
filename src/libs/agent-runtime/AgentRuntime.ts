@@ -233,7 +233,7 @@ class AgentRuntime {
 
       case ModelProvider.Taichu: {
         runtimeModel = new LobeTaichuAI(params.taichu ?? {});
-        break;
+        break
       }
 
       case ModelProvider.Cloudflare: {
