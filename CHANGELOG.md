@@ -2,6 +2,198 @@
 
 # Changelog
 
+### [Version 1.7.9](https://github.com/lobehub/lobe-chat/compare/v1.7.8...v1.7.9)
+
+<sup>Released on **2024-08-01**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Mistral models calling & update model info.
+
+#### 💄 Styles
+
+- **misc**: Fix stepfun & baichuan model tag icon missing, update Perplexity models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Mistral models calling & update model info, closes [#3377](https://github.com/lobehub/lobe-chat/issues/3377) [#3098](https://github.com/lobehub/lobe-chat/issues/3098) ([66274d0](https://github.com/lobehub/lobe-chat/commit/66274d0))
+
+#### Styles
+
+- **misc**: Fix stepfun & baichuan model tag icon missing, closes [#3379](https://github.com/lobehub/lobe-chat/issues/3379) ([e283ef4](https://github.com/lobehub/lobe-chat/commit/e283ef4))
+- **misc**: Update Perplexity models, closes [#3380](https://github.com/lobehub/lobe-chat/issues/3380) ([06cb946](https://github.com/lobehub/lobe-chat/commit/06cb946))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.8](https://github.com/lobehub/lobe-chat/compare/v1.7.7...v1.7.8)
+
+<sup>Released on **2024-07-30**</sup>
+
+#### 💄 Styles
+
+- **ui**: Modify and repair UI layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **ui**: Modify and repair UI layout, closes [#3321](https://github.com/lobehub/lobe-chat/issues/3321) ([cda776f](https://github.com/lobehub/lobe-chat/commit/cda776f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.7](https://github.com/lobehub/lobe-chat/compare/v1.7.6...v1.7.7)
+
+<sup>Released on **2024-07-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve tools calling UI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve tools calling UI, closes [#3326](https://github.com/lobehub/lobe-chat/issues/3326) ([36cabc0](https://github.com/lobehub/lobe-chat/commit/36cabc0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.6](https://github.com/lobehub/lobe-chat/compare/v1.7.5...v1.7.6)
+
+<sup>Released on **2024-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disable anthropic browser request.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disable anthropic browser request, closes [#3359](https://github.com/lobehub/lobe-chat/issues/3359) ([a519837](https://github.com/lobehub/lobe-chat/commit/a519837))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.5](https://github.com/lobehub/lobe-chat/compare/v1.7.4...v1.7.5)
+
+<sup>Released on **2024-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `create_session ` `edit_agent` feature flags and add more flags.
+
+#### 💄 Styles
+
+- **misc**: Update 360GPT model (360GPT2 Pro).
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `create_session ` `edit_agent` feature flags and add more flags, closes [#3289](https://github.com/lobehub/lobe-chat/issues/3289) ([ebfd3cf](https://github.com/lobehub/lobe-chat/commit/ebfd3cf))
+
+#### Styles
+
+- **misc**: Update 360GPT model (360GPT2 Pro), closes [#3339](https://github.com/lobehub/lobe-chat/issues/3339) ([c8ed85e](https://github.com/lobehub/lobe-chat/commit/c8ed85e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.4](https://github.com/lobehub/lobe-chat/compare/v1.7.3...v1.7.4)
+
+<sup>Released on **2024-07-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve remote model list fetching for Novita AI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve remote model list fetching for Novita AI, closes [#3311](https://github.com/lobehub/lobe-chat/issues/3311) ([67b9ff0](https://github.com/lobehub/lobe-chat/commit/67b9ff0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.7.3](https://github.com/lobehub/lobe-chat/compare/v1.7.2...v1.7.3)
+
+<sup>Released on **2024-07-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update minimax models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update minimax models, closes [#3354](https://github.com/lobehub/lobe-chat/issues/3354) ([8113729](https://github.com/lobehub/lobe-chat/commit/8113729))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.7.2](https://github.com/lobehub/lobe-chat/compare/v1.7.1...v1.7.2)
 
 <sup>Released on **2024-07-26**</sup>

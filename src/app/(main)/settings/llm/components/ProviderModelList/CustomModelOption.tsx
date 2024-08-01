@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 import ModelIcon from '@/components/ModelIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors } from '@/store/user/selectors';
+import { modelConfigSelectors, modelProviderSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 interface CustomModelOptionProps {
@@ -28,30 +28,34 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
       s.toggleEditingCustomModelCard,
       s.removeEnabledModels,
     ]);
+
   const modelCard = useUserStore(
     modelConfigSelectors.getCustomModelCard({ id, provider }),
     isEqual,
   );
 
+  const isEnabled = useUserStore(
+    (s) => modelProviderSelectors.getEnableModelsById(provider)(s)?.includes(id),
+    isEqual,
+  );
+
   return (
     <Flexbox align={'center'} distribution={'space-between'} gap={8} horizontal>
-      <Flexbox align={'center'} gap={8} horizontal>
+      <Flexbox align={'center'} gap={8} horizontal style={{ flex: 1, width: '70%' }}>
         <ModelIcon model={id} size={32} />
-        <Flexbox>
+        <Flexbox direction={'vertical'} style={{ flex: 1, overflow: 'hidden' }}>
           <Flexbox align={'center'} gap={8} horizontal>
-            {modelCard?.displayName || id}
+            <Typography.Text ellipsis>{modelCard?.displayName || id}</Typography.Text>
             <ModelInfoTags id={id} {...modelCard} isCustom />
           </Flexbox>
-          <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
-            <Flexbox gap={2} horizontal>
-              {id}
-              {!!modelCard?.deploymentName && (
-                <>
-                  <Icon icon={LucideArrowRight} />
-                  {modelCard?.deploymentName}
-                </>
-              )}
-            </Flexbox>
+          <Typography.Text ellipsis style={{ fontSize: 12, marginTop: '4px' }} type={'secondary'}>
+            {id}
+            {!!modelCard?.deploymentName && (
+              <>
+                <Icon icon={LucideArrowRight} />
+                {modelCard?.deploymentName}
+              </>
+            )}
           </Typography.Text>
         </Flexbox>
       </Flexbox>
@@ -83,6 +87,7 @@ const CustomModelOption = memo<CustomModelOptionProps>(({ id, provider }) => {
               type: 'warning',
             });
           }}
+          style={isEnabled ? { marginRight: '10px' } : {}}
           title={t('delete')}
         />
       </Flexbox>

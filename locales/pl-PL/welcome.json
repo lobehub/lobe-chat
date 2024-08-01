@@ -10,6 +10,7 @@
       "title": "Nowe zalecenia asystenta:"
     },
     "defaultMessage": "Jestem Twoim prywatnym asystentem LobeChat. W czym mogę pomóc?\nJeśli potrzebujesz bardziej profesjonalnej lub spersonalizowanej pomocy, kliknij `+` aby stworzyć niestandardowego asystenta",
+    "defaultMessageWithoutCreate": "Jestem Twoim prywatnym asystentem LobeChat. W czym mogę Ci teraz pomóc?",
     "qa": {
       "q01": "Czym jest LobeHub?",
       "q02": "Czym jest LobeChat?",

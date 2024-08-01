@@ -420,11 +420,11 @@ describe('LobeOpenAICompatibleFactory', () => {
     describe('noUserId option', () => {
       it('should not add user to payload when noUserId is true', async () => {
         const LobeMockProvider = LobeOpenAICompatibleFactory({
-          baseURL: 'https://spark-api-open.xf-yun.com/v1',
+          baseURL: 'https://api.mistral.ai/v1',
           chatCompletion: {
             noUserId: true,
           },
-          provider: ModelProvider.Spark,
+          provider: ModelProvider.Mistral,
         });
     
         const instance = new LobeMockProvider({ apiKey: 'test' });
@@ -433,7 +433,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         await instance.chat(
           {
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
+            model: 'open-mistral-7b',
             temperature: 0,
           },
           { user: 'testUser' }
@@ -449,11 +449,11 @@ describe('LobeOpenAICompatibleFactory', () => {
     
       it('should add user to payload when noUserId is false', async () => {
         const LobeMockProvider = LobeOpenAICompatibleFactory({
-          baseURL: 'https://spark-api-open.xf-yun.com/v1',
+          baseURL: 'https://api.mistral.ai/v1',
           chatCompletion: {
             noUserId: false,
           },
-          provider: ModelProvider.Spark,
+          provider: ModelProvider.Mistral,
         });
     
         const instance = new LobeMockProvider({ apiKey: 'test' });
@@ -462,7 +462,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         await instance.chat(
           {
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
+            model: 'open-mistral-7b',
             temperature: 0,
           },
           { user: 'testUser' }
@@ -478,8 +478,8 @@ describe('LobeOpenAICompatibleFactory', () => {
     
       it('should add user to payload when noUserId is not set in chatCompletion', async () => {
         const LobeMockProvider = LobeOpenAICompatibleFactory({
-          baseURL: 'https://spark-api-open.xf-yun.com/v1',
-          provider: ModelProvider.Spark,
+          baseURL: 'https://api.mistral.ai/v1',
+          provider: ModelProvider.Mistral,
         });
     
         const instance = new LobeMockProvider({ apiKey: 'test' });
@@ -488,7 +488,7 @@ describe('LobeOpenAICompatibleFactory', () => {
         await instance.chat(
           {
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'general',
+            model: 'open-mistral-7b',
             temperature: 0,
           },
           { user: 'testUser' }
