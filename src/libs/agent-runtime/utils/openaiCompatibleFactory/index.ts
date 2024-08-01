@@ -40,6 +40,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       payload: ChatStreamPayload,
       options: ConstructorOptions<T>,
     ) => OpenAI.ChatCompletionCreateParamsStreaming;
+    noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
   debug?: {
@@ -151,7 +152,10 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
         const response = await this.client.chat.completions.create(
-          { ...postPayload, user: options?.user },
+          {
+            ...postPayload,
+            ...(chatCompletion?.noUserId ? {} : { user: options?.user }) 
+          },
           {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*' },

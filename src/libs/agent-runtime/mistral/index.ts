@@ -13,7 +13,7 @@ export const LobeMistralAI = LobeOpenAICompatibleFactory({
       ...payload.tools && { tools: payload.tools },
       top_p: payload.top_p,
     }),
-    //noUserId: true, # wait for PR #3098
+    noUserId: true,
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_MISTRAL_CHAT_COMPLETION === '1',
