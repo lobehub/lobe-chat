@@ -1,6 +1,7 @@
 import { ModelProviderCard } from '@/types/llm';
 
 // ref https://docs.mistral.ai/getting-started/models/
+// ref https://docs.mistral.ai/capabilities/function_calling/
 const Mistral: ModelProviderCard = {
   chatModels: [
     {
@@ -24,20 +25,41 @@ const Mistral: ModelProviderCard = {
     },
     {
       displayName: 'Mistral Small',
-      enabled: true,
+      enabled: false,
+      functionCall: true,
       id: 'mistral-small-latest',
       tokens: 32_768,
     },
     {
       displayName: 'Mistral Medium',
-      enabled: true,
+      enabled: false,
       id: 'mistral-medium-latest',
       tokens: 32_768,
     },
     {
+      displayName: 'Mistral Nemo',
+      enabled: true,
+      functionCall: true,
+      id: 'open-mistral-nemo',
+      tokens: 128_000,
+    },
+    {
       displayName: 'Mistral Large',
       enabled: true,
+      functionCall: true,
       id: 'mistral-large-latest',
+      tokens: 32_768,
+    },
+    {
+      displayName: 'Codestral',
+      enabled: true,
+      id: 'codestral-latest',
+      tokens: 32_768,
+    },
+    {
+      displayName: 'Codestral Mamba',
+      enabled: true,
+      id: 'open-codestral-mamba',
       tokens: 32_768,
     },
   ],
