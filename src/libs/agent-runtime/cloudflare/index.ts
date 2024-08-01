@@ -41,8 +41,7 @@ function getModelBeta(model: any): boolean {
       (property: any) => property[CF_PROPERTY_NAME] === 'beta',
     );
     if (betaProperty.length === 1) {
-      // eslint-disable-next-line eqeqeq
-      return betaProperty[0]['value'] == true; // This is a string now.
+      return betaProperty[0]['value'] === 'true'; // This is a string now.
     }
     return false;
   } catch {
@@ -67,8 +66,7 @@ function getModelFunctionCalling(model: any): boolean {
       (property: any) => property[CF_PROPERTY_NAME] === 'function_calling',
     );
     if (fcProperty.length === 1) {
-      // eslint-disable-next-line eqeqeq
-      return fcProperty[0]['value'] == true;
+      return fcProperty[0]['value'] === 'true';
     }
     return false;
   } catch {
