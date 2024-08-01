@@ -104,6 +104,9 @@ export const createModelListSlice: StateCreator<
       const togetherai = draft.find((d) => d.id === ModelProvider.TogetherAI);
       if (togetherai) togetherai.chatModels = mergeModels('togetherai', togetherai.chatModels);
 
+      const novita = draft.find((d) => d.id === ModelProvider.Novita);
+      if (novita) novita.chatModels = mergeModels('novita', novita.chatModels);
+
       const cloudflare = draft.find((d) => d.id === ModelProvider.Cloudflare);
       if (cloudflare)
         cloudflare.chatModels = mergeModels('cloudflare', cloudflare.chatModels);

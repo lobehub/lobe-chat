@@ -6,10 +6,9 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import BubblesLoading from '@/components/BubblesLoading';
 import { useChatStore } from '@/store/chat';
 import { ChatTranslate } from '@/types/message';
-
-import BubblesLoading from '../components/BubblesLoading';
 
 interface TranslateProps extends ChatTranslate {
   id: string;
