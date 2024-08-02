@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.7.10](https://github.com/lobehub/lobe-chat/compare/v1.7.9...v1.7.10)
+
+<sup>Released on **2024-08-02**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Gemini 1.5 Pro Exp model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Gemini 1.5 Pro Exp model, closes [#3384](https://github.com/lobehub/lobe-chat/issues/3384) ([0de8b7b](https://github.com/lobehub/lobe-chat/commit/0de8b7b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.7.9](https://github.com/lobehub/lobe-chat/compare/v1.7.8...v1.7.9)
 
 <sup>Released on **2024-08-01**</sup>
