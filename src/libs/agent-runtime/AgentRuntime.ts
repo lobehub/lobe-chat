@@ -251,7 +251,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.Spark: {
-        runtimeModel = new LobeSparkAI(params.spark ?? {});
+        runtimeModel = new LobeSparkAI(params.spark);
         break
       }
     }
