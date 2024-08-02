@@ -1,15 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { getAuth } from '@clerk/nextjs/server';
+import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
-import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk } from '@/const/auth';
+import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
+import NextAuthEdge from '@/libs/next-auth/edge';
 
 type ClerkAuth = ReturnType<typeof getAuth>;
 
 export interface AuthContext {
-  auth?: ClerkAuth;
   authorizationHeader?: string | null;
+  clerkAuth?: ClerkAuth;
   jwtPayload?: JWTPayload | null;
+  nextAuth?: User;
   userId?: string | null;
 }
 
@@ -18,12 +21,14 @@ export interface AuthContext {
  * This is useful for testing when we don't want to mock Next.js' request/response
  */
 export const createContextInner = async (params?: {
-  auth?: ClerkAuth;
   authorizationHeader?: string | null;
+  clerkAuth?: ClerkAuth;
+  nextAuth?: User;
   userId?: string | null;
 }): Promise<AuthContext> => ({
-  auth: params?.auth,
   authorizationHeader: params?.authorizationHeader,
+  clerkAuth: params?.clerkAuth,
+  nextAuth: params?.nextAuth,
   userId: params?.userId,
 });
 
@@ -45,7 +50,19 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
     auth = getAuth(request);
 
     userId = auth.userId;
+    return createContextInner({ authorizationHeader: authorization, clerkAuth: auth, userId });
   }
 
-  return createContextInner({ auth, authorizationHeader: authorization, userId });
+  if (enableNextAuth) {
+    try {
+      const session = await NextAuthEdge.auth();
+      if (session && session?.user?.id) {
+        auth = session.user;
+        userId = session.user.id;
+      }
+      return createContextInner({ authorizationHeader: authorization, nextAuth: auth, userId });
+    } catch {}
+  }
+
+  return createContextInner({ authorizationHeader: authorization, userId });
 };

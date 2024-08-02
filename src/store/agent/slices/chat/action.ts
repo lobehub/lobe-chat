@@ -27,6 +27,7 @@ export interface AgentChatAction {
 
   useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
   useInitAgentStore: (
+    isLogin: boolean | undefined,
     defaultAgentConfig?: DeepPartial<LobeAgentConfig>,
   ) => SWRResponse<DeepPartial<LobeAgentConfig>>;
 
@@ -111,9 +112,9 @@ export const createChatSlice: StateCreator<
         suspense: true,
       },
     ),
-  useInitAgentStore: (defaultAgentConfig) =>
+  useInitAgentStore: (isLogin, defaultAgentConfig) =>
     useOnlyFetchOnceSWR<DeepPartial<LobeAgentConfig>>(
-      'fetchInboxAgentConfig',
+      !!isLogin ? 'fetchInboxAgentConfig' : null,
       () => sessionService.getSessionConfig(INBOX_SESSION_ID),
       {
         onSuccess: (data) => {
