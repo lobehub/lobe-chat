@@ -4,7 +4,7 @@ import {
   Ai360,
   AiMass,
   Aws,
-  // Aya, // TODO: wait for Aya ready
+  Aya,
   Azure,
   Baichuan,
   ByteDance,
@@ -68,7 +68,7 @@ const ModelIcon = memo<ModelIconProps>(({ model: originModel, size = 12 }) => {
   if (model.includes('yi-')) return <Yi size={size} />;
   if (model.startsWith('openrouter')) return <OpenRouter size={size} />; // only for Cinematika and Auto
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
-  // if (model.includes('aya')) return <Aya.Avatar size={size} />; // TODO: wait for Aya ready
+  if (model.includes('aya')) return <Aya.Avatar size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
   if (model.includes('step')) return <Stepfun size={size} />;
