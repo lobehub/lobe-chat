@@ -23,22 +23,22 @@ const Ollama: ModelProviderCard = {
       displayName: 'Code Llama 7B',
       enabled: true,
       id: 'codellama',
-      tokens: 16_384,
+      tokens: 2048,
     },
     {
       displayName: 'Code Llama 13B',
       id: 'codellama:13b',
-      tokens: 16_384,
+      tokens: 2048,
     },
     {
       displayName: 'Code Llama 34B',
       id: 'codellama:34b',
-      tokens: 16_384,
+      tokens: 2048,
     },
     {
       displayName: 'Code Llama 70B',
       id: 'codellama:70b',
-      tokens: 16_384,
+      tokens: 2048,
     },
     {
       displayName: 'Gemma2 2B',
@@ -83,7 +83,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'WizardLM 2 7B',
       enabled: true,
       id: 'wizardlm2',
-      tokens: 65_536,
+      tokens: 32_000,
     },
     {
       displayName: 'WizardLM 2 8x22B',
