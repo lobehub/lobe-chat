@@ -125,24 +125,24 @@ const Ollama: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Deepseek V2 16B',
+      displayName: 'DeepSeek V2 16B',
       enabled: true,
       id: 'deepseek-v2',
       tokens: 32_000,
     },
     {
-      displayName: 'Deepseek V2 236B',
+      displayName: 'DeepSeek V2 236B',
       id: 'deepseek-v2:236b',
       tokens: 128_000,
     },
     {
-      displayName: 'Deepseek Coder V2 16B',
+      displayName: 'DeepSeek Coder V2 16B',
       enabled: true,
       id: 'deepseek-coder-v2',
       tokens: 128_000,
     },
     {
-      displayName: 'Deepseek Coder V2 236B',
+      displayName: 'DeepSeek Coder V2 236B',
       id: 'deepseek-coder-v2:236b',
       tokens: 128_000,
     },
