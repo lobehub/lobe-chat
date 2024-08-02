@@ -52,6 +52,11 @@ const Ollama: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      displayName: 'Gemma2 27B',
+      id: 'gemma2:27b',
+      tokens: 8192,
+    },
+    {
       displayName: 'CodeGemma 2B',
       id: 'codegemma:2b',
       tokens: 8192,
@@ -60,11 +65,6 @@ const Ollama: ModelProviderCard = {
       displayName: 'CodeGemma 7B',
       enabled: true,
       id: 'codegemma',
-      tokens: 8192,
-    },
-    {
-      displayName: 'Gemma2 27B',
-      id: 'gemma2:27b',
       tokens: 8192,
     },
     {
