@@ -20,35 +20,10 @@ const Ollama: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      displayName: 'Llama3 8B',
-      id: 'llama3',
-      tokens: 8000, // https://huggingface.co/blog/zh/llama3#llama-3-的新进展
-    },
-    {
-      displayName: 'Llama3 70B',
-      id: 'llama3:70b',
-      tokens: 8000,
-    },
-    {
-      displayName: 'Llama2 Chat 7B',
-      id: 'llama2', // https://llama.meta.com/llama2/
-      tokens: 4096,
-    },
-    {
-      displayName: 'Llama2 Chat 13B',
-      id: 'llama2:13b',
-      tokens: 4096,
-    },
-    {
-      displayName: 'Llama2 Chat 70B',
-      id: 'llama2:70b',
-      tokens: 4096,
-    },
-    {
       displayName: 'Code Llama 7B',
       enabled: true,
       id: 'codellama',
-      tokens: 16_384, // https://huggingface.co/codellama/CodeLlama-7b-hf/blob/main/config.json
+      tokens: 16_384,
     },
     {
       displayName: 'Code Llama 13B',
@@ -74,21 +49,11 @@ const Ollama: ModelProviderCard = {
       displayName: 'Gemma2 9B',
       enabled: true,
       id: 'gemma2',
-      tokens: 8192, // https://huggingface.co/blog/zh/gemma2
+      tokens: 8192,
     },
     {
       displayName: 'Gemma2 27B',
       id: 'gemma2:27b',
-      tokens: 8192,
-    },
-    {
-      displayName: 'Gemma 7B',
-      id: 'gemma',
-      tokens: 8192, // https://huggingface.co/google/gemma-7b-it/discussions/73#65e9678c0cda621164a95bad
-    },
-    {
-      displayName: 'Gemma 2B',
-      id: 'gemma:2b',
       tokens: 8192,
     },
     {
@@ -117,7 +82,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'MathΣtral',
       enabled: true,
       id: 'mathstral',
-      tokens: 32_000, // https://huggingface.co/mistralai/mathstral-7B-v0.1
+      tokens: 32_000,
     },
     {
       displayName: 'Mixtral 8x7B',
@@ -128,7 +93,7 @@ const Ollama: ModelProviderCard = {
     {
       displayName: 'Mixtral 8x22B',
       id: 'mixtral:8x22b',
-      tokens: 65_536, // https://huggingface.co/mistralai/Mixtral-8x22B-v0.1/blob/main/config.json
+      tokens: 65_536,
     },
     {
       displayName: 'Mixtral Nemo',
@@ -140,7 +105,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'Command R 35B',
       enabled: true,
       id: 'command-r',
-      tokens: 131_072, // https://huggingface.co/CohereForAI/c4ai-command-r-v01/blob/main/config.json
+      tokens: 131_072,
     },
     {
       displayName: 'Command R+ 104B (Q2_K)',
@@ -151,7 +116,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'Aya 23 8B',
       enabled: true,
       id: 'aya',
-      tokens: 8192, // https://cohere.com/research/papers/aya-command-23-8b-and-35b-technical-report-2024-05-23
+      tokens: 8192,
     },
     {
       displayName: 'Aya 23 35B',
@@ -170,13 +135,13 @@ const Ollama: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      displayName: 'Deepseek Coder V2 16B', // https://huggingface.co/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
+      displayName: 'Deepseek Coder V2 16B',
       enabled: true,
       id: 'deepseek-coder-v2',
       tokens: 128_000,
     },
     {
-      displayName: 'Deepseek Coder V2 236B', // https://huggingface.co/deepseek-ai/DeepSeek-Coder-V2-Lite-Instruct
+      displayName: 'Deepseek Coder V2 236B',
       id: 'deepseek-coder-v2:236b',
       tokens: 128_000,
     },
@@ -202,44 +167,9 @@ const Ollama: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      displayName: 'Qwen1.5 0.5B',
-      id: 'qwen:0.5b',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'Qwen1.5 1.8B',
-      id: 'qwen:1.8b',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'Qwen1.5 4B',
-      id: 'qwen',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'Qwen1.5 7B',
-      id: 'qwen:7b',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'Qwen1.5 14B',
-      id: 'qwen:14b',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'Qwen1.5 72B',
-      id: 'qwen:72b',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'Qwen1.5 110B',
-      id: 'qwen:110b',
-      tokens: 32_768,
-    },
-    {
       displayName: 'LLaVA 7B',
       id: 'llava',
-      tokens: 4096, // https://huggingface.co/llava-hf/llava-1.5-7b-hf/blob/main/config.json
+      tokens: 4096,
       vision: true,
     },
     {
