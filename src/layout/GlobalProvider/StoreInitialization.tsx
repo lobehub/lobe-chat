@@ -11,6 +11,7 @@ import { useEnabledDataSync } from '@/hooks/useSyncData';
 import { useAgentStore } from '@/store/agent';
 import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
+import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -19,8 +20,9 @@ const StoreInitialization = memo(() => {
   useTranslation('error');
 
   const router = useRouter();
-  const [isLogin, useInitUserState, importUrlShareSettings] = useUserStore((s) => [
+  const [isLogin, isSignedIn, useInitUserState, importUrlShareSettings] = useUserStore((s) => [
     authSelectors.isLogin(s),
+    s.isSignedIn,
     s.useInitUserState,
     s.importUrlShareSettings,
   ]);
@@ -34,10 +36,23 @@ const StoreInitialization = memo(() => {
   // init the system preference
   useInitSystemStatus();
 
-  // init inbox agent and default agent config
-  useInitAgentStore(serverConfig.defaultAgent?.config);
+  // Update NextAuth status
+  const useUserStoreUpdater = createStoreUpdater(useUserStore);
+  const enableNextAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
+  useUserStoreUpdater('enabledNextAuth', enableNextAuth);
 
-  useInitUserState(isLogin, serverConfig, {
+  /**
+   * The store function of `isLogin` will both consider the values of `enableAuth` and `isSignedIn`.
+   * But during initialization, the value of `enableAuth` might be incorrect cause of the async fetch.
+   * So we need to use `isSignedIn` only to determine whether request for the default agent config and user state.
+   */
+  const isLoginOnInit = enableNextAuth ? isSignedIn : isLogin;
+
+  // init inbox agent and default agent config
+  useInitAgentStore(isLoginOnInit, serverConfig.defaultAgent?.config);
+
+  // init user state
+  useInitUserState(isLoginOnInit, serverConfig, {
     onSuccess: (state) => {
       if (state.isOnboard === false) {
         router.push('/onboard');

@@ -9,6 +9,9 @@ declare module 'next-auth' {
       firstName?: string;
     } & DefaultSession['user'];
   }
+  interface User {
+    providerAccountId?: string;
+  }
   /**
    * More types can be extends here
    * ref: https://authjs.dev/getting-started/typescript
