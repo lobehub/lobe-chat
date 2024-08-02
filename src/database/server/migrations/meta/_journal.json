@@ -28,6 +28,13 @@
       "when": 1718460779230,
       "tag": "0003_naive_echo",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1721724512422,
+      "tag": "0004_add_next_auth",
+      "breakpoints": true
     }
   ],
   "version": "6"
