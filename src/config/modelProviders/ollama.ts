@@ -108,8 +108,9 @@ const Ollama: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      displayName: 'Command R+ 104B (Q2_K)',
-      id: 'command-r-plus:104b-q2_K',
+      displayName: 'Command R+ 104B',
+      enabled: true,
+      id: 'command-r-plus',
       tokens: 131_072,
     },
     {
