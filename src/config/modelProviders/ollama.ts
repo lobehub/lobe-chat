@@ -52,6 +52,18 @@ const Ollama: ModelProviderCard = {
       tokens: 8192,
     },
     {
+      displayName: 'CodeGemma 2B',
+      enabled: true,
+      id: 'codegemma:2b',
+      tokens: 8192,
+    },
+    {
+      displayName: 'CodeGemma 7B',
+      enabled: true,
+      id: 'codegemma',
+      tokens: 8192,
+    },
+    {
       displayName: 'Gemma2 27B',
       id: 'gemma2:27b',
       tokens: 8192,
@@ -79,10 +91,16 @@ const Ollama: ModelProviderCard = {
       tokens: 65_536,
     },
     {
-      displayName: 'MathΣtral',
+      displayName: 'MathΣtral 7B',
       enabled: true,
       id: 'mathstral',
       tokens: 32_000,
+    },
+    {
+      displayName: 'Mistral 7B',
+      enabled: true,
+      id: 'mistral',
+      tokens: 32_768,
     },
     {
       displayName: 'Mixtral 8x7B',
@@ -96,10 +114,27 @@ const Ollama: ModelProviderCard = {
       tokens: 65_536,
     },
     {
-      displayName: 'Mixtral Nemo',
+      displayName: 'Mixtral Nemo 12B',
       enabled: true,
       id: 'mistral-nemo',
       tokens: 128_000,
+    },
+    {
+      displayName: 'Codestral 22B',
+      enabled: true,
+      id: 'codestral',
+      tokens: 32_000,
+    },
+    {
+      displayName: 'Aya 23 8B',
+      enabled: true,
+      id: 'aya',
+      tokens: 8192,
+    },
+    {
+      displayName: 'Aya 23 35B',
+      id: 'aya:35b',
+      tokens: 8192,
     },
     {
       displayName: 'Command R 35B',
@@ -112,17 +147,6 @@ const Ollama: ModelProviderCard = {
       enabled: true,
       id: 'command-r-plus',
       tokens: 131_072,
-    },
-    {
-      displayName: 'Aya 23 8B',
-      enabled: true,
-      id: 'aya',
-      tokens: 8192,
-    },
-    {
-      displayName: 'Aya 23 35B',
-      id: 'aya:35b',
-      tokens: 8192,
     },
     {
       displayName: 'DeepSeek V2 16B',
@@ -166,6 +190,12 @@ const Ollama: ModelProviderCard = {
       displayName: 'Qwen2 72B',
       id: 'qwen2:72b',
       tokens: 128_000,
+    },
+    {
+      displayName: 'CodeQwen1.5 7B',
+      enabled: true,
+      id: 'codeqwen',
+      tokens: 32_768,
     },
     {
       displayName: 'LLaVA 7B',
