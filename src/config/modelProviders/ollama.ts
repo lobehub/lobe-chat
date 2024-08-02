@@ -168,6 +168,7 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'LLaVA 7B',
+      enabled: true,
       id: 'llava',
       tokens: 4096,
       vision: true,
