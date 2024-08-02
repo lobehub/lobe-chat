@@ -23,22 +23,22 @@ const Ollama: ModelProviderCard = {
       displayName: 'Code Llama 7B',
       enabled: true,
       id: 'codellama',
-      tokens: 2048,
+      tokens: 16_384,
     },
     {
       displayName: 'Code Llama 13B',
       id: 'codellama:13b',
-      tokens: 2048,
+      tokens: 16_384,
     },
     {
       displayName: 'Code Llama 34B',
       id: 'codellama:34b',
-      tokens: 2048,
+      tokens: 16_384,
     },
     {
       displayName: 'Code Llama 70B',
       id: 'codellama:70b',
-      tokens: 2048,
+      tokens: 16_384,
     },
     {
       displayName: 'Gemma2 2B',
@@ -82,7 +82,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'WizardLM 2 7B',
       enabled: true,
       id: 'wizardlm2',
-      tokens: 32_000,
+      tokens: 32_768,
     },
     {
       displayName: 'WizardLM 2 8x22B',
@@ -93,7 +93,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'MathΣtral 7B',
       enabled: true,
       id: 'mathstral',
-      tokens: 32_000,
+      tokens: 32_768,
     },
     {
       displayName: 'Mistral 7B',
@@ -128,7 +128,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'Codestral 22B',
       enabled: true,
       id: 'codestral',
-      tokens: 32_000,
+      tokens: 32_768,
     },
     {
       displayName: 'Aya 23 8B',
@@ -157,7 +157,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'DeepSeek V2 16B',
       enabled: true,
       id: 'deepseek-v2',
-      tokens: 32_000,
+      tokens: 32_768,
     },
     {
       displayName: 'DeepSeek V2 236B',
@@ -200,7 +200,7 @@ const Ollama: ModelProviderCard = {
       displayName: 'CodeQwen1.5 7B',
       enabled: true,
       id: 'codeqwen',
-      tokens: 32_768,
+      tokens: 65_536,
     },
     {
       displayName: 'LLaVA 7B',
