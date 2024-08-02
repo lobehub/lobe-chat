@@ -53,7 +53,6 @@ const Ollama: ModelProviderCard = {
     },
     {
       displayName: 'CodeGemma 2B',
-      enabled: true,
       id: 'codegemma:2b',
       tokens: 8192,
     },
