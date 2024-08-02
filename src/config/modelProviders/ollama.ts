@@ -113,6 +113,12 @@ const Ollama: ModelProviderCard = {
       tokens: 65_536,
     },
     {
+      displayName: 'Mixtral Large 123B',
+      enabled: true,
+      id: 'mistral-large',
+      tokens: 128_000,
+    },
+    {
       displayName: 'Mixtral Nemo 12B',
       enabled: true,
       id: 'mistral-nemo',
