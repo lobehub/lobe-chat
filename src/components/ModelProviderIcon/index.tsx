@@ -6,6 +6,7 @@ import {
   Baichuan,
   Bedrock,
   DeepSeek,
+  Fireworks,
   Google,
   Groq,
   LobeHub,
@@ -108,6 +109,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.TogetherAI: {
       return <Together size={20} />;
+    }
+
+    case ModelProvider.FireworksAI: {
+      return <Fireworks size={20} />;
     }
 
     case ModelProvider.Qwen: {

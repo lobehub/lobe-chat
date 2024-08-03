@@ -5,6 +5,7 @@ import {
   Baichuan,
   Claude,
   DeepSeek,
+  Fireworks,
   Gemini,
   Google,
   Groq,
@@ -31,6 +32,7 @@ import {
   AnthropicProviderCard,
   BaichuanProviderCard,
   DeepSeekProviderCard,
+  FireworksAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -137,6 +139,11 @@ export const useProviderList = (): ProviderItem[] => {
         ...TogetherAIProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'togetherai'),
         title: <Together.Combine size={26} type={'color'} />,
+      },
+      {
+        ...FireworksAIProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'fireworksai'),
+        title: <Fireworks.Combine iconProps={{ color: Fireworks.colorPrimary }} size={20} />,
       },
       {
         ...QwenProviderCard,
