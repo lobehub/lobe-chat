@@ -12,18 +12,23 @@ const client = new Pool({ connectionString: process.env.DATABASE_URL });
 const db = drizzle(client);
 
 const runMigrations = async () => {
+  console.log('[Database] Start to migration...');
   await migrator.migrate(db, {
     migrationsFolder: join(__dirname, './migrations'),
   });
 
   console.log('✅ database migration pass.');
+  console.log('-------------------------------------');
   // eslint-disable-next-line unicorn/no-process-exit
   process.exit(0);
 };
 
 // eslint-disable-next-line unicorn/prefer-top-level-await
 runMigrations().catch((err) => {
-  console.error('❌ Database migrate failed:', err);
+  console.error(
+    '❌ Database migrate failed. Please check your database is valid and DATABASE_URL is set correctly. The error detail is below:',
+  );
+  console.error(err);
   // eslint-disable-next-line unicorn/no-process-exit
   process.exit(1);
 });
