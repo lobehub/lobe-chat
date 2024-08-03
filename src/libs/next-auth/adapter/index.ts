@@ -145,13 +145,9 @@ export function LobeNextAuthDbAdapter(serverDB: NeonDatabase<typeof schema>): Ad
     },
 
     async getUser(id): Promise<AdapterUser | null> {
-      try {
-        const lobeUser = await UserModel.findById(id);
-        if (!lobeUser) return null;
-        return mapLobeUserToAdapterUser(lobeUser);
-      } catch {
-        return null;
-      }
+      const lobeUser = await UserModel.findById(id);
+      if (!lobeUser) return null;
+      return mapLobeUserToAdapterUser(lobeUser);
     },
 
     async getUserByAccount(account): Promise<AdapterUser | null> {
