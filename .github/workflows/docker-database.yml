@@ -1,7 +1,9 @@
 name: Publish Database Docker Image
 
-on: [push]
-
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   push_to_registry:
@@ -22,7 +24,7 @@ jobs:
         with:
           images: lobehub/lobe-chat-database
           tags: |
-            type=raw,value=test
+            type=raw,value=latest
             type=ref,event=tag
 
       - name: Set up QEMU
