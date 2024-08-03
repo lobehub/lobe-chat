@@ -10,6 +10,7 @@
       "title": "Nieuwe aanbeveling assistent: "
     },
     "defaultMessage": "Ik ben uw persoonlijke slimme assistent LobeChat, waarmee kan ik u helpen?\nAls u een meer professionele of op maat gemaakte assistent nodig heeft, kunt u op `+` klikken om een aangepaste assistent te maken",
+    "defaultMessageWithoutCreate": "Ik ben uw persoonlijke slimme assistent LobeChat. Hoe kan ik u nu helpen?",
     "qa": {
       "q01": "Wat is LobeHub?",
       "q02": "Wat is LobeChat?",
