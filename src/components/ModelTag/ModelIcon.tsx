@@ -4,6 +4,7 @@ import {
   Ai360,
   AiMass,
   Aws,
+  Aya,
   Azure,
   Baichuan,
   ByteDance,
@@ -62,11 +63,12 @@ const ModelIcon = memo<ModelIconProps>(({ model: originModel, size = 12 }) => {
   if (model.includes('qwen')) return <Tongyi size={size} />;
   if (model.includes('minmax')) return <Minimax size={size} />;
   if (model.includes('abab')) return <Minimax size={size} />;
-  if (model.includes('mistral') || model.includes('mixtral') || model.includes('codestral')) return <Mistral size={size} />;
+  if (model.includes('mistral') || model.includes('mixtral') || model.includes('codestral') || model.includes('mathstral')) return <Mistral size={size} />;
   if (model.includes('pplx') || model.includes('sonar')) return <Perplexity size={size} />;
   if (model.includes('yi-')) return <Yi size={size} />;
   if (model.startsWith('openrouter')) return <OpenRouter size={size} />; // only for Cinematika and Auto
   if (model.startsWith('openchat')) return <OpenChat size={size} />;
+  if (model.includes('aya')) return <Aya.Avatar size={size} />;
   if (model.includes('command')) return <Cohere size={size} />;
   if (model.includes('dbrx')) return <Dbrx size={size} />;
   if (model.includes('step')) return <Stepfun size={size} />;
@@ -95,8 +97,7 @@ const ModelIcon = memo<ModelIconProps>(({ model: originModel, size = 12 }) => {
   )
     return <Stability size={size} />;
 
-  if (model.includes('wizardlm')) return <Azure size={size} />;
-  if (model.includes('phi3') || model.includes('phi-3')) return <Azure size={size} />;
+  if (model.includes('phi3') || model.includes('phi-3') || model.includes('wizardlm')) return <Azure.Avatar size={size} />;
   if (model.includes('firefly')) return <AdobeFirefly size={size} />;
   if (model.includes('jamba') || model.includes('j2-')) return <Ai21 size={size} />;
 });
