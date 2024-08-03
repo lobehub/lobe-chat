@@ -54,7 +54,7 @@
     "pull": "git pull",
     "release": "semantic-release",
     "self-hosting:docker": "docker build -t lobe-chat:local .",
-    "self-hosting:docker-cn": "docker build -t lobe-chat:local --build-arg USE_NPM_CN_MIRROR=true .",
+    "self-hosting:docker-cn": "docker build -t lobe-chat:local --build-arg USE_CN_MIRROR=true .",
     "start": "next start -p 3210",
     "stylelint": "stylelint \"src/**/*.{js,jsx,ts,tsx}\" --fix",
     "test": "npm run test-app && npm run test-server",
