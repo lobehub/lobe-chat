@@ -11,7 +11,8 @@ FROM base AS builder
 
 ARG USE_NPM_CN_MIRROR
 
-ENV NEXT_PUBLIC_SERVICE_MODE="server" \
+ENV KEY_VAULTS_SECRET="use-for-build" \
+  NEXT_PUBLIC_SERVICE_MODE="server" \
   DATABASE_DRIVER="node" \
   DATABASE_URL="postgres://postgres:password@localhost:5432/postgres"
 
