@@ -5,6 +5,21 @@ import { ModelProviderCard } from '@/types/llm';
 const FireworksAI: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'Firefunction V2',
+      enabled: true,
+      //functionCall: true,
+      id: 'accounts/fireworks/models/firefunction-v2',
+      tokens: 8192,
+    },
+    {
+      displayName: 'FireLLaVA-13B',
+      enabled: true,
+      functionCall: false,
+      id: 'accounts/fireworks/models/firellava-13b',
+      tokens: 4096,
+      vision: true,
+    },
+    {
       displayName: 'Llama3.1 8B Instruct',
       enabled: true,
       functionCall: false,
@@ -69,7 +84,7 @@ const FireworksAI: ModelProviderCard = {
       tokens: 32_768,
     },
   ],
-  checkModel: 'accounts/fireworks/models/llama-v3p1-8b-instruct',
+  checkModel: 'accounts/fireworks/models/firefunction-v2',
   id: 'fireworksai',
   modelList: { showModelFetcher: true },
   name: 'Fireworks AI',

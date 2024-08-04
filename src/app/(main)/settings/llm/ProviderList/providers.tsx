@@ -143,7 +143,7 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...FireworksAIProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'fireworksai'),
-        title: <Fireworks.Combine iconProps={{ color: Fireworks.colorPrimary }} size={20} />,
+        title: <Fireworks.Combine iconProps={{ color: Fireworks.colorPrimary }} size={26} />,
       },
       {
         ...QwenProviderCard,
