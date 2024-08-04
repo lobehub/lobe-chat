@@ -5,15 +5,13 @@ import { ModelProviderCard } from '@/types/llm';
 const FireworksAI: ModelProviderCard = {
   chatModels: [
     {
-      description: 'Fireworks latest and most performant function-calling model. Firefunction-v2 is based on Llama-3 and trained to excel at function-calling as well as chat and instruction-following. See blog post for more details https://fireworks.ai/blog/firefunction-v2-launch-post',
       displayName: 'Firefunction V2',
       enabled: true,
-      functionCall: true,
+      //functionCall: true,
       id: 'accounts/fireworks/models/firefunction-v2',
       tokens: 8192,
     },
     {
-      description: 'Vision-language model allowing both image and text as inputs (single image is recommended), trained on OSS model generated training data and open sourced on huggingface at fireworks-ai/FireLLaVA-13b',
       displayName: 'FireLLaVA-13B',
       enabled: true,
       functionCall: false,
