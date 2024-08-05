@@ -1,5 +1,5 @@
 ---
-title: 使用服务端数据库部署 - 配置 Postgres、Clerk 和 S3 存储服务
+title: 在 Vercel 上部署 LobeChat 的服务端数据库版本
 description: 本文详细介绍如何在 Vercel 中部署服务端数据库版 LobeChat，包括数据库配置、身份验证服务配置和 S3 存储服务的设置步骤。
 tags:
   - 服务端数据库
@@ -12,20 +12,14 @@ tags:
   - 环境变量配置
 ---
 
-# 使用服务端数据库部署
-
-LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用服务端数据库。LobeChat 采用了 Postgres 作为后端存储数据库。PostgreSQL是一种强大的开源关系型数据库管理系统，具备高度扩展性和标准SQL支持。它提供了丰富的数据类型、并发处理、数据完整性、安全性及可编程性，适用于复杂应用和大规模数据管理。
+# 在 Vercel 上部署服务端数据库版
 
 本文将详细介绍如何在 Vercel 中部署服务端数据库版 LobeChat，包括： 1）数据库配置；2）身份验证服务配置；3） S3 存储服务的设置步骤。
 
-<Callout type={'info'}>
-  限于工作量原因，目前仅支持在 Vercel 中部署使用服务端数据库版本，Docker 版本将会在后续迭代中支持。
-</Callout>
-
 <Callout type={'warning'}>
-进行后续操作前，请务必确认以下事项
-  - 导出所有数据，部署服务端数据库后，原有用户数据无法自动迁移，只能提前备份后进行手动导入！
-  - 环境变量中的`ACCESS_CODE`未设置或已清除！
+进行后续操作前，请务必确认以下事项：
+  - 导出所有数据，部署服务端数据库后，原有用户数据无法自动迁移，只能提前备份后进行手动导入！ 
+  - 环境变量中的`ACCESS_CODE`未设置或已清除！ 
   - 配置服务端数据库所需要的环境变量时，需全部填入后再进行部署，否则可能遭遇数据库迁移问题！
 </Callout>
 
@@ -46,13 +40,14 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
 
 在 Vercel 的部署环境变量中，添加 `DATABASE_URL` 等环境变量，将上一步准备好的 Postgres 数据库连接 URL 填入其中。数据库连接 URL 的通常格式为 `postgres://username:password@host:port/database`。
 
-<Callout type={'warning'}>
-确认您的供应商所提供的`Postgres`类型，若为`Node Postgres`，则必须添加环境变量`DATABASE_DRIVER=node`
-</Callout>
-
   <Tabs items={['Serverless Postgres', 'Node Postgres']}>
 
     <Tab>
+
+      <Callout type={'warning'}>
+        请确认您的供应商所提供的 `Postgres` 类型，若为 `Node Postgres`，请切换到 `Node Postgres` Tab 。
+     
+</Callout>
 
       Serverless Postgres 需要填写的变量如下：
 
@@ -93,7 +88,8 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
 </Tabs>
 
 <Callout type={'info'}>
-  如果希望连接数据库时启用 SSL ，请自行参考[链接](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)进行设置
+  如果希望连接数据库时启用 SSL
+  ，请自行参考[链接](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)进行设置
 </Callout>
 
 ### 添加 `KEY_VAULTS_SECRET` 环境变量
@@ -111,10 +107,6 @@ KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 ## 二、 配置身份验证服务
 
 服务端数据库需要搭配用户身份验证服务才可以正常使用。因此需要配置对应的身份验证服务。
-
-<Callout type={'warning'}>
-  同样由于工作量原因，目前仅支持 Clerk 作为身份验证服务方案， Next-Auth 的服务端数据库集成有待开发
-</Callout>
 
 <Steps>
 
@@ -198,7 +190,7 @@ CLERK_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxx
 
 ## 三、 配置 S3 存储服务
 
-LobeChat 在很早以前就支持了多模态 的 AI 会话，其中涉及到图片上传给 AI 的功能。在客户端数据库方案中，图片文件直接以二进制数据存储在浏览器 indexedDB 数据库，但在服务端数据库中这个方案并不可行。我们需要配置 S3 存储服务来存储大量的图片文件，同时 S3 也可以作为文件上传的存储方案。
+在服务端数据库中我们需要配置 S3 存储服务来存储文件。
 
 <Callout type={'info'}>
   在本文，S3所指代的是指兼容 S3 存储方案，即支持 Amazon S3 API 的对象存储系统，常见例如 Cloudflare
@@ -262,9 +254,7 @@ NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
       src={'https://github.com/lobehub/lobe-chat/assets/28616219/7b0ea46c-5157-40a8-888f-f47664a4884f'}
     ></Image>
 
-    鉴于我们的服务端数据库需要读写 S3 存储服务，因此权限需要选择`管理员读与写`，然后点击创建。
-
-    <Callout type={'warning'}>权限必须为`管理员读与写`，否则无法上传照片等其它文件</Callout>
+    鉴于我们的服务端数据库需要读写 S3 存储服务，因此权限需要选择`对象读与写`，然后点击创建。
 
     <Image
       alt={'配置 API token 权限'}
