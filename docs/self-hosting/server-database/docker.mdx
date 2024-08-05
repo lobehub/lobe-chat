@@ -1,4 +1,4 @@
-# 使用 Docker 部署服务端数据库版
+# Deploying Server Database Version Using Docker
 
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
@@ -10,37 +10,37 @@
 </div>
 
 <Callout type="info">
-本文已经假定你了解了 LobeChat 服务端数据库版本的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat 服务端数据库版本的部署原理，请先查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
+This article assumes that you are familiar with the basic principles and processes of deploying the LobeChat server database version, so it only includes content related to core environment variable configuration. If you are not familiar with the deployment principles of the LobeChat server database version, please refer to [Deploying Server Database](/en/docs/self-hosting/server-database) first.
 </Callout>
 
-## 在 Linux 服务器上部署
+## Deploying on a Linux Server
 
-以下是在 Linux 服务器上部署 LobeChat 服务端数据库版本的流程：
+Here is the process for deploying the LobeChat server database version on a Linux server:
 
 <Steps>
 
-### 创建 Postgres 数据库实例
+### Create a Postgres Database Instance
 
-请按照你自己的诉求创建一个 Postgres 数据库实例，例如：
+Create a Postgres database instance according to your needs, for example:
 
 ```sh
 docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
 ```
 
 <Callout type="warning">
-以上命令仅用于测试/演示，因为这个 pg 实例并没有包含持久化部分。
+The above command is only for testing/demonstration purposes because this pg instance does not include a persistent part.
 </Callout>
 
-上述指令会创建一个名为 `my-postgres`，并且网络为 `pg` 的 PG 实例。
+The above command will create a PG instance named `my-postgres` on the network `pg`.
 
-### 创建名为 `lobe-chat.env` 文件用于存放环境变量：
+### Create a file named `lobe-chat.env` to store environment variables:
 
 ```shell
-# DB 必须
+# DB required
 KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
 
-# NEXT_AUTH 相关
+# NEXT_AUTH related
 NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
 NEXT_AUTH_SSO_PROVIDERS=auth0
 NEXTAUTH_URL=https://your-prod-domain.com/api/auth
@@ -48,7 +48,7 @@ AUTH0_CLIENT_ID=xxxxxx
 AUTH0_CLIENT_SECRET=cSX_xxxxx
 AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
 
-# S3 相关
+# S3 related
 S3_ACCESS_KEY_ID=xxxxxxxxxx
 S3_SECRET_ACCESS_KEY=xxxxxxxxxx
 S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
@@ -56,13 +56,13 @@ S3_BUCKET=lobechat
 NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
 ```
 
-### 启动 lobe-chat-database docker 镜像
+### Start the lobe-chat-database Docker image
 
 ```sh
 docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
 ```
 
-如果你在容器中看到了以下日志，则说明已经启动成功：
+If you see the following logs in the container, it means it has started successfully:
 
 ```log
 [Database] Start to migration...
@@ -79,16 +79,16 @@ docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe
 </Steps>
 
 <Callout type="tip">
-在我们官方的 Docker 镜像中，会在启动镜像前自动执行数据库 schema 的 migration ，我们会确保从一个空数据库到所有表正式可用的稳定性。因此我们建议你的数据库实例使用一个空表实例，进而省去手动维护表结构 migration 的成本。
+In our official Docker image, the database schema migration is automatically executed before starting the image. We ensure stability from an empty database to all tables being formally available. Therefore, we recommend using an empty table instance for your database to avoid the cost of manually maintaining table structure migration.
 </Callout>
 
-## 在本地（Mac / Windows） 上使用
+## Using Locally (Mac / Windows)
 
-LobeChat 的数据版本也支持直接在本地的 Mac/Windows 本地使用。
+The data version of LobeChat also supports direct use on a local Mac/Windows machine.
 
-在此我们已假设你的本地有一个 5432 端口可用，账号为 `postgres` ，密码是 `mysecretpassword` 的 pg 实例，它在 `localhost:5432` 可用。
+Here, we assume that you have a pg instance available on port 5432 locally on your Mac/Windows, with the account `postgres` and password `mysecretpassword`, accessible at `localhost:5432`.
 
-那么你需要执行的脚本指令为：
+The script command you need to execute is:
 
 ```shell
 $ docker run -it -d --name lobe-chat-database -p 3210:3210 \
@@ -109,7 +109,7 @@ lobehub/lobe-chat-database
 ```
 
 <Callout type="tip">
-`Docker` 在 `Windows` 和 `macOS` 上走的是虚拟机方案，如果使用 `localhost` / `127.0.0.1` ，将会走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
+`Docker` uses a virtual machine solution on `Windows` and `macOS`. If you use `localhost` / `127.0.0.1`, it will refer to the container's `localhost`. In this case, try using `host.docker.internal` instead of `localhost`.
 </Callout>
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
