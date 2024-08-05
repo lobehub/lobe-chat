@@ -26,18 +26,18 @@ PostgreSQL是一种强大的开源关系型数据库管理系统，具备高度�
 
 ---
 
-对于 LobeChat 的服务端数据库版，正常的配置流程都需要包含三个模块的配置：
+对于 LobeChat 的服务端数据库版，正常的部署流程都需要包含三个模块的配置：
 
-1. 配置数据库；
-2. 配置身份验证服务；
-3. 配置S3 存储服务。
+1. 数据库配置；
+2. 身份验证服务配置；
+3. S3 存储服务配置。
 
 ## 配置数据库
 
-在部署之前，请确保你已经准备好 Postgres 数据库实例，你可以选择以下任一方式：
+在部署之前，请确保你已经准备好 Postgres 数据库实例，你可以选择以下任一实例：
 
 - `A.` 使用 Vercel / Neon 等 Serverless Postgres 实例；
-- `B.` 使用 Docker / Railway / Zeabur 等自部署 Postgres 实例（下统称 Node Postgres 实例）；
+- `B.` 使用 Docker / Railway / Zeabur 等自部署 Postgres 实例，下统称 Node Postgres 实例；
 
 两者的配置方式在环境变量的取值上会略有一点区别。
 
@@ -59,12 +59,12 @@ LobeChat 同时支持了客户端数据库和服务端数据库，因此我们�
 
 <Callout type={'info'}>
   如果希望连接数据库时启用 SSL
-  ，请自行参考[链接](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)进行设置
+  ，请自行参考[文档](https://stackoverflow.com/questions/14021998/using-psql-to-connect-to-postgresql-in-ssl-mode)进行设置
 </Callout>
 
 ### `DATABASE_DRIVER`
 
-环境变量 `DATABASE_DRIVER` 用于区分两种 Postgres 数据库实例，`DATABASE_DRIVER` 的取值为 `node` 或 `neon`。
+`DATABASE_DRIVER` 环境变量用于区分两种 Postgres 数据库实例，`DATABASE_DRIVER` 的取值为 `node` 或 `neon`。
 
 为提升部署便捷性，我们根据不同的平台特点设置了默认值：
 
@@ -78,21 +78,21 @@ LobeChat 同时支持了客户端数据库和服务端数据库，因此我们�
 
 ### `KEY_VAULTS_SECRET`
 
-考虑到用户会存储自己的 api key 和 baseURL 等敏感信息到数据库中，因此我们需要一个密钥来加密这些信息，避免数据库被爆破时这些关键信息被泄露。 因此有了 `KEY_VAULTS_SECRET` 环境变量，用于加密用户存储的 apikey 等敏感信息。
+考虑到用户会存储自己的 API Key 和 baseURL 等敏感信息到数据库中，因此我们需要一个密钥来加密这些信息，避免数据库被爆破/脱库时这些关键信息被泄露。 因此有了 `KEY_VAULTS_SECRET` 环境变量，用于加密用户存储的 apikey 等敏感信息。
 
 <Callout type={'info'}>
-  你可以使用 `openssl rand -base64 32` 生成一个随机的 32 位字符串作为密钥。
+  你可以使用 `openssl rand -base64 32` 生成一个随机的 32 位字符串作为 `KEY_VAULTS_SECRET` 的值。
 </Callout>
 
 </Steps>
 
 ## 配置身份验证服务
 
-在服务端数据库模式下，我们要为不同用户区分身份，因此需要一个身份验证服务。开源社区中已经存在较多完善的身份验证解决方案。我们在实现过程中集成了两种不同的身份验证服务用于满足不同场景的诉求，一种是 Clerk ，另外一种是 NextAuth。
+在服务端数据库模式下，我们要为不同用户区分身份，因此需要一个身份验证服务。开源社区中已经存在较多完善的身份验证解决方案。我们在实现过程中集成了两种不同的身份验证服务，用于满足不同场景的诉求，一种是 Clerk ，另外一种是 NextAuth。
 
 ### Clerk
 
-Clerk 是一个身份验证 SaaS 服务，其提供了开箱即用的身份验证能力，产品化程度很高，集成成本较低，体验很好。对于提供 SaaS 化产品的诉求来说，Clerk 是一个不错的选择。我们官方提供的 [LobeChat Cloud](https://lobechat.com)，就是使用了 Clerk 作为身份验证服务。
+[Clerk](https://clerk.com?utm_source=lobehub&utm_medium=docs) 是一个身份验证 SaaS 服务，提供了开箱即用的身份验证能力，产品化程度很高，集成成本较低，体验很好。对于提供 SaaS 化产品的诉求来说，Clerk 是一个不错的选择。我们官方提供的 [LobeChat Cloud](https://lobechat.com)，就是使用了 Clerk 作为身份验证服务。
 
 Clerk 的集成也相对简单，只需要配置 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` 、 `CLERK_SECRET_KEY` 和 `CLERK_WEBHOOK_SECRET` 环境变量即可，这三个环境变量可以在 Clerk 控制台中获取。
 
