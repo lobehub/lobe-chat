@@ -6,7 +6,6 @@ We need to configure an S3 storage service in the server-side database to store 
 
 <Steps>
 
-```
 ### Configure and Obtain S3 Bucket
 
 You need to go to your S3 service provider (such as AWS S3, Cloudflare R2, etc.) and create a new storage bucket. The following is an example using Cloudflare R2 to guide you through the creation process.
@@ -32,7 +31,6 @@ In the settings of the R2 storage bucket, you can view the bucket configuration 
   alt={'View relevant information of the bucket'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/2ceb210c-eca0-4439-ba27-8734d4ebb3ee'}
 ></Image>
-```
 
 The corresponding environment variables are:
 
@@ -47,7 +45,6 @@ NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
 
 <Callout type={'warning'}>`S3_ENDPOINT` must have its path removed, otherwise uploaded files cannot be accessed.</Callout>
 
-```
 ### Obtain S3 Key Environment Variables
 
 You need to obtain the access key for S3 so that the LobeChat server has permission to access the S3 storage service. In R2, you can configure the access key in the account details:
@@ -79,14 +76,12 @@ After creation, you can see the corresponding S3 API token.
 ></Image>
 
 The corresponding environment variables are:
-```
 
 ```shell
 S3_ACCESS_KEY_ID=9998d6757e276cf9f1edbd325b7083a6
 S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f497ac2
 ```
 
-```
 ### Configure Cross-Origin Resource Sharing (CORS)
 
 Since S3 storage services are often on a separate domain, cross-origin access needs to be configured.
@@ -104,7 +99,6 @@ Add a CORS rule to allow requests from your domain (in the previous section, it 
   alt={'Configure allowed site domain'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/dfcc2cb3-2958-4498-a8a4-51bec584fe7d'}
 ></Image>
-```
 
 Example configuration is as follows:
 
