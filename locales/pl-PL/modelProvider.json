@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "Wersja API Azure, stosuj format YYYY-MM-DD, zobacz [najnowszą wersję](https://learn.microsoft.com/pl-pl/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "Pobierz listę",
-      "title": "Wersja Azure Api"
+      "title": "Wersja Azure API"
     },
     "empty": "Wprowadź identyfikator modelu, aby dodać pierwszy model",
     "endpoint": {

@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "Azure の API バージョン、YYYY-MM-DD 形式に従う、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
       "fetch": "リストを取得",
-      "title": "Azure Api Version"
+      "title": "Azure API Version"
     },
     "empty": "モデル ID を入力して最初のモデルを追加してください",
     "endpoint": {
