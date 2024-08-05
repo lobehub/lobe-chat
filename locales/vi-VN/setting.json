@@ -51,7 +51,7 @@
     },
     "checker": {
       "button": "Kiểm tra",
-      "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
+      "desc": "Kiểm tra xem API Key và địa chỉ proxy đã được điền đúng chưa",
       "pass": "Kiểm tra thành công",
       "title": "Kiểm tra kết nối"
     },

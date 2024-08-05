@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "获取列表",
-      "title": "Azure Api Version"
+      "title": "Azure API Version"
     },
     "empty": "请输入模型 ID 添加第一个模型",
     "endpoint": {
