@@ -65,6 +65,18 @@ docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe
 
 如果你在容器中看到了以下日志，则说明已经启动成功：
 
+```log
+[Database] Start to migration...
+✅ database migration pass.
+-------------------------------------
+  ▲ Next.js 14.x.x
+  - Local:        http://localhost:3210
+  - Network:      http://0.0.0.0:3210
+
+ ✓ Starting...
+ ✓ Ready in 95ms
+```
+
 </Steps>
 
 <Callout type="tip">
