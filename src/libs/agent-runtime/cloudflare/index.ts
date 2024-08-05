@@ -4,8 +4,10 @@ import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
+import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
 import { StreamingResponse } from '../utils/response';
+import { createCallbacksTransformer } from '../utils/streams';
 
 const DEFAULT_BASE_URL_PREFIX = 'https://api.cloudflare.com';
 
@@ -98,7 +100,9 @@ class CloudflareStreamTransformer {
     const json = chunk.replace(dataPrefix, '');
     const parsedChunk = JSON.parse(json);
     controller.enqueue(this.textEncoder.encode(`event: text\n`));
-    controller.enqueue(this.textEncoder.encode(`data: ${JSON.stringify(parsedChunk.response)}\n\n`));
+    controller.enqueue(
+      this.textEncoder.encode(`data: ${JSON.stringify(parsedChunk.response)}\n\n`),
+    );
   }
 
   public async transform(chunk: Uint8Array, controller: TransformStreamDefaultController) {
@@ -137,6 +141,9 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
       // Try get accountID from baseURL
       this.accountID = baseURLOrAccountID.replaceAll(/^.*\/([\dA-Fa-f]{32})\/.*$/g, '$1');
     } else {
+      if (!apiKey) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
+      }
       this.accountID = baseURLOrAccountID;
       this.baseURL = fillUrl(baseURLOrAccountID);
     }
@@ -162,9 +169,10 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
         body: JSON.stringify({ tools: functions, ...restPayload }),
         headers: { 'Content-Type': 'application/json', ...headers },
         method: 'POST',
+        signal: options?.signal,
       });
 
-      const desensitizedEndpoint = desensitizeCloudflareUrl(this.baseURL);
+      const desensitizedEndpoint = desensitizeCloudflareUrl(url.toString());
 
       switch (response.status) {
         case 400: {
@@ -177,8 +185,21 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
         }
       }
 
+      // Only tee when debugging
+      let responseBody: ReadableStream;
+      if (process.env.DEBUG_CLOUDFLARE_CHAT_COMPLETION === '1') {
+        const [prod, useForDebug] = response.body!.tee();
+        debugStream(useForDebug).catch();
+        responseBody = prod;
+      } else {
+        responseBody = response.body!;
+      }
+
       return StreamingResponse(
-        response.body!.pipeThrough(new TransformStream(new CloudflareStreamTransformer())),
+        responseBody
+          .pipeThrough(new TransformStream(new CloudflareStreamTransformer()))
+          .pipeThrough(createCallbacksTransformer(options?.callback)),
+        { headers: options?.headers },
       );
     } catch (error) {
       const desensitizedEndpoint = desensitizeCloudflareUrl(this.baseURL);
