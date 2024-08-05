@@ -96,7 +96,7 @@ LobeChat 同时支持了客户端数据库和服务端数据库，因此我们�
 
 Clerk 的集成也相对简单，只需要配置 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` 、 `CLERK_SECRET_KEY` 和 `CLERK_WEBHOOK_SECRET` 环境变量即可，这三个环境变量可以在 Clerk 控制台中获取。
 
-<Callout type={'info'}>
+<Callout type={'tip'}>
   在 Vercel 部署模式下，我们推荐使用 Clerk 作为身份验证服务，可以获得更好的用户体验。
 </Callout>
 
@@ -115,7 +115,7 @@ NextAuth 是一个开源的身份验证库，支持多种身份验证提供商�
 
 关于 NextAuth 的配置，你可以参考 [身份验证](/zh/docs/self-hosting/advanced/authentication) 的文档获取更多信息。
 
-<Callout type={'info'}>
+<Callout type={'tip'}>
   在官方的 Docker 镜像 `lobe-chat-database` 中，我们推荐使用 NextAuth 作为身份验证服务。
 </Callout>
 
@@ -155,7 +155,7 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 
 存储桶对外的访问域名，用于访问存储桶中的文件，这个地址需要**允许互联网可读**。 原因是 OpenAI 的 gpt-4o 等视觉模型识别图片时，OpenAI 会尝试在他们的服务器中下载这个图片链接，因此这个链接必须是公开可访问的，如果是私有的链接，OpenAI 将无法访问到这个图片，进而无法正常识别到图片内容。
 
-<Callout type={'info'}>
+<Callout type={'warning'}>
   此外，由于该访问域名往往是一个独立的网址，因此需要配置允许站点的跨域访问，否则会在浏览器中出现跨域问题。
 </Callout>
 
