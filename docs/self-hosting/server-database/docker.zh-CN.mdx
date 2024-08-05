@@ -1,0 +1,129 @@
+---
+title: 使用 Docker 部署 LobeChat 数据库
+description: 详细步骤教你如何在 Docker 中部署 LobeChat 服务端数据库。
+tags:
+  - Docker
+  - LobeChat
+  - 数据库部署
+  - Postgres
+---
+# 使用 Docker 部署服务端数据库版
+
+<div style={{display:"flex", gap: 4}}>
+  [![][docker-release-shield]][docker-release-link]
+
+[![][docker-size-shield]][docker-size-link]
+
+[![][docker-pulls-shield]][docker-pulls-link]
+
+</div>
+
+<Callout type="info">
+本文已经假定你了解了 LobeChat 服务端数据库版本的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat 服务端数据库版本的部署原理，请先查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
+</Callout>
+
+## 在 Linux 服务器上部署
+
+以下是在 Linux 服务器上部署 LobeChat 服务端数据库版本的流程：
+
+<Steps>
+
+### 创建 Postgres 数据库实例
+
+请按照你自己的诉求创建一个 Postgres 数据库实例，例如：
+
+```sh
+docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
+```
+
+<Callout type="warning">
+以上命令仅用于测试/演示，因为这个 pg 实例并没有包含持久化部分。
+</Callout>
+
+上述指令会创建一个名为 `my-postgres`，并且网络为 `pg` 的 PG 实例。
+
+### 创建名为 `lobe-chat.env` 文件用于存放环境变量：
+
+```shell
+# DB 必须
+KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
+DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
+
+# NEXT_AUTH 相关
+NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
+NEXT_AUTH_SSO_PROVIDERS=auth0
+NEXTAUTH_URL=https://your-prod-domain.com/api/auth
+AUTH0_CLIENT_ID=xxxxxx
+AUTH0_CLIENT_SECRET=cSX_xxxxx
+AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
+
+# S3 相关
+S3_ACCESS_KEY_ID=xxxxxxxxxx
+S3_SECRET_ACCESS_KEY=xxxxxxxxxx
+S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
+S3_BUCKET=lobechat
+NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
+```
+
+### 启动 lobe-chat-database docker 镜像
+
+```sh
+docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
+```
+
+如果你在容器中看到了以下日志，则说明已经启动成功：
+
+```log
+[Database] Start to migration...
+✅ database migration pass.
+-------------------------------------
+  ▲ Next.js 14.x.x
+  - Local:        http://localhost:3210
+  - Network:      http://0.0.0.0:3210
+
+ ✓ Starting...
+ ✓ Ready in 95ms
+```
+
+</Steps>
+
+<Callout type="tip">
+在我们官方的 Docker 镜像中，会在启动镜像前自动执行数据库 schema 的 migration ，我们会确保从一个空数据库到所有表正式可用的稳定性。因此我们建议你的数据库实例使用一个空表实例，进而省去手动维护表结构 migration 的成本。
+</Callout>
+
+## 在本地（Mac / Windows） 上使用
+
+LobeChat 的数据版本也支持直接在本地的 Mac/Windows 本地使用。
+
+在此我们已假设你的本地有一个 5432 端口可用，账号为 `postgres` ，密码是 `mysecretpassword` 的 pg 实例，它在 `localhost:5432` 可用。
+
+那么你需要执行的脚本指令为：
+
+```shell
+$ docker run -it -d --name lobe-chat-database -p 3210:3210 \
+-e DATABASE_URL=postgres://postgres:mysecretpassword@host.docker.internal:5432/postgres \
+-e KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk= \
+-e NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250 \
+-e NEXT_AUTH_SSO_PROVIDERS=auth0 \
+-e AUTH0_CLIENT_ID=xxxxxx \
+-e AUTH0_CLIENT_SECRET=cSX_xxxxx \
+-e AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com \
+-e NEXTAUTH_URL=http://localhost:3210/api/auth \
+-e S3_ACCESS_KEY_ID=xxxxxxxxxx \
+-e S3_SECRET_ACCESS_KEY=xxxxxxxxxx \
+-e S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com \
+-e S3_BUCKET=lobechat \
+-e NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com \
+lobehub/lobe-chat-database
+```
+
+<Callout type="tip">
+`Docker` 在 `Windows` 和 `macOS` 上走的是虚拟机方案，如果使用 `localhost` / `127.0.0.1` ，将会走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
+</Callout>
+
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square
