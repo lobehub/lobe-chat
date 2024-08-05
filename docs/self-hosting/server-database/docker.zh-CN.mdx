@@ -23,7 +23,7 @@
 
 请按照你自己的诉求创建一个 Postgres 数据库实例，例如：
 
-```shell
+```sh
 docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
 ```
 
@@ -98,7 +98,7 @@ lobehub/lobe-chat-database
 ```
 
 <Callout type="tip">
-`Docker` 在 `Windows `和 `macOS `上走的是虚拟机方案，如果使用 `localhost` / `127.0.0.1` ，将会走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
+`Docker` 在 `Windows` 和 `macOS` 上走的是虚拟机方案，如果使用 `localhost` / `127.0.0.1` ，将会走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
 </Callout>
 
 
