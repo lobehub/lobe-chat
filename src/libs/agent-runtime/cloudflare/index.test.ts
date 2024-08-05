@@ -17,25 +17,6 @@ vi.spyOn(console, 'error').mockImplementation(() => {});
 let instance: LobeCloudflareAI;
 const textEncoder = new TextEncoder();
 
-beforeEach(() => {
-  instance = new LobeCloudflareAI({
-    apiKey: 'test_api_key',
-    baseURLOrAccountID: '10002000300040005000600070008000',
-  });
-
-  // Mock fetch
-  vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-    new Response(
-      new ReadableStream<Uint8Array>({
-        start(controller) {
-          controller.enqueue(textEncoder.encode('data: {"response": "Hello, world!"}\n\n'));
-          controller.close();
-        },
-      }),
-    ),
-  );
-});
-
 afterEach(() => {
   vi.clearAllMocks();
 });
@@ -68,6 +49,25 @@ describe('LobeCloudflareAI', () => {
   });
 
   describe('chat', () => {
+    beforeEach(() => {
+      instance = new LobeCloudflareAI({
+        apiKey: 'test_api_key',
+        baseURLOrAccountID: accountID,
+      });
+
+      // Mock fetch
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response(
+          new ReadableStream<Uint8Array>({
+            start(controller) {
+              controller.enqueue(textEncoder.encode('data: {"response": "Hello, world!"}\n\n'));
+              controller.close();
+            },
+          }),
+        ),
+      );
+    });
+
     it('should return a Response on successful API call', async () => {
       const result = await instance.chat({
         messages: [{ content: 'Hello', role: 'user' }],
@@ -480,6 +480,169 @@ describe('LobeCloudflareAI', () => {
           }),
         ).resolves.toBeInstanceOf(Response);
       });
+    });
+  });
+
+  describe('models', () => {
+    it('should send request', async () => {
+      // Arrange
+      const apiKey = 'test_api_key';
+      const instance = new LobeCloudflareAI({ apiKey, baseURLOrAccountID: accountID });
+
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            result: [
+              {
+                description: 'Model 1',
+                name: 'model1',
+                task: { name: 'Text Generation' },
+                properties: [{ property_id: 'beta', value: 'false' }],
+              },
+              {
+                description: 'Model 2',
+                name: 'model2',
+                task: { name: 'Text Generation' },
+                properties: [{ property_id: 'beta', value: 'true' }],
+              },
+            ],
+          }),
+        ),
+      );
+
+      // Act
+      const result = await instance.models();
+
+      // Assert
+      expect(globalThis.fetch).toHaveBeenCalledWith(
+        `https://api.cloudflare.com/client/v4/accounts/${accountID}/ai/models/search`,
+        {
+          headers: {
+            'Authorization': `Bearer ${apiKey}`,
+            'Content-Type': 'application/json',
+          },
+          method: 'GET',
+        },
+      );
+
+      expect(result).toHaveLength(2);
+    });
+
+    it('should set id to name', async () => {
+      // Arrange
+      const instance = new LobeCloudflareAI({
+        apiKey: 'test_api_key',
+        baseURLOrAccountID: accountID,
+      });
+
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            result: [
+              {
+                id: 'id1',
+                name: 'name1',
+                task: { name: 'Text Generation' },
+              },
+            ],
+          }),
+        ),
+      );
+
+      // Act
+      const result = await instance.models();
+
+      // Assert
+      expect(result).toEqual([
+        expect.objectContaining({
+          displayName: 'name1',
+          id: 'name1',
+        }),
+      ]);
+    });
+
+    it('should filter text generation models', async () => {
+      // Arrange
+      const instance = new LobeCloudflareAI({
+        apiKey: 'test_api_key',
+        baseURLOrAccountID: accountID,
+      });
+
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            result: [
+              {
+                id: '1',
+                name: 'model1',
+                task: { name: 'Text Generation' },
+              },
+              {
+                id: '2',
+                name: 'model2',
+                task: { name: 'Text Classification' },
+              },
+            ],
+          }),
+        ),
+      );
+
+      // Act
+      const result = await instance.models();
+
+      // Assert
+      expect(result).toEqual([
+        expect.objectContaining({
+          displayName: 'model1',
+          id: 'model1',
+        }),
+      ]);
+    });
+
+    it('should enable non-beta models and mark beta models', async () => {
+      // Arrange
+      const instance = new LobeCloudflareAI({
+        apiKey: 'test_api_key',
+        baseURLOrAccountID: accountID,
+      });
+
+      vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response(
+          JSON.stringify({
+            result: [
+              {
+                id: '1',
+                name: 'model1',
+                task: { name: 'Text Generation' },
+                properties: [{ property_id: 'beta', value: 'false' }],
+              },
+              {
+                id: '2',
+                name: 'model2',
+                task: { name: 'Text Generation' },
+                properties: [{ property_id: 'beta', value: 'true' }],
+              },
+            ],
+          }),
+        ),
+      );
+
+      // Act
+      const result = await instance.models();
+
+      // Assert
+      expect(result).toEqual([
+        expect.objectContaining({
+          displayName: 'model1',
+          enabled: true,
+          id: 'model1',
+        }),
+        expect.objectContaining({
+          displayName: 'model2 (Beta)',
+          enabled: false,
+          id: 'model2',
+        }),
+      ]);
     });
   });
 });
