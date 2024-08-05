@@ -838,7 +838,7 @@ describe('AgentRuntimeOnClient', () => {
               azure: {
                 apiKey: 'user-azure-key',
                 endpoint: 'user-azure-endpoint',
-                apiVersion: '2024-02-01',
+                apiVersion: '2024-06-01',
               },
             },
           },

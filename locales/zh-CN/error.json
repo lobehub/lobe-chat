@@ -60,7 +60,7 @@
     "PluginManifestNotFound": "很抱歉，服务器没有找到该插件的描述清单 (manifest.json)，请检查插件描述文件地址是否正确",
     "PluginManifestInvalid": "很抱歉，该插件的描述清单校验未通过，请检查描述清单格式是否规范",
     "PluginApiNotFound": "很抱歉，插件描述清单中不存在该 API ，请检查你的请求方法与插件清单 API 是否匹配",
-    "PluginApiParamsError": "很抱歉，该插件请求的入参校验未通过，请检查入参与 Api 描述信息是否匹配",
+    "PluginApiParamsError": "很抱歉，该插件请求的入参校验未通过，请检查入参与 API 描述信息是否匹配",
     "PluginSettingsInvalid": "该插件需要正确配置后才可以使用，请检查你的配置是否正确",
     "PluginServerError": "插件服务端请求返回出错，请检查根据下面的报错信息检查你的插件描述文件、插件配置或服务端实现",
     "PluginGatewayError": "很抱歉，插件网关出现错误，请检查插件网关配置是否正确",

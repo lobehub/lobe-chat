@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "نسخة API الخاصة بـ Azure، والتي تتبع تنسيق YYYY-MM-DD، راجع [الإصدارات الأحدث](https://learn.microsoft.com/zh-en/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "جلب القائمة",
-      "title": "Azure Api Version"
+      "title": "Azure API Version"
     },
     "empty": "الرجاء إدخال معرف النموذج لإضافة أول نموذج",
     "endpoint": {
