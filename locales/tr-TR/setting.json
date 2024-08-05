@@ -51,7 +51,7 @@
     },
     "checker": {
       "button": "Kontrol Et",
-      "desc": "Api Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
+      "desc": "API Anahtarı ve vekil adresinin doğru şekilde doldurulup doldurulmadığını test eder",
       "pass": "Kontrol Başarılı",
       "title": "Bağlantı Kontrolü"
     },
