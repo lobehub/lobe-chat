@@ -82,29 +82,6 @@ S3_ACCESS_KEY_ID=9998d6757e276cf9f1edbd325b7083a6
 S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f497ac2
 ```
 
-### 添加对应的环境变量
-
-    不同 S3 服务商获取所需环境变量的步骤可能有所不同，但最终获得到的环境变量应该都是一致的：
-
-<Callout type={'warning'}>URL的`https://`不可缺失，须保持URL的完整性</Callout>
-
-```shell
-# S3 秘钥
-S3_ACCESS_KEY_ID=9998d6757e276cf9f1edbd325b7083a6
-S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f497ac2
-
-# 存储桶的名称
-S3_BUCKET=lobechat
-# 存储桶的请求端点
-S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
-# 存储桶对外的访问域名
-NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
-
-# 桶的区域，如 us-west-1，一般来说不需要添加，但某些服务商则需要配置
-# S3_REGION=us-west-1
-```
-
-
     ### 配置跨域
 
     由于 S3 存储服务往往是一个独立的网址，因此需要配置跨域访问。
@@ -138,3 +115,24 @@ NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
 配置后点击保存即可。
 
 </Steps>
+
+
+## 环境变量一览
+
+<Callout type={'warning'}>URL的`https://`不可缺失，须保持URL的完整性</Callout>
+
+```shell
+# S3 秘钥
+S3_ACCESS_KEY_ID=9998d6757e276cf9f1edbd325b7083a6
+S3_SECRET_ACCESS_KEY=55af75d8eb6b99f189f6a35f855336ea62cd9c4751a5cf4337c53c1d3f497ac2
+
+# 存储桶的名称
+S3_BUCKET=lobechat
+# 存储桶的请求端点
+S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
+# 存储桶对外的访问域名
+NEXT_PUBLIC_S3_DOMAIN=https://s3-dev.your-domain.com
+
+# 桶的区域，如 us-west-1，一般来说不需要添加，但某些服务商则需要配置
+# S3_REGION=us-west-1
+```
