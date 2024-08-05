@@ -76,7 +76,7 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       const jwtPayload: JWTPayload = {
         apiKey: 'user-azure-key',
         endpoint: 'user-azure-endpoint',
-        azureApiVersion: '2024-02-01',
+        azureApiVersion: '2024-06-01',
       };
       const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.Azure, jwtPayload);
       expect(runtime).toBeInstanceOf(AgentRuntime);
