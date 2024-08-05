@@ -189,7 +189,7 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...BaichuanProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'baichuan'),
-        title: <Baichuan.Combine size={20} type={'color'} />,
+        title: <Baichuan.Combine size={ 20 } type={ 'color' } />,
       },
       {
         ...cloudflareProvider,
