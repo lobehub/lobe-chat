@@ -51,7 +51,7 @@
     },
     "checker": {
       "button": "检查",
-      "desc": "测试 Api Key 与代理地址是否正确填写",
+      "desc": "测试 API Key 与代理地址是否正确填写",
       "pass": "检查通过",
       "title": "连通性检查"
     },

@@ -51,7 +51,7 @@
     },
     "checker": {
       "button": "Check",
-      "desc": "Test if the Api Key and proxy address are filled in correctly",
+      "desc": "Test if the API Key and proxy address are filled in correctly",
       "pass": "Check Passed",
       "title": "Connectivity Check"
     },
