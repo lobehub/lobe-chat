@@ -1,16 +1,14 @@
 ---
-title: 在 Vercel 上部署 LobeChat 的服务端数据库版本
-description: 本文详细介绍如何在 Vercel 中部署服务端数据库版 LobeChat，包括数据库配置、身份验证服务配置和 S3 存储服务的设置步骤。
+title: Deploy LobeChat with database on Vercel
+description: >-
+  Learn how to deploy LobeChat with database on Vercel with ease, including: database, authentication and S3 storage service.
 tags:
-  - 服务端数据库
-  - Postgres
-  - Clerk
-  - S3存储服务
-  - Vercel部署
-  - 数据库配置
-  - 身份验证服务
-  - 环境变量配置
+  - Deploy LobeChat
+  - Vercel Deployment
+  - OpenAI API Key
+  - Custom Domain Binding
 ---
+
 # Deploying Server Database Version on Vercel
 
 This article will detail how to deploy the server database version of LobeChat on Vercel, including: 1) database configuration; 2) identity authentication service configuration; 3) steps for setting up the S3 storage service.
@@ -208,7 +206,6 @@ In this article, S3 refers to a compatible S3 storage solution, which supports o
 
 <Steps>
 
-```
 ### Configure and Obtain S3 Bucket
 
 You need to go to your S3 service provider (such as AWS S3, Cloudflare R2, etc.) and create a new storage bucket. The following steps will use Cloudflare R2 as an example to explain the creation process.
@@ -234,7 +231,6 @@ In the settings of the R2 storage bucket, you can view the bucket configuration 
   alt={'View Storage Bucket Information'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/2ceb210c-eca0-4439-ba27-8734d4ebb3ee'}
 ></Image>
-```
 
 The corresponding environment variables are:
 
@@ -249,7 +245,6 @@ NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
 
 <Callout type={'warning'}>`S3_ENDPOINT` must have its path removed, otherwise uploaded files will not be accessible</Callout>
 
-```
 ### Obtain S3 Key Environment Variables
 
 You need to obtain the access key for S3 so that the LobeChat server has permission to access the S3 storage service. In R2, you can configure the access key in the account details:
@@ -333,7 +328,6 @@ Add a CORS rule to allow requests from your domain (in this case, `https://your-
   alt={'Configuring allowed site domain'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/dfcc2cb3-2958-4498-a8a4-51bec584fe7d'}
 ></Image>
-```
 
 Example configuration:
 
