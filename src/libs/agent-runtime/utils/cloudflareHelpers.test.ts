@@ -37,7 +37,7 @@ describe('cloudflareHelpers', () => {
     });
 
     describe('parseChunk', () => {
-      let chunks: Uint8Array[];
+      let chunks: string[];
       let controller: TransformStreamDefaultController;
 
       beforeEach(() => {
@@ -58,8 +58,8 @@ describe('cloudflareHelpers', () => {
 
         // Assert
         expect(chunks.length).toBe(2);
-        expect(textDecoder.decode(chunks[0])).toBe('event: text\n');
-        expect(textDecoder.decode(chunks[1])).toBe('data: "response1"\n\n');
+        expect(chunks[0]).toBe('event: text\n');
+        expect(chunks[1]).toBe('data: "response1"\n\n');
       });
 
       it('should not replace `data` in text', () => {
@@ -72,8 +72,8 @@ describe('cloudflareHelpers', () => {
 
         // Assert
         expect(chunks.length).toBe(2);
-        expect(textDecoder.decode(chunks[0])).toBe('event: text\n');
-        expect(textDecoder.decode(chunks[1])).toBe('data: "data: a"\n\n');
+        expect(chunks[0]).toBe('event: text\n');
+        expect(chunks[1]).toBe('data: "data: a"\n\n');
       });
     });
 
