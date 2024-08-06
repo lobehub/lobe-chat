@@ -1,8 +1,7 @@
-//  ======= nextauth ======= //
 import { boolean, integer, pgTable, primaryKey, text, timestamp } from 'drizzle-orm/pg-core';
 import { AdapterAccount } from 'next-auth/adapters';
 
-import { users } from '@/database/server/schemas/lobechat';
+import { users } from './user';
 
 /**
  * This table stores nextauth accounts. This is used to link users to their sso profiles.
