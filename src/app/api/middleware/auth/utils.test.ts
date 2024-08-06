@@ -1,4 +1,4 @@
-import { type AuthObject } from '@clerk/backend/internal';
+import { type AuthObject } from '@clerk/backend';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getAppConfig } from '@/config/app';
