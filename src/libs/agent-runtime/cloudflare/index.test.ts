@@ -18,11 +18,11 @@ let instance: LobeCloudflareAI;
 const textEncoder = new TextEncoder();
 
 afterEach(() => {
-  vi.clearAllMocks();
+  vi.restoreAllMocks();
 });
 
 describe('LobeCloudflareAI', () => {
-  const accountID = '10002000300040005000600070008000';
+  const accountID = '80009000a000b000c000d000e000f000';
   describe('init', () => {
     it('should correctly initialize with API key and Account ID', async () => {
       const instance = new LobeCloudflareAI({

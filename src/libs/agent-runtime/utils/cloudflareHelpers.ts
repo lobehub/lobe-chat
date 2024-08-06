@@ -53,6 +53,9 @@ function desensitizeCloudflareUrl(url: string): string {
     return `${protocol}//${hostname}${port ? `:${port}` : ''}${desensitizeAccountId(pathname)}${search}`;
   } else {
     const desensitizedUrl = desensitizeUrl(`${protocol}//${hostname}${port ? `:${port}` : ''}`);
+    if (desensitizedUrl.endsWith('/') && pathname.startsWith('/')) {
+      pathname = pathname.slice(1);
+    }
     return `${desensitizedUrl}${desensitizeAccountId(pathname)}${search}`;
   }
 }
@@ -80,9 +83,8 @@ function getModelDisplayName(model: any, beta: boolean): string {
   return name;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 function getModelFunctionCalling(model: any): boolean {
-  return false;
-  // eslint-disable-next-line no-unreachable
   try {
     const fcProperty = model['properties'].filter(
       (property: any) => property[CF_PROPERTY_NAME] === 'function_calling',
@@ -116,7 +118,7 @@ function convertModelManifest(model: any) {
     description: model['description'],
     displayName: getModelDisplayName(model, modelBeta),
     enabled: !modelBeta,
-    functionCall: getModelFunctionCalling(model),
+    functionCall: false, //getModelFunctionCalling(model),
     id: model['name'],
     tokens: getModelTokens(model),
   };
@@ -128,4 +130,8 @@ export {
   DEFAULT_BASE_URL_PREFIX,
   desensitizeCloudflareUrl,
   fillUrl,
+  getModelBeta,
+  getModelDisplayName,
+  getModelFunctionCalling,
+  getModelTokens,
 };
