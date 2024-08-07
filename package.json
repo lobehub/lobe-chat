@@ -104,7 +104,7 @@
     "@aws-sdk/client-bedrock-runtime": "^3.609.0",
     "@aws-sdk/client-s3": "^3.609.0",
     "@aws-sdk/s3-request-presigner": "^3.609.0",
-    "@azure/core-rest-pipeline": "1.16.0",
+    "@azure/core-rest-pipeline": "1.16.3",
     "@azure/openai": "1.0.0-beta.12",
     "@cfworker/json-schema": "^1.12.8",
     "@clerk/localizations": "2.0.0",
