@@ -78,6 +78,11 @@ const Qwen: ModelProviderCard = {
   id: 'qwen',
   modelList: { showModelFetcher: true },
   name: 'Qwen',
+  proxyUrl: {
+    desc: '如果您所在的区域无法使用大陆的endpoint，请尝试切换至https://dashscope-intl.aliyuncs.com/compatible-mode/v1，但请注意，两者的API-KEY不通用，您可能需要获取国际版的API-KEY',
+    placeholder: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    title: 'Endpoint',
+  },
 };
 
 export default Qwen;
