@@ -158,7 +158,7 @@
     "modern-screenshot": "^4.4.39",
     "nanoid": "^5.0.7",
     "next": "^14.2.4",
-    "next-auth": "5.0.0-beta.15",
+    "next-auth": "5.0.0-beta.20",
     "next-sitemap": "^4.2.3",
     "numeral": "^2.0.6",
     "nuqs": "^1.17.4",
