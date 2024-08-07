@@ -8,7 +8,7 @@ import { SESSION_CHAT_URL } from '@/const/url';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
-import ListItem from '../ListItem';
+import RawListItem from '../ListItem/item';
 import { useSwitchSession } from '../useSwitchSession';
 
 const Inbox = memo(() => {
@@ -26,7 +26,7 @@ const Inbox = memo(() => {
         switchSession(INBOX_SESSION_ID);
       }}
     >
-      <ListItem
+      <RawListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
         title={t('inbox.title')}
