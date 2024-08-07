@@ -122,7 +122,7 @@
     "@neondatabase/serverless": "^0.9.4",
     "@next/third-parties": "^14.2.4",
     "@sentry/nextjs": "^7.118.0",
-    "@t3-oss/env-nextjs": "^0.10.1",
+    "@t3-oss/env-nextjs": "^0.11.0",
     "@tanstack/react-query": "^5.51.11",
     "@trpc/client": "next",
     "@trpc/next": "next",
