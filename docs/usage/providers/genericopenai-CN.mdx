@@ -1,0 +1,26 @@
+---
+title: Using GenericOpenAIProvider in LobeChat
+description: >-
+  Learn how to configure LobeChat to use an OpenAI-compatible inference
+  endpoint, without making the real OpenAI inaccessable.
+tags:
+  - Local LLM
+  - LM Studio
+  - TextGen WebUI
+  - OpenAI compatible endpoints
+---
+## Needs to be translated
+
+# Start using a generic OpenAI provider in LobeChat
+
+This is a slightly more advanced solution than using a pre-configured provider, as it assumes you already have access to an OpenAI compatible server. There are many different pieces of software (and more popping up all the time) which can provide this. Some examples include: LM Studio, TextGen-WebUI, and vLLM.
+
+## Configuration
+<Steps>
+An API key is required even if your server is not expecting one. If you do not need one, input something anyways.
+
+The URL is set to `http://localhost:5000/v1` by default and that pattern should be followed if you need to change it.
+
+You may or may not need to set the model, depending on the OpenAI compatible server you are using.
+
+</Steps>

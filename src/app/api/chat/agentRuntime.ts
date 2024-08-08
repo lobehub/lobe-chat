@@ -50,6 +50,16 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
         endpoint,
       };
     }
+    case ModelProvider.GenericOpenAI: {
+      const { GENERIC_OPENAI_API_KEY, GENERIC_OPENAI_PROXY_URL } = getLLMConfig();
+      const genericOpenaiApiKey = payload?.apiKey || GENERIC_OPENAI_API_KEY;
+      const baseURL = payload?.endpoint || GENERIC_OPENAI_PROXY_URL;
+      const apiKey = apiKeyManager.pick(genericOpenaiApiKey);
+      return {
+        apiKey,
+        baseURL,
+      };
+    }
     case ModelProvider.ZhiPu: {
       const { ZHIPU_API_KEY } = getLLMConfig();
       const apiKey = apiKeyManager.pick(payload?.apiKey || ZHIPU_API_KEY);

@@ -50,6 +50,7 @@ import {
 import { ProviderItem } from '../type';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
+import { useGenericOpenAIProvider } from './GenericOpenAI';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 
@@ -88,6 +89,7 @@ export const useProviderList = (): ProviderItem[] => {
   const azureProvider = useAzureProvider();
   const ollamaProvider = useOllamaProvider();
   const openAIProvider = useOpenAIProvider();
+  const genericOpenAIProvider = useGenericOpenAIProvider();
   const bedrockProvider = useBedrockProvider();
 
   return useMemo(
@@ -103,6 +105,10 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...azureProvider,
         docUrl: urlJoin(BASE_DOC_URL, 'azure'),
+      },
+      {
+        ...genericOpenAIProvider,
+        docUrl: urlJoin(BASE_DOC_URL, 'genericopenai'),
       },
       {
         ...GoogleProviderCard,
@@ -196,7 +202,7 @@ export const useProviderList = (): ProviderItem[] => {
       {
         ...Ai360ProviderCard,
         docUrl: urlJoin(BASE_DOC_URL, 'ai360'),
-        title: <Ai360.Combine size={ 20 } type={ 'color' } />,
+        title: <Ai360.Combine size={20} type={'color'} />,
       },
     ],
     [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],

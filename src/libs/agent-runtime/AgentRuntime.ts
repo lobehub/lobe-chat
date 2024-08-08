@@ -111,6 +111,7 @@ class AgentRuntime {
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       deepseek: Partial<ClientOptions>;
+      genericopenai: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
@@ -145,6 +146,11 @@ class AgentRuntime {
           params.azure?.apikey,
           params.azure?.apiVersion,
         );
+        break;
+      }
+
+      case ModelProvider.GenericOpenAI: {
+        runtimeModel = new LobeOpenAI(params.openai ?? (params as any)[provider]);
         break;
       }
 
@@ -245,7 +251,7 @@ class AgentRuntime {
 
       case ModelProvider.Ai360: {
         runtimeModel = new LobeAi360AI(params.ai360 ?? {});
-        break
+        break;
       }
     }
 
