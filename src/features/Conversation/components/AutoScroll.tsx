@@ -4,6 +4,8 @@ import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
 import BackBottom from './BackBottom';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 
 interface AutoScrollProps {
   atBottom: boolean;
@@ -12,7 +14,9 @@ interface AutoScrollProps {
 }
 const AutoScroll = memo<AutoScrollProps>(({ atBottom, isScrolling, onScrollToBottom }) => {
   const trackVisibility = useChatStore(chatSelectors.isAIGenerating);
-  const str = useChatStore(chatSelectors.chatsMessageString);
+  const state = useChatStore();
+  const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
+  const str = chatSelectors.chatsMessageString(state, config);
 
   useEffect(() => {
     if (atBottom && trackVisibility && !isScrolling) {

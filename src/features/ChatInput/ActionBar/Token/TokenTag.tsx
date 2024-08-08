@@ -22,9 +22,10 @@ const Token = memo(() => {
   const { t } = useTranslation(['chat', 'components']);
   const theme = useTheme();
 
+  const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
   const [input, messageString] = useChatStore((s) => [
     s.inputMessage,
-    chatSelectors.chatsMessageString(s),
+    chatSelectors.chatsMessageString(s, config),
   ]);
 
   const [systemRole, model] = useAgentStore((s) => [
