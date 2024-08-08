@@ -1,6 +1,7 @@
 import { ModelProviderCard } from '@/types/llm';
 
 // ref https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html
+// ref https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
 const Bedrock: ModelProviderCard = {
   chatModels: [
     {
@@ -87,18 +88,33 @@ const Bedrock: ModelProviderCard = {
       tokens: 100_000,
     },
     {
-      description: 'Llama 2 Chat 13B v1，上下文大小为 4k，Llama 2 模型的对话用例优化变体。',
-      displayName: 'Llama 2 Chat 13B',
+      description: 'Mistral Large 2 128k',
+      displayName: 'Mistral Large 2',
       enabled: true,
-      id: 'meta.llama2-13b-chat-v1',
-      tokens: 4096,
+      functionCall: true,
+      id: 'mistral.mistral-large-2407-v1:0',
+      tokens: 128_000,
     },
     {
-      description: 'Llama 2 Chat 70B v1，上下文大小为 4k，Llama 2 模型的对话用例优化变体。',
-      displayName: 'Llama 2 Chat 70B',
+      description: 'Llama 3.1 405B Instruct (preview)',
+      displayName: 'Llama 3.1 405B Instruct (preview)',
       enabled: true,
-      id: 'meta.llama2-70b-chat-v1',
-      tokens: 4096,
+      id: 'meta.llama3-405b-instruct-v1:0',
+      tokens: 128_000,
+    },
+    {
+      description: 'Llama 3.1 70B Instruct',
+      displayName: 'Llama 3.1 70B Instruct',
+      enabled: true,
+      id: 'meta.llama3-70b-instruct-v1:0',
+      tokens: 128_000,
+    },
+    {
+      description: 'Llama 3.1 8B Instruct',
+      displayName: 'Llama 3.1 8B Instruct',
+      enabled: true,
+      id: 'meta.llama3-8b-instruct-v1:0',
+      tokens: 128_000,
     },
   ],
   checkModel: 'anthropic.claude-instant-v1',
