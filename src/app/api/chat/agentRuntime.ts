@@ -151,6 +151,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.FireworksAI: {
+      const { FIREWORKSAI_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || FIREWORKSAI_API_KEY);
+
+      return { apiKey };
+    }
     case ModelProvider.ZeroOne: {
       const { ZEROONE_API_KEY } = getLLMConfig();
 

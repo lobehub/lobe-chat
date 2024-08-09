@@ -4,6 +4,7 @@ import {
   Anthropic,
   Baichuan,
   DeepSeek,
+  Fireworks,
   Google,
   Groq,
   Minimax,
@@ -90,6 +91,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.TogetherAI: {
       return <Together color={Together.colorPrimary} size={56} />;
+    }
+
+    case ModelProvider.FireworksAI: {
+      return <Fireworks color={Fireworks.colorPrimary} size={56} />;
     }
 
     case ModelProvider.ZeroOne: {

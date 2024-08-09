@@ -8,6 +8,7 @@ import {
   OpenAIProviderCard,
   OpenRouterProviderCard,
   TogetherAIProviderCard,
+  FireworksAIProviderCard,
 } from '@/config/modelProviders';
 import { enableNextAuth } from '@/const/auth';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
@@ -53,6 +54,9 @@ export const getServerGlobalConfig = () => {
     ENABLED_ZEROONE,
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
+
+    ENABLED_FIREWORKSAI,
+    FIREWORKSAI_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -79,6 +83,16 @@ export const getServerGlobalConfig = () => {
       baichuan: { enabled: ENABLED_BAICHUAN },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       deepseek: { enabled: ENABLED_DEEPSEEK },
+
+      fireworksai: {
+        enabled: ENABLED_FIREWORKSAI,
+        enabledModels: extractEnabledModels(FIREWORKSAI_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: FireworksAIProviderCard.chatModels,
+          modelString: FIREWORKSAI_MODEL_LIST,
+        }),
+      },
+
       google: { enabled: ENABLED_GOOGLE },
       groq: { enabled: ENABLED_GROQ },
       minimax: { enabled: ENABLED_MINIMAX },

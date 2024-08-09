@@ -61,6 +61,10 @@ export const getLLMConfig = () => {
       TOGETHERAI_API_KEY: z.string().optional(),
       TOGETHERAI_MODEL_LIST: z.string().optional(),
 
+      ENABLED_FIREWORKSAI: z.boolean(),
+      FIREWORKSAI_API_KEY: z.string().optional(),
+      FIREWORKSAI_MODEL_LIST: z.string().optional(),
+      
       ENABLED_AWS_BEDROCK: z.boolean(),
       AWS_REGION: z.string().optional(),
       AWS_ACCESS_KEY_ID: z.string().optional(),
@@ -133,6 +137,10 @@ export const getLLMConfig = () => {
       ENABLED_TOGETHERAI: !!process.env.TOGETHERAI_API_KEY,
       TOGETHERAI_API_KEY: process.env.TOGETHERAI_API_KEY,
       TOGETHERAI_MODEL_LIST: process.env.TOGETHERAI_MODEL_LIST,
+
+      ENABLED_FIREWORKSAI: !!process.env.FIREWORKSAI_API_KEY,
+      FIREWORKSAI_API_KEY: process.env.FIREWORKSAI_API_KEY,
+      FIREWORKSAI_MODEL_LIST: process.env.FIREWORKSAI_MODEL_LIST,
 
       ENABLED_MOONSHOT: !!process.env.MOONSHOT_API_KEY,
       MOONSHOT_API_KEY: process.env.MOONSHOT_API_KEY,
