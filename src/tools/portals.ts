@@ -1,3 +1,8 @@
 import { BuiltinPortal } from '@/types/tool';
 
-export const BuiltinToolsPortals: Record<string, BuiltinPortal> = {};
+import { ArtifactsManifest } from './artifacts';
+import Artifacts from './artifacts/Portal';
+
+export const BuiltinToolsPortals: Record<string, BuiltinPortal> = {
+  [ArtifactsManifest.identifier]: Artifacts as BuiltinPortal,
+};

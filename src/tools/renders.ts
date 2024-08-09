@@ -1,9 +1,12 @@
 import { BuiltinRender } from '@/types/tool';
 
+import { ArtifactsManifest } from './artifacts';
+import Artifacts from './artifacts/Render';
 import { DalleManifest } from './dalle';
 import DalleRender from './dalle/Render';
 
 export const BuiltinToolsRenders: Record<string, BuiltinRender> = {
+  [ArtifactsManifest.identifier]: Artifacts as BuiltinRender,
   [DalleManifest.identifier]: DalleRender as BuiltinRender,
   /**
    * 兼容旧版本 dalle3 的 identifier
