@@ -234,7 +234,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>       | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                |
 | [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>    | Space data including NASA.<br/>`space` `nasa`                                                                                             |
 
-> 📊 Total plugins: [<kbd>**52**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**51**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
