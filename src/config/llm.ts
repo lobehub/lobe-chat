@@ -87,6 +87,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI360: z.boolean(),
       AI360_API_KEY: z.string().optional(),
+
+      ENABLED_SPARK: z.boolean(),
+      SPARK_API_KEY: z.string().optional(),
+      SPARK_API_SECRET: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -171,6 +175,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI360: !!process.env.AI360_API_KEY,
       AI360_API_KEY: process.env.AI360_API_KEY,
+
+      ENABLED_SPARK: !!process.env.SPARK_API_KEY && !!process.env.SPARK_API_SECRET,
+      SPARK_API_KEY: process.env.SPARK_API_KEY,
+      SPARK_API_SECRET: process.env.SPARK_API_SECRET,
     },
   });
 };

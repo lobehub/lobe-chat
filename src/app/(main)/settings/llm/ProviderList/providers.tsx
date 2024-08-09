@@ -52,6 +52,7 @@ import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
+import { useSparkProvider } from './Spark';
 
 const BASE_DOC_URL = 'https://lobehub.com/docs/usage/providers';
 
@@ -89,6 +90,7 @@ export const useProviderList = (): ProviderItem[] => {
   const ollamaProvider = useOllamaProvider();
   const openAIProvider = useOpenAIProvider();
   const bedrockProvider = useBedrockProvider();
+  const sparkProvider = useSparkProvider();
 
   return useMemo(
     () => [
@@ -198,7 +200,11 @@ export const useProviderList = (): ProviderItem[] => {
         docUrl: urlJoin(BASE_DOC_URL, 'ai360'),
         title: <Ai360.Combine size={ 20 } type={ 'color' } />,
       },
+      {
+        ...sparkProvider,
+        docUrl: urlJoin(BASE_DOC_URL, 'spark')
+      },
     ],
-    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
+    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider, sparkProvider],
   );
 };

@@ -15,6 +15,7 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  SparkProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
@@ -93,6 +94,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   qwen: {
     enabled: false,
     enabledModels: filterEnabledModels(QwenProviderCard),
+  },
+  spark: {
+    enabled: false,
+    enabledModels: filterEnabledModels(SparkProviderCard),
   },
   stepfun: {
     enabled: false,
