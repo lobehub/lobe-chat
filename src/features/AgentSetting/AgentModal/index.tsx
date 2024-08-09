@@ -36,7 +36,7 @@ const AgentModal = memo(() => {
         tag: 'model',
       },
       {
-        children: <SliderWithInput max={1} min={0} step={0.1} />,
+        children: <SliderWithInput max={2} min={0} step={0.1} />,
         desc: t('settingModel.temperature.desc'),
         label: t('settingModel.temperature.title'),
         name: ['params', 'temperature'],

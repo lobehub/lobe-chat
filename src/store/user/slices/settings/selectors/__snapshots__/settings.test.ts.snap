@@ -79,7 +79,7 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
     "params": {
       "frequency_penalty": 0,
       "presence_penalty": 0,
-      "temperature": 0.6,
+      "temperature": 1,
       "top_p": 1,
     },
     "plugins": [],
