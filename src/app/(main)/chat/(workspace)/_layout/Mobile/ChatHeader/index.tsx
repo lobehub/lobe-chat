@@ -4,6 +4,7 @@ import { MobileNavBar } from '@lobehub/ui';
 import { memo, useState } from 'react';
 
 import { useInitAgentConfig } from '@/app/(main)/chat/(workspace)/_layout/useInitAgentConfig';
+import { INBOX_SESSION_ID } from '@/const/session';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -21,7 +22,9 @@ const MobileHeader = memo(() => {
   return (
     <MobileNavBar
       center={<ChatHeaderTitle />}
-      onBackClick={() => router.push('/chat', { query: { session: '' }, replace: true })}
+      onBackClick={() =>
+        router.push('/chat', { query: { session: INBOX_SESSION_ID }, replace: true })
+      }
       right={
         <>
           <ShareButton mobile open={open} setOpen={setOpen} />
