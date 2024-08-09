@@ -7,6 +7,7 @@ import {
   GoogleGenerativeAI,
   Part,
 } from '@google/generative-ai';
+import axios from 'axios';
 import { JSONSchema7 } from 'json-schema';
 import { transform } from 'lodash-es';
 
@@ -37,6 +38,26 @@ enum HarmBlockThreshold {
   BLOCK_NONE = 'BLOCK_NONE',
 }
 
+async function imageUrlToBase64(imageUrl: string): Promise<string> {
+  try {
+    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
+    const arrayBuffer = response.data;
+    const base64Image =
+      typeof btoa === 'function'
+        ? btoa(
+            new Uint8Array(arrayBuffer).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          )
+        : Buffer.from(arrayBuffer).toString('base64');
+    return base64Image;
+  } catch (error) {
+    console.error('Error converting image to base64:', error);
+    throw error;
+  }
+}
+
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   baseURL?: string;
@@ -52,7 +73,37 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     try {
       const model = payload.model;
 
-      const contents = this.buildGoogleMessages(payload.messages, model);
+      // TODO: 应先检测 Env 是否启用 S3
+      // url -> base64, currently Gemini don't support image url.
+
+      let messages: OpenAIChatMessage[] = [];
+      const urlPattern = /^(https?):\/\/[^\s#$./?].\S*$/i;
+
+      for (const message of payload.messages) {
+        if (Array.isArray(message.content)) {
+          const newContent = await Promise.all(
+            message.content.map(async (content) => {
+              if (content.type === 'image_url' && urlPattern.test(content.image_url?.url)) {
+                const base64Image = await imageUrlToBase64(content.image_url.url);
+                return {
+                  ...content,
+                  image_url: { ...content.image_url, url: `data:image/png;base64,${base64Image}` },
+                };
+              } else {
+                return content as UserMessageContentPart;
+              }
+            }),
+          );
+          messages.push({ ...message, content: newContent as UserMessageContentPart[] });
+        } else {
+          messages.push(message as OpenAIChatMessage);
+        }
+      }
+
+      if (messages.length === 0) {
+        messages = payload.messages;
+      }
+      const contents = this.buildGoogleMessages(messages, model);
 
       const geminiStreamResult = await this.client
         .getGenerativeModel(
