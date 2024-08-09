@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import Cell, { CellProps } from '@/components/Cell';
 import DataImporter from '@/features/DataImporter';
-import { configService } from '@/services/config';
+import { exportService } from '@/services/export';
 
 const Category = memo(() => {
   const { t } = useTranslation('common');
@@ -13,17 +13,17 @@ const Category = memo(() => {
     {
       key: 'allAgent',
       label: t('exportType.allAgent'),
-      onClick: configService.exportAgents,
+      onClick: exportService.exportAgents,
     },
     {
       key: 'allAgentWithMessage',
       label: t('exportType.allAgentWithMessage'),
-      onClick: configService.exportSessions,
+      onClick: exportService.exportSessions,
     },
     {
       key: 'globalSetting',
       label: t('exportType.globalSetting'),
-      onClick: configService.exportSettings,
+      onClick: exportService.exportSettings,
     },
     {
       type: 'divider',
@@ -31,7 +31,7 @@ const Category = memo(() => {
     {
       key: 'all',
       label: t('exportType.all'),
-      onClick: configService.exportAll,
+      onClick: exportService.exportAll,
     },
     {
       type: 'divider',
