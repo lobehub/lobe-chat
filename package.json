@@ -246,6 +246,7 @@
     "drizzle-kit": "^0.23.0",
     "eslint": "^8.57.0",
     "eslint-plugin-mdx": "^2.3.4",
+    "eslint-plugin-unused-imports": "4.0.1",
     "fake-indexeddb": "^6.0.0",
     "glob": "^10.4.3",
     "gray-matter": "^4.0.3",
