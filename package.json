@@ -272,7 +272,7 @@
     "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "packageManager": "pnpm@9.6.0",
+  "packageManager": "pnpm@9.7.0",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
