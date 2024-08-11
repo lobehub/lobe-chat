@@ -17,11 +17,12 @@ export interface UserAuthState {
   clerkSignOut?: SignOut;
   clerkUser?: UserResource;
   enabledNextAuth?: boolean;
-
   isLoaded?: boolean;
+
   isSignedIn?: boolean;
   nextSession?: Session;
   nextUser?: User;
+  oAuthSSOProviders?: string[];
   user?: LobeUser;
 }
 

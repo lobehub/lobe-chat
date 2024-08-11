@@ -4,8 +4,8 @@ import dynamic from 'next/dynamic';
 import { memo } from 'react';
 import { Center } from 'react-layout-kit';
 
-const LogoThree = dynamic(() => import('@lobehub/ui/es/LogoThree'), { ssr: false });
-const LogoSpline = dynamic(() => import('@lobehub/ui/es/LogoThree/LogoSpline'), { ssr: false });
+const LogoThree = () => <img src="https://github.com/user-attachments/assets/aa547c58-6045-4b9f-9c1b-bef3ea3536a8" alt="Logo Three" />;
+const LogoSpline = () => <img src="https://github.com/user-attachments/assets/aa547c58-6045-4b9f-9c1b-bef3ea3536a8" alt="Logo Spline" />;
 
 const Logo = memo<{ mobile?: boolean }>(({ mobile }) => {
   return mobile ? (
