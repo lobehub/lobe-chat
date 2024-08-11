@@ -1,10 +1,3 @@
-'use client';
-
-import { UserProfile } from '@clerk/nextjs';
-import { ElementsConfig } from '@clerk/types';
-import { createStyles } from 'antd-style';
-import { memo } from 'react';
-
 export const useStyles = createStyles(
   ({ css, token, cx }, mobile: boolean) =>
     ({
@@ -56,20 +49,6 @@ export const useStyles = createStyles(
         border-radius: unset;
       `,
     }) as Partial<{
-      [k in keyof ElementsConfig]: any;
+      [key in keyof ElementsConfig]: any; // Đổi 'k' thành 'key'
     }>,
 );
-
-const Client = memo<{ mobile?: boolean }>(({ mobile }) => {
-  const { styles } = useStyles(mobile);
-
-  return (
-    <UserProfile
-      appearance={{
-        elements: styles,
-      }}
-    />
-  );
-});
-
-export default Client;
