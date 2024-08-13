@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "De API-versie van Azure, volgt het formaat YYYY-MM-DD, raadpleeg [de nieuwste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "Lijst ophalen",
-      "title": "Azure Api Versie"
+      "title": "Azure API Versie"
     },
     "empty": "Voer een model-ID in om het eerste model toe te voegen",
     "endpoint": {

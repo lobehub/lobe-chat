@@ -7,7 +7,7 @@ import { experimental_buildLlama2Prompt } from 'ai/prompts';
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
-import { buildAnthropicMessages } from '../utils/anthropicHelpers';
+import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -53,7 +53,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     payload: ChatStreamPayload,
     options?: ChatCompetitionOptions,
   ): Promise<Response> => {
-    const { max_tokens, messages, model, temperature, top_p } = payload;
+    const { max_tokens, messages, model, temperature, top_p, tools } = payload;
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
@@ -65,6 +65,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         messages: buildAnthropicMessages(user_messages),
         system: system_message?.content as string,
         temperature: temperature,
+        tools: buildAnthropicTools(tools),
         top_p: top_p,
       }),
       contentType: 'application/json',

@@ -7,7 +7,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { DefaultMessage } from '../Default';
-import ToolCall from './ToolCalls';
+import ToolCall from './ToolCallItem';
 
 export const AssistantMessage = memo<
   ChatMessage & {
@@ -31,17 +31,16 @@ export const AssistantMessage = memo<
         />
       )}
       {!editing && tools && (
-        <Flexbox gap={8} horizontal>
+        <Flexbox gap={8}>
           {tools.map((toolCall, index) => (
             <ToolCall
+              apiName={toolCall.apiName}
               arguments={toolCall.arguments}
+              id={toolCall.id}
               identifier={toolCall.identifier}
               index={index}
               key={toolCall.id}
               messageId={id}
-              style={{
-                maxWidth: `max(${100 / tools.length}%, 300px)`,
-              }}
             />
           ))}
         </Flexbox>
