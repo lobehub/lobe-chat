@@ -162,7 +162,7 @@
     "next-sitemap": "^4.2.3",
     "numeral": "^2.0.6",
     "nuqs": "^1.17.4",
-    "ollama": "0.5.6",
+    "ollama": "^0.5.8",
     "openai": "~4.54.0",
     "partial-json": "^0.1.7",
     "pg": "^8.12.0",
