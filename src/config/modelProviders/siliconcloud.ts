@@ -10,6 +10,11 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       enabled: true,
+      id: 'Qwen/Qwen2-Math-72B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      enabled: true,
       id: 'Qwen/Qwen2-57B-A14B-Instruct',
       tokens: 32_768,
     },
@@ -48,7 +53,7 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       id: 'deepseek-ai/deepseek-llm-67b-chat',
-      tokens: 4096,
+      tokens: 32_768,
     },
     {
       id: 'THUDM/glm-4-9b-chat',
@@ -82,6 +87,10 @@ const SiliconCloud: ModelProviderCard = {
     {
       id: 'google/gemma-2-27b-it',
       tokens: 8192,
+    },
+    {
+      id: 'internlm/internlm2_5-20b-chat',
+      tokens: 32_768,
     },
     {
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
