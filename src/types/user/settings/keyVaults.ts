@@ -40,6 +40,7 @@ export interface UserKeyVaults {
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
+  siliconcloud?: OpenAICompatibleKeyVault;
   spark?: SparkKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;

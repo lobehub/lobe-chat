@@ -40,6 +40,8 @@ const StoreInitialization = memo(() => {
   const useUserStoreUpdater = createStoreUpdater(useUserStore);
   const enableNextAuth = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
   useUserStoreUpdater('enabledNextAuth', enableNextAuth);
+  const oAuthSSOProviders = useServerConfigStore(serverConfigSelectors.oAuthSSOProviders);
+  useUserStoreUpdater('oAuthSSOProviders', oAuthSSOProviders);
 
   /**
    * The store function of `isLogin` will both consider the values of `enableAuth` and `isSignedIn`.

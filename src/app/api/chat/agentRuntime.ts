@@ -200,6 +200,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.SiliconCloud: {
+      const { SILICONCLOUD_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SILICONCLOUD_API_KEY);
+
+      return { apiKey };
+    }
     case ModelProvider.Spark: {
       const { SPARK_API_KEY, SPARK_API_SECRET } = getLLMConfig();
 

@@ -1,4 +1,5 @@
 import { appEnv, getAppConfig } from '@/config/app';
+import { authEnv } from '@/config/auth';
 import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
@@ -38,6 +39,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
     ENABLED_AI360,
+    ENABLED_SILICONCLOUD,
     ENABLED_SPARK,
 
     ENABLED_AZURE_OPENAI,
@@ -112,7 +114,7 @@ export const getServerGlobalConfig = () => {
       },
       perplexity: { enabled: ENABLED_PERPLEXITY },
       qwen: { enabled: ENABLED_QWEN },
-
+      siliconcloud: { enabled: ENABLED_SILICONCLOUD },
       spark: { enabled: ENABLED_SPARK },
       stepfun: { enabled: ENABLED_STEPFUN },
 
@@ -128,6 +130,7 @@ export const getServerGlobalConfig = () => {
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { enabled: ENABLED_ZHIPU },
     },
+    oAuthSSOProviders: authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {
       langfuse: langfuseEnv.ENABLE_LANGFUSE,

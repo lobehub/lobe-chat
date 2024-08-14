@@ -2,6 +2,240 @@
 
 # Changelog
 
+## [Version 1.10.0](https://github.com/lobehub/lobe-chat/compare/v1.9.8...v1.10.0)
+
+<sup>Released on **2024-08-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add SiliconCloud model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add SiliconCloud model provider, closes [#3092](https://github.com/lobehub/lobe-chat/issues/3092) ([0781dc5](https://github.com/lobehub/lobe-chat/commit/0781dc5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.8](https://github.com/lobehub/lobe-chat/compare/v1.9.7...v1.9.8)
+
+<sup>Released on **2024-08-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Resize the image size in chat message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Resize the image size in chat message, closes [#3462](https://github.com/lobehub/lobe-chat/issues/3462) ([37c7429](https://github.com/lobehub/lobe-chat/commit/37c7429))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.7](https://github.com/lobehub/lobe-chat/compare/v1.9.6...v1.9.7)
+
+<sup>Released on **2024-08-13**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.6](https://github.com/lobehub/lobe-chat/compare/v1.9.5...v1.9.6)
+
+<sup>Released on **2024-08-09**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.5](https://github.com/lobehub/lobe-chat/compare/v1.9.4...v1.9.5)
+
+<sup>Released on **2024-08-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Updated AWS bedrock model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Updated AWS bedrock model list, closes [#3315](https://github.com/lobehub/lobe-chat/issues/3315) ([042f2d3](https://github.com/lobehub/lobe-chat/commit/042f2d3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.4](https://github.com/lobehub/lobe-chat/compare/v1.9.3...v1.9.4)
+
+<sup>Released on **2024-08-06**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix import clerk `AuthObject` from public api.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix import clerk `AuthObject` from public api, closes [#3416](https://github.com/lobehub/lobe-chat/issues/3416) ([af8960d](https://github.com/lobehub/lobe-chat/commit/af8960d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.3](https://github.com/lobehub/lobe-chat/compare/v1.9.2...v1.9.3)
+
+<sup>Released on **2024-08-06**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor server db schema for better code organize.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor server db schema for better code organize, closes [#3410](https://github.com/lobehub/lobe-chat/issues/3410) ([4743bfd](https://github.com/lobehub/lobe-chat/commit/4743bfd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.2](https://github.com/lobehub/lobe-chat/compare/v1.9.1...v1.9.2)
+
+<sup>Released on **2024-08-05**</sup>
+
+#### 💄 Styles
+
+- **config**: Update Azure model and API versions.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **config**: Update Azure model and API versions, closes [#3405](https://github.com/lobehub/lobe-chat/issues/3405) ([a4938eb](https://github.com/lobehub/lobe-chat/commit/a4938eb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.1](https://github.com/lobehub/lobe-chat/compare/v1.9.0...v1.9.1)
+
+<sup>Released on **2024-08-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Azure modelTag icon display.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Azure modelTag icon display, closes [#3394](https://github.com/lobehub/lobe-chat/issues/3394) ([ee6baa8](https://github.com/lobehub/lobe-chat/commit/ee6baa8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.9.0](https://github.com/lobehub/lobe-chat/compare/v1.8.2...v1.9.0)
+
+<sup>Released on **2024-08-05**</sup>
+
+#### ✨ Features
+
+- **misc**: Skip login page if only one provider exists.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Skip login page if only one provider exists, closes [#3400](https://github.com/lobehub/lobe-chat/issues/3400) ([52da1d8](https://github.com/lobehub/lobe-chat/commit/52da1d8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.8.2](https://github.com/lobehub/lobe-chat/compare/v1.8.1...v1.8.2)
 
 <sup>Released on **2024-08-03**</sup>
