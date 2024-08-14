@@ -103,7 +103,7 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   spark: {
     enabled: false,
     enabledModels: filterEnabledModels(SparkProviderCard),
-  }
+  },
   stepfun: {
     enabled: false,
     enabledModels: filterEnabledModels(StepfunProviderCard),
