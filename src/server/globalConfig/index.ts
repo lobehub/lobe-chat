@@ -39,6 +39,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
     ENABLED_AI360,
+    ENABLED_SILICONCLOUD,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -112,7 +113,7 @@ export const getServerGlobalConfig = () => {
       },
       perplexity: { enabled: ENABLED_PERPLEXITY },
       qwen: { enabled: ENABLED_QWEN },
-
+      siliconcloud: { enabled: ENABLED_SILICONCLOUD },
       stepfun: { enabled: ENABLED_STEPFUN },
 
       taichu: { enabled: ENABLED_TAICHU },
