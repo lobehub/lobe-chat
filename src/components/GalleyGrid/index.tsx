@@ -32,7 +32,7 @@ const GalleyGrid = memo<GalleyGridProps>(({ items, renderItem: Render }) => {
   const { gap, max } = useMemo(
     () => ({
       gap: mobile ? 4 : 6,
-      max: mobile ? MAX_SIZE_MOBILE : MAX_SIZE_DESKTOP,
+      max: (mobile ? MAX_SIZE_MOBILE : MAX_SIZE_DESKTOP) * firstRow.length,
     }),
     [mobile],
   );

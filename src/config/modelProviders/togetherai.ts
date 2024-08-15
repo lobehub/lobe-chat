@@ -58,9 +58,9 @@ const TogetherAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'Qwen 1.5 Chat (14B)',
+      displayName: 'Qwen 1.5 Chat (32B)',
       enabled: true,
-      id: 'Qwen/Qwen1.5-14B-Chat',
+      id: 'Qwen/Qwen1.5-32B-Chat',
       tokens: 32_768,
     },
     {

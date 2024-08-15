@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐにチャットを開始するか、[エージェント設定](/chat/settings#session={{id}}) に移動して私の情報を完全にすることができます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
+  "agentDefaultMessageWithoutEdit": "こんにちは、私は**{{name}}**です。会話しましょう！",
   "agentsAndConversations": "エージェントと会話",
   "backToBottom": "現在に戻る",
   "clearCurrentMessages": "現在の会話をクリア",
@@ -99,6 +100,8 @@
       "duplicate": "コピーを作成",
       "export": "トピックをエクスポート"
     },
+    "checkOpenNewTopic": "新しいトピックを開始しますか？",
+    "checkSaveCurrentMessages": "現在の会話をトピックとして保存しますか？",
     "confirmRemoveAll": "すべてのトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
@@ -128,10 +131,6 @@
   "upload": {
     "actionFiletip": "ファイルをアップロードする",
     "actionTooltip": "画像をアップロード",
-    "disabled": "現在のモデルはビジュアル認識をサポートしていません。モデルを切り替えて使用してください",
-    "dragDesc": "ファイルをここにドラッグしてください。複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信することもできます。",
-    "dragFileDesc": "複数の写真やファイルのアップロードをサポートするには、ここに写真やファイルをドラッグします。 Shift キーを押しながら画像またはファイルを直接送信します。",
-    "dragFileTitle": "ファイルをアップロードする",
-    "dragTitle": "画像をアップロード"
+    "disabled": "現在のモデルはビジュアル認識をサポートしていません。モデルを切り替えて使用してください"
   }
 }

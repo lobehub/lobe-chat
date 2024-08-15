@@ -373,15 +373,23 @@ describe('LobeOpenAICompatibleFactory', () => {
         });
 
         const decoder = new TextDecoder();
-
         const reader = result.body!.getReader();
-        expect(decoder.decode((await reader.read()).value)).toContain('id: a\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('data: "Hello"\n\n');
+        const stream: string[] = [];
 
-        expect(decoder.decode((await reader.read()).value)).toContain('id: a\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('');
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
+
+        expect(stream).toEqual([
+          'id: a\n',
+          'event: text\n',
+          'data: "Hello"\n\n',
+          'id: a\n',
+          'event: stop\n',
+          'data: "stop"\n\n',
+        ]);
 
         expect((await reader.read()).done).toBe(true);
       });
@@ -405,6 +413,92 @@ describe('LobeOpenAICompatibleFactory', () => {
             user: 'abc',
           }),
           expect.anything(),
+        );
+      });
+    });
+
+    describe('noUserId option', () => {
+      it('should not add user to payload when noUserId is true', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://api.mistral.ai/v1',
+          chatCompletion: {
+            noUserId: true,
+          },
+          provider: ModelProvider.Mistral,
+        });
+    
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
+    
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'open-mistral-7b',
+            temperature: 0,
+          },
+          { user: 'testUser' }
+        );
+    
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.not.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything()
+        );
+      });
+    
+      it('should add user to payload when noUserId is false', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://api.mistral.ai/v1',
+          chatCompletion: {
+            noUserId: false,
+          },
+          provider: ModelProvider.Mistral,
+        });
+    
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
+    
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'open-mistral-7b',
+            temperature: 0,
+          },
+          { user: 'testUser' }
+        );
+    
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything()
+        );
+      });
+    
+      it('should add user to payload when noUserId is not set in chatCompletion', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://api.mistral.ai/v1',
+          provider: ModelProvider.Mistral,
+        });
+    
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(new ReadableStream() as any);
+    
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'open-mistral-7b',
+            temperature: 0,
+          },
+          { user: 'testUser' }
+        );
+    
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything()
         );
       });
     });

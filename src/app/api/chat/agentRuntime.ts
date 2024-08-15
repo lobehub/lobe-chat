@@ -172,10 +172,38 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Novita: {
+      const { NOVITA_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || NOVITA_API_KEY);
+
+      return { apiKey };
+    }
     case ModelProvider.Baichuan: {
       const { BAICHUAN_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || BAICHUAN_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Taichu: {
+      const { TAICHU_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || TAICHU_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Ai360: {
+      const { AI360_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || AI360_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.SiliconCloud: {
+      const { SILICONCLOUD_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SILICONCLOUD_API_KEY);
 
       return { apiKey };
     }
@@ -193,11 +221,16 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
  * Initializes the agent runtime with the user payload in backend
  * @param provider - The provider name.
  * @param payload - The JWT payload.
+ * @param params
  * @returns A promise that resolves when the agent runtime is initialized.
  */
-export const initAgentRuntimeWithUserPayload = (provider: string, payload: JWTPayload) => {
+export const initAgentRuntimeWithUserPayload = (
+  provider: string,
+  payload: JWTPayload,
+  params: any = {},
+) => {
   return AgentRuntime.initializeWithProviderOptions(provider, {
-    [provider]: getLlmOptionsFromPayload(provider, payload),
+    [provider]: { ...getLlmOptionsFromPayload(provider, payload), ...params },
   });
 };
 

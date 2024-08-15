@@ -13,9 +13,9 @@ import {
   LobeAgentSession,
   LobeSessionType,
   LobeSessions,
-  SessionGroupId,
   SessionGroupItem,
   SessionGroups,
+  UpdateSessionParams,
 } from '@/types/session';
 
 import { ISessionService } from './type';
@@ -54,14 +54,11 @@ export class ServerService implements ISessionService {
     return lambdaClient.session.countSessions.query();
   }
 
-  updateSession(
-    id: string,
-    data: Partial<{ group?: SessionGroupId; meta?: any; pinned?: boolean }>,
-  ): Promise<any> {
-    const { group, pinned, meta } = data;
+  updateSession(id: string, data: Partial<UpdateSessionParams>): Promise<any> {
+    const { group, pinned, meta, updatedAt } = data;
     return lambdaClient.session.updateSession.mutate({
       id,
-      value: { groupId: group === 'default' ? null : group, pinned, ...meta },
+      value: { groupId: group === 'default' ? null : group, pinned, ...meta, updatedAt },
     });
   }
 

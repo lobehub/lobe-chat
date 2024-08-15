@@ -1,0 +1,92 @@
+---
+title: LobeChat WebRTC Sync - Real-Time Data Sharing
+description: >-
+  Explore LobeChat's WebRTC sync for real-time data sharing and privacy without
+  servers.
+tags:
+  - WebRTC
+  - LobeChat
+  - Data Synchronization
+  - Real-Time Communication
+  - Peer-to-Peer
+---
+# LobeChat WebRTC Sync
+
+## Introduction to WebRTC
+
+WebRTC (Web Real-Time Communication) is a technology that enables peer-to-peer communication between browsers. In LobeChat, we experimentally implemented real-time data synchronization between devices based on WebRTC and YJS, without relying on traditional server databases. This solution offers high privacy, zero conflicts, and provides a real-time session synchronization experience.
+
+## Configuring WebRTC for Synchronization
+
+To use the WebRTC synchronization feature in LobeChat, you need to complete the following steps:
+
+<Steps>
+
+### Deploy Signaling Server
+
+Deploy a WebRTC signaling server with one click using the Zeabur platform:
+
+[![Deploy on Zeabur](https://zeabur.com/button.svg)](https://zeabur.com/templates/MY0JZG?referralCode=arvinxx)
+
+Alternatively, you can view the [source code](https://github.com/lobehub/y-webrtc-signaling) and deploy it on your own.
+
+After deployment, you will receive a URL, for example: `https://my-signaling-server.zeabur.app`.
+
+### Enable WebRTC Sync in the Deployment Instance
+
+The WebRTC sync feature in LobeChat is hidden by default and needs to be enabled by adding the environment variable `FEATURE_FLAGS=+webrtc_sync`.
+
+### Configure WebRTC Sync Settings in LobeChat
+
+1. Open LobeChat settings -> Data Sync
+2. Enter the signaling server address in the WebRTC sync section;
+3. Set the sync channel name and password
+
+<Image
+  alt={'LobeChat Data Sync Settings Page'}
+  height={356}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/28616219/bf86bf1e-87fb-4015-8587-15ff28bb9c24'}
+/>
+
+### Repeat the Above Configuration on Devices that Need to Sync
+
+Ensure all devices use the same signaling server, channel name, and password. Once configured, the devices should automatically start syncing data.
+
+</Steps>
+
+## Limitations and Known Issues
+
+Although WebRTC has the advantages of no database and flexibility, after extensive community testing, the following limitations and known issues have been identified:
+
+### Requirement for Devices to be Online Simultaneously
+
+WebRTC requires devices to be online simultaneously to synchronize, meaning changes cannot be made on one device while offline and then synced later on another device.
+
+This limitation is due to the communication nature of WebRTC. In a pure frontend, serverless scenario, data synchronization between two devices can only be achieved through peer-to-peer communication. When one device is online and the other is offline, it is impossible to determine where the data should come from. Only when both devices are online can data communication occur. This mode is more like an online chat room where everyone needs to be online to see each other's data and achieve synchronization.
+
+Therefore, in certain situations, WebRTC's pure peer-to-peer approach may not fully meet users' needs (e.g., one device is a work computer, and the other is a home computer), and there are also some issues with data synchronization.
+
+### Network Issues Leading to Sync Failures
+
+Due to the implementation mechanism of WebRTC, its peer-to-peer communication has strict network requirements. Many of our users have reported:
+
+- Syncing between PCs is possible, but syncing between a mobile device with a SIM card and a PC is not, although syncing is possible when using the same WIFI as the PC;
+- Syncing fails when switching networks.
+
+### Stability and Performance Issues
+
+- Some users have reported ICE connection failures on the Firefox browser: [WebRTC Data Sync Feedback](https://github.com/lobehub/lobe-chat/issues/1683#issuecomment-2094745907)
+- For extremely long text or large amounts of conversation records, the synchronization process may slow down or become unstable: [When the model outputs a very long conversation, the end of the conversation will contain synchronization-related content tags, leading to sync failures](https://github.com/lobehub/lobe-chat/issues/1962)
+
+## Our Recommendations
+
+Considering the above reasons, we recommend users treat the WebRTC sync feature as experimental and regularly back up important data.
+
+We have already released a more stable and user-friendly server database synchronization solution ([deployment guide](/docs/self-hosting/advanced/server-database)). We recommend users prioritize using the server database synchronization solution.
+
+<Callout type={'warning'}>
+  Please note that we have officially announced the archiving of this sync feature in [PR
+  3182](https://github.com/lobehub/lobe-chat/pull/3182), and the above issues will no longer be
+  considered for fixes.
+</Callout>

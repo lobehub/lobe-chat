@@ -14,6 +14,12 @@ const createCaller = createCallerFactory(configRouter);
 let ctx: AuthContext;
 let router: ReturnType<typeof createCaller>;
 
+vi.mock('@/libs/next-auth/edge', () => {
+  return {
+    auth: vi.fn().mockResolvedValue(undefined),
+  };
+});
+
 beforeEach(async () => {
   vi.resetAllMocks();
   ctx = await createContextInner();
@@ -130,7 +136,7 @@ describe('configRouter', () => {
       describe('OPENROUTER_MODEL_LIST', () => {
         it('custom deletion, addition, and renaming of models', async () => {
           process.env.OPENROUTER_MODEL_LIST =
-            '-all,+google/gemma-7b-it,+mistralai/mistral-7b-instruct=Mistral-7B-Instruct';
+            '-all,+google/gemma-7b-it:free,+mistralai/mistral-7b-instruct:free';
 
           const response = await router.getGlobalConfig();
 

@@ -1,5 +1,5 @@
 [build]
-command = "npm run build"
+command = "pnpm run build"
 publish = ".next"
 
 [build.environment]

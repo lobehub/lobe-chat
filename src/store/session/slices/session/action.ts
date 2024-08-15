@@ -18,7 +18,7 @@ import {
   LobeSessionGroups,
   LobeSessionType,
   LobeSessions,
-  SessionGroupId,
+  UpdateSessionParams,
 } from '@/types/session';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
@@ -52,6 +52,7 @@ export interface SessionAction {
     isSwitchSession?: boolean,
   ) => Promise<string>;
   duplicateSession: (id: string) => Promise<void>;
+  triggerSessionUpdate: (id: string) => Promise<void>;
   updateSessionGroupId: (sessionId: string, groupId: string) => Promise<void>;
   updateSessionMeta: (meta: Partial<MetaData>) => void;
 
@@ -75,10 +76,7 @@ export interface SessionAction {
   useSearchSessions: (keyword?: string) => SWRResponse<any>;
 
   internal_dispatchSessions: (payload: SessionDispatch) => void;
-  internal_updateSession: (
-    id: string,
-    data: Partial<{ group?: SessionGroupId; meta?: any; pinned?: boolean }>,
-  ) => Promise<void>;
+  internal_updateSession: (id: string, data: Partial<UpdateSessionParams>) => Promise<void>;
   internal_processSessions: (
     sessions: LobeSessions,
     customGroups: LobeSessionGroups,
@@ -117,7 +115,6 @@ export const createSessionSlice: StateCreator<
 
     return id;
   },
-
   duplicateSession: async (id) => {
     const { switchSession, refreshSessions } = get();
     const session = sessionSelectors.getSessionById(id)(get());
@@ -153,7 +150,6 @@ export const createSessionSlice: StateCreator<
   pinSession: async (id, pinned) => {
     await get().internal_updateSession(id, { pinned });
   },
-
   removeSession: async (sessionId) => {
     await sessionService.removeSession(sessionId);
     await get().refreshSessions();
@@ -168,6 +164,10 @@ export const createSessionSlice: StateCreator<
     if (get().activeId === sessionId) return;
 
     set({ activeId: sessionId }, false, n(`activeSession/${sessionId}`));
+  },
+
+  triggerSessionUpdate: async (id) => {
+    await get().internal_updateSession(id, { updatedAt: new Date() });
   },
 
   updateSearchKeywords: (keywords) => {

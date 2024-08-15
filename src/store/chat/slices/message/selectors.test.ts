@@ -7,6 +7,7 @@ import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
+import { createServerConfigStore } from '@/store/serverConfig/store';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
@@ -93,6 +94,14 @@ const mockChatStore = {
   activeId: 'abc',
 } as ChatStore;
 
+beforeAll(() => {
+  createServerConfigStore();
+});
+
+afterEach(() => {
+  createServerConfigStore().setState({ featureFlags: { edit_agent: true } });
+});
+
 describe('chatSelectors', () => {
   describe('getMessageById', () => {
     it('should return undefined if the message with the given id does not exist', () => {
@@ -119,6 +128,36 @@ describe('chatSelectors', () => {
     it('should return undefined if no message matches the id', () => {
       const message = chatSelectors.getMessageById('nonexistent')(mockChatStore);
       expect(message).toBeUndefined();
+    });
+  });
+
+  describe('getMessageByToolCallId', () => {
+    it('should return undefined if the message with the given id does not exist', () => {
+      const message = chatSelectors.getMessageByToolCallId('non-existent-id')(initialStore);
+      expect(message).toBeUndefined();
+    });
+
+    it('should return the message object with the matching tool_call_id', () => {
+      const toolMessage = {
+        id: 'msg3',
+        content: 'Function Message',
+        role: 'tool',
+        tool_call_id: 'ttt',
+        plugin: {
+          arguments: 'arg1',
+          identifier: 'func1',
+          apiName: 'ttt',
+          type: 'default',
+        },
+      } as ChatMessage;
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: [...mockMessages, toolMessage],
+        },
+        activeId: 'abc',
+      });
+      const message = chatSelectors.getMessageByToolCallId('ttt')(state);
+      expect(message).toMatchObject(toolMessage);
     });
   });
 
@@ -194,7 +233,7 @@ describe('chatSelectors', () => {
   });
 
   describe('currentChatsWithGuideMessage', () => {
-    it('should return existing messages if there are any', () => {
+    it('should return existing messages except tool message', () => {
       const state = merge(initialStore, {
         messagesMap: {
           [messageMapKey('someActiveId')]: mockMessages,
@@ -202,7 +241,7 @@ describe('chatSelectors', () => {
         activeId: 'someActiveId',
       });
       const chats = chatSelectors.currentChatsWithGuideMessage({} as MetaData)(state);
-      expect(chats).toEqual(mockedChats);
+      expect(chats).toEqual(mockedChats.slice(0, 2));
     });
 
     it('should add a guide message if the chat is brand new', () => {
@@ -233,6 +272,19 @@ describe('chatSelectors', () => {
       const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
 
       expect(chats[0].content).toMatch('agentDefaultMessage'); // Assuming translation returns a string containing this
+    });
+
+    it('should use agent default message without edit button for non-inbox sessions when agent is not editable', () => {
+      act(() => {
+        createServerConfigStore().setState({ featureFlags: { edit_agent: false } });
+      });
+
+      const state = merge(initialStore, { messages: [], activeId: 'someActiveId' });
+      const metaData = { title: 'Mock Agent' };
+
+      const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
+
+      expect(chats[0].content).toMatch('agentDefaultMessageWithoutEdit');
     });
   });
 

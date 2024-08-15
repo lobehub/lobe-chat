@@ -67,6 +67,7 @@
     "OpenAIBizError": "Erro no serviço OpenAI solicitado. Por favor, verifique as informações abaixo ou tente novamente.",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
     "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",
+    "PluginFailToTransformArguments": "Desculpe, falha ao transformar os argumentos da chamada do plugin. Por favor, tente regerar a mensagem do assistente ou tente novamente com um modelo de IA de chamada de ferramentas mais robusto.",
     "PluginGatewayError": "Desculpe, ocorreu um erro no gateway do plugin. Verifique se a configuração do gateway do plugin está correta",
     "PluginManifestInvalid": "Desculpe, a validação do manifesto de descrição do plugin falhou. Verifique se o formato do manifesto de descrição está correto",
     "PluginManifestNotFound": "Desculpe, o servidor não encontrou o manifesto de descrição do plugin (manifest.json). Verifique se o endereço do arquivo de descrição do plugin está correto",

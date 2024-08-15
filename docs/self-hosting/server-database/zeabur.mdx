@@ -1,0 +1,66 @@
+---
+title: Deploying LobeChat Database on Zeabur
+description: >-
+  Learn how to deploy LobeChat on Zeabur with ease. Follow the provided steps to
+  set up your chat application seamlessly.
+tags:
+  - Deploy LobeChat
+  - Zeabur Deployment
+  - OpenAI API Key
+  - Custom Domain Binding
+---
+
+# Deploying LobeChat Database on Zeabur
+
+<Callout type="info">
+This article assumes that you are familiar with the basic principles and processes of deploying the LobeChat server database version, so it only includes content related to core environment variable configuration. If you are not familiar with the deployment principles of the LobeChat server database version, please refer to [Deploying Server Database](/en/docs/self-hosting/server-database) first.
+</Callout>
+
+If you want to deploy LobeChat Database on Zeabur, you can follow the steps below:
+
+## Create an Auth0 Account for Authentication
+
+The [template for LobeChat Database on Zeabur](https://zeabur.com/templates/RRSPSD) uses NextAuth and Auth0 as auth provider, so you need to create an Auth0 account to get the required credentials.
+
+You can refer to the [Auth0 documentation](/en/docs/self-hosting/advanced/auth/next-auth/auth0) to a detailed guide on how to create an Auth0 account and get those credentials.
+
+## Deploying on Zeabur
+
+Here is the process for deploying the LobeChat server database version on Zeabur:
+
+<Steps>
+
+### Go to the template page on Zeabur
+
+Go to the [LobeChat Database template page](https://zeabur.com/templates/RRSPSD) on Zeabur and click on the "Deploy" button.
+
+### Fill in the required environment variables
+
+After you click on the "Deploy" button, you will see a modal pop-up where you can fill in the required environment variables.
+
+Here are the environment variables you need to fill in:
+
+- OpenAI API key: Your OpenAI API key to get responses from OpenAI.
+- Auth0 Client ID: Your Auth0 client ID.
+- Auth0 Client Secret: Your Auth0 client secret.
+- Auth0 Domain: Your Auth0 domain(without https:// prefix).
+- LobeChat Domain: A free subdomain with `.zeabur.app` suffix.
+- MinIO Public Domain: A free subdomain with `.zeabur.app` suffix for yout MinIO web port to enable public access for the uploaded files.
+
+### Select a region and deploy
+
+After you fill all the required environment variables, select a region where you want to deploy your LobeChat Database and click on the "Deploy" button.
+
+You will see another modal pop-up where you can see the deployment progress.
+
+### Access your LobeChat Database
+
+Once the deployment is done, you will be navigated automatically to your project just created on Zeabur Dashboard.
+
+You can see three services running: `LobeChat-Database`, `MinIO`, and `PostgreSQL`.
+
+Press on the `LobeChat-Database` and you can see the public domain you just created, click on it to access your LobeChat Database.
+
+You can also bind a custom domain for your services if you want, here is a guide on how to [bind a custom domain on Zeabur](https://zeabur.com/docs/deploy/domain-binding).
+
+</Steps>

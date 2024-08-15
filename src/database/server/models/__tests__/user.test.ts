@@ -3,7 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { INBOX_SESSION_ID } from '@/const/session';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
-import { KeyVaultsGateKeeper } from '@/server/keyVaultsEncrypt';
+import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 import { UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
@@ -20,6 +20,7 @@ vi.mock('@/database/server/core/db', async () => ({
 }));
 
 const userId = 'user-db';
+const userEmail = 'user@example.com';
 const userModel = new UserModel();
 
 beforeEach(async () => {
@@ -76,6 +77,18 @@ describe('UserModel', () => {
       expect(user).not.toBeNull();
       expect(user?.id).toBe(userId);
       expect(user?.username).toBe('testuser');
+    });
+  });
+
+  describe('findByEmail', () => {
+    it('should find a user by email', async () => {
+      await serverDB.insert(users).values({ id: userId, email: userEmail });
+
+      const user = await UserModel.findByEmail(userEmail);
+
+      expect(user).not.toBeNull();
+      expect(user?.id).toBe(userId);
+      expect(user?.email).toBe(userEmail);
     });
   });
 

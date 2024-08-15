@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**. Vous pouvez commencer à discuter avec moi dès maintenant ou aller dans [Paramètres de l'agent](/chat/settings#session={{id}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
+  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
   "agentsAndConversations": "Agents et conversations",
   "backToBottom": "Retour en bas",
   "clearCurrentMessages": "Effacer les messages actuels",
@@ -99,6 +100,8 @@
       "duplicate": "Créer une copie",
       "export": "Exporter le sujet"
     },
+    "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
+    "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
     "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
     "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",
@@ -128,10 +131,6 @@
   "upload": {
     "actionFiletip": "Télécharger le fichier",
     "actionTooltip": "Télécharger une image",
-    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité.",
-    "dragDesc": "Faites glisser les fichiers ici pour télécharger plusieurs images. Maintenez la touche Maj enfoncée pour envoyer directement les images.",
-    "dragFileDesc": "Faites glisser les images et les fichiers ici pour prendre en charge le téléchargement de plusieurs images et fichiers. Maintenez la touche Shift enfoncée pour envoyer directement une image ou un fichier.",
-    "dragFileTitle": "Télécharger le fichier",
-    "dragTitle": "Télécharger une image"
+    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité."
   }
 }

@@ -5,6 +5,8 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
+import { featureFlagsSelectors } from '@/store/serverConfig';
+import { createServerConfigStore } from '@/store/serverConfig/store';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
@@ -63,11 +65,14 @@ const showInboxWelcome = (s: ChatStore): boolean => {
   return isBrandNewChat;
 };
 
-// 针对新助手添加初始化时的自定义消息
+// Custom message for new assistant initialization
 const currentChatsWithGuideMessage =
   (meta: MetaData) =>
   (s: ChatStore): ChatMessage[] => {
-    const data = currentChats(s);
+    // skip tool message
+    const data = currentChats(s).filter((m) => m.role !== 'tool');
+
+    const { isAgentEditable } = featureFlagsSelectors(createServerConfigStore().getState());
 
     const isBrandNewChat = data.length === 0;
 
@@ -81,7 +86,7 @@ const currentChatsWithGuideMessage =
       ns: 'chat',
       systemRole: meta.description,
     });
-    const agentMsg = t('agentDefaultMessage', {
+    const agentMsg = t(isAgentEditable ? 'agentDefaultMessage' : 'agentDefaultMessageWithoutEdit', {
       id: activeId,
       name: meta.title || t('defaultAgent'),
       ns: 'chat',
@@ -121,6 +126,10 @@ const chatsMessageString = (s: ChatStore): string => {
 const getMessageById = (id: string) => (s: ChatStore) =>
   chatHelpers.getMessageById(currentChats(s), id);
 
+const getMessageByToolCallId = (id: string) => (s: ChatStore) => {
+  const messages = currentChats(s);
+  return messages.find((m) => m.tool_call_id === id);
+};
 const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(id)(s)?.traceId;
 
 const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
@@ -156,6 +165,7 @@ export const chatSelectors = {
   currentChatsWithHistoryConfig,
   currentToolMessages,
   getMessageById,
+  getMessageByToolCallId,
   getTraceIdByMessageId,
   isAIGenerating,
   isCreatingMessage,

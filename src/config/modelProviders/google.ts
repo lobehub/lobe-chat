@@ -24,7 +24,7 @@ const Google: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'Mid-size multimodal model that supports up to 1 million tokens',
+      description: 'Mid-size multimodal model that supports up to 2 million tokens',
       displayName: 'Gemini 1.5 Pro',
       enabled: true,
       functionCall: true,
@@ -34,7 +34,7 @@ const Google: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'Mid-size multimodal model that supports up to 1 million tokens',
+      description: 'Mid-size multimodal model that supports up to 2 million tokens',
       displayName: 'Gemini 1.5 Pro 001',
       functionCall: true,
       id: 'gemini-1.5-pro-001',
@@ -43,14 +43,26 @@ const Google: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'The best model for scaling across a wide range of tasks. This is the latest model.',
+      description: 'Mid-size multimodal model that supports up to 2 million tokens',
+      displayName: 'Gemini 1.5 Pro Experimental 0801',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-1.5-pro-exp-0801',
+      maxOutput: 8192,
+      tokens: 2_097_152 + 8192,
+      vision: true,
+    },
+    {
+      description:
+        'The best model for scaling across a wide range of tasks. This is the latest model.',
       displayName: 'Gemini 1.0 Pro',
       id: 'gemini-1.0-pro-latest',
       maxOutput: 2048,
       tokens: 30_720 + 2048,
     },
     {
-      description: 'The best model for scaling across a wide range of tasks. This is a stable model that supports tuning.',
+      description:
+        'The best model for scaling across a wide range of tasks. This is a stable model that supports tuning.',
       displayName: 'Gemini 1.0 Pro 001 (Tuning)',
       functionCall: true,
       id: 'gemini-1.0-pro-001',
@@ -58,27 +70,13 @@ const Google: ModelProviderCard = {
       tokens: 30_720 + 2048,
     },
     {
-      description: 'The best model for scaling across a wide range of tasks. Released April 9, 2024.',
+      description:
+        'The best model for scaling across a wide range of tasks. Released April 9, 2024.',
       displayName: 'Gemini 1.0 Pro 002 (Tuning)',
       id: 'gemini-1.0-pro-002',
       maxOutput: 2048,
       tokens: 30_720 + 2048,
     },
-    {
-      description: 'The most capable model for highly complex tasks',
-      displayName: 'Gemini 1.0 Ultra',
-      id: 'gemini-ultra',
-      maxOutput: 2048,
-      tokens: 32_768,
-    },
-    {
-      description: 'A legacy text-only model optimized for chat conversations',
-      displayName: 'PaLM 2 Chat (Legacy)',
-      id: 'chat-bison-001',
-      legacy: true,
-      maxOutput: 1024,
-      // tokens: 4096 + 1024, // none tokens test
-    }
   ],
   checkModel: 'gemini-1.5-flash',
   id: 'google',

@@ -1,4 +1,10 @@
 {
+  "DragUpload": {
+    "dragDesc": "Ziehen Sie Dateien hierher, um mehrere Bilder hochzuladen.",
+    "dragFileDesc": "Ziehen Sie Bilder und Dateien hierher, um mehrere Bilder und Dateien hochzuladen.",
+    "dragFileTitle": "Dateien hochladen",
+    "dragTitle": "Bilder hochladen"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Benutzerdefiniertes Modell, standardmäßig unterstützt es sowohl Funktionsaufrufe als auch visuelle Erkennung. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Gegebenheiten.",

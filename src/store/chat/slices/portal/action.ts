@@ -5,7 +5,7 @@ import { ChatStore } from '@/store/chat/store';
 export interface ChatPortalAction {
   closeToolUI: () => void;
   openToolUI: (messageId: string, identifier: string) => void;
-  toggleDock: (open?: boolean) => void;
+  togglePortal: (open?: boolean) => void;
 }
 
 export const chatPortalSlice: StateCreator<
@@ -15,17 +15,17 @@ export const chatPortalSlice: StateCreator<
   ChatPortalAction
 > = (set, get) => ({
   closeToolUI: () => {
-    set({ dockToolMessage: undefined }, false, 'openToolUI');
+    set({ portalToolMessage: undefined }, false, 'openToolUI');
   },
   openToolUI: (id, identifier) => {
-    if (!get().showDock) {
-      get().toggleDock(true);
+    if (!get().showPortal) {
+      get().togglePortal(true);
     }
 
-    set({ dockToolMessage: { id, identifier } }, false, 'openToolUI');
+    set({ portalToolMessage: { id, identifier } }, false, 'openToolUI');
   },
-  toggleDock: (open) => {
-    const showInspector = open === undefined ? !get().showDock : open;
-    set({ showDock: showInspector }, false, 'toggleInspector');
+  togglePortal: (open) => {
+    const showInspector = open === undefined ? !get().showPortal : open;
+    set({ showPortal: showInspector }, false, 'toggleInspector');
   },
 });
