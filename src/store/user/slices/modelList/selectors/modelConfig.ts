@@ -38,7 +38,10 @@ const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s:
   // 3. Follow the user settings.
   if (typeof config?.fetchOnClient !== 'undefined') return config?.fetchOnClient;
 
-  // 4. On Server, by default.
+  // 4.If no user settings, but contains baseUrl, force on Client
+  if (isProviderEndpointNotEmpty) return true;
+
+  // 5. On Server, by default.
   return false;
 };
 
