@@ -32,13 +32,16 @@ const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s:
   const isProviderApiKeyNotEmpty = keyVaultsConfigSelectors.isProviderApiKeyNotEmpty(provider)(s);
   if (!isProviderEndpointNotEmpty && !isProviderApiKeyNotEmpty) return false;
 
-  // 2. Follow the user settings.
+  // 2. If only contains baseUrl, force on Client
+  if (isProviderEndpointNotEmpty && !isProviderApiKeyNotEmpty) return true;
+
+  // 3. Follow the user settings.
   if (typeof config?.fetchOnClient !== 'undefined') return config?.fetchOnClient;
 
-  // 3. If only contains baseUrl, force on Client
+  // 4.If no user settings, but contains baseUrl, force on Client
   if (isProviderEndpointNotEmpty) return true;
 
-  // 4. On Server, by default.
+  // 5. On Server, by default.
   return false;
 };
 
