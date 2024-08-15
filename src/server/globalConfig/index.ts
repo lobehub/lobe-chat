@@ -40,7 +40,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_TAICHU,
     ENABLED_AI360,
     ENABLED_SILICONCLOUD,
-    ENABLED_DOUBAO,
+    ENABLED_ZEROONE,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -52,9 +52,11 @@ export const getServerGlobalConfig = () => {
     ENABLED_OPENROUTER,
     OPENROUTER_MODEL_LIST,
 
-    ENABLED_ZEROONE,
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
+
+    ENABLED_DOUBAO,
+    ARK_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -81,7 +83,13 @@ export const getServerGlobalConfig = () => {
       baichuan: { enabled: ENABLED_BAICHUAN },
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       deepseek: { enabled: ENABLED_DEEPSEEK },
-      doubao: { enabled: ENABLED_DOUBAO },
+      doubao: { enabled: ENABLED_DOUBAO,
+        enabledModels: extractEnabledModels(ARK_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: [],
+          modelString: ARK_MODEL_LIST,
+        }),
+      },
       google: { enabled: ENABLED_GOOGLE },
       groq: { enabled: ENABLED_GROQ },
       minimax: { enabled: ENABLED_MINIMAX },
@@ -104,7 +112,6 @@ export const getServerGlobalConfig = () => {
           modelString: OPENAI_MODEL_LIST,
         }),
       },
-
       openrouter: {
         enabled: ENABLED_OPENROUTER,
         enabledModels: extractEnabledModels(OPENROUTER_MODEL_LIST),
@@ -117,7 +124,6 @@ export const getServerGlobalConfig = () => {
       qwen: { enabled: ENABLED_QWEN },
       siliconcloud: { enabled: ENABLED_SILICONCLOUD },
       stepfun: { enabled: ENABLED_STEPFUN },
-
       taichu: { enabled: ENABLED_TAICHU },
       togetherai: {
         enabled: ENABLED_TOGETHERAI,

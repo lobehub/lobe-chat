@@ -93,6 +93,7 @@ export const getLLMConfig = () => {
 
       ENABLED_DOUBAO: z.boolean(),
       ARK_API_KEY: z.string().optional(),
+      ARK_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -183,6 +184,7 @@ export const getLLMConfig = () => {
 
       ENABLED_DOUBAO: !!process.env.ARK_API_KEY,
       ARK_API_KEY: process.env.ARK_API_KEY,
+      ARK_MODEL_LIST: process.env.ARK_MODEL_LIST,
     },
   });
 };
