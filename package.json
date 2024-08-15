@@ -111,7 +111,7 @@
     "@clerk/nextjs": "^5.2.14",
     "@clerk/themes": "^2.1.10",
     "@google/generative-ai": "^0.16.0",
-    "@icons-pack/react-simple-icons": "^9.6.0",
+    "@icons-pack/react-simple-icons": "9.6.0",
     "@khmyznikov/pwa-install": "^0.3.9",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
