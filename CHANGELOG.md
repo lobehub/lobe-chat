@@ -2,6 +2,140 @@
 
 # Changelog
 
+### [Version 1.11.1](https://github.com/lobehub/lobe-chat/compare/v1.11.0...v1.11.1)
+
+<sup>Released on **2024-08-15**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Make S3 upload ACL setting optional.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Make S3 upload ACL setting optional, closes [#3464](https://github.com/lobehub/lobe-chat/issues/3464) ([53a0b47](https://github.com/lobehub/lobe-chat/commit/53a0b47))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.11.0](https://github.com/lobehub/lobe-chat/compare/v1.10.1...v1.11.0)
+
+<sup>Released on **2024-08-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add 2 new models to openai provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add 2 new models to openai provider, closes [#3470](https://github.com/lobehub/lobe-chat/issues/3470) ([cc9ffdd](https://github.com/lobehub/lobe-chat/commit/cc9ffdd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.10.1](https://github.com/lobehub/lobe-chat/compare/v1.10.0...v1.10.1)
+
+<sup>Released on **2024-08-14**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.10.0](https://github.com/lobehub/lobe-chat/compare/v1.9.8...v1.10.0)
+
+<sup>Released on **2024-08-14**</sup>
+
+#### ✨ Features
+
+- **misc**: Add SiliconCloud model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add SiliconCloud model provider, closes [#3092](https://github.com/lobehub/lobe-chat/issues/3092) ([0781dc5](https://github.com/lobehub/lobe-chat/commit/0781dc5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.8](https://github.com/lobehub/lobe-chat/compare/v1.9.7...v1.9.8)
+
+<sup>Released on **2024-08-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Resize the image size in chat message.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Resize the image size in chat message, closes [#3462](https://github.com/lobehub/lobe-chat/issues/3462) ([37c7429](https://github.com/lobehub/lobe-chat/commit/37c7429))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.9.7](https://github.com/lobehub/lobe-chat/compare/v1.9.6...v1.9.7)
+
+<sup>Released on **2024-08-13**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.9.6](https://github.com/lobehub/lobe-chat/compare/v1.9.5...v1.9.6)
 
 <sup>Released on **2024-08-09**</sup>
