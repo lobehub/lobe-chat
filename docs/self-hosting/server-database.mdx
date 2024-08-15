@@ -144,6 +144,9 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 
 The name and region of the bucket. `S3_BUCKET` is mandatory for specifying the bucket's name. `S3_REGION` is optional for specifying the bucket's region, generally not required to add, but some service providers may need to configure it.
 
+### `S3_SET_ACL`
+Whether to set the ACL to `public-read` when uploading files. This option is enabled by default. If the service provider does not support setting individual ACLs for files (i.e., all files inherit the bucket's ACL), enabling this option may result in a request error. You can disable it by setting `S3_SET_ACL` to `0`.
+
 ### `NEXT_PUBLIC_S3_DOMAIN`
 
 The public access domain of the bucket, used to access files in the bucket. This address needs to be **internet-readable**. The reason is that when OpenAI's GPT-4o and other visual models recognize images, OpenAI will try to download the image link on their servers. Therefore, this link must be publicly accessible. If it is a private link, OpenAI will not be able to access the image and will not be able to recognize the image content properly.
