@@ -182,7 +182,7 @@ export const getLLMConfig = () => {
       ENABLED_SILICONCLOUD: !!process.env.SILICONCLOUD_API_KEY,
       SILICONCLOUD_API_KEY: process.env.SILICONCLOUD_API_KEY,
 
-      ENABLED_DOUBAO: !!process.env.ARK_API_KEY,
+      ENABLED_DOUBAO: !!(process.env.ARK_API_KEY && process.env.ARK_MODEL_LIST),
       ARK_API_KEY: process.env.ARK_API_KEY,
       ARK_MODEL_LIST: process.env.ARK_MODEL_LIST,
     },
