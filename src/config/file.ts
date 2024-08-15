@@ -18,6 +18,7 @@ export const getFileConfig = () => {
       S3_ENDPOINT: process.env.S3_ENDPOINT,
       S3_REGION: process.env.S3_REGION,
       S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
+      S3_SET_ACL: process.env.S3_SET_ACL !== '0',
     },
     server: {
       // S3
@@ -27,6 +28,7 @@ export const getFileConfig = () => {
 
       S3_REGION: z.string().optional(),
       S3_SECRET_ACCESS_KEY: z.string().optional(),
+      S3_SET_ACL: z.boolean(),
     },
   });
 };

@@ -26,11 +26,14 @@ export class S3 {
 
   private readonly bucket: string;
 
+  private readonly setAcl: boolean;
+
   constructor() {
     if (!fileEnv.S3_ACCESS_KEY_ID || !fileEnv.S3_SECRET_ACCESS_KEY || !fileEnv.S3_BUCKET)
       throw new Error('S3 environment variables are not set completely, please check your env');
 
     this.bucket = fileEnv.S3_BUCKET;
+    this.setAcl = fileEnv.S3_SET_ACL;
 
     this.client = new S3Client({
       credentials: {
@@ -68,7 +71,7 @@ export class S3 {
 
   public async createPreSignedUrl(key: string): Promise<string> {
     const command = new PutObjectCommand({
-      ACL: 'public-read',
+      ACL: this.setAcl ? 'public-read' : undefined,
       Bucket: this.bucket,
       Key: key,
     });
