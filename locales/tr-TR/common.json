@@ -13,6 +13,7 @@
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
+  "batchDelete": "Toplu Sil",
   "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
@@ -31,6 +32,7 @@
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
   "document": "Belge",
+  "download": "İndir",
   "duplicate": "Kopya oluştur",
   "edit": "Düzenle",
   "export": "Dışa Aktar",
@@ -192,6 +194,7 @@
   },
   "tab": {
     "chat": "Chat",
+    "files": "Dosyalar",
     "market": "Keşfet",
     "me": "ben",
     "setting": "Ayarlar"

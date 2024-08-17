@@ -372,6 +372,11 @@
       "modelDesc": "Modèle spécifié pour générer le nom, la description, l'avatar et les balises de l'assistant",
       "title": "Génération automatique des informations de l'assistant"
     },
+    "queryRewrite": {
+      "label": "Modèle de reformulation des questions",
+      "modelDesc": "Modèle utilisé pour optimiser les questions des utilisateurs",
+      "title": "Base de connaissances"
+    },
     "title": "Agent système",
     "topic": {
       "label": "Modèle de nommage des sujets",

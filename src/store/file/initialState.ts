@@ -1,4 +1,4 @@
-import { ImageFileState, initialImageFileState } from './slices/images';
+import { ImageFileState, initialImageFileState } from './slices/chat';
 
 export type FilesStoreState = ImageFileState;
 

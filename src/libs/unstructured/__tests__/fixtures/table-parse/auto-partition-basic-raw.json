@@ -1,0 +1,131 @@
+[
+  {
+    "type": "CompositeElement",
+    "element_id": "32855cf6-5605-4a8e-97a3-3ac0b509b725",
+    "text": "Multiple Sclerosis Journal 29(6)\n\nTable 1. Characteristics of the study population.",
+    "metadata": {
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJy1UcFu3CAU/BXEqZHWyGBgTa+9RJVSRUpuq8gC/LxGYo0FuM0qyr8X3FSq0lvUHmeYeW/ecHrB4OECSx7ciD8j3KlOyaPpGiq5bXhPeaP7njbKSq6h14YbgQ8IXyDrUWddPC/YhhBHt+gMacdeX8OWhxncec6FYawVxfNG/3BjngtLpeCFXYNbcvWdTrIn7IAUI+LpgN4QZYKoCrmQRP6Nd3XBOF1Thku94d49g39YtQX8Wh5GyGCzC8tgvU5pWGMwRdaSvgToimByHvJ1hd17f4f3qMt50+f9nhOG5YzrirUww7JdDMSavw7P8FwvxHebz271gB6shxiSS+hr2OKiPWLqk7ypQ3/vuAU9lgnF/r79VjJrDZsaOk2m4XSyjWK2a6apHUExdTTc/r/2O9KWfpUgbK9/h4wdSVehELTW/R7/kn+sf9nStv9H/T9qU8qnBH2ZddQ2Q3QpO5tQmFCeAaW8jVe0hnXzumYhf37INx1jYb/DY532+vQTZ1bsRw==",
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "Table",
+    "element_id": "ad6705ea-1a7a-4708-bdfd-770f2a7cdf74",
+    "text": "Male Female Overall MS subjects Control subjects p-value MS subjects Control subjects p-value MS subjects Control subjects p-value N Follow-up time (years) Female (%) Age (years) Ethnicity – white (%) Smoking status (%) Non-smoker Ex-smoker Current smoker eFI ratio Fit Mid frailty Moderate frailty Severe frailty Number of primary care visits in previous year Index of multiple deprivation (IMD; %) 3685 9.9 (6.1) 46.3 (13.3) 92.3 41.5 17.5 41.1 0.02 (0.04) 97.2 2.8 0.0 0.0 6.9 (10.3) 21,931 11.4 (6.5) <0.001 46.3 (13.3) 93.5 0.852 0.013 53.8 14.7 31.6 0.01 (0.03) <0.001 98.3 1.6 0.0 0.0 2.2 (5.0) <0.001 <0.001 <0.001 8566 10.4 (6.3) 44.3 (13.3) 91.5 49.5 13.9 36.6 0.03 (0.04) 95.8 4.0 0.2 0.0 8.2 (11.5) 50,640 11.5 (6.5) <0.001 44.3 (13.3) 94.1 0.907 <0.001 60.0 11.6 28.5 0.02 (0.04) <0.001",
+    "metadata": {
+      "text_as_html": "<table><thead><tr><th></th><th colspan=\"3\">Male</th><th colspan=\"3\">Female</th><th colspan=\"2\">Overall</th><th rowspan=\"2\">p-value</th></tr><tr><th></th><th>MS subjects</th><th>Control \nsubjects</th><th></th><th>p-value MS subjects Control \nsubjects</th><th></th><th>p-value</th><th>MS \nsubjects</th><th>Control \nsubjects</th></tr></thead><tbody><tr><td>N</td><td>3685</td><td>21,931</td><td></td><td>8566</td><td>50,640</td><td></td><td>12,251</td><td>72,572</td><td></td></tr><tr><td>Follow-up time (years)</td><td>9.9 (6.1)</td><td>11.4(6.5)</td><td>&lt;0.001</td><td>10.4 (6.3)</td><td>11.5(6.5)</td><td>&lt;0.001</td><td>10.3(6.3)</td><td>11.5(6.5)</td><td>&lt;0.001</td></tr><tr><td>Female (%)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>69.9</td><td>69.8</td><td>0.752</td></",
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJytGGtv4zbsrxABNuSAxLXk964LMNx2wH3o7YruW3sI3FhtvDl2YCttg8P995FKYtOxkrXbPtQVKVJ8iOIjt99GqlArVep5no1+glGYLhIVpek0DEU89RepmsYqiqeprxbhQxZ5i4dgNIHRSuk0S3WKPN9Gi6qqs7xMtWoMXKTbaqPnS5U/LjVipHQD5Nmjn/NMLxErwsBH7LrKS018t7dh5EQTkJ50vK8T2IPCk6ETEywCXzjChtmxIGbUbButVmTJl/xFFTfrdKFG33EjU1otdF6V80WRNs18XVf3SOY6SRBGpMdDXii9XSvD++VqZBQuHzfpo7HqdqTKxxGJWCNmXm5W96omKxCj1Yuep818qVcFsV/q9L5Qs0u9VGmG/2pazi4v6KOXsKiKZp2WP9+NvLvR7Cot1Imtj2pl35S4+fuTqtOiaHfr6pntrqdPabHZ814YDfpazK5uoNnc/4lOaVrch6rUdVXAXTnYahf7k4Hxwxv4uHwL+amTjAkXB4feV9l2b1E2+4z4zKy8MA5aQIpJ4okWbBdxEIYtELiT0HeHREJOZNAxR3ISRPKIrPNqNvtYFUX1PN2sQecrBeOtSuvmXcuQOAmMQ0d0GCEcHzFBh/mx0O9dx3U7qcJ1fGLzemzBK9i8N3L1TDFBB+Mf3g3d8qZFiFZzIG4B14kCOZT8y+PQcz4aAmPhcXMId4RynTjo7sf3BwQWFD59N+IEyZDnGIWay2io+W96WeaLXG/hbiNd4cPzMtd9HybS69aeE7AjXcG2RLeT+I44dWO7UxLG58gB7UBRlkKEi1niZlX9lZeP0OhUb5pOX27b56qcNkin6s4xTMnAYxfbUSTMwhB1sZBEzLogdo6fas+/L8cqiIgJEL4TnXGU4I7CtxCeo2WnSibipEtnHzZ1jfUTBj5iFnlcKEtXDCtjJq0jiTrNZeKfcZH6+AnqFAscDywJY/z6PH5dYXDeuQxC+xbOwWn/ndOSfnLdBXXEgjqJHW/ooCRg4ZdEgygibMhPiZxzXrzKM3io07zQ287vTIL1Hn0W3tL2GjwWnnJwzT35VYZVHVPHsRL8CfG17QokW59LIHzXRjlU70Zh0/F65f4vgl46Mo0XVA+wrvNVWm9hkaJKT3mTYyOSl4hWT3mF2YwqSZeDqAJTZexiUMpx4LjnojmWYyqdHYkn+1V8yBLFyCKZkASFJK8I/OPU/KnM1AuZudoUOl9jRc4UWvxET7yE8aerX9+DLV2L60MNKlTa6D2Xyng2jOwAz6ehHWBY37oeKiSvO0Ke4xA4ZrOQWHLiP5Fw4R4THnGjIqtRES8UHODY2A4MhfudcMlfpXS7RCYwFlxuTXwC6NMl7Lg+0NFxVYI2KlaVLShQv9AOcKxnBxjWt65tebZpqPGgEbLLzezMxBYcvIdMbLeTsGhOBpG9nyF2w8PFbkYzsyHNbzS30SgG+/53P15Zx5wWcW4W+ndEn8E+SkDXlgPrk+Go8/S6zhOGzR10vRy0LRX0GxhoGwnAUgysIMJxcYJ+OYC3pWZ4XYYDGuqgHaCADQSQ4NQP2GgFQO0grQSwbgOofwCsyIQ0f10VgN14CDSHgZmN4NJk8r4AbNTBzBZg2nSgbheo3QRq6YC1Uwd2alNgv2f+JOpgCs2Bov+PxlHoJj2gQaUVT6ZRKw3UwgL1i8A6LKDmB3wjxygIMckyJQt2ky3ZFxzZxwX4xmM4Bx12qVcnphCoIe1582AgNll7pxpvg0dCzd1YDdyN0mSitzeRBkNSI2FuRgSdKwLwMO/2rcT+DYVErUDMusZK+Q52g7nFSpo3+zKE8VFkrhKHuAMhTR5ArT5IzDknDPZBGmeI/Y0mYKr6CYOvD2+xX4HpEqP9B2tq+/F3H3kN3jX41xC0/L1cDTxnAtU9inq8J7p8Stn4SDzC+y3eO+ARRXWh5UpoFe9IyFF2fHLEhXTJTpaPu9FpPHHR72eHn9P+oFQ7+v71b3Ocw2Y=",
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "Table",
+    "element_id": "6863ab6a-557c-408e-8511-a0412fc562c9",
+    "text": "97.1 2.8 0.1 0.0 3.2 (6.1) <0.001 <0.001 <0.001 12,251 10.3 (6.3) 69.9 44.9 (13.3) 93.9 47.1 15 37.9 0.03 (0.04) 96.2 3.7 0.1 0.0 7.8 (11.2) 72,572 11.5 (6.5) <0.001 69.8 44.9 (13.3) 91.2 0.752 0.727 <0.001 58.1 12.5 29.4 0.02 (0.04) <0.001 97.4 2.5 0.1 0.0 2.9 (5.9) <0.001 <0.001 <0.001 1Q – least deprived 13.7 13.7 14.6 14.6 14.4 14.4 2Q 3Q 4Q 5Q – most deprived Missing data 18.5 17.6 20.2 20.6 9.3 18.4 17.6 20.3 20.6 9.4 1.000 18.5 17.9 18.8 20.3 9.8 18.5 17.9 18.8 20.3 9.9 1.000 18.5 17.8 19.2 20.4 9.7 18.5 17.8 19.2 20.4 9.7 1.000",
+    "metadata": {
+      "text_as_html": "tr><tr><td>Age (years)</td><td>46.3 (13.3)</td><td>46.3(13.3)</td><td>0.852</td><td>44.3(13.3)</td><td>44.3(13.3)</td><td>0.907</td><td>44.9(13.3)</td><td>44.9(13.3)</td><td>0.727</td></tr><tr><td>Ethnicity — white (%)</td><td>923</td><td>93.5</td><td>0.013</td><td>915</td><td>94.1</td><td>&lt;0.001</td><td>93.9</td><td>91.2</td><td>&lt;0.00</td></tr><tr><td colspan=\"10\">Smoking status (%)</td></tr><tr><td>Non-smoker</td><td>415</td><td>53.8</td><td></td><td>49.5</td><td>60.0</td><td></td><td>47.1</td><td>58.1</td><td></td></tr><tr><td>Ex-smoker</td><td>17.5</td><td>14.7</td><td>&lt;0.001</td><td>13.9</td><td>11.6</td><td>&lt;0.001</td><td>15</td><td>12.5</td><td>&lt;0.00</td></tr><tr><td>Current smoker</td><td>41.1</td><td>31.6</td><td></td><td>36.6</td><td>28.5</td><td></td><td>379</td><",
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJytGGtv4zbsrxABNuSAxrXk964LMNx2wH1od0X3rT0ETqxrvDl2YCttg8P995FKYtOxkrXbPtQVKVJ8iOIj999GqlArVepZno1+gtFcqiD25+kknKts4seuO4nnaTjxF2G6iDIvDoQaXcBopXSapTpFnm+jRVXVWV6mWjUGLtJttdGzpcoflxoxUroB8uzRz3mml4gVYeAjdl3lpSa++/swcqILkJ50vC8XsAeFJ0MnJlgEvnCEDbNjQcyo2TZarciSz/mLKu7W6UKNvuNGprRa6LwqZ4sibZrZuq7mSOY6SRBGpMfXvFB6u1aG9/P1yChcPm7SR2PV/UiVjyMSsUbMrNys5qomKxCj1Yuepc1sqVcFsV/pdF6o6ZVeqjTDfzUtp1eX9NFLWFRFs07Lnx9G3sNoep0W6sTWR7Wyb0rc/P1J1WlRtLt19cx215OntNjseS+NBn0tptd30Gzmf6JTmhb3oSp1XRXwUA622sX+ZGD88AY+Lt9CfuokY8LlwaHzKtvuLcqmN4jPzMoL46AFpLhIPNGC7SIOwrAFAvci9N0hkZAXMuiYI3kRRPKIrPNqNv1YFUX1PNmsQecrBeOtSuvmXcuQOAmMQ0d0GCEcHzFBh/mx0O9dx3U7qcJ1fGLzemzBK9i8N3L1TDFBB+Mf3g3d8qZFiFZzIG4B14kCOZT8y+PQcz4aAmPhcXMId4RynTjo7sf3BwQWFD59N+IEyZDnGIWay2io+W96WeaLXG/hYSNd4cPzMtd9HybS69aeE7AjXcG2RLeT+I44dWO7UxLG58gB7UBRlkKEi1niblX9lZeP0OhUb5pOX27bTVVOGqRTdecYpmTgsYvtKBJmYYi6WEgiZl0QO8dPteffl2MVRMQECN+JzjhKcEfhWwjP0bJTJRNx0qXTD5u6xvoJAx8xizwulKUrhpUxk9aRRJ3mMvHPuEh9/AR1igWOB5aEMX59Hr+uMDjvXAahfQvn4LT/zmlJP7nugjpiQZ3Ejjd0UBKw8EuiQRQRNuSnRM45L17nGXyt07zQ287vTIL1Hn0W3tL2GjwWnnJwzT35VYZVHVPHsRL8CfG17QokW59LIHzXRjlU705h0/F65f4vgl46Mo0XVF9hXeertN7CIkWVnvImx0YkLxGtnvIKsxlVki4HUQWmytjFoJTjwHHPRXMsx1Q6OxJP9qv4kCWKkUUyIQkKSV4R+Mep+VOZqRcyc7UpdL7GipwptPiJnngJ40/Xv74HW7oWt4caVKi00XsulfFsGNkBnk9DO8CwvnU9VEjedoQ8xyFwzGYhseTEfyLhwj0mPOJGRVajIl4oOMCxsR0YCvc74ZK/Sul2iUxgLLjcmvgE0KdL2HF9oKPjqgRtVKwqW1CgfqEd4FjPDjCsb13b8mzTUONBI2SXm9mZiS04eA+Z2G4nYdGcDCJ7P0PshofL3YxmZkOa32huo1EM9v3vfryyjjkt4tws9O+IbsA+SkDXlgPrk+Go8/S6zhOGzR10vRy0LRX0GxhoGwnAUgysIMJxcYJ+OYC3pWZ4XYYDGuqgHaCADQSQ4NQP2GgFQO0grQSwbgOofwCsyIQ0f10VgN14CDSHgZmN4Mpk8r4AbNTBzBZg2nSgbheo3QRq6YC1Uwd2alNgv2f+JOpgCs2Bov+PxlHoJj2gQaUVT6ZRKw3UwgL1i8A6LKDmB3wjxygIMckyJQt2ky3ZFxzZxwX4xmM4Bx12qVcnphCoIe1582AgNll7pxpvg0dCzd1YDdyN0mSitzeRBkNSI2FuRgSdKwLwMO/2rcT+DYVErUDMusZK+Q52g7nFSpo3+zKE8VFkrhKHuAMhTR5ArT5IzDknDPZBGmeI/Y0mYKr6CYNvD2+xX4HpEqP9B2tq+/F3H3kL3i34txC0/L1cDTxnAtU9inq8J7p8Stn4SDzC+y3eO+ARRXWh5UpoFe9IyFF2fHLEhXTJTpaPu9FpPHHR72eHn9P+oFQ7+v7lbwgiwu8=",
+      "is_continuation": true,
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "Table",
+    "element_id": "e8e6fa12-9b5d-43d6-9886-597c00112158",
+    "text": "",
+    "metadata": {
+      "text_as_html": "td>294</td><td></td></tr><tr><td>eFI ratio</td><td>0.02 (0.04)</td><td>0.01 (0.03)</td><td>&lt;0.001</td><td>0.03 (0.04)</td><td>0.02 (0.04)</td><td>&lt;0.001</td><td>0.03 (0.04)</td><td>0.02 (0.04)</td><td>&lt;0.00</td></tr><tr><td>Fit</td><td>97.2</td><td>98.3</td><td></td><td>95.8</td><td>97.1</td><td></td><td>96.2</td><td>97.4</td><td></td></tr><tr><td>Mid frailty</td><td>2.8</td><td>1.6</td><td></td><td>4.0</td><td>2.8</td><td></td><td>3.7</td><td>2.5</td><td></td></tr><tr><td>Moderate frailty</td><td>0.0</td><td>0.0</td><td>&lt;0.001</td><td>0.2</td><td>0.1</td><td>&lt;0.001</td><td>0.1</td><td>0.1</td><td>&lt;0.00</td></tr><tr><td>Severe frailty</td><td>0.0</td><td>0.0</td><td></td><td>0.0</td><td>0.0</td><td></td><td>0.0</td><td>0.0</td><td></td></tr><tr><td>Number of primary care ",
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJytGGtv4zbsrxABNuSAxrXk964LMNx2wH3o7YruW3sInFhtvDl2YCttg8P995FKYtOxkrXbPtQVKVJ8iOIjd99GqlArVepZno1+gtE8mT8sFg/uRGZxMPGVTCep+yAmiVwsUj/KFjL2RxcwWimdZqlOkefbaFFVdZaXqVaNgYt0W230bKnyx6VGjJRugDx79HOe6SViRRj4iF1XeamJ7+4ujJzoAqQnHe/rBexB4cnQiQkWgS8cYcPsWBAzaraNViuy5Ev+oorbdbpQo++4kSmtFjqvytmiSJtmtq6rOZK5ThKEEenxkBdKb9fK8H65HhmFy8dN+misuhup8nFEItaImZWb1VzVZAVitHrRs7SZLfWqIPYrnc4LNb3SS5Vm+K+m5fTqkj56CYuqaNZp+fP9yLsfTa/TQp3Y+qhW9k2Jm78/qTotina3rp7Z7nrylBabPe+l0aCvxfT6FprN/E90StPiPlSlrqsC7svBVrvYnwyMH97Ax+VbyE+dZEy4PDh0XmXbvUXZ9DPiM7PywjhoASkuEk+0YLuIgzBsgcC9CH13SCTkhQw65kheBJE8Iuu8mk0/VkVRPU82a9D5SsF4q9K6edcyJE4C49ARHUYIx0dM0GF+LPR713HdTqpwHZ/YvB5b8Ao2741cPVNM0MH4h3dDt7xpEaLVHIhbwHWiQA4l//I49JyPhsBYeNwcwh2hXCcOuvvx/QGBBYVP3404QTLkOUah5jIaav6bXpb5ItdbuN9IV/jwvMx134eJ9Lq15wTsSFewLdHtJL4jTt3Y7pSE8TlyQDtQlKUQ4WKWuF1Vf+XlIzQ61Zum05fb9rkqJw3SqbpzDFMy8NjFdhQJszBEXSwkEbMuiJ3jp9rz78uxCiJiAoTvRGccJbij8C2E52jZqZKJOOnS6YdNXWP9hIGPmEUeF8rSFcPKmEnrSKJOc5n4Z1ykPn6COsUCxwNLwhi/Po9fVxicdy6D0L6Fc3Daf+e0pJ9cd0EdsaBOYscbOigJWPgl0SCKCBvyUyLnnBev8wwe6jQv9LbzO5NgvUefhbe0vQaPhaccXHNPfpVhVcfUcawEf0J8bbsCydbnEgjftVEO1btV2HS8Xrn/i6CXjkzjBdUDrOt8ldZbWKSo0lPe5NiI5CWi1VNeYTajStLlIKrAVBm7GJRyHDjuuWiO5ZhKZ0fiyX4VH7JEMbJIJiRBIckrAv84NX8qM/VCZq42hc7XWJEzhRY/0RMvYfzp+tf3YEvX4uZQgwqVNnrPpTKeDSM7wPNpaAcY1reuhwrJm46Q5zgEjtksJJac+E8kXLjHhEfcqMhqVMQLBQc4NrYDQ+F+J1zyVyndLpEJjAWXWxOfAPp0CTuuD3R0XJWgjYpVZQsK1C+0Axzr2QGG9a1rW55tGmo8aITscjM7M7EFB+8hE9vtJCyak0Fk72eI3fBwuZvRzGxI8xvNbTSKwb7/3Y9X1jGnRZybhf4d0WewjxLQteXA+mQ46jy9rvOEYXMHXS8HbUsF/QYG2kYCsBQDK4hwXJygXw7gbakZXpfhgIY6aAcoYAMBJDj1AzZaAVA7SCsBrNsA6h8AKzIhzV9XBWA3HgLNYWBmI7gymbwvABt1MLMFmDYdqNsFajeBWjpg7dSBndoU2O+ZP4k6mEJzoOj/o3EUukkPaFBpxZNp1EoDtbBA/SKwDguo+QHfyDEKQkyyTMmC3WRL9gVH9nEBvvEYzkGHXerViSkEakh73jwYiE3W3qnG2+CRUHM3VgN3ozSZ6O1NpMGQ1EiYmxFB54oAPMy7fSuxf0MhUSsQs66xUr6D3WBusZLmzb4MYXwUmavEIe5ASJMHUKsPEnPOCYN9kMYZYn+jCZiqfsLgm8Nb7FdgusRo/8Ga2n783UfegHcD/g0ELX8vVwPPmUB1j6Ie74kun1I2PhKP8H6L9w54RFFdaLkSWsU7EnKUHZ8ccSFdspPl4250Gk9c9PvZ4ee0PyjVjr5//RtD9sNK",
+      "is_continuation": true,
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "Table",
+    "element_id": "9d93c6f7-aecb-4773-ae20-587989b448f8",
+    "text": "",
+    "metadata": {
+      "text_as_html": "visits in previous year</td><td>6.9 (10.3)</td><td>22(5.0)</td><td>&lt;0.001</td><td>82(11.5)</td><td>32(6.1)</td><td>&lt;0.001</td><td>78(112)</td><td>29(5.9)</td><td>&lt;0.00</td></tr><tr><td colspan=\"10\">Index of multiple deprivation (IMD; %)</td></tr><tr><td>1Q — least deprived</td><td>13.7</td><td>13.7</td><td></td><td>14.6</td><td>14.6</td><td></td><td>144</td><td>144</td><td></td></tr><tr><td>2Q</td><td>18.5</td><td>18.4</td><td></td><td>18.5</td><td>18.5</td><td></td><td>18.5</td><td>18.5</td><td></td></tr><tr><td>3Q</td><td>17.6</td><td>17.6</td><td></td><td>17.9</td><td>17.9</td><td></td><td>17.8</td><td>17.8</td><td></td></tr><tr><td>4Q</td><td>20.2</td><td>203</td><td>1.000</td><td>18.8</td><td>18.8</td><td>1.000</td><td>19.2</td><td>19.2</td><td>1.000</td></tr><tr><td>5Q — mos",
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJytGGtv4zbsrxABNuSA1rUlv7TrCgy3HXAferui+9YeCjdWG2+OHdhK2+Bw/32kkth0rGTttg91RYoUH6L4yM23iS71QlfmrsgnP8HEf/BV/JBHp0rO5GkYSnV6nwWz0+xepomMhZbZbHICk4U2WZ6ZDHm+TWZ13eRFlRndWrjM1vXK3M118Tg3iBHCj5Bni34ucjNHbBBHIWKXdVEZ4ru5iRMvOQEhhSe/nsAWDKSIvZTgIAoDL3BhNiyImbTr1ugFWfKleNHl9TKb6cl33Mi10TNT1NXdrMza9m7Z1PdI5nsqihPS46EotVkvteX9cjmxClePq+zRWnUz0dXjhEQsEXNXrRb3uiErEGP0i7nL2ru5WZTEfm6y+1JfnJu5znL819Dy4vyMPmYOs7psl1n18+1E3k4uLrNSH9j6qBfuTYGbvz/pJivLbrepn9nu8vQpK1db3jOrwVCLi8traFf3f6JT2g73oa5MU5dwW422usX2ZGD88AY+Lt9Bfugka8LZzqH3db7eWpRffEZ8blcyTqMOEMGJkkEHdos0iuMOiPyTOPTHRIE4EVHPnIiTKBF7ZL1X84uPdVnWz6erJZhioWG61lnTvusYlKdgGntBjwkCL0RM1GN+LM173/P9XmrgeyGxyQFb9Ao2+UaugSk26GD6w7uxW960iNFqDqQd4HtJJMaSf3kcey5EQ2AaSG4O4fZQvpdG/f2E4YjAgcKn7yecQI159lGouUjGmv9m5lUxK8wablfCD0J4nhdm6EMlZL+WXsSO9AO2FfQ7KvSCQze2OUUxPk+MaEeKshQS+Jglrhf1X0X1CK3JzKrt9eW2fa6r0xbpdNM7hikZSXaxPYViFsaoi4MkYdZFqbf/VAf+fdlXIUiYgCD0kiOOCrij8C3Ex2jZqYKJOOjSiw+rpsH6CSMfMYskF8rSFcOKlEnrSZJec6HCIy7SHz9Bk2GB44ElYIrfkMevH1icPJZBaN/BOTrtv3M60k9h+qBOWFCr1JNjB6mIhZ9KRlFE2JifknjHvHhZ5PDQZEVp1r3fmQTnPYYsvIXrNUgWnmJ0zQP5dY5VHVPHvhL8CfG16woEWx9LIHzXRTlW71pj0/F65f4vgkE6so0X1A+wbIpF1qxhlqFKT0VbYCNSVIjWT0WN2YwqSZ+DqAJTZexjUIhp5PnHojkVUyqdPYkUwyo+ZklSZBFMiEIh6hWBv5+aP1W5fiEzF6vSFEusyLlGi5/oiVcw/XT563twpevgaleDSp21Zsulc54NEzfA82nsBhg2dK7HComrnpDnOAT22Rwkjpz4TyRcuGTCE25U4jQq4YWCAxybuoGx8LAXLvirFH6fyAKMBZ9bkx4AhnSKHTcEejquStRFxaJ2BQXqF7sBjpVugGFD59qVZ9uWGg8aIfvczM5UruDgPaRy3Y5i0axGkb2dITbDw9lmRrOzIc1vNLfRKAbb/nc7XjnHnA5xbBb6d0SfwT1KQN+WA+uTYa/zlH3nCePmDvpeDrqWCoYNDHSNBGApBlYQYb84wbAcwNtSM7wuwwENddANUMAGAlA49QM2WhFQO0irAFi3AdQ/AFZkQtq/vgrAZjwEmsPAzkZwbjP5UAA26mBnC7BtOlC3C9RuArV0wNqpHTu1KbDds38CdbCFZkcx/EfjKPSTHtCg0okn06iVBmphgfpFYB0WUPMDoZVjFYSUZNmSBZvJluyL9uzjAkLrMZyDdrvUqxNTDNSQDry5MxCbrK1TrbdBklB7N04DN6M0mSi3JtJgSGoo5mZE0LlBBBLz7tBK7N9QSNIJxKxrrRTvYDOYO6ykeXMoI7A+SuxV4hC3I6TJA6jVB4E554DBIQjrjGB7owpsVT9g8NXuLQ4rMF1isv1gTe0+4eYjrkBeQXgFUcc/yNXAcyZQ3aOox3uiy6eUjY9EEj7s8HKHRxTVhY5L0SrdkJCj3Hi1x4V0aiMrxN3kMJ646Pez3c9pf1CqnXz/+jdlk8KP",
+      "is_continuation": true,
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "Table",
+    "element_id": "21843169-a334-4356-9ee1-53c0d98c3366",
+    "text": "",
+    "metadata": {
+      "text_as_html": "t deprived</td><td>20.6</td><td>20.6</td><td></td><td>20.3</td><td>20.3</td><td></td><td>204</td><td>204</td><td></td></tr><tr><td>Missing data</td><td>9.3</td><td>9.4</td><td></td><td>9.8</td><td>9.9</td><td></td><td>9.7</td><td>9.7</td><td></td></tr></tbody></table>",
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJytGGtv4zbsrxABNuSA1rUkP3ddgeG2A+5Db1d039pD4cZq482xA1tpGxzuv49UEpuOlazd9qGuSJHiQxQfufk20aVe6MrcFfnkJ5gIPbufyYf7UzFLotMgDfzTTKnwNJspEYd5EooHNTmByUKbLM9MhjzfJrO6bvKiyoxuLVxm63pl7ua6eJwbxEjph8izRT8XuZkjVkRhgNhlXVSG+G5uotiLT0Aq6amvJ7AFhZKRlxAswkB4woXZsCBm0q5boxdkyZfiRZfXy2ymJ99xI9dGz0xRV3ezMmvbu2VT3yOZ76VhFJMeD0WpzXqpLe+Xy4lVuHpcZY/WqpuJrh4nJGKJmLtqtbjXDVmBGKNfzF3W3s3NoiT2c5Pdl/ri3Mx1luO/hpYX52f0MXOY1WW7zKqfbyfqdnJxmZX6wNZHvXBvStz8/Uk3WVl2u039zHaXp09ZudrynlkNhlpcXF5Du7r/E53SdrgPdWWauoTbarTVLbYnA+OHN/Bx+Q7yQydZE852Dr2v8/XWovziM+Jzu1JREnaAFCepEh3YLZIwijog9E+iwB8TCXkiw545lidhLPfIeq/mFx/rsqyfT1dLMMVCw3Sts6Z91zGkXgrTyBM9RggvQEzYY34szXvf8/1eqvC9gNjUgC18BZt6I9fAFBt0MP3h3dgtb1pEaDUHkg7wvTiUY8m/PI49F6AhMBWKm0O4PZTvJWF/P0EwInCg8On7MSdIxzz7KNRcxmPNfzPzqpgVZg23K+mLAJ7nhRn6MJWqXysvZEf6gm2JficNPHHoxjanpIzPkyPakaIshQgfs8T1ov6rqB6hNZlZtb2+3LbPdXXaIp1uescwJUPFLranSJmFEeriIImZdWHi7T/VgX9f9lUQMRMgAi8+4ijBHYVvITpGy06VTMRBl158WDUN1k8Y+YhZpLhQlq4YViZMWk8S95rLNDjiIv3xEzQZFjgeWBKm+A14/PrC4tSxDEL7Ds7Raf+d05F+CtMHdcyCOk08NXZQGrLwS+NRFBE24qfE3jEvXhY5PDRZUZp173cmwXmPAQtv6XoNioWnHF3zQH6dY1XH1LGvBH9CfO26AsnWxxII33VRjtW71th0vF65/4tgkI5s4wX1AyybYpE1a5hlqNJT0RbYiBQVovVTUWM2o0rS5yCqwFQZ+xiUchp6/rFoTuSUSmdPouSwio9Z4gRZJBOSopD0FYG/n5o/Vbl+ITMXq9IUS6zIuUaLn+iJVzD9dPnre3Cla3G1q0Glzlqz5dI5z4axG+D5NHIDDBs412OF5FVPyHMcAvtsDhJHTvwnEi5cMeExNyp2GhXzQsEBjk3cwFh40AuX/FVKv09kAmPB59YkB4AhXcqOGwI9HVcl7KJiUbuCAvWL3ADHKjfAsIFz7cqzbUuNB42QfW5mZ6au4OA9ZOq6nZRFczqK7O0MsRkezjYzmp0NaX6juY1GMdj2v9vxyjnmdIhjs9C/I/oM7lEC+rYcWJ8Me52n6jtPGDd30Pdy0LVUMGxgoGskAEsxsIII+8UJhuUA3paa4XUZDmiog26AAjYQQIpTP2CjFQK1g7QSwLoNoP4BsCIT0v71VQA24yHQHAZ2NoJzm8mHArBRBztbgG3TgbpdoHYTqKUD1k7t2KlNge2e/ZOogy00O4rhPxpHoZ/0gAaVTjyZRq00UAsL1C8C67CAmh8IrByrICQky5Ys2Ey2ZF+4Zx8XEFiP4Ry026VenZgioIZ04M2dgdhkbZ1qvQ2KhNq7cRq4GaXJRLU1kQZDUiNlbkYEnStCUJh3h1Zi/4ZC4k4gZl1rpXwHm8HcYSXNm0MZwvootleJQ9yOkCYPoFYfJOacAwYHIK0zxPZGU7BV/YDBV7u3OKzAdInx9oM1tfsEm4+8AnUFwRWEHf8gVwPPmUB1j6Ie74kun1I2PhJF+KDDqx0eUVQXOq6UVsmGhBzlxqd7XEiXbmQFuBsfxhMX/X62+zntD0q1k+9f/wbjZsKI",
+      "is_continuation": true,
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "CompositeElement",
+    "element_id": "499fc9c7-95f4-412c-87e2-10fa1a2e950e",
+    "text": "Individuals were classified as fit, if the eFI score was below 0.12; mildly frail, if the score was between 0.12 and 0.24; moderately frail, if the score was between 0.24 and 0.36; severely frail, if the score was 0.36 and above. Differences between groups were assessed employing Chi-square test, Student’s t-test and the Kruskal–Wallis test, as appropriate.\n\nwas even lower in men (PR = 0.27, 95% CI = 0.18, 0.39) than in women (PR = 0.38, 95% CI = 0.30, 0.49; Figure 1), but the difference was not statistically sig- nificant (p = 0.097).",
+    "metadata": {
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJy1k19r2zAUxb/KxTBoITb+b2thTx2FMDbKOthDVoJsXTtiiuRZctJQ9t135aZdN0oZY4M8REfnSPfq/ry+C1DhDrXbSBG8hkCwLmF10YSiaIowL1MRNpVowqrNiiLHJhNxFiwg2KHjgjtOmbugNWYUUnOHdl4rfjST22xR9ltHSprGBWVO8kEKtyU1KYuc1MFI7Xxuva5YVC4gybI8Km4W8LDOkypifp0USR3Vzyr3GZICe7QOd76XK3mL6nrgLQbfaUOgw9ZJozet4tZuhtE0ZIsjFhepr6+TCt1xwDl79T6YS9b9xPu5r3WAug/8FQMpGz3tGhx9H/5wh7e+02ClhdxLMXFl4YAjwnyX7CQK4BY66RYgO3BbBLxcgW0NeQ6006AyByomSZewk0qoI3Qjl+rR/tTqDoh6NgPXgv6kOaWMwJFm8EfJND8ls3IJFvdU6gs5b5v9vDF7jOCt7DpK6BZ/ntmPZhpOTVPLSD8BuBuUOUrdw8VWhvbbxGmXMKFXuHaTIO6+TGmcMAsu9PJ8ib/73TjZr1zNu9lnrpS0pxyVwwea3TBKajbyU3oY2gc+0gPIPX7y06Cx/E53nRPenDVhwzkP81S0IU+aOmRpmdZtmVdp2fw3urOYRamHt66ixMP7IJTEcOkFlhRR8ZxwH/lLuvOUsX9Et2eBWNFArOIIUgM9LpxdfYQ3nqlqAax4BRereZnQd0ngsHMaKNfefDBP7Vn9iz2LvT1nS7iU/USYJOcLaCY34yAegZt51MaBdTRq62RLcBzByj4ETd9Zy7WDs2E+MmbV+UuA3PwAHmiH2Q==",
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "CompositeElement",
+    "element_id": "875d46a9-6106-40d2-b891-b803d0bb87ac",
+    "text": "Hyperlipidaemia. Treatment with lipid-lowering medications was lower in PwMS, as compared with matched controls (PR = 0.63, 95% CI = 0.54, 0.74). This was particularly pronounced for men (women: PR = 0.71, 95% CI = 0.59, 0.87; men: PR = 0.41, 95% CI = 0.37, 0.62).\n\nDifferences in risk factor severity\n\nAs compared with matched controls, after adjustment, PwMS had a 0.4-mm Hg lower systolic blood",
+    "metadata": {
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJy1VE1r3DAQ/SvCUEhgbWRL/lBKD6U9pIeUpcltCcvYGq/V2paxtdksof+9I++mdNvQ0pCcjN7MG+vNvNHqIcAWO+zd2ujgggUgEp1wVYfAVRLKpBJhmUEaiiLOdC1FWesyWLCgQwcaHBDnIaisHbXpweE0n1vY261bN2g2jSMkSXhKnCO8M9o1hMZZKgkdrOmd561WIuYRQRRQUXa7YD+BIi2i2AMqTqP0KeBAISSY9pPDzmtZmntsrweoMPhOAY0OK2dsv65amKb1MNqS0nikpOI5JdSmRbcfcOYur4L5yv1mC5tZ1yrAfhP4XwyErPttV+LodfjiDu+90uCS+GNrBqMBOwMRuxkRnG8w2xnXsDkUtnaHo+k3rENtKvCXmtgOJjYHmOnZcnd1vWCEVLYbYER9oHfgqoYOle3daNuJnS2/sHekIRMLptI37MOn+eg7y6NcntMFGnOoTWWcqbYtjO2ekfjebvuKatV2pHv07Gxn6XPBjhXz+LSi8hWL/C37NUmeJoncJ2XJeeSb99jLzzCOpPEOb3yTqFu/my4HXqcF6lDlKEJZJEkIRZ2EMQqlZSGSuIZXNF0cFeQgJfij6Y5AJg9ApsgjTwIz5Xmmy5LihSz30dQ1jkiznLxzRjN9YzVUjsY64R35zO3/axqilGUucwxFxlUoM5WHoEsMMcukiAF0LIvXmwaX8z6rXERinsYBSLjkJxv/B3CkPPMJ4GmavNA83v9raWmva0drDvrrdprfhsW876wBzcBvVdh17HJzfA28GtuaipWttfovo7z9ATguvV4=",
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "CompositeElement",
+    "element_id": "2990794c-e50d-4ed2-b3b3-b76a2fc76693",
+    "text": "pressure at the index year. The magnitude was greater for men than women, considering that men had almost a 3-mm Hg lower blood pressure than matched con- trols (overall: coeff. = −0.37, 95% CI = −0.60, −0.13; women: −0.54, 95% CI = −0.96, −0.12; men: −2.81, 95% CI = −3.84, −1.77). The differences were greater when restricting analyses to only those with a diagno- sis of hypertension at baseline, as PwMS had a 3.3- mm Hg lower systolic blood pressure then matched controls (coeff. = −3.27, 95% CI = −5.04, −1.50); dif- ferences were confirmed in women but not in men (women: coeff. = −2.56, 95% CI = −3.84, −1.27; men: −0.27, 95% CI = 0.01, −2.56).",
+    "metadata": {
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJyFU11r4zAQ/CuL4aAFW9iynY+We7qXu4cehfYtV4JsrW2BLAVJbhpK//utkjQkzcG9SeOd3Z0ZefWeoMYRTVgrmdxBUs1lucglZvNl1WUVz+tMFAueVWUjm4JLXs8XSQrJiEFIEQRx3pPWWieVEQH9/q7Fzk5hPaDqh0AIpzbEOcJbJcNAaDGrK0I3VpkQeavVsioYFRbVomTVSwonYFmUbBGBoq44q/6JHEgEJX7nA45RzaN6Q/20ES0mH/RBYsA2KGvWrRberzfONlSWM5oTV+mUxrDb4J76+JDsdzb9JPq9sFWCpk/ihA0hazONDbooJPYO+BalJhuH3k8OQQQIA4IyEt9gh8IxeKb7KHqjwiQRtsJD75Bcc9BZB5QCMYSBraVjCq01Xkl0yvQRD/uCQUgQerQ+gIAyG0f42YO2W+rRaGslnObvW40itAPK2CuD4Kz2cGNf0Qmt7wjErmPwHf5MnBc8Z+U8hWX9DX78OgNneXo6F+X9Ybu7ExQzvOIsZ2ccfg9nDM4WxRWDsqw+GQWbz28PXknVdejQtOiBFOLJru1AVpDQ4BTlSf4II/TOU1mwYI3ekXrryWIVBvJJKjLdZuCVB9vBQBG7gOSuNTGmRnjUymAKlMjj9uHp4DKUrMzg3OH4sKxW7bXVeGH10egv/paMX/tbs/xMeZ3f3kfVGVzqpp6dciN1V8fnAc0UwNgQgXi9OcbyZSZn9ew/bvP5RT755ZY5y4v0rNkti3/F50/yWzgngnrF5/j6P17+AkclSxo=",
+      "filename": "table-parse.pdf"
+    }
+  },
+  {
+    "type": "CompositeElement",
+    "element_id": "9e6198b1-08c2-4e33-91af-8a3361e02925",
+    "text": "In contrast, PwMS had higher levels of diastolic blood pressure at baseline, as compared with matched controls (coeff. = 0.29, 95% CI = 0.14, 0.43). However,\n\n674\n\njournals.sagepub.com/home/msj",
+    "metadata": {
+      "filetype": "application/pdf",
+      "languages": ["eng"],
+      "page_number": 1,
+      "orig_elements": "eJy1k01r3DAQhv+KEBRasB1LlvxR6KlQmkPCQnpbwiJb47WCbRlLziaE/veOvLshlD21yXEez2j8vjOzfaHQwwCj3xlNvxIKipUgOYtTDjIWnBVxXVZ1nEGeKSlUrgugEaEDeKWVV1jzQhtrZ21G5cGtca+e7eJ3HZh955FwnkqsOeGD0b5DynIpkE7WjD7UbbdVlidVRFiVlYm4j8gZ8BQBC4BJwRNxiZyKEFH37DwMQc3GPEF/N6kG6G/8oMFD440dd02vnNtNs60xLU0qkQrsQ1vTg3+eYK3d3ND1p8f9ovarsi2FcU9DiwnJblyGGuagJDzu4SlopdcjaezoZ+V8RDaHmzvSKU06tAJm0sMj9I7YlmiDCbY3Dal7azWZZnBumYEoT2rloDcjREQ5fGyY1AyaHIzvyKB802GwtrD41OfGQtsm5BvK4Kihkp/I9+s1ZGhLmojsS0J+2gN2nqOg6CzwVs2z8uYRfoU/Rwl/7wLPC8GKlsVcFLgLTVHEJSgRQ84kLzjndSs/bBfyKmFhzpVIqjDnU8yYPMYs5Ym8BI4V/7YHRZ7L8p32AM176/YGM2+PiZesLjPWlprFshQCrc5lrOoqjTXneIMVL1WWfpjVjFfF8czOZr8SxooTkeG8LpL/MbwU6Xvd3YNd5lH1LnGYMy11godz1dkBrgb38HYSP6z1YQr3fwBhSXjP",
+      "filename": "table-parse.pdf"
+    }
+  }
+]

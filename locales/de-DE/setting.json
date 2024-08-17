@@ -372,6 +372,11 @@
       "modelDesc": "Das Modell, das zur Generierung von Assistentennamen, -beschreibungen, -avatars und -tags verwendet wird",
       "title": "Automatische Generierung von Assistenteninformationen"
     },
+    "queryRewrite": {
+      "label": "Fragenumformulierung Modell",
+      "modelDesc": "Modell zur Optimierung der Benutzeranfragen",
+      "title": "Wissensdatenbank"
+    },
     "title": "Systemassistent",
     "topic": {
       "label": "Themenbenennungsmodell",

@@ -51,7 +51,7 @@
     },
     "checker": {
       "button": "检查",
-      "desc": "测试 API Key 与代理地址是否正确填写",
+      "desc": "测试 Api Key 与代理地址是否正确填写",
       "pass": "检查通过",
       "title": "连通性检查"
     },
@@ -371,6 +371,11 @@
       "label": "助理元数据生成模型",
       "modelDesc": "指定用于生成助理名称、描述、头像、标签的模型",
       "title": "自动生成助理信息"
+    },
+    "queryRewrite": {
+      "label": "提问重写模型",
+      "modelDesc": "指定用于优化用户提问的模型",
+      "title": "知识库"
     },
     "title": "系统助手",
     "topic": {

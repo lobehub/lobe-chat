@@ -13,6 +13,7 @@
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
   "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
+  "batchDelete": "일괄 삭제",
   "blog": "제품 블로그",
   "cancel": "취소",
   "changelog": "변경 로그",
@@ -31,6 +32,7 @@
   "defaultSession": "기본 세션",
   "delete": "삭제",
   "document": "사용 설명서",
+  "download": "다운로드",
   "duplicate": "복제품 만들기",
   "edit": "편집",
   "export": "내보내기",
@@ -192,6 +194,7 @@
   },
   "tab": {
     "chat": "채팅",
+    "files": "파일",
     "market": "발견",
     "me": "나",
     "setting": "설정"

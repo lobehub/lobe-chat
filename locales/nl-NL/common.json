@@ -13,6 +13,7 @@
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
   "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
+  "batchDelete": "Batch verwijderen",
   "blog": "Product Blog",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
@@ -31,6 +32,7 @@
   "defaultSession": "Standaard assistent",
   "delete": "Verwijderen",
   "document": "Gebruiksaanwijzing",
+  "download": "Downloaden",
   "duplicate": "Dupliceren",
   "edit": "Bewerken",
   "export": "Exporteren",
@@ -192,6 +194,7 @@
   },
   "tab": {
     "chat": "Chat",
+    "files": "Bestanden",
     "market": "Ontdekken",
     "me": "Ik",
     "setting": "Instellingen"
