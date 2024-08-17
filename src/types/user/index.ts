@@ -1,4 +1,5 @@
 import { DeepPartial } from 'utility-types';
+import { z } from 'zod';
 
 import { UserSettings } from '@/types/user/settings';
 
@@ -12,17 +13,24 @@ export interface LobeUser {
   username?: string | null;
 }
 
-export interface UserGuide {
+export const UserGuideSchema = z.object({
   /**
    * Move the settings button to the avatar dropdown
    */
-  moveSettingsToAvatar?: boolean;
+  moveSettingsToAvatar: z.boolean().optional(),
 
   /**
    * Topic Guide
    */
-  topic?: boolean;
-}
+  topic: z.boolean().optional(),
+
+  /**
+   * tell user that uploaded files can be found in knowledge base
+   */
+  uploadFileInKnowledgeBase: z.boolean().optional(),
+});
+
+export type UserGuide = z.infer<typeof UserGuideSchema>;
 
 export interface UserPreference {
   guide?: UserGuide;

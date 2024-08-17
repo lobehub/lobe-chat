@@ -13,6 +13,7 @@
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
   "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
+  "batchDelete": "Elimina in batch",
   "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
@@ -31,6 +32,7 @@
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",
   "document": "Documento di utilizzo",
+  "download": "Scarica",
   "duplicate": "Duplicato",
   "edit": "Modifica",
   "export": "Esporta configurazione",
@@ -192,6 +194,7 @@
   },
   "tab": {
     "chat": "Chat",
+    "files": "File",
     "market": "Scopri",
     "me": "io",
     "setting": "Impostazioni"
