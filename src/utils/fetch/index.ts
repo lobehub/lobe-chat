@@ -1,4 +1,3 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { t } from 'i18next';
 import { produce } from 'immer';
 
@@ -10,6 +9,8 @@ import {
   MessageToolCallChunk,
   MessageToolCallSchema,
 } from '@/types/message';
+
+import { fetchEventSource } from './fetchEventSource';
 
 export const getMessageError = async (response: Response) => {
   let chatMessageError: ChatMessageError;
@@ -285,86 +286,80 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     },
   });
 
-  try {
-    await fetchEventSource(url, {
-      body: options.body,
-      fetch: options?.fetcher,
-      headers: options.headers as Record<string, string>,
-      method: options.method,
-      onerror: (error) => {
-        if ((error as TypeError).name === 'AbortError') {
-          finishedType = 'abort';
-          options?.onAbort?.(output);
-          textController.stopAnimation();
-        } else {
-          finishedType = 'error';
-          options.onErrorHandle?.(error);
-        }
+  await fetchEventSource(url, {
+    body: options.body,
+    fetch: options?.fetcher,
+    headers: options.headers as Record<string, string>,
+    method: options.method,
+    onerror: (error) => {
+      if ((error as TypeError).name === 'AbortError') {
+        finishedType = 'abort';
+        options?.onAbort?.(output);
+        textController.stopAnimation();
+      } else {
+        finishedType = 'error';
+        options.onErrorHandle?.(error);
+        return;
+      }
+    },
+    onmessage: (ev) => {
+      triggerOnMessageHandler = true;
+      let data;
+      try {
+        data = JSON.parse(ev.data);
+      } catch (e) {
+        console.warn('parse error, fallback to stream', e);
+        options.onMessageHandle?.({ text: data, type: 'text' });
+        return;
+      }
 
-        throw new Error(error);
-      },
-      onmessage: (ev) => {
-        triggerOnMessageHandler = true;
-        let data;
-        try {
-          data = JSON.parse(ev.data);
-        } catch (e) {
-          console.warn('parse error, fallback to stream', e);
-          options.onMessageHandle?.({ text: data, type: 'text' });
-          return;
-        }
+      switch (ev.event) {
+        case 'text': {
+          if (smoothing) {
+            textController.pushToQueue(data);
 
-        switch (ev.event) {
-          case 'text': {
-            if (smoothing) {
-              textController.pushToQueue(data);
-
-              if (!textController.isAnimationActive) textController.startAnimation();
-            } else {
-              output += data;
-              options.onMessageHandle?.({ text: data, type: 'text' });
-            }
-
-            break;
+            if (!textController.isAnimationActive) textController.startAnimation();
+          } else {
+            output += data;
+            options.onMessageHandle?.({ text: data, type: 'text' });
           }
 
-          case 'tool_calls': {
-            // get finial
-            // if there is no tool calls, we should initialize the tool calls
-            if (!toolCalls) toolCalls = [];
-            toolCalls = parseToolCalls(toolCalls, data);
+          break;
+        }
 
-            if (smoothing) {
-              // make the tool calls smooth
+        case 'tool_calls': {
+          // get finial
+          // if there is no tool calls, we should initialize the tool calls
+          if (!toolCalls) toolCalls = [];
+          toolCalls = parseToolCalls(toolCalls, data);
 
-              // push the tool calls to the smooth queue
-              toolCallsController.pushToQueue(data);
-              // if there is no animation active, we should start the animation
-              if (toolCallsController.isAnimationActives.some((value) => !value)) {
-                toolCallsController.startAnimations();
-              }
-            } else {
-              options.onMessageHandle?.({
-                tool_calls: toolCalls,
-                type: 'tool_calls',
-              });
+          if (smoothing) {
+            // make the tool calls smooth
+
+            // push the tool calls to the smooth queue
+            toolCallsController.pushToQueue(data);
+            // if there is no animation active, we should start the animation
+            if (toolCallsController.isAnimationActives.some((value) => !value)) {
+              toolCallsController.startAnimations();
             }
+          } else {
+            options.onMessageHandle?.({
+              tool_calls: toolCalls,
+              type: 'tool_calls',
+            });
           }
         }
-      },
-      onopen: async (res) => {
-        response = res.clone();
-        // 如果不 ok 说明有请求错误
-        if (!response.ok) {
-          throw await getMessageError(res);
-        }
-      },
-      // we should keep open when page hidden, or it will case lots of token cost
-      // refs: https://github.com/lobehub/lobe-chat/issues/2501
-      openWhenHidden: true,
-      signal: options.signal,
-    });
-  } catch {}
+      }
+    },
+    onopen: async (res) => {
+      response = res.clone();
+      // 如果不 ok 说明有请求错误
+      if (!response.ok) {
+        throw await getMessageError(res);
+      }
+    },
+    signal: options.signal,
+  });
 
   // only call onFinish when response is available
   // so like abort, we don't need to call onFinish

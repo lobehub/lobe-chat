@@ -1,11 +1,11 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source';
 import { FetchEventSourceInit } from '@microsoft/fetch-event-source';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ZodError } from 'zod';
 
 import { ErrorResponse } from '@/types/fetch';
 
-import { fetchSSE, getMessageError, parseToolCalls } from './fetch';
+import { fetchEventSource } from './fetchEventSource';
+import { fetchSSE, getMessageError, parseToolCalls } from './index';
 
 // 模拟 i18next
 vi.mock('i18next', () => ({
@@ -42,7 +42,7 @@ const createMockResponse = (body: any, ok: boolean, status: number = 200) => ({
   },
 });
 
-vi.mock('@microsoft/fetch-event-source', () => ({
+vi.mock('./fetchEventSource', () => ({
   fetchEventSource: vi.fn(),
 }));
 

@@ -399,7 +399,7 @@ export const chatMessage: StateCreator<
     const { abortController, internal_toggleChatLoading } = get();
     if (!abortController) return;
 
-    abortController.abort();
+    abortController.abort('canceled');
 
     internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },
