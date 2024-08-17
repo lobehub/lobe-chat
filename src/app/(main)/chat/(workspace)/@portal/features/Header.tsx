@@ -30,6 +30,7 @@ const Header = memo(() => {
   return (
     <SidebarHeader
       actions={<ActionIcon icon={XIcon} onClick={() => toggleInspector(false)} />}
+      style={{ paddingBlock: 8 }}
       title={
         showToolUI ? (
           <Flexbox align={'center'} gap={4} horizontal>

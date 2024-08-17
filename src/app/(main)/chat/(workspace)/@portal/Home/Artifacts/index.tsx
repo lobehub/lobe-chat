@@ -3,9 +3,9 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import ToolList from './ArtifactList';
+import ArtifactList from './ArtifactList';
 
-export const Artifacts = memo(() => {
+export const Files = memo(() => {
   const { t } = useTranslation('portal');
 
   return (
@@ -13,9 +13,9 @@ export const Artifacts = memo(() => {
       <Typography.Title level={5} style={{ marginInline: 12 }}>
         {t('Artifacts')}
       </Typography.Title>
-      <ToolList />
+      <ArtifactList />
     </Flexbox>
   );
 });
 
-export default Artifacts;
+export default Files;
