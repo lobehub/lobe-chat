@@ -1,20 +1,32 @@
 ## Base image for all the stages
 FROM node:20-alpine AS base
 
+ARG USE_CN_MIRROR
+
 RUN \
+    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
+    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
+        sed -i "s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g" "/etc/apk/repositories"; \
+    fi \
+    # Add required package & update base package
+    && apk update \
+    && apk add --no-cache bind-tools proxychains-ng \
+    && apk upgrade --no-cache \
     # Add user nextjs to run the app
-    addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs
+    && addgroup --system --gid 1001 nodejs \
+    && adduser --system --uid 1001 nextjs \
+    && chown -R nextjs:nodejs "/etc/proxychains" \
+    && rm -rf /tmp/* /var/cache/apk/*
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
 
-ARG USE_NPM_CN_MIRROR
+ARG USE_CN_MIRROR
 
-ENV KEY_VAULTS_SECRET="use-for-build" \
-  NEXT_PUBLIC_SERVICE_MODE="server" \
-  DATABASE_DRIVER="node" \
-  DATABASE_URL="postgres://postgres:password@localhost:5432/postgres"
+ENV NEXT_PUBLIC_SERVICE_MODE="server" \
+    DATABASE_DRIVER="node" \
+    DATABASE_URL="postgres://postgres:password@localhost:5432/postgres" \
+    KEY_VAULTS_SECRET="use-for-build"
 
 # Sentry
 ENV NEXT_PUBLIC_SENTRY_DSN="" \
@@ -40,8 +52,8 @@ COPY package.json ./
 COPY .npmrc ./
 
 RUN \
-    # If you want to build docker in China, build with --build-arg USE_NPM_CN_MIRROR=true
-    if [ "${USE_NPM_CN_MIRROR:-false}" = "true" ]; then \
+    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
+    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
         export SENTRYCLI_CDNURL="https://npmmirror.com/mirrors/sentry-cli"; \
         npm config set registry "https://registry.npmmirror.com/"; \
     fi \
@@ -94,26 +106,29 @@ ENV HOSTNAME="0.0.0.0" \
     PORT="3210"
 
 # General Variables
-ENV API_KEY_SELECT_MODE="" \
-    FEATURE_FLAGS=""
+ENV ACCESS_CODE="" \
+    API_KEY_SELECT_MODE="" \
+    DEFAULT_AGENT_CONFIG="" \
+    SYSTEM_AGENT="" \
+    FEATURE_FLAGS="" \
+    PROXY_URL=""
 
 # Database
 ENV KEY_VAULTS_SECRET="" \
-DATABASE_DRIVER="node" \
-DATABASE_URL=""
+    DATABASE_DRIVER="node" \
+    DATABASE_URL=""
 
 # Next Auth
 ENV NEXT_AUTH_SECRET="" \
-ACCESS_CODE="" \
-NEXTAUTH_URL="" \
-NEXT_AUTH_SSO_PROVIDERS=""
+    NEXT_AUTH_SSO_PROVIDERS="" \
+    NEXTAUTH_URL=""
 
 # S3
-ENV S3_ACCESS_KEY_ID="" \
-    S3_SECRET_ACCESS_KEY="" \
-    NEXT_PUBLIC_S3_DOMAIN="" \
+ENV NEXT_PUBLIC_S3_DOMAIN="" \
+    S3_ACCESS_KEY_ID="" \
+    S3_BUCKET="" \
     S3_ENDPOINT="" \
-    S3_BUCKET=""
+    S3_SECRET_ACCESS_KEY=""
 
 # Model Variables
 ENV \
@@ -166,5 +181,38 @@ USER nextjs
 
 EXPOSE 3210/tcp
 
-# run migration , then run app
-CMD ["sh", "-c", "node /app/docker.cjs && node /app/server.js"]
+CMD \
+    if [ -n "$PROXY_URL" ]; then \
+        # Set regex for IPv4
+        IP_REGEX="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$"; \
+        # Set proxychains command
+        PROXYCHAINS="proxychains -q"; \
+        # Parse the proxy URL
+        host_with_port="${PROXY_URL#*//}"; \
+        host="${host_with_port%%:*}"; \
+        port="${PROXY_URL##*:}"; \
+        protocol="${PROXY_URL%%://*}"; \
+        # Resolve to IP address if the host is a domain
+        if ! [[ "$host" =~ "$IP_REGEX" ]]; then \
+            nslookup=$(nslookup -q="A" "$host" | tail -n +3 | grep 'Address:'); \
+            if [ -n "$nslookup" ]; then \
+                host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
+            fi; \
+        fi; \
+        # Generate proxychains configuration file
+        printf "%s\n" \
+            'localnet 127.0.0.0/255.0.0.0' \
+            'localnet ::1/128' \
+            'proxy_dns' \
+            'remote_dns_subnet 224' \
+            'strict_chain' \
+            'tcp_connect_time_out 8000' \
+            'tcp_read_time_out 15000' \
+            '[ProxyList]' \
+            "$protocol $host $port" \
+        > "/etc/proxychains/proxychains.conf"; \
+    fi; \
+    # Run migration
+    node "/app/docker.cjs"; \
+    # Run the server
+    ${PROXYCHAINS} node "/app/server.js";
