@@ -155,7 +155,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { FIREWORKSAI_API_KEY, FIREWORKSAI_PROXY_URL } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || FIREWORKSAI_API_KEY);
-      const baseURL = payload?.endpoint || SILICONCLOUD_PROXY_URL;
+      const baseURL = payload?.endpoint || FIREWORKSAI_PROXY_URL;
 
       return { apiKey, baseURL };
     }
