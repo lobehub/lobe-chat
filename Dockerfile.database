@@ -106,7 +106,10 @@ ENV HOSTNAME="0.0.0.0" \
     PORT="3210"
 
 # General Variables
-ENV API_KEY_SELECT_MODE="" \
+ENV ACCESS_CODE="" \
+    API_KEY_SELECT_MODE="" \
+    DEFAULT_AGENT_CONFIG="" \
+    SYSTEM_AGENT="" \
     FEATURE_FLAGS="" \
     PROXY_URL=""
 
@@ -117,7 +120,6 @@ ENV KEY_VAULTS_SECRET="" \
 
 # Next Auth
 ENV NEXT_AUTH_SECRET="" \
-    ACCESS_CODE="" \
     NEXTAUTH_URL="" \
     NEXT_AUTH_SSO_PROVIDERS=""
 
