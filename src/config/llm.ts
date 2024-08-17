@@ -64,6 +64,7 @@ export const getLLMConfig = () => {
       ENABLED_FIREWORKSAI: z.boolean(),
       FIREWORKSAI_API_KEY: z.string().optional(),
       FIREWORKSAI_MODEL_LIST: z.string().optional(),
+      FIREWORKSAI_PROXY_URL: z.string().optional(),
       
       ENABLED_AWS_BEDROCK: z.boolean(),
       AWS_REGION: z.string().optional(),
@@ -144,6 +145,7 @@ export const getLLMConfig = () => {
       ENABLED_FIREWORKSAI: !!process.env.FIREWORKSAI_API_KEY,
       FIREWORKSAI_API_KEY: process.env.FIREWORKSAI_API_KEY,
       FIREWORKSAI_MODEL_LIST: process.env.FIREWORKSAI_MODEL_LIST,
+      FIREWORKSAI_PROXY_URL: process.env.FIREWORKSAI_PROXY_URL,
 
       ENABLED_MOONSHOT: !!process.env.MOONSHOT_API_KEY,
       MOONSHOT_API_KEY: process.env.MOONSHOT_API_KEY,

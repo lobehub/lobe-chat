@@ -90,6 +90,9 @@ const FireworksAI: ModelProviderCard = {
   id: 'fireworksai',
   modelList: { showModelFetcher: true },
   name: 'Fireworks AI',
+  proxyUrl: {
+    placeholder: 'https://api.fireworks.ai/inference/v1',
+  },
 };
 
 export default FireworksAI;
