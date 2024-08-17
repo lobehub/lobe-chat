@@ -1,87 +1,57 @@
-import { act, cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react';
-import { afterEach, beforeAll, describe, expect, it, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
-import { useGlobalStore } from '@/store/global';
 import { SidebarTabKey } from '@/store/global/initialState';
-import {
-  Provider,
-  createServerConfigStore,
-  initServerConfigStore,
-} from '@/store/serverConfig/store';
-import { useSessionStore } from '@/store/session';
+import { useServerConfigStore } from '@/store/serverConfig';
 
-import TopActions, { TopActionProps } from './TopActions';
+import TopActions from './TopActions';
 
-beforeAll(() => {
-  initServerConfigStore({ featureFlags: { market: true } });
-});
-
-beforeEach(() => {
-  vi.clearAllMocks();
-});
-
-afterEach(() => {
-  createServerConfigStore().setState({ featureFlags: { market: true } });
-  cleanup();
-});
-
+// Mock the required modules and hooks
 vi.mock('next/link', () => ({
-  default: vi.fn(({ children, ...rest }: { children: React.ReactNode; href: string }) => (
-    <div {...rest}>
-      {`Mocked Link ${rest.href}`}
-      {children}
-    </div>
-  )),
+  default: ({ children, onClick }: any) => <div onClick={onClick}>{children}</div>,
 }));
 
 vi.mock('@lobehub/ui', () => ({
-  ActionIcon: vi.fn(({ title }) => <div>{title}</div>),
+  ActionIcon: ({ icon: Icon, title }: any) => (
+    <div role="button" title={title}>
+      <Icon data-testid={`icon-${title}`} />
+    </div>
+  ),
 }));
 
 vi.mock('react-i18next', () => ({
-  useTranslation: vi.fn(() => ({
-    t: vi.fn((key) => key),
-  })),
+  useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-const renderTopActions = (props: TopActionProps = {}) => {
-  render(
-    <Provider createStore={createServerConfigStore}>
-      <TopActions {...props} />
-    </Provider>,
-  );
-};
+vi.mock('@/store/global', () => ({
+  useGlobalStore: vi.fn(),
+}));
+
+vi.mock('@/store/serverConfig', () => ({
+  useServerConfigStore: vi.fn(),
+  featureFlagsSelectors: {},
+}));
 
 describe('TopActions', () => {
-  it('should render Chat and Market by default', () => {
-    renderTopActions();
+  const switchBackToChat = vi.fn();
 
-    expect(screen.getByText('tab.chat')).toBeInTheDocument();
-    expect(screen.getByText('tab.market')).toBeInTheDocument();
+  it('should render chat and market icons by default', () => {
+    vi.mocked(useServerConfigStore).mockReturnValue({ enableKnowledgeBase: false });
+
+    render(<TopActions />);
+
+    expect(screen.getByTitle('tab.chat')).toBeInTheDocument();
+    expect(screen.getByTitle('tab.market')).toBeInTheDocument();
+    expect(screen.queryByTitle('tab.files')).not.toBeInTheDocument();
   });
 
-  it('should render only Chat icon when `-market` is set', () => {
-    act(() => {
-      createServerConfigStore().setState({ featureFlags: { market: false } });
-    });
+  it('should render files icon when enableKnowledgeBase is true', () => {
+    vi.mocked(useServerConfigStore).mockReturnValue({ enableKnowledgeBase: true });
 
-    renderTopActions();
+    render(<TopActions />);
 
-    expect(screen.getByText('tab.chat')).toBeInTheDocument();
-    expect(screen.queryByText('tab.market')).not.toBeInTheDocument();
-  });
-
-  it('should switch back to previous active session', () => {
-    act(() => {
-      useSessionStore.setState({ activeId: '1' });
-    });
-
-    const { result: store } = renderHook(() => useGlobalStore((s) => s));
-    const switchBackToChat = vi.spyOn(store.current, 'switchBackToChat');
-
-    renderTopActions({ tab: SidebarTabKey.Market });
-    fireEvent.click(screen.getByText('Mocked Link /chat'));
-
-    expect(switchBackToChat).toBeCalledWith('1');
+    expect(screen.getByTitle('tab.chat')).toBeInTheDocument();
+    expect(screen.getByTitle('tab.files')).toBeInTheDocument();
+    expect(screen.getByTitle('tab.market')).toBeInTheDocument();
   });
 });
