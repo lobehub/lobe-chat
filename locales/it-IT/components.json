@@ -5,6 +5,66 @@
     "dragFileTitle": "Carica file",
     "dragTitle": "Carica immagini"
   },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Aggiungi alla base di conoscenza",
+      "addToOtherKnowledgeBase": "Aggiungi a un'altra base di conoscenza",
+      "batchChunking": "Suddivisione in batch",
+      "chunking": "Suddivisione",
+      "chunkingTooltip": "Dividi il file in più blocchi di testo e vettorizzali, utilizzabili per la ricerca semantica e il dialogo sui file",
+      "confirmDelete": "Stai per eliminare questo file. Una volta eliminato, non sarà possibile recuperarlo. Ti preghiamo di confermare l'operazione.",
+      "confirmDeleteMultiFiles": "Stai per eliminare i {{count}} file selezionati. Una volta eliminati, non sarà possibile recuperarli. Ti preghiamo di confermare l'operazione.",
+      "confirmRemoveFromKnowledgeBase": "Stai per rimuovere i {{count}} file selezionati dalla base di conoscenza. I file rimarranno visibili in tutti i file. Ti preghiamo di confermare l'operazione.",
+      "copyUrl": "Copia link",
+      "copyUrlSuccess": "Indirizzo del file copiato con successo",
+      "createChunkingTask": "Preparazione in corso...",
+      "deleteSuccess": "File eliminato con successo",
+      "downloading": "Download del file in corso...",
+      "removeFromKnowledgeBase": "Rimuovi dalla base di conoscenza",
+      "removeFromKnowledgeBaseSuccess": "File rimosso con successo"
+    },
+    "bottom": "Hai raggiunto il fondo",
+    "config": {
+      "showFilesInKnowledgeBase": "Mostra contenuti nella base di conoscenza"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Carica file",
+        "folder": "Carica cartella",
+        "knowledgeBase": "Crea nuova base di conoscenza"
+      },
+      "or": "oppure",
+      "title": "Trascina qui file o cartelle"
+    },
+    "title": {
+      "createdAt": "Data di creazione",
+      "size": "Dimensione",
+      "title": "File"
+    },
+    "total": {
+      "fileCount": "Totale {{count}} elementi",
+      "selectedCount": "Selezionati {{count}} elementi"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "I blocchi di testo non sono stati completamente vettorizzati, il che comporterà l'impossibilità di utilizzare la funzione di ricerca semantica. Per migliorare la qualità della ricerca, si prega di vettorizzare i blocchi di testo.",
+        "processing": "I blocchi di testo sono in fase di vettorizzazione, ti preghiamo di attendere",
+        "success": "Attualmente tutti i blocchi di testo sono stati vettorizzati"
+      },
+      "embeddings": "Vettorizzazione",
+      "status": {
+        "error": "Suddivisione fallita",
+        "errorResult": "Suddivisione fallita, controlla e riprova. Motivo del fallimento:",
+        "processing": "In fase di suddivisione",
+        "processingTip": "Il server sta suddividendo i blocchi di testo, chiudere la pagina non influisce sul progresso della suddivisione"
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Indietro"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modello personalizzato: di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Verifica l'effettiva disponibilità di tali funzionalità.",

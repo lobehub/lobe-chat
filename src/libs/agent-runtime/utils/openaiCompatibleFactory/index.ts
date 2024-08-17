@@ -6,7 +6,14 @@ import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
-import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
+import {
+  ChatCompetitionOptions,
+  ChatCompletionErrorPayload,
+  ChatStreamPayload,
+  EmbeddingItem,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
+} from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
@@ -154,7 +161,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         const response = await this.client.chat.completions.create(
           {
             ...postPayload,
-            ...(chatCompletion?.noUserId ? {} : { user: options?.user }) 
+            ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
           },
           {
             // https://github.com/lobehub/lobe-chat/pull/318
@@ -213,6 +220,22 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         })
 
         .filter(Boolean) as ChatModelCard[];
+    }
+
+    async embeddings(
+      payload: EmbeddingsPayload,
+      options?: EmbeddingsOptions,
+    ): Promise<EmbeddingItem[]> {
+      try {
+        const res = await this.client.embeddings.create(
+          { ...payload, user: options?.user },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        return res.data;
+      } catch (error) {
+        throw this.handleError(error);
+      }
     }
 
     async textToImage(payload: TextToImagePayload) {
