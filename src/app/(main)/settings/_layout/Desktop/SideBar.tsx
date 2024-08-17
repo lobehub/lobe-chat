@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import BrandWatermark from '@/components/BrandWatermark';
+import PanelTitle from '@/components/PanelTitle';
 
 const useStyles = createStyles(({ token, css }) => ({
   container: css`
@@ -12,23 +13,6 @@ const useStyles = createStyles(({ token, css }) => ({
     padding-inline: 12px;
     background: ${token.colorBgContainer};
     border-inline-end: 1px solid ${token.colorBorder};
-  `,
-  desc: css`
-    line-height: 1.4;
-    color: ${token.colorTextDescription};
-  `,
-  header: css`
-    padding-block: 0;
-    padding-inline: 0.75rem;
-  `,
-  logo: css`
-    fill: ${token.colorText};
-  `,
-  title: css`
-    margin: 0;
-    font-size: 26px;
-    font-weight: 600;
-    line-height: 1.3;
   `,
 }));
 
@@ -48,10 +32,7 @@ const SidebarLayout = ({ children, className, title, desc, ...rest }: SidebarLay
       width={280}
       {...rest}
     >
-      <Flexbox className={styles.header} gap={4}>
-        <h1 className={styles.title}>{title || t('header.title')}</h1>
-        <p className={styles.desc}>{desc || t('header.desc')}</p>
-      </Flexbox>
+      <PanelTitle desc={desc || t('header.desc')} title={title || t('header.title')} />
       {children}
       <BrandWatermark paddingInline={12} />
     </Flexbox>
