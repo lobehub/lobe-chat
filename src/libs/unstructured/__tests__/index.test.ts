@@ -133,5 +133,33 @@ describe('Unstructured', () => {
       expect(result.originElements).toEqual(AutoWithChunkingOutput.originElements);
       expect(result.originElements).toEqual(AutoWithChunkingOutput.originElements);
     });
+
+    it.skip('should error', async () => {
+      vi.spyOn(UnstructuredClient.prototype.general, 'partition').mockResolvedValue(
+        mockPartitionResponse([
+          {
+            type: 'CompositeElement',
+            element_id: '32855cf6-5605-4a8e-97a3-3ac0b509b725',
+            text: 'abc',
+            metadata: {
+              filetype: 'application/pdf',
+              languages: ['eng'],
+              page_number: 1,
+              orig_elements: 'e==',
+              filename: 'table-parse.pdf',
+            },
+          },
+        ]),
+      );
+      try {
+        await client.partition({
+          fileContent: new Uint8Array(),
+          filename: 'test.txt',
+          chunkingStrategy: ChunkingStrategy.Basic,
+        });
+      } catch (e) {
+        expect(e).toThrowError('unexpected end of file');
+      }
+    });
   });
 });
