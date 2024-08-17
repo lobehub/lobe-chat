@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { createDevtools } from '../middleware/createDevtools';
 import { FilesStoreState, initialState } from './initialState';
-import { FileAction, createFileSlice } from './slices/images';
+import { FileAction, createFileSlice } from './slices/chat';
 import { TTSFileAction, createTTSFileSlice } from './slices/tts';
 
 //  ===============  聚合 createStoreFn ============ //
