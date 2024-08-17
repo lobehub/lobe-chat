@@ -1,9 +1,9 @@
-import { FetchEventSourceInit } from '@microsoft/fetch-event-source';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ZodError } from 'zod';
 
 import { ErrorResponse } from '@/types/fetch';
 
+import { FetchEventSourceInit } from './fetchEventSource';
 import { fetchEventSource } from './fetchEventSource';
 import { fetchSSE, getMessageError, parseToolCalls } from './index';
 
