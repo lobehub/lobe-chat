@@ -71,6 +71,17 @@ describe('TopActions', () => {
     expect(screen.queryByText('tab.market')).not.toBeInTheDocument();
   });
 
+  it('should render File icon when `-knowledge_base` is set', () => {
+    act(() => {
+      createServerConfigStore().setState({ featureFlags: { knowledge_base: false } });
+    });
+
+    renderTopActions();
+
+    expect(screen.getByText('tab.chat')).toBeInTheDocument();
+    expect(screen.queryByText('tab.files')).not.toBeInTheDocument();
+  });
+
   it('should switch back to previous active session', () => {
     act(() => {
       useSessionStore.setState({ activeId: '1' });
