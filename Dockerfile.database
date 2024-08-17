@@ -213,6 +213,6 @@ CMD \
         > "/etc/proxychains/proxychains.conf"; \
     fi; \
     # Run migration
-    node "/app/docker.cjs";
+    node "/app/docker.cjs"; \
     # Run the server
     ${PROXYCHAINS} node "/app/server.js";
