@@ -5,6 +5,66 @@
     "dragFileTitle": "Dateien hochladen",
     "dragTitle": "Bilder hochladen"
   },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Zur Wissensdatenbank hinzufügen",
+      "addToOtherKnowledgeBase": "Zur anderen Wissensdatenbank hinzufügen",
+      "batchChunking": "Batch-Zerteilung",
+      "chunking": "Zerteilung",
+      "chunkingTooltip": "Teilen Sie die Datei in mehrere Textblöcke und vektorisieren Sie sie, um sie für die semantische Suche und Dateidialoge zu verwenden.",
+      "confirmDelete": "Die Datei wird gelöscht. Nach dem Löschen kann sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
+      "confirmDeleteMultiFiles": "Die ausgewählten {{count}} Dateien werden gelöscht. Nach dem Löschen können sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
+      "confirmRemoveFromKnowledgeBase": "Die ausgewählten {{count}} Dateien werden aus der Wissensdatenbank entfernt. Die Dateien sind weiterhin in allen Dateien sichtbar. Bitte bestätigen Sie Ihre Aktion.",
+      "copyUrl": "Link kopieren",
+      "copyUrlSuccess": "Dateiadresse erfolgreich kopiert",
+      "createChunkingTask": "Wird vorbereitet...",
+      "deleteSuccess": "Datei erfolgreich gelöscht",
+      "downloading": "Datei wird heruntergeladen...",
+      "removeFromKnowledgeBase": "Aus der Wissensdatenbank entfernen",
+      "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt"
+    },
+    "bottom": "Das Ende ist erreicht",
+    "config": {
+      "showFilesInKnowledgeBase": "In der Wissensdatenbank angezeigte Inhalte"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Datei hochladen",
+        "folder": "Ordner hochladen",
+        "knowledgeBase": "Neue Wissensdatenbank erstellen"
+      },
+      "or": "oder",
+      "title": "Ziehen Sie Dateien oder Ordner hierher"
+    },
+    "title": {
+      "createdAt": "Erstellungsdatum",
+      "size": "Größe",
+      "title": "Datei"
+    },
+    "total": {
+      "fileCount": "Insgesamt {{count}} Elemente",
+      "selectedCount": "Ausgewählt {{count}} Elemente"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Textblöcke sind noch nicht vollständig vektorisiert, was die Funktion der semantischen Suche beeinträchtigen kann. Um die Suchqualität zu verbessern, vektorisieren Sie die Textblöcke.",
+        "processing": "Textblöcke werden vektorisiert, bitte haben Sie Geduld.",
+        "success": "Alle aktuellen Textblöcke sind vektorisiert."
+      },
+      "embeddings": "Vektorisierung",
+      "status": {
+        "error": "Zerteilung fehlgeschlagen",
+        "errorResult": "Zerteilung fehlgeschlagen, bitte überprüfen Sie und versuchen Sie es erneut. Grund für das Scheitern:",
+        "processing": "Zerteilung läuft",
+        "processingTip": "Der Server zerteilt die Textblöcke. Das Schließen der Seite hat keinen Einfluss auf den Zerteilungsfortschritt."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Zurück"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Benutzerdefiniertes Modell, standardmäßig unterstützt es sowohl Funktionsaufrufe als auch visuelle Erkennung. Bitte überprüfen Sie die Verfügbarkeit dieser Fähigkeiten basierend auf den tatsächlichen Gegebenheiten.",

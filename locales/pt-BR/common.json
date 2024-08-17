@@ -13,6 +13,7 @@
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
   "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
+  "batchDelete": "Excluir em massa",
   "blog": "Blog de Produtos",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
@@ -31,6 +32,7 @@
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
   "document": "Documento de Uso",
+  "download": "Baixar",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuração",
@@ -192,6 +194,7 @@
   },
   "tab": {
     "chat": "Chat",
+    "files": "Arquivos",
     "market": "Descobrir",
     "me": "eu",
     "setting": "Configuração"
