@@ -13,6 +13,7 @@
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "batchDelete": "Batch Delete",
   "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
@@ -31,6 +32,7 @@
   "defaultSession": "Default Assistant",
   "delete": "Delete",
   "document": "User Manual",
+  "download": "Download",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
@@ -192,6 +194,7 @@
   },
   "tab": {
     "chat": "Chat",
+    "files": "Files",
     "market": "Discover",
     "me": "Me",
     "setting": "Settings"
