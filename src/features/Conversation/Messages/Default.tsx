@@ -1,9 +1,8 @@
 import { ReactNode, memo } from 'react';
 
+import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
 import { ChatMessage } from '@/types/message';
-
-import BubblesLoading from '@/components/BubblesLoading';
 
 export const DefaultMessage = memo<
   ChatMessage & {
