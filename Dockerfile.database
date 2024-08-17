@@ -10,11 +10,12 @@ RUN \
     fi \
     # Add required package & update base package
     && apk update \
-    && apk add --no-cache bind-tools \
+    && apk add --no-cache bind-tools proxychains-ng \
     && apk upgrade --no-cache \
     # Add user nextjs to run the app
     && addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs \
+    && chown -R nextjs:nodejs "/etc/proxychains" \
     && rm -rf /tmp/* /var/cache/apk/*
 
 ## Builder image, install all the dependencies and build the app
@@ -110,14 +111,14 @@ ENV API_KEY_SELECT_MODE="" \
 
 # Database
 ENV KEY_VAULTS_SECRET="" \
-DATABASE_DRIVER="node" \
-DATABASE_URL=""
+    DATABASE_DRIVER="node" \
+    DATABASE_URL=""
 
 # Next Auth
 ENV NEXT_AUTH_SECRET="" \
-ACCESS_CODE="" \
-NEXTAUTH_URL="" \
-NEXT_AUTH_SSO_PROVIDERS=""
+    ACCESS_CODE="" \
+    NEXTAUTH_URL="" \
+    NEXT_AUTH_SSO_PROVIDERS=""
 
 # S3
 ENV S3_ACCESS_KEY_ID="" \
@@ -177,5 +178,38 @@ USER nextjs
 
 EXPOSE 3210/tcp
 
-# run migration , then run app
-CMD ["sh", "-c", "node /app/docker.cjs && node /app/server.js"]
+CMD \
+    if [ -n "$PROXY_URL" ]; then \
+        # Set regex for IPv4
+        IP_REGEX="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$"; \
+        # Set proxychains command
+        PROXYCHAINS="proxychains -q"; \
+        # Parse the proxy URL
+        host_with_port="${PROXY_URL#*//}"; \
+        host="${host_with_port%%:*}"; \
+        port="${PROXY_URL##*:}"; \
+        protocol="${PROXY_URL%%://*}"; \
+        # Resolve to IP address if the host is a domain
+        if ! [[ "$host" =~ "$IP_REGEX" ]]; then \
+            nslookup=$(nslookup -q="A" "$host" | tail -n +3 | grep 'Address:'); \
+            if [ -n "$nslookup" ]; then \
+                host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
+            fi; \
+        fi; \
+        # Generate proxychains configuration file
+        printf "%s\n" \
+            'localnet 127.0.0.0/255.0.0.0' \
+            'localnet ::1/128' \
+            'proxy_dns' \
+            'remote_dns_subnet 224' \
+            'strict_chain' \
+            'tcp_connect_time_out 8000' \
+            'tcp_read_time_out 15000' \
+            '[ProxyList]' \
+            "$protocol $host $port" \
+        > "/etc/proxychains/proxychains.conf"; \
+    fi; \
+    # Run migration
+    node "/app/docker.cjs";
+    # Run the server
+    ${PROXYCHAINS} node "/app/server.js";
