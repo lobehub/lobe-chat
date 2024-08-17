@@ -23,10 +23,10 @@ FROM base AS builder
 
 ARG USE_CN_MIRROR
 
-ENV KEY_VAULTS_SECRET="use-for-build" \
-  NEXT_PUBLIC_SERVICE_MODE="server" \
-  DATABASE_DRIVER="node" \
-  DATABASE_URL="postgres://postgres:password@localhost:5432/postgres"
+ENV NEXT_PUBLIC_SERVICE_MODE="server" \
+    DATABASE_DRIVER="node" \
+    DATABASE_URL="postgres://postgres:password@localhost:5432/postgres" \
+    KEY_VAULTS_SECRET="use-for-build"
 
 # Sentry
 ENV NEXT_PUBLIC_SENTRY_DSN="" \
