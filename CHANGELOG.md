@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 1.11.3](https://github.com/lobehub/lobe-chat/compare/v1.11.2...v1.11.3)
+
+<sup>Released on **2024-08-17**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor PanelTitle and move commit from file uploading.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor PanelTitle and move commit from file uploading, closes [#3491](https://github.com/lobehub/lobe-chat/issues/3491) ([d03d9f6](https://github.com/lobehub/lobe-chat/commit/d03d9f6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.11.2](https://github.com/lobehub/lobe-chat/compare/v1.11.1...v1.11.2)
+
+<sup>Released on **2024-08-17**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.11.1](https://github.com/lobehub/lobe-chat/compare/v1.11.0...v1.11.1)
 
 <sup>Released on **2024-08-15**</sup>
