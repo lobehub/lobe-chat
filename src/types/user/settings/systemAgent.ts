@@ -5,6 +5,7 @@ export interface SystemAgentItem {
 
 export interface UserSystemAgentConfig {
   agentMeta: SystemAgentItem;
+  queryRewrite: SystemAgentItem;
   topic: SystemAgentItem;
   translation: SystemAgentItem;
 }
