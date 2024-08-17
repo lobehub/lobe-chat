@@ -107,7 +107,8 @@ ENV HOSTNAME="0.0.0.0" \
 
 # General Variables
 ENV API_KEY_SELECT_MODE="" \
-    FEATURE_FLAGS=""
+    FEATURE_FLAGS="" \
+    PROXY_URL=""
 
 # Database
 ENV KEY_VAULTS_SECRET="" \
