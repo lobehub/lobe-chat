@@ -5,6 +5,66 @@
     "dragFileTitle": "파일 업로드",
     "dragTitle": "이미지 업로드"
   },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "지식 베이스에 추가",
+      "addToOtherKnowledgeBase": "다른 지식 베이스에 추가",
+      "batchChunking": "배치 청크 분할",
+      "chunking": "청크 분할",
+      "chunkingTooltip": "파일을 여러 텍스트 블록으로 분할하고 벡터화한 후, 의미 검색 및 파일 대화에 사용할 수 있습니다.",
+      "confirmDelete": "해당 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
+      "confirmDeleteMultiFiles": "선택한 {{count}} 개 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
+      "confirmRemoveFromKnowledgeBase": "선택한 {{count}} 개 파일을 지식 베이스에서 제거하려고 합니다. 제거 후에도 파일은 모든 파일에서 볼 수 있으니, 작업을 확인해 주세요.",
+      "copyUrl": "링크 복사",
+      "copyUrlSuccess": "파일 주소가 성공적으로 복사되었습니다.",
+      "createChunkingTask": "준비 중...",
+      "deleteSuccess": "파일이 성공적으로 삭제되었습니다.",
+      "downloading": "파일 다운로드 중...",
+      "removeFromKnowledgeBase": "지식 베이스에서 제거",
+      "removeFromKnowledgeBaseSuccess": "파일이 성공적으로 제거되었습니다."
+    },
+    "bottom": "끝까지 도달했습니다.",
+    "config": {
+      "showFilesInKnowledgeBase": "지식 베이스의 내용 표시"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "파일 업로드",
+        "folder": "폴더 업로드",
+        "knowledgeBase": "새 지식 베이스 만들기"
+      },
+      "or": "또는",
+      "title": "파일 또는 폴더를 여기에 드래그하세요."
+    },
+    "title": {
+      "createdAt": "생성 시간",
+      "size": "크기",
+      "title": "파일"
+    },
+    "total": {
+      "fileCount": "총 {{count}} 항목",
+      "selectedCount": "선택된 {{count}} 항목"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "텍스트 블록이 완전히 벡터화되지 않았습니다. 이는 의미 검색 기능을 사용할 수 없게 만듭니다. 검색 품질을 향상시키기 위해 텍스트 블록을 벡터화해 주세요.",
+        "processing": "텍스트 블록이 벡터화되고 있습니다. 잠시 기다려 주세요.",
+        "success": "현재 텍스트 블록이 모두 벡터화되었습니다."
+      },
+      "embeddings": "벡터화",
+      "status": {
+        "error": "청크 분할 실패",
+        "errorResult": "청크 분할에 실패했습니다. 다시 시도하기 전에 확인해 주세요. 실패 원인:",
+        "processing": "청크 분할 중",
+        "processingTip": "서버에서 텍스트 블록을 분할하고 있습니다. 페이지를 닫아도 분할 진행에는 영향을 미치지 않습니다."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "뒤로 가기"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "사용자 정의 모델, 기본적으로 함수 호출 및 시각 인식을 모두 지원하며, 실제 기능을 확인하세요",

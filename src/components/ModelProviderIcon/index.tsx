@@ -18,6 +18,7 @@ import {
   OpenAI,
   OpenRouter,
   Perplexity,
+  SiliconCloud,
   Stepfun,
   Together,
   Tongyi,
@@ -137,6 +138,10 @@ const ModelProviderIcon = memo<ModelProviderIconProps>(({ provider }) => {
 
     case ModelProvider.Ai360: {
       return <Ai360 size={20} />;
+    }
+
+    case ModelProvider.SiliconCloud: {
+      return <SiliconCloud size={20} />;
     }
 
     default: {

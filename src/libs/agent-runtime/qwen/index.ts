@@ -3,7 +3,7 @@ import OpenAI, { ClientOptions } from 'openai';
 
 import Qwen from '@/config/modelProviders/qwen';
 
-import { LobeOpenAICompatibleRuntime, LobeRuntimeAI } from '../BaseAI';
+import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
@@ -23,7 +23,7 @@ const DEFAULT_BASE_URL = 'https://dashscope.aliyuncs.com/compatible-mode/v1';
  * or
  * 2. Set S3-* enviroment variables properly to store all uploaded files.
  */
-export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRuntimeAI {
+export class LobeQwenAI implements LobeRuntimeAI {
   client: OpenAI;
   baseURL: string;
 
@@ -32,7 +32,6 @@ export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRunti
     baseURL = DEFAULT_BASE_URL,
     ...res
   }: ClientOptions & Record<string, any> = {}) {
-    super();
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
     this.client = new OpenAI({ apiKey, baseURL, ...res });
     this.baseURL = this.client.baseURL;
@@ -108,7 +107,7 @@ export class LobeQwenAI extends LobeOpenAICompatibleRuntime implements LobeRunti
       ...payload,
       messages,
       result_format: 'message',
-      stream: !!tools?.length ? false : stream ?? true,
+      stream: !!tools?.length ? false : (stream ?? true),
       top_p: top_p && top_p >= 1 ? 0.999 : top_p,
     };
 
