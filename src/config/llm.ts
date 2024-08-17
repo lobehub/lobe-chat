@@ -91,6 +91,7 @@ export const getLLMConfig = () => {
       ENABLED_SILICONCLOUD: z.boolean(),
       SILICONCLOUD_API_KEY: z.string().optional(),
       SILICONCLOUD_MODEL_LIST: z.string().optional(),
+      SILICONCLOUD_PROXY_URL: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -179,6 +180,7 @@ export const getLLMConfig = () => {
       ENABLED_SILICONCLOUD: !!process.env.SILICONCLOUD_API_KEY,
       SILICONCLOUD_API_KEY: process.env.SILICONCLOUD_API_KEY,
       SILICONCLOUD_MODEL_LIST: process.env.SILICONCLOUD_MODEL_LIST,
+      SILICONCLOUD_PROXY_URL: process.env.SILICONCLOUD_PROXY_URL,
     },
   });
 };
