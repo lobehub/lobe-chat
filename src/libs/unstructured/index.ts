@@ -1,4 +1,5 @@
 import zlib from 'node:zlib';
+import pMap from 'p-map';
 import { UnstructuredClient } from 'unstructured-client';
 import { Strategy } from 'unstructured-client/sdk/models/shared';
 import { PartitionResponse } from 'unstructured-client/src/sdk/models/operations';
@@ -102,44 +103,39 @@ export class Unstructured {
       let compositeElements: UnstructuredPartitionElement[] = [];
 
       if (hasChunkingStrategy) {
-        await Promise.all(
-          elements
-            // .filter((c) => c.type === 'CompositeElement')
-            .map(async (element) => {
-              // Your Base64 encoded string
-              const base64EncodedString = element.metadata.orig_elements as string;
-              delete element.metadata.orig_elements;
+        await pMap(elements, async (element) => {
+          // Your Base64 encoded string
+          const base64EncodedString = element.metadata.orig_elements as string;
+          delete element.metadata.orig_elements;
 
-              if (!base64EncodedString) return;
+          if (!base64EncodedString) return;
 
-              // Step 1: Decode the Base64 encoded string to binary
-              const binaryBuffer = Buffer.from(base64EncodedString, 'base64');
+          // Step 1: Decode the Base64 encoded string to binary
+          const binaryBuffer = Buffer.from(base64EncodedString, 'base64');
 
-              // Step 2: Decompress the binary data
-              const elements = await this.decompressGzip(binaryBuffer);
+          // Step 2: Decompress the binary data
+          const elements = await this.decompressGzip(binaryBuffer);
 
-              // if element is Table type then get the origin
-              if (element.type === 'Table') {
-                // skip continuation table due to being split by chunk strategy
-                if (element.metadata.is_continuation) {
-                  return;
-                }
+          // if element is Table type then get the origin
+          if (element.type === 'Table') {
+            // skip continuation table due to being split by chunk strategy
+            if (element.metadata.is_continuation) {
+              return;
+            }
 
-                compositeElements = [...compositeElements, elements[0]];
-                originElements = [...originElements, elements[0]];
-                return;
-              }
+            compositeElements = [...compositeElements, elements[0]];
+            originElements = [...originElements, elements[0]];
+            return;
+          }
 
-              compositeElements = [...compositeElements, element];
+          compositeElements = [...compositeElements, element];
 
-              originElements = originElements.concat(
-                elements.map(
-                  (e) =>
-                    ({ ...e, compositeId: element.element_id }) as UnstructuredPartitionElement,
-                ),
-              );
-            }),
-        );
+          originElements = originElements.concat(
+            elements.map(
+              (e) => ({ ...e, compositeId: element.element_id }) as UnstructuredPartitionElement,
+            ),
+          );
+        });
       } else {
         originElements = elements;
       }
