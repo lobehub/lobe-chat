@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
+import { ChatMessageError } from '@/types/message';
 
 import { FetchEventSourceInit } from '../fetchEventSource';
 import { fetchEventSource } from '../fetchEventSource';
@@ -312,9 +313,13 @@ describe('fetchSSE', () => {
   });
 
   describe('onErrorHandle', () => {
-    it('should call onErrorHandle when other error is thrown', async () => {
+    it('should call onErrorHandle when Chat Message error is thrown', async () => {
       const mockOnErrorHandle = vi.fn();
-      const mockError = new Error('Unknown error');
+      const mockError: ChatMessageError = {
+        body: {},
+        message: 'StreamChunkError',
+        type: 'StreamChunkError',
+      };
 
       (fetchEventSource as any).mockImplementationOnce(
         (url: string, options: FetchEventSourceInit) => {
@@ -326,10 +331,10 @@ describe('fetchSSE', () => {
         await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
       } catch (e) {}
 
-      expect(mockOnErrorHandle).toHaveBeenCalled();
+      expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError);
     });
 
-    it('should call onErrorHandle when no error is thrown', async () => {
+    it('should call onErrorHandle when Unknown error is thrown', async () => {
       const mockOnErrorHandle = vi.fn();
       const mockError = new Error('Unknown error');
 
