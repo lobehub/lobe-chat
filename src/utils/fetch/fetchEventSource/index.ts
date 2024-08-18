@@ -106,6 +106,7 @@ export function fetchEventSource(
         resolve();
       } catch (err) {
         onerror?.(err);
+        resolve();
       }
     }
 
