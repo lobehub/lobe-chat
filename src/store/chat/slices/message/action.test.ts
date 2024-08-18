@@ -14,6 +14,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { sessionMetaSelectors } from '@/store/session/selectors';
+import { UploadFileItem } from '@/types/files/upload';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
@@ -426,7 +427,7 @@ describe('chatMessage actions', () => {
     it('should create message and call internal_coreProcessMessage if message or files are provided', async () => {
       const { result } = renderHook(() => useChatStore());
       const message = 'Test message';
-      const files = [{ id: 'file-id', url: 'file-url' }];
+      const files = [{ id: 'file-id' } as UploadFileItem];
 
       // Mock messageService.create to resolve with a message id
       (messageService.createMessage as Mock).mockResolvedValue('new-message-id');

@@ -6,10 +6,16 @@ const showPortal = (s: ChatStoreState) => s.showPortal;
 const isArtifactMessageUIOpen = (id: string) => (s: ChatStoreState) =>
   artifactMessageId(s) === id && showPortal(s);
 
+const showArtifactUI = (s: ChatStoreState) => !!s.portalToolMessage;
+const showFilePreview = (s: ChatStoreState) => !!s.portalFile;
+const previewFileId = (s: ChatStoreState) => s.portalFile?.fileId;
+
 export const chatPortalSelectors = {
   artifactMessageId,
   isArtifactMessageUIOpen,
-  showArtifactUI: (state: ChatStoreState) => !!state.portalToolMessage,
+  previewFileId,
+  showArtifactUI,
+  showFilePreview,
   showPortal,
-  toolUIIdentifier: (state: ChatStoreState) => state.portalToolMessage?.identifier,
+  toolUIIdentifier: (s: ChatStoreState) => s.portalToolMessage?.identifier,
 };

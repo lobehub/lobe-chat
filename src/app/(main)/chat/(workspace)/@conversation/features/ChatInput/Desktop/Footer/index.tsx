@@ -11,13 +11,13 @@ import StopLoadingIcon from '@/components/StopLoading';
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
-import { filesSelectors, useFileStore } from '@/store/file';
+import { chatSelectors } from '@/store/chat/selectors';
+import { fileChatSelectors, useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { isMacOS } from '@/utils/platform';
 
-import LocalFiles from '../LocalFiles';
+import LocalFiles from '../FilePreview';
 import SendMore from './SendMore';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => {
@@ -57,21 +57,13 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
 
   const { theme, styles } = useStyles();
 
-  const [
-    isAIGenerating,
-    isHasMessageLoading,
-    isCreatingMessage,
-    isCreatingTopic,
-    stopGenerateMessage,
-  ] = useChatStore((s) => [
+  const [isAIGenerating, isSendButtonDisabledByMessage, stopGenerateMessage] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
-    chatSelectors.isHasMessageLoading(s),
-    chatSelectors.isCreatingMessage(s),
-    topicSelectors.isCreatingTopic(s),
+    chatSelectors.isSendButtonDisabledByMessage(s),
     s.stopGenerateMessage,
   ]);
 
-  const isImageUploading = useFileStore(filesSelectors.isImageUploading);
+  const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
 
   const [useCmdEnterToSend] = useUserStore((s) => [preferenceSelectors.useCmdEnterToSend(s)]);
 
@@ -105,8 +97,7 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
 
   const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
 
-  const buttonDisabled =
-    isImageUploading || isHasMessageLoading || isCreatingTopic || isCreatingMessage;
+  const buttonDisabled = isUploadingFiles || isSendButtonDisabledByMessage;
 
   return (
     <Flexbox

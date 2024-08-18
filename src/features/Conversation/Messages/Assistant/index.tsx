@@ -7,13 +7,14 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { DefaultMessage } from '../Default';
+import FileChunks from './FileChunks';
 import ToolCall from './ToolCallItem';
 
 export const AssistantMessage = memo<
   ChatMessage & {
     editableContent: ReactNode;
   }
->(({ id, tools, content, ...props }) => {
+>(({ id, tools, content, chunksList, ...props }) => {
   const editing = useChatStore(chatSelectors.isMessageEditing(id));
   const generating = useChatStore(chatSelectors.isMessageGenerating(id));
 
@@ -21,6 +22,7 @@ export const AssistantMessage = memo<
 
   return (
     <Flexbox gap={8} id={id}>
+      {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
       {(content || editing) && (
         <DefaultMessage
           addIdOnDOM={false}

@@ -13,13 +13,22 @@ export class TemplateModel {
   }
 
   create = async (params: NewSessionGroup) => {
-    return serverDB.insert(sessionGroups).values({ ...params, userId: this.userId });
+    const [result] = await serverDB
+      .insert(sessionGroups)
+      .values({ ...params, userId: this.userId })
+      .returning();
+
+    return result;
   };
 
   delete = async (id: string) => {
     return serverDB
       .delete(sessionGroups)
       .where(and(eq(sessionGroups.id, id), eq(sessionGroups.userId, this.userId)));
+  };
+
+  deleteAll = async () => {
+    return serverDB.delete(sessionGroups).where(eq(sessionGroups.userId, this.userId));
   };
 
   query = async () => {

@@ -21,7 +21,7 @@ describe('featureFlagsSelectors', () => {
       isAgentEditable: false,
       showCreateSession: true,
       showDalle: true,
-      enableKnowledgeBase: false,
+      enableKnowledgeBase: true,
       showLLM: false,
       showCloudPromotion: false,
       showOpenAIApiKey: true,

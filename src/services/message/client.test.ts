@@ -127,7 +127,7 @@ describe('MessageClientService', () => {
 
       // Assert
       expect(MessageModel.query).toHaveBeenCalledWith({ sessionId, topicId });
-      expect(messages).toBe(mockMessages);
+      expect(messages).toEqual(mockMessages.map((i) => ({ ...i, imageList: [] })));
     });
   });
 

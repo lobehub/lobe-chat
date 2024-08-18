@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { FileItem } from '@/types/files';
+import { KnowledgeBaseItem } from '@/types/knowledgeBase';
 import { FewShots, LLMParams } from '@/types/llm';
 
 export type TTSServer = 'openai' | 'edge' | 'microsoft';
@@ -18,6 +20,12 @@ export interface LobeAgentTTSConfig {
 export interface LobeAgentConfig {
   chatConfig: LobeAgentChatConfig;
   fewShots?: FewShots;
+  files?: FileItem[];
+  id?: string;
+  /**
+   * knowledge bases
+   */
+  knowledgeBases?: KnowledgeBaseItem[];
   /**
    * 角色所使用的语言模型
    * @default gpt-4o-mini
@@ -39,6 +47,7 @@ export interface LobeAgentConfig {
    * 系统角色
    */
   systemRole: string;
+
   /**
    * 语音服务
    */

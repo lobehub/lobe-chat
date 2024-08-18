@@ -24,6 +24,7 @@ const links = [
 
       return response;
     },
+    maxURLLength: 2083,
     transformer: superjson,
     url: '/trpc/lambda',
   }),
