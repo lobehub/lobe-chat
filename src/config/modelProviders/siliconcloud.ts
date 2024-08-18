@@ -122,6 +122,9 @@ const SiliconCloud: ModelProviderCard = {
   id: 'siliconcloud',
   modelList: { showModelFetcher: true },
   name: 'SiliconCloud',
+  proxyUrl: {
+    placeholder: 'https://api.siliconflow.cn/v1',
+  },
 };
 
 export default SiliconCloud;
