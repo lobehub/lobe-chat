@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import ArtifactList from './ArtifactList';
 
-export const Files = memo(() => {
+export const Artifacts = memo(() => {
   const { t } = useTranslation('portal');
 
   return (
@@ -18,4 +18,4 @@ export const Files = memo(() => {
   );
 });
 
-export default Files;
+export default Artifacts;
