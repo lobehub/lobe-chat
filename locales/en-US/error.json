@@ -79,7 +79,9 @@
     "PluginServerError": "Plugin server request returned an error. Please check your plugin manifest file, plugin configuration, or server implementation based on the error information below",
     "PluginSettingsInvalid": "This plugin needs to be correctly configured before it can be used. Please check if your configuration is correct",
     "ProviderBizError": "Error requesting {{provider}} service, please troubleshoot or retry based on the following information",
-    "SubscriptionPlanLimit": "Your subscription limit has been reached, and you cannot use this feature. Please upgrade to a higher plan or purchase a resource pack to continue using it."
+    "StreamChunkError": "Error parsing the message chunk of the streaming request. Please check if the current API interface complies with the standard specifications, or contact your API provider for assistance.",
+    "SubscriptionPlanLimit": "Your subscription limit has been reached, and you cannot use this feature. Please upgrade to a higher plan or purchase a resource pack to continue using it.",
+    "UnknownChatFetchError": "Sorry, an unknown request error occurred. Please check the information below or try again."
   },
   "stt": {
     "responseError": "Service request failed, please check the configuration or try again"

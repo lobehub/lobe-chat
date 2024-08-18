@@ -28,6 +28,8 @@ import { LobeTogetherAI } from './togetherai';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
   ModelProvider,
   TextToImagePayload,
 } from './types';
@@ -79,12 +81,17 @@ class AgentRuntime {
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     return this._runtime.chat(payload, options);
   }
+
   async textToImage(payload: TextToImagePayload) {
     return this._runtime.textToImage?.(payload);
   }
 
   async models() {
     return this._runtime.models?.();
+  }
+
+  async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions) {
+    return this._runtime.embeddings?.(payload, options);
   }
 
   /**
@@ -249,12 +256,12 @@ class AgentRuntime {
 
       case ModelProvider.Ai360: {
         runtimeModel = new LobeAi360AI(params.ai360 ?? {});
-        break
+        break;
       }
 
       case ModelProvider.SiliconCloud: {
         runtimeModel = new LobeSiliconCloudAI(params.siliconcloud ?? {});
-        break
+        break;
       }
         
       case ModelProvider.Spark: {
