@@ -71,11 +71,6 @@ export function fetchEventSource(
       headers.accept = EventStreamContentType;
     }
 
-    // if the incoming signal aborts, dispose resources and resolve:
-    inputSignal?.addEventListener('abort', () => {
-      resolve(); // don't waste time constructing/logging errors
-    });
-
     const fetch = inputFetch ?? window.fetch;
     async function create() {
       try {

@@ -1,8 +1,9 @@
 import { t } from 'i18next';
 import { produce } from 'immer';
 
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
-import { ErrorResponse, ErrorType } from '@/types/fetch';
+import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 import {
   ChatMessageError,
   MessageToolCall,
@@ -292,13 +293,26 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     headers: options.headers as Record<string, string>,
     method: options.method,
     onerror: (error) => {
-      if ((error as TypeError).name === 'AbortError') {
+      if (error === MESSAGE_CANCEL_FLAT || (error as TypeError).name === 'AbortError') {
         finishedType = 'abort';
         options?.onAbort?.(output);
         textController.stopAnimation();
       } else {
         finishedType = 'error';
-        options.onErrorHandle?.(error);
+
+        options.onErrorHandle?.(
+          error.type
+            ? error
+            : {
+                body: {
+                  message: error.message,
+                  name: error.name,
+                  stack: error.stack,
+                },
+                message: error.message,
+                type: ChatErrorType.UnknownChatFetchError,
+              },
+        );
         return;
       }
     },

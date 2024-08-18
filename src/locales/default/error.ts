@@ -93,6 +93,7 @@ export default {
     InvalidBedrockCredentials: 'Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试',
     StreamChunkError:
       '流式请求的消息块解析错误，请检查当前 API 接口是否符合标准规范，或联系你的 API 供应商咨询',
+    UnknownChatFetchError: '很抱歉，遇到未知请求错误，请根据以下信息排查或重试',
     InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
     OllamaServiceUnavailable:
