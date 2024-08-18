@@ -577,7 +577,6 @@ Get data from users`,
         body: JSON.stringify(expectedPayload),
         headers: expect.any(Object),
         method: 'POST',
-        signal: expect.any(AbortSignal),
       });
     });
 

@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.11.4",
+  "version": "1.11.5",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -39,7 +39,6 @@
     "db:studio": "drizzle-kit studio",
     "db:z-pull": "drizzle-kit introspect",
     "dev": "next dev -p 3010",
-    "dev:clerk-proxy": "ngrok http http://localhost:3011",
     "docs:i18n": "lobe-i18n md && npm run lint:mdx",
     "docs:seo": "lobe-seo && npm run lint:mdx",
     "i18n": "npm run workflow:i18n && lobe-i18n",
@@ -64,6 +63,7 @@
     "test-server:coverage": "vitest run --config vitest.server.config.ts --coverage",
     "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
+    "webhook:ngrok": "ngrok http http://localhost:3011",
     "workflow:docs": "tsx scripts/docsWorkflow/index.ts",
     "workflow:i18n": "tsx scripts/i18nWorkflow/index.ts",
     "workflow:mdx": "tsx ./scripts/mdxWorkflow/index.ts",
@@ -120,7 +120,6 @@
     "@lobehub/icons": "^1.28.0",
     "@lobehub/tts": "^1.24.3",
     "@lobehub/ui": "^1.149.2",
-    "@microsoft/fetch-event-source": "^2.0.1",
     "@neondatabase/serverless": "^0.9.4",
     "@next/third-parties": "^14.2.4",
     "@sentry/nextjs": "^7.118.0",
