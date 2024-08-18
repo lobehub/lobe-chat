@@ -201,7 +201,7 @@ class Ld {
   }
 
   private getId(url: string, id: string) {
-    return urlJoin(url, id);
+    return [url, id].join('/');
   }
 
   private fixTitle(title: string) {
