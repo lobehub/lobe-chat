@@ -314,6 +314,12 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       }
 
       switch (ev.event) {
+        case 'error': {
+          finishedType = 'error';
+          options.onErrorHandle?.(data);
+          break;
+        }
+
         case 'text': {
           if (smoothing) {
             textController.pushToQueue(data);
