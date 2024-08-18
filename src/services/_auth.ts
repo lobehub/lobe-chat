@@ -36,15 +36,6 @@ export const getProviderAuthPayload = (provider: string) => {
       return { endpoint: config?.baseURL };
     }
 
-    case ModelProvider.Spark: {
-      const config = keyVaultsConfigSelectors.sparkConfig(useUserStore.getState());
-
-      return { 
-        sparkApiKey: config?.sparkApiKey, 
-        sparkApiSecret: config?.sparkApiSecret, 
-      };
-    }
-
     default: {
       const config = keyVaultsConfigSelectors.getVaultByProvider(provider as GlobalLLMProviderKey)(
         useUserStore.getState(),

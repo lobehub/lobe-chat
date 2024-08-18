@@ -15,11 +15,6 @@ export interface AWSBedrockKeyVault {
   secretAccessKey?: string;
 }
 
-export interface SparkKeyVault {
-  sparkApiKey?: string;
-  sparkApiSecret?: string;
-}
-
 export interface UserKeyVaults {
   ai360?: OpenAICompatibleKeyVault;
   anthropic?: OpenAICompatibleKeyVault;
@@ -41,7 +36,7 @@ export interface UserKeyVaults {
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
-  spark?: SparkKeyVault;
+  spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;

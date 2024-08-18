@@ -162,13 +162,6 @@ export function initializeWithClientStore(provider: string, payload: any) {
     case ModelProvider.ZeroOne: {
       break;
     }
-    case ModelProvider.Spark: {
-      providerOptions = {
-        sparkApiKey: providerAuthPayload?.sparkApiKey,
-        sparkApiSecret: providerAuthPayload?.sparkApiSecret,
-      };
-      break;
-    }
   }
 
   /**

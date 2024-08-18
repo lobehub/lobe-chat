@@ -15,6 +15,7 @@ import {
   OpenRouter,
   Perplexity,
   SiliconCloud,
+  Spark,
   Stepfun,
   Together,
   Tongyi,
@@ -42,6 +43,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   SiliconCloudProviderCard,
+  SparkProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
@@ -54,7 +56,6 @@ import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
-import { useSparkProvider } from './Spark';
 
 const BASE_DOC_URL = 'https://lobehub.com/docs/usage/providers';
 
@@ -92,7 +93,6 @@ export const useProviderList = (): ProviderItem[] => {
   const ollamaProvider = useOllamaProvider();
   const openAIProvider = useOpenAIProvider();
   const bedrockProvider = useBedrockProvider();
-  const sparkProvider = useSparkProvider();
 
   return useMemo(
     () => [
@@ -208,10 +208,11 @@ export const useProviderList = (): ProviderItem[] => {
         title: <SiliconCloud.Combine size={20} type={'color'} />,
       },
       {
-        ...sparkProvider,
-        docUrl: urlJoin(BASE_DOC_URL, 'spark')
+        ...SparkProviderCard,
+        docUrl: urlJoin(BASE_DOC_URL, 'spark'),
+        title: <Spark.Combine size={ 22 } type={ 'color' } />,
       },
     ],
-    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider, sparkProvider],
+    [azureProvider, ollamaProvider, ollamaProvider, bedrockProvider],
   );
 };

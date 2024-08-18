@@ -102,23 +102,6 @@ export default {
       title: '下载指定的 Ollama 模型',
     },
   },
-  spark: {
-    sparkApiKey: {
-      desc: '填入 Spark API Key',
-      placeholder: 'Spark API Key',
-      title: 'Spark API Key',
-    },
-    sparkApiSecret: {
-      desc: '填入 Spark API Secret',
-      placeholder: 'Spark API Secret',
-      title: 'Spark API Secret',
-    },
-    unlock: {
-      description:
-        '输入你的 Spark API Key / Spark API Secret 即可开始会话。应用不会记录你的鉴权配置',
-      title: '使用自定义 Spark 鉴权信息',
-    },
-  },
   zeroone: {
     title: '01.AI 零一万物',
   },

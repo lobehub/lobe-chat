@@ -95,7 +95,6 @@ export const getLLMConfig = () => {
 
       ENABLED_SPARK: z.boolean(),
       SPARK_API_KEY: z.string().optional(),
-      SPARK_API_SECRET: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -186,9 +185,8 @@ export const getLLMConfig = () => {
       SILICONCLOUD_MODEL_LIST: process.env.SILICONCLOUD_MODEL_LIST,
       SILICONCLOUD_PROXY_URL: process.env.SILICONCLOUD_PROXY_URL,
 
-      ENABLED_SPARK: !!process.env.SPARK_API_KEY && !!process.env.SPARK_API_SECRET,
+      ENABLED_SPARK: !!process.env.SPARK_API_KEY,
       SPARK_API_KEY: process.env.SPARK_API_KEY,
-      SPARK_API_SECRET: process.env.SPARK_API_SECRET,
     },
   });
 };
