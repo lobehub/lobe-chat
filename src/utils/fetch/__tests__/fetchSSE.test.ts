@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
+
 import { FetchEventSourceInit } from '../fetchEventSource';
 import { fetchEventSource } from '../fetchEventSource';
 import { fetchSSE } from '../fetchSSE';
@@ -9,7 +11,7 @@ vi.mock('i18next', () => ({
   t: vi.fn((key) => `translated_${key}`),
 }));
 
-vi.mock('./fetchEventSource', () => ({
+vi.mock('../fetchEventSource', () => ({
   fetchEventSource: vi.fn(),
 }));
 
@@ -95,65 +97,6 @@ describe('fetchSSE', () => {
       traceId: null,
       type: 'done',
     });
-  });
-
-  it('should call onAbort when AbortError is thrown', async () => {
-    const mockOnAbort = vi.fn();
-
-    (fetchEventSource as any).mockImplementationOnce(
-      (url: string, options: FetchEventSourceInit) => {
-        options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
-        options.onerror!({ name: 'AbortError' });
-      },
-    );
-
-    await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
-
-    expect(mockOnAbort).toHaveBeenCalledWith('Hello');
-  });
-
-  it('should call onErrorHandle when other error is thrown', async () => {
-    const mockOnErrorHandle = vi.fn();
-    const mockError = new Error('Unknown error');
-
-    (fetchEventSource as any).mockImplementationOnce(
-      (url: string, options: FetchEventSourceInit) => {
-        options.onerror!(mockError);
-      },
-    );
-
-    try {
-      await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-    } catch (e) {}
-
-    expect(mockOnErrorHandle).toHaveBeenCalled();
-  });
-
-  it('should call onErrorHandle when response is not ok', async () => {
-    const mockOnErrorHandle = vi.fn();
-
-    (fetchEventSource as any).mockImplementationOnce(
-      async (url: string, options: FetchEventSourceInit) => {
-        const res = new Response(JSON.stringify({ errorType: 'SomeError' }), {
-          status: 400,
-          statusText: 'Error',
-        });
-
-        try {
-          await options.onopen!(res as any);
-        } catch (e) {}
-      },
-    );
-
-    try {
-      await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-    } catch (e) {
-      expect(mockOnErrorHandle).toHaveBeenCalledWith({
-        body: undefined,
-        message: 'translated_response.SomeError',
-        type: 'SomeError',
-      });
-    }
   });
 
   it('should call onMessageHandle with full text if no message event', async () => {
@@ -333,6 +276,109 @@ describe('fetchSSE', () => {
       toolCalls: undefined,
       traceId: null,
       type: 'error',
+    });
+  });
+
+  describe('onAbort', () => {
+    it('should call onAbort when AbortError is thrown', async () => {
+      const mockOnAbort = vi.fn();
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+          options.onerror!({ name: 'AbortError' });
+        },
+      );
+
+      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+
+      expect(mockOnAbort).toHaveBeenCalledWith('Hello');
+    });
+
+    it('should call onAbort when MESSAGE_CANCEL_FLAT is thrown', async () => {
+      const mockOnAbort = vi.fn();
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+          options.onerror!(MESSAGE_CANCEL_FLAT);
+        },
+      );
+
+      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+
+      expect(mockOnAbort).toHaveBeenCalledWith('Hello');
+    });
+  });
+
+  describe('onErrorHandle', () => {
+    it('should call onErrorHandle when other error is thrown', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError = new Error('Unknown error');
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onerror!(mockError);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalled();
+    });
+
+    it('should call onErrorHandle when no error is thrown', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError = new Error('Unknown error');
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onerror!(mockError);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalledWith({
+        type: 'UnknownChatFetchError',
+        message: 'Unknown error',
+        body: {
+          message: 'Unknown error',
+          name: 'Error',
+          stack: expect.any(String),
+        },
+      });
+    });
+
+    it('should call onErrorHandle when response is not ok', async () => {
+      const mockOnErrorHandle = vi.fn();
+
+      (fetchEventSource as any).mockImplementationOnce(
+        async (url: string, options: FetchEventSourceInit) => {
+          const res = new Response(JSON.stringify({ errorType: 'SomeError' }), {
+            status: 400,
+            statusText: 'Error',
+          });
+
+          try {
+            await options.onopen!(res as any);
+          } catch (e) {}
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {
+        expect(mockOnErrorHandle).toHaveBeenCalledWith({
+          body: undefined,
+          message: 'translated_response.SomeError',
+          type: 'SomeError',
+        });
+      }
     });
   });
 });
