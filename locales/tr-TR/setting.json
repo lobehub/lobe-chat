@@ -372,6 +372,11 @@
       "modelDesc": "Asistan adı, açıklaması, avatar ve etiket oluşturmak için belirlenen model",
       "title": "Asistan Bilgilerini Otomatik Oluştur"
     },
+    "queryRewrite": {
+      "label": "Soru Yeniden Yazım Modeli",
+      "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
+      "title": "Bilgi Tabanı"
+    },
     "title": "Sistem Asistanı",
     "topic": {
       "label": "Konu Adlandırma Modeli",

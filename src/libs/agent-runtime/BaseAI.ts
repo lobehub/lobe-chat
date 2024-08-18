@@ -3,11 +3,19 @@ import OpenAI from 'openai';
 import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
 import { ChatModelCard } from '@/types/llm';
 
-import { ChatCompetitionOptions, ChatStreamPayload } from './types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  EmbeddingItem,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
+} from './types';
 
 export interface LobeRuntimeAI {
   baseURL?: string;
   chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
+
+  embeddings?(payload: EmbeddingsPayload, options?: EmbeddingsOptions): Promise<EmbeddingItem[]>;
 
   models?(): Promise<any>;
 
@@ -21,4 +29,9 @@ export abstract class LobeOpenAICompatibleRuntime {
   abstract chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response>;
 
   abstract models(): Promise<ChatModelCard[]>;
+
+  abstract embeddings(
+    payload: EmbeddingsPayload,
+    options?: EmbeddingsOptions,
+  ): Promise<EmbeddingItem[]>;
 }

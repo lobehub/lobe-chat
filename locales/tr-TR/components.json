@@ -5,6 +5,66 @@
     "dragFileTitle": "Dosya Yükle",
     "dragTitle": "Resim Yükle"
   },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Bilgi tabanına ekle",
+      "addToOtherKnowledgeBase": "Diğer bilgi tabanına ekle",
+      "batchChunking": "Toplu parçalara ayırma",
+      "chunking": "Parçalara ayırma",
+      "chunkingTooltip": "Dosyayı birden fazla metin parçasına ayırıp vektörleştirdikten sonra, anlamsal arama ve dosya diyalogları için kullanılabilir",
+      "confirmDelete": "Bu dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
+      "confirmDeleteMultiFiles": "Seçilen {{count}} dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
+      "confirmRemoveFromKnowledgeBase": "Seçilen {{count}} dosya bilgi tabanından kaldırılacak, kaldırıldıktan sonra dosyalar tüm dosyalar arasında görüntülenebilir, lütfen işleminizi onaylayın",
+      "copyUrl": "Bağlantıyı kopyala",
+      "copyUrlSuccess": "Dosya adresi başarıyla kopyalandı",
+      "createChunkingTask": "Hazırlanıyor...",
+      "deleteSuccess": "Dosya başarıyla silindi",
+      "downloading": "Dosya indiriliyor...",
+      "removeFromKnowledgeBase": "Bilgi tabanından kaldır",
+      "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı"
+    },
+    "bottom": "Artık sona geldik",
+    "config": {
+      "showFilesInKnowledgeBase": "Bilgi tabanındaki içeriği göster"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Dosya yükle",
+        "folder": "Klasör yükle",
+        "knowledgeBase": "Yeni bilgi tabanı oluştur"
+      },
+      "or": "veya",
+      "title": "Dosyayı veya klasörü buraya sürükleyin"
+    },
+    "title": {
+      "createdAt": "Oluşturulma zamanı",
+      "size": "Boyut",
+      "title": "Dosya"
+    },
+    "total": {
+      "fileCount": "Toplam {{count}} öğe",
+      "selectedCount": "Seçilen {{count}} öğe"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Metin parçaları henüz tamamen vektörleştirilmedi, bu durum anlamsal arama işlevinin kullanılamamasına neden olabilir, arama kalitesini artırmak için lütfen metin parçalarını vektörleştirin",
+        "processing": "Metin parçaları vektörleştiriliyor, lütfen bekleyin",
+        "success": "Mevcut metin parçaları tamamen vektörleştirildi"
+      },
+      "embeddings": "Vektörleştirme",
+      "status": {
+        "error": "Parçalara ayırma başarısız oldu",
+        "errorResult": "Parçalara ayırma başarısız oldu, lütfen kontrol edip tekrar deneyin. Başarısız olma nedeni:",
+        "processing": "Parçalara ayırma işlemi devam ediyor",
+        "processingTip": "Sunucu metin parçalarını ayırıyor, sayfayı kapatmak parçalama ilerlemesini etkilemez"
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Geri dön"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, yukarıdaki yeteneklerin kullanılabilirliğini doğrulamak için lütfen gerçek durumu kontrol edin",

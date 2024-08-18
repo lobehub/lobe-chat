@@ -372,6 +372,11 @@
       "modelDesc": "Modelo designado para generar el nombre, descripción, avatar y etiquetas del asistente",
       "title": "Generación automática de información del asistente"
     },
+    "queryRewrite": {
+      "label": "Modelo de reescritura de preguntas",
+      "modelDesc": "Modelo designado para optimizar las preguntas de los usuarios",
+      "title": "Base de conocimientos"
+    },
     "title": "Asistente del sistema",
     "topic": {
       "label": "Modelo de nombramiento de temas",

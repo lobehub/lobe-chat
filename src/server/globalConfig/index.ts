@@ -7,6 +7,7 @@ import {
   OllamaProviderCard,
   OpenAIProviderCard,
   OpenRouterProviderCard,
+  SiliconCloudProviderCard,
   TogetherAIProviderCard,
 } from '@/config/modelProviders';
 import { enableNextAuth } from '@/const/auth';
@@ -39,8 +40,10 @@ export const getServerGlobalConfig = () => {
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
     ENABLED_AI360,
-    ENABLED_SILICONCLOUD,
     ENABLED_ZEROONE,
+
+    ENABLED_SILICONCLOUD,
+    SILICONCLOUD_MODEL_LIST,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -122,7 +125,14 @@ export const getServerGlobalConfig = () => {
       },
       perplexity: { enabled: ENABLED_PERPLEXITY },
       qwen: { enabled: ENABLED_QWEN },
-      siliconcloud: { enabled: ENABLED_SILICONCLOUD },
+      siliconcloud: {
+        enabled: ENABLED_SILICONCLOUD,
+        enabledModels: extractEnabledModels(SILICONCLOUD_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: SiliconCloudProviderCard.chatModels,
+          modelString: SILICONCLOUD_MODEL_LIST,
+        }),
+      },
       stepfun: { enabled: ENABLED_STEPFUN },
       taichu: { enabled: ENABLED_TAICHU },
       togetherai: {

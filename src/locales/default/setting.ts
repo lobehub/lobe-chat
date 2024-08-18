@@ -375,6 +375,11 @@ export default {
       modelDesc: '指定用于生成助理名称、描述、头像、标签的模型',
       title: '自动生成助理信息',
     },
+    queryRewrite: {
+      label: '提问重写模型',
+      modelDesc: '指定用于优化用户提问的模型',
+      title: '知识库',
+    },
     title: '系统助手',
     topic: {
       label: '话题命名模型',
