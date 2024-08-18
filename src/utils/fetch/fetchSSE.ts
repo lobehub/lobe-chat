@@ -277,8 +277,20 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       try {
         data = JSON.parse(ev.data);
       } catch (e) {
-        console.warn('parse error, fallback to stream', e);
-        options.onMessageHandle?.({ text: data, type: 'text' });
+        console.warn('parse error:', e);
+        options.onErrorHandle?.({
+          body: {
+            context: {
+              chunk: ev.data,
+              error: { message: (e as Error).message, name: (e as Error).name },
+            },
+            message:
+              'chat response streaming chunk parse error, please contact your API Provider to fix it.',
+          },
+          message: 'parse error',
+          type: 'StreamChunkError',
+        });
+
         return;
       }
 

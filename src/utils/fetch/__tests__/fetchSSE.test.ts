@@ -385,5 +385,60 @@ describe('fetchSSE', () => {
         });
       }
     });
+
+    it('should call onErrorHandle when stream chunk has error type', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError = {
+        type: 'StreamChunkError',
+        message: 'abc',
+        body: { message: 'abc', context: {} },
+      };
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({
+            event: 'error',
+            data: JSON.stringify(mockError),
+          } as any);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError);
+    });
+
+    it('should call onErrorHandle when stream chunk is not valid json', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError = 'abc';
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({ event: 'text', data: mockError } as any);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalledWith({
+        body: {
+          context: {
+            chunk: 'abc',
+            error: {
+              message: 'Unexpected token a in JSON at position 0',
+              name: 'SyntaxError',
+            },
+          },
+          message:
+            'chat response streaming chunk parse error, please contact your API Provider to fix it.',
+        },
+        message: 'parse error',
+        type: 'StreamChunkError',
+      });
+    });
   });
 });
