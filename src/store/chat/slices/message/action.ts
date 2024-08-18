@@ -7,7 +7,7 @@ import { template } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
-import { LOADING_FLAT } from '@/const/message';
+import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
@@ -399,7 +399,7 @@ export const chatMessage: StateCreator<
     const { abortController, internal_toggleChatLoading } = get();
     if (!abortController) return;
 
-    abortController.abort();
+    abortController.abort(MESSAGE_CANCEL_FLAT);
 
     internal_toggleChatLoading(false, undefined, n('stopGenerateMessage') as string);
   },
