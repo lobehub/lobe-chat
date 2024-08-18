@@ -79,7 +79,9 @@
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
     "ProviderBizError": "Er is een fout opgetreden bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie of probeer het opnieuw.",
-    "SubscriptionPlanLimit": "Uw abonnementslimiet is bereikt en u kunt deze functie niet gebruiken. Upgrade naar een hoger plan of koop een resourcepakket om door te gaan met gebruiken."
+    "StreamChunkError": "Fout bij het parseren van het berichtblok van de streamingaanroep. Controleer of de huidige API-interface voldoet aan de standaardnormen, of neem contact op met uw API-leverancier voor advies.",
+    "SubscriptionPlanLimit": "Uw abonnementslimiet is bereikt en u kunt deze functie niet gebruiken. Upgrade naar een hoger plan of koop een resourcepakket om door te gaan met gebruiken.",
+    "UnknownChatFetchError": "Het spijt me, er is een onbekende verzoekfout opgetreden. Controleer de onderstaande informatie of probeer het opnieuw."
   },
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"

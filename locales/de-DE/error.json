@@ -79,7 +79,9 @@
     "PluginServerError": "Fehler bei der Serveranfrage des Plugins. Bitte überprüfen Sie die Fehlerinformationen unten in Ihrer Plugin-Beschreibungsdatei, Plugin-Konfiguration oder Serverimplementierung",
     "PluginSettingsInvalid": "Das Plugin muss korrekt konfiguriert werden, um verwendet werden zu können. Bitte überprüfen Sie Ihre Konfiguration auf Richtigkeit",
     "ProviderBizError": "Fehler bei der Anforderung des {{provider}}-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
-    "SubscriptionPlanLimit": "Ihr Abonnementkontingent wurde aufgebraucht und Sie können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein höheres Abonnement oder kaufen Sie ein Ressourcenpaket, um fortzufahren."
+    "StreamChunkError": "Fehler beim Parsen des Nachrichtenchunks der Streaming-Anfrage. Bitte überprüfen Sie, ob die aktuelle API-Schnittstelle den Standards entspricht, oder wenden Sie sich an Ihren API-Anbieter.",
+    "SubscriptionPlanLimit": "Ihr Abonnementkontingent wurde aufgebraucht und Sie können diese Funktion nicht nutzen. Bitte aktualisieren Sie auf ein höheres Abonnement oder kaufen Sie ein Ressourcenpaket, um fortzufahren.",
+    "UnknownChatFetchError": "Es tut uns leid, es ist ein unbekannter Anforderungsfehler aufgetreten. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut."
   },
   "stt": {
     "responseError": "Serviceanfrage fehlgeschlagen. Bitte überprüfen Sie die Konfiguration oder versuchen Sie es erneut"
