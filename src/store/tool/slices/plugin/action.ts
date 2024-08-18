@@ -2,6 +2,7 @@ import { Schema, ValidationResult } from '@cfworker/json-schema';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { pluginService } from '@/services/plugin';
 import { merge } from '@/utils/merge';
 
@@ -46,7 +47,7 @@ export const createPluginSlice: StateCreator<
   },
   updatePluginSettings: async (id, settings) => {
     const signal = get().updatePluginSettingsSignal;
-    if (signal) signal.abort('canceled');
+    if (signal) signal.abort(MESSAGE_CANCEL_FLAT);
 
     const newSignal = new AbortController();
 

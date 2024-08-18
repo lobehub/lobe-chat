@@ -260,4 +260,46 @@ describe('OpenAIStream', () => {
       `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
     ]);
   });
+
+  it('should handle error when there is not correct error', async () => {
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          choices: [
+            {
+              delta: { content: 'Hello' },
+              index: 0,
+            },
+          ],
+          id: '1',
+        });
+        controller.enqueue({
+          id: '1',
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      [
+        'id: 1',
+        'event: text',
+        `data: "Hello"\n`,
+        'id: 1',
+        'event: error',
+        `data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Cannot read properties of undefined (reading '0')","name":"TypeError"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n`,
+      ].map((i) => `${i}\n`),
+    );
+  });
 });

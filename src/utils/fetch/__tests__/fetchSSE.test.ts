@@ -1,217 +1,24 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { FetchEventSourceInit } from '@microsoft/fetch-event-source';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { ZodError } from 'zod';
 
-import { ErrorResponse } from '@/types/fetch';
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
+import { ChatMessageError } from '@/types/message';
 
-import { fetchSSE, getMessageError, parseToolCalls } from './fetch';
+import { FetchEventSourceInit } from '../fetchEventSource';
+import { fetchEventSource } from '../fetchEventSource';
+import { fetchSSE } from '../fetchSSE';
 
 // 模拟 i18next
 vi.mock('i18next', () => ({
   t: vi.fn((key) => `translated_${key}`),
 }));
 
-// 模拟 Response
-const createMockResponse = (body: any, ok: boolean, status: number = 200) => ({
-  ok,
-  status,
-  json: vi.fn(async () => body),
-  clone: vi.fn(function () {
-    // @ts-ignore
-    return this;
-  }),
-  text: vi.fn(async () => JSON.stringify(body)),
-  body: {
-    getReader: () => {
-      let done = false;
-      return {
-        read: () => {
-          if (!done) {
-            done = true;
-            return Promise.resolve({
-              value: new TextEncoder().encode(JSON.stringify(body)),
-              done: false,
-            });
-          } else {
-            return Promise.resolve({ done: true });
-          }
-        },
-      };
-    },
-  },
-});
-
-vi.mock('@microsoft/fetch-event-source', () => ({
+vi.mock('../fetchEventSource', () => ({
   fetchEventSource: vi.fn(),
 }));
 
 // 在每次测试后清理所有模拟
 afterEach(() => {
   vi.restoreAllMocks();
-});
-
-describe('getMessageError', () => {
-  it('should handle business error correctly', async () => {
-    const mockErrorResponse: ErrorResponse = {
-      body: 'Error occurred',
-      errorType: 'InvalidAccessCode',
-    };
-    const mockResponse = createMockResponse(mockErrorResponse, false, 400);
-
-    const error = await getMessageError(mockResponse as any);
-
-    expect(error).toEqual({
-      body: mockErrorResponse.body,
-      message: 'translated_response.InvalidAccessCode',
-      type: mockErrorResponse.errorType,
-    });
-    expect(mockResponse.json).toHaveBeenCalled();
-  });
-
-  it('should handle regular error correctly', async () => {
-    const mockResponse = createMockResponse({}, false, 500);
-    mockResponse.json.mockImplementationOnce(() => {
-      throw new Error('Failed to parse');
-    });
-
-    const error = await getMessageError(mockResponse as any);
-
-    expect(error).toEqual({
-      message: 'translated_response.500',
-      type: 500,
-    });
-    expect(mockResponse.json).toHaveBeenCalled();
-  });
-
-  it('should handle timeout error correctly', async () => {
-    const mockResponse = createMockResponse(undefined, false, 504);
-    const error = await getMessageError(mockResponse as any);
-
-    expect(error).toEqual({
-      message: 'translated_response.504',
-      type: 504,
-    });
-  });
-});
-
-describe('parseToolCalls', () => {
-  it('should create add new item', () => {
-    const chunk = [
-      { index: 0, id: '1', type: 'function', function: { name: 'func', arguments: '' } },
-    ];
-
-    const result = parseToolCalls([], chunk);
-    expect(result).toEqual([
-      { id: '1', type: 'function', function: { name: 'func', arguments: '' } },
-    ]);
-  });
-
-  it('should update arguments if there is a toolCall', () => {
-    const origin = [{ id: '1', type: 'function', function: { name: 'func', arguments: '' } }];
-
-    const chunk1 = [{ index: 0, function: { arguments: '{"lo' } }];
-
-    const result1 = parseToolCalls(origin, chunk1);
-    expect(result1).toEqual([
-      { id: '1', type: 'function', function: { name: 'func', arguments: '{"lo' } },
-    ]);
-
-    const chunk2 = [{ index: 0, function: { arguments: 'cation\\": \\"Hangzhou\\"}' } }];
-    const result2 = parseToolCalls(result1, chunk2);
-
-    expect(result2).toEqual([
-      {
-        id: '1',
-        type: 'function',
-        function: { name: 'func', arguments: '{"location\\": \\"Hangzhou\\"}' },
-      },
-    ]);
-  });
-
-  it('should add a new tool call if the index is different', () => {
-    const origin = [
-      {
-        id: '1',
-        type: 'function',
-        function: { name: 'func', arguments: '{"location\\": \\"Hangzhou\\"}' },
-      },
-    ];
-
-    const chunk = [
-      {
-        index: 1,
-        id: '2',
-        type: 'function',
-        function: { name: 'func', arguments: '' },
-      },
-    ];
-
-    const result1 = parseToolCalls(origin, chunk);
-    expect(result1).toEqual([
-      {
-        id: '1',
-        type: 'function',
-        function: { name: 'func', arguments: '{"location\\": \\"Hangzhou\\"}' },
-      },
-      { id: '2', type: 'function', function: { name: 'func', arguments: '' } },
-    ]);
-  });
-
-  it('should update correct arguments if there are multi tool calls', () => {
-    const origin = [
-      {
-        id: '1',
-        type: 'function',
-        function: { name: 'func', arguments: '{"location\\": \\"Hangzhou\\"}' },
-      },
-      { id: '2', type: 'function', function: { name: 'func', arguments: '' } },
-    ];
-
-    const chunk = [{ index: 1, function: { arguments: '{"location\\": \\"Beijing\\"}' } }];
-
-    const result1 = parseToolCalls(origin, chunk);
-    expect(result1).toEqual([
-      {
-        id: '1',
-        type: 'function',
-        function: { name: 'func', arguments: '{"location\\": \\"Hangzhou\\"}' },
-      },
-      {
-        id: '2',
-        type: 'function',
-        function: { name: 'func', arguments: '{"location\\": \\"Beijing\\"}' },
-      },
-    ]);
-  });
-
-  it('should throw error if incomplete tool calls data', () => {
-    const origin = [
-      {
-        id: '1',
-        type: 'function',
-        function: { name: 'func', arguments: '{"location\\": \\"Hangzhou\\"}' },
-      },
-    ];
-
-    const chunk = [{ index: 1, id: '2', type: 'function' }];
-
-    try {
-      parseToolCalls(origin, chunk as any);
-    } catch (e) {
-      expect(e).toEqual(
-        new ZodError([
-          {
-            code: 'invalid_type',
-            expected: 'object',
-            received: 'undefined',
-            path: ['function'],
-            message: 'Required',
-          },
-        ]),
-      );
-    }
-  });
 });
 
 describe('fetchSSE', () => {
@@ -291,65 +98,6 @@ describe('fetchSSE', () => {
       traceId: null,
       type: 'done',
     });
-  });
-
-  it('should call onAbort when AbortError is thrown', async () => {
-    const mockOnAbort = vi.fn();
-
-    (fetchEventSource as any).mockImplementationOnce(
-      (url: string, options: FetchEventSourceInit) => {
-        options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
-        options.onerror!({ name: 'AbortError' });
-      },
-    );
-
-    await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
-
-    expect(mockOnAbort).toHaveBeenCalledWith('Hello');
-  });
-
-  it('should call onErrorHandle when other error is thrown', async () => {
-    const mockOnErrorHandle = vi.fn();
-    const mockError = new Error('Unknown error');
-
-    (fetchEventSource as any).mockImplementationOnce(
-      (url: string, options: FetchEventSourceInit) => {
-        options.onerror!(mockError);
-      },
-    );
-
-    try {
-      await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-    } catch (e) {}
-
-    expect(mockOnErrorHandle).toHaveBeenCalled();
-  });
-
-  it('should call onErrorHandle when response is not ok', async () => {
-    const mockOnErrorHandle = vi.fn();
-
-    (fetchEventSource as any).mockImplementationOnce(
-      async (url: string, options: FetchEventSourceInit) => {
-        const res = new Response(JSON.stringify({ errorType: 'SomeError' }), {
-          status: 400,
-          statusText: 'Error',
-        });
-
-        try {
-          await options.onopen!(res as any);
-        } catch (e) {}
-      },
-    );
-
-    try {
-      await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
-    } catch (e) {
-      expect(mockOnErrorHandle).toHaveBeenCalledWith({
-        body: undefined,
-        message: 'translated_response.SomeError',
-        type: 'SomeError',
-      });
-    }
   });
 
   it('should call onMessageHandle with full text if no message event', async () => {
@@ -529,6 +277,168 @@ describe('fetchSSE', () => {
       toolCalls: undefined,
       traceId: null,
       type: 'error',
+    });
+  });
+
+  describe('onAbort', () => {
+    it('should call onAbort when AbortError is thrown', async () => {
+      const mockOnAbort = vi.fn();
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+          options.onerror!({ name: 'AbortError' });
+        },
+      );
+
+      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+
+      expect(mockOnAbort).toHaveBeenCalledWith('Hello');
+    });
+
+    it('should call onAbort when MESSAGE_CANCEL_FLAT is thrown', async () => {
+      const mockOnAbort = vi.fn();
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+          options.onerror!(MESSAGE_CANCEL_FLAT);
+        },
+      );
+
+      await fetchSSE('/', { onAbort: mockOnAbort, smoothing: false });
+
+      expect(mockOnAbort).toHaveBeenCalledWith('Hello');
+    });
+  });
+
+  describe('onErrorHandle', () => {
+    it('should call onErrorHandle when Chat Message error is thrown', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError: ChatMessageError = {
+        body: {},
+        message: 'StreamChunkError',
+        type: 'StreamChunkError',
+      };
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onerror!(mockError);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError);
+    });
+
+    it('should call onErrorHandle when Unknown error is thrown', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError = new Error('Unknown error');
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onerror!(mockError);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalledWith({
+        type: 'UnknownChatFetchError',
+        message: 'Unknown error',
+        body: {
+          message: 'Unknown error',
+          name: 'Error',
+          stack: expect.any(String),
+        },
+      });
+    });
+
+    it('should call onErrorHandle when response is not ok', async () => {
+      const mockOnErrorHandle = vi.fn();
+
+      (fetchEventSource as any).mockImplementationOnce(
+        async (url: string, options: FetchEventSourceInit) => {
+          const res = new Response(JSON.stringify({ errorType: 'SomeError' }), {
+            status: 400,
+            statusText: 'Error',
+          });
+
+          try {
+            await options.onopen!(res as any);
+          } catch (e) {}
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {
+        expect(mockOnErrorHandle).toHaveBeenCalledWith({
+          body: undefined,
+          message: 'translated_response.SomeError',
+          type: 'SomeError',
+        });
+      }
+    });
+
+    it('should call onErrorHandle when stream chunk has error type', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError = {
+        type: 'StreamChunkError',
+        message: 'abc',
+        body: { message: 'abc', context: {} },
+      };
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({
+            event: 'error',
+            data: JSON.stringify(mockError),
+          } as any);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalledWith(mockError);
+    });
+
+    it('should call onErrorHandle when stream chunk is not valid json', async () => {
+      const mockOnErrorHandle = vi.fn();
+      const mockError = 'abc';
+
+      (fetchEventSource as any).mockImplementationOnce(
+        (url: string, options: FetchEventSourceInit) => {
+          options.onmessage!({ event: 'text', data: mockError } as any);
+        },
+      );
+
+      try {
+        await fetchSSE('/', { onErrorHandle: mockOnErrorHandle });
+      } catch (e) {}
+
+      expect(mockOnErrorHandle).toHaveBeenCalledWith({
+        body: {
+          context: {
+            chunk: 'abc',
+            error: {
+              message: 'Unexpected token a in JSON at position 0',
+              name: 'SyntaxError',
+            },
+          },
+          message:
+            'chat response streaming chunk parse error, please contact your API Provider to fix it.',
+        },
+        message: 'parse error',
+        type: 'StreamChunkError',
+      });
     });
   });
 });

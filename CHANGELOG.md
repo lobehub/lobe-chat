@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.11.5](https://github.com/lobehub/lobe-chat/compare/v1.11.4...v1.11.5)
+
+<sup>Released on **2024-08-18**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the fetch method to fix `response.undefined`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the fetch method to fix `response.undefined`, closes [#3493](https://github.com/lobehub/lobe-chat/issues/3493) ([30d0609](https://github.com/lobehub/lobe-chat/commit/30d0609))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.11.4](https://github.com/lobehub/lobe-chat/compare/v1.11.3...v1.11.4)
 
 <sup>Released on **2024-08-18**</sup>
