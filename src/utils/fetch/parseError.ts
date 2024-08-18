@@ -6,7 +6,7 @@ import { ChatMessageError } from '@/types/message';
 export const getMessageError = async (response: Response) => {
   let chatMessageError: ChatMessageError;
 
-  // 尝试取一波业务错误语义
+  // try to get the biz error
   try {
     const data = (await response.json()) as ErrorResponse;
     chatMessageError = {
@@ -15,7 +15,7 @@ export const getMessageError = async (response: Response) => {
       type: data.errorType,
     };
   } catch {
-    // 如果无法正常返回，说明是常规报错
+    // if not return, then it's a common error
     chatMessageError = {
       message: t(`response.${response.status}` as any, { ns: 'error' }),
       type: response.status as ErrorType,
