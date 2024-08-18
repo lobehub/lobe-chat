@@ -1,3 +1,5 @@
+/* vitest-ignore-coverage */
+
 //@ts-nocheck
 /* eslint-disable unicorn/no-abusive-eslint-disable */
 /* eslint-disable */
