@@ -115,6 +115,7 @@
   },
   "upload": {
     "desc": "Szczegóły: {{detail}}",
+    "fileOnlySupportInServerMode": "Aktualny tryb wdrożenia nie obsługuje przesyłania plików, które nie są obrazami. Aby przesłać pliki w formacie {{ext}}, przełącz się na wdrożenie bazy danych na serwerze lub skorzystaj z usługi LobeChat Cloud.",
     "title": "Nie udało się przesłać pliku. Sprawdź połączenie sieciowe lub spróbuj ponownie później"
   }
 }

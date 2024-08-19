@@ -36,6 +36,24 @@
     "stop": "停止",
     "warp": "換行"
   },
+  "knowledgeBase": {
+    "all": "所有內容",
+    "allFiles": "所有檔案",
+    "allKnowledgeBases": "所有知識庫",
+    "disabled": "當前部署模式不支持知識庫對話，如需使用，請切換到伺服器端資料庫部署或使用 LobeChat Cloud 服務",
+    "library": {
+      "action": {
+        "add": "添加",
+        "detail": "詳情",
+        "remove": "移除"
+      },
+      "title": "檔案/知識庫"
+    },
+    "relativeFilesOrKnowledgeBases": "關聯檔案/知識庫",
+    "title": "知識庫",
+    "uploadGuide": "上傳過的檔案可以在「知識庫」中查看哦",
+    "viewMore": "查看更多"
+  },
   "messageAction": {
     "delAndRegenerate": "刪除並重新生成",
     "regenerate": "重新生成"
@@ -43,6 +61,14 @@
   "newAgent": "新建助手",
   "pin": "置頂",
   "pinOff": "取消置頂",
+  "rag": {
+    "userQuery": {
+      "actions": {
+        "delete": "刪除 Query 重寫",
+        "regenerate": "重新生成 Query"
+      }
+    }
+  },
   "regenerate": "重新生成",
   "roleAndArchive": "角色與記錄",
   "searchAgentPlaceholder": "搜索助手和對話...",
@@ -131,6 +157,13 @@
   "upload": {
     "actionFiletip": "上傳文件",
     "actionTooltip": "上傳圖片",
-    "disabled": "當前模型不支援視覺識別，請切換模型後使用"
+    "disabled": "當前模型不支援視覺識別，請切換模型後使用",
+    "preview": {
+      "prepareTasks": "準備分塊...",
+      "status": {
+        "pending": "準備上傳...",
+        "processing": "檔案處理中..."
+      }
+    }
   }
 }

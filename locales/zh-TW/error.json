@@ -115,6 +115,7 @@
   },
   "upload": {
     "desc": "詳情: {{detail}}",
+    "fileOnlySupportInServerMode": "當前部署模式不支持上傳非圖片文件，如需上傳 {{ext}} 格式，請切換到伺服器端資料庫部署或使用 LobeChat Cloud 服務",
     "title": "檔案上傳失敗，請檢查網路連線或稍後再試"
   }
 }
