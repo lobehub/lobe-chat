@@ -1,0 +1,31 @@
+{
+  "addToKnowledgeBase": {
+    "addSuccess": "Datei erfolgreich hinzugefügt, <1>jetzt ansehen</1>",
+    "confirm": "Hinzufügen",
+    "id": {
+      "placeholder": "Bitte wählen Sie die zu hinzuzufügende Wissensdatenbank",
+      "required": "Bitte wählen Sie eine Wissensdatenbank",
+      "title": "Ziel-Wissensdatenbank"
+    },
+    "title": "Zur Wissensdatenbank hinzufügen",
+    "totalFiles": "{{count}} Datei(en) ausgewählt"
+  },
+  "createNew": {
+    "confirm": "Neu erstellen",
+    "description": {
+      "placeholder": "Beschreibung der Wissensdatenbank (optional)"
+    },
+    "formTitle": "Grundinformationen",
+    "name": {
+      "placeholder": "Name der Wissensdatenbank",
+      "required": "Bitte geben Sie den Namen der Wissensdatenbank ein"
+    },
+    "title": "Wissensdatenbank neu erstellen"
+  },
+  "tab": {
+    "files": "Dokumente",
+    "settings": "Einstellungen",
+    "testing": "Rückruf-Test"
+  },
+  "title": "Wissensdatenbank"
+}

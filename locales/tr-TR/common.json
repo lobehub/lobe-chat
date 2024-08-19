@@ -13,6 +13,7 @@
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
+  "back": "Geri",
   "batchDelete": "Toplu Sil",
   "blog": "Ürün Blogu",
   "cancel": "İptal",
