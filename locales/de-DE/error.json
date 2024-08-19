@@ -115,6 +115,7 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
+    "fileOnlySupportInServerMode": "Der aktuelle Bereitstellungsmodus unterstützt das Hochladen von Nicht-Bilddateien nicht. Um Dateien im {{ext}}-Format hochzuladen, wechseln Sie bitte zum Serverdatenbank-Bereitstellungsmodus oder verwenden Sie den LobeChat Cloud-Dienst.",
     "title": "Dateiupload fehlgeschlagen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es später erneut."
   }
 }

@@ -6,5 +6,6 @@
     "summaryTooltip": "Summarize current content"
   },
   "emptyArtifactList": "The current Artifacts list is empty. Please use plugins in the session as needed before viewing.",
+  "files": "Files",
   "title": "Portal View"
 }

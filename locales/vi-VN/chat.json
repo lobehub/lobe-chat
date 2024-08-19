@@ -36,6 +36,24 @@
     "stop": "Dừng",
     "warp": "Xuống dòng"
   },
+  "knowledgeBase": {
+    "all": "Tất cả nội dung",
+    "allFiles": "Tất cả tệp",
+    "allKnowledgeBases": "Tất cả kho kiến thức",
+    "disabled": "Chế độ triển khai hiện tại không hỗ trợ đối thoại kho kiến thức, nếu muốn sử dụng, vui lòng chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ LobeChat Cloud",
+    "library": {
+      "action": {
+        "add": "Thêm",
+        "detail": "Chi tiết",
+        "remove": "Xóa"
+      },
+      "title": "Tệp/Kho kiến thức"
+    },
+    "relativeFilesOrKnowledgeBases": "Tệp/Kho kiến thức liên quan",
+    "title": "Kho kiến thức",
+    "uploadGuide": "Các tệp đã tải lên có thể được xem trong 'Kho kiến thức'",
+    "viewMore": "Xem thêm"
+  },
   "messageAction": {
     "delAndRegenerate": "Xóa và tạo lại",
     "regenerate": "Tạo lại"
@@ -43,6 +61,14 @@
   "newAgent": "Tạo trợ lý mới",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
+  "rag": {
+    "userQuery": {
+      "actions": {
+        "delete": "Xóa truy vấn",
+        "regenerate": "Tạo lại truy vấn"
+      }
+    }
+  },
   "regenerate": "Tạo lại",
   "roleAndArchive": "Vai trò và lưu trữ",
   "searchAgentPlaceholder": "Tìm kiếm trợ lý và cuộc trò chuyện...",
@@ -131,6 +157,13 @@
   "upload": {
     "actionFiletip": "Tải lên tập tin",
     "actionTooltip": "Tải lên hình ảnh",
-    "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng"
+    "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng",
+    "preview": {
+      "prepareTasks": "Chuẩn bị phân đoạn...",
+      "status": {
+        "pending": "Đang chuẩn bị tải lên...",
+        "processing": "Đang xử lý tệp..."
+      }
+    }
   }
 }
