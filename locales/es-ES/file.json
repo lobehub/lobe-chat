@@ -1,0 +1,91 @@
+{
+  "desc": "Gestiona tus archivos y tu base de conocimientos",
+  "detail": {
+    "basic": {
+      "createdAt": "Fecha de creación",
+      "filename": "Nombre del archivo",
+      "size": "Tamaño del archivo",
+      "title": "Información básica",
+      "type": "Formato",
+      "updatedAt": "Fecha de actualización"
+    },
+    "data": {
+      "chunkCount": "Número de fragmentos",
+      "embedding": {
+        "default": "No vectorizado aún",
+        "error": "Error",
+        "pending": "Pendiente de inicio",
+        "processing": "En proceso",
+        "success": "Completado"
+      },
+      "embeddingStatus": "Vectorización"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "Nueva carpeta",
+      "uploadFile": "Subir archivo",
+      "uploadFolder": "Subir carpeta"
+    },
+    "uploadButton": "Subir"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Estás a punto de eliminar esta base de conocimientos. Los archivos no se eliminarán, se moverán a Todos los archivos. Una vez eliminada, la base de conocimientos no se podrá recuperar, por favor actúa con precaución.",
+      "empty": "Haz clic en <1>+</1> para comenzar a crear una base de conocimientos"
+    },
+    "new": "Nueva base de conocimientos",
+    "title": "Base de conocimientos"
+  },
+  "notSupportGuide": {
+    "desc": "La instancia de despliegue actual está en modo de base de datos cliente, no se puede utilizar la función de gestión de archivos. Por favor, cambia a <1>modo de despliegue de base de datos en servidor</1>, o utiliza directamente <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Soporta los tipos de archivos más comunes, incluyendo formatos de documentos como Word, PPT, Excel, PDF, TXT, así como archivos de código como JS, Python, etc.",
+        "title": "Análisis de múltiples tipos de archivos"
+      },
+      "embeddings": {
+        "desc": "Utiliza modelos de vectores de alto rendimiento para vectorizar fragmentos de texto, permitiendo la búsqueda semántica del contenido del archivo",
+        "title": "Semantización de vectores"
+      },
+      "repos": {
+        "desc": "Soporta la creación de bases de conocimientos y permite añadir diferentes tipos de archivos, construyendo tu propio conocimiento en el área",
+        "title": "Base de conocimientos"
+      }
+    },
+    "title": "El modo de despliegue actual no soporta la gestión de archivos"
+  },
+  "preview": {
+    "unsupportedFile": "Este formato de archivo no es compatible con la vista previa en línea"
+  },
+  "searchFilePlaceholder": "Buscar archivo",
+  "tab": {
+    "all": "Todos los archivos",
+    "audios": "Audios",
+    "documents": "Documentos",
+    "images": "Imágenes",
+    "videos": "Videos",
+    "websites": "Sitios web"
+  },
+  "title": "Archivos",
+  "uploadDock": {
+    "body": {
+      "collapse": "Colapsar",
+      "item": {
+        "done": "Subido",
+        "error": "Error en la subida, por favor intenta de nuevo",
+        "pending": "Preparando para subir...",
+        "processing": "Procesando archivo...",
+        "restTime": "Tiempo restante {{time}}"
+      }
+    },
+    "totalCount": "Total {{count}} elementos",
+    "uploadStatus": {
+      "error": "Error en la subida",
+      "pending": "Esperando para subir",
+      "processing": "Subiendo",
+      "success": "Subida completada",
+      "uploading": "Subiendo"
+    }
+  }
+}

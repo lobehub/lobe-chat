@@ -1,0 +1,91 @@
+{
+  "desc": "Verwalten Sie Ihre Dateien und Wissensdatenbank",
+  "detail": {
+    "basic": {
+      "createdAt": "Erstellungszeit",
+      "filename": "Dateiname",
+      "size": "Dateigröße",
+      "title": "Grundinformationen",
+      "type": "Format",
+      "updatedAt": "Aktualisierungszeit"
+    },
+    "data": {
+      "chunkCount": "Anzahl der Teile",
+      "embedding": {
+        "default": "Noch nicht vektorisiert",
+        "error": "Fehler",
+        "pending": "Warten auf Start",
+        "processing": "Wird bearbeitet",
+        "success": "Abgeschlossen"
+      },
+      "embeddingStatus": "Vektorisierung"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "Neuen Ordner erstellen",
+      "uploadFile": "Datei hochladen",
+      "uploadFolder": "Ordner hochladen"
+    },
+    "uploadButton": "Hochladen"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Die Wissensdatenbank wird gelöscht, die darin enthaltenen Dateien werden nicht gelöscht, sondern in den gesamten Dateien verschoben. Nach dem Löschen der Wissensdatenbank kann sie nicht wiederhergestellt werden, bitte vorsichtig vorgehen.",
+      "empty": "Klicken Sie auf <1>+</1>, um eine Wissensdatenbank zu erstellen"
+    },
+    "new": "Neue Wissensdatenbank",
+    "title": "Wissensdatenbank"
+  },
+  "notSupportGuide": {
+    "desc": "Die aktuelle Bereitstellung ist im Client-Datenbankmodus und unterstützt keine Dateiverwaltungsfunktionen. Bitte wechseln Sie zu <1>Server-Datenbank-Bereitstellungsmodus</1> oder verwenden Sie direkt <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Unterstützt gängige Dateitypen, einschließlich Word, PPT, Excel, PDF, TXT und andere gängige Dokumentformate sowie JS, Python und andere gängige Code-Dateien",
+        "title": "Verschiedene Dateitypen analysieren"
+      },
+      "embeddings": {
+        "desc": "Verwendet leistungsstarke Vektormodelle zur Vektorisierung von Textteilen, um eine semantische Suche nach Dateiinhalten zu ermöglichen",
+        "title": "Vektor-Semantisierung"
+      },
+      "repos": {
+        "desc": "Unterstützt die Erstellung von Wissensdatenbanken und ermöglicht das Hinzufügen verschiedener Dateitypen, um Ihr Fachwissen aufzubauen",
+        "title": "Wissensdatenbank"
+      }
+    },
+    "title": "Der aktuelle Bereitstellungsmodus unterstützt keine Dateiverwaltung"
+  },
+  "preview": {
+    "unsupportedFile": "Dieses Dateiformat wird nicht für die Online-Vorschau unterstützt"
+  },
+  "searchFilePlaceholder": "Datei suchen",
+  "tab": {
+    "all": "Alle Dateien",
+    "audios": "Audio",
+    "documents": "Dokumente",
+    "images": "Bilder",
+    "videos": "Videos",
+    "websites": "Webseiten"
+  },
+  "title": "Dateien",
+  "uploadDock": {
+    "body": {
+      "collapse": "Einklappen",
+      "item": {
+        "done": "Hochgeladen",
+        "error": "Hochladen fehlgeschlagen, bitte erneut versuchen",
+        "pending": "Bereit zum Hochladen...",
+        "processing": "Datei wird bearbeitet...",
+        "restTime": "Verbleibende Zeit {{time}}"
+      }
+    },
+    "totalCount": "Insgesamt {{count}} Elemente",
+    "uploadStatus": {
+      "error": "Fehler beim Hochladen",
+      "pending": "Warten auf Upload",
+      "processing": "Wird hochgeladen",
+      "success": "Hochladen abgeschlossen",
+      "uploading": "Wird hochgeladen"
+    }
+  }
+}

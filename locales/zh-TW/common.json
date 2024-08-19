@@ -13,6 +13,7 @@
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
   "autoGenerateTooltipDisabled": "請填寫提示詞後使用自動補全功能",
+  "back": "返回",
   "batchDelete": "批次刪除",
   "blog": "產品部落格",
   "cancel": "取消",
