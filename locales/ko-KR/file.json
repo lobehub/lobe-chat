@@ -1,0 +1,91 @@
+{
+  "desc": "파일 및 지식 베이스 관리",
+  "detail": {
+    "basic": {
+      "createdAt": "생성 시간",
+      "filename": "파일 이름",
+      "size": "파일 크기",
+      "title": "기본 정보",
+      "type": "형식",
+      "updatedAt": "업데이트 시간"
+    },
+    "data": {
+      "chunkCount": "청크 수",
+      "embedding": {
+        "default": "벡터화되지 않음",
+        "error": "실패",
+        "pending": "시작 대기 중",
+        "processing": "처리 중",
+        "success": "완료"
+      },
+      "embeddingStatus": "벡터화"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "새 폴더 만들기",
+      "uploadFile": "파일 업로드",
+      "uploadFolder": "폴더 업로드"
+    },
+    "uploadButton": "업로드"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "해당 지식 베이스를 삭제하면 파일은 삭제되지 않고 모든 파일로 이동됩니다. 지식 베이스 삭제 후에는 복구할 수 없으니 신중하게 작업하세요.",
+      "empty": "지식 베이스 생성을 시작하려면 <1>+</1>를 클릭하세요."
+    },
+    "new": "새 지식 베이스 만들기",
+    "title": "지식 베이스"
+  },
+  "notSupportGuide": {
+    "desc": "현재 배포된 인스턴스는 클라이언트 데이터베이스 모드로, 파일 관리 기능을 사용할 수 없습니다. <1>서버 데이터베이스 배포 모드</1>로 전환하거나 직접 <3>LobeChat Cloud</3>를 사용하세요.",
+    "features": {
+      "allKind": {
+        "desc": "Word, PPT, Excel, PDF, TXT 등 일반 문서 형식과 JS, Python 등 주요 코드 파일을 포함한 다양한 파일 형식을 지원합니다.",
+        "title": "다양한 파일 형식 분석"
+      },
+      "embeddings": {
+        "desc": "고성능 벡터 모델을 사용하여 텍스트 청크를 벡터화하여 파일 내용의 의미 기반 검색을 구현합니다.",
+        "title": "벡터 의미화"
+      },
+      "repos": {
+        "desc": "지식 베이스를 생성하고 다양한 유형의 파일을 추가하여 나만의 분야 지식을 구축할 수 있습니다.",
+        "title": "지식 베이스"
+      }
+    },
+    "title": "현재 배포 모드는 파일 관리를 지원하지 않습니다."
+  },
+  "preview": {
+    "unsupportedFile": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다."
+  },
+  "searchFilePlaceholder": "파일 검색",
+  "tab": {
+    "all": "모든 파일",
+    "audios": "음성",
+    "documents": "문서",
+    "images": "이미지",
+    "videos": "비디오",
+    "websites": "웹사이트"
+  },
+  "title": "파일",
+  "uploadDock": {
+    "body": {
+      "collapse": "접기",
+      "item": {
+        "done": "업로드 완료",
+        "error": "업로드 실패, 다시 시도하세요.",
+        "pending": "업로드 준비 중...",
+        "processing": "파일 처리 중...",
+        "restTime": "남은 시간 {{time}}"
+      }
+    },
+    "totalCount": "총 {{count}} 항목",
+    "uploadStatus": {
+      "error": "업로드 오류",
+      "pending": "업로드 대기 중",
+      "processing": "업로드 중",
+      "success": "업로드 완료",
+      "uploading": "업로드 진행 중"
+    }
+  }
+}

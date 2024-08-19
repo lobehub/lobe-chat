@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.11.8](https://github.com/lobehub/lobe-chat/compare/v1.11.7...v1.11.8)
+
+<sup>Released on **2024-08-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update zhipu models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update zhipu models, closes [#3509](https://github.com/lobehub/lobe-chat/issues/3509) ([e323b50](https://github.com/lobehub/lobe-chat/commit/e323b50))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.11.7](https://github.com/lobehub/lobe-chat/compare/v1.11.6...v1.11.7)
 
 <sup>Released on **2024-08-18**</sup>

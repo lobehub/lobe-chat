@@ -115,6 +115,7 @@
   },
   "upload": {
     "desc": "Detalhes: {{detail}}",
+    "fileOnlySupportInServerMode": "O modo de implantação atual não suporta o upload de arquivos que não sejam imagens. Para fazer o upload de arquivos no formato {{ext}}, por favor, mude para a implantação do banco de dados no servidor ou utilize o serviço LobeChat Cloud.",
     "title": "Falha ao enviar o arquivo, verifique a conexão de rede ou tente novamente mais tarde"
   }
 }
