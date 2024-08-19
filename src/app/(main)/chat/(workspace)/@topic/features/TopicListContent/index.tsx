@@ -15,7 +15,7 @@ import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
 import { ChatTopic } from '@/types/topic';
 
-import { Placeholder, SkeletonList } from '../SkeletonList';
+import { SkeletonList } from '../SkeletonList';
 import TopicItem from './TopicItem';
 
 const TopicListContent = memo(() => {
@@ -85,7 +85,7 @@ const TopicListContent = memo(() => {
         </Flexbox>
       )}
       <Virtuoso
-        components={{ ScrollSeekPlaceholder: Placeholder }}
+        // components={{ ScrollSeekPlaceholder: Placeholder }}
         computeItemKey={(_, item) => item.id}
         data={topics}
         fixedItemHeight={44}
@@ -93,10 +93,10 @@ const TopicListContent = memo(() => {
         itemContent={itemContent}
         overscan={44 * 10}
         ref={virtuosoRef}
-        scrollSeekConfiguration={{
-          enter: (velocity) => Math.abs(velocity) > 350,
-          exit: (velocity) => Math.abs(velocity) < 10,
-        }}
+        // scrollSeekConfiguration={{
+        //   enter: (velocity) => Math.abs(velocity) > 350,
+        //   exit: (velocity) => Math.abs(velocity) < 10,
+        // }}
       />
     </>
   );
