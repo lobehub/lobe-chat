@@ -1,0 +1,91 @@
+{
+  "desc": "Zarządzaj swoimi plikami i bazą wiedzy",
+  "detail": {
+    "basic": {
+      "createdAt": "Data utworzenia",
+      "filename": "Nazwa pliku",
+      "size": "Rozmiar pliku",
+      "title": "Informacje podstawowe",
+      "type": "Format",
+      "updatedAt": "Data aktualizacji"
+    },
+    "data": {
+      "chunkCount": "Liczba fragmentów",
+      "embedding": {
+        "default": "Nie zindeksowano",
+        "error": "Błąd",
+        "pending": "Oczekiwanie na uruchomienie",
+        "processing": "W trakcie przetwarzania",
+        "success": "Zakończono"
+      },
+      "embeddingStatus": "Indeksowanie"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "Nowy folder",
+      "uploadFile": "Prześlij plik",
+      "uploadFolder": "Prześlij folder"
+    },
+    "uploadButton": "Prześlij"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Zaraz usuniesz tę bazę wiedzy, pliki w niej zawarte nie zostaną usunięte, a zostaną przeniesione do folderu wszystkich plików. Po usunięciu bazy wiedzy nie będzie można jej przywrócić, proszę działać ostrożnie.",
+      "empty": "Kliknij <1>+</1>, aby rozpocząć tworzenie bazy wiedzy"
+    },
+    "new": "Nowa baza wiedzy",
+    "title": "Baza wiedzy"
+  },
+  "notSupportGuide": {
+    "desc": "Obecna instancja wdrożeniowa jest w trybie bazy danych klienta, co uniemożliwia korzystanie z funkcji zarządzania plikami. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio korzystać z <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Obsługuje popularne typy plików, w tym formaty dokumentów takie jak Word, PPT, Excel, PDF, TXT oraz popularne pliki kodu, takie jak JS, Python",
+        "title": "Analiza różnych typów plików"
+      },
+      "embeddings": {
+        "desc": "Wykorzystuje wysokowydajne modele wektorowe do indeksowania fragmentów tekstu, umożliwiając semantyczne przeszukiwanie treści plików",
+        "title": "Semantyzacja wektorów"
+      },
+      "repos": {
+        "desc": "Obsługuje tworzenie bazy wiedzy i pozwala na dodawanie różnych typów plików, budując swoją własną wiedzę w danej dziedzinie",
+        "title": "Baza wiedzy"
+      }
+    },
+    "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
+  },
+  "preview": {
+    "unsupportedFile": "Ten format pliku nie jest obsługiwany w podglądzie online"
+  },
+  "searchFilePlaceholder": "Szukaj pliku",
+  "tab": {
+    "all": "Wszystkie pliki",
+    "audios": "Audio",
+    "documents": "Dokumenty",
+    "images": "Obrazy",
+    "videos": "Wideo",
+    "websites": "Strony internetowe"
+  },
+  "title": "Pliki",
+  "uploadDock": {
+    "body": {
+      "collapse": "Zwiń",
+      "item": {
+        "done": "Przesłano",
+        "error": "Błąd przesyłania, spróbuj ponownie",
+        "pending": "Przygotowanie do przesłania...",
+        "processing": "Przetwarzanie pliku...",
+        "restTime": "Pozostały czas {{time}}"
+      }
+    },
+    "totalCount": "Łącznie {{count}} pozycji",
+    "uploadStatus": {
+      "error": "Błąd przesyłania",
+      "pending": "Oczekiwanie na przesłanie",
+      "processing": "Przesyłanie",
+      "success": "Przesyłanie zakończone",
+      "uploading": "Przesyłanie w toku"
+    }
+  }
+}

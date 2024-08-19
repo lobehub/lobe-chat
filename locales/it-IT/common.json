@@ -13,6 +13,7 @@
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
   "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
+  "back": "Indietro",
   "batchDelete": "Elimina in batch",
   "blog": "Blog sui prodotti",
   "cancel": "Annulla",

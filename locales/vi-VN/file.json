@@ -1,0 +1,91 @@
+{
+  "desc": "Quản lý tệp và kho tri thức của bạn",
+  "detail": {
+    "basic": {
+      "createdAt": "Thời gian tạo",
+      "filename": "Tên tệp",
+      "size": "Kích thước tệp",
+      "title": "Thông tin cơ bản",
+      "type": "Định dạng",
+      "updatedAt": "Thời gian cập nhật"
+    },
+    "data": {
+      "chunkCount": "Số lượng phân đoạn",
+      "embedding": {
+        "default": "Chưa được vector hóa",
+        "error": "Thất bại",
+        "pending": "Đang chờ khởi động",
+        "processing": "Đang xử lý",
+        "success": "Đã hoàn thành"
+      },
+      "embeddingStatus": "Trạng thái vector hóa"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "Tạo thư mục mới",
+      "uploadFile": "Tải tệp lên",
+      "uploadFolder": "Tải thư mục lên"
+    },
+    "uploadButton": "Tải lên"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Bạn sắp xóa kho tri thức này, các tệp trong đó sẽ không bị xóa mà sẽ được chuyển vào tất cả tệp. Kho tri thức sau khi xóa sẽ không thể khôi phục, vui lòng cẩn thận khi thực hiện.",
+      "empty": "Nhấp vào <1>+</1> để bắt đầu tạo kho tri thức"
+    },
+    "new": "Tạo kho tri thức mới",
+    "title": "Kho tri thức"
+  },
+  "notSupportGuide": {
+    "desc": "Phiên bản triển khai hiện tại là chế độ cơ sở dữ liệu khách hàng, không thể sử dụng chức năng quản lý tệp. Vui lòng chuyển sang <1>chế độ triển khai cơ sở dữ liệu máy chủ</1>, hoặc sử dụng trực tiếp <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Hỗ trợ các loại tệp phổ biến, bao gồm các định dạng tài liệu như Word, PPT, Excel, PDF, TXT, cũng như các tệp mã nguồn phổ biến như JS, Python",
+        "title": "Phân tích nhiều loại tệp"
+      },
+      "embeddings": {
+        "desc": "Sử dụng mô hình vector hiệu suất cao để vector hóa các phân đoạn văn bản, thực hiện tìm kiếm ngữ nghĩa nội dung tệp",
+        "title": "Ngữ nghĩa hóa vector"
+      },
+      "repos": {
+        "desc": "Hỗ trợ tạo kho tri thức và cho phép thêm các loại tệp khác nhau, xây dựng kiến thức thuộc lĩnh vực của bạn",
+        "title": "Kho tri thức"
+      }
+    },
+    "title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp"
+  },
+  "preview": {
+    "unsupportedFile": "Định dạng tệp này không hỗ trợ xem trước trực tuyến"
+  },
+  "searchFilePlaceholder": "Tìm kiếm tệp",
+  "tab": {
+    "all": "Tất cả tệp",
+    "audios": "Âm thanh",
+    "documents": "Tài liệu",
+    "images": "Hình ảnh",
+    "videos": "Video",
+    "websites": "Trang web"
+  },
+  "title": "Tệp",
+  "uploadDock": {
+    "body": {
+      "collapse": "Thu gọn",
+      "item": {
+        "done": "Đã tải lên",
+        "error": "Tải lên thất bại, vui lòng thử lại",
+        "pending": "Chuẩn bị tải lên...",
+        "processing": "Đang xử lý tệp...",
+        "restTime": "Thời gian còn lại {{time}}"
+      }
+    },
+    "totalCount": "Tổng cộng {{count}} mục",
+    "uploadStatus": {
+      "error": "Lỗi tải lên",
+      "pending": "Đang chờ tải lên",
+      "processing": "Đang tải lên",
+      "success": "Tải lên hoàn tất",
+      "uploading": "Đang tải lên"
+    }
+  }
+}

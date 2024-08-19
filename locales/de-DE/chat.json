@@ -36,6 +36,24 @@
     "stop": "Stoppen",
     "warp": "Zeilenumbruch"
   },
+  "knowledgeBase": {
+    "all": "Alle Inhalte",
+    "allFiles": "Alle Dateien",
+    "allKnowledgeBases": "Alle Wissensdatenbanken",
+    "disabled": "Der aktuelle Bereitstellungsmodus unterstützt keine Wissensdatenbankgespräche. Bitte wechseln Sie zur serverseitigen Datenbankbereitstellung oder verwenden Sie den LobeChat Cloud-Dienst.",
+    "library": {
+      "action": {
+        "add": "Hinzufügen",
+        "detail": "Details",
+        "remove": "Entfernen"
+      },
+      "title": "Datei/Wissensdatenbank"
+    },
+    "relativeFilesOrKnowledgeBases": "Verwandte Dateien/Wissensdatenbanken",
+    "title": "Wissensdatenbank",
+    "uploadGuide": "Hochgeladene Dateien können in der „Wissensdatenbank“ eingesehen werden.",
+    "viewMore": "Mehr anzeigen"
+  },
   "messageAction": {
     "delAndRegenerate": "Löschen und neu generieren",
     "regenerate": "Neu generieren"
@@ -43,6 +61,14 @@
   "newAgent": "Neuer Assistent",
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
+  "rag": {
+    "userQuery": {
+      "actions": {
+        "delete": "Abfrage löschen",
+        "regenerate": "Abfrage neu generieren"
+      }
+    }
+  },
   "regenerate": "Neu generieren",
   "roleAndArchive": "Rolle und Archiv",
   "searchAgentPlaceholder": "Assistenten und Unterhaltungen durchsuchen...",
@@ -131,6 +157,13 @@
   "upload": {
     "actionFiletip": "Laden Sie die Datei hoch",
     "actionTooltip": "Bild hochladen",
-    "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um es zu verwenden."
+    "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um es zu verwenden.",
+    "preview": {
+      "prepareTasks": "Vorbereitung der Teile...",
+      "status": {
+        "pending": "Vorbereitung des Uploads...",
+        "processing": "Datei wird verarbeitet..."
+      }
+    }
   }
 }

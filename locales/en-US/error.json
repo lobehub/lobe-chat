@@ -115,6 +115,7 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
+    "fileOnlySupportInServerMode": "The current deployment mode does not support uploading non-image files. To upload files in {{ext}} format, please switch to server database deployment or use LobeChat Cloud service.",
     "title": "File upload failed. Please check your network connection or try again later"
   }
 }

@@ -115,6 +115,7 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
+    "fileOnlySupportInServerMode": "De huidige implementatiemodus ondersteunt het uploaden van niet-afbeeldingsbestanden niet. Als u bestanden in {{ext}}-formaat wilt uploaden, schakelt u over naar de serverdatabase-implementatie of gebruikt u de LobeChat Cloud-service.",
     "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw"
   }
 }
