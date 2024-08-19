@@ -372,6 +372,11 @@
       "modelDesc": "指定用於生成助理名稱、描述、頭像、標籤的模型",
       "title": "自動生成助理資訊"
     },
+    "queryRewrite": {
+      "label": "提問重寫模型",
+      "modelDesc": "指定用於優化用戶提問的模型",
+      "title": "知識庫"
+    },
     "title": "系統助手",
     "topic": {
       "label": "話題命名模型",

@@ -958,10 +958,10 @@ describe('chatMessage actions', () => {
     it('should not do anything if there is no abortController', async () => {
       const { result } = renderHook(() => useChatStore());
 
-      // 确保没有设置 abortController
-      useChatStore.setState({ abortController: undefined });
-
       await act(async () => {
+        // 确保没有设置 abortController
+        useChatStore.setState({ abortController: undefined });
+
         result.current.stopGenerateMessage();
       });
 
@@ -1089,7 +1089,7 @@ describe('chatMessage actions', () => {
 
       // Mock fetch to reject with an error
       const errorMessage = 'Error fetching AI response';
-      vi.mocked(fetch).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(fetch).mockRejectedValueOnce(new Error(errorMessage));
 
       await act(async () => {
         expect(

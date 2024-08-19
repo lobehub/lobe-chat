@@ -23,9 +23,9 @@ export const AssistantMessage = memo<
     <Flexbox gap={8} id={id}>
       {(content || editing) && (
         <DefaultMessage
+          addIdOnDOM={false}
           content={content}
-          // we have id above, so don't need to pass it again
-          id={undefined as any}
+          id={id}
           isToolCallGenerating={isToolCallGenerating}
           {...props}
         />
