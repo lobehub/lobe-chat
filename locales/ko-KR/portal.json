@@ -6,5 +6,6 @@
     "summaryTooltip": "현재 콘텐츠를 요약합니다"
   },
   "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 플러그인을 사용한 후에 다시 확인해주세요.",
+  "files": "파일",
   "title": "확장 창"
 }

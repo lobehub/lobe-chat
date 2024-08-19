@@ -13,6 +13,7 @@
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
+  "back": "Retour",
   "batchDelete": "Suppression en masse",
   "blog": "Blog des produits",
   "cancel": "Annuler",

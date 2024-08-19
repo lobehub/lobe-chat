@@ -36,6 +36,24 @@
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
   },
+  "knowledgeBase": {
+    "all": "Alle inhoud",
+    "allFiles": "Alle bestanden",
+    "allKnowledgeBases": "Alle kennisbanken",
+    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Schakel over naar serverdatabase-implementatie of gebruik de LobeChat Cloud-service om dit te gebruiken.",
+    "library": {
+      "action": {
+        "add": "Toevoegen",
+        "detail": "Details",
+        "remove": "Verwijderen"
+      },
+      "title": "Bestand/Kennisbank"
+    },
+    "relativeFilesOrKnowledgeBases": "Gerelateerde bestanden/kennisbanken",
+    "title": "Kennisbank",
+    "uploadGuide": "Geüploade bestanden kunnen worden bekeken in de 'Kennisbank'.",
+    "viewMore": "Bekijk meer"
+  },
   "messageAction": {
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "regenerate": "Opnieuw genereren"
@@ -43,6 +61,14 @@
   "newAgent": "Nieuwe assistent",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
+  "rag": {
+    "userQuery": {
+      "actions": {
+        "delete": "Verwijder Query herschrijving",
+        "regenerate": "Genereer Query opnieuw"
+      }
+    }
+  },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
   "searchAgentPlaceholder": "Zoek assistenten en gesprekken...",
@@ -131,6 +157,13 @@
   "upload": {
     "actionFiletip": "Upload het bestand",
     "actionTooltip": "Upload afbeelding",
-    "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken."
+    "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken.",
+    "preview": {
+      "prepareTasks": "Voorbereiden van blokken...",
+      "status": {
+        "pending": "Voorbereiden om te uploaden...",
+        "processing": "Bestand wordt verwerkt..."
+      }
+    }
   }
 }
