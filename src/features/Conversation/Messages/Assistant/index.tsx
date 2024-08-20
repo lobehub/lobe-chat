@@ -20,10 +20,17 @@ export const AssistantMessage = memo<
 
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 
-  return (
+  return editing ? (
+    <DefaultMessage
+      content={content}
+      id={id}
+      isToolCallGenerating={isToolCallGenerating}
+      {...props}
+    />
+  ) : (
     <Flexbox gap={8} id={id}>
       {!!chunksList && chunksList.length > 0 && <FileChunks data={chunksList} />}
-      {(content || editing) && (
+      {content && (
         <DefaultMessage
           addIdOnDOM={false}
           content={content}
@@ -32,7 +39,7 @@ export const AssistantMessage = memo<
           {...props}
         />
       )}
-      {!editing && tools && (
+      {tools && (
         <Flexbox gap={8}>
           {tools.map((toolCall, index) => (
             <ToolCall

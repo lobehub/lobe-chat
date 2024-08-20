@@ -64,6 +64,7 @@ export default {
   pin: '置顶',
   pinOff: '取消置顶',
   rag: {
+    referenceChunks: '引用源',
     userQuery: {
       actions: {
         delete: '删除 Query 重写',

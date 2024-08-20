@@ -151,7 +151,7 @@ export class MessageModel {
       .from(messageQueryChunks)
       .leftJoin(chunks, eq(chunks.id, messageQueryChunks.chunkId))
       .leftJoin(fileChunks, eq(fileChunks.chunkId, chunks.id))
-      .leftJoin(files, eq(fileChunks.fileId, files.id))
+      .innerJoin(files, eq(fileChunks.fileId, files.id))
       .where(inArray(messageQueryChunks.messageId, messageIds));
 
     // 3. get relative message query

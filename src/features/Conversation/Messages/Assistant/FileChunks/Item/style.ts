@@ -11,11 +11,14 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     color: ${token.colorText};
 
-    border: 1px solid ${token.colorSplit};
+    background: ${token.colorBgContainer};
     border-radius: 8px;
+    box-shadow: ${token.boxShadowTertiary};
+
+    transition: box-shadow 0.2s;
 
     &:hover {
-      background: ${token.colorFillTertiary};
+      box-shadow: ${token.boxShadowSecondary};
     }
   `,
   filename: css`
