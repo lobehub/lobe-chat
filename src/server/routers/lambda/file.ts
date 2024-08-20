@@ -7,6 +7,7 @@ import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { FileModel } from '@/database/server/models/file';
 import { authedProcedure, router } from '@/libs/trpc';
+import { S3 } from '@/server/modules/S3';
 import { getFullFileUrl } from '@/server/utils/files';
 import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
 import { FileListItem, QueryFileListSchema, UploadFileSchema } from '@/types/files';
@@ -146,13 +147,26 @@ export const fileRouter = router({
   }),
 
   removeFile: fileProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
-    return ctx.fileModel.delete(input.id);
+    const file = await ctx.fileModel.delete(input.id);
+
+    if (!file) return;
+
+    // delele the file from remove from S3 if it is not used by other files
+    const s3Client = new S3();
+    await s3Client.deleteFile(file.url!);
   }),
 
   removeFiles: fileProcedure
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input, ctx }) => {
-      return ctx.fileModel.deleteMany(input.ids);
+      const needToRemoveFileList = await ctx.fileModel.deleteMany(input.ids);
+
+      if (!needToRemoveFileList || needToRemoveFileList.length === 0) return;
+
+      // remove from S3
+      const s3Client = new S3();
+
+      await s3Client.deleteFiles(needToRemoveFileList.map((file) => file.url!));
     }),
 });
 

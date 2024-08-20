@@ -69,10 +69,7 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
 
     // if there is no ragQuery and there is a chat history
     // we need to rewrite the user message to get better results
-    if (
-      !message?.ragQuery
-      // && messages.length > 0
-    ) {
+    if (!message?.ragQuery && messages.length > 0) {
       rewriteQuery = await get().internal_rewriteQuery(id, userQuery, messages);
     }
 

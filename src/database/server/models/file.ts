@@ -1,4 +1,4 @@
-import { asc, eq, ilike, inArray, notExists } from 'drizzle-orm';
+import { asc, count, eq, ilike, inArray, notExists } from 'drizzle-orm';
 import { and, desc } from 'drizzle-orm/expressions';
 
 import { serverDB } from '@/database/server/core/db';
@@ -61,11 +61,77 @@ export class FileModel {
   };
 
   delete = async (id: string) => {
-    return serverDB.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
+    const file = await this.findById(id);
+    if (!file) return;
+
+    const fileHash = file.fileHash!;
+
+    return await serverDB.transaction(async (trx) => {
+      await trx.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
+
+      const result = await trx
+        .select({ count: count() })
+        .from(files)
+        .where(and(eq(files.fileHash, fileHash)));
+
+      const fileCount = result[0].count;
+
+      // delete the file from global file if it is not used by other files
+      if (fileCount === 0) {
+        await trx.delete(globalFiles).where(eq(globalFiles.hashId, fileHash));
+
+        return file;
+      }
+    });
+  };
+
+  deleteGlobalFile = async (hashId: string) => {
+    return serverDB.delete(globalFiles).where(eq(globalFiles.hashId, hashId));
   };
 
   deleteMany = async (ids: string[]) => {
-    return serverDB.delete(files).where(and(inArray(files.id, ids), eq(files.userId, this.userId)));
+    const fileList = await this.findByIds(ids);
+    const hashList = fileList.map((file) => file.fileHash!);
+
+    return await serverDB.transaction(async (trx) => {
+      // delete the files
+      await trx.delete(files).where(and(inArray(files.id, ids), eq(files.userId, this.userId)));
+
+      // count the files by hash
+      const result = await trx
+        .select({
+          count: count(),
+          hashId: files.fileHash,
+        })
+        .from(files)
+        .where(inArray(files.fileHash, hashList))
+        .groupBy(files.fileHash);
+
+      // Create a Map to store the query result
+      const countMap = new Map(result.map((item) => [item.hashId, item.count]));
+
+      // Ensure that all incoming hashes have a result, even if it is 0
+      const fileHashCounts = hashList.map((hashId) => ({
+        count: countMap.get(hashId) || 0,
+        hashId: hashId,
+      }));
+
+      const needToDeleteList = fileHashCounts.filter((item) => item.count === 0);
+
+      if (needToDeleteList.length === 0) return;
+
+      // delete the file from global file if it is not used by other files
+      await trx.delete(globalFiles).where(
+        inArray(
+          globalFiles.hashId,
+          needToDeleteList.map((item) => item.hashId!),
+        ),
+      );
+
+      return fileList.filter((file) =>
+        needToDeleteList.some((item) => item.hashId === file.fileHash),
+      );
+    });
   };
 
   clear = async () => {
@@ -149,10 +215,27 @@ export class FileModel {
     return query.where(whereClause).orderBy(orderByClause);
   };
 
+  findByIds = async (ids: string[]) => {
+    return serverDB.query.files.findMany({
+      where: and(inArray(files.id, ids), eq(files.userId, this.userId)),
+    });
+  };
+
   findById = async (id: string) => {
     return serverDB.query.files.findFirst({
       where: and(eq(files.id, id), eq(files.userId, this.userId)),
     });
+  };
+
+  countFilesByHash = async (hash: string) => {
+    const result = await serverDB
+      .select({
+        count: count(),
+      })
+      .from(files)
+      .where(and(eq(files.fileHash, hash)));
+
+    return result[0].count;
   };
 
   async update(id: string, value: Partial<FileItem>) {

@@ -1,6 +1,7 @@
 import {
+  DeleteObjectCommand,
+  DeleteObjectsCommand,
   GetObjectCommand,
-  ListObjectsCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3';
@@ -45,13 +46,22 @@ export class S3 {
     });
   }
 
-  public async getImages(): Promise<FileType[]> {
-    const command = new ListObjectsCommand({
+  public async deleteFile(key: string) {
+    const command = new DeleteObjectCommand({
       Bucket: this.bucket,
+      Key: key,
     });
 
-    const res = await this.client.send(command);
-    return listFileSchema.parse(res.Contents);
+    return this.client.send(command);
+  }
+
+  public async deleteFiles(keys: string[]) {
+    const command = new DeleteObjectsCommand({
+      Bucket: this.bucket,
+      Delete: { Objects: keys.map((key) => ({ Key: key })) },
+    });
+
+    return this.client.send(command);
   }
 
   public async getFileContent(key: string): Promise<string> {

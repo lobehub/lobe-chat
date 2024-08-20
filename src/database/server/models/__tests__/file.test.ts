@@ -373,4 +373,56 @@ describe('FileModel', () => {
       userId,
     });
   });
+
+  it('should countFilesByHash', async () => {
+    const fileList = [
+      {
+        id: '1',
+        name: 'document.pdf',
+        url: 'https://example.com/document.pdf',
+        fileHash: 'hash1',
+        size: 1000,
+        fileType: 'application/pdf',
+        userId,
+      },
+      {
+        id: '2',
+        name: 'image.jpg',
+        url: 'https://example.com/image.jpg',
+        fileHash: 'hash2',
+        size: 500,
+        fileType: 'image/jpeg',
+        userId,
+      },
+      {
+        id: '5',
+        name: 'document.pdf',
+        url: 'https://example.com/document.pdf',
+        fileHash: 'hash1',
+        size: 1000,
+        fileType: 'application/pdf',
+        userId: 'user2',
+      },
+    ];
+
+    await serverDB.insert(globalFiles).values([
+      {
+        hashId: 'hash1',
+        url: 'https://example.com/document.pdf',
+        size: 1000,
+        fileType: 'application/pdf',
+      },
+      {
+        hashId: 'hash2',
+        url: 'https://example.com/image.jpg',
+        size: 500,
+        fileType: 'image/jpeg',
+      },
+    ]);
+
+    await serverDB.insert(files).values(fileList);
+
+    const data = await fileModel.countFilesByHash('hash1');
+    expect(data).toEqual(2);
+  });
 });
