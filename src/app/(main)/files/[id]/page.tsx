@@ -1,4 +1,3 @@
-import { auth } from '@clerk/nextjs/server';
 import { notFound } from 'next/navigation';
 import { Flexbox } from 'react-layout-kit';
 
@@ -6,6 +5,7 @@ import FileDetail from '@/app/(main)/files/features/FileDetail';
 import FileViewer from '@/features/FileViewer';
 import { createCallerFactory } from '@/libs/trpc';
 import { lambdaRouter } from '@/server/routers/lambda';
+import { getUserAuth } from '@/utils/server/auth';
 
 import Header from './Header';
 
@@ -18,8 +18,9 @@ type Props = { params: Params };
 const createCaller = createCallerFactory(lambdaRouter);
 
 const FilePage = async ({ params }: Props) => {
-  const clerkAuth = auth();
-  const caller = createCaller({ userId: clerkAuth.userId });
+  const { userId } = await getUserAuth();
+
+  const caller = createCaller({ userId });
 
   const file = await caller.file.getFileItemById({ id: params.id });
 
