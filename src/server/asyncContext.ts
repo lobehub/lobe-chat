@@ -1,9 +1,10 @@
 import { NextRequest } from 'next/server';
 
-import { LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
+import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
 
 export interface AsyncAuthContext {
+  jwtPayload: JWTPayload;
   secret: string;
   userId?: string | null;
 }
@@ -13,9 +14,11 @@ export interface AsyncAuthContext {
  * This is useful for testing when we don't want to mock Next.js' request/response
  */
 export const createAsyncContextInner = async (params?: {
+  jwtPayload?: JWTPayload;
   secret?: string;
   userId?: string | null;
 }): Promise<AsyncAuthContext> => ({
+  jwtPayload: params?.jwtPayload || {},
   secret: params?.secret || '',
   userId: params?.userId,
 });
@@ -30,7 +33,8 @@ export const createAsyncRouteContext = async (request: NextRequest): Promise<Asy
 
   const secret = authorization?.split(' ')[1];
   const gateKeeper = await KeyVaultsGateKeeper.initWithEnvKey();
-  const result = await gateKeeper.decrypt(lobeChatAuthorization || '');
+  const { plaintext } = await gateKeeper.decrypt(lobeChatAuthorization || '');
 
-  return createAsyncContextInner({ secret, userId: result.plaintext });
+  const { userId, payload } = JSON.parse(plaintext);
+  return createAsyncContextInner({ jwtPayload: payload, secret, userId });
 };

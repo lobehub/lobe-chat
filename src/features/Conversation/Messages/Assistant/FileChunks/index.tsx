@@ -9,7 +9,7 @@ import { ChatFileChunk } from '@/types/message';
 
 import ChunkItem from './Item';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     cursor: pointer;
 
@@ -23,7 +23,7 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 8px;
 
     &:hover {
-      background: ${token.colorFillTertiary};
+      background: ${isDarkMode ? '' : token.colorFillSecondary};
     }
   `,
   title: css`

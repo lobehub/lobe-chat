@@ -1,6 +1,7 @@
 import { createStyles } from 'antd-style';
+import { lighten } from 'polished';
 
-export const useStyles = createStyles(({ css, token }) => ({
+export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     cursor: pointer;
 
@@ -11,13 +12,14 @@ export const useStyles = createStyles(({ css, token }) => ({
 
     color: ${token.colorText};
 
-    background: ${token.colorBgContainer};
+    background: ${lighten(0.1, token.colorBgElevated)};
     border-radius: 8px;
     box-shadow: ${token.boxShadowTertiary};
 
-    transition: box-shadow 0.2s;
+    transition: all 0.2s;
 
     &:hover {
+      background: ${isDarkMode ? lighten(0.15, token.colorBgElevated) : ''};
       box-shadow: ${token.boxShadowSecondary};
     }
   `,

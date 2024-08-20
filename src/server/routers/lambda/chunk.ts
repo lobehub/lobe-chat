@@ -12,18 +12,15 @@ import { MessageModel } from '@/database/server/models/message';
 import { knowledgeBaseFiles } from '@/database/server/schemas/lobechat';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { authedProcedure, router } from '@/libs/trpc';
+import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
 import { ChunkService } from '@/server/services/chunk';
 import { SemanticSearchSchema } from '@/types/rag';
 
-const chunkProcedure = authedProcedure.use(async (opts) => {
+const chunkProcedure = authedProcedure.use(keyVaults).use(async (opts) => {
   const { ctx } = opts;
-
-  // TODO: need to find a way to pass the provider options
-  const agentRuntime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenAI, {});
 
   return opts.next({
     ctx: {
-      agentRuntime,
       asyncTaskModel: new AsyncTaskModel(ctx.userId),
       chunkModel: new ChunkModel(ctx.userId),
       chunkService: new ChunkService(ctx.userId),
@@ -42,7 +39,7 @@ export const chunkRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const asyncTaskId = await ctx.chunkService.asyncEmbeddingFileChunks(input.id);
+      const asyncTaskId = await ctx.chunkService.asyncEmbeddingFileChunks(input.id, ctx.jwtPayload);
 
       return { id: asyncTaskId, success: true };
     }),
@@ -55,7 +52,11 @@ export const chunkRouter = router({
       }),
     )
     .mutation(async ({ ctx, input }) => {
-      const asyncTaskId = await ctx.chunkService.asyncParseFileToChunks(input.id, input.skipExist);
+      const asyncTaskId = await ctx.chunkService.asyncParseFileToChunks(
+        input.id,
+        ctx.jwtPayload,
+        input.skipExist,
+      );
 
       return { id: asyncTaskId, success: true };
     }),
@@ -91,7 +92,7 @@ export const chunkRouter = router({
       }
 
       // 2. create a new asyncTask for chunking
-      const asyncTaskId = await ctx.chunkService.asyncParseFileToChunks(input.id);
+      const asyncTaskId = await ctx.chunkService.asyncParseFileToChunks(input.id, ctx.jwtPayload);
 
       return { id: asyncTaskId, success: true };
     }),
@@ -106,7 +107,12 @@ export const chunkRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       console.time('embedding');
-      const embeddings = await ctx.agentRuntime.embeddings({
+      const agentRuntime = await initAgentRuntimeWithUserPayload(
+        ModelProvider.OpenAI,
+        ctx.jwtPayload,
+      );
+
+      const embeddings = await agentRuntime.embeddings({
         dimensions: 1024,
         input: input.query,
         model: input.model,
@@ -129,7 +135,13 @@ export const chunkRouter = router({
 
       // if there is no message rag or it's embeddings, then we need to create one
       if (!item || !item.embeddings) {
-        const embeddings = await ctx.agentRuntime.embeddings({
+        // TODO: need to support customize
+        const agentRuntime = await initAgentRuntimeWithUserPayload(
+          ModelProvider.OpenAI,
+          ctx.jwtPayload,
+        );
+
+        const embeddings = await agentRuntime.embeddings({
           dimensions: 1024,
           input: input.rewriteQuery,
           model: input.model || DEFAULT_EMBEDDING_MODEL,

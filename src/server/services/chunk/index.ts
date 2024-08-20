@@ -1,3 +1,4 @@
+import { JWTPayload } from '@/const/auth';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { FileModel } from '@/database/server/models/file';
 import { ChunkContentParams, ContentChunk } from '@/server/modules/ContentChunk';
@@ -23,7 +24,7 @@ export class ChunkService {
     return this.chunkClient.chunkContent(params);
   }
 
-  async asyncEmbeddingFileChunks(fileId: string) {
+  async asyncEmbeddingFileChunks(fileId: string, payload: JWTPayload) {
     const result = await this.fileModel.findById(fileId);
 
     if (!result) return;
@@ -36,7 +37,7 @@ export class ChunkService {
 
     await this.fileModel.update(fileId, { embeddingTaskId: asyncTaskId });
 
-    const asyncCaller = await createAsyncServerClient(this.userId);
+    const asyncCaller = await createAsyncServerClient(this.userId, payload);
 
     // trigger embedding task asynchronously
     await asyncCaller.file.embeddingChunks.mutate({ fileId, taskId: asyncTaskId });
@@ -47,7 +48,7 @@ export class ChunkService {
   /**
    * parse file to chunks with async task
    */
-  async asyncParseFileToChunks(fileId: string, skipExist?: boolean) {
+  async asyncParseFileToChunks(fileId: string, payload: JWTPayload, skipExist?: boolean) {
     const result = await this.fileModel.findById(fileId);
 
     if (!result) return;
@@ -63,7 +64,7 @@ export class ChunkService {
 
     await this.fileModel.update(fileId, { chunkTaskId: asyncTaskId });
 
-    const asyncCaller = await createAsyncServerClient(this.userId);
+    const asyncCaller = await createAsyncServerClient(this.userId, payload);
 
     // trigger parse file task asynchronously
     asyncCaller.file.parseFileToChunks.mutate({ fileId: fileId, taskId: asyncTaskId });

@@ -21,12 +21,8 @@ import { safeParseJSON } from '@/utils/safeParseJSON';
 const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
   const { ctx } = opts;
 
-  // TODO: need to find a way to pass the provider options
-  const agentRuntime = await initAgentRuntimeWithUserPayload(ModelProvider.OpenAI, {});
-
   return opts.next({
     ctx: {
-      agentRuntime,
       asyncTaskModel: new AsyncTaskModel(ctx.userId),
       chunkModel: new ChunkModel(ctx.userId),
       chunkService: new ChunkService(ctx.userId),
@@ -83,11 +79,17 @@ export const fileRouter = router({
           await pMap(
             requestArray,
             async (chunks, index) => {
+              const agentRuntime = await initAgentRuntimeWithUserPayload(
+                ModelProvider.OpenAI,
+                ctx.jwtPayload,
+              );
+
               const number = index + 1;
               console.log(`执行第 ${number} 个任务`);
 
               console.time(`任务[${number}]: embeddings`);
-              const embeddings = await ctx.agentRuntime.embeddings({
+
+              const embeddings = await agentRuntime.embeddings({
                 dimensions: 1024,
                 input: chunks.map((c) => c.text),
                 model: input.model,
@@ -122,7 +124,7 @@ export const fileRouter = router({
         // Race between the chunking process and the timeout
         return await Promise.race([embeddingPromise(), timeoutPromise]);
       } catch (e) {
-        console.log('embeddingChunks error', e);
+        console.error('embeddingChunks error', e);
         await ctx.asyncTaskModel.update(input.taskId, {
           error: e,
           status: AsyncTaskStatus.Error,
@@ -216,7 +218,7 @@ export const fileRouter = router({
 
           // if enable auto embedding, trigger the embedding task
           if (fileEnv.CHUNKS_AUTO_EMBEDDING) {
-            await chunkService.asyncEmbeddingFileChunks(input.fileId);
+            await chunkService.asyncEmbeddingFileChunks(input.fileId, ctx.jwtPayload);
           }
 
           return { success: true };
