@@ -28,11 +28,12 @@ export const useStyles = createStyles(
 
         width: 280px;
         max-width: unset;
-        margin-right: 0;
-        padding: 24px 12px 16px;
+        margin-inline-end: 0;
+        padding-block: 24px 16px;
+        padding-inline: 12px;
 
         background: ${token.colorBgContainer};
-        border-right: 1px solid ${token.colorSplit};
+        border-inline-end: 1px solid ${token.colorSplit};
       `,
       navbarMobileMenuRow: cx(
         mobile &&

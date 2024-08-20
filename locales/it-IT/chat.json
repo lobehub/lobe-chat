@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare a chattare con me subito o andare a [impostazioni assistente](/chat/settings#session={{id}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
+  "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
   "agentsAndConversations": "Assistenti e Conversazioni",
   "backToBottom": "Torna in fondo",
   "clearCurrentMessages": "Cancella messaggi attuali",
@@ -35,14 +36,39 @@
     "stop": "Ferma",
     "warp": "A capo"
   },
+  "knowledgeBase": {
+    "all": "Tutti i contenuti",
+    "allFiles": "Tutti i file",
+    "allKnowledgeBases": "Tutte le basi di conoscenza",
+    "disabled": "La modalità di distribuzione attuale non supporta le conversazioni con la base di conoscenza. Per utilizzare questa funzione, passare alla distribuzione del database server o utilizzare il servizio LobeChat Cloud.",
+    "library": {
+      "action": {
+        "add": "Aggiungi",
+        "detail": "Dettagli",
+        "remove": "Rimuovi"
+      },
+      "title": "File/Basi di conoscenza"
+    },
+    "relativeFilesOrKnowledgeBases": "File/Basi di conoscenza correlate",
+    "title": "Base di conoscenza",
+    "uploadGuide": "I file caricati possono essere visualizzati nella 'Base di conoscenza'.",
+    "viewMore": "Visualizza di più"
+  },
   "messageAction": {
     "delAndRegenerate": "Elimina e rigenera",
     "regenerate": "Rigenera"
   },
   "newAgent": "Nuovo assistente",
-  "noDescription": "Nessuna descrizione",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
+  "rag": {
+    "userQuery": {
+      "actions": {
+        "delete": "Elimina la Query riscritta",
+        "regenerate": "Rigenera la Query"
+      }
+    }
+  },
   "regenerate": "Rigenera",
   "roleAndArchive": "Ruolo e archivio",
   "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
@@ -100,6 +126,8 @@
       "duplicate": "Crea copia",
       "export": "Esporta argomento"
     },
+    "checkOpenNewTopic": "Abilitare un nuovo argomento?",
+    "checkSaveCurrentMessages": "Vuoi salvare la conversazione attuale come argomento?",
     "confirmRemoveAll": "Stai per rimuovere tutti gli argomenti, questa operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveTopic": "Stai per rimuovere questo argomento, l'operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveUnstarred": "Stai per rimuovere gli argomenti non contrassegnati, questa operazione non potrà essere annullata. Procedere con cautela.",
@@ -130,9 +158,12 @@
     "actionFiletip": "Carica il file",
     "actionTooltip": "Carica immagine",
     "disabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello prima di utilizzarlo",
-    "dragDesc": "Trascina i file qui, supporta il caricamento di più immagini. Tieni premuto Shift per inviare direttamente le immagini",
-    "dragFileDesc": "Trascina qui immagini e file per supportare il caricamento di più immagini e file. Tieni premuto Maiusc per inviare direttamente un'immagine o un file",
-    "dragFileTitle": "Carica il file",
-    "dragTitle": "Carica immagine"
+    "preview": {
+      "prepareTasks": "Preparazione dei blocchi...",
+      "status": {
+        "pending": "Preparazione al caricamento...",
+        "processing": "Elaborazione del file..."
+      }
+    }
   }
 }

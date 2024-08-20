@@ -4,6 +4,7 @@ import { SWRResponse, mutate } from 'swr';
 import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
@@ -27,6 +28,7 @@ export interface AgentChatAction {
 
   useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
   useInitAgentStore: (
+    isLogin: boolean | undefined,
     defaultAgentConfig?: DeepPartial<LobeAgentConfig>,
   ) => SWRResponse<DeepPartial<LobeAgentConfig>>;
 
@@ -111,9 +113,9 @@ export const createChatSlice: StateCreator<
         suspense: true,
       },
     ),
-  useInitAgentStore: (defaultAgentConfig) =>
+  useInitAgentStore: (isLogin, defaultAgentConfig) =>
     useOnlyFetchOnceSWR<DeepPartial<LobeAgentConfig>>(
-      'fetchInboxAgentConfig',
+      !!isLogin ? 'fetchInboxAgentConfig' : null,
       () => sessionService.getSessionConfig(INBOX_SESSION_ID),
       {
         onSuccess: (data) => {
@@ -167,7 +169,7 @@ export const createChatSlice: StateCreator<
 
   internal_createAbortController: (key) => {
     const abortController = get()[key] as AbortController;
-    if (abortController) abortController.abort('canceled');
+    if (abortController) abortController.abort(MESSAGE_CANCEL_FLAT);
     const controller = new AbortController();
     set({ [key]: controller }, false, 'internal_createAbortController');
 

@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import { ChatMessageError } from '@/types/message';
 
 interface ErrorJSONViewerProps {
-  error?: ChatMessageError;
+  error?: ChatMessageError | null;
   id: string;
 }
 

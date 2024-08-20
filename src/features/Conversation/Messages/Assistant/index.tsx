@@ -7,7 +7,7 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { DefaultMessage } from '../Default';
-import ToolCall from './ToolCalls';
+import ToolCall from './ToolCallItem';
 
 export const AssistantMessage = memo<
   ChatMessage & {
@@ -23,25 +23,24 @@ export const AssistantMessage = memo<
     <Flexbox gap={8} id={id}>
       {(content || editing) && (
         <DefaultMessage
+          addIdOnDOM={false}
           content={content}
-          // we have id above, so don't need to pass it again
-          id={undefined as any}
+          id={id}
           isToolCallGenerating={isToolCallGenerating}
           {...props}
         />
       )}
       {!editing && tools && (
-        <Flexbox gap={8} horizontal>
+        <Flexbox gap={8}>
           {tools.map((toolCall, index) => (
             <ToolCall
+              apiName={toolCall.apiName}
               arguments={toolCall.arguments}
+              id={toolCall.id}
               identifier={toolCall.identifier}
               index={index}
               key={toolCall.id}
               messageId={id}
-              style={{
-                maxWidth: `max(${100 / tools.length}%, 300px)`,
-              }}
             />
           ))}
         </Flexbox>

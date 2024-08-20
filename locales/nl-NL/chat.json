@@ -4,6 +4,7 @@
   },
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me praten of naar [Assistentinstellingen](/chat/settings#session={{id}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
+  "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met een gesprek!",
   "agentsAndConversations": "agenten en gesprekken",
   "backToBottom": "Terug naar onderen",
   "clearCurrentMessages": "Huidige berichten wissen",
@@ -35,14 +36,39 @@
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
   },
+  "knowledgeBase": {
+    "all": "Alle inhoud",
+    "allFiles": "Alle bestanden",
+    "allKnowledgeBases": "Alle kennisbanken",
+    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Schakel over naar serverdatabase-implementatie of gebruik de LobeChat Cloud-service om dit te gebruiken.",
+    "library": {
+      "action": {
+        "add": "Toevoegen",
+        "detail": "Details",
+        "remove": "Verwijderen"
+      },
+      "title": "Bestand/Kennisbank"
+    },
+    "relativeFilesOrKnowledgeBases": "Gerelateerde bestanden/kennisbanken",
+    "title": "Kennisbank",
+    "uploadGuide": "Geüploade bestanden kunnen worden bekeken in de 'Kennisbank'.",
+    "viewMore": "Bekijk meer"
+  },
   "messageAction": {
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "regenerate": "Opnieuw genereren"
   },
   "newAgent": "Nieuwe assistent",
-  "noDescription": "Geen beschrijving beschikbaar",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
+  "rag": {
+    "userQuery": {
+      "actions": {
+        "delete": "Verwijder Query herschrijving",
+        "regenerate": "Genereer Query opnieuw"
+      }
+    }
+  },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
   "searchAgentPlaceholder": "Zoek assistenten en gesprekken...",
@@ -100,6 +126,8 @@
       "duplicate": "Dupliceren",
       "export": "Exporteren"
     },
+    "checkOpenNewTopic": "Is het openen van een nieuw onderwerp ingeschakeld?",
+    "checkSaveCurrentMessages": "Wil je het huidige gesprek opslaan als onderwerp?",
     "confirmRemoveAll": "Alle onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveTopic": "Dit onderwerp wordt verwijderd en kan niet worden hersteld. Wees voorzichtig.",
     "confirmRemoveUnstarred": "Niet-gefavoriseerde onderwerpen worden verwijderd en kunnen niet worden hersteld. Wees voorzichtig.",
@@ -130,9 +158,12 @@
     "actionFiletip": "Upload het bestand",
     "actionTooltip": "Upload afbeelding",
     "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken.",
-    "dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden. Houd Shift ingedrukt om afbeeldingen direct te verzenden",
-    "dragFileDesc": "Sleep afbeeldingen en bestanden hierheen om het uploaden van meerdere afbeeldingen en bestanden te ondersteunen. Houd Shift ingedrukt om een ​​afbeelding of bestand rechtstreeks te verzenden",
-    "dragFileTitle": "Upload het bestand",
-    "dragTitle": "Upload afbeelding"
+    "preview": {
+      "prepareTasks": "Voorbereiden van blokken...",
+      "status": {
+        "pending": "Voorbereiden om te uploaden...",
+        "processing": "Bestand wordt verwerkt..."
+      }
+    }
   }
 }

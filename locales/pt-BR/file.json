@@ -1,0 +1,91 @@
+{
+  "desc": "Gerencie seus arquivos e repositórios de conhecimento",
+  "detail": {
+    "basic": {
+      "createdAt": "Data de criação",
+      "filename": "Nome do arquivo",
+      "size": "Tamanho do arquivo",
+      "title": "Informações básicas",
+      "type": "Formato",
+      "updatedAt": "Data de atualização"
+    },
+    "data": {
+      "chunkCount": "Número de partes",
+      "embedding": {
+        "default": "Ainda não vetorizado",
+        "error": "Falha",
+        "pending": "Aguardando início",
+        "processing": "Processando",
+        "success": "Concluído"
+      },
+      "embeddingStatus": "Vetorização"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "Nova pasta",
+      "uploadFile": "Enviar arquivo",
+      "uploadFolder": "Enviar pasta"
+    },
+    "uploadButton": "Enviar"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Você está prestes a excluir este repositório de conhecimento. Os arquivos não serão excluídos, mas serão movidos para 'Todos os arquivos'. Após a exclusão, o repositório não poderá ser recuperado, por favor, proceda com cautela.",
+      "empty": "Clique em <1>+</1> para começar a criar um repositório de conhecimento"
+    },
+    "new": "Novo repositório de conhecimento",
+    "title": "Repositório de conhecimento"
+  },
+  "notSupportGuide": {
+    "desc": "A instância atual está no modo de banco de dados cliente e não pode usar a funcionalidade de gerenciamento de arquivos. Por favor, mude para <1>modo de banco de dados servidor</1>, ou use diretamente <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Suporta os principais tipos de arquivos, incluindo formatos comuns como Word, PPT, Excel, PDF, TXT, além de arquivos de código como JS, Python",
+        "title": "Análise de vários tipos de arquivos"
+      },
+      "embeddings": {
+        "desc": "Utiliza modelos vetoriais de alto desempenho para vetorização de partes de texto, permitindo a busca semântica do conteúdo dos arquivos",
+        "title": "Semantização vetorial"
+      },
+      "repos": {
+        "desc": "Permite a criação de repositórios de conhecimento e a adição de diferentes tipos de arquivos, construindo seu próprio conhecimento de domínio",
+        "title": "Repositório de conhecimento"
+      }
+    },
+    "title": "O modo de implantação atual não suporta gerenciamento de arquivos"
+  },
+  "preview": {
+    "unsupportedFile": "Este formato de arquivo não suporta visualização online"
+  },
+  "searchFilePlaceholder": "Pesquisar arquivo",
+  "tab": {
+    "all": "Todos os arquivos",
+    "audios": "Áudios",
+    "documents": "Documentos",
+    "images": "Imagens",
+    "videos": "Vídeos",
+    "websites": "Sites"
+  },
+  "title": "Arquivos",
+  "uploadDock": {
+    "body": {
+      "collapse": "Recolher",
+      "item": {
+        "done": "Enviado",
+        "error": "Falha no envio, por favor, tente novamente",
+        "pending": "Preparando para enviar...",
+        "processing": "Processando arquivo...",
+        "restTime": "Restante {{time}}"
+      }
+    },
+    "totalCount": "Total de {{count}} itens",
+    "uploadStatus": {
+      "error": "Erro no envio",
+      "pending": "Aguardando envio",
+      "processing": "Enviando",
+      "success": "Envio concluído",
+      "uploading": "Enviando"
+    }
+  }
+}

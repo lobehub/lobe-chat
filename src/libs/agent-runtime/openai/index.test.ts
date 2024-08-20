@@ -49,7 +49,7 @@ describe('LobeOpenAI', () => {
     });
 
     describe('Error', () => {
-      it('should return OpenAIBizError with an openai error response when OpenAI.APIError is thrown', async () => {
+      it('should return ProviderBizError with an openai error response when OpenAI.APIError is thrown', async () => {
         // Arrange
         const apiError = new OpenAI.APIError(
           400,
@@ -79,7 +79,7 @@ describe('LobeOpenAI', () => {
               error: { message: 'Bad Request' },
               status: 400,
             },
-            errorType: 'OpenAIBizError',
+            errorType: 'ProviderBizError',
             provider: 'openai',
           });
         }
@@ -89,11 +89,11 @@ describe('LobeOpenAI', () => {
         try {
           new LobeOpenAI({});
         } catch (e) {
-          expect(e).toEqual({ errorType: 'NoOpenAIAPIKey' });
+          expect(e).toEqual({ errorType: 'InvalidProviderAPIKey' });
         }
       });
 
-      it('should return OpenAIBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
+      it('should return ProviderBizError with the cause when OpenAI.APIError is thrown with cause', async () => {
         // Arrange
         const errorInfo = {
           stack: 'abc',
@@ -119,13 +119,13 @@ describe('LobeOpenAI', () => {
               cause: { message: 'api is undefined' },
               stack: 'abc',
             },
-            errorType: 'OpenAIBizError',
+            errorType: 'ProviderBizError',
             provider: 'openai',
           });
         }
       });
 
-      it('should return OpenAIBizError with an cause response with desensitize Url', async () => {
+      it('should return ProviderBizError with an cause response with desensitize Url', async () => {
         // Arrange
         const errorInfo = {
           stack: 'abc',
@@ -155,7 +155,7 @@ describe('LobeOpenAI', () => {
               cause: { message: 'api is undefined' },
               stack: 'abc',
             },
-            errorType: 'OpenAIBizError',
+            errorType: 'ProviderBizError',
             provider: 'openai',
           });
         }

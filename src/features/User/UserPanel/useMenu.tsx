@@ -1,8 +1,10 @@
 import { ActionIcon, DiscordIcon, Icon } from '@lobehub/ui';
 import { Badge } from 'antd';
+import { ItemType } from 'antd/es/menu/interface';
 import {
   Book,
   CircleUserRound,
+  Cloudy,
   Download,
   Feather,
   HardDriveDownload,
@@ -20,13 +22,23 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
-import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES, mailTo } from '@/const/url';
+import {
+  DISCORD,
+  DOCUMENTS_REFER_URL,
+  EMAIL_SUPPORT,
+  GITHUB_ISSUES,
+  OFFICIAL_URL,
+  UTM_SOURCE,
+  mailTo,
+} from '@/const/url';
+import { isServerMode } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { configService } from '@/services/config';
 import { SettingsTabs } from '@/store/global/initialState';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -60,6 +72,7 @@ export const useMenu = () => {
   const hasNewVersion = useNewVersion();
   const openSettings = useOpenSettings();
   const { t } = useTranslation(['common', 'setting', 'auth']);
+  const { showCloudPromotion } = useServerConfigStore(featureFlagsSelectors);
   const [isLogin, isLoginWithAuth, isLoginWithClerk, openUserProfile] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
@@ -115,48 +128,61 @@ export const useMenu = () => {
     },
   ];
 
-  const data: MenuProps['items'] = [
-    {
-      icon: <Icon icon={HardDriveUpload} />,
-      key: 'import',
-      label: <DataImporter>{t('import')}</DataImporter>,
-    },
-    {
-      children: [
+  const data = !isLogin
+    ? []
+    : ([
         {
-          key: 'allAgent',
-          label: t('exportType.allAgent'),
-          onClick: configService.exportAgents,
+          icon: <Icon icon={HardDriveDownload} />,
+          key: 'import',
+          label: <DataImporter>{t('import')}</DataImporter>,
         },
-        {
-          key: 'allAgentWithMessage',
-          label: t('exportType.allAgentWithMessage'),
-          onClick: configService.exportSessions,
-        },
-        {
-          key: 'globalSetting',
-          label: t('exportType.globalSetting'),
-          onClick: configService.exportSettings,
-        },
+        isServerMode
+          ? null
+          : {
+              children: [
+                {
+                  key: 'allAgent',
+                  label: t('exportType.allAgent'),
+                  onClick: configService.exportAgents,
+                },
+                {
+                  key: 'allAgentWithMessage',
+                  label: t('exportType.allAgentWithMessage'),
+                  onClick: configService.exportSessions,
+                },
+                {
+                  key: 'globalSetting',
+                  label: t('exportType.globalSetting'),
+                  onClick: configService.exportSettings,
+                },
+                {
+                  type: 'divider',
+                },
+                {
+                  key: 'all',
+                  label: t('exportType.all'),
+                  onClick: configService.exportAll,
+                },
+              ],
+              icon: <Icon icon={HardDriveUpload} />,
+              key: 'export',
+              label: t('export'),
+            },
         {
           type: 'divider',
         },
-        {
-          key: 'all',
-          label: t('exportType.all'),
-          onClick: configService.exportAll,
-        },
-      ],
-      icon: <Icon icon={HardDriveDownload} />,
-      key: 'export',
-      label: t('export'),
-    },
-    {
-      type: 'divider',
-    },
-  ];
+      ].filter(Boolean) as ItemType[]);
 
   const helps: MenuProps['items'] = [
+    showCloudPromotion && {
+      icon: <Icon icon={Cloudy} />,
+      key: 'cloud',
+      label: (
+        <Link href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`} target={'_blank'}>
+          {t('userPanel.cloud', { name: 'LobeChat Cloud' })}
+        </Link>
+      ),
+    },
     {
       icon: <Icon icon={DiscordIcon} />,
       key: 'discord',
@@ -172,7 +198,7 @@ export const useMenu = () => {
           icon: <Icon icon={Book} />,
           key: 'docs',
           label: (
-            <Link href={DOCUMENTS} target={'_blank'}>
+            <Link href={DOCUMENTS_REFER_URL} target={'_blank'}>
               {t('userPanel.docs')}
             </Link>
           ),
@@ -203,19 +229,19 @@ export const useMenu = () => {
     {
       type: 'divider',
     },
-  ];
+  ].filter(Boolean) as ItemType[];
 
   const mainItems = [
     {
       type: 'divider',
     },
-    ...(isLoginWithClerk ? profile : []),
     ...(isLogin ? settings : []),
+    ...(isLoginWithClerk ? profile : []),
     /* ↓ cloud slot ↓ */
 
     /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
-    ...(isLogin ? data : []),
+    ...data,
     ...helps,
   ].filter(Boolean) as MenuProps['items'];
 

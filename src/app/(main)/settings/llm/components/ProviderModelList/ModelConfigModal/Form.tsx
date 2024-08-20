@@ -2,6 +2,7 @@ import { Checkbox, Form, FormInstance, Input } from 'antd';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { ChatModelCard } from '@/types/llm';
 
 import MaxTokenSlider from './MaxTokenSlider';
@@ -17,6 +18,8 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
     const { t } = useTranslation('setting');
 
     const [formInstance] = Form.useForm();
+
+    const isMobile = useIsMobile();
 
     useEffect(() => {
       onFormInstanceReady(formInstance);
@@ -37,7 +40,7 @@ const ModelConfigForm = memo<ModelConfigFormProps>(
           initialValues={initialValues}
           labelCol={{ span: 4 }}
           style={{ marginTop: 16 }}
-          wrapperCol={{ offset: 1, span: 18 }}
+          wrapperCol={isMobile ? { span: 18 } : { offset: 1, span: 18 }}
         >
           <Form.Item
             extra={t('llm.customModelCards.modelConfig.id.extra')}

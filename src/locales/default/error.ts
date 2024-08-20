@@ -71,26 +71,41 @@ export default {
     PluginGatewayError: '很抱歉，插件网关出现错误，请检查插件网关配置是否正确',
     PluginOpenApiInitError: '很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确',
 
+    PluginFailToTransformArguments:
+      '很抱歉，插件调用参数解析失败，请尝试重新生成助手消息，或更换 Tools Calling 能力更强的 AI 模型后重试',
+
     InvalidAccessCode: '密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key',
     InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
     LocationNotSupportError:
       '很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。',
 
     InvalidProviderAPIKey: '{{provider}} API Key 不正确或为空，请检查 {{provider}} API Key 后重试',
-    ProviderBizAPIKey: '请求 {{provider}} 服务出错，请根据以下信息排查或重试',
+    ProviderBizError: '请求 {{provider}} 服务出错，请根据以下信息排查或重试',
     /**
      * @deprecated
      */
     NoOpenAIAPIKey: 'OpenAI API Key 不正确或为空，请添加自定义 OpenAI API Key',
+    /**
+     * @deprecated
+     */
+    OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
 
     InvalidBedrockCredentials: 'Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试',
-
+    StreamChunkError:
+      '流式请求的消息块解析错误，请检查当前 API 接口是否符合标准规范，或联系你的 API 供应商咨询',
+    UnknownChatFetchError: '很抱歉，遇到未知请求错误，请根据以下信息排查或重试',
     InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
     OllamaServiceUnavailable:
       'Ollama 服务连接失败，请检查 Ollama 是否运行正常，或是否正确设置 Ollama 的跨域配置',
 
     AgentRuntimeError: 'Lobe AI Runtime 执行出错，请根据以下信息排查或重试',
+
+    // cloud
+    FreePlanLimit: '当前为免费用户，无法使用该功能，请升级到付费计划后继续使用',
+    SubscriptionPlanLimit:
+      '您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用',
+
     /* eslint-enable */
   },
   stt: {

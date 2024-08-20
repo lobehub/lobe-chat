@@ -43,6 +43,7 @@
     "title": "Impostazioni"
   },
   "llm": {
+    "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
     "apiKey": {
       "desc": "Inserisci la tua chiave API {{name}}",
       "placeholder": "Chiave API {{name}}",
@@ -102,6 +103,7 @@
       "latestTime": "Ultimo aggiornamento: {{time}}",
       "noLatestTime": "Nessun elenco disponibile al momento"
     },
+    "helpDoc": "Guida alla configurazione",
     "modelList": {
       "desc": "Seleziona i modelli da visualizzare durante la sessione, i modelli selezionati verranno mostrati nell'elenco dei modelli",
       "placeholder": "Seleziona un modello dall'elenco",
@@ -112,7 +114,7 @@
       "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
       "title": "Indirizzo del proxy API"
     },
-    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
+    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
   },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",
@@ -207,13 +209,7 @@
       "title": "Limite di risposta singola"
     },
     "model": {
-      "desc": "Modello ChatGPT",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "Modello {{provider}}",
       "title": "Modello"
     },
     "presencePenalty": {
@@ -343,7 +339,7 @@
       "unknownOS": "Sistema operativo sconosciuto"
     },
     "warning": {
-      "message": "Questa funzione è attualmente sperimentale e potrebbe comportare comportamenti imprevisti o instabili. In caso di problemi, invia tempestivamente un feedback."
+      "tip": "Dopo un lungo periodo di test della comunità, la sincronizzazione WebRTC potrebbe non essere in grado di soddisfare in modo stabile le esigenze generali di sincronizzazione dei dati. Si prega di <1>configurare un server di segnalazione</1> prima di utilizzarlo."
     },
     "webrtc": {
       "channelName": {
@@ -359,13 +355,28 @@
       },
       "desc": "Comunicazione dati in tempo reale punto a punto, entrambi i dispositivi devono essere online per sincronizzarsi",
       "enabled": {
-        "invalid": "Per favore, inserisci un nome per il canale di sincronizzazione prima di abilitarlo",
+        "invalid": "Si prega di inserire l'indirizzo del server di segnalazione e il nome del canale di sincronizzazione prima di abilitare.",
         "title": "Abilita la sincronizzazione"
+      },
+      "signaling": {
+        "desc": "WebRTC utilizzerà questo indirizzo per la sincronizzazione",
+        "placeholder": "Inserisci l'indirizzo del server di segnalazione",
+        "title": "Server di segnalazione"
       },
       "title": "Sincronizzazione WebRTC"
     }
   },
   "systemAgent": {
+    "agentMeta": {
+      "label": "Modello di generazione metadati assistente",
+      "modelDesc": "Modello specificato per generare nome, descrizione, avatar e etichetta dell'assistente",
+      "title": "Genera automaticamente informazioni sull'assistente"
+    },
+    "queryRewrite": {
+      "label": "Modello di riscrittura delle domande",
+      "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
+      "title": "Banca dati"
+    },
     "title": "Assistente di sistema",
     "topic": {
       "label": "Modello di denominazione degli argomenti",

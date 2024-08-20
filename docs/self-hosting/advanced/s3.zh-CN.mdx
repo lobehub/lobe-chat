@@ -1,0 +1,27 @@
+---
+title: 配置 S3 存储服务 - 多模态 AI 会话
+description: 了解如何配置 S3 存储服务以支持多模态 AI 会话和图片上传。
+tags:
+  - S3 存储
+  - 多模态 AI
+  - 图片上传
+  - 文件存储
+---
+# 配置 S3 存储服务
+
+LobeChat 在 [很早以前](https://x.com/lobehub/status/1724289575672291782) 就支持了多模态的 AI 会话，其中涉及到图片上传给 AI 的功能。在客户端数据库方案中，图片文件直接以二进制数据存储在浏览器 IndexedDB 数据库，但在服务端数据库中这个方案并不可行，在 Postgres 中直接存储文件类数据会大大浪费数据库存储空间，并拖慢计算性能。
+
+这块最佳实践是使用文件存储服务（S3）来存储图片文件，同时 S3 也是文件上传/知识库功能所依赖的存储方案。
+
+<Callout type={'info'}>
+  在本文档库中，S3 所指代的是指兼容 S3 存储方案，即支持 Amazon S3 API 的对象存储系统，常见例如
+  Cloudflare R2 、阿里云 OSS，可以自部署的 minio 等均支持 S3 兼容 API。
+</Callout>
+
+目前文档中包含的 S3 配置教程有：
+
+<Cards>
+  <Card href={'/zh/docs/self-hosting/advanced/s3/cloudflare-r2'} title={'Cloudflare R2'} />
+</Cards>
+
+点击即可查看对应平台的教程，如果上述教程中不包含你所使用的 S3 服务商，欢迎提交 Pull Request ，将共同完善 S3 对象存储的指南。

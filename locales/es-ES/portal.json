@@ -1,0 +1,11 @@
+{
+  "Artifacts": "Artefactos",
+  "actions": {
+    "genAiMessage": "Crear mensaje de IA",
+    "summary": "Resumen",
+    "summaryTooltip": "Resumir el contenido actual"
+  },
+  "emptyArtifactList": "La lista de Artefactos actual está vacía. Por favor, utilice los complementos en la conversación y vuelva a intentarlo.",
+  "files": "archivos",
+  "title": "Ventana de expansión"
+}

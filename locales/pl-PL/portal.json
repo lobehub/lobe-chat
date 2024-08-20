@@ -1,0 +1,11 @@
+{
+  "Artifacts": "Artefakty",
+  "actions": {
+    "genAiMessage": "Tworzenie wiadomości AI",
+    "summary": "Podsumowanie",
+    "summaryTooltip": "Podsumowanie bieżącej zawartości"
+  },
+  "emptyArtifactList": "Obecna lista Artefaktów jest pusta. Proszę użyć wtyczek w trakcie sesji, a następnie sprawdzić ponownie.",
+  "files": "Pliki",
+  "title": "Okno rozszerzenia"
+}

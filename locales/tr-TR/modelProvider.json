@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "Azure'un API versiyonu, YYYY-AA-GG formatına uygun, [en son versiyonu](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) kontrol edin",
       "fetch": "Listeyi al",
-      "title": "Azure Api Versiyonu"
+      "title": "Azure API Versiyonu"
     },
     "empty": "İlk modeli eklemek için model kimliğini girin",
     "endpoint": {

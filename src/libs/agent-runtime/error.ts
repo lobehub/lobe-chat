@@ -11,6 +11,7 @@ export const AgentRuntimeErrorType = {
   OllamaBizError: 'OllamaBizError',
 
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
+  StreamChunkError: 'StreamChunkError',
 
   /**
    * @deprecated

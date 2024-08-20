@@ -76,6 +76,18 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 
 具体的内容可以参见 [特性标志](/zh/docs/self-hosting/advanced/feature-flags) 中的说明。
 
+### `PROXY_URL`
+
+- 类型：可选
+- 描述：用于指定连接到外部服务的代理 URL。该变量的值在不同的部署环境中应该有所不同。
+- 默认值：-
+- 示例：`http://127.0.0.1:7890` 或 `socks5://localhost:7891`
+
+<Callout type="info">
+  `Docker Desktop` 在 `Windows `和 `macOS `上走的是虚拟机方案，如果是 `localhost` / `127.0.0.1`
+  是走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
+</Callout>
+
 ## 插件服务
 
 ### `PLUGINS_INDEX_URL`

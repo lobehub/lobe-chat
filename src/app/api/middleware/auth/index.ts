@@ -1,4 +1,4 @@
-import { AuthObject } from '@clerk/backend/internal';
+import { AuthObject } from '@clerk/backend';
 import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest } from 'next/server';
 

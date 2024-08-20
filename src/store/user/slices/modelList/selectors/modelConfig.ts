@@ -1,3 +1,4 @@
+import { isProviderDisableBroswerRequest } from '@/config/modelProviders';
 import { UserStore } from '@/store/user';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
@@ -7,6 +8,7 @@ import { keyVaultsConfigSelectors } from './keyVaults';
 const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
   getProviderConfigById(provider)(s)?.enabled || false;
 
+const providerWhitelist = new Set(['ollama']);
 /**
  * @description The conditions to enable client fetch
  * 1. If no baseUrl and apikey input, force on Server.
@@ -16,6 +18,13 @@ const isProviderEnabled = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
  */
 const isProviderFetchOnClient = (provider: GlobalLLMProviderKey | string) => (s: UserStore) => {
   const config = getProviderConfigById(provider)(s);
+
+  // If the provider already disable broswer request in model config, force on Server.
+  if (isProviderDisableBroswerRequest(provider)) return false;
+
+  // If the provider in the whitelist, follow the user settings
+  if (providerWhitelist.has(provider) && typeof config?.fetchOnClient !== 'undefined')
+    return config?.fetchOnClient;
 
   // 1. If no baseUrl and apikey input, force on Server.
   const isProviderEndpointNotEmpty =

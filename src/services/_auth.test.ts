@@ -168,6 +168,23 @@ describe('getProviderAuthPayload', () => {
     });
   });
 
+  it('should return correct payload for Stepfun provider', () => {
+    // 假设的 OpenAI 配置
+    const mockOpenAIConfig = {
+      apiKey: 'stepfun-api-key',
+      baseURL: 'stepfun-baseURL',
+    };
+    act(() => {
+      setModelProviderConfig('stepfun', mockOpenAIConfig);
+    });
+
+    const payload = getProviderAuthPayload(ModelProvider.Stepfun);
+    expect(payload).toEqual({
+      apiKey: mockOpenAIConfig.apiKey,
+      endpoint: mockOpenAIConfig.baseURL,
+    });
+  });
+
   it('should return an empty object or throw an error for an unknown provider', () => {
     const payload = getProviderAuthPayload('UnknownProvider');
     expect(payload).toEqual({});

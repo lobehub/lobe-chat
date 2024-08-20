@@ -27,10 +27,21 @@ export interface LobeBuiltinTool {
   type: 'builtin';
 }
 
-export interface BuiltinRenderProps<Result = any> {
-  content: Result;
+export interface BuiltinRenderProps<Content = any, Arguments = any, State = any> {
+  args: Arguments;
+  content: Content;
   identifier?: string;
   messageId: string;
+  pluginState?: State;
 }
 
 export type BuiltinRender = <T = any>(props: BuiltinRenderProps<T>) => ReactNode;
+
+export interface BuiltinPortalProps<Arguments = Record<string, any>, State = any> {
+  arguments: Arguments;
+  identifier: string;
+  messageId: string;
+  state: State;
+}
+
+export type BuiltinPortal = <T = any>(props: BuiltinPortalProps<T>) => ReactNode;

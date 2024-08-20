@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 import { pino } from '@/libs/logger';
 import { createContext } from '@/server/context';
-import { edgeRouter } from '@/server/routers';
+import { edgeRouter } from '@/server/routers/edge';
 
 export const runtime = 'edge';
 

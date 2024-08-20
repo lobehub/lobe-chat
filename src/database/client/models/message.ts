@@ -6,9 +6,14 @@ import { DB_Message, DB_MessageSchema } from '@/database/client/schemas/message'
 import { ChatMessage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
 
+/**
+ * use `@/types/message` instead
+ * @deprecated
+ */
 export interface CreateMessageParams
   extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
     Pick<ChatMessage, 'content' | 'role'> {
+  files?: string[];
   fromModel?: string;
   fromProvider?: string;
   sessionId: string;
@@ -55,7 +60,7 @@ class _MessageModel extends BaseModel {
     const finalList: ChatMessage[] = [];
 
     const addItem = (item: ChatMessage) => {
-      const isExist = finalList.findIndex((i) => item.id === i.id) > -1;
+      const isExist = finalList.some((i) => item.id === i.id);
       if (!isExist) {
         finalList.push(item);
       }
@@ -129,6 +134,10 @@ class _MessageModel extends BaseModel {
     return super._deleteWithSync(id);
   }
 
+  async bulkDelete(ids: string[]) {
+    return super._bulkDeleteWithSync(ids);
+  }
+
   async clearTable() {
     return this._clearWithSync();
   }
@@ -188,6 +197,12 @@ class _MessageModel extends BaseModel {
     const item = await this.findById(id);
 
     return this.update(id, { pluginState: { ...item.pluginState, ...value } });
+  }
+
+  async updatePlugin(id: string, value: any) {
+    const item = await this.findById(id);
+
+    return this.update(id, { plugin: { ...item.plugin, ...value } });
   }
 
   /**

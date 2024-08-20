@@ -19,7 +19,7 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
     background: ${token.colorBgContainer};
   `,
   header: css`
-    border-bottom: 1px solid ${token.colorBorder};
+    border-block-end: 1px solid ${token.colorBorder};
   `,
   noScrollbar: stylish.noScrollbar,
 }));
