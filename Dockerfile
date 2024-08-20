@@ -8,9 +8,9 @@ RUN \
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
         sed -i "s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g" "/etc/apk/repositories"; \
     fi \
-    # Add proxychains-ng package & update base package
+    # Add required package & update base package
     && apk update \
-    && apk add --no-cache proxychains-ng \
+    && apk add --no-cache bind-tools proxychains-ng \
     && apk upgrade --no-cache \
     # Add user nextjs to run the app
     && addgroup --system --gid 1001 nodejs \
@@ -138,6 +138,8 @@ ENV \
     PERPLEXITY_API_KEY="" PERPLEXITY_PROXY_URL="" \
     # Qwen
     QWEN_API_KEY="" \
+    # SiliconCloud
+    SILICONCLOUD_API_KEY="" SILICONCLOUD_MODEL_LIST="" SILICONCLOUD_PROXY_URL="" \
     # Stepfun
     STEPFUN_API_KEY="" \
     # Taichu

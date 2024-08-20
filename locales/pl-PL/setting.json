@@ -372,6 +372,11 @@
       "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
       "title": "Automatyczne generowanie informacji o asystencie"
     },
+    "queryRewrite": {
+      "label": "Model przekształcania zapytań",
+      "modelDesc": "Model używany do optymalizacji zapytań użytkowników",
+      "title": "Baza wiedzy"
+    },
     "title": "Asystent Systemowy",
     "topic": {
       "label": "Model nazewnictwa tematów",

@@ -41,7 +41,7 @@ const ArtifactList = () => {
         size={48}
       />
       <Balancer>
-        <Typography.Link type={'secondary'}>{t('emptyArtifactList')}</Typography.Link>
+        <Typography.Text type={'secondary'}>{t('emptyArtifactList')}</Typography.Text>
       </Balancer>
     </Center>
   ) : (

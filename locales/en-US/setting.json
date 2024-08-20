@@ -372,6 +372,11 @@
       "modelDesc": "Model designated for generating assistant name, description, avatar, and tags",
       "title": "Automatically Generate Assistant Information"
     },
+    "queryRewrite": {
+      "label": "Question Rewriting Model",
+      "modelDesc": "Specify the model used to optimize user inquiries",
+      "title": "Knowledge Base"
+    },
     "title": "System Assistants",
     "topic": {
       "label": "Topic Naming Model",

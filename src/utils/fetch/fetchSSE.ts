@@ -1,9 +1,6 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source';
-import { t } from 'i18next';
-import { produce } from 'immer';
-
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { LOBE_CHAT_OBSERVATION_ID, LOBE_CHAT_TRACE_ID } from '@/const/trace';
-import { ErrorResponse, ErrorType } from '@/types/fetch';
+import { ChatErrorType } from '@/types/fetch';
 import {
   ChatMessageError,
   MessageToolCall,
@@ -11,27 +8,9 @@ import {
   MessageToolCallSchema,
 } from '@/types/message';
 
-export const getMessageError = async (response: Response) => {
-  let chatMessageError: ChatMessageError;
-
-  // 尝试取一波业务错误语义
-  try {
-    const data = (await response.json()) as ErrorResponse;
-    chatMessageError = {
-      body: data.body,
-      message: t(`response.${data.errorType}` as any, { ns: 'error' }),
-      type: data.errorType,
-    };
-  } catch {
-    // 如果无法正常返回，说明是常规报错
-    chatMessageError = {
-      message: t(`response.${response.status}` as any, { ns: 'error' }),
-      type: response.status as ErrorType,
-    };
-  }
-
-  return chatMessageError;
-};
+import { fetchEventSource } from './fetchEventSource';
+import { getMessageError } from './parseError';
+import { parseToolCalls } from './parseToolCalls';
 
 type SSEFinishType = 'done' | 'error' | 'abort';
 
@@ -64,28 +43,6 @@ export interface FetchSSEOptions {
   onMessageHandle?: (chunk: MessageTextChunk | MessageToolCallsChunk) => void;
   smoothing?: boolean;
 }
-
-export const parseToolCalls = (origin: MessageToolCall[], value: MessageToolCallChunk[]) =>
-  produce(origin, (draft) => {
-    // if there is no origin, we should parse all the value and set it to draft
-    if (draft.length === 0) {
-      draft.push(...value.map((item) => MessageToolCallSchema.parse(item)));
-      return;
-    }
-
-    // if there is origin, we should merge the value to the origin
-    value.forEach(({ index, ...item }) => {
-      if (!draft?.[index]) {
-        // if not, we should insert it to the draft
-        draft?.splice(index, 0, MessageToolCallSchema.parse(item));
-      } else {
-        // if it is already in the draft, we should merge the arguments to the draft
-        if (item.function?.arguments) {
-          draft[index].function.arguments += item.function.arguments;
-        }
-      }
-    });
-  });
 
 const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: string) => void }) => {
   let buffer = '';
@@ -285,86 +242,111 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
     },
   });
 
-  try {
-    await fetchEventSource(url, {
-      body: options.body,
-      fetch: options?.fetcher,
-      headers: options.headers as Record<string, string>,
-      method: options.method,
-      onerror: (error) => {
-        if ((error as TypeError).name === 'AbortError') {
-          finishedType = 'abort';
-          options?.onAbort?.(output);
-          textController.stopAnimation();
-        } else {
+  await fetchEventSource(url, {
+    body: options.body,
+    fetch: options?.fetcher,
+    headers: options.headers as Record<string, string>,
+    method: options.method,
+    onerror: (error) => {
+      if (error === MESSAGE_CANCEL_FLAT || (error as TypeError).name === 'AbortError') {
+        finishedType = 'abort';
+        options?.onAbort?.(output);
+        textController.stopAnimation();
+      } else {
+        finishedType = 'error';
+
+        options.onErrorHandle?.(
+          error.type
+            ? error
+            : {
+                body: {
+                  message: error.message,
+                  name: error.name,
+                  stack: error.stack,
+                },
+                message: error.message,
+                type: ChatErrorType.UnknownChatFetchError,
+              },
+        );
+        return;
+      }
+    },
+    onmessage: (ev) => {
+      triggerOnMessageHandler = true;
+      let data;
+      try {
+        data = JSON.parse(ev.data);
+      } catch (e) {
+        console.warn('parse error:', e);
+        options.onErrorHandle?.({
+          body: {
+            context: {
+              chunk: ev.data,
+              error: { message: (e as Error).message, name: (e as Error).name },
+            },
+            message:
+              'chat response streaming chunk parse error, please contact your API Provider to fix it.',
+          },
+          message: 'parse error',
+          type: 'StreamChunkError',
+        });
+
+        return;
+      }
+
+      switch (ev.event) {
+        case 'error': {
           finishedType = 'error';
-          options.onErrorHandle?.(error);
+          options.onErrorHandle?.(data);
+          break;
         }
 
-        throw new Error(error);
-      },
-      onmessage: (ev) => {
-        triggerOnMessageHandler = true;
-        let data;
-        try {
-          data = JSON.parse(ev.data);
-        } catch (e) {
-          console.warn('parse error, fallback to stream', e);
-          options.onMessageHandle?.({ text: data, type: 'text' });
-          return;
-        }
+        case 'text': {
+          if (smoothing) {
+            textController.pushToQueue(data);
 
-        switch (ev.event) {
-          case 'text': {
-            if (smoothing) {
-              textController.pushToQueue(data);
-
-              if (!textController.isAnimationActive) textController.startAnimation();
-            } else {
-              output += data;
-              options.onMessageHandle?.({ text: data, type: 'text' });
-            }
-
-            break;
+            if (!textController.isAnimationActive) textController.startAnimation();
+          } else {
+            output += data;
+            options.onMessageHandle?.({ text: data, type: 'text' });
           }
 
-          case 'tool_calls': {
-            // get finial
-            // if there is no tool calls, we should initialize the tool calls
-            if (!toolCalls) toolCalls = [];
-            toolCalls = parseToolCalls(toolCalls, data);
+          break;
+        }
 
-            if (smoothing) {
-              // make the tool calls smooth
+        case 'tool_calls': {
+          // get finial
+          // if there is no tool calls, we should initialize the tool calls
+          if (!toolCalls) toolCalls = [];
+          toolCalls = parseToolCalls(toolCalls, data);
 
-              // push the tool calls to the smooth queue
-              toolCallsController.pushToQueue(data);
-              // if there is no animation active, we should start the animation
-              if (toolCallsController.isAnimationActives.some((value) => !value)) {
-                toolCallsController.startAnimations();
-              }
-            } else {
-              options.onMessageHandle?.({
-                tool_calls: toolCalls,
-                type: 'tool_calls',
-              });
+          if (smoothing) {
+            // make the tool calls smooth
+
+            // push the tool calls to the smooth queue
+            toolCallsController.pushToQueue(data);
+            // if there is no animation active, we should start the animation
+            if (toolCallsController.isAnimationActives.some((value) => !value)) {
+              toolCallsController.startAnimations();
             }
+          } else {
+            options.onMessageHandle?.({
+              tool_calls: toolCalls,
+              type: 'tool_calls',
+            });
           }
         }
-      },
-      onopen: async (res) => {
-        response = res.clone();
-        // 如果不 ok 说明有请求错误
-        if (!response.ok) {
-          throw await getMessageError(res);
-        }
-      },
-      // we should keep open when page hidden, or it will case lots of token cost
-      // refs: https://github.com/lobehub/lobe-chat/issues/2501
-      openWhenHidden: true,
-      signal: options.signal,
-    });
-  } catch {}
+      }
+    },
+    onopen: async (res) => {
+      response = res.clone();
+      // 如果不 ok 说明有请求错误
+      if (!response.ok) {
+        throw await getMessageError(res);
+      }
+    },
+    signal: options.signal,
+  });
 
   // only call onFinish when response is available
   // so like abort, we don't need to call onFinish

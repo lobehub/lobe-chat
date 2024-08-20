@@ -20,12 +20,15 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
+import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
 import { LobeTogetherAI } from './togetherai';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
   ModelProvider,
   TextToImagePayload,
 } from './types';
@@ -77,12 +80,17 @@ class AgentRuntime {
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     return this._runtime.chat(payload, options);
   }
+
   async textToImage(payload: TextToImagePayload) {
     return this._runtime.textToImage?.(payload);
   }
 
   async models() {
     return this._runtime.models?.();
+  }
+
+  async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions) {
+    return this._runtime.embeddings?.(payload, options);
   }
 
   /**
@@ -122,6 +130,7 @@ class AgentRuntime {
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
+      siliconcloud: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
       taichu: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
@@ -245,7 +254,12 @@ class AgentRuntime {
 
       case ModelProvider.Ai360: {
         runtimeModel = new LobeAi360AI(params.ai360 ?? {});
-        break
+        break;
+      }
+
+      case ModelProvider.SiliconCloud: {
+        runtimeModel = new LobeSiliconCloudAI(params.siliconcloud ?? {});
+        break;
       }
     }
 

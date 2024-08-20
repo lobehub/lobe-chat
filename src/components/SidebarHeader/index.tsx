@@ -1,5 +1,5 @@
 import { createStyles } from 'antd-style';
-import { type ReactNode, memo } from 'react';
+import { CSSProperties, type ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 const useStyles = createStyles(({ css }) => ({
@@ -10,10 +10,11 @@ const useStyles = createStyles(({ css }) => ({
 
 interface SidebarHeaderProps {
   actions?: ReactNode;
+  style?: CSSProperties;
   title: ReactNode;
 }
 
-const SidebarHeader = memo<SidebarHeaderProps>(({ title, actions }) => {
+const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions }) => {
   const { styles } = useStyles();
 
   return (
@@ -24,6 +25,7 @@ const SidebarHeader = memo<SidebarHeaderProps>(({ title, actions }) => {
       horizontal
       padding={14}
       paddingInline={16}
+      style={style}
     >
       <Flexbox align={'center'} gap={4} horizontal>
         {title}

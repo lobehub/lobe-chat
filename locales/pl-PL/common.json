@@ -13,6 +13,8 @@
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
   "autoGenerateTooltipDisabled": "Proszę wprowadzić słowo kluczowe przed użyciem funkcji automatycznego uzupełniania",
+  "back": "Powrót",
+  "batchDelete": "Usuń wiele",
   "blog": "Blog produktowy",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
@@ -31,6 +33,7 @@
   "defaultSession": "Domyślna sesja",
   "delete": "Usuń",
   "document": "Dokumentacja",
+  "download": "Pobierz",
   "duplicate": "Utwórz kopię",
   "edit": "Edytuj",
   "export": "Eksportuj ustawienia",
@@ -192,6 +195,7 @@
   },
   "tab": {
     "chat": "Czat",
+    "files": "Pliki",
     "market": "Odkrywaj",
     "me": "ja",
     "setting": "Ustawienia"

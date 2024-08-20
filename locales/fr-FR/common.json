@@ -13,6 +13,8 @@
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
+  "back": "Retour",
+  "batchDelete": "Suppression en masse",
   "blog": "Blog des produits",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
@@ -31,6 +33,7 @@
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
   "document": "Document d'utilisation",
+  "download": "Télécharger",
   "duplicate": "Dupliquer",
   "edit": "Modifier",
   "export": "Exporter",
@@ -192,6 +195,7 @@
   },
   "tab": {
     "chat": "Conversation",
+    "files": "Fichiers",
     "market": "Découvrir",
     "me": "moi",
     "setting": "Paramètre"
