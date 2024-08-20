@@ -40,9 +40,9 @@ const FileUpload = memo(() => {
         title={t(
           canUpload
             ? enabledFiles
-              ? 'upload.actionFiletip'
-              : 'upload.actionTooltip'
-            : 'upload.disabled',
+              ? 'upload.clientMode.actionFiletip'
+              : 'upload.clientMode.actionTooltip'
+            : 'upload.clientMode.disabled',
         )}
       />
     </Upload>

@@ -1,6 +1,7 @@
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { FILE_UPLOAD_BLACKLIST } from '@/const/file';
 import { useClientDataSWR } from '@/libs/swr';
 import { fileService } from '@/services/file';
 import { ServerService } from '@/services/file/server';
@@ -82,8 +83,12 @@ export const createFileManageSlice: StateCreator<
     await get().refreshFileList();
     get().toggleParsingIds(ids, false);
   },
-  pushDockFileList: async (files: File[], knowledgeBaseId) => {
+  pushDockFileList: async (rawFiles, knowledgeBaseId) => {
     const { dispatchDockFileList } = get();
+
+    // 0. skip file in blacklist
+    const files = rawFiles.filter((file) => !FILE_UPLOAD_BLACKLIST.includes(file.name));
+
     // 1. add files
     dispatchDockFileList({
       atStart: true,

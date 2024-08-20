@@ -1,16 +1,16 @@
 import STT from '../STT';
 import Clear from './Clear';
-import FileUpload from './FileUpload';
 import History from './History';
 import Knowledge from './Knowledge';
 import ModelSwitch from './ModelSwitch';
 import Temperature from './Temperature';
 import Token from './Token';
 import Tools from './Tools';
+import Upload from './Upload';
 
 export const actionMap = {
   clear: Clear,
-  fileUpload: FileUpload,
+  fileUpload: Upload,
   history: History,
   knowledgeBase: Knowledge,
   model: ModelSwitch,

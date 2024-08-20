@@ -2,6 +2,7 @@ import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { FILE_UPLOAD_BLACKLIST } from '@/const/file';
 import { fileService } from '@/services/file';
 import { ServerService } from '@/services/file/server';
 import { ragService } from '@/services/rag';
@@ -99,9 +100,10 @@ export const createFileSlice: StateCreator<
     }
   },
 
-  uploadChatFiles: async (files) => {
+  uploadChatFiles: async (rawFiles) => {
     const { dispatchChatUploadFileList, startAsyncTask } = get();
-
+    // 0. skip file in blacklist
+    const files = rawFiles.filter((file) => !FILE_UPLOAD_BLACKLIST.includes(file.name));
     // 1. add files with base64
     const uploadFiles: UploadFileItem[] = await Promise.all(
       files.map(async (file) => {

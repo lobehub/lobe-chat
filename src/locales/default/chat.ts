@@ -157,9 +157,18 @@ export default {
   },
   updateAgent: '更新助理信息',
   upload: {
-    actionFiletip: '上传文件',
-    actionTooltip: '上传图片',
-    disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+    action: {
+      fileUpload: '上传文件',
+      folderUpload: '上传文件夹',
+      imageDisabled: '当前模型不支持视觉识别，请切换模型后使用',
+      imageUpload: '上传图片',
+      tooltip: '上传',
+    },
+    clientMode: {
+      actionFiletip: '上传文件',
+      actionTooltip: '上传',
+      disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+    },
     preview: {
       prepareTasks: '准备分块...',
       status: {
