@@ -6,5 +6,5 @@ export const filesSelectors = {
   ...ttsFilesSelectors,
 };
 
+export { fileChatSelectors } from './slices/chat/selectors';
 export * from './slices/fileManager/selectors';
-export * from '@/store/file/slices/chat/newSelectors';
