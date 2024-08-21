@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Text chunks have not been fully vectorized, which will render the semantic search feature unavailable. To improve search quality, please vectorize the text chunks.",
+        "error": "Vectorization failed",
+        "errorResult": "Vectorization failed, please check and try again. Reason for failure:",
         "processing": "Text chunks are being vectorized, please be patient.",
         "success": "All current text chunks have been vectorized."
       },
