@@ -65,7 +65,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
-  const sendMessage = useSendMessage();
+  const { send: sendMessage } = useSendMessage();
 
   return (
     <Flexbox gap={8} width={'100%'}>

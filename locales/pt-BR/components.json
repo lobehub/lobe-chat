@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Os blocos de texto ainda não foram completamente vetorizados, o que resultará na funcionalidade de busca semântica indisponível. Para melhorar a qualidade da busca, por favor, vetorize os blocos de texto.",
+        "error": "Falha na vetorização",
+        "errorResult": "Falha na vetorização, por favor verifique e tente novamente. Motivo da falha:",
         "processing": "Os blocos de texto estão sendo vetorizados, por favor, aguarde.",
         "success": "Atualmente, todos os blocos de texto foram vetorizados."
       },

@@ -4,7 +4,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
 import { imageGenerationService } from '@/services/textToImage';
-import { uploadService } from '@/services/upload';
+import { legacyUploadService } from '@/services/upload_legacy';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -61,7 +61,7 @@ export const chatToolSlice: StateCreator<
 
       toggleDallEImageLoading(messageId + params.prompt, false);
 
-      uploadService
+      legacyUploadService
         .uploadImageByUrl(url, {
           metadata: { ...params, originPrompt: originPrompt },
           name: `${originPrompt || params.prompt}_${index}.png`,

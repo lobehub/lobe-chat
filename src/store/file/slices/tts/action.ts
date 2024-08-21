@@ -2,7 +2,7 @@ import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
-import { uploadService } from '@/services/upload';
+import { legacyUploadService } from '@/services/upload_legacy';
 import { FilePreview } from '@/types/files';
 
 import { FileStore } from '../../store';
@@ -42,7 +42,7 @@ export const createTTSFileSlice: StateCreator<
   },
   uploadTTSFile: async (file) => {
     try {
-      const res = await uploadService.uploadFile({
+      const res = await legacyUploadService.uploadFile({
         createdAt: file.lastModified,
         data: await file.arrayBuffer(),
         fileType: file.type,

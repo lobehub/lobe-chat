@@ -68,7 +68,7 @@ export class ServerService implements ISessionService {
 
     // TODO: Need to be fixed
     // @ts-ignore
-    return lambdaClient.session.getSessionConfig.query({ id });
+    return lambdaClient.agent.getAgentConfig.query({ sessionId: id });
   }
 
   updateSessionConfig(
