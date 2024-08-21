@@ -39,9 +39,9 @@ LobeChat 默认使用客户端数据库（IndexedDB），同时也支持使用�
 - `A.` 使用 Vercel / Neon 等 Serverless Postgres 实例；
 - `B.` 使用 Docker / Railway / Zeabur 等自部署 Postgres 实例，下统称 Node Postgres 实例；
 
-同时，由于我们支持了文件对话/知识库对话的能力，因此我们需要为 Postgres 安装 `pgvector` 插件，该插件提供了向量搜索的能力，是 LobeChat 实现 RAG 的重要构件之一。
-
 <Callout>两者的配置方式在环境变量的取值上会略有一点区别，其他方面是一样的。</Callout>
+
+同时，由于我们支持了文件对话/知识库对话的能力，因此我们需要为 Postgres 安装 `pgvector` 插件，该插件提供了向量搜索的能力，是 LobeChat 实现 RAG 的重要构件之一。
 
 <Steps>
 
@@ -57,9 +57,9 @@ LobeChat 同时支持了客户端数据库和服务端数据库，因此我们�
 </Callout>
 
 <Callout type={'tip'}>
-  由于 `NEXT_PUBLIC` 开头的环境变量是在前端代码中生效的，而因此无法通过容器运行时注入进行修改。 （参考 `next.js`的文档 [Configuring: Environment Variables | Next.js (nextjs.org)](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables) 这也是为什么我们选择再打一个 DB 版的镜像的原因。
+  由于 `NEXT_PUBLIC` 开头的环境变量是在前端代码中生效的，而因此无法通过容器运行时注入进行修改。 （`next.js`的参考文档 [Configuring: Environment Variables | Next.js (nextjs.org)](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables) ) 这也是为什么我们选择再打一个 DB 版镜像的原因。
 
-如果需要修改 `NEXT_PUBLIC` 前缀的变量，你需要自行构建镜像，在 build 时就把自己的 `NEXT_PUBLIC` 开头的环境变量打进去。
+如果你需要在 Docker 部署中修改 `NEXT_PUBLIC` 前缀的变量，你必须自行构建镜像，在 build 时就把自己的 `NEXT_PUBLIC` 开头的环境变量打进去。
 
 </Callout>
 
@@ -130,9 +130,9 @@ NextAuth 是一个开源的身份验证库，支持多种身份验证提供商�
 
 ## 配置 S3 存储服务
 
-LobeChat 在 [很早以前](https://x.com/lobehub/status/1724289575672291782) 就支持了多模态的 AI 会话，其中涉及到图片上传给大模型的功能。在客户端数据库方案中，图片文件直接以二进制数据存储在浏览器 IndexedDB 数据库，但在服务端数据库中这个方案并不可行。因为在 Postgres 中直接存储文件类数据会大大浪费宝贵的数据库存储空间，并拖慢计算性能。
+LobeChat 在 [很早以前](https://x.com/lobehub/status/1724289575672291782) 就支持了多模态的 AI 会话，其中涉及到图片上传给大模型的功能。在客户端数据库方案中，图片文件直接以二进制数据存储在浏览器 IndexedDB 数据库，但在服务端数据库中这个方案并不可行。因为在 Postgres 中直接存储文件类二进制数据会大大浪费宝贵的数据库存储空间，并拖慢计算性能。
 
-这块最佳实践是使用文件存储服务（S3）来存储图片文件，同时 S3 也是文件上传/知识库功能所依赖的存储方案。
+这块最佳实践是使用文件存储服务（S3）来存储图片文件，同时 S3 也是文件上传/知识库功能所依赖的大容量静态文件存储方案。
 
 <Callout type={'info'}>
   在本文档库中，S3 所指代的是指兼容 S3 存储方案，即支持 Amazon S3 API 的对象存储系统，常见例如
