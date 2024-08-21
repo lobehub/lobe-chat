@@ -15,7 +15,7 @@ const db = drizzle(client);
 const runMigrations = async () => {
   console.log('[Database] Start to migration...');
   await migrator.migrate(db, {
-    migrationsFolder: join(__dirname, '../../src/database/server/migrations'),
+    migrationsFolder: join(__dirname, './migrations'),
   });
 
   console.log('✅ database migration pass.');
