@@ -115,6 +115,7 @@
   },
   "upload": {
     "desc": "Detay: {{detail}}",
+    "fileOnlySupportInServerMode": "Mevcut dağıtım modu, yalnızca resim dosyalarının yüklenmesini desteklemektedir. {{ext}} formatında bir dosya yüklemek istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya LobeChat Cloud hizmetini kullanın.",
     "title": "Dosya yükleme başarısız, lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin"
   }
 }

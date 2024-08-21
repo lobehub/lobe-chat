@@ -1,0 +1,91 @@
+{
+  "desc": "Manage your files and knowledge base",
+  "detail": {
+    "basic": {
+      "createdAt": "Creation Time",
+      "filename": "File Name",
+      "size": "File Size",
+      "title": "Basic Information",
+      "type": "Format",
+      "updatedAt": "Update Time"
+    },
+    "data": {
+      "chunkCount": "Number of Chunks",
+      "embedding": {
+        "default": "Not yet vectorized",
+        "error": "Failed",
+        "pending": "Pending start",
+        "processing": "In progress",
+        "success": "Completed"
+      },
+      "embeddingStatus": "Vectorization"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "New Folder",
+      "uploadFile": "Upload File",
+      "uploadFolder": "Upload Folder"
+    },
+    "uploadButton": "Upload"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "You are about to delete this knowledge base. The files within will not be deleted and will be moved to All Files. Once deleted, the knowledge base cannot be recovered. Please proceed with caution.",
+      "empty": "Click <1>+</1> to start creating a knowledge base"
+    },
+    "new": "New Knowledge Base",
+    "title": "Knowledge Base"
+  },
+  "notSupportGuide": {
+    "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
+    "features": {
+      "allKind": {
+        "desc": "Supports mainstream file types, including common document formats like Word, PPT, Excel, PDF, TXT, as well as popular code files like JS and Python.",
+        "title": "Multiple File Type Parsing"
+      },
+      "embeddings": {
+        "desc": "Utilizes high-performance vector models to vectorize text chunks, enabling semantic search of file content.",
+        "title": "Vector Semantics"
+      },
+      "repos": {
+        "desc": "Supports the creation of knowledge bases and allows the addition of different types of files, building your domain knowledge.",
+        "title": "Knowledge Base"
+      }
+    },
+    "title": "The current deployment mode does not support file management"
+  },
+  "preview": {
+    "unsupportedFile": "This file format does not support online preview"
+  },
+  "searchFilePlaceholder": "Search Files",
+  "tab": {
+    "all": "All Files",
+    "audios": "Audio",
+    "documents": "Documents",
+    "images": "Images",
+    "videos": "Videos",
+    "websites": "Websites"
+  },
+  "title": "Files",
+  "uploadDock": {
+    "body": {
+      "collapse": "Collapse",
+      "item": {
+        "done": "Uploaded",
+        "error": "Upload failed, please try again",
+        "pending": "Preparing to upload...",
+        "processing": "Processing file...",
+        "restTime": "Remaining {{time}}"
+      }
+    },
+    "totalCount": "Total {{count}} items",
+    "uploadStatus": {
+      "error": "Upload error",
+      "pending": "Waiting to upload",
+      "processing": "Uploading",
+      "success": "Upload completed",
+      "uploading": "Uploading"
+    }
+  }
+}
