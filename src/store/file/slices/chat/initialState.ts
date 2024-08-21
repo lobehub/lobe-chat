@@ -3,17 +3,16 @@ import { UploadFileItem } from '@/types/files/upload';
 
 export interface ImageFileState {
   chatUploadFileList: UploadFileItem[];
-  imagesMap: Record<string, FilePreview>;
   /**
+   * it should be removed after dalle plugin refactor
    * @deprecated
    */
-  inputFilesList: string[];
+  imagesMap: Record<string, FilePreview>;
   uploadingIds: string[];
 }
 
 export const initialImageFileState: ImageFileState = {
   chatUploadFileList: [],
   imagesMap: {},
-  inputFilesList: [],
   uploadingIds: [],
 };

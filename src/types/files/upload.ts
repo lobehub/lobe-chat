@@ -23,14 +23,19 @@ export const UPLOAD_STATUS_SET = new Set(['uploading', 'pending', 'processing'])
 // the file that is upload at chat page
 export interface UploadFileItem {
   /**
-   * base64 url of image url
+   * base64 data, it will use in other data
    */
   base64Url?: string;
   file: File;
+  /**
+   * the file url after upload,it will be s3 url
+   * if enable the S3 storage, or the data is same as base64Url
+   */
   fileUrl?: string;
   id: string;
   /**
    * blob url for local preview
+   * it will use in the file preview before send the message
    */
   previewUrl?: string;
   status: FileUploadStatus;

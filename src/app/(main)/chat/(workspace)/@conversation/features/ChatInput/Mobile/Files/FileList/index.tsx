@@ -4,18 +4,17 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ImageItem from '@/components/ImageItem';
-
-import { ImageFileItem } from './type';
+import { UploadFileItem } from '@/types/files';
 
 interface EditableFileListProps {
   alwaysShowClose?: boolean;
   editable?: boolean;
-  items: ImageFileItem[];
+  items: UploadFileItem[];
   onRemove?: (id: string) => void;
   padding?: number | string;
 }
 
-export const EditableFileList = memo<EditableFileListProps>(
+const EditableFileList = memo<EditableFileListProps>(
   ({ items, editable = true, alwaysShowClose, onRemove, padding = 12 }) => {
     const { mobile } = useResponsive();
 
@@ -29,13 +28,13 @@ export const EditableFileList = memo<EditableFileListProps>(
         <ImageGallery>
           {items.map((i) => (
             <ImageItem
-              alt={i.alt}
+              alt={i.file.name}
               alwaysShowClose={alwaysShowClose}
               editable={editable}
               key={i.id}
-              loading={i.loading}
+              loading={i.status === 'pending'}
               onRemove={() => onRemove?.(i.id)}
-              url={i.url}
+              url={i.previewUrl}
             />
           ))}
         </ImageGallery>
