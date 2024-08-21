@@ -24,7 +24,10 @@ export class EmbeddingModel {
   bulkCreate = async (values: Omit<NewEmbeddingsItem, 'userId'>[]) => {
     return serverDB
       .insert(embeddings)
-      .values(values.map((item) => ({ ...item, userId: this.userId })));
+      .values(values.map((item) => ({ ...item, userId: this.userId })))
+      .onConflictDoNothing({
+        target: [embeddings.chunkId],
+      });
   };
 
   delete = async (id: string) => {
