@@ -426,7 +426,7 @@ LobeChat provides Self-Hosted Version with Vercel and [Docker Image][docker-rele
 >
 > Learn more about [📘 Build your own LobeChat][docs-self-hosting] by checking it out.
 
-### `A` Deploying with Vercel, Zeabur or Sealos
+### `A` Deploying with Vercel, Zeabur, Sealos or Elestio
 
 If you want to deploy this service yourself on either Vercel or Zeabur, you can follow these steps:
 
@@ -440,7 +440,6 @@ If you want to deploy this service yourself on either Vercel or Zeabur, you can 
 |           Deploy with Vercel            |                     Deploy with Zeabur                      |                     Deploy with Sealos                      |          Deploy with Elestio            | 
 | :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
 | [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![Deploy on Elestio](https://elest.io/images/logos/deploy-to-elestio-btn.png)](https://elest.io/open-source/lobechat) |
-
 
 </div>
 
