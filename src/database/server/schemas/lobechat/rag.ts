@@ -41,7 +41,9 @@ export type NewUnstructuredChunkItem = typeof unstructuredChunks.$inferInsert;
 
 export const embeddings = pgTable('embeddings', {
   id: uuid('id').defaultRandom().primaryKey(),
-  chunkId: uuid('chunk_id').references(() => chunks.id, { onDelete: 'cascade' }),
+  chunkId: uuid('chunk_id')
+    .references(() => chunks.id, { onDelete: 'cascade' })
+    .unique(),
   embeddings: vector('embeddings', { dimensions: 1024 }),
   model: text('model'),
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
