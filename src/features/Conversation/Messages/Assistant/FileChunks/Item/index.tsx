@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { ChatFileChunk } from '@/types/message';
 
@@ -14,13 +15,14 @@ export interface ChunkItemProps extends ChatFileChunk {
 }
 
 const ChunkItem = memo<ChunkItemProps>(({ id, fileId, text, filename, fileType }) => {
-  const { styles } = useStyles();
+  const { styles, cx } = useStyles();
   const openFilePreview = useChatStore((s) => s.openFilePreview);
 
+  const isMobile = useIsMobile();
   return (
     <Flexbox
       align={'center'}
-      className={styles.container}
+      className={cx(styles.container, isMobile && styles.mobile)}
       gap={4}
       horizontal
       key={id}

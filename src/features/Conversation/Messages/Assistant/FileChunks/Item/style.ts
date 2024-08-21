@@ -32,4 +32,7 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     font-size: 12px;
     text-overflow: ellipsis;
   `,
+  mobile: css`
+    width: 100%;
+  `,
 }));

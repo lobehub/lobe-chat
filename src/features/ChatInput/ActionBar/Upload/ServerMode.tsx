@@ -2,7 +2,7 @@ import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
 import { Dropdown, MenuProps, Upload } from 'antd';
 import { css, cx } from 'antd-style';
 import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
@@ -26,78 +26,74 @@ const FileUpload = memo(() => {
   const upload = useFileStore((s) => s.uploadChatFiles);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
-  const [canUploadImage] = useUserStore((s) => [
-    modelProviderSelectors.isModelEnabledUpload(model)(s),
-    // modelProviderSelectors.isModelEnabledFiles(model)(s),
-  ]);
 
-  const items = useMemo<MenuProps['items']>(
-    () => [
-      {
-        disabled: !canUploadImage,
-        icon: <Icon icon={ImageUp} />,
-        key: 'upload-image',
-        label: canUploadImage ? (
-          <Upload
-            accept={'image/*'}
-            beforeUpload={async (file) => {
-              await upload([file]);
+  const canUploadImage = useUserStore(modelProviderSelectors.isModelEnabledVision(model));
 
-              return false;
-            }}
-            multiple
-            showUploadList={false}
-          >
-            <div className={cx(hotArea)}>{t('upload.action.imageUpload')}</div>
-          </Upload>
-        ) : (
-          <Tooltip placement={'right'} title={t('upload.action.imageDisabled')}>
-            <div className={cx(hotArea)}>{t('upload.action.imageUpload')}</div>
-          </Tooltip>
-        ),
-      },
-      {
-        icon: <Icon icon={FileUp} />,
-        key: 'upload-file',
-        label: (
-          <Upload
-            beforeUpload={async (file) => {
-              if (!canUploadImage && file.type.startsWith('image')) return false;
+  const items: MenuProps['items'] = [
+    {
+      disabled: !canUploadImage,
+      icon: <Icon icon={ImageUp} />,
+      key: 'upload-image',
+      label: canUploadImage ? (
+        <Upload
+          accept={'image/*'}
+          beforeUpload={async (file) => {
+            await upload([file]);
 
-              await upload([file]);
+            return false;
+          }}
+          multiple
+          showUploadList={false}
+        >
+          <div className={cx(hotArea)}>{t('upload.action.imageUpload')}</div>
+        </Upload>
+      ) : (
+        <Tooltip placement={'right'} title={t('upload.action.imageDisabled')}>
+          <div className={cx(hotArea)}>{t('upload.action.imageUpload')}</div>
+        </Tooltip>
+      ),
+    },
+    {
+      icon: <Icon icon={FileUp} />,
+      key: 'upload-file',
+      label: (
+        <Upload
+          beforeUpload={async (file) => {
+            if (!canUploadImage && file.type.startsWith('image')) return false;
 
-              return false;
-            }}
-            multiple
-            showUploadList={false}
-          >
-            <div className={cx(hotArea)}>{t('upload.action.fileUpload')}</div>
-          </Upload>
-        ),
-      },
-      {
-        icon: <Icon icon={FolderUp} />,
-        key: 'upload-folder',
-        label: (
-          <Upload
-            beforeUpload={async (file) => {
-              if (!canUploadImage && file.type.startsWith('image')) return false;
+            await upload([file]);
 
-              await upload([file]);
+            return false;
+          }}
+          multiple
+          showUploadList={false}
+        >
+          <div className={cx(hotArea)}>{t('upload.action.fileUpload')}</div>
+        </Upload>
+      ),
+    },
+    {
+      icon: <Icon icon={FolderUp} />,
+      key: 'upload-folder',
+      label: (
+        <Upload
+          beforeUpload={async (file) => {
+            if (!canUploadImage && file.type.startsWith('image')) return false;
 
-              return false;
-            }}
-            directory
-            multiple={true}
-            showUploadList={false}
-          >
-            <div className={cx(hotArea)}>{t('upload.action.folderUpload')}</div>
-          </Upload>
-        ),
-      },
-    ],
-    [],
-  );
+            await upload([file]);
+
+            return false;
+          }}
+          directory
+          multiple={true}
+          showUploadList={false}
+        >
+          <div className={cx(hotArea)}>{t('upload.action.folderUpload')}</div>
+        </Upload>
+      ),
+    },
+  ];
+
   return (
     <Dropdown menu={{ items }} placement="top">
       <ActionIcon icon={Paperclip} placement={'bottom'} title={t('upload.action.tooltip')} />

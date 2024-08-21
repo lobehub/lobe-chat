@@ -5,13 +5,12 @@ import { Trash2Icon } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
-import FileParsingStatus from 'src/components/FileParsingStatus';
 
 import { useFileStore } from '@/store/file';
 import { UploadFileItem } from '@/types/files/upload';
 
+import UploadDetail from '../../../components/UploadDetail';
 import Content from './Content';
-import UploadStatus from './UploadStatus';
 import { FILE_ITEM_SIZE } from './style';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -68,18 +67,7 @@ const FileItem = memo<FileItemProps>((props) => {
           {file.name}
         </Typography.Text>
 
-        <Flexbox align={'center'} gap={8} height={22} horizontal>
-          <UploadStatus size={file.size} status={status} uploadState={uploadState} />
-          {!!tasks && Object.keys(tasks).length === 0 ? (
-            <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
-              {t('upload.preview.prepareTasks')}
-            </Typography.Text>
-          ) : (
-            <div>
-              <FileParsingStatus {...tasks} className={styles.status} hideEmbeddingButton />
-            </div>
-          )}
-        </Flexbox>
+        <UploadDetail size={file.size} status={status} tasks={tasks} uploadState={uploadState} />
       </Flexbox>
       <Flexbox className={styles.actions}>
         <ActionIcon

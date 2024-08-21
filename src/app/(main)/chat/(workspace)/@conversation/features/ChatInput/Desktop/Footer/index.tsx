@@ -12,7 +12,6 @@ import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { fileChatSelectors, useFileStore } from '@/store/file';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { isMacOS } from '@/utils/platform';
@@ -57,17 +56,14 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
 
   const { theme, styles } = useStyles();
 
-  const [isAIGenerating, isSendButtonDisabledByMessage, stopGenerateMessage] = useChatStore((s) => [
+  const [isAIGenerating, stopGenerateMessage] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
-    chatSelectors.isSendButtonDisabledByMessage(s),
     s.stopGenerateMessage,
   ]);
 
-  const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
-
   const [useCmdEnterToSend] = useUserStore((s) => [preferenceSelectors.useCmdEnterToSend(s)]);
 
-  const sendMessage = useSendMessage();
+  const { send: sendMessage, canSend } = useSendMessage();
 
   const [isMac, setIsMac] = useState<boolean>();
   useEffect(() => {
@@ -96,8 +92,6 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
   const sendShortcut = useCmdEnterToSend ? cmdEnter : enter;
 
   const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
-
-  const buttonDisabled = isUploadingFiles || isSendButtonDisabledByMessage;
 
   return (
     <Flexbox
@@ -137,8 +131,8 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
           ) : (
             <Space.Compact>
               <Button
-                disabled={buttonDisabled}
-                loading={buttonDisabled}
+                disabled={!canSend}
+                loading={!canSend}
                 onClick={() => {
                   sendMessage();
                   setExpand?.(false);
@@ -147,7 +141,7 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
               >
                 {t('input.send')}
               </Button>
-              <SendMore disabled={buttonDisabled} isMac={isMac} />
+              <SendMore disabled={!canSend} isMac={isMac} />
             </Space.Compact>
           )}
         </Flexbox>

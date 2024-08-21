@@ -8,7 +8,7 @@ import { useChatStore } from '@/store/chat';
 import { ChatFileItem } from '@/types/message';
 import { formatSize } from '@/utils/format';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
     cursor: pointer;
 
@@ -16,9 +16,9 @@ const useStyles = createStyles(({ css, token }) => ({
 
     max-width: 420px;
     padding-block: 8px;
-    padding-inline: 12px 24px;
+    padding-inline: 12px 32px;
 
-    border: 1px solid ${token.colorBorder};
+    border: 1px solid ${isDarkMode ? token.colorBorder : token.colorSplit};
     border-radius: 8px;
 
     &:hover {
@@ -31,6 +31,7 @@ const FileItem = memo<ChatFileItem>(({ id, fileType, size, name }) => {
   const { styles } = useStyles();
 
   const openFilePreview = useChatStore((s) => s.openFilePreview);
+
   return (
     <Flexbox
       className={styles.container}
@@ -42,7 +43,7 @@ const FileItem = memo<ChatFileItem>(({ id, fileType, size, name }) => {
       }}
     >
       <FileIcon fileName={name} fileType={fileType} />
-      <Flexbox>
+      <Flexbox style={{ overflow: 'hidden' }}>
         <Typography.Text ellipsis>{name}</Typography.Text>
         <Typography.Text type={'secondary'}>{formatSize(size)}</Typography.Text>
       </Flexbox>

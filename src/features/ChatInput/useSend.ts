@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
@@ -18,7 +18,7 @@ export const useSendMessage = () => {
 
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
 
-  return useCallback((params: UseSendMessageParams = {}) => {
+  const send = useCallback((params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
     if (chatSelectors.isAIGenerating(store)) return;
 
@@ -43,4 +43,11 @@ export const useSendMessage = () => {
     //   agentSetting.autocompleteAllMeta();
     // }
   }, []);
+
+  const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
+  const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
+
+  const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
+
+  return useMemo(() => ({ canSend, send }), [canSend]);
 };
