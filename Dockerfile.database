@@ -218,5 +218,7 @@ CMD \
     fi; \
     # Run migration
     node "/app/docker.cjs"; \
-    # Run the server
-    ${PROXYCHAINS} node "/app/server.js";
+    if [ "$?" -eq "0" ]; then \
+      # Run the server
+      ${PROXYCHAINS} node "/app/server.js"; \
+    fi;
