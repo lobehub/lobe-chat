@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.12.8](https://github.com/lobehub/lobe-chat/compare/v1.12.7...v1.12.8)
+
+<sup>Released on **2024-08-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `NEXT_PUBLIC_S3_DOMAIN` error on Docker.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `NEXT_PUBLIC_S3_DOMAIN` error on Docker, closes [#3564](https://github.com/lobehub/lobe-chat/issues/3564) ([bc6b64c](https://github.com/lobehub/lobe-chat/commit/bc6b64c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.12.7](https://github.com/lobehub/lobe-chat/compare/v1.12.6...v1.12.7)
 
 <sup>Released on **2024-08-22**</sup>
