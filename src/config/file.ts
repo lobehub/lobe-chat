@@ -14,6 +14,9 @@ export const getFileConfig = () => {
 
   return createEnv({
     client: {
+      /**
+       * @deprecated
+       */
       NEXT_PUBLIC_S3_DOMAIN: z.string().url().optional(),
       NEXT_PUBLIC_S3_FILE_PATH: z.string().optional(),
     },
