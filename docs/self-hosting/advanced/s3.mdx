@@ -53,6 +53,26 @@ In this documentation, S3 refers to a compatible S3 storage solution, which supp
     Additionally, since this access domain is often a separate URL, it needs to be configured to allow cross-origin access to the site. Otherwise, cross-origin issues will occur in the browser.
   </Callout>
 
+  ### `S3_ENABLE_PATH_STYLE`
+
+  Whether to enable the `path-style` access mode of S3. This option is disabled by default. If your S3 service provider uses `path-style`, set `S3_ENABLE_PATH_STYLE` to `1` to enable it.
+
+  <Callout type={'info'}>
+
+  `path-style` and `virtual-host` are different ways to access buckets and objects in S3, with different URL structures and domain name resolutions.
+
+  Assuming the domain name of the S3 service provider is s3.example.net, the bucket is mybucket, and the object is config.env, the specific differences are as follows:
+  - path-style: `s3.example.net/mybucket/config.env`
+  - virtual-host: `mybucket.s3.example.net/config.env`
+
+  </Callout>
+
+  <Callout type={'tip'}>
+
+  Common S3 cloud service providers often default to the `virtual-host` mode, while self-deployed services like Minio default to using `path-style`. Therefore, if you use Minio as the S3 service, you need to set `S3_ENABLE_PATH_STYLE=1`.
+
+  </Callout>
+
 </Steps>
 
 ## S3 Configuration Guide
