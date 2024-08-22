@@ -164,7 +164,7 @@
     "mammoth": "^1.8.0",
     "modern-screenshot": "^4.4.39",
     "nanoid": "^5.0.7",
-    "next": "^14.2.4",
+    "next": "14.2.5",
     "next-auth": "5.0.0-beta.15",
     "next-sitemap": "^4.2.3",
     "numeral": "^2.0.6",
