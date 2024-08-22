@@ -1,8 +1,6 @@
 import { TRPCError } from '@trpc/server';
-import urlJoin from 'url-join';
 import { z } from 'zod';
 
-import { fileEnv } from '@/config/file';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { FileModel } from '@/database/server/models/file';
@@ -137,7 +135,7 @@ export const fileRouter = router({
         embeddingError: embeddingTask?.error ?? null,
         embeddingStatus: embeddingTask?.status as AsyncTaskStatus,
         finishEmbedding: embeddingTask?.status === AsyncTaskStatus.Success,
-        url: urlJoin(fileEnv.NEXT_PUBLIC_S3_DOMAIN!, item.url!),
+        url: getFullFileUrl(item.url!),
       };
     });
   }),
