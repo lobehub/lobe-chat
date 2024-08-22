@@ -138,16 +138,20 @@ export const createFileSlice: StateCreator<
           file,
           onStatusUpdate: dispatchChatUploadFileList,
         });
-      } catch (errorMessage) {
-        notification.error({
-          description:
-            // it may be a network error or the cors error
-            errorMessage === UPLOAD_NETWORK_ERROR
-              ? t('upload.networkError', { ns: 'error' })
-              : // or the error from the server
-                (errorMessage as string),
-          message: t('upload.uploadFailed', { ns: 'error' }),
-        });
+      } catch (error) {
+        // skip `UNAUTHORIZED` error
+        if ((error as any)?.message !== 'UNAUTHORIZED')
+          notification.error({
+            description:
+              // it may be a network error or the cors error
+              error === UPLOAD_NETWORK_ERROR
+                ? t('upload.networkError', { ns: 'error' })
+                : // or the error from the server
+                  typeof error === 'string'
+                  ? error
+                  : t('upload.unknownError', { ns: 'error', reason: (error as Error).message }),
+            message: t('upload.uploadFailed', { ns: 'error' }),
+          });
 
         dispatchChatUploadFileList({ id: file.name, type: 'removeFile' });
       }
