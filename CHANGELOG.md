@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.12.4](https://github.com/lobehub/lobe-chat/compare/v1.12.3...v1.12.4)
+
+<sup>Released on **2024-08-22**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix link style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix link style, closes [#3552](https://github.com/lobehub/lobe-chat/issues/3552) ([aa936c8](https://github.com/lobehub/lobe-chat/commit/aa936c8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.12.3](https://github.com/lobehub/lobe-chat/compare/v1.12.2...v1.12.3)
 
 <sup>Released on **2024-08-22**</sup>
