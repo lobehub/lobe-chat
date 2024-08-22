@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { FileText, Settings2Icon } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useMemo, useState } from 'react';
@@ -29,11 +29,11 @@ const FileMenu = memo<{ id: string }>(({ id }) => {
       //   key: `/repos/${id}/testing`,
       //   label: <Link href={`/repos/${id}/testing`}>{t('tab.testing')}</Link>,
       // },
-      {
-        icon: <Icon icon={Settings2Icon} />,
-        key: `/repos/${id}/settings`,
-        label: <Link href={`/repos/${id}/settings`}>{t('tab.settings')}</Link>,
-      },
+      // {
+      //   icon: <Icon icon={Settings2Icon} />,
+      //   key: `/repos/${id}/settings`,
+      //   label: <Link href={`/repos/${id}/settings`}>{t('tab.settings')}</Link>,
+      // },
     ],
     [t],
   );
