@@ -81,6 +81,12 @@ export const messageRouter = router({
       return ctx.messageModel.deleteMessage(input.id);
     }),
 
+  removeMessageQuery: messageProcedure
+    .input(z.object({ id: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.messageModel.deleteMessageQuery(input.id);
+    }),
+
   removeMessages: messageProcedure
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input, ctx }) => {

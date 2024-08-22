@@ -1,21 +1,33 @@
-import { count, sql } from 'drizzle-orm';
-import { and, asc, desc, eq, isNull, like } from 'drizzle-orm/expressions';
-import { inArray } from 'drizzle-orm/sql/expressions/conditions';
+import { count } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, inArray, isNull, like, lt } from 'drizzle-orm/expressions';
 
-import { CreateMessageParams } from '@/database/client/models/message';
 import { serverDB } from '@/database/server/core/db';
 import { idGenerator } from '@/database/server/utils/idGenerator';
-import { ChatTTS, ChatToolPayload } from '@/types/message';
+import { getFullFileUrl } from '@/server/utils/files';
+import {
+  ChatFileItem,
+  ChatImageItem,
+  ChatTTS,
+  ChatToolPayload,
+  CreateMessageParams,
+} from '@/types/message';
 import { merge } from '@/utils/merge';
 
 import {
   MessageItem,
   MessagePluginItem,
-  filesToMessages,
+  NewMessageQuery,
+  chunks,
+  embeddings,
+  fileChunks,
+  files,
   messagePlugins,
+  messageQueries,
+  messageQueryChunks,
   messageTTS,
   messageTranslates,
   messages,
+  messagesFiles,
 } from '../schemas/lobechat';
 
 export interface QueryMessageParams {
@@ -41,6 +53,7 @@ export class MessageModel {
   }: QueryMessageParams = {}): Promise<MessageItem[]> {
     const offset = current * pageSize;
 
+    // 1. get basic messages
     const result = await serverDB
       .select({
         /* eslint-disable sort-keys-fix/sort-keys-fix*/
@@ -102,13 +115,55 @@ export class MessageModel {
 
     if (messageIds.length === 0) return result;
 
-    const fileIds = await serverDB
+    // 2. get relative files
+    const rawRelatedFileList = await serverDB
       .select({
-        fileId: filesToMessages.fileId,
-        messageId: filesToMessages.messageId,
+        fileType: files.fileType,
+        id: messagesFiles.fileId,
+        messageId: messagesFiles.messageId,
+        name: files.name,
+        size: files.size,
+        url: files.url,
       })
-      .from(filesToMessages)
-      .where(inArray(filesToMessages.messageId, messageIds));
+      .from(messagesFiles)
+      .leftJoin(files, eq(files.id, messagesFiles.fileId))
+      .where(inArray(messagesFiles.messageId, messageIds));
+
+    const relatedFileList = rawRelatedFileList.map((file) => ({
+      ...file,
+      url: getFullFileUrl(file.url),
+    }));
+
+    const imageList = relatedFileList.filter((i) => (i.fileType || '').startsWith('image'));
+    const fileList = relatedFileList.filter((i) => !(i.fileType || '').startsWith('image'));
+
+    // 3. get relative file chunks
+    const chunksList = await serverDB
+      .select({
+        fileId: files.id,
+        fileType: files.fileType,
+        fileUrl: files.url,
+        filename: files.name,
+        id: chunks.id,
+        messageId: messageQueryChunks.messageId,
+        text: chunks.text,
+      })
+      .from(messageQueryChunks)
+      .leftJoin(chunks, eq(chunks.id, messageQueryChunks.chunkId))
+      .leftJoin(fileChunks, eq(fileChunks.chunkId, chunks.id))
+      .innerJoin(files, eq(fileChunks.fileId, files.id))
+      .where(inArray(messageQueryChunks.messageId, messageIds));
+
+    // 3. get relative message query
+    const messageQueriesList = await serverDB
+      .select({
+        id: messageQueries.id,
+        messageId: messageQueries.messageId,
+        rewriteQuery: messageQueries.rewriteQuery,
+        userQuery: messageQueries.userQuery,
+      })
+      .from(messageQueries)
+      .where(inArray(messageQueries.messageId, messageIds));
 
     return result.map(
       ({
@@ -118,22 +173,45 @@ export class MessageModel {
         ttsId,
         // ttsFile, ttsId, ttsContentMd5, ttsVoice,
         ...item
-      }) => ({
-        ...item,
-        extra: {
-          fromModel: model,
-          fromProvider: provider,
-          translate,
-          tts: ttsId
-            ? {
-                // contentMd5: ttsContentMd5,
-                // file: ttsFile,
-                // voice: ttsVoice,
-              }
-            : undefined,
-        },
-        files: fileIds.filter((relation) => relation.messageId === item.id).map((r) => r.fileId),
-      }),
+      }) => {
+        const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
+        return {
+          ...item,
+          chunksList: chunksList.filter((relation) => relation.messageId === item.id),
+
+          extra: {
+            fromModel: model,
+            fromProvider: provider,
+            translate,
+            tts: ttsId
+              ? {
+                  // contentMd5: ttsContentMd5,
+                  // file: ttsFile,
+                  // voice: ttsVoice,
+                }
+              : undefined,
+          },
+          fileList: fileList
+            .filter((relation) => relation.messageId === item.id)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .map<ChatFileItem>(({ id, url, size, fileType, name }) => ({
+              fileType: fileType!,
+              id,
+              name: name!,
+              size: size!,
+              url,
+            })),
+
+          imageList: imageList
+            .filter((relation) => relation.messageId === item.id)
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            .map<ChatImageItem>(({ id, url, name }) => ({ alt: name!, id, url })),
+
+          ragQuery: messageQuery?.rewriteQuery,
+          ragQueryId: messageQuery?.id,
+          ragRawQuery: messageQuery?.userQuery,
+        };
+      },
     );
   }
 
@@ -141,6 +219,24 @@ export class MessageModel {
     return serverDB.query.messages.findFirst({
       where: and(eq(messages.id, id), eq(messages.userId, this.userId)),
     });
+  }
+
+  async findMessageQueriesById(messageId: string) {
+    const result = await serverDB
+      .select({
+        embeddings: embeddings.embeddings,
+        id: messageQueries.id,
+        query: messageQueries.rewriteQuery,
+        rewriteQuery: messageQueries.rewriteQuery,
+        userQuery: messageQueries.userQuery,
+      })
+      .from(messageQueries)
+      .where(and(eq(messageQueries.messageId, messageId)))
+      .leftJoin(embeddings, eq(embeddings.id, messageQueries.embeddingsId));
+
+    if (result.length === 0) return undefined;
+
+    return result[0];
   }
 
   async queryAll(): Promise<MessageItem[]> {
@@ -195,7 +291,8 @@ export class MessageModel {
       .where(
         and(
           eq(messages.userId, this.userId),
-          sql`${messages.createdAt} >= ${today} AND ${messages.createdAt} < ${tomorrow}`,
+          gte(messages.createdAt, today),
+          lt(messages.createdAt, tomorrow),
         ),
       )
       .execute();
@@ -206,7 +303,16 @@ export class MessageModel {
   // **************** Create *************** //
 
   async create(
-    { fromModel, fromProvider, files, plugin, pluginState, ...message }: CreateMessageParams,
+    {
+      fromModel,
+      fromProvider,
+      files,
+      plugin,
+      pluginState,
+      fileChunks,
+      ragQueryId,
+      ...message
+    }: CreateMessageParams,
     id: string = this.genId(),
   ): Promise<MessageItem> {
     return serverDB.transaction(async (trx) => {
@@ -236,8 +342,19 @@ export class MessageModel {
 
       if (files && files.length > 0) {
         await trx
-          .insert(filesToMessages)
+          .insert(messagesFiles)
           .values(files.map((file) => ({ fileId: file, messageId: id })));
+      }
+
+      if (fileChunks && fileChunks.length > 0 && ragQueryId) {
+        await trx.insert(messageQueryChunks).values(
+          fileChunks.map((chunk) => ({
+            chunkId: chunk.id,
+            messageId: id,
+            queryId: ragQueryId,
+            similarity: chunk.similarity.toString(),
+          })),
+        );
       }
 
       return item;
@@ -252,6 +369,11 @@ export class MessageModel {
     return serverDB.insert(messages).values(messagesToInsert);
   }
 
+  async createMessageQuery(params: NewMessageQuery) {
+    const result = await serverDB.insert(messageQueries).values(params).returning();
+
+    return result[0];
+  }
   // **************** Update *************** //
 
   async update(id: string, message: Partial<MessageItem>) {
@@ -365,6 +487,10 @@ export class MessageModel {
 
   async deleteMessageTTS(id: string) {
     return serverDB.delete(messageTTS).where(and(eq(messageTTS.id, id)));
+  }
+
+  async deleteMessageQuery(id: string) {
+    return serverDB.delete(messageQueries).where(and(eq(messageQueries.id, id)));
   }
 
   async deleteMessagesBySession(sessionId?: string | null, topicId?: string | null) {

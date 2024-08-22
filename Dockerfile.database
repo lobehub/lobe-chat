@@ -92,6 +92,7 @@ COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
 # Copy database migrations
 COPY --from=builder /app/src/database/server/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
+COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 
 ## Production image, copy all the files and run next
 FROM base
@@ -107,6 +108,7 @@ ENV HOSTNAME="0.0.0.0" \
 
 # General Variables
 ENV ACCESS_CODE="" \
+    APP_URL="" \
     API_KEY_SELECT_MODE="" \
     DEFAULT_AGENT_CONFIG="" \
     SYSTEM_AGENT="" \
@@ -125,6 +127,7 @@ ENV NEXT_AUTH_SECRET="" \
 
 # S3
 ENV NEXT_PUBLIC_S3_DOMAIN="" \
+    S3_PUBLIC_DOMAIN="" \
     S3_ACCESS_KEY_ID="" \
     S3_BUCKET="" \
     S3_ENDPOINT="" \
@@ -216,5 +219,7 @@ CMD \
     fi; \
     # Run migration
     node "/app/docker.cjs"; \
-    # Run the server
-    ${PROXYCHAINS} node "/app/server.js";
+    if [ "$?" -eq "0" ]; then \
+      # Run the server
+      ${PROXYCHAINS} node "/app/server.js"; \
+    fi;

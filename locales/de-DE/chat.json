@@ -62,6 +62,7 @@
   "pin": "Anheften",
   "pinOff": "Anheften aufheben",
   "rag": {
+    "referenceChunks": "Referenzstücke",
     "userQuery": {
       "actions": {
         "delete": "Abfrage löschen",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Assistenteninformationen aktualisieren",
   "upload": {
-    "actionFiletip": "Laden Sie die Datei hoch",
-    "actionTooltip": "Bild hochladen",
-    "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um es zu verwenden.",
+    "action": {
+      "fileUpload": "Datei hochladen",
+      "folderUpload": "Ordner hochladen",
+      "imageDisabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung. Bitte wechseln Sie das Modell, um diese Funktion zu nutzen.",
+      "imageUpload": "Bild hochladen",
+      "tooltip": "Hochladen"
+    },
+    "clientMode": {
+      "actionFiletip": "Datei hochladen",
+      "actionTooltip": "Hochladen",
+      "disabled": "Das aktuelle Modell unterstützt keine visuelle Erkennung und Dateianalyse. Bitte wechseln Sie das Modell, um diese Funktionen zu nutzen."
+    },
     "preview": {
       "prepareTasks": "Vorbereitung der Teile...",
       "status": {

@@ -62,6 +62,7 @@
   "pin": "Pin",
   "pinOff": "Unpin",
   "rag": {
+    "referenceChunks": "Reference Source",
     "userQuery": {
       "actions": {
         "delete": "Delete Query Rewrite",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Update Assistant Information",
   "upload": {
-    "actionFiletip": "Update File",
-    "actionTooltip": "Upload Image",
-    "disabled": "The current model does not support visual recognition. Please switch models to use this feature.",
+    "action": {
+      "fileUpload": "Upload File",
+      "folderUpload": "Upload Folder",
+      "imageDisabled": "The current model does not support visual recognition. Please switch models to use this feature.",
+      "imageUpload": "Upload Image",
+      "tooltip": "Upload"
+    },
+    "clientMode": {
+      "actionFiletip": "Upload File",
+      "actionTooltip": "Upload",
+      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature."
+    },
     "preview": {
       "prepareTasks": "Preparing chunks...",
       "status": {

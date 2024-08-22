@@ -62,6 +62,7 @@
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
   "rag": {
+    "referenceChunks": "参照チャンク",
     "userQuery": {
       "actions": {
         "delete": "クエリを削除",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "エージェント情報を更新",
   "upload": {
-    "actionFiletip": "ファイルをアップロードする",
-    "actionTooltip": "画像をアップロード",
-    "disabled": "現在のモデルはビジュアル認識をサポートしていません。モデルを切り替えて使用してください",
+    "action": {
+      "fileUpload": "ファイルをアップロード",
+      "folderUpload": "フォルダをアップロード",
+      "imageDisabled": "現在のモデルは視覚認識をサポートしていません。モデルを切り替えてから使用してください。",
+      "imageUpload": "画像をアップロード",
+      "tooltip": "アップロード"
+    },
+    "clientMode": {
+      "actionFiletip": "ファイルをアップロード",
+      "actionTooltip": "アップロード",
+      "disabled": "現在のモデルは視覚認識とファイル分析をサポートしていません。モデルを切り替えてから使用してください。"
+    },
     "preview": {
       "prepareTasks": "ブロックの準備中...",
       "status": {
