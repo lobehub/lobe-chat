@@ -43,7 +43,12 @@ const getFileListFromDataTransferItems = async (items: DataTransferItem[]) => {
       } else {
         const file = item.getAsFile();
 
-        if (file) filePromises.push();
+        if (file)
+          filePromises.push(
+            new Promise((resolve) => {
+              resolve([file]);
+            }),
+          );
       }
     }
   }
