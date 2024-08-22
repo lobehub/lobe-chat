@@ -116,6 +116,9 @@
   "upload": {
     "desc": "Dettagli: {{detail}}",
     "fileOnlySupportInServerMode": "L'attuale modalità di distribuzione non supporta il caricamento di file non immagine. Se desideri caricare un formato {{ext}}, ti preghiamo di passare alla distribuzione del database sul server o di utilizzare il servizio LobeChat Cloud.",
-    "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi"
+    "networkError": "Si prega di verificare che la connessione di rete sia stabile e controllare se la configurazione CORS del servizio di archiviazione file è corretta.",
+    "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi",
+    "unknownError": "Motivo dell'errore: {{reason}}",
+    "uploadFailed": "Caricamento del file non riuscito."
   }
 }

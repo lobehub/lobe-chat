@@ -135,7 +135,7 @@
     "@vercel/speed-insights": "^1.0.12",
     "ahooks": "^3.8.0",
     "ai": "^3.2.16",
-    "antd": "5.20.0",
+    "antd": "^5.20.2",
     "antd-style": "^3.6.2",
     "brotli-wasm": "^3.0.1",
     "chroma-js": "^2.4.2",

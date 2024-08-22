@@ -1,11 +1,14 @@
+import { t } from 'i18next';
 import { produce } from 'immer';
 import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { notification } from '@/components/AntdStaticMethods';
 import { FILE_UPLOAD_BLACKLIST } from '@/const/file';
 import { fileService } from '@/services/file';
 import { ServerService } from '@/services/file/server';
 import { ragService } from '@/services/rag';
+import { UPLOAD_NETWORK_ERROR } from '@/services/upload';
 import { userService } from '@/services/user';
 import { useAgentStore } from '@/store/agent';
 import {
@@ -128,10 +131,30 @@ export const createFileSlice: StateCreator<
 
     // upload files and process it
     const pools = files.map(async (file) => {
-      const fileResult = await get().uploadWithProgress({
-        file,
-        onStatusUpdate: dispatchChatUploadFileList,
-      });
+      let fileResult: { id: string; url: string } | undefined;
+
+      try {
+        fileResult = await get().uploadWithProgress({
+          file,
+          onStatusUpdate: dispatchChatUploadFileList,
+        });
+      } catch (error) {
+        // skip `UNAUTHORIZED` error
+        if ((error as any)?.message !== 'UNAUTHORIZED')
+          notification.error({
+            description:
+              // it may be a network error or the cors error
+              error === UPLOAD_NETWORK_ERROR
+                ? t('upload.networkError', { ns: 'error' })
+                : // or the error from the server
+                  typeof error === 'string'
+                  ? error
+                  : t('upload.unknownError', { ns: 'error', reason: (error as Error).message }),
+            message: t('upload.uploadFailed', { ns: 'error' }),
+          });
+
+        dispatchChatUploadFileList({ id: file.name, type: 'removeFile' });
+      }
 
       if (!fileResult) return;
 

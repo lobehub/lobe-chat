@@ -5,6 +5,8 @@ import { FileMetadata, UploadFileParams } from '@/types/files';
 import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
 import { uuid } from '@/utils/uuid';
 
+export const UPLOAD_NETWORK_ERROR = 'NetWorkError';
+
 class UploadService {
   uploadWithProgress = async (
     file: File,
@@ -13,7 +15,6 @@ class UploadService {
     const xhr = new XMLHttpRequest();
 
     const { preSignUrl, ...result } = await this.getSignedUploadUrl(file);
-
     let startTime = Date.now();
     xhr.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) {
@@ -49,7 +50,10 @@ class UploadService {
           reject(xhr.statusText);
         }
       });
-      xhr.addEventListener('error', () => reject(xhr.statusText));
+      xhr.addEventListener('error', () => {
+        if (xhr.status === 0) reject(UPLOAD_NETWORK_ERROR);
+        else reject(xhr.statusText);
+      });
       xhr.send(data);
     });
 
