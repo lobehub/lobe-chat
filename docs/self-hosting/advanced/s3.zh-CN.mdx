@@ -55,6 +55,28 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 
 </Callout>
 
+### `S3_ENABLE_PATH_STYLE`
+
+是否启用 S3 的 `path-style` 访问模式。此选项默认禁用。如果您的 S3 服务提供商使用 `path-style`，请将 `S3_ENABLE_PATH_STYLE` 设置为 `1` 以启用它。
+
+<Callout type={'info'}>
+
+`path-style` 和 `virtual-host` 在 S3 中是访问 bucket 和 object 的不同方式，URL 的结构和域名解析不太一样
+
+假设 S3 服务商的域名是 s3.example.net ，bucket为mybucket，object为config.env，具体区别如下：
+- path-style : `s3.example.net/mybucket/config.env`
+- virtual-host : `mybucket.s3.example.net/config.env`
+
+</Callout>
+
+<Callout type={'tip'}>
+
+常见的 S3 Cloud 服务商往往默认采用 `virtual-host` 模式，而自部署服务 minio 则默认使用的是 `path-style`。 因此如果你使用了 minio 作为 S3 服务，你需要设置 `S3_ENABLE_PATH_STYLE=1` 。
+
+
+</Callout>
+
+
 </Steps>
 
 ## S3 配置指南
