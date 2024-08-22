@@ -62,6 +62,7 @@
   "pin": "Fijar",
   "pinOff": "Desfijar",
   "rag": {
+    "referenceChunks": "Fragmentos de referencia",
     "userQuery": {
       "actions": {
         "delete": "Eliminar reescritura de consulta",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Actualizar información del asistente",
   "upload": {
-    "actionFiletip": "Sube el archivo",
-    "actionTooltip": "Subir imagen",
-    "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función",
+    "action": {
+      "fileUpload": "Subir archivo",
+      "folderUpload": "Subir carpeta",
+      "imageDisabled": "El modelo actual no soporta reconocimiento visual, por favor cambie de modelo para usar esta función",
+      "imageUpload": "Subir imagen",
+      "tooltip": "Subir"
+    },
+    "clientMode": {
+      "actionFiletip": "Subir archivo",
+      "actionTooltip": "Subir",
+      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función"
+    },
     "preview": {
       "prepareTasks": "Preparando fragmentos...",
       "status": {

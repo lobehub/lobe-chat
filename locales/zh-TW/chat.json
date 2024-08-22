@@ -62,6 +62,7 @@
   "pin": "置頂",
   "pinOff": "取消置頂",
   "rag": {
+    "referenceChunks": "引用來源",
     "userQuery": {
       "actions": {
         "delete": "刪除 Query 重寫",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "更新助理信息",
   "upload": {
-    "actionFiletip": "上傳文件",
-    "actionTooltip": "上傳圖片",
-    "disabled": "當前模型不支援視覺識別，請切換模型後使用",
+    "action": {
+      "fileUpload": "上傳檔案",
+      "folderUpload": "上傳資料夾",
+      "imageDisabled": "當前模型不支援視覺識別，請切換模型後使用",
+      "imageUpload": "上傳圖片",
+      "tooltip": "上傳"
+    },
+    "clientMode": {
+      "actionFiletip": "上傳檔案",
+      "actionTooltip": "上傳",
+      "disabled": "當前模型不支援視覺識別和檔案分析，請切換模型後使用"
+    },
     "preview": {
       "prepareTasks": "準備分塊...",
       "status": {

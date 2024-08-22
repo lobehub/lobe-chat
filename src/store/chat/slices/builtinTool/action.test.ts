@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
 import { imageGenerationService } from '@/services/textToImage';
-import { uploadService } from '@/services/upload';
+import { legacyUploadService as uploadService } from '@/services/upload_legacy';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -37,7 +37,7 @@ describe('chatToolSlice', () => {
 
       vi.spyOn(imageGenerationService, 'generateImage').mockResolvedValue(mockUrl);
       vi.spyOn(uploadService, 'uploadImageByUrl').mockResolvedValue({} as any);
-      vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: mockId });
+      vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: mockId, url: '' });
       vi.spyOn(result.current, 'toggleDallEImageLoading');
 
       await act(async () => {

@@ -62,6 +62,7 @@
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
   "rag": {
+    "referenceChunks": "Citazioni di riferimento",
     "userQuery": {
       "actions": {
         "delete": "Elimina la Query riscritta",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
-    "actionFiletip": "Carica il file",
-    "actionTooltip": "Carica immagine",
-    "disabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello prima di utilizzarlo",
+    "action": {
+      "fileUpload": "Carica file",
+      "folderUpload": "Carica cartella",
+      "imageDisabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello per utilizzare questa funzione",
+      "imageUpload": "Carica immagine",
+      "tooltip": "Carica"
+    },
+    "clientMode": {
+      "actionFiletip": "Carica file",
+      "actionTooltip": "Carica",
+      "disabled": "Il modello attuale non supporta il riconoscimento visivo e l'analisi dei file, si prega di cambiare modello per utilizzare questa funzione"
+    },
     "preview": {
       "prepareTasks": "Preparazione dei blocchi...",
       "status": {

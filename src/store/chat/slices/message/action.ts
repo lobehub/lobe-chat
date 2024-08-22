@@ -7,11 +7,13 @@ import { template } from 'lodash-es';
 import { SWRResponse, mutate } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
+import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
+import { isServerMode } from '@/const/version';
 import { useClientDataSWR } from '@/libs/swr';
 import { chatService } from '@/services/chat';
-import { CreateMessageParams, messageService } from '@/services/message';
+import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { useAgentStore } from '@/store/agent';
@@ -20,7 +22,14 @@ import { chatHelpers } from '@/store/chat/helpers';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { ChatStore } from '@/store/chat/store';
 import { useSessionStore } from '@/store/session';
-import { ChatMessage, ChatMessageError, MessageToolCall } from '@/types/message';
+import { UploadFileItem } from '@/types/files/upload';
+import {
+  ChatMessage,
+  ChatMessageError,
+  CreateMessageParams,
+  MessageToolCall,
+} from '@/types/message';
+import { MessageSemanticSearchChunk } from '@/types/rag';
 import { TraceEventPayloads } from '@/types/trace';
 import { setNamespace } from '@/utils/storeDebug';
 import { nanoid } from '@/utils/uuid';
@@ -28,6 +37,7 @@ import { nanoid } from '@/utils/uuid';
 import type { ChatStoreState } from '../../initialState';
 import { chatSelectors, topicSelectors } from '../../selectors';
 import { preventLeavingFn, toggleBooleanList } from '../../utils';
+import { ChatRAGAction, chatRag } from './actions/rag';
 import { MessageDispatch, messagesReducer } from './reducer';
 
 const n = setNamespace('m');
@@ -36,7 +46,7 @@ const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
 export interface SendMessageParams {
   message: string;
-  files?: { id: string; url: string }[];
+  files?: UploadFileItem[];
   onlyAddUserMessage?: boolean;
   /**
    *
@@ -48,9 +58,13 @@ export interface SendMessageParams {
 interface ProcessMessageParams {
   traceId?: string;
   isWelcomeQuestion?: boolean;
+  /**
+   * the RAG query content, should be embedding and used in the semantic search
+   */
+  ragQuery?: string;
 }
 
-export interface ChatMessageAction {
+export interface ChatMessageAction extends ChatRAGAction {
   // create
   sendMessage: (params: SendMessageParams) => Promise<void>;
   addAIMessage: () => Promise<void>;
@@ -174,13 +188,16 @@ export interface ChatMessageAction {
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
 const getAgentChatConfig = () => agentSelectors.currentAgentChatConfig(useAgentStore.getState());
+const getAgentKnowledge = () => agentSelectors.currentEnabledKnowledge(useAgentStore.getState());
 
 export const chatMessage: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
   ChatMessageAction
-> = (set, get) => ({
+> = (set, get, ...rest) => ({
+  ...chatRag(set, get, ...rest),
+
   deleteMessage: async (id) => {
     const message = chatSelectors.getMessageById(id)(get());
     if (!message) return;
@@ -261,10 +278,11 @@ export const chatMessage: StateCreator<
 
     const fileIdList = files?.map((f) => f.id);
 
-    const isNoFile = !fileIdList || fileIdList.length === 0;
+    const hasFile = !!fileIdList && fileIdList.length > 0;
 
     // if message is empty or no files, then stop
-    if (!message && isNoFile) return;
+    if (!message && !hasFile) return;
+
     set({ isCreatingMessage: true }, false, 'creatingMessage/start');
 
     const newMessage: CreateMessageParams = {
@@ -347,26 +365,43 @@ export const chatMessage: StateCreator<
 
     // Get the current messages to generate AI response
     const messages = chatSelectors.currentChats(get());
-    await internal_coreProcessMessage(messages, id, { isWelcomeQuestion });
+    const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
+
+    await internal_coreProcessMessage(messages, id, {
+      isWelcomeQuestion,
+      ragQuery: get().internal_shouldUseRAG() ? message : undefined,
+    });
 
     set({ isCreatingMessage: false }, false, 'creatingMessage/stop');
 
-    // if autoCreateTopic is false, then stop
-    if (!agentConfig.enableAutoCreateTopic) return;
+    const summaryTitle = async () => {
+      // if autoCreateTopic is false, then stop
+      if (!agentConfig.enableAutoCreateTopic) return;
 
-    // check activeTopic and then auto update topic title
-    if (newTopicId) {
-      const chats = chatSelectors.currentChats(get());
-      await get().summaryTopicTitle(newTopicId, chats);
-      return;
-    }
+      // check activeTopic and then auto update topic title
+      if (newTopicId) {
+        const chats = chatSelectors.currentChats(get());
+        await get().summaryTopicTitle(newTopicId, chats);
+        return;
+      }
 
-    const topic = topicSelectors.currentActiveTopic(get());
+      const topic = topicSelectors.currentActiveTopic(get());
 
-    if (topic && !topic.title) {
-      const chats = chatSelectors.currentChats(get());
-      await get().summaryTopicTitle(topic.id, chats);
-    }
+      if (topic && !topic.title) {
+        const chats = chatSelectors.currentChats(get());
+        await get().summaryTopicTitle(topic.id, chats);
+      }
+    };
+
+    // if there is relative files, then add files to agent
+    // only available in server mode
+    const addFilesToAgent = async () => {
+      if (userFiles.length === 0 || !isServerMode) return;
+
+      await useAgentStore.getState().addFilesToAgent(userFiles, false);
+    };
+
+    await Promise.all([summaryTitle(), addFilesToAgent()]);
   },
   addAIMessage: async () => {
     const { internal_createMessage, updateInputMessage, activeTopicId, activeId, inputMessage } =
@@ -446,12 +481,48 @@ export const chatMessage: StateCreator<
   },
 
   // the internal process method of the AI message
-  internal_coreProcessMessage: async (messages, userMessageId, params) => {
+  internal_coreProcessMessage: async (originalMessages, userMessageId, params) => {
     const { internal_fetchAIChatMessage, triggerToolCalls, refreshMessages, activeTopicId } = get();
+
+    // create a new array to avoid the original messages array change
+    const messages = [...originalMessages];
 
     const { model, provider } = getAgentConfig();
 
-    // 1. Add an empty message to place the AI response
+    let fileChunks: MessageSemanticSearchChunk[] | undefined;
+    let ragQueryId;
+    // go into RAG flow if there is ragQuery flag
+    if (params?.ragQuery) {
+      // 1. get the relative chunks from semantic search
+      const { chunks, queryId } = await get().internal_retrieveChunks(
+        userMessageId,
+        params?.ragQuery,
+        // should skip the last content
+        messages.map((m) => m.content).slice(0, messages.length - 1),
+      );
+
+      ragQueryId = queryId;
+
+      console.log('召回 chunks', chunks);
+
+      // 2. build the retrieve context messages
+      const retrieveContext = chainAnswerWithContext({
+        context: chunks.map((c) => c.text as string),
+        question: params?.ragQuery,
+        knowledge: getAgentKnowledge().map((knowledge) => knowledge.name),
+      });
+
+      // 3. add the retrieve context messages to the messages history
+      if (retrieveContext.messages && retrieveContext.messages?.length > 0) {
+        // remove the last message due to the query is in the retrieveContext
+        messages.pop();
+        retrieveContext.messages?.forEach((m) => messages.push(m as ChatMessage));
+      }
+
+      fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
+    }
+
+    // 2. Add an empty message to place the AI response
     const assistantMessage: CreateMessageParams = {
       role: 'assistant',
       content: LOADING_FLAT,
@@ -461,14 +532,16 @@ export const chatMessage: StateCreator<
       parentId: userMessageId,
       sessionId: get().activeId,
       topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
+      fileChunks,
+      ragQueryId,
     };
 
     const assistantId = await get().internal_createMessage(assistantMessage);
 
-    // 2. fetch the AI response
+    // 3. fetch the AI response
     const { isFunctionCall } = await internal_fetchAIChatMessage(messages, assistantId, params);
 
-    // 3. if it's the function call message, trigger the function method
+    // 4. if it's the function call message, trigger the function method
     if (isFunctionCall) {
       await refreshMessages();
       await triggerToolCalls(assistantId);
@@ -661,7 +734,10 @@ export const chatMessage: StateCreator<
 
     if (!latestMsg) return;
 
-    await internal_coreProcessMessage(contextMessages, latestMsg.id, { traceId });
+    await internal_coreProcessMessage(contextMessages, latestMsg.id, {
+      traceId,
+      ragQuery: get().internal_shouldUseRAG() ? currentMessage.content : undefined,
+    });
   },
 
   internal_updateMessageError: async (id, error) => {

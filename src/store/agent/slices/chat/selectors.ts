@@ -9,6 +9,7 @@ import {
 } from '@/const/settings';
 import { AgentStore } from '@/store/agent';
 import { LobeAgentChatConfig, LobeAgentConfig, LobeAgentTTSConfig } from '@/types/agent';
+import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
 
 const isInboxSession = (s: AgentStore) => s.activeId === INBOX_SESSION_ID;
@@ -47,6 +48,18 @@ const currentAgentPlugins = (s: AgentStore) => {
   return config?.plugins || [];
 };
 
+const currentAgentKnowledgeBases = (s: AgentStore) => {
+  const config = currentAgentConfig(s);
+
+  return config?.knowledgeBases || [];
+};
+
+const currentAgentFiles = (s: AgentStore) => {
+  const config = currentAgentConfig(s);
+
+  return config?.files || [];
+};
+
 const currentAgentTTS = (s: AgentStore): LobeAgentTTSConfig => {
   const config = currentAgentConfig(s);
 
@@ -76,21 +89,66 @@ const currentAgentTTSVoice =
     return currentVoice || 'alloy';
   };
 
+const currentEnabledKnowledge = (s: AgentStore) => {
+  const knowledgeBases = currentAgentKnowledgeBases(s);
+  const files = currentAgentFiles(s);
+
+  return [
+    ...files
+      .filter((f) => f.enabled)
+      .map((f) => ({ fileType: f.type, id: f.id, name: f.name, type: KnowledgeType.File })),
+    ...knowledgeBases
+      .filter((k) => k.enabled)
+      .map((k) => ({ id: k.id, name: k.name, type: KnowledgeType.KnowledgeBase })),
+  ] as KnowledgeItem[];
+};
+
 const hasSystemRole = (s: AgentStore) => {
   const config = currentAgentConfig(s);
 
   return !!config.systemRole;
 };
 
+const hasKnowledgeBases = (s: AgentStore) => {
+  const knowledgeBases = currentAgentKnowledgeBases(s);
+
+  return knowledgeBases.length > 0;
+};
+
+const hasFiles = (s: AgentStore) => {
+  const files = currentAgentFiles(s);
+
+  return files.length > 0;
+};
+
+const hasKnowledge = (s: AgentStore) => hasKnowledgeBases(s) || hasFiles(s);
+const hasEnabledKnowledge = (s: AgentStore) => currentEnabledKnowledge(s).length > 0;
+const currentKnowledgeIds = (s: AgentStore) => {
+  return {
+    fileIds: currentAgentFiles(s)
+      .filter((item) => item.enabled)
+      .map((f) => f.id),
+    knowledgeBaseIds: currentAgentKnowledgeBases(s)
+      .filter((item) => item.enabled)
+      .map((k) => k.id),
+  };
+};
+
 export const agentSelectors = {
   currentAgentChatConfig,
   currentAgentConfig,
+  currentAgentFiles,
+  currentAgentKnowledgeBases,
   currentAgentModel,
   currentAgentModelProvider,
   currentAgentPlugins,
   currentAgentSystemRole,
   currentAgentTTS,
   currentAgentTTSVoice,
+  currentEnabledKnowledge,
+  currentKnowledgeIds,
+  hasEnabledKnowledge,
+  hasKnowledge,
   hasSystemRole,
   inboxAgentConfig,
   inboxAgentModel,

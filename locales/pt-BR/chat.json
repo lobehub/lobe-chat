@@ -62,6 +62,7 @@
   "pin": "Fixar",
   "pinOff": "Desafixar",
   "rag": {
+    "referenceChunks": "Referências",
     "userQuery": {
       "actions": {
         "delete": "Excluir reescrita de Query",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Atualizar Informações do Assistente",
   "upload": {
-    "actionFiletip": "Enviar arquivo",
-    "actionTooltip": "Enviar Imagem",
-    "disabled": "O modelo atual não suporta reconhecimento visual. Por favor, altere o modelo antes de usar.",
+    "action": {
+      "fileUpload": "Enviar arquivo",
+      "folderUpload": "Enviar pasta",
+      "imageDisabled": "O modelo atual não suporta reconhecimento visual, por favor, mude de modelo antes de usar",
+      "imageUpload": "Enviar imagem",
+      "tooltip": "Enviar"
+    },
+    "clientMode": {
+      "actionFiletip": "Enviar arquivo",
+      "actionTooltip": "Enviar",
+      "disabled": "O modelo atual não suporta reconhecimento visual e análise de arquivos, por favor, mude de modelo antes de usar"
+    },
     "preview": {
       "prepareTasks": "Preparando partes...",
       "status": {

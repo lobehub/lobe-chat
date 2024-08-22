@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Les blocs de texte n'ont pas encore été entièrement vectorisés, ce qui rendra la fonction de recherche sémantique indisponible. Pour améliorer la qualité de la recherche, veuillez vectoriser les blocs de texte.",
+        "error": "Échec de la vectorisation",
+        "errorResult": "Échec de la vectorisation, veuillez vérifier et réessayer. Raison de l'échec :",
         "processing": "Les blocs de texte sont en cours de vectorisation, veuillez patienter.",
         "success": "Tous les blocs de texte sont maintenant vectorisés."
       },
