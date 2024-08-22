@@ -21,6 +21,10 @@ export class ServerService implements IFileService {
     return lambdaClient.file.createFile.mutate({ ...params, knowledgeBaseId } as CreateFileParams);
   }
 
+  /**
+   * @deprecated
+   * @param id
+   */
   async getFile(id: string): Promise<FilePreview> {
     if (!fileEnv.NEXT_PUBLIC_S3_DOMAIN) {
       throw new Error('fileEnv.NEXT_PUBLIC_S3_DOMAIN is not set while enable server upload');

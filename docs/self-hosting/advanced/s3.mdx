@@ -45,7 +45,7 @@ In this documentation, S3 refers to a compatible S3 storage solution, which supp
 
   Whether to set the ACL to `public-read` when uploading files. This option is enabled by default. If the service provider does not support setting individual ACLs for files (i.e., all files inherit the ACL of the storage bucket), enabling this option may cause request errors. Set `S3_SET_ACL` to `0` to disable it.
 
-  ### `NEXT_PUBLIC_S3_DOMAIN`
+  ### `S3_PUBLIC_DOMAIN`
 
   The public access domain of the storage bucket, used to access files in the storage bucket. This address needs to be **publicly readable**. The reason is that when OpenAI's gpt-4o and other vision models recognize images, OpenAI will try to download this image link on their servers. Therefore, this link must be publicly accessible. If it is a private link, OpenAI will not be able to access the image and thus will not be able to recognize the image content properly.
 

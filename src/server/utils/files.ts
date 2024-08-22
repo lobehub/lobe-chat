@@ -5,5 +5,5 @@ import { fileEnv } from '@/config/file';
 export const getFullFileUrl = (url?: string | null) => {
   if (!url) return '';
 
-  return urlJoin(fileEnv.NEXT_PUBLIC_S3_DOMAIN!, url);
+  return urlJoin(fileEnv.S3_PUBLIC_DOMAIN!, url);
 };
