@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@lobehub/ui';
-import { FileText, Settings2Icon } from 'lucide-react';
+import { FileText } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { memo, useMemo, useState } from 'react';
