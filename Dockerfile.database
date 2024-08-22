@@ -220,5 +220,5 @@ CMD \
     node "/app/docker.cjs"; \
     if [ "$?" -eq "0" ]; then \
       # Run the server
-      ${PROXYCHAINS} node "/app/server.js";
+      ${PROXYCHAINS} node "/app/server.js"; \
     fi;
