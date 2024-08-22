@@ -107,14 +107,12 @@ export const useDragUpload = (onUploadFiles: (files: File[]) => Promise<void>) =
   const handlePaste = async (event: ClipboardEvent) => {
     // get files from clipboard
     if (!event.clipboardData) return;
-
-    const items = Array.from(event.clipboardData.items);
-    const otherFiles = Array.from(event.clipboardData.files);
+    const items = Array.from(event.clipboardData?.items);
 
     const files = await getFileListFromDataTransferItems(items);
     if (files.length === 0) return;
 
-    onUploadFiles([...files, ...otherFiles]);
+    onUploadFiles(files);
   };
 
   useEffect(() => {
