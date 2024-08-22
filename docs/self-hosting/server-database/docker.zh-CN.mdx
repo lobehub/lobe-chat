@@ -75,7 +75,7 @@ S3_ACCESS_KEY_ID=xxxxxxxxxx
 S3_SECRET_ACCESS_KEY=xxxxxxxxxx
 S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
 S3_BUCKET=lobechat
-NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
+S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
 ```
 
 ### 启动 lobe-chat-database docker 镜像
@@ -130,7 +130,7 @@ $ docker run -it -d --name lobe-chat-database -p 3210:3210 \
   -e S3_SECRET_ACCESS_KEY=xxxxxxxxxx \
   -e S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com \
   -e S3_BUCKET=lobechat \
-  -e NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com \
+  -e S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com \
   lobehub/lobe-chat-database
 ```
 

@@ -46,7 +46,7 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 
 是否在上传文件时设置 ACL 为 `public-read`。该选项默认启用。如果服务商不支持为文件设置单独的 ACL（即所有文件继承存储桶的 ACL），启用此选项可能会导致请求错误，将 `S3_SET_ACL` 设置为 `0` 即可关闭。
 
-### `NEXT_PUBLIC_S3_DOMAIN`
+### `S3_PUBLIC_DOMAIN`
 
 存储桶对外的访问域名，用于访问存储桶中的文件，这个地址需要**允许互联网可读**。 原因是 OpenAI 的 gpt-4o 等视觉模型识别图片时，OpenAI 会尝试在他们的服务器中下载这个图片链接，因此这个链接必须是公开可访问的，如果是私有的链接，OpenAI 将无法访问到这个图片，进而无法正常识别到图片内容。
 
@@ -54,6 +54,28 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
     此外，由于该访问域名往往是一个独立的网址，因此需要配置允许站点的跨域访问，否则会在浏览器中出现跨域问题。
 
 </Callout>
+
+### `S3_ENABLE_PATH_STYLE`
+
+是否启用 S3 的 `path-style` 访问模式。此选项默认禁用。如果您的 S3 服务提供商使用 `path-style`，请将 `S3_ENABLE_PATH_STYLE` 设置为 `1` 以启用它。
+
+<Callout type={'info'}>
+
+`path-style` 和 `virtual-host` 在 S3 中是访问 bucket 和 object 的不同方式，URL 的结构和域名解析不太一样
+
+假设 S3 服务商的域名是 s3.example.net ，bucket为mybucket，object为config.env，具体区别如下：
+- path-style : `s3.example.net/mybucket/config.env`
+- virtual-host : `mybucket.s3.example.net/config.env`
+
+</Callout>
+
+<Callout type={'tip'}>
+
+常见的 S3 Cloud 服务商往往默认采用 `virtual-host` 模式，而自部署服务 minio 则默认使用的是 `path-style`。 因此如果你使用了 minio 作为 S3 服务，你需要设置 `S3_ENABLE_PATH_STYLE=1` 。
+
+
+</Callout>
+
 
 </Steps>
 
