@@ -40,6 +40,10 @@ const getFileListFromDataTransferItems = async (items: DataTransferItem[]) => {
       const entry = item.webkitGetAsEntry();
       if (entry) {
         filePromises.push(processEntry(entry));
+      } else {
+        const file = item.getAsFile();
+
+        if (file) filePromises.push();
       }
     }
   }
