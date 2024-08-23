@@ -1,9 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { INBOX_SESSION_ID } from '@/const/session';
 import { lambdaClient } from '@/libs/trpc/client';
-import { ChatMessage, ChatMessageError, ChatTTS, ChatTranslate } from '@/types/message';
+import {
+  ChatMessage,
+  ChatMessageError,
+  ChatTTS,
+  ChatTranslate,
+  CreateMessageParams,
+} from '@/types/message';
 
-import { CreateMessageParams, IMessageService } from './type';
+import { IMessageService } from './type';
 
 export class ServerService implements IMessageService {
   createMessage({ sessionId, ...params }: CreateMessageParams): Promise<string> {

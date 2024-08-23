@@ -116,6 +116,9 @@
   "upload": {
     "desc": "Chi tiết: {{detail}}",
     "fileOnlySupportInServerMode": "Chế độ triển khai hiện tại không hỗ trợ tải lên các tệp không phải hình ảnh. Nếu bạn cần tải lên định dạng {{ext}}, vui lòng chuyển sang triển khai cơ sở dữ liệu trên máy chủ hoặc sử dụng dịch vụ LobeChat Cloud.",
-    "title": "Tải lên tệp thất bại, vui lòng kiểm tra kết nối mạng hoặc thử lại sau"
+    "networkError": "Vui lòng kiểm tra xem mạng của bạn có hoạt động bình thường không và kiểm tra cấu hình chia sẻ tệp giữa các miền có đúng không",
+    "title": "Tải lên tệp thất bại, vui lòng kiểm tra kết nối mạng hoặc thử lại sau",
+    "unknownError": "Lỗi: {{reason}}",
+    "uploadFailed": "Tải tệp lên không thành công"
   }
 }

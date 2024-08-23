@@ -66,7 +66,7 @@ describe('TTSFileAction', () => {
     };
 
     // Mock the fileService.uploadFile to resolve with uploadedFileData
-    vi.spyOn(fileService, 'createFile').mockResolvedValue(uploadedFileData);
+    vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: uploadedFileData.id, url: '' });
 
     let fileId;
     await act(async () => {

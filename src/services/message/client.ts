@@ -1,10 +1,18 @@
 import dayjs from 'dayjs';
 
+import { FileModel } from '@/database/client/models/file';
 import { MessageModel } from '@/database/client/models/message';
 import { DB_Message } from '@/database/client/schemas/message';
-import { ChatMessage, ChatMessageError, ChatTTS, ChatTranslate } from '@/types/message';
+import {
+  ChatFileItem,
+  ChatMessage,
+  ChatMessageError,
+  ChatTTS,
+  ChatTranslate,
+  CreateMessageParams,
+} from '@/types/message';
 
-import { CreateMessageParams, IMessageService } from './type';
+import { IMessageService } from './type';
 
 export class ClientService implements IMessageService {
   async createMessage(data: CreateMessageParams) {
@@ -18,7 +26,25 @@ export class ClientService implements IMessageService {
   }
 
   async getMessages(sessionId: string, topicId?: string): Promise<ChatMessage[]> {
-    return MessageModel.query({ sessionId, topicId });
+    const messages = await MessageModel.query({ sessionId, topicId });
+
+    const fileList = (await Promise.all(
+      messages
+        .flatMap((item) => item.files)
+        .filter(Boolean)
+        .map(async (id) => FileModel.findById(id!)),
+    )) as ChatFileItem[];
+
+    return messages.map((item) => ({
+      ...item,
+      imageList: fileList
+        .filter((file) => item.files?.includes(file.id) && file.fileType.startsWith('image'))
+        .map((file) => ({
+          alt: file.name,
+          id: file.id,
+          url: file.url,
+        })),
+    }));
   }
 
   async getAllMessages() {

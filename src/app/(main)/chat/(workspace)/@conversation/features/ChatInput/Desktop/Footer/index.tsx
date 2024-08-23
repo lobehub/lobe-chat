@@ -11,13 +11,12 @@ import StopLoadingIcon from '@/components/StopLoading';
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
-import { filesSelectors, useFileStore } from '@/store/file';
+import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { isMacOS } from '@/utils/platform';
 
-import LocalFiles from '../LocalFiles';
+import LocalFiles from '../FilePreview';
 import SendMore from './SendMore';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => {
@@ -57,25 +56,14 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
 
   const { theme, styles } = useStyles();
 
-  const [
-    isAIGenerating,
-    isHasMessageLoading,
-    isCreatingMessage,
-    isCreatingTopic,
-    stopGenerateMessage,
-  ] = useChatStore((s) => [
+  const [isAIGenerating, stopGenerateMessage] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
-    chatSelectors.isHasMessageLoading(s),
-    chatSelectors.isCreatingMessage(s),
-    topicSelectors.isCreatingTopic(s),
     s.stopGenerateMessage,
   ]);
 
-  const isImageUploading = useFileStore(filesSelectors.isImageUploading);
-
   const [useCmdEnterToSend] = useUserStore((s) => [preferenceSelectors.useCmdEnterToSend(s)]);
 
-  const sendMessage = useSendMessage();
+  const { send: sendMessage, canSend } = useSendMessage();
 
   const [isMac, setIsMac] = useState<boolean>();
   useEffect(() => {
@@ -104,9 +92,6 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
   const sendShortcut = useCmdEnterToSend ? cmdEnter : enter;
 
   const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
-
-  const buttonDisabled =
-    isImageUploading || isHasMessageLoading || isCreatingTopic || isCreatingMessage;
 
   return (
     <Flexbox
@@ -146,8 +131,8 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
           ) : (
             <Space.Compact>
               <Button
-                disabled={buttonDisabled}
-                loading={buttonDisabled}
+                disabled={!canSend}
+                loading={!canSend}
                 onClick={() => {
                   sendMessage();
                   setExpand?.(false);
@@ -156,7 +141,7 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
               >
                 {t('input.send')}
               </Button>
-              <SendMore disabled={buttonDisabled} isMac={isMac} />
+              <SendMore disabled={!canSend} isMac={isMac} />
             </Space.Compact>
           )}
         </Flexbox>

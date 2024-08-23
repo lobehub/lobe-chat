@@ -1,9 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { SendMessageParams } from '@/store/chat/slices/message/action';
-import { filesSelectors, useFileStore } from '@/store/file';
+import { fileChatSelectors, useFileStore } from '@/store/file';
 
 export type UseSendMessageParams = Pick<
   SendMessageParams,
@@ -16,22 +16,24 @@ export const useSendMessage = () => {
     s.updateInputMessage,
   ]);
 
-  return useCallback((params: UseSendMessageParams = {}) => {
+  const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
+
+  const send = useCallback((params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
     if (chatSelectors.isAIGenerating(store)) return;
 
-    const imageList = filesSelectors.imageUrlOrBase64List(useFileStore.getState());
+    const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
     // if there is no message and no image, then we should not send the message
-    if (!store.inputMessage && imageList.length === 0) return;
+    if (!store.inputMessage && fileList.length === 0) return;
 
     sendMessage({
-      files: imageList,
+      files: fileList,
       message: store.inputMessage,
       ...params,
     });
 
     updateInputMessage('');
-    useFileStore.getState().clearImageList();
+    clearChatUploadFileList();
 
     // const hasSystemRole = agentSelectors.hasSystemRole(useAgentStore.getState());
     // const agentSetting = useAgentStore.getState().agentSettingInstance;
@@ -41,4 +43,11 @@ export const useSendMessage = () => {
     //   agentSetting.autocompleteAllMeta();
     // }
   }, []);
+
+  const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
+  const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
+
+  const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
+
+  return useMemo(() => ({ canSend, send }), [canSend]);
 };

@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Metin parçaları henüz tamamen vektörleştirilmedi, bu durum anlamsal arama işlevinin kullanılamamasına neden olabilir, arama kalitesini artırmak için lütfen metin parçalarını vektörleştirin",
+        "error": "Vektörleştirme başarısız oldu",
+        "errorResult": "Vektörleştirme başarısız oldu, lütfen kontrol edip tekrar deneyin. Başarısız olma nedeni:",
         "processing": "Metin parçaları vektörleştiriliyor, lütfen bekleyin",
         "success": "Mevcut metin parçaları tamamen vektörleştirildi"
       },

@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Các khối văn bản chưa được vector hóa hoàn toàn, sẽ dẫn đến chức năng tìm kiếm ngữ nghĩa không khả dụng, để nâng cao chất lượng tìm kiếm, vui lòng vector hóa các khối văn bản",
+        "error": "Lỗi vector hóa",
+        "errorResult": "Lỗi vector hóa, vui lòng kiểm tra và thử lại. Nguyên nhân thất bại:",
         "processing": "Các khối văn bản đang được vector hóa, vui lòng chờ",
         "success": "Hiện tại tất cả các khối văn bản đã được vector hóa"
       },

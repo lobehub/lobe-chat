@@ -13,6 +13,11 @@ declare global {
 
 export const getAppConfig = () => {
   const ACCESS_CODES = process.env.ACCESS_CODE?.split(',').filter(Boolean) || [];
+  const isInVercel = process.env.VERCEL === '1';
+
+  const vercelUrl = `https://${process.env.VERCEL_URL}`;
+
+  const APP_URL = process.env.APP_URL ? process.env.APP_URL : isInVercel ? vercelUrl : undefined;
 
   return createEnv({
     client: {
@@ -52,7 +57,7 @@ export const getAppConfig = () => {
         : 'https://chat-plugins.lobehub.com',
 
       PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
-      APP_URL: process.env.APP_URL,
+      APP_URL,
     },
   });
 };
