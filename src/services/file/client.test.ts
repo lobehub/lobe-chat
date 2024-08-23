@@ -74,7 +74,7 @@ describe('FileService', () => {
   describe('getFile', () => {
     it('should retrieve and convert local file info to FilePreview', async () => {
       const fileId = '1';
-      const fileData: DB_File = {
+      const fileData = {
         name: 'test',
         data: new ArrayBuffer(1),
         fileType: 'image/png',
@@ -82,7 +82,7 @@ describe('FileService', () => {
         size: 1,
         createdAt: 1,
         updatedAt: 2,
-      };
+      } as DB_File;
 
       (FileModel.findById as Mock).mockResolvedValue(fileData);
       (global.URL.createObjectURL as Mock).mockReturnValue('blob:test');
