@@ -13,6 +13,7 @@ export const downloadFile = async (url: string, fileName: string) => {
     link.remove();
     window.URL.revokeObjectURL(blobUrl);
   } catch (error) {
-    console.error('Download failed:', error);
+    console.log('Download failed:', error);
+    window.open(url);
   }
 };

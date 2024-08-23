@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { downloadFile } from '@/utils/downloadFile';
+import { downloadFile } from '@/utils/client/downloadFile';
 
 interface DropdownMenuProps {
   filename: string;
