@@ -31,7 +31,7 @@ vi.mock('@/config/db', async () => ({
       get DISABLE_REMOVE_GLOBAL_FILE() {
         return DISABLE_REMOVE_GLOBAL_FILE;
       },
-      DATABASE_TEST_URL: 'postgres://postgres:mysecretpassword@localhost:5432/postgres',
+      DATABASE_TEST_URL: process.env.DATABASE_TEST_URL,
       DATABASE_DRIVER: 'node',
     };
   },
