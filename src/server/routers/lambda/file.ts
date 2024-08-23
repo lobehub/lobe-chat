@@ -66,7 +66,10 @@ export const fileRouter = router({
       }),
     )
     .query(async ({ ctx, input }) => {
-      return ctx.fileModel.findById(input.id);
+      const item = await ctx.fileModel.findById(input.id);
+      if (!item) throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
+
+      return { ...item, url: getFullFileUrl(item?.url) };
     }),
 
   getFileItemById: fileProcedure
