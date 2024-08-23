@@ -439,7 +439,7 @@ If you want to deploy this service yourself on either Vercel or Zeabur, you can 
 
 |           Deploy with Vercel            |                     Deploy with Zeabur                      |                     Deploy with Sealos                      |          Deploy with Elestio            | 
 | :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
-| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![Deploy on Elestio](https://elest.io/images/logos/deploy-to-elestio-btn.png)](https://elest.io/open-source/lobechat) |
+| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![Deploy on Elestio][deploy-on-elestio-button]][deploy-on-elestio-link] |
 
 </div>
 
@@ -805,3 +805,5 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [vercel-link]: https://chat-preview.lobehub.com
 [vercel-shield]: https://img.shields.io/badge/vercel-online-55b467?labelColor=black&logo=vercel&style=flat-square
 [vercel-shield-badge]: https://img.shields.io/badge/TRY%20LOBECHAT-ONLINE-55b467?labelColor=black&logo=vercel&style=for-the-badge
+[deploy-on-elestio-button]: https://elest.io/images/logos/deploy-to-elestio-btn.png
+[deploy-on-elestio-link]: https://elest.io/open-source/lobechat
