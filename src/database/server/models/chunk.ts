@@ -1,5 +1,5 @@
 import { asc, cosineDistance, count, eq, inArray, sql } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { and, desc, isNull } from 'drizzle-orm/expressions';
 
 import { serverDB } from '@/database/server';
 import { ChunkMetadata, FileChunk, SemanticSearchChunk } from '@/types/chunk';
@@ -41,6 +41,19 @@ export class ChunkModel {
 
   delete = async (id: string) => {
     return serverDB.delete(chunks).where(and(eq(chunks.id, id), eq(chunks.userId, this.userId)));
+  };
+
+  deleteOrphanChunks = async () => {
+    const orphanedChunks = await serverDB
+      .select({ chunkId: chunks.id })
+      .from(chunks)
+      .leftJoin(fileChunks, eq(chunks.id, fileChunks.chunkId))
+      .where(isNull(fileChunks.fileId));
+
+    const ids = orphanedChunks.map((chunk) => chunk.chunkId);
+    if (ids.length === 0) return;
+
+    await serverDB.delete(chunks).where(inArray(chunks.id, ids));
   };
 
   findById = async (id: string) => {
