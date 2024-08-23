@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 
+import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
+import { createErrorResponse } from '@/app/api/errorResponse';
 import { checkAuth } from '@/app/api/middleware/auth';
+import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
+import { TextToImagePayload } from '@/libs/agent-runtime/types';
+import { ChatErrorType } from '@/types/fetch';
 
 export const runtime = 'edge';
 
@@ -43,33 +48,30 @@ export const preferredRegion = [
 // );
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload }) => {
-  return NextResponse.json([
-    'https://gw.alipayobjects.com/zos/kitchen/tF24g9EjH/32d3ebfe-46f5-4b19-9252-cfb34b911d35.png',
-  ]);
+  const { provider } = params;
 
-  // const { provider } = params;
-  // try {
-  //   // ============  1. init chat model   ============ //
-  //   const agentRuntime = await initAgentRuntimeWithUserPayload(provider, jwtPayload);
-  //
-  //   // ============  2. create chat completion   ============ //
-  //
-  //   const data = (await req.json()) as TextToImagePayload;
-  //
-  //   const images = await agentRuntime.textToImage(data);
-  //
-  //   return NextResponse.json(images);
-  // } catch (e) {
-  //   const {
-  //     errorType = ChatErrorType.InternalServerError,
-  //     error: errorContent,
-  //     ...res
-  //   } = e as ChatCompletionErrorPayload;
-  //
-  //   const error = errorContent || e;
-  //   // track the error at server side
-  //   console.error(`Route: [${provider}] ${errorType}:`, error);
-  //
-  //   return createErrorResponse(errorType, { error, ...res, provider });
-  // }
+  try {
+    // ============  1. init chat model   ============ //
+    const agentRuntime = await initAgentRuntimeWithUserPayload(provider, jwtPayload);
+
+    // ============  2. create chat completion   ============ //
+
+    const data = (await req.json()) as TextToImagePayload;
+
+    const images = await agentRuntime.textToImage(data);
+
+    return NextResponse.json(images);
+  } catch (e) {
+    const {
+      errorType = ChatErrorType.InternalServerError,
+      error: errorContent,
+      ...res
+    } = e as ChatCompletionErrorPayload;
+
+    const error = errorContent || e;
+    // track the error at server side
+    console.error(`Route: [${provider}] ${errorType}:`, error);
+
+    return createErrorResponse(errorType, { error, ...res, provider });
+  }
 });
