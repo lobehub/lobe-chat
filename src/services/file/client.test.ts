@@ -80,6 +80,8 @@ describe('FileService', () => {
         fileType: 'image/png',
         saveMode: 'local',
         size: 1,
+        createdAt: 1,
+        updatedAt: 2,
       };
 
       (FileModel.findById as Mock).mockResolvedValue(fileData);
@@ -90,12 +92,13 @@ describe('FileService', () => {
 
       expect(FileModel.findById).toHaveBeenCalledWith(fileId);
       expect(result).toEqual({
+        createdAt: new Date(1),
         id: '1',
-        base64Url: 'data:image/png;base64,AA==',
-        fileType: 'image/png',
+        size: 1,
+        type: 'image/png',
         name: 'test',
-        saveMode: 'local',
         url: 'blob:test',
+        updatedAt: new Date(2),
       });
     });
 
