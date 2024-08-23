@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.12.9](https://github.com/lobehub/lobe-chat/compare/v1.12.8...v1.12.9)
+
+<sup>Released on **2024-08-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve s3 path-style url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve s3 path-style url, closes [#3567](https://github.com/lobehub/lobe-chat/issues/3567) ([96bb38a](https://github.com/lobehub/lobe-chat/commit/96bb38a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.12.8](https://github.com/lobehub/lobe-chat/compare/v1.12.7...v1.12.8)
 
 <sup>Released on **2024-08-22**</sup>
