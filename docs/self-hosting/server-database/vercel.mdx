@@ -109,6 +109,10 @@ KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 
 Make sure to add this to the Vercel environment variables as well.
 
+### Add the `APP_URL` Environment Variable
+
+Finally, you need to add the `APP_URL` environment variable, which specifies the URL address of the LobeChat application.
+
 </Steps>
 
 ## 2. Configure Authentication Service
@@ -394,6 +398,8 @@ src={'https://github.com/lobehub/lobe-chat/assets/28616219/9cb5150d-6e1e-4c59-9a
 For easy copying, here is a summary of the environment variables required to configure the server-side database:
 
 ```shell
+APP_URL=https://your-project.com
+
 # Specify the service mode as server
 NEXT_PUBLIC_SERVICE_MODE=server
 
