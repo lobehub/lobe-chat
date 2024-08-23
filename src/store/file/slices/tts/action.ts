@@ -3,7 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 
 import { fileService } from '@/services/file';
 import { legacyUploadService } from '@/services/upload_legacy';
-import { FilePreview } from '@/types/files';
+import { FileItem } from '@/types/files';
 
 import { FileStore } from '../../store';
 
@@ -17,7 +17,7 @@ export interface TTSFileAction {
 
   uploadTTSFile: (file: File) => Promise<string | undefined>;
 
-  useFetchTTSFile: (id: string | null) => SWRResponse<FilePreview>;
+  useFetchTTSFile: (id: string | null) => SWRResponse<FileItem>;
 }
 
 export const createTTSFileSlice: StateCreator<

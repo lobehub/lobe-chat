@@ -1,6 +1,7 @@
 import { fileEnv } from '@/config/file';
 import { FileModel } from '@/database/client/models/file';
 import { edgeClient } from '@/libs/trpc/client';
+import { API_ENDPOINTS } from '@/services/_url';
 import { FileMetadata, UploadFileParams } from '@/types/files';
 import { FileUploadState, FileUploadStatus } from '@/types/files/upload';
 import { uuid } from '@/utils/uuid';
@@ -77,6 +78,19 @@ class UploadService {
       id: res.id,
       url: `data:${params.fileType};base64,${base64}`,
     };
+  };
+
+  /**
+   * get image File item with cors image URL
+   * @param url
+   * @param filename
+   * @param fileType
+   */
+  getImageFileByUrlWithCORS = async (url: string, filename: string, fileType = 'image/png') => {
+    const res = await fetch(API_ENDPOINTS.proxy, { body: url, method: 'POST' });
+    const data = await res.arrayBuffer();
+
+    return new File([data], filename, { lastModified: Date.now(), type: fileType });
   };
 
   private getSignedUploadUrl = async (

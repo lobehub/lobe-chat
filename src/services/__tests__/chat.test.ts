@@ -229,21 +229,6 @@ describe('ChatService', () => {
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                id: 'file1',
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
-
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({ messages, plugins: [] });
 

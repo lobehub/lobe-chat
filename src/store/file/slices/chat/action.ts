@@ -1,6 +1,4 @@
 import { t } from 'i18next';
-import { produce } from 'immer';
-import useSWR, { SWRResponse } from 'swr';
 import { StateCreator } from 'zustand/vanilla';
 
 import { notification } from '@/components/AntdStaticMethods';
@@ -17,7 +15,7 @@ import {
 } from '@/store/file/reducers/uploadFileList';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
-import { FileListItem, FilePreview } from '@/types/files';
+import { FileListItem } from '@/types/files';
 import { UploadFileItem } from '@/types/files/upload';
 import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
@@ -40,12 +38,6 @@ export interface FileAction {
   ) => Promise<void>;
 
   uploadChatFiles: (files: File[]) => Promise<void>;
-
-  /**
-   * en: delete it after refactoring the Dalle plugin
-   * @deprecated
-   */
-  useFetchFile: (id: string) => SWRResponse<FilePreview>;
 }
 
 export const createFileSlice: StateCreator<
@@ -211,21 +203,4 @@ export const createFileSlice: StateCreator<
 
     await Promise.all(pools);
   },
-
-  useFetchFile: (id) =>
-    useSWR(id, async (id) => {
-      const item = await fileService.getFile(id);
-
-      set(
-        produce((draft) => {
-          if (draft.imagesMap[id]) return;
-
-          draft.imagesMap[id] = item;
-        }),
-        false,
-        n('useFetchFile'),
-      );
-
-      return item;
-    }),
 });

@@ -84,40 +84,6 @@ describe('useFileStore:chat', () => {
   //   expect(result.current.inputFilesList).toEqual([]);
   // });
 
-  // Test for useFetchFile
-  it('useFetchFile should call useSWR and update the store', async () => {
-    const fileId = 'test-id';
-    const fileData = {
-      id: fileId,
-      name: 'test',
-      url: 'blob:test',
-      fileType: 'image/png',
-      base64Url: '',
-      saveMode: 'local',
-    };
-
-    // Mock the fileService.getFile to resolve with fileData
-    vi.spyOn(fileService, 'getFile').mockResolvedValue(fileData as any);
-
-    // Mock useSWR to call the fetcher function immediately
-    const useSWRMock = vi.mocked(useSWR);
-    useSWRMock.mockImplementation(((key: string, fetcher: any) => {
-      const data = fetcher(key);
-      return { data, error: undefined, isValidating: false, mutate: vi.fn() };
-    }) as any);
-
-    const { result } = renderHook(() => useStore().useFetchFile(fileId));
-
-    await act(async () => {
-      await result.current.data;
-    });
-
-    expect(fileService.getFile).toHaveBeenCalledWith(fileId);
-
-    // Since we are not rendering a component with the hook, we cannot test the state update here
-    // Instead, we would need to use a test renderer that can work with hooks, like @testing-library/react
-  });
-
   // describe('uploadFile', () => {
   //   it('uploadFile should handle errors', async () => {
   //     const { result } = renderHook(() => useStore());
