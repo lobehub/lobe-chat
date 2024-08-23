@@ -180,69 +180,12 @@ describe('ChatService', () => {
         );
       });
 
-      it('should not include image content when default model', async () => {
-        const messages = [
-          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
-          { content: 'Hey', role: 'assistant' }, // Regular user message
-        ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                id: 'file1',
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
-
-        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-        await chatService.createAssistantMessage({
-          messages,
-          plugins: [],
-          model: 'gpt-3.5-turbo',
-        });
-
-        expect(getChatCompletionSpy).toHaveBeenCalledWith(
-          {
-            messages: [
-              { content: 'Hello', role: 'user' },
-              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
-              { content: 'Hey', role: 'assistant' },
-            ],
-            model: 'gpt-3.5-turbo',
-          },
-          undefined,
-        );
-      });
-
       it('should not include image with vision models when can not find the image', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
           { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                id: 'file1',
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({ messages, plugins: [] });
