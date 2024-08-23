@@ -1,7 +1,8 @@
 // @vitest-environment node
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { getServerDBConfig, serverDBEnv } from '@/config/db';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { FilesTabs, SortType } from '@/types/files';
 
@@ -19,6 +20,20 @@ let serverDB = await getTestDBInstance();
 vi.mock('@/database/server/core/db', async () => ({
   get serverDB() {
     return serverDB;
+  },
+}));
+
+let DISABLE_REMOVE_GLOBAL_FILE = false;
+
+vi.mock('@/config/db', async () => ({
+  get serverDBEnv() {
+    return {
+      get DISABLE_REMOVE_GLOBAL_FILE() {
+        return DISABLE_REMOVE_GLOBAL_FILE;
+      },
+      DATABASE_TEST_URL: process.env.DATABASE_TEST_URL,
+      DATABASE_DRIVER: 'node',
+    };
   },
 }));
 
@@ -73,18 +88,21 @@ describe('FileModel', () => {
     });
   });
 
-  it('should create a global file', async () => {
-    const globalFile = {
-      hashId: 'test-hash',
-      fileType: 'text/plain',
-      size: 100,
-      url: 'https://example.com/global-file.txt',
-      metadata: { key: 'value' },
-    };
+  describe('createGlobalFile', () => {
+    it('should create a global file', async () => {
+      const globalFile = {
+        hashId: 'test-hash',
+        fileType: 'text/plain',
+        size: 100,
+        url: 'https://example.com/global-file.txt',
+        metadata: { key: 'value' },
+      };
 
-    const result = await fileModel.createGlobalFile(globalFile);
-    expect(result[0]).toMatchObject(globalFile);
+      const result = await fileModel.createGlobalFile(globalFile);
+      expect(result[0]).toMatchObject(globalFile);
+    });
   });
+
   describe('checkHash', () => {
     it('should return isExist: false for non-existent hash', async () => {
       const result = await fileModel.checkHash('non-existent-hash');
@@ -113,58 +131,183 @@ describe('FileModel', () => {
     });
   });
 
-  it('should delete a file by id', async () => {
-    const { id } = await fileModel.create({
-      name: 'test-file.txt',
-      url: 'https://example.com/test-file.txt',
-      size: 100,
-      fileType: 'text/plain',
+  describe('delete', () => {
+    it('should delete a file by id', async () => {
+      await fileModel.createGlobalFile({
+        hashId: '1',
+        url: 'https://example.com/file1.txt',
+        size: 100,
+        fileType: 'text/plain',
+      });
+
+      const { id } = await fileModel.create({
+        name: 'test-file.txt',
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        fileType: 'text/plain',
+        fileHash: '1',
+      });
+
+      await fileModel.delete(id);
+
+      const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
+      const globalFile = await serverDB.query.globalFiles.findFirst({
+        where: eq(globalFiles.hashId, '1'),
+      });
+
+      expect(file).toBeUndefined();
+      expect(globalFile).toBeUndefined();
     });
+    it('should delete a file by id but global file not removed ', async () => {
+      DISABLE_REMOVE_GLOBAL_FILE = true;
+      await fileModel.createGlobalFile({
+        hashId: '1',
+        url: 'https://example.com/file1.txt',
+        size: 100,
+        fileType: 'text/plain',
+      });
 
-    await fileModel.delete(id);
+      const { id } = await fileModel.create({
+        name: 'test-file.txt',
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        fileType: 'text/plain',
+        fileHash: '1',
+      });
 
-    const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
-    expect(file).toBeUndefined();
+      await fileModel.delete(id);
+
+      const file = await serverDB.query.files.findFirst({ where: eq(files.id, id) });
+      const globalFile = await serverDB.query.globalFiles.findFirst({
+        where: eq(globalFiles.hashId, '1'),
+      });
+
+      expect(file).toBeUndefined();
+      expect(globalFile).toBeDefined();
+      DISABLE_REMOVE_GLOBAL_FILE = false;
+    });
   });
 
-  it('should delete multiple files', async () => {
-    const file1 = await fileModel.create({
-      name: 'file1.txt',
-      url: 'https://example.com/file1.txt',
-      size: 100,
-      fileType: 'text/plain',
-    });
-    const file2 = await fileModel.create({
-      name: 'file2.txt',
-      url: 'https://example.com/file2.txt',
-      size: 200,
-      fileType: 'text/plain',
-    });
+  describe('deleteMany', () => {
+    it('should delete multiple files', async () => {
+      await fileModel.createGlobalFile({
+        hashId: '1',
+        url: 'https://example.com/file1.txt',
+        size: 100,
+        fileType: 'text/plain',
+      });
+      await fileModel.createGlobalFile({
+        hashId: '2',
+        url: 'https://example.com/file2.txt',
+        size: 200,
+        fileType: 'text/plain',
+      });
 
-    await fileModel.deleteMany([file1.id, file2.id]);
+      const file1 = await fileModel.create({
+        name: 'file1.txt',
+        url: 'https://example.com/file1.txt',
+        size: 100,
+        fileHash: '1',
+        fileType: 'text/plain',
+      });
+      const file2 = await fileModel.create({
+        name: 'file2.txt',
+        url: 'https://example.com/file2.txt',
+        size: 200,
+        fileType: 'text/plain',
+        fileHash: '2',
+      });
+      const globalFilesResult = await serverDB.query.globalFiles.findMany({
+        where: inArray(globalFiles.hashId, ['1', '2']),
+      });
+      expect(globalFilesResult).toHaveLength(2);
 
-    const remainingFiles = await serverDB.query.files.findMany({ where: eq(files.userId, userId) });
-    expect(remainingFiles).toHaveLength(0);
+      await fileModel.deleteMany([file1.id, file2.id]);
+
+      const remainingFiles = await serverDB.query.files.findMany({
+        where: eq(files.userId, userId),
+      });
+      const globalFilesResult2 = await serverDB.query.globalFiles.findMany({
+        where: inArray(
+          globalFiles.hashId,
+          remainingFiles.map((i) => i.fileHash as string),
+        ),
+      });
+
+      expect(remainingFiles).toHaveLength(0);
+      expect(globalFilesResult2).toHaveLength(0);
+    });
+    it('should delete multiple files but not remove global files if DISABLE_REMOVE_GLOBAL_FILE=true', async () => {
+      DISABLE_REMOVE_GLOBAL_FILE = true;
+      await fileModel.createGlobalFile({
+        hashId: '1',
+        url: 'https://example.com/file1.txt',
+        size: 100,
+        fileType: 'text/plain',
+      });
+      await fileModel.createGlobalFile({
+        hashId: '2',
+        url: 'https://example.com/file2.txt',
+        size: 200,
+        fileType: 'text/plain',
+      });
+
+      const file1 = await fileModel.create({
+        name: 'file1.txt',
+        url: 'https://example.com/file1.txt',
+        size: 100,
+        fileType: 'text/plain',
+        fileHash: '1',
+      });
+      const file2 = await fileModel.create({
+        name: 'file2.txt',
+        url: 'https://example.com/file2.txt',
+        size: 200,
+        fileType: 'text/plain',
+        fileHash: '2',
+      });
+
+      const globalFilesResult = await serverDB.query.globalFiles.findMany({
+        where: inArray(globalFiles.hashId, ['1', '2']),
+      });
+
+      expect(globalFilesResult).toHaveLength(2);
+
+      await fileModel.deleteMany([file1.id, file2.id]);
+
+      const remainingFiles = await serverDB.query.files.findMany({
+        where: eq(files.userId, userId),
+      });
+      const globalFilesResult2 = await serverDB.query.globalFiles.findMany({
+        where: inArray(globalFiles.hashId, ['1', '2']),
+      });
+
+      expect(remainingFiles).toHaveLength(0);
+      expect(globalFilesResult2).toHaveLength(2);
+      DISABLE_REMOVE_GLOBAL_FILE = false;
+    });
   });
 
-  it('should clear all files for the user', async () => {
-    await fileModel.create({
-      name: 'test-file-1.txt',
-      url: 'https://example.com/test-file-1.txt',
-      size: 100,
-      fileType: 'text/plain',
-    });
-    await fileModel.create({
-      name: 'test-file-2.txt',
-      url: 'https://example.com/test-file-2.txt',
-      size: 200,
-      fileType: 'text/plain',
-    });
+  describe('clear', () => {
+    it('should clear all files for the user', async () => {
+      await fileModel.create({
+        name: 'test-file-1.txt',
+        url: 'https://example.com/test-file-1.txt',
+        size: 100,
+        fileType: 'text/plain',
+      });
+      await fileModel.create({
+        name: 'test-file-2.txt',
+        url: 'https://example.com/test-file-2.txt',
+        size: 200,
+        fileType: 'text/plain',
+      });
 
-    await fileModel.clear();
+      await fileModel.clear();
 
-    const userFiles = await serverDB.query.files.findMany({ where: eq(files.userId, userId) });
-    expect(userFiles).toHaveLength(0);
+      const userFiles = await serverDB.query.files.findMany({ where: eq(files.userId, userId) });
+      expect(userFiles).toHaveLength(0);
+    });
   });
 
   describe('Query', () => {
@@ -334,22 +477,24 @@ describe('FileModel', () => {
     });
   });
 
-  it('should find a file by id', async () => {
-    const { id } = await fileModel.create({
-      name: 'test-file.txt',
-      url: 'https://example.com/test-file.txt',
-      size: 100,
-      fileType: 'text/plain',
-    });
+  describe('findById', () => {
+    it('should find a file by id', async () => {
+      const { id } = await fileModel.create({
+        name: 'test-file.txt',
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        fileType: 'text/plain',
+      });
 
-    const file = await fileModel.findById(id);
-    expect(file).toMatchObject({
-      id,
-      name: 'test-file.txt',
-      url: 'https://example.com/test-file.txt',
-      size: 100,
-      fileType: 'text/plain',
-      userId,
+      const file = await fileModel.findById(id);
+      expect(file).toMatchObject({
+        id,
+        name: 'test-file.txt',
+        url: 'https://example.com/test-file.txt',
+        size: 100,
+        fileType: 'text/plain',
+        userId,
+      });
     });
   });
 

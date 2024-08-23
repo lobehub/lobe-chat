@@ -1,11 +1,18 @@
 // @vitest-environment node
 import { eq } from 'drizzle-orm';
-import { desc } from 'drizzle-orm/expressions';
+import { and, desc } from 'drizzle-orm/expressions';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
-import { NewKnowledgeBase, knowledgeBases, users } from '../../schemas/lobechat';
+import {
+  NewKnowledgeBase,
+  files,
+  globalFiles,
+  knowledgeBaseFiles,
+  knowledgeBases,
+  users,
+} from '../../schemas/lobechat';
 import { KnowledgeBaseModel } from '../knowledgeBase';
 
 let serverDB = await getTestDBInstance();
@@ -21,6 +28,7 @@ const knowledgeBaseModel = new KnowledgeBaseModel(userId);
 
 beforeEach(async () => {
   await serverDB.delete(users);
+  await serverDB.delete(globalFiles);
   await serverDB.insert(users).values([{ id: userId }, { id: 'user2' }]);
 });
 
@@ -126,6 +134,124 @@ describe('KnowledgeBaseModel', () => {
         id,
         name: 'Updated Test Group',
         userId,
+      });
+    });
+  });
+
+  const fileList = [
+    {
+      id: 'file1',
+      name: 'document.pdf',
+      url: 'https://example.com/document.pdf',
+      fileHash: 'hash1',
+      size: 1000,
+      fileType: 'application/pdf',
+      userId,
+    },
+    {
+      id: 'file2',
+      name: 'image.jpg',
+      url: 'https://example.com/image.jpg',
+      fileHash: 'hash2',
+      size: 500,
+      fileType: 'image/jpeg',
+      userId,
+    },
+  ];
+
+  describe('addFilesToKnowledgeBase', () => {
+    it('should add files to a knowledge base', async () => {
+      await serverDB.insert(globalFiles).values([
+        {
+          hashId: 'hash1',
+          url: 'https://example.com/document.pdf',
+          size: 1000,
+          fileType: 'application/pdf',
+        },
+        {
+          hashId: 'hash2',
+          url: 'https://example.com/image.jpg',
+          size: 500,
+          fileType: 'image/jpeg',
+        },
+      ]);
+
+      await serverDB.insert(files).values(fileList);
+
+      const { id: knowledgeBaseId } = await knowledgeBaseModel.create({ name: 'Test Group' });
+      const fileIds = ['file1', 'file2'];
+
+      const result = await knowledgeBaseModel.addFilesToKnowledgeBase(knowledgeBaseId, fileIds);
+
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(
+        expect.arrayContaining(
+          fileIds.map((fileId) => expect.objectContaining({ fileId, knowledgeBaseId })),
+        ),
+      );
+
+      const addedFiles = await serverDB.query.knowledgeBaseFiles.findMany({
+        where: eq(knowledgeBaseFiles.knowledgeBaseId, knowledgeBaseId),
+      });
+      expect(addedFiles).toHaveLength(2);
+    });
+  });
+
+  describe('removeFilesFromKnowledgeBase', () => {
+    it('should remove files from a knowledge base', async () => {
+      await serverDB.insert(globalFiles).values([
+        {
+          hashId: 'hash1',
+          url: 'https://example.com/document.pdf',
+          size: 1000,
+          fileType: 'application/pdf',
+        },
+        {
+          hashId: 'hash2',
+          url: 'https://example.com/image.jpg',
+          size: 500,
+          fileType: 'image/jpeg',
+        },
+      ]);
+
+      await serverDB.insert(files).values(fileList);
+
+      const { id: knowledgeBaseId } = await knowledgeBaseModel.create({ name: 'Test Group' });
+      const fileIds = ['file1', 'file2'];
+      await knowledgeBaseModel.addFilesToKnowledgeBase(knowledgeBaseId, fileIds);
+
+      const filesToRemove = ['file1'];
+      await knowledgeBaseModel.removeFilesFromKnowledgeBase(knowledgeBaseId, filesToRemove);
+
+      const remainingFiles = await serverDB.query.knowledgeBaseFiles.findMany({
+        where: and(eq(knowledgeBaseFiles.knowledgeBaseId, knowledgeBaseId)),
+      });
+      expect(remainingFiles).toHaveLength(1);
+      expect(remainingFiles[0].fileId).toBe('file2');
+    });
+  });
+
+  describe('static findById', () => {
+    it('should find a knowledge base by id without user restriction', async () => {
+      const { id } = await knowledgeBaseModel.create({ name: 'Test Group' });
+
+      const group = await KnowledgeBaseModel.findById(id);
+      expect(group).toMatchObject({
+        id,
+        name: 'Test Group',
+        userId,
+      });
+    });
+
+    it('should find a knowledge base created by another user', async () => {
+      const anotherKnowledgeBaseModel = new KnowledgeBaseModel('user2');
+      const { id } = await anotherKnowledgeBaseModel.create({ name: 'Another User Group' });
+
+      const group = await KnowledgeBaseModel.findById(id);
+      expect(group).toMatchObject({
+        id,
+        name: 'Another User Group',
+        userId: 'user2',
       });
     });
   });

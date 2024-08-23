@@ -1,6 +1,7 @@
 import { asc, count, eq, ilike, inArray, notExists } from 'drizzle-orm';
 import { and, desc } from 'drizzle-orm/expressions';
 
+import { serverDBEnv } from '@/config/db';
 import { serverDB } from '@/database/server/core/db';
 import { FilesTabs, QueryFileListParams, SortType } from '@/types/files';
 
@@ -77,7 +78,8 @@ export class FileModel {
       const fileCount = result[0].count;
 
       // delete the file from global file if it is not used by other files
-      if (fileCount === 0) {
+      // if `DISABLE_REMOVE_GLOBAL_FILE` is true, we will not remove the global file
+      if (fileCount === 0 && !serverDBEnv.DISABLE_REMOVE_GLOBAL_FILE) {
         await trx.delete(globalFiles).where(eq(globalFiles.hashId, fileHash));
 
         return file;
@@ -118,7 +120,7 @@ export class FileModel {
 
       const needToDeleteList = fileHashCounts.filter((item) => item.count === 0);
 
-      if (needToDeleteList.length === 0) return;
+      if (needToDeleteList.length === 0 || serverDBEnv.DISABLE_REMOVE_GLOBAL_FILE) return;
 
       // delete the file from global file if it is not used by other files
       await trx.delete(globalFiles).where(
