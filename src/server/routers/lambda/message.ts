@@ -150,7 +150,7 @@ export const messageRouter = router({
         value: z
           .object({
             contentMd5: z.string().optional(),
-            fileId: z.string().optional(),
+            file: z.string().optional(),
             voice: z.string().optional(),
           })
           .or(z.literal(false)),

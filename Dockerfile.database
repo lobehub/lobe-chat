@@ -24,6 +24,7 @@ FROM base AS builder
 ARG USE_CN_MIRROR
 
 ENV NEXT_PUBLIC_SERVICE_MODE="server" \
+    APP_URL="http://app.com" \
     DATABASE_DRIVER="node" \
     DATABASE_URL="postgres://postgres:password@localhost:5432/postgres" \
     KEY_VAULTS_SECRET="use-for-build"
