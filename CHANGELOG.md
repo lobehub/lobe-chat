@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.12.14](https://github.com/lobehub/lobe-chat/compare/v1.12.13...v1.12.14)
+
+<sup>Released on **2024-08-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix tts file saving in server mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix tts file saving in server mode, closes [#3585](https://github.com/lobehub/lobe-chat/issues/3585) ([ab1cb47](https://github.com/lobehub/lobe-chat/commit/ab1cb47))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.12.13](https://github.com/lobehub/lobe-chat/compare/v1.12.12...v1.12.13)
 
 <sup>Released on **2024-08-24**</sup>
