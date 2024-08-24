@@ -8,6 +8,7 @@ import { LangChainLoaderType } from '@/libs/langchain/types';
 
 import { CodeLoader } from './code';
 import { DocxLoader } from './docx';
+import { LatexLoader } from './latex';
 import { MarkdownLoader } from './markdown';
 import { PdfLoader } from './pdf';
 import { PPTXLoader } from './pptx';
@@ -36,6 +37,10 @@ export class ChunkingLoader {
 
         case 'ppt': {
           return await PPTXLoader(fileBlob);
+        }
+
+        case 'latex': {
+          return await LatexLoader(txt);
         }
 
         case 'pdf': {
@@ -76,6 +81,10 @@ export class ChunkingLoader {
 
     if (filename.endsWith('pdf')) {
       return 'pdf';
+    }
+
+    if (filename.endsWith('tex')) {
+      return 'latex';
     }
 
     if (filename.endsWith('md') || filename.endsWith('mdx')) {
