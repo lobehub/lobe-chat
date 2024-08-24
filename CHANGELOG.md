@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.12.13](https://github.com/lobehub/lobe-chat/compare/v1.12.12...v1.12.13)
+
+<sup>Released on **2024-08-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update 01.AI models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update 01.AI models, closes [#3586](https://github.com/lobehub/lobe-chat/issues/3586) ([c4a7f70](https://github.com/lobehub/lobe-chat/commit/c4a7f70))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.12.12](https://github.com/lobehub/lobe-chat/compare/v1.12.11...v1.12.12)
 
 <sup>Released on **2024-08-24**</sup>
