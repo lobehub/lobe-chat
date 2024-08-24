@@ -248,9 +248,10 @@ describe('MessageModel', () => {
 
       // 断言结果
       expect(result[0].extra.translate).toEqual({ content: 'translated', from: 'en', to: 'zh' });
-      // TODO: 确认是否需要包含 tts 字段
       expect(result[0].extra.tts).toEqual({
-        // contentMd5: 'md5', file: 'f1', voice: 'voice1'
+        contentMd5: 'md5',
+        file: 'f1',
+        voice: 'voice1',
       });
     });
 
