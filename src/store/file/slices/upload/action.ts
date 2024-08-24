@@ -16,7 +16,7 @@ const serverFileService = new ServerService();
 interface UploadWithProgressParams {
   file: File;
   knowledgeBaseId?: string;
-  onStatusUpdate: (
+  onStatusUpdate?: (
     data:
       | {
           id: string;
@@ -53,7 +53,7 @@ export const createFileUploadSlice: StateCreator<
 > = (set, get) => ({
   internal_uploadToClientDB: async ({ file, onStatusUpdate }) => {
     if (!file.type.startsWith('image')) {
-      onStatusUpdate({ id: file.name, type: 'removeFile' });
+      onStatusUpdate?.({ id: file.name, type: 'removeFile' });
       message.info({
         content: t('upload.fileOnlySupportInServerMode', {
           ext: file.name.split('.').pop(),
@@ -73,7 +73,7 @@ export const createFileUploadSlice: StateCreator<
       file,
     );
 
-    onStatusUpdate({
+    onStatusUpdate?.({
       id: file.name,
       type: 'updateFile',
       value: {
@@ -99,7 +99,7 @@ export const createFileUploadSlice: StateCreator<
     // 2. if file exist, just skip upload
     if (checkStatus.isExist) {
       metadata = checkStatus.metadata as FileMetadata;
-      onStatusUpdate({
+      onStatusUpdate?.({
         id: file.name,
         type: 'updateFile',
         value: { status: 'processing', uploadState: { progress: 100, restTime: 0, speed: 0 } },
@@ -107,7 +107,7 @@ export const createFileUploadSlice: StateCreator<
     } else {
       // 2. if file don't exist, need upload files
       metadata = await uploadService.uploadWithProgress(file, (status, upload) => {
-        onStatusUpdate({
+        onStatusUpdate?.({
           id: file.name,
           type: 'updateFile',
           value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
@@ -140,7 +140,7 @@ export const createFileUploadSlice: StateCreator<
       knowledgeBaseId,
     );
 
-    onStatusUpdate({
+    onStatusUpdate?.({
       id: file.name,
       type: 'updateFile',
       value: {
