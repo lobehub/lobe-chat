@@ -89,11 +89,9 @@ export class MessageModel {
         },
 
         ttsId: messageTTS.id,
-
-        // TODO: 确认下如何处理 TTS 的读取
-        // ttsContentMd5: messageTTS.contentMd5,
-        // ttsFile: messageTTS.fileId,
-        // ttsVoice: messageTTS.voice,
+        ttsContentMd5: messageTTS.contentMd5,
+        ttsFile: messageTTS.fileId,
+        ttsVoice: messageTTS.voice,
         /* eslint-enable */
       })
       .from(messages)
@@ -113,7 +111,7 @@ export class MessageModel {
 
     const messageIds = result.map((message) => message.id as string);
 
-    if (messageIds.length === 0) return result;
+    if (messageIds.length === 0) return [];
 
     // 2. get relative files
     const rawRelatedFileList = await serverDB
@@ -166,14 +164,7 @@ export class MessageModel {
       .where(inArray(messageQueries.messageId, messageIds));
 
     return result.map(
-      ({
-        model,
-        provider,
-        translate,
-        ttsId,
-        // ttsFile, ttsId, ttsContentMd5, ttsVoice,
-        ...item
-      }) => {
+      ({ model, provider, translate, ttsId, ttsFile, ttsContentMd5, ttsVoice, ...item }) => {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
           ...item,
@@ -185,9 +176,9 @@ export class MessageModel {
             translate,
             tts: ttsId
               ? {
-                  // contentMd5: ttsContentMd5,
-                  // file: ttsFile,
-                  // voice: ttsVoice,
+                  contentMd5: ttsContentMd5,
+                  file: ttsFile,
+                  voice: ttsVoice,
                 }
               : undefined,
           },

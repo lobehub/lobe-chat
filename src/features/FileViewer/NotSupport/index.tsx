@@ -5,7 +5,7 @@ import React, { ComponentType, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { downloadFile } from '@/utils/downloadFile';
+import { downloadFile } from '@/utils/client/downloadFile';
 
 const useStyles = createStyles(({ css, token }) => ({
   page: css`

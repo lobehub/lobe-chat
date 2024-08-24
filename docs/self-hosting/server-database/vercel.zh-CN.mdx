@@ -102,6 +102,10 @@ KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
 
 同样需要将其添加到 Vercel 环境变量中。
 
+### 添加 `APP_URL` 环境变量
+
+该部分最后需要添加 APP_URL 环境变量，用于指定LobeChat 应用的 URL 地址。
+
 </Steps>
 
 ## 二、 配置身份验证服务
@@ -375,6 +379,8 @@ S3_PUBLIC_DOMAIN=https://s3-dev.your-domain.com
 为方便一键复制，在此汇总配置服务端数据库所需要的环境变量：
 
 ```shell
+APP_URL=https://your-project.com
+
 # 指定服务模式为 server
 NEXT_PUBLIC_SERVICE_MODE=server
 

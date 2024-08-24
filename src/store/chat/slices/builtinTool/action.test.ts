@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { fileService } from '@/services/file';
 import { imageGenerationService } from '@/services/textToImage';
-import { legacyUploadService as uploadService } from '@/services/upload_legacy';
+import { uploadService } from '@/services/upload';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 import { DallEImageItem } from '@/types/tool/dalle';
@@ -36,7 +36,10 @@ describe('chatToolSlice', () => {
       const mockId = 'image-id';
 
       vi.spyOn(imageGenerationService, 'generateImage').mockResolvedValue(mockUrl);
-      vi.spyOn(uploadService, 'uploadImageByUrl').mockResolvedValue({} as any);
+      vi.spyOn(uploadService, 'getImageFileByUrlWithCORS').mockResolvedValue(
+        new File(['1'], 'file.png', { type: 'image/png' }),
+      );
+      vi.spyOn(uploadService, 'uploadToClientDB').mockResolvedValue({} as any);
       vi.spyOn(fileService, 'createFile').mockResolvedValue({ id: mockId, url: '' });
       vi.spyOn(result.current, 'toggleDallEImageLoading');
 
@@ -45,7 +48,7 @@ describe('chatToolSlice', () => {
       });
       // For each prompt, loading is toggled on and then off
       expect(imageGenerationService.generateImage).toHaveBeenCalledTimes(prompts.length);
-      expect(uploadService.uploadImageByUrl).toHaveBeenCalledTimes(prompts.length);
+      expect(uploadService.uploadToClientDB).toHaveBeenCalledTimes(prompts.length);
 
       expect(result.current.toggleDallEImageLoading).toHaveBeenCalledTimes(prompts.length * 2);
     });
