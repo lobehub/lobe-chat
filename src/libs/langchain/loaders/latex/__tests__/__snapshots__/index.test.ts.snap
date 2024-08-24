@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`MarkdownLoader > should run 1`] = `
+exports[`LatexLoader > should run 1`] = `
 [
   Document {
     "id": undefined,
