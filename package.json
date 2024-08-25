@@ -255,7 +255,7 @@
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
     "dpdm": "^3.14.0",
-    "drizzle-kit": "^0.23.2",
+    "drizzle-kit": "^0.24.0",
     "eslint": "^8.57.0",
     "eslint-plugin-mdx": "^2.3.4",
     "eslint-plugin-unused-imports": "4.0.1",
