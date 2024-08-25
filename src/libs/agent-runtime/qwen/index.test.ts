@@ -106,7 +106,7 @@ describe('LobeQwenAI', () => {
       });
 
       it('should transform non-streaming response to stream correctly', async () => {
-        const mockResponse: OpenAI.ChatCompletion = {
+        const mockResponse = {
           id: 'chatcmpl-fc539f49-51a8-94be-8061',
           object: 'chat.completion',
           created: 1719901794,
@@ -119,7 +119,7 @@ describe('LobeQwenAI', () => {
               logprobs: null,
             },
           ],
-        };
+        } as OpenAI.ChatCompletion;
         vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
           mockResponse as any,
         );
