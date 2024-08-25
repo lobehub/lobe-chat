@@ -36,6 +36,24 @@
     "stop": "Dur",
     "warp": "Satır atla"
   },
+  "knowledgeBase": {
+    "all": "Tüm İçerik",
+    "allFiles": "Tüm Dosyalar",
+    "allKnowledgeBases": "Tüm Bilgi Tabanları",
+    "disabled": "Mevcut dağıtım modu bilgi tabanı sohbetini desteklemiyor, kullanmak için lütfen sunucu veritabanı dağıtımına geçin veya LobeChat Cloud hizmetini kullanın.",
+    "library": {
+      "action": {
+        "add": "Ekle",
+        "detail": "Detay",
+        "remove": "Kaldır"
+      },
+      "title": "Dosya/Bilgi Tabanı"
+    },
+    "relativeFilesOrKnowledgeBases": "İlişkili Dosyalar/Bilgi Tabanları",
+    "title": "Bilgi Tabanı",
+    "uploadGuide": "Yüklenen dosyaları 'Bilgi Tabanı' içinde görebilirsiniz.",
+    "viewMore": "Daha Fazla Gör"
+  },
   "messageAction": {
     "delAndRegenerate": "Sil ve Yeniden Oluştur",
     "regenerate": "Yeniden Oluştur"
@@ -43,6 +61,15 @@
   "newAgent": "Yeni Asistan",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "rag": {
+    "referenceChunks": "Referans Parçaları",
+    "userQuery": {
+      "actions": {
+        "delete": "Sorguyu Sil",
+        "regenerate": "Sorguyu Yeniden Oluştur"
+      }
+    }
+  },
   "regenerate": "Tekrarla",
   "roleAndArchive": "Rol ve Arşiv",
   "searchAgentPlaceholder": "Arama yardımcıları ve konuşmalar...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
-    "actionFiletip": "Dosyayı Yükle",
-    "actionTooltip": "Resim Yükle",
-    "disabled": "Geçerli model görüntü tanıma desteğini desteklemiyor, lütfen modeli değiştirerek kullanın"
+    "action": {
+      "fileUpload": "Dosya Yükle",
+      "folderUpload": "Klasör Yükle",
+      "imageDisabled": "Mevcut model görsel tanımayı desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin",
+      "imageUpload": "Görüntü Yükle",
+      "tooltip": "Yükle"
+    },
+    "clientMode": {
+      "actionFiletip": "Dosya Yükle",
+      "actionTooltip": "Yükle",
+      "disabled": "Mevcut model görsel tanımayı ve dosya analizini desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin"
+    },
+    "preview": {
+      "prepareTasks": "Parçaları Hazırlıyor...",
+      "status": {
+        "pending": "Yüklemeye Hazırlanıyor...",
+        "processing": "Dosya İşleniyor..."
+      }
+    }
   }
 }

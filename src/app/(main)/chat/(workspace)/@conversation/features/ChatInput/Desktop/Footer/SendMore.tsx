@@ -40,7 +40,7 @@ const SendMore = memo<SendMoreProps>(({ disabled, isMac }) => {
   ]);
   const addAIMessage = useChatStore((s) => s.addAIMessage);
 
-  const sendMessage = useSendMessage();
+  const { send: sendMessage } = useSendMessage();
 
   const hotKey = [ALT_KEY, 'enter'].join('+');
   useHotkeys(

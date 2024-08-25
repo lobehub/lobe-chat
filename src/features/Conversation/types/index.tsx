@@ -11,6 +11,7 @@ export type OnActionsClick = (action: ActionEvent, message: ChatMessage) => void
 export type OnAvatarsClick = (role: RenderRole) => ChatItemProps['onAvatarClick'];
 export type RenderRole = LLMRoleType | 'default' | string;
 export type RenderMessage = FC<ChatMessage & { editableContent: ReactNode }>;
+export type RenderBelowMessage = FC<ChatMessage>;
 export type RenderMessageExtra = FC<ChatMessage>;
 
 export type RenderAction = FC<ActionsBarProps & ChatMessage>;

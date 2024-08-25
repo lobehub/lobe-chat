@@ -36,6 +36,24 @@
     "stop": "停止",
     "warp": "改行"
   },
+  "knowledgeBase": {
+    "all": "すべてのコンテンツ",
+    "allFiles": "すべてのファイル",
+    "allKnowledgeBases": "すべての知識ベース",
+    "disabled": "現在のデプロイモードでは知識ベースの対話はサポートされていません。使用するには、サーバー側のデータベースデプロイに切り替えるか、LobeChat Cloud サービスを利用してください。",
+    "library": {
+      "action": {
+        "add": "追加",
+        "detail": "詳細",
+        "remove": "削除"
+      },
+      "title": "ファイル/知識ベース"
+    },
+    "relativeFilesOrKnowledgeBases": "関連ファイル/知識ベース",
+    "title": "知識ベース",
+    "uploadGuide": "アップロードしたファイルは「知識ベース」で確認できますよ",
+    "viewMore": "さらに表示"
+  },
   "messageAction": {
     "delAndRegenerate": "削除して再生成",
     "regenerate": "再生成"
@@ -43,6 +61,15 @@
   "newAgent": "新しいエージェント",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
+  "rag": {
+    "referenceChunks": "参照チャンク",
+    "userQuery": {
+      "actions": {
+        "delete": "クエリを削除",
+        "regenerate": "クエリを再生成"
+      }
+    }
+  },
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
   "searchAgentPlaceholder": "エージェントや会話を検索...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "エージェント情報を更新",
   "upload": {
-    "actionFiletip": "ファイルをアップロードする",
-    "actionTooltip": "画像をアップロード",
-    "disabled": "現在のモデルはビジュアル認識をサポートしていません。モデルを切り替えて使用してください"
+    "action": {
+      "fileUpload": "ファイルをアップロード",
+      "folderUpload": "フォルダをアップロード",
+      "imageDisabled": "現在のモデルは視覚認識をサポートしていません。モデルを切り替えてから使用してください。",
+      "imageUpload": "画像をアップロード",
+      "tooltip": "アップロード"
+    },
+    "clientMode": {
+      "actionFiletip": "ファイルをアップロード",
+      "actionTooltip": "アップロード",
+      "disabled": "現在のモデルは視覚認識とファイル分析をサポートしていません。モデルを切り替えてから使用してください。"
+    },
+    "preview": {
+      "prepareTasks": "ブロックの準備中...",
+      "status": {
+        "pending": "アップロードの準備中...",
+        "processing": "ファイル処理中..."
+      }
+    }
   }
 }

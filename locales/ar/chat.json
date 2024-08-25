@@ -36,6 +36,24 @@
     "stop": "توقف",
     "warp": "تغيير السطر"
   },
+  "knowledgeBase": {
+    "all": "جميع المحتويات",
+    "allFiles": "جميع الملفات",
+    "allKnowledgeBases": "جميع قواعد المعرفة",
+    "disabled": "وضع النشر الحالي لا يدعم محادثات قاعدة المعرفة، إذا كنت ترغب في الاستخدام، يرجى التبديل إلى نشر قاعدة البيانات على الخادم أو استخدام خدمة LobeChat Cloud",
+    "library": {
+      "action": {
+        "add": "إضافة",
+        "detail": "تفاصيل",
+        "remove": "إزالة"
+      },
+      "title": "الملفات/قاعدة المعرفة"
+    },
+    "relativeFilesOrKnowledgeBases": "ملفات/قواعد معرفة مرتبطة",
+    "title": "قاعدة المعرفة",
+    "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في «قاعدة المعرفة»",
+    "viewMore": "عرض المزيد"
+  },
   "messageAction": {
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "regenerate": "إعادة الإنشاء"
@@ -43,6 +61,15 @@
   "newAgent": "مساعد جديد",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
+  "rag": {
+    "referenceChunks": "مراجع",
+    "userQuery": {
+      "actions": {
+        "delete": "حذف الاستعلام",
+        "regenerate": "إعادة توليد الاستعلام"
+      }
+    }
+  },
   "regenerate": "إعادة الإنشاء",
   "roleAndArchive": "الدور والأرشيف",
   "searchAgentPlaceholder": "البحث عن مساعد ومحادثة...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
-    "actionFiletip": "تحميل المستند",
-    "actionTooltip": "تحميل الصورة",
-    "disabled": "النموذج الحالي لا يدعم التعرف على الرؤية، يرجى تغيير النموذج المستخدم"
+    "action": {
+      "fileUpload": "رفع ملف",
+      "folderUpload": "رفع مجلد",
+      "imageDisabled": "النموذج الحالي لا يدعم التعرف على الصور، يرجى تغيير النموذج لاستخدامه",
+      "imageUpload": "رفع صورة",
+      "tooltip": "رفع"
+    },
+    "clientMode": {
+      "actionFiletip": "رفع ملف",
+      "actionTooltip": "رفع",
+      "disabled": "النموذج الحالي لا يدعم التعرف على الصور وتحليل الملفات، يرجى تغيير النموذج لاستخدامه"
+    },
+    "preview": {
+      "prepareTasks": "تحضير الأجزاء...",
+      "status": {
+        "pending": "يتم التحضير للتحميل...",
+        "processing": "يتم معالجة الملف..."
+      }
+    }
   }
 }

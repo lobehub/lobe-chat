@@ -36,6 +36,24 @@
     "stop": "Stop",
     "warp": "New Line"
   },
+  "knowledgeBase": {
+    "all": "All Content",
+    "allFiles": "All Files",
+    "allKnowledgeBases": "All Knowledge Bases",
+    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to server database deployment or use LobeChat Cloud service.",
+    "library": {
+      "action": {
+        "add": "Add",
+        "detail": "Details",
+        "remove": "Remove"
+      },
+      "title": "Files/Knowledge Base"
+    },
+    "relativeFilesOrKnowledgeBases": "Related Files/Knowledge Bases",
+    "title": "Knowledge Base",
+    "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
+    "viewMore": "View More"
+  },
   "messageAction": {
     "delAndRegenerate": "Delete and Regenerate",
     "regenerate": "Regenerate"
@@ -43,6 +61,15 @@
   "newAgent": "New Assistant",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "rag": {
+    "referenceChunks": "Reference Source",
+    "userQuery": {
+      "actions": {
+        "delete": "Delete Query Rewrite",
+        "regenerate": "Regenerate Query"
+      }
+    }
+  },
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
   "searchAgentPlaceholder": "Search assistants and conversations...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "Update Assistant Information",
   "upload": {
-    "actionFiletip": "Update File",
-    "actionTooltip": "Upload Image",
-    "disabled": "The current model does not support visual recognition. Please switch models to use this feature."
+    "action": {
+      "fileUpload": "Upload File",
+      "folderUpload": "Upload Folder",
+      "imageDisabled": "The current model does not support visual recognition. Please switch models to use this feature.",
+      "imageUpload": "Upload Image",
+      "tooltip": "Upload"
+    },
+    "clientMode": {
+      "actionFiletip": "Upload File",
+      "actionTooltip": "Upload",
+      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature."
+    },
+    "preview": {
+      "prepareTasks": "Preparing chunks...",
+      "status": {
+        "pending": "Preparing to upload...",
+        "processing": "Processing file..."
+      }
+    }
   }
 }

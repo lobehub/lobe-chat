@@ -5,6 +5,8 @@ import clerk from './clerk';
 import common from './common';
 import components from './components';
 import error from './error';
+import file from './file';
+import knowledgeBase from './knowledgeBase';
 import market from './market';
 import metadata from './metadata';
 import migration from './migration';
@@ -21,6 +23,8 @@ const resources = {
   common,
   components,
   error,
+  file,
+  knowledgeBase,
   market,
   metadata,
   migration,

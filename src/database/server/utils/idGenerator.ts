@@ -5,6 +5,7 @@ import { createNanoId } from '@/utils/uuid';
 const prefixes = {
   agents: 'agt',
   files: 'file',
+  knowledgeBases: 'kb',
   messages: 'msg',
   plugins: 'plg',
   sessionGroups: 'sg',

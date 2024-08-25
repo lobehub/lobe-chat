@@ -36,6 +36,24 @@
     "stop": "Arrêter",
     "warp": "Saut de ligne"
   },
+  "knowledgeBase": {
+    "all": "Tout le contenu",
+    "allFiles": "Tous les fichiers",
+    "allKnowledgeBases": "Toutes les bases de connaissances",
+    "disabled": "Le mode de déploiement actuel ne prend pas en charge les dialogues de la base de connaissances. Pour l'utiliser, veuillez passer à un déploiement de base de données côté serveur ou utiliser le service LobeChat Cloud.",
+    "library": {
+      "action": {
+        "add": "Ajouter",
+        "detail": "Détails",
+        "remove": "Supprimer"
+      },
+      "title": "Fichiers/Bases de connaissances"
+    },
+    "relativeFilesOrKnowledgeBases": "Fichiers/Bases de connaissances associés",
+    "title": "Base de connaissances",
+    "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la « Base de connaissances ».",
+    "viewMore": "Voir plus"
+  },
   "messageAction": {
     "delAndRegenerate": "Supprimer et régénérer",
     "regenerate": "Régénérer"
@@ -43,6 +61,15 @@
   "newAgent": "Nouvel agent",
   "pin": "Épingler",
   "pinOff": "Désépingler",
+  "rag": {
+    "referenceChunks": "Références",
+    "userQuery": {
+      "actions": {
+        "delete": "Supprimer la réécriture de la requête",
+        "regenerate": "Régénérer la requête"
+      }
+    }
+  },
   "regenerate": "Regénérer",
   "roleAndArchive": "Rôle et archivage",
   "searchAgentPlaceholder": "Rechercher des agents et des conversations...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upload": {
-    "actionFiletip": "Télécharger le fichier",
-    "actionTooltip": "Télécharger une image",
-    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité."
+    "action": {
+      "fileUpload": "Télécharger un fichier",
+      "folderUpload": "Télécharger un dossier",
+      "imageDisabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser",
+      "imageUpload": "Télécharger une image",
+      "tooltip": "Télécharger"
+    },
+    "clientMode": {
+      "actionFiletip": "Télécharger un fichier",
+      "actionTooltip": "Télécharger",
+      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser"
+    },
+    "preview": {
+      "prepareTasks": "Préparation des morceaux...",
+      "status": {
+        "pending": "Préparation du téléchargement...",
+        "processing": "Traitement du fichier..."
+      }
+    }
   }
 }

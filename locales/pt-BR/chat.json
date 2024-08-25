@@ -36,6 +36,24 @@
     "stop": "Parar",
     "warp": "Quebrar linha"
   },
+  "knowledgeBase": {
+    "all": "Todo conteúdo",
+    "allFiles": "Todos os arquivos",
+    "allKnowledgeBases": "Todos os bancos de conhecimento",
+    "disabled": "O modo de implantação atual não suporta diálogos de banco de conhecimento. Para usar, mude para a implantação de banco de dados no servidor ou utilize o serviço LobeChat Cloud.",
+    "library": {
+      "action": {
+        "add": "Adicionar",
+        "detail": "Detalhes",
+        "remove": "Remover"
+      },
+      "title": "Arquivo/Banco de Conhecimento"
+    },
+    "relativeFilesOrKnowledgeBases": "Arquivos/Bancos de Conhecimento relacionados",
+    "title": "Banco de Conhecimento",
+    "uploadGuide": "Os arquivos enviados podem ser visualizados em 'Banco de Conhecimento'.",
+    "viewMore": "Ver mais"
+  },
   "messageAction": {
     "delAndRegenerate": "Excluir e Regenerar",
     "regenerate": "Regenerar"
@@ -43,6 +61,15 @@
   "newAgent": "Novo Assistente",
   "pin": "Fixar",
   "pinOff": "Desafixar",
+  "rag": {
+    "referenceChunks": "Referências",
+    "userQuery": {
+      "actions": {
+        "delete": "Excluir reescrita de Query",
+        "regenerate": "Regenerar Query"
+      }
+    }
+  },
   "regenerate": "Regenerar",
   "roleAndArchive": "Função e Arquivo",
   "searchAgentPlaceholder": "Pesquisar assistentes e conversas...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "Atualizar Informações do Assistente",
   "upload": {
-    "actionFiletip": "Enviar arquivo",
-    "actionTooltip": "Enviar Imagem",
-    "disabled": "O modelo atual não suporta reconhecimento visual. Por favor, altere o modelo antes de usar."
+    "action": {
+      "fileUpload": "Enviar arquivo",
+      "folderUpload": "Enviar pasta",
+      "imageDisabled": "O modelo atual não suporta reconhecimento visual, por favor, mude de modelo antes de usar",
+      "imageUpload": "Enviar imagem",
+      "tooltip": "Enviar"
+    },
+    "clientMode": {
+      "actionFiletip": "Enviar arquivo",
+      "actionTooltip": "Enviar",
+      "disabled": "O modelo atual não suporta reconhecimento visual e análise de arquivos, por favor, mude de modelo antes de usar"
+    },
+    "preview": {
+      "prepareTasks": "Preparando partes...",
+      "status": {
+        "pending": "Preparando para upload...",
+        "processing": "Processando arquivo..."
+      }
+    }
   }
 }

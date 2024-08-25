@@ -1,0 +1,91 @@
+{
+  "desc": "管理你的文件與知識庫",
+  "detail": {
+    "basic": {
+      "createdAt": "創建時間",
+      "filename": "檔案名稱",
+      "size": "檔案大小",
+      "title": "基本資訊",
+      "type": "格式",
+      "updatedAt": "更新時間"
+    },
+    "data": {
+      "chunkCount": "分塊數",
+      "embedding": {
+        "default": "暫未向量化",
+        "error": "失敗",
+        "pending": "待啟動",
+        "processing": "進行中",
+        "success": "已完成"
+      },
+      "embeddingStatus": "向量化"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "新建資料夾",
+      "uploadFile": "上傳檔案",
+      "uploadFolder": "上傳資料夾"
+    },
+    "uploadButton": "上傳"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "即將刪除該知識庫，其中的檔案不會刪除，將移入全部檔案中。知識庫刪除後將不可恢復，請謹慎操作。",
+      "empty": "點擊 <1>+</1> 開始創建知識庫"
+    },
+    "new": "新建知識庫",
+    "title": "知識庫"
+  },
+  "notSupportGuide": {
+    "desc": "當前部署實例為客戶端資料庫模式，無法使用檔案管理功能。請切換到<1>伺服器端資料庫部署模式</1>，或直接使用 <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "支持主流檔案類型，包括 Word、PPT、Excel、PDF、TXT 等常見文檔格式，以及JS、Python 等主流程式碼檔案",
+        "title": "多種檔案類型解析"
+      },
+      "embeddings": {
+        "desc": "使用高性能向量模型，對文本分塊進行向量化，實現檔案內容的語義化檢索",
+        "title": "向量語義化"
+      },
+      "repos": {
+        "desc": "支持創建知識庫，並允許添加不同類型的檔案，構建屬於你的領域知識",
+        "title": "知識庫"
+      }
+    },
+    "title": "當前部署模式不支持檔案管理"
+  },
+  "preview": {
+    "unsupportedFile": "此檔案格式不支持在線預覽"
+  },
+  "searchFilePlaceholder": "搜索檔案",
+  "tab": {
+    "all": "全部檔案",
+    "audios": "語音",
+    "documents": "文檔",
+    "images": "圖片",
+    "videos": "視頻",
+    "websites": "網頁"
+  },
+  "title": "檔案",
+  "uploadDock": {
+    "body": {
+      "collapse": "收起",
+      "item": {
+        "done": "已上傳",
+        "error": "上傳失敗，請重試",
+        "pending": "準備上傳...",
+        "processing": "檔案處理中...",
+        "restTime": "剩餘 {{time}}"
+      }
+    },
+    "totalCount": "共 {{count}} 項",
+    "uploadStatus": {
+      "error": "上傳出錯",
+      "pending": "等待上傳",
+      "processing": "正在上傳",
+      "success": "上傳完成",
+      "uploading": "正在上傳"
+    }
+  }
+}

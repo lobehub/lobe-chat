@@ -36,7 +36,9 @@ Before deployment, make sure you have a Postgres database instance ready. You ca
 - `A.` Use Serverless Postgres instances like Vercel/Neon;
 - `B.` Use self-deployed Postgres instances like Docker/Railway/Zeabur, collectively referred to as Node Postgres instances;
 
-There is a slight difference in the way they are configured in terms of environment variables.
+<Callout>There is a slight difference in the way they are configured in terms of environment variables.</Callout>
+
+Since we support file-based conversations/knowledge base conversations, we need to install the `pgvector` plugin for Postgres. This plugin provides vector search capabilities and is a key component for LobeChat to implement RAG.
 
 <Steps>
 ### `NEXT_PUBLIC_SERVICE_MODE`
@@ -47,6 +49,12 @@ For server-side database deployment scenarios, you need to set `NEXT_PUBLIC_SERV
 
 <Callout type={'info'}>
 In the official `lobe-chat-database` Docker image, this environment variable is already set to `server` by default. Therefore, if you deploy using the Docker image, you do not need to configure this environment variable again.
+</Callout>
+
+<Callout type={'tip'}>
+Since environment variables starting with `NEXT_PUBLIC` take effect in the front-end code, they cannot be modified through container runtime injection. (Refer to the `next.js` documentation [Configuring: Environment Variables | Next.js (nextjs.org)](https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables)). This is why we chose to create a separate DB version image.
+
+If you need to modify variables with the `NEXT_PUBLIC` prefix in a Docker deployment, you must build the image yourself and inject your own `NEXT_PUBLIC` prefixed environment variables during the build.
 </Callout>
 
 ### `DATABASE_URL`
@@ -87,7 +95,7 @@ In the server-side database mode, we need an authentication service to distingui
 
 ### Clerk
 
-[Clerk](https://clerk.com?utm_source=lobehub\&utm_medium=docs) is an authentication SaaS service that provides out-of-the-box authentication capabilities with high productization, low integration costs, and a great user experience. For those who offer SaaS products, Clerk is a good choice. Our official [LobeChat Cloud](https://lobechat.com) uses Clerk as the authentication service.
+[Clerk](https://clerk.com?utm_source=lobehub&utm_medium=docs) is an authentication SaaS service that provides out-of-the-box authentication capabilities with high productization, low integration costs, and a great user experience. For those who offer SaaS products, Clerk is a good choice. Our official [LobeChat Cloud](https://lobechat.com) uses Clerk as the authentication service.
 
 The integration of Clerk is relatively simple, requiring only the configuration of the `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`, `CLERK_SECRET_KEY`, and `CLERK_WEBHOOK_SECRET` environment variables, which can be obtained from the Clerk console.
 
@@ -123,37 +131,6 @@ The best practice in this area is to use a file storage service (S3) to store im
 In this documentation, S3 refers to a compatible S3 storage solution, which supports the Amazon S3 API-compatible object storage system. Common examples include Cloudflare R2, Alibaba Cloud OSS, and self-deployable Minio, all of which support the S3-compatible API.
 </Callout>
 
-<Steps>
-### `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY`
-
-These are the two keys required by all S3-compatible storage services to access the S3 storage service, without going into detail.
-
-### `S3_ENDPOINT`
-
-The request endpoint of the bucket, note that the link here should not include the bucket's name.
-
-<Callout type={'warning'}>`S3_ENDPOINT` must remove the suffix path, otherwise the uploaded files will not be accessible.</Callout>
-
-For example, for Cloudflare:
-
-```shell
-S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
-```
-
-### `S3_BUCKET` and `S3_REGION`
-
-The name and region of the bucket. `S3_BUCKET` is mandatory for specifying the bucket's name. `S3_REGION` is optional for specifying the bucket's region, generally not required to add, but some service providers may need to configure it.
-
-### `NEXT_PUBLIC_S3_DOMAIN`
-
-The public access domain of the bucket, used to access files in the bucket. This address needs to be **internet-readable**. The reason is that when OpenAI's GPT-4o and other visual models recognize images, OpenAI will try to download the image link on their servers. Therefore, this link must be publicly accessible. If it is a private link, OpenAI will not be able to access the image and will not be able to recognize the image content properly.
-
-<Callout type={'warning'}>
-In addition, since this access domain is often an independent URL, it needs to be configured to allow cross-origin access to the site, otherwise cross-origin issues will occur in the browser.
-</Callout>
-
-</Steps>
-
 For detailed configuration guidelines on S3, please refer to [S3 Object Storage](/en/docs/self-hosting/advanced/s3) for more information.
 
 ## Getting Started with Deployment
@@ -161,4 +138,3 @@ For detailed configuration guidelines on S3, please refer to [S3 Object Storage]
 The above is a detailed explanation of configuring LobeChat with a server-side database. You can configure it according to your actual situation and then choose a deployment platform that suits you to start deployment:
 
 <PlatformCards urlPrefix={'server-database'} />
-

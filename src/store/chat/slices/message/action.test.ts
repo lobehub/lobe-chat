@@ -14,6 +14,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { chatSelectors } from '@/store/chat/selectors';
 import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { sessionMetaSelectors } from '@/store/session/selectors';
+import { UploadFileItem } from '@/types/files/upload';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
@@ -426,7 +427,7 @@ describe('chatMessage actions', () => {
     it('should create message and call internal_coreProcessMessage if message or files are provided', async () => {
       const { result } = renderHook(() => useChatStore());
       const message = 'Test message';
-      const files = [{ id: 'file-id', url: 'file-url' }];
+      const files = [{ id: 'file-id' } as UploadFileItem];
 
       // Mock messageService.create to resolve with a message id
       (messageService.createMessage as Mock).mockResolvedValue('new-message-id');
@@ -958,10 +959,10 @@ describe('chatMessage actions', () => {
     it('should not do anything if there is no abortController', async () => {
       const { result } = renderHook(() => useChatStore());
 
-      // 确保没有设置 abortController
-      useChatStore.setState({ abortController: undefined });
-
       await act(async () => {
+        // 确保没有设置 abortController
+        useChatStore.setState({ abortController: undefined });
+
         result.current.stopGenerateMessage();
       });
 
@@ -1089,7 +1090,7 @@ describe('chatMessage actions', () => {
 
       // Mock fetch to reject with an error
       const errorMessage = 'Error fetching AI response';
-      vi.mocked(fetch).mockRejectedValue(new Error(errorMessage));
+      vi.mocked(fetch).mockRejectedValueOnce(new Error(errorMessage));
 
       await act(async () => {
         expect(

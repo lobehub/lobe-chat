@@ -36,6 +36,24 @@
     "stop": "Detener",
     "warp": "Salto de línea"
   },
+  "knowledgeBase": {
+    "all": "Todo el contenido",
+    "allFiles": "Todos los archivos",
+    "allKnowledgeBases": "Todas las bases de conocimiento",
+    "disabled": "El modo de implementación actual no admite conversaciones de base de conocimiento. Para usarlo, cambie a la implementación de base de datos del servidor o utilice el servicio LobeChat Cloud.",
+    "library": {
+      "action": {
+        "add": "Agregar",
+        "detail": "Detalles",
+        "remove": "Eliminar"
+      },
+      "title": "Archivos/Bases de conocimiento"
+    },
+    "relativeFilesOrKnowledgeBases": "Archivos/Bases de conocimiento relacionados",
+    "title": "Base de conocimiento",
+    "uploadGuide": "Los archivos subidos se pueden ver en la 'Base de conocimiento'.",
+    "viewMore": "Ver más"
+  },
   "messageAction": {
     "delAndRegenerate": "Eliminar y Regenerar",
     "regenerate": "Regenerar"
@@ -43,6 +61,15 @@
   "newAgent": "Nuevo asistente",
   "pin": "Fijar",
   "pinOff": "Desfijar",
+  "rag": {
+    "referenceChunks": "Fragmentos de referencia",
+    "userQuery": {
+      "actions": {
+        "delete": "Eliminar reescritura de consulta",
+        "regenerate": "Regenerar consulta"
+      }
+    }
+  },
   "regenerate": "Regenerar",
   "roleAndArchive": "Rol y archivo",
   "searchAgentPlaceholder": "Buscar asistentes y conversaciones...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "Actualizar información del asistente",
   "upload": {
-    "actionFiletip": "Sube el archivo",
-    "actionTooltip": "Subir imagen",
-    "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función"
+    "action": {
+      "fileUpload": "Subir archivo",
+      "folderUpload": "Subir carpeta",
+      "imageDisabled": "El modelo actual no soporta reconocimiento visual, por favor cambie de modelo para usar esta función",
+      "imageUpload": "Subir imagen",
+      "tooltip": "Subir"
+    },
+    "clientMode": {
+      "actionFiletip": "Subir archivo",
+      "actionTooltip": "Subir",
+      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función"
+    },
+    "preview": {
+      "prepareTasks": "Preparando fragmentos...",
+      "status": {
+        "pending": "Preparando para subir...",
+        "processing": "Procesando archivo..."
+      }
+    }
   }
 }

@@ -8,7 +8,6 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
-import { filesSelectors, useFileStore } from '@/store/file';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -367,23 +366,26 @@ class ChatService {
         return;
       }
       onError?.(error, errorContent);
+      console.error(error);
     };
 
     onLoadingChange?.(true);
 
-    const data = await this.getChatCompletion(params, {
-      onErrorHandle: (error) => {
-        errorHandle(new Error(error.message), error);
-      },
-      onFinish,
-      onMessageHandle,
-      signal: abortController?.signal,
-      trace: this.mapTrace(trace, TraceTagMap.SystemChain),
-    }).catch(errorHandle);
+    try {
+      await this.getChatCompletion(params, {
+        onErrorHandle: (error) => {
+          errorHandle(new Error(error.message), error);
+        },
+        onFinish,
+        onMessageHandle,
+        signal: abortController?.signal,
+        trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+      });
 
-    onLoadingChange?.(false);
-
-    return await data?.text();
+      onLoadingChange?.(false);
+    } catch (e) {
+      errorHandle(e as Error);
+    }
   };
 
   private processMessages = (
@@ -402,9 +404,9 @@ class ChatService {
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
     const getContent = (m: ChatMessage) => {
-      if (!m.files) return m.content;
+      if (!m.imageList) return m.content;
 
-      const imageList = filesSelectors.getImageUrlOrBase64ByList(m.files)(useFileStore.getState());
+      const imageList = m.imageList;
 
       if (imageList.length === 0) return m.content;
 

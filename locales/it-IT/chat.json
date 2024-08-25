@@ -36,6 +36,24 @@
     "stop": "Ferma",
     "warp": "A capo"
   },
+  "knowledgeBase": {
+    "all": "Tutti i contenuti",
+    "allFiles": "Tutti i file",
+    "allKnowledgeBases": "Tutte le basi di conoscenza",
+    "disabled": "La modalità di distribuzione attuale non supporta le conversazioni con la base di conoscenza. Per utilizzare questa funzione, passare alla distribuzione del database server o utilizzare il servizio LobeChat Cloud.",
+    "library": {
+      "action": {
+        "add": "Aggiungi",
+        "detail": "Dettagli",
+        "remove": "Rimuovi"
+      },
+      "title": "File/Basi di conoscenza"
+    },
+    "relativeFilesOrKnowledgeBases": "File/Basi di conoscenza correlate",
+    "title": "Base di conoscenza",
+    "uploadGuide": "I file caricati possono essere visualizzati nella 'Base di conoscenza'.",
+    "viewMore": "Visualizza di più"
+  },
   "messageAction": {
     "delAndRegenerate": "Elimina e rigenera",
     "regenerate": "Rigenera"
@@ -43,6 +61,15 @@
   "newAgent": "Nuovo assistente",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
+  "rag": {
+    "referenceChunks": "Citazioni di riferimento",
+    "userQuery": {
+      "actions": {
+        "delete": "Elimina la Query riscritta",
+        "regenerate": "Rigenera la Query"
+      }
+    }
+  },
   "regenerate": "Rigenera",
   "roleAndArchive": "Ruolo e archivio",
   "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
@@ -129,8 +156,24 @@
   },
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
-    "actionFiletip": "Carica il file",
-    "actionTooltip": "Carica immagine",
-    "disabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello prima di utilizzarlo"
+    "action": {
+      "fileUpload": "Carica file",
+      "folderUpload": "Carica cartella",
+      "imageDisabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello per utilizzare questa funzione",
+      "imageUpload": "Carica immagine",
+      "tooltip": "Carica"
+    },
+    "clientMode": {
+      "actionFiletip": "Carica file",
+      "actionTooltip": "Carica",
+      "disabled": "Il modello attuale non supporta il riconoscimento visivo e l'analisi dei file, si prega di cambiare modello per utilizzare questa funzione"
+    },
+    "preview": {
+      "prepareTasks": "Preparazione dei blocchi...",
+      "status": {
+        "pending": "Preparazione al caricamento...",
+        "processing": "Elaborazione del file..."
+      }
+    }
   }
 }

@@ -6,9 +6,14 @@ import { DB_Message, DB_MessageSchema } from '@/database/client/schemas/message'
 import { ChatMessage } from '@/types/message';
 import { nanoid } from '@/utils/uuid';
 
+/**
+ * use `@/types/message` instead
+ * @deprecated
+ */
 export interface CreateMessageParams
   extends Partial<Omit<ChatMessage, 'content' | 'role'>>,
     Pick<ChatMessage, 'content' | 'role'> {
+  files?: string[];
   fromModel?: string;
   fromProvider?: string;
   sessionId: string;
