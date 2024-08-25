@@ -273,7 +273,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 | [Prompt Engineering Expert](https://chat-preview.lobehub.com/market?agent=ai-prompts-assistant)<br/><sup>By **[cyicz123](https://github.com/cyicz123)** on **2024-08-12**</sup>               | Specializing in prompt optimization and design<br/>`prompt-engineering` `ai-interaction` `writing` `optimization` `consulting`                                                                                                                                                                                                                                                                                                                                                                                                 |
 | [Commit Message Generator](https://chat-preview.lobehub.com/market?agent=commit-assistant)<br/><sup>By **[cyicz123](https://github.com/cyicz123)** on **2024-08-12**</sup>                    | Expert at generating precise Git commit messages<br/>`programming` `git` `commit-message` `code-review`                                                                                                                                                                                                                                                                                                                                                                                                                        |
 
-> 📊 Total agents: [<kbd>**316**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**317**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

@@ -102,8 +102,8 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
           </Flexbox>
         )}
         <Upload
-          beforeUpload={async (_, fileList) => {
-            await pushDockFileList(Array.from(fileList), knowledgeBaseId);
+          beforeUpload={async (file) => {
+            await pushDockFileList([file], knowledgeBaseId);
 
             return false;
           }}
@@ -122,8 +122,8 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
           </Flexbox>
         </Upload>
         <Upload
-          beforeUpload={async (_, fileList) => {
-            await pushDockFileList(Array.from(fileList), knowledgeBaseId);
+          beforeUpload={async (file) => {
+            await pushDockFileList([file], knowledgeBaseId);
 
             return false;
           }}

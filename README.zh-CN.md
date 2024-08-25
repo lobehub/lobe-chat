@@ -261,7 +261,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [提示工程专家](https://chat-preview.lobehub.com/market?agent=ai-prompts-assistant)<br/><sup>By **[cyicz123](https://github.com/cyicz123)** on **2024-08-12**</sup>               | 专精 Prompt 优化与设计<br/>`提示工程` `ai交互` `写作` `优化` `咨询`                                                                                                                                                                                                                   |
 | [提交信息生成器](https://chat-preview.lobehub.com/market?agent=commit-assistant)<br/><sup>By **[cyicz123](https://github.com/cyicz123)** on **2024-08-12**</sup>                 | 擅长生成精准的 Git 提交信息<br/>`编程` `git` `提交信息` `代码审查`                                                                                                                                                                                                                    |
 
-> 📊 Total agents: [<kbd>**316**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**317**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
