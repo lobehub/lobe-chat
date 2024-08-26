@@ -4,6 +4,17 @@ import { authEnv } from '@/config/auth';
 
 import { CommonProviderConfig } from './sso.config';
 
+export type AutheliaProfile = {
+  // The users display name
+  email: string; 
+  // The users email
+  groups: string[]; 
+  // The username the user used to login with
+  name: string; 
+  preferred_username: string; // The users groups
+  sub: string; // The users id
+};
+
 const provider = {
   id: 'authelia',
   provider: {
@@ -15,8 +26,15 @@ const provider = {
     id: 'authelia',
     issuer: authEnv.AUTHELIA_ISSUER,
     name: 'Authelia',
+    profile(profile) {
+      return {
+        email: profile.email,
+        name: profile.name,
+        providerAccountId: profile.sub,
+      };
+    },
     type: 'oidc',
-  } satisfies OIDCConfig<unknown>,
+  } satisfies OIDCConfig<AutheliaProfile>,
 };
 
 export default provider;
