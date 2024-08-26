@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Textblöcke sind noch nicht vollständig vektorisiert, was die Funktion der semantischen Suche beeinträchtigen kann. Um die Suchqualität zu verbessern, vektorisieren Sie die Textblöcke.",
+        "error": "Vektorisierung fehlgeschlagen",
+        "errorResult": "Vektorisierung fehlgeschlagen, bitte überprüfen Sie und versuchen Sie es erneut. Grund für das Scheitern:",
         "processing": "Textblöcke werden vektorisiert, bitte haben Sie Geduld.",
         "success": "Alle aktuellen Textblöcke sind vektorisiert."
       },

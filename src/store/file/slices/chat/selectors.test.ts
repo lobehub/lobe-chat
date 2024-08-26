@@ -1,78 +1,101 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
-import { FilesStoreState } from '../../initialState';
-import { filesSelectors } from './selectors';
+import { FilesStoreState, initialState } from '@/store/file/initialState';
+import { UPLOAD_STATUS_SET, UploadFileItem } from '@/types/files/upload';
+
+import { fileChatSelectors, filesSelectors } from './selectors';
 
 describe('filesSelectors', () => {
-  let state: FilesStoreState;
-
-  beforeEach(() => {
-    // 创建并初始化 state 的模拟实例
-    state = {
-      imagesMap: {
-        '1': {
-          id: '1',
-          name: 'a',
-          fileType: 'image/png',
-          saveMode: 'local',
-          base64Url: 'base64string1',
-          url: 'blob:abc',
-        },
-        '2': {
-          id: '2',
-          name: 'b',
-          fileType: 'image/png',
-          saveMode: 'url',
-          base64Url: 'base64string2',
-          url: 'url2',
-        },
-      },
-      uploadingIds: [],
-      // 假设 '3' 是不存在的 ID
-      inputFilesList: ['1', '2', '3'],
-    };
+  describe('chatUploadFileList', () => {
+    it('should return the chatUploadFileList from state', () => {
+      const state = {
+        ...initialState,
+        chatUploadFileList: [{ id: '1' }] as UploadFileItem[],
+      } as FilesStoreState;
+      expect(filesSelectors.chatUploadFileList(state)).toEqual([{ id: '1' }]);
+    });
   });
 
-  it('getImageDetailByList should return details for the provided list of image IDs', () => {
-    const list = ['1', '2'];
-    const details = filesSelectors.getImageDetailByList(list)(state);
-    expect(details.length).toBe(2);
-    expect(details[0].name).toBe('a');
-    expect(details[1].name).toBe('b');
+  describe('isImageUploading', () => {
+    it('should return true if there are uploading ids', () => {
+      const state = { uploadingIds: ['1', '2'] } as FilesStoreState;
+      expect(filesSelectors.isImageUploading(state)).toBe(true);
+    });
+
+    it('should return false if there are no uploading ids', () => {
+      const state = { uploadingIds: [] as string[] } as FilesStoreState;
+      expect(filesSelectors.isImageUploading(state)).toBe(false);
+    });
+  });
+});
+
+describe('fileChatSelectors', () => {
+  describe('chatRawFileList', () => {
+    it('should return a list of raw files', () => {
+      const state = {
+        chatUploadFileList: [
+          { file: { name: 'test1.jpg' } },
+          { file: { name: 'test2.jpg' } },
+        ] as UploadFileItem[],
+      } as FilesStoreState;
+
+      expect(fileChatSelectors.chatRawFileList(state)).toEqual([
+        { name: 'test1.jpg' },
+        { name: 'test2.jpg' },
+      ]);
+    });
   });
 
-  it('imageDetailList should return details for the images in the inputFilesList', () => {
-    const details = filesSelectors.imageDetailList(state);
-    // '3' should be filtered due to not exist in map
-    expect(details.length).toBe(2);
+  describe('chatUploadFileList', () => {
+    it('should return the chatUploadFileList from state', () => {
+      const state = {
+        chatUploadFileList: [{ id: '1' }] as UploadFileItem[],
+      } as FilesStoreState;
+      expect(fileChatSelectors.chatUploadFileList(state)).toEqual([{ id: '1' }]);
+    });
   });
 
-  it('getImageUrlOrBase64ById should return the correct URL or Base64 based on saveMode', () => {
-    const localImage = filesSelectors.getImageUrlOrBase64ById('1')(state);
-    expect(localImage).toEqual({ id: '1', url: 'base64string1' });
+  describe('chatUploadFileListHasItem', () => {
+    it('should return true if chatUploadFileList has items', () => {
+      const state = { chatUploadFileList: [{ id: '1' }] as UploadFileItem[] } as FilesStoreState;
+      expect(fileChatSelectors.chatUploadFileListHasItem(state)).toBe(true);
+    });
 
-    const serverImage = filesSelectors.getImageUrlOrBase64ById('2')(state);
-    expect(serverImage).toEqual({ id: '2', url: 'url2' });
-
-    const nonExistentImage = filesSelectors.getImageUrlOrBase64ById('3')(state);
-    expect(nonExistentImage).toBeUndefined();
+    it('should return false if chatUploadFileList is empty', () => {
+      const state = { chatUploadFileList: [] as UploadFileItem[] } as FilesStoreState;
+      expect(fileChatSelectors.chatUploadFileListHasItem(state)).toBe(false);
+    });
   });
 
-  it('getImageUrlOrBase64ByList should return the correct list of URLs or Base64 strings', () => {
-    const list = ['1', '2', '3'];
-    const urlsOrBase64s = filesSelectors.getImageUrlOrBase64ByList(list)(state);
-    expect(urlsOrBase64s.length).toBe(2); // '3' 应该被过滤掉，因为它不存在
-    expect(urlsOrBase64s[0].url).toBe('base64string1');
-    expect(urlsOrBase64s[1].url).toBe('url2');
-  });
+  describe('isUploadingFiles', () => {
+    it('should return true if any file is in uploading status', () => {
+      const state = {
+        chatUploadFileList: [
+          { status: Array.from(UPLOAD_STATUS_SET)[0] },
+          { status: 'completed' },
+        ] as UploadFileItem[],
+      } as FilesStoreState;
+      expect(fileChatSelectors.isUploadingFiles(state)).toBe(true);
+    });
 
-  it('imageUrlOrBase64List should return a list of image URLs or Base64 strings for all images in inputFilesList', () => {
-    const urlsOrBase64s = filesSelectors.imageUrlOrBase64List(state);
-    expect(urlsOrBase64s.length).toBe(2); // '3' 是不存在的 ID，所以应该被过滤掉
+    it('should return true if any file has unfinished embedding tasks', () => {
+      const state = {
+        chatUploadFileList: [
+          { status: 'success', tasks: { finishEmbedding: false } },
+          { status: 'success', tasks: { finishEmbedding: true } },
+        ] as UploadFileItem[],
+      } as FilesStoreState;
+      expect(fileChatSelectors.isUploadingFiles(state)).toBe(true);
+    });
 
-    expect(urlsOrBase64s).toEqual([
-      { id: '1', url: 'base64string1' }, // 本地保存的图像应该使用 base64 URL
-      { id: '2', url: 'url2' }, // 服务器保存的图像应该使用普通 URL
-    ]);
+    it('should return false if no files are uploading or have unfinished tasks', () => {
+      const state: FilesStoreState = {
+        chatUploadFileList: [
+          { status: 'success', tasks: { finishEmbedding: true } },
+          { status: 'success' },
+        ] as UploadFileItem[],
+      } as FilesStoreState;
+      expect(fileChatSelectors.isUploadingFiles(state)).toBe(false);
+    });
   });
 });
