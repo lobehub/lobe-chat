@@ -14,9 +14,10 @@ tags:
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
 
-  [![][docker-size-shield]][docker-size-link]
+[![][docker-size-shield]][docker-size-link]
 
-  [![][docker-pulls-shield]][docker-pulls-link]
+[![][docker-pulls-shield]][docker-pulls-link]
+
 </div>
 
 <Callout type="info">
@@ -29,141 +30,66 @@ tags:
   由于无法使用 Docker 环境变量暴露 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`，使用 Docker / Docker Compose
   部署 LobeChat 时，你不能使用 Clerk 作为登录鉴权服务。
 
-  如果你确实需要 Clerk 作为登录鉴权服务，你可以考虑使用 Vercel 部署或者自行构建镜像。
+如果你确实需要 Clerk 作为登录鉴权服务，你可以考虑使用 Vercel 部署或者自行构建镜像。
+
 </Callout>
 
-## 配置文件
+## 快速启动
 
-一般来讲，想要完整的运行 LobeChat 数据库版本，你需要至少拥有如下三个服务
+以下假设你选择完全自建全部三个所需服务，即：
 
-- 带有 PGVector 插件的 PostgreSQL 数据库
-- 支持 S3 协议的对象存储服务
+- PostgreSQL：带有 PGVector 插件
+- MinIO：支持 S3 协议的对象存储服务
 - LobeChat 数据库版本自身
 
-这些服务可以通过自建或者在线云服务组合搭配，以满足你的需求。
-
-在这里，我们提供一份完全基于自建的 Docker Compose 配置，你可以直接使用这份配置文件来启动 LobeChat 数据库版本，也可以对之进行修改以适应你的需求。
-
-我们使用 [MinIO](https://github.com/minio/minio) 作为本地 S3 对象存储服务，同时假设在这些服务之外，你还运行了一层 Nginx / OpenResty 来进行反向代理。
-
-关于域名和配套服务端口说明如下：
+并且使用了如下配置的的 Nginx / OpenResty 反向代理服务：
 
 - `lobe.example.com`：为你的 LobeChat 服务端域名，需要反向代理到 LobeChat 服务端口，默认为 `3210`
-- `postgresql`：你的 PostgreSQL 数据库服务端口，无需反向代理，默认为 `5432`
 - `lobe-s3-api.example.com`：为你的 MinIO API 域名，需要反向代理到 MinIO 服务端口，默认为 `9000`
-- `lobe-s3-ui.example.com`：可选，为你的 MinIO UI 域名，需要反向代理到 MinIO UI 服务端口，默认为 `9001`，如果你不想暴露它，你可以通过建立端口映射来访问 MinIO UI。
+- `lobe-s3-ui.example.com`：可选，为你的 MinIO UI 域名，需要反向代理到 MinIO UI 服务端口，默认为 `9001`
+- `postgresql`：你的 PostgreSQL 数据库服务端口，无需反向代理，默认为 `5432`
 
 <Callout type="warning">
   请务必注意，CORS 跨域是在 MinIO 服务端内部配置的，请勿在你的反向代理中额外配置
   CORS，这会导致错误。
 </Callout>
 
-首先，在你的文件夹中创建一个 `.env` 文件，用于存储环境变量：
+<Steps>
+  ### 创建配置文件
 
 ```sh
-# 网站域名
-APP_URL=https://lobe.example.com/
-
-# Postgres 相关，也即 DB 必须的环境变量
-# 用于加密敏感信息的密钥，可以使用 openssl rand -base64 32 生成
-KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
-# Postgres 数据库连接字符串
-# 格式：postgres://username:password@host:port/dbname，如果你的 pg 实例为 Docker 容器，请使用容器名
-DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
-
-# NEXT_AUTH 相关，可以使用 auth0、Azure AD、GitHub、Authentik、zitadel 等，如有其他接入诉求欢迎提 PR
-# 这里以 GitHub 为例
-NEXT_AUTH_SECRET=cDdPtQevMi2uFFLUFNx9rJoposxo362G
-NEXT_AUTH_SSO_PROVIDERS=github
-NEXTAUTH_URL=https://lobe.example.com/api/auth
-GITHUB_CLIENT_ID=h3nagLLGo4MxDGYB4SpU
-GITHUB_CLIENT_SECRET=eL5poxnVPggh38Ny56HH6KbxnHehVymFyziET4jo
-# 注：如果你有 ACCESS_CODE，请务必清空，我们以 NEXT_AUTH 作为唯一鉴权来源
-# Proxy，如果你需要的话
-HTTP_PROXY=http://localhost:7890
-HTTPS_PROXY=http://localhost:7890
-
-# MinIO S3 配置
-S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID         # 直到在 MinIO UI 中手动创建之前都是无效的
-S3_SECRET_ACCESS_KEY=YOUR_S3_SECRET_ACCESS_KEY # 直到在 MinIO UI 中手动创建之前都是无效的
-S3_ENDPOINT=https://lobe-s3-api.example.com
-S3_BUCKET=lobe
-S3_PUBLIC_DOMAIN=https://lobe-s3-api.example.com
-S3_ENABLE_PATH_STYLE=1
-
-# 其他环境变量，视需求而定，可以参照客户端版本的环境变量配置，注意不要有 ACCESS_CODE
-# OPEANAI_API_KEY=sk-xxxx
-# OPENAI_PROXY_URL=https://api.openai.com/v1
-# OPENAI_MODEL_LIST=...
+cd docker-compose
+cp .env.example .env
 ```
 
-<Callout type="warning">
-  这份文件中的 `S3_ACCESS_KEY_ID`、`S3_SECRET_ACCESS_KEY`、`S3_BUCKET` 直到你在 MinIO UI
-  中手动创建之前都是无效的。请遵循后文指引，创建它们并填入，然后再次重启 LobeChat 服务。
-</Callout>
+你也可以从下文的附录中复制得到这两份示例配置文件。
 
-请在你的文件夹中创建一个 `docker-compose.yml` 文件，并将以下内容复制到文件中，并根据你的需求修改各环境变量：
+请按照注释，修改你的 `.env` 和 `docker-compose.yml` 文件。
 
-```yaml
-services:
-  postgresql:
-    image: pgvector/pgvector:pg16
-    container_name: lobe-postgres
-    ports:
-      - '5432:5432'
-    volumes:
-      - './data:/var/lib/postgresql/data'
-    environment:
-      - 'POSTGRES_DB=lobe'
-      - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
-
-  minio:
-    image: minio/minio
-    container_name: lobe-minio
-    ports:
-      - '9000:9000'
-      - '9001:9001'
-    volumes:
-      - './s3_data:/etc/minio/data'
-    environment:
-      - 'MINIO_ROOT_USER=YOUR_MINIO_USER'
-      - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
-      - 'MINIO_DOMAIN=lobe-s3-api.example.com'
-      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # 请注意这里的域名是你的 LobeChat 服务端域名
-    command: >
-      server /etc/minio/data --address ":9000" --console-address ":9001"
-
-  lobe:
-    image: lobehub/lobe-chat-database
-    container_name: lobe-database
-    ports:
-      - '3210:3210'
-    depends_on:
-      - postgresql
-      - minio
-    env_file:
-      - .env
-
-volumes:
-  data:
-    driver: local
-  s3_data:
-    driver: local
-```
-
-然后运行如下指令启动服务：
+### 启动服务
 
 ```sh
 docker compose up -d
 ```
 
-<Callout type="warning">
-  请注意，首次运行上述指令时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat
-  已经尝试连接而失败，出现 `Database migrate failed` 错误并退出， 此时你需要输入 `docker compose
-                      restart lobe` 来重启 LobeChat，从而使其连接到正确的数据库。
-</Callout>
+### 配置 MinIO S3
 
-你可以使用下述指令检查日志：
+1. 打开 `https://lobe-s3-api.example.com` 或者 `http://localhost:9001`，访问 MinIO WebUI
+2. 创建符合你的 `.env` 文件中 `S3_BUCKET` 字段的桶
+3. 选择自定义策略，复制 `minio-bucket-config.json` 中的内容，粘贴之（如果你修改了桶名，请自行修改对应字段）
+4. 创建一个新的访问密钥，将生成的 `Access Key` 和 `Secret Key` 填入你的 `.env` 文件中的 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY` 中
+
+### 重启 LobeChat 服务
+
+```sh
+docker compose restart lobe
+```
+
+</Steps>
+
+至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `https://lobe.example.com` 访问你的 LobeChat 服务。
+
+如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
 
 ```sh
 docker logs -f lobe-chat-database
@@ -183,6 +109,44 @@ docker logs -f lobe-chat-database
  ✓ Ready in 95ms
 ```
 
+## 概述
+
+一般来讲，想要完整的运行 LobeChat 数据库版本，你需要至少拥有如下三个服务
+
+- 带有 PGVector 插件的 PostgreSQL 数据库
+- 支持 S3 协议的对象存储服务
+- LobeChat 数据库版本自身
+
+这些服务可以通过自建或者在线云服务组合搭配，以满足你的需求。
+
+我们提供了一份完全基于自建的 Docker Compose 配置，你可以直接使用这份配置文件来启动 LobeChat 数据库版本，也可以对之进行修改以适应你的需求。
+
+我们默认使用 [MinIO](https://github.com/minio/minio) 作为本地 S3 对象存储服务，同时假设在这些服务之外，你还运行了一层 Nginx / OpenResty 来进行反向代理。
+
+关于域名和配套服务端口说明同前。
+
+### 配置文件
+
+配置文件包括 `.env` 和 `docker-compose.yml` 两个文件，其中 `.env` 文件用于配置 LobeChat 的环境变量，`docker-compose.yml` 文件用于配置 Postgres 和 MinIO 服务。
+
+一般情况下，你只应修改其中的域名和账号密码等敏感信息，其他配置项请按照默认值进行配置。
+
+它们的示例配置请参见本文附录。
+
+### Postgres 数据库配置
+
+<Callout type="warning">
+  请注意，首次运行 `docker compose up -d` 时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat
+  已经尝试连接而失败，出现 `Database migrate failed` 错误并退出。此时，你需要输入 `docker compose
+  restart lobe` 来重启 LobeChat，从而使其连接到正确的数据库。
+</Callout>
+
+你可以使用下述指令检查日志：
+
+```sh
+docker logs -f lobe-chat-database
+```
+
 <Callout type="tip">
   在我们官方的 Docker 镜像中，会在启动镜像前自动执行数据库 schema 的 migration
   ，我们的官方镜像承诺「空数据库 ->
@@ -190,9 +154,26 @@ docker logs -f lobe-chat-database
   migration 的麻烦。
 </Callout>
 
-## MinIO S3 配置
+如果你在建表的时候出现了问题，你可以尝试使用如下命令强制移除数据库容器并重新启动：
 
-接下来是 MinIO S3 对象存储的配置，你需要或访问 WebUI 来进行配置：
+```sh
+docker compose down  # 停止服务
+sudo rm -rf ./data   # 移除挂载的数据库数据
+docker compose up -d # 重新启动
+```
+
+### S3 对象存储服务配置
+
+本文以 MinIO 为例，解释配置过程，如果你使用的是其他 S3 服务商，请参照其文档进行配置。
+
+<Callout type="warning">
+  请记得注意配置对应 S3 服务商的 CORS 跨域配置，以确保 LobeChat 能够正常访问 S3 服务。
+
+在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。
+
+</Callout>
+
+你需要首先访问 WebUI 来进行配置：
 
 - 如果你按照前文配置了反向代理，打开 `https://lobe-s3-api.example.com`
 - 否则，请在进行端口映射后，打开 `http://localhost:9001`
@@ -258,25 +239,102 @@ docker logs -f lobe-chat-database
 
 至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `https://lobe.example.com` 访问你的 LobeChat 服务。
 
-## 其他 S3 服务配置示例
+## 附录
 
-这里给出一个腾讯云 COS 的 `.env` 文件配置示例做参考，具体请以你的 S3 服务商提供的文档为准。
+为方便一键复制，在此汇总配置服务端数据库所需要的示例配置文件：
 
-```env
-# S3 相关，这里以腾讯云 COS 为例
-S3_ACCESS_KEY_ID=AKIDxxxxxxxxxxxxxxxxxxxx
-S3_SECRET_ACCESS_KEY=BGOXxxxxxxxxxxxxxxxxxxxx
-S3_REGION=ap-chengdu
-S3_BUCKET=lobechat-100000000
-S3_ENDPOINT=https://cos.ap-chengdu.myqcloud.com
-S3_PUBLIC_DOMAIN=https://lobe-s3-api.example.com # 用于外网访问 S3 的公共域名，需在腾讯云 COS 配置
+### `.env`
+
+```sh
+
+# 网站域名
+APP_URL=https://lobe.example.com/
+
+# Postgres 相关，也即 DB 必须的环境变量
+# 用于加密敏感信息的密钥，可以使用 openssl rand -base64 32 生成
+KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
+# Postgres 数据库连接字符串
+# 格式：postgres://username:password@host:port/dbname，如果你的 pg 实例为 Docker 容器，请使用容器名
+DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
+
+# NEXT_AUTH 相关，可以使用 auth0、Azure AD、GitHub、Authentik、zitadel 等，如有其他接入诉求欢迎提 PR
+# 这里以 GitHub 为例
+NEXT_AUTH_SECRET=cDdPtQevMi2uFFLUFNx9rJoposxo362G
+NEXT_AUTH_SSO_PROVIDERS=github
+NEXTAUTH_URL=https://lobe.example.com/api/auth
+GITHUB_CLIENT_ID=h3nagLLGo4MxDGYB4SpU
+GITHUB_CLIENT_SECRET=eL5poxnVPggh38Ny56HH6KbxnHehVymFyziET4jo
+# 注：如果你有 ACCESS_CODE，请务必清空，我们以 NEXT_AUTH 作为唯一鉴权来源
+# Proxy，如果你需要的话
+HTTP_PROXY=http://localhost:7890
+HTTPS_PROXY=http://localhost:7890
+
+# MinIO S3 配置
+S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID         # 直到在 MinIO UI 中手动创建之前都是无效的
+S3_SECRET_ACCESS_KEY=YOUR_S3_SECRET_ACCESS_KEY # 直到在 MinIO UI 中手动创建之前都是无效的
+S3_ENDPOINT=https://lobe-s3-api.example.com
+S3_BUCKET=lobe # 直到在 MinIO UI 中手动创建之前都是无效的
+S3_PUBLIC_DOMAIN=https://lobe-s3-api.example.com
+S3_ENABLE_PATH_STYLE=1
+
+# 其他环境变量，视需求而定，可以参照客户端版本的环境变量配置，注意不要有 ACCESS_CODE
+# OPEANAI_API_KEY=sk-xxxx
+# OPENAI_PROXY_URL=https://api.openai.com/v1
+# OPENAI_MODEL_LIST=...
 ```
 
-<Callout type="warning">
-  请记得注意配置对应 S3 服务商的 CORS 跨域配置，以确保 LobeChat 能够正常访问 S3 服务。
+### `docker-compose.yml`
 
-  在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。
-</Callout>
+```yaml
+services:
+  postgresql:
+    image: pgvector/pgvector:pg16
+    container_name: lobe-postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - './data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_DB=lobe'
+      - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
+    restart: always
+
+  minio:
+    image: minio/minio
+    container_name: lobe-minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - './s3_data:/etc/minio/data'
+    environment:
+      - 'MINIO_ROOT_USER=YOUR_MINIO_USER'
+      - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
+      - 'MINIO_DOMAIN=lobe-s3-api.example.com'
+      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # 请注意这里的域名是你的 LobeChat 服务端域名
+    command: >
+      server /etc/minio/data --address ":9000" --console-address ":9001"
+
+    restart: always
+
+  lobe:
+    image: lobehub/lobe-chat-database
+    container_name: lobe-database
+    ports:
+      - '3210:3210'
+    depends_on:
+      - postgresql
+      - minio
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  data:
+    driver: local
+  s3_data:
+    driver: local
+```
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square
