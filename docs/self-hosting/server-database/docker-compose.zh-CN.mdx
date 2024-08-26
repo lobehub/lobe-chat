@@ -32,7 +32,7 @@ tags:
   如果你确实需要 Clerk 作为登录鉴权服务，你可以考虑使用 Vercel 部署或者自行构建镜像。
 </Callout>
 
-## `docker-compose.yml` 文件
+## 配置文件
 
 一般来讲，想要完整的运行 LobeChat 数据库版本，你需要至少拥有如下三个服务
 
@@ -159,8 +159,8 @@ docker compose up -d
 
 <Callout type="warning">
   请注意，首次运行上述指令时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat
-  已经尝试连接而失败，出现 `Database migrate failed` 错误并退出，
-  此时你需要输入 `docker compose restart lobe` 来重启 LobeChat，从而使其连接到正确的数据库。
+  已经尝试连接而失败，出现 `Database migrate failed` 错误并退出， 此时你需要输入 `docker compose
+                      restart lobe` 来重启 LobeChat，从而使其连接到正确的数据库。
 </Callout>
 
 你可以使用下述指令检查日志：
@@ -189,6 +189,8 @@ docker logs -f lobe-chat-database
   完整表」这一段自动建表的稳定性。因此我们建议你的数据库实例使用一个空表实例，进而省去手动维护表结构或者
   migration 的麻烦。
 </Callout>
+
+## MinIO S3 配置
 
 接下来是 MinIO S3 对象存储的配置，你需要或访问 WebUI 来进行配置：
 
@@ -255,6 +257,26 @@ docker logs -f lobe-chat-database
    ```
 
 至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `https://lobe.example.com` 访问你的 LobeChat 服务。
+
+## 其他 S3 服务配置示例
+
+这里给出一个腾讯云 COS 的 `.env` 文件配置示例做参考，具体请以你的 S3 服务商提供的文档为准。
+
+```env
+# S3 相关，这里以腾讯云 COS 为例
+S3_ACCESS_KEY_ID=AKIDxxxxxxxxxxxxxxxxxxxx
+S3_SECRET_ACCESS_KEY=BGOXxxxxxxxxxxxxxxxxxxxx
+S3_REGION=ap-chengdu
+S3_BUCKET=lobechat-100000000
+S3_ENDPOINT=https://cos.ap-chengdu.myqcloud.com
+S3_PUBLIC_DOMAIN=https://lobe-s3-api.example.com # 用于外网访问 S3 的公共域名，需在腾讯云 COS 配置
+```
+
+<Callout type="warning">
+  请记得注意配置对应 S3 服务商的 CORS 跨域配置，以确保 LobeChat 能够正常访问 S3 服务。
+
+  在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。
+</Callout>
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square
