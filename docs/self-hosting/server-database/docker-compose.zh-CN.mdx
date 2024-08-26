@@ -29,6 +29,8 @@ tags:
 <Callout type="warning">
   由于无法使用 Docker 环境变量暴露 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`，使用 Docker / Docker Compose
   部署 LobeChat 时，你不能使用 Clerk 作为登录鉴权服务。
+
+  如果你确实需要 Clerk 作为登录鉴权服务，你可以考虑使用 Vercel 部署或者自行构建镜像。
 </Callout>
 
 ## `docker-compose.yml` 文件
@@ -114,7 +116,7 @@ docker compose up -d
 <Callout type="warning">
 请注意，如果你修改了默认数据库名，即 `POSTGRES_DB` 环境变量，你需要在 `DATABASE_URL` 中相应修改数据库名。
 
-此时，首次运行上述指令时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat 已经尝试连接而失败，你需要再次输入 `docker compose up -d` 来重启 LobeChat。
+若如此操作，首次运行上述指令时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat 已经尝试连接而失败，出现 `Database migrate failed` 错误并退出，此时你需要再次输入 `docker compose up -d` 来重启 LobeChat。
 
 </Callout>
 
