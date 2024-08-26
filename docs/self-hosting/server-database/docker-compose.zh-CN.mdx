@@ -20,7 +20,130 @@ tags:
 
 </div>
 
-TODO: 文档内容待补充
+<Callout type="info">
+  本文已经假定你了解了 LobeChat 服务端数据库版本（下简称 DB
+  版）的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat DB
+  版的部署原理，请先查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
+</Callout>
+
+<Callout type="warning">
+  由于无法使用 Docker 环境变量暴露 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`，使用 Docker / Docker Compose
+  部署 LobeChat 时，你不能使用 Clerk 作为登录鉴权服务。
+</Callout>
+
+## `docker-compose.yml` 文件
+
+一般来讲，我们需要启动两个服务：
+
+- 带有 PGVector 插件的 PostgreSQL 数据库
+- LobeChat 数据库版本。
+
+当然，如果你的 Postgres 数据库不仅仅用于 LobeChat，那么你可以在下述配置中删去 `postgresql` 服务，只保留 `lobe` 服务。
+
+如果你还打算将 S3 存储也在本地启动，你可以自行查找配置 [minio](https://github.com/minio/minio)。
+
+请在你的文件夹中创建一个 `docker-compose.yml` 文件，并将以下内容复制到文件中，并根据你的需求修改环境变量：
+
+```yaml
+services:
+  postgresql:
+    image: pgvector/pgvector:pg16
+    container_name: lobe-postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - './data:/var/lib/postgresql/data'
+    environment:
+      # - 'POSTGRES_DB=lobe'
+      - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
+
+  lobe:
+    image: lobehub/lobe-chat-database
+    container_name: lobe-database
+    ports:
+      - '3210:3210'
+    depends_on:
+      - postgresql
+    environment:
+      # 网站域名
+      - 'APP_URL=https://your-prod-domain.com/'
+
+      # DB 必须的环境变量
+      # 用于加密敏感信息的密钥，可以使用 openssl rand -base64 32 生成
+      - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
+      # Postgres 数据库连接字符串
+      # 格式：postgres://username:password@host:port/dbname，如果你的 pg 实例为 Docker 容器，请使用容器名
+      - 'DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres'
+
+      # NEXT_AUTH 相关，可以使用 auth0、Azure AD、GitHub、Authentik、zitadel 等，如有其他接入诉求欢迎提 PR
+      # 这里以 GitHub 为例
+      - NEXT_AUTH_SECRET=cDdPtQevMi2uFFLUFNx9rJoposxo362G
+      - NEXT_AUTH_SSO_PROVIDERS=github
+      - NEXTAUTH_URL=https://your-prod-domain.com/api/auth
+      - GITHUB_CLIENT_ID=h3nagLLGo4MxDGYB4SpU
+      - GITHUB_CLIENT_SECRET=eL5poxnVPggh38Ny56HH6KbxnHehVymFyziET4jo
+      # 注：如果你有 ACCESS_CODE，请务必清空，我们以 NEXT_AUTH 作为唯一鉴权来源
+      # Proxy，如果你需要的话
+      - HTTP_PROXY=http://localhost:7890
+      - HTTPS_PROXY=http://localhost:7890
+
+      # S3 相关，这里以腾讯云 COS 为例
+      - S3_ACCESS_KEY_ID=AKIDxxxxxxxxxx
+      - S3_SECRET_ACCESS_KEY=xxxxxxxxxx
+      - 'S3_REGION=ap-chengdu'
+      - 'S3_BUCKET=lobechat-123456'
+      - 'S3_ENDPOINT=https://cos.ap-chengdu.myqcloud.com'
+      - 'S3_PUBLIC_DOMAIN=https://s3-lobe.arthals.ink' # 用于外网访问 S3 的公共域名，需配置 CORS
+
+      # 其他环境变量，视需求而定
+      # OPEANAI_API_KEY=sk-xxxx
+      # OPENAI_PROXY_URL=https://api.openai.com/v1
+      # OPENAI_MODEL_LIST=...
+
+volumes:
+  data:
+    driver: local
+```
+
+然后运行如下指令启动服务：
+
+```sh
+docker compose up -d
+```
+
+<Callout type="warning">
+请注意，如果你修改了默认数据库名，即 `POSTGRES_DB` 环境变量，你需要在 `DATABASE_URL` 中相应修改数据库名。
+
+此时，首次运行上述指令时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat 已经尝试连接而失败，你需要再次输入 `docker compose up -d` 来重启 LobeChat。
+
+</Callout>
+
+你可以使用下述指令检查日志：
+
+```sh
+docker logs -f lobe-chat-database
+```
+
+如果你在容器中看到了以下日志，则说明已经启动成功：
+
+```log
+[Database] Start to migration...
+✅ database migration pass.
+-------------------------------------
+  ▲ Next.js 14.x.x
+  - Local:        http://localhost:3210
+  - Network:      http://0.0.0.0:3210
+
+ ✓ Starting...
+ ✓ Ready in 95ms
+```
+
+<Callout type="tip">
+  在我们官方的 Docker 镜像中，会在启动镜像前自动执行数据库 schema 的 migration
+  ，我们的官方镜像承诺「空数据库 ->
+  完整表」这一段自动建表的稳定性。因此我们建议你的数据库实例使用一个空表实例，进而省去手动维护表结构或者
+  migration 的麻烦。
+</Callout>
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square
