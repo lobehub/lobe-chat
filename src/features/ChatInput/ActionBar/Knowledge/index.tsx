@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import TipGuide from '@/components/TipGuide';
 import { isServerMode } from '@/const/version';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 
@@ -15,10 +16,16 @@ const enableKnowledge = isServerMode;
 const Knowledge = memo(() => {
   const { t } = useTranslation('chat');
 
+  const { enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
+
   const [showTip, updateGuideState] = useUserStore((s) => [
     preferenceSelectors.showUploadFileInKnowledgeBaseTip(s),
     s.updateGuideState,
   ]);
+
+  if (!enableKnowledgeBase) {
+    return null;
+  }
 
   const content = (
     <DropdownMenu>
