@@ -60,8 +60,7 @@ identity_providers:
 | `AUTHELIA_CLIENT_ID` | 必选 | 刚刚在 Authelia 配置的 `id`，示例值是 `lobe-chat` |
 | `AUTHELIA_CLIENT_SECRET` | 必选 | 刚刚在 Authelia 配置的 `secret` 对应的明文，示例值是 `insecure_secret` |
 | `AUTHELIA_ISSUER` | 必选 |您的 Authelia 的网址，例如 `https://sso.example.com` |
-| `ACCESS_CODE` | 必选 | 添加访问此服务的密码，你可以设置一个足够长的随机密码以 “禁用” 访问码授权 |
-| `AUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://chat.example.com/api/auth` |
+| `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://chat.example.com/api/auth` |
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/docs/self-hosting/environment-variable#Authelia) 可查阅相关变量详情。

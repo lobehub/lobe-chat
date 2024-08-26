@@ -14,7 +14,7 @@ const provider = {
     clientSecret: authEnv.AUTHELIA_CLIENT_SECRET,
     id: 'authelia',
     issuer: authEnv.AUTHELIA_ISSUER,
-    name: 'Authentik',
+    name: 'Authelia',
     type: 'oidc',
   } satisfies OIDCConfig<unknown>,
 };
