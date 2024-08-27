@@ -275,11 +275,11 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 3. Use the above answers as evidence to logically and coherently provide a final answer to your question, assisted by visual charts.
 
 Please tell me what issue you would like to explore?<br/>`backtracking-questions` `thinking-strategies` `problem-analysis` |
+\| [Unreal Engine Master](https://chat-preview.lobehub.com/market?agent=unreal-engine-master)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-27**</sup> | Unreal Game Development Companion<br/>`game-development` `unreal-engine` `software-engineering` |
 \| [TypeScript Solution Architect](https://chat-preview.lobehub.com/market?agent=typescript-developer)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2024-08-24**</sup> | Expert in TypeScript, Node.js, Vue.js 3, Nuxt.js 3, Express.js, React.js, and modern UI libraries.<br/>`type-script` `java-script` `web-development` `coding-standards` `best-practices` |
 \| [Variable Name Conversion Expert](https://chat-preview.lobehub.com/market?agent=variable-name-conversion)<br/><sup>By **[zengyishou](https://github.com/zengyishou)** on **2024-08-21**</sup> | In software development, naming variables is a common yet relatively time-consuming task. This assistant can automatically convert Chinese variable names into English variable names that conform to camelCase, PascalCase, snake_case, kebab-case, and constant naming conventions based on specific naming rules. This not only improves code readability but also alleviates the frustration of variable naming.<br/>`software-development` `variable-naming` `chinese-to-english` `code-standards` `automatic-conversion` |
-\| [Prompt Engineering Expert](https://chat-preview.lobehub.com/market?agent=ai-prompts-assistant)<br/><sup>By **[cyicz123](https://github.com/cyicz123)** on **2024-08-12**</sup> | Specializing in prompt optimization and design<br/>`prompt-engineering` `ai-interaction` `writing` `optimization` `consulting` |
 
-> 📊 Total agents: [<kbd>**318**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**319**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
