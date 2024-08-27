@@ -35,6 +35,27 @@
       "when": 1721724512422,
       "tag": "0004_add_next_auth",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1722944166657,
+      "tag": "0005_pgvector",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1724089032064,
+      "tag": "0006_add_knowledge_base",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1724254147447,
+      "tag": "0007_fix_embedding_table",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -46,3 +46,11 @@ export const formatTime = (timeInSeconds: number): string => {
     return `${(timeInSeconds / 3600).toFixed(2)} h`;
   }
 };
+
+/**
+ * format number with comma
+ * @param num
+ */
+export const formatNumber = (num: any) => {
+  return new Intl.NumberFormat('en-US').format(num);
+};

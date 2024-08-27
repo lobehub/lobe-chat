@@ -14,6 +14,7 @@ export default {
   autoGenerate: '自动补全',
   autoGenerateTooltip: '基于提示词自动补全助手描述',
   autoGenerateTooltipDisabled: '请填写提示词后使用自动补全功能',
+  back: '返回',
   batchDelete: '批量删除',
   blog: '产品博客',
   cancel: '取消',

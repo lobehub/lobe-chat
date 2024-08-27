@@ -13,6 +13,7 @@
   "autoGenerate": "توليد تلقائي",
   "autoGenerateTooltip": "إكمال تلقائي بناءً على الكلمات المقترحة لوصف المساعد",
   "autoGenerateTooltipDisabled": "الرجاء إدخال كلمة تلميح قبل تفعيل وظيفة الإكمال التلقائي",
+  "back": "عودة",
   "batchDelete": "حذف دفعة",
   "blog": "مدونة المنتجات",
   "cancel": "إلغاء",

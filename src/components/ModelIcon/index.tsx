@@ -1,8 +1,8 @@
 import {
-  AiMass,
   Adobe,
   Ai21,
   Ai360,
+  AiMass,
   Aws,
   Aya,
   Azure,
@@ -50,6 +50,7 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   const model = originModel.toLowerCase();
 
   // currently supported models, maybe not in its own provider
+  if (model.includes('text-embedding-')) return <OpenAI.Avatar size={size} />;
   if (model.includes('gpt-3')) return <OpenAI.Avatar size={size} type={'gpt3'} />;
   if (model.includes('gpt-4')) return <OpenAI.Avatar size={size} type={'gpt4'} />;
   if (model.includes('glm-') || model.includes('chatglm')) return <ChatGLM.Avatar size={size} />;
@@ -65,7 +66,13 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   if (model.includes('moonshot')) return <Moonshot.Avatar size={size} />;
   if (model.includes('qwen')) return <Tongyi.Avatar background={Tongyi.colorPrimary} size={size} />;
   if (model.includes('minmax') || model.includes('abab')) return <Minimax.Avatar size={size} />;
-  if (model.includes('mistral') || model.includes('mixtral') || model.includes('codestral') || model.includes('mathstral')) return <Mistral.Avatar size={size} />;
+  if (
+    model.includes('mistral') ||
+    model.includes('mixtral') ||
+    model.includes('codestral') ||
+    model.includes('mathstral')
+  )
+    return <Mistral.Avatar size={size} />;
   if (model.includes('pplx') || model.includes('sonar')) return <Perplexity.Avatar size={size} />;
   if (model.includes('yi-')) return <Yi.Avatar size={size} />;
   if (model.startsWith('openrouter')) return <OpenRouter.Avatar size={size} />; // only for Cinematika and Auto
@@ -100,7 +107,8 @@ const ModelIcon = memo<ModelProviderIconProps>(({ model: originModel, size = 12 
   )
     return <Stability.Avatar size={size} />;
 
-  if (model.includes('phi3') || model.includes('phi-3') || model.includes('wizardlm')) return <Azure.Avatar size={size} />;
+  if (model.includes('phi3') || model.includes('phi-3') || model.includes('wizardlm'))
+    return <Azure.Avatar size={size} />;
   if (model.includes('firefly')) return <Adobe.Avatar size={size} />;
   if (model.includes('jamba') || model.includes('j2-')) return <Ai21.Avatar size={size} />;
 });

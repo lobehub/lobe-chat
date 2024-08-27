@@ -1,0 +1,91 @@
+{
+  "desc": "Gestisci i tuoi file e il tuo knowledge base",
+  "detail": {
+    "basic": {
+      "createdAt": "Data di creazione",
+      "filename": "Nome del file",
+      "size": "Dimensione del file",
+      "title": "Informazioni di base",
+      "type": "Formato",
+      "updatedAt": "Data di aggiornamento"
+    },
+    "data": {
+      "chunkCount": "Numero di blocchi",
+      "embedding": {
+        "default": "Non ancora vettorizzato",
+        "error": "Errore",
+        "pending": "In attesa di avvio",
+        "processing": "In elaborazione",
+        "success": "Completato"
+      },
+      "embeddingStatus": "Vettorizzazione"
+    }
+  },
+  "header": {
+    "actions": {
+      "newFolder": "Nuova cartella",
+      "uploadFile": "Carica file",
+      "uploadFolder": "Carica cartella"
+    },
+    "uploadButton": "Carica"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Stai per eliminare questa knowledge base. I file al suo interno non verranno eliminati, ma spostati in 'Tutti i file'. Una volta eliminata, la knowledge base non potrà essere recuperata, procedi con cautela.",
+      "empty": "Clicca <1>+</1> per iniziare a creare una knowledge base"
+    },
+    "new": "Nuova knowledge base",
+    "title": "Knowledge Base"
+  },
+  "notSupportGuide": {
+    "desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Supporta i formati di file più comuni, inclusi Word, PPT, Excel, PDF, TXT e altri formati di documenti, così come file di codice comuni come JS e Python",
+        "title": "Analisi di vari tipi di file"
+      },
+      "embeddings": {
+        "desc": "Utilizza modelli vettoriali ad alte prestazioni per vettorizzare i blocchi di testo, consentendo la ricerca semantica del contenuto dei file",
+        "title": "Semantizzazione vettoriale"
+      },
+      "repos": {
+        "desc": "Supporta la creazione di knowledge base e consente di aggiungere diversi tipi di file, costruendo la tua conoscenza di settore",
+        "title": "Knowledge Base"
+      }
+    },
+    "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
+  },
+  "preview": {
+    "unsupportedFile": "Questo formato di file non supporta l'anteprima online"
+  },
+  "searchFilePlaceholder": "Cerca file",
+  "tab": {
+    "all": "Tutti i file",
+    "audios": "Audio",
+    "documents": "Documenti",
+    "images": "Immagini",
+    "videos": "Video",
+    "websites": "Siti web"
+  },
+  "title": "File",
+  "uploadDock": {
+    "body": {
+      "collapse": "Riduci",
+      "item": {
+        "done": "Caricato",
+        "error": "Caricamento fallito, riprova",
+        "pending": "Pronto per il caricamento...",
+        "processing": "Elaborazione del file...",
+        "restTime": "Tempo rimanente {{time}}"
+      }
+    },
+    "totalCount": "Totale {{count}} elementi",
+    "uploadStatus": {
+      "error": "Errore di caricamento",
+      "pending": "In attesa di caricamento",
+      "processing": "Caricamento in corso",
+      "success": "Caricamento completato",
+      "uploading": "Caricamento in corso"
+    }
+  }
+}

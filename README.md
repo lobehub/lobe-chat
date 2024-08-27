@@ -8,7 +8,7 @@ An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
 Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
 One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/Ollama chat application.
 
-**English** · [简体中文](./README.zh-CN.md) · [Official Site][official-site] · [Changelog](./CHANGELOG.md) · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
+**English** · [简体中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md) · [Official Site][official-site] · [Changelog](./CHANGELOG.md) · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -266,14 +266,20 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                   | Description                                                                                                                                                                                                                                                                                                         |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [RO-SCIRAW Prompt Word Expert](https://chat-preview.lobehub.com/market?agent=rosciraw)<br/><sup>By **[kirklin](https://github.com/kirklin)** on **2024-08-06**</sup>             | The RO-SCIRAW framework, created by Kirk Lin, is a methodology for prompt words that provides a new paradigm for building highly precise and efficient prompt words. Please enter the information for the persona you want to create.<br/>`prompt-word-framework`                                                   |
-| [Social Media Sage](https://chat-preview.lobehub.com/market?agent=social-media-sage)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-06**</sup> | Social Media Marketing expert crafting winning strategies for brands and empowering businesses to thrive online<br/>`social-media-marketing` `branding` `growth-strategies`                                                                                                                                         |
-| [Omnipedia](https://chat-preview.lobehub.com/market?agent=omnipedia)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-02**</sup>                 | Expert in providing high-quality, well-researched information on various topics, including history, science, literature, art, and more. Skilled in summarizing complex topics, assisting with research tasks, and offering creative prompts<br/>`artificial-intelligence` `information` `education` `communication` |
-| [Code Snark Master](https://chat-preview.lobehub.com/market?agent=code-snark-master)<br/><sup>By **[leter](https://github.com/leter)** on **2024-07-29**</sup>                   | Specializes in sharp criticism of code, sarcastically pointing out inefficiencies and readability issues<br/>`tech-leadership` `code-review` `sarcastic-style` `programming-consultation`                                                                                                                           |
+| Recent Submits                                                                                                                                                               | Description                                                                                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Backtracking Question Expert](https://chat-preview.lobehub.com/market?agent=step-back-expert)<br/><sup>By **[tiny656](https://github.com/tiny656)** on **2024-08-27**</sup> | Hello! I am an expert in world knowledge, skilled in using backtracking questioning strategies to help you gain a deeper understanding and analysis of issues. Please enter a question, and I will respond to it according to the following process: |
 
-> 📊 Total agents: [<kbd>**312**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+1. Provide at least 3 optional backtracking questions that align with the strategy.
+2. Answer each of these backtracking questions.
+3. Use the above answers as evidence to logically and coherently provide a final answer to your question, assisted by visual charts.
+
+Please tell me what issue you would like to explore?<br/>`backtracking-questions` `thinking-strategies` `problem-analysis` |
+\| [Unreal Engine Master](https://chat-preview.lobehub.com/market?agent=unreal-engine-master)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-27**</sup> | Unreal Game Development Companion<br/>`game-development` `unreal-engine` `software-engineering` |
+\| [TypeScript Solution Architect](https://chat-preview.lobehub.com/market?agent=typescript-developer)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2024-08-24**</sup> | Expert in TypeScript, Node.js, Vue.js 3, Nuxt.js 3, Express.js, React.js, and modern UI libraries.<br/>`type-script` `java-script` `web-development` `coding-standards` `best-practices` |
+\| [Variable Name Conversion Expert](https://chat-preview.lobehub.com/market?agent=variable-name-conversion)<br/><sup>By **[zengyishou](https://github.com/zengyishou)** on **2024-08-21**</sup> | In software development, naming variables is a common yet relatively time-consuming task. This assistant can automatically convert Chinese variable names into English variable names that conform to camelCase, PascalCase, snake_case, kebab-case, and constant naming conventions based on specific naming rules. This not only improves code readability but also alleviates the frustration of variable naming.<br/>`software-development` `variable-naming` `chinese-to-english` `code-standards` `automatic-conversion` |
+
+> 📊 Total agents: [<kbd>**319**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

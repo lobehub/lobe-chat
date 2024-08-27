@@ -27,21 +27,26 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 | 环境变量 | 类型 | 描述 |
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令： `openssl rand -base64 32`，或者访问 `https://generate-secret.vercel.app/32` 生成秘钥。 |
-| `ACCESS_CODE` | 必选 | 添加访问此服务的密码，你可以设置一个足够长的随机密码以 “禁用” 访问码授权 |
-| `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
+| `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 | `NEXT_AUTH_SSO_PROVIDERS` | 可选 | 该环境变量用于同时启用多个身份验证源，以逗号 `,` 分割，例如 `auth0,azure-ad,authentik`。 |
 
 目前支持的身份验证服务有：
 
 <Cards>
-  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/auth0'} title={'Auth0'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/auth0'} title={'Auth0'} />
   <Card
-    href={'/zh/docs/self-hosting/advanced/sso-providers/microsoft-entra-id'}
+    href={'/zh/docs/self-hosting/advanced/auth/next-auth/microsoft-entra-id'}
     title={'Microsoft Entra ID'}
   />
-  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/authentik'} title={'Authentik'} />
-  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/github'} title={'Github'} />
-  <Card href={'/zh/docs/self-hosting/advanced/sso-providers/zitadel'} title={'ZITADEL'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/authentik'} title={'Authentik'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/github'} title={'Github'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/zitadel'} title={'ZITADEL'} />
+  <Card
+    href={'/zh/docs/self-hosting/advanced/auth/next-auth/cloudflare-zero-trust'}
+    title={'Cloudflare Zero Trust'}
+  />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/authelia'} title={'Authelia'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/logto'} title={'Logto'} />
 </Cards>
 
 点击即可查看对应平台的配置文档。

@@ -1,0 +1,31 @@
+{
+  "addToKnowledgeBase": {
+    "addSuccess": "Dosya başarıyla eklendi, <1>hemen görüntüle</1>",
+    "confirm": "Ekle",
+    "id": {
+      "placeholder": "Eklenecek bilgi havuzunu seçin",
+      "required": "Lütfen bilgi havuzunu seçin",
+      "title": "Hedef bilgi havuzu"
+    },
+    "title": "Bilgi Havuzuna Ekle",
+    "totalFiles": "Seçilen {{count}} dosya"
+  },
+  "createNew": {
+    "confirm": "Yeni Oluştur",
+    "description": {
+      "placeholder": "Bilgi havuzu tanımı (isteğe bağlı)"
+    },
+    "formTitle": "Temel Bilgiler",
+    "name": {
+      "placeholder": "Bilgi havuzu adı",
+      "required": "Lütfen bilgi havuzu adını girin"
+    },
+    "title": "Yeni Bilgi Havuzu"
+  },
+  "tab": {
+    "files": "Belgeler",
+    "settings": "Ayarlar",
+    "testing": "Geri Çağırma Testi"
+  },
+  "title": "Bilgi Havuzu"
+}

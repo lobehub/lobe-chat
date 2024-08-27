@@ -4,7 +4,7 @@ import { DeepPartial } from 'utility-types';
 
 import { serverDB } from '@/database/server/core/db';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
-import { UserPreference } from '@/types/user';
+import { UserGuide, UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 import { merge } from '@/utils/merge';
 
@@ -143,6 +143,17 @@ export class UserModel {
     return serverDB
       .update(users)
       .set({ preference: merge(user.preference, value) })
+      .where(eq(users.id, id));
+  }
+
+  async updateGuide(id: string, value: Partial<UserGuide>) {
+    const user = await serverDB.query.users.findFirst({ where: eq(users.id, id) });
+    if (!user) return;
+
+    const prevPreference = (user.preference || {}) as UserPreference;
+    return serverDB
+      .update(users)
+      .set({ preference: { ...prevPreference, guide: merge(prevPreference.guide || {}, value) } })
       .where(eq(users.id, id));
   }
 }

@@ -14,6 +14,8 @@ export const config = {
     '/',
     '/chat(.*)',
     '/settings(.*)',
+    '/files(.*)',
+    '/repos(.*)',
     // ↓ cloud ↓
   ],
 };
@@ -46,6 +48,7 @@ const nextAuthMiddleware = NextAuthEdge.auth((req) => {
 
 const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
+  '/files(.*)',
   // ↓ cloud ↓
 ]);
 

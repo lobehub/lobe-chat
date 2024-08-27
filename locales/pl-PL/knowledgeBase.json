@@ -1,0 +1,31 @@
+{
+  "addToKnowledgeBase": {
+    "addSuccess": "Plik dodany pomyślnie, <1>zobacz teraz</1>",
+    "confirm": "Dodaj",
+    "id": {
+      "placeholder": "Wybierz bazę wiedzy do dodania",
+      "required": "Wybierz bazę wiedzy",
+      "title": "Docelowa baza wiedzy"
+    },
+    "title": "Dodaj do bazy wiedzy",
+    "totalFiles": "Wybrano {{count}} plików"
+  },
+  "createNew": {
+    "confirm": "Utwórz",
+    "description": {
+      "placeholder": "Opis bazy wiedzy (opcjonalnie)"
+    },
+    "formTitle": "Podstawowe informacje",
+    "name": {
+      "placeholder": "Nazwa bazy wiedzy",
+      "required": "Proszę wpisać nazwę bazy wiedzy"
+    },
+    "title": "Utwórz nową bazę wiedzy"
+  },
+  "tab": {
+    "files": "Dokumenty",
+    "settings": "Ustawienia",
+    "testing": "Testowanie przypomnienia"
+  },
+  "title": "Baza wiedzy"
+}

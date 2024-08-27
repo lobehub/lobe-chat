@@ -21,3 +21,7 @@ export const DefaultMessage = memo<
 
   return <div id={addIdOnDOM ? id : undefined}>{editableContent}</div>;
 });
+
+export const DefaultBelowMessage = memo<ChatMessage>(() => {
+  return null;
+});

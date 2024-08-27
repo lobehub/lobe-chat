@@ -4,7 +4,6 @@ import { User } from 'next-auth';
 import { NextRequest } from 'next/server';
 
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER, enableClerk, enableNextAuth } from '@/const/auth';
-import NextAuthEdge from '@/libs/next-auth/edge';
 
 type ClerkAuth = ReturnType<typeof getAuth>;
 
@@ -55,6 +54,8 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
 
   if (enableNextAuth) {
     try {
+      const { default: NextAuthEdge } = await import('@/libs/next-auth/edge');
+
       const session = await NextAuthEdge.auth();
       if (session && session?.user?.id) {
         auth = session.user;
