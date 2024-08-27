@@ -210,6 +210,15 @@ export const fileRouter = router({
 
           const duration = Date.now() - startAt;
 
+          // if no chunk found, throw error
+          if (chunks.length === 0) {
+            throw {
+              message:
+                'No chunk found in this file. it may due to current chunking method can not parse file accurately',
+              name: AsyncTaskErrorType.NoChunkError,
+            };
+          }
+
           await ctx.chunkModel.bulkCreate(chunks, input.fileId);
 
           if (chunkResult.unstructuredChunks) {

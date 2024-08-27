@@ -11,6 +11,10 @@ export enum AsyncTaskStatus {
 }
 
 export enum AsyncTaskErrorType {
+  /**
+   * the chunk parse result it empty
+   */
+  NoChunkError = 'NoChunkError',
   SDKError = 'SDKError',
   ServerError = 'ServerError',
   /**
