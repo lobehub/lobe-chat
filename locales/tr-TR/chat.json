@@ -62,6 +62,7 @@
   "pin": "Pin",
   "pinOff": "Unpin",
   "rag": {
+    "referenceChunks": "Referans Parçaları",
     "userQuery": {
       "actions": {
         "delete": "Sorguyu Sil",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upload": {
-    "actionFiletip": "Dosyayı Yükle",
-    "actionTooltip": "Resim Yükle",
-    "disabled": "Geçerli model görüntü tanıma desteğini desteklemiyor, lütfen modeli değiştirerek kullanın",
+    "action": {
+      "fileUpload": "Dosya Yükle",
+      "folderUpload": "Klasör Yükle",
+      "imageDisabled": "Mevcut model görsel tanımayı desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin",
+      "imageUpload": "Görüntü Yükle",
+      "tooltip": "Yükle"
+    },
+    "clientMode": {
+      "actionFiletip": "Dosya Yükle",
+      "actionTooltip": "Yükle",
+      "disabled": "Mevcut model görsel tanımayı ve dosya analizini desteklemiyor, lütfen modeli değiştirin ve tekrar deneyin"
+    },
     "preview": {
       "prepareTasks": "Parçaları Hazırlıyor...",
       "status": {

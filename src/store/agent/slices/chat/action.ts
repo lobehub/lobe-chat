@@ -8,10 +8,12 @@ import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { useClientDataSWR, useOnlyFetchOnceSWR } from '@/libs/swr';
+import { agentService } from '@/services/agent';
 import { sessionService } from '@/services/session';
 import { AgentState } from '@/store/agent/slices/chat/initialState';
 import { useSessionStore } from '@/store/session';
 import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
+import { KnowledgeItem } from '@/types/knowledgeBase';
 import { merge } from '@/utils/merge';
 
 import { AgentStore } from '../../store';
@@ -21,35 +23,42 @@ import { agentSelectors } from './selectors';
  * 助手接口
  */
 export interface AgentChatAction {
-  removePlugin: (id: string) => void;
-  togglePlugin: (id: string, open?: boolean) => Promise<void>;
-  updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
-  updateAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
+  addFilesToAgent: (fileIds: string[], boolean?: boolean) => Promise<void>;
+  addKnowledgeBaseToAgent: (knowledgeBaseId: string) => Promise<void>;
+  internal_createAbortController: (key: keyof AgentState) => AbortController;
 
-  useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
-  useInitAgentStore: (
-    isLogin: boolean | undefined,
-    defaultAgentConfig?: DeepPartial<LobeAgentConfig>,
-  ) => SWRResponse<DeepPartial<LobeAgentConfig>>;
-
-  /* eslint-disable typescript-sort-keys/interface */
-
-  internal_updateAgentConfig: (
-    id: string,
-    data: DeepPartial<LobeAgentConfig>,
-    signal?: AbortSignal,
-  ) => Promise<void>;
-  internal_refreshAgentConfig: (id: string) => Promise<void>;
   internal_dispatchAgentMap: (
     id: string,
     config: DeepPartial<LobeAgentConfig>,
     actions?: string,
   ) => void;
-  internal_createAbortController: (key: keyof AgentState) => AbortController;
-  /* eslint-enable */
+  internal_refreshAgentConfig: (id: string) => Promise<void>;
+  internal_refreshAgentKnowledge: () => Promise<void>;
+  internal_updateAgentConfig: (
+    id: string,
+    data: DeepPartial<LobeAgentConfig>,
+    signal?: AbortSignal,
+  ) => Promise<void>;
+  removeFileFromAgent: (fileId: string) => Promise<void>;
+  removeKnowledgeBaseFromAgent: (knowledgeBaseId: string) => Promise<void>;
+
+  removePlugin: (id: string) => void;
+  toggleFile: (id: string, open?: boolean) => Promise<void>;
+  toggleKnowledgeBase: (id: string, open?: boolean) => Promise<void>;
+
+  togglePlugin: (id: string, open?: boolean) => Promise<void>;
+  updateAgentChatConfig: (config: Partial<LobeAgentChatConfig>) => Promise<void>;
+  updateAgentConfig: (config: DeepPartial<LobeAgentConfig>) => Promise<void>;
+  useFetchAgentConfig: (id: string) => SWRResponse<LobeAgentConfig>;
+  useFetchFilesAndKnowledgeBases: () => SWRResponse<KnowledgeItem[]>;
+  useInitAgentStore: (
+    isLogin: boolean | undefined,
+    defaultAgentConfig?: DeepPartial<LobeAgentConfig>,
+  ) => SWRResponse<DeepPartial<LobeAgentConfig>>;
 }
 
 const FETCH_AGENT_CONFIG_KEY = 'FETCH_AGENT_CONFIG';
+const FETCH_AGENT_KNOWLEDGE_KEY = 'FETCH_AGENT_KNOWLEDGE';
 
 export const createChatSlice: StateCreator<
   AgentStore,
@@ -57,10 +66,59 @@ export const createChatSlice: StateCreator<
   [],
   AgentChatAction
 > = (set, get) => ({
+  addFilesToAgent: async (fileIds, enabled) => {
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
+    if (fileIds.length === 0) return;
+
+    await agentService.createAgentFiles(activeAgentId, fileIds, enabled);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
+  },
+  addKnowledgeBaseToAgent: async (knowledgeBaseId) => {
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
+
+    await agentService.createAgentKnowledgeBase(activeAgentId, knowledgeBaseId, true);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
+  },
+  removeFileFromAgent: async (fileId) => {
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
+
+    await agentService.deleteAgentFile(activeAgentId, fileId);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
+  },
+  removeKnowledgeBaseFromAgent: async (knowledgeBaseId) => {
+    const { activeAgentId, internal_refreshAgentConfig, internal_refreshAgentKnowledge } = get();
+    if (!activeAgentId) return;
+
+    await agentService.deleteAgentKnowledgeBase(activeAgentId, knowledgeBaseId);
+    await internal_refreshAgentConfig(get().activeId);
+    await internal_refreshAgentKnowledge();
+  },
+
   removePlugin: async (id) => {
     await get().togglePlugin(id, false);
   },
+  toggleFile: async (id, open) => {
+    const { activeAgentId, internal_refreshAgentConfig } = get();
+    if (!activeAgentId) return;
 
+    await agentService.toggleFile(activeAgentId, id, open);
+
+    await internal_refreshAgentConfig(get().activeId);
+  },
+  toggleKnowledgeBase: async (id, open) => {
+    const { activeAgentId, internal_refreshAgentConfig } = get();
+    if (!activeAgentId) return;
+
+    await agentService.toggleKnowledgeBase(activeAgentId, id, open);
+
+    await internal_refreshAgentConfig(get().activeId);
+  },
   togglePlugin: async (id, open) => {
     const originConfig = agentSelectors.currentAgentConfig(get());
 
@@ -109,10 +167,22 @@ export const createChatSlice: StateCreator<
         fallbackData: DEFAULT_AGENT_CONFIG,
         onSuccess: (data) => {
           get().internal_dispatchAgentMap(sessionId, data, 'fetch');
+          set({ activeAgentId: data.id }, false, 'updateActiveAgentId');
         },
         suspense: true,
       },
     ),
+  useFetchFilesAndKnowledgeBases: () => {
+    return useClientDataSWR<KnowledgeItem[]>(
+      [FETCH_AGENT_KNOWLEDGE_KEY, get().activeAgentId],
+      ([, id]: string[]) => agentService.getFilesAndKnowledgeBases(id),
+      {
+        fallbackData: [],
+        suspense: true,
+      },
+    );
+  },
+
   useInitAgentStore: (isLogin, defaultAgentConfig) =>
     useOnlyFetchOnceSWR<DeepPartial<LobeAgentConfig>>(
       !!isLogin ? 'fetchInboxAgentConfig' : null,
@@ -134,7 +204,6 @@ export const createChatSlice: StateCreator<
         },
       },
     ),
-
   /* eslint-disable sort-keys-fix/sort-keys-fix */
 
   internal_dispatchAgentMap: (id, config, actions) => {
@@ -167,6 +236,9 @@ export const createChatSlice: StateCreator<
     await mutate([FETCH_AGENT_CONFIG_KEY, id]);
   },
 
+  internal_refreshAgentKnowledge: async () => {
+    await mutate([FETCH_AGENT_KNOWLEDGE_KEY, get().activeAgentId]);
+  },
   internal_createAbortController: (key) => {
     const abortController = get()[key] as AbortController;
     if (abortController) abortController.abort(MESSAGE_CANCEL_FLAT);

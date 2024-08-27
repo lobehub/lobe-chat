@@ -8,7 +8,7 @@
  * @link https://trpc.io/docs/v11/procedures
  */
 import { trpc } from './init';
-import { passwordChecker } from './middleware/password';
+import { jwtPayloadChecker } from './middleware/jwtPayload';
 import { userAuth } from './middleware/userAuth';
 
 /**
@@ -27,7 +27,7 @@ export const publicProcedure = trpc.procedure;
 export const authedProcedure = trpc.procedure.use(userAuth);
 
 // procedure that asserts that the user add the password
-export const passwordProcedure = trpc.procedure.use(passwordChecker);
+export const passwordProcedure = trpc.procedure.use(jwtPayloadChecker);
 
 /**
  * Merge multiple routers together

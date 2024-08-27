@@ -3,11 +3,11 @@ import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 
-import { OnAvatarsClick, RenderMessage } from '../types';
+import { OnAvatarsClick, RenderBelowMessage, RenderMessage } from '../types';
 import { AssistantMessage } from './Assistant';
-import { DefaultMessage } from './Default';
+import { DefaultBelowMessage, DefaultMessage } from './Default';
 import { ToolMessage } from './Tool';
-import { UserMessage } from './User';
+import { UserBelowMessage, UserMessage } from './User';
 
 export const renderMessages: Record<string, RenderMessage> = {
   assistant: AssistantMessage,
@@ -15,6 +15,11 @@ export const renderMessages: Record<string, RenderMessage> = {
   function: DefaultMessage,
   tool: ToolMessage,
   user: UserMessage,
+};
+
+export const renderBelowMessages: Record<string, RenderBelowMessage> = {
+  default: DefaultBelowMessage,
+  user: UserBelowMessage,
 };
 
 export const useAvatarsClick = (): OnAvatarsClick => {

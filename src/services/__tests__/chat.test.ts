@@ -129,25 +129,20 @@ describe('ChatService', () => {
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
         const messages = [
-          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'http://example.com/image.jpg',
+                alt: 'abc.png',
+              },
+            ],
+          }, // Message with files
           { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                id: 'file1',
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({
@@ -185,69 +180,12 @@ describe('ChatService', () => {
         );
       });
 
-      it('should not include image content when default model', async () => {
-        const messages = [
-          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
-          { content: 'Hey', role: 'assistant' }, // Regular user message
-        ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                id: 'file1',
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
-
-        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-        await chatService.createAssistantMessage({
-          messages,
-          plugins: [],
-          model: 'gpt-3.5-turbo',
-        });
-
-        expect(getChatCompletionSpy).toHaveBeenCalledWith(
-          {
-            messages: [
-              { content: 'Hello', role: 'user' },
-              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
-              { content: 'Hey', role: 'assistant' },
-            ],
-            model: 'gpt-3.5-turbo',
-          },
-          undefined,
-        );
-      });
-
       it('should not include image with vision models when can not find the image', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
           { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                id: 'file1',
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({ messages, plugins: [] });
@@ -615,7 +553,7 @@ Get data from users`,
       const abortController = new AbortController();
       const trace = {};
 
-      const result = await chatService.fetchPresetTaskResult({
+      await chatService.fetchPresetTaskResult({
         params,
         onMessageHandle,
         onFinish,
@@ -625,9 +563,12 @@ Get data from users`,
         trace,
       });
 
-      expect(result).toBe('AI response');
-
-      expect(onFinish).toHaveBeenCalled();
+      expect(onFinish).toHaveBeenCalledWith('AI response', {
+        type: 'done',
+        observationId: null,
+        toolCalls: undefined,
+        traceId: null,
+      });
       expect(onError).not.toHaveBeenCalled();
       expect(onMessageHandle).toHaveBeenCalled();
       expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false

@@ -85,7 +85,7 @@ describe('LobeGroqAI', () => {
             choices: [
               {
                 index: 0,
-                message: { role: 'assistant', content: 'hello' },
+                message: { role: 'assistant', content: 'hello', refusal: null },
                 logprobs: null,
                 finish_reason: 'stop',
               },
