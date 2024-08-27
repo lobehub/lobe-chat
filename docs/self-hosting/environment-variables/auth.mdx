@@ -132,6 +132,29 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Default: `-`
 - Example: `https://sso.example.com`
 
+### Cloudflare Zero Trust
+
+#### `CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the Cloudflare Zero Trust provider application. You can access it [here][auth0-client-page] and navigate to the application settings to view.
+- Default: `-`
+- Example: `lobe-chat`
+
+#### `CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
+
+- Type: Required
+- Description: The plaintext of the Client Secret for the Cloudflare Zero Trust provider
+- Default: `-`
+- Example: `insecure_secret`
+
+#### `CLOUDFLARE_ZERO_TRUST_ISSUER`
+
+- Type: Required
+- Description: Issuer of the Cloudflare Zero Trust provider application.
+- Default: `-`
+- Example: `https://sso.example.com`
+
 ### Github
 
 #### `GITHUB_CLIENT_ID`
