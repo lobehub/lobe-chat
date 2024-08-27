@@ -1,5 +1,6 @@
 'use client';
 
+import { ProviderCombine } from '@lobehub/icons';
 import { Form, type FormItemProps, Icon, type ItemGroup, Tooltip } from '@lobehub/ui';
 import { Input, Switch } from 'antd';
 import { createStyles } from 'antd-style';
@@ -101,7 +102,6 @@ export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'cha
     showModelFetcher?: boolean;
   };
   showAceGcm?: boolean;
-  title: ReactNode;
 }
 
 const ProviderConfig = memo<ProviderConfigProps>(
@@ -112,7 +112,6 @@ const ProviderConfig = memo<ProviderConfigProps>(
     showApiKey = true,
     checkModel,
     canDeactivate = true,
-    title,
     checkerItem,
     modelList,
     defaultShowBrowserRequest,
@@ -146,7 +145,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
 
     const apiKeyItem: FormItemProps[] = !showApiKey
       ? []
-      : apiKeyItems ?? [
+      : (apiKeyItems ?? [
           {
             children: (
               <Input.Password
@@ -158,7 +157,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             label: t(`llm.apiKey.title`),
             name: [KeyVaultsConfigKey, id, LLMProviderApiTokenKey],
           },
-        ];
+        ]);
 
     const aceGcmItem: FormItemProps = {
       children: (
@@ -275,7 +274,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             ...(enabled ? {} : { filter: 'grayscale(100%)', maxHeight: 24, opacity: 0.66 }),
           }}
         >
-          {title}
+          <ProviderCombine provider={id} size={24} />
         </Flexbox>
       ),
     };

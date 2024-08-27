@@ -1,11 +1,9 @@
 'use client';
 
-import { Azure, OpenAI } from '@lobehub/icons';
 import { Markdown } from '@lobehub/ui';
-import { AutoComplete, Divider, Input } from 'antd';
+import { AutoComplete, Input } from 'antd';
 import { createStyles } from 'antd-style';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { AzureProviderCard } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
@@ -28,16 +26,6 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const providerKey = ModelProvider.Azure;
-
-const AzureOpenAIBrand = () => {
-  return (
-    <Flexbox align={'center'} gap={8} horizontal>
-      <Azure.Combine size={22} type={'color'}></Azure.Combine>
-      <Divider style={{ margin: '0 4px' }} type={'vertical'} />
-      <OpenAI.Combine size={24}></OpenAI.Combine>
-    </Flexbox>
-  );
-};
 
 export const useAzureProvider = (): ProviderItem => {
   const { t } = useTranslation('modelProvider');
@@ -105,6 +93,5 @@ export const useAzureProvider = (): ProviderItem => {
       notFoundContent: t('azure.empty'),
       placeholder: t('azure.modelListPlaceholder'),
     },
-    title: <AzureOpenAIBrand />,
   };
 };
