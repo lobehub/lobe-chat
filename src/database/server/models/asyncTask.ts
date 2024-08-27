@@ -79,10 +79,10 @@ export class AsyncTaskModel {
       await serverDB
         .update(asyncTasks)
         .set({
-          error: {
-            body: { detail: 'chunking task is timeout, please try again' },
-            name: AsyncTaskErrorType.Timeout,
-          } as AsyncTaskError,
+          error: new AsyncTaskError(
+            AsyncTaskErrorType.Timeout,
+            'chunking task is timeout, please try again',
+          ),
           status: AsyncTaskStatus.Error,
         })
         .where(

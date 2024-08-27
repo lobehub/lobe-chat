@@ -15,9 +15,11 @@ export const createAsyncServerClient = async (userId: string, payload: JWTPayloa
     Authorization: `Bearer ${serverDBEnv.KEY_VAULTS_SECRET}`,
     [LOBE_CHAT_AUTH_HEADER]: await gateKeeper.encrypt(JSON.stringify({ payload, userId })),
   };
+
   if (process.env.VERCEL_AUTOMATION_BYPASS_SECRET) {
     headers['x-vercel-protection-bypass'] = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
   }
+
   return createTRPCClient<AsyncRouter>({
     links: [
       httpBatchLink({
