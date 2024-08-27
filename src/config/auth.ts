@@ -90,6 +90,11 @@ export const getAuthConfig = () => {
       ZITADEL_CLIENT_ID: z.string().optional(),
       ZITADEL_CLIENT_SECRET: z.string().optional(),
       ZITADEL_ISSUER: z.string().optional(),
+
+      // LOGTO
+      LOGTO_CLIENT_ID: z.string().optional(),
+      LOGTO_CLIENT_SECRET: z.string().optional(),
+      LOGTO_ISSUER: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -132,6 +137,11 @@ export const getAuthConfig = () => {
       ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
       ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
       ZITADEL_ISSUER: process.env.ZITADEL_ISSUER,
+
+      // LOGTO
+      LOGTO_CLIENT_ID: process.env.LOGTO_CLIENT_ID,
+      LOGTO_CLIENT_SECRET: process.env.LOGTO_CLIENT_SECRET,
+      LOGTO_ISSUER: process.env.LOGTO_ISSUER,
     },
   });
 };
