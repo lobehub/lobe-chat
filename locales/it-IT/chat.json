@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Modelli"
   },
-  "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare a chattare con me subito o andare a [impostazioni assistente](/chat/settings#session={{id}}) per completare le mie informazioni.",
+  "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
   "agentsAndConversations": "Assistenti e Conversazioni",
