@@ -109,6 +109,29 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Default: `-`
 - Example: `https://your-authentik-domain.com/application/o/slug/`
 
+### Authelia
+
+#### `AUTHELIA_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the Authelia provider application. You can access it [here][auth0-client-page] and navigate to the application settings to view.
+- Default: `-`
+- Example: `lobe-chat`
+
+#### `AUTHELIA_CLIENT_SECRET`
+
+- Type: Required
+- Description: The plaintext of the Client Secret for the Authelia provider
+- Default: `-`
+- Example: `insecure_secret`
+
+#### `AUTHELIA_ISSUER`
+
+- Type: Required
+- Description: Issuer of the Authelia provider application.
+- Default: `-`
+- Example: `https://sso.example.com`
+
 ### Github
 
 #### `GITHUB_CLIENT_ID`
