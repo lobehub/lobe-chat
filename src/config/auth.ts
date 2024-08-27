@@ -81,6 +81,11 @@ export const getAuthConfig = () => {
       AUTHENTIK_CLIENT_SECRET: z.string().optional(),
       AUTHENTIK_ISSUER: z.string().optional(),
 
+      // AUTHELIA
+      AUTHELIA_CLIENT_ID: z.string().optional(),
+      AUTHELIA_CLIENT_SECRET: z.string().optional(),
+      AUTHELIA_ISSUER: z.string().optional(),
+
       // ZITADEL
       ZITADEL_CLIENT_ID: z.string().optional(),
       ZITADEL_CLIENT_SECRET: z.string().optional(),
@@ -117,6 +122,11 @@ export const getAuthConfig = () => {
       AUTHENTIK_CLIENT_ID: process.env.AUTHENTIK_CLIENT_ID,
       AUTHENTIK_CLIENT_SECRET: process.env.AUTHENTIK_CLIENT_SECRET,
       AUTHENTIK_ISSUER: process.env.AUTHENTIK_ISSUER,
+
+      // AUTHELIA
+      AUTHELIA_CLIENT_ID: process.env.AUTHELIA_CLIENT_ID,
+      AUTHELIA_CLIENT_SECRET: process.env.AUTHELIA_CLIENT_SECRET,
+      AUTHELIA_ISSUER: process.env.AUTHELIA_ISSUER,
 
       // ZITADEL
       ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
