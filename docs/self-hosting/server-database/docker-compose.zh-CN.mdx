@@ -88,6 +88,11 @@ docker compose up -d
 docker compose up -d
 ```
 
+  <Callout typr="warning">
+    此时，请勿使用 `docker compose restart lobe` 来重启，因为这种重启方式不会重新加载环境变量，你的
+    S3 配置将不会生效。
+ 
+</Callout>
 </Steps>
 
 至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `https://lobe.example.com` 访问你的 LobeChat 服务。
