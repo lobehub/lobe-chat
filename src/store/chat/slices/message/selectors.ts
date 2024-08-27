@@ -102,9 +102,9 @@ const currentChatsWithGuideMessage =
       systemRole: meta.description,
     });
     const agentMsg = t(isAgentEditable ? 'agentDefaultMessage' : 'agentDefaultMessageWithoutEdit', {
-      id: activeId,
       name: meta.title || t('defaultAgent'),
       ns: 'chat',
+      url: `/chat/settings?session=${activeId}`,
     });
 
     const emptyInboxGuideMessage = {

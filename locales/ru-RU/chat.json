@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Модель"
   },
-  "agentDefaultMessage": "Привет, я **{{name}}**. Ты можешь начать общение со мной прямо сейчас или перейти к [настройкам помощника](/chat/settings#session={{id}}), чтобы улучшить мою информацию.",
+  "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете сразу начать со мной разговор или перейти в [настройки помощника]({{url}}), чтобы дополнить мою информацию.",
   "agentDefaultMessageWithSystemRole": "Привет, я **{{name}}**, {{systemRole}}. Давай начнем разговор!",
   "agentDefaultMessageWithoutEdit": "Привет, я **{{name}}**, давай начнём разговор!",
   "agentsAndConversations": "Агенты и беседы",
