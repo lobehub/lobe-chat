@@ -15,7 +15,12 @@ import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { S3 } from '@/server/modules/S3';
 import { ChunkService } from '@/server/services/chunk';
-import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@/types/asyncTask';
+import {
+  AsyncTaskError,
+  AsyncTaskErrorType,
+  AsyncTaskStatus,
+  IAsyncTaskError,
+} from '@/types/asyncTask';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
@@ -55,10 +60,12 @@ export const fileRouter = router({
       try {
         const timeoutPromise = new Promise((_, reject) => {
           setTimeout(() => {
-            reject({
-              body: { detail: 'embedding task is timeout, please try again' },
-              name: AsyncTaskErrorType.Timeout,
-            } as AsyncTaskError);
+            reject(
+              new AsyncTaskError(
+                AsyncTaskErrorType.Timeout,
+                'embedding task is timeout, please try again',
+              ),
+            );
           }, ASYNC_TASK_TIMEOUT);
         });
 
@@ -175,10 +182,12 @@ export const fileRouter = router({
 
         const timeoutPromise = new Promise((_, reject) => {
           setTimeout(() => {
-            reject({
-              body: { detail: 'chunking task is timeout, please try again' },
-              name: AsyncTaskErrorType.Timeout,
-            } as AsyncTaskError);
+            reject(
+              new AsyncTaskError(
+                AsyncTaskErrorType.Timeout,
+                'chunking task is timeout, please try again',
+              ),
+            );
           }, ASYNC_TASK_TIMEOUT);
         });
 
@@ -228,9 +237,9 @@ export const fileRouter = router({
       } catch (e) {
         const error = e as any;
 
-        const asyncTaskError: AsyncTaskError = error.body
-          ? { body: safeParseJSON(error.body) ?? error.body, name: error.name }
-          : { body: { detail: error.message }, name: (error as Error).name };
+        const asyncTaskError = error.body
+          ? ({ body: safeParseJSON(error.body) ?? error.body, name: error.name } as IAsyncTaskError)
+          : new AsyncTaskError((error as Error).name, error.message);
 
         console.error('[Chunking Error]', asyncTaskError);
         await ctx.asyncTaskModel.update(input.taskId, {
