@@ -20,6 +20,7 @@ export const getLLMConfig = () => {
 
       ENABLED_ZHIPU: z.boolean(),
       ZHIPU_API_KEY: z.string().optional(),
+      ZHIPU_MODEL_LIST: z.string().optional(),
 
       ENABLED_DEEPSEEK: z.boolean(),
       DEEPSEEK_API_KEY: z.string().optional(),
@@ -109,6 +110,7 @@ export const getLLMConfig = () => {
 
       ENABLED_ZHIPU: !!process.env.ZHIPU_API_KEY,
       ZHIPU_API_KEY: process.env.ZHIPU_API_KEY,
+      ZHIPU_MODEL_LIST: process.env.ZHIPU_MODEL_LIST,
 
       ENABLED_DEEPSEEK: !!process.env.DEEPSEEK_API_KEY,
       DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
