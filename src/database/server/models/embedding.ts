@@ -1,4 +1,4 @@
-import { eq } from 'drizzle-orm';
+import { count, eq } from 'drizzle-orm';
 import { and } from 'drizzle-orm/expressions';
 
 import { serverDB } from '@/database/server';
@@ -46,5 +46,16 @@ export class EmbeddingModel {
     return serverDB.query.embeddings.findFirst({
       where: and(eq(embeddings.id, id), eq(embeddings.userId, this.userId)),
     });
+  };
+
+  countUsage = async () => {
+    const result = await serverDB
+      .select({
+        count: count(),
+      })
+      .from(embeddings)
+      .where(eq(embeddings.userId, this.userId));
+
+    return result[0].count;
   };
 }
