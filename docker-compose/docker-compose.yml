@@ -34,6 +34,22 @@ services:
       server /etc/minio/data --address ":9000" --console-address ":9001"
 
 
+  logto:
+    image: svhd/logto
+    container_name: lobe-logto
+    ports:
+      - '3001:3001'
+      - '3002:3002'
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      - 'TRUST_PROXY_HEADER=1'
+      - 'DB_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/logto'
+      - 'ENDPOINT=https://lobe-auth-api.example.com'
+      - 'ADMIN_ENDPOINT=https://lobe-auth-ui.example.com'
+    entrypoint: ['sh', '-c', 'npm run cli db seed -- --swe && npm start']
+
   lobe:
     image: lobehub/lobe-chat-database
     container_name: lobe-database
@@ -42,6 +58,7 @@ services:
     depends_on:
       - postgresql
       - minio
+      - logto
     env_file:
       - .env
     restart: always
