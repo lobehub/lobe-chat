@@ -28,7 +28,7 @@ services:
       - 'MINIO_ROOT_USER=YOUR_MINIO_USER'
       - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
       - 'MINIO_DOMAIN=lobe-s3-api.example.com'
-      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # 请注意这里的域名是你的 LobeChat 服务端域名
+      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # Your LobeChat's domain name.
     restart: always
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"

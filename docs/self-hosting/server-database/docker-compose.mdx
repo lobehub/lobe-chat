@@ -1,14 +1,16 @@
 ---
-title: Deploying Server Database with Docker Compose
+title: Deploying LobeChat Server Database with Docker Compose
 description: >-
-  Learn how to deploy a server database using Docker Compose for efficient
-  management.
+  Learn how to deploy LobeChat Server Database using Docker Compose, including
+  configuration tutorials for various services.
 tags:
-  - Docker
-  - Database Deployment
   - Docker Compose
+  - LobeChat
+  - Docker Container
+  - Deployment Guide
 ---
-# Deploying Server Database with Docker Compose
+
+# Deploying LobeChat server database with Docker Compose
 
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
@@ -19,7 +21,340 @@ tags:
 
 </div>
 
-TODO: Document content to be added.
+<Callout type="info">
+  This article assumes that you are already familiar with the basic principles and processes for
+  deploying the LobeChat server-side database version (hereafter referred to as the DB version).
+  Therefore, it only covers the configuration of core environment variables. If you are not yet
+  familiar with the deployment principles of LobeChat DB version, please refer to [Deploying with
+  the Server-Side Database](/zh/docs/self-hosting/server-database) first.
+</Callout>
+
+<Callout type="warning">
+  Since it is not possible to expose `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` using Docker environment variables, you cannot use Clerk as the authentication service when deploying LobeChat with Docker / Docker Compose.
+
+If you need Clerk as the authentication service, consider deploying with Vercel or building your own image.
+
+</Callout>
+
+## Quick Start
+
+The following assumes that you are self-hosting all three required services except for SSO login:
+
+- PostgreSQL: with PGVector plugin
+- MinIO: an object storage service supporting the S3 protocol
+- LobeChat database version itself
+
+And you are using an Nginx reverse proxy service configured as follows:
+
+- `lobe.example.com`: The domain name for your LobeChat server, which needs to be reverse-proxied to the LobeChat service port, defaulting to `3210`
+- `lobe-s3-api.example.com`: The domain name for your MinIO API, which needs to be reverse-proxied to the MinIO service port, defaulting to `9000`
+- `lobe-s3-ui.example.com`: Optional, the domain name for your MinIO UI, which needs to be reverse-proxied to the MinIO UI service port, defaulting to `9001`
+
+And services that do not require reverse proxy:
+
+- `postgresql`: The service port for your PostgreSQL database, defaulting to `5432`
+
+<Callout type="warning">
+  Please note that CORS settings are configured within the MinIO service itself. Do not configure CORS in your reverse proxy, as this may cause errors.
+
+If you need to configure SSL certificates, please configure them uniformly in the outer Nginx reverse proxy, not in MinIO.
+
+</Callout>
+
+<Steps>
+  ### Create Configuration Files
+
+```sh
+cd docker-compose
+cp .env.example .env
+```
+
+You can also copy these two example configuration files from the appendix below.
+
+Modify your `.env` and `docker-compose.yml` files according to the comments.
+
+### Start the Services
+
+```sh
+docker compose up -d
+```
+
+### Configure MinIO S3
+
+1. Open `https://lobe-s3-api.example.com` or `http://localhost:9001` to access the MinIO WebUI
+2. Create a bucket that matches the `S3_BUCKET` field in your `.env` file
+3. Select a custom policy, copy the content from `minio-bucket-config.json` (also available in the appendix), and paste it (if you modified the bucket name, update the corresponding fields)
+4. Create a new access key and fill in the generated `Access Key` and `Secret Key` into the `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` fields in your `.env` file
+
+### Restart the LobeChat Service
+
+```sh
+docker compose up -d
+```
+
+  <Callout typr="warning">
+    At this point, do not use `docker compose restart lobe` to restart, as this restart method will not reload environment variables, and your S3 configuration will not take effect.
+ 
+</Callout>
+</Steps>
+
+At this point, you have successfully deployed the LobeChat database version. You can access your LobeChat service at `https://lobe.example.com`.
+
+If you encounter issues, try checking Docker logs and console logs, and troubleshoot according to the detailed guide below.
+
+```sh
+docker logs -f lobe-chat-database
+```
+
+If you see the following logs in the container, it indicates a successful startup:
+
+```log
+[Database] Start to migration...
+✅ database migration pass.
+-------------------------------------
+  ▲ Next.js 14.x.x
+  - Local:        http://localhost:3210
+  - Network:      http://0.0.0.0:3210
+
+ ✓ Starting...
+ ✓ Ready in 95ms
+```
+
+## Overview
+
+Generally speaking, to fully run the LobeChat database version, you need to have at least the following three services:
+
+- A PostgreSQL database with the PGVector plugin
+- An object storage service supporting the S3 protocol
+- The LobeChat database version itself
+
+These services can be self-hosted or combined with online cloud services to meet your needs.
+
+We provide a fully self-hosted Docker Compose configuration that you can use to start the LobeChat database version directly or modify to suit your needs.
+
+We use [MinIO](https://github.com/minio/minio) as the local S3 object storage service by default and assume that, in addition to these services, you are also running a layer of Nginx / OpenResty for reverse proxying.
+
+For domain names and corresponding service ports, see the previous explanation.
+
+### Configuration Files
+
+The configuration files include `.env` and `docker-compose.yml`, where the `.env` file is used to configure the environment variables for LobeChat, and the `docker-compose.yml` file is used to configure the Postgres and MinIO services.
+
+In general, you should only modify the domain name and sensitive information such as username and password, and keep the other configurations as default.
+
+Refer to the appendix in this article for example configurations.
+
+### PostgreSQL Database Configuration
+
+<Callout type="warning">
+  Please note that when running `docker compose up -d` for the first time, LobeChat may fail to
+  connect and exit with a `Database migrate failed` error if the Postgres database has not yet been
+  fully initialized. In this case, you need to input `docker compose restart lobe` to restart
+  LobeChat so that it connects to the correct database.
+</Callout>
+
+You can use the following command to check the logs:
+
+```sh
+docker logs -f lobe-chat-database
+```
+
+<Callout type="tip">
+  In our official Docker image, database schema migration is automatically executed before starting
+  the image. Our official image guarantees stability for the "empty database -> complete tables"
+  automatic table creation. Therefore, we recommend using an empty table instance in your database,
+  saving you the trouble of manually maintaining table structures or migrations.
+</Callout>
+
+If you encounter issues during table creation, you can try the following commands to force remove the database container and restart:
+
+```sh
+docker compose down  # Stop the service
+sudo rm -rf ./data   # Remove the mounted database data
+docker compose up -d # Restart
+```
+
+### S3 Object Storage Service Configuration
+
+This article uses MinIO as an example to explain the configuration process. If you are using another S3 service provider, please refer to their documentation.
+
+<Callout type="warning">
+  Remember to configure the corresponding CORS settings of the S3 service provider to ensure that LobeChat can access the S3 service correctly.
+
+In this article, you need to allow cross-origin requests from `https://lobe.example.com`. This can be configured either in the MinIO WebUI under `Configuration - API - Cors Allow Origin` or in Docker Compose under `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN`.
+
+If you use the second method (which is also the default method) for configuration, you will no longer be able to configure it in the MinIO WebUI.
+
+</Callout>
+
+You need to access the WebUI to configure:
+
+- If you have configured the reverse proxy as mentioned earlier, open `https://lobe-s3-api.example.com`
+- Otherwise, after configuring port mapping, open `http://localhost:9001`
+
+1. On the login page, enter the `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` you set, then click login.
+
+2. In the left panel under Administer / Buckets, click `Create Bucket`, enter `lobe` (corresponding to your `S3_BUCKET` environment variable), and click `Create`.
+
+   ![image](https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab)
+
+3. Select your bucket, click Summary - Access Policy, edit, choose `Custom`, enter the content from `minio-bucket-config.json` (see appendix) and save (assuming your bucket name is `lobe` by default):
+
+   ![image](https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c)
+
+   ![image](https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0)
+
+4. In the left panel under User / Access Keys, click `Create New Access Key`, without making additional changes, and fill the generated `Access Key` and `Secret Key` into your `.env` file's `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY` fields.
+
+   ![image](https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf)
+
+5. Restart the LobeChat service:
+
+   ```sh
+   docker compose up -d
+   ```
+
+At this point, you have successfully deployed the LobeChat database version, and you can access your LobeChat service via `https://lobe.example.com`.
+
+## Appendix
+
+For easy one-click copying, here is a summary of the sample configuration files needed to configure the server database:
+
+### `.env`
+
+```sh
+# LobeChat domain
+APP_URL=https://lobe.example.com/
+
+# Related to Postgres, which are the necessary environment variables for the DB
+# Key used for encrypting sensitive information, can be generated using `openssl rand -base64 32`
+KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
+# Postgres database connection string
+# Format: postgres://username:password@host:port/dbname
+# If your pg instance is a Docker container, please use the container name
+DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
+
+# Related to NEXT_AUTH, can use auth0, Azure AD, GitHub, Authentik, zitadel, etc. If you have other integration requests, feel free to submit a PR
+# Here is an example using GitHub
+NEXT_AUTH_SECRET=cDdPtQevMi2uFFLUFNx9rJoposxo362G
+NEXT_AUTH_SSO_PROVIDERS=github
+NEXTAUTH_URL=https://lobe.example.com/api/auth
+GITHUB_CLIENT_ID=h3nagLLGo4MxDGYB4SpU
+GITHUB_CLIENT_SECRET=eL5poxnVPggh38Ny56HH6KbxnHehVymFyziET4jo
+# Note: If you have an ACCESS_CODE, please make sure to clear it, we use NEXT_AUTH as the only authentication source
+# Proxy, if you need it
+HTTP_PROXY=http://localhost:7890
+HTTPS_PROXY=http://localhost:7890
+
+# MinIO S3 configuration
+S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID         # Invalid until manually created in MinIO UI
+S3_SECRET_ACCESS_KEY=YOUR_S3_SECRET_ACCESS_KEY # Invalid until manually created in MinIO UI
+S3_ENDPOINT=https://lobe-s3-api.example.com
+S3_BUCKET=lobe # Invalid until manually created in MinIO UI
+S3_PUBLIC_DOMAIN=https://lobe-s3-api.example.com
+S3_ENABLE_PATH_STYLE=1
+
+# Other environment variables, depending on needs, can refer to the environment variable configuration of the client version, be careful not to have ACCESS_CODE
+# OPEANAI_API_KEY=sk-xxxx
+# OPENAI_PROXY_URL=https://api.openai.com/v1
+# OPENAI_MODEL_LIST=...
+```
+
+### `docker-compose.yml`
+
+```yaml
+services:
+  postgresql:
+    image: pgvector/pgvector:pg16
+    container_name: lobe-postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - './data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_DB=lobe'
+      - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  minio:
+    image: minio/minio
+    container_name: lobe-minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - './s3_data:/etc/minio/data'
+    environment:
+      - 'MINIO_ROOT_USER=YOUR_MINIO_USER'
+      - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
+      - 'MINIO_DOMAIN=lobe-s3-api.example.com'
+      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # Your LobeChat's domain name.
+    restart: always
+    command: >
+      server /etc/minio/data --address ":9000" --console-address ":9001"
+
+  lobe:
+    image: lobehub/lobe-chat-database
+    container_name: lobe-database
+    ports:
+      - '3210:3210'
+    depends_on:
+      - postgresql
+      - minio
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  data:
+    driver: local
+  s3_data:
+    driver: local
+```
+
+### `minio-bucket-config.json`
+
+```json
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:GetBucketLocation"],
+      "Resource": ["arn:aws:s3:::lobe"]
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::lobe"],
+      "Condition": {
+        "StringEquals": {
+          "s3:prefix": ["files/*"]
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:GetObject"],
+      "Resource": ["arn:aws:s3:::lobe/files/**"]
+    }
+  ],
+  "Version": "2012-10-17"
+}
+```
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square

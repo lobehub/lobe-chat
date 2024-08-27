@@ -1,15 +1,14 @@
 ---
 title: 通过 Docker Compose 部署 LobeChat
-description: 学习如何使用 Docker Compose 部署 LobeChat 服务，包括安装 Docker 容器环境和自动更新脚本设置。
+description: 学习如何使用 Docker Compose 部署 LobeChat 服务，包括各种服务的配置教程。
 tags:
   - Docker Compose
   - LobeChat
   - Docker 容器
-  - 自动更新脚本
   - 部署指引
 ---
 
-# 使用 Docker Compose 部署服务端数据库
+# 使用 Docker Compose 部署 LobeChat 服务端数据库版本
 
 <div style={{display:"flex", gap: 4}}>
   [![][docker-release-shield]][docker-release-link]
@@ -36,7 +35,7 @@ tags:
 
 ## 快速启动
 
-以下假设你选择完全自建全部三个所需服务，即：
+以下假设你选择自建除了 SSO 登录之外的全部三个所需服务，即：
 
 - PostgreSQL：带有 PGVector 插件
 - MinIO：支持 S3 协议的对象存储服务
@@ -47,7 +46,10 @@ tags:
 - `lobe.example.com`：为你的 LobeChat 服务端域名，需要反向代理到 LobeChat 服务端口，默认为 `3210`
 - `lobe-s3-api.example.com`：为你的 MinIO API 域名，需要反向代理到 MinIO 服务端口，默认为 `9000`
 - `lobe-s3-ui.example.com`：可选，为你的 MinIO UI 域名，需要反向代理到 MinIO UI 服务端口，默认为 `9001`
-- `postgresql`：你的 PostgreSQL 数据库服务端口，无需反向代理，默认为 `5432`
+
+以及不进行反向代理的服务端口：
+
+- `postgresql`：你的 PostgreSQL 数据库服务端口，默认为 `5432`
 
 <Callout type="warning">
   请务必注意，CORS 跨域是在 MinIO 服务端内部配置的，请勿在你的反向代理中额外配置
@@ -62,7 +64,7 @@ tags:
 
 ```sh
 cd docker-compose
-cp .env.example .env
+cp .env.zh-CN.example .env
 ```
 
 你也可以从下文的附录中复制得到这两份示例配置文件。
@@ -177,7 +179,9 @@ docker compose up -d # 重新启动
 <Callout type="warning">
   请记得注意配置对应 S3 服务商的 CORS 跨域配置，以确保 LobeChat 能够正常访问 S3 服务。
 
-在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。
+在本文中，你需要允许 `https://lobe.example.com` 的跨域请求。这既可以在 MinIO WebUI 的 `Configuration - API - Cors Allow Origin` 中配置，也可以在 Docker Compose 中的 `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN` 中配置。
+
+如果你使用第二种方法（这也是默认的方法）进行配置，你将无法再在 MinIO WebUI 中配置。
 
 </Callout>
 
