@@ -24,6 +24,13 @@ tags:
 This article assumes that you are familiar with the basic principles and processes of deploying the LobeChat server database version, so it only includes content related to core environment variable configuration. If you are not familiar with the deployment principles of the LobeChat server database version, please refer to [Deploying Server Database](/en/docs/self-hosting/server-database) first.
 </Callout>
 
+<Callout type="warning">
+  Due to the inability to expose `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` using Docker environment variables, you cannot use Clerk as an authentication service when deploying LobeChat using Docker / Docker Compose.
+
+If you do need Clerk as an authentication service, you might consider deploying using Vercel or building your own image.
+
+</Callout>
+
 ## Deploying on a Linux Server
 
 Here is the process for deploying the LobeChat server database version on a Linux server:
@@ -58,6 +65,8 @@ APP_URL=https://your-prod-domain.com
 
 # DB required environment variables
 KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
+# Postgres database connection string
+# Format: postgres://username:password@host:port/dbname; if your pg instance is a Docker container, use the container name
 DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
 
 # NEXT_AUTH related, can use auth0, Azure AD, GitHub, Authentik, zitadel, etc. If you have other access requirements, feel free to submit a PR
@@ -74,12 +83,23 @@ S3_SECRET_ACCESS_KEY=xxxxxxxxxx
 S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
 S3_BUCKET=lobechat
 S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
+
+# Other environment variables, as needed. You can refer to the environment variables configuration for the client version, making sure not to have ACCESS_CODE.
+# OPEANAI_API_KEY=sk-xxxx
+# OPENAI_PROXY_URL=https://api.openai.com/v1
+# OPENAI_MODEL_LIST=...
 ```
 
 ### Start the lobe-chat-database Docker image
 
 ```sh
 docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
+```
+
+You can use the following command to check the logs:
+
+```sh
+docker logs -f lobe-chat-database
 ```
 
 If you see the following logs in the container, it means it has started successfully:
