@@ -9,6 +9,11 @@ services:
     environment:
       - 'POSTGRES_DB=lobe'
       - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
 
   minio:
@@ -24,10 +29,10 @@ services:
       - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
       - 'MINIO_DOMAIN=lobe-s3-api.example.com'
       - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # 请注意这里的域名是你的 LobeChat 服务端域名
+    restart: always
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
 
-    restart: always
 
   lobe:
     image: lobehub/lobe-chat-database

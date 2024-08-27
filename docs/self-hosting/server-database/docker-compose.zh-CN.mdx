@@ -42,7 +42,7 @@ tags:
 - MinIO：支持 S3 协议的对象存储服务
 - LobeChat 数据库版本自身
 
-并且使用了如下配置的的 Nginx / OpenResty 反向代理服务：
+并且使用了如下配置的的 Nginx 反向代理服务：
 
 - `lobe.example.com`：为你的 LobeChat 服务端域名，需要反向代理到 LobeChat 服务端口，默认为 `3210`
 - `lobe-s3-api.example.com`：为你的 MinIO API 域名，需要反向代理到 MinIO 服务端口，默认为 `9000`
@@ -52,6 +52,9 @@ tags:
 <Callout type="warning">
   请务必注意，CORS 跨域是在 MinIO 服务端内部配置的，请勿在你的反向代理中额外配置
   CORS，这会导致错误。
+
+如果你需要配置 SSL 证书，请统一在外层的 Nginx 反向代理中配置，而不是在 MinIO 中配置。
+
 </Callout>
 
 <Steps>
@@ -76,13 +79,13 @@ docker compose up -d
 
 1. 打开 `https://lobe-s3-api.example.com` 或者 `http://localhost:9001`，访问 MinIO WebUI
 2. 创建符合你的 `.env` 文件中 `S3_BUCKET` 字段的桶
-3. 选择自定义策略，复制 `minio-bucket-config.json` 中的内容，粘贴之（如果你修改了桶名，请自行修改对应字段）
+3. 选择自定义策略，复制 `minio-bucket-config.json` 中的内容（亦可见于附录），粘贴之（如果你修改了桶名，请自行修改对应字段）
 4. 创建一个新的访问密钥，将生成的 `Access Key` 和 `Secret Key` 填入你的 `.env` 文件中的 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY` 中
 
 ### 重启 LobeChat 服务
 
 ```sh
-docker compose restart lobe
+docker compose up -d
 ```
 
 </Steps>
@@ -184,44 +187,7 @@ docker compose up -d # 重新启动
 
    ![image](https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab)
 
-3. 选中你的桶，点击 Summary - Access Policy，编辑，选择 `Custom`，输入如下内容并保存（同样默认你的桶名为 `lobe`）：
-
-   ```json
-   {
-     "Statement": [
-       {
-         "Effect": "Allow",
-         "Principal": {
-           "AWS": ["*"]
-         },
-         "Action": ["s3:GetBucketLocation"],
-         "Resource": ["arn:aws:s3:::lobe"]
-       },
-       {
-         "Effect": "Allow",
-         "Principal": {
-           "AWS": ["*"]
-         },
-         "Action": ["s3:ListBucket"],
-         "Resource": ["arn:aws:s3:::lobe"],
-         "Condition": {
-           "StringEquals": {
-             "s3:prefix": ["files/*"]
-           }
-         }
-       },
-       {
-         "Effect": "Allow",
-         "Principal": {
-           "AWS": ["*"]
-         },
-         "Action": ["s3:PutObject", "s3:DeleteObject", "s3:GetObject"],
-         "Resource": ["arn:aws:s3:::lobe/files/**"]
-       }
-     ],
-     "Version": "2012-10-17"
-   }
-   ```
+3. 选中你的桶，点击 Summary - Access Policy，编辑，选择 `Custom`，输入 `minio-bucket-config.json` 中的内容（见附录）并保存（同样默认你的桶名为 `lobe`）：
 
    ![image](https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c)
 
@@ -234,7 +200,7 @@ docker compose up -d # 重新启动
 5. 重启 LobeChat 服务：
 
    ```sh
-   docker compose restart lobe
+   docker compose up -d
    ```
 
 至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `https://lobe.example.com` 访问你的 LobeChat 服务。
@@ -246,7 +212,6 @@ docker compose up -d # 重新启动
 ### `.env`
 
 ```sh
-
 # 网站域名
 APP_URL=https://lobe.example.com/
 
@@ -297,6 +262,11 @@ services:
     environment:
       - 'POSTGRES_DB=lobe'
       - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
 
   minio:
@@ -312,10 +282,9 @@ services:
       - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
       - 'MINIO_DOMAIN=lobe-s3-api.example.com'
       - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # 请注意这里的域名是你的 LobeChat 服务端域名
+    restart: always
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
-
-    restart: always
 
   lobe:
     image: lobehub/lobe-chat-database
@@ -334,6 +303,45 @@ volumes:
     driver: local
   s3_data:
     driver: local
+```
+
+### `minio-bucket-config.json`
+
+```json
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:GetBucketLocation"],
+      "Resource": ["arn:aws:s3:::lobe"]
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::lobe"],
+      "Condition": {
+        "StringEquals": {
+          "s3:prefix": ["files/*"]
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:GetObject"],
+      "Resource": ["arn:aws:s3:::lobe/files/**"]
+    }
+  ],
+  "Version": "2012-10-17"
+}
 ```
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
