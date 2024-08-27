@@ -11,11 +11,11 @@ export enum AsyncTaskStatus {
 }
 
 export enum AsyncTaskErrorType {
+  EmbeddingError = 'EmbeddingError',
   /**
    * the chunk parse result it empty
    */
   NoChunkError = 'NoChunkError',
-  SDKError = 'SDKError',
   ServerError = 'ServerError',
   /**
    * this happens when the task is not trigger successfully

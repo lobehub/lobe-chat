@@ -83,40 +83,47 @@ export const fileRouter = router({
           const chunks = await ctx.chunkModel.getChunksTextByFileId(input.fileId);
           const requestArray = chunk(chunks, CHUNK_SIZE);
 
-          await pMap(
-            requestArray,
-            async (chunks, index) => {
-              const agentRuntime = await initAgentRuntimeWithUserPayload(
-                ModelProvider.OpenAI,
-                ctx.jwtPayload,
-              );
+          try {
+            await pMap(
+              requestArray,
+              async (chunks, index) => {
+                const agentRuntime = await initAgentRuntimeWithUserPayload(
+                  ModelProvider.OpenAI,
+                  ctx.jwtPayload,
+                );
 
-              const number = index + 1;
-              console.log(`执行第 ${number} 个任务`);
+                const number = index + 1;
+                console.log(`执行第 ${number} 个任务`);
 
-              console.time(`任务[${number}]: embeddings`);
+                console.time(`任务[${number}]: embeddings`);
 
-              const embeddings = await agentRuntime.embeddings({
-                dimensions: 1024,
-                input: chunks.map((c) => c.text),
-                model: input.model,
-              });
-              console.timeEnd(`任务[${number}]: embeddings`);
-
-              const items: NewEmbeddingsItem[] =
-                embeddings?.map((e) => ({
-                  chunkId: chunks[e.index].id,
-                  embeddings: e.embedding,
-                  fileId: input.fileId,
+                const embeddings = await agentRuntime.embeddings({
+                  dimensions: 1024,
+                  input: chunks.map((c) => c.text),
                   model: input.model,
-                })) || [];
+                });
+                console.timeEnd(`任务[${number}]: embeddings`);
 
-              console.time(`任务[${number}]: insert db`);
-              await ctx.embeddingModel.bulkCreate(items);
-              console.timeEnd(`任务[${number}]: insert db`);
-            },
-            { concurrency: CONCURRENCY },
-          );
+                const items: NewEmbeddingsItem[] =
+                  embeddings?.map((e) => ({
+                    chunkId: chunks[e.index].id,
+                    embeddings: e.embedding,
+                    fileId: input.fileId,
+                    model: input.model,
+                  })) || [];
+
+                console.time(`任务[${number}]: insert db`);
+                await ctx.embeddingModel.bulkCreate(items);
+                console.timeEnd(`任务[${number}]: insert db`);
+              },
+              { concurrency: CONCURRENCY },
+            );
+          } catch (e) {
+            throw {
+              message: JSON.stringify(e),
+              name: AsyncTaskErrorType.EmbeddingError,
+            };
+          }
 
           const duration = Date.now() - startAt;
           // update the task status to success
@@ -132,8 +139,9 @@ export const fileRouter = router({
         return await Promise.race([embeddingPromise(), timeoutPromise]);
       } catch (e) {
         console.error('embeddingChunks error', e);
+
         await ctx.asyncTaskModel.update(input.taskId, {
-          error: e,
+          error: new AsyncTaskError((e as Error).name, (e as Error).message),
           status: AsyncTaskStatus.Error,
         });
 
