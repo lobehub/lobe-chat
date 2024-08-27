@@ -149,7 +149,7 @@ ENV \
     # 01.AI
     ZEROONE_API_KEY="" \
     # Zhipu
-    ZHIPU_API_KEY=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
 
 USER nextjs
 

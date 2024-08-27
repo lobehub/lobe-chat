@@ -55,6 +55,8 @@ const ZhiPu: ModelProviderCard = {
     {
       description: '适用简单任务，速度最快，价格最实惠的版本',
       displayName: 'GLM-4-Flash',
+      enabled: true,
+      functionCall: true,
       id: 'glm-4-flash',
       tokens: 128_000,
     },
