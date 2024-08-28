@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.14.7](https://github.com/lobehub/lobe-chat/compare/v1.14.6...v1.14.7)
+
+<sup>Released on **2024-08-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disable ChatGPT-4o Tools Calling.
+
+#### 💄 Styles
+
+- **misc**: Improve chunk and file preview.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disable ChatGPT-4o Tools Calling, closes [#3659](https://github.com/lobehub/lobe-chat/issues/3659) ([c94077d](https://github.com/lobehub/lobe-chat/commit/c94077d))
+
+#### Styles
+
+- **misc**: Improve chunk and file preview, closes [#3658](https://github.com/lobehub/lobe-chat/issues/3658) ([4c9155c](https://github.com/lobehub/lobe-chat/commit/4c9155c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.14.6](https://github.com/lobehub/lobe-chat/compare/v1.14.5...v1.14.6)
 
 <sup>Released on **2024-08-28**</sup>
