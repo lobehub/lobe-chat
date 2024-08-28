@@ -37,7 +37,6 @@ const OpenAI: ModelProviderCard = {
       description: 'Dynamic model continuously updated to the current version of GPT-4o in ChatGPT',
       displayName: 'ChatGPT-4o',
       enabled: true,
-      functionCall: true,
       id: 'chatgpt-4o-latest',
       tokens: 128_000,
       vision: true,

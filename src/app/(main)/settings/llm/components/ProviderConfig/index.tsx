@@ -102,6 +102,7 @@ export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'cha
     showModelFetcher?: boolean;
   };
   showAceGcm?: boolean;
+  title?: ReactNode;
 }
 
 const ProviderConfig = memo<ProviderConfigProps>(
@@ -114,6 +115,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
     canDeactivate = true,
     checkerItem,
     modelList,
+    title,
     defaultShowBrowserRequest,
     disableBrowserRequest,
     className,
@@ -264,7 +266,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
           ) : undefined}
         </Flexbox>
       ),
-      title: (
+      title: title ?? (
         <Flexbox
           align={'center'}
           className={styles.safariIconWidthFix}

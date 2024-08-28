@@ -9,13 +9,19 @@ interface ChunkTagProps extends FileParsingTask {
 }
 
 const ChunksBadge = memo<ChunkTagProps>(({ id, ...res }) => {
-  const [isCreatingChunkEmbeddingTask, embeddingChunks, reParseFile, openChunkDrawer] =
-    useFileStore((s) => [
-      fileManagerSelectors.isCreatingChunkEmbeddingTask(id)(s),
-      s.embeddingChunks,
-      s.reParseFile,
-      s.openChunkDrawer,
-    ]);
+  const [
+    isCreatingChunkEmbeddingTask,
+    embeddingChunks,
+    reParseFile,
+    openChunkDrawer,
+    reEmbeddingChunks,
+  ] = useFileStore((s) => [
+    fileManagerSelectors.isCreatingChunkEmbeddingTask(id)(s),
+    s.embeddingChunks,
+    s.reParseFile,
+    s.openChunkDrawer,
+    s.reEmbeddingChunks,
+  ]);
 
   return (
     <FileParsingStatusTag
@@ -25,6 +31,7 @@ const ChunksBadge = memo<ChunkTagProps>(({ id, ...res }) => {
       onEmbeddingClick={() => embeddingChunks([id])}
       onErrorClick={(task) => {
         if (task === 'chunking') reParseFile(id);
+        if (task === 'embedding') reEmbeddingChunks(id);
       }}
       preparingEmbedding={isCreatingChunkEmbeddingTask}
       {...res}

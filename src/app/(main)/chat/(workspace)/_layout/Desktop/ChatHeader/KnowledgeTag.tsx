@@ -1,13 +1,13 @@
 'use client';
 
 import { Icon, Tag } from '@lobehub/ui';
-import type { MenuProps } from 'antd';
-import { Dropdown } from 'antd';
+import { Dropdown, MenuProps } from 'antd';
 import { LibraryBig } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import KnowledgeIcon from '@/components/KnowledgeIcon';
+import { oneLineEllipsis } from '@/styles';
 import { KnowledgeItem } from '@/types/knowledgeBase';
 
 export interface PluginTagProps {
@@ -30,7 +30,9 @@ const PluginTag = memo<PluginTagProps>(({ data }) => {
       <div>
         <Tag>
           {<Icon icon={LibraryBig} />}
-          {data[0].name}
+          <div className={oneLineEllipsis} style={{ maxWidth: 140 }}>
+            {data[0].name}
+          </div>
           {count > 1 && <div>({data.length - 1}+)</div>}
         </Tag>
       </div>

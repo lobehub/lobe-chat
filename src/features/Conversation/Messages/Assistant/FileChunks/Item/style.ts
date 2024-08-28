@@ -2,6 +2,18 @@ import { createStyles } from 'antd-style';
 import { lighten } from 'polished';
 
 export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+  badge: css`
+    padding-block: 4px;
+    padding-inline: 6px;
+
+    font-size: 12px;
+    line-height: 12px;
+    color: ${token.colorTextSecondary};
+
+    background: ${token.colorFillSecondary};
+    border-radius: 2222px;
+  `,
+
   container: css`
     cursor: pointer;
 
@@ -32,6 +44,7 @@ export const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     font-size: 12px;
     text-overflow: ellipsis;
   `,
+
   mobile: css`
     width: 100%;
   `,

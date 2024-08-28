@@ -51,4 +51,8 @@ export class ServerService implements IFileService {
   async checkFileHash(hash: string) {
     return lambdaClient.file.checkFileHash.mutate({ hash });
   }
+
+  async removeFileAsyncTask(id: string, type: 'embedding' | 'chunk') {
+    return await lambdaClient.file.removeFileAsyncTask.mutate({ id, type });
+  }
 }
