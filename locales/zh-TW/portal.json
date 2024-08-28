@@ -1,11 +1,18 @@
 {
   "Artifacts": "文物",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "分塊",
+      "file": "檔案"
+    }
+  },
   "actions": {
     "genAiMessage": "生成助手訊息",
     "summary": "摘要",
     "summaryTooltip": "總結目前內容"
   },
   "emptyArtifactList": "當前文物列表為空，請在會話中按需使用插件後再查看",
+  "emptyKnowledgeList": "當前知識列表為空，請在會話中按需開啟知識庫後再查看",
   "files": "檔案",
   "title": "擴展視窗"
 }
