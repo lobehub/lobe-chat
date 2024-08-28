@@ -69,3 +69,4 @@ export const RELEASES_URL = urlJoin(GITHUB, 'releases');
 export const mailTo = (email: string) => `mailto:${email}`;
 
 export const AES_GCM_URL = 'https://datatracker.ietf.org/doc/html/draft-ietf-avt-srtp-aes-gcm-01';
+export const BASE_PROVIDER_DOC_URL = 'https://lobehub.com/docs/usage/providers';
