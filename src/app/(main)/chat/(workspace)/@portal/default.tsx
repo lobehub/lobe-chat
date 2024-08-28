@@ -6,7 +6,7 @@ import { isMobileDevice } from '@/utils/responsive';
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
 
-const PortalView = lazy(() => import('./router'));
+const PortalBody = lazy(() => import('./router'));
 
 const Inspector = () => {
   const mobile = isMobileDevice();
@@ -16,7 +16,7 @@ const Inspector = () => {
   return (
     <Suspense fallback={<Loading />}>
       <Layout>
-        <PortalView />
+        <PortalBody />
       </Layout>
     </Suspense>
   );

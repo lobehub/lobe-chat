@@ -1,11 +1,18 @@
 {
   "Artifacts": "Artefaktlar",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Parça",
+      "file": "Dosya"
+    }
+  },
   "actions": {
     "genAiMessage": "Yapay Zeka Mesajı Oluştur",
     "summary": "Özet",
     "summaryTooltip": "Mevcut içeriği özetle"
   },
   "emptyArtifactList": "Mevcut Artefakt listesi boş, lütfen eklentileri kullanarak oturumda gerektiğinde göz atın",
+  "emptyKnowledgeList": "Mevcut bilgi listesi boş. Lütfen sohbet sırasında ihtiyaç duyduğunuz bilgi havuzunu açtıktan sonra tekrar kontrol edin.",
   "files": "Dosyalar",
   "title": "Genişletme Penceresi"
 }

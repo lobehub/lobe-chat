@@ -1,11 +1,18 @@
 {
   "Artifacts": "Artefatti",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Blocco",
+      "file": "File"
+    }
+  },
   "actions": {
     "genAiMessage": "Genera messaggio AI",
     "summary": "Sommario",
     "summaryTooltip": "Sommario del contenuto attuale"
   },
   "emptyArtifactList": "La lista degli Artefatti attuale è vuota, si prega di utilizzare i plugin necessari durante la sessione e poi controllare di nuovo",
+  "emptyKnowledgeList": "L'elenco delle conoscenze attuale è vuoto. Si prega di attivare il database delle conoscenze durante la conversazione per visualizzarlo.",
   "files": "File",
   "title": "Finestra di espansione"
 }

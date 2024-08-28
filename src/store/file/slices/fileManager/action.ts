@@ -13,6 +13,7 @@ import {
 import { FileListItem, QueryFileListParams } from '@/types/files';
 
 import { FileStore } from '../../store';
+import { fileManagerSelectors } from './selectors';
 
 const serverFileService = new ServerService();
 
@@ -22,6 +23,7 @@ export interface FileManageAction {
   parseFilesToChunks: (ids: string[], params?: { skipExist?: boolean }) => Promise<void>;
   pushDockFileList: (files: File[], knowledgeBaseId?: string) => Promise<void>;
 
+  reEmbeddingChunks: (id: string) => Promise<void>;
   reParseFile: (id: string) => Promise<void>;
   refreshFileList: () => Promise<void>;
   removeAllFiles: () => Promise<void>;
@@ -109,6 +111,22 @@ export const createFileManageSlice: StateCreator<
     await Promise.all(pools);
   },
 
+  reEmbeddingChunks: async (id) => {
+    if (fileManagerSelectors.isCreatingChunkEmbeddingTask(id)(get())) return;
+
+    // toggle file ids
+    get().toggleEmbeddingIds([id]);
+
+    await serverFileService.removeFileAsyncTask(id, 'embedding');
+
+    await get().refreshFileList();
+
+    await ragService.createEmbeddingChunksTask(id);
+
+    await get().refreshFileList();
+
+    get().toggleEmbeddingIds([id], false);
+  },
   reParseFile: async (id) => {
     // toggle file ids
     get().toggleParsingIds([id]);
