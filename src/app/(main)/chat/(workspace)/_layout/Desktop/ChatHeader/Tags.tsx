@@ -1,8 +1,8 @@
+import { ModelTag } from '@lobehub/icons';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ModelTag from '@/components/ModelTag';
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';

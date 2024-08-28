@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.14.5](https://github.com/lobehub/lobe-chat/compare/v1.14.4...v1.14.5)
+
+<sup>Released on **2024-08-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: No user name if Cloudflare Zero Trust with onetimepin.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: No user name if Cloudflare Zero Trust with onetimepin, closes [#3649](https://github.com/lobehub/lobe-chat/issues/3649) ([5bfee5a](https://github.com/lobehub/lobe-chat/commit/5bfee5a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.14.4](https://github.com/lobehub/lobe-chat/compare/v1.14.3...v1.14.4)
+
+<sup>Released on **2024-08-28**</sup>
+
+#### 💄 Styles
+
+- **misc**: Move model and provider icon components to `@lobehub/icons`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Move model and provider icon components to `@lobehub/icons`, closes [#3634](https://github.com/lobehub/lobe-chat/issues/3634) ([5c7e17a](https://github.com/lobehub/lobe-chat/commit/5c7e17a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.14.3](https://github.com/lobehub/lobe-chat/compare/v1.14.2...v1.14.3)
 
 <sup>Released on **2024-08-27**</sup>

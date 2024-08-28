@@ -141,7 +141,7 @@ You have successfully deployed the LobeChat database version, and you can access
 If you encounter issues, please check the Docker logs and console logs, and follow the detailed troubleshooting guide later in the document.
 
 ```sh
-docker logs -f lobe-chat-database
+docker logs -f lobe-database
 ```
 
 If you see the following logs in the container, it indicates that it has started successfully:
@@ -214,7 +214,7 @@ Refer to the example configurations in the appendix of this article.
 You can check the logs using the following command:
 
 ```sh
-docker logs -f lobe-chat-database
+docker logs -f lobe-database
 ```
 
 <Callout type="tip">
@@ -257,17 +257,26 @@ You need to first access the WebUI for configuration:
 
 4. Set `CORS allowed origins` to `https://lobe.example.com`.
 
-   ![image](https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523)
+   <Image
+     alt="Configure Logto"
+     src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
+   />
 
 5. Obtain `Client ID` and `Client Secret`, and fill them into your `.env` file under `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
 
 6. Set `LOGTO_ISSUER` in your `.env` file to `https://lobe-auth-api.example.com/oidc`.
 
-   ![image](https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837)
+   <Image
+     alt="Configure environment variables"
+     src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837"
+   />
 
 7. Optional: In the left panel under `Sign-in experience`, in `Sign-up and sign-in - Advanced Options`, disable `Enable user registration` to prohibit user self-registration. If you disable user self-registration, you can only manually add users in the left panel under `User Management`.
 
-   ![image](https://github.com/user-attachments/assets/6b2e6f7b-fec5-41c6-864a-a1add40f74a0)
+   <Image
+     alt="Disable user registration"
+     src="https://github.com/user-attachments/assets/6b2e6f7b-fec5-41c6-864a-a1add40f74a0"
+   />
 
 8. Restart the LobeChat service:
 
@@ -302,17 +311,29 @@ You need to first access the WebUI for configuration:
 
 2. In the left panel under Administer / Buckets, click `Create Bucket`, enter `lobe` (corresponding to your `S3_BUCKET` environment variable), and then click `Create`.
 
-   ![image](https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab)
+   <Image
+     alt="Create a bucket"
+     src="https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab"
+   />
 
 3. Select your bucket, click Summary - Access Policy, edit, choose `Custom`, and input the content from `minio-bucket-config.json` (see appendix) and save (again, assuming your bucket name is `lobe`):
 
-   ![image](https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c)
+   <Image
+     alt="Select MinIO bucket policy"
+     src="https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c"
+   />
 
-   ![image](https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0)
+   <Image
+     alt="Configure MinIO bucket policy"
+     src="https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0"
+   />
 
 4. In the left panel under User / Access Keys, click `Create New Access Key`, make no additional modifications, and fill the generated `Access Key` and `Secret Key` into your `.env` file under `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY`.
 
-   ![image](https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf)
+   <Image
+     alt="Create a new access key"
+     src="https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf"
+   />
 
 5. Restart the LobeChat service:
 
@@ -343,7 +364,7 @@ DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
 # Here we take Logto as an example
 NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg
 NEXT_AUTH_SSO_PROVIDERS=logto
-NEXTAUTH_URL=https://lobe-auth-api.example.com/api/auth
+NEXTAUTH_URL=https://lobe.example.com/api/auth
 LOGTO_CLIENT_ID=buc2lpttyo6evdtrfqsur
 LOGTO_CLIENT_SECRET=d97eztx8Ej6aUafeToMAL4jugAKGTAH4
 LOGTO_ISSUER=https://lobe-auth-api.example.com/oidc
