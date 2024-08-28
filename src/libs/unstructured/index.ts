@@ -43,12 +43,12 @@ export interface Coordinates {
   system: string;
 }
 
-class UnstructuredError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'Unstructured';
-  }
-}
+// class UnstructuredError extends Error {
+//   constructor(message: string) {
+//     super(message);
+//     this.name = 'Unstructured';
+//   }
+// }
 
 interface PartitionParameters {
   chunkingStrategy?: ChunkingStrategy;
@@ -63,11 +63,6 @@ export class Unstructured {
   private client: UnstructuredClient;
 
   constructor(apikey?: string) {
-    if (!apikey && !knowledgeEnv.UNSTRUCTURED_API_KEY)
-      throw new UnstructuredError(
-        `"UNSTRUCTURED_API_KEY" variables are not set completely, please check your env`,
-      );
-
     this.client = new UnstructuredClient({
       security: { apiKeyAuth: apikey || knowledgeEnv.UNSTRUCTURED_API_KEY! },
       serverURL: knowledgeEnv.UNSTRUCTURED_SERVER_URL,

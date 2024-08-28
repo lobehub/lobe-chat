@@ -1,13 +1,11 @@
-import { FilePreview } from '@/types/files';
+import { UploadFileItem } from '@/types/files/upload';
 
 export interface ImageFileState {
-  imagesMap: Record<string, FilePreview>;
-  inputFilesList: string[];
+  chatUploadFileList: UploadFileItem[];
   uploadingIds: string[];
 }
 
 export const initialImageFileState: ImageFileState = {
-  imagesMap: {},
-  inputFilesList: [],
+  chatUploadFileList: [],
   uploadingIds: [],
 };

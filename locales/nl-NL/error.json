@@ -115,6 +115,10 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
-    "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw"
+    "fileOnlySupportInServerMode": "De huidige implementatiemodus ondersteunt het uploaden van niet-afbeeldingsbestanden niet. Als u bestanden in {{ext}}-formaat wilt uploaden, schakelt u over naar de serverdatabase-implementatie of gebruikt u de LobeChat Cloud-service.",
+    "networkError": "Controleer of je netwerk goed werkt en of de cross-origin configuratie van de bestandsopslagservice correct is.",
+    "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw",
+    "unknownError": "Foutreden: {{reason}}",
+    "uploadFailed": "Bestand uploaden is mislukt."
   }
 }

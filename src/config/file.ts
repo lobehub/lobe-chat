@@ -4,9 +4,20 @@ import { z } from 'zod';
 const DEFAULT_S3_FILE_PATH = 'files';
 
 export const getFileConfig = () => {
+  if (!!process.env.NEXT_PUBLIC_S3_DOMAIN) {
+    console.warn(
+      '⚠️ `NEXT_PUBLIC_S3_DOMAIN` will be de deprecated in the next major version, please replace it with `S3_PUBLIC_DOMAIN` in your env',
+    );
+  }
+
+  const S3_PUBLIC_DOMAIN = process.env.S3_PUBLIC_DOMAIN || process.env.NEXT_PUBLIC_S3_DOMAIN;
+
   return createEnv({
     client: {
-      NEXT_PUBLIC_S3_DOMAIN: z.string().url().optional(),
+      /**
+       * @deprecated
+       */
+      NEXT_PUBLIC_S3_DOMAIN: z.string().optional(),
       NEXT_PUBLIC_S3_FILE_PATH: z.string().optional(),
     },
     runtimeEnv: {
@@ -18,7 +29,9 @@ export const getFileConfig = () => {
 
       S3_ACCESS_KEY_ID: process.env.S3_ACCESS_KEY_ID,
       S3_BUCKET: process.env.S3_BUCKET,
+      S3_ENABLE_PATH_STYLE: process.env.S3_ENABLE_PATH_STYLE === '1',
       S3_ENDPOINT: process.env.S3_ENDPOINT,
+      S3_PUBLIC_DOMAIN,
       S3_REGION: process.env.S3_REGION,
       S3_SECRET_ACCESS_KEY: process.env.S3_SECRET_ACCESS_KEY,
       S3_SET_ACL: process.env.S3_SET_ACL !== '0',
@@ -30,8 +43,10 @@ export const getFileConfig = () => {
       // S3
       S3_ACCESS_KEY_ID: z.string().optional(),
       S3_BUCKET: z.string().optional(),
-      S3_ENDPOINT: z.string().url().optional(),
+      S3_ENABLE_PATH_STYLE: z.boolean(),
 
+      S3_ENDPOINT: z.string().url().optional(),
+      S3_PUBLIC_DOMAIN: z.string().url().optional(),
       S3_REGION: z.string().optional(),
       S3_SECRET_ACCESS_KEY: z.string().optional(),
       S3_SET_ACL: z.boolean(),

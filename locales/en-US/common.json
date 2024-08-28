@@ -13,6 +13,7 @@
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "back": "Back",
   "batchDelete": "Batch Delete",
   "blog": "Product Blog",
   "cancel": "Cancel",

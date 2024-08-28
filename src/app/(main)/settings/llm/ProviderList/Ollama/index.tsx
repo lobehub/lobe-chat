@@ -1,6 +1,5 @@
 'use client';
 
-import { Ollama } from '@lobehub/icons';
 import { useTranslation } from 'react-i18next';
 
 import { OllamaProviderCard } from '@/config/modelProviders';
@@ -24,6 +23,5 @@ export const useOllamaProvider = (): ProviderItem => {
       placeholder: 'http://127.0.0.1:11434',
       title: t('ollama.endpoint.title'),
     },
-    title: <Ollama.Combine size={28} />,
   };
 };

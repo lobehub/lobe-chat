@@ -47,7 +47,6 @@ export const useProviderList = (): ProviderItem[] => {
       OpenRouterProviderCard,
       NovitaProviderCard,
       TogetherAIProviderCard,
-      FireworksAIProviderCard,
       QwenProviderCard,
       DeepSeekProviderCard,
       MinimaxProviderCard,

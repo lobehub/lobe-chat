@@ -1,10 +1,9 @@
-import { ActionIcon, Image } from '@lobehub/ui';
+import { Image } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { Trash } from 'lucide-react';
-import { CSSProperties, memo, useCallback } from 'react';
+import { CSSProperties, memo } from 'react';
 
 import { usePlatform } from '@/hooks/usePlatform';
-import { useFileStore } from '@/store/file';
+import { useChatStore } from '@/store/chat';
 
 const MIN_IMAGE_SIZE = 64;
 
@@ -35,33 +34,14 @@ interface FileItemProps {
   style?: CSSProperties;
 }
 const ImageFileItem = memo<FileItemProps>(({ editable, id, alwaysShowClose }) => {
-  const [useFetchFile, removeFile] = useFileStore((s) => [s.useFetchFile, s.removeFile]);
+  const [useFetchDalleImageItem] = useChatStore((s) => [s.useFetchDalleImageItem]);
   const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
-  const { data, isLoading } = useFetchFile(id);
+  const { data, isLoading } = useFetchDalleImageItem(id);
   const { styles, cx } = useStyles();
   const { isSafari } = usePlatform();
 
-  const handleRemoveFile = useCallback(
-    (e: any) => {
-      e.stopPropagation();
-      removeFile(id);
-    },
-    [id],
-  );
-
   return (
     <Image
-      actions={
-        editable && (
-          <ActionIcon
-            className={styles.deleteButton}
-            glass
-            icon={Trash}
-            onClick={handleRemoveFile}
-            size={'small'}
-          />
-        )
-      }
       alt={data?.name || id || ''}
       alwaysShowActions={alwaysShowClose}
       height={isSafari ? 'auto' : '100%'}
