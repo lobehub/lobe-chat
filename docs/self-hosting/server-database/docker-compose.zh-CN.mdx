@@ -64,7 +64,7 @@ docker compose up -d
 
 1. 打开 `http://localhost:3002`，访问 Logto WebUI，注册管理员账号
 
-2. 创建一个 `Next.js (App Router)` 应用，，添加以下配置：
+2. 创建一个 `Next.js (App Router)` 应用，添加以下配置：
 
    - `Redirect URI` 为 `http://localhost:3210/api/auth/callback/logto`
    - `Post sign-out redirect URI` 为 `http://localhost:3210/`
@@ -139,7 +139,7 @@ docker compose up -d
 如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
 
 ```sh
-docker logs -f lobe-chat-database
+docker logs -f lobe-database
 ```
 
 如果你在容器中看到了以下日志，则说明已经启动成功：
@@ -211,7 +211,7 @@ docker logs -f lobe-chat-database
 你可以使用下述指令检查日志：
 
 ```sh
-docker logs -f lobe-chat-database
+docker logs -f lobe-database
 ```
 
 <Callout type="tip">
@@ -253,17 +253,26 @@ docker compose up -d # 重新启动
 
 4. 配置 `CORS allowed origins` 为 `https://lobe.example.com`
 
-   ![image](https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523)
+   <Image
+     alt="配置 Logto"
+     src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
+   />
 
 5. 获取 `Client ID` 和 `Client Secret`，填入你的 `.env` 文件中的 `LOGTO_CLIENT_ID` 和 `LOGTO_CLIENT_SECRETT` 中
 
 6. 配置你的 `.env` 文件中 `LOGTO_ISSUER` 为 `https://lobe-auth-api.example.com/oidc`
 
-   ![image](https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837)
+   <Image
+     alt="配置 Logto 环境变量"
+     src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837"
+   />
 
 7. 可选，在左侧 `Sign-in experience` 面板的 `Sign-up and sign-in - Advanced Options` 中关闭 `Enable user registration`，禁止用户自行注册。如果你禁止了用户自行注册，那么你只能在左侧 `User Management` 里手动添加用户。
 
-   ![image](https://github.com/user-attachments/assets/6b2e6f7b-fec5-41c6-864a-a1add40f74a0)
+   <Image
+     alt="关闭用户注册"
+     src="https://github.com/user-attachments/assets/6b2e6f7b-fec5-41c6-864a-a1add40f74a0"
+   />
 
 8. 重启 LobeChat 服务：
 
@@ -297,17 +306,29 @@ docker compose up -d # 重新启动
 
 2. 在左侧面板 Administer / Buckets 中点击 `Create Bucket`，输入 `lobe`（对应你的 `S3_BUCKET` 环境变量），然后点击 `Create`
 
-   ![image](https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab)
+   <Image
+     alt="创建 MinIO 桶"
+     src="https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab"
+   />
 
 3. 选中你的桶，点击 Summary - Access Policy，编辑，选择 `Custom`，输入 `minio-bucket-config.json` 中的内容（见附录）并保存（同样默认你的桶名为 `lobe`）：
 
-   ![image](https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c)
+   <Image
+     alt="选中 MinIO 桶策略"
+     src="https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c"
+   />
 
-   ![image](https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0)
+   <Image
+     alt="配置 MinIO 桶策略"
+     src="https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0"
+   />
 
 4. 在左侧面板 User / Access Keys 处，点击 `Create New Access Key`，无需额外修改，将生成的 `Access Key` 和 `Secret Key` 填入你的 `.env` 文件中的 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY` 中
 
-   ![image](https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf)
+   <Image
+     alt="创建 MinIO 访问密钥"
+     src="https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf"
+   />
 
 5. 重启 LobeChat 服务：
 
@@ -338,7 +359,7 @@ DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
 # 这里以 Logto 为例
 NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg
 NEXT_AUTH_SSO_PROVIDERS=logto
-NEXTAUTH_URL=https://lobe-auth-api.example.com/api/auth
+NEXTAUTH_URL=https://lobe.example.com/api/auth
 LOGTO_CLIENT_ID=buc2lpttyo6evdtrfqsur
 LOGTO_CLIENT_SECRET=d97eztx8Ej6aUafeToMAL4jugAKGTAH4
 LOGTO_ISSUER=https://lobe-auth-api.example.com/oidc
