@@ -1,4 +1,4 @@
-import { Google, OpenAI } from '@lobehub/icons';
+import { OpenAI } from '@lobehub/icons';
 import { SelectProps } from 'antd';
 
 import { LabelRenderer } from '@/components/ModelSelect';
@@ -23,11 +23,11 @@ export const opeanaiSTTOptions: SelectProps['options'] = [
 
 export const sttOptions: SelectProps['options'] = [
   {
-    label: <LabelRenderer Icon={OpenAI.Avatar} label={'OpenAI'} />,
+    label: 'OpenAI',
     value: 'openai',
   },
   {
-    label: <LabelRenderer Icon={Google.Avatar} label={'Browser'} />,
+    label: 'Browser',
     value: 'browser',
   },
 ];
