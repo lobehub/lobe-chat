@@ -24,7 +24,7 @@ const provider = {
     profile(profile) {
       return {
         email: profile.email,
-        name: profile.name,
+        name: profile.name ?? profile.email,
         providerAccountId: profile.sub,
       };
     },
