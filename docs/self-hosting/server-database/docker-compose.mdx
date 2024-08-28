@@ -49,13 +49,19 @@ The following assumes that you choose to build all four required services for Lo
   ### Create Configuration Files
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/docker-compose.yml
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/.env.example > .env
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.example > .env
 ```
 
 You can also copy these two example configuration files from the appendix below.
 
 Please modify your `.env` and `docker-compose.yml` files according to the comments.
+
+<Callout type="warning">
+
+Due to network reasons, when starting locally, we intentionally let all services use `network_mode: host` simultaneously. This can solve some network issues, but it may cause port conflicts, please resolve them yourself.
+
+</Callout>
 
 ### Start Services
 
@@ -195,6 +201,11 @@ If you need to configure SSL certificates, please configure them uniformly in th
 </Callout>
 
 ### Configuration Files
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/.env.example > .env
+```
 
 The configuration files include `.env` and `docker-compose.yml`, where the `.env` file is used to configure LobeChat's environment variables, and the `docker-compose.yml` file is used to configure the Postgres, MinIO, and Logto services.
 
@@ -347,7 +358,121 @@ You have successfully deployed the LobeChat database version, and you can access
 
 To facilitate one-click copying, here are the example configuration files needed to configure the server database:
 
-### `.env`
+### Local Deployment
+
+#### `.env`
+
+```sh
+# LobeChat domain
+APP_URL=https://localhost:3210
+
+# Postgres related, which are the necessary environment variables for DB
+# Key used to encrypt sensitive information; can be generated using openssl rand -base64 32
+KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
+# Postgres database connection string
+# Format: postgres://username:password@host:port/dbname; if your pg instance is a Docker container, use the container name
+DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
+
+# NEXT_AUTH related; can use auth0, Azure AD, GitHub, Authentik, Zitadel, Logto, etc. If you have other integration requests, feel free to submit a PR.
+# Here we take Logto as an example
+NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg
+NEXT_AUTH_SSO_PROVIDERS=logto
+NEXTAUTH_URL=http://localhost:3210/api/auth
+LOGTO_CLIENT_ID=YOUR_LOGTO_CLIENT_ID
+LOGTO_CLIENT_SECRET=YOUR_LOGTO_CLIENT_SECRET
+LOGTO_ISSUER=http://localhost:3001/oidc
+# Note: If you have ACCESS_CODE, be sure to clear it. We use NEXT_AUTH as the only authentication source.
+# Proxy, if you need it (e.g., if you use GitHub as an authentication service provider)
+# HTTP_PROXY=http://localhost:7890
+# HTTPS_PROXY=http://localhost:7890
+
+# MinIO S3 configuration
+S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID         # Invalid until manually created in MinIO UI
+S3_SECRET_ACCESS_KEY=YOUR_S3_SECRET_ACCESS_KEY # Invalid until manually created in MinIO UI
+S3_ENDPOINT=http://localhost:9000
+S3_BUCKET=lobe # Invalid until manually created in MinIO UI
+S3_ENDPOINT=http://localhost:9000
+S3_ENABLE_PATH_STYLE=1
+
+# Other environment variables, as needed. You can refer to the environment variables configuration for the client version, making sure not to have ACCESS_CODE.
+# OPEANAI_API_KEY=sk-xxxx
+# OPENAI_PROXY_URL=https://api.openai.com/v1
+# OPENAI_MODEL_LIST=...
+
+```
+
+#### `docker-compose.yml`
+
+```yaml
+services:
+  postgresql:
+    image: pgvector/pgvector:pg16
+    container_name: lobe-postgres
+    network_mode: 'host'
+    volumes:
+      - './data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_DB=lobe'
+      - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  minio:
+    image: minio/minio
+    container_name: lobe-minio
+    network_mode: 'host'
+    volumes:
+      - './s3_data:/etc/minio/data'
+    environment:
+      - 'MINIO_ROOT_USER=YOUR_MINIO_USER'
+      - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
+      - 'MINIO_DOMAIN=localhost:9000'
+      - 'MINIO_API_CORS_ALLOW_ORIGIN=http://localhost:3210'
+    restart: always
+    command: >
+      server /etc/minio/data --address ":9000" --console-address ":9001"
+
+  logto:
+    image: svhd/logto
+    container_name: lobe-logto
+    network_mode: 'host'
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      - 'TRUST_PROXY_HEADER=1'
+      - 'DB_URL=postgresql://postgres:uWNZugjBqixf8dxC@localhost:5432/logto'
+      - 'ENDPOINT=http://localhost:3001'
+      - 'ADMIN_ENDPOINT=http://localhost:3002'
+    entrypoint: ['sh', '-c', 'npm run cli db seed -- --swe && npm start']
+
+  lobe:
+    image: lobehub/lobe-chat-database
+    container_name: lobe-database
+    network_mode: 'host'
+    depends_on:
+      - postgresql
+      - minio
+      - logto
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  data:
+    driver: local
+  s3_data:
+    driver: local
+
+```
+
+### Deploying to Production
+
+#### `.env`
 
 ```sh
 # LobeChat domain
@@ -365,13 +490,13 @@ DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
 NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg
 NEXT_AUTH_SSO_PROVIDERS=logto
 NEXTAUTH_URL=https://lobe.example.com/api/auth
-LOGTO_CLIENT_ID=buc2lpttyo6evdtrfqsur
-LOGTO_CLIENT_SECRET=d97eztx8Ej6aUafeToMAL4jugAKGTAH4
+LOGTO_CLIENT_ID=YOUR_LOGTO_CLIENT_ID
+LOGTO_CLIENT_SECRET=YOUR_LOGTO_CLIENT_SECRET
 LOGTO_ISSUER=https://lobe-auth-api.example.com/oidc
 # Note: If you have ACCESS_CODE, be sure to clear it. We use NEXT_AUTH as the only authentication source.
 # Proxy, if you need it (e.g., if you use GitHub as an authentication service provider)
-HTTP_PROXY=http://localhost:7890
-HTTPS_PROXY=http://localhost:7890
+# HTTP_PROXY=http://localhost:7890
+# HTTPS_PROXY=http://localhost:7890
 
 # MinIO S3 configuration
 S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID         # Invalid until manually created in MinIO UI
@@ -387,7 +512,7 @@ S3_ENABLE_PATH_STYLE=1
 # OPENAI_MODEL_LIST=...
 ```
 
-### `docker-compose.yml`
+#### `docker-compose.yml`
 
 ```yaml
 services:
@@ -420,7 +545,7 @@ services:
       - 'MINIO_ROOT_USER=YOUR_MINIO_USER'
       - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
       - 'MINIO_DOMAIN=lobe-s3-api.example.com'
-      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # Your LobeChat domain
+      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # Your LobeChat's domain name.
     restart: always
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
@@ -459,9 +584,10 @@ volumes:
     driver: local
   s3_data:
     driver: local
+
 ```
 
-### `minio-bucket-config.json`
+#### `minio-bucket-config.json`
 
 ```json
 {
