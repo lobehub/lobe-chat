@@ -21,6 +21,7 @@ describe('featureFlagsSelectors', () => {
       isAgentEditable: false,
       showCreateSession: true,
       showDalle: true,
+      enableKnowledgeBase: true,
       showLLM: false,
       showCloudPromotion: false,
       showOpenAIApiKey: true,
@@ -28,6 +29,8 @@ describe('featureFlagsSelectors', () => {
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
       enableClerkSignUp: true,
+      showMarket: true,
+      enableSTT: true,
     });
   });
 });

@@ -9,17 +9,22 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
 const Actions = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
   const router = useRouter();
+  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Flexbox gap={16} horizontal={!mobile} justify={'center'} width={'100%'} wrap={'wrap'}>
-      <Link href={'/market'}>
-        <Button block={mobile} size={'large'} style={{ minWidth: 160 }} type={'default'}>
-          {t('button.market')}
-        </Button>
-      </Link>
+      {showMarket && (
+        <Link href={'/market'}>
+          <Button block={mobile} size={'large'} style={{ minWidth: 160 }} type={'default'}>
+            {t('button.market')}
+          </Button>
+        </Link>
+      )}
       <Button
         block={mobile}
         onClick={() => router.push('/chat')}

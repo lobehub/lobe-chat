@@ -1,29 +1,42 @@
 'use client';
 
-import { MobileChatInputArea, MobileChatSendButton } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
+import { TextAreaRef } from 'antd/es/input/TextArea';
+import { memo, useRef, useState } from 'react';
 
 import ActionBar from '@/features/ChatInput/ActionBar';
 import STT from '@/features/ChatInput/STT';
 import SaveTopic from '@/features/ChatInput/Topic';
-import { useChatInput } from '@/features/ChatInput/useChatInput';
+import { useSendMessage } from '@/features/ChatInput/useSend';
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 
 import Files from './Files';
+import InputArea from './InputArea';
+import SendButton from './Send';
 
 const MobileChatInput = memo(() => {
-  const { t } = useTranslation('chat');
   const theme = useTheme();
-  const { ref, onSend, loading, value, onInput, onStop, expand, setExpand } = useChatInput();
+  const ref = useRef<TextAreaRef>(null);
+  const [expand, setExpand] = useState<boolean>(false);
+  const { send: sendMessage, canSend } = useSendMessage();
+
+  const [loading, value, onInput, onStop] = useChatStore((s) => [
+    chatSelectors.isAIGenerating(s),
+    s.inputMessage,
+    s.updateInputMessage,
+    s.stopGenerateMessage,
+  ]);
 
   return (
-    <MobileChatInputArea
+    <InputArea
       expand={expand}
-      loading={loading}
       onInput={onInput}
-      onSend={onSend}
-      placeholder={t('sendPlaceholder')}
+      onSend={() => {
+        setExpand(false);
+
+        sendMessage();
+      }}
       ref={ref}
       setExpand={setExpand}
       style={{
@@ -34,7 +47,7 @@ const MobileChatInput = memo(() => {
       }}
       textAreaLeftAddons={<STT mobile />}
       textAreaRightAddons={
-        <MobileChatSendButton loading={loading} onSend={onSend} onStop={onStop} />
+        <SendButton disabled={!canSend} loading={loading} onSend={sendMessage} onStop={onStop} />
       }
       topAddons={
         <>

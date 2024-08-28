@@ -1,14 +1,15 @@
+/* eslint-disable no-undef */
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { FileImage, FileText, FileUpIcon } from 'lucide-react';
 import { darken, lighten } from 'polished';
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-const DRAGGING_ROOT_ID = 'dragging-root';
-const getContainer = () => document.querySelector(`#${DRAGGING_ROOT_ID}`);
+import { getContainer, useDragUpload } from './useDragUpload';
+
 const BLOCK_SIZE = 64;
 const ICON_SIZE = 36;
 
@@ -64,110 +65,16 @@ const useStyles = createStyles(({ css, token }) => {
   };
 });
 
-const handleDragOver = (e: DragEvent) => {
-  if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
-
-  const isFile = e.dataTransfer.types.includes('Files');
-  if (isFile) {
-    e.preventDefault();
-  }
-};
-
 interface DragUploadProps {
   enabledFiles?: boolean;
-  onUploadFiles: (files?: FileList) => Promise<void>;
+  onUploadFiles: (files: File[]) => Promise<void>;
 }
 
 const DragUpload = memo<DragUploadProps>(({ enabledFiles = true, onUploadFiles }) => {
   const { styles, theme } = useStyles();
   const { t } = useTranslation('components');
-  const [isDragging, setIsDragging] = useState(false);
-  // When a file is dragged to a different area, the 'dragleave' event may be triggered,
-  // causing isDragging to be mistakenly set to false.
-  // to fix this issue, use a counter to ensure the status change only when drag event left the browser window .
-  const dragCounter = useRef(0);
 
-  const handleDragEnter = (e: DragEvent) => {
-    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
-
-    const isFile = e.dataTransfer.types.includes('Files');
-    if (isFile) {
-      dragCounter.current += 1;
-      e.preventDefault();
-      setIsDragging(true);
-    }
-  };
-
-  const handleDragLeave = (e: DragEvent) => {
-    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
-
-    const isFile = e.dataTransfer.types.includes('Files');
-    if (isFile) {
-      e.preventDefault();
-
-      // reset counter
-      dragCounter.current -= 1;
-
-      if (dragCounter.current === 0) {
-        setIsDragging(false);
-      }
-    }
-  };
-
-  const handleDrop = async (e: DragEvent) => {
-    if (!e.dataTransfer?.items || e.dataTransfer.items.length === 0) return;
-
-    const isFile = e.dataTransfer.types.includes('Files');
-    if (isFile) {
-      e.preventDefault();
-
-      // reset counter
-      dragCounter.current = 0;
-
-      setIsDragging(false);
-
-      // get filesList
-      // TODO: support folder files upload
-      const files = e.dataTransfer?.files;
-
-      // upload files
-      onUploadFiles(files);
-    }
-  };
-
-  const handlePaste = (event: ClipboardEvent) => {
-    // get files from clipboard
-    const files = event.clipboardData?.files;
-
-    onUploadFiles(files);
-  };
-
-  useEffect(() => {
-    if (getContainer()) return;
-    const root = document.createElement('div');
-    root.id = DRAGGING_ROOT_ID;
-    document.body.append(root);
-
-    return () => {
-      root.remove();
-    };
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener('dragenter', handleDragEnter);
-    window.addEventListener('dragover', handleDragOver);
-    window.addEventListener('dragleave', handleDragLeave);
-    window.addEventListener('drop', handleDrop);
-    window.addEventListener('paste', handlePaste);
-
-    return () => {
-      window.removeEventListener('dragenter', handleDragEnter);
-      window.removeEventListener('dragover', handleDragOver);
-      window.removeEventListener('dragleave', handleDragLeave);
-      window.removeEventListener('drop', handleDrop);
-      window.removeEventListener('paste', handlePaste);
-    };
-  }, [handleDragEnter, handleDragOver, handleDragLeave, handleDrop, handlePaste]);
+  const isDragging = useDragUpload(onUploadFiles);
 
   if (!isDragging) return;
 

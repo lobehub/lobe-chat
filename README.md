@@ -8,7 +8,7 @@ An open-source, modern-design ChatGPT/LLMs UI/Framework.<br/>
 Supports speech-synthesis, multi-modal, and extensible ([function call][docs-functionc-call]) plugin system.<br/>
 One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/Ollama chat application.
 
-**English** · [简体中文](./README.zh-CN.md) · [Official Site][official-site] · [Changelog](./CHANGELOG.md) · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
+**English** · [简体中文](./README.zh-CN.md) · [日本語](./README.ja-JP.md) · [Official Site][official-site] · [Changelog](./CHANGELOG.md) · [Documents][docs] · [Blog][blog] · [Feedback][github-issues-link]
 
 <!-- SHIELD GROUP -->
 
@@ -227,14 +227,14 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 <!-- PLUGIN LIST -->
 
-| Recent Submits                                                                                                          | Description                                                                                                                               |
-| ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| [Shopping tools](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **shoppingtools** on **2024-07-19**</sup> | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
-| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup>  | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                                   |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>       | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                |
-| [Space](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **automateyournetwork** on **2024-05-12**</sup>    | Space data including NASA.<br/>`space` `nasa`                                                                                             |
+| Recent Submits                                                                                                                     | Description                                                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [Tongyi wanxiang Image Generator](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | This plugin uses Alibaba's Tongyi Wanxiang model to generate images based on text prompts.<br/>`image` `tongyi` `wanxiang`                |
+| [Shopping tools](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **shoppingtools** on **2024-07-19**</sup>            | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
+| [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup>             | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                                   |
+| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>                  | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                |
 
-> 📊 Total plugins: [<kbd>**52**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**51**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -266,14 +266,20 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Brand Pioneer](https://chat-preview.lobehub.com/market?agent=brand-pioneer)<br/><sup>By **[SaintFresh](https://github.com/SaintFresh)** on **2024-07-25**</sup>                                | A brand development specialist, thought leader, brand strategy super-genius, and brand visionary. Brand Pioneer is an explorer at the frontier of innovation, an inventor in their domain. Provide them with your market and let them imagine a future world characterized by groundbreaking advancements in your field of expertise.<br/>`business` `brand-pioneer` `brand-development` `business-assistant` `brand-narrative` |
-| [BIDOSx2](https://chat-preview.lobehub.com/market?agent=bidosx-2-v-2)<br/><sup>By **[SaintFresh](https://github.com/SaintFresh)** on **2024-07-21**</sup>                                       | A highly advanced AI LLM transcending conventional AI. 'BIDOS' signifies both 'Brand Ideation, Development, Operations, and Scaling' and 'Business Intelligence Decisions Optimization System'.<br/>`brand-development` `ai-assistant` `market-analysis` `strategic-planning` `business-optimization` `business-intelligence`                                                                                                   |
-| [Growth Coach](https://chat-preview.lobehub.com/market?agent=personal-development-coach)<br/><sup>By **[zer0boss](https://github.com/zer0boss)** on **2024-07-20**</sup>                        | Specializes in helping users explore themselves through dialogue, find solutions, and paths to growth<br/>`growth-coach` `self-exploration` `goal-setting` `self-awareness`                                                                                                                                                                                                                                                     |
-| [Convert SQL Table Structure to Dao and Mapper](https://chat-preview.lobehub.com/market?agent=my-batis-generator)<br/><sup>By **[MeYoung](https://github.com/MeYoung)** on **2024-07-17**</sup> | Generate entity class and MyBatis Mapper based on a table structure<br/>`sql` `sql` `mybatis`                                                                                                                                                                                                                                                                                                                                   |
+| Recent Submits                                                                                                                                                               | Description                                                                                                                                                                                                                                          |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Backtracking Question Expert](https://chat-preview.lobehub.com/market?agent=step-back-expert)<br/><sup>By **[tiny656](https://github.com/tiny656)** on **2024-08-27**</sup> | Hello! I am an expert in world knowledge, skilled in using backtracking questioning strategies to help you gain a deeper understanding and analysis of issues. Please enter a question, and I will respond to it according to the following process: |
 
-> 📊 Total agents: [<kbd>**305**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+1. Provide at least 3 optional backtracking questions that align with the strategy.
+2. Answer each of these backtracking questions.
+3. Use the above answers as evidence to logically and coherently provide a final answer to your question, assisted by visual charts.
+
+Please tell me what issue you would like to explore?<br/>`backtracking-questions` `thinking-strategies` `problem-analysis` |
+\| [Unreal Engine Master](https://chat-preview.lobehub.com/market?agent=unreal-engine-master)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-27**</sup> | Unreal Game Development Companion<br/>`game-development` `unreal-engine` `software-engineering` |
+\| [TypeScript Solution Architect](https://chat-preview.lobehub.com/market?agent=typescript-developer)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2024-08-24**</sup> | Expert in TypeScript, Node.js, Vue.js 3, Nuxt.js 3, Express.js, React.js, and modern UI libraries.<br/>`type-script` `java-script` `web-development` `coding-standards` `best-practices` |
+\| [Variable Name Conversion Expert](https://chat-preview.lobehub.com/market?agent=variable-name-conversion)<br/><sup>By **[zengyishou](https://github.com/zengyishou)** on **2024-08-21**</sup> | In software development, naming variables is a common yet relatively time-consuming task. This assistant can automatically convert Chinese variable names into English variable names that conform to camelCase, PascalCase, snake_case, kebab-case, and constant naming conventions based on specific naming rules. This not only improves code readability but also alleviates the frustration of variable naming.<br/>`software-development` `variable-naming` `chinese-to-english` `code-standards` `automatic-conversion` |
+
+> 📊 Total agents: [<kbd>**319**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -308,7 +314,7 @@ LobeChat supports multi-user management and provides two main user authenticatio
 
 - **next-auth**: LobeChat integrates `next-auth`, a flexible and powerful identity verification library that supports multiple authentication methods, including OAuth, email login, credential login, etc. With `next-auth`, you can easily implement user registration, login, session management, social login, and other functions to ensure the security and privacy of user data.
 
-- **Clerk**: For users who need more advanced user management features, LobeChat also supports `Clerk`, a modern user management platform. `Clerk` provides richer functions, such as multi-factor authentication (MFA), user profile management, login activity monitoring, etc. With `Clerk`, you can get higher security and flexibility, and easily cope with complex user management needs.
+- [**Clerk**](https://go.clerk.com/exgqLG0): For users who need more advanced user management features, LobeChat also supports `Clerk`, a modern user management platform. `Clerk` provides richer functions, such as multi-factor authentication (MFA), user profile management, login activity monitoring, etc. With `Clerk`, you can get higher security and flexibility, and easily cope with complex user management needs.
 
 Regardless of which user management solution you choose, LobeChat can provide you with an excellent user experience and powerful functional support.
 

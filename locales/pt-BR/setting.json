@@ -51,7 +51,7 @@
     },
     "checker": {
       "button": "Verificar",
-      "desc": "Verifica se a Api Key e o endereço do proxy estão preenchidos corretamente",
+      "desc": "Verifica se a API Key e o endereço do proxy estão preenchidos corretamente",
       "pass": "Verificação aprovada",
       "title": "Verificação de Conectividade"
     },
@@ -371,6 +371,11 @@
       "label": "Modelo de Geração de Metadados do Assistente",
       "modelDesc": "Especifica o modelo usado para gerar o nome, descrição, avatar e tags do assistente",
       "title": "Geração Automática de Informações do Assistente"
+    },
+    "queryRewrite": {
+      "label": "Modelo de Reescrita de Perguntas",
+      "modelDesc": "Modelo designado para otimizar as perguntas dos usuários",
+      "title": "Base de Conhecimento"
     },
     "title": "Assistente do Sistema",
     "topic": {

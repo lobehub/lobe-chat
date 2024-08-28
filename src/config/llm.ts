@@ -20,6 +20,7 @@ export const getLLMConfig = () => {
 
       ENABLED_ZHIPU: z.boolean(),
       ZHIPU_API_KEY: z.string().optional(),
+      ZHIPU_MODEL_LIST: z.string().optional(),
 
       ENABLED_DEEPSEEK: z.boolean(),
       DEEPSEEK_API_KEY: z.string().optional(),
@@ -87,6 +88,11 @@ export const getLLMConfig = () => {
 
       ENABLED_AI360: z.boolean(),
       AI360_API_KEY: z.string().optional(),
+
+      ENABLED_SILICONCLOUD: z.boolean(),
+      SILICONCLOUD_API_KEY: z.string().optional(),
+      SILICONCLOUD_MODEL_LIST: z.string().optional(),
+      SILICONCLOUD_PROXY_URL: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -104,6 +110,7 @@ export const getLLMConfig = () => {
 
       ENABLED_ZHIPU: !!process.env.ZHIPU_API_KEY,
       ZHIPU_API_KEY: process.env.ZHIPU_API_KEY,
+      ZHIPU_MODEL_LIST: process.env.ZHIPU_MODEL_LIST,
 
       ENABLED_DEEPSEEK: !!process.env.DEEPSEEK_API_KEY,
       DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
@@ -171,6 +178,11 @@ export const getLLMConfig = () => {
 
       ENABLED_AI360: !!process.env.AI360_API_KEY,
       AI360_API_KEY: process.env.AI360_API_KEY,
+
+      ENABLED_SILICONCLOUD: !!process.env.SILICONCLOUD_API_KEY,
+      SILICONCLOUD_API_KEY: process.env.SILICONCLOUD_API_KEY,
+      SILICONCLOUD_MODEL_LIST: process.env.SILICONCLOUD_MODEL_LIST,
+      SILICONCLOUD_PROXY_URL: process.env.SILICONCLOUD_PROXY_URL,
     },
   });
 };

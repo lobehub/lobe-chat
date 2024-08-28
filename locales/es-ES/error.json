@@ -79,7 +79,9 @@
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
     "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
-    "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando."
+    "StreamChunkError": "Error de análisis del bloque de mensajes de la solicitud en streaming. Por favor, verifica si la API actual cumple con las normas estándar o contacta a tu proveedor de API para más información.",
+    "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando.",
+    "UnknownChatFetchError": "Lo sentimos, se ha producido un error desconocido en la solicitud. Por favor, verifica la información a continuación o intenta de nuevo."
   },
   "stt": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
@@ -113,6 +115,10 @@
   },
   "upload": {
     "desc": "Detalles: {{detail}}",
-    "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde"
+    "fileOnlySupportInServerMode": "El modo de implementación actual no admite la carga de archivos que no sean imágenes. Si desea cargar un archivo en formato {{ext}}, cambie a la implementación de base de datos en servidor o utilice el servicio LobeChat Cloud.",
+    "networkError": "Por favor, verifica que tu red esté funcionando correctamente y comprueba si la configuración de CORS del servicio de almacenamiento de archivos es correcta.",
+    "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde",
+    "unknownError": "Razón del error: {{reason}}",
+    "uploadFailed": "La carga del archivo ha fallado."
   }
 }
