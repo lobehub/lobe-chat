@@ -2,6 +2,7 @@ import { Icon, Markdown } from '@lobehub/ui';
 import { Segmented } from 'antd';
 import { BoltIcon, FileIcon } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Loading from '@/components/CircleLoading';
@@ -14,6 +15,7 @@ const FilePreview = () => {
   const previewFileId = useChatStore(chatPortalSelectors.previewFileId);
   const chunkText = useChatStore(chatPortalSelectors.chunkText);
   const useFetchFileItem = useFileStore((s) => s.useFetchFileItem);
+  const { t } = useTranslation('portal');
 
   const [tab, setTab] = useState('chunk');
   const { data, isLoading } = useFetchFileItem(previewFileId);
@@ -34,8 +36,8 @@ const FilePreview = () => {
           block
           onChange={setTab}
           options={[
-            { icon: <Icon icon={BoltIcon} />, label: '分块', value: 'chunk' },
-            { icon: <Icon icon={FileIcon} />, label: '文件', value: 'file' },
+            { icon: <Icon icon={BoltIcon} />, label: t('FilePreview.tabs.chunk'), value: 'chunk' },
+            { icon: <Icon icon={FileIcon} />, label: t('FilePreview.tabs.file'), value: 'file' },
           ]}
           value={tab}
         />

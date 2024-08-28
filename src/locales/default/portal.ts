@@ -1,5 +1,11 @@
 export default {
   Artifacts: 'Artifacts',
+  FilePreview: {
+    tabs: {
+      chunk: '分块',
+      file: '文件',
+    },
+  },
   actions: {
     genAiMessage: '创建助手消息',
     summary: '总结',
