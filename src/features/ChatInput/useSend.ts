@@ -18,9 +18,23 @@ export const useSendMessage = () => {
 
   const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
 
+  const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
+  const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
+
+  const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
+
   const send = useCallback((params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
     if (chatSelectors.isAIGenerating(store)) return;
+
+    // if uploading file or send button is disabled by message, then we should not send the message
+    const isUploadingFiles = fileChatSelectors.isUploadingFiles(useFileStore.getState());
+    const isSendButtonDisabledByMessage = chatSelectors.isSendButtonDisabledByMessage(
+      useChatStore.getState(),
+    );
+
+    const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
+    if (!canSend) return;
 
     const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
     // if there is no message and no image, then we should not send the message
@@ -43,11 +57,6 @@ export const useSendMessage = () => {
     //   agentSetting.autocompleteAllMeta();
     // }
   }, []);
-
-  const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
-  const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
-
-  const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
 
   return useMemo(() => ({ canSend, send }), [canSend]);
 };

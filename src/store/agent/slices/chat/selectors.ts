@@ -20,8 +20,12 @@ const inboxAgentConfig = (s: AgentStore) =>
   merge(DEFAULT_AGENT_CONFIG, s.agentMap[INBOX_SESSION_ID]);
 const inboxAgentModel = (s: AgentStore) => inboxAgentConfig(s).model;
 
-const currentAgentConfig = (s: AgentStore): LobeAgentConfig =>
-  merge(s.defaultAgentConfig, s.agentMap[s.activeId]);
+const getAgentConfigById =
+  (id: string) =>
+  (s: AgentStore): LobeAgentConfig =>
+    merge(s.defaultAgentConfig, s.agentMap[id]);
+
+const currentAgentConfig = (s: AgentStore): LobeAgentConfig => getAgentConfigById(s.activeId)(s);
 
 const currentAgentChatConfig = (s: AgentStore): LobeAgentChatConfig =>
   currentAgentConfig(s).chatConfig || {};
@@ -147,6 +151,7 @@ export const agentSelectors = {
   currentAgentTTSVoice,
   currentEnabledKnowledge,
   currentKnowledgeIds,
+  getAgentConfigById,
   hasEnabledKnowledge,
   hasKnowledge,
   hasSystemRole,

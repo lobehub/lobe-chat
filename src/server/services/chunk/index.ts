@@ -3,7 +3,12 @@ import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { FileModel } from '@/database/server/models/file';
 import { ChunkContentParams, ContentChunk } from '@/server/modules/ContentChunk';
 import { createAsyncServerClient } from '@/server/routers/async';
-import { AsyncTaskStatus, AsyncTaskType } from '@/types/asyncTask';
+import {
+  AsyncTaskError,
+  AsyncTaskErrorType,
+  AsyncTaskStatus,
+  AsyncTaskType,
+} from '@/types/asyncTask';
 
 export class ChunkService {
   private userId: string;
@@ -40,7 +45,19 @@ export class ChunkService {
     const asyncCaller = await createAsyncServerClient(this.userId, payload);
 
     // trigger embedding task asynchronously
-    await asyncCaller.file.embeddingChunks.mutate({ fileId, taskId: asyncTaskId });
+    try {
+      await asyncCaller.file.embeddingChunks.mutate({ fileId, taskId: asyncTaskId });
+    } catch (e) {
+      console.error('[embeddingFileChunks] error:', e);
+
+      await this.asyncTaskModel.update(asyncTaskId, {
+        error: new AsyncTaskError(
+          AsyncTaskErrorType.TaskTriggerError,
+          'trigger chunk embedding async task error. Please check your app is public available or check your proxy settings is set correctly.',
+        ),
+        status: AsyncTaskStatus.Error,
+      });
+    }
 
     return asyncTaskId;
   }
@@ -67,7 +84,19 @@ export class ChunkService {
     const asyncCaller = await createAsyncServerClient(this.userId, payload);
 
     // trigger parse file task asynchronously
-    asyncCaller.file.parseFileToChunks.mutate({ fileId: fileId, taskId: asyncTaskId });
+    asyncCaller.file.parseFileToChunks
+      .mutate({ fileId: fileId, taskId: asyncTaskId })
+      .catch(async (e) => {
+        console.error('[ParseFileToChunks] error:', e);
+
+        await this.asyncTaskModel.update(asyncTaskId, {
+          error: new AsyncTaskError(
+            AsyncTaskErrorType.TaskTriggerError,
+            'trigger file parse async task error. Please check your app is public available or check your proxy settings is set correctly.',
+          ),
+          status: AsyncTaskStatus.Error,
+        });
+      });
 
     return asyncTaskId;
   }

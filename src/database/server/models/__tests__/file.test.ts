@@ -570,4 +570,37 @@ describe('FileModel', () => {
     const data = await fileModel.countFilesByHash('hash1');
     expect(data).toEqual(2);
   });
+
+  describe('countUsage', () => {
+    const sharedFileList = [
+      {
+        name: 'document.pdf',
+        url: 'https://example.com/document.pdf',
+        size: 1000,
+        fileType: 'application/pdf',
+        userId,
+      },
+      {
+        name: 'image.jpg',
+        url: 'https://example.com/image.jpg',
+        size: 500,
+        fileType: 'image/jpeg',
+        userId,
+      },
+      {
+        name: 'audio.mp3',
+        url: 'https://example.com/audio.mp3',
+        size: 2000,
+        fileType: 'audio/mpeg',
+        userId,
+      },
+    ];
+
+    it('should get total size of files for the user', async () => {
+      await serverDB.insert(files).values(sharedFileList);
+      const size = await fileModel.countUsage();
+
+      expect(size).toBe(3500);
+    });
+  });
 });

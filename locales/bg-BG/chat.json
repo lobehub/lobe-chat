@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Модел"
   },
-  "agentDefaultMessage": "Здравей, аз съм **{{name}}**. Можеш да започнеш да чатиш с мен веднага, или да отидеш в [Настройки на агента](/chat/settings#session={{id}}) за да попълниш информацията ми.",
+  "agentDefaultMessage": "Здравейте, аз съм **{{name}}**, можете да започнете разговор с мен веднага или да отидете на [Настройки на асистента]({{url}}), за да попълните информацията ми.",
   "agentDefaultMessageWithSystemRole": "Здравей, аз съм **{{name}}**, {{systemRole}}. Нека започнем да чатим!",
   "agentDefaultMessageWithoutEdit": "Здравей, аз съм **{{name}}** и нека започнем разговора!",
   "agentsAndConversations": "агенти и разговори",
