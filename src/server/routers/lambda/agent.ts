@@ -106,7 +106,9 @@ export const agentRouter = router({
     .query(async ({ ctx, input }): Promise<KnowledgeItem[]> => {
       const knowledgeBases = await ctx.knowledgeBaseModel.query();
 
-      const files = await ctx.fileModel.query({ showFilesInKnowledgeBase: false });
+      const files = await ctx.fileModel.query({
+        showFilesInKnowledgeBase: false,
+      });
 
       const knowledge = await ctx.agentModel.getAgentAssignedKnowledge(input.agentId);
 
