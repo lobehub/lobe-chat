@@ -10,7 +10,7 @@ import Balancer from 'react-wrap-balancer';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-import SkeletonLoading from '../../../components/SkeletonLoading';
+import SkeletonLoading from '../../../../components/SkeletonLoading';
 import FileItem from './Item';
 
 const FileList = () => {

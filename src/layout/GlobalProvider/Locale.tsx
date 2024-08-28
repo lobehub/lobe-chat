@@ -9,6 +9,23 @@ import { createI18nNext } from '@/locales/create';
 import { isOnServerSide } from '@/utils/env';
 import { getAntdLocale } from '@/utils/locale';
 
+const updateDayjs = async (lang: string) => {
+  // load default lang
+  let dayJSLocale;
+  try {
+    // dayjs locale is using `en` instead of `en-US`
+    // refs: https://github.com/lobehub/lobe-chat/issues/3396
+    const locale = lang!.toLowerCase() === 'en-us' ? 'en' : lang!.toLowerCase();
+
+    dayJSLocale = await import(`dayjs/locale/${locale}.js`);
+  } catch {
+    console.warn(`dayjs locale for ${lang} not found, fallback to en`);
+    dayJSLocale = await import(`dayjs/locale/en.js`);
+  }
+
+  dayjs.locale(dayJSLocale.default);
+};
+
 interface LocaleLayoutProps extends PropsWithChildren {
   antdLocale?: any;
   defaultLang?: string;
@@ -36,20 +53,7 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
       i18n.init().then(async () => {
         if (!lang) return;
 
-        // load default lang
-        let dayJSLocale;
-        try {
-          // dayjs locale is using `en` instead of `en-US`
-          // refs: https://github.com/lobehub/lobe-chat/issues/3396
-          const locale = lang!.toLowerCase() === 'en-us' ? 'en' : lang!.toLowerCase();
-
-          dayJSLocale = await import(`dayjs/locale/${locale}.js`);
-        } catch {
-          console.warn(`dayjs locale for ${lang} not found, fallback to en`);
-          dayJSLocale = await import(`dayjs/locale/en.js`);
-        }
-
-        dayjs.locale(dayJSLocale.default);
+        await updateDayjs(lang);
       });
   }
 
@@ -63,9 +67,7 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
       const newLocale = await getAntdLocale(lng);
       setLocale(newLocale);
 
-      const dayJSLocale = await import(`dayjs/locale/${lng.toLowerCase()}.js`);
-
-      dayjs.locale(dayJSLocale.default);
+      await updateDayjs(lng);
     };
 
     i18n.instance.on('languageChanged', handleLang);

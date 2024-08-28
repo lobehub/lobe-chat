@@ -5,19 +5,46 @@ import { memo } from 'react';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 
-import Artifacts from './Artifacts';
-import FilePreview from './FilePreview';
-import Home from './Home';
+import { Artifacts, ArtifactsBody } from './Artifacts';
+import { FileBody, FilePreview } from './FilePreview';
+import { Home, HomeBody } from './Home';
 
-const PortalView = memo(() => {
+const items = [Artifacts, FilePreview, Home];
+
+export const PortalHeader = memo(() => {
+  const enabledList: boolean[] = [];
+
+  for (const item of items) {
+    const enabled = item.useEnable();
+    enabledList.push(enabled);
+  }
+
+  for (const [i, element] of enabledList.entries()) {
+    const Header = items[i].Header;
+    if (element) {
+      return <Header />;
+    }
+  }
+
+  // const showArtifactUI = useChatStore(chatPortalSelectors.showArtifactUI);
+  // const showFilePreview = useChatStore(chatPortalSelectors.showFilePreview);
+  //
+  // if (showArtifactUI) return <ArtifactsHeader />;
+  //
+  // if (showFilePreview) return <FileHeader />;
+  //
+  // return <HomeHeader />;
+});
+
+const PortalBody = memo(() => {
   const showArtifactUI = useChatStore(chatPortalSelectors.showArtifactUI);
   const showFilePreview = useChatStore(chatPortalSelectors.showFilePreview);
 
-  if (showArtifactUI) return <Artifacts />;
+  if (showArtifactUI) return <ArtifactsBody />;
 
-  if (showFilePreview) return <FilePreview />;
+  if (showFilePreview) return <FileBody />;
 
-  return <Home />;
+  return <HomeBody />;
 });
 
-export default PortalView;
+export default PortalBody;

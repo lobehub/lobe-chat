@@ -15,7 +15,6 @@ const FilePreview = () => {
   if (isLoading) return <Loading />;
   if (!data) return;
 
-  console.log(data);
   return (
     <Flexbox height={'100%'} paddingBlock={'0 4px'} paddingInline={4} style={{ borderRadius: 4 }}>
       <FileViewer {...data} />

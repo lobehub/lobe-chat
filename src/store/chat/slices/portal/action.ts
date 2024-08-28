@@ -3,6 +3,7 @@ import { StateCreator } from 'zustand/vanilla';
 import { ChatStore } from '@/store/chat/store';
 
 export interface ChatPortalAction {
+  closeFilePreview: () => void;
   closeToolUI: () => void;
   openFilePreview: (fileId: string) => void;
   openToolUI: (messageId: string, identifier: string) => void;
@@ -15,8 +16,11 @@ export const chatPortalSlice: StateCreator<
   [],
   ChatPortalAction
 > = (set, get) => ({
+  closeFilePreview: () => {
+    set({ portalFile: undefined }, false, 'closeFilePreview');
+  },
   closeToolUI: () => {
-    set({ portalToolMessage: undefined }, false, 'openToolUI');
+    set({ portalToolMessage: undefined }, false, 'closeToolUI');
   },
   openFilePreview: (fileId) => {
     if (!get().showPortal) {

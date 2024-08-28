@@ -343,7 +343,7 @@ export class MessageModel {
             chunkId: chunk.id,
             messageId: id,
             queryId: ragQueryId,
-            similarity: chunk.similarity.toString(),
+            similarity: chunk.similarity?.toString(),
           })),
         );
       }
