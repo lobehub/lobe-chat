@@ -15,7 +15,7 @@ const Header = memo(() => {
   return (
     <SidebarHeader
       actions={<ActionIcon icon={XIcon} onClick={() => toggleInspector(false)} />}
-      style={{ paddingBlock: 8 }}
+      style={{ paddingBlock: 8, paddingInline: 8 }}
       title={<PortalHeader />}
     />
   );

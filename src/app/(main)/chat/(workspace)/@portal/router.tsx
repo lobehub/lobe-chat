@@ -2,14 +2,11 @@
 
 import { memo } from 'react';
 
-import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors } from '@/store/chat/selectors';
+import { Artifacts } from './Artifacts';
+import { FilePreview } from './FilePreview';
+import { HomeBody, HomeHeader } from './Home';
 
-import { Artifacts, ArtifactsBody } from './Artifacts';
-import { FileBody, FilePreview } from './FilePreview';
-import { Home, HomeBody } from './Home';
-
-const items = [Artifacts, FilePreview, Home];
+const items = [Artifacts, FilePreview];
 
 export const PortalHeader = memo(() => {
   const enabledList: boolean[] = [];
@@ -26,23 +23,23 @@ export const PortalHeader = memo(() => {
     }
   }
 
-  // const showArtifactUI = useChatStore(chatPortalSelectors.showArtifactUI);
-  // const showFilePreview = useChatStore(chatPortalSelectors.showFilePreview);
-  //
-  // if (showArtifactUI) return <ArtifactsHeader />;
-  //
-  // if (showFilePreview) return <FileHeader />;
-  //
-  // return <HomeHeader />;
+  return <HomeHeader />;
 });
 
 const PortalBody = memo(() => {
-  const showArtifactUI = useChatStore(chatPortalSelectors.showArtifactUI);
-  const showFilePreview = useChatStore(chatPortalSelectors.showFilePreview);
+  const enabledList: boolean[] = [];
 
-  if (showArtifactUI) return <ArtifactsBody />;
+  for (const item of items) {
+    const enabled = item.useEnable();
+    enabledList.push(enabled);
+  }
 
-  if (showFilePreview) return <FileBody />;
+  for (const [i, element] of enabledList.entries()) {
+    const Body = items[i].Body;
+    if (element) {
+      return <Body />;
+    }
+  }
 
   return <HomeBody />;
 });
