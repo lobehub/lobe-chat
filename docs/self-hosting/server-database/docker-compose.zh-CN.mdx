@@ -33,30 +33,43 @@ tags:
 
 </Callout>
 
-## 快速启动
-
-以下假设你选择自建 LobeChat 全部四个所需服务，即：
+一般来讲，想要完整的运行 LobeChat 数据库版本，你需要至少拥有如下四个服务
 
 - LobeChat 数据库版本自身
-- PostgreSQL：带有 PGVector 插件
-- Logto：SSO 登录鉴权服务
-- MinIO：支持 S3 协议的本地对象存储服务
+- 带有 PGVector 插件的 PostgreSQL 数据库
+- 支持 S3 协议的对象存储服务
+- 受 LobeChat 支持的 SSO 登录鉴权服务
+
+这些服务可以通过自建或者在线云服务组合搭配，以满足不同层次的部署需求。
+
+本文中，我们提供了完全基于开源自建服务的 Docker Compose 配置，你可以直接使用这份配置文件来启动 LobeChat 数据库版本，也可以对之进行修改以适应你的需求。
+
+我们默认使用 [MinIO](https://github.com/minio/minio) 作为本地 S3 对象存储服务，使用 [Logto](https://github.com/logto-io/logto) 作为本地鉴权服务。
+
+## 快速启动
+
+为方便快速上手，这一章使用 `docker-compose/local` 目录中的 docker-compose 配置文件，启动后的 LobeChat 应用运行在 `http://localhost:3210`，可在本地运行。
+
+<Callout type="warning">
+  为了快速上手，此 docker-compose.yml内置掉了大量的 Secret/Password
+  的配置，仅适用于快速演示或个人本地使用。请勿直接用于线上生产环境！否则遇到安全问题请自行负责！
+</Callout>
 
 <Steps>
   ### 创建配置文件
 
+新建一个 `lobe-chat-db` 目录，用于存放你的配置文件和后续的数据库文件。
+
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example > .env
+mkdir lobe-chat-db
 ```
 
-你也可以从下文的附录中复制得到这两份示例配置文件。
+拉取配置文件到你的目录中：
 
-请按照注释，修改你的 `.env` 和 `docker-compose.yml` 文件。
-
-<Callout type="warning">
-  出于网络原因，本地启动时，我们特意让所有服务都同时使用了 `network_mode: host`。这可以解决一些网络问题，但是有可能会导致端口冲突，请自行解决。
-</Callout>
+```sh
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml > docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example > .env
+```
 
 ### 启动服务
 
@@ -72,19 +85,16 @@ docker compose up -d
 
    - `Redirect URI` 为 `http://localhost:3210/api/auth/callback/logto`
    - `Post sign-out redirect URI` 为 `http://localhost:3210/`
-   - `CORS allowed origins` 为 `http://localhost:3210`
 
-3. 获取 `Client ID` 和 `Client Secret`，填入你的 `.env` 文件中对应的 `LOGTO_CLIENT_ID` 、 `LOGTO_CLIENT_SECRETT`
-
-4. 配置你的 `.env` 文件中的 `LOGTO_ISSUER` 为 `http://localhost:3001/oidc`
+3. 获取 `Client ID` 和 `Client Secret`，填入 `.env` 文件中对应的 `LOGTO_CLIENT_ID` 、 `LOGTO_CLIENT_SECRETT`
 
 ### 配置 MinIO S3
 
-1. 打开 `http://localhost:9001`，访问 MinIO WebUI，默认管理员账号密码在 `docker-compose.yml` 中配置
+1. 打开 `http://localhost:9001`，访问 MinIO WebUI，默认管理员账号密码在 `.env` 中配置
 
-2. 创建符合你的 `.env` 文件中 `S3_BUCKET` 字段的桶，默认为 `lobe`
+2. 创建符合你的 `.env` 文件中 `MINIO_LOBE_BUCKET` 字段的桶，默认为 `lobe`
 
-3. 选择自定义策略，复制如下内容，粘贴之（如果你修改了桶名，请自行查找替换）
+3. 选择自定义策略，复制并粘贴如下内容（如果你修改了桶名，请自行查找替换）
 
    ```json
    {
@@ -131,20 +141,11 @@ docker compose up -d
 docker compose up -d
 ```
 
-  <Callout typr="warning">
-    此时，请勿使用 `docker compose restart lobe` 来重启，因为这种重启方式不会重新加载环境变量，你的
-    S3 配置将不会生效。
- 
+<Callout typr="warning">
+  此时，请勿使用 `docker compose restart lobe` 来重启，因为这种重启方式不会重新加载环境变量，你的
+  S3 配置将不会生效。
+
 </Callout>
-</Steps>
-
-至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `http://localhost:3210` 访问你的 LobeChat 服务。
-
-如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
-
-```sh
-docker logs -f lobe-database
-```
 
 如果你在容器中看到了以下日志，则说明已经启动成功：
 
@@ -160,22 +161,16 @@ docker logs -f lobe-database
  ✓ Ready in 95ms
 ```
 
+</Steps>
+
+至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `http://localhost:3210` 访问你的 LobeChat 服务。
+
+如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
+
+
 ## 发布到生产
 
-一般来讲，想要完整的运行 LobeChat 数据库版本，你需要至少拥有如下四个服务
-
-- LobeChat 数据库版本自身
-- 带有 PGVector 插件的 PostgreSQL 数据库
-- 支持 S3 协议的对象存储服务
-- 受 LobeChat 支持的 SSO 登录鉴权服务
-
-这些服务可以通过自建或者在线云服务组合搭配，以满足你的需求。
-
-我们提供了一份完全基于自建的 Docker Compose 配置，你可以直接使用这份配置文件来启动 LobeChat 数据库版本，也可以对之进行修改以适应你的需求。
-
-我们默认使用 [MinIO](https://github.com/minio/minio) 作为本地 S3 对象存储服务，使用 [Logto](https://github.com/logto-io/logto) 作为本地鉴权服务。
-
-我们同时假设在这些服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
+生产和本地运行存在一个很大的差别，就是在于需要使用域名地址而不是 localhost。我们假设在上述服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
 
 域名和配套服务端口说明如下：
 
@@ -199,7 +194,7 @@ docker logs -f lobe-database
 ### 配置文件
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml > docker-compose.yml
 curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/.env.zh-CN.example > .env
 ```
 
@@ -210,12 +205,6 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
 它们的示例配置请参见本文附录。
 
 ### Postgres 数据库配置
-
-<Callout type="warning">
-  请注意，首次运行 `docker compose up -d` 时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat
-  已经尝试连接而失败，出现 `Database migrate failed` 错误并退出。此时，你需要输入 `docker compose
-  restart lobe` 来重启 LobeChat，从而使其连接到正确的数据库。
-</Callout>
 
 你可以使用下述指令检查日志：
 
@@ -380,7 +369,7 @@ LOGTO_ISSUER=http://localhost:3001/oidc
 # HTTPS_PROXY=http://localhost:7890
 
 # MinIO S3 配置
-S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID # 直到在 MinIO UI 中手动创建之前都是无效的
+S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID         # 直到在 MinIO UI 中手动创建之前都是无效的
 S3_SECRET_ACCESS_KEY=YOUR_S3_SECRET_ACCESS_KEY # 直到在 MinIO UI 中手动创建之前都是无效的
 S3_ENDPOINT=http://localhost:9000
 S3_BUCKET=lobe # 直到在 MinIO UI 中手动创建之前都是无效的
@@ -391,7 +380,6 @@ S3_ENABLE_PATH_STYLE=1
 # OPEANAI_API_KEY=sk-xxxx
 # OPENAI_PROXY_URL=https://api.openai.com/v1
 # OPENAI_MODEL_LIST=...
-
 ```
 
 #### `docker-compose.yml`
@@ -429,6 +417,7 @@ services:
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
 
+
   logto:
     image: svhd/logto
     container_name: lobe-logto
@@ -460,7 +449,6 @@ volumes:
     driver: local
   s3_data:
     driver: local
-
 ```
 
 ### 发布到生产
@@ -503,7 +491,6 @@ S3_ENABLE_PATH_STYLE=1
 # OPEANAI_API_KEY=sk-xxxx
 # OPENAI_PROXY_URL=https://api.openai.com/v1
 # OPENAI_MODEL_LIST=...
-
 ```
 
 #### `docker-compose.yml`
@@ -544,6 +531,7 @@ services:
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
 
+
   logto:
     image: svhd/logto
     container_name: lobe-logto
@@ -578,7 +566,6 @@ volumes:
     driver: local
   s3_data:
     driver: local
-
 ```
 
 #### `minio-bucket-config.json`
