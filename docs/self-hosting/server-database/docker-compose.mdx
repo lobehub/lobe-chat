@@ -36,32 +36,42 @@ If you do need Clerk as an authentication service, you might consider deploying 
 
 </Callout>
 
-## Quick Start
-
-The following assumes that you choose to build all four required services for LobeChat, namely:
+Generally speaking, to fully run the LobeChat database version, you need at least the following four services:
 
 - LobeChat database version itself
-- PostgreSQL: with PGVector plugin
-- Logto: SSO authentication service
-- MinIO: local object storage service supporting S3 protocol
+- PostgreSQL database with PGVector plugin
+- Object storage service supporting S3 protocol
+- SSO authentication service supported by LobeChat
+
+These services can be combined through self-hosting or online cloud services to meet your needs.
+
+We provide a fully self-built Docker Compose configuration, which you can use directly to start the LobeChat database version or modify to suit your needs.
+
+We default to using [MinIO](https://github.com/minio/minio) as the local S3 object storage service and [Logto](https://github.com/logto-io/logto) as the local authentication service.
+
+## Quick Start
+
+To facilitate quick start, this chapter uses the docker-compose configuration file in the `docker-compose/local` directory. The LobeChat application runs at `http://localhost:3210` after startup and can be run locally.
+
+<Callout type="warning">
+  To facilitate quick start, this docker-compose.yml omits a large number of Secret/Password configurations and is only suitable for quick demonstration or personal local use. Do not use it directly in a production environment! Otherwise, you will be responsible for any security issues!
+</Callout>
 
 <Steps>
   ### Create Configuration Files
 
+Create a new `lobe-chat-db` directory to store your configuration files and subsequent database files.
+
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.example > .env
+mkdir lobe-chat-db
 ```
 
-You can also copy these two example configuration files from the appendix below.
+Pull the configuration files into your directory:
 
-Please modify your `.env` and `docker-compose.yml` files according to the comments.
-
-<Callout type="warning">
-
-Due to network reasons, when starting locally, we intentionally let all services use `network_mode: host` simultaneously. This can solve some network issues, but it may cause port conflicts, please resolve them yourself.
-
-</Callout>
+```sh
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml > docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.example > .env
+```
 
 ### Start Services
 
@@ -77,17 +87,14 @@ docker compose up -d
 
    - `Redirect URI` should be `http://localhost:3210/api/auth/callback/logto`
    - `Post sign-out redirect URI` should be `http://localhost:3210/`
-   - `CORS allowed origins` should be `http://localhost:3210`
 
 3. Obtain the `Client ID` and `Client Secret`, and fill them into your `.env` file corresponding to `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
 
-4. Set `LOGTO_ISSUER` in your `.env` file to `http://localhost:3001/oidc`.
-
 ### Configure MinIO S3
 
-1. Open `http://localhost:9001` to access the MinIO WebUI. The default admin account password is configured in `docker-compose.yml`.
+1. Open `http://localhost:9001` to access the MinIO WebUI. The default admin account password is configured in `.env`.
 
-2. Create a bucket that matches the `S3_BUCKET` field in your `.env` file, which defaults to `lobe`.
+2. Create a bucket that matches the `MINIO_LOBE_BUCKET` field in your `.env` file, which defaults to `lobe`.
 
 3. Choose a custom policy, copy the following content, and paste it in (if you modified the bucket name, please find and replace accordingly):
 
@@ -140,15 +147,6 @@ docker compose up -d
     At this point, do not use `docker compose restart lobe` to restart, as this method will not reload the environment variables, and your S3 configuration will not take effect.
  
 </Callout>
-</Steps>
-
-You have successfully deployed the LobeChat database version, and you can access your LobeChat service at `http://localhost:3210`.
-
-If you encounter issues, please check the Docker logs and console logs, and follow the detailed troubleshooting guide later in the document.
-
-```sh
-docker logs -f lobe-database
-```
 
 If you see the following logs in the container, it indicates that it has started successfully:
 
@@ -164,22 +162,15 @@ If you see the following logs in the container, it indicates that it has started
  ✓ Ready in 95ms
 ```
 
+</Steps>
+
+You have successfully deployed the LobeChat database version, and you can access your LobeChat service at `http://localhost:3210`.
+
+If you encounter issues, please check the Docker logs and console logs, and follow the detailed troubleshooting guide later in the document.
+
 ## Deploying to Production
 
-Generally speaking, to fully run the LobeChat database version, you need at least the following four services:
-
-- LobeChat database version itself
-- PostgreSQL database with PGVector plugin
-- Object storage service supporting S3 protocol
-- SSO authentication service supported by LobeChat
-
-These services can be combined through self-hosting or online cloud services to meet your needs.
-
-We provide a fully self-built Docker Compose configuration, which you can use directly to start the LobeChat database version or modify to suit your needs.
-
-We default to using [MinIO](https://github.com/minio/minio) as the local S3 object storage service and [Logto](https://github.com/logto-io/logto) as the local authentication service.
-
-We also assume that you are running an Nginx layer for reverse proxy and SSL configuration outside of these services.
+The main difference between production and local operation is the need to use domain addresses instead of localhost. We assume that in addition to the above services, you are also running an Nginx layer for reverse proxy and SSL configuration.
 
 The domain names and corresponding service port descriptions are as follows:
 
@@ -203,7 +194,7 @@ If you need to configure SSL certificates, please configure them uniformly in th
 ### Configuration Files
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml > docker-compose.yml
 curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/.env.example > .env
 ```
 
@@ -214,13 +205,6 @@ In general, you should only modify sensitive information such as domain names an
 Refer to the example configurations in the appendix of this article.
 
 ### PostgreSQL Database Configuration
-
-<Callout type="warning">
-  Please note that on the first run of `docker compose up -d`, it may fail with a `Database migrate
-  failed` error and exit because the Postgres database has not yet been initialized while LobeChat
-  has already attempted to connect. In this case, you need to enter `docker compose restart lobe` to
-  restart LobeChat so that it connects to the correct database.
-</Callout>
 
 You can check the logs using the following command:
 
@@ -391,14 +375,13 @@ S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID         # Invalid until manually created 
 S3_SECRET_ACCESS_KEY=YOUR_S3_SECRET_ACCESS_KEY # Invalid until manually created in MinIO UI
 S3_ENDPOINT=http://localhost:9000
 S3_BUCKET=lobe # Invalid until manually created in MinIO UI
-S3_ENDPOINT=http://localhost:9000
+S3_PUBLIC_DOMAIN=http://localhost:9000
 S3_ENABLE_PATH_STYLE=1
 
 # Other environment variables, as needed. You can refer to the environment variables configuration for the client version, making sure not to have ACCESS_CODE.
 # OPEANAI_API_KEY=sk-xxxx
 # OPENAI_PROXY_URL=https://api.openai.com/v1
 # OPENAI_MODEL_LIST=...
-
 ```
 
 #### `docker-compose.yml`
@@ -467,7 +450,6 @@ volumes:
     driver: local
   s3_data:
     driver: local
-
 ```
 
 ### Deploying to Production
@@ -584,7 +566,6 @@ volumes:
     driver: local
   s3_data:
     driver: local
-
 ```
 
 #### `minio-bucket-config.json`
