@@ -16,7 +16,7 @@ export const opeanaiTTSOptions: SelectProps['options'] = [
 
 export const opeanaiSTTOptions: SelectProps['options'] = [
   {
-    label: <LabelRenderer Icon={OpenAI.Avatar} label={'stt-1'} />,
+    label: <LabelRenderer Icon={OpenAI.Avatar} label={'whisper-1'} />,
     value: 'whisper-1',
   },
 ];
