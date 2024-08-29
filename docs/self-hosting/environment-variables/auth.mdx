@@ -137,21 +137,44 @@ LobeChat provides a complete authentication service capability when deployed. Th
 #### `CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
 
 - Type: Required
-- Description: Client ID of the Cloudflare Zero Trust provider application. You can access it [here][auth0-client-page] and navigate to the application settings to view.
+- Description: Client ID of the Cloudflare Zero Trust provider application.
 - Default: `-`
-- Example: `lobe-chat`
+- Example: `711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
 
 #### `CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
 
 - Type: Required
 - Description: The plaintext of the Client Secret for the Cloudflare Zero Trust provider
 - Default: `-`
-- Example: `insecure_secret`
+- Example: `8f26d4ef834a828045b401e032ae128dbb00471bca53f0d25332323f525dfa30`
 
 #### `CLOUDFLARE_ZERO_TRUST_ISSUER`
 
 - Type: Required
 - Description: Issuer of the Cloudflare Zero Trust provider application.
+- Default: `-`
+- Example: `https://example.cloudflareaccess.com/cdn-cgi/access/sso/oidc/711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
+
+### Generic OIDC
+
+#### `GENERIC_OIDC_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the Generic OIDC provider application.
+- Default: `-`
+- Example: `_client_id_for_lobe_chat_`
+
+#### `GENERIC_OIDC_CLIENT_SECRET`
+
+- Type: Required
+- Description: The plaintext of the Client Secret for the Generic OIDC provider
+- Default: `-`
+- Example: `_client_secret_for_lobe_chat_`
+
+#### `GENERIC_OIDC_ISSUER`
+
+- Type: Required
+- Description: Issuer of the Generic OIDC provider application.
 - Default: `-`
 - Example: `https://sso.example.com`
 
