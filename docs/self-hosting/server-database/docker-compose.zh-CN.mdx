@@ -48,11 +48,11 @@ tags:
 
 ## 快速启动
 
-为方便快速上手，这一章使用 `docker-compose/local` 目录中的 docker-compose 配置文件快速启动。启动后的 LobeChat 应用运行在 `http://localhost:3210` 端口，适用于本地设备运行。
+为方便快速上手，这一章使用 `docker-compose/local` 目录中的 docker-compose 配置文件，启动后的 LobeChat 应用运行在 `http://localhost:3210`，可在本地运行。
 
 <Callout type="warning">
-  为了快速上手，此 docker-compose.yml内置掉了大量的 SECRET/Password
-  的配置，仅适用于快速演示或个人本地使用。请勿直接用于线上生产环境！遇到安全问题请自己负责！
+  为了快速上手，此 docker-compose.yml内置掉了大量的 Secret/Password
+  的配置，仅适用于快速演示或个人本地使用。请勿直接用于线上生产环境！否则遇到安全问题请自行负责！
 </Callout>
 
 <Steps>
@@ -67,13 +67,9 @@ mkdir lobe-chat-db
 拉取配置文件到你的目录中：
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml > .env
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml > docker-compose.yml
 curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example > .env
 ```
-
-你也可以从下文的附录中复制得到这两份示例配置文件。
-
-请按照注释，修改你的 `.env` 和 `docker-compose.yml` 文件。
 
 ### 启动服务
 
@@ -89,17 +85,16 @@ docker compose up -d
 
    - `Redirect URI` 为 `http://localhost:3210/api/auth/callback/logto`
    - `Post sign-out redirect URI` 为 `http://localhost:3210/`
-   - （可选）`CORS allowed origins` 为 `http://localhost:3210`
 
-3. 获取 `Client ID` 和 `Client Secret`，填入你的 `.env` 文件中对应的 `LOGTO_CLIENT_ID` 、 `LOGTO_CLIENT_SECRETT`
+3. 获取 `Client ID` 和 `Client Secret`，填入 `.env` 文件中对应的 `LOGTO_CLIENT_ID` 、 `LOGTO_CLIENT_SECRETT`
 
 ### 配置 MinIO S3
 
-1. 打开 `http://localhost:9001`，访问 MinIO WebUI，默认管理员账号密码在 `docker-compose.yml` 中配置
+1. 打开 `http://localhost:9001`，访问 MinIO WebUI，默认管理员账号密码在 `.env` 中配置
 
 2. 创建符合你的 `.env` 文件中 `MINIO_LOBE_BUCKET` 字段的桶，默认为 `lobe`
 
-3. 选择自定义策略，复制如下内容，粘贴之（如果你修改了桶名，请自行查找替换）
+3. 选择自定义策略，复制并粘贴如下内容（如果你修改了桶名，请自行查找替换）
 
    ```json
    {
@@ -146,20 +141,11 @@ docker compose up -d
 docker compose up -d
 ```
 
-  <Callout typr="warning">
-    此时，请勿使用 `docker compose restart lobe` 来重启，因为这种重启方式不会重新加载环境变量，你的
-    S3 配置将不会生效。
+<Callout typr="warning">
+  此时，请勿使用 `docker compose restart lobe` 来重启，因为这种重启方式不会重新加载环境变量，你的
+  S3 配置将不会生效。
 
 </Callout>
-</Steps>
-
-至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `http://localhost:3210` 访问你的 LobeChat 服务。
-
-如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
-
-```sh
-docker logs -f lobe-database
-```
 
 如果你在容器中看到了以下日志，则说明已经启动成功：
 
@@ -175,9 +161,16 @@ docker logs -f lobe-database
  ✓ Ready in 95ms
 ```
 
+</Steps>
+
+至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `http://localhost:3210` 访问你的 LobeChat 服务。
+
+如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
+
+
 ## 发布到生产
 
-我们同时假设在这些服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
+生产和本地运行存在一个很大的差别，就是在于需要使用域名地址而不是 localhost。我们假设在上述服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
 
 域名和配套服务端口说明如下：
 
@@ -201,7 +194,7 @@ docker logs -f lobe-database
 ### 配置文件
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml > docker-compose.yml
 curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/.env.zh-CN.example > .env
 ```
 
@@ -212,12 +205,6 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
 它们的示例配置请参见本文附录。
 
 ### Postgres 数据库配置
-
-<Callout type="warning">
-  请注意，首次运行 `docker compose up -d` 时，可能会因为 Postgres 数据库尚未初始化完毕，而 LobeChat
-  已经尝试连接而失败，出现 `Database migrate failed` 错误并退出。此时，你需要输入 `docker compose
-  restart lobe` 来重启 LobeChat，从而使其连接到正确的数据库。
-</Callout>
 
 你可以使用下述指令检查日志：
 
