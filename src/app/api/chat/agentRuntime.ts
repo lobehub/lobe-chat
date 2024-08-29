@@ -208,6 +208,14 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURL };
     }
+    case ModelProvider.Upstage: {
+      const { UPSTAGE_API_KEY, UPSTAGE_PROXY_URL } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || UPSTAGE_API_KEY);
+      const baseURL = payload?.endpoint || UPSTAGE_PROXY_URL;
+
+      return { apiKey, baseURL };
+    }
   }
 };
 
