@@ -96,7 +96,6 @@ export const getLLMConfig = () => {
 
       ENABLED_UPSTAGE: z.boolean(),
       UPSTAGE_API_KEY: z.string().optional(),
-      UPSTAGE_PROXY_URL: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -190,7 +189,6 @@ export const getLLMConfig = () => {
 
       ENABLED_UPSTAGE: !!process.env.UPSTAGE_API_KEY,
       UPSTAGE_API_KEY: process.env.UPSTAGE_API_KEY,
-      UPSTAGE_PROXY_URL: process.env.UPSTAGE_PROXY_URL,
     },
   });
 };

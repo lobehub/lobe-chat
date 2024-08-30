@@ -147,7 +147,7 @@ ENV \
     # TogetherAI
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
     # Upstage
-    UPSTAGE_API_KEY="" UPSTAGE_PROXY_URL="" \
+    UPSTAGE_API_KEY="" \
     # 01.AI
     ZEROONE_API_KEY="" \
     # Zhipu

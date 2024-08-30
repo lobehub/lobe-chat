@@ -40,9 +40,6 @@ const Upstage: ModelProviderCard = {
   id: 'upstage',
   modelList: { showModelFetcher: true },
   name: 'Upstage',
-  proxyUrl: {
-    placeholder: 'https://api.upstage.ai/v1/solar',
-  },
 };
 
 export default Upstage;
