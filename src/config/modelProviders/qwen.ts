@@ -4,6 +4,13 @@ import { ModelProviderCard } from '@/types/llm';
 const Qwen: ModelProviderCard = {
   chatModels: [
     {
+      description: '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
+      displayName: 'Qwen Long',
+      enabled: true,
+      id: 'qwen-long',
+      tokens: 1_000_000,
+    },
+    {
       description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入',
       displayName: 'Qwen Turbo',
       enabled: true,
@@ -17,7 +24,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-plus',
-      tokens: 32_768,
+      tokens: 130_000,
     },
     {
       description:
@@ -34,25 +41,7 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Max LongContext',
       functionCall: true,
       id: 'qwen-max-longcontext',
-      tokens: 32_768,
-    },
-    {
-      description: '通义千问2对外开源的7B规模的模型',
-      displayName: 'Qwen2 7B',
-      id: 'qwen2-7b-instruct',
-      tokens: 128_000,
-    },
-    {
-      description: '通义千问2对外开源的57B规模14B激活参数的MOE模型',
-      displayName: 'Qwen2 57B-A14B MoE',
-      id: 'qwen2-57b-a14b-instruct',
-      tokens: 32_768,
-    },
-    {
-      description: '通义千问2对外开源的72B规模的模型',
-      displayName: 'Qwen2 72B',
-      id: 'qwen2-72b-instruct',
-      tokens: 128_000,
+      tokens: 30_720,
     },
     {
       description:
@@ -74,9 +63,41 @@ const Qwen: ModelProviderCard = {
     },
     {
       description:
+        '抢先体验即将升级的 qwen-vl-max 大模型。',
+      displayName: 'Qwen VL Max 0809',
+      enabled: true,
+      id: 'qwen-vl-max-0809',
+      tokens: 32_768,
+      vision: true,
+    },
+    {
+      description: '通义千问2对外开源的7B规模的模型',
+      displayName: 'Qwen2 7B',
+      id: 'qwen2-7b-instruct',
+      tokens: 128_000,
+    },
+    {
+      description: '通义千问2对外开源的57B规模14B激活参数的MOE模型',
+      displayName: 'Qwen2 57B-A14B MoE',
+      id: 'qwen2-57b-a14b-instruct',
+      tokens: 32_768,
+    },
+    {
+      description: '通义千问2对外开源的72B规模的模型',
+      displayName: 'Qwen2 72B',
+      id: 'qwen2-72b-instruct',
+      tokens: 128_000,
+    },
+    {
+      description: 'Qwen2-Math 模型具有强大的数学解题能力',
+      displayName: 'Qwen2 Math 72B',
+      id: 'qwen2-math-72b-instruct',
+      tokens: 128_000,
+    },
+    {
+      description:
         '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
       displayName: 'Qwen VL',
-      enabled: true,
       id: 'qwen-vl-v1',
       tokens: 8192,
       vision: true,
@@ -85,25 +106,8 @@ const Qwen: ModelProviderCard = {
       description:
         '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
       displayName: 'Qwen VL Chat',
-      enabled: true,
       id: 'qwen-vl-chat-v1',
       tokens: 8192,
-      vision: true,
-    },
-    {
-      description: 'Qwen2-Math 模型具有强大的数学解题能力',
-      displayName: 'Qwen2 Math 72B',
-      enabled: true,
-      id: 'qwen2-math-72b-instruct',
-      tokens: 4096,
-    },
-    {
-      description:
-        '抢先体验即将升级的 qwen-vl-max 大模型。',
-      displayName: 'Qwen VL Max 0809',
-      enabled: true,
-      id: 'qwen-vl-max-0809',
-      tokens: 32_768,
       vision: true,
     },
   ],

@@ -46,7 +46,7 @@ const Baichuan: ModelProviderCard = {
       tokens: 192_000,
     },
   ],
-  checkModel: 'Baichuan4',
+  checkModel: 'Baichuan3-Turbo',
   id: 'baichuan',
   modelList: { showModelFetcher: true },
   name: 'Baichuan',

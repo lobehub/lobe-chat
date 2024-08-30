@@ -18,6 +18,7 @@ import {
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
+  UpstageProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
@@ -59,6 +60,7 @@ export const useProviderList = (): ProviderItem[] => {
       TaichuProviderCard,
       Ai360ProviderCard,
       SiliconCloudProviderCard,
+      UpstageProviderCard,
     ],
     [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider],
   );

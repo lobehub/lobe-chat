@@ -104,8 +104,6 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
       }
 
       case AsyncTaskStatus.Success: {
-        console.log(embeddingStatus);
-
         // if no embedding status, it means that the embedding is not started
         if (!embeddingStatus || preparingEmbedding)
           return (
