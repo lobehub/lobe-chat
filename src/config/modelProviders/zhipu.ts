@@ -23,7 +23,15 @@ const ZhiPu: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      description: '智谱当前最先进最智能的模型，指令遵从能力大幅提升18.6%，发布于20240605',
+      description: '高智能旗舰：性能全面提升，长文本和复杂任务能力显著增强',
+      displayName: 'GLM-4-Plus',
+      enabled: true,
+      functionCall: true,
+      id: 'glm-4-plus',
+      tokens: 128_000,
+    },
+    {
+      description: '高智能模型：适用于处理高度复杂和多样化的任务',
       displayName: 'GLM-4-0520',
       enabled: true,
       functionCall: true,
@@ -31,7 +39,7 @@ const ZhiPu: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      description: '发布于2024年1月16日的旧版旗舰模型，目前已被 GLM-4-0520 版本超越', // deprecated on 2025-06
+      description: '旧版旗舰：发布于2024年1月16日，目前已被 GLM-4-0520 取代', // deprecated on 2025-06
       displayName: 'GLM-4',
       functionCall: true,
       id: 'glm-4',
@@ -62,11 +70,20 @@ const ZhiPu: ModelProviderCard = {
     },
     {
       description:
-        '实现了视觉语言特征的深度融合，支持视觉问答、图像字幕、视觉定位、复杂目标检测等各类图像理解任务',
+        '视频和图像理解：具备视频内容和多图片的理解能力',
+      displayName: 'GLM-4V-Plus',
+      enabled: true,
+      id: 'glm-4v-plus',
+      tokens: 8192,
+      vision: true,
+    },
+    {
+      description:
+        '图像理解：具备图像理解能力和推理能力',
       displayName: 'GLM-4V',
       enabled: true,
       id: 'glm-4v',
-      tokens: 2000,
+      tokens: 2048,
       vision: true,
     },
     {
