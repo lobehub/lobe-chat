@@ -56,7 +56,8 @@
     "title": "Obecny tryb wdrożenia nie obsługuje zarządzania plikami"
   },
   "preview": {
-    "unsupportedFile": "Ten format pliku nie jest obsługiwany w podglądzie online"
+    "downloadFile": "Pobierz plik",
+    "unsupportedFileAndContact": "Ten format pliku nie jest obecnie obsługiwany w podglądzie online. Jeśli chcesz uzyskać podgląd, zachęcamy do <1>skontaktowania się z nami</1>."
   },
   "searchFilePlaceholder": "Szukaj pliku",
   "tab": {

@@ -56,7 +56,8 @@
     "title": "O modo de implantação atual não suporta gerenciamento de arquivos"
   },
   "preview": {
-    "unsupportedFile": "Este formato de arquivo não suporta visualização online"
+    "downloadFile": "Baixar arquivo",
+    "unsupportedFileAndContact": "Este formato de arquivo não é suportado para visualização online. Se você tiver interesse em visualizar, sinta-se à vontade para <1>nos enviar um feedback</1>."
   },
   "searchFilePlaceholder": "Pesquisar arquivo",
   "tab": {
