@@ -1,14 +1,14 @@
 'use client';
 
-import DocViewer, { MSDocRenderer } from '@cyntler/react-doc-viewer';
+import DocViewer from '@cyntler/react-doc-viewer';
 import { createStyles } from 'antd-style';
 import { CSSProperties, memo } from 'react';
 
 import { FileListItem } from '@/types/files';
 
 import NotSupport from './NotSupport';
-import PDFViewer from './PDFViewer';
-import TXTViewer from './TXTViewer';
+import { FileViewRenderers } from './Renderer';
+import PDFRenderer from './Renderer/PDF';
 
 const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -25,7 +25,7 @@ interface FileViewerProps extends FileListItem {
 const FileViewer = memo<FileViewerProps>(({ id, style, fileType, url, name }) => {
   const { styles } = useStyles();
   if (fileType === 'pdf' || name.endsWith('.pdf')) {
-    return <PDFViewer fileId={id} url={url} />;
+    return <PDFRenderer fileId={id} url={url} />;
   }
 
   return (
@@ -36,7 +36,7 @@ const FileViewer = memo<FileViewerProps>(({ id, style, fileType, url, name }) =>
         noRenderer: { overrideComponent: NotSupport },
       }}
       documents={[{ fileName: name, fileType, uri: url }]}
-      pluginRenderers={[TXTViewer, MSDocRenderer]}
+      pluginRenderers={FileViewRenderers}
       style={style}
     />
   );
