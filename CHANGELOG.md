@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.14.11](https://github.com/lobehub/lobe-chat/compare/v1.14.10...v1.14.11)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Stepfun models info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Stepfun models info, closes [#3685](https://github.com/lobehub/lobe-chat/issues/3685) ([478b40a](https://github.com/lobehub/lobe-chat/commit/478b40a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.14.10](https://github.com/lobehub/lobe-chat/compare/v1.14.9...v1.14.10)
 
 <sup>Released on **2024-08-30**</sup>
