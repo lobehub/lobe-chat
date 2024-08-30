@@ -74,7 +74,7 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4V-Plus',
       enabled: true,
       id: 'glm-4v-plus',
-      tokens: 8000,
+      tokens: 8192,
       vision: true,
     },
     {
@@ -83,7 +83,7 @@ const ZhiPu: ModelProviderCard = {
       displayName: 'GLM-4V',
       enabled: true,
       id: 'glm-4v',
-      tokens: 2000,
+      tokens: 2048,
       vision: true,
     },
     {
