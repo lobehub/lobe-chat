@@ -42,7 +42,7 @@ const Minimax: ModelProviderCard = {
       tokens: 8192,
     },
   ],
-  checkModel: 'abab5.5s-chat',
+  checkModel: 'abab6.5s-chat',
   id: 'minimax',
   name: 'Minimax',
 };
