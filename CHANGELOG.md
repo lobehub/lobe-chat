@@ -2,6 +2,31 @@
 
 # Changelog
 
+## [Version 1.15.0](https://github.com/lobehub/lobe-chat/compare/v1.14.12...v1.15.0)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Upstage model provider support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Upstage model provider support, closes [#3670](https://github.com/lobehub/lobe-chat/issues/3670) ([4b8591b](https://github.com/lobehub/lobe-chat/commit/4b8591b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.14.12](https://github.com/lobehub/lobe-chat/compare/v1.14.11...v1.14.12)
 
 <sup>Released on **2024-08-30**</sup>
