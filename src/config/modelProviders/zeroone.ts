@@ -51,6 +51,7 @@ const ZeroOne: ModelProviderCard = {
     {
       description: '小而精悍，轻量极速模型。提供强化数学运算和代码编写能力。',
       displayName: 'Yi Spark',
+      enabled: true,
       id: 'yi-spark',
       tokens: 16_384,
     },
