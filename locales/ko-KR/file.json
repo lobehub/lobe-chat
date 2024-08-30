@@ -56,7 +56,8 @@
     "title": "현재 배포 모드는 파일 관리를 지원하지 않습니다."
   },
   "preview": {
-    "unsupportedFile": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다."
+    "downloadFile": "파일 다운로드",
+    "unsupportedFileAndContact": "이 파일 형식은 온라인 미리보기를 지원하지 않습니다. 미리보기가 필요하신 경우, <1>저희에게 피드백을 주시기 바랍니다</1>."
   },
   "searchFilePlaceholder": "파일 검색",
   "tab": {

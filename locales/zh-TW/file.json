@@ -56,7 +56,8 @@
     "title": "當前部署模式不支持檔案管理"
   },
   "preview": {
-    "unsupportedFile": "此檔案格式不支持在線預覽"
+    "downloadFile": "下載檔案",
+    "unsupportedFileAndContact": "此檔案格式暫不支援線上預覽，如有預覽需求，歡迎<1>反饋給我們</1>"
   },
   "searchFilePlaceholder": "搜索檔案",
   "tab": {

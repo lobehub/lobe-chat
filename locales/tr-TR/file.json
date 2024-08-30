@@ -56,7 +56,8 @@
     "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
   },
   "preview": {
-    "unsupportedFile": "Bu dosya formatı çevrimiçi önizleme desteklenmiyor"
+    "downloadFile": "Dosyayı İndir",
+    "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
   },
   "searchFilePlaceholder": "Dosya Ara",
   "tab": {

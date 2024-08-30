@@ -56,7 +56,8 @@
     "title": "Le mode de déploiement actuel ne prend pas en charge la gestion des fichiers"
   },
   "preview": {
-    "unsupportedFile": "Ce format de fichier ne prend pas en charge l'aperçu en ligne"
+    "downloadFile": "Télécharger le fichier",
+    "unsupportedFileAndContact": "Ce format de fichier n'est pas encore pris en charge pour l'aperçu en ligne. Si vous souhaitez un aperçu, n'hésitez pas à <1>nous contacter</1>."
   },
   "searchFilePlaceholder": "Rechercher un fichier",
   "tab": {

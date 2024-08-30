@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.14.12](https://github.com/lobehub/lobe-chat/compare/v1.14.11...v1.14.12)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix ms doc file preview, Update the sorting of each provider model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix ms doc file preview, closes [#3686](https://github.com/lobehub/lobe-chat/issues/3686) ([2cd78cf](https://github.com/lobehub/lobe-chat/commit/2cd78cf))
+- **misc**: Update the sorting of each provider model, closes [#3688](https://github.com/lobehub/lobe-chat/issues/3688) ([2630bbc](https://github.com/lobehub/lobe-chat/commit/2630bbc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.14.11](https://github.com/lobehub/lobe-chat/compare/v1.14.10...v1.14.11)
 
 <sup>Released on **2024-08-30**</sup>
