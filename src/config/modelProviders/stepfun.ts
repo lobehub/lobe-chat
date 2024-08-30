@@ -8,7 +8,6 @@ const Stepfun: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      enabled: true,
       id: 'step-1-256k',
       tokens: 256_000,
     },
