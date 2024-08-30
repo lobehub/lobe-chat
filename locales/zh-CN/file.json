@@ -56,7 +56,8 @@
     "title": "当前部署模式不支持文件管理"
   },
   "preview": {
-    "unsupportedFile": "此文件格式不支持在线预览"
+    "downloadFile": "下载文件",
+    "unsupportedFileAndContact": "此文件格式暂不支持在线预览，如有预览诉求，欢迎<1>反馈给我们</1>"
   },
   "searchFilePlaceholder": "搜索文件",
   "tab": {

@@ -2,6 +2,107 @@
 
 # Changelog
 
+### [Version 1.15.2](https://github.com/lobehub/lobe-chat/compare/v1.15.1...v1.15.2)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Qwen and Gemini models info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Qwen and Gemini models info, closes [#3693](https://github.com/lobehub/lobe-chat/issues/3693) ([ba01641](https://github.com/lobehub/lobe-chat/commit/ba01641))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.15.1](https://github.com/lobehub/lobe-chat/compare/v1.15.0...v1.15.1)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update the sorting of each provider model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update the sorting of each provider model, closes [#3689](https://github.com/lobehub/lobe-chat/issues/3689) ([e82c9dd](https://github.com/lobehub/lobe-chat/commit/e82c9dd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.15.0](https://github.com/lobehub/lobe-chat/compare/v1.14.12...v1.15.0)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Upstage model provider support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Upstage model provider support, closes [#3670](https://github.com/lobehub/lobe-chat/issues/3670) ([4b8591b](https://github.com/lobehub/lobe-chat/commit/4b8591b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.14.12](https://github.com/lobehub/lobe-chat/compare/v1.14.11...v1.14.12)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix ms doc file preview, Update the sorting of each provider model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix ms doc file preview, closes [#3686](https://github.com/lobehub/lobe-chat/issues/3686) ([2cd78cf](https://github.com/lobehub/lobe-chat/commit/2cd78cf))
+- **misc**: Update the sorting of each provider model, closes [#3688](https://github.com/lobehub/lobe-chat/issues/3688) ([2630bbc](https://github.com/lobehub/lobe-chat/commit/2630bbc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.14.11](https://github.com/lobehub/lobe-chat/compare/v1.14.10...v1.14.11)
 
 <sup>Released on **2024-08-30**</sup>

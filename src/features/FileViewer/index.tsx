@@ -1,21 +1,22 @@
 'use client';
 
-import DocViewer, { MSDocRenderer } from '@cyntler/react-doc-viewer';
-import { createStyles } from 'antd-style';
+import DocViewer from '@cyntler/react-doc-viewer';
+import { css, cx } from 'antd-style';
 import { CSSProperties, memo } from 'react';
 
 import { FileListItem } from '@/types/files';
 
 import NotSupport from './NotSupport';
-import PDFViewer from './PDFViewer';
-import TXTViewer from './TXTViewer';
+import { FileViewRenderers } from './Renderer';
+import PDFRenderer from './Renderer/PDF';
 
-const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    padding: 12px;
-    background: ${token.colorBgLayout} !important;
-  `,
-}));
+const container = css`
+  background: transparent !important;
+
+  #proxy-renderer {
+    height: 100%;
+  }
+`;
 
 interface FileViewerProps extends FileListItem {
   className?: string;
@@ -23,20 +24,19 @@ interface FileViewerProps extends FileListItem {
 }
 
 const FileViewer = memo<FileViewerProps>(({ id, style, fileType, url, name }) => {
-  const { styles } = useStyles();
   if (fileType === 'pdf' || name.endsWith('.pdf')) {
-    return <PDFViewer fileId={id} url={url} />;
+    return <PDFRenderer fileId={id} url={url} />;
   }
 
   return (
     <DocViewer
-      className={styles.container}
+      className={cx(container)}
       config={{
         header: { disableHeader: true },
         noRenderer: { overrideComponent: NotSupport },
       }}
       documents={[{ fileName: name, fileType, uri: url }]}
-      pluginRenderers={[TXTViewer, MSDocRenderer]}
+      pluginRenderers={FileViewRenderers}
       style={style}
     />
   );
