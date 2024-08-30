@@ -25,7 +25,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-plus',
-      tokens: 32_768,
+      tokens: 130_000,
     },
     {
       description:
@@ -42,7 +42,7 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Max LongContext',
       functionCall: true,
       id: 'qwen-max-longcontext',
-      tokens: 32_768,
+      tokens: 30_720,
     },
     {
       description:
