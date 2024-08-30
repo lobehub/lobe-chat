@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.1](https://github.com/lobehub/lobe-chat/compare/v1.15.0...v1.15.1)
+
+<sup>Released on **2024-08-30**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update the sorting of each provider model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update the sorting of each provider model, closes [#3689](https://github.com/lobehub/lobe-chat/issues/3689) ([e82c9dd](https://github.com/lobehub/lobe-chat/commit/e82c9dd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.15.0](https://github.com/lobehub/lobe-chat/compare/v1.14.12...v1.15.0)
 
 <sup>Released on **2024-08-30**</sup>
