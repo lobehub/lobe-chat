@@ -112,7 +112,7 @@ const Qwen: ModelProviderCard = {
       vision: true,
     },
   ],
-  checkModel: 'qwen-long',
+  checkModel: 'qwen-turbo',
   disableBrowserRequest: true,
   id: 'qwen',
   modelList: { showModelFetcher: true },
