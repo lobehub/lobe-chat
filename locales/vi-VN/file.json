@@ -56,7 +56,8 @@
     "title": "Chế độ triển khai hiện tại không hỗ trợ quản lý tệp"
   },
   "preview": {
-    "unsupportedFile": "Định dạng tệp này không hỗ trợ xem trước trực tuyến"
+    "downloadFile": "Tải tệp",
+    "unsupportedFileAndContact": "Định dạng tệp này hiện không hỗ trợ xem trước trực tuyến. Nếu bạn có yêu cầu xem trước, vui lòng <1>phản hồi cho chúng tôi</1>"
   },
   "searchFilePlaceholder": "Tìm kiếm tệp",
   "tab": {

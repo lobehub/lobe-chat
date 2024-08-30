@@ -56,7 +56,8 @@
     "title": "El modo de despliegue actual no soporta la gestión de archivos"
   },
   "preview": {
-    "unsupportedFile": "Este formato de archivo no es compatible con la vista previa en línea"
+    "downloadFile": "Descargar archivo",
+    "unsupportedFileAndContact": "Este formato de archivo no es compatible con la vista previa en línea. Si desea solicitar una vista previa, no dude en <1>contactarnos</1>."
   },
   "searchFilePlaceholder": "Buscar archivo",
   "tab": {
