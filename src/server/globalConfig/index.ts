@@ -47,6 +47,8 @@ export const getServerGlobalConfig = () => {
     ENABLED_SILICONCLOUD,
     SILICONCLOUD_MODEL_LIST,
 
+    ENABLED_UPSTAGE,
+
     ENABLED_SPARK,
 
     ENABLED_AZURE_OPENAI,
@@ -141,6 +143,7 @@ export const getServerGlobalConfig = () => {
           modelString: TOGETHERAI_MODEL_LIST,
         }),
       },
+      upstage: { enabled: ENABLED_UPSTAGE },
       zeroone: { enabled: ENABLED_ZEROONE },
       zhipu: { 
         enabled: ENABLED_ZHIPU, 

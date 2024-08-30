@@ -9,7 +9,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-turbo',
-      tokens: 8000,
+      tokens: 8192,
     },
     {
       description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入',
@@ -17,7 +17,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-plus',
-      tokens: 32_000,
+      tokens: 32_768,
     },
     {
       description:
@@ -26,7 +26,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-max',
-      tokens: 8000,
+      tokens: 8192,
     },
     {
       description:
@@ -34,13 +34,13 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Max LongContext',
       functionCall: true,
       id: 'qwen-max-longcontext',
-      tokens: 30_000,
+      tokens: 32_768,
     },
     {
       description: '通义千问2对外开源的7B规模的模型',
       displayName: 'Qwen2 7B',
       id: 'qwen2-7b-instruct',
-      tokens: 131_072,
+      tokens: 128_000,
     },
     {
       description: '通义千问2对外开源的57B规模14B激活参数的MOE模型',
@@ -52,7 +52,7 @@ const Qwen: ModelProviderCard = {
       description: '通义千问2对外开源的72B规模的模型',
       displayName: 'Qwen2 72B',
       id: 'qwen2-72b-instruct',
-      tokens: 131_072,
+      tokens: 128_000,
     },
     {
       description:

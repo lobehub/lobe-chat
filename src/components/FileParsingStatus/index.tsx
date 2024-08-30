@@ -9,6 +9,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { AsyncTaskStatus, FileParsingTask } from '@/types/asyncTask';
 
+import EmbeddingStatus from './EmbeddingStatus';
+
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   errorReason: css`
     padding: 4px;
@@ -72,7 +74,6 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
         return (
           <Tooltip
             overlayStyle={{ maxWidth: 340, pointerEvents: 'none' }}
-            // style={{}}
             title={
               <Flexbox gap={4}>
                 {t('FileParsingStatus.chunks.status.errorResult')}
@@ -103,124 +104,63 @@ const FileParsingStatus = memo<FileParsingStatusProps>(
       }
 
       case AsyncTaskStatus.Success: {
-        const isEmbeddingProcessing = embeddingStatus === AsyncTaskStatus.Processing;
-
-        switch (embeddingStatus) {
-          case AsyncTaskStatus.Processing: {
-            return (
-              <Flexbox horizontal>
-                <Tooltip
-                  overlayStyle={{ pointerEvents: 'none' }}
-                  title={t('FileParsingStatus.chunks.embeddingStatus.processing')}
-                >
-                  <Tag
-                    bordered={false}
-                    className={cx('chunk-tag', className)}
-                    color={'processing'}
-                    icon={
-                      preparingEmbedding ? (
-                        <Icon icon={Loader2Icon} spin />
-                      ) : (
-                        <Icon icon={BoltIcon} spin={isEmbeddingProcessing} />
-                      )
-                    }
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {chunkCount}
-                  </Tag>
-                </Tooltip>
-              </Flexbox>
-            );
-          }
-
-          case AsyncTaskStatus.Error: {
-            return (
+        // if no embedding status, it means that the embedding is not started
+        if (!embeddingStatus || preparingEmbedding)
+          return (
+            <Flexbox horizontal>
               <Tooltip
-                overlayStyle={{ maxWidth: 340, pointerEvents: 'none' }}
-                title={
-                  <Flexbox gap={4}>
-                    {t('FileParsingStatus.chunks.embeddingStatus.errorResult')}
-                    {embeddingError && (
-                      <Flexbox className={styles.errorReason}>
-                        [{embeddingError.name}]:{' '}
-                        {embeddingError.body && typeof embeddingError.body !== 'string'
-                          ? embeddingError.body.detail
-                          : embeddingError.body}
-                      </Flexbox>
-                    )}
-                  </Flexbox>
-                }
+                overlayStyle={{ pointerEvents: 'none' }}
+                title={t('FileParsingStatus.chunks.embeddingStatus.empty')}
               >
-                <Tag bordered={false} className={className} color={'error'}>
-                  {t('FileParsingStatus.chunks.embeddingStatus.error')}{' '}
-                  <Icon
-                    icon={RotateCwIcon}
-                    onClick={() => {
-                      onErrorClick?.('embedding');
-                    }}
-                    style={{ cursor: 'pointer' }}
-                    title={t('retry', { ns: 'common' })}
-                  />
+                <Tag
+                  bordered={false}
+                  className={cx('chunk-tag', className)}
+                  icon={
+                    preparingEmbedding ? <Icon icon={Loader2Icon} spin /> : <Icon icon={BoltIcon} />
+                  }
+                  onClick={() => {
+                    onClick?.(AsyncTaskStatus.Success);
+                  }}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {chunkCount}
+                  {
+                    // if want to hide button
+                    hideEmbeddingButton ||
+                    // or if preparing the embedding
+                    preparingEmbedding ? null : (
+                      <Button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onEmbeddingClick?.();
+                        }}
+                        style={{
+                          fontSize: 12,
+                          height: 'auto',
+                          paddingBlock: 0,
+                          paddingInline: '8px 0',
+                        }}
+                        type={'link'}
+                      >
+                        {t('FileParsingStatus.chunks.embeddings')}
+                      </Button>
+                    )
+                  }
                 </Tag>
               </Tooltip>
-            );
-          }
-        }
+            </Flexbox>
+          );
 
         return (
-          <Flexbox horizontal>
-            <Tooltip
-              overlayStyle={{ pointerEvents: 'none' }}
-              title={
-                finishEmbedding
-                  ? t('FileParsingStatus.chunks.embeddingStatus.success')
-                  : t('FileParsingStatus.chunks.embeddingStatus.empty')
-              }
-            >
-              <Tag
-                bordered={false}
-                className={cx('chunk-tag', className)}
-                color={finishEmbedding ? 'purple' : undefined}
-                icon={
-                  preparingEmbedding ? (
-                    <Icon icon={Loader2Icon} spin />
-                  ) : (
-                    <Icon icon={BoltIcon} spin={isEmbeddingProcessing} />
-                  )
-                }
-                onClick={() => {
-                  onClick?.(AsyncTaskStatus.Success);
-                }}
-                style={{ cursor: 'pointer' }}
-              >
-                {chunkCount}
-                {
-                  // if want to hide button
-                  hideEmbeddingButton ||
-                  // or if finished the embedding
-                  finishEmbedding ||
-                  // or if preparing the embedding
-                  preparingEmbedding ? null : (
-                    <Button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEmbeddingClick?.();
-                      }}
-                      style={{
-                        fontSize: 12,
-                        height: 'auto',
-                        paddingBlock: 0,
-                        paddingInline: '8px 0',
-                      }}
-                      type={'link'}
-                    >
-                      {t('FileParsingStatus.chunks.embeddings')}
-                    </Button>
-                  )
-                }
-              </Tag>
-            </Tooltip>
-          </Flexbox>
+          <EmbeddingStatus
+            chunkCount={chunkCount}
+            className={className}
+            embeddingError={embeddingError}
+            embeddingStatus={embeddingStatus}
+            finishEmbedding={finishEmbedding}
+            onClick={onClick}
+            onErrorClick={onErrorClick}
+          />
         );
       }
     }

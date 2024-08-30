@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
+import { useChatStore } from '@/store/chat';
 import { ChatFileItem } from '@/types/message';
 import { formatSize } from '@/utils/format';
 
@@ -26,8 +27,9 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-const ArtifactItem = memo<ChatFileItem>(({ name, fileType, size }) => {
+const FileItem = memo<ChatFileItem>(({ name, fileType, size, id }) => {
   const { styles } = useStyles();
+  const openFilePreview = useChatStore((s) => s.openFilePreview);
 
   return (
     <Flexbox
@@ -35,11 +37,9 @@ const ArtifactItem = memo<ChatFileItem>(({ name, fileType, size }) => {
       className={styles.container}
       gap={8}
       horizontal
-      // onClick={() => {
-      //   if (!isToolHasUI || !identifier) return;
-      //
-      //   openToolUI(messageId, identifier);
-      // }}
+      onClick={() => {
+        openFilePreview({ fileId: id });
+      }}
     >
       <FileIcon fileName={name} fileType={fileType} />
       <Flexbox>
@@ -50,4 +50,4 @@ const ArtifactItem = memo<ChatFileItem>(({ name, fileType, size }) => {
   );
 });
 
-export default ArtifactItem;
+export default FileItem;

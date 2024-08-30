@@ -137,19 +137,42 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 - 类型：必选
 - 描述: Cloudflare Zero Trust 提供程序的 Client ID
 - 默认值: `-`
-- 示例: `lobe-chat`
+- 示例: `711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
 
 #### `CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
 
 - 类型：必选
 - 描述: Cloudflare Zero Trust 提供程序的 Client Secret 的明文
 - 默认值: `-`
-- 示例: `insecure_secret`
+- 示例: `8f26d4ef834a828045b401e032ae128dbb00471bca53f0d25332323f525dfa30`
 
 #### `CLOUDFLARE_ZERO_TRUST_ISSUER`
 
 - 类型：必选
 - 描述: Cloudflare Zero Trust 提供程序的 OpenID Connect 颁发者
+- 默认值: `-`
+- 示例: `https://example.cloudflareaccess.com/cdn-cgi/access/sso/oidc/711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
+
+### Generic OIDC
+
+#### `GENERIC_OIDC_CLIENT_ID`
+
+- 类型：必选
+- 描述: Generic OIDC 提供程序的 Client ID
+- 默认值: `-`
+- 示例: `_client_id_for_lobe_chat_`
+
+#### `GENERIC_OIDC_CLIENT_SECRET`
+
+- 类型：必选
+- 描述: Generic OIDC 提供程序的 Client Secret 的明文
+- 默认值: `-`
+- 示例: `_client_secret_for_lobe_chat_`
+
+#### `GENERIC_OIDC_ISSUER`
+
+- 类型：必选
+- 描述: Generic OIDC 提供程序的 OpenID Connect 颁发者
 - 默认值: `-`
 - 示例: `https://sso.example.com`
 

@@ -9,9 +9,11 @@ const isArtifactMessageUIOpen = (id: string) => (s: ChatStoreState) =>
 const showArtifactUI = (s: ChatStoreState) => !!s.portalToolMessage;
 const showFilePreview = (s: ChatStoreState) => !!s.portalFile;
 const previewFileId = (s: ChatStoreState) => s.portalFile?.fileId;
+const chunkText = (s: ChatStoreState) => s.portalFile?.chunkText;
 
 export const chatPortalSelectors = {
   artifactMessageId,
+  chunkText,
   isArtifactMessageUIOpen,
   previewFileId,
   showArtifactUI,
