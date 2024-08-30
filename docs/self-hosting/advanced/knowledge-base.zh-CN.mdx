@@ -31,6 +31,12 @@ S3（或兼容 S3 协议的存储服务）用于存储上传的文件。
 
 OpenAI 的嵌入（Embedding）服务用于将文本转化为向量表示。
 
+<Callout type={'info'}>
+
+LobeChat 当前默认使用 OpenAI `text-embedding-3-small` 模型，请确保你的 API Key 可以访问该模型。
+
+</Callout>
+
 - **用途**：生成文本的向量表示，用于语义搜索
 - **注意事项**：
   - 需要有效的 OpenAI API 密钥
