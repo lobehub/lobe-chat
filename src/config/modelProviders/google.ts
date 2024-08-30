@@ -34,6 +34,15 @@ const Google: ModelProviderCard = {
       vision: true,
     },
     {
+      description: 'Fast and versatile multimodal model for scaling across diverse tasks',
+      displayName: 'Gemini 1.5 Flash 001',
+      functionCall: true,
+      id: 'gemini-1.5-flash-001',
+      maxOutput: 8192,
+      tokens: 1_048_576 + 8192,
+      vision: true,
+    },
+    {
       description: 'Mid-size multimodal model that supports up to 2 million tokens',
       displayName: 'Gemini 1.5 Pro',
       enabled: true,
@@ -60,15 +69,6 @@ const Google: ModelProviderCard = {
       id: 'gemini-1.5-pro-exp-0801',
       maxOutput: 8192,
       tokens: 2_097_152 + 8192,
-      vision: true,
-    },
-    {
-      description: 'Fast and versatile multimodal model for scaling across diverse tasks',
-      displayName: 'Gemini 1.5 Flash 001',
-      functionCall: true,
-      id: 'gemini-1.5-flash-001',
-      maxOutput: 8192,
-      tokens: 1_048_576 + 8192,
       vision: true,
     },
     {
