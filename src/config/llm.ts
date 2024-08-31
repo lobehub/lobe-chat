@@ -57,6 +57,7 @@ export const getLLMConfig = () => {
 
       ENABLED_ZEROONE: z.boolean(),
       ZEROONE_API_KEY: z.string().optional(),
+      ZEROONE_MODEL_LIST: z.string().optional(),
 
       ENABLED_TOGETHERAI: z.boolean(),
       TOGETHERAI_API_KEY: z.string().optional(),
@@ -73,6 +74,7 @@ export const getLLMConfig = () => {
 
       ENABLED_QWEN: z.boolean(),
       QWEN_API_KEY: z.string().optional(),
+      QWEN_MODEL_LIST: z.string().optional(),
 
       ENABLED_STEPFUN: z.boolean(),
       STEPFUN_API_KEY: z.string().optional(),
@@ -154,6 +156,7 @@ export const getLLMConfig = () => {
 
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
       ZEROONE_API_KEY: process.env.ZEROONE_API_KEY,
+      ZEROONE_MODEL_LIST: process.env.ZEROONE_MODEL_LIST,
 
       ENABLED_AWS_BEDROCK: process.env.ENABLED_AWS_BEDROCK === '1',
       AWS_REGION: process.env.AWS_REGION,
@@ -166,6 +169,7 @@ export const getLLMConfig = () => {
 
       ENABLED_QWEN: !!process.env.QWEN_API_KEY,
       QWEN_API_KEY: process.env.QWEN_API_KEY,
+      QWEN_MODEL_LIST: process.env.QWEN_MODEL_LIST,
 
       ENABLED_STEPFUN: !!process.env.STEPFUN_API_KEY,
       STEPFUN_API_KEY: process.env.STEPFUN_API_KEY,
