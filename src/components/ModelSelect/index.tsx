@@ -62,7 +62,7 @@ const formatTokenNumber = (num: number): string => {
   if (num >= 1024 && num < 1024 * 41 || num >= 128_000 && num < 1_024_000) {
     kiloToken = Math.floor(num / 1000);
   }
-  if (num === 131_072) return '128K';
+  if (num >= 130000 && num <= 131_072) return '128K';
   return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
 };
 
