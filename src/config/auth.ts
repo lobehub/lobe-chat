@@ -42,7 +42,27 @@ declare global {
   }
 }
 
+// TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
+const removeTipsTemplate = (willBeRemoved: string, replaceOne: string) =>
+  `${willBeRemoved} will be removed in the future. Please set ${replaceOne} instead.`;
+// End
+
 export const getAuthConfig = () => {
+  // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
+  if (process.env.NEXT_AUTH_SECRET) {
+    console.warn(removeTipsTemplate('NEXT_AUTH_SECRET', 'AUTH_SECRET'));
+  }
+  if (process.env.AUTH0_CLIENT_ID) {
+    console.warn(removeTipsTemplate('AUTH0_CLIENT_ID', 'AUTH_AUTH0_ID'));
+  }
+  if (process.env.AUTH0_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('AUTH0_CLIENT_SECRET', 'AUTH_AUTH0_SECRET'));
+  }
+  if (process.env.AUTH0_ISSUER) {
+    console.warn(removeTipsTemplate('AUTH0_ISSUER', 'AUTH_AUTH0_ISSUER'));
+  }
+  // End
+
   return createEnv({
     client: {
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
