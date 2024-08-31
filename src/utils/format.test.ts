@@ -92,20 +92,21 @@ describe('formatTokenNumber', () => {
   it('should format numbers between 41,984 and 127,999 correctly', () => {
     expect(formatTokenNumber(41984)).toBe('41K');
     expect(formatTokenNumber(100000)).toBe('97K');
-    expect(formatTokenNumber(127999)).toBe('125K');
+    expect(formatTokenNumber(127999)).toBe('124K');
   });
 
   it('should return "128K" for 131,072', () => {
     expect(formatTokenNumber(131072)).toBe('128K'); // Qwen
   });
 
-  it('should format numbers between 128,000 and 1,023,999 correctly', () => {
+  it('should format numbers between 128,000 and 999,999 correctly', () => {
     expect(formatTokenNumber(128000)).toBe('128K');
     expect(formatTokenNumber(200000)).toBe('200K'); // Claude
-    expect(formatTokenNumber(1023999)).toBe('1023K');
+    expect(formatTokenNumber(999999)).toBe('999K');
   });
 
-  it('should format numbers 1,024,000 and above correctly', () => {
+  it('should format numbers 1,000,000 and above correctly', () => {
+    expect(formatTokenNumber(1000000)).toBe('1M');
     expect(formatTokenNumber(1024000)).toBe('1M');
     expect(formatTokenNumber(1048576)).toBe('1M'); // Gemini Flash
     expect(formatTokenNumber(2097152)).toBe('2M'); // Gemini Pro
