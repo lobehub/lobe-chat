@@ -118,6 +118,12 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 
 https://github.com/user-attachments/assets/faa8cf67-e743-4590-8bf6-ebf6ccc34175
 
+
+> \[!TIP]
+>
+> 查阅 [📘 LobeChat 知识库上线 —— 此刻起，跬步千里](https://lobehub.com/zh/blog/knowledge-base) 了解详情。
+
+
 <div align="right">
 
 [![][back-to-top]](#readme-top)
