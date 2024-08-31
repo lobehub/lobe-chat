@@ -113,7 +113,7 @@ const Qwen: ModelProviderCard = {
     },
   ],
   checkModel: 'qwen-turbo',
-  disableBrowserRequest: true,
+  disableBrowserRequest: true, // CORS issue
   id: 'qwen',
   modelList: { showModelFetcher: true },
   name: 'Qwen',
