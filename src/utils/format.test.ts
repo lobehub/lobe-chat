@@ -109,6 +109,7 @@ describe('formatTokenNumber', () => {
     expect(formatTokenNumber(1000000)).toBe('1M');
     expect(formatTokenNumber(1024000)).toBe('1M');
     expect(formatTokenNumber(1048576)).toBe('1M'); // Gemini Flash
+    expect(formatTokenNumber(2000000)).toBe('2M');
     expect(formatTokenNumber(2097152)).toBe('2M'); // Gemini Pro
   });
 });
