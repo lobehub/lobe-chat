@@ -52,18 +52,19 @@
 
 - [👋🏻 开始使用 & 交流](#-开始使用--交流)
 - [✨ 特性一览](#-特性一览)
-  - [`1` 多模型服务商支持](#1-多模型服务商支持)
-  - [`2` 支持本地大语言模型 (LLM)](#2-支持本地大语言模型-llm)
-  - [`3` 模型视觉识别 (Model Visual)](#3-模型视觉识别-model-visual)
-  - [`4` TTS & STT 语音会话](#4-tts--stt-语音会话)
-  - [`5` Text to Image 文生图](#5-text-to-image-文生图)
-  - [`6` 插件系统 (Function Calling)](#6-插件系统-function-calling)
-  - [`7` 助手市场 (GPTs)](#7-助手市场-gpts)
-  - [`8` 支持本地 / 远程数据库](#8-支持本地--远程数据库)
-  - [`9` 支持多用户管理](#9-支持多用户管理)
-  - [`10` 渐进式 Web 应用 (PWA)](#10-渐进式-web-应用-pwa)
-  - [`11` 移动设备适配](#11-移动设备适配)
-  - [`12` 自定义主题](#12-自定义主题)
+  - [`1` 文件上传 / 知识库](#1-文件上传--知识库)
+  - [`2` 多模型服务商支持](#2-多模型服务商支持)
+  - [`3` 支持本地大语言模型 (LLM)](#3-支持本地大语言模型-llm)
+  - [`4` 模型视觉识别 (Model Visual)](#4-模型视觉识别-model-visual)
+  - [`5` TTS & STT 语音会话](#5-tts--stt-语音会话)
+  - [`6` Text to Image 文生图](#6-text-to-image-文生图)
+  - [`7` 插件系统 (Tools Calling)](#7-插件系统-tools-calling)
+  - [`8` 助手市场 (GPTs)](#8-助手市场-gpts)
+  - [`9` 支持本地 / 远程数据库](#9-支持本地--远程数据库)
+  - [`10` 支持多用户管理](#10-支持多用户管理)
+  - [`11` 渐进式 Web 应用 (PWA)](#11-渐进式-web-应用-pwa)
+  - [`12` 移动设备适配](#12-移动设备适配)
+  - [`13` 自定义主题](#13-自定义主题)
   - [更多特性](#更多特性)
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
@@ -112,17 +113,15 @@
 
 [![][image-feat-knowledgebase]][docs-feat-knowledgebase]
 
-### `1` [文件上传/知识库][docs-feat-knowledgebase]
+### `1` [文件上传 / 知识库][docs-feat-knowledgebase]
 
 LobeChat 支持文件上传与知识库功能，你可以上传文件、图片、音频、视频等多种类型的文件，以及创建知识库，方便用户管理和查找文件。同时在对话中使用文件和知识库功能，实现更加丰富的对话体验。
 
-https://github.com/user-attachments/assets/faa8cf67-e743-4590-8bf6-ebf6ccc34175
-
+<https://github.com/user-attachments/assets/faa8cf67-e743-4590-8bf6-ebf6ccc34175>
 
 > \[!TIP]
 >
 > 查阅 [📘 LobeChat 知识库上线 —— 此刻起，跬步千里](https://lobehub.com/zh/blog/knowledge-base) 了解详情。
-
 
 <div align="right">
 
@@ -753,10 +752,10 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
 [docs-feat-auth]: https://lobehub.com/docs/usage/features/auth
 [docs-feat-database]: https://lobehub.com/docs/usage/features/database
+[docs-feat-knowledgebase]: https://lobehub.com/blog/knowledge-base
 [docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
 [docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
 [docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
-[docs-feat-knowledgebase]: https://lobehub.com/blog/knowledge-base
 [docs-feat-provider]: https://lobehub.com/docs/usage/features/multi-ai-providers
 [docs-feat-pwa]: https://lobehub.com/docs/usage/features/pwa
 [docs-feat-t2i]: https://lobehub.com/docs/usage/features/text-to-image
@@ -799,10 +798,10 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-agent]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png
 [image-feat-auth]: https://github.com/lobehub/lobe-chat/assets/17870709/8ce70e15-40df-451e-b700-66090fe5b8c2
 [image-feat-database]: https://github.com/lobehub/lobe-chat/assets/17870709/c27a0234-a4e9-40e5-8bcb-42d5ce7e40f9
+[image-feat-knowledgebase]: https://github.com/user-attachments/assets/77e58e1c-c82f-4341-b159-f4eeede9967f
 [image-feat-local]: https://github.com/lobehub/lobe-chat/assets/28616219/ca9a21bc-ea6c-4c90-bf4a-fa53b4fb2b5c
 [image-feat-mobile]: https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp
 [image-feat-plugin]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png
-[image-feat-knowledgebase]: https://github.com/user-attachments/assets/77e58e1c-c82f-4341-b159-f4eeede9967f
 [image-feat-privoder]: https://github.com/lobehub/lobe-chat/assets/28616219/b164bc54-8ba2-4c1e-b2f2-f4d7f7e7a551
 [image-feat-pwa]: https://gw.alipayobjects.com/zos/kitchen/69x6bllkX3/pwa.webp
 [image-feat-t2i]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/297746445-0ff762b9-aa08-4337-afb7-12f932b6efbb.png
