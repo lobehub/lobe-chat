@@ -95,7 +95,7 @@ export const getAuthConfig = () => {
       GENERIC_OIDC_CLIENT_ID: z.string().optional(),
       GENERIC_OIDC_CLIENT_SECRET: z.string().optional(),
       GENERIC_OIDC_ISSUER: z.string().optional(),
-      
+
       // ZITADEL
       ZITADEL_CLIENT_ID: z.string().optional(),
       ZITADEL_CLIENT_SECRET: z.string().optional(),
@@ -115,7 +115,7 @@ export const getAuthConfig = () => {
       CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
       // Next Auth
-      NEXT_PUBLIC_ENABLE_NEXT_AUTH: !!process.env.NEXT_AUTH_SECRET,
+      NEXT_PUBLIC_ENABLE_NEXT_AUTH: !!process.env.NEXT_AUTH_SECRET || !!process.env.AUTH_SECRET,
       NEXT_AUTH_SSO_PROVIDERS: process.env.NEXT_AUTH_SSO_PROVIDERS,
       NEXT_AUTH_SECRET: process.env.NEXT_AUTH_SECRET,
 
@@ -152,7 +152,7 @@ export const getAuthConfig = () => {
       GENERIC_OIDC_CLIENT_ID: process.env.GENERIC_OIDC_CLIENT_ID,
       GENERIC_OIDC_CLIENT_SECRET: process.env.GENERIC_OIDC_CLIENT_SECRET,
       GENERIC_OIDC_ISSUER: process.env.GENERIC_OIDC_ISSUER,
-      
+
       // ZITADEL
       ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
       ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
