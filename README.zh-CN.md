@@ -110,9 +110,9 @@
 
 ## ✨ 特性一览
 
-[![][image-feat-knowledgebase]][docs-knowledgebase]
+[![][image-feat-knowledgebase]][docs-feat-knowledgebase]
 
-### `1` [文件上传/知识库][docs-knowledgebase]
+### `1` [文件上传/知识库][docs-feat-knowledgebase]
 
 LobeChat 支持文件上传与知识库功能，你可以上传文件、图片、音频、视频等多种类型的文件，以及创建知识库，方便用户管理和查找文件。同时在对话中使用文件和知识库功能，实现更加丰富的对话体验。
 
