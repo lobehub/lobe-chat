@@ -90,6 +90,11 @@ export const getAuthConfig = () => {
       CLOUDFLARE_ZERO_TRUST_CLIENT_ID: z.string().optional(),
       CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: z.string().optional(),
       CLOUDFLARE_ZERO_TRUST_ISSUER: z.string().optional(),
+
+      // Generic OIDC
+      GENERIC_OIDC_CLIENT_ID: z.string().optional(),
+      GENERIC_OIDC_CLIENT_SECRET: z.string().optional(),
+      GENERIC_OIDC_ISSUER: z.string().optional(),
       
       // ZITADEL
       ZITADEL_CLIENT_ID: z.string().optional(),
@@ -142,6 +147,11 @@ export const getAuthConfig = () => {
       CLOUDFLARE_ZERO_TRUST_CLIENT_ID: process.env.CLOUDFLARE_ZERO_TRUST_CLIENT_ID,
       CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET: process.env.CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET,
       CLOUDFLARE_ZERO_TRUST_ISSUER: process.env.CLOUDFLARE_ZERO_TRUST_ISSUER,
+
+      // Generic OIDC
+      GENERIC_OIDC_CLIENT_ID: process.env.GENERIC_OIDC_CLIENT_ID,
+      GENERIC_OIDC_CLIENT_SECRET: process.env.GENERIC_OIDC_CLIENT_SECRET,
+      GENERIC_OIDC_ISSUER: process.env.GENERIC_OIDC_ISSUER,
       
       // ZITADEL
       ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,

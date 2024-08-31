@@ -59,7 +59,7 @@
       "status": {
         "error": "Chunking failed",
         "errorResult": "Chunking failed, please check and try again. Error detail:",
-        "processing": "Chunking in progress.",
+        "processing": "Chunking",
         "processingTip": "The server is splitting text chunks; closing the page will not affect the chunking progress."
       }
     }

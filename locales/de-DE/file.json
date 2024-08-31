@@ -56,7 +56,8 @@
     "title": "Der aktuelle Bereitstellungsmodus unterstützt keine Dateiverwaltung"
   },
   "preview": {
-    "unsupportedFile": "Dieses Dateiformat wird nicht für die Online-Vorschau unterstützt"
+    "downloadFile": "Datei herunterladen",
+    "unsupportedFileAndContact": "Dieses Dateiformat wird derzeit nicht für die Online-Vorschau unterstützt. Wenn Sie eine Vorschau wünschen, können Sie uns gerne <1>Feedback geben</1>."
   },
   "searchFilePlaceholder": "Datei suchen",
   "tab": {
