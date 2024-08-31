@@ -23,11 +23,11 @@ const Stepfun: ModelProviderCard = {
       tokens: 32_000,
     },
     {
-      enabled: true,
       id: 'step-1-8k',
       tokens: 8000,
     },
     {
+      enabled: true,
       id: 'step-1-flash',
       tokens: 8000,
     },
