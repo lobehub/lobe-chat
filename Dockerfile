@@ -127,7 +127,7 @@ ENV \
     # Moonshot
     MOONSHOT_API_KEY="" MOONSHOT_PROXY_URL="" \
     # Novita
-    NOVITA_API_KEY="" \
+    NOVITA_API_KEY="" NOVITA_MODEL_LIST="" \
     # Ollama
     OLLAMA_MODEL_LIST="" OLLAMA_PROXY_URL="" \
     # OpenAI
