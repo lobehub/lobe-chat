@@ -22,6 +22,7 @@ import SiliconCloudProvider from './siliconcloud';
 import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
+import UpstageProvider from './upstage';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -49,6 +50,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   TaichuProvider.chatModels,
   Ai360Provider.chatModels,
   SiliconCloudProvider.chatModels,
+  UpstageProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -76,6 +78,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   TaichuProvider,
   Ai360Provider,
   SiliconCloudProvider,
+  UpstageProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -109,5 +112,6 @@ export { default as SiliconCloudProviderCard } from './siliconcloud';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
+export { default as UpstageProviderCard } from './upstage';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

@@ -11,12 +11,12 @@
       "addToOtherKnowledgeBase": "Add to Other Knowledge Base",
       "batchChunking": "Batch Chunking",
       "chunking": "Chunking",
-      "chunkingTooltip": "Split the file into multiple text chunks and vectorize them for semantic search and file dialogue.",
+      "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
       "confirmDelete": "You are about to delete this file. Once deleted, it cannot be recovered. Please confirm your action.",
       "confirmDeleteMultiFiles": "You are about to delete the selected {{count}} files. Once deleted, they cannot be recovered. Please confirm your action.",
       "confirmRemoveFromKnowledgeBase": "You are about to remove the selected {{count}} files from the knowledge base. They will still be viewable in all files. Please confirm your action.",
       "copyUrl": "Copy Link",
-      "copyUrlSuccess": "File address copied successfully.",
+      "copyUrlSuccess": "File url copied successfully.",
       "createChunkingTask": "Preparing...",
       "deleteSuccess": "File deleted successfully.",
       "downloading": "Downloading file...",
@@ -49,17 +49,17 @@
   "FileParsingStatus": {
     "chunks": {
       "embeddingStatus": {
-        "empty": "Text chunks have not been fully vectorized, which will render the semantic search feature unavailable. To improve search quality, please vectorize the text chunks.",
-        "error": "Vectorization failed",
-        "errorResult": "Vectorization failed, please check and try again. Reason for failure:",
-        "processing": "Text chunks are being vectorized, please be patient.",
-        "success": "All current text chunks have been vectorized."
+        "empty": "Text chunks have not been fully embedded, which will render the semantic search feature unavailable. To improve search quality, please embedding the text chunks.",
+        "error": "Embedding failed",
+        "errorResult": "Vectorization failed, please check and try again. Error detail:",
+        "processing": "Text chunks are being embedded, please be patient.",
+        "success": "All current text chunks have been embedded"
       },
-      "embeddings": "Vectorization",
+      "embeddings": "Embedding",
       "status": {
-        "error": "Chunking failed.",
-        "errorResult": "Chunking failed, please check and try again. Reason for failure:",
-        "processing": "Chunking in progress.",
+        "error": "Chunking failed",
+        "errorResult": "Chunking failed, please check and try again. Error detail:",
+        "processing": "Chunking",
         "processingTip": "The server is splitting text chunks; closing the page will not affect the chunking progress."
       }
     }

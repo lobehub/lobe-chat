@@ -25,6 +25,7 @@ import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
 import { LobeTogetherAI } from './togetherai';
+import { LobeUpstageAI } from './upstage';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
@@ -136,6 +137,7 @@ class AgentRuntime {
       stepfun: Partial<ClientOptions>;
       taichu: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
+      upstage: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
     }>,
@@ -267,6 +269,11 @@ class AgentRuntime {
       case ModelProvider.SiliconCloud: {
         runtimeModel = new LobeSiliconCloudAI(params.siliconcloud ?? {});
         break;
+      }
+
+      case ModelProvider.Upstage: {
+        runtimeModel = new LobeUpstageAI(params.upstage);
+        break
       }
     }
 

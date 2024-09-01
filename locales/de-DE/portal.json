@@ -1,11 +1,18 @@
 {
   "Artifacts": "Artefakte",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Chunk",
+      "file": "Datei"
+    }
+  },
   "actions": {
     "genAiMessage": "Assistenten-Nachricht erstellen",
     "summary": "Zusammenfassung",
     "summaryTooltip": "Zusammenfassung des aktuellen Inhalts"
   },
   "emptyArtifactList": "Die Liste der Artefakte ist derzeit leer. Bitte verwenden Sie Plugins in der Sitzung und überprüfen Sie sie erneut.",
+  "emptyKnowledgeList": "Die aktuelle Wissensliste ist leer. Bitte aktivieren Sie die Wissensdatenbank nach Bedarf in der Sitzung, um sie anzuzeigen.",
   "files": "Dateien",
   "title": "Erweiterungsfenster"
 }

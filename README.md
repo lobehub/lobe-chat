@@ -52,18 +52,19 @@ One-click **FREE** deployment of your private OpenAI ChatGPT/Claude/Gemini/Groq/
 
 - [👋🏻 Getting Started & Join Our Community](#-getting-started--join-our-community)
 - [✨ Features](#-features)
-  - [`1` Multi-Model Service Provider Support](#1-multi-model-service-provider-support)
-  - [`2` Local Large Language Model (LLM) Support](#2-local-large-language-model-llm-support)
-  - [`3` Model Visual Recognition](#3-model-visual-recognition)
-  - [`4` TTS & STT Voice Conversation](#4-tts--stt-voice-conversation)
-  - [`5` Text to Image Generation](#5-text-to-image-generation)
-  - [`6` Plugin System (Function Calling)](#6-plugin-system-function-calling)
-  - [`7` Agent Market (GPTs)](#7-agent-market-gpts)
-  - [`8` Support Local / Remote Database](#8-support-local--remote-database)
-  - [`9` Support Multi-User Management](#9-support-multi-user-management)
-  - [`10` Progressive Web App (PWA)](#10-progressive-web-app-pwa)
-  - [`11` Mobile Device Adaptation](#11-mobile-device-adaptation)
-  - [`12` Custom Themes](#12-custom-themes)
+  - [`1` File Upload/Knowledge Base](#1-file-uploadknowledge-base)
+  - [`2` Multi-Model Service Provider Support](#2-multi-model-service-provider-support)
+  - [`3` Local Large Language Model (LLM) Support](#3-local-large-language-model-llm-support)
+  - [`4` Model Visual Recognition](#4-model-visual-recognition)
+  - [`5` TTS & STT Voice Conversation](#5-tts--stt-voice-conversation)
+  - [`6` Text to Image Generation](#6-text-to-image-generation)
+  - [`7` Plugin System (Function Calling)](#7-plugin-system-function-calling)
+  - [`8` Agent Market (GPTs)](#8-agent-market-gpts)
+  - [`9` Support Local / Remote Database](#9-support-local--remote-database)
+  - [`10` Support Multi-User Management](#10-support-multi-user-management)
+  - [`11` Progressive Web App (PWA)](#11-progressive-web-app-pwa)
+  - [`12` Mobile Device Adaptation](#12-mobile-device-adaptation)
+  - [`13` Custom Themes](#13-custom-themes)
   - [`*` What's more](#-whats-more)
 - [⚡️ Performance](#️-performance)
 - [🛳 Self Hosting](#-self-hosting)
@@ -110,9 +111,27 @@ Whether for users or professional developers, LobeHub will be your AI Agent play
 
 ## ✨ Features
 
+[![][image-feat-knowledgebase]][docs-feat-knowledgebase]
+
+### `1` [File Upload/Knowledge Base][docs-feat-knowledgebase]
+
+LobeChat supports file upload and knowledge base functionality. You can upload various types of files including documents, images, audio, and video, as well as create knowledge bases, making it convenient for users to manage and search for files. Additionally, you can utilize files and knowledge base features during conversations, enabling a richer dialogue experience.
+
+<https://github.com/user-attachments/assets/faa8cf67-e743-4590-8bf6-ebf6ccc34175>
+
+> \[!TIP]
+>
+> Learn more on [📘 LobeChat Knowledge Base Launch — From Now On, Every Step Counts](https://lobehub.com/blog/knowledge-base)
+
+<div align="right">
+
+[![][back-to-top]](#readme-top)
+
+</div>
+
 [![][image-feat-privoder]][docs-feat-provider]
 
-### `1` [Multi-Model Service Provider Support][docs-feat-provider]
+### `2` [Multi-Model Service Provider Support][docs-feat-provider]
 
 In the continuous development of LobeChat, we deeply understand the importance of diversity in model service providers for meeting the needs of the community when providing AI conversation services. Therefore, we have expanded our support to multiple model service providers, rather than being limited to a single one, in order to offer users a more diverse and rich selection of conversations.
 
@@ -146,7 +165,7 @@ At the same time, we are also planning to support more model service providers, 
 
 [![][image-feat-local]][docs-feat-local]
 
-### `2` [Local Large Language Model (LLM) Support][docs-feat-local]
+### `3` [Local Large Language Model (LLM) Support][docs-feat-local]
 
 To meet the specific needs of users, LobeChat also supports the use of local models based on [Ollama](https://ollama.ai), allowing users to flexibly use their own or third-party models.
 
@@ -162,7 +181,7 @@ To meet the specific needs of users, LobeChat also supports the use of local mod
 
 [![][image-feat-vision]][docs-feat-vision]
 
-### `3` [Model Visual Recognition][docs-feat-vision]
+### `4` [Model Visual Recognition][docs-feat-vision]
 
 LobeChat now supports OpenAI's latest [`gpt-4-vision`](https://platform.openai.com/docs/guides/vision) model with visual recognition capabilities,
 a multimodal intelligence that can perceive visuals. Users can easily upload or drag and drop images into the dialogue box,
@@ -180,7 +199,7 @@ Whether it's sharing images in daily use or interpreting images within specific 
 
 [![][image-feat-tts]][docs-feat-tts]
 
-### `4` [TTS & STT Voice Conversation][docs-feat-tts]
+### `5` [TTS & STT Voice Conversation][docs-feat-tts]
 
 LobeChat supports Text-to-Speech (TTS) and Speech-to-Text (STT) technologies, enabling our application to convert text messages into clear voice outputs,
 allowing users to interact with our conversational agent as if they were talking to a real person. Users can choose from a variety of voices to pair with the agent.
@@ -197,7 +216,7 @@ Users can choose the voice that suits their personal preferences or specific sce
 
 [![][image-feat-t2i]][docs-feat-t2i]
 
-### `5` [Text to Image Generation][docs-feat-t2i]
+### `6` [Text to Image Generation][docs-feat-t2i]
 
 With support for the latest text-to-image generation technology, LobeChat now allows users to invoke image creation tools directly within conversations with the agent. By leveraging the capabilities of AI tools such as [`DALL-E 3`](https://openai.com/dall-e-3), [`MidJourney`](https://www.midjourney.com/), and [`Pollinations`](https://pollinations.ai/), the agents are now equipped to transform your ideas into images.
 
@@ -211,7 +230,7 @@ This enables a more private and immersive creative process, allowing for the sea
 
 [![][image-feat-plugin]][docs-feat-plugin]
 
-### `6` [Plugin System (Function Calling)][docs-feat-plugin]
+### `7` [Plugin System (Function Calling)][docs-feat-plugin]
 
 The plugin ecosystem of LobeChat is an important extension of its core functionality, greatly enhancing the practicality and flexibility of the LobeChat assistant.
 
@@ -246,7 +265,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 
 [![][image-feat-agent]][docs-feat-agent]
 
-### `7` [Agent Market (GPTs)][docs-feat-agent]
+### `8` [Agent Market (GPTs)][docs-feat-agent]
 
 In LobeChat Agent Marketplace, creators can discover a vibrant and innovative community that brings together a multitude of well-designed agents,
 which not only play an important role in work scenarios but also offer great convenience in learning processes.
@@ -268,6 +287,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 | Recent Submits                                                                                                                                                               | Description                                                                                                                                                                                                                                          |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [International Lyricist](https://chat-preview.lobehub.com/market?agent=letrista-internacional)<br/><sup>By **[mnector](https://github.com/mnector)** on **2024-08-29**</sup> | Specialized in writing lyrics for songs in Spanish, English, and French, with a focus on storytelling and the emotions of the provided content.<br/>`lyricism` `translation` `music`                                                                 |
 | [Backtracking Question Expert](https://chat-preview.lobehub.com/market?agent=step-back-expert)<br/><sup>By **[tiny656](https://github.com/tiny656)** on **2024-08-27**</sup> | Hello! I am an expert in world knowledge, skilled in using backtracking questioning strategies to help you gain a deeper understanding and analysis of issues. Please enter a question, and I will respond to it according to the following process: |
 
 1. Provide at least 3 optional backtracking questions that align with the strategy.
@@ -277,9 +297,8 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 Please tell me what issue you would like to explore?<br/>`backtracking-questions` `thinking-strategies` `problem-analysis` |
 \| [Unreal Engine Master](https://chat-preview.lobehub.com/market?agent=unreal-engine-master)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-27**</sup> | Unreal Game Development Companion<br/>`game-development` `unreal-engine` `software-engineering` |
 \| [TypeScript Solution Architect](https://chat-preview.lobehub.com/market?agent=typescript-developer)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2024-08-24**</sup> | Expert in TypeScript, Node.js, Vue.js 3, Nuxt.js 3, Express.js, React.js, and modern UI libraries.<br/>`type-script` `java-script` `web-development` `coding-standards` `best-practices` |
-\| [Variable Name Conversion Expert](https://chat-preview.lobehub.com/market?agent=variable-name-conversion)<br/><sup>By **[zengyishou](https://github.com/zengyishou)** on **2024-08-21**</sup> | In software development, naming variables is a common yet relatively time-consuming task. This assistant can automatically convert Chinese variable names into English variable names that conform to camelCase, PascalCase, snake_case, kebab-case, and constant naming conventions based on specific naming rules. This not only improves code readability but also alleviates the frustration of variable naming.<br/>`software-development` `variable-naming` `chinese-to-english` `code-standards` `automatic-conversion` |
 
-> 📊 Total agents: [<kbd>**319**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**321**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -291,7 +310,7 @@ Please tell me what issue you would like to explore?<br/>`backtracking-questions
 
 [![][image-feat-database]][docs-feat-database]
 
-### `8` [Support Local / Remote Database][docs-feat-database]
+### `9` [Support Local / Remote Database][docs-feat-database]
 
 LobeChat supports the use of both server-side and local databases. Depending on your needs, you can choose the appropriate deployment solution:
 
@@ -308,7 +327,7 @@ Regardless of which database you choose, LobeChat can provide you with an excell
 
 [![][image-feat-auth]][docs-feat-auth]
 
-### `9` [Support Multi-User Management][docs-feat-auth]
+### `10` [Support Multi-User Management][docs-feat-auth]
 
 LobeChat supports multi-user management and provides two main user authentication and management solutions to meet different needs:
 
@@ -326,7 +345,7 @@ Regardless of which user management solution you choose, LobeChat can provide yo
 
 [![][image-feat-pwa]][docs-feat-pwa]
 
-### `10` [Progressive Web App (PWA)][docs-feat-pwa]
+### `11` [Progressive Web App (PWA)][docs-feat-pwa]
 
 We deeply understand the importance of providing a seamless experience for users in today's multi-device environment.
 Therefore, we have adopted Progressive Web Application ([PWA](https://support.google.com/chrome/answer/9658361)) technology,
@@ -353,7 +372,7 @@ providing smooth animations, responsive layouts, and adapting to different devic
 
 [![][image-feat-mobile]][docs-feat-mobile]
 
-### `11` [Mobile Device Adaptation][docs-feat-mobile]
+### `12` [Mobile Device Adaptation][docs-feat-mobile]
 
 We have carried out a series of optimization designs for mobile devices to enhance the user's mobile experience. Currently, we are iterating on the mobile user experience to achieve smoother and more intuitive interactions. If you have any suggestions or ideas, we welcome you to provide feedback through GitHub Issues or Pull Requests.
 
@@ -365,7 +384,7 @@ We have carried out a series of optimization designs for mobile devices to enhan
 
 [![][image-feat-theme]][docs-feat-theme]
 
-### `12` [Custom Themes][docs-feat-theme]
+### `13` [Custom Themes][docs-feat-theme]
 
 As a design-engineering-oriented application, LobeChat places great emphasis on users' personalized experiences,
 hence introducing flexible and diverse theme modes, including a light mode for daytime and a dark mode for nighttime.
@@ -712,6 +731,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [docs-feat-agent]: https://lobehub.com/docs/usage/features/agent-market
 [docs-feat-auth]: https://lobehub.com/docs/usage/features/auth
 [docs-feat-database]: https://lobehub.com/docs/usage/features/database
+[docs-feat-knowledgebase]: https://lobehub.com/blog/knowledge-base
 [docs-feat-local]: https://lobehub.com/docs/usage/features/local-llm
 [docs-feat-mobile]: https://lobehub.com/docs/usage/features/mobile
 [docs-feat-plugin]: https://lobehub.com/docs/usage/features/plugin-system
@@ -755,6 +775,7 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [image-feat-agent]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670869-f1ffbf66-42b6-42cf-a937-9ce1f8328514.png
 [image-feat-auth]: https://github.com/lobehub/lobe-chat/assets/17870709/8ce70e15-40df-451e-b700-66090fe5b8c2
 [image-feat-database]: https://github.com/lobehub/lobe-chat/assets/17870709/c27a0234-a4e9-40e5-8bcb-42d5ce7e40f9
+[image-feat-knowledgebase]: https://github.com/user-attachments/assets/77e58e1c-c82f-4341-b159-f4eeede9967f
 [image-feat-local]: https://github.com/lobehub/lobe-chat/assets/28616219/ca9a21bc-ea6c-4c90-bf4a-fa53b4fb2b5c
 [image-feat-mobile]: https://gw.alipayobjects.com/zos/kitchen/R441AuFS4W/mobile.webp
 [image-feat-plugin]: https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/268670883-33c43a5c-a512-467e-855c-fa299548cce5.png

@@ -5,7 +5,7 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
-import Footer from './Footer';
+import Footer from '../Footer';
 import ToolRender from './ToolRender';
 
 const ToolUI = () => {

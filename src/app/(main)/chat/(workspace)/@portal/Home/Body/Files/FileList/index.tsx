@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import Balancer from 'react-wrap-balancer';
 
+import SkeletonLoading from '@/components/SkeletonLoading';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 
-import SkeletonLoading from '../../../components/SkeletonLoading';
 import FileItem from './Item';
 
 const FileList = () => {
@@ -35,7 +35,7 @@ const FileList = () => {
         size={48}
       />
       <Balancer>
-        <Typography.Text type={'secondary'}>{t('emptyArtifactList')}</Typography.Text>
+        <Typography.Text type={'secondary'}>{t('emptyKnowledgeList')}</Typography.Text>
       </Balancer>
     </Center>
   ) : (
