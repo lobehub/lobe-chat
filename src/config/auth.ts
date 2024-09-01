@@ -61,6 +61,75 @@ export const getAuthConfig = () => {
   if (process.env.AUTH0_ISSUER) {
     console.warn(removeTipsTemplate('AUTH0_ISSUER', 'AUTH_AUTH0_ISSUER'));
   }
+  if (process.env.AUTHENTIK_CLIENT_ID) {
+    console.warn(removeTipsTemplate('AUTHENTIK_CLIENT_ID', 'AUTH_AUTHENTIK_ID'));
+  }
+  if (process.env.AUTHENTIK_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('AUTHENTIK_CLIENT_SECRET', 'AUTH_AUTHENTIK_SECRET'));
+  }
+  if (process.env.AUTHENTIK_ISSUER) {
+    console.warn(removeTipsTemplate('AUTHENTIK_ISSUER', 'AUTH_AUTHENTIK_ISSUER'));
+  }
+  if (process.env.AUTHELIA_CLIENT_ID) {
+    console.warn(removeTipsTemplate('AUTHELIA_CLIENT_ID', 'AUTH_AUTHELIA_ID'));
+  }
+  if (process.env.AUTHELIA_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('AUTHELIA_CLIENT_SECRET', 'AUTH_AUTHELIA_SECRET'));
+  }
+  if (process.env.AUTHELIA_ISSUER) {
+    console.warn(removeTipsTemplate('AUTHELIA_ISSUER', 'AUTH_AUTHELIA_ISSUER'));
+  }
+  if (process.env.CLOUDFLARE_ZERO_TRUST_CLIENT_ID) {
+    console.warn(
+      removeTipsTemplate('CLOUDFLARE_ZERO_TRUST_CLIENT_ID', 'AUTH_CLOUDFLARE_ZERO_TRUST_ID'),
+    );
+  }
+  if (process.env.CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET) {
+    console.warn(
+      removeTipsTemplate(
+        'CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET',
+        'AUTH_CLOUDFLARE_ZERO_TRUST_SECRET',
+      ),
+    );
+  }
+  if (process.env.CLOUDFLARE_ZERO_TRUST_ISSUER) {
+    console.warn(
+      removeTipsTemplate('CLOUDFLARE_ZERO_TRUST_ISSUER', 'AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER'),
+    );
+  }
+  if (process.env.GENERIC_OIDC_CLIENT_ID) {
+    console.warn(removeTipsTemplate('GENERIC_OIDC_CLIENT_ID', 'AUTH_GENERIC_ID'));
+  }
+  if (process.env.GENERIC_OIDC_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('GENERIC_OIDC_CLIENT_SECRET', 'AUTH_GENERIC_SECRET'));
+  }
+  if (process.env.GENERIC_OIDC_ISSUER) {
+    console.warn(removeTipsTemplate('GENERIC_OIDC_ISSUER', 'AUTH_GENERIC_ISSUER'));
+  }
+  if (process.env.GITHUB_CLIENT_ID) {
+    console.warn(removeTipsTemplate('GITHUB_CLIENT_ID', 'AUTH_GITHUB_ID'));
+  }
+  if (process.env.GITHUB_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('GITHUB_CLIENT_SECRET', 'AUTH_GITHUB_SECRET'));
+  }
+  if (process.env.LOGTO_CLIENT_ID) {
+    console.warn(removeTipsTemplate('LOGTO_CLIENT_ID', 'AUTH_LOGTO_ID'));
+  }
+  if (process.env.LOGTO_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('LOGTO_CLIENT_SECRET', 'AUTH_LOGTO_SECRET'));
+  }
+  if (process.env.LOGTO_ISSUER) {
+    console.warn(removeTipsTemplate('LOGTO_ISSUER', 'AUTH_LOGTO_ISSUER'));
+  }
+  if (process.env.ZITADEL_CLIENT_ID) {
+    console.warn(removeTipsTemplate('ZITADEL_CLIENT_ID', 'AUTH_ZITADEL_ID'));
+  }
+  if (process.env.ZITADEL_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('ZITADEL_CLIENT_SECRET', 'AUTH_ZITADEL_SECRET'));
+  }
+  if (process.env.ZITADEL_ISSUER) {
+    console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
+  }
   // End
 
   return createEnv({

@@ -21,8 +21,7 @@ const provider = {
     clientSecret:
       authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET ?? process.env.CLOUDFLARE_ZERO_TRUST_SECRET,
     // Remove end
-id: 'cloudflare-zero-trust',
-    
+    id: 'cloudflare-zero-trust',
     issuer: authEnv.CLOUDFLARE_ZERO_TRUST_ISSUER ?? process.env.CLOUDFLARE_ZERO_TRUST_ISSUER,
     name: 'Cloudflare Zero Trust',
     profile(profile) {
