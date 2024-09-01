@@ -16,10 +16,14 @@ const provider = {
     ...CommonProviderConfig,
     authorization: { params: { scope: 'openid email profile' } },
     checks: ['state', 'pkce'],
-    clientId: authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_ID,
-    clientSecret: authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET,
-    id: 'cloudflare-zero-trust',
-    issuer: authEnv.CLOUDFLARE_ZERO_TRUST_ISSUER,
+    // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
+    clientId: authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_ID ?? process.env.AUTH_CLOUDFLARE_ZERO_TRUST_ID,
+    clientSecret:
+      authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET ?? process.env.CLOUDFLARE_ZERO_TRUST_SECRET,
+    // Remove end
+id: 'cloudflare-zero-trust',
+    
+    issuer: authEnv.CLOUDFLARE_ZERO_TRUST_ISSUER ?? process.env.CLOUDFLARE_ZERO_TRUST_ISSUER,
     name: 'Cloudflare Zero Trust',
     profile(profile) {
       return {
