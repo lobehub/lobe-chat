@@ -280,4 +280,10 @@ export class FileModel {
       }
     }
   };
+
+  async findByNames(fileNames: string[]) {
+    return serverDB.query.files.findMany({
+      where: and(inArray(files.name, fileNames), eq(files.userId, this.userId)),
+    });
+  }
 }

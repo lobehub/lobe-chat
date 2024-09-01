@@ -1,4 +1,7 @@
+import { notFound } from 'next/navigation';
 import { Flexbox } from 'react-layout-kit';
+
+import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 
 import Head from './Head';
 import Menu from './Menu';
@@ -9,12 +12,15 @@ interface Params {
 
 type Props = { params: Params };
 
-const MenuPage = ({ params }: Props) => {
+const MenuPage = async ({ params }: Props) => {
   const id = params.id;
+  const item = await KnowledgeBaseModel.findById(params.id);
+
+  if (!item) return notFound();
 
   return (
     <Flexbox gap={16} height={'100%'} paddingInline={12} style={{ paddingTop: 12 }}>
-      <Head id={id} />
+      <Head name={item.name} />
       <Menu id={id} />
     </Flexbox>
   );

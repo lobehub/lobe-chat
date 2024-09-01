@@ -56,6 +56,20 @@
       "when": 1724254147447,
       "tag": "0007_fix_embedding_table",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1725196620356,
+      "tag": "0008_spotty_hydra",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1725198166266,
+      "tag": "0009_gorgeous_warbird",
+      "breakpoints": true
     }
   ],
   "version": "6"
