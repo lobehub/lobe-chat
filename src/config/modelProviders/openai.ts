@@ -26,7 +26,7 @@ const OpenAI: ModelProviderCard = {
     },
     {
       description: 'Latest GPT-4o snapshot that supports Structured Outputs',
-      displayName: 'GPT-4o 0806',
+      displayName: 'GPT-4o (240806)',
       enabled: true,
       functionCall: true,
       id: 'gpt-4o-2024-08-06',
@@ -50,8 +50,8 @@ const OpenAI: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'GPT-4 Turbo 视觉版 0409',
-      displayName: 'GPT-4 Turbo Vision 0409',
+      description: 'GPT-4 Turbo 视觉版 (240409)',
+      displayName: 'GPT-4 Turbo Vision (240409)',
       functionCall: true,
       id: 'gpt-4-turbo-2024-04-09',
       tokens: 128_000,
@@ -65,7 +65,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      displayName: 'GPT-4 Turbo Preview 0125',
+      displayName: 'GPT-4 Turbo Preview (0125)',
       functionCall: true,
       id: 'gpt-4-0125-preview',
       tokens: 128_000,
@@ -78,13 +78,13 @@ const OpenAI: ModelProviderCard = {
       vision: true,
     },
     {
-      displayName: 'GPT-4 Turbo Vision Preview 1106', // Will be discontinued on December 6, 2024
+      displayName: 'GPT-4 Turbo Vision Preview (1106)', // Will be discontinued on December 6, 2024
       id: 'gpt-4-1106-vision-preview',
       tokens: 128_000,
       vision: true,
     },
     {
-      displayName: 'GPT-4 Turbo Preview 1106',
+      displayName: 'GPT-4 Turbo Preview (1106)',
       functionCall: true,
       id: 'gpt-4-1106-preview',
       tokens: 128_000,
@@ -97,7 +97,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'GPT-4 0613',
+      displayName: 'GPT-4 (0613)',
       functionCall: true,
       id: 'gpt-4-0613',
       tokens: 8192,
@@ -110,7 +110,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'GPT-4 32K 0613', // Will be discontinued on June 6, 2025
+      displayName: 'GPT-4 32K (0613)', // Will be discontinued on June 6, 2025
       functionCall: true,
       id: 'gpt-4-32k-0613',
       tokens: 32_768,
@@ -124,13 +124,13 @@ const OpenAI: ModelProviderCard = {
       tokens: 16_385,
     },
     {
-      displayName: 'GPT-3.5 Turbo 0125',
+      displayName: 'GPT-3.5 Turbo (0125)',
       functionCall: true,
       id: 'gpt-3.5-turbo-0125',
       tokens: 16_385,
     },
     {
-      displayName: 'GPT-3.5 Turbo 1106',
+      displayName: 'GPT-3.5 Turbo (1106)',
       functionCall: true,
       id: 'gpt-3.5-turbo-1106',
       tokens: 16_385,
@@ -148,7 +148,7 @@ const OpenAI: ModelProviderCard = {
       tokens: 16_385,
     },
     {
-      displayName: 'GPT-3.5 Turbo 0613', // Will be discontinued on September 13, 2024
+      displayName: 'GPT-3.5 Turbo (0613)', // Will be discontinued on September 13, 2024
       id: 'gpt-3.5-turbo-0613',
       legacy: true,
       tokens: 4096,
