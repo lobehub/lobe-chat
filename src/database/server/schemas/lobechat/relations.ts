@@ -4,9 +4,8 @@ import { pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { agentsTags, plugins, pluginsTags, tags } from './discover';
-import { asyncTasks, files, knowledgeBases } from './file';
+import { asyncTasks, files, knowledgeBases, unstructuredChunks } from './file';
 import { messages, messagesFiles } from './message';
-import { unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
 import { topics } from './topic';
 
