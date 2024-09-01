@@ -20,7 +20,7 @@ const TogetherAI: ModelProviderCard = {
       displayName: 'Llama 3.1 405B Instruct Turbo',
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo',
-      tokens: 131_072,
+      tokens: 8192,
     },
     {
       displayName: 'Llama 3 8B Instruct Turbo',
