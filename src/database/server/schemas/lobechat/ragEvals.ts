@@ -44,14 +44,21 @@ export type EvalDatasetRecordsSelectItem = typeof evalDatasetRecords.$inferSelec
 
 export const evalEvaluation = pgTable('rag_eval_evaluations', {
   id: integer('id').generatedAlwaysAsIdentity().primaryKey(),
-  name: text('name'),
-  exportUrl: text('export_url'),
+  name: text('name').notNull(),
+  description: text('description'),
 
+  exportUrl: text('export_url'),
   result: jsonb('result'),
 
-  datasetId: integer('dataset_id').references(() => evalDatasets.id, { onDelete: 'cascade' }),
+  datasetId: integer('dataset_id')
+    .references(() => evalDatasets.id, { onDelete: 'cascade' })
+    .notNull(),
+  knowledgeBaseId: text('knowledge_base_id').references(() => knowledgeBases.id, {
+    onDelete: 'cascade',
+  }),
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   createdAt: createdAt(),
+  updatedAt: updatedAt(),
 });
 
 export type NewEvalEvaluationItem = typeof evalEvaluation.$inferInsert;

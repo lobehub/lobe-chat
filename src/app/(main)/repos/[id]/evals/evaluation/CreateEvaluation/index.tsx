@@ -1,37 +1,27 @@
-import { Icon } from '@lobehub/ui';
-import { SheetIcon } from 'lucide-react';
+'use client';
+
+import { Button } from 'antd';
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
-import { createModal } from '@/components/FunctionModal';
+import { useCreateDatasetModal } from '../CreateEvaluation/useModal';
 
-import CreateForm from './CreateForm';
-
-const Title = () => {
-  const { t } = useTranslation('ragEval');
-
-  return (
-    <Flexbox gap={8} horizontal>
-      <Icon icon={SheetIcon} />
-      {t('addDataset.title')}
-    </Flexbox>
-  );
-};
-
-interface CreateDatasetModalProps {
+interface CreateEvaluationProps {
   knowledgeBaseId: string;
 }
 
-export const useCreateDatasetModal = createModal<CreateDatasetModalProps>((instance, params) => ({
-  content: (
-    <Flexbox paddingInline={16} style={{ marginBlock: 24 }}>
-      <CreateForm
-        knowledgeBaseId={params!.knowledgeBaseId}
-        onClose={() => {
-          instance.current?.destroy();
-        }}
-      />
-    </Flexbox>
-  ),
-  title: <Title />,
-}));
+const CreateEvaluation = memo<CreateEvaluationProps>(({ knowledgeBaseId }) => {
+  const { t } = useTranslation('ragEval');
+  const modal = useCreateDatasetModal();
+  return (
+    <Button
+      onClick={() => {
+        modal.open({ knowledgeBaseId });
+      }}
+      type={'primary'}
+    >
+      {t('evaluation.addNewButton')}
+    </Button>
+  );
+});
+export default CreateEvaluation;

@@ -3,7 +3,11 @@ import JSONL from 'jsonl-parse-stringify';
 import { z } from 'zod';
 
 import { FileModel } from '@/database/server/models/file';
-import { EvalDatasetModel, EvalDatasetRecordModel } from '@/database/server/models/ragEval';
+import {
+  EvalDatasetModel,
+  EvalDatasetRecordModel,
+  EvalEvaluationModel,
+} from '@/database/server/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc';
 import { S3 } from '@/server/modules/S3';
 import {
@@ -12,6 +16,7 @@ import {
   RAGEvalDataSetItem,
   insertEvalDatasetRecordSchema,
   insertEvalDatasetsSchema,
+  insertEvalEvaluationSchema,
 } from '@/types/eval';
 
 const ragEvalProcedure = authedProcedure.use(async (opts) => {
@@ -22,6 +27,7 @@ const ragEvalProcedure = authedProcedure.use(async (opts) => {
       datasetModel: new EvalDatasetModel(ctx.userId),
       fileModel: new FileModel(ctx.userId),
       datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
+      evaluationModel: new EvalEvaluationModel(ctx.userId),
     },
   });
 });
@@ -151,5 +157,31 @@ export const ragEvalRouter = router({
       );
 
       return ctx.datasetRecordModel.batchCreate(data);
+    }),
+
+  // Evaluation operations
+  createEvaluation: ragEvalProcedure
+    .input(insertEvalEvaluationSchema)
+    .mutation(async ({ input, ctx }) => {
+      const data = await ctx.evaluationModel.create({
+        description: input.description,
+        knowledgeBaseId: input.knowledgeBaseId,
+        datasetId: input.datasetId,
+        name: input.name,
+      });
+
+      return data?.id;
+    }),
+
+  removeEvaluation: ragEvalProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      return ctx.evaluationModel.delete(input.id);
+    }),
+
+  getEvaluationList: ragEvalProcedure
+    .input(z.object({ knowledgeBaseId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return ctx.evaluationModel.query(input.knowledgeBaseId);
     }),
 });

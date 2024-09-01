@@ -24,10 +24,13 @@ export class EvalEvaluationModel {
       .where(and(eq(evalEvaluation.id, id), eq(evalEvaluation.userId, this.userId)));
   };
 
-  query = async () => {
+  query = async (knowledgeBaseId: string) => {
     return serverDB.query.evalEvaluation.findMany({
       orderBy: [desc(evalEvaluation.createdAt)],
-      where: eq(evalEvaluation.userId, this.userId),
+      where: and(
+        eq(evalEvaluation.userId, this.userId),
+        eq(evalEvaluation.knowledgeBaseId, knowledgeBaseId),
+      ),
     });
   };
 

@@ -12,7 +12,7 @@ import EvaluationList from './EvaluationList';
 const Evaluation = ({ params }: PageProps) => {
   const knowledgeBaseId = params.id;
 
-  const useFetchEvaluation = useKnowledgeBaseStore((s) => s.useFetchEvaluation);
+  const useFetchEvaluation = useKnowledgeBaseStore((s) => s.useFetchEvaluationList);
 
   const { data, isLoading } = useFetchEvaluation(knowledgeBaseId);
 
@@ -23,10 +23,8 @@ const Evaluation = ({ params }: PageProps) => {
   ) : isEmpty ? (
     <EmptyGuide knowledgeBaseId={knowledgeBaseId} />
   ) : (
-    <Flexbox height={'100%'} horizontal>
-      <Flexbox width={'100%'}>
-        <EvaluationList />
-      </Flexbox>
+    <Flexbox height={'100%'}>
+      <EvaluationList knowledgeBaseId={knowledgeBaseId} />
     </Flexbox>
   );
 };

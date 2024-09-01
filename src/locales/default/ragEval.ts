@@ -37,12 +37,21 @@ export default {
     },
   },
   evaluation: {
+    addEvaluation: {
+      confirm: '新建',
+      description: {
+        placeholder: '评测任务简介（选填）',
+      },
+      name: {
+        placeholder: '评测任务名称',
+        required: '请填写评测任务名称',
+      },
+      title: '添加评测任务',
+    },
     addNewButton: '创建评测',
     emptyGuide: '当前评测任务为空，开始创建评测。',
+
     table: {
-      actions: {
-        importData: '导入数据',
-      },
       columns: {
         actions: '操作',
         ideal: {
@@ -55,8 +64,7 @@ export default {
           title: '参考文件',
         },
       },
-      notSelected: '请在左侧选择数据集',
-      title: '数据集详情',
+      title: '评测任务列表',
     },
   },
 };

@@ -15,7 +15,7 @@ import {
 const FETCH_DATASET_LIST_KEY = 'FETCH_DATASET_LIST';
 const FETCH_DATASET_RECORD_KEY = 'FETCH_DATASET_RECORD_KEY';
 
-export interface RAGEvalAction {
+export interface RAGEvalDatasetAction {
   activateDataset: (id: number) => void;
   createNewDataset: (params: CreateNewEvalDatasets) => Promise<void>;
 
@@ -26,15 +26,13 @@ export interface RAGEvalAction {
   removeDataset: (id: number) => Promise<void>;
   useFetchDatasetRecords: (datasetId: number | null) => SWRResponse<EvalDatasetRecord[]>;
   useFetchDatasets: (knowledgeBaseId: string) => SWRResponse<RAGEvalDataSetItem[]>;
-
-  useFetchEvaluation: (knowledgeBaseId: string) => SWRResponse<RAGEvalDataSetItem[]>;
 }
 
-export const createRagEvalSlice: StateCreator<
+export const createRagEvalDatasetSlice: StateCreator<
   KnowledgeBaseStore,
   [['zustand/devtools', never]],
   [],
-  RAGEvalAction
+  RAGEvalDatasetAction
 > = (set, get) => ({
   activateDataset: (id) => {
     set({ activeDatasetId: id });
@@ -87,18 +85,6 @@ export const createRagEvalSlice: StateCreator<
       () => ragEvalService.getDatasetRecords(datasetId!),
     ),
   useFetchDatasets: (knowledgeBaseId) =>
-    useClientDataSWR<RAGEvalDataSetItem[]>(
-      [FETCH_DATASET_LIST_KEY, knowledgeBaseId],
-      () => ragEvalService.getDatasets(knowledgeBaseId),
-      {
-        fallbackData: [],
-        onSuccess: () => {
-          if (!get().initDatasetList)
-            set({ initDatasetList: true }, false, 'useFetchDatasets/init');
-        },
-      },
-    ),
-  useFetchEvaluation: (knowledgeBaseId) =>
     useClientDataSWR<RAGEvalDataSetItem[]>(
       [FETCH_DATASET_LIST_KEY, knowledgeBaseId],
       () => ragEvalService.getDatasets(knowledgeBaseId),

@@ -2,12 +2,13 @@
 
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { ActionIcon } from '@lobehub/ui';
-import { Button, Typography, Upload } from 'antd';
+import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Edit2Icon, Trash2Icon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import CreateEvaluationButton from '@/app/(main)/repos/[id]/evals/evaluation/CreateEvaluation';
 import FileIcon from '@/components/FileIcon';
 import { ragEvalService } from '@/services/ragEval';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
@@ -24,9 +25,6 @@ const createRequest = (activeDatasetId: number) => async () => {
 };
 
 const useStyles = createStyles(({ css }) => ({
-  container: css`
-    padding: 12px;
-  `,
   icon: css`
     min-width: 24px;
     border-radius: 4px;
@@ -36,22 +34,19 @@ const useStyles = createStyles(({ css }) => ({
   `,
 }));
 
-const DatasetDetail = () => {
+const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
   const { t } = useTranslation(['ragEval', 'common']);
   const { styles } = useStyles();
-  const [activeDatasetId, importDataset] = useKnowledgeBaseStore((s) => [
-    s.activeDatasetId,
-    s.importDataset,
-  ]);
+  const [activeDatasetId] = useKnowledgeBaseStore((s) => [s.activeDatasetId]);
 
   const columns: ProColumns[] = [
     {
       dataIndex: 'question',
       ellipsis: true,
-      title: t('dataset.list.table.columns.question.title'),
+      title: t('evaluation.table.columns.question.title'),
       width: '40%',
     },
-    { dataIndex: 'ideal', ellipsis: true, title: t('dataset.list.table.columns.ideal.title') },
+    { dataIndex: 'ideal', ellipsis: true, title: t('evaluation.table.columns.ideal.title') },
     {
       dataIndex: 'referenceFiles',
       render: (dom, entity) => {
@@ -70,7 +65,7 @@ const DatasetDetail = () => {
           )
         );
       },
-      title: t('dataset.list.table.columns.referenceFiles.title'),
+      title: t('evaluation.table.columns.referenceFiles.title'),
       width: 200,
     },
     {
@@ -81,7 +76,7 @@ const DatasetDetail = () => {
           <ActionIcon icon={Trash2Icon} size={'small'} title={t('delete', { ns: 'common' })} />
         </Flexbox>
       ),
-      title: t('dataset.list.table.columns.actions'),
+      title: t('evaluation.table.columns.actions'),
 
       width: 80,
     },
@@ -90,32 +85,19 @@ const DatasetDetail = () => {
   const request = activeDatasetId ? createRequest(activeDatasetId) : undefined;
 
   return (
-    <Flexbox className={styles.container} gap={24}>
+    <Flexbox gap={24}>
       <ProTable
         columns={columns}
         request={request}
         search={false}
         size={'small'}
         toolbar={{
-          actions: [
-            <Upload
-              beforeUpload={async (file) => {
-                await importDataset(file);
-
-                return false;
-              }}
-              key={'upload'}
-              multiple={false}
-              showUploadList={false}
-            >
-              <Button type={'primary'}>{t('dataset.list.table.actions.importData')}</Button>
-            </Upload>,
-          ],
-          title: <div className={styles.title}>{t('dataset.list.table.title')}</div>,
+          actions: [<CreateEvaluationButton key={'new'} knowledgeBaseId={knowledgeBaseId} />],
+          title: <div className={styles.title}>{t('evaluation.table.title')}</div>,
         }}
       />
     </Flexbox>
   );
 };
 
-export default DatasetDetail;
+export default EvaluationList;

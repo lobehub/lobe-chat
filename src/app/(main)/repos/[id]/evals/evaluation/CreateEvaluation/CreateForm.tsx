@@ -45,13 +45,13 @@ const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
       <Form className={cx(formItem)} onFinish={onFinish}>
         <Form.Item
           name={'name'}
-          rules={[{ message: t('addDataset.name.required'), required: true }]}
+          rules={[{ message: t('evaluation.addEvaluation.name.required'), required: true }]}
         >
-          <Input autoFocus placeholder={t('addDataset.name.placeholder')} />
+          <Input autoFocus placeholder={t('evaluation.addEvaluation.name.placeholder')} />
         </Form.Item>
         <Form.Item name={'description'}>
           <Input.TextArea
-            placeholder={t('addDataset.description.placeholder')}
+            placeholder={t('evaluation.addEvaluation.description.placeholder')}
             style={{ minHeight: 120 }}
           />
         </Form.Item>
@@ -62,7 +62,7 @@ const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
           style={{ marginTop: 16 }}
           type={'primary'}
         >
-          {t('addDataset.confirm')}
+          {t('evaluation.addEvaluation.confirm')}
         </Button>
       </Form>
     </Flexbox>
