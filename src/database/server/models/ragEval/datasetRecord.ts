@@ -1,7 +1,12 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 
 import { serverDB } from '@/database/server';
-import { NewEvalDatasetRecordsItem, evalDatasetRecords } from '@/database/server/schemas/lobechat';
+import {
+  NewEvalDatasetRecordsItem,
+  evalDatasetRecords,
+  files,
+} from '@/database/server/schemas/lobechat';
+import { EvalDatasetRecordRefFile } from '@/types/eval';
 
 export class EvalDatasetRecordModel {
   private userId: string;
@@ -34,11 +39,27 @@ export class EvalDatasetRecordModel {
   };
 
   query = async (datasetId: number) => {
-    return serverDB.query.evalDatasetRecords.findMany({
+    const list = await serverDB.query.evalDatasetRecords.findMany({
       where: and(
         eq(evalDatasetRecords.datasetId, datasetId),
         eq(evalDatasetRecords.userId, this.userId),
       ),
+    });
+    const fileList = list.flatMap((item) => item.referenceFiles).filter(Boolean) as string[];
+
+    const fileItems = await serverDB
+      .select({ fileType: files.fileType, id: files.id, name: files.name })
+      .from(files)
+      .where(and(inArray(files.id, fileList), eq(files.userId, this.userId)))
+      .execute();
+
+    return list.map((item) => {
+      return {
+        ...item,
+        referenceFiles: (item.referenceFiles?.map((fileId) => {
+          return fileItems.find((file) => file.id === fileId);
+        }) || []) as EvalDatasetRecordRefFile[],
+      };
     });
   };
 

@@ -1,12 +1,12 @@
 'use client';
 
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import CircleLoading from '@/components/CircleLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
+import { PageProps } from '../type';
 import DatasetDetail from './DatasetDetail';
 import DatasetList from './DatasetList';
 import EmptyGuide from './EmptyGuide';
@@ -17,15 +17,18 @@ const useStyles = createStyles(({ css, token }) => ({
     background: ${token.colorBgContainer};
     border-radius: 8px;
   `,
+  sider: css`
+    padding-inline-end: 12px;
+    border-inline-end: 1px solid ${token.colorSplit};
+  `,
 }));
 
-interface DatasetProps {
-  knowledgeBaseId: string;
-}
-
-const Dataset = memo<DatasetProps>(({ knowledgeBaseId }) => {
+const Dataset = ({ params }: PageProps) => {
   const { styles } = useStyles();
+  const knowledgeBaseId = params.id;
+
   const useFetchDatasets = useKnowledgeBaseStore((s) => s.useFetchDatasets);
+
   const { data, isLoading } = useFetchDatasets(knowledgeBaseId);
 
   const isEmpty = data?.length === 0;
@@ -35,8 +38,8 @@ const Dataset = memo<DatasetProps>(({ knowledgeBaseId }) => {
   ) : isEmpty ? (
     <EmptyGuide knowledgeBaseId={knowledgeBaseId} />
   ) : (
-    <Flexbox className={styles.container} gap={32} height={'100%'} horizontal>
-      <Flexbox width={240}>
+    <Flexbox className={styles.container} height={'100%'} horizontal>
+      <Flexbox className={styles.sider} width={200}>
         <DatasetList dataSource={data!} />
       </Flexbox>
       <Flexbox width={'100%'}>
@@ -44,5 +47,6 @@ const Dataset = memo<DatasetProps>(({ knowledgeBaseId }) => {
       </Flexbox>
     </Flexbox>
   );
-});
+};
+
 export default Dataset;

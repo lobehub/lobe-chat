@@ -126,6 +126,7 @@ export const ragEvalRouter = router({
       const s3 = new S3();
       const dataStr = await s3.getFileContent(input.pathname);
       const items = JSONL.parse<InsertEvalDatasetRecord>(dataStr);
+
       insertEvalDatasetRecordSchema.array().parse(items);
 
       const data = await Promise.all(

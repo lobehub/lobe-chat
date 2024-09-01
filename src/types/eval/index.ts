@@ -1,5 +1,10 @@
 import { z } from 'zod';
 
+export interface EvalDatasetRecordRefFile {
+  fileType: string;
+  id: string;
+  name: string;
+}
 export interface EvalDatasetRecord {
   createdAt: Date;
   id: number;
@@ -12,7 +17,7 @@ export interface EvalDatasetRecord {
   /**
    * The reference files for the question
    */
-  referenceFiles: string[] | null;
+  referenceFiles?: EvalDatasetRecordRefFile[] | null;
 }
 
 export const insertEvalDatasetRecordSchema = z.object({

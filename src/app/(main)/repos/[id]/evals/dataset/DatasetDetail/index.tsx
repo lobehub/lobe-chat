@@ -2,13 +2,15 @@
 
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { ActionIcon } from '@lobehub/ui';
-import { Button, Upload } from 'antd';
+import { Button, Typography, Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { Edit2Icon, Trash2Icon } from 'lucide-react';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import FileIcon from '@/components/FileIcon';
 import { ragEvalService } from '@/services/ragEval';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
+import { EvalDatasetRecordRefFile } from '@/types/eval';
 
 const createRequest = (activeDatasetId: number) => async () => {
   const records = await ragEvalService.getDatasetRecords(activeDatasetId);
@@ -42,7 +44,27 @@ const DatasetDetail = () => {
   const columns: ProColumns[] = [
     { dataIndex: 'question', ellipsis: true, title: '问题', width: '40%' },
     { dataIndex: 'ideal', ellipsis: true, title: '期望回答' },
-    { dataIndex: 'referenceFiles', title: '参考文件' },
+    {
+      dataIndex: 'referenceFiles',
+      render: (dom, entity) => {
+        const referenceFiles = entity.referenceFiles as EvalDatasetRecordRefFile[];
+
+        return (
+          !!referenceFiles && (
+            <Flexbox>
+              {referenceFiles?.map((file) => (
+                <Flexbox gap={4} horizontal key={file.id}>
+                  <FileIcon fileName={file.name} fileType={file.fileType} size={20} />
+                  <Typography.Text ellipsis={{ tooltip: true }}>{file.name}</Typography.Text>
+                </Flexbox>
+              ))}
+            </Flexbox>
+          )
+        );
+      },
+      title: '参考文件',
+      width: 200,
+    },
     {
       dataIndex: 'actions',
       render: () => (

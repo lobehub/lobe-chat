@@ -1,5 +1,5 @@
-import { asc, count, eq, ilike, inArray, notExists, sum } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { asc, count, eq, ilike, inArray, notExists, or, sum } from 'drizzle-orm';
+import { and, desc, like } from 'drizzle-orm/expressions';
 
 import { serverDBEnv } from '@/config/db';
 import { serverDB } from '@/database/server/core/db';
@@ -283,7 +283,10 @@ export class FileModel {
 
   async findByNames(fileNames: string[]) {
     return serverDB.query.files.findMany({
-      where: and(inArray(files.name, fileNames), eq(files.userId, this.userId)),
+      where: and(
+        or(...fileNames.map((name) => like(files.name, `${name}%`))),
+        eq(files.userId, this.userId),
+      ),
     });
   }
 }

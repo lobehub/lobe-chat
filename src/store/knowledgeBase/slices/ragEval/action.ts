@@ -68,6 +68,8 @@ export const createRagEvalSlice: StateCreator<
         notification.error({ description: (e as Error).message, message: '文件格式错误' });
       }
     }
+
+    await get().refreshDatasetList();
   },
   refreshDatasetList: async () => {
     await mutate(FETCH_DATASET_LIST_KEY);
@@ -75,7 +77,7 @@ export const createRagEvalSlice: StateCreator<
 
   removeDataset: async (id) => {
     await ragEvalService.removeDataset(id);
-    await get().refreshKnowledgeBaseList();
+    await get().refreshDatasetList();
   },
   useFetchDatasetRecords: (datasetId) =>
     useClientDataSWR<EvalDatasetRecord[]>(
