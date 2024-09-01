@@ -75,9 +75,10 @@ const TogetherAI: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Mistral (7B) Instruct',
-      id: 'mistralai/Mistral-7B-Instruct-v0.1',
-      tokens: 8192,
+      displayName: 'Mistral (7B) Instruct v0.3',
+      enabled: true,
+      id: 'mistralai/Mistral-7B-Instruct-v0.3',
+      tokens: 32_768,
     },
     {
       displayName: 'Mistral (7B) Instruct v0.2',
@@ -85,10 +86,9 @@ const TogetherAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'Mistral (7B) Instruct v0.3',
-      enabled: true,
-      id: 'mistralai/Mistral-7B-Instruct-v0.3',
-      tokens: 32_768,
+      displayName: 'Mistral (7B) Instruct',
+      id: 'mistralai/Mistral-7B-Instruct-v0.1',
+      tokens: 8192,
     },
     {
       displayName: 'Mixtral-8x7B Instruct (46.7B)',
@@ -125,16 +125,14 @@ const TogetherAI: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'Upstage SOLAR Instruct v1 (11B)',
-      enabled: true,
-      id: 'upstage/SOLAR-10.7B-Instruct-v1.0',
-      tokens: 4096,
-    },
-    {
       displayName: 'DBRX Instruct',
-      enabled: true,
       id: 'databricks/dbrx-instruct',
       tokens: 32_768,
+    },
+    {
+      displayName: 'Upstage SOLAR Instruct v1 (11B)',
+      id: 'upstage/SOLAR-10.7B-Instruct-v1.0',
+      tokens: 4096,
     },
     {
       displayName: 'Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)',
