@@ -39,6 +39,9 @@ export default {
   evaluation: {
     addEvaluation: {
       confirm: '新建',
+      datasetId: {
+        placeholder: '请选择你的评测数据集',
+      },
       description: {
         placeholder: '评测任务简介（选填）',
       },
@@ -54,11 +57,11 @@ export default {
     table: {
       columns: {
         actions: '操作',
-        ideal: {
-          title: '期望回答',
+        datasetId: {
+          title: '数据集',
         },
-        question: {
-          title: '问题',
+        name: {
+          title: '评测任务名称',
         },
         referenceFiles: {
           title: '参考文件',

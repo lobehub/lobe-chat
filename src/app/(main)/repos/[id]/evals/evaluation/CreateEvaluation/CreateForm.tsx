@@ -1,11 +1,11 @@
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Select } from 'antd';
 import { css, cx } from 'antd-style';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { CreateNewEvalDatasets } from '@/types/eval';
+import { CreateNewEvalEvaluation } from '@/types/eval';
 
 const formItem = css`
   display: flex;
@@ -24,14 +24,20 @@ interface CreateFormProps {
 
 const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
   const { t } = useTranslation('ragEval');
-  const [loading, setLoading] = useState(false);
-  const createNewDataset = useKnowledgeBaseStore((s) => s.createNewDataset);
 
-  const onFinish = async (values: CreateNewEvalDatasets) => {
+  const [loading, setLoading] = useState(false);
+  const [useFetchDatasets, createNewEvaluation] = useKnowledgeBaseStore((s) => [
+    s.useFetchDatasets,
+    s.createNewEvaluation,
+  ]);
+
+  const { data, isLoading } = useFetchDatasets(knowledgeBaseId);
+
+  const onFinish = async (values: CreateNewEvalEvaluation) => {
     setLoading(true);
 
     try {
-      await createNewDataset({ ...values, knowledgeBaseId });
+      await createNewEvaluation({ ...values, knowledgeBaseId });
       setLoading(false);
       onClose?.();
     } catch (e) {
@@ -53,6 +59,16 @@ const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
           <Input.TextArea
             placeholder={t('evaluation.addEvaluation.description.placeholder')}
             style={{ minHeight: 120 }}
+          />
+        </Form.Item>
+        <Form.Item name={'datasetId'}>
+          <Select
+            loading={isLoading}
+            options={data?.map((item) => ({
+              label: item.name,
+              value: item.id,
+            }))}
+            placeholder={t('evaluation.addEvaluation.datasetId.placeholder')}
           />
         </Form.Item>
         <Button

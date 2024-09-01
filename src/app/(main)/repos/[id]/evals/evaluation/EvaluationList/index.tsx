@@ -2,20 +2,16 @@
 
 import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { ActionIcon } from '@lobehub/ui';
-import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Edit2Icon, Trash2Icon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import CreateEvaluationButton from '@/app/(main)/repos/[id]/evals/evaluation/CreateEvaluation';
-import FileIcon from '@/components/FileIcon';
 import { ragEvalService } from '@/services/ragEval';
-import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
-import { EvalDatasetRecordRefFile } from '@/types/eval';
 
-const createRequest = (activeDatasetId: number) => async () => {
-  const records = await ragEvalService.getDatasetRecords(activeDatasetId);
+const createRequest = (knowledgeBaseId: string) => async () => {
+  const records = await ragEvalService.getEvaluationList(knowledgeBaseId);
 
   return {
     data: records,
@@ -37,35 +33,20 @@ const useStyles = createStyles(({ css }) => ({
 const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
   const { t } = useTranslation(['ragEval', 'common']);
   const { styles } = useStyles();
-  const [activeDatasetId] = useKnowledgeBaseStore((s) => [s.activeDatasetId]);
 
   const columns: ProColumns[] = [
     {
-      dataIndex: 'question',
+      dataIndex: 'name',
       ellipsis: true,
-      title: t('evaluation.table.columns.question.title'),
-      width: '40%',
+      title: t('evaluation.table.columns.name.title'),
+      width: '50%',
     },
-    { dataIndex: 'ideal', ellipsis: true, title: t('evaluation.table.columns.ideal.title') },
     {
-      dataIndex: 'referenceFiles',
+      dataIndex: 'datasetId',
       render: (dom, entity) => {
-        const referenceFiles = entity.referenceFiles as EvalDatasetRecordRefFile[];
-
-        return (
-          !!referenceFiles && (
-            <Flexbox>
-              {referenceFiles?.map((file) => (
-                <Flexbox gap={4} horizontal key={file.id}>
-                  <FileIcon fileName={file.name} fileType={file.fileType} size={20} />
-                  <Typography.Text ellipsis={{ tooltip: true }}>{file.name}</Typography.Text>
-                </Flexbox>
-              ))}
-            </Flexbox>
-          )
-        );
+        return <Flexbox>{entity.datasetId}</Flexbox>;
       },
-      title: t('evaluation.table.columns.referenceFiles.title'),
+      title: t('evaluation.table.columns.datasetId.title'),
       width: 200,
     },
     {
@@ -82,7 +63,7 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
     },
   ];
 
-  const request = activeDatasetId ? createRequest(activeDatasetId) : undefined;
+  const request = knowledgeBaseId ? createRequest(knowledgeBaseId) : undefined;
 
   return (
     <Flexbox gap={24}>
@@ -90,7 +71,6 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
         columns={columns}
         request={request}
         search={false}
-        size={'small'}
         toolbar={{
           actions: [<CreateEvaluationButton key={'new'} knowledgeBaseId={knowledgeBaseId} />],
           title: <div className={styles.title}>{t('evaluation.table.title')}</div>,
