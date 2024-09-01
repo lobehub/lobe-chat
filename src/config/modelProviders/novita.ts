@@ -19,7 +19,7 @@ const Novita: ModelProviderCard = {
       displayName: 'Llama3.1 405B Instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-405b-instruct',
-      tokens: 32768,
+      tokens: 32_768,
     },
     {
       displayName: 'Llama3 8B Instruct',
