@@ -10,4 +10,53 @@ export default {
     },
     title: '添加数据集',
   },
+  dataset: {
+    addNewButton: '创建数据集',
+    emptyGuide: '当前数据集为空，请创建一个数据集。',
+    list: {
+      table: {
+        actions: {
+          importData: '导入数据',
+        },
+        columns: {
+          actions: '操作',
+          ideal: {
+            title: '期望回答',
+          },
+          question: {
+            title: '问题',
+          },
+          referenceFiles: {
+            title: '参考文件',
+          },
+        },
+        notSelected: '请在左侧选择数据集',
+        title: '数据集详情',
+      },
+      title: '数据集',
+    },
+  },
+  evaluation: {
+    addNewButton: '创建评测',
+    emptyGuide: '当前评测任务为空，开始创建评测。',
+    table: {
+      actions: {
+        importData: '导入数据',
+      },
+      columns: {
+        actions: '操作',
+        ideal: {
+          title: '期望回答',
+        },
+        question: {
+          title: '问题',
+        },
+        referenceFiles: {
+          title: '参考文件',
+        },
+      },
+      notSelected: '请在左侧选择数据集',
+      title: '数据集详情',
+    },
+  },
 };

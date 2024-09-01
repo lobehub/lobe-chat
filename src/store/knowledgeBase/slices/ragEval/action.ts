@@ -26,6 +26,8 @@ export interface RAGEvalAction {
   removeDataset: (id: number) => Promise<void>;
   useFetchDatasetRecords: (datasetId: number | null) => SWRResponse<EvalDatasetRecord[]>;
   useFetchDatasets: (knowledgeBaseId: string) => SWRResponse<RAGEvalDataSetItem[]>;
+
+  useFetchEvaluation: (knowledgeBaseId: string) => SWRResponse<RAGEvalDataSetItem[]>;
 }
 
 export const createRagEvalSlice: StateCreator<
@@ -85,6 +87,18 @@ export const createRagEvalSlice: StateCreator<
       () => ragEvalService.getDatasetRecords(datasetId!),
     ),
   useFetchDatasets: (knowledgeBaseId) =>
+    useClientDataSWR<RAGEvalDataSetItem[]>(
+      [FETCH_DATASET_LIST_KEY, knowledgeBaseId],
+      () => ragEvalService.getDatasets(knowledgeBaseId),
+      {
+        fallbackData: [],
+        onSuccess: () => {
+          if (!get().initDatasetList)
+            set({ initDatasetList: true }, false, 'useFetchDatasets/init');
+        },
+      },
+    ),
+  useFetchEvaluation: (knowledgeBaseId) =>
     useClientDataSWR<RAGEvalDataSetItem[]>(
       [FETCH_DATASET_LIST_KEY, knowledgeBaseId],
       () => ragEvalService.getDatasets(knowledgeBaseId),

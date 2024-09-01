@@ -6,7 +6,7 @@ import { Button, Typography, Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { Edit2Icon, Trash2Icon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import FileIcon from '@/components/FileIcon';
 import { ragEvalService } from '@/services/ragEval';
@@ -25,8 +25,7 @@ const createRequest = (activeDatasetId: number) => async () => {
 
 const useStyles = createStyles(({ css }) => ({
   container: css`
-    padding-block: 0;
-padding-inline: 12px;
+    padding: 12px;
   `,
   icon: css`
     min-width: 24px;
@@ -90,11 +89,7 @@ const DatasetDetail = () => {
 
   const request = activeDatasetId ? createRequest(activeDatasetId) : undefined;
 
-  return !activeDatasetId ? (
-    <Center height={'100%'} width={'100%'}>
-      {t('dataset.list.table.notSelected')}
-    </Center>
-  ) : (
+  return (
     <Flexbox className={styles.container} gap={24}>
       <ProTable
         columns={columns}

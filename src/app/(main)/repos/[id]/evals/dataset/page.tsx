@@ -12,11 +12,6 @@ import DatasetList from './DatasetList';
 import EmptyGuide from './EmptyGuide';
 
 const useStyles = createStyles(({ css, token }) => ({
-  container: css`
-    padding: 16px;
-    background: ${token.colorBgContainer};
-    border-radius: 8px;
-  `,
   sider: css`
     padding-inline-end: 12px;
     border-inline-end: 1px solid ${token.colorSplit};
@@ -38,7 +33,7 @@ const Dataset = ({ params }: PageProps) => {
   ) : isEmpty ? (
     <EmptyGuide knowledgeBaseId={knowledgeBaseId} />
   ) : (
-    <Flexbox className={styles.container} height={'100%'} horizontal>
+    <Flexbox height={'100%'} horizontal>
       <Flexbox className={styles.sider} width={200}>
         <DatasetList dataSource={data!} />
       </Flexbox>

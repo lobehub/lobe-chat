@@ -42,25 +42,22 @@ export const evalDatasetRecords = pgTable('rag_eval_dataset_records', {
 export type NewEvalDatasetRecordsItem = typeof evalDatasetRecords.$inferInsert;
 export type EvalDatasetRecordsSelectItem = typeof evalDatasetRecords.$inferSelect;
 
-export const evalReports = pgTable('rag_eval_reports', {
-  id: integer('id').generatedAlwaysAsIdentity({ startWith: 10_000 }).primaryKey(),
+export const evalEvaluation = pgTable('rag_eval_evaluations', {
+  id: integer('id').generatedAlwaysAsIdentity().primaryKey(),
   name: text('name'),
   exportUrl: text('export_url'),
 
   result: jsonb('result'),
 
-  taskId: uuid('task_id')
-    .references(() => asyncTasks.id)
-    .notNull(),
-
+  datasetId: integer('dataset_id').references(() => evalDatasets.id, { onDelete: 'cascade' }),
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   createdAt: createdAt(),
 });
 
-export type NewEvalReportsItem = typeof evalReports.$inferInsert;
-export type EvalReportsSelectItem = typeof evalReports.$inferSelect;
+export type NewEvalEvaluationItem = typeof evalEvaluation.$inferInsert;
+export type EvalEvaluationSelectItem = typeof evalEvaluation.$inferSelect;
 
-export const evalResults = pgTable('rag_eval_results', {
+export const evaluationRecords = pgTable('rag_eval_evaluation_records', {
   id: integer('id').generatedAlwaysAsIdentity().primaryKey(),
 
   question: text('question').notNull(),
@@ -71,16 +68,16 @@ export const evalResults = pgTable('rag_eval_results', {
   taskId: uuid('task_id')
     .references(() => asyncTasks.id)
     .notNull(),
-  datasetItemId: integer('dataset_item_id')
+  datasetRecordId: integer('dataset_record_id')
     .references(() => evalDatasetRecords.id)
     .notNull(),
-  reportId: integer('report_id')
-    .references(() => evalReports.id)
+  evaluationId: integer('evaluation_id')
+    .references(() => evalEvaluation.id)
     .notNull(),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   createdAt: createdAt(),
 });
 
-export type NewEvalResultsItem = typeof evalResults.$inferInsert;
-export type EvalResultsSelectItem = typeof evalResults.$inferSelect;
+export type NewEvaluationRecordsItem = typeof evaluationRecords.$inferInsert;
+export type EvaluationRecordsSelectItem = typeof evaluationRecords.$inferSelect;

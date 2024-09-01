@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "2662c10e-311c-41dd-b8c0-e85cdfe17feb",
+  "id": "228c5915-77ff-4365-a3f0-3a44cfa1296f",
   "prevId": "5b855702-5dff-4ae1-bd09-a0453c153aaa",
   "schemas": {},
   "sequences": {},
@@ -2296,6 +2296,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "knowledge_base_id": {
+          "name": "knowledge_base_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "user_id": {
           "name": "user_id",
           "type": "text",
@@ -2319,6 +2325,15 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "rag_eval_datasets_knowledge_base_id_knowledge_bases_id_fk": {
+          "name": "rag_eval_datasets_knowledge_base_id_knowledge_bases_id_fk",
+          "tableFrom": "rag_eval_datasets",
+          "tableTo": "knowledge_bases",
+          "columnsFrom": ["knowledge_base_id"],
+          "columnsTo": ["id"],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
         "rag_eval_datasets_user_id_users_id_fk": {
           "name": "rag_eval_datasets_user_id_users_id_fk",
           "tableFrom": "rag_eval_datasets",
@@ -2332,8 +2347,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.rag_eval_reports": {
-      "name": "rag_eval_reports",
+    "public.rag_eval_evaluations": {
+      "name": "rag_eval_evaluations",
       "schema": "",
       "columns": {
         "id": {
@@ -2343,10 +2358,10 @@
           "notNull": true,
           "identity": {
             "type": "always",
-            "name": "rag_eval_reports_id_seq",
+            "name": "rag_eval_evaluations_id_seq",
             "schema": "public",
             "increment": "1",
-            "startWith": "10000",
+            "startWith": "1",
             "minValue": "1",
             "maxValue": "2147483647",
             "cache": "1",
@@ -2371,11 +2386,11 @@
           "primaryKey": false,
           "notNull": false
         },
-        "task_id": {
-          "name": "task_id",
-          "type": "uuid",
+        "dataset_id": {
+          "name": "dataset_id",
+          "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "user_id": {
           "name": "user_id",
@@ -2393,18 +2408,18 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "rag_eval_reports_task_id_async_tasks_id_fk": {
-          "name": "rag_eval_reports_task_id_async_tasks_id_fk",
-          "tableFrom": "rag_eval_reports",
-          "tableTo": "async_tasks",
-          "columnsFrom": ["task_id"],
+        "rag_eval_evaluations_dataset_id_rag_eval_datasets_id_fk": {
+          "name": "rag_eval_evaluations_dataset_id_rag_eval_datasets_id_fk",
+          "tableFrom": "rag_eval_evaluations",
+          "tableTo": "rag_eval_datasets",
+          "columnsFrom": ["dataset_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "rag_eval_reports_user_id_users_id_fk": {
-          "name": "rag_eval_reports_user_id_users_id_fk",
-          "tableFrom": "rag_eval_reports",
+        "rag_eval_evaluations_user_id_users_id_fk": {
+          "name": "rag_eval_evaluations_user_id_users_id_fk",
+          "tableFrom": "rag_eval_evaluations",
           "tableTo": "users",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],
@@ -2415,8 +2430,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "public.rag_eval_results": {
-      "name": "rag_eval_results",
+    "public.rag_eval_evaluation_records": {
+      "name": "rag_eval_evaluation_records",
       "schema": "",
       "columns": {
         "id": {
@@ -2426,7 +2441,7 @@
           "notNull": true,
           "identity": {
             "type": "always",
-            "name": "rag_eval_results_id_seq",
+            "name": "rag_eval_evaluation_records_id_seq",
             "schema": "public",
             "increment": "1",
             "startWith": "1",
@@ -2466,14 +2481,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "dataset_item_id": {
-          "name": "dataset_item_id",
+        "dataset_record_id": {
+          "name": "dataset_record_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "report_id": {
-          "name": "report_id",
+        "evaluation_id": {
+          "name": "evaluation_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -2494,36 +2509,36 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "rag_eval_results_task_id_async_tasks_id_fk": {
-          "name": "rag_eval_results_task_id_async_tasks_id_fk",
-          "tableFrom": "rag_eval_results",
+        "rag_eval_evaluation_records_task_id_async_tasks_id_fk": {
+          "name": "rag_eval_evaluation_records_task_id_async_tasks_id_fk",
+          "tableFrom": "rag_eval_evaluation_records",
           "tableTo": "async_tasks",
           "columnsFrom": ["task_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "rag_eval_results_dataset_item_id_rag_eval_dataset_records_id_fk": {
-          "name": "rag_eval_results_dataset_item_id_rag_eval_dataset_records_id_fk",
-          "tableFrom": "rag_eval_results",
+        "rag_eval_evaluation_records_dataset_record_id_rag_eval_dataset_records_id_fk": {
+          "name": "rag_eval_evaluation_records_dataset_record_id_rag_eval_dataset_records_id_fk",
+          "tableFrom": "rag_eval_evaluation_records",
           "tableTo": "rag_eval_dataset_records",
-          "columnsFrom": ["dataset_item_id"],
+          "columnsFrom": ["dataset_record_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "rag_eval_results_report_id_rag_eval_reports_id_fk": {
-          "name": "rag_eval_results_report_id_rag_eval_reports_id_fk",
-          "tableFrom": "rag_eval_results",
-          "tableTo": "rag_eval_reports",
-          "columnsFrom": ["report_id"],
+        "rag_eval_evaluation_records_evaluation_id_rag_eval_evaluations_id_fk": {
+          "name": "rag_eval_evaluation_records_evaluation_id_rag_eval_evaluations_id_fk",
+          "tableFrom": "rag_eval_evaluation_records",
+          "tableTo": "rag_eval_evaluations",
+          "columnsFrom": ["evaluation_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "rag_eval_results_user_id_users_id_fk": {
-          "name": "rag_eval_results_user_id_users_id_fk",
-          "tableFrom": "rag_eval_results",
+        "rag_eval_evaluation_records_user_id_users_id_fk": {
+          "name": "rag_eval_evaluation_records_user_id_users_id_fk",
+          "tableFrom": "rag_eval_evaluation_records",
           "tableTo": "users",
           "columnsFrom": ["user_id"],
           "columnsTo": ["id"],

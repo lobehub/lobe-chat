@@ -5,7 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { useCreateDatasetModal } from '../CreateDataset';
+import { useCreateDatasetModal } from '../CreateEvaluation';
 
 interface EmptyGuideProps {
   knowledgeBaseId: string;
@@ -16,7 +16,7 @@ const EmptyGuide = memo<EmptyGuideProps>(({ knowledgeBaseId }) => {
   const modal = useCreateDatasetModal();
   return (
     <Center gap={24} height={'100%'} width={'100%'}>
-      <div>{t('dataset.emptyGuide')}</div>
+      <div>{t('evaluation.emptyGuide')}</div>
       <Flexbox gap={8} horizontal>
         <Button
           onClick={() => {
@@ -24,7 +24,7 @@ const EmptyGuide = memo<EmptyGuideProps>(({ knowledgeBaseId }) => {
           }}
           type={'primary'}
         >
-          {t('dataset.addNewButton')}
+          {t('evaluation.addNewButton')}
         </Button>
       </Flexbox>
     </Center>

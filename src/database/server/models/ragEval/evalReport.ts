@@ -1,18 +1,18 @@
 import { and, desc, eq } from 'drizzle-orm';
 
 import { serverDB } from '@/database/server';
-import { NewEvalReportsItem, evalReports } from '@/database/server/schemas/lobechat';
+import { NewEvalEvaluationItem, evalEvaluation } from '@/database/server/schemas/lobechat';
 
-export class EvalReportModel {
+export class EvalEvaluationModel {
   private userId: string;
 
   constructor(userId: string) {
     this.userId = userId;
   }
 
-  create = async (params: NewEvalReportsItem) => {
+  create = async (params: NewEvalEvaluationItem) => {
     const [result] = await serverDB
-      .insert(evalReports)
+      .insert(evalEvaluation)
       .values({ ...params, userId: this.userId })
       .returning();
     return result;
@@ -20,27 +20,27 @@ export class EvalReportModel {
 
   delete = async (id: number) => {
     return serverDB
-      .delete(evalReports)
-      .where(and(eq(evalReports.id, id), eq(evalReports.userId, this.userId)));
+      .delete(evalEvaluation)
+      .where(and(eq(evalEvaluation.id, id), eq(evalEvaluation.userId, this.userId)));
   };
 
   query = async () => {
-    return serverDB.query.evalReports.findMany({
-      orderBy: [desc(evalReports.createdAt)],
-      where: eq(evalReports.userId, this.userId),
+    return serverDB.query.evalEvaluation.findMany({
+      orderBy: [desc(evalEvaluation.createdAt)],
+      where: eq(evalEvaluation.userId, this.userId),
     });
   };
 
   findById = async (id: number) => {
-    return serverDB.query.evalReports.findFirst({
-      where: and(eq(evalReports.id, id), eq(evalReports.userId, this.userId)),
+    return serverDB.query.evalEvaluation.findFirst({
+      where: and(eq(evalEvaluation.id, id), eq(evalEvaluation.userId, this.userId)),
     });
   };
 
-  update = async (id: number, value: Partial<NewEvalReportsItem>) => {
+  update = async (id: number, value: Partial<NewEvalEvaluationItem>) => {
     return serverDB
-      .update(evalReports)
+      .update(evalEvaluation)
       .set(value)
-      .where(and(eq(evalReports.id, id), eq(evalReports.userId, this.userId)));
+      .where(and(eq(evalEvaluation.id, id), eq(evalEvaluation.userId, this.userId)));
   };
 }

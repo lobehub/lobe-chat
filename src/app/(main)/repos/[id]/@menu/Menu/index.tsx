@@ -16,20 +16,22 @@ const FileMenu = memo<{ id: string }>(({ id }) => {
   const { t } = useTranslation('knowledgeBase');
   const pathname = usePathname();
   const { enableRAGEval } = useServerConfigStore(featureFlagsSelectors);
-  const [activeKey, setActiveKey] = useState(pathname);
+  const [activeKey, setActiveKey] = useState(
+    pathname.startsWith(`/repos/${id}/evals`) ? 'eval' : 'files',
+  );
 
   const items = useMemo(
     () =>
       [
         {
           icon: <Icon icon={FileText} />,
-          key: `/repos/${id}`,
+          key: 'files',
           label: <Link href={`/repos/${id}`}>{t('tab.files')}</Link>,
         },
         enableRAGEval && {
           icon: <Icon icon={GaugeIcon} />,
-          key: `/repos/${id}/evals`,
-          label: <Link href={`/repos/${id}/evals`}>{t('tab.evals')}</Link>,
+          key: 'eval',
+          label: <Link href={`/repos/${id}/evals/dataset`}>{t('tab.evals')}</Link>,
         },
         // {
         //   icon: <Icon icon={TestTubeDiagonal} />,

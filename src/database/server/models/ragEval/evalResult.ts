@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 
 import { serverDB } from '@/database/server';
-import { NewEvalResultsItem, evalResults } from '@/database/server/schemas/lobechat';
+import { NewEvaluationRecordsItem, evaluationRecords } from '@/database/server/schemas/lobechat';
 
 export class EvalResultModel {
   private userId: string;
@@ -10,9 +10,9 @@ export class EvalResultModel {
     this.userId = userId;
   }
 
-  create = async (params: NewEvalResultsItem) => {
+  create = async (params: NewEvaluationRecordsItem) => {
     const [result] = await serverDB
-      .insert(evalResults)
+      .insert(evaluationRecords)
       .values({ ...params, userId: this.userId })
       .returning();
     return result;
@@ -20,20 +20,23 @@ export class EvalResultModel {
 
   delete = async (id: number) => {
     return serverDB
-      .delete(evalResults)
-      .where(and(eq(evalResults.id, id), eq(evalResults.userId, this.userId)));
+      .delete(evaluationRecords)
+      .where(and(eq(evaluationRecords.id, id), eq(evaluationRecords.userId, this.userId)));
   };
 
   query = async (reportId: number) => {
-    return serverDB.query.evalResults.findMany({
-      where: and(eq(evalResults.reportId, reportId), eq(evalResults.userId, this.userId)),
+    return serverDB.query.evaluationRecords.findMany({
+      where: and(
+        eq(evaluationRecords.evaluationId, reportId),
+        eq(evaluationRecords.userId, this.userId),
+      ),
     });
   };
 
-  update = async (id: number, value: Partial<NewEvalResultsItem>) => {
+  update = async (id: number, value: Partial<NewEvaluationRecordsItem>) => {
     return serverDB
-      .update(evalResults)
+      .update(evaluationRecords)
       .set(value)
-      .where(and(eq(evalResults.id, id), eq(evalResults.userId, this.userId)));
+      .where(and(eq(evaluationRecords.id, id), eq(evaluationRecords.userId, this.userId)));
   };
 }
