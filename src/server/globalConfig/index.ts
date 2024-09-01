@@ -4,11 +4,14 @@ import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
+  NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
   OpenRouterProviderCard,
+  QwenProviderCard,
   SiliconCloudProviderCard,
   TogetherAIProviderCard,
+  ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
 import { enableNextAuth } from '@/const/auth';
@@ -37,8 +40,13 @@ export const getServerGlobalConfig = () => {
     ENABLED_ANTHROPIC,
     ENABLED_MINIMAX,
     ENABLED_MISTRAL,
+
     ENABLED_NOVITA,
+    NOVITA_MODEL_LIST,
+
     ENABLED_QWEN,
+    QWEN_MODEL_LIST,
+
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
@@ -60,6 +68,8 @@ export const getServerGlobalConfig = () => {
     OPENROUTER_MODEL_LIST,
 
     ENABLED_ZEROONE,
+    ZEROONE_MODEL_LIST,
+
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
   } = getLLMConfig();
@@ -93,7 +103,14 @@ export const getServerGlobalConfig = () => {
       minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
-      novita: { enabled: ENABLED_NOVITA },
+      novita: {
+        enabled: ENABLED_NOVITA,
+        enabledModels: extractEnabledModels(NOVITA_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: NovitaProviderCard.chatModels,
+          modelString: NOVITA_MODEL_LIST,
+        }),
+      },
       ollama: {
         enabled: ENABLED_OLLAMA,
         fetchOnClient: !OLLAMA_PROXY_URL,
@@ -120,7 +137,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
       perplexity: { enabled: ENABLED_PERPLEXITY },
-      qwen: { enabled: ENABLED_QWEN },
+      qwen: {
+        enabled: ENABLED_QWEN,
+        enabledModels: extractEnabledModels(QWEN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: QwenProviderCard.chatModels,
+          modelString: QWEN_MODEL_LIST,
+        }),
+      },
       siliconcloud: {
         enabled: ENABLED_SILICONCLOUD,
         enabledModels: extractEnabledModels(SILICONCLOUD_MODEL_LIST),
@@ -141,7 +165,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
       upstage: { enabled: ENABLED_UPSTAGE },
-      zeroone: { enabled: ENABLED_ZEROONE },
+      zeroone: {
+        enabled: ENABLED_ZEROONE,
+        enabledModels: extractEnabledModels(ZEROONE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: ZeroOneProviderCard.chatModels,
+          modelString: ZEROONE_MODEL_LIST,
+        }),
+      },
       zhipu: { 
         enabled: ENABLED_ZHIPU, 
         enabledModels: extractEnabledModels(ZHIPU_MODEL_LIST), 
