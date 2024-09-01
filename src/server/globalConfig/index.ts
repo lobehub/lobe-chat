@@ -4,6 +4,7 @@ import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
+  GroqProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
@@ -34,7 +35,10 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_AWS_BEDROCK,
     ENABLED_GOOGLE,
+
     ENABLED_GROQ,
+    GROQ_MODEL_LIST,
+
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
@@ -99,7 +103,14 @@ export const getServerGlobalConfig = () => {
       bedrock: { enabled: ENABLED_AWS_BEDROCK },
       deepseek: { enabled: ENABLED_DEEPSEEK },
       google: { enabled: ENABLED_GOOGLE },
-      groq: { enabled: ENABLED_GROQ },
+      groq: {
+        enabled: ENABLED_GROQ,
+        enabledModels: extractEnabledModels(GROQ_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: GroqProviderCard.chatModels,
+          modelString: GROQ_MODEL_LIST,
+        }),
+      },
       minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
