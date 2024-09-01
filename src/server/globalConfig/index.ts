@@ -4,6 +4,7 @@ import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
+  NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
   OpenRouterProviderCard,
@@ -39,7 +40,9 @@ export const getServerGlobalConfig = () => {
     ENABLED_ANTHROPIC,
     ENABLED_MINIMAX,
     ENABLED_MISTRAL,
+
     ENABLED_NOVITA,
+    NOVITA_MODEL_LIST,
 
     ENABLED_QWEN,
     QWEN_MODEL_LIST,
@@ -100,7 +103,14 @@ export const getServerGlobalConfig = () => {
       minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
-      novita: { enabled: ENABLED_NOVITA },
+      novita: {
+        enabled: ENABLED_NOVITA,
+        enabledModels: extractEnabledModels(NOVITA_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: NovitaProviderCard.chatModels,
+          modelString: NOVITA_MODEL_LIST,
+        }),
+      },
       ollama: {
         enabled: ENABLED_OLLAMA,
         fetchOnClient: !OLLAMA_PROXY_URL,
