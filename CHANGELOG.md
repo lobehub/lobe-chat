@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.5](https://github.com/lobehub/lobe-chat/compare/v1.15.4...v1.15.5)
+
+<sup>Released on **2024-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Together AI model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Together AI model list, closes [#3713](https://github.com/lobehub/lobe-chat/issues/3713) ([0dde3b1](https://github.com/lobehub/lobe-chat/commit/0dde3b1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.4](https://github.com/lobehub/lobe-chat/compare/v1.15.3...v1.15.4)
 
 <sup>Released on **2024-09-01**</sup>
