@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.4](https://github.com/lobehub/lobe-chat/compare/v1.15.3...v1.15.4)
+
+<sup>Released on **2024-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Novita AI model info & add `NOVITA_MODEL_LIST` support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Novita AI model info & add `NOVITA_MODEL_LIST` support, closes [#3715](https://github.com/lobehub/lobe-chat/issues/3715) ([4ab33f6](https://github.com/lobehub/lobe-chat/commit/4ab33f6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.3](https://github.com/lobehub/lobe-chat/compare/v1.15.2...v1.15.3)
 
 <sup>Released on **2024-09-01**</sup>
