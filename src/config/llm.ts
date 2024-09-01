@@ -81,6 +81,7 @@ export const getLLMConfig = () => {
 
       ENABLED_NOVITA: z.boolean(),
       NOVITA_API_KEY: z.string().optional(),
+      NOVITA_MODEL_LIST: z.string().optional(),
 
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
@@ -176,6 +177,7 @@ export const getLLMConfig = () => {
 
       ENABLED_NOVITA: !!process.env.NOVITA_API_KEY,
       NOVITA_API_KEY: process.env.NOVITA_API_KEY,
+      NOVITA_MODEL_LIST: process.env.NOVITA_MODEL_LIST,
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
