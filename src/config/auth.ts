@@ -79,6 +79,15 @@ export const getAuthConfig = () => {
   if (process.env.AUTHELIA_ISSUER) {
     console.warn(removeTipsTemplate('AUTHELIA_ISSUER', 'AUTH_AUTHELIA_ISSUER'));
   }
+  if (process.env.AZURE_AD_CLIENT_ID) {
+    console.warn(removeTipsTemplate('AZURE_AD_CLIENT_ID', 'AUTH_AZURE_AD_ID'));
+  }
+  if (process.env.AZURE_AD_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('AZURE_AD_CLIENT_SECRET', 'AUTH_AZURE_AD_SECRET'));
+  }
+  if (process.env.AZURE_AD_ISSUER) {
+    console.warn(removeTipsTemplate('AZURE_AD_ISSUER', 'AUTH_AZURE_AD_SECRET'));
+  }
   if (process.env.CLOUDFLARE_ZERO_TRUST_CLIENT_ID) {
     console.warn(
       removeTipsTemplate('CLOUDFLARE_ZERO_TRUST_CLIENT_ID', 'AUTH_CLOUDFLARE_ZERO_TRUST_ID'),
