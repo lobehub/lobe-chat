@@ -107,13 +107,13 @@ export const getAuthConfig = () => {
     );
   }
   if (process.env.GENERIC_OIDC_CLIENT_ID) {
-    console.warn(removeTipsTemplate('GENERIC_OIDC_CLIENT_ID', 'AUTH_GENERIC_ID'));
+    console.warn(removeTipsTemplate('GENERIC_OIDC_CLIENT_ID', 'AUTH_GENERIC_OIDC_ID'));
   }
   if (process.env.GENERIC_OIDC_CLIENT_SECRET) {
-    console.warn(removeTipsTemplate('GENERIC_OIDC_CLIENT_SECRET', 'AUTH_GENERIC_SECRET'));
+    console.warn(removeTipsTemplate('GENERIC_OIDC_CLIENT_SECRET', 'AUTH_GENERIC_OIDC_SECRET'));
   }
   if (process.env.GENERIC_OIDC_ISSUER) {
-    console.warn(removeTipsTemplate('GENERIC_OIDC_ISSUER', 'AUTH_GENERIC_ISSUER'));
+    console.warn(removeTipsTemplate('GENERIC_OIDC_ISSUER', 'AUTH_GENERIC_OIDC_ISSUER'));
   }
   if (process.env.GITHUB_CLIENT_ID) {
     console.warn(removeTipsTemplate('GITHUB_CLIENT_ID', 'AUTH_GITHUB_ID'));
