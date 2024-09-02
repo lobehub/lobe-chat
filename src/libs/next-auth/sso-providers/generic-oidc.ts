@@ -19,12 +19,9 @@ const provider = {
     ...CommonProviderConfig,
     authorization: { params: { scope: 'email openid profile' } },
     checks: ['state', 'pkce'],
-    // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
     clientId: authEnv.GENERIC_OIDC_CLIENT_ID ?? process.env.AUTH_GENERIC_OIDC_ID,
     clientSecret: authEnv.GENERIC_OIDC_CLIENT_SECRET ?? process.env.AUTH_GENERIC_OIDC_SECRET,
-    // Remove end
-id: 'generic-oidc',
-    
+    id: 'generic-oidc',
     issuer: authEnv.GENERIC_OIDC_ISSUER ?? process.env.AUTH_GENERIC_OIDC_ISSUER,
     name: 'Generic OIDC',
     profile(profile) {
