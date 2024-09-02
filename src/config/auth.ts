@@ -85,8 +85,8 @@ export const getAuthConfig = () => {
   if (process.env.AZURE_AD_CLIENT_SECRET) {
     console.warn(removeTipsTemplate('AZURE_AD_CLIENT_SECRET', 'AUTH_AZURE_AD_SECRET'));
   }
-  if (process.env.AZURE_AD_ISSUER) {
-    console.warn(removeTipsTemplate('AZURE_AD_ISSUER', 'AUTH_AZURE_AD_SECRET'));
+  if (process.env.AZURE_AD_TENANT_ID) {
+    console.warn(removeTipsTemplate('AZURE_AD_TENANT_ID', 'AUTH_AZURE_AD_TENANT_ID'));
   }
   if (process.env.CLOUDFLARE_ZERO_TRUST_CLIENT_ID) {
     console.warn(
