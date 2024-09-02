@@ -14,6 +14,8 @@ export interface RAGEvalEvaluationAction {
   refreshEvaluationList: () => Promise<void>;
   removeEvaluation: (id: number) => Promise<void>;
 
+  runEvaluation: (id: number) => Promise<void>;
+
   useFetchEvaluationList: (knowledgeBaseId: string) => SWRResponse<RAGEvalDataSetItem[]>;
 }
 
@@ -31,10 +33,13 @@ export const createRagEvalEvaluationSlice: StateCreator<
   refreshEvaluationList: async () => {
     await mutate(FETCH_EVALUATION_LIST_KEY);
   },
-
   removeEvaluation: async (id) => {
     await ragEvalService.removeDataset(id);
     await get().refreshDatasetList();
+  },
+
+  runEvaluation: async (id) => {
+    await ragEvalService.startEvaluationTask(id);
   },
 
   useFetchEvaluationList: (knowledgeBaseId) =>

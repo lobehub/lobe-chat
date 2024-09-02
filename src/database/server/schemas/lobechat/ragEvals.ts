@@ -1,9 +1,12 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
+import { EvalEvaluationStatus } from '@/types/eval';
+
 import { createdAt, updatedAt } from './_helpers';
 import { asyncTasks } from './asyncTask';
 import { knowledgeBases } from './file';
+import { embeddings } from './rag';
 import { users } from './user';
 
 export const evalDatasets = pgTable('rag_eval_datasets', {
@@ -49,6 +52,7 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
 
   exportUrl: text('export_url'),
   result: jsonb('result'),
+  status: text('status').$defaultFn(() => EvalEvaluationStatus.Pending),
 
   datasetId: integer('dataset_id')
     .references(() => evalDatasets.id, { onDelete: 'cascade' })
@@ -56,6 +60,9 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
   knowledgeBaseId: text('knowledge_base_id').references(() => knowledgeBases.id, {
     onDelete: 'cascade',
   }),
+  languageModel: text('language_model'),
+  embeddingModel: text('embedding_model'),
+
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   createdAt: createdAt(),
   updatedAt: updatedAt(),
@@ -68,18 +75,25 @@ export const evaluationRecords = pgTable('rag_eval_evaluation_records', {
   id: integer('id').generatedAlwaysAsIdentity().primaryKey(),
 
   question: text('question').notNull(),
-  answer: text('answer').notNull(),
+  answer: text('answer'),
   context: text('context').array(),
   groundTruth: text('ground_truth'),
 
-  taskId: uuid('task_id')
-    .references(() => asyncTasks.id)
-    .notNull(),
+  status: text('status').$defaultFn(() => EvalEvaluationStatus.Pending),
+
+  languageModel: text('language_model'),
+  embeddingModel: text('embedding_model'),
+
+  questionEmbeddingId: uuid('question_embedding_id').references(() => embeddings.id, {
+    onDelete: 'set null',
+  }),
+
+  taskId: uuid('task_id').references(() => asyncTasks.id),
   datasetRecordId: integer('dataset_record_id')
-    .references(() => evalDatasetRecords.id)
+    .references(() => evalDatasetRecords.id, { onDelete: 'cascade' })
     .notNull(),
   evaluationId: integer('evaluation_id')
-    .references(() => evalEvaluation.id)
+    .references(() => evalEvaluation.id, { onDelete: 'cascade' })
     .notNull(),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),

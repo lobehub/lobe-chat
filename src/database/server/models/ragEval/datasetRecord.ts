@@ -63,6 +63,21 @@ export class EvalDatasetRecordModel {
     });
   };
 
+  findByDatasetId = async (datasetId: number) => {
+    return serverDB.query.evalDatasetRecords.findMany({
+      where: and(
+        eq(evalDatasetRecords.datasetId, datasetId),
+        eq(evalDatasetRecords.userId, this.userId),
+      ),
+    });
+  };
+
+  findById = async (id: number) => {
+    return serverDB.query.evalDatasetRecords.findFirst({
+      where: and(eq(evalDatasetRecords.id, id), eq(evalDatasetRecords.userId, this.userId)),
+    });
+  };
+
   update = async (id: number, value: Partial<NewEvalDatasetRecordsItem>) => {
     return serverDB
       .update(evalDatasetRecords)

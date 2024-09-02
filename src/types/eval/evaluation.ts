@@ -1,5 +1,12 @@
 import { z } from 'zod';
 
+export enum EvalEvaluationStatus {
+  Error = 'Error',
+  Pending = 'Pending',
+  Processing = 'Processing',
+  Success = 'Success',
+}
+
 export interface EvaluationRecord {
   answer: string;
   context: string[];

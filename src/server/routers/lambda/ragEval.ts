@@ -1,5 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
+import { TRPCError } from '@trpc/server';
 import JSONL from 'jsonl-parse-stringify';
+import pMap from 'p-map';
 import { z } from 'zod';
 
 import { FileModel } from '@/database/server/models/file';
@@ -7,11 +9,14 @@ import {
   EvalDatasetModel,
   EvalDatasetRecordModel,
   EvalEvaluationModel,
+  EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc';
 import { S3 } from '@/server/modules/S3';
+import { createAsyncServerClient } from '@/server/routers/async';
 import {
   EvalDatasetRecord,
+  EvalEvaluationStatus,
   InsertEvalDatasetRecord,
   RAGEvalDataSetItem,
   insertEvalDatasetRecordSchema,
@@ -28,6 +33,7 @@ const ragEvalProcedure = authedProcedure.use(async (opts) => {
       fileModel: new FileModel(ctx.userId),
       datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
       evaluationModel: new EvalEvaluationModel(ctx.userId),
+      evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
     },
   });
 });
@@ -160,6 +166,56 @@ export const ragEvalRouter = router({
     }),
 
   // Evaluation operations
+  startEvaluationTask: ragEvalProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ input, ctx }) => {
+      // Start evaluation task
+      const evaluation = await ctx.evaluationModel.findById(input.id);
+
+      if (!evaluation) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Evaluation not found' });
+      }
+
+      // create evaluation records by dataset records
+      const datasetRecords = await ctx.datasetRecordModel.findByDatasetId(evaluation.datasetId);
+
+      if (datasetRecords.length === 0) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Dataset record is empty' });
+      }
+
+      const evalRecords = await ctx.evaluationRecordModel.batchCreate(
+        datasetRecords.map((record) => ({
+          evaluationId: input.id,
+          datasetRecordId: record.id,
+          question: record.question!,
+          groundTruth: record.ideal,
+          status: EvalEvaluationStatus.Pending,
+        })),
+      );
+
+      const asyncCaller = await createAsyncServerClient(ctx.userId, ctx.jwtPayload!);
+
+      pMap(
+        evalRecords,
+        async (record) => {
+          asyncCaller.ragEval.runRecordEvaluation.mutate({ evalRecordId: record.id }).catch((e) => {
+            throw new TRPCError({
+              code: 'BAD_GATEWAY',
+              message: `[${e.statusCode}] Failed to start evaluation task: ${e.message}`,
+            });
+          });
+        },
+        {
+          concurrency: 30,
+        },
+      );
+
+      // ctx.
+
+      await ctx.evaluationModel.update(input.id, { status: EvalEvaluationStatus.Processing });
+
+      return { success: true };
+    }),
   createEvaluation: ragEvalProcedure
     .input(insertEvalEvaluationSchema)
     .mutation(async ({ input, ctx }) => {

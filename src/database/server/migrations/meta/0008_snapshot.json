@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "ff2246b5-3f5b-4228-bfd2-01e5b1b60dac",
+  "id": "5725b68a-8570-4178-a3de-ce158093f996",
   "prevId": "5b855702-5dff-4ae1-bd09-a0453c153aaa",
   "schemas": {},
   "sequences": {},
@@ -2392,6 +2392,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "dataset_id": {
           "name": "dataset_id",
           "type": "integer",
@@ -2400,6 +2406,18 @@
         },
         "knowledge_base_id": {
           "name": "knowledge_base_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "language_model": {
+          "name": "language_model",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "embedding_model": {
+          "name": "embedding_model",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -2489,7 +2507,7 @@
           "name": "answer",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "context": {
           "name": "context",
@@ -2503,11 +2521,35 @@
           "primaryKey": false,
           "notNull": false
         },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "language_model": {
+          "name": "language_model",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "embedding_model": {
+          "name": "embedding_model",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "question_embedding_id": {
+          "name": "question_embedding_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
         "task_id": {
           "name": "task_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "dataset_record_id": {
           "name": "dataset_record_id",
@@ -2537,6 +2579,15 @@
       },
       "indexes": {},
       "foreignKeys": {
+        "rag_eval_evaluation_records_question_embedding_id_embeddings_id_fk": {
+          "name": "rag_eval_evaluation_records_question_embedding_id_embeddings_id_fk",
+          "tableFrom": "rag_eval_evaluation_records",
+          "tableTo": "embeddings",
+          "columnsFrom": ["question_embedding_id"],
+          "columnsTo": ["id"],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
         "rag_eval_evaluation_records_task_id_async_tasks_id_fk": {
           "name": "rag_eval_evaluation_records_task_id_async_tasks_id_fk",
           "tableFrom": "rag_eval_evaluation_records",
@@ -2552,7 +2603,7 @@
           "tableTo": "rag_eval_dataset_records",
           "columnsFrom": ["dataset_record_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "rag_eval_evaluation_records_evaluation_id_rag_eval_evaluations_id_fk": {
@@ -2561,7 +2612,7 @@
           "tableTo": "rag_eval_evaluations",
           "columnsFrom": ["evaluation_id"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
         "rag_eval_evaluation_records_user_id_users_id_fk": {

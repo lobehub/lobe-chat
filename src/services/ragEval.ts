@@ -51,8 +51,8 @@ class RAGEvalService {
     return lambdaClient.ragEval.getEvaluationList.query({ knowledgeBaseId });
   }
 
-  async startEvaluationTask(id: number): Promise<void> {
-    console.log(id);
+  async startEvaluationTask(id: number) {
+    return lambdaClient.ragEval.startEvaluationTask.mutate({ id });
   }
 
   async removeEvaluation(id: number): Promise<void> {

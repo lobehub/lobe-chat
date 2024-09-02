@@ -1,14 +1,19 @@
 'use client';
 
-import { ProColumns, ProTable } from '@ant-design/pro-components';
-import { ActionIcon } from '@lobehub/ui';
+import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
+import { ActionIcon, Icon } from '@lobehub/ui';
+import { App, Button } from 'antd';
 import { createStyles } from 'antd-style';
-import { Edit2Icon, Trash2Icon } from 'lucide-react';
+import { PlayIcon, Trash2Icon } from 'lucide-react';
+import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import CreateEvaluationButton from '@/app/(main)/repos/[id]/evals/evaluation/CreateEvaluation';
 import { ragEvalService } from '@/services/ragEval';
+import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
+import { EvalEvaluationStatus } from '@/types/eval';
+
+import CreateEvaluationButton from '../CreateEvaluation';
 
 const createRequest = (knowledgeBaseId: string) => async () => {
   const records = await ragEvalService.getEvaluationList(knowledgeBaseId);
@@ -33,6 +38,9 @@ const useStyles = createStyles(({ css }) => ({
 const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
   const { t } = useTranslation(['ragEval', 'common']);
   const { styles } = useStyles();
+  const [, runEvaluation] = useKnowledgeBaseStore((s) => [s.removeEvaluation, s.runEvaluation]);
+  const { modal } = App.useApp();
+  const actionRef = useRef<ActionType>();
 
   const columns: ProColumns[] = [
     {
@@ -50,16 +58,53 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
       width: 200,
     },
     {
+      dataIndex: 'status',
+      title: t('evaluation.table.columns.status.title'),
+      valueEnum: {
+        [EvalEvaluationStatus.Error]: {
+          status: 'error',
+          text: t('evaluation.table.columns.status.error'),
+        },
+        [EvalEvaluationStatus.Processing]: {
+          status: 'processing',
+          text: t('evaluation.table.columns.status.processing'),
+        },
+        [EvalEvaluationStatus.Pending]: {
+          status: 'default',
+          text: t('evaluation.table.columns.status.pending'),
+        },
+        [EvalEvaluationStatus.Success]: {
+          status: 'success',
+          text: t('evaluation.table.columns.status.success'),
+        },
+      },
+      width: '50%',
+    },
+    {
       dataIndex: 'actions',
-      render: () => (
+      render: (_, entity) => (
         <Flexbox gap={4} horizontal>
-          <ActionIcon icon={Edit2Icon} size={'small'} title={t('edit', { ns: 'common' })} />
+          <Button
+            icon={<Icon icon={PlayIcon} />}
+            onClick={() => {
+              modal.confirm({
+                content: t('evaluation.table.columns.actions.confirmRun'),
+                onOk: async () => {
+                  await runEvaluation(entity.id);
+                  await actionRef.current?.reload();
+                },
+              });
+            }}
+            size={'small'}
+            type={'primary'}
+          >
+            {t('evaluation.table.columns.actions.run')}
+          </Button>
           <ActionIcon icon={Trash2Icon} size={'small'} title={t('delete', { ns: 'common' })} />
         </Flexbox>
       ),
-      title: t('evaluation.table.columns.actions'),
-
-      width: 80,
+      title: t('evaluation.table.columns.actions.title'),
+      width: 120,
     },
   ];
 

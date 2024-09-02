@@ -3,7 +3,7 @@ import { and, eq } from 'drizzle-orm';
 import { serverDB } from '@/database/server';
 import { NewEvaluationRecordsItem, evaluationRecords } from '@/database/server/schemas/lobechat';
 
-export class EvalResultModel {
+export class EvaluationRecordModel {
   private userId: string;
 
   constructor(userId: string) {
@@ -18,6 +18,13 @@ export class EvalResultModel {
     return result;
   };
 
+  batchCreate = async (params: NewEvaluationRecordsItem[]) => {
+    return serverDB
+      .insert(evaluationRecords)
+      .values(params.map((item) => ({ ...item, userId: this.userId })))
+      .returning();
+  };
+
   delete = async (id: number) => {
     return serverDB
       .delete(evaluationRecords)
@@ -30,6 +37,12 @@ export class EvalResultModel {
         eq(evaluationRecords.evaluationId, reportId),
         eq(evaluationRecords.userId, this.userId),
       ),
+    });
+  };
+
+  findById = async (id: number) => {
+    return serverDB.query.evaluationRecords.findFirst({
+      where: and(eq(evaluationRecords.id, id), eq(evaluationRecords.userId, this.userId)),
     });
   };
 

@@ -56,7 +56,13 @@ export default {
 
     table: {
       columns: {
-        actions: '操作',
+        actions: {
+          confirmDelete: '是否删除本条评测',
+          confirmRun:
+            '是否开始运行？开始运行后将在后台异步执行评测任务，关闭页面不影响异步任务的执行',
+          run: '运行',
+          title: '操作',
+        },
         datasetId: {
           title: '数据集',
         },
@@ -65,6 +71,13 @@ export default {
         },
         referenceFiles: {
           title: '参考文件',
+        },
+        status: {
+          error: '执行出错',
+          pending: '待运行',
+          processing: '运行中',
+          success: '执行成功',
+          title: '状态',
         },
       },
       title: '评测任务列表',
