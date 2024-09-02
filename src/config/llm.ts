@@ -49,6 +49,7 @@ export const getLLMConfig = () => {
 
       ENABLED_GROQ: z.boolean(),
       GROQ_API_KEY: z.string().optional(),
+      GROQ_MODEL_LIST: z.string().optional(),
       GROQ_PROXY_URL: z.string().optional(),
 
       ENABLED_OPENROUTER: z.boolean(),
@@ -81,6 +82,7 @@ export const getLLMConfig = () => {
 
       ENABLED_NOVITA: z.boolean(),
       NOVITA_API_KEY: z.string().optional(),
+      NOVITA_MODEL_LIST: z.string().optional(),
 
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
@@ -152,6 +154,7 @@ export const getLLMConfig = () => {
 
       ENABLED_GROQ: !!process.env.GROQ_API_KEY,
       GROQ_API_KEY: process.env.GROQ_API_KEY,
+      GROQ_MODEL_LIST: process.env.GROQ_MODEL_LIST,
       GROQ_PROXY_URL: process.env.GROQ_PROXY_URL,
 
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
@@ -176,6 +179,7 @@ export const getLLMConfig = () => {
 
       ENABLED_NOVITA: !!process.env.NOVITA_API_KEY,
       NOVITA_API_KEY: process.env.NOVITA_API_KEY,
+      NOVITA_MODEL_LIST: process.env.NOVITA_MODEL_LIST,
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,

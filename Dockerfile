@@ -119,7 +119,7 @@ ENV \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
-    GROQ_API_KEY="" GROQ_PROXY_URL="" \
+    GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
     # Minimax
     MINIMAX_API_KEY="" \
     # Mistral
@@ -127,7 +127,7 @@ ENV \
     # Moonshot
     MOONSHOT_API_KEY="" MOONSHOT_PROXY_URL="" \
     # Novita
-    NOVITA_API_KEY="" \
+    NOVITA_API_KEY="" NOVITA_MODEL_LIST="" \
     # Ollama
     OLLAMA_MODEL_LIST="" OLLAMA_PROXY_URL="" \
     # OpenAI
