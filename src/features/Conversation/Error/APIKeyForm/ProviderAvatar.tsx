@@ -1,4 +1,5 @@
 import {
+  Ai21,
   Ai360,
   AiMass,
   Anthropic,
@@ -106,6 +107,10 @@ const ProviderAvatar = memo<ProviderAvatarProps>(({ provider }) => {
 
     case ModelProvider.Upstage: {
       return <Upstage color={Upstage.colorPrimary} size={56} />;
+    }
+
+    case ModelProvider.Ai21: {
+      return <Ai21 color={Ai21.colorPrimary} size={56} />;
     }
 
     default:

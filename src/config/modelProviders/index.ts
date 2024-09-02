@@ -1,5 +1,6 @@
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
+import Ai21Provider from './ai21';
 import Ai360Provider from './ai360';
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
@@ -49,6 +50,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   Ai360Provider.chatModels,
   SiliconCloudProvider.chatModels,
   UpstageProvider.chatModels,
+  Ai21Provider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -76,6 +78,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   SiliconCloudProvider,
   UpstageProvider,
+  Ai21Provider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -87,6 +90,7 @@ export const isProviderDisableBroswerRequest = (id: string) => {
   return !!provider;
 };
 
+export { default as Ai21ProviderCard } from './ai21';
 export { default as Ai360ProviderCard } from './ai360';
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
