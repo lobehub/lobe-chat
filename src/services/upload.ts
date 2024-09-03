@@ -35,7 +35,7 @@ class UploadService {
           // so make it as 99.9 and let users think it's still uploading
           progress: progress === 100 ? 99.9 : progress,
           restTime: (event.total - event.loaded) / speedInByte,
-          speed: speedInByte / 1024,
+          speed: speedInByte,
         });
       }
     });
