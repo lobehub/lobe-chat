@@ -82,6 +82,7 @@ describe('formatTokenNumber', () => {
 
   it('should format numbers between 1024 and 41,983 correctly', () => {
     expect(formatTokenNumber(1024)).toBe('1K');
+    expect(formatTokenNumber(2000)).toBe('2K');
     expect(formatTokenNumber(2048)).toBe('2K');
     expect(formatTokenNumber(4000)).toBe('4K');
     expect(formatTokenNumber(4096)).toBe('4K');
