@@ -1,4 +1,4 @@
-import { encode } from 'gpt-tokenizer';
+import { encode } from 'gpt-tokenizer/encoding/o200k_base';
 import { z } from 'zod';
 
 import { publicProcedure, router } from '@/libs/trpc';
