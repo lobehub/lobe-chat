@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "e6f7e060-142b-4c72-9cfb-ead71350edd0",
+  "id": "a28836b8-99dc-4a31-97be-a6e29d0c74d1",
   "prevId": "5b855702-5dff-4ae1-bd09-a0453c153aaa",
   "schemas": {},
   "sequences": {},
@@ -2380,15 +2380,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "export_url": {
-          "name": "export_url",
+        "eval_records_url": {
+          "name": "eval_records_url",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "result": {
-          "name": "result",
-          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -2521,8 +2515,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "ground_truth": {
-          "name": "ground_truth",
+        "ideal": {
+          "name": "ideal",
           "type": "text",
           "primaryKey": false,
           "notNull": false

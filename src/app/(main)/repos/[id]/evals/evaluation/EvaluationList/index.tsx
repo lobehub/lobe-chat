@@ -145,7 +145,7 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
             children: t('evaluation.table.columns.actions.downloadRecords'),
             icon: <Icon icon={DownloadIcon} />,
             onClick: async () => {
-              window.open(entity.exportUrl);
+              window.open(entity.evalRecordsUrl);
             },
           },
         };

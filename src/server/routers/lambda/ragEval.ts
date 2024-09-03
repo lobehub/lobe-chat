@@ -191,7 +191,7 @@ export const ragEvalRouter = router({
           evaluationId: input.id,
           datasetRecordId: record.id,
           question: record.question!,
-          groundTruth: record.ideal,
+          ideal: record.ideal,
           status: EvalEvaluationStatus.Pending,
         })),
       );
@@ -249,7 +249,7 @@ export const ragEvalRouter = router({
           question: record.question,
           context: record.context,
           answer: record.answer,
-          ground_truth: record.groundTruth,
+          ground_truth: record.ideal,
         }));
         const date = dayjs().format('YYYY-MM-DD-HH-mm');
         const filename = `${date}-eval_${evaluation.id}-${evaluation.name}.jsonl`;
@@ -260,7 +260,7 @@ export const ragEvalRouter = router({
         // 保存数据
         await ctx.evaluationModel.update(input.id, {
           status: EvalEvaluationStatus.Success,
-          exportUrl: getFullFileUrl(path),
+          evalRecordsUrl: getFullFileUrl(path),
         });
       }
 

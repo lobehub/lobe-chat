@@ -11,8 +11,8 @@ export interface EvaluationRecord {
   answer: string;
   context: string[];
   createdAt: Date;
-  groundTruth: string;
   id: number;
+  ideal: string;
   question: string;
 }
 
@@ -32,7 +32,7 @@ export interface RAGEvalEvaluationItem {
     id: number;
     name: string;
   };
-  exportUrl?: string;
+  evalRecordsUrl?: string;
   id: number;
   name: string;
   recordsStats: {

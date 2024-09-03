@@ -50,8 +50,7 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
   name: text('name').notNull(),
   description: text('description'),
 
-  exportUrl: text('export_url'),
-  result: jsonb('result'),
+  evalRecordsUrl: text('eval_records_url'),
   status: text('status').$defaultFn(() => EvalEvaluationStatus.Pending),
   error: jsonb('error'),
 
@@ -78,7 +77,7 @@ export const evaluationRecords = pgTable('rag_eval_evaluation_records', {
   question: text('question').notNull(),
   answer: text('answer'),
   context: text('context').array(),
-  groundTruth: text('ground_truth'),
+  ideal: text('ideal'),
 
   status: text('status').$defaultFn(() => EvalEvaluationStatus.Pending),
   error: jsonb('error'),
