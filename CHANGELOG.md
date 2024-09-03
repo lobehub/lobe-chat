@@ -2,6 +2,109 @@
 
 # Changelog
 
+### [Version 1.15.6](https://github.com/lobehub/lobe-chat/compare/v1.15.5...v1.15.6)
+
+<sup>Released on **2024-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Stepfun default enabled model, update Groq model list & add `GROQ_MODEL_LIST` support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Stepfun default enabled model, closes [#3712](https://github.com/lobehub/lobe-chat/issues/3712) ([7e41d54](https://github.com/lobehub/lobe-chat/commit/7e41d54))
+- **misc**: Update Groq model list & add `GROQ_MODEL_LIST` support, closes [#3716](https://github.com/lobehub/lobe-chat/issues/3716) ([75c9247](https://github.com/lobehub/lobe-chat/commit/75c9247))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.15.5](https://github.com/lobehub/lobe-chat/compare/v1.15.4...v1.15.5)
+
+<sup>Released on **2024-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Together AI model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Together AI model list, closes [#3713](https://github.com/lobehub/lobe-chat/issues/3713) ([0dde3b1](https://github.com/lobehub/lobe-chat/commit/0dde3b1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.15.4](https://github.com/lobehub/lobe-chat/compare/v1.15.3...v1.15.4)
+
+<sup>Released on **2024-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Novita AI model info & add `NOVITA_MODEL_LIST` support.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Novita AI model info & add `NOVITA_MODEL_LIST` support, closes [#3715](https://github.com/lobehub/lobe-chat/issues/3715) ([4ab33f6](https://github.com/lobehub/lobe-chat/commit/4ab33f6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.15.3](https://github.com/lobehub/lobe-chat/compare/v1.15.2...v1.15.3)
+
+<sup>Released on **2024-09-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `*_MODEL_LIST` for Qwen and ZeroOne, fix model info, update Claude 3.5 Sonnet maxOutput vaule.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `*_MODEL_LIST` for Qwen and ZeroOne, closes [#3704](https://github.com/lobehub/lobe-chat/issues/3704) ([05419dc](https://github.com/lobehub/lobe-chat/commit/05419dc))
+- **misc**: Fix model info, closes [#3696](https://github.com/lobehub/lobe-chat/issues/3696) ([4d98037](https://github.com/lobehub/lobe-chat/commit/4d98037))
+- **misc**: Update Claude 3.5 Sonnet maxOutput vaule, closes [#3705](https://github.com/lobehub/lobe-chat/issues/3705) ([685bd74](https://github.com/lobehub/lobe-chat/commit/685bd74))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.2](https://github.com/lobehub/lobe-chat/compare/v1.15.1...v1.15.2)
 
 <sup>Released on **2024-08-30**</sup>
