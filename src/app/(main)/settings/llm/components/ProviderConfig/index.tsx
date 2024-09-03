@@ -266,7 +266,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
           ) : undefined}
         </Flexbox>
       ),
-      title: title ?? (
+      title: (
         <Flexbox
           align={'center'}
           className={styles.safariIconWidthFix}
@@ -277,7 +277,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             ...(enabled ? {} : { filter: 'grayscale(100%)', maxHeight: 24, opacity: 0.66 }),
           }}
         >
-          <ProviderCombine provider={id} size={24} />
+          {title ?? <ProviderCombine provider={id} size={24} />}
         </Flexbox>
       ),
     };
