@@ -16,12 +16,9 @@ const FETCH_DATASET_LIST_KEY = 'FETCH_DATASET_LIST';
 const FETCH_DATASET_RECORD_KEY = 'FETCH_DATASET_RECORD_KEY';
 
 export interface RAGEvalDatasetAction {
-  activateDataset: (id: number) => void;
   createNewDataset: (params: CreateNewEvalDatasets) => Promise<void>;
 
-  deactivateDataset: () => void;
-
-  importDataset: (file: File) => Promise<void>;
+  importDataset: (file: File, datasetId: number) => Promise<void>;
   refreshDatasetList: () => Promise<void>;
   removeDataset: (id: number) => Promise<void>;
   useFetchDatasetRecords: (datasetId: number | null) => SWRResponse<EvalDatasetRecord[]>;
@@ -34,21 +31,13 @@ export const createRagEvalDatasetSlice: StateCreator<
   [],
   RAGEvalDatasetAction
 > = (set, get) => ({
-  activateDataset: (id) => {
-    set({ activeDatasetId: id });
-  },
   createNewDataset: async (params) => {
     await ragEvalService.createDataset(params);
     await get().refreshDatasetList();
   },
 
-  deactivateDataset: () => {
-    set({ activeDatasetId: null });
-  },
-  importDataset: async (file) => {
-    const { activeDatasetId } = get();
-
-    if (!activeDatasetId) return;
+  importDataset: async (file, datasetId) => {
+    if (!datasetId) return;
     const fileType = file.name.split('.').pop();
 
     if (fileType === 'jsonl') {
@@ -63,7 +52,7 @@ export const createRagEvalDatasetSlice: StateCreator<
         insertEvalDatasetRecordSchema.array().parse(items);
 
         // if valid, send to backend
-        await ragEvalService.importDatasetRecords(activeDatasetId, file);
+        await ragEvalService.importDatasetRecords(datasetId, file);
       } catch (e) {
         notification.error({ description: (e as Error).message, message: '文件格式错误' });
       }

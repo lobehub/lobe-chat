@@ -6,7 +6,7 @@
   },
   "dialect": "postgresql",
   "enums": {},
-  "id": "5725b68a-8570-4178-a3de-ce158093f996",
+  "id": "e6f7e060-142b-4c72-9cfb-ead71350edd0",
   "prevId": "5b855702-5dff-4ae1-bd09-a0453c153aaa",
   "schemas": {},
   "sequences": {},
@@ -2398,6 +2398,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "error": {
+          "name": "error",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "dataset_id": {
           "name": "dataset_id",
           "type": "integer",
@@ -2527,6 +2533,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "error": {
+          "name": "error",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
         "language_model": {
           "name": "language_model",
           "type": "text",
@@ -2545,9 +2557,9 @@
           "primaryKey": false,
           "notNull": false
         },
-        "task_id": {
-          "name": "task_id",
-          "type": "uuid",
+        "duration": {
+          "name": "duration",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -2586,15 +2598,6 @@
           "columnsFrom": ["question_embedding_id"],
           "columnsTo": ["id"],
           "onDelete": "set null",
-          "onUpdate": "no action"
-        },
-        "rag_eval_evaluation_records_task_id_async_tasks_id_fk": {
-          "name": "rag_eval_evaluation_records_task_id_async_tasks_id_fk",
-          "tableFrom": "rag_eval_evaluation_records",
-          "tableTo": "async_tasks",
-          "columnsFrom": ["task_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
           "onUpdate": "no action"
         },
         "rag_eval_evaluation_records_dataset_record_id_rag_eval_dataset_records_id_fk": {

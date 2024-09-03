@@ -28,10 +28,17 @@ export type InsertEvaluationRecord = z.infer<typeof insertEvaluationSchema>;
 
 export interface RAGEvalEvaluationItem {
   createdAt: Date;
-  datasetId: number | null;
-  description?: string | null;
+  dataset: {
+    id: number;
+    name: string;
+  };
   id: number;
   name: string;
+  recordsStats: {
+    success: number;
+    total: number;
+  };
+  status: EvalEvaluationStatus;
   updatedAt: Date;
 }
 

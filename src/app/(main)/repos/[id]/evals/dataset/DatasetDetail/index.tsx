@@ -5,6 +5,7 @@ import { ActionIcon } from '@lobehub/ui';
 import { Button, Typography, Upload } from 'antd';
 import { createStyles } from 'antd-style';
 import { Edit2Icon, Trash2Icon } from 'lucide-react';
+import { parseAsInteger, useQueryState } from 'nuqs';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -26,7 +27,7 @@ const createRequest = (activeDatasetId: number) => async () => {
 const useStyles = createStyles(({ css }) => ({
   container: css`
     padding-block: 0;
-padding-inline: 12px;
+    padding-inline: 12px;
   `,
   icon: css`
     min-width: 24px;
@@ -40,10 +41,9 @@ padding-inline: 12px;
 const DatasetDetail = () => {
   const { t } = useTranslation(['ragEval', 'common']);
   const { styles } = useStyles();
-  const [activeDatasetId, importDataset] = useKnowledgeBaseStore((s) => [
-    s.activeDatasetId,
-    s.importDataset,
-  ]);
+  const [importDataset] = useKnowledgeBaseStore((s) => [s.importDataset]);
+
+  const [activeDatasetId] = useQueryState('id', parseAsInteger);
 
   const columns: ProColumns[] = [
     {
@@ -88,7 +88,7 @@ const DatasetDetail = () => {
     },
   ];
 
-  const request = activeDatasetId ? createRequest(activeDatasetId) : undefined;
+  const request = !!activeDatasetId ? createRequest(activeDatasetId) : undefined;
 
   return !activeDatasetId ? (
     <Center height={'100%'} width={'100%'}>
@@ -105,7 +105,7 @@ const DatasetDetail = () => {
           actions: [
             <Upload
               beforeUpload={async (file) => {
-                await importDataset(file);
+                await importDataset(file, activeDatasetId);
 
                 return false;
               }}

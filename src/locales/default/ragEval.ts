@@ -60,6 +60,7 @@ export default {
           confirmDelete: '是否删除本条评测',
           confirmRun:
             '是否开始运行？开始运行后将在后台异步执行评测任务，关闭页面不影响异步任务的执行',
+          retry: '重试',
           run: '运行',
           title: '操作',
         },
@@ -68,6 +69,9 @@ export default {
         },
         name: {
           title: '评测任务名称',
+        },
+        records: {
+          title: '评测记录数',
         },
         referenceFiles: {
           title: '参考文件',

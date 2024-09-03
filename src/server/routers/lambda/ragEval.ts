@@ -195,26 +195,35 @@ export const ragEvalRouter = router({
 
       const asyncCaller = await createAsyncServerClient(ctx.userId, ctx.jwtPayload!);
 
-      pMap(
-        evalRecords,
-        async (record) => {
-          asyncCaller.ragEval.runRecordEvaluation.mutate({ evalRecordId: record.id }).catch((e) => {
-            throw new TRPCError({
-              code: 'BAD_GATEWAY',
-              message: `[${e.statusCode}] Failed to start evaluation task: ${e.message}`,
-            });
-          });
-        },
-        {
-          concurrency: 30,
-        },
-      );
-
-      // ctx.
-
       await ctx.evaluationModel.update(input.id, { status: EvalEvaluationStatus.Processing });
+      try {
+        await pMap(
+          evalRecords,
+          async (record) => {
+            asyncCaller.ragEval.runRecordEvaluation
+              .mutate({ evalRecordId: record.id })
+              .catch(async (e) => {
+                await ctx.evaluationModel.update(input.id, { status: EvalEvaluationStatus.Error });
 
-      return { success: true };
+                throw new TRPCError({
+                  code: 'BAD_GATEWAY',
+                  message: `[ASYNC_TASK] Failed to start evaluation task: ${e.message}`,
+                });
+              });
+          },
+          {
+            concurrency: 30,
+          },
+        );
+
+        return { success: true };
+      } catch (e) {
+        console.error('[startEvaluationTask]:', e);
+
+        await ctx.evaluationModel.update(input.id, { status: EvalEvaluationStatus.Error });
+
+        return { success: false };
+      }
     }),
   createEvaluation: ragEvalProcedure
     .input(insertEvalEvaluationSchema)
@@ -238,6 +247,6 @@ export const ragEvalRouter = router({
   getEvaluationList: ragEvalProcedure
     .input(z.object({ knowledgeBaseId: z.string() }))
     .query(async ({ ctx, input }) => {
-      return ctx.evaluationModel.query(input.knowledgeBaseId);
+      return ctx.evaluationModel.queryByKnowledgeBaseId(input.knowledgeBaseId);
     }),
 });

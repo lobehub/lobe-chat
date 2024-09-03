@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS "rag_eval_evaluations" (
 	"export_url" text,
 	"result" jsonb,
 	"status" text,
+	"error" jsonb,
 	"dataset_id" integer NOT NULL,
 	"knowledge_base_id" text,
 	"language_model" text,
@@ -42,10 +43,11 @@ CREATE TABLE IF NOT EXISTS "rag_eval_evaluation_records" (
 	"context" text[],
 	"ground_truth" text,
 	"status" text,
+	"error" jsonb,
 	"language_model" text,
 	"embedding_model" text,
 	"question_embedding_id" uuid,
-	"task_id" uuid,
+	"duration" integer,
 	"dataset_record_id" integer NOT NULL,
 	"evaluation_id" integer NOT NULL,
 	"user_id" text,
@@ -96,12 +98,6 @@ END $$;
 --> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "rag_eval_evaluation_records" ADD CONSTRAINT "rag_eval_evaluation_records_question_embedding_id_embeddings_id_fk" FOREIGN KEY ("question_embedding_id") REFERENCES "public"."embeddings"("id") ON DELETE set null ON UPDATE no action;
-EXCEPTION
- WHEN duplicate_object THEN null;
-END $$;
---> statement-breakpoint
-DO $$ BEGIN
- ALTER TABLE "rag_eval_evaluation_records" ADD CONSTRAINT "rag_eval_evaluation_records_task_id_async_tasks_id_fk" FOREIGN KEY ("task_id") REFERENCES "public"."async_tasks"("id") ON DELETE no action ON UPDATE no action;
 EXCEPTION
  WHEN duplicate_object THEN null;
 END $$;

@@ -1,10 +1,10 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
+import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
 import { EvalEvaluationStatus } from '@/types/eval';
 
 import { createdAt, updatedAt } from './_helpers';
-import { asyncTasks } from './asyncTask';
 import { knowledgeBases } from './file';
 import { embeddings } from './rag';
 import { users } from './user';
@@ -53,6 +53,7 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
   exportUrl: text('export_url'),
   result: jsonb('result'),
   status: text('status').$defaultFn(() => EvalEvaluationStatus.Pending),
+  error: jsonb('error'),
 
   datasetId: integer('dataset_id')
     .references(() => evalDatasets.id, { onDelete: 'cascade' })
@@ -60,8 +61,8 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
   knowledgeBaseId: text('knowledge_base_id').references(() => knowledgeBases.id, {
     onDelete: 'cascade',
   }),
-  languageModel: text('language_model'),
-  embeddingModel: text('embedding_model'),
+  languageModel: text('language_model').$defaultFn(() => DEFAULT_MODEL),
+  embeddingModel: text('embedding_model').$defaultFn(() => DEFAULT_EMBEDDING_MODEL),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   createdAt: createdAt(),
@@ -80,6 +81,7 @@ export const evaluationRecords = pgTable('rag_eval_evaluation_records', {
   groundTruth: text('ground_truth'),
 
   status: text('status').$defaultFn(() => EvalEvaluationStatus.Pending),
+  error: jsonb('error'),
 
   languageModel: text('language_model'),
   embeddingModel: text('embedding_model'),
@@ -88,7 +90,7 @@ export const evaluationRecords = pgTable('rag_eval_evaluation_records', {
     onDelete: 'set null',
   }),
 
-  taskId: uuid('task_id').references(() => asyncTasks.id),
+  duration: integer('duration'),
   datasetRecordId: integer('dataset_record_id')
     .references(() => evalDatasetRecords.id, { onDelete: 'cascade' })
     .notNull(),
