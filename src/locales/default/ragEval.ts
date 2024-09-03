@@ -1,0 +1,93 @@
+export default {
+  addDataset: {
+    confirm: '新建',
+    description: {
+      placeholder: '数据集简介（选填）',
+    },
+    name: {
+      placeholder: '数据集名称',
+      required: '请填写数据集名称',
+    },
+    title: '添加数据集',
+  },
+  dataset: {
+    addNewButton: '创建数据集',
+    emptyGuide: '当前数据集为空，请创建一个数据集。',
+    list: {
+      table: {
+        actions: {
+          importData: '导入数据',
+        },
+        columns: {
+          actions: '操作',
+          ideal: {
+            title: '期望回答',
+          },
+          question: {
+            title: '问题',
+          },
+          referenceFiles: {
+            title: '参考文件',
+          },
+        },
+        notSelected: '请在左侧选择数据集',
+        title: '数据集详情',
+      },
+      title: '数据集',
+    },
+  },
+  evaluation: {
+    addEvaluation: {
+      confirm: '新建',
+      datasetId: {
+        placeholder: '请选择你的评测数据集',
+        required: '请选择评测数据集',
+      },
+      description: {
+        placeholder: '评测任务简介（选填）',
+      },
+      name: {
+        placeholder: '评测任务名称',
+        required: '请填写评测任务名称',
+      },
+      title: '添加评测任务',
+    },
+    addNewButton: '创建评测',
+    emptyGuide: '当前评测任务为空，开始创建评测。',
+
+    table: {
+      columns: {
+        actions: {
+          checkStatus: '检查状态',
+          confirmDelete: '是否删除本条评测',
+          confirmRun:
+            '是否开始运行？开始运行后将在后台异步执行评测任务，关闭页面不影响异步任务的执行',
+          downloadRecords: '下载评测',
+          retry: '重试',
+          run: '运行',
+          title: '操作',
+        },
+        datasetId: {
+          title: '数据集',
+        },
+        name: {
+          title: '评测任务名称',
+        },
+        records: {
+          title: '评测记录数',
+        },
+        referenceFiles: {
+          title: '参考文件',
+        },
+        status: {
+          error: '执行出错',
+          pending: '待运行',
+          processing: '运行中',
+          success: '执行成功',
+          title: '状态',
+        },
+      },
+      title: '评测任务列表',
+    },
+  },
+};
