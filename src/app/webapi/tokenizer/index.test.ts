@@ -27,6 +27,6 @@ describe('tokenizer Route', () => {
     const response = await POST(request);
 
     const data = await response.json();
-    expect(data.count).toEqual(7);
+    expect(data.count).toEqual(5);
   });
 });

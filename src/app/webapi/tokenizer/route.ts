@@ -1,4 +1,4 @@
-import { encode } from 'gpt-tokenizer/encoding/cl100k_base';
+import { encode } from 'gpt-tokenizer/encoding/o200k_base';
 import { NextResponse } from 'next/server';
 
 export const POST = async (req: Request) => {
