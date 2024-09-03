@@ -88,7 +88,7 @@ docker compose up -d
    - `Redirect URI` should be `http://localhost:3210/api/auth/callback/logto`
    - `Post sign-out redirect URI` should be `http://localhost:3210/`
 
-3. Obtain the `Client ID` and `Client Secret`, and fill them into your `.env` file corresponding to `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
+3. Obtain the `App ID` and `App secrets`, and fill them into your `.env` file corresponding to `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
 
 ### Configure MinIO S3
 
@@ -257,7 +257,7 @@ You need to first access the WebUI for configuration:
      src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
    />
 
-5. Obtain `Client ID` and `Client Secret`, and fill them into your `.env` file under `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
+5. Obtain `App ID` and `App secrets`, and fill them into your `.env` file under `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
 
 6. Set `LOGTO_ISSUER` in your `.env` file to `https://lobe-auth-api.example.com/oidc`.
 
