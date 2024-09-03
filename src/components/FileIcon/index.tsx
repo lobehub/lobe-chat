@@ -11,8 +11,8 @@ interface FileListProps {
 }
 
 const FileIcon = memo<FileListProps>(({ fileName, size, variant = 'file' }) => {
-  if (Object.keys(mimeTypeMap).some((key) => fileName.endsWith(`.${key}`))) {
-    const ext = fileName.split('.').pop() as string;
+  if (Object.keys(mimeTypeMap).some((key) => fileName?.toLowerCase().endsWith(`.${key}`))) {
+    const ext = fileName.split('.').pop()?.toLowerCase() as string;
 
     return (
       <FileTypeIcon

@@ -89,6 +89,7 @@ export const useStyles = createStyles(
         order: -1;
       `,
     }) as Partial<{
+      // eslint-disable-next-line unused-imports/no-unused-vars
       [k in keyof ElementsConfig]: any;
     }>,
 );
