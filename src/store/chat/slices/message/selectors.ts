@@ -102,9 +102,9 @@ const currentChatsWithGuideMessage =
       systemRole: meta.description,
     });
     const agentMsg = t(isAgentEditable ? 'agentDefaultMessage' : 'agentDefaultMessageWithoutEdit', {
-      id: activeId,
       name: meta.title || t('defaultAgent'),
       ns: 'chat',
+      url: `/chat/settings?session=${activeId}`,
     });
 
     const emptyInboxGuideMessage = {
@@ -175,7 +175,6 @@ const isHasMessageLoading = (s: ChatStore) => s.messageLoadingIds.length > 0;
 
 /**
  * this function is used to determine whether the send button should be disabled
- * @param s
  */
 const isSendButtonDisabledByMessage = (s: ChatStore) =>
   // 1. when there is message loading

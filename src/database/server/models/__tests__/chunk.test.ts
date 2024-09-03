@@ -98,7 +98,66 @@ describe('ChunkModel', () => {
     });
   });
 
-  // Add more test cases for other methods...
+  describe('deleteOrphanChunks', () => {
+    it('should delete orphaned chunks', async () => {
+      // Create orphaned chunks
+      await serverDB
+        .insert(chunks)
+        .values([
+          { text: 'Orphan Chunk 1', userId },
+          { text: 'Orphan Chunk 2', userId },
+        ])
+        .returning();
+
+      // Create a non-orphaned chunk
+      const [nonOrphanChunk] = await serverDB
+        .insert(chunks)
+        .values([{ text: 'Non-Orphan Chunk', userId }])
+        .returning();
+
+      await serverDB.insert(fileChunks).values([{ fileId: '1', chunkId: nonOrphanChunk.id }]);
+
+      // Execute the method
+      await chunkModel.deleteOrphanChunks();
+
+      // Check if orphaned chunks are deleted
+      const remainingChunks = await serverDB.query.chunks.findMany();
+      expect(remainingChunks).toHaveLength(1);
+      expect(remainingChunks[0].id).toBe(nonOrphanChunk.id);
+    });
+
+    it('should not delete any chunks when there are no orphans', async () => {
+      // Create non-orphaned chunks
+      const [chunk1, chunk2] = await serverDB
+        .insert(chunks)
+        .values([
+          { text: 'Chunk 1', userId },
+          { text: 'Chunk 2', userId },
+        ])
+        .returning();
+
+      await serverDB.insert(fileChunks).values([
+        { fileId: '1', chunkId: chunk1.id },
+        { fileId: '2', chunkId: chunk2.id },
+      ]);
+
+      // Execute the method
+      await chunkModel.deleteOrphanChunks();
+
+      // Check if all chunks are still present
+      const remainingChunks = await serverDB.query.chunks.findMany();
+      expect(remainingChunks).toHaveLength(2);
+    });
+
+    it('should not throw an error when the database is empty', async () => {
+      // Ensure the database is empty
+      await serverDB.delete(chunks);
+      await serverDB.delete(fileChunks);
+
+      // Execute the method and expect it not to throw
+      await expect(chunkModel.deleteOrphanChunks()).resolves.not.toThrow();
+    });
+  });
 
   describe('semanticSearch', () => {
     it('should perform semantic search and return results', async () => {

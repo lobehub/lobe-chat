@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Przełącz model"
   },
-  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu zacząć ze mną rozmawiać, lub udoskonalić moje informacje, przechodząc do [Ustawień asystenta](/chat/settings#session={{id}}).",
+  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. Zacznijmy rozmowę!",
   "agentsAndConversations": "Agenci i rozmowy",

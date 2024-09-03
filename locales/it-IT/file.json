@@ -56,7 +56,8 @@
     "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
   },
   "preview": {
-    "unsupportedFile": "Questo formato di file non supporta l'anteprima online"
+    "downloadFile": "Scarica file",
+    "unsupportedFileAndContact": "Questo formato di file non è attualmente supportato per la visualizzazione online. Se hai bisogno di una visualizzazione, ti preghiamo di <1>contattarci</1>."
   },
   "searchFilePlaceholder": "Cerca file",
   "tab": {

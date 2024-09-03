@@ -1,5 +1,5 @@
 import { asc, cosineDistance, count, eq, inArray, sql } from 'drizzle-orm';
-import { and, desc } from 'drizzle-orm/expressions';
+import { and, desc, isNull } from 'drizzle-orm/expressions';
 
 import { serverDB } from '@/database/server';
 import { ChunkMetadata, FileChunk, SemanticSearchChunk } from '@/types/chunk';
@@ -41,6 +41,19 @@ export class ChunkModel {
 
   delete = async (id: string) => {
     return serverDB.delete(chunks).where(and(eq(chunks.id, id), eq(chunks.userId, this.userId)));
+  };
+
+  deleteOrphanChunks = async () => {
+    const orphanedChunks = await serverDB
+      .select({ chunkId: chunks.id })
+      .from(chunks)
+      .leftJoin(fileChunks, eq(chunks.id, fileChunks.chunkId))
+      .where(isNull(fileChunks.fileId));
+
+    const ids = orphanedChunks.map((chunk) => chunk.chunkId);
+    if (ids.length === 0) return;
+
+    await serverDB.delete(chunks).where(inArray(chunks.id, ids));
   };
 
   findById = async (id: string) => {
@@ -158,6 +171,10 @@ export class ChunkModel {
   }) {
     const similarity = sql<number>`1 - (${cosineDistance(embeddings.embeddings, embedding)})`;
 
+    const hasFiles = fileIds && fileIds.length > 0;
+
+    if (!hasFiles) return [];
+
     const result = await serverDB
       .select({
         fileId: files.id,
@@ -173,7 +190,7 @@ export class ChunkModel {
       .leftJoin(embeddings, eq(chunks.id, embeddings.chunkId))
       .leftJoin(fileChunks, eq(chunks.id, fileChunks.chunkId))
       .leftJoin(files, eq(files.id, fileChunks.fileId))
-      .where(and(fileIds && fileIds.length > 0 ? inArray(fileChunks.fileId, fileIds) : undefined))
+      .where(inArray(fileChunks.fileId, fileIds))
       .orderBy((t) => desc(t.similarity))
       .limit(5);
 

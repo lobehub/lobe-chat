@@ -7,7 +7,7 @@ const Layout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <Header />
-      <Flexbox height={'100%'} style={{ overflow: 'auto', position: 'relative' }} width={'100%'}>
+      <Flexbox height={'100%'} style={{ position: 'relative' }} width={'100%'}>
         {children}
       </Flexbox>
     </>

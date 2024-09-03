@@ -9,7 +9,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import { downloadFile } from '@/utils/downloadFile';
+import { downloadFile } from '@/utils/client/downloadFile';
 
 interface HeaderProps {
   filename: string;

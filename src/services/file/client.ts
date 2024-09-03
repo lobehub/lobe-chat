@@ -1,6 +1,6 @@
 import { FileModel } from '@/database/client/models/file';
 import { DB_File } from '@/database/client/schemas/files';
-import { FilePreview } from '@/types/files';
+import { FileItem } from '@/types/files';
 
 import { IFileService } from './type';
 
@@ -18,7 +18,7 @@ export class ClientService implements IFileService {
     };
   }
 
-  async getFile(id: string): Promise<FilePreview> {
+  async getFile(id: string): Promise<FileItem> {
     const item = await FileModel.findById(id);
     if (!item) {
       throw new Error('file not found');
@@ -26,14 +26,14 @@ export class ClientService implements IFileService {
 
     // arrayBuffer to url
     const url = URL.createObjectURL(new Blob([item.data!], { type: item.fileType }));
-    const base64 = Buffer.from(item.data!).toString('base64');
 
     return {
-      base64Url: `data:${item.fileType};base64,${base64}`,
-      fileType: item.fileType,
+      createdAt: new Date(item.createdAt),
       id,
       name: item.name,
-      saveMode: 'local',
+      size: item.size,
+      type: item.fileType,
+      updatedAt: new Date(item.updatedAt),
       url,
     };
   }

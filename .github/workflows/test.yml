@@ -39,7 +39,8 @@ jobs:
           DATABASE_DRIVER: node
           NEXT_PUBLIC_SERVICE_MODE: server
           KEY_VAULTS_SECRET: LA7n9k3JdEcbSgml2sxfw+4TV1AzaaFU5+R176aQz4s=
-          NEXT_PUBLIC_S3_DOMAIN: https://example.com
+          S3_PUBLIC_DOMAIN: https://example.com
+          APP_URL: https://home.com
 
       - name: Upload Server coverage to Codecov
         uses: codecov/codecov-action@v4

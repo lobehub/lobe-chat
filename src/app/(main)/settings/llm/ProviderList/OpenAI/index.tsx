@@ -1,7 +1,5 @@
 'use client';
 
-import { OpenAI } from '@lobehub/icons';
-
 import { OpenAIProviderCard } from '@/config/modelProviders';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -15,6 +13,5 @@ export const useOpenAIProvider = (): ProviderItem => {
       placeholder: 'https://api.openai.com/v1',
     },
     showApiKey: showOpenAIApiKey,
-    title: <OpenAI.Combine size={24} />,
   };
 };

@@ -1,3 +1,4 @@
+import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { App, Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
@@ -6,7 +7,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import ModelIcon from '@/components/ModelIcon';
 import { ModelInfoTags } from '@/components/ModelSelect';
 import { useUserStore } from '@/store/user';
 import { modelConfigSelectors, modelProviderSelectors } from '@/store/user/selectors';

@@ -1,6 +1,9 @@
 ---
 title: LobeChat Authentication Service Configuration
-description: Learn how to configure external authentication services using Clerk or Next Auth for centralized user authorization management. Supported authentication services include Auth0, Azure ID, etc.
+description: >-
+  Learn how to configure external authentication services using Clerk or Next
+  Auth for centralized user authorization management. Supported authentication
+  services include Auth0, Azure ID, etc.
 tags:
   - Authentication Service
   - Next Auth
@@ -33,14 +36,20 @@ Before using NextAuth, please set the following variables in LobeChat's environm
 Currently supported identity verification services include:
 
 <Cards>
-  <Card href={'/docs/self-hosting/advanced/sso-providers/auth0'} title={'Auth0'} />
+  <Card href={'/docs/self-hosting/advanced/auth/next-auth/auth0'} title={'Auth0'} />
   <Card
-    href={'/docs/self-hosting/advanced/sso-providers/microsoft-entra-id'}
+    href={'/docs/self-hosting/advanced/auth/next-auth/microsoft-entra-id'}
     title={'Microsoft Entra ID'}
   />
-  <Card href={'/docs/self-hosting/advanced/sso-providers/authentik'} title={'Authentik'} />
-  <Card href={'/docs/self-hosting/advanced/sso-providers/github'} title={'Github'} />
-  <Card href={'/docs/self-hosting/advanced/sso-providers/zitadel'} title={'ZITADEL'} />
+  <Card href={'/docs/self-hosting/advanced/auth/next-auth/authentik'} title={'Authentik'} />
+  <Card href={'/docs/self-hosting/advanced/auth/next-auth/github'} title={'Github'} />
+  <Card href={'/docs/self-hosting/advanced/auth/next-auth/zitadel'} title={'ZITADEL'} />
+  <Card
+    href={'/docs/self-hosting/advanced/auth/next-auth/cloudflare-zero-trust'}
+    title={'Cloudflare Zero Trust'}
+  />
+  <Card href={'/docs/self-hosting/advanced/auth/next-auth/authelia'} title={'Authelia'} />
+  <Card href={'/docs/self-hosting/advanced/auth/next-auth/logto'} title={'Logto'} />
 </Cards>
 
 Click on the links to view the corresponding platform's configuration documentation.

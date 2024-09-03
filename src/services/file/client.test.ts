@@ -74,13 +74,15 @@ describe('FileService', () => {
   describe('getFile', () => {
     it('should retrieve and convert local file info to FilePreview', async () => {
       const fileId = '1';
-      const fileData: DB_File = {
+      const fileData = {
         name: 'test',
         data: new ArrayBuffer(1),
         fileType: 'image/png',
         saveMode: 'local',
         size: 1,
-      };
+        createdAt: 1,
+        updatedAt: 2,
+      } as DB_File;
 
       (FileModel.findById as Mock).mockResolvedValue(fileData);
       (global.URL.createObjectURL as Mock).mockReturnValue('blob:test');
@@ -90,12 +92,13 @@ describe('FileService', () => {
 
       expect(FileModel.findById).toHaveBeenCalledWith(fileId);
       expect(result).toEqual({
+        createdAt: new Date(1),
         id: '1',
-        base64Url: 'data:image/png;base64,AA==',
-        fileType: 'image/png',
+        size: 1,
+        type: 'image/png',
         name: 'test',
-        saveMode: 'local',
         url: 'blob:test',
+        updatedAt: new Date(2),
       });
     });
 

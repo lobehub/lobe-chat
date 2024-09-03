@@ -1,6 +1,6 @@
 ---
 title: 在 LobeChat 中配置 Github 身份验证服务
-description: 学习如何在 LobeChat 中配置Github身份验证服务，包括创建新的Github App、设置权限和环境变量。
+description: 学习如何在 LobeChat 中配置 Github 身份验证服务，包括创建新的 Github App、设置权限和环境变量。
 tags:
   - Github 身份验证
   - Github App
@@ -16,9 +16,9 @@ tags:
 <Steps>
   ### 创建 Github 提供应用
 
-点击[这里](https://github.com/settings/apps/new) 创建一个新的 Github App。
+点击 [这里](https://github.com/settings/apps/new) 创建一个新的 Github App。
 
-填写Github App name、Homepage URL、Callbak URL
+填写 Github App name、Homepage URL、Callbak URL
 
 <Image
   alt="创建 Github 提供程序"
@@ -82,11 +82,10 @@ tags:
 | `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Github 请填写 `github`。 |
 | `GITHUB_CLIENT_ID` | 必选 | Github App详情页的 客户端 ID |
 | `GITHUB_CLIENT_SECRET` | 必选 | Github App详情页的 客户端 Secret |
-| `ACCESS_CODE` | 必选 | 添加访问此服务的密码，你可以设置一个足够长的随机密码以 “禁用” 访问码授权 |
 | `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 
   <Callout type={'tip'}>
-    前往 [📘 环境变量](/docs/self-hosting/environment-variable#Github) 可查阅相关变量详情。
+    前往 [📘 环境变量](/zh/docs/self-hosting/environment-variables/auth#github) 可查阅相关变量详情。
 
 </Callout>
 </Steps>

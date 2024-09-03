@@ -73,9 +73,7 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 
 常见的 S3 Cloud 服务商往往默认采用 `virtual-host` 模式，而自部署服务 minio 则默认使用的是 `path-style`。 因此如果你使用了 minio 作为 S3 服务，你需要设置 `S3_ENABLE_PATH_STYLE=1` 。
 
-
 </Callout>
-
 
 </Steps>
 
@@ -85,6 +83,7 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 
 <Cards>
   <Card href={'/zh/docs/self-hosting/advanced/s3/cloudflare-r2'} title={'Cloudflare R2'} />
+  <Card href={'/zh/docs/self-hosting/advanced/s3/tencent-cloud'} title={'腾讯云 COS'} />
 </Cards>
 
 点击即可查看对应 S3 服务的部署指南，如果上述指南中不包含你所使用的 S3 服务商，欢迎提交 PR ，将共同完善 S3 对象存储的指南。

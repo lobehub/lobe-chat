@@ -15,7 +15,12 @@ import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { S3 } from '@/server/modules/S3';
 import { ChunkService } from '@/server/services/chunk';
-import { AsyncTaskError, AsyncTaskErrorType, AsyncTaskStatus } from '@/types/asyncTask';
+import {
+  AsyncTaskError,
+  AsyncTaskErrorType,
+  AsyncTaskStatus,
+  IAsyncTaskError,
+} from '@/types/asyncTask';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 const fileProcedure = asyncAuthedProcedure.use(async (opts) => {
@@ -55,10 +60,12 @@ export const fileRouter = router({
       try {
         const timeoutPromise = new Promise((_, reject) => {
           setTimeout(() => {
-            reject({
-              body: { detail: 'embedding task is timeout, please try again' },
-              name: AsyncTaskErrorType.Timeout,
-            } as AsyncTaskError);
+            reject(
+              new AsyncTaskError(
+                AsyncTaskErrorType.Timeout,
+                'embedding task is timeout, please try again',
+              ),
+            );
           }, ASYNC_TASK_TIMEOUT);
         });
 
@@ -76,40 +83,47 @@ export const fileRouter = router({
           const chunks = await ctx.chunkModel.getChunksTextByFileId(input.fileId);
           const requestArray = chunk(chunks, CHUNK_SIZE);
 
-          await pMap(
-            requestArray,
-            async (chunks, index) => {
-              const agentRuntime = await initAgentRuntimeWithUserPayload(
-                ModelProvider.OpenAI,
-                ctx.jwtPayload,
-              );
+          try {
+            await pMap(
+              requestArray,
+              async (chunks, index) => {
+                const agentRuntime = await initAgentRuntimeWithUserPayload(
+                  ModelProvider.OpenAI,
+                  ctx.jwtPayload,
+                );
 
-              const number = index + 1;
-              console.log(`执行第 ${number} 个任务`);
+                const number = index + 1;
+                console.log(`执行第 ${number} 个任务`);
 
-              console.time(`任务[${number}]: embeddings`);
+                console.time(`任务[${number}]: embeddings`);
 
-              const embeddings = await agentRuntime.embeddings({
-                dimensions: 1024,
-                input: chunks.map((c) => c.text),
-                model: input.model,
-              });
-              console.timeEnd(`任务[${number}]: embeddings`);
-
-              const items: NewEmbeddingsItem[] =
-                embeddings?.map((e) => ({
-                  chunkId: chunks[e.index].id,
-                  embeddings: e.embedding,
-                  fileId: input.fileId,
+                const embeddings = await agentRuntime.embeddings({
+                  dimensions: 1024,
+                  input: chunks.map((c) => c.text),
                   model: input.model,
-                })) || [];
+                });
+                console.timeEnd(`任务[${number}]: embeddings`);
 
-              console.time(`任务[${number}]: insert db`);
-              await ctx.embeddingModel.bulkCreate(items);
-              console.timeEnd(`任务[${number}]: insert db`);
-            },
-            { concurrency: CONCURRENCY },
-          );
+                const items: NewEmbeddingsItem[] =
+                  embeddings?.map((e) => ({
+                    chunkId: chunks[e.index].id,
+                    embeddings: e.embedding,
+                    fileId: input.fileId,
+                    model: input.model,
+                  })) || [];
+
+                console.time(`任务[${number}]: insert db`);
+                await ctx.embeddingModel.bulkCreate(items);
+                console.timeEnd(`任务[${number}]: insert db`);
+              },
+              { concurrency: CONCURRENCY },
+            );
+          } catch (e) {
+            throw {
+              message: JSON.stringify(e),
+              name: AsyncTaskErrorType.EmbeddingError,
+            };
+          }
 
           const duration = Date.now() - startAt;
           // update the task status to success
@@ -125,8 +139,9 @@ export const fileRouter = router({
         return await Promise.race([embeddingPromise(), timeoutPromise]);
       } catch (e) {
         console.error('embeddingChunks error', e);
+
         await ctx.asyncTaskModel.update(input.taskId, {
-          error: e,
+          error: new AsyncTaskError((e as Error).name, (e as Error).message),
           status: AsyncTaskStatus.Error,
         });
 
@@ -175,10 +190,12 @@ export const fileRouter = router({
 
         const timeoutPromise = new Promise((_, reject) => {
           setTimeout(() => {
-            reject({
-              body: { detail: 'chunking task is timeout, please try again' },
-              name: AsyncTaskErrorType.Timeout,
-            } as AsyncTaskError);
+            reject(
+              new AsyncTaskError(
+                AsyncTaskErrorType.Timeout,
+                'chunking task is timeout, please try again',
+              ),
+            );
           }, ASYNC_TASK_TIMEOUT);
         });
 
@@ -200,6 +217,15 @@ export const fileRouter = router({
           );
 
           const duration = Date.now() - startAt;
+
+          // if no chunk found, throw error
+          if (chunks.length === 0) {
+            throw {
+              message:
+                'No chunk found in this file. it may due to current chunking method can not parse file accurately',
+              name: AsyncTaskErrorType.NoChunkError,
+            };
+          }
 
           await ctx.chunkModel.bulkCreate(chunks, input.fileId);
 
@@ -228,9 +254,9 @@ export const fileRouter = router({
       } catch (e) {
         const error = e as any;
 
-        const asyncTaskError: AsyncTaskError = error.body
-          ? { body: safeParseJSON(error.body) ?? error.body, name: error.name }
-          : { body: { detail: error.message }, name: (error as Error).name };
+        const asyncTaskError = error.body
+          ? ({ body: safeParseJSON(error.body) ?? error.body, name: error.name } as IAsyncTaskError)
+          : new AsyncTaskError((error as Error).name, error.message);
 
         console.error('[Chunking Error]', asyncTaskError);
         await ctx.asyncTaskModel.update(input.taskId, {

@@ -1,9 +1,6 @@
-import urlJoin from 'url-join';
-
-import { fileEnv } from '@/config/file';
 import { lambdaClient } from '@/libs/trpc/client';
 import {
-  FilePreview,
+  FileItem,
   QueryFileListParams,
   QueryFileListSchemaType,
   UploadFileParams,
@@ -21,28 +18,14 @@ export class ServerService implements IFileService {
     return lambdaClient.file.createFile.mutate({ ...params, knowledgeBaseId } as CreateFileParams);
   }
 
-  /**
-   * @deprecated
-   * @param id
-   */
-  async getFile(id: string): Promise<FilePreview> {
-    if (!fileEnv.NEXT_PUBLIC_S3_DOMAIN) {
-      throw new Error('fileEnv.NEXT_PUBLIC_S3_DOMAIN is not set while enable server upload');
-    }
-
+  async getFile(id: string): Promise<FileItem> {
     const item = await lambdaClient.file.findById.query({ id });
 
     if (!item) {
       throw new Error('file not found');
     }
 
-    return {
-      fileType: item.fileType,
-      id: item.id,
-      name: item.name,
-      saveMode: 'url',
-      url: urlJoin(fileEnv.NEXT_PUBLIC_S3_DOMAIN!, item.url!),
-    };
+    return { ...item, type: item.fileType };
   }
 
   async removeFile(id: string) {
@@ -67,5 +50,9 @@ export class ServerService implements IFileService {
 
   async checkFileHash(hash: string) {
     return lambdaClient.file.checkFileHash.mutate({ hash });
+  }
+
+  async removeFileAsyncTask(id: string, type: 'embedding' | 'chunk') {
+    return await lambdaClient.file.removeFileAsyncTask.mutate({ id, type });
   }
 }
