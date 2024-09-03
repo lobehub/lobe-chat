@@ -23,6 +23,7 @@
     "title": "새 지식베이스 만들기"
   },
   "tab": {
+    "evals": "평가",
     "files": "문서",
     "settings": "설정",
     "testing": "리콜 테스트"

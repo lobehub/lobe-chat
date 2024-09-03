@@ -23,6 +23,7 @@
     "title": "Créer une nouvelle base de connaissances"
   },
   "tab": {
+    "evals": "Évaluations",
     "files": "Documents",
     "settings": "Paramètres",
     "testing": "Test de rappel"
