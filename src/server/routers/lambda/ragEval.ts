@@ -13,6 +13,7 @@ import {
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc';
+import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
 import { S3 } from '@/server/modules/S3';
 import { createAsyncServerClient } from '@/server/routers/async';
 import { getFullFileUrl } from '@/server/utils/files';
@@ -26,7 +27,7 @@ import {
   insertEvalEvaluationSchema,
 } from '@/types/eval';
 
-const ragEvalProcedure = authedProcedure.use(async (opts) => {
+const ragEvalProcedure = authedProcedure.use(keyVaults).use(async (opts) => {
   const { ctx } = opts;
 
   return opts.next({
@@ -195,7 +196,7 @@ export const ragEvalRouter = router({
         })),
       );
 
-      const asyncCaller = await createAsyncServerClient(ctx.userId, ctx.jwtPayload!);
+      const asyncCaller = await createAsyncServerClient(ctx.userId, ctx.jwtPayload);
 
       await ctx.evaluationModel.update(input.id, { status: EvalEvaluationStatus.Processing });
       try {
