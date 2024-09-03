@@ -32,6 +32,7 @@ export interface RAGEvalEvaluationItem {
     id: number;
     name: string;
   };
+  exportUrl?: string;
   id: number;
   name: string;
   recordsStats: {

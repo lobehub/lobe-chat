@@ -58,9 +58,11 @@ export default {
     table: {
       columns: {
         actions: {
+          checkStatus: '检查状态',
           confirmDelete: '是否删除本条评测',
           confirmRun:
             '是否开始运行？开始运行后将在后台异步执行评测任务，关闭页面不影响异步任务的执行',
+          downloadRecords: '下载评测',
           retry: '重试',
           run: '运行',
           title: '操作',

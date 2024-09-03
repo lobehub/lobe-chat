@@ -46,6 +46,15 @@ export class EvaluationRecordModel {
     });
   };
 
+  findByEvaluationId = async (evaluationId: number) => {
+    return serverDB.query.evaluationRecords.findMany({
+      where: and(
+        eq(evaluationRecords.evaluationId, evaluationId),
+        eq(evaluationRecords.userId, this.userId),
+      ),
+    });
+  };
+
   update = async (id: number, value: Partial<NewEvaluationRecordsItem>) => {
     return serverDB
       .update(evaluationRecords)

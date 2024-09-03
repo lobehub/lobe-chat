@@ -58,6 +58,10 @@ class RAGEvalService {
   async removeEvaluation(id: number): Promise<void> {
     await lambdaClient.ragEval.removeEvaluation.mutate({ id });
   }
+
+  async checkEvaluationStatus(id: number): Promise<{ success: boolean }> {
+    return lambdaClient.ragEval.checkEvaluationStatus.query({ id });
+  }
 }
 
 export const ragEvalService = new RAGEvalService();

@@ -2,10 +2,10 @@
 
 import { ActionType, ProColumns, ProTable } from '@ant-design/pro-components';
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { App, Button, Typography } from 'antd';
+import { App, Button, ButtonProps, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { PlayIcon, RotateCcwIcon, Trash2Icon } from 'lucide-react';
-import { useRef } from 'react';
+import { DownloadIcon, PlayIcon, RotateCcwIcon, Trash2Icon } from 'lucide-react';
+import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -38,10 +38,12 @@ const useStyles = createStyles(({ css }) => ({
 const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
   const { t } = useTranslation(['ragEval', 'common']);
   const { styles } = useStyles();
-  const [removeEvaluation, runEvaluation] = useKnowledgeBaseStore((s) => [
+  const [removeEvaluation, runEvaluation, checkEvaluationStatus] = useKnowledgeBaseStore((s) => [
     s.removeEvaluation,
     s.runEvaluation,
+    s.checkEvaluationStatus,
   ]);
+  const [isCheckingStatus, setCheckingStatus] = useState(false);
   const { modal } = App.useApp();
   const actionRef = useRef<ActionType>();
 
@@ -101,43 +103,58 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
     {
       dataIndex: 'actions',
       render: (_, entity) => {
-        const action =
-          entity.status === EvalEvaluationStatus.Pending ? (
-            <Button
-              icon={<Icon icon={PlayIcon} />}
-              onClick={() => {
-                modal.confirm({
-                  content: t('evaluation.table.columns.actions.confirmRun'),
-                  onOk: async () => {
-                    await runEvaluation(entity.id);
-                    await actionRef.current?.reload();
-                  },
-                });
-              }}
-              size={'small'}
-            >
-              {t('evaluation.table.columns.actions.run')}
-            </Button>
-          ) : entity.status === EvalEvaluationStatus.Error ? (
-            <Button
-              icon={<Icon icon={RotateCcwIcon} />}
-              onClick={() => {
-                modal.confirm({
-                  content: t('evaluation.table.columns.actions.confirmRun'),
-                  onOk: async () => {
-                    await runEvaluation(entity.id);
-                    await actionRef.current?.reload();
-                  },
-                });
-              }}
-              size={'small'}
-            >
-              {t('evaluation.table.columns.actions.retry')}
-            </Button>
-          ) : null;
+        const actionsMap: Record<EvalEvaluationStatus, ButtonProps> = {
+          [EvalEvaluationStatus.Pending]: {
+            children: t('evaluation.table.columns.actions.run'),
+            icon: <Icon icon={PlayIcon} />,
+            onClick: () => {
+              modal.confirm({
+                content: t('evaluation.table.columns.actions.confirmRun'),
+                onOk: async () => {
+                  await runEvaluation(entity.id);
+                  await actionRef.current?.reload();
+                },
+              });
+            },
+          },
+          [EvalEvaluationStatus.Error]: {
+            children: t('evaluation.table.columns.actions.retry'),
+            icon: <Icon icon={RotateCcwIcon} />,
+            onClick: () => {
+              modal.confirm({
+                content: t('evaluation.table.columns.actions.confirmRun'),
+                onOk: async () => {
+                  await runEvaluation(entity.id);
+                  await actionRef.current?.reload();
+                },
+              });
+            },
+          },
+          [EvalEvaluationStatus.Processing]: {
+            children: t('evaluation.table.columns.actions.checkStatus'),
+            icon: null,
+            loading: isCheckingStatus,
+            onClick: async () => {
+              setCheckingStatus(true);
+              await checkEvaluationStatus(entity.id);
+              setCheckingStatus(false);
+              await actionRef.current?.reload();
+            },
+          },
+          [EvalEvaluationStatus.Success]: {
+            children: t('evaluation.table.columns.actions.downloadRecords'),
+            icon: <Icon icon={DownloadIcon} />,
+            onClick: async () => {
+              window.open(entity.exportUrl);
+            },
+          },
+        };
+
+        const actionProps = actionsMap[entity.status];
+
         return (
           <Flexbox gap={4} horizontal>
-            {action}
+            {!actionProps ? null : <Button {...actionProps} size={'small'} />}
             <ActionIcon
               icon={Trash2Icon}
               onClick={async () => {
@@ -154,7 +171,7 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
               }}
               size={'small'}
               title={t('delete', { ns: 'common' })}
-            />{' '}
+            />
           </Flexbox>
         );
       },

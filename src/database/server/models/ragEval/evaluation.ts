@@ -38,8 +38,8 @@ export class EvalEvaluationModel {
           id: evalDatasets.id,
           name: evalDatasets.name,
         },
+        exportUrl: evalEvaluation.exportUrl,
         id: evalEvaluation.id,
-
         name: evalEvaluation.name,
         status: evalEvaluation.status,
         updatedAt: evalEvaluation.updatedAt,

@@ -9,11 +9,12 @@ import { CreateNewEvalEvaluation, RAGEvalDataSetItem } from '@/types/eval';
 const FETCH_EVALUATION_LIST_KEY = 'FETCH_EVALUATION_LIST_KEY';
 
 export interface RAGEvalEvaluationAction {
+  checkEvaluationStatus: (id: number) => Promise<void>;
+
   createNewEvaluation: (params: CreateNewEvalEvaluation) => Promise<void>;
-
   refreshEvaluationList: () => Promise<void>;
-  removeEvaluation: (id: number) => Promise<void>;
 
+  removeEvaluation: (id: number) => Promise<void>;
   runEvaluation: (id: number) => Promise<void>;
 
   useFetchEvaluationList: (knowledgeBaseId: string) => SWRResponse<RAGEvalDataSetItem[]>;
@@ -25,17 +26,21 @@ export const createRagEvalEvaluationSlice: StateCreator<
   [],
   RAGEvalEvaluationAction
 > = (set, get) => ({
+  checkEvaluationStatus: async (id) => {
+    await ragEvalService.checkEvaluationStatus(id);
+  },
+
   createNewEvaluation: async (params) => {
     await ragEvalService.createEvaluation(params);
     await get().refreshEvaluationList();
   },
-
   refreshEvaluationList: async () => {
     await mutate(FETCH_EVALUATION_LIST_KEY);
   },
+
   removeEvaluation: async (id) => {
     await ragEvalService.removeEvaluation(id);
-    await get().refreshEvaluationList();
+    // await get().refreshEvaluationList();
   },
 
   runEvaluation: async (id) => {

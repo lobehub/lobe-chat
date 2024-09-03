@@ -1,5 +1,6 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { TRPCError } from '@trpc/server';
+import dayjs from 'dayjs';
 import JSONL from 'jsonl-parse-stringify';
 import pMap from 'p-map';
 import { z } from 'zod';
@@ -14,6 +15,7 @@ import {
 import { authedProcedure, router } from '@/libs/trpc';
 import { S3 } from '@/server/modules/S3';
 import { createAsyncServerClient } from '@/server/routers/async';
+import { getFullFileUrl } from '@/server/utils/files';
 import {
   EvalDatasetRecord,
   EvalEvaluationStatus,
@@ -34,6 +36,7 @@ const ragEvalProcedure = authedProcedure.use(async (opts) => {
       datasetRecordModel: new EvalDatasetRecordModel(ctx.userId),
       evaluationModel: new EvalEvaluationModel(ctx.userId),
       evaluationRecordModel: new EvaluationRecordModel(ctx.userId),
+      s3: new S3(),
     },
   });
 });
@@ -135,8 +138,7 @@ export const ragEvalRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const s3 = new S3();
-      const dataStr = await s3.getFileContent(input.pathname);
+      const dataStr = await ctx.s3.getFileContent(input.pathname);
       const items = JSONL.parse<InsertEvalDatasetRecord>(dataStr);
 
       insertEvalDatasetRecordSchema.array().parse(items);
@@ -224,6 +226,44 @@ export const ragEvalRouter = router({
 
         return { success: false };
       }
+    }),
+
+  checkEvaluationStatus: ragEvalProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ input, ctx }) => {
+      const evaluation = await ctx.evaluationModel.findById(input.id);
+
+      if (!evaluation) {
+        throw new TRPCError({ code: 'BAD_REQUEST', message: 'Evaluation not found' });
+      }
+
+      const records = await ctx.evaluationRecordModel.findByEvaluationId(input.id);
+
+      const isSuccess = records.every((record) => record.status === EvalEvaluationStatus.Success);
+
+      if (isSuccess) {
+        // 将结果上传到 S3
+
+        const evalRecords = records.map((record) => ({
+          question: record.question,
+          context: record.context,
+          answer: record.answer,
+          ground_truth: record.groundTruth,
+        }));
+        const date = dayjs().format('YYYY-MM-DD-HH-mm');
+        const filename = `${date}-eval_${evaluation.id}-${evaluation.name}.jsonl`;
+        const path = `rag_eval_records/${filename}`;
+
+        await ctx.s3.uploadContent(path, JSONL.stringify(evalRecords));
+
+        // 保存数据
+        await ctx.evaluationModel.update(input.id, {
+          status: EvalEvaluationStatus.Success,
+          exportUrl: getFullFileUrl(path),
+        });
+      }
+
+      return { success: isSuccess };
     }),
   createEvaluation: ragEvalProcedure
     .input(insertEvalEvaluationSchema)
