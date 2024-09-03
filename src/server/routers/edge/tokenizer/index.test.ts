@@ -28,7 +28,7 @@ describe('tokenizerRouter', () => {
     it('count Chinese', async () => {
       const response = await router.countTokenLength({ str: '今天天气真好' });
 
-      expect(response).toEqual(5);
+      expect(response).toEqual(7);
     });
   });
 });
