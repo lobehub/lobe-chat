@@ -1,6 +1,11 @@
-import { edgeClient } from '@/libs/trpc/client';
-
 export const serverEncodeAsync = async (str: string): Promise<number> => {
-  // console.log('serverEncodeAsync:', data);
-  return await edgeClient.tokenizer.countTokenLength.mutate({ str });
+  try {
+    const res = await fetch('/webapi/tokenizer', { body: str, method: 'POST' });
+    const data = await res.json();
+
+    return data.count;
+  } catch (e) {
+    console.error('serverEncodeAsync:', e);
+    return str.length;
+  }
 };
