@@ -106,12 +106,14 @@ export const createFileUploadSlice: StateCreator<
       });
     } else {
       // 2. if file don't exist, need upload files
-      metadata = await uploadService.uploadWithProgress(file, (status, upload) => {
-        onStatusUpdate?.({
-          id: file.name,
-          type: 'updateFile',
-          value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
-        });
+      metadata = await uploadService.uploadWithProgress(file, {
+        onProgress: (status, upload) => {
+          onStatusUpdate?.({
+            id: file.name,
+            type: 'updateFile',
+            value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
+          });
+        },
       });
     }
 

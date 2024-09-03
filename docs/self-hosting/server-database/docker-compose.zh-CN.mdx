@@ -86,7 +86,7 @@ docker compose up -d
    - `Redirect URI` 为 `http://localhost:3210/api/auth/callback/logto`
    - `Post sign-out redirect URI` 为 `http://localhost:3210/`
 
-3. 获取 `Client ID` 和 `Client Secret`，填入 `.env` 文件中对应的 `LOGTO_CLIENT_ID` 、 `LOGTO_CLIENT_SECRETT`
+3. 获取 `App ID` 和 `App secrets`，填入 `.env` 文件中对应的 `LOGTO_CLIENT_ID` 、 `LOGTO_CLIENT_SECRETT`
 
 ### 配置 MinIO S3
 
@@ -255,7 +255,7 @@ docker compose up -d # 重新启动
      src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
    />
 
-5. 获取 `Client ID` 和 `Client Secret`，填入你的 `.env` 文件中的 `LOGTO_CLIENT_ID` 和 `LOGTO_CLIENT_SECRETT` 中
+5. 获取 `App ID` 和 `App secrets`，填入你的 `.env` 文件中的 `LOGTO_CLIENT_ID` 和 `LOGTO_CLIENT_SECRETT` 中
 
 6. 配置你的 `.env` 文件中 `LOGTO_ISSUER` 为 `https://lobe-auth-api.example.com/oidc`
 
@@ -296,7 +296,7 @@ docker compose up -d # 重新启动
 
 你需要首先访问 WebUI 来进行配置：
 
-- 如果你按照前文配置了反向代理，打开 `https://lobe-s3-api.example.com`
+- 如果你按照前文配置了反向代理，打开 `https://lobe-s3-ui.example.com`
 - 否则，请在进行端口映射后，打开 `http://localhost:9001`
 
 1. 在登录界面输入你设置的 `MINIO_ROOT_USER` 和 `MINIO_ROOT_PASSWORD`，然后点击登录
