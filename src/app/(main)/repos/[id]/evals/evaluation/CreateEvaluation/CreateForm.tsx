@@ -20,9 +20,10 @@ const formItem = css`
 interface CreateFormProps {
   knowledgeBaseId: string;
   onClose?: () => void;
+  onCreate?: () => void;
 }
 
-const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
+const CreateForm = memo<CreateFormProps>(({ onClose, onCreate, knowledgeBaseId }) => {
   const { t } = useTranslation('ragEval');
 
   const [loading, setLoading] = useState(false);
@@ -39,6 +40,7 @@ const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
     try {
       await createNewEvaluation({ ...values, knowledgeBaseId });
       setLoading(false);
+      onCreate?.();
       onClose?.();
     } catch (e) {
       console.error(e);
@@ -61,7 +63,10 @@ const CreateForm = memo<CreateFormProps>(({ onClose, knowledgeBaseId }) => {
             style={{ minHeight: 120 }}
           />
         </Form.Item>
-        <Form.Item name={'datasetId'}>
+        <Form.Item
+          name={'datasetId'}
+          rules={[{ message: t('evaluation.addEvaluation.datasetId.required'), required: true }]}
+        >
           <Select
             loading={isLoading}
             options={data?.map((item) => ({

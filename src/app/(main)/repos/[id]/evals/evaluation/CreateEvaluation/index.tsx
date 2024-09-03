@@ -8,15 +8,16 @@ import { useCreateDatasetModal } from '../CreateEvaluation/useModal';
 
 interface CreateEvaluationProps {
   knowledgeBaseId: string;
+  onCreate?: () => void;
 }
 
-const CreateEvaluation = memo<CreateEvaluationProps>(({ knowledgeBaseId }) => {
+const CreateEvaluation = memo<CreateEvaluationProps>(({ knowledgeBaseId, onCreate }) => {
   const { t } = useTranslation('ragEval');
   const modal = useCreateDatasetModal();
   return (
     <Button
       onClick={() => {
-        modal.open({ knowledgeBaseId });
+        modal.open({ knowledgeBaseId, onCreate });
       }}
       type={'primary'}
     >

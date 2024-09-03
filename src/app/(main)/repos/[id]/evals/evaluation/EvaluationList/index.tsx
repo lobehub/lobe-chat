@@ -38,7 +38,10 @@ const useStyles = createStyles(({ css }) => ({
 const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
   const { t } = useTranslation(['ragEval', 'common']);
   const { styles } = useStyles();
-  const [, runEvaluation] = useKnowledgeBaseStore((s) => [s.removeEvaluation, s.runEvaluation]);
+  const [removeEvaluation, runEvaluation] = useKnowledgeBaseStore((s) => [
+    s.removeEvaluation,
+    s.runEvaluation,
+  ]);
   const { modal } = App.useApp();
   const actionRef = useRef<ActionType>();
 
@@ -135,7 +138,23 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
         return (
           <Flexbox gap={4} horizontal>
             {action}
-            <ActionIcon icon={Trash2Icon} size={'small'} title={t('delete', { ns: 'common' })} />
+            <ActionIcon
+              icon={Trash2Icon}
+              onClick={async () => {
+                modal.confirm({
+                  content: t('evaluation.table.columns.actions.confirmDelete'),
+                  okButtonProps: {
+                    danger: true,
+                  },
+                  onOk: async () => {
+                    await removeEvaluation(entity.id);
+                    await actionRef.current?.reload();
+                  },
+                });
+              }}
+              size={'small'}
+              title={t('delete', { ns: 'common' })}
+            />{' '}
           </Flexbox>
         );
       },
@@ -149,11 +168,20 @@ const EvaluationList = ({ knowledgeBaseId }: { knowledgeBaseId: string }) => {
   return (
     <Flexbox gap={24}>
       <ProTable
+        actionRef={actionRef}
         columns={columns}
         request={request}
         search={false}
         toolbar={{
-          actions: [<CreateEvaluationButton key={'new'} knowledgeBaseId={knowledgeBaseId} />],
+          actions: [
+            <CreateEvaluationButton
+              key={'new'}
+              knowledgeBaseId={knowledgeBaseId}
+              onCreate={() => {
+                actionRef.current?.reload();
+              }}
+            />,
+          ],
           title: <div className={styles.title}>{t('evaluation.table.title')}</div>,
         }}
       />

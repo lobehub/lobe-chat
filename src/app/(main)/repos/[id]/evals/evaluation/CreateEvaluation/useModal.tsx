@@ -20,6 +20,7 @@ const Title = () => {
 
 interface CreateDatasetModalProps {
   knowledgeBaseId: string;
+  onCreate?: () => void;
 }
 
 export const useCreateDatasetModal = createModal<CreateDatasetModalProps>((instance, params) => ({
@@ -30,6 +31,7 @@ export const useCreateDatasetModal = createModal<CreateDatasetModalProps>((insta
         onClose={() => {
           instance.current?.destroy();
         }}
+        onCreate={params?.onCreate}
       />
     </Flexbox>
   ),

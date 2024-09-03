@@ -41,6 +41,7 @@ export default {
       confirm: '新建',
       datasetId: {
         placeholder: '请选择你的评测数据集',
+        required: '请选择评测数据集',
       },
       description: {
         placeholder: '评测任务简介（选填）',

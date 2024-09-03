@@ -27,15 +27,15 @@ export const createRagEvalEvaluationSlice: StateCreator<
 > = (set, get) => ({
   createNewEvaluation: async (params) => {
     await ragEvalService.createEvaluation(params);
-    await get().refreshDatasetList();
+    await get().refreshEvaluationList();
   },
 
   refreshEvaluationList: async () => {
     await mutate(FETCH_EVALUATION_LIST_KEY);
   },
   removeEvaluation: async (id) => {
-    await ragEvalService.removeDataset(id);
-    await get().refreshDatasetList();
+    await ragEvalService.removeEvaluation(id);
+    await get().refreshEvaluationList();
   },
 
   runEvaluation: async (id) => {
