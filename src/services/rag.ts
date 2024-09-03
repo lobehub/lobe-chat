@@ -5,6 +5,7 @@ class RAGService {
   async createParseFileTask(id: string, skipExist?: boolean) {
     return await lambdaClient.chunk.createParseFileTask.mutate({ id, skipExist });
   }
+
   async retryParseFile(id: string) {
     return await lambdaClient.chunk.retryParseFileTask.mutate({ id });
   }

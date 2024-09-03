@@ -1,10 +1,12 @@
 import { StateCreator } from 'zustand/vanilla';
 
+import { PortalFile } from '@/store/chat/slices/portal/initialState';
 import { ChatStore } from '@/store/chat/store';
 
 export interface ChatPortalAction {
+  closeFilePreview: () => void;
   closeToolUI: () => void;
-  openFilePreview: (fileId: string) => void;
+  openFilePreview: (portal: PortalFile) => void;
   openToolUI: (messageId: string, identifier: string) => void;
   togglePortal: (open?: boolean) => void;
 }
@@ -15,15 +17,18 @@ export const chatPortalSlice: StateCreator<
   [],
   ChatPortalAction
 > = (set, get) => ({
-  closeToolUI: () => {
-    set({ portalToolMessage: undefined }, false, 'openToolUI');
+  closeFilePreview: () => {
+    set({ portalFile: undefined }, false, 'closeFilePreview');
   },
-  openFilePreview: (fileId) => {
+  closeToolUI: () => {
+    set({ portalToolMessage: undefined }, false, 'closeToolUI');
+  },
+  openFilePreview: (portal) => {
     if (!get().showPortal) {
       get().togglePortal(true);
     }
 
-    set({ portalFile: { fileId } }, false, 'openFilePreview');
+    set({ portalFile: portal }, false, 'openFilePreview');
   },
   openToolUI: (id, identifier) => {
     if (!get().showPortal) {

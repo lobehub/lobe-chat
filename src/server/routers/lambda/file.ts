@@ -159,6 +159,25 @@ export const fileRouter = router({
     await s3Client.deleteFile(file.url!);
   }),
 
+  removeFileAsyncTask: fileProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        type: z.enum(['embedding', 'chunk']),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      const file = await ctx.fileModel.findById(input.id);
+
+      if (!file) return;
+
+      const taskId = input.type === 'embedding' ? file.embeddingTaskId : file.chunkTaskId;
+
+      if (!taskId) return;
+
+      await ctx.asyncTaskModel.delete(taskId);
+    }),
+
   removeFiles: fileProcedure
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input, ctx }) => {

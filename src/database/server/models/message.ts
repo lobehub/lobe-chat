@@ -144,6 +144,7 @@ export class MessageModel {
         filename: files.name,
         id: chunks.id,
         messageId: messageQueryChunks.messageId,
+        similarity: messageQueryChunks.similarity,
         text: chunks.text,
       })
       .from(messageQueryChunks)
@@ -168,7 +169,12 @@ export class MessageModel {
         const messageQuery = messageQueriesList.find((relation) => relation.messageId === item.id);
         return {
           ...item,
-          chunksList: chunksList.filter((relation) => relation.messageId === item.id),
+          chunksList: chunksList
+            .filter((relation) => relation.messageId === item.id)
+            .map((c) => ({
+              ...c,
+              similarity: Number(c.similarity) ?? undefined,
+            })),
 
           extra: {
             fromModel: model,
@@ -343,7 +349,7 @@ export class MessageModel {
             chunkId: chunk.id,
             messageId: id,
             queryId: ragQueryId,
-            similarity: chunk.similarity.toString(),
+            similarity: chunk.similarity?.toString(),
           })),
         );
       }

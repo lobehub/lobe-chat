@@ -1,11 +1,18 @@
 {
   "Artifacts": "Artefactos",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Fragmento",
+      "file": "Archivo"
+    }
+  },
   "actions": {
     "genAiMessage": "Crear mensaje de IA",
     "summary": "Resumen",
     "summaryTooltip": "Resumir el contenido actual"
   },
   "emptyArtifactList": "La lista de Artefactos actual está vacía. Por favor, utilice los complementos en la conversación y vuelva a intentarlo.",
+  "emptyKnowledgeList": "La lista de conocimientos actual está vacía. Por favor, activa la base de conocimientos según sea necesario en la conversación antes de volver a revisar.",
   "files": "archivos",
   "title": "Ventana de expansión"
 }

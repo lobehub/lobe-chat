@@ -56,7 +56,8 @@
     "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
   },
   "preview": {
-    "unsupportedFile": "Dit bestandsformaat wordt niet ondersteund voor online preview"
+    "downloadFile": "Bestand downloaden",
+    "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
   },
   "searchFilePlaceholder": "Zoek bestand",
   "tab": {

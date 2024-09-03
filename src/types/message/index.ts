@@ -51,8 +51,10 @@ export interface ChatFileChunk {
   fileUrl: string;
   filename: string;
   id: string;
+  similarity?: number;
   text: string;
 }
+
 export interface ChatMessage extends BaseDataModel {
   chunksList?: ChatFileChunk[];
   content: string;

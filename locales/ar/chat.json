@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "النموذج"
   },
-  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في الدردشة معي على الفور، أو يمكنك الانتقال إلى [إعدادات المساعد](/chat/settings#session={{id}}) لتحسين معلوماتي.",
+  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
   "agentsAndConversations": "الوكلاء والمحادثات",

@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Modèle"
   },
-  "agentDefaultMessage": "Bonjour, je suis **{{name}}**. Vous pouvez commencer à discuter avec moi dès maintenant ou aller dans [Paramètres de l'agent](/chat/settings#session={{id}}) pour compléter mes informations.",
+  "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
   "agentsAndConversations": "Agents et conversations",

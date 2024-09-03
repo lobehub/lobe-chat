@@ -39,7 +39,7 @@ const FileItem = memo<ChatFileItem>(({ id, fileType, size, name }) => {
       horizontal
       key={id}
       onClick={() => {
-        openFilePreview(id);
+        openFilePreview({ fileId: id });
       }}
     >
       <FileIcon fileName={name} fileType={fileType} />

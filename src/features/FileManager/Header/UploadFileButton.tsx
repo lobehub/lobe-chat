@@ -30,8 +30,8 @@ const UploadFileButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => 
         key: 'upload-file',
         label: (
           <Upload
-            beforeUpload={async (_, fileList) => {
-              await pushDockFileList(Array.from(fileList), knowledgeBaseId);
+            beforeUpload={async (file) => {
+              await pushDockFileList([file], knowledgeBaseId);
 
               return false;
             }}
@@ -47,8 +47,8 @@ const UploadFileButton = ({ knowledgeBaseId }: { knowledgeBaseId?: string }) => 
         key: 'upload-folder',
         label: (
           <Upload
-            beforeUpload={async (_, fileList) => {
-              await pushDockFileList(Array.from(fileList), knowledgeBaseId);
+            beforeUpload={async (file) => {
+              await pushDockFileList([file], knowledgeBaseId);
 
               return false;
             }}

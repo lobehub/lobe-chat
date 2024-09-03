@@ -56,7 +56,8 @@
     "title": "現在のデプロイメントモードはファイル管理をサポートしていません"
   },
   "preview": {
-    "unsupportedFile": "このファイル形式はオンラインプレビューをサポートしていません"
+    "downloadFile": "ファイルをダウンロード",
+    "unsupportedFileAndContact": "このファイル形式はオンラインプレビューをサポートしていません。プレビューのリクエストがある場合は、ぜひ<1>ご連絡ください</1>。"
   },
   "searchFilePlaceholder": "ファイルを検索",
   "tab": {
