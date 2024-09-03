@@ -139,8 +139,8 @@ describe('fetchSSE', () => {
       onFinish: mockOnFinish,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'llo World', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o World', type: 'text' });
     // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
@@ -232,8 +232,8 @@ describe('fetchSSE', () => {
       signal: abortController.signal,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'llo World', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o World', type: 'text' });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       type: 'done',
