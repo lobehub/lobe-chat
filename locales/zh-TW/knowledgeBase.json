@@ -23,6 +23,7 @@
     "title": "新建知識庫"
   },
   "tab": {
+    "evals": "評測",
     "files": "文檔",
     "settings": "設置",
     "testing": "召回測試"

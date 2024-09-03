@@ -23,6 +23,7 @@
     "title": "Utwórz nową bazę wiedzy"
   },
   "tab": {
+    "evals": "Oceny",
     "files": "Dokumenty",
     "settings": "Ustawienia",
     "testing": "Testowanie przypomnienia"

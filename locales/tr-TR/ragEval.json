@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Yeni Oluştur",
+    "description": {
+      "placeholder": "Veri seti açıklaması (isteğe bağlı)"
+    },
+    "name": {
+      "placeholder": "Veri seti adı",
+      "required": "Lütfen veri seti adını girin"
+    },
+    "title": "Veri Seti Ekle"
+  },
+  "dataset": {
+    "addNewButton": "Veri Seti Oluştur",
+    "emptyGuide": "Mevcut veri seti boş, lütfen bir veri seti oluşturun.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Veri İçe Aktar"
+        },
+        "columns": {
+          "actions": "İşlemler",
+          "ideal": {
+            "title": "Beklenen Yanıt"
+          },
+          "question": {
+            "title": "Soru"
+          },
+          "referenceFiles": {
+            "title": "Referans Dosyaları"
+          }
+        },
+        "notSelected": "Lütfen soldan bir veri seti seçin",
+        "title": "Veri Seti Detayları"
+      },
+      "title": "Veri Seti"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Yeni Oluştur",
+      "datasetId": {
+        "placeholder": "Lütfen değerlendirme veri setinizi seçin",
+        "required": "Lütfen değerlendirme veri setini seçin"
+      },
+      "description": {
+        "placeholder": "Değerlendirme görevi açıklaması (isteğe bağlı)"
+      },
+      "name": {
+        "placeholder": "Değerlendirme görevi adı",
+        "required": "Lütfen değerlendirme görevi adını girin"
+      },
+      "title": "Değerlendirme Görevi Ekle"
+    },
+    "addNewButton": "Değerlendirme Oluştur",
+    "emptyGuide": "Mevcut değerlendirme görevi boş, değerlendirme oluşturmaya başlayın.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Durumu Kontrol Et",
+          "confirmDelete": "Bu değerlendirmeyi silmek istiyor musunuz?",
+          "confirmRun": "Çalıştırmaya başlamak istiyor musunuz? Çalıştırmaya başladıktan sonra arka planda asenkron olarak değerlendirme görevi yürütülecek, sayfayı kapatmak asenkron görevin yürütülmesini etkilemeyecektir.",
+          "downloadRecords": "Değerlendirmeyi İndir",
+          "retry": "Tekrar Dene",
+          "run": "Çalıştır",
+          "title": "İşlemler"
+        },
+        "datasetId": {
+          "title": "Veri Seti"
+        },
+        "name": {
+          "title": "Değerlendirme Görevi Adı"
+        },
+        "records": {
+          "title": "Değerlendirme Kayıt Sayısı"
+        },
+        "referenceFiles": {
+          "title": "Referans Dosyaları"
+        },
+        "status": {
+          "error": "Yürütme Hatası",
+          "pending": "Çalıştırmayı Bekliyor",
+          "processing": "Yürütülüyor",
+          "success": "Yürütme Başarılı",
+          "title": "Durum"
+        }
+      },
+      "title": "Değerlendirme Görevleri Listesi"
+    }
+  }
+}
