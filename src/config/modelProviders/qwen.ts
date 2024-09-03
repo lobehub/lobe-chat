@@ -58,7 +58,7 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL Max',
       enabled: true,
       id: 'qwen-vl-max',
-      tokens: 8192,
+      tokens: 32_768,
       vision: true,
     },
     {
