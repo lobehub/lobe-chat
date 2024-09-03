@@ -1,11 +1,18 @@
 {
   "Artifacts": "Artifacts",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Chunk",
+      "file": "File"
+    }
+  },
   "actions": {
     "genAiMessage": "Generate Assistant Message",
     "summary": "Summary",
     "summaryTooltip": "Summarize current content"
   },
   "emptyArtifactList": "The current Artifacts list is empty. Please use plugins in the session as needed before viewing.",
+  "emptyKnowledgeList": "The current knowledge list is empty. Please enable the knowledge base as needed during the conversation before viewing.",
   "files": "Files",
   "title": "Portal View"
 }

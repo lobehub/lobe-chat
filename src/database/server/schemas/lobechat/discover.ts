@@ -2,7 +2,7 @@
 import { integer, pgTable, primaryKey, serial, text } from 'drizzle-orm/pg-core';
 
 import { createdAt, updatedAt } from './_helpers';
-import { agents } from './chat';
+import { agents } from './agent';
 import { users } from './user';
 
 export const tags = pgTable('tags', {

@@ -22,6 +22,14 @@ const useStyles = createStyles(({ css, token }) => ({
   `,
   image: css`
     margin-block: 0 !important;
+
+    .ant-image {
+      height: 100% !important;
+
+      img {
+        height: 100% !important;
+      }
+    }
   `,
 }));
 
@@ -37,7 +45,7 @@ interface FileItemProps {
   url?: string;
 }
 
-const ImageItem = memo<FileItemProps>(
+const FileItem = memo<FileItemProps>(
   ({ editable, alt, onRemove, url, loading, alwaysShowClose }) => {
     const IMAGE_SIZE = editable ? MIN_IMAGE_SIZE : '100%';
     const { styles, cx } = useStyles();
@@ -72,4 +80,4 @@ const ImageItem = memo<FileItemProps>(
   },
 );
 
-export default ImageItem;
+export default FileItem;

@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Mô hình"
   },
-  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến [Cài đặt trợ lý](/chat/settings#session={{id}}) để hoàn thiện thông tin của tôi.",
+  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay bây giờ, hoặc bạn có thể đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, chúng ta hãy bắt đầu trò chuyện nào!",
   "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
@@ -62,6 +62,7 @@
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
   "rag": {
+    "referenceChunks": "Trích dẫn nguồn",
     "userQuery": {
       "actions": {
         "delete": "Xóa truy vấn",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
-    "actionFiletip": "Tải lên tập tin",
-    "actionTooltip": "Tải lên hình ảnh",
-    "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng",
+    "action": {
+      "fileUpload": "Tải lên tệp",
+      "folderUpload": "Tải lên thư mục",
+      "imageDisabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình để sử dụng",
+      "imageUpload": "Tải lên hình ảnh",
+      "tooltip": "Tải lên"
+    },
+    "clientMode": {
+      "actionFiletip": "Tải lên tệp",
+      "actionTooltip": "Tải lên",
+      "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng"
+    },
     "preview": {
       "prepareTasks": "Chuẩn bị phân đoạn...",
       "status": {

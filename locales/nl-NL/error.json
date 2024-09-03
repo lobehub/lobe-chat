@@ -116,6 +116,9 @@
   "upload": {
     "desc": "Details: {{detail}}",
     "fileOnlySupportInServerMode": "De huidige implementatiemodus ondersteunt het uploaden van niet-afbeeldingsbestanden niet. Als u bestanden in {{ext}}-formaat wilt uploaden, schakelt u over naar de serverdatabase-implementatie of gebruikt u de LobeChat Cloud-service.",
-    "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw"
+    "networkError": "Controleer of je netwerk goed werkt en of de cross-origin configuratie van de bestandsopslagservice correct is.",
+    "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw",
+    "unknownError": "Foutreden: {{reason}}",
+    "uploadFailed": "Bestand uploaden is mislukt."
   }
 }

@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Modelli"
   },
-  "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare a chattare con me subito o andare a [impostazioni assistente](/chat/settings#session={{id}}) per completare le mie informazioni.",
+  "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
   "agentsAndConversations": "Assistenti e Conversazioni",
@@ -62,6 +62,7 @@
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
   "rag": {
+    "referenceChunks": "Citazioni di riferimento",
     "userQuery": {
       "actions": {
         "delete": "Elimina la Query riscritta",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
-    "actionFiletip": "Carica il file",
-    "actionTooltip": "Carica immagine",
-    "disabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello prima di utilizzarlo",
+    "action": {
+      "fileUpload": "Carica file",
+      "folderUpload": "Carica cartella",
+      "imageDisabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello per utilizzare questa funzione",
+      "imageUpload": "Carica immagine",
+      "tooltip": "Carica"
+    },
+    "clientMode": {
+      "actionFiletip": "Carica file",
+      "actionTooltip": "Carica",
+      "disabled": "Il modello attuale non supporta il riconoscimento visivo e l'analisi dei file, si prega di cambiare modello per utilizzare questa funzione"
+    },
     "preview": {
       "prepareTasks": "Preparazione dei blocchi...",
       "status": {

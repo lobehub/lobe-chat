@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "النموذج"
   },
-  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في الدردشة معي على الفور، أو يمكنك الانتقال إلى [إعدادات المساعد](/chat/settings#session={{id}}) لتحسين معلوماتي.",
+  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
   "agentsAndConversations": "الوكلاء والمحادثات",
@@ -62,6 +62,7 @@
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
   "rag": {
+    "referenceChunks": "مراجع",
     "userQuery": {
       "actions": {
         "delete": "حذف الاستعلام",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
-    "actionFiletip": "تحميل المستند",
-    "actionTooltip": "تحميل الصورة",
-    "disabled": "النموذج الحالي لا يدعم التعرف على الرؤية، يرجى تغيير النموذج المستخدم",
+    "action": {
+      "fileUpload": "رفع ملف",
+      "folderUpload": "رفع مجلد",
+      "imageDisabled": "النموذج الحالي لا يدعم التعرف على الصور، يرجى تغيير النموذج لاستخدامه",
+      "imageUpload": "رفع صورة",
+      "tooltip": "رفع"
+    },
+    "clientMode": {
+      "actionFiletip": "رفع ملف",
+      "actionTooltip": "رفع",
+      "disabled": "النموذج الحالي لا يدعم التعرف على الصور وتحليل الملفات، يرجى تغيير النموذج لاستخدامه"
+    },
     "preview": {
       "prepareTasks": "تحضير الأجزاء...",
       "status": {

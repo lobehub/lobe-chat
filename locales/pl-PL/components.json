@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Bloki tekstowe nie zostały w pełni wektoryzowane, co spowoduje, że funkcja wyszukiwania semantycznego będzie niedostępna. Aby poprawić jakość wyszukiwania, proszę wektoryzować bloki tekstowe",
+        "error": "Błąd wektoryzacji",
+        "errorResult": "Błąd wektoryzacji, spróbuj ponownie po sprawdzeniu. Powód błędu:",
         "processing": "Bloki tekstowe są wektoryzowane, proszę czekać",
         "success": "Obecne bloki tekstowe zostały w pełni wektoryzowane"
       },

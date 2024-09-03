@@ -24,6 +24,7 @@ FROM base AS builder
 ARG USE_CN_MIRROR
 
 ENV NEXT_PUBLIC_SERVICE_MODE="server" \
+    APP_URL="http://app.com" \
     DATABASE_DRIVER="node" \
     DATABASE_URL="postgres://postgres:password@localhost:5432/postgres" \
     KEY_VAULTS_SECRET="use-for-build"
@@ -92,6 +93,7 @@ COPY --from=builder /deps/node_modules/drizzle-orm /app/node_modules/drizzle-orm
 # Copy database migrations
 COPY --from=builder /app/src/database/server/migrations /app/migrations
 COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
+COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 
 ## Production image, copy all the files and run next
 FROM base
@@ -107,6 +109,7 @@ ENV HOSTNAME="0.0.0.0" \
 
 # General Variables
 ENV ACCESS_CODE="" \
+    APP_URL="" \
     API_KEY_SELECT_MODE="" \
     DEFAULT_AGENT_CONFIG="" \
     SYSTEM_AGENT="" \
@@ -125,6 +128,7 @@ ENV NEXT_AUTH_SECRET="" \
 
 # S3
 ENV NEXT_PUBLIC_S3_DOMAIN="" \
+    S3_PUBLIC_DOMAIN="" \
     S3_ACCESS_KEY_ID="" \
     S3_BUCKET="" \
     S3_ENDPOINT="" \
@@ -147,7 +151,7 @@ ENV \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
-    GROQ_API_KEY="" GROQ_PROXY_URL="" \
+    GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
     # Minimax
     MINIMAX_API_KEY="" \
     # Mistral
@@ -155,7 +159,7 @@ ENV \
     # Moonshot
     MOONSHOT_API_KEY="" MOONSHOT_PROXY_URL="" \
     # Novita
-    NOVITA_API_KEY="" \
+    NOVITA_API_KEY="" NOVITA_MODEL_LIST="" \
     # Ollama
     OLLAMA_MODEL_LIST="" OLLAMA_PROXY_URL="" \
     # OpenAI
@@ -165,7 +169,7 @@ ENV \
     # Perplexity
     PERPLEXITY_API_KEY="" PERPLEXITY_PROXY_URL="" \
     # Qwen
-    QWEN_API_KEY="" \
+    QWEN_API_KEY="" QWEN_MODEL_LIST="" \
     # SiliconCloud
     SILICONCLOUD_API_KEY="" SILICONCLOUD_MODEL_LIST="" SILICONCLOUD_PROXY_URL="" \
     # Stepfun
@@ -174,8 +178,10 @@ ENV \
     TAICHU_API_KEY="" \
     # TogetherAI
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
+    # Upstage
+    UPSTAGE_API_KEY="" \
     # 01.AI
-    ZEROONE_API_KEY="" \
+    ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
     ZHIPU_API_KEY=""
 
@@ -216,5 +222,7 @@ CMD \
     fi; \
     # Run migration
     node "/app/docker.cjs"; \
-    # Run the server
-    ${PROXYCHAINS} node "/app/server.js";
+    if [ "$?" -eq "0" ]; then \
+      # Run the server
+      ${PROXYCHAINS} node "/app/server.js"; \
+    fi;

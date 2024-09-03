@@ -50,6 +50,8 @@
     "chunks": {
       "embeddingStatus": {
         "empty": "Tekstblokken zijn nog niet volledig gevectoriseerd, wat de semantische zoekfunctie kan uitschakelen. Om de zoekkwaliteit te verbeteren, vectoriseer de tekstblokken.",
+        "error": "Vectorisatie mislukt",
+        "errorResult": "Vectorisatie mislukt, controleer en probeer het opnieuw. Reden van falen:",
         "processing": "Tekstblokken worden gevectoriseerd, graag even geduld.",
         "success": "Huidige tekstblokken zijn allemaal gevectoriseerd"
       },

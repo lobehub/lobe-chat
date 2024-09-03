@@ -21,7 +21,14 @@ tags:
 </div>
 
 <Callout type="info">
-This article assumes that you are familiar with the basic principles and processes of deploying the LobeChat server database version, so it only includes content related to core environment variable configuration. If you are not familiar with the deployment principles of the LobeChat server database version, please refer to [Deploying Server Database](/en/docs/self-hosting/server-database) first.
+This article assumes that you are familiar with the basic principles and processes of deploying the LobeChat server database version, so it only includes content related to core environment variable configuration. If you are not familiar with the deployment principles of the LobeChat server database version, please refer to [Deploying Server Database](/docs/self-hosting/server-database) first.
+</Callout>
+
+<Callout type="warning">
+  Due to the inability to expose `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` using Docker environment variables, you cannot use Clerk as an authentication service when deploying LobeChat using Docker / Docker Compose.
+
+If you do need Clerk as an authentication service, you might consider deploying using Vercel or building your own image.
+
 </Callout>
 
 ## Deploying on a Linux Server
@@ -32,26 +39,37 @@ Here is the process for deploying the LobeChat server database version on a Linu
 
 ### Create a Postgres Database Instance
 
-Create a Postgres database instance according to your needs, for example:
+Please create a Postgres database instance with the PGVector plugin according to your needs, for example:
 
 ```sh
-docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres
+docker network create pg
+
+docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d pgvector/pgvector:pg16
 ```
 
-<Callout type="warning">
-The above command is only for testing/demonstration purposes because this pg instance does not include a persistent part.
+The above command will create a PG instance named `my-postgres` on the network `pg`, where `pgvector/pgvector:pg16` is a Postgres 16 image with the pgvector plugin installed by default.
+
+<Callout type="info">
+The pgvector plugin provides vector search capabilities for Postgres, which is an important component for LobeChat to implement RAG.
 </Callout>
 
-The above command will create a PG instance named `my-postgres` on the network `pg`.
+<Callout type="warning">
+The above command does not specify a persistent storage location for the pg instance, so it is only for testing/demonstration purposes. Please configure persistent storage for production environments.
+</Callout>
 
 ### Create a file named `lobe-chat.env` to store environment variables:
 
 ```shell
-# DB required
+# Website domain
+APP_URL=https://your-prod-domain.com
+
+# DB required environment variables
 KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk=
+# Postgres database connection string
+# Format: postgres://username:password@host:port/dbname; if your pg instance is a Docker container, use the container name
 DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
 
-# NEXT_AUTH related
+# NEXT_AUTH related, can use auth0, Azure AD, GitHub, Authentik, zitadel, etc. If you have other access requirements, feel free to submit a PR
 NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
 NEXT_AUTH_SSO_PROVIDERS=auth0
 NEXTAUTH_URL=https://your-prod-domain.com/api/auth
@@ -64,13 +82,24 @@ S3_ACCESS_KEY_ID=xxxxxxxxxx
 S3_SECRET_ACCESS_KEY=xxxxxxxxxx
 S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com
 S3_BUCKET=lobechat
-NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com
+S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
+
+# Other environment variables, as needed. You can refer to the environment variables configuration for the client version, making sure not to have ACCESS_CODE.
+# OPEANAI_API_KEY=sk-xxxx
+# OPENAI_PROXY_URL=https://api.openai.com/v1
+# OPENAI_MODEL_LIST=...
 ```
 
 ### Start the lobe-chat-database Docker image
 
 ```sh
 docker run -it -d -p 3210:3210 --network pg --env-file lobe-chat.env --name lobe-chat-database lobehub/lobe-chat-database
+```
+
+You can use the following command to check the logs:
+
+```sh
+docker logs -f lobe-chat-database
 ```
 
 If you see the following logs in the container, it means it has started successfully:
@@ -103,20 +132,21 @@ The script command you need to execute is:
 
 ```shell
 $ docker run -it -d --name lobe-chat-database -p 3210:3210 \
--e DATABASE_URL=postgres://postgres:mysecretpassword@host.docker.internal:5432/postgres \
--e KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk= \
--e NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250 \
--e NEXT_AUTH_SSO_PROVIDERS=auth0 \
--e AUTH0_CLIENT_ID=xxxxxx \
--e AUTH0_CLIENT_SECRET=cSX_xxxxx \
--e AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com \
--e NEXTAUTH_URL=http://localhost:3210/api/auth \
--e S3_ACCESS_KEY_ID=xxxxxxxxxx \
--e S3_SECRET_ACCESS_KEY=xxxxxxxxxx \
--e S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com \
--e S3_BUCKET=lobechat \
--e NEXT_PUBLIC_S3_DOMAIN=https://s3-for-lobechat.your-domain.com \
-lobehub/lobe-chat-database
+  -e DATABASE_URL=postgres://postgres:mysecretpassword@host.docker.internal:5432/postgres \
+  -e KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk= \
+  -e NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250 \
+  -e NEXT_AUTH_SSO_PROVIDERS=auth0 \
+  -e AUTH0_CLIENT_ID=xxxxxx \
+  -e AUTH0_CLIENT_SECRET=cSX_xxxxx \
+  -e AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com \
+  -e APP_URL=http://localhost:3210 \
+  -e NEXTAUTH_URL=http://localhost:3210/api/auth \
+  -e S3_ACCESS_KEY_ID=xxxxxxxxxx \
+  -e S3_SECRET_ACCESS_KEY=xxxxxxxxxx \
+  -e S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com \
+  -e S3_BUCKET=lobechat \
+  -e S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com \
+  lobehub/lobe-chat-database
 ```
 
 <Callout type="tip">

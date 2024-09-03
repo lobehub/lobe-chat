@@ -13,7 +13,7 @@ import { useFileStore } from '@/store/file';
 const Clear = memo(() => {
   const { t } = useTranslation('setting');
   const [clearMessage] = useChatStore((s) => [s.clearMessage]);
-  const [clearImageList] = useFileStore((s) => [s.clearImageList]);
+  const [clearImageList] = useFileStore((s) => [s.clearChatUploadFileList]);
   const hotkeys = [META_KEY, ALT_KEY, CLEAN_MESSAGE_KEY].join('+');
   const [confirmOpened, updateConfirmOpened] = useState(false);
   const mobile = useIsMobile();

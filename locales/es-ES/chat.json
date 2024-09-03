@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Cambiar modelo"
   },
-  "agentDefaultMessage": "Hola, soy **{{name}}**, puedes comenzar a chatear conmigo de inmediato o ir a [Configuración del asistente](/chat/settings#session={{id}}) para completar mi información.",
+  "agentDefaultMessage": "Hola, soy **{{name}}**. Puedes comenzar a hablar conmigo de inmediato o ir a [Configuración del asistente]({{url}}) para completar mi información.",
   "agentDefaultMessageWithSystemRole": "Hola, soy **{{name}}**, {{systemRole}}, ¡comencemos a chatear!",
   "agentDefaultMessageWithoutEdit": "¡Hola, soy **{{name}}**! Comencemos nuestra conversación.",
   "agentsAndConversations": "agentesYConversaciones",
@@ -62,6 +62,7 @@
   "pin": "Fijar",
   "pinOff": "Desfijar",
   "rag": {
+    "referenceChunks": "Fragmentos de referencia",
     "userQuery": {
       "actions": {
         "delete": "Eliminar reescritura de consulta",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Actualizar información del asistente",
   "upload": {
-    "actionFiletip": "Sube el archivo",
-    "actionTooltip": "Subir imagen",
-    "disabled": "El modelo actual no admite reconocimiento visual. Por favor, cambia de modelo para usar esta función",
+    "action": {
+      "fileUpload": "Subir archivo",
+      "folderUpload": "Subir carpeta",
+      "imageDisabled": "El modelo actual no soporta reconocimiento visual, por favor cambie de modelo para usar esta función",
+      "imageUpload": "Subir imagen",
+      "tooltip": "Subir"
+    },
+    "clientMode": {
+      "actionFiletip": "Subir archivo",
+      "actionTooltip": "Subir",
+      "disabled": "El modelo actual no soporta reconocimiento visual ni análisis de archivos, por favor cambie de modelo para usar esta función"
+    },
     "preview": {
       "prepareTasks": "Preparando fragmentos...",
       "status": {

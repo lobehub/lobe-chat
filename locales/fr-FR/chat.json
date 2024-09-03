@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Modèle"
   },
-  "agentDefaultMessage": "Bonjour, je suis **{{name}}**. Vous pouvez commencer à discuter avec moi dès maintenant ou aller dans [Paramètres de l'agent](/chat/settings#session={{id}}) pour compléter mes informations.",
+  "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
   "agentsAndConversations": "Agents et conversations",
@@ -62,6 +62,7 @@
   "pin": "Épingler",
   "pinOff": "Désépingler",
   "rag": {
+    "referenceChunks": "Références",
     "userQuery": {
       "actions": {
         "delete": "Supprimer la réécriture de la requête",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upload": {
-    "actionFiletip": "Télécharger le fichier",
-    "actionTooltip": "Télécharger une image",
-    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité.",
+    "action": {
+      "fileUpload": "Télécharger un fichier",
+      "folderUpload": "Télécharger un dossier",
+      "imageDisabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser",
+      "imageUpload": "Télécharger une image",
+      "tooltip": "Télécharger"
+    },
+    "clientMode": {
+      "actionFiletip": "Télécharger un fichier",
+      "actionTooltip": "Télécharger",
+      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser"
+    },
     "preview": {
       "prepareTasks": "Préparation des morceaux...",
       "status": {

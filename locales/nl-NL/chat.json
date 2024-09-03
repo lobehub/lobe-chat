@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Modelen"
   },
-  "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me praten of naar [Assistentinstellingen](/chat/settings#session={{id}}) gaan om mijn informatie aan te vullen.",
+  "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met een gesprek!",
   "agentsAndConversations": "agenten en gesprekken",
@@ -62,6 +62,7 @@
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
   "rag": {
+    "referenceChunks": "Referentiestukken",
     "userQuery": {
       "actions": {
         "delete": "Verwijder Query herschrijving",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Assistentgegevens bijwerken",
   "upload": {
-    "actionFiletip": "Upload het bestand",
-    "actionTooltip": "Upload afbeelding",
-    "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken.",
+    "action": {
+      "fileUpload": "Bestand uploaden",
+      "folderUpload": "Map uploaden",
+      "imageDisabled": "Dit model ondersteunt momenteel geen visuele herkenning, schakel alstublieft naar een ander model.",
+      "imageUpload": "Afbeelding uploaden",
+      "tooltip": "Uploaden"
+    },
+    "clientMode": {
+      "actionFiletip": "Bestand uploaden",
+      "actionTooltip": "Uploaden",
+      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model."
+    },
     "preview": {
       "prepareTasks": "Voorbereiden van blokken...",
       "status": {

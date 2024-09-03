@@ -3,6 +3,7 @@ import * as migrator from 'drizzle-orm/neon-serverless/migrator';
 import { join } from 'node:path';
 
 import { serverDB } from '../../src/database/server/core/db';
+import { PGVECTOR_HINT } from './errorHint';
 
 // Read the `.env` file if it exists, or a file specified by the
 // dotenv_config_path parameter that's passed to Node.js
@@ -24,6 +25,11 @@ if (connectionString) {
   // eslint-disable-next-line unicorn/prefer-top-level-await
   runMigrations().catch((err) => {
     console.error('❌ Database migrate failed:', err);
+
+    if ((err.message as string).includes('extension "vector" is not available')) {
+      console.info(PGVECTOR_HINT);
+    }
+
     // eslint-disable-next-line unicorn/no-process-exit
     process.exit(1);
   });

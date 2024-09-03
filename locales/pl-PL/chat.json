@@ -2,7 +2,7 @@
   "ModelSwitch": {
     "title": "Przełącz model"
   },
-  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu zacząć ze mną rozmawiać, lub udoskonalić moje informacje, przechodząc do [Ustawień asystenta](/chat/settings#session={{id}}).",
+  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. Zacznijmy rozmowę!",
   "agentsAndConversations": "Agenci i rozmowy",
@@ -62,6 +62,7 @@
   "pin": "Przypnij",
   "pinOff": "Odepnij",
   "rag": {
+    "referenceChunks": "Fragmenty odniesienia",
     "userQuery": {
       "actions": {
         "delete": "Usuń przepisanie zapytania",
@@ -155,9 +156,18 @@
   },
   "updateAgent": "Aktualizuj informacje asystenta",
   "upload": {
-    "actionFiletip": "Prześlij plik",
-    "actionTooltip": "Prześlij obraz",
-    "disabled": "Obecny model nie obsługuje rozpoznawania wizyjnego. Proszę przełączyć model.",
+    "action": {
+      "fileUpload": "Prześlij plik",
+      "folderUpload": "Prześlij folder",
+      "imageDisabled": "Aktualny model nie obsługuje rozpoznawania wizualnego, przełącz się na inny model, aby użyć tej funkcji",
+      "imageUpload": "Prześlij obraz",
+      "tooltip": "Prześlij"
+    },
+    "clientMode": {
+      "actionFiletip": "Prześlij plik",
+      "actionTooltip": "Prześlij",
+      "disabled": "Aktualny model nie obsługuje rozpoznawania wizualnego i analizy plików, przełącz się na inny model, aby użyć tej funkcji"
+    },
     "preview": {
       "prepareTasks": "Przygotowywanie fragmentów...",
       "status": {
