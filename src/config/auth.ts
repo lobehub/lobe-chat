@@ -49,9 +49,6 @@ const removeTipsTemplate = (willBeRemoved: string, replaceOne: string) =>
 
 export const getAuthConfig = () => {
   // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
-  if (process.env.NEXT_AUTH_SECRET) {
-    console.warn(removeTipsTemplate('NEXT_AUTH_SECRET', 'AUTH_SECRET'));
-  }
   if (process.env.AUTH0_CLIENT_ID) {
     console.warn(removeTipsTemplate('AUTH0_CLIENT_ID', 'AUTH_AUTH0_ID'));
   }
