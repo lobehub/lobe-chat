@@ -44,6 +44,10 @@ export interface FetchSSEOptions {
   smoothing?: boolean;
 }
 
+const START_ANIMATION_SPEED = 4;
+
+const END_ANIMATION_SPEED = 15;
+
 const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: string) => void }) => {
   let buffer = '';
   // why use queue: https://shareg.pt/GLBrjpK
@@ -64,7 +68,7 @@ const createSmoothMessage = (params: { onTextUpdate: (delta: string, text: strin
 
   // define startAnimation function to display the text in buffer smooth
   // when you need to start the animation, call this function
-  const startAnimation = (speed = 2) =>
+  const startAnimation = (speed = START_ANIMATION_SPEED) =>
     new Promise<void>((resolve) => {
       if (isAnimationActive) {
         resolve();
@@ -137,7 +141,7 @@ const createSmoothToolCalls = (params: {
     }
   };
 
-  const startAnimation = (index: number, speed = 2) =>
+  const startAnimation = (index: number, speed = START_ANIMATION_SPEED) =>
     new Promise<void>((resolve) => {
       if (isAnimationActives[index]) {
         resolve();
@@ -191,7 +195,7 @@ const createSmoothToolCalls = (params: {
     });
   };
 
-  const startAnimations = async (speed = 2) => {
+  const startAnimations = async (speed = START_ANIMATION_SPEED) => {
     const pools = toolCallsBuffer.map(async (_, index) => {
       if (outputQueues[index].length > 0 && !isAnimationActives[index]) {
         await startAnimation(index, speed);
@@ -365,11 +369,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
       const observationId = response.headers.get(LOBE_CHAT_OBSERVATION_ID);
 
       if (textController.isTokenRemain()) {
-        await textController.startAnimation(15);
+        await textController.startAnimation(END_ANIMATION_SPEED);
       }
 
       if (toolCallsController.isTokenRemain()) {
-        await toolCallsController.startAnimations(15);
+        await toolCallsController.startAnimations(END_ANIMATION_SPEED);
       }
 
       await options?.onFinish?.(output, { observationId, toolCalls, traceId, type: finishedType });
