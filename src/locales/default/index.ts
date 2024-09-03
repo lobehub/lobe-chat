@@ -13,6 +13,7 @@ import migration from './migration';
 import modelProvider from './modelProvider';
 import plugin from './plugin';
 import portal from './portal';
+import ragEval from './ragEval';
 import setting from './setting';
 import welcome from './welcome';
 
@@ -31,6 +32,7 @@ const resources = {
   modelProvider,
   plugin,
   portal,
+  ragEval,
   setting,
   tool,
   welcome,

@@ -1,17 +1,13 @@
 'use client';
 
-import { Skeleton, Typography } from 'antd';
+import { Typography } from 'antd';
 import { memo } from 'react';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import GoBack from '@/components/GoBack';
 import RepoIcon from '@/components/RepoIcon';
 
-import { useKnowledgeBaseItem } from '../../hooks/useKnowledgeItem';
-
-const Head = memo<{ id: string }>(({ id }) => {
-  const { data, isLoading } = useKnowledgeBaseItem(id);
-
+const Head = memo<{ name?: string }>(({ name }) => {
   return (
     <Flexbox gap={8}>
       <GoBack href={'/files'} />
@@ -19,13 +15,8 @@ const Head = memo<{ id: string }>(({ id }) => {
         <Center style={{ minWidth: 24 }} width={24}>
           <RepoIcon />
         </Center>
-        {isLoading ? (
-          <Skeleton active paragraph={{ rows: 1, style: { marginBottom: 0 } }} title={false} />
-        ) : (
-          <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>
-            {data?.name}
-          </Typography.Text>
-        )}
+
+        <Typography.Text style={{ fontSize: 16, fontWeight: 'bold' }}>{name}</Typography.Text>
       </Flexbox>
     </Flexbox>
   );

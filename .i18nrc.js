@@ -24,7 +24,6 @@ module.exports = defineConfig({
   ],
   temperature: 0,
   modelName: 'gpt-4o-mini',
-  splitToken: 2048,
   experimental: {
     jsonMode: true,
   },

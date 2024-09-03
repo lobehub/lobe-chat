@@ -56,6 +56,13 @@
       "when": 1724254147447,
       "tag": "0007_fix_embedding_table",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1725366565650,
+      "tag": "0008_add_rag_evals",
+      "breakpoints": true
     }
   ],
   "version": "6"
