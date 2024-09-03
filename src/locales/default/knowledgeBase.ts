@@ -23,6 +23,7 @@ export default {
     title: '新建知识库',
   },
   tab: {
+    evals: '评测',
     files: '文档',
     settings: '设置',
     testing: '召回测试',

@@ -23,6 +23,7 @@
     "title": "Wissensdatenbank neu erstellen"
   },
   "tab": {
+    "evals": "Bewertungen",
     "files": "Dokumente",
     "settings": "Einstellungen",
     "testing": "Rückruf-Test"

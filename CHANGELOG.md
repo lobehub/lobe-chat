@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.15.9](https://github.com/lobehub/lobe-chat/compare/v1.15.8...v1.15.9)
+
+<sup>Released on **2024-09-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix speed and rag prompt.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix speed and rag prompt, closes [#3751](https://github.com/lobehub/lobe-chat/issues/3751) ([dce200c](https://github.com/lobehub/lobe-chat/commit/dce200c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.15.8](https://github.com/lobehub/lobe-chat/compare/v1.15.7...v1.15.8)
+
+<sup>Released on **2024-09-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `.PDF` can not be chunked.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `.PDF` can not be chunked, closes [#3720](https://github.com/lobehub/lobe-chat/issues/3720) ([4244c04](https://github.com/lobehub/lobe-chat/commit/4244c04))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.7](https://github.com/lobehub/lobe-chat/compare/v1.15.6...v1.15.7)
 
 <sup>Released on **2024-09-03**</sup>
