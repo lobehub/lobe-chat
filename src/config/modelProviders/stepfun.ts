@@ -1,11 +1,12 @@
 import { ModelProviderCard } from '@/types/llm';
 
 // ref https://platform.stepfun.com/docs/llm/text
-// 根据文档，阶级星辰大模型的上下文长度，其 k 的含义为 1000
+// 根据文档，阶级星辰大模型的上下文长度，其 k 的含义均为 1000
 const Stepfun: ModelProviderCard = {
   chatModels: [
     {
-      id: 'step-2-16k-nightly',
+      enabled: true,
+      id: 'step-2-16k',
       tokens: 16_000,
     },
     {
