@@ -4,6 +4,8 @@ import { ModelProviderCard } from '@/types/llm';
 // ref https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
 const Bedrock: ModelProviderCard = {
   chatModels: [
+/*
+    // TODO: Not support for now
     {
       displayName: 'Titan Text G1 - Lite',
       id: 'amazon.titan-text-lite-v1',
@@ -19,6 +21,7 @@ const Bedrock: ModelProviderCard = {
       id: 'amazon.titan-text-premier-v1:0',
       tokens: 32_000,
     },
+*/
     {
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
@@ -97,6 +100,8 @@ const Bedrock: ModelProviderCard = {
       id: 'meta.llama3-70b-instruct-v1:0',
       tokens: 8192,
     },
+/*
+    // This model is unavailable. To enable access to this model, contact support . Note that your request may be fully approved, partially approved, or denied to maintain service performance and ensure appropriate usage of Amazon Bedrock.
     {
       displayName: 'Llama 2 Chat 13B',
       id: 'meta.llama2-13b-chat-v1',
@@ -107,6 +112,9 @@ const Bedrock: ModelProviderCard = {
       id: 'meta.llama2-70b-chat-v1',
       tokens: 4096,
     },
+*/
+/*
+    // TODO: Not support for now
     {
       displayName: 'Mistral 7B Instruct',
       enabled: true,
@@ -139,6 +147,9 @@ const Bedrock: ModelProviderCard = {
       id: 'mistral.mistral-large-2402-v1:0',
       tokens: 8192,
     },
+*/
+/*
+    // TODO: Not support for now
     {
       displayName: 'Command R+',
       enabled: true,
@@ -153,6 +164,7 @@ const Bedrock: ModelProviderCard = {
       id: 'cohere.command-r-v1:0',
       tokens: 128_000,
     },
+*/
 /*
     // Cohere Command (Text) and AI21 Labs Jurassic-2 (Text) don't support chat with the Converse API
     {
@@ -166,11 +178,14 @@ const Bedrock: ModelProviderCard = {
       tokens: 4096,
     },
 */
+/*
+    // TODO: Not support for now
     {
       displayName: 'Jamba-Instruct',
       id: 'ai21.jamba-instruct-v1:0',
       tokens: 4096,
     },
+*/
 /*
     // Cohere Command (Text) and AI21 Labs Jurassic-2 (Text) don't support chat with the Converse API
     {
@@ -185,7 +200,7 @@ const Bedrock: ModelProviderCard = {
     },
 */
   ],
-  checkModel: 'amazon.titan-text-lite-v1',
+  checkModel: 'anthropic.claude-instant-v1',
   id: 'bedrock',
   name: 'Bedrock',
 };
