@@ -2,26 +2,26 @@ import { ModelProviderCard } from '@/types/llm';
 
 // ref https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html
 // ref https://docs.aws.amazon.com/bedrock/latest/userguide/conversation-inference.html
-// ref https://us-east-1.console.aws.amazon.com/bedrock/home?region=us-west-2#/providers?model=amazon.titan-embed-text-v1
-// ref https://us-west-2.console.aws.amazon.com/bedrock/home?region=us-west-2#/providers?model=amazon.titan-embed-text-v1
+// ref https://us-east-1.console.aws.amazon.com/bedrock/home?region=us-east-1#/models
+// ref https://us-west-2.console.aws.amazon.com/bedrock/home?region=us-west-2#/models
 const Bedrock: ModelProviderCard = {
   chatModels: [
 /*
     // TODO: Not support for now
     {
-      description: 'Amazon Titan Text G1 - Lite is a light weight efficient model, ideal for fine-tuning of English-language tasks, including like summarizations and copy writing, where customers want a smaller, more cost-effective model that is also highly customizable.',
+      description: 'Amazon Titan Text Lite is a light weight efficient model ideal for fine-tuning for English-language tasks, including like summarization and copywriting, where customers want a smaller, more cost-effective model that is also highly customizable.',
       displayName: 'Titan Text G1 - Lite',
       id: 'amazon.titan-text-lite-v1',
       tokens: 4000,
     },
     {
-      description: 'Amazon Titan Text G1 - Express is a large language model for text generation. It is useful for a wide range of advanced, general language tasks such as open-ended text generation and conversational chat, as well as support within Retrieval Augmented Generation (RAG). At launch, the model is optimized for English, with multilingual support for more than 30 additional languages available in preview.',
+      description: 'Amazon Titan Text Express has a context length of up to 8,000 tokens, making it well-suited for a wide range of advanced, general language tasks such as open-ended text generation and conversational chat, as well as support within Retrieval Augmented Generation (RAG). At launch, the model is optimized for English, with multilingual support for more than 100 additional languages available in preview.',
       displayName: 'Titan Text G1 - Express',
       id: 'amazon.titan-text-express-v1',
       tokens: 8000,
     },
     {
-      description: 'Amazon Titan Text G1 - Premier is a large language model for text generation. It is useful for a wide range of tasks including open-ended and context-based question answering, code generation, and summarization. This model is integrated with Amazon Bedrock Knowledge Base and Amazon Bedrock Agents. The model also supports Custom Finetuning in preview.',
+      description: 'Titan Text Premier is a powerful and advanced model within the Titan Text family, designed to deliver superior performance across a wide range of enterprise applications. With its cutting-edge capabilities, it offers enhanced accuracy and exceptional results, making it an excellent choice for organizations seeking top-notch text processing solutions.',
       displayName: 'Titan Text Premier',
       id: 'amazon.titan-text-premier-v1:0',
       tokens: 32_000,
@@ -117,21 +117,6 @@ const Bedrock: ModelProviderCard = {
       id: 'meta.llama3-70b-instruct-v1:0',
       tokens: 8000,
     },
-/*
-    // This model is unavailable. To enable access to this model, contact support . Note that your request may be fully approved, partially approved, or denied to maintain service performance and ensure appropriate usage of Amazon Bedrock.
-    {
-      description: 'A dialogue use case optimized variant of Llama 2 models. Llama 2 is an auto-regressive language model that uses an optimized transformer architecture. Llama 2 is intended for commercial and research use in English.',
-      displayName: 'Llama 2 Chat 13B',
-      id: 'meta.llama2-13b-chat-v1',
-      tokens: 4096,
-    },
-    {
-      description: 'A dialogue use case optimized variant of Llama 2 models. Llama 2 is an auto-regressive language model that uses an optimized transformer architecture. Llama 2 is intended for commercial and research use in English.',
-      displayName: 'Llama 2 Chat 70B',
-      id: 'meta.llama2-70b-chat-v1',
-      tokens: 4096,
-    },
-*/
 /*
     // TODO: Not support for now
     {
