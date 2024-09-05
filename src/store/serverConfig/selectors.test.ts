@@ -20,6 +20,7 @@ describe('featureFlagsSelectors', () => {
       enableWebrtc: false,
       isAgentEditable: false,
       showCreateSession: true,
+      enableRAGEval: false,
       showDalle: true,
       enableKnowledgeBase: true,
       showLLM: false,

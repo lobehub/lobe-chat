@@ -9,7 +9,7 @@ export interface FileUploadState {
    */
   restTime: number;
   /**
-   * upload speed in KB/s
+   * upload speed in Byte/s
    */
   speed: number;
 }

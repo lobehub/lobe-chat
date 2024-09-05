@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { ChatMessageError } from '@/types/message';
+import { sleep } from '@/utils/sleep';
 
 import { FetchEventSourceInit } from '../fetchEventSource';
 import { fetchEventSource } from '../fetchEventSource';
@@ -127,9 +128,10 @@ describe('fetchSSE', () => {
     const mockOnFinish = vi.fn();
 
     (fetchEventSource as any).mockImplementationOnce(
-      (url: string, options: FetchEventSourceInit) => {
+      async (url: string, options: FetchEventSourceInit) => {
         options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
         options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+        await sleep(100);
         options.onmessage!({ event: 'text', data: JSON.stringify(' World') } as any);
       },
     );
@@ -139,8 +141,9 @@ describe('fetchSSE', () => {
       onFinish: mockOnFinish,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'llo World', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' World', type: 'text' });
     // more assertions for each character...
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       observationId: null,
@@ -184,7 +187,7 @@ describe('fetchSSE', () => {
 
     // TODO: need to check whether the `aarg1` is correct
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, {
-      isAnimationActives: [true],
+      isAnimationActives: [true, true],
       tool_calls: [
         { id: '1', type: 'function', function: { name: 'func1', arguments: 'aarg1' } },
         { function: { arguments: 'aarg2', name: 'func2' }, id: '2', type: 'function' },
@@ -218,9 +221,10 @@ describe('fetchSSE', () => {
     const abortController = new AbortController();
 
     (fetchEventSource as any).mockImplementationOnce(
-      (url: string, options: FetchEventSourceInit) => {
+      async (url: string, options: FetchEventSourceInit) => {
         options.onopen!({ clone: () => ({ ok: true, headers: new Headers() }) } as any);
         options.onmessage!({ event: 'text', data: JSON.stringify('Hello') } as any);
+        await sleep(100);
         abortController.abort();
         options.onmessage!({ event: 'text', data: JSON.stringify(' World') } as any);
       },
@@ -232,8 +236,9 @@ describe('fetchSSE', () => {
       signal: abortController.signal,
     });
 
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'He', type: 'text' });
-    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'llo World', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(2, { text: 'o', type: 'text' });
+    expect(mockOnMessageHandle).toHaveBeenNthCalledWith(3, { text: ' World', type: 'text' });
 
     expect(mockOnFinish).toHaveBeenCalledWith('Hello World', {
       type: 'done',
