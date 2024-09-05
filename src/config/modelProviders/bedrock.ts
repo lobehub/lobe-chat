@@ -22,7 +22,7 @@ const Bedrock: ModelProviderCard = {
     },
     {
       description: 'Titan Text Premier is a powerful and advanced model within the Titan Text family, designed to deliver superior performance across a wide range of enterprise applications. With its cutting-edge capabilities, it offers enhanced accuracy and exceptional results, making it an excellent choice for organizations seeking top-notch text processing solutions.',
-      displayName: 'Titan Text Premier',
+      displayName: 'Titan Text G1 - Premier',
       id: 'amazon.titan-text-premier-v1:0',
       tokens: 32_000,
     },
