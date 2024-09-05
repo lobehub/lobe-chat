@@ -95,7 +95,7 @@ export const getAuthConfig = () => {
       GENERIC_OIDC_CLIENT_ID: z.string().optional(),
       GENERIC_OIDC_CLIENT_SECRET: z.string().optional(),
       GENERIC_OIDC_ISSUER: z.string().optional(),
-      
+
       // ZITADEL
       ZITADEL_CLIENT_ID: z.string().optional(),
       ZITADEL_CLIENT_SECRET: z.string().optional(),
@@ -105,6 +105,7 @@ export const getAuthConfig = () => {
       LOGTO_CLIENT_ID: z.string().optional(),
       LOGTO_CLIENT_SECRET: z.string().optional(),
       LOGTO_ISSUER: z.string().optional(),
+      LOGTO_WEBHOOK_SIGNING_KEY: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -152,7 +153,7 @@ export const getAuthConfig = () => {
       GENERIC_OIDC_CLIENT_ID: process.env.GENERIC_OIDC_CLIENT_ID,
       GENERIC_OIDC_CLIENT_SECRET: process.env.GENERIC_OIDC_CLIENT_SECRET,
       GENERIC_OIDC_ISSUER: process.env.GENERIC_OIDC_ISSUER,
-      
+
       // ZITADEL
       ZITADEL_CLIENT_ID: process.env.ZITADEL_CLIENT_ID,
       ZITADEL_CLIENT_SECRET: process.env.ZITADEL_CLIENT_SECRET,
@@ -162,6 +163,7 @@ export const getAuthConfig = () => {
       LOGTO_CLIENT_ID: process.env.LOGTO_CLIENT_ID,
       LOGTO_CLIENT_SECRET: process.env.LOGTO_CLIENT_SECRET,
       LOGTO_ISSUER: process.env.LOGTO_ISSUER,
+      LOGTO_WEBHOOK_SIGNING_KEY: process.env.LOGTO_WEBHOOK_SIGNING_KEY,
     },
   });
 };
