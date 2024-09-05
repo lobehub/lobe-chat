@@ -1,15 +1,10 @@
 import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
-import { isServerMode } from '@/const/version';
-import { UserModel } from '@/database/client/models/user';
 import { pino } from '@/libs/logger';
+import { NextAuthUserService } from '@/server/services/nextauthUser';
 
 import { validateRequest } from './validateRequest';
-
-if (!authEnv.LOGTO_WEBHOOK_SIGNING_KEY && isServerMode) {
-  throw new Error('`LOGTO_WEBHOOK_SIGNING_KEY` environment variable is missing');
-}
 
 export const POST = async (req: Request): Promise<NextResponse> => {
   const payload = await validateRequest(req, authEnv.LOGTO_WEBHOOK_SIGNING_KEY!);
@@ -25,10 +20,14 @@ export const POST = async (req: Request): Promise<NextResponse> => {
 
   pino.trace(`logto webhook payload: ${{ data, event }}`);
 
+  const nextauthUserService = new NextAuthUserService();
   switch (event) {
     case 'User.Data.Updated': {
-      if (data?.avatar) UserModel.updateAvatar(data.avatar);
-      return NextResponse.json({ statue: 200 });
+      return nextauthUserService.safeUpdateUser(data.id, {
+        avatar: data?.avatar,
+        email: data?.primaryEmail,
+        fullName: data?.name,
+      });
     }
 
     default: {
