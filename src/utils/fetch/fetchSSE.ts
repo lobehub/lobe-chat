@@ -230,7 +230,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let finishedType: SSEFinishType = 'done';
   let response!: Response;
 
-  const { smoothing = true } = options;
+  const { smoothing } = options;
 
   const textController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
