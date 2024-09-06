@@ -4,6 +4,7 @@
     "downloading": "DallE3 tarafından oluşturulan resim bağlantıları sadece 1 saat geçerlidir, resim yerel olarak önbelleğe alınıyor...",
     "generate": "Oluştur",
     "generating": "Oluşturuluyor...",
-    "images": "Görseller:"
+    "images": "Görseller:",
+    "prompt": "İpucu"
   }
 }

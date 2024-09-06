@@ -43,7 +43,7 @@ Choose a meaningful branch name related to your work. It makes collaboration eas
 🧙‍♀️ Time to work your magic! Write your code, fix bugs, or add new features. Be sure to follow our project's coding style. You can check if your code adheres to our style using:
 
 ```bash
-yarn lint
+pnpm lint
 ```
 
 This adds a bit of enchantment to your coding experience! ✨

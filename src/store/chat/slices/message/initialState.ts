@@ -7,20 +7,48 @@ export interface ChatMessageState {
    * @description 当前正在编辑或查看的会话
    */
   activeId: string;
-  chatLoadingId?: string;
+  /**
+   * is the AI message is generating
+   */
+  chatLoadingIds: string[];
+  inputFiles: File[];
   inputMessage: string;
-  messageLoadingIds: [];
-  messages: ChatMessage[];
+  isCreatingMessage: boolean;
+  /**
+   * is the message is editing
+   */
+  messageEditingIds: string[];
+  /**
+   * is the message is creating or updating in the service
+   */
+  messageLoadingIds: string[];
+  /**
+   * is the message is in RAG flow
+   */
+  messageRAGLoadingIds: string[];
   /**
    * whether messages have fetched
    */
   messagesInit: boolean;
+  messagesMap: Record<string, ChatMessage[]>;
+  pluginApiLoadingIds: string[];
+  /**
+   * the tool calling stream ids
+   */
+  toolCallingStreamIds: Record<string, boolean[]>;
 }
 
 export const initialMessageState: ChatMessageState = {
   activeId: 'inbox',
+  chatLoadingIds: [],
+  inputFiles: [],
   inputMessage: '',
+  isCreatingMessage: false,
+  messageEditingIds: [],
   messageLoadingIds: [],
-  messages: [],
+  messageRAGLoadingIds: [],
   messagesInit: false,
+  messagesMap: {},
+  pluginApiLoadingIds: [],
+  toolCallingStreamIds: {},
 };

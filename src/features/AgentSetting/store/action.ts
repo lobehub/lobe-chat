@@ -1,12 +1,19 @@
+import { DeepPartial } from 'utility-types';
 import { StateCreator } from 'zustand/vanilla';
 
 import { chainPickEmoji } from '@/chains/pickEmoji';
 import { chainSummaryAgentName } from '@/chains/summaryAgentName';
 import { chainSummaryDescription } from '@/chains/summaryDescription';
 import { chainSummaryTags } from '@/chains/summaryTags';
+import { TraceNameMap, TracePayload, TraceTopicType } from '@/const/trace';
 import { chatService } from '@/services/chat';
-import { LobeAgentConfig } from '@/types/agent';
+import { useUserStore } from '@/store/user';
+import { systemAgentSelectors } from '@/store/user/slices/settings/selectors';
+import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
 import { MetaData } from '@/types/meta';
+import { SystemAgentItem } from '@/types/user/settings';
+import { MessageTextChunk } from '@/utils/fetch';
+import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { SessionLoadingState } from '../store/initialState';
@@ -14,15 +21,12 @@ import { State, initialState } from './initialState';
 import { ConfigDispatch, configReducer } from './reducers/config';
 import { MetaDataDispatch, metaDataReducer } from './reducers/meta';
 
-/**
- * 设置操作
- */
-export interface Action {
+export interface PublicAction {
   /**
    * 自动选择表情
    * @param id - 表情的 ID
    */
-  autoPickEmoji: () => void;
+  autoPickEmoji: () => Promise<void>;
   /**
    * 自动完成代理描述
    * @param id - 代理的 ID
@@ -41,19 +45,25 @@ export interface Action {
    */
   autocompleteAllMeta: (replace?: boolean) => void;
   autocompleteMeta: (key: keyof MetaData) => void;
+}
+
+export interface Action extends PublicAction {
   dispatchConfig: (payload: ConfigDispatch) => void;
   dispatchMeta: (payload: MetaDataDispatch) => void;
+  getCurrentTracePayload: (data: Partial<TracePayload>) => TracePayload;
 
+  internal_getSystemAgentForMeta: () => SystemAgentItem;
   resetAgentConfig: () => void;
 
   resetAgentMeta: () => void;
-
-  setAgentConfig: (config: Partial<LobeAgentConfig>) => void;
-
+  setAgentConfig: (config: DeepPartial<LobeAgentConfig>) => void;
   setAgentMeta: (meta: Partial<MetaData>) => void;
+
+  setChatConfig: (config: Partial<LobeAgentChatConfig>) => void;
   streamUpdateMetaArray: (key: keyof MetaData) => any;
   streamUpdateMetaString: (key: keyof MetaData) => any;
   toggleAgentPlugin: (pluginId: string, state?: boolean) => void;
+
   /**
    * 更新加载状态
    * @param key - SessionLoadingState 的键
@@ -68,22 +78,24 @@ const t = setNamespace('AgentSettings');
 
 export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, get) => ({
   ...initialState,
-
   autoPickEmoji: async () => {
     const { config, meta, dispatchMeta } = get();
 
     const systemRole = config.systemRole;
 
-    const emoji = await chatService.fetchPresetTaskResult({
+    chatService.fetchPresetTaskResult({
+      onFinish: async (emoji) => {
+        dispatchMeta({ type: 'update', value: { avatar: emoji } });
+      },
       onLoadingChange: (loading) => {
         get().updateLoadingState('avatar', loading);
       },
-      params: chainPickEmoji([meta.title, meta.description, systemRole].filter(Boolean).join(',')),
+      params: merge(
+        get().internal_getSystemAgentForMeta(),
+        chainPickEmoji([meta.title, meta.description, systemRole].filter(Boolean).join(',')),
+      ),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.EmojiPicker }),
     });
-
-    if (emoji) {
-      dispatchMeta({ type: 'update', value: { avatar: emoji } });
-    }
   },
   autocompleteAgentDescription: async () => {
     const { dispatchMeta, config, meta, updateLoadingState, streamUpdateMetaString } = get();
@@ -105,7 +117,8 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('description', loading);
       },
       onMessageHandle: streamUpdateMetaString('description'),
-      params: chainSummaryDescription(systemRole),
+      params: merge(get().internal_getSystemAgentForMeta(), chainSummaryDescription(systemRole)),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryAgentDescription }),
     });
   },
   autocompleteAgentTags: async () => {
@@ -120,6 +133,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     // 替换为 ...
     dispatchMeta({ type: 'update', value: { tags: ['...'] } });
 
+    // Get current agent for agentMeta
     chatService.fetchPresetTaskResult({
       onError: () => {
         dispatchMeta({ type: 'update', value: { tags: preValue } });
@@ -128,9 +142,11 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('tags', loading);
       },
       onMessageHandle: streamUpdateMetaArray('tags'),
-      params: chainSummaryTags(
-        [meta.title, meta.description, systemRole].filter(Boolean).join(','),
+      params: merge(
+        get().internal_getSystemAgentForMeta(),
+        chainSummaryTags([meta.title, meta.description, systemRole].filter(Boolean).join(',')),
       ),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryAgentTags }),
     });
   },
   autocompleteAgentTitle: async () => {
@@ -153,7 +169,11 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
         updateLoadingState('title', loading);
       },
       onMessageHandle: streamUpdateMetaString('title'),
-      params: chainSummaryAgentName([meta.description, systemRole].filter(Boolean).join(',')),
+      params: merge(
+        get().internal_getSystemAgentForMeta(),
+        chainSummaryAgentName([meta.description, systemRole].filter(Boolean).join(',')),
+      ),
+      trace: get().getCurrentTracePayload({ traceName: TraceNameMap.SummaryAgentTitle }),
     });
   },
   autocompleteAllMeta: (replace) => {
@@ -205,7 +225,6 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       }
     }
   },
-
   dispatchConfig: (payload) => {
     const nextConfig = configReducer(get().config, payload);
 
@@ -220,14 +239,23 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
 
     get().onMetaChange?.(nextValue);
   },
+  getCurrentTracePayload: (data) => ({
+    sessionId: get().id,
+    topicId: TraceTopicType.AgentSettings,
+    ...data,
+  }),
+
+  internal_getSystemAgentForMeta: () => {
+    return systemAgentSelectors.agentMeta(useUserStore.getState());
+  },
 
   resetAgentConfig: () => {
     get().dispatchConfig({ type: 'reset' });
   },
+
   resetAgentMeta: () => {
     get().dispatchMeta({ type: 'reset' });
   },
-
   setAgentConfig: (config) => {
     get().dispatchConfig({ config, type: 'update' });
   },
@@ -235,19 +263,31 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
     get().dispatchMeta({ type: 'update', value: meta });
   },
 
+  setChatConfig: (config) => {
+    get().setAgentConfig({ chatConfig: config });
+  },
+
   streamUpdateMetaArray: (key: keyof MetaData) => {
     let value = '';
-    return (text: string) => {
-      value += text;
-      get().dispatchMeta({ type: 'update', value: { [key]: value.split(',') } });
+    return (chunk: MessageTextChunk) => {
+      switch (chunk.type) {
+        case 'text': {
+          value += chunk.text;
+          get().dispatchMeta({ type: 'update', value: { [key]: value.split(',') } });
+        }
+      }
     };
   },
 
   streamUpdateMetaString: (key: keyof MetaData) => {
     let value = '';
-    return (text: string) => {
-      value += text;
-      get().dispatchMeta({ type: 'update', value: { [key]: value } });
+    return (chunk: MessageTextChunk) => {
+      switch (chunk.type) {
+        case 'text': {
+          value += chunk.text;
+          get().dispatchMeta({ type: 'update', value: { [key]: value } });
+        }
+      }
     };
   },
 

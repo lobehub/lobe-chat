@@ -1,4 +1,22 @@
 {
+  "about": {
+    "title": "について"
+  },
+  "agentTab": {
+    "chat": "チャット設定",
+    "meta": "メタ情報",
+    "modal": "モーダル設定",
+    "plugin": "プラグイン設定",
+    "prompt": "プロンプト設定",
+    "tts": "音声サービス"
+  },
+  "analytics": {
+    "telemetry": {
+      "desc": "匿名の使用データを送信することで、LobeChat の全体的なユーザーエクスペリエンスの向上にご協力いただけます",
+      "title": "匿名使用データの送信"
+    },
+    "title": "データ分析"
+  },
   "danger": {
     "clear": {
       "action": "すぐにクリア",
@@ -12,139 +30,24 @@
       "confirm": "すべての設定をリセットしますか？",
       "currentVersion": "現在のバージョン",
       "desc": "すべての設定をデフォルト値にリセットします",
+      "success": "すべての設定がリセットされました",
       "title": "すべての設定をリセット"
     }
   },
   "header": {
+    "desc": "設定優先順位和模型設置。",
     "global": "グローバル設定",
     "session": "セッション設定",
-    "sessionWithName": "セッション設定 · {{name}}"
+    "sessionDesc": "キャラクター設定とセッションの好み。",
+    "sessionWithName": "セッション設定 · {{name}}",
+    "title": "設定"
   },
   "llm": {
-    "AzureOpenAI": {
-      "azureApiVersion": {
-        "desc": "AzureのAPIバージョン。YYYY-MM-DD形式に従う。[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
-        "fetch": "リストを取得",
-        "title": "Azure APIバージョン"
-      },
-      "deployments": {
-        "desc": "id=nameの構文を使用して、デプロイモデルを記入します（デプロイ名とモデルが同じ場合、モデル名のみを記入できます）。複数のモデルは、カンマ（,）で区切ります",
-        "title": "Azureデプロイリスト"
-      },
-      "endpoint": {
-        "desc": "Azure ポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます",
-        "placeholder": "https://docs-test-001.openai.azure.com",
-        "title": "Azure API アドレス"
-      },
-      "models": {
-        "desc": "サポートされているモデル",
-        "title": "モデルリスト"
-      },
-      "title": "Azure OpenAI 設定",
-      "token": {
-        "desc": "Azure ポータルでリソースを確認すると、この値は「キーとエンドポイント」セクションで見つけることができます。KEY1 または KEY2 を使用できます",
-        "placeholder": "Azure API キー",
-        "title": "API キー"
-      }
-    },
-    "Bedrock": {
-      "accessKeyId": {
-        "desc": "Aws Access Key Idを入力",
-        "placeholder": "Aws Access Key Id",
-        "title": "Aws Access Key Id"
-      },
-      "checker": {
-        "desc": "AccessKeyId / SecretAccessKeyが正しく記入されているかをテスト"
-      },
-      "region": {
-        "desc": "Aws Regionを入力",
-        "placeholder": "Aws Region",
-        "title": "Aws Region"
-      },
-      "secretAccessKey": {
-        "desc": "Aws Secret Access Keyを入力",
-        "placeholder": "Aws Secret Access Key",
-        "title": "Aws Secret Access Key"
-      },
-      "title": "Bedrock"
-    },
-    "Google": {
-      "title": "Google",
-      "token": {
-        "desc": "Googleから取得したAPIキーを入力",
-        "placeholder": "Google API Key",
-        "title": "APIキー"
-      }
-    },
-    "Moonshot": {
-      "title": "月の裏側",
-      "token": {
-        "desc": "Moonshot AI からの API キーを入力してください",
-        "placeholder": "Moonshot AI API キー",
-        "title": "API キー"
-      }
-    },
-    "Ollama": {
-      "checker": {
-        "desc": "プロキシアドレスが正しく入力されているかをテストします"
-      },
-      "customModelName": {
-        "desc": "カスタムモデルを追加します。複数のモデルはコンマ（,）で区切ってください",
-        "placeholder": "ビクーニャ、リャマ、コードリャマ、リャマ2:13b-テキスト",
-        "title": "カスタムモデル名"
-      },
-      "endpoint": {
-        "desc": "Ollama インターフェースプロキシアドレスを入力します。ローカルで追加指定がない場合は空白のままにしてください",
-        "placeholder": "http://127.0.0.1:11434/v1",
-        "title": "インターフェースプロキシアドレス"
-      },
-      "title": "Ollama"
-    },
-    "OpenAI": {
-      "azureApiVersion": {
-        "desc": "Azure の API バージョンは YYYY-MM-DD 形式に従い、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照してください",
-        "fetch": "リストを取得",
-        "title": "Azure API バージョン"
-      },
-      "customModelName": {
-        "desc": "カスタムモデルを追加し、複数のモデルはカンマ（,）で区切って使用します",
-        "placeholder": "model1,model2,model3",
-        "title": "カスタムモデル名"
-      },
-      "endpoint": {
-        "desc": "デフォルトのアドレス以外に、http(s):// を含める必要があります",
-        "placeholder": "https://api.openai.com/v1",
-        "title": "インターフェースプロキシアドレス"
-      },
-      "models": {
-        "count": "{{count}} 個のモデルをサポート",
-        "desc": "サポートされているモデル",
-        "fetch": "モデルリストを取得",
-        "notSupport": "Azure OpenAI はモデルリストの表示をサポートしていません",
-        "notSupportTip": "デプロイ名とモデル名が一致することを確認する必要があります",
-        "refetch": "モデルリストを再取得",
-        "title": "モデルリスト"
-      },
-      "title": "OpenAI 設定",
-      "token": {
-        "desc": "独自の OpenAI キーを使用します",
-        "placeholder": "OpenAI API キー",
-        "title": "API キー"
-      },
-      "useAzure": {
-        "desc": "Azure の提供する OpenAI サービスを使用します",
-        "fetch": "リストを取得",
-        "serverConfig": "管理者はサーバー側で Azure OpenAI を有効にし、切り替えを禁止しています",
-        "title": "Azure OpenAI を使用"
-      }
-    },
-    "Zhipu": {
-      "title": "智谱",
-      "token": {
-        "desc": "智谱から取得したAPIキーを入力",
-        "placeholder": "Zhipu API Key",
-        "title": "APIキー"
-      }
+    "aesGcm": "キーとプロキシアドレスなどは <1>AES-GCM</1> 暗号化アルゴリズムを使用して暗号化されます",
+    "apiKey": {
+      "desc": "あなたの {{name}} API キーを入力してください",
+      "placeholder": "{{name}} API キー",
+      "title": "API キー"
     },
     "checker": {
       "button": "チェック",
@@ -152,7 +55,66 @@
       "pass": "チェック合格",
       "title": "接続性チェック"
     },
-    "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに ✨"
+    "customModelCards": {
+      "addNew": "{{id}} モデルを作成して追加する",
+      "config": "モデルの設定",
+      "confirmDelete": "このカスタムモデルを削除しようとしています。削除した後は元に戻すことはできませんので、慎重に操作してください。",
+      "modelConfig": {
+        "azureDeployName": {
+          "extra": "Azure OpenAI で実際にリクエストされるフィールド",
+          "placeholder": "Azure でのモデル展開名を入力してください",
+          "title": "モデル展開名"
+        },
+        "displayName": {
+          "placeholder": "ChatGPT、GPT-4 などのモデルの表示名を入力してください",
+          "title": "モデル表示名"
+        },
+        "files": {
+          "extra": "現在の LobeChat のファイルアップロード実装は一種のハック方法にすぎず、自己責任でのみ試用できます。完全なファイルアップロード機能は今後の実装をお待ちください",
+          "title": "ファイルアップロードのサポート"
+        },
+        "functionCall": {
+          "extra": "この設定は LobeChat での関数呼び出し機能のみを有効にします。関数呼び出しのサポートは完全にモデル自体に依存するため、モデルの関数呼び出し機能の可用性を自己でテストしてください",
+          "title": "関数呼び出しのサポート"
+        },
+        "id": {
+          "extra": "モデルのラベルとして表示されます",
+          "placeholder": "gpt-4-turbo-preview または claude-2.1 などのモデルIDを入力してください",
+          "title": "モデルID"
+        },
+        "modalTitle": "カスタムモデルの設定",
+        "tokens": {
+          "title": "最大トークン数",
+          "unlimited": "無制限"
+        },
+        "vision": {
+          "extra": "この設定は LobeChat での画像アップロード構成のみを有効にします。認識のサポートは完全にモデル自体に依存するため、モデルの視覚認識機能の可用性を自己でテストしてください",
+          "title": "視覚認識のサポート"
+        }
+      }
+    },
+    "fetchOnClient": {
+      "desc": "ブラウザから直接セッションリクエストを開始するクライアントサイドリクエストモードは、応答速度を向上させることができます。",
+      "title": "クライアントサイドリクエストモードの使用"
+    },
+    "fetcher": {
+      "fetch": "モデルリストを取得する",
+      "fetching": "モデルリストを取得中...",
+      "latestTime": "最終更新時間：{{time}}",
+      "noLatestTime": "リストを取得していません"
+    },
+    "helpDoc": "設定ガイド",
+    "modelList": {
+      "desc": "セッションで表示するモデルを選択します。選択したモデルはモデルリストに表示されます",
+      "placeholder": "モデルをリストから選択してください",
+      "title": "モデルリスト",
+      "total": "合計 {{count}} 個のモデルが利用可能です"
+    },
+    "proxyUrl": {
+      "desc": "デフォルトのアドレスに加えて、http(s)://を含める必要があります",
+      "title": "APIプロキシアドレス"
+    },
+    "waitingForMore": "さらに多くのモデルが <1>計画されています</1>。お楽しみに"
   },
   "plugin": {
     "addTooltip": "カスタムプラグイン",
@@ -219,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "制限なし",
       "limited": "{{number}}件の会話メッセージのみ含む",
+      "setlimited": "使用履歴メッセージ数",
       "title": "過去メッセージ数を制限する",
       "unlimited": "過去メッセージ数を制限しない"
     },
@@ -246,13 +209,7 @@
       "title": "単一応答制限"
     },
     "model": {
-      "desc": "ChatGPT モデル",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "{{provider}}モデル",
       "title": "モデル"
     },
     "presencePenalty": {
@@ -300,6 +257,7 @@
   "settingTTS": {
     "openai": {
       "sttModel": "OpenAI 音声認識モデル",
+      "title": "OpenAI",
       "ttsModel": "OpenAI 音声合成モデル"
     },
     "showAllLocaleVoice": {
@@ -369,10 +327,76 @@
     "placeholder": "エージェントの識別子を入力してください。一意である必要があります。例：web-development",
     "tooltips": "エージェントマーケットに共有"
   },
+  "sync": {
+    "device": {
+      "deviceName": {
+        "hint": "識別のために名前を追加",
+        "placeholder": "デバイス名を入力",
+        "title": "デバイス名"
+      },
+      "title": "デバイス情報",
+      "unknownBrowser": "不明なブラウザ",
+      "unknownOS": "不明なOS"
+    },
+    "warning": {
+      "tip": "コミュニティの長期にわたる公開テストの結果、WebRTC 同期は一般的なデータ同期要求を安定して満たすことができない可能性があります。 <1>シグナリングサーバーをデプロイ</1> してからご使用ください。"
+    },
+    "webrtc": {
+      "channelName": {
+        "desc": "WebRTC はこの名前で同期チャネルを作成し、チャネル名が一意であることを確認します",
+        "placeholder": "同期チャネル名を入力してください",
+        "shuffle": "ランダム生成",
+        "title": "同期チャネル名"
+      },
+      "channelPassword": {
+        "desc": "パスワードを追加してチャネルをプライベートに保ち、パスワードが正しい場合のみデバイスがチャネルに参加できます",
+        "placeholder": "同期チャネルのパスワードを入力してください",
+        "title": "同期チャネルのパスワード"
+      },
+      "desc": "リアルタイムでピアツーピアのデータ通信を行い、デバイスが同時にオンラインである必要があります",
+      "enabled": {
+        "invalid": "シグナリングサーバーと同期チャネル名を入力してから有効にしてください",
+        "title": "同期を有効にする"
+      },
+      "signaling": {
+        "desc": "WebRTC はこのアドレスを使用して同期します",
+        "placeholder": "シグナリングサーバーのアドレスを入力してください",
+        "title": "シグナリングサーバー"
+      },
+      "title": "WebRTC 同期"
+    }
+  },
+  "systemAgent": {
+    "agentMeta": {
+      "label": "アシスタントメタデータ生成モデル",
+      "modelDesc": "アシスタントの名前、説明、アバター、ラベルを生成するために指定されたモデル",
+      "title": "アシスタント情報の自動生成"
+    },
+    "queryRewrite": {
+      "label": "質問リライトモデル",
+      "modelDesc": "ユーザーの質問を最適化するために指定されたモデル",
+      "title": "知識ベース"
+    },
+    "title": "システムアシスタント",
+    "topic": {
+      "label": "トピックネーミングモデル",
+      "modelDesc": "トピックの自動リネームに使用されるモデルを指定します",
+      "title": "トピックの自動リネーム"
+    },
+    "translation": {
+      "label": "翻訳モデル",
+      "modelDesc": "翻訳に使用するモデルを指定します",
+      "title": "翻訳アシスタントの設定"
+    }
+  },
   "tab": {
+    "about": "について",
     "agent": "デフォルトエージェント",
     "common": "一般設定",
+    "experiment": "実験",
     "llm": "言語モデル",
+    "sync": "クラウド同期",
+    "system-agent": "システムアシスタント",
     "tts": "音声サービス"
   },
   "tools": {

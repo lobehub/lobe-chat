@@ -1,0 +1,118 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
+{
+  "enabled": true,
+  "enabledModels": [
+    "llama",
+    "claude-2",
+    "gpt-4-0125-preview",
+  ],
+  "serverModelCards": [
+    {
+      "displayName": "llama",
+      "enabled": true,
+      "id": "llama",
+    },
+    {
+      "displayName": "claude-2",
+      "enabled": true,
+      "id": "claude-2",
+    },
+    {
+      "displayName": "gpt-4-32k",
+      "enabled": true,
+      "functionCall": true,
+      "id": "gpt-4-0125-preview",
+      "tokens": 128000,
+    },
+  ],
+}
+`;
+
+exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST > should work correct with gpt-4 1`] = `
+[
+  {
+    "displayName": "GPT-3.5 Turbo (1106)",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-3.5-turbo-1106",
+    "tokens": 16385,
+  },
+  {
+    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
+    "displayName": "GPT-3.5 Turbo",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-3.5-turbo",
+    "tokens": 16385,
+  },
+  {
+    "description": "Currently points to gpt-3.5-turbo-16k-0613",
+    "displayName": "GPT-3.5 Turbo 16K",
+    "enabled": true,
+    "id": "gpt-3.5-turbo-16k",
+    "legacy": true,
+    "tokens": 16385,
+  },
+  {
+    "description": "Currently points to gpt-4-0613",
+    "displayName": "GPT-4",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4",
+    "tokens": 8192,
+  },
+  {
+    "description": "Currently points to gpt-4-32k-0613",
+    "displayName": "GPT-4 32K",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4-32k",
+    "tokens": 32768,
+  },
+  {
+    "displayName": "GPT-4 Turbo Preview (1106)",
+    "enabled": true,
+    "functionCall": true,
+    "id": "gpt-4-1106-preview",
+    "tokens": 128000,
+  },
+  {
+    "description": "Currently points to gpt-4-1106-vision-preview",
+    "displayName": "GPT-4 Turbo Vision Preview",
+    "enabled": true,
+    "id": "gpt-4-vision-preview",
+    "tokens": 128000,
+    "vision": true,
+  },
+]
+`;
+
+exports[`configRouter > getGlobalConfig > Model Provider env > OPENROUTER_MODEL_LIST > custom deletion, addition, and renaming of models 1`] = `
+{
+  "enabled": false,
+  "enabledModels": [
+    "google/gemma-7b-it:free",
+    "mistralai/mistral-7b-instruct:free",
+  ],
+  "serverModelCards": [
+    {
+      "displayName": "Google: Gemma 7B (free)",
+      "enabled": true,
+      "functionCall": false,
+      "id": "google/gemma-7b-it:free",
+      "tokens": 8192,
+      "vision": false,
+    },
+    {
+      "displayName": "Mistral 7B Instruct (free)",
+      "enabled": true,
+      "functionCall": false,
+      "id": "mistralai/mistral-7b-instruct:free",
+      "tokens": 32768,
+      "vision": false,
+    },
+  ],
+}
+`;

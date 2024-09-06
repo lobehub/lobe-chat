@@ -1,0 +1,84 @@
+{
+  "DragUpload": {
+    "dragDesc": "Sleep bestanden hierheen om meerdere afbeeldingen te uploaden.",
+    "dragFileDesc": "Sleep afbeeldingen en bestanden hierheen om meerdere afbeeldingen en bestanden te uploaden.",
+    "dragFileTitle": "Bestanden uploaden",
+    "dragTitle": "Afbeeldingen uploaden"
+  },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Toevoegen aan kennisbank",
+      "addToOtherKnowledgeBase": "Toevoegen aan andere kennisbank",
+      "batchChunking": "Batchverdeling",
+      "chunking": "Verdeling",
+      "chunkingTooltip": "Splits het bestand in meerdere tekstblokken en vectoriseer deze voor semantische zoekopdrachten en bestandsdialoog",
+      "confirmDelete": "Je staat op het punt dit bestand te verwijderen. Na verwijdering kan het niet meer worden hersteld. Bevestig je actie.",
+      "confirmDeleteMultiFiles": "Je staat op het punt de geselecteerde {{count}} bestanden te verwijderen. Na verwijdering kunnen ze niet meer worden hersteld. Bevestig je actie.",
+      "confirmRemoveFromKnowledgeBase": "Je staat op het punt de geselecteerde {{count}} bestanden uit de kennisbank te verwijderen. Na verwijdering zijn de bestanden nog steeds zichtbaar in alle bestanden. Bevestig je actie.",
+      "copyUrl": "Kopieer link",
+      "copyUrlSuccess": "Bestandsadres succesvol gekopieerd",
+      "createChunkingTask": "Voorbereiden...",
+      "deleteSuccess": "Bestand succesvol verwijderd",
+      "downloading": "Bestand aan het downloaden...",
+      "removeFromKnowledgeBase": "Verwijderen uit kennisbank",
+      "removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd"
+    },
+    "bottom": "Je bent onderaan aangekomen",
+    "config": {
+      "showFilesInKnowledgeBase": "Toon inhoud in kennisbank"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Bestand uploaden",
+        "folder": "Map uploaden",
+        "knowledgeBase": "Nieuwe kennisbank aanmaken"
+      },
+      "or": "of",
+      "title": "Sleep bestanden of mappen hierheen"
+    },
+    "title": {
+      "createdAt": "Aangemaakt op",
+      "size": "Grootte",
+      "title": "Bestand"
+    },
+    "total": {
+      "fileCount": "Totaal {{count}} items",
+      "selectedCount": "Geselecteerd {{count}} items"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Tekstblokken zijn nog niet volledig gevectoriseerd, wat de semantische zoekfunctie kan uitschakelen. Om de zoekkwaliteit te verbeteren, vectoriseer de tekstblokken.",
+        "error": "Vectorisatie mislukt",
+        "errorResult": "Vectorisatie mislukt, controleer en probeer het opnieuw. Reden van falen:",
+        "processing": "Tekstblokken worden gevectoriseerd, graag even geduld.",
+        "success": "Huidige tekstblokken zijn allemaal gevectoriseerd"
+      },
+      "embeddings": "Vectorisatie",
+      "status": {
+        "error": "Verdeling mislukt",
+        "errorResult": "Verdeling mislukt, controleer en probeer het opnieuw. Reden van falen:",
+        "processing": "Bezig met verdelen",
+        "processingTip": "De server is bezig met het splitsen van tekstblokken, het sluiten van de pagina heeft geen invloed op de voortgang van de verdeling."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Terug"
+  },
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual needs.",
+      "file": "This model supports file upload for reading and recognition.",
+      "functionCall": "This model supports function call.",
+      "tokens": "This model supports up to {{tokens}} tokens in a single session.",
+      "vision": "This model supports visual recognition."
+    },
+    "removed": "Dit model staat niet meer in de lijst. Als je het deselecteert, wordt het automatisch verwijderd."
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "No enabled model, please go to settings to enable.",
+    "provider": "Provider"
+  }
+}

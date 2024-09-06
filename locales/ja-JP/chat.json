@@ -2,38 +2,74 @@
   "ModelSwitch": {
     "title": "モデル"
   },
-  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐにチャットを開始するか、[エージェント設定](/chat/settings#session={{id}}) に移動して私の情報を完全にすることができます。",
+  "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることもできますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
+  "agentDefaultMessageWithoutEdit": "こんにちは、私は**{{name}}**です。会話しましょう！",
+  "agentsAndConversations": "エージェントと会話",
   "backToBottom": "現在に戻る",
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
+  "confirmRemoveSessionSuccess": "セッションが正常に削除されました",
   "defaultAgent": "デフォルトエージェント",
   "defaultList": "デフォルトリスト",
   "defaultSession": "デフォルトセッション",
+  "duplicateSession": {
+    "loading": "複製中...",
+    "success": "複製に成功しました",
+    "title": "{{title}} のコピー"
+  },
   "duplicateTitle": "{{title}} のコピー",
+  "emptyAgent": "エージェントがいません",
   "historyRange": "履歴範囲",
   "inbox": {
-    "defaultMessage": "こんにちは、私はあなたのスマートアシスタントです。何か質問があれば遠慮なく聞いてください。より専門的でカスタマイズされたアシスタントが必要な場合は、`+` をクリックしてカスタムエージェントを作成できます。",
     "desc": "脳のクラスターを起動し、創造性を引き出しましょう。あなたのスマートアシスタントは、あなたとすべてのことについてここでコミュニケーションします。",
     "title": "気軽におしゃべり"
   },
   "input": {
-    "onlyAdd": "メッセージのみ追加",
+    "addAi": "AIメッセージを追加",
+    "addUser": "ユーザーメッセージを追加",
+    "more": "もっと",
     "send": "送信",
     "sendWithCmdEnter": "{{meta}} + Enter キーで送信",
     "sendWithEnter": "Enter キーで送信",
     "stop": "停止",
     "warp": "改行"
   },
+  "knowledgeBase": {
+    "all": "すべてのコンテンツ",
+    "allFiles": "すべてのファイル",
+    "allKnowledgeBases": "すべての知識ベース",
+    "disabled": "現在のデプロイモードでは知識ベースの対話はサポートされていません。使用するには、サーバー側のデータベースデプロイに切り替えるか、LobeChat Cloud サービスを利用してください。",
+    "library": {
+      "action": {
+        "add": "追加",
+        "detail": "詳細",
+        "remove": "削除"
+      },
+      "title": "ファイル/知識ベース"
+    },
+    "relativeFilesOrKnowledgeBases": "関連ファイル/知識ベース",
+    "title": "知識ベース",
+    "uploadGuide": "アップロードしたファイルは「知識ベース」で確認できますよ",
+    "viewMore": "さらに表示"
+  },
   "messageAction": {
     "delAndRegenerate": "削除して再生成",
     "regenerate": "再生成"
   },
   "newAgent": "新しいエージェント",
-  "noDescription": "説明なし",
   "pin": "ピン留め",
   "pinOff": "ピン留め解除",
+  "rag": {
+    "referenceChunks": "参照チャンク",
+    "userQuery": {
+      "actions": {
+        "delete": "クエリを削除",
+        "regenerate": "クエリを再生成"
+      }
+    }
+  },
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
   "searchAgentPlaceholder": "エージェントや会話を検索...",
@@ -41,13 +77,17 @@
   "sessionGroup": {
     "config": "グループ設定",
     "confirmRemoveGroupAlert": "このグループを削除します。削除後、このグループのアシスタントはデフォルトリストに移動されます。操作を確認してください。",
+    "createAgentSuccess": "エージェントの作成に成功しました",
     "createGroup": "新しいグループを作成",
     "createSuccess": "作成が成功しました",
+    "creatingAgent": "エージェントの作成中...",
     "inputPlaceholder": "グループ名を入力してください...",
     "moveGroup": "グループに移動",
     "newGroup": "新しいグループ",
     "rename": "グループ名を変更",
     "renameSuccess": "名前の変更が成功しました",
+    "sortSuccess": "並び替えに成功しました",
+    "sorting": "グループの並び替えを更新中...",
     "tooLong": "グループ名は1〜20文字で入力してください"
   },
   "shareModal": {
@@ -71,6 +111,7 @@
     "chats": "チャットメッセージ",
     "rest": "残り利用可能",
     "systemRole": "システムロール設定",
+    "title": "コンテキストの詳細",
     "tools": "ツール設定",
     "total": "合計利用可能",
     "used": "合計使用"
@@ -86,10 +127,14 @@
       "duplicate": "コピーを作成",
       "export": "トピックをエクスポート"
     },
+    "checkOpenNewTopic": "新しいトピックを開始しますか？",
+    "checkSaveCurrentMessages": "現在の会話をトピックとして保存しますか？",
     "confirmRemoveAll": "すべてのトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveTopic": "このトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "confirmRemoveUnstarred": "スターをつけていないトピックを削除します。削除した後は元に戻すことはできません。注意して操作してください。",
     "defaultTitle": "デフォルトトピック",
+    "duplicateLoading": "トピックを複製中...",
+    "duplicateSuccess": "トピックの複製に成功しました",
     "guide": {
       "desc": "左側のボタンをクリックして、現在の会話を保存し、新しい会話を開始できます",
       "title": "トピックリスト"
@@ -111,9 +156,24 @@
   },
   "updateAgent": "エージェント情報を更新",
   "upload": {
-    "actionTooltip": "画像をアップロード",
-    "disabled": "現在のモデルはビジュアル認識をサポートしていません。モデルを切り替えて使用してください",
-    "dragDesc": "ファイルをここにドラッグしてください。複数の画像をアップロードできます。Shift キーを押しながら画像を直接送信することもできます。",
-    "dragTitle": "画像をアップロード"
+    "action": {
+      "fileUpload": "ファイルをアップロード",
+      "folderUpload": "フォルダをアップロード",
+      "imageDisabled": "現在のモデルは視覚認識をサポートしていません。モデルを切り替えてから使用してください。",
+      "imageUpload": "画像をアップロード",
+      "tooltip": "アップロード"
+    },
+    "clientMode": {
+      "actionFiletip": "ファイルをアップロード",
+      "actionTooltip": "アップロード",
+      "disabled": "現在のモデルは視覚認識とファイル分析をサポートしていません。モデルを切り替えてから使用してください。"
+    },
+    "preview": {
+      "prepareTasks": "ブロックの準備中...",
+      "status": {
+        "pending": "アップロードの準備中...",
+        "processing": "ファイル処理中..."
+      }
+    }
   }
 }

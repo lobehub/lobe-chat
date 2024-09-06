@@ -12,13 +12,19 @@ beforeEach(() => {
 });
 vi.mock('@/services/plugin', () => ({
   pluginService: {
-    getPluginManifest: vi.fn(),
     updatePlugin: vi.fn(),
     createCustomPlugin: vi.fn(),
     uninstallPlugin: vi.fn(),
     updatePluginManifest: vi.fn(),
   },
 }));
+
+vi.mock('@/services/tool', () => ({
+  toolService: {
+    getPluginManifest: vi.fn(),
+  },
+}));
+
 describe('useToolStore:customPlugin', () => {
   describe('deleteCustomPlugin', () => {
     it('should delete custom plugin and related settings', async () => {

@@ -1,21 +1,18 @@
 import OpenAI from 'openai';
 
-import { checkAuth } from '@/app/api/auth';
-import { getServerConfig } from '@/config/server';
 import { getOpenAIAuthFromRequest } from '@/const/fetch';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
 
 import { createErrorResponse } from '../../errorResponse';
-import { createAzureOpenai } from './createAzureOpenai';
+import { checkAuth } from './auth';
 import { createOpenai } from './createOpenai';
 
 /**
  * createOpenAI Instance with Auth and azure openai support
  * if auth not pass ,just return error response
  */
-export const createBizOpenAI = (req: Request, model: string): Response | OpenAI => {
-  const { apiKey, accessCode, endpoint, useAzure, apiVersion, oauthAuthorized } =
-    getOpenAIAuthFromRequest(req);
+export const createBizOpenAI = (req: Request): Response | OpenAI => {
+  const { apiKey, accessCode, endpoint, oauthAuthorized } = getOpenAIAuthFromRequest(req);
 
   const result = checkAuth({ accessCode, apiKey, oauthAuthorized });
 
@@ -25,15 +22,8 @@ export const createBizOpenAI = (req: Request, model: string): Response | OpenAI 
 
   let openai: OpenAI;
 
-  const { USE_AZURE_OPENAI } = getServerConfig();
-  const useAzureOpenAI = useAzure || USE_AZURE_OPENAI;
-
   try {
-    if (useAzureOpenAI) {
-      openai = createAzureOpenai({ apiVersion, endpoint, model, userApiKey: apiKey });
-    } else {
-      openai = createOpenai(apiKey, endpoint);
-    }
+    openai = createOpenai(apiKey, endpoint);
   } catch (error) {
     if ((error as Error).cause === ChatErrorType.NoOpenAIAPIKey) {
       return createErrorResponse(ChatErrorType.NoOpenAIAPIKey);

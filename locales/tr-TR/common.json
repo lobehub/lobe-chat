@@ -1,33 +1,39 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Özel model, varsayılan olarak hem fonksiyon çağrısını hem de görüntü tanımayı destekler, lütfen yukarıdaki yeteneklerin kullanılabilirliğini doğrulayın",
-      "file": "Bu model dosya yükleme ve tanıma desteği sağlar",
-      "functionCall": "Bu model fonksiyon çağrısını destekler (Function Call)",
-      "tokens": "Bu model, tek bir oturumda en fazla {{tokens}} Token'ı destekler",
-      "vision": "Bu model görüntü tanımı destekler"
-    }
-  },
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
-  "agentMaxToken": "Maksimum Oturum Süresi",
-  "agentModel": "Model",
-  "agentProfile": "Asistan Profili",
-  "appInitializing": "LobeChat başlatılıyor, lütfen bekleyin...",
-  "archive": "Arşiv",
+  "alert": {
+    "cloud": {
+      "action": "Ücretsiz Deneyin",
+      "desc": "Tüm kayıtlı kullanıcılarımıza {{credit}} ücretsiz hesaplama puanı sunuyoruz, karmaşık yapılandırmaya gerek yok, hemen kullanıma hazır, sınırsız konuşma geçmişi ve global bulut senkronizasyonu desteği, daha fazla gelişmiş özellikleri keşfetmeye hazır olun.",
+      "descOnMobile": "Tüm kayıtlı kullanıcılara {{credit}} ücretsiz hesaplama puanı sunuyoruz, karmaşık yapılandırmaya gerek yok, hemen kullanıma hazır.",
+      "title": "{{name}}'i Denemek İçin Hoş Geldiniz"
+    }
+  },
+  "appInitializing": "Uygulama başlatılıyor, lütfen bekleyin...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
+  "back": "Geri",
+  "batchDelete": "Toplu Sil",
+  "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
   "close": "Kapat",
-  "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
+  "contact": "Bize Ulaşın",
   "copy": "Kopyala",
   "copyFail": "Kopyalama başarısız oldu",
   "copySuccess": "Kopyalama Başarılı",
+  "dataStatistics": {
+    "messages": "Mesajlar",
+    "sessions": "Oturumlar",
+    "today": "Bugün",
+    "topics": "Konular"
+  },
   "defaultAgent": "Varsayılan Asistan",
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
   "document": "Belge",
+  "download": "İndir",
   "duplicate": "Kopya oluştur",
   "edit": "Düzenle",
   "export": "Dışa Aktar",
@@ -40,9 +46,34 @@
     "globalSetting": "Ayarları Dışa Aktar"
   },
   "feedback": "Feedback",
+  "follow": "Bizi {{name}} üzerinde takip edin",
+  "footer": {
+    "action": {
+      "feedback": "Geri Bildirimde Bulun",
+      "star": "GitHub'da Yıldız Ekleyin"
+    },
+    "and": "ve",
+    "feedback": {
+      "action": "Geri Bildirim Paylaş",
+      "desc": "Her fikir ve öneriniz bizim için değerlidir, görüşlerinizi duymak için sabırsızlanıyoruz! LobeChat'in ürün özellikleri ve kullanıcı deneyimi hakkında geri bildirim sağlayarak bize yardımcı olun ve platformumuzu daha da geliştirmemize katkıda bulunun.",
+      "title": "GitHub'da Değerli Geri Bildiriminizi Paylaşın"
+    },
+    "later": "Daha Sonra",
+    "star": {
+      "action": "Yıldız Ekleyin",
+      "desc": "Ürünümüzü beğendiyseniz ve bizi desteklemek istiyorsanız, GitHub'da bize bir yıldız verebilir misiniz? Bu küçük jest bizim için büyük anlam taşır ve sizin için özellikler sunmamızı teşvik eder.",
+      "title": "GitHub'da Bize Yıldız Ekleyin"
+    },
+    "title": "Ürünümüzü Beğendiniz mi?"
+  },
+  "fullscreen": "Tam Ekran Modu",
   "historyRange": "Geçmiş Aralığı",
   "import": "İçe Aktar",
   "importModal": {
+    "error": {
+      "desc": "Üzgünüz, veri aktarımı sırasında bir hata oluştu. Lütfen tekrar deneyin veya <1>bir sorun bildirin</1>, sorunu çözmek için elimizden geleni yapacağız.",
+      "title": "Veri Aktarımı Başarısız"
+    },
     "finish": {
       "onlySettings": "Sistem ayarları başarıyla içe aktarıldı",
       "start": "Başla",
@@ -50,6 +81,7 @@
       "title": "Veri başarıyla aktarıldı"
     },
     "loading": "Veri aktarılıyor, lütfen bekleyin...",
+    "preparing": "Veri aktarımı modülü hazırlanıyor...",
     "result": {
       "added": "Başarıyla içe aktarıldı",
       "errors": "İçe Aktarma Hataları",
@@ -60,10 +92,18 @@
       "topics": "Konular",
       "type": "Tip"
     },
-    "title": "Veri İçe Aktar"
+    "title": "Veri İçe Aktar",
+    "uploading": {
+      "desc": "Dosya şu anda büyük olduğundan, yüklenmeye çalışılıyor...",
+      "restTime": "Kalan Zaman",
+      "speed": "Yükleme Hızı"
+    }
   },
+  "information": "Topluluk ve Bilgi",
+  "installPWA": "Tarayıcı Uygulamasını Yükle",
   "lang": {
     "ar": "Arapça",
+    "bg-BG": "Bulgarca",
     "bn": "Bengalce",
     "cs-CZ": "Çekçe",
     "da-DK": "Danca",
@@ -99,22 +139,19 @@
     "zh-TW": "Geleneksel Çince"
   },
   "layoutInitializing": "Başlatılıyor...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
+  "legal": "Hukuki Bildirim",
+  "loading": "Yükleniyor...",
+  "mail": {
+    "business": "İşbirliği",
+    "support": "E-posta Desteği"
   },
-  "noDescription": "Açıklama yok",
   "oauth": "SSO Girişi",
+  "officialSite": "Resmi Site",
   "ok": "Tamam",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Gizlilik Politikası",
   "regenerate": "Tekrarla",
   "rename": "Yeniden İsimlendir",
   "reset": "Reset",
@@ -123,16 +160,78 @@
   "setting": "Ayarlar",
   "share": "Paylaş",
   "stop": "Dur",
+  "sync": {
+    "actions": {
+      "settings": "Senkronizasyon Ayarları",
+      "sync": "Hemen Senkronize Et"
+    },
+    "awareness": {
+      "current": "Mevcut Cihaz"
+    },
+    "channel": "Kanal",
+    "disabled": {
+      "actions": {
+        "enable": "Bulut Senkronizasyonunu Etkinleştir",
+        "settings": "Senkronizasyon Ayarlarını Yapılandır"
+      },
+      "desc": "Mevcut oturum verileri sadece bu tarayıcıda depolanır. Verilerinizi birden fazla cihaz arasında senkronize etmeniz gerekiyorsa bulut senkronizasyonunu yapılandırın ve etkinleştirin.",
+      "title": "Veri Senkronizasyonu Devre Dışı"
+    },
+    "enabled": {
+      "title": "Veri Senkronizasyonu"
+    },
+    "status": {
+      "connecting": "Bağlanılıyor",
+      "disabled": "Senkronizasyon Devre Dışı",
+      "ready": "Bağlandı",
+      "synced": "Senkronize Edildi",
+      "syncing": "Senkronize Ediliyor",
+      "unconnected": "Bağlantı Başarısız"
+    },
+    "title": "Senkronizasyon Durumu",
+    "unconnected": {
+      "tip": "Sinyal sunucusuna bağlantı başarısız oldu, noktadan noktaya iletişim kanalı kurulamayabilir, lütfen ağı kontrol edip tekrar deneyin"
+    }
+  },
   "tab": {
     "chat": "Chat",
+    "files": "Dosyalar",
     "market": "Keşfet",
+    "me": "ben",
     "setting": "Ayarlar"
   },
+  "telemetry": {
+    "allow": "İzin ver",
+    "deny": "Reddet",
+    "desc": "Anonim kullanım bilgilerinizi toplamamıza izin vererek LobeChat'i geliştirmemize ve size daha iyi bir ürün deneyimi sunmamıza yardımcı olabilirsiniz. Dilediğiniz zaman 'Ayarlar' - 'Hakkında' bölümünden devre dışı bırakabilirsiniz.",
+    "learnMore": "Daha Fazla Bilgi",
+    "title": "LobeChat'i Geliştirmemize Yardımcı Olun"
+  },
   "temp": "Geçici",
+  "terms": "Hizmet Koşulları",
   "updateAgent": "Asistan Bilgilerini Güncelle",
   "upgradeVersion": {
     "action": "Güncelle",
     "hasNew": "Yeni güncelleme mevcut",
     "newVersion": "Yeni sürüm mevcut: {{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonim Kullanıcı",
+    "billing": "Fatura Yönetimi",
+    "cloud": "{{name}}'i Deneyin",
+    "data": "Veri Depolama",
+    "defaultNickname": "Topluluk Kullanıcısı",
+    "discord": "Topluluk Destek",
+    "docs": "Belgeler",
+    "email": "E-posta Destek",
+    "feedback": "Geribildirim ve Öneriler",
+    "help": "Yardım Merkezi",
+    "moveGuide": "Ayarlar düğmesini buraya taşıyın",
+    "plans": "Planlar",
+    "preview": "Önizleme",
+    "profile": "Hesap Yönetimi",
+    "setting": "Uygulama Ayarları",
+    "usages": "Kullanım İstatistikleri"
+  },
+  "version": "Sürüm"
 }

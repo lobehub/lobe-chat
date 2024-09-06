@@ -10,12 +10,9 @@ export const readJSON = (filePath: string) => {
   return JSON.parse(data);
 };
 
-export const replaceAssistantToAgent = (text: string) =>
-  text.replaceAll('assistant', 'agent').replaceAll('Assistant', 'Agent');
-
 export const writeJSON = (filePath: string, data: any) => {
   const jsonStr = JSON.stringify(data, null, 2);
-  writeFileSync(filePath, replaceAssistantToAgent(jsonStr), 'utf8');
+  writeFileSync(filePath, jsonStr, 'utf8');
 };
 
 export const genResourcesContent = (locales: string[]) => {

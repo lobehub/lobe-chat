@@ -1,0 +1,84 @@
+{
+  "DragUpload": {
+    "dragDesc": "Przeciągnij pliki tutaj, aby przesłać wiele obrazów.",
+    "dragFileDesc": "Przeciągnij obrazy i pliki tutaj, aby przesłać wiele obrazów i plików.",
+    "dragFileTitle": "Prześlij plik",
+    "dragTitle": "Prześlij obraz"
+  },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Dodaj do bazy wiedzy",
+      "addToOtherKnowledgeBase": "Dodaj do innej bazy wiedzy",
+      "batchChunking": "Partycjonowanie wsadowe",
+      "chunking": "Partycjonowanie",
+      "chunkingTooltip": "Podziel plik na wiele bloków tekstowych i wektoryzuj, aby umożliwić wyszukiwanie semantyczne i rozmowy o plikach",
+      "confirmDelete": "Zaraz usuniesz ten plik. Po usunięciu nie będzie można go odzyskać, proszę potwierdź swoje działanie",
+      "confirmDeleteMultiFiles": "Zaraz usuniesz wybrane {{count}} plików. Po usunięciu nie będzie można ich odzyskać, proszę potwierdź swoje działanie",
+      "confirmRemoveFromKnowledgeBase": "Zaraz usuniesz wybrane {{count}} plików z bazy wiedzy. Po usunięciu pliki będą nadal widoczne wśród wszystkich plików, proszę potwierdź swoje działanie",
+      "copyUrl": "Kopiuj link",
+      "copyUrlSuccess": "Adres pliku skopiowany pomyślnie",
+      "createChunkingTask": "Przygotowywanie...",
+      "deleteSuccess": "Plik usunięty pomyślnie",
+      "downloading": "Pobieranie pliku...",
+      "removeFromKnowledgeBase": "Usuń z bazy wiedzy",
+      "removeFromKnowledgeBaseSuccess": "Plik usunięty pomyślnie"
+    },
+    "bottom": "To już wszystko",
+    "config": {
+      "showFilesInKnowledgeBase": "Pokaż zawartość w bazie wiedzy"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Prześlij plik",
+        "folder": "Prześlij folder",
+        "knowledgeBase": "Utwórz nową bazę wiedzy"
+      },
+      "or": "lub",
+      "title": "Przeciągnij plik lub folder tutaj"
+    },
+    "title": {
+      "createdAt": "Data utworzenia",
+      "size": "Rozmiar",
+      "title": "Plik"
+    },
+    "total": {
+      "fileCount": "Łącznie {{count}} pozycji",
+      "selectedCount": "Wybrano {{count}} pozycji"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Bloki tekstowe nie zostały w pełni wektoryzowane, co spowoduje, że funkcja wyszukiwania semantycznego będzie niedostępna. Aby poprawić jakość wyszukiwania, proszę wektoryzować bloki tekstowe",
+        "error": "Błąd wektoryzacji",
+        "errorResult": "Błąd wektoryzacji, spróbuj ponownie po sprawdzeniu. Powód błędu:",
+        "processing": "Bloki tekstowe są wektoryzowane, proszę czekać",
+        "success": "Obecne bloki tekstowe zostały w pełni wektoryzowane"
+      },
+      "embeddings": "Wektoryzacja",
+      "status": {
+        "error": "Partycjonowanie nie powiodło się",
+        "errorResult": "Partycjonowanie nie powiodło się, proszę sprawdzić i spróbować ponownie. Powód niepowodzenia:",
+        "processing": "Partycjonowanie w toku",
+        "processingTip": "Serwer jest w trakcie dzielenia bloków tekstowych, zamknięcie strony nie wpłynie na postęp partycjonowania"
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Wróć"
+  },
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Niestandardowy model, domyślnie obsługujący zarówno wywołania funkcji, jak i rozpoznawanie wizualne. Proszę zweryfikować możliwość użycia tych funkcji w praktyce.",
+      "file": "Ten model obsługuje wczytywanie plików i rozpoznawanie",
+      "functionCall": "Ten model obsługuje wywołania funkcji (Function Call).",
+      "tokens": "Ten model obsługuje maksymalnie {{tokens}} tokenów w pojedynczej sesji.",
+      "vision": "Ten model obsługuje rozpoznawanie wizualne."
+    },
+    "removed": "Ten model nie znajduje się na liście, jeśli zostanie odznaczony, zostanie automatycznie usunięty"
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "Brak włączonych modeli, przejdź do ustawień i włącz je",
+    "provider": "Dostawca"
+  }
+}

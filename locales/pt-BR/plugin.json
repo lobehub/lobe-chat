@@ -4,7 +4,9 @@
     "function_call": "Chamada de Função",
     "off": "Desativar Depuração",
     "on": "Ver Informações de Chamada de Plugin",
-    "response": "Resposta"
+    "payload": "carga do plugin",
+    "response": "Resposta",
+    "tool_call": "solicitação de chamada de ferramenta"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Executando o plugin..."
   },
   "pluginList": "Lista de Plugins",
-  "plugins": {
-    "loading": "Verificando plugins...",
-    "unknown": "Plugin desconhecido"
-  },
   "setting": "Configuração do Plugin",
   "settings": {
     "indexUrl": {
@@ -141,6 +139,7 @@
     "modalDesc": "Após configurar o endereço do mercado de plugins, você poderá usar um mercado personalizado de plugins.",
     "title": "Configurações do Mercado de Plugins"
   },
+  "showInPortal": "Por favor, veja os detalhes na área de trabalho",
   "store": {
     "actions": {
       "confirmUninstall": "Você está prestes a desinstalar este plugin. A desinstalação irá limpar a configuração do plugin. Confirme a operação.",
@@ -162,5 +161,6 @@
       "installed": "Instalados"
     },
     "title": "Loja de Plugins"
-  }
+  },
+  "unknownPlugin": "Plugin desconhecido"
 }

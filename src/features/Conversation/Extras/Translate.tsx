@@ -1,19 +1,14 @@
 import { ActionIcon, Icon, Markdown, Tag, copyToClipboard } from '@lobehub/ui';
 import { App } from 'antd';
-import { createStyles } from 'antd-style';
+import { useTheme } from 'antd-style';
 import { ChevronDown, ChevronUp, ChevronsRight, CopyIcon, TrashIcon } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import BubblesLoading from '@/components/BubblesLoading';
 import { useChatStore } from '@/store/chat';
 import { ChatTranslate } from '@/types/message';
-
-import BubblesLoading from '../components/BubblesLoading';
-
-const useStyles = createStyles(({ stylish }) => ({
-  markdown: stylish.markdownInChat,
-}));
 
 interface TranslateProps extends ChatTranslate {
   id: string;
@@ -21,7 +16,7 @@ interface TranslateProps extends ChatTranslate {
 }
 
 const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading }) => {
-  const { theme, styles } = useStyles();
+  const theme = useTheme();
   const { t } = useTranslation('common');
   const [show, setShow] = useState(true);
   const clearTranslate = useChatStore((s) => s.clearTranslate);
@@ -67,7 +62,7 @@ const Translate = memo<TranslateProps>(({ content = '', from, to, id, loading })
       {!show ? null : loading && !content ? (
         <BubblesLoading />
       ) : (
-        <Markdown className={styles.markdown}>{content}</Markdown>
+        <Markdown variant={'chat'}>{content}</Markdown>
       )}
     </Flexbox>
   );

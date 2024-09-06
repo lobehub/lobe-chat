@@ -4,7 +4,9 @@
     "function_call": "함수 호출",
     "off": "디버그 끄기",
     "on": "플러그인 호출 정보 보기",
-    "response": "응답"
+    "payload": "페이로드",
+    "response": "응답",
+    "tool_call": "도구 호출"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "플러그인 실행 중..."
   },
   "pluginList": "플러그인 목록",
-  "plugins": {
-    "loading": "플러그인을 확인하는 중...",
-    "unknown": "알 수 없는 플러그인"
-  },
   "setting": "플러그인 설정",
   "settings": {
     "indexUrl": {
@@ -141,6 +139,7 @@
     "modalDesc": "플러그인 마켓의 주소를 구성하면 사용자 정의 플러그인 마켓을 사용할 수 있습니다.",
     "title": "플러그인 마켓 설정"
   },
+  "showInPortal": "작업 영역에서 자세히 확인하세요",
   "store": {
     "actions": {
       "confirmUninstall": "이 플러그인을 제거하려고 합니다. 제거하면 플러그인 구성이 지워지므로 작업을 확인하세요.",
@@ -162,5 +161,6 @@
       "installed": "설치됨"
     },
     "title": "플러그인 스토어"
-  }
+  },
+  "unknownPlugin": "알 수 없는 플러그인"
 }

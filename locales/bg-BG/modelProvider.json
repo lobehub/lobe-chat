@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Версия на Azure API, в формат YYYY-MM-DD, вижте [най-новата версия](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Извличане на списък",
+      "title": "Версия на Azure API"
+    },
+    "empty": "Моля, въведете идентификатор на модела, за да добавите първия модел",
+    "endpoint": {
+      "desc": "Тази стойност може да бъде намерена в раздела „Ключове и крайни точки“ при проверка на ресурсите от портала на Azure",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Адрес на Azure API"
+    },
+    "modelListPlaceholder": "Изберете или добавете моделите на OpenAI, които сте разгърнали",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Тази стойност може да бъде намерена в раздела „Ключове и крайни точки“ при проверка на ресурсите от портала на Azure. Можете да използвате KEY1 или KEY2",
+      "placeholder": "Azure API Key",
+      "title": "API ключ"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Въведете AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Тестване дали AccessKeyId / SecretAccessKey са попълнени правилно"
+    },
+    "region": {
+      "desc": "Въведете AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Въведете AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Персонализиран регион за услуги",
+      "description": "Въведете вашия AWS AccessKeyId / SecretAccessKey, за да започнете сесия. Приложението няма да запази вашата удостоверителна конфигурация",
+      "title": "Използване на персонализирана информация за удостоверяване на Bedrock"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Тестване дали адресът на прокси е попълнен правилно",
+      "title": "Проверка на свързаност"
+    },
+    "customModelName": {
+      "desc": "Добавяне на персонализирани модели, използвайте запетая (,) за разделяне на множество модели",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Имена на персонализирани модели"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
+    },
+    "endpoint": {
+      "desc": "Въведете адрес на Ollama интерфейсния прокси, оставете празно, ако локално не е указано специално",
+      "title": "Адрес на прокси интерфейс"
+    },
+    "setup": {
+      "cors": {
+        "description": "Заради ограниченията за сигурност в браузъра, трябва да конфигурирате кросдомейн за Ollama, за да работи правилно.",
+        "linux": {
+          "env": "Добавете `Environment` в раздела [Service], като добавите променливата на средата OLLAMA_ORIGINS:",
+          "reboot": "Презаредете systemd и рестартирайте Ollama",
+          "systemd": "Извикайте systemd за редактиране на услугата ollama:"
+        },
+        "macos": "Моля, отворете приложението „Терминал“ и поставете следната команда, след което натиснете Enter",
+        "reboot": "Моля, рестартирайте услугата Ollama след приключване на изпълнението",
+        "title": "Конфигуриране на Ollama за позволяване на кросдомейн достъп",
+        "windows": "На Windows кликнете върху „Контролен панел“, влезте в редактиране на системните променливи. Създайте нова променлива на средата с име „OLLAMA_ORIGINS“, стойност * и кликнете „ОК/Приложи“, за да запазите промените"
+      },
+      "install": {
+        "description": "Моля, потвърдете, че сте активирали Ollama. Ако не сте го изтеглили, моля посетете <1>официалния сайт</1> на Ollama.",
+        "docker": "Ако предпочитате да използвате Docker, Ollama предлага официален Docker образ, който можете да изтеглите с помощта на следната команда:",
+        "linux": {
+          "command": "Инсталирайте чрез следната команда:",
+          "manual": "Или може да се обадите на <1>Ръководство за ръчна инсталация на Linux</1> и да инсталирате ръчно"
+        },
+        "title": "Инсталиране и стартиране на приложението Ollama локално",
+        "windowsTab": "Windows (преглед)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Зероуан Всичко"
+  },
+  "zhipu": {
+    "title": "Интелигентен албум"
+  }
+}

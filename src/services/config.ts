@@ -1,15 +1,13 @@
+import { importService } from '@/services/import';
 import { messageService } from '@/services/message';
 import { sessionService } from '@/services/session';
 import { topicService } from '@/services/topic';
-import { useGlobalStore } from '@/store/global';
-import { settingsSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { settingsSelectors } from '@/store/user/selectors';
 import { ConfigFile } from '@/types/exportConfig';
-import { ChatMessage } from '@/types/message';
-import { LobeSessions, SessionGroupItem } from '@/types/session';
-import { GlobalSettings } from '@/types/settings';
-import { ChatTopic } from '@/types/topic';
+import { ImportStage, OnImportCallbacks } from '@/types/importer';
 import { createConfigFile, exportConfigFile } from '@/utils/config';
 
 export interface ImportResult {
@@ -20,92 +18,42 @@ export interface ImportResult {
 export interface ImportResults {
   messages?: ImportResult;
   sessionGroups?: ImportResult;
-  sessions: ImportResult;
+  sessions?: ImportResult;
   topics?: ImportResult;
+  type?: string;
 }
 
 class ConfigService {
-  /**
-   * import sessions from files
-   * @param sessions
-   */
-  importSessions = async (sessions: LobeSessions) => {
-    return await sessionService.batchCreateSessions(sessions);
-  };
-  importMessages = async (messages: ChatMessage[]) => {
-    return messageService.batchCreate(messages);
-  };
-  importSettings = async (settings: GlobalSettings) => {
-    useGlobalStore.getState().importAppSettings(settings);
-  };
-  importTopics = async (topics: ChatTopic[]) => {
-    return topicService.batchCreateTopics(topics);
-  };
-  importSessionGroups = async (sessionGroups: SessionGroupItem[]) => {
-    return sessionService.batchCreateSessionGroups(sessionGroups);
-  };
-
-  importConfigState = async (config: ConfigFile): Promise<ImportResults | undefined> => {
-    switch (config.exportType) {
-      case 'settings': {
-        await this.importSettings(config.state.settings);
-
-        break;
-      }
-
-      case 'agents': {
-        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
-
-        const data = await this.importSessions(config.state.sessions);
-        return {
-          sessionGroups: this.mapImportResult(sessionGroups),
-          sessions: this.mapImportResult(data),
-        };
-      }
-
-      case 'all': {
-        await this.importSettings(config.state.settings);
-
-        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
-
-        const [sessions, messages, topics] = await Promise.all([
-          this.importSessions(config.state.sessions),
-          this.importMessages(config.state.messages),
-          this.importTopics(config.state.topics),
-        ]);
-
-        return {
-          messages: this.mapImportResult(messages),
-          sessionGroups: this.mapImportResult(sessionGroups),
-          sessions: this.mapImportResult(sessions),
-          topics: this.mapImportResult(topics),
-        };
-      }
-
-      case 'sessions': {
-        const sessionGroups = await this.importSessionGroups(config.state.sessionGroups);
-
-        const [sessions, messages, topics] = await Promise.all([
-          this.importSessions(config.state.sessions),
-          this.importMessages(config.state.messages),
-          this.importTopics(config.state.topics),
-        ]);
-
-        return {
-          messages: this.mapImportResult(messages),
-          sessionGroups: this.mapImportResult(sessionGroups),
-          sessions: this.mapImportResult(sessions),
-          topics: this.mapImportResult(topics),
-        };
-      }
+  importConfigState = async (config: ConfigFile, callbacks?: OnImportCallbacks): Promise<void> => {
+    if (config.exportType === 'settings') {
+      await importService.importSettings(config.state.settings);
+      callbacks?.onStageChange?.(ImportStage.Success);
+      return;
     }
+
+    if (config.exportType === 'all') {
+      await importService.importSettings(config.state.settings);
+    }
+
+    await importService.importData(
+      {
+        messages: (config.state as any).messages || [],
+        sessionGroups: (config.state as any).sessionGroups || [],
+        sessions: (config.state as any).sessions || [],
+        topics: (config.state as any).topics || [],
+        version: config.version,
+      },
+      callbacks,
+    );
   };
+
+  // TODO: Separate export feature into a new service like importService
 
   /**
    * export all agents
    */
   exportAgents = async () => {
-    const agents = await sessionService.getAllAgents();
+    const agents = await sessionService.getSessionsByType('agent');
     const sessionGroups = await sessionService.getSessionGroups();
 
     const config = createConfigFile('agents', { sessionGroups, sessions: agents });
@@ -117,7 +65,7 @@ class ConfigService {
    * export all sessions
    */
   exportSessions = async () => {
-    const sessions = await sessionService.getSessions();
+    const sessions = await sessionService.getSessionsByType();
     const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
@@ -188,7 +136,7 @@ class ConfigService {
    * export all data
    */
   exportAll = async () => {
-    const sessions = await sessionService.getSessions();
+    const sessions = await sessionService.getSessionsByType();
     const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();
@@ -199,25 +147,13 @@ class ConfigService {
     exportConfigFile(config, 'config');
   };
 
-  private getSettings = () => settingsSelectors.exportSettings(useGlobalStore.getState());
+  private getSettings = () => settingsSelectors.exportSettings(useUserStore.getState());
 
   private getSession = (id: string) =>
     sessionSelectors.getSessionById(id)(useSessionStore.getState());
 
   private getAgent = (id: string) =>
     sessionSelectors.getSessionById(id)(useSessionStore.getState());
-
-  private mapImportResult = (input: {
-    added: number;
-    errors?: Error[];
-    skips: string[];
-  }): ImportResult => {
-    return {
-      added: input.added,
-      errors: input.errors?.length || 0,
-      skips: input.skips.length,
-    };
-  };
 }
 
 export const configService = new ConfigService();

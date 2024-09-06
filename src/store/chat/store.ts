@@ -1,15 +1,17 @@
-import { devtools, subscribeWithSelector } from 'zustand/middleware';
+// sort-imports-ignore
+import { subscribeWithSelector } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { isDev } from '@/utils/env';
-
+import { createDevtools } from '../middleware/createDevtools';
 import { ChatStoreState, initialState } from './initialState';
+import { ChatBuiltinToolAction, chatToolSlice } from './slices/builtinTool/action';
+import { ChatPortalAction, chatPortalSlice } from './slices/portal/action';
 import { ChatEnhanceAction, chatEnhance } from './slices/enchance/action';
 import { ChatMessageAction, chatMessage } from './slices/message/action';
+import { ChatPluginAction, chatPlugin } from './slices/plugin/action';
 import { ShareAction, chatShare } from './slices/share/action';
-import { ChatPluginAction, chatPlugin } from './slices/tool/action';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
 
 export interface ChatStoreAction
@@ -17,7 +19,9 @@ export interface ChatStoreAction
     ChatTopicAction,
     ShareAction,
     ChatEnhanceAction,
-    ChatPluginAction {}
+    ChatPluginAction,
+    ChatBuiltinToolAction,
+    ChatPortalAction {}
 
 export type ChatStore = ChatStoreAction & ChatStoreState;
 
@@ -30,16 +34,17 @@ const createStore: StateCreator<ChatStore, [['zustand/devtools', never]]> = (...
   ...chatTopic(...params),
   ...chatShare(...params),
   ...chatEnhance(...params),
+  ...chatToolSlice(...params),
   ...chatPlugin(...params),
+  ...chatPortalSlice(...params),
+
+  // cloud
 });
 
 //  ===============  实装 useStore ============ //
+const devtools = createDevtools('chat');
 
 export const useChatStore = createWithEqualityFn<ChatStore>()(
-  subscribeWithSelector(
-    devtools(createStore, {
-      name: 'LobeChat_Chat' + (isDev ? '_DEV' : ''),
-    }),
-  ),
+  subscribeWithSelector(devtools(createStore)),
   shallow,
 );

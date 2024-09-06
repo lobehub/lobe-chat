@@ -1,34 +1,15 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { uniqBy } from 'lodash-es';
-import { Md5 } from 'ts-md5';
 
-import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/plugin';
 import { MetaData } from '@/types/meta';
 import { ChatCompletionTool } from '@/types/openai/chat';
 import { LobeToolMeta } from '@/types/tool/tool';
+import { genToolCallingName } from '@/utils/toolCall';
 
 import { pluginHelpers } from '../helpers';
 import { ToolStoreState } from '../initialState';
 import { builtinToolSelectors } from '../slices/builtin/selectors';
 import { pluginSelectors } from '../slices/plugin/selectors';
-
-const getAPIName = (identifier: string, name: string, type?: string) => {
-  const pluginType = type && type !== 'default' ? `${PLUGIN_SCHEMA_SEPARATOR + type}` : '';
-
-  // 将插件的 identifier 作为前缀，避免重复
-  let apiName = identifier + PLUGIN_SCHEMA_SEPARATOR + name + pluginType;
-
-  // OpenAI GPT function_call name can't be longer than 64 characters
-  // So we need to use md5 to shorten the name
-  // and then find the correct apiName in response by md5
-  if (apiName.length >= 64) {
-    const md5Content = PLUGIN_SCHEMA_API_MD5_PREFIX + Md5.hashStr(name).toString();
-
-    apiName = identifier + PLUGIN_SCHEMA_SEPARATOR + md5Content + pluginType;
-  }
-
-  return apiName;
-};
 
 const enabledSchema =
   (tools: string[] = []) =>
@@ -40,8 +21,9 @@ const enabledSchema =
       .filter((m) => tools.includes(m?.identifier))
       .flatMap((manifest) =>
         manifest.api.map((m) => ({
-          ...m,
-          name: getAPIName(manifest.identifier, m.name, manifest.type),
+          description: m.description,
+          name: genToolCallingName(manifest.identifier, m.name, manifest.type),
+          parameters: m.parameters,
         })),
       );
 
@@ -66,9 +48,10 @@ const enabledSystemRoles =
 
         const methods = manifest.api
           .map((m) =>
-            [`#### ${getAPIName(manifest.identifier, m.name, manifest.type)}`, m.description].join(
-              '\n\n',
-            ),
+            [
+              `#### ${genToolCallingName(manifest.identifier, m.name, manifest.type)}`,
+              m.description,
+            ].join('\n\n'),
           )
           .join('\n\n');
 
@@ -85,16 +68,18 @@ const enabledSystemRoles =
     return '';
   };
 
-const metaList = (s: ToolStoreState): LobeToolMeta[] => {
-  const pluginList = pluginSelectors.installedPluginMetaList(s) as LobeToolMeta[];
+const metaList =
+  (showDalle?: boolean) =>
+  (s: ToolStoreState): LobeToolMeta[] => {
+    const pluginList = pluginSelectors.installedPluginMetaList(s) as LobeToolMeta[];
 
-  return builtinToolSelectors.metaList(s).concat(pluginList);
-};
+    return builtinToolSelectors.metaList(showDalle)(s).concat(pluginList);
+  };
 
 const getMetaById =
-  (id: string) =>
+  (id: string, showDalle: boolean = true) =>
   (s: ToolStoreState): MetaData | undefined =>
-    metaList(s).find((m) => m.identifier === id)?.meta;
+    metaList(showDalle)(s).find((m) => m.identifier === id)?.meta;
 
 const getManifestById =
   (id: string) =>
@@ -115,11 +100,24 @@ const getManifestLoadingStatus = (id: string) => (s: ToolStoreState) => {
   if (!!manifest) return 'success';
 };
 
+const isToolHasUI = (id: string) => (s: ToolStoreState) => {
+  const manifest = getManifestById(id)(s);
+  if (!manifest) return false;
+  const builtinTool = s.builtinTools.find((tool) => tool.identifier === id);
+
+  if (builtinTool && builtinTool.type === 'builtin') {
+    return true;
+  }
+
+  return !!manifest.ui;
+};
+
 export const toolSelectors = {
   enabledSchema,
   enabledSystemRoles,
   getManifestById,
   getManifestLoadingStatus,
   getMetaById,
+  isToolHasUI,
   metaList,
 };

@@ -3,10 +3,12 @@ import { describe, expect, it } from 'vitest';
 
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
-import { useGlobalStore } from '@/store/global';
-import { useSessionStore } from '@/store/session';
+import { messageMapKey } from '@/store/chat/slices/message/utils';
+import { createServerConfigStore } from '@/store/serverConfig/store';
+import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -33,12 +35,16 @@ const mockMessages = [
   {
     id: 'msg3',
     content: 'Function Message',
-    role: 'function',
-    plugin: {
-      arguments: ['arg1', 'arg2'],
-      identifier: 'func1',
-      type: 'pluginType',
-    },
+    role: 'tool',
+    tools: [
+      {
+        arguments: ['arg1', 'arg2'],
+        identifier: 'func1',
+        apiName: 'ttt',
+        type: 'pluginType',
+        id: 'abc',
+      },
+    ],
   },
 ] as ChatMessage[];
 
@@ -62,20 +68,39 @@ const mockedChats = [
   {
     id: 'msg3',
     content: 'Function Message',
-    role: 'function',
+    role: 'tool',
     meta: {
-      avatar: '🧩',
-      title: 'plugin-unknown',
+      avatar: '🤯',
+      backgroundColor: 'rgba(0,0,0,0)',
+      description: 'inbox.desc',
+      title: 'inbox.title',
     },
-    plugin: {
-      arguments: ['arg1', 'arg2'],
-      identifier: 'func1',
-      type: 'pluginType',
-    },
+    tools: [
+      {
+        arguments: ['arg1', 'arg2'],
+        identifier: 'func1',
+        apiName: 'ttt',
+        type: 'pluginType',
+        id: 'abc',
+      },
+    ],
   },
 ] as ChatMessage[];
 
-const mockChatStore = { messages: mockMessages } as ChatStore;
+const mockChatStore = {
+  messagesMap: {
+    [messageMapKey('abc')]: mockMessages,
+  },
+  activeId: 'abc',
+} as ChatStore;
+
+beforeAll(() => {
+  createServerConfigStore();
+});
+
+afterEach(() => {
+  createServerConfigStore().setState({ featureFlags: { edit_agent: true } });
+});
 
 describe('chatSelectors', () => {
   describe('getMessageById', () => {
@@ -85,14 +110,19 @@ describe('chatSelectors', () => {
     });
 
     it('should return the message object with the matching id', () => {
-      const state = merge(initialStore, { messages: mockMessages });
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: mockMessages,
+        },
+        activeId: 'abc',
+      });
       const message = chatSelectors.getMessageById('msg1')(state);
-      expect(message).toEqual(mockMessages[0]);
+      expect(message).toEqual(mockedChats[0]);
     });
 
     it('should return the message with the matching id', () => {
       const message = chatSelectors.getMessageById('msg1')(mockChatStore);
-      expect(message).toEqual(mockMessages[0]);
+      expect(message).toEqual(mockedChats[0]);
     });
 
     it('should return undefined if no message matches the id', () => {
@@ -101,65 +131,68 @@ describe('chatSelectors', () => {
     });
   });
 
-  describe('getFunctionMessageProps', () => {
-    it('should return the properties of a function message', () => {
-      const state = merge(initialStore, {
-        messages: mockMessages,
-        chatLoadingId: 'msg3', // Assuming this id represents a loading state
-      });
-      const props = chatSelectors.getFunctionMessageProps(mockMessages[2])(state);
-      expect(props).toEqual({
-        arguments: ['arg1', 'arg2'],
-        command: mockMessages[2].plugin,
+  describe('getMessageByToolCallId', () => {
+    it('should return undefined if the message with the given id does not exist', () => {
+      const message = chatSelectors.getMessageByToolCallId('non-existent-id')(initialStore);
+      expect(message).toBeUndefined();
+    });
+
+    it('should return the message object with the matching tool_call_id', () => {
+      const toolMessage = {
+        id: 'msg3',
         content: 'Function Message',
-        id: 'func1',
-        loading: true,
-        type: 'pluginType',
-      });
-    });
-
-    it('should return loading as false if the message id is not the current loading id', () => {
-      const state = merge(initialStore, { messages: mockMessages, chatLoadingId: 'msg1' });
-      const props = chatSelectors.getFunctionMessageProps(mockMessages[2])(state);
-      expect(props.loading).toBe(false);
-    });
-
-    it('should return correct properties when no plugin is present', () => {
-      const messageWithoutPlugin = {
-        id: 'msg4',
-        content: 'No Plugin Message',
-        role: 'function',
-        // No plugin property
-      };
+        role: 'tool',
+        tool_call_id: 'ttt',
+        plugin: {
+          arguments: 'arg1',
+          identifier: 'func1',
+          apiName: 'ttt',
+          type: 'default',
+        },
+      } as ChatMessage;
       const state = merge(initialStore, {
-        messages: [...mockMessages, messageWithoutPlugin],
-        chatLoadingId: 'msg1',
+        messagesMap: {
+          [messageMapKey('abc')]: [...mockMessages, toolMessage],
+        },
+        activeId: 'abc',
       });
-      const props = chatSelectors.getFunctionMessageProps(messageWithoutPlugin)(state);
-      expect(props).toEqual({
-        arguments: undefined,
-        command: undefined,
-        content: 'No Plugin Message',
-        id: undefined,
-        loading: false,
-        type: undefined,
-      });
+      const message = chatSelectors.getMessageByToolCallId('ttt')(state);
+      expect(message).toMatchObject(toolMessage);
     });
   });
 
   describe('currentChatsWithHistoryConfig', () => {
     it('should slice the messages according to the current agent config', () => {
-      const state = merge(initialStore, { messages: mockMessages });
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: mockMessages,
+        },
+        activeId: 'abc',
+      });
 
       const chats = chatSelectors.currentChatsWithHistoryConfig(state);
       expect(chats).toHaveLength(3);
       expect(chats).toEqual(mockedChats);
     });
     it('should slice the messages according to config, assuming historyCount is mocked to 2', async () => {
-      const state = merge(initialStore, { messages: mockMessages });
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('abc')]: mockMessages,
+        },
+        activeId: 'abc',
+      });
       act(() => {
-        useGlobalStore.setState({
-          settings: { defaultAgent: { config: { historyCount: 2, enableHistoryCount: true } } },
+        useAgentStore.setState({
+          activeId: 'inbox',
+          agentMap: {
+            inbox: {
+              chatConfig: {
+                historyCount: 2,
+                enableHistoryCount: true,
+              },
+              model: 'abc',
+            } as LobeAgentConfig,
+          },
         });
       });
 
@@ -178,26 +211,37 @@ describe('chatSelectors', () => {
         {
           id: 'msg3',
           content: 'Function Message',
-          role: 'function',
+          role: 'tool',
           meta: {
-            avatar: '🧩',
-            title: 'plugin-unknown',
+            avatar: '🤯',
+            backgroundColor: 'rgba(0,0,0,0)',
+            description: 'inbox.desc',
+            title: 'inbox.title',
           },
-          plugin: {
-            arguments: ['arg1', 'arg2'],
-            identifier: 'func1',
-            type: 'pluginType',
-          },
+          tools: [
+            {
+              apiName: 'ttt',
+              arguments: ['arg1', 'arg2'],
+              identifier: 'func1',
+              id: 'abc',
+              type: 'pluginType',
+            },
+          ],
         },
       ]);
     });
   });
 
   describe('currentChatsWithGuideMessage', () => {
-    it('should return existing messages if there are any', () => {
-      const state = merge(initialStore, { messages: mockMessages, activeId: 'someActiveId' });
+    it('should return existing messages except tool message', () => {
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: mockMessages,
+        },
+        activeId: 'someActiveId',
+      });
       const chats = chatSelectors.currentChatsWithGuideMessage({} as MetaData)(state);
-      expect(chats).toEqual(mockedChats);
+      expect(chats).toEqual(mockedChats.slice(0, 2));
     });
 
     it('should add a guide message if the chat is brand new', () => {
@@ -218,7 +262,7 @@ describe('chatSelectors', () => {
 
       const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
 
-      expect(chats[0].content).toEqual('inbox.defaultMessage'); // Assuming translation returns a string containing this
+      expect(chats[0].content).toEqual(''); // Assuming translation returns a string containing this
     });
 
     it('should use agent default message for non-inbox sessions', () => {
@@ -229,13 +273,28 @@ describe('chatSelectors', () => {
 
       expect(chats[0].content).toMatch('agentDefaultMessage'); // Assuming translation returns a string containing this
     });
+
+    it('should use agent default message without edit button for non-inbox sessions when agent is not editable', () => {
+      act(() => {
+        createServerConfigStore().setState({ featureFlags: { edit_agent: false } });
+      });
+
+      const state = merge(initialStore, { messages: [], activeId: 'someActiveId' });
+      const metaData = { title: 'Mock Agent' };
+
+      const chats = chatSelectors.currentChatsWithGuideMessage(metaData)(state);
+
+      expect(chats[0].content).toMatch('agentDefaultMessageWithoutEdit');
+    });
   });
 
   describe('chatsMessageString', () => {
     it('should concatenate the contents of all messages returned by currentChatsWithHistoryConfig', () => {
       // Prepare a state with a few messages
       const state = merge(initialStore, {
-        messages: mockMessages,
+        messagesMap: {
+          [messageMapKey('active-session')]: mockMessages,
+        },
         activeId: 'active-session',
       });
 
@@ -251,6 +310,167 @@ describe('chatSelectors', () => {
 
       // Restore the mocks after the test
       vi.restoreAllMocks();
+    });
+  });
+
+  describe('showInboxWelcome', () => {
+    it('should return false if the active session is not the inbox session', () => {
+      const state = merge(initialStore, { activeId: 'someActiveId' });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(false);
+    });
+
+    it('should return false if there are existing messages in the inbox session', () => {
+      const state = merge(initialStore, {
+        activeId: INBOX_SESSION_ID,
+        messagesMap: {
+          [messageMapKey('inbox')]: mockMessages,
+        },
+      });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(false);
+    });
+
+    it('should return true if the active session is the inbox session and there are no existing messages', () => {
+      const state = merge(initialStore, {
+        activeId: INBOX_SESSION_ID,
+        messages: [],
+      });
+      const result = chatSelectors.showInboxWelcome(state);
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('currentToolMessages', () => {
+    it('should return only tool messages', () => {
+      const messages = [
+        { id: '1', role: 'user', content: 'Hello' },
+        { id: '2', role: 'assistant', content: 'Hi' },
+        { id: '3', role: 'tool', content: 'Tool message 1' },
+        { id: '4', role: 'user', content: 'Query' },
+        { id: '5', role: 'tool', tools: [] },
+      ] as ChatMessage[];
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
+      };
+      const result = chatSelectors.currentToolMessages(state as ChatStore);
+      expect(result).toHaveLength(2);
+      expect(result.every((msg) => msg.role === 'tool')).toBe(true);
+    });
+
+    it('should return an empty array when no tool messages exist', () => {
+      const messages = [
+        { id: '1', role: 'user', content: 'Hello' },
+        { id: '2', role: 'assistant', content: 'Hi' },
+      ] as ChatMessage[];
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
+      };
+      const result = chatSelectors.currentToolMessages(state as ChatStore);
+      expect(result).toHaveLength(0);
+    });
+  });
+
+  describe('currentChatKey', () => {
+    it('should generate correct key with activeId only', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'testId',
+        activeTopicId: undefined,
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey('testId', undefined));
+    });
+
+    it('should generate correct key with both activeId and activeTopicId', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'testId',
+        activeTopicId: 'topicId',
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey('testId', 'topicId'));
+    });
+
+    it('should generate key with undefined activeId', () => {
+      const state: Partial<ChatStore> = {
+        activeId: undefined,
+        activeTopicId: 'topicId',
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey(undefined as any, 'topicId'));
+    });
+
+    it('should generate key with empty string activeId', () => {
+      const state: Partial<ChatStore> = {
+        activeId: '',
+        activeTopicId: undefined,
+      };
+      const result = chatSelectors.currentChatKey(state as ChatStore);
+      expect(result).toBe(messageMapKey('', undefined));
+    });
+  });
+
+  describe('currentChatIDsWithGuideMessage', () => {
+    it('should return message IDs including guide message for empty chat', () => {
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: [],
+        },
+      };
+      const result = chatSelectors.currentChatIDsWithGuideMessage(state as ChatStore);
+      expect(result).toHaveLength(1);
+      expect(result[0]).toBe('default');
+    });
+
+    it('should return existing message IDs for non-empty chat', () => {
+      const messages = [
+        { id: '1', role: 'user', content: 'Hello' },
+        { id: '2', role: 'assistant', content: 'Hi' },
+      ] as ChatMessage[];
+      const state: Partial<ChatStore> = {
+        activeId: 'test-id',
+        messagesMap: {
+          [messageMapKey('test-id')]: messages,
+        },
+      };
+      const result = chatSelectors.currentChatIDsWithGuideMessage(state as ChatStore);
+      expect(result).toHaveLength(2);
+      expect(result).toEqual(['1', '2']);
+    });
+  });
+
+  describe('isToolCallStreaming', () => {
+    it('should return true when tool call is streaming for given message and index', () => {
+      const state: Partial<ChatStore> = {
+        toolCallingStreamIds: {
+          'msg-1': [true, false, true],
+        },
+      };
+      expect(chatSelectors.isToolCallStreaming('msg-1', 0)(state as ChatStore)).toBe(true);
+      expect(chatSelectors.isToolCallStreaming('msg-1', 2)(state as ChatStore)).toBe(true);
+    });
+
+    it('should return false when tool call is not streaming for given message and index', () => {
+      const state: Partial<ChatStore> = {
+        toolCallingStreamIds: {
+          'msg-1': [true, false, true],
+        },
+      };
+      expect(chatSelectors.isToolCallStreaming('msg-1', 1)(state as ChatStore)).toBe(false);
+      expect(chatSelectors.isToolCallStreaming('msg-2', 0)(state as ChatStore)).toBe(false);
+    });
+
+    it('should return false when no streaming data exists for the message', () => {
+      const state: Partial<ChatStore> = {
+        toolCallingStreamIds: {},
+      };
+      expect(chatSelectors.isToolCallStreaming('msg-1', 0)(state as ChatStore)).toBe(false);
     });
   });
 });

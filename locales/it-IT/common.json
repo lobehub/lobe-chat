@@ -1,33 +1,39 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modello personalizzato, di default supporta sia la chiamata di funzioni che il riconoscimento visivo. Si prega di verificare l'effettiva disponibilità di tali funzionalità in base alle esigenze specifiche.",
-      "file": "Questo modello supporta il caricamento e il riconoscimento dei file",
-      "functionCall": "Questo modello supporta la chiamata di funzioni (Function Call)",
-      "tokens": "Questo modello supporta un massimo di {{tokens}} token per singola sessione",
-      "vision": "Questo modello supporta il riconoscimento visivo"
-    }
-  },
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
-  "agentMaxToken": "Massima lunghezza della sessione",
-  "agentModel": "Modello",
-  "agentProfile": "Profilo assistente",
-  "appInitializing": "LobeChat inizializzazione in corso, attendere prego...",
-  "archive": "Archivio",
+  "alert": {
+    "cloud": {
+      "action": "Provalo gratuitamente",
+      "desc": "Abbiamo fornito a tutti gli utenti registrati {{credit}} crediti di calcolo gratuiti, senza la necessità di configurazioni complesse, pronto all'uso, supporta la cronologia delle conversazioni illimitata e la sincronizzazione cloud globale. Ci sono molte altre funzionalità avanzate che ti aspettano da scoprire.",
+      "descOnMobile": "Offriamo a tutti gli utenti registrati {{credit}} crediti di calcolo gratuiti, pronti all'uso senza configurazioni complesse.",
+      "title": "Benvenuto a {{name}}"
+    }
+  },
+  "appInitializing": "Inizializzazione dell'app in corso, attendere pazientemente...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
+  "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
+  "back": "Indietro",
+  "batchDelete": "Elimina in batch",
+  "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
   "close": "Chiudi",
-  "confirmRemoveSessionItemAlert": "Stai per eliminare questo assistente. Una volta eliminato, non sarà possibile recuperarlo. Confermi l'operazione?",
+  "contact": "Contattaci",
   "copy": "Copia",
   "copyFail": "Copia non riuscita",
   "copySuccess": "Copia riuscita",
+  "dataStatistics": {
+    "messages": "Messaggi",
+    "sessions": "Sessioni",
+    "today": "Oggi",
+    "topics": "Argomenti"
+  },
   "defaultAgent": "Assistente predefinito",
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",
   "document": "Documento di utilizzo",
+  "download": "Scarica",
   "duplicate": "Duplicato",
   "edit": "Modifica",
   "export": "Esporta configurazione",
@@ -40,9 +46,34 @@
     "globalSetting": "Esporta impostazioni globali"
   },
   "feedback": "Feedback e suggerimenti",
+  "follow": "Seguici su {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Condividi i tuoi preziosi suggerimenti",
+      "star": "Aggiungi una stella su GitHub"
+    },
+    "and": "e",
+    "feedback": {
+      "action": "Condividi feedback",
+      "desc": "Ogni tua idea e suggerimento è prezioso per noi, non vediamo l'ora di conoscere la tua opinione! Contattaci per fornire feedback sulle funzionalità del prodotto e sull'esperienza utente, aiutandoci a migliorare LobeChat.",
+      "title": "Condividi il tuo prezioso feedback su GitHub"
+    },
+    "later": "Più tardi",
+    "star": {
+      "action": "Aggiungi una stella",
+      "desc": "Se ami il nostro prodotto e desideri supportarci, potresti aggiungerci una stella su GitHub? Questo piccolo gesto è di grande significato per noi e ci motiva a continuare a offrirti un'esperienza di qualità.",
+      "title": "Aggiungi una stella su GitHub per supportarci"
+    },
+    "title": "Ti piace il nostro prodotto?"
+  },
+  "fullscreen": "Modalità a schermo intero",
   "historyRange": "Intervallo cronologico",
   "import": "Importa configurazione",
   "importModal": {
+    "error": {
+      "desc": "Ci dispiace molto, si è verificato un errore durante il processo di importazione dei dati. Si prega di provare a importare nuovamente, o <1>invia un problema</1>, saremo pronti ad aiutarti a risolvere il problema al più presto.",
+      "title": "Importazione dei dati fallita"
+    },
     "finish": {
       "onlySettings": "Impostazioni di sistema importate con successo",
       "start": "Inizia utilizzo",
@@ -50,6 +81,7 @@
       "title": "Importazione dati completata"
     },
     "loading": "Importazione dati in corso, attendere prego...",
+    "preparing": "Preparazione del modulo di importazione dei dati in corso...",
     "result": {
       "added": "Importazione riuscita",
       "errors": "Errori di importazione",
@@ -60,10 +92,18 @@
       "topics": "Argomenti",
       "type": "Tipo di dati"
     },
-    "title": "Importa dati"
+    "title": "Importa dati",
+    "uploading": {
+      "desc": "Il file attuale è troppo grande, sta venendo caricato con impegno...",
+      "restTime": "Tempo rimanente",
+      "speed": "Velocità di caricamento"
+    }
   },
+  "information": "Comunità e informazioni",
+  "installPWA": "Installa l'applicazione del browser",
   "lang": {
     "ar": "Arabo",
+    "bg-BG": "bulgaro",
     "bn": "Bengalese",
     "cs-CZ": "Ceco",
     "da-DK": "Danese",
@@ -99,22 +139,19 @@
     "zh-TW": "Cinese tradizionale"
   },
   "layoutInitializing": "Inizializzazione layout in corso...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
+  "legal": "Avviso legale",
+  "loading": "Caricamento in corso...",
+  "mail": {
+    "business": "Collaborazioni commerciali",
+    "support": "Supporto via email"
   },
-  "noDescription": "Nessuna descrizione disponibile",
   "oauth": "Accesso SSO",
+  "officialSite": "Sito ufficiale",
   "ok": "OK",
   "password": "Password",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio",
+  "privacy": "Informativa sulla privacy",
   "regenerate": "Rigenera",
   "rename": "Rinomina",
   "reset": "Ripristina",
@@ -123,16 +160,78 @@
   "setting": "Impostazioni",
   "share": "Condividi",
   "stop": "Ferma",
+  "sync": {
+    "actions": {
+      "settings": "Impostazioni di sincronizzazione",
+      "sync": "Sincronizza ora"
+    },
+    "awareness": {
+      "current": "Dispositivo corrente"
+    },
+    "channel": "Canale",
+    "disabled": {
+      "actions": {
+        "enable": "Abilita la sincronizzazione cloud",
+        "settings": "Configura le impostazioni di sincronizzazione"
+      },
+      "desc": "I dati della sessione corrente sono memorizzati solo in questo browser. Se hai bisogno di sincronizzare i dati tra più dispositivi, configura e abilita la sincronizzazione cloud.",
+      "title": "Sincronizzazione dati disabilitata"
+    },
+    "enabled": {
+      "title": "Sincronizzazione dati"
+    },
+    "status": {
+      "connecting": "Connessione in corso",
+      "disabled": "Sincronizzazione disabilitata",
+      "ready": "Pronto",
+      "synced": "Sincronizzato",
+      "syncing": "Sincronizzazione in corso",
+      "unconnected": "Connessione non riuscita"
+    },
+    "title": "Stato di sincronizzazione",
+    "unconnected": {
+      "tip": "Connessione al server di segnalazione non riuscita. Impossibile stabilire un canale di comunicazione punto a punto. Controlla la rete e riprova."
+    }
+  },
   "tab": {
     "chat": "Chat",
+    "files": "File",
     "market": "Scopri",
+    "me": "io",
     "setting": "Impostazioni"
   },
+  "telemetry": {
+    "allow": "Consenti",
+    "deny": "Rifiuta",
+    "desc": "Speriamo di acquisire in modo anonimo le tue informazioni sull'uso per aiutarci a migliorare LobeChat e offrirti un'esperienza prodotto migliore. Puoi disattivarlo in qualsiasi momento in Impostazioni - Informazioni su.",
+    "learnMore": "Ulteriori informazioni",
+    "title": "Aiuta LobeChat a migliorare"
+  },
   "temp": "Temporaneo",
+  "terms": "Termini di servizio",
   "updateAgent": "Aggiorna informazioni agente",
   "upgradeVersion": {
     "action": "Aggiorna",
     "hasNew": "Nuovo aggiornamento disponibile",
     "newVersion": "Nuova versione disponibile: {{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "Utente Anonimo",
+    "billing": "Gestione fatturazione",
+    "cloud": "Prova {{name}}",
+    "data": "Archiviazione dati",
+    "defaultNickname": "Utente Community",
+    "discord": "Supporto della community",
+    "docs": "Documentazione",
+    "email": "Supporto via email",
+    "feedback": "Feedback e suggerimenti",
+    "help": "Centro assistenza",
+    "moveGuide": "Il pulsante delle impostazioni è stato spostato qui",
+    "plans": "Piani di abbonamento",
+    "preview": "Anteprima",
+    "profile": "Gestione account",
+    "setting": "Impostazioni app",
+    "usages": "Statistiche di utilizzo"
+  },
+  "version": "Versione"
 }

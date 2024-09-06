@@ -4,7 +4,9 @@
     "function_call": "Appel de fonction",
     "off": "Désactivé",
     "on": "Activer le débogage",
-    "response": "Réponse"
+    "payload": "charge du plugin",
+    "response": "Réponse",
+    "tool_call": "demande d'appel d'outil"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Exécution du plugin en cours..."
   },
   "pluginList": "Liste des plugins",
-  "plugins": {
-    "loading": "Vérification des plugins en cours...",
-    "unknown": "Plugin inconnu"
-  },
   "setting": "Paramètres des plugins",
   "settings": {
     "indexUrl": {
@@ -141,6 +139,7 @@
     "modalDesc": "Une fois l'adresse du marché des plugins configurée, vous pourrez utiliser un marché de plugins personnalisé.",
     "title": "Paramètres du marché des plugins"
   },
+  "showInPortal": "Veuillez consulter les détails dans l'espace de travail",
   "store": {
     "actions": {
       "confirmUninstall": "Vous êtes sur le point de désinstaller ce plugin. Une fois désinstallé, sa configuration sera effacée. Veuillez confirmer votre action.",
@@ -162,5 +161,6 @@
       "installed": "Installés"
     },
     "title": "Boutique de plugins"
-  }
+  },
+  "unknownPlugin": "Plugin inconnu"
 }

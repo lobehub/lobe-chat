@@ -1,4 +1,24 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continua la sessione",
+      "desc": "{{greeting}}, Sono felice di poterti aiutare ancora. Continuiamo a parlare di quello di cui stavamo discutendo.",
+      "title": "Bentornato, {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "Torna alla homepage",
+    "desc": "Prova di nuovo più tardi, o torna al mondo conosciuto",
+    "retry": "Ricarica",
+    "title": "La pagina ha riscontrato un problema.."
+  },
+  "fetchError": "Errore di richiesta",
+  "fetchErrorDetail": "Dettagli dell'errore",
+  "notFound": {
+    "backHome": "Torna alla homepage",
+    "desc": "Non riusciamo a trovare la pagina che stai cercando, controlla che il link sia corretto",
+    "title": "Hai raggiunto un territorio sconosciuto?"
+  },
   "pluginSettings": {
     "desc": "Completa la seguente configurazione per iniziare a utilizzare il plugin",
     "title": "Configurazione del plugin {{name}}"
@@ -34,23 +54,20 @@
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
-    "AzureBizError": "Errore nella richiesta del servizio Azure AI, controlla le informazioni seguenti o riprova",
-    "BedrockBizError": "Errore nella richiesta del servizio Bedrock, controlla le informazioni seguenti o riprova",
-    "GoogleBizError": "Errore nella richiesta del servizio Google, controlla le informazioni seguenti o riprova",
+    "FreePlanLimit": "Attualmente sei un utente gratuito e non puoi utilizzare questa funzione. Per favore, passa a un piano a pagamento per continuare.",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
-    "InvalidAzureAPIKey": "Chiave API Azure non corretta o vuota, controlla la chiave API Azure e riprova",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
-    "InvalidGoogleAPIKey": "Chiave API Google non corretta o vuota, controlla la chiave API Google e riprova",
-    "InvalidMoonshotAPIKey": "La chiave API di Moonshot AI non è corretta o è vuota, si prega di controllare la chiave API di Moonshot e riprovare",
+    "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
-    "InvalidZhipuAPIKey": "Chiave API Zhipu non corretta o vuota, controlla la chiave API Zhipu e riprova",
+    "InvalidProviderAPIKey": "{{provider}} Chiave API non valida o vuota, controlla la Chiave API di {{provider}} e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
-    "MoonshotBizError": "Si è verificato un errore nel servizio Moonshot, si prega di controllare le informazioni seguenti o riprovare",
     "NoOpenAIAPIKey": "La chiave API OpenAI è vuota. Aggiungi una chiave API personalizzata OpenAI",
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
-    "OpenAIBizError": "Errore nella richiesta del servizio OpenAI. Segui le informazioni seguenti per individuare e riprovare",
+    "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controllare che Ollama sia in esecuzione correttamente o che la configurazione di cross-origin di Ollama sia corretta",
+    "OpenAIBizError": "Errore di business di OpenAI. Si prega di controllare le informazioni seguenti o riprovare.",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
+    "PluginFailToTransformArguments": "Spiacenti, la trasformazione degli argomenti della chiamata al plugin non è riuscita. Si prega di provare a rigenerare il messaggio dell'assistente o riprovare dopo aver cambiato il modello AI di Tools Calling con capacità più avanzate.",
     "PluginGatewayError": "Spiacenti, si è verificato un errore nel gateway del plugin. Verifica che la configurazione del gateway del plugin sia corretta",
     "PluginManifestInvalid": "Spiacenti, la convalida del manifesto descrittivo del plugin non è riuscita. Verifica che il formato del manifesto descrittivo sia conforme alle specifiche",
     "PluginManifestNotFound": "Spiacenti, il server non trova il manifesto descrittivo del plugin (manifest.json). Verifica che l'indirizzo del file descrittivo del plugin sia corretto",
@@ -61,7 +78,10 @@
     "PluginOpenApiInitError": "Spiacenti, inizializzazione fallita del client OpenAPI. Verifica che le informazioni di configurazione di OpenAPI siano corrette",
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
     "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
-    "ZhipuBizError": "Errore nella richiesta del servizio Zhipu, controlla le informazioni seguenti o riprova"
+    "ProviderBizError": "Errore di business del fornitore {{provider}}. Si prega di controllare le informazioni seguenti o riprovare.",
+    "StreamChunkError": "Erro di analisi del blocco di messaggi della richiesta in streaming. Controlla se l'interfaccia API attuale è conforme agli standard o contatta il tuo fornitore di API per ulteriori informazioni.",
+    "SubscriptionPlanLimit": "Il tuo piano di abbonamento ha raggiunto il limite e non puoi utilizzare questa funzione. Per favore, passa a un piano superiore o acquista un pacchetto di risorse per continuare.",
+    "UnknownChatFetchError": "Ci scusiamo, si è verificato un errore di richiesta sconosciuto. Si prega di controllare le informazioni seguenti o riprovare."
   },
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
@@ -70,29 +90,10 @@
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
   },
   "unlock": {
-    "apikey": {
-      "Bedrock": {
-        "customRegion": "Regione del servizio personalizzata",
-        "description": "Inserisci il tuo Aws AccessKeyId / SecretAccessKey per iniziare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
-        "title": "Utilizza le informazioni di autenticazione personalizzate di Bedrock"
-      },
-      "Google": {
-        "description": "Inserisci la tua chiave API Google per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza la chiave API Google personalizzata"
-      },
-      "Moonshot": {
-        "description": "Inserisci la tua chiave API di Moonshot AI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza una chiave API personalizzata per Moonshot AI"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Aggiungi l'indirizzo del proxy OpenAI (opzionale)",
-        "description": "Inserisci la tua chiave API OpenAI per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza la chiave API OpenAI personalizzata"
-      },
-      "Zhipu": {
-        "description": "Inserisci la tua chiave API Zhipu per iniziare la sessione. L'applicazione non memorizzerà la tua chiave API",
-        "title": "Utilizza la chiave API Zhipu personalizzata"
-      }
+    "addProxyUrl": "Aggiungi URL del proxy OpenAI (opzionale)",
+    "apiKey": {
+      "description": "Inserisci la tua Chiave API {{name}} per iniziare la sessione",
+      "title": "Usa la tua Chiave API personalizzata {{name}}"
     },
     "closeMessage": "Chiudi messaggio",
     "confirm": "Conferma e riprova",
@@ -111,5 +112,13 @@
       "apiKey": "Chiave API personalizzata",
       "password": "Password"
     }
+  },
+  "upload": {
+    "desc": "Dettagli: {{detail}}",
+    "fileOnlySupportInServerMode": "L'attuale modalità di distribuzione non supporta il caricamento di file non immagine. Se desideri caricare un formato {{ext}}, ti preghiamo di passare alla distribuzione del database sul server o di utilizzare il servizio LobeChat Cloud.",
+    "networkError": "Si prega di verificare che la connessione di rete sia stabile e controllare se la configurazione CORS del servizio di archiviazione file è corretta.",
+    "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi",
+    "unknownError": "Motivo dell'errore: {{reason}}",
+    "uploadFailed": "Caricamento del file non riuscito."
   }
 }

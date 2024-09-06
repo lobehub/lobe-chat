@@ -1,0 +1,84 @@
+{
+  "DragUpload": {
+    "dragDesc": "Faites glisser des fichiers ici, plusieurs images peuvent être téléchargées.",
+    "dragFileDesc": "Faites glisser des images et des fichiers ici, plusieurs images et fichiers peuvent être téléchargés.",
+    "dragFileTitle": "Télécharger des fichiers",
+    "dragTitle": "Télécharger des images"
+  },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Ajouter à la base de connaissances",
+      "addToOtherKnowledgeBase": "Ajouter à une autre base de connaissances",
+      "batchChunking": "Découpage par lots",
+      "chunking": "Découpage",
+      "chunkingTooltip": "Divisez le fichier en plusieurs blocs de texte et vectorisez-les pour une recherche sémantique et un dialogue sur le fichier",
+      "confirmDelete": "Vous allez supprimer ce fichier. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
+      "confirmDeleteMultiFiles": "Vous allez supprimer les {{count}} fichiers sélectionnés. Une fois supprimés, ils ne pourront pas être récupérés. Veuillez confirmer votre action.",
+      "confirmRemoveFromKnowledgeBase": "Vous allez retirer les {{count}} fichiers sélectionnés de la base de connaissances. Une fois retirés, les fichiers resteront visibles dans tous les fichiers. Veuillez confirmer votre action.",
+      "copyUrl": "Copier le lien",
+      "copyUrlSuccess": "Adresse du fichier copiée avec succès",
+      "createChunkingTask": "Préparation en cours...",
+      "deleteSuccess": "Fichier supprimé avec succès",
+      "downloading": "Téléchargement du fichier en cours...",
+      "removeFromKnowledgeBase": "Retirer de la base de connaissances",
+      "removeFromKnowledgeBaseSuccess": "Fichier retiré avec succès"
+    },
+    "bottom": "C'est tout",
+    "config": {
+      "showFilesInKnowledgeBase": "Afficher le contenu dans la base de connaissances"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Télécharger un fichier",
+        "folder": "Télécharger un dossier",
+        "knowledgeBase": "Créer une nouvelle base de connaissances"
+      },
+      "or": "ou",
+      "title": "Faites glisser un fichier ou un dossier ici"
+    },
+    "title": {
+      "createdAt": "Date de création",
+      "size": "Taille",
+      "title": "Fichier"
+    },
+    "total": {
+      "fileCount": "Total {{count}} éléments",
+      "selectedCount": "Sélectionné {{count}} éléments"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Les blocs de texte n'ont pas encore été entièrement vectorisés, ce qui rendra la fonction de recherche sémantique indisponible. Pour améliorer la qualité de la recherche, veuillez vectoriser les blocs de texte.",
+        "error": "Échec de la vectorisation",
+        "errorResult": "Échec de la vectorisation, veuillez vérifier et réessayer. Raison de l'échec :",
+        "processing": "Les blocs de texte sont en cours de vectorisation, veuillez patienter.",
+        "success": "Tous les blocs de texte sont maintenant vectorisés."
+      },
+      "embeddings": "Vectorisation",
+      "status": {
+        "error": "Échec du découpage",
+        "errorResult": "Échec du découpage, veuillez vérifier et réessayer. Raison de l'échec :",
+        "processing": "Découpage en cours",
+        "processingTip": "Le serveur est en train de diviser les blocs de texte, fermer la page n'affectera pas le progrès du découpage."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Retour"
+  },
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modèle personnalisé par défaut prenant en charge à la fois les appels de fonction et la reconnaissance visuelle. Veuillez vérifier la disponibilité de ces capacités en fonction de vos besoins réels.",
+      "file": "Ce modèle prend en charge la lecture et la reconnaissance de fichiers téléchargés.",
+      "functionCall": "Ce modèle prend en charge les appels de fonction.",
+      "tokens": "Ce modèle prend en charge jusqu'à {{tokens}} jetons par session.",
+      "vision": "Ce modèle prend en charge la reconnaissance visuelle."
+    },
+    "removed": "Le modèle n'est pas dans la liste, il sera automatiquement supprimé si vous annulez la sélection"
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "Aucun modèle activé. Veuillez vous rendre dans les paramètres pour l'activer.",
+    "provider": "Fournisseur"
+  }
+}

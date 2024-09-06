@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Nuovo",
+    "description": {
+      "placeholder": "Descrizione del dataset (opzionale)"
+    },
+    "name": {
+      "placeholder": "Nome del dataset",
+      "required": "Si prega di inserire il nome del dataset"
+    },
+    "title": "Aggiungi dataset"
+  },
+  "dataset": {
+    "addNewButton": "Crea dataset",
+    "emptyGuide": "Il dataset attuale è vuoto, si prega di crearne uno.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Importa dati"
+        },
+        "columns": {
+          "actions": "Operazioni",
+          "ideal": {
+            "title": "Risposta ideale"
+          },
+          "question": {
+            "title": "Domanda"
+          },
+          "referenceFiles": {
+            "title": "File di riferimento"
+          }
+        },
+        "notSelected": "Si prega di selezionare un dataset a sinistra",
+        "title": "Dettagli del dataset"
+      },
+      "title": "Dataset"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Nuovo",
+      "datasetId": {
+        "placeholder": "Seleziona il tuo dataset di valutazione",
+        "required": "Si prega di selezionare un dataset di valutazione"
+      },
+      "description": {
+        "placeholder": "Descrizione del compito di valutazione (opzionale)"
+      },
+      "name": {
+        "placeholder": "Nome del compito di valutazione",
+        "required": "Si prega di inserire il nome del compito di valutazione"
+      },
+      "title": "Aggiungi compito di valutazione"
+    },
+    "addNewButton": "Crea valutazione",
+    "emptyGuide": "Attualmente non ci sono compiti di valutazione, inizia a crearne uno.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Controlla stato",
+          "confirmDelete": "Sei sicuro di voler eliminare questa valutazione?",
+          "confirmRun": "Sei sicuro di voler avviare l'esecuzione? L'esecuzione avverrà in modo asincrono in background, chiudere la pagina non influenzerà l'esecuzione del compito asincrono.",
+          "downloadRecords": "Scarica valutazione",
+          "retry": "Riprova",
+          "run": "Esegui",
+          "title": "Operazioni"
+        },
+        "datasetId": {
+          "title": "Dataset"
+        },
+        "name": {
+          "title": "Nome del compito di valutazione"
+        },
+        "records": {
+          "title": "Numero di registrazioni di valutazione"
+        },
+        "referenceFiles": {
+          "title": "File di riferimento"
+        },
+        "status": {
+          "error": "Errore durante l'esecuzione",
+          "pending": "In attesa di esecuzione",
+          "processing": "In esecuzione",
+          "success": "Esecuzione riuscita",
+          "title": "Stato"
+        }
+      },
+      "title": "Elenco dei compiti di valutazione"
+    }
+  }
+}

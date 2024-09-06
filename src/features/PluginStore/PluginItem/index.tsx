@@ -40,6 +40,8 @@ const PluginItem = memo<InstallPluginMeta>(({ identifier, homepage, author, type
       gap={8}
       horizontal
       justify={'space-between'}
+      paddingBlock={12}
+      paddingInline={16}
       style={{ position: 'relative' }}
     >
       <Flexbox

@@ -4,7 +4,9 @@
     "function_call": "Chiamata di funzione",
     "off": "Disattivato",
     "on": "Visualizza informazioni sulla chiamata del plugin",
-    "response": "Risposta"
+    "payload": "carico del plugin",
+    "response": "Risposta",
+    "tool_call": "richiesta di chiamata dello strumento"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Esecuzione del plugin in corso..."
   },
   "pluginList": "Elenco dei plugin",
-  "plugins": {
-    "loading": "Rilevamento dei plugin in corso...",
-    "unknown": "Plugin sconosciuto"
-  },
   "setting": "Impostazioni del plugin",
   "settings": {
     "indexUrl": {
@@ -141,6 +139,7 @@
     "modalDesc": "Dopo aver configurato l'indirizzo del mercato dei plugin, è possibile utilizzare un mercato dei plugin personalizzato",
     "title": "Impostazioni del mercato dei plugin"
   },
+  "showInPortal": "Si prega di visualizzare i dettagli nell'area di lavoro",
   "store": {
     "actions": {
       "confirmUninstall": "Stai per disinstallare questo plugin. La disinstallazione cancellerà la configurazione del plugin. Conferma l'operazione",
@@ -162,5 +161,6 @@
       "installed": "Installati"
     },
     "title": "Negozio dei plugin"
-  }
+  },
+  "unknownPlugin": "Plugin sconosciuto"
 }

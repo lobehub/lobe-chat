@@ -4,14 +4,14 @@ This document aims to guide developers on how to develop a complete feature requ
 
 We will use the implementation of sessionGroup as an example: [✨ feat: add session group manager](https://github.com/lobehub/lobe-chat/pull/1055), and explain the complete implementation process through the following six main sections:
 
-1. Data Model / Database Definition
-2. Service Implementation / Model Implementation
-3. Frontend Data Flow Store Implementation
-4. UI Implementation and Action Binding
-5. Data Migration
-6. Data Import and Export
+1. [Data Model / Database Definition](#1-data-model--database-definition)
+2. [Service Implementation / Model Implementation](#2-service-implementation--model-implementation)
+3. [Frontend Data Flow Store Implementation](#3-frontend-data-flow-store-implementation)
+4. [UI Implementation and Action Binding](#4-ui-implementation-and-action-binding)
+5. [Data Migration](#5-data-migration)
+6. [Data Import and Export](#6-data-import-and-export)
 
-## 1. Database Section
+## 1. Data Model / Database Definition
 
 To implement the Session Group feature, it is necessary to define the relevant data model and indexes at the database level.
 
@@ -119,7 +119,7 @@ As a result, you can now view the `sessionGroups` table in the `LOBE_CHAT_DB` in
 
 ![](https://github.com/lobehub/lobe-chat/assets/28616219/aea50f66-4060-4a32-88c8-b3c672d05be8)
 
-## 2. Model and Service Section
+## 2. Service Implementation / Model Implementation
 
 ### Define Model
 
@@ -128,8 +128,8 @@ When building the LobeChat application, the Model is responsible for interacting
 In `src/database/model/sessionGroup.ts`, the `SessionGroupModel` is defined as follows:
 
 ```typescript
-import { BaseModel } from '@/database/core';
-import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/schemas/sessionGroup';
+import { BaseModel } from '@/database/client/core';
+import { DB_SessionGroup, DB_SessionGroupSchema } from '@/database/client/schemas/sessionGroup';
 import { nanoid } from '@/utils/uuid';
 
 class _SessionGroupModel extends BaseModel {
@@ -176,7 +176,7 @@ class SessionService {
 }
 ```
 
-## 3. Store Action Section
+## 3. Frontend Data Flow Store Implementation
 
 In the LobeChat application, the Store module is used to manage the frontend state of the application. The Actions within it are functions that trigger state updates, usually by calling methods in the service layer to perform actual data processing operations and then updating the state in the Store. We use `zustand` as the underlying dependency for the Store module. For a detailed practical introduction to state management, you can refer to [📘 Best Practices for State Management](../State-Management/State-Management-Intro.zh-CN.md).
 
@@ -231,7 +231,7 @@ This requirement involves upgrading the Sessions feature to transform it from a 
 
 To handle these groups, we need to refactor the implementation logic of `useFetchSessions`. Here are the key changes:
 
-1. Use the `sessionService.getSessionsWithGroup` method to call the backend API and retrieve the grouped session data.
+1. Use the `sessionService.getGroupedSessions` method to call the backend API and retrieve the grouped session data.
 2. Save the retrieved data into three different state fields: `pinnedSessions`, `customSessionGroups`, and `defaultSessions`.
 
 #### `useFetchSessions` Method
@@ -247,7 +247,7 @@ export const createSessionSlice: StateCreator<
 > = (set, get) => ({
   // ... other methods
   useFetchSessions: () =>
-    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getSessionsWithGroup, {
+    useSWR<ChatSessionList>(FETCH_SESSIONS_KEY, sessionService.getGroupedSessions, {
       onSuccess: (data) => {
         set(
           {
@@ -267,15 +267,15 @@ export const createSessionSlice: StateCreator<
 
 After successfully retrieving the data, we use the `set` method to update the `customSessionGroups`, `defaultSessions`, `pinnedSessions`, and `sessions` states. This ensures that the states are synchronized with the latest session data.
 
-#### `sessionService.getSessionsWithGroup` Method
+#### `sessionService.getGroupedSessions` Method
 
-The `sessionService.getSessionsWithGroup` method is responsible for calling the backend API `SessionModel.queryWithGroups()`.
+The `sessionService.getGroupedSessions` method is responsible for calling the backend API `SessionModel.queryWithGroups()`.
 
 ```typescript
 class SessionService {
   // ... other SessionGroup related implementations
 
-  async getSessionsWithGroup(): Promise<ChatSessionList> {
+  async getGroupedSessions(): Promise<ChatSessionList> {
     return SessionModel.queryWithGroups();
   }
 }
@@ -283,7 +283,7 @@ class SessionService {
 
 #### `SessionModel.queryWithGroups` Method
 
-This method is the core method called by `sessionService.getSessionsWithGroup`, and it is responsible for querying and organizing session data. The code is as follows:
+This method is the core method called by `sessionService.getGroupedSessions`, and it is responsible for querying and organizing session data. The code is as follows:
 
 ```typescript
 class _SessionModel extends BaseModel {
@@ -351,7 +351,7 @@ Since all data retrieval in the UI is implemented using syntax like `useSessionS
 >
 > If you are not familiar with the concept and functionality of selectors, you can refer to the section [📘 Data Storage and Retrieval Module](./State-Management-Selectors.en-US) for relevant information.
 
-## IV. UI Section
+## 4. UI Implementation and Action Binding
 
 Bind Store Action in the UI component to implement interactive logic, for example `CreateGroupModal`:
 
@@ -570,7 +570,7 @@ export class LocalDB extends Dexie {
 
 This is our data migration strategy. When performing the migration, it is essential to ensure the correctness of the migration script and validate the migration results through thorough testing.
 
-## VI. Data Import and Export
+## 6. Data Import and Export
 
 In LobeChat, the data import and export feature is designed to ensure that users can migrate their data between different devices. This includes session, topic, message, and settings data. In the implementation of the Session Group feature, we also need to handle data import and export to ensure that the complete exported data can be restored exactly the same on other devices.
 
@@ -617,7 +617,7 @@ class ConfigService {
   // ... Other code omitted
 
   exportSessions = async () => {
-    const sessions = await sessionService.getSessions();
+    const sessions = await sessionService.getAllSessions();
 +   const sessionGroups = await sessionService.getSessionGroups();
     const messages = await messageService.getAllMessages();
     const topics = await topicService.getAllTopics();

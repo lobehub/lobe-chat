@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Azure の API バージョン、YYYY-MM-DD 形式に従う、[最新バージョン](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)を参照",
+      "fetch": "リストを取得",
+      "title": "Azure API Version"
+    },
+    "empty": "モデル ID を入力して最初のモデルを追加してください",
+    "endpoint": {
+      "desc": "Azure ポータルでリソースを確認する際に、「キーとエンドポイント」セクションでこの値を見つけることができます",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure API アドレス"
+    },
+    "modelListPlaceholder": "展開したい OpenAI モデルを選択または追加してください",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Azure ポータルでリソースを確認する際に、「キーとエンドポイント」セクションでこの値を見つけることができます。KEY1 または KEY2 を使用できます",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "AWS Access Key Id を入力してください",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "AccessKeyId / SecretAccessKey が正しく入力されているかをテストします"
+    },
+    "region": {
+      "desc": "AWS リージョンを入力してください",
+      "placeholder": "AWS リージョン",
+      "title": "AWS リージョン"
+    },
+    "secretAccessKey": {
+      "desc": "AWS Secret Access Key を入力してください",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "カスタムサービスリージョン",
+      "description": "AWS AccessKeyId / SecretAccessKey を入力するとセッションを開始できます。アプリは認証情報を記録しません",
+      "title": "使用カスタム Bedrock 認証情報"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "プロキシアドレスが正しく入力されているかをテストします",
+      "title": "連結性チェック"
+    },
+    "customModelName": {
+      "desc": "カスタムモデルを追加します。複数のモデルはカンマ（,）で区切ります",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "カスタムモデル名"
+    },
+    "download": {
+      "desc": "Ollama is currently downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
+    },
+    "endpoint": {
+      "desc": "Ollamaプロキシインターフェースアドレスを入力してください。ローカルで追加の指定がない場合は空白のままにしてください",
+      "title": "プロキシインターフェースアドレス"
+    },
+    "setup": {
+      "cors": {
+        "description": "ブラウザのセキュリティ制限により、Ollama を正常に使用するにはクロスオリジンリクエストを許可する必要があります。",
+        "linux": {
+          "env": "[Service] セクションに `Environment` を追加し、OLLAMA_ORIGINS 環境変数を設定してください：",
+          "reboot": "systemd を再読み込みして Ollama を再起動します。",
+          "systemd": "systemd を呼び出して ollama サービスを編集します："
+        },
+        "macos": "「ターミナル」アプリを開き、以下のコマンドを貼り付けて実行し、Enter キーを押してください",
+        "reboot": "Ollama サービスを再起動するには、実行後に再起動してください",
+        "title": "Ollama の CORS アクセスを許可する設定",
+        "windows": "Windows 上では、「コントロールパネル」をクリックしてシステム環境変数を編集します。ユーザーアカウントに「OLLAMA_ORIGINS」という名前の環境変数を作成し、値を * に設定し、「OK/適用」をクリックして保存します"
+      },
+      "install": {
+        "description": "Ollamaを有効にしていることを確認してください。Ollamaをまだダウンロードしていない場合は、公式サイト<1>からダウンロード</1>してください。",
+        "docker": "もしDockerを使用することを好む場合、Ollamaは公式Dockerイメージも提供しています。以下のコマンドを使用して取得できます：",
+        "linux": {
+          "command": "以下のコマンドを使用してインストール：",
+          "manual": "または、<1>Linuxマニュアルインストールガイド</1>を参照して手動でインストールすることもできます"
+        },
+        "title": "ローカルでOllamaアプリをインストールして起動する",
+        "windowsTab": "Windows（プレビュー版）"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI 零一万物"
+  },
+  "zhipu": {
+    "title": "智谱"
+  }
+}

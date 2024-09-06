@@ -1,4 +1,24 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continue session",
+      "desc": "{{greeting}}, it's great to continue serving you. Let's continue our previous conversation.",
+      "title": "Welcome back, {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "Powrót do strony głównej",
+    "desc": "Spróbuj ponownie później lub wróć do znanego świata",
+    "retry": "Ponów próbę",
+    "title": "Napotkano problem na stronie.."
+  },
+  "fetchError": "Błąd żądania",
+  "fetchErrorDetail": "Szczegóły błędu",
+  "notFound": {
+    "backHome": "Powrót do strony głównej",
+    "desc": "Nie możemy odnaleźć strony, której szukasz. Sprawdź, czy link jest poprawny.",
+    "title": "Wkraczasz w nieznane terytorium?"
+  },
   "pluginSettings": {
     "desc": "Wykonaj poniższą konfigurację, aby rozpocząć korzystanie z tego wtyczki",
     "title": "Konfiguracja wtyczki {{name}}"
@@ -34,23 +54,20 @@
     "503": "Przepraszamy, serwer tymczasowo nie może przetworzyć Twojego żądania, prawdopodobnie z powodu przeciążenia lub konserwacji. Proszę spróbuj ponownie później",
     "504": "Przepraszamy, serwer nie otrzymał odpowiedzi od serwera nadrzędnego. Proszę spróbuj ponownie później",
     "AgentRuntimeError": "Wystąpił błąd wykonania modelu językowego Lobe, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
-    "AzureBizError": "Wystąpił błąd żądania usługi Azure AI, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
-    "BedrockBizError": "Wystąpił błąd żądania usługi Bedrock, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
-    "GoogleBizError": "Wystąpił błąd żądania usługi Google, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
+    "FreePlanLimit": "Jesteś obecnie użytkownikiem darmowej wersji, nie możesz korzystać z tej funkcji. Proszę uaktualnić do planu płatnego, aby kontynuować korzystanie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
-    "InvalidAzureAPIKey": "Nieprawidłowy lub pusty klucz API Azure, prosimy sprawdzić klucz API Azure i spróbować ponownie.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
-    "InvalidGoogleAPIKey": "Nieprawidłowy lub pusty klucz API Google, prosimy sprawdzić klucz API Google i spróbować ponownie.",
-    "InvalidMoonshotAPIKey": "Moonshot AI API密钥不正确或为空，请检查Moonshot API密钥后重试",
+    "InvalidClerkUser": "Przepraszamy, nie jesteś obecnie zalogowany. Proszę najpierw zalogować się lub zarejestrować, aby kontynuować.",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
-    "InvalidZhipuAPIKey": "Nieprawidłowy lub pusty klucz API Zhipu, prosimy sprawdzić klucz API Zhipu i spróbować ponownie.",
+    "InvalidProviderAPIKey": "{{provider}} Klucz API jest nieprawidłowy lub pusty. Sprawdź Klucz API {{provider}} i spróbuj ponownie.",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
-    "MoonshotBizError": "请求月球AI服务出错，请根据以下信息排查或重试",
     "NoOpenAIAPIKey": "Klucz API OpenAI jest pusty. Proszę dodać niestandardowy klucz API OpenAI",
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
-    "OpenAIBizError": "Błąd żądania usługi OpenAI. Proszę sprawdź poniższe informacje i spróbuj ponownie",
+    "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy Ollama działa poprawnie, lub czy poprawnie skonfigurowano ustawienia przekraczania domeny Ollama",
+    "OpenAIBizError": "Wystąpił błąd usługi OpenAI, proszę sprawdzić poniższe informacje lub spróbować ponownie",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
+    "PluginFailToTransformArguments": "Przepraszamy, nie udało się przekształcić argumentów wywołania wtyczki. Spróbuj ponownie wygenerować wiadomość pomocnika lub zmień model AI o większej zdolności do wywoływania narzędzi i spróbuj ponownie",
     "PluginGatewayError": "Przepraszamy, wystąpił błąd bramy wtyczki. Proszę sprawdź, czy konfiguracja bramy wtyczki jest poprawna",
     "PluginManifestInvalid": "Przepraszamy, walidacja manifestu opisowego wtyczki nie powiodła się. Proszę sprawdź, czy format pliku opisowego wtyczki jest zgodny z normami",
     "PluginManifestNotFound": "Przepraszamy, serwer nie odnalazł manifestu opisowego wtyczki (manifest.json). Proszę sprawdź, czy adres pliku opisowego wtyczki jest poprawny",
@@ -61,7 +78,10 @@
     "PluginOpenApiInitError": "Przepraszamy, inicjalizacja klienta OpenAPI nie powiodła się. Proszę sprawdź, czy informacje konfiguracyjne OpenAPI są poprawne",
     "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
     "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna",
-    "ZhipuBizError": "Wystąpił błąd żądania usługi Zhipu, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie."
+    "ProviderBizError": "Wystąpił błąd usługi {{provider}}, proszę sprawdzić poniższe informacje lub spróbować ponownie",
+    "StreamChunkError": "Błąd analizy bloku wiadomości w żądaniu strumieniowym. Proszę sprawdzić, czy aktualny interfejs API jest zgodny z normami, lub skontaktować się z dostawcą API w celu uzyskania informacji.",
+    "SubscriptionPlanLimit": "Wykorzystałeś limit swojego abonamentu i nie możesz korzystać z tej funkcji. Proszę uaktualnić do wyższego planu lub zakupić dodatkowy pakiet zasobów, aby kontynuować korzystanie.",
+    "UnknownChatFetchError": "Przykro nam, wystąpił nieznany błąd żądania. Proszę sprawdzić poniższe informacje lub spróbować ponownie."
   },
   "stt": {
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
@@ -70,29 +90,10 @@
     "responseError": "Błąd żądania usługi. Proszę sprawdź konfigurację i spróbuj ponownie"
   },
   "unlock": {
-    "apikey": {
-      "Bedrock": {
-        "customRegion": "Własny obszar usług",
-        "description": "Wprowadź swój Aws AccessKeyId / SecretAccessKey, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojej konfiguracji uwierzytelniania.",
-        "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
-      },
-      "Google": {
-        "description": "Wprowadź swój klucz API Google, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API Google"
-      },
-      "Moonshot": {
-        "description": "输入您的Moonshot AI API密钥即可开始会话。应用不会记录您的API密钥",
-        "title": "使用自定义Moonshot AI API密钥"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
-        "description": "Wprowadź swój klucz API OpenAI, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API OpenAI"
-      },
-      "Zhipu": {
-        "description": "Wprowadź swój klucz API Zhipu, aby rozpocząć sesję. Aplikacja nie będzie przechowywać Twojego klucza API.",
-        "title": "Użyj niestandardowego klucza API Zhipu"
-      }
+    "addProxyUrl": "Dodaj adres proxy OpenAI (opcjonalnie)",
+    "apiKey": {
+      "description": "Wprowadź swój Klucz API {{name}}, aby rozpocząć sesję.",
+      "title": "Użyj niestandardowego Klucza API {{name}}"
     },
     "closeMessage": "Zamknij komunikat",
     "confirm": "Potwierdź i spróbuj ponownie",
@@ -111,5 +112,13 @@
       "apiKey": "Niestandardowy klucz API",
       "password": "Hasło"
     }
+  },
+  "upload": {
+    "desc": "Szczegóły: {{detail}}",
+    "fileOnlySupportInServerMode": "Aktualny tryb wdrożenia nie obsługuje przesyłania plików, które nie są obrazami. Aby przesłać pliki w formacie {{ext}}, przełącz się na wdrożenie bazy danych na serwerze lub skorzystaj z usługi LobeChat Cloud.",
+    "networkError": "Proszę upewnić się, że Twoja sieć działa poprawnie oraz sprawdzić, czy konfiguracja CORS dla usługi przechowywania plików jest prawidłowa.",
+    "title": "Nie udało się przesłać pliku. Sprawdź połączenie sieciowe lub spróbuj ponownie później",
+    "unknownError": "Przyczyna błędu: {{reason}}",
+    "uploadFailed": "Wysyłanie pliku nie powiodło się."
   }
 }

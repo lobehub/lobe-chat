@@ -1,0 +1,245 @@
+{
+  "exportType": "sessions",
+  "state": {
+    "sessions": [
+      {
+        "config": {
+          "displayMode": "chat",
+          "historyCount": 1,
+          "model": "gpt-3.5-turbo",
+          "params": {
+            "frequency_penalty": 0,
+            "presence_penalty": 0,
+            "temperature": 0.6,
+            "top_p": 1,
+            "max_tokens": 2200
+          },
+          "plugins": [],
+          "systemRole": "你是一名 Postgresql 的数据库专家。用户是一名数据库小白，你需要使用简单直白的方式告诉用户如何使用 ostgresql 和它相应的 orm 工具 primsa",
+          "enableCompressThreshold": false,
+          "enableMaxTokens": false,
+          "inputTemplate": ""
+        },
+        "id": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "meta": {
+          "avatar": "🐘",
+          "backgroundColor": "rgba(0,0,0,0)",
+          "title": "Postgresql 指南",
+          "description": "PostgreSQL 数据库和 Prisma ORM 工具的简单使用指南",
+          "tags": ["数据库", "PostgreSQL", "教程", "ORM", "Prisma"]
+        },
+        "type": "agent",
+        "createdAt": 1698463356269,
+        "group": "default",
+        "updatedAt": 1698463356269,
+        "pinned": true
+      }
+    ],
+    "messages": [
+      {
+        "content": "是的，你可以使用 Prisma 来自定义生成 `id` 的逻辑，例如使用 `nanoid` 库来生成唯一标识符。\n\n首先，你需要在项目中安装 `nanoid` 库：\n\n```\nnpm install nanoid\n```\n\n然后，你可以在 Prisma 的模型定义中使用 `@default` 指令，并提供一个自定义的默认值函数来生成 `id`。\n\n```prisma\nmodel Message {\n  id String @id @default(dbgenerated(\"nanoid(10)\"))\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n}\n```\n\n在上述模型定义中，我们使用 `dbgenerated` 指令来定义一个自定义的默认值函数。函数 `nanoid(10)` 会生成一个长度为 10 的唯一标识符。\n\n请注意，使用自定义的 `id` 生成逻辑可能会对数据库性能产生一些影响，因为每次创建新记录时都需要执行自定义函数。因此，请确保你的自定义逻辑是高效的，并在实际使用中进行测试和评估性能。",
+        "id": "n2Tsl3Dm",
+        "meta": {},
+        "parentId": "JSZaJOGj",
+        "role": "assistant",
+        "topicId": "CZg3IEdy",
+        "createdAt": 1698463981313,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698464004494,
+        "fromModel": "gpt-3.5-turbo"
+      },
+      {
+        "content": "如何指定 自定义函数的引入位置？",
+        "id": "xPft8Msa",
+        "meta": {},
+        "role": "user",
+        "topicId": "CZg3IEdy",
+        "createdAt": 1698464173224,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698464173226
+      },
+      {
+        "content": "在 Prisma 中，你可以通过在 `schema.prisma` 文件的顶部使用 `generator` 块来指定自定义函数的引入位置。\n\n例如，假设你想使用 `nanoid` 库来生成自定义的 `id`，你可以按照以下方式配置：\n\n```prisma\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"./node_modules/@prisma/client\"\n}\n\ngenerator dbgenerated {\n  provider = \"prisma-dbgenerator\"\n  output   = \"./node_modules/@prisma/client\"\n  binaryTargets = [\"native\"]\n  previewFeatures = [\"nativeTypes\"]\n  config = {\n    \"generator\": {\n      \"dbgenerated\": {\n        \"output\": \"./src/db/generated\",\n        \"provider\": \"./src/db/generated/provider.js\"\n      }\n    }\n  }\n}\n```\n\n在上述配置中，我们定义了两个生成器。`client` 生成器用于生成 Prisma 客户端代码，而 `dbgenerated` 生成器用于生成数据库相关的代码。\n\n注意到 `dbgenerated` 生成器的 `config` 部分中有一个 `provider` 字段，它指定了自定义函数的引入位置。在这个示例中，我们将自定义函数放在 `./src/db/generated/provider.js` 文件中。\n\n你可以根据你的项目结构和需要来调整路径和文件名，确保指定的 `provider` 路径正确引入了自定义函数。",
+        "id": "jZc2KKRs",
+        "meta": {},
+        "parentId": "xPft8Msa",
+        "role": "assistant",
+        "topicId": "CZg3IEdy",
+        "createdAt": 1698464173228,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698464181896,
+        "fromModel": "gpt-3.5-turbo"
+      },
+      {
+        "content": "如何启动一个 postgres Docker 镜像？",
+        "id": "LjG9XSuq",
+        "meta": {},
+        "role": "user",
+        "topicId": "MNWhBEh5",
+        "createdAt": 1698754460196,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698754463118
+      },
+      {
+        "content": "要启动一个 PostgreSQL Docker 镜像，你可以按照以下步骤操作：\n\n1. 首先，确保你已经安装了 Docker，可以在终端中运行 `docker --version` 来检查。\n\n2. 在终端中运行以下命令以下载并启动一个 PostgreSQL 镜像：\n\n   ```shell\n   docker run --name my-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres\n   ```\n\n   这将从 Docker Hub 下载 PostgreSQL 镜像",
+        "id": "CL7E1Mc5",
+        "meta": {},
+        "parentId": "LjG9XSuq",
+        "role": "assistant",
+        "topicId": "MNWhBEh5",
+        "createdAt": 1698754479751,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698754507690,
+        "fromModel": "gpt-3.5-turbo"
+      },
+      {
+        "content": "如何指定本地存储的目录到 /www/database/postgres",
+        "id": "UIvHZr7m",
+        "meta": {},
+        "role": "user",
+        "topicId": "MNWhBEh5",
+        "createdAt": 1698754591763,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698754591764
+      },
+      {
+        "content": "要将本地存储的目录映射到容器内的 `/var/lib/postgresql/data` 目录，你可以使用 Docker 的 `-v` 参数。\n\n以下是示例命令：\n\n```shell\ndocker run --name my-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -v /www/database/postgres:/var/lib/postgresql/data -d postgres\n```\n\n在这个命令中，我们使用了 `-v` 参数来指定本地目录 `/www/database/postgres` 映射到容器内的 `/var/lib/postgresql/data` 目录。这样，所有的 PostgreSQL 数据将会保存在本地指定的目录中。",
+        "id": "XLJOK44r",
+        "meta": {},
+        "parentId": "UIvHZr7m",
+        "role": "assistant",
+        "topicId": "MNWhBEh5",
+        "createdAt": 1698754591765,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698754609275,
+        "fromModel": "gpt-3.5-turbo"
+      },
+      {
+        "content": "docker run --name postgres -e POSTGRES_PASSWORD=DSLapHYdzNrai5j6 -p 33300:5432 -v /www/database/postgres:/var/lib/postgresql/data -d postgres",
+        "id": "W3J6jQjm",
+        "meta": {},
+        "role": "user",
+        "topicId": "MNWhBEh5",
+        "createdAt": 1698754700529,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698754700530
+      },
+      {
+        "content": "如何启动 pgadmin",
+        "id": "L7mq0ehV",
+        "meta": {},
+        "role": "user",
+        "topicId": "MNWhBEh5",
+        "createdAt": 1698755749886,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698755749888
+      },
+      {
+        "content": "要启动 pgAdmin，你可以按照以下步骤操作：\n\n1. 首先，确保你已经安装了 Docker，并且已经成功启动了 PostgreSQL Docker 容器。\n\n2. 在终端中运行以下命令以启动 pgAdmin Docker 容器：\n\n   ```shell\n   docker run --name my-pgadmin -p 5050:80 -e PGADMIN_DEFAULT_EMAIL=myemail@example.com -e PGADMIN_DEFAULT_PASSWORD=mypassword -d dpage/pgadmin4\n   ```\n\n   在这个命令中，我们使用了 `-p` 参数来将容器的端口 80 映射到本地的端口 5050。你可以根据需要修改这个端口映射。\n\n   我们还使用了 `-e` 参数来设置 pgAdmin 的默认登录邮箱和密码。你可以根据需要修改这些值。\n\n3. 在浏览器中访问 `http://localhost:5050`，你将看到 pgAdmin 的登录界面。\n\n4. 使用在上一步中设置的邮箱和密码进行登录。\n\n5. 在 pgAdmin 中，你可以添加一个新的服务器连接，以连接到运行在 Docker 容器中的 PostgreSQL 数据库。要添加一个新的服务器连接，你需要提供以下信息：\n\n   - 主机名/地址：使用 Docker 容器的 IP 地址或者 `localhost`。\n   - 端口：使用 Docker 容器中 PostgreSQL 的映射端口，例如 33300。\n   - 用户名和密码：使用在启动 PostgreSQL 容器时设置的用户名和密码。\n\n   完成上述信息的填写后，点击保存并连接到 PostgreSQL 服务器。\n\n现在，你已经成功启动了 pgAdmin 并连接到了你的 PostgreSQL 数据库。你可以使用 pgAdmin 来管理和操作你的数据库。",
+        "id": "d5XTX9EQ",
+        "meta": {},
+        "parentId": "L7mq0ehV",
+        "role": "assistant",
+        "topicId": "MNWhBEh5",
+        "createdAt": 1698755749889,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698755786183,
+        "fromModel": "gpt-3.5-turbo"
+      },
+      {
+        "content": "",
+        "id": "tool_calls_KPPDiRyW",
+        "meta": {},
+        "parentId": "42k72jMi",
+        "role": "assistant",
+        "createdAt": 1690650544842,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1690650572389,
+        "fromModel": "gpt-3.5-turbo-16k",
+        "tools": [
+          {
+            "apiName": "websiteCrawler",
+            "arguments": "{\n  \"url\": \"https://mp.weixin.qq.com/s?__biz=MjM5MTA1MjAxMQ==&mid=2651264337&idx=1&sn=d7d9126578c74c912e1f0d42cb5629da&chksm=bd48ccd58a3f45c3f2cbc7d7b732c820b9e7cd6b547c06acc8170b233710b5fb5ed62f5fd94d&mpshare=1&scene=1&srcid=07294Mpw7C6JCLgtagL1cBDR&sharer_sharetime=1690622712877&sharer_shareid=0358058a42fc25387d28337fc3d22c3c#rd\"\n}",
+            "id": "tool_call_KPPDiRyW",
+            "identifier": "websiteCrawler",
+            "type": "default"
+          }
+        ]
+      },
+      {
+        "content": "abcabc",
+        "id": "KPPDiRyW",
+        "meta": {},
+        "parentId": "tool_calls_KPPDiRyW",
+        "role": "tool",
+        "createdAt": 1690650544852,
+        "plugin": {
+          "apiName": "websiteCrawler",
+          "arguments": "{\n  \"url\": \"https://mp.weixin.qq.com/s?__biz=MjM5MTA1MjAxMQ==&mid=2651264337&idx=1&sn=d7d9126578c74c912e1f0d42cb5629da&chksm=bd48ccd58a3f45c3f2cbc7d7b732c820b9e7cd6b547c06acc8170b233710b5fb5ed62f5fd94d&mpshare=1&scene=1&srcid=07294Mpw7C6JCLgtagL1cBDR&sharer_sharetime=1690622712877&sharer_shareid=0358058a42fc25387d28337fc3d22c3c#rd\"\n}",
+          "identifier": "websiteCrawler",
+          "type": "default"
+        },
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1690650572399,
+        "fromModel": "gpt-3.5-turbo-16k",
+        "tool_call_id": "tool_call_KPPDiRyW"
+      },
+      {
+        "content": "",
+        "id": "tool_calls_9cRjevRQ",
+        "meta": {},
+        "parentId": "3nDXtEKv",
+        "role": "assistant",
+        "createdAt": 1700065743395,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1700065751851,
+        "fromModel": "gpt-3.5-turbo-16k",
+        "tools": [
+          {
+            "apiName": "getWebsiteContent",
+            "arguments": "{\n  \"url\": \"https://nodejs.org/api/packages.html#dual-package-hazard\"\n}",
+            "id": "tool_call_9cRjevRQ",
+            "identifier": "website-crawler",
+            "type": "default"
+          }
+        ]
+      },
+      {
+        "content": "bbbbb",
+        "id": "9cRjevRQ",
+        "meta": {},
+        "parentId": "tool_calls_9cRjevRQ",
+        "role": "tool",
+        "plugin": {
+          "apiName": "getWebsiteContent",
+          "arguments": "{\n  \"url\": \"https://nodejs.org/api/packages.html#dual-package-hazard\"\n}",
+          "identifier": "website-crawler",
+          "type": "default"
+        },
+        "createdAt": 1700065743405,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1700065751861,
+        "fromModel": "gpt-3.5-turbo-16k",
+        "tool_call_id": "tool_call_9cRjevRQ"
+      }
+    ],
+    "topics": [
+      {
+        "id": "CZg3IEdy",
+        "title": "Prisma中的cuid函数作用是什么",
+        "createdAt": 1698463911747,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698463915716
+      },
+      {
+        "id": "MNWhBEh5",
+        "title": "启动 PostgreSQL Docker 镜像方法",
+        "createdAt": 1698754463117,
+        "sessionId": "06cc3e20-e870-4099-a619-c07a849d742d",
+        "updatedAt": 1698754464867
+      }
+    ],
+    "sessionGroups": []
+  },
+  "version": 5
+}

@@ -1,61 +1,166 @@
 {
   "background_color": "#000000",
-  "description": "An open-source, extensible (Function Calling), high-performance chatbot framework. It supports one-click free deployment of your private ChatGPT/LLM web application",
+  "cache_busting_mode": "all",
+  "categories": ["productivity", "design", "development", "education"],
+  "description": "Personal LLM productivity tool, brings you the best user experience of ChatGPT, OLLaMA, Gemini, Claude WebUI. Customize AI assistant features flexibly according to personalized needs to solve problems, enhance productivity, and explore future workflow in LobeChat.",
   "display": "standalone",
+  "display_override": ["tabbed"],
+  "edge_side_panel": {
+    "preferred_width": 480
+  },
+  "handle_links": "auto",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/icon-192x192.png?v=1",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     },
     {
-      "src": "/icons/maskable-icon-192x192.png",
+      "src": "/icons/icon-192x192.maskable.png?v=1",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "maskable",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon-512x512.png?v=1",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     },
     {
-      "src": "/icons/maskable-icon-512x512.png",
+      "src": "/icons/icon-512x512.maskable.png?v=1",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "maskable",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     }
   ],
-  "id": "/",
+  "id": "lobe-chat",
+  "immutable": "true",
+  "launch_handler": {
+    "client_mode": ["navigate-existing", "auto"]
+  },
+  "max_age": 31536000,
   "name": "LobeChat",
   "orientation": "portrait",
+  "related_applications": [
+    {
+      "platform": "webapp",
+      "url": "https://chat-preview.lobehub.com/manifest.json"
+    }
+  ],
   "scope": "/",
   "screenshots": [
     {
-      "src": "/screenshots/screenshot-1.png",
-      "sizes": "750x1334",
-      "type": "image/png"
+      "src": "/screenshots/shot-1.mobile.png?v=1",
+      "sizes": "640x1138",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     },
     {
-      "src": "/screenshots/screenshot-2.png",
-      "sizes": "750x1334",
-      "type": "image/png"
+      "src": "/screenshots/shot-2.mobile.png?v=1",
+      "sizes": "640x1138",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     },
     {
-      "src": "/screenshots/screenshot-3.png",
-      "sizes": "750x1334",
-      "type": "image/png"
+      "src": "/screenshots/shot-3.mobile.png?v=1",
+      "sizes": "640x1138",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     },
     {
-      "src": "/screenshots/screenshot-4.png",
-      "sizes": "750x1334",
-      "type": "image/png"
+      "src": "/screenshots/shot-4.mobile.png?v=1",
+      "sizes": "640x1138",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
+    },
+    {
+      "src": "/screenshots/shot-5.mobile.png?v=1",
+      "sizes": "640x1138",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
+    },
+    {
+      "src": "/screenshots/shot-1.desktop.png?v=1",
+      "sizes": "1280x676",
+      "type": "image/png",
+      "form_factor": "wide",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
+    },
+    {
+      "src": "/screenshots/shot-2.desktop.png?v=1",
+      "sizes": "1280x676",
+      "type": "image/png",
+      "form_factor": "wide",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
+    },
+    {
+      "src": "/screenshots/shot-3.desktop.png?v=1",
+      "sizes": "1280x676",
+      "type": "image/png",
+      "form_factor": "wide",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
+    },
+    {
+      "src": "/screenshots/shot-4.desktop.png?v=1",
+      "sizes": "1280x676",
+      "type": "image/png",
+      "form_factor": "wide",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
+    },
+    {
+      "src": "/screenshots/shot-5.desktop.png?v=1",
+      "sizes": "1280x676",
+      "type": "image/png",
+      "form_factor": "wide",
+      "cache_busting_mode": "query",
+      "max_age": 31536000,
+      "immutable": "true"
     }
   ],
   "short_name": "LobeChat",
   "splash_pages": null,
   "start_url": ".",
+  "tab_strip": {
+    "new_tab_button": {
+      "url": "/"
+    }
+  },
   "theme_color": "#000000"
 }

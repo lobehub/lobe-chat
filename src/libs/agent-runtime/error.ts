@@ -4,27 +4,23 @@ export const AgentRuntimeErrorType = {
   AgentRuntimeError: 'AgentRuntimeError', // Agent Runtime 模块运行时错误
   LocationNotSupportError: 'LocationNotSupportError',
 
-  OpenAIBizError: 'OpenAIBizError',
-
-  NoOpenAIAPIKey: 'NoOpenAIAPIKey',
-
-  InvalidAzureAPIKey: 'InvalidAzureAPIKey',
-  AzureBizError: 'AzureBizError',
-
-  InvalidZhipuAPIKey: 'InvalidZhipuAPIKey',
-  ZhipuBizError: 'ZhipuBizError',
-
-  InvalidGoogleAPIKey: 'InvalidGoogleAPIKey',
-  GoogleBizError: 'GoogleBizError',
-
-  InvalidBedrockCredentials: 'InvalidBedrockCredentials',
-  BedrockBizError: 'BedrockBizError',
-
-  InvalidMoonshotAPIKey: 'InvalidMoonshotAPIKey',
-  MoonshotBizError: 'MoonshotBizError',
+  InvalidProviderAPIKey: 'InvalidProviderAPIKey',
+  ProviderBizError: 'ProviderBizError',
 
   InvalidOllamaArgs: 'InvalidOllamaArgs',
   OllamaBizError: 'OllamaBizError',
+
+  InvalidBedrockCredentials: 'InvalidBedrockCredentials',
+  StreamChunkError: 'StreamChunkError',
+
+  /**
+   * @deprecated
+   */
+  NoOpenAIAPIKey: 'NoOpenAIAPIKey',
+  /**
+   * @deprecated
+   */
+  OpenAIBizError: 'OpenAIBizError',
 } as const;
 
 export type ILobeAgentRuntimeErrorType =

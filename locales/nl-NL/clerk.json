@@ -1,0 +1,769 @@
+{
+  "backButton": "Terug",
+  "badge__default": "Standaard",
+  "badge__otherImpersonatorDevice": "Ander impersonatorapparaat",
+  "badge__primary": "Primair",
+  "badge__requiresAction": "Vereist actie",
+  "badge__thisDevice": "Dit apparaat",
+  "badge__unverified": "Ongeverifieerd",
+  "badge__userDevice": "Gebruikersapparaat",
+  "badge__you": "Jij",
+  "createOrganization": {
+    "formButtonSubmit": "Organisatie aanmaken",
+    "invitePage": {
+      "formButtonReset": "Overslaan"
+    },
+    "title": "Organisatie aanmaken"
+  },
+  "dates": {
+    "lastDay": "Gisteren om {{ date | timeString('nl-NL') }}",
+    "next6Days": "{{ date | weekday('nl-NL','long') }} om {{ date | timeString('nl-NL') }}",
+    "nextDay": "Morgen om {{ date | timeString('nl-NL') }}",
+    "numeric": "{{ date | numeric('nl-NL') }}",
+    "previous6Days": "Vorige {{ date | weekday('nl-NL','long') }} om {{ date | timeString('nl-NL') }}",
+    "sameDay": "Vandaag om {{ date | timeString('nl-NL') }}"
+  },
+  "dividerText": "of",
+  "footerActionLink__useAnotherMethod": "Een andere methode gebruiken",
+  "footerPageLink__help": "Help",
+  "footerPageLink__privacy": "Privacy",
+  "footerPageLink__terms": "Voorwaarden",
+  "formButtonPrimary": "Doorgaan",
+  "formButtonPrimary__verify": "Verifiëren",
+  "formFieldAction__forgotPassword": "Wachtwoord vergeten?",
+  "formFieldError__matchingPasswords": "Wachtwoorden komen overeen.",
+  "formFieldError__notMatchingPasswords": "Wachtwoorden komen niet overeen.",
+  "formFieldError__verificationLinkExpired": "De verificatielink is verlopen. Vraag een nieuwe link aan.",
+  "formFieldHintText__optional": "Optioneel",
+  "formFieldHintText__slug": "Een slug is een leesbare ID die uniek moet zijn. Het wordt vaak gebruikt in URL's.",
+  "formFieldInputPlaceholder__backupCode": "",
+  "formFieldInputPlaceholder__confirmDeletionUserAccount": "Account verwijderen",
+  "formFieldInputPlaceholder__emailAddress": "",
+  "formFieldInputPlaceholder__emailAddress_username": "",
+  "formFieldInputPlaceholder__emailAddresses": "voorbeeld@email.com, voorbeeld2@email.com",
+  "formFieldInputPlaceholder__firstName": "",
+  "formFieldInputPlaceholder__lastName": "",
+  "formFieldInputPlaceholder__organizationDomain": "",
+  "formFieldInputPlaceholder__organizationDomainEmailAddress": "",
+  "formFieldInputPlaceholder__organizationName": "",
+  "formFieldInputPlaceholder__organizationSlug": "mijn-org",
+  "formFieldInputPlaceholder__password": "",
+  "formFieldInputPlaceholder__phoneNumber": "",
+  "formFieldInputPlaceholder__username": "",
+  "formFieldLabel__automaticInvitations": "Automatische uitnodigingen inschakelen voor dit domein",
+  "formFieldLabel__backupCode": "Back-upcode",
+  "formFieldLabel__confirmDeletion": "Bevestiging",
+  "formFieldLabel__confirmPassword": "Wachtwoord bevestigen",
+  "formFieldLabel__currentPassword": "Huidig wachtwoord",
+  "formFieldLabel__emailAddress": "E-mailadres",
+  "formFieldLabel__emailAddress_username": "E-mailadres of gebruikersnaam",
+  "formFieldLabel__emailAddresses": "E-mailadressen",
+  "formFieldLabel__firstName": "Voornaam",
+  "formFieldLabel__lastName": "Achternaam",
+  "formFieldLabel__newPassword": "Nieuw wachtwoord",
+  "formFieldLabel__organizationDomain": "Domein",
+  "formFieldLabel__organizationDomainDeletePending": "Verwijder uitnodigingen en suggesties in behandeling",
+  "formFieldLabel__organizationDomainEmailAddress": "Verificatie e-mailadres",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "Voer een e-mailadres onder dit domein in om een code te ontvangen en dit domein te verifiëren.",
+  "formFieldLabel__organizationName": "Naam",
+  "formFieldLabel__organizationSlug": "Slug",
+  "formFieldLabel__passkeyName": "Naam van passkey",
+  "formFieldLabel__password": "Wachtwoord",
+  "formFieldLabel__phoneNumber": "Telefoonnummer",
+  "formFieldLabel__role": "Rol",
+  "formFieldLabel__signOutOfOtherSessions": "Afmelden bij alle andere apparaten",
+  "formFieldLabel__username": "Gebruikersnaam",
+  "impersonationFab": {
+    "action__signOut": "Afmelden",
+    "title": "Aangemeld als {{identifier}}"
+  },
+  "locale": "nl-NL",
+  "maintenanceMode": "We zijn momenteel bezig met onderhoud, maar maak je geen zorgen, het zou niet langer dan een paar minuten moeten duren.",
+  "membershipRole__admin": "Admin",
+  "membershipRole__basicMember": "Lid",
+  "membershipRole__guestMember": "Gast",
+  "organizationList": {
+    "action__createOrganization": "Organisatie creëren",
+    "action__invitationAccept": "Deelnemen",
+    "action__suggestionsAccept": "Verzoek om deel te nemen",
+    "createOrganization": "Organisatie creëren",
+    "invitationAcceptedLabel": "Toegetreden",
+    "subtitle": "om door te gaan naar {{applicationName}}",
+    "suggestionsAcceptedLabel": "In afwachting van goedkeuring",
+    "title": "Kies een account",
+    "titleWithoutPersonal": "Kies een organisatie"
+  },
+  "organizationProfile": {
+    "badge__automaticInvitation": "Automatische uitnodigingen",
+    "badge__automaticSuggestion": "Automatische suggesties",
+    "badge__manualInvitation": "Geen automatische inschrijving",
+    "badge__unverified": "Ongeverifieerd",
+    "createDomainPage": {
+      "subtitle": "Voeg het domein toe ter verificatie. Gebruikers met e-mailadressen op dit domein kunnen automatisch lid worden van de organisatie of een verzoek indienen om lid te worden.",
+      "title": "Domein toevoegen"
+    },
+    "invitePage": {
+      "detailsTitle__inviteFailed": "De uitnodigingen konden niet worden verstuurd. Er zijn al uitstaande uitnodigingen voor de volgende e-mailadressen: {{email_addresses}}.",
+      "formButtonPrimary__continue": "Uitnodigingen versturen",
+      "selectDropdown__role": "Rol selecteren",
+      "subtitle": "Voer één of meer e-mailadressen in of plak ze, gescheiden door spaties of komma's.",
+      "successMessage": "Uitnodigingen succesvol verstuurd",
+      "title": "Nieuwe leden uitnodigen"
+    },
+    "membersPage": {
+      "action__invite": "Uitnodigen",
+      "activeMembersTab": {
+        "menuAction__remove": "Lid verwijderen",
+        "tableHeader__actions": "",
+        "tableHeader__joined": "Toegetreden",
+        "tableHeader__role": "Rol",
+        "tableHeader__user": "Gebruiker"
+      },
+      "detailsTitle__emptyRow": "Geen leden om weer te geven",
+      "invitationsTab": {
+        "autoInvitations": {
+          "headerSubtitle": "Nodig gebruikers uit door een e-maildomein te koppelen aan je organisatie. Iedereen die zich aanmeldt met een overeenkomstig e-maildomein kan op elk moment lid worden van de organisatie.",
+          "headerTitle": "Automatische uitnodigingen",
+          "primaryButton": "Beheer geverifieerde domeinen"
+        },
+        "table__emptyRow": "Geen uitnodigingen om weer te geven"
+      },
+      "invitedMembersTab": {
+        "menuAction__revoke": "Uitnodiging intrekken",
+        "tableHeader__invited": "Uitgenodigd"
+      },
+      "requestsTab": {
+        "autoSuggestions": {
+          "headerSubtitle": "Gebruikers die zich aanmelden met een overeenkomstig e-maildomein, kunnen een suggestie zien om een verzoek in te dienen om lid te worden van je organisatie.",
+          "headerTitle": "Automatische suggesties",
+          "primaryButton": "Beheer geverifieerde domeinen"
+        },
+        "menuAction__approve": "Goedkeuren",
+        "menuAction__reject": "Afwijzen",
+        "tableHeader__requested": "Toegang aangevraagd",
+        "table__emptyRow": "Geen verzoeken om weer te geven"
+      },
+      "start": {
+        "headerTitle__invitations": "Uitnodigingen",
+        "headerTitle__members": "Leden",
+        "headerTitle__requests": "Verzoeken"
+      }
+    },
+    "navbar": {
+      "description": "Beheer je organisatie.",
+      "general": "Algemeen",
+      "members": "Leden",
+      "title": "Organisatie"
+    },
+    "profilePage": {
+      "dangerSection": {
+        "deleteOrganization": {
+          "actionDescription": "Typ \"{{organizationName}}\" hieronder om door te gaan.",
+          "messageLine1": "Weet je zeker dat je deze organisatie wilt verwijderen?",
+          "messageLine2": "Deze actie is permanent en onomkeerbaar.",
+          "successMessage": "Je hebt de organisatie verwijderd.",
+          "title": "Organisatie verwijderen"
+        },
+        "leaveOrganization": {
+          "actionDescription": "Typ \"{{organizationName}}\" hieronder om door te gaan.",
+          "messageLine1": "Weet je zeker dat je deze organisatie wilt verlaten? Je verliest toegang tot deze organisatie en de bijbehorende applicaties.",
+          "messageLine2": "Deze actie is permanent en onomkeerbaar.",
+          "successMessage": "Je hebt de organisatie verlaten.",
+          "title": "Organisatie verlaten"
+        },
+        "title": "Gevaar"
+      },
+      "domainSection": {
+        "menuAction__manage": "Beheren",
+        "menuAction__remove": "Verwijderen",
+        "menuAction__verify": "Verifiëren",
+        "primaryButton": "Domein toevoegen",
+        "subtitle": "Laat gebruikers automatisch lid worden van de organisatie of een verzoek indienen om lid te worden op basis van een geverifieerd e-maildomein.",
+        "title": "Geverifieerde domeinen"
+      },
+      "successMessage": "De organisatie is bijgewerkt.",
+      "title": "Profiel bijwerken"
+    },
+    "removeDomainPage": {
+      "messageLine1": "Het e-maildomein {{domain}} wordt verwijderd.",
+      "messageLine2": "Gebruikers kunnen zich niet langer automatisch bij de organisatie aansluiten na deze actie.",
+      "successMessage": "{{domain}} is verwijderd.",
+      "title": "Domein verwijderen"
+    },
+    "start": {
+      "headerTitle__general": "Algemeen",
+      "headerTitle__members": "Leden",
+      "profileSection": {
+        "primaryButton": "Profiel bijwerken",
+        "title": "Organisatieprofiel",
+        "uploadAction__title": "Logo"
+      }
+    },
+    "verifiedDomainPage": {
+      "dangerTab": {
+        "calloutInfoLabel": "Het verwijderen van dit domein zal van invloed zijn op uitgenodigde gebruikers.",
+        "removeDomainActionLabel__remove": "Domein verwijderen",
+        "removeDomainSubtitle": "Verwijder dit domein uit je geverifieerde domeinen",
+        "removeDomainTitle": "Domein verwijderen"
+      },
+      "enrollmentTab": {
+        "automaticInvitationOption__description": "Gebruikers worden automatisch uitgenodigd om lid te worden van de organisatie wanneer ze zich aanmelden en kunnen op elk moment lid worden.",
+        "automaticInvitationOption__label": "Automatische uitnodigingen",
+        "automaticSuggestionOption__description": "Gebruikers ontvangen een suggestie om lid te worden, maar moeten worden goedgekeurd door een beheerder voordat ze lid kunnen worden van de organisatie.",
+        "automaticSuggestionOption__label": "Automatische suggesties",
+        "calloutInfoLabel": "Het wijzigen van de inschrijvingsmodus heeft alleen invloed op nieuwe gebruikers.",
+        "calloutInvitationCountLabel": "Uitstaande uitnodigingen verzonden naar gebruikers: {{count}}",
+        "calloutSuggestionCountLabel": "Uitstaande suggesties verzonden naar gebruikers: {{count}}",
+        "manualInvitationOption__description": "Gebruikers kunnen alleen handmatig worden uitgenodigd voor de organisatie.",
+        "manualInvitationOption__label": "Geen automatische inschrijving",
+        "subtitle": "Kies hoe gebruikers van dit domein lid kunnen worden van de organisatie."
+      },
+      "start": {
+        "headerTitle__danger": "Gevaar",
+        "headerTitle__enrollment": "Inschrijvingsopties"
+      },
+      "subtitle": "Het domein {{domain}} is nu geverifieerd. Ga verder door de inschrijvingsmodus te selecteren.",
+      "title": "{{domain}} bijwerken"
+    },
+    "verifyDomainPage": {
+      "formSubtitle": "Voer de verificatiecode in die naar je e-mailadres is gestuurd",
+      "formTitle": "Verificatiecode",
+      "resendButton": "Code niet ontvangen? Opnieuw verzenden",
+      "subtitle": "Het domein {{domainName}} moet worden geverifieerd via e-mail.",
+      "subtitleVerificationCodeScreen": "Er is een verificatiecode naar {{emailAddress}} gestuurd. Voer de code in om door te gaan.",
+      "title": "Domein verifiëren"
+    }
+  },
+  "organizationSwitcher": {
+    "action__createOrganization": "Organisatie creëren",
+    "action__invitationAccept": "Deelnemen",
+    "action__manageOrganization": "Beheren",
+    "action__suggestionsAccept": "Verzoek om deel te nemen",
+    "notSelected": "Geen organisatie geselecteerd",
+    "personalWorkspace": "Persoonlijk account",
+    "suggestionsAcceptedLabel": "In afwachting van goedkeuring"
+  },
+  "paginationButton__next": "Volgende",
+  "paginationButton__previous": "Vorige",
+  "paginationRowText__displaying": "Weergeven",
+  "paginationRowText__of": "van",
+  "signIn": {
+    "accountSwitcher": {
+      "action__addAccount": "Account toevoegen",
+      "action__signOutAll": "Afmelden bij alle accounts",
+      "subtitle": "Selecteer het account waarmee je wilt doorgaan.",
+      "title": "Kies een account"
+    },
+    "alternativeMethods": {
+      "actionLink": "Hulp krijgen",
+      "actionText": "Heb je geen van deze?",
+      "blockButton__backupCode": "Een back-upcode gebruiken",
+      "blockButton__emailCode": "Code e-mailen naar {{identifier}}",
+      "blockButton__emailLink": "Link e-mailen naar {{identifier}}",
+      "blockButton__passkey": "Inloggen met je pascode",
+      "blockButton__password": "Inloggen met je wachtwoord",
+      "blockButton__phoneCode": "SMS-code verzenden naar {{identifier}}",
+      "blockButton__totp": "Je authenticator-app gebruiken",
+      "getHelp": {
+        "blockButton__emailSupport": "E-mailondersteuning",
+        "content": "Als je problemen ondervindt bij het inloggen op je account, stuur ons een e-mail en we zullen samen met jou werken om zo snel mogelijk toegang te herstellen.",
+        "title": "Hulp krijgen"
+      },
+      "subtitle": "Problemen? Je kunt een van deze methoden gebruiken om in te loggen.",
+      "title": "Een andere methode gebruiken"
+    },
+    "backupCodeMfa": {
+      "subtitle": "Je back-upcode is degene die je hebt gekregen bij het instellen van tweestapsverificatie.",
+      "title": "Voer een back-upcode in"
+    },
+    "emailCode": {
+      "formTitle": "Verificatiecode",
+      "resendButton": "Geen code ontvangen? Opnieuw verzenden",
+      "subtitle": "om door te gaan naar {{applicationName}}",
+      "title": "Controleer je e-mail"
+    },
+    "emailLink": {
+      "expired": {
+        "subtitle": "Ga terug naar het oorspronkelijke tabblad om door te gaan.",
+        "title": "Deze verificatielink is verlopen"
+      },
+      "failed": {
+        "subtitle": "Ga terug naar het oorspronkelijke tabblad om door te gaan.",
+        "title": "Deze verificatielink is ongeldig"
+      },
+      "formSubtitle": "Gebruik de verificatielink die naar je e-mail is verzonden",
+      "formTitle": "Verificatielink",
+      "loading": {
+        "subtitle": "Je wordt binnenkort doorgestuurd",
+        "title": "Aanmelden..."
+      },
+      "resendButton": "Geen link ontvangen? Opnieuw verzenden",
+      "subtitle": "om door te gaan naar {{applicationName}}",
+      "title": "Controleer je e-mail",
+      "unusedTab": {
+        "title": "Je kunt dit tabblad sluiten"
+      },
+      "verified": {
+        "subtitle": "Je wordt binnenkort doorgestuurd",
+        "title": "Succesvol aangemeld"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Ga terug naar het oorspronkelijke tabblad om door te gaan",
+        "subtitleNewTab": "Ga terug naar het nieuw geopende tabblad om door te gaan",
+        "titleNewTab": "Aangemeld op ander tabblad"
+      }
+    },
+    "forgotPassword": {
+      "formTitle": "Wachtwoord resetcode",
+      "resendButton": "Geen code ontvangen? Opnieuw verzenden",
+      "subtitle": "om je wachtwoord opnieuw in te stellen",
+      "subtitle_email": "Voer eerst de code in die naar je e-mailadres is verzonden",
+      "subtitle_phone": "Voer eerst de code in die naar je telefoon is verzonden",
+      "title": "Wachtwoord opnieuw instellen"
+    },
+    "forgotPasswordAlternativeMethods": {
+      "blockButton__resetPassword": "Je wachtwoord opnieuw instellen",
+      "label__alternativeMethods": "Of meld je aan met een andere methode",
+      "title": "Wachtwoord vergeten?"
+    },
+    "noAvailableMethods": {
+      "message": "Kan niet doorgaan met aanmelden. Er is geen beschikbare authenticatiefactor.",
+      "subtitle": "Er is een fout opgetreden",
+      "title": "Kan niet aanmelden"
+    },
+    "passkey": {
+      "subtitle": "Het gebruik van je pascode bevestigt dat jij het bent. Je apparaat kan vragen om je vingerafdruk, gezicht of schermvergrendeling.",
+      "title": "Gebruik je pascode"
+    },
+    "password": {
+      "actionLink": "Een andere methode gebruiken",
+      "subtitle": "Voer het wachtwoord in dat is gekoppeld aan je account",
+      "title": "Voer je wachtwoord in"
+    },
+    "passwordPwned": {
+      "title": "Wachtwoord gecompromitteerd"
+    },
+    "phoneCode": {
+      "formTitle": "Verificatiecode",
+      "resendButton": "Geen code ontvangen? Opnieuw verzenden",
+      "subtitle": "om door te gaan naar {{applicationName}}",
+      "title": "Controleer je telefoon"
+    },
+    "phoneCodeMfa": {
+      "formTitle": "Verificatiecode",
+      "resendButton": "Geen code ontvangen? Opnieuw verzenden",
+      "subtitle": "Voer de verificatiecode in die naar je telefoon is verzonden",
+      "title": "Controleer je telefoon"
+    },
+    "resetPassword": {
+      "formButtonPrimary": "Wachtwoord opnieuw instellen",
+      "requiredMessage": "Om veiligheidsredenen moet je je wachtwoord opnieuw instellen.",
+      "successMessage": "Je wachtwoord is succesvol gewijzigd. We melden je aan, even geduld a.u.b.",
+      "title": "Stel een nieuw wachtwoord in"
+    },
+    "resetPasswordMfa": {
+      "detailsLabel": "We moeten je identiteit verifiëren voordat we je wachtwoord opnieuw instellen."
+    },
+    "start": {
+      "actionLink": "Aanmelden",
+      "actionLink__use_email": "Gebruik e-mail",
+      "actionLink__use_email_username": "Gebruik e-mail of gebruikersnaam",
+      "actionLink__use_passkey": "Gebruik pascode in plaats daarvan",
+      "actionLink__use_phone": "Gebruik telefoon",
+      "actionLink__use_username": "Gebruik gebruikersnaam",
+      "actionText": "Heb je nog geen account?",
+      "subtitle": "Welkom terug! Meld je aan om door te gaan",
+      "title": "Meld je aan bij {{applicationName}}"
+    },
+    "totpMfa": {
+      "formTitle": "Verificatiecode",
+      "subtitle": "Voer de verificatiecode in die is gegenereerd door je authenticator-app",
+      "title": "Tweestapsverificatie"
+    }
+  },
+  "signInEnterPasswordTitle": "Voer je wachtwoord in",
+  "signUp": {
+    "continue": {
+      "actionLink": "Aanmelden",
+      "actionText": "Heb je al een account?",
+      "subtitle": "Vul de overgebleven gegevens in om door te gaan",
+      "title": "Ontbrekende velden invullen"
+    },
+    "emailCode": {
+      "formSubtitle": "Voer de verificatiecode in die naar je e-mailadres is verzonden",
+      "formTitle": "Verificatiecode",
+      "resendButton": "Geen code ontvangen? Opnieuw verzenden",
+      "subtitle": "Voer de verificatiecode in die naar je e-mail is verzonden",
+      "title": "Je e-mail verifiëren"
+    },
+    "emailLink": {
+      "formSubtitle": "Gebruik de verificatielink die naar je e-mailadres is verzonden",
+      "formTitle": "Verificatielink",
+      "loading": {
+        "title": "Aanmelden..."
+      },
+      "resendButton": "Geen link ontvangen? Opnieuw verzenden",
+      "subtitle": "om door te gaan naar {{applicationName}}",
+      "title": "Je e-mail verifiëren",
+      "verified": {
+        "title": "Succesvol aangemeld"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Ga terug naar het nieuw geopende tabblad om door te gaan",
+        "subtitleNewTab": "Ga terug naar het vorige tabblad om door te gaan",
+        "title": "E-mail succesvol geverifieerd"
+      }
+    },
+    "phoneCode": {
+      "formSubtitle": "Voer de verificatiecode in die naar je telefoonnummer is verzonden",
+      "formTitle": "Verificatiecode",
+      "resendButton": "Geen code ontvangen? Opnieuw verzenden",
+      "subtitle": "Voer de verificatiecode in die naar je telefoon is verzonden",
+      "title": "Je telefoon verifiëren"
+    },
+    "start": {
+      "actionLink": "Aanmelden",
+      "actionText": "Heb je al een account?",
+      "subtitle": "Welkom! Vul de gegevens in om te beginnen",
+      "title": "Maak je account aan"
+    }
+  },
+  "socialButtonsBlockButton": "Doorgaan met {{provider|titleize}}",
+  "unstable__errors": {
+    "captcha_invalid": "Aanmelding mislukt vanwege mislukte beveiligingsvalidaties. Vernieuw de pagina om het opnieuw te proberen of neem contact op met de ondersteuning voor meer hulp.",
+    "captcha_unavailable": "Aanmelding mislukt vanwege mislukte botvalidatie. Vernieuw de pagina om het opnieuw te proberen of neem contact op met de ondersteuning voor meer hulp.",
+    "form_code_incorrect": "",
+    "form_identifier_exists": "",
+    "form_identifier_exists__email_address": "Dit e-mailadres is al in gebruik. Probeer een ander e-mailadres.",
+    "form_identifier_exists__phone_number": "Dit telefoonnummer is al in gebruik. Probeer een ander telefoonnummer.",
+    "form_identifier_exists__username": "Deze gebruikersnaam is al in gebruik. Probeer een andere gebruikersnaam.",
+    "form_identifier_not_found": "",
+    "form_param_format_invalid": "",
+    "form_param_format_invalid__email_address": "E-mailadres moet een geldig e-mailadres zijn.",
+    "form_param_format_invalid__phone_number": "Telefoonnummer moet in een geldig internationaal formaat zijn.",
+    "form_param_max_length_exceeded__first_name": "Voornaam mag niet meer dan 256 tekens bevatten.",
+    "form_param_max_length_exceeded__last_name": "Achternaam mag niet meer dan 256 tekens bevatten.",
+    "form_param_max_length_exceeded__name": "Naam mag niet meer dan 256 tekens bevatten.",
+    "form_param_nil": "",
+    "form_password_incorrect": "",
+    "form_password_length_too_short": "",
+    "form_password_not_strong_enough": "Uw wachtwoord is niet sterk genoeg.",
+    "form_password_pwned": "Dit wachtwoord is gevonden als onderdeel van een datalek en kan niet worden gebruikt, probeer in plaats daarvan een ander wachtwoord.",
+    "form_password_pwned__sign_in": "Dit wachtwoord is gevonden als onderdeel van een datalek en kan niet worden gebruikt, reset alstublieft uw wachtwoord.",
+    "form_password_size_in_bytes_exceeded": "Uw wachtwoord heeft het maximale aantal bytes overschreden, verkort het of verwijder enkele speciale tekens.",
+    "form_password_validation_failed": "Onjuist wachtwoord",
+    "form_username_invalid_character": "",
+    "form_username_invalid_length": "",
+    "identification_deletion_failed": "U kunt uw laatste identificatie niet verwijderen.",
+    "not_allowed_access": "",
+    "passkey_already_exists": "Er is al een pascode geregistreerd op dit apparaat.",
+    "passkey_not_supported": "Pascodes worden niet ondersteund op dit apparaat.",
+    "passkey_pa_not_supported": "Registratie vereist een platformauthenticator, maar het apparaat ondersteunt dit niet.",
+    "passkey_registration_cancelled": "Registratie van pascode is geannuleerd of verlopen.",
+    "passkey_retrieval_cancelled": "Verificatie van pascode is geannuleerd of verlopen.",
+    "passwordComplexity": {
+      "maximumLength": "minder dan {{length}} tekens",
+      "minimumLength": "{{length}} of meer tekens",
+      "requireLowercase": "een kleine letter",
+      "requireNumbers": "een nummer",
+      "requireSpecialCharacter": "een speciaal teken",
+      "requireUppercase": "een hoofdletter",
+      "sentencePrefix": "Uw wachtwoord moet bevatten"
+    },
+    "phone_number_exists": "Dit telefoonnummer is al in gebruik. Probeer een ander telefoonnummer.",
+    "zxcvbn": {
+      "couldBeStronger": "Uw wachtwoord werkt, maar kan sterker zijn. Probeer meer tekens toe te voegen.",
+      "goodPassword": "Uw wachtwoord voldoet aan alle vereisten.",
+      "notEnough": "Uw wachtwoord is niet sterk genoeg.",
+      "suggestions": {
+        "allUppercase": "Maak sommige letters hoofdletters, maar niet allemaal.",
+        "anotherWord": "Voeg meer woorden toe die minder gebruikelijk zijn.",
+        "associatedYears": "Vermijd jaren die met u geassocieerd zijn.",
+        "capitalization": "Maak meer dan alleen de eerste letter hoofdletter.",
+        "dates": "Vermijd data en jaren die met u geassocieerd zijn.",
+        "l33t": "Vermijd voorspelbare lettervervangingen zoals '@' voor 'a'.",
+        "longerKeyboardPattern": "Gebruik langere toetsenbordpatronen en verander meerdere keren van typrichting.",
+        "noNeed": "U kunt sterke wachtwoorden maken zonder symbolen, cijfers of hoofdletters te gebruiken.",
+        "pwned": "Als u dit wachtwoord elders gebruikt, moet u het wijzigen.",
+        "recentYears": "Vermijd recente jaren.",
+        "repeated": "Vermijd herhaalde woorden en tekens.",
+        "reverseWords": "Vermijd omgekeerde spellingen van veelvoorkomende woorden.",
+        "sequences": "Vermijd veelvoorkomende karakterreeksen.",
+        "useWords": "Gebruik meerdere woorden, maar vermijd veelvoorkomende zinnen."
+      },
+      "warnings": {
+        "common": "Dit is een veelgebruikt wachtwoord.",
+        "commonNames": "Gemeenschappelijke namen en achternamen zijn gemakkelijk te raden.",
+        "dates": "Data zijn gemakkelijk te raden.",
+        "extendedRepeat": "Herhaalde karakterpatronen zoals \"abcabcabc\" zijn gemakkelijk te raden.",
+        "keyPattern": "Korte toetsenbordpatronen zijn gemakkelijk te raden.",
+        "namesByThemselves": "Enkele namen of achternamen zijn gemakkelijk te raden.",
+        "pwned": "Uw wachtwoord is blootgesteld door een datalek op het internet.",
+        "recentYears": "Recente jaren zijn gemakkelijk te raden.",
+        "sequences": "Gemeenschappelijke karakterreeksen zoals \"abc\" zijn gemakkelijk te raden.",
+        "similarToCommon": "Dit lijkt op een veelgebruikt wachtwoord.",
+        "simpleRepeat": "Herhaalde tekens zoals \"aaa\" zijn gemakkelijk te raden.",
+        "straightRow": "Rechte rijen toetsen op uw toetsenbord zijn gemakkelijk te raden.",
+        "topHundred": "Dit is een veelgebruikt wachtwoord.",
+        "topTen": "Dit is een zeer gebruikt wachtwoord.",
+        "userInputs": "Er mogen geen persoonlijke of paginagerelateerde gegevens zijn.",
+        "wordByItself": "Enkele woorden zijn gemakkelijk te raden."
+      }
+    }
+  },
+  "userButton": {
+    "action__addAccount": "Account toevoegen",
+    "action__manageAccount": "Account beheren",
+    "action__signOut": "Afmelden",
+    "action__signOutAll": "Afmelden bij alle accounts"
+  },
+  "userProfile": {
+    "backupCodePage": {
+      "actionLabel__copied": "Gekopieerd!",
+      "actionLabel__copy": "Alles kopiëren",
+      "actionLabel__download": "Download .txt",
+      "actionLabel__print": "Afdrukken",
+      "infoText1": "Back-upcodes worden ingeschakeld voor dit account.",
+      "infoText2": "Houd de back-upcodes geheim en bewaar ze veilig. U kunt back-upcodes opnieuw genereren als u vermoedt dat ze zijn gecompromitteerd.",
+      "subtitle__codelist": "Bewaar ze veilig en houd ze geheim.",
+      "successMessage": "Back-upcodes zijn nu ingeschakeld. U kunt een van deze gebruiken om in te loggen op uw account als u geen toegang meer heeft tot uw verificatieapparaat. Elke code kan slechts eenmaal worden gebruikt.",
+      "successSubtitle": "U kunt een van deze gebruiken om in te loggen op uw account als u geen toegang meer heeft tot uw verificatieapparaat.",
+      "title": "Back-upcodeverificatie toevoegen",
+      "title__codelist": "Back-upcodes"
+    },
+    "connectedAccountPage": {
+      "formHint": "Selecteer een provider om uw account te koppelen.",
+      "formHint__noAccounts": "Er zijn geen beschikbare externe accountproviders.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} wordt verwijderd van dit account.",
+        "messageLine2": "U kunt dit gekoppelde account niet langer gebruiken en eventuele afhankelijke functies zullen niet meer werken.",
+        "successMessage": "{{connectedAccount}} is verwijderd van uw account.",
+        "title": "Gekoppeld account verwijderen"
+      },
+      "socialButtonsBlockButton": "{{provider|titleize}}",
+      "successMessage": "De provider is toegevoegd aan uw account",
+      "title": "Gekoppeld account toevoegen"
+    },
+    "deletePage": {
+      "actionDescription": "Typ \"Account verwijderen\" hieronder om door te gaan.",
+      "confirm": "Account verwijderen",
+      "messageLine1": "Weet u zeker dat u uw account wilt verwijderen?",
+      "messageLine2": "Deze actie is permanent en onomkeerbaar.",
+      "title": "Account verwijderen"
+    },
+    "emailAddressPage": {
+      "emailCode": {
+        "formHint": "Er wordt een e-mail met een verificatiecode naar dit e-mailadres gestuurd.",
+        "formSubtitle": "Voer de verificatiecode in die naar {{identifier}} is gestuurd.",
+        "formTitle": "Verificatiecode",
+        "resendButton": "Geen code ontvangen? Opnieuw verzenden",
+        "successMessage": "Het e-mailadres {{identifier}} is toegevoegd aan uw account."
+      },
+      "emailLink": {
+        "formHint": "Er wordt een e-mail met een verificatielink naar dit e-mailadres gestuurd.",
+        "formSubtitle": "Klik op de verificatielink in de e-mail die naar {{identifier}} is gestuurd.",
+        "formTitle": "Verificatielink",
+        "resendButton": "Geen link ontvangen? Opnieuw verzenden",
+        "successMessage": "Het e-mailadres {{identifier}} is toegevoegd aan uw account."
+      },
+      "removeResource": {
+        "messageLine1": "{{identifier}} wordt verwijderd van dit account.",
+        "messageLine2": "U kunt niet langer inloggen met dit e-mailadres.",
+        "successMessage": "{{emailAddress}} is verwijderd van uw account.",
+        "title": "E-mailadres verwijderen"
+      },
+      "title": "E-mailadres toevoegen",
+      "verifyTitle": "E-mailadres verifiëren"
+    },
+    "formButtonPrimary__add": "Toevoegen",
+    "formButtonPrimary__continue": "Doorgaan",
+    "formButtonPrimary__finish": "Voltooien",
+    "formButtonPrimary__remove": "Verwijderen",
+    "formButtonPrimary__save": "Opslaan",
+    "formButtonReset": "Annuleren",
+    "mfaPage": {
+      "formHint": "Selecteer een methode om toe te voegen.",
+      "title": "Tweestapsverificatie toevoegen"
+    },
+    "mfaPhoneCodePage": {
+      "backButton": "Bestaand nummer gebruiken",
+      "primaryButton__addPhoneNumber": "Telefoonnummer toevoegen",
+      "removeResource": {
+        "messageLine1": "{{identifier}} ontvangt geen verificatiecodes meer bij het inloggen.",
+        "messageLine2": "Uw account is mogelijk minder veilig. Weet u zeker dat u wilt doorgaan?",
+        "successMessage": "SMS-code tweestapsverificatie is verwijderd voor {{mfaPhoneCode}}",
+        "title": "Tweestapsverificatie verwijderen"
+      },
+      "subtitle__availablePhoneNumbers": "Selecteer een bestaand telefoonnummer om te registreren voor SMS-code tweestapsverificatie of voeg een nieuw nummer toe.",
+      "subtitle__unavailablePhoneNumbers": "Er zijn geen beschikbare telefoonnummers om te registreren voor SMS-code tweestapsverificatie, voeg alstublieft een nieuw nummer toe.",
+      "successMessage1": "Bij het inloggen moet u een verificatiecode invoeren die naar dit telefoonnummer is gestuurd als extra stap.",
+      "successMessage2": "Sla deze back-upcodes op en bewaar ze op een veilige plek. Als u geen toegang meer heeft tot uw verificatieapparaat, kunt u back-upcodes gebruiken om in te loggen.",
+      "successTitle": "SMS-codeverificatie ingeschakeld",
+      "title": "SMS-codeverificatie toevoegen"
+    },
+    "mfaTOTPPage": {
+      "authenticatorApp": {
+        "buttonAbleToScan__nonPrimary": "In plaats daarvan QR-code scannen",
+        "buttonUnableToScan__nonPrimary": "Kan QR-code niet scannen?",
+        "infoText__ableToScan": "Stel een nieuwe aanmeldmethode in in uw authenticator-app en scan de volgende QR-code om deze aan uw account te koppelen.",
+        "infoText__unableToScan": "Stel een nieuwe aanmeldmethode in in uw authenticator en voer de onderstaande sleutel in.",
+        "inputLabel__unableToScan1": "Zorg ervoor dat Tijdgebaseerde of Eenmalige wachtwoorden zijn ingeschakeld en voltooi vervolgens het koppelen van uw account.",
+        "inputLabel__unableToScan2": "Als uw authenticator TOTP URI's ondersteunt, kunt u ook de volledige URI kopiëren."
+      },
+      "removeResource": {
+        "messageLine1": "Verificatiecodes van deze authenticator zijn niet langer vereist bij het inloggen.",
+        "messageLine2": "Uw account is mogelijk minder veilig. Weet u zeker dat u wilt doorgaan?",
+        "successMessage": "Tweestapsverificatie via authenticator-applicatie is verwijderd.",
+        "title": "Tweestapsverificatie verwijderen"
+      },
+      "successMessage": "Tweestapsverificatie is nu ingeschakeld. Bij het inloggen moet u een verificatiecode van deze authenticator invoeren als extra stap.",
+      "title": "Authenticator-applicatie toevoegen",
+      "verifySubtitle": "Voer de verificatiecode in die is gegenereerd door uw authenticator",
+      "verifyTitle": "Verificatiecode"
+    },
+    "mobileButton__menu": "Menu",
+    "navbar": {
+      "account": "Profiel",
+      "description": "Beheer uw accountgegevens.",
+      "security": "Beveiliging",
+      "title": "Account"
+    },
+    "passkeyScreen": {
+      "removeResource": {
+        "messageLine1": "{{name}} wordt van dit account verwijderd.",
+        "title": "Passkey verwijderen"
+      },
+      "subtitle__rename": "U kunt de naam van de passkey wijzigen om deze gemakkelijker te vinden.",
+      "title__rename": "Passkey hernoemen"
+    },
+    "passwordPage": {
+      "checkboxInfoText__signOutOfOtherSessions": "Het wordt aanbevolen om uit te loggen op alle andere apparaten die uw oude wachtwoord hebben gebruikt.",
+      "readonly": "Uw wachtwoord kan momenteel niet worden bewerkt omdat u alleen kunt inloggen via de bedrijfsverbinding.",
+      "successMessage__set": "Uw wachtwoord is ingesteld.",
+      "successMessage__signOutOfOtherSessions": "Alle andere apparaten zijn uitgelogd.",
+      "successMessage__update": "Uw wachtwoord is bijgewerkt.",
+      "title__set": "Wachtwoord instellen",
+      "title__update": "Wachtwoord bijwerken"
+    },
+    "phoneNumberPage": {
+      "infoText": "Een sms met een verificatiecode wordt naar dit telefoonnummer gestuurd. Bericht- en datatarieven kunnen van toepassing zijn.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} wordt van dit account verwijderd.",
+        "messageLine2": "U kunt niet langer inloggen met dit telefoonnummer.",
+        "successMessage": "{{phoneNumber}} is verwijderd uit uw account.",
+        "title": "Telefoonnummer verwijderen"
+      },
+      "successMessage": "{{identifier}} is toegevoegd aan uw account.",
+      "title": "Telefoonnummer toevoegen",
+      "verifySubtitle": "Voer de verificatiecode in die naar {{identifier}} is gestuurd.",
+      "verifyTitle": "Telefoonnummer verifiëren"
+    },
+    "profilePage": {
+      "fileDropAreaHint": "Aanbevolen grootte 1:1, tot 10 MB.",
+      "imageFormDestructiveActionSubtitle": "Verwijderen",
+      "imageFormSubtitle": "Uploaden",
+      "imageFormTitle": "Profielafbeelding",
+      "readonly": "Uw profielinformatie is verstrekt via de bedrijfsverbinding en kan niet worden bewerkt.",
+      "successMessage": "Uw profiel is bijgewerkt.",
+      "title": "Profiel bijwerken"
+    },
+    "start": {
+      "activeDevicesSection": {
+        "destructiveAction": "Uitloggen van apparaat",
+        "title": "Actieve apparaten"
+      },
+      "connectedAccountsSection": {
+        "actionLabel__connectionFailed": "Probeer opnieuw",
+        "actionLabel__reauthorize": "Nu autoriseren",
+        "destructiveActionTitle": "Verwijderen",
+        "primaryButton": "Verbind account",
+        "subtitle__reauthorize": "De vereiste rechten zijn bijgewerkt en u kunt beperkte functionaliteit ervaren. Autoriseer deze applicatie opnieuw om problemen te voorkomen",
+        "title": "Gekoppelde accounts"
+      },
+      "dangerSection": {
+        "deleteAccountButton": "Account verwijderen",
+        "title": "Account verwijderen"
+      },
+      "emailAddressesSection": {
+        "destructiveAction": "E-mail verwijderen",
+        "detailsAction__nonPrimary": "Instellen als primair",
+        "detailsAction__primary": "Verificatie voltooien",
+        "detailsAction__unverified": "Verifiëren",
+        "primaryButton": "E-mailadres toevoegen",
+        "title": "E-mailadressen"
+      },
+      "enterpriseAccountsSection": {
+        "title": "Zakelijke accounts"
+      },
+      "headerTitle__account": "Profielgegevens",
+      "headerTitle__security": "Beveiliging",
+      "mfaSection": {
+        "backupCodes": {
+          "actionLabel__regenerate": "Regenereren",
+          "headerTitle": "Back-upcodes",
+          "subtitle__regenerate": "Ontvang een nieuwe set veilige back-upcodes. Eerdere back-upcodes worden verwijderd en kunnen niet meer worden gebruikt.",
+          "title__regenerate": "Back-upcodes regenereren"
+        },
+        "phoneCode": {
+          "actionLabel__setDefault": "Als standaard instellen",
+          "destructiveActionLabel": "Verwijderen"
+        },
+        "primaryButton": "Tweestapsverificatie toevoegen",
+        "title": "Tweestapsverificatie",
+        "totp": {
+          "destructiveActionTitle": "Verwijderen",
+          "headerTitle": "Authenticator-applicatie"
+        }
+      },
+      "passkeysSection": {
+        "menuAction__destructive": "Verwijderen",
+        "menuAction__rename": "Hernoemen",
+        "title": "Wachtwoorden"
+      },
+      "passwordSection": {
+        "primaryButton__setPassword": "Wachtwoord instellen",
+        "primaryButton__updatePassword": "Wachtwoord bijwerken",
+        "title": "Wachtwoord"
+      },
+      "phoneNumbersSection": {
+        "destructiveAction": "Telefoonnummer verwijderen",
+        "detailsAction__nonPrimary": "Instellen als primair",
+        "detailsAction__primary": "Verificatie voltooien",
+        "detailsAction__unverified": "Telefoonnummer verifiëren",
+        "primaryButton": "Telefoonnummer toevoegen",
+        "title": "Telefoonnummers"
+      },
+      "profileSection": {
+        "primaryButton": "Profiel bijwerken",
+        "title": "Profiel"
+      },
+      "usernameSection": {
+        "primaryButton__setUsername": "Gebruikersnaam instellen",
+        "primaryButton__updateUsername": "Gebruikersnaam bijwerken",
+        "title": "Gebruikersnaam"
+      },
+      "web3WalletsSection": {
+        "destructiveAction": "Portemonnee verwijderen",
+        "primaryButton": "Web3-portefeuilles",
+        "title": "Web3-portefeuilles"
+      }
+    },
+    "usernamePage": {
+      "successMessage": "Uw gebruikersnaam is bijgewerkt.",
+      "title__set": "Gebruikersnaam instellen",
+      "title__update": "Gebruikersnaam bijwerken"
+    },
+    "web3WalletPage": {
+      "removeResource": {
+        "messageLine1": "{{identifier}} wordt van dit account verwijderd.",
+        "messageLine2": "U kunt niet langer inloggen met deze web3-portemonnee.",
+        "successMessage": "{{web3Wallet}} is verwijderd uit uw account.",
+        "title": "Web3-portemonnee verwijderen"
+      },
+      "subtitle__availableWallets": "Selecteer een web3-portemonnee om verbinding te maken met uw account.",
+      "subtitle__unavailableWallets": "Er zijn geen beschikbare web3-portemonnees.",
+      "successMessage": "De portemonnee is toegevoegd aan uw account.",
+      "title": "Web3-portemonnee toevoegen"
+    }
+  }
+}

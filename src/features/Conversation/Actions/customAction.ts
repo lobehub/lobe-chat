@@ -1,9 +1,17 @@
 import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
+import { css, cx } from 'antd-style';
 import { LanguagesIcon, Play } from 'lucide-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { localeOptions } from '@/locales/resources';
+
+const translateStyle = css`
+  .ant-dropdown-menu-sub {
+    overflow-y: scroll;
+    max-height: 400px;
+  }
+`;
 
 export const useCustomActions = () => {
   const { t } = useTranslation('chat');
@@ -16,6 +24,7 @@ export const useCustomActions = () => {
     icon: LanguagesIcon,
     key: 'translate',
     label: t('translate.action'),
+    popupClassName: cx(translateStyle),
   } as ActionIconGroupItems;
 
   const tts = {

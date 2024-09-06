@@ -1,0 +1,84 @@
+{
+  "DragUpload": {
+    "dragDesc": "Arraste os arquivos para cá, suportando o upload de várias imagens.",
+    "dragFileDesc": "Arraste imagens e arquivos para cá, suportando o upload de várias imagens e arquivos.",
+    "dragFileTitle": "Enviar arquivo",
+    "dragTitle": "Enviar imagem"
+  },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Adicionar ao banco de conhecimento",
+      "addToOtherKnowledgeBase": "Adicionar a outro banco de conhecimento",
+      "batchChunking": "Divisão em lotes",
+      "chunking": "Divisão",
+      "chunkingTooltip": "Divida o arquivo em vários blocos de texto e vetorize, podendo ser usado para busca semântica e diálogo sobre o arquivo",
+      "confirmDelete": "Você está prestes a excluir este arquivo. Após a exclusão, ele não poderá ser recuperado. Por favor, confirme sua ação.",
+      "confirmDeleteMultiFiles": "Você está prestes a excluir {{count}} arquivos selecionados. Após a exclusão, eles não poderão ser recuperados. Por favor, confirme sua ação.",
+      "confirmRemoveFromKnowledgeBase": "Você está prestes a remover {{count}} arquivos selecionados do banco de conhecimento. Após a remoção, os arquivos ainda poderão ser visualizados em todos os arquivos. Por favor, confirme sua ação.",
+      "copyUrl": "Copiar link",
+      "copyUrlSuccess": "Endereço do arquivo copiado com sucesso",
+      "createChunkingTask": "Preparando...",
+      "deleteSuccess": "Arquivo excluído com sucesso",
+      "downloading": "Baixando arquivo...",
+      "removeFromKnowledgeBase": "Remover do banco de conhecimento",
+      "removeFromKnowledgeBaseSuccess": "Arquivo removido com sucesso"
+    },
+    "bottom": "Você chegou ao final",
+    "config": {
+      "showFilesInKnowledgeBase": "Mostrar conteúdo no banco de conhecimento"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Carregar arquivo",
+        "folder": "Carregar pasta",
+        "knowledgeBase": "Criar novo banco de conhecimento"
+      },
+      "or": "ou",
+      "title": "Arraste arquivos ou pastas para cá"
+    },
+    "title": {
+      "createdAt": "Data de criação",
+      "size": "Tamanho",
+      "title": "Arquivo"
+    },
+    "total": {
+      "fileCount": "Total de {{count}} itens",
+      "selectedCount": "Selecionados {{count}} itens"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Os blocos de texto ainda não foram completamente vetorizados, o que resultará na funcionalidade de busca semântica indisponível. Para melhorar a qualidade da busca, por favor, vetorize os blocos de texto.",
+        "error": "Falha na vetorização",
+        "errorResult": "Falha na vetorização, por favor verifique e tente novamente. Motivo da falha:",
+        "processing": "Os blocos de texto estão sendo vetorizados, por favor, aguarde.",
+        "success": "Atualmente, todos os blocos de texto foram vetorizados."
+      },
+      "embeddings": "Vetorizar",
+      "status": {
+        "error": "Falha na divisão",
+        "errorResult": "Falha na divisão, por favor, verifique e tente novamente. Motivo da falha:",
+        "processing": "Dividindo",
+        "processingTip": "O servidor está dividindo os blocos de texto, fechar a página não afetará o progresso da divisão."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Voltar"
+  },
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Modelo personalizado, por padrão, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
+      "file": "Este modelo suporta leitura e reconhecimento de arquivos enviados.",
+      "functionCall": "Este modelo suporta chamadas de função.",
+      "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão.",
+      "vision": "Este modelo suporta reconhecimento visual."
+    },
+    "removed": "Este modelo não está na lista, se for desmarcado, será removido automaticamente"
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "Nenhum modelo habilitado. Por favor, vá para as configurações e habilite um.",
+    "provider": "Fornecedor"
+  }
+}

@@ -5,53 +5,64 @@ labels: ['🐛 Bug']
 body:
   - type: dropdown
     attributes:
-      label: '💻 Operating System'
+      label: '📦 Environment'
+      multiple: true
       options:
-        - Windows
-        - macOS
-        - Ubuntu
-        - Other Linux
-        - iOS
-        - Android
-        - Other
+        - 'Official Preview'
+        - 'Vercel'
+        - 'Zeabur'
+        - 'Sealos'
+        - 'Netlify'
+        - 'Docker'
+        - 'Other'
     validations:
       required: true
+  - type: input
+    attributes:
+      label: '📌 Version'
+    validations:
+      required: true
+  
   - type: dropdown
     attributes:
-      label: '📦 Environment'
+      label: '💻 Operating System'
+      multiple: true
       options:
-        - Official Preview
-        - Vercel / Zeabur / Sealos
-        - Docker
-        - Other
+        - 'Windows'
+        - 'macOS'
+        - 'Ubuntu'
+        - 'Other Linux'
+        - 'iOS'
+        - 'Android'
+        - 'Other'
     validations:
       required: true
-
   - type: dropdown
     attributes:
       label: '🌐 Browser'
+      multiple: true
       options:
-        - Chrome
-        - Edge
-        - Safari
-        - Firefox
-        - Other
+        - 'Chrome'
+        - 'Edge'
+        - 'Safari'
+        - 'Firefox'
+        - 'Other'
     validations:
       required: true
   - type: textarea
     attributes:
       label: '🐛 Bug Description'
-      description: A clear and concise description of the bug.
+      description: A clear and concise description of the bug, if the above option is `Other`, please also explain in detail.
     validations:
       required: true
   - type: textarea
     attributes:
-      label: '🚦 Expected Behavior'
-      description: A clear and concise description of what you expected to happen.
-  - type: textarea
-    attributes:
       label: '📷 Recurrence Steps'
       description: A clear and concise description of how to recurrence.
+  - type: textarea
+    attributes:
+      label: '🚦 Expected Behavior'
+      description: A clear and concise description of what you expected to happen.
   - type: textarea
     attributes:
       label: '📝 Additional Information'

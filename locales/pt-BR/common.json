@@ -1,33 +1,39 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Modelo personalizado, suporta chamadas de função e reconhecimento visual. Por favor, verifique a disponibilidade dessas capacidades de acordo com a situação real.",
-      "file": "Este modelo suporta o carregamento de arquivos para leitura e reconhecimento",
-      "functionCall": "Este modelo suporta chamadas de função (Function Call)",
-      "tokens": "Este modelo suporta no máximo {{tokens}} tokens por sessão",
-      "vision": "Este modelo suporta reconhecimento visual"
-    }
-  },
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
-  "agentMaxToken": "Máximo de tokens da sessão",
-  "agentModel": "Modelo",
-  "agentProfile": "Perfil do assistente",
-  "appInitializing": "LobeChat inicializando, por favor aguarde...",
-  "archive": "Arquivar",
+  "alert": {
+    "cloud": {
+      "action": "Experimente de graça",
+      "desc": "Oferecemos {{credit}} pontos de computação gratuitos para todos os usuários registrados, sem necessidade de configuração complicada, pronto para uso, suporta histórico de conversas ilimitado e sincronização em nuvem global. Mais recursos avançados esperam por você para explorar.",
+      "descOnMobile": "Oferecemos {{credit}} créditos de computação gratuitos para todos os usuários registrados, sem necessidade de configurações complicadas, pronto para uso.",
+      "title": "Bem-vindo para experimentar {{name}}"
+    }
+  },
+  "appInitializing": "Inicializando o aplicativo, por favor, aguarde...",
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
+  "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
+  "back": "Voltar",
+  "batchDelete": "Excluir em massa",
+  "blog": "Blog de Produtos",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
   "close": "Fechar",
-  "confirmRemoveSessionItemAlert": "Você está prestes a excluir este assistente. Após a exclusão, não será possível recuperá-lo. Por favor, confirme sua ação.",
+  "contact": "Entre em contato",
   "copy": "Copiar",
   "copyFail": "Falha ao copiar",
   "copySuccess": "Cópia bem-sucedida",
+  "dataStatistics": {
+    "messages": "Mensagens",
+    "sessions": "Sessões",
+    "today": "Hoje",
+    "topics": "Tópicos"
+  },
   "defaultAgent": "Assistente padrão",
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
   "document": "Documento de Uso",
+  "download": "Baixar",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuração",
@@ -40,9 +46,34 @@
     "globalSetting": "Exportar configurações globais"
   },
   "feedback": "Feedback e sugestões",
+  "follow": "Siga-nos no {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Compartilhe seus valiosos comentários",
+      "star": "Dê uma estrela no GitHub"
+    },
+    "and": "e",
+    "feedback": {
+      "action": "Compartilhar feedback",
+      "desc": "Cada uma de suas ideias e sugestões é extremamente valiosa para nós. Mal podemos esperar para saber o que você pensa! Sinta-se à vontade para entrar em contato conosco para fornecer feedback sobre os recursos do produto e a experiência de uso, ajudando-nos a tornar o LobeChat ainda melhor.",
+      "title": "Compartilhe seu valioso feedback no GitHub"
+    },
+    "later": "Mais tarde",
+    "star": {
+      "action": "Dar uma estrela",
+      "desc": "Se você ama nosso produto e deseja nos apoiar, poderia nos dar uma estrela no GitHub? Esse pequeno gesto é significativo para nós e nos motiva a continuar oferecendo uma experiência de qualidade para você.",
+      "title": "Dê uma estrela para nós no GitHub"
+    },
+    "title": "Está gostando do nosso produto?"
+  },
+  "fullscreen": "Modo de Tela Cheia",
   "historyRange": "Intervalo de histórico",
   "import": "Importar configuração",
   "importModal": {
+    "error": {
+      "desc": "Desculpe, ocorreu um erro durante o processo de importação de dados. Por favor, tente importar novamente ou <1>envie um problema</1>, e nós iremos ajudá-lo a resolver o problema o mais rápido possível.",
+      "title": "Falha na importação de dados"
+    },
     "finish": {
       "onlySettings": "Configurações do sistema importadas com sucesso",
       "start": "Começar a usar",
@@ -50,6 +81,7 @@
       "title": "Importação de dados concluída"
     },
     "loading": "Importando dados, por favor aguarde...",
+    "preparing": "Preparando módulo de importação de dados...",
     "result": {
       "added": "Importação bem-sucedida",
       "errors": "Erros na importação",
@@ -60,10 +92,18 @@
       "topics": "Tópicos",
       "type": "Tipo de dados"
     },
-    "title": "Importar dados"
+    "title": "Importar dados",
+    "uploading": {
+      "desc": "O arquivo atual é grande, estamos fazendo o upload...",
+      "restTime": "Tempo restante",
+      "speed": "Velocidade de upload"
+    }
   },
+  "information": "Comunidade e Informações",
+  "installPWA": "Instalar aplicativo de navegador",
   "lang": {
     "ar": "árabe",
+    "bg-BG": "Búlgaro",
     "bn": "Bengali",
     "cs-CZ": "Tcheco",
     "da-DK": "Dinamarquês",
@@ -99,22 +139,19 @@
     "zh-TW": "Chinês tradicional"
   },
   "layoutInitializing": "Inicializando layout...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot IA",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
+  "legal": "Aviso Legal",
+  "loading": "Carregando...",
+  "mail": {
+    "business": "Parcerias Comerciais",
+    "support": "Suporte por E-mail"
   },
-  "noDescription": "Sem descrição",
   "oauth": "Login SSO",
+  "officialSite": "Site Oficial",
   "ok": "OK",
   "password": "Senha",
   "pin": "Fixar",
   "pinOff": "Desafixar",
+  "privacy": "Política de Privacidade",
   "regenerate": "Regenerar",
   "rename": "Renomear",
   "reset": "Redefinir",
@@ -123,16 +160,78 @@
   "setting": "Configuração",
   "share": "Compartilhar",
   "stop": "Parar",
+  "sync": {
+    "actions": {
+      "settings": "Configurações de Sincronização",
+      "sync": "Sincronizar Agora"
+    },
+    "awareness": {
+      "current": "Dispositivo Atual"
+    },
+    "channel": "Canal",
+    "disabled": {
+      "actions": {
+        "enable": "Habilitar Sincronização na Nuvem",
+        "settings": "Configurar Parâmetros de Sincronização"
+      },
+      "desc": "Os dados da sessão atual são armazenados apenas neste navegador. Se você precisa sincronizar os dados entre vários dispositivos, configure e habilite a sincronização na nuvem.",
+      "title": "Sincronização de Dados Desativada"
+    },
+    "enabled": {
+      "title": "Sincronização de Dados"
+    },
+    "status": {
+      "connecting": "Conectando",
+      "disabled": "Sincronização Desativada",
+      "ready": "Conectado",
+      "synced": "Sincronizado",
+      "syncing": "Sincronizando",
+      "unconnected": "Falha na Conexão"
+    },
+    "title": "Status de Sincronização",
+    "unconnected": {
+      "tip": "Falha na conexão com o servidor de sinalização. Não será possível estabelecer um canal de comunicação ponto a ponto. Verifique a rede e tente novamente."
+    }
+  },
   "tab": {
     "chat": "Chat",
+    "files": "Arquivos",
     "market": "Descobrir",
+    "me": "eu",
     "setting": "Configuração"
   },
+  "telemetry": {
+    "allow": "Permitir",
+    "deny": "Negar",
+    "desc": "Queremos coletar anonimamente suas informações de uso para nos ajudar a melhorar o LobeChat e oferecer uma experiência de produto melhor para você. Você pode desativar a qualquer momento em Configurações - Sobre.",
+    "learnMore": "Saiba mais",
+    "title": "Ajude o LobeChat a melhorar"
+  },
   "temp": "Temporário",
+  "terms": "Termos de Serviço",
   "updateAgent": "Atualizar informações do assistente",
   "upgradeVersion": {
     "action": "Atualizar",
     "hasNew": "Nova atualização disponível",
     "newVersion": "Nova versão disponível: {{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "Usuário Anônimo",
+    "billing": "Gerenciamento de faturas",
+    "cloud": "Experimente {{name}}",
+    "data": "Armazenamento de dados",
+    "defaultNickname": "Usuário da Comunidade",
+    "discord": "Suporte da Comunidade",
+    "docs": "Documentação",
+    "email": "Suporte por E-mail",
+    "feedback": "Feedback e Sugestões",
+    "help": "Central de Ajuda",
+    "moveGuide": "O botão de configurações foi movido para cá",
+    "plans": "Planos de Assinatura",
+    "preview": "Versão de visualização",
+    "profile": "Gerenciamento de Conta",
+    "setting": "Configurações do Aplicativo",
+    "usages": "Estatísticas de Uso"
+  },
+  "version": "Versão"
 }

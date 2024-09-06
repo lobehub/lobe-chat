@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
 import { NON_HTTP_PREFIX } from '@/const/auth';

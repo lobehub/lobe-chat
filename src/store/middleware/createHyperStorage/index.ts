@@ -1,5 +1,4 @@
-import { PersistStorage } from 'zustand/middleware';
-import { StorageValue } from 'zustand/middleware/persist';
+import { PersistStorage, StorageValue } from 'zustand/middleware';
 
 import { createIndexedDB } from './indexedDB';
 import { createKeyMapper } from './keyMapper';

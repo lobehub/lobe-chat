@@ -1,11 +1,11 @@
-import { PersistOptions, devtools, persist } from 'zustand/middleware';
+import { PersistOptions, persist } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { createHyperStorage } from '@/store/middleware/createHyperStorage';
-import { isDev } from '@/utils/env';
 
+import { createDevtools } from '../middleware/createDevtools';
 import { type StoreAction, createMarketAction } from './action';
 import { type StoreState, initialState } from './initialState';
 
@@ -40,12 +40,9 @@ const createStore: StateCreator<Store, [['zustand/devtools', never]]> = (...para
   ...createMarketAction(...parameters),
 });
 
+const devtools = createDevtools('market');
+
 export const useMarketStore = createWithEqualityFn<Store>()(
-  persist(
-    devtools(createStore, {
-      name: LOBE_AGENT_MARKET + (isDev ? '_DEV' : ''),
-    }),
-    persistOptions,
-  ),
+  persist(devtools(createStore), persistOptions),
   shallow,
 );

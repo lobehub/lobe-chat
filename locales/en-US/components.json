@@ -1,0 +1,84 @@
+{
+  "DragUpload": {
+    "dragDesc": "Drag and drop files here to upload multiple images.",
+    "dragFileDesc": "Drag and drop images and files here to upload multiple images and files.",
+    "dragFileTitle": "Upload Files",
+    "dragTitle": "Upload Images"
+  },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Add to Knowledge Base",
+      "addToOtherKnowledgeBase": "Add to Other Knowledge Base",
+      "batchChunking": "Batch Chunking",
+      "chunking": "Chunking",
+      "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
+      "confirmDelete": "You are about to delete this file. Once deleted, it cannot be recovered. Please confirm your action.",
+      "confirmDeleteMultiFiles": "You are about to delete the selected {{count}} files. Once deleted, they cannot be recovered. Please confirm your action.",
+      "confirmRemoveFromKnowledgeBase": "You are about to remove the selected {{count}} files from the knowledge base. They will still be viewable in all files. Please confirm your action.",
+      "copyUrl": "Copy Link",
+      "copyUrlSuccess": "File url copied successfully.",
+      "createChunkingTask": "Preparing...",
+      "deleteSuccess": "File deleted successfully.",
+      "downloading": "Downloading file...",
+      "removeFromKnowledgeBase": "Remove from Knowledge Base",
+      "removeFromKnowledgeBaseSuccess": "File removed successfully."
+    },
+    "bottom": "You've reached the end.",
+    "config": {
+      "showFilesInKnowledgeBase": "Show content in Knowledge Base"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Upload File",
+        "folder": "Upload Folder",
+        "knowledgeBase": "Create New Knowledge Base"
+      },
+      "or": "or",
+      "title": "Drag files or folders here"
+    },
+    "title": {
+      "createdAt": "Created At",
+      "size": "Size",
+      "title": "File"
+    },
+    "total": {
+      "fileCount": "Total {{count}} items",
+      "selectedCount": "Selected {{count}} items"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Text chunks have not been fully embedded, which will render the semantic search feature unavailable. To improve search quality, please embedding the text chunks.",
+        "error": "Embedding failed",
+        "errorResult": "Vectorization failed, please check and try again. Error detail:",
+        "processing": "Text chunks are being embedded, please be patient.",
+        "success": "All current text chunks have been embedded"
+      },
+      "embeddings": "Embedding",
+      "status": {
+        "error": "Chunking failed",
+        "errorResult": "Chunking failed, please check and try again. Error detail:",
+        "processing": "Chunking",
+        "processingTip": "The server is splitting text chunks; closing the page will not affect the chunking progress."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Back"
+  },
+  "ModelSelect": {
+    "featureTag": {
+      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
+      "file": "This model supports file upload for reading and recognition.",
+      "functionCall": "This model supports function call.",
+      "tokens": "This model supports up to {{tokens}} tokens in a single session.",
+      "vision": "This model supports visual recognition."
+    },
+    "removed": "The model is not in the list. It will be automatically removed if deselected."
+  },
+  "ModelSwitchPanel": {
+    "emptyModel": "No enabled model. Please go to settings to enable.",
+    "provider": "Provider"
+  }
+}

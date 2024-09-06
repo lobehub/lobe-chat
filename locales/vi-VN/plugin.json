@@ -4,7 +4,9 @@
     "function_call": "Gọi hàm",
     "off": "Tắt gỡ lỗi",
     "on": "Xem thông tin gọi plugin",
-    "response": "Kết quả trả về"
+    "payload": "Dữ liệu cắm",
+    "response": "Kết quả trả về",
+    "tool_call": "Yêu cầu công cụ"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "Plugin đang chạy..."
   },
   "pluginList": "Danh sách plugin",
-  "plugins": {
-    "loading": "Đang kiểm tra công cụ...",
-    "unknown": "Công cụ không xác định"
-  },
   "setting": "Cài đặt plugin",
   "settings": {
     "indexUrl": {
@@ -141,6 +139,7 @@
     "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
     "title": "Cài đặt thị trường plugin"
   },
+  "showInPortal": "Vui lòng xem chi tiết trong khu vực làm việc",
   "store": {
     "actions": {
       "confirmUninstall": "Sắp gỡ bỏ plugin này, sau khi gỡ bỏ sẽ xóa cấu hình của plugin này, vui lòng xác nhận hành động của bạn",
@@ -162,5 +161,6 @@
       "installed": "Đã cài đặt"
     },
     "title": "Cửa hàng plugin"
-  }
+  },
+  "unknownPlugin": "Plugin không xác định"
 }

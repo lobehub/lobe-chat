@@ -8,7 +8,7 @@ import { Center } from 'react-layout-kit';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
-const useStyles = createStyles(({ css, token, stylish }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   avatar: css`
     flex: none;
   `,
@@ -16,8 +16,6 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
     color: ${token.colorTextDescription};
     text-align: center;
   `,
-  markdown: stylish.markdownInChat,
-
   title: css`
     font-size: 20px;
     font-weight: 600;

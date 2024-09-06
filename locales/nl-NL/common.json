@@ -1,33 +1,39 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Aangepast model, standaard ingesteld om zowel functieoproep als visuele herkenning te ondersteunen. Verifieer de beschikbaarheid van deze mogelijkheden op basis van de werkelijke situatie.",
-      "file": "Dit model ondersteunt het uploaden van bestanden voor lezen en herkenning",
-      "functionCall": "Dit model ondersteunt functieoproep (Function Call).",
-      "tokens": "Dit model ondersteunt maximaal {{tokens}} tokens per sessie.",
-      "vision": "Dit model ondersteunt visuele herkenning."
-    }
-  },
   "about": "Over",
   "advanceSettings": "Geavanceerde instellingen",
-  "agentMaxToken": "Maximale sessielengte",
-  "agentModel": "Model",
-  "agentProfile": "Assistentprofiel",
-  "appInitializing": "LobeChat wordt geïnitialiseerd, even geduld a.u.b...",
-  "archive": "Archief",
+  "alert": {
+    "cloud": {
+      "action": "Gratis proberen",
+      "desc": "We bieden alle geregistreerde gebruikers {{credit}} gratis rekenpunten aan, zonder ingewikkelde configuratie, direct klaar voor gebruik. Ondersteunt onbeperkte chatgeschiedenis en wereldwijde cloudsynchronisatie. Ontdek samen meer geavanceerde functies.",
+      "descOnMobile": "We bieden alle geregistreerde gebruikers {{credit}} gratis rekenpunten aan, zonder ingewikkelde configuratie direct klaar voor gebruik.",
+      "title": "Welkom bij {{name}}"
+    }
+  },
+  "appInitializing": "Applicatie wordt gestart, gelieve geduld te hebben...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
+  "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
+  "back": "Terug",
+  "batchDelete": "Batch verwijderen",
+  "blog": "Product Blog",
   "cancel": "Annuleren",
   "changelog": "Wijzigingslogboek",
   "close": "Sluiten",
-  "confirmRemoveSessionItemAlert": "U staat op het punt deze assistent te verwijderen. Na verwijdering kan deze niet worden hersteld. Weet u zeker dat u door wilt gaan?",
+  "contact": "Contacteer ons",
   "copy": "Kopiëren",
   "copyFail": "Kopiëren mislukt",
   "copySuccess": "Kopiëren gelukt",
+  "dataStatistics": {
+    "messages": "Berichten",
+    "sessions": "Sessies",
+    "today": "Vandaag",
+    "topics": "Onderwerpen"
+  },
   "defaultAgent": "Standaard assistent",
   "defaultSession": "Standaard assistent",
   "delete": "Verwijderen",
   "document": "Gebruiksaanwijzing",
+  "download": "Downloaden",
   "duplicate": "Dupliceren",
   "edit": "Bewerken",
   "export": "Exporteren",
@@ -40,9 +46,34 @@
     "globalSetting": "Algemene instellingen exporteren"
   },
   "feedback": "Feedback en suggesties",
+  "follow": "Volg ons op {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Deel uw waardevolle feedback",
+      "star": "Voeg een ster toe op GitHub"
+    },
+    "and": "en",
+    "feedback": {
+      "action": "Feedback delen",
+      "desc": "Elk van uw ideeën en suggesties is van onschatbare waarde. We horen graag uw mening! Neem gerust contact met ons op voor feedback over productfuncties en gebruikerservaring om LobeChat te helpen verbeteren.",
+      "title": "Deel uw waardevolle feedback op GitHub"
+    },
+    "later": "Later",
+    "star": {
+      "action": "Geef een ster",
+      "desc": "Als u van ons product houdt en ons wilt steunen, kunt u ons dan een ster geven op GitHub? Deze kleine daad is voor ons van grote betekenis en zal ons motiveren om u voortdurend een geweldige ervaring te bieden.",
+      "title": "Geef ons een ster op GitHub"
+    },
+    "title": "Houdt u van ons product?"
+  },
+  "fullscreen": "Volledig scherm",
   "historyRange": "Geschiedenisbereik",
   "import": "Importeren",
   "importModal": {
+    "error": {
+      "desc": "Sorry, er is een uitzondering opgetreden tijdens het importeren van gegevens. Probeer opnieuw te importeren of <1>diend een probleem in</1>, we zullen het probleem zo snel mogelijk voor je onderzoeken.",
+      "title": "Gegevens importeren mislukt"
+    },
     "finish": {
       "onlySettings": "Systeeminstellingen succesvol geïmporteerd",
       "start": "Beginnen met gebruiken",
@@ -50,6 +81,7 @@
       "title": "Gegevensimport voltooid"
     },
     "loading": "Gegevens worden geïmporteerd, even geduld a.u.b...",
+    "preparing": "Voorbereiden van gegevensimportmodule...",
     "result": {
       "added": "Succesvol geïmporteerd",
       "errors": "Fouten bij importeren",
@@ -60,10 +92,18 @@
       "topics": "Onderwerpen",
       "type": "Gegevenstype"
     },
-    "title": "Gegevens importeren"
+    "title": "Gegevens importeren",
+    "uploading": {
+      "desc": "Het bestand is momenteel aan het uploaden vanwege de grote omvang...",
+      "restTime": "Resterende tijd",
+      "speed": "Uploadsnelheid"
+    }
   },
+  "information": "Gemeenschap en Informatie",
+  "installPWA": "Installeer de browser-app",
   "lang": {
     "ar": "Arabisch",
+    "bg-BG": "Bulgaars",
     "bn": "Bengaals",
     "cs-CZ": "Tsjechisch",
     "da-DK": "Deens",
@@ -99,40 +139,99 @@
     "zh-TW": "Traditioneel Chinees"
   },
   "layoutInitializing": "Lay-out wordt geladen...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "智谱AI"
+  "legal": "Juridisch",
+  "loading": "Laden...",
+  "mail": {
+    "business": "Zakelijke samenwerking",
+    "support": "E-mailondersteuning"
   },
-  "noDescription": "Geen beschrijving beschikbaar",
   "oauth": "SSO inloggen",
+  "officialSite": "Officiële website",
   "ok": "Oké",
   "password": "Wachtwoord",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
-  "regenerate": "重新生成",
-  "rename": "重命名",
-  "reset": "重置",
-  "retry": "重试",
-  "send": "发送",
-  "setting": "设置",
-  "share": "分享",
-  "stop": "停止",
-  "tab": {
-    "chat": "会话",
-    "market": "发现",
-    "setting": "设置"
+  "privacy": "Privacybeleid",
+  "regenerate": "Opnieuw genereren",
+  "rename": "Naam wijzigen",
+  "reset": "Resetten",
+  "retry": "Opnieuw proberen",
+  "send": "Verzenden",
+  "setting": "Instelling",
+  "share": "Delen",
+  "stop": "Stoppen",
+  "sync": {
+    "actions": {
+      "settings": "Synchronisatie-instellingen",
+      "sync": "Nu synchroniseren"
+    },
+    "awareness": {
+      "current": "Huidig apparaat"
+    },
+    "channel": "Kanaal",
+    "disabled": {
+      "actions": {
+        "enable": "Cloudsynchronisatie inschakelen",
+        "settings": "Synchronisatie-instellingen configureren"
+      },
+      "desc": "De huidige gespreksgegevens worden alleen opgeslagen in deze browser. Als u gegevens wilt synchroniseren tussen meerdere apparaten, configureer en schakel dan cloudsynchronisatie in.",
+      "title": "Gegevenssynchronisatie is uitgeschakeld"
+    },
+    "enabled": {
+      "title": "Gegevenssynchronisatie"
+    },
+    "status": {
+      "connecting": "Verbinding maken",
+      "disabled": "Synchronisatie is uitgeschakeld",
+      "ready": "Verbonden",
+      "synced": "Gesynchroniseerd",
+      "syncing": "Synchroniseren",
+      "unconnected": "Verbinding mislukt"
+    },
+    "title": "Synchronisatiestatus",
+    "unconnected": {
+      "tip": "Verbindingsfout met de signaleringsserver. Er kan geen point-to-point-communicatiekanaal worden opgezet. Controleer het netwerk en probeer het opnieuw."
+    }
   },
-  "temp": "临时",
-  "updateAgent": "更新助理信息",
+  "tab": {
+    "chat": "Chat",
+    "files": "Bestanden",
+    "market": "Ontdekken",
+    "me": "Ik",
+    "setting": "Instellingen"
+  },
+  "telemetry": {
+    "allow": "Toestaan",
+    "deny": "Weigeren",
+    "desc": "We willen graag anonieme gebruiksgegevens verzamelen om LobeChat te verbeteren en een betere productervaring te bieden. Je kunt dit op elk moment uitschakelen in 'Instellingen' - 'Over'.",
+    "learnMore": "Meer informatie",
+    "title": "Help LobeChat verbeteren"
+  },
+  "temp": "tijdelijk",
+  "terms": "algemene voorwaarden",
+  "updateAgent": "update assistent",
   "upgradeVersion": {
-    "action": "升级",
-    "hasNew": "有可用更新",
-    "newVersion": "有新版本可用：{{version}}"
-  }
+    "action": "upgraden",
+    "hasNew": "nieuwe versie beschikbaar",
+    "newVersion": "nieuwe versie beschikbaar: {{version}}"
+  },
+  "userPanel": {
+    "anonymousNickName": "anonieme gebruiker",
+    "billing": "facturatie",
+    "cloud": "Ervaar {{name}}",
+    "data": "gegevensopslag",
+    "defaultNickname": "communitygebruiker",
+    "discord": "communityondersteuning",
+    "docs": "gebruiksaanwijzing",
+    "email": "e-mailondersteuning",
+    "feedback": "feedback en suggesties",
+    "help": "helpcentrum",
+    "moveGuide": "instellingen verplaatst naar hier",
+    "plans": "abonnementen",
+    "preview": "voorbeeldversie",
+    "profile": "accountbeheer",
+    "setting": "app-instellingen",
+    "usages": "gebruiksstatistieken"
+  },
+  "version": "Versie"
 }

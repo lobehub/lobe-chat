@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "description": "LobeChat mang đến trải nghiệm sử dụng tốt nhất với ChatGPT, OLLaMA, Gemini, Claude WebUI",
+    "title": "LobeChat: Công cụ hiệu suất cá nhân LLM, giúp tăng cường trí não của bạn"
+  },
+  "market": {
+    "description": "Tạo nội dung, viết copy, trả lời câu hỏi, tạo hình ảnh, tạo video, tạo giọng nói, trợ lý thông minh, quy trình làm việc tự động, tùy chỉnh trợ lý trí tuệ AI / GPTs / OLLaMA riêng của bạn",
+    "title": "Thị trường trợ lý"
+  },
+  "plugins": {
+    "description": "Tìm kiếm, tạo biểu đồ, học thuật, tạo hình ảnh, tạo video, tạo giọng nói, quy trình làm việc tự động, tùy chỉnh khả năng plugin ToolCall riêng của ChatGPT / OLLaMA",
+    "title": "Thị trường plugin"
+  },
+  "welcome": {
+    "description": "LobeChat mang đến trải nghiệm sử dụng tốt nhất với ChatGPT, OLLaMA, Gemini, Claude WebUI",
+    "title": "Chào mừng đến với LobeChat: Công cụ hiệu suất cá nhân LLM, giúp tăng cường trí não của bạn"
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "نسخة API الخاصة بـ Azure، والتي تتبع تنسيق YYYY-MM-DD، راجع [الإصدارات الأحدث](https://learn.microsoft.com/zh-en/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "جلب القائمة",
+      "title": "Azure API Version"
+    },
+    "empty": "الرجاء إدخال معرف النموذج لإضافة أول نموذج",
+    "endpoint": {
+      "desc": "يمكن العثور على هذه القيمة في قسم 'المفاتيح والنقاط النهائية' عند فحص الموارد في بوابة Azure",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "عنوان Azure API"
+    },
+    "modelListPlaceholder": "يرجى تحديد أو إضافة نموذج OpenAI الذي قمت بنشره",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "يمكن العثور على هذه القيمة في قسم 'المفاتيح والنقاط النهائية' عند فحص الموارد في بوابة Azure. يمكن استخدام KEY1 أو KEY2",
+      "placeholder": "Azure API Key",
+      "title": "مفتاح API"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "أدخل AWS Access Key Id",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "اختبر ما إذا كان AccessKeyId / SecretAccessKey مدخلاً بشكل صحيح"
+    },
+    "region": {
+      "desc": "أدخل AWS Region",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "أدخل AWS Secret Access Key",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "منطقة خدمة مخصصة",
+      "description": "أدخل معرف الوصول / مفتاح الوصول السري الخاص بك في AWS لبدء الجلسة. لن يتم تسجيل تكوين المصادقة الخاص بك من قبل التطبيق",
+      "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",
+      "title": "فحص الاتصال"
+    },
+    "customModelName": {
+      "desc": "أضف نماذج مخصصة، استخدم الفاصلة (،) لفصل عدة نماذج",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "أسماء النماذج المخصصة"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
+    },
+    "endpoint": {
+      "desc": "أدخل عنوان واجهة برمجة التطبيقات الخاص بـ Ollama، إذا لم يتم تحديده محليًا، يمكن تركه فارغًا",
+      "title": "عنوان وكيل الواجهة"
+    },
+    "setup": {
+      "cors": {
+        "description": "بسبب قيود الأمان في المتصفح، يجب تكوين الوصول عبر المواقع المختلفة لـ Ollama لاستخدامه بشكل صحيح.",
+        "linux": {
+          "env": "في القسم [Service]، أضف `Environment` وأضف متغير البيئة OLLAMA_ORIGINS:",
+          "reboot": "أعد تحميل systemd وأعد تشغيل Ollama",
+          "systemd": "استدعاء تحرير خدمة ollama في systemd:"
+        },
+        "macos": "افتح تطبيق \"Terminal\" والصق الأمر التالي، ثم اضغط على Enter للتشغيل.",
+        "reboot": "يرجى إعادة تشغيل خدمة Ollama بعد الانتهاء من التنفيذ",
+        "title": "تكوين Ollama للسماح بالوصول عبر المواقع المختلفة",
+        "windows": "على نظام Windows، انقر فوق \"لوحة التحكم\"، ثم ادخل إلى تحرير متغيرات البيئة النظامية. قم بإنشاء متغير بيئي بعنوان \"OLLAMA_ORIGINS\" لحساب المستخدم الخاص بك، واجعل قيمته * ثم انقر على \"موافق/تطبيق\" للحفظ."
+      },
+      "install": {
+        "description": "يرجى التأكد من أنك قد قمت بتشغيل Ollama ، إذا لم تقم بتنزيل Ollama ، يرجى زيارة الموقع الرسمي <1>للتنزيل</1>",
+        "docker": "إذا كنت تفضل استخدام Docker، يوفر Ollama أيضًا صور Docker الرسمية، يمكنك سحبها باستخدام الأمر التالي:",
+        "linux": {
+          "command": "قم بتثبيته باستخدام الأمر التالي:",
+          "manual": "أو يمكنك الرجوع إلى <1>دليل تثبيت Linux يدويًا</1> للقيام بالتثبيت بنفسك."
+        },
+        "title": "تثبيت وتشغيل تطبيق Ollama محليًا",
+        "windowsTab": "Windows (نسخة معاينة)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI الأشياء الصغرى"
+  },
+  "zhipu": {
+    "title": "Zhipu"
+  }
+}

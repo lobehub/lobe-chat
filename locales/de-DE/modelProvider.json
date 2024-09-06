@@ -1,0 +1,108 @@
+{
+  "azure": {
+    "azureApiVersion": {
+      "desc": "Die API-Version von Azure im Format JJJJ-MM-TT, siehe [neueste Version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "fetch": "Liste abrufen",
+      "title": "Azure-API-Version"
+    },
+    "empty": "Geben Sie eine Modell-ID ein, um das erste Modell hinzuzufügen",
+    "endpoint": {
+      "desc": "Diesen Wert finden Sie im Abschnitt 'Schlüssel und Endpunkte', wenn Sie in Azure Portal Ihre Ressource überprüfen",
+      "placeholder": "https://docs-test-001.openai.azure.com",
+      "title": "Azure-API-Adresse"
+    },
+    "modelListPlaceholder": "Wählen Sie ein bereitgestelltes OpenAI-Modell aus oder fügen Sie eines hinzu",
+    "title": "Azure OpenAI",
+    "token": {
+      "desc": "Diesen Wert finden Sie im Abschnitt 'Schlüssel und Endpunkte', wenn Sie in Azure Portal Ihre Ressource überprüfen. Sie können KEY1 oder KEY2 verwenden",
+      "placeholder": "Azure API Key",
+      "title": "API Key"
+    }
+  },
+  "bedrock": {
+    "accessKeyId": {
+      "desc": "Geben Sie Ihre AWS Access Key Id ein",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
+    },
+    "checker": {
+      "desc": "Testen Sie, ob AccessKeyId / SecretAccessKey korrekt eingegeben wurden"
+    },
+    "region": {
+      "desc": "Geben Sie Ihre AWS Region ein",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
+    },
+    "secretAccessKey": {
+      "desc": "Geben Sie Ihren AWS Secret Access Key ein",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
+    },
+    "title": "Bedrock",
+    "unlock": {
+      "customRegion": "Benutzerdefinierter Regionsservice",
+      "description": "Geben Sie Ihren AWS AccessKeyId / SecretAccessKey ein, um das Gespräch zu beginnen. Die App speichert Ihre Authentifizierungsinformationen nicht.",
+      "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
+    }
+  },
+  "ollama": {
+    "checker": {
+      "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde",
+      "title": "Konnektivitätsprüfung"
+    },
+    "customModelName": {
+      "desc": "Fügen Sie benutzerdefinierte Modelle hinzu, trennen Sie mehrere Modelle mit Kommas (,)",
+      "placeholder": "vicuna,llava,codellama,llama2:13b-text",
+      "title": "Benutzerdefinierte Modellnamen"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
+    },
+    "endpoint": {
+      "desc": "Geben Sie die Proxy-Adresse der Ollama-Schnittstelle ein, leer lassen, wenn lokal nicht spezifiziert",
+      "title": "Schnittstellen-Proxy-Adresse"
+    },
+    "setup": {
+      "cors": {
+        "description": "Aufgrund von Browser-Sicherheitsbeschränkungen müssen Sie die CORS-Einstellungen für Ollama konfigurieren, um es ordnungsgemäß zu verwenden.",
+        "linux": {
+          "env": "Fügen Sie unter [Service] `Environment` hinzu und setzen Sie die Umgebungsvariable OLLAMA_ORIGINS:",
+          "reboot": "Systemd neu laden und Ollama neu starten",
+          "systemd": "Rufen Sie systemd auf, um den Ollama-Dienst zu bearbeiten:"
+        },
+        "macos": "Öffnen Sie das Terminal und fügen Sie den folgenden Befehl ein, um fortzufahren.",
+        "reboot": "Starten Sie den Ollama-Dienst nach Abschluss der Ausführung neu.",
+        "title": "Konfigurieren Sie Ollama für den Zugriff über CORS",
+        "windows": "Klicken Sie auf Windows auf 'Systemsteuerung', um die Systemumgebungsvariablen zu bearbeiten. Erstellen Sie eine Umgebungsvariable namens 'OLLAMA_ORIGINS' für Ihr Benutzerkonto mit dem Wert '*', und klicken Sie auf 'OK/Anwenden', um zu speichern."
+      },
+      "install": {
+        "description": "Stelle sicher, dass du Ollama aktiviert hast. Wenn du Ollama noch nicht heruntergeladen hast, besuche die offizielle Website, um es <1>herunterzuladen</1>.",
+        "docker": "Wenn Sie Docker bevorzugen, bietet Ollama auch offizielle Docker-Images an. Sie können sie mit dem folgenden Befehl abrufen:",
+        "linux": {
+          "command": "Installieren Sie mit dem folgenden Befehl:",
+          "manual": "Alternativ können Sie die <1>Linux-Installationsanleitung</1> für die manuelle Installation verwenden."
+        },
+        "title": "Installieren und starten Sie die lokale Ollama-Anwendung",
+        "windowsTab": "Windows (Vorschau)"
+      }
+    },
+    "title": "Ollama",
+    "unlock": {
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
+    }
+  },
+  "zeroone": {
+    "title": "01.AI Alles und Nichts"
+  },
+  "zhipu": {
+    "title": "Zhipu"
+  }
+}

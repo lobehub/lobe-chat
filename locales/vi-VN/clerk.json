@@ -1,0 +1,769 @@
+{
+  "backButton": "Quay lại",
+  "badge__default": "Mặc định",
+  "badge__otherImpersonatorDevice": "Thiết bị giả mạo khác",
+  "badge__primary": "Chính",
+  "badge__requiresAction": "Yêu cầu hành động",
+  "badge__thisDevice": "Thiết bị này",
+  "badge__unverified": "Chưa xác minh",
+  "badge__userDevice": "Thiết bị người dùng",
+  "badge__you": "Bạn",
+  "createOrganization": {
+    "formButtonSubmit": "Tạo tổ chức",
+    "invitePage": {
+      "formButtonReset": "Bỏ qua"
+    },
+    "title": "Tạo tổ chức"
+  },
+  "dates": {
+    "lastDay": "Hôm qua vào {{ date | timeString('vi-VN') }}",
+    "next6Days": "{{ date | weekday('vi-VN','long') }} vào {{ date | timeString('vi-VN') }}",
+    "nextDay": "Ngày mai vào {{ date | timeString('vi-VN') }}",
+    "numeric": "{{ date | numeric('vi-VN') }}",
+    "previous6Days": "Vào {{ date | weekday('vi-VN','long') }} trước vào {{ date | timeString('vi-VN') }}",
+    "sameDay": "Hôm nay vào {{ date | timeString('vi-VN') }}"
+  },
+  "dividerText": "hoặc",
+  "footerActionLink__useAnotherMethod": "Sử dụng phương pháp khác",
+  "footerPageLink__help": "Trợ giúp",
+  "footerPageLink__privacy": "Quyền riêng tư",
+  "footerPageLink__terms": "Điều khoản",
+  "formButtonPrimary": "Tiếp tục",
+  "formButtonPrimary__verify": "Xác minh",
+  "formFieldAction__forgotPassword": "Quên mật khẩu?",
+  "formFieldError__matchingPasswords": "Mật khẩu khớp.",
+  "formFieldError__notMatchingPasswords": "Mật khẩu không khớp.",
+  "formFieldError__verificationLinkExpired": "Liên kết xác minh đã hết hạn. Vui lòng yêu cầu một liên kết mới.",
+  "formFieldHintText__optional": "Tùy chọn",
+  "formFieldHintText__slug": "Slug là một ID có thể đọc được cho con người phải là duy nhất. Thường được sử dụng trong URL.",
+  "formFieldInputPlaceholder__backupCode": "",
+  "formFieldInputPlaceholder__confirmDeletionUserAccount": "Xóa tài khoản",
+  "formFieldInputPlaceholder__emailAddress": "",
+  "formFieldInputPlaceholder__emailAddress_username": "",
+  "formFieldInputPlaceholder__emailAddresses": "ví dụ@email.com, ví dụ2@email.com",
+  "formFieldInputPlaceholder__firstName": "",
+  "formFieldInputPlaceholder__lastName": "",
+  "formFieldInputPlaceholder__organizationDomain": "",
+  "formFieldInputPlaceholder__organizationDomainEmailAddress": "",
+  "formFieldInputPlaceholder__organizationName": "",
+  "formFieldInputPlaceholder__organizationSlug": "tổ-chức-của-tôi",
+  "formFieldInputPlaceholder__password": "",
+  "formFieldInputPlaceholder__phoneNumber": "",
+  "formFieldInputPlaceholder__username": "",
+  "formFieldLabel__automaticInvitations": "Bật mời tự động cho miền này",
+  "formFieldLabel__backupCode": "Mã sao lưu",
+  "formFieldLabel__confirmDeletion": "Xác nhận",
+  "formFieldLabel__confirmPassword": "Xác nhận mật khẩu",
+  "formFieldLabel__currentPassword": "Mật khẩu hiện tại",
+  "formFieldLabel__emailAddress": "Địa chỉ email",
+  "formFieldLabel__emailAddress_username": "Địa chỉ email hoặc tên người dùng",
+  "formFieldLabel__emailAddresses": "Địa chỉ email",
+  "formFieldLabel__firstName": "Tên",
+  "formFieldLabel__lastName": "Họ",
+  "formFieldLabel__newPassword": "Mật khẩu mới",
+  "formFieldLabel__organizationDomain": "Miền",
+  "formFieldLabel__organizationDomainDeletePending": "Xóa lời mời và gợi ý đang chờ",
+  "formFieldLabel__organizationDomainEmailAddress": "Địa chỉ email xác minh",
+  "formFieldLabel__organizationDomainEmailAddressDescription": "Nhập một địa chỉ email dưới miền này để nhận mã xác minh và xác minh miền này.",
+  "formFieldLabel__organizationName": "Tên",
+  "formFieldLabel__organizationSlug": "Slug",
+  "formFieldLabel__passkeyName": "Tên của passkey",
+  "formFieldLabel__password": "Mật khẩu",
+  "formFieldLabel__phoneNumber": "Số điện thoại",
+  "formFieldLabel__role": "Vai trò",
+  "formFieldLabel__signOutOfOtherSessions": "Đăng xuất khỏi tất cả các thiết bị khác",
+  "formFieldLabel__username": "Tên người dùng",
+  "impersonationFab": {
+    "action__signOut": "Đăng xuất",
+    "title": "Đã đăng nhập với tư cách {{identifier}}"
+  },
+  "locale": "vi-VN",
+  "maintenanceMode": "Chúng tôi đang tiến hành bảo trì, nhưng đừng lo, nó không nên mất nhiều hơn vài phút.",
+  "membershipRole__admin": "Quản trị viên",
+  "membershipRole__basicMember": "Thành viên",
+  "membershipRole__guestMember": "Khách",
+  "organizationList": {
+    "action__createOrganization": "Tạo tổ chức",
+    "action__invitationAccept": "Tham gia",
+    "action__suggestionsAccept": "Yêu cầu tham gia",
+    "createOrganization": "Tạo Tổ chức",
+    "invitationAcceptedLabel": "Đã tham gia",
+    "subtitle": "để tiếp tục {{applicationName}}",
+    "suggestionsAcceptedLabel": "Chờ phê duyệt",
+    "title": "Chọn một tài khoản",
+    "titleWithoutPersonal": "Chọn một tổ chức"
+  },
+  "organizationProfile": {
+    "badge__automaticInvitation": "Mời tự động",
+    "badge__automaticSuggestion": "Đề xuất tự động",
+    "badge__manualInvitation": "Không tự động",
+    "badge__unverified": "Chưa xác minh",
+    "createDomainPage": {
+      "subtitle": "Thêm miền để xác minh. Người dùng có địa chỉ email tại miền này có thể tham gia tự động hoặc yêu cầu tham gia tổ chức.",
+      "title": "Thêm miền"
+    },
+    "invitePage": {
+      "detailsTitle__inviteFailed": "Không thể gửi lời mời. Đã có lời mời đang chờ xử lý cho các địa chỉ email sau: {{email_addresses}}.",
+      "formButtonPrimary__continue": "Gửi lời mời",
+      "selectDropdown__role": "Chọn vai trò",
+      "subtitle": "Nhập hoặc dán một hoặc nhiều địa chỉ email, cách nhau bằng dấu cách hoặc dấu phẩy.",
+      "successMessage": "Lời mời đã được gửi thành công",
+      "title": "Mời thành viên mới"
+    },
+    "membersPage": {
+      "action__invite": "Mời",
+      "activeMembersTab": {
+        "menuAction__remove": "Xóa thành viên",
+        "tableHeader__actions": "",
+        "tableHeader__joined": "Đã tham gia",
+        "tableHeader__role": "Vai trò",
+        "tableHeader__user": "Người dùng"
+      },
+      "detailsTitle__emptyRow": "Không có thành viên để hiển thị",
+      "invitationsTab": {
+        "autoInvitations": {
+          "headerSubtitle": "Mời người dùng bằng cách kết nối miền email với tổ chức của bạn. Bất kỳ ai đăng ký với miền email phù hợp sẽ có thể tham gia tổ chức bất cứ lúc nào.",
+          "headerTitle": "Mời tự động",
+          "primaryButton": "Quản lý miền đã xác minh"
+        },
+        "table__emptyRow": "Không có lời mời để hiển thị"
+      },
+      "invitedMembersTab": {
+        "menuAction__revoke": "Thu hồi lời mời",
+        "tableHeader__invited": "Đã mời"
+      },
+      "requestsTab": {
+        "autoSuggestions": {
+          "headerSubtitle": "Người dùng đăng ký với miền email phù hợp, sẽ thấy một đề xuất để yêu cầu tham gia tổ chức của bạn.",
+          "headerTitle": "Đề xuất tự động",
+          "primaryButton": "Quản lý miền đã xác minh"
+        },
+        "menuAction__approve": "Phê duyệt",
+        "menuAction__reject": "Từ chối",
+        "tableHeader__requested": "Yêu cầu truy cập",
+        "table__emptyRow": "Không có yêu cầu để hiển thị"
+      },
+      "start": {
+        "headerTitle__invitations": "Lời mời",
+        "headerTitle__members": "Thành viên",
+        "headerTitle__requests": "Yêu cầu"
+      }
+    },
+    "navbar": {
+      "description": "Quản lý tổ chức của bạn",
+      "general": "Chung",
+      "members": "Thành viên",
+      "title": "Tổ chức"
+    },
+    "profilePage": {
+      "dangerSection": {
+        "deleteOrganization": {
+          "actionDescription": "Nhập \"{{organizationName}}\" bên dưới để tiếp tục.",
+          "messageLine1": "Bạn có chắc chắn muốn xóa tổ chức này không?",
+          "messageLine2": "Hành động này là vĩnh viễn và không thể hoàn tác.",
+          "successMessage": "Bạn đã xóa tổ chức.",
+          "title": "Xóa tổ chức"
+        },
+        "leaveOrganization": {
+          "actionDescription": "Nhập \"{{organizationName}}\" bên dưới để tiếp tục.",
+          "messageLine1": "Bạn có chắc chắn muốn rời khỏi tổ chức này không? Bạn sẽ mất quyền truy cập vào tổ chức và các ứng dụng của nó.",
+          "messageLine2": "Hành động này là vĩnh viễn và không thể hoàn tác.",
+          "successMessage": "Bạn đã rời khỏi tổ chức.",
+          "title": "Rời khỏi tổ chức"
+        },
+        "title": "Nguy hiểm"
+      },
+      "domainSection": {
+        "menuAction__manage": "Quản lý",
+        "menuAction__remove": "Xóa",
+        "menuAction__verify": "Xác minh",
+        "primaryButton": "Thêm miền",
+        "subtitle": "Cho phép người dùng tham gia tự động hoặc yêu cầu tham gia dựa trên miền email đã xác minh.",
+        "title": "Miền đã xác minh"
+      },
+      "successMessage": "Tổ chức đã được cập nhật.",
+      "title": "Cập nhật hồ sơ"
+    },
+    "removeDomainPage": {
+      "messageLine1": "Miền email {{domain}} sẽ bị xóa.",
+      "messageLine2": "Người dùng sẽ không thể tham gia tự động vào tổ chức sau đây.",
+      "successMessage": "{{domain}} đã được xóa.",
+      "title": "Xóa miền"
+    },
+    "start": {
+      "headerTitle__general": "Chung",
+      "headerTitle__members": "Thành viên",
+      "profileSection": {
+        "primaryButton": "Cập nhật hồ sơ",
+        "title": "Hồ sơ tổ chức",
+        "uploadAction__title": "Logo"
+      }
+    },
+    "verifiedDomainPage": {
+      "dangerTab": {
+        "calloutInfoLabel": "Việc xóa miền này sẽ ảnh hưởng đến người dùng đã được mời.",
+        "removeDomainActionLabel__remove": "Xóa miền",
+        "removeDomainSubtitle": "Xóa miền này khỏi các miền đã xác minh của bạn",
+        "removeDomainTitle": "Xóa miền"
+      },
+      "enrollmentTab": {
+        "automaticInvitationOption__description": "Người dùng được mời tự động tham gia tổ chức khi đăng ký và có thể tham gia bất kỳ lúc nào.",
+        "automaticInvitationOption__label": "Mời tự động",
+        "automaticSuggestionOption__description": "Người dùng nhận được đề xuất để yêu cầu tham gia, nhưng phải được quản trị viên phê duyệt trước khi họ có thể tham gia tổ chức.",
+        "automaticSuggestionOption__label": "Đề xuất tự động",
+        "calloutInfoLabel": "Thay đổi chế độ nhập học chỉ ảnh hưởng đến người dùng mới.",
+        "calloutInvitationCountLabel": "Lời mời đang chờ xử lý: {{count}}",
+        "calloutSuggestionCountLabel": "Đề xuất đang chờ xử lý: {{count}}",
+        "manualInvitationOption__description": "Người dùng chỉ có thể được mời thủ công vào tổ chức.",
+        "manualInvitationOption__label": "Không tự động",
+        "subtitle": "Chọn cách người dùng từ miền này có thể tham gia tổ chức."
+      },
+      "start": {
+        "headerTitle__danger": "Nguy hiểm",
+        "headerTitle__enrollment": "Tùy chọn nhập học"
+      },
+      "subtitle": "Miền {{domain}} đã được xác minh. Tiếp tục bằng cách chọn chế độ nhập học.",
+      "title": "Cập nhật {{domain}}"
+    },
+    "verifyDomainPage": {
+      "formSubtitle": "Nhập mã xác minh được gửi đến địa chỉ email của bạn",
+      "formTitle": "Mã xác minh",
+      "resendButton": "Không nhận được mã? Gửi lại",
+      "subtitle": "Miền {{domainName}} cần được xác minh qua email.",
+      "subtitleVerificationCodeScreen": "Một mã xác minh đã được gửi đến {{emailAddress}}. Nhập mã để tiếp tục.",
+      "title": "Xác minh miền"
+    }
+  },
+  "organizationSwitcher": {
+    "action__createOrganization": "Tạo tổ chức",
+    "action__invitationAccept": "Tham gia",
+    "action__manageOrganization": "Quản lý",
+    "action__suggestionsAccept": "Yêu cầu tham gia",
+    "notSelected": "Không có tổ chức nào được chọn",
+    "personalWorkspace": "Tài khoản cá nhân",
+    "suggestionsAcceptedLabel": "Chờ phê duyệt"
+  },
+  "paginationButton__next": "Tiếp theo",
+  "paginationButton__previous": "Trước",
+  "paginationRowText__displaying": "Hiển thị",
+  "paginationRowText__of": "của",
+  "signIn": {
+    "accountSwitcher": {
+      "action__addAccount": "Thêm tài khoản",
+      "action__signOutAll": "Đăng xuất khỏi tất cả các tài khoản",
+      "subtitle": "Chọn tài khoản mà bạn muốn tiếp tục.",
+      "title": "Chọn một tài khoản"
+    },
+    "alternativeMethods": {
+      "actionLink": "Nhận trợ giúp",
+      "actionText": "Chưa có trong số này?",
+      "blockButton__backupCode": "Sử dụng mã sao lưu",
+      "blockButton__emailCode": "Gửi mã qua email đến {{identifier}}",
+      "blockButton__emailLink": "Gửi liên kết qua email đến {{identifier}}",
+      "blockButton__passkey": "Đăng nhập bằng passkey của bạn",
+      "blockButton__password": "Đăng nhập bằng mật khẩu của bạn",
+      "blockButton__phoneCode": "Gửi mã qua tin nhắn SMS đến {{identifier}}",
+      "blockButton__totp": "Sử dụng ứng dụng xác thực của bạn",
+      "getHelp": {
+        "blockButton__emailSupport": "Hỗ trợ qua email",
+        "content": "Nếu bạn gặp khó khăn khi đăng nhập vào tài khoản của mình, hãy gửi email cho chúng tôi và chúng tôi sẽ làm việc với bạn để khôi phục truy cập càng sớm càng tốt.",
+        "title": "Nhận trợ giúp"
+      },
+      "subtitle": "Gặp vấn đề? Bạn có thể sử dụng bất kỳ phương pháp nào sau để đăng nhập.",
+      "title": "Sử dụng phương pháp khác"
+    },
+    "backupCodeMfa": {
+      "subtitle": "Mã sao lưu của bạn là mã bạn nhận được khi thiết lập xác thực hai bước.",
+      "title": "Nhập mã sao lưu"
+    },
+    "emailCode": {
+      "formTitle": "Mã xác minh",
+      "resendButton": "Không nhận được mã? Gửi lại",
+      "subtitle": "để tiếp tục đến {{applicationName}}",
+      "title": "Kiểm tra email của bạn"
+    },
+    "emailLink": {
+      "expired": {
+        "subtitle": "Quay trở lại tab ban đầu để tiếp tục.",
+        "title": "Liên kết xác minh này đã hết hạn"
+      },
+      "failed": {
+        "subtitle": "Quay trở lại tab ban đầu để tiếp tục.",
+        "title": "Liên kết xác minh này không hợp lệ"
+      },
+      "formSubtitle": "Sử dụng liên kết xác minh được gửi đến email của bạn",
+      "formTitle": "Liên kết xác minh",
+      "loading": {
+        "subtitle": "Bạn sẽ được chuyển hướng sớm.",
+        "title": "Đang đăng nhập..."
+      },
+      "resendButton": "Không nhận được liên kết? Gửi lại",
+      "subtitle": "để tiếp tục đến {{applicationName}}",
+      "title": "Kiểm tra email của bạn",
+      "unusedTab": {
+        "title": "Bạn có thể đóng tab này"
+      },
+      "verified": {
+        "subtitle": "Bạn sẽ được chuyển hướng sớm.",
+        "title": "Đăng nhập thành công"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Quay trở lại tab ban đầu để tiếp tục",
+        "subtitleNewTab": "Quay lại tab mới mở để tiếp tục",
+        "titleNewTab": "Đã đăng nhập trên tab khác"
+      }
+    },
+    "forgotPassword": {
+      "formTitle": "Mã đặt lại mật khẩu",
+      "resendButton": "Không nhận được mã? Gửi lại",
+      "subtitle": "để đặt lại mật khẩu của bạn",
+      "subtitle_email": "Đầu tiên, nhập mã được gửi đến địa chỉ email của bạn",
+      "subtitle_phone": "Đầu tiên, nhập mã được gửi đến điện thoại của bạn",
+      "title": "Đặt lại mật khẩu"
+    },
+    "forgotPasswordAlternativeMethods": {
+      "blockButton__resetPassword": "Đặt lại mật khẩu của bạn",
+      "label__alternativeMethods": "Hoặc, đăng nhập bằng phương pháp khác",
+      "title": "Quên mật khẩu?"
+    },
+    "noAvailableMethods": {
+      "message": "Không thể tiếp tục đăng nhập. Không có yếu tố xác thực nào khả dụng.",
+      "subtitle": "Đã xảy ra lỗi",
+      "title": "Không thể đăng nhập"
+    },
+    "passkey": {
+      "subtitle": "Sử dụng passkey của bạn xác nhận đó là bạn. Thiết bị của bạn có thể yêu cầu vân tay, khuôn mặt hoặc khóa màn hình của bạn.",
+      "title": "Sử dụng passkey của bạn"
+    },
+    "password": {
+      "actionLink": "Sử dụng phương pháp khác",
+      "subtitle": "Nhập mật khẩu liên kết với tài khoản của bạn",
+      "title": "Nhập mật khẩu của bạn"
+    },
+    "passwordPwned": {
+      "title": "Mật khẩu đã bị đánh cắp"
+    },
+    "phoneCode": {
+      "formTitle": "Mã xác minh",
+      "resendButton": "Không nhận được mã? Gửi lại",
+      "subtitle": "để tiếp tục đến {{applicationName}}",
+      "title": "Kiểm tra điện thoại của bạn"
+    },
+    "phoneCodeMfa": {
+      "formTitle": "Mã xác minh",
+      "resendButton": "Không nhận được mã? Gửi lại",
+      "subtitle": "Để tiếp tục, vui lòng nhập mã xác minh được gửi đến điện thoại của bạn",
+      "title": "Kiểm tra điện thoại của bạn"
+    },
+    "resetPassword": {
+      "formButtonPrimary": "Đặt lại mật khẩu",
+      "requiredMessage": "Vì lý do bảo mật, cần phải đặt lại mật khẩu của bạn.",
+      "successMessage": "Mật khẩu của bạn đã được thay đổi thành công. Đang đăng nhập, vui lòng đợi một chút.",
+      "title": "Thiết lập mật khẩu mới"
+    },
+    "resetPasswordMfa": {
+      "detailsLabel": "Chúng tôi cần xác minh danh tính của bạn trước khi đặt lại mật khẩu của bạn."
+    },
+    "start": {
+      "actionLink": "Đăng ký",
+      "actionLink__use_email": "Sử dụng email",
+      "actionLink__use_email_username": "Sử dụng email hoặc tên người dùng",
+      "actionLink__use_passkey": "Sử dụng passkey thay thế",
+      "actionLink__use_phone": "Sử dụng điện thoại",
+      "actionLink__use_username": "Sử dụng tên người dùng",
+      "actionText": "Chưa có tài khoản?",
+      "subtitle": "Chào mừng trở lại! Vui lòng đăng nhập để tiếp tục",
+      "title": "Đăng nhập vào {{applicationName}}"
+    },
+    "totpMfa": {
+      "formTitle": "Mã xác minh",
+      "subtitle": "Để tiếp tục, vui lòng nhập mã xác minh được tạo bởi ứng dụng xác thực của bạn",
+      "title": "Xác thực hai bước"
+    }
+  },
+  "signInEnterPasswordTitle": "Nhập mật khẩu của bạn",
+  "signUp": {
+    "continue": {
+      "actionLink": "Đăng nhập",
+      "actionText": "Đã có tài khoản?",
+      "subtitle": "Vui lòng điền thông tin còn thiếu để tiếp tục.",
+      "title": "Điền vào các trường còn thiếu"
+    },
+    "emailCode": {
+      "formSubtitle": "Nhập mã xác minh được gửi đến địa chỉ email của bạn",
+      "formTitle": "Mã xác minh",
+      "resendButton": "Không nhận được mã? Gửi lại",
+      "subtitle": "Nhập mã xác minh được gửi đến email của bạn",
+      "title": "Xác minh email của bạn"
+    },
+    "emailLink": {
+      "formSubtitle": "Sử dụng liên kết xác minh được gửi đến địa chỉ email của bạn",
+      "formTitle": "Liên kết xác minh",
+      "loading": {
+        "title": "Đang đăng ký..."
+      },
+      "resendButton": "Không nhận được liên kết? Gửi lại",
+      "subtitle": "để tiếp tục đến {{applicationName}}",
+      "title": "Xác minh email của bạn",
+      "verified": {
+        "title": "Đăng ký thành công"
+      },
+      "verifiedSwitchTab": {
+        "subtitle": "Quay lại tab mới mở để tiếp tục",
+        "subtitleNewTab": "Quay lại tab trước để tiếp tục",
+        "title": "Đã xác minh email thành công"
+      }
+    },
+    "phoneCode": {
+      "formSubtitle": "Nhập mã xác minh được gửi đến số điện thoại của bạn",
+      "formTitle": "Mã xác minh",
+      "resendButton": "Không nhận được mã? Gửi lại",
+      "subtitle": "Nhập mã xác minh được gửi đến số điện thoại của bạn",
+      "title": "Xác minh số điện thoại của bạn"
+    },
+    "start": {
+      "actionLink": "Đăng nhập",
+      "actionText": "Đã có tài khoản?",
+      "subtitle": "Chào mừng! Vui lòng điền thông tin để bắt đầu.",
+      "title": "Tạo tài khoản của bạn"
+    }
+  },
+  "socialButtonsBlockButton": "Tiếp tục với {{provider|titleize}}",
+  "unstable__errors": {
+    "captcha_invalid": "Đăng ký không thành công do việc xác thực bảo mật không thành công. Vui lòng làm mới trang để thử lại hoặc liên hệ với bộ phận hỗ trợ để được hỗ trợ thêm.",
+    "captcha_unavailable": "Đăng ký không thành công do việc xác thực bot không thành công. Vui lòng làm mới trang để thử lại hoặc liên hệ với bộ phận hỗ trợ để được hỗ trợ thêm.",
+    "form_code_incorrect": "",
+    "form_identifier_exists": "",
+    "form_identifier_exists__email_address": "Địa chỉ email này đã được sử dụng. Vui lòng thử lại.",
+    "form_identifier_exists__phone_number": "Số điện thoại này đã được sử dụng. Vui lòng thử lại.",
+    "form_identifier_exists__username": "Tên người dùng này đã được sử dụng. Vui lòng thử lại.",
+    "form_identifier_not_found": "",
+    "form_param_format_invalid": "",
+    "form_param_format_invalid__email_address": "Địa chỉ email phải là một địa chỉ email hợp lệ.",
+    "form_param_format_invalid__phone_number": "Số điện thoại phải ở định dạng quốc tế hợp lệ.",
+    "form_param_max_length_exceeded__first_name": "Tên không được vượt quá 256 ký tự.",
+    "form_param_max_length_exceeded__last_name": "Họ không được vượt quá 256 ký tự.",
+    "form_param_max_length_exceeded__name": "Tên không được vượt quá 256 ký tự.",
+    "form_param_nil": "",
+    "form_password_incorrect": "",
+    "form_password_length_too_short": "",
+    "form_password_not_strong_enough": "Mật khẩu của bạn không đủ mạnh.",
+    "form_password_pwned": "Mật khẩu này đã được tìm thấy trong một vụ vi phạm và không thể sử dụng, vui lòng thử mật khẩu khác.",
+    "form_password_pwned__sign_in": "Mật khẩu này đã được tìm thấy trong một vụ vi phạm và không thể sử dụng, vui lòng đặt lại mật khẩu của bạn.",
+    "form_password_size_in_bytes_exceeded": "Mật khẩu của bạn đã vượt quá số lượng byte tối đa cho phép, vui lòng rút ngắn hoặc loại bỏ một số ký tự đặc biệt.",
+    "form_password_validation_failed": "Mật khẩu không chính xác",
+    "form_username_invalid_character": "",
+    "form_username_invalid_length": "",
+    "identification_deletion_failed": "Bạn không thể xóa thông tin nhận dạng cuối cùng của mình.",
+    "not_allowed_access": "",
+    "passkey_already_exists": "Một passkey đã được đăng ký với thiết bị này.",
+    "passkey_not_supported": "Passkeys không được hỗ trợ trên thiết bị này.",
+    "passkey_pa_not_supported": "Đăng ký yêu cầu một bộ xác thực nền tảng nhưng thiết bị không hỗ trợ.",
+    "passkey_registration_cancelled": "Đăng ký passkey đã bị hủy bỏ hoặc hết thời gian.",
+    "passkey_retrieval_cancelled": "Xác minh passkey đã bị hủy bỏ hoặc hết thời gian.",
+    "passwordComplexity": {
+      "maximumLength": "ít hơn {{length}} ký tự",
+      "minimumLength": "{{length}} hoặc nhiều hơn ký tự",
+      "requireLowercase": "một chữ thường",
+      "requireNumbers": "một số",
+      "requireSpecialCharacter": "một ký tự đặc biệt",
+      "requireUppercase": "một chữ hoa",
+      "sentencePrefix": "Mật khẩu của bạn phải chứa"
+    },
+    "phone_number_exists": "Số điện thoại này đã được sử dụng. Vui lòng thử lại.",
+    "zxcvbn": {
+      "couldBeStronger": "Mật khẩu của bạn hoạt động, nhưng có thể mạnh hơn. Hãy thêm nhiều ký tự hơn.",
+      "goodPassword": "Mật khẩu của bạn đáp ứng tất cả các yêu cầu cần thiết.",
+      "notEnough": "Mật khẩu của bạn không đủ mạnh.",
+      "suggestions": {
+        "allUppercase": "Viết hoa một số chữ, nhưng không phải tất cả.",
+        "anotherWord": "Thêm nhiều từ ít phổ biến hơn.",
+        "associatedYears": "Tránh các năm mà bạn liên kết với mình.",
+        "capitalization": "Viết hoa nhiều hơn chỉ chữ đầu tiên.",
+        "dates": "Tránh các ngày và năm mà bạn liên kết với mình.",
+        "l33t": "Tránh việc thay thế chữ dễ đoán như '@' cho 'a'.",
+        "longerKeyboardPattern": "Sử dụng các mẫu bàn phím dài hơn và thay đổi hướng gõ nhiều lần.",
+        "noNeed": "Bạn có thể tạo mật khẩu mạnh mà không cần sử dụng ký tự đặc biệt, số hoặc chữ hoa.",
+        "pwned": "Nếu bạn sử dụng mật khẩu này ở nơi khác, bạn nên thay đổi nó.",
+        "recentYears": "Tránh các năm gần đây.",
+        "repeated": "Tránh các từ và ký tự lặp lại.",
+        "reverseWords": "Tránh việc đảo ngược chính tả của các từ thông thường.",
+        "sequences": "Tránh các chuỗi ký tự phổ biến.",
+        "useWords": "Sử dụng nhiều từ, nhưng tránh các cụm từ phổ biến."
+      },
+      "warnings": {
+        "common": "Đây là một mật khẩu phổ biến.",
+        "commonNames": "Tên và họ phổ biến dễ đoán.",
+        "dates": "Ngày tháng dễ đoán.",
+        "extendedRepeat": "Mẫu ký tự lặp lại như \"abcabcabc\" dễ đoán.",
+        "keyPattern": "Mẫu bàn phím ngắn dễ đoán.",
+        "namesByThemselves": "Tên đơn hoặc họ dễ đoán.",
+        "pwned": "Mật khẩu của bạn đã bị tiết lộ trong một vụ vi phạm trên Internet.",
+        "recentYears": "Các năm gần đây dễ đoán.",
+        "sequences": "Các chuỗi ký tự phổ biến như \"abc\" dễ đoán.",
+        "similarToCommon": "Đây giống với một mật khẩu phổ biến.",
+        "simpleRepeat": "Các ký tự lặp lại như \"aaa\" dễ đoán.",
+        "straightRow": "Các hàng ký tự thẳng trên bàn phím dễ đoán.",
+        "topHundred": "Đây là một mật khẩu được sử dụng thường xuyên.",
+        "topTen": "Đây là một mật khẩu được sử dụng nhiều.",
+        "userInputs": "Không nên có bất kỳ dữ liệu cá nhân hoặc liên quan đến trang nào.",
+        "wordByItself": "Các từ đơn dễ đoán."
+      }
+    }
+  },
+  "userButton": {
+    "action__addAccount": "Thêm tài khoản",
+    "action__manageAccount": "Quản lý tài khoản",
+    "action__signOut": "Đăng xuất",
+    "action__signOutAll": "Đăng xuất khỏi tất cả các tài khoản"
+  },
+  "userProfile": {
+    "backupCodePage": {
+      "actionLabel__copied": "Đã sao chép!",
+      "actionLabel__copy": "Sao chép tất cả",
+      "actionLabel__download": "Tải xuống .txt",
+      "actionLabel__print": "In",
+      "infoText1": "Mã sao lưu sẽ được kích hoạt cho tài khoản này.",
+      "infoText2": "Giữ bí mật mã sao lưu và lưu trữ chúng một cách an toàn. Bạn có thể tạo lại mã sao lưu nếu nghi ngờ rằng chúng đã bị xâm phạm.",
+      "subtitle__codelist": "Lưu trữ chúng một cách an toàn và giữ chúng bí mật.",
+      "successMessage": "Mã sao lưu đã được kích hoạt. Bạn có thể sử dụng một trong số chúng để đăng nhập vào tài khoản của mình, nếu bạn mất quyền truy cập vào thiết bị xác thực của mình. Mỗi mã chỉ có thể sử dụng một lần.",
+      "successSubtitle": "Bạn có thể sử dụng một trong số chúng để đăng nhập vào tài khoản của mình, nếu bạn mất quyền truy cập vào thiết bị xác thực của mình.",
+      "title": "Thêm xác minh mã sao lưu",
+      "title__codelist": "Mã sao lưu"
+    },
+    "connectedAccountPage": {
+      "formHint": "Chọn một nhà cung cấp để kết nối tài khoản của bạn.",
+      "formHint__noAccounts": "Không có nhà cung cấp tài khoản bên ngoài nào có sẵn.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} sẽ bị xóa khỏi tài khoản này.",
+        "messageLine2": "Bạn sẽ không còn có khả năng sử dụng tài khoản kết nối này và bất kỳ tính năng phụ thuộc nào cũng sẽ không hoạt động nữa.",
+        "successMessage": "{{connectedAccount}} đã bị xóa khỏi tài khoản của bạn.",
+        "title": "Xóa tài khoản kết nối"
+      },
+      "socialButtonsBlockButton": "{{provider|titleize}}",
+      "successMessage": "Nhà cung cấp đã được thêm vào tài khoản của bạn",
+      "title": "Thêm tài khoản kết nối"
+    },
+    "deletePage": {
+      "actionDescription": "Nhập \"Xóa tài khoản\" bên dưới để tiếp tục.",
+      "confirm": "Xóa tài khoản",
+      "messageLine1": "Bạn có chắc chắn muốn xóa tài khoản của mình không?",
+      "messageLine2": "Hành động này là vĩnh viễn và không thể đảo ngược.",
+      "title": "Xóa tài khoản"
+    },
+    "emailAddressPage": {
+      "emailCode": {
+        "formHint": "Một email chứa mã xác minh sẽ được gửi đến địa chỉ email này.",
+        "formSubtitle": "Nhập mã xác minh được gửi đến {{identifier}}",
+        "formTitle": "Mã xác minh",
+        "resendButton": "Không nhận được mã? Gửi lại",
+        "successMessage": "Email {{identifier}} đã được thêm vào tài khoản của bạn."
+      },
+      "emailLink": {
+        "formHint": "Một email chứa liên kết xác minh sẽ được gửi đến địa chỉ email này.",
+        "formSubtitle": "Nhấp vào liên kết xác minh trong email được gửi đến {{identifier}}",
+        "formTitle": "Liên kết xác minh",
+        "resendButton": "Không nhận được liên kết? Gửi lại",
+        "successMessage": "Email {{identifier}} đã được thêm vào tài khoản của bạn."
+      },
+      "removeResource": {
+        "messageLine1": "{{identifier}} sẽ bị xóa khỏi tài khoản này.",
+        "messageLine2": "Bạn sẽ không còn có khả năng đăng nhập bằng địa chỉ email này nữa.",
+        "successMessage": "{{emailAddress}} đã bị xóa khỏi tài khoản của bạn.",
+        "title": "Xóa địa chỉ email"
+      },
+      "title": "Thêm địa chỉ email",
+      "verifyTitle": "Xác minh địa chỉ email"
+    },
+    "formButtonPrimary__add": "Thêm",
+    "formButtonPrimary__continue": "Tiếp tục",
+    "formButtonPrimary__finish": "Hoàn tất",
+    "formButtonPrimary__remove": "Xóa",
+    "formButtonPrimary__save": "Lưu",
+    "formButtonReset": "Hủy",
+    "mfaPage": {
+      "formHint": "Chọn một phương pháp để thêm.",
+      "title": "Thêm xác minh hai bước"
+    },
+    "mfaPhoneCodePage": {
+      "backButton": "Sử dụng số hiện có",
+      "primaryButton__addPhoneNumber": "Thêm số điện thoại",
+      "removeResource": {
+        "messageLine1": "{{identifier}} sẽ không còn nhận được mã xác minh khi đăng nhập nữa.",
+        "messageLine2": "Tài khoản của bạn có thể không an toàn. Bạn có chắc chắn muốn tiếp tục không?",
+        "successMessage": "Xác minh hai bước qua mã SMS đã bị xóa cho {{mfaPhoneCode}}",
+        "title": "Xóa xác minh hai bước"
+      },
+      "subtitle__availablePhoneNumbers": "Chọn một số điện thoại hiện có để đăng ký xác minh hai bước qua mã SMS hoặc thêm một số mới.",
+      "subtitle__unavailablePhoneNumbers": "Không có số điện thoại nào có sẵn để đăng ký xác minh hai bước qua mã SMS, vui lòng thêm một số mới.",
+      "successMessage1": "Khi đăng nhập, bạn sẽ cần nhập mã xác minh được gửi đến số điện thoại này như một bước bổ sung.",
+      "successMessage2": "Lưu các mã sao lưu này và lưu trữ chúng một cách an toàn. Nếu bạn mất quyền truy cập vào thiết bị xác thực của mình, bạn có thể sử dụng mã sao lưu để đăng nhập.",
+      "successTitle": "Xác minh qua mã SMS đã được kích hoạt",
+      "title": "Thêm xác minh qua mã SMS"
+    },
+    "mfaTOTPPage": {
+      "authenticatorApp": {
+        "buttonAbleToScan__nonPrimary": "Quét mã QR thay vì",
+        "buttonUnableToScan__nonPrimary": "Không thể quét mã QR?",
+        "infoText__ableToScan": "Thiết lập một phương pháp đăng nhập mới trong ứng dụng xác thực của bạn và quét mã QR sau để liên kết nó với tài khoản của bạn.",
+        "infoText__unableToScan": "Thiết lập một phương pháp đăng nhập mới trong ứng dụng xác thực của bạn và nhập Khóa được cung cấp dưới đây.",
+        "inputLabel__unableToScan1": "Đảm bảo rằng Mật khẩu dựa trên thời gian hoặc Mật khẩu một lần đã được kích hoạt, sau đó hoàn tất việc liên kết tài khoản của bạn.",
+        "inputLabel__unableToScan2": "Hoặc nếu ứng dụng xác thực của bạn hỗ trợ URI TOTP, bạn cũng có thể sao chép toàn bộ URI."
+      },
+      "removeResource": {
+        "messageLine1": "Mã xác minh từ ứng dụng xác thực này sẽ không còn được yêu cầu khi đăng nhập nữa.",
+        "messageLine2": "Tài khoản của bạn có thể không an toàn. Bạn có chắc chắn muốn tiếp tục không?",
+        "successMessage": "Xác minh hai bước qua ứng dụng xác thực đã bị xóa.",
+        "title": "Xóa xác minh hai bước"
+      },
+      "successMessage": "Xác minh hai bước hiện đã được kích hoạt. Khi đăng nhập, bạn sẽ cần nhập mã xác minh từ ứng dụng xác thực này như một bước bổ sung.",
+      "title": "Thêm ứng dụng xác thực",
+      "verifySubtitle": "Nhập mã xác minh được tạo bởi ứng dụng xác thực của bạn",
+      "verifyTitle": "Mã xác minh"
+    },
+    "mobileButton__menu": "Menu",
+    "navbar": {
+      "account": "Hồ sơ",
+      "description": "Quản lý thông tin tài khoản của bạn.",
+      "security": "Bảo mật",
+      "title": "Tài khoản"
+    },
+    "passkeyScreen": {
+      "removeResource": {
+        "messageLine1": "{{name}} sẽ được xóa khỏi tài khoản này.",
+        "title": "Xóa passkey"
+      },
+      "subtitle__rename": "Bạn có thể đổi tên passkey để dễ dàng tìm kiếm.",
+      "title__rename": "Đổi tên Passkey"
+    },
+    "passwordPage": {
+      "checkboxInfoText__signOutOfOtherSessions": "Đề nghị đăng xuất khỏi tất cả các thiết bị khác có thể đã sử dụng mật khẩu cũ của bạn.",
+      "readonly": "Mật khẩu của bạn hiện không thể chỉnh sửa vì bạn chỉ có thể đăng nhập qua kết nối doanh nghiệp.",
+      "successMessage__set": "Mật khẩu của bạn đã được thiết lập.",
+      "successMessage__signOutOfOtherSessions": "Tất cả các thiết bị khác đã được đăng xuất.",
+      "successMessage__update": "Mật khẩu của bạn đã được cập nhật.",
+      "title__set": "Thiết lập mật khẩu",
+      "title__update": "Cập nhật mật khẩu"
+    },
+    "phoneNumberPage": {
+      "infoText": "Một tin nhắn chứa mã xác minh sẽ được gửi đến số điện thoại này. Có thể áp dụng cước phí tin nhắn và dữ liệu.",
+      "removeResource": {
+        "messageLine1": "{{identifier}} sẽ được xóa khỏi tài khoản này.",
+        "messageLine2": "Bạn sẽ không thể đăng nhập bằng số điện thoại này nữa.",
+        "successMessage": "{{phoneNumber}} đã được xóa khỏi tài khoản của bạn.",
+        "title": "Xóa số điện thoại"
+      },
+      "successMessage": "{{identifier}} đã được thêm vào tài khoản của bạn.",
+      "title": "Thêm số điện thoại",
+      "verifySubtitle": "Nhập mã xác minh được gửi đến {{identifier}}",
+      "verifyTitle": "Xác minh số điện thoại"
+    },
+    "profilePage": {
+      "fileDropAreaHint": "Kích thước khuyến nghị 1:1, tối đa 10MB.",
+      "imageFormDestructiveActionSubtitle": "Xóa",
+      "imageFormSubtitle": "Tải lên",
+      "imageFormTitle": "Ảnh hồ sơ",
+      "readonly": "Thông tin hồ sơ của bạn đã được cung cấp bởi kết nối doanh nghiệp và không thể chỉnh sửa.",
+      "successMessage": "Hồ sơ của bạn đã được cập nhật.",
+      "title": "Cập nhật hồ sơ"
+    },
+    "start": {
+      "activeDevicesSection": {
+        "destructiveAction": "Đăng xuất khỏi thiết bị",
+        "title": "Thiết bị hoạt động"
+      },
+      "connectedAccountsSection": {
+        "actionLabel__connectionFailed": "Thử lại",
+        "actionLabel__reauthorize": "Ủy quyền ngay",
+        "destructiveActionTitle": "Xóa",
+        "primaryButton": "Kết nối tài khoản",
+        "subtitle__reauthorize": "Phạm vi yêu cầu đã được cập nhật, và bạn có thể gặp hạn chế về chức năng. Vui lòng ủy quyền lại ứng dụng này để tránh bất kỳ vấn đề nào",
+        "title": "Tài khoản đã kết nối"
+      },
+      "dangerSection": {
+        "deleteAccountButton": "Xóa tài khoản",
+        "title": "Xóa tài khoản"
+      },
+      "emailAddressesSection": {
+        "destructiveAction": "Xóa email",
+        "detailsAction__nonPrimary": "Đặt làm chính",
+        "detailsAction__primary": "Hoàn tất xác minh",
+        "detailsAction__unverified": "Xác minh",
+        "primaryButton": "Thêm địa chỉ email",
+        "title": "Địa chỉ email"
+      },
+      "enterpriseAccountsSection": {
+        "title": "Tài khoản doanh nghiệp"
+      },
+      "headerTitle__account": "Chi tiết hồ sơ",
+      "headerTitle__security": "Bảo mật",
+      "mfaSection": {
+        "backupCodes": {
+          "actionLabel__regenerate": "Tạo lại",
+          "headerTitle": "Mã dự phòng",
+          "subtitle__regenerate": "Nhận một bộ mã dự phòng an toàn mới. Các mã dự phòng trước sẽ bị xóa và không thể sử dụng.",
+          "title__regenerate": "Tạo lại mã dự phòng"
+        },
+        "phoneCode": {
+          "actionLabel__setDefault": "Đặt làm mặc định",
+          "destructiveActionLabel": "Xóa"
+        },
+        "primaryButton": "Thêm xác minh hai bước",
+        "title": "Xác minh hai bước",
+        "totp": {
+          "destructiveActionTitle": "Xóa",
+          "headerTitle": "Ứng dụng xác thực"
+        }
+      },
+      "passkeysSection": {
+        "menuAction__destructive": "Xóa",
+        "menuAction__rename": "Đổi tên",
+        "title": "Passkeys"
+      },
+      "passwordSection": {
+        "primaryButton__setPassword": "Đặt mật khẩu",
+        "primaryButton__updatePassword": "Cập nhật mật khẩu",
+        "title": "Mật khẩu"
+      },
+      "phoneNumbersSection": {
+        "destructiveAction": "Xóa số điện thoại",
+        "detailsAction__nonPrimary": "Đặt làm chính",
+        "detailsAction__primary": "Hoàn tất xác minh",
+        "detailsAction__unverified": "Xác minh số điện thoại",
+        "primaryButton": "Thêm số điện thoại",
+        "title": "Số điện thoại"
+      },
+      "profileSection": {
+        "primaryButton": "Cập nhật hồ sơ",
+        "title": "Hồ sơ"
+      },
+      "usernameSection": {
+        "primaryButton__setUsername": "Đặt tên người dùng",
+        "primaryButton__updateUsername": "Cập nhật tên người dùng",
+        "title": "Tên người dùng"
+      },
+      "web3WalletsSection": {
+        "destructiveAction": "Xóa ví",
+        "primaryButton": "Ví Web3",
+        "title": "Ví Web3"
+      }
+    },
+    "usernamePage": {
+      "successMessage": "Tên người dùng của bạn đã được cập nhật.",
+      "title__set": "Thiết lập tên người dùng",
+      "title__update": "Cập nhật tên người dùng"
+    },
+    "web3WalletPage": {
+      "removeResource": {
+        "messageLine1": "{{identifier}} sẽ được xóa khỏi tài khoản này.",
+        "messageLine2": "Bạn sẽ không thể đăng nhập bằng ví web3 này nữa.",
+        "successMessage": "{{web3Wallet}} đã được xóa khỏi tài khoản của bạn.",
+        "title": "Xóa ví web3"
+      },
+      "subtitle__availableWallets": "Chọn một ví web3 để kết nối với tài khoản của bạn.",
+      "subtitle__unavailableWallets": "Không có ví web3 nào khả dụng.",
+      "successMessage": "Ví đã được thêm vào tài khoản của bạn.",
+      "title": "Thêm ví web3"
+    }
+  }
+}

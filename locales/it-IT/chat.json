@@ -2,38 +2,74 @@
   "ModelSwitch": {
     "title": "Modelli"
   },
-  "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare a chattare con me subito o andare a [impostazioni assistente](/chat/settings#session={{id}}) per completare le mie informazioni.",
+  "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
+  "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
+  "agentsAndConversations": "Assistenti e Conversazioni",
   "backToBottom": "Torna in fondo",
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
+  "confirmRemoveSessionSuccess": "Session eliminata con successo",
   "defaultAgent": "Assistente predefinito",
   "defaultList": "Lista predefinita",
   "defaultSession": "Sessione predefinita",
+  "duplicateSession": {
+    "loading": "In corso di duplicazione...",
+    "success": "Duplicazione riuscita",
+    "title": "{{title}} Copia"
+  },
   "duplicateTitle": "{{title}} Copia",
+  "emptyAgent": "Nessun assistente disponibile",
   "historyRange": "Intervallo cronologico",
   "inbox": {
-    "defaultMessage": "Ciao, sono il tuo assistente virtuale, puoi chiedermi qualsiasi cosa e farò del mio meglio per risponderti. Se hai bisogno di un assistente più professionale o personalizzato, clicca su `+` per creare un assistente personalizzato.",
     "desc": "Attiva il cluster cerebrale, accendi la scintilla del pensiero. Il tuo assistente intelligente, qui per comunicare con te su tutto.",
     "title": "Chiacchierata casuale"
   },
   "input": {
-    "onlyAdd": "Solo aggiungi messaggio",
+    "addAi": "Aggiungi un messaggio AI",
+    "addUser": "Aggiungi un messaggio utente",
+    "more": "Ulteriori",
     "send": "Invia",
     "sendWithCmdEnter": "Invia premendo {{meta}} + Invio",
     "sendWithEnter": "Invia premendo Invio",
     "stop": "Ferma",
     "warp": "A capo"
   },
+  "knowledgeBase": {
+    "all": "Tutti i contenuti",
+    "allFiles": "Tutti i file",
+    "allKnowledgeBases": "Tutte le basi di conoscenza",
+    "disabled": "La modalità di distribuzione attuale non supporta le conversazioni con la base di conoscenza. Per utilizzare questa funzione, passare alla distribuzione del database server o utilizzare il servizio LobeChat Cloud.",
+    "library": {
+      "action": {
+        "add": "Aggiungi",
+        "detail": "Dettagli",
+        "remove": "Rimuovi"
+      },
+      "title": "File/Basi di conoscenza"
+    },
+    "relativeFilesOrKnowledgeBases": "File/Basi di conoscenza correlate",
+    "title": "Base di conoscenza",
+    "uploadGuide": "I file caricati possono essere visualizzati nella 'Base di conoscenza'.",
+    "viewMore": "Visualizza di più"
+  },
   "messageAction": {
     "delAndRegenerate": "Elimina e rigenera",
     "regenerate": "Rigenera"
   },
   "newAgent": "Nuovo assistente",
-  "noDescription": "Nessuna descrizione",
   "pin": "Fissa in alto",
   "pinOff": "Annulla fissaggio in alto",
+  "rag": {
+    "referenceChunks": "Citazioni di riferimento",
+    "userQuery": {
+      "actions": {
+        "delete": "Elimina la Query riscritta",
+        "regenerate": "Rigenera la Query"
+      }
+    }
+  },
   "regenerate": "Rigenera",
   "roleAndArchive": "Ruolo e archivio",
   "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
@@ -41,13 +77,17 @@
   "sessionGroup": {
     "config": "Gestione gruppi",
     "confirmRemoveGroupAlert": "Stai per rimuovere questo gruppo. Dopo la rimozione, gli assistenti di questo gruppo verranno spostati nella lista predefinita. Confermi l'operazione?",
+    "createAgentSuccess": "Assistente creato con successo",
     "createGroup": "Aggiungi nuovo gruppo",
     "createSuccess": "Creazione riuscita",
+    "creatingAgent": "Creazione dell'assistente in corso...",
     "inputPlaceholder": "Inserisci il nome del gruppo...",
     "moveGroup": "Sposta nel gruppo",
     "newGroup": "Nuovo gruppo",
     "rename": "Rinomina gruppo",
     "renameSuccess": "Rinominazione riuscita",
+    "sortSuccess": "Riordinamento riuscito",
+    "sorting": "Aggiornamento dell'ordinamento del gruppo in corso...",
     "tooLong": "Il nome del gruppo deve essere lungo 1-20 caratteri"
   },
   "shareModal": {
@@ -71,6 +111,7 @@
     "chats": "Chat",
     "rest": "Rimanenti",
     "systemRole": "Ruolo di sistema",
+    "title": "Dettagli del Token",
     "tools": "Strumenti",
     "total": "Totale",
     "used": "Utilizzati"
@@ -86,10 +127,14 @@
       "duplicate": "Crea copia",
       "export": "Esporta argomento"
     },
+    "checkOpenNewTopic": "Abilitare un nuovo argomento?",
+    "checkSaveCurrentMessages": "Vuoi salvare la conversazione attuale come argomento?",
     "confirmRemoveAll": "Stai per rimuovere tutti gli argomenti, questa operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveTopic": "Stai per rimuovere questo argomento, l'operazione non potrà essere annullata. Procedere con cautela.",
     "confirmRemoveUnstarred": "Stai per rimuovere gli argomenti non contrassegnati, questa operazione non potrà essere annullata. Procedere con cautela.",
     "defaultTitle": "Argomento predefinito",
+    "duplicateLoading": "Duplicazione dell'argomento in corso...",
+    "duplicateSuccess": "Argomento duplicato con successo",
     "guide": {
       "desc": "Fare clic sul pulsante a sinistra per salvare l'attuale sessione come argomento storico e avviare una nuova sessione",
       "title": "Elenco argomenti"
@@ -111,9 +156,24 @@
   },
   "updateAgent": "Aggiorna informazioni assistente",
   "upload": {
-    "actionTooltip": "Carica immagine",
-    "disabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello prima di utilizzarlo",
-    "dragDesc": "Trascina i file qui, supporta il caricamento di più immagini. Tieni premuto Shift per inviare direttamente le immagini",
-    "dragTitle": "Carica immagine"
+    "action": {
+      "fileUpload": "Carica file",
+      "folderUpload": "Carica cartella",
+      "imageDisabled": "Il modello attuale non supporta il riconoscimento visivo, si prega di cambiare modello per utilizzare questa funzione",
+      "imageUpload": "Carica immagine",
+      "tooltip": "Carica"
+    },
+    "clientMode": {
+      "actionFiletip": "Carica file",
+      "actionTooltip": "Carica",
+      "disabled": "Il modello attuale non supporta il riconoscimento visivo e l'analisi dei file, si prega di cambiare modello per utilizzare questa funzione"
+    },
+    "preview": {
+      "prepareTasks": "Preparazione dei blocchi...",
+      "status": {
+        "pending": "Preparazione al caricamento...",
+        "processing": "Elaborazione del file..."
+      }
+    }
   }
 }

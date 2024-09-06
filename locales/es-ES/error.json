@@ -1,4 +1,24 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "Continuar la sesión",
+      "desc": "{{greeting}}, es un placer poder seguir asistiéndote. Continuemos con el tema que estábamos tratando.",
+      "title": "Bienvenido de nuevo, {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "Volver a la página de inicio",
+    "desc": "Inténtalo de nuevo más tarde, o regresa al mundo conocido",
+    "retry": "Reintentar",
+    "title": "Se ha producido un problema en la página.."
+  },
+  "fetchError": "Error en la solicitud",
+  "fetchErrorDetail": "Detalles del error",
+  "notFound": {
+    "backHome": "Volver a la página de inicio",
+    "desc": "No podemos encontrar la página que estás buscando, por favor verifica si el enlace es correcto",
+    "title": "¿Has entrado en un área desconocida?"
+  },
   "pluginSettings": {
     "desc": "Complete la siguiente configuración para comenzar a usar este complemento",
     "title": "Configuración del complemento {{name}}"
@@ -34,23 +54,20 @@
     "503": "Lo sentimos, el servidor no puede procesar su solicitud en este momento, posiblemente debido a una sobrecarga o mantenimiento. Por favor, inténtelo de nuevo más tarde",
     "504": "Lo sentimos, el servidor no recibió respuesta del servidor upstream. Por favor, inténtelo de nuevo más tarde",
     "AgentRuntimeError": "Se produjo un error en la ejecución del tiempo de ejecución del modelo de lenguaje Lobe, por favor, verifica la siguiente información o inténtalo de nuevo",
-    "AzureBizError": "Se produjo un error al solicitar el servicio de Azure AI, por favor, verifica la siguiente información o inténtalo de nuevo",
-    "BedrockBizError": "Se produjo un error al solicitar el servicio de Bedrock, por favor, verifica la siguiente información o inténtalo de nuevo",
-    "GoogleBizError": "Se produjo un error al solicitar el servicio de Google, por favor, verifica la siguiente información o inténtalo de nuevo",
+    "FreePlanLimit": "Actualmente eres un usuario gratuito y no puedes utilizar esta función. Por favor, actualiza a un plan de pago para seguir utilizando.",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
-    "InvalidAzureAPIKey": "La clave de API de Azure es incorrecta o está vacía, por favor, verifica la clave de API de Azure e inténtalo de nuevo",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
-    "InvalidGoogleAPIKey": "La clave de API de Google es incorrecta o está vacía, por favor, verifica la clave de API de Google e inténtalo de nuevo",
-    "InvalidMoonshotAPIKey": "La clave de API de Moonshot AI no es válida o está vacía. Por favor, revise la clave de API de Moonshot e inténtelo de nuevo.",
+    "InvalidClerkUser": "Lo siento mucho, actualmente no has iniciado sesión. Por favor, inicia sesión o regístrate antes de continuar.",
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
-    "InvalidZhipuAPIKey": "La clave de API de Zhipu es incorrecta o está vacía, por favor, verifica la clave de API de Zhipu e inténtalo de nuevo",
+    "InvalidProviderAPIKey": "{{provider}} API Key incorrecta o vacía, por favor revisa tu {{provider}} API Key e intenta de nuevo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",
-    "MoonshotBizError": "Se produjo un error al solicitar el servicio de Moonshot en el lado oscuro de la luna. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
-    "OpenAIBizError": "Error al solicitar el servicio OpenAI. Depure o reintente según la siguiente información",
+    "OllamaServiceUnavailable": "El servicio Ollama no está disponible. Por favor, verifica si Ollama está funcionando correctamente o si la configuración de Ollama para el acceso entre dominios está configurada correctamente.",
+    "OpenAIBizError": "Se produjo un error al solicitar el servicio de OpenAI, por favor, revise la siguiente información o inténtelo de nuevo",
     "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
     "PluginApiParamsError": "Lo sentimos, la validación de los parámetros de entrada de la solicitud del complemento no ha pasado. Verifique si los parámetros de entrada coinciden con la información de descripción del API",
+    "PluginFailToTransformArguments": "Lo siento, no se pudieron transformar los argumentos de la llamada al plugin. Por favor, intenta generar de nuevo el mensaje del asistente o prueba con un modelo de IA de Tools Calling más potente.",
     "PluginGatewayError": "Lo sentimos, se ha producido un error en la puerta de enlace del complemento. Verifique si la configuración de la puerta de enlace del complemento es correcta",
     "PluginManifestInvalid": "Lo sentimos, la validación del manifiesto del complemento no ha pasado. Por favor, verifique si el formato del manifiesto es correcto",
     "PluginManifestNotFound": "Lo sentimos, el servidor no puede encontrar el manifiesto de descripción del complemento (manifest.json). Verifique si la dirección del archivo de descripción del complemento es correcta",
@@ -61,7 +78,10 @@
     "PluginOpenApiInitError": "Lo sentimos, la inicialización del cliente OpenAPI ha fallado. Verifique si la información de configuración de OpenAPI es correcta",
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
-    "ZhipuBizError": "Se produjo un error al solicitar el servicio Zhipu, por favor, verifica la siguiente información o inténtalo de nuevo"
+    "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
+    "StreamChunkError": "Error de análisis del bloque de mensajes de la solicitud en streaming. Por favor, verifica si la API actual cumple con las normas estándar o contacta a tu proveedor de API para más información.",
+    "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando.",
+    "UnknownChatFetchError": "Lo sentimos, se ha producido un error desconocido en la solicitud. Por favor, verifica la información a continuación o intenta de nuevo."
   },
   "stt": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
@@ -70,29 +90,10 @@
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
   },
   "unlock": {
-    "apikey": {
-      "Bedrock": {
-        "customRegion": "Región de servicio personalizada",
-        "description": "Ingresa tu AccessKeyId/SecretAccessKey de Aws para comenzar la sesión. La aplicación no guardará tu configuración de autenticación",
-        "title": "Usar información de autenticación personalizada de Bedrock"
-      },
-      "Google": {
-        "description": "Ingresa tu clave de API de Google para comenzar la sesión. La aplicación no guardará tu clave de API",
-        "title": "Usar clave de API personalizada de Google"
-      },
-      "Moonshot": {
-        "description": "Ingrese su clave de API de Moonshot AI personalizada para comenzar la sesión. La aplicación no almacenará su clave de API.",
-        "title": "Usar una clave de API personalizada de Moonshot AI"
-      },
-      "OpenAI": {
-        "addProxyUrl": "Agregar dirección de proxy de OpenAI (opcional)",
-        "description": "Ingresa tu clave de API de OpenAI para comenzar la sesión. La aplicación no guardará tu clave de API",
-        "title": "Usar clave de API personalizada de OpenAI"
-      },
-      "Zhipu": {
-        "description": "Ingresa tu clave de API de Zhipu para comenzar la sesión. La aplicación no guardará tu clave de API",
-        "title": "Usar clave de API personalizada de Zhipu"
-      }
+    "addProxyUrl": "Agregar URL de proxy de OpenAI (opcional)",
+    "apiKey": {
+      "description": "Ingresa tu API Key de {{name}} para comenzar la sesión",
+      "title": "Usar tu propia API Key de {{name}}"
     },
     "closeMessage": "Cerrar mensaje",
     "confirm": "Confirmar y volver a intentar",
@@ -111,5 +112,13 @@
       "apiKey": "Clave de API personalizada",
       "password": "Contraseña"
     }
+  },
+  "upload": {
+    "desc": "Detalles: {{detail}}",
+    "fileOnlySupportInServerMode": "El modo de implementación actual no admite la carga de archivos que no sean imágenes. Si desea cargar un archivo en formato {{ext}}, cambie a la implementación de base de datos en servidor o utilice el servicio LobeChat Cloud.",
+    "networkError": "Por favor, verifica que tu red esté funcionando correctamente y comprueba si la configuración de CORS del servicio de almacenamiento de archivos es correcta.",
+    "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde",
+    "unknownError": "Razón del error: {{reason}}",
+    "uploadFailed": "La carga del archivo ha fallado."
   }
 }

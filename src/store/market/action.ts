@@ -4,7 +4,7 @@ import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { marketService } from '@/services/market';
-import { globalHelpers } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/user/helpers';
 import { AgentsMarketItem, LobeChatAgentsMarketIndex } from '@/types/market';
 
 import type { Store } from './store';
@@ -12,6 +12,7 @@ import type { Store } from './store';
 export interface StoreAction {
   activateAgent: (identifier: string) => void;
   deactivateAgent: () => void;
+  getAgentById: (identifiers: string) => Promise<AgentsMarketItem>;
   setSearchKeywords: (keywords: string) => void;
   updateAgentMap: (key: string, value: AgentsMarketItem) => void;
   useFetchAgent: (identifier: string) => SWRResponse<AgentsMarketItem>;
@@ -28,8 +29,14 @@ export const createMarketAction: StateCreator<
     set({ currentIdentifier: identifier });
   },
   deactivateAgent: () => {
-    set({ currentIdentifier: undefined }, false, 'deactivateAgent');
+    set({ currentIdentifier: '' }, false, 'deactivateAgent');
   },
+
+  getAgentById: async (identifier) => {
+    const locale = globalHelpers.getCurrentLanguage();
+    return marketService.getAgentManifest(identifier, locale as string);
+  },
+
   setSearchKeywords: (keywords) => {
     set({ searchKeywords: keywords });
   },
@@ -69,6 +76,7 @@ export const createMarketAction: StateCreator<
             'useFetchAgentList',
           );
         },
+        revalidateOnFocus: false,
       },
     ),
 });

@@ -1,7 +1,7 @@
 import OpenAI, { ClientOptions } from 'openai';
 import urlJoin from 'url-join';
 
-import { getServerConfig } from '@/config/server';
+import { getLLMConfig } from '@/config/llm';
 import { ChatErrorType } from '@/types/fetch';
 
 // create Azure OpenAI Instance
@@ -11,7 +11,7 @@ export const createAzureOpenai = (params: {
   model: string;
   userApiKey?: string | null;
 }) => {
-  const { OPENAI_PROXY_URL = '', AZURE_API_VERSION, AZURE_API_KEY } = getServerConfig();
+  const { OPENAI_PROXY_URL = '', AZURE_API_VERSION, AZURE_API_KEY } = getLLMConfig();
 
   const endpoint = !params.endpoint ? OPENAI_PROXY_URL : params.endpoint;
   const baseURL = urlJoin(endpoint, `/openai/deployments/${params.model.replace('.', '')}`); // refs: https://test-001.openai.azure.com/openai/deployments/gpt-35-turbo

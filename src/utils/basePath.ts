@@ -1,3 +1,3 @@
-import { getClientConfig } from '@/config/client';
+import { appEnv } from '@/config/app';
 
-export const withBasePath = (path: string) => getClientConfig().BASE_PATH + path;
+export const withBasePath = (path: string) => appEnv.NEXT_PUBLIC_BASE_PATH + path;

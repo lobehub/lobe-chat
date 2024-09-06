@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { AssistantMessageExtra } from './Assistant';
@@ -16,10 +16,10 @@ vi.mock('./Translate', () => ({
 }));
 
 // Mock dependencies
-vi.mock('@/store/session', () => ({
-  useSessionStore: vi.fn(),
+vi.mock('@/store/agent', () => ({
+  useAgentStore: vi.fn(),
 }));
-vi.mock('@/store/session/selectors', () => ({
+vi.mock('@/store/agent/selectors', () => ({
   agentSelectors: {
     currentAgentModel: vi.fn(),
   },
@@ -37,7 +37,7 @@ const mockData: ChatMessage = {
 describe('AssistantMessageExtra', () => {
   beforeEach(() => {
     // Set default mock return values
-    (useSessionStore as unknown as Mock).mockImplementation(() => ({
+    (useAgentStore as unknown as Mock).mockImplementation(() => ({
       chatLoadingId: null,
     }));
     (agentSelectors.currentAgentModel as Mock).mockReturnValue('defaultModel');
@@ -76,7 +76,7 @@ describe('AssistantMessageExtra', () => {
   });
 
   it('should receive the correct loading attribute if loading is true for TTS and Translate components', async () => {
-    (useSessionStore as unknown as Mock).mockImplementation(() => ({
+    (useAgentStore as unknown as Mock).mockImplementation(() => ({
       chatLoadingId: 'test-id',
     }));
     render(<AssistantMessageExtra {...mockData} extra={{ translate: { to: 'abc' }, tts: {} }} />);

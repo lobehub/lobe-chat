@@ -7,4 +7,5 @@ export const AgentRuntimeError = {
     errorType: ILobeAgentRuntimeErrorType | string | number,
     error?: any,
   ): AgentInitErrorPayload => ({ error, errorType }),
+  textToImage: (error: any): any => error,
 };

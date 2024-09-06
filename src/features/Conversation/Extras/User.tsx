@@ -1,6 +1,7 @@
 import { memo } from 'react';
 
 import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { RenderMessageExtra } from '../types';
@@ -9,7 +10,7 @@ import TTS from './TTS';
 import Translate from './Translate';
 
 export const UserMessageExtra: RenderMessageExtra = memo<ChatMessage>(({ extra, id, content }) => {
-  const loading = useChatStore((s) => s.chatLoadingId === id);
+  const loading = useChatStore(chatSelectors.isMessageGenerating(id));
 
   const showTranslate = !!extra?.translate;
   const showTTS = !!extra?.tts;

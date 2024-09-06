@@ -1,33 +1,48 @@
-import { css } from 'antd-style';
+import { Theme, css } from 'antd-style';
 
-export default ({ prefixCls }: { prefixCls: string }) => css`
+// fix ios input keyboard
+// overflow: hidden;
+// ref: https://zhuanlan.zhihu.com/p/113855026
+export default ({ token }: { prefixCls: string; token: Theme }) => css`
   html,
   body,
-  #__next,
-  .${prefixCls}-app {
+  #__next {
     position: relative;
-    overscroll-behavior: none;
-    height: 100% !important;
-    max-height: 100dvh !important;
 
-    ::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0;
+    overscroll-behavior: none;
+
+    height: 100%;
+    min-height: 100dvh;
+    max-height: 100dvh;
+
+    background: ${token.colorBgLayout};
+
+    @media (min-device-width: 576px) {
+      overflow: hidden;
     }
   }
 
-  p {
-    margin-bottom: 0;
-  }
+  * {
+    scrollbar-color: ${token.colorFill} transparent;
+    scrollbar-width: thin;
 
-  @media (max-width: 575px) {
-    * {
-      ::-webkit-scrollbar {
-        display: none;
-        width: 0;
-        height: 0;
-      }
+    ::-webkit-scrollbar {
+      width: 0.75em;
+      height: 0.75em;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+    }
+
+    :hover::-webkit-scrollbar-thumb {
+      background-color: ${token.colorText};
+      background-clip: content-box;
+      border: 3px solid transparent;
+    }
+
+    ::-webkit-scrollbar-track {
+      background-color: transparent;
     }
   }
 `;

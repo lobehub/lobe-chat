@@ -6,6 +6,8 @@ import global from './global';
 const prefixCls = 'ant';
 
 export const GlobalStyle = createGlobalStyle(({ theme }) => [
-  global({ prefixCls }),
+  global({ prefixCls, token: theme }),
   antdOverride({ prefixCls, token: theme }),
 ]);
+
+export * from './text';

@@ -1,4 +1,14 @@
-import { Callout } from 'nextra/components';
+---
+title: LobeChat 环境变量配置指南
+description: 了解如何使用环境变量自定义设置 LobeChat 部署，包括访问密码、单点登录、basePath 设置等。
+tags:
+  - LobeChat
+  - 环境变量
+  - 配置指南
+  - 单点登录
+  - 插件服务
+  - 助手市场
+---
 
 # 环境变量
 
@@ -13,12 +23,16 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 默认值：-
 - 示例：`awCTe)re_r74` or `rtrt_ewee3@09!`
 
-### `ENABLE_OAUTH_SSO`
+### `API_KEY_SELECT_MODE`
 
 - 类型：可选
-- 描述：为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。有关详细信息，请参阅[身份验证服务](#身份验证服务)。
-- 默认值: `-`
-- 示例: `1`
+- 描述：用于控制多个 API Keys 时，选择 Key 的模式，当前支持 `random` 和 `turn`
+- 默认值：`random`
+- 示例：`random` 或 `turn`
+
+使用 `random` 模式下，将在多个 API Keys 中随机获取一个 API Key。
+
+使用 `turn` 模式下，将按照填写的顺序，轮询获取得到 API Key。
 
 ### `NEXT_PUBLIC_BASE_PATH`
 
@@ -27,12 +41,12 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 默认值: `-`
 - 示例: `/test`
 
-#### `DEFAULT_AGENT_CONFIG`
+### `DEFAULT_AGENT_CONFIG`
 
 - 类型：可选
 - 描述：用于配置 LobeChat 默认助理的默认配置。它支持多种数据类型和结构，包括键值对、嵌套字段、数组值等。
 - 默认值：`-`
-- 示例：`'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer`
+- 示例：`'model=gpt-4-1106-preview;params.max_tokens=300;plugins=search-engine,lobe-image-designer'`
 
 `DEFAULT_AGENT_CONFIG` 用于配置 LobeChat 默认助理的默认配置。它支持多种数据类型和结构，包括键值对、嵌套字段、数组值等。下表详细说明了 `DEFAULT_AGENT_CONFIG` 环境变量的配置项、示例以及相应解释：
 
@@ -43,68 +57,36 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 | 数组 | `plugins=search-engine,lobe-image-designer` | 启用 `search-engine` 和 `lobe-image-designer` 插件。 |
 | 中文逗号 | `plugins=search-engine，lobe-image-designer` | 同上，演示支持中文逗号分隔。 |
 | 多个配置项 | `model=glm-4;provider=zhipu` | 设置模型为 `glm-4` 且模型服务商为 `zhipu`。 |
-| 数字值 | `params.max_tokens=300` | 设置最大令牌数为 `300`。 |
-| 布尔值 | `enableAutoCreateTopic=true` | 启用自动创建主题。 |
+| 数字值 | `params.max_tokens=300`, `chatConfig.historyCount=5` | 设置最大令牌数为 `300`，设置历史消息条数为5。 |
+| 布尔值 | `chatConfig.enableAutoCreateTopic=true`,`chatConfig.enableCompressThreshold=true`, `chatConfig.enableHistoryCount=true` | 启用自动创建主题，历史长度压缩阈值，历史记录条数。 |
 | 特殊字符 | `inputTemplate="Hello; I am a bot;"` | 设置输入模板为 `Hello; I am a bot;`。 |
 | 错误处理 | `model=gpt-4;maxToken` | 忽略无效条目 `maxToken`，仅解析出 `model=gpt-4`。 |
 | 值覆盖 | `model=gpt-4;model=gpt-4-1106-preview` | 如果键重复，使用最后一次出现的值，此处 `model` 的值为 `gpt-4-1106-preview`。 |
 
 相关阅读：
 
-- [\[RFC\] 022 - 环境变量配置默认助手参数](https://github.com/lobehub/lobe-chat/discussions/913)
+- [[RFC] 022 - 环境变量配置默认助手参数](https://github.com/lobehub/lobe-chat/discussions/913)
 
-## 身份验证服务
-
-### 通用设置
-
-#### `ENABLE_OAUTH_SSO`
-
-- 类型：必选
-- 描述：为 LobeChat 启用单点登录 (SSO)。设置为 `1` 以启用单点登录。
-- 默认值: `-`
-- 示例: `1`
-
-#### `NEXTAUTH_SECRET`
-
-- 类型：必选
-- 描述：用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32`.
-- 默认值: `-`
-- 示例: `Tfhi2t2pelSMEA8eaV61KaqPNEndFFdMIxDaJnS1CUI=`
-
-#### `NEXTAUTH_URL`
+### `FEATURE_FLAGS`
 
 - 类型：可选
-- 描述：该URL用于指定Auth.js在执行OAuth验证时的回调地址，在Vercel上部署时无需设置。
+- 描述：用于控制 LobeChat 的特性功能，支持多个功能标志，使用 `+` 增加一个功能，使用 `-` 来关闭一个功能，多个功能标志之间使用英文逗号 `,` 隔开，最外层建议添加引号 `"` 以避免解析错误。
 - 默认值：`-`
-- 示例：`https://example.com/api/auth`
+- 示例：`"-welcome_suggest"`
 
-### Auth0
+具体的内容可以参见 [特性标志](/zh/docs/self-hosting/advanced/feature-flags) 中的说明。
 
-<Callout>
-  目前我们只支持 Auth0 身份验证服务提供商。如果您需要使用其他身份验证服务提供商，可以提交
-  [功能请求](https://github.com/lobehub/lobe-chat/issues/new/choose) 或 Pull Request。
+### `PROXY_URL`
+
+- 类型：可选
+- 描述：用于指定连接到外部服务的代理 URL。该变量的值在不同的部署环境中应该有所不同。
+- 默认值：-
+- 示例：`http://127.0.0.1:7890` 或 `socks5://localhost:7891`
+
+<Callout type="info">
+  `Docker Desktop` 在 `Windows `和 `macOS `上走的是虚拟机方案，如果是 `localhost` / `127.0.0.1`
+  是走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
 </Callout>
-
-#### `AUTH0_CLIENT_ID`
-
-- 类型：必选
-- 描述: Auth0 应用程序的 Client ID，您可以访问[这里][auth0-client-page]并导航至应用程序设置来查看
-- 默认值: `-`
-- 示例: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
-
-#### `AUTH0_CLIENT_SECRET`
-
-- 类型：必选
-- 描述: Auth0 应用程序的 Client Secret
-- 默认值: `-`
-- 示例: `wnX7UbZg85ZUzF6ioxPLnJVEQa1Elbs7aqBUSF16xleBS5AdkVfASS49-fQIC8Rm`
-
-#### `AUTH0_ISSUER`
-
-- 类型：必选
-- 描述: Auth0 应用程序的签发人 / 域
-- 默认值: `-`
-- 示例: `https://example.auth0.com`
 
 ## 插件服务
 
@@ -142,80 +124,3 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
 - 类型：可选
 - 描述：LobeChat 助手市场的索引地址，如果你自行部署了助手市场的服务，可以使用该变量来覆盖默认的市场地址
 - 默认值：`https://chat-agents.lobehub.com`
-
-## 数据统计
-
-### Vercel Analytics
-
-#### `NEXT_PUBLIC_ANALYTICS_VERCEL`
-
-- 类型：可选
-- 描述：用于配置 Vercel Analytics 的环境变量，当设为 `1` 时开启 Vercel Analytics
-- 默认值： `-`
-- 示例：`1`
-
-#### `NEXT_PUBLIC_VERCEL_DEBUG`
-
-- 类型：可选
-- 描述：用于开启 Vercel Analytics 的调试模式
-- 默认值： `-`
-- 示例：`1`
-
-### Posthog Analytics
-
-#### `NEXT_PUBLIC_ANALYTICS_POSTHOG`
-
-- 类型：可选
-- 描述：用于开启 [PostHog Analytics][posthog-analytics-url] 的环境变量，设为 `1` 时开启 PostHog Analytics
-- 默认值： `-`
-- 示例：`1`
-
-#### `NEXT_PUBLIC_POSTHOG_KEY`
-
-- 类型：可选
-- 描述：设置 PostHog 项目 Key
-- 默认值： `-`
-- 示例：`phc_xxxxxxxx`
-
-#### `NEXT_PUBLIC_POSTHOG_HOST`
-
-- 类型：可选
-- 描述：设置 PostHog 服务的部署地址，默认为官方的 SAAS 地址
-- 默认值：`https://app.posthog.com`
-- 示例：`https://example.com`
-
-#### `NEXT_PUBLIC_POSTHOG_DEBUG`
-
-- 类型：可选
-- 描述：开启 PostHog 的调试模式
-- 默认值： `-`
-- 示例：`1`
-
-### Umami Analytics
-
-#### `NEXT_PUBLIC_ANALYTICS_UMAMI`
-
-- 类型：可选
-- 描述：用于开启 [Umami Analytics][umami-analytics-url] 的环境变量，设为 `1` 时开启 Umami Analytics
-- 默认值： `-`
-- 示例：`1`
-
-#### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
-
-- 类型：可选
-- 描述：Umami 脚本的网址，默认为 Umami Cloud 提供的脚本网址
-- 默认值：`https://analytics.umami.is/script.js`
-- 示例：`https://umami.your-site.com/script.js`
-
-#### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
-
-- 类型：必选
-- 描述：你的 Umami 的 Website ID
-- 默认值：`-`
-- 示例：`E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
-
-[auth0-client-page]: https://manage.auth0.com/dashboard
-[azure-api-verion-url]: https://docs.microsoft.com/zh-cn/azure/developer/javascript/api-reference/es-modules/azure-sdk/ai-translation/translationconfiguration?view=azure-node-latest#api-version
-[openai-api-page]: https://platform.openai.com/account/api-keys
-[posthog-analytics-url]: https://posthog.com
-[umami-analytics-url]: https://umami.is

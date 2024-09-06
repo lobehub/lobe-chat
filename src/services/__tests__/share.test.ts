@@ -1,9 +1,12 @@
+import { DeepPartial } from 'utility-types';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { LOBE_URL_IMPORT_NAME } from '@/const/url';
 import { ShareGPTConversation } from '@/types/share';
+import { UserSettings } from '@/types/user/settings';
 import { parseMarkdown } from '@/utils/parseMarkdown';
 
-import { SHARE_GPT_URL, shareGPTService } from '../share';
+import { SHARE_GPT_URL, shareService } from '../share';
 
 // Mock dependencies
 vi.mock('@/utils/parseMarkdown', () => ({
@@ -32,7 +35,7 @@ describe('ShareGPTService', () => {
     });
 
     // Act
-    const url = await shareGPTService.createShareGPTUrl(conversation);
+    const url = await shareService.createShareGPTUrl(conversation);
 
     // Assert
     expect(parseMarkdown).toHaveBeenCalledWith('Hi there!');
@@ -48,7 +51,7 @@ describe('ShareGPTService', () => {
     (fetch as Mock).mockRejectedValue(new Error('Network error'));
 
     // Act & Assert
-    await expect(shareGPTService.createShareGPTUrl(conversation)).rejects.toThrow('Network error');
+    await expect(shareService.createShareGPTUrl(conversation)).rejects.toThrow('Network error');
   });
 
   it('should not parse markdown for items not from gpt', async () => {
@@ -65,7 +68,7 @@ describe('ShareGPTService', () => {
     });
 
     // Act
-    await shareGPTService.createShareGPTUrl(conversation);
+    await shareService.createShareGPTUrl(conversation);
 
     // Assert
     expect(parseMarkdown).not.toHaveBeenCalled();
@@ -81,6 +84,48 @@ describe('ShareGPTService', () => {
     });
 
     // Act & Assert
-    await expect(shareGPTService.createShareGPTUrl(conversation)).rejects.toThrow();
+    await expect(shareService.createShareGPTUrl(conversation)).rejects.toThrow();
+  });
+});
+
+describe('ShareViaUrl', () => {
+  describe('createShareSettingsUrl', () => {
+    it('should create a share settings URL with the provided settings', () => {
+      const settings: DeepPartial<UserSettings> = {
+        keyVaults: {
+          openai: {
+            apiKey: 'user-key',
+          },
+        },
+      };
+      const url = shareService.createShareSettingsUrl(settings);
+      expect(url).toBe(
+        `/?${LOBE_URL_IMPORT_NAME}=%7B%22keyVaults%22:%7B%22openai%22:%7B%22apiKey%22:%22user-key%22%7D%7D%7D`,
+      );
+    });
+  });
+
+  describe('decodeShareSettings', () => {
+    it('should decode share settings from search params', () => {
+      const settings = '{"languageModel":{"openai":{"apiKey":"user-key"}}}';
+      const decodedSettings = shareService.decodeShareSettings(settings);
+      expect(decodedSettings).toEqual({
+        data: {
+          languageModel: {
+            openai: {
+              apiKey: 'user-key',
+            },
+          },
+        },
+      });
+    });
+
+    it('should return an error message if decoding fails', () => {
+      const settings = '%7B%22theme%22%3A%22dark%22%2C%22fontSize%22%3A16%';
+      const decodedSettings = shareService.decodeShareSettings(settings);
+      expect(decodedSettings).toEqual({
+        message: expect.any(String),
+      });
+    });
   });
 });

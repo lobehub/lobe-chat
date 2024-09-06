@@ -1,9 +1,10 @@
-import { notification } from 'antd';
 import { t } from 'i18next';
 import { merge } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
+import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
+import { toolService } from '@/services/tool';
 import { pluginHelpers } from '@/store/tool/helpers';
 import { LobeToolCustomPlugin, PluginInstallError } from '@/types/tool/plugin';
 import { setNamespace } from '@/utils/storeDebug';
@@ -41,7 +42,7 @@ export const createCustomPluginSlice: StateCreator<
     const { refreshPlugins, updateInstallLoadingState } = get();
     try {
       updateInstallLoadingState(id, true);
-      const manifest = await pluginService.getPluginManifest(
+      const manifest = await toolService.getPluginManifest(
         plugin.customParams?.manifestUrl,
         plugin.customParams?.useProxy,
       );

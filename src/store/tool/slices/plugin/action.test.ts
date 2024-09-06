@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { pluginService } from '@/services/plugin';
 import { LobeTool } from '@/types/tool';
+import { merge } from '@/utils/merge';
 
 import { useToolStore } from '../../store';
 
@@ -89,7 +90,33 @@ describe('useToolStore:plugin', () => {
         await result.current.updatePluginSettings(pluginId, newSettings);
       });
 
-      expect(pluginService.updatePluginSettings).toBeCalledWith(pluginId, newSettings);
+      expect(pluginService.updatePluginSettings).toBeCalledWith(
+        pluginId,
+        newSettings,
+        expect.any(AbortSignal),
+      );
+    });
+
+    it('should merge settings for a plugin with existing settings', async () => {
+      const pluginId = 'test-plugin';
+      const existingSettings = { setting1: 'old-value', setting2: 'old-value' };
+      const newSettings = { setting1: 'new-value' };
+      const mergedSettings = merge(existingSettings, newSettings);
+      useToolStore.setState({
+        installedPlugins: [{ identifier: pluginId, settings: existingSettings }] as LobeTool[],
+      });
+
+      const { result } = renderHook(() => useToolStore());
+
+      await act(async () => {
+        await result.current.updatePluginSettings(pluginId, newSettings);
+      });
+
+      expect(pluginService.updatePluginSettings).toBeCalledWith(
+        pluginId,
+        mergedSettings,
+        expect.any(AbortSignal),
+      );
     });
   });
 

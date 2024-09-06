@@ -7,28 +7,28 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ModelProvider } from '@/libs/agent-runtime';
-import { useGlobalStore } from '@/store/global';
-import { modelProviderSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
+import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 
 import { FormAction } from '../style';
 
 const BedrockForm = memo(() => {
-  const { t } = useTranslation('error');
+  const { t } = useTranslation('modelProvider');
   const [showRegion, setShow] = useState(false);
 
-  const [accessKeyId, secretAccessKey, region, setConfig] = useGlobalStore((s) => [
-    modelProviderSelectors.bedrockConfig(s).accessKeyId,
-    modelProviderSelectors.bedrockConfig(s).secretAccessKey,
-    modelProviderSelectors.bedrockConfig(s).region,
-    s.setModelProviderConfig,
+  const [accessKeyId, secretAccessKey, region, setConfig] = useUserStore((s) => [
+    keyVaultsConfigSelectors.bedrockConfig(s).accessKeyId,
+    keyVaultsConfigSelectors.bedrockConfig(s).secretAccessKey,
+    keyVaultsConfigSelectors.bedrockConfig(s).region,
+    s.updateKeyVaultConfig,
   ]);
 
   const theme = useTheme();
   return (
     <FormAction
       avatar={<Aws.Color color={theme.colorText} size={56} />}
-      description={t('unlock.apikey.Bedrock.description')}
-      title={t('unlock.apikey.Bedrock.title')}
+      description={t('bedrock.unlock.description')}
+      title={t('bedrock.unlock.title')}
     >
       <Input.Password
         autoComplete={'new-password'}
@@ -70,7 +70,7 @@ const BedrockForm = memo(() => {
           }}
           type={'text'}
         >
-          {t('unlock.apikey.Bedrock.customRegion')}
+          {t('bedrock.unlock.customRegion')}
         </Button>
       )}
     </FormAction>

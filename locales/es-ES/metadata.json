@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "description": "LobeChat ofrece la mejor experiencia de uso de ChatGPT, OLLaMA, Gemini, Claude WebUI",
+    "title": "LobeChat: Herramienta personal de productividad LLM para tener un cerebro más inteligente"
+  },
+  "market": {
+    "description": "Creación de contenido, redacción, preguntas y respuestas, generación de imágenes, generación de videos, generación de voz, agente inteligente, flujo de trabajo automatizado, personaliza tu asistente inteligente AI / GPTs / OLLaMA exclusivo",
+    "title": "Mercado de asistentes"
+  },
+  "plugins": {
+    "description": "Búsqueda, generación de gráficos, académico, generación de imágenes, generación de videos, generación de voz, flujo de trabajo automatizado, personaliza las capacidades de los complementos ToolCall exclusivos de ChatGPT / OLLaMA",
+    "title": "Mercado de complementos"
+  },
+  "welcome": {
+    "description": "LobeChat ofrece la mejor experiencia de uso de ChatGPT, OLLaMA, Gemini, Claude WebUI",
+    "title": "¡Bienvenido a LobeChat: Herramienta personal de productividad LLM para tener un cerebro más inteligente!"
+  }
+}

@@ -1,11 +1,11 @@
 import { Mock, describe, expect, it } from 'vitest';
 
-import { globalHelpers } from '@/store/global/helpers';
+import { globalHelpers } from '@/store/user/helpers';
 
 import { chainSummaryTags } from '../summaryTags';
 
 // Mock the getCurrentLanguage function
-vi.mock('@/store/global/helpers', () => ({
+vi.mock('@/store/user/helpers', () => ({
   globalHelpers: {
     getCurrentLanguage: vi.fn(),
   },

@@ -1,20 +1,19 @@
 'use client';
 
 import posthog from 'posthog-js';
-import { FC, memo, useEffect } from 'react';
+import { memo, useEffect } from 'react';
 
-import { getClientConfig } from '@/config/client';
+interface PostHogProps {
+  debug: boolean;
+  host: string;
+  token?: string;
+}
 
-const { POSTHOG_HOST, POSTHOG_KEY, POSTHOG_DEBUG } = getClientConfig();
-
-const PostHog: FC = memo(() => {
+const PostHog = memo<PostHogProps>(({ token, host, debug }) => {
   useEffect(() => {
-    if (!POSTHOG_KEY) return;
+    if (!token) return;
 
-    posthog.init(POSTHOG_KEY, {
-      api_host: POSTHOG_HOST ?? 'https://app.posthog.com',
-      debug: POSTHOG_DEBUG,
-    });
+    posthog.init(token, { api_host: host, debug });
   }, []);
 
   return null;

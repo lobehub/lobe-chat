@@ -1,28 +1,57 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
+import { merge } from 'lodash-es';
+import OpenAI from 'openai';
 import { describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
+import {
+  LobeAnthropicAI,
+  LobeAzureOpenAI,
+  LobeBedrockAI,
+  LobeDeepSeekAI,
+  LobeGoogleAI,
+  LobeGroq,
+  LobeMistralAI,
+  LobeMoonshotAI,
+  LobeOllamaAI,
+  LobeOpenAI,
+  LobeOpenAICompatibleRuntime,
+  LobeOpenRouterAI,
+  LobePerplexityAI,
+  LobeQwenAI,
+  LobeTogetherAI,
+  LobeZeroOneAI,
+  LobeZhipuAI,
+  ModelProvider,
+} from '@/libs/agent-runtime';
+import { AgentRuntime } from '@/libs/agent-runtime';
 import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
+import { UserStore } from '@/store/user';
+import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
-// import { createHeaderWithAuth } from '../_header';
-import { chatService } from '../chat';
+import { chatService, initializeWithClientStore } from '../chat';
 
 // Mocking external dependencies
+vi.mock('i18next', () => ({
+  t: vi.fn((key) => `translated_${key}`),
+}));
+
 vi.stubGlobal(
   'fetch',
   vi.fn(() => Promise.resolve(new Response(JSON.stringify({ some: 'data' })))),
-); // 用你的模拟响应替换这里的内容
+);
 
-vi.mock('@/utils/fetch', () => ({
-  fetchAIFactory: vi.fn(),
-  getMessageError: vi.fn(),
-}));
+vi.mock('@/utils/fetch', async (importOriginal) => {
+  const module = await importOriginal();
+
+  return { ...(module as any), getMessageError: vi.fn() };
+});
 
 // mock auth
 vi.mock('../_auth', () => ({
@@ -100,24 +129,20 @@ describe('ChatService', () => {
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
         const messages = [
-          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'http://example.com/image.jpg',
+                alt: 'abc.png',
+              },
+            ],
+          }, // Message with files
+          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({
@@ -141,8 +166,8 @@ describe('ChatService', () => {
               },
               {
                 content: 'Hi',
-                name: 'plugin1',
-                role: 'function',
+                name: 'plugin1____api1',
+                role: 'tool',
               },
               {
                 content: 'Hey',
@@ -155,67 +180,12 @@ describe('ChatService', () => {
         );
       });
 
-      it('should not include image content when default model', async () => {
-        const messages = [
-          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
-          { content: 'Hey', role: 'assistant' }, // Regular user message
-        ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
-
-        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-        await chatService.createAssistantMessage({
-          messages,
-          plugins: [],
-          model: 'gpt-3.5-turbo',
-        });
-
-        expect(getChatCompletionSpy).toHaveBeenCalledWith(
-          {
-            messages: [
-              { content: 'Hello', role: 'user' },
-              { content: 'Hi', name: 'plugin1', role: 'function' },
-              { content: 'Hey', role: 'assistant' },
-            ],
-            model: 'gpt-3.5-turbo',
-          },
-          undefined,
-        );
-      });
-
       it('should not include image with vision models when can not find the image', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
-          { content: 'Hi', role: 'function', plugin: { identifier: 'plugin1' } }, // Message with function role
+          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({ messages, plugins: [] });
@@ -223,19 +193,9 @@ describe('ChatService', () => {
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
             messages: [
-              {
-                content: 'Hello',
-                role: 'user',
-              },
-              {
-                content: 'Hi',
-                name: 'plugin1',
-                role: 'function',
-              },
-              {
-                content: 'Hey',
-                role: 'assistant',
-              },
+              { content: 'Hello', role: 'user' },
+              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
+              { content: 'Hey', role: 'assistant' },
             ],
           },
           undefined,
@@ -555,7 +515,6 @@ Get data from users`,
         body: JSON.stringify(expectedPayload),
         headers: expect.any(Object),
         method: 'POST',
-        signal: undefined,
       });
     });
 
@@ -573,9 +532,510 @@ Get data from users`,
       const result = await chatService.runPluginApi(params, options);
 
       expect(global.fetch).toHaveBeenCalledWith(expect.any(String), expect.any(Object));
-      expect(result).toBe('Plugin Result');
+      expect(result.text).toBe('Plugin Result');
     });
 
     // Add more test cases to cover different scenarios and edge cases
+  });
+
+  describe('fetchPresetTaskResult', () => {
+    it('should handle successful chat completion response', async () => {
+      // 模拟 fetch 抛出错误的情况
+      vi.mocked(fetch).mockResolvedValueOnce(new Response('AI response'));
+      const params = {
+        /* 填充参数 */
+      };
+
+      const onMessageHandle = vi.fn();
+      const onFinish = vi.fn();
+      const onError = vi.fn();
+      const onLoadingChange = vi.fn();
+      const abortController = new AbortController();
+      const trace = {};
+
+      await chatService.fetchPresetTaskResult({
+        params,
+        onMessageHandle,
+        onFinish,
+        onError,
+        onLoadingChange,
+        abortController,
+        trace,
+      });
+
+      expect(onFinish).toHaveBeenCalledWith('AI response', {
+        type: 'done',
+        observationId: null,
+        toolCalls: undefined,
+        traceId: null,
+      });
+      expect(onError).not.toHaveBeenCalled();
+      expect(onMessageHandle).toHaveBeenCalled();
+      expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false
+      expect(onLoadingChange).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle error in chat completion', async () => {
+      // 模拟 fetch 抛出错误的情况
+      vi.mocked(fetch).mockResolvedValueOnce(
+        new Response(null, { status: 404, statusText: 'Not Found' }),
+      );
+
+      const params = {
+        /* 填充参数 */
+      };
+      const onError = vi.fn();
+      const onLoadingChange = vi.fn();
+      const abortController = new AbortController();
+      const trace = {
+        /* 填充跟踪信息 */
+      };
+
+      await chatService.fetchPresetTaskResult({
+        params,
+        onError,
+        onLoadingChange,
+        abortController,
+        trace,
+      });
+
+      expect(onError).toHaveBeenCalledWith(expect.any(Error), {
+        message: 'translated_response.404',
+        type: 404,
+      });
+      expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false
+    });
+  });
+
+  describe('processMessage', () => {
+    it('should reorderToolMessages', () => {
+      const input: OpenAIChatMessage[] = [
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_nXxXHW8Z',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_2f3CEKz9',
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+        },
+        {
+          content: 'LobeHub 是一个专注于设计和开发现代人工智能生成内容（AIGC）工具和组件的团队。',
+          role: 'assistant',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_nXxXHW8Z',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_2f3CEKz9',
+        },
+        {
+          content: '### LobeHub 智能AI聚合神器\n\nLobeHub 是一个强大的AI聚合平台',
+          role: 'assistant',
+        },
+      ];
+      const output = chatService['reorderToolMessages'](input);
+
+      expect(output).toEqual([
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_nXxXHW8Z',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_2f3CEKz9',
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_nXxXHW8Z',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_2f3CEKz9',
+        },
+        {
+          content: 'LobeHub 是一个专注于设计和开发现代人工智能生成内容（AIGC）工具和组件的团队。',
+          role: 'assistant',
+        },
+        {
+          content: '### LobeHub 智能AI聚合神器\n\nLobeHub 是一个强大的AI聚合平台',
+          role: 'assistant',
+        },
+      ]);
+    });
+  });
+});
+
+/**
+ * Tests for AgentRuntime on client side, aim to test the
+ * initialization of AgentRuntime with different providers
+ */
+vi.mock('../_auth', async (importOriginal) => {
+  return await importOriginal();
+});
+describe('AgentRuntimeOnClient', () => {
+  describe('initializeWithClientStore', () => {
+    describe('should initialize with options correctly', () => {
+      it('OpenAI provider: with apikey and endpoint', async () => {
+        // Mock the global store to return the user's OpenAI API key and endpoint
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              openai: {
+                apiKey: 'user-openai-key',
+                baseURL: 'user-openai-endpoint',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.OpenAI, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+        expect(runtime['_runtime'].baseURL).toBe('user-openai-endpoint');
+      });
+
+      it('Azure provider: with apiKey, apiVersion, endpoint', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              azure: {
+                apiKey: 'user-azure-key',
+                endpoint: 'user-azure-endpoint',
+                apiVersion: '2024-06-01',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Azure, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeAzureOpenAI);
+      });
+
+      it('Google provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              google: {
+                apiKey: 'user-google-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Google, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeGoogleAI);
+      });
+
+      it('Moonshot AI provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              moonshot: {
+                apiKey: 'user-moonshot-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Moonshot, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeMoonshotAI);
+      });
+
+      it('Bedrock provider: with accessKeyId, region, secretAccessKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              bedrock: {
+                accessKeyId: 'user-bedrock-access-key',
+                region: 'user-bedrock-region',
+                secretAccessKey: 'user-bedrock-secret',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Bedrock, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeBedrockAI);
+      });
+
+      it('Ollama provider: with endpoint', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              ollama: {
+                baseURL: 'http://127.0.0.1:1234',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Ollama, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOllamaAI);
+      });
+
+      it('Perplexity provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              perplexity: {
+                apiKey: 'user-perplexity-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Perplexity, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobePerplexityAI);
+      });
+
+      it('Anthropic provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              anthropic: {
+                apiKey: 'user-anthropic-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Anthropic, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeAnthropicAI);
+      });
+
+      it('Mistral provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              mistral: {
+                apiKey: 'user-mistral-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Mistral, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeMistralAI);
+      });
+
+      it('OpenRouter provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              openrouter: {
+                apiKey: 'user-openrouter-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.OpenRouter, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOpenRouterAI);
+      });
+
+      it('TogetherAI provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              togetherai: {
+                apiKey: 'user-togetherai-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.TogetherAI, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
+      });
+
+      it('ZeroOneAI provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              zeroone: {
+                apiKey: 'user-zeroone-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.ZeroOne, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
+      });
+
+      it('Groq provider: with apiKey,endpoint', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              groq: {
+                apiKey: 'user-groq-key',
+                baseURL: 'user-groq-endpoint',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Groq, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        const lobeOpenAICompatibleInstance = runtime['_runtime'] as LobeOpenAICompatibleRuntime;
+        expect(lobeOpenAICompatibleInstance).toBeInstanceOf(LobeGroq);
+        expect(lobeOpenAICompatibleInstance.baseURL).toBe('user-groq-endpoint');
+        expect(lobeOpenAICompatibleInstance.client).toBeInstanceOf(OpenAI);
+        expect(lobeOpenAICompatibleInstance.client.apiKey).toBe('user-groq-key');
+      });
+
+      it('DeepSeek provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              deepseek: {
+                apiKey: 'user-deepseek-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.DeepSeek, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
+      });
+
+      it('Qwen provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              qwen: {
+                apiKey: 'user-qwen-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Qwen, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
+      });
+
+      /**
+       * Should not have a unknown provider in client, but has
+       * similar cases in server side
+       */
+      it('Unknown provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              unknown: {
+                apiKey: 'user-unknown-key',
+                endpoint: 'user-unknown-endpoint',
+              },
+            },
+          },
+        } as any as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore('unknown' as ModelProvider, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeOpenAI);
+      });
+
+      /**
+       * The following test cases need to be enforce
+       */
+
+      it('ZhiPu AI provider: with apiKey', async () => {
+        // Mock the generateApiToken function
+        vi.mock('@/libs/agent-runtime/zhipu/authToken', () => ({
+          generateApiToken: vi
+            .fn()
+            .mockResolvedValue(
+              'eyJhbGciOiJIUzI1NiIsInNpZ25fdHlwZSI6IlNJR04iLCJ0eXAiOiJKV1QifQ.eyJhcGlfa2V5IjoiemhpcHUiLCJleHAiOjE3MTU5MTc2NzMsImlhdCI6MTcxMzMyNTY3M30.gt8o-hUDvJFPJLYcH4EhrT1LAmTXI8YnybHeQjpD9oM',
+            ),
+        }));
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              zhipu: {
+                apiKey: 'zhipu.user-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.ZhiPu, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeZhipuAI);
+      });
+    });
   });
 });

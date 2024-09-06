@@ -4,7 +4,9 @@
     "function_call": "函式呼叫",
     "off": "關閉偵錯",
     "on": "查看插件呼叫資訊",
-    "response": "回應"
+    "payload": "插件載荷",
+    "response": "回應",
+    "tool_call": "工具呼叫"
   },
   "detailModal": {
     "info": {
@@ -128,10 +130,6 @@
     "plugin": "外掛執行中..."
   },
   "pluginList": "外掛清單",
-  "plugins": {
-    "loading": "插件檢測中...",
-    "unknown": "未知插件"
-  },
   "setting": "插件設置",
   "settings": {
     "indexUrl": {
@@ -141,6 +139,7 @@
     "modalDesc": "設定外掛市集的網址後，您可以使用自訂的外掛市集",
     "title": "設定外掛市集"
   },
+  "showInPortal": "請在入口網站中查看",
   "store": {
     "actions": {
       "confirmUninstall": "即將卸載該插件，卸載後將清除該插件配置，請確認你的操作",
@@ -162,5 +161,6 @@
       "installed": "已安裝"
     },
     "title": "插件商店"
-  }
+  },
+  "unknownPlugin": "未知插件"
 }

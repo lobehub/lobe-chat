@@ -1,5 +1,5 @@
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
-import { ErrorResponse, ErrorType } from '@/types/fetch';
+import { ChatErrorType, ErrorResponse, ErrorType } from '@/types/fetch';
 
 const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
   // InvalidAccessCode / InvalidAzureAPIKey / InvalidOpenAIAPIKey / InvalidZhipuAPIKey ....
@@ -7,6 +7,7 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
 
   switch (errorType) {
     // TODO: Need to refactor to Invalid OpenAI API Key
+    case AgentRuntimeErrorType.InvalidProviderAPIKey:
     case AgentRuntimeErrorType.NoOpenAIAPIKey: {
       return 401;
     }
@@ -19,28 +20,18 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
     case AgentRuntimeErrorType.AgentRuntimeError: {
       return 470;
     }
+
+    case AgentRuntimeErrorType.ProviderBizError:
     case AgentRuntimeErrorType.OpenAIBizError: {
       return 471;
     }
-    case AgentRuntimeErrorType.AzureBizError: {
+
+    case ChatErrorType.OllamaServiceUnavailable:
+    case AgentRuntimeErrorType.OllamaBizError: {
       return 472;
     }
-    case AgentRuntimeErrorType.ZhipuBizError: {
-      return 473;
-    }
-    case AgentRuntimeErrorType.BedrockBizError: {
-      return 474;
-    }
-    case AgentRuntimeErrorType.GoogleBizError: {
-      return 475;
-    }
-    case AgentRuntimeErrorType.MoonshotBizError: {
-      return 476;
-    }
-    case AgentRuntimeErrorType.OllamaBizError: {
-      return 478;
-    }
   }
+
   return errorType as number;
 };
 

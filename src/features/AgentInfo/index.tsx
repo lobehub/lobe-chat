@@ -7,7 +7,7 @@ import { Center } from 'react-layout-kit';
 
 import { MetaData } from '@/types/meta';
 
-const useStyles = createStyles(({ css, token, stylish }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   avatar: css`
     flex: none;
   `,
@@ -15,8 +15,6 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
     color: ${token.colorTextDescription};
     text-align: center;
   `,
-  markdown: stylish.markdownInChat,
-
   title: css`
     font-size: 20px;
     font-weight: 600;
@@ -62,7 +60,7 @@ const AgentInfo = memo<AgentInfoProps>(({ systemRole, style, meta, onAvatarClick
       {systemRole && (
         <>
           <Divider style={{ margin: '8px 0' }} />
-          <Markdown className={styles.markdown}>{systemRole}</Markdown>
+          <Markdown variant={'chat'}>{systemRole}</Markdown>
         </>
       )}
     </Center>

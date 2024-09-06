@@ -1,0 +1,50 @@
+---
+title: Customizing Provider Model List in LobeChat for Deployment
+description: >-
+  Learn how to customize the model list in LobeChat for deployment with the
+  syntax and extension capabilities
+tags:
+  - LobeChat
+  - model customization
+  - deployment
+  - extension capabilities
+---
+
+# Model List
+
+LobeChat supports customizing the model list during deployment. This configuration is done in the environment for each [model provider](/docs/self-hosting/environment-variables/model-provider). 
+
+You can use `+` to add a model, `-` to hide a model, and use `model name=display name<extension configuration>` to customize the display name of a model, separated by English commas. The basic syntax is as follows:
+
+```text
+id=displayName<maxToken:vision:fc:file>,model2,model3
+```
+
+For example: `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
+
+In the above example, it adds `qwen-7b-chat` and `glm-6b` to the model list, removes `gpt-3.5-turbo` from the list, and displays the model name of `gpt-4-0125-preview` as `gpt-4-turbo`. If you want to disable all models first and then enable specific models, you can use `-all,+gpt-3.5-turbo`, which means only enabling `gpt-3.5-turbo`.
+
+## Extension Capabilities
+
+Considering the diversity of model capabilities, we started to add extension configuration in version `0.147.8`, with the following rules:
+
+```shell
+id=displayName<maxToken:vision:fc:file>
+```
+
+The first value in angle brackets is designated as the `maxToken` for this model. The second value and beyond are the model's extension capabilities, separated by colons `:`, and the order is not important.
+
+Examples are as follows:
+
+- `chatglm-6b=ChatGLM 6B<4096>`: ChatGLM 6B, maximum context of 4k, no advanced capabilities;
+- `spark-v3.5=讯飞星火 v3.5<8192:fc>`: Xunfei Spark 3.5 model, maximum context of 8k, supports Function Call;
+- `gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>`: Google Vision model, maximum context of 16k, supports image recognition;
+- `gpt-4-all=ChatGPT Plus<128000:fc:vision:file>`, hacked version of ChatGPT Plus web, context of 128k, supports image recognition, Function Call, file upload.
+
+Currently supported extension capabilities are:
+
+| ---      | Description                                              |
+| -------- | -------------------------------------------------------- |
+| `fc`     | Function Calling                                         |
+| `vision` | Image Recognition                                        |
+| `file`   | File Upload (a bit hacky, not recommended for daily use) |

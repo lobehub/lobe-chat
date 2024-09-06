@@ -3,13 +3,13 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import PluginTag from '@/features/PluginStore/PluginItem/PluginTag';
-import { useSessionStore } from '@/store/session';
-import { agentSelectors } from '@/store/session/selectors';
+import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useToolStore } from '@/store/tool';
 import { customPluginSelectors } from '@/store/tool/selectors';
 
 const ToolItem = memo<{ identifier: string; label: string }>(({ identifier, label }) => {
-  const [checked, togglePlugin] = useSessionStore((s) => [
+  const [checked, togglePlugin] = useAgentStore((s) => [
     agentSelectors.currentAgentPlugins(s).includes(identifier),
     s.togglePlugin,
   ]);

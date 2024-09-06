@@ -1,48 +1,79 @@
 {
-  "ModelSelect": {
-    "featureTag": {
-      "custom": "Custom model, by default, supports both function call and visual recognition. Please verify the availability of the above capabilities based on actual situations.",
-      "file": "This model supports file upload for reading and recognition",
-      "functionCall": "This model supports function call.",
-      "tokens": "This model supports a maximum of {{tokens}} tokens per session.",
-      "vision": "This model supports visual recognition."
-    }
-  },
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "agentMaxToken": "Max Session Length",
-  "agentModel": "Model",
-  "agentProfile": "Agent Profile",
-  "appInitializing": "LobeChat is initializing, please wait...",
-  "archive": "Archive",
+  "alert": {
+    "cloud": {
+      "action": "Free Trial",
+      "desc": "We offer {{credit}} free computing credits to all registered users, no complex configuration required, ready to use out of the box, support unlimited conversation history and global cloud synchronization.",
+      "descOnMobile": "We provide {{credit}} free computing credits for all registered users, ready to use without complex configuration.",
+      "title": "Launch {{name}}"
+    }
+  },
+  "appInitializing": "The application is initializing, please wait for a moment...",
   "autoGenerate": "Auto Generate",
-  "autoGenerateTooltip": "Auto-generate agent description based on prompts",
+  "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
+  "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "back": "Back",
+  "batchDelete": "Batch Delete",
+  "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
   "close": "Close",
-  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be recovered. Please confirm your action.",
+  "contact": "Contact Us",
   "copy": "Copy",
   "copyFail": "Copy failed",
   "copySuccess": "Copied successfully",
-  "defaultAgent": "Default Agent",
-  "defaultSession": "Default Agent",
+  "dataStatistics": {
+    "messages": "Messages",
+    "sessions": "Assistants",
+    "today": "Today's New",
+    "topics": "Topics"
+  },
+  "defaultAgent": "Default Assistant",
+  "defaultSession": "Default Assistant",
   "delete": "Delete",
   "document": "User Manual",
+  "download": "Download",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
   "exportType": {
-    "agent": "Export Agent Settings",
-    "agentWithMessage": "Export Agent and Messages",
-    "all": "Export Global Settings and All Agent Data",
-    "allAgent": "Export All Agent Settings",
-    "allAgentWithMessage": "Export All Agents and Messages",
+    "agent": "Export Assistant Settings",
+    "agentWithMessage": "Export Assistant and Messages",
+    "all": "Export Global Settings and All Assistant Data",
+    "allAgent": "Export All Assistant Settings",
+    "allAgentWithMessage": "Export All Assistants and Messages",
     "globalSetting": "Export Global Settings"
   },
   "feedback": "Feedback",
+  "follow": "Follow us on {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Share Your Valuable Feedback",
+      "star": "Star on GitHub"
+    },
+    "and": "and",
+    "feedback": {
+      "action": "Share Feedback",
+      "desc": "Every idea and suggestion from you is precious to us. We can't wait to hear your thoughts! Feel free to contact us to provide feedback on product features and user experience, helping us make LobeChat even better.",
+      "title": "Share Your Valuable Feedback on GitHub"
+    },
+    "later": "Later",
+    "star": {
+      "action": "Star It",
+      "desc": "If you love our product and want to support us, could you go to GitHub and give us a star? This small gesture means a lot to us and motivates us to continue providing you with great experiences.",
+      "title": "Star Us on GitHub"
+    },
+    "title": "Like Our Product?"
+  },
+  "fullscreen": "Full Screen Mode",
   "historyRange": "History Range",
   "import": "Import Configuration",
   "importModal": {
+    "error": {
+      "desc": "Sorry, an error occurred during the data import process. Please try importing again, or <1>submit a request</1>, and we will help you troubleshoot the issue as soon as possible.",
+      "title": "Data Import Failed"
+    },
     "finish": {
       "onlySettings": "System settings imported successfully",
       "start": "Start using",
@@ -50,20 +81,29 @@
       "title": "Data import completed"
     },
     "loading": "Data importing, please wait...",
+    "preparing": "Data import module is preparing...",
     "result": {
       "added": "Imported successfully",
       "errors": "Import errors",
       "messages": "Messages",
       "sessionGroups": "Groups",
-      "sessions": "Agents",
+      "sessions": "Assistants",
       "skips": "Duplicates skipped",
       "topics": "Topics",
       "type": "Data Type"
     },
-    "title": "Import Data"
+    "title": "Import Data",
+    "uploading": {
+      "desc": "The current file is large, and is being uploaded...",
+      "restTime": "Time remaining",
+      "speed": "Upload speed"
+    }
   },
+  "information": "Community and News",
+  "installPWA": "Install browser app",
   "lang": {
     "ar": "Arabic",
+    "bg-BG": "Bulgarian",
     "bn": "Bengali",
     "cs-CZ": "Czech",
     "da-DK": "Danish",
@@ -99,22 +139,19 @@
     "zh-TW": "Traditional Chinese"
   },
   "layoutInitializing": "Initializing layout...",
-  "modelProvider": {
-    "azure": "Azure",
-    "bedrock": "AWS Bedrock",
-    "google": "Google",
-    "moonshot": "Moonshot AI",
-    "ollama": "Ollama",
-    "oneapi": "One API",
-    "openai": "OpenAI",
-    "zhipu": "Zhipu AI"
+  "legal": "Legal Disclaimer",
+  "loading": "Loading...",
+  "mail": {
+    "business": "Business Cooperation",
+    "support": "Email Support"
   },
-  "noDescription": "No description available",
   "oauth": "SSO Login",
+  "officialSite": "Official Website",
   "ok": "OK",
   "password": "Password",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "privacy": "Privacy Policy",
   "regenerate": "Regenerate",
   "rename": "Rename",
   "reset": "Reset",
@@ -123,16 +160,78 @@
   "setting": "Settings",
   "share": "Share",
   "stop": "Stop",
+  "sync": {
+    "actions": {
+      "settings": "Sync Settings",
+      "sync": "Sync Now"
+    },
+    "awareness": {
+      "current": "Current Device"
+    },
+    "channel": "Channel",
+    "disabled": {
+      "actions": {
+        "enable": "Enable Cloud Sync",
+        "settings": "Sync Settings"
+      },
+      "desc": "Current session data is only stored in this browser. If you need to sync data across multiple devices, please configure and enable cloud sync.",
+      "title": "Data Sync Disabled"
+    },
+    "enabled": {
+      "title": "Data Sync Enabled"
+    },
+    "status": {
+      "connecting": "Connecting",
+      "disabled": "Sync Disabled",
+      "ready": "Connected",
+      "synced": "Synced",
+      "syncing": "Syncing",
+      "unconnected": "Connection Failed"
+    },
+    "title": "Sync Status",
+    "unconnected": {
+      "tip": "Signaling server connection failed, and peer-to-peer communication channel cannot be established. Please check the network and try again."
+    }
+  },
   "tab": {
     "chat": "Chat",
+    "files": "Files",
     "market": "Discover",
+    "me": "Me",
     "setting": "Settings"
   },
+  "telemetry": {
+    "allow": "Allow",
+    "deny": "Deny",
+    "desc": "We would like to anonymously collect usage information to help us improve LobeChat and provide you with a better product experience. You can disable this at any time in Settings - About.",
+    "learnMore": "Learn More",
+    "title": "Help LobeChat be better"
+  },
   "temp": "Temporary",
-  "updateAgent": "Update Agent Information",
+  "terms": "Terms of Service",
+  "updateAgent": "Update Assistant Information",
   "upgradeVersion": {
     "action": "Upgrade",
     "hasNew": "New update available",
     "newVersion": "New version available: {{version}}"
-  }
+  },
+  "userPanel": {
+    "anonymousNickName": "Anonymous User",
+    "billing": "Billing Management",
+    "cloud": "Launch {{name}}",
+    "data": "Data Storage",
+    "defaultNickname": "Community User",
+    "discord": "Community Support",
+    "docs": "Documentation",
+    "email": "Email Support",
+    "feedback": "Feedback and Suggestions",
+    "help": "Help Center",
+    "moveGuide": "The settings button has been moved here",
+    "plans": "Subscription Plans",
+    "preview": "Preview",
+    "profile": "Account Management",
+    "setting": "Settings",
+    "usages": "Usage Statistics"
+  },
+  "version": "Version"
 }

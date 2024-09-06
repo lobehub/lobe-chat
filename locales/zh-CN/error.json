@@ -1,4 +1,24 @@
 {
+  "clerkAuth": {
+    "loginSuccess": {
+      "action": "继续会话",
+      "desc": "{{greeting}}，很高兴能够继续为你服务。让我们接着刚刚的话题聊下去吧",
+      "title": "欢迎回来， {{nickName}}"
+    }
+  },
+  "error": {
+    "backHome": "返回首页",
+    "desc": "待会来试试，或者回到已知的世界",
+    "retry": "重新加载",
+    "title": "页面遇到一点问题.."
+  },
+  "fetchError": "请求失败",
+  "fetchErrorDetail": "错误详情",
+  "notFound": {
+    "backHome": "返回首页",
+    "desc": "我们找不到你正在寻找的页面，请检查链接是否正确",
+    "title": "进入了未知领域？"
+  },
   "pluginSettings": {
     "desc": "完成以下配置，即可开始使用该插件",
     "title": "{{name}} 插件配置"
@@ -45,23 +65,23 @@
     "PluginServerError": "插件服务端请求返回出错，请检查根据下面的报错信息检查你的插件描述文件、插件配置或服务端实现",
     "PluginGatewayError": "很抱歉，插件网关出现错误，请检查插件网关配置是否正确",
     "PluginOpenApiInitError": "很抱歉，OpenAPI 客户端初始化失败，请检查 OpenAPI 的配置信息是否正确",
+    "PluginFailToTransformArguments": "很抱歉，插件调用参数解析失败，请尝试重新生成助手消息，或更换 Tools Calling 能力更强的 AI 模型后重试",
     "InvalidAccessCode": "密码不正确或为空，请输入正确的访问密码，或者添加自定义 API Key",
-    "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服务，可能是由于地区限制或服务未开通。请确认当前位置是否支持使用此服务，或尝试使用其他位置信息。",
+    "InvalidClerkUser": "很抱歉，你当前尚未登录，请先登录或注册账号后继续操作",
+    "LocationNotSupportError": "很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。",
+    "InvalidProviderAPIKey": "{{provider}} API Key 不正确或为空，请检查 {{provider}} API Key 后重试",
+    "ProviderBizError": "请求 {{provider}} 服务出错，请根据以下信息排查或重试",
+    "NoOpenAIAPIKey": "OpenAI API Key 不正确或为空，请添加自定义 OpenAI API Key",
     "OpenAIBizError": "请求 OpenAI 服务出错，请根据以下信息排查或重试",
-    "NoOpenAIAPIKey": "OpenAI API Key 为空，请添加自定义 OpenAI API Key",
-    "ZhipuBizError": "请求智谱服务出错，请根据以下信息排查或重试",
-    "InvalidZhipuAPIKey": "Zhipu API Key 不正确或为空，请检查 Zhipu API Key 后重试",
-    "MoonshotBizError": "请求月之暗面服务出错，请根据以下信息排查或重试",
-    "InvalidMoonshotAPIKey": "Moonshot AI API Key 不正确或为空，请检查 Moonshot API Key 后重试",
-    "GoogleBizError": "请求 Google 服务出错，请根据以下信息排查或重试",
-    "InvalidGoogleAPIKey": "Google API Key 不正确或为空，请检查 Google API Key 后重试",
     "InvalidBedrockCredentials": "Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试",
-    "BedrockBizError": "请求 Bedrock 服务出错，请根据以下信息排查或重试",
-    "InvalidAzureAPIKey": "Azure API Key 不正确或为空，请检查 Azure API Key 后重试",
-    "AzureBizError": "请求 Azure AI 服务出错，请根据以下信息排查或重试",
+    "StreamChunkError": "流式请求的消息块解析错误，请检查当前 API 接口是否符合标准规范，或联系你的 API 供应商咨询",
+    "UnknownChatFetchError": "很抱歉，遇到未知请求错误，请根据以下信息排查或重试",
     "InvalidOllamaArgs": "Ollama 配置不正确，请检查 Ollama 配置后重试",
     "OllamaBizError": "请求 Ollama 服务出错，请根据以下信息排查或重试",
-    "AgentRuntimeError": "Lobe 语言模型运行时执行出错，请根据以下信息排查或重试"
+    "OllamaServiceUnavailable": "Ollama 服务连接失败，请检查 Ollama 是否运行正常，或是否正确设置 Ollama 的跨域配置",
+    "AgentRuntimeError": "Lobe AI Runtime 执行出错，请根据以下信息排查或重试",
+    "FreePlanLimit": "当前为免费用户，无法使用该功能，请升级到付费计划后继续使用",
+    "SubscriptionPlanLimit": "您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用"
   },
   "stt": {
     "responseError": "服务请求失败，请检查配置或重试"
@@ -70,29 +90,10 @@
     "responseError": "服务请求失败，请检查配置或重试"
   },
   "unlock": {
-    "apikey": {
-      "Bedrock": {
-        "customRegion": "自定义服务区域",
-        "description": "输入你的 Aws AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置",
-        "title": "使用自定义 Bedrock 鉴权信息"
-      },
-      "Google": {
-        "description": "输入你的 Google API Key 即可开始会话。应用不会记录你的 API Key",
-        "title": "使用自定义 Google API Key"
-      },
-      "Moonshot": {
-        "description": "输入你的 Moonshot AI API Key 即可开始会话。应用不会记录你的 API Key",
-        "title": "使用自定义 Moonshot AI API Key"
-      },
-      "OpenAI": {
-        "addProxyUrl": "添加 OpenAI 代理地址（可选）",
-        "description": "输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key",
-        "title": "使用自定义 OpenAI API Key"
-      },
-      "Zhipu": {
-        "description": "输入你的 Zhipu API Key 即可开始会话。应用不会记录你的 API Key",
-        "title": "使用自定义 Zhipu API Key"
-      }
+    "addProxyUrl": "添加 OpenAI 代理地址（可选）",
+    "apiKey": {
+      "description": "输入你的 {{name}} API Key 即可开始会话",
+      "title": "使用自定义 {{name}} API Key"
     },
     "closeMessage": "关闭提示",
     "confirm": "确认并重试",
@@ -111,5 +112,13 @@
       "apiKey": "自定义 API Key",
       "password": "密码"
     }
+  },
+  "upload": {
+    "desc": "详情: {{detail}}",
+    "fileOnlySupportInServerMode": "当前部署模式不支持上传非图片文件，如需上传 {{ext}} 格式，请切换到服务端数据库部署或使用 LobeChat Cloud 服务",
+    "networkError": "请确认你的网络是否正常，并检查文件存储服务跨域配置是否正确",
+    "title": "文件上传失败，请检查网络连接或稍后再试",
+    "unknownError": "错误原因: {{reason}}",
+    "uploadFailed": "文件上传失败"
   }
 }

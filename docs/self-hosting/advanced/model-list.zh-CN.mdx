@@ -1,0 +1,49 @@
+---
+title: LobeChat 自定义模型服务商模型列表及扩展能力配置
+description: 了解如何在 LobeChat 中自定义模型列表以及扩展能力配置的基本语法和规则。
+tags:
+  - LobeChat
+  - 自定义模型列表
+  - 扩展能力配置
+  - 模型展示名
+  - 模型能力
+---
+
+# Model List
+
+LobeChat 支持在部署时自定义模型列表，详情请参考 [模型提供商](/zh/docs/self-hosting/environment-variables/model-provider) 。
+
+你可以使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。通过 `<>` 来添加扩展配置。基本语法如下：
+
+```text
+id=displayName<maxToken:vision:fc:file>,model2,model3
+```
+
+例如： `+qwen-7b-chat,+glm-6b,-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo`
+
+上面示例表示增加 `qwen-7b-chat` 和 `glm-6b` 到模型列表，而从列表中删除 `gpt-3.5-turbo`，并将 `gpt-4-0125-preview` 模型名字展示为 `gpt-4-turbo`。如果你想先禁用所有模型，再启用指定模型，可以使用 `-all,+gpt-3.5-turbo`，则表示仅启用 `gpt-3.5-turbo`。
+
+## 扩展能力
+
+考虑到模型的能力多样性，我们在 `0.147.8` 版本开始增加扩展性配置，它的规则如下：
+
+```shell
+id=displayName<maxToken:vision:fc:file>
+```
+
+尖括号第一个值约定为这个模型的 `maxToken` 。第二个及以后作为模型的扩展能力，能力与能力之间用冒号 `:` 作为分隔符，顺序不重要。
+
+举例如下：
+
+- `chatglm-6b=ChatGLM 6B<4096>`：ChatGLM 6B，最大上下文 4k，没有高阶能力；
+- `spark-v3.5=讯飞星火 v3.5<8192:fc>`：讯飞星火 3.5 模型，最大上下文 8k，支持 Function Call；
+- `gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>`：Google 视觉模型，最大上下文 16k，支持图像识别；
+- `gpt-4-all=ChatGPT Plus<128000:fc:vision:file>`，hack 的 ChatGPT Plus 网页版，上下 128k ，支持图像识别、Function Call、文件上传
+
+目前支持的扩展能力有：
+
+| ---      | 描述                                 |
+| -------- | ------------------------------------ |
+| `fc`     | 函数调用（function calling）         |
+| `vision` | 视觉识别                             |
+| `file`   | 文件上传（比较hack，不建议日常使用） |
