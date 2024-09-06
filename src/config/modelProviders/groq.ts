@@ -57,7 +57,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Gemma2 9B',
+      displayName: 'Gemma 2 9B',
       enabled: true,
       functionCall: true,
       id: 'gemma2-9b-it',
@@ -75,6 +75,13 @@ const Groq: ModelProviderCard = {
       functionCall: true,
       id: 'mixtral-8x7b-32768',
       tokens: 32_768,
+    },
+    {
+      displayName: 'LLaVA 1.5 7B',
+      enabled: true,
+      id: 'llava-v1.5-7b-4096-preview',
+      tokens: 4096,
+      vision: true,
     },
   ],
   checkModel: 'gemma2-9b-it',

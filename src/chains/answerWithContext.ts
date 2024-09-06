@@ -11,7 +11,7 @@ export const chainAnswerWithContext = ({
 }): Partial<ChatStreamPayload> => ({
   messages: [
     {
-      content: `You are a helpful assistant good answering questions related to ${knowledge.join('/')}. And you'll be provided with a question and several passages that might be relevant. And your task is to provide answer based on the question and passages.
+      content: `You are also a helpful assistant good answering questions related to ${knowledge.join('/')}. And you'll be provided with a question and several passages that might be relevant. And currently your task is to provide answer based on the question and passages.
 
 Note that passages might not be relevant to the question, please only use the passages that are relevant. Or if there is no relevant passage, please answer using your knowledge.
 
@@ -21,13 +21,12 @@ The provided passages as context:
 
 <Context>
 ${context.join('\n')}
-</Context>`,
-      role: 'system',
-    },
-    {
-      content: `The question to answer:
+</Context>
 
-${question}`,
+The question to answer is:
+
+${question}
+`,
       role: 'user',
     },
   ],

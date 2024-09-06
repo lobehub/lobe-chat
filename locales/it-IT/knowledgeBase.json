@@ -23,6 +23,7 @@
     "title": "Crea knowledge base"
   },
   "tab": {
+    "evals": "Valutazioni",
     "files": "Documenti",
     "settings": "Impostazioni",
     "testing": "Test di richiamo"

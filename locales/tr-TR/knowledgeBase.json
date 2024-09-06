@@ -23,6 +23,7 @@
     "title": "Yeni Bilgi Havuzu"
   },
   "tab": {
+    "evals": "Değerlendirme",
     "files": "Belgeler",
     "settings": "Ayarlar",
     "testing": "Geri Çağırma Testi"
