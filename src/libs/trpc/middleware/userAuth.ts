@@ -1,12 +1,18 @@
 import { TRPCError } from '@trpc/server';
 
+import { enableClerk } from '@/const/auth';
+
 import { trpc } from '../init';
 
 export const userAuth = trpc.middleware(async (opts) => {
   const { ctx } = opts;
   // `ctx.user` is nullable
   if (!ctx.userId) {
-    console.log('clerk auth:', ctx.clerkAuth);
+    if (enableClerk) {
+      console.log('clerk auth:', ctx.clerkAuth);
+    } else {
+      console.log('next auth:', ctx.nextAuth);
+    }
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
 

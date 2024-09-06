@@ -27,7 +27,7 @@ export class ChunkingLoader {
       const fileBlob = new Blob([Buffer.from(content)]);
       const txt = this.uint8ArrayToString(content);
 
-      const type = this.getType(filename);
+      const type = this.getType(filename?.toLowerCase());
 
       switch (type) {
         case 'code': {
