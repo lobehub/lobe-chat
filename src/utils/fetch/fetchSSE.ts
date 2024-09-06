@@ -41,7 +41,7 @@ export interface FetchSSEOptions {
   onErrorHandle?: (error: ChatMessageError) => void;
   onFinish?: OnFinishHandler;
   onMessageHandle?: (chunk: MessageTextChunk | MessageToolCallsChunk) => void;
-  smoothing?: boolean;
+  smoothing?: { text?: boolean; toolsCalling?: boolean } | boolean;
 }
 
 const START_ANIMATION_SPEED = 4;
@@ -231,6 +231,9 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
   let response!: Response;
 
   const { smoothing } = options;
+  const textSmoothing = typeof smoothing === 'boolean' ? smoothing : smoothing?.text;
+  const toolsCallingSmoothing =
+    typeof smoothing === 'boolean' ? smoothing : (smoothing?.toolsCalling ?? true);
 
   const textController = createSmoothMessage({
     onTextUpdate: (delta, text) => {
@@ -305,7 +308,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
         }
 
         case 'text': {
-          if (smoothing) {
+          if (textSmoothing) {
             textController.pushToQueue(data);
 
             if (!textController.isAnimationActive) textController.startAnimation();
@@ -323,7 +326,7 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
           if (!toolCalls) toolCalls = [];
           toolCalls = parseToolCalls(toolCalls, data);
 
-          if (smoothing) {
+          if (toolsCallingSmoothing) {
             // make the tool calls smooth
 
             // push the tool calls to the smooth queue
