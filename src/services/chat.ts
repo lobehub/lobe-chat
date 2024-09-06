@@ -134,12 +134,14 @@ export function initializeWithClientStore(provider: string, payload: any) {
     case ModelProvider.Qwen: {
       break;
     }
+
     case ModelProvider.Anthropic: {
       providerOptions = {
         baseURL: providerAuthPayload?.endpoint,
       };
       break;
     }
+
     case ModelProvider.Mistral: {
       break;
     }
