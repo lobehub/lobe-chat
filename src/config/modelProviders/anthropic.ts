@@ -67,7 +67,6 @@ const Anthropic: ModelProviderCard = {
     },
   ],
   checkModel: 'claude-3-haiku-20240307',
-  disableBrowserRequest: true,
   id: 'anthropic',
   name: 'Anthropic',
   proxyUrl: {
