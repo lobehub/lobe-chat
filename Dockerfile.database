@@ -141,7 +141,7 @@ ENV \
     # Anthropic
     ANTHROPIC_API_KEY="" ANTHROPIC_PROXY_URL="" \
     # Amazon Bedrock
-    AWS_ACCESS_KEY_ID="" AWS_SECRET_ACCESS_KEY="" AWS_REGION="" \
+    AWS_ACCESS_KEY_ID="" AWS_SECRET_ACCESS_KEY="" AWS_REGION="" AWS_BEDROCK_MODEL_LIST="" \
     # Azure OpenAI
     AZURE_API_KEY="" AZURE_API_VERSION="" AZURE_ENDPOINT="" AZURE_MODEL_LIST="" \
     # Baichuan
@@ -151,7 +151,7 @@ ENV \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
-    GROQ_API_KEY="" GROQ_PROXY_URL="" \
+    GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
     # Minimax
     MINIMAX_API_KEY="" \
     # Mistral

@@ -11,11 +11,17 @@ export const UPLOAD_NETWORK_ERROR = 'NetWorkError';
 class UploadService {
   uploadWithProgress = async (
     file: File,
-    onProgress: (status: FileUploadStatus, state: FileUploadState) => void,
+    {
+      onProgress,
+      directory,
+    }: {
+      directory?: string;
+      onProgress?: (status: FileUploadStatus, state: FileUploadState) => void;
+    },
   ): Promise<FileMetadata> => {
     const xhr = new XMLHttpRequest();
 
-    const { preSignUrl, ...result } = await this.getSignedUploadUrl(file);
+    const { preSignUrl, ...result } = await this.getSignedUploadUrl(file, directory);
     let startTime = Date.now();
     xhr.upload.addEventListener('progress', (event) => {
       if (event.lengthComputable) {
@@ -29,7 +35,7 @@ class UploadService {
           // so make it as 99.9 and let users think it's still uploading
           progress: progress === 100 ? 99.9 : progress,
           restTime: (event.total - event.loaded) / speedInByte,
-          speed: speedInByte / 1024,
+          speed: speedInByte,
         });
       }
     });
@@ -41,7 +47,7 @@ class UploadService {
     await new Promise((resolve, reject) => {
       xhr.addEventListener('load', () => {
         if (xhr.status >= 200 && xhr.status < 300) {
-          onProgress('success', {
+          onProgress?.('success', {
             progress: 100,
             restTime: 0,
             speed: file.size / ((Date.now() - startTime) / 1000),
@@ -95,6 +101,7 @@ class UploadService {
 
   private getSignedUploadUrl = async (
     file: File,
+    directory?: string,
   ): Promise<
     FileMetadata & {
       preSignUrl: string;
@@ -104,7 +111,7 @@ class UploadService {
 
     // 精确到以 h 为单位的 path
     const date = (Date.now() / 1000 / 60 / 60).toFixed(0);
-    const dirname = `${fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}`;
+    const dirname = `${directory || fileEnv.NEXT_PUBLIC_S3_FILE_PATH}/${date}`;
     const pathname = `${dirname}/${filename}`;
 
     const preSignUrl = await edgeClient.upload.createS3PreSignedUrl.mutate({ pathname });

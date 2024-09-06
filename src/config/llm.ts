@@ -49,6 +49,7 @@ export const getLLMConfig = () => {
 
       ENABLED_GROQ: z.boolean(),
       GROQ_API_KEY: z.string().optional(),
+      GROQ_MODEL_LIST: z.string().optional(),
       GROQ_PROXY_URL: z.string().optional(),
 
       ENABLED_OPENROUTER: z.boolean(),
@@ -64,6 +65,7 @@ export const getLLMConfig = () => {
       TOGETHERAI_MODEL_LIST: z.string().optional(),
 
       ENABLED_AWS_BEDROCK: z.boolean(),
+      AWS_BEDROCK_MODEL_LIST: z.string().optional(),
       AWS_REGION: z.string().optional(),
       AWS_ACCESS_KEY_ID: z.string().optional(),
       AWS_SECRET_ACCESS_KEY: z.string().optional(),
@@ -156,6 +158,7 @@ export const getLLMConfig = () => {
 
       ENABLED_GROQ: !!process.env.GROQ_API_KEY,
       GROQ_API_KEY: process.env.GROQ_API_KEY,
+      GROQ_MODEL_LIST: process.env.GROQ_MODEL_LIST,
       GROQ_PROXY_URL: process.env.GROQ_PROXY_URL,
 
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
@@ -163,6 +166,7 @@ export const getLLMConfig = () => {
       ZEROONE_MODEL_LIST: process.env.ZEROONE_MODEL_LIST,
 
       ENABLED_AWS_BEDROCK: process.env.ENABLED_AWS_BEDROCK === '1',
+      AWS_BEDROCK_MODEL_LIST: process.env.AWS_BEDROCK_MODEL_LIST,
       AWS_REGION: process.env.AWS_REGION,
       AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
       AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,

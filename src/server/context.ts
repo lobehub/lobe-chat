@@ -62,7 +62,9 @@ export const createContext = async (request: NextRequest): Promise<Context> => {
         userId = session.user.id;
       }
       return createContextInner({ authorizationHeader: authorization, nextAuth: auth, userId });
-    } catch {}
+    } catch (e) {
+      console.error('next auth err', e);
+    }
   }
 
   return createContextInner({ authorizationHeader: authorization, userId });

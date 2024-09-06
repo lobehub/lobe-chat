@@ -23,6 +23,7 @@
     "title": "Create Knowledge Base"
   },
   "tab": {
+    "evals": "Evaluations",
     "files": "Documents",
     "settings": "Settings",
     "testing": "Recall Testing"
