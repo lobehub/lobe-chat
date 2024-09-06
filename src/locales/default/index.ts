@@ -5,12 +5,15 @@ import clerk from './clerk';
 import common from './common';
 import components from './components';
 import error from './error';
+import file from './file';
+import knowledgeBase from './knowledgeBase';
 import market from './market';
 import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
 import plugin from './plugin';
 import portal from './portal';
+import ragEval from './ragEval';
 import setting from './setting';
 import welcome from './welcome';
 
@@ -21,12 +24,15 @@ const resources = {
   common,
   components,
   error,
+  file,
+  knowledgeBase,
   market,
   metadata,
   migration,
   modelProvider,
   plugin,
   portal,
+  ragEval,
   setting,
   tool,
   welcome,

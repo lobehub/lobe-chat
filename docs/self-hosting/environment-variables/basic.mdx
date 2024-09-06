@@ -80,6 +80,19 @@ Further reading:
 
 For specific content, please refer to the [Feature Flags](/docs/self-hosting/advanced/feature-flags) documentation.
 
+### `PROXY_URL`
+
+- Type: Optional
+- Description: Used to specify the proxy URL for connecting to external services. The value of this variable should be different in different deployment environments.
+- Default: -
+- Example: `http://127.0.0.1:7890` or `socks5://localhost:7891`
+
+<Callout type="info">
+  If you're using Docker Desktop on Windows or macOS, it relies on a virtual machine. In this setup,
+  `localhost` / `127.0.0.1` refers to the localhost of the container itself. In such cases, please
+  try using `host.docker.internal` instead of `localhost`.
+</Callout>
+
 ## Plugin Service
 
 ### `PLUGINS_INDEX_URL`

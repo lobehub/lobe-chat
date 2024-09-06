@@ -1,20 +1,32 @@
-import { startTransition, useEffect, useState } from 'react';
+import { debounce } from 'lodash-es';
+import { startTransition, useCallback, useEffect, useState } from 'react';
 
 import { encodeAsync } from '@/utils/tokenizer';
 
 export const useTokenCount = (input: string = '') => {
   const [value, setNum] = useState(0);
 
-  useEffect(() => {
-    startTransition(() => {
-      encodeAsync(input || '')
+  const debouncedEncode = useCallback(
+    debounce((text: string) => {
+      encodeAsync(text)
         .then(setNum)
         .catch(() => {
-          // 兜底采用字符数
-          setNum(input.length);
+          setNum(text.length);
         });
+    }, 300),
+    [],
+  );
+
+  useEffect(() => {
+    startTransition(() => {
+      debouncedEncode(input || '');
     });
-  }, [input]);
+
+    // 清理函数
+    return () => {
+      debouncedEncode.cancel();
+    };
+  }, [input, debouncedEncode]);
 
   return value;
 };

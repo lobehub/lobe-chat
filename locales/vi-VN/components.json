@@ -5,6 +5,68 @@
     "dragFileTitle": "Tải lên tệp",
     "dragTitle": "Tải lên hình ảnh"
   },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Thêm vào kho tri thức",
+      "addToOtherKnowledgeBase": "Thêm vào kho tri thức khác",
+      "batchChunking": "Chia nhỏ theo lô",
+      "chunking": "Chia nhỏ",
+      "chunkingTooltip": "Chia tách tệp thành nhiều khối văn bản và vector hóa, có thể sử dụng cho tìm kiếm ngữ nghĩa và đối thoại tệp",
+      "confirmDelete": "Bạn sắp xóa tệp này, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
+      "confirmDeleteMultiFiles": "Bạn sắp xóa {{count}} tệp đã chọn, sau khi xóa sẽ không thể khôi phục, vui lòng xác nhận hành động của bạn",
+      "confirmRemoveFromKnowledgeBase": "Bạn sắp xóa {{count}} tệp đã chọn khỏi kho tri thức, sau khi xóa tệp vẫn có thể xem trong tất cả các tệp, vui lòng xác nhận hành động của bạn",
+      "copyUrl": "Sao chép liên kết",
+      "copyUrlSuccess": "Địa chỉ tệp đã được sao chép thành công",
+      "createChunkingTask": "Đang chuẩn bị...",
+      "deleteSuccess": "Tệp đã được xóa thành công",
+      "downloading": "Đang tải tệp...",
+      "removeFromKnowledgeBase": "Xóa khỏi kho tri thức",
+      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công"
+    },
+    "bottom": "Đã đến cuối rồi",
+    "config": {
+      "showFilesInKnowledgeBase": "Hiển thị nội dung trong kho tri thức"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Tải lên tệp",
+        "folder": "Tải lên thư mục",
+        "knowledgeBase": "Tạo kho tri thức mới"
+      },
+      "or": "hoặc",
+      "title": "Kéo tệp hoặc thư mục vào đây"
+    },
+    "title": {
+      "createdAt": "Thời gian tạo",
+      "size": "Kích thước",
+      "title": "Tệp"
+    },
+    "total": {
+      "fileCount": "Tổng cộng {{count}} mục",
+      "selectedCount": "Đã chọn {{count}} mục"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Các khối văn bản chưa được vector hóa hoàn toàn, sẽ dẫn đến chức năng tìm kiếm ngữ nghĩa không khả dụng, để nâng cao chất lượng tìm kiếm, vui lòng vector hóa các khối văn bản",
+        "error": "Lỗi vector hóa",
+        "errorResult": "Lỗi vector hóa, vui lòng kiểm tra và thử lại. Nguyên nhân thất bại:",
+        "processing": "Các khối văn bản đang được vector hóa, vui lòng chờ",
+        "success": "Hiện tại tất cả các khối văn bản đã được vector hóa"
+      },
+      "embeddings": "Vector hóa",
+      "status": {
+        "error": "Chia nhỏ thất bại",
+        "errorResult": "Chia nhỏ thất bại, vui lòng kiểm tra và thử lại. Nguyên nhân thất bại:",
+        "processing": "Đang chia nhỏ",
+        "processingTip": "Máy chủ đang chia tách các khối văn bản, đóng trang không ảnh hưởng đến tiến trình chia nhỏ"
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Quay lại"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Mô hình tùy chỉnh, mặc định hỗ trợ cả cuộc gọi hàm và nhận diện hình ảnh, vui lòng xác minh khả năng sử dụng của chúng theo tình hình cụ thể",

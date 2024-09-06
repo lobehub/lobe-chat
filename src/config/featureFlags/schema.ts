@@ -23,9 +23,11 @@ export const FeatureFlagsSchema = z.object({
 
   market: z.boolean().optional(),
   speech_to_text: z.boolean().optional(),
+
+  knowledge_base: z.boolean().optional(),
+  rag_eval: z.boolean().optional(),
 });
 
-// TypeScript 类型，从 Zod schema 生成
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
@@ -43,6 +45,9 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   check_updates: true,
   welcome_suggest: true,
+
+  knowledge_base: true,
+  rag_eval: false,
 
   clerk_sign_up: true,
 
@@ -69,6 +74,9 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
     showWelcomeSuggest: config.welcome_suggest,
 
     enableClerkSignUp: config.clerk_sign_up,
+
+    enableKnowledgeBase: config.knowledge_base,
+    enableRAGEval: config.rag_eval,
 
     showCloudPromotion: config.cloud_promotion,
 

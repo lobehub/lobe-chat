@@ -3,7 +3,7 @@ export default {
     title: '模型',
   },
   agentDefaultMessage:
-    '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置](/chat/settings#session={{id}}) 完善我的信息。',
+    '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。',
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
   agentDefaultMessageWithoutEdit: '你好，我是 **{{name}}**，让我们开始对话吧！',
   agentsAndConversations: '助手与会话',
@@ -37,6 +37,25 @@ export default {
     stop: '停止',
     warp: '换行',
   },
+  knowledgeBase: {
+    all: '所有内容',
+    allFiles: '所有文件',
+    allKnowledgeBases: '所有知识库',
+    disabled:
+      '当前部署模式不支持知识库对话，如需使用，请切换到服务端数据库部署或使用 LobeChat Cloud 服务',
+    library: {
+      action: {
+        add: '添加',
+        detail: '详情',
+        remove: '移除',
+      },
+      title: '文件/知识库',
+    },
+    relativeFilesOrKnowledgeBases: '关联文件/知识库',
+    title: '知识库',
+    uploadGuide: '上传过的文件可以在「知识库」中查看哦',
+    viewMore: '查看更多',
+  },
   messageAction: {
     delAndRegenerate: '删除并重新生成',
     regenerate: '重新生成',
@@ -44,6 +63,15 @@ export default {
   newAgent: '新建助手',
   pin: '置顶',
   pinOff: '取消置顶',
+  rag: {
+    referenceChunks: '引用源',
+    userQuery: {
+      actions: {
+        delete: '删除 Query 重写',
+        regenerate: '重新生成 Query',
+      },
+    },
+  },
   regenerate: '重新生成',
   roleAndArchive: '角色与记录',
   searchAgentPlaceholder: '搜索助手和对话...',
@@ -130,8 +158,24 @@ export default {
   },
   updateAgent: '更新助理信息',
   upload: {
-    actionFiletip: '上传文件',
-    actionTooltip: '上传图片',
-    disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+    action: {
+      fileUpload: '上传文件',
+      folderUpload: '上传文件夹',
+      imageDisabled: '当前模型不支持视觉识别，请切换模型后使用',
+      imageUpload: '上传图片',
+      tooltip: '上传',
+    },
+    clientMode: {
+      actionFiletip: '上传文件',
+      actionTooltip: '上传',
+      disabled: '当前模型不支持视觉识别和文件分析，请切换模型后使用',
+    },
+    preview: {
+      prepareTasks: '准备分块...',
+      status: {
+        pending: '准备上传...',
+        processing: '文件处理中...',
+      },
+    },
   },
 };

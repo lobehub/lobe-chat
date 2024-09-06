@@ -72,6 +72,8 @@ export interface ChatStreamPayload {
    * @default openai
    */
   provider?: string;
+
+  responseMode?: 'streamText' | 'json';
   /**
    * @title 是否开启流式请求
    * @default true
@@ -84,6 +86,7 @@ export interface ChatStreamPayload {
   temperature: number;
   tool_choice?: string;
   tools?: ChatCompletionTool[];
+
   /**
    * @title 控制生成文本中最高概率的单个令牌
    * @default 1

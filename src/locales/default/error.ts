@@ -85,10 +85,15 @@ export default {
      * @deprecated
      */
     NoOpenAIAPIKey: 'OpenAI API Key 不正确或为空，请添加自定义 OpenAI API Key',
+    /**
+     * @deprecated
+     */
     OpenAIBizError: '请求 OpenAI 服务出错，请根据以下信息排查或重试',
 
     InvalidBedrockCredentials: 'Bedrock 鉴权未通过，请检查 AccessKeyId/SecretAccessKey 后重试',
-
+    StreamChunkError:
+      '流式请求的消息块解析错误，请检查当前 API 接口是否符合标准规范，或联系你的 API 供应商咨询',
+    UnknownChatFetchError: '很抱歉，遇到未知请求错误，请根据以下信息排查或重试',
     InvalidOllamaArgs: 'Ollama 配置不正确，请检查 Ollama 配置后重试',
     OllamaBizError: '请求 Ollama 服务出错，请根据以下信息排查或重试',
     OllamaServiceUnavailable:
@@ -133,5 +138,13 @@ export default {
       password: '密码',
     },
   },
-  upload: { desc: '详情: {{detail}}', title: '文件上传失败，请检查网络连接或稍后再试' },
+  upload: {
+    desc: '详情: {{detail}}',
+    fileOnlySupportInServerMode:
+      '当前部署模式不支持上传非图片文件，如需上传 {{ext}} 格式，请切换到服务端数据库部署或使用 LobeChat Cloud 服务',
+    networkError: '请确认你的网络是否正常，并检查文件存储服务跨域配置是否正确',
+    title: '文件上传失败，请检查网络连接或稍后再试',
+    unknownError: '错误原因: {{reason}}',
+    uploadFailed: '文件上传失败',
+  },
 };
