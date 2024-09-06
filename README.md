@@ -285,10 +285,11 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                               | Description                                                                                                                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [International Lyricist](https://chat-preview.lobehub.com/market?agent=letrista-internacional)<br/><sup>By **[mnector](https://github.com/mnector)** on **2024-08-29**</sup> | Specialized in writing lyrics for songs in Spanish, English, and French, with a focus on storytelling and the emotions of the provided content.<br/>`lyricism` `translation` `music`                                                                 |
-| [Backtracking Question Expert](https://chat-preview.lobehub.com/market?agent=step-back-expert)<br/><sup>By **[tiny656](https://github.com/tiny656)** on **2024-08-27**</sup> | Hello! I am an expert in world knowledge, skilled in using backtracking questioning strategies to help you gain a deeper understanding and analysis of issues. Please enter a question, and I will respond to it according to the following process: |
+| Recent Submits                                                                                                                                                                   | Description                                                                                                                                                                                                                                          |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Nuxt 3/Vue.js Master Developer](https://chat-preview.lobehub.com/market?agent=nuxt-vue-developer)<br/><sup>By **[Kadreev](https://github.com/Kadreev)** on **2024-09-03**</sup> | Specialized in full-stack development with Nuxt 3 expertise.<br/>`nuxt-3` `vue-js` `full-stack-development` `java-script` `web-applications`                                                                                                         |
+| [International Lyricist](https://chat-preview.lobehub.com/market?agent=letrista-internacional)<br/><sup>By **[mnector](https://github.com/mnector)** on **2024-08-29**</sup>     | Specialized in writing lyrics for songs in Spanish, English, and French, with a focus on storytelling and the emotions of the provided content.<br/>`lyricism` `translation` `music`                                                                 |
+| [Backtracking Question Expert](https://chat-preview.lobehub.com/market?agent=step-back-expert)<br/><sup>By **[tiny656](https://github.com/tiny656)** on **2024-08-27**</sup>     | Hello! I am an expert in world knowledge, skilled in using backtracking questioning strategies to help you gain a deeper understanding and analysis of issues. Please enter a question, and I will respond to it according to the following process: |
 
 1. Provide at least 3 optional backtracking questions that align with the strategy.
 2. Answer each of these backtracking questions.
@@ -296,9 +297,8 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 Please tell me what issue you would like to explore?<br/>`backtracking-questions` `thinking-strategies` `problem-analysis` |
 \| [Unreal Engine Master](https://chat-preview.lobehub.com/market?agent=unreal-engine-master)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-27**</sup> | Unreal Game Development Companion<br/>`game-development` `unreal-engine` `software-engineering` |
-\| [TypeScript Solution Architect](https://chat-preview.lobehub.com/market?agent=typescript-developer)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2024-08-24**</sup> | Expert in TypeScript, Node.js, Vue.js 3, Nuxt.js 3, Express.js, React.js, and modern UI libraries.<br/>`type-script` `java-script` `web-development` `coding-standards` `best-practices` |
 
-> 📊 Total agents: [<kbd>**321**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**322**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

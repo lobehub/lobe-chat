@@ -23,6 +23,7 @@
     "title": "Criar conhecimento"
   },
   "tab": {
+    "evals": "Avaliações",
     "files": "Documentos",
     "settings": "Configurações",
     "testing": "Teste de recuperação"

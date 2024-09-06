@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Nowy",
+    "description": {
+      "placeholder": "Opis zestawu danych (opcjonalnie)"
+    },
+    "name": {
+      "placeholder": "Nazwa zestawu danych",
+      "required": "Proszę wpisać nazwę zestawu danych"
+    },
+    "title": "Dodaj zestaw danych"
+  },
+  "dataset": {
+    "addNewButton": "Utwórz zestaw danych",
+    "emptyGuide": "Aktualny zestaw danych jest pusty, proszę utworzyć nowy zestaw danych.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Importuj dane"
+        },
+        "columns": {
+          "actions": "Operacje",
+          "ideal": {
+            "title": "Oczekiwana odpowiedź"
+          },
+          "question": {
+            "title": "Pytanie"
+          },
+          "referenceFiles": {
+            "title": "Pliki referencyjne"
+          }
+        },
+        "notSelected": "Proszę wybrać zestaw danych po lewej stronie",
+        "title": "Szczegóły zestawu danych"
+      },
+      "title": "Zestaw danych"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Nowy",
+      "datasetId": {
+        "placeholder": "Wybierz swój zestaw danych do oceny",
+        "required": "Proszę wybrać zestaw danych do oceny"
+      },
+      "description": {
+        "placeholder": "Opis zadania oceny (opcjonalnie)"
+      },
+      "name": {
+        "placeholder": "Nazwa zadania oceny",
+        "required": "Proszę wpisać nazwę zadania oceny"
+      },
+      "title": "Dodaj zadanie oceny"
+    },
+    "addNewButton": "Utwórz ocenę",
+    "emptyGuide": "Aktualne zadania oceny są puste, rozpocznij tworzenie oceny.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Sprawdź status",
+          "confirmDelete": "Czy na pewno chcesz usunąć to zadanie oceny?",
+          "confirmRun": "Czy chcesz rozpocząć wykonanie? Po rozpoczęciu zadanie oceny będzie wykonywane asynchronicznie w tle, zamknięcie strony nie wpłynie na wykonanie asynchroniczne.",
+          "downloadRecords": "Pobierz oceny",
+          "retry": "Spróbuj ponownie",
+          "run": "Uruchom",
+          "title": "Operacje"
+        },
+        "datasetId": {
+          "title": "Zestaw danych"
+        },
+        "name": {
+          "title": "Nazwa zadania oceny"
+        },
+        "records": {
+          "title": "Liczba rekordów oceny"
+        },
+        "referenceFiles": {
+          "title": "Pliki referencyjne"
+        },
+        "status": {
+          "error": "Wystąpił błąd podczas wykonania",
+          "pending": "Oczekuje na wykonanie",
+          "processing": "W trakcie wykonywania",
+          "success": "Wykonanie zakończone sukcesem",
+          "title": "Status"
+        }
+      },
+      "title": "Lista zadań oceny"
+    }
+  }
+}

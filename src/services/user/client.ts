@@ -50,7 +50,7 @@ export class ClientService implements IUserService {
     await this.preferenceStorage.saveToLocalStorage(preference);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,unused-imports/no-unused-vars
   async updateGuide(guide: Partial<UserGuide>) {
     throw new Error('Method not implemented.');
   }

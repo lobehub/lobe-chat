@@ -104,4 +104,15 @@ export class S3 {
 
     return getSignedUrl(this.client, command, { expiresIn: 3600 });
   }
+
+  public async uploadContent(path: string, content: string) {
+    const command = new PutObjectCommand({
+      ACL: this.setAcl ? 'public-read' : undefined,
+      Body: content,
+      Bucket: this.bucket,
+      Key: path,
+    });
+
+    return this.client.send(command);
+  }
 }
