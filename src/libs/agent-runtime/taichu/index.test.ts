@@ -251,5 +251,41 @@ describe('LobeTaichuAI', () => {
         process.env.DEBUG_TAICHU_CHAT_COMPLETION = originalDebugValue;
       });
     });
+
+    it('should correctly adjust temperature and top_p parameters', async () => {
+      const instance = new LobeTaichuAI({ apiKey: 'test_api_key' });
+
+      // Mock the chat.completions.create method
+      const mockCreate = vi
+        .spyOn(instance['client'].chat.completions, 'create')
+        .mockResolvedValue(new ReadableStream() as any);
+
+      // Test cases for temperature and top_p
+      const testCases = [
+        { temperature: 0.5, top_p: 0.5, expectedTemperature: 0.25, expectedTopP: 0.25 },
+        { temperature: 1.0, top_p: 1.0, expectedTemperature: 0.5, expectedTopP: 0.5 },
+        { temperature: 2.0, top_p: 2.0, expectedTemperature: 1.0, expectedTopP: 1.0 },
+        { temperature: 1.0, top_p: undefined, expectedTemperature: 0.5, expectedTopP: undefined },
+        { temperature: 0, top_p: 0.1, expectedTemperature: 0.01, expectedTopP: 0.1 },
+        { temperature: 0.01, top_p: 0.0, expectedTemperature: 0.01, expectedTopP: 0.1 },
+        { temperature: 0.02, top_p: 20.0, expectedTemperature: 0.01, expectedTopP: 9.9 },
+      ];
+
+      for (const { temperature, top_p, expectedTemperature, expectedTopP } of testCases) {
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'Taichu4',
+          temperature,
+          top_p,
+        });
+
+        expect(mockCreate).toHaveBeenCalledWith(
+          expect.objectContaining({
+            temperature: expectedTemperature,
+            top_p: expectedTopP,
+          }),
+        );
+      }
+    });
   });
 });
