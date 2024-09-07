@@ -1,35 +1,40 @@
 import { NextResponse } from 'next/server';
 
+import { serverDB } from '@/database/server';
 import { UserModel } from '@/database/server/models/user';
 import { UserItem } from '@/database/server/schemas/lobechat';
 import { pino } from '@/libs/logger';
+import { LobeNextAuthDbAdapter } from '@/libs/next-auth/adapter';
 
 export class NextAuthUserService {
-  safeUpdateUser = async (id: string, data: Partial<UserItem>) => {
-    pino.info('updating user due to webhook');
-    const userModel = new UserModel();
-    // 1. Find User by id from sso provider
-    // We using providerAccountId as userId
-    let user = await UserModel.findById(id);
-    // Should not edit email if user use email linking
-    const allowEditEmail = !!user;
-    // We using provider email to link accont automatically
-    if (!user && data?.email) user = await UserModel.findByEmail(data.email);
+  userModel;
+  adapter;
 
-    // 2. Update user data from provider
+  constructor() {
+    this.userModel = new UserModel();
+    this.adapter = LobeNextAuthDbAdapter(serverDB);
+  }
+
+  safeUpdateUser = async (providerAccountId: string, data: Partial<UserItem>) => {
+    pino.info('updating user due to webhook');
+    // 1. Find User by account
+    // @ts-expect-error: Already impl in `LobeNextauthDbAdapter`
+    const user = await this.adapter.getUserByAccount({
+      provider: 'logto',
+      providerAccountId,
+    });
+
+    // 2. If found, Update user data from provider
     if (user?.id) {
-      let updateContent = {
-        avatar: data?.avatar,
-        fullName: data?.fullName,
-      } as Partial<UserItem>;
-      // If allowed to edit email and email changed
-      if (allowEditEmail && data?.email && user.email !== data?.email)
-        updateContent.email = data.email;
       // Perform update
-      await userModel.updateUser(user.id, updateContent);
+      await this.userModel.updateUser(user.id, {
+        avatar: data?.avatar,
+        email: data?.email,
+        fullName: data?.fullName,
+      });
     } else {
       pino.warn(
-        `[logto]: Webhooks handler received event type "${event}", but no user was found by the providerAccountId.`,
+        `[logto]: Webhooks handler user update for "${JSON.stringify(data)}", but no user was found by the providerAccountId.`,
       );
     }
     return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });
