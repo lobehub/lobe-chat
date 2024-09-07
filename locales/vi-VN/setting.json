@@ -51,7 +51,7 @@
     },
     "checker": {
       "button": "Kiểm tra",
-      "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
+      "desc": "Kiểm tra xem API Key và địa chỉ proxy đã được điền đúng chưa",
       "pass": "Kiểm tra thành công",
       "title": "Kiểm tra kết nối"
     },
@@ -371,6 +371,11 @@
       "label": "Mô hình tạo siêu dữ liệu trợ lý",
       "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
       "title": "Tự động tạo thông tin trợ lý"
+    },
+    "queryRewrite": {
+      "label": "Mô hình viết lại câu hỏi",
+      "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",
+      "title": "Kho tri thức"
     },
     "title": "Trợ lý hệ thống",
     "topic": {

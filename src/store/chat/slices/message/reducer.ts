@@ -1,8 +1,12 @@
 import isEqual from 'fast-deep-equal';
 import { produce } from 'immer';
 
-import { CreateMessageParams } from '@/services/message';
-import { ChatMessage, ChatPluginPayload, ChatToolPayload } from '@/types/message';
+import {
+  ChatMessage,
+  ChatPluginPayload,
+  ChatToolPayload,
+  CreateMessageParams,
+} from '@/types/message';
 import { merge } from '@/utils/merge';
 
 interface UpdateMessages {

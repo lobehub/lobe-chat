@@ -9,13 +9,12 @@ import {
   CHAT_TEXTAREA_MAX_HEIGHT,
   HEADER_HEIGHT,
 } from '@/const/layoutTokens';
-import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
+import LocalFiles from './FilePreview';
 import Footer from './Footer';
 import Head from './Header';
-import LocalFiles from './LocalFiles';
 import TextArea from './TextArea';
 
 const DesktopChatInput = memo(() => {
@@ -25,11 +24,10 @@ const DesktopChatInput = memo(() => {
     systemStatusSelectors.inputHeight(s),
     s.updateSystemStatus,
   ]);
-  const showFileList = useFileStore((s) => s.inputFilesList.length > 0);
 
   return (
     <>
-      {!expand && <LocalFiles padding={showFileList ? '8px 16px' : 0} />}
+      {!expand && <LocalFiles />}
       <DraggablePanel
         fullscreen={expand}
         headerHeight={HEADER_HEIGHT}

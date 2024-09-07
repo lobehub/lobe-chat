@@ -58,7 +58,7 @@ describe('FileService', () => {
     const result = await fileService.createFile(localFile);
 
     expect(FileModel.create).toHaveBeenCalledWith(localFile);
-    expect(result).toEqual(localFile);
+    expect(result).toEqual({ url: 'data:image/png;base64,AA==' });
   });
 
   it('removeFile should delete the file from the database', async () => {
@@ -74,13 +74,15 @@ describe('FileService', () => {
   describe('getFile', () => {
     it('should retrieve and convert local file info to FilePreview', async () => {
       const fileId = '1';
-      const fileData: DB_File = {
+      const fileData = {
         name: 'test',
         data: new ArrayBuffer(1),
         fileType: 'image/png',
         saveMode: 'local',
         size: 1,
-      };
+        createdAt: 1,
+        updatedAt: 2,
+      } as DB_File;
 
       (FileModel.findById as Mock).mockResolvedValue(fileData);
       (global.URL.createObjectURL as Mock).mockReturnValue('blob:test');
@@ -90,62 +92,14 @@ describe('FileService', () => {
 
       expect(FileModel.findById).toHaveBeenCalledWith(fileId);
       expect(result).toEqual({
+        createdAt: new Date(1),
         id: '1',
-        base64Url: 'data:image/png;base64,AA==',
-        fileType: 'image/png',
+        size: 1,
+        type: 'image/png',
         name: 'test',
-        saveMode: 'local',
         url: 'blob:test',
+        updatedAt: new Date(2),
       });
-    });
-
-    it('should retrieve and convert URL file info to FilePreview when enableServer is true', async () => {
-      const fileId = '1';
-      const fileData: DB_File = {
-        name: 'test',
-        fileType: 'image/png',
-        saveMode: 'url',
-        metadata: {
-          filename: 'test.png',
-        },
-        size: 1,
-        url: '/test.png',
-      };
-
-      (FileModel.findById as Mock).mockResolvedValue(fileData);
-      vi.spyOn(serverConfigSelectors, 'enableUploadFileToServer').mockReturnValue(true);
-      s3Domain = 'https://example.com';
-
-      const result = await fileService.getFile(fileId);
-
-      expect(FileModel.findById).toHaveBeenCalledWith(fileId);
-      expect(result).toEqual({
-        fileType: 'image/png',
-        id: '1',
-        name: 'test.png',
-        saveMode: 'url',
-        url: 'https://example.com/test.png',
-      });
-    });
-
-    it('should throw an error when enableServer is true but NEXT_PUBLIC_S3_DOMAIN is not set', async () => {
-      const fileId = '1';
-      const fileData: DB_File = {
-        name: 'test',
-        fileType: 'image/png',
-        saveMode: 'url',
-        size: 1,
-        url: '/test.png',
-      };
-
-      (FileModel.findById as Mock).mockResolvedValue(fileData);
-      vi.spyOn(serverConfigSelectors, 'enableUploadFileToServer').mockReturnValue(true);
-
-      const getFilePromise = fileService.getFile(fileId);
-
-      await expect(getFilePromise).rejects.toThrow(
-        'fileEnv.NEXT_PUBLIC_S3_DOMAIN is not set while enable server upload',
-      );
     });
 
     it('should throw an error when the file is not found', async () => {

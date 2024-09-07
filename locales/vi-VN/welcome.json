@@ -10,6 +10,7 @@
       "title": "Đề xuất trợ lý mới: "
     },
     "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn, LobeChat. Bạn cần giúp đỡ gì bây giờ?\nNếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn vào dấu `+` để tạo trợ lý cá nhân",
+    "defaultMessageWithoutCreate": "Tôi là trợ lý ảo cá nhân của bạn LobeChat, có gì tôi có thể giúp bạn ngay bây giờ?",
     "qa": {
       "q01": "LobeHub là gì?",
       "q02": "LobeChat là gì?",

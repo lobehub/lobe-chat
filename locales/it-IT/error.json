@@ -79,7 +79,9 @@
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
     "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
     "ProviderBizError": "Errore di business del fornitore {{provider}}. Si prega di controllare le informazioni seguenti o riprovare.",
-    "SubscriptionPlanLimit": "Il tuo piano di abbonamento ha raggiunto il limite e non puoi utilizzare questa funzione. Per favore, passa a un piano superiore o acquista un pacchetto di risorse per continuare."
+    "StreamChunkError": "Erro di analisi del blocco di messaggi della richiesta in streaming. Controlla se l'interfaccia API attuale è conforme agli standard o contatta il tuo fornitore di API per ulteriori informazioni.",
+    "SubscriptionPlanLimit": "Il tuo piano di abbonamento ha raggiunto il limite e non puoi utilizzare questa funzione. Per favore, passa a un piano superiore o acquista un pacchetto di risorse per continuare.",
+    "UnknownChatFetchError": "Ci scusiamo, si è verificato un errore di richiesta sconosciuto. Si prega di controllare le informazioni seguenti o riprovare."
   },
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
@@ -113,6 +115,10 @@
   },
   "upload": {
     "desc": "Dettagli: {{detail}}",
-    "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi"
+    "fileOnlySupportInServerMode": "L'attuale modalità di distribuzione non supporta il caricamento di file non immagine. Se desideri caricare un formato {{ext}}, ti preghiamo di passare alla distribuzione del database sul server o di utilizzare il servizio LobeChat Cloud.",
+    "networkError": "Si prega di verificare che la connessione di rete sia stabile e controllare se la configurazione CORS del servizio di archiviazione file è corretta.",
+    "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi",
+    "unknownError": "Motivo dell'errore: {{reason}}",
+    "uploadFailed": "Caricamento del file non riuscito."
   }
 }

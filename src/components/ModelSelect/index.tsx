@@ -1,16 +1,15 @@
+import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Icon, Tooltip } from '@lobehub/ui';
+import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
 import { rgba } from 'polished';
-import { memo } from 'react';
+import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { ChatModelCard } from '@/types/llm';
-
-import ModelIcon from '../ModelIcon';
-import ModelProviderIcon from '../ModelProviderIcon';
 
 const useStyles = createStyles(({ css, token }) => ({
   custom: css`
@@ -142,7 +141,9 @@ export const ModelItemRender = memo<ModelItemRenderProps>(({ showInfoTag = true,
     <Flexbox align={'center'} gap={32} horizontal justify={'space-between'}>
       <Flexbox align={'center'} gap={8} horizontal>
         <ModelIcon model={model.id} size={20} />
-        {model.displayName || model.id}
+        <Typography.Paragraph ellipsis={false} style={{ marginBottom: 0 }}>
+          {model.displayName || model.id}
+        </Typography.Paragraph>
       </Flexbox>
 
       {showInfoTag && <ModelInfoTags {...model} />}
@@ -157,7 +158,19 @@ interface ProviderItemRenderProps {
 
 export const ProviderItemRender = memo<ProviderItemRenderProps>(({ provider, name }) => (
   <Flexbox align={'center'} gap={4} horizontal>
-    <ModelProviderIcon provider={provider} />
+    <ProviderIcon provider={provider} size={20} type={'mono'} />
     {name}
+  </Flexbox>
+));
+
+interface LabelRendererProps {
+  Icon: FC<IconAvatarProps>;
+  label: string;
+}
+
+export const LabelRenderer = memo<LabelRendererProps>(({ Icon, label }) => (
+  <Flexbox align={'center'} gap={8} horizontal>
+    <Icon size={20} />
+    <span>{label}</span>
   </Flexbox>
 ));
