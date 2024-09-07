@@ -76,7 +76,7 @@ describe('AgentRuntime', () => {
         const jwtPayload = {
           apikey: 'user-azure-key',
           endpoint: 'user-azure-endpoint',
-          apiVersion: '2024-02-01',
+          apiVersion: '2024-06-01',
         };
 
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Azure, {

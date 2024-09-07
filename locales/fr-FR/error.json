@@ -79,7 +79,9 @@
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
     "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
-    "SubscriptionPlanLimit": "Vous avez atteint votre limite d'abonnement et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan supérieur ou acheter un pack de ressources pour continuer à l'utiliser."
+    "StreamChunkError": "Erreur de parsing du bloc de message de la requête en streaming. Veuillez vérifier si l'API actuelle respecte les normes ou contacter votre fournisseur d'API pour des conseils.",
+    "SubscriptionPlanLimit": "Vous avez atteint votre limite d'abonnement et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan supérieur ou acheter un pack de ressources pour continuer à l'utiliser.",
+    "UnknownChatFetchError": "Désolé, une erreur de requête inconnue s'est produite. Veuillez vérifier les informations ci-dessous ou réessayer."
   },
   "stt": {
     "responseError": "Échec de la requête de service. Veuillez vérifier la configuration ou réessayer"
@@ -113,6 +115,10 @@
   },
   "upload": {
     "desc": "Détails : {{detail}}",
-    "title": "Échec de l'envoi du fichier, veuillez vérifier votre connexion réseau ou réessayer plus tard"
+    "fileOnlySupportInServerMode": "Le mode de déploiement actuel ne prend pas en charge le téléchargement de fichiers non image. Pour télécharger un format {{ext}}, veuillez passer à un déploiement de base de données côté serveur ou utiliser le service LobeChat Cloud.",
+    "networkError": "Veuillez vérifier si votre réseau fonctionne correctement et assurez-vous que la configuration CORS du service de stockage de fichiers est correcte.",
+    "title": "Échec de l'envoi du fichier, veuillez vérifier votre connexion réseau ou réessayer plus tard",
+    "unknownError": "Raison de l'erreur : {{reason}}",
+    "uploadFailed": "Échec du téléchargement du fichier."
   }
 }

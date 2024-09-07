@@ -342,7 +342,7 @@ describe('LobeOpenAICompatibleFactory', () => {
       });
 
       it('should transform non-streaming response to stream correctly', async () => {
-        const mockResponse: OpenAI.ChatCompletion = {
+        const mockResponse = {
           id: 'a',
           object: 'chat.completion',
           created: 123,
@@ -360,7 +360,7 @@ describe('LobeOpenAICompatibleFactory', () => {
             completion_tokens: 5,
             total_tokens: 10,
           },
-        };
+        } as OpenAI.ChatCompletion;
         vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
           mockResponse as any,
         );
@@ -411,6 +411,98 @@ describe('LobeOpenAICompatibleFactory', () => {
         expect(mockCreateMethod).toHaveBeenCalledWith(
           expect.objectContaining({
             user: 'abc',
+          }),
+          expect.anything(),
+        );
+      });
+    });
+
+    describe('noUserId option', () => {
+      it('should not add user to payload when noUserId is true', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://api.mistral.ai/v1',
+          chatCompletion: {
+            noUserId: true,
+          },
+          provider: ModelProvider.Mistral,
+        });
+
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi
+          .spyOn(instance['client'].chat.completions, 'create')
+          .mockResolvedValue(new ReadableStream() as any);
+
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'open-mistral-7b',
+            temperature: 0,
+          },
+          { user: 'testUser' },
+        );
+
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.not.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything(),
+        );
+      });
+
+      it('should add user to payload when noUserId is false', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://api.mistral.ai/v1',
+          chatCompletion: {
+            noUserId: false,
+          },
+          provider: ModelProvider.Mistral,
+        });
+
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi
+          .spyOn(instance['client'].chat.completions, 'create')
+          .mockResolvedValue(new ReadableStream() as any);
+
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'open-mistral-7b',
+            temperature: 0,
+          },
+          { user: 'testUser' },
+        );
+
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            user: 'testUser',
+          }),
+          expect.anything(),
+        );
+      });
+
+      it('should add user to payload when noUserId is not set in chatCompletion', async () => {
+        const LobeMockProvider = LobeOpenAICompatibleFactory({
+          baseURL: 'https://api.mistral.ai/v1',
+          provider: ModelProvider.Mistral,
+        });
+
+        const instance = new LobeMockProvider({ apiKey: 'test' });
+        const mockCreateMethod = vi
+          .spyOn(instance['client'].chat.completions, 'create')
+          .mockResolvedValue(new ReadableStream() as any);
+
+        await instance.chat(
+          {
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'open-mistral-7b',
+            temperature: 0,
+          },
+          { user: 'testUser' },
+        );
+
+        expect(mockCreateMethod).toHaveBeenCalledWith(
+          expect.objectContaining({
+            user: 'testUser',
           }),
           expect.anything(),
         );

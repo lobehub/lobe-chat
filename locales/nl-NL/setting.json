@@ -372,6 +372,11 @@
       "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
       "title": "Automatisch assistentinformatie genereren"
     },
+    "queryRewrite": {
+      "label": "Vraag herschrijvingsmodel",
+      "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
+      "title": "Kennisbank"
+    },
     "title": "Systeemassistent",
     "topic": {
       "label": "Onderwerp Naamgevingsmodel",

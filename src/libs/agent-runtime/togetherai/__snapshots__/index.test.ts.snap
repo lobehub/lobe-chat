@@ -45,7 +45,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Nous Hermes 2 Mixtral 7bx8 DPO is the new flagship Nous Research model trained over the Mixtral 7bx8 MoE LLM. The model was trained on over 1,000,000 entries of primarily GPT-4 generated data, as well as other high quality data from open datasets across the AI landscape, achieving state of the art performance on a variety of tasks.",
     "displayName": "Nous Hermes 2 - Mixtral 8x7B-DPO ",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO",
     "maxOutput": 32768,
@@ -65,7 +65,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Nous Hermes 2 - Yi-34B is a state of the art Yi Fine-tune",
     "displayName": "Nous Hermes-2 Yi (34B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "NousResearch/Nous-Hermes-2-Yi-34B",
     "maxOutput": 4096,
@@ -145,7 +145,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Qwen1.5 is the beta version of Qwen2, a transformer-based decoder-only language model pretrained on a large amount of data. In comparison with the previous released Qwen.",
     "displayName": "Qwen 1.5 Chat (32B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "Qwen/Qwen1.5-32B-Chat",
     "maxOutput": 32768,
@@ -165,7 +165,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Qwen1.5 is the beta version of Qwen2, a transformer-based decoder-only language model pretrained on a large amount of data. In comparison with the previous released Qwen.",
     "displayName": "Qwen 1.5 Chat (72B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "Qwen/Qwen1.5-72B-Chat",
     "maxOutput": 32768,
@@ -175,7 +175,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Qwen1.5 is the beta version of Qwen2, a transformer-based decoder-only language model pretrained on a large amount of data. In comparison with the previous released Qwen.",
     "displayName": "Qwen 1.5 Chat (7B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "Qwen/Qwen1.5-7B-Chat",
     "maxOutput": 32768,
@@ -295,7 +295,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Deepseek Coder is composed of a series of code language models, each trained from scratch on 2T tokens, with a composition of 87% code and 13% natural language in both English and Chinese.",
     "displayName": "Deepseek Coder Instruct (33B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "deepseek-ai/deepseek-coder-33b-instruct",
     "maxOutput": 16384,
@@ -305,7 +305,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "trained from scratch on a vast dataset of 2 trillion tokens in both English and Chinese",
     "displayName": "DeepSeek LLM Chat (67B)",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "deepseek-ai/deepseek-llm-67b-chat",
     "maxOutput": 4096,
@@ -325,7 +325,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Gemma is a family of lightweight, state-of-the-art open models from Google, built from the same research and technology used to create the Gemini models.",
     "displayName": "Gemma Instruct (2B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemma-2b-it",
     "maxOutput": 8192,
@@ -365,7 +365,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "Llama 2-chat leverages publicly available instruction datasets and over 1 million human annotations. Available in three sizes: 7B, 13B and 70B parameters",
     "displayName": "LLaMA-2 Chat (13B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "meta-llama/Llama-2-13b-chat-hf",
     "maxOutput": 4096,
@@ -445,7 +445,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "The Mixtral-8x22B-Instruct-v0.1 Large Language Model (LLM) is an instruct fine-tuned version of the Mixtral-8x22B-v0.1.",
     "displayName": "Mixtral-8x22B Instruct v0.1",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "mistralai/Mixtral-8x22B-Instruct-v0.1",
     "maxOutput": 65536,
@@ -565,7 +565,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "The Yi series models are large language models trained from scratch by developers at 01.AI",
     "displayName": "01-ai Yi Chat (34B)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "zero-one-ai/Yi-34B-Chat",
     "maxOutput": 4096,

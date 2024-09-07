@@ -79,7 +79,9 @@
     "PluginServerError": "Eklenti sunucusu isteği bir hata ile döndü. Lütfen aşağıdaki hata bilgilerine dayanarak eklenti bildirim dosyanızı, eklenti yapılandırmanızı veya sunucu uygulamanızı kontrol edin",
     "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin",
     "ProviderBizError": "Talep {{provider}} hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
-    "SubscriptionPlanLimit": "Abonelik kotası tükenmiş, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana yükseltin veya kaynak paketi satın alarak devam edin."
+    "StreamChunkError": "Akış isteği mesaj parçası çözümleme hatası, lütfen mevcut API arayüzünün standartlara uygun olup olmadığını kontrol edin veya API sağlayıcınızla iletişime geçin.",
+    "SubscriptionPlanLimit": "Abonelik kotası tükenmiş, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana yükseltin veya kaynak paketi satın alarak devam edin.",
+    "UnknownChatFetchError": "Üzgünüm, bilinmeyen bir istek hatasıyla karşılaştık. Lütfen aşağıdaki bilgileri kontrol edin veya tekrar deneyin."
   },
   "stt": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
@@ -113,6 +115,10 @@
   },
   "upload": {
     "desc": "Detay: {{detail}}",
-    "title": "Dosya yükleme başarısız, lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin"
+    "fileOnlySupportInServerMode": "Mevcut dağıtım modu, yalnızca resim dosyalarının yüklenmesini desteklemektedir. {{ext}} formatında bir dosya yüklemek istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya LobeChat Cloud hizmetini kullanın.",
+    "networkError": "Lütfen ağ bağlantınızın düzgün çalıştığından emin olun ve dosya depolama hizmetinin çapraz alan yapılandırmasının doğru olup olmadığını kontrol edin.",
+    "title": "Dosya yükleme başarısız, lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin",
+    "unknownError": "Hata nedeni: {{reason}}",
+    "uploadFailed": "Dosya yüklemesi başarısız oldu."
   }
 }
