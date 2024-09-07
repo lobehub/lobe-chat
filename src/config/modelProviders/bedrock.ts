@@ -191,7 +191,6 @@ const Bedrock: ModelProviderCard = {
       tokens: 4000,
     },
 */
-    // TODO: Not support for now
     {
       description: 'The latest Foundation Model from AI21 Labs, Jamba-Instruct offers an impressive 256K context window and delivers the best value per price on core text generation, summarization, and question answering tasks for the enterprise.',
       displayName: 'Jamba-Instruct',
