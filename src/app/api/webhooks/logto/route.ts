@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
 import { pino } from '@/libs/logger';
-import { NextAuthUserService } from '@/server/services/nextauthUser';
+import { NextAuthUserService } from '@/server/services/nextAuthUser';
 
 import { validateRequest } from './validateRequest';
 
@@ -20,10 +20,10 @@ export const POST = async (req: Request): Promise<NextResponse> => {
 
   pino.trace(`logto webhook payload: ${{ data, event }}`);
 
-  const nextauthUserService = new NextAuthUserService();
+  const nextAuthUserService = new NextAuthUserService();
   switch (event) {
     case 'User.Data.Updated': {
-      return nextauthUserService.safeUpdateUser(data.id, {
+      return nextAuthUserService.safeUpdateUser(data.id, {
         avatar: data?.avatar,
         email: data?.primaryEmail,
         fullName: data?.name,
