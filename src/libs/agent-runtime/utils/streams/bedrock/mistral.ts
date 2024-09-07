@@ -70,13 +70,13 @@ export const transformMistralStream = (
       type: 'tool_calls',
     } as StreamProtocolToolCallChunk;
   }
-
-  if (typeof item.message?.content === 'string') {
-    return { data: item.message.content, id: stack.id, type: 'text' };
-  }
   
   if (item.stop_reason) {
     return { data: item.stop_reason, id: stack.id, type: 'stop' };
+  }
+
+  if (typeof item.message?.content === 'string') {
+    return { data: item.message.content, id: stack.id, type: 'text' };
   }
 
   if (item.message?.content === null) {
