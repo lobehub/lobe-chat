@@ -5,9 +5,12 @@ import { nanoid } from '@/utils/uuid';
 import { ChatStreamCallbacks } from '../../../types';
 import {
   StreamProtocolChunk,
+  StreamProtocolToolCallChunk,
   StreamStack,
+  StreamToolCallChunkData,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
+  generateToolCallId,
 } from '../protocol';
 import { createBedrockStream } from './common';
 
@@ -27,9 +30,12 @@ interface BedrockMistralStreamChunk {
     'message': {
       'content': string;
       'role'?: string;
+      'tool_call_id'?: string;
       'tool_calls'?: {
         'function': any;
         'id'?: string;
+        'index'?: number;
+        'type'?: string;
       }[];
     };
     'stop_reason'?: null | string;
@@ -49,17 +55,32 @@ export const transformMistralStream = (
 
   const item = chunk.choices[0];
 
+  // mistral_chunk_tool_calls: {"choices":[{"index":0,"message":{"role":"assistant","content":"","tool_calls":[{"id":"3NcHNntdRyaHu8zisKJAhQ","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\": \"Singapore\"}"}}]},"stop_reason":"tool_calls"}]}
+  if (item.message?.tool_calls) {
+    return {
+      data: item.message.tool_calls.map(
+        (value, index): StreamToolCallChunkData => ({
+          function: value.function,
+          id: value.id || generateToolCallId(index, value.function?.name),
+          index: typeof value.index !== 'undefined' ? value.index : index,
+          type: value.type || 'function',
+        }),
+      ),
+      id: stack.id,
+      type: 'tool_calls',
+    } as StreamProtocolToolCallChunk;
+  }
+
   if (typeof item.message?.content === 'string') {
     return { data: item.message.content, id: stack.id, type: 'text' };
   }
-
-  // mistral_chunk_tool_calls: {"choices":[{"index":0,"message":{"role":"assistant","content":"","tool_calls":[{"id":"3NcHNntdRyaHu8zisKJAhQ","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\": \"Singapore\"}"}}]},"stop_reason":"tool_calls"}]}
-  if (item.message?.tool_calls) {
-    return { data: item.message.tool_calls, id: stack.id, type: 'tool_calls' }
-  }
-
+  
   if (item.stop_reason) {
     return { data: item.stop_reason, id: stack.id, type: 'stop' };
+  }
+
+  if (item.message?.content === null) {
+    return { data: item.message, id: stack.id, type: 'data' };
   }
 
   return {
