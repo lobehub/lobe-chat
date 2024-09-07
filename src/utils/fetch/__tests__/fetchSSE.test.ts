@@ -139,6 +139,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
+      smoothing: true,
     });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
@@ -183,6 +184,7 @@ describe('fetchSSE', () => {
     await fetchSSE('/', {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
+      smoothing: true,
     });
 
     // TODO: need to check whether the `aarg1` is correct
@@ -234,6 +236,7 @@ describe('fetchSSE', () => {
       onMessageHandle: mockOnMessageHandle,
       onFinish: mockOnFinish,
       signal: abortController.signal,
+      smoothing: true,
     });
 
     expect(mockOnMessageHandle).toHaveBeenNthCalledWith(1, { text: 'Hell', type: 'text' });
