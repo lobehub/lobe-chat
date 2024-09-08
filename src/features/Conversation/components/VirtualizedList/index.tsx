@@ -64,8 +64,8 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   }, [data.length]);
 
   const theme = useTheme();
-  // overscan should be 1.5 times the height of the window
-  const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
+  // overscan should be 3 times the height of the window
+  const overscan = typeof window !== 'undefined' ? window.innerHeight * 3 : 0;
 
   const itemContent = useCallback(
     (index: number, id: string) => {
