@@ -107,7 +107,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         computeItemKey={(_, item) => item}
         data={data}
         followOutput={getFollowOutput}
-        // increaseViewportBy={overscan}
+        increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
         isScrolling={setIsScrolling}
         itemContent={itemContent}
