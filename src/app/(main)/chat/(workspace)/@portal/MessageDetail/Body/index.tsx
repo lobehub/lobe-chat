@@ -1,6 +1,7 @@
 import { Markdown } from '@lobehub/ui';
 import { css, cx } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { useEffect } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -15,11 +16,20 @@ const md = css`
 `;
 
 const MessageDetailBody = () => {
-  const [messageDetailId] = useChatStore((s) => [chatPortalSelectors.messageDetailId(s)]);
+  const [messageDetailId, togglePortal] = useChatStore((s) => [
+    chatPortalSelectors.messageDetailId(s),
+    s.togglePortal,
+  ]);
 
   const message = useChatStore(chatSelectors.getMessageById(messageDetailId || ''), isEqual);
 
   const content = message?.content || '';
+
+  useEffect(() => {
+    if (!message) {
+      togglePortal(false);
+    }
+  }, [message]);
 
   return (
     <Flexbox height={'100%'} paddingBlock={'0 12px'} paddingInline={8}>
