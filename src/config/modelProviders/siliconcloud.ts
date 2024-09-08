@@ -69,25 +69,25 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      enabled: true,
-      displayName: 'GLM 4 9B',
-      id: 'THUDM/glm-4-9b-chat',
-      tokens: 32_768,
-    },
-    {
       displayName: 'GLM 3 6B',
       id: 'THUDM/chatglm3-6b',
       tokens: 32_768,
     },
     {
       enabled: true,
-      displayName: 'Internlm2.5 7B',
+      displayName: 'GLM 4 9B',
+      id: 'THUDM/glm-4-9b-chat',
+      tokens: 32_768,
+    },
+    {
+      enabled: true,
+      displayName: 'Internlm 2.5 7B',
       id: 'internlm/internlm2_5-7b-chat',
       tokens: 32_768,
     },
     {
       enabled: true,
-      displayName: 'Internlm2.5 20B',
+      displayName: 'Internlm 2.5 20B',
       id: 'internlm/internlm2_5-20b-chat',
       tokens: 32_768,
     },
