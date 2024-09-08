@@ -176,28 +176,28 @@ const Ollama: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      displayName: 'Qwen 2 0.5B',
+      displayName: 'Qwen2 0.5B',
       id: 'qwen2:0.5b',
       tokens: 128_000,
     },
     {
-      displayName: 'Qwen 2 1.5B',
+      displayName: 'Qwen2 1.5B',
       id: 'qwen2:1.5b',
       tokens: 128_000,
     },
     {
-      displayName: 'Qwen 2 7B',
+      displayName: 'Qwen2 7B',
       enabled: true,
       id: 'qwen2',
       tokens: 128_000,
     },
     {
-      displayName: 'Qwen 2 72B',
+      displayName: 'Qwen2 72B',
       id: 'qwen2:72b',
       tokens: 128_000,
     },
     {
-      displayName: 'CodeQwen 1.5 7B',
+      displayName: 'CodeQwen1.5 7B',
       enabled: true,
       id: 'codeqwen',
       tokens: 65_536,
