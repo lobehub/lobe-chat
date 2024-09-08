@@ -13,6 +13,7 @@ export type RenderRole = LLMRoleType | 'default' | string;
 export type RenderMessage = FC<ChatMessage & { editableContent: ReactNode }>;
 export type RenderBelowMessage = FC<ChatMessage>;
 export type RenderMessageExtra = FC<ChatMessage>;
+export type MarkdownCustomRender = (dom: ReactNode, props: { text: string }) => ReactNode;
 
 export type RenderAction = FC<ActionsBarProps & ChatMessage>;
 
