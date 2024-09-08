@@ -52,21 +52,6 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'DeepSeek V2',
-      id: 'deepseek-ai/DeepSeek-V2-Chat',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'DeepSeek Coder V2',
-      id: 'deepseek-ai/DeepSeek-Coder-V2-Instruct',
-      tokens: 32_768,
-    },
-    {
-      displayName: 'DeepSeek LLM 67B',
-      id: 'deepseek-ai/deepseek-llm-67b-chat',
-      tokens: 32_768,
-    },
-    {
       displayName: 'Yi1.5 6B',
       id: '01-ai/Yi-1.5-6B-Chat',
       tokens: 4096,
@@ -85,6 +70,17 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       enabled: true,
+      displayName: 'GLM 4 9B',
+      id: 'THUDM/glm-4-9b-chat',
+      tokens: 32_768,
+    },
+    {
+      displayName: 'GLM 3 6B',
+      id: 'THUDM/chatglm3-6b',
+      tokens: 32_768,
+    },
+    {
+      enabled: true,
       displayName: 'Internlm2.5 7B',
       id: 'internlm/internlm2_5-7b-chat',
       tokens: 32_768,
@@ -96,14 +92,18 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      enabled: true,
-      displayName: 'GLM 4 9B',
-      id: 'THUDM/glm-4-9b-chat',
+      displayName: 'DeepSeek V2',
+      id: 'deepseek-ai/DeepSeek-V2-Chat',
       tokens: 32_768,
     },
     {
-      displayName: 'GLM 3 6B',
-      id: 'THUDM/chatglm3-6b',
+      displayName: 'DeepSeek Coder V2',
+      id: 'deepseek-ai/DeepSeek-Coder-V2-Instruct',
+      tokens: 32_768,
+    },
+    {
+      displayName: 'DeepSeek LLM 67B',
+      id: 'deepseek-ai/deepseek-llm-67b-chat',
       tokens: 32_768,
     },
     {
