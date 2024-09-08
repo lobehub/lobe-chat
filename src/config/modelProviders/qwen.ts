@@ -61,14 +61,6 @@ const Qwen: ModelProviderCard = {
       tokens: 32_768,
       vision: true,
     },
-    {
-      description:
-        '抢先体验即将升级的 qwen-vl-max 大模型。',
-      displayName: 'Qwen VL Max 0809',
-      id: 'qwen-vl-max-0809',
-      tokens: 32_768,
-      vision: true,
-    },
     // ref https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-7b-14b-72b-api-detailes
     {
       description: '通义千问2对外开源的7B规模的模型',
