@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
   "agentsAndConversations": "Assistenti e Conversazioni",
   "backToBottom": "Torna in fondo",
+  "chatList": {
+    "longMessageDetail": "Visualizza dettagli"
+  },
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
