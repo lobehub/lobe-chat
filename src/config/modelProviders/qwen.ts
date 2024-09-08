@@ -64,25 +64,25 @@ const Qwen: ModelProviderCard = {
     // ref https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-7b-14b-72b-api-detailes
     {
       description: '通义千问2对外开源的7B规模的模型',
-      displayName: 'Qwen 2 7B',
+      displayName: 'Qwen2 7B',
       id: 'qwen2-7b-instruct',
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2-7B-Instruct
     },
     {
       description: '通义千问2对外开源的57B规模14B激活参数的MOE模型',
-      displayName: 'Qwen 2 57B A14B MoE',
+      displayName: 'Qwen2 57B A14B MoE',
       id: 'qwen2-57b-a14b-instruct',
       tokens: 65_536, // https://huggingface.co/Qwen/Qwen2-57B-A14B-Instruct
     },
     {
       description: '通义千问2对外开源的72B规模的模型',
-      displayName: 'Qwen 2 72B',
+      displayName: 'Qwen2 72B',
       id: 'qwen2-72b-instruct',
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2-72B-Instruct
     },
     {
       description: 'Qwen2-Math 模型具有强大的数学解题能力',
-      displayName: 'Qwen 2 Math 72B',
+      displayName: 'Qwen2 Math 72B',
       id: 'qwen2-math-72b-instruct',
       tokens: 4096, // https://help.aliyun.com/zh/dashscope/developer-reference/use-qwen2-math-by-calling-api
     },
