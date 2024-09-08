@@ -24,7 +24,7 @@ const Temperature = memo(() => {
       content={
         <SliderWithInput
           controls={false}
-          max={1}
+          max={2}
           min={0}
           onChange={(v) => {
             updateAgentConfig({ params: { temperature: v } });

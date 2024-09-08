@@ -1,18 +1,18 @@
 {
   "chat": {
-    "description": "LobeChat은 최고의 ChatGPT, OLLaMA, Gemini, Claude WebUI 사용 경험을 제공합니다.",
-    "title": "LobeChat: 개인 LLM 생산성 도구, 더 똑똑한 두뇌를 위해"
+    "description": "{{appName}}가 제공하는 최고의 ChatGPT, Claude, Gemini, OLLaMA WebUI 사용 경험",
+    "title": "{{appName}}: 개인 AI 효율 도구, 더 똑똑한 두뇌를 위한 선택"
   },
   "market": {
-    "description": "콘텐츠 작성, 문구, 질의응답, 이미지 생성, 비디오 생성, 음성 생성, 지능형 에이전트, 자동화된 워크플로우를 통해 AI / GPTs / OLLaMA를 맞춤 설정하세요.",
+    "description": "콘텐츠 창작, 카피라이팅, Q&A, 이미지 생성, 비디오 생성, 음성 생성, 스마트 에이전트, 자동화 워크플로우, 나만의 AI 스마트 어시스턴트를 맞춤 설정하세요",
     "title": "어시스턴트 마켓"
   },
   "plugins": {
-    "description": "검색, 차트 생성, 학술, 이미지 생성, 비디오 생성, 음성 생성, 자동화된 워크플로우를 통해 ChatGPT / OLLaMA 전용 ToolCall 플러그인 능력을 맞춤 설정하세요.",
+    "description": "검색, 차트 생성, 학술, 이미지 생성, 비디오 생성, 음성 생성, 자동화 워크플로우, ChatGPT / Claude 전용 ToolCall 플러그인 기능을 맞춤 설정하세요",
     "title": "플러그인 마켓"
   },
   "welcome": {
-    "description": "LobeChat은 최고의 ChatGPT, OLLaMA, Gemini, Claude WebUI 사용 경험을 제공합니다.",
-    "title": "LobeChat를 사용해 주셔서 감사합니다: 개인 LLM 생산성 도구, 더 똑똑한 두뇌를 위해"
+    "description": "{{appName}}가 제공하는 최고의 ChatGPT, Claude, Gemini, OLLaMA WebUI 사용 경험",
+    "title": "{{appName}}에 오신 것을 환영합니다: 개인 AI 효율 도구, 더 똑똑한 두뇌를 위한 선택"
   }
 }
