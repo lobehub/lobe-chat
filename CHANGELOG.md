@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.21](https://github.com/lobehub/lobe-chat/compare/v1.15.20...v1.15.21)
+
+<sup>Released on **2024-09-08**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Temperature range from 0 to 2.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Temperature range from 0 to 2, closes [#3355](https://github.com/lobehub/lobe-chat/issues/3355) ([4a9114e](https://github.com/lobehub/lobe-chat/commit/4a9114e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.20](https://github.com/lobehub/lobe-chat/compare/v1.15.19...v1.15.20)
 
 <sup>Released on **2024-09-08**</sup>
