@@ -2,8 +2,13 @@
 import { z } from 'zod';
 
 export const FeatureFlagsSchema = z.object({
+  /**
+   *
+   */
   webrtc_sync: z.boolean().optional(),
+  check_updates: z.boolean().optional(),
 
+  // settings
   language_model_settings: z.boolean().optional(),
 
   openai_api_key: z.boolean().optional(),
@@ -13,19 +18,20 @@ export const FeatureFlagsSchema = z.object({
   edit_agent: z.boolean().optional(),
 
   dalle: z.boolean().optional(),
+  speech_to_text: z.boolean().optional(),
+  token_counter: z.boolean().optional(),
 
-  check_updates: z.boolean().optional(),
   welcome_suggest: z.boolean().optional(),
 
   clerk_sign_up: z.boolean().optional(),
 
-  cloud_promotion: z.boolean().optional(),
-
   market: z.boolean().optional(),
-  speech_to_text: z.boolean().optional(),
-
   knowledge_base: z.boolean().optional(),
+
   rag_eval: z.boolean().optional(),
+
+  // internal flag
+  cloud_promotion: z.boolean().optional(),
 });
 
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;

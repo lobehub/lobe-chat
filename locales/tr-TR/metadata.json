@@ -1,18 +1,18 @@
 {
   "chat": {
-    "description": "LobeChat size en iyi ChatGPT, OLLaMA, Gemini, Claude WebUI kullanım deneyimini sunar",
-    "title": "LobeChat: Kişisel LLM Verimlilik Aracı, Daha Akıllı Bir Beyin İçin Kendinize Bir Hediye"
+    "description": "{{appName}} size en iyi ChatGPT, Claude, Gemini, OLLaMA WebUI deneyimini sunar",
+    "title": "{{appName}}: Kişisel AI verimlilik aracı, kendinize daha akıllı bir zihin verin"
   },
   "market": {
-    "description": "İçerik oluşturma, metin yazma, soru cevap, görüntü oluşturma, video oluşturma, ses oluşturma, akıllı ajan, otomasyon iş akışı, kendi AI / GPTs / OLLaMA akıllı asistanınızı özelleştirin",
+    "description": "İçerik oluşturma, metin yazımı, soru-cevap, görsel oluşturma, video oluşturma, ses oluşturma, akıllı ajan, otomatik iş akışları, size özel AI akıllı asistanınızı özelleştirin",
     "title": "Asistan Pazarı"
   },
   "plugins": {
-    "description": "Arama, grafik oluşturma, akademik, görüntü oluşturma, video oluşturma, ses oluşturma, otomasyon iş akışı, ChatGPT / OLLaMA için özel ToolCall eklenti yeteneklerini özelleştirin",
+    "description": "Arama, grafik oluşturma, akademik, görsel oluşturma, video oluşturma, ses oluşturma, otomatik iş akışları, ChatGPT / Claude için özel ToolCall eklenti yeteneklerini özelleştirin",
     "title": "Eklenti Pazarı"
   },
   "welcome": {
-    "description": "LobeChat size en iyi ChatGPT, OLLaMA, Gemini, Claude WebUI kullanım deneyimini sunar",
-    "title": "LobeChat'i Kullanmaya Hoş Geldiniz: Kişisel LLM Verimlilik Aracı, Daha Akıllı Bir Beyin İçin Kendinize Bir Hediye"
+    "description": "{{appName}} size en iyi ChatGPT, Claude, Gemini, OLLaMA WebUI deneyimini sunar",
+    "title": "Hoş geldiniz {{appName}}: Kişisel AI verimlilik aracı, kendinize daha akıllı bir zihin verin"
   }
 }
