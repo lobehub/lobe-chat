@@ -108,13 +108,13 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       enabled: true,
-      displayName: 'Gemma 2 9B',
+      displayName: 'Gemma2 9B',
       id: 'google/gemma-2-9b-it',
       tokens: 8192,
     },
     {
       enabled: true,
-      displayName: 'Gemma 2 27B',
+      displayName: 'Gemma2 27B',
       id: 'google/gemma-2-27b-it',
       tokens: 8192,
     },
