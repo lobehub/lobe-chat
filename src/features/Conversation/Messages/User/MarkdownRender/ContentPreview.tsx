@@ -7,25 +7,21 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { convertAlphaToSolid } from '@/utils/colorUtils';
 
-const useStyles = createStyles(({ css, token, isDarkMode }, displayMode: 'chat' | 'docs') => ({
-  mask: css`
-    position: absolute;
-    inset-block: 0 0;
+const useStyles = createStyles(({ css, token, isDarkMode }, displayMode: 'chat' | 'docs') => {
+  const darkBg = convertAlphaToSolid(token.colorFillSecondary, token.colorBgContainer);
 
-    width: 100%;
+  const maskBgColor =
+    displayMode === 'docs' ? token.colorBgLayout : isDarkMode ? darkBg : token.colorBgContainer;
 
-    background: linear-gradient(
-      0deg,
-      ${displayMode === 'chat'
-          ? isDarkMode
-            ? convertAlphaToSolid(token.colorFillSecondary, token.colorBgContainer)
-            : token.colorBgContainer
-          : token.colorBgLayout}
-        0%,
-      transparent 50%
-    );
-  `,
-}));
+  return {
+    mask: css`
+      position: absolute;
+      inset-block: 0 0;
+      width: 100%;
+      background: linear-gradient(0deg, ${maskBgColor} 0%, transparent 50%);
+    `,
+  };
+});
 
 interface ContentPreviewProps {
   content: string;
