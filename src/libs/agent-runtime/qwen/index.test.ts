@@ -152,6 +152,53 @@ describe('LobeQwenAI', () => {
 
         expect((await reader.read()).done).toBe(true);
       });
+
+      it('should set temperature to undefined if temperature is 0 or >= 2', async () => {
+        const temperatures = [0, 2, 3];
+        const expectedTemperature = undefined;
+
+        for (const temp of temperatures) {
+          vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+            new ReadableStream() as any,
+          );
+
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'qwen-turbo',
+            temperature: temp,
+          });
+
+          expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+              messages: expect.any(Array),
+              model: 'qwen-turbo',
+              temperature: expectedTemperature,
+            }),
+            expect.any(Object),
+          );
+        }
+      });
+
+      it('should set temperature to original temperature', async () => {
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          new ReadableStream() as any,
+        );
+
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'qwen-turbo',
+          temperature: 1.5,
+        });
+
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.any(Array),
+            model: 'qwen-turbo',
+            temperature: 1.5,
+          }),
+          expect.any(Object),
+        );
+      });
     });
 
     describe('Error', () => {

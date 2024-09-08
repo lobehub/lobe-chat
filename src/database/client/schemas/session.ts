@@ -32,7 +32,7 @@ export const AgentSchema = z.object({
     frequency_penalty: z.number().default(0).optional(),
     max_tokens: z.number().optional(),
     presence_penalty: z.number().default(0).optional(),
-    temperature: z.number().default(0.6).optional(),
+    temperature: z.number().default(1).optional(),
     top_p: z.number().default(1).optional(),
   }),
   plugins: z.array(z.string()).optional(),
