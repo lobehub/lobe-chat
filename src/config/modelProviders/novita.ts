@@ -4,35 +4,35 @@ import { ModelProviderCard } from '@/types/llm';
 const Novita: ModelProviderCard = {
   chatModels: [
     {
-      displayName: 'Llama3.1 8B Instruct',
+      displayName: 'Llama 3.1 8B Instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-8b-instruct',
       tokens: 8192,
     },
     {
-      displayName: 'Llama3.1 70B Instruct',
+      displayName: 'Llama 3.1 70B Instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-70b-instruct',
       tokens: 131_072,
     },
     {
-      displayName: 'Llama3.1 405B Instruct',
+      displayName: 'Llama 3.1 405B Instruct',
       enabled: true,
       id: 'meta-llama/llama-3.1-405b-instruct',
       tokens: 32_768,
     },
     {
-      displayName: 'Llama3 8B Instruct',
+      displayName: 'Llama 3 8B Instruct',
       id: 'meta-llama/llama-3-8b-instruct',
       tokens: 8192,
     },
     {
-      displayName: 'Llama3 70B Instruct',
+      displayName: 'Llama 3 70B Instruct',
       id: 'meta-llama/llama-3-70b-instruct',
       tokens: 8192,
     },
     {
-      displayName: 'Gemma 2 9B',
+      displayName: 'Gemma2 9B',
       enabled: true,
       id: 'google/gemma-2-9b-it',
       tokens: 8192,
