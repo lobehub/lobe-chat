@@ -231,7 +231,7 @@ describe('LobeMinimaxAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'text-davinci-003',
           stream: true,
-          temperature: 0.5,
+          temperature: 0.25,
           top_p: 0.8,
         });
       });

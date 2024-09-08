@@ -100,7 +100,7 @@ export class LobeQwenAI implements LobeRuntimeAI {
   }
 
   private buildCompletionParamsByModel(payload: ChatStreamPayload) {
-    const { model, top_p, stream, messages, tools } = payload;
+    const { model, temperature, top_p, stream, messages, tools } = payload;
     const isVisionModel = model.startsWith('qwen-vl');
 
     const params = {
@@ -108,6 +108,10 @@ export class LobeQwenAI implements LobeRuntimeAI {
       messages,
       result_format: 'message',
       stream: !!tools?.length ? false : (stream ?? true),
+      temperature: 
+        temperature === 0 || temperature >= 2 
+        ? undefined 
+        : temperature,
       top_p: top_p && top_p >= 1 ? 0.999 : top_p,
     };
 

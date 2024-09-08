@@ -5,41 +5,49 @@ import { ModelProviderCard } from '@/types/llm';
 const Stepfun: ModelProviderCard = {
   chatModels: [
     {
+      displayName: 'Step 2 16K',
       enabled: true,
       id: 'step-2-16k',
       tokens: 16_000,
     },
     {
+      displayName: 'Step 1 256K',
       id: 'step-1-256k',
       tokens: 256_000,
     },
     {
+      displayName: 'Step 1 128K',
       enabled: true,
       id: 'step-1-128k',
       tokens: 128_000,
     },
     {
+      displayName: 'Step 1 32K',
       enabled: true,
       id: 'step-1-32k',
       tokens: 32_000,
     },
     {
+      displayName: 'Step 1 8K',
       enabled: true,
       id: 'step-1-8k',
       tokens: 8000,
     },
     {
+      displayName: 'Step 1 Flash',
       enabled: true,
       id: 'step-1-flash',
       tokens: 8000,
     },
     {
+      displayName: 'Step 1V 32K',
       enabled: true,
       id: 'step-1v-32k',
       tokens: 32_000,
       vision: true,
     },
     {
+      displayName: 'Step 1V 8K',
       enabled: true,
       id: 'step-1v-8k',
       tokens: 8000,
