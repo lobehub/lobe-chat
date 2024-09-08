@@ -12,6 +12,7 @@
   },
   "analytics": {
     "telemetry": {
+      "desc": "Al seleccionar enviar datos de telemetría, puedes ayudarnos a mejorar la experiencia general del usuario en {{appName}}",
       "title": "Enviar datos de uso anónimos"
     },
     "title": "Análisis de datos"
@@ -69,9 +70,11 @@
           "title": "Nombre de visualización del modelo"
         },
         "files": {
+          "extra": "La implementación actual de carga de archivos es solo una solución temporal, limitada a pruebas personales. Por favor, espera la implementación completa de la capacidad de carga de archivos.",
           "title": "Soporte de carga de archivos"
         },
         "functionCall": {
+          "extra": "Esta configuración solo habilitará la capacidad de llamada a funciones en la aplicación; si se admite la llamada a funciones depende completamente del modelo en sí. Por favor, prueba la disponibilidad de la capacidad de llamada a funciones de este modelo.",
           "title": "Soporte de llamadas a funciones"
         },
         "id": {
@@ -85,7 +88,7 @@
           "unlimited": "ilimitado"
         },
         "vision": {
-          "extra": "Esta configuración solo habilitará la configuración de carga de imágenes en LobeChat. La capacidad de reconocimiento depende completamente del modelo en sí. Por favor, realiza pruebas para verificar la disponibilidad de esta capacidad en el modelo.",
+          "extra": "Esta configuración solo habilitará la configuración de carga de imágenes en la aplicación; si se admite el reconocimiento depende completamente del modelo en sí. Por favor, prueba la disponibilidad de la capacidad de reconocimiento visual de este modelo.",
           "title": "Soporte de reconocimiento visual"
         }
       }

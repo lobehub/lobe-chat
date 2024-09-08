@@ -12,6 +12,7 @@
   },
   "analytics": {
     "telemetry": {
+      "desc": "Selezionando di inviare i dati di telemetria, puoi aiutarci a migliorare l'esperienza complessiva degli utenti di {{appName}}",
       "title": "Invio dati anonimi"
     },
     "title": "Analisi"
@@ -69,9 +70,11 @@
           "title": "Nome di visualizzazione del modello"
         },
         "files": {
+          "extra": "L'attuale implementazione del caricamento dei file è solo una soluzione temporanea, limitata a tentativi personali. Ti preghiamo di attendere implementazioni complete per la capacità di caricamento dei file.",
           "title": "Supporto per il caricamento dei file"
         },
         "functionCall": {
+          "extra": "Questa configurazione attiverà solo la capacità di chiamata di funzioni all'interno dell'app, se la chiamata di funzioni è supportata dipende interamente dal modello stesso, ti invitiamo a testare l'usabilità della chiamata di funzioni di questo modello.",
           "title": "Supporto per la chiamata di funzione"
         },
         "id": {
@@ -85,7 +88,7 @@
           "unlimited": "illimitato"
         },
         "vision": {
-          "extra": "Questa configurazione abiliterà solo la funzionalità di caricamento delle immagini in LobeChat. La reale capacità di riconoscimento dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",
+          "extra": "Questa configurazione attiverà solo la capacità di caricamento delle immagini nell'app, se il riconoscimento è supportato dipende interamente dal modello stesso, ti invitiamo a testare l'usabilità del riconoscimento visivo di questo modello.",
           "title": "Supporto per il riconoscimento visivo"
         }
       }

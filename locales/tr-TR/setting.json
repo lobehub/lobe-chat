@@ -12,6 +12,7 @@
   },
   "analytics": {
     "telemetry": {
+      "desc": "{{appName}} genel kullanıcı deneyimini geliştirmemize yardımcı olmak için telemetri verilerini göndermeyi seçerek katkıda bulunabilirsiniz.",
       "title": "Anonim Kullanım Verileri Gönder"
     },
     "title": "Analitik"
@@ -69,9 +70,11 @@
           "title": "Model Görüntü Adı"
         },
         "files": {
+          "extra": "Mevcut dosya yükleme uygulaması yalnızca bir Hack çözümüdür ve yalnızca kendi denemeleriniz için geçerlidir. Tam dosya yükleme yeteneği için lütfen sonraki uygulamaları bekleyin.",
           "title": "Dosya Yükleme Desteği"
         },
         "functionCall": {
+          "extra": "Bu yapılandırma yalnızca uygulamadaki işlev çağırma yeteneğini açacaktır; işlev çağırmanın desteklenip desteklenmediği tamamen modele bağlıdır, lütfen bu modelin işlev çağırma yeteneğini kendiniz test edin.",
           "title": "Fonksiyon Çağrısını Destekle"
         },
         "id": {
@@ -85,7 +88,7 @@
           "unlimited": "Sınırsız"
         },
         "vision": {
-          "extra": "Bu yapılandırma yalnızca LobeChat'teki görüntü yükleme yapılandırmasını etkinleştirir, tanıma desteğinin olup olmadığı tamamen modelin kendisine bağlıdır, bu modelin görüntü tanıma yeteneğini test etmek size kalmıştır",
+          "extra": "Bu yapılandırma yalnızca uygulamadaki resim yükleme yapılandırmasını açacaktır; tanıma desteği tamamen modele bağlıdır, lütfen bu modelin görsel tanıma yeteneğini kendiniz test edin.",
           "title": "Görüntü Tanımayı Destekle"
         }
       }
