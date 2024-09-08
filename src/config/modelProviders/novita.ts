@@ -32,7 +32,7 @@ const Novita: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Gemma2 9B',
+      displayName: 'Gemma 2 9B',
       enabled: true,
       id: 'google/gemma-2-9b-it',
       tokens: 8192,
