@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.22](https://github.com/lobehub/lobe-chat/compare/v1.15.21...v1.15.22)
+
+<sup>Released on **2024-09-08**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update model display name & Remove Qwen preview model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update model display name & Remove Qwen preview model, closes [#3757](https://github.com/lobehub/lobe-chat/issues/3757) ([dd439ba](https://github.com/lobehub/lobe-chat/commit/dd439ba))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.21](https://github.com/lobehub/lobe-chat/compare/v1.15.20...v1.15.21)
 
 <sup>Released on **2024-09-08**</sup>
