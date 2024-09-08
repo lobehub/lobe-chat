@@ -8,7 +8,7 @@ const ZhiPu: ModelProviderCard = {
     {
       description:
         'GLM-4-AllTools 是专门为支持智能体和相关任务而进一步优化的模型版本。它能够自主理解用户的意图，规划复杂的指令，并能够调用一个或多个工具（例如网络浏览器、代码解释器和文本生图像）以完成复杂的任务。',
-      displayName: 'GLM-4 AllTools',
+      displayName: 'GLM 4 AllTools',
       enabled: true,
       functionCall: true,
       id: 'glm-4-alltools',
