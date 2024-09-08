@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "By choosing to send telemetry data, you can help us improve the overall user experience of {{appName}}.",
+      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of {{appName}}.",
       "title": "Send Anonymous Usage Data"
     },
     "title": "Analytics"
