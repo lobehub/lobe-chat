@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, chúng ta hãy bắt đầu trò chuyện nào!",
   "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
   "backToBottom": "Quay về dưới cùng",
+  "chatList": {
+    "longMessageDetail": "Xem chi tiết"
+  },
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",

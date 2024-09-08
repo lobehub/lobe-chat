@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. Zacznijmy rozmowę!",
   "agentsAndConversations": "Agenci i rozmowy",
   "backToBottom": "Przewiń na dół",
+  "chatList": {
+    "longMessageDetail": "Zobacz szczegóły"
+  },
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",

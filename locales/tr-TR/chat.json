@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Konuşmaya başlayalım!",
   "agentsAndConversations": "Ajanlar ve Konuşmalar",
   "backToBottom": "En alta git",
+  "chatList": {
+    "longMessageDetail": "Detayları görüntüle"
+  },
   "clearCurrentMessages": "Mevcut oturum mesajlarını temizle",
   "confirmClearCurrentMessages": "Mevcut oturum mesajlarını temizlemek üzeresiniz. Temizlendikten sonra geri alınamazlar. Lütfen eyleminizi onaylayın.",
   "confirmRemoveSessionItemAlert": "Bu asistanı silmek üzeresiniz. Silindikten sonra geri alınamaz. Lütfen eyleminizi onaylayın.",
