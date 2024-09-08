@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
   "agentsAndConversations": "에이전트 및 대화",
   "backToBottom": "하단으로 이동",
+  "chatList": {
+    "longMessageDetail": "자세히 보기"
+  },
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",

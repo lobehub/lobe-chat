@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Olá, sou o **{{name}}**, vamos começar a conversa!",
   "agentsAndConversations": "Agentes e Conversas",
   "backToBottom": "Voltar para o início",
+  "chatList": {
+    "longMessageDetail": "Ver detalhes"
+  },
   "clearCurrentMessages": "Limpar mensagens atuais",
   "confirmClearCurrentMessages": "Você está prestes a limpar as mensagens desta sessão. Depois de limpar, não será possível recuperá-las. Por favor, confirme sua ação.",
   "confirmRemoveSessionItemAlert": "Você está prestes a remover este assistente. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
