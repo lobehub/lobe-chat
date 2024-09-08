@@ -41,18 +41,18 @@ const Ollama: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      displayName: 'Gemma 2 2B',
+      displayName: 'Gemma2 2B',
       id: 'gemma2:2b',
       tokens: 8192,
     },
     {
-      displayName: 'Gemma 2 9B',
+      displayName: 'Gemma2 9B',
       enabled: true,
       id: 'gemma2',
       tokens: 8192,
     },
     {
-      displayName: 'Gemma 2 27B',
+      displayName: 'Gemma2 27B',
       id: 'gemma2:27b',
       tokens: 8192,
     },
