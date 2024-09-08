@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
   "agentsAndConversations": "الوكلاء والمحادثات",
   "backToBottom": "العودة إلى الأسفل",
+  "chatList": {
+    "longMessageDetail": "عرض التفاصيل"
+  },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",

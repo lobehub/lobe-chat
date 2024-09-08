@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Lassen Sie uns ins Gespräch kommen!",
   "agentsAndConversations": "Agenten und Unterhaltungen",
   "backToBottom": "Zurück zum Ende",
+  "chatList": {
+    "longMessageDetail": "Details anzeigen"
+  },
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
   "confirmClearCurrentMessages": "Möchtest du wirklich die aktuellen Nachrichten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
   "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",

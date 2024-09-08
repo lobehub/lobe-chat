@@ -6,6 +6,7 @@ export interface PortalFile {
 
 export interface ChatPortalState {
   portalFile?: PortalFile;
+  portalMessageDetail?: string;
   portalToolMessage?: { id: string; identifier: string };
   showPortal: boolean;
 }

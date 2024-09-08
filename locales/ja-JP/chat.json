@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "こんにちは、私は**{{name}}**です。会話しましょう！",
   "agentsAndConversations": "エージェントと会話",
   "backToBottom": "現在に戻る",
+  "chatList": {
+    "longMessageDetail": "詳細を見る"
+  },
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
