@@ -10,33 +10,33 @@
     "clear": {
       "confirm": "Czy na pewno chcesz wyczyścić lokalne dane (ustawienia globalne nie zostaną dotknięte)? Upewnij się, że masz pobraną kopię zapasową danych."
     },
-    "description": "W nowej wersji LobeChat nastąpił ogromny postęp w przechowywaniu danych. Dlatego musimy zaktualizować dane z poprzedniej wersji, aby zapewnić Ci lepsze doświadczenia z użytkowania.",
+    "description": "W nowej wersji, przechowywanie danych w {{appName}} przeszło ogromny skok. Dlatego musimy zaktualizować dane z poprzedniej wersji, aby zapewnić Ci lepsze doświadczenia użytkownika.",
     "features": {
       "capability": {
-        "desc": "Dzięki technologii IndexedDB, pomieści ona wszystkie Twoje wiadomości z rozmów na całe życie.",
+        "desc": "Oparte na technologii IndexedDB, wystarczającej, aby pomieścić wszystkie Twoje wiadomości z życia.",
         "title": "Duża pojemność"
       },
       "performance": {
-        "desc": "Automatyczne indeksowanie milionów wiadomości, co pozwala na błyskawiczne wyszukiwanie i odpowiedzi w milisekundach.",
+        "desc": "Automatyczne indeksowanie milionów wiadomości, z czasem odpowiedzi na zapytania w milisekundach.",
         "title": "Wysoka wydajność"
       },
       "use": {
-        "desc": "Wsparcie dla wyszukiwania tytułów, opisów, etykiet, treści wiadomości oraz tłumaczeń znacząco zwiększa wydajność codziennych wyszukiwań.",
-        "title": "Większa użyteczność"
+        "desc": "Obsługuje wyszukiwanie według tytułów, opisów, tagów, treści wiadomości, a nawet tekstów tłumaczeń, znacznie zwiększając efektywność codziennego wyszukiwania.",
+        "title": "Łatwiejsze w użyciu"
       }
     },
-    "title": "Ewolucja danych w LobeChat",
+    "title": "Ewolucja danych {{appName}}",
     "upgrade": {
       "error": {
-        "subTitle": "Przepraszamy, wystąpił błąd podczas procesu aktualizacji bazy danych. Prosimy spróbować jednego z poniższych rozwiązań: A. Wyczyść lokalne dane i zaimportuj ponownie kopię zapasową danych; B. Kliknij przycisk „Ponowne uaktualnienie”.<br><br> Jeśli problem nadal występuje, prosimy <1>zgłosić problem</1>, a my natychmiast pomożemy Ci go rozwiązać.",
-        "title": "Błąd aktualizacji bazy danych"
+        "subTitle": "Przykro nam, wystąpił błąd podczas procesu aktualizacji bazy danych. Proszę spróbować następujących rozwiązań: A. Wyczyść lokalne dane, a następnie ponownie zaimportuj dane z kopii zapasowej; B. Kliknij przycisk „Ponownie zaktualizuj”.<br><br> Jeśli problem nadal występuje, proszę <1>zgłosić problem</1>, a my jak najszybciej pomożemy Ci go rozwiązać.",
+        "title": "Aktualizacja bazy danych nie powiodła się"
       },
       "success": {
-        "subTitle": "Baza danych LobeChat została pomyślnie zaktualizowana do najnowszej wersji. Zacznij korzystać już teraz!",
-        "title": "Pomyślna aktualizacja bazy danych"
+        "subTitle": "Baza danych {{appName}} została zaktualizowana do najnowszej wersji, zacznij korzystać już teraz.",
+        "title": "Aktualizacja bazy danych powiodła się"
       }
     },
-    "upgradeTip": "Aktualizacja zazwyczaj trwa od 10 do 20 sekund. Prosimy nie zamykać LobeChat podczas procesu aktualizacji."
+    "upgradeTip": "Aktualizacja zajmuje zazwyczaj 10-20 sekund, w trakcie aktualizacji nie zamykaj {{appName}}."
   },
   "migrateError": {
     "missVersion": "Importowane dane nie zawierają numeru wersji. Prosimy sprawdzić plik i spróbować ponownie.",

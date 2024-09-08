@@ -1,18 +1,18 @@
 {
   "chat": {
-    "description": "LobeChat ofrece la mejor experiencia de uso de ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "LobeChat: Herramienta personal de productividad LLM para tener un cerebro más inteligente"
+    "description": "{{appName}} te ofrece la mejor experiencia de uso de ChatGPT, Claude, Gemini y OLLaMA WebUI",
+    "title": "{{appName}}: Herramienta de productividad personal de IA, dale a tu cerebro un impulso más inteligente"
   },
   "market": {
-    "description": "Creación de contenido, redacción, preguntas y respuestas, generación de imágenes, generación de videos, generación de voz, agente inteligente, flujo de trabajo automatizado, personaliza tu asistente inteligente AI / GPTs / OLLaMA exclusivo",
-    "title": "Mercado de asistentes"
+    "description": "Creación de contenido, redacción, preguntas y respuestas, generación de imágenes, generación de videos, generación de voz, agentes inteligentes, flujos de trabajo automatizados, personaliza tu asistente inteligente de IA exclusivo",
+    "title": "Mercado de Asistentes"
   },
   "plugins": {
-    "description": "Búsqueda, generación de gráficos, académico, generación de imágenes, generación de videos, generación de voz, flujo de trabajo automatizado, personaliza las capacidades de los complementos ToolCall exclusivos de ChatGPT / OLLaMA",
-    "title": "Mercado de complementos"
+    "description": "Búsqueda, generación de gráficos, académico, generación de imágenes, generación de videos, generación de voz, flujos de trabajo automatizados, personaliza las capacidades de los plugins ToolCall exclusivos de ChatGPT / Claude",
+    "title": "Mercado de Plugins"
   },
   "welcome": {
-    "description": "LobeChat ofrece la mejor experiencia de uso de ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "¡Bienvenido a LobeChat: Herramienta personal de productividad LLM para tener un cerebro más inteligente!"
+    "description": "{{appName}} te ofrece la mejor experiencia de uso de ChatGPT, Claude, Gemini y OLLaMA WebUI",
+    "title": "Bienvenido a {{appName}}: Herramienta de productividad personal de IA, dale a tu cerebro un impulso más inteligente"
   }
 }

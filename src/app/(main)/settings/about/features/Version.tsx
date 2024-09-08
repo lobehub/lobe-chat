@@ -6,6 +6,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { MANUAL_UPGRADE_URL, OFFICIAL_SITE, RELEASES_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
 import { useNewVersion } from '@/features/User/UserPanel/useNewVersion';
@@ -37,11 +38,11 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Flexbox align={'center'} flex={'none'} gap={16} horizontal>
         <Link href={OFFICIAL_SITE} target={'_blank'}>
           <Center className={styles.logo} height={64} width={64}>
-            <Image alt={'LobeChat'} height={52} src={'/icons/icon-192x192.png'} width={52} />
+            <Image alt={BRANDING_NAME} height={52} src={'/icons/icon-192x192.png'} width={52} />
           </Center>
         </Link>
         <Flexbox>
-          <div style={{ fontSize: 18, fontWeight: 'bolder' }}>LobeChat</div>
+          <div style={{ fontSize: 18, fontWeight: 'bolder' }}>${BRANDING_NAME}</div>
           <div>
             <Tag color={theme.colorFillSecondary} style={{ color: theme.colorTextSecondary }}>
               v{CURRENT_VERSION}
