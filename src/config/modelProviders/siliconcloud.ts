@@ -92,12 +92,12 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      displayName: 'DeepSeek V2',
+      displayName: 'DeepSeek V2 Chat',
       id: 'deepseek-ai/DeepSeek-V2-Chat',
       tokens: 32_768,
     },
     {
-      displayName: 'DeepSeek Coder V2',
+      displayName: 'DeepSeek V2 Coder',
       id: 'deepseek-ai/DeepSeek-Coder-V2-Instruct',
       tokens: 32_768,
     },
