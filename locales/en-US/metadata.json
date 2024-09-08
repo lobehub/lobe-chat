@@ -1,6 +1,6 @@
 {
   "chat": {
-    "description": "{{appName}} brings you the best experience with ChatGPT, Claude, Gemini, and OLLaMA WebUI.",
+    "description": "{{appName}} brings you the best UI experience for ChatGPT, Claude, Gemini, and OLLaMA.",
     "title": "{{appName}}: Your personal AI productivity tool for a smarter brain."
   },
   "market": {
@@ -8,11 +8,11 @@
     "title": "Assistant Marketplace"
   },
   "plugins": {
-    "description": "Search, chart generation, academic tools, image generation, video generation, voice generation, automated workflows—customize ToolCall plugin capabilities for ChatGPT / Claude.",
+    "description": "Search, chart generation, academic tools, image generation, video generation, voice generation, automated workflows—customize Tools Calling plugin capabilities for ChatGPT / Claude.",
     "title": "Plugin Marketplace"
   },
   "welcome": {
-    "description": "{{appName}} brings you the best experience with ChatGPT, Claude, Gemini, and OLLaMA WebUI.",
+    "description": "{{appName}} brings you the best UI experience for ChatGPT, Claude, Gemini, and OLLaMA.",
     "title": "Welcome to {{appName}}: Your personal AI productivity tool for a smarter brain."
   }
 }
