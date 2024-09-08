@@ -119,6 +119,19 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [item?.role],
   );
 
+  const markdownCustomRender = useCallback(
+    (dom: ReactNode, { text }: { text: string }) => {
+      if (!item?.role) return dom;
+      let RenderFunction;
+
+      if (renderMessagesExtra?.[item.role]) RenderFunction = markdownCustomRenders[item.role];
+      if (!RenderFunction) return dom;
+
+      return <RenderFunction dom={dom} id={id} text={text} />;
+    },
+    [item?.role],
+  );
+
   const error = useErrorContent(item?.error);
 
   const enableHistoryDivider = useAgentStore((s) => {
@@ -152,7 +165,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           fontSize={fontSize}
           loading={isProcessing}
           markdownProps={{
-            customRender: markdownCustomRenders[item.role],
+            customRender: markdownCustomRender,
           }}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
