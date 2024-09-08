@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
   "agentsAndConversations": "Assistants and Conversations",
   "backToBottom": "Back to bottom",
+  "chatList": {
+    "longMessageDetail": "View Details"
+  },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
