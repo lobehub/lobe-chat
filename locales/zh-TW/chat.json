@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，讓我們開始對話吧！",
   "agentsAndConversations": "助理與對話",
   "backToBottom": "返回底部",
+  "chatList": {
+    "longMessageDetail": "查看詳情"
+  },
   "clearCurrentMessages": "清空當前對話",
   "confirmClearCurrentMessages": "即將清空當前對話，清空後將無法找回，請確認你的操作",
   "confirmRemoveSessionItemAlert": "即將刪除該助手，刪除後將無法找回，請確認你的操作",

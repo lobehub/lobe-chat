@@ -14,5 +14,6 @@
   "emptyArtifactList": "La lista degli Artefatti attuale è vuota, si prega di utilizzare i plugin necessari durante la sessione e poi controllare di nuovo",
   "emptyKnowledgeList": "L'elenco delle conoscenze attuale è vuoto. Si prega di attivare il database delle conoscenze durante la conversazione per visualizzarlo.",
   "files": "File",
+  "messageDetail": "Dettagli del messaggio",
   "title": "Finestra di espansione"
 }

@@ -8,6 +8,9 @@ export default {
   agentDefaultMessageWithoutEdit: '你好，我是 **{{name}}**，让我们开始对话吧！',
   agentsAndConversations: '助手与会话',
   backToBottom: '跳转至当前',
+  chatList: {
+    longMessageDetail: '查看详情',
+  },
   clearCurrentMessages: '清空当前会话消息',
   confirmClearCurrentMessages: '即将清空当前会话消息，清空后将无法找回，请确认你的操作',
   confirmRemoveSessionItemAlert: '即将删除该助手，删除后该将无法找回，请确认你的操作',
