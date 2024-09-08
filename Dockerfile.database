@@ -220,6 +220,8 @@ CMD \
             "$protocol $host $port" \
         > "/etc/proxychains/proxychains.conf"; \
     fi; \
+    # Fix DNS resolving issue in Docker Compose
+    sed -i '/ndots:0/d' "/etc/resolv.conf"; \
     # Run migration
     node "/app/docker.cjs"; \
     if [ "$?" -eq "0" ]; then \
