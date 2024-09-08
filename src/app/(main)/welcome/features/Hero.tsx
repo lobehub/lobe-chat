@@ -45,7 +45,7 @@ const Hero = memo(() => {
         justify={'center'}
         wrap={'wrap'}
       >
-        <strong style={{ fontSize: 'min(56px, 8vw)' }}>${BRANDING_NAME}</strong>
+        <strong style={{ fontSize: 'min(56px, 8vw)' }}>{BRANDING_NAME}</strong>
         <span>{t('slogan.title')}</span>
       </Flexbox>
       <Flexbox
