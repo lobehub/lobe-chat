@@ -5,29 +5,40 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
+import { convertAlphaToSolid } from '@/utils/colorUtils';
 
-const useStyles = createStyles(({ css, token }) => ({
+const useStyles = createStyles(({ css, token, isDarkMode }, displayMode: 'chat' | 'docs') => ({
   mask: css`
     position: absolute;
     inset-block: 0 0;
 
     width: 100%;
 
-    background: linear-gradient(0deg, ${token.colorBgContainer} 0%, transparent 100%);
+    background: linear-gradient(
+      0deg,
+      ${displayMode === 'chat'
+          ? isDarkMode
+            ? convertAlphaToSolid(token.colorFillSecondary, token.colorBgContainer)
+            : token.colorBgContainer
+          : token.colorBgLayout}
+        0%,
+      transparent 50%
+    );
   `,
 }));
 
 interface ContentPreviewProps {
   content: string;
+  displayMode: 'chat' | 'docs';
   id: string;
 }
 
-const ContentPreview = ({ content, id }: ContentPreviewProps) => {
+const ContentPreview = ({ content, id, displayMode }: ContentPreviewProps) => {
   const { t } = useTranslation('chat');
 
   const [openMessageDetail] = useChatStore((s) => [s.openMessageDetail]);
 
-  const { styles } = useStyles();
+  const { styles } = useStyles(displayMode);
   return (
     <Flexbox>
       <Flexbox style={{ position: 'relative' }}>

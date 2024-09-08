@@ -127,9 +127,9 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
       if (renderMessagesExtra?.[item.role]) RenderFunction = markdownCustomRenders[item.role];
       if (!RenderFunction) return dom;
 
-      return <RenderFunction dom={dom} id={id} text={text} />;
+      return <RenderFunction displayMode={type} dom={dom} id={id} text={text} />;
     },
-    [item?.role],
+    [item?.role, type],
   );
 
   const error = useErrorContent(item?.error);
