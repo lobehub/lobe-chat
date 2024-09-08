@@ -14,5 +14,6 @@
   "emptyArtifactList": "Obecna lista Artefaktów jest pusta. Proszę użyć wtyczek w trakcie sesji, a następnie sprawdzić ponownie.",
   "emptyKnowledgeList": "Aktualna lista wiedzy jest pusta. Proszę otworzyć bazę wiedzy w trakcie rozmowy, aby ją przeglądać.",
   "files": "Pliki",
+  "messageDetail": "Szczegóły wiadomości",
   "title": "Okno rozszerzenia"
 }
