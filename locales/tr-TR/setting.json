@@ -12,7 +12,6 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Anonim kullanım verilerini göndererek LobeChat'in genel kullanıcı deneyimini iyileştirmemize yardımcı olabilirsiniz",
       "title": "Anonim Kullanım Verileri Gönder"
     },
     "title": "Analitik"
@@ -70,11 +69,9 @@
           "title": "Model Görüntü Adı"
         },
         "files": {
-          "extra": "Mevcut LobeChat dosya yükleme uygulaması sadece bir hile çözümüdür, tam dosya yükleme yeteneği için gelecek uygulamaları bekleyin",
           "title": "Dosya Yükleme Desteği"
         },
         "functionCall": {
-          "extra": "Bu yapılandırma yalnızca LobeChat'teki işlev çağrısı yeteneğini etkinleştirir, işlev çağrısının desteklenip desteklenmediği tamamen modelin kendisine bağlıdır, bu modelin işlev çağrısı yeteneğini test etmek size kalmıştır",
           "title": "Fonksiyon Çağrısını Destekle"
         },
         "id": {

@@ -12,7 +12,6 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Door te kiezen om telemetrische gegevens te verzenden, kun je ons helpen om de algehele gebruikerservaring van LobeChat te verbeteren",
       "title": "Anonieme gebruiksgegevens verzenden"
     },
     "title": "Analytics"
@@ -70,11 +69,9 @@
           "title": "Model weergavenaam"
         },
         "files": {
-          "extra": "Currently, the file upload implementation in LobeChat is just a temporary solution and is for self-exploration only. Please wait for the full file upload capability in the future.",
           "title": "Ondersteuning voor het uploaden van bestanden"
         },
         "functionCall": {
-          "extra": "Deze configuratie schakelt alleen de functieaanroepmogelijkheid in LobeChat in. Of functieaanroepen worden ondersteund, hangt volledig af van het model zelf. Test zelf de beschikbaarheid van functieaanroepen van dit model.",
           "title": "Ondersteuningsfunctie Oproep"
         },
         "id": {

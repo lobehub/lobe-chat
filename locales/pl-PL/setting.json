@@ -12,7 +12,6 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Poprzez wybór wysyłania danych telemetrycznych możesz pomóc nam poprawić ogólny użytkowy interfejs LobeChat",
       "title": "Wysyłanie anonimowych danych użytkowych"
     },
     "title": "Analiza danych"
@@ -70,11 +69,9 @@
           "title": "Nazwa wyświetlana modelu"
         },
         "files": {
-          "extra": "Obecna implementacja przesyłania plików w LobeChat to tylko tymczasowe rozwiązanie, przeznaczone wyłącznie do własnego użytku. Pełna funkcjonalność przesyłania plików będzie dostępna w przyszłości",
           "title": "Obsługa przesyłania plików"
         },
         "functionCall": {
-          "extra": "Ta konfiguracja aktywuje tylko możliwość wywoływania funkcji w LobeChat. Możliwość obsługi wywołań funkcji zależy wyłącznie od samego modelu. Proszę przetestować dostępność wywołań funkcji tego modelu",
           "title": "Obsługa wywołań funkcji"
         },
         "id": {

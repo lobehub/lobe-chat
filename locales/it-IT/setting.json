@@ -12,7 +12,6 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Attivando l'invio dei dati di telemetria, ci aiuti a migliorare complessivamente l'esperienza utente di LobeChat",
       "title": "Invio dati anonimi"
     },
     "title": "Analisi"
@@ -70,11 +69,9 @@
           "title": "Nome di visualizzazione del modello"
         },
         "files": {
-          "extra": "L'attuale implementazione del caricamento dei file in LobeChat è solo un hack temporaneo, da utilizzare a proprio rischio. Per un'implementazione completa del caricamento dei file, attendere futuri aggiornamenti.",
           "title": "Supporto per il caricamento dei file"
         },
         "functionCall": {
-          "extra": "Questa configurazione abiliterà solo la capacità di chiamata di funzione in LobeChat. La reale disponibilità del supporto alle chiamate di funzione dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",
           "title": "Supporto per la chiamata di funzione"
         },
         "id": {
