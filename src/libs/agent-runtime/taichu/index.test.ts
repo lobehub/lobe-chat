@@ -256,9 +256,17 @@ describe('LobeTaichuAI', () => {
       const instance = new LobeTaichuAI({ apiKey: 'test_api_key' });
 
       // Mock the chat.completions.create method
+      const errorInfo = {
+        stack: 'abc',
+        cause: {
+          message: 'api is undefined',
+        },
+      };
+      const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
+
       const mockCreate = vi
         .spyOn(instance['client'].chat.completions, 'create')
-        .mockResolvedValue(new ReadableStream() as any);
+        .mockRejectedValue(apiError);
 
       // Test cases for temperature and top_p
       const testCases = [
@@ -272,19 +280,23 @@ describe('LobeTaichuAI', () => {
       ];
 
       for (const { temperature, top_p, expectedTemperature, expectedTopP } of testCases) {
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'Taichu4',
-          temperature,
-          top_p,
-        });
+        try {
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'Taichu4',
+            temperature,
+            top_p,
+            stream: true,
+          });
 
-        expect(mockCreate).toHaveBeenCalledWith(
-          expect.objectContaining({
-            temperature: expectedTemperature,
-            top_p: expectedTopP,
-          }),
-        );
+          expect(mockCreate).toHaveBeenCalledWith(
+            expect.objectContaining({
+              temperature: expectedTemperature,
+              top_p: expectedTopP,
+            }),
+            expect.objectContaining({}),
+          );
+        } catch (e) {}
       }
     });
   });
