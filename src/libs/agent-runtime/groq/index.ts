@@ -14,9 +14,10 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
       const { temperature, ...restPayload } = payload;
       return {
         ...restPayload,
-        temperature: temperature <= 0 ? undefined : temperature,
         // disable stream for tools due to groq dont support
         stream: !payload.tools,
+
+        temperature: temperature <= 0 ? undefined : temperature,
       } as any;
     },
   },
