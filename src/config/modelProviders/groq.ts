@@ -57,7 +57,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Gemma2 9B',
+      displayName: 'Gemma 2 9B',
       enabled: true,
       functionCall: true,
       id: 'gemma2-9b-it',
