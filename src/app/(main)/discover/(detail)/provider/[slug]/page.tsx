@@ -2,10 +2,12 @@ import { notFound } from 'next/navigation';
 import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
+import { CustomMDX } from '@/components/mdx';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 import { discoverService } from '@/services/discover';
+import { docsService } from '@/services/docs';
 import { isMobileDevice } from '@/utils/responsive';
 
 import DetailLayout from '../../features/DetailLayout';
@@ -55,6 +57,8 @@ const Page = async ({ params, searchParams }: Props) => {
   const data = await discoverService.getProviderById(locale, identifier);
   if (!data) return notFound();
 
+  const doc = await docsService.getDocByPath(locale, `usage/providers/${identifier}`);
+
   const modelData = await discoverService.getModelByIds(locale, data.models);
 
   const { meta, createdAt, models } = data;
@@ -66,7 +70,7 @@ const Page = async ({ params, searchParams }: Props) => {
       tags: models || [],
     },
     date: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
-    description: meta.description || t('discover.providers.description'),
+    description: meta.description || doc?.description || t('discover.providers.description'),
     title: [meta.title, t('discover.providers.title')].join(' · '),
     url: urlJoin('/discover/provider', identifier),
   });
@@ -83,6 +87,7 @@ const Page = async ({ params, searchParams }: Props) => {
         /* ↑ cloud slot ↑ */
       >
         <ModelList data={modelData} identifier={identifier} />
+        {doc && <CustomMDX mobile={mobile} source={doc.content} />}
       </DetailLayout>
     </>
   );

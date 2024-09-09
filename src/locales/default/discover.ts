@@ -176,6 +176,7 @@ export default {
     config: '配置服务商',
     list: '模型服务商列表',
     more: '更多',
+    showAllModels: '显示所有模型',
     suggestions: '相关服务商',
     supportedModels: '支持模型',
   },

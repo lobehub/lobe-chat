@@ -1,12 +1,13 @@
 'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
-import { Divider } from 'antd';
+import { Button, Divider } from 'antd';
 import { useTheme } from 'antd-style';
 import { Brain } from 'lucide-react';
 import Link from 'next/link';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { DiscoverModelItem } from '@/types/discover';
@@ -14,14 +15,19 @@ import { DiscoverModelItem } from '@/types/discover';
 import HighlightBlock from '../../../../features/HighlightBlock';
 import ModelItem from './ModelItem';
 
+const DEFAULT_LENGTH = 4;
+
 interface ModelListProps {
   data: DiscoverModelItem[];
   identifier: string;
 }
 
 const ModelList = memo<ModelListProps>(({ data, identifier }) => {
+  const [showAll, setShowAll] = useState(false);
   const { t } = useTranslation('discover');
   const theme = useTheme();
+
+  const list = showAll ? data : data.slice(0, DEFAULT_LENGTH);
 
   return (
     <HighlightBlock
@@ -31,7 +37,7 @@ const ModelList = memo<ModelListProps>(({ data, identifier }) => {
       style={{ background: theme.colorBgContainer }}
       title={t('providers.supportedModels')}
     >
-      {data.map((item, index) => (
+      {list.map((item, index) => (
         <>
           <Link href={urlJoin('/discover/model', item.identifier)} key={item.identifier}>
             <ModelItem {...item} />
@@ -39,6 +45,11 @@ const ModelList = memo<ModelListProps>(({ data, identifier }) => {
           {index < data.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
         </>
       ))}
+      {data.length > DEFAULT_LENGTH && !showAll && (
+        <Flexbox padding={16}>
+          <Button onClick={() => setShowAll(true)}>{t('providers.showAllModels')}</Button>
+        </Flexbox>
+      )}
     </HighlightBlock>
   );
 });
