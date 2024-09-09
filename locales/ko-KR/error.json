@@ -115,7 +115,7 @@
   },
   "upload": {
     "desc": "상세 내용: {{detail}}",
-    "fileOnlySupportInServerMode": "현재 배포 모드에서는 이미지 파일이 아닌 파일 업로드를 지원하지 않습니다. {{ext}} 형식을 업로드하려면 서버 데이터베이스 배포로 전환하거나 LobeChat Cloud 서비스를 사용하세요.",
+    "fileOnlySupportInServerMode": "현재 배포 모드에서는 이미지 파일이 아닌 파일 업로드를 지원하지 않습니다. {{ext}} 형식을 업로드하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 사용하세요.",
     "networkError": "네트워크가 정상인지 확인하고 파일 저장 서비스의 교차 출처 구성도 올바른지 확인하세요.",
     "title": "파일 업로드 실패, 네트워크 연결을 확인하거나 나중에 다시 시도해주세요",
     "unknownError": "오류 원인: {{reason}}",

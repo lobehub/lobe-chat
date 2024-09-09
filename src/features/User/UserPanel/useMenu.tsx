@@ -22,6 +22,7 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import {
   DISCORD,
   DOCUMENTS_REFER_URL,
@@ -179,7 +180,7 @@ export const useMenu = () => {
       key: 'cloud',
       label: (
         <Link href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`} target={'_blank'}>
-          {t('userPanel.cloud', { name: 'LobeChat Cloud' })}
+          {t('userPanel.cloud', { name: LOBE_CHAT_CLOUD })}
         </Link>
       ),
     },

@@ -45,7 +45,7 @@ export default {
     allFiles: '所有文件',
     allKnowledgeBases: '所有知识库',
     disabled:
-      '当前部署模式不支持知识库对话，如需使用，请切换到服务端数据库部署或使用 LobeChat Cloud 服务',
+      '当前部署模式不支持知识库对话，如需使用，请切换到服务端数据库部署或使用 {{cloud}} 服务',
     library: {
       action: {
         add: '添加',

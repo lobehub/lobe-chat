@@ -18,6 +18,7 @@ import SessionSearchBar from '../../features/SessionSearchBar';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
+    color: ${token.colorText};
     fill: ${token.colorText};
   `,
   top: css`
