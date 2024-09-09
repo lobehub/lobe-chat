@@ -39,7 +39,7 @@
       "title": "AWS 비밀 액세스 키"
     },
     "sessionToken": {
-      "desc": "Power User Access를 사용하는 경우 AWS 세션 토큰을 입력하세요.",
+      "desc": "임시 자격 증명이나 IAM 역할을 사용하는 경우, AWS 세션 토큰을 입력하세요.",
       "placeholder": "AWS 세션 토큰",
       "title": "AWS 세션 토큰 (선택 사항)"
     },

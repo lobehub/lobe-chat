@@ -5,7 +5,6 @@ import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
   BedrockProviderCard,
-  GoogleProviderCard,
   GroqProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
@@ -80,8 +79,6 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
-
-    GOOGLE_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -115,14 +112,7 @@ export const getServerGlobalConfig = () => {
         }),
       },
       deepseek: { enabled: ENABLED_DEEPSEEK },
-      google: {
-        enabled: ENABLED_GOOGLE,
-        enabledModels: extractEnabledModels(GOOGLE_MODEL_LIST),
-        serverModelCards: transformToChatModelCards({
-          defaultChatModels: GoogleProviderCard.chatModels,
-          modelString: GOOGLE_MODEL_LIST,
-        }),
-      },
+      google: { enabled: ENABLED_GOOGLE },
       groq: {
         enabled: ENABLED_GROQ,
         enabledModels: extractEnabledModels(GROQ_MODEL_LIST),

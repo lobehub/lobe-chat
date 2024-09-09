@@ -39,9 +39,9 @@
       "title": "Chiave di accesso segreta AWS"
     },
     "sessionToken": {
-      "desc": "Se stai utilizzando l'accesso Power User, inserisci il tuo token di sessione AWS",
-      "placeholder": "Token di sessione AWS",
-      "title": "Token di sessione AWS (opzionale)"
+      "desc": "Se stai utilizzando credenziali temporanee o un ruolo IAM, inserisci il tuo AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (opzionale)"
     },
     "title": "Bedrock",
     "unlock": {

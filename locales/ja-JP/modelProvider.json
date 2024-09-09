@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "Power User Accessを使用している場合は、AWSセッショントークンを入力してください。",
-      "placeholder": "AWSセッショントークン",
-      "title": "AWSセッショントークン（オプション）"
+      "desc": "一時的な認証情報または IAM ロールを使用している場合は、AWS セッショントークンを入力してください。",
+      "placeholder": "AWS セッショントークン",
+      "title": "AWS セッショントークン（オプション）"
     },
     "title": "Bedrock",
     "unlock": {

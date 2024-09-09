@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "Als je gebruikmaakt van Power User Access, voer dan je AWS Session Token in",
-      "placeholder": "AWS Session Token",
-      "title": "AWS Session Token (optioneel)"
+      "desc": "Als je tijdelijke referenties of een IAM-rol gebruikt, voer dan je AWS-sessie-token in.",
+      "placeholder": "AWS-sessie-token",
+      "title": "AWS-sessie-token (optioneel)"
     },
     "title": "Bedrock",
     "unlock": {

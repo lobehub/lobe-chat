@@ -39,7 +39,7 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "If you are using Power User Access, please enter your AWS Session Token.",
+      "desc": "If you are using temporary credentials or an IAM role, please enter your AWS Session Token.",
       "placeholder": "AWS Session Token",
       "title": "AWS Session Token (optional)"
     },
