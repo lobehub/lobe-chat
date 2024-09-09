@@ -29,6 +29,7 @@ export enum ModelProvider {
   Bedrock = 'bedrock',
   DeepSeek = 'deepseek',
   FireworksAI = 'fireworksai',
+  Github = 'github',
   Google = 'google',
   Groq = 'groq',
   Minimax = 'minimax',

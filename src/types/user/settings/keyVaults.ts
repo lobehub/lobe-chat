@@ -24,6 +24,7 @@ export interface UserKeyVaults {
   bedrock?: AWSBedrockKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
+  github?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
   lobehub?: any;
