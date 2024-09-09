@@ -1,6 +1,8 @@
 import { OpenAI } from 'openai';
 import { describe, expect, it } from 'vitest';
 
+import { imageUrlToBase64 } from '@/utils/imageToBase64';
+
 import { OpenAIChatMessage, UserMessageContentPart } from '../types/chat';
 import {
   buildAnthropicBlock,
@@ -10,16 +12,17 @@ import {
 } from './anthropicHelpers';
 import { parseDataUri } from './uriParser';
 
-describe('anthropicHelpers', () => {
-  // Mock the parseDataUri function since it's an implementation detail
-  vi.mock('./uriParser', () => ({
-    parseDataUri: vi.fn().mockReturnValue({
-      mimeType: 'image/jpeg',
-      base64: 'base64EncodedString',
-      type: 'base64',
-    }),
-  }));
+// Mock the parseDataUri function since it's an implementation detail
+vi.mock('./uriParser', () => ({
+  parseDataUri: vi.fn().mockReturnValue({
+    mimeType: 'image/jpeg',
+    base64: 'base64EncodedString',
+    type: 'base64',
+  }),
+}));
+vi.mock('@/utils/imageToBase64');
 
+describe('anthropicHelpers', () => {
   describe('buildAnthropicBlock', () => {
     it('should return the content as is for text type', async () => {
       const content: UserMessageContentPart = { type: 'text', text: 'Hello!' };
@@ -42,6 +45,74 @@ describe('anthropicHelpers', () => {
         },
         type: 'image',
       });
+    });
+
+    it('should transform a regular image URL into an Anthropic.ImageBlockParam', async () => {
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        mimeType: 'image/png',
+        base64: null,
+        type: 'url',
+      });
+      vi.mocked(imageUrlToBase64).mockResolvedValue('convertedBase64String');
+
+      const content = {
+        type: 'image_url',
+        image_url: { url: 'https://example.com/image.png' },
+      } as const;
+
+      const result = await buildAnthropicBlock(content);
+
+      expect(parseDataUri).toHaveBeenCalledWith(content.image_url.url);
+      expect(imageUrlToBase64).toHaveBeenCalledWith(content.image_url.url);
+      expect(result).toEqual({
+        source: {
+          data: 'convertedBase64String',
+          media_type: 'image/png',
+          type: 'base64',
+        },
+        type: 'image',
+      });
+    });
+
+    it('should use default media_type for URL images when mimeType is not provided', async () => {
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        mimeType: null,
+        base64: null,
+        type: 'url',
+      });
+      vi.mocked(imageUrlToBase64).mockResolvedValue('convertedBase64String');
+
+      const content = {
+        type: 'image_url',
+        image_url: { url: 'https://example.com/image' },
+      } as const;
+
+      const result = await buildAnthropicBlock(content);
+
+      expect(result).toEqual({
+        source: {
+          data: 'convertedBase64String',
+          media_type: 'image/png',
+          type: 'base64',
+        },
+        type: 'image',
+      });
+    });
+
+    it('should throw an error for invalid image URLs', async () => {
+      vi.mocked(parseDataUri).mockReturnValueOnce({
+        mimeType: null,
+        base64: null,
+        // @ts-ignore
+        type: 'invalid',
+      });
+
+      const content = {
+        type: 'image_url',
+        image_url: { url: 'invalid-url' },
+      } as const;
+
+      await expect(buildAnthropicBlock(content)).rejects.toThrow('Invalid image URL: invalid-url');
     });
   });
 
