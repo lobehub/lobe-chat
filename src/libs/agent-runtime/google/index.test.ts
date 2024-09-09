@@ -309,7 +309,7 @@ describe('LobeGoogleAI', () => {
         const mockBase64 = 'mockBase64Data';
 
         // Mock the imageUrlToBase64 function
-        vi.spyOn(imageToBase64Module, 'imageUrlToBase64').mockResolvedValue(mockBase64);
+        vi.spyOn(imageToBase64Module, 'imageUrlToBase64').mockResolvedValueOnce(mockBase64);
 
         const result = await instance['convertContentToGooglePart']({
           type: 'image_url',
