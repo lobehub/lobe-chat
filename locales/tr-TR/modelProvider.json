@@ -39,7 +39,7 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "Geçici kimlik bilgileri veya IAM rolü kullanıyorsanız, AWS Oturum Tokeninizi girin",
+      "desc": "AWS SSO/STS kullanıyorsanız, lütfen AWS Oturum Tokeninizi girin",
       "placeholder": "AWS Oturum Tokeni",
       "title": "AWS Oturum Tokeni (isteğe bağlı)"
     },

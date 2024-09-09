@@ -39,7 +39,7 @@
       "title": "Chiave di accesso segreta AWS"
     },
     "sessionToken": {
-      "desc": "Se stai utilizzando credenziali temporanee o un ruolo IAM, inserisci il tuo AWS Session Token",
+      "desc": "Se stai utilizzando AWS SSO/STS, inserisci il tuo AWS Session Token",
       "placeholder": "AWS Session Token",
       "title": "AWS Session Token (opzionale)"
     },

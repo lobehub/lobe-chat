@@ -39,7 +39,7 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "Jeśli używasz tymczasowych poświadczeń lub roli IAM, wprowadź swój token sesji AWS",
+      "desc": "Jeśli korzystasz z AWS SSO/STS, wprowadź swój token sesji AWS",
       "placeholder": "Token sesji AWS",
       "title": "Token sesji AWS (opcjonalnie)"
     },
