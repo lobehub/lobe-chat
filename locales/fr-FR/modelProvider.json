@@ -39,9 +39,9 @@
       "title": "Clé d'accès secrète AWS"
     },
     "sessionToken": {
-      "desc": "Entrez le jeton de session AWS",
+      "desc": "Si vous utilisez l'accès Power User, veuillez entrer votre jeton de session AWS",
       "placeholder": "Jeton de session AWS",
-      "title": "Jeton de session AWS"
+      "title": "Jeton de session AWS (facultatif)"
     },
     "title": "Bedrock",
     "unlock": {

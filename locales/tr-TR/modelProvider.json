@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "AWS Oturum Belgesi girin",
-      "placeholder": "AWS Oturum Belgesi",
-      "title": "AWS Oturum Belgesi"
+      "desc": "Eğer Power User Access kullanıyorsanız, lütfen AWS Oturum Token'ınızı girin",
+      "placeholder": "AWS Oturum Token'ı",
+      "title": "AWS Oturum Token'ı (isteğe bağlı)"
     },
     "title": "Bedrock",
     "unlock": {

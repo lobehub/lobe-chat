@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "Въведете AWS Session Token",
+      "desc": "Ако използвате Power User Access, моля, въведете вашия AWS Session Token",
       "placeholder": "AWS Session Token",
-      "title": "AWS Session Token"
+      "title": "AWS Session Token (по избор)"
     },
     "title": "Bedrock",
     "unlock": {

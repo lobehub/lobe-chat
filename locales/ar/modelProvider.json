@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "أدخل رمز جلسة AWS",
+      "desc": "إذا كنت تستخدم وصول المستخدم المتقدم، يرجى إدخال رمز جلسة AWS الخاص بك",
       "placeholder": "رمز جلسة AWS",
-      "title": "رمز جلسة AWS"
+      "title": "رمز جلسة AWS (اختياري)"
     },
     "title": "Bedrock",
     "unlock": {

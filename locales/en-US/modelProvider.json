@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "Enter the AWS Session Token",
+      "desc": "If you are using Power User Access, please enter your AWS Session Token.",
       "placeholder": "AWS Session Token",
-      "title": "AWS Session Token"
+      "title": "AWS Session Token (optional)"
     },
     "title": "Bedrock",
     "unlock": {

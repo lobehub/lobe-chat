@@ -39,9 +39,9 @@ export default {
       title: 'AWS Secret Access Key',
     },
     sessionToken: {
-      desc: '填入 AWS Session Token',
+      desc: '如果你使用的是 Power User Access，请输入你的 AWS Session Token',
       placeholder: 'AWS Session Token',
-      title: 'AWS Session Token',
+      title: 'AWS Session Token (可选)',
     },
     title: 'Bedrock',
     unlock: {

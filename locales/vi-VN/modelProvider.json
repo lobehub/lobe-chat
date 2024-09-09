@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "Nhập AWS Session Token",
+      "desc": "Nếu bạn đang sử dụng quyền truy cập Power User, hãy nhập AWS Session Token của bạn",
       "placeholder": "AWS Session Token",
-      "title": "AWS Session Token"
+      "title": "AWS Session Token (tùy chọn)"
     },
     "title": "Bedrock",
     "unlock": {

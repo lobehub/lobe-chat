@@ -39,9 +39,9 @@
       "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "填入 AWS 會話令牌",
-      "placeholder": "AWS 會話令牌",
-      "title": "AWS 會話令牌"
+      "desc": "如果你使用的是 Power User Access，請輸入你的 AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (可選)"
     },
     "title": "Bedrock",
     "unlock": {
