@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { domToJpeg, domToPng, domToSvg, domToWebp } from 'modern-screenshot';
 import { useCallback, useState } from 'react';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
@@ -42,7 +43,7 @@ export const useScreenshot = (imageType: ImageType) => {
         scale: 2,
       });
       const link = document.createElement('a');
-      link.download = `LobeChat_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
+      link.download = `${BRANDING_NAME}_${title}_${dayjs().format('YYYY-MM-DD')}.${imageType}`;
       link.href = dataUrl;
       link.click();
       setLoading(false);

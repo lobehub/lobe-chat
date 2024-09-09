@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Door te kiezen om telemetrische gegevens te verzenden, kun je ons helpen om de algehele gebruikerservaring van LobeChat te verbeteren",
+      "desc": "Door te kiezen voor het verzenden van telemetriegegevens, kun je ons helpen de algehele gebruikerservaring van {{appName}} te verbeteren.",
       "title": "Anonieme gebruiksgegevens verzenden"
     },
     "title": "Analytics"
@@ -70,11 +70,11 @@
           "title": "Model weergavenaam"
         },
         "files": {
-          "extra": "Currently, the file upload implementation in LobeChat is just a temporary solution and is for self-exploration only. Please wait for the full file upload capability in the future.",
+          "extra": "De huidige implementatie van het uploaden van bestanden is slechts een hackoplossing en is alleen bedoeld voor eigen gebruik. Volledige bestandsuploadmogelijkheden zijn in de toekomst te verwachten.",
           "title": "Ondersteuning voor het uploaden van bestanden"
         },
         "functionCall": {
-          "extra": "Deze configuratie schakelt alleen de functieaanroepmogelijkheid in LobeChat in. Of functieaanroepen worden ondersteund, hangt volledig af van het model zelf. Test zelf de beschikbaarheid van functieaanroepen van dit model.",
+          "extra": "Deze configuratie zal alleen de functie-aanroepmogelijkheden in de applicatie inschakelen. Of functie-aanroepen worden ondersteund, hangt volledig af van het model zelf. Test de beschikbaarheid van functie-aanroepen van dit model zelf.",
           "title": "Ondersteuningsfunctie Oproep"
         },
         "id": {
@@ -88,7 +88,7 @@
           "unlimited": "onbeperkt"
         },
         "vision": {
-          "extra": "Deze configuratie schakelt alleen de configuratie voor het uploaden van afbeeldingen in LobeChat in. Of herkenning wordt ondersteund, hangt volledig af van het model zelf. Test zelf de beschikbaarheid van visuele herkenning in dit model.",
+          "extra": "Deze configuratie zal alleen de mogelijkheid voor het uploaden van afbeeldingen in de applicatie inschakelen. Of herkenning wordt ondersteund, hangt volledig af van het model zelf. Test de beschikbaarheid van visuele herkenning van dit model zelf.",
           "title": "Ondersteuning van visuele herkenning"
         }
       }

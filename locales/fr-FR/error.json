@@ -115,7 +115,7 @@
   },
   "upload": {
     "desc": "Détails : {{detail}}",
-    "fileOnlySupportInServerMode": "Le mode de déploiement actuel ne prend pas en charge le téléchargement de fichiers non image. Pour télécharger un format {{ext}}, veuillez passer à un déploiement de base de données côté serveur ou utiliser le service LobeChat Cloud.",
+    "fileOnlySupportInServerMode": "Le mode de déploiement actuel ne prend pas en charge le téléchargement de fichiers non image. Pour télécharger un format {{ext}}, veuillez passer à un déploiement de base de données côté serveur ou utiliser le service {{cloud}}.",
     "networkError": "Veuillez vérifier si votre réseau fonctionne correctement et assurez-vous que la configuration CORS du service de stockage de fichiers est correcte.",
     "title": "Échec de l'envoi du fichier, veuillez vérifier votre connexion réseau ou réessayer plus tard",
     "unknownError": "Raison de l'erreur : {{reason}}",

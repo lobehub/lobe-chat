@@ -64,7 +64,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         max_tokens: max_tokens || 4096,
         messages: buildAnthropicMessages(user_messages),
         system: system_message?.content as string,
-        temperature: temperature,
+        temperature: temperature / 2,
         tools: buildAnthropicTools(tools),
         top_p: top_p,
       }),

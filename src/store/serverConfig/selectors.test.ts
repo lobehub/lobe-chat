@@ -26,6 +26,8 @@ describe('featureFlagsSelectors', () => {
       showLLM: false,
       showCloudPromotion: false,
       showOpenAIApiKey: true,
+      hideDocs: false,
+      hideGitHub: false,
       showOpenAIProxyUrl: true,
       enableCheckUpdates: true,
       showWelcomeSuggest: true,

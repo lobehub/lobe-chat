@@ -96,7 +96,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       messages: buildAnthropicMessages(user_messages),
       model,
       system: system_message?.content as string,
-      temperature,
+      temperature: 
+        payload.temperature !== undefined 
+        ? temperature / 2
+        : undefined,
       tools: buildAnthropicTools(tools),
       top_p,
     } satisfies Anthropic.MessageCreateParams;

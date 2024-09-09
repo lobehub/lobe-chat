@@ -1,18 +1,18 @@
 {
   "chat": {
-    "description": "LobeChat zapewnia najlepsze doświadczenie użytkowania ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "LobeChat: narzędzie do poprawy efektywności osobistej LLM, dając sobie bardziej inteligentny umysł"
+    "description": "{{appName}} oferuje najlepsze doświadczenia z ChatGPT, Claude, Gemini, OLLaMA WebUI",
+    "title": "{{appName}}: osobiste narzędzie AI, które daje ci mądrzejszy umysł"
   },
   "market": {
-    "description": "Tworzenie treści, copywriting, pytania i odpowiedzi, generowanie obrazów, generowanie wideo, generowanie głosu, inteligentny agent, automatyzacja workflowów - dostosuj swojego własnego asystenta AI / GPTs / OLLaMA",
+    "description": "Tworzenie treści, copywriting, pytania i odpowiedzi, generowanie obrazów, generowanie wideo, generowanie głosu, inteligentni agenci, automatyzacja przepływów pracy, dostosuj swojego osobistego asystenta AI",
     "title": "Rynek asystentów"
   },
   "plugins": {
-    "description": "Wyszukiwanie, generowanie wykresów, akademickie, generowanie obrazów, generowanie wideo, generowanie głosu, automatyzacja workflowów - dostosuj ekskluzywne możliwości narzędzi ToolCall dla ChatGPT / OLLaMA",
+    "description": "Wyszukiwanie, generowanie wykresów, akademickie, generowanie obrazów, generowanie wideo, generowanie głosu, automatyzacja przepływów pracy, dostosuj możliwości wtyczek ToolCall dla ChatGPT / Claude",
     "title": "Rynek wtyczek"
   },
   "welcome": {
-    "description": "LobeChat zapewnia najlepsze doświadczenie użytkowania ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "Witaj w LobeChat: narzędziu do poprawy efektywności osobistej LLM, dając sobie bardziej inteligentny umysł"
+    "description": "{{appName}} oferuje najlepsze doświadczenia z ChatGPT, Claude, Gemini, OLLaMA WebUI",
+    "title": "Witamy w {{appName}}: osobistym narzędziu AI, które daje ci mądrzejszy umysł"
   }
 }
