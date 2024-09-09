@@ -115,7 +115,7 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
-    "fileOnlySupportInServerMode": "Der aktuelle Bereitstellungsmodus unterstützt das Hochladen von Nicht-Bilddateien nicht. Um Dateien im {{ext}}-Format hochzuladen, wechseln Sie bitte zum Serverdatenbank-Bereitstellungsmodus oder verwenden Sie den LobeChat Cloud-Dienst.",
+    "fileOnlySupportInServerMode": "Der aktuelle Bereitstellungsmodus unterstützt das Hochladen von Nicht-Bilddateien nicht. Um Dateien im {{ext}}-Format hochzuladen, wechseln Sie bitte zum Serverdatenbank-Bereitstellungsmodus oder verwenden Sie den {{cloud}}-Dienst.",
     "networkError": "Bitte überprüfen Sie, ob Ihre Internetverbindung stabil ist, und prüfen Sie die Cross-Origin-Konfiguration des Dateispeicherdienstes.",
     "title": "Dateiupload fehlgeschlagen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es später erneut.",
     "unknownError": "Fehlerursache: {{reason}}",
