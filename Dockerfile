@@ -188,7 +188,7 @@ CMD \
             "$protocol $host $port" \
         > "/etc/proxychains/proxychains.conf"; \
     fi; \
-    # Fix DNS resolving issue in Docker Compose
+    # Fix DNS resolving issue in Docker Compose, ref https://github.com/lobehub/lobe-chat/pull/3837
     if [ -f "/etc/resolv.conf" ]; then \
         resolv_conf=$(grep '^nameserver' "/etc/resolv.conf" | awk '{print "nameserver " $2}'); \
         printf "%s\n" \
