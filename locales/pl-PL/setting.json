@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Poprzez wybór wysyłania danych telemetrycznych możesz pomóc nam poprawić ogólny użytkowy interfejs LobeChat",
+      "desc": "Wybierając wysyłanie danych telemetrycznych, możesz pomóc nam poprawić ogólne doświadczenie użytkowników {{appName}}.",
       "title": "Wysyłanie anonimowych danych użytkowych"
     },
     "title": "Analiza danych"
@@ -70,11 +70,11 @@
           "title": "Nazwa wyświetlana modelu"
         },
         "files": {
-          "extra": "Obecna implementacja przesyłania plików w LobeChat to tylko tymczasowe rozwiązanie, przeznaczone wyłącznie do własnego użytku. Pełna funkcjonalność przesyłania plików będzie dostępna w przyszłości",
+          "extra": "Obecna implementacja przesyłania plików to jedynie rozwiązanie typu hack, przeznaczone wyłącznie do samodzielnego testowania. Pełna funkcjonalność przesyłania plików będzie dostępna w późniejszej wersji.",
           "title": "Obsługa przesyłania plików"
         },
         "functionCall": {
-          "extra": "Ta konfiguracja aktywuje tylko możliwość wywoływania funkcji w LobeChat. Możliwość obsługi wywołań funkcji zależy wyłącznie od samego modelu. Proszę przetestować dostępność wywołań funkcji tego modelu",
+          "extra": "Ta konfiguracja włączy jedynie możliwość wywoływania funkcji w aplikacji, a to, czy wywołania funkcji będą wspierane, zależy całkowicie od samego modelu. Proszę samodzielnie przetestować dostępność wywołań funkcji w tym modelu.",
           "title": "Obsługa wywołań funkcji"
         },
         "id": {
@@ -88,7 +88,7 @@
           "unlimited": "Nieograniczony"
         },
         "vision": {
-          "extra": "Ta konfiguracja aktywuje tylko możliwość przesyłania obrazów w LobeChat. Możliwość rozpoznawania zależy wyłącznie od modelu. Proszę przetestować dostępność rozpoznawania wizyjnego tego modelu",
+          "extra": "Ta konfiguracja włączy jedynie możliwość przesyłania obrazów w aplikacji, a to, czy rozpoznawanie będzie wspierane, zależy całkowicie od samego modelu. Proszę samodzielnie przetestować dostępność rozpoznawania wizualnego w tym modelu.",
           "title": "Obsługa rozpoznawania wizyjnego"
         }
       }

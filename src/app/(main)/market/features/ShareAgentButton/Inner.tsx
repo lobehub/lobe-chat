@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { AGENTS_INDEX_GITHUB, imageUrl } from '@/const/url';
 
 const Inner = memo(() => {
@@ -20,7 +21,7 @@ const Inner = memo(() => {
       />
       <h3>
         <Tag color={'cyan'}>{t('guide.func1.tag')}</Tag>
-        <span>{t('guide.func1.title')}</span>
+        <span>{t('guide.func1.title', { appName: BRANDING_NAME })}</span>
       </h3>
       <p>
         <kbd>
