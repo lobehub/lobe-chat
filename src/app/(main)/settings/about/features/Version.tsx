@@ -42,7 +42,7 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
           </Center>
         </Link>
         <Flexbox>
-          <div style={{ fontSize: 18, fontWeight: 'bolder' }}>${BRANDING_NAME}</div>
+          <div style={{ fontSize: 18, fontWeight: 'bolder' }}>{BRANDING_NAME}</div>
           <div>
             <Tag color={theme.colorFillSecondary} style={{ color: theme.colorTextSecondary }}>
               v{CURRENT_VERSION}
