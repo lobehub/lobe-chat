@@ -3,9 +3,26 @@
     "description": "{{appName}} bietet dir das beste Erlebnis mit ChatGPT, Claude, Gemini und OLLaMA WebUI",
     "title": "{{appName}}: Persönliches KI-Effizienzwerkzeug, gib dir selbst ein schlaueres Gehirn"
   },
-  "market": {
-    "description": "Inhaltserstellung, Copywriting, Fragen und Antworten, Bilderzeugung, Videoerzeugung, Spracherzeugung, intelligente Agenten, automatisierte Workflows, passe deinen eigenen KI-Assistenten an",
-    "title": "Assistentenmarkt"
+  "discover": {
+    "assistants": {
+      "description": "Inhaltserstellung, Textverfassung, Fragen und Antworten, Bildgenerierung, Videoerstellung, Sprachsynthese, intelligente Agenten, automatisierte Workflows, passe deinen eigenen AI / GPTs / OLLaMA intelligenten Assistenten an",
+      "title": "KI-Assistenten"
+    },
+    "description": "Inhaltserstellung, Textverfassung, Fragen und Antworten, Bildgenerierung, Videoerstellung, Sprachsynthese, intelligente Agenten, automatisierte Workflows, benutzerdefinierte AI-Anwendungen, passe deine eigene AI-Anwendungsplattform an",
+    "models": {
+      "description": "Entdecke gängige AI-Modelle wie OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
+      "title": "KI-Modelle"
+    },
+    "plugins": {
+      "description": "Entdecken Sie die Möglichkeiten zur Erstellung von Diagrammen, wissenschaftlichen Inhalten, Bildgenerierung, Videoerstellung, Sprachsynthese und automatisierten Workflows, um Ihrem Assistenten eine Vielzahl von Plugin-Funktionen zu integrieren.",
+      "title": "KI-Plugins"
+    },
+    "providers": {
+      "description": "Entdecke führende Modellanbieter wie OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
+      "title": "Anbieter von KI-Modellen"
+    },
+    "search": "Suche",
+    "title": "Entdecken"
   },
   "plugins": {
     "description": "Suche, Diagrammerstellung, akademisch, Bilderzeugung, Videoerzeugung, Spracherzeugung, automatisierte Workflows, passe die ToolCall-Plugin-Funktionen von ChatGPT / Claude an",

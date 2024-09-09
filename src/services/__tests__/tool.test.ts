@@ -19,7 +19,7 @@ beforeEach(() => {
 });
 
 describe('ToolService', () => {
-  describe('getPluginList', () => {
+  describe('getToolList', () => {
     it('should fetch and return the plugin list', async () => {
       // Arrange
       const fakeResponse = { plugins: [{ name: 'TestPlugin' }] };
@@ -31,7 +31,7 @@ describe('ToolService', () => {
       ) as any;
 
       // Act
-      const pluginList = await toolService.getPluginList();
+      const pluginList = await toolService.getToolList('en-US');
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
@@ -46,11 +46,11 @@ describe('ToolService', () => {
       global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
 
       // Act & Assert
-      await expect(toolService.getPluginList()).rejects.toThrow('Network error');
+      await expect(toolService.getToolList('en-US')).rejects.toThrow('Network error');
     });
   });
 
-  describe('getPluginManifest', () => {
+  describe('getToolManifest', () => {
     it('should return manifest', async () => {
       const manifestUrl = 'http://fake-url.com/manifest.json';
 
@@ -98,7 +98,7 @@ describe('ToolService', () => {
         }),
       ) as any;
 
-      const manifest = await toolService.getPluginManifest(manifestUrl);
+      const manifest = await toolService.getToolManifest(manifestUrl);
 
       expect(fetch).toHaveBeenCalledWith(manifestUrl);
       expect(manifest).toEqual(fakeManifest);
@@ -106,7 +106,7 @@ describe('ToolService', () => {
 
     it('should return error on noManifest', async () => {
       try {
-        await toolService.getPluginManifest();
+        await toolService.getToolManifest();
       } catch (e) {
         expect(e).toEqual(new TypeError('noManifest'));
       }
@@ -124,7 +124,7 @@ describe('ToolService', () => {
       ) as any;
 
       try {
-        await toolService.getPluginManifest(manifestUrl);
+        await toolService.getToolManifest(manifestUrl);
       } catch (e) {
         expect(e).toEqual(new TypeError('manifestInvalid'));
       }
@@ -135,7 +135,7 @@ describe('ToolService', () => {
       global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
 
       try {
-        await toolService.getPluginManifest(manifestUrl);
+        await toolService.getToolManifest(manifestUrl);
       } catch (e) {
         expect(e).toEqual(new TypeError('fetchError'));
       }
@@ -156,7 +156,7 @@ describe('ToolService', () => {
       ) as any;
 
       try {
-        await toolService.getPluginManifest(manifestUrl);
+        await toolService.getToolManifest(manifestUrl);
       } catch (e) {
         expect(e).toEqual(new TypeError('urlError'));
       }
@@ -174,7 +174,7 @@ describe('ToolService', () => {
       ) as any;
 
       try {
-        await toolService.getPluginManifest(manifestUrl);
+        await toolService.getToolManifest(manifestUrl);
       } catch (e) {
         expect(e).toEqual(new TypeError('fetchError'));
       }
@@ -214,7 +214,7 @@ describe('ToolService', () => {
           }),
         ) as any;
 
-        const manifest = await toolService.getPluginManifest(manifestUrl);
+        const manifest = await toolService.getToolManifest(manifestUrl);
 
         expect(manifest).toMatchSnapshot();
       });
@@ -252,7 +252,7 @@ describe('ToolService', () => {
         ) as any;
 
         try {
-          await toolService.getPluginManifest(manifestUrl);
+          await toolService.getToolManifest(manifestUrl);
         } catch (e) {
           expect(e).toEqual(new TypeError('openAPIInvalid'));
         }

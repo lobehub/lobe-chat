@@ -3,9 +3,26 @@
     "description": "{{appName}}が提供する最高のChatGPT、Claude、Gemini、OLLaMA WebUIの体験",
     "title": "{{appName}}：個人AI効率ツール、より賢い脳を手に入れよう"
   },
-  "market": {
-    "description": "コンテンツ制作、コピーライティング、Q&A、画像生成、動画生成、音声生成、インテリジェントエージェント、自動化ワークフロー、あなた専用のAIスマートアシスタントをカスタマイズ",
-    "title": "アシスタントマーケット"
+  "discover": {
+    "assistants": {
+      "description": "コンテンツ作成、コピーライティング、Q&A、画像生成、動画生成、音声生成、インテリジェントエージェント、自動化ワークフロー、あなた専用のAI / GPTs / OLLaMAインテリジェントアシスタントをカスタマイズ",
+      "title": "AIアシスタント"
+    },
+    "description": "コンテンツ作成、コピーライティング、Q&A、画像生成、動画生成、音声生成、インテリジェントエージェント、自動化ワークフロー、カスタムAIアプリケーション、あなた専用のAIアプリケーションワークスペースをカスタマイズ",
+    "models": {
+      "description": "主流のAIモデルを探索 OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
+      "title": "AIモデル"
+    },
+    "plugins": {
+      "description": "グラフ生成、学術、画像生成、動画生成、音声生成、自動化ワークフローの検索を行い、あなたのアシスタントに豊富なプラグイン機能を統合します。",
+      "title": "AIプラグイン"
+    },
+    "providers": {
+      "description": "主流のモデルプロバイダーを探索 OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
+      "title": "AIモデルサービスプロバイダー"
+    },
+    "search": "検索",
+    "title": "発見"
   },
   "plugins": {
     "description": "検索、グラフ生成、学術、画像生成、動画生成、音声生成、自動化ワークフロー、ChatGPT / Claude専用のToolCallプラグイン機能をカスタマイズ",

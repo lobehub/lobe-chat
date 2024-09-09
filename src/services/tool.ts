@@ -1,13 +1,16 @@
-import {
-  LobeChatPluginManifest,
-  LobeChatPluginsMarketIndex,
-  pluginManifestSchema,
-} from '@lobehub/chat-plugin-sdk';
+import { LobeChatPluginManifest, pluginManifestSchema } from '@lobehub/chat-plugin-sdk';
+import { cloneDeep, merge } from 'lodash-es';
+import qs from 'query-string';
+import urlJoin from 'url-join';
 
-import { globalHelpers } from '@/store/user/helpers';
+import { appEnv } from '@/config/app';
+import { DEFAULT_DISCOVER_PLUGIN_ITEM } from '@/const/discover';
+import { DiscoverPlugintem } from '@/types/discover';
 import { OpenAIPluginManifest } from '@/types/openai/plugin';
 
 import { API_ENDPOINTS } from './_url';
+
+const revalidate: number = 3600;
 
 class ToolService {
   private _fetchJSON = async <T = any>(url: string, proxy = false): Promise<T> => {
@@ -41,18 +44,36 @@ class ToolService {
 
     return data;
   };
-  /**
-   * get plugin list from store
-   */
-  getPluginList = async (): Promise<LobeChatPluginsMarketIndex> => {
-    const locale = globalHelpers.getCurrentLanguage();
 
-    const res = await fetch(`${API_ENDPOINTS.pluginStore}?locale=${locale}`);
-
-    return res.json();
+  private _formatUrl = (url: string) => {
+    return appEnv && appEnv?.APP_URL ? urlJoin(appEnv.APP_URL!, url) : url;
   };
 
-  getPluginManifest = async (
+  getToolList = async (locale: string): Promise<DiscoverPlugintem[]> => {
+    const res = await fetch(
+      qs.stringifyUrl({
+        query: { locale },
+        url: this._formatUrl(API_ENDPOINTS.pluginStore),
+      }),
+      {
+        next: { revalidate },
+      },
+    );
+
+    const json = await res.json();
+
+    return json.plugins;
+  };
+
+  getToolById = async (locale: string, identifier: string): Promise<DiscoverPlugintem> => {
+    const pluginList = await this.getToolList(locale);
+
+    const plugin = pluginList.find((item) => item.identifier === identifier) as DiscoverPlugintem;
+
+    return merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), plugin);
+  };
+
+  getToolManifest = async (
     url?: string,
     useProxy: boolean = false,
   ): Promise<LobeChatPluginManifest> => {

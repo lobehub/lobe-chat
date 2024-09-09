@@ -9,12 +9,17 @@ import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import { NS, normalizeLocale } from '@/locales/resources';
 import { isDev } from '@/utils/env';
 
-export const translation = async (ns: NS = 'common') => {
+export const getLocale = async (hl?: string) => {
+  if (hl) return normalizeLocale(hl);
+  const cookieStore = cookies();
+  const defaultLang = cookieStore.get(LOBE_LOCALE_COOKIE);
+  return defaultLang?.value || DEFAULT_LANG;
+};
+
+export const translation = async (ns: NS = 'common', hl?: string) => {
   let i18ns = {};
+  const lng = await getLocale(hl);
   try {
-    const cookieStore = cookies();
-    const defaultLang = cookieStore.get(LOBE_LOCALE_COOKIE);
-    const lng = defaultLang?.value || DEFAULT_LANG;
     let filepath = join(process.cwd(), `locales/${normalizeLocale(lng)}/${ns}.json`);
     const isExist = existsSync(filepath);
     if (!isExist)
@@ -29,6 +34,7 @@ export const translation = async (ns: NS = 'common') => {
   }
 
   return {
+    locale: lng,
     t: (key: string, options: { [key: string]: string } = {}) => {
       if (!i18ns) return key;
       let content = get(i18ns, key);

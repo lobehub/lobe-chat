@@ -30,6 +30,7 @@ export const AUTHOR_LIST = {
 class Ld {
   generate({
     image = '/og/cover.png',
+    article,
     url,
     title,
     description,
@@ -38,6 +39,12 @@ class Ld {
       enable: true,
     },
   }: {
+    article?: {
+      author: string[];
+      enable?: boolean;
+      identifier: string;
+      tags?: string[];
+    };
     date?: string;
     description: string;
     image?: string;
@@ -52,6 +59,7 @@ class Ld {
       '@context': 'https://schema.org',
       '@graph': [
         this.genWebSite(),
+        article?.enable && this.genArticle({ ...article, date, description, title, url }),
         webpage?.enable &&
           this.genWebPage({
             ...webpage,
@@ -199,6 +207,55 @@ class Ld {
     };
 
     return baseInfo;
+  }
+
+  genArticle({
+    description,
+    title,
+    url,
+    author,
+    date,
+    tags,
+    identifier,
+  }: {
+    author: string[];
+    date?: string;
+    description: string;
+    identifier: string;
+    tags?: string[];
+    title: string;
+    url: string;
+  }) {
+    const fixedUrl = this.fixUrl(url);
+
+    const dateCreated = date ? new Date(date).toISOString() : LAST_MODIFIED;
+
+    const dateModified = date ? new Date(date).toISOString() : LAST_MODIFIED;
+    const baseInfo: any = {
+      '@type': 'Article',
+      'author': this.getAuthors(author),
+      'creator': author,
+      'dateCreated': dateCreated,
+      'dateModified': dateModified,
+      'datePublished': dateCreated,
+      'description': description,
+      'headline': this.fixTitle(title),
+      'identifier': identifier,
+      'image': {
+        '@id': this.getId(fixedUrl, '#primaryimage'),
+      },
+      'keywords': tags?.join(' ') || 'LobeHub LobeChat',
+      'mainEntityOfPage': fixedUrl,
+      'name': title,
+      'publisher': {
+        '@id': this.getId(OFFICIAL_URL, '#organization'),
+      },
+      'url': fixedUrl,
+    };
+
+    return {
+      ...baseInfo,
+    };
   }
 
   private getId(url: string, id: string) {
