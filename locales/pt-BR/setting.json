@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Ao optar por enviar dados de telemetria, você pode nos ajudar a melhorar a experiência do usuário do LobeChat como um todo",
+      "desc": "Ao escolher enviar dados de telemetria, você pode nos ajudar a melhorar a experiência geral do usuário no {{appName}}",
       "title": "Enviar dados de uso anônimo"
     },
     "title": "Análise de dados"
@@ -70,11 +70,11 @@
           "title": "Nome de Exibição do Modelo"
         },
         "files": {
-          "extra": "A implementação atual de upload de arquivos do LobeChat é apenas uma solução temporária. Aguarde a implementação completa de capacidade de upload de arquivos no futuro.",
+          "extra": "A implementação atual de upload de arquivos é apenas uma solução alternativa, limitada a tentativas pessoais. A capacidade completa de upload de arquivos deve ser aguardada em implementações futuras.",
           "title": "Suporte a Upload de Arquivos"
         },
         "functionCall": {
-          "extra": "Esta configuração ativará apenas a capacidade de chamada de função no LobeChat. A capacidade de suporte à chamada de função depende inteiramente do modelo em si. Por favor, teste a disponibilidade da capacidade de chamada de função deste modelo.",
+          "extra": "Esta configuração ativará apenas a capacidade de chamada de funções dentro do aplicativo; a possibilidade de suporte a chamadas de funções depende totalmente do modelo em si. Por favor, teste a disponibilidade da capacidade de chamada de funções desse modelo.",
           "title": "Suporte a Chamada de Função"
         },
         "id": {
@@ -88,7 +88,7 @@
           "unlimited": "ilimitado"
         },
         "vision": {
-          "extra": "Esta configuração ativará apenas a configuração de upload de imagens no LobeChat. A capacidade de reconhecimento depende inteiramente do modelo em si. Por favor, teste a disponibilidade da capacidade de reconhecimento visual deste modelo.",
+          "extra": "Esta configuração ativará apenas a configuração de upload de imagens dentro do aplicativo; a capacidade de reconhecimento depende totalmente do modelo em si. Por favor, teste a disponibilidade da capacidade de reconhecimento visual desse modelo.",
           "title": "Suporte a Reconhecimento Visual"
         }
       }

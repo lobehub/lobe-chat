@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
   "agentsAndConversations": "Agents et conversations",
   "backToBottom": "Retour en bas",
+  "chatList": {
+    "longMessageDetail": "Voir les détails"
+  },
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",

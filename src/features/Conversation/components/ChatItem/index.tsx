@@ -16,7 +16,12 @@ import { ChatMessage } from '@/types/message';
 
 import ErrorMessageExtra, { useErrorContent } from '../../Error';
 import { renderMessagesExtra } from '../../Extras';
-import { renderBelowMessages, renderMessages, useAvatarsClick } from '../../Messages';
+import {
+  markdownCustomRenders,
+  renderBelowMessages,
+  renderMessages,
+  useAvatarsClick,
+} from '../../Messages';
 import ActionsBar from './ActionsBar';
 import HistoryDivider from './HistoryDivider';
 
@@ -104,7 +109,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const MessageExtra = useCallback(
     ({ data }: { data: ChatMessage }) => {
-      if (!renderMessagesExtra || !item?.role) return;
+      if (!item?.role) return;
       let RenderFunction;
       if (renderMessagesExtra?.[item.role]) RenderFunction = renderMessagesExtra[item.role];
 
@@ -113,6 +118,20 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     },
     [item?.role],
   );
+
+  const markdownCustomRender = useCallback(
+    (dom: ReactNode, { text }: { text: string }) => {
+      if (!item?.role) return dom;
+      let RenderFunction;
+
+      if (renderMessagesExtra?.[item.role]) RenderFunction = markdownCustomRenders[item.role];
+      if (!RenderFunction) return dom;
+
+      return <RenderFunction displayMode={type} dom={dom} id={id} text={text} />;
+    },
+    [item?.role, type],
+  );
+
   const error = useErrorContent(item?.error);
 
   const enableHistoryDivider = useAgentStore((s) => {
@@ -145,6 +164,9 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           errorMessage={<ErrorMessageExtra data={item} />}
           fontSize={fontSize}
           loading={isProcessing}
+          markdownProps={{
+            customRender: markdownCustomRender,
+          }}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}

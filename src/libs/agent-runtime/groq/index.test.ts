@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
+import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeGroq } from './index';
@@ -316,5 +316,46 @@ describe('LobeGroqAI', () => {
         process.env.DEBUG_GROQ_CHAT_COMPLETION = originalDebugValue;
       });
     });
+  });
+});
+
+describe('LobeGroqAI Temperature Tests', () => {
+  it('should set temperature to 0.7', async () => {
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'mistralai/mistral-7b-instruct:free',
+      temperature: 0.7,
+    });
+
+    expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+      expect.objectContaining({ temperature: 0.7 }),
+      expect.anything(),
+    );
+  });
+
+  it('should set temperature to 0', async () => {
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'mistralai/mistral-7b-instruct:free',
+      temperature: 0,
+    });
+
+    expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+      expect.objectContaining({ temperature: undefined }),
+      expect.anything(),
+    );
+  });
+
+  it('should set temperature to negative', async () => {
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'mistralai/mistral-7b-instruct:free',
+      temperature: -1.0,
+    });
+
+    expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+      expect.objectContaining({ temperature: undefined }),
+      expect.anything(),
+    );
   });
 });
