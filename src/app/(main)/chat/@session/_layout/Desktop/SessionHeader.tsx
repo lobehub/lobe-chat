@@ -18,6 +18,7 @@ import SessionSearchBar from '../../features/SessionSearchBar';
 
 export const useStyles = createStyles(({ css, token }) => ({
   logo: css`
+    color: ${token.colorText};
     fill: ${token.colorText};
   `,
   top: css`
@@ -38,7 +39,7 @@ const Header = memo(() => {
     <Flexbox className={styles.top} gap={16} padding={16}>
       <Flexbox distribution={'space-between'} horizontal>
         <Flexbox align={'center'} gap={4} horizontal>
-          <ProductLogo className={styles.logo} size={36} />
+          <ProductLogo className={styles.logo} size={36} type={'text'} />
           {enableWebrtc && <SyncStatusTag />}
         </Flexbox>
         {showCreateSession && (

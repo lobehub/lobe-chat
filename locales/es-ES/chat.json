@@ -43,7 +43,7 @@
     "all": "Todo el contenido",
     "allFiles": "Todos los archivos",
     "allKnowledgeBases": "Todas las bases de conocimiento",
-    "disabled": "El modo de implementación actual no admite conversaciones de base de conocimiento. Para usarlo, cambie a la implementación de base de datos del servidor o utilice el servicio LobeChat Cloud.",
+    "disabled": "El modo de implementación actual no admite conversaciones con la base de conocimientos. Si desea utilizar esta función, cambie a la implementación de base de datos en el servidor o utilice el servicio {{cloud}}.",
     "library": {
       "action": {
         "add": "Agregar",

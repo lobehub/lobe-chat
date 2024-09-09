@@ -43,7 +43,7 @@
     "all": "Tout le contenu",
     "allFiles": "Tous les fichiers",
     "allKnowledgeBases": "Toutes les bases de connaissances",
-    "disabled": "Le mode de déploiement actuel ne prend pas en charge les dialogues de la base de connaissances. Pour l'utiliser, veuillez passer à un déploiement de base de données côté serveur ou utiliser le service LobeChat Cloud.",
+    "disabled": "Le mode de déploiement actuel ne prend pas en charge les dialogues de la base de connaissances. Pour l'utiliser, veuillez passer à un déploiement de base de données sur serveur ou utiliser le service {{cloud}}.",
     "library": {
       "action": {
         "add": "Ajouter",
