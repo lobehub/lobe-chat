@@ -16,22 +16,23 @@ describe('anthropicHelpers', () => {
     parseDataUri: vi.fn().mockReturnValue({
       mimeType: 'image/jpeg',
       base64: 'base64EncodedString',
+      type: 'base64',
     }),
   }));
 
   describe('buildAnthropicBlock', () => {
-    it('should return the content as is for text type', () => {
+    it('should return the content as is for text type', async () => {
       const content: UserMessageContentPart = { type: 'text', text: 'Hello!' };
-      const result = buildAnthropicBlock(content);
+      const result = await buildAnthropicBlock(content);
       expect(result).toEqual(content);
     });
 
-    it('should transform an image URL into an Anthropic.ImageBlockParam', () => {
+    it('should transform an image URL into an Anthropic.ImageBlockParam', async () => {
       const content: UserMessageContentPart = {
         type: 'image_url',
         image_url: { url: 'data:image/jpeg;base64,base64EncodedString' },
       };
-      const result = buildAnthropicBlock(content);
+      const result = await buildAnthropicBlock(content);
       expect(parseDataUri).toHaveBeenCalledWith(content.image_url.url);
       expect(result).toEqual({
         source: {
@@ -45,25 +46,25 @@ describe('anthropicHelpers', () => {
   });
 
   describe('buildAnthropicMessage', () => {
-    it('should correctly convert system message to assistant message', () => {
+    it('should correctly convert system message to assistant message', async () => {
       const message: OpenAIChatMessage = {
         content: [{ type: 'text', text: 'Hello!' }],
         role: 'system',
       };
-      const result = buildAnthropicMessage(message);
+      const result = await buildAnthropicMessage(message);
       expect(result).toEqual({ content: [{ type: 'text', text: 'Hello!' }], role: 'user' });
     });
 
-    it('should correctly convert user message with string content', () => {
+    it('should correctly convert user message with string content', async () => {
       const message: OpenAIChatMessage = {
         content: 'Hello!',
         role: 'user',
       };
-      const result = buildAnthropicMessage(message);
+      const result = await buildAnthropicMessage(message);
       expect(result).toEqual({ content: 'Hello!', role: 'user' });
     });
 
-    it('should correctly convert user message with content parts', () => {
+    it('should correctly convert user message with content parts', async () => {
       const message: OpenAIChatMessage = {
         content: [
           { type: 'text', text: 'Check out this image:' },
@@ -71,19 +72,19 @@ describe('anthropicHelpers', () => {
         ],
         role: 'user',
       };
-      const result = buildAnthropicMessage(message);
+      const result = await buildAnthropicMessage(message);
       expect(result.role).toBe('user');
       expect(result.content).toHaveLength(2);
       expect((result.content[1] as any).type).toBe('image');
     });
 
-    it('should correctly convert tool message', () => {
+    it('should correctly convert tool message', async () => {
       const message: OpenAIChatMessage = {
         content: 'Tool result content',
         role: 'tool',
         tool_call_id: 'tool123',
       };
-      const result = buildAnthropicMessage(message);
+      const result = await buildAnthropicMessage(message);
       expect(result.role).toBe('user');
       expect(result.content).toEqual([
         {
@@ -94,7 +95,7 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
-    it('should correctly convert assistant message with tool calls', () => {
+    it('should correctly convert assistant message with tool calls', async () => {
       const message: OpenAIChatMessage = {
         content: 'Here is the result:',
         role: 'assistant',
@@ -109,7 +110,7 @@ describe('anthropicHelpers', () => {
           },
         ],
       };
-      const result = buildAnthropicMessage(message);
+      const result = await buildAnthropicMessage(message);
       expect(result.role).toBe('assistant');
       expect(result.content).toEqual([
         { text: 'Here is the result:', type: 'text' },
@@ -122,12 +123,12 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
-    it('should correctly convert function message', () => {
+    it('should correctly convert function message', async () => {
       const message: OpenAIChatMessage = {
         content: 'def hello(name):\n  return f"Hello {name}"',
         role: 'function',
       };
-      const result = buildAnthropicMessage(message);
+      const result = await buildAnthropicMessage(message);
       expect(result).toEqual({
         content: 'def hello(name):\n  return f"Hello {name}"',
         role: 'assistant',
@@ -136,13 +137,13 @@ describe('anthropicHelpers', () => {
   });
 
   describe('buildAnthropicMessages', () => {
-    it('should correctly convert OpenAI Messages to Anthropic Messages', () => {
+    it('should correctly convert OpenAI Messages to Anthropic Messages', async () => {
       const messages: OpenAIChatMessage[] = [
         { content: 'Hello', role: 'user' },
         { content: 'Hi', role: 'assistant' },
       ];
 
-      const result = buildAnthropicMessages(messages);
+      const result = await buildAnthropicMessages(messages);
       expect(result).toHaveLength(2);
       expect(result).toEqual([
         { content: 'Hello', role: 'user' },
@@ -150,14 +151,14 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
-    it('messages should end with user', () => {
+    it('messages should end with user', async () => {
       const messages: OpenAIChatMessage[] = [
         { content: 'Hello', role: 'user' },
         { content: 'Hello', role: 'user' },
         { content: 'Hi', role: 'assistant' },
       ];
 
-      const contents = buildAnthropicMessages(messages);
+      const contents = await buildAnthropicMessages(messages);
 
       expect(contents).toHaveLength(4);
       expect(contents).toEqual([
@@ -168,7 +169,7 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
-    it('messages should pair', () => {
+    it('messages should pair', async () => {
       const messages: OpenAIChatMessage[] = [
         { content: 'a', role: 'assistant' },
         { content: 'b', role: 'assistant' },
@@ -177,7 +178,7 @@ describe('anthropicHelpers', () => {
         { content: '你好', role: 'user' },
       ];
 
-      const contents = buildAnthropicMessages(messages);
+      const contents = await buildAnthropicMessages(messages);
 
       expect(contents).toHaveLength(9);
       expect(contents).toEqual([
@@ -193,7 +194,7 @@ describe('anthropicHelpers', () => {
       ]);
     });
 
-    it('should correctly convert OpenAI tool message to Anthropic format', () => {
+    it('should correctly convert OpenAI tool message to Anthropic format', async () => {
       const messages: OpenAIChatMessage[] = [
         {
           content: '告诉我杭州和北京的天气，先回答我好的',
@@ -242,7 +243,7 @@ describe('anthropicHelpers', () => {
         },
       ];
 
-      const contents = buildAnthropicMessages(messages);
+      const contents = await buildAnthropicMessages(messages);
 
       expect(contents).toEqual([
         { content: '告诉我杭州和北京的天气，先回答我好的', role: 'user' },
