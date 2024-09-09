@@ -38,6 +38,11 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "Vul de AWS Sessie Token in",
+      "placeholder": "AWS Sessie Token",
+      "title": "AWS Sessie Token"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Aangepaste regio",

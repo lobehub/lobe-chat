@@ -75,17 +75,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       };
     }
     case ModelProvider.Bedrock: {
-      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION } = getLLMConfig();
+      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } =
+        getLLMConfig();
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
       let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
       let region = AWS_REGION;
+      let sessionToken: string | undefined = AWS_SESSION_TOKEN;
       // if the payload has the api key, use user
       if (payload.apiKey) {
         accessKeyId = payload?.awsAccessKeyId;
         accessKeySecret = payload?.awsSecretAccessKey;
+        sessionToken = payload?.awsSessionToken;
         region = payload?.awsRegion;
       }
-      return { accessKeyId, accessKeySecret, region };
+      return { accessKeyId, accessKeySecret, region, sessionToken };
     }
     case ModelProvider.Ollama: {
       const { OLLAMA_PROXY_URL } = getLLMConfig();

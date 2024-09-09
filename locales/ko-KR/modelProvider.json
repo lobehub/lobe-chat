@@ -38,6 +38,11 @@
       "placeholder": "AWS 비밀 액세스 키",
       "title": "AWS 비밀 액세스 키"
     },
+    "sessionToken": {
+      "desc": "AWS 세션 토큰을 입력하세요",
+      "placeholder": "AWS 세션 토큰",
+      "title": "AWS 세션 토큰"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "사용자 정의 서비스 지역",

@@ -38,6 +38,11 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "AWS Oturum Belgesi girin",
+      "placeholder": "AWS Oturum Belgesi",
+      "title": "AWS Oturum Belgesi"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Özel Bölge",

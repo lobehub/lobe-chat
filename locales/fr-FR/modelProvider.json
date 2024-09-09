@@ -38,6 +38,11 @@
       "placeholder": "Clé d'accès secrète AWS",
       "title": "Clé d'accès secrète AWS"
     },
+    "sessionToken": {
+      "desc": "Entrez le jeton de session AWS",
+      "placeholder": "Jeton de session AWS",
+      "title": "Jeton de session AWS"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Région de service personnalisée",

@@ -38,6 +38,11 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "Nhập AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Vùng Dịch vụ Tùy chỉnh",

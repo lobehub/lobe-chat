@@ -16,9 +16,10 @@ const BedrockForm = memo(() => {
   const { t } = useTranslation('modelProvider');
   const [showRegion, setShow] = useState(false);
 
-  const [accessKeyId, secretAccessKey, region, setConfig] = useUserStore((s) => [
+  const [accessKeyId, secretAccessKey, sessionToken, region, setConfig] = useUserStore((s) => [
     keyVaultsConfigSelectors.bedrockConfig(s).accessKeyId,
     keyVaultsConfigSelectors.bedrockConfig(s).secretAccessKey,
+    keyVaultsConfigSelectors.bedrockConfig(s).sessionToken,
     keyVaultsConfigSelectors.bedrockConfig(s).region,
     s.updateKeyVaultConfig,
   ]);
@@ -47,6 +48,15 @@ const BedrockForm = memo(() => {
         placeholder={'Aws Secret Access Key'}
         type={'block'}
         value={secretAccessKey}
+      />
+      <Input.Password
+        autoComplete={'new-password'}
+        onChange={(e) => {
+          setConfig(ModelProvider.Bedrock, { sessionToken: e.target.value });
+        }}
+        placeholder={'Aws Session Token'}
+        type={'block'}
+        value={sessionToken}
       />
       {showRegion ? (
         <Select

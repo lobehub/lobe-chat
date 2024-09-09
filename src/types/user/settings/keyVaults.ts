@@ -13,6 +13,7 @@ export interface AWSBedrockKeyVault {
   accessKeyId?: string;
   region?: string;
   secretAccessKey?: string;
+  sessionToken?: string;
 }
 
 export interface UserKeyVaults {
