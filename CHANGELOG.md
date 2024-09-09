@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.23](https://github.com/lobehub/lobe-chat/compare/v1.15.22...v1.15.23)
+
+<sup>Released on **2024-09-08**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Improve branding implement.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Improve branding implement, closes [#3832](https://github.com/lobehub/lobe-chat/issues/3832) ([b5e6b8b](https://github.com/lobehub/lobe-chat/commit/b5e6b8b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.22](https://github.com/lobehub/lobe-chat/compare/v1.15.21...v1.15.22)
 
 <sup>Released on **2024-09-08**</sup>
