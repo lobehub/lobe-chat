@@ -91,7 +91,7 @@ const ProviderCard = memo<ProviderCardProps>(({ models, className, meta, identif
           title={provider.name}
         />
         <span style={{ color: theme.colorTextSecondary, fontSize: 12, marginTop: -8 }}>
-          @{provider.name}
+          {provider.name}
         </span>
         {description && (
           <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>

@@ -55,7 +55,7 @@ const SuggestionItem = memo<SuggestionItemProps>(
   ({ className, meta, identifier, models, ...rest }) => {
     const { title, description } = meta;
 
-    const { cx, styles } = useStyles();
+    const { cx, styles, theme } = useStyles();
 
     return (
       <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} {...rest}>
@@ -65,11 +65,14 @@ const SuggestionItem = memo<SuggestionItemProps>(
           size={24}
           title={title}
         />
-        <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
+        <span style={{ color: theme.colorTextSecondary, fontSize: 12, marginTop: -8 }}>
           {title}
-          {' | '}
-          {description || '服务商介绍'}
-        </Paragraph>
+        </span>
+        {description && (
+          <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
+            {description}
+          </Paragraph>
+        )}
         <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
           {(models as string[])
             .slice(0, 3)
