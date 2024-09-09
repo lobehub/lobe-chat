@@ -115,7 +115,7 @@
   },
   "upload": {
     "desc": "Szczegóły: {{detail}}",
-    "fileOnlySupportInServerMode": "Aktualny tryb wdrożenia nie obsługuje przesyłania plików, które nie są obrazami. Aby przesłać pliki w formacie {{ext}}, przełącz się na wdrożenie bazy danych na serwerze lub skorzystaj z usługi LobeChat Cloud.",
+    "fileOnlySupportInServerMode": "Aktualny tryb wdrożenia nie obsługuje przesyłania plików, które nie są obrazami. Aby przesłać pliki w formacie {{ext}}, przełącz się na wdrożenie bazy danych na serwerze lub skorzystaj z usługi {{cloud}}.",
     "networkError": "Proszę upewnić się, że Twoja sieć działa poprawnie oraz sprawdzić, czy konfiguracja CORS dla usługi przechowywania plików jest prawidłowa.",
     "title": "Nie udało się przesłać pliku. Sprawdź połączenie sieciowe lub spróbuj ponownie później",
     "unknownError": "Przyczyna błędu: {{reason}}",
