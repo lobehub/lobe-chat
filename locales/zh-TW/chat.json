@@ -43,7 +43,7 @@
     "all": "所有內容",
     "allFiles": "所有檔案",
     "allKnowledgeBases": "所有知識庫",
-    "disabled": "當前部署模式不支持知識庫對話，如需使用，請切換到伺服器端資料庫部署或使用 LobeChat Cloud 服務",
+    "disabled": "目前的部署模式不支援知識庫對話，如需使用，請切換到伺服器端資料庫部署或使用 {{cloud}} 服務",
     "library": {
       "action": {
         "add": "添加",

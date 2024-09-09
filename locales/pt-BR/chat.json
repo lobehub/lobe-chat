@@ -43,7 +43,7 @@
     "all": "Todo conteúdo",
     "allFiles": "Todos os arquivos",
     "allKnowledgeBases": "Todos os bancos de conhecimento",
-    "disabled": "O modo de implantação atual não suporta diálogos de banco de conhecimento. Para usar, mude para a implantação de banco de dados no servidor ou utilize o serviço LobeChat Cloud.",
+    "disabled": "O modo de implantação atual não suporta diálogos com a base de conhecimento. Para utilizá-lo, por favor, mude para a implantação do banco de dados no servidor ou utilize o serviço {{cloud}}.",
     "library": {
       "action": {
         "add": "Adicionar",
