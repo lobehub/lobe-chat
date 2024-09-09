@@ -57,6 +57,8 @@ services:
       RUNNING_IN_DOCKER: "true"
       driverName: "postgres"
       dataSourceName: "user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor"
+      origin: "http://localhost:${CASDOOR_PORT}"
+      runmode: "dev"
     volumes:
       - ./init_data.json:/init_data.json
 
@@ -76,11 +78,11 @@ services:
 
     environment:
       - 'APP_URL=http://localhost:3210'
-      - 'NEXT_AUTH_SSO_PROVIDERS=generic'
+      - 'NEXT_AUTH_SSO_PROVIDERS=generic-oidc'
       - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
       - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
-      - 'NEXTAUTH_URL=http://localhost:${CASDOOR_PORT}/api/auth'
-      - 'GENERIC_OIDC_ISSUER=http://localhost:${CASDOOR_PORT}/oidc'
+      - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
+      - 'GENERIC_OIDC_ISSUER=http://localhost:${CASDOOR_PORT}'
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
       - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
