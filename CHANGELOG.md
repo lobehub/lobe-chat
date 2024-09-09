@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.30](https://github.com/lobehub/lobe-chat/compare/v1.15.29...v1.15.30)
+
+<sup>Released on **2024-09-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix claude 3.5 image with s3 url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix claude 3.5 image with s3 url, closes [#3870](https://github.com/lobehub/lobe-chat/issues/3870) ([89c8dd4](https://github.com/lobehub/lobe-chat/commit/89c8dd4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.29](https://github.com/lobehub/lobe-chat/compare/v1.15.28...v1.15.29)
 
 <sup>Released on **2024-09-09**</sup>
