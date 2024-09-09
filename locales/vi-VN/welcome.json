@@ -9,16 +9,16 @@
       "replaceBtn": "Thay đổi",
       "title": "Đề xuất trợ lý mới: "
     },
-    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn, LobeChat. Bạn cần giúp đỡ gì bây giờ?\nNếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấn vào dấu `+` để tạo trợ lý cá nhân",
-    "defaultMessageWithoutCreate": "Tôi là trợ lý ảo cá nhân của bạn LobeChat, có gì tôi có thể giúp bạn ngay bây giờ?",
+    "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}. Xin hỏi tôi có thể giúp gì cho bạn ngay bây giờ?\nNếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấp vào `+` để tạo trợ lý tùy chỉnh.",
+    "defaultMessageWithoutCreate": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}. Xin hỏi tôi có thể giúp gì cho bạn ngay bây giờ?",
     "qa": {
       "q01": "LobeHub là gì?",
-      "q02": "LobeChat là gì?",
-      "q03": "LobeChat có hỗ trợ cộng đồng không?",
-      "q04": "LobeChat hỗ trợ những chức năng nào?",
-      "q05": "LobeChat cách triển khai và sử dụng như thế nào?",
-      "q06": "Giá của LobeChat như thế nào?",
-      "q07": "LobeChat có miễn phí không?",
+      "q02": "{{appName}} là gì?",
+      "q03": "{{appName}} có hỗ trợ cộng đồng không?",
+      "q04": "{{appName}} hỗ trợ những tính năng nào?",
+      "q05": "{{appName}} được triển khai và sử dụng như thế nào?",
+      "q06": "Giá cả của {{appName}} như thế nào?",
+      "q07": "{{appName}} có miễn phí không?",
       "q08": "Có phiên bản dịch vụ đám mây không?",
       "q09": "Có hỗ trợ mô hình ngôn ngữ địa phương không?",
       "q10": "Có hỗ trợ nhận diện và tạo hình ảnh không?",
@@ -26,7 +26,7 @@
       "q12": "Có hỗ trợ hệ thống plugin không?",
       "q13": "Có thị trường riêng để lấy GPTs không?",
       "q14": "Có hỗ trợ nhiều nhà cung cấp dịch vụ AI không?",
-      "q15": "Nếu gặp vấn đề khi sử dụng, tôi nên làm gì?"
+      "q15": "Tôi nên làm gì nếu gặp vấn đề khi sử dụng?"
     },
     "questions": {
       "moreBtn": "Tìm hiểu thêm",

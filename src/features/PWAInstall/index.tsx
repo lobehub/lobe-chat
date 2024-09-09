@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { memo, useEffect, useLayoutEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { PWA_INSTALL_ID } from '@/const/layoutTokens';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { usePlatform } from '@/hooks/usePlatform';
@@ -66,7 +67,9 @@ const PWAInstall = memo(() => {
   }, [canInstall, hidePWAInstaller, isShowPWAGuide]);
 
   if (isPWA) return null;
-  return <PWA description={t('chat.description')} id={PWA_INSTALL_ID} />;
+  return (
+    <PWA description={t('chat.description', { appName: BRANDING_NAME })} id={PWA_INSTALL_ID} />
+  );
 });
 
 export default PWAInstall;

@@ -70,7 +70,7 @@
         "pattenErrorMessage": "只允許英數字元、連字號 -，以及底線 _"
       },
       "manifest": {
-        "desc": "LobeChat 會使用此連結安裝外掛",
+        "desc": "{{appName}}將會透過該連結安裝插件",
         "label": "插件描述檔 (Manifest) URL",
         "preview": "預覽 Manifest",
         "refresh": "重新載入"
