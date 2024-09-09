@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export const FeatureFlagsSchema = z.object({
   /**
-   *
+   * Enable WebRTC sync
    */
   webrtc_sync: z.boolean().optional(),
   check_updates: z.boolean().optional(),
@@ -32,6 +32,12 @@ export const FeatureFlagsSchema = z.object({
 
   // internal flag
   cloud_promotion: z.boolean().optional(),
+
+  // the flags below can only be used with commercial license
+  // if you want to use it in the commercial usage
+  // please contact us for more information: hello@lobehub.com
+  commercial_hide_github: z.boolean().optional(),
+  commercial_hide_docs: z.boolean().optional(),
 });
 
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
@@ -61,6 +67,12 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   market: true,
   speech_to_text: true,
+
+  // the flags below can only be used with commercial license
+  // if you want to use it in the commercial usage
+  // please contact us for more information: hello@lobehub.com
+  commercial_hide_github: false,
+  commercial_hide_docs: false,
 };
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
@@ -88,5 +100,8 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     showMarket: config.market,
     enableSTT: config.speech_to_text,
+
+    hideGitHub: config.commercial_hide_github,
+    hideDocs: config.commercial_hide_docs,
   };
 };
