@@ -7,9 +7,10 @@ import {
   GoogleGenerativeAI,
   Part,
 } from '@google/generative-ai';
-import axios from 'axios';
 import { JSONSchema7 } from 'json-schema';
 import { transform } from 'lodash-es';
+
+import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
@@ -38,26 +39,6 @@ enum HarmBlockThreshold {
   BLOCK_NONE = 'BLOCK_NONE',
 }
 
-async function imageUrlToBase64(imageUrl: string): Promise<string> {
-  try {
-    const response = await axios.get(imageUrl, { responseType: 'arraybuffer' });
-    const arrayBuffer = response.data;
-    const base64Image =
-      typeof btoa === 'function'
-        ? btoa(
-            new Uint8Array(arrayBuffer).reduce(
-              (data, byte) => data + String.fromCharCode(byte),
-              '',
-            ),
-          )
-        : Buffer.from(arrayBuffer).toString('base64');
-    return base64Image;
-  } catch (error) {
-    console.error('Error converting image to base64:', error);
-    throw error;
-  }
-}
-
 export class LobeGoogleAI implements LobeRuntimeAI {
   private client: GoogleGenerativeAI;
   baseURL?: string;
@@ -73,37 +54,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     try {
       const model = payload.model;
 
-      // TODO: 应先检测 Env 是否启用 S3
-      // url -> base64, currently Gemini don't support image url.
-
-      let messages: OpenAIChatMessage[] = [];
-      const urlPattern = /^(https?):\/\/[^\s#$./?].\S*$/i;
-
-      for (const message of payload.messages) {
-        if (Array.isArray(message.content)) {
-          const newContent = await Promise.all(
-            message.content.map(async (content) => {
-              if (content.type === 'image_url' && urlPattern.test(content.image_url?.url)) {
-                const base64Image = await imageUrlToBase64(content.image_url.url);
-                return {
-                  ...content,
-                  image_url: { ...content.image_url, url: `data:image/png;base64,${base64Image}` },
-                };
-              } else {
-                return content as UserMessageContentPart;
-              }
-            }),
-          );
-          messages.push({ ...message, content: newContent as UserMessageContentPart[] });
-        } else {
-          messages.push(message as OpenAIChatMessage);
-        }
-      }
-
-      if (messages.length === 0) {
-        messages = payload.messages;
-      }
-      const contents = this.buildGoogleMessages(messages, model);
+      const contents = await this.buildGoogleMessages(payload.messages, model);
 
       const geminiStreamResult = await this.client
         .getGenerativeModel(
@@ -160,7 +111,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
   }
 
-  private convertContentToGooglePart = (content: UserMessageContentPart): Part => {
+  private convertContentToGooglePart = async (content: UserMessageContentPart): Promise<Part> => {
     switch (content.type) {
       case 'text': {
         return { text: content.text };
@@ -181,51 +132,60 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           };
         }
 
-        // if (type === 'url') {
-        //   return {
-        //     fileData: {
-        //       fileUri: content.image_url.url,
-        //       mimeType: mimeType || 'image/png',
-        //     },
-        //   };
-        // }
+        if (type === 'url') {
+          const base64Image = await imageUrlToBase64(content.image_url.url);
+
+          return {
+            inlineData: {
+              data: base64Image,
+              mimeType: mimeType || 'image/png',
+            },
+          };
+        }
 
         throw new TypeError(`currently we don't support image url: ${content.image_url.url}`);
       }
     }
   };
 
-  private convertOAIMessagesToGoogleMessage = (message: OpenAIChatMessage): Content => {
+  private convertOAIMessagesToGoogleMessage = async (
+    message: OpenAIChatMessage,
+  ): Promise<Content> => {
     const content = message.content as string | UserMessageContentPart[];
 
     return {
       parts:
         typeof content === 'string'
           ? [{ text: content }]
-          : content.map((c) => this.convertContentToGooglePart(c)),
+          : await Promise.all(content.map(async (c) => await this.convertContentToGooglePart(c))),
       role: message.role === 'assistant' ? 'model' : 'user',
     };
   };
 
   // convert messages from the Vercel AI SDK Format to the format
   // that is expected by the Google GenAI SDK
-  private buildGoogleMessages = (messages: OpenAIChatMessage[], model: string): Content[] => {
+  private buildGoogleMessages = async (
+    messages: OpenAIChatMessage[],
+    model: string,
+  ): Promise<Content[]> => {
     // if the model is gemini-1.5-pro-latest, we don't need any special handling
     if (model === 'gemini-1.5-pro-latest') {
-      return messages
+      const pools = messages
         .filter((message) => message.role !== 'function')
-        .map((msg) => this.convertOAIMessagesToGoogleMessage(msg));
+        .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg));
+
+      return Promise.all(pools);
     }
 
     const contents: Content[] = [];
     let lastRole = 'model';
 
-    messages.forEach((message) => {
+    for (const message of messages) {
       // current to filter function message
       if (message.role === 'function') {
-        return;
+        continue;
       }
-      const googleMessage = this.convertOAIMessagesToGoogleMessage(message);
+      const googleMessage = await this.convertOAIMessagesToGoogleMessage(message);
 
       // if the last message is a model message and the current message is a model message
       // then we need to add a user message to separate them
@@ -238,7 +198,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
 
       // update the last role
       lastRole = googleMessage.role;
-    });
+    }
 
     // if the last message is a user message, then we need to add a model message to separate them
     if (lastRole === 'model') {
