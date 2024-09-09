@@ -1,11 +1,11 @@
 import { Button, Tag } from 'antd';
 import { createStyles } from 'antd-style';
-import Image from 'next/image';
 import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
+import { ProductLogo } from '@/components/Branding';
 import { BRANDING_NAME } from '@/const/branding';
 import { MANUAL_UPGRADE_URL, OFFICIAL_SITE, RELEASES_URL } from '@/const/url';
 import { CURRENT_VERSION } from '@/const/version';
@@ -38,7 +38,7 @@ const Version = memo<{ mobile?: boolean }>(({ mobile }) => {
       <Flexbox align={'center'} flex={'none'} gap={16} horizontal>
         <Link href={OFFICIAL_SITE} target={'_blank'}>
           <Center className={styles.logo} height={64} width={64}>
-            <Image alt={BRANDING_NAME} height={52} src={'/icons/icon-192x192.png'} width={52} />
+            <ProductLogo size={52} />
           </Center>
         </Link>
         <Flexbox>
