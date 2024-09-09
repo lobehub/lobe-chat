@@ -43,7 +43,7 @@
     "all": "Tüm İçerik",
     "allFiles": "Tüm Dosyalar",
     "allKnowledgeBases": "Tüm Bilgi Tabanları",
-    "disabled": "Mevcut dağıtım modu bilgi tabanı sohbetini desteklemiyor, kullanmak için lütfen sunucu veritabanı dağıtımına geçin veya LobeChat Cloud hizmetini kullanın.",
+    "disabled": "Mevcut dağıtım modu bilgi tabanı sohbetini desteklemiyor. Kullanmak istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya {{cloud}} hizmetini kullanın.",
     "library": {
       "action": {
         "add": "Ekle",

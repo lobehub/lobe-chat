@@ -20,7 +20,7 @@ const Header = memo(() => {
 
   return (
     <ChatHeader
-      left={<ProductLogo className={styles.logo} extra={'Discover'} size={36} />}
+      left={<ProductLogo className={styles.logo} extra={'Discover'} size={36} type={'text'} />}
       right={<ShareAgentButton />}
     />
   );
