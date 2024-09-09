@@ -1,0 +1,347 @@
+{
+  "compositeElements": [
+    {
+      "type": "CompositeElement",
+      "element_id": "32855cf6-5605-4a8e-97a3-3ac0b509b725",
+      "text": "Multiple Sclerosis Journal 29(6)\n\nTable 1. Characteristics of the study population.",
+      "metadata": {
+        "filetype": "application/pdf",
+        "languages": ["eng"],
+        "page_number": 1,
+        "filename": "table-parse.pdf"
+      }
+    },
+    {
+      "type": "Table",
+      "element_id": "6ac9e7aa-6618-4cae-8e78-a4ec6fd73cf5",
+      "metadata": {
+        "languages": ["eng"],
+        "page_number": 1,
+        "text_as_html": "<table><thead><tr><th></th><th colspan=\"3\">Male</th><th colspan=\"3\">Female</th><th colspan=\"2\">Overall</th><th rowspan=\"2\">p-value</th></tr><tr><th></th><th>MS subjects</th><th>Control \nsubjects</th><th></th><th>p-value MS subjects Control \nsubjects</th><th></th><th>p-value</th><th>MS \nsubjects</th><th>Control \nsubjects</th></tr></thead><tbody><tr><td>N</td><td>3685</td><td>21,931</td><td></td><td>8566</td><td>50,640</td><td></td><td>12,251</td><td>72,572</td><td></td></tr><tr><td>Follow-up time (years)</td><td>9.9 (6.1)</td><td>11.4(6.5)</td><td>&lt;0.001</td><td>10.4 (6.3)</td><td>11.5(6.5)</td><td>&lt;0.001</td><td>10.3(6.3)</td><td>11.5(6.5)</td><td>&lt;0.001</td></tr><tr><td>Female (%)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>69.9</td><td>69.8</td><td>0.752</td></tr><tr><td>Age (years)</td><td>46.3 (13.3)</td><td>46.3(13.3)</td><td>0.852</td><td>44.3(13.3)</td><td>44.3(13.3)</td><td>0.907</td><td>44.9(13.3)</td><td>44.9(13.3)</td><td>0.727</td></tr><tr><td>Ethnicity — white (%)</td><td>923</td><td>93.5</td><td>0.013</td><td>915</td><td>94.1</td><td>&lt;0.001</td><td>93.9</td><td>91.2</td><td>&lt;0.00</td></tr><tr><td colspan=\"10\">Smoking status (%)</td></tr><tr><td>Non-smoker</td><td>415</td><td>53.8</td><td></td><td>49.5</td><td>60.0</td><td></td><td>47.1</td><td>58.1</td><td></td></tr><tr><td>Ex-smoker</td><td>17.5</td><td>14.7</td><td>&lt;0.001</td><td>13.9</td><td>11.6</td><td>&lt;0.001</td><td>15</td><td>12.5</td><td>&lt;0.00</td></tr><tr><td>Current smoker</td><td>41.1</td><td>31.6</td><td></td><td>36.6</td><td>28.5</td><td></td><td>379</td><td>294</td><td></td></tr><tr><td>eFI ratio</td><td>0.02 (0.04)</td><td>0.01 (0.03)</td><td>&lt;0.001</td><td>0.03 (0.04)</td><td>0.02 (0.04)</td><td>&lt;0.001</td><td>0.03 (0.04)</td><td>0.02 (0.04)</td><td>&lt;0.00</td></tr><tr><td>Fit</td><td>97.2</td><td>98.3</td><td></td><td>95.8</td><td>97.1</td><td></td><td>96.2</td><td>97.4</td><td></td></tr><tr><td>Mid frailty</td><td>2.8</td><td>1.6</td><td></td><td>4.0</td><td>2.8</td><td></td><td>3.7</td><td>2.5</td><td></td></tr><tr><td>Moderate frailty</td><td>0.0</td><td>0.0</td><td>&lt;0.001</td><td>0.2</td><td>0.1</td><td>&lt;0.001</td><td>0.1</td><td>0.1</td><td>&lt;0.00</td></tr><tr><td>Severe frailty</td><td>0.0</td><td>0.0</td><td></td><td>0.0</td><td>0.0</td><td></td><td>0.0</td><td>0.0</td><td></td></tr><tr><td>Number of primary care visits in previous year</td><td>6.9 (10.3)</td><td>22(5.0)</td><td>&lt;0.001</td><td>82(11.5)</td><td>32(6.1)</td><td>&lt;0.001</td><td>78(112)</td><td>29(5.9)</td><td>&lt;0.00</td></tr><tr><td colspan=\"10\">Index of multiple deprivation (IMD; %)</td></tr><tr><td>1Q — least deprived</td><td>13.7</td><td>13.7</td><td></td><td>14.6</td><td>14.6</td><td></td><td>144</td><td>144</td><td></td></tr><tr><td>2Q</td><td>18.5</td><td>18.4</td><td></td><td>18.5</td><td>18.5</td><td></td><td>18.5</td><td>18.5</td><td></td></tr><tr><td>3Q</td><td>17.6</td><td>17.6</td><td></td><td>17.9</td><td>17.9</td><td></td><td>17.8</td><td>17.8</td><td></td></tr><tr><td>4Q</td><td>20.2</td><td>203</td><td>1.000</td><td>18.8</td><td>18.8</td><td>1.000</td><td>19.2</td><td>19.2</td><td>1.000</td></tr><tr><td>5Q — most deprived</td><td>20.6</td><td>20.6</td><td></td><td>20.3</td><td>20.3</td><td></td><td>204</td><td>204</td><td></td></tr><tr><td>Missing data</td><td>9.3</td><td>9.4</td><td></td><td>9.8</td><td>9.9</td><td></td><td>9.7</td><td>9.7</td><td></td></tr></tbody></table>"
+      },
+      "text": "Male Female Overall MS subjects Control subjects p-value MS subjects Control subjects p-value MS subjects Control subjects p-value N Follow-up time (years) Female (%) Age (years) Ethnicity – white (%) Smoking status (%) Non-smoker Ex-smoker Current smoker eFI ratio Fit Mid frailty Moderate frailty Severe frailty Number of primary care visits in previous year Index of multiple deprivation (IMD; %) 3685 9.9 (6.1) 46.3 (13.3) 92.3 41.5 17.5 41.1 0.02 (0.04) 97.2 2.8 0.0 0.0 6.9 (10.3) 21,931 11.4 (6.5) <0.001 46.3 (13.3) 93.5 0.852 0.013 53.8 14.7 31.6 0.01 (0.03) <0.001 98.3 1.6 0.0 0.0 2.2 (5.0) <0.001 <0.001 <0.001 8566 10.4 (6.3) 44.3 (13.3) 91.5 49.5 13.9 36.6 0.03 (0.04) 95.8 4.0 0.2 0.0 8.2 (11.5) 50,640 11.5 (6.5) <0.001 44.3 (13.3) 94.1 0.907 <0.001 60.0 11.6 28.5 0.02 (0.04) <0.001 97.1 2.8 0.1 0.0 3.2 (6.1) <0.001 <0.001 <0.001 12,251 10.3 (6.3) 69.9 44.9 (13.3) 93.9 47.1 15 37.9 0.03 (0.04) 96.2 3.7 0.1 0.0 7.8 (11.2) 72,572 11.5 (6.5) <0.001 69.8 44.9 (13.3) 91.2 0.752 0.727 <0.001 58.1 12.5 29.4 0.02 (0.04) <0.001 97.4 2.5 0.1 0.0 2.9 (5.9) <0.001 <0.001 <0.001 1Q – least deprived 13.7 13.7 14.6 14.6 14.4 14.4 2Q 3Q 4Q 5Q – most deprived Missing data 18.5 17.6 20.2 20.6 9.3 18.4 17.6 20.3 20.6 9.4 1.000 18.5 17.9 18.8 20.3 9.8 18.5 17.9 18.8 20.3 9.9 1.000 18.5 17.8 19.2 20.4 9.7 18.5 17.8 19.2 20.4 9.7 1.000"
+    },
+    {
+      "type": "CompositeElement",
+      "element_id": "499fc9c7-95f4-412c-87e2-10fa1a2e950e",
+      "text": "Individuals were classified as fit, if the eFI score was below 0.12; mildly frail, if the score was between 0.12 and 0.24; moderately frail, if the score was between 0.24 and 0.36; severely frail, if the score was 0.36 and above. Differences between groups were assessed employing Chi-square test, Student’s t-test and the Kruskal–Wallis test, as appropriate.\n\nwas even lower in men (PR = 0.27, 95% CI = 0.18, 0.39) than in women (PR = 0.38, 95% CI = 0.30, 0.49; Figure 1), but the difference was not statistically sig- nificant (p = 0.097).",
+      "metadata": {
+        "filetype": "application/pdf",
+        "languages": ["eng"],
+        "page_number": 1,
+        "filename": "table-parse.pdf"
+      }
+    },
+    {
+      "type": "CompositeElement",
+      "element_id": "875d46a9-6106-40d2-b891-b803d0bb87ac",
+      "text": "Hyperlipidaemia. Treatment with lipid-lowering medications was lower in PwMS, as compared with matched controls (PR = 0.63, 95% CI = 0.54, 0.74). This was particularly pronounced for men (women: PR = 0.71, 95% CI = 0.59, 0.87; men: PR = 0.41, 95% CI = 0.37, 0.62).\n\nDifferences in risk factor severity\n\nAs compared with matched controls, after adjustment, PwMS had a 0.4-mm Hg lower systolic blood",
+      "metadata": {
+        "filetype": "application/pdf",
+        "languages": ["eng"],
+        "page_number": 1,
+        "filename": "table-parse.pdf"
+      }
+    },
+    {
+      "type": "CompositeElement",
+      "element_id": "2990794c-e50d-4ed2-b3b3-b76a2fc76693",
+      "text": "pressure at the index year. The magnitude was greater for men than women, considering that men had almost a 3-mm Hg lower blood pressure than matched con- trols (overall: coeff. = −0.37, 95% CI = −0.60, −0.13; women: −0.54, 95% CI = −0.96, −0.12; men: −2.81, 95% CI = −3.84, −1.77). The differences were greater when restricting analyses to only those with a diagno- sis of hypertension at baseline, as PwMS had a 3.3- mm Hg lower systolic blood pressure then matched controls (coeff. = −3.27, 95% CI = −5.04, −1.50); dif- ferences were confirmed in women but not in men (women: coeff. = −2.56, 95% CI = −3.84, −1.27; men: −0.27, 95% CI = 0.01, −2.56).",
+      "metadata": {
+        "filetype": "application/pdf",
+        "languages": ["eng"],
+        "page_number": 1,
+        "filename": "table-parse.pdf"
+      }
+    },
+    {
+      "type": "CompositeElement",
+      "element_id": "9e6198b1-08c2-4e33-91af-8a3361e02925",
+      "text": "In contrast, PwMS had higher levels of diastolic blood pressure at baseline, as compared with matched controls (coeff. = 0.29, 95% CI = 0.14, 0.43). However,\n\n674\n\njournals.sagepub.com/home/msj",
+      "metadata": {
+        "filetype": "application/pdf",
+        "languages": ["eng"],
+        "page_number": 1,
+        "filename": "table-parse.pdf"
+      }
+    }
+  ],
+  "originElements": [
+    {
+      "element_id": "393967b3-164c-4814-a881-9c64ae8ab4b5",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [68.2, 92.5],
+            [68.2, 125.9],
+            [456.6, 125.9],
+            [456.6, 92.5]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.86543,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "Multiple Sclerosis Journal 29(6)",
+      "type": "Header",
+      "compositeId": "32855cf6-5605-4a8e-97a3-3ac0b509b725"
+    },
+    {
+      "element_id": "062ccb2f-1ffb-41fc-92c3-ff0de9297b4c",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [63, 195.2],
+            [63, 227.3],
+            [551.6, 227.3],
+            [551.6, 195.2]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.60108,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "Table 1. Characteristics of the study population.",
+      "type": "NarrativeText",
+      "compositeId": "32855cf6-5605-4a8e-97a3-3ac0b509b725"
+    },
+    {
+      "type": "Table",
+      "element_id": "6ac9e7aa-6618-4cae-8e78-a4ec6fd73cf5",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [67.7, 232.3],
+            [67.7, 1326.8],
+            [1541.1, 1326.8],
+            [1541.1, 232.3]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.95674,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1,
+        "text_as_html": "<table><thead><tr><th></th><th colspan=\"3\">Male</th><th colspan=\"3\">Female</th><th colspan=\"2\">Overall</th><th rowspan=\"2\">p-value</th></tr><tr><th></th><th>MS subjects</th><th>Control \nsubjects</th><th></th><th>p-value MS subjects Control \nsubjects</th><th></th><th>p-value</th><th>MS \nsubjects</th><th>Control \nsubjects</th></tr></thead><tbody><tr><td>N</td><td>3685</td><td>21,931</td><td></td><td>8566</td><td>50,640</td><td></td><td>12,251</td><td>72,572</td><td></td></tr><tr><td>Follow-up time (years)</td><td>9.9 (6.1)</td><td>11.4(6.5)</td><td>&lt;0.001</td><td>10.4 (6.3)</td><td>11.5(6.5)</td><td>&lt;0.001</td><td>10.3(6.3)</td><td>11.5(6.5)</td><td>&lt;0.001</td></tr><tr><td>Female (%)</td><td></td><td></td><td></td><td></td><td></td><td></td><td>69.9</td><td>69.8</td><td>0.752</td></tr><tr><td>Age (years)</td><td>46.3 (13.3)</td><td>46.3(13.3)</td><td>0.852</td><td>44.3(13.3)</td><td>44.3(13.3)</td><td>0.907</td><td>44.9(13.3)</td><td>44.9(13.3)</td><td>0.727</td></tr><tr><td>Ethnicity — white (%)</td><td>923</td><td>93.5</td><td>0.013</td><td>915</td><td>94.1</td><td>&lt;0.001</td><td>93.9</td><td>91.2</td><td>&lt;0.00</td></tr><tr><td colspan=\"10\">Smoking status (%)</td></tr><tr><td>Non-smoker</td><td>415</td><td>53.8</td><td></td><td>49.5</td><td>60.0</td><td></td><td>47.1</td><td>58.1</td><td></td></tr><tr><td>Ex-smoker</td><td>17.5</td><td>14.7</td><td>&lt;0.001</td><td>13.9</td><td>11.6</td><td>&lt;0.001</td><td>15</td><td>12.5</td><td>&lt;0.00</td></tr><tr><td>Current smoker</td><td>41.1</td><td>31.6</td><td></td><td>36.6</td><td>28.5</td><td></td><td>379</td><td>294</td><td></td></tr><tr><td>eFI ratio</td><td>0.02 (0.04)</td><td>0.01 (0.03)</td><td>&lt;0.001</td><td>0.03 (0.04)</td><td>0.02 (0.04)</td><td>&lt;0.001</td><td>0.03 (0.04)</td><td>0.02 (0.04)</td><td>&lt;0.00</td></tr><tr><td>Fit</td><td>97.2</td><td>98.3</td><td></td><td>95.8</td><td>97.1</td><td></td><td>96.2</td><td>97.4</td><td></td></tr><tr><td>Mid frailty</td><td>2.8</td><td>1.6</td><td></td><td>4.0</td><td>2.8</td><td></td><td>3.7</td><td>2.5</td><td></td></tr><tr><td>Moderate frailty</td><td>0.0</td><td>0.0</td><td>&lt;0.001</td><td>0.2</td><td>0.1</td><td>&lt;0.001</td><td>0.1</td><td>0.1</td><td>&lt;0.00</td></tr><tr><td>Severe frailty</td><td>0.0</td><td>0.0</td><td></td><td>0.0</td><td>0.0</td><td></td><td>0.0</td><td>0.0</td><td></td></tr><tr><td>Number of primary care visits in previous year</td><td>6.9 (10.3)</td><td>22(5.0)</td><td>&lt;0.001</td><td>82(11.5)</td><td>32(6.1)</td><td>&lt;0.001</td><td>78(112)</td><td>29(5.9)</td><td>&lt;0.00</td></tr><tr><td colspan=\"10\">Index of multiple deprivation (IMD; %)</td></tr><tr><td>1Q — least deprived</td><td>13.7</td><td>13.7</td><td></td><td>14.6</td><td>14.6</td><td></td><td>144</td><td>144</td><td></td></tr><tr><td>2Q</td><td>18.5</td><td>18.4</td><td></td><td>18.5</td><td>18.5</td><td></td><td>18.5</td><td>18.5</td><td></td></tr><tr><td>3Q</td><td>17.6</td><td>17.6</td><td></td><td>17.9</td><td>17.9</td><td></td><td>17.8</td><td>17.8</td><td></td></tr><tr><td>4Q</td><td>20.2</td><td>203</td><td>1.000</td><td>18.8</td><td>18.8</td><td>1.000</td><td>19.2</td><td>19.2</td><td>1.000</td></tr><tr><td>5Q — most deprived</td><td>20.6</td><td>20.6</td><td></td><td>20.3</td><td>20.3</td><td></td><td>204</td><td>204</td><td></td></tr><tr><td>Missing data</td><td>9.3</td><td>9.4</td><td></td><td>9.8</td><td>9.9</td><td></td><td>9.7</td><td>9.7</td><td></td></tr></tbody></table>"
+      },
+      "text": "Male Female Overall MS subjects Control subjects p-value MS subjects Control subjects p-value MS subjects Control subjects p-value N Follow-up time (years) Female (%) Age (years) Ethnicity – white (%) Smoking status (%) Non-smoker Ex-smoker Current smoker eFI ratio Fit Mid frailty Moderate frailty Severe frailty Number of primary care visits in previous year Index of multiple deprivation (IMD; %) 3685 9.9 (6.1) 46.3 (13.3) 92.3 41.5 17.5 41.1 0.02 (0.04) 97.2 2.8 0.0 0.0 6.9 (10.3) 21,931 11.4 (6.5) <0.001 46.3 (13.3) 93.5 0.852 0.013 53.8 14.7 31.6 0.01 (0.03) <0.001 98.3 1.6 0.0 0.0 2.2 (5.0) <0.001 <0.001 <0.001 8566 10.4 (6.3) 44.3 (13.3) 91.5 49.5 13.9 36.6 0.03 (0.04) 95.8 4.0 0.2 0.0 8.2 (11.5) 50,640 11.5 (6.5) <0.001 44.3 (13.3) 94.1 0.907 <0.001 60.0 11.6 28.5 0.02 (0.04) <0.001 97.1 2.8 0.1 0.0 3.2 (6.1) <0.001 <0.001 <0.001 12,251 10.3 (6.3) 69.9 44.9 (13.3) 93.9 47.1 15 37.9 0.03 (0.04) 96.2 3.7 0.1 0.0 7.8 (11.2) 72,572 11.5 (6.5) <0.001 69.8 44.9 (13.3) 91.2 0.752 0.727 <0.001 58.1 12.5 29.4 0.02 (0.04) <0.001 97.4 2.5 0.1 0.0 2.9 (5.9) <0.001 <0.001 <0.001 1Q – least deprived 13.7 13.7 14.6 14.6 14.4 14.4 2Q 3Q 4Q 5Q – most deprived Missing data 18.5 17.6 20.2 20.6 9.3 18.4 17.6 20.3 20.6 9.4 1.000 18.5 17.9 18.8 20.3 9.8 18.5 17.9 18.8 20.3 9.9 1.000 18.5 17.8 19.2 20.4 9.7 18.5 17.8 19.2 20.4 9.7 1.000"
+    },
+    {
+      "element_id": "d9f1985b-d5b5-462d-b7db-7c3554eb3d03",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [79.6, 1334.5],
+            [79.6, 1417.9],
+            [1518.8, 1417.9],
+            [1518.8, 1334.5]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.90525,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "Individuals were classified as fit, if the eFI score was below 0.12; mildly frail, if the score was between 0.12 and 0.24; moderately frail, if the score was between 0.24 and 0.36; severely frail, if the score was 0.36 and above. Differences between groups were assessed employing Chi-square test, Student’s t-test and the Kruskal–Wallis test, as appropriate.",
+      "type": "NarrativeText",
+      "compositeId": "499fc9c7-95f4-412c-87e2-10fa1a2e950e"
+    },
+    {
+      "element_id": "849f1a9b-baaa-42dc-a1b8-92628c64726b",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [309.2, 1487.1],
+            [309.2, 1618.6],
+            [915.5, 1618.6],
+            [915.5, 1487.1]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.94299,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "was even lower in men (PR = 0.27, 95% CI = 0.18, 0.39) than in women (PR = 0.38, 95% CI = 0.30, 0.49; Figure 1), but the difference was not statistically sig- nificant (p = 0.097).",
+      "type": "NarrativeText",
+      "compositeId": "499fc9c7-95f4-412c-87e2-10fa1a2e950e"
+    },
+    {
+      "element_id": "a32d209f-a092-42c3-b6a5-3816df43bfdb",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [310.4, 1659.6],
+            [310.4, 1858.1],
+            [915.5, 1858.1],
+            [915.5, 1659.6]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.94907,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "Hyperlipidaemia. Treatment with lipid-lowering medications was lower in PwMS, as compared with matched controls (PR = 0.63, 95% CI = 0.54, 0.74). This was particularly pronounced for men (women: PR = 0.71, 95% CI = 0.59, 0.87; men: PR = 0.41, 95% CI = 0.37, 0.62).",
+      "type": "NarrativeText",
+      "compositeId": "875d46a9-6106-40d2-b891-b803d0bb87ac"
+    },
+    {
+      "element_id": "7a0f58ed-97e3-4822-a8f2-1e39d48321fa",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [311.8, 1930.6],
+            [311.8, 1964.6],
+            [690.9, 1964.6],
+            [690.9, 1930.6]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.628,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "Differences in risk factor severity",
+      "type": "NarrativeText",
+      "compositeId": "875d46a9-6106-40d2-b891-b803d0bb87ac"
+    },
+    {
+      "element_id": "3b4b747e-3609-4697-adbe-e66431aad148",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [304.5, 1973.3],
+            [304.5, 2040.1],
+            [915.5, 2040.1],
+            [915.5, 1973.3]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.90552,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "As compared with matched controls, after adjustment, PwMS had a 0.4-mm Hg lower systolic blood",
+      "type": "NarrativeText",
+      "compositeId": "875d46a9-6106-40d2-b891-b803d0bb87ac"
+    },
+    {
+      "element_id": "47d380de-794f-4205-a182-43bdb12d2578",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [941.5, 1483.4],
+            [941.5, 1913.8],
+            [1542.4, 1913.8],
+            [1542.4, 1483.4]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.9414,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "pressure at the index year. The magnitude was greater for men than women, considering that men had almost a 3-mm Hg lower blood pressure than matched con- trols (overall: coeff. = −0.37, 95% CI = −0.60, −0.13; women: −0.54, 95% CI = −0.96, −0.12; men: −2.81, 95% CI = −3.84, −1.77). The differences were greater when restricting analyses to only those with a diagno- sis of hypertension at baseline, as PwMS had a 3.3- mm Hg lower systolic blood pressure then matched controls (coeff. = −3.27, 95% CI = −5.04, −1.50); dif- ferences were confirmed in women but not in men (women: coeff. = −2.56, 95% CI = −3.84, −1.27; men: −0.27, 95% CI = 0.01, −2.56).",
+      "type": "NarrativeText",
+      "compositeId": "2990794c-e50d-4ed2-b3b3-b76a2fc76693"
+    },
+    {
+      "element_id": "ea18e521-02e5-4217-b89b-3e63a54a6d7e",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [936.9, 1938.4],
+            [936.9, 2038.1],
+            [1542.4, 2038.1],
+            [1542.4, 1938.4]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.94049,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "In contrast, PwMS had higher levels of diastolic blood pressure at baseline, as compared with matched controls (coeff. = 0.29, 95% CI = 0.14, 0.43). However,",
+      "type": "NarrativeText",
+      "compositeId": "9e6198b1-08c2-4e33-91af-8a3361e02925"
+    },
+    {
+      "element_id": "267417f1-2475-4c77-8ea4-e61527222bf5",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [69.1, 2094.9],
+            [69.1, 2115.9],
+            [102.5, 2115.9],
+            [102.5, 2094.9]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.76658,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "674",
+      "type": "PageNumber",
+      "compositeId": "9e6198b1-08c2-4e33-91af-8a3361e02925"
+    },
+    {
+      "element_id": "2831f8d1-5844-4c65-ab90-d22421928a30",
+      "metadata": {
+        "coordinates": {
+          "layout_height": 2205,
+          "layout_width": 1654,
+          "points": [
+            [1297.9, 2094.9],
+            [1297.9, 2117.9],
+            [1538.4, 2117.9],
+            [1538.4, 2094.9]
+          ],
+          "system": "PixelSpace"
+        },
+        "detection_class_prob": 0.8409,
+        "filetype": "PPM",
+        "languages": ["eng"],
+        "page_number": 1
+      },
+      "text": "journals.sagepub.com/home/msj",
+      "type": "Footer",
+      "compositeId": "9e6198b1-08c2-4e33-91af-8a3361e02925"
+    }
+  ]
+}

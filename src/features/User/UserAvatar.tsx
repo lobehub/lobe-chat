@@ -4,6 +4,7 @@ import { Avatar, type AvatarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { forwardRef } from 'react';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
@@ -56,7 +57,7 @@ const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
 
     return (
       <Avatar
-        alt={isSignedIn ? (username as string) : 'LobeChat'}
+        alt={isSignedIn ? (username as string) : BRANDING_NAME}
         avatar={isSignedIn ? avatar || DEFAULT_USER_AVATAR_URL : DEFAULT_USER_AVATAR_URL}
         background={isSignedIn && avatar ? background : undefined}
         className={cx(clickable && styles.clickable, className)}

@@ -20,10 +20,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
   baseURL: string;
 
-  constructor({ apiKey, baseURL = DEFAULT_BASE_URL }: ClientOptions = {}) {
+  constructor({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
-    this.client = new Anthropic({ apiKey, baseURL });
+    this.client = new Anthropic({ apiKey, baseURL, ...res });
     this.baseURL = this.client.baseURL;
   }
 
@@ -96,7 +96,10 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
       messages: buildAnthropicMessages(user_messages),
       model,
       system: system_message?.content as string,
-      temperature,
+      temperature: 
+        payload.temperature !== undefined 
+        ? temperature / 2
+        : undefined,
       tools: buildAnthropicTools(tools),
       top_p,
     } satisfies Anthropic.MessageCreateParams;

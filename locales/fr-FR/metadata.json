@@ -1,18 +1,18 @@
 {
   "chat": {
-    "description": "LobeChat offre la meilleure expérience d'utilisation de ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "LobeChat: Outil de productivité personnel LLM, pour un cerveau plus intelligent"
+    "description": "{{appName}} vous offre la meilleure expérience d'utilisation de ChatGPT, Claude, Gemini et OLLaMA WebUI",
+    "title": "{{appName}} : un outil d'efficacité personnelle en IA pour vous donner un cerveau plus intelligent"
   },
   "market": {
-    "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération vocale, agent intelligent, flux de travail automatisé, personnalisez votre agent intelligent AI / GPTs / OLLaMA",
-    "title": "Marché des agents"
+    "description": "Création de contenu, rédaction, questions-réponses, génération d'images, génération de vidéos, génération de voix, agents intelligents, flux de travail automatisés, personnalisez votre assistant intelligent IA",
+    "title": "Marché des assistants"
   },
   "plugins": {
-    "description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération vocale, flux de travail automatisé, personnalisez les capacités des plugins ToolCall exclusifs de ChatGPT / OLLaMA",
+    "description": "Recherche, génération de graphiques, académique, génération d'images, génération de vidéos, génération de voix, flux de travail automatisés, personnalisez les capacités de plugins ToolCall pour ChatGPT / Claude",
     "title": "Marché des plugins"
   },
   "welcome": {
-    "description": "LobeChat offre la meilleure expérience d'utilisation de ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "Bienvenue sur LobeChat: Outil de productivité personnel LLM, pour un cerveau plus intelligent"
+    "description": "{{appName}} vous offre la meilleure expérience d'utilisation de ChatGPT, Claude, Gemini et OLLaMA WebUI",
+    "title": "Bienvenue sur {{appName}} : un outil d'efficacité personnelle en IA pour vous donner un cerveau plus intelligent"
   }
 }

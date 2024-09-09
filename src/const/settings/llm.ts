@@ -15,9 +15,11 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  SiliconCloudProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
+  UpstageProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
   filterEnabledModels,
@@ -94,6 +96,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
     enabled: false,
     enabledModels: filterEnabledModels(QwenProviderCard),
   },
+  siliconcloud: {
+    enabled: false,
+    enabledModels: filterEnabledModels(SiliconCloudProviderCard),
+  },
   stepfun: {
     enabled: false,
     enabledModels: filterEnabledModels(StepfunProviderCard),
@@ -106,6 +112,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
     enabled: false,
     enabledModels: filterEnabledModels(TogetherAIProviderCard),
   },
+  upstage: {
+    enabled: false,
+    enabledModels: filterEnabledModels(UpstageProviderCard),
+  },
   zeroone: {
     enabled: false,
     enabledModels: filterEnabledModels(ZeroOneProviderCard),
@@ -117,5 +127,6 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
 };
 
 export const DEFAULT_MODEL = 'gpt-4o-mini';
+export const DEFAULT_EMBEDDING_MODEL = 'text-embedding-3-small';
 
 export const DEFAULT_PROVIDER = ModelProvider.OpenAI;

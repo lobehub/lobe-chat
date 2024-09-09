@@ -6,8 +6,8 @@ import { memo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import SettingContainer from '@/features/Setting//SettingContainer';
 import Footer from '@/features/Setting/Footer';
+import SettingContainer from '@/features/Setting/SettingContainer';
 import { useActiveSettingsKey } from '@/hooks/useActiveSettingsKey';
 import { SettingsTabs } from '@/store/global/initialState';
 

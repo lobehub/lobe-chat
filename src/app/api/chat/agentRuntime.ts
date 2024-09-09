@@ -200,6 +200,21 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.SiliconCloud: {
+      const { SILICONCLOUD_API_KEY, SILICONCLOUD_PROXY_URL } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SILICONCLOUD_API_KEY);
+      const baseURL = payload?.endpoint || SILICONCLOUD_PROXY_URL;
+
+      return { apiKey, baseURL };
+    }
+    case ModelProvider.Upstage: {
+      const { UPSTAGE_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || UPSTAGE_API_KEY);
+
+      return { apiKey };
+    }
   }
 };
 

@@ -12,6 +12,7 @@ export const ChatErrorType = {
   NoOpenAIAPIKey: 'NoOpenAIAPIKey',
   OllamaServiceUnavailable: 'OllamaServiceUnavailable', // 未启动/检测到 Ollama 服务
   PluginFailToTransformArguments: 'PluginFailToTransformArguments',
+  UnknownChatFetchError: 'UnknownChatFetchError',
 
   // ******* 客户端错误 ******* //
   BadRequest: 400,

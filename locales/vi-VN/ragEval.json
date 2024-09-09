@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Tạo mới",
+    "description": {
+      "placeholder": "Mô tả bộ dữ liệu (tùy chọn)"
+    },
+    "name": {
+      "placeholder": "Tên bộ dữ liệu",
+      "required": "Vui lòng điền tên bộ dữ liệu"
+    },
+    "title": "Thêm bộ dữ liệu"
+  },
+  "dataset": {
+    "addNewButton": "Tạo bộ dữ liệu",
+    "emptyGuide": "Hiện tại không có bộ dữ liệu nào, vui lòng tạo một bộ dữ liệu.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Nhập dữ liệu"
+        },
+        "columns": {
+          "actions": "Hành động",
+          "ideal": {
+            "title": "Câu trả lời mong đợi"
+          },
+          "question": {
+            "title": "Câu hỏi"
+          },
+          "referenceFiles": {
+            "title": "Tài liệu tham khảo"
+          }
+        },
+        "notSelected": "Vui lòng chọn bộ dữ liệu ở bên trái",
+        "title": "Chi tiết bộ dữ liệu"
+      },
+      "title": "Bộ dữ liệu"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Tạo mới",
+      "datasetId": {
+        "placeholder": "Vui lòng chọn bộ dữ liệu đánh giá của bạn",
+        "required": "Vui lòng chọn bộ dữ liệu đánh giá"
+      },
+      "description": {
+        "placeholder": "Mô tả nhiệm vụ đánh giá (tùy chọn)"
+      },
+      "name": {
+        "placeholder": "Tên nhiệm vụ đánh giá",
+        "required": "Vui lòng điền tên nhiệm vụ đánh giá"
+      },
+      "title": "Thêm nhiệm vụ đánh giá"
+    },
+    "addNewButton": "Tạo đánh giá",
+    "emptyGuide": "Hiện tại không có nhiệm vụ đánh giá nào, hãy bắt đầu tạo đánh giá.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Kiểm tra trạng thái",
+          "confirmDelete": "Có chắc chắn muốn xóa nhiệm vụ đánh giá này không?",
+          "confirmRun": "Có chắc chắn muốn bắt đầu chạy không? Sau khi bắt đầu, nhiệm vụ đánh giá sẽ được thực hiện bất đồng bộ ở phía sau, đóng trang không ảnh hưởng đến việc thực hiện nhiệm vụ bất đồng bộ.",
+          "downloadRecords": "Tải xuống đánh giá",
+          "retry": "Thử lại",
+          "run": "Chạy",
+          "title": "Hành động"
+        },
+        "datasetId": {
+          "title": "Bộ dữ liệu"
+        },
+        "name": {
+          "title": "Tên nhiệm vụ đánh giá"
+        },
+        "records": {
+          "title": "Số lượng bản ghi đánh giá"
+        },
+        "referenceFiles": {
+          "title": "Tài liệu tham khảo"
+        },
+        "status": {
+          "error": "Có lỗi trong quá trình thực hiện",
+          "pending": "Chờ chạy",
+          "processing": "Đang chạy",
+          "success": "Thực hiện thành công",
+          "title": "Trạng thái"
+        }
+      },
+      "title": "Danh sách nhiệm vụ đánh giá"
+    }
+  }
+}

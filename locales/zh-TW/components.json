@@ -5,6 +5,68 @@
     "dragFileTitle": "上傳檔案",
     "dragTitle": "上傳圖片"
   },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "添加到知識庫",
+      "addToOtherKnowledgeBase": "添加到其他知識庫",
+      "batchChunking": "批量分塊",
+      "chunking": "分塊",
+      "chunkingTooltip": "將文件拆分為多個文本塊並向量化後，可用於語義檢索和文件對話",
+      "confirmDelete": "即將刪除該文件，刪除後將無法找回，請確認你的操作",
+      "confirmDeleteMultiFiles": "即將刪除選中的 {{count}} 個文件，刪除後將無法找回，請確認你的操作",
+      "confirmRemoveFromKnowledgeBase": "即將從知識庫中移除選中的 {{count}} 個文件，移除後文件仍然可以在全部文件中查看，請確認你的操作",
+      "copyUrl": "複製鏈接",
+      "copyUrlSuccess": "文件地址複製成功",
+      "createChunkingTask": "準備中...",
+      "deleteSuccess": "文件刪除成功",
+      "downloading": "文件下載中...",
+      "removeFromKnowledgeBase": "從知識庫中移除",
+      "removeFromKnowledgeBaseSuccess": "文件移除成功"
+    },
+    "bottom": "已經到底啦",
+    "config": {
+      "showFilesInKnowledgeBase": "顯示知識庫中內容"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "上傳文件",
+        "folder": "上傳文件夾",
+        "knowledgeBase": "新建知識庫"
+      },
+      "or": "或者",
+      "title": "將文件或文件夾拖到這裡"
+    },
+    "title": {
+      "createdAt": "創建時間",
+      "size": "大小",
+      "title": "文件"
+    },
+    "total": {
+      "fileCount": "共 {{count}} 項",
+      "selectedCount": "已選 {{count}} 項"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "文本塊尚未完全向量化，將導致語義檢索功能不可用，為提升檢索質量，請對文本塊向量化",
+        "error": "向量化失敗",
+        "errorResult": "向量化失敗，請檢查後重試。失敗原因：",
+        "processing": "文本塊正在向量化，請耐心等待",
+        "success": "當前文本塊均已向量化"
+      },
+      "embeddings": "向量化",
+      "status": {
+        "error": "分塊失敗",
+        "errorResult": "分塊失敗，請檢查後重試。失敗原因：",
+        "processing": "分塊中",
+        "processingTip": "服務端正在拆分文本塊，關閉頁面不影響分塊進度"
+      }
+    }
+  },
+  "GoBack": {
+    "back": "返回"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "自訂模型，預設支援函式呼叫與視覺辨識，請根據實際情況驗證上述能力的可用性",

@@ -13,7 +13,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Pro',
-      enabled: false,
       functionCall: false,
       id: '360gpt-pro',
       maxOutput: 7000,
@@ -21,7 +20,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Pro Perf',
-      enabled: false,
       functionCall: false,
       id: '360gpt-pro-perf',
       maxOutput: 7000,
@@ -29,7 +27,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Pro sc202401v3',
-      enabled: false,
       functionCall: false,
       id: '360gpt-pro-sc202401v3',
       maxOutput: 2048,
@@ -37,7 +34,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Pro sc202401v2',
-      enabled: false,
       functionCall: false,
       id: '360gpt-pro-sc202401v2',
       maxOutput: 2048,
@@ -45,7 +41,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Pro sc202401v1',
-      enabled: false,
       functionCall: false,
       id: '360gpt-pro-sc202401v1',
       maxOutput: 2048,
@@ -53,7 +48,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Pro v2.0.3',
-      enabled: false,
       functionCall: false,
       id: '360gpt-pro-v2.0.3',
       maxOutput: 2048,
@@ -77,7 +71,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Turbo 32K Responsibility 240530',
-      enabled: false,
       functionCall: false,
       id: '360gpt-turbo-32k-responsibility-240530',
       maxOutput: 32_000,
@@ -85,7 +78,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT Turbo 32K Responsibility 240516',
-      enabled: false,
       functionCall: false,
       id: '360gpt-turbo-32k-responsibility-240516',
       maxOutput: 32_000,
@@ -93,7 +85,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT_S1_QIYUAN',
-      enabled: false,
       functionCall: false,
       id: '360GPT_S1_QIYUAN',
       maxOutput: 2048,
@@ -101,7 +92,6 @@ const Ai360: ModelProviderCard = {
     },
     {
       displayName: '360GPT_S2_V9',
-      enabled: false,
       functionCall: false,
       id: '360GPT_S2_V9',
       maxOutput: 7000,

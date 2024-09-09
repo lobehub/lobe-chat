@@ -6,7 +6,14 @@ import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
-import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
+import {
+  ChatCompetitionOptions,
+  ChatCompletionErrorPayload,
+  ChatStreamPayload,
+  EmbeddingItem,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
+} from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
@@ -40,6 +47,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       payload: ChatStreamPayload,
       options: ConstructorOptions<T>,
     ) => OpenAI.ChatCompletionCreateParamsStreaming;
+    noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
   debug?: {
@@ -141,7 +149,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       this.baseURL = this.client.baseURL;
     }
 
-    async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatCompetitionOptions) {
       try {
         const postPayload = chatCompletion?.handlePayload
           ? chatCompletion.handlePayload(payload, this._options)
@@ -151,7 +159,10 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
         const response = await this.client.chat.completions.create(
-          { ...postPayload, user: options?.user },
+          {
+            ...postPayload,
+            ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
+          },
           {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*' },
@@ -174,6 +185,8 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         if (debug?.chatCompletion?.()) {
           debugResponse(response);
         }
+
+        if (responseMode === 'json') return Response.json(response);
 
         const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
@@ -209,6 +222,22 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         })
 
         .filter(Boolean) as ChatModelCard[];
+    }
+
+    async embeddings(
+      payload: EmbeddingsPayload,
+      options?: EmbeddingsOptions,
+    ): Promise<EmbeddingItem[]> {
+      try {
+        const res = await this.client.embeddings.create(
+          { ...payload, user: options?.user },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        return res.data;
+      } catch (error) {
+        throw this.handleError(error);
+      }
     }
 
     async textToImage(payload: TextToImagePayload) {
