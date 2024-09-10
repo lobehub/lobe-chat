@@ -23,7 +23,7 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): Stream
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
-    if (typeof item.delta?.content === 'string') {
+    if (typeof item.delta?.content === 'string' && !item.finish_reason && !item.delta?.tool_calls) {
       return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
