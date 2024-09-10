@@ -27,10 +27,6 @@ export const transformOpenAIStream = (
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
-    if (typeof item.delta?.content === 'string' && !item.finish_reason && !item.delta?.tool_calls) {
-      return { data: item.delta.content, id: chunk.id, type: 'text' };
-    }
-
     if (item.delta?.tool_calls) {
       return {
         data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
@@ -61,6 +57,10 @@ export const transformOpenAIStream = (
     // 给定结束原因
     if (item.finish_reason) {
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
+    }
+
+    if (typeof item.delta?.content === 'string') {
+      return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
     if (item.delta?.content === null) {
