@@ -23,6 +23,7 @@ export interface UserKeyVaults {
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
+  fireworksai?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
   lobehub?: any;
@@ -37,6 +38,7 @@ export interface UserKeyVaults {
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
+  spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;

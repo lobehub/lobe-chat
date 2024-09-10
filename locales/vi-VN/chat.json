@@ -43,7 +43,7 @@
     "all": "Tất cả nội dung",
     "allFiles": "Tất cả tệp",
     "allKnowledgeBases": "Tất cả kho kiến thức",
-    "disabled": "Chế độ triển khai hiện tại không hỗ trợ đối thoại kho kiến thức, nếu muốn sử dụng, vui lòng chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ LobeChat Cloud",
+    "disabled": "Chế độ triển khai hiện tại không hỗ trợ đối thoại với cơ sở kiến thức. Nếu bạn muốn sử dụng, hãy chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}.",
     "library": {
       "action": {
         "add": "Thêm",

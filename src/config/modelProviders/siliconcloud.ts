@@ -92,6 +92,12 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      displayName: 'DeepSeek V2.5',
+      enabled: true,
+      id: 'deepseek-ai/DeepSeek-V2.5',
+      tokens: 32_768,
+    },
+    {
       displayName: 'DeepSeek V2 Chat',
       id: 'deepseek-ai/DeepSeek-V2-Chat',
       tokens: 32_768,
@@ -134,6 +140,11 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Llama 3.1 405B',
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      displayName: 'Reflection Llama 3.1 70B',
+      id: 'mattshumer/Reflection-Llama-3.1-70B',
       tokens: 32_768,
     },
     {
