@@ -10,12 +10,13 @@ RUN \
     fi \
     # Add required package & update base package
     && apk update \
-    && apk add --no-cache bind-tools proxychains-ng \
+    && apk add --no-cache bind-tools proxychains-ng sudo \
     && apk upgrade --no-cache \
     # Add user nextjs to run the app
     && addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs \
     && chown -R nextjs:nodejs "/etc/proxychains" \
+    && echo "nextjs ALL=(ALL) NOPASSWD: /bin/chmod * /etc/resolv.conf" >> /etc/sudoers \
     && rm -rf /tmp/* /var/cache/apk/*
 
 ## Builder image, install all the dependencies and build the app
@@ -190,6 +191,7 @@ CMD \
     fi; \
     # Fix DNS resolving issue in Docker Compose, ref https://github.com/lobehub/lobe-chat/pull/3837
     if [ -f "/etc/resolv.conf" ]; then \
+        sudo chmod 666 "/etc/resolv.conf"; \
         resolv_conf=$(grep '^nameserver' "/etc/resolv.conf" | awk '{print "nameserver " $2}'); \
         printf "%s\n" \
             "$resolv_conf" \
