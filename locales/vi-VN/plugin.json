@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Chỉ có thể nhập ký tự tiếng Anh, số, - và _"
       },
       "manifest": {
-        "desc": "LobeChat sẽ cài đặt plugin thông qua liên kết này",
+        "desc": "{{appName}} sẽ cài đặt plugin qua liên kết này",
         "label": "Tệp mô tả plugin (Manifest) URL",
         "preview": "Xem trước Manifest",
         "refresh": "Làm mới"

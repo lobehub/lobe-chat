@@ -58,15 +58,6 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL Max',
       enabled: true,
       id: 'qwen-vl-max',
-      tokens: 8192,
-      vision: true,
-    },
-    {
-      description:
-        '抢先体验即将升级的 qwen-vl-max 大模型。',
-      displayName: 'Qwen VL Max 0809',
-      enabled: true,
-      id: 'qwen-vl-max-0809',
       tokens: 32_768,
       vision: true,
     },
@@ -79,7 +70,7 @@ const Qwen: ModelProviderCard = {
     },
     {
       description: '通义千问2对外开源的57B规模14B激活参数的MOE模型',
-      displayName: 'Qwen2 57B-A14B MoE',
+      displayName: 'Qwen2 57B A14B MoE',
       id: 'qwen2-57b-a14b-instruct',
       tokens: 65_536, // https://huggingface.co/Qwen/Qwen2-57B-A14B-Instruct
     },

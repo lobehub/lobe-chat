@@ -7,6 +7,9 @@
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
   "agentsAndConversations": "Assistenti e Conversazioni",
   "backToBottom": "Torna in fondo",
+  "chatList": {
+    "longMessageDetail": "Visualizza dettagli"
+  },
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
@@ -40,7 +43,7 @@
     "all": "Tutti i contenuti",
     "allFiles": "Tutti i file",
     "allKnowledgeBases": "Tutte le basi di conoscenza",
-    "disabled": "La modalità di distribuzione attuale non supporta le conversazioni con la base di conoscenza. Per utilizzare questa funzione, passare alla distribuzione del database server o utilizzare il servizio LobeChat Cloud.",
+    "disabled": "L'attuale modalità di distribuzione non supporta le conversazioni con la base di conoscenza. Se desideri utilizzarla, passa alla distribuzione del database server o utilizza il servizio {{cloud}}.",
     "library": {
       "action": {
         "add": "Aggiungi",

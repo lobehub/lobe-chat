@@ -3,9 +3,7 @@ addEventListener('message', async (event) => {
   try {
     const { encode } = await import('gpt-tokenizer');
 
-    console.time('client tokenizer');
     const tokenCount = encode(str).length;
-    console.timeEnd('client tokenizer');
 
     postMessage({ id, result: tokenCount });
   } catch (error) {

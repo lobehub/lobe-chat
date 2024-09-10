@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Seuls les caractères alphanumériques, - et _ sont autorisés"
       },
       "manifest": {
-        "desc": "Lien d'installation du plugin pour LobeChat",
+        "desc": "{{appName}} sera installé via ce lien pour ajouter le plugin.",
         "label": "URL du fichier de description du plugin (Manifest)",
         "preview": "Aperçu du Manifest",
         "refresh": "Actualiser"

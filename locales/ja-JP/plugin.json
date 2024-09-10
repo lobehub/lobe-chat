@@ -70,7 +70,7 @@
         "pattenErrorMessage": "英数字、-、_ のみ入力できます"
       },
       "manifest": {
-        "desc": "LobeChatはこのリンクを使用してプラグインをインストールします",
+        "desc": "{{appName}}はこのリンクを通じてプラグインをインストールします",
         "label": "プラグイン記述ファイル (Manifest) URL",
         "preview": "マニフェストのプレビュー",
         "refresh": "更新"

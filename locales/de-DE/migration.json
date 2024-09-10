@@ -10,33 +10,33 @@
     "clear": {
       "confirm": "Lokale Daten werden gelöscht (Globale Einstellungen bleiben unberührt). Bitte bestätigen Sie, dass Sie ein Datenbackup heruntergeladen haben."
     },
-    "description": "In der neuen Version hat LobeChat einen großen Sprung in der Datenverwaltung gemacht. Daher müssen wir die Daten der alten Version aktualisieren, um Ihnen ein besseres Nutzungserlebnis zu bieten.",
+    "description": "In der neuen Version hat die Datenspeicherung von {{appName}} einen riesigen Sprung gemacht. Daher müssen wir die alten Daten aktualisieren, um dir ein besseres Nutzungserlebnis zu bieten.",
     "features": {
       "capability": {
-        "desc": "Basierend auf der IndexedDB-Technologie, groß genug, um Ihre gesamten Chat-Nachrichten zu speichern",
-        "title": "Hohe Kapazität"
+        "desc": "Basierend auf der IndexedDB-Technologie, die genug Platz für alle deine Lebensnachrichten bietet.",
+        "title": "Großer Speicher"
       },
       "performance": {
-        "desc": "Automatische Indexierung von Millionen von Nachrichten, Abfragen in Millisekunden",
+        "desc": "Millionen von Nachrichten werden automatisch indiziert, Abfragen reagieren in Millisekunden.",
         "title": "Hohe Leistung"
       },
       "use": {
-        "desc": "Unterstützt die Suche nach Titeln, Beschreibungen, Tags, Nachrichteninhalten und sogar übersetzten Texten, was die tägliche Sucheffizienz erheblich verbessert",
+        "desc": "Unterstützt die Suche nach Titel, Beschreibung, Tags, Nachrichteninhalt und sogar übersetzten Texten, wodurch die Effizienz der täglichen Suche erheblich gesteigert wird.",
         "title": "Benutzerfreundlicher"
       }
     },
-    "title": "LobeChat Datenmigration",
+    "title": "Datenentwicklung von {{appName}}",
     "upgrade": {
       "error": {
-        "subTitle": "Es tut uns sehr leid, während des Datenbank-Upgrades ist ein Fehler aufgetreten. Bitte versuchen Sie folgende Lösungen: A. Löschen Sie lokale Daten und importieren Sie das Backup erneut; B. Klicken Sie auf die Schaltfläche „Erneut aktualisieren“.<br><br> Wenn das Problem weiterhin besteht, <1>reichen Sie ein Problem ein</1>, wir werden Ihnen sofort helfen.",
+        "subTitle": "Es tut uns leid, während des Datenbank-Upgrades ist ein Fehler aufgetreten. Bitte versuche die folgenden Lösungen: A. Leere die lokalen Daten und importiere die Sicherungsdaten erneut; B. Klicke auf die Schaltfläche „Erneut upgraden“. <br><br> Wenn der Fehler weiterhin besteht, bitte <1>ein Problem melden</1>, wir werden dir umgehend helfen.",
         "title": "Datenbank-Upgrade fehlgeschlagen"
       },
       "success": {
-        "subTitle": "Die Datenbank von LobeChat wurde erfolgreich auf die neueste Version aktualisiert. Beginnen Sie sofort mit dem Erlebnis.",
+        "subTitle": "Die Datenbank von {{appName}} wurde auf die neueste Version aktualisiert, beginne sofort mit dem Erlebnis.",
         "title": "Datenbank-Upgrade erfolgreich"
       }
     },
-    "upgradeTip": "Das Upgrade dauert in der Regel 10-20 Sekunden. Bitte schließen Sie LobeChat während des Upgrades nicht."
+    "upgradeTip": "Das Upgrade dauert etwa 10 bis 20 Sekunden. Bitte schließe {{appName}} während des Upgrade-Vorgangs nicht."
   },
   "migrateError": {
     "missVersion": "Die importierten Daten enthalten keine Versionsnummer. Bitte überprüfen Sie die Datei und versuchen Sie es erneut.",
