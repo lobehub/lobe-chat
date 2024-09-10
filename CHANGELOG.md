@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.34](https://github.com/lobehub/lobe-chat/compare/v1.15.33...v1.15.34)
+
+<sup>Released on **2024-09-10**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Change empty content stream behavior.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Change empty content stream behavior, closes [#3883](https://github.com/lobehub/lobe-chat/issues/3883) ([e910f68](https://github.com/lobehub/lobe-chat/commit/e910f68))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.33](https://github.com/lobehub/lobe-chat/compare/v1.15.32...v1.15.33)
 
 <sup>Released on **2024-09-10**</sup>
