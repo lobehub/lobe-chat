@@ -79,10 +79,7 @@ describe('imageUrlToBase64', () => {
 
     expect(mockFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
     expect(global.btoa).toHaveBeenCalled();
-    expect(result).toBe({
-      base64: 'mockBase64String',
-      mimeType: 'image/jpg',
-    });
+    expect(result).toEqual({ base64: 'mockBase64String', mimeType: 'image/jpg' });
   });
 
   it('should throw an error when fetch fails', async () => {
