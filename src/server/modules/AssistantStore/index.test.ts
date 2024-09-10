@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it } from 'vitest';
 
-import { AssistantStore } from './AssistantStore';
+import { AssistantStore } from './index';
 
 const baseURL = 'https://chat-agents.lobehub.com';
 describe('AssistantStore', () => {

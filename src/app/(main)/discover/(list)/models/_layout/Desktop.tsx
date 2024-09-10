@@ -1,13 +1,15 @@
 import { PropsWithChildren } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import { discoverService } from '@/services/discover';
+import { DEFAULT_LANG } from '@/const/locale';
+import { DiscoverService } from '@/server/services/discover';
 
 import CategoryContainer from '../../features/CategoryContainer';
 import Category from '../features/Category';
 
 const Layout = async ({ children }: PropsWithChildren) => {
-  const categoryList = await discoverService.getProviderList('en');
+  const discoverService = new DiscoverService();
+  const categoryList = await discoverService.getProviderList(DEFAULT_LANG);
 
   return (
     <Flexbox gap={24} horizontal style={{ position: 'relative' }} width={'100%'}>

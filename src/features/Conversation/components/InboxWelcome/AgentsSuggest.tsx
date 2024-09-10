@@ -65,7 +65,7 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const { data: assistantList, isLoading } = useSWR(
     ['assistant-list', locale].join('-'),
-    async () => await assistantService.getAssistantList(locale),
+    async () => await assistantService.getAssistantList(),
     {
       refreshWhenOffline: false,
       revalidateOnFocus: false,

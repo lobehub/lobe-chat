@@ -2,12 +2,14 @@ import { cloneDeep, isString, merge, uniqBy } from 'lodash-es';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import {
-  DEFAULT_DISCOVER_AGENT_ITEM,
+  DEFAULT_DISCOVER_ASSISTANT_ITEM,
   DEFAULT_DISCOVER_MODEL_ITEM,
+  DEFAULT_DISCOVER_PLUGIN_ITEM,
   DEFAULT_DISCOVER_PROVIDER_ITEM,
 } from '@/const/discover';
-import { assistantService } from '@/services/assistant';
-import { toolService } from '@/services/tool';
+import { Locales } from '@/locales/resources';
+import { AssistantStore } from '@/server/modules/AssistantStore';
+import { PluginStore } from '@/server/modules/PluginStore';
 import {
   AssistantCategory,
   DiscoverAssistantItem,
@@ -16,11 +18,16 @@ import {
   DiscoverProviderItem,
   PluginCategory,
 } from '@/types/discover';
+import { getToolManifest } from '@/utils/toolManifest';
 
-class DiscoverService {
+const revalidate: number = 3600;
+
+export class DiscoverService {
+  assistantStore = new AssistantStore();
+  pluginStore = new PluginStore();
+
   // Assistants
-
-  searchAssistant = async (locale: string, keywords: string): Promise<DiscoverAssistantItem[]> => {
+  searchAssistant = async (locale: Locales, keywords: string): Promise<DiscoverAssistantItem[]> => {
     const assistantList = await this.getAssistantList(locale);
     return assistantList.filter((item) => {
       return [item.author, item.meta.title, item.meta.description, item.meta?.tags]
@@ -33,19 +40,36 @@ class DiscoverService {
   };
 
   getAssistantCategory = async (
-    locale: string,
+    locale: Locales,
     category: AssistantCategory,
   ): Promise<DiscoverAssistantItem[]> => {
     const assistantList = await this.getAssistantList(locale);
     return assistantList.filter((item) => item.meta.category === category);
   };
 
-  getAssistantList = async (locale: string): Promise<DiscoverAssistantItem[]> => {
-    return assistantService.getAssistantList(locale);
+  getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
+    const res = await fetch(this.assistantStore.getAgentIndexUrl(locale), {
+      next: { revalidate },
+    });
+
+    const json = await res.json();
+
+    return json.agents;
   };
 
-  getAssistantById = async (locale: string, identifier: string): Promise<DiscoverAssistantItem> => {
-    let assistant = await assistantService.getAssistantById(locale, identifier);
+  getAssistantById = async (
+    locale: Locales,
+    identifier: string,
+  ): Promise<DiscoverAssistantItem | undefined> => {
+    const res = await fetch(this.assistantStore.getAgentUrl(identifier, locale), {
+      next: { revalidate: 12 * revalidate },
+    });
+
+    let assistant = await res.json();
+
+    if (!assistant) return;
+
+    assistant = merge(cloneDeep(DEFAULT_DISCOVER_ASSISTANT_ITEM), assistant);
 
     const categoryItems = await this.getAssistantCategory(
       locale,
@@ -59,12 +83,12 @@ class DiscoverService {
         .slice(0, 5) as any,
     };
 
-    return merge(cloneDeep(DEFAULT_DISCOVER_AGENT_ITEM), assistant);
+    return assistant;
   };
 
   // Tools
 
-  searchTool = async (locale: string, keywords: string): Promise<DiscoverPlugintem[]> => {
+  searchTool = async (locale: Locales, keywords: string): Promise<DiscoverPlugintem[]> => {
     const toolList = await this.getPluginList(locale);
     return toolList.filter((item) => {
       return [item.author, item.meta.title, item.meta.description, item.meta?.tags]
@@ -77,59 +101,68 @@ class DiscoverService {
   };
 
   getPluginCategory = async (
-    locale: string,
+    locale: Locales,
     category: PluginCategory,
   ): Promise<DiscoverPlugintem[]> => {
     const toolList = await this.getPluginList(locale);
     return toolList.filter((item) => item.meta.category === category);
   };
 
-  getPluginList = async (locale: string): Promise<DiscoverPlugintem[]> => {
-    return toolService.getToolList(locale);
+  getPluginList = async (locale: Locales): Promise<DiscoverPlugintem[]> => {
+    const res = await fetch(this.pluginStore.getPluginIndexUrl(locale), {
+      next: { revalidate: 12 * revalidate },
+    });
+    const json = await res.json();
+    return json.plugins;
   };
 
-  getPluginByIds = async (locale: string, identifiers: string[]): Promise<DiscoverPlugintem[]> => {
+  getPluginByIds = async (locale: Locales, identifiers: string[]): Promise<DiscoverPlugintem[]> => {
     const toolList = await this.getPluginList(locale);
     return toolList.filter((item) => identifiers.includes(item.identifier));
   };
 
   getPluginById = async (
-    locale: string,
+    locale: Locales,
     identifier: string,
     withManifest?: boolean,
-  ): Promise<DiscoverPlugintem> => {
-    let tool = await toolService.getToolById(locale, identifier);
+  ): Promise<DiscoverPlugintem | undefined> => {
+    const pluginList = await this.getPluginList(locale);
+    let plugin = pluginList.find((item) => item.identifier === identifier) as DiscoverPlugintem;
+
+    if (!plugin) return;
+
+    plugin = merge(cloneDeep(DEFAULT_DISCOVER_PLUGIN_ITEM), plugin);
 
     if (withManifest) {
-      const manifest = isString(tool?.manifest)
-        ? await toolService.getToolManifest(tool.manifest)
-        : tool?.manifest;
+      const manifest = isString(plugin?.manifest)
+        ? await getToolManifest(plugin.manifest)
+        : plugin?.manifest;
 
-      tool = {
-        ...tool,
+      plugin = {
+        ...plugin,
         manifest,
       } as DiscoverPlugintem;
     }
 
     const categoryItems = await this.getPluginCategory(
       locale,
-      tool.meta.category || PluginCategory.Tools,
+      plugin.meta.category || PluginCategory.Tools,
     );
 
-    tool = {
-      ...tool,
+    plugin = {
+      ...plugin,
       suggestions: categoryItems
-        .filter((item) => item.identifier !== tool.identifier)
+        .filter((item) => item.identifier !== plugin.identifier)
         .slice(0, 5) as any,
     } as DiscoverPlugintem;
 
-    return tool;
+    return plugin;
   };
 
   // Providers
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getProviderList = async (locale: string): Promise<DiscoverProviderItem[]> => {
+  getProviderList = async (locale: Locales): Promise<DiscoverProviderItem[]> => {
     const providerList = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
     return providerList.map((item) => {
       const provider = {
@@ -144,7 +177,7 @@ class DiscoverService {
     });
   };
 
-  searchProvider = async (locale: string, keywords: string): Promise<DiscoverProviderItem[]> => {
+  searchProvider = async (locale: Locales, keywords: string): Promise<DiscoverProviderItem[]> => {
     const providerList = await this.getProviderList(locale);
     return providerList.filter((item) => {
       return [item.identifier, item.meta.title]
@@ -156,7 +189,7 @@ class DiscoverService {
   };
 
   getProviderById = async (
-    locale: string,
+    locale: Locales,
     id: string,
   ): Promise<DiscoverProviderItem | undefined> => {
     const providerList = await this.getProviderList(locale);
@@ -177,7 +210,7 @@ class DiscoverService {
   // Models
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  private _getModelList = async (locale: string): Promise<DiscoverModelItem[]> => {
+  private _getModelList = async (locale: Locales): Promise<DiscoverModelItem[]> => {
     const providerList = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
     const providers = await this.getProviderList(locale);
 
@@ -202,7 +235,7 @@ class DiscoverService {
     });
   };
 
-  getModelList = async (locale: string): Promise<DiscoverModelItem[]> => {
+  getModelList = async (locale: Locales): Promise<DiscoverModelItem[]> => {
     const modelList = await this._getModelList(locale);
 
     return uniqBy(modelList, (item) => {
@@ -211,7 +244,7 @@ class DiscoverService {
     });
   };
 
-  searchModel = async (locale: string, keywords: string): Promise<DiscoverModelItem[]> => {
+  searchModel = async (locale: Locales, keywords: string): Promise<DiscoverModelItem[]> => {
     const modelList = await this.getModelList(locale);
     return modelList.filter((item) => {
       return [item.identifier, item.meta.title, item.meta.description, item.providers]
@@ -223,12 +256,12 @@ class DiscoverService {
     });
   };
 
-  getModelCategory = async (locale: string, category: string): Promise<DiscoverModelItem[]> => {
+  getModelCategory = async (locale: Locales, category: string): Promise<DiscoverModelItem[]> => {
     const modelList = await this._getModelList(locale);
     return modelList.filter((item) => item.meta.category === category);
   };
 
-  getModelById = async (locale: string, id: string): Promise<DiscoverModelItem | undefined> => {
+  getModelById = async (locale: Locales, id: string): Promise<DiscoverModelItem | undefined> => {
     const list = await this.getModelList(locale);
     let model = list.find((item) => item.identifier === id);
 
@@ -248,9 +281,8 @@ class DiscoverService {
     return merge(cloneDeep(DEFAULT_DISCOVER_MODEL_ITEM), model);
   };
 
-  getModelByIds = async (locale: string, identifiers: string[]): Promise<DiscoverModelItem[]> => {
+  getModelByIds = async (locale: Locales, identifiers: string[]): Promise<DiscoverModelItem[]> => {
     const modelList = await this.getModelList(locale);
     return modelList.filter((item) => identifiers.includes(item.identifier));
   };
 }
-export const discoverService = new DiscoverService();

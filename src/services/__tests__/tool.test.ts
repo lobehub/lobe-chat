@@ -31,7 +31,7 @@ describe('ToolService', () => {
       ) as any;
 
       // Act
-      const pluginList = await toolService.getToolList('en-US');
+      const pluginList = await toolService.getToolList();
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
@@ -46,7 +46,7 @@ describe('ToolService', () => {
       global.fetch = vi.fn(() => Promise.reject(new Error('Network error')));
 
       // Act & Assert
-      await expect(toolService.getToolList('en-US')).rejects.toThrow('Network error');
+      await expect(toolService.getToolList()).rejects.toThrow('Network error');
     });
   });
 

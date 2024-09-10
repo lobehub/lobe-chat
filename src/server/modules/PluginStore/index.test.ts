@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, expect, it, vi } from 'vitest';
 
-import { PluginStore } from './Store';
+import { PluginStore } from './index';
 
 const baseURL = 'https://chat-plugins.lobehub.com';
 

@@ -2,10 +2,11 @@ import { notFound } from 'next/navigation';
 import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
+import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { discoverService } from '@/services/discover';
 import { isMobileDevice } from '@/utils/responsive';
 
 import DetailLayout from '../../features/DetailLayout';
@@ -15,14 +16,14 @@ import InfoSidebar from './features/InfoSidebar';
 import ParameterList from './features/ParameterList';
 import ProviderList from './features/ProviderList';
 
-type Props = { params: { slug: string }; searchParams: { hl?: string } };
+type Props = { params: { slug: string }; searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ params, searchParams }: Props) => {
   const { slug: identifier } = params;
   const { t, locale } = await translation('metadata', searchParams?.hl);
 
+  const discoverService = new DiscoverService();
   const data = await discoverService.getModelById(locale, identifier);
-
   if (!data) return notFound();
 
   const { meta, createdAt, providers } = data;
@@ -54,6 +55,7 @@ const Page = async ({ params, searchParams }: Props) => {
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
+  const discoverService = new DiscoverService();
   const data = await discoverService.getModelById(locale, identifier);
   if (!data) return notFound();
 

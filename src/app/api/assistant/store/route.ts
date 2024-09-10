@@ -1,6 +1,5 @@
 import { DEFAULT_LANG } from '@/const/locale';
-
-import { AssistantStore } from './AssistantStore';
+import { AssistantStore } from '@/server/modules/AssistantStore';
 
 export const runtime = 'edge';
 

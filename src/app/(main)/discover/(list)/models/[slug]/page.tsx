@@ -1,19 +1,23 @@
 import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
+import { DEFAULT_LANG } from '@/const/locale';
+import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { discoverService } from '@/services/discover';
 import { AssistantCategory } from '@/types/discover';
 import { isMobileDevice } from '@/utils/responsive';
 
 import List from '../features/List';
 
-type Props = { params: { slug: AssistantCategory }; searchParams: { hl?: string } };
+type Props = { params: { slug: AssistantCategory }; searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ params, searchParams }: Props) => {
   const { t, locale } = await translation('metadata', searchParams?.hl);
+
+  const discoverService = new DiscoverService();
   const list = await discoverService.getProviderList(locale);
   const cate = list.find((cate) => cate.identifier === params.slug);
 
@@ -28,6 +32,7 @@ const Page = async ({ params, searchParams }: Props) => {
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
+  const discoverService = new DiscoverService();
   const list = await discoverService.getProviderList(locale);
   const cate = list.find((cate) => cate.identifier === params.slug);
   const items = await discoverService.getModelCategory(locale, params.slug);
@@ -51,7 +56,8 @@ const Page = async ({ params, searchParams }: Props) => {
 };
 
 export const generateStaticParams = async () => {
-  const cates = await discoverService.getProviderList('en');
+  const discoverService = new DiscoverService();
+  const cates = await discoverService.getProviderList(DEFAULT_LANG);
   return cates.map((cate) => ({
     slug: cate.identifier,
   }));

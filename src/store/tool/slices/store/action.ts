@@ -8,7 +8,6 @@ import { notification } from '@/components/AntdStaticMethods';
 import { pluginService } from '@/services/plugin';
 import { toolService } from '@/services/tool';
 import { pluginStoreSelectors } from '@/store/tool/selectors';
-import { globalHelpers } from '@/store/user/helpers';
 import { LobeTool } from '@/types/tool';
 import { PluginInstallError } from '@/types/tool/plugin';
 import { setNamespace } from '@/utils/storeDebug';
@@ -69,8 +68,7 @@ export const createPluginStoreSlice: StateCreator<
     await Promise.all(plugins.map((identifier) => installPlugin(identifier)));
   },
   loadPluginStore: async () => {
-    const local = globalHelpers.getCurrentLanguage();
-    const pluginMarketIndex = await toolService.getToolList(local);
+    const pluginMarketIndex = await toolService.getToolList();
 
     set({ pluginStoreList: pluginMarketIndex }, false, n('loadPluginList'));
 

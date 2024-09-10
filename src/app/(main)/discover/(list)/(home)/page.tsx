@@ -1,12 +1,13 @@
 import StructuredData from '@/components/StructuredData';
+import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { discoverService } from '@/services/discover';
 
 import Client from './Client';
 
-type Props = { searchParams: { hl?: string } };
+type Props = { searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ searchParams }: Props) => {
   const { t } = await translation('metadata', searchParams?.hl);
@@ -25,6 +26,7 @@ const Page = async ({ searchParams }: Props) => {
     url: '/discover',
   });
 
+  const discoverService = new DiscoverService();
   const assistantList = await discoverService.getAssistantList(locale);
   const pluginList = await discoverService.getPluginList(locale);
   const modelList = await discoverService.getModelList(locale);

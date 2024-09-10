@@ -6,14 +6,14 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
-import { NS, normalizeLocale } from '@/locales/resources';
+import { Locales, NS, normalizeLocale } from '@/locales/resources';
 import { isDev } from '@/utils/env';
 
-export const getLocale = async (hl?: string) => {
-  if (hl) return normalizeLocale(hl);
+export const getLocale = async (hl?: string): Promise<Locales> => {
+  if (hl) return normalizeLocale(hl) as Locales;
   const cookieStore = cookies();
   const defaultLang = cookieStore.get(LOBE_LOCALE_COOKIE);
-  return defaultLang?.value || DEFAULT_LANG;
+  return (defaultLang?.value || DEFAULT_LANG) as Locales;
 };
 
 export const translation = async (ns: NS = 'common', hl?: string) => {

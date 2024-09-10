@@ -3,10 +3,11 @@ import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
 import { CustomMDX } from '@/components/mdx';
+import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { discoverService } from '@/services/discover';
 import { docsService } from '@/services/docs';
 import { isMobileDevice } from '@/utils/responsive';
 
@@ -16,12 +17,13 @@ import Header from './features/Header';
 import InfoSidebar from './features/InfoSidebar';
 import ModelList from './features/ModelList';
 
-type Props = { params: { slug: string }; searchParams: { hl?: string } };
+type Props = { params: { slug: string }; searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ params, searchParams }: Props) => {
   const { slug: identifier } = params;
   const { t, locale } = await translation('metadata', searchParams?.hl);
 
+  const discoverService = new DiscoverService();
   const data = await discoverService.getProviderById(locale, identifier);
   if (!data) return notFound();
 
@@ -54,11 +56,11 @@ const Page = async ({ params, searchParams }: Props) => {
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
+  const discoverService = new DiscoverService();
   const data = await discoverService.getProviderById(locale, identifier);
   if (!data) return notFound();
 
   const doc = await docsService.getDocByPath(locale, `usage/providers/${identifier}`);
-
   const modelData = await discoverService.getModelByIds(locale, data.models);
 
   const { meta, createdAt, models } = data;

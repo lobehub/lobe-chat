@@ -1,13 +1,14 @@
 import StructuredData from '@/components/StructuredData';
+import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { discoverService } from '@/services/discover';
 import { isMobileDevice } from '@/utils/responsive';
 
 import List from './features/List';
 
-type Props = { searchParams: { hl?: string } };
+type Props = { searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ searchParams }: Props) => {
   const { t } = await translation('metadata', searchParams?.hl);
@@ -23,6 +24,7 @@ const Page = async ({ searchParams }: Props) => {
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
+  const discoverService = new DiscoverService();
   const items = await discoverService.getProviderList(locale);
 
   const ld = ldModule.generate({

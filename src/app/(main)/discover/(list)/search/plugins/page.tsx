@@ -2,13 +2,14 @@ import { redirect } from 'next/navigation';
 
 import List from '@/app/(main)/discover/(list)/plugins/features/List';
 import StructuredData from '@/components/StructuredData';
+import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
+import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { discoverService } from '@/services/discover';
 import { isMobileDevice } from '@/utils/responsive';
 
-type Props = { searchParams: { hl?: string; q?: string } };
+type Props = { searchParams: { hl?: Locales; q?: string } };
 
 export const generateMetadata = async ({ searchParams }: Props) => {
   const { t } = await translation('metadata', searchParams?.hl);
@@ -27,6 +28,7 @@ const Page = async ({ searchParams }: Props) => {
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
+  const discoverService = new DiscoverService();
   const items = await discoverService.searchTool(locale, q);
 
   const ld = ldModule.generate({
