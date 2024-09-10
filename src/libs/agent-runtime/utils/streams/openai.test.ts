@@ -78,60 +78,6 @@ describe('OpenAIStream', () => {
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
 
-  it('should handle tool calls', async () => {
-    const mockOpenAIStream = new ReadableStream({
-      start(controller) {
-        controller.enqueue({
-          choices: [
-            {
-              delta: {
-                tool_calls: [
-                  {
-                    function: { name: 'tool1', arguments: '{}' },
-                    id: 'call_1',
-                    index: 0,
-                    type: 'function',
-                  },
-                  {
-                    function: { name: 'tool2', arguments: '{}' },
-                    id: 'call_2',
-                    index: 1,
-                  },
-                ],
-              },
-              index: 0,
-            },
-          ],
-          id: '2',
-        });
-
-        controller.close();
-      },
-    });
-
-    const onToolCallMock = vi.fn();
-
-    const protocolStream = OpenAIStream(mockOpenAIStream, {
-      onToolCall: onToolCallMock,
-    });
-
-    const decoder = new TextDecoder();
-    const chunks = [];
-
-    // @ts-ignore
-    for await (const chunk of protocolStream) {
-      chunks.push(decoder.decode(chunk, { stream: true }));
-    }
-
-    expect(chunks).toEqual([
-      'id: 2\n',
-      'event: tool_calls\n',
-      `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
-    ]);
-
-    expect(onToolCallMock).toHaveBeenCalledTimes(1);
-  });
-
   it('should handle empty stream', async () => {
     const mockStream = new ReadableStream({
       start(controller) {
@@ -216,51 +162,6 @@ describe('OpenAIStream', () => {
     ]);
   });
 
-  it('should handle tool calls without index and type', async () => {
-    const mockOpenAIStream = new ReadableStream({
-      start(controller) {
-        controller.enqueue({
-          choices: [
-            {
-              delta: {
-                tool_calls: [
-                  {
-                    function: { name: 'tool1', arguments: '{}' },
-                    id: 'call_1',
-                  },
-                  {
-                    function: { name: 'tool2', arguments: '{}' },
-                    id: 'call_2',
-                  },
-                ],
-              },
-              index: 0,
-            },
-          ],
-          id: '5',
-        });
-
-        controller.close();
-      },
-    });
-
-    const protocolStream = OpenAIStream(mockOpenAIStream);
-
-    const decoder = new TextDecoder();
-    const chunks = [];
-
-    // @ts-ignore
-    for await (const chunk of protocolStream) {
-      chunks.push(decoder.decode(chunk, { stream: true }));
-    }
-
-    expect(chunks).toEqual([
-      'id: 5\n',
-      'event: tool_calls\n',
-      `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
-    ]);
-  });
-
   it('should handle error when there is not correct error', async () => {
     const mockOpenAIStream = new ReadableStream({
       start(controller) {
@@ -301,5 +202,206 @@ describe('OpenAIStream', () => {
         `data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Cannot read properties of undefined (reading '0')","name":"TypeError"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n`,
       ].map((i) => `${i}\n`),
     );
+  });
+
+  describe('Tools Calling', () => {
+    it('should handle OpenAI official tool calls', async () => {
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            choices: [
+              {
+                delta: {
+                  tool_calls: [
+                    {
+                      function: { name: 'tool1', arguments: '{}' },
+                      id: 'call_1',
+                      index: 0,
+                      type: 'function',
+                    },
+                    {
+                      function: { name: 'tool2', arguments: '{}' },
+                      id: 'call_2',
+                      index: 1,
+                    },
+                  ],
+                },
+                index: 0,
+              },
+            ],
+            id: '2',
+          });
+
+          controller.close();
+        },
+      });
+
+      const onToolCallMock = vi.fn();
+
+      const protocolStream = OpenAIStream(mockOpenAIStream, {
+        onToolCall: onToolCallMock,
+      });
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual([
+        'id: 2\n',
+        'event: tool_calls\n',
+        `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+      ]);
+
+      expect(onToolCallMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('should handle tool calls without index and type like mistral and minimax', async () => {
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          controller.enqueue({
+            choices: [
+              {
+                delta: {
+                  tool_calls: [
+                    {
+                      function: { name: 'tool1', arguments: '{}' },
+                      id: 'call_1',
+                    },
+                    {
+                      function: { name: 'tool2', arguments: '{}' },
+                      id: 'call_2',
+                    },
+                  ],
+                },
+                index: 0,
+              },
+            ],
+            id: '5',
+          });
+
+          controller.close();
+        },
+      });
+
+      const protocolStream = OpenAIStream(mockOpenAIStream);
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual([
+        'id: 5\n',
+        'event: tool_calls\n',
+        `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+      ]);
+    });
+
+    it('should handle LiteLLM tools Calling', async () => {
+      const streamData = [
+        {
+          id: '1',
+          choices: [{ index: 0, delta: { content: '为了获取杭州的天气情况', role: 'assistant' } }],
+        },
+        {
+          id: '1',
+          choices: [{ index: 0, delta: { content: '让我为您查询一下。' } }],
+        },
+        {
+          id: '1',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '',
+                tool_calls: [
+                  {
+                    id: 'toolu_01VQtK4W9kqxGGLHgsPPxiBj',
+                    function: { arguments: '', name: 'realtime-weather____fetchCurrentWeather' },
+                    type: 'function',
+                    index: 0,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        {
+          id: '1',
+          choices: [
+            {
+              index: 0,
+              delta: {
+                content: '',
+                tool_calls: [
+                  {
+                    function: { arguments: '{"city": "\u676d\u5dde"}' },
+                    type: 'function',
+                    index: 0,
+                  },
+                ],
+              },
+            },
+          ],
+        },
+        {
+          id: '1',
+          choices: [{ finish_reason: 'tool_calls', index: 0, delta: {} }],
+        },
+      ];
+
+      const mockOpenAIStream = new ReadableStream({
+        start(controller) {
+          streamData.forEach((data) => {
+            controller.enqueue(data);
+          });
+
+          controller.close();
+        },
+      });
+
+      const onToolCallMock = vi.fn();
+
+      const protocolStream = OpenAIStream(mockOpenAIStream, {
+        onToolCall: onToolCallMock,
+      });
+
+      const decoder = new TextDecoder();
+      const chunks = [];
+
+      // @ts-ignore
+      for await (const chunk of protocolStream) {
+        chunks.push(decoder.decode(chunk, { stream: true }));
+      }
+
+      expect(chunks).toEqual(
+        [
+          'id: 1',
+          'event: text',
+          `data: "为了获取杭州的天气情况"\n`,
+          'id: 1',
+          'event: text',
+          `data: "让我为您查询一下。"\n`,
+          'id: 1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"toolu_01VQtK4W9kqxGGLHgsPPxiBj","index":0,"type":"function"}]\n`,
+          'id: 1',
+          'event: tool_calls',
+          `data: [{"function":{"arguments":"{\\"city\\": \\"杭州\\"}"},"id":"toolu_01VQtK4W9kqxGGLHgsPPxiBj","index":0,"type":"function"}]\n`,
+          'id: 1',
+          'event: stop',
+          `data: "tool_calls"\n`,
+        ].map((i) => `${i}\n`),
+      );
+
+      expect(onToolCallMock).toHaveBeenCalledTimes(2);
+    });
   });
 });
