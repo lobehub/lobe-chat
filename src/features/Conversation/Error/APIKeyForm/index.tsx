@@ -64,7 +64,7 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
       ) : (
         <ProviderApiKeyForm
           apiKeyPlaceholder={apiKeyPlaceholder}
-          avatar={<ProviderIcon provider={provider} size={56} type={'avatar'} />}
+          avatar={<ProviderIcon provider={provider} size={80} type={'avatar'} />}
           provider={provider as GlobalLLMProviderKey}
           showEndpoint={provider === ModelProvider.OpenAI}
         />
