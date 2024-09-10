@@ -35,7 +35,10 @@ export const transformOpenAIStream = (
           }
 
           return {
-            function: value.function,
+            function: {
+              arguments: value.function?.arguments ?? '{}',
+              name: value.function?.name ?? null,
+            },
             id: value.id || stack?.tool?.id || generateToolCallId(index, value.function?.name),
 
             // mistral's tool calling don't have index and function field, it's data like:
