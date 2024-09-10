@@ -50,7 +50,7 @@ const Spark: ModelProviderCard = {
       tokens: 8192,
     },
   ],
-  checkModel: 'generalv3',
+  checkModel: 'general',
   id: 'spark',
   modelList: { showModelFetcher: true },
   name: 'Spark',
