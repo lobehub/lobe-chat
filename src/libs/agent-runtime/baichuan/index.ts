@@ -7,10 +7,12 @@ export const LobeBaichuanAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.baichuan-ai.com/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
-      const { temperature, ...rest } = payload;
+      const { frequency_penalty, temperature, ...rest } = payload;
 
       return { 
         ...rest, 
+        // [baichuan] frequency_penalty must be between 1 and 2.
+        frequency_penalty: undefined,
         temperature: 
           temperature !== undefined 
           ? temperature / 2
