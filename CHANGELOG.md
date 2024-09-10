@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.15.33](https://github.com/lobehub/lobe-chat/compare/v1.15.32...v1.15.33)
+
+<sup>Released on **2024-09-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `/etc/resolv.conf`edit permission in docker image.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `/etc/resolv.conf`edit permission in docker image, closes [#3880](https://github.com/lobehub/lobe-chat/issues/3880) ([fdaa190](https://github.com/lobehub/lobe-chat/commit/fdaa190))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.32](https://github.com/lobehub/lobe-chat/compare/v1.15.31...v1.15.32)
 
 <sup>Released on **2024-09-10**</sup>
