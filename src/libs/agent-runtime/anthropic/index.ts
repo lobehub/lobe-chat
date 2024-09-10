@@ -29,7 +29,8 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
-      const anthropicPayload = this.buildAnthropicPayload(payload);
+      const anthropicPayload = await this.buildAnthropicPayload(payload);
+
       const response = await this.client.messages.create(
         { ...anthropicPayload, stream: true },
         {
@@ -86,20 +87,17 @@ export class LobeAnthropicAI implements LobeRuntimeAI {
     }
   }
 
-  private buildAnthropicPayload(payload: ChatStreamPayload) {
+  private async buildAnthropicPayload(payload: ChatStreamPayload) {
     const { messages, model, max_tokens = 4096, temperature, top_p, tools } = payload;
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
     return {
       max_tokens,
-      messages: buildAnthropicMessages(user_messages),
+      messages: await buildAnthropicMessages(user_messages),
       model,
       system: system_message?.content as string,
-      temperature: 
-        payload.temperature !== undefined 
-        ? temperature / 2
-        : undefined,
+      temperature: payload.temperature !== undefined ? temperature / 2 : undefined,
       tools: buildAnthropicTools(tools),
       top_p,
     } satisfies Anthropic.MessageCreateParams;
