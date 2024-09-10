@@ -1,29 +1,20 @@
 'use client';
 
 import { ChatHeader } from '@lobehub/ui';
-import { LobeChat } from '@lobehub/ui/brand';
-import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
+
+import { ProductLogo } from '@/components/Branding';
 
 import CreateButton from '../../features/CreateButton';
 import StoreSearchBar from '../../features/StoreSearchBar';
 
-export const useStyles = createStyles(({ css, token }) => ({
-  logo: css`
-    color: ${token.colorText};
-    fill: ${token.colorText};
-  `,
-}));
-
 const Header = memo(() => {
-  const { styles } = useStyles();
-
   return (
     <ChatHeader
       left={
-        <Link href={'/discover'}>
-          <LobeChat className={styles.logo} extra={'Discover'} size={36} type={'text'} />
+        <Link href={'/discover'} style={{ color: 'inherit' }}>
+          <ProductLogo extra={'Discover'} size={36} type={'text'} />
         </Link>
       }
       right={<CreateButton />}
