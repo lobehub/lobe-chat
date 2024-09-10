@@ -1,72 +1,125 @@
-import { LobeChatProps } from '@lobehub/ui/brand';
-import Image from 'next/image';
-import { memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import type { DivProps, SvgProps } from '@lobehub/ui';
+import type { LobeChatProps } from '@lobehub/ui/brand';
+import { createStyles, useTheme } from 'antd-style';
+import Image, { ImageProps } from 'next/image';
+import { ReactNode, memo } from 'react';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { BRANDING_LOGO_URL, BRANDING_NAME } from '@/const/branding';
 
-interface ProductLogoProps {
-  className?: string;
-  extra?: string;
-  size?: number;
-  type?: LobeChatProps['type'];
-}
+const useStyles = createStyles(({ css }) => {
+  return {
+    extraTitle: css`
+      font-weight: 300;
+      white-space: nowrap;
+    `,
+  };
+});
 
-const CustomLogo = memo<ProductLogoProps>(({ size = 32, className, type }) => {
-  const textNode = (
+const CustomTextLogo = memo<FlexboxProps & { size: number }>(({ size, style, ...rest }) => {
+  return (
     <Flexbox
-      className={className}
       height={size}
       style={{
         fontSize: size / 1.5,
-        fontWeight: 'bold',
+        fontWeight: 'bolder',
         userSelect: 'none',
+        ...style,
       }}
+      {...rest}
     >
       {BRANDING_NAME}
     </Flexbox>
   );
+});
 
-  const imageNode = (
-    <Image
-      alt={BRANDING_NAME}
-      className={className}
+const CustomImageLogo = memo<Omit<ImageProps, 'alt' | 'src'> & { size: number }>(
+  ({ size, ...rest }) => {
+    return (
+      <Image
+        alt={BRANDING_NAME}
+        height={size}
+        src={BRANDING_LOGO_URL}
+        unoptimized={true}
+        width={size}
+        {...rest}
+      />
+    );
+  },
+);
+
+const Divider = memo<SvgProps & DivProps & { size?: number }>(
+  ({ size = '1em', style, ...rest }) => (
+    <svg
+      fill="none"
       height={size}
-      src={BRANDING_LOGO_URL}
-      unoptimized={true}
+      shapeRendering="geometricPrecision"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ flex: 'none', lineHeight: 1, ...style }}
+      viewBox="0 0 24 24"
       width={size}
-    />
-  );
+      {...rest}
+    >
+      <path d="M16.88 3.549L7.12 20.451" />
+    </svg>
+  ),
+);
+
+const CustomLogo = memo<LobeChatProps>(({ extra, size = 32, className, style, type, ...rest }) => {
+  const theme = useTheme();
+  const { styles } = useStyles();
+  let logoComponent: ReactNode;
+
   switch (type) {
+    case '3d':
+    case 'flat': {
+      logoComponent = <CustomImageLogo size={size} style={style} {...rest} />;
+      break;
+    }
+    case 'mono': {
+      logoComponent = (
+        <CustomImageLogo size={size} style={{ filter: 'grayscale(100%)', ...style }} {...rest} />
+      );
+      break;
+    }
     case 'text': {
-      return textNode;
+      logoComponent = <CustomTextLogo size={size} style={style} {...rest} />;
+      break;
     }
-
     case 'combine': {
-      return (
-        <Flexbox align={'center'} gap={4} horizontal>
-          {imageNode}
-          {textNode}
-        </Flexbox>
+      logoComponent = (
+        <>
+          <CustomImageLogo size={size} />
+          <CustomTextLogo size={size} style={{ marginLeft: Math.round(size / 4) }} />
+        </>
       );
-    }
 
-    default:
-    case 'flat':
-    case 'mono':
-    case '3d': {
-      return (
-        <Image
-          alt={BRANDING_NAME}
-          className={className}
-          height={size}
-          src={BRANDING_LOGO_URL}
-          unoptimized={true}
-          width={size}
-        />
-      );
+      if (!extra)
+        logoComponent = (
+          <Flexbox align={'center'} flex={'none'} horizontal {...rest}>
+            {logoComponent}
+          </Flexbox>
+        );
+
+      break;
     }
   }
+
+  if (!extra) return logoComponent;
+
+  const extraSize = Math.round((size / 3) * 1.9);
+
+  return (
+    <Flexbox align={'center'} className={className} flex={'none'} horizontal {...rest}>
+      {logoComponent}
+      <Divider size={extraSize} style={{ color: theme.colorFill }} />
+      <div className={styles.extraTitle} style={{ fontSize: extraSize }}>
+        {extra}
+      </div>
+    </Flexbox>
+  );
 });
 
 export default CustomLogo;

@@ -5,6 +5,7 @@ import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
   BedrockProviderCard,
+  FireworksAIProviderCard,
   GroqProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
@@ -63,7 +64,9 @@ export const getServerGlobalConfig = () => {
     SILICONCLOUD_MODEL_LIST,
 
     ENABLED_UPSTAGE,
-    
+
+    ENABLED_SPARK,
+
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
 
@@ -79,6 +82,9 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
+
+    ENABLED_FIREWORKSAI,
+    FIREWORKSAI_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -112,6 +118,16 @@ export const getServerGlobalConfig = () => {
         }),
       },
       deepseek: { enabled: ENABLED_DEEPSEEK },
+
+      fireworksai: {
+        enabled: ENABLED_FIREWORKSAI,
+        enabledModels: extractEnabledModels(FIREWORKSAI_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: FireworksAIProviderCard.chatModels,
+          modelString: FIREWORKSAI_MODEL_LIST,
+        }),
+      },
+
       google: { enabled: ENABLED_GOOGLE },
       groq: {
         enabled: ENABLED_GROQ,
@@ -174,6 +190,7 @@ export const getServerGlobalConfig = () => {
           modelString: SILICONCLOUD_MODEL_LIST,
         }),
       },
+      spark: { enabled: ENABLED_SPARK },
       stepfun: { enabled: ENABLED_STEPFUN },
 
       taichu: { enabled: ENABLED_TAICHU },

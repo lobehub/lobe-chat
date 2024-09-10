@@ -32,7 +32,6 @@ const Baichuan: ModelProviderCard = {
     {
       description: '采用搜索增强技术实现大模型与领域知识、全网知识的全面链接。支持PDF、Word等多种文档上传及网址输入，信息获取及时、全面，输出结果准确、专业。',
       displayName: 'Baichuan 2 Turbo',
-      enabled: true,
       id: 'Baichuan2-Turbo',
       maxOutput: 8192,
       tokens: 32_768,
@@ -40,7 +39,6 @@ const Baichuan: ModelProviderCard = {
     {
       description: '具备 192K 超长上下文窗口，采用搜索增强技术实现大模型与领域知识、全网知识的全面链接。支持PDF、Word等多种文档上传及网址输入，信息获取及时、全面，输出结果准确、专业。',
       displayName: 'Baichuan 2 Turbo 192k',
-      enabled: true,
       id: 'Baichuan2-Turbo-192k',
       maxOutput: 2048,
       tokens: 192_000,

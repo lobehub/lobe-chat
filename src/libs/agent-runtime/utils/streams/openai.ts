@@ -27,10 +27,6 @@ export const transformOpenAIStream = (
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
-    if (typeof item.delta?.content === 'string' && !item.finish_reason && !item.delta?.tool_calls) {
-      return { data: item.delta.content, id: chunk.id, type: 'text' };
-    }
-
     if (item.delta?.tool_calls) {
       return {
         data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
@@ -39,7 +35,10 @@ export const transformOpenAIStream = (
           }
 
           return {
-            function: value.function,
+            function: {
+              arguments: value.function?.arguments ?? '{}',
+              name: value.function?.name ?? null,
+            },
             id: value.id || stack?.tool?.id || generateToolCallId(index, value.function?.name),
 
             // mistral's tool calling don't have index and function field, it's data like:
@@ -60,7 +59,18 @@ export const transformOpenAIStream = (
 
     // 给定结束原因
     if (item.finish_reason) {
+      // one-api 的流式接口，会出现既有 finish_reason ，也有 content 的情况
+      //  {"id":"demo","model":"deepl-en","choices":[{"index":0,"delta":{"role":"assistant","content":"Introduce yourself."},"finish_reason":"stop"}]}
+
+      if (typeof item.delta?.content === 'string' && !!item.delta.content) {
+        return { data: item.delta.content, id: chunk.id, type: 'text' };
+      }
+
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
+    }
+
+    if (typeof item.delta?.content === 'string') {
+      return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
     if (item.delta?.content === null) {
