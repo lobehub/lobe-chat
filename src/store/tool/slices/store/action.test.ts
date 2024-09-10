@@ -102,7 +102,7 @@ describe('useToolStore:pluginStore', () => {
   describe('loadPluginStore', () => {
     it('should load plugin list and update state', async () => {
       // Given
-      const pluginListMock = { plugins: [{ identifier: 'plugin1' }, { identifier: 'plugin2' }] };
+      const pluginListMock = [{ identifier: 'plugin1' }, { identifier: 'plugin2' }];
       (toolService.getToolList as Mock).mockResolvedValue(pluginListMock);
 
       // When
@@ -114,7 +114,7 @@ describe('useToolStore:pluginStore', () => {
       // Then
       expect(toolService.getToolList).toHaveBeenCalled();
       expect(pluginList).toEqual(pluginListMock);
-      expect(useToolStore.getState().pluginStoreList).toEqual(pluginListMock.plugins);
+      expect(useToolStore.getState().pluginStoreList).toEqual(pluginListMock);
     });
 
     it('should handle errors when loading plugin list', async () => {
@@ -145,7 +145,7 @@ describe('useToolStore:pluginStore', () => {
   describe('useFetchPluginStore', () => {
     it('should use SWR to fetch plugin store', async () => {
       // Given
-      const pluginListMock = { plugins: [{ identifier: 'plugin1' }, { identifier: 'plugin2' }] };
+      const pluginListMock = [{ identifier: 'plugin1' }, { identifier: 'plugin2' }];
       (useSWR as Mock).mockReturnValue({
         data: pluginListMock,
         error: null,
@@ -157,10 +157,7 @@ describe('useToolStore:pluginStore', () => {
 
       // Then
       expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function), {
-        fallbackData: {
-          plugins: [],
-          schemaVersion: 1,
-        },
+        fallbackData: [],
         revalidateOnFocus: false,
         suspense: true,
       });
@@ -183,10 +180,7 @@ describe('useToolStore:pluginStore', () => {
 
       // Then
       expect(useSWR).toHaveBeenCalledWith('loadPluginStore', expect.any(Function), {
-        fallbackData: {
-          plugins: [],
-          schemaVersion: 1,
-        },
+        fallbackData: [],
         revalidateOnFocus: false,
         suspense: true,
       });
