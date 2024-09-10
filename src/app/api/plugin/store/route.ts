@@ -3,8 +3,6 @@ import { PluginStore } from '@/server/modules/PluginStore';
 
 export const runtime = 'edge';
 
-export const revalidate = 3600 * 12; // revalidate at almost every 12 hours
-
 export const GET = async (req: Request) => {
   const locale = new URL(req.url).searchParams.get('locale');
 

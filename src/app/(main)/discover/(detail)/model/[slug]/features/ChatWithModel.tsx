@@ -10,8 +10,6 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import { BASE_PROVIDER_DOC_URL } from '@/const/url';
-
 import { useProviderList } from '../../../../features/useProviderList';
 
 const useStyles = createStyles(({ css }) => ({
@@ -32,7 +30,7 @@ const ChatWithModel = memo<{ providers?: string[] }>(({ providers = [] }) => {
   const items = list.map((item) => ({
     key: item.id,
     label: (
-      <Link href={urlJoin(BASE_PROVIDER_DOC_URL, item.id)} target={'_blank'}>
+      <Link href={urlJoin('/discover/provider', item.id)}>
         {[item.name, t('models.guide')].join(' ')}
       </Link>
     ),
@@ -60,6 +58,15 @@ const ChatWithModel = memo<{ providers?: string[] }>(({ providers = [] }) => {
       </Dropdown.Button>
     );
 
+  if (items.length === 1)
+    return (
+      <Link href={urlJoin('/discover/provider', items[0].key)} style={{ flex: 1 }}>
+        <Button block className={styles.button} size={'large'} type={'primary'}>
+          {t('models.guide')}
+        </Button>
+      </Link>
+    );
+
   return (
     <Dropdown
       menu={{
@@ -73,7 +80,7 @@ const ChatWithModel = memo<{ providers?: string[] }>(({ providers = [] }) => {
         style={{ flex: 1, width: 'unset' }}
         type={'primary'}
       >
-        {t('models.chat')}
+        {t('models.guide')}
       </Button>
     </Dropdown>
   );

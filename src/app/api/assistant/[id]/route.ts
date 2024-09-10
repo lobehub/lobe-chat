@@ -3,8 +3,6 @@ import { AssistantStore } from '@/server/modules/AssistantStore';
 
 export const runtime = 'edge';
 
-export const revalidate = 3600 * 12; // revalidate
-
 export const GET = async (req: Request, { params }: { params: { id: string } }) => {
   const { searchParams } = new URL(req.url);
 
