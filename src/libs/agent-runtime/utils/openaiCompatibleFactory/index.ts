@@ -2,7 +2,9 @@ import OpenAI, { ClientOptions } from 'openai';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
+import { parseDataUri } from '@/libs/agent-runtime/utils/uriParser';
 import { ChatModelCard } from '@/types/llm';
+import { imageUrlToBase64 } from '@/utils/imageToBase64';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
@@ -149,6 +151,25 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       this.baseURL = this.client.baseURL;
     }
 
+    private async convertMessageContent(
+      content: OpenAI.ChatCompletionContentPart,
+    ): Promise<OpenAI.ChatCompletionContentPart> {
+      if (content.type === 'image_url') {
+        const { type } = parseDataUri(content.image_url.url);
+
+        if (type === 'url' && process.env.LLM_VISION_IMAGE_TYPE === 'base64') {
+          const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
+
+          return {
+            ...content,
+            image_url: { ...content.image_url, url: `data:${mimeType};base64,${base64}` },
+          };
+        }
+      }
+
+      return content;
+    }
+
     async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatCompetitionOptions) {
       try {
         const postPayload = chatCompletion?.handlePayload
@@ -158,9 +179,24 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
+        const messages = (await Promise.all(
+          postPayload.messages.map(async (message) => ({
+            ...message,
+            content:
+              typeof message.content === 'string'
+                ? message.content
+                : await Promise.all(
+                    (message.content || []).map((c) =>
+                      this.convertMessageContent(c as OpenAI.ChatCompletionContentPart),
+                    ),
+                  ),
+          })),
+        )) as OpenAI.ChatCompletionMessageParam[];
+
         const response = await this.client.chat.completions.create(
           {
             ...postPayload,
+            messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
           },
           {
