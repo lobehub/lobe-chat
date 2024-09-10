@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const LAST_MODIFIED = new Date().toISOString();
 
-class Docs {
+export class DocService {
   async getDocByPath(locale: string, path: string) {
     const extra = locale === 'zh-CN' ? '.zh-CN.mdx' : '.mdx';
 
@@ -38,5 +38,3 @@ class Docs {
 // 很奇怪，需要加一行这个 `readdirSync` 才能在 vercel 部署后读到 md 文件
 // 否则没法正常找到 mdx 文件
 readdirSync(join(process.cwd(), 'docs'));
-
-export const docsService = new Docs();

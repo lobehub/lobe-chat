@@ -7,8 +7,8 @@ import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
+import { DocService } from '@/server/services/doc';
 import { translation } from '@/server/translation';
-import { docsService } from '@/services/docs';
 import { isMobileDevice } from '@/utils/responsive';
 
 import DetailLayout from '../../features/DetailLayout';
@@ -60,7 +60,8 @@ const Page = async ({ params, searchParams }: Props) => {
   const data = await discoverService.getProviderById(locale, identifier);
   if (!data) return notFound();
 
-  const doc = await docsService.getDocByPath(locale, `usage/providers/${identifier}`);
+  const docService = new DocService();
+  const doc = await docService.getDocByPath(locale, `usage/providers/${identifier}`);
   const modelData = await discoverService.getModelByIds(locale, data.models);
 
   const { meta, createdAt, models } = data;
