@@ -18,6 +18,7 @@ import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
 import SiliconCloudProvider from './siliconcloud';
+import SparkProvider from './spark';
 import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
@@ -49,6 +50,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   Ai360Provider.chatModels,
   SiliconCloudProvider.chatModels,
   UpstageProvider.chatModels,
+  SparkProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -76,6 +78,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   SiliconCloudProvider,
   UpstageProvider,
+  SparkProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -105,6 +108,7 @@ export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
 export { default as SiliconCloudProviderCard } from './siliconcloud';
+export { default as SparkProviderCard } from './spark';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';

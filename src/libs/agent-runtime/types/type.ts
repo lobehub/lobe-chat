@@ -40,6 +40,7 @@ export enum ModelProvider {
   Perplexity = 'perplexity',
   Qwen = 'qwen',
   SiliconCloud = 'siliconcloud',
+  Spark = 'spark',
   Stepfun = 'stepfun',
   Taichu = 'taichu',
   TogetherAI = 'togetherai',

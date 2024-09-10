@@ -15,6 +15,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   SiliconCloudProviderCard,
+  SparkProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
@@ -61,6 +62,7 @@ export const useProviderList = (): ProviderItem[] => {
       Ai360ProviderCard,
       SiliconCloudProviderCard,
       UpstageProviderCard,
+      SparkProviderCard,
     ],
     [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider],
   );

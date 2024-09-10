@@ -16,6 +16,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   SiliconCloudProviderCard,
+  SparkProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
@@ -99,6 +100,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   siliconcloud: {
     enabled: false,
     enabledModels: filterEnabledModels(SiliconCloudProviderCard),
+  },
+  spark: {
+    enabled: false,
+    enabledModels: filterEnabledModels(SparkProviderCard),
   },
   stepfun: {
     enabled: false,

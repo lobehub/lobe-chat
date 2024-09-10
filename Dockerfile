@@ -141,6 +141,8 @@ ENV \
     QWEN_API_KEY="" QWEN_MODEL_LIST="" \
     # SiliconCloud
     SILICONCLOUD_API_KEY="" SILICONCLOUD_MODEL_LIST="" SILICONCLOUD_PROXY_URL="" \
+    # Spark
+    SPARK_API_KEY="" \
     # Stepfun
     STEPFUN_API_KEY="" \
     # Taichu

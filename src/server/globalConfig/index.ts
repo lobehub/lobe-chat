@@ -63,7 +63,9 @@ export const getServerGlobalConfig = () => {
     SILICONCLOUD_MODEL_LIST,
 
     ENABLED_UPSTAGE,
-    
+
+    ENABLED_SPARK,
+
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
 
@@ -174,6 +176,7 @@ export const getServerGlobalConfig = () => {
           modelString: SILICONCLOUD_MODEL_LIST,
         }),
       },
+      spark: { enabled: ENABLED_SPARK },
       stepfun: { enabled: ENABLED_STEPFUN },
 
       taichu: { enabled: ENABLED_TAICHU },
