@@ -1,13 +1,17 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { PortalFile } from '@/store/chat/slices/portal/initialState';
 import { ChatStore } from '@/store/chat/store';
+
+import { PortalFile } from './initialState';
 
 export interface ChatPortalAction {
   closeFilePreview: () => void;
+  closeMessageDetail: () => void;
   closeToolUI: () => void;
   openFilePreview: (portal: PortalFile) => void;
+  openMessageDetail: (messageId: string) => void;
   openToolUI: (messageId: string, identifier: string) => void;
+
   togglePortal: (open?: boolean) => void;
 }
 
@@ -20,20 +24,24 @@ export const chatPortalSlice: StateCreator<
   closeFilePreview: () => {
     set({ portalFile: undefined }, false, 'closeFilePreview');
   },
+  closeMessageDetail: () => {
+    set({ portalMessageDetail: undefined }, false, 'openMessageDetail');
+  },
   closeToolUI: () => {
     set({ portalToolMessage: undefined }, false, 'closeToolUI');
   },
   openFilePreview: (portal) => {
-    if (!get().showPortal) {
-      get().togglePortal(true);
-    }
+    get().togglePortal(true);
 
     set({ portalFile: portal }, false, 'openFilePreview');
   },
+  openMessageDetail: (messageId) => {
+    get().togglePortal(true);
+
+    set({ portalMessageDetail: messageId }, false, 'openMessageDetail');
+  },
   openToolUI: (id, identifier) => {
-    if (!get().showPortal) {
-      get().togglePortal(true);
-    }
+    get().togglePortal(true);
 
     set({ portalToolMessage: { id, identifier } }, false, 'openToolUI');
   },

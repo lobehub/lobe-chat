@@ -1,10 +1,11 @@
 import { t } from 'i18next';
 
 import { enableClerk } from '@/const/auth';
+import { BRANDING_NAME } from '@/const/branding';
 import { UserStore } from '@/store/user';
 import { LobeUser } from '@/types/user';
 
-const DEFAULT_USERNAME = 'LobeChat';
+const DEFAULT_USERNAME = BRANDING_NAME;
 
 const nickName = (s: UserStore) => {
   if (!s.enableAuth()) return t('userPanel.defaultNickname', { ns: 'common' });

@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "Bằng cách chọn gửi dữ liệu telemetri, bạn có thể giúp chúng tôi cải thiện trải nghiệm người dùng toàn diện của LobeChat",
+      "desc": "Bằng cách chọn gửi dữ liệu telemetry, bạn có thể giúp chúng tôi cải thiện trải nghiệm người dùng tổng thể của {{appName}}",
       "title": "Gửi dữ liệu sử dụng ẩn danh"
     },
     "title": "Thống kê dữ liệu"
@@ -70,11 +70,11 @@
           "title": "Tên hiển thị mô hình"
         },
         "files": {
-          "extra": "Hiện tại, việc tải lên tệp trong LobeChat chỉ là một phương pháp tạm thời, chỉ dành cho mục đích thử nghiệm. Chờ đợi tính năng tải lên tệp đầy đủ trong tương lai",
+          "extra": "Hiện tại, việc tải lên tệp chỉ là một giải pháp Hack, chỉ dành cho việc thử nghiệm cá nhân. Vui lòng chờ đợi khả năng tải lên tệp đầy đủ trong các phiên bản sau.",
           "title": "Hỗ trợ tải lên tệp"
         },
         "functionCall": {
-          "extra": "Cấu hình này chỉ mở khả năng gọi hàm trong LobeChat, việc hỗ trợ gọi hàm hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng gọi hàm của mô hình",
+          "extra": "Cấu hình này chỉ mở khả năng gọi hàm trong ứng dụng, việc hỗ trợ gọi hàm hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra khả năng gọi hàm của mô hình đó.",
           "title": "Hỗ trợ gọi hàm"
         },
         "id": {
@@ -88,7 +88,7 @@
           "unlimited": "vô hạn"
         },
         "vision": {
-          "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong LobeChat, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng nhận diện hình ảnh của mô hình",
+          "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong ứng dụng, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra khả năng nhận diện hình ảnh của mô hình đó.",
           "title": "Hỗ trợ nhận diện hình ảnh"
         }
       }

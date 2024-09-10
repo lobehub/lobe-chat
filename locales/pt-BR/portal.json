@@ -14,5 +14,6 @@
   "emptyArtifactList": "A lista de Artefatos atual está vazia. Por favor, use os plugins conforme necessário durante a sessão e depois verifique novamente.",
   "emptyKnowledgeList": "A lista de conhecimentos atual está vazia. Por favor, ative o repositório de conhecimentos conforme necessário durante a conversa antes de visualizar.",
   "files": "Arquivos",
+  "messageDetail": "Detalhes da mensagem",
   "title": "Janela de Expansão"
 }

@@ -7,7 +7,7 @@ export default {
       desc1: '在会话窗口中通过右上角设置进入你想提交助手的设置页面;',
       desc2: '点击右上角提交到助手市场按钮。',
       tag: '方法一',
-      title: '通过 LobeChat 提交',
+      title: '通过 {{appName}} 提交',
     },
     func2: {
       button: '前往 Github 助手仓库',
