@@ -9,6 +9,7 @@ import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeDeepSeekAI } from './deepseek';
+import { LobeFireworksAI } from './fireworksai';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
 import { LobeMinimaxAI } from './minimax';
@@ -121,6 +122,7 @@ class AgentRuntime {
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       deepseek: Partial<ClientOptions>;
+      fireworksai: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
@@ -224,6 +226,11 @@ class AgentRuntime {
       case ModelProvider.TogetherAI: {
         runtimeModel = new LobeTogetherAI(params.togetherai);
         break;
+      }
+
+      case ModelProvider.FireworksAI: {
+        runtimeModel = new LobeFireworksAI(params.fireworksai);
+        break
       }
 
       case ModelProvider.ZeroOne: {

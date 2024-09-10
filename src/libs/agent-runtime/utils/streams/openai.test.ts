@@ -287,7 +287,7 @@ describe('OpenAIStream', () => {
       expect(chunks).toEqual([
         'id: 2\n',
         'event: tool_calls\n',
-        `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+        `data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n`,
       ]);
 
       expect(onToolCallMock).toHaveBeenCalledTimes(1);
@@ -334,7 +334,7 @@ describe('OpenAIStream', () => {
       expect(chunks).toEqual([
         'id: 5\n',
         'event: tool_calls\n',
-        `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
+        `data: [{"function":{"arguments":"{}","name":"tool1"},"id":"call_1","index":0,"type":"function"},{"function":{"arguments":"{}","name":"tool2"},"id":"call_2","index":1,"type":"function"}]\n\n`,
       ]);
     });
 
@@ -428,7 +428,7 @@ describe('OpenAIStream', () => {
           `data: [{"function":{"arguments":"","name":"realtime-weather____fetchCurrentWeather"},"id":"toolu_01VQtK4W9kqxGGLHgsPPxiBj","index":0,"type":"function"}]\n`,
           'id: 1',
           'event: tool_calls',
-          `data: [{"function":{"arguments":"{\\"city\\": \\"杭州\\"}"},"id":"toolu_01VQtK4W9kqxGGLHgsPPxiBj","index":0,"type":"function"}]\n`,
+          `data: [{"function":{"arguments":"{\\"city\\": \\"杭州\\"}","name":null},"id":"toolu_01VQtK4W9kqxGGLHgsPPxiBj","index":0,"type":"function"}]\n`,
           'id: 1',
           'event: stop',
           `data: "tool_calls"\n`,

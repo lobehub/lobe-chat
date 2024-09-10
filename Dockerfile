@@ -117,6 +117,8 @@ ENV \
     BAICHUAN_API_KEY="" \
     # DeepSeek
     DEEPSEEK_API_KEY="" \
+    # Fireworks AI
+    FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq

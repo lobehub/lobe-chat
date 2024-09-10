@@ -4,6 +4,7 @@ import {
   BaichuanProviderCard,
   BedrockProviderCard,
   DeepSeekProviderCard,
+  FireworksAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -51,6 +52,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   deepseek: {
     enabled: false,
     enabledModels: filterEnabledModels(DeepSeekProviderCard),
+  },
+  fireworksai: {
+    enabled: false,
+    enabledModels: filterEnabledModels(FireworksAIProviderCard),
   },
   google: {
     enabled: false,
