@@ -524,14 +524,16 @@ describe('LobeOpenAICompatibleFactory', () => {
               }) as any,
           );
 
-        const chatPromise = instance.chat(
-          {
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'mistralai/mistral-7b-instruct:free',
-            temperature: 0,
-          },
-          { signal: controller.signal },
-        );
+        const chatPromise = instance
+          .chat(
+            {
+              messages: [{ content: 'Hello', role: 'user' }],
+              model: 'mistralai/mistral-7b-instruct:free',
+              temperature: 0,
+            },
+            { signal: controller.signal },
+          )
+          .catch();
 
         // 给一些时间让请求开始
         await sleep(50);
