@@ -128,6 +128,40 @@ describe('OpenAIStream', () => {
     expect(chunks).toEqual(['id: 3\n', 'event: data\n', `data: {"content":null}\n\n`]);
   });
 
+  it('should handle content with finish_reason', async () => {
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          id: '123',
+          model: 'deepl',
+          choices: [
+            {
+              index: 0,
+              delta: { role: 'assistant', content: 'Introduce yourself.' },
+              finish_reason: 'stop',
+            },
+          ],
+        });
+
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      ['id: 123', 'event: text', `data: "Introduce yourself."\n`].map((i) => `${i}\n`),
+    );
+  });
+
   it('should handle other delta data', async () => {
     const mockOpenAIStream = new ReadableStream({
       start(controller) {
