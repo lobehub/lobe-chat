@@ -8,13 +8,17 @@ import { ChatStreamCallbacks } from '../../types';
 import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
+  StreamStack,
   StreamToolCallChunkData,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
 
-export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): StreamProtocolChunk => {
+export const transformOpenAIStream = (
+  chunk: OpenAI.ChatCompletionChunk,
+  stack?: StreamStack,
+): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
 
   try {
@@ -23,16 +27,20 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): Stream
       return { data: chunk, id: chunk.id, type: 'data' };
     }
 
-    if (typeof item.delta?.content === 'string') {
+    if (typeof item.delta?.content === 'string' && !item.finish_reason && !item.delta?.tool_calls) {
       return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
     if (item.delta?.tool_calls) {
       return {
-        data: item.delta.tool_calls.map(
-          (value, index): StreamToolCallChunkData => ({
+        data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
+          if (stack && !stack.tool) {
+            stack.tool = { id: value.id!, index: value.index, name: value.function!.name! };
+          }
+
+          return {
             function: value.function,
-            id: value.id || generateToolCallId(index, value.function?.name),
+            id: value.id || stack?.tool?.id || generateToolCallId(index, value.function?.name),
 
             // mistral's tool calling don't have index and function field, it's data like:
             // [{"id":"xbhnmTtY7","function":{"name":"lobe-image-designer____text2image____builtin","arguments":"{\"prompts\": [\"A photo of a small, fluffy dog with a playful expression and wagging tail.\", \"A watercolor painting of a small, energetic dog with a glossy coat and bright eyes.\", \"A vector illustration of a small, adorable dog with a short snout and perky ears.\", \"A drawing of a small, scruffy dog with a mischievous grin and a wagging tail.\"], \"quality\": \"standard\", \"seeds\": [123456, 654321, 111222, 333444], \"size\": \"1024x1024\", \"style\": \"vivid\"}"}}]
@@ -43,8 +51,8 @@ export const transformOpenAIStream = (chunk: OpenAI.ChatCompletionChunk): Stream
             // so we need to add these default values
             index: typeof value.index !== 'undefined' ? value.index : index,
             type: value.type || 'function',
-          }),
-        ),
+          };
+        }),
         id: chunk.id,
         type: 'tool_calls',
       } as StreamProtocolToolCallChunk;
@@ -97,10 +105,12 @@ export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
   callbacks?: ChatStreamCallbacks,
 ) => {
+  const streamStack: StreamStack = { id: '' };
+
   const readableStream =
     stream instanceof ReadableStream ? stream : readableFromAsyncIterable(chatStreamable(stream));
 
   return readableStream
-    .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream))
+    .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };
