@@ -10,12 +10,13 @@ RUN \
     fi \
     # Add required package & update base package
     && apk update \
-    && apk add --no-cache bind-tools proxychains-ng \
+    && apk add --no-cache bind-tools proxychains-ng sudo \
     && apk upgrade --no-cache \
     # Add user nextjs to run the app
     && addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs \
     && chown -R nextjs:nodejs "/etc/proxychains" \
+    && echo "nextjs ALL=(ALL) NOPASSWD: /bin/chmod * /etc/resolv.conf" >> /etc/sudoers \
     && rm -rf /tmp/* /var/cache/apk/*
 
 ## Builder image, install all the dependencies and build the app
@@ -63,8 +64,8 @@ RUN \
     # Install the dependencies
     && pnpm i \
     # Add sharp dependencies
-    && mkdir -p /sharp \
-    && pnpm add sharp --prefix /sharp
+    && mkdir -p /deps \
+    && pnpm add sharp --prefix /deps
 
 COPY . .
 
@@ -80,7 +81,7 @@ COPY --from=builder /app/public /app/public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=builder /sharp/node_modules/.pnpm /app/node_modules/.pnpm
+COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
 ## Production image, copy all the files and run next
 FROM base
@@ -189,6 +190,14 @@ CMD \
             '[ProxyList]' \
             "$protocol $host $port" \
         > "/etc/proxychains/proxychains.conf"; \
+    fi; \
+    # Fix DNS resolving issue in Docker Compose, ref https://github.com/lobehub/lobe-chat/pull/3837
+    if [ -f "/etc/resolv.conf" ]; then \
+        sudo chmod 666 "/etc/resolv.conf"; \
+        resolv_conf=$(grep '^nameserver' "/etc/resolv.conf" | awk '{print "nameserver " $2}'); \
+        printf "%s\n" \
+            "$resolv_conf" \
+        > "/etc/resolv.conf"; \
     fi; \
     # Run the server
     ${PROXYCHAINS} node "/app/server.js";

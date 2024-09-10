@@ -10,14 +10,14 @@ const Groq: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'llama-3.1-8b-instant',
-      tokens: 8000,
+      tokens: 131_072,
     },
     {
       displayName: 'Llama 3.1 70B (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama-3.1-70b-versatile',
-      tokens: 8000,
+      tokens: 131_072,
     },
 /*
     // Offline due to overwhelming demand! Stay tuned for updates.
@@ -25,7 +25,7 @@ const Groq: ModelProviderCard = {
       displayName: 'Llama 3.1 405B (Preview)',
       functionCall: true,
       id: 'llama-3.1-405b-reasoning',
-      tokens: 8000,
+      tokens: 8_192,
     },
 */
     {

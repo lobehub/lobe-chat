@@ -1,18 +1,18 @@
 {
   "chat": {
-    "description": "LobeChat oferece a melhor experiência de uso do ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "LobeChat: Ferramenta de produtividade pessoal LLM para um cérebro mais inteligente"
+    "description": "{{appName}} traz a você a melhor experiência de uso do ChatGPT, Claude, Gemini e OLLaMA WebUI",
+    "title": "{{appName}}: Ferramenta de eficiência pessoal em IA, dê a si mesmo um cérebro mais inteligente"
   },
   "market": {
-    "description": "Criação de conteúdo, redação, perguntas e respostas, geração de imagens, geração de vídeos, geração de voz, agente inteligente, fluxo de trabalho automatizado, personalize seu assistente de IA / GPTs / OLLaMA exclusivo",
-    "title": "Mercado de assistentes"
+    "description": "Criação de conteúdo, redação, perguntas e respostas, geração de imagens, geração de vídeos, geração de voz, agentes inteligentes, fluxos de trabalho automatizados, personalize seu assistente inteligente de IA exclusivo",
+    "title": "Mercado de Assistentes"
   },
   "plugins": {
-    "description": "Pesquisa, geração de gráficos, acadêmico, geração de imagens, geração de vídeos, geração de voz, fluxo de trabalho automatizado, personalize a capacidade de plug-in exclusiva do ChatGPT / OLLaMA com ToolCall",
-    "title": "Mercado de plug-ins"
+    "description": "Pesquisa, geração de gráficos, acadêmico, geração de imagens, geração de vídeos, geração de voz, fluxos de trabalho automatizados, personalize as capacidades de plugins ToolCall exclusivos do ChatGPT / Claude",
+    "title": "Mercado de Plugins"
   },
   "welcome": {
-    "description": "LobeChat oferece a melhor experiência de uso do ChatGPT, OLLaMA, Gemini, Claude WebUI",
-    "title": "Bem-vindo ao LobeChat: Ferramenta de produtividade pessoal LLM para um cérebro mais inteligente"
+    "description": "{{appName}} traz a você a melhor experiência de uso do ChatGPT, Claude, Gemini e OLLaMA WebUI",
+    "title": "Bem-vindo ao {{appName}}: Ferramenta de eficiência pessoal em IA, dê a si mesmo um cérebro mais inteligente"
   }
 }

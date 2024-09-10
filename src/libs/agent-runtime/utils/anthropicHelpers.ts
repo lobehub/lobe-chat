@@ -1,35 +1,52 @@
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 
+import { imageUrlToBase64 } from '@/utils/imageToBase64';
+
 import { OpenAIChatMessage, UserMessageContentPart } from '../types';
 import { parseDataUri } from './uriParser';
 
-export const buildAnthropicBlock = (
+export const buildAnthropicBlock = async (
   content: UserMessageContentPart,
-): Anthropic.ContentBlock | Anthropic.ImageBlockParam => {
+): Promise<Anthropic.ContentBlock | Anthropic.ImageBlockParam> => {
   switch (content.type) {
     case 'text': {
       return content;
     }
 
     case 'image_url': {
-      const { mimeType, base64 } = parseDataUri(content.image_url.url);
+      const { mimeType, base64, type } = parseDataUri(content.image_url.url);
 
-      return {
-        source: {
-          data: base64 as string,
-          media_type: mimeType as Anthropic.ImageBlockParam.Source['media_type'],
-          type: 'base64',
-        },
-        type: 'image',
-      };
+      if (type === 'base64')
+        return {
+          source: {
+            data: base64 as string,
+            media_type: mimeType as Anthropic.ImageBlockParam.Source['media_type'],
+            type: 'base64',
+          },
+          type: 'image',
+        };
+
+      if (type === 'url') {
+        const base64 = await imageUrlToBase64(content.image_url.url);
+        return {
+          source: {
+            data: base64 as string,
+            media_type: (mimeType as Anthropic.ImageBlockParam.Source['media_type']) || 'image/png',
+            type: 'base64',
+          },
+          type: 'image',
+        };
+      }
+
+      throw new Error(`Invalid image URL: ${content.image_url.url}`);
     }
   }
 };
 
-export const buildAnthropicMessage = (
+export const buildAnthropicMessage = async (
   message: OpenAIChatMessage,
-): Anthropic.Messages.MessageParam => {
+): Promise<Anthropic.Messages.MessageParam> => {
   const content = message.content as string | UserMessageContentPart[];
 
   switch (message.role) {
@@ -39,7 +56,10 @@ export const buildAnthropicMessage = (
 
     case 'user': {
       return {
-        content: typeof content === 'string' ? content : content.map((c) => buildAnthropicBlock(c)),
+        content:
+          typeof content === 'string'
+            ? content
+            : await Promise.all(content.map(async (c) => await buildAnthropicBlock(c))),
         role: 'user',
       };
     }
@@ -90,14 +110,15 @@ export const buildAnthropicMessage = (
   }
 };
 
-export const buildAnthropicMessages = (
+export const buildAnthropicMessages = async (
   oaiMessages: OpenAIChatMessage[],
-): Anthropic.Messages.MessageParam[] => {
+): Promise<Anthropic.Messages.MessageParam[]> => {
   const messages: Anthropic.Messages.MessageParam[] = [];
   let lastRole = 'assistant';
   let pendingToolResults: Anthropic.ToolResultBlockParam[] = [];
 
-  oaiMessages.forEach((message, index) => {
+  for (const message of oaiMessages) {
+    const index = oaiMessages.indexOf(message);
     // refs: https://docs.anthropic.com/claude/docs/tool-use#tool-use-and-tool-result-content-blocks
     if (message.role === 'tool') {
       pendingToolResults.push({
@@ -117,7 +138,7 @@ export const buildAnthropicMessages = (
         lastRole = 'user';
       }
     } else {
-      const anthropicMessage = buildAnthropicMessage(message);
+      const anthropicMessage = await buildAnthropicMessage(message);
 
       if (lastRole === anthropicMessage.role) {
         messages.push({ content: '_', role: lastRole === 'user' ? 'assistant' : 'user' });
@@ -126,7 +147,7 @@ export const buildAnthropicMessages = (
       lastRole = anthropicMessage.role;
       messages.push(anthropicMessage);
     }
-  });
+  }
 
   return messages;
 };
