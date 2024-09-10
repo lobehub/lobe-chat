@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.15.32](https://github.com/lobehub/lobe-chat/compare/v1.15.31...v1.15.32)
+
+<sup>Released on **2024-09-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix tools calling in some edge cases.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix tools calling in some edge cases, closes [#3872](https://github.com/lobehub/lobe-chat/issues/3872) ([2ed759d](https://github.com/lobehub/lobe-chat/commit/2ed759d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.15.31](https://github.com/lobehub/lobe-chat/compare/v1.15.30...v1.15.31)
+
+<sup>Released on **2024-09-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Baichuan should not introduce `freequency_penality` parameters.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Baichuan should not introduce `freequency_penality` parameters, closes [#3871](https://github.com/lobehub/lobe-chat/issues/3871) ([66a061e](https://github.com/lobehub/lobe-chat/commit/66a061e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.15.30](https://github.com/lobehub/lobe-chat/compare/v1.15.29...v1.15.30)
 
 <sup>Released on **2024-09-09**</sup>
