@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.16.7](https://github.com/lobehub/lobe-chat/compare/v1.16.6...v1.16.7)
+
+<sup>Released on **2024-09-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Optimize model token display method.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Optimize model token display method, closes [#3697](https://github.com/lobehub/lobe-chat/issues/3697) ([249795c](https://github.com/lobehub/lobe-chat/commit/249795c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.16.6](https://github.com/lobehub/lobe-chat/compare/v1.16.5...v1.16.6)
 
 <sup>Released on **2024-09-11**</sup>
