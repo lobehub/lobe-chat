@@ -16,7 +16,8 @@
   "fetchErrorDetail": "錯誤詳情",
   "notFound": {
     "backHome": "返回首頁",
-    "desc": "我們找不到您正在尋找的頁面，請檢查連結是否正確",
+    "check": "請檢查你的 URL 是否正確",
+    "desc": "我們找不到您尋找的頁面",
     "title": "進入了未知領域？"
   },
   "pluginSettings": {

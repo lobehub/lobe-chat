@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Détails de l'erreur",
   "notFound": {
     "backHome": "Retour à la page d'accueil",
-    "desc": "La page que vous recherchez est introuvable. Veuillez vérifier si le lien est correct.",
+    "check": "Veuillez vérifier si votre URL est correcte",
+    "desc": "Nous n'avons pas pu trouver la page que vous recherchez.",
     "title": "Êtes-vous entré dans un domaine inconnu ?"
   },
   "pluginSettings": {

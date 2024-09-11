@@ -133,12 +133,12 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         }
 
         if (type === 'url') {
-          const base64Image = await imageUrlToBase64(content.image_url.url);
+          const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
 
           return {
             inlineData: {
-              data: base64Image,
-              mimeType: mimeType || 'image/png',
+              data: base64,
+              mimeType,
             },
           };
         }

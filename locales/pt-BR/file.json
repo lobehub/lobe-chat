@@ -21,6 +21,7 @@
       "embeddingStatus": "Vetorização"
     }
   },
+  "empty": "Nenhum arquivo/pasta enviado até o momento",
   "header": {
     "actions": {
       "newFolder": "Nova pasta",
@@ -37,6 +38,7 @@
     "new": "Novo repositório de conhecimento",
     "title": "Repositório de conhecimento"
   },
+  "networkError": "Falha ao acessar a base de conhecimento, por favor verifique a conexão de rede e tente novamente",
   "notSupportGuide": {
     "desc": "A instância atual está no modo de banco de dados cliente e não pode usar a funcionalidade de gerenciamento de arquivos. Por favor, mude para <1>modo de banco de dados servidor</1>, ou use diretamente <3>LobeChat Cloud</3>",
     "features": {
