@@ -165,6 +165,10 @@ const OpenAI: ModelProviderCard = {
   id: 'openai',
   modelList: { showModelFetcher: true },
   name: 'OpenAI',
+  smoothing: {
+    speed: 2,
+    text: true,
+  },
 };
 
 export default OpenAI;
