@@ -43,6 +43,10 @@ const Minimax: ModelProviderCard = {
   checkModel: 'abab6.5s-chat',
   id: 'minimax',
   name: 'Minimax',
+  smoothing: {
+    speed: 2,
+    text: true,
+  },
 };
 
 export default Minimax;
