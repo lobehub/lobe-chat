@@ -3,26 +3,53 @@ SOURCE_URL="https://raw.githubusercontent.com/cy948/lobe-chat/run/casdoor"
 FILES=(
   "docker-compose/demo/docker-compose.yml"
   "docker-compose/demo/.env.example"
-  "docker-compose/demo/init_data.json"
+  "docker-compose/demo/init_data.json.tar.gz"
   "docker-compose/demo/s3_data.tar.gz"
 )
+
+# Default value for force download
+FORCE_DOWNLOAD=false
+
+# Parse script arguments
+while getopts "f" opt; do
+  case $opt in
+    f)
+      FORCE_DOWNLOAD=true
+      ;;
+    *)
+      echo "Usage: $0 [-f]"
+      exit 1
+      ;;
+  esac
+done
 
 # Function to download files
 download_file() {
   local file_url="$1"
   local local_file="$2"
 
-  if [ -e "$local_file" ]; then
+  if [ "$FORCE_DOWNLOAD" = false ] && [ -e "$local_file" ]; then
     echo "$local_file already exists, skipping download."
     return 0
   fi
 
-  wget "$file_url" -O "$local_file"
-  if [ $? -eq 0 ]; then
-    echo "$local_file downloaded successfully."
-    return 0
+  wget -q --show-progress "$file_url" -O "$local_file" &
+}
+
+extract_file() {
+  local file_name=$1
+  local target_dir=$2
+
+  if [ -e "$file_name" ]; then
+    tar -zxvf "$file_name" -C "$target_dir" > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "$file_name extracted successfully to $target_dir."
+    else
+      echo "$file_name extraction failed."
+      exit 1
+    fi
   else
-    echo "$local_file download failed."
+    echo "$file_name does not exist."
     exit 1
   fi
 }
@@ -57,21 +84,17 @@ print_centered() {
 }
 
 # Download files
-download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
-download_file "$SOURCE_URL/${FILES[1]}" ".env"
 download_file "$SOURCE_URL/${FILES[2]}" "init_data.json"
 download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
+download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
+download_file "$SOURCE_URL/${FILES[1]}" ".env"
 
-# Extract s3_data.tar.gz file without output
-if [ -e "s3_data.tar.gz" ]; then
-  tar -zxvf s3_data.tar.gz > /dev/null 2>&1
-  if [ $? -eq 0 ]; then
-    echo "s3_data.tar.gz extracted successfully."
-  else
-    echo "s3_data.tar.gz extraction failed."
-    exit 1
-  fi
-fi
+# Wait for download job finishes
+wait
+
+# Extract .tar.gz file without output
+extract_file "s3_data.tar.gz" "."
+extract_file "init_data.json.tar.gz" "."
 
 # Display final message
 echo -e "\nYou have completed downloading all configuration files. Next steps:"
