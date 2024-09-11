@@ -8,6 +8,7 @@ import {
   LobeOpenAICompatibleRuntime,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import { sleep } from '@/utils/sleep';
 
 import * as debugStreamModule from '../debugStream';
 import { LobeOpenAICompatibleFactory } from './index';
@@ -512,9 +513,18 @@ describe('LobeOpenAICompatibleFactory', () => {
     describe('cancel request', () => {
       it('should cancel ongoing request correctly', async () => {
         const controller = new AbortController();
-        const mockCreateMethod = vi.spyOn(instance['client'].chat.completions, 'create');
+        const mockCreateMethod = vi
+          .spyOn(instance['client'].chat.completions, 'create')
+          .mockImplementation(
+            () =>
+              new Promise((_, reject) => {
+                setTimeout(() => {
+                  reject(new DOMException('The user aborted a request.', 'AbortError'));
+                }, 100);
+              }) as any,
+          );
 
-        instance.chat(
+        const chatPromise = instance.chat(
           {
             messages: [{ content: 'Hello', role: 'user' }],
             model: 'mistralai/mistral-7b-instruct:free',
@@ -523,8 +533,22 @@ describe('LobeOpenAICompatibleFactory', () => {
           { signal: controller.signal },
         );
 
+        // 给一些时间让请求开始
+        await sleep(50);
+
         controller.abort();
 
+        // 等待并断言 Promise 被拒绝
+        // 使用 try-catch 来捕获和验证错误
+        try {
+          await chatPromise;
+          // 如果 Promise 没有被拒绝，测试应该失败
+          expect.fail('Expected promise to be rejected');
+        } catch (error) {
+          expect((error as any).errorType).toBe('AgentRuntimeError');
+          expect((error as any).error.name).toBe('AbortError');
+          expect((error as any).error.message).toBe('The user aborted a request.');
+        }
         expect(mockCreateMethod).toHaveBeenCalledWith(
           expect.anything(),
           expect.objectContaining({

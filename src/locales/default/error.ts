@@ -16,7 +16,8 @@ export default {
   fetchErrorDetail: '错误详情',
   notFound: {
     backHome: '返回首页',
-    desc: '我们找不到你正在寻找的页面，请检查链接是否正确',
+    check: '请检查你的 URL 是否正确',
+    desc: '我们找不到你寻找的页面',
     title: '进入了未知领域？',
   },
   pluginSettings: {

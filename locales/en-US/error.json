@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Error Details",
   "notFound": {
     "backHome": "Back to Home",
-    "desc": "We couldn't find the page you're looking for, please check if the link is correct",
+    "check": "Please check if your URL is correct.",
+    "desc": "We couldn't find the page you were looking for.",
     "title": "Entered Unknown Territory?"
   },
   "pluginSettings": {

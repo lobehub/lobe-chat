@@ -108,6 +108,10 @@ const Qwen: ModelProviderCard = {
   id: 'qwen',
   modelList: { showModelFetcher: true },
   name: 'Qwen',
+  smoothing: {
+    speed: 2,
+    text: true,
+  },
 };
 
 export default Qwen;
