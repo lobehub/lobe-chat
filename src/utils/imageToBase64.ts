@@ -36,16 +36,25 @@ export const imageToBase64 = ({
   return canvas.toDataURL(type);
 };
 
-export const imageUrlToBase64 = async (imageUrl: string): Promise<string> => {
+export const imageUrlToBase64 = async (
+  imageUrl: string,
+): Promise<{ base64: string; mimeType: string }> => {
   try {
     const res = await fetch(imageUrl);
-    const arrayBuffer = await res.arrayBuffer();
+    const blob = await res.blob();
+    const arrayBuffer = await blob.arrayBuffer();
 
-    return typeof btoa === 'function'
-      ? btoa(
-          new Uint8Array(arrayBuffer).reduce((data, byte) => data + String.fromCharCode(byte), ''),
-        )
-      : Buffer.from(arrayBuffer).toString('base64');
+    const base64 =
+      typeof btoa === 'function'
+        ? btoa(
+            new Uint8Array(arrayBuffer).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              '',
+            ),
+          )
+        : Buffer.from(arrayBuffer).toString('base64');
+
+    return { base64, mimeType: blob.type };
   } catch (error) {
     console.error('Error converting image to base64:', error);
     throw error;

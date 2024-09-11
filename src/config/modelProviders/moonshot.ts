@@ -28,6 +28,10 @@ const Moonshot: ModelProviderCard = {
   checkModel: 'moonshot-v1-8k',
   id: 'moonshot',
   name: 'Moonshot',
+  smoothing: {
+    speed: 2,
+    text: true,
+  },
 };
 
 export default Moonshot;

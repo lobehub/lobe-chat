@@ -72,13 +72,14 @@ describe('imageUrlToBase64', () => {
   it('should convert image URL to base64 string', async () => {
     mockFetch.mockResolvedValue({
       arrayBuffer: () => Promise.resolve(mockArrayBuffer),
+      blob: () => Promise.resolve(new Blob([mockArrayBuffer], { type: 'image/jpg' })),
     });
 
     const result = await imageUrlToBase64('https://example.com/image.jpg');
 
     expect(mockFetch).toHaveBeenCalledWith('https://example.com/image.jpg');
     expect(global.btoa).toHaveBeenCalled();
-    expect(result).toBe('mockBase64String');
+    expect(result).toEqual({ base64: 'mockBase64String', mimeType: 'image/jpg' });
   });
 
   it('should throw an error when fetch fails', async () => {

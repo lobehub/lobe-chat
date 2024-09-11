@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Foutdetails",
   "notFound": {
     "backHome": "Terug naar startpagina",
-    "desc": "We kunnen de pagina die je zoekt niet vinden, controleer of de link juist is",
+    "check": "Controleer of je URL correct is",
+    "desc": "We kunnen de pagina die je zoekt niet vinden",
     "title": "Betreden onbekend terrein?"
   },
   "pluginSettings": {

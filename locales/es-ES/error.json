@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Detalles del error",
   "notFound": {
     "backHome": "Volver a la página de inicio",
-    "desc": "No podemos encontrar la página que estás buscando, por favor verifica si el enlace es correcto",
+    "check": "Por favor, verifica si tu URL es correcta",
+    "desc": "No podemos encontrar la página que estás buscando",
     "title": "¿Has entrado en un área desconocida?"
   },
   "pluginSettings": {

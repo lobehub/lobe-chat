@@ -21,6 +21,7 @@
       "embeddingStatus": "Vettorizzazione"
     }
   },
+  "empty": "Nessun file/cartella caricato",
   "header": {
     "actions": {
       "newFolder": "Nuova cartella",
@@ -37,6 +38,7 @@
     "new": "Nuova knowledge base",
     "title": "Knowledge Base"
   },
+  "networkError": "Impossibile ottenere la knowledge base, controlla la connessione di rete e riprova",
   "notSupportGuide": {
     "desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeChat Cloud</3>",
     "features": {
