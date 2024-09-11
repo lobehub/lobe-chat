@@ -85,7 +85,7 @@ print_centered() {
 }
 
 # Download files
-download_file "$SOURCE_URL/${FILES[2]}" "init_data.json"
+download_file "$SOURCE_URL/${FILES[2]}" "init_data.json.tar.gz"
 download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
 download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
 download_file "$SOURCE_URL/${FILES[1]}" ".env"
