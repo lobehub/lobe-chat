@@ -3,26 +3,12 @@
 # ==================
 # == Env settings ==
 # ==================
-# Set locale to UTF-8 to support Chinese characters
-export LANG=zh_CN.UTF-8
-export LC_ALL=zh_CN.UTF-8
-
-# ===============
-# == Variables ==
-# ===============
-SOURCE_URL="https://raw.githubusercontent.com/cy948/lobe-chat/run/casdoor"
-SUB_DIR=docker-compose/local
-FILES=(
-  "$SUB_DIR/docker-compose.yml"
-  "$SUB_DIR/.env.example"
-  "$SUB_DIR/init_data.json.tar.gz"
-  "$SUB_DIR/s3_data.tar.gz"
-)
 
 # ======================
 # == Process the args ==
 # ======================
 
+# 1. Default values of arguments
 # Arg: -f 
 # Determine force download asserts, default is not
 FORCE_DOWNLOAD=false
@@ -31,7 +17,11 @@ FORCE_DOWNLOAD=false
 # Determine the language to show, default is en
 LANGUAGE="en_US"
 
-# Parse script arguments
+# Arg: --url
+# Determine the source URL to download files
+SOURCE_URL="https://raw.githubusercontent.com/lobehub/lobe-chat/main"
+
+# 2. Parse script arguments
 while getopts "fl:-:" opt; do
   case $opt in
     f)
@@ -45,18 +35,35 @@ while getopts "fl:-:" opt; do
         lang)
           LANGUAGE="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
           ;;
+        url)
+          SOURCE_URL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+          ;;
         *)
-          echo "Usage: $0 [-f] [-l language|--lang language]" >&2
+          echo "Usage: $0 [-f] [-l language|--lang language] [--url source]" >&2
           exit 1
           ;;
       esac
       ;;
     *)
-      echo "Usage: $0 [-f] [-l language|--lang language]" >&2
+      echo "Usage: $0 [-f] [-l language|--lang language] [--url source]" >&2
       exit 1
       ;;
   esac
 done
+
+
+# ===============
+# == Variables ==
+# ===============
+# SOURCE_URL="https://raw.githubusercontent.com/cy948/lobe-chat/run/casdoor"
+# File list
+SUB_DIR=docker-compose/local
+FILES=(
+  "$SUB_DIR/docker-compose.yml"
+  "$SUB_DIR/.env.example"
+  "$SUB_DIR/init_data.json.tar.gz"
+  "$SUB_DIR/s3_data.tar.gz"
+)
 
 # Supported languages and messages
 declare -A MESSAGES
