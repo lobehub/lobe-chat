@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Hata detayı",
   "notFound": {
     "backHome": "Ana Sayfaya Dön",
-    "desc": "Aradığınız sayfayı bulamadık, lütfen bağlantının doğru olduğundan emin olun",
+    "check": "Lütfen URL'nizin doğru olduğundan emin olun",
+    "desc": "Aradığınız sayfa bulunamadı",
     "title": "Bilinmeyen bir alana mı girdiniz?"
   },
   "pluginSettings": {

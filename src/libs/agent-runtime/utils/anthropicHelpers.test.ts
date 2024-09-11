@@ -53,7 +53,10 @@ describe('anthropicHelpers', () => {
         base64: null,
         type: 'url',
       });
-      vi.mocked(imageUrlToBase64).mockResolvedValue('convertedBase64String');
+      vi.mocked(imageUrlToBase64).mockResolvedValue({
+        base64: 'convertedBase64String',
+        mimeType: 'image/jpg',
+      });
 
       const content = {
         type: 'image_url',
@@ -67,7 +70,7 @@ describe('anthropicHelpers', () => {
       expect(result).toEqual({
         source: {
           data: 'convertedBase64String',
-          media_type: 'image/png',
+          media_type: 'image/jpg',
           type: 'base64',
         },
         type: 'image',
@@ -80,7 +83,10 @@ describe('anthropicHelpers', () => {
         base64: null,
         type: 'url',
       });
-      vi.mocked(imageUrlToBase64).mockResolvedValue('convertedBase64String');
+      vi.mocked(imageUrlToBase64).mockResolvedValue({
+        base64: 'convertedBase64String',
+        mimeType: 'image/png',
+      });
 
       const content = {
         type: 'image_url',
