@@ -177,7 +177,7 @@ extract_file "s3_data.tar.gz" "."
 extract_file "init_data.json.tar.gz" "."
 
 # Display final message
-printf "\n%s\n" "$(show_message "tips_run_command")"
+printf "\n%s\n\n" "$(show_message "tips_run_command")"
 print_centered "docker compose up" "green"
 printf "\n%s" "$(show_message "tips_show_documentation")"
 printf "\e[34m%s\e[0m" $(show_message "tips_show_documentation_url")
