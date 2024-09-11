@@ -4,8 +4,8 @@
 # == Env settings ==
 # ==================
 # Set locale to UTF-8 to support Chinese characters
-# export LANG=zh_CN.UTF-8
-# export LC_ALL=zh_CN.UTF-8
+export LANG=zh_CN.UTF-8
+export LC_ALL=zh_CN.UTF-8
 
 # ===============
 # == Variables ==
