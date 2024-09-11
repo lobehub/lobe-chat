@@ -84,11 +84,11 @@ print_centered() {
     printf "%*s${colors[$color]}%s${colors[reset]}\n" $padding "" "$text"
 }
 
-# Download files
-download_file "$SOURCE_URL/${FILES[2]}" "init_data.json.tar.gz"
-download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
+# Download files asynchronously
 download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
 download_file "$SOURCE_URL/${FILES[1]}" ".env"
+download_file "$SOURCE_URL/${FILES[2]}" "init_data.json.tar.gz"
+download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
 
 # Wait for download job finishes
 wait
