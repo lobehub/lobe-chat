@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.16.1](https://github.com/lobehub/lobe-chat/compare/v1.16.0...v1.16.1)
+
+<sup>Released on **2024-09-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Reorder the provider list, update spark check model to spark-lite & default disable useless model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Reorder the provider list, closes [#3886](https://github.com/lobehub/lobe-chat/issues/3886) ([4d641f5](https://github.com/lobehub/lobe-chat/commit/4d641f5))
+- **misc**: Update spark check model to spark-lite & default disable useless model, closes [#3885](https://github.com/lobehub/lobe-chat/issues/3885) ([9d7e47c](https://github.com/lobehub/lobe-chat/commit/9d7e47c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.16.0](https://github.com/lobehub/lobe-chat/compare/v1.15.35...v1.16.0)
 
 <sup>Released on **2024-09-10**</sup>
