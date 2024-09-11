@@ -42,11 +42,13 @@ const Minimax: ModelProviderCard = {
   ],
   checkModel: 'abab6.5s-chat',
   id: 'minimax',
+  modelsUrl: 'https://platform.minimaxi.com/document/Models',
   name: 'Minimax',
   smoothing: {
     speed: 2,
     text: true,
   },
+  url: 'https://www.minimaxi.com',
 };
 
 export default Minimax;
