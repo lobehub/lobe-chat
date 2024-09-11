@@ -14,7 +14,9 @@ export default () => {
         <div>
           <Icon icon={LoaderCircle} size={'large'} spin />
         </div>
-        <Typography.Text type={'secondary'}>{t('loading')}</Typography.Text>
+        <Typography.Text style={{ letterSpacing: '0.1em' }} type={'secondary'}>
+          {t('loading')}
+        </Typography.Text>
       </Flexbox>
     </Center>
   );

@@ -9,7 +9,7 @@
       "title": "Witaj w {{name}}"
     }
   },
-  "appInitializing": "Inicjowanie aplikacji, prosimy o cierpliwość...",
+  "appInitializing": "Aplikacja uruchamia się...",
   "autoGenerate": "Automatyczne generowanie",
   "autoGenerateTooltip": "Automatyczne uzupełnianie opisu asystenta na podstawie sugestii",
   "autoGenerateTooltipDisabled": "Proszę wprowadzić słowo kluczowe przed użyciem funkcji automatycznego uzupełniania",

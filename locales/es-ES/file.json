@@ -21,6 +21,7 @@
       "embeddingStatus": "Vectorización"
     }
   },
+  "empty": "No hay archivos/carpetas subidos aún",
   "header": {
     "actions": {
       "newFolder": "Nueva carpeta",
@@ -37,6 +38,7 @@
     "new": "Nueva base de conocimientos",
     "title": "Base de conocimientos"
   },
+  "networkError": "Error al obtener la base de conocimientos, por favor verifica la conexión a internet y vuelve a intentarlo",
   "notSupportGuide": {
     "desc": "La instancia de despliegue actual está en modo de base de datos cliente, no se puede utilizar la función de gestión de archivos. Por favor, cambia a <1>modo de despliegue de base de datos en servidor</1>, o utiliza directamente <3>LobeChat Cloud</3>",
     "features": {

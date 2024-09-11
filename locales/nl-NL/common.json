@@ -9,7 +9,7 @@
       "title": "Welkom bij {{name}}"
     }
   },
-  "appInitializing": "Applicatie wordt gestart, gelieve geduld te hebben...",
+  "appInitializing": "Applicatie wordt gestart...",
   "autoGenerate": "Automatisch genereren",
   "autoGenerateTooltip": "Automatisch assistentbeschrijving genereren op basis van suggesties",
   "autoGenerateTooltipDisabled": "Schakel de automatische aanvulling in nadat u een suggestiewoord heeft ingevoerd",
