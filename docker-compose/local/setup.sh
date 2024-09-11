@@ -4,8 +4,8 @@
 # == Env settings ==
 # ==================
 # Set locale to UTF-8 to support Chinese characters
-export LANG=en_US.UTF-8
-export LC_ALL=en_US.UTF-8
+# export LANG=zh_CN.UTF-8
+# export LC_ALL=zh_CN.UTF-8
 
 # ===============
 # == Variables ==
@@ -177,8 +177,8 @@ extract_file "s3_data.tar.gz" "."
 extract_file "init_data.json.tar.gz" "."
 
 # Display final message
-echo -e "\n" $(show_message "tips_run_command") "\n"
+printf "\n%s\n" "$(show_message "tips_run_command")"
 print_centered "docker compose up" "green"
-printf $(show_message "tips_show_documentation")
-printf "\e[34m%s\e[0m\n" $(show_message "tips_show_documentation_url")
-printf "\n\e[33m%s\e[0m\n" $(show_message "tips_warning")
+printf "\n%s" "$(show_message "tips_show_documentation")"
+printf "\e[34m%s\e[0m" $(show_message "tips_show_documentation_url")
+printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
