@@ -61,6 +61,10 @@ const Stepfun: ModelProviderCard = {
   id: 'stepfun',
   modelList: { showModelFetcher: true },
   name: '阶跃星辰',
+  smoothing: {
+    speed: 2,
+    text: true,
+  },
 };
 
 export default Stepfun;

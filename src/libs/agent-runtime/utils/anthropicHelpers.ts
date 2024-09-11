@@ -28,11 +28,11 @@ export const buildAnthropicBlock = async (
         };
 
       if (type === 'url') {
-        const base64 = await imageUrlToBase64(content.image_url.url);
+        const { base64, mimeType } = await imageUrlToBase64(content.image_url.url);
         return {
           source: {
             data: base64 as string,
-            media_type: (mimeType as Anthropic.ImageBlockParam.Source['media_type']) || 'image/png',
+            media_type: mimeType as Anthropic.ImageBlockParam.Source['media_type'],
             type: 'base64',
           },
           type: 'image',
