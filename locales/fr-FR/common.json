@@ -9,7 +9,7 @@
       "title": "Bienvenue à {{name}}"
     }
   },
-  "appInitializing": "L'application est en cours de démarrage, veuillez patienter...",
+  "appInitializing": "L'application est en cours de démarrage...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",

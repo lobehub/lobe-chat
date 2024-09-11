@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Chi tiết lỗi",
   "notFound": {
     "backHome": "Quay về Trang chủ",
-    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm, vui lòng kiểm tra xem liên kết có đúng không",
+    "check": "Vui lòng kiểm tra xem URL của bạn có đúng không",
+    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm",
     "title": "Bước vào vùng đất chưa biết?"
   },
   "pluginSettings": {
