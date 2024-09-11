@@ -59,6 +59,10 @@ const Azure: ModelProviderCard = {
   defaultShowBrowserRequest: true,
   id: 'azure',
   name: 'Azure',
+  smoothing: {
+    speed: 2,
+    text: true,
+  },
 };
 
 export default Azure;
