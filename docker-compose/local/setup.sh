@@ -55,9 +55,8 @@ done
 # ===============
 # == Variables ==
 # ===============
-# SOURCE_URL="https://raw.githubusercontent.com/cy948/lobe-chat/run/casdoor"
 # File list
-SUB_DIR=docker-compose/local
+SUB_DIR="docker-compose/local"
 FILES=(
   "$SUB_DIR/docker-compose.yml"
   "$SUB_DIR/.env.example"
