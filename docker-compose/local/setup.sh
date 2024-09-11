@@ -1,10 +1,11 @@
 #!/bin/bash
 SOURCE_URL="https://raw.githubusercontent.com/cy948/lobe-chat/run/casdoor"
+SUB_DIR=docker-compose/local
 FILES=(
-  "docker-compose/demo/docker-compose.yml"
-  "docker-compose/demo/.env.example"
-  "docker-compose/demo/init_data.json.tar.gz"
-  "docker-compose/demo/s3_data.tar.gz"
+  "$SUB_DIR/docker-compose.yml"
+  "$SUB_DIR/.env.example"
+  "$SUB_DIR/init_data.json.tar.gz"
+  "$SUB_DIR/s3_data.tar.gz"
 )
 
 # Default value for force download
