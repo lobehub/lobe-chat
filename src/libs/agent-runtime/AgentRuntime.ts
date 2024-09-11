@@ -289,6 +289,7 @@ class AgentRuntime {
         runtimeModel = new LobeAi21AI(params.ai21);
         break;
       }
+    }
 
     return new AgentRuntime(runtimeModel);
   }
