@@ -21,6 +21,7 @@
       "embeddingStatus": "Indeksowanie"
     }
   },
+  "empty": "Brak przesłanych plików/folderów",
   "header": {
     "actions": {
       "newFolder": "Nowy folder",
@@ -37,6 +38,7 @@
     "new": "Nowa baza wiedzy",
     "title": "Baza wiedzy"
   },
+  "networkError": "Nie udało się uzyskać dostępu do bazy wiedzy, proszę sprawdzić połączenie sieciowe i spróbować ponownie",
   "notSupportGuide": {
     "desc": "Obecna instancja wdrożeniowa jest w trybie bazy danych klienta, co uniemożliwia korzystanie z funkcji zarządzania plikami. Proszę przełączyć się na <1>tryb wdrożenia bazy danych serwera</1> lub bezpośrednio korzystać z <3>LobeChat Cloud</3>",
     "features": {

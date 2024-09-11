@@ -32,7 +32,7 @@ const FileUpload = memo(() => {
   const items: MenuProps['items'] = [
     {
       disabled: !canUploadImage,
-      icon: <Icon icon={ImageUp} />,
+      icon: <Icon icon={ImageUp} style={{ fontSize: '16px' }} />,
       key: 'upload-image',
       label: canUploadImage ? (
         <Upload
@@ -54,7 +54,7 @@ const FileUpload = memo(() => {
       ),
     },
     {
-      icon: <Icon icon={FileUp} />,
+      icon: <Icon icon={FileUp} style={{ fontSize: '16px' }} />,
       key: 'upload-file',
       label: (
         <Upload
@@ -73,7 +73,7 @@ const FileUpload = memo(() => {
       ),
     },
     {
-      icon: <Icon icon={FolderUp} />,
+      icon: <Icon icon={FolderUp} style={{ fontSize: '16px' }} />,
       key: 'upload-folder',
       label: (
         <Upload
