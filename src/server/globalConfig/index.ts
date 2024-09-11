@@ -59,7 +59,6 @@ export const getServerGlobalConfig = () => {
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
     ENABLED_AI360,
-    ENABLED_ZEROONE,
 
     ENABLED_SILICONCLOUD,
     SILICONCLOUD_MODEL_LIST,
