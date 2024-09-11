@@ -43,7 +43,7 @@
     "all": "Alle inhoud",
     "allFiles": "Alle bestanden",
     "allKnowledgeBases": "Alle kennisbanken",
-    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Schakel over naar serverdatabase-implementatie of gebruik de LobeChat Cloud-service om dit te gebruiken.",
+    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Als je dit wilt gebruiken, schakel dan over naar serverdatabase-implementatie of gebruik de {{cloud}}-dienst.",
     "library": {
       "action": {
         "add": "Toevoegen",

@@ -43,7 +43,7 @@
     "all": "Alle Inhalte",
     "allFiles": "Alle Dateien",
     "allKnowledgeBases": "Alle Wissensdatenbanken",
-    "disabled": "Der aktuelle Bereitstellungsmodus unterstützt keine Wissensdatenbankgespräche. Bitte wechseln Sie zur serverseitigen Datenbankbereitstellung oder verwenden Sie den LobeChat Cloud-Dienst.",
+    "disabled": "Der aktuelle Bereitstellungsmodus unterstützt keine Dialoge mit der Wissensdatenbank. Bitte wechseln Sie zur Bereitstellung mit einer Serverdatenbank oder nutzen Sie den {{cloud}}-Dienst.",
     "library": {
       "action": {
         "add": "Hinzufügen",

@@ -115,7 +115,7 @@
   },
   "upload": {
     "desc": "Detay: {{detail}}",
-    "fileOnlySupportInServerMode": "Mevcut dağıtım modu, yalnızca resim dosyalarının yüklenmesini desteklemektedir. {{ext}} formatında bir dosya yüklemek istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya LobeChat Cloud hizmetini kullanın.",
+    "fileOnlySupportInServerMode": "Mevcut dağıtım modu, yalnızca resim dosyalarının yüklenmesini desteklemektedir. {{ext}} formatında bir dosya yüklemek istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya {{cloud}} hizmetini kullanın.",
     "networkError": "Lütfen ağ bağlantınızın düzgün çalıştığından emin olun ve dosya depolama hizmetinin çapraz alan yapılandırmasının doğru olup olmadığını kontrol edin.",
     "title": "Dosya yükleme başarısız, lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin",
     "unknownError": "Hata nedeni: {{reason}}",

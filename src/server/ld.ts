@@ -191,7 +191,7 @@ class Ld {
       '@type': 'WebSite',
       'description': pkg.description,
       'inLanguage': 'en-US',
-      'name': 'LobeChat',
+      'name': BRANDING_NAME,
       'publisher': {
         '@id': this.getId(OFFICIAL_URL, '#organization'),
       },

@@ -4,6 +4,7 @@ import {
   BaichuanProviderCard,
   BedrockProviderCard,
   DeepSeekProviderCard,
+  FireworksAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -16,6 +17,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   SiliconCloudProviderCard,
+  SparkProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
@@ -50,6 +52,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   deepseek: {
     enabled: false,
     enabledModels: filterEnabledModels(DeepSeekProviderCard),
+  },
+  fireworksai: {
+    enabled: false,
+    enabledModels: filterEnabledModels(FireworksAIProviderCard),
   },
   google: {
     enabled: false,
@@ -99,6 +105,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   siliconcloud: {
     enabled: false,
     enabledModels: filterEnabledModels(SiliconCloudProviderCard),
+  },
+  spark: {
+    enabled: false,
+    enabledModels: filterEnabledModels(SparkProviderCard),
   },
   stepfun: {
     enabled: false,
