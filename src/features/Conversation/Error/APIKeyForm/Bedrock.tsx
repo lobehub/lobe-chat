@@ -2,7 +2,7 @@ import { Aws } from '@lobehub/icons';
 import { Icon } from '@lobehub/ui';
 import { Button, Input, Select } from 'antd';
 import { useTheme } from 'antd-style';
-import { Network } from 'lucide-react';
+import { Network, ShieldPlus } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,6 +15,7 @@ import { FormAction } from '../style';
 const BedrockForm = memo(() => {
   const { t } = useTranslation('modelProvider');
   const [showRegion, setShow] = useState(false);
+  const [showSessionToken, setShowSessionToken] = useState(false);
 
   const [accessKeyId, secretAccessKey, sessionToken, region, setConfig] = useUserStore((s) => [
     keyVaultsConfigSelectors.bedrockConfig(s).accessKeyId,
@@ -49,15 +50,28 @@ const BedrockForm = memo(() => {
         type={'block'}
         value={secretAccessKey}
       />
-      <Input.Password
-        autoComplete={'new-password'}
-        onChange={(e) => {
-          setConfig(ModelProvider.Bedrock, { sessionToken: e.target.value });
-        }}
-        placeholder={'Aws Session Token'}
-        type={'block'}
-        value={sessionToken}
-      />
+      {showSessionToken ? (
+        <Input.Password
+          autoComplete={'new-password'}
+          onChange={(e) => {
+            setConfig(ModelProvider.Bedrock, { sessionToken: e.target.value });
+          }}
+          placeholder={'Aws Session Token'}
+          type={'block'}
+          value={sessionToken}
+        />
+      ) : (
+        <Button
+          block
+          icon={<Icon icon={ShieldPlus} />}
+          onClick={() => {
+            setShowSessionToken(true);
+          }}
+          type={'text'}
+        >
+          {t('bedrock.unlock.customSessionToken')}
+        </Button>
+      )}
       {showRegion ? (
         <Select
           onChange={(region) => {

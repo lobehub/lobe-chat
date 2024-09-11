@@ -46,6 +46,7 @@
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Région de service personnalisée",
+      "customSessionToken": "Jeton de session personnalisé",
       "description": "Entrez votre ID de clé d'accès AWS / SecretAccessKey pour commencer la session. L'application ne stockera pas votre configuration d'authentification.",
       "title": "Utiliser des informations d'authentification Bedrock personnalisées"
     }

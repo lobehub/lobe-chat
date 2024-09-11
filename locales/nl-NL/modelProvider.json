@@ -46,6 +46,7 @@
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Aangepaste regio",
+      "customSessionToken": "Aangepaste sessietoken",
       "description": "Voer uw AWS AccessKeyId / SecretAccessKey in om een sessie te starten. De app zal uw verificatiegegevens niet opslaan",
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }

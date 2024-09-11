@@ -46,6 +46,7 @@
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Regione del servizio personalizzata",
+      "customSessionToken": "Token di sessione personalizzato",
       "description": "Inserisci la tua chiave di accesso AWS AccessKeyId / SecretAccessKey per avviare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
       "title": "Usa le informazioni di autenticazione Bedrock personalizzate"
     }

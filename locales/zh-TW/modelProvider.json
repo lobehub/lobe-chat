@@ -46,6 +46,7 @@
     "title": "Bedrock",
     "unlock": {
       "customRegion": "自定義服務區域",
+      "customSessionToken": "自訂 Session Token",
       "description": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始會話。應用程式不會記錄你的驗證配置",
       "title": "使用自定義 Bedrock 驗證資訊"
     }
