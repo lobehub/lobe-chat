@@ -27,6 +27,35 @@ download_file() {
   fi
 }
 
+# Define colors
+declare -A colors
+colors=(
+    [black]="\e[30m"
+    [red]="\e[31m"
+    [green]="\e[32m"
+    [yellow]="\e[33m"
+    [blue]="\e[34m"
+    [magenta]="\e[35m"
+    [cyan]="\e[36m"
+    [white]="\e[37m"
+    [reset]="\e[0m"
+)
+
+print_centered() {
+    local text="$1"  # Get input texts
+    local color="${2:-reset}"  # Get color, default to reset
+    local term_width=$(tput cols)  # Get terminal width
+    local text_length=${#text}  # Get text length
+    local padding=$(( (term_width - text_length) / 2 ))  # Get padding
+    # Check if the color is valid
+    if [[ -z "${colors[$color]}" ]]; then
+        echo "Invalid color specified. Available colors: ${!colors[@]}"
+        return 1
+    fi
+    # Print the text with padding
+    printf "%*s${colors[$color]}%s${colors[reset]}\n" $padding "" "$text"
+}
+
 # Download files
 download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
 download_file "$SOURCE_URL/${FILES[1]}" ".env"
@@ -47,6 +76,6 @@ fi
 # Display final message
 echo -e "\nYou have completed downloading all configuration files. Next steps:"
 echo -e "1. Edit the environment variables in the '.env' file if needed. You can find the documentation on: "
-echo -e "https://lobehub.com/docs/self-hosting/environment-variables"
+print_centered "https://lobehub.com/docs/self-hosting/environment-variables" "blue"
 echo -e "2. Run:"
-echo -e "\e[32mdocker compose up\e[0m"
+print_centered "docker compose up" "green"
