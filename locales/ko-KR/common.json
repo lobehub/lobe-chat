@@ -13,6 +13,7 @@
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
   "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
+  "back": "뒤로",
   "batchDelete": "일괄 삭제",
   "blog": "제품 블로그",
   "cancel": "취소",

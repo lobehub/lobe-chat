@@ -30,19 +30,17 @@ const Minimax: ModelProviderCard = {
     {
       description: '生产力场景',
       displayName: 'abab5.5',
-      enabled: true,
       id: 'abab5.5-chat',
       tokens: 16_384,
     },
     {
       description: '中文人设对话场景',
       displayName: 'abab5.5s',
-      enabled: true,
       id: 'abab5.5s-chat',
       tokens: 8192,
     },
   ],
-  checkModel: 'abab5.5s-chat',
+  checkModel: 'abab6.5s-chat',
   id: 'minimax',
   name: 'Minimax',
 };

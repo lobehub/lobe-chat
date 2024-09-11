@@ -12,7 +12,7 @@
   },
   "analytics": {
     "telemetry": {
-      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of LobeChat",
+      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of {{appName}}.",
       "title": "Send Anonymous Usage Data"
     },
     "title": "Analytics"
@@ -70,11 +70,11 @@
           "title": "Model Display Name"
         },
         "files": {
-          "extra": "The current file upload implementation in LobeChat is only a hack solution for self-attempt. Please wait for the complete file upload capability in future implementations.",
+          "extra": "The current file upload implementation is merely a hack solution and is intended for personal experimentation only. Please wait for a complete file upload capability in future updates.",
           "title": "Support File Upload"
         },
         "functionCall": {
-          "extra": "This configuration will only enable the function call capability in LobeChat. Whether function calls are supported depends entirely on the model itself. Please test the availability of function calls in this model on your own.",
+          "extra": "This configuration will only enable function calling capabilities within the application. Whether function calling is supported depends entirely on the model itself; please test the model's function calling capabilities on your own.",
           "title": "Support Function Call"
         },
         "id": {
@@ -88,7 +88,7 @@
           "unlimited": "unlimited"
         },
         "vision": {
-          "extra": "This configuration will only enable the image upload configuration in LobeChat. Whether recognition is supported depends entirely on the model itself. Please test the availability of visual recognition in this model on your own.",
+          "extra": "This configuration will only enable image upload capabilities within the application. Whether recognition is supported depends entirely on the model itself; please test the model's visual recognition capabilities on your own.",
           "title": "Support Visual Recognition"
         }
       }

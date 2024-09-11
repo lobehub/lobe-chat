@@ -11,7 +11,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useUserStore } from '@/store/user';
 import { userProfileSelectors } from '@/store/user/selectors';
-import { ChatMessage } from '@/types/message';
+import { ChatFileItem, ChatMessage } from '@/types/message';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
@@ -53,6 +53,21 @@ const currentToolMessages = (s: ChatStore) => {
   return messages.filter((m) => m.role === 'tool');
 };
 
+const currentUserMessages = (s: ChatStore) => {
+  const messages = currentChats(s);
+
+  return messages.filter((m) => m.role === 'user');
+};
+
+const currentUserFiles = (s: ChatStore) => {
+  const userMessages = currentUserMessages(s);
+
+  return userMessages
+    .filter((m) => m.fileList && m.fileList?.length > 0)
+    .flatMap((m) => m.fileList)
+    .filter(Boolean) as ChatFileItem[];
+};
+
 const initTime = Date.now();
 
 const showInboxWelcome = (s: ChatStore): boolean => {
@@ -87,9 +102,9 @@ const currentChatsWithGuideMessage =
       systemRole: meta.description,
     });
     const agentMsg = t(isAgentEditable ? 'agentDefaultMessage' : 'agentDefaultMessageWithoutEdit', {
-      id: activeId,
       name: meta.title || t('defaultAgent'),
       ns: 'chat',
+      url: `/chat/settings?session=${activeId}`,
     });
 
     const emptyInboxGuideMessage = {
@@ -140,10 +155,9 @@ const isCurrentChatLoaded = (s: ChatStore) => !!s.messagesMap[currentChatKey(s)]
 
 const isMessageEditing = (id: string) => (s: ChatStore) => s.messageEditingIds.includes(id);
 const isMessageLoading = (id: string) => (s: ChatStore) => s.messageLoadingIds.includes(id);
-const isHasMessageLoading = (s: ChatStore) => s.messageLoadingIds.length > 0;
-const isCreatingMessage = (s: ChatStore) => s.isCreatingMessage;
 
 const isMessageGenerating = (id: string) => (s: ChatStore) => s.chatLoadingIds.includes(id);
+const isMessageInRAGFlow = (id: string) => (s: ChatStore) => s.messageRAGLoadingIds.includes(id);
 const isPluginApiInvoking = (id: string) => (s: ChatStore) => s.pluginApiLoadingIds.includes(id);
 
 const isToolCallStreaming = (id: string, index: number) => (s: ChatStore) => {
@@ -153,7 +167,24 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStore) => {
 
   return isLoading[index];
 };
+
 const isAIGenerating = (s: ChatStore) => s.chatLoadingIds.length > 0;
+const isInRAGFlow = (s: ChatStore) => s.messageRAGLoadingIds.length > 0;
+const isCreatingMessage = (s: ChatStore) => s.isCreatingMessage;
+const isHasMessageLoading = (s: ChatStore) => s.messageLoadingIds.length > 0;
+
+/**
+ * this function is used to determine whether the send button should be disabled
+ */
+const isSendButtonDisabledByMessage = (s: ChatStore) =>
+  // 1. when there is message loading
+  isHasMessageLoading(s) ||
+  // 2. when is creating the topic
+  s.creatingTopic ||
+  // 3. when is creating the message
+  isCreatingMessage(s) ||
+  // 4. when the message is in RAG flow
+  isInRAGFlow(s);
 
 export const chatSelectors = {
   chatsMessageString,
@@ -164,6 +195,7 @@ export const chatSelectors = {
   currentChatsWithGuideMessage,
   currentChatsWithHistoryConfig,
   currentToolMessages,
+  currentUserFiles,
   getMessageById,
   getMessageByToolCallId,
   getTraceIdByMessageId,
@@ -173,8 +205,10 @@ export const chatSelectors = {
   isHasMessageLoading,
   isMessageEditing,
   isMessageGenerating,
+  isMessageInRAGFlow,
   isMessageLoading,
   isPluginApiInvoking,
+  isSendButtonDisabledByMessage,
   isToolCallStreaming,
   latestMessage,
   showInboxWelcome,

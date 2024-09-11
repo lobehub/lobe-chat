@@ -4,11 +4,18 @@ import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
+  BedrockProviderCard,
+  FireworksAIProviderCard,
+  GroqProviderCard,
+  NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
   OpenRouterProviderCard,
+  QwenProviderCard,
   SiliconCloudProviderCard,
   TogetherAIProviderCard,
+  ZeroOneProviderCard,
+  ZhiPuProviderCard,
 } from '@/config/modelProviders';
 import { enableNextAuth } from '@/const/auth';
 import { parseSystemAgent } from '@/server/globalConfig/parseSystemAgent';
@@ -26,16 +33,28 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_MOONSHOT,
     ENABLED_ZHIPU,
+    ZHIPU_MODEL_LIST,
+
     ENABLED_AWS_BEDROCK,
+    AWS_BEDROCK_MODEL_LIST,
+
     ENABLED_GOOGLE,
+
     ENABLED_GROQ,
+    GROQ_MODEL_LIST,
+
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
     ENABLED_MINIMAX,
     ENABLED_MISTRAL,
+
     ENABLED_NOVITA,
+    NOVITA_MODEL_LIST,
+
     ENABLED_QWEN,
+    QWEN_MODEL_LIST,
+
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
@@ -44,6 +63,10 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_SILICONCLOUD,
     SILICONCLOUD_MODEL_LIST,
+
+    ENABLED_UPSTAGE,
+
+    ENABLED_SPARK,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -55,8 +78,14 @@ export const getServerGlobalConfig = () => {
     ENABLED_OPENROUTER,
     OPENROUTER_MODEL_LIST,
 
+    ENABLED_ZEROONE,
+    ZEROONE_MODEL_LIST,
+
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
+
+    ENABLED_FIREWORKSAI,
+    FIREWORKSAI_MODEL_LIST,
 
     ENABLED_DOUBAO,
     ARK_MODEL_LIST,
@@ -84,7 +113,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
       baichuan: { enabled: ENABLED_BAICHUAN },
-      bedrock: { enabled: ENABLED_AWS_BEDROCK },
+      bedrock: {
+        enabled: ENABLED_AWS_BEDROCK,
+        enabledModels: extractEnabledModels(AWS_BEDROCK_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: BedrockProviderCard.chatModels,
+          modelString: AWS_BEDROCK_MODEL_LIST,
+        }),
+      },
       deepseek: { enabled: ENABLED_DEEPSEEK },
       doubao: { enabled: ENABLED_DOUBAO,
         enabledModels: extractEnabledModels(ARK_MODEL_LIST),
@@ -93,12 +129,34 @@ export const getServerGlobalConfig = () => {
           modelString: ARK_MODEL_LIST,
         }),
       },
+      fireworksai: {
+        enabled: ENABLED_FIREWORKSAI,
+        enabledModels: extractEnabledModels(FIREWORKSAI_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: FireworksAIProviderCard.chatModels,
+          modelString: FIREWORKSAI_MODEL_LIST,
+        }),
+      },
       google: { enabled: ENABLED_GOOGLE },
-      groq: { enabled: ENABLED_GROQ },
+      groq: {
+        enabled: ENABLED_GROQ,
+        enabledModels: extractEnabledModels(GROQ_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: GroqProviderCard.chatModels,
+          modelString: GROQ_MODEL_LIST,
+        }),
+      },
       minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
-      novita: { enabled: ENABLED_NOVITA },
+      novita: {
+        enabled: ENABLED_NOVITA,
+        enabledModels: extractEnabledModels(NOVITA_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: NovitaProviderCard.chatModels,
+          modelString: NOVITA_MODEL_LIST,
+        }),
+      },
       ollama: {
         enabled: ENABLED_OLLAMA,
         fetchOnClient: !OLLAMA_PROXY_URL,
@@ -124,7 +182,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
       perplexity: { enabled: ENABLED_PERPLEXITY },
-      qwen: { enabled: ENABLED_QWEN },
+      qwen: {
+        enabled: ENABLED_QWEN,
+        enabledModels: extractEnabledModels(QWEN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: QwenProviderCard.chatModels,
+          modelString: QWEN_MODEL_LIST,
+        }),
+      },
       siliconcloud: {
         enabled: ENABLED_SILICONCLOUD,
         enabledModels: extractEnabledModels(SILICONCLOUD_MODEL_LIST),
@@ -133,6 +198,7 @@ export const getServerGlobalConfig = () => {
           modelString: SILICONCLOUD_MODEL_LIST,
         }),
       },
+      spark: { enabled: ENABLED_SPARK },
       stepfun: { enabled: ENABLED_STEPFUN },
       taichu: { enabled: ENABLED_TAICHU },
       togetherai: {
@@ -143,8 +209,23 @@ export const getServerGlobalConfig = () => {
           modelString: TOGETHERAI_MODEL_LIST,
         }),
       },
-      zeroone: { enabled: ENABLED_ZEROONE },
-      zhipu: { enabled: ENABLED_ZHIPU },
+      upstage: { enabled: ENABLED_UPSTAGE },
+      zeroone: {
+        enabled: ENABLED_ZEROONE,
+        enabledModels: extractEnabledModels(ZEROONE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: ZeroOneProviderCard.chatModels,
+          modelString: ZEROONE_MODEL_LIST,
+        }),
+      },
+      zhipu: { 
+        enabled: ENABLED_ZHIPU, 
+        enabledModels: extractEnabledModels(ZHIPU_MODEL_LIST), 
+        serverModelCards: transformToChatModelCards({ 
+          defaultChatModels: ZhiPuProviderCard.chatModels, 
+          modelString: ZHIPU_MODEL_LIST 
+        }),
+      },
     },
     oAuthSSOProviders: authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),

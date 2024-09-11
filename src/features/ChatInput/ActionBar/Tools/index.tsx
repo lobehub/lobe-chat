@@ -17,7 +17,7 @@ const Tools = memo(() => {
   const enableFC = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
 
   return (
-    <Suspense fallback={<ActionIcon icon={LucideLoader2} />}>
+    <Suspense fallback={<ActionIcon icon={LucideLoader2} spin />}>
       <DropdownMenu>
         <ActionIcon
           disable={!enableFC}

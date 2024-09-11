@@ -10,12 +10,13 @@ RUN \
     fi \
     # Add required package & update base package
     && apk update \
-    && apk add --no-cache bind-tools proxychains-ng \
+    && apk add --no-cache bind-tools proxychains-ng sudo \
     && apk upgrade --no-cache \
     # Add user nextjs to run the app
     && addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs \
     && chown -R nextjs:nodejs "/etc/proxychains" \
+    && echo "nextjs ALL=(ALL) NOPASSWD: /bin/chmod * /etc/resolv.conf" >> /etc/sudoers \
     && rm -rf /tmp/* /var/cache/apk/*
 
 ## Builder image, install all the dependencies and build the app
@@ -63,8 +64,8 @@ RUN \
     # Install the dependencies
     && pnpm i \
     # Add sharp dependencies
-    && mkdir -p /sharp \
-    && pnpm add sharp --prefix /sharp
+    && mkdir -p /deps \
+    && pnpm add sharp --prefix /deps
 
 COPY . .
 
@@ -80,7 +81,7 @@ COPY --from=builder /app/public /app/public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=builder /sharp/node_modules/.pnpm /app/node_modules/.pnpm
+COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
 ## Production image, copy all the files and run next
 FROM base
@@ -109,17 +110,19 @@ ENV \
     # Anthropic
     ANTHROPIC_API_KEY="" ANTHROPIC_PROXY_URL="" \
     # Amazon Bedrock
-    AWS_ACCESS_KEY_ID="" AWS_SECRET_ACCESS_KEY="" AWS_REGION="" \
+    AWS_ACCESS_KEY_ID="" AWS_SECRET_ACCESS_KEY="" AWS_REGION="" AWS_BEDROCK_MODEL_LIST="" \
     # Azure OpenAI
     AZURE_API_KEY="" AZURE_API_VERSION="" AZURE_ENDPOINT="" AZURE_MODEL_LIST="" \
     # Baichuan
     BAICHUAN_API_KEY="" \
     # DeepSeek
     DEEPSEEK_API_KEY="" \
+    # Fireworks AI
+    FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
-    GROQ_API_KEY="" GROQ_PROXY_URL="" \
+    GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
     # Minimax
     MINIMAX_API_KEY="" \
     # Mistral
@@ -127,7 +130,7 @@ ENV \
     # Moonshot
     MOONSHOT_API_KEY="" MOONSHOT_PROXY_URL="" \
     # Novita
-    NOVITA_API_KEY="" \
+    NOVITA_API_KEY="" NOVITA_MODEL_LIST="" \
     # Ollama
     OLLAMA_MODEL_LIST="" OLLAMA_PROXY_URL="" \
     # OpenAI
@@ -137,19 +140,23 @@ ENV \
     # Perplexity
     PERPLEXITY_API_KEY="" PERPLEXITY_PROXY_URL="" \
     # Qwen
-    QWEN_API_KEY="" \
+    QWEN_API_KEY="" QWEN_MODEL_LIST="" \
     # SiliconCloud
     SILICONCLOUD_API_KEY="" SILICONCLOUD_MODEL_LIST="" SILICONCLOUD_PROXY_URL="" \
+    # Spark
+    SPARK_API_KEY="" \
     # Stepfun
     STEPFUN_API_KEY="" \
     # Taichu
     TAICHU_API_KEY="" \
     # TogetherAI
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
+    # Upstage
+    UPSTAGE_API_KEY="" \
     # 01.AI
-    ZEROONE_API_KEY="" \
+    ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
-    ZHIPU_API_KEY=""
+    ZHIPU_API_KEY="" ZHIPU_MODEL_LIST=""
 
 USER nextjs
 
@@ -185,6 +192,14 @@ CMD \
             '[ProxyList]' \
             "$protocol $host $port" \
         > "/etc/proxychains/proxychains.conf"; \
+    fi; \
+    # Fix DNS resolving issue in Docker Compose, ref https://github.com/lobehub/lobe-chat/pull/3837
+    if [ -f "/etc/resolv.conf" ]; then \
+        sudo chmod 666 "/etc/resolv.conf"; \
+        resolv_conf=$(grep '^nameserver' "/etc/resolv.conf" | awk '{print "nameserver " $2}'); \
+        printf "%s\n" \
+            "$resolv_conf" \
+        > "/etc/resolv.conf"; \
     fi; \
     # Run the server
     ${PROXYCHAINS} node "/app/server.js";

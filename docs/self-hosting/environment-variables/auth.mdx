@@ -109,6 +109,75 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Default: `-`
 - Example: `https://your-authentik-domain.com/application/o/slug/`
 
+### Authelia
+
+#### `AUTHELIA_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the Authelia provider application. You can access it [here][auth0-client-page] and navigate to the application settings to view.
+- Default: `-`
+- Example: `lobe-chat`
+
+#### `AUTHELIA_CLIENT_SECRET`
+
+- Type: Required
+- Description: The plaintext of the Client Secret for the Authelia provider
+- Default: `-`
+- Example: `insecure_secret`
+
+#### `AUTHELIA_ISSUER`
+
+- Type: Required
+- Description: Issuer of the Authelia provider application.
+- Default: `-`
+- Example: `https://sso.example.com`
+
+### Cloudflare Zero Trust
+
+#### `CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the Cloudflare Zero Trust provider application.
+- Default: `-`
+- Example: `711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
+
+#### `CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
+
+- Type: Required
+- Description: The plaintext of the Client Secret for the Cloudflare Zero Trust provider
+- Default: `-`
+- Example: `8f26d4ef834a828045b401e032ae128dbb00471bca53f0d25332323f525dfa30`
+
+#### `CLOUDFLARE_ZERO_TRUST_ISSUER`
+
+- Type: Required
+- Description: Issuer of the Cloudflare Zero Trust provider application.
+- Default: `-`
+- Example: `https://example.cloudflareaccess.com/cdn-cgi/access/sso/oidc/711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
+
+### Generic OIDC
+
+#### `GENERIC_OIDC_CLIENT_ID`
+
+- Type: Required
+- Description: Client ID of the Generic OIDC provider application.
+- Default: `-`
+- Example: `_client_id_for_lobe_chat_`
+
+#### `GENERIC_OIDC_CLIENT_SECRET`
+
+- Type: Required
+- Description: The plaintext of the Client Secret for the Generic OIDC provider
+- Default: `-`
+- Example: `_client_secret_for_lobe_chat_`
+
+#### `GENERIC_OIDC_ISSUER`
+
+- Type: Required
+- Description: Issuer of the Generic OIDC provider application.
+- Default: `-`
+- Example: `https://sso.example.com`
+
 ### Github
 
 #### `GITHUB_CLIENT_ID`
@@ -147,6 +216,27 @@ LobeChat provides a complete authentication service capability when deployed. Th
 - Description: Issuer of the ZITADEL application. This is usually the URL of the ZITADEL instance, and can be found in `URLs` tab of your application in the console.
 - Default: `-`
 - Example: `https://your-instance-abc123.zitadel.cloud`
+
+#### `LOGTO_CLIENT_ID`
+
+- Type: Required
+- Description: The Client ID of the Logto application. You can find it in the Logto console for private deployment or [Logto Cloud](http://cloud.logto.io/) depending on the deployment mode.
+- Default value: `-`
+- Example: `123456789012345678@your-project`
+
+#### `LOGTO_CLIENT_SECRET`
+
+- Type: Required
+- Description: The Client Secret of the Logto application.
+- Default value: `-`
+- Example: `9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
+
+#### `LOGTO_ISSUER`
+
+- Type: Required
+- Description: The OpenID Connect issuer of the Logto application. You can find it in the Logto console for private deployment or [Logto Cloud](http://cloud.logto.io/) depending on the deployment mode.
+- Default value: `-`
+- Example: `https://lobe-auth-api.example.com/oidc`
 
 <Callout>
   Currently, we only support providers above. If you need to use other identity verification service

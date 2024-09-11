@@ -9,6 +9,7 @@ export default defineConfig({
     coverage: {
       all: false,
       exclude: ['src/database/server/core/dbForTest.ts'],
+      include: ['src/database/server/**/*.ts'],
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],
       reportsDirectory: './coverage/server',

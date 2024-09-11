@@ -4,6 +4,7 @@ import {
   BaichuanProviderCard,
   BedrockProviderCard,
   DeepSeekProviderCard,
+  FireworksAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -16,9 +17,11 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   SiliconCloudProviderCard,
+  SparkProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
+  UpstageProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
   filterEnabledModels,
@@ -52,6 +55,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   },
   doubao: {
     enabled: false,
+  },
+  fireworksai: {
+    enabled: false,
+    enabledModels: filterEnabledModels(FireworksAIProviderCard),
   },
   google: {
     enabled: false,
@@ -102,6 +109,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
     enabled: false,
     enabledModels: filterEnabledModels(SiliconCloudProviderCard),
   },
+  spark: {
+    enabled: false,
+    enabledModels: filterEnabledModels(SparkProviderCard),
+  },
   stepfun: {
     enabled: false,
     enabledModels: filterEnabledModels(StepfunProviderCard),
@@ -113,6 +124,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   togetherai: {
     enabled: false,
     enabledModels: filterEnabledModels(TogetherAIProviderCard),
+  },
+  upstage: {
+    enabled: false,
+    enabledModels: filterEnabledModels(UpstageProviderCard),
   },
   zeroone: {
     enabled: false,

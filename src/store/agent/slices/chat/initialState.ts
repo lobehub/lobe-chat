@@ -5,6 +5,7 @@ import { AgentSettingsInstance } from '@/features/AgentSetting';
 import { LobeAgentConfig } from '@/types/agent';
 
 export interface AgentState {
+  activeAgentId?: string;
   activeId: string;
   agentMap: Record<string, DeepPartial<LobeAgentConfig>>;
   agentSettingInstance?: AgentSettingsInstance | null;

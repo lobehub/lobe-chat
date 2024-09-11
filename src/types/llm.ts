@@ -43,6 +43,12 @@ export interface ChatModelCard {
   vision?: boolean;
 }
 
+export interface SmoothingParams {
+  speed?: number;
+  text?: boolean;
+  toolsCalling?: boolean;
+}
+
 export interface ModelProviderCard {
   chatModels: ChatModelCard[];
   /**
@@ -89,6 +95,11 @@ export interface ModelProviderCard {
    * so provider like ollama don't need api key field
    */
   showApiKey?: boolean;
+
+  /**
+   * whether to smoothing the output
+   */
+  smoothing?: SmoothingParams;
 }
 
 // 语言模型的设置参数
@@ -109,7 +120,7 @@ export interface LLMParams {
   presence_penalty?: number;
   /**
    * 生成文本的随机度量，用于控制文本的创造性和多样性
-   * @default 0.6
+   * @default 1
    */
   temperature?: number;
   /**

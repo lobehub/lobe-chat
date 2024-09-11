@@ -151,6 +151,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.FireworksAI: {
+      const { FIREWORKSAI_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || FIREWORKSAI_API_KEY);
+
+      return { apiKey };
+    }
     case ModelProvider.ZeroOne: {
       const { ZEROONE_API_KEY } = getLLMConfig();
 
@@ -207,6 +214,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const baseURL = payload?.endpoint || SILICONCLOUD_PROXY_URL;
 
       return { apiKey, baseURL };
+    }
+    case ModelProvider.Upstage: {
+      const { UPSTAGE_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || UPSTAGE_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Spark: {
+      const { SPARK_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SPARK_API_KEY);
+
+      return { apiKey };
     }
     case ModelProvider.Doubao: {
       const { ARK_API_KEY } = getLLMConfig();

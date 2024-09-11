@@ -1,4 +1,5 @@
 import { notification } from '@/components/AntdStaticMethods';
+import { BRANDING_NAME } from '@/const/branding';
 import { CURRENT_CONFIG_VERSION, Migration } from '@/migrations';
 import {
   ConfigFile,
@@ -12,7 +13,7 @@ import {
 } from '@/types/exportConfig';
 
 export const exportConfigFile = (config: object, fileName?: string) => {
-  const file = `LobeChat-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
+  const file = `${BRANDING_NAME}-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
 
   // 创建一个 Blob 对象
   const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });

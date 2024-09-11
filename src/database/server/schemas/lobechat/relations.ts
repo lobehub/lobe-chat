@@ -1,25 +1,45 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { relations } from 'drizzle-orm';
+import { pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
-import {
-  agents,
-  agentsToSessions,
-  filesToAgents,
-  filesToMessages,
-  filesToSessions,
-  messages,
-  sessionGroups,
-  sessions,
-  topics,
-} from './chat';
+import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
+import { asyncTasks } from './asyncTask';
 import { agentsTags, plugins, pluginsTags, tags } from './discover';
-import { files } from './file';
+import { files, knowledgeBases } from './file';
+import { messages, messagesFiles } from './message';
+import { unstructuredChunks } from './rag';
+import { sessionGroups, sessions } from './session';
+import { topics } from './topic';
 
-export const filesRelations = relations(files, ({ many }) => ({
-  filesToMessages: many(filesToMessages),
-  filesToSessions: many(filesToSessions),
-  filesToAgents: many(filesToAgents),
-}));
+export const agentsToSessions = pgTable(
+  'agents_to_sessions',
+  {
+    agentId: text('agent_id')
+      .notNull()
+      .references(() => agents.id, { onDelete: 'cascade' }),
+    sessionId: text('session_id')
+      .notNull()
+      .references(() => sessions.id, { onDelete: 'cascade' }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.agentId, t.sessionId] }),
+  }),
+);
+
+export const filesToSessions = pgTable(
+  'files_to_sessions',
+  {
+    fileId: text('file_id')
+      .notNull()
+      .references(() => files.id, { onDelete: 'cascade' }),
+    sessionId: text('session_id')
+      .notNull()
+      .references(() => sessions.id, { onDelete: 'cascade' }),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.fileId, t.sessionId] }),
+  }),
+);
 
 export const topicRelations = relations(topics, ({ one }) => ({
   session: one(sessions, {
@@ -49,7 +69,7 @@ export const tagsRelations = relations(tags, ({ many }) => ({
 }));
 
 export const messagesRelations = relations(messages, ({ many, one }) => ({
-  filesToMessages: many(filesToMessages),
+  filesToMessages: many(messagesFiles),
 
   session: one(sessions, {
     fields: [messages.sessionId],
@@ -69,7 +89,8 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
 
 export const agentsRelations = relations(agents, ({ many }) => ({
   agentsToSessions: many(agentsToSessions),
-  filesToAgents: many(filesToAgents),
+  knowledgeBases: many(agentsKnowledgeBases),
+  files: many(agentsFiles),
   agentsTags: many(agentsTags),
 }));
 
@@ -84,36 +105,14 @@ export const agentsToSessionsRelations = relations(agentsToSessions, ({ one }) =
   }),
 }));
 
-export const filesToAgentsRelations = relations(filesToAgents, ({ one }) => ({
+export const agentsKnowledgeBasesRelations = relations(agentsKnowledgeBases, ({ one }) => ({
+  knowledgeBase: one(knowledgeBases, {
+    fields: [agentsKnowledgeBases.knowledgeBaseId],
+    references: [knowledgeBases.id],
+  }),
   agent: one(agents, {
-    fields: [filesToAgents.agentId],
+    fields: [agentsKnowledgeBases.agentId],
     references: [agents.id],
-  }),
-  file: one(files, {
-    fields: [filesToAgents.fileId],
-    references: [files.id],
-  }),
-}));
-
-export const filesToMessagesRelations = relations(filesToMessages, ({ one }) => ({
-  file: one(files, {
-    fields: [filesToMessages.fileId],
-    references: [files.id],
-  }),
-  message: one(messages, {
-    fields: [filesToMessages.messageId],
-    references: [messages.id],
-  }),
-}));
-
-export const filesToSessionsRelations = relations(filesToSessions, ({ one }) => ({
-  file: one(files, {
-    fields: [filesToSessions.fileId],
-    references: [files.id],
-  }),
-  session: one(sessions, {
-    fields: [filesToSessions.sessionId],
-    references: [sessions.id],
   }),
 }));
 
@@ -134,5 +133,27 @@ export const sessionsRelations = relations(sessions, ({ many, one }) => ({
   group: one(sessionGroups, {
     fields: [sessions.groupId],
     references: [sessionGroups.id],
+  }),
+}));
+
+export const chunksRelations = relations(unstructuredChunks, ({ one }) => ({
+  file: one(files, {
+    fields: [unstructuredChunks.fileId],
+    references: [files.id],
+  }),
+}));
+
+export const filesRelations = relations(files, ({ many, one }) => ({
+  messages: many(messagesFiles),
+  sessions: many(filesToSessions),
+  agents: many(agentsFiles),
+
+  chunkingTask: one(asyncTasks, {
+    fields: [files.chunkTaskId],
+    references: [asyncTasks.id],
+  }),
+  embeddingTask: one(asyncTasks, {
+    fields: [files.embeddingTaskId],
+    references: [asyncTasks.id],
   }),
 }));

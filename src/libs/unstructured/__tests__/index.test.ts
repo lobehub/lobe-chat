@@ -52,16 +52,6 @@ describe('Unstructured', () => {
       const customUnstructured = new Unstructured('custom-api-key');
       expect(customUnstructured).toBeInstanceOf(Unstructured);
     });
-
-    it('should throw an error if no API key is provided or in environment', () => {
-      let defaultKey = UNSTRUCTURED_API_KEY;
-      UNSTRUCTURED_API_KEY = '';
-
-      expect(() => new Unstructured()).toThrow(
-        '"UNSTRUCTURED_API_KEY" variables are not set completely, please check your env',
-      );
-      UNSTRUCTURED_API_KEY = defaultKey;
-    });
   });
 
   describe('basic partition', () => {

@@ -16,12 +16,17 @@ const EditPage = memo(() => {
   const id = useSessionStore((s) => s.activeId);
   const config = useAgentStore(agentSelectors.currentAgentConfig, isEqual);
   const meta = useSessionStore(sessionMetaSelectors.currentAgentMeta, isEqual);
-  const [updateAgentConfig] = useAgentStore((s) => [s.updateAgentConfig]);
+  const [useFetchAgentConfig, updateAgentConfig] = useAgentStore((s) => [
+    s.useFetchAgentConfig,
+    s.updateAgentConfig,
+  ]);
 
   const [updateAgentMeta, title] = useSessionStore((s) => [
     s.updateSessionMeta,
     sessionMetaSelectors.currentAgentTitle(s),
   ]);
+
+  useFetchAgentConfig(id);
 
   return (
     <>
