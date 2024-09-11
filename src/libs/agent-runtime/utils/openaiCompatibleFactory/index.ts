@@ -2,9 +2,6 @@ import OpenAI, { ClientOptions } from 'openai';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
-import {
-  convertOpenAIMessages,
-} from '@/libs/agent-runtime/utils/openaiHelpers';
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
@@ -23,6 +20,7 @@ import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
 import { StreamingResponse } from '../response';
 import { OpenAIStream } from '../streams';
+import { convertOpenAIMessages } from '../openaiHelpers';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 const CHAT_MODELS_BLOCK_LIST = [

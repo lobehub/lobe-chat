@@ -27,7 +27,7 @@ describe('convertMessageContent', () => {
 
   it('should convert image URL to base64 when necessary', async () => {
     // 设置环境变量
-    process.env.LLM_VISION_IMAGE_TYPE = 'base64';
+    process.env.LLM_VISION_IMAGE_USE_BASE64 = '1';
 
     const content = {
       type: 'image_url',
@@ -52,7 +52,7 @@ describe('convertMessageContent', () => {
   });
 
   it('should not convert image URL when not necessary', async () => {
-    process.env.LLM_VISION_IMAGE_TYPE = 'url';
+    process.env.LLM_VISION_IMAGE_USE_BASE64 = undefined;
 
     const content = {
       type: 'image_url',
@@ -98,7 +98,7 @@ describe('convertOpenAIMessages', () => {
       mimeType: 'image/jpeg',
     });
 
-    process.env.LLM_VISION_IMAGE_TYPE = 'base64';
+    process.env.LLM_VISION_IMAGE_USE_BASE64 = '1';
 
     const result = await convertOpenAIMessages(messages);
 
@@ -117,7 +117,7 @@ describe('convertOpenAIMessages', () => {
 
     expect(Promise.all).toHaveBeenCalledTimes(2); // 一次用于消息数组，一次用于内容数组
 
-    process.env.LLM_VISION_IMAGE_TYPE = 'url';
+    process.env.LLM_VISION_IMAGE_USE_BASE64 = undefined;
   });
   it('should convert array content messages', async () => {
     const messages = [
