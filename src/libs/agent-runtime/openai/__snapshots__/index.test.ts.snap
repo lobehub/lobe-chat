@@ -7,6 +7,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "displayName": "GPT-3.5 Turbo",
     "functionCall": true,
     "id": "gpt-3.5-turbo",
+    "pricing": {
+      "input": 0.5,
+      "output": 1.5,
+    },
     "tokens": 16385,
   },
   {
@@ -14,17 +18,29 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "displayName": "GPT-3.5 Turbo 16K",
     "id": "gpt-3.5-turbo-16k",
     "legacy": true,
+    "pricing": {
+      "input": 3,
+      "output": 4,
+    },
     "tokens": 16385,
   },
   {
     "description": "Currently points to gpt-3.5-turbo-16k-0613",
     "id": "gpt-3.5-turbo-16k-0613",
     "legacy": true,
+    "pricing": {
+      "input": 3,
+      "output": 4,
+    },
     "tokens": 16385,
   },
   {
     "displayName": "GPT-4 Turbo Vision Preview (1106)",
     "id": "gpt-4-1106-vision-preview",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
     "tokens": 128000,
     "vision": true,
   },
@@ -35,6 +51,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "displayName": "GPT-4 Turbo Preview (0125)",
     "functionCall": true,
     "id": "gpt-4-0125-preview",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
     "tokens": 128000,
   },
   {
@@ -42,11 +62,19 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "displayName": "GPT-4 Turbo Preview",
     "functionCall": true,
     "id": "gpt-4-turbo-preview",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
     "tokens": 128000,
   },
   {
     "displayName": "GPT-3.5 Turbo Instruct",
     "id": "gpt-3.5-turbo-instruct",
+    "pricing": {
+      "input": 1.5,
+      "output": 2,
+    },
     "tokens": 4096,
   },
   {
@@ -56,24 +84,40 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "displayName": "GPT-3.5 Turbo (0613)",
     "id": "gpt-3.5-turbo-0613",
     "legacy": true,
+    "pricing": {
+      "input": 1.5,
+      "output": 2,
+    },
     "tokens": 4096,
   },
   {
     "displayName": "GPT-3.5 Turbo (1106)",
     "functionCall": true,
     "id": "gpt-3.5-turbo-1106",
+    "pricing": {
+      "input": 1,
+      "output": 2,
+    },
     "tokens": 16385,
   },
   {
     "displayName": "GPT-4 Turbo Preview (1106)",
     "functionCall": true,
     "id": "gpt-4-1106-preview",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
     "tokens": 128000,
   },
   {
     "description": "Currently points to gpt-4-1106-vision-preview",
     "displayName": "GPT-4 Turbo Vision Preview",
     "id": "gpt-4-vision-preview",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
     "tokens": 128000,
     "vision": true,
   },
@@ -82,18 +126,30 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "displayName": "GPT-4",
     "functionCall": true,
     "id": "gpt-4",
+    "pricing": {
+      "input": 30,
+      "output": 60,
+    },
     "tokens": 8192,
   },
   {
     "displayName": "GPT-3.5 Turbo (0125)",
     "functionCall": true,
     "id": "gpt-3.5-turbo-0125",
+    "pricing": {
+      "input": 0.5,
+      "output": 1.5,
+    },
     "tokens": 16385,
   },
   {
     "displayName": "GPT-4 (0613)",
     "functionCall": true,
     "id": "gpt-4-0613",
+    "pricing": {
+      "input": 30,
+      "output": 60,
+    },
     "tokens": 8192,
   },
 ]
