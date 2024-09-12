@@ -1,35 +1,5 @@
-## Base image for all the stages
-FROM node:20-slim AS base
-
-ARG USE_CN_MIRROR
-
-ENV DEBIAN_FRONTEND="noninteractive"
-
-RUN \
-    # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
-    if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
-    fi \
-    # Add required package
-    && apt update \
-    && apt install ca-certificates proxychains-ng -qy \
-    # Prepare required package to distroless
-    && mkdir -p /distroless/bin /distroless/lib /distroless/etc/ssl/certs \
-    # Copy proxychains to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4 \
-    && cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2 \
-    && cp /usr/bin/proxychains4 /distroless/bin/proxychains \
-    # Copy node to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6 \
-    && cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1 \
-    && cp /usr/local/bin/node /distroless/bin/node \
-    # Copy CA certificates to distroless
-    && cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt \
-    # Cleanup temp files
-    && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
-
 ## Builder image, install all the dependencies and build the app
-FROM base AS builder
+FROM node:20-alpine AS builder
 
 ARG USE_CN_MIRROR
 
@@ -90,8 +60,6 @@ FROM scratch AS app
 
 COPY --from=builder /app/public /app/public
 
-COPY --from=base /distroless/ /
-
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
@@ -108,19 +76,10 @@ COPY --from=builder /app/scripts/migrateServerDB/docker.cjs /app/docker.cjs
 COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 
 ## Production image, copy all the files and run next
-FROM busybox:latest
+FROM lobehub/lobe-chat-base:latest
 
 # Copy all the files from app, set the correct permission for prerender cache
-COPY --from=app / /
-
-RUN \
-    # Add nextjs:nodejs to run the app
-    addgroup -S -g 1001 nodejs \
-    && adduser -D -G nodejs -H -S -h /app -u 1001 nextjs \
-    # Create required directory
-    && mkdir -p "/etc/proxychains" \
-    # Set permission for nextjs:nodejs
-    && chown -R nextjs:nodejs /app /etc/proxychains
+COPY --from=app /app /app
 
 ENV NODE_ENV="production"
 
