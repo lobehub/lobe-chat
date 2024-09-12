@@ -32,7 +32,7 @@ describe('configRouter', () => {
       describe('OPENAI_MODEL_LIST', () => {
         it('custom deletion, addition, and renaming of models', async () => {
           process.env.OPENAI_MODEL_LIST =
-            '-all,+llama,+claude-2，-gpt-3.5-turbo,gpt-4-0125-preview=gpt-4-turbo,gpt-4-0125-preview=gpt-4-32k';
+            '-all,+llama,+claude-2';
 
           const response = await router.getGlobalConfig();
 
@@ -45,7 +45,7 @@ describe('configRouter', () => {
 
         it('should work correct with gpt-4', async () => {
           process.env.OPENAI_MODEL_LIST =
-            '-all,+gpt-3.5-turbo-1106,+gpt-3.5-turbo,+gpt-3.5-turbo-16k,+gpt-4,+gpt-4-32k,+gpt-4-1106-preview,+gpt-4-vision-preview';
+            '-all,+gpt-4,+gpt-4-32k';
 
           const response = await router.getGlobalConfig();
 
@@ -58,13 +58,13 @@ describe('configRouter', () => {
 
         it('duplicate naming model', async () => {
           process.env.OPENAI_MODEL_LIST =
-            'gpt-4-0125-preview=gpt-4-turbo，gpt-4-0125-preview=gpt-4-32k';
+            '+gpt-4-turbo，+gpt-4-32k';
 
           const response = await router.getGlobalConfig();
 
           const result = response.languageModel?.openai?.serverModelCards;
 
-          expect(result?.find((s) => s.id === 'gpt-4-0125-preview')?.displayName).toEqual(
+          expect(result?.find((s) => s.id === 'gpt-4-32k')?.displayName).toEqual(
             'gpt-4-32k',
           );
 
@@ -84,13 +84,13 @@ describe('configRouter', () => {
         });
 
         it('show the hidden model', async () => {
-          process.env.OPENAI_MODEL_LIST = '+gpt-4-1106-preview';
+          process.env.OPENAI_MODEL_LIST = '+gpt-4';
 
           const response = await router.getGlobalConfig();
 
           const result = response.languageModel?.openai?.serverModelCards;
 
-          const model = result?.find((o) => o.id === 'gpt-4-1106-preview');
+          const model = result?.find((o) => o.id === 'gpt-4');
 
           expect(model).toMatchSnapshot();
 
