@@ -86,19 +86,19 @@ describe('LLMSettingsSliceAction', () => {
           serverLanguageModel: {
             openai: {
               enabled: true,
-              enabledModels: ['gpt-4-0125-preview', 'gpt-4-turbo-2024-04-09'],
+              enabledModels: ['gpt-4-turbo', 'gpt-4o'],
               serverModelCards: [
                 {
-                  displayName: 'ChatGPT-4',
+                  displayName: 'GPT-4 Turbo',
                   functionCall: true,
-                  id: 'gpt-4-0125-preview',
+                  id: 'gpt-4-turbo',
                   tokens: 128000,
                   enabled: true,
                 },
                 {
-                  displayName: 'ChatGPT-4 Vision',
+                  displayName: 'GPT-4o',
                   functionCall: true,
-                  id: 'gpt-4-turbo-2024-04-09',
+                  id: 'gpt-4o',
                   tokens: 128000,
                   vision: true,
                   enabled: true,
@@ -117,17 +117,17 @@ describe('LLMSettingsSliceAction', () => {
       const openai = result.current.defaultModelProviderList.find((m) => m.id === 'openai');
       expect(openai?.chatModels).toEqual([
         {
-          displayName: 'ChatGPT-4',
+          displayName: 'GPT-4 Turbo',
           enabled: true,
           functionCall: true,
-          id: 'gpt-4-0125-preview',
+          id: 'gpt-4-turbo',
           tokens: 128000,
         },
         {
-          displayName: 'ChatGPT-4 Vision',
+          displayName: 'GPT-4o',
           enabled: true,
           functionCall: true,
-          id: 'gpt-4-turbo-2024-04-09',
+          id: 'gpt-4o',
           tokens: 128000,
           vision: true,
         },
@@ -188,7 +188,7 @@ describe('LLMSettingsSliceAction', () => {
   describe('removeEnabledModels', () => {
     it('should remove the specified model from enabledModels', async () => {
       const { result } = renderHook(() => useUserStore());
-      const model = 'gpt-3.5-turbo';
+      const model = 'gpt-4o-mini';
 
       const spyOn = vi.spyOn(userService, 'updateUserSettings');
 
@@ -196,7 +196,7 @@ describe('LLMSettingsSliceAction', () => {
         useUserStore.setState({
           settings: {
             languageModel: {
-              azure: { enabledModels: ['gpt-3.5-turbo', 'gpt-4'] },
+              azure: { enabledModels: ['gpt-4o-mini', 'gpt-4o'] },
             },
           },
         });
@@ -208,7 +208,7 @@ describe('LLMSettingsSliceAction', () => {
       });
 
       expect(spyOn).toHaveBeenCalledWith(
-        { languageModel: { azure: { enabledModels: ['gpt-4'] } } },
+        { languageModel: { azure: { enabledModels: ['gpt-4o'] } } },
         expect.any(AbortSignal),
       );
     });
@@ -270,8 +270,8 @@ describe('LLMSettingsSliceAction', () => {
     it('should add new custom model to customModelCards', async () => {
       const { result } = renderHook(() => useUserStore());
       const provider = 'openai';
-      const modelKeys = ['gpt-3.5-turbo', 'custom-model'];
-      const options = [{ value: 'gpt-3.5-turbo' }, {}];
+      const modelKeys = ['gpt-4o-mini', 'custom-model'];
+      const options = [{ value: 'gpt-4o-mini' }, {}];
 
       await act(async () => {
         await result.current.updateEnabledModels(provider, modelKeys, options);
@@ -283,7 +283,7 @@ describe('LLMSettingsSliceAction', () => {
             openai: {
               customModelCards: [{ id: 'custom-model' }],
               // TODO：目标单测中需要包含下面这一行
-              // enabledModels: ['gpt-3.5-turbo', 'custom-model'],
+              // enabledModels: ['gpt-4o-mini', 'custom-model'],
             },
           },
         },
@@ -294,14 +294,14 @@ describe('LLMSettingsSliceAction', () => {
     it('should not add removed model to customModelCards', async () => {
       const { result } = renderHook(() => useUserStore());
       const provider = 'openai';
-      const modelKeys = ['gpt-3.5-turbo'];
-      const options = [{ value: 'gpt-3.5-turbo' }];
+      const modelKeys = ['gpt-4o-mini'];
+      const options = [{ value: 'gpt-4o-mini' }];
 
       act(() => {
         useUserStore.setState({
           settings: {
             languageModel: {
-              openai: { enabledModels: ['gpt-3.5-turbo', 'gpt-4'] },
+              openai: { enabledModels: ['gpt-4o-mini', 'gpt-4o'] },
             },
           },
         });
@@ -313,7 +313,7 @@ describe('LLMSettingsSliceAction', () => {
 
       expect(userService.updateUserSettings).toHaveBeenCalledWith(
         {
-          languageModel: { openai: { enabledModels: ['gpt-3.5-turbo'] } },
+          languageModel: { openai: { enabledModels: ['gpt-4o-mini'] } },
         },
         expect.any(AbortSignal),
       );
