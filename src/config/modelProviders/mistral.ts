@@ -8,7 +8,6 @@ const Mistral: ModelProviderCard = {
       description:
         'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
       displayName: 'Mistral 7B',
-      enabled: true,
       id: 'open-mistral-7b',
       tokens: 32_768,
     },
@@ -16,7 +15,6 @@ const Mistral: ModelProviderCard = {
       description:
         'Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。',
       displayName: 'Mixtral 8x7B',
-      enabled: true,
       id: 'open-mixtral-8x7b',
       tokens: 32_768,
     },
@@ -57,7 +55,6 @@ const Mistral: ModelProviderCard = {
       description:
         'Codestral Mamba是专注于代码生成的Mamba 2语言模型，为先进的代码和推理任务提供强力支持。',
       displayName: 'Codestral Mamba',
-      enabled: true,
       id: 'open-codestral-mamba',
       tokens: 256_000,
     },
