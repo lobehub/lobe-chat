@@ -22,8 +22,14 @@ import {
   renderMessages,
   useAvatarsClick,
 } from '../../Messages';
+import { markdownElements } from '../MarkdownElements';
 import ActionsBar from './ActionsBar';
 import HistoryDivider from './HistoryDivider';
+
+const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
+const components = Object.fromEntries(
+  markdownElements.map((element) => [element.tag, element.Component]),
+);
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   loading: css`
@@ -165,7 +171,9 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           fontSize={fontSize}
           loading={isProcessing}
           markdownProps={{
+            components,
             customRender: markdownCustomRender,
+            rehypePlugins,
           }}
           message={item.content}
           messageExtra={<MessageExtra data={item} />}

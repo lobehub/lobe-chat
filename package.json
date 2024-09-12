@@ -255,6 +255,7 @@
     "@types/semver": "^7.5.8",
     "@types/systemjs": "^6.13.5",
     "@types/ua-parser-js": "^0.7.39",
+    "@types/unist": "^3.0.3",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.5.12",
     "@vitest/coverage-v8": "~1.2.2",
