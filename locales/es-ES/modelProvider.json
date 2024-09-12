@@ -38,9 +38,15 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "Si estás utilizando AWS SSO/STS, introduce tu Token de Sesión de AWS",
+      "placeholder": "Token de Sesión de AWS",
+      "title": "Token de Sesión de AWS (opcional)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Región de servicio personalizada",
+      "customSessionToken": "Token de sesión personalizado",
       "description": "Introduce tu AWS AccessKeyId / SecretAccessKey para comenzar la sesión. La aplicación no guardará tu configuración de autenticación.",
       "title": "Usar información de autenticación de Bedrock personalizada"
     }

@@ -59,7 +59,7 @@ export const formatTokenNumber = (num: number): string => {
   if (num > 0 && num < 1024) return '1K';
 
   let kiloToken = Math.floor(num / 1024);
-  if (num >= 1024 && num < 1024 * 41 || num >= 128_000) {
+  if ((num >= 1024 && num < 1024 * 41) || num >= 128_000) {
     kiloToken = Math.floor(num / 1000);
   }
   if (num === 131_072) return '128K';
