@@ -7,7 +7,6 @@ const OpenAI: ModelProviderCard = {
       description:
         'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'o1-mini',
-      functionCall: true,
       id: 'o1-mini',
       maxOutput: 16_385,
       pricing: {
@@ -15,33 +14,28 @@ const OpenAI: ModelProviderCard = {
         output: 12,
       },
       tokens: 128_000,
-      vision: true,
     },
     {
       description:
         'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
       displayName: 'o1',
-      functionCall: true,
       id: 'o1',
       pricing: {
         input: 15,
         output: 60,
       },
       tokens: 128_000,
-      vision: true,
     },
     {
       description:
         'o1-preview是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K 上下文和2023年10月的知识截止日期。',
       displayName: 'o1-preview',
-      functionCall: true,
       id: 'o1-preview',
       pricing: {
         input: 15,
         output: 60,
       },
       tokens: 128_000,
-      vision: true,
     },
     {
       description:
