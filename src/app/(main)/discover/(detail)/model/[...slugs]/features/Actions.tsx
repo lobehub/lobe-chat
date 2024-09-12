@@ -2,6 +2,7 @@
 
 import { ModelIcon } from '@lobehub/icons';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
@@ -19,13 +20,14 @@ interface ModelActionsProps extends FlexboxProps {
 }
 
 const ModelActions = memo<ModelActionsProps>(({ identifier, providerData, data }) => {
+  const { t } = useTranslation('models');
   return (
     <Flexbox align={'center'} gap={8} horizontal>
       <ChatWithModel providerData={providerData} providers={data.providers} />
       <ShareButton
         meta={{
           avatar: <ModelIcon model={identifier} size={64} type={'avatar'} />,
-          desc: data.meta.description,
+          desc: data.meta.description && t(`${identifier}.description`),
           tags: (
             <ModelFeatureTags
               functionCall={data.meta.functionCall}

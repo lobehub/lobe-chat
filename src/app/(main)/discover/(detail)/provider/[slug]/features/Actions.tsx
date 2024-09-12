@@ -3,6 +3,7 @@
 import { ProviderIcon } from '@lobehub/icons';
 import { Tag } from '@lobehub/ui';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
@@ -18,13 +19,14 @@ interface ModelActionsProps extends FlexboxProps {
 }
 
 const ProviderActions = memo<ModelActionsProps>(({ identifier, data }) => {
+  const { t } = useTranslation('providers');
   return (
     <Flexbox align={'center'} gap={8} horizontal width={'100%'}>
       <ProviderConfig data={data} identifier={identifier} />
       <ShareButton
         meta={{
           avatar: <ProviderIcon provider={identifier} size={64} type={'avatar'} />,
-          desc: data.meta.description,
+          desc: data.meta.description && t(`${identifier}.description`),
           tags: (
             <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
               {data.models
