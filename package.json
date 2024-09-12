@@ -256,7 +256,7 @@
     "@types/ua-parser-js": "^0.7.39",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.5.12",
-    "@vitest/coverage-v8": "~1.2.2",
+    "@vitest/coverage-v8": "~2.1.0",
     "ajv-keywords": "^5.1.0",
     "commitlint": "^19.4.0",
     "consola": "^3.2.3",
