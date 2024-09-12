@@ -46,8 +46,7 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
             </Link>
           )}
           style={{
-            height: '100%',
-            minHeight: '100vh',
+            minHeight: '50vh',
           }}
         />
       </>
@@ -75,8 +74,7 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
               </Link>
             )}
             style={{
-              height: '100%',
-              minHeight: '100vh',
+              minHeight: '50vh',
             }}
           />
         </>

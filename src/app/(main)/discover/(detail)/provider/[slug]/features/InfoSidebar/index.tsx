@@ -22,7 +22,7 @@ const InfoSidebar = memo<InfoSidebarProps>(({ data, ...rest }) => {
   const { t } = useTranslation('discover');
 
   return (
-    <Flexbox gap={48} height={'100%'} style={{ position: 'relative' }} width={'100%'} {...rest}>
+    <Flexbox gap={48} style={{ position: 'relative' }} width={'100%'} {...rest}>
       <Block
         gap={24}
         more={t('providers.more')}

@@ -24,7 +24,7 @@ const InfoSidebar = memo<InfoSidebarProps>(({ pluginData, data, ...rest }) => {
   const { t } = useTranslation('discover');
 
   return (
-    <Flexbox gap={48} height={'100%'} style={{ position: 'relative' }} width={'100%'} {...rest}>
+    <Flexbox gap={48} style={{ position: 'relative' }} width={'100%'} {...rest}>
       {pluginData && pluginData?.length > 0 && (
         <Block gap={12} title={t('assistants.plugins')}>
           {pluginData.map((item) => (
