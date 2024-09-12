@@ -51,6 +51,13 @@
       "title": "Use Custom Bedrock Authentication Information"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Enter your GitHub Personal Access Token",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "GitHub Personal Access Token"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Test if the proxy address is correctly filled in",

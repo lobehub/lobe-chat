@@ -51,6 +51,13 @@
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Vul je Github Personal Access Token in",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "Github Personal Access Token"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Test of het proxyadres correct is ingevuld",

@@ -51,6 +51,13 @@
       "title": "使用自定义 Bedrock 鉴权信息"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "填入 Github Personal Access Token",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "Github Personal Access Token"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "测试代理地址是否正确填写",

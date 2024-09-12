@@ -51,6 +51,13 @@
       "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "أدخل رمز الوصول الشخصي لـ GitHub",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "رمز الوصول الشخصي لـ GitHub"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",

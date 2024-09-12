@@ -51,6 +51,13 @@
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Wprowadź swój token dostępu osobistego Githuba",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "Token dostępu osobistego Githuba"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Test czy adres proxy jest poprawnie wypełniony",

@@ -51,6 +51,13 @@
       "title": "Използване на персонализирана информация за удостоверяване на Bedrock"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Въведете Github Personal Access Token",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "Github Личен Достъп Токен"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Тестване дали адресът на прокси е попълнен правилно",

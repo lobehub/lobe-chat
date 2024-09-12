@@ -51,6 +51,13 @@
       "title": "사용자 정의 Bedrock 인증 정보 사용"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "GitHub 개인 액세스 토큰을 입력하세요.",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "GitHub 개인 액세스 토큰"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",

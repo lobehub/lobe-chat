@@ -51,6 +51,13 @@
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "GitHubの個人アクセストークンを入力してください",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "GitHubの個人アクセストークン"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "プロキシアドレスが正しく入力されているかをテストします",

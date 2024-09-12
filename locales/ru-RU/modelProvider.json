@@ -51,6 +51,13 @@
       "title": "Использовать пользовательскую информацию аутентификации Bedrock"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Введите личный токен доступа GitHub",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "Личный токен доступа GitHub"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Проверить правильность адреса прокси",

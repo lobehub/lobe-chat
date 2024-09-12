@@ -51,6 +51,13 @@
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Nhập Github Personal Access Token",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "Github Personal Access Token"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",

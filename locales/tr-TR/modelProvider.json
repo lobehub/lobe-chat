@@ -51,6 +51,13 @@
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Github Kişisel Erişim Tokeninizi girin",
+      "placeholder": "github_pat_xxxxxx",
+      "title": "Github Kişisel Erişim Tokeni"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Proxy adresinin doğru girilip girilmediğini test edin",
