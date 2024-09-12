@@ -196,10 +196,14 @@ const Github: ModelProviderCard = {
     },
   ],
   checkModel: 'Phi-3-mini-4k-instruct',
+  // Ref: https://github.blog/news-insights/product-news/introducing-github-models/
+  description:
+    "With GitHub Models, developers can become AI engineers and build with the industry's leading AI models.",
   enabled: true,
   id: 'github',
   modelList: { showModelFetcher: true },
   name: 'GitHub',
+  url: 'https://github.com/marketplace/models',
 };
 
 export default Github;
