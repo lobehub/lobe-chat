@@ -10,7 +10,7 @@ import { OFFICIAL_URL } from '@/const/url';
 import { DiscoverProviderItem } from '@/types/discover';
 
 import ShareButton from '../../../features/ShareButton';
-import ConfigProvider from './ConfigProvider';
+import ProviderConfig from './ProviderConfig';
 
 interface ModelActionsProps extends FlexboxProps {
   data: DiscoverProviderItem;
@@ -20,7 +20,7 @@ interface ModelActionsProps extends FlexboxProps {
 const ProviderActions = memo<ModelActionsProps>(({ identifier, data }) => {
   return (
     <Flexbox align={'center'} gap={8} horizontal width={'100%'}>
-      <ConfigProvider identifier={identifier} />
+      <ProviderConfig data={data} identifier={identifier} />
       <ShareButton
         meta={{
           avatar: <ProviderIcon provider={identifier} size={64} type={'avatar'} />,

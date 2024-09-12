@@ -11,8 +11,10 @@ import knowledgeBase from './knowledgeBase';
 import metadata from './metadata';
 import migration from './migration';
 import modelProvider from './modelProvider';
+import models from './models';
 import plugin from './plugin';
 import portal from './portal';
+import providers from './providers';
 import ragEval from './ragEval';
 import setting from './setting';
 import welcome from './welcome';
@@ -30,8 +32,10 @@ const resources = {
   metadata,
   migration,
   modelProvider,
+  models,
   plugin,
   portal,
+  providers,
   ragEval,
   setting,
   tool,

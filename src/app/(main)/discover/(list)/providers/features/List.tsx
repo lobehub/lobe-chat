@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
 import Title from '@/app/(main)/discover/(list)/features/Title';
-import VirtuosoGridList from '@/app/(main)/discover/components/VirtuosoGridList';
+import { VirtuosoList } from '@/app/(main)/discover/components/VirtuosoGridList';
 import { DiscoverProviderItem } from '@/types/discover';
 
 import SearchResultCount from '../../components/SearchResultCount';
@@ -19,7 +19,7 @@ export interface ListProps {
   searchKeywords?: string;
 }
 
-const List = memo<ListProps>(({ searchKeywords, items = [] }) => {
+const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
   const { t } = useTranslation('discover');
 
   if (searchKeywords) {
@@ -27,11 +27,11 @@ const List = memo<ListProps>(({ searchKeywords, items = [] }) => {
     return (
       <>
         <SearchResultCount count={items.length} keyword={searchKeywords} />
-        <VirtuosoGridList
+        <VirtuosoList
           data={items}
           itemContent={(_, item) => (
             <Link href={urlJoin('/discover/provider/', item.identifier)} key={item.identifier}>
-              <Card {...item} style={{ minHeight: 'unset' }} />
+              <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
             </Link>
           )}
           style={{
@@ -45,12 +45,12 @@ const List = memo<ListProps>(({ searchKeywords, items = [] }) => {
 
   return (
     <>
-      <Title>{t('providers.list')}</Title>
-      <VirtuosoGridList
+      <Title tag={items.length}>{t('providers.list')}</Title>
+      <VirtuosoList
         data={items}
         itemContent={(_, item) => (
           <Link href={urlJoin('/discover/provider/', item.identifier)} key={item.identifier}>
-            <Card {...item} style={{ minHeight: 'unset' }} />
+            <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
           </Link>
         )}
         style={{

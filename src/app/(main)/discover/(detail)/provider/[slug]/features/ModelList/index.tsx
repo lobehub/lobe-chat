@@ -1,14 +1,13 @@
 'use client';
 
 import { ProviderIcon } from '@lobehub/icons';
+import { Icon } from '@lobehub/ui';
 import { Button, Divider } from 'antd';
 import { useTheme } from 'antd-style';
-import { Brain } from 'lucide-react';
-import Link from 'next/link';
+import { Brain, ChevronsUpDown } from 'lucide-react';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
 import { DiscoverModelItem } from '@/types/discover';
 
@@ -18,16 +17,16 @@ import ModelItem from './ModelItem';
 const DEFAULT_LENGTH = 4;
 
 interface ModelListProps {
-  data: DiscoverModelItem[];
   identifier: string;
+  modelData: DiscoverModelItem[];
 }
 
-const ModelList = memo<ModelListProps>(({ data, identifier }) => {
+const ModelList = memo<ModelListProps>(({ modelData, identifier }) => {
   const [showAll, setShowAll] = useState(false);
   const { t } = useTranslation('discover');
   const theme = useTheme();
 
-  const list = showAll ? data : data.slice(0, DEFAULT_LENGTH);
+  const list = showAll ? modelData : modelData.slice(0, DEFAULT_LENGTH);
 
   return (
     <HighlightBlock
@@ -39,15 +38,18 @@ const ModelList = memo<ModelListProps>(({ data, identifier }) => {
     >
       {list.map((item, index) => (
         <>
-          <Link href={urlJoin('/discover/model', item.identifier)} key={item.identifier}>
-            <ModelItem {...item} />
-          </Link>
-          {index < data.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
+          <ModelItem key={item.identifier} {...item} />
+          {index < modelData.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
         </>
       ))}
-      {data.length > DEFAULT_LENGTH && !showAll && (
+      {modelData.length > DEFAULT_LENGTH && !showAll && (
         <Flexbox padding={16}>
-          <Button onClick={() => setShowAll(true)}>{t('providers.showAllModels')}</Button>
+          <Button icon={<Icon icon={ChevronsUpDown} />} onClick={() => setShowAll(true)}>
+            {t('providers.showAllModels')}{' '}
+            <span style={{ color: theme.colorTextDescription }}>
+              (+{modelData.length - DEFAULT_LENGTH})
+            </span>
+          </Button>
         </Flexbox>
       )}
     </HighlightBlock>

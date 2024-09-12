@@ -175,6 +175,7 @@
     "config": "Configure Provider",
     "list": "Model Provider List",
     "more": "More",
+    "showAllModels": "Show All Models",
     "suggestions": "Related Providers",
     "supportedModels": "Supported Models"
   },

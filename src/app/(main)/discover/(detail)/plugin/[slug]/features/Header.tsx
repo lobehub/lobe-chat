@@ -57,9 +57,9 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
             size={48}
             style={{ flex: 'none' }}
           />
-          <Flexbox gap={2}>
+          <Flexbox gap={4}>
             <h1 className={styles.title}>{data.meta.title}</h1>
-            <Flexbox align={'center'} gap={12} horizontal>
+            <Flexbox align={'center'} gap={8} horizontal>
               <Link href={data.homepage} target={'_blank'}>
                 @{data.author}
               </Link>

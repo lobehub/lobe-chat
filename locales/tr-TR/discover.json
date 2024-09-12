@@ -175,6 +175,7 @@
     "config": "Sağlayıcıyı Yapılandır",
     "list": "Model Sağlayıcıları Listesi",
     "more": "Daha Fazla",
+    "showAllModels": "Tüm modelleri göster",
     "suggestions": "İlgili Sağlayıcılar",
     "supportedModels": "Desteklenen Modeller"
   },

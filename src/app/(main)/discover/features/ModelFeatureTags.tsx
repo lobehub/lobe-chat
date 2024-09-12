@@ -30,7 +30,7 @@ interface TagsProps extends FlexboxProps {
   vision?: boolean;
 }
 
-const Tags = memo<TagsProps>(({ children, tokens, vision, functionCall, ...rest }) => {
+const ModelFeatureTags = memo<TagsProps>(({ children, tokens, vision, functionCall, ...rest }) => {
   const { t } = useTranslation(['discover', 'components']);
   const { styles } = useStyles();
 
@@ -74,4 +74,4 @@ const Tags = memo<TagsProps>(({ children, tokens, vision, functionCall, ...rest 
   );
 });
 
-export default Tags;
+export default ModelFeatureTags;

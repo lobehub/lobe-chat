@@ -7,21 +7,21 @@ import { BrainCircuit } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { DiscoverModelItem } from '@/types/discover';
+import { DiscoverProviderItem } from '@/types/discover';
 
-import { useProviderList } from '../../../../../features/useProviderList';
 import HighlightBlock from '../../../../features/HighlightBlock';
 import ProviderItem from './ProviderItem';
 
 interface ProviderListProps {
-  data?: DiscoverModelItem;
+  data: DiscoverProviderItem[];
   identifier: string;
 }
 
 const ProviderList = memo<ProviderListProps>(({ data, identifier }) => {
   const { t } = useTranslation('discover');
-  const list = useProviderList(data?.providers);
   const theme = useTheme();
+
+  if (data?.length === 0) return null;
 
   return (
     <HighlightBlock
@@ -31,18 +31,10 @@ const ProviderList = memo<ProviderListProps>(({ data, identifier }) => {
       style={{ background: theme.colorBgContainer }}
       title={t('models.supportedProviders')}
     >
-      {list.map((item, index) => (
+      {data.map((item, index) => (
         <>
-          <ProviderItem
-            id={item.id}
-            // TODO: 配置模型价格
-            // input={inputPrice}
-            // output={outputPrice}
-            key={item.id}
-            maxOutput={data?.meta.maxOutput}
-            title={item.title}
-          />
-          {index < list.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
+          <ProviderItem key={item.identifier} modelId={identifier} {...item} />
+          {index < data.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
         </>
       ))}
     </HighlightBlock>

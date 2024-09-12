@@ -175,6 +175,7 @@
     "config": "プロバイダーの設定",
     "list": "モデルサービスプロバイダーリスト",
     "more": "もっと見る",
+    "showAllModels": "すべてのモデルを表示",
     "suggestions": "関連プロバイダー",
     "supportedModels": "サポートされているモデル"
   },

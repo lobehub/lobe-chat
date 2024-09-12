@@ -23,9 +23,8 @@ export interface ListProps {
 
 const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) => {
   const { t } = useTranslation('discover');
-
+  const recentLength = mobile ? 4 : 8;
   const { all, recent, last } = useMemo(() => {
-    const recentLength = mobile ? 4 : 8;
     return {
       all: items,
       last: items.slice(recentLength),
@@ -66,7 +65,7 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
       </Grid>
       {last && last?.length > 0 && (
         <>
-          <Title>{t('plugins.list')}</Title>
+          <Title tag={last.length}>{t('plugins.list')}</Title>
           <VirtuosoGridList
             data={last}
             itemContent={(_, item) => (

@@ -175,6 +175,7 @@
     "config": "Cấu hình nhà cung cấp",
     "list": "Danh sách nhà cung cấp mô hình",
     "more": "Thêm",
+    "showAllModels": "Hiển thị tất cả các mô hình",
     "suggestions": "Nhà cung cấp liên quan",
     "supportedModels": "Mô hình được hỗ trợ"
   },

@@ -2,10 +2,12 @@ import { ModelIcon } from '@lobehub/icons';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-import Tags from '@/app/(main)/discover/(detail)/model/[slug]/features/Tags';
 import { DiscoverModelItem } from '@/types/discover';
+
+import ModelFeatureTags from '../../../../../features/ModelFeatureTags';
 
 const { Paragraph, Title } = Typography;
 
@@ -44,7 +46,7 @@ export interface SuggestionItemProps
 
 const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier, ...rest }) => {
   const { title, description, tokens, vision, functionCall } = meta;
-
+  const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
   return (
@@ -62,10 +64,10 @@ const SuggestionItem = memo<SuggestionItemProps>(({ className, meta, identifier,
       </Flexbox>
       {description && (
         <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-          {description}
+          {t(`${identifier}.description`)}
         </Paragraph>
       )}
-      <Tags functionCall={functionCall} tokens={tokens} vision={vision} />
+      <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
     </Flexbox>
   );
 });

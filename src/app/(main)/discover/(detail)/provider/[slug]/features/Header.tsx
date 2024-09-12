@@ -10,7 +10,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverProviderItem } from '@/types/discover';
 
-import { useProviderItem } from '../../../../features/useProviderList';
 import Back from '../../../features/Back';
 
 export const useStyles = createStyles(({ css, token }) => ({
@@ -38,9 +37,8 @@ interface HeaderProps {
 }
 
 const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
-  const provider = useProviderItem(identifier);
   const { styles, theme } = useStyles();
-  const { t } = useTranslation('discover');
+  const { t } = useTranslation(['discover', 'providers']);
 
   return (
     <Flexbox gap={12} width={'100%'}>
@@ -48,11 +46,11 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
       <Flexbox align={'center'} gap={8} horizontal justify={'space-between'} width={'100%'}>
         <Flexbox align={'flex-start'} gap={4} justify={'flex-start'}>
           <ProviderCombine provider={identifier} size={40} />
-          <Flexbox align={'center'} gap={12} horizontal style={{ color: theme.colorTextSecondary }}>
-            <div>{provider?.name}</div>
-            <time className={styles.time} dateTime={new Date(data.createdAt).toISOString()}>
-              {data.createdAt}
-            </time>
+          <Flexbox gap={8} horizontal>
+            <Link href={data.meta.url} target={'_blank'}>
+              @{data.meta.title}
+            </Link>
+            <div style={{ color: theme.colorTextDescription }}>{data.models.length} Models</div>
           </Flexbox>
         </Flexbox>
         {!mobile && (
@@ -65,7 +63,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
           </Flexbox>
         )}
       </Flexbox>
-      <div>{data.meta.description}</div>
+      {data.meta.description && <div> {t(`${identifier}.description`, { ns: 'providers' })}</div>}
     </Flexbox>
   );
 });

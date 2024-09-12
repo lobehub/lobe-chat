@@ -1,11 +1,9 @@
 import { ProviderCombine } from '@lobehub/icons';
-import { Tag } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import Link from 'next/link';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
 import { DiscoverProviderItem } from '@/types/discover';
 
@@ -54,7 +52,7 @@ export interface SuggestionItemProps
 const SuggestionItem = memo<SuggestionItemProps>(
   ({ className, meta, identifier, models, ...rest }) => {
     const { title, description } = meta;
-
+    const { t } = useTranslation('providers');
     const { cx, styles, theme } = useStyles();
 
     return (
@@ -65,27 +63,15 @@ const SuggestionItem = memo<SuggestionItemProps>(
           size={24}
           title={title}
         />
-        <span style={{ color: theme.colorTextSecondary, fontSize: 12, marginTop: -8 }}>
-          {title}
-        </span>
+        <Flexbox gap={8} horizontal style={{ fontSize: 12, marginTop: -8 }}>
+          <div style={{ color: theme.colorTextSecondary }}>@{meta.title}</div>
+          <div style={{ color: theme.colorTextDescription }}>{models.length} Models</div>
+        </Flexbox>
         {description && (
           <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-            {description}
+            {t(`${identifier}.description`)}
           </Paragraph>
         )}
-        <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-          {(models as string[])
-            .slice(0, 3)
-            .filter(Boolean)
-            .map((tag: string, index) => (
-              <Link href={urlJoin('/discover/model', tag)} key={tag}>
-                <Tag key={index} style={{ margin: 0 }}>
-                  {tag}
-                </Tag>
-              </Link>
-            ))}
-          {models.length > 3 && <Tag>+{models.length - 3}</Tag>}
-        </Flexbox>
       </Flexbox>
     );
   },

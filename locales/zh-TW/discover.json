@@ -175,6 +175,7 @@
     "config": "配置服務商",
     "list": "模型服務商列表",
     "more": "更多",
+    "showAllModels": "顯示所有模型",
     "suggestions": "相關服務商",
     "supportedModels": "支持模型"
   },

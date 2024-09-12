@@ -1,16 +1,20 @@
-import { Avatar } from '@lobehub/ui';
+import { Avatar, Tag } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import { startCase } from 'lodash-es';
 import dynamic from 'next/dynamic';
+import qs from 'query-string';
 import { memo } from 'react';
 import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
+import urlJoin from 'url-join';
 
+import { useCategoryItem } from '@/app/(main)/discover/(list)/assistants/features/useCategory';
 import GitHubAvatar from '@/app/(main)/discover/features/GitHubAvatar';
 import { DiscoverAssistantItem } from '@/types/discover';
 
 import CardBanner from '../../features/CardBanner';
 
-const TagList = dynamic(() => import('./TagList'), {
+const Link = dynamic(() => import('next/link'), {
   loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,
   ssr: false,
 });
@@ -66,8 +70,9 @@ export interface AssistantCardProps
 
 const AssistantCard = memo<AssistantCardProps>(
   ({ showCategory, className, meta, createdAt, author, variant, ...rest }) => {
-    const { avatar, title, description, tags, category } = meta;
+    const { avatar, title, description, tags = [], category } = meta;
     const { cx, styles, theme } = useStyles();
+    const categoryItem = useCategoryItem(category, 12);
     const isCompact = variant === 'compact';
 
     const user = (
@@ -128,7 +133,7 @@ const AssistantCard = memo<AssistantCardProps>(
             )}
           </Flexbox>
           {!isCompact && (
-            <Flexbox gap={12} horizontal style={{ fontSize: 12 }}>
+            <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
               {user}
               <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
                 {createdAt}
@@ -138,7 +143,30 @@ const AssistantCard = memo<AssistantCardProps>(
           <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
             {description}
           </Paragraph>
-          <TagList category={category} showCategory={showCategory} tags={tags || []} />
+          <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
+            {showCategory && categoryItem ? (
+              <Link href={urlJoin('/discover/assistants', categoryItem.key)}>
+                <Tag icon={categoryItem.icon} style={{ margin: 0 }}>
+                  {categoryItem.label}
+                </Tag>
+              </Link>
+            ) : (
+              tags
+                .slice(0, 4)
+                .filter(Boolean)
+                .map((tag: string, index) => {
+                  const url = qs.stringifyUrl({
+                    query: { q: tag },
+                    url: '/discover/search/assistants',
+                  });
+                  return (
+                    <Link href={url} key={index}>
+                      <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+                    </Link>
+                  );
+                })
+            )}
+          </Flexbox>
         </Flexbox>
       </Flexbox>
     );

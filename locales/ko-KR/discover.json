@@ -175,6 +175,7 @@
     "config": "서비스 제공자 설정",
     "list": "모델 서비스 제공자 목록",
     "more": "더보기",
+    "showAllModels": "모든 모델 보기",
     "suggestions": "관련 서비스 제공자",
     "supportedModels": "지원되는 모델"
   },

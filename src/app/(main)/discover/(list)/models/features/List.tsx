@@ -46,7 +46,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
 
   return (
     <>
-      <Title>{t('models.list')}</Title>
+      <Title tag={items.length}>{t('models.list')}</Title>
       <VirtuosoGridList
         data={items}
         itemContent={(_, item) => (

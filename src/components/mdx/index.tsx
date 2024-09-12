@@ -13,9 +13,14 @@ export const Typography = ({
   style,
   ...rest
 }: { mobile?: boolean } & TypographyProps) => {
-  const headerMultiple = mobile ? 0.25 : 0.5;
+  const headerMultiple = mobile ? 0.2 : 0.4;
   return (
-    <Typo headerMultiple={headerMultiple} style={{ width: '100%', ...style }} {...rest}>
+    <Typo
+      fontSize={14}
+      headerMultiple={headerMultiple}
+      style={{ width: '100%', ...style }}
+      {...rest}
+    >
       {children}
     </Typo>
   );

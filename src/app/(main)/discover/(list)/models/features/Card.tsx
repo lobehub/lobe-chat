@@ -2,10 +2,12 @@ import { ModelIcon } from '@lobehub/icons';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-import Tags from '@/app/(main)/discover/(detail)/model/[slug]/features/Tags';
 import { DiscoverModelItem } from '@/types/discover';
+
+import ModelFeatureTags from '../../../features/ModelFeatureTags';
 
 const { Paragraph, Title } = Typography;
 
@@ -71,7 +73,7 @@ export interface ModelCardProps extends DiscoverModelItem, FlexboxProps {
 
 const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, ...rest }) => {
   const { description, title, functionCall, vision, tokens } = meta;
-
+  const { t } = useTranslation('models');
   const { cx, styles } = useStyles();
 
   return (
@@ -99,10 +101,13 @@ const ModelCard = memo<ModelCardProps>(({ className, meta, identifier, ...rest }
             </Paragraph>
           </Flexbox>
         </Flexbox>
-        <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-          {description}
-        </Paragraph>
-        <Tags functionCall={functionCall} tokens={tokens} vision={vision} />
+        {description && (
+          <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
+            {t(`${identifier}.description`)}
+          </Paragraph>
+        )}
+
+        <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
       </Flexbox>
     </Flexbox>
   );

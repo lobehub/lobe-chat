@@ -1,4 +1,5 @@
 import { cloneDeep, isString, merge, uniqBy } from 'lodash-es';
+import pMap from 'p-map';
 
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import {
@@ -86,6 +87,21 @@ export class DiscoverService {
     return assistant;
   };
 
+  getAssistantByIds = async (
+    locale: Locales,
+    identifiers: string[],
+  ): Promise<DiscoverAssistantItem[]> => {
+    const list = await pMap(
+      identifiers,
+      async (identifier) => this.getAssistantById(locale, identifier),
+      {
+        concurrency: 5,
+      },
+    );
+
+    return list.filter(Boolean) as DiscoverAssistantItem[];
+  };
+
   // Tools
 
   searchTool = async (locale: Locales, keywords: string): Promise<DiscoverPlugintem[]> => {
@@ -117,8 +133,15 @@ export class DiscoverService {
   };
 
   getPluginByIds = async (locale: Locales, identifiers: string[]): Promise<DiscoverPlugintem[]> => {
-    const toolList = await this.getPluginList(locale);
-    return toolList.filter((item) => identifiers.includes(item.identifier));
+    let list = await pMap(
+      identifiers,
+      async (identifier) => this.getPluginById(locale, identifier),
+      {
+        concurrency: 5,
+      },
+    );
+
+    return list.filter(Boolean) as DiscoverPlugintem[];
   };
 
   getPluginById = async (
@@ -207,6 +230,21 @@ export class DiscoverService {
     return merge(cloneDeep(DEFAULT_DISCOVER_PROVIDER_ITEM), provider) as DiscoverProviderItem;
   };
 
+  getProviderByIds = async (
+    locale: Locales,
+    identifiers: string[],
+  ): Promise<DiscoverProviderItem[]> => {
+    const list = await pMap(
+      identifiers,
+      async (identifier) => this.getProviderById(locale, identifier),
+      {
+        concurrency: 5,
+      },
+    );
+
+    return list.filter(Boolean) as DiscoverProviderItem[];
+  };
+
   // Models
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -282,7 +320,13 @@ export class DiscoverService {
   };
 
   getModelByIds = async (locale: Locales, identifiers: string[]): Promise<DiscoverModelItem[]> => {
-    const modelList = await this.getModelList(locale);
-    return modelList.filter((item) => identifiers.includes(item.identifier));
+    const list = await pMap(
+      identifiers,
+      async (identifier) => this.getModelById(locale, identifier),
+      {
+        concurrency: 5,
+      },
+    );
+    return list.filter(Boolean) as DiscoverModelItem[];
   };
 }

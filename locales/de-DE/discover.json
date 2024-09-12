@@ -175,6 +175,7 @@
     "config": "Anbieter konfigurieren",
     "list": "Liste der Modellanbieter",
     "more": "Mehr",
+    "showAllModels": "Alle Modelle anzeigen",
     "suggestions": "Verwandte Anbieter",
     "supportedModels": "Unterstützte Modelle"
   },

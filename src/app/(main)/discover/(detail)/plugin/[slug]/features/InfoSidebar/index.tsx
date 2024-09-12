@@ -2,7 +2,6 @@
 
 import { Skeleton } from 'antd';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
@@ -22,18 +21,12 @@ interface InfoSidebarProps extends FlexboxProps {
 const InfoSidebar = memo<InfoSidebarProps>(({ data, ...rest }) => {
   const { t } = useTranslation('discover');
 
-  const route = useRouter();
-
-  const handleMoreClick = () => {
-    route.push(urlJoin('/discover/plugins', data.meta?.category || ''));
-  };
-
   return (
     <Flexbox gap={48} height={'100%'} style={{ position: 'relative' }} width={'100%'} {...rest}>
       <Block
         gap={24}
         more={t('assistants.more')}
-        onMoreClick={handleMoreClick}
+        moreLink={urlJoin('/discover/plugins', data.meta?.category || '')}
         title={t('assistants.suggestions')}
       >
         {data?.suggestions?.length > 0 ? (

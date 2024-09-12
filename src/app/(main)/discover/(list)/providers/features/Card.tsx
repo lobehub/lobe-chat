@@ -1,14 +1,19 @@
-import { ProviderCombine } from '@lobehub/icons';
+import { ModelTag, ProviderCombine } from '@lobehub/icons';
 import { Tag } from '@lobehub/ui';
-import { Typography } from 'antd';
+import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useProviderItem } from '@/app/(main)/discover/features/useProviderList';
 import { DiscoverProviderItem } from '@/types/discover';
+
+const Link = dynamic(() => import('next/link'), {
+  loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,
+  ssr: false,
+});
 
 const { Paragraph } = Typography;
 
@@ -72,44 +77,44 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
 }));
 
-export interface ProviderCardProps extends DiscoverProviderItem, FlexboxProps {}
+export interface ProviderCardProps extends DiscoverProviderItem, FlexboxProps {
+  mobile?: boolean;
+}
 
 const ProviderCard = memo<ProviderCardProps>(({ models, className, meta, identifier, ...rest }) => {
   const { description } = meta;
-  const provider = useProviderItem(identifier);
+  const { t } = useTranslation('providers');
   const { cx, styles, theme } = useStyles();
-
-  if (!provider) return null;
 
   return (
     <Flexbox className={cx(styles.container, className)} gap={24} {...rest}>
-      <Flexbox gap={12} padding={16}>
+      <Flexbox gap={12} padding={16} width={'100%'}>
         <ProviderCombine
           className={styles.safariIconWidthFix}
           provider={identifier}
           size={28}
-          title={provider.name}
+          title={meta.title}
         />
-        <span style={{ color: theme.colorTextSecondary, fontSize: 12, marginTop: -8 }}>
-          {provider.name}
-        </span>
+
+        <Flexbox gap={8} horizontal style={{ fontSize: 12, marginTop: -8 }}>
+          <div style={{ color: theme.colorTextSecondary }}>@{meta.title}</div>
+          <div style={{ color: theme.colorTextDescription }}>{models.length} Models</div>
+        </Flexbox>
         {description && (
           <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-            {description}
+            {t(`${identifier}.description`)}
           </Paragraph>
         )}
         <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
-          {(models as string[])
+          {models
             .slice(0, 3)
             .filter(Boolean)
-            .map((tag: string, index) => (
+            .map((tag: string) => (
               <Link href={urlJoin('/discover/model', tag)} key={tag}>
-                <Tag key={index} style={{ margin: 0 }}>
-                  {tag}
-                </Tag>
+                <ModelTag model={tag} style={{ margin: 0 }} />
               </Link>
             ))}
-          {models.length > 3 && <Tag>+{models.length - 3}</Tag>}
+          {models.length > 3 && <Tag>...</Tag>}
         </Flexbox>
       </Flexbox>
     </Flexbox>

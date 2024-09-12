@@ -175,6 +175,7 @@
     "config": "Configurar proveedor",
     "list": "Lista de proveedores de modelos",
     "more": "Más",
+    "showAllModels": "Mostrar todos los modelos",
     "suggestions": "Proveedores relacionados",
     "supportedModels": "Modelos soportados"
   },

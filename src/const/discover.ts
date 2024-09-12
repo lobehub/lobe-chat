@@ -1,4 +1,3 @@
-
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   DiscoverAssistantItem,
@@ -10,8 +9,6 @@ import {
 export const CNY_TO_USD = 7.14;
 
 const DEFAULT_CREATED_AT = new Date().toISOString();
-
-export const CNY_TO_USD = 7.14;
 
 export const DEFAULT_DISCOVER_ASSISTANT_ITEM: Partial<DiscoverAssistantItem> = {
   author: '',

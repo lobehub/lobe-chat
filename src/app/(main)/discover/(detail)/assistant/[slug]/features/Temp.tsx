@@ -27,7 +27,7 @@ const ConversationExample = memo<ConversationExampleProps>(({ data }) => {
       avatar={data?.meta.avatar}
       icon={BotMessageSquare}
       justify={'space-between'}
-      style={{ background: theme.colorFillQuaternary }}
+      style={{ background: theme.colorBgContainer }}
       title={t('assistants.systemRole')}
     >
       <Flexbox paddingInline={16} style={{ minHeight: 600 }}>

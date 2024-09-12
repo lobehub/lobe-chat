@@ -9,6 +9,7 @@ import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { DocService } from '@/server/services/doc';
 import { translation } from '@/server/translation';
+import { DiscoverModelItem } from '@/types/discover';
 import { isMobileDevice } from '@/utils/responsive';
 
 import DetailLayout from '../../features/DetailLayout';
@@ -22,6 +23,7 @@ type Props = { params: { slug: string }; searchParams: { hl?: Locales } };
 export const generateMetadata = async ({ params, searchParams }: Props) => {
   const { slug: identifier } = params;
   const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t: td } = await translation('models', searchParams?.hl);
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getProviderById(locale, identifier);
@@ -36,7 +38,7 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
       { name: 'LobeChat', url: 'https://github.com/lobehub/lobe-chat' },
     ],
     ...metadataModule.generate({
-      description: meta.description || t('discover.providers.description'),
+      description: td(`${identifier}.description`) || t('discover.providers.description'),
       tags: models || [],
       title: [meta.title, t('discover.providers.title')].join(' · '),
       url: urlJoin('/discover/provider', identifier),
@@ -54,6 +56,7 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
 const Page = async ({ params, searchParams }: Props) => {
   const { slug: identifier } = params;
   const { t, locale } = await translation('metadata', searchParams?.hl);
+  const { t: td } = await translation('models', searchParams?.hl);
   const mobile = isMobileDevice();
 
   const discoverService = new DiscoverService();
@@ -61,10 +64,16 @@ const Page = async ({ params, searchParams }: Props) => {
   if (!data) return notFound();
 
   const docService = new DocService();
-  const doc = await docService.getDocByPath(locale, `usage/providers/${identifier}`);
-  const modelData = await discoverService.getModelByIds(locale, data.models);
 
   const { meta, createdAt, models } = data;
+
+  let modelData: DiscoverModelItem[] = [];
+  if (models && models?.length > 0) {
+    modelData = await discoverService.getModelByIds(locale, models);
+  }
+
+  const doc = await docService.getDocByPath(locale, `usage/providers/${identifier}`);
+
   const ld = ldModule.generate({
     article: {
       author: [meta.title],
@@ -73,7 +82,7 @@ const Page = async ({ params, searchParams }: Props) => {
       tags: models || [],
     },
     date: createdAt ? new Date(createdAt).toISOString() : new Date().toISOString(),
-    description: meta.description || doc?.description || t('discover.providers.description'),
+    description: td(`${identifier}.description`) || t('discover.providers.description'),
     title: [meta.title, t('discover.providers.title')].join(' · '),
     url: urlJoin('/discover/provider', identifier),
   });
@@ -89,7 +98,7 @@ const Page = async ({ params, searchParams }: Props) => {
         /* ↓ cloud slot ↓ */
         /* ↑ cloud slot ↑ */
       >
-        <ModelList data={modelData} identifier={identifier} />
+        <ModelList identifier={identifier} modelData={modelData} />
         {doc && <CustomMDX mobile={mobile} source={doc.content} />}
       </DetailLayout>
     </>

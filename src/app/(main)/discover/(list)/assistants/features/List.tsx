@@ -66,7 +66,7 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
       </Grid>
       {last && last?.length > 0 && (
         <>
-          <Title>{t('assistants.list')}</Title>
+          <Title tag={last.length}>{t('assistants.list')}</Title>
           <VirtuosoGridList
             data={last}
             itemContent={(_, item) => (

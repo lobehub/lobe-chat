@@ -63,13 +63,13 @@ const Page = async ({ params, searchParams }: Props) => {
   const data = await discoverService.getAssistantById(locale, identifier);
   if (!data) return notFound();
 
-  let pluginData: DiscoverPlugintem[] = [];
+  const { meta, createdAt, author, config } = data;
 
-  if (data.config?.plugins && data.config.plugins?.length > 0) {
-    pluginData = await discoverService.getPluginByIds(locale, data.config.plugins);
+  let pluginData: DiscoverPlugintem[] = [];
+  if (config?.plugins && config.plugins?.length > 0) {
+    pluginData = await discoverService.getPluginByIds(locale, config.plugins);
   }
 
-  const { meta, createdAt, author } = data;
   const ld = ldModule.generate({
     article: {
       author: [author],

@@ -28,7 +28,7 @@ export const useStyles = createStyles(({ css, token }) => ({
   `,
 }));
 
-interface StatisticProps extends Omit<FlexboxProps, 'children' | 'title'> {
+export interface StatisticProps extends Omit<FlexboxProps, 'children' | 'title'> {
   title: ReactNode;
   titleStyle?: CSSProperties;
   tooltip?: string;

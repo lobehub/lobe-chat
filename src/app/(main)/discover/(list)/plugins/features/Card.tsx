@@ -1,15 +1,19 @@
-import { Avatar } from '@lobehub/ui';
+import { Avatar, Tag } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
+import { startCase } from 'lodash-es';
 import dynamic from 'next/dynamic';
+import qs from 'query-string';
 import { memo } from 'react';
 import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
+import urlJoin from 'url-join';
 
+import { useCategoryItem } from '@/app/(main)/discover/(list)/plugins/features/useCategory';
 import { DiscoverPlugintem } from '@/types/discover';
 
 import CardBanner from '../../features/CardBanner';
 
-const TagList = dynamic(() => import('./TagList'), {
+const Link = dynamic(() => import('next/link'), {
   loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,
   ssr: false,
 });
@@ -68,8 +72,8 @@ interface PluginCardProps
 
 const PluginCard = memo<PluginCardProps>(
   ({ className, showCategory, meta, createdAt, author, variant, ...rest }) => {
-    const { avatar, title, description, tags, category } = meta;
-
+    const { avatar, title, description, tags = [], category } = meta;
+    const categoryItem = useCategoryItem(category, 12);
     const { cx, styles, theme } = useStyles();
     const isCompact = variant === 'compact';
 
@@ -106,8 +110,8 @@ const PluginCard = memo<PluginCardProps>(
               </Center>
             )}
           </Flexbox>
-          <Flexbox gap={12} horizontal style={{ fontSize: 12 }}>
-            <span style={{ color: theme.colorTextSecondary, fontSize: 12 }}>@{author}</span>
+          <Flexbox gap={8} horizontal style={{ fontSize: 12 }}>
+            <div style={{ color: theme.colorTextSecondary }}>@{author}</div>
             {!isCompact && (
               <time className={styles.time} dateTime={new Date(createdAt).toISOString()}>
                 {createdAt}
@@ -117,7 +121,30 @@ const PluginCard = memo<PluginCardProps>(
           <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
             {description}
           </Paragraph>
-          <TagList category={category} showCategory={showCategory} tags={tags || []} />
+          <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
+            {showCategory && categoryItem ? (
+              <Link href={urlJoin('/discover/plugins', categoryItem.key)}>
+                <Tag icon={categoryItem.icon} style={{ margin: 0 }}>
+                  {categoryItem.label}
+                </Tag>
+              </Link>
+            ) : (
+              tags
+                .slice(0, 4)
+                .filter(Boolean)
+                .map((tag: string, index) => {
+                  const url = qs.stringifyUrl({
+                    query: { q: tag },
+                    url: '/discover/search/plugins',
+                  });
+                  return (
+                    <Link href={url} key={index}>
+                      <Tag style={{ margin: 0 }}>{startCase(tag).trim()}</Tag>
+                    </Link>
+                  );
+                })
+            )}
+          </Flexbox>
         </Flexbox>
       </Flexbox>
     );

@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -18,21 +17,20 @@ interface ClientProps {
 }
 
 const Client = memo<ClientProps>(({ modelList, assistantList, pluginList }) => {
-  const router = useRouter();
   const { t } = useTranslation('discover');
   return (
     <>
-      <Title more={t('home.more')} onMoreClick={() => router.push('/discover/assistants')}>
+      <Title more={t('home.more')} moreLink={'/discover/assistants'}>
         {t('home.featuredAssistants')}
       </Title>
       <AssistantList data={assistantList} />
       <div />
-      <Title more={t('home.more')} onMoreClick={() => router.push('/discover/plugins')}>
+      <Title more={t('home.more')} moreLink={'/discover/plugins'}>
         {t('home.featuredTools')}
       </Title>
       <PluginList data={pluginList} />
       <div />
-      <Title more={t('home.more')} onMoreClick={() => router.push('/discover/models')}>
+      <Title more={t('home.more')} moreLink={'/discover/models'}>
         {t('home.featuredModels')}
       </Title>
       <div />

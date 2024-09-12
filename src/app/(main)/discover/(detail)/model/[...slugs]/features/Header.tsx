@@ -10,8 +10,8 @@ import { Flexbox } from 'react-layout-kit';
 
 import { DiscoverModelItem } from '@/types/discover';
 
+import ModelFeatureTags from '../../../../features/ModelFeatureTags';
 import Back from '../../../features/Back';
-import Tags from './Tags';
 
 export const useStyles = createStyles(({ css, token }) => ({
   tag: css`
@@ -39,7 +39,7 @@ interface HeaderProps {
 
 const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
   const { styles, theme } = useStyles();
-  const { t } = useTranslation(['discover', 'components']);
+  const { t } = useTranslation(['discover', 'models']);
 
   return (
     <Flexbox gap={12} width={'100%'}>
@@ -72,8 +72,8 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
           </Flexbox>
         )}
       </Flexbox>
-      <div>{data.meta.description}</div>
-      <Tags
+      {data.meta.description && <div>{t(`${identifier}.description`, { ns: 'models' })}</div>}
+      <ModelFeatureTags
         functionCall={data.meta.functionCall}
         tokens={data.meta.tokens}
         vision={data.meta.vision}
