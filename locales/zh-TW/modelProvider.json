@@ -38,9 +38,15 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "如果你正在使用 AWS SSO/STS，請輸入你的 AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (可選)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "自定義服務區域",
+      "customSessionToken": "自訂 Session Token",
       "description": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始會話。應用程式不會記錄你的驗證配置",
       "title": "使用自定義 Bedrock 驗證資訊"
     }

@@ -16,10 +16,11 @@ const provider = {
     ...CommonProviderConfig,
     authorization: { params: { scope: 'openid email profile' } },
     checks: ['state', 'pkce'],
-    clientId: authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_ID,
-    clientSecret: authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET,
+    clientId: authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_ID ?? process.env.AUTH_CLOUDFLARE_ZERO_TRUST_ID,
+    clientSecret:
+      authEnv.CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET ?? process.env.AUTH_CLOUDFLARE_ZERO_TRUST_SECRET,
     id: 'cloudflare-zero-trust',
-    issuer: authEnv.CLOUDFLARE_ZERO_TRUST_ISSUER,
+    issuer: authEnv.CLOUDFLARE_ZERO_TRUST_ISSUER ?? process.env.AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER,
     name: 'Cloudflare Zero Trust',
     profile(profile) {
       return {
