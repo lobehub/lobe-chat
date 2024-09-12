@@ -4,22 +4,6 @@ const Anthropic: ModelProviderCard = {
   chatModels: [
     {
       description:
-        'Fastest and most compact model for near-instant responsiveness. Quick and accurate targeted performance',
-      displayName: 'Claude 3 Haiku',
-      enabled: true,
-      functionCall: true,
-      id: 'claude-3-haiku-20240307',
-      maxOutput: 4096,
-      pricing: {
-        input: 0.25,
-        output: 1.25,
-      },
-      releasedAt: '2024-03-07',
-      tokens: 200_000,
-      vision: true,
-    },
-    {
-      description:
         'Claude 3.5 Sonnet raises the industry bar for intelligence, outperforming competitor models and Claude 3 Opus on a wide range of evaluations, with the speed and cost of our mid-tier model, Claude 3 Sonnet.',
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
@@ -38,6 +22,38 @@ const Anthropic: ModelProviderCard = {
     },
     {
       description:
+        'Fastest and most compact model for near-instant responsiveness. Quick and accurate targeted performance',
+      displayName: 'Claude 3 Haiku',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-3-haiku-20240307',
+      maxOutput: 4096,
+      pricing: {
+        input: 0.25,
+        output: 1.25,
+      },
+      releasedAt: '2024-03-07',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
+        'Ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments',
+      displayName: 'Claude 3 Sonnet',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-3-sonnet-20240229',
+      maxOutput: 4096,
+      pricing: {
+        input: 3,
+        output: 15,
+      },
+      releasedAt: '2024-02-29',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
         'Most powerful model for highly complex tasks. Top-level performance, intelligence, fluency, and understanding',
       displayName: 'Claude 3 Opus',
       enabled: true,
@@ -47,21 +63,6 @@ const Anthropic: ModelProviderCard = {
       pricing: {
         input: 15,
         output: 75,
-      },
-      releasedAt: '2024-02-29',
-      tokens: 200_000,
-      vision: true,
-    },
-    {
-      description:
-        'Ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments',
-      displayName: 'Claude 3 Sonnet',
-      functionCall: true,
-      id: 'claude-3-sonnet-20240229',
-      maxOutput: 4096,
-      pricing: {
-        input: 3,
-        output: 15,
       },
       releasedAt: '2024-02-29',
       tokens: 200_000,
