@@ -14,7 +14,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 16385,
   },
   {
-    "description": "Currently points to gpt-3.5-turbo-16k-0613",
+    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo 16K",
     "id": "gpt-3.5-turbo-16k",
     "legacy": true,
@@ -25,7 +25,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 16385,
   },
   {
-    "description": "Currently points to gpt-3.5-turbo-16k-0613",
+    "description": "GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。",
     "id": "gpt-3.5-turbo-16k-0613",
     "legacy": true,
     "pricing": {
@@ -35,7 +35,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 16385,
   },
   {
-    "displayName": "GPT-4 Turbo Vision Preview (1106)",
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "id": "gpt-4-1106-vision-preview",
     "pricing": {
       "input": 10,
@@ -48,6 +48,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-instruct-0914",
   },
   {
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "displayName": "GPT-4 Turbo Preview (0125)",
     "functionCall": true,
     "id": "gpt-4-0125-preview",
@@ -58,7 +59,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 128000,
   },
   {
-    "description": "Currently points to gpt-4-0125-preview",
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "displayName": "GPT-4 Turbo Preview",
     "functionCall": true,
     "id": "gpt-4-turbo-preview",
@@ -69,6 +70,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 128000,
   },
   {
+    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo Instruct",
     "id": "gpt-3.5-turbo-instruct",
     "pricing": {
@@ -81,6 +83,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-0301",
   },
   {
+    "description": "GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。",
     "displayName": "GPT-3.5 Turbo (0613)",
     "id": "gpt-3.5-turbo-0613",
     "legacy": true,
@@ -91,6 +94,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 4096,
   },
   {
+    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo (1106)",
     "functionCall": true,
     "id": "gpt-3.5-turbo-1106",
@@ -101,6 +105,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 16385,
   },
   {
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "displayName": "GPT-4 Turbo Preview (1106)",
     "functionCall": true,
     "id": "gpt-4-1106-preview",
@@ -111,7 +116,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 128000,
   },
   {
-    "description": "Currently points to gpt-4-1106-vision-preview",
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
     "displayName": "GPT-4 Turbo Vision Preview",
     "id": "gpt-4-vision-preview",
     "pricing": {
@@ -122,7 +127,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "vision": true,
   },
   {
-    "description": "Currently points to gpt-4-0613",
+    "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。",
     "displayName": "GPT-4",
     "functionCall": true,
     "id": "gpt-4",
@@ -133,6 +138,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 8192,
   },
   {
+    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
     "displayName": "GPT-3.5 Turbo (0125)",
     "functionCall": true,
     "id": "gpt-3.5-turbo-0125",
@@ -143,6 +149,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 16385,
   },
   {
+    "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。",
     "displayName": "GPT-4 (0613)",
     "functionCall": true,
     "id": "gpt-4-0613",
