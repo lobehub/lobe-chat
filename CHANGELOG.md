@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.16.11](https://github.com/lobehub/lobe-chat/compare/v1.16.10...v1.16.11)
+
+<sup>Released on **2024-09-12**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Support webhooks for logto.
+
+#### 💄 Styles
+
+- **misc**: Default disable mistral provider useless models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Support webhooks for logto, closes [#3774](https://github.com/lobehub/lobe-chat/issues/3774) ([0cfee6b](https://github.com/lobehub/lobe-chat/commit/0cfee6b))
+
+#### Styles
+
+- **misc**: Default disable mistral provider useless models, closes [#3922](https://github.com/lobehub/lobe-chat/issues/3922) ([bdbc647](https://github.com/lobehub/lobe-chat/commit/bdbc647))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.16.10](https://github.com/lobehub/lobe-chat/compare/v1.16.9...v1.16.10)
 
 <sup>Released on **2024-09-12**</sup>
