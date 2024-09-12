@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { formatShortenNumber } from '@/utils/format';
 
-import { useStyles } from './Statistic';
+import { useStyles } from '../components/Statistic';
 
 interface LikeButtonProps {
   count: number;

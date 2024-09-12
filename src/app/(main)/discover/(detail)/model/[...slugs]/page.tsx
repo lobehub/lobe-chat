@@ -95,7 +95,7 @@ const Page = async ({ params, searchParams }: Props) => {
         /* ↓ cloud slot ↓ */
         /* ↑ cloud slot ↑ */
       >
-        <ProviderList data={providerData} identifier={identifier} />
+        <ProviderList data={providerData} identifier={identifier} mobile={mobile} />
         <ParameterList data={data} identifier={identifier} />
       </DetailLayout>
     </>

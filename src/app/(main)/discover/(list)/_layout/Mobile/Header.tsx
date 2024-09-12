@@ -36,13 +36,20 @@ const Header = memo(() => {
           </Flexbox>
         )
       }
+      contentStyles={{ center: { display: 'none' } }}
       left={<Nav />}
       right={
-        <ActionIcon
-          icon={SearchIcon}
-          onClick={() => setShowSearch(true)}
-          size={MOBILE_HEADER_ICON_SIZE}
-        />
+        showSearch ? (
+          <Flexbox align={'center'} className={styles.search} paddingBlock={8} paddingInline={16}>
+            <StoreSearchBar mobile onBlur={() => setShowSearch(false)} />
+          </Flexbox>
+        ) : (
+          <ActionIcon
+            icon={SearchIcon}
+            onClick={() => setShowSearch(true)}
+            size={MOBILE_HEADER_ICON_SIZE}
+          />
+        )
       }
       style={{
         ...mobileHeaderSticky,

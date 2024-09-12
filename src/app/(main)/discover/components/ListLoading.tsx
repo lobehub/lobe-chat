@@ -4,7 +4,7 @@ import { Skeleton } from 'antd';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import GridLoadingCard from '../components/GridLoadingCard';
+import GridLoadingCard from './GridLoadingCard';
 
 const ListLoading = memo(() => {
   return (

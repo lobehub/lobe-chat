@@ -4,7 +4,7 @@ import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Trans } from 'react-i18next';
 
-import Title from '../features/Title';
+import Title from './Title';
 
 const useStyles = createStyles(({ css, token }) => ({
   highlight: css`

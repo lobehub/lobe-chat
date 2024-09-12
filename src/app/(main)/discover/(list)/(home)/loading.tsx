@@ -1,1 +1,1 @@
-export { HomeLoading as default } from '../features/ListLoading';
+export { HomeLoading as default } from '../../components/ListLoading';

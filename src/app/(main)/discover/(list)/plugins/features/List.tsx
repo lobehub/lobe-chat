@@ -9,9 +9,9 @@ import urlJoin from 'url-join';
 
 import { DiscoverPlugintem } from '@/types/discover';
 
+import SearchResultCount from '../../../components/SearchResultCount';
+import Title from '../../../components/Title';
 import VirtuosoGridList from '../../../components/VirtuosoGridList';
-import SearchResultCount from '../../components/SearchResultCount';
-import Title from '../../features/Title';
 import Card from './Card';
 
 export interface ListProps {

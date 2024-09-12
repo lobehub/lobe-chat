@@ -13,8 +13,9 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-import { ICON_SIZE } from '@/app/(main)/discover/(list)/components/CategoryMenu';
 import { PluginCategory } from '@/types/discover';
+
+import { ICON_SIZE } from '../../../components/CategoryMenu';
 
 export const useCategory = (fontsize?: number) => {
   const theme = useTheme();

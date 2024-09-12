@@ -12,9 +12,9 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import GitHubAvatar from '@/app/(main)/discover/features/GitHubAvatar';
 import { DiscoverAssistantItem } from '@/types/discover';
 
+import GitHubAvatar from '../../../../components/GitHubAvatar';
 import Back from '../../../features/Back';
 
 export const useStyles = createStyles(({ css, token }) => ({

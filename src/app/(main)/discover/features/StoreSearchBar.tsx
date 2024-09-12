@@ -1,12 +1,10 @@
 'use client';
 
-import { Icon, SearchBar, SearchBarProps } from '@lobehub/ui';
-import { Select, SelectProps } from 'antd';
+import { SearchBar, SearchBarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { ChevronDownIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useQueryState } from 'nuqs';
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
@@ -35,7 +33,7 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   const [active, setActive] = useState(false);
   const pathname = usePathname();
   const { q } = useQuery();
-  const { items, activeKey } = useNav();
+  const { activeKey } = useNav();
   const [searchKey, setSearchKey] = useQueryState('q');
   const [activeType, setActiveType] = useState<DiscoverTab>(
     activeKey === DiscoverTab.Home ? DiscoverTab.Assistants : activeKey,
@@ -54,38 +52,12 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
     if (activeKey !== DiscoverTab.Home) setActiveType(activeKey);
   }, [activeKey]);
 
-  const options = useMemo(
-    () =>
-      items
-        .map((item: any) => {
-          if (item.key === DiscoverTab.Home) return false;
-          return {
-            label: item.label,
-            value: item.key,
-          };
-        })
-        .filter(Boolean) as SelectProps['options'],
-    [items],
-  );
-
   const handleSearch = (value: string) => {
     router.push(urlJoin('/discover/search', activeType), { query: { q: value } });
   };
 
   return (
     <SearchBar
-      addonBefore={
-        !mobile &&
-        active && (
-          <Select
-            defaultValue={activeType}
-            onSelect={(value) => setActiveType(value)}
-            options={options}
-            suffixIcon={<Icon icon={ChevronDownIcon} />}
-            value={activeType}
-          />
-        )
-      }
       allowClear
       autoFocus={mobile || active}
       className={cx(styles.bar, active && styles.active)}

@@ -98,7 +98,7 @@ const Page = async ({ params, searchParams }: Props) => {
         /* ↓ cloud slot ↓ */
         /* ↑ cloud slot ↑ */
       >
-        <ModelList identifier={identifier} modelData={modelData} />
+        <ModelList identifier={identifier} mobile={mobile} modelData={modelData} />
         {doc && <CustomMDX mobile={mobile} source={doc.content} />}
       </DetailLayout>
     </>

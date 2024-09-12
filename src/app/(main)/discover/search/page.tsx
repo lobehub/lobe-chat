@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation';
 
-import { SearchParams } from '../type';
+import { SearchParams } from './type';
 
 type Props = { searchParams: SearchParams };
 

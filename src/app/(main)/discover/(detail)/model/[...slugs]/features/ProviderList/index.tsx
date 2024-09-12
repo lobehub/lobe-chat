@@ -15,9 +15,10 @@ import ProviderItem from './ProviderItem';
 interface ProviderListProps {
   data: DiscoverProviderItem[];
   identifier: string;
+  mobile?: boolean;
 }
 
-const ProviderList = memo<ProviderListProps>(({ data, identifier }) => {
+const ProviderList = memo<ProviderListProps>(({ mobile, data, identifier }) => {
   const { t } = useTranslation('discover');
   const theme = useTheme();
 
@@ -33,7 +34,7 @@ const ProviderList = memo<ProviderListProps>(({ data, identifier }) => {
     >
       {data.map((item, index) => (
         <>
-          <ProviderItem key={item.identifier} modelId={identifier} {...item} />
+          <ProviderItem key={item.identifier} mobile={mobile} modelId={identifier} {...item} />
           {index < data.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
         </>
       ))}

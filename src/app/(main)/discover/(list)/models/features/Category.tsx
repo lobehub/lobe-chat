@@ -14,7 +14,7 @@ import urlJoin from 'url-join';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverProviderItem } from '@/types/discover';
 
-import CategoryMenu, { ICON_SIZE } from '../../components/CategoryMenu';
+import CategoryMenu, { ICON_SIZE } from '../../../components/CategoryMenu';
 
 const Category = memo<{ data: DiscoverProviderItem[] }>(({ data }) => {
   const pathname = usePathname();

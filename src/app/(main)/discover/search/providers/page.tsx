@@ -8,7 +8,7 @@ import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
 
-import List from '../../providers/features/List';
+import List from '../../(list)/providers/features/List';
 
 type Props = { searchParams: { hl?: Locales; q?: string } };
 

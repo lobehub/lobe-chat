@@ -16,7 +16,7 @@ const MOBILE_NAV_ROUTES = new Set([
   '/discover/assistants',
   '/discover/plugins',
   '/discover/models',
-  '/discover/search',
+  '/discover/providers',
   '/me',
 ]);
 

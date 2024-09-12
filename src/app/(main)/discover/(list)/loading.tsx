@@ -7,7 +7,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useServerConfigStore } from '@/store/serverConfig';
 
-import CategoryContainer from './features/CategoryContainer';
+import CategoryContainer from '../components/CategoryContainer';
 
 export default memo(() => {
   const pathname = usePathname();

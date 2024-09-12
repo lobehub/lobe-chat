@@ -6,7 +6,9 @@ import { LucideIcon } from 'lucide-react';
 import { ReactNode, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-import CardBanner from '@/app/(main)/discover/(list)/features/CardBanner';
+import { useServerConfigStore } from '@/store/serverConfig';
+
+import CardBanner from '../../components/CardBanner';
 
 const useStyles = createStyles(({ css, token }) => ({
   background: css`
@@ -41,7 +43,7 @@ interface HighlightBlockProps extends FlexboxProps {
 
 const HighlightBlock = memo<HighlightBlockProps>(({ avatar, title, icon, children, ...rest }) => {
   const { styles } = useStyles();
-
+  const mobile = useServerConfigStore((s) => s.isMobile);
   return (
     <Flexbox className={styles.container} flex={'none'} width={'100%'} {...rest}>
       <Flexbox
@@ -54,7 +56,7 @@ const HighlightBlock = memo<HighlightBlockProps>(({ avatar, title, icon, childre
       >
         <Icon icon={icon} size={{ fontSize: 20 }} style={{ zIndex: 1 }} />
         <h2 style={{ fontSize: 16, fontWeight: 'bold', margin: 0, zIndex: 1 }}>{title}</h2>
-        <CardBanner avatar={avatar} className={styles.background} />
+        <CardBanner avatar={avatar} className={styles.background} size={mobile ? 64 : 512} />
       </Flexbox>
       {children}
     </Flexbox>

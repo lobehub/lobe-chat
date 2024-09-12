@@ -28,13 +28,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     font-size: 12px;
     color: ${token.colorTextSecondary};
   `,
-  safariIconWidthFix: css`
-    color: ${token.colorText};
-
-    svg {
-      width: unset !important;
-    }
-  `,
   title: css`
     margin-block-end: 0 !important;
     font-size: 16px !important;
@@ -57,12 +50,7 @@ const SuggestionItem = memo<SuggestionItemProps>(
 
     return (
       <Flexbox className={cx(styles.container, className)} gap={12} key={identifier} {...rest}>
-        <ProviderCombine
-          className={styles.safariIconWidthFix}
-          provider={identifier}
-          size={24}
-          title={title}
-        />
+        <ProviderCombine provider={identifier} size={24} title={title} />
         <Flexbox gap={8} horizontal style={{ fontSize: 12, marginTop: -8 }}>
           <div style={{ color: theme.colorTextSecondary }}>@{meta.title}</div>
           <div style={{ color: theme.colorTextDescription }}>{models.length} Models</div>

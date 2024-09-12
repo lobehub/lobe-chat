@@ -47,14 +47,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
     margin-block-end: 0 !important;
     color: ${token.colorTextDescription};
   `,
-
-  safariIconWidthFix: css`
-    color: ${token.colorText};
-
-    svg {
-      width: unset !important;
-    }
-  `,
   tagBlue: css`
     color: ${token.geekblue};
     background: ${token.geekblue1};
@@ -90,12 +82,11 @@ const ProviderCard = memo<ProviderCardProps>(({ models, className, meta, identif
     <Flexbox className={cx(styles.container, className)} gap={24} {...rest}>
       <Flexbox gap={12} padding={16} width={'100%'}>
         <ProviderCombine
-          className={styles.safariIconWidthFix}
           provider={identifier}
           size={28}
+          style={{ color: theme.colorText }}
           title={meta.title}
         />
-
         <Flexbox gap={8} horizontal style={{ fontSize: 12, marginTop: -8 }}>
           <div style={{ color: theme.colorTextSecondary }}>@{meta.title}</div>
           <div style={{ color: theme.colorTextDescription }}>{models.length} Models</div>

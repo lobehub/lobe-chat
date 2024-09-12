@@ -7,11 +7,11 @@ import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import Title from '@/app/(main)/discover/(list)/features/Title';
 import { DiscoverAssistantItem } from '@/types/discover';
 
+import SearchResultCount from '../../../components/SearchResultCount';
+import Title from '../../../components/Title';
 import VirtuosoGridList from '../../../components/VirtuosoGridList';
-import SearchResultCount from '../../components/SearchResultCount';
 import Card from './Card';
 
 export interface ListProps {

@@ -8,8 +8,9 @@ import { ReactNode, memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import CardBanner from '@/app/(main)/discover/(list)/features/CardBanner';
 import { useShare } from '@/hooks/useShare';
+
+import CardBanner from '../../components/CardBanner';
 
 const useStyles = createStyles(({ css, token }) => {
   return {

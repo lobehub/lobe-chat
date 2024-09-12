@@ -3,8 +3,9 @@ import Link from 'next/link';
 import { memo } from 'react';
 import urlJoin from 'url-join';
 
-import Card from '@/app/(main)/discover/(list)/plugins/features/Card';
 import { DiscoverPlugintem } from '@/types/discover';
+
+import Card from '../../plugins/features/Card';
 
 const PluginList = memo<{ data: DiscoverPlugintem[] }>(({ data }) => {
   return (

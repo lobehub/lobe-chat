@@ -8,7 +8,7 @@ import urlJoin from 'url-join';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { PluginCategory } from '@/types/discover';
 
-import CategoryMenu from '../../components/CategoryMenu';
+import CategoryMenu from '../../../components/CategoryMenu';
 import { useCategory } from './useCategory';
 
 const Category = memo(() => {

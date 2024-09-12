@@ -8,11 +8,11 @@ import { memo } from 'react';
 import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useCategoryItem } from '@/app/(main)/discover/(list)/assistants/features/useCategory';
-import GitHubAvatar from '@/app/(main)/discover/features/GitHubAvatar';
 import { DiscoverAssistantItem } from '@/types/discover';
 
-import CardBanner from '../../features/CardBanner';
+import CardBanner from '../../../components/CardBanner';
+import GitHubAvatar from '../../../components/GitHubAvatar';
+import { useCategoryItem } from '../../assistants/features/useCategory';
 
 const Link = dynamic(() => import('next/link'), {
   loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,

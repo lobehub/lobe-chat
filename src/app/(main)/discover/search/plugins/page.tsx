@@ -8,7 +8,7 @@ import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
 
-import List from '../../assistants/features/List';
+import List from '../../(list)/plugins/features/List';
 
 type Props = { searchParams: { hl?: Locales; q?: string } };
 
@@ -18,24 +18,24 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   return metadataModule.generate({
     description: t('discover.description'),
     title: t('discover.search'),
-    url: '/discover/search/assistants',
+    url: '/discover/search/plugins',
   });
 };
 
 const Page = async ({ searchParams }: Props) => {
   const { q } = searchParams;
-  if (!q) redirect(`/discover/assistants`);
+  if (!q) redirect(`/discover/plugins`);
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.searchAssistant(locale, q);
+  const items = await discoverService.searchTool(locale, q);
 
   const ld = ldModule.generate({
     description: t('discover.description'),
     title: t('discover.search'),
-    url: '/discover/search/assistants',
+    url: '/discover/search/plugins',
     webpage: {
       enable: true,
       search: true,
@@ -50,6 +50,6 @@ const Page = async ({ searchParams }: Props) => {
   );
 };
 
-Page.DisplayName = 'DiscoverSearchAssistants';
+Page.DisplayName = 'DiscoverSearchTools';
 
 export default Page;

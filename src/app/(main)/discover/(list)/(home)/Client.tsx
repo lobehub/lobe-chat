@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import { DiscoverAssistantItem, DiscoverModelItem, DiscoverPlugintem } from '@/types/discover';
 
-import Title from '../features/Title';
+import Title from '../../components/Title';
 import AssistantList from './features/AssistantList';
 import ModelList from './features/ModelList';
 import PluginList from './features/PluginList';

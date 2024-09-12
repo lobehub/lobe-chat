@@ -18,10 +18,11 @@ const DEFAULT_LENGTH = 4;
 
 interface ModelListProps {
   identifier: string;
+  mobile?: boolean;
   modelData: DiscoverModelItem[];
 }
 
-const ModelList = memo<ModelListProps>(({ modelData, identifier }) => {
+const ModelList = memo<ModelListProps>(({ mobile, modelData, identifier }) => {
   const [showAll, setShowAll] = useState(false);
   const { t } = useTranslation('discover');
   const theme = useTheme();
@@ -38,7 +39,7 @@ const ModelList = memo<ModelListProps>(({ modelData, identifier }) => {
     >
       {list.map((item, index) => (
         <>
-          <ModelItem key={item.identifier} {...item} />
+          <ModelItem key={item.identifier} mobile={mobile} {...item} />
           {index < modelData.length - 1 && <Divider key={index} style={{ margin: 0 }} />}
         </>
       ))}

@@ -35,7 +35,7 @@ const useStyles = createStyles(({ css, responsive, token }) => ({
     font-size: 24px;
     font-weight: 600;
     ${responsive.mobile} {
-      font-size: 20px;
+      font-size: 18px;
     }
   `,
 }));

@@ -6,11 +6,11 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import Title from '@/app/(main)/discover/(list)/features/Title';
-import { VirtuosoList } from '@/app/(main)/discover/components/VirtuosoGridList';
 import { DiscoverProviderItem } from '@/types/discover';
 
-import SearchResultCount from '../../components/SearchResultCount';
+import SearchResultCount from '../../../components/SearchResultCount';
+import Title from '../../../components/Title';
+import { VirtuosoList } from '../../../components/VirtuosoGridList';
 import Card from './Card';
 
 export interface ListProps {
@@ -30,7 +30,11 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
         <VirtuosoList
           data={items}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/provider/', item.identifier)} key={item.identifier}>
+            <Link
+              href={urlJoin('/discover/provider/', item.identifier)}
+              key={item.identifier}
+              style={{ color: 'inherit' }}
+            >
               <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
             </Link>
           )}

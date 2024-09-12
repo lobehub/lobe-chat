@@ -8,10 +8,10 @@ import { memo } from 'react';
 import { Center, Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { useCategoryItem } from '@/app/(main)/discover/(list)/plugins/features/useCategory';
 import { DiscoverPlugintem } from '@/types/discover';
 
-import CardBanner from '../../features/CardBanner';
+import CardBanner from '../../../components/CardBanner';
+import { useCategoryItem } from './useCategory';
 
 const Link = dynamic(() => import('next/link'), {
   loading: () => <Skeleton.Button size={'small'} style={{ height: 22 }} />,

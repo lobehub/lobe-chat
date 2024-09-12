@@ -9,10 +9,10 @@ import { memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import { MAX_WIDTH } from '@/app/(main)/discover/features/const';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
 
+import { MAX_WIDTH } from '../../../features/const';
 import { useNav } from '../../../features/useNav';
 import { useScroll } from './useScroll';
 
@@ -48,10 +48,6 @@ const Nav = memo(() => {
   const { items, activeKey } = useNav();
   const router = useQueryRoute();
 
-  const isHome = pathname === '/discover';
-  const isProviders =
-    pathname === '/discover/providers' || pathname === '/discover/search/providers';
-
   useScroll((scroll, delta) => {
     if (delta < 0) {
       setHide(false);
@@ -62,17 +58,14 @@ const Nav = memo(() => {
     }
   });
 
+  const isHome = pathname === '/discover';
+  const isProviders = pathname === '/discover/providers';
+
   const navBar = items
     .map((item: any) => {
       const isActive = item.key === activeKey;
-      const isSearch = pathname.includes('/discover/search');
 
-      const href =
-        item.key === DiscoverTab.Home
-          ? '/discover'
-          : urlJoin(isSearch ? '/discover/search/' : '/discover', item.key);
-
-      if (isSearch && item.key === DiscoverTab.Home) return null;
+      const href = item.key === DiscoverTab.Home ? '/discover' : urlJoin('/discover', item.key);
 
       return (
         <Link

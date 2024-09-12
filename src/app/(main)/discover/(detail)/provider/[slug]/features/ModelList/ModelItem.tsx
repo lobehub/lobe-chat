@@ -12,8 +12,8 @@ import urlJoin from 'url-join';
 import { DiscoverModelItem } from '@/types/discover';
 import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
 
+import Statistic, { type StatisticProps } from '../../../../../components/Statistic';
 import ModelFeatureTags from '../../../../../features/ModelFeatureTags';
-import Statistic, { type StatisticProps } from '../../../../../features/Statistic';
 
 const { Paragraph, Title } = Typography;
 
@@ -42,9 +42,11 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
 export interface SuggestionItemProps
   extends Omit<DiscoverModelItem, 'suggestions' | 'socialData' | 'providers'>,
-    FlexboxProps {}
+    FlexboxProps {
+  mobile?: boolean;
+}
 
-const ModelItem = memo<SuggestionItemProps>(({ meta, identifier }) => {
+const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
   const { title, tokens, vision, functionCall } = meta;
   const { t } = useTranslation('discover');
   const { styles, theme } = useStyles();
@@ -77,6 +79,31 @@ const ModelItem = memo<SuggestionItemProps>(({ meta, identifier }) => {
     /* ↑ cloud slot ↑ */
   ];
 
+  const header = (
+    <Flexbox gap={12}>
+      <Link href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
+        <Flexbox align={'center'} gap={12} horizontal width={'100%'}>
+          <ModelIcon model={identifier} size={36} type={'avatar'} />
+          <Flexbox style={{ overflow: 'hidden' }}>
+            <Title className={styles.title} ellipsis={{ rows: 1, tooltip: title }} level={3}>
+              {title}
+            </Title>
+            <Paragraph className={styles.id} ellipsis={{ rows: 1 }}>
+              {identifier}
+            </Paragraph>
+          </Flexbox>
+        </Flexbox>
+      </Link>
+      <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
+    </Flexbox>
+  );
+
+  const button = (
+    <Link href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
+      <ActionIcon color={theme.colorTextDescription} icon={ChevronRightIcon} />
+    </Link>
+  );
+
   return (
     <Flexbox
       align={'center'}
@@ -86,33 +113,25 @@ const ModelItem = memo<SuggestionItemProps>(({ meta, identifier }) => {
       padding={16}
       wrap={'wrap'}
     >
+      {mobile && (
+        <Flexbox align={'center'} horizontal justify={'space-between'}>
+          {header}
+          {button}
+        </Flexbox>
+      )}
       <Grid
         align={'center'}
         flex={1}
         gap={16}
         horizontal
         maxItemWidth={100}
-        rows={items.length + 1}
+        rows={mobile ? 2 : items.length + 1}
         style={{ minWidth: 240 }}
       >
-        <Flexbox gap={12}>
-          <Link href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
-            <Flexbox align={'center'} gap={12} horizontal width={'100%'}>
-              <ModelIcon model={identifier} size={36} type={'avatar'} />
-              <Flexbox style={{ overflow: 'hidden' }}>
-                <Title className={styles.title} ellipsis={{ rows: 1, tooltip: title }} level={3}>
-                  {title}
-                </Title>
-                <Paragraph className={styles.id} ellipsis={{ rows: 1 }}>
-                  {identifier}
-                </Paragraph>
-              </Flexbox>
-            </Flexbox>
-          </Link>
-          <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
-        </Flexbox>
+        {!mobile && header}
         {items.map((item, index) => (
           <Statistic
+            align={mobile ? 'flex-start' : 'center'}
             gap={4}
             key={index}
             valuePlacement={'bottom'}
@@ -121,9 +140,7 @@ const ModelItem = memo<SuggestionItemProps>(({ meta, identifier }) => {
           />
         ))}
       </Grid>
-      <Link href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
-        <ActionIcon color={theme.colorTextDescription} icon={ChevronRightIcon} />
-      </Link>
+      {!mobile && button}
     </Flexbox>
   );
 });

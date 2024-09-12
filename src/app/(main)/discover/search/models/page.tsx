@@ -1,6 +1,5 @@
 import { redirect } from 'next/navigation';
 
-import List from '@/app/(main)/discover/(list)/plugins/features/List';
 import StructuredData from '@/components/StructuredData';
 import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
@@ -8,6 +7,8 @@ import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { isMobileDevice } from '@/utils/responsive';
+
+import List from '../../(list)/models/features/List';
 
 type Props = { searchParams: { hl?: Locales; q?: string } };
 
@@ -17,24 +18,24 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   return metadataModule.generate({
     description: t('discover.description'),
     title: t('discover.search'),
-    url: '/discover/search/plugins',
+    url: '/discover/search/models',
   });
 };
 
 const Page = async ({ searchParams }: Props) => {
   const { q } = searchParams;
-  if (!q) redirect(`/discover/plugins`);
+  if (!q) redirect(`/discover/models`);
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 
   const discoverService = new DiscoverService();
-  const items = await discoverService.searchTool(locale, q);
+  const items = await discoverService.searchModel(locale, q);
 
   const ld = ldModule.generate({
     description: t('discover.description'),
     title: t('discover.search'),
-    url: '/discover/search/plugins',
+    url: '/discover/search/models',
     webpage: {
       enable: true,
       search: true,
@@ -49,6 +50,6 @@ const Page = async ({ searchParams }: Props) => {
   );
 };
 
-Page.DisplayName = 'DiscoverSearchTools';
+Page.DisplayName = 'DiscoverSearchModels';
 
 export default Page;

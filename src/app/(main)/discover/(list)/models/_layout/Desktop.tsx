@@ -4,7 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 import { DEFAULT_LANG } from '@/const/locale';
 import { DiscoverService } from '@/server/services/discover';
 
-import CategoryContainer from '../../features/CategoryContainer';
+import CategoryContainer from '../../../components/CategoryContainer';
 import Category from '../features/Category';
 
 const Layout = async ({ children }: PropsWithChildren) => {
