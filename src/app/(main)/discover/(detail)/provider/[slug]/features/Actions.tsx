@@ -1,6 +1,6 @@
 'use client';
 
-import { ProviderIcon } from '@lobehub/icons';
+import { ModelTag, ProviderIcon } from '@lobehub/icons';
 import { Tag } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -28,14 +28,12 @@ const ProviderActions = memo<ModelActionsProps>(({ identifier, data }) => {
           avatar: <ProviderIcon provider={identifier} size={64} type={'avatar'} />,
           desc: data.meta.description && t(`${identifier}.description`),
           tags: (
-            <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>
+            <Flexbox align={'center'} gap={4} horizontal justify={'center'} wrap={'wrap'}>
               {data.models
-                .slice(0, 3)
+                .slice(0, 4)
                 .filter(Boolean)
                 .map((tag: string, index) => (
-                  <Tag key={index} style={{ margin: 0 }}>
-                    {tag}
-                  </Tag>
+                  <ModelTag key={index} model={tag} style={{ margin: 0 }} />
                 ))}
               {data.models.length > 3 && <Tag>+{data.models.length - 3}</Tag>}
             </Flexbox>

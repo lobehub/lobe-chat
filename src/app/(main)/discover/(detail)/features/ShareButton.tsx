@@ -92,16 +92,13 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
           </Center>
           <Center padding={12} width={'100%'}>
             <h3 style={{ fontWeight: 'bold', textAlign: 'center' }}>{meta.title}</h3>
-            <Typography.Paragraph
-              ellipsis={{ rows: 3 }}
-              style={{ color: theme.colorTextSecondary, textAlign: 'center' }}
-            >
+            <Typography.Paragraph style={{ color: theme.colorTextSecondary, textAlign: 'center' }}>
               {meta.desc}
             </Typography.Paragraph>
             {meta.hashtags && (
-              <Flexbox gap={4} horizontal wrap={'wrap'}>
-                {meta.hashtags.map((tag) => (
-                  <Tag key={tag} style={{ margin: 0 }}>
+              <Flexbox align={'center'} gap={4} horizontal justify={'center'} wrap={'wrap'}>
+                {meta.hashtags.map((tag, index) => (
+                  <Tag key={index} style={{ margin: 0 }}>
                     {startCase(tag).trim()}
                   </Tag>
                 ))}
@@ -110,7 +107,7 @@ const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
             {meta.tags}
           </Center>
         </Flexbox>
-        <Flexbox align={'center'} gap={8} horizontal wrap={'wrap'}>
+        <Flexbox align={'center'} gap={8} horizontal justify={'center'} wrap={'wrap'}>
           {[x, reddit, telegram, whatsapp, mastodon, linkedin, weibo].map((item) => (
             <Link href={item.link} key={item.title} target={'_blank'}>
               <ActionIcon
