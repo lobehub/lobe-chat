@@ -200,6 +200,7 @@ export const getAuthConfig = () => {
       LOGTO_CLIENT_ID: z.string().optional(),
       LOGTO_CLIENT_SECRET: z.string().optional(),
       LOGTO_ISSUER: z.string().optional(),
+      LOGTO_WEBHOOK_SIGNING_KEY: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -257,6 +258,7 @@ export const getAuthConfig = () => {
       LOGTO_CLIENT_ID: process.env.LOGTO_CLIENT_ID,
       LOGTO_CLIENT_SECRET: process.env.LOGTO_CLIENT_SECRET,
       LOGTO_ISSUER: process.env.LOGTO_ISSUER,
+      LOGTO_WEBHOOK_SIGNING_KEY: process.env.LOGTO_WEBHOOK_SIGNING_KEY,
     },
   });
 };
