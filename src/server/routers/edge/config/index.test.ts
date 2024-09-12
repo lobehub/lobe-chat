@@ -64,8 +64,8 @@ describe('configRouter', () => {
 
           const result = response.languageModel?.openai?.serverModelCards;
 
-          expect(result?.find((s) => s.id === 'gpt-4-32k')?.displayName).toEqual(
-            'gpt-4-32k',
+          expect(result?.find((s) => s.id === 'gpt-4o-2024-05-13')?.displayName).toEqual(
+            'gpt-4o',
           );
 
           process.env.OPENAI_MODEL_LIST = '';
