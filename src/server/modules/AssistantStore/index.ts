@@ -12,13 +12,14 @@ export class AssistantStore {
   }
 
   getAgentIndexUrl = (lang: Locales = DEFAULT_LANG) => {
-    if (isLocaleNotSupport(lang)) return this.baseUrl;
+    if (isLocaleNotSupport(lang) || lang !== 'zh-CN') return this.baseUrl;
 
     return urlJoin(this.baseUrl, `index.${normalizeLocale(lang)}.json`);
   };
 
   getAgentUrl = (identifier: string, lang: Locales = DEFAULT_LANG) => {
-    if (isLocaleNotSupport(lang)) return urlJoin(this.baseUrl, `${identifier}.json`);
+    if (isLocaleNotSupport(lang) || lang !== 'zh-CN')
+      return urlJoin(this.baseUrl, `${identifier}.json`);
 
     return urlJoin(this.baseUrl, `${identifier}.${normalizeLocale(lang)}.json`);
   };
