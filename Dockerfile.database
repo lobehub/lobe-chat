@@ -79,7 +79,7 @@ COPY --from=builder /app/scripts/migrateServerDB/errorHint.js /app/errorHint.js
 FROM lobehub/lobe-chat-base:latest
 
 # Copy all the files from app, set the correct permission for prerender cache
-COPY --from=app /app /app
+COPY --from=app --chown=nextjs:nodejs /app /app
 
 ENV NODE_ENV="production"
 

@@ -66,7 +66,7 @@ COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 FROM lobehub/lobe-chat-base:latest
 
 # Copy all the files from app, set the correct permission for prerender cache
-COPY --from=app /app /app
+COPY --from=app --chown=nextjs:nodejs /app /app
 
 ENV NODE_ENV="production"
 

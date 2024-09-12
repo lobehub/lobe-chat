@@ -45,4 +45,4 @@ RUN \
     # Create required directory
     && mkdir -p "/etc/proxychains" \
     # Set permission for nextjs:nodejs
-    && chown -R nextjs:nodejs /app /etc/proxychains
+    && chown -R nextjs:nodejs /etc/proxychains
