@@ -256,7 +256,6 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125', // Will be discontinued on September 13, 2024
-
       displayName: 'GPT-3.5 Turbo 16K',
       id: 'gpt-3.5-turbo-16k',
       legacy: true,
@@ -282,6 +281,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。', // Will be discontinued on September 13, 2024
+      displayName: 'GPT-3.5 Turbo 16K 0613',
       id: 'gpt-3.5-turbo-16k-0613',
       legacy: true,
       pricing: {
