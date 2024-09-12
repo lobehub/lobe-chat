@@ -21,6 +21,7 @@
       "embeddingStatus": "Trạng thái vector hóa"
     }
   },
+  "empty": "Chưa có tệp/tệp tin nào được tải lên",
   "header": {
     "actions": {
       "newFolder": "Tạo thư mục mới",
@@ -37,6 +38,7 @@
     "new": "Tạo kho tri thức mới",
     "title": "Kho tri thức"
   },
+  "networkError": "Không thể lấy kho tri thức, vui lòng kiểm tra kết nối mạng và thử lại",
   "notSupportGuide": {
     "desc": "Phiên bản triển khai hiện tại là chế độ cơ sở dữ liệu khách hàng, không thể sử dụng chức năng quản lý tệp. Vui lòng chuyển sang <1>chế độ triển khai cơ sở dữ liệu máy chủ</1>, hoặc sử dụng trực tiếp <3>LobeChat Cloud</3>",
     "features": {

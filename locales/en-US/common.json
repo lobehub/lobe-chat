@@ -9,7 +9,7 @@
       "title": "Launch {{name}}"
     }
   },
-  "appInitializing": "The application is initializing, please wait for a moment...",
+  "appInitializing": "Application is starting...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",

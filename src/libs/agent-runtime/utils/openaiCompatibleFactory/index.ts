@@ -18,6 +18,7 @@ import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
+import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIStream } from '../streams';
 
@@ -158,9 +159,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
+        const messages = await convertOpenAIMessages(postPayload.messages);
+
         const response = await this.client.chat.completions.create(
           {
             ...postPayload,
+            messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
           },
           {

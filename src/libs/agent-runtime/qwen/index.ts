@@ -108,10 +108,8 @@ export class LobeQwenAI implements LobeRuntimeAI {
       messages,
       result_format: 'message',
       stream: !!tools?.length ? false : (stream ?? true),
-      temperature: 
-        temperature === 0 || temperature >= 2 
-        ? undefined 
-        : temperature,
+      temperature:
+        temperature === 0 || temperature >= 2 ? undefined : temperature === 1 ? 0.999 : temperature, // 'temperature' must be Float
       top_p: top_p && top_p >= 1 ? 0.999 : top_p,
     };
 

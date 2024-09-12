@@ -186,6 +186,7 @@ And the service port without reverse proxy:
 
 <Callout type="warning">
   Please note that CORS cross-origin is configured internally in MinIO / Logto service, do not configure CORS additionally in your reverse proxy, as this will cause errors.
+  For minio ports other than 443, Host must be $http_host (with port number), otherwise a 403 error will occur: proxy_set_header Host $http_host.
 
 If you need to configure SSL certificates, please configure them uniformly in the outer Nginx reverse proxy, rather than in MinIO.
 
