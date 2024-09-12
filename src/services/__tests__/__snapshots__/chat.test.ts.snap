@@ -49,7 +49,7 @@ Create images from a text-only prompt.",
       "role": "user",
     },
   ],
-  "model": "gpt-3.5-turbo-1106",
+  "model": "gpt-4o-mini",
   "tools": [
     {
       "function": {
