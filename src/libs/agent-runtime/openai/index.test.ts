@@ -145,7 +145,7 @@ describe('LobeOpenAI', () => {
         try {
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-4o-mini',
             temperature: 0,
           });
         } catch (e) {
