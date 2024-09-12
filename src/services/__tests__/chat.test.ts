@@ -109,7 +109,7 @@ describe('ChatService', () => {
     it('should not use tools for models in the vision model whitelist', async () => {
       const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
       const messages = [{ content: 'Hello', role: 'user' }] as ChatMessage[];
-      const modelInWhitelist = 'gpt-4-vision-preview';
+      const modelInWhitelist = 'gpt-4-turbo';
 
       await chatService.createAssistantMessage({
         messages,
@@ -148,7 +148,7 @@ describe('ChatService', () => {
         await chatService.createAssistantMessage({
           messages,
           plugins: [],
-          model: 'gpt-4-vision-preview',
+          model: 'gpt-4-turbo',
         });
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
@@ -174,7 +174,7 @@ describe('ChatService', () => {
                 role: 'assistant',
               },
             ],
-            model: 'gpt-4-vision-preview',
+            model: 'gpt-4-turbo',
           },
           undefined,
         );
@@ -271,14 +271,14 @@ describe('ChatService', () => {
 
         await chatService.createAssistantMessage({
           messages,
-          model: 'gpt-3.5-turbo-1106',
+          model: 'gpt-4o-mini',
           top_p: 1,
           plugins: ['seo'],
         });
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
-            model: 'gpt-3.5-turbo-1106',
+            model: 'gpt-4o-mini',
             top_p: 1,
             tools: [
               {
@@ -378,14 +378,14 @@ Get data from users`,
 
         await chatService.createAssistantMessage({
           messages,
-          model: 'gpt-3.5-turbo-1106',
+          model: 'gpt-4o-mini',
           top_p: 1,
           plugins: ['seo'],
         });
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
-            model: 'gpt-3.5-turbo-1106',
+            model: 'gpt-4o-mini',
             top_p: 1,
             tools: [
               {
@@ -439,14 +439,14 @@ Get data from users`,
 
         await chatService.createAssistantMessage({
           messages,
-          model: 'gpt-3.5-turbo-1106',
+          model: 'gpt-4o-mini',
           top_p: 1,
           plugins: ['ttt'],
         });
 
         expect(getChatCompletionSpy).toHaveBeenCalledWith(
           {
-            model: 'gpt-3.5-turbo-1106',
+            model: 'gpt-4o-mini',
             top_p: 1,
             messages: [
               {
@@ -479,7 +479,7 @@ Get data from users`,
 
         await chatService.createAssistantMessage({
           messages,
-          model: 'gpt-3.5-turbo-1106',
+          model: 'gpt-4o-mini',
           top_p: 1,
           plugins: [DalleManifest.identifier],
         });
