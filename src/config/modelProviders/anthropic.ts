@@ -22,8 +22,25 @@ const Anthropic: ModelProviderCard = {
     },
     {
       description:
+        'Fastest and most compact model for near-instant responsiveness. Quick and accurate targeted performance',
+      displayName: 'Claude 3 Haiku',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-3-haiku-20240307',
+      maxOutput: 4096,
+      pricing: {
+        input: 0.25,
+        output: 1.25,
+      },
+      releasedAt: '2024-03-07',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
         'Ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments',
       displayName: 'Claude 3 Sonnet',
+      enabled: true,
       functionCall: true,
       id: 'claude-3-sonnet-20240229',
       maxOutput: 4096,
@@ -48,22 +65,6 @@ const Anthropic: ModelProviderCard = {
         output: 75,
       },
       releasedAt: '2024-02-29',
-      tokens: 200_000,
-      vision: true,
-    },
-    {
-      description:
-        'Fastest and most compact model for near-instant responsiveness. Quick and accurate targeted performance',
-      displayName: 'Claude 3 Haiku',
-      enabled: true,
-      functionCall: true,
-      id: 'claude-3-haiku-20240307',
-      maxOutput: 4096,
-      pricing: {
-        input: 0.25,
-        output: 1.25,
-      },
-      releasedAt: '2024-03-07',
       tokens: 200_000,
       vision: true,
     },

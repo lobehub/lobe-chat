@@ -38,7 +38,7 @@ const Groq: ModelProviderCard = {
     },
 */
     {
-      displayName: 'Llama 3 Groq 8B Tool Use Preview 8K',
+      displayName: 'Llama 3 Groq 8B Tool Use (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama3-groq-8b-8192-tool-use-preview',
@@ -49,7 +49,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Llama 3 Groq 70B Tool Use Preview 8K',
+      displayName: 'Llama 3 Groq 70B Tool Use (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama3-groq-70b-8192-tool-use-preview',
@@ -61,7 +61,6 @@ const Groq: ModelProviderCard = {
     },
     {
       displayName: 'Meta Llama 3 8B',
-      enabled: true,
       functionCall: true,
       id: 'llama3-8b-8192',
       pricing: {
@@ -72,7 +71,6 @@ const Groq: ModelProviderCard = {
     },
     {
       displayName: 'Meta Llama 3 70B',
-      enabled: true,
       functionCall: true,
       id: 'llama3-70b-8192',
       pricing: {
@@ -82,7 +80,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Gemma 2 9B 8k',
+      displayName: 'Gemma 2 9B',
       enabled: true,
       functionCall: true,
       id: 'gemma2-9b-it',
@@ -93,7 +91,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Gemma 7B 8k Instruct',
+      displayName: 'Gemma 7B',
       functionCall: true,
       id: 'gemma-7b-it',
       pricing: {
@@ -103,8 +101,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Mixtral 8x7B Instruct 32k',
-      enabled: true,
+      displayName: 'Mixtral 8x7B',
       functionCall: true,
       id: 'mixtral-8x7b-32768',
       pricing: {
