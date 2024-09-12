@@ -59,6 +59,7 @@
     "InvalidAccessCode": "パスワードが正しくないか空です。正しいアクセスパスワードを入力するか、カスタムAPIキーを追加してください",
     "InvalidBedrockCredentials": "Bedrockの認証に失敗しました。AccessKeyId/SecretAccessKeyを確認してから再試行してください。",
     "InvalidClerkUser": "申し訳ありませんが、現在ログインしていません。続行するにはログインまたはアカウント登録を行ってください",
+    "InvalidGithubToken": "Githubのパーソナルアクセストークンが無効または空です。Githubのパーソナルアクセストークンを確認してから、再試行してください。",
     "InvalidOllamaArgs": "Ollamaの設定が正しくありません。Ollamaの設定を確認してからもう一度お試しください",
     "InvalidProviderAPIKey": "{{provider}} APIキーが正しくないか空です。{{provider}} APIキーを確認して再試行してください。",
     "LocationNotSupportError": "申し訳ありませんが、お住まいの地域ではこのモデルサービスをサポートしていません。地域制限またはサービスが利用できない可能性があります。現在の位置がこのサービスをサポートしているかどうかを確認するか、他の位置情報を使用してみてください。",

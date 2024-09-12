@@ -107,6 +107,10 @@ export default {
     SubscriptionPlanLimit:
       '您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用',
 
+    // Github Token
+    InvalidGithubToken:
+      'Github Personal Access Token 不正确或为空，请检查 Github Personal Access Token 后重试',
+
     /* eslint-enable */
   },
   stt: {
