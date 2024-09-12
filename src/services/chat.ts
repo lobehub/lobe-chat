@@ -114,6 +114,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
           accessKeyId: providerAuthPayload?.awsAccessKeyId,
           accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
           region: providerAuthPayload?.awsRegion,
+          sessionToken: providerAuthPayload?.awsSessionToken,
         };
       }
       break;
