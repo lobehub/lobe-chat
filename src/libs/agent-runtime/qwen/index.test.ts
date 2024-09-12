@@ -197,9 +197,12 @@ describe('LobeQwenAI', () => {
       });
 
       it('should set temperature to Float', async () => {
-        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
-          new ReadableStream() as any,
-        );
+        // vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+        //   new ReadableStream() as any,
+        // );
+        const createMock = vi.fn().mockResolvedValue(new ReadableStream() as any);
+        vi.spyOn(instance['client'].chat.completions, 'create').mockImplementation(createMock);
+
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'qwen-turbo',
@@ -213,7 +216,8 @@ describe('LobeQwenAI', () => {
           }),
           expect.any(Object),
         );
-        const callArgs = instance['client'].chat.completions.create.mock.calls[0][0];
+        const callArgs = createMock.mock.calls[0][0];
+        // const callArgs = instance['client'].chat.completions.create.mock.calls[0][0];
         expect(Number.isInteger(callArgs.temperature)).toBe(false);
       });
     });
