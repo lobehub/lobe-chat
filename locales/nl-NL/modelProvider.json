@@ -54,7 +54,7 @@
   "github": {
     "personalAccessToken": {
       "desc": "Vul je Github Personal Access Token in",
-      "placeholder": "github_pat_xxxxxx",
+      "placeholder": "ghp_xxxxxx",
       "title": "Github Personal Access Token"
     }
   },

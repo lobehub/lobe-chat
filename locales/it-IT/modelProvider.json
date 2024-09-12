@@ -54,7 +54,7 @@
   "github": {
     "personalAccessToken": {
       "desc": "Inserisci il tuo token di accesso personale di Github",
-      "placeholder": "github_pat_xxxxxx",
+      "placeholder": "ghp_xxxxxx",
       "title": "Token di Accesso Personale di Github"
     }
   },

@@ -55,7 +55,7 @@ export default {
   github: {
     personalAccessToken: {
       desc: '填入 Github Personal Access Token',
-      placeholder: 'github_pat_xxxxxx',
+      placeholder: 'ghp_xxxxxx',
       title: 'Github Personal Access Token',
     },
   },

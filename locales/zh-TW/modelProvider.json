@@ -54,7 +54,7 @@
   "github": {
     "personalAccessToken": {
       "desc": "填入 GitHub 個人存取權杖",
-      "placeholder": "github_pat_xxxxxx",
+      "placeholder": "ghp_xxxxxx",
       "title": "GitHub 個人存取權杖"
     }
   },
