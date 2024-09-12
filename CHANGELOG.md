@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.16.12](https://github.com/lobehub/lobe-chat/compare/v1.16.11...v1.16.12)
+
+<sup>Released on **2024-09-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Remove brackets from model names with dates in OpenAI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Remove brackets from model names with dates in OpenAI, closes [#3927](https://github.com/lobehub/lobe-chat/issues/3927) ([2a937bc](https://github.com/lobehub/lobe-chat/commit/2a937bc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.16.11](https://github.com/lobehub/lobe-chat/compare/v1.16.10...v1.16.11)
 
 <sup>Released on **2024-09-12**</sup>
