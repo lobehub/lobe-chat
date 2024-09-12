@@ -5,7 +5,7 @@ const Groq: ModelProviderCard = {
   chatModels: [
     // TODO: During preview launch, Groq is limiting 3.1 models to max_tokens of 8k.
     {
-      displayName: 'Llama 3.1 8B',
+      displayName: 'Llama 3.1 8B (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama-3.1-8b-instant',
@@ -17,7 +17,7 @@ const Groq: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      displayName: 'Llama 3.1 70B',
+      displayName: 'Llama 3.1 70B (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama-3.1-70b-versatile',
@@ -31,14 +31,14 @@ const Groq: ModelProviderCard = {
     /*
     // Offline due to overwhelming demand! Stay tuned for updates.
     {
-      displayName: 'Llama 3.1 405B',
+      displayName: 'Llama 3.1 405B (Preview)',
       functionCall: true,
       id: 'llama-3.1-405b-reasoning',
       tokens: 8_192,
     },
 */
     {
-      displayName: 'Llama 3 Groq 8B Tool Use',
+      displayName: 'Llama 3 Groq 8B Tool Use (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama3-groq-8b-8192-tool-use-preview',
@@ -49,7 +49,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Llama 3 Groq 70B Tool Use',
+      displayName: 'Llama 3 Groq 70B Tool Use (Preview)',
       enabled: true,
       functionCall: true,
       id: 'llama3-groq-70b-8192-tool-use-preview',
@@ -60,7 +60,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Llama 3 8B',
+      displayName: 'Meta Llama 3 8B',
       functionCall: true,
       id: 'llama3-8b-8192',
       pricing: {
@@ -70,7 +70,7 @@ const Groq: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      displayName: 'Llama 3 70B',
+      displayName: 'Meta Llama 3 70B',
       functionCall: true,
       id: 'llama3-70b-8192',
       pricing: {
