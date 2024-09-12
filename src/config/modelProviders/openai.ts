@@ -5,6 +5,46 @@ const OpenAI: ModelProviderCard = {
   chatModels: [
     {
       description:
+        'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
+      displayName: 'o1-mini',
+      functionCall: true,
+      id: 'o1-mini',
+      maxOutput: 16_385,
+      pricing: {
+        input: 3,
+        output: 12,
+      },
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description:
+        'o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。',
+      displayName: 'o1',
+      functionCall: true,
+      id: 'o1',
+      pricing: {
+        input: 15,
+        output: 60,
+      },
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description:
+        'o1-preview是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K 上下文和2023年10月的知识截止日期。',
+      displayName: 'o1-preview',
+      functionCall: true,
+      id: 'o1-preview',
+      pricing: {
+        input: 15,
+        output: 60,
+      },
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description:
         'GPT-4o mini是OpenAI在GPT-4 Omni之后推出的最新模型，支持图文输入并输出文本。作为他们最先进的小型模型，它比其他近期的前沿模型便宜很多，并且比GPT-3.5 Turbo便宜超过60%。它保持了最先进的智能，同时具有显著的性价比。GPT-4o mini在MMLU测试中获得了 82% 的得分，目前在聊天偏好上排名高于 GPT-4。',
       displayName: 'GPT-4o mini',
       enabled: true,
@@ -87,78 +127,6 @@ const OpenAI: ModelProviderCard = {
     },
     {
       description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
-      displayName: 'GPT-4 Turbo Vision 0409',
-      functionCall: true,
-      id: 'gpt-4-turbo-2024-04-09',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-      vision: true,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
-      displayName: 'GPT-4 Turbo Preview',
-      functionCall: true,
-      id: 'gpt-4-turbo-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
-      displayName: 'GPT-4 Turbo Preview 0125',
-      functionCall: true,
-      id: 'gpt-4-0125-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。', // Will be discontinued on December 6, 2024
-      displayName: 'GPT-4 Turbo Vision Preview',
-      id: 'gpt-4-vision-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-      vision: true,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。', // Will be discontinued on December 6, 2024
-      id: 'gpt-4-1106-vision-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-      vision: true,
-    },
-    {
-      description:
-        '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
-      displayName: 'GPT-4 Turbo Preview 1106',
-      functionCall: true,
-      id: 'gpt-4-1106-preview',
-      pricing: {
-        input: 10,
-        output: 30,
-      },
-      tokens: 128_000,
-    },
-    {
-      description:
         'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
       displayName: 'GPT-4',
       functionCall: true,
@@ -171,35 +139,10 @@ const OpenAI: ModelProviderCard = {
     },
     {
       description:
-        'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-      displayName: 'GPT-4 0613',
-      functionCall: true,
-      id: 'gpt-4-0613',
-      pricing: {
-        input: 30,
-        output: 60,
-      },
-      tokens: 8192,
-    },
-    {
-      description:
         'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。', // Will be discontinued on June 6, 2025
       displayName: 'GPT-4 32K',
       functionCall: true,
       id: 'gpt-4-32k',
-      pricing: {
-        input: 60,
-        output: 120,
-      },
-      tokens: 32_768,
-    },
-    {
-      // Will be discontinued on June 6, 2025
-      description:
-        'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-      displayName: 'GPT-4 32K 0613',
-      functionCall: true,
-      id: 'gpt-4-32k-0613',
       pricing: {
         input: 60,
         output: 120,
@@ -220,69 +163,9 @@ const OpenAI: ModelProviderCard = {
     },
     {
       description:
-        'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
-      displayName: 'GPT-3.5 Turbo 0125',
-      functionCall: true,
-      id: 'gpt-3.5-turbo-0125',
-      pricing: {
-        input: 0.5,
-        output: 1.5,
-      },
-      tokens: 16_385,
-    },
-    {
-      description:
-        'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
-      displayName: 'GPT-3.5 Turbo 1106',
-      functionCall: true,
-      id: 'gpt-3.5-turbo-1106',
-      pricing: {
-        input: 1,
-        output: 2,
-      },
-      tokens: 16_385,
-    },
-    {
-      description:
-        'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
-      displayName: 'GPT-3.5 Turbo Instruct',
-      id: 'gpt-3.5-turbo-instruct',
-      pricing: {
-        input: 1.5,
-        output: 2,
-      },
-      tokens: 4096,
-    },
-    {
-      description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125', // Will be discontinued on September 13, 2024
       displayName: 'GPT-3.5 Turbo 16K',
       id: 'gpt-3.5-turbo-16k',
-      legacy: true,
-      pricing: {
-        input: 3,
-        output: 4,
-      },
-      tokens: 16_385,
-    },
-    {
-      description:
-        'GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。',
-      displayName: 'GPT-3.5 Turbo 0613',
-      // Will be discontinued on September 13, 2024
-      id: 'gpt-3.5-turbo-0613',
-      legacy: true,
-      pricing: {
-        input: 1.5,
-        output: 2,
-      },
-      tokens: 4096,
-    },
-    {
-      description:
-        'GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。', // Will be discontinued on September 13, 2024
-      displayName: 'GPT-3.5 Turbo 16K 0613',
-      id: 'gpt-3.5-turbo-16k-0613',
       legacy: true,
       pricing: {
         input: 3,
