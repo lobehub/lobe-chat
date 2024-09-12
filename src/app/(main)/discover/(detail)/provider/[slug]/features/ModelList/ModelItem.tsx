@@ -10,11 +10,10 @@ import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import { DiscoverModelItem } from '@/types/discover';
-import { formatTokenNumber } from '@/utils/format';
+import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
 
 import ModelFeatureTags from '../../../../../features/ModelFeatureTags';
 import Statistic, { type StatisticProps } from '../../../../../features/Statistic';
-import { formatModelPrice } from '../../../../features/formatModelPrice';
 
 const { Paragraph, Title } = Typography;
 
@@ -64,14 +63,14 @@ const ModelItem = memo<SuggestionItemProps>(({ meta, identifier }) => {
       title: t('models.providerInfo.input'),
       tooltip: t('models.providerInfo.inputTooltip'),
       value: meta?.pricing?.input
-        ? '$' + formatModelPrice(meta.pricing.input, meta.pricing?.currency)
+        ? '$' + formatPriceByCurrency(meta.pricing.input, meta.pricing?.currency)
         : '--',
     },
     {
       title: t('models.providerInfo.output'),
       tooltip: t('models.providerInfo.outputTooltip'),
       value: meta?.pricing?.output
-        ? '$' + formatModelPrice(meta.pricing.output, meta.pricing?.currency)
+        ? '$' + formatPriceByCurrency(meta.pricing.output, meta.pricing?.currency)
         : '--',
     },
     /* ↓ cloud slot ↓ */

@@ -1,4 +1,8 @@
 import { isNumber } from 'lodash-es';
+import numeral from 'numeral';
+
+import { CNY_TO_USD } from '@/const/discover';
+import { ModelPriceCurrency } from '@/types/llm';
 
 export const formatSize = (bytes: number, fractionDigits = 1): string => {
   const kbSize = bytes / 1024;
@@ -71,6 +75,7 @@ export const formatShortenNumber = (num: any) => {
  * @param num
  */
 export const formatNumber = (num: any) => {
+  if (!num) return;
   return new Intl.NumberFormat('en-US').format(num);
 };
 
@@ -83,4 +88,16 @@ export const formatTokenNumber = (num: number): string => {
   }
   if (num === 131_072) return '128K';
   return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
+};
+
+export const formatPrice = (price: number) => {
+  const [a, b] = price.toFixed(2).split('.');
+  return `${numeral(a).format('0,0')}.${b}`;
+};
+
+export const formatPriceByCurrency = (price: number, currency?: ModelPriceCurrency) => {
+  if (currency === 'CNY') {
+    return formatPrice(price / CNY_TO_USD);
+  }
+  return formatPrice(price);
 };

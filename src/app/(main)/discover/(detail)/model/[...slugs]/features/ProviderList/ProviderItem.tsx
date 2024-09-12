@@ -12,10 +12,9 @@ import urlJoin from 'url-join';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { DiscoverProviderItem } from '@/types/discover';
-import { formatTokenNumber } from '@/utils/format';
+import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
 
 import Statistic, { type StatisticProps } from '../../../../../features/Statistic';
-import { formatModelPrice } from '../../../../features/formatModelPrice';
 
 const useStyles = createStyles(({ css, token }) => ({
   tagGreen: css`
@@ -53,14 +52,14 @@ const ProviderItem = memo<ProviderItemProps>(({ modelId, identifier }) => {
       title: t('models.providerInfo.input'),
       tooltip: t('models.providerInfo.inputTooltip'),
       value: model?.pricing?.input
-        ? '$' + formatModelPrice(model.pricing.input, model.pricing?.currency)
+        ? '$' + formatPriceByCurrency(model.pricing.input, model.pricing?.currency)
         : '--',
     },
     {
       title: t('models.providerInfo.output'),
       tooltip: t('models.providerInfo.outputTooltip'),
       value: model?.pricing?.output
-        ? '$' + formatModelPrice(model.pricing.output, model.pricing?.currency)
+        ? '$' + formatPriceByCurrency(model.pricing.output, model.pricing?.currency)
         : '--',
     },
     /* ↓ cloud slot ↓ */

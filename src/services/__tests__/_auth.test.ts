@@ -9,7 +9,7 @@ import {
   UserModelProviderConfig,
 } from '@/types/user/settings';
 
-import { getProviderAuthPayload } from './_auth';
+import { getProviderAuthPayload } from '../_auth';
 
 // Mock data for different providers
 const mockZhiPuAPIKey = 'zhipu-api-key';
