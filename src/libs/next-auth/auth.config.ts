@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from 'next-auth';
+import urlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
 
@@ -40,6 +41,7 @@ export default {
     },
   },
   providers: initSSOProviders(),
+  redirectProxyUrl: process.env.APP_URL ? urlJoin(process.env.APP_URL, '/api/auth') : undefined,
   secret: authEnv.NEXT_AUTH_SECRET,
-  trustHost: true,
+  trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;
