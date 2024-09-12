@@ -1,9 +1,11 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://openrouter.ai/docs#models
+// ref :https://openrouter.ai/docs#models
 const OpenRouter: ModelProviderCard = {
   chatModels: [
     {
+      description:
+        '根据上下文长度、主题和复杂性，你的请求将发送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我调节）或 GPT-4o。',
       displayName: 'Auto (best for prompt)',
       enabled: true,
       functionCall: false,
@@ -12,6 +14,8 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description:
+        'Mistral 7B Instruct 是一款高效的多语言模型，优化用于对话和问答，能在资源受限的环境中表现出色。',
       displayName: 'Mistral 7B Instruct (free)',
       enabled: true,
       functionCall: false,
@@ -20,6 +24,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'Google 的 Gemma 7B 具有出色的计算效率，适适用于多种硬件架构，如GPU和TPU。',
       displayName: 'Google: Gemma 7B (free)',
       enabled: true,
       functionCall: false,
@@ -28,6 +33,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'OpenChat 3.5 是一个创新的开源语言模型库，使用C-RLFT策略优化，支持多种任务。',
       displayName: 'OpenChat 3.5 (free)',
       enabled: true,
       functionCall: false,
@@ -36,6 +42,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'Nous Capybara 7B 专为基础任务设计，提供高效的语言处理能力。',
       displayName: 'Nous: Capybara 7B (free)',
       enabled: true,
       functionCall: false,
@@ -44,6 +51,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'Hugging Face的Zephyr 7B，以小巧身形实现了超越许多大型模型的性能。',
       displayName: 'Hugging Face: Zephyr 7B (free)',
       enabled: true,
       functionCall: false,
@@ -52,6 +60,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'MythoMist 7B 为实验性最强的Mistral合并模型，结合了最新算法。',
       displayName: 'MythoMist 7B (free)',
       enabled: true,
       functionCall: false,
@@ -60,6 +69,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'Toppy M 7B 是一个开源模型，旨在通过开源科学推进人工智能的普及。',
       displayName: 'Toppy M 7B (free)',
       enabled: true,
       functionCall: false,
@@ -68,6 +78,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'Cinematika 7B 模型将电影剧本转换为小说风格，适用于创意内容生成。',
       displayName: 'Cinematika 7B (alpha) (free)',
       enabled: true,
       functionCall: false,
@@ -76,6 +87,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'RWKV v5 World 3B 结合了 RNN 和 Transformer，实现了卓越的多语言处理能力。',
       displayName: 'RWKV v5 World 3B (free)',
       enabled: true,
       functionCall: false,
@@ -84,6 +96,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'RWKV v5 3B AI Town 是为 AI 小镇项目前置量身定制的模型。',
       displayName: 'RWKV v5 3B AI Town (free)',
       enabled: true,
       functionCall: false,
@@ -92,6 +105,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'RWKV v5 Eagle 7B 以超小成本实现高效的多语言翻译和处理，适用于边缘计算。',
       displayName: 'RWKV v5: Eagle 7B (free)',
       enabled: true,
       functionCall: false,
@@ -100,6 +114,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: 'Mistral Mixtral 8x22B 提供高性能的基础模型。',
       displayName: 'Mistral: Mixtral 8x22B (base)',
       enabled: true,
       functionCall: false,
@@ -108,6 +123,7 @@ const OpenRouter: ModelProviderCard = {
       vision: false,
     },
     {
+      description: '微软的 WizardLM-2 8x22B 具有高容量和高效能特性。',
       displayName: 'Microsoft: WizardLM-2 8x22B',
       enabled: true,
       functionCall: false,
@@ -117,9 +133,13 @@ const OpenRouter: ModelProviderCard = {
     },
   ],
   checkModel: 'mistralai/mistral-7b-instruct:free',
+  description:
+    'OpenRouter 是一个提供多种前沿大模型接口的服务平台，支持 OpenAI、Anthropic、LLaMA 及更多，适合多样化的开发和应用需求。用户可根据自身需求灵活选择最优的模型和价格，助力AI体验的提升。',
   id: 'openrouter',
   modelList: { showModelFetcher: true },
+  modelsUrl: 'https://openrouter.ai/models',
   name: 'OpenRouter',
+  url: 'https://openrouter.ai',
 };
 
 export default OpenRouter;
