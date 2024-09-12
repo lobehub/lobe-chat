@@ -42,6 +42,20 @@ const Bedrock: ModelProviderCard = {
     },
     {
       description:
+        'Claude 3 Haiku 是 Anthropic 最快、最紧凑的模型，提供近乎即时的响应速度。它可以快速回答简单的查询和请求。客户将能够构建模仿人类互动的无缝 AI 体验。Claude 3 Haiku 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
+      displayName: 'Claude 3 Haiku',
+      enabled: true,
+      functionCall: true,
+      id: 'anthropic.claude-3-haiku-20240307-v1:0',
+      pricing: {
+        input: 0.25,
+        output: 1.25,
+      },
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
         'Anthropic 的 Claude 3 Sonnet 在智能和速度之间达到了理想的平衡——特别适合企业工作负载。它以低于竞争对手的价格提供最大的效用，并被设计成为可靠的、高耐用的主力机，适用于规模化的 AI 部署。Claude 3 Sonnet 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
       displayName: 'Claude 3 Sonnet',
       enabled: true,
@@ -64,20 +78,6 @@ const Bedrock: ModelProviderCard = {
       pricing: {
         input: 15,
         output: 75,
-      },
-      tokens: 200_000,
-      vision: true,
-    },
-    {
-      description:
-        'Claude 3 Haiku 是 Anthropic 最快、最紧凑的模型，提供近乎即时的响应速度。它可以快速回答简单的查询和请求。客户将能够构建模仿人类互动的无缝 AI 体验。Claude 3 Haiku 可以处理图像并返回文本输出，具有 200K 的上下文窗口。',
-      displayName: 'Claude 3 Haiku',
-      enabled: true,
-      functionCall: true,
-      id: 'anthropic.claude-3-haiku-20240307-v1:0',
-      pricing: {
-        input: 0.25,
-        output: 1.25,
       },
       tokens: 200_000,
       vision: true,

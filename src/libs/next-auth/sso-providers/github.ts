@@ -10,8 +10,10 @@ const provider = {
     ...CommonProviderConfig,
     // Specify auth scope, at least include 'openid email'
     authorization: { params: { scope: 'read:user user:email' } },
-    clientId: authEnv.GITHUB_CLIENT_ID,
-    clientSecret: authEnv.GITHUB_CLIENT_SECRET,
+    // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
+    clientId: authEnv.GITHUB_CLIENT_ID ?? process.env.AUTH_GITHUB_ID,
+    clientSecret: authEnv.GITHUB_CLIENT_SECRET ?? process.env.AUTH_GITHUB_SECRET,
+    // Remove end
     profile: (profile) => {
       return {
         email: profile.email,

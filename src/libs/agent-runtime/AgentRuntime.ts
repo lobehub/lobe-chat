@@ -26,7 +26,6 @@ import { LobeSparkAI } from './spark';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
 import { LobeTogetherAI } from './togetherai';
-import { LobeUpstageAI } from './upstage';
 import {
   ChatCompetitionOptions,
   ChatStreamPayload,
@@ -35,6 +34,7 @@ import {
   ModelProvider,
   TextToImagePayload,
 } from './types';
+import { LobeUpstageAI } from './upstage';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
 
@@ -230,7 +230,7 @@ class AgentRuntime {
 
       case ModelProvider.FireworksAI: {
         runtimeModel = new LobeFireworksAI(params.fireworksai);
-        break
+        break;
       }
 
       case ModelProvider.ZeroOne: {
@@ -275,12 +275,12 @@ class AgentRuntime {
 
       case ModelProvider.Upstage: {
         runtimeModel = new LobeUpstageAI(params.upstage);
-        break
+        break;
       }
 
       case ModelProvider.Spark: {
         runtimeModel = new LobeSparkAI(params.spark);
-        break
+        break;
       }
     }
 
