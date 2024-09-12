@@ -12,7 +12,7 @@ import { LobeGithubAI } from './index';
 const provider = ModelProvider.Github;
 const defaultBaseURL = 'https://models.inference.ai.azure.com';
 const bizErrorType = AgentRuntimeErrorType.ProviderBizError;
-const invalidErrorType = AgentRuntimeErrorType.InvalidProviderAPIKey;
+const invalidErrorType = AgentRuntimeErrorType.InvalidGithubToken;
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -79,7 +79,7 @@ describe('LobeGithubAI', () => {
         }
       });
 
-      it('should throw AgentRuntimeError with InvalidGithubAPIKey if no apiKey is provided', async () => {
+      it('should throw AgentRuntimeError with InvalidGithubToken if no apiKey is provided', async () => {
         try {
           new LobeGithubAI({});
         } catch (e) {
@@ -154,7 +154,7 @@ describe('LobeGithubAI', () => {
         }
       });
 
-      it('should throw an InvalidGithubAPIKey error type on 401 status code', async () => {
+      it('should throw an InvalidGithubToken error type on 401 status code', async () => {
         // Mock the API call to simulate a 401 error
         const error = new Error('InvalidApiKey') as any;
         error.status = 401;
