@@ -8,6 +8,10 @@ const Ai21: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'jamba-1.5-mini',
+      pricing: {
+        input: 0.2,
+        output: 0.4,
+      },
       tokens: 256_000,
     },
     {
@@ -15,13 +19,19 @@ const Ai21: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'jamba-1.5-large',
+      pricing: {
+        input: 2,
+        output: 8,
+      },
       tokens: 256_000,
     },
   ],
   checkModel: 'jamba-1.5-mini',
   id: 'ai21',
+  modelsUrl: 'https://docs.ai21.com/reference',
   modelList: { showModelFetcher: true },
   name: 'Ai21Labs',
+  url: 'https://studio.ai21.com',
 };
 
 export default Ai21;
