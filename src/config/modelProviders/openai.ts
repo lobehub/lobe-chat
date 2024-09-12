@@ -143,30 +143,6 @@ const OpenAI: ModelProviderCard = {
       },
       tokens: 32_768,
     },
-    {
-      description:
-        'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
-      displayName: 'GPT-3.5 Turbo',
-      functionCall: true,
-      id: 'gpt-3.5-turbo',
-      pricing: {
-        input: 0.5,
-        output: 1.5,
-      },
-      tokens: 16_385,
-    },
-    {
-      description:
-        'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125', // Will be discontinued on September 13, 2024
-      displayName: 'GPT-3.5 Turbo 16K',
-      id: 'gpt-3.5-turbo-16k',
-      legacy: true,
-      pricing: {
-        input: 3,
-        output: 4,
-      },
-      tokens: 16_385,
-    },
   ],
   checkModel: 'gpt-4o-mini',
   description:
