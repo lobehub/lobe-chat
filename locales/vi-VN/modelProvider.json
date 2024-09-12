@@ -38,9 +38,15 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "Nếu bạn đang sử dụng AWS SSO/STS, hãy nhập AWS Session Token của bạn",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (tùy chọn)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Vùng Dịch vụ Tùy chỉnh",
+      "customSessionToken": "Mã thông báo phiên tùy chỉnh",
       "description": "Nhập AWS AccessKeyId / SecretAccessKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu trữ cấu hình xác thực của bạn",
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }

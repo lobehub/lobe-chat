@@ -213,7 +213,7 @@ describe('LobeQwenAI', () => {
           expect.any(Object),
         );
         const callArgs = createMock.mock.calls[0][0];
-        expect(Number.isInteger(callArgs.temperature)).toBe(false); // Temperature is always not an integer 
+        expect(Number.isInteger(callArgs.temperature)).toBe(false); // Temperature is always not an integer
       });
     });
 

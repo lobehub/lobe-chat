@@ -35,6 +35,7 @@ export interface JWTPayload {
   awsAccessKeyId?: string;
   awsRegion?: string;
   awsSecretAccessKey?: string;
+  awsSessionToken?: string;
   /**
    * user id
    * in client db mode it's a uuid
