@@ -96,6 +96,10 @@ describe('configRouter', () => {
             enabled: true,
             id: 'gpt-4-1106-preview',
             tokens: 128000,
+            pricing: {
+              input: 10,
+              output: 30,
+            },
           });
 
           process.env.OPENAI_MODEL_LIST = '';

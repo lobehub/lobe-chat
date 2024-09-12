@@ -1,11 +1,12 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html#_3-%E8%AF%B7%E6%B1%82%E8%AF%B4%E6%98%8E
-// ref https://www.xfyun.cn/doc/spark/Web.html#_1-%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E
+// ref: https://www.xfyun.cn/doc/spark/HTTP%E8%B0%83%E7%94%A8%E6%96%87%E6%A1%A3.html#_3-%E8%AF%B7%E6%B1%82%E8%AF%B4%E6%98%8E
+// ref: https://www.xfyun.cn/doc/spark/Web.html#_1-%E6%8E%A5%E5%8F%A3%E8%AF%B4%E6%98%8E
 const Spark: ModelProviderCard = {
   chatModels: [
     {
-      description: '轻量级大语言模型，低延迟，全免费 支持在线联网搜索功能 响应快速、便捷，全面免费开放 适用于低算力推理与模型精调等定制化场景',
+      description:
+        'Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。',
       displayName: 'Spark Lite',
       enabled: true,
       functionCall: false,
@@ -14,7 +15,8 @@ const Spark: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: '专业级大语言模型，兼顾模型效果与性能 数学、代码、医疗、教育等场景专项优化 支持联网搜索、天气、日期等多个内置插件 覆盖大部分知识问答、语言理解、文本创作等多个场景',
+      description:
+        'Spark Pro 是一款为专业领域优化的高性能大语言模型，专注数学、编程、医疗、教育等多个领域，并支持联网搜索及内置天气、日期等插件。其优化后模型在复杂知识问答、语言理解及高层次文本创作中展现出色表现和高效性能，是适合专业应用场景的理想选择。',
       displayName: 'Spark Pro',
       enabled: true,
       functionCall: false,
@@ -23,7 +25,8 @@ const Spark: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: '支持最长上下文的星火大模型，长文无忧 128K星火大模型强势来袭 通读全文，旁征博引 沟通无界，逻辑连贯',
+      description:
+        'Spark Pro-128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。',
       displayName: 'Spark Pro-128K',
       enabled: true,
       functionCall: false,
@@ -32,7 +35,8 @@ const Spark: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      description: '最全面的星火大模型版本，功能丰富 支持联网搜索、天气、日期等多个内置插件 核心能力全面升级，各场景应用效果普遍提升 支持System角色人设与FunctionCall函数调用',
+      description:
+        'Spark3.5 Max 为功能最为全面的版本，支持联网搜索及众多内置插件。其全面优化的核心能力以及系统角色设定和函数调用功能，使其在各种复杂应用场景中的表现极为优异和出色。',
       displayName: 'Spark3.5 Max',
       enabled: true,
       functionCall: false,
@@ -41,7 +45,8 @@ const Spark: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: '最强大的星火大模型版本，效果极佳 全方位提升效果，引领智能巅峰 优化联网搜索链路，提供精准回答 强化文本总结能力，提升办公生产力',
+      description:
+        'Spark4.0 Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。',
       displayName: 'Spark4.0 Ultra',
       enabled: true,
       functionCall: false,
@@ -51,13 +56,17 @@ const Spark: ModelProviderCard = {
     },
   ],
   checkModel: 'general',
+  description:
+    '科大讯飞星火大模型提供多领域、多语言的强大 AI 能力，利用先进的自然语言处理技术，构建适用于智能硬件、智慧医疗、智慧金融等多种垂直场景的创新应用。',
   id: 'spark',
   modelList: { showModelFetcher: true },
+  modelsUrl: 'https://xinghuo.xfyun.cn/spark',
   name: 'Spark',
   smoothing: {
     speed: 2,
     text: true,
   },
+  url: 'https://www.xfyun.cn',
 };
 
 export default Spark;
