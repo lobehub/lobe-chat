@@ -111,7 +111,7 @@ export class LobeQwenAI implements LobeRuntimeAI {
       temperature: 
         temperature === 0 || temperature >= 2 
         ? undefined 
-        : temperature,
+        : (temperature === 1 ? 0.999 : temperature), // 'temperature' must be Float
       top_p: top_p && top_p >= 1 ? 0.999 : top_p,
     };
 
