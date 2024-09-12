@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.16.9](https://github.com/lobehub/lobe-chat/compare/v1.16.8...v1.16.9)
+
+<sup>Released on **2024-09-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add model and provider desc and url.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add model and provider desc and url, closes [#3920](https://github.com/lobehub/lobe-chat/issues/3920) ([ea9ff00](https://github.com/lobehub/lobe-chat/commit/ea9ff00))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.16.8](https://github.com/lobehub/lobe-chat/compare/v1.16.7...v1.16.8)
 
 <sup>Released on **2024-09-12**</sup>
