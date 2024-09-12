@@ -66,18 +66,6 @@ export const formatShortenNumber = (num: any) => {
   }
 };
 
-export const formatTokenNumber = (num: number): string => {
-  if (!num || num === 0) return 'Unlimited';
-
-  if (num > 0 && num < 1024) return '1K';
-
-  let kiloToken = Math.floor(num / 1024);
-  if (num >= 128_000 && num < 1_024_000) {
-    kiloToken = Math.floor(num / 1000);
-  }
-  return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
-};
-
 /**
  * format number with comma
  * @param num
