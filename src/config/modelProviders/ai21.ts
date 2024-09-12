@@ -28,8 +28,8 @@ const Ai21: ModelProviderCard = {
   ],
   checkModel: 'jamba-1.5-mini',
   id: 'ai21',
-  modelsUrl: 'https://docs.ai21.com/reference',
   modelList: { showModelFetcher: true },
+  modelsUrl: 'https://docs.ai21.com/reference',
   name: 'Ai21Labs',
   url: 'https://studio.ai21.com',
 };
