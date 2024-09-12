@@ -80,6 +80,7 @@ export interface ModelProviderCard {
    * @default false
    */
   defaultShowBrowserRequest?: boolean;
+  description?: string;
   /**
    * some provider server like stepfun and aliyun don't support browser request,
    * So we should disable it
