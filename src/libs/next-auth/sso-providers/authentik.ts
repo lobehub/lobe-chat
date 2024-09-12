@@ -11,9 +11,11 @@ const provider = {
     // Specify auth scope, at least include 'openid email'
     // all scopes in Authentik ref: https://goauthentik.io/docs/providers/oauth2
     authorization: { params: { scope: 'openid email profile' } },
-    clientId: authEnv.AUTHENTIK_CLIENT_ID,
-    clientSecret: authEnv.AUTHENTIK_CLIENT_SECRET,
-    issuer: authEnv.AUTHENTIK_ISSUER,
+    // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
+    clientId: authEnv.AUTHENTIK_CLIENT_ID ?? process.env.AUTH_AUTHENTIK_ID,
+    clientSecret: authEnv.AUTHENTIK_CLIENT_SECRET ?? process.env.AUTH_AUTHENTIK_SECRET,
+    issuer: authEnv.AUTHENTIK_ISSUER ?? process.env.AUTH_AUTHENTIK_ISSUER,
+    // Remove end
     // TODO(NextAuth): map unique user id to `providerAccountId` field
     //  profile(profile) {
     //   return {
