@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Fehlerdetails",
   "notFound": {
     "backHome": "Zurück zur Startseite",
-    "desc": "Die von Ihnen gesuchte Seite konnte nicht gefunden werden. Bitte überprüfen Sie, ob der Link korrekt ist.",
+    "check": "Bitte überprüfen Sie, ob Ihre URL korrekt ist.",
+    "desc": "Die von Ihnen gesuchte Seite konnte nicht gefunden werden.",
     "title": "In unbekanntes Gebiet geraten?"
   },
   "pluginSettings": {

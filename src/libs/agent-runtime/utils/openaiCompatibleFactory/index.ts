@@ -20,6 +20,7 @@ import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
 import { StreamingResponse } from '../response';
 import { OpenAIStream } from '../streams';
+import { convertOpenAIMessages } from '../openaiHelpers';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 const CHAT_MODELS_BLOCK_LIST = [
@@ -158,9 +159,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
+        const messages = await convertOpenAIMessages(postPayload.messages);
+
         const response = await this.client.chat.completions.create(
           {
             ...postPayload,
+            messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
           },
           {

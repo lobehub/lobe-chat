@@ -1,7 +1,5 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://ai.google.dev/models/gemini
-// api https://ai.google.dev/api/rest/v1beta/models/list
 const Google: ModelProviderCard = {
   chatModels: [
     {
@@ -11,6 +9,11 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-latest',
       maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.018_75,
+        input: 0.075,
+        output: 0.3,
+      },
       tokens: 1_048_576 + 8192,
       vision: true,
     },
@@ -21,6 +24,12 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-exp-0827',
       maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.018_75,
+        input: 0.075,
+        output: 0.3,
+      },
+      releasedAt: '2024-08-27',
       tokens: 1_048_576 + 8192,
       vision: true,
     },
@@ -30,6 +39,7 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-flash-8b-exp-0827',
       maxOutput: 8192,
+      releasedAt: '2024-08-27',
       tokens: 1_048_576 + 8192,
       vision: true,
     },
@@ -49,6 +59,12 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-latest',
       maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.875,
+        input: 3.5,
+        output: 10.5,
+      },
+      releasedAt: '2024-02-15',
       tokens: 2_097_152 + 8192,
       vision: true,
     },
@@ -59,6 +75,12 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-exp-0827',
       maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.875,
+        input: 3.5,
+        output: 10.5,
+      },
+      releasedAt: '2024-08-27',
       tokens: 2_097_152 + 8192,
       vision: true,
     },
@@ -68,6 +90,12 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-exp-0801',
       maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.875,
+        input: 3.5,
+        output: 10.5,
+      },
+      releasedAt: '2024-08-01',
       tokens: 2_097_152 + 8192,
       vision: true,
     },
@@ -77,6 +105,12 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.5-pro-001',
       maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.875,
+        input: 3.5,
+        output: 10.5,
+      },
+      releasedAt: '2024-02-15',
       tokens: 2_097_152 + 8192,
       vision: true,
     },
@@ -86,6 +120,11 @@ const Google: ModelProviderCard = {
       displayName: 'Gemini 1.0 Pro',
       id: 'gemini-1.0-pro-latest',
       maxOutput: 2048,
+      pricing: {
+        input: 0.5,
+        output: 1.5,
+      },
+      releasedAt: '2023-12-06',
       tokens: 30_720 + 2048,
     },
     {
@@ -95,6 +134,11 @@ const Google: ModelProviderCard = {
       functionCall: true,
       id: 'gemini-1.0-pro-001',
       maxOutput: 2048,
+      pricing: {
+        input: 0.5,
+        output: 1.5,
+      },
+      releasedAt: '2023-12-06',
       tokens: 30_720 + 2048,
     },
     {
@@ -103,11 +147,17 @@ const Google: ModelProviderCard = {
       displayName: 'Gemini 1.0 Pro 002 (Tuning)',
       id: 'gemini-1.0-pro-002',
       maxOutput: 2048,
+      pricing: {
+        input: 0.5,
+        output: 1.5,
+      },
+      releasedAt: '2023-12-06',
       tokens: 30_720 + 2048,
     },
   ],
   checkModel: 'gemini-1.5-flash-latest',
   id: 'google',
+  modelsUrl: 'https://ai.google.dev/gemini-api/docs/models/gemini',
   name: 'Google',
   proxyUrl: {
     placeholder: 'https://generativelanguage.googleapis.com',
@@ -116,6 +166,7 @@ const Google: ModelProviderCard = {
     speed: 2,
     text: true,
   },
+  url: 'https://ai.google.dev',
 };
 
 export default Google;
