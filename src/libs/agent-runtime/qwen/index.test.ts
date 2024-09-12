@@ -161,13 +161,11 @@ describe('LobeQwenAI', () => {
           vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
             new ReadableStream() as any,
           );
-
           await instance.chat({
             messages: [{ content: 'Hello', role: 'user' }],
             model: 'qwen-turbo',
             temperature: temp,
           });
-
           expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
             expect.objectContaining({
               messages: expect.any(Array),
@@ -183,13 +181,11 @@ describe('LobeQwenAI', () => {
         vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
           new ReadableStream() as any,
         );
-
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'qwen-turbo',
           temperature: 1.5,
         });
-
         expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
           expect.objectContaining({
             messages: expect.any(Array),
@@ -198,6 +194,26 @@ describe('LobeQwenAI', () => {
           }),
           expect.any(Object),
         );
+      });
+
+      it('should set temperature to Float', async () => {
+        const createMock = vi.fn().mockResolvedValue(new ReadableStream() as any);
+        vi.spyOn(instance['client'].chat.completions, 'create').mockImplementation(createMock);
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'qwen-turbo',
+          temperature: 1,
+        });
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.any(Array),
+            model: 'qwen-turbo',
+            temperature: expect.any(Number),
+          }),
+          expect.any(Object),
+        );
+        const callArgs = createMock.mock.calls[0][0];
+        expect(Number.isInteger(callArgs.temperature)).toBe(false); // Temperature is always not an integer
       });
     });
 

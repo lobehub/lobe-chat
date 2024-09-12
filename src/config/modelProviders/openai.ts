@@ -35,7 +35,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
-      displayName: 'GPT-4o (240806)',
+      displayName: 'GPT-4o 0806',
       enabled: true,
       functionCall: true,
       id: 'gpt-4o-2024-08-06',
@@ -49,7 +49,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
-      displayName: 'GPT-4o (240513)',
+      displayName: 'GPT-4o 0513',
       functionCall: true,
       id: 'gpt-4o-2024-05-13',
       pricing: {
@@ -88,7 +88,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
-      displayName: 'GPT-4 Turbo Vision (240409)',
+      displayName: 'GPT-4 Turbo Vision 0409',
       functionCall: true,
       id: 'gpt-4-turbo-2024-04-09',
       pricing: {
@@ -113,7 +113,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
-      displayName: 'GPT-4 Turbo Preview (0125)',
+      displayName: 'GPT-4 Turbo Preview 0125',
       functionCall: true,
       id: 'gpt-4-0125-preview',
       pricing: {
@@ -148,7 +148,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         '最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。',
-      displayName: 'GPT-4 Turbo Preview (1106)',
+      displayName: 'GPT-4 Turbo Preview 1106',
       functionCall: true,
       id: 'gpt-4-1106-preview',
       pricing: {
@@ -172,7 +172,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-      displayName: 'GPT-4 (0613)',
+      displayName: 'GPT-4 0613',
       functionCall: true,
       id: 'gpt-4-0613',
       pricing: {
@@ -197,7 +197,7 @@ const OpenAI: ModelProviderCard = {
       // Will be discontinued on June 6, 2025
       description:
         'GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。',
-      displayName: 'GPT-4 32K (0613)',
+      displayName: 'GPT-4 32K 0613',
       functionCall: true,
       id: 'gpt-4-32k-0613',
       pricing: {
@@ -221,7 +221,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
-      displayName: 'GPT-3.5 Turbo (0125)',
+      displayName: 'GPT-3.5 Turbo 0125',
       functionCall: true,
       id: 'gpt-3.5-turbo-0125',
       pricing: {
@@ -233,7 +233,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125',
-      displayName: 'GPT-3.5 Turbo (1106)',
+      displayName: 'GPT-3.5 Turbo 1106',
       functionCall: true,
       id: 'gpt-3.5-turbo-1106',
       pricing: {
@@ -269,7 +269,7 @@ const OpenAI: ModelProviderCard = {
     {
       description:
         'GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。',
-      displayName: 'GPT-3.5 Turbo (0613)',
+      displayName: 'GPT-3.5 Turbo 0613',
       // Will be discontinued on September 13, 2024
       id: 'gpt-3.5-turbo-0613',
       legacy: true,

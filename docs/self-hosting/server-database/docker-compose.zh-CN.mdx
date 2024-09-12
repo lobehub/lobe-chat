@@ -185,6 +185,7 @@ docker compose up -d
 
 <Callout type="warning">
   请务必注意，CORS 跨域是在 MinIO / Logto 服务端内部配置的，请勿在你的反向代理中额外配置 CORS，这会导致错误。
+  对于minio非443端口时，Host必须是$http_host（带端口号），否则会403错误：proxy_set_header Host $http_host。
 
 如果你需要配置 SSL 证书，请统一在外层的 Nginx 反向代理中配置，而不是在 MinIO 中配置。
 
