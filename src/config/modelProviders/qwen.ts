@@ -1,10 +1,11 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://help.aliyun.com/zh/dashscope/developer-reference/api-details
+// ref :https://help.aliyun.com/zh/dashscope/developer-reference/api-details
 const Qwen: ModelProviderCard = {
   chatModels: [
     {
-      description: '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
+      description:
+        '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
       displayName: 'Qwen Long',
       enabled: true,
       id: 'qwen-long',
@@ -61,7 +62,7 @@ const Qwen: ModelProviderCard = {
       tokens: 32_768,
       vision: true,
     },
-    // ref https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-7b-14b-72b-api-detailes
+    // ref :https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-7b-14b-72b-api-detailes
     {
       description: '通义千问2对外开源的7B规模的模型',
       displayName: 'Qwen2 7B',
@@ -87,16 +88,14 @@ const Qwen: ModelProviderCard = {
       tokens: 4096, // https://help.aliyun.com/zh/dashscope/developer-reference/use-qwen2-math-by-calling-api
     },
     {
-      description:
-        '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
+      description: '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
       displayName: 'Qwen VL',
       id: 'qwen-vl-v1',
       tokens: 8192, // https://huggingface.co/Qwen/Qwen-VL/blob/main/config.json
       vision: true,
     },
     {
-      description:
-        '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
+      description: '通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。',
       displayName: 'Qwen VL Chat',
       id: 'qwen-vl-chat-v1',
       tokens: 8192, // https://huggingface.co/Qwen/Qwen-VL-Chat/blob/main/config.json
@@ -104,14 +103,18 @@ const Qwen: ModelProviderCard = {
     },
   ],
   checkModel: 'qwen-turbo',
-  disableBrowserRequest: true, // CORS issue
+  description:
+    '通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。',
+  disableBrowserRequest: true,
   id: 'qwen',
   modelList: { showModelFetcher: true },
+  modelsUrl: 'https://help.aliyun.com/zh/dashscope/developer-reference/api-details',
   name: 'Qwen',
   smoothing: {
     speed: 2,
     text: true,
   },
+  url: 'https://tongyi.aliyun.com',
 };
 
 export default Qwen;

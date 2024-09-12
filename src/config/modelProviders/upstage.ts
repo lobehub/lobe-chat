@@ -1,10 +1,11 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://developers.upstage.ai/docs/getting-started/models
+// ref :https://developers.upstage.ai/docs/getting-started/models
 const Upstage: ModelProviderCard = {
   chatModels: [
     {
-      description: 'A more intelligent, instruction-following Solar LLM with IFEval 80+. The official version with expanded language support and longer context length will be released in November 2024. solar-pro supports English only at this time. solar-pro is an alias for our latest Solar Pro model. (Currently solar-pro-preview-240910)',
+      description:
+        'Solar Pro 是 Upstage 推出的一款高智能LLM，专注于单GPU的指令跟随能力，IFEval得分80以上。目前支持英语，正式版本计划于2024年11月推出，将扩展语言支持和上下文长度。',
       displayName: 'Solar Pro',
       enabled: true,
       functionCall: false,
@@ -12,7 +13,8 @@ const Upstage: ModelProviderCard = {
       tokens: 4096,
     },
     {
-      description: 'A compact LLM offering superior performance to GPT-3.5, with robust multilingual capabilities for both English and Korean, delivering high efficiency in a smaller package. solar-1-mini-chat is alias for our latest solar-1-mini-chat model. (Currently solar-1-mini-chat-240612)',
+      description:
+        'Solar Mini 是一种紧凑型 LLM，性能优于 GPT-3.5，具备强大的多语言能力，支持英语和韩语，提供高效小巧的解决方案。',
       displayName: 'Solar Mini',
       enabled: true,
       functionCall: true,
@@ -20,7 +22,8 @@ const Upstage: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'A compact LLM that extends the capabilities of solar-mini-chat with specialization in Japanese, while maintaining high efficiency and performance in English and Korean. solar-1-mini-chat-ja is alias for our latest solar-1-mini-chat-ja model.(Currently solar-1-mini-chat-ja-240612)',
+      description:
+        'Solar Mini (Ja) 扩展了 Solar Mini 的能力，专注于日语，同时在英语和韩语的使用中保持高效和卓越性能。',
       displayName: 'Solar Mini (Ja)',
       functionCall: false,
       id: 'solar-1-mini-chat-ja',
@@ -28,9 +31,13 @@ const Upstage: ModelProviderCard = {
     },
   ],
   checkModel: 'solar-1-mini-chat',
+  description:
+    'Upstage 专注于为各种商业需求开发AI模型，包括 Solar LLM 和文档 AI，旨在实现工作的人造通用智能（AGI）。通过 Chat API 创建简单的对话代理，并支持功能调用、翻译、嵌入以及特定领域应用。',
   id: 'upstage',
   modelList: { showModelFetcher: true },
+  modelsUrl: 'https://developers.upstage.ai/docs/getting-started/models',
   name: 'Upstage',
+  url: 'https://upstage.ai',
 };
 
 export default Upstage;
