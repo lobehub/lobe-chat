@@ -9,7 +9,7 @@ const Mistral: ModelProviderCard = {
         'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
       displayName: 'Mistral 7B',
       id: 'open-mistral-7b',
-      tokens: 32_768,1
+      tokens: 32_768,
     },
     {
       description:
