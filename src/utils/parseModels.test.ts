@@ -266,33 +266,6 @@ describe('transformToChatModelCards', () => {
       defaultChatModels: OpenAIProviderCard.chatModels,
     });
 
-    expect(result).toEqual([
-      {
-        displayName: 'ChatGPT-4',
-        files: true,
-        functionCall: true,
-        enabled: true,
-        id: 'gpt-4-0125-preview',
-        tokens: 128000,
-        pricing: {
-          input: 10,
-          output: 30,
-        },
-      },
-      {
-        description: 'GPT-4 Turbo 视觉版 (240409)',
-        displayName: 'ChatGPT-4 Vision',
-        files: true,
-        functionCall: true,
-        enabled: true,
-        id: 'gpt-4-turbo-2024-04-09',
-        tokens: 128000,
-        vision: true,
-        pricing: {
-          input: 10,
-          output: 30,
-        },
-      },
-    ]);
+    expect(result).toMatchSnapshot();
   });
 });
