@@ -61,7 +61,7 @@ describe('modelProviderSelectors', () => {
   });
   describe('modelEnabledVision', () => {
     it('should return true if the model has vision ability', () => {
-      const hasAbility = modelProviderSelectors.isModelEnabledVision('gpt-4-vision-preview')(
+      const hasAbility = modelProviderSelectors.isModelEnabledVision('gpt-4-turbo')(
         useUserStore.getState(),
       );
       expect(hasAbility).toBeTruthy();
@@ -86,7 +86,7 @@ describe('modelProviderSelectors', () => {
 
   describe('modelEnabledFiles', () => {
     it('should return false if the model does not have file ability', () => {
-      const enabledFiles = modelProviderSelectors.isModelEnabledFiles('gpt-4-vision-preview')(
+      const enabledFiles = modelProviderSelectors.isModelEnabledFiles('gpt-4-turbo')(
         useUserStore.getState(),
       );
       expect(enabledFiles).toBeFalsy();
@@ -102,7 +102,7 @@ describe('modelProviderSelectors', () => {
 
   describe('modelHasMaxToken', () => {
     it('should return true if the model is in the list of models that show tokens', () => {
-      const show = modelProviderSelectors.isModelHasMaxToken('gpt-3.5-turbo')(
+      const show = modelProviderSelectors.isModelHasMaxToken('gpt-4o-mini')(
         useUserStore.getState(),
       );
       expect(show).toBeTruthy();
@@ -118,7 +118,7 @@ describe('modelProviderSelectors', () => {
 
   describe('modelMaxToken', () => {
     it('should return the correct token count for a model with specified tokens', () => {
-      const model1Tokens = modelProviderSelectors.modelMaxToken('gpt-3.5-turbo')(
+      const model1Tokens = modelProviderSelectors.modelMaxToken('gpt-4o-mini')(
         useUserStore.getState(),
       );
 
