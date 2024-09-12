@@ -9,7 +9,7 @@
       "title": "歡迎體驗 {{name}}"
     }
   },
-  "appInitializing": "應用程式初始化中，請耐心等候...",
+  "appInitializing": "應用啟動中...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "基於提示詞自動生成助手描述",
   "autoGenerateTooltipDisabled": "請填寫提示詞後使用自動補全功能",

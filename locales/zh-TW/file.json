@@ -21,6 +21,7 @@
       "embeddingStatus": "向量化"
     }
   },
+  "empty": "暫無已上傳文件/文件夾",
   "header": {
     "actions": {
       "newFolder": "新建資料夾",
@@ -37,6 +38,7 @@
     "new": "新建知識庫",
     "title": "知識庫"
   },
+  "networkError": "獲取知識庫失敗，請檢查網路連接後重試",
   "notSupportGuide": {
     "desc": "當前部署實例為客戶端資料庫模式，無法使用檔案管理功能。請切換到<1>伺服器端資料庫部署模式</1>，或直接使用 <3>LobeChat Cloud</3>",
     "features": {

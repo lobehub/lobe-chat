@@ -12,7 +12,7 @@ import Item from './Item';
 import Loading from './Loading';
 
 export const List = memo(() => {
-  const { t } = useTranslation('plugin');
+  const { t } = useTranslation('file');
 
   const useFetchFilesAndKnowledgeBases = useAgentStore((s) => s.useFetchFilesAndKnowledgeBases);
 
@@ -27,10 +27,10 @@ export const List = memo(() => {
       {error ? (
         <>
           <Icon icon={ServerCrash} size={{ fontSize: 80 }} />
-          {t('store.networkError')}
+          {t('networkError')}
         </>
       ) : (
-        <Empty description={t('store.empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description={t('empty')} image={Empty.PRESENTED_IMAGE_SIMPLE} />
       )}
     </Center>
   ) : (

@@ -21,6 +21,7 @@
       "embeddingStatus": "向量化"
     }
   },
+  "empty": "暂无已上传文件/文件夹",
   "header": {
     "actions": {
       "newFolder": "新建文件夹",
@@ -37,6 +38,7 @@
     "new": "新建知识库",
     "title": "知识库"
   },
+  "networkError": "获取知识库失败，请检测网络连接后重试",
   "notSupportGuide": {
     "desc": "当前部署实例为客户端数据库模式，无法使用文件管理功能。请切换到<1>服务端数据库部署模式</1>，或直接使用 <3>LobeChat Cloud</3>",
     "features": {
