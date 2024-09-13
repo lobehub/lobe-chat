@@ -65,7 +65,6 @@ const SVG = memo<SVGProps>(({ svgOptions }) => {
   return (
     <motion.svg
       animate={{ opacity: 1 }}
-      className="absolute inset-0 w-full h-full"
       fill="none"
       initial={{ opacity: 0 }}
       transition={{ duration: 1 }}
