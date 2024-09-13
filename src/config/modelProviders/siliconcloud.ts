@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref :https://siliconflow.cn/zh-cn/models
+// ref :https://siliconflow.cn/zh-cn/pricing
 const SiliconCloud: ModelProviderCard = {
   chatModels: [
     {
@@ -161,16 +161,10 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'LLaMA 3.1 405B 是预训练和指令调整的强大机型。',
+      description: 'LLaMA 3.1 405B 指令微调模型针对多语言对话场景进行了优化。',
       displayName: 'Llama 3.1 405B',
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
-      tokens: 32_768,
-    },
-    {
-      description: 'Reflection Llama 3.1 通过Reflection-Tuning技术提升推理能力。',
-      displayName: 'Reflection Llama 3.1 70B',
-      id: 'mattshumer/Reflection-Llama-3.1-70B',
       tokens: 32_768,
     },
     {
@@ -180,13 +174,13 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: 'Mistral 7B 是按需 fine-tuning的模型，为任务提供优化解答。',
+      description: 'Mistral 7B 指令微调模型针对对话场景进行了优化，可用于文本生成和对话任务。',
       displayName: 'Mistral 7B',
       id: 'mistralai/Mistral-7B-Instruct-v0.2',
       tokens: 32_768,
     },
     {
-      description: 'Mixtral 8x7B 是预训练的稀疏混合专家模型，用于通用性文本任务。',
+      description: 'Mixtral 8x7B 模型支持多语言输入和输出，可用于文本生成和对话任务。',
       displayName: 'Mistral 8x7B',
       id: 'mistralai/Mixtral-8x7B-Instruct-v0.1',
       tokens: 32_768,
@@ -194,7 +188,7 @@ const SiliconCloud: ModelProviderCard = {
   ],
   checkModel: 'Qwen/Qwen2-1.5B-Instruct',
   description:
-    'SiliconFlow 致力于加速 AGI，以惠及人类，通过易用与成本低的 GenAI 堆栈提升大规模 AI 效率。',
+    'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
   id: 'siliconcloud',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://siliconflow.cn/zh-cn/models',
@@ -202,7 +196,7 @@ const SiliconCloud: ModelProviderCard = {
   proxyUrl: {
     placeholder: 'https://api.siliconflow.cn/v1',
   },
-  url: 'https://siliconflow.cn',
+  url: 'https://siliconflow.cn/zh-cn/siliconcloud',
 };
 
 export default SiliconCloud;
