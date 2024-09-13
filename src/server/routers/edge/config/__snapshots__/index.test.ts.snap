@@ -131,27 +131,23 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENROUTER_MODEL_
 {
   "enabled": false,
   "enabledModels": [
-    "google/gemma-7b-it:free",
-    "mistralai/mistral-7b-instruct:free",
+    "meta-llama/llama-3.1-8b-instruct:free",
+    "google/gemma-2-9b-it:free",
   ],
   "serverModelCards": [
     {
-      "description": "Google 的 Gemma 7B 具有出色的计算效率，适适用于多种硬件架构，如GPU和TPU。",
-      "displayName": "Google: Gemma 7B (free)",
+      "description": "LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。",
+      "displayName": "Llama 3.1 8B (Free)",
       "enabled": true,
-      "functionCall": false,
-      "id": "google/gemma-7b-it:free",
-      "tokens": 8192,
-      "vision": false,
+      "id": "meta-llama/llama-3.1-8b-instruct:free",
+      "tokens": 32768,
     },
     {
-      "description": "Mistral 7B Instruct 是一款高效的多语言模型，优化用于对话和问答，能在资源受限的环境中表现出色。",
-      "displayName": "Mistral 7B Instruct (free)",
+      "description": "Gemma 2 是Google轻量化的开源文本模型系列。",
+      "displayName": "Gemma 2 9B (Free)",
       "enabled": true,
-      "functionCall": false,
-      "id": "mistralai/mistral-7b-instruct:free",
-      "tokens": 32768,
-      "vision": false,
+      "id": "google/gemma-2-9b-it:free",
+      "tokens": 8192,
     },
   ],
 }
