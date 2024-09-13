@@ -26,7 +26,7 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
         return truneO1Payload(payload) as any;
       }
 
-      return payload;
+      return { ...payload, stream: payload.stream ?? true };
     },
   },
   debug: {
