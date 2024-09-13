@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import InterceptingLink from '@/components/InterceptingLink';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { DiscoverProviderItem } from '@/types/discover';
@@ -69,9 +70,12 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
 
   const header = (
     <Flexbox gap={4} style={{ minWidth: 240 }}>
-      <Link href={urlJoin('/discover/provider', identifier)} style={{ color: 'inherit' }}>
+      <InterceptingLink
+        href={urlJoin('/discover/provider', identifier)}
+        style={{ color: 'inherit' }}
+      >
         <ProviderCombine provider={identifier} size={24} />
-      </Link>
+      </InterceptingLink>
       <Flexbox align={'center'} gap={6} horizontal>
         <ModelTag model={modelId} style={{ background: theme.colorFillQuaternary, margin: 0 }} />
         {isLobeHub && (
@@ -99,9 +103,9 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
   );
 
   const button = (
-    <Link href={urlJoin('/discover/provider', identifier)} style={{ color: 'inherit' }}>
+    <InterceptingLink href={urlJoin('/discover/provider', identifier)} style={{ color: 'inherit' }}>
       <ActionIcon color={theme.colorTextDescription} icon={ChevronRightIcon} />
-    </Link>
+    </InterceptingLink>
   );
 
   return (

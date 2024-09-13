@@ -15,9 +15,14 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   `,
   container: css`
     cursor: pointer;
+
     position: relative;
+
     overflow: hidden;
+
     height: 100%;
+
+    color: ${token.colorText};
   `,
   desc: css`
     margin-block-end: 0 !important;
