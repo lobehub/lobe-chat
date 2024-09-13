@@ -54,7 +54,7 @@ export const useInterceptingRoutes = () => {
     () => ({
       isIntercepted,
       push: (url: string, disableIntercepting?: boolean) => {
-        if ((disableIntercepting && isIntercepted) || mobile) {
+        if (disableIntercepting || mobile) {
           router.push(`/redirect`, { query: { url } });
           return;
         }
