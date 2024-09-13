@@ -6,6 +6,7 @@ import { getLLMConfig } from '@/config/llm';
 import {
   BedrockProviderCard,
   FireworksAIProviderCard,
+  GoogleProviderCard,
   GroqProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
@@ -39,6 +40,7 @@ export const getServerGlobalConfig = () => {
     AWS_BEDROCK_MODEL_LIST,
 
     ENABLED_GOOGLE,
+    GOOGLE_MODEL_LIST,
 
     ENABLED_GROQ,
     GROQ_MODEL_LIST,
@@ -128,7 +130,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
 
-      google: { enabled: ENABLED_GOOGLE },
+      google: {
+        enabled: ENABLED_GOOGLE,
+        enabledModels: extractEnabledModels(GOOGLE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: GoogleProviderCard.chatModels,
+          modelString: GOOGLE_MODEL_LIST,
+        }),
+      },
       groq: {
         enabled: ENABLED_GROQ,
         enabledModels: extractEnabledModels(GROQ_MODEL_LIST),
