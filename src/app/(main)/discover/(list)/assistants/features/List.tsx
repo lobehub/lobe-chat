@@ -2,11 +2,11 @@
 
 import { Grid } from '@lobehub/ui';
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import InterceptingLink from '@/components/InterceptingLink';
 import { DiscoverAssistantItem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
@@ -41,9 +41,12 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
         <VirtuosoGridList
           data={all}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+            <InterceptingLink
+              href={urlJoin('/discover/assistant/', item.identifier)}
+              key={item.identifier}
+            >
               <Card showCategory variant={'compact'} {...item} />
-            </Link>
+            </InterceptingLink>
           )}
           style={{
             minHeight: '50vh',
@@ -58,9 +61,12 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
       <Title>{t('assistants.recentSubmits')}</Title>
       <Grid maxItemWidth={280} rows={4}>
         {recent.map((item) => (
-          <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+          <InterceptingLink
+            href={urlJoin('/discover/assistant/', item.identifier)}
+            key={item.identifier}
+          >
             <Card showCategory={!category} {...item} />
-          </Link>
+          </InterceptingLink>
         ))}
       </Grid>
       {last && last?.length > 0 && (
@@ -69,9 +75,12 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
           <VirtuosoGridList
             data={last}
             itemContent={(_, item) => (
-              <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+              <InterceptingLink
+                href={urlJoin('/discover/assistant/', item.identifier)}
+                key={item.identifier}
+              >
                 <Card showCategory={!category} variant={'compact'} {...item} />
-              </Link>
+              </InterceptingLink>
             )}
             style={{
               minHeight: '50vh',

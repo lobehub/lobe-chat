@@ -6,6 +6,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useInterceptingRoutes } from '@/hooks/useInterceptingRoutes';
+
 const useStyles = createStyles(({ css, token }) => {
   return {
     back: css`
@@ -19,8 +21,12 @@ const useStyles = createStyles(({ css, token }) => {
 });
 
 const Back = memo<{ href: string }>(({ href }) => {
+  const { isIntercepted } = useInterceptingRoutes();
   const { t } = useTranslation('discover');
   const { styles } = useStyles();
+
+  if (isIntercepted) return null;
+
   return (
     <Link className={styles.back} href={href} style={{ marginBottom: 8 }}>
       <Flexbox align={'center'} gap={8} horizontal>

@@ -8,7 +8,7 @@ import { useServerConfigStore } from '@/store/serverConfig';
 
 import DetailLayout from './features/DetailLayout';
 
-export default memo(() => {
+const Loading = memo(() => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   return (
     <DetailLayout
@@ -34,3 +34,5 @@ export default memo(() => {
     </DetailLayout>
   );
 });
+
+export default Loading;

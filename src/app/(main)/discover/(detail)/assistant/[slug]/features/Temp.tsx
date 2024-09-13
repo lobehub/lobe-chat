@@ -30,9 +30,9 @@ const ConversationExample = memo<ConversationExampleProps>(({ data }) => {
       style={{ background: theme.colorBgContainer }}
       title={t('assistants.systemRole')}
     >
-      <Flexbox paddingInline={16} style={{ minHeight: 600 }}>
+      <Flexbox paddingInline={16}>
         {data.config.systemRole ? (
-          <Markdown>{data.config.systemRole}</Markdown>
+          <Markdown fontSize={theme.fontSize}>{data.config.systemRole}</Markdown>
         ) : (
           <Skeleton paragraph={{ rows: 4 }} title={false} />
         )}

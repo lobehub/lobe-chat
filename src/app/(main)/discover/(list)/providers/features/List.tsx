@@ -1,11 +1,11 @@
 'use client';
 
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import InterceptingLink from '@/components/InterceptingLink';
 import { DiscoverProviderItem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
@@ -30,13 +30,12 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
         <VirtuosoList
           data={items}
           itemContent={(_, item) => (
-            <Link
+            <InterceptingLink
               href={urlJoin('/discover/provider/', item.identifier)}
               key={item.identifier}
-              style={{ color: 'inherit' }}
             >
               <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
-            </Link>
+            </InterceptingLink>
           )}
           style={{
             minHeight: '50vh',
@@ -52,9 +51,12 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
       <VirtuosoList
         data={items}
         itemContent={(_, item) => (
-          <Link href={urlJoin('/discover/provider/', item.identifier)} key={item.identifier}>
+          <InterceptingLink
+            href={urlJoin('/discover/provider/', item.identifier)}
+            key={item.identifier}
+          >
             <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
-          </Link>
+          </InterceptingLink>
         )}
         style={{
           minHeight: '50vh',

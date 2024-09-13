@@ -3,6 +3,7 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { LucideIcon } from 'lucide-react';
+import { rgba } from 'polished';
 import { ReactNode, memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
@@ -18,6 +19,21 @@ const useStyles = createStyles(({ css, token }) => ({
     z-index: 0;
     inset: 0;
     transform: scale(3);
+
+    overflow: hidden;
+
+    &::before {
+      content: '';
+
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+
+      width: 100%;
+      height: 100%;
+
+      background: ${rgba(token.colorBgContainer, 0.5)};
+    }
   `,
   container: css`
     position: relative;

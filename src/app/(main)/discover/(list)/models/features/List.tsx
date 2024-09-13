@@ -1,11 +1,11 @@
 'use client';
 
 import { Empty } from 'antd';
-import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
+import InterceptingLink from '@/components/InterceptingLink';
 import { DiscoverModelItem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
@@ -31,9 +31,12 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
         <VirtuosoGridList
           data={items}
           itemContent={(_, item) => (
-            <Link href={urlJoin('/discover/model/', item.identifier)} key={item.identifier}>
+            <InterceptingLink
+              href={urlJoin('/discover/model/', item.identifier)}
+              key={item.identifier}
+            >
               <Card showCategory {...item} />
-            </Link>
+            </InterceptingLink>
           )}
           style={{
             minHeight: '50vh',
@@ -49,9 +52,12 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
       <VirtuosoGridList
         data={items}
         itemContent={(_, item) => (
-          <Link href={urlJoin('/discover/model/', item.identifier)} key={item.identifier}>
+          <InterceptingLink
+            href={urlJoin('/discover/model/', item.identifier)}
+            key={item.identifier}
+          >
             <Card showCategory={!category} {...item} />
-          </Link>
+          </InterceptingLink>
         )}
         style={{
           minHeight: '50vh',

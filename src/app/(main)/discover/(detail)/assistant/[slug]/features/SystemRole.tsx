@@ -16,7 +16,7 @@ const SystemRole = memo<{ children?: string }>(({ children }) => {
     <Block title={t('assistants.systemRole')}>
       {children ? (
         <Markdown
-          fontSize={14}
+          fontSize={theme.fontSize}
           style={{
             border: `1px solid ${theme.colorBorderSecondary}`,
             borderRadius: theme.borderRadiusLG,
