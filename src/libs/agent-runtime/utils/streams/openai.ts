@@ -57,20 +57,22 @@ export const transformOpenAIStream = (
       } as StreamProtocolToolCallChunk;
     }
 
+    if (typeof item.delta?.content === 'string') {
+      return { data: item.delta.content, id: chunk.id, type: 'text' };
+    }
+
     // 给定结束原因
     if (item.finish_reason) {
       // one-api 的流式接口，会出现既有 finish_reason ，也有 content 的情况
       //  {"id":"demo","model":"deepl-en","choices":[{"index":0,"delta":{"role":"assistant","content":"Introduce yourself."},"finish_reason":"stop"}]}
 
+      /*
       if (typeof item.delta?.content === 'string' && !!item.delta.content) {
         return { data: item.delta.content, id: chunk.id, type: 'text' };
       }
+      */
 
       return { data: item.finish_reason, id: chunk.id, type: 'stop' };
-    }
-
-    if (typeof item.delta?.content === 'string') {
-      return { data: item.delta.content, id: chunk.id, type: 'text' };
     }
 
     if (item.delta?.content === null) {
