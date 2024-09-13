@@ -13,10 +13,12 @@ import List from '../../(list)/plugins/features/List';
 type Props = { searchParams: { hl?: Locales; q?: string } };
 
 export const generateMetadata = async ({ searchParams }: Props) => {
-  const { t } = await translation('metadata', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl);
 
   return metadataModule.generate({
+    alternate: true,
     description: t('discover.description'),
+    locale,
     title: t('discover.search'),
     url: '/discover/search/plugins',
   });
@@ -38,7 +40,7 @@ const Page = async ({ searchParams }: Props) => {
     url: '/discover/search/plugins',
     webpage: {
       enable: true,
-      search: true,
+      search: '/discover/search/plugins',
     },
   });
 

@@ -38,7 +38,9 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
       { name: 'LobeChat', url: 'https://github.com/lobehub/lobe-chat' },
     ],
     ...metadataModule.generate({
+      alternate: true,
       description: td(`${identifier}.description`) || t('discover.providers.description'),
+      locale,
       tags: models || [],
       title: [meta.title, t('discover.providers.title')].join(' · '),
       url: urlJoin('/discover/provider', identifier),
@@ -85,6 +87,10 @@ const Page = async ({ params, searchParams }: Props) => {
     description: td(`${identifier}.description`) || t('discover.providers.description'),
     title: [meta.title, t('discover.providers.title')].join(' · '),
     url: urlJoin('/discover/provider', identifier),
+    webpage: {
+      enable: true,
+      search: '/discover/search/providers',
+    },
   });
 
   return (

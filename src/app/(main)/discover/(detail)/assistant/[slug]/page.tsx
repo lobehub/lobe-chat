@@ -39,7 +39,9 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
     ],
     keywords: meta.tags,
     ...metadataModule.generate({
+      alternate: true,
       description: meta.description,
+      locale,
       tags: meta.tags,
       title: [meta.title, t('discover.assistants.title')].join(' · '),
       url: urlJoin('/discover/assistant', identifier),
@@ -81,6 +83,10 @@ const Page = async ({ params, searchParams }: Props) => {
     description: meta.description || t('discover.assistants.description'),
     title: [meta.title, t('discover.assistants.title')].join(' · '),
     url: urlJoin('/discover/assistant', identifier),
+    webpage: {
+      enable: true,
+      search: '/discover/search/assistants',
+    },
   });
 
   return (

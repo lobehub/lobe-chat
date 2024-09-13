@@ -10,9 +10,11 @@ import Client from './Client';
 type Props = { searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ searchParams }: Props) => {
-  const { t } = await translation('metadata', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl);
   return metadataModule.generate({
+    alternate: true,
     description: t('discover.description'),
+    locale,
     title: t('discover.title'),
     url: '/discover',
   });
@@ -24,6 +26,10 @@ const Page = async ({ searchParams }: Props) => {
     description: t('discover.description'),
     title: t('discover.title'),
     url: '/discover',
+    webpage: {
+      enable: true,
+      search: '/discover/search/assistants',
+    },
   });
 
   const discoverService = new DiscoverService();

@@ -11,10 +11,12 @@ import List from './features/List';
 type Props = { searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ searchParams }: Props) => {
-  const { t } = await translation('metadata', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl);
 
   return metadataModule.generate({
+    alternate: true,
     description: t('discover.providers.description'),
+    locale,
     title: t('discover.providers.title'),
     url: '/discover/providers',
   });
@@ -33,7 +35,7 @@ const Page = async ({ searchParams }: Props) => {
     url: '/discover/providers',
     webpage: {
       enable: true,
-      search: true,
+      search: '/discover/search/providers',
     },
   });
 

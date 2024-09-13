@@ -22,7 +22,9 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
   const cate = list.find((cate) => cate.identifier === params.slug);
 
   return metadataModule.generate({
+    alternate: true,
     description: t('discover.models.description'),
+    locale,
     title: [cate?.meta.title, t('discover.models.title')].join(' · '),
     url: urlJoin('/discover/models', params.slug),
   });
@@ -43,7 +45,7 @@ const Page = async ({ params, searchParams }: Props) => {
     url: urlJoin('/discover/models', params.slug),
     webpage: {
       enable: true,
-      search: true,
+      search: '/discover/search/models',
     },
   });
 

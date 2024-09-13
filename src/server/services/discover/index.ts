@@ -8,6 +8,7 @@ import {
   DEFAULT_DISCOVER_PLUGIN_ITEM,
   DEFAULT_DISCOVER_PROVIDER_ITEM,
 } from '@/const/discover';
+import { DEFAULT_LANG } from '@/const/locale';
 import { Locales } from '@/locales/resources';
 import { AssistantStore } from '@/server/modules/AssistantStore';
 import { PluginStore } from '@/server/modules/PluginStore';
@@ -49,9 +50,15 @@ export class DiscoverService {
   };
 
   getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
-    const res = await fetch(this.assistantStore.getAgentIndexUrl(locale), {
+    let res = await fetch(this.assistantStore.getAgentIndexUrl(locale), {
       next: { revalidate },
     });
+
+    if (!res.ok) {
+      res = await fetch(this.assistantStore.getAgentIndexUrl(DEFAULT_LANG), {
+        next: { revalidate },
+      });
+    }
 
     const json = await res.json();
 
@@ -62,9 +69,15 @@ export class DiscoverService {
     locale: Locales,
     identifier: string,
   ): Promise<DiscoverAssistantItem | undefined> => {
-    const res = await fetch(this.assistantStore.getAgentUrl(identifier, locale), {
+    let res = await fetch(this.assistantStore.getAgentUrl(identifier, locale), {
       next: { revalidate: 12 * revalidate },
     });
+
+    if (!res.ok) {
+      res = await fetch(this.assistantStore.getAgentUrl(DEFAULT_LANG), {
+        next: { revalidate: 12 * revalidate },
+      });
+    }
 
     let assistant = await res.json();
 
@@ -125,9 +138,16 @@ export class DiscoverService {
   };
 
   getPluginList = async (locale: Locales): Promise<DiscoverPlugintem[]> => {
-    const res = await fetch(this.pluginStore.getPluginIndexUrl(locale), {
+    let res = await fetch(this.pluginStore.getPluginIndexUrl(locale), {
       next: { revalidate: 12 * revalidate },
     });
+
+    if (!res.ok) {
+      res = await fetch(this.pluginStore.getPluginIndexUrl(DEFAULT_LANG), {
+        next: { revalidate: 12 * revalidate },
+      });
+    }
+
     const json = await res.json();
     return json.plugins;
   };

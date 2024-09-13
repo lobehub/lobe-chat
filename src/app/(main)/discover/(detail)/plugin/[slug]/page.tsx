@@ -35,8 +35,14 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
       { name: 'LobeChat', url: 'https://github.com/lobehub/lobe-chat' },
     ],
     keywords: meta.tags,
+    webpage: {
+      enable: true,
+      search: '/discover/search/plugins',
+    },
     ...metadataModule.generate({
+      alternate: true,
       description: meta.description,
+      locale,
       tags: meta.tags,
       title: [meta.title, t('discover.plugins.title')].join(' · '),
       url: urlJoin('/discover/plugin', identifier),

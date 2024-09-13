@@ -1,7 +1,17 @@
+import qs from 'query-string';
 import urlJoin from 'url-join';
 
 import { BRANDING_NAME } from '@/const/branding';
-import { EMAIL_BUSINESS, EMAIL_SUPPORT, OFFICIAL_SITE, OFFICIAL_URL, X } from '@/const/url';
+import { DEFAULT_LANG } from '@/const/locale';
+import {
+  EMAIL_BUSINESS,
+  EMAIL_SUPPORT,
+  OFFICIAL_SITE,
+  OFFICIAL_URL,
+  X,
+  getCanonicalUrl,
+} from '@/const/url';
+import { Locales } from '@/locales/resources';
 
 import pkg from '../../package.json';
 
@@ -35,6 +45,7 @@ class Ld {
     title,
     description,
     date,
+    locale = DEFAULT_LANG,
     webpage = {
       enable: true,
     },
@@ -48,24 +59,26 @@ class Ld {
     date?: string;
     description: string;
     image?: string;
+    locale?: Locales;
     title: string;
     url: string;
     webpage?: {
       enable?: boolean;
-      search?: boolean;
+      search?: string;
     };
   }) {
     return {
       '@context': 'https://schema.org',
       '@graph': [
         this.genWebSite(),
-        article?.enable && this.genArticle({ ...article, date, description, title, url }),
+        article?.enable && this.genArticle({ ...article, date, description, locale, title, url }),
         webpage?.enable &&
           this.genWebPage({
             ...webpage,
             date,
             description,
             image,
+            locale,
             title,
             url,
           }),
@@ -131,17 +144,19 @@ class Ld {
     search,
     description,
     title,
+    locale = DEFAULT_LANG,
     url,
   }: {
     breadcrumbs?: { title: string; url: string }[];
     date?: string;
     description: string;
     image?: string;
-    search?: boolean;
+    locale?: Locales;
+    search?: string;
     title: string;
     url: string;
   }) {
-    const fixedUrl = this.fixUrl(url);
+    const fixedUrl = getCanonicalUrl(url);
     const dateCreated = date ? new Date(date).toISOString() : LAST_MODIFIED;
     const dateModified = date ? new Date(date).toISOString() : LAST_MODIFIED;
 
@@ -160,7 +175,7 @@ class Ld {
       'image': {
         '@id': this.getId(fixedUrl, '#primaryimage'),
       },
-      'inLanguage': 'en-US',
+      'inLanguage': locale,
       'isPartOf': {
         '@id': this.getId(OFFICIAL_URL, '#website'),
       },
@@ -175,14 +190,17 @@ class Ld {
       baseInfo.potentialAction = {
         '@type': 'SearchAction',
         'query-input': 'required name=search_term_string',
-        'target': `${fixedUrl}?q={search_term_string}`,
+        'target': qs.stringifyUrl({
+          query: { q: '{search_term_string}' },
+          url: getCanonicalUrl(search),
+        }),
       };
 
     return baseInfo;
   }
 
   genImageObject({ image, url }: { image: string; url: string }) {
-    const fixedUrl = this.fixUrl(url);
+    const fixedUrl = getCanonicalUrl(url);
 
     return {
       '@id': this.getId(fixedUrl, '#primaryimage'),
@@ -215,6 +233,7 @@ class Ld {
     url,
     author,
     date,
+    locale = DEFAULT_LANG,
     tags,
     identifier,
   }: {
@@ -222,11 +241,12 @@ class Ld {
     date?: string;
     description: string;
     identifier: string;
+    locale: Locales;
     tags?: string[];
     title: string;
     url: string;
   }) {
-    const fixedUrl = this.fixUrl(url);
+    const fixedUrl = getCanonicalUrl(url);
 
     const dateCreated = date ? new Date(date).toISOString() : LAST_MODIFIED;
 
@@ -244,6 +264,7 @@ class Ld {
       'image': {
         '@id': this.getId(fixedUrl, '#primaryimage'),
       },
+      'inLanguage': locale,
       'keywords': tags?.join(' ') || 'LobeHub LobeChat',
       'mainEntityOfPage': fixedUrl,
       'name': title,
@@ -264,10 +285,6 @@ class Ld {
 
   private fixTitle(title: string) {
     return title.includes(BRANDING_NAME) ? title : `${title} · ${BRANDING_NAME}`;
-  }
-
-  private fixUrl(url: string) {
-    return urlJoin(OFFICIAL_URL, url);
   }
 }
 

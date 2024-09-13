@@ -14,11 +14,13 @@ import List from '../features/List';
 type Props = { params: { slug: PluginCategory }; searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ params, searchParams }: Props) => {
-  const { t } = await translation('metadata', searchParams?.hl);
+  const { t, locale } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('discover', searchParams?.hl);
 
   return metadataModule.generate({
+    alternate: true,
     description: t('discover.plugins.description'),
+    locale,
     title: [td(`category.plugin.${params.slug}`), t('discover.plugins.title')].join(' · '),
     url: urlJoin('/discover/plugins', params.slug),
   });
@@ -38,7 +40,7 @@ const Page = async ({ params, searchParams }: Props) => {
     url: urlJoin('/discover/plugins', params.slug),
     webpage: {
       enable: true,
-      search: true,
+      search: '/discover/search/plugins',
     },
   });
 

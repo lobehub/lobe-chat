@@ -37,8 +37,14 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
       { name: 'LobeHub', url: 'https://github.com/lobehub' },
       { name: 'LobeChat', url: 'https://github.com/lobehub/lobe-chat' },
     ],
+    webpage: {
+      enable: true,
+      search: '/discover/search/models',
+    },
     ...metadataModule.generate({
+      alternate: true,
       description: td(`${identifier}.description`) || t('discover.models.description'),
+      locale,
       tags: providers || [],
       title: [meta.title, t('discover.models.title')].join(' · '),
       url: urlJoin('/discover/model', identifier),
