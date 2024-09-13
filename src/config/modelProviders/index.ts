@@ -6,6 +6,7 @@ import AzureProvider from './azure';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import DeepSeekProvider from './deepseek';
+import FireworksAIProvider from './fireworksai';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
 import MinimaxProvider from './minimax';
@@ -17,9 +18,12 @@ import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
+import SiliconCloudProvider from './siliconcloud';
+import SparkProvider from './spark';
 import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
+import UpstageProvider from './upstage';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -37,6 +41,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   OllamaProvider.chatModels,
   OpenRouterProvider.chatModels,
   TogetherAIProvider.chatModels,
+  FireworksAIProvider.chatModels,
   PerplexityProvider.chatModels,
   AnthropicProvider.chatModels,
   ZeroOneProvider.chatModels,
@@ -45,31 +50,38 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
   Ai360Provider.chatModels,
+  SiliconCloudProvider.chatModels,
+  UpstageProvider.chatModels,
+  SparkProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
   OpenAIProvider,
   { ...AzureProvider, chatModels: [] },
-  QwenProvider,
   OllamaProvider,
   AnthropicProvider,
-  DeepSeekProvider,
-  GoogleProvider,
-  OpenRouterProvider,
-  TogetherAIProvider,
   BedrockProvider,
-  PerplexityProvider,
-  MinimaxProvider,
-  MistralProvider,
+  GoogleProvider,
+  DeepSeekProvider,
+  OpenRouterProvider,
   GroqProvider,
-  MoonshotProvider,
-  ZeroOneProvider,
-  ZhiPuProvider,
-  StepfunProvider,
   NovitaProvider,
+  PerplexityProvider,
+  MistralProvider,
+  TogetherAIProvider,
+  FireworksAIProvider,
+  UpstageProvider,
+  QwenProvider,
+  SparkProvider,
+  ZhiPuProvider,
+  ZeroOneProvider,
+  StepfunProvider,
+  MoonshotProvider,
   BaichuanProvider,
-  TaichuProvider,
+  MinimaxProvider,
   Ai360Provider,
+  SiliconCloudProvider,
+  TaichuProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -87,6 +99,7 @@ export { default as AzureProviderCard } from './azure';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as DeepSeekProviderCard } from './deepseek';
+export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
 export { default as MinimaxProviderCard } from './minimax';
@@ -98,8 +111,11 @@ export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
+export { default as SiliconCloudProviderCard } from './siliconcloud';
+export { default as SparkProviderCard } from './spark';
 export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
+export { default as UpstageProviderCard } from './upstage';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

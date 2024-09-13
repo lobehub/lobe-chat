@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Neu erstellen",
+    "description": {
+      "placeholder": "Beschreibung des Datensatzes (optional)"
+    },
+    "name": {
+      "placeholder": "Name des Datensatzes",
+      "required": "Bitte geben Sie den Namen des Datensatzes ein"
+    },
+    "title": "Datensatz hinzufügen"
+  },
+  "dataset": {
+    "addNewButton": "Datensatz erstellen",
+    "emptyGuide": "Der aktuelle Datensatz ist leer, bitte erstellen Sie einen Datensatz.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Daten importieren"
+        },
+        "columns": {
+          "actions": "Aktionen",
+          "ideal": {
+            "title": "Erwartete Antwort"
+          },
+          "question": {
+            "title": "Frage"
+          },
+          "referenceFiles": {
+            "title": "Referenzdateien"
+          }
+        },
+        "notSelected": "Bitte wählen Sie einen Datensatz auf der linken Seite aus",
+        "title": "Details zum Datensatz"
+      },
+      "title": "Datensatz"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Neu erstellen",
+      "datasetId": {
+        "placeholder": "Bitte wählen Sie Ihren Bewertungsdatensatz aus",
+        "required": "Bitte wählen Sie einen Bewertungsdatensatz aus"
+      },
+      "description": {
+        "placeholder": "Beschreibung der Bewertungsaufgabe (optional)"
+      },
+      "name": {
+        "placeholder": "Name der Bewertungsaufgabe",
+        "required": "Bitte geben Sie den Namen der Bewertungsaufgabe ein"
+      },
+      "title": "Bewertungsaufgabe hinzufügen"
+    },
+    "addNewButton": "Bewertung erstellen",
+    "emptyGuide": "Aktuell sind keine Bewertungsaufgaben vorhanden, beginnen Sie mit der Erstellung einer Bewertung.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Status überprüfen",
+          "confirmDelete": "Möchten Sie diese Bewertungsaufgabe wirklich löschen?",
+          "confirmRun": "Möchten Sie die Ausführung starten? Nach dem Start wird die Bewertungsaufgabe im Hintergrund asynchron ausgeführt, das Schließen der Seite hat keinen Einfluss auf die Ausführung der asynchronen Aufgabe.",
+          "downloadRecords": "Bewertung herunterladen",
+          "retry": "Erneut versuchen",
+          "run": "Ausführen",
+          "title": "Aktionen"
+        },
+        "datasetId": {
+          "title": "Datensatz"
+        },
+        "name": {
+          "title": "Name der Bewertungsaufgabe"
+        },
+        "records": {
+          "title": "Anzahl der Bewertungsaufzeichnungen"
+        },
+        "referenceFiles": {
+          "title": "Referenzdateien"
+        },
+        "status": {
+          "error": "Fehler bei der Ausführung",
+          "pending": "Warten auf Ausführung",
+          "processing": "Wird ausgeführt",
+          "success": "Erfolgreich ausgeführt",
+          "title": "Status"
+        }
+      },
+      "title": "Liste der Bewertungsaufgaben"
+    }
+  }
+}

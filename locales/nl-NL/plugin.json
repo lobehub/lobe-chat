@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Alleen alfanumerieke tekens, koppelteken - en underscore _ zijn toegestaan"
       },
       "manifest": {
-        "desc": "LobeChat zal de plug-in installeren via deze link",
+        "desc": "{{appName}} zal de plugin installeren via deze link",
         "label": "Plug-in Beschrijving (Manifest) URL",
         "preview": "Voorbeeld",
         "refresh": "Vernieuwen"

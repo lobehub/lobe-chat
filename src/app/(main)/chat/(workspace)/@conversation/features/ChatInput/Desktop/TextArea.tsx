@@ -51,7 +51,7 @@ const InputArea = memo<InputAreaProps>(({ setExpand }) => {
 
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
 
-  const sendMessage = useSendMessage();
+  const { send: sendMessage } = useSendMessage();
 
   useAutoFocus(ref);
 

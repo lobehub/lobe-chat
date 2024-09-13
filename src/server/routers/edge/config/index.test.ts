@@ -14,6 +14,12 @@ const createCaller = createCallerFactory(configRouter);
 let ctx: AuthContext;
 let router: ReturnType<typeof createCaller>;
 
+vi.mock('@/libs/next-auth/edge', () => {
+  return {
+    auth: vi.fn().mockResolvedValue(undefined),
+  };
+});
+
 beforeEach(async () => {
   vi.resetAllMocks();
   ctx = await createContextInner();
@@ -84,13 +90,9 @@ describe('configRouter', () => {
 
           const result = response.languageModel?.openai?.serverModelCards;
 
-          expect(result?.find((o) => o.id === 'gpt-4-1106-preview')).toEqual({
-            displayName: 'GPT-4 Turbo Preview (1106)',
-            functionCall: true,
-            enabled: true,
-            id: 'gpt-4-1106-preview',
-            tokens: 128000,
-          });
+          const model = result?.find((o) => o.id === 'gpt-4-1106-preview');
+
+          expect(model).toMatchSnapshot();
 
           process.env.OPENAI_MODEL_LIST = '';
         });

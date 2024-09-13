@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "De API-versie van Azure, volgt het formaat YYYY-MM-DD, raadpleeg [de nieuwste versie](https://learn.microsoft.com/nl-nl/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "Lijst ophalen",
-      "title": "Azure Api Versie"
+      "title": "Azure API Versie"
     },
     "empty": "Voer een model-ID in om het eerste model toe te voegen",
     "endpoint": {
@@ -38,9 +38,15 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "Als je AWS SSO/STS gebruikt, voer dan je AWS Sessie Token in",
+      "placeholder": "AWS Sessie Token",
+      "title": "AWS Sessie Token (optioneel)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Aangepaste regio",
+      "customSessionToken": "Aangepaste sessietoken",
       "description": "Voer uw AWS AccessKeyId / SecretAccessKey in om een sessie te starten. De app zal uw verificatiegegevens niet opslaan",
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }

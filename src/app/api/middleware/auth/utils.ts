@@ -1,4 +1,4 @@
-import { type AuthObject } from '@clerk/backend/internal';
+import { type AuthObject } from '@clerk/backend';
 import { importJWK, jwtVerify } from 'jose';
 
 import { getAppConfig } from '@/config/app';

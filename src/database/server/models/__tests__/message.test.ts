@@ -5,11 +5,11 @@ import { getTestDBInstance } from '@/database/server/core/dbForTest';
 
 import {
   files,
-  filesToMessages,
   messagePlugins,
   messageTTS,
   messageTranslates,
   messages,
+  messagesFiles,
   sessions,
   topics,
   users,
@@ -202,7 +202,7 @@ describe('MessageModel', () => {
           .insert(messageTTS)
           .values([{ id: '1' }, { id: '2', voice: 'a', fileId: 'f-1', contentMd5: 'abc' }]);
 
-        await trx.insert(filesToMessages).values([
+        await trx.insert(messagesFiles).values([
           { fileId: 'f-0', messageId: '1' },
           { fileId: 'f-3', messageId: '1' },
         ]);
@@ -214,10 +214,13 @@ describe('MessageModel', () => {
       // 断言结果
       expect(result).toHaveLength(2);
       expect(result[0].id).toBe('1');
-      expect(result[0].files).toEqual(['f-0', 'f-3']);
+      expect(result[0].imageList).toEqual([
+        { alt: 'file-1', id: 'f-0', url: expect.stringContaining('/abc') },
+        { alt: 'file-3', id: 'f-3', url: expect.stringContaining('/abc') },
+      ]);
 
       expect(result[1].id).toBe('2');
-      expect(result[1].files).toEqual([]);
+      expect(result[1].imageList).toEqual([]);
     });
 
     it('should include translate, tts and other extra fields in query result', async () => {
@@ -245,9 +248,10 @@ describe('MessageModel', () => {
 
       // 断言结果
       expect(result[0].extra.translate).toEqual({ content: 'translated', from: 'en', to: 'zh' });
-      // TODO: 确认是否需要包含 tts 字段
       expect(result[0].extra.tts).toEqual({
-        // contentMd5: 'md5', file: 'f1', voice: 'voice1'
+        contentMd5: 'md5',
+        file: 'f1',
+        voice: 'voice1',
       });
     });
 

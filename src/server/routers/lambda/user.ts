@@ -8,7 +8,7 @@ import { SessionModel } from '@/database/server/models/session';
 import { UserModel, UserNotFoundError } from '@/database/server/models/user';
 import { authedProcedure, router } from '@/libs/trpc';
 import { UserService } from '@/server/services/user';
-import { UserInitializationState, UserPreference } from '@/types/user';
+import { UserGuideSchema, UserInitializationState, UserPreference } from '@/types/user';
 
 const userProcedure = authedProcedure.use(async (opts) => {
   return opts.next({
@@ -82,6 +82,10 @@ export const userRouter = router({
 
   resetSettings: userProcedure.mutation(async ({ ctx }) => {
     return ctx.userModel.deleteSetting(ctx.userId);
+  }),
+
+  updateGuide: userProcedure.input(UserGuideSchema).mutation(async ({ ctx, input }) => {
+    return ctx.userModel.updateGuide(ctx.userId, input);
   }),
 
   updatePreference: userProcedure.input(z.any()).mutation(async ({ ctx, input }) => {

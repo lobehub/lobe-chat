@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Créer",
+    "description": {
+      "placeholder": "Description du jeu de données (optionnel)"
+    },
+    "name": {
+      "placeholder": "Nom du jeu de données",
+      "required": "Veuillez remplir le nom du jeu de données"
+    },
+    "title": "Ajouter un jeu de données"
+  },
+  "dataset": {
+    "addNewButton": "Créer un jeu de données",
+    "emptyGuide": "Le jeu de données actuel est vide, veuillez en créer un.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Importer des données"
+        },
+        "columns": {
+          "actions": "Actions",
+          "ideal": {
+            "title": "Réponse idéale"
+          },
+          "question": {
+            "title": "Question"
+          },
+          "referenceFiles": {
+            "title": "Fichiers de référence"
+          }
+        },
+        "notSelected": "Veuillez sélectionner un jeu de données à gauche",
+        "title": "Détails du jeu de données"
+      },
+      "title": "Jeu de données"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Créer",
+      "datasetId": {
+        "placeholder": "Veuillez sélectionner votre jeu de données d'évaluation",
+        "required": "Veuillez sélectionner un jeu de données d'évaluation"
+      },
+      "description": {
+        "placeholder": "Description de la tâche d'évaluation (optionnel)"
+      },
+      "name": {
+        "placeholder": "Nom de la tâche d'évaluation",
+        "required": "Veuillez remplir le nom de la tâche d'évaluation"
+      },
+      "title": "Ajouter une tâche d'évaluation"
+    },
+    "addNewButton": "Créer une évaluation",
+    "emptyGuide": "La tâche d'évaluation actuelle est vide, commencez à créer une évaluation.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Vérifier l'état",
+          "confirmDelete": "Voulez-vous supprimer cette évaluation ?",
+          "confirmRun": "Voulez-vous commencer l'exécution ? L'exécution sera effectuée en arrière-plan de manière asynchrone, fermer la page n'affectera pas l'exécution de la tâche asynchrone.",
+          "downloadRecords": "Télécharger l'évaluation",
+          "retry": "Réessayer",
+          "run": "Exécuter",
+          "title": "Actions"
+        },
+        "datasetId": {
+          "title": "Jeu de données"
+        },
+        "name": {
+          "title": "Nom de la tâche d'évaluation"
+        },
+        "records": {
+          "title": "Nombre d'enregistrements d'évaluation"
+        },
+        "referenceFiles": {
+          "title": "Fichiers de référence"
+        },
+        "status": {
+          "error": "Erreur d'exécution",
+          "pending": "En attente d'exécution",
+          "processing": "En cours d'exécution",
+          "success": "Exécution réussie",
+          "title": "État"
+        }
+      },
+      "title": "Liste des tâches d'évaluation"
+    }
+  }
+}

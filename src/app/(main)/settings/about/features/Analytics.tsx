@@ -5,6 +5,7 @@ import { Switch } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
@@ -27,7 +28,7 @@ const Analytics = memo(() => {
             }}
           />
         ),
-        desc: t('analytics.telemetry.desc'),
+        desc: t('analytics.telemetry.desc', { appName: BRANDING_NAME }),
         label: t('analytics.telemetry.title'),
         minWidth: undefined,
         valuePropName: 'checked',
