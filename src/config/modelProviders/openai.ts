@@ -14,8 +14,8 @@ const OpenAI: ModelProviderCard = {
         input: 3,
         output: 12,
       },
-      tokens: 128_000,
       releasedAt: '2024-09-12',
+      tokens: 128_000,
     },
     {
       description:
@@ -28,8 +28,8 @@ const OpenAI: ModelProviderCard = {
         input: 15,
         output: 60,
       },
-      tokens: 128_000,
       releasedAt: '2024-09-12',
+      tokens: 128_000,
     },
     {
       description:
