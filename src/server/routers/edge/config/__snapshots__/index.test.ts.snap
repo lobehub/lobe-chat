@@ -62,18 +62,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "tokens": 16385,
   },
   {
-    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
-    "displayName": "GPT-3.5 Turbo 16K",
-    "enabled": true,
-    "id": "gpt-3.5-turbo-16k",
-    "legacy": true,
-    "pricing": {
-      "input": 3,
-      "output": 4,
-    },
-    "tokens": 16385,
-  },
-  {
     "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。",
     "displayName": "GPT-4",
     "enabled": true,
