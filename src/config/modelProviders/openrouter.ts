@@ -86,6 +86,22 @@ const OpenRouter: ModelProviderCard = {
     },
     {
       description:
+        'Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。',
+      displayName: 'Claude 3 Haiku',
+      enabled: true,
+      functionCall: true,
+      id: 'anthropic/claude-3-haiku',
+      maxOutput: 4096,
+      pricing: {
+        input: 0.25,
+        output: 1.25,
+      },
+      releasedAt: '2024-03-07',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
         'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
@@ -99,22 +115,6 @@ const OpenRouter: ModelProviderCard = {
         writeCacheInput: 3.75,
       },
       releasedAt: '2024-06-20',
-      tokens: 200_000,
-      vision: true,
-    },
-    {
-      description:
-        'Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。',
-      displayName: 'Claude 3 Haiku',
-      enabled: true,
-      functionCall: true,
-      id: 'anthropic/claude-3-haiku',
-      maxOutput: 4096,
-      pricing: {
-        input: 0.25,
-        output: 1.25,
-      },
-      releasedAt: '2024-03-07',
       tokens: 200_000,
       vision: true,
     },
