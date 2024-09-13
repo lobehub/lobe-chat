@@ -28,6 +28,7 @@ export const getLLMConfig = () => {
       ENABLED_GOOGLE: z.boolean(),
       GOOGLE_API_KEY: z.string().optional(),
       GOOGLE_PROXY_URL: z.string().optional(),
+      GOOGLE_MODEL_LIST: z.string().optional(),
 
       ENABLED_MOONSHOT: z.boolean(),
       MOONSHOT_API_KEY: z.string().optional(),
@@ -134,6 +135,7 @@ export const getLLMConfig = () => {
       ENABLED_GOOGLE: !!process.env.GOOGLE_API_KEY,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
       GOOGLE_PROXY_URL: process.env.GOOGLE_PROXY_URL,
+      GOOGLE_MODEL_LIST: process.env.GOOGLE_MODEL_LIST,
 
       ENABLED_PERPLEXITY: !!process.env.PERPLEXITY_API_KEY,
       PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY,

@@ -14,25 +14,10 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "tokens": 16385,
   },
   {
-    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
-    "displayName": "GPT-3.5 Turbo 16K",
     "id": "gpt-3.5-turbo-16k",
-    "legacy": true,
-    "pricing": {
-      "input": 3,
-      "output": 4,
-    },
-    "tokens": 16385,
   },
   {
-    "description": "GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。",
     "id": "gpt-3.5-turbo-16k-0613",
-    "legacy": true,
-    "pricing": {
-      "input": 3,
-      "output": 4,
-    },
-    "tokens": 16385,
   },
   {
     "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
@@ -83,15 +68,7 @@ exports[`LobeOpenAI > models > should get models 1`] = `
     "id": "gpt-3.5-turbo-0301",
   },
   {
-    "description": "GPT-3.5 Turbo 是 OpenAI 的一款基础模型，结合了高效性和经济性，广泛用于文本生成、理解和分析，专为指导性提示进行调整，去除了与聊天相关的优化。",
-    "displayName": "GPT-3.5 Turbo 0613",
     "id": "gpt-3.5-turbo-0613",
-    "legacy": true,
-    "pricing": {
-      "input": 1.5,
-      "output": 2,
-    },
-    "tokens": 4096,
   },
   {
     "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
