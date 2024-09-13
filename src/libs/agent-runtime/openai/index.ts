@@ -2,8 +2,14 @@ import { ChatStreamPayload, ModelProvider, OpenAIChatMessage } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 // TODO: 临时写法，后续要重构成 model card 展示配置
-const o1Models = new Set(['o1-preview', 'o1-mini']);
-const truneO1Payload = (payload: ChatStreamPayload) => ({
+export const o1Models = new Set([
+  'o1-preview',
+  'o1-preview-2024-09-12',
+  'o1-mini',
+  'o1-mini-2024-09-12',
+]);
+
+export const pruneO1Payload = (payload: ChatStreamPayload) => ({
   ...payload,
   frequency_penalty: 0,
   messages: payload.messages.map((message: OpenAIChatMessage) => ({
@@ -23,7 +29,7 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
       const { model } = payload;
 
       if (o1Models.has(model)) {
-        return truneO1Payload(payload) as any;
+        return pruneO1Payload(payload) as any;
       }
 
       return { ...payload, stream: payload.stream ?? true };
