@@ -16,7 +16,6 @@ import { Flexbox } from 'react-layout-kit';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css }) => ({
