@@ -140,7 +140,7 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENROUTER_MODEL_
       "displayName": "Llama 3.1 8B (Free)",
       "enabled": true,
       "id": "meta-llama/llama-3.1-8b-instruct:free",
-      "tokens": 32_768,
+      "tokens": 32768,
     },
     {
       "description": "Gemma 2 是Google轻量化的开源文本模型系列。",
