@@ -10,33 +10,33 @@
     "clear": {
       "confirm": "You are about to clear local data (global settings will not be affected). Please confirm that you have downloaded a data backup."
     },
-    "description": "In the new version, LobeChat's data storage has made a huge leap. Therefore, we need to upgrade the old version data to bring you a better user experience.",
+    "description": "In the new version, the data storage of {{appName}} has made significant advancements. Therefore, we need to upgrade the old data to provide you with a better user experience.",
     "features": {
       "capability": {
-        "desc": "Based on IndexedDB technology, it can store a lifetime of conversation messages.",
-        "title": "High Capacity"
+        "desc": "Based on IndexedDB technology, capable of storing a lifetime's worth of chat messages.",
+        "title": "Large Capacity"
       },
       "performance": {
-        "desc": "Millions of messages are automatically indexed, and retrieval queries respond in milliseconds.",
+        "desc": "Automatically indexes millions of messages, with retrieval queries responding in milliseconds.",
         "title": "High Performance"
       },
       "use": {
-        "desc": "Supports searching for titles, descriptions, tags, message content, and even translated text, greatly improving daily search efficiency.",
+        "desc": "Supports searching by title, description, tags, message content, and even translated text, greatly enhancing daily search efficiency.",
         "title": "More User-Friendly"
       }
     },
-    "title": "LobeChat Data Evolution",
+    "title": "{{appName}} Data Evolution",
     "upgrade": {
       "error": {
-        "subTitle": "We are sorry, an error occurred during the database upgrade process. Please try the following solutions: A. Clear local data and re-import backup data; B. Click the 'Retry Upgrade' button.<br><br> If the issue persists, please <1>submit a request</1>, and we will assist you as soon as possible.",
+        "subTitle": "We apologize, an error occurred during the database upgrade process. Please try the following solutions: A. Clear local data and re-import backup data; B. Click the 'Retry Upgrade' button.<br><br> If the issue persists, please <1>submit a problem report</1>, and we will assist you as soon as possible.",
         "title": "Database Upgrade Failed"
       },
       "success": {
-        "subTitle": "LobeChat's database has been successfully upgraded to the latest version. Start experiencing it now!",
+        "subTitle": "{{appName}}'s database has been successfully upgraded to the latest version. Start experiencing it now!",
         "title": "Database Upgrade Successful"
       }
     },
-    "upgradeTip": "The upgrade process will take approximately 10 to 20 seconds. Please do not close LobeChat during the upgrade."
+    "upgradeTip": "The upgrade will take approximately 10 to 20 seconds. Please do not close {{appName}} during the upgrade process."
   },
   "migrateError": {
     "missVersion": "Imported data is missing a version number. Please check the file and try again.",

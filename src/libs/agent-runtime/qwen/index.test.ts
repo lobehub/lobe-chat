@@ -3,9 +3,7 @@ import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import Qwen from '@/config/modelProviders/qwen';
-import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
-import { ModelProvider } from '@/libs/agent-runtime';
-import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
+import { AgentRuntimeErrorType, ModelProvider } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeQwenAI } from './index';
@@ -108,7 +106,7 @@ describe('LobeQwenAI', () => {
       });
 
       it('should transform non-streaming response to stream correctly', async () => {
-        const mockResponse: OpenAI.ChatCompletion = {
+        const mockResponse = {
           id: 'chatcmpl-fc539f49-51a8-94be-8061',
           object: 'chat.completion',
           created: 1719901794,
@@ -121,7 +119,7 @@ describe('LobeQwenAI', () => {
               logprobs: null,
             },
           ],
-        };
+        } as OpenAI.ChatCompletion;
         vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
           mockResponse as any,
         );
@@ -134,21 +132,88 @@ describe('LobeQwenAI', () => {
         });
 
         const decoder = new TextDecoder();
-
         const reader = result.body!.getReader();
-        expect(decoder.decode((await reader.read()).value)).toContain(
-          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
-        );
-        expect(decoder.decode((await reader.read()).value)).toContain('event: text\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('data: "Hello"\n\n');
+        const stream: string[] = [];
 
-        expect(decoder.decode((await reader.read()).value)).toContain(
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+          stream.push(decoder.decode(value));
+        }
+
+        expect(stream).toEqual([
           'id: chatcmpl-fc539f49-51a8-94be-8061\n',
-        );
-        expect(decoder.decode((await reader.read()).value)).toContain('event: stop\n');
-        expect(decoder.decode((await reader.read()).value)).toContain('');
+          'event: text\n',
+          'data: "Hello"\n\n',
+          'id: chatcmpl-fc539f49-51a8-94be-8061\n',
+          'event: stop\n',
+          'data: "stop"\n\n',
+        ]);
 
         expect((await reader.read()).done).toBe(true);
+      });
+
+      it('should set temperature to undefined if temperature is 0 or >= 2', async () => {
+        const temperatures = [0, 2, 3];
+        const expectedTemperature = undefined;
+
+        for (const temp of temperatures) {
+          vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+            new ReadableStream() as any,
+          );
+          await instance.chat({
+            messages: [{ content: 'Hello', role: 'user' }],
+            model: 'qwen-turbo',
+            temperature: temp,
+          });
+          expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+            expect.objectContaining({
+              messages: expect.any(Array),
+              model: 'qwen-turbo',
+              temperature: expectedTemperature,
+            }),
+            expect.any(Object),
+          );
+        }
+      });
+
+      it('should set temperature to original temperature', async () => {
+        vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+          new ReadableStream() as any,
+        );
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'qwen-turbo',
+          temperature: 1.5,
+        });
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.any(Array),
+            model: 'qwen-turbo',
+            temperature: 1.5,
+          }),
+          expect.any(Object),
+        );
+      });
+
+      it('should set temperature to Float', async () => {
+        const createMock = vi.fn().mockResolvedValue(new ReadableStream() as any);
+        vi.spyOn(instance['client'].chat.completions, 'create').mockImplementation(createMock);
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: 'qwen-turbo',
+          temperature: 1,
+        });
+        expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+          expect.objectContaining({
+            messages: expect.any(Array),
+            model: 'qwen-turbo',
+            temperature: expect.any(Number),
+          }),
+          expect.any(Object),
+        );
+        const callArgs = createMock.mock.calls[0][0];
+        expect(Number.isInteger(callArgs.temperature)).toBe(false); // Temperature is always not an integer
       });
     });
 

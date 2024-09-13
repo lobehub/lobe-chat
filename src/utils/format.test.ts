@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatSize, formatSpeed, formatTime } from './format';
+import { formatSize, formatSpeed, formatTime, formatTokenNumber } from './format';
 
 describe('formatSize', () => {
   it('should format bytes to KB correctly', () => {
@@ -71,5 +71,46 @@ describe('formatTime', () => {
     expect(formatTime(0)).toBe('0.0 s');
     expect(formatTime(59.99)).toBe('60.0 s');
     expect(formatTime(3599.99)).toBe('60.0 min');
+  });
+});
+
+describe('formatTokenNumber', () => {
+  it('should return "1K" for numbers between 1 and 1023', () => {
+    expect(formatTokenNumber(500)).toBe('1K');
+    expect(formatTokenNumber(1000)).toBe('1K');
+  });
+
+  it('should format numbers between 1024 and 41,983 correctly', () => {
+    expect(formatTokenNumber(1024)).toBe('1K');
+    expect(formatTokenNumber(2000)).toBe('2K');
+    expect(formatTokenNumber(2048)).toBe('2K');
+    expect(formatTokenNumber(4000)).toBe('4K');
+    expect(formatTokenNumber(4096)).toBe('4K');
+    expect(formatTokenNumber(32000)).toBe('32K');
+    expect(formatTokenNumber(65536)).toBe('64K');
+  });
+
+  it('should format numbers between 41,984 and 127,999 correctly', () => {
+    expect(formatTokenNumber(41984)).toBe('41K');
+    expect(formatTokenNumber(100000)).toBe('97K');
+    expect(formatTokenNumber(127999)).toBe('124K');
+  });
+
+  it('should return "128K" for 131,072', () => {
+    expect(formatTokenNumber(131072)).toBe('128K'); // Qwen
+  });
+
+  it('should format numbers between 128,000 and 999,999 correctly', () => {
+    expect(formatTokenNumber(128000)).toBe('128K');
+    expect(formatTokenNumber(200000)).toBe('200K'); // Claude
+    expect(formatTokenNumber(999999)).toBe('999K');
+  });
+
+  it('should format numbers 1,000,000 and above correctly', () => {
+    expect(formatTokenNumber(1000000)).toBe('1M');
+    expect(formatTokenNumber(1024000)).toBe('1M');
+    expect(formatTokenNumber(1048576)).toBe('1M'); // Gemini Flash
+    expect(formatTokenNumber(2000000)).toBe('2M');
+    expect(formatTokenNumber(2097152)).toBe('2M'); // Gemini Pro
   });
 });

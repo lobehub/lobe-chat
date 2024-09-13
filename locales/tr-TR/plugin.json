@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Sadece İngilizce karakterler, sayılar, - ve _ kullanılabilir"
       },
       "manifest": {
-        "desc": "LobeChat, eklentiyi bu bağlantı üzerinden yükleyecek",
+        "desc": "{{appName}} bu bağlantı aracılığıyla eklentiyi yükleyecektir.",
         "label": "Eklenti Tanım Dosyası (Manifest) URL'si",
         "preview": "Manifesti Önizle",
         "refresh": "Yenile"

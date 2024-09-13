@@ -56,6 +56,7 @@ export const useStyles = createStyles(
         border-radius: unset;
       `,
     }) as Partial<{
+      // eslint-disable-next-line unused-imports/no-unused-vars
       [k in keyof ElementsConfig]: any;
     }>,
 );

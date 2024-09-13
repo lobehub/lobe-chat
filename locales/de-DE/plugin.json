@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Es können nur Buchstaben, Zahlen, - und _ eingegeben werden"
       },
       "manifest": {
-        "desc": "LobeChat wird das Plugin über diesen Link installieren",
+        "desc": "{{appName}} wird das Plugin über diesen Link installieren.",
         "label": "Plugin-Beschreibungsdatei (Manifest) URL",
         "preview": "Vorschau des Manifests",
         "refresh": "Aktualisieren"
