@@ -1,10 +1,20 @@
 {
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
-  "appInitializing": "Inicializando o aplicativo, por favor, aguarde...",
+  "alert": {
+    "cloud": {
+      "action": "Experimente de graça",
+      "desc": "Oferecemos {{credit}} pontos de computação gratuitos para todos os usuários registrados, sem necessidade de configuração complicada, pronto para uso, suporta histórico de conversas ilimitado e sincronização em nuvem global. Mais recursos avançados esperam por você para explorar.",
+      "descOnMobile": "Oferecemos {{credit}} créditos de computação gratuitos para todos os usuários registrados, sem necessidade de configurações complicadas, pronto para uso.",
+      "title": "Bem-vindo para experimentar {{name}}"
+    }
+  },
+  "appInitializing": "Aplicativo iniciando...",
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
   "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
+  "back": "Voltar",
+  "batchDelete": "Excluir em massa",
   "blog": "Blog de Produtos",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
@@ -23,6 +33,7 @@
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
   "document": "Documento de Uso",
+  "download": "Baixar",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuração",
@@ -184,6 +195,7 @@
   },
   "tab": {
     "chat": "Chat",
+    "files": "Arquivos",
     "market": "Descobrir",
     "me": "eu",
     "setting": "Configuração"
@@ -206,6 +218,7 @@
   "userPanel": {
     "anonymousNickName": "Usuário Anônimo",
     "billing": "Gerenciamento de faturas",
+    "cloud": "Experimente {{name}}",
     "data": "Armazenamento de dados",
     "defaultNickname": "Usuário da Comunidade",
     "discord": "Suporte da Comunidade",

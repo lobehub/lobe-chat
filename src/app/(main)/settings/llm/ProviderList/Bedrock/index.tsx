@@ -1,9 +1,7 @@
 'use client';
 
-import { Aws, Bedrock } from '@lobehub/icons';
-import { Divider, Input, Select } from 'antd';
+import { Input, Select } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
 
 import { BedrockProviderCard } from '@/config/modelProviders';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -43,6 +41,17 @@ export const useBedrockProvider = (): ProviderItem => {
       },
       {
         children: (
+          <Input.Password
+            autoComplete={'new-password'}
+            placeholder={t(`${providerKey}.sessionToken.placeholder`)}
+          />
+        ),
+        desc: t(`${providerKey}.sessionToken.desc`),
+        label: t(`${providerKey}.sessionToken.title`),
+        name: [KeyVaultsConfigKey, providerKey, 'sessionToken'],
+      },
+      {
+        children: (
           <Select
             allowClear
             options={['us-east-1', 'us-west-2', 'ap-southeast-1'].map((i) => ({
@@ -57,12 +66,5 @@ export const useBedrockProvider = (): ProviderItem => {
         name: [KeyVaultsConfigKey, providerKey, 'region'],
       },
     ],
-    title: (
-      <Flexbox align={'center'} gap={8} horizontal>
-        <Aws.Color size={32} />
-        <Divider style={{ margin: '0 4px' }} type={'vertical'} />
-        <Bedrock.Combine size={26} type={'color'} />
-      </Flexbox>
-    ),
   };
 };

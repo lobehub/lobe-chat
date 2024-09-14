@@ -207,11 +207,25 @@ describe('AgentSlice', () => {
         model: 'gemini-pro',
       } as any);
 
-      renderHook(() => result.current.useInitAgentStore());
+      renderHook(() => result.current.useInitAgentStore(true));
 
       await waitFor(async () => {
         expect(result.current.agentMap[INBOX_SESSION_ID]).toEqual({ model: 'gemini-pro' });
         expect(result.current.isInboxAgentConfigInit).toBe(true);
+      });
+    });
+
+    it('should not modify state if user not logged in', async () => {
+      const { result } = renderHook(() => useAgentStore());
+      vi.spyOn(sessionService, 'getSessionConfig').mockResolvedValue({
+        model: 'gemini-pro',
+      } as any);
+
+      renderHook(() => result.current.useInitAgentStore(false));
+
+      await waitFor(async () => {
+        expect(result.current.agentMap[INBOX_SESSION_ID]).toBeUndefined();
+        expect(result.current.isInboxAgentConfigInit).toBe(false);
       });
     });
 
@@ -220,7 +234,7 @@ describe('AgentSlice', () => {
 
       vi.spyOn(globalService, 'getDefaultAgentConfig').mockRejectedValueOnce(new Error());
 
-      renderHook(() => result.current.useInitAgentStore());
+      renderHook(() => result.current.useInitAgentStore(true));
 
       await waitFor(async () => {
         expect(result.current.agentMap[INBOX_SESSION_ID]).toBeUndefined();

@@ -170,11 +170,15 @@ export class SessionModel {
 
     if (!result) return;
 
-    const { agent, ...session } = result;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars,unused-imports/no-unused-vars
+    const { agent, clientId, ...session } = result;
     const sessionId = this.genId();
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: _, slug: __, ...config } = agent;
+
     return this.create({
-      config: agent,
+      config: config,
       id: sessionId,
       session: {
         ...session,

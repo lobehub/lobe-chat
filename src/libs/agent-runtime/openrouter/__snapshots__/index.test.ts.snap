@@ -33,7 +33,7 @@ This project is led by [qnguyen3](https://twitter.com/stablequan) and [teknium](
 
 Updated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/gpt-3.5). Training data up to Sep 2021.",
     "displayName": "OpenAI: GPT-3.5 Turbo",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "openai/gpt-3.5-turbo",
     "maxTokens": 4096,
@@ -59,7 +59,7 @@ Updated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/g
 
 Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
     "displayName": "Google: Gemma 7B",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemma-7b-it",
     "maxTokens": undefined,

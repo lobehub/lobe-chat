@@ -6,11 +6,19 @@ import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
-import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
+import {
+  ChatCompetitionOptions,
+  ChatCompletionErrorPayload,
+  ChatStreamPayload,
+  EmbeddingItem,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
+} from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
+import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIStream } from '../streams';
 
@@ -36,7 +44,11 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       error: any,
       options: ConstructorOptions<T>,
     ) => Omit<ChatCompletionErrorPayload, 'provider'> | undefined;
-    handlePayload?: (payload: ChatStreamPayload) => OpenAI.ChatCompletionCreateParamsStreaming;
+    handlePayload?: (
+      payload: ChatStreamPayload,
+      options: ConstructorOptions<T>,
+    ) => OpenAI.ChatCompletionCreateParamsStreaming;
+    noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
   debug?: {
@@ -52,6 +64,59 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
         transformModel?: (model: OpenAI.Model) => ChatModelCard;
       };
   provider: string;
+}
+
+/**
+ * make the OpenAI response data as a stream
+ */
+export function transformResponseToStream(data: OpenAI.ChatCompletion) {
+  return new ReadableStream({
+    start(controller) {
+      const chunk: OpenAI.ChatCompletionChunk = {
+        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+          delta: {
+            content: choice.message.content,
+            role: choice.message.role,
+            tool_calls: choice.message.tool_calls?.map(
+              (tool, index): OpenAI.ChatCompletionChunk.Choice.Delta.ToolCall => ({
+                function: tool.function,
+                id: tool.id,
+                index,
+                type: tool.type,
+              }),
+            ),
+          },
+          finish_reason: null,
+          index: choice.index,
+          logprobs: choice.logprobs,
+        })),
+        created: data.created,
+        id: data.id,
+        model: data.model,
+        object: 'chat.completion.chunk',
+      };
+
+      controller.enqueue(chunk);
+
+      controller.enqueue({
+        choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
+          delta: {
+            content: null,
+            role: choice.message.role,
+          },
+          finish_reason: choice.finish_reason,
+          index: choice.index,
+          logprobs: choice.logprobs,
+        })),
+        created: data.created,
+        id: data.id,
+        model: data.model,
+        object: 'chat.completion.chunk',
+        system_fingerprint: data.system_fingerprint,
+      } as OpenAI.ChatCompletionChunk);
+      controller.close();
+    },
+  });
 }
 
 export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>({
@@ -75,25 +140,33 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     private _options: ConstructorOptions<T>;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
-      const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = options;
-      this._options = options as ConstructorOptions<T>;
+      const _options = { ...options, baseURL: options.baseURL?.trim() || DEFAULT_BASE_URL };
+      const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
+      this._options = _options as ConstructorOptions<T>;
+
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
       this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
       this.baseURL = this.client.baseURL;
     }
 
-    async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatCompetitionOptions) {
       try {
         const postPayload = chatCompletion?.handlePayload
-          ? chatCompletion.handlePayload(payload)
+          ? chatCompletion.handlePayload(payload, this._options)
           : ({
               ...payload,
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
+        const messages = await convertOpenAIMessages(postPayload.messages);
+
         const response = await this.client.chat.completions.create(
-          { ...postPayload, user: options?.user },
+          {
+            ...postPayload,
+            messages,
+            ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
+          },
           {
             // https://github.com/lobehub/lobe-chat/pull/318
             headers: { Accept: '*/*' },
@@ -117,7 +190,9 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           debugResponse(response);
         }
 
-        const stream = this.transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
+        if (responseMode === 'json') return Response.json(response);
+
+        const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
         return StreamingResponse(OpenAIStream(stream, options?.callback), {
           headers: options?.headers,
@@ -153,6 +228,22 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         .filter(Boolean) as ChatModelCard[];
     }
 
+    async embeddings(
+      payload: EmbeddingsPayload,
+      options?: EmbeddingsOptions,
+    ): Promise<EmbeddingItem[]> {
+      try {
+        const res = await this.client.embeddings.create(
+          { ...payload, user: options?.user },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        return res.data;
+      } catch (error) {
+        throw this.handleError(error);
+      }
+    }
+
     async textToImage(payload: TextToImagePayload) {
       try {
         const res = await this.client.images.generate(payload);
@@ -160,60 +251,6 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       } catch (error) {
         throw this.handleError(error);
       }
-    }
-
-    /**
-     * make the OpenAI response data as a stream
-     * @private
-     */
-    private transformResponseToStream(data: OpenAI.ChatCompletion) {
-      return new ReadableStream({
-        start(controller) {
-          const chunk: OpenAI.ChatCompletionChunk = {
-            choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
-              delta: {
-                content: choice.message.content,
-                role: choice.message.role,
-                tool_calls: choice.message.tool_calls?.map(
-                  (tool, index): OpenAI.ChatCompletionChunk.Choice.Delta.ToolCall => ({
-                    function: tool.function,
-                    id: tool.id,
-                    index,
-                    type: tool.type,
-                  }),
-                ),
-              },
-              finish_reason: null,
-              index: choice.index,
-              logprobs: choice.logprobs,
-            })),
-            created: data.created,
-            id: data.id,
-            model: data.model,
-            object: 'chat.completion.chunk',
-          };
-
-          controller.enqueue(chunk);
-
-          controller.enqueue({
-            choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({
-              delta: {
-                content: choice.message.content,
-                role: choice.message.role,
-              },
-              finish_reason: choice.finish_reason,
-              index: choice.index,
-              logprobs: choice.logprobs,
-            })),
-            created: data.created,
-            id: data.id,
-            model: data.model,
-            object: 'chat.completion.chunk',
-            system_fingerprint: data.system_fingerprint,
-          } as OpenAI.ChatCompletionChunk);
-          controller.close();
-        },
-      });
     }
 
     private handleError(error: any): ChatCompletionErrorPayload {

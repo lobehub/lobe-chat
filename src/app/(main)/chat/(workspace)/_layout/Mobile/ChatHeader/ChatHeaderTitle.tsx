@@ -43,7 +43,16 @@ const ChatHeaderTitle = memo(() => {
         </Flexbox>
       }
       title={
-        <div onClick={() => toggleConfig()}>
+        <div
+          onClick={() => toggleConfig()}
+          style={{
+            marginRight: '8px',
+            maxWidth: '64vw',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
           {displayTitle}
           {topicLength > 1 ? `(${topicLength + 1})` : ''}
         </div>

@@ -18,7 +18,7 @@ const HotKeys = () => {
   ]);
   const lastMessage = useChatStore(chatSelectors.latestMessage, isEqual);
 
-  const [clearImageList] = useFileStore((s) => [s.clearImageList]);
+  const [clearImageList] = useFileStore((s) => [s.clearChatUploadFileList]);
   const clearHotkeys = [META_KEY, ALT_KEY, CLEAN_MESSAGE_KEY].join('+');
 
   const resetConversation = useCallback(() => {

@@ -1,10 +1,20 @@
 {
   "about": "概要",
   "advanceSettings": "高度な設定",
-  "appInitializing": "アプリケーションを初期化しています。しばらくお待ちください...",
+  "alert": {
+    "cloud": {
+      "action": "無料体験",
+      "desc": "我々はすべての登録ユーザーに {{credit}} 無料の計算ポイントを提供しています。複雑な設定は不要で、すぐに使用できます。無制限の会話履歴とグローバルクラウド同期をサポートし、さらに多くの高度な機能があなたを待っています。",
+      "descOnMobile": "すべての登録ユーザーに {{credit}} の無料コンピューティングポイントを提供しています。複雑な設定は不要で、すぐにご利用いただけます。",
+      "title": "{{name}} を体験してみてください"
+    }
+  },
+  "appInitializing": "アプリケーションを初期化しています...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
   "autoGenerateTooltipDisabled": "ツールチップを入力してから自動生成機能を使用してください",
+  "back": "戻る",
+  "batchDelete": "バッチ削除",
   "blog": "製品ブログ",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
@@ -23,6 +33,7 @@
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
   "document": "ドキュメント",
+  "download": "ダウンロード",
   "duplicate": "コピーを作成する",
   "edit": "編集",
   "export": "エクスポート",
@@ -184,6 +195,7 @@
   },
   "tab": {
     "chat": "チャット",
+    "files": "ファイル",
     "market": "探す",
     "me": "私",
     "setting": "設定"
@@ -206,6 +218,7 @@
   "userPanel": {
     "anonymousNickName": "匿名ユーザー",
     "billing": "請求管理",
+    "cloud": "{{name}} を体験",
     "data": "データストレージ",
     "defaultNickname": "コミュニティユーザー",
     "discord": "コミュニティサポート",
