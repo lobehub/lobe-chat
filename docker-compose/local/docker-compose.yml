@@ -88,6 +88,7 @@ services:
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
       - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
       - 'S3_ENABLE_PATH_STYLE=1'
+      - 'LLM_VISION_IMAGE_USE_BASE64=1'
     env_file:
       - .env
     restart: always
