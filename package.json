@@ -200,7 +200,7 @@
     "react-wrap-balancer": "^1.1.1",
     "remark": "^14.0.3",
     "remark-gfm": "^3.0.1",
-    "remark-html": "^15.0.2",
+    "remark-html": "^16.0.0",
     "resolve-accept-language": "^3.1.5",
     "rtl-detect": "^1.1.2",
     "semver": "^7.6.3",
