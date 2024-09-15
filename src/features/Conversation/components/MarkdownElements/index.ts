@@ -1,4 +1,4 @@
-import AntArtifact from './AntArtifact';
-import AntThinkingElement from './AntThinking';
+import LobeArtifact from './LobeArtifact';
+import LobeThinking from './LobeThinking';
 
-export const markdownElements = [AntThinkingElement, AntArtifact];
+export const markdownElements = [LobeArtifact, LobeThinking];

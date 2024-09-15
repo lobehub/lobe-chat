@@ -1,10 +1,10 @@
-import Component from './Component';
+import Component from './Render';
 import rehypePlugin from './rehypePlugin';
 
 const AntArtifactElement = {
   Component,
   rehypePlugin,
-  tag: 'antArtifact',
+  tag: 'lobeArtifact',
 };
 
 export default AntArtifactElement;

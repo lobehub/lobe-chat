@@ -4,7 +4,7 @@ import { ChevronDown, ChevronRight, SparkleIcon } from 'lucide-react';
 import { PropsWithChildren, memo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-const useStyles = createStyles(({ css, token, isDarkMode }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   container: css`
     cursor: pointer;
 
@@ -16,10 +16,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
     background: ${token.colorFillTertiary};
     border-radius: 8px;
-
-    &:hover {
-      background: ${isDarkMode ? '' : token.colorFillSecondary};
-    }
   `,
   title: css`
     overflow: hidden;

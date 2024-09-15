@@ -7,23 +7,23 @@ const rehypePlugin = () => (tree: Node) => {
     if (node.type === 'element' && node.tagName === 'p') {
       const children = node.children || [];
       const openTagIndex = children.findIndex(
-        (child: any) => child.type === 'raw' && child.value === '<antThinking>',
+        (child: any) => child.type === 'raw' && child.value === '<lobeThinking>',
       );
       const closeTagIndex = children.findIndex(
-        (child: any) => child.type === 'raw' && child.value === '</antThinking>',
+        (child: any) => child.type === 'raw' && child.value === '</lobeThinking>',
       );
 
       if (openTagIndex !== -1 && closeTagIndex !== -1 && closeTagIndex > openTagIndex) {
         const content = children.slice(openTagIndex + 1, closeTagIndex);
-        const antThinkingNode = {
+        const lobeThinkingNode = {
           children: content,
           properties: {},
-          tagName: 'antThinking',
+          tagName: 'lobeThinking',
           type: 'element',
         };
 
-        // Replace the entire paragraph with our new antThinking node
-        parent.children.splice(index, 1, antThinkingNode);
+        // Replace the entire paragraph with our new lobeThinking node
+        parent.children.splice(index, 1, lobeThinkingNode);
         return index; // Skip processing the newly inserted node
       }
     }

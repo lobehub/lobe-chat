@@ -4,7 +4,7 @@ import rehypePlugin from './rehypePlugin';
 const AntThinkingElement = {
   Component,
   rehypePlugin,
-  tag: 'antThinking',
+  tag: 'lobeThinking',
 };
 
 export default AntThinkingElement;

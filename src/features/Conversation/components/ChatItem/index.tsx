@@ -25,6 +25,7 @@ import {
 import { markdownElements } from '../MarkdownElements';
 import ActionsBar from './ActionsBar';
 import HistoryDivider from './HistoryDivider';
+import { isContainArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
 const components = Object.fromEntries(
@@ -149,6 +150,10 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     );
   });
 
+  // remove line breaks in artifact tag to make the ast transform easier
+  const message =
+    !editing && item?.role === 'assistant' ? isContainArtifact(item?.content) : item?.content;
+
   return (
     item && (
       <>
@@ -175,7 +180,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
             customRender: markdownCustomRender,
             rehypePlugins,
           }}
-          message={item.content}
+          message={message}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}
           onChange={(value) => updateMessageContent(item.id, value)}

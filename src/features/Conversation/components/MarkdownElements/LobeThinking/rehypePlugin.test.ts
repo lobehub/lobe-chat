@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import rehypePlugin from './rehypePlugin';
 
 describe('rehypePlugin', () => {
-  it('should transform <antThinking> tags within paragraphs', () => {
+  it('should transform <lobeThinking> tags within paragraphs', () => {
     const tree = {
       type: 'root',
       children: [
@@ -12,9 +12,9 @@ describe('rehypePlugin', () => {
           tagName: 'p',
           children: [
             { type: 'text', value: 'Before ' },
-            { type: 'raw', value: '<antThinking>' },
+            { type: 'raw', value: '<lobeThinking>' },
             { type: 'text', value: 'Thinking content' },
-            { type: 'raw', value: '</antThinking>' },
+            { type: 'raw', value: '</lobeThinking>' },
             { type: 'text', value: ' After' },
           ],
         },
@@ -26,7 +26,7 @@ describe('rehypePlugin', () => {
       children: [
         {
           type: 'element',
-          tagName: 'antThinking',
+          tagName: 'lobeThinking',
           properties: {},
           children: [{ type: 'text', value: 'Thinking content' }],
         },
@@ -48,7 +48,7 @@ describe('rehypePlugin', () => {
           tagName: 'p',
           children: [
             { type: 'text', value: 'Before ' },
-            { type: 'raw', value: '<antThinking>' },
+            { type: 'raw', value: '<lobeThinking>' },
             { type: 'text', value: 'Thinking content' },
           ],
         },
@@ -72,7 +72,7 @@ describe('rehypePlugin', () => {
           tagName: 'p',
           children: [
             { type: 'text', value: 'Thinking content' },
-            { type: 'raw', value: '</antThinking>' },
+            { type: 'raw', value: '</lobeThinking>' },
             { type: 'text', value: ' After' },
           ],
         },
@@ -95,9 +95,9 @@ describe('rehypePlugin', () => {
           type: 'element',
           tagName: 'p',
           children: [
-            { type: 'raw', value: '</antThinking>' },
+            { type: 'raw', value: '</lobeThinking>' },
             { type: 'text', value: 'Thinking content' },
-            { type: 'raw', value: '<antThinking>' },
+            { type: 'raw', value: '<lobeThinking>' },
           ],
         },
       ],
@@ -124,18 +124,18 @@ describe('rehypePlugin', () => {
           type: 'element',
           tagName: 'p',
           children: [
-            { type: 'raw', value: '<antThinking>' },
+            { type: 'raw', value: '<lobeThinking>' },
             { type: 'text', value: 'First thinking' },
-            { type: 'raw', value: '</antThinking>' },
+            { type: 'raw', value: '</lobeThinking>' },
           ],
         },
         {
           type: 'element',
           tagName: 'p',
           children: [
-            { type: 'raw', value: '<antThinking>' },
+            { type: 'raw', value: '<lobeThinking>' },
             { type: 'text', value: 'Second thinking' },
-            { type: 'raw', value: '</antThinking>' },
+            { type: 'raw', value: '</lobeThinking>' },
           ],
         },
       ],
@@ -151,13 +151,13 @@ describe('rehypePlugin', () => {
         },
         {
           type: 'element',
-          tagName: 'antThinking',
+          tagName: 'lobeThinking',
           properties: {},
           children: [{ type: 'text', value: 'First thinking' }],
         },
         {
           type: 'element',
-          tagName: 'antThinking',
+          tagName: 'lobeThinking',
           properties: {},
           children: [{ type: 'text', value: 'Second thinking' }],
         },
