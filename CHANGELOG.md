@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.17.6](https://github.com/lobehub/lobe-chat/compare/v1.17.5...v1.17.6)
+
+<sup>Released on **2024-09-15**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Rename artifacts to plugins in portal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Rename artifacts to plugins in portal, closes [#3986](https://github.com/lobehub/lobe-chat/issues/3986) ([073b936](https://github.com/lobehub/lobe-chat/commit/073b936))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.17.5](https://github.com/lobehub/lobe-chat/compare/v1.17.4...v1.17.5)
 
 <sup>Released on **2024-09-15**</sup>
