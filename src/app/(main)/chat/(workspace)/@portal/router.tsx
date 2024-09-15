@@ -2,12 +2,12 @@
 
 import { memo } from 'react';
 
-import { Artifacts } from './Artifacts';
 import { FilePreview } from './FilePreview';
 import { HomeBody, HomeHeader } from './Home';
 import { MessageDetail } from './MessageDetail';
+import { Plugins } from './Plugins';
 
-const items = [MessageDetail, Artifacts, FilePreview];
+const items = [MessageDetail, Plugins, FilePreview];
 
 export const PortalHeader = memo(() => {
   const enabledList: boolean[] = [];
