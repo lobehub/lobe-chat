@@ -1,15 +1,13 @@
 import { Icon } from '@lobehub/ui';
 import { Loader2 } from 'lucide-react';
 import { memo } from 'react';
-import { Center } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { ProductLogo } from '@/components/Branding';
 
-import BackgroundLines from './BackgroundLines';
-
 const FullscreenLoading = memo<{ title?: string }>(({ title }) => {
   return (
-    <BackgroundLines>
+    <Flexbox height={'100%'} style={{ position: 'relative', userSelect: 'none' }} width={'100%'}>
       <Center flex={1} gap={16} width={'100%'}>
         <ProductLogo size={48} type={'combine'} />
         <Center gap={12} horizontal style={{ fontSize: 15, lineHeight: 1.5, opacity: 0.66 }}>
@@ -17,7 +15,7 @@ const FullscreenLoading = memo<{ title?: string }>(({ title }) => {
           {title}
         </Center>
       </Center>
-    </BackgroundLines>
+    </Flexbox>
   );
 });
 
