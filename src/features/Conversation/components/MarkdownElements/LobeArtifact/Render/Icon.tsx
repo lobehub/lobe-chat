@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { CodeXml, SparkleIcon } from 'lucide-react';
+import { CodeXml, OrigamiIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -37,16 +37,19 @@ interface ArtifactProps {
   type: string;
 }
 
+const SIZE = 28;
 const ArtifactIcon = memo<ArtifactProps>(({ type }) => {
   const { theme } = useStyles();
 
   if (type === 'image/svg+xml') {
     return (
-      <Icon icon={CodeXml} size={{ fontSize: 28 }} style={{ color: theme.colorTextSecondary }} />
+      <Icon icon={CodeXml} size={{ fontSize: SIZE }} style={{ color: theme.colorTextSecondary }} />
     );
   }
 
-  return <Icon color={theme.purple} icon={SparkleIcon} />;
+  return (
+    <Icon color={theme.purple} icon={OrigamiIcon} size={{ fontSize: SIZE, strokeWidth: 1.2 }} />
+  );
 });
 
 export default ArtifactIcon;

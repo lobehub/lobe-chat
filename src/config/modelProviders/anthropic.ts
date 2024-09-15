@@ -118,7 +118,7 @@ const Anthropic: ModelProviderCard = {
     placeholder: 'https://api.anthropic.com',
   },
   smoothing: {
-    speed: 2,
+    speed: 5,
     text: true,
   },
   url: 'https://anthropic.com',

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { isContainArtifact } from './utils';
+import { processWithArtifact } from './utils';
 
 describe('removeLineBreaksInArtifact', () => {
   it('should removeLineBreaks with closed tag', () => {
@@ -20,7 +20,7 @@ describe('removeLineBreaksInArtifact', () => {
 </svg>
 </lobeArtifact>`;
 
-    const output = isContainArtifact(input);
+    const output = processWithArtifact(input);
 
     expect(output).toEqual(`好的
 
@@ -38,7 +38,7 @@ describe('removeLineBreaksInArtifact', () => {
   </defs>
 `;
 
-    const output = isContainArtifact(input);
+    const output = processWithArtifact(input);
 
     expect(output).toEqual(`好的
 
@@ -47,8 +47,16 @@ describe('removeLineBreaksInArtifact', () => {
   it('should not throw error with empty', () => {
     const input = '';
 
-    const output = isContainArtifact(input);
+    const output = processWithArtifact(input);
 
     expect(output).toEqual('');
+
+    const regex = /<lobeArtifact(?![^>]*[>/])/;
+
+    // 测试
+    console.log(regex.test('<lobeArtifact')); // true
+    console.log(regex.test('<lobeArtifact identifier="something"')); // true
+    console.log(regex.test('<lobeArtifact>')); // false
+    console.log(regex.test('<lobeArtifact />')); // false
   });
 });
