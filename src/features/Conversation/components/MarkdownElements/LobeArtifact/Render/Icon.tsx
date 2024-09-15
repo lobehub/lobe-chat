@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { CodeXml, OrigamiIcon } from 'lucide-react';
+import { CodeXml, Loader2, OrigamiIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -40,6 +40,16 @@ interface ArtifactProps {
 const SIZE = 28;
 const ArtifactIcon = memo<ArtifactProps>(({ type }) => {
   const { theme } = useStyles();
+
+  if (!type)
+    return (
+      <Icon
+        icon={Loader2}
+        size={{ fontSize: SIZE }}
+        spin
+        style={{ color: theme.colorTextSecondary }}
+      />
+    );
 
   if (type === 'image/svg+xml') {
     return (

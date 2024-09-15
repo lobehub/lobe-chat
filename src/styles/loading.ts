@@ -12,7 +12,6 @@ export const dotLoading = css`
     vertical-align: bottom;
 
     animation: ellipsis steps(4, end) 900ms infinite;
-    animation: ellipsis steps(4, end) 900ms infinite;
   }
 
   @keyframes ellipsis {

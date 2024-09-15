@@ -11,7 +11,7 @@ export const processWithArtifact = (input: string = '') => {
     return input.replaceAll(ARTIFACT_TAG_REGEX, (match) => match.replaceAll(/\r?\n|\r/g, ''));
 
   // if not match, check if it's start with <lobeArtifact but not closed
-  const regex = /<lobeArtifact(?![^>]*[/>])/;
+  const regex = /<lobeArtifact\b(?:(?!\/?>)[\S\s])*$/;
   if (regex.test(input)) {
     return input.replace(regex, '<lobeArtifact>');
   }
