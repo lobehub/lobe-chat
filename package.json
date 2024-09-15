@@ -199,7 +199,7 @@
     "react-virtuoso": "^4.10.1",
     "react-wrap-balancer": "^1.1.1",
     "remark": "^14.0.3",
-    "remark-gfm": "^3.0.1",
+    "remark-gfm": "^4.0.0",
     "remark-html": "^15.0.2",
     "resolve-accept-language": "^3.1.5",
     "rtl-detect": "^1.1.2",
