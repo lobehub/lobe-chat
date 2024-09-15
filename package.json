@@ -283,7 +283,7 @@
     "remark-cli": "^11.0.0",
     "remark-parse": "^10.0.2",
     "semantic-release": "^21.1.2",
-    "stylelint": "^15.11.0",
+    "stylelint": "^16.0.0",
     "supports-color": "8",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",
