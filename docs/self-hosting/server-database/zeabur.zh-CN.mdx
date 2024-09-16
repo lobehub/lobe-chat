@@ -17,13 +17,11 @@ tags:
   服务器数据库版的部署原理不熟悉，请先参考[部署服务器数据库](/zh/docs/self-hosting/server-database)。
 </Callout>
 
-如果你想在 Zeabur 上部署 LobeChat 数据库版，可以按照以下步骤操作：
-
-## 创建 Auth0 账户以进行身份验证
-
-[在 Zeabur 上的 LobeChat 数据库模板](https://zeabur.com/templates/RRSPSD) 使用 NextAuth 和 Auth0 作为身份验证提供者，因此你需要创建一个 Auth0 账户以获取所需的凭证。
-
-你可以参考[Auth0 文档](/zh/docs/self-hosting/advanced/auth/next-auth/auth0)获取关于如何创建 Auth0 账户和获取凭证的详细指南。
+在 Zeabur 的模板中总共包含有以下四个服务：
+- Logto 提供身份校验
+- 带有 Vector 插件的 PostgreSQL 来做数据存储和向量化
+- MinIO 作为对象存储
+- LobeChat Database 的实例
 
 ## 在 Zeabur 上部署
 
@@ -42,11 +40,10 @@ tags:
 以下是你需要填写的环境变量：
 
 - OpenAI API key: 你的 OpenAI API key 用于获取模型的访问权限。
-- Auth0 Client ID: 你的 Auth0 客户端 ID 。
-- Auth0 Client Secret: 你的 Auth0 客户端 secret 。
-- Auth0 Domain: 你的 Auth0 域名(不需要 https:// 前缀) 。
 - LobeChat Domain: 一个免费的 `.zeabur.app` 后缀的域名。
 - MinIO Public Domain: 一个免费的 `.zeabur.app` 后缀的域名为了暴露 MinIO 服务以公开访问资源。
+- Logto Console Domain: 一个免费的 `.zeabur.app` 后缀的域名来访问 Logto 的控制台。
+- Logto API Domain: 一个免费的 `.zeabur.app` 后缀的域名来访问 Logto 的 API。
 
 ### 选择一个区域并部署
 
@@ -54,11 +51,17 @@ tags:
 
 你会看到另一个模态弹窗，你可以在这里看到部署的进度。
 
-### 访问你的 LobeChat 数据库版本
+### 配置 Logto
 
 当部署完成后，你会被自动导航到你在 Zeabur 控制台上刚刚创建的项目。
+你需要再进一步配置你的 Logto 服务。
 
-你会看到三个服务正在运行：`LobeChat-Database`、`MinIO` 和 `PostgreSQL`。
+使用你刚绑定的域名来访问你的 Logto 控制台，创建一个新项目以获得对应的客户端 ID 与密钥，将它们填入你的 LobeChat 服务的变量中。
+关于如何填入变量，可以参照 [Zeabur 的官方文档](https://zeabur.com/docs/deploy/variables)。
+
+Logto 的详细配置可以参考[这篇文档](../advanced/auth.zh-CN.mdx)。
+
+### 访问你的 LobeChat
 
 按下 `LobeChat-Database` 你会看到你刚刚创建的公共域名，点击它以访问你的 LobeChat 数据库。
 

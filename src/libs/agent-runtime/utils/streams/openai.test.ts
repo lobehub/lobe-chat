@@ -162,6 +162,49 @@ describe('OpenAIStream', () => {
     );
   });
 
+  it('should handle content with tool_calls but is an empty object', async () => {
+    // data: {"id":"chatcmpl-A7pokGUqSov0JuMkhiHhWU9GRtAgJ", "object":"chat.completion.chunk", "created":1726430846, "model":"gpt-4o-2024-05-13", "choices":[{"index":0, "delta":{"content":" today", "role":"", "tool_calls":[]}, "finish_reason":"", "logprobs":""}], "prompt_annotations":[{"prompt_index":0, "content_filter_results":null}]}
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          choices: [
+            {
+              "index": 0,
+              "delta": {
+                "content": "Some contents",
+                "role": "",
+                "tool_calls": []
+              },
+              "finish_reason": "",
+              "logprobs": ""
+            }
+          ],
+          id: '456',
+        });
+
+        controller.close();
+      },
+    });
+
+    const onToolCallMock = vi.fn();
+
+    const protocolStream = OpenAIStream(mockOpenAIStream, {
+      onToolCall: onToolCallMock,
+    });
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual(
+      ['id: 456', 'event: text', `data: "Some contents"\n`].map((i) => `${i}\n`),
+    );
+  });
+
   it('should handle other delta data', async () => {
     const mockOpenAIStream = new ReadableStream({
       start(controller) {

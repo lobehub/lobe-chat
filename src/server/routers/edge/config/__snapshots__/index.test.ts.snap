@@ -62,18 +62,6 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENAI_MODEL_LIST
     "tokens": 16385,
   },
   {
-    "description": "GPT 3.5 Turbo，适用于各种文本生成和理解任务，Currently points to gpt-3.5-turbo-0125",
-    "displayName": "GPT-3.5 Turbo 16K",
-    "enabled": true,
-    "id": "gpt-3.5-turbo-16k",
-    "legacy": true,
-    "pricing": {
-      "input": 3,
-      "output": 4,
-    },
-    "tokens": 16385,
-  },
-  {
     "description": "GPT-4 提供了一个更大的上下文窗口，能够处理更长的文本输入，适用于需要广泛信息整合和数据分析的场景。",
     "displayName": "GPT-4",
     "enabled": true,
@@ -143,27 +131,23 @@ exports[`configRouter > getGlobalConfig > Model Provider env > OPENROUTER_MODEL_
 {
   "enabled": false,
   "enabledModels": [
-    "google/gemma-7b-it:free",
-    "mistralai/mistral-7b-instruct:free",
+    "meta-llama/llama-3.1-8b-instruct:free",
+    "google/gemma-2-9b-it:free",
   ],
   "serverModelCards": [
     {
-      "description": "Google 的 Gemma 7B 具有出色的计算效率，适适用于多种硬件架构，如GPU和TPU。",
-      "displayName": "Google: Gemma 7B (free)",
+      "description": "LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。",
+      "displayName": "Llama 3.1 8B (Free)",
       "enabled": true,
-      "functionCall": false,
-      "id": "google/gemma-7b-it:free",
-      "tokens": 8192,
-      "vision": false,
+      "id": "meta-llama/llama-3.1-8b-instruct:free",
+      "tokens": 32768,
     },
     {
-      "description": "Mistral 7B Instruct 是一款高效的多语言模型，优化用于对话和问答，能在资源受限的环境中表现出色。",
-      "displayName": "Mistral 7B Instruct (free)",
+      "description": "Gemma 2 是Google轻量化的开源文本模型系列。",
+      "displayName": "Gemma 2 9B (Free)",
       "enabled": true,
-      "functionCall": false,
-      "id": "mistralai/mistral-7b-instruct:free",
-      "tokens": 32768,
-      "vision": false,
+      "id": "google/gemma-2-9b-it:free",
+      "tokens": 8192,
     },
   ],
 }
