@@ -6,6 +6,7 @@
       "file": "Datei"
     }
   },
+  "Plugins": "Plugins",
   "actions": {
     "genAiMessage": "Assistenten-Nachricht erstellen",
     "summary": "Zusammenfassung",

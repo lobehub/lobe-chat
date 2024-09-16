@@ -6,6 +6,7 @@
       "file": "Dosya"
     }
   },
+  "Plugins": "Eklentiler",
   "actions": {
     "genAiMessage": "Yapay Zeka Mesajı Oluştur",
     "summary": "Özet",

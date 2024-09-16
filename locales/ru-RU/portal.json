@@ -6,6 +6,7 @@
       "file": "Файл"
     }
   },
+  "Plugins": "Плагины",
   "actions": {
     "genAiMessage": "Создать сообщение помощника",
     "summary": "Сводка",

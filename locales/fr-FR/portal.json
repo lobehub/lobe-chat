@@ -6,6 +6,7 @@
       "file": "Fichier"
     }
   },
+  "Plugins": "Plugins",
   "actions": {
     "genAiMessage": "Créer un message d'assistant",
     "summary": "Résumé",

@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "Olá, eu sou **{{name}}**, {{systemRole}}, vamos conversar!",
   "agentDefaultMessageWithoutEdit": "Olá, sou o **{{name}}**, vamos começar a conversa!",
   "agentsAndConversations": "Agentes e Conversas",
+  "artifact": {
+    "generating": "Gerando",
+    "thinking": "Pensando",
+    "thought": "Processo de pensamento",
+    "unknownTitle": "Obra sem título"
+  },
   "backToBottom": "Voltar para o início",
   "chatList": {
     "longMessageDetail": "Ver detalhes"

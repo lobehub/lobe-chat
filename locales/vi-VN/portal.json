@@ -6,6 +6,7 @@
       "file": "Tập tin"
     }
   },
+  "Plugins": "Tiện ích",
   "actions": {
     "genAiMessage": "Tạo tin nhắn trợ giúp",
     "summary": "Tóm tắt",

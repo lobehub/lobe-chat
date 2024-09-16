@@ -6,6 +6,7 @@
       "file": "Archivo"
     }
   },
+  "Plugins": "Complementos",
   "actions": {
     "genAiMessage": "Crear mensaje de IA",
     "summary": "Resumen",

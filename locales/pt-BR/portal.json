@@ -6,6 +6,7 @@
       "file": "Arquivo"
     }
   },
+  "Plugins": "Plugins",
   "actions": {
     "genAiMessage": "Gerar mensagem de IA",
     "summary": "Resumo",

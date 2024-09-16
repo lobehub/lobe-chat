@@ -6,6 +6,7 @@
       "file": "Plik"
     }
   },
+  "Plugins": "Wtyczki",
   "actions": {
     "genAiMessage": "Tworzenie wiadomości AI",
     "summary": "Podsumowanie",

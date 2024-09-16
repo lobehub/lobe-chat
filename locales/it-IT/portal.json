@@ -6,6 +6,7 @@
       "file": "File"
     }
   },
+  "Plugins": "Plugin",
   "actions": {
     "genAiMessage": "Genera messaggio AI",
     "summary": "Sommario",

@@ -6,6 +6,7 @@
       "file": "Bestand"
     }
   },
+  "Plugins": "Plugins",
   "actions": {
     "genAiMessage": "Creëer assistentbericht",
     "summary": "Samenvatting",

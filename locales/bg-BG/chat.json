@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "Здравей, аз съм **{{name}}**, {{systemRole}}. Нека започнем да чатим!",
   "agentDefaultMessageWithoutEdit": "Здравей, аз съм **{{name}}** и нека започнем разговора!",
   "agentsAndConversations": "агенти и разговори",
+  "artifact": {
+    "generating": "Генериране",
+    "thinking": "В процес на мислене",
+    "thought": "Процес на мислене",
+    "unknownTitle": "Неназован артефакт"
+  },
   "backToBottom": "Върни се в началото",
   "chatList": {
     "longMessageDetail": "Вижте детайлите"

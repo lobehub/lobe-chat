@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, chúng ta hãy bắt đầu trò chuyện nào!",
   "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
+  "artifact": {
+    "generating": "Đang tạo",
+    "thinking": "Đang suy nghĩ",
+    "thought": "Quá trình suy nghĩ",
+    "unknownTitle": "Tác phẩm chưa được đặt tên"
+  },
   "backToBottom": "Quay về dưới cùng",
   "chatList": {
     "longMessageDetail": "Xem chi tiết"

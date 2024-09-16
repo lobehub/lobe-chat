@@ -6,6 +6,7 @@
       "file": "ファイル"
     }
   },
+  "Plugins": "プラグイン",
   "actions": {
     "genAiMessage": "AIメッセージを生成",
     "summary": "サマリー",
