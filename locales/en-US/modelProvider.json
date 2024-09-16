@@ -53,7 +53,7 @@
   },
   "github": {
     "personalAccessToken": {
-      "desc": "Enter your GitHub PAT",
+      "desc": "Enter your GitHub PAT, [create one here](https://github.com/settings/tokens)",
       "placeholder": "ghp_xxxxxx",
       "title": "GitHub PAT"
     }

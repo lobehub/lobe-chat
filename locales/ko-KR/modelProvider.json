@@ -53,7 +53,7 @@
   },
   "github": {
     "personalAccessToken": {
-      "desc": "GitHub 개인 액세스 토큰을 입력하세요.",
+      "desc": "GitHub 개인 액세스 토큰을 입력하세요. [생성하러 가기](https://github.com/settings/tokens)",
       "placeholder": "ghp_xxxxxx",
       "title": "GitHub PAT"
     }
