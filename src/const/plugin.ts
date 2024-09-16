@@ -7,5 +7,5 @@ export const ARTIFACT_THINKING_TAG = 'lobeThinking';
 // https://regex101.com/r/TwzTkf/2
 export const ARTIFACT_TAG_REGEX = /<lobeArtifact\b[^>]*>([\S\s]*?)(?:<\/lobeArtifact>|$)/g;
 
-// https://regex101.com/r/TwzTkf/2
+// https://regex101.com/r/AvPA2g/1
 export const ARTIFACT_THINKING_TAG_REGEX = /<lobeThinking\b[^>]*>([\S\s]*?)(?:<\/lobeThinking>|$)/g;
