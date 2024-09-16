@@ -55,7 +55,7 @@
     "personalAccessToken": {
       "desc": "Vul je Github Personal Access Token in",
       "placeholder": "ghp_xxxxxx",
-      "title": "Github Personal Access Token"
+      "title": "GitHub PAT"
     }
   },
   "ollama": {

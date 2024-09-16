@@ -55,7 +55,7 @@
     "personalAccessToken": {
       "desc": "填入 GitHub 個人存取權杖",
       "placeholder": "ghp_xxxxxx",
-      "title": "GitHub 個人存取權杖"
+      "title": "GitHub PAT"
     }
   },
   "ollama": {

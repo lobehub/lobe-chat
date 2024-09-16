@@ -55,7 +55,7 @@
     "personalAccessToken": {
       "desc": "Github Kişisel Erişim Tokeninizi girin",
       "placeholder": "ghp_xxxxxx",
-      "title": "Github Kişisel Erişim Tokeni"
+      "title": "GitHub PAT"
     }
   },
   "ollama": {

@@ -54,9 +54,9 @@ export default {
   },
   github: {
     personalAccessToken: {
-      desc: '填入 Github Personal Access Token',
+      desc: '填入 Github PAT',
       placeholder: 'ghp_xxxxxx',
-      title: 'Github Personal Access Token',
+      title: 'Github PAT',
     },
   },
   ollama: {
