@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.17.7](https://github.com/lobehub/lobe-chat/compare/v1.17.6...v1.17.7)
+
+<sup>Released on **2024-09-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix a corner case of `tools_call` with empty object.
+
+#### 💄 Styles
+
+- **misc**: Delete duplicate models in ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix a corner case of `tools_call` with empty object, closes [#3955](https://github.com/lobehub/lobe-chat/issues/3955) ([d3fabdc](https://github.com/lobehub/lobe-chat/commit/d3fabdc))
+
+#### Styles
+
+- **misc**: Delete duplicate models in ollama, closes [#3989](https://github.com/lobehub/lobe-chat/issues/3989) ([ece60ee](https://github.com/lobehub/lobe-chat/commit/ece60ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.17.6](https://github.com/lobehub/lobe-chat/compare/v1.17.5...v1.17.6)
 
 <sup>Released on **2024-09-15**</sup>
