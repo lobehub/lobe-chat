@@ -62,6 +62,9 @@ COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
 COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
+# Copy server launcher
+COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
+
 ## Production image, copy all the files and run next
 FROM lobehub/lobe-chat-base:latest
 
@@ -141,36 +144,4 @@ USER nextjs
 
 EXPOSE 3210/tcp
 
-CMD \
-    if [ -n "$PROXY_URL" ]; then \
-        # Set regex for IPv4
-        IP_REGEX="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$"; \
-        # Set proxychains command
-        PROXYCHAINS="proxychains -q"; \
-        # Parse the proxy URL
-        host_with_port="${PROXY_URL#*//}"; \
-        host="${host_with_port%%:*}"; \
-        port="${PROXY_URL##*:}"; \
-        protocol="${PROXY_URL%%://*}"; \
-        # Resolve to IP address if the host is a domain
-        if ! [[ "$host" =~ "$IP_REGEX" ]]; then \
-            nslookup=$(nslookup -q="A" "$host" | tail -n +3 | grep 'Address:'); \
-            if [ -n "$nslookup" ]; then \
-                host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
-            fi; \
-        fi; \
-        # Generate proxychains configuration file
-        printf "%s\n" \
-            'localnet 127.0.0.0/255.0.0.0' \
-            'localnet ::1/128' \
-            'proxy_dns' \
-            'remote_dns_subnet 224' \
-            'strict_chain' \
-            'tcp_connect_time_out 8000' \
-            'tcp_read_time_out 15000' \
-            '[ProxyList]' \
-            "$protocol $host $port" \
-        > "/etc/proxychains4.conf"; \
-    fi; \
-    # Run the server
-    ${PROXYCHAINS} node "/app/server.js";
+CMD ["node", "/app/startServer.js"]
