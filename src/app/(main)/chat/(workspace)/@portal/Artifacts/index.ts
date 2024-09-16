@@ -3,7 +3,7 @@ import Body from './Body';
 import Header from './Header';
 import { useEnable } from './useEnable';
 
-export const MessageDetail: PortalImpl = {
+export const Artifacts: PortalImpl = {
   Body,
   Header,
   useEnable,

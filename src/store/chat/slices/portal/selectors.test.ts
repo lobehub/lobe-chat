@@ -21,12 +21,12 @@ describe('chatDockSelectors', () => {
 
   describe('toolUIMessageId', () => {
     it('should return undefined when dockToolMessage is not set', () => {
-      expect(chatPortalSelectors.artifactMessageId(createState())).toBeUndefined();
+      expect(chatPortalSelectors.toolMessageId(createState())).toBeUndefined();
     });
 
     it('should return the id when dockToolMessage is set', () => {
       const state = createState({ portalToolMessage: { id: 'test-id', identifier: 'test' } });
-      expect(chatPortalSelectors.artifactMessageId(state)).toBe('test-id');
+      expect(chatPortalSelectors.toolMessageId(state)).toBe('test-id');
     });
   });
 
@@ -36,8 +36,8 @@ describe('chatDockSelectors', () => {
         portalToolMessage: { id: 'test-id', identifier: 'test' },
         showPortal: false,
       });
-      expect(chatPortalSelectors.isArtifactMessageUIOpen('test-id')(state)).toBe(false);
-      expect(chatPortalSelectors.isArtifactMessageUIOpen('other-id')(state)).toBe(false);
+      expect(chatPortalSelectors.isPluginUIOpen('test-id')(state)).toBe(false);
+      expect(chatPortalSelectors.isPluginUIOpen('other-id')(state)).toBe(false);
     });
 
     it('should return true when id matches and showDock is true', () => {
@@ -45,18 +45,18 @@ describe('chatDockSelectors', () => {
         portalToolMessage: { id: 'test-id', identifier: 'test' },
         showPortal: true,
       });
-      expect(chatPortalSelectors.isArtifactMessageUIOpen('test-id')(state)).toBe(true);
+      expect(chatPortalSelectors.isPluginUIOpen('test-id')(state)).toBe(true);
     });
   });
 
   describe('showToolUI', () => {
     it('should return false when dockToolMessage is not set', () => {
-      expect(chatPortalSelectors.showArtifactUI(createState())).toBe(false);
+      expect(chatPortalSelectors.showPluginUI(createState())).toBe(false);
     });
 
     it('should return true when dockToolMessage is set', () => {
       const state = createState({ portalToolMessage: { id: 'test-id', identifier: 'test' } });
-      expect(chatPortalSelectors.showArtifactUI(state)).toBe(true);
+      expect(chatPortalSelectors.showPluginUI(state)).toBe(true);
     });
   });
 

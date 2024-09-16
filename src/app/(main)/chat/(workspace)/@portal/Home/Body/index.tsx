@@ -1,13 +1,13 @@
 import { Flexbox } from 'react-layout-kit';
 
-import Artifacts from './Artifacts';
 import Files from './Files';
+import Plugins from './Plugins';
 
 const Home = () => {
   return (
     <Flexbox gap={12} height={'100%'}>
       <Files />
-      <Artifacts />
+      <Plugins />
     </Flexbox>
   );
 };

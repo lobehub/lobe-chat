@@ -1,9 +1,10 @@
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
+import { chatPortalSelectors } from '@/store/chat/selectors';
 import { chatSelectors } from '@/store/chat/slices/message/selectors';
 import { dotLoading } from '@/styles/loading';
 
@@ -57,18 +58,51 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, children, id }) =
   const hasChildren = !!children;
   const str = ((children as string) || '').toString?.();
 
-  const [isGenerating] = useChatStore((s) => {
-    return [chatSelectors.isMessageGenerating(id)(s)];
+  const [
+    isGenerating,
+    openArtifact,
+    showArtifactUI,
+    closeArtifact,
+    // updateArtifactContent
+  ] = useChatStore((s) => {
+    return [
+      chatSelectors.isMessageGenerating(id)(s),
+      s.openArtifact,
+      chatPortalSelectors.showArtifactUI(s),
+      s.closeArtifact,
+      // s.updateArtifactContent,
+    ];
   });
+
+  const openArtifactUI = () => {
+    openArtifact({ children: str, id, identifier, title, type });
+  };
+
+  useEffect(() => {
+    if (!hasChildren || !isGenerating) return;
+
+    openArtifactUI();
+  }, [isGenerating, hasChildren, str, identifier, title, type, id]);
 
   return (
     <p>
-      <Flexbox className={styles.container} gap={16} width={'100%'}>
+      <Flexbox
+        className={styles.container}
+        gap={16}
+        onClick={() => {
+          if (showArtifactUI) {
+            closeArtifact();
+          } else {
+            openArtifactUI();
+          }
+        }}
+        width={'100%'}
+      >
         <Flexbox align={'center'} flex={1} horizontal>
           <Center className={styles.avatar} height={64} horizontal width={64}>
             <ArtifactIcon type={type} />
           </Center>
-          <Flexbox paddingBlock={8} paddingInline={12}>
+          <Flexbox gap={4} paddingBlock={8} paddingInline={12}>
             {!title && isGenerating ? (
               <Flexbox className={cx(dotLoading)} horizontal>
                 {t('artifact.generating')}
