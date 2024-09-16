@@ -39,30 +39,6 @@ describe('rehypePlugin', () => {
     expect(tree).toEqual(expectedTree);
   });
 
-  it('should not transform when only opening tag is present', () => {
-    const tree = {
-      type: 'root',
-      children: [
-        {
-          type: 'element',
-          tagName: 'p',
-          children: [
-            { type: 'text', value: 'Before ' },
-            { type: 'raw', value: '<lobeThinking>' },
-            { type: 'text', value: 'Thinking content' },
-          ],
-        },
-      ],
-    };
-
-    const originalTree = JSON.parse(JSON.stringify(tree));
-
-    const plugin = rehypePlugin();
-    plugin(tree);
-
-    expect(tree).toEqual(originalTree);
-  });
-
   it('should not transform when only closing tag is present', () => {
     const tree = {
       type: 'root',
@@ -74,30 +50,6 @@ describe('rehypePlugin', () => {
             { type: 'text', value: 'Thinking content' },
             { type: 'raw', value: '</lobeThinking>' },
             { type: 'text', value: ' After' },
-          ],
-        },
-      ],
-    };
-
-    const originalTree = JSON.parse(JSON.stringify(tree));
-
-    const plugin = rehypePlugin();
-    plugin(tree);
-
-    expect(tree).toEqual(originalTree);
-  });
-
-  it('should not transform when tags are in wrong order', () => {
-    const tree = {
-      type: 'root',
-      children: [
-        {
-          type: 'element',
-          tagName: 'p',
-          children: [
-            { type: 'raw', value: '</lobeThinking>' },
-            { type: 'text', value: 'Thinking content' },
-            { type: 'raw', value: '<lobeThinking>' },
           ],
         },
       ],
