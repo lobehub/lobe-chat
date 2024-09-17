@@ -56,7 +56,7 @@ async function runServer() {
     // If the host is not an IP, resolve it using DNS
     if (!isValidIP(host)) {
       try {
-        const result = await dns.lookup(host);
+        const result = await dns.lookup(host, { family: 4 });
         if (isValidIP(result.address)) {
           // Get the resolved IP address
           ip = result.address;
