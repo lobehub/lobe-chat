@@ -12,6 +12,12 @@
     "summary": "Podsumowanie",
     "summaryTooltip": "Podsumowanie bieżącej zawartości"
   },
+  "artifacts": {
+    "display": {
+      "code": "Kod",
+      "preview": "Podgląd"
+    }
+  },
   "emptyArtifactList": "Obecna lista Artefaktów jest pusta. Proszę użyć wtyczek w trakcie sesji, a następnie sprawdzić ponownie.",
   "emptyKnowledgeList": "Aktualna lista wiedzy jest pusta. Proszę otworzyć bazę wiedzy w trakcie rozmowy, aby ją przeglądać.",
   "files": "Pliki",

@@ -12,6 +12,12 @@
     "summary": "Résumé",
     "summaryTooltip": "Résumé du contenu actuel"
   },
+  "artifacts": {
+    "display": {
+      "code": "Code",
+      "preview": "Aperçu"
+    }
+  },
   "emptyArtifactList": "La liste des Artifacts est actuellement vide. Veuillez utiliser les plugins dans la conversation avant de consulter à nouveau.",
   "emptyKnowledgeList": "La liste des connaissances est actuellement vide. Veuillez activer la base de connaissances selon vos besoins dans la conversation avant de consulter.",
   "files": "Fichiers",

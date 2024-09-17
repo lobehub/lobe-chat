@@ -12,6 +12,12 @@
     "summary": "요약",
     "summaryTooltip": "현재 콘텐츠를 요약합니다"
   },
+  "artifacts": {
+    "display": {
+      "code": "코드",
+      "preview": "미리보기"
+    }
+  },
   "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 플러그인을 사용한 후에 다시 확인해주세요.",
   "emptyKnowledgeList": "현재 지식 목록이 비어 있습니다. 대화 중에 필요에 따라 지식 베이스를 활성화한 후 다시 확인해 주세요.",
   "files": "파일",

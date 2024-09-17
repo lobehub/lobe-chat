@@ -12,6 +12,12 @@
     "summary": "Resumen",
     "summaryTooltip": "Resumir el contenido actual"
   },
+  "artifacts": {
+    "display": {
+      "code": "Código",
+      "preview": "Vista previa"
+    }
+  },
   "emptyArtifactList": "La lista de Artefactos actual está vacía. Por favor, utilice los complementos en la conversación y vuelva a intentarlo.",
   "emptyKnowledgeList": "La lista de conocimientos actual está vacía. Por favor, activa la base de conocimientos según sea necesario en la conversación antes de volver a revisar.",
   "files": "archivos",
