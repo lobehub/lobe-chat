@@ -15,6 +15,7 @@ const ReactRenderer = memo<ReactRendererProps>(({ code }) => {
       files={{
         'App.js': code,
       }}
+      options={{ externalResources: ['https://cdn.tailwindcss.com'] }}
       style={{ height: '100%' }}
       template="react"
       theme="auto"
