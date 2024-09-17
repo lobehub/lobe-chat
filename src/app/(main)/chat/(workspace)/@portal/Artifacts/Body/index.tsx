@@ -5,7 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 
-import HTMLRender from './HTMLRender';
+import Renderer from './Renderer';
 
 const ArtifactsUI = memo(() => {
   const [
@@ -70,7 +70,7 @@ const ArtifactsUI = memo(() => {
           {artifactContent}
         </Highlighter>
       ) : (
-        <HTMLRender htmlContent={artifactContent!} />
+        <Renderer content={artifactContent} type={artifactType} />
       )}
     </Flexbox>
   );
