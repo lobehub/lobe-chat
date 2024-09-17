@@ -1,6 +1,5 @@
 import { Highlighter } from '@lobehub/ui';
-import isEqual from 'fast-deep-equal';
-import { useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -8,15 +7,35 @@ import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 
 import HTMLRender from './HTMLRender';
 
-const ArtifactsUI = () => {
-  const [displayMode, artifactType, artifactContent] = useChatStore((s) => [
-    s.portalArtifactDisplayMode,
+const ArtifactsUI = memo(() => {
+  const [
+    messageId,
+    displayMode,
+    isMessageGenerating,
+    artifactType,
+    artifactContent,
 
-    chatPortalSelectors.artifactType(s),
-    chatPortalSelectors.artifactContent(s),
-  ]);
-  const messageId = useChatStore(chatPortalSelectors.artifactMessageId);
-  const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
+    isArtifactTagClosed,
+  ] = useChatStore((s) => {
+    const messageId = chatPortalSelectors.artifactMessageId(s) || '';
+
+    return [
+      messageId,
+      s.portalArtifactDisplayMode,
+      chatSelectors.isMessageGenerating(messageId)(s),
+      chatPortalSelectors.artifactType(s),
+      chatPortalSelectors.artifactCode(messageId)(s),
+      chatPortalSelectors.isArtifactTagClosed(messageId)(s),
+    ];
+  });
+
+  useEffect(() => {
+    // when message generating , check whether the artifact is closed
+    // if close, move the display mode to preview
+    if (isMessageGenerating && isArtifactTagClosed && displayMode === 'code') {
+      useChatStore.setState({ portalArtifactDisplayMode: 'preview' });
+    }
+  }, [isMessageGenerating, displayMode, isArtifactTagClosed]);
 
   const language = useMemo(() => {
     switch (artifactType) {
@@ -35,7 +54,8 @@ const ArtifactsUI = () => {
   }, [artifactType]);
 
   // make sure the message and id is valid
-  if (!messageId || !message) return;
+  if (!messageId) return;
+
   return (
     <Flexbox
       className={'portal-artifact'}
@@ -45,15 +65,15 @@ const ArtifactsUI = () => {
       paddingInline={12}
       style={{ overflow: 'hidden' }}
     >
-      {displayMode === 'preview' ? (
-        <HTMLRender htmlContent={artifactContent!} />
-      ) : (
-        <Highlighter language={language} style={{ maxHeight: '100%', overflow: 'hidden' }} wrap>
-          {artifactContent!}
+      {!isArtifactTagClosed || displayMode === 'code' ? (
+        <Highlighter language={language} style={{ maxHeight: '100%', overflow: 'hidden' }}>
+          {artifactContent}
         </Highlighter>
+      ) : (
+        <HTMLRender htmlContent={artifactContent!} />
       )}
     </Flexbox>
   );
-};
+});
 
 export default ArtifactsUI;

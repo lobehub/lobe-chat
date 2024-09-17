@@ -22,6 +22,6 @@ export interface ChatPortalState {
 }
 
 export const initialChatPortalState: ChatPortalState = {
-  portalArtifactDisplayMode: 'code',
+  portalArtifactDisplayMode: 'preview',
   showPortal: false,
 };

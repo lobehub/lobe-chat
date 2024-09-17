@@ -1,11 +1,12 @@
+import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
+import { Loader2 } from 'lucide-react';
 import { memo, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors } from '@/store/chat/selectors';
-import { chatSelectors } from '@/store/chat/slices/message/selectors';
+import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { dotLoading } from '@/styles/loading';
 
 import { MarkdownElementProps } from '../../type';
@@ -58,24 +59,19 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, children, id }) =
   const hasChildren = !!children;
   const str = ((children as string) || '').toString?.();
 
-  const [
-    isGenerating,
-    openArtifact,
-    showArtifactUI,
-    closeArtifact,
-    // updateArtifactContent
-  ] = useChatStore((s) => {
-    return [
-      chatSelectors.isMessageGenerating(id)(s),
-      s.openArtifact,
-      chatPortalSelectors.showArtifactUI(s),
-      s.closeArtifact,
-      // s.updateArtifactContent,
-    ];
-  });
+  const [isGenerating, isArtifactTagClosed, currentArtifactMessageId, openArtifact, closeArtifact] =
+    useChatStore((s) => {
+      return [
+        chatSelectors.isMessageGenerating(id)(s),
+        chatPortalSelectors.isArtifactTagClosed(id)(s),
+        chatPortalSelectors.artifactMessageId(s),
+        s.openArtifact,
+        s.closeArtifact,
+      ];
+    });
 
   const openArtifactUI = () => {
-    openArtifact({ children: str, id, identifier, title, type });
+    openArtifact({ id, identifier, title, type });
   };
 
   useEffect(() => {
@@ -90,7 +86,7 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, children, id }) =
         className={styles.container}
         gap={16}
         onClick={() => {
-          if (showArtifactUI) {
+          if (currentArtifactMessageId === id) {
             closeArtifact();
           } else {
             openArtifactUI();
@@ -111,8 +107,16 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, children, id }) =
               <Flexbox className={cx(styles.title)}>{title || t('artifact.unknownTitle')}</Flexbox>
             )}
             {hasChildren && (
-              <Flexbox className={styles.desc}>
-                {identifier} · {str?.length}
+              <Flexbox className={styles.desc} horizontal>
+                {identifier} ·{' '}
+                <Flexbox gap={2} horizontal>
+                  {!isArtifactTagClosed && (
+                    <div>
+                      <Icon icon={Loader2} spin />
+                    </div>
+                  )}
+                  {str?.length}
+                </Flexbox>
               </Flexbox>
             )}
           </Flexbox>

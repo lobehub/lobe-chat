@@ -9,14 +9,14 @@ export const processWithArtifact = (input: string = '') => {
 
   // If the input contains the `lobeThinking` tag, replace all line breaks with an empty string
   if (thinkMatch)
-    output = input.replaceAll(ARTIFACT_THINKING_TAG_REGEX, (match) =>
+    output = input.replace(ARTIFACT_THINKING_TAG_REGEX, (match) =>
       match.replaceAll(/\r?\n|\r/g, ''),
     );
 
   const match = ARTIFACT_TAG_REGEX.exec(input);
   // If the input contains the `lobeArtifact` tag, replace all line breaks with an empty string
   if (match)
-    return output.replaceAll(ARTIFACT_TAG_REGEX, (match) => match.replaceAll(/\r?\n|\r/g, ''));
+    return output.replace(ARTIFACT_TAG_REGEX, (match) => match.replaceAll(/\r?\n|\r/g, ''));
 
   // if not match, check if it's start with <lobeArtifact but not closed
   const regex = /<lobeArtifact\b(?:(?!\/?>)[\S\s])*$/;

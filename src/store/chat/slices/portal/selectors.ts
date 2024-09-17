@@ -1,4 +1,7 @@
+import { ARTIFACT_TAG_CLOSED_REGEX, ARTIFACT_TAG_REGEX } from '@/const/plugin';
 import type { ChatStoreState } from '@/store/chat';
+
+import { chatSelectors } from '../message/selectors';
 
 const showPortal = (s: ChatStoreState) => s.showPortal;
 
@@ -21,7 +24,24 @@ const artifactTitle = (s: ChatStoreState) => s.portalArtifact?.title;
 const artifactIdentifier = (s: ChatStoreState) => s.portalArtifact?.identifier || '';
 const artifactMessageId = (s: ChatStoreState) => s.portalArtifact?.id;
 const artifactType = (s: ChatStoreState) => s.portalArtifact?.type;
-const artifactContent = (s: ChatStoreState) => s.portalArtifact?.children;
+
+const artifactMessageContent = (id: string) => (s: ChatStoreState) => {
+  const message = chatSelectors.getMessageById(id)(s);
+  return message?.content || '';
+};
+
+const artifactCode = (id: string) => (s: ChatStoreState) => {
+  const messageContent = artifactMessageContent(id)(s);
+  const result = messageContent.match(ARTIFACT_TAG_REGEX);
+
+  return result?.groups?.content || '';
+};
+
+const isArtifactTagClosed = (id: string) => (s: ChatStoreState) => {
+  const content = artifactMessageContent(id)(s);
+
+  return ARTIFACT_TAG_CLOSED_REGEX.test(content || '');
+};
 
 /* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 export const chatPortalSelectors = {
@@ -45,5 +65,7 @@ export const chatPortalSelectors = {
   artifactIdentifier,
   artifactMessageId,
   artifactType,
-  artifactContent,
+  artifactCode,
+  artifactMessageContent,
+  isArtifactTagClosed,
 };

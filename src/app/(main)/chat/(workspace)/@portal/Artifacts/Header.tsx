@@ -10,11 +10,16 @@ import { chatPortalSelectors } from '@/store/chat/selectors';
 const Header = () => {
   const { t } = useTranslation('portal');
 
-  const [displayMode, closeArtifact, artifactTitle] = useChatStore((s) => [
-    s.portalArtifactDisplayMode,
-    s.closeArtifact,
-    chatPortalSelectors.artifactTitle(s),
-  ]);
+  const [displayMode, artifactTitle, isArtifactTagClosed, closeArtifact] = useChatStore((s) => {
+    const messageId = chatPortalSelectors.artifactMessageId(s) || '';
+
+    return [
+      s.portalArtifactDisplayMode,
+      chatPortalSelectors.artifactTitle(s),
+      chatPortalSelectors.isArtifactTagClosed(messageId)(s),
+      s.closeArtifact,
+    ];
+  });
 
   return (
     <Flexbox align={'center'} flex={1} gap={12} horizontal justify={'space-between'} width={'100%'}>
@@ -33,21 +38,23 @@ const Header = () => {
           },
         }}
       >
-        <Segmented
-          onChange={(value: 'code' | 'preview') => {
-            useChatStore.setState({ portalArtifactDisplayMode: value });
-          }}
-          options={[
-            {
-              icon: <Icon icon={EyeIcon} />,
-              label: t('artifacts.display.preview'),
-              value: 'preview',
-            },
-            { icon: <Icon icon={CodeIcon} />, label: t('artifacts.display.code'), value: 'code' },
-          ]}
-          size={'small'}
-          value={displayMode}
-        />
+        {isArtifactTagClosed && (
+          <Segmented
+            onChange={(value: 'code' | 'preview') => {
+              useChatStore.setState({ portalArtifactDisplayMode: value });
+            }}
+            options={[
+              {
+                icon: <Icon icon={EyeIcon} />,
+                label: t('artifacts.display.preview'),
+                value: 'preview',
+              },
+              { icon: <Icon icon={CodeIcon} />, label: t('artifacts.display.code'), value: 'code' },
+            ]}
+            size={'small'}
+            value={displayMode}
+          />
+        )}
       </ConfigProvider>
     </Flexbox>
   );
