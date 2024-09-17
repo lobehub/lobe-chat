@@ -1,3 +1,4 @@
+import { SiReact } from '@icons-pack/react-simple-icons';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { CodeXml, GlobeIcon, Loader2, OrigamiIcon } from 'lucide-react';
@@ -51,24 +52,41 @@ const ArtifactIcon = memo<ArtifactProps>(({ type }) => {
       />
     );
 
-  if (type === 'text/html') {
-    return (
-      <Icon
-        icon={GlobeIcon}
-        size={{ fontSize: SIZE }}
-        style={{ color: theme.colorTextSecondary }}
-      />
-    );
-  }
-  if (type === 'image/svg+xml') {
-    return (
-      <Icon icon={CodeXml} size={{ fontSize: SIZE }} style={{ color: theme.colorTextSecondary }} />
-    );
-  }
+  switch (type) {
+    case 'application/lobe.artifacts.react': {
+      return (
+        <SiReact
+          // icon={CodeXml}
+          size={SIZE}
+          style={{ color: theme.colorTextSecondary }}
+        />
+      );
+    }
 
-  return (
-    <Icon color={theme.purple} icon={OrigamiIcon} size={{ fontSize: SIZE, strokeWidth: 1.2 }} />
-  );
+    case 'image/svg+xml': {
+      return (
+        <Icon
+          icon={CodeXml}
+          size={{ fontSize: SIZE }}
+          style={{ color: theme.colorTextSecondary }}
+        />
+      );
+    }
+    case 'text/html': {
+      return (
+        <Icon
+          icon={GlobeIcon}
+          size={{ fontSize: SIZE }}
+          style={{ color: theme.colorTextSecondary }}
+        />
+      );
+    }
+    default: {
+      return (
+        <Icon color={theme.purple} icon={OrigamiIcon} size={{ fontSize: SIZE, strokeWidth: 1.2 }} />
+      );
+    }
+  }
 });
 
 export default ArtifactIcon;

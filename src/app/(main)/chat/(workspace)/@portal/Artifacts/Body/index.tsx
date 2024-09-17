@@ -39,7 +39,7 @@ const ArtifactsUI = memo(() => {
 
   const language = useMemo(() => {
     switch (artifactType) {
-      case 'react': {
+      case 'application/lobe.artifacts.react': {
         return 'tsx';
       }
 
