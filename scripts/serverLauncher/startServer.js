@@ -104,7 +104,7 @@ ${protocol} ${ip} ${port}
 
 // Main
 (async () => {
-  if (process.env.DATABASE_URL) {
+  if (process.env.DATABASE_DRIVER) {
     try {
       // Run the DB Migration script first
       await runDBMigrationScript();
