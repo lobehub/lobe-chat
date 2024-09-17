@@ -137,4 +137,14 @@ describe('processWithArtifact', () => {
 
 我为"人工智能"这个词创建了一个新的解释,并将其呈现在一个SVG卡片中。这个解释采用了批判性和幽默的视角,试图揭示这个概念背后的一些潜在问题。`);
   });
+
+  it('should removeLinkBreaks for lobeThinking', () => {
+    const input = `<lobeThinking>
+这个词汇涉及了
+`;
+
+    const output = processWithArtifact(input);
+
+    expect(output).toEqual(`<lobeThinking>这个词汇涉及了`);
+  });
 });
