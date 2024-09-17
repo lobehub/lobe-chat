@@ -14,6 +14,7 @@ export interface PortalArtifact {
 
 export interface ChatPortalState {
   portalArtifact?: PortalArtifact;
+  portalArtifactDisplayMode?: 'code' | 'preview';
   portalFile?: PortalFile;
   portalMessageDetail?: string;
   portalToolMessage?: { id: string; identifier: string };
@@ -21,5 +22,6 @@ export interface ChatPortalState {
 }
 
 export const initialChatPortalState: ChatPortalState = {
+  portalArtifactDisplayMode: 'code',
   showPortal: false,
 };

@@ -1,7 +1,6 @@
 import { Highlighter } from '@lobehub/ui';
-import { Segmented } from 'antd';
 import isEqual from 'fast-deep-equal';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -10,14 +9,15 @@ import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import HTMLRender from './HTMLRender';
 
 const ArtifactsUI = () => {
-  const [artifactType, artifactContent] = useChatStore((s) => [
+  const [displayMode, artifactType, artifactContent] = useChatStore((s) => [
+    s.portalArtifactDisplayMode,
+
     chatPortalSelectors.artifactType(s),
     chatPortalSelectors.artifactContent(s),
   ]);
   const messageId = useChatStore(chatPortalSelectors.artifactMessageId);
   const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
 
-  const [value, setValue] = useState('code');
   const language = useMemo(() => {
     switch (artifactType) {
       case 'react': {
@@ -45,21 +45,12 @@ const ArtifactsUI = () => {
       paddingInline={12}
       style={{ overflow: 'hidden' }}
     >
-      <Segmented
-        block
-        onChange={setValue}
-        options={[
-          { label: 'Code', value: 'code' },
-          { label: 'Preview', value: 'preview' },
-        ]}
-        value={value}
-      />
-      {value === 'code' ? (
+      {displayMode === 'preview' ? (
+        <HTMLRender htmlContent={artifactContent!} />
+      ) : (
         <Highlighter language={language} style={{ maxHeight: '100%', overflow: 'hidden' }} wrap>
           {artifactContent!}
         </Highlighter>
-      ) : (
-        <HTMLRender htmlContent={artifactContent!} />
       )}
     </Flexbox>
   );
