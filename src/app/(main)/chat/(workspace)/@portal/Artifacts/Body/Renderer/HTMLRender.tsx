@@ -15,17 +15,7 @@ const HTMLRenderer = memo<HTMLRendererProps>(({ htmlContent, width = '100%', hei
     if (!doc) return;
 
     doc.open();
-    doc.write(`
-        <!DOCTYPE html>
-        <html>
-          <head>
-            <style>
-              body { margin: 0; padding: 0; }
-            </style>
-          </head>
-          <body>${htmlContent}</body>
-        </html>
-      `);
+    doc.write(htmlContent);
     doc.close();
   }, [htmlContent]);
 

@@ -1,6 +1,6 @@
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { CodeXml, Loader2, OrigamiIcon } from 'lucide-react';
+import { CodeXml, GlobeIcon, Loader2, OrigamiIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -51,6 +51,15 @@ const ArtifactIcon = memo<ArtifactProps>(({ type }) => {
       />
     );
 
+  if (type === 'text/html') {
+    return (
+      <Icon
+        icon={GlobeIcon}
+        size={{ fontSize: SIZE }}
+        style={{ color: theme.colorTextSecondary }}
+      />
+    );
+  }
   if (type === 'image/svg+xml') {
     return (
       <Icon icon={CodeXml} size={{ fontSize: SIZE }} style={{ color: theme.colorTextSecondary }} />

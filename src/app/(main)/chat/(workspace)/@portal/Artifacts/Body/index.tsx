@@ -44,7 +44,7 @@ const ArtifactsUI = memo(() => {
       }
 
       case 'python': {
-        return 'html';
+        return 'python';
       }
 
       default: {
