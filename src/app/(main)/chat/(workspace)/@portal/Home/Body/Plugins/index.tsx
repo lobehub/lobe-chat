@@ -11,7 +11,7 @@ export const Artifacts = memo(() => {
   return (
     <Flexbox gap={8}>
       <Typography.Title level={5} style={{ marginInline: 12 }}>
-        {t('Artifacts')}
+        {t('Plugins')}
       </Typography.Title>
       <ArtifactList />
     </Flexbox>

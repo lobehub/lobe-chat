@@ -27,7 +27,7 @@ const SidebarHeader = memo<SidebarHeaderProps>(({ title, style, actions }) => {
       paddingInline={16}
       style={style}
     >
-      <Flexbox align={'center'} gap={4} horizontal>
+      <Flexbox align={'center'} gap={4} horizontal width={'100%'}>
         {title}
       </Flexbox>
       <Flexbox align={'center'} gap={2} horizontal>

@@ -9,7 +9,7 @@ import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 
 const Footer = () => {
   const [messageId, isAIGenerating, triggerAIMessage, summaryPluginContent] = useChatStore((s) => [
-    chatPortalSelectors.artifactMessageId(s),
+    chatPortalSelectors.toolMessageId(s),
     chatSelectors.isAIGenerating(s),
     s.triggerAIMessage,
     s.summaryPluginContent,
