@@ -59,6 +59,7 @@
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
+    "InvalidGithubToken": "Github Persoonlijke Toegangstoken is ongeldig of leeg, controleer de Github Persoonlijke Toegangstoken en probeer het opnieuw.",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
     "InvalidProviderAPIKey": "{{provider}} API-sleutel is onjuist of leeg. Controleer de {{provider}} API-sleutel en probeer het opnieuw.",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",

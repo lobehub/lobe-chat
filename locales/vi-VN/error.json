@@ -59,6 +59,7 @@
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidClerkUser": "Xin lỗi, bạn chưa đăng nhập. Vui lòng đăng nhập hoặc đăng ký tài khoản trước khi tiếp tục.",
+    "InvalidGithubToken": "Mã truy cập cá nhân Github không chính xác hoặc để trống, vui lòng kiểm tra lại Mã truy cập cá nhân Github và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
     "InvalidProviderAPIKey": "{{provider}} API Key không hợp lệ hoặc trống, vui lòng kiểm tra và thử lại",
     "LocationNotSupportError": "Xin lỗi, vị trí của bạn không hỗ trợ dịch vụ mô hình này, có thể do hạn chế vùng miền hoặc dịch vụ chưa được mở. Vui lòng xác nhận xem vị trí hiện tại có hỗ trợ sử dụng dịch vụ này không, hoặc thử sử dụng thông tin vị trí khác.",

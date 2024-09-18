@@ -1,11 +1,11 @@
 'use client';
 
 import { Empty } from 'antd';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import InterceptingLink from '@/components/InterceptingLink';
 import { DiscoverProviderItem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
@@ -31,12 +31,9 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
           data={items}
           initialItemCount={6}
           itemContent={(_, item) => (
-            <InterceptingLink
-              href={urlJoin('/discover/provider/', item.identifier)}
-              key={item.identifier}
-            >
+            <Link href={urlJoin('/discover/provider/', item.identifier)} key={item.identifier}>
               <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
-            </InterceptingLink>
+            </Link>
           )}
           style={{
             minHeight: '75vh',
@@ -53,12 +50,9 @@ const List = memo<ListProps>(({ searchKeywords, items = [], mobile }) => {
         data={items}
         initialItemCount={6}
         itemContent={(_, item) => (
-          <InterceptingLink
-            href={urlJoin('/discover/provider/', item.identifier)}
-            key={item.identifier}
-          >
+          <Link href={urlJoin('/discover/provider/', item.identifier)} key={item.identifier}>
             <Card {...item} mobile={mobile} style={{ minHeight: 'unset' }} />
-          </InterceptingLink>
+          </Link>
         )}
         style={{
           minHeight: '75vh',

@@ -51,6 +51,13 @@
       "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Geben Sie Ihr GitHub-PAT ein und klicken Sie [hier](https://github.com/settings/tokens), um eines zu erstellen.",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Testen Sie, ob die Proxy-Adresse korrekt eingetragen wurde",

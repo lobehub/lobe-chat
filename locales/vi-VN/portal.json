@@ -6,10 +6,26 @@
       "file": "Tập tin"
     }
   },
+  "Plugins": "Tiện ích",
   "actions": {
     "genAiMessage": "Tạo tin nhắn trợ giúp",
     "summary": "Tóm tắt",
     "summaryTooltip": "Tóm tắt nội dung hiện tại"
+  },
+  "artifacts": {
+    "display": {
+      "code": "Mã",
+      "preview": "Xem trước"
+    },
+    "svg": {
+      "copyAsImage": "Sao chép dưới dạng hình ảnh",
+      "copyFail": "Sao chép thất bại, lý do lỗi: {{error}}",
+      "copySuccess": "Sao chép hình ảnh thành công",
+      "download": {
+        "png": "Tải xuống dưới dạng PNG",
+        "svg": "Tải xuống dưới dạng SVG"
+      }
+    }
   },
   "emptyArtifactList": "Danh sách Tác Phẩm hiện tại đang trống, vui lòng sử dụng các plugin trong cuộc trò chuyện trước khi xem lại",
   "emptyKnowledgeList": "Danh sách kiến thức hiện tại trống, vui lòng mở kho kiến thức khi cần trong cuộc trò chuyện trước khi xem",
