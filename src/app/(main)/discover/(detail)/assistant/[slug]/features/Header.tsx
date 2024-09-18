@@ -99,8 +99,8 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
           {data.meta.tags.map((tag) => (
             <Link
               href={qs.stringifyUrl({
-                query: { q: tag },
-                url: '/discover/search/assistants',
+                query: { q: tag, type: 'assistants' },
+                url: '/discover/search',
               })}
               key={tag}
             >

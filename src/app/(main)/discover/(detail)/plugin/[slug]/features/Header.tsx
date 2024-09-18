@@ -96,7 +96,7 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
             <Link
               href={qs.stringifyUrl({
                 query: { q: tag },
-                url: '/discover/search/plugins',
+                url: '/discover/search',
               })}
               key={tag}
             >

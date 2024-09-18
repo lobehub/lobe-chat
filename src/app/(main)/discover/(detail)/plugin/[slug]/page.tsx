@@ -37,7 +37,7 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
     keywords: meta.tags,
     webpage: {
       enable: true,
-      search: '/discover/search/plugins',
+      search: '/discover/search',
     },
     ...metadataModule.generate({
       alternate: true,

@@ -6,24 +6,23 @@ import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
+import { useQuery } from '@/hooks/useQuery';
 import { DiscoverTab } from '@/types/discover';
-
-const checkPath = (pathname: string, key: string) =>
-  pathname.includes(urlJoin('/discover', key)) ||
-  pathname.includes(urlJoin('/discover/search', key));
 
 export const useNav = () => {
   const pathname = usePathname();
+  const { type } = useQuery();
   const { t } = useTranslation('discover');
   const iconSize = { fontSize: 16 };
 
   const activeKey = useMemo(() => {
     for (const value of Object.values(DiscoverTab)) {
-      if (checkPath(pathname, value)) {
+      if (pathname === 'discover/search') {
+        return (type as DiscoverTab) || DiscoverTab.Assistants;
+      } else if (pathname.includes(urlJoin('/discover', value))) {
         return value;
       }
     }
-
     return DiscoverTab.Home;
   }, [pathname]);
 

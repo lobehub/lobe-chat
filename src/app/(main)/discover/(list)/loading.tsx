@@ -15,7 +15,7 @@ export default memo(() => {
   const withoutCategory =
     pathname === '/discover' ||
     pathname === '/discover/providers' ||
-    pathname.includes('/discover/search');
+    pathname === '/discover/search';
 
   if (mobile || withoutCategory)
     return (

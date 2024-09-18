@@ -4,7 +4,6 @@ import { TabsNav } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
-import urlJoin from 'url-join';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
@@ -43,7 +42,7 @@ const Nav = memo(() => {
           .map((item: any) => ({
             key: item.key,
             label: (
-              <div onClick={() => router.push(urlJoin('/discover/search', item.key))}>
+              <div onClick={() => router.push('/discover/search', { query: { type: item.key } })}>
                 {item.label}
               </div>
             ),

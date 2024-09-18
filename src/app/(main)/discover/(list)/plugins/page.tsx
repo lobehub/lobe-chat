@@ -35,7 +35,7 @@ const Page = async ({ searchParams }: Props) => {
     url: '/discover/plugins',
     webpage: {
       enable: true,
-      search: '/discover/search/plugins',
+      search: '/discover/search',
     },
   });
 

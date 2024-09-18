@@ -28,7 +28,7 @@ const Page = async ({ searchParams }: Props) => {
     url: '/discover',
     webpage: {
       enable: true,
-      search: '/discover/search/assistants',
+      search: '/discover/search',
     },
   });
 

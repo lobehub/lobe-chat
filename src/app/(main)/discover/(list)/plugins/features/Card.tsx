@@ -134,8 +134,8 @@ const PluginCard = memo<PluginCardProps>(
                 .filter(Boolean)
                 .map((tag: string, index) => {
                   const url = qs.stringifyUrl({
-                    query: { q: tag },
-                    url: '/discover/search/plugins',
+                    query: { q: tag, type: 'plugins' },
+                    url: '/discover/search',
                   });
                   return (
                     <Link href={url} key={index}>

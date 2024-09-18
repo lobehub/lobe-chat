@@ -30,8 +30,8 @@ export class DiscoverService {
 
   // Assistants
   searchAssistant = async (locale: Locales, keywords: string): Promise<DiscoverAssistantItem[]> => {
-    const assistantList = await this.getAssistantList(locale);
-    return assistantList.filter((item) => {
+    const list = await this.getAssistantList(locale);
+    return list.filter((item) => {
       return [item.author, item.meta.title, item.meta.description, item.meta?.tags]
         .flat()
         .filter(Boolean)
@@ -45,8 +45,8 @@ export class DiscoverService {
     locale: Locales,
     category: AssistantCategory,
   ): Promise<DiscoverAssistantItem[]> => {
-    const assistantList = await this.getAssistantList(locale);
-    return assistantList.filter((item) => item.meta.category === category);
+    const list = await this.getAssistantList(locale);
+    return list.filter((item) => item.meta.category === category);
   };
 
   getAssistantList = async (locale: Locales): Promise<DiscoverAssistantItem[]> => {
@@ -117,9 +117,9 @@ export class DiscoverService {
 
   // Tools
 
-  searchTool = async (locale: Locales, keywords: string): Promise<DiscoverPlugintem[]> => {
-    const toolList = await this.getPluginList(locale);
-    return toolList.filter((item) => {
+  searchPlugin = async (locale: Locales, keywords: string): Promise<DiscoverPlugintem[]> => {
+    const list = await this.getPluginList(locale);
+    return list.filter((item) => {
       return [item.author, item.meta.title, item.meta.description, item.meta?.tags]
         .flat()
         .filter(Boolean)
@@ -133,8 +133,8 @@ export class DiscoverService {
     locale: Locales,
     category: PluginCategory,
   ): Promise<DiscoverPlugintem[]> => {
-    const toolList = await this.getPluginList(locale);
-    return toolList.filter((item) => item.meta.category === category);
+    const list = await this.getPluginList(locale);
+    return list.filter((item) => item.meta.category === category);
   };
 
   getPluginList = async (locale: Locales): Promise<DiscoverPlugintem[]> => {
@@ -169,8 +169,8 @@ export class DiscoverService {
     identifier: string,
     withManifest?: boolean,
   ): Promise<DiscoverPlugintem | undefined> => {
-    const pluginList = await this.getPluginList(locale);
-    let plugin = pluginList.find((item) => item.identifier === identifier) as DiscoverPlugintem;
+    const list = await this.getPluginList(locale);
+    let plugin = list.find((item) => item.identifier === identifier) as DiscoverPlugintem;
 
     if (!plugin) return;
 
@@ -206,8 +206,8 @@ export class DiscoverService {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   getProviderList = async (locale: Locales): Promise<DiscoverProviderItem[]> => {
-    const providerList = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
-    return providerList.map((item) => {
+    const list = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
+    return list.map((item) => {
       const provider = {
         identifier: item.id,
         meta: {
@@ -221,8 +221,8 @@ export class DiscoverService {
   };
 
   searchProvider = async (locale: Locales, keywords: string): Promise<DiscoverProviderItem[]> => {
-    const providerList = await this.getProviderList(locale);
-    return providerList.filter((item) => {
+    const list = await this.getProviderList(locale);
+    return list.filter((item) => {
       return [item.identifier, item.meta.title]
         .filter(Boolean)
         .join(',')
@@ -235,14 +235,14 @@ export class DiscoverService {
     locale: Locales,
     id: string,
   ): Promise<DiscoverProviderItem | undefined> => {
-    const providerList = await this.getProviderList(locale);
-    let provider = providerList.find((item) => item.identifier === id);
+    const list = await this.getProviderList(locale);
+    let provider = list.find((item) => item.identifier === id);
 
     if (!provider) return;
 
     provider = {
       ...provider,
-      suggestions: providerList
+      suggestions: list
         .filter((item) => item.identifier !== provider?.identifier)
         .slice(0, 5) as any,
     };
@@ -269,10 +269,10 @@ export class DiscoverService {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private _getModelList = async (locale: Locales): Promise<DiscoverModelItem[]> => {
-    const providerList = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
+    const list = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
     const providers = await this.getProviderList(locale);
 
-    return providerList.flatMap((provider) => {
+    return list.flatMap((provider) => {
       return provider.chatModels.map((item) => {
         const ids = item.id.split('/')[1] || item.id;
         const providerIds = providers
@@ -294,17 +294,17 @@ export class DiscoverService {
   };
 
   getModelList = async (locale: Locales): Promise<DiscoverModelItem[]> => {
-    const modelList = await this._getModelList(locale);
+    const list = await this._getModelList(locale);
 
-    return uniqBy(modelList, (item) => {
+    return uniqBy(list, (item) => {
       const ids = item.identifier.split('/');
       return ids[1] || item.identifier;
     });
   };
 
   searchModel = async (locale: Locales, keywords: string): Promise<DiscoverModelItem[]> => {
-    const modelList = await this.getModelList(locale);
-    return modelList.filter((item) => {
+    const list = await this.getModelList(locale);
+    return list.filter((item) => {
       return [item.identifier, item.meta.title, item.meta.description, item.providers]
         .flat()
         .filter(Boolean)
@@ -315,8 +315,8 @@ export class DiscoverService {
   };
 
   getModelCategory = async (locale: Locales, category: string): Promise<DiscoverModelItem[]> => {
-    const modelList = await this._getModelList(locale);
-    return modelList.filter((item) => item.meta.category === category);
+    const list = await this._getModelList(locale);
+    return list.filter((item) => item.meta.category === category);
   };
 
   getModelById = async (locale: Locales, id: string): Promise<DiscoverModelItem | undefined> => {

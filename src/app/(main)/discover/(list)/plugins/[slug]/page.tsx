@@ -40,7 +40,7 @@ const Page = async ({ params, searchParams }: Props) => {
     url: urlJoin('/discover/plugins', params.slug),
     webpage: {
       enable: true,
-      search: '/discover/search/plugins',
+      search: '/discover/search',
     },
   });
 

@@ -21,7 +21,7 @@ type Props = { params: { slugs: string[] }; searchParams: { hl?: Locales } };
 
 export const generateMetadata = async ({ params, searchParams }: Props) => {
   const { slugs } = params;
-  const identifier = slugs.join('/');
+  const identifier = decodeURIComponent(slugs.join('/'));
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('models', searchParams?.hl);
 
@@ -39,7 +39,7 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
     ],
     webpage: {
       enable: true,
-      search: '/discover/search/models',
+      search: '/discover/search',
     },
     ...metadataModule.generate({
       alternate: true,
@@ -61,7 +61,8 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
 
 const Page = async ({ params, searchParams }: Props) => {
   const { slugs } = params;
-  const identifier = slugs.join('/');
+
+  const identifier = decodeURIComponent(slugs.join('/'));
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const { t: td } = await translation('models', searchParams?.hl);
   const mobile = isMobileDevice();

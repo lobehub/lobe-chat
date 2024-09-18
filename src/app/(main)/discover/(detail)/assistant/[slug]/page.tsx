@@ -85,7 +85,7 @@ const Page = async ({ params, searchParams }: Props) => {
     url: urlJoin('/discover/assistant', identifier),
     webpage: {
       enable: true,
-      search: '/discover/search/assistants',
+      search: '/discover/search',
     },
   });
 

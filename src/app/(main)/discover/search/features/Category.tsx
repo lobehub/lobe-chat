@@ -1,8 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import qs from 'query-string';
 import { memo } from 'react';
-import urlJoin from 'url-join';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { DiscoverTab } from '@/types/discover';
@@ -21,9 +21,18 @@ const Category = memo(() => {
         .filter((item) => item?.key !== DiscoverTab.Home)
         .map((item: any) => ({
           ...item,
-          label: <Link href={urlJoin('/discover/search', item.key)}>{item.label}</Link>,
+          label: (
+            <Link
+              href={qs.stringifyUrl({
+                query: { type: item.key },
+                url: '/discover/search',
+              })}
+            >
+              {item.label}
+            </Link>
+          ),
         }))}
-      onSelect={({ key }) => router.push(urlJoin('/discover/search', key))}
+      onSelect={({ key }) => router.push('/discover/search', { query: { type: key } })}
       selectedKeys={[activeKey]}
     />
   );

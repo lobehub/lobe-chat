@@ -35,25 +35,21 @@ const StoreSearchBar = memo<StoreSearchBarProps>(({ mobile, onBlur, onFocus, ...
   const { q } = useQuery();
   const { activeKey } = useNav();
   const [searchKey, setSearchKey] = useQueryState('q');
-  const [activeType, setActiveType] = useState<DiscoverTab>(
-    activeKey === DiscoverTab.Home ? DiscoverTab.Assistants : activeKey,
-  );
+
   const { t } = useTranslation('discover');
   const { cx, styles } = useStyles();
   const router = useQueryRoute();
 
+  const activeType = activeKey === DiscoverTab.Home ? DiscoverTab.Assistants : activeKey;
+
   useEffect(() => {
     if (!pathname.includes('/discover/search')) return;
     // 使用 useQueryState 时，当 handleSearch 为空时无法回跳
-    if (!q) router.push(urlJoin('/discover', activeType));
-  }, [q, pathname]);
-
-  useEffect(() => {
-    if (activeKey !== DiscoverTab.Home) setActiveType(activeKey);
-  }, [activeKey]);
+    if (!q) router.push(urlJoin('/discover', activeType), { query: {}, replace: true });
+  }, [q, pathname, activeType]);
 
   const handleSearch = (value: string) => {
-    router.push(urlJoin('/discover/search', activeType), { query: { q: value } });
+    router.push('/discover/search', { query: { q: value, type: activeType } });
   };
 
   return (

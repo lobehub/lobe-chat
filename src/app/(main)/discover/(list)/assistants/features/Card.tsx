@@ -156,8 +156,8 @@ const AssistantCard = memo<AssistantCardProps>(
                 .filter(Boolean)
                 .map((tag: string, index) => {
                   const url = qs.stringifyUrl({
-                    query: { q: tag },
-                    url: '/discover/search/assistants',
+                    query: { q: tag, type: 'assistants' },
+                    url: '/discover/search',
                   });
                   return (
                     <Link href={url} key={index}>
