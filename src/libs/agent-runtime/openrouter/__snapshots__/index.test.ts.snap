@@ -443,7 +443,7 @@ The model is multilingual, supporting English, French, German, Spanish, Italian,
 
 It supports function calling and is released under the Apache 2.0 license.",
     "displayName": "Mistral: Mistral Nemo",
-    "enabled": true,
+    "enabled": false,
     "functionCall": true,
     "id": "mistralai/mistral-nemo",
     "maxTokens": undefined,
@@ -1433,7 +1433,7 @@ _This is a faster endpoint, made available in collaboration with Anthropic, that
 
 It is fluent in English, French, Spanish, German, and Italian, with high grammatical accuracy, and its long context window allows precise information recall from large documents.",
     "displayName": "Mistral Large",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "mistralai/mistral-large",
     "maxTokens": undefined,
