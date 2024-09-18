@@ -1,0 +1,845 @@
+{
+  "01-ai/Yi-1.5-34B-Chat-16K": {
+    "description": "Yi-1.5 34B는 풍부한 훈련 샘플을 통해 산업 응용에서 우수한 성능을 제공합니다."
+  },
+  "01-ai/Yi-1.5-6B-Chat": {
+    "description": "Yi-1.5는 Yi 시리즈의 진화 버전으로, 고품질의 사전 훈련과 풍부한 미세 조정 데이터를 갖추고 있습니다."
+  },
+  "01-ai/Yi-1.5-9B-Chat-16K": {
+    "description": "Yi-1.5 9B는 16K 토큰을 지원하며, 효율적이고 매끄러운 언어 생성 능력을 제공합니다."
+  },
+  "360gpt-pro": {
+    "description": "360GPT Pro는 360 AI 모델 시리즈의 중요한 구성원으로, 다양한 자연어 응용 시나리오에 맞춘 효율적인 텍스트 처리 능력을 갖추고 있으며, 긴 텍스트 이해 및 다중 회화 기능을 지원합니다."
+  },
+  "360gpt-turbo": {
+    "description": "360GPT Turbo는 강력한 계산 및 대화 능력을 제공하며, 뛰어난 의미 이해 및 생성 효율성을 갖추고 있어 기업 및 개발자에게 이상적인 스마트 어시스턴트 솔루션입니다."
+  },
+  "360gpt-turbo-responsibility-8k": {
+    "description": "360GPT Turbo Responsibility 8K는 의미 안전성과 책임 지향성을 강조하며, 콘텐츠 안전에 대한 높은 요구가 있는 응용 시나리오를 위해 설계되어 사용자 경험의 정확성과 안정성을 보장합니다."
+  },
+  "360gpt2-pro": {
+    "description": "360GPT2 Pro는 360 회사에서 출시한 고급 자연어 처리 모델로, 뛰어난 텍스트 생성 및 이해 능력을 갖추고 있으며, 특히 생성 및 창작 분야에서 뛰어난 성능을 발휘하여 복잡한 언어 변환 및 역할 연기 작업을 처리할 수 있습니다."
+  },
+  "4.0Ultra": {
+    "description": "Spark4.0 Ultra는 스타크 대형 모델 시리즈 중 가장 강력한 버전으로, 업그레이드된 네트워크 검색 링크와 함께 텍스트 내용의 이해 및 요약 능력을 향상시킵니다. 사무 생산성을 높이고 정확한 요구에 응답하기 위한 종합 솔루션으로, 업계를 선도하는 스마트 제품입니다."
+  },
+  "Baichuan2-Turbo": {
+    "description": "검색 강화 기술을 통해 대형 모델과 분야 지식, 전 세계 지식의 완전한 연결을 실현합니다. PDF, Word 등 다양한 문서 업로드 및 웹사이트 입력을 지원하며, 정보 획득이 신속하고 포괄적이며, 출력 결과가 정확하고 전문적입니다."
+  },
+  "Baichuan3-Turbo": {
+    "description": "기업의 고빈도 시나리오에 최적화되어 효과가 크게 향상되었으며, 높은 비용 효율성을 자랑합니다. Baichuan2 모델에 비해 콘텐츠 창작이 20%, 지식 질문 응답이 17%, 역할 수행 능력이 40% 향상되었습니다. 전체적인 성능은 GPT3.5보다 우수합니다."
+  },
+  "Baichuan3-Turbo-128k": {
+    "description": "128K 초장기 컨텍스트 창을 갖추고 있으며, 기업의 고빈도 시나리오에 최적화되어 효과가 크게 향상되었으며, 높은 비용 효율성을 자랑합니다. Baichuan2 모델에 비해 콘텐츠 창작이 20%, 지식 질문 응답이 17%, 역할 수행 능력이 40% 향상되었습니다. 전체적인 성능은 GPT3.5보다 우수합니다."
+  },
+  "Baichuan4": {
+    "description": "모델 능력 국내 1위로, 지식 백과, 긴 텍스트, 생성 창작 등 중국어 작업에서 해외 주류 모델을 초월합니다. 또한 업계 선도적인 다중 모달 능력을 갖추고 있으며, 여러 권위 있는 평가 기준에서 우수한 성과를 보입니다."
+  },
+  "Gryphe/MythoMax-L2-13b": {
+    "description": "MythoMax-L2 (13B)는 혁신적인 모델로, 다양한 분야의 응용과 복잡한 작업에 적합합니다."
+  },
+  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
+    "description": "Hermes 2 Mixtral 8x7B DPO는 뛰어난 창의적 경험을 제공하기 위해 설계된 고도로 유연한 다중 모델 통합입니다."
+  },
+  "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
+    "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)는 고정밀 지시 모델로, 복잡한 계산에 적합합니다."
+  },
+  "NousResearch/Nous-Hermes-2-Yi-34B": {
+    "description": "Nous Hermes-2 Yi (34B)는 최적화된 언어 출력과 다양한 응용 가능성을 제공합니다."
+  },
+  "Pro-128k": {
+    "description": "Spark Pro-128K는 초대형 컨텍스트 처리 능력을 갖추고 있으며, 최대 128K의 컨텍스트 정보를 처리할 수 있어, 특히 전체 분석 및 장기 논리 연관 처리가 필요한 긴 문서 콘텐츠에 적합합니다. 복잡한 텍스트 커뮤니케이션에서 매끄럽고 일관된 논리와 다양한 인용 지원을 제공합니다."
+  },
+  "Qwen/Qwen1.5-110B-Chat": {
+    "description": "Qwen2의 테스트 버전인 Qwen1.5는 대규모 데이터를 사용하여 더 정밀한 대화 기능을 구현하였습니다."
+  },
+  "Qwen/Qwen1.5-14B-Chat": {
+    "description": "Qwen1.5는 대규모 데이터 세트로 훈련되어 복잡한 언어 작업에 능숙합니다."
+  },
+  "Qwen/Qwen1.5-32B-Chat": {
+    "description": "Qwen1.5는 다분야 질문 응답 및 텍스트 생성 능력을 갖추고 있습니다."
+  },
+  "Qwen/Qwen1.5-72B-Chat": {
+    "description": "Qwen 1.5 Chat (72B)는 빠른 응답과 자연스러운 대화 능력을 제공하며, 다국어 환경에 적합합니다."
+  },
+  "Qwen/Qwen1.5-7B-Chat": {
+    "description": "Qwen1.5는 고급 사전 훈련과 미세 조정을 결합하여 대화 표현 능력을 향상시킵니다."
+  },
+  "Qwen/Qwen2-1.5B-Instruct": {
+    "description": "Qwen2는 지시형 작업 처리를 최적화하기 위해 설계된 새로운 대형 언어 모델 시리즈입니다."
+  },
+  "Qwen/Qwen2-57B-A14B-Instruct": {
+    "description": "Qwen2는 새로운 시리즈로, 57B A14B 모델은 지시 작업에서 뛰어난 성능을 보입니다."
+  },
+  "Qwen/Qwen2-72B-Instruct": {
+    "description": "Qwen2는 다양한 지시 유형을 지원하는 고급 범용 언어 모델입니다."
+  },
+  "Qwen/Qwen2-7B-Instruct": {
+    "description": "Qwen2는 새로운 대형 언어 모델 시리즈로, 더 강력한 이해 및 생성 능력을 갖추고 있습니다."
+  },
+  "Qwen/Qwen2-Math-72B-Instruct": {
+    "description": "Qwen2-Math는 수학 분야의 문제 해결에 중점을 두고 있으며, 고난이도 문제에 대한 전문적인 해답을 제공합니다."
+  },
+  "THUDM/chatglm3-6b": {
+    "description": "ChatGLM3는 이중 언어 대화 언어 모델로, 중문과 영문 변환 작업을 처리할 수 있습니다."
+  },
+  "THUDM/glm-4-9b-chat": {
+    "description": "GLM-4 9B 오픈 소스 버전으로, 대화 응용을 위한 최적화된 대화 경험을 제공합니다."
+  },
+  "abab5.5-chat": {
+    "description": "생산성 시나리오를 위해 설계되었으며, 복잡한 작업 처리 및 효율적인 텍스트 생성을 지원하여 전문 분야 응용에 적합합니다."
+  },
+  "abab5.5s-chat": {
+    "description": "중국어 캐릭터 대화 시나리오를 위해 설계되었으며, 고품질의 중국어 대화 생성 능력을 제공하여 다양한 응용 시나리오에 적합합니다."
+  },
+  "abab6.5g-chat": {
+    "description": "다국어 캐릭터 대화를 위해 설계되었으며, 영어 및 기타 여러 언어의 고품질 대화 생성을 지원합니다."
+  },
+  "abab6.5s-chat": {
+    "description": "텍스트 생성, 대화 시스템 등 다양한 자연어 처리 작업에 적합합니다."
+  },
+  "abab6.5t-chat": {
+    "description": "중국어 캐릭터 대화 시나리오에 최적화되어 있으며, 유창하고 중국어 표현 습관에 맞는 대화 생성 능력을 제공합니다."
+  },
+  "accounts/fireworks/models/firefunction-v1": {
+    "description": "Fireworks 오픈 소스 함수 호출 모델로, 뛰어난 지시 실행 능력과 개방형 커스터마이징 기능을 제공합니다."
+  },
+  "accounts/fireworks/models/firefunction-v2": {
+    "description": "Fireworks 회사의 최신 Firefunction-v2는 Llama-3를 기반으로 개발된 뛰어난 함수 호출 모델로, 많은 최적화를 통해 함수 호출, 대화 및 지시 따르기 등의 시나리오에 특히 적합합니다."
+  },
+  "accounts/fireworks/models/firellava-13b": {
+    "description": "fireworks-ai/FireLLaVA-13b는 이미지와 텍스트 입력을 동시에 수용할 수 있는 비주얼 언어 모델로, 고품질 데이터로 훈련되어 다중 모달 작업에 적합합니다."
+  },
+  "accounts/fireworks/models/gemma2-9b-it": {
+    "description": "Gemma 2 9B 지시 모델은 이전 Google 기술을 기반으로 하여 질문 응답, 요약 및 추론 등 다양한 텍스트 생성 작업에 적합합니다."
+  },
+  "accounts/fireworks/models/llama-v3-70b-instruct": {
+    "description": "Llama 3 70B 지시 모델은 다국어 대화 및 자연어 이해를 위해 최적화되어 있으며, 대부분의 경쟁 모델보다 성능이 우수합니다."
+  },
+  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
+    "description": "Llama 3 70B 지시 모델(HF 버전)은 공식 구현 결과와 일치하며, 고품질의 지시 따르기 작업에 적합합니다."
+  },
+  "accounts/fireworks/models/llama-v3-8b-instruct": {
+    "description": "Llama 3 8B 지시 모델은 대화 및 다국어 작업을 위해 최적화되어 있으며, 뛰어난 성능과 효율성을 제공합니다."
+  },
+  "accounts/fireworks/models/llama-v3-8b-instruct-hf": {
+    "description": "Llama 3 8B 지시 모델(HF 버전)은 공식 구현 결과와 일치하며, 높은 일관성과 크로스 플랫폼 호환성을 갖추고 있습니다."
+  },
+  "accounts/fireworks/models/llama-v3p1-405b-instruct": {
+    "description": "Llama 3.1 405B 지시 모델은 초대규모 매개변수를 갖추고 있어 복잡한 작업과 고부하 환경에서의 지시 따르기에 적합합니다."
+  },
+  "accounts/fireworks/models/llama-v3p1-70b-instruct": {
+    "description": "Llama 3.1 70B 지시 모델은 뛰어난 자연어 이해 및 생성 능력을 제공하며, 대화 및 분석 작업에 이상적인 선택입니다."
+  },
+  "accounts/fireworks/models/llama-v3p1-8b-instruct": {
+    "description": "Llama 3.1 8B 지시 모델은 다국어 대화를 위해 최적화되어 있으며, 일반 산업 기준에서 대부분의 오픈 소스 및 폐쇄 소스 모델을 초월합니다."
+  },
+  "accounts/fireworks/models/mixtral-8x22b-instruct": {
+    "description": "Mixtral MoE 8x22B 지시 모델은 대규모 매개변수와 다수의 전문가 아키텍처를 통해 복잡한 작업의 효율적인 처리를 전방위적으로 지원합니다."
+  },
+  "accounts/fireworks/models/mixtral-8x7b-instruct": {
+    "description": "Mixtral MoE 8x7B 지시 모델은 다수의 전문가 아키텍처를 통해 효율적인 지시 따르기 및 실행을 제공합니다."
+  },
+  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
+    "description": "Mixtral MoE 8x7B 지시 모델(HF 버전)은 성능이 공식 구현과 일치하며, 다양한 효율적인 작업 시나리오에 적합합니다."
+  },
+  "accounts/fireworks/models/mythomax-l2-13b": {
+    "description": "MythoMax L2 13B 모델은 혁신적인 통합 기술을 결합하여 서사 및 역할 수행에 강점을 보입니다."
+  },
+  "accounts/fireworks/models/phi-3-vision-128k-instruct": {
+    "description": "Phi 3 Vision 지시 모델은 경량 다중 모달 모델로, 복잡한 시각 및 텍스트 정보를 처리할 수 있으며, 강력한 추론 능력을 갖추고 있습니다."
+  },
+  "accounts/fireworks/models/starcoder-16b": {
+    "description": "StarCoder 15.5B 모델은 고급 프로그래밍 작업을 지원하며, 다국어 능력이 강화되어 복잡한 코드 생성 및 이해에 적합합니다."
+  },
+  "accounts/fireworks/models/starcoder-7b": {
+    "description": "StarCoder 7B 모델은 80개 이상의 프로그래밍 언어를 대상으로 훈련되어 뛰어난 프로그래밍 완성 능력과 문맥 이해를 제공합니다."
+  },
+  "accounts/yi-01-ai/models/yi-large": {
+    "description": "Yi-Large 모델은 뛰어난 다국어 처리 능력을 갖추고 있으며, 다양한 언어 생성 및 이해 작업에 사용될 수 있습니다."
+  },
+  "anthropic.claude-3-5-sonnet-20240620-v1:0": {
+    "description": "Claude 3.5 Sonnet는 업계 표준을 향상시켜 경쟁 모델 및 Claude 3 Opus를 초월하며, 광범위한 평가에서 뛰어난 성능을 보이고, 중간 수준 모델의 속도와 비용을 갖추고 있습니다."
+  },
+  "anthropic.claude-3-haiku-20240307-v1:0": {
+    "description": "Claude 3 Haiku는 Anthropic의 가장 빠르고 간결한 모델로, 거의 즉각적인 응답 속도를 제공합니다. 간단한 질문과 요청에 신속하게 답변할 수 있습니다. 고객은 인간 상호작용을 모방하는 원활한 AI 경험을 구축할 수 있습니다. Claude 3 Haiku는 이미지를 처리하고 텍스트 출력을 반환할 수 있으며, 200K의 컨텍스트 창을 갖추고 있습니다."
+  },
+  "anthropic.claude-3-opus-20240229-v1:0": {
+    "description": "Claude 3 Opus는 Anthropic의 가장 강력한 AI 모델로, 매우 복잡한 작업에서 최첨단 성능을 발휘합니다. 개방형 프롬프트와 이전에 보지 못한 장면을 처리할 수 있으며, 뛰어난 유창성과 인간과 유사한 이해 능력을 갖추고 있습니다. Claude 3 Opus는 생성 AI의 가능성을 보여줍니다. Claude 3 Opus는 이미지를 처리하고 텍스트 출력을 반환할 수 있으며, 200K의 컨텍스트 창을 갖추고 있습니다."
+  },
+  "anthropic.claude-3-sonnet-20240229-v1:0": {
+    "description": "Anthropic의 Claude 3 Sonnet는 지능과 속도 간의 이상적인 균형을 이루어 기업 작업 부하에 특히 적합합니다. 경쟁 모델보다 낮은 가격으로 최대의 효용을 제공하며, 신뢰할 수 있고 내구성이 뛰어난 주력 모델로 설계되어 대규모 AI 배포에 적합합니다. Claude 3 Sonnet는 이미지를 처리하고 텍스트 출력을 반환할 수 있으며, 200K의 컨텍스트 창을 갖추고 있습니다."
+  },
+  "anthropic.claude-instant-v1": {
+    "description": "일상 대화, 텍스트 분석, 요약 및 문서 질문 응답을 포함한 다양한 작업을 처리할 수 있는 빠르고 경제적이며 여전히 매우 유능한 모델입니다."
+  },
+  "anthropic.claude-v2": {
+    "description": "Anthropic은 복잡한 대화 및 창의적 콘텐츠 생성에서부터 세부 지시 준수에 이르기까지 광범위한 작업에서 높은 능력을 발휘하는 모델입니다."
+  },
+  "anthropic.claude-v2:1": {
+    "description": "Claude 2의 업데이트 버전으로, 두 배의 컨텍스트 창을 갖추고 있으며, 긴 문서 및 RAG 컨텍스트에서의 신뢰성, 환각률 및 증거 기반 정확성이 개선되었습니다."
+  },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 Haiku는 Anthropic의 가장 빠르고 컴팩트한 모델로, 거의 즉각적인 응답을 목표로 합니다. 빠르고 정확한 방향성 성능을 제공합니다."
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opus는 Anthropic이 복잡한 작업을 처리하기 위해 개발한 가장 강력한 모델입니다. 성능, 지능, 유창성 및 이해력에서 뛰어난 성과를 보입니다."
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 비주얼 처리 및 에이전트 작업에 특히 강합니다."
+  },
+  "aya": {
+    "description": "Aya 23은 Cohere에서 출시한 다국어 모델로, 23개 언어를 지원하여 다양한 언어 응용에 편리함을 제공합니다."
+  },
+  "aya:35b": {
+    "description": "Aya 23은 Cohere에서 출시한 다국어 모델로, 23개 언어를 지원하여 다양한 언어 응용에 편리함을 제공합니다."
+  },
+  "charglm-3": {
+    "description": "CharGLM-3는 역할 수행 및 감정 동반을 위해 설계된 모델로, 초장 다회 기억 및 개인화된 대화를 지원하여 광범위하게 사용됩니다."
+  },
+  "chatgpt-4o-latest": {
+    "description": "ChatGPT-4o는 동적 모델로, 최신 버전을 유지하기 위해 실시간으로 업데이트됩니다. 강력한 언어 이해 및 생성 능력을 결합하여 고객 서비스, 교육 및 기술 지원을 포함한 대규모 응용 프로그램에 적합합니다."
+  },
+  "claude-2.0": {
+    "description": "Claude 2는 기업에 중요한 능력의 발전을 제공하며, 업계 최고의 200K 토큰 컨텍스트, 모델 환각 발생률 대폭 감소, 시스템 프롬프트 및 새로운 테스트 기능인 도구 호출을 포함합니다."
+  },
+  "claude-2.1": {
+    "description": "Claude 2는 기업에 중요한 능력의 발전을 제공하며, 업계 최고의 200K 토큰 컨텍스트, 모델 환각 발생률 대폭 감소, 시스템 프롬프트 및 새로운 테스트 기능인 도구 호출을 포함합니다."
+  },
+  "claude-3-5-sonnet-20240620": {
+    "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 시각 처리 및 대리 작업에 특히 강합니다."
+  },
+  "claude-3-haiku-20240307": {
+    "description": "Claude 3 Haiku는 Anthropic의 가장 빠르고 컴팩트한 모델로, 거의 즉각적인 응답을 목표로 합니다. 빠르고 정확한 방향성 성능을 갖추고 있습니다."
+  },
+  "claude-3-opus-20240229": {
+    "description": "Claude 3 Opus는 Anthropic이 고도로 복잡한 작업을 처리하기 위해 개발한 가장 강력한 모델입니다. 성능, 지능, 유창성 및 이해력에서 뛰어난 성능을 보입니다."
+  },
+  "claude-3-sonnet-20240229": {
+    "description": "Claude 3 Sonnet은 기업 작업 부하에 이상적인 균형을 제공하며, 더 낮은 가격으로 최대 효용을 제공합니다. 신뢰성이 높고 대규모 배포에 적합합니다."
+  },
+  "claude-instant-1.2": {
+    "description": "Anthropic의 모델은 낮은 지연 시간과 높은 처리량의 텍스트 생성을 위해 설계되었으며, 수백 페이지의 텍스트 생성을 지원합니다."
+  },
+  "codegeex-4": {
+    "description": "CodeGeeX-4는 강력한 AI 프로그래밍 도우미로, 다양한 프로그래밍 언어에 대한 스마트 Q&A 및 코드 완성을 지원하여 개발 효율성을 높입니다."
+  },
+  "codegemma": {
+    "description": "CodeGemma는 다양한 프로그래밍 작업을 위한 경량 언어 모델로, 빠른 반복 및 통합을 지원합니다."
+  },
+  "codegemma:2b": {
+    "description": "CodeGemma는 다양한 프로그래밍 작업을 위한 경량 언어 모델로, 빠른 반복 및 통합을 지원합니다."
+  },
+  "codellama": {
+    "description": "Code Llama는 코드 생성 및 논의에 중점을 둔 LLM으로, 광범위한 프로그래밍 언어 지원을 결합하여 개발자 환경에 적합합니다."
+  },
+  "codellama:13b": {
+    "description": "Code Llama는 코드 생성 및 논의에 중점을 둔 LLM으로, 광범위한 프로그래밍 언어 지원을 결합하여 개발자 환경에 적합합니다."
+  },
+  "codellama:34b": {
+    "description": "Code Llama는 코드 생성 및 논의에 중점을 둔 LLM으로, 광범위한 프로그래밍 언어 지원을 결합하여 개발자 환경에 적합합니다."
+  },
+  "codellama:70b": {
+    "description": "Code Llama는 코드 생성 및 논의에 중점을 둔 LLM으로, 광범위한 프로그래밍 언어 지원을 결합하여 개발자 환경에 적합합니다."
+  },
+  "codeqwen": {
+    "description": "CodeQwen1.5는 대량의 코드 데이터로 훈련된 대형 언어 모델로, 복잡한 프로그래밍 작업을 해결하기 위해 설계되었습니다."
+  },
+  "codestral": {
+    "description": "Codestral은 Mistral AI의 첫 번째 코드 모델로, 코드 생성 작업에 뛰어난 지원을 제공합니다."
+  },
+  "codestral-latest": {
+    "description": "Codestral은 코드 생성을 전문으로 하는 최첨단 생성 모델로, 중간 채우기 및 코드 완성 작업을 최적화했습니다."
+  },
+  "cognitivecomputations/dolphin-mixtral-8x22b": {
+    "description": "Dolphin Mixtral 8x22B는 지시 준수, 대화 및 프로그래밍을 위해 설계된 모델입니다."
+  },
+  "command-r": {
+    "description": "Command R은 대화 및 긴 컨텍스트 작업에 최적화된 LLM으로, 동적 상호작용 및 지식 관리에 특히 적합합니다."
+  },
+  "command-r-plus": {
+    "description": "Command R+는 실제 기업 환경 및 복잡한 응용을 위해 설계된 고성능 대형 언어 모델입니다."
+  },
+  "databricks/dbrx-instruct": {
+    "description": "DBRX Instruct는 높은 신뢰성을 가진 지시 처리 능력을 제공하며, 다양한 산업 응용을 지원합니다."
+  },
+  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
+    "description": "DeepSeek Coder V2는 코드 작업을 위해 설계되었으며, 효율적인 코드 생성을 중점적으로 다룹니다."
+  },
+  "deepseek-ai/DeepSeek-V2-Chat": {
+    "description": "DeepSeek V2는 67억 파라미터를 갖추고 있으며, 영문 및 중문 텍스트 처리를 지원합니다."
+  },
+  "deepseek-ai/DeepSeek-V2.5": {
+    "description": "DeepSeek V2.5는 이전 버전의 우수한 기능을 집약하여 일반 및 인코딩 능력을 강화했습니다."
+  },
+  "deepseek-ai/deepseek-llm-67b-chat": {
+    "description": "DeepSeek 67B는 고복잡성 대화를 위해 훈련된 고급 모델입니다."
+  },
+  "deepseek-chat": {
+    "description": "일반 및 코드 능력을 융합한 새로운 오픈 소스 모델로, 기존 Chat 모델의 일반 대화 능력과 Coder 모델의 강력한 코드 처리 능력을 유지하면서 인간의 선호에 더 잘 맞춰졌습니다. 또한, DeepSeek-V2.5는 작문 작업, 지시 따르기 등 여러 측면에서 큰 향상을 이루었습니다."
+  },
+  "deepseek-coder-v2": {
+    "description": "DeepSeek Coder V2는 오픈 소스 혼합 전문가 코드 모델로, 코드 작업에서 뛰어난 성능을 발휘하며, GPT4-Turbo와 경쟁할 수 있습니다."
+  },
+  "deepseek-coder-v2:236b": {
+    "description": "DeepSeek Coder V2는 오픈 소스 혼합 전문가 코드 모델로, 코드 작업에서 뛰어난 성능을 발휘하며, GPT4-Turbo와 경쟁할 수 있습니다."
+  },
+  "deepseek-v2": {
+    "description": "DeepSeek V2는 경제적이고 효율적인 처리 요구에 적합한 Mixture-of-Experts 언어 모델입니다."
+  },
+  "deepseek-v2:236b": {
+    "description": "DeepSeek V2 236B는 DeepSeek의 설계 코드 모델로, 강력한 코드 생성 능력을 제공합니다."
+  },
+  "deepseek/deepseek-chat": {
+    "description": "일반 및 코드 능력을 통합한 새로운 오픈 소스 모델로, 기존 Chat 모델의 일반 대화 능력과 Coder 모델의 강력한 코드 처리 능력을 유지하면서 인간의 선호에 더 잘 맞춰졌습니다. 또한, DeepSeek-V2.5는 작문 작업, 지시 따르기 등 여러 분야에서 큰 향상을 이루었습니다."
+  },
+  "emohaa": {
+    "description": "Emohaa는 심리 모델로, 전문 상담 능력을 갖추고 있어 사용자가 감정 문제를 이해하는 데 도움을 줍니다."
+  },
+  "gemini-1.0-pro-001": {
+    "description": "Gemini 1.0 Pro 001 (Tuning)은 안정적이고 조정 가능한 성능을 제공하며, 복잡한 작업 솔루션의 이상적인 선택입니다."
+  },
+  "gemini-1.0-pro-002": {
+    "description": "Gemini 1.0 Pro 002 (Tuning)은 뛰어난 다중 모달 지원을 제공하며, 복잡한 작업의 효과적인 해결에 중점을 둡니다."
+  },
+  "gemini-1.0-pro-latest": {
+    "description": "Gemini 1.0 Pro는 Google의 고성능 AI 모델로, 광범위한 작업 확장을 위해 설계되었습니다."
+  },
+  "gemini-1.5-flash-001": {
+    "description": "Gemini 1.5 Flash 001은 효율적인 다중 모달 모델로, 광범위한 응용 프로그램 확장을 지원합니다."
+  },
+  "gemini-1.5-flash-8b-exp-0827": {
+    "description": "Gemini 1.5 Flash 8B 0827은 대규모 작업 시나리오 처리를 위해 설계되었으며, 비할 데 없는 처리 속도를 제공합니다."
+  },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827은 최적화된 다중 모달 처리 능력을 제공하며, 다양한 복잡한 작업 시나리오에 적합합니다."
+  },
+  "gemini-1.5-flash-latest": {
+    "description": "Gemini 1.5 Flash는 Google의 최신 다중 모달 AI 모델로, 빠른 처리 능력을 갖추고 있으며 텍스트, 이미지 및 비디오 입력을 지원하여 다양한 작업에 효율적으로 확장할 수 있습니다."
+  },
+  "gemini-1.5-pro-001": {
+    "description": "Gemini 1.5 Pro 001은 확장 가능한 다중 모달 AI 솔루션으로, 광범위한 복잡한 작업을 지원합니다."
+  },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801은 뛰어난 다중 모달 처리 능력을 제공하여 응용 프로그램 개발에 더 큰 유연성을 제공합니다."
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827은 최신 최적화 기술을 결합하여 더 효율적인 다중 모달 데이터 처리 능력을 제공합니다."
+  },
+  "gemini-1.5-pro-latest": {
+    "description": "Gemini 1.5 Pro는 최대 200만 개의 토큰을 지원하며, 중형 다중 모달 모델의 이상적인 선택으로 복잡한 작업에 대한 다각적인 지원을 제공합니다."
+  },
+  "gemma-7b-it": {
+    "description": "Gemma 7B는 중소 규모 작업 처리에 적합하며, 비용 효과성을 갖추고 있습니다."
+  },
+  "gemma2": {
+    "description": "Gemma 2는 Google에서 출시한 효율적인 모델로, 소형 응용 프로그램부터 복잡한 데이터 처리까지 다양한 응용 시나리오를 포함합니다."
+  },
+  "gemma2-9b-it": {
+    "description": "Gemma 2 9B는 특정 작업 및 도구 통합을 위해 최적화된 모델입니다."
+  },
+  "gemma2:27b": {
+    "description": "Gemma 2는 Google에서 출시한 효율적인 모델로, 소형 응용 프로그램부터 복잡한 데이터 처리까지 다양한 응용 시나리오를 포함합니다."
+  },
+  "gemma2:2b": {
+    "description": "Gemma 2는 Google에서 출시한 효율적인 모델로, 소형 응용 프로그램부터 복잡한 데이터 처리까지 다양한 응용 시나리오를 포함합니다."
+  },
+  "general": {
+    "description": "Spark Lite는 경량 대형 언어 모델로, 매우 낮은 지연 시간과 효율적인 처리 능력을 갖추고 있으며, 완전 무료로 개방되어 실시간 온라인 검색 기능을 지원합니다. 빠른 응답 특성 덕분에 저전력 장치에서의 추론 응용 및 모델 미세 조정에서 뛰어난 성능을 발휘하여 사용자에게 뛰어난 비용 효율성과 지능적인 경험을 제공합니다. 특히 지식 질문 응답, 콘텐츠 생성 및 검색 시나리오에서 두각을 나타냅니다."
+  },
+  "generalv3": {
+    "description": "Spark Pro는 전문 분야에 최적화된 고성능 대형 언어 모델로, 수학, 프로그래밍, 의료, 교육 등 여러 분야에 중점을 두고 있으며, 네트워크 검색 및 내장된 날씨, 날짜 등의 플러그인을 지원합니다. 최적화된 모델은 복잡한 지식 질문 응답, 언어 이해 및 고급 텍스트 창작에서 뛰어난 성능과 효율성을 보여주며, 전문 응용 시나리오에 적합한 이상적인 선택입니다."
+  },
+  "generalv3.5": {
+    "description": "Spark3.5 Max는 기능이 가장 포괄적인 버전으로, 네트워크 검색 및 다양한 내장 플러그인을 지원합니다. 전면적으로 최적화된 핵심 능력과 시스템 역할 설정 및 함수 호출 기능 덕분에 다양한 복잡한 응용 시나리오에서 매우 우수한 성능을 발휘합니다."
+  },
+  "glm-4": {
+    "description": "GLM-4는 2024년 1월에 출시된 구형 플래그십 버전으로, 현재 더 강력한 GLM-4-0520으로 대체되었습니다."
+  },
+  "glm-4-0520": {
+    "description": "GLM-4-0520은 최신 모델 버전으로, 매우 복잡하고 다양한 작업을 위해 설계되어 뛰어난 성능을 발휘합니다."
+  },
+  "glm-4-air": {
+    "description": "GLM-4-Air는 가성비가 높은 버전으로, GLM-4에 가까운 성능을 제공하며 빠른 속도와 저렴한 가격을 자랑합니다."
+  },
+  "glm-4-airx": {
+    "description": "GLM-4-AirX는 GLM-4-Air의 효율적인 버전으로, 추론 속도가 최대 2.6배에 달합니다."
+  },
+  "glm-4-alltools": {
+    "description": "GLM-4-AllTools는 복잡한 지시 계획 및 도구 호출을 지원하도록 최적화된 다기능 지능형 모델로, 웹 브라우징, 코드 해석 및 텍스트 생성을 포함한 다중 작업 실행에 적합합니다."
+  },
+  "glm-4-flash": {
+    "description": "GLM-4-Flash는 간단한 작업을 처리하는 데 이상적인 선택으로, 가장 빠른 속도와 가장 저렴한 가격을 자랑합니다."
+  },
+  "glm-4-long": {
+    "description": "GLM-4-Long는 초장 텍스트 입력을 지원하여 기억형 작업 및 대규모 문서 처리에 적합합니다."
+  },
+  "glm-4-plus": {
+    "description": "GLM-4-Plus는 고지능 플래그십 모델로, 긴 텍스트 및 복잡한 작업 처리 능력이 뛰어나며 성능이 전반적으로 향상되었습니다."
+  },
+  "glm-4v": {
+    "description": "GLM-4V는 강력한 이미지 이해 및 추론 능력을 제공하며, 다양한 시각적 작업을 지원합니다."
+  },
+  "glm-4v-plus": {
+    "description": "GLM-4V-Plus는 비디오 콘텐츠 및 다수의 이미지에 대한 이해 능력을 갖추고 있어 다중 모드 작업에 적합합니다."
+  },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827은 최적화된 다중 모달 처리 능력을 제공하며, 다양한 복잡한 작업 시나리오에 적합합니다."
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827은 최신 최적화 기술을 결합하여 더 효율적인 다중 모달 데이터 처리 능력을 제공합니다."
+  },
+  "google/gemma-2-27b-it": {
+    "description": "Gemma 2는 경량화와 효율적인 설계를 이어갑니다."
+  },
+  "google/gemma-2-9b-it": {
+    "description": "Gemma 2는 Google의 경량화된 오픈 소스 텍스트 모델 시리즈입니다."
+  },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2는 Google의 경량화된 오픈 소스 텍스트 모델 시리즈입니다."
+  },
+  "google/gemma-2b-it": {
+    "description": "Gemma Instruct (2B)는 기본적인 지시 처리 능력을 제공하며, 경량 애플리케이션에 적합합니다."
+  },
+  "gpt-3.5-turbo": {
+    "description": "GPT 3.5 Turbo는 다양한 텍스트 생성 및 이해 작업에 적합하며, 현재 gpt-3.5-turbo-0125를 가리킵니다."
+  },
+  "gpt-3.5-turbo-0125": {
+    "description": "GPT 3.5 Turbo는 다양한 텍스트 생성 및 이해 작업에 적합하며, 현재 gpt-3.5-turbo-0125를 가리킵니다."
+  },
+  "gpt-3.5-turbo-1106": {
+    "description": "GPT 3.5 Turbo는 다양한 텍스트 생성 및 이해 작업에 적합하며, 현재 gpt-3.5-turbo-0125를 가리킵니다."
+  },
+  "gpt-3.5-turbo-instruct": {
+    "description": "GPT 3.5 Turbo는 다양한 텍스트 생성 및 이해 작업에 적합하며, 현재 gpt-3.5-turbo-0125를 가리킵니다."
+  },
+  "gpt-4": {
+    "description": "GPT-4는 더 큰 컨텍스트 창을 제공하여 더 긴 텍스트 입력을 처리할 수 있으며, 광범위한 정보 통합 및 데이터 분석이 필요한 상황에 적합합니다."
+  },
+  "gpt-4-0125-preview": {
+    "description": "최신 GPT-4 Turbo 모델은 시각적 기능을 갖추고 있습니다. 이제 시각적 요청은 JSON 형식과 함수 호출을 사용하여 처리할 수 있습니다. GPT-4 Turbo는 다중 모드 작업을 위한 비용 효율적인 지원을 제공하는 향상된 버전입니다. 정확성과 효율성 간의 균형을 찾아 실시간 상호작용이 필요한 응용 프로그램에 적합합니다."
+  },
+  "gpt-4-0613": {
+    "description": "GPT-4는 더 큰 컨텍스트 창을 제공하여 더 긴 텍스트 입력을 처리할 수 있으며, 광범위한 정보 통합 및 데이터 분석이 필요한 상황에 적합합니다."
+  },
+  "gpt-4-1106-preview": {
+    "description": "최신 GPT-4 Turbo 모델은 시각적 기능을 갖추고 있습니다. 이제 시각적 요청은 JSON 형식과 함수 호출을 사용하여 처리할 수 있습니다. GPT-4 Turbo는 다중 모드 작업을 위한 비용 효율적인 지원을 제공하는 향상된 버전입니다. 정확성과 효율성 간의 균형을 찾아 실시간 상호작용이 필요한 응용 프로그램에 적합합니다."
+  },
+  "gpt-4-1106-vision-preview": {
+    "description": "최신 GPT-4 Turbo 모델은 시각적 기능을 갖추고 있습니다. 이제 시각적 요청은 JSON 형식과 함수 호출을 사용하여 처리할 수 있습니다. GPT-4 Turbo는 다중 모드 작업을 위한 비용 효율적인 지원을 제공하는 향상된 버전입니다. 정확성과 효율성 간의 균형을 찾아 실시간 상호작용이 필요한 응용 프로그램에 적합합니다."
+  },
+  "gpt-4-32k": {
+    "description": "GPT-4는 더 큰 컨텍스트 창을 제공하여 더 긴 텍스트 입력을 처리할 수 있으며, 광범위한 정보 통합 및 데이터 분석이 필요한 상황에 적합합니다."
+  },
+  "gpt-4-32k-0613": {
+    "description": "GPT-4는 더 큰 컨텍스트 창을 제공하여 더 긴 텍스트 입력을 처리할 수 있으며, 광범위한 정보 통합 및 데이터 분석이 필요한 상황에 적합합니다."
+  },
+  "gpt-4-turbo": {
+    "description": "최신 GPT-4 Turbo 모델은 시각적 기능을 갖추고 있습니다. 이제 시각적 요청은 JSON 형식과 함수 호출을 사용하여 처리할 수 있습니다. GPT-4 Turbo는 다중 모드 작업을 위한 비용 효율적인 지원을 제공하는 향상된 버전입니다. 정확성과 효율성 간의 균형을 찾아 실시간 상호작용이 필요한 응용 프로그램에 적합합니다."
+  },
+  "gpt-4-turbo-2024-04-09": {
+    "description": "최신 GPT-4 Turbo 모델은 시각적 기능을 갖추고 있습니다. 이제 시각적 요청은 JSON 형식과 함수 호출을 사용하여 처리할 수 있습니다. GPT-4 Turbo는 다중 모드 작업을 위한 비용 효율적인 지원을 제공하는 향상된 버전입니다. 정확성과 효율성 간의 균형을 찾아 실시간 상호작용이 필요한 응용 프로그램에 적합합니다."
+  },
+  "gpt-4-turbo-preview": {
+    "description": "최신 GPT-4 Turbo 모델은 시각적 기능을 갖추고 있습니다. 이제 시각적 요청은 JSON 형식과 함수 호출을 사용하여 처리할 수 있습니다. GPT-4 Turbo는 다중 모드 작업을 위한 비용 효율적인 지원을 제공하는 향상된 버전입니다. 정확성과 효율성 간의 균형을 찾아 실시간 상호작용이 필요한 응용 프로그램에 적합합니다."
+  },
+  "gpt-4-vision-preview": {
+    "description": "최신 GPT-4 Turbo 모델은 시각적 기능을 갖추고 있습니다. 이제 시각적 요청은 JSON 형식과 함수 호출을 사용하여 처리할 수 있습니다. GPT-4 Turbo는 다중 모드 작업을 위한 비용 효율적인 지원을 제공하는 향상된 버전입니다. 정확성과 효율성 간의 균형을 찾아 실시간 상호작용이 필요한 응용 프로그램에 적합합니다."
+  },
+  "gpt-4o": {
+    "description": "ChatGPT-4o는 동적 모델로, 최신 버전을 유지하기 위해 실시간으로 업데이트됩니다. 강력한 언어 이해 및 생성 능력을 결합하여 고객 서비스, 교육 및 기술 지원을 포함한 대규모 응용 프로그램에 적합합니다."
+  },
+  "gpt-4o-2024-05-13": {
+    "description": "ChatGPT-4o는 동적 모델로, 최신 버전을 유지하기 위해 실시간으로 업데이트됩니다. 강력한 언어 이해 및 생성 능력을 결합하여 고객 서비스, 교육 및 기술 지원을 포함한 대규모 응용 프로그램에 적합합니다."
+  },
+  "gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o는 동적 모델로, 최신 버전을 유지하기 위해 실시간으로 업데이트됩니다. 강력한 언어 이해 및 생성 능력을 결합하여 고객 서비스, 교육 및 기술 지원을 포함한 대규모 응용 프로그램에 적합합니다."
+  },
+  "gpt-4o-mini": {
+    "description": "GPT-4o mini는 OpenAI가 GPT-4 Omni 이후에 출시한 최신 모델로, 텍스트와 이미지를 입력받아 텍스트를 출력합니다. 이 모델은 최신의 소형 모델로, 최근의 다른 최첨단 모델보다 훨씬 저렴하며, GPT-3.5 Turbo보다 60% 이상 저렴합니다. 최첨단의 지능을 유지하면서도 뛰어난 가성비를 자랑합니다. GPT-4o mini는 MMLU 테스트에서 82%의 점수를 기록했으며, 현재 채팅 선호도에서 GPT-4보다 높은 순위를 차지하고 있습니다."
+  },
+  "gryphe/mythomax-l2-13b": {
+    "description": "MythoMax l2 13B는 여러 최상위 모델을 통합한 창의성과 지능이 결합된 언어 모델입니다."
+  },
+  "internlm/internlm2_5-20b-chat": {
+    "description": "혁신적인 오픈 소스 모델 InternLM2.5는 대규모 파라미터를 통해 대화의 지능을 향상시킵니다."
+  },
+  "internlm/internlm2_5-7b-chat": {
+    "description": "InternLM2.5는 다양한 시나리오에서 스마트 대화 솔루션을 제공합니다."
+  },
+  "llama-3.1-70b-instruct": {
+    "description": "Llama 3.1 70B Instruct 모델은 70B 매개변수를 갖추고 있으며, 대규모 텍스트 생성 및 지시 작업에서 뛰어난 성능을 제공합니다."
+  },
+  "llama-3.1-70b-versatile": {
+    "description": "Llama 3.1 70B는 더 강력한 AI 추론 능력을 제공하며, 복잡한 응용 프로그램에 적합하고, 많은 계산 처리를 지원하며 효율성과 정확성을 보장합니다."
+  },
+  "llama-3.1-8b-instant": {
+    "description": "Llama 3.1 8B는 효율적인 모델로, 빠른 텍스트 생성 능력을 제공하며, 대규모 효율성과 비용 효과성이 필요한 응용 프로그램에 매우 적합합니다."
+  },
+  "llama-3.1-8b-instruct": {
+    "description": "Llama 3.1 8B Instruct 모델은 8B 매개변수를 갖추고 있으며, 화면 지시 작업의 효율적인 실행을 지원하고 우수한 텍스트 생성 능력을 제공합니다."
+  },
+  "llama-3.1-sonar-huge-128k-online": {
+    "description": "Llama 3.1 Sonar Huge Online 모델은 405B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 복잡한 온라인 채팅 애플리케이션을 위해 설계되었습니다."
+  },
+  "llama-3.1-sonar-large-128k-chat": {
+    "description": "Llama 3.1 Sonar Large Chat 모델은 70B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 복잡한 오프라인 채팅 작업에 적합합니다."
+  },
+  "llama-3.1-sonar-large-128k-online": {
+    "description": "Llama 3.1 Sonar Large Online 모델은 70B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 대용량 및 다양한 채팅 작업에 적합합니다."
+  },
+  "llama-3.1-sonar-small-128k-chat": {
+    "description": "Llama 3.1 Sonar Small Chat 모델은 8B 매개변수를 갖추고 있으며, 오프라인 채팅을 위해 설계되어 약 127,000개의 토큰의 컨텍스트 길이를 지원합니다."
+  },
+  "llama-3.1-sonar-small-128k-online": {
+    "description": "Llama 3.1 Sonar Small Online 모델은 8B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 온라인 채팅을 위해 설계되었습니다."
+  },
+  "llama3-70b-8192": {
+    "description": "Meta Llama 3 70B는 비할 데 없는 복잡성 처리 능력을 제공하며, 높은 요구 사항을 가진 프로젝트에 맞춤형으로 설계되었습니다."
+  },
+  "llama3-8b-8192": {
+    "description": "Meta Llama 3 8B는 우수한 추론 성능을 제공하며, 다양한 응용 프로그램 요구에 적합합니다."
+  },
+  "llama3-groq-70b-8192-tool-use-preview": {
+    "description": "Llama 3 Groq 70B Tool Use는 강력한 도구 호출 능력을 제공하며, 복잡한 작업의 효율적인 처리를 지원합니다."
+  },
+  "llama3-groq-8b-8192-tool-use-preview": {
+    "description": "Llama 3 Groq 8B Tool Use는 효율적인 도구 사용을 위해 최적화된 모델로, 빠른 병렬 계산을 지원합니다."
+  },
+  "llama3.1": {
+    "description": "Llama 3.1은 Meta에서 출시한 선도적인 모델로, 최대 405B 매개변수를 지원하며, 복잡한 대화, 다국어 번역 및 데이터 분석 분야에 적용될 수 있습니다."
+  },
+  "llama3.1:405b": {
+    "description": "Llama 3.1은 Meta에서 출시한 선도적인 모델로, 최대 405B 매개변수를 지원하며, 복잡한 대화, 다국어 번역 및 데이터 분석 분야에 적용될 수 있습니다."
+  },
+  "llama3.1:70b": {
+    "description": "Llama 3.1은 Meta에서 출시한 선도적인 모델로, 최대 405B 매개변수를 지원하며, 복잡한 대화, 다국어 번역 및 데이터 분석 분야에 적용될 수 있습니다."
+  },
+  "llava": {
+    "description": "LLaVA는 시각 인코더와 Vicuna를 결합한 다중 모달 모델로, 강력한 시각 및 언어 이해를 제공합니다."
+  },
+  "llava-v1.5-7b-4096-preview": {
+    "description": "LLaVA 1.5 7B는 시각 처리 능력을 융합하여, 시각 정보 입력을 통해 복잡한 출력을 생성합니다."
+  },
+  "llava:13b": {
+    "description": "LLaVA는 시각 인코더와 Vicuna를 결합한 다중 모달 모델로, 강력한 시각 및 언어 이해를 제공합니다."
+  },
+  "llava:34b": {
+    "description": "LLaVA는 시각 인코더와 Vicuna를 결합한 다중 모달 모델로, 강력한 시각 및 언어 이해를 제공합니다."
+  },
+  "mathstral": {
+    "description": "MathΣtral은 과학 연구 및 수학 추론을 위해 설계되었으며, 효과적인 계산 능력과 결과 해석을 제공합니다."
+  },
+  "meta-llama/Llama-2-13b-chat-hf": {
+    "description": "LLaMA-2 Chat (13B)는 뛰어난 언어 처리 능력과 우수한 상호작용 경험을 제공합니다."
+  },
+  "meta-llama/Llama-3-70b-chat-hf": {
+    "description": "LLaMA-3 Chat (70B)는 강력한 채팅 모델로, 복잡한 대화 요구를 지원합니다."
+  },
+  "meta-llama/Llama-3-8b-chat-hf": {
+    "description": "LLaMA-3 Chat (8B)는 다국어 지원을 제공하며, 풍부한 분야 지식을 포함합니다."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct": {
+    "description": "LLaMA 3는 대용량 텍스트 생성 및 지시 해석을 지원합니다."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
+    "description": "Llama 3 70B Instruct Lite는 효율성과 낮은 지연 시간이 필요한 환경에 적합합니다."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct-Turbo": {
+    "description": "Llama 3 70B Instruct Turbo는 뛰어난 언어 이해 및 생성 능력을 제공하며, 가장 까다로운 계산 작업에 적합합니다."
+  },
+  "meta-llama/Meta-Llama-3-8B-Instruct-Lite": {
+    "description": "Llama 3 8B Instruct Lite는 자원이 제한된 환경에 적합하며, 뛰어난 균형 성능을 제공합니다."
+  },
+  "meta-llama/Meta-Llama-3-8B-Instruct-Turbo": {
+    "description": "Llama 3 8B Instruct Turbo는 효율적인 대형 언어 모델로, 광범위한 응용 분야를 지원합니다."
+  },
+  "meta-llama/Meta-Llama-3.1-405B-Instruct": {
+    "description": "LLaMA 3.1 405B는 사전 훈련 및 지시 조정의 강력한 모델입니다."
+  },
+  "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
+    "description": "405B Llama 3.1 Turbo 모델은 대규모 데이터 처리를 위한 초대용량의 컨텍스트 지원을 제공하며, 초대규모 인공지능 애플리케이션에서 뛰어난 성능을 발휘합니다."
+  },
+  "meta-llama/Meta-Llama-3.1-70B-Instruct": {
+    "description": "LLaMA 3.1 70B는 다국어의 효율적인 대화 지원을 제공합니다."
+  },
+  "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {
+    "description": "Llama 3.1 70B 모델은 정밀 조정되어 고부하 애플리케이션에 적합하며, FP8로 양자화되어 더 높은 효율의 계산 능력과 정확성을 제공합니다."
+  },
+  "meta-llama/Meta-Llama-3.1-8B-Instruct": {
+    "description": "LLaMA 3.1은 다국어 지원을 제공하며, 업계에서 선도하는 생성 모델 중 하나입니다."
+  },
+  "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
+    "description": "Llama 3.1 8B 모델은 FP8 양자화를 사용하여 최대 131,072개의 컨텍스트 토큰을 지원하며, 오픈 소스 모델 중에서 뛰어난 성능을 발휘하여 복잡한 작업에 적합합니다."
+  },
+  "meta-llama/llama-3-70b-instruct": {
+    "description": "Llama 3 70B Instruct는 고품질 대화 시나리오에 최적화되어 있으며, 다양한 인간 평가에서 뛰어난 성능을 보여줍니다."
+  },
+  "meta-llama/llama-3-8b-instruct": {
+    "description": "Llama 3 8B Instruct는 고품질 대화 시나리오에 최적화되어 있으며, 많은 폐쇄형 모델보다 우수한 성능을 보입니다."
+  },
+  "meta-llama/llama-3.1-405b-instruct": {
+    "description": "Llama 3.1 405B Instruct는 Meta에서 새롭게 출시한 버전으로, 고품질 대화 생성을 위해 최적화되어 있으며, 많은 선도적인 폐쇄형 모델을 초월합니다."
+  },
+  "meta-llama/llama-3.1-70b-instruct": {
+    "description": "Llama 3.1 70B Instruct는 고품질 대화를 위해 설계되었으며, 인간 평가에서 뛰어난 성능을 보여주고, 특히 높은 상호작용 시나리오에 적합합니다."
+  },
+  "meta-llama/llama-3.1-8b-instruct": {
+    "description": "Llama 3.1 8B Instruct는 Meta에서 출시한 최신 버전으로, 고품질 대화 시나리오에 최적화되어 있으며, 많은 선도적인 폐쇄형 모델보다 우수한 성능을 보입니다."
+  },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1은 다국어 지원을 제공하며, 업계 최고의 생성 모델 중 하나입니다."
+  },
+  "meta.llama3-1-405b-instruct-v1:0": {
+    "description": "Meta Llama 3.1 405B Instruct는 Llama 3.1 Instruct 모델 중 가장 크고 강력한 모델로, 고도로 발전된 대화 추론 및 합성 데이터 생성 모델입니다. 특정 분야에서 전문적인 지속적 사전 훈련 또는 미세 조정의 기초로도 사용될 수 있습니다. Llama 3.1이 제공하는 다국어 대형 언어 모델(LLMs)은 8B, 70B 및 405B 크기의 사전 훈련된 지시 조정 생성 모델로 구성되어 있습니다(텍스트 입력/출력). Llama 3.1 지시 조정 텍스트 모델(8B, 70B, 405B)은 다국어 대화 사용 사례에 최적화되어 있으며, 일반 산업 벤치마크 테스트에서 많은 오픈 소스 채팅 모델을 초과했습니다. Llama 3.1은 다양한 언어의 상업적 및 연구 용도로 설계되었습니다. 지시 조정 텍스트 모델은 비서와 유사한 채팅에 적합하며, 사전 훈련 모델은 다양한 자연어 생성 작업에 적응할 수 있습니다. Llama 3.1 모델은 또한 모델의 출력을 활용하여 다른 모델을 개선하는 것을 지원하며, 합성 데이터 생성 및 정제에 사용될 수 있습니다. Llama 3.1은 최적화된 변압기 아키텍처를 사용한 자기 회귀 언어 모델입니다. 조정된 버전은 감독 미세 조정(SFT) 및 인간 피드백이 포함된 강화 학습(RLHF)을 사용하여 인간의 도움 및 안전성 선호에 부합하도록 설계되었습니다."
+  },
+  "meta.llama3-1-70b-instruct-v1:0": {
+    "description": "Meta Llama 3.1 70B Instruct의 업데이트 버전으로, 확장된 128K 컨텍스트 길이, 다국어 지원 및 개선된 추론 능력을 포함합니다. Llama 3.1이 제공하는 다국어 대형 언어 모델(LLMs)은 사전 훈련된 지침 조정 생성 모델의 집합으로, 8B, 70B 및 405B 크기(텍스트 입력/출력)를 포함합니다. Llama 3.1 지침 조정 텍스트 모델(8B, 70B, 405B)은 다국어 대화 사용 사례에 최적화되어 있으며, 일반적인 산업 벤치마크 테스트에서 많은 사용 가능한 오픈 소스 채팅 모델을 초월했습니다. Llama 3.1은 다양한 언어의 상업적 및 연구 용도로 사용되도록 설계되었습니다. 지침 조정 텍스트 모델은 비서와 유사한 채팅에 적합하며, 사전 훈련된 모델은 다양한 자연어 생성 작업에 적응할 수 있습니다. Llama 3.1 모델은 또한 모델의 출력을 활용하여 다른 모델을 개선하는 데 지원하며, 합성 데이터 생성 및 정제 작업을 포함합니다. Llama 3.1은 최적화된 변압기 아키텍처를 사용한 자기 회귀 언어 모델입니다. 조정된 버전은 감독 미세 조정(SFT) 및 인간 피드백을 통한 강화 학습(RLHF)을 사용하여 인간의 도움 및 안전성 선호에 부합하도록 설계되었습니다."
+  },
+  "meta.llama3-1-8b-instruct-v1:0": {
+    "description": "Meta Llama 3.1 8B Instruct의 업데이트 버전으로, 확장된 128K 컨텍스트 길이, 다국어 지원 및 개선된 추론 능력을 포함합니다. Llama 3.1이 제공하는 다국어 대형 언어 모델(LLMs)은 사전 훈련된 지침 조정 생성 모델의 집합으로, 8B, 70B 및 405B 크기(텍스트 입력/출력)를 포함합니다. Llama 3.1 지침 조정 텍스트 모델(8B, 70B, 405B)은 다국어 대화 사용 사례에 최적화되어 있으며, 일반적인 산업 벤치마크 테스트에서 많은 사용 가능한 오픈 소스 채팅 모델을 초월했습니다. Llama 3.1은 다양한 언어의 상업적 및 연구 용도로 사용되도록 설계되었습니다. 지침 조정 텍스트 모델은 비서와 유사한 채팅에 적합하며, 사전 훈련된 모델은 다양한 자연어 생성 작업에 적응할 수 있습니다. Llama 3.1 모델은 또한 모델의 출력을 활용하여 다른 모델을 개선하는 데 지원하며, 합성 데이터 생성 및 정제 작업을 포함합니다. Llama 3.1은 최적화된 변압기 아키텍처를 사용한 자기 회귀 언어 모델입니다. 조정된 버전은 감독 미세 조정(SFT) 및 인간 피드백을 통한 강화 학습(RLHF)을 사용하여 인간의 도움 및 안전성 선호에 부합하도록 설계되었습니다."
+  },
+  "meta.llama3-70b-instruct-v1:0": {
+    "description": "Meta Llama 3은 개발자, 연구자 및 기업을 위한 오픈 대형 언어 모델(LLM)로, 생성 AI 아이디어를 구축하고 실험하며 책임감 있게 확장하는 데 도움을 주기 위해 설계되었습니다. 전 세계 커뮤니티 혁신의 기초 시스템의 일환으로, 콘텐츠 생성, 대화 AI, 언어 이해, 연구 개발 및 기업 응용에 매우 적합합니다."
+  },
+  "meta.llama3-8b-instruct-v1:0": {
+    "description": "Meta Llama 3은 개발자, 연구자 및 기업을 위한 오픈 대형 언어 모델(LLM)로, 생성 AI 아이디어를 구축하고 실험하며 책임감 있게 확장하는 데 도움을 주기 위해 설계되었습니다. 전 세계 커뮤니티 혁신의 기초 시스템의 일환으로, 계산 능력과 자원이 제한된 환경, 엣지 장치 및 더 빠른 훈련 시간에 매우 적합합니다."
+  },
+  "microsoft/wizardlm 2-7b": {
+    "description": "WizardLM 2 7B는 Microsoft AI의 최신 경량 모델로, 기존 오픈 소스 선도 모델의 성능에 근접합니다."
+  },
+  "microsoft/wizardlm-2-8x22b": {
+    "description": "WizardLM-2 8x22B는 마이크로소프트 AI의 최첨단 Wizard 모델로, 매우 경쟁력 있는 성능을 보여줍니다."
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-V는 OpenBMB에서 출시한 차세대 다중 모달 대형 모델로, 뛰어난 OCR 인식 및 다중 모달 이해 능력을 갖추고 있으며, 다양한 응용 프로그램을 지원합니다."
+  },
+  "mistral": {
+    "description": "Mistral은 Mistral AI에서 출시한 7B 모델로, 변화하는 언어 처리 요구에 적합합니다."
+  },
+  "mistral-large": {
+    "description": "Mixtral Large는 Mistral의 플래그십 모델로, 코드 생성, 수학 및 추론 능력을 결합하여 128k 컨텍스트 창을 지원합니다."
+  },
+  "mistral-large-latest": {
+    "description": "Mistral Large는 플래그십 대형 모델로, 다국어 작업, 복잡한 추론 및 코드 생성에 능숙하여 고급 응용 프로그램에 이상적인 선택입니다."
+  },
+  "mistral-nemo": {
+    "description": "Mistral Nemo는 Mistral AI와 NVIDIA가 협력하여 출시한 고효율 12B 모델입니다."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.1": {
+    "description": "Mistral (7B) Instruct는 높은 성능으로 유명하며, 다양한 언어 작업에 적합합니다."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.2": {
+    "description": "Mistral 7B는 필요에 따라 미세 조정된 모델로, 작업에 최적화된 해답을 제공합니다."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.3": {
+    "description": "Mistral (7B) Instruct v0.3는 효율적인 계산 능력과 자연어 이해를 제공하며, 광범위한 응용에 적합합니다."
+  },
+  "mistralai/Mixtral-8x22B-Instruct-v0.1": {
+    "description": "Mixtral-8x22B Instruct (141B)는 슈퍼 대형 언어 모델로, 극도의 처리 요구를 지원합니다."
+  },
+  "mistralai/Mixtral-8x7B-Instruct-v0.1": {
+    "description": "Mixtral 8x7B는 일반 텍스트 작업을 위한 사전 훈련된 희소 혼합 전문가 모델입니다."
+  },
+  "mistralai/mistral-7b-instruct": {
+    "description": "Mistral 7B Instruct는 속도 최적화와 긴 컨텍스트 지원을 갖춘 고성능 산업 표준 모델입니다."
+  },
+  "mistralai/mistral-nemo": {
+    "description": "Mistral Nemo는 다국어 지원과 고성능 프로그래밍을 위한 7.3B 파라미터 모델입니다."
+  },
+  "mixtral": {
+    "description": "Mixtral은 Mistral AI의 전문가 모델로, 오픈 소스 가중치를 가지고 있으며, 코드 생성 및 언어 이해를 지원합니다."
+  },
+  "mixtral-8x7b-32768": {
+    "description": "Mixtral 8x7B는 높은 내결함성을 가진 병렬 계산 능력을 제공하며, 복잡한 작업에 적합합니다."
+  },
+  "mixtral:8x22b": {
+    "description": "Mixtral은 Mistral AI의 전문가 모델로, 오픈 소스 가중치를 가지고 있으며, 코드 생성 및 언어 이해를 지원합니다."
+  },
+  "moonshot-v1-128k": {
+    "description": "Moonshot V1 128K는 초장기 컨텍스트 처리 능력을 갖춘 모델로, 초장문 생성을 위해 설계되었으며, 복잡한 생성 작업 요구를 충족하고 최대 128,000개의 토큰을 처리할 수 있어, 연구, 학술 및 대형 문서 생성 등 응용 시나리오에 매우 적합합니다."
+  },
+  "moonshot-v1-32k": {
+    "description": "Moonshot V1 32K는 중간 길이의 컨텍스트 처리 능력을 제공하며, 32,768개의 토큰을 처리할 수 있어, 다양한 장문 및 복잡한 대화 생성을 위해 특히 적합하며, 콘텐츠 생성, 보고서 작성 및 대화 시스템 등 분야에 활용됩니다."
+  },
+  "moonshot-v1-8k": {
+    "description": "Moonshot V1 8K는 짧은 텍스트 작업 생성을 위해 설계되었으며, 효율적인 처리 성능을 갖추고 있어 8,192개의 토큰을 처리할 수 있으며, 짧은 대화, 속기 및 빠른 콘텐츠 생성에 매우 적합합니다."
+  },
+  "nousresearch/hermes-2-pro-llama-3-8b": {
+    "description": "Hermes 2 Pro Llama 3 8B는 Nous Hermes 2의 업그레이드 버전으로, 최신 내부 개발 데이터 세트를 포함하고 있습니다."
+  },
+  "o1-mini": {
+    "description": "o1-mini는 프로그래밍, 수학 및 과학 응용 프로그램을 위해 설계된 빠르고 경제적인 추론 모델입니다. 이 모델은 128K의 컨텍스트와 2023년 10월의 지식 기준일을 가지고 있습니다."
+  },
+  "o1-preview": {
+    "description": "o1은 OpenAI의 새로운 추론 모델로, 광범위한 일반 지식이 필요한 복잡한 작업에 적합합니다. 이 모델은 128K의 컨텍스트와 2023년 10월의 지식 기준일을 가지고 있습니다."
+  },
+  "open-codestral-mamba": {
+    "description": "Codestral Mamba는 코드 생성을 전문으로 하는 Mamba 2 언어 모델로, 고급 코드 및 추론 작업에 강력한 지원을 제공합니다."
+  },
+  "open-mistral-7b": {
+    "description": "Mistral 7B는 컴팩트하지만 고성능 모델로, 분류 및 텍스트 생성과 같은 간단한 작업 및 배치 처리에 능숙하며, 우수한 추론 능력을 갖추고 있습니다."
+  },
+  "open-mistral-nemo": {
+    "description": "Mistral Nemo는 NVIDIA와 협력하여 개발된 12B 모델로, 뛰어난 추론 및 인코딩 성능을 제공하며, 통합 및 교체가 용이합니다."
+  },
+  "open-mixtral-8x22b": {
+    "description": "Mixtral 8x22B는 더 큰 전문가 모델로, 복잡한 작업에 중점을 두고 뛰어난 추론 능력과 더 높은 처리량을 제공합니다."
+  },
+  "open-mixtral-8x7b": {
+    "description": "Mixtral 8x7B는 희소 전문가 모델로, 여러 매개변수를 활용하여 추론 속도를 높이며, 다국어 및 코드 생성 작업 처리에 적합합니다."
+  },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o는 동적 모델로, 최신 버전을 유지하기 위해 실시간으로 업데이트됩니다. 강력한 언어 이해 및 생성 능력을 결합하여 고객 서비스, 교육 및 기술 지원을 포함한 대규모 응용 프로그램에 적합합니다."
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o mini는 OpenAI가 GPT-4 Omni 이후에 출시한 최신 모델로, 이미지와 텍스트 입력을 지원하며 텍스트를 출력합니다. 가장 진보된 소형 모델로, 최근의 다른 최첨단 모델보다 훨씬 저렴하며, GPT-3.5 Turbo보다 60% 이상 저렴합니다. 최첨단 지능을 유지하면서도 뛰어난 가성비를 자랑합니다. GPT-4o mini는 MMLU 테스트에서 82%의 점수를 기록했으며, 현재 채팅 선호도에서 GPT-4보다 높은 순위를 차지하고 있습니다."
+  },
+  "openai/o1-mini": {
+    "description": "o1-mini는 프로그래밍, 수학 및 과학 응용 프로그램을 위해 설계된 빠르고 경제적인 추론 모델입니다. 이 모델은 128K의 컨텍스트와 2023년 10월의 지식 기준일을 가지고 있습니다."
+  },
+  "openai/o1-preview": {
+    "description": "o1은 OpenAI의 새로운 추론 모델로, 광범위한 일반 지식이 필요한 복잡한 작업에 적합합니다. 이 모델은 128K의 컨텍스트와 2023년 10월의 지식 기준일을 가지고 있습니다."
+  },
+  "openchat/openchat-7b": {
+    "description": "OpenChat 7B는 'C-RLFT(조건 강화 학습 미세 조정)' 전략으로 정교하게 조정된 오픈 소스 언어 모델 라이브러리입니다."
+  },
+  "openrouter/auto": {
+    "description": "요청은 컨텍스트 길이, 주제 및 복잡성에 따라 Llama 3 70B Instruct, Claude 3.5 Sonnet(자기 조정) 또는 GPT-4o로 전송됩니다."
+  },
+  "phi3": {
+    "description": "Phi-3는 Microsoft에서 출시한 경량 오픈 모델로, 효율적인 통합 및 대규모 지식 추론에 적합합니다."
+  },
+  "phi3:14b": {
+    "description": "Phi-3는 Microsoft에서 출시한 경량 오픈 모델로, 효율적인 통합 및 대규모 지식 추론에 적합합니다."
+  },
+  "qwen-long": {
+    "description": "통의천문 초대규모 언어 모델로, 긴 텍스트 컨텍스트를 지원하며, 긴 문서 및 다수의 문서에 기반한 대화 기능을 제공합니다."
+  },
+  "qwen-max": {
+    "description": "통의천문 천억급 초대규모 언어 모델로, 중국어, 영어 등 다양한 언어 입력을 지원하며, 현재 통의천문 2.5 제품 버전의 API 모델입니다."
+  },
+  "qwen-max-longcontext": {
+    "description": "통의천문 천억급 초대규모 언어 모델로, 중국어, 영어 등 다양한 언어 입력을 지원하며, 컨텍스트 창을 확장했습니다."
+  },
+  "qwen-plus": {
+    "description": "통의천문 초대규모 언어 모델의 강화 버전으로, 중국어, 영어 등 다양한 언어 입력을 지원합니다."
+  },
+  "qwen-turbo": {
+    "description": "통의천문 초대규모 언어 모델로, 중국어, 영어 등 다양한 언어 입력을 지원합니다."
+  },
+  "qwen-vl-chat-v1": {
+    "description": "통의천문 VL은 다중 이미지, 다중 회차 질문 응답, 창작 등 유연한 상호작용 방식을 지원하는 모델입니다."
+  },
+  "qwen-vl-max": {
+    "description": "통의천문 초대규모 시각 언어 모델로, 강화 버전보다 시각적 추론 능력과 지시 준수 능력을 다시 향상시켜 더 높은 시각적 인식 및 인지 수준을 제공합니다."
+  },
+  "qwen-vl-plus": {
+    "description": "통의천문 대규모 시각 언어 모델의 강화 버전으로, 세부 사항 인식 능력과 문자 인식 능력을 크게 향상시켰으며, 백만 화소 이상의 해상도와 임의의 가로 세로 비율의 이미지를 지원합니다."
+  },
+  "qwen-vl-v1": {
+    "description": "Qwen-7B 언어 모델로 초기화된 모델로, 이미지 모델을 추가하여 이미지 입력 해상도가 448인 사전 훈련 모델입니다."
+  },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2는 더 강력한 이해 및 생성 능력을 갖춘 새로운 대형 언어 모델 시리즈입니다."
+  },
+  "qwen2": {
+    "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
+  "qwen2-57b-a14b-instruct": {
+    "description": "통의천문 2가 외부에 공개한 57B 규모 14B 활성화 매개변수의 MOE 모델입니다."
+  },
+  "qwen2-72b-instruct": {
+    "description": "통의천문 2가 외부에 공개한 72B 규모의 모델입니다."
+  },
+  "qwen2-7b-instruct": {
+    "description": "통의천문 2가 외부에 공개한 7B 규모의 모델입니다."
+  },
+  "qwen2-math-72b-instruct": {
+    "description": "Qwen2-Math 모델은 강력한 수학 문제 해결 능력을 갖추고 있습니다."
+  },
+  "qwen2:0.5b": {
+    "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
+  "qwen2:1.5b": {
+    "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
+  "qwen2:72b": {
+    "description": "Qwen2는 Alibaba의 차세대 대규모 언어 모델로, 뛰어난 성능으로 다양한 응용 요구를 지원합니다."
+  },
+  "solar-1-mini-chat": {
+    "description": "Solar Mini는 컴팩트한 LLM으로, GPT-3.5보다 성능이 우수하며, 강력한 다국어 능력을 갖추고 있어 영어와 한국어를 지원하며, 효율적이고 소형 솔루션을 제공합니다."
+  },
+  "solar-1-mini-chat-ja": {
+    "description": "Solar Mini (Ja)는 Solar Mini의 능력을 확장하여 일본어에 중점을 두고 있으며, 영어와 한국어 사용에서도 효율적이고 뛰어난 성능을 유지합니다."
+  },
+  "solar-pro": {
+    "description": "Solar Pro는 Upstage에서 출시한 고지능 LLM으로, 단일 GPU의 지시 추적 능력에 중점을 두고 있으며, IFEval 점수가 80 이상입니다. 현재 영어를 지원하며, 정식 버전은 2024년 11월에 출시될 예정이며, 언어 지원 및 컨텍스트 길이를 확장할 계획입니다."
+  },
+  "step-1-128k": {
+    "description": "성능과 비용의 균형을 맞추어 일반적인 시나리오에 적합합니다."
+  },
+  "step-1-256k": {
+    "description": "초장기 컨텍스트 처리 능력을 갖추고 있으며, 특히 긴 문서 분석에 적합합니다."
+  },
+  "step-1-32k": {
+    "description": "중간 길이의 대화를 지원하며, 다양한 응용 시나리오에 적합합니다."
+  },
+  "step-1-8k": {
+    "description": "소형 모델로, 경량 작업에 적합합니다."
+  },
+  "step-1-flash": {
+    "description": "고속 모델로, 실시간 대화에 적합합니다."
+  },
+  "step-1v-32k": {
+    "description": "시각 입력을 지원하여 다중 모달 상호작용 경험을 강화합니다."
+  },
+  "step-1v-8k": {
+    "description": "소형 비주얼 모델로, 기본적인 텍스트 및 이미지 작업에 적합합니다."
+  },
+  "step-2-16k": {
+    "description": "대규모 컨텍스트 상호작용을 지원하며, 복잡한 대화 시나리오에 적합합니다."
+  },
+  "taichu_llm": {
+    "description": "자이동 태초 언어 대모델은 뛰어난 언어 이해 능력과 텍스트 창작, 지식 질문 응답, 코드 프로그래밍, 수학 계산, 논리 추론, 감정 분석, 텍스트 요약 등의 능력을 갖추고 있습니다. 혁신적으로 대규모 데이터 사전 훈련과 다원적 풍부한 지식을 결합하여 알고리즘 기술을 지속적으로 다듬고, 방대한 텍스트 데이터에서 어휘, 구조, 문법, 의미 등의 새로운 지식을 지속적으로 흡수하여 모델 성능을 지속적으로 진화시킵니다. 사용자에게 보다 편리한 정보와 서비스, 그리고 더 지능적인 경험을 제공합니다."
+  },
+  "togethercomputer/StripedHyena-Nous-7B": {
+    "description": "StripedHyena Nous (7B)는 효율적인 전략과 모델 아키텍처를 통해 향상된 계산 능력을 제공합니다."
+  },
+  "upstage/SOLAR-10.7B-Instruct-v1.0": {
+    "description": "Upstage SOLAR Instruct v1 (11B)는 세밀한 지시 작업에 적합하며, 뛰어난 언어 처리 능력을 제공합니다."
+  },
+  "wizardlm2": {
+    "description": "WizardLM 2는 Microsoft AI에서 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 발휘합니다."
+  },
+  "wizardlm2:8x22b": {
+    "description": "WizardLM 2는 Microsoft AI에서 제공하는 언어 모델로, 복잡한 대화, 다국어, 추론 및 스마트 어시스턴트 분야에서 특히 뛰어난 성능을 발휘합니다."
+  },
+  "yi-large": {
+    "description": "새로운 1000억 매개변수 모델로, 강력한 질문 응답 및 텍스트 생성 능력을 제공합니다."
+  },
+  "yi-large-fc": {
+    "description": "yi-large 모델을 기반으로 도구 호출 능력을 지원하고 강화하여 다양한 에이전트 또는 워크플로우 구축이 필요한 비즈니스 시나리오에 적합합니다."
+  },
+  "yi-large-preview": {
+    "description": "초기 버전으로, yi-large(신버전) 사용을 권장합니다."
+  },
+  "yi-large-rag": {
+    "description": "yi-large 초강력 모델을 기반으로 한 고급 서비스로, 검색 및 생성 기술을 결합하여 정확한 답변을 제공하며, 실시간으로 전 세계 정보를 검색하는 서비스를 제공합니다."
+  },
+  "yi-large-turbo": {
+    "description": "초고성능, 뛰어난 성능. 성능과 추론 속도, 비용을 기준으로 균형 잡힌 고정밀 조정을 수행합니다."
+  },
+  "yi-medium": {
+    "description": "중형 모델 업그레이드 및 미세 조정으로, 능력이 균형 잡히고 가성비가 높습니다. 지시 따르기 능력을 깊이 최적화하였습니다."
+  },
+  "yi-medium-200k": {
+    "description": "200K 초장기 컨텍스트 창을 지원하여 긴 텍스트의 깊은 이해 및 생성 능력을 제공합니다."
+  },
+  "yi-spark": {
+    "description": "작고 강력한 경량 모델로, 강화된 수학 연산 및 코드 작성 능력을 제공합니다."
+  },
+  "yi-vision": {
+    "description": "복잡한 시각 작업 모델로, 고성능 이미지 이해 및 분석 능력을 제공합니다."
+  }
+}

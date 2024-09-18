@@ -27,7 +27,7 @@ const getCustomPluginById = (id: string) => (s: ToolStoreState) =>
     | LobeToolCustomPlugin
     | undefined;
 
-const getPluginManifestById = (id: string) => (s: ToolStoreState) =>
+const getToolManifestById = (id: string) => (s: ToolStoreState) =>
   getInstalledPluginById(id)(s)?.manifest;
 
 const getPluginSettingsById = (id: string) => (s: ToolStoreState) =>
@@ -59,7 +59,7 @@ const installedCustomPluginMetaList = (s: ToolStoreState) =>
   installedPluginMetaList(s).filter((p) => p.type === 'customPlugin');
 
 const isPluginHasUI = (id: string) => (s: ToolStoreState) => {
-  const plugin = getPluginManifestById(id)(s);
+  const plugin = getToolManifestById(id)(s);
 
   return !!plugin?.ui;
 };
@@ -67,9 +67,9 @@ const isPluginHasUI = (id: string) => (s: ToolStoreState) => {
 export const pluginSelectors = {
   getCustomPluginById,
   getInstalledPluginById,
-  getPluginManifestById,
   getPluginMetaById,
   getPluginSettingsById,
+  getToolManifestById,
   installedCustomPluginMetaList,
   installedPluginManifestList,
   installedPluginMetaList,
