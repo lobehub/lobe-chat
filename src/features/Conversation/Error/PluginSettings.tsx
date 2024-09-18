@@ -26,7 +26,7 @@ const PluginSettings = memo<PluginSettingsProps>(({ id, plugin }) => {
   const [resend, deleteMessage] = useChatStore((s) => [s.regenerateMessage, s.deleteMessage]);
   const pluginIdentifier = plugin?.identifier as string;
   const pluginMeta = useToolStore(pluginSelectors.getPluginMetaById(pluginIdentifier), isEqual);
-  const manifest = useToolStore(pluginSelectors.getPluginManifestById(pluginIdentifier), isEqual);
+  const manifest = useToolStore(pluginSelectors.getToolManifestById(pluginIdentifier), isEqual);
 
   return (
     !!manifest && (

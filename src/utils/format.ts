@@ -1,3 +1,9 @@
+import { isNumber } from 'lodash-es';
+import numeral from 'numeral';
+
+import { CNY_TO_USD } from '@/const/discover';
+import { ModelPriceCurrency } from '@/types/llm';
+
 export const formatSize = (bytes: number, fractionDigits = 1): string => {
   const kbSize = bytes / 1024;
   if (kbSize < 1024) {
@@ -47,11 +53,29 @@ export const formatTime = (timeInSeconds: number): string => {
   }
 };
 
+export const formatShortenNumber = (num: any) => {
+  if (!isNumber(num)) return num;
+  // 使用Intl.NumberFormat来添加千分号
+  const formattedWithComma = new Intl.NumberFormat('en-US').format(num);
+
+  // 格式化为 K 或 M
+  if (num >= 10_000_000) {
+    return (num / 1_000_000).toFixed(1) + 'M';
+  } else if (num >= 10_000) {
+    return (num / 1000).toFixed(1) + 'K';
+  } else if (num === 0) {
+    return 0;
+  } else {
+    return formattedWithComma;
+  }
+};
+
 /**
  * format number with comma
  * @param num
  */
 export const formatNumber = (num: any) => {
+  if (!num) return;
   return new Intl.NumberFormat('en-US').format(num);
 };
 
@@ -64,4 +88,16 @@ export const formatTokenNumber = (num: number): string => {
   }
   if (num === 131_072) return '128K';
   return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
+};
+
+export const formatPrice = (price: number) => {
+  const [a, b] = price.toFixed(2).split('.');
+  return `${numeral(a).format('0,0')}.${b}`;
+};
+
+export const formatPriceByCurrency = (price: number, currency?: ModelPriceCurrency) => {
+  if (currency === 'CNY') {
+    return formatPrice(price / CNY_TO_USD);
+  }
+  return formatPrice(price);
 };

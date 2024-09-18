@@ -47,11 +47,11 @@ export default memo<Props>(({ className, tabBarKey }) => {
           icon: (active: boolean) => (
             <Icon className={active ? styles.active : undefined} icon={Bot} />
           ),
-          key: SidebarTabKey.Market,
+          key: SidebarTabKey.Discover,
           onClick: () => {
-            router.push('/market');
+            router.push('/discover');
           },
-          title: t('tab.market'),
+          title: t('tab.discover'),
         },
         {
           icon: (active: boolean) => (
