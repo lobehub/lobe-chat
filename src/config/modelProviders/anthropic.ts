@@ -117,6 +117,10 @@ const Anthropic: ModelProviderCard = {
   proxyUrl: {
     placeholder: 'https://api.anthropic.com',
   },
+  smoothing: {
+    speed: 5,
+    text: true,
+  },
   url: 'https://anthropic.com',
 };
 

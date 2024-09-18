@@ -51,6 +51,10 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
         return 'sk-********************************';
       }
 
+      case ModelProvider.Github: {
+        return 'ghp_*****************************';
+      }
+
       default: {
         return '*********************************';
       }

@@ -6,10 +6,26 @@
       "file": "Bestand"
     }
   },
+  "Plugins": "Plugins",
   "actions": {
     "genAiMessage": "Creëer assistentbericht",
     "summary": "Samenvatting",
     "summaryTooltip": "Samenvatting van de huidige inhoud"
+  },
+  "artifacts": {
+    "display": {
+      "code": "Code",
+      "preview": "Voorbeeld"
+    },
+    "svg": {
+      "copyAsImage": "Kopieer als afbeelding",
+      "copyFail": "Kopiëren mislukt, foutmelding: {{error}}",
+      "copySuccess": "Afbeelding succesvol gekopieerd",
+      "download": {
+        "png": "Download als PNG",
+        "svg": "Download als SVG"
+      }
+    }
   },
   "emptyArtifactList": "De huidige lijst met Artifacts is leeg. Gebruik plugins in de sessie en bekijk deze later opnieuw.",
   "emptyKnowledgeList": "De huidige kennislijst is leeg. Gelieve de kennisbank in de sessie te openen voordat u deze bekijkt.",

@@ -7,6 +7,12 @@ export default {
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
   agentDefaultMessageWithoutEdit: '你好，我是 **{{name}}**，让我们开始对话吧！',
   agentsAndConversations: '助手与会话',
+  artifact: {
+    generating: '生成中',
+    thinking: '思考中',
+    thought: '思考过程',
+    unknownTitle: '未命名作品',
+  },
   backToBottom: '跳转至当前',
   chatList: {
     longMessageDetail: '查看详情',
@@ -160,6 +166,7 @@ export default {
     clear: '删除语音',
   },
   updateAgent: '更新助理信息',
+
   upload: {
     action: {
       fileUpload: '上传文件',

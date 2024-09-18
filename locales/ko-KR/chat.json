@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
   "agentsAndConversations": "에이전트 및 대화",
+  "artifact": {
+    "generating": "생성 중",
+    "thinking": "생각 중",
+    "thought": "사고 과정",
+    "unknownTitle": "제목 없음"
+  },
   "backToBottom": "하단으로 이동",
   "chatList": {
     "longMessageDetail": "자세히 보기"

@@ -105,6 +105,8 @@ ENV ACCESS_CODE="" \
 
 # Model Variables
 ENV \
+    # AI21
+    AI21_API_KEY="" \
     # Ai360
     AI360_API_KEY="" \
     # Anthropic
