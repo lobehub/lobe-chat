@@ -1,7 +1,7 @@
 import { SiReact } from '@icons-pack/react-simple-icons';
 import { Icon } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { CodeXml, GlobeIcon, Loader2, OrigamiIcon } from 'lucide-react';
+import { CodeXml, GlobeIcon, ImageIcon, Loader2, OrigamiIcon } from 'lucide-react';
 import { memo } from 'react';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
@@ -53,20 +53,24 @@ const ArtifactIcon = memo<ArtifactProps>(({ type }) => {
     );
 
   switch (type) {
-    case 'application/lobe.artifacts.react': {
+    case 'application/lobe.artifacts.code': {
       return (
-        <SiReact
-          // icon={CodeXml}
-          size={SIZE}
+        <Icon
+          icon={CodeXml}
+          size={{ fontSize: SIZE }}
           style={{ color: theme.colorTextSecondary }}
         />
       );
     }
 
+    case 'application/lobe.artifacts.react': {
+      return <SiReact size={SIZE} style={{ color: theme.colorTextSecondary }} />;
+    }
+
     case 'image/svg+xml': {
       return (
         <Icon
-          icon={CodeXml}
+          icon={ImageIcon}
           size={{ fontSize: SIZE }}
           style={{ color: theme.colorTextSecondary }}
         />
