@@ -3,9 +3,26 @@
     "description": "{{appName}} brings you the best UI experience for ChatGPT, Claude, Gemini, and OLLaMA.",
     "title": "{{appName}}: Your personal AI productivity tool for a smarter brain."
   },
-  "market": {
-    "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows—customize your own AI assistant.",
-    "title": "Assistant Marketplace"
+  "discover": {
+    "assistants": {
+      "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, customize your own AI / GPTs / OLLaMA intelligent assistant",
+      "title": "AI Assistants"
+    },
+    "description": "Content creation, copywriting, Q&A, image generation, video generation, voice generation, intelligent agents, automated workflows, custom AI applications, customize your own AI application workspace",
+    "models": {
+      "description": "Explore mainstream AI models OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
+      "title": "AI Models"
+    },
+    "plugins": {
+      "description": "Explore chart generation, academic tools, image generation, video generation, voice generation, and automated workflows to integrate rich plugin capabilities into your assistant.",
+      "title": "AI Plugins"
+    },
+    "providers": {
+      "description": "Explore leading model providers OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
+      "title": "AI Model Providers"
+    },
+    "search": "Search",
+    "title": "Discover"
   },
   "plugins": {
     "description": "Search, chart generation, academic tools, image generation, video generation, voice generation, automated workflows—customize Tools Calling plugin capabilities for ChatGPT / Claude.",

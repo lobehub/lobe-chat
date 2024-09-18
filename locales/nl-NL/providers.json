@@ -1,0 +1,80 @@
+{
+  "ai360": {
+    "description": "360 AI is een AI-model- en serviceplatform gelanceerd door het bedrijf 360, dat verschillende geavanceerde modellen voor natuurlijke taalverwerking biedt, waaronder 360GPT2 Pro, 360GPT Pro, 360GPT Turbo en 360GPT Turbo Responsibility 8K. Deze modellen combineren grootschalige parameters en multimodale capaciteiten, en worden breed toegepast in tekstgeneratie, semantisch begrip, dialoogsystemen en codegeneratie. Met flexibele prijsstrategieën voldoet 360 AI aan diverse gebruikersbehoeften, ondersteunt het ontwikkelaars bij integratie en bevordert het de innovatie en ontwikkeling van intelligente toepassingen."
+  },
+  "anthropic": {
+    "description": "Anthropic is een bedrijf dat zich richt op onderzoek en ontwikkeling van kunstmatige intelligentie, en biedt een reeks geavanceerde taalmodellen aan, zoals Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus en Claude 3 Haiku. Deze modellen bereiken een ideale balans tussen intelligentie, snelheid en kosten, en zijn geschikt voor een breed scala aan toepassingen, van bedrijfswerkbelasting tot snelle respons. Claude 3.5 Sonnet, als hun nieuwste model, presteert uitstekend in verschillende evaluaties, terwijl het een hoge kosteneffectiviteit behoudt."
+  },
+  "azure": {
+    "description": "Azure biedt een scala aan geavanceerde AI-modellen, waaronder GPT-3.5 en de nieuwste GPT-4-serie, die verschillende datatypes en complexe taken ondersteunen, met een focus op veilige, betrouwbare en duurzame AI-oplossingen."
+  },
+  "baichuan": {
+    "description": "Baichuan Intelligent is een bedrijf dat zich richt op de ontwikkeling van grote modellen voor kunstmatige intelligentie, wiens modellen uitblinken in Chinese taken zoals kennisencyclopedieën, lange tekstverwerking en generatieve creatie, en de mainstream modellen uit het buitenland overtreffen. Baichuan Intelligent heeft ook toonaangevende multimodale capaciteiten en presteert uitstekend in verschillende autoritatieve evaluaties. Hun modellen omvatten Baichuan 4, Baichuan 3 Turbo en Baichuan 3 Turbo 128k, die zijn geoptimaliseerd voor verschillende toepassingsscenario's en kosteneffectieve oplossingen bieden."
+  },
+  "bedrock": {
+    "description": "Bedrock is een dienst van Amazon AWS die zich richt op het bieden van geavanceerde AI-taalmodellen en visuele modellen voor bedrijven. De modellenfamilie omvat de Claude-serie van Anthropic, de Llama 3.1-serie van Meta, en meer, met opties variërend van lichtgewicht tot hoge prestaties, en ondersteunt tekstgeneratie, dialogen, beeldverwerking en meer, geschikt voor bedrijfsapplicaties van verschillende schalen en behoeften."
+  },
+  "deepseek": {
+    "description": "DeepSeek is een bedrijf dat zich richt op onderzoek en toepassing van kunstmatige intelligentietechnologie, en hun nieuwste model DeepSeek-V2.5 combineert algemene dialoog- en codeverwerkingscapaciteiten, met significante verbeteringen in het afstemmen op menselijke voorkeuren, schrijfopdrachten en het volgen van instructies."
+  },
+  "fireworksai": {
+    "description": "Fireworks AI is een toonaangevende aanbieder van geavanceerde taalmodellen, met een focus op functionele aanroepen en multimodale verwerking. Hun nieuwste model Firefunction V2 is gebaseerd op Llama-3 en geoptimaliseerd voor functieaanroepen, dialogen en het volgen van instructies. Het visuele taalmodel FireLLaVA-13B ondersteunt gemengde invoer van afbeeldingen en tekst. Andere opmerkelijke modellen zijn de Llama-serie en de Mixtral-serie, die efficiënte ondersteuning bieden voor meertalig volgen van instructies en genereren."
+  },
+  "google": {
+    "description": "De Gemini-serie van Google is hun meest geavanceerde, algemene AI-modellen, ontwikkeld door Google DeepMind, speciaal ontworpen voor multimodale toepassingen, en ondersteunt naadloze begrip en verwerking van tekst, code, afbeeldingen, audio en video. Geschikt voor verschillende omgevingen, van datacenters tot mobiele apparaten, verhoogt het de efficiëntie en toepasbaarheid van AI-modellen aanzienlijk."
+  },
+  "groq": {
+    "description": "De LPU-inferentie-engine van Groq presteert uitstekend in de nieuwste onafhankelijke benchmarktests voor grote taalmodellen (LLM), en herdefinieert de normen voor AI-oplossingen met zijn verbazingwekkende snelheid en efficiëntie. Groq is een vertegenwoordiger van onmiddellijke inferentiesnelheid en toont goede prestaties in cloudgebaseerde implementaties."
+  },
+  "minimax": {
+    "description": "MiniMax is een algemeen kunstmatige intelligentietechnologiebedrijf dat in 2021 is opgericht, en zich richt op co-creatie van intelligentie met gebruikers. MiniMax heeft verschillende multimodale algemene grote modellen ontwikkeld, waaronder een MoE-tekstgrootmodel met triljoenen parameters, een spraakgrootmodel en een afbeeldingsgrootmodel. Ze hebben ook toepassingen zoals Conch AI gelanceerd."
+  },
+  "mistral": {
+    "description": "Mistral biedt geavanceerde algemene, professionele en onderzoeksmodellen, die breed worden toegepast in complexe redenering, meertalige taken, codegeneratie en meer. Via functionele aanroepinterfaces kunnen gebruikers aangepaste functies integreren voor specifieke toepassingen."
+  },
+  "moonshot": {
+    "description": "Moonshot is een open platform gelanceerd door Beijing Dark Side Technology Co., Ltd., dat verschillende modellen voor natuurlijke taalverwerking biedt, met een breed toepassingsgebied, waaronder maar niet beperkt tot contentcreatie, academisch onderzoek, slimme aanbevelingen, medische diagnose, en ondersteunt lange tekstverwerking en complexe generatietaken."
+  },
+  "novita": {
+    "description": "Novita AI is een platform dat API-diensten biedt voor verschillende grote taalmodellen en AI-beeldgeneratie, flexibel, betrouwbaar en kosteneffectief. Het ondersteunt de nieuwste open-source modellen zoals Llama3 en Mistral, en biedt een uitgebreide, gebruiksvriendelijke en automatisch schaalbare API-oplossing voor de ontwikkeling van generatieve AI-toepassingen, geschikt voor de snelle groei van AI-startups."
+  },
+  "ollama": {
+    "description": "De modellen van Ollama bestrijken een breed scala aan gebieden, waaronder codegeneratie, wiskundige berekeningen, meertalige verwerking en interactieve dialogen, en voldoen aan de diverse behoeften van bedrijfs- en lokale implementaties."
+  },
+  "openai": {
+    "description": "OpenAI is 's werelds toonaangevende onderzoeksinstituut op het gebied van kunstmatige intelligentie, wiens ontwikkelde modellen zoals de GPT-serie de grenzen van natuurlijke taalverwerking verleggen. OpenAI streeft ernaar verschillende industrieën te transformeren door middel van innovatieve en efficiënte AI-oplossingen. Hun producten bieden opmerkelijke prestaties en kosteneffectiviteit, en worden op grote schaal gebruikt in onderzoek, commercie en innovatieve toepassingen."
+  },
+  "openrouter": {
+    "description": "OpenRouter is een serviceplatform dat verschillende vooraanstaande grote modelinterfaces biedt, ondersteunt OpenAI, Anthropic, LLaMA en meer, en is geschikt voor diverse ontwikkelings- en toepassingsbehoeften. Gebruikers kunnen flexibel het optimale model en de prijs kiezen op basis van hun behoeften, wat de AI-ervaring verbetert."
+  },
+  "perplexity": {
+    "description": "Perplexity is een toonaangevende aanbieder van dialooggeneratiemodellen, die verschillende geavanceerde Llama 3.1-modellen aanbiedt, die zowel online als offline toepassingen ondersteunen, en bijzonder geschikt zijn voor complexe natuurlijke taalverwerkingstaken."
+  },
+  "qwen": {
+    "description": "Tongyi Qianwen is een door Alibaba Cloud zelf ontwikkeld grootschalig taalmodel met krachtige mogelijkheden voor natuurlijke taalbegrip en -generatie. Het kan verschillende vragen beantwoorden, tekstinhoud creëren, meningen uiten, code schrijven, en speelt een rol in verschillende domeinen."
+  },
+  "siliconcloud": {
+    "description": "SiliconFlow streeft ernaar AGI te versnellen ten behoeve van de mensheid, door de efficiëntie van grootschalige AI te verbeteren met een gebruiksvriendelijke en kosteneffectieve GenAI-stack."
+  },
+  "spark": {
+    "description": "iFlytek's Xinghuo-grootmodel biedt krachtige AI-capaciteiten in meerdere domeinen en talen, en maakt gebruik van geavanceerde natuurlijke taalverwerkingstechnologie om innovatieve toepassingen te bouwen die geschikt zijn voor slimme hardware, slimme gezondheidszorg, slimme financiën en andere verticale scenario's."
+  },
+  "stepfun": {
+    "description": "De Class Star-grootmodel heeft toonaangevende multimodale en complexe redeneringscapaciteiten, ondersteunt het begrijpen van zeer lange teksten en beschikt over krachtige autonome zoekmachinefunctionaliteit."
+  },
+  "taichu": {
+    "description": "Het Instituut voor Automatisering van de Chinese Academie van Wetenschappen en het Wuhan Instituut voor Kunstmatige Intelligentie hebben een nieuwe generatie multimodale grote modellen gelanceerd, die ondersteuning bieden voor meerdaagse vraag-en-antwoord, tekstcreatie, beeldgeneratie, 3D-begrip, signaalanalyse en andere uitgebreide vraag-en-antwoordtaken, met sterkere cognitieve, begrip en creatiecapaciteiten, wat zorgt voor een geheel nieuwe interactie-ervaring."
+  },
+  "togetherai": {
+    "description": "Together AI streeft ernaar toonaangevende prestaties te bereiken door middel van innovatieve AI-modellen, en biedt uitgebreide aanpassingsmogelijkheden, waaronder ondersteuning voor snelle schaling en intuïtieve implementatieprocessen, om aan de verschillende behoeften van bedrijven te voldoen."
+  },
+  "upstage": {
+    "description": "Upstage richt zich op het ontwikkelen van AI-modellen voor verschillende zakelijke behoeften, waaronder Solar LLM en document AI, met als doel het realiseren van kunstmatige algemene intelligentie (AGI). Het creëert eenvoudige dialoogagenten via de Chat API en ondersteunt functionele aanroepen, vertalingen, insluitingen en specifieke domeintoepassingen."
+  },
+  "zeroone": {
+    "description": "01.AI richt zich op kunstmatige intelligentietechnologie in het tijdperk van AI 2.0, en bevordert sterk de innovatie en toepassing van 'mens + kunstmatige intelligentie', met behulp van krachtige modellen en geavanceerde AI-technologie om de productiviteit van de mens te verbeteren en technologische capaciteiten te realiseren."
+  },
+  "zhipu": {
+    "description": "Zhipu AI biedt een open platform voor multimodale en taalmodellen, dat een breed scala aan AI-toepassingsscenario's ondersteunt, waaronder tekstverwerking, beeldbegrip en programmeerondersteuning."
+  }
+}

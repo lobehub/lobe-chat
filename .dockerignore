@@ -4,7 +4,6 @@ node_modules
 npm-debug.log
 .next
 .git
-docs
 .github
 *.md
 .env.example

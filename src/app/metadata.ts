@@ -14,6 +14,9 @@ export const generateMetadata = async (): Promise<Metadata> => {
   const { t } = await translation('metadata');
 
   return {
+    alternates: {
+      canonical: OFFICIAL_URL,
+    },
     appleWebApp: {
       statusBarStyle: 'black-translucent',
       title: BRANDING_NAME,
