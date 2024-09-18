@@ -83,7 +83,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 
 Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
     "displayName": "Google: Gemini Flash 1.5 Experimental",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "google/gemini-flash-1.5-exp",
     "maxTokens": 32768,
@@ -195,7 +195,7 @@ _These are extended-context endpoints for [Hermes 3 405B Instruct](/models/nousr
   {
     "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance. The model is built upon the Llama 3.1 405B and has internet access.",
     "displayName": "Perplexity: Llama 3.1 Sonar 405B Online",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "perplexity/llama-3.1-sonar-huge-128k-online",
     "maxTokens": undefined,
@@ -291,7 +291,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 
 Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
     "displayName": "Google: Gemini Pro 1.5 Experimental",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "google/gemini-pro-1.5-exp",
     "maxTokens": 32768,
@@ -369,7 +369,7 @@ To read more about the model release, [click here](https://ai.meta.com/blog/meta
 
 _These are free, rate-limited endpoints for [Llama 3.1 8B Instruct](/models/meta-llama/llama-3.1-8b-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "Meta: Llama 3.1 8B Instruct (free)",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "meta-llama/llama-3.1-8b-instruct:free",
     "maxTokens": 4096,
@@ -493,7 +493,7 @@ Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://hug
 
 _These are free, rate-limited endpoints for [Qwen 2 7B Instruct](/models/qwen/qwen-2-7b-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "Qwen 2 7B Instruct (free)",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "qwen/qwen-2-7b-instruct:free",
     "maxTokens": 4096,
@@ -563,7 +563,7 @@ See the [launch announcement](https://blog.google/technology/developers/google-g
 
 _These are free, rate-limited endpoints for [Gemma 2 9B](/models/google/gemma-2-9b-it). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "Google: Gemma 2 9B (free)",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "google/gemma-2-9b-it:free",
     "maxTokens": 2048,
@@ -626,7 +626,7 @@ Jamba has a knowledge cutoff of February 2024.",
 
 #multimodal",
     "displayName": "Anthropic: Claude 3.5 Sonnet",
-    "enabled": false,
+    "enabled": true,
     "functionCall": true,
     "id": "anthropic/claude-3.5-sonnet",
     "maxTokens": 8192,
@@ -766,7 +766,7 @@ NOTE: Support for function calling depends on the provider.",
 
 _These are free, rate-limited endpoints for [Mistral 7B Instruct](/models/mistralai/mistral-7b-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "Mistral: Mistral 7B Instruct (free)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "mistralai/mistral-7b-instruct:free",
     "maxTokens": 4096,
@@ -1344,7 +1344,7 @@ See the launch announcement and benchmark results [here](https://www.anthropic.c
 
 #multimodal",
     "displayName": "Anthropic: Claude 3 Haiku",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "anthropic/claude-3-haiku",
     "maxTokens": 4096,
@@ -1405,7 +1405,7 @@ See the launch announcement and benchmark results [here](https://www.anthropic.c
 
 #multimodal",
     "displayName": "Anthropic: Claude 3 Opus",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "anthropic/claude-3-opus",
     "maxTokens": 4096,
@@ -1650,7 +1650,7 @@ It combines [Neural Chat 7B](/models/intel/neural-chat-7b), Airoboros 7b, [Toppy
 
 _These are free, rate-limited endpoints for [MythoMist 7B](/models/gryphe/mythomist-7b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "MythoMist 7B (free)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "gryphe/mythomist-7b:free",
     "maxTokens": 4096,
@@ -1681,7 +1681,7 @@ It combines [Neural Chat 7B](/models/intel/neural-chat-7b), Airoboros 7b, [Toppy
 
 _These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/openchat-7b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "OpenChat 3.5 7B (free)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "openchat/openchat-7b:free",
     "maxTokens": 4096,
@@ -1836,7 +1836,7 @@ List of merged models:
 
 _These are free, rate-limited endpoints for [Toppy M 7B](/models/undi95/toppy-m-7b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "Toppy M 7B (free)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "undi95/toppy-m-7b:free",
     "maxTokens": 2048,
@@ -2032,7 +2032,7 @@ Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin
 
 _These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/zephyr-7b-beta). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
     "displayName": "Hugging Face: Zephyr 7B (free)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "huggingfaceh4/zephyr-7b-beta:free",
     "maxTokens": 2048,
