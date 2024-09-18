@@ -5,7 +5,6 @@ import { ReactNode, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import Footer from '@/features/Setting/Footer';
-import { useInterceptingRoutes } from '@/hooks/useInterceptingRoutes';
 
 import SidebarContainer from './SidebarContainer';
 
@@ -20,10 +19,9 @@ interface DetailLayoutProps {
 
 const DetailLayout = memo<DetailLayoutProps>(
   ({ statistics, mobile, header, sidebar, children, actions }) => {
-    const { md = true, xl = true } = useResponsive();
-    const { isIntercepted } = useInterceptingRoutes();
+    const { md = true } = useResponsive();
 
-    if (mobile || !md || (isIntercepted && !xl))
+    if (mobile || !md)
       return (
         <>
           {header}
@@ -36,36 +34,6 @@ const DetailLayout = memo<DetailLayoutProps>(
           <Footer />
         </>
       );
-
-    if (isIntercepted) {
-      return (
-        <>
-          <Flexbox flex={1} gap={24} style={{ overflow: 'hidden', position: 'relative' }}>
-            <Flexbox style={{ paddingRight: 16 }}>{header}</Flexbox>
-            <Flexbox
-              gap={24}
-              style={{
-                overflowX: 'hidden',
-                overflowY: 'auto',
-                paddingBottom: 48,
-                paddingRight: 16,
-                position: 'relative',
-              }}
-            >
-              {children}
-              <Footer />
-            </Flexbox>
-          </Flexbox>
-          <SidebarContainer style={{ position: 'sticky', top: '0' }}>
-            <Flexbox gap={16} width={'100%'}>
-              {actions}
-              {statistics}
-            </Flexbox>
-            {sidebar}
-          </SidebarContainer>
-        </>
-      );
-    }
 
     return (
       <>

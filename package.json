@@ -172,6 +172,7 @@
     "next-auth": "beta",
     "next-mdx-remote": "^4.4.1",
     "next-sitemap": "^4.2.3",
+    "nextjs-toploader": "^3.6.15",
     "numeral": "^2.0.6",
     "nuqs": "^1.17.8",
     "officeparser": "^4.1.1",

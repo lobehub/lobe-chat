@@ -1,14 +1,14 @@
 import { ModelIcon } from '@lobehub/icons';
 import { ActionIcon, Grid } from '@lobehub/ui';
 import { Typography } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import { ChevronRightIcon } from 'lucide-react';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import InterceptingLink from '@/components/InterceptingLink';
 import { DiscoverModelItem } from '@/types/discover';
 import { formatPriceByCurrency, formatTokenNumber } from '@/utils/format';
 
@@ -48,8 +48,11 @@ export interface SuggestionItemProps
 
 const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
   const { title, tokens, vision, functionCall } = meta;
+  const { xl = true } = useResponsive();
   const { t } = useTranslation('discover');
   const { styles, theme } = useStyles();
+
+  const isMobile = mobile || !xl;
 
   const items: StatisticProps[] = [
     {
@@ -81,7 +84,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
 
   const header = (
     <Flexbox gap={12}>
-      <InterceptingLink href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
+      <Link href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
         <Flexbox align={'center'} gap={12} horizontal width={'100%'}>
           <ModelIcon model={identifier} size={36} type={'avatar'} />
           <Flexbox style={{ overflow: 'hidden' }}>
@@ -93,15 +96,15 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
             </Paragraph>
           </Flexbox>
         </Flexbox>
-      </InterceptingLink>
+      </Link>
       <ModelFeatureTags functionCall={functionCall} tokens={tokens} vision={vision} />
     </Flexbox>
   );
 
   const button = (
-    <InterceptingLink href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
+    <Link href={urlJoin('/discover/model', identifier)} style={{ color: 'inherit' }}>
       <ActionIcon color={theme.colorTextDescription} icon={ChevronRightIcon} />
-    </InterceptingLink>
+    </Link>
   );
 
   return (
@@ -113,7 +116,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
       padding={16}
       wrap={'wrap'}
     >
-      {mobile && (
+      {isMobile && (
         <Flexbox align={'center'} horizontal justify={'space-between'}>
           {header}
           {button}
@@ -125,13 +128,13 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
         gap={16}
         horizontal
         maxItemWidth={100}
-        rows={mobile ? 2 : items.length + 1}
+        rows={isMobile ? 2 : items.length + 1}
         style={{ minWidth: 240 }}
       >
-        {!mobile && header}
+        {!isMobile && header}
         {items.map((item, index) => (
           <Statistic
-            align={mobile ? 'flex-start' : 'center'}
+            align={isMobile ? 'flex-start' : 'center'}
             gap={4}
             key={index}
             valuePlacement={'bottom'}
@@ -140,7 +143,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
           />
         ))}
       </Grid>
-      {!mobile && button}
+      {!isMobile && button}
     </Flexbox>
   );
 });
