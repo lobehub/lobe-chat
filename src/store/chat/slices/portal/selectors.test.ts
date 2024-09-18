@@ -70,4 +70,26 @@ describe('chatDockSelectors', () => {
       expect(chatPortalSelectors.toolUIIdentifier(state)).toBe('test');
     });
   });
+
+  describe('showFilePreview', () => {
+    it('should return false when portalFile is not set', () => {
+      expect(chatPortalSelectors.showFilePreview(createState())).toBe(false);
+    });
+
+    it('should return true when portalFile is set', () => {
+      const state = createState({ portalFile: { fileId: 'file-id', chunkText: 'chunk' } });
+      expect(chatPortalSelectors.showFilePreview(state)).toBe(true);
+    });
+  });
+
+  describe('previewFileId', () => {
+    it('should return undefined when portalFile is not set', () => {
+      expect(chatPortalSelectors.previewFileId(createState())).toBeUndefined();
+    });
+
+    it('should return the fileId when portalFile is set', () => {
+      const state = createState({ portalFile: { fileId: 'file-id', chunkText: 'chunk' } });
+      expect(chatPortalSelectors.previewFileId(state)).toBe('file-id');
+    });
+  });
 });
