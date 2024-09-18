@@ -52,6 +52,13 @@ export default {
       title: '使用自定义 Bedrock 鉴权信息',
     },
   },
+  github: {
+    personalAccessToken: {
+      desc: '填入你的 Github PAT，点击[这里](https://github.com/settings/tokens) 创建',
+      placeholder: 'ghp_xxxxxx',
+      title: 'Github PAT',
+    },
+  },
   ollama: {
     checker: {
       desc: '测试代理地址是否正确填写',
