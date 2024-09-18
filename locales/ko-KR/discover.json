@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "도우미 추가",
+    "addAgentAndConverse": "도우미 추가 및 대화하기",
+    "addAgentSuccess": "추가 성공",
+    "conversation": {
+      "l1": "안녕하세요, 저는 **{{name}}**입니다. 궁금한 점이 있으면 무엇이든 물어보세요. 최선을 다해 답변하겠습니다 ~",
+      "l2": "다음은 제 능력 소개입니다: ",
+      "l3": "대화를 시작해 볼까요!"
+    },
+    "description": "도우미 소개",
+    "detail": "상세 정보",
+    "list": "도우미 목록",
+    "more": "더 보기",
+    "plugins": "플러그인 통합",
+    "recentSubmits": "최근 업데이트",
+    "suggestions": "추천 항목",
+    "systemRole": "도우미 설정",
+    "try": "해보기"
+  },
+  "back": "발견으로 돌아가기",
+  "category": {
+    "assistant": {
+      "academic": "학술",
+      "all": "전체",
+      "career": "직업",
+      "copywriting": "카피라이팅",
+      "design": "디자인",
+      "education": "교육",
+      "emotions": "감정",
+      "entertainment": "엔터테인먼트",
+      "games": "게임",
+      "general": "일반",
+      "life": "생활",
+      "marketing": "마케팅",
+      "office": "사무",
+      "programming": "프로그래밍",
+      "translation": "번역"
+    },
+    "plugin": {
+      "all": "모두",
+      "gaming-entertainment": "게임 및 엔터테인먼트",
+      "life-style": "라이프스타일",
+      "media-generate": "미디어 생성",
+      "science-education": "과학 및 교육",
+      "social": "소셜 미디어",
+      "stocks-finance": "주식 및 금융",
+      "tools": "유용한 도구",
+      "web-search": "웹 검색"
+    }
+  },
+  "cleanFilter": "필터 지우기",
+  "create": "창작",
+  "createGuide": {
+    "func1": {
+      "desc1": "대화 창의 오른쪽 상단 설정을 통해 제출할 도우미의 설정 페이지로 이동하세요;",
+      "desc2": "오른쪽 상단의 도우미 마켓에 제출 버튼을 클릭하세요.",
+      "tag": "방법 1",
+      "title": "LobeChat을 통해 제출하기"
+    },
+    "func2": {
+      "button": "Github 도우미 저장소로 이동",
+      "desc": "도우미를 인덱스에 추가하려면 plugins 디렉토리에 agent-template.json 또는 agent-template-full.json을 사용하여 항목을 만들고, 간단한 설명을 작성한 후 적절히 태그를 추가하고, 풀 리퀘스트를 생성하세요.",
+      "tag": "방법 2",
+      "title": "Github을 통해 제출하기"
+    }
+  },
+  "dislike": "싫어요",
+  "filter": "필터",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "모든 저자",
+      "followed": "팔로우한 저자",
+      "title": "저자 범위"
+    },
+    "contentLength": "최소 맥락 길이",
+    "maxToken": {
+      "title": "최대 길이 설정 (Token)",
+      "unlimited": "무제한"
+    },
+    "other": {
+      "functionCall": "함수 호출 지원",
+      "title": "기타",
+      "vision": "비주얼 인식 지원",
+      "withKnowledge": "지식 베이스 포함",
+      "withTool": "플러그인 포함"
+    },
+    "pricing": "모델 가격",
+    "timePeriod": {
+      "all": "전체 시간",
+      "day": "최근 24시간",
+      "month": "최근 30일",
+      "title": "시간 범위",
+      "week": "최근 7일",
+      "year": "최근 1년"
+    }
+  },
+  "home": {
+    "featuredAssistants": "추천 도우미",
+    "featuredModels": "추천 모델",
+    "featuredProviders": "추천 모델 서비스 제공자",
+    "featuredTools": "추천 플러그인",
+    "more": "더 많은 발견"
+  },
+  "like": "좋아요",
+  "models": {
+    "chat": "대화 시작",
+    "contentLength": "최대 맥락 길이",
+    "free": "무료",
+    "guide": "설정 가이드",
+    "list": "모델 목록",
+    "more": "더 보기",
+    "parameterList": {
+      "defaultValue": "기본값",
+      "docs": "문서 보기",
+      "frequency_penalty": {
+        "desc": "이 설정은 모델이 입력에서 이미 나타난 특정 단어의 사용 빈도를 조정합니다. 높은 값은 이러한 반복의 가능성을 줄이고, 음수 값은 반대의 효과를 생성합니다. 단어 처벌은 출현 횟수에 따라 증가하지 않습니다. 음수 값은 단어의 반복 사용을 장려합니다.",
+        "title": "빈도 처벌"
+      },
+      "max_tokens": {
+        "desc": "이 설정은 모델이 한 번의 응답에서 생성할 수 있는 최대 길이를 정의합니다. 높은 값을 설정하면 모델이 더 긴 응답을 생성할 수 있으며, 낮은 값은 응답의 길이를 제한하여 더 간결하게 만듭니다. 다양한 응용 프로그램에 따라 이 값을 적절히 조정하면 예상되는 응답 길이와 세부 사항을 달성하는 데 도움이 될 수 있습니다.",
+        "title": "한 번의 응답 제한"
+      },
+      "presence_penalty": {
+        "desc": "이 설정은 입력에서 단어의 출현 빈도에 따라 단어의 반복 사용을 제어하는 데 목적이 있습니다. 입력에서 많이 나타나는 단어는 덜 사용하려고 하며, 사용 빈도는 출현 빈도와 비례합니다. 단어 처벌은 출현 횟수에 따라 증가합니다. 음수 값은 단어의 반복 사용을 장려합니다.",
+        "title": "주제 신선도"
+      },
+      "range": "범위",
+      "temperature": {
+        "desc": "이 설정은 모델 응답의 다양성에 영향을 미칩니다. 낮은 값은 더 예측 가능하고 전형적인 응답을 유도하며, 높은 값은 더 다양하고 드문 응답을 장려합니다. 값이 0으로 설정되면 모델은 주어진 입력에 대해 항상 동일한 응답을 제공합니다.",
+        "title": "무작위성"
+      },
+      "title": "모델 매개변수",
+      "top_p": {
+        "desc": "이 설정은 모델의 선택을 가능성이 가장 높은 특정 비율의 단어로 제한합니다: 누적 확률이 P에 도달하는 최상위 단어만 선택합니다. 낮은 값은 모델의 응답을 더 예측 가능하게 만들고, 기본 설정은 모델이 전체 범위의 단어에서 선택할 수 있도록 허용합니다.",
+        "title": "핵 샘플링"
+      },
+      "type": "유형"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat은 이 제공자에 대해 사용자 정의 API 키를 지원합니다.",
+      "input": "입력 가격",
+      "inputTooltip": "백만 개의 Token당 비용",
+      "latency": "지연",
+      "latencyTooltip": "제공자가 첫 번째 Token을 보내는 평균 응답 시간",
+      "maxOutput": "최대 출력 길이",
+      "maxOutputTooltip": "이 엔드포인트가 생성할 수 있는 최대 Token 수",
+      "officialTooltip": "LobeHub 공식 서비스",
+      "output": "출력 가격",
+      "outputTooltip": "백만 개의 Token당 비용",
+      "streamCancellationTooltip": "이 제공자는 스트림 취소 기능을 지원합니다.",
+      "throughput": "처리량",
+      "throughputTooltip": "스트림 요청당 초당 전송되는 평균 Token 수"
+    },
+    "suggestions": "관련 모델",
+    "supportedProviders": "이 모델을 지원하는 서비스 제공자"
+  },
+  "plugins": {
+    "community": "커뮤니티 플러그인",
+    "install": "플러그인 설치",
+    "installed": "설치됨",
+    "list": "플러그인 목록",
+    "meta": {
+      "description": "설명",
+      "parameter": "매개변수",
+      "title": "도구 매개변수",
+      "type": "유형"
+    },
+    "more": "더보기",
+    "official": "공식 플러그인",
+    "recentSubmits": "최근 업데이트",
+    "suggestions": "추천 항목"
+  },
+  "providers": {
+    "config": "서비스 제공자 설정",
+    "list": "모델 서비스 제공자 목록",
+    "modelCount": "{{count}} 개 모델",
+    "modelSite": "모델 문서",
+    "more": "더보기",
+    "officialSite": "공식 웹사이트",
+    "showAllModels": "모든 모델 보기",
+    "suggestions": "관련 서비스 제공자",
+    "supportedModels": "지원되는 모델"
+  },
+  "search": {
+    "placeholder": "이름, 소개 또는 키워드 검색...",
+    "result": "{{count}} 개의 <highlight>{{keyword}}</highlight>에 대한 검색 결과",
+    "searching": "검색 중..."
+  },
+  "sort": {
+    "mostLiked": "가장 좋아요",
+    "mostUsed": "가장 많이 사용됨",
+    "newest": "최신순",
+    "oldest": "오래된 순",
+    "recommended": "추천"
+  },
+  "tab": {
+    "assistants": "도우미",
+    "home": "홈",
+    "models": "모델",
+    "plugins": "플러그인",
+    "providers": "모델 제공자"
+  }
+}

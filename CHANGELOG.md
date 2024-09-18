@@ -2,6 +2,106 @@
 
 # Changelog
 
+### [Version 1.18.2](https://github.com/lobehub/lobe-chat/compare/v1.18.1...v1.18.2)
+
+<sup>Released on **2024-09-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix InterceptingRoutes in discover.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix InterceptingRoutes in discover, closes [#4011](https://github.com/lobehub/lobe-chat/issues/4011) ([2b75040](https://github.com/lobehub/lobe-chat/commit/2b75040))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.18.1](https://github.com/lobehub/lobe-chat/compare/v1.18.0...v1.18.1)
+
+<sup>Released on **2024-09-18**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.18.0](https://github.com/lobehub/lobe-chat/compare/v1.17.7...v1.18.0)
+
+<sup>Released on **2024-09-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Discover Page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Discover Page, closes [#3848](https://github.com/lobehub/lobe-chat/issues/3848) ([f83cab6](https://github.com/lobehub/lobe-chat/commit/f83cab6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.7](https://github.com/lobehub/lobe-chat/compare/v1.17.6...v1.17.7)
+
+<sup>Released on **2024-09-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix a corner case of `tools_call` with empty object.
+
+#### 💄 Styles
+
+- **misc**: Delete duplicate models in ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix a corner case of `tools_call` with empty object, closes [#3955](https://github.com/lobehub/lobe-chat/issues/3955) ([d3fabdc](https://github.com/lobehub/lobe-chat/commit/d3fabdc))
+
+#### Styles
+
+- **misc**: Delete duplicate models in ollama, closes [#3989](https://github.com/lobehub/lobe-chat/issues/3989) ([ece60ee](https://github.com/lobehub/lobe-chat/commit/ece60ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.17.6](https://github.com/lobehub/lobe-chat/compare/v1.17.5...v1.17.6)
 
 <sup>Released on **2024-09-15**</sup>

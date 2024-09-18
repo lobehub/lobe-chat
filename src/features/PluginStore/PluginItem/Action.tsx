@@ -30,7 +30,7 @@ const Actions = memo<ActionsProps>(({ identifier, type }) => {
   const isCustomPlugin = type === 'customPlugin';
   const { t } = useTranslation('plugin');
   const [open, setOpen] = useState(false);
-  const plugin = useToolStore(pluginSelectors.getPluginManifestById(identifier));
+  const plugin = useToolStore(pluginSelectors.getToolManifestById(identifier));
   const { modal } = App.useApp();
   const [tab, setTab] = useState('info');
   const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(plugin?.settings);

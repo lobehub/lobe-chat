@@ -1,0 +1,845 @@
+{
+  "01-ai/Yi-1.5-34B-Chat-16K": {
+    "description": "Yi-1.5 34B, với mẫu huấn luyện phong phú, cung cấp hiệu suất vượt trội trong ứng dụng ngành."
+  },
+  "01-ai/Yi-1.5-6B-Chat": {
+    "description": "Yi-1.5 là phiên bản tiến hóa của dòng Yi, có đào tạo trước chất lượng cao và dữ liệu tinh chỉnh phong phú."
+  },
+  "01-ai/Yi-1.5-9B-Chat-16K": {
+    "description": "Yi-1.5 9B hỗ trợ 16K Tokens, cung cấp khả năng tạo ngôn ngữ hiệu quả và mượt mà."
+  },
+  "360gpt-pro": {
+    "description": "360GPT Pro là thành viên quan trọng trong dòng mô hình AI của 360, đáp ứng nhu cầu đa dạng của các ứng dụng ngôn ngữ tự nhiên với khả năng xử lý văn bản hiệu quả, hỗ trợ hiểu văn bản dài và đối thoại nhiều vòng."
+  },
+  "360gpt-turbo": {
+    "description": "360GPT Turbo cung cấp khả năng tính toán và đối thoại mạnh mẽ, có khả năng hiểu ngữ nghĩa và hiệu suất tạo ra xuất sắc, là giải pháp trợ lý thông minh lý tưởng cho doanh nghiệp và nhà phát triển."
+  },
+  "360gpt-turbo-responsibility-8k": {
+    "description": "360GPT Turbo Responsibility 8K nhấn mạnh an toàn ngữ nghĩa và định hướng trách nhiệm, được thiết kế đặc biệt cho các tình huống ứng dụng có yêu cầu cao về an toàn nội dung, đảm bảo độ chính xác và độ ổn định trong trải nghiệm người dùng."
+  },
+  "360gpt2-pro": {
+    "description": "360GPT2 Pro là mô hình xử lý ngôn ngữ tự nhiên cao cấp do công ty 360 phát hành, có khả năng tạo và hiểu văn bản xuất sắc, đặc biệt trong lĩnh vực tạo ra và sáng tạo, có thể xử lý các nhiệm vụ chuyển đổi ngôn ngữ phức tạp và diễn xuất vai trò."
+  },
+  "4.0Ultra": {
+    "description": "Spark4.0 Ultra là phiên bản mạnh mẽ nhất trong dòng mô hình lớn Xinghuo, nâng cao khả năng hiểu và tóm tắt nội dung văn bản trong khi nâng cấp liên kết tìm kiếm trực tuyến. Đây là giải pháp toàn diện nhằm nâng cao năng suất văn phòng và đáp ứng chính xác nhu cầu, là sản phẩm thông minh dẫn đầu ngành."
+  },
+  "Baichuan2-Turbo": {
+    "description": "Sử dụng công nghệ tăng cường tìm kiếm để kết nối toàn diện giữa mô hình lớn và kiến thức lĩnh vực, kiến thức toàn cầu. Hỗ trợ tải lên nhiều loại tài liệu như PDF, Word và nhập URL, thông tin được thu thập kịp thời và toàn diện, kết quả đầu ra chính xác và chuyên nghiệp."
+  },
+  "Baichuan3-Turbo": {
+    "description": "Tối ưu hóa cho các tình huống doanh nghiệp thường xuyên, hiệu quả được cải thiện đáng kể, chi phí hiệu quả cao. So với mô hình Baichuan2, sáng tạo nội dung tăng 20%, trả lời câu hỏi kiến thức tăng 17%, khả năng đóng vai tăng 40%. Hiệu quả tổng thể tốt hơn GPT3.5."
+  },
+  "Baichuan3-Turbo-128k": {
+    "description": "Có cửa sổ ngữ cảnh siêu dài 128K, tối ưu hóa cho các tình huống doanh nghiệp thường xuyên, hiệu quả được cải thiện đáng kể, chi phí hiệu quả cao. So với mô hình Baichuan2, sáng tạo nội dung tăng 20%, trả lời câu hỏi kiến thức tăng 17%, khả năng đóng vai tăng 40%. Hiệu quả tổng thể tốt hơn GPT3.5."
+  },
+  "Baichuan4": {
+    "description": "Mô hình có khả năng hàng đầu trong nước, vượt trội hơn các mô hình chính thống nước ngoài trong các nhiệm vụ tiếng Trung như bách khoa toàn thư, văn bản dài, sáng tạo nội dung. Cũng có khả năng đa phương tiện hàng đầu trong ngành, thể hiện xuất sắc trong nhiều tiêu chuẩn đánh giá uy tín."
+  },
+  "Gryphe/MythoMax-L2-13b": {
+    "description": "MythoMax-L2 (13B) là một mô hình sáng tạo, phù hợp cho nhiều lĩnh vực ứng dụng và nhiệm vụ phức tạp."
+  },
+  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
+    "description": "Hermes 2 Mixtral 8x7B DPO là một mô hình kết hợp đa dạng, nhằm cung cấp trải nghiệm sáng tạo xuất sắc."
+  },
+  "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
+    "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) là mô hình chỉ dẫn chính xác cao, phù hợp cho tính toán phức tạp."
+  },
+  "NousResearch/Nous-Hermes-2-Yi-34B": {
+    "description": "Nous Hermes-2 Yi (34B) cung cấp đầu ra ngôn ngữ tối ưu và khả năng ứng dụng đa dạng."
+  },
+  "Pro-128k": {
+    "description": "Spark Pro-128K được cấu hình với khả năng xử lý ngữ cảnh cực lớn, có thể xử lý tới 128K thông tin ngữ cảnh, đặc biệt phù hợp cho việc phân tích toàn bộ và xử lý mối liên hệ logic lâu dài trong nội dung văn bản dài, có thể cung cấp logic mạch lạc và hỗ trợ trích dẫn đa dạng trong giao tiếp văn bản phức tạp."
+  },
+  "Qwen/Qwen1.5-110B-Chat": {
+    "description": "Là phiên bản thử nghiệm của Qwen2, Qwen1.5 sử dụng dữ liệu quy mô lớn để đạt được chức năng đối thoại chính xác hơn."
+  },
+  "Qwen/Qwen1.5-14B-Chat": {
+    "description": "Qwen1.5 được đào tạo từ bộ dữ liệu quy mô lớn, xuất sắc trong các nhiệm vụ ngôn ngữ phức tạp."
+  },
+  "Qwen/Qwen1.5-32B-Chat": {
+    "description": "Qwen1.5 có khả năng trả lời câu hỏi đa lĩnh vực và tạo văn bản."
+  },
+  "Qwen/Qwen1.5-72B-Chat": {
+    "description": "Qwen 1.5 Chat (72B) cung cấp phản hồi nhanh và khả năng đối thoại tự nhiên, phù hợp cho môi trường đa ngôn ngữ."
+  },
+  "Qwen/Qwen1.5-7B-Chat": {
+    "description": "Qwen1.5 nâng cao khả năng diễn đạt trong đối thoại thông qua việc kết hợp giữa đào tạo trước cao cấp và tinh chỉnh."
+  },
+  "Qwen/Qwen2-1.5B-Instruct": {
+    "description": "Qwen2 là dòng mô hình ngôn ngữ lớn hoàn toàn mới, nhằm tối ưu hóa việc xử lý các nhiệm vụ theo hướng dẫn."
+  },
+  "Qwen/Qwen2-57B-A14B-Instruct": {
+    "description": "Qwen2 là dòng mới, mô hình 57B A14B thể hiện xuất sắc trong các nhiệm vụ theo hướng dẫn."
+  },
+  "Qwen/Qwen2-72B-Instruct": {
+    "description": "Qwen2 là mô hình ngôn ngữ tổng quát tiên tiến, hỗ trợ nhiều loại chỉ dẫn."
+  },
+  "Qwen/Qwen2-7B-Instruct": {
+    "description": "Qwen2 là dòng mô hình ngôn ngữ lớn hoàn toàn mới, có khả năng hiểu và tạo ra mạnh mẽ hơn."
+  },
+  "Qwen/Qwen2-Math-72B-Instruct": {
+    "description": "Qwen2-Math tập trung vào việc giải quyết các vấn đề trong lĩnh vực toán học, cung cấp giải pháp chuyên nghiệp cho các bài toán khó."
+  },
+  "THUDM/chatglm3-6b": {
+    "description": "Là mô hình ngôn ngữ hội thoại song ngữ, ChatGLM3 có khả năng xử lý các nhiệm vụ chuyển đổi giữa tiếng Trung và tiếng Anh."
+  },
+  "THUDM/glm-4-9b-chat": {
+    "description": "GLM-4 9B là phiên bản mã nguồn mở, cung cấp trải nghiệm đối thoại tối ưu cho các ứng dụng hội thoại."
+  },
+  "abab5.5-chat": {
+    "description": "Hướng đến các tình huống sản xuất, hỗ trợ xử lý nhiệm vụ phức tạp và sinh văn bản hiệu quả, phù hợp cho các ứng dụng trong lĩnh vực chuyên môn."
+  },
+  "abab5.5s-chat": {
+    "description": "Được thiết kế đặc biệt cho các tình huống đối thoại bằng tiếng Trung, cung cấp khả năng sinh đối thoại chất lượng cao bằng tiếng Trung, phù hợp cho nhiều tình huống ứng dụng."
+  },
+  "abab6.5g-chat": {
+    "description": "Được thiết kế đặc biệt cho các cuộc đối thoại đa ngôn ngữ, hỗ trợ sinh đối thoại chất lượng cao bằng tiếng Anh và nhiều ngôn ngữ khác."
+  },
+  "abab6.5s-chat": {
+    "description": "Phù hợp cho nhiều nhiệm vụ xử lý ngôn ngữ tự nhiên, bao gồm sinh văn bản, hệ thống đối thoại, v.v."
+  },
+  "abab6.5t-chat": {
+    "description": "Tối ưu hóa cho các tình huống đối thoại bằng tiếng Trung, cung cấp khả năng sinh đối thoại mượt mà và phù hợp với thói quen diễn đạt tiếng Trung."
+  },
+  "accounts/fireworks/models/firefunction-v1": {
+    "description": "Mô hình gọi hàm mã nguồn mở của Fireworks, cung cấp khả năng thực hiện chỉ dẫn xuất sắc và tính năng tùy chỉnh mở."
+  },
+  "accounts/fireworks/models/firefunction-v2": {
+    "description": "Firefunction-v2 mới nhất của công ty Fireworks là một mô hình gọi hàm hiệu suất cao, được phát triển dựa trên Llama-3 và được tối ưu hóa nhiều, đặc biệt phù hợp cho các tình huống gọi hàm, đối thoại và theo dõi chỉ dẫn."
+  },
+  "accounts/fireworks/models/firellava-13b": {
+    "description": "fireworks-ai/FireLLaVA-13b là một mô hình ngôn ngữ hình ảnh, có thể nhận cả hình ảnh và văn bản đầu vào, được huấn luyện bằng dữ liệu chất lượng cao, phù hợp cho các nhiệm vụ đa mô hình."
+  },
+  "accounts/fireworks/models/gemma2-9b-it": {
+    "description": "Mô hình chỉ dẫn Gemma 2 9B, dựa trên công nghệ trước đó của Google, phù hợp cho nhiều nhiệm vụ tạo văn bản như trả lời câu hỏi, tóm tắt và suy luận."
+  },
+  "accounts/fireworks/models/llama-v3-70b-instruct": {
+    "description": "Mô hình chỉ dẫn Llama 3 70B, được tối ưu hóa cho đối thoại đa ngôn ngữ và hiểu ngôn ngữ tự nhiên, hiệu suất vượt trội hơn nhiều mô hình cạnh tranh."
+  },
+  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
+    "description": "Mô hình chỉ dẫn Llama 3 70B (phiên bản HF), giữ nguyên kết quả với thực hiện chính thức, phù hợp cho các nhiệm vụ theo dõi chỉ dẫn chất lượng cao."
+  },
+  "accounts/fireworks/models/llama-v3-8b-instruct": {
+    "description": "Mô hình chỉ dẫn Llama 3 8B, được tối ưu hóa cho đối thoại và các nhiệm vụ đa ngôn ngữ, thể hiện hiệu suất xuất sắc và hiệu quả."
+  },
+  "accounts/fireworks/models/llama-v3-8b-instruct-hf": {
+    "description": "Mô hình chỉ dẫn Llama 3 8B (phiên bản HF), kết quả nhất quán với thực hiện chính thức, có tính nhất quán cao và tương thích đa nền tảng."
+  },
+  "accounts/fireworks/models/llama-v3p1-405b-instruct": {
+    "description": "Mô hình chỉ dẫn Llama 3.1 405B, có số lượng tham số cực lớn, phù hợp cho các nhiệm vụ phức tạp và theo dõi chỉ dẫn trong các tình huống tải cao."
+  },
+  "accounts/fireworks/models/llama-v3p1-70b-instruct": {
+    "description": "Mô hình chỉ dẫn Llama 3.1 70B, cung cấp khả năng hiểu và sinh ngôn ngữ tự nhiên xuất sắc, là lựa chọn lý tưởng cho các nhiệm vụ đối thoại và phân tích."
+  },
+  "accounts/fireworks/models/llama-v3p1-8b-instruct": {
+    "description": "Mô hình chỉ dẫn Llama 3.1 8B, được tối ưu hóa cho đối thoại đa ngôn ngữ, có thể vượt qua hầu hết các mô hình mã nguồn mở và đóng trong các tiêu chuẩn ngành phổ biến."
+  },
+  "accounts/fireworks/models/mixtral-8x22b-instruct": {
+    "description": "Mô hình chỉ dẫn Mixtral MoE 8x22B, với số lượng tham số lớn và kiến trúc nhiều chuyên gia, hỗ trợ toàn diện cho việc xử lý hiệu quả các nhiệm vụ phức tạp."
+  },
+  "accounts/fireworks/models/mixtral-8x7b-instruct": {
+    "description": "Mô hình chỉ dẫn Mixtral MoE 8x7B, kiến trúc nhiều chuyên gia cung cấp khả năng theo dõi và thực hiện chỉ dẫn hiệu quả."
+  },
+  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
+    "description": "Mô hình chỉ dẫn Mixtral MoE 8x7B (phiên bản HF), hiệu suất nhất quán với thực hiện chính thức, phù hợp cho nhiều tình huống nhiệm vụ hiệu quả."
+  },
+  "accounts/fireworks/models/mythomax-l2-13b": {
+    "description": "Mô hình MythoMax L2 13B, kết hợp công nghệ hợp nhất mới, xuất sắc trong việc kể chuyện và đóng vai."
+  },
+  "accounts/fireworks/models/phi-3-vision-128k-instruct": {
+    "description": "Mô hình chỉ dẫn Phi 3 Vision, mô hình đa mô hình nhẹ, có khả năng xử lý thông tin hình ảnh và văn bản phức tạp, với khả năng suy luận mạnh mẽ."
+  },
+  "accounts/fireworks/models/starcoder-16b": {
+    "description": "Mô hình StarCoder 15.5B, hỗ trợ các nhiệm vụ lập trình nâng cao, khả năng đa ngôn ngữ được cải thiện, phù hợp cho việc tạo và hiểu mã phức tạp."
+  },
+  "accounts/fireworks/models/starcoder-7b": {
+    "description": "Mô hình StarCoder 7B, được huấn luyện cho hơn 80 ngôn ngữ lập trình, có khả năng điền mã và hiểu ngữ cảnh xuất sắc."
+  },
+  "accounts/yi-01-ai/models/yi-large": {
+    "description": "Mô hình Yi-Large, có khả năng xử lý đa ngôn ngữ xuất sắc, có thể được sử dụng cho nhiều nhiệm vụ sinh và hiểu ngôn ngữ."
+  },
+  "anthropic.claude-3-5-sonnet-20240620-v1:0": {
+    "description": "Claude 3.5 Sonnet nâng cao tiêu chuẩn ngành, hiệu suất vượt trội hơn các mô hình cạnh tranh và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá, đồng thời có tốc độ và chi phí của mô hình tầm trung của chúng tôi."
+  },
+  "anthropic.claude-3-haiku-20240307-v1:0": {
+    "description": "Claude 3 Haiku là mô hình nhanh nhất và gọn nhẹ nhất của Anthropic, cung cấp tốc độ phản hồi gần như ngay lập tức. Nó có thể nhanh chóng trả lời các truy vấn và yêu cầu đơn giản. Khách hàng sẽ có thể xây dựng trải nghiệm AI liền mạch mô phỏng tương tác của con người. Claude 3 Haiku có thể xử lý hình ảnh và trả về đầu ra văn bản, với cửa sổ ngữ cảnh 200K."
+  },
+  "anthropic.claude-3-opus-20240229-v1:0": {
+    "description": "Claude 3 Opus là mô hình AI mạnh nhất của Anthropic, có hiệu suất tiên tiến trong các nhiệm vụ phức tạp. Nó có thể xử lý các gợi ý mở và các tình huống chưa thấy, với độ trôi chảy và khả năng hiểu giống con người xuất sắc. Claude 3 Opus thể hiện những khả năng tiên tiến của AI sinh. Claude 3 Opus có thể xử lý hình ảnh và trả về đầu ra văn bản, với cửa sổ ngữ cảnh 200K."
+  },
+  "anthropic.claude-3-sonnet-20240229-v1:0": {
+    "description": "Claude 3 Sonnet của Anthropic đạt được sự cân bằng lý tưởng giữa trí thông minh và tốc độ - đặc biệt phù hợp cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu quả tối đa với giá thấp hơn đối thủ, được thiết kế để trở thành một máy chủ đáng tin cậy và bền bỉ, phù hợp cho triển khai AI quy mô lớn. Claude 3 Sonnet có thể xử lý hình ảnh và trả về đầu ra văn bản, với cửa sổ ngữ cảnh 200K."
+  },
+  "anthropic.claude-instant-v1": {
+    "description": "Một mô hình nhanh chóng, kinh tế nhưng vẫn rất mạnh mẽ, có thể xử lý một loạt các nhiệm vụ bao gồm đối thoại hàng ngày, phân tích văn bản, tóm tắt và hỏi đáp tài liệu."
+  },
+  "anthropic.claude-v2": {
+    "description": "Mô hình của Anthropic thể hiện khả năng cao trong nhiều nhiệm vụ từ đối thoại phức tạp và sinh nội dung sáng tạo đến tuân thủ chỉ dẫn chi tiết."
+  },
+  "anthropic.claude-v2:1": {
+    "description": "Phiên bản cập nhật của Claude 2, có cửa sổ ngữ cảnh gấp đôi, cùng với độ tin cậy, tỷ lệ ảo giác và độ chính xác dựa trên bằng chứng được cải thiện trong các tài liệu dài và ngữ cảnh RAG."
+  },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 Haiku là mô hình nhanh nhất và nhỏ gọn nhất của Anthropic, được thiết kế để đạt được phản hồi gần như ngay lập tức. Nó có hiệu suất định hướng nhanh chóng và chính xác."
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opus là mô hình mạnh mẽ nhất của Anthropic, được sử dụng để xử lý các nhiệm vụ phức tạp cao. Nó thể hiện xuất sắc về hiệu suất, trí thông minh, sự trôi chảy và khả năng hiểu biết."
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 Sonnet cung cấp khả năng vượt trội hơn Opus và tốc độ nhanh hơn Sonnet, trong khi vẫn giữ giá tương tự. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại lý."
+  },
+  "aya": {
+    "description": "Aya 23 là mô hình đa ngôn ngữ do Cohere phát hành, hỗ trợ 23 ngôn ngữ, tạo điều kiện thuận lợi cho các ứng dụng ngôn ngữ đa dạng."
+  },
+  "aya:35b": {
+    "description": "Aya 23 là mô hình đa ngôn ngữ do Cohere phát hành, hỗ trợ 23 ngôn ngữ, tạo điều kiện thuận lợi cho các ứng dụng ngôn ngữ đa dạng."
+  },
+  "charglm-3": {
+    "description": "CharGLM-3 được thiết kế đặc biệt cho vai trò và đồng hành cảm xúc, hỗ trợ trí nhớ nhiều vòng siêu dài và đối thoại cá nhân hóa, ứng dụng rộng rãi."
+  },
+  "chatgpt-4o-latest": {
+    "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
+  },
+  "claude-2.0": {
+    "description": "Claude 2 cung cấp những tiến bộ quan trọng trong khả năng cho doanh nghiệp, bao gồm ngữ cảnh 200K token hàng đầu trong ngành, giảm đáng kể tỷ lệ ảo giác của mô hình, nhắc nhở hệ thống và một tính năng kiểm tra mới: gọi công cụ."
+  },
+  "claude-2.1": {
+    "description": "Claude 2 cung cấp những tiến bộ quan trọng trong khả năng cho doanh nghiệp, bao gồm ngữ cảnh 200K token hàng đầu trong ngành, giảm đáng kể tỷ lệ ảo giác của mô hình, nhắc nhở hệ thống và một tính năng kiểm tra mới: gọi công cụ."
+  },
+  "claude-3-5-sonnet-20240620": {
+    "description": "Claude 3.5 Sonnet cung cấp khả năng vượt trội so với Opus và tốc độ nhanh hơn Sonnet, đồng thời giữ nguyên mức giá như Sonnet. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại lý."
+  },
+  "claude-3-haiku-20240307": {
+    "description": "Claude 3 Haiku là mô hình nhanh nhất và gọn nhẹ nhất của Anthropic, được thiết kế để đạt được phản hồi gần như ngay lập tức. Nó có hiệu suất định hướng nhanh và chính xác."
+  },
+  "claude-3-opus-20240229": {
+    "description": "Claude 3 Opus là mô hình mạnh mẽ nhất của Anthropic để xử lý các nhiệm vụ phức tạp. Nó thể hiện xuất sắc về hiệu suất, trí thông minh, sự trôi chảy và khả năng hiểu biết."
+  },
+  "claude-3-sonnet-20240229": {
+    "description": "Claude 3 Sonnet cung cấp sự cân bằng lý tưởng giữa trí thông minh và tốc độ cho khối lượng công việc doanh nghiệp. Nó cung cấp hiệu suất tối đa với mức giá thấp hơn, đáng tin cậy và phù hợp cho triển khai quy mô lớn."
+  },
+  "claude-instant-1.2": {
+    "description": "Mô hình của Anthropic được sử dụng cho việc sinh văn bản với độ trễ thấp và thông lượng cao, hỗ trợ sinh hàng trăm trang văn bản."
+  },
+  "codegeex-4": {
+    "description": "CodeGeeX-4 là trợ lý lập trình AI mạnh mẽ, hỗ trợ nhiều ngôn ngữ lập trình với câu hỏi thông minh và hoàn thành mã, nâng cao hiệu suất phát triển."
+  },
+  "codegemma": {
+    "description": "CodeGemma là mô hình ngôn ngữ nhẹ chuyên dụng cho các nhiệm vụ lập trình khác nhau, hỗ trợ lặp lại và tích hợp nhanh chóng."
+  },
+  "codegemma:2b": {
+    "description": "CodeGemma là mô hình ngôn ngữ nhẹ chuyên dụng cho các nhiệm vụ lập trình khác nhau, hỗ trợ lặp lại và tích hợp nhanh chóng."
+  },
+  "codellama": {
+    "description": "Code Llama là một LLM tập trung vào việc sinh và thảo luận mã, kết hợp hỗ trợ cho nhiều ngôn ngữ lập trình, phù hợp cho môi trường phát triển."
+  },
+  "codellama:13b": {
+    "description": "Code Llama là một LLM tập trung vào việc sinh và thảo luận mã, kết hợp hỗ trợ cho nhiều ngôn ngữ lập trình, phù hợp cho môi trường phát triển."
+  },
+  "codellama:34b": {
+    "description": "Code Llama là một LLM tập trung vào việc sinh và thảo luận mã, kết hợp hỗ trợ cho nhiều ngôn ngữ lập trình, phù hợp cho môi trường phát triển."
+  },
+  "codellama:70b": {
+    "description": "Code Llama là một LLM tập trung vào việc sinh và thảo luận mã, kết hợp hỗ trợ cho nhiều ngôn ngữ lập trình, phù hợp cho môi trường phát triển."
+  },
+  "codeqwen": {
+    "description": "CodeQwen1.5 là mô hình ngôn ngữ quy mô lớn được đào tạo trên một lượng lớn dữ liệu mã, chuyên giải quyết các nhiệm vụ lập trình phức tạp."
+  },
+  "codestral": {
+    "description": "Codestral là mô hình mã đầu tiên của Mistral AI, cung cấp hỗ trợ xuất sắc cho các nhiệm vụ sinh mã."
+  },
+  "codestral-latest": {
+    "description": "Codestral là mô hình sinh mã tiên tiến tập trung vào việc sinh mã, tối ưu hóa cho các nhiệm vụ điền vào khoảng trống và hoàn thiện mã."
+  },
+  "cognitivecomputations/dolphin-mixtral-8x22b": {
+    "description": "Dolphin Mixtral 8x22B là mô hình được thiết kế cho việc tuân thủ hướng dẫn, đối thoại và lập trình."
+  },
+  "command-r": {
+    "description": "Command R là LLM được tối ưu hóa cho các nhiệm vụ đối thoại và ngữ cảnh dài, đặc biệt phù hợp cho tương tác động và quản lý kiến thức."
+  },
+  "command-r-plus": {
+    "description": "Command R+ là một mô hình ngôn ngữ lớn hiệu suất cao, được thiết kế cho các tình huống doanh nghiệp thực tế và ứng dụng phức tạp."
+  },
+  "databricks/dbrx-instruct": {
+    "description": "DBRX Instruct cung cấp khả năng xử lý chỉ dẫn đáng tin cậy, hỗ trợ nhiều ứng dụng trong ngành."
+  },
+  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
+    "description": "DeepSeek Coder V2 được thiết kế cho các nhiệm vụ mã, tập trung vào việc tạo mã hiệu quả."
+  },
+  "deepseek-ai/DeepSeek-V2-Chat": {
+    "description": "DeepSeek V2 có 6.7 tỷ tham số, hỗ trợ xử lý văn bản tiếng Anh và tiếng Trung."
+  },
+  "deepseek-ai/DeepSeek-V2.5": {
+    "description": "DeepSeek V2.5 kết hợp các đặc điểm xuất sắc của các phiên bản trước, tăng cường khả năng tổng quát và mã hóa."
+  },
+  "deepseek-ai/deepseek-llm-67b-chat": {
+    "description": "DeepSeek 67B là mô hình tiên tiến được huấn luyện cho các cuộc đối thoại phức tạp."
+  },
+  "deepseek-chat": {
+    "description": "Mô hình mã nguồn mở mới kết hợp khả năng tổng quát và mã, không chỉ giữ lại khả năng đối thoại tổng quát của mô hình Chat ban đầu và khả năng xử lý mã mạnh mẽ của mô hình Coder, mà còn tốt hơn trong việc phù hợp với sở thích của con người. Hơn nữa, DeepSeek-V2.5 cũng đã đạt được sự cải thiện lớn trong nhiều khía cạnh như nhiệm vụ viết, theo dõi chỉ dẫn."
+  },
+  "deepseek-coder-v2": {
+    "description": "DeepSeek Coder V2 là mô hình mã nguồn mở hỗn hợp chuyên gia, thể hiện xuất sắc trong các nhiệm vụ mã, tương đương với GPT4-Turbo."
+  },
+  "deepseek-coder-v2:236b": {
+    "description": "DeepSeek Coder V2 là mô hình mã nguồn mở hỗn hợp chuyên gia, thể hiện xuất sắc trong các nhiệm vụ mã, tương đương với GPT4-Turbo."
+  },
+  "deepseek-v2": {
+    "description": "DeepSeek V2 là mô hình ngôn ngữ Mixture-of-Experts hiệu quả, phù hợp cho các nhu cầu xử lý tiết kiệm."
+  },
+  "deepseek-v2:236b": {
+    "description": "DeepSeek V2 236B là mô hình mã thiết kế của DeepSeek, cung cấp khả năng sinh mã mạnh mẽ."
+  },
+  "deepseek/deepseek-chat": {
+    "description": "Mô hình mã nguồn mở mới kết hợp khả năng tổng quát và mã, không chỉ giữ lại khả năng đối thoại tổng quát của mô hình Chat ban đầu và khả năng xử lý mã mạnh mẽ của mô hình Coder, mà còn tốt hơn trong việc phù hợp với sở thích của con người. Hơn nữa, DeepSeek-V2.5 cũng đã đạt được sự cải thiện lớn trong nhiều lĩnh vực như nhiệm vụ viết, theo dõi chỉ dẫn."
+  },
+  "emohaa": {
+    "description": "Emohaa là mô hình tâm lý, có khả năng tư vấn chuyên nghiệp, giúp người dùng hiểu các vấn đề cảm xúc."
+  },
+  "gemini-1.0-pro-001": {
+    "description": "Gemini 1.0 Pro 001 (Tuning) cung cấp hiệu suất ổn định và có thể điều chỉnh, là lựa chọn lý tưởng cho các giải pháp nhiệm vụ phức tạp."
+  },
+  "gemini-1.0-pro-002": {
+    "description": "Gemini 1.0 Pro 002 (Tuning) cung cấp hỗ trợ đa phương thức xuất sắc, tập trung vào việc giải quyết hiệu quả các nhiệm vụ phức tạp."
+  },
+  "gemini-1.0-pro-latest": {
+    "description": "Gemini 1.0 Pro là mô hình AI hiệu suất cao của Google, được thiết kế để mở rộng cho nhiều nhiệm vụ."
+  },
+  "gemini-1.5-flash-001": {
+    "description": "Gemini 1.5 Flash 001 là một mô hình đa phương thức hiệu quả, hỗ trợ mở rộng cho nhiều ứng dụng."
+  },
+  "gemini-1.5-flash-8b-exp-0827": {
+    "description": "Gemini 1.5 Flash 8B 0827 được thiết kế để xử lý các tình huống nhiệm vụ quy mô lớn, cung cấp tốc độ xử lý vô song."
+  },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827 cung cấp khả năng xử lý đa phương thức được tối ưu hóa, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
+  },
+  "gemini-1.5-flash-latest": {
+    "description": "Gemini 1.5 Flash là mô hình AI đa phương thức mới nhất của Google, có khả năng xử lý nhanh, hỗ trợ đầu vào văn bản, hình ảnh và video, phù hợp cho việc mở rộng hiệu quả cho nhiều nhiệm vụ."
+  },
+  "gemini-1.5-pro-001": {
+    "description": "Gemini 1.5 Pro 001 là giải pháp AI đa phương thức có thể mở rộng, hỗ trợ nhiều nhiệm vụ phức tạp."
+  },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801 cung cấp khả năng xử lý đa phương thức xuất sắc, mang lại sự linh hoạt lớn hơn cho phát triển ứng dụng."
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827 kết hợp công nghệ tối ưu hóa mới nhất, mang lại khả năng xử lý dữ liệu đa phương thức hiệu quả hơn."
+  },
+  "gemini-1.5-pro-latest": {
+    "description": "Gemini 1.5 Pro hỗ trợ lên đến 2 triệu tokens, là lựa chọn lý tưởng cho mô hình đa phương thức trung bình, phù hợp cho hỗ trợ đa diện cho các nhiệm vụ phức tạp."
+  },
+  "gemma-7b-it": {
+    "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
+  },
+  "gemma2": {
+    "description": "Gemma 2 là mô hình hiệu quả do Google phát hành, bao gồm nhiều ứng dụng từ nhỏ đến xử lý dữ liệu phức tạp."
+  },
+  "gemma2-9b-it": {
+    "description": "Gemma 2 9B là một mô hình được tối ưu hóa cho các nhiệm vụ cụ thể và tích hợp công cụ."
+  },
+  "gemma2:27b": {
+    "description": "Gemma 2 là mô hình hiệu quả do Google phát hành, bao gồm nhiều ứng dụng từ nhỏ đến xử lý dữ liệu phức tạp."
+  },
+  "gemma2:2b": {
+    "description": "Gemma 2 là mô hình hiệu quả do Google phát hành, bao gồm nhiều ứng dụng từ nhỏ đến xử lý dữ liệu phức tạp."
+  },
+  "general": {
+    "description": "Spark Lite là một mô hình ngôn ngữ lớn nhẹ, có độ trễ cực thấp và khả năng xử lý hiệu quả, hoàn toàn miễn phí và mở, hỗ trợ chức năng tìm kiếm trực tuyến theo thời gian thực. Đặc điểm phản hồi nhanh giúp nó thể hiện xuất sắc trong các ứng dụng suy luận trên thiết bị có công suất thấp và tinh chỉnh mô hình, mang lại hiệu quả chi phí và trải nghiệm thông minh xuất sắc cho người dùng, đặc biệt trong các tình huống hỏi đáp kiến thức, tạo nội dung và tìm kiếm."
+  },
+  "generalv3": {
+    "description": "Spark Pro là một mô hình ngôn ngữ lớn hiệu suất cao được tối ưu hóa cho các lĩnh vực chuyên môn, tập trung vào toán học, lập trình, y tế, giáo dục và nhiều lĩnh vực khác, đồng thời hỗ trợ tìm kiếm trực tuyến và các plugin tích hợp như thời tiết, ngày tháng. Mô hình đã được tối ưu hóa thể hiện xuất sắc và hiệu suất cao trong các nhiệm vụ hỏi đáp kiến thức phức tạp, hiểu ngôn ngữ và sáng tạo văn bản cấp cao, là lựa chọn lý tưởng cho các tình huống ứng dụng chuyên nghiệp."
+  },
+  "generalv3.5": {
+    "description": "Spark3.5 Max là phiên bản toàn diện nhất, hỗ trợ tìm kiếm trực tuyến và nhiều plugin tích hợp. Khả năng cốt lõi đã được tối ưu hóa toàn diện cùng với thiết lập vai trò hệ thống và chức năng gọi hàm, giúp nó thể hiện xuất sắc và nổi bật trong nhiều tình huống ứng dụng phức tạp."
+  },
+  "glm-4": {
+    "description": "GLM-4 là phiên bản flagship cũ phát hành vào tháng 1 năm 2024, hiện đã được GLM-4-0520 mạnh mẽ hơn thay thế."
+  },
+  "glm-4-0520": {
+    "description": "GLM-4-0520 là phiên bản mô hình mới nhất, được thiết kế cho các nhiệm vụ phức tạp và đa dạng, thể hiện xuất sắc."
+  },
+  "glm-4-air": {
+    "description": "GLM-4-Air là phiên bản có giá trị sử dụng cao, hiệu suất gần giống GLM-4, cung cấp tốc độ nhanh và giá cả phải chăng."
+  },
+  "glm-4-airx": {
+    "description": "GLM-4-AirX cung cấp phiên bản hiệu quả của GLM-4-Air, tốc độ suy luận có thể đạt 2.6 lần."
+  },
+  "glm-4-alltools": {
+    "description": "GLM-4-AllTools là một mô hình tác nhân đa chức năng, được tối ưu hóa để hỗ trợ lập kế hoạch chỉ dẫn phức tạp và gọi công cụ, như duyệt web, giải thích mã và sinh văn bản, phù hợp cho thực hiện nhiều nhiệm vụ."
+  },
+  "glm-4-flash": {
+    "description": "GLM-4-Flash là lựa chọn lý tưởng cho các nhiệm vụ đơn giản, tốc độ nhanh nhất và giá cả phải chăng nhất."
+  },
+  "glm-4-long": {
+    "description": "GLM-4-Long hỗ trợ đầu vào văn bản siêu dài, phù hợp cho các nhiệm vụ ghi nhớ và xử lý tài liệu quy mô lớn."
+  },
+  "glm-4-plus": {
+    "description": "GLM-4-Plus là mô hình flagship thông minh cao, có khả năng xử lý văn bản dài và nhiệm vụ phức tạp, hiệu suất được nâng cao toàn diện."
+  },
+  "glm-4v": {
+    "description": "GLM-4V cung cấp khả năng hiểu và suy luận hình ảnh mạnh mẽ, hỗ trợ nhiều nhiệm vụ hình ảnh."
+  },
+  "glm-4v-plus": {
+    "description": "GLM-4V-Plus có khả năng hiểu nội dung video và nhiều hình ảnh, phù hợp cho các nhiệm vụ đa phương tiện."
+  },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827 cung cấp khả năng xử lý đa phương thức tối ưu, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827 kết hợp công nghệ tối ưu mới nhất, mang lại khả năng xử lý dữ liệu đa phương thức hiệu quả hơn."
+  },
+  "google/gemma-2-27b-it": {
+    "description": "Gemma 2 tiếp tục triết lý thiết kế nhẹ và hiệu quả."
+  },
+  "google/gemma-2-9b-it": {
+    "description": "Gemma 2 là một loạt mô hình văn bản mã nguồn mở nhẹ của Google."
+  },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2 là loạt mô hình văn bản mã nguồn mở nhẹ của Google."
+  },
+  "google/gemma-2b-it": {
+    "description": "Gemma Instruct (2B) cung cấp khả năng xử lý chỉ dẫn cơ bản, phù hợp cho các ứng dụng nhẹ."
+  },
+  "gpt-3.5-turbo": {
+    "description": "GPT 3.5 Turbo, phù hợp cho nhiều nhiệm vụ sinh và hiểu văn bản, hiện tại trỏ đến gpt-3.5-turbo-0125."
+  },
+  "gpt-3.5-turbo-0125": {
+    "description": "GPT 3.5 Turbo, phù hợp cho nhiều nhiệm vụ sinh và hiểu văn bản, hiện tại trỏ đến gpt-3.5-turbo-0125."
+  },
+  "gpt-3.5-turbo-1106": {
+    "description": "GPT 3.5 Turbo, phù hợp cho nhiều nhiệm vụ sinh và hiểu văn bản, hiện tại trỏ đến gpt-3.5-turbo-0125."
+  },
+  "gpt-3.5-turbo-instruct": {
+    "description": "GPT 3.5 Turbo, phù hợp cho nhiều nhiệm vụ sinh và hiểu văn bản, hiện tại trỏ đến gpt-3.5-turbo-0125."
+  },
+  "gpt-4": {
+    "description": "GPT-4 cung cấp một cửa sổ ngữ cảnh lớn hơn, có khả năng xử lý các đầu vào văn bản dài hơn, phù hợp cho các tình huống cần tích hợp thông tin rộng rãi và phân tích dữ liệu."
+  },
+  "gpt-4-0125-preview": {
+    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
+  },
+  "gpt-4-0613": {
+    "description": "GPT-4 cung cấp một cửa sổ ngữ cảnh lớn hơn, có khả năng xử lý các đầu vào văn bản dài hơn, phù hợp cho các tình huống cần tích hợp thông tin rộng rãi và phân tích dữ liệu."
+  },
+  "gpt-4-1106-preview": {
+    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
+  },
+  "gpt-4-1106-vision-preview": {
+    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
+  },
+  "gpt-4-32k": {
+    "description": "GPT-4 cung cấp một cửa sổ ngữ cảnh lớn hơn, có khả năng xử lý các đầu vào văn bản dài hơn, phù hợp cho các tình huống cần tích hợp thông tin rộng rãi và phân tích dữ liệu."
+  },
+  "gpt-4-32k-0613": {
+    "description": "GPT-4 cung cấp một cửa sổ ngữ cảnh lớn hơn, có khả năng xử lý các đầu vào văn bản dài hơn, phù hợp cho các tình huống cần tích hợp thông tin rộng rãi và phân tích dữ liệu."
+  },
+  "gpt-4-turbo": {
+    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
+  },
+  "gpt-4-turbo-2024-04-09": {
+    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
+  },
+  "gpt-4-turbo-preview": {
+    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
+  },
+  "gpt-4-vision-preview": {
+    "description": "Mô hình GPT-4 Turbo mới nhất có chức năng hình ảnh. Hiện tại, các yêu cầu hình ảnh có thể sử dụng chế độ JSON và gọi hàm. GPT-4 Turbo là một phiên bản nâng cao, cung cấp hỗ trợ chi phí hiệu quả cho các nhiệm vụ đa phương tiện. Nó tìm thấy sự cân bằng giữa độ chính xác và hiệu quả, phù hợp cho các ứng dụng cần tương tác theo thời gian thực."
+  },
+  "gpt-4o": {
+    "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
+  },
+  "gpt-4o-2024-05-13": {
+    "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
+  },
+  "gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian thực để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
+  },
+  "gpt-4o-mini": {
+    "description": "GPT-4o mini là mô hình mới nhất do OpenAI phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và đầu ra văn bản. Là mô hình nhỏ gọn tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng cao hơn GPT-4 về sở thích trò chuyện."
+  },
+  "gryphe/mythomax-l2-13b": {
+    "description": "MythoMax l2 13B là mô hình ngôn ngữ kết hợp giữa sáng tạo và trí thông minh, kết hợp nhiều mô hình hàng đầu."
+  },
+  "internlm/internlm2_5-20b-chat": {
+    "description": "Mô hình mã nguồn mở sáng tạo InternLM2.5, thông qua số lượng tham số lớn, nâng cao trí thông minh trong đối thoại."
+  },
+  "internlm/internlm2_5-7b-chat": {
+    "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
+  },
+  "llama-3.1-70b-instruct": {
+    "description": "Mô hình Llama 3.1 70B Instruct, có 70B tham số, có thể cung cấp hiệu suất xuất sắc trong các nhiệm vụ sinh văn bản và chỉ dẫn lớn."
+  },
+  "llama-3.1-70b-versatile": {
+    "description": "Llama 3.1 70B cung cấp khả năng suy luận AI mạnh mẽ hơn, phù hợp cho các ứng dụng phức tạp, hỗ trợ xử lý tính toán cực lớn và đảm bảo hiệu quả và độ chính xác cao."
+  },
+  "llama-3.1-8b-instant": {
+    "description": "Llama 3.1 8B là một mô hình hiệu suất cao, cung cấp khả năng sinh văn bản nhanh chóng, rất phù hợp cho các tình huống ứng dụng cần hiệu quả quy mô lớn và tiết kiệm chi phí."
+  },
+  "llama-3.1-8b-instruct": {
+    "description": "Mô hình Llama 3.1 8B Instruct, có 8B tham số, hỗ trợ thực hiện nhiệm vụ chỉ dẫn hình ảnh hiệu quả, cung cấp khả năng sinh văn bản chất lượng."
+  },
+  "llama-3.1-sonar-huge-128k-online": {
+    "description": "Mô hình Llama 3.1 Sonar Huge Online, có 405B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, được thiết kế cho các ứng dụng trò chuyện trực tuyến phức tạp."
+  },
+  "llama-3.1-sonar-large-128k-chat": {
+    "description": "Mô hình Llama 3.1 Sonar Large Chat, có 70B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, phù hợp cho các nhiệm vụ trò chuyện ngoại tuyến phức tạp."
+  },
+  "llama-3.1-sonar-large-128k-online": {
+    "description": "Mô hình Llama 3.1 Sonar Large Online, có 70B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, phù hợp cho các nhiệm vụ trò chuyện có dung lượng lớn và đa dạng."
+  },
+  "llama-3.1-sonar-small-128k-chat": {
+    "description": "Mô hình Llama 3.1 Sonar Small Chat, có 8B tham số, được thiết kế cho trò chuyện ngoại tuyến, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã."
+  },
+  "llama-3.1-sonar-small-128k-online": {
+    "description": "Mô hình Llama 3.1 Sonar Small Online, có 8B tham số, hỗ trợ độ dài ngữ cảnh khoảng 127,000 mã, được thiết kế cho trò chuyện trực tuyến, có khả năng xử lý hiệu quả các tương tác văn bản khác nhau."
+  },
+  "llama3-70b-8192": {
+    "description": "Meta Llama 3 70B cung cấp khả năng xử lý phức tạp vô song, được thiết kế riêng cho các dự án yêu cầu cao."
+  },
+  "llama3-8b-8192": {
+    "description": "Meta Llama 3 8B mang lại hiệu suất suy luận chất lượng cao, phù hợp cho nhu cầu ứng dụng đa dạng."
+  },
+  "llama3-groq-70b-8192-tool-use-preview": {
+    "description": "Llama 3 Groq 70B Tool Use cung cấp khả năng gọi công cụ mạnh mẽ, hỗ trợ xử lý hiệu quả cho các nhiệm vụ phức tạp."
+  },
+  "llama3-groq-8b-8192-tool-use-preview": {
+    "description": "Llama 3 Groq 8B Tool Use là mô hình được tối ưu hóa cho việc sử dụng công cụ hiệu quả, hỗ trợ tính toán song song nhanh chóng."
+  },
+  "llama3.1": {
+    "description": "Llama 3.1 là mô hình tiên tiến do Meta phát hành, hỗ trợ lên đến 405B tham số, có thể áp dụng cho các cuộc đối thoại phức tạp, dịch đa ngôn ngữ và phân tích dữ liệu."
+  },
+  "llama3.1:405b": {
+    "description": "Llama 3.1 là mô hình tiên tiến do Meta phát hành, hỗ trợ lên đến 405B tham số, có thể áp dụng cho các cuộc đối thoại phức tạp, dịch đa ngôn ngữ và phân tích dữ liệu."
+  },
+  "llama3.1:70b": {
+    "description": "Llama 3.1 là mô hình tiên tiến do Meta phát hành, hỗ trợ lên đến 405B tham số, có thể áp dụng cho các cuộc đối thoại phức tạp, dịch đa ngôn ngữ và phân tích dữ liệu."
+  },
+  "llava": {
+    "description": "LLaVA là mô hình đa phương thức kết hợp bộ mã hóa hình ảnh và Vicuna, phục vụ cho việc hiểu biết mạnh mẽ về hình ảnh và ngôn ngữ."
+  },
+  "llava-v1.5-7b-4096-preview": {
+    "description": "LLaVA 1.5 7B cung cấp khả năng xử lý hình ảnh tích hợp, tạo ra đầu ra phức tạp thông qua đầu vào thông tin hình ảnh."
+  },
+  "llava:13b": {
+    "description": "LLaVA là mô hình đa phương thức kết hợp bộ mã hóa hình ảnh và Vicuna, phục vụ cho việc hiểu biết mạnh mẽ về hình ảnh và ngôn ngữ."
+  },
+  "llava:34b": {
+    "description": "LLaVA là mô hình đa phương thức kết hợp bộ mã hóa hình ảnh và Vicuna, phục vụ cho việc hiểu biết mạnh mẽ về hình ảnh và ngôn ngữ."
+  },
+  "mathstral": {
+    "description": "MathΣtral được thiết kế cho nghiên cứu khoa học và suy luận toán học, cung cấp khả năng tính toán hiệu quả và giải thích kết quả."
+  },
+  "meta-llama/Llama-2-13b-chat-hf": {
+    "description": "LLaMA-2 Chat (13B) cung cấp khả năng xử lý ngôn ngữ xuất sắc và trải nghiệm tương tác tuyệt vời."
+  },
+  "meta-llama/Llama-3-70b-chat-hf": {
+    "description": "LLaMA-3 Chat (70B) là mô hình trò chuyện mạnh mẽ, hỗ trợ các nhu cầu đối thoại phức tạp."
+  },
+  "meta-llama/Llama-3-8b-chat-hf": {
+    "description": "LLaMA-3 Chat (8B) cung cấp hỗ trợ đa ngôn ngữ, bao gồm nhiều lĩnh vực kiến thức phong phú."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct": {
+    "description": "LLaMA 3 hỗ trợ tạo văn bản dung lượng lớn và phân tích theo hướng dẫn."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
+    "description": "Llama 3 70B Instruct Lite phù hợp cho các môi trường cần hiệu suất cao và độ trễ thấp."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct-Turbo": {
+    "description": "Llama 3 70B Instruct Turbo cung cấp khả năng hiểu và sinh ngôn ngữ xuất sắc, phù hợp cho các nhiệm vụ tính toán khắt khe nhất."
+  },
+  "meta-llama/Meta-Llama-3-8B-Instruct-Lite": {
+    "description": "Llama 3 8B Instruct Lite phù hợp cho các môi trường hạn chế tài nguyên, cung cấp hiệu suất cân bằng xuất sắc."
+  },
+  "meta-llama/Meta-Llama-3-8B-Instruct-Turbo": {
+    "description": "Llama 3 8B Instruct Turbo là một mô hình ngôn ngữ lớn hiệu suất cao, hỗ trợ nhiều tình huống ứng dụng."
+  },
+  "meta-llama/Meta-Llama-3.1-405B-Instruct": {
+    "description": "LLaMA 3.1 405B là mô hình mạnh mẽ cho việc đào tạo trước và điều chỉnh theo hướng dẫn."
+  },
+  "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
+    "description": "Mô hình Llama 3.1 Turbo 405B cung cấp hỗ trợ ngữ cảnh dung lượng lớn cho xử lý dữ liệu lớn, thể hiện xuất sắc trong các ứng dụng trí tuệ nhân tạo quy mô lớn."
+  },
+  "meta-llama/Meta-Llama-3.1-70B-Instruct": {
+    "description": "LLaMA 3.1 70B cung cấp hỗ trợ đối thoại hiệu quả đa ngôn ngữ."
+  },
+  "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {
+    "description": "Mô hình Llama 3.1 70B được tinh chỉnh để phù hợp với các ứng dụng tải cao, định lượng đến FP8 cung cấp khả năng tính toán và độ chính xác hiệu quả hơn, đảm bảo hiệu suất xuất sắc trong các tình huống phức tạp."
+  },
+  "meta-llama/Meta-Llama-3.1-8B-Instruct": {
+    "description": "LLaMA 3.1 cung cấp hỗ trợ đa ngôn ngữ, là một trong những mô hình sinh nổi bật trong ngành."
+  },
+  "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
+    "description": "Mô hình Llama 3.1 8B sử dụng định lượng FP8, hỗ trợ lên đến 131,072 mã ngữ cảnh, là một trong những mô hình mã nguồn mở hàng đầu, phù hợp cho các nhiệm vụ phức tạp, vượt trội hơn nhiều tiêu chuẩn ngành."
+  },
+  "meta-llama/llama-3-70b-instruct": {
+    "description": "Llama 3 70B Instruct được tối ưu hóa cho các tình huống đối thoại chất lượng cao, thể hiện xuất sắc trong nhiều đánh giá của con người."
+  },
+  "meta-llama/llama-3-8b-instruct": {
+    "description": "Llama 3 8B Instruct tối ưu hóa cho các tình huống đối thoại chất lượng cao, hiệu suất vượt trội hơn nhiều mô hình đóng nguồn."
+  },
+  "meta-llama/llama-3.1-405b-instruct": {
+    "description": "Llama 3.1 405B Instruct là phiên bản mới nhất do Meta phát hành, tối ưu hóa cho việc tạo ra các cuộc đối thoại chất lượng cao, vượt qua nhiều mô hình đóng nguồn hàng đầu."
+  },
+  "meta-llama/llama-3.1-70b-instruct": {
+    "description": "Llama 3.1 70B Instruct được thiết kế đặc biệt cho các cuộc đối thoại chất lượng cao, thể hiện xuất sắc trong các đánh giá của con người, đặc biệt phù hợp cho các tình huống tương tác cao."
+  },
+  "meta-llama/llama-3.1-8b-instruct": {
+    "description": "Llama 3.1 8B Instruct là phiên bản mới nhất do Meta phát hành, tối ưu hóa cho các tình huống đối thoại chất lượng cao, vượt trội hơn nhiều mô hình đóng nguồn hàng đầu."
+  },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1 cung cấp hỗ trợ đa ngôn ngữ, là một trong những mô hình sinh hàng đầu trong ngành."
+  },
+  "meta.llama3-1-405b-instruct-v1:0": {
+    "description": "Meta Llama 3.1 405B Instruct là mô hình lớn nhất và mạnh mẽ nhất trong mô hình Llama 3.1 Instruct, là một mô hình sinh dữ liệu và suy luận đối thoại tiên tiến, cũng có thể được sử dụng làm nền tảng cho việc tiền huấn luyện hoặc tinh chỉnh chuyên sâu trong các lĩnh vực cụ thể. Các mô hình ngôn ngữ lớn đa ngôn ngữ (LLMs) mà Llama 3.1 cung cấp là một tập hợp các mô hình sinh đã được tiền huấn luyện và điều chỉnh theo chỉ dẫn, bao gồm kích thước 8B, 70B và 405B (đầu vào/đầu ra văn bản). Các mô hình văn bản điều chỉnh theo chỉ dẫn của Llama 3.1 (8B, 70B, 405B) được tối ưu hóa cho các trường hợp đối thoại đa ngôn ngữ và đã vượt qua nhiều mô hình trò chuyện mã nguồn mở có sẵn trong các bài kiểm tra chuẩn ngành phổ biến. Llama 3.1 được thiết kế để sử dụng cho nhiều mục đích thương mại và nghiên cứu bằng nhiều ngôn ngữ. Các mô hình văn bản điều chỉnh theo chỉ dẫn phù hợp cho các cuộc trò chuyện giống như trợ lý, trong khi các mô hình đã được tiền huấn luyện có thể thích ứng với nhiều nhiệm vụ sinh ngôn ngữ tự nhiên khác nhau. Mô hình Llama 3.1 cũng hỗ trợ việc cải thiện các mô hình khác bằng cách sử dụng đầu ra của nó, bao gồm sinh dữ liệu tổng hợp và tinh chỉnh. Llama 3.1 là một mô hình ngôn ngữ tự hồi quy sử dụng kiến trúc biến áp tối ưu. Phiên bản điều chỉnh sử dụng tinh chỉnh có giám sát (SFT) và học tăng cường có phản hồi từ con người (RLHF) để phù hợp với sở thích của con người về tính hữu ích và an toàn."
+  },
+  "meta.llama3-1-70b-instruct-v1:0": {
+    "description": "Phiên bản cập nhật của Meta Llama 3.1 70B Instruct, bao gồm độ dài ngữ cảnh mở rộng 128K, tính đa ngôn ngữ và khả năng suy luận cải tiến. Các mô hình ngôn ngữ lớn (LLMs) đa ngôn ngữ do Llama 3.1 cung cấp là một tập hợp các mô hình sinh đã được huấn luyện trước và điều chỉnh theo chỉ dẫn, bao gồm kích thước 8B, 70B và 405B (đầu vào/đầu ra văn bản). Các mô hình văn bản điều chỉnh theo chỉ dẫn của Llama 3.1 (8B, 70B, 405B) được tối ưu hóa cho các trường hợp đối thoại đa ngôn ngữ và đã vượt qua nhiều mô hình trò chuyện mã nguồn mở có sẵn trong các bài kiểm tra chuẩn ngành phổ biến. Llama 3.1 được thiết kế cho các mục đích thương mại và nghiên cứu đa ngôn ngữ. Các mô hình văn bản điều chỉnh theo chỉ dẫn phù hợp cho các cuộc trò chuyện giống như trợ lý, trong khi các mô hình đã được huấn luyện trước có thể thích ứng với nhiều nhiệm vụ sinh ngôn ngữ tự nhiên khác nhau. Mô hình Llama 3.1 cũng hỗ trợ việc sử dụng đầu ra của mô hình để cải thiện các mô hình khác, bao gồm tạo dữ liệu tổng hợp và tinh chỉnh. Llama 3.1 là mô hình ngôn ngữ tự hồi quy sử dụng kiến trúc biến áp được tối ưu hóa. Phiên bản điều chỉnh sử dụng tinh chỉnh giám sát (SFT) và học tăng cường có phản hồi của con người (RLHF) để phù hợp với sở thích của con người về tính hữu ích và an toàn."
+  },
+  "meta.llama3-1-8b-instruct-v1:0": {
+    "description": "Phiên bản cập nhật của Meta Llama 3.1 8B Instruct, bao gồm độ dài ngữ cảnh mở rộng 128K, tính đa ngôn ngữ và khả năng suy luận cải tiến. Các mô hình ngôn ngữ lớn (LLMs) đa ngôn ngữ do Llama 3.1 cung cấp là một tập hợp các mô hình sinh đã được huấn luyện trước và điều chỉnh theo chỉ dẫn, bao gồm kích thước 8B, 70B và 405B (đầu vào/đầu ra văn bản). Các mô hình văn bản điều chỉnh theo chỉ dẫn của Llama 3.1 (8B, 70B, 405B) được tối ưu hóa cho các trường hợp đối thoại đa ngôn ngữ và đã vượt qua nhiều mô hình trò chuyện mã nguồn mở có sẵn trong các bài kiểm tra chuẩn ngành phổ biến. Llama 3.1 được thiết kế cho các mục đích thương mại và nghiên cứu đa ngôn ngữ. Các mô hình văn bản điều chỉnh theo chỉ dẫn phù hợp cho các cuộc trò chuyện giống như trợ lý, trong khi các mô hình đã được huấn luyện trước có thể thích ứng với nhiều nhiệm vụ sinh ngôn ngữ tự nhiên khác nhau. Mô hình Llama 3.1 cũng hỗ trợ việc sử dụng đầu ra của mô hình để cải thiện các mô hình khác, bao gồm tạo dữ liệu tổng hợp và tinh chỉnh. Llama 3.1 là mô hình ngôn ngữ tự hồi quy sử dụng kiến trúc biến áp được tối ưu hóa. Phiên bản điều chỉnh sử dụng tinh chỉnh giám sát (SFT) và học tăng cường có phản hồi của con người (RLHF) để phù hợp với sở thích của con người về tính hữu ích và an toàn."
+  },
+  "meta.llama3-70b-instruct-v1:0": {
+    "description": "Meta Llama 3 là một mô hình ngôn ngữ lớn (LLM) mở dành cho các nhà phát triển, nhà nghiên cứu và doanh nghiệp, nhằm giúp họ xây dựng, thử nghiệm và mở rộng ý tưởng AI sinh một cách có trách nhiệm. Là một phần của hệ thống cơ sở hạ tầng đổi mới toàn cầu, nó rất phù hợp cho việc tạo nội dung, AI đối thoại, hiểu ngôn ngữ, nghiên cứu và ứng dụng doanh nghiệp."
+  },
+  "meta.llama3-8b-instruct-v1:0": {
+    "description": "Meta Llama 3 là một mô hình ngôn ngữ lớn (LLM) mở dành cho các nhà phát triển, nhà nghiên cứu và doanh nghiệp, nhằm giúp họ xây dựng, thử nghiệm và mở rộng ý tưởng AI sinh một cách có trách nhiệm. Là một phần của hệ thống cơ sở hạ tầng đổi mới toàn cầu, nó rất phù hợp cho các thiết bị biên và thời gian huấn luyện nhanh hơn với khả năng tính toán và tài nguyên hạn chế."
+  },
+  "microsoft/wizardlm 2-7b": {
+    "description": "WizardLM 2 7B là mô hình nhẹ và nhanh mới nhất của Microsoft AI, hiệu suất gần gấp 10 lần so với các mô hình mở nguồn hiện có."
+  },
+  "microsoft/wizardlm-2-8x22b": {
+    "description": "WizardLM-2 8x22B là mô hình Wizard tiên tiến nhất của Microsoft AI, thể hiện hiệu suất cực kỳ cạnh tranh."
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-V là mô hình đa phương thức thế hệ mới do OpenBMB phát triển, có khả năng nhận diện OCR xuất sắc và hiểu biết đa phương thức, hỗ trợ nhiều ứng dụng khác nhau."
+  },
+  "mistral": {
+    "description": "Mistral là mô hình 7B do Mistral AI phát hành, phù hợp cho các nhu cầu xử lý ngôn ngữ đa dạng."
+  },
+  "mistral-large": {
+    "description": "Mixtral Large là mô hình hàng đầu của Mistral, kết hợp khả năng sinh mã, toán học và suy luận, hỗ trợ cửa sổ ngữ cảnh 128k."
+  },
+  "mistral-large-latest": {
+    "description": "Mistral Large là mô hình lớn hàng đầu, chuyên về các nhiệm vụ đa ngôn ngữ, suy luận phức tạp và sinh mã, là lựa chọn lý tưởng cho các ứng dụng cao cấp."
+  },
+  "mistral-nemo": {
+    "description": "Mistral Nemo được phát triển hợp tác giữa Mistral AI và NVIDIA, là mô hình 12B hiệu suất cao."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.1": {
+    "description": "Mistral (7B) Instruct nổi bật với hiệu suất cao, phù hợp cho nhiều nhiệm vụ ngôn ngữ."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.2": {
+    "description": "Mistral 7B là mô hình fine-tuning theo yêu cầu, cung cấp giải pháp tối ưu cho các nhiệm vụ."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.3": {
+    "description": "Mistral (7B) Instruct v0.3 cung cấp khả năng tính toán hiệu quả và hiểu ngôn ngữ tự nhiên, phù hợp cho nhiều ứng dụng."
+  },
+  "mistralai/Mixtral-8x22B-Instruct-v0.1": {
+    "description": "Mixtral-8x22B Instruct (141B) là một mô hình ngôn ngữ lớn siêu cấp, hỗ trợ nhu cầu xử lý cực cao."
+  },
+  "mistralai/Mixtral-8x7B-Instruct-v0.1": {
+    "description": "Mixtral 8x7B là mô hình chuyên gia hỗn hợp thưa được tiền huấn luyện, dùng cho các nhiệm vụ văn bản tổng quát."
+  },
+  "mistralai/mistral-7b-instruct": {
+    "description": "Mistral 7B Instruct là mô hình tiêu chuẩn ngành với tốc độ tối ưu hóa và hỗ trợ ngữ cảnh dài."
+  },
+  "mistralai/mistral-nemo": {
+    "description": "Mistral Nemo là mô hình 7.3B tham số hỗ trợ đa ngôn ngữ và lập trình hiệu suất cao."
+  },
+  "mixtral": {
+    "description": "Mixtral là mô hình chuyên gia của Mistral AI, có trọng số mã nguồn mở và cung cấp hỗ trợ cho việc sinh mã và hiểu ngôn ngữ."
+  },
+  "mixtral-8x7b-32768": {
+    "description": "Mixtral 8x7B cung cấp khả năng tính toán song song có độ dung sai cao, phù hợp cho các nhiệm vụ phức tạp."
+  },
+  "mixtral:8x22b": {
+    "description": "Mixtral là mô hình chuyên gia của Mistral AI, có trọng số mã nguồn mở và cung cấp hỗ trợ cho việc sinh mã và hiểu ngôn ngữ."
+  },
+  "moonshot-v1-128k": {
+    "description": "Moonshot V1 128K là một mô hình có khả năng xử lý ngữ cảnh siêu dài, phù hợp cho việc sinh văn bản siêu dài, đáp ứng nhu cầu nhiệm vụ sinh phức tạp, có thể xử lý nội dung lên đến 128.000 tokens, rất phù hợp cho nghiên cứu, học thuật và sinh tài liệu lớn."
+  },
+  "moonshot-v1-32k": {
+    "description": "Moonshot V1 32K cung cấp khả năng xử lý ngữ cảnh độ dài trung bình, có thể xử lý 32.768 tokens, đặc biệt phù hợp cho việc sinh các tài liệu dài và đối thoại phức tạp, ứng dụng trong sáng tạo nội dung, sinh báo cáo và hệ thống đối thoại."
+  },
+  "moonshot-v1-8k": {
+    "description": "Moonshot V1 8K được thiết kế đặc biệt cho các nhiệm vụ sinh văn bản ngắn, có hiệu suất xử lý cao, có thể xử lý 8.192 tokens, rất phù hợp cho các cuộc đối thoại ngắn, ghi chú nhanh và sinh nội dung nhanh chóng."
+  },
+  "nousresearch/hermes-2-pro-llama-3-8b": {
+    "description": "Hermes 2 Pro Llama 3 8B là phiên bản nâng cấp của Nous Hermes 2, bao gồm bộ dữ liệu phát triển nội bộ mới nhất."
+  },
+  "o1-mini": {
+    "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
+  },
+  "o1-preview": {
+    "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
+  },
+  "open-codestral-mamba": {
+    "description": "Codestral Mamba là mô hình ngôn ngữ Mamba 2 tập trung vào sinh mã, cung cấp hỗ trợ mạnh mẽ cho các nhiệm vụ mã và suy luận tiên tiến."
+  },
+  "open-mistral-7b": {
+    "description": "Mistral 7B là một mô hình nhỏ gọn nhưng hiệu suất cao, chuyên về xử lý hàng loạt và các nhiệm vụ đơn giản như phân loại và sinh văn bản, có khả năng suy luận tốt."
+  },
+  "open-mistral-nemo": {
+    "description": "Mistral Nemo là một mô hình 12B được phát triển hợp tác với Nvidia, cung cấp hiệu suất suy luận và mã hóa xuất sắc, dễ dàng tích hợp và thay thế."
+  },
+  "open-mixtral-8x22b": {
+    "description": "Mixtral 8x22B là một mô hình chuyên gia lớn hơn, tập trung vào các nhiệm vụ phức tạp, cung cấp khả năng suy luận xuất sắc và thông lượng cao hơn."
+  },
+  "open-mixtral-8x7b": {
+    "description": "Mixtral 8x7B là một mô hình chuyên gia thưa thớt, sử dụng nhiều tham số để tăng tốc độ suy luận, phù hợp cho việc xử lý đa ngôn ngữ và sinh mã."
+  },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o là một mô hình động, được cập nhật theo thời gian để giữ phiên bản mới nhất. Nó kết hợp khả năng hiểu và sinh ngôn ngữ mạnh mẽ, phù hợp cho các ứng dụng quy mô lớn, bao gồm dịch vụ khách hàng, giáo dục và hỗ trợ kỹ thuật."
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o mini là mô hình mới nhất của OpenAI, được phát hành sau GPT-4 Omni, hỗ trợ đầu vào hình ảnh và văn bản, và đầu ra văn bản. Là mô hình nhỏ tiên tiến nhất của họ, nó rẻ hơn nhiều so với các mô hình tiên tiến gần đây khác và rẻ hơn hơn 60% so với GPT-3.5 Turbo. Nó giữ lại trí thông minh tiên tiến nhất trong khi có giá trị sử dụng đáng kể. GPT-4o mini đạt 82% điểm trong bài kiểm tra MMLU và hiện đứng đầu về sở thích trò chuyện so với GPT-4."
+  },
+  "openai/o1-mini": {
+    "description": "o1-mini là một mô hình suy diễn nhanh chóng và tiết kiệm chi phí, được thiết kế cho các ứng dụng lập trình, toán học và khoa học. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
+  },
+  "openai/o1-preview": {
+    "description": "o1 là mô hình suy diễn mới của OpenAI, phù hợp cho các nhiệm vụ phức tạp cần kiến thức tổng quát rộng rãi. Mô hình này có ngữ cảnh 128K và thời điểm cắt kiến thức vào tháng 10 năm 2023."
+  },
+  "openchat/openchat-7b": {
+    "description": "OpenChat 7B là thư viện mô hình ngôn ngữ mã nguồn mở được tinh chỉnh bằng chiến lược 'C-RLFT (tinh chỉnh tăng cường có điều kiện)'."
+  },
+  "openrouter/auto": {
+    "description": "Dựa trên độ dài ngữ cảnh, chủ đề và độ phức tạp, yêu cầu của bạn sẽ được gửi đến Llama 3 70B Instruct, Claude 3.5 Sonnet (tự điều chỉnh) hoặc GPT-4o."
+  },
+  "phi3": {
+    "description": "Phi-3 là mô hình mở nhẹ do Microsoft phát hành, phù hợp cho việc tích hợp hiệu quả và suy luận kiến thức quy mô lớn."
+  },
+  "phi3:14b": {
+    "description": "Phi-3 là mô hình mở nhẹ do Microsoft phát hành, phù hợp cho việc tích hợp hiệu quả và suy luận kiến thức quy mô lớn."
+  },
+  "qwen-long": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
+  },
+  "qwen-max": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen với quy mô hàng trăm tỷ, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác, hiện là mô hình API đứng sau phiên bản sản phẩm Qwen 2.5."
+  },
+  "qwen-max-longcontext": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen với quy mô hàng trăm tỷ, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác, mở rộng cửa sổ ngữ cảnh."
+  },
+  "qwen-plus": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen phiên bản nâng cao, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác."
+  },
+  "qwen-turbo": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác."
+  },
+  "qwen-vl-chat-v1": {
+    "description": "Mô hình Qwen VL hỗ trợ các phương thức tương tác linh hoạt, bao gồm nhiều hình ảnh, nhiều vòng hỏi đáp, sáng tạo, v.v."
+  },
+  "qwen-vl-max": {
+    "description": "Mô hình ngôn ngữ hình ảnh quy mô lớn Qwen. So với phiên bản nâng cao, nâng cao khả năng suy luận hình ảnh và tuân thủ chỉ dẫn, cung cấp mức độ nhận thức và nhận thức hình ảnh cao hơn."
+  },
+  "qwen-vl-plus": {
+    "description": "Mô hình ngôn ngữ hình ảnh quy mô lớn Qwen phiên bản nâng cao. Nâng cao khả năng nhận diện chi tiết và nhận diện văn bản, hỗ trợ độ phân giải hình ảnh trên một triệu pixel và tỷ lệ khung hình tùy ý."
+  },
+  "qwen-vl-v1": {
+    "description": "Mô hình được khởi tạo bằng mô hình ngôn ngữ Qwen-7B, thêm mô hình hình ảnh, mô hình được huấn luyện trước với độ phân giải đầu vào hình ảnh là 448."
+  },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, có khả năng hiểu và sinh mạnh mẽ hơn."
+  },
+  "qwen2": {
+    "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "qwen2-57b-a14b-instruct": {
+    "description": "Mô hình Qwen2 quy mô 57B với 14B tham số kích hoạt MOE được mở nguồn cho công chúng."
+  },
+  "qwen2-72b-instruct": {
+    "description": "Mô hình Qwen2 quy mô 72B được mở nguồn cho công chúng."
+  },
+  "qwen2-7b-instruct": {
+    "description": "Mô hình Qwen2 quy mô 7B được mở nguồn cho công chúng."
+  },
+  "qwen2-math-72b-instruct": {
+    "description": "Mô hình Qwen2-Math có khả năng giải toán mạnh mẽ."
+  },
+  "qwen2:0.5b": {
+    "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "qwen2:1.5b": {
+    "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "qwen2:72b": {
+    "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "solar-1-mini-chat": {
+    "description": "Solar Mini là một LLM dạng nhỏ gọn, hiệu suất vượt trội hơn GPT-3.5, có khả năng đa ngôn ngữ mạnh mẽ, hỗ trợ tiếng Anh và tiếng Hàn, cung cấp giải pháp hiệu quả và nhỏ gọn."
+  },
+  "solar-1-mini-chat-ja": {
+    "description": "Solar Mini (Ja) mở rộng khả năng của Solar Mini, tập trung vào tiếng Nhật, đồng thời duy trì hiệu suất cao và xuất sắc trong việc sử dụng tiếng Anh và tiếng Hàn."
+  },
+  "solar-pro": {
+    "description": "Solar Pro là một LLM thông minh cao do Upstage phát hành, tập trung vào khả năng tuân theo hướng dẫn trên một GPU, đạt điểm IFEval trên 80. Hiện tại hỗ trợ tiếng Anh, phiên bản chính thức dự kiến ra mắt vào tháng 11 năm 2024, sẽ mở rộng hỗ trợ ngôn ngữ và độ dài ngữ cảnh."
+  },
+  "step-1-128k": {
+    "description": "Cân bằng hiệu suất và chi phí, phù hợp cho các tình huống chung."
+  },
+  "step-1-256k": {
+    "description": "Có khả năng xử lý ngữ cảnh siêu dài, đặc biệt phù hợp cho phân tích tài liệu dài."
+  },
+  "step-1-32k": {
+    "description": "Hỗ trợ đối thoại có độ dài trung bình, phù hợp cho nhiều tình huống ứng dụng."
+  },
+  "step-1-8k": {
+    "description": "Mô hình nhỏ, phù hợp cho các nhiệm vụ nhẹ."
+  },
+  "step-1-flash": {
+    "description": "Mô hình tốc độ cao, phù hợp cho đối thoại thời gian thực."
+  },
+  "step-1v-32k": {
+    "description": "Hỗ trợ đầu vào hình ảnh, tăng cường trải nghiệm tương tác đa mô hình."
+  },
+  "step-1v-8k": {
+    "description": "Mô hình thị giác nhỏ, phù hợp cho các nhiệm vụ cơ bản về văn bản và hình ảnh."
+  },
+  "step-2-16k": {
+    "description": "Hỗ trợ tương tác ngữ cảnh quy mô lớn, phù hợp cho các tình huống đối thoại phức tạp."
+  },
+  "taichu_llm": {
+    "description": "Mô hình ngôn ngữ lớn Taichu có khả năng hiểu ngôn ngữ mạnh mẽ và các khả năng như sáng tạo văn bản, trả lời câu hỏi kiến thức, lập trình mã, tính toán toán học, suy luận logic, phân tích cảm xúc, tóm tắt văn bản. Đổi mới kết hợp giữa đào tạo trước với dữ liệu phong phú từ nhiều nguồn, thông qua việc liên tục cải tiến công nghệ thuật toán và hấp thụ kiến thức mới từ dữ liệu văn bản khổng lồ, giúp mô hình ngày càng hoàn thiện. Cung cấp thông tin và dịch vụ tiện lợi hơn cho người dùng cùng trải nghiệm thông minh hơn."
+  },
+  "togethercomputer/StripedHyena-Nous-7B": {
+    "description": "StripedHyena Nous (7B) cung cấp khả năng tính toán nâng cao thông qua chiến lược và kiến trúc mô hình hiệu quả."
+  },
+  "upstage/SOLAR-10.7B-Instruct-v1.0": {
+    "description": "Upstage SOLAR Instruct v1 (11B) phù hợp cho các nhiệm vụ chỉ dẫn tinh vi, cung cấp khả năng xử lý ngôn ngữ xuất sắc."
+  },
+  "wizardlm2": {
+    "description": "WizardLM 2 là mô hình ngôn ngữ do Microsoft AI cung cấp, đặc biệt xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
+  },
+  "wizardlm2:8x22b": {
+    "description": "WizardLM 2 là mô hình ngôn ngữ do Microsoft AI cung cấp, đặc biệt xuất sắc trong các lĩnh vực đối thoại phức tạp, đa ngôn ngữ, suy luận và trợ lý thông minh."
+  },
+  "yi-large": {
+    "description": "Mô hình với hàng trăm tỷ tham số mới, cung cấp khả năng hỏi đáp và sinh văn bản mạnh mẽ."
+  },
+  "yi-large-fc": {
+    "description": "Hỗ trợ và tăng cường khả năng gọi công cụ trên cơ sở mô hình yi-large, phù hợp cho nhiều tình huống kinh doanh cần xây dựng agent hoặc workflow."
+  },
+  "yi-large-preview": {
+    "description": "Phiên bản ban đầu, khuyến nghị sử dụng yi-large (phiên bản mới)."
+  },
+  "yi-large-rag": {
+    "description": "Dịch vụ cao cấp dựa trên mô hình yi-large mạnh mẽ, kết hợp công nghệ tìm kiếm và sinh để cung cấp câu trả lời chính xác, dịch vụ tìm kiếm thông tin toàn mạng theo thời gian thực."
+  },
+  "yi-large-turbo": {
+    "description": "Hiệu suất vượt trội với chi phí hợp lý. Tối ưu hóa độ chính xác cao dựa trên hiệu suất, tốc độ suy luận và chi phí."
+  },
+  "yi-medium": {
+    "description": "Mô hình kích thước trung bình được nâng cấp và tinh chỉnh, khả năng cân bằng, chi phí hiệu quả cao. Tối ưu hóa sâu khả năng tuân theo chỉ dẫn."
+  },
+  "yi-medium-200k": {
+    "description": "Cửa sổ ngữ cảnh siêu dài 200K, cung cấp khả năng hiểu và sinh văn bản sâu cho các văn bản dài."
+  },
+  "yi-spark": {
+    "description": "Mô hình nhỏ gọn và nhanh chóng. Cung cấp khả năng tính toán toán học và viết mã được tăng cường."
+  },
+  "yi-vision": {
+    "description": "Mô hình cho các nhiệm vụ hình ảnh phức tạp, cung cấp khả năng hiểu và phân tích hình ảnh hiệu suất cao."
+  }
+}

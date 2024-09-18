@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Add Assistant",
+    "addAgentAndConverse": "Add Assistant and Converse",
+    "addAgentSuccess": "Added Successfully",
+    "conversation": {
+      "l1": "Hello, I am **{{name}}**, you can ask me any questions, and I will do my best to answer you ~",
+      "l2": "Here are my capabilities: ",
+      "l3": "Let's start the conversation!"
+    },
+    "description": "Assistant Introduction",
+    "detail": "Details",
+    "list": "Assistant List",
+    "more": "More",
+    "plugins": "Integrated Plugins",
+    "recentSubmits": "Recent Updates",
+    "suggestions": "Related Recommendations",
+    "systemRole": "Assistant Settings",
+    "try": "Try It Out"
+  },
+  "back": "Back to Discovery",
+  "category": {
+    "assistant": {
+      "academic": "Academic",
+      "all": "All",
+      "career": "Career",
+      "copywriting": "Copywriting",
+      "design": "Design",
+      "education": "Education",
+      "emotions": "Emotions",
+      "entertainment": "Entertainment",
+      "games": "Games",
+      "general": "General",
+      "life": "Life",
+      "marketing": "Marketing",
+      "office": "Office",
+      "programming": "Programming",
+      "translation": "Translation"
+    },
+    "plugin": {
+      "all": "All",
+      "gaming-entertainment": "Gaming & Entertainment",
+      "life-style": "Lifestyle",
+      "media-generate": "Media Generation",
+      "science-education": "Science & Education",
+      "social": "Social Media",
+      "stocks-finance": "Stocks & Finance",
+      "tools": "Utility Tools",
+      "web-search": "Web Search"
+    }
+  },
+  "cleanFilter": "Clear Filter",
+  "create": "Create",
+  "createGuide": {
+    "func1": {
+      "desc1": "Access the settings page for the assistant you want to submit through the settings in the upper right corner of the conversation window;",
+      "desc2": "Click the 'Submit to Assistant Marketplace' button in the upper right corner.",
+      "tag": "Method One",
+      "title": "Submit via LobeChat"
+    },
+    "func2": {
+      "button": "Go to GitHub Assistant Repository",
+      "desc": "If you want to add the assistant to the index, create an entry using agent-template.json or agent-template-full.json in the plugins directory, write a brief description, tag appropriately, and then create a pull request.",
+      "tag": "Method Two",
+      "title": "Submit via GitHub"
+    }
+  },
+  "dislike": "Dislike",
+  "filter": "Filter",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "All Authors",
+      "followed": "Followed Authors",
+      "title": "Author Range"
+    },
+    "contentLength": "Minimum Context Length",
+    "maxToken": {
+      "title": "Set Maximum Length (Token)",
+      "unlimited": "Unlimited"
+    },
+    "other": {
+      "functionCall": "Supports Function Calls",
+      "title": "Other",
+      "vision": "Supports Visual Recognition",
+      "withKnowledge": "Includes Knowledge Base",
+      "withTool": "Includes Plugins"
+    },
+    "pricing": "Model Pricing",
+    "timePeriod": {
+      "all": "All Time",
+      "day": "Last 24 Hours",
+      "month": "Last 30 Days",
+      "title": "Time Range",
+      "week": "Last 7 Days",
+      "year": "Last Year"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Featured Assistants",
+    "featuredModels": "Featured Models",
+    "featuredProviders": "Featured Model Providers",
+    "featuredTools": "Featured Plugins",
+    "more": "Discover More"
+  },
+  "like": "Like",
+  "models": {
+    "chat": "Start Conversation",
+    "contentLength": "Maximum Context Length",
+    "free": "Free",
+    "guide": "Configuration Guide",
+    "list": "Model List",
+    "more": "More",
+    "parameterList": {
+      "defaultValue": "Default Value",
+      "docs": "View Documentation",
+      "frequency_penalty": {
+        "desc": "This setting adjusts the frequency at which the model reuses specific vocabulary that has already appeared in the input. Higher values reduce the likelihood of such repetition, while negative values have the opposite effect. Vocabulary penalties do not increase with frequency of occurrence. Negative values encourage vocabulary reuse.",
+        "title": "Frequency Penalty"
+      },
+      "max_tokens": {
+        "desc": "This setting defines the maximum length that the model can generate in a single response. Setting a higher value allows the model to produce longer replies, while a lower value restricts the length of the response, making it more concise. Adjusting this value appropriately based on different application scenarios can help achieve the desired response length and level of detail.",
+        "title": "Single Response Limit"
+      },
+      "presence_penalty": {
+        "desc": "This setting aims to control the reuse of vocabulary based on its frequency in the input. It attempts to use less of those words that appear more frequently in the input, with usage frequency proportional to occurrence frequency. Vocabulary penalties increase with frequency of occurrence. Negative values encourage vocabulary reuse.",
+        "title": "Topic Freshness"
+      },
+      "range": "Range",
+      "temperature": {
+        "desc": "This setting affects the diversity of the model's responses. Lower values lead to more predictable and typical responses, while higher values encourage more diverse and less common responses. When set to 0, the model always gives the same response to a given input.",
+        "title": "Randomness"
+      },
+      "title": "Model Parameters",
+      "top_p": {
+        "desc": "This setting limits the model's selection to a certain proportion of the most likely vocabulary: only selecting those top words whose cumulative probability reaches P. Lower values make the model's responses more predictable, while the default setting allows the model to choose from the entire range of vocabulary.",
+        "title": "Nucleus Sampling"
+      },
+      "type": "Type"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat supports using a custom API key for this provider.",
+      "input": "Input Price",
+      "inputTooltip": "Cost per million tokens",
+      "latency": "Latency",
+      "latencyTooltip": "Average response time for the provider to send the first token",
+      "maxOutput": "Maximum Output Length",
+      "maxOutputTooltip": "Maximum number of tokens this endpoint can generate",
+      "officialTooltip": "LobeHub Official Service",
+      "output": "Output Price",
+      "outputTooltip": "Cost per million tokens",
+      "streamCancellationTooltip": "This provider supports stream cancellation.",
+      "throughput": "Throughput",
+      "throughputTooltip": "Average number of tokens transmitted per second for stream requests"
+    },
+    "suggestions": "Related Models",
+    "supportedProviders": "Providers Supporting This Model"
+  },
+  "plugins": {
+    "community": "Community Plugins",
+    "install": "Install Plugin",
+    "installed": "Installed",
+    "list": "Plugin List",
+    "meta": {
+      "description": "Description",
+      "parameter": "Parameter",
+      "title": "Tool Parameters",
+      "type": "Type"
+    },
+    "more": "More",
+    "official": "Official Plugins",
+    "recentSubmits": "Recently Updated",
+    "suggestions": "Related Recommendations"
+  },
+  "providers": {
+    "config": "Configure Provider",
+    "list": "Model Provider List",
+    "modelCount": "{{count}} models",
+    "modelSite": "Model Documentation",
+    "more": "More",
+    "officialSite": "Official Website",
+    "showAllModels": "Show All Models",
+    "suggestions": "Related Providers",
+    "supportedModels": "Supported Models"
+  },
+  "search": {
+    "placeholder": "Search by name, description, or keywords...",
+    "result": "{{count}} results about <highlight>{{keyword}}</highlight>",
+    "searching": "Searching..."
+  },
+  "sort": {
+    "mostLiked": "Most Liked",
+    "mostUsed": "Most Used",
+    "newest": "Newest First",
+    "oldest": "Oldest First",
+    "recommended": "Recommended"
+  },
+  "tab": {
+    "assistants": "Assistants",
+    "home": "Home",
+    "models": "Models",
+    "plugins": "Plugins",
+    "providers": "Model Providers"
+  }
+}
