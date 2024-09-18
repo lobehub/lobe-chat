@@ -2,6 +2,7 @@ const { join } = require('node:path');
 const { Pool } = require('pg');
 const { drizzle } = require('drizzle-orm/node-postgres');
 const migrator = require('drizzle-orm/node-postgres/migrator');
+const { PGVECTOR_HINT } = require('./errorHint');
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not set, please set it in your environment variables.');
@@ -29,6 +30,11 @@ runMigrations().catch((err) => {
     '❌ Database migrate failed. Please check your database is valid and DATABASE_URL is set correctly. The error detail is below:',
   );
   console.error(err);
+
+  if (err.message.includes('extension "vector" is not available')) {
+    console.info(PGVECTOR_HINT);
+  }
+
   // eslint-disable-next-line unicorn/no-process-exit
   process.exit(1);
 });

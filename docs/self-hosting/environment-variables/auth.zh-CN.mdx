@@ -107,21 +107,90 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 - 默认值: `-`
 - 示例: `https://your-authentik-domain.com/application/o/slug/`
 
+### Authelia
+
+#### `AUTHELIA_CLIENT_ID`
+
+- 类型：必选
+- 描述: Authelia 提供程序的 Client ID
+- 默认值: `-`
+- 示例: `lobe-chat`
+
+#### `AUTHELIA_CLIENT_SECRET`
+
+- 类型：必选
+- 描述: Authelia 提供程序的 Client Secret 的明文
+- 默认值: `-`
+- 示例: `insecure_secret`
+
+#### `AUTHELIA_ISSUER`
+
+- 类型：必选
+- 描述: Authentik 提供程序的 OpenID Connect 颁发者
+- 默认值: `-`
+- 示例: `https://sso.example.com`
+
+### Cloudflare Zero Trust
+
+#### `CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
+
+- 类型：必选
+- 描述: Cloudflare Zero Trust 提供程序的 Client ID
+- 默认值: `-`
+- 示例: `711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
+
+#### `CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
+
+- 类型：必选
+- 描述: Cloudflare Zero Trust 提供程序的 Client Secret 的明文
+- 默认值: `-`
+- 示例: `8f26d4ef834a828045b401e032ae128dbb00471bca53f0d25332323f525dfa30`
+
+#### `CLOUDFLARE_ZERO_TRUST_ISSUER`
+
+- 类型：必选
+- 描述: Cloudflare Zero Trust 提供程序的 OpenID Connect 颁发者
+- 默认值: `-`
+- 示例: `https://example.cloudflareaccess.com/cdn-cgi/access/sso/oidc/711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
+
+### Generic OIDC
+
+#### `GENERIC_OIDC_CLIENT_ID`
+
+- 类型：必选
+- 描述: Generic OIDC 提供程序的 Client ID
+- 默认值: `-`
+- 示例: `_client_id_for_lobe_chat_`
+
+#### `GENERIC_OIDC_CLIENT_SECRET`
+
+- 类型：必选
+- 描述: Generic OIDC 提供程序的 Client Secret 的明文
+- 默认值: `-`
+- 示例: `_client_secret_for_lobe_chat_`
+
+#### `GENERIC_OIDC_ISSUER`
+
+- 类型：必选
+- 描述: Generic OIDC 提供程序的 OpenID Connect 颁发者
+- 默认值: `-`
+- 示例: `https://sso.example.com`
+
 ### Github
 
 #### `GITHUB_CLIENT_ID`
 
-- Type: Required
-- Description: Github应用的客户端ID。您可以在[这里](https://github.com/settings/apps)访问，并导航到应用程序设置以查看。
-- Default: `-`
-- Example: `abd94200333283550508`
+- 类型：必选
+- 描述: Github 应用的客户端 ID。您可以在[这里](https://github.com/settings/apps)访问，并导航到应用程序设置以查看。
+- 默认值: `-`
+- 示例: `abd94200333283550508`
 
 #### `GITHUB_CLIENT_SECRET`
 
-- Type: Required
-- Description: Github应用的客户端密钥。
-- Default: `-`
-- Example: `dd262976ac0931d947e104891586a053f3d3750b`
+- 类型：必选
+- 描述: Github应用的客户端密钥。
+- 默认值: `-`
+- 示例: `dd262976ac0931d947e104891586a053f3d3750b`
 
 ### ZITADEL
 
@@ -145,6 +214,29 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 - 描述：ZITADEL 应用的 OpenID Connect 颁发者（issuer），通常为 ZITADEL 实例的 URL。您可以在 ZITADEL 控制台应用设置中的 `URLs` 选项卡中找到 issuer。
 - 默认值：`-`
 - 示例：`https://your-instance-abc123.zitadel.cloud`
+
+### Logto
+
+#### `LOGTO_CLIENT_ID`
+
+- 类型：必选
+- 描述：Logto 应用程序的 Client ID。您可以在根据部署模式，在私有部署的 Logto 控制台或 [Logto Cloud](http://cloud.logto.io/) 中找到。
+- 默认值：`-`
+- 示例：`123456789012345678@your-project`
+
+#### `LOGTO_CLIENT_SECRET`
+
+- 类型：必选
+- 描述：Logto 应用程序的 Client Secret。
+- 默认值：`-`
+- 示例：`9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
+
+#### `LOGTO_ISSUER`
+
+- 类型：必选
+- 描述：Logto 应用程序的 OpenID Connect 颁发者（issuer）。根据部署模式，您可以在私有部署的 Logto 控制台或 [Logto Cloud](http://cloud.logto.io/) 中找到。
+- 默认值：`-`
+- 示例：`https://lobe-auth-api.example.com/oidc`
 
 <Callout>
   如果您需要使用其他身份验证服务提供商，可以提交

@@ -15,8 +15,14 @@ class _FileModel extends BaseModel<'files'> {
     return this._addWithSync(file, `file-${id}`);
   }
 
-  async findById(id: string): Promise<DBModel<DB_File>> {
-    return this.table.get(id);
+  async findById(id: string): Promise<DBModel<DB_File> | undefined> {
+    const item = await this.table.get(id);
+    if (!item) return;
+
+    // arrayBuffer to url
+    const base64 = Buffer.from(item.data!).toString('base64');
+
+    return { ...item, url: `data:${item.fileType};base64,${base64}` };
   }
 
   async delete(id: string) {

@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Dozwolone są tylko znaki alfanumeryczne, myślnik - i podkreślenie _"
       },
       "manifest": {
-        "desc": "LobeChat zainstaluje wtyczkę za pomocą tego linku",
+        "desc": "{{appName}} zainstaluje wtyczkę za pośrednictwem tego linku",
         "label": "Opis wtyczki (Manifest) URL",
         "preview": "Podgląd",
         "refresh": "Odśwież"

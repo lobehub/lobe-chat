@@ -5,6 +5,7 @@ import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { OpenAIChatMessage } from '@/libs/agent-runtime';
+import * as imageToBase64Module from '@/utils/imageToBase64';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeGoogleAI } from './index';
@@ -303,36 +304,60 @@ describe('LobeGoogleAI', () => {
 
   describe('private method', () => {
     describe('convertContentToGooglePart', () => {
-      it('should throw TypeError when image URL does not contain base64 data', () => {
-        // 提供一个不包含base64数据的图像URL
-        const invalidImageUrl = 'http://example.com/image.png';
+      it('should handle URL type images', async () => {
+        const imageUrl = 'http://example.com/image.png';
+        const mockBase64 = 'mockBase64Data';
 
-        expect(() =>
+        // Mock the imageUrlToBase64 function
+        vi.spyOn(imageToBase64Module, 'imageUrlToBase64').mockResolvedValueOnce({
+          base64: mockBase64,
+          mimeType: 'image/png',
+        });
+
+        const result = await instance['convertContentToGooglePart']({
+          type: 'image_url',
+          image_url: { url: imageUrl },
+        });
+
+        expect(result).toEqual({
+          inlineData: {
+            data: mockBase64,
+            mimeType: 'image/png',
+          },
+        });
+
+        expect(imageToBase64Module.imageUrlToBase64).toHaveBeenCalledWith(imageUrl);
+      });
+
+      it('should throw TypeError for unsupported image URL types', async () => {
+        const unsupportedImageUrl = 'unsupported://example.com/image.png';
+
+        await expect(
           instance['convertContentToGooglePart']({
             type: 'image_url',
-            image_url: { url: invalidImageUrl },
+            image_url: { url: unsupportedImageUrl },
           }),
-        ).toThrow(TypeError);
+        ).rejects.toThrow(TypeError);
       });
     });
 
     describe('buildGoogleMessages', () => {
-      it('get default result with gemini-pro', () => {
+      it('get default result with gemini-pro', async () => {
         const messages: OpenAIChatMessage[] = [{ content: 'Hello', role: 'user' }];
 
-        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
+        const contents = await instance['buildGoogleMessages'](messages, 'gemini-pro');
 
         expect(contents).toHaveLength(1);
         expect(contents).toEqual([{ parts: [{ text: 'Hello' }], role: 'user' }]);
       });
 
-      it('messages should end with user if using gemini-pro', () => {
+      it('messages should end with user if using gemini-pro', async () => {
         const messages: OpenAIChatMessage[] = [
           { content: 'Hello', role: 'user' },
           { content: 'Hi', role: 'assistant' },
         ];
 
-        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
+        const contents = await instance['buildGoogleMessages'](messages, 'gemini-pro');
 
         expect(contents).toHaveLength(3);
         expect(contents).toEqual([
@@ -342,13 +367,13 @@ describe('LobeGoogleAI', () => {
         ]);
       });
 
-      it('should include system role if there is a system role prompt', () => {
+      it('should include system role if there is a system role prompt', async () => {
         const messages: OpenAIChatMessage[] = [
           { content: 'you are ChatGPT', role: 'system' },
           { content: 'Who are you', role: 'user' },
         ];
 
-        const contents = instance['buildGoogleMessages'](messages, 'gemini-pro');
+        const contents = await instance['buildGoogleMessages'](messages, 'gemini-pro');
 
         expect(contents).toHaveLength(3);
         expect(contents).toEqual([
@@ -358,13 +383,13 @@ describe('LobeGoogleAI', () => {
         ]);
       });
 
-      it('should not modify the length if model is gemini-1.5-pro', () => {
+      it('should not modify the length if model is gemini-1.5-pro', async () => {
         const messages: OpenAIChatMessage[] = [
           { content: 'Hello', role: 'user' },
           { content: 'Hi', role: 'assistant' },
         ];
 
-        const contents = instance['buildGoogleMessages'](messages, 'gemini-1.5-pro-latest');
+        const contents = await instance['buildGoogleMessages'](messages, 'gemini-1.5-pro-latest');
 
         expect(contents).toHaveLength(2);
         expect(contents).toEqual([
@@ -373,7 +398,7 @@ describe('LobeGoogleAI', () => {
         ]);
       });
 
-      it('should use specified model when images are included in messages', () => {
+      it('should use specified model when images are included in messages', async () => {
         const messages: OpenAIChatMessage[] = [
           {
             content: [
@@ -386,7 +411,7 @@ describe('LobeGoogleAI', () => {
         const model = 'gemini-1.5-flash-latest';
 
         // 调用 buildGoogleMessages 方法
-        const contents = instance['buildGoogleMessages'](messages, model);
+        const contents = await instance['buildGoogleMessages'](messages, model);
 
         expect(contents).toHaveLength(1);
         expect(contents).toEqual([
@@ -501,13 +526,13 @@ describe('LobeGoogleAI', () => {
     });
 
     describe('convertOAIMessagesToGoogleMessage', () => {
-      it('should correctly convert assistant message', () => {
+      it('should correctly convert assistant message', async () => {
         const message: OpenAIChatMessage = {
           role: 'assistant',
           content: 'Hello',
         };
 
-        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+        const converted = await instance['convertOAIMessagesToGoogleMessage'](message);
 
         expect(converted).toEqual({
           role: 'model',
@@ -515,13 +540,13 @@ describe('LobeGoogleAI', () => {
         });
       });
 
-      it('should correctly convert user message', () => {
+      it('should correctly convert user message', async () => {
         const message: OpenAIChatMessage = {
           role: 'user',
           content: 'Hi',
         };
 
-        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+        const converted = await instance['convertOAIMessagesToGoogleMessage'](message);
 
         expect(converted).toEqual({
           role: 'user',
@@ -529,7 +554,7 @@ describe('LobeGoogleAI', () => {
         });
       });
 
-      it('should correctly convert message with inline base64 image parts', () => {
+      it('should correctly convert message with inline base64 image parts', async () => {
         const message: OpenAIChatMessage = {
           role: 'user',
           content: [
@@ -538,7 +563,7 @@ describe('LobeGoogleAI', () => {
           ],
         };
 
-        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+        const converted = await instance['convertOAIMessagesToGoogleMessage'](message);
 
         expect(converted).toEqual({
           role: 'user',
@@ -548,7 +573,7 @@ describe('LobeGoogleAI', () => {
           ],
         });
       });
-      it.skip('should correctly convert message with image url parts', () => {
+      it.skip('should correctly convert message with image url parts', async () => {
         const message: OpenAIChatMessage = {
           role: 'user',
           content: [
@@ -557,7 +582,7 @@ describe('LobeGoogleAI', () => {
           ],
         };
 
-        const converted = instance['convertOAIMessagesToGoogleMessage'](message);
+        const converted = await instance['convertOAIMessagesToGoogleMessage'](message);
 
         expect(converted).toEqual({
           role: 'user',

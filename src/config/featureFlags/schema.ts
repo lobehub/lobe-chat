@@ -2,8 +2,13 @@
 import { z } from 'zod';
 
 export const FeatureFlagsSchema = z.object({
+  /**
+   * Enable WebRTC sync
+   */
   webrtc_sync: z.boolean().optional(),
+  check_updates: z.boolean().optional(),
 
+  // settings
   language_model_settings: z.boolean().optional(),
 
   openai_api_key: z.boolean().optional(),
@@ -13,19 +18,28 @@ export const FeatureFlagsSchema = z.object({
   edit_agent: z.boolean().optional(),
 
   dalle: z.boolean().optional(),
+  speech_to_text: z.boolean().optional(),
+  token_counter: z.boolean().optional(),
 
-  check_updates: z.boolean().optional(),
   welcome_suggest: z.boolean().optional(),
 
   clerk_sign_up: z.boolean().optional(),
 
+  market: z.boolean().optional(),
+  knowledge_base: z.boolean().optional(),
+
+  rag_eval: z.boolean().optional(),
+
+  // internal flag
   cloud_promotion: z.boolean().optional(),
 
-  market: z.boolean().optional(),
-  speech_to_text: z.boolean().optional(),
+  // the flags below can only be used with commercial license
+  // if you want to use it in the commercial usage
+  // please contact us for more information: hello@lobehub.com
+  commercial_hide_github: z.boolean().optional(),
+  commercial_hide_docs: z.boolean().optional(),
 });
 
-// TypeScript 类型，从 Zod schema 生成
 export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
@@ -44,12 +58,21 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   check_updates: true,
   welcome_suggest: true,
 
+  knowledge_base: true,
+  rag_eval: false,
+
   clerk_sign_up: true,
 
   cloud_promotion: false,
 
   market: true,
   speech_to_text: true,
+
+  // the flags below can only be used with commercial license
+  // if you want to use it in the commercial usage
+  // please contact us for more information: hello@lobehub.com
+  commercial_hide_github: false,
+  commercial_hide_docs: false,
 };
 
 export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
@@ -70,9 +93,15 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     enableClerkSignUp: config.clerk_sign_up,
 
+    enableKnowledgeBase: config.knowledge_base,
+    enableRAGEval: config.rag_eval,
+
     showCloudPromotion: config.cloud_promotion,
 
     showMarket: config.market,
     enableSTT: config.speech_to_text,
+
+    hideGitHub: config.commercial_hide_github,
+    hideDocs: config.commercial_hide_docs,
   };
 };

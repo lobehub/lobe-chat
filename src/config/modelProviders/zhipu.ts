@@ -1,85 +1,182 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://open.bigmodel.cn/dev/howuse/model
+// ref :https://open.bigmodel.cn/dev/howuse/model
 // api https://open.bigmodel.cn/dev/api#language
-// ref https://open.bigmodel.cn/modelcenter/square
+// ref :https://open.bigmodel.cn/modelcenter/square
 const ZhiPu: ModelProviderCard = {
   chatModels: [
     {
       description:
-        'GLM-4-AllTools 是专门为支持智能体和相关任务而进一步优化的模型版本。它能够自主理解用户的意图，规划复杂的指令，并能够调用一个或多个工具（例如网络浏览器、代码解释器和文本生图像）以完成复杂的任务。',
+        'GLM-4-AllTools 是一个多功能智能体模型，优化以支持复杂指令规划与工具调用，如网络浏览、代码解释和文本生成，适用于多任务执行。',
       displayName: 'GLM-4-AllTools',
       enabled: true,
       functionCall: true,
       id: 'glm-4-alltools',
+      pricing: {
+        currency: 'CNY',
+        input: 100,
+        output: 100,
+      },
       tokens: 128_000,
     },
     {
-      description: '智谱当前最先进最智能的模型，指令遵从能力大幅提升18.6%，发布于20240605',
-      displayName: 'GLM-4-0520',
+      description:
+        'GLM-4-Plus 作为高智能旗舰，具备强大的处理长文本和复杂任务的能力，性能全面提升。',
+      displayName: 'GLM-4-Plus',
       enabled: true,
       functionCall: true,
-      id: 'glm-4-0520',
+      id: 'glm-4-plus',
+      pricing: {
+        currency: 'CNY',
+        input: 50,
+        output: 50,
+      },
       tokens: 128_000,
     },
     {
-      description: '发布于20240116的最智能版本模型，目前已被 GLM-4-0520 版本超越',
+      description: 'GLM-4-0520 是最新模型版本，专为高度复杂和多样化任务设计，表现卓越。',
+      displayName: 'GLM-4-0520',
+      functionCall: true,
+      id: 'glm-4-0520',
+      pricing: {
+        currency: 'CNY',
+        input: 100,
+        output: 100,
+      },
+      tokens: 128_000,
+    },
+    {
+      description: 'GLM-4 是发布于2024年1月的旧旗舰版本，目前已被更强的 GLM-4-0520 取代。',
       displayName: 'GLM-4',
       functionCall: true,
       id: 'glm-4',
+      pricing: {
+        currency: 'CNY',
+        input: 100,
+        output: 100,
+      },
       tokens: 128_000,
     },
     {
-      description: '性价比最高的版本，综合性能接近GLM-4，速度快，价格实惠',
+      description: 'GLM-4-AirX 提供 GLM-4-Air 的高效版本，推理速度可达其2.6倍。',
+      displayName: 'GLM-4-AirX',
+      enabled: true,
+      functionCall: true,
+      id: 'glm-4-airx',
+      pricing: {
+        currency: 'CNY',
+        input: 10,
+        output: 10,
+      },
+      tokens: 8192,
+    },
+    {
+      description: 'GLM-4-Air 是性价比高的版本，性能接近GLM-4，提供快速度和实惠的价格。',
       displayName: 'GLM-4-Air',
       enabled: true,
       functionCall: true,
       id: 'glm-4-air',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 1,
+      },
       tokens: 128_000,
     },
     {
-      description: 'GLM-4-Air 的高性能版本，效果不变，推理速度达到其2.6倍',
-      displayName: 'GLM-4-AirX',
-      functionCall: true,
-      id: 'glm-4-airx',
-      tokens: 8192,
-    },
-    {
-      description: '适用简单任务，速度最快，价格最实惠的版本',
-      displayName: 'GLM-4-Flash',
-      id: 'glm-4-flash',
-      tokens: 128_000,
-    },
-    {
-      description:
-        '实现了视觉语言特征的深度融合，支持视觉问答、图像字幕、视觉定位、复杂目标检测等各类图像理解任务',
-      displayName: 'GLM-4V',
+      description: 'GLM-4-Long 支持超长文本输入，适合记忆型任务与大规模文档处理。',
+      displayName: 'GLM-4-Long',
       enabled: true,
+      functionCall: true,
+      id: 'glm-4-long',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 1,
+      },
+      tokens: 1_024_000,
+    },
+    {
+      description: 'GLM-4-Flash 是处理简单任务的理想选择，速度最快且价格最优惠。',
+      displayName: 'GLM-4-Flash',
+      enabled: true,
+      functionCall: true,
+      id: 'glm-4-flash',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      tokens: 128_000,
+    },
+    {
+      description: 'GLM-4V-Plus 具备对视频内容及多图片的理解能力，适合多模态任务。',
+      displayName: 'GLM-4V-Plus',
+      enabled: true,
+      id: 'glm-4v-plus',
+      pricing: {
+        currency: 'CNY',
+        input: 10,
+        output: 10,
+      },
+      tokens: 8192,
+      vision: true,
+    },
+    {
+      description: 'GLM-4V 提供强大的图像理解与推理能力，支持多种视觉任务。',
+      displayName: 'GLM-4V',
       id: 'glm-4v',
-      tokens: 2000,
+      pricing: {
+        currency: 'CNY',
+        input: 50,
+        output: 50,
+      },
+      tokens: 2048,
       vision: true,
     },
     {
       description:
-        '适用于对知识量、推理能力、创造力要求较高的场景，比如广告文案、小说写作、知识类写作、代码生成等', // Will be discontinued on December 31, 2024
-      displayName: 'GLM-3-Turbo',
-      functionCall: true,
-      id: 'glm-3-turbo',
+        'CodeGeeX-4 是强大的AI编程助手，支持多种编程语言的智能问答与代码补全，提升开发效率。',
+      displayName: 'CodeGeeX-4',
+      enabled: true,
+      id: 'codegeex-4',
+      pricing: {
+        currency: 'CNY',
+        input: 0.1,
+        output: 0.1,
+      },
       tokens: 128_000,
     },
     {
-      description:
-        'CodeGeeX是一款强大的AI编程助手，提供智能问答和代码补全功能，支持多种编程语言，帮助开发者提高编程效率。',
-      displayName: 'CodeGeeX-4',
-      enabled: true,
-      functionCall: false,
-      id: 'codegeex-4',
-      tokens: 128_000,
+      description: 'CharGLM-3 专为角色扮演与情感陪伴设计，支持超长多轮记忆与个性化对话，应用广泛。',
+      displayName: 'CharGLM-3',
+      id: 'charglm-3',
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 15,
+      },
+      tokens: 4096,
+    },
+    {
+      description: 'Emohaa 是心理模型，具备专业咨询能力，帮助用户理解情感问题。',
+      displayName: 'Emohaa',
+      id: 'emohaa',
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 15,
+      },
+      tokens: 8192,
     },
   ],
   checkModel: 'glm-4-flash',
+  description:
+    '智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。',
   id: 'zhipu',
+  modelsUrl: 'https://open.bigmodel.cn/dev/howuse/model',
   name: 'ZhiPu',
+  url: 'https://zhipuai.cn',
 };
 
 export default ZhiPu;

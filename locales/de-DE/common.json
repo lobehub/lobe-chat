@@ -9,10 +9,12 @@
       "title": "Willkommen bei {{name}}"
     }
   },
-  "appInitializing": "Die App wird gestartet, bitte haben Sie etwas Geduld...",
+  "appInitializing": "Anwendung wird gestartet...",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
   "autoGenerateTooltipDisabled": "Bitte geben Sie einen Hinweis ein, um die automatische Vervollständigung zu aktivieren",
+  "back": "Zurück",
+  "batchDelete": "Massenlöschung",
   "blog": "Produkt-Blog",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
@@ -31,6 +33,7 @@
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
   "document": "Dokumentation",
+  "download": "Herunterladen",
   "duplicate": "Duplikat erstellen",
   "edit": "Bearbeiten",
   "export": "Exportieren",
@@ -192,7 +195,8 @@
   },
   "tab": {
     "chat": "Chat",
-    "market": "Entdecken",
+    "discover": "Entdecken",
+    "files": "Dateien",
     "me": "Ich",
     "setting": "Einstellung"
   },

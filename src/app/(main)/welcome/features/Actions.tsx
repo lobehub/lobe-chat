@@ -19,7 +19,7 @@ const Actions = memo<{ mobile?: boolean }>(({ mobile }) => {
   return (
     <Flexbox gap={16} horizontal={!mobile} justify={'center'} width={'100%'} wrap={'wrap'}>
       {showMarket && (
-        <Link href={'/market'}>
+        <Link href={'/discover'}>
           <Button block={mobile} size={'large'} style={{ minWidth: 160 }} type={'default'}>
             {t('button.market')}
           </Button>

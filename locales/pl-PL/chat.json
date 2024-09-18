@@ -2,11 +2,14 @@
   "ModelSwitch": {
     "title": "Przełącz model"
   },
-  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu zacząć ze mną rozmawiać, lub udoskonalić moje informacje, przechodząc do [Ustawień asystenta](/chat/settings#session={{id}}).",
+  "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. Zacznijmy rozmowę!",
   "agentsAndConversations": "Agenci i rozmowy",
   "backToBottom": "Przewiń na dół",
+  "chatList": {
+    "longMessageDetail": "Zobacz szczegóły"
+  },
   "clearCurrentMessages": "Wyczyść bieżącą rozmowę",
   "confirmClearCurrentMessages": "Czy na pewno chcesz wyczyścić bieżącą rozmowę? Tej operacji nie można cofnąć.",
   "confirmRemoveSessionItemAlert": "Czy na pewno chcesz usunąć tego asystenta? Tej operacji nie można cofnąć.",
@@ -36,6 +39,24 @@
     "stop": "Zatrzymaj",
     "warp": "Złamanie wiersza"
   },
+  "knowledgeBase": {
+    "all": "Wszystkie treści",
+    "allFiles": "Wszystkie pliki",
+    "allKnowledgeBases": "Wszystkie bazy wiedzy",
+    "disabled": "Obecny tryb wdrożenia nie obsługuje rozmów z bazą wiedzy. Aby z niej skorzystać, przełącz się na wdrożenie z bazą danych serwera lub skorzystaj z usługi {{cloud}}.",
+    "library": {
+      "action": {
+        "add": "Dodaj",
+        "detail": "Szczegóły",
+        "remove": "Usuń"
+      },
+      "title": "Plik/Baza wiedzy"
+    },
+    "relativeFilesOrKnowledgeBases": "Powiązane pliki/bazy wiedzy",
+    "title": "Baza wiedzy",
+    "uploadGuide": "Przesłane pliki można przeglądać w „Bazie wiedzy”",
+    "viewMore": "Zobacz więcej"
+  },
   "messageAction": {
     "delAndRegenerate": "Usuń i wygeneruj ponownie",
     "regenerate": "Wygeneruj ponownie"
@@ -43,6 +64,15 @@
   "newAgent": "Nowy asystent",
   "pin": "Przypnij",
   "pinOff": "Odepnij",
+  "rag": {
+    "referenceChunks": "Fragmenty odniesienia",
+    "userQuery": {
+      "actions": {
+        "delete": "Usuń przepisanie zapytania",
+        "regenerate": "Ponownie wygeneruj zapytanie"
+      }
+    }
+  },
   "regenerate": "Wygeneruj ponownie",
   "roleAndArchive": "Rola i archiwum",
   "searchAgentPlaceholder": "Szukaj asystentów i rozmów...",
@@ -129,8 +159,24 @@
   },
   "updateAgent": "Aktualizuj informacje asystenta",
   "upload": {
-    "actionFiletip": "Prześlij plik",
-    "actionTooltip": "Prześlij obraz",
-    "disabled": "Obecny model nie obsługuje rozpoznawania wizyjnego. Proszę przełączyć model."
+    "action": {
+      "fileUpload": "Prześlij plik",
+      "folderUpload": "Prześlij folder",
+      "imageDisabled": "Aktualny model nie obsługuje rozpoznawania wizualnego, przełącz się na inny model, aby użyć tej funkcji",
+      "imageUpload": "Prześlij obraz",
+      "tooltip": "Prześlij"
+    },
+    "clientMode": {
+      "actionFiletip": "Prześlij plik",
+      "actionTooltip": "Prześlij",
+      "disabled": "Aktualny model nie obsługuje rozpoznawania wizualnego i analizy plików, przełącz się na inny model, aby użyć tej funkcji"
+    },
+    "preview": {
+      "prepareTasks": "Przygotowywanie fragmentów...",
+      "status": {
+        "pending": "Przygotowywanie do przesłania...",
+        "processing": "Przetwarzanie pliku..."
+      }
+    }
   }
 }

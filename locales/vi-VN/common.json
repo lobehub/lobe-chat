@@ -9,10 +9,12 @@
       "title": "Chào mừng bạn trải nghiệm {{name}}"
     }
   },
-  "appInitializing": "Ứng dụng đang khởi động, vui lòng chờ...",
+  "appInitializing": "Đang khởi động ứng dụng...",
   "autoGenerate": "Tự động tạo",
   "autoGenerateTooltip": "Tự động hoàn thành mô tả trợ lý dựa trên từ gợi ý",
   "autoGenerateTooltipDisabled": "Vui lòng nhập từ gợi ý trước khi sử dụng tính năng tự động hoàn thành",
+  "back": "Quay lại",
+  "batchDelete": "Xóa hàng loạt",
   "blog": "Blog sản phẩm",
   "cancel": "Hủy",
   "changelog": "Nhật ký cập nhật",
@@ -31,6 +33,7 @@
   "defaultSession": "Phiên mặc định",
   "delete": "Xóa",
   "document": "Tài Liệu Sử Dụng",
+  "download": "Tải xuống",
   "duplicate": "Tạo bản sao",
   "edit": "Chỉnh sửa",
   "export": "Xuất cấu hình",
@@ -192,7 +195,8 @@
   },
   "tab": {
     "chat": "Trò chuyện",
-    "market": "Thị trường",
+    "discover": "Khám phá",
+    "files": "Tệp",
     "me": "Tôi",
     "setting": "Cài đặt"
   },
