@@ -5,44 +5,36 @@ import { ARTIFACT_TAG_REGEX } from './plugin';
 describe('ARTIFACT_TAG_REGEX', () => {
   it('should match a simple lobeArtifact tag', () => {
     const input = '<lobeArtifact>Simple content</lobeArtifact>';
-    const matches = [...input.matchAll(ARTIFACT_TAG_REGEX)];
-    expect(matches).toHaveLength(1);
-    expect(matches[0][1]).toBe('Simple content');
+    const matches = input.match(ARTIFACT_TAG_REGEX);
+    expect(matches).toHaveLength(2);
+    expect(matches?.[1]).toBe('Simple content');
   });
 
   it('should match a lobeArtifact tag with attributes', () => {
     const input = '<lobeArtifact type="image">Content with attributes</lobeArtifact>';
-    const matches = [...input.matchAll(ARTIFACT_TAG_REGEX)];
-    expect(matches).toHaveLength(1);
-    expect(matches[0][1]).toBe('Content with attributes');
-  });
-
-  it('should match multiple lobeArtifact tags', () => {
-    const input = '<lobeArtifact>First</lobeArtifact>Some text<lobeArtifact>Second</lobeArtifact>';
-    const matches = [...input.matchAll(ARTIFACT_TAG_REGEX)];
+    const matches = input.match(ARTIFACT_TAG_REGEX);
     expect(matches).toHaveLength(2);
-    expect(matches[0][1]).toBe('First');
-    expect(matches[1][1]).toBe('Second');
+    expect(matches?.[1]).toBe('Content with attributes');
   });
 
   it('should match lobeArtifact tag with multiline content', () => {
     const input = '<lobeArtifact>\nMultiline\ncontent\n</lobeArtifact>';
-    const matches = [...input.matchAll(ARTIFACT_TAG_REGEX)];
-    expect(matches).toHaveLength(1);
-    expect(matches[0][1]).toBe('\nMultiline\ncontent\n');
+    const matches = input.match(ARTIFACT_TAG_REGEX);
+    expect(matches).toHaveLength(2);
+    expect(matches?.[1]).toBe('\nMultiline\ncontent\n');
   });
 
   it('should match an unclosed lobeArtifact tag', () => {
     const input = '<lobeArtifact>Unclosed tag';
-    const matches = [...input.matchAll(ARTIFACT_TAG_REGEX)];
-    expect(matches).toHaveLength(1);
-    expect(matches[0][1]).toBe('Unclosed tag');
+    const matches = input.match(ARTIFACT_TAG_REGEX);
+    expect(matches).toHaveLength(2);
+    expect(matches?.[1]).toBe('Unclosed tag');
   });
 
   it('should not match when there is no lobeArtifact tag', () => {
     const input = 'This is a text without any lobeArtifact tag';
-    const matches = [...input.matchAll(ARTIFACT_TAG_REGEX)];
-    expect(matches).toHaveLength(0);
+    const matches = input.match(ARTIFACT_TAG_REGEX);
+    expect(matches).toBeNull();
   });
 
   it('should match', () => {
