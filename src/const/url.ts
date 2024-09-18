@@ -2,6 +2,7 @@ import qs from 'query-string';
 import urlJoin from 'url-join';
 
 import { withBasePath } from '@/utils/basePath';
+import { isDev } from '@/utils/env';
 
 import pkg from '../../package.json';
 import { INBOX_SESSION_ID } from './session';
@@ -73,3 +74,4 @@ export const mailTo = (email: string) => `mailto:${email}`;
 
 export const AES_GCM_URL = 'https://datatracker.ietf.org/doc/html/draft-ietf-avt-srtp-aes-gcm-01';
 export const BASE_PROVIDER_DOC_URL = 'https://lobehub.com/docs/usage/providers';
+export const SITEMAP_BASE_URL = isDev ? '/sitemap.xml/' : 'sitemap';
