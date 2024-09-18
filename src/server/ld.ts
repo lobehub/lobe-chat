@@ -31,7 +31,7 @@ export const AUTHOR_LIST = {
   },
 };
 
-class Ld {
+export class Ld {
   generate({
     image = '/og/cover.png',
     article,

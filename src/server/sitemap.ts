@@ -32,8 +32,6 @@ export enum SitemapType {
 export const LAST_MODIFIED = new Date().toISOString();
 
 export class Sitemap {
-  discoverService: DiscoverService;
-
   sitemapIndexs = [
     { id: SitemapType.Pages },
     { id: SitemapType.Assistants },
@@ -42,9 +40,7 @@ export class Sitemap {
     { id: SitemapType.Providers },
   ];
 
-  constructor() {
-    this.discoverService = new DiscoverService();
-  }
+  private discoverService = new DiscoverService();
 
   private _generateSitemapLink(url: string) {
     return [
