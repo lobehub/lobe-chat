@@ -1,12 +1,12 @@
 'use client';
 
 import { Skeleton } from 'antd';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import InterceptingLink from '@/components/InterceptingLink';
 import { DiscoverAssistantItem, DiscoverPlugintem } from '@/types/discover';
 
 import Block from '../../../../features/Block';
@@ -28,13 +28,13 @@ const InfoSidebar = memo<InfoSidebarProps>(({ pluginData, data, ...rest }) => {
       {pluginData && pluginData?.length > 0 && (
         <Block gap={12} title={t('assistants.plugins')}>
           {pluginData.map((item) => (
-            <InterceptingLink
+            <Link
               href={urlJoin('/discover/plugin', item.identifier)}
               key={item.identifier}
               style={{ color: 'inherit' }}
             >
               <ToolItem {...item} />
-            </InterceptingLink>
+            </Link>
           ))}
         </Block>
       )}
@@ -46,12 +46,9 @@ const InfoSidebar = memo<InfoSidebarProps>(({ pluginData, data, ...rest }) => {
       >
         {data?.suggestions?.length > 0 ? (
           data?.suggestions.map((item) => (
-            <InterceptingLink
-              href={urlJoin('/discover/assistant', item.identifier)}
-              key={item.identifier}
-            >
+            <Link href={urlJoin('/discover/assistant', item.identifier)} key={item.identifier}>
               <SuggestionItem {...item} />
-            </InterceptingLink>
+            </Link>
           ))
         ) : (
           <Skeleton active paragraph={{ rows: 5 }} title={false} />
