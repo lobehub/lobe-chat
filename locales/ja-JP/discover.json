@@ -174,7 +174,10 @@
   "providers": {
     "config": "プロバイダーの設定",
     "list": "モデルサービスプロバイダーリスト",
+    "modelCount": "{{count}} 個のモデル",
+    "modelSite": "モデルドキュメント",
     "more": "もっと見る",
+    "officialSite": "公式サイト",
     "showAllModels": "すべてのモデルを表示",
     "suggestions": "関連プロバイダー",
     "supportedModels": "サポートされているモデル"

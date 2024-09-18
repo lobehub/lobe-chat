@@ -179,6 +179,15 @@
   "anthropic.claude-v2:1": {
     "description": "Claude 2的更新版，具有雙倍的上下文窗口，以及在長文檔和RAG上下文中的可靠性、幻覺率和基於證據的準確性的改進。"
   },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 Haiku 是 Anthropic 的最快且最緊湊的模型，旨在實現近乎即時的響應。它具有快速且準確的定向性能。"
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opus 是 Anthropic 用於處理高度複雜任務的最強大模型。它在性能、智能、流暢性和理解力方面表現卓越。"
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長程式設計、數據科學、視覺處理、代理任務。"
+  },
   "aya": {
     "description": "Aya 23 是 Cohere 推出的多語言模型，支持 23 種語言，為多元化語言應用提供便利。"
   },
@@ -281,6 +290,9 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B 是 DeepSeek 的設計代碼模型，提供強大的代碼生成能力。"
   },
+  "deepseek/deepseek-chat": {
+    "description": "融合通用與代碼能力的全新開源模型，不僅保留了原有 Chat 模型的通用對話能力和 Coder 模型的強大代碼處理能力，還更好地對齊了人類偏好。此外，DeepSeek-V2.5 在寫作任務、指令跟隨等多個方面也實現了大幅提升。"
+  },
   "emohaa": {
     "description": "Emohaa是一個心理模型，具備專業諮詢能力，幫助用戶理解情感問題。"
   },
@@ -371,17 +383,23 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus具備對視頻內容及多圖片的理解能力，適合多模態任務。"
   },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827 提供了優化後的多模態處理能力，適用多種複雜任務場景。"
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827 結合最新優化技術，帶來更高效的多模態數據處理能力。"
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 延續了輕量化與高效的設計理念。"
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 是 Google 輕量化的開源文本模型系列。"
   },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2 是Google輕量化的開源文本模型系列。"
+  },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) 提供基本的指令處理能力，適合輕量級應用。"
-  },
-  "google/gemma-7b-it:free": {
-    "description": "Google 的 Gemma 7B 具有出色的計算效率，適用於多種硬體架構，如 GPU 和 TPU。"
   },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
@@ -389,17 +407,8 @@
   "gpt-3.5-turbo-0125": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
   },
-  "gpt-3.5-turbo-0613": {
-    "description": "GPT-3.5 Turbo是OpenAI的一款基礎模型，結合了高效性和經濟性，廣泛用於文本生成、理解和分析，專為指導性提示進行調整，去除了與聊天相關的優化。"
-  },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
-  },
-  "gpt-3.5-turbo-16k-0613": {
-    "description": "GPT-3.5 Turbo是OpenAI的一款基礎模型，結合了高效性和經濟性，廣泛用於文本生成、理解和分析，專為指導性提示進行調整，去除了與聊天相關的優化。"
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo，適用於各種文本生成和理解任務，Currently points to gpt-3.5-turbo-0125"
@@ -451,12 +460,6 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
-  },
-  "gryphe/mythomist-7b:free": {
-    "description": "MythoMist 7B 為實驗性最強的 Mistral 合併模型，結合了最新算法。"
-  },
-  "huggingfaceh4/zephyr-7b-beta:free": {
-    "description": "Hugging Face 的 Zephyr 7B，以小巧身形實現了超越許多大型模型的性能。"
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "創新的開源模型InternLM2.5，通過大規模的參數提高了對話智能。"
@@ -527,9 +530,6 @@
   "mathstral": {
     "description": "MathΣtral 專為科學研究和數學推理設計，提供有效的計算能力和結果解釋。"
   },
-  "mattshumer/Reflection-Llama-3.1-70B": {
-    "description": "Reflection Llama 3.1 通過Reflection-Tuning技術提升推理能力。"
-  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) 提供優秀的語言處理能力和出色的互動體驗。"
   },
@@ -587,6 +587,9 @@
   "meta-llama/llama-3.1-8b-instruct": {
     "description": "Llama 3.1 8B Instruct 是 Meta 推出的最新版本，優化了高品質對話場景，表現優於許多領先的閉源模型。"
   },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1 提供多語言支持，是業界領先的生成模型之一。"
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct 是 Llama 3.1 Instruct 模型中最大、最強大的模型，是一款高度先進的對話推理和合成數據生成模型，也可以用作在特定領域進行專業持續預訓練或微調的基礎。Llama 3.1 提供的多語言大型語言模型 (LLMs) 是一組預訓練的、指令調整的生成模型，包括 8B、70B 和 405B 大小 (文本輸入/輸出)。Llama 3.1 指令調整的文本模型 (8B、70B、405B) 專為多語言對話用例進行了優化，並在常見的行業基準測試中超過了許多可用的開源聊天模型。Llama 3.1 旨在用於多種語言的商業和研究用途。指令調整的文本模型適用於類似助手的聊天，而預訓練模型可以適應各種自然語言生成任務。Llama 3.1 模型還支持利用其模型的輸出來改進其他模型，包括合成數據生成和精煉。Llama 3.1 是使用優化的變壓器架構的自回歸語言模型。調整版本使用監督微調 (SFT) 和帶有人類反饋的強化學習 (RLHF) 來符合人類對幫助性和安全性的偏好。"
   },
@@ -607,6 +610,9 @@
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B 是微軟 AI 最先進的 Wizard 模型，顯示出極其競爭力的表現。"
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-V 是 OpenBMB 推出的新一代多模態大模型，具備卓越的 OCR 識別和多模態理解能力，支持廣泛的應用場景。"
   },
   "mistral": {
     "description": "Mistral 是 Mistral AI 發布的 7B 模型，適合多變的語言處理需求。"
@@ -638,14 +644,8 @@
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instruct 是一款兼具速度優化和長上下文支持的高性能行業標準模型。"
   },
-  "mistralai/mistral-7b-instruct:free": {
-    "description": "Mistral 7B Instruct 是一款高效的多語言模型，優化用於對話和問答，能在資源受限的環境中表現出色。"
-  },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo 是多語言支持和高性能編程的7.3B參數模型。"
-  },
-  "mistralai/mixtral-8x22b": {
-    "description": "Mistral Mixtral 8x22B 提供高性能的基礎模型。"
   },
   "mixtral": {
     "description": "Mixtral 是 Mistral AI 的專家模型，具有開源權重，並在代碼生成和語言理解方面提供支持。"
@@ -668,8 +668,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
   },
-  "nousresearch/nous-capybara-7b:free": {
-    "description": "Nous Capybara 7B 專為基礎任務設計，提供高效的語言處理能力。"
+  "o1-mini": {
+    "description": "o1-mini是一款針對程式設計、數學和科學應用場景而設計的快速、經濟高效的推理模型。該模型具有128K上下文和2023年10月的知識截止日期。"
+  },
+  "o1-preview": {
+    "description": "o1是OpenAI新的推理模型，適用於需要廣泛通用知識的複雜任務。該模型具有128K上下文和2023年10月的知識截止日期。"
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba 是專注於代碼生成的 Mamba 2 語言模型，為先進的代碼和推理任務提供強力支持。"
@@ -686,17 +689,23 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B 是一個稀疏專家模型，利用多個參數提高推理速度，適合處理多語言和代碼生成任務。"
   },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o 是一款動態模型，實時更新以保持當前最新版本。它結合了強大的語言理解與生成能力，適合於大規模應用場景，包括客戶服務、教育和技術支持。"
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
+  },
+  "openai/o1-mini": {
+    "description": "o1-mini是一款針對程式設計、數學和科學應用場景而設計的快速、經濟高效的推理模型。該模型具有128K上下文和2023年10月的知識截止日期。"
+  },
+  "openai/o1-preview": {
+    "description": "o1是OpenAI新的推理模型，適用於需要廣泛通用知識的複雜任務。該模型具有128K上下文和2023年10月的知識截止日期。"
+  },
   "openchat/openchat-7b": {
     "description": "OpenChat 7B 是經過“C-RLFT（條件強化學習微調）”策略精調的開源語言模型庫。"
   },
-  "openchat/openchat-7b:free": {
-    "description": "OpenChat 3.5 是一個創新的開源語言模型庫，使用 C-RLFT 策略優化，支持多種任務。"
-  },
   "openrouter/auto": {
     "description": "根據上下文長度、主題和複雜性，你的請求將發送到 Llama 3 70B Instruct、Claude 3.5 Sonnet（自我調節）或 GPT-4o。"
-  },
-  "openrouter/cinematika-7b:free": {
-    "description": "Cinematika 7B 模型將電影劇本轉換為小說風格，適用於創意內容生成。"
   },
   "phi3": {
     "description": "Phi-3 是微軟推出的輕量級開放模型，適用於高效集成和大規模知識推理。"
@@ -731,6 +740,9 @@
   "qwen-vl-v1": {
     "description": "以Qwen-7B語言模型初始化，添加圖像模型，圖像輸入分辨率為448的預訓練模型。"
   },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2 是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  },
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
   },
@@ -754,15 +766,6 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
-  },
-  "recursal/eagle-7b": {
-    "description": "RWKV v5 Eagle 7B 以超小成本實現高效的多語言翻譯和處理，適用於邊緣計算。"
-  },
-  "recursal/rwkv-5-3b-ai-town": {
-    "description": "RWKV v5 3B AI Town 是為 AI 小鎮項目前置量身定制的模型。"
-  },
-  "rwkv/rwkv-5-world-3b": {
-    "description": "RWKV v5 World 3B 結合了 RNN 和 Transformer，實現了卓越的多語言處理能力。"
   },
   "solar-1-mini-chat": {
     "description": "Solar Mini 是一種緊湊型 LLM，性能優於 GPT-3.5，具備強大的多語言能力，支持英語和韓語，提供高效小巧的解決方案。"
@@ -802,9 +805,6 @@
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) 通過高效的策略和模型架構，提供增強的計算能力。"
-  },
-  "undi95/toppy-m-7b:free": {
-    "description": "Toppy M 7B 是一個開源模型，旨在通過開源科學推進人工智慧的普及。"
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) 適用於精細化指令任務，提供出色的語言處理能力。"

@@ -174,7 +174,10 @@
   "providers": {
     "config": "تكوين مزود الخدمة",
     "list": "قائمة مزودي النماذج",
+    "modelCount": "{{count}} نموذج",
+    "modelSite": "وثائق النموذج",
     "more": "المزيد",
+    "officialSite": "الموقع الرسمي",
     "showAllModels": "عرض جميع النماذج",
     "suggestions": "مزودو الخدمة ذوو الصلة",
     "supportedModels": "النماذج المدعومة"

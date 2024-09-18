@@ -174,7 +174,10 @@
   "providers": {
     "config": "Configurazione del fornitore",
     "list": "Elenco fornitori di modelli",
+    "modelCount": "{{count}} modelli",
+    "modelSite": "Documentazione del modello",
     "more": "Di più",
+    "officialSite": "Sito ufficiale",
     "showAllModels": "Mostra tutti i modelli",
     "suggestions": "Fornitori correlati",
     "supportedModels": "Modelli supportati"

@@ -174,7 +174,10 @@
   "providers": {
     "config": "Sağlayıcıyı Yapılandır",
     "list": "Model Sağlayıcıları Listesi",
+    "modelCount": "{{count}} model",
+    "modelSite": "Model belgeleri",
     "more": "Daha Fazla",
+    "officialSite": "Resmi site",
     "showAllModels": "Tüm modelleri göster",
     "suggestions": "İlgili Sağlayıcılar",
     "supportedModels": "Desteklenen Modeller"

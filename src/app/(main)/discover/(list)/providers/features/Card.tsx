@@ -75,7 +75,7 @@ export interface ProviderCardProps extends DiscoverProviderItem, FlexboxProps {
 
 const ProviderCard = memo<ProviderCardProps>(({ models, className, meta, identifier, ...rest }) => {
   const { description } = meta;
-  const { t } = useTranslation('providers');
+  const { t } = useTranslation(['discover', 'providers']);
   const { cx, styles, theme } = useStyles();
 
   return (
@@ -89,11 +89,13 @@ const ProviderCard = memo<ProviderCardProps>(({ models, className, meta, identif
         />
         <Flexbox gap={8} horizontal style={{ fontSize: 12, marginTop: -8 }}>
           <div style={{ color: theme.colorTextSecondary }}>@{meta.title}</div>
-          <div style={{ color: theme.colorTextDescription }}>{models.length} Models</div>
+          <div style={{ color: theme.colorTextDescription }}>
+            {t('providers.modelCount', { count: models.length })}
+          </div>
         </Flexbox>
         {description && (
           <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-            {t(`${identifier}.description`)}
+            {t(`${identifier}.description`, { ns: 'providers' })}
           </Paragraph>
         )}
         <Flexbox gap={6} horizontal style={{ flexWrap: 'wrap' }}>

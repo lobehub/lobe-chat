@@ -50,7 +50,9 @@ const Header = memo<HeaderProps>(({ identifier, data, mobile }) => {
             <Link href={data.meta.url} target={'_blank'}>
               @{data.meta.title}
             </Link>
-            <div style={{ color: theme.colorTextDescription }}>{data.models.length} Models</div>
+            <div style={{ color: theme.colorTextDescription }}>
+              {t('providers.modelCount', { count: data.models.length })}
+            </div>
           </Flexbox>
         </Flexbox>
         {!mobile && (

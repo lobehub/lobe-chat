@@ -179,6 +179,15 @@
   "anthropic.claude-v2:1": {
     "description": "La versión actualizada de Claude 2, con el doble de ventana de contexto, así como mejoras en la fiabilidad, tasa de alucinaciones y precisión basada en evidencia en contextos de documentos largos y RAG."
   },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 Haiku es el modelo más rápido y compacto de Anthropic, diseñado para lograr respuestas casi instantáneas. Tiene un rendimiento de orientación rápido y preciso."
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opus es el modelo más potente de Anthropic para manejar tareas altamente complejas. Destaca en rendimiento, inteligencia, fluidez y comprensión."
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 Sonnet ofrece capacidades que superan a Opus y una velocidad más rápida que Sonnet, manteniendo el mismo precio que Sonnet. Sonnet es especialmente hábil en programación, ciencia de datos, procesamiento visual y tareas de agente."
+  },
   "aya": {
     "description": "Aya 23 es un modelo multilingüe lanzado por Cohere, que admite 23 idiomas, facilitando aplicaciones de lenguaje diversas."
   },
@@ -281,6 +290,9 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B es el modelo de código de diseño de DeepSeek, que ofrece una potente capacidad de generación de código."
   },
+  "deepseek/deepseek-chat": {
+    "description": "Un nuevo modelo de código abierto que fusiona capacidades generales y de codificación, no solo conserva la capacidad de diálogo general del modelo Chat original y la potente capacidad de procesamiento de código del modelo Coder, sino que también se alinea mejor con las preferencias humanas. Además, DeepSeek-V2.5 ha logrado mejoras significativas en tareas de escritura, seguimiento de instrucciones y más."
+  },
   "emohaa": {
     "description": "Emohaa es un modelo psicológico con capacidades de consulta profesional, ayudando a los usuarios a comprender problemas emocionales."
   },
@@ -371,17 +383,23 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus tiene la capacidad de entender contenido de video y múltiples imágenes, adecuado para tareas multimodales."
   },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827 ofrece capacidades de procesamiento multimodal optimizadas, adecuadas para una variedad de escenarios de tareas complejas."
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827 combina las últimas tecnologías de optimización, ofreciendo una capacidad de procesamiento de datos multimodal más eficiente."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 continúa con el concepto de diseño ligero y eficiente."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 es una serie de modelos de texto de código abierto y ligeros de Google."
   },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2 es una serie de modelos de texto de código abierto y livianos de Google."
+  },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) ofrece capacidades básicas de procesamiento de instrucciones, adecuado para aplicaciones ligeras."
-  },
-  "google/gemma-7b-it:free": {
-    "description": "Gemma 7B de Google ofrece una excelente eficiencia computacional, adecuada para diversas arquitecturas de hardware, como GPU y TPU."
   },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo, adecuado para diversas tareas de generación y comprensión de texto, actualmente apunta a gpt-3.5-turbo-0125."
@@ -389,17 +407,8 @@
   "gpt-3.5-turbo-0125": {
     "description": "GPT 3.5 Turbo, adecuado para diversas tareas de generación y comprensión de texto, actualmente apunta a gpt-3.5-turbo-0125."
   },
-  "gpt-3.5-turbo-0613": {
-    "description": "GPT-3.5 Turbo es un modelo base de OpenAI que combina eficiencia y economía, ampliamente utilizado para generación, comprensión y análisis de texto, ajustado para indicaciones directivas, eliminando optimizaciones relacionadas con el chat."
-  },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo, adecuado para diversas tareas de generación y comprensión de texto, actualmente apunta a gpt-3.5-turbo-0125."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo, adecuado para diversas tareas de generación y comprensión de texto, actualmente apunta a gpt-3.5-turbo-0125."
-  },
-  "gpt-3.5-turbo-16k-0613": {
-    "description": "GPT-3.5 Turbo es un modelo base de OpenAI que combina eficiencia y economía, ampliamente utilizado para generación, comprensión y análisis de texto, ajustado para indicaciones directivas, eliminando optimizaciones relacionadas con el chat."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, adecuado para diversas tareas de generación y comprensión de texto, actualmente apunta a gpt-3.5-turbo-0125."
@@ -451,12 +460,6 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B es un modelo de lenguaje que combina creatividad e inteligencia, fusionando múltiples modelos de vanguardia."
-  },
-  "gryphe/mythomist-7b:free": {
-    "description": "MythoMist 7B es el modelo de fusión Mistral más experimental, combinando los algoritmos más recientes."
-  },
-  "huggingfaceh4/zephyr-7b-beta:free": {
-    "description": "Zephyr 7B de Hugging Face logra un rendimiento que supera a muchos modelos grandes, todo en un tamaño compacto."
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "El innovador modelo de código abierto InternLM2.5 mejora la inteligencia del diálogo mediante un gran número de parámetros."
@@ -527,9 +530,6 @@
   "mathstral": {
     "description": "MathΣtral está diseñado para la investigación científica y el razonamiento matemático, proporcionando capacidades de cálculo efectivas y explicación de resultados."
   },
-  "mattshumer/Reflection-Llama-3.1-70B": {
-    "description": "Reflection Llama 3.1 mejora la capacidad de razonamiento mediante la tecnología Reflection-Tuning."
-  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) ofrece una excelente capacidad de procesamiento de lenguaje y una experiencia de interacción sobresaliente."
   },
@@ -587,6 +587,9 @@
   "meta-llama/llama-3.1-8b-instruct": {
     "description": "Llama 3.1 8B Instruct es la última versión lanzada por Meta, optimizada para escenarios de conversación de alta calidad, superando a muchos modelos cerrados líderes."
   },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1 ofrece soporte multilingüe y es uno de los modelos generativos más avanzados de la industria."
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct es el modelo más grande y potente de la serie Llama 3.1 Instruct, un modelo de generación de datos de diálogo y razonamiento altamente avanzado, que también puede servir como base para un preentrenamiento o ajuste fino especializado en dominios específicos. Los modelos de lenguaje de gran tamaño (LLMs) multilingües que ofrece Llama 3.1 son un conjunto de modelos generativos preentrenados y ajustados por instrucciones, que incluyen tamaños de 8B, 70B y 405B (entrada/salida de texto). Los modelos de texto ajustados por instrucciones de Llama 3.1 (8B, 70B, 405B) están optimizados para casos de uso de diálogo multilingüe y superan a muchos modelos de chat de código abierto disponibles en pruebas de referencia de la industria. Llama 3.1 está diseñado para usos comerciales y de investigación en múltiples idiomas. Los modelos de texto ajustados por instrucciones son adecuados para chats similares a asistentes, mientras que los modelos preentrenados pueden adaptarse a diversas tareas de generación de lenguaje natural. El modelo Llama 3.1 también admite el uso de su salida para mejorar otros modelos, incluida la generación de datos sintéticos y el refinamiento. Llama 3.1 es un modelo de lenguaje autorregresivo que utiliza una arquitectura de transformador optimizada. Las versiones ajustadas utilizan ajuste fino supervisado (SFT) y aprendizaje por refuerzo con retroalimentación humana (RLHF) para alinearse con las preferencias humanas de ayuda y seguridad."
   },
@@ -607,6 +610,9 @@
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B es el modelo Wizard más avanzado de Microsoft AI, mostrando un rendimiento extremadamente competitivo."
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-V es la nueva generación de modelos multimodales lanzada por OpenBMB, que cuenta con una excelente capacidad de reconocimiento OCR y comprensión multimodal, soportando una amplia gama de escenarios de aplicación."
   },
   "mistral": {
     "description": "Mistral es un modelo de 7B lanzado por Mistral AI, adecuado para necesidades de procesamiento de lenguaje variables."
@@ -638,14 +644,8 @@
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instruct es un modelo de estándar industrial de alto rendimiento, optimizado para velocidad y soporte de contexto largo."
   },
-  "mistralai/mistral-7b-instruct:free": {
-    "description": "Mistral 7B Instruct es un modelo multilingüe eficiente, optimizado para diálogos y preguntas y respuestas, que puede sobresalir en entornos con recursos limitados."
-  },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo es un modelo de 7.3B parámetros con soporte multilingüe y programación de alto rendimiento."
-  },
-  "mistralai/mixtral-8x22b": {
-    "description": "Mistral Mixtral 8x22B ofrece un modelo base de alto rendimiento."
   },
   "mixtral": {
     "description": "Mixtral es el modelo de expertos de Mistral AI, con pesos de código abierto, que ofrece soporte en generación de código y comprensión del lenguaje."
@@ -668,8 +668,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B es una versión mejorada de Nous Hermes 2, que incluye los conjuntos de datos más recientes desarrollados internamente."
   },
-  "nousresearch/nous-capybara-7b:free": {
-    "description": "Nous Capybara 7B está diseñado para tareas básicas, ofreciendo una capacidad de procesamiento de lenguaje eficiente."
+  "o1-mini": {
+    "description": "o1-mini es un modelo de inferencia rápido y rentable diseñado para aplicaciones de programación, matemáticas y ciencias. Este modelo tiene un contexto de 128K y una fecha de corte de conocimiento en octubre de 2023."
+  },
+  "o1-preview": {
+    "description": "o1 es el nuevo modelo de inferencia de OpenAI, adecuado para tareas complejas que requieren un amplio conocimiento general. Este modelo tiene un contexto de 128K y una fecha de corte de conocimiento en octubre de 2023."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba es un modelo de lenguaje Mamba 2 enfocado en la generación de código, que proporciona un fuerte apoyo para tareas avanzadas de codificación y razonamiento."
@@ -686,17 +689,23 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B es un modelo de expertos dispersos que utiliza múltiples parámetros para mejorar la velocidad de razonamiento, adecuado para el procesamiento de tareas de múltiples idiomas y generación de código."
   },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o es un modelo dinámico que se actualiza en tiempo real para mantener la versión más actual. Combina una poderosa capacidad de comprensión y generación de lenguaje, adecuado para escenarios de aplicación a gran escala, incluyendo servicio al cliente, educación y soporte técnico."
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o mini es el modelo más reciente de OpenAI, lanzado después de GPT-4 Omni, que admite entradas de texto e imagen y genera texto como salida. Como su modelo más avanzado de tamaño pequeño, es mucho más económico que otros modelos de vanguardia recientes y más de un 60% más barato que GPT-3.5 Turbo. Mantiene una inteligencia de vanguardia mientras ofrece una relación calidad-precio notable. GPT-4o mini obtuvo un puntaje del 82% en la prueba MMLU y actualmente se clasifica por encima de GPT-4 en preferencias de chat."
+  },
+  "openai/o1-mini": {
+    "description": "o1-mini es un modelo de inferencia rápido y rentable diseñado para aplicaciones de programación, matemáticas y ciencias. Este modelo tiene un contexto de 128K y una fecha de corte de conocimiento en octubre de 2023."
+  },
+  "openai/o1-preview": {
+    "description": "o1 es el nuevo modelo de inferencia de OpenAI, adecuado para tareas complejas que requieren un amplio conocimiento general. Este modelo tiene un contexto de 128K y una fecha de corte de conocimiento en octubre de 2023."
+  },
   "openchat/openchat-7b": {
     "description": "OpenChat 7B es una biblioteca de modelos de lenguaje de código abierto ajustada mediante la estrategia de 'C-RLFT (ajuste fino de refuerzo condicional)'."
   },
-  "openchat/openchat-7b:free": {
-    "description": "OpenChat 3.5 es una innovadora biblioteca de modelos de lenguaje de código abierto, optimizada con la estrategia C-RLFT, que admite múltiples tareas."
-  },
   "openrouter/auto": {
     "description": "Según la longitud del contexto, el tema y la complejidad, tu solicitud se enviará a Llama 3 70B Instruct, Claude 3.5 Sonnet (autoajuste) o GPT-4o."
-  },
-  "openrouter/cinematika-7b:free": {
-    "description": "El modelo Cinematika 7B convierte guiones de películas en un estilo de novela, adecuado para la generación de contenido creativo."
   },
   "phi3": {
     "description": "Phi-3 es un modelo abierto ligero lanzado por Microsoft, adecuado para una integración eficiente y razonamiento de conocimiento a gran escala."
@@ -731,6 +740,9 @@
   "qwen-vl-v1": {
     "description": "Iniciado con el modelo de lenguaje Qwen-7B, se añade un modelo de imagen, un modelo preentrenado con una resolución de entrada de imagen de 448."
   },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2 es una nueva serie de modelos de lenguaje de gran tamaño, con una mayor capacidad de comprensión y generación."
+  },
   "qwen2": {
     "description": "Qwen2 es el nuevo modelo de lenguaje a gran escala de Alibaba, que ofrece un rendimiento excepcional para satisfacer diversas necesidades de aplicación."
   },
@@ -754,15 +766,6 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 es el nuevo modelo de lenguaje a gran escala de Alibaba, que ofrece un rendimiento excepcional para satisfacer diversas necesidades de aplicación."
-  },
-  "recursal/eagle-7b": {
-    "description": "RWKV v5 Eagle 7B logra traducción y procesamiento multilingüe eficientes a un costo extremadamente bajo, adecuado para computación en el borde."
-  },
-  "recursal/rwkv-5-3b-ai-town": {
-    "description": "RWKV v5 3B AI Town es un modelo diseñado a medida para el proyecto AI Town."
-  },
-  "rwkv/rwkv-5-world-3b": {
-    "description": "RWKV v5 World 3B combina RNN y Transformer, logrando una excelente capacidad de procesamiento multilingüe."
   },
   "solar-1-mini-chat": {
     "description": "Solar Mini es un LLM compacto, con un rendimiento superior al de GPT-3.5, que cuenta con potentes capacidades multilingües, soportando inglés y coreano, ofreciendo una solución eficiente y compacta."
@@ -802,9 +805,6 @@
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) proporciona una capacidad de cálculo mejorada a través de estrategias y arquitecturas de modelos eficientes."
-  },
-  "undi95/toppy-m-7b:free": {
-    "description": "Toppy M 7B es un modelo de código abierto diseñado para avanzar en la difusión de la inteligencia artificial a través de la ciencia abierta."
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) es adecuado para tareas de instrucciones detalladas, ofreciendo una excelente capacidad de procesamiento de lenguaje."

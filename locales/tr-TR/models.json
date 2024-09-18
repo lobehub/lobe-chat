@@ -179,6 +179,15 @@
   "anthropic.claude-v2:1": {
     "description": "Claude 2'nin güncellenmiş versiyonu, iki kat daha büyük bir bağlam penceresine sahiptir ve uzun belgeler ve RAG bağlamındaki güvenilirlik, yanılsama oranı ve kanıta dayalı doğrulukta iyileştirmeler sunar."
   },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 Haiku, Anthropic'in en hızlı ve en kompakt modelidir; neredeyse anlık yanıtlar sağlamak için tasarlanmıştır. Hızlı ve doğru yönlendirme performansına sahiptir."
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opus, Anthropic'in son derece karmaşık görevleri işlemek için en güçlü modelidir. Performans, zeka, akıcılık ve anlama açısından olağanüstü bir performans sergiler."
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı bir hız sunar; aynı zamanda Sonnet ile aynı fiyatı korur. Sonnet, programlama, veri bilimi, görsel işleme ve ajan görevlerinde özellikle başarılıdır."
+  },
   "aya": {
     "description": "Aya 23, Cohere tarafından sunulan çok dilli bir modeldir, 23 dili destekler ve çok dilli uygulamalar için kolaylık sağlar."
   },
@@ -281,6 +290,9 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B, DeepSeek'in tasarım kodu modelidir, güçlü kod üretim yetenekleri sunar."
   },
+  "deepseek/deepseek-chat": {
+    "description": "Genel ve kod yeteneklerini birleştiren yeni açık kaynak model, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleriyle daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazma görevleri, talimat takibi gibi birçok alanda da büyük iyileştirmeler sağlamıştır."
+  },
   "emohaa": {
     "description": "Emohaa, duygusal sorunları anlamalarına yardımcı olmak için profesyonel danışmanlık yeteneklerine sahip bir psikolojik modeldir."
   },
@@ -371,17 +383,23 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus, video içeriği ve çoklu görüntüleri anlama yeteneğine sahiptir, çok modlu görevler için uygundur."
   },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827, optimize edilmiş çok modlu işleme yetenekleri sunar ve çeşitli karmaşık görev senaryolarına uygundur."
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827, en son optimize edilmiş teknolojileri birleştirerek daha verimli çok modlu veri işleme yetenekleri sunar."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2, hafiflik ve verimlilik tasarım felsefesini sürdürmektedir."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2, Google'ın hafif açık kaynak metin modeli serisidir."
   },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2, Google'ın hafif açık kaynak metin modeli serisidir."
+  },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B), temel talimat işleme yetenekleri sunar ve hafif uygulamalar için uygundur."
-  },
-  "google/gemma-7b-it:free": {
-    "description": "Google'ın Gemma 7B, mükemmel hesaplama verimliliğine sahiptir, GPU ve TPU gibi çeşitli donanım mimarileri için uygundur."
   },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
@@ -389,17 +407,8 @@
   "gpt-3.5-turbo-0125": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
   },
-  "gpt-3.5-turbo-0613": {
-    "description": "GPT-3.5 Turbo, OpenAI'nin bir temel modelidir, verimlilik ve maliyet etkinliği ile birleştirilmiştir. Metin üretimi, anlama ve analiz için yaygın olarak kullanılır, rehberlik eden ipuçları için optimize edilmiştir ve sohbetle ilgili optimizasyonlar kaldırılmıştır."
-  },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
-  },
-  "gpt-3.5-turbo-16k-0613": {
-    "description": "GPT-3.5 Turbo, OpenAI'nin bir temel modelidir, verimlilik ve maliyet etkinliği ile birleştirilmiştir. Metin üretimi, anlama ve analiz için yaygın olarak kullanılır, rehberlik eden ipuçları için optimize edilmiştir ve sohbetle ilgili optimizasyonlar kaldırılmıştır."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, çeşitli metin üretimi ve anlama görevleri için uygundur, şu anda gpt-3.5-turbo-0125'e işaret ediyor."
@@ -451,12 +460,6 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
-  },
-  "gryphe/mythomist-7b:free": {
-    "description": "MythoMist 7B, deneysel olarak en güçlü Mistral birleşim modelidir ve en son algoritmaları birleştirir."
-  },
-  "huggingfaceh4/zephyr-7b-beta:free": {
-    "description": "Hugging Face'in Zephyr 7B, kompakt yapısıyla birçok büyük modelin performansını aşmaktadır."
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "Yenilikçi açık kaynak modeli InternLM2.5, büyük ölçekli parametreler ile diyalog zekasını artırmıştır."
@@ -527,9 +530,6 @@
   "mathstral": {
     "description": "MathΣtral, bilimsel araştırma ve matematik akıl yürütme için tasarlanmış, etkili hesaplama yetenekleri ve sonuç açıklamaları sunar."
   },
-  "mattshumer/Reflection-Llama-3.1-70B": {
-    "description": "Reflection Llama 3.1, Reflection-Tuning teknolojisi ile akıl yürütme yeteneğini artırır."
-  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B), mükemmel dil işleme yetenekleri ve olağanüstü etkileşim deneyimi sunar."
   },
@@ -587,6 +587,9 @@
   "meta-llama/llama-3.1-8b-instruct": {
     "description": "Llama 3.1 8B Instruct, Meta tarafından sunulan en son versiyon olup, yüksek kaliteli diyalog senaryoları için optimize edilmiştir ve birçok önde gelen kapalı kaynak modelden daha iyi performans göstermektedir."
   },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1, çok dilli destek sunar ve sektördeki en önde gelen üretim modellerinden biridir."
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct, Llama 3.1 Instruct modelinin en büyük ve en güçlü versiyonudur. Bu, son derece gelişmiş bir diyalog akıl yürütme ve veri sentezleme modelidir ve belirli alanlarda uzmanlaşmış sürekli ön eğitim veya ince ayar için bir temel olarak da kullanılabilir. Llama 3.1, çok dilli büyük dil modelleri (LLM'ler) sunar ve 8B, 70B ve 405B boyutlarında önceden eğitilmiş, talimat ayarlı üretim modellerinden oluşur (metin girişi/çıkışı). Llama 3.1'in talimat ayarlı metin modelleri (8B, 70B, 405B), çok dilli diyalog kullanım durumları için optimize edilmiştir ve yaygın endüstri benchmark testlerinde birçok mevcut açık kaynaklı sohbet modelini geride bırakmıştır. Llama 3.1, çok dilli ticari ve araştırma amaçları için tasarlanmıştır. Talimat ayarlı metin modelleri, asistan benzeri sohbetler için uygundur, önceden eğitilmiş modeller ise çeşitli doğal dil üretim görevlerine uyum sağlayabilir. Llama 3.1 modeli, diğer modellerin çıktısını iyileştirmek için de kullanılabilir, bu da veri sentezleme ve rafine etme işlemlerini içerir. Llama 3.1, optimize edilmiş bir transformer mimarisi kullanarak oluşturulmuş bir otoregresif dil modelidir. Ayarlanmış versiyon, insan yardımseverliği ve güvenlik tercihleri ile uyumlu hale getirmek için denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) kullanır."
   },
@@ -607,6 +610,9 @@
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B, Microsoft'un en gelişmiş AI Wizard modelidir ve son derece rekabetçi bir performans sergiler."
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-V, OpenBMB tarafından sunulan yeni nesil çok modlu büyük bir modeldir; olağanüstü OCR tanıma ve çok modlu anlama yeteneklerine sahiptir ve geniş bir uygulama yelpazesini destekler."
   },
   "mistral": {
     "description": "Mistral, Mistral AI tarafından sunulan 7B modelidir, değişken dil işleme ihtiyaçları için uygundur."
@@ -638,14 +644,8 @@
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instruct, hız optimizasyonu ve uzun bağlam desteği sunan yüksek performanslı bir endüstri standart modelidir."
   },
-  "mistralai/mistral-7b-instruct:free": {
-    "description": "Mistral 7B Instruct, diyalog ve soru-cevap için optimize edilmiş verimli bir çok dilli modeldir, kaynak kısıtlı ortamlarda mükemmel performans gösterir."
-  },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo, çok dilli destek ve yüksek performanslı programlama sunan 7.3B parametreli bir modeldir."
-  },
-  "mistralai/mixtral-8x22b": {
-    "description": "Mistral Mixtral 8x22B, yüksek performanslı temel modeller sunar."
   },
   "mixtral": {
     "description": "Mixtral, Mistral AI'nın uzman modelidir, açık kaynak ağırlıkları ile birlikte gelir ve kod üretimi ve dil anlama konularında destek sunar."
@@ -668,8 +668,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B, Nous Hermes 2'nin güncellenmiş versiyonudur ve en son iç geliştirme veri setlerini içermektedir."
   },
-  "nousresearch/nous-capybara-7b:free": {
-    "description": "Nous Capybara 7B, temel görevler için tasarlanmış, etkili dil işleme yetenekleri sunar."
+  "o1-mini": {
+    "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
+  },
+  "o1-preview": {
+    "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba, kod üretimine odaklanan Mamba 2 dil modelidir ve ileri düzey kod ve akıl yürütme görevlerine güçlü destek sunar."
@@ -686,17 +689,23 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B, birden fazla parametre kullanarak akıl yürütme hızını artıran seyrek uzman modelidir, çok dilli ve kod üretim görevlerini işlemek için uygundur."
   },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o, dinamik bir modeldir; en güncel versiyonu korumak için gerçek zamanlı olarak güncellenir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, geniş ölçekli uygulama senaryoları için uygundur; müşteri hizmetleri, eğitim ve teknik destek gibi."
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra sunduğu en son modeldir; görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde bir sıralamaya sahiptir."
+  },
+  "openai/o1-mini": {
+    "description": "o1-mini, programlama, matematik ve bilim uygulama senaryoları için tasarlanmış hızlı ve ekonomik bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
+  },
+  "openai/o1-preview": {
+    "description": "o1, OpenAI'nin geniş genel bilgiye ihtiyaç duyan karmaşık görevler için uygun yeni bir akıl yürütme modelidir. Bu model, 128K bağlam ve Ekim 2023 bilgi kesim tarihi ile donatılmıştır."
+  },
   "openchat/openchat-7b": {
     "description": "OpenChat 7B, 'C-RLFT (koşullu pekiştirme öğrenimi ince ayarı)' stratejisi ile ince ayar yapılmış açık kaynak dil modeli kütüphanesidir."
   },
-  "openchat/openchat-7b:free": {
-    "description": "OpenChat 3.5, yenilikçi bir açık kaynak dil modeli kütüphanesidir, C-RLFT stratejisi ile optimize edilmiştir ve çeşitli görevleri destekler."
-  },
   "openrouter/auto": {
     "description": "Bağlam uzunluğu, konu ve karmaşıklığa göre isteğiniz, Llama 3 70B Instruct, Claude 3.5 Sonnet (kendini ayarlama) veya GPT-4o'ya gönderilecektir."
-  },
-  "openrouter/cinematika-7b:free": {
-    "description": "Cinematika 7B modeli, film senaryolarını roman tarzına dönüştürerek yaratıcı içerik üretimi için uygundur."
   },
   "phi3": {
     "description": "Phi-3, Microsoft tarafından sunulan hafif bir açık modeldir, verimli entegrasyon ve büyük ölçekli bilgi akıl yürütme için uygundur."
@@ -731,6 +740,9 @@
   "qwen-vl-v1": {
     "description": "Qwen-7B dil modeli ile başlatılan, 448 çözünürlükte görüntü girişi olan önceden eğitilmiş bir modeldir."
   },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2, daha güçlü anlama ve üretme yeteneklerine sahip yeni bir büyük dil modeli serisidir."
+  },
   "qwen2": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
   },
@@ -754,15 +766,6 @@
   },
   "qwen2:72b": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
-  },
-  "recursal/eagle-7b": {
-    "description": "RWKV v5 Eagle 7B, düşük maliyetle etkili çok dilli çeviri ve işleme sunar, kenar hesaplama için uygundur."
-  },
-  "recursal/rwkv-5-3b-ai-town": {
-    "description": "RWKV v5 3B AI Town, AI Town projesi için özel olarak tasarlanmış bir modeldir."
-  },
-  "rwkv/rwkv-5-world-3b": {
-    "description": "RWKV v5 World 3B, RNN ve Transformer'ı birleştirerek mükemmel çok dilli işleme yetenekleri sunar."
   },
   "solar-1-mini-chat": {
     "description": "Solar Mini, kompakt bir LLM'dir, GPT-3.5'ten daha iyi performans gösterir, güçlü çok dilli yeteneklere sahiptir, İngilizce ve Koreceyi destekler, etkili ve hafif bir çözüm sunar."
@@ -802,9 +805,6 @@
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B), etkili stratejiler ve model mimarisi ile artırılmış hesaplama yetenekleri sunar."
-  },
-  "undi95/toppy-m-7b:free": {
-    "description": "Toppy M 7B, açık kaynak biliminin yaygınlaşmasını sağlamak amacıyla geliştirilmiş bir açık kaynak modelidir."
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B), ince ayar gerektiren talimat görevleri için uygundur ve mükemmel dil işleme yetenekleri sunar."

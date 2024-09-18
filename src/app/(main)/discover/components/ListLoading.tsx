@@ -32,6 +32,17 @@ export const ListLoadingWithoutBanner = memo<{ banner?: boolean }>(() => {
   );
 });
 
+export const ProviderListLoading = memo<{ banner?: boolean }>(() => {
+  return (
+    <Flexbox gap={16}>
+      <Flexbox justify={'center'} style={{ minHeight: 62 }}>
+        <Skeleton.Button active style={{ minWidth: 150 }} />
+      </Flexbox>
+      <GridLoadingCard count={6} rows={1} />
+    </Flexbox>
+  );
+});
+
 export const HomeLoading = memo<{ banner?: boolean }>(() => {
   return (
     <Flexbox gap={16}>

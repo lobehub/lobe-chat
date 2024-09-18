@@ -174,7 +174,10 @@
   "providers": {
     "config": "Cấu hình nhà cung cấp",
     "list": "Danh sách nhà cung cấp mô hình",
+    "modelCount": "{{count}} mô hình",
+    "modelSite": "Tài liệu mô hình",
     "more": "Thêm",
+    "officialSite": "Trang web chính thức",
     "showAllModels": "Hiển thị tất cả các mô hình",
     "suggestions": "Nhà cung cấp liên quan",
     "supportedModels": "Mô hình được hỗ trợ"

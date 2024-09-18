@@ -30,6 +30,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
         <SearchResultCount count={items.length} keyword={searchKeywords} />
         <VirtuosoGridList
           data={items}
+          initialItemCount={24}
           itemContent={(_, item) => (
             <InterceptingLink
               href={urlJoin('/discover/model/', item.identifier)}
@@ -51,6 +52,7 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
       <Title tag={items.length}>{t('models.list')}</Title>
       <VirtuosoGridList
         data={items}
+        initialItemCount={24}
         itemContent={(_, item) => (
           <InterceptingLink
             href={urlJoin('/discover/model/', item.identifier)}

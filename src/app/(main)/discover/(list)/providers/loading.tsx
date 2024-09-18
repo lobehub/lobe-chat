@@ -1,1 +1,1 @@
-export { ListLoadingWithoutBanner as default } from '../../components/ListLoading';
+export { ProviderListLoading as default } from '../../components/ListLoading';

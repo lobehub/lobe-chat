@@ -174,7 +174,10 @@
   "providers": {
     "config": "配置服務商",
     "list": "模型服務商列表",
+    "modelCount": "{{count}} 個模型",
+    "modelSite": "模型文件",
     "more": "更多",
+    "officialSite": "官方網站",
     "showAllModels": "顯示所有模型",
     "suggestions": "相關服務商",
     "supportedModels": "支持模型"

@@ -179,6 +179,15 @@
   "anthropic.claude-v2:1": {
     "description": "De bijgewerkte versie van Claude 2, met een verdubbeling van het contextvenster en verbeteringen in betrouwbaarheid, hallucinatiepercentages en op bewijs gebaseerde nauwkeurigheid in lange documenten en RAG-contexten."
   },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, ontworpen voor bijna onmiddellijke reacties. Het biedt snelle en nauwkeurige gerichte prestaties."
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opus is het krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het excelleert in prestaties, intelligentie, vloeiendheid en begrip."
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en een snellere snelheid dan Sonnet, terwijl het dezelfde prijs als Sonnet behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
+  },
   "aya": {
     "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
   },
@@ -281,6 +290,9 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236B is het ontwerpcode-model van DeepSeek, biedt krachtige codegeneratiecapaciteiten."
   },
+  "deepseek/deepseek-chat": {
+    "description": "Een nieuw open-source model dat algemene en codeercapaciteiten combineert, niet alleen de algemene gespreksvaardigheden van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model behoudt, maar ook beter is afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en meer."
+  },
   "emohaa": {
     "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
   },
@@ -371,17 +383,23 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus heeft de capaciteit om video-inhoud en meerdere afbeeldingen te begrijpen, geschikt voor multimodale taken."
   },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827 combineert de nieuwste optimalisatietechnologieën voor efficiëntere multimodale gegevensverwerking."
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 behoudt het ontwerpprincipe van lichtgewicht en efficiëntie."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 is een lichtgewicht open-source tekstmodelserie van Google."
   },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2 is een lichtgewicht open-source tekstmodelserie van Google."
+  },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B) biedt basis instructieverwerkingscapaciteiten, geschikt voor lichte toepassingen."
-  },
-  "google/gemma-7b-it:free": {
-    "description": "Google's Gemma 7B heeft uitstekende rekenefficiëntie, geschikt voor verschillende hardware-architecturen, zoals GPU's en TPU's."
   },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
@@ -389,17 +407,8 @@
   "gpt-3.5-turbo-0125": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
   },
-  "gpt-3.5-turbo-0613": {
-    "description": "GPT-3.5 Turbo is een basismodel van OpenAI, dat efficiëntie en kosteneffectiviteit combineert, veel gebruikt voor tekstgeneratie, begrip en analyse, speciaal afgestemd op instructieve prompts, met verwijdering van chatgerelateerde optimalisaties."
-  },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
-  },
-  "gpt-3.5-turbo-16k-0613": {
-    "description": "GPT-3.5 Turbo is een basismodel van OpenAI, dat efficiëntie en kosteneffectiviteit combineert, veel gebruikt voor tekstgeneratie, begrip en analyse, speciaal afgestemd op instructieve prompts, met verwijdering van chatgerelateerde optimalisaties."
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
@@ -451,12 +460,6 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
-  },
-  "gryphe/mythomist-7b:free": {
-    "description": "MythoMist 7B is het meest experimentele Mistral-samengevoegde model, dat de nieuwste algoritmen combineert."
-  },
-  "huggingfaceh4/zephyr-7b-beta:free": {
-    "description": "Zephyr 7B van Hugging Face levert prestaties die veel grotere modellen overtreffen, ondanks zijn compacte formaat."
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "Het innovatieve open-source model InternLM2.5 verhoogt de gespreksintelligentie door een groot aantal parameters."
@@ -527,9 +530,6 @@
   "mathstral": {
     "description": "MathΣtral is ontworpen voor wetenschappelijk onderzoek en wiskundige inferentie, biedt effectieve rekencapaciteiten en resultaatinterpretatie."
   },
-  "mattshumer/Reflection-Llama-3.1-70B": {
-    "description": "Reflection Llama 3.1 verbetert de redeneercapaciteit door middel van Reflection-Tuning technologie."
-  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) biedt uitstekende taalverwerkingscapaciteiten en een geweldige interactie-ervaring."
   },
@@ -587,6 +587,9 @@
   "meta-llama/llama-3.1-8b-instruct": {
     "description": "Llama 3.1 8B Instruct is de nieuwste versie van Meta, geoptimaliseerd voor hoogwaardige gespreksscenario's en presteert beter dan veel toonaangevende gesloten modellen."
   },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1 biedt ondersteuning voor meerdere talen en is een van de toonaangevende generatiemodellen in de industrie."
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct is het grootste en krachtigste model binnen het Llama 3.1 Instruct-model, een geavanceerd model voor conversatie-inferentie en synthetische datageneratie, dat ook kan worden gebruikt als basis voor gespecialiseerde continue pre-training of fine-tuning in specifieke domeinen. De meertalige grote taalmodellen (LLMs) die Llama 3.1 biedt, zijn een set van voorgetrainde, instructie-geoptimaliseerde generatieve modellen, waaronder 8B, 70B en 405B in grootte (tekstinvoer/uitvoer). De tekstmodellen van Llama 3.1, die zijn geoptimaliseerd voor meertalige conversatiegebruik, overtreffen veel beschikbare open-source chatmodellen in gangbare industriële benchmarktests. Llama 3.1 is ontworpen voor commercieel en onderzoeksgebruik in meerdere talen. De instructie-geoptimaliseerde tekstmodellen zijn geschikt voor assistentachtige chats, terwijl de voorgetrainde modellen zich kunnen aanpassen aan verschillende taken voor natuurlijke taalgeneratie. Het Llama 3.1-model ondersteunt ook het verbeteren van andere modellen door gebruik te maken van de output van zijn modellen, inclusief synthetische datageneratie en verfijning. Llama 3.1 is een autoregressief taalmodel dat gebruikmaakt van een geoptimaliseerde transformer-architectuur. De afgestelde versies gebruiken supervisie-finetuning (SFT) en versterkend leren met menselijke feedback (RLHF) om te voldoen aan menselijke voorkeuren voor behulpzaamheid en veiligheid."
   },
@@ -607,6 +610,9 @@
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22B is het meest geavanceerde Wizard-model van Microsoft AI, met een uiterst competitieve prestatie."
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-V is de nieuwe generatie multimodale grote modellen van OpenBMB, met uitstekende OCR-herkenning en multimodaal begrip, geschikt voor een breed scala aan toepassingsscenario's."
   },
   "mistral": {
     "description": "Mistral is het 7B-model van Mistral AI, geschikt voor variabele taalverwerkingsbehoeften."
@@ -638,14 +644,8 @@
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instruct is een hoogwaardig industrieel standaardmodel met snelheidoptimalisatie en ondersteuning voor lange contexten."
   },
-  "mistralai/mistral-7b-instruct:free": {
-    "description": "Mistral 7B Instruct is een efficiënt meertalig model, geoptimaliseerd voor conversatie en vraag-en-antwoord, presteert uitstekend in omgevingen met beperkte middelen."
-  },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemo is een model met 7,3 miljard parameters dat meertalige ondersteuning en hoge prestaties biedt."
-  },
-  "mistralai/mixtral-8x22b": {
-    "description": "Mistral Mixtral 8x22B biedt een hoogpresterend basis model."
   },
   "mixtral": {
     "description": "Mixtral is het expertmodel van Mistral AI, met open-source gewichten en biedt ondersteuning voor codegeneratie en taalbegrip."
@@ -668,8 +668,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B is een upgrade van Nous Hermes 2, met de nieuwste intern ontwikkelde datasets."
   },
-  "nousresearch/nous-capybara-7b:free": {
-    "description": "Nous Capybara 7B is ontworpen voor basis taken en biedt efficiënte taalverwerkingscapaciteiten."
+  "o1-mini": {
+    "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "o1-preview": {
+    "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba is een Mamba 2-taalmodel dat zich richt op codegeneratie en krachtige ondersteuning biedt voor geavanceerde code- en inferentietaken."
@@ -686,17 +689,23 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B is een spaarzaam expertmodel dat meerdere parameters benut om de inferentiesnelheid te verhogen, geschikt voor het verwerken van meertalige en codegeneratietaken."
   },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "openai/o1-mini": {
+    "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "openai/o1-preview": {
+    "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
   "openchat/openchat-7b": {
     "description": "OpenChat 7B is een open-source taalmodelbibliotheek die is geoptimaliseerd met de 'C-RLFT (Conditionele Versterkingsleer Fijnstelling)' strategie."
   },
-  "openchat/openchat-7b:free": {
-    "description": "OpenChat 3.5 is een innovatieve open-source taalmodelbibliotheek, geoptimaliseerd met de C-RLFT-strategie en ondersteunt verschillende taken."
-  },
   "openrouter/auto": {
     "description": "Afhankelijk van de contextlengte, het onderwerp en de complexiteit, wordt uw verzoek verzonden naar Llama 3 70B Instruct, Claude 3.5 Sonnet (zelfregulerend) of GPT-4o."
-  },
-  "openrouter/cinematika-7b:free": {
-    "description": "Cinematika 7B model converteert filmscripts naar een romanstijl, geschikt voor creatieve inhoudsgeneratie."
   },
   "phi3": {
     "description": "Phi-3 is een lichtgewicht open model van Microsoft, geschikt voor efficiënte integratie en grootschalige kennisinferentie."
@@ -731,6 +740,9 @@
   "qwen-vl-v1": {
     "description": "Geïnitieerd met het Qwen-7B taalmodel, voegt het een afbeeldingsmodel toe, met een invoerresolutie van 448 voor het voorgetrainde model."
   },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2 is een gloednieuwe serie grote taalmodellen met sterkere begrip- en generatiecapaciteiten."
+  },
   "qwen2": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
   },
@@ -754,15 +766,6 @@
   },
   "qwen2:72b": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
-  },
-  "recursal/eagle-7b": {
-    "description": "RWKV v5 Eagle 7B biedt efficiënte meertalige vertaling en verwerking tegen zeer lage kosten, geschikt voor edge computing."
-  },
-  "recursal/rwkv-5-3b-ai-town": {
-    "description": "RWKV v5 3B AI Town is een model dat speciaal is ontworpen voor het AI Town-project."
-  },
-  "rwkv/rwkv-5-world-3b": {
-    "description": "RWKV v5 World 3B combineert RNN en Transformer voor uitstekende meertalige verwerkingscapaciteiten."
   },
   "solar-1-mini-chat": {
     "description": "Solar Mini is een compact LLM dat beter presteert dan GPT-3.5, met sterke meertalige capaciteiten, ondersteunt Engels en Koreaans, en biedt een efficiënte en compacte oplossing."
@@ -802,9 +805,6 @@
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) biedt verbeterde rekenkracht door middel van efficiënte strategieën en modelarchitectuur."
-  },
-  "undi95/toppy-m-7b:free": {
-    "description": "Toppy M 7B is een open-source model dat is ontworpen om de verspreiding van kunstmatige intelligentie door middel van open wetenschap te bevorderen."
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) is geschikt voor verfijnde instructietaken en biedt uitstekende taalverwerkingscapaciteiten."

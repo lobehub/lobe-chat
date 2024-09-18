@@ -174,7 +174,10 @@
   "providers": {
     "config": "Configuratie aanbieder",
     "list": "Lijst van modelproviders",
+    "modelCount": "{{count}} modellen",
+    "modelSite": "Modeldocumentatie",
     "more": "Meer",
+    "officialSite": "Officiële website",
     "showAllModels": "Toon alle modellen",
     "suggestions": "Gerelateerde aanbieders",
     "supportedModels": "Ondersteunde modellen"

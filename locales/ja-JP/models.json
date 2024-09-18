@@ -179,6 +179,15 @@
   "anthropic.claude-v2:1": {
     "description": "Claude 2の更新版で、コンテキストウィンドウが2倍になり、長文書やRAGコンテキストにおける信頼性、幻覚率、証拠に基づく正確性が改善されています。"
   },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 HaikuはAnthropicの最も迅速でコンパクトなモデルで、ほぼ瞬時の応答を実現することを目的としています。迅速かつ正確な指向性能を備えています。"
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opusは、Anthropicが高度に複雑なタスクを処理するために開発した最も強力なモデルです。性能、知能、流暢さ、理解力において卓越したパフォーマンスを発揮します。"
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 SonnetはOpusを超える能力を提供し、Sonnetよりも速い速度を持ちながら、Sonnetと同じ価格を維持します。Sonnetは特にプログラミング、データサイエンス、視覚処理、代理タスクに優れています。"
+  },
   "aya": {
     "description": "Aya 23は、Cohereが提供する多言語モデルであり、23の言語をサポートし、多様な言語アプリケーションを便利にします。"
   },
@@ -281,6 +290,9 @@
   "deepseek-v2:236b": {
     "description": "DeepSeek V2 236Bは、DeepSeekの設計コードモデルであり、強力なコード生成能力を提供します。"
   },
+  "deepseek/deepseek-chat": {
+    "description": "汎用性とコード能力を融合させた新しいオープンソースモデルで、元のChatモデルの汎用対話能力とCoderモデルの強力なコード処理能力を保持しつつ、人間の好みにより良く整合しています。さらに、DeepSeek-V2.5は執筆タスク、指示の遵守などの多くの面で大幅な向上を実現しました。"
+  },
   "emohaa": {
     "description": "Emohaaは心理モデルで、専門的な相談能力を持ち、ユーザーが感情問題を理解するのを助けます。"
   },
@@ -371,17 +383,23 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plusは動画コンテンツや複数の画像を理解する能力を持ち、マルチモーダルタスクに適しています。"
   },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827は、最適化されたマルチモーダル処理能力を提供し、さまざまな複雑なタスクシーンに適用可能です。"
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827は、最新の最適化技術を組み合わせて、より効率的なマルチモーダルデータ処理能力を提供します。"
+  },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2は、軽量化と高効率のデザイン理念を継承しています。"
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2は、Googleの軽量オープンソーステキストモデルシリーズです。"
   },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2はGoogleの軽量化されたオープンソーステキストモデルシリーズです。"
+  },
   "google/gemma-2b-it": {
     "description": "Gemma Instruct (2B)は、基本的な指示処理能力を提供し、軽量アプリケーションに適しています。"
-  },
-  "google/gemma-7b-it:free": {
-    "description": "GoogleのGemma 7Bは、優れた計算効率を持ち、GPUやTPUなどのさまざまなハードウェアアーキテクチャに適しています。"
   },
   "gpt-3.5-turbo": {
     "description": "GPT 3.5 Turboは、さまざまなテキスト生成と理解タスクに適しており、現在はgpt-3.5-turbo-0125を指しています。"
@@ -389,17 +407,8 @@
   "gpt-3.5-turbo-0125": {
     "description": "GPT 3.5 Turboは、さまざまなテキスト生成と理解タスクに適しており、現在はgpt-3.5-turbo-0125を指しています。"
   },
-  "gpt-3.5-turbo-0613": {
-    "description": "GPT-3.5 TurboはOpenAIの基盤モデルで、高効率と経済性を兼ね備え、テキスト生成、理解、分析に広く使用され、指導的なプロンプトに特化して調整され、チャット関連の最適化が除外されています。"
-  },
   "gpt-3.5-turbo-1106": {
     "description": "GPT 3.5 Turboは、さまざまなテキスト生成と理解タスクに適しており、現在はgpt-3.5-turbo-0125を指しています。"
-  },
-  "gpt-3.5-turbo-16k": {
-    "description": "GPT 3.5 Turboは、さまざまなテキスト生成と理解タスクに適しており、現在はgpt-3.5-turbo-0125を指しています。"
-  },
-  "gpt-3.5-turbo-16k-0613": {
-    "description": "GPT-3.5 TurboはOpenAIの基盤モデルで、高効率と経済性を兼ね備え、テキスト生成、理解、分析に広く使用され、指導的なプロンプトに特化して調整され、チャット関連の最適化が除外されています。"
   },
   "gpt-3.5-turbo-instruct": {
     "description": "GPT 3.5 Turboは、さまざまなテキスト生成と理解タスクに適しており、現在はgpt-3.5-turbo-0125を指しています。"
@@ -451,12 +460,6 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13Bは複数のトップモデルを統合した創造性と知性を兼ね備えた言語モデルです。"
-  },
-  "gryphe/mythomist-7b:free": {
-    "description": "MythoMist 7Bは、最新のアルゴリズムを組み合わせた実験的なMistral統合モデルです。"
-  },
-  "huggingfaceh4/zephyr-7b-beta:free": {
-    "description": "Hugging FaceのZephyr 7Bは、小型の形状でありながら、多くの大型モデルを超える性能を実現しています。"
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "革新的なオープンソースモデルInternLM2.5は、大規模なパラメータを通じて対話のインテリジェンスを向上させました。"
@@ -527,9 +530,6 @@
   "mathstral": {
     "description": "MathΣtralは、科学研究と数学推論のために設計されており、効果的な計算能力と結果の解釈を提供します。"
   },
-  "mattshumer/Reflection-Llama-3.1-70B": {
-    "description": "Reflection Llama 3.1はReflection-Tuning技術を通じて推論能力を向上させます。"
-  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B)は、優れた言語処理能力と素晴らしいインタラクション体験を提供します。"
   },
@@ -587,6 +587,9 @@
   "meta-llama/llama-3.1-8b-instruct": {
     "description": "Llama 3.1 8B InstructはMetaが発表した最新バージョンで、高品質な対話シーンに最適化されており、多くの先進的なクローズドソースモデルを上回る性能を発揮します。"
   },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1は多言語サポートを提供し、業界をリードする生成モデルの一つです。"
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instructは、Llama 3.1 Instructモデルの中で最大かつ最も強力なモデルであり、高度に進化した対話推論および合成データ生成モデルです。また、特定の分野での専門的な継続的な事前トレーニングや微調整の基盤としても使用できます。Llama 3.1が提供する多言語大規模言語モデル（LLMs）は、8B、70B、405Bのサイズ（テキスト入力/出力）を含む、事前トレーニングされた指示調整された生成モデルのセットです。Llama 3.1の指示調整されたテキストモデル（8B、70B、405B）は、多言語対話のユースケースに最適化されており、一般的な業界ベンチマークテストで多くの利用可能なオープンソースチャットモデルを上回っています。Llama 3.1は、さまざまな言語の商業および研究用途に使用されることを目的としています。指示調整されたテキストモデルは、アシスタントのようなチャットに適しており、事前トレーニングモデルはさまざまな自然言語生成タスクに適応できます。Llama 3.1モデルは、他のモデルを改善するためにその出力を利用することもサポートしており、合成データ生成や洗練にも対応しています。Llama 3.1は、最適化されたトランスフォーマーアーキテクチャを使用した自己回帰型言語モデルです。調整されたバージョンは、監視付き微調整（SFT）と人間のフィードバックを伴う強化学習（RLHF）を使用して、人間の助けや安全性に対する好みに適合させています。"
   },
@@ -607,6 +610,9 @@
   },
   "microsoft/wizardlm-2-8x22b": {
     "description": "WizardLM-2 8x22Bは、Microsoftの最先端AI Wizardモデルであり、非常に競争力のあるパフォーマンスを示しています。"
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-VはOpenBMBが発表した次世代のマルチモーダル大モデルで、優れたOCR認識能力とマルチモーダル理解能力を備え、幅広いアプリケーションシーンをサポートします。"
   },
   "mistral": {
     "description": "Mistralは、Mistral AIがリリースした7Bモデルであり、多様な言語処理ニーズに適しています。"
@@ -638,14 +644,8 @@
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instructは速度最適化と長いコンテキストサポートを兼ね備えた高性能な業界標準モデルです。"
   },
-  "mistralai/mistral-7b-instruct:free": {
-    "description": "Mistral 7B Instructは、高効率な多言語モデルであり、対話と質問応答に最適化されており、リソースが限られた環境でも優れた性能を発揮します。"
-  },
   "mistralai/mistral-nemo": {
     "description": "Mistral Nemoは多言語サポートと高性能プログラミングを備えた7.3Bパラメータモデルです。"
-  },
-  "mistralai/mixtral-8x22b": {
-    "description": "Mistral Mixtral 8x22Bは、高性能の基盤モデルを提供します。"
   },
   "mixtral": {
     "description": "Mixtralは、Mistral AIのエキスパートモデルであり、オープンソースの重みを持ち、コード生成と言語理解のサポートを提供します。"
@@ -668,8 +668,11 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8BはNous Hermes 2のアップグレード版で、最新の内部開発データセットを含んでいます。"
   },
-  "nousresearch/nous-capybara-7b:free": {
-    "description": "Nous Capybara 7Bは、基本的なタスクのために設計されており、高効率の言語処理能力を提供します。"
+  "o1-mini": {
+    "description": "o1-miniは、プログラミング、数学、科学のアプリケーションシーンに特化して設計された迅速で経済的な推論モデルです。このモデルは128Kのコンテキストを持ち、2023年10月の知識のカットオフがあります。"
+  },
+  "o1-preview": {
+    "description": "o1はOpenAIの新しい推論モデルで、広範な一般知識を必要とする複雑なタスクに適しています。このモデルは128Kのコンテキストを持ち、2023年10月の知識のカットオフがあります。"
   },
   "open-codestral-mamba": {
     "description": "Codestral Mambaは、コード生成に特化したMamba 2言語モデルであり、高度なコードおよび推論タスクを強力にサポートします。"
@@ -686,17 +689,23 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7Bは、スパースエキスパートモデルであり、複数のパラメータを利用して推論速度を向上させ、多言語およびコード生成タスクの処理に適しています。"
   },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4oは動的モデルで、リアルタイムで最新バージョンを維持します。強力な言語理解と生成能力を組み合わせており、顧客サービス、教育、技術サポートなどの大規模なアプリケーションシーンに適しています。"
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o miniはOpenAIがGPT-4 Omniの後に発表した最新モデルで、画像とテキストの入力をサポートし、テキストを出力します。彼らの最先端の小型モデルとして、最近の他の最前線モデルよりもはるかに安価で、GPT-3.5 Turboよりも60%以上安価です。最先端の知能を維持しつつ、顕著なコストパフォーマンスを誇ります。GPT-4o miniはMMLUテストで82%のスコアを獲得し、現在チャットの好みでGPT-4よりも高い評価を得ています。"
+  },
+  "openai/o1-mini": {
+    "description": "o1-miniは、プログラミング、数学、科学のアプリケーションシーンに特化して設計された迅速で経済的な推論モデルです。このモデルは128Kのコンテキストを持ち、2023年10月の知識のカットオフがあります。"
+  },
+  "openai/o1-preview": {
+    "description": "o1はOpenAIの新しい推論モデルで、広範な一般知識を必要とする複雑なタスクに適しています。このモデルは128Kのコンテキストを持ち、2023年10月の知識のカットオフがあります。"
+  },
   "openchat/openchat-7b": {
     "description": "OpenChat 7Bは「C-RLFT（条件強化学習微調整）」戦略で微調整されたオープンソース言語モデルライブラリです。"
   },
-  "openchat/openchat-7b:free": {
-    "description": "OpenChat 3.5は、C-RLFT戦略を使用して最適化された革新的なオープンソース言語モデルライブラリであり、さまざまなタスクをサポートしています。"
-  },
   "openrouter/auto": {
     "description": "コンテキストの長さ、テーマ、複雑さに応じて、あなたのリクエストはLlama 3 70B Instruct、Claude 3.5 Sonnet（自己調整）、またはGPT-4oに送信されます。"
-  },
-  "openrouter/cinematika-7b:free": {
-    "description": "Cinematika 7Bモデルは、映画の脚本を小説スタイルに変換し、創造的なコンテンツ生成に適しています。"
   },
   "phi3": {
     "description": "Phi-3は、Microsoftが提供する軽量オープンモデルであり、高効率な統合と大規模な知識推論に適しています。"
@@ -731,6 +740,9 @@
   "qwen-vl-v1": {
     "description": "Qwen-7B言語モデルを初期化し、画像モデルを追加した、画像入力解像度448の事前トレーニングモデルです。"
   },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2は全く新しい大型言語モデルシリーズで、より強力な理解と生成能力を備えています。"
+  },
   "qwen2": {
     "description": "Qwen2は、Alibabaの新世代大規模言語モデルであり、優れた性能で多様なアプリケーションニーズをサポートします。"
   },
@@ -754,15 +766,6 @@
   },
   "qwen2:72b": {
     "description": "Qwen2は、Alibabaの新世代大規模言語モデルであり、優れた性能で多様なアプリケーションニーズをサポートします。"
-  },
-  "recursal/eagle-7b": {
-    "description": "RWKV v5 Eagle 7Bは、超小型コストで高効率の多言語翻訳と処理を実現し、エッジコンピューティングに適しています。"
-  },
-  "recursal/rwkv-5-3b-ai-town": {
-    "description": "RWKV v5 3B AI Townは、AIタウンプロジェクトのために特別に設計されたモデルです。"
-  },
-  "rwkv/rwkv-5-world-3b": {
-    "description": "RWKV v5 World 3Bは、RNNとTransformerを組み合わせて、卓越した多言語処理能力を実現しています。"
   },
   "solar-1-mini-chat": {
     "description": "Solar MiniはコンパクトなLLMで、GPT-3.5を上回る性能を持ち、強力な多言語能力を備え、英語と韓国語をサポートし、高効率でコンパクトなソリューションを提供します。"
@@ -802,9 +805,6 @@
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B)は、高効率の戦略とモデルアーキテクチャを通じて、強化された計算能力を提供します。"
-  },
-  "undi95/toppy-m-7b:free": {
-    "description": "Toppy M 7Bは、オープンサイエンスを通じて人工知能の普及を推進することを目的としたオープンソースモデルです。"
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B)は、精密な指示タスクに適しており、優れた言語処理能力を提供します。"

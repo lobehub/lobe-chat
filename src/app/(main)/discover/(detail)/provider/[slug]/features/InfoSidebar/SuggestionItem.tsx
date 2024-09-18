@@ -50,7 +50,7 @@ export interface SuggestionItemProps
 const SuggestionItem = memo<SuggestionItemProps>(
   ({ className, meta, identifier, models, ...rest }) => {
     const { title, description } = meta;
-    const { t } = useTranslation('providers');
+    const { t } = useTranslation(['discover', 'providers']);
     const { cx, styles, theme } = useStyles();
 
     return (
@@ -58,11 +58,13 @@ const SuggestionItem = memo<SuggestionItemProps>(
         <ProviderCombine provider={identifier} size={24} title={title} />
         <Flexbox gap={8} horizontal style={{ fontSize: 12, marginTop: -8 }}>
           <div style={{ color: theme.colorTextSecondary }}>@{meta.title}</div>
-          <div style={{ color: theme.colorTextDescription }}>{models.length} Models</div>
+          <div style={{ color: theme.colorTextDescription }}>
+            {t('providers.modelCount', { count: models.length })}
+          </div>
         </Flexbox>
         {description && (
           <Paragraph className={styles.desc} ellipsis={{ rows: 2 }}>
-            {t(`${identifier}.description`)}
+            {t(`${identifier}.description`, { ns: 'providers' })}
           </Paragraph>
         )}
       </Flexbox>
