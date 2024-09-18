@@ -1,11 +1,13 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
 import { ConfigProvider, Segmented, Typography } from 'antd';
+import { cx } from 'antd-style';
 import { ArrowLeft, CodeIcon, EyeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
+import { oneLineEllipsis } from '@/styles';
 
 const Header = () => {
   const { t } = useTranslation('portal');
@@ -25,7 +27,11 @@ const Header = () => {
     <Flexbox align={'center'} flex={1} gap={12} horizontal justify={'space-between'} width={'100%'}>
       <Flexbox align={'center'} gap={4} horizontal>
         <ActionIcon icon={ArrowLeft} onClick={() => closeArtifact()} />
-        <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
+        <Typography.Text
+          className={cx(oneLineEllipsis)}
+          style={{ fontSize: 16 }}
+          type={'secondary'}
+        >
           {artifactTitle}
         </Typography.Text>
       </Flexbox>
