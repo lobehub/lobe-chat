@@ -53,7 +53,7 @@
   },
   "github": {
     "personalAccessToken": {
-      "desc": "填入 Github PAT，[前往創建](https://github.com/settings/tokens)",
+      "desc": "填入你的 Github 個人存取權杖，點擊[這裡](https://github.com/settings/tokens) 創建",
       "placeholder": "ghp_xxxxxx",
       "title": "GitHub PAT"
     }
