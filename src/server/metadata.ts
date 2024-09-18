@@ -3,8 +3,9 @@ import qs from 'query-string';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_LANG } from '@/const/locale';
-import { OG_URL, getCanonicalUrl } from '@/const/url';
+import { OG_URL } from '@/const/url';
 import { Locales, locales } from '@/locales/resources';
+import { getCanonicalUrl } from '@/server/utils/url';
 import { formatDescLength, formatTitleLength } from '@/utils/genOG';
 
 export class Meta {

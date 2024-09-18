@@ -4,9 +4,10 @@ import qs from 'query-string';
 import urlJoin from 'url-join';
 
 import { DEFAULT_LANG } from '@/const/locale';
-import { OFFICIAL_URL, SITEMAP_BASE_URL } from '@/const/url';
+import { SITEMAP_BASE_URL } from '@/const/url';
 import { Locales, locales as allLocales } from '@/locales/resources';
 import { DiscoverService } from '@/server/services/discover';
+import { getCanonicalUrl } from '@/server/utils/url';
 import { AssistantCategory, PluginCategory } from '@/types/discover';
 import { isDev } from '@/utils/env';
 
@@ -30,7 +31,7 @@ export enum SitemapType {
 
 export const LAST_MODIFIED = new Date().toISOString();
 
-class Sitemap {
+export class Sitemap {
   discoverService: DiscoverService;
 
   sitemapIndexs = [
@@ -86,8 +87,8 @@ class Sitemap {
       priority,
       url:
         lang === DEFAULT_LANG
-          ? urlJoin(OFFICIAL_URL, url)
-          : qs.stringifyUrl({ query: { hl: lang }, url: urlJoin(OFFICIAL_URL, url) }),
+          ? getCanonicalUrl(url)
+          : qs.stringifyUrl({ query: { hl: lang }, url: getCanonicalUrl(url) }),
     };
     if (noLocales) return sitemap;
 
@@ -96,7 +97,7 @@ class Sitemap {
       if (locale === lang) continue;
       languages[locale] = qs.stringifyUrl({
         query: { hl: locale },
-        url: urlJoin(OFFICIAL_URL, url),
+        url: getCanonicalUrl(url),
       });
     }
     return {
@@ -150,7 +151,7 @@ class Sitemap {
       '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
       ...this.sitemapIndexs.map((item) =>
         this._generateSitemapLink(
-          urlJoin(OFFICIAL_URL, SITEMAP_BASE_URL, isDev ? item.id : `${item.id}.xml`),
+          getCanonicalUrl(SITEMAP_BASE_URL, isDev ? item.id : `${item.id}.xml`),
         ),
       ),
       '</sitemapindex>',
@@ -235,9 +236,9 @@ class Sitemap {
   }
   getRobots() {
     return [
-      urlJoin(OFFICIAL_URL, 'sitemap-index.xml'),
+      getCanonicalUrl('/sitemap-index.xml'),
       ...this.sitemapIndexs.map((index) =>
-        urlJoin(OFFICIAL_URL, SITEMAP_BASE_URL, isDev ? index.id : `${index.id}.xml`),
+        getCanonicalUrl(SITEMAP_BASE_URL, isDev ? index.id : `${index.id}.xml`),
       ),
     ];
   }

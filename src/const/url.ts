@@ -13,8 +13,6 @@ export const OFFICIAL_URL = 'https://lobechat.com/';
 export const OFFICIAL_PREVIEW_URL = 'https://chat-preview.lobehub.com/';
 export const OFFICIAL_SITE = 'https://lobehub.com/';
 
-export const getCanonicalUrl = (path: string) => urlJoin(OFFICIAL_URL, path);
-
 export const OG_URL = '/og/cover.png?v=1';
 
 export const GITHUB = pkg.homepage;
