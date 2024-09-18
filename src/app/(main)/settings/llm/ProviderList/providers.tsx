@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import {
+  Ai21ProviderCard,
   Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
@@ -57,6 +58,7 @@ export const useProviderList = (): ProviderItem[] => {
       TogetherAIProviderCard,
       FireworksAIProviderCard,
       UpstageProviderCard,
+      Ai21ProviderCard,
       QwenProviderCard,
       SparkProviderCard,
       ZhiPuProviderCard,

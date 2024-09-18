@@ -3,6 +3,7 @@ import { ClientOptions } from 'openai';
 import type { TracePayload } from '@/const/trace';
 
 import { LobeRuntimeAI } from './BaseAI';
+import { LobeAi21AI } from './ai21';
 import { LobeAi360AI } from './ai360';
 import { LobeAnthropicAI } from './anthropic';
 import { LobeAzureOpenAI } from './azureOpenai';
@@ -117,6 +118,7 @@ class AgentRuntime {
   static async initializeWithProviderOptions(
     provider: string,
     params: Partial<{
+      ai21: Partial<ClientOptions>;
       ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
       azure: { apiVersion?: string; apikey?: string; endpoint?: string };
@@ -287,6 +289,11 @@ class AgentRuntime {
 
       case ModelProvider.Spark: {
         runtimeModel = new LobeSparkAI(params.spark);
+        break;
+      }
+
+      case ModelProvider.Ai21: {
+        runtimeModel = new LobeAi21AI(params.ai21);
         break;
       }
     }
