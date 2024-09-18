@@ -1,7 +1,7 @@
 import { ModelTag, ProviderCombine } from '@lobehub/icons';
 import { ActionIcon, Grid, Icon, Tooltip } from '@lobehub/ui';
 import { Tag } from 'antd';
-import { createStyles } from 'antd-style';
+import { createStyles, useResponsive } from 'antd-style';
 import { BadgeCheck, BookIcon, ChevronRightIcon, KeyIcon } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useMemo } from 'react';
@@ -9,7 +9,6 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
-import InterceptingLink from '@/components/InterceptingLink';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { DiscoverProviderItem } from '@/types/discover';
@@ -31,8 +30,11 @@ interface ProviderItemProps extends DiscoverProviderItem {
 
 const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) => {
   const { t } = useTranslation('discover');
+  const { xl = true } = useResponsive();
   const { styles, theme } = useStyles();
   const isLobeHub = identifier === 'lobehub';
+
+  const isMobile = mobile || !xl;
 
   const model = useMemo(() => {
     const prividerItem = DEFAULT_MODEL_PROVIDER_LIST.find((v) => v.id === identifier);
@@ -70,13 +72,10 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
 
   const header = (
     <Flexbox gap={4} style={{ minWidth: 240 }}>
-      <InterceptingLink
-        href={urlJoin('/discover/provider', identifier)}
-        style={{ color: 'inherit' }}
-      >
+      <Link href={urlJoin('/discover/provider', identifier)} style={{ color: 'inherit' }}>
         <ProviderCombine provider={identifier} size={24} />
-      </InterceptingLink>
-      <Flexbox align={'center'} gap={6} horizontal>
+      </Link>
+      <Flexbox align={'center'} gap={6} horizontal wrap={'wrap'}>
         <ModelTag model={modelId} style={{ background: theme.colorFillQuaternary, margin: 0 }} />
         {isLobeHub && (
           <Tooltip title={t('models.providerInfo.officialTooltip')}>
@@ -103,9 +102,9 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
   );
 
   const button = (
-    <InterceptingLink href={urlJoin('/discover/provider', identifier)} style={{ color: 'inherit' }}>
+    <Link href={urlJoin('/discover/provider', identifier)} style={{ color: 'inherit' }}>
       <ActionIcon color={theme.colorTextDescription} icon={ChevronRightIcon} />
-    </InterceptingLink>
+    </Link>
   );
 
   return (
@@ -117,7 +116,7 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
       padding={16}
       wrap={'wrap'}
     >
-      {mobile && (
+      {isMobile && (
         <Flexbox align={'center'} horizontal justify={'space-between'}>
           {header}
           {button}
@@ -129,13 +128,13 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
         gap={16}
         horizontal
         maxItemWidth={100}
-        rows={mobile ? 2 : items.length + 1}
+        rows={isMobile ? 2 : items.length + 1}
         style={{ minWidth: 240 }}
       >
-        {!mobile && header}
+        {!isMobile && header}
         {items.map((item, index) => (
           <Statistic
-            align={mobile ? 'flex-start' : 'center'}
+            align={isMobile ? 'flex-start' : 'center'}
             gap={4}
             key={index}
             valuePlacement={'bottom'}
@@ -144,7 +143,7 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
           />
         ))}
       </Grid>
-      {!mobile && button}
+      {!isMobile && button}
     </Flexbox>
   );
 });

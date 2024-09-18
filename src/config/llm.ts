@@ -53,6 +53,10 @@ export const getLLMConfig = () => {
       GROQ_MODEL_LIST: z.string().optional(),
       GROQ_PROXY_URL: z.string().optional(),
 
+      ENABLED_GITHUB: z.boolean(),
+      GITHUB_TOKEN: z.string().optional(),
+      GITHUB_MODEL_LIST: z.string().optional(),
+
       ENABLED_OPENROUTER: z.boolean(),
       OPENROUTER_API_KEY: z.string().optional(),
       OPENROUTER_MODEL_LIST: z.string().optional(),
@@ -110,6 +114,9 @@ export const getLLMConfig = () => {
 
       ENABLED_SPARK: z.boolean(),
       SPARK_API_KEY: z.string().optional(),
+
+      ENABLED_AI21: z.boolean(),
+      AI21_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -172,6 +179,10 @@ export const getLLMConfig = () => {
       GROQ_MODEL_LIST: process.env.GROQ_MODEL_LIST,
       GROQ_PROXY_URL: process.env.GROQ_PROXY_URL,
 
+      ENABLED_GITHUB: !!process.env.GITHUB_TOKEN,
+      GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+      GITHUB_MODEL_LIST: process.env.GITHUB_MODEL_LIST,
+
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
       ZEROONE_API_KEY: process.env.ZEROONE_API_KEY,
       ZEROONE_MODEL_LIST: process.env.ZEROONE_MODEL_LIST,
@@ -217,6 +228,9 @@ export const getLLMConfig = () => {
 
       ENABLED_SPARK: !!process.env.SPARK_API_KEY,
       SPARK_API_KEY: process.env.SPARK_API_KEY,
+
+      ENABLED_AI21: !!process.env.AI21_API_KEY,
+      AI21_API_KEY: process.env.AI21_API_KEY,
     },
   });
 };

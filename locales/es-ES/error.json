@@ -59,6 +59,7 @@
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidClerkUser": "Lo siento mucho, actualmente no has iniciado sesión. Por favor, inicia sesión o regístrate antes de continuar.",
+    "InvalidGithubToken": "El token de acceso personal de Github es incorrecto o está vacío. Por favor, verifica el token de acceso personal de Github y vuelve a intentarlo.",
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
     "InvalidProviderAPIKey": "{{provider}} API Key incorrecta o vacía, por favor revisa tu {{provider}} API Key e intenta de nuevo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",

@@ -59,6 +59,7 @@
     "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或添加自定義 API 金鑰",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidClerkUser": "很抱歉，你當前尚未登錄，請先登錄或註冊帳號後繼續操作",
+    "InvalidGithubToken": "Github 個人存取權杖不正確或為空，請檢查 Github 個人存取權杖後再試一次",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidProviderAPIKey": "{{provider}} API 金鑰不正確或為空，請檢查 {{provider}} API 金鑰後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",

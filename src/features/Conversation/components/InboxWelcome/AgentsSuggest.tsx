@@ -4,13 +4,13 @@ import { ActionIcon, Avatar, Grid } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import { RefreshCw } from 'lucide-react';
+import Link from 'next/link';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import useSWR from 'swr';
 import urlJoin from 'url-join';
 
-import InterceptingLink from '@/components/InterceptingLink';
 import { assistantService } from '@/services/assistant';
 import { useUserStore } from '@/store/user';
 import { userGeneralSettingsSelectors } from '@/store/user/selectors';
@@ -105,10 +105,7 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
           : assistantList
               .slice(sliceStart, sliceStart + agentLength)
               .map((item: DiscoverAssistantItem) => (
-                <InterceptingLink
-                  href={urlJoin('/discover/assistant/', item.identifier)}
-                  key={item.identifier}
-                >
+                <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
                   <Flexbox className={styles.card} gap={8} horizontal>
                     <Avatar avatar={item.meta.avatar} style={{ flex: 'none' }} />
                     <Flexbox gap={mobile ? 2 : 8} style={{ overflow: 'hidden', width: '100%' }}>
@@ -120,7 +117,7 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
                       </Paragraph>
                     </Flexbox>
                   </Flexbox>
-                </InterceptingLink>
+                </Link>
               ))}
       </Grid>
     </Flexbox>

@@ -107,6 +107,9 @@ export default {
     SubscriptionPlanLimit:
       '您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用',
 
+    // Github Token
+    InvalidGithubToken: 'Github PAT 不正确或为空，请检查 Github PAT 后重试',
+
     /* eslint-enable */
   },
   stt: {
