@@ -78,7 +78,7 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
 
                 try {
                   const useProxy = form.getFieldValue(proxyKey);
-                  const data = await toolService.getPluginManifest(value, useProxy);
+                  const data = await toolService.getToolManifest(value, useProxy);
                   setManifest(data);
 
                   form.setFieldsValue({ identifier: data.identifier, manifest: data });

@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "添加助手",
+    "addAgentAndConverse": "添加助手并会话",
+    "addAgentSuccess": "添加成功",
+    "conversation": {
+      "l1": "你好，我是 **{{name}}**，你可以问我任何问题，我会尽力回答你 ~",
+      "l2": "以下是我的能力介绍: ",
+      "l3": "让我们开始对话吧！"
+    },
+    "description": "助手介绍",
+    "detail": "详情",
+    "list": "助手列表",
+    "more": "更多",
+    "plugins": "集成插件",
+    "recentSubmits": "最近更新",
+    "suggestions": "相关推荐",
+    "systemRole": "助手设定",
+    "try": "试一下"
+  },
+  "back": "返回发现",
+  "category": {
+    "assistant": {
+      "academic": "学术",
+      "all": "全部",
+      "career": "职业",
+      "copywriting": "文案",
+      "design": "设计",
+      "education": "教育",
+      "emotions": "情感",
+      "entertainment": "娱乐",
+      "games": "游戏",
+      "general": "通用",
+      "life": "生活",
+      "marketing": "商业",
+      "office": "办公",
+      "programming": "编程",
+      "translation": "翻译"
+    },
+    "plugin": {
+      "all": "全部",
+      "gaming-entertainment": "游戏娱乐",
+      "life-style": "生活方式",
+      "media-generate": "媒体生成",
+      "science-education": "科学教育",
+      "social": "社交媒体",
+      "stocks-finance": "股票金融",
+      "tools": "实用工具",
+      "web-search": "网络搜索"
+    }
+  },
+  "cleanFilter": "清除筛选",
+  "create": "创作",
+  "createGuide": {
+    "func1": {
+      "desc1": "在会话窗口中通过右上角设置进入你想提交助手的设置页面;",
+      "desc2": "点击右上角提交到助手市场按钮。",
+      "tag": "方法一",
+      "title": "通过 LobeChat 提交"
+    },
+    "func2": {
+      "button": "前往 Github 助手仓库",
+      "desc": "如果您想将助手添加到索引中，请使用 agent-template.json 或 agent-template-full.json 在 plugins 目录中创建一个条目，编写简短的描述并适当标记，然后创建一个拉取请求。",
+      "tag": "方法二",
+      "title": "通过 Github 提交"
+    }
+  },
+  "dislike": "不喜欢",
+  "filter": "筛选",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "所有作者",
+      "followed": "关注的作者",
+      "title": "作者范围"
+    },
+    "contentLength": "最小上下文长度",
+    "maxToken": {
+      "title": "设定最大长度 (Token)",
+      "unlimited": "无限制"
+    },
+    "other": {
+      "functionCall": "支持函数调用",
+      "title": "其他",
+      "vision": "支持视觉识别",
+      "withKnowledge": "附带知识库",
+      "withTool": "附带插件"
+    },
+    "pricing": "模型价格",
+    "timePeriod": {
+      "all": "全部时间",
+      "day": "近 24 小时",
+      "month": "近 30 天",
+      "title": "时间范围",
+      "week": "近 7 天",
+      "year": "近一年"
+    }
+  },
+  "home": {
+    "featuredAssistants": "推荐助手",
+    "featuredModels": "推荐模型",
+    "featuredProviders": "推荐模型服务商",
+    "featuredTools": "推荐插件",
+    "more": "发现更多"
+  },
+  "like": "喜欢",
+  "models": {
+    "chat": "开始会话",
+    "contentLength": "最大上下文长度",
+    "free": "免费",
+    "guide": "配置指南",
+    "list": "模型列表",
+    "more": "更多",
+    "parameterList": {
+      "defaultValue": "默认值",
+      "docs": "查看文档",
+      "frequency_penalty": {
+        "desc": "此设置调整模型重复使用输入中已经出现的特定词汇的频率。较高的值使得这种重复出现的可能性降低，而负值则产生相反的效果。词汇惩罚不随出现次数增加而增加。负值将鼓励词汇的重复使用。",
+        "title": "频率惩罚度"
+      },
+      "max_tokens": {
+        "desc": "此设置定义了模型在单次回复中可以生成的最大长度。设置较高的值允许模型生成更长的回应，而较低的值则限制回应的长度，使其更简洁。根据不同的应用场景，合理调整此值可以帮助达到预期的回应长度和详细程度。",
+        "title": "单次回复限制"
+      },
+      "presence_penalty": {
+        "desc": "此设置旨在根据词汇在输入中出现的频率来控制词汇的重复使用。它尝试较少使用那些在输入中出现较多的词汇，其使用频率与出现频率成比例。词汇惩罚随出现次数而增加。负值将鼓励重复使用词汇。",
+        "title": "话题新鲜度"
+      },
+      "range": "范围",
+      "temperature": {
+        "desc": "此设置影响模型回应的多样性。较低的值会导致更可预测和典型的回应，而较高的值则鼓励更多样化和不常见的回应。当值设为0时，模型对于给定的输入总是给出相同的回应。",
+        "title": "随机性"
+      },
+      "title": "模型参数",
+      "top_p": {
+        "desc": "此设置将模型的选择限制为可能性最高的一定比例的词汇：只选择那些累计概率达到P的顶尖词汇。较低的值使得模型的回应更加可预测，而默认设置则允许模型从全部范围的词汇中进行选择。",
+        "title": "核采样"
+      },
+      "type": "类型"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat 支持为此提供商使用自定义 API 密钥。",
+      "input": "输入价格",
+      "inputTooltip": "每百万个 Token 的成本",
+      "latency": "延迟",
+      "latencyTooltip": "服务商发送第一个 Token 的平均响应时间",
+      "maxOutput": "最大输出长度",
+      "maxOutputTooltip": "此端点可以生成的最大 Token 数",
+      "officialTooltip": "LobeHub 官方服务",
+      "output": "输出价格",
+      "outputTooltip": "每百万个 Token 的成本",
+      "streamCancellationTooltip": "此服务商支持流取消功能。",
+      "throughput": "吞吐量",
+      "throughputTooltip": "流请求每秒传输的平均 Token 数"
+    },
+    "suggestions": "相关模型",
+    "supportedProviders": "支持该模型的服务商"
+  },
+  "plugins": {
+    "community": "社区插件",
+    "install": "安装插件",
+    "installed": "已安装",
+    "list": "插件列表",
+    "meta": {
+      "description": "描述",
+      "parameter": "参数",
+      "title": "工具参数",
+      "type": "类型"
+    },
+    "more": "更多",
+    "official": "官方插件",
+    "recentSubmits": "最近更新",
+    "suggestions": "相关推荐"
+  },
+  "providers": {
+    "config": "配置服务商",
+    "list": "模型服务商列表",
+    "modelCount": "{{count}} 个模型",
+    "modelSite": "模型文档",
+    "more": "更多",
+    "officialSite": "官方网站",
+    "showAllModels": "显示所有模型",
+    "suggestions": "相关服务商",
+    "supportedModels": "支持模型"
+  },
+  "search": {
+    "placeholder": "搜索名称介绍或关键词...",
+    "result": "{{count}} 个关于 <highlight>{{keyword}}</highlight> 的搜索结果",
+    "searching": "搜索中..."
+  },
+  "sort": {
+    "mostLiked": "最多喜欢",
+    "mostUsed": "最多使用",
+    "newest": "从新到旧",
+    "oldest": "从旧到新",
+    "recommended": "推荐"
+  },
+  "tab": {
+    "assistants": "助手",
+    "home": "首页",
+    "models": "模型",
+    "plugins": "插件",
+    "providers": "模型服务商"
+  }
+}

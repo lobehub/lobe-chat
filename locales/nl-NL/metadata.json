@@ -3,9 +3,26 @@
     "description": "{{appName}} biedt je de beste ervaring met ChatGPT, Claude, Gemini, en OLLaMA WebUI",
     "title": "{{appName}}: Persoonlijke AI-efficiëntietool, geef jezelf een slimmer brein"
   },
-  "market": {
-    "description": "Inhoudcreatie, copywriting, Q&A, beeldgeneratie, video-generatie, spraakgeneratie, slimme agenten, geautomatiseerde workflows, pas je eigen AI slimme assistent aan",
-    "title": "Assistentenmarkt"
+  "discover": {
+    "assistants": {
+      "description": "Inhoud creatie, copywriting, vraag-en-antwoord, beeldgeneratie, video-generatie, spraakgeneratie, slimme agenten, geautomatiseerde workflows, pas je eigen AI / GPTs / OLLaMA slimme assistent aan",
+      "title": "AI-assistenten"
+    },
+    "description": "Inhoud creatie, copywriting, vraag-en-antwoord, beeldgeneratie, video-generatie, spraakgeneratie, slimme agenten, geautomatiseerde workflows, aangepaste AI-toepassingen, pas je eigen AI-toepassingswerkplek aan",
+    "models": {
+      "description": "Verken populaire AI-modellen zoals OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
+      "title": "AI-modellen"
+    },
+    "plugins": {
+      "description": "Zoek naar grafiekgeneratie, academische toepassingen, afbeeldingsgeneratie, videogeneratie, spraakgeneratie en geautomatiseerde workflows om rijke plug-in mogelijkheden voor je assistent te integreren.",
+      "title": "AI-plug-ins"
+    },
+    "providers": {
+      "description": "Verken populaire modelproviders zoals OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
+      "title": "AI-modelleveranciers"
+    },
+    "search": "Zoeken",
+    "title": "Ontdekken"
   },
   "plugins": {
     "description": "Zoeken, grafiekgeneratie, academisch, beeldgeneratie, video-generatie, spraakgeneratie, geautomatiseerde workflows, pas de ToolCall-pluginmogelijkheden van ChatGPT / Claude aan",
