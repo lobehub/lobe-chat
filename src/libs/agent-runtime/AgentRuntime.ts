@@ -9,6 +9,7 @@ import { LobeAzureOpenAI } from './azureOpenai';
 import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeDeepSeekAI } from './deepseek';
+import { LobeFireworksAI } from './fireworksai';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
 import { LobeMinimaxAI } from './minimax';
@@ -21,6 +22,7 @@ import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
 import { LobeSiliconCloudAI } from './siliconcloud';
+import { LobeSparkAI } from './spark';
 import { LobeStepfunAI } from './stepfun';
 import { LobeTaichuAI } from './taichu';
 import { LobeTogetherAI } from './togetherai';
@@ -32,6 +34,7 @@ import {
   ModelProvider,
   TextToImagePayload,
 } from './types';
+import { LobeUpstageAI } from './upstage';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
 
@@ -119,6 +122,7 @@ class AgentRuntime {
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       deepseek: Partial<ClientOptions>;
+      fireworksai: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
@@ -131,9 +135,11 @@ class AgentRuntime {
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
       siliconcloud: Partial<ClientOptions>;
+      spark: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
       taichu: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
+      upstage: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
     }>,
@@ -222,6 +228,11 @@ class AgentRuntime {
         break;
       }
 
+      case ModelProvider.FireworksAI: {
+        runtimeModel = new LobeFireworksAI(params.fireworksai);
+        break;
+      }
+
       case ModelProvider.ZeroOne: {
         runtimeModel = new LobeZeroOneAI(params.zeroone);
         break;
@@ -259,6 +270,16 @@ class AgentRuntime {
 
       case ModelProvider.SiliconCloud: {
         runtimeModel = new LobeSiliconCloudAI(params.siliconcloud ?? {});
+        break;
+      }
+
+      case ModelProvider.Upstage: {
+        runtimeModel = new LobeUpstageAI(params.upstage);
+        break;
+      }
+
+      case ModelProvider.Spark: {
+        runtimeModel = new LobeSparkAI(params.spark);
         break;
       }
     }

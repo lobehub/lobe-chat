@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Ajouter un assistant",
+    "addAgentAndConverse": "Ajouter un assistant et discuter",
+    "addAgentSuccess": "Ajout réussi",
+    "conversation": {
+      "l1": "Bonjour, je suis **{{name}}**, vous pouvez me poser n'importe quelle question, je ferai de mon mieux pour y répondre ~",
+      "l2": "Voici un aperçu de mes capacités : ",
+      "l3": "Commençons la conversation !"
+    },
+    "description": "Présentation de l'assistant",
+    "detail": "Détails",
+    "list": "Liste des assistants",
+    "more": "Plus",
+    "plugins": "Intégrer des plugins",
+    "recentSubmits": "Mises à jour récentes",
+    "suggestions": "Suggestions connexes",
+    "systemRole": "Paramètres de l'assistant",
+    "try": "Essayer"
+  },
+  "back": "Retour à la découverte",
+  "category": {
+    "assistant": {
+      "academic": "Académique",
+      "all": "Tout",
+      "career": "Carrière",
+      "copywriting": "Rédaction",
+      "design": "Design",
+      "education": "Éducation",
+      "emotions": "Émotions",
+      "entertainment": "Divertissement",
+      "games": "Jeux",
+      "general": "Général",
+      "life": "Vie",
+      "marketing": "Marketing",
+      "office": "Bureau",
+      "programming": "Programmation",
+      "translation": "Traduction"
+    },
+    "plugin": {
+      "all": "Tout",
+      "gaming-entertainment": "Jeux et divertissement",
+      "life-style": "Style de vie",
+      "media-generate": "Génération de médias",
+      "science-education": "Science et éducation",
+      "social": "Médias sociaux",
+      "stocks-finance": "Actions et finances",
+      "tools": "Outils pratiques",
+      "web-search": "Recherche sur le web"
+    }
+  },
+  "cleanFilter": "Effacer le filtre",
+  "create": "Créer",
+  "createGuide": {
+    "func1": {
+      "desc1": "Accédez à la page de paramètres de l'assistant que vous souhaitez soumettre via le coin supérieur droit de la fenêtre de conversation ;",
+      "desc2": "Cliquez sur le bouton de soumission au marché des assistants dans le coin supérieur droit.",
+      "tag": "Méthode un",
+      "title": "Soumettre via LobeChat"
+    },
+    "func2": {
+      "button": "Aller au dépôt d'assistants Github",
+      "desc": "Si vous souhaitez ajouter un assistant à l'index, créez une entrée dans le répertoire plugins avec agent-template.json ou agent-template-full.json, rédigez une brève description et marquez-la de manière appropriée, puis créez une demande de tirage.",
+      "tag": "Méthode deux",
+      "title": "Soumettre via Github"
+    }
+  },
+  "dislike": "Je n'aime pas",
+  "filter": "Filtrer",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "Tous les auteurs",
+      "followed": "Auteurs suivis",
+      "title": "Plage d'auteurs"
+    },
+    "contentLength": "Longueur minimale du contexte",
+    "maxToken": {
+      "title": "Définir la longueur maximale (Token)",
+      "unlimited": "Illimité"
+    },
+    "other": {
+      "functionCall": "Appel de fonction pris en charge",
+      "title": "Autres",
+      "vision": "Reconnaissance visuelle prise en charge",
+      "withKnowledge": "Avec base de connaissances",
+      "withTool": "Avec plugin"
+    },
+    "pricing": "Prix du modèle",
+    "timePeriod": {
+      "all": "Tout le temps",
+      "day": "Dernières 24 heures",
+      "month": "Derniers 30 jours",
+      "title": "Plage de temps",
+      "week": "Dernières 7 jours",
+      "year": "Dernière année"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Assistants recommandés",
+    "featuredModels": "Modèles recommandés",
+    "featuredProviders": "Fournisseurs de modèles recommandés",
+    "featuredTools": "Plugins recommandés",
+    "more": "Découvrez plus"
+  },
+  "like": "J'aime",
+  "models": {
+    "chat": "Commencer la conversation",
+    "contentLength": "Longueur maximale du contexte",
+    "free": "Gratuit",
+    "guide": "Guide de configuration",
+    "list": "Liste des modèles",
+    "more": "Plus",
+    "parameterList": {
+      "defaultValue": "Valeur par défaut",
+      "docs": "Voir la documentation",
+      "frequency_penalty": {
+        "desc": "Ce paramètre ajuste la fréquence à laquelle le modèle réutilise des mots spécifiques déjà présents dans l'entrée. Des valeurs plus élevées réduisent la probabilité de répétition, tandis que des valeurs négatives produisent l'effet inverse. La pénalité de vocabulaire n'augmente pas avec le nombre d'occurrences. Les valeurs négatives encouragent la réutilisation des mots.",
+        "title": "Pénalité de fréquence"
+      },
+      "max_tokens": {
+        "desc": "Ce paramètre définit la longueur maximale que le modèle peut générer dans une seule réponse. Un réglage plus élevé permet au modèle de produire des réponses plus longues, tandis qu'un réglage plus bas limite la longueur de la réponse, la rendant plus concise. Ajuster ce paramètre de manière appropriée en fonction des différents scénarios d'application peut aider à atteindre la longueur et le niveau de détail souhaités dans la réponse.",
+        "title": "Limite de réponse unique"
+      },
+      "presence_penalty": {
+        "desc": "Ce paramètre vise à contrôler la réutilisation des mots en fonction de leur fréquence d'apparition dans l'entrée. Il essaie d'utiliser moins de mots qui apparaissent fréquemment dans l'entrée, en proportion de leur fréquence d'apparition. La pénalité de vocabulaire augmente avec le nombre d'occurrences. Les valeurs négatives encouragent la réutilisation des mots.",
+        "title": "Fraîcheur des sujets"
+      },
+      "range": "Plage",
+      "temperature": {
+        "desc": "Ce paramètre influence la diversité des réponses du modèle. Des valeurs plus basses entraînent des réponses plus prévisibles et typiques, tandis que des valeurs plus élevées encouragent des réponses plus variées et moins courantes. Lorsque la valeur est fixée à 0, le modèle donne toujours la même réponse pour une entrée donnée.",
+        "title": "Aléatoire"
+      },
+      "title": "Paramètres du modèle",
+      "top_p": {
+        "desc": "Ce paramètre limite le choix du modèle à un certain pourcentage de mots ayant la plus haute probabilité : seuls les mots de pointe dont la probabilité cumulée atteint P sont sélectionnés. Des valeurs plus basses rendent les réponses du modèle plus prévisibles, tandis que les paramètres par défaut permettent au modèle de choisir parmi l'ensemble du vocabulaire.",
+        "title": "Échantillonnage nucléaire"
+      },
+      "type": "Type"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat prend en charge l'utilisation de clés API personnalisées pour ce fournisseur.",
+      "input": "Prix d'entrée",
+      "inputTooltip": "Coût par million de tokens",
+      "latency": "Latence",
+      "latencyTooltip": "Temps de réponse moyen pour que le fournisseur envoie le premier token",
+      "maxOutput": "Longueur de sortie maximale",
+      "maxOutputTooltip": "Nombre maximal de tokens que ce point de terminaison peut générer",
+      "officialTooltip": "Service officiel de LobeHub",
+      "output": "Prix de sortie",
+      "outputTooltip": "Coût par million de tokens",
+      "streamCancellationTooltip": "Ce fournisseur prend en charge la fonction d'annulation de flux.",
+      "throughput": "Débit",
+      "throughputTooltip": "Nombre moyen de tokens transmis par seconde pour les requêtes de flux"
+    },
+    "suggestions": "Modèles connexes",
+    "supportedProviders": "Fournisseurs prenant en charge ce modèle"
+  },
+  "plugins": {
+    "community": "Plugins communautaires",
+    "install": "Installer le plugin",
+    "installed": "Installé",
+    "list": "Liste des plugins",
+    "meta": {
+      "description": "Description",
+      "parameter": "Paramètre",
+      "title": "Paramètres de l'outil",
+      "type": "Type"
+    },
+    "more": "Plus",
+    "official": "Plugins officiels",
+    "recentSubmits": "Mises à jour récentes",
+    "suggestions": "Suggestions connexes"
+  },
+  "providers": {
+    "config": "Configurer le fournisseur",
+    "list": "Liste des fournisseurs de modèles",
+    "modelCount": "{{count}} modèles",
+    "modelSite": "Documentation des modèles",
+    "more": "Plus",
+    "officialSite": "Site officiel",
+    "showAllModels": "Afficher tous les modèles",
+    "suggestions": "Fournisseurs connexes",
+    "supportedModels": "Modèles pris en charge"
+  },
+  "search": {
+    "placeholder": "Rechercher par nom, description ou mot-clé...",
+    "result": "{{count}} résultats de recherche concernant <highlight>{{keyword}}</highlight>",
+    "searching": "Recherche en cours..."
+  },
+  "sort": {
+    "mostLiked": "Le plus aimé",
+    "mostUsed": "Le plus utilisé",
+    "newest": "Du plus récent au plus ancien",
+    "oldest": "Du plus ancien au plus récent",
+    "recommended": "Recommandé"
+  },
+  "tab": {
+    "assistants": "Assistants",
+    "home": "Accueil",
+    "models": "Modèles",
+    "plugins": "Plugins",
+    "providers": "Fournisseurs de modèles"
+  }
+}

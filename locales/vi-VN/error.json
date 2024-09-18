@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Chi tiết lỗi",
   "notFound": {
     "backHome": "Quay về Trang chủ",
-    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm, vui lòng kiểm tra xem liên kết có đúng không",
+    "check": "Vui lòng kiểm tra xem URL của bạn có đúng không",
+    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm",
     "title": "Bước vào vùng đất chưa biết?"
   },
   "pluginSettings": {
@@ -115,7 +116,7 @@
   },
   "upload": {
     "desc": "Chi tiết: {{detail}}",
-    "fileOnlySupportInServerMode": "Chế độ triển khai hiện tại không hỗ trợ tải lên các tệp không phải hình ảnh. Nếu bạn cần tải lên định dạng {{ext}}, vui lòng chuyển sang triển khai cơ sở dữ liệu trên máy chủ hoặc sử dụng dịch vụ LobeChat Cloud.",
+    "fileOnlySupportInServerMode": "Chế độ triển khai hiện tại không hỗ trợ tải lên các tệp không phải hình ảnh. Nếu bạn muốn tải lên định dạng {{ext}}, vui lòng chuyển sang triển khai cơ sở dữ liệu trên máy chủ hoặc sử dụng dịch vụ {{cloud}}.",
     "networkError": "Vui lòng kiểm tra xem mạng của bạn có hoạt động bình thường không và kiểm tra cấu hình chia sẻ tệp giữa các miền có đúng không",
     "title": "Tải lên tệp thất bại, vui lòng kiểm tra kết nối mạng hoặc thử lại sau",
     "unknownError": "Lỗi: {{reason}}",

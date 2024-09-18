@@ -16,7 +16,8 @@
   "fetchErrorDetail": "錯誤詳情",
   "notFound": {
     "backHome": "返回首頁",
-    "desc": "我們找不到您正在尋找的頁面，請檢查連結是否正確",
+    "check": "請檢查你的 URL 是否正確",
+    "desc": "我們找不到您尋找的頁面",
     "title": "進入了未知領域？"
   },
   "pluginSettings": {
@@ -115,7 +116,7 @@
   },
   "upload": {
     "desc": "詳情: {{detail}}",
-    "fileOnlySupportInServerMode": "當前部署模式不支持上傳非圖片文件，如需上傳 {{ext}} 格式，請切換到伺服器端資料庫部署或使用 LobeChat Cloud 服務",
+    "fileOnlySupportInServerMode": "當前部署模式不支持上傳非圖片文件，如需上傳 {{ext}} 格式，請切換到伺服器數據庫部署或使用 {{cloud}} 服務",
     "networkError": "請確認你的網路是否正常，並檢查檔案儲存服務的跨域配置是否正確",
     "title": "檔案上傳失敗，請檢查網路連線或稍後再試",
     "unknownError": "錯誤原因: {{reason}}",

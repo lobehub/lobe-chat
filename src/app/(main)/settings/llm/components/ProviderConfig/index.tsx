@@ -80,11 +80,6 @@ const useStyles = createStyles(({ css, prefixCls, responsive, token }) => ({
       background: ${token.colorFill};
     }
   `,
-  safariIconWidthFix: css`
-    svg {
-      width: unset !important;
-    }
-  `,
 }));
 
 export interface ProviderConfigProps extends Omit<ModelProviderCard, 'id' | 'chatModels'> {
@@ -266,10 +261,9 @@ const ProviderConfig = memo<ProviderConfigProps>(
           ) : undefined}
         </Flexbox>
       ),
-      title: title ?? (
+      title: (
         <Flexbox
           align={'center'}
-          className={styles.safariIconWidthFix}
           horizontal
           style={{
             height: 24,
@@ -277,7 +271,7 @@ const ProviderConfig = memo<ProviderConfigProps>(
             ...(enabled ? {} : { filter: 'grayscale(100%)', maxHeight: 24, opacity: 0.66 }),
           }}
         >
-          <ProviderCombine provider={id} size={24} />
+          {title ?? <ProviderCombine provider={id} size={24} />}
         </Flexbox>
       ),
     };

@@ -21,6 +21,7 @@
       "embeddingStatus": "向量化"
     }
   },
+  "empty": "暫無已上傳文件/文件夾",
   "header": {
     "actions": {
       "newFolder": "新建資料夾",
@@ -37,6 +38,7 @@
     "new": "新建知識庫",
     "title": "知識庫"
   },
+  "networkError": "獲取知識庫失敗，請檢查網路連接後重試",
   "notSupportGuide": {
     "desc": "當前部署實例為客戶端資料庫模式，無法使用檔案管理功能。請切換到<1>伺服器端資料庫部署模式</1>，或直接使用 <3>LobeChat Cloud</3>",
     "features": {
@@ -56,7 +58,8 @@
     "title": "當前部署模式不支持檔案管理"
   },
   "preview": {
-    "unsupportedFile": "此檔案格式不支持在線預覽"
+    "downloadFile": "下載檔案",
+    "unsupportedFileAndContact": "此檔案格式暫不支援線上預覽，如有預覽需求，歡迎<1>反饋給我們</1>"
   },
   "searchFilePlaceholder": "搜索檔案",
   "tab": {

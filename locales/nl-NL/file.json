@@ -21,6 +21,7 @@
       "embeddingStatus": "Vectorisatie"
     }
   },
+  "empty": "Geen bestanden/mappen geüpload",
   "header": {
     "actions": {
       "newFolder": "Nieuwe map",
@@ -37,6 +38,7 @@
     "new": "Nieuwe kennisbank",
     "title": "Kennisbank"
   },
+  "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
   "notSupportGuide": {
     "desc": "De huidige implementatie is in client-database modus, waardoor de bestandsbeheerfunctie niet beschikbaar is. Schakel over naar <1>server-database implementatiemodus</1>, of gebruik direct <3>LobeChat Cloud</3>",
     "features": {
@@ -56,7 +58,8 @@
     "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
   },
   "preview": {
-    "unsupportedFile": "Dit bestandsformaat wordt niet ondersteund voor online preview"
+    "downloadFile": "Bestand downloaden",
+    "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
   },
   "searchFilePlaceholder": "Zoek bestand",
   "tab": {

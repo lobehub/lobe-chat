@@ -16,7 +16,8 @@ export default {
   fetchErrorDetail: '错误详情',
   notFound: {
     backHome: '返回首页',
-    desc: '我们找不到你正在寻找的页面，请检查链接是否正确',
+    check: '请检查你的 URL 是否正确',
+    desc: '我们找不到你寻找的页面',
     title: '进入了未知领域？',
   },
   pluginSettings: {
@@ -141,7 +142,7 @@ export default {
   upload: {
     desc: '详情: {{detail}}',
     fileOnlySupportInServerMode:
-      '当前部署模式不支持上传非图片文件，如需上传 {{ext}} 格式，请切换到服务端数据库部署或使用 LobeChat Cloud 服务',
+      '当前部署模式不支持上传非图片文件，如需上传 {{ext}} 格式，请切换到服务端数据库部署或使用 {{cloud}} 服务',
     networkError: '请确认你的网络是否正常，并检查文件存储服务跨域配置是否正确',
     title: '文件上传失败，请检查网络连接或稍后再试',
     unknownError: '错误原因: {{reason}}',

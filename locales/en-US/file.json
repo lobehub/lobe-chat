@@ -21,6 +21,7 @@
       "embeddingStatus": "embedding"
     }
   },
+  "empty": "No files or folders have been uploaded yet.",
   "header": {
     "actions": {
       "newFolder": "New Folder",
@@ -37,6 +38,7 @@
     "new": "New Knowledge Base",
     "title": "Knowledge Base"
   },
+  "networkError": "Failed to retrieve the knowledge base. Please check your network connection and try again.",
   "notSupportGuide": {
     "desc": "The current deployment instance is in client database mode, and file management features are not available. Please switch to <1>server database deployment mode</1>, or use <3>LobeChat Cloud</3> directly.",
     "features": {
@@ -56,7 +58,8 @@
     "title": "The current deployment mode does not support file management"
   },
   "preview": {
-    "unsupportedFile": "This file format does not support online preview"
+    "downloadFile": "Download File",
+    "unsupportedFileAndContact": "This file format is not currently supported for online preview. If you have a request for previewing, feel free to <1>contact us</1>."
   },
   "searchFilePlaceholder": "Search Files",
   "tab": {

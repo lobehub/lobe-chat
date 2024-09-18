@@ -41,9 +41,9 @@ const provider = {
     },
     // You can get the issuer value from the Logto Application Details page,
     // in the field "Issuer endpoint"
-    clientId: authEnv.LOGTO_CLIENT_ID,
-    clientSecret: authEnv.LOGTO_CLIENT_SECRET,
-    issuer: authEnv.LOGTO_ISSUER,
+    clientId: authEnv.LOGTO_CLIENT_ID ?? process.env.AUTH_LOGTO_ID,
+    clientSecret: authEnv.LOGTO_CLIENT_SECRET ?? process.env.AUTH_LOGTO_SECRET,
+    issuer: authEnv.LOGTO_ISSUER ?? process.env.AUTH_LOGTO_ISSUER,
   }),
 };
 

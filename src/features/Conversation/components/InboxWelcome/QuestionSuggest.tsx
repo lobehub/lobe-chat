@@ -9,6 +9,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { USAGE_DOCUMENTS } from '@/const/url';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
@@ -81,7 +82,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
       </Flexbox>
       <Flexbox gap={8} horizontal wrap={'wrap'}>
         {qa.slice(0, mobile ? 2 : 5).map((item) => {
-          const text = t(`guide.qa.${item}` as any);
+          const text = t(`guide.qa.${item}` as any, { appName: BRANDING_NAME });
           return (
             <Flexbox
               align={'center'}

@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Detalles del error",
   "notFound": {
     "backHome": "Volver a la página de inicio",
-    "desc": "No podemos encontrar la página que estás buscando, por favor verifica si el enlace es correcto",
+    "check": "Por favor, verifica si tu URL es correcta",
+    "desc": "No podemos encontrar la página que estás buscando",
     "title": "¿Has entrado en un área desconocida?"
   },
   "pluginSettings": {
@@ -115,7 +116,7 @@
   },
   "upload": {
     "desc": "Detalles: {{detail}}",
-    "fileOnlySupportInServerMode": "El modo de implementación actual no admite la carga de archivos que no sean imágenes. Si desea cargar un archivo en formato {{ext}}, cambie a la implementación de base de datos en servidor o utilice el servicio LobeChat Cloud.",
+    "fileOnlySupportInServerMode": "El modo de implementación actual no admite la carga de archivos que no sean imágenes. Si necesita cargar un archivo en formato {{ext}}, cambie a la implementación de base de datos en servidor o utilice el servicio {{cloud}}.",
     "networkError": "Por favor, verifica que tu red esté funcionando correctamente y comprueba si la configuración de CORS del servicio de almacenamiento de archivos es correcta.",
     "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde",
     "unknownError": "Razón del error: {{reason}}",

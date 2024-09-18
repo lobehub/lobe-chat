@@ -1,0 +1,80 @@
+{
+  "ai360": {
+    "description": "360 AI, 360 şirketi tarafından sunulan yapay zeka modeli ve hizmet platformudur. 360GPT2 Pro, 360GPT Pro, 360GPT Turbo ve 360GPT Turbo Responsibility 8K gibi çeşitli gelişmiş doğal dil işleme modelleri sunmaktadır. Bu modeller, büyük ölçekli parametreler ve çok modlu yetenekleri birleştirerek metin üretimi, anlamsal anlama, diyalog sistemleri ve kod üretimi gibi alanlarda geniş bir uygulama yelpazesine sahiptir. Esnek fiyatlandırma stratejileri ile 360 AI, çeşitli kullanıcı ihtiyaçlarını karşılamakta ve geliştiricilerin entegrasyonunu destekleyerek akıllı uygulamaların yenilik ve gelişimini teşvik etmektedir."
+  },
+  "anthropic": {
+    "description": "Anthropic, yapay zeka araştırma ve geliştirmeye odaklanan bir şirkettir. Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus ve Claude 3 Haiku gibi bir dizi gelişmiş dil modeli sunmaktadır. Bu modeller, zeka, hız ve maliyet arasında ideal bir denge sağlamaktadır ve kurumsal düzeydeki iş yüklerinden hızlı yanıt gerektiren çeşitli uygulama senaryolarına kadar geniş bir yelpazede kullanılmaktadır. Claude 3.5 Sonnet, en son modeli olarak, birçok değerlendirmede mükemmel performans sergilemekte ve yüksek maliyet etkinliğini korumaktadır."
+  },
+  "azure": {
+    "description": "Azure, GPT-3.5 ve en son GPT-4 serisi gibi çeşitli gelişmiş yapay zeka modelleri sunar. Farklı veri türlerini ve karmaşık görevleri destekleyerek güvenli, güvenilir ve sürdürülebilir yapay zeka çözümleri sağlamaya odaklanmaktadır."
+  },
+  "baichuan": {
+    "description": "Baichuan Intelligent, yapay zeka büyük modellerinin geliştirilmesine odaklanan bir şirkettir. Modelleri, yerel bilgi ansiklopedisi, uzun metin işleme ve üretim gibi Çince görevlerde mükemmel performans sergilemekte ve uluslararası ana akım modelleri aşmaktadır. Baichuan Intelligent ayrıca sektördeki lider çok modlu yeteneklere sahiptir ve birçok otoriter değerlendirmede mükemmel sonuçlar elde etmiştir. Modelleri, Baichuan 4, Baichuan 3 Turbo ve Baichuan 3 Turbo 128k gibi farklı uygulama senaryolarına yönelik optimize edilmiş yüksek maliyet etkinliği çözümleri sunmaktadır."
+  },
+  "bedrock": {
+    "description": "Bedrock, Amazon AWS tarafından sunulan bir hizmettir ve işletmelere gelişmiş yapay zeka dil modelleri ve görsel modeller sağlamaya odaklanmaktadır. Model ailesi, Anthropic'in Claude serisi, Meta'nın Llama 3.1 serisi gibi seçenekleri içermekte olup, metin üretimi, diyalog, görüntü işleme gibi çeşitli görevleri desteklemektedir. Farklı ölçek ve ihtiyaçlara uygun kurumsal uygulamalar için geniş bir yelpaze sunmaktadır."
+  },
+  "deepseek": {
+    "description": "DeepSeek, yapay zeka teknolojisi araştırma ve uygulamalarına odaklanan bir şirkettir. En son modeli DeepSeek-V2.5, genel diyalog ve kod işleme yeteneklerini birleştirerek, insan tercihleriyle uyum, yazma görevleri ve talimat takibi gibi alanlarda önemli iyileştirmeler sağlamaktadır."
+  },
+  "fireworksai": {
+    "description": "Fireworks AI, işlev çağrısı ve çok modlu işleme üzerine odaklanan önde gelen bir gelişmiş dil modeli hizmet sağlayıcısıdır. En son modeli Firefunction V2, Llama-3 tabanlıdır ve işlev çağrısı, diyalog ve talimat takibi için optimize edilmiştir. Görsel dil modeli FireLLaVA-13B, görüntü ve metin karışık girişi desteklemektedir. Diğer dikkat çekici modeller arasında Llama serisi ve Mixtral serisi bulunmaktadır ve etkili çok dilli talimat takibi ve üretim desteği sunmaktadır."
+  },
+  "google": {
+    "description": "Google'ın Gemini serisi, Google DeepMind tarafından geliştirilen en gelişmiş ve genel yapay zeka modelleridir. Çok modlu tasarımı sayesinde metin, kod, görüntü, ses ve video gibi çeşitli veri türlerini sorunsuz bir şekilde anlama ve işleme yeteneğine sahiptir. Veri merkezlerinden mobil cihazlara kadar çeşitli ortamlarda kullanılabilir, yapay zeka modellerinin verimliliğini ve uygulama kapsamını büyük ölçüde artırmaktadır."
+  },
+  "groq": {
+    "description": "Groq'un LPU çıkarım motoru, en son bağımsız büyük dil modeli (LLM) benchmark testlerinde mükemmel performans sergilemekte ve olağanüstü hız ve verimliliği ile yapay zeka çözümlerinin standartlarını yeniden tanımlamaktadır. Groq, bulut tabanlı dağıtımlarda iyi bir performans sergileyen anlık çıkarım hızının temsilcisidir."
+  },
+  "minimax": {
+    "description": "MiniMax, 2021 yılında kurulan genel yapay zeka teknolojisi şirketidir ve kullanıcılarla birlikte akıllı çözümler yaratmayı hedeflemektedir. MiniMax, farklı modlarda genel büyük modeller geliştirmiştir. Bunlar arasında trilyon parametreli MoE metin büyük modeli, ses büyük modeli ve görüntü büyük modeli bulunmaktadır. Ayrıca, Conch AI gibi uygulamalar da sunmaktadır."
+  },
+  "mistral": {
+    "description": "Mistral, karmaşık akıl yürütme, çok dilli görevler, kod üretimi gibi alanlarda geniş bir uygulama yelpazesine sahip gelişmiş genel, profesyonel ve araştırma modelleri sunmaktadır. Fonksiyon çağrısı arayüzü aracılığıyla kullanıcılar, özel işlevleri entegre ederek belirli uygulamalar gerçekleştirebilirler."
+  },
+  "moonshot": {
+    "description": "Moonshot, Beijing Yuezhi Anmian Technology Co., Ltd. tarafından sunulan açık kaynaklı bir platformdur. İçerik oluşturma, akademik araştırma, akıllı öneri, tıbbi teşhis gibi geniş bir uygulama alanına sahip çeşitli doğal dil işleme modelleri sunmaktadır. Uzun metin işleme ve karmaşık üretim görevlerini desteklemektedir."
+  },
+  "novita": {
+    "description": "Novita AI, çeşitli büyük dil modelleri ve yapay zeka görüntü üretimi API hizmetleri sunan bir platformdur. Esnek, güvenilir ve maliyet etkin bir yapıya sahiptir. Llama3, Mistral gibi en son açık kaynak modelleri desteklemekte ve üretken yapay zeka uygulama geliştirme için kapsamlı, kullanıcı dostu ve otomatik ölçeklenebilir API çözümleri sunmaktadır. Bu, yapay zeka girişimlerinin hızlı gelişimi için uygundur."
+  },
+  "ollama": {
+    "description": "Ollama'nın sunduğu modeller, kod üretimi, matematiksel işlemler, çok dilli işleme ve diyalog etkileşimi gibi alanları kapsamaktadır. Kurumsal düzeyde ve yerelleştirilmiş dağıtım için çeşitli ihtiyaçları desteklemektedir."
+  },
+  "openai": {
+    "description": "OpenAI, dünya çapında lider bir yapay zeka araştırma kuruluşudur. Geliştirdiği modeller, GPT serisi gibi, doğal dil işleme alanında öncü adımlar atmaktadır. OpenAI, yenilikçi ve etkili yapay zeka çözümleri ile birçok sektörü dönüştürmeyi hedeflemektedir. Ürünleri, belirgin performans ve maliyet etkinliği ile araştırma, ticaret ve yenilikçi uygulamalarda yaygın olarak kullanılmaktadır."
+  },
+  "openrouter": {
+    "description": "OpenRouter, OpenAI, Anthropic, LLaMA ve daha fazlasını destekleyen çeşitli öncü büyük model arayüzleri sunan bir hizmet platformudur. Kullanıcılar, ihtiyaçlarına göre en uygun modeli ve fiyatı esnek bir şekilde seçerek yapay zeka deneyimlerini geliştirebilirler."
+  },
+  "perplexity": {
+    "description": "Perplexity, çeşitli gelişmiş Llama 3.1 modelleri sunan önde gelen bir diyalog üretim modeli sağlayıcısıdır. Hem çevrimiçi hem de çevrimdışı uygulamaları desteklemekte olup, özellikle karmaşık doğal dil işleme görevleri için uygundur."
+  },
+  "qwen": {
+    "description": "Tongyi Qianwen, Alibaba Cloud tarafından geliştirilen büyük ölçekli bir dil modelidir ve güçlü doğal dil anlama ve üretme yeteneklerine sahiptir. Çeşitli soruları yanıtlayabilir, metin içeriği oluşturabilir, görüşlerini ifade edebilir ve kod yazabilir. Birçok alanda etkili bir şekilde kullanılmaktadır."
+  },
+  "siliconcloud": {
+    "description": "SiliconFlow, insanlığa fayda sağlamak amacıyla AGI'yi hızlandırmaya odaklanmakta ve kullanıcı dostu ve maliyet etkin GenAI yığınları ile büyük ölçekli yapay zeka verimliliğini artırmayı hedeflemektedir."
+  },
+  "spark": {
+    "description": "iFlytek'in Xinghuo büyük modeli, çok alanlı ve çok dilli güçlü yapay zeka yetenekleri sunmaktadır. Gelişmiş doğal dil işleme teknolojisini kullanarak, akıllı donanım, akıllı sağlık, akıllı finans gibi çeşitli dikey senaryolar için yenilikçi uygulamalar geliştirmektedir."
+  },
+  "stepfun": {
+    "description": "StepFun büyük modeli, sektördeki lider çok modlu ve karmaşık akıl yürütme yeteneklerine sahiptir. Uzun metin anlama ve güçlü kendi kendine yönlendirme arama motoru işlevlerini desteklemektedir."
+  },
+  "taichu": {
+    "description": "Çin Bilimler Akademisi Otomasyon Araştırma Enstitüsü ve Wuhan Yapay Zeka Araştırma Enstitüsü, çok modlu büyük modelin yeni neslini sunmaktadır. Çoklu soru-cevap, metin oluşturma, görüntü üretimi, 3D anlama, sinyal analizi gibi kapsamlı soru-cevap görevlerini desteklemekte ve daha güçlü bilişsel, anlama ve yaratma yetenekleri sunarak yeni bir etkileşim deneyimi sağlamaktadır."
+  },
+  "togetherai": {
+    "description": "Together AI, yenilikçi yapay zeka modelleri aracılığıyla lider performans elde etmeye odaklanmaktadır. Hızlı ölçeklenme desteği ve sezgisel dağıtım süreçleri dahil olmak üzere geniş özelleştirme yetenekleri sunarak işletmelerin çeşitli ihtiyaçlarını karşılamaktadır."
+  },
+  "upstage": {
+    "description": "Upstage, çeşitli ticari ihtiyaçlar için yapay zeka modelleri geliştirmeye odaklanmaktadır. Solar LLM ve belge AI gibi modeller, insan yapımı genel zeka (AGI) hedeflemektedir. Chat API aracılığıyla basit diyalog ajanları oluşturmakta ve işlev çağrısı, çeviri, gömme ve belirli alan uygulamalarını desteklemektedir."
+  },
+  "zeroone": {
+    "description": "01.AI, yapay zeka 2.0 çağının yapay zeka teknolojisine odaklanmakta ve 'insan + yapay zeka' yenilik ve uygulamalarını teşvik etmektedir. Son derece güçlü modeller ve gelişmiş yapay zeka teknolojileri kullanarak insan üretkenliğini artırmayı ve teknolojik güçlendirmeyi hedeflemektedir."
+  },
+  "zhipu": {
+    "description": "Zhipu AI, çok modlu ve dil modellerinin açık platformunu sunmakta, metin işleme, görüntü anlama ve programlama yardımı gibi geniş bir yapay zeka uygulama senaryosunu desteklemektedir."
+  }
+}

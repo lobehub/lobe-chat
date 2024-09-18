@@ -21,6 +21,7 @@ export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
   region?: string;
+  sessionToken?: string;
 }
 
 export class LobeBedrockAI implements LobeRuntimeAI {
@@ -28,7 +29,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret }: LobeBedrockAIParams = {}) {
+  constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
 
@@ -38,6 +39,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       credentials: {
         accessKeyId: accessKeyId,
         secretAccessKey: accessKeySecret,
+        sessionToken: sessionToken,
       },
       region: this.region,
     });
@@ -62,9 +64,9 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       body: JSON.stringify({
         anthropic_version: 'bedrock-2023-05-31',
         max_tokens: max_tokens || 4096,
-        messages: buildAnthropicMessages(user_messages),
+        messages: await buildAnthropicMessages(user_messages),
         system: system_message?.content as string,
-        temperature: temperature,
+        temperature: temperature / 2,
         tools: buildAnthropicTools(tools),
         top_p: top_p,
       }),

@@ -18,6 +18,7 @@ import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
+import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIStream } from '../streams';
 
@@ -149,7 +150,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       this.baseURL = this.client.baseURL;
     }
 
-    async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatCompetitionOptions) {
       try {
         const postPayload = chatCompletion?.handlePayload
           ? chatCompletion.handlePayload(payload, this._options)
@@ -158,9 +159,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
+        const messages = await convertOpenAIMessages(postPayload.messages);
+
         const response = await this.client.chat.completions.create(
           {
             ...postPayload,
+            messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
           },
           {
@@ -185,6 +189,8 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         if (debug?.chatCompletion?.()) {
           debugResponse(response);
         }
+
+        if (responseMode === 'json') return Response.json(response);
 
         const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 

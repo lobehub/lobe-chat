@@ -23,6 +23,7 @@
     "title": "Tạo kho kiến thức mới"
   },
   "tab": {
+    "evals": "Đánh giá",
     "files": "Tài liệu",
     "settings": "Cài đặt",
     "testing": "Kiểm tra hồi phục"

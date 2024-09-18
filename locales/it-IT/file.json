@@ -21,6 +21,7 @@
       "embeddingStatus": "Vettorizzazione"
     }
   },
+  "empty": "Nessun file/cartella caricato",
   "header": {
     "actions": {
       "newFolder": "Nuova cartella",
@@ -37,6 +38,7 @@
     "new": "Nuova knowledge base",
     "title": "Knowledge Base"
   },
+  "networkError": "Impossibile ottenere la knowledge base, controlla la connessione di rete e riprova",
   "notSupportGuide": {
     "desc": "L'istanza attuale è in modalità database client e non supporta la gestione dei file. Passa a <1>modalità di distribuzione del database server</1>, oppure utilizza direttamente <3>LobeChat Cloud</3>",
     "features": {
@@ -56,7 +58,8 @@
     "title": "La modalità di distribuzione attuale non supporta la gestione dei file"
   },
   "preview": {
-    "unsupportedFile": "Questo formato di file non supporta l'anteprima online"
+    "downloadFile": "Scarica file",
+    "unsupportedFileAndContact": "Questo formato di file non è attualmente supportato per la visualizzazione online. Se hai bisogno di una visualizzazione, ti preghiamo di <1>contattarci</1>."
   },
   "searchFilePlaceholder": "Cerca file",
   "tab": {

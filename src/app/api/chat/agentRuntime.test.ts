@@ -43,6 +43,7 @@ vi.mock('@/config/llm', () => ({
     AWS_SECRET_ACCESS_KEY: 'test-aws-secret',
     AWS_ACCESS_KEY_ID: 'test-aws-id',
     AWS_REGION: 'test-aws-region',
+    AWS_SESSION_TOKEN: 'test-aws-session-token',
     OLLAMA_PROXY_URL: 'https://test-ollama-url.local',
     PERPLEXITY_API_KEY: 'test-perplexity-key',
     DEEPSEEK_API_KEY: 'test-deepseek-key',

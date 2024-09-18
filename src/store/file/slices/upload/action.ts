@@ -3,6 +3,7 @@ import { sha256 } from 'js-sha256';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { isServerMode } from '@/const/version';
 import { fileService } from '@/services/file';
 import { ServerService } from '@/services/file/server';
@@ -56,6 +57,7 @@ export const createFileUploadSlice: StateCreator<
       onStatusUpdate?.({ id: file.name, type: 'removeFile' });
       message.info({
         content: t('upload.fileOnlySupportInServerMode', {
+          cloud: LOBE_CHAT_CLOUD,
           ext: file.name.split('.').pop(),
           ns: 'error',
         }),
@@ -106,12 +108,14 @@ export const createFileUploadSlice: StateCreator<
       });
     } else {
       // 2. if file don't exist, need upload files
-      metadata = await uploadService.uploadWithProgress(file, (status, upload) => {
-        onStatusUpdate?.({
-          id: file.name,
-          type: 'updateFile',
-          value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
-        });
+      metadata = await uploadService.uploadWithProgress(file, {
+        onProgress: (status, upload) => {
+          onStatusUpdate?.({
+            id: file.name,
+            type: 'updateFile',
+            value: { status: status === 'success' ? 'processing' : status, uploadState: upload },
+          });
+        },
       });
     }
 

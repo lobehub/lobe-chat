@@ -9,7 +9,7 @@
       "title": "{{name}} を体験してみてください"
     }
   },
-  "appInitializing": "アプリケーションを初期化しています。しばらくお待ちください...",
+  "appInitializing": "アプリケーションを初期化しています...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
   "autoGenerateTooltipDisabled": "ツールチップを入力してから自動生成機能を使用してください",
@@ -195,8 +195,8 @@
   },
   "tab": {
     "chat": "チャット",
+    "discover": "発見",
     "files": "ファイル",
-    "market": "探す",
     "me": "私",
     "setting": "設定"
   },
