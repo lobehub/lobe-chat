@@ -1,11 +1,11 @@
 import { MetadataRoute } from 'next';
 
-import { OFFICIAL_URL } from '@/const/url';
 import { sitemapModule } from '@/server/sitemap';
+import { getCanonicalUrl } from '@/server/utils/url';
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    host: OFFICIAL_URL,
+    host: getCanonicalUrl(),
     rules: {
       allow: ['/'],
       disallow: ['/api/*'],
