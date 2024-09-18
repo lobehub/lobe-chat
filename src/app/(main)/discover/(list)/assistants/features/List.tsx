@@ -49,7 +49,7 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
             </InterceptingLink>
           )}
           style={{
-            minHeight: '50vh',
+            minHeight: '75vh',
           }}
         />
       </>
@@ -83,7 +83,7 @@ const List = memo<ListProps>(({ category, mobile, searchKeywords, items = [] }) 
               </InterceptingLink>
             )}
             style={{
-              minHeight: '50vh',
+              minHeight: '75vh',
             }}
           />
         </>

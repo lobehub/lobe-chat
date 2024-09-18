@@ -17,7 +17,7 @@ export const useNav = () => {
 
   const activeKey = useMemo(() => {
     for (const value of Object.values(DiscoverTab)) {
-      if (pathname === 'discover/search') {
+      if (pathname === '/discover/search') {
         return (type as DiscoverTab) || DiscoverTab.Assistants;
       } else if (pathname.includes(urlJoin('/discover', value))) {
         return value;

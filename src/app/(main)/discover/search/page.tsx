@@ -47,6 +47,7 @@ export const generateMetadata = async ({ searchParams }: Props) => {
 const Page = async ({ searchParams }: Props) => {
   const { q, type = 'assistants' } = searchParams;
   if (!q) redirect(urlJoin(`/discover`, type));
+  const keywords = decodeURIComponent(q);
 
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
@@ -64,10 +65,10 @@ const Page = async ({ searchParams }: Props) => {
   return (
     <>
       <StructuredData ld={ld} />
-      {type === 'assistants' && <AssistantsResult locale={locale} mobile={mobile} q={q} />}
-      {type === 'plugins' && <PluginsResult locale={locale} mobile={mobile} q={q} />}
-      {type === 'models' && <ModelsResult locale={locale} mobile={mobile} q={q} />}
-      {type === 'providers' && <ProvidersResult locale={locale} mobile={mobile} q={q} />}
+      {type === 'assistants' && <AssistantsResult locale={locale} mobile={mobile} q={keywords} />}
+      {type === 'plugins' && <PluginsResult locale={locale} mobile={mobile} q={keywords} />}
+      {type === 'models' && <ModelsResult locale={locale} mobile={mobile} q={keywords} />}
+      {type === 'providers' && <ProvidersResult locale={locale} mobile={mobile} q={keywords} />}
     </>
   );
 };
