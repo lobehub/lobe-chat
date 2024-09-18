@@ -51,11 +51,11 @@ const Nav = memo(() => {
           icon: (active: boolean) => (
             <Icon className={active ? styles.active : undefined} icon={Compass} />
           ),
-          key: SidebarTabKey.Market,
+          key: SidebarTabKey.Discover,
           onClick: () => {
-            router.push('/market');
+            router.push('/discover');
           },
-          title: t('tab.market'),
+          title: t('tab.discover'),
         },
         {
           icon: (active: boolean) => (

@@ -18,7 +18,7 @@ export interface PluginDefaultTypeProps {
 }
 
 const PluginDefaultType = memo<PluginDefaultTypeProps>(({ content, name, loading }) => {
-  const manifest = useToolStore(pluginSelectors.getPluginManifestById(name || ''));
+  const manifest = useToolStore(pluginSelectors.getToolManifestById(name || ''));
 
   const { isJSON, data } = useParseContent(content);
 

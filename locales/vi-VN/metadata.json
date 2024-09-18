@@ -3,9 +3,26 @@
     "description": "{{appName}} mang đến cho bạn trải nghiệm tốt nhất với ChatGPT, Claude, Gemini, OLLaMA WebUI",
     "title": "{{appName}}: Công cụ AI cá nhân, giúp bạn có một bộ não thông minh hơn"
   },
-  "market": {
-    "description": "Sáng tạo nội dung, viết quảng cáo, hỏi đáp, tạo hình ảnh, tạo video, tạo giọng nói, tác nhân thông minh, quy trình tự động hóa, tùy chỉnh trợ lý AI thông minh riêng của bạn",
-    "title": "Thị trường trợ lý"
+  "discover": {
+    "assistants": {
+      "description": "Sáng tạo nội dung, viết quảng cáo, hỏi đáp, tạo hình ảnh, tạo video, tạo giọng nói, Agent thông minh, quy trình tự động hóa, tùy chỉnh trợ lý AI / GPTs / OLLaMA của riêng bạn",
+      "title": "Trợ lý AI"
+    },
+    "description": "Sáng tạo nội dung, viết quảng cáo, hỏi đáp, tạo hình ảnh, tạo video, tạo giọng nói, Agent thông minh, quy trình tự động hóa, ứng dụng AI tùy chỉnh, tùy chỉnh bảng điều khiển ứng dụng AI của riêng bạn",
+    "models": {
+      "description": "Khám phá các mô hình AI phổ biến như OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
+      "title": "Mô hình AI"
+    },
+    "plugins": {
+      "description": "Tìm kiếm biểu đồ, học thuật, tạo hình ảnh, tạo video, tạo giọng nói, tự động hóa quy trình làm việc, tích hợp khả năng phong phú của các plugin cho trợ lý của bạn",
+      "title": "Plugin AI"
+    },
+    "providers": {
+      "description": "Khám phá các nhà cung cấp mô hình phổ biến như OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
+      "title": "Nhà cung cấp dịch vụ mô hình AI"
+    },
+    "search": "Tìm kiếm",
+    "title": "Khám Phá"
   },
   "plugins": {
     "description": "Tìm kiếm, tạo biểu đồ, học thuật, tạo hình ảnh, tạo video, tạo giọng nói, quy trình tự động hóa, tùy chỉnh khả năng plugin ToolCall dành riêng cho ChatGPT / Claude",
