@@ -16,6 +16,15 @@
     "display": {
       "code": "程式碼",
       "preview": "預覽"
+    },
+    "svg": {
+      "copyAsImage": "複製為圖片",
+      "copyFail": "複製失敗，錯誤原因:{{error}}",
+      "copySuccess": "圖片複製成功",
+      "download": {
+        "png": "下載為 PNG",
+        "svg": "下載為 SVG"
+      }
     }
   },
   "emptyArtifactList": "當前文物列表為空，請在會話中按需使用插件後再查看",

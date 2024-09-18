@@ -16,6 +16,15 @@
     "display": {
       "code": "コード",
       "preview": "プレビュー"
+    },
+    "svg": {
+      "copyAsImage": "画像としてコピー",
+      "copyFail": "コピーに失敗しました。エラーの理由: {{error}}",
+      "copySuccess": "画像のコピーに成功しました",
+      "download": {
+        "png": "PNGとしてダウンロード",
+        "svg": "SVGとしてダウンロード"
+      }
     }
   },
   "emptyArtifactList": "現在、アーティファクトリストは空です。プラグインを使用してセッション中に追加してください。",

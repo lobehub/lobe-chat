@@ -16,6 +16,15 @@
     "display": {
       "code": "코드",
       "preview": "미리보기"
+    },
+    "svg": {
+      "copyAsImage": "이미지로 복사",
+      "copyFail": "복사 실패, 오류 원인: {{error}}",
+      "copySuccess": "이미지 복사 성공",
+      "download": {
+        "png": "PNG로 다운로드",
+        "svg": "SVG로 다운로드"
+      }
     }
   },
   "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 플러그인을 사용한 후에 다시 확인해주세요.",

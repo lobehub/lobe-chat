@@ -16,6 +16,15 @@
     "display": {
       "code": "Code",
       "preview": "Vorschau"
+    },
+    "svg": {
+      "copyAsImage": "Als Bild kopieren",
+      "copyFail": "Kopieren fehlgeschlagen, Fehlerursache: {{error}}",
+      "copySuccess": "Bild erfolgreich kopiert",
+      "download": {
+        "png": "Als PNG herunterladen",
+        "svg": "Als SVG herunterladen"
+      }
     }
   },
   "emptyArtifactList": "Die Liste der Artefakte ist derzeit leer. Bitte verwenden Sie Plugins in der Sitzung und überprüfen Sie sie erneut.",

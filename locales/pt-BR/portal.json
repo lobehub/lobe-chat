@@ -16,6 +16,15 @@
     "display": {
       "code": "Código",
       "preview": "Prévia"
+    },
+    "svg": {
+      "copyAsImage": "Copiar como imagem",
+      "copyFail": "Falha ao copiar, motivo do erro: {{error}}",
+      "copySuccess": "Imagem copiada com sucesso",
+      "download": {
+        "png": "Baixar como PNG",
+        "svg": "Baixar como SVG"
+      }
     }
   },
   "emptyArtifactList": "A lista de Artefatos atual está vazia. Por favor, use os plugins conforme necessário durante a sessão e depois verifique novamente.",

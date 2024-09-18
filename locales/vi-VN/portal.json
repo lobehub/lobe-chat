@@ -16,6 +16,15 @@
     "display": {
       "code": "Mã",
       "preview": "Xem trước"
+    },
+    "svg": {
+      "copyAsImage": "Sao chép dưới dạng hình ảnh",
+      "copyFail": "Sao chép thất bại, lý do lỗi: {{error}}",
+      "copySuccess": "Sao chép hình ảnh thành công",
+      "download": {
+        "png": "Tải xuống dưới dạng PNG",
+        "svg": "Tải xuống dưới dạng SVG"
+      }
     }
   },
   "emptyArtifactList": "Danh sách Tác Phẩm hiện tại đang trống, vui lòng sử dụng các plugin trong cuộc trò chuyện trước khi xem lại",

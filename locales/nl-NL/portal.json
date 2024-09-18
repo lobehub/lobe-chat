@@ -16,6 +16,15 @@
     "display": {
       "code": "Code",
       "preview": "Voorbeeld"
+    },
+    "svg": {
+      "copyAsImage": "Kopieer als afbeelding",
+      "copyFail": "Kopiëren mislukt, foutmelding: {{error}}",
+      "copySuccess": "Afbeelding succesvol gekopieerd",
+      "download": {
+        "png": "Download als PNG",
+        "svg": "Download als SVG"
+      }
     }
   },
   "emptyArtifactList": "De huidige lijst met Artifacts is leeg. Gebruik plugins in de sessie en bekijk deze later opnieuw.",

@@ -16,6 +16,15 @@
     "display": {
       "code": "Kod",
       "preview": "Podgląd"
+    },
+    "svg": {
+      "copyAsImage": "Skopiuj jako obraz",
+      "copyFail": "Kopiowanie nie powiodło się, powód błędu: {{error}}",
+      "copySuccess": "Obraz skopiowany pomyślnie",
+      "download": {
+        "png": "Pobierz jako PNG",
+        "svg": "Pobierz jako SVG"
+      }
     }
   },
   "emptyArtifactList": "Obecna lista Artefaktów jest pusta. Proszę użyć wtyczek w trakcie sesji, a następnie sprawdzić ponownie.",
