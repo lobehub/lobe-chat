@@ -133,6 +133,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURL };
     }
+    case ModelProvider.Github: {
+      const { GITHUB_TOKEN } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || GITHUB_TOKEN);
+
+      return { apiKey };
+    }
     case ModelProvider.OpenRouter: {
       const { OPENROUTER_API_KEY } = getLLMConfig();
 

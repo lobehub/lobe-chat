@@ -6,6 +6,7 @@ import { getLLMConfig } from '@/config/llm';
 import {
   BedrockProviderCard,
   FireworksAIProviderCard,
+  GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   NovitaProviderCard,
@@ -44,6 +45,9 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_GROQ,
     GROQ_MODEL_LIST,
+
+    ENABLED_GITHUB,
+    GITHUB_MODEL_LIST,
 
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
@@ -130,6 +134,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
 
+      github: {
+        enabled: ENABLED_GITHUB,
+        enabledModels: extractEnabledModels(GITHUB_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: GithubProviderCard.chatModels,
+          modelString: GITHUB_MODEL_LIST,
+        }),
+      },
       google: {
         enabled: ENABLED_GOOGLE,
         enabledModels: extractEnabledModels(GOOGLE_MODEL_LIST),

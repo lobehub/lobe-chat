@@ -5,6 +5,7 @@ import {
   BedrockProviderCard,
   DeepSeekProviderCard,
   FireworksAIProviderCard,
+  GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -56,6 +57,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   fireworksai: {
     enabled: false,
     enabledModels: filterEnabledModels(FireworksAIProviderCard),
+  },
+  github: {
+    enabled: false,
+    enabledModels: filterEnabledModels(GithubProviderCard),
   },
   google: {
     enabled: false,

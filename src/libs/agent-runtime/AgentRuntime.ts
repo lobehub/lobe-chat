@@ -10,6 +10,7 @@ import { LobeBaichuanAI } from './baichuan';
 import { LobeBedrockAI, LobeBedrockAIParams } from './bedrock';
 import { LobeDeepSeekAI } from './deepseek';
 import { LobeFireworksAI } from './fireworksai';
+import { LobeGithubAI } from './github';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
 import { LobeMinimaxAI } from './minimax';
@@ -123,6 +124,7 @@ class AgentRuntime {
       bedrock: Partial<LobeBedrockAIParams>;
       deepseek: Partial<ClientOptions>;
       fireworksai: Partial<ClientOptions>;
+      github: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
@@ -215,6 +217,11 @@ class AgentRuntime {
 
       case ModelProvider.Groq: {
         runtimeModel = new LobeGroq(params.groq);
+        break;
+      }
+
+      case ModelProvider.Github: {
+        runtimeModel = new LobeGithubAI(params.github);
         break;
       }
 

@@ -7,6 +7,7 @@ import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
 import DeepSeekProvider from './deepseek';
 import FireworksAIProvider from './fireworksai';
+import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
 import MinimaxProvider from './minimax';
@@ -35,6 +36,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   DeepSeekProvider.chatModels,
   GoogleProvider.chatModels,
   GroqProvider.chatModels,
+  GithubProvider.chatModels,
   MinimaxProvider.chatModels,
   MistralProvider.chatModels,
   MoonshotProvider.chatModels,
@@ -64,6 +66,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   GoogleProvider,
   DeepSeekProvider,
   OpenRouterProvider,
+  GithubProvider,
   GroqProvider,
   NovitaProvider,
   PerplexityProvider,
@@ -100,6 +103,7 @@ export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FireworksAIProviderCard } from './fireworksai';
+export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
 export { default as MinimaxProviderCard } from './minimax';
