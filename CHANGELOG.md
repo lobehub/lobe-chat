@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.8](https://github.com/lobehub/lobe-chat/compare/v1.19.7...v1.19.8)
+
+<sup>Released on **2024-09-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Delete siliconflow outdated model & disable stepfun functioncall.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Delete siliconflow outdated model & disable stepfun functioncall, closes [#4033](https://github.com/lobehub/lobe-chat/issues/4033) ([08c53eb](https://github.com/lobehub/lobe-chat/commit/08c53eb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.7](https://github.com/lobehub/lobe-chat/compare/v1.19.6...v1.19.7)
 
 <sup>Released on **2024-09-19**</sup>
