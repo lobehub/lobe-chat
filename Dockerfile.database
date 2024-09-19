@@ -109,7 +109,8 @@ FROM base
 # Copy all the files from app, set the correct permission for prerender cache
 COPY --from=app --chown=nextjs:nodejs /app /app
 
-ENV NODE_ENV="production"
+ENV NODE_ENV="production" \
+    NODE_TLS_REJECT_UNAUTHORIZED=""
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
