@@ -30,15 +30,15 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
-      displayName: 'Qwen2.5 1.5B',
-      id: 'Qwen/Qwen2.5-1.5B-Instruct',
+      displayName: 'Qwen2.5 7B',
+      enabled: true,
+      id: 'Qwen/Qwen2.5-7B-Instruct',
       tokens: 32_768,
     },
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
-      displayName: 'Qwen2.5 7B',
-      enabled: true,
-      id: 'Qwen/Qwen2.5-7B-Instruct',
+      displayName: 'Qwen2.5 14B',
+      id: 'Qwen/Qwen2.5-14B-Instruct',
       tokens: 32_768,
     },
     {
