@@ -11,6 +11,12 @@ describe('AssistantStore', () => {
     expect(url).toBe(baseURL);
   });
 
+  it('should return the index URL for a not supported language', () => {
+    const agentMarket = new AssistantStore();
+    const url = agentMarket.getAgentIndexUrl('xxx' as any);
+    expect(url).toBe('https://chat-agents.lobehub.com');
+  });
+
   it('should return the zh-CN URL for zh locale', () => {
     const agentMarket = new AssistantStore();
     const url = agentMarket.getAgentIndexUrl('zh' as any);
