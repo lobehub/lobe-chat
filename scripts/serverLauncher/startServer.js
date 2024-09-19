@@ -45,7 +45,7 @@ function isValidSSL(url) {
     });
 
     socket.on('error', (err) => {
-      if (err.code === 'DEPTH_ZERO_SELF_SIGNED_CERT') {
+      if (err.code === 'DEPTH_ZERO_SELF_SIGNED_CERT' || err.code === 'CERT_HAS_EXPIRED') {
         console.error(`❌ SSL Check: Certificate for ${host}:${port} is not valid. You can set NODE_TLS_REJECT_UNAUTHORIZED="0" to fix it. Error details:`);
       } else {
         console.error(`❌ SSL Check: Unable to connect ${host}:${port}. Please check your network connection or firewall rule. Error details:`);
