@@ -6,8 +6,6 @@ import { pino } from '@/libs/logger';
 
 export class UserService {
   createUser = async (id: string, params: UserJSON) => {
-    pino.info('creating user due to clerk webhook');
-
     // Check if user already exists
     const res = await UserModel.findById(id);
 
