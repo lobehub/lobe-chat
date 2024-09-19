@@ -35,6 +35,7 @@ import {
   EmbeddingsPayload,
   ModelProvider,
   TextToImagePayload,
+  TextToSpeechPayload,
 } from './types';
 import { LobeUpstageAI } from './upstage';
 import { LobeZeroOneAI } from './zeroone';
@@ -96,6 +97,9 @@ class AgentRuntime {
 
   async embeddings(payload: EmbeddingsPayload, options?: EmbeddingsOptions) {
     return this._runtime.embeddings?.(payload, options);
+  }
+  async textToSpeech(payload: TextToSpeechPayload, options?: EmbeddingsOptions) {
+    return this._runtime.textToSpeech?.(payload, options);
   }
 
   /**
