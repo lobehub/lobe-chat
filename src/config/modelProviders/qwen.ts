@@ -45,41 +45,6 @@ const Qwen: ModelProviderCard = {
     },
     {
       description:
-        '通义千问数学模型是专门用于数学解题的语言模型。',
-      displayName: 'Qwen Math Turbo',
-      id: 'qwen-math-turbo-latest',
-      pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 6,
-      },
-      tokens: 4096,
-    },
-    {
-      description:
-        '通义千问数学模型是专门用于数学解题的语言模型。',
-      displayName: 'Qwen Math Plus',
-      id: 'qwen-math-plus-latest',
-      pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 12,
-      },
-      tokens: 4096,
-    },
-    {
-      description: '通义千问代码模型。',
-      displayName: 'Qwen Coder Turbo',
-      id: 'qwen-coder-turbo-latest',
-      pricing: {
-        currency: 'CNY',
-        input: 2,
-        output: 6,
-      },
-      tokens: 131_072,
-    },
-    {
-      description:
         '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
       displayName: 'Qwen Long',
       id: 'qwen-long',
@@ -117,6 +82,41 @@ const Qwen: ModelProviderCard = {
       },
       tokens: 32_000,
       vision: true,
+    },
+    {
+      description:
+        '通义千问数学模型是专门用于数学解题的语言模型。',
+      displayName: 'Qwen Math Turbo',
+      id: 'qwen-math-turbo-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 2,
+        output: 6,
+      },
+      tokens: 4096,
+    },
+    {
+      description:
+        '通义千问数学模型是专门用于数学解题的语言模型。',
+      displayName: 'Qwen Math Plus',
+      id: 'qwen-math-plus-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 4,
+        output: 12,
+      },
+      tokens: 4096,
+    },
+    {
+      description: '通义千问代码模型。',
+      displayName: 'Qwen Coder Turbo',
+      id: 'qwen-coder-turbo-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 2,
+        output: 6,
+      },
+      tokens: 131_072,
     },
     {
       description: '通义千问2.5对外开源的7B规模的模型。',
