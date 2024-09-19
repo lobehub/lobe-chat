@@ -87,7 +87,7 @@ async function runServer() {
 
   if (PROXY_URL) {
     // Run ProxyChain Conf Generator first
-    await runProxyChainsConfGenerator();
+    await runProxyChainsConfGenerator(PROXY_URL);
 
     // Run the server using proxychains
     server = spawn('proxychains', ['-q', 'node', SERVER_SCRIPT_PATH], { stdio: 'inherit' });
