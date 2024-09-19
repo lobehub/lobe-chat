@@ -12,10 +12,12 @@ RUN \
     fi \
     # Add required package & update base package
     && apt update \
-    && apt install proxychains-ng -qy \
+    && apt install busybox proxychains-ng -qy \
     && apt full-upgrade -qy \
     && apt autoremove -qy --purge \
     && apt clean -qy \
+    # Configure BusyBox
+    && busybox --install -s \
     # Add nextjs:nodejs to run the app
     && addgroup --system --gid 1001 nodejs \
     && adduser --system --home "/app" --gid 1001 -uid 1001 nextjs \
