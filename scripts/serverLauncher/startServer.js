@@ -22,10 +22,11 @@ function isValidIP(ip) {
 // Function to check if a URL using a valid TLS certificate
 function isValidTLS(url) {
   let { host, port } = parseUrl(url);
+  port = port || 443;
 
   const options = {
     host: host,
-    port: Number( port ) || 443,
+    port: Number( port ),
     servername: host
   };
 
