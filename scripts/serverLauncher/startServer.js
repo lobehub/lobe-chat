@@ -35,7 +35,7 @@ async function runDBMigrationScript() {
 
     server.on('close', (code) => {
       if (code !== 0) {
-        reject(new Error('❌ DB Migration script failed.'));
+        reject();
       } else {
         resolve();
       }
@@ -58,8 +58,10 @@ async function runProxyChainsConfGenerator(url) {
 
       ip = result.address;
       console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
+      console.log('-------------------------------------');
     } catch (error) {
       console.error(`❌ ProxyChains: Unable to resolve the host "${host}". Please verify your DNS configuration. Error details:`, error);
+      console.log('-------------------------------------');
       process.exit(1);
     }
   }
