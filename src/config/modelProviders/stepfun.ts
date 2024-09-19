@@ -7,6 +7,7 @@ const Stepfun: ModelProviderCard = {
     {
       description: '支持大规模上下文交互，适合复杂对话场景。',
       displayName: 'Step 2 16K',
+      functionCall: true,
       enabled: true,
       id: 'step-2-16k',
       tokens: 16_000,
@@ -14,12 +15,14 @@ const Stepfun: ModelProviderCard = {
     {
       description: '具备超长上下文处理能力，尤其适合长文档分析。',
       displayName: 'Step 1 256K',
+      functionCall: true,
       id: 'step-1-256k',
       tokens: 256_000,
     },
     {
       description: '平衡性能与成本，适合一般场景。',
       displayName: 'Step 1 128K',
+      functionCall: true,
       enabled: true,
       id: 'step-1-128k',
       tokens: 128_000,
@@ -27,6 +30,7 @@ const Stepfun: ModelProviderCard = {
     {
       description: '支持中等长度的对话，适用于多种应用场景。',
       displayName: 'Step 1 32K',
+      functionCall: true,
       enabled: true,
       id: 'step-1-32k',
       tokens: 32_000,
@@ -34,6 +38,7 @@ const Stepfun: ModelProviderCard = {
     {
       description: '小型模型，适合轻量级任务。',
       displayName: 'Step 1 8K',
+      functionCall: true,
       enabled: true,
       id: 'step-1-8k',
       tokens: 8000,
@@ -41,6 +46,7 @@ const Stepfun: ModelProviderCard = {
     {
       description: '高速模型，适合实时对话。',
       displayName: 'Step 1 Flash',
+      functionCall: true,
       enabled: true,
       id: 'step-1-flash',
       tokens: 8000,
@@ -48,6 +54,7 @@ const Stepfun: ModelProviderCard = {
     {
       description: '支持视觉输入，增强多模态交互体验。',
       displayName: 'Step 1V 32K',
+      functionCall: true,
       enabled: true,
       id: 'step-1v-32k',
       tokens: 32_000,
@@ -56,6 +63,7 @@ const Stepfun: ModelProviderCard = {
     {
       description: '小型视觉模型，适合基本的图文任务。',
       displayName: 'Step 1V 8K',
+      functionCall: true,
       enabled: true,
       id: 'step-1v-8k',
       tokens: 8000,
