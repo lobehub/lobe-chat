@@ -14,6 +14,8 @@ RUN \
     && apt update \
     && apt install proxychains-ng -qy \
     && apt full-upgrade -qy \
+    && apt autoremove -qy --purge \
+    && apt clean -qy \
     # Add nextjs:nodejs to run the app
     addgroup -S -g 1001 nodejs \
     && adduser -D -G nodejs -H -S -h "/app" -u 1001 nextjs \
