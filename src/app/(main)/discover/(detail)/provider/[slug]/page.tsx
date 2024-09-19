@@ -102,6 +102,7 @@ const Page = async ({ params, searchParams }: Props) => {
         mobile={mobile}
         sidebar={<InfoSidebar data={data} identifier={identifier} />}
         /* ↓ cloud slot ↓ */
+
         /* ↑ cloud slot ↑ */
       >
         <ModelList identifier={identifier} mobile={mobile} modelData={modelData} />

@@ -108,6 +108,7 @@ const Nav = memo(() => {
       {!isHome && !isProviders && (
         <Flexbox align={'center'} gap={4} horizontal>
           {/* ↓ cloud slot ↓ */}
+
           {/* ↑ cloud slot ↑ */}
         </Flexbox>
       )}

@@ -79,6 +79,7 @@ const ModelItem = memo<SuggestionItemProps>(({ mobile, meta, identifier }) => {
         : '--',
     },
     /* ↓ cloud slot ↓ */
+
     /* ↑ cloud slot ↑ */
   ];
 
