@@ -8,7 +8,7 @@ const Ai360: ModelProviderCard = {
         '360GPT2 Pro 是 360 公司推出的高级自然语言处理模型，具备卓越的文本生成和理解能力，尤其在生成与创作领域表现出色，能够处理复杂的语言转换和角色演绎任务。',
       displayName: '360GPT2 Pro',
       enabled: true,
-      functionCall: true,
+      functionCall: false,
       id: '360gpt2-pro',
       maxOutput: 7000,
       pricing: {
