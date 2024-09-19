@@ -106,7 +106,8 @@ FROM scratch
 # Copy all the files from app, set the correct permission for prerender cache
 COPY --from=app / /
 
-ENV NODE_ENV="production"
+ENV NODE_ENV="production" \
+    NODE_TLS_REJECT_UNAUTHORIZED=""
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
@@ -138,6 +139,8 @@ ENV \
     DEEPSEEK_API_KEY="" \
     # Fireworks AI
     FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
+    # GitHub
+    GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
