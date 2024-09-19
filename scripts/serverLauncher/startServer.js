@@ -35,7 +35,6 @@ async function runDBMigrationScript() {
 
     server.on('close', (code) => {
       if (code !== 0) {
-        console.error(`❌ DB Migration script failed with code ${code}`);
         reject(new Error('❌ DB Migration script failed.'));
       } else {
         resolve();
@@ -55,7 +54,7 @@ async function runProxyChainsConfGenerator(url) {
   // If the host is not an IP, resolve it using DNS
   if (!isValidIP(host)) {
     try {
-      const result = await dns.lookup(host, { family: 4 });
+      const result = await dns.lookup(host);
       if (isValidIP(result.address)) {
         // Get the resolved IP address
         ip = result.address;
