@@ -1,23 +1,31 @@
-## Base image for all the stages
-FROM node:20-alpine AS base
+## Base image for all building stages
+FROM node:lts-slim AS base
 
 ARG USE_CN_MIRROR
+
+ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        sed -i "s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g" "/etc/apk/repositories"; \
+        sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
     fi \
-    # Add required package & update base package
-    && apk update \
-    && apk add --no-cache bind-tools proxychains-ng sudo \
-    && apk upgrade --no-cache \
-    # Add user nextjs to run the app
-    && addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs \
-    && chown -R nextjs:nodejs "/etc/proxychains" \
-    && echo "nextjs ALL=(ALL) NOPASSWD: /bin/chmod * /etc/resolv.conf" >> /etc/sudoers \
-    && rm -rf /tmp/* /var/cache/apk/*
+    # Add required package
+    && apt update \
+    && apt install proxychains-ng -qy \
+    # Prepare required package to distroless
+    && mkdir -p /distroless/bin /distroless/etc /distroless/lib \
+    # Copy proxychains to distroless
+    && cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4 \
+    && cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2 \
+    && cp /usr/bin/proxychains4 /distroless/bin/proxychains \
+    && cp /etc/proxychains4.conf /distroless/etc/proxychains4.conf \
+    # Copy node to distroless
+    && cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6 \
+    && cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1 \
+    && cp /usr/local/bin/node /distroless/bin/node \
+    # Cleanup temp files
+    && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
@@ -73,7 +81,9 @@ COPY . .
 RUN npm run build:docker
 
 ## Application image, copy all the files for production
-FROM scratch AS app
+FROM busybox:latest AS app
+
+COPY --from=base /distroless/ /
 
 COPY --from=builder /app/public /app/public
 
@@ -83,11 +93,18 @@ COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
 COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
+RUN \
+    # Add nextjs:nodejs to run the app
+    addgroup -S -g 1001 nodejs \
+    && adduser -D -G nodejs -H -S -h /app -u 1001 nextjs \
+    # Set permission for nextjs:nodejs
+    && chown -R nextjs:nodejs /app /etc/proxychains4.conf
+
 ## Production image, copy all the files and run next
-FROM base
+FROM scratch
 
 # Copy all the files from app, set the correct permission for prerender cache
-COPY --from=app --chown=nextjs:nodejs /app /app
+COPY --from=app / /
 
 ENV NODE_ENV="production"
 
@@ -193,15 +210,7 @@ CMD \
             'tcp_read_time_out 15000' \
             '[ProxyList]' \
             "$protocol $host $port" \
-        > "/etc/proxychains/proxychains.conf"; \
-    fi; \
-    # Fix DNS resolving issue in Docker Compose, ref https://github.com/lobehub/lobe-chat/pull/3837
-    if [ -f "/etc/resolv.conf" ]; then \
-        sudo chmod 666 "/etc/resolv.conf"; \
-        resolv_conf=$(grep '^nameserver' "/etc/resolv.conf" | awk '{print "nameserver " $2}'); \
-        printf "%s\n" \
-            "$resolv_conf" \
-        > "/etc/resolv.conf"; \
+        > "/etc/proxychains4.conf"; \
     fi; \
     # Run the server
     ${PROXYCHAINS} node "/app/server.js";
