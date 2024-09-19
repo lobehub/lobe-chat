@@ -54,16 +54,10 @@ async function runProxyChainsConfGenerator(url) {
   // If the host is not an IP, resolve it using DNS
   if (!isValidIP(host)) {
     try {
-      const result = await dns.lookup(host);
-      if (isValidIP(result.address)) {
-        // Get the resolved IP address
-        ip = result.address;
+      const result = await dns.lookup(host, { family: 4 });
 
-        console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
-      } else {
-        console.error(`❌ ProxyChains: The host "${host}" resolved to an address "${result.address}", but it is not a valid IPv4 address. Proxy setup aborted.`);
-        process.exit(1);
-      }
+      ip = result.address;
+      console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
     } catch (error) {
       console.error(`❌ ProxyChains: Unable to resolve the host "${host}". Please verify your DNS configuration. Error details:`, error);
       process.exit(1);
