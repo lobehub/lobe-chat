@@ -8,6 +8,7 @@ import { OAUTH_AUTHORIZED } from './const/auth';
 
 export const config = {
   matcher: [
+    '/((?!static|sitemap|.well-known|assets|.*\\..*|_next|favicon.ico|robots.txt|sitemap-index.xml).*)',
     // include any files in the api or trpc folders that might have an extension
     '/(api|trpc)(.*)',
     // include the /
