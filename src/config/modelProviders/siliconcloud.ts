@@ -44,7 +44,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2.5 32B',
-      enabled: true,
       id: 'Qwen/Qwen2.5-32B-Instruct',
       tokens: 32_768,
     },
