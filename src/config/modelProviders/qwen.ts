@@ -87,42 +87,49 @@ const Qwen: ModelProviderCard = {
     {
       description: '通义千问2.5对外开源的7B规模的模型',
       displayName: 'Qwen2.5 7B',
+      functionCall: true,
       id: 'qwen2.5-7b-instruct',
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
     },
     {
       description: '通义千问2.5对外开源的32B规模的模型',
       displayName: 'Qwen2.5 32B',
+      functionCall: true,
       id: 'qwen2.5-32b-instruct',
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-32B-Instruct
     },
     {
       description: '通义千问2.5对外开源的72B规模的模型',
       displayName: 'Qwen2.5 72B',
+      functionCall: true,
       id: 'qwen2.5-72b-instruct',
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-72B-Instruct
     },
     {
       description: '通义千问2对外开源的7B规模的模型',
       displayName: 'Qwen2 7B',
+      functionCall: true,
       id: 'qwen2-7b-instruct',
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2-7B-Instruct
     },
     {
       description: '通义千问2对外开源的57B规模14B激活参数的MOE模型',
       displayName: 'Qwen2 57B A14B MoE',
+      functionCall: true,
       id: 'qwen2-57b-a14b-instruct',
       tokens: 65_536, // https://huggingface.co/Qwen/Qwen2-57B-A14B-Instruct
     },
     {
       description: '通义千问2对外开源的72B规模的模型',
       displayName: 'Qwen2 72B',
+      functionCall: true,
       id: 'qwen2-72b-instruct',
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2-72B-Instruct
     },
     {
       description: 'Qwen2-Math 模型具有强大的数学解题能力',
       displayName: 'Qwen2 Math 72B',
+      functionCall: true,
       id: 'qwen2-math-72b-instruct',
       tokens: 4096, // https://help.aliyun.com/zh/dashscope/developer-reference/use-qwen2-math-by-calling-api
     },
