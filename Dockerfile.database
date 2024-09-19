@@ -1,23 +1,30 @@
 ## Base image for all the stages
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 
 ARG USE_CN_MIRROR
+
+ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        sed -i "s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g" "/etc/apk/repositories"; \
+        sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
     fi \
     # Add required package & update base package
-    && apk update \
-    && apk add --no-cache bind-tools proxychains-ng sudo \
-    && apk upgrade --no-cache \
-    # Add user nextjs to run the app
+    && apt update \
+    && apt install busybox proxychains-ng -qy \
+    && apt full-upgrade -qy \
+    && apt autoremove -qy --purge \
+    && apt clean -qy \
+    # Configure BusyBox
+    && busybox --install -s \
+    # Add nextjs:nodejs to run the app
     && addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs \
-    && chown -R nextjs:nodejs "/etc/proxychains" \
-    && echo "nextjs ALL=(ALL) NOPASSWD: /bin/chmod * /etc/resolv.conf" >> /etc/sudoers \
-    && rm -rf /tmp/* /var/cache/apk/*
+    && adduser --system --home "/app" --gid 1001 -uid 1001 nextjs \
+    # Set permission for nextjs:nodejs
+    && chown -R nextjs:nodejs "/etc/proxychains4.conf" \
+    # Cleanup temp files
+    && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
@@ -102,7 +109,8 @@ FROM base
 # Copy all the files from app, set the correct permission for prerender cache
 COPY --from=app --chown=nextjs:nodejs /app /app
 
-ENV NODE_ENV="production"
+ENV NODE_ENV="production" \
+    NODE_TLS_REJECT_UNAUTHORIZED=""
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
@@ -153,6 +161,8 @@ ENV \
     DEEPSEEK_API_KEY="" \
     # Fireworks AI
     FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
+    # GitHub
+    GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
@@ -225,15 +235,7 @@ CMD \
             'tcp_read_time_out 15000' \
             '[ProxyList]' \
             "$protocol $host $port" \
-        > "/etc/proxychains/proxychains.conf"; \
-    fi; \
-    # Fix DNS resolving issue in Docker Compose, ref https://github.com/lobehub/lobe-chat/pull/3837
-    if [ -f "/etc/resolv.conf" ]; then \
-        sudo chmod 666 "/etc/resolv.conf"; \
-        resolv_conf=$(grep '^nameserver' "/etc/resolv.conf" | awk '{print "nameserver " $2}'); \
-        printf "%s\n" \
-            "$resolv_conf" \
-        > "/etc/resolv.conf"; \
+        > "/etc/proxychains4.conf"; \
     fi; \
     # Run migration
     node "/app/docker.cjs"; \
