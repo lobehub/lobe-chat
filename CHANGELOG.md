@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 1.19.3](https://github.com/lobehub/lobe-chat/compare/v1.19.2...v1.19.3)
+
+<sup>Released on **2024-09-19**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.2](https://github.com/lobehub/lobe-chat/compare/v1.19.1...v1.19.2)
+
+<sup>Released on **2024-09-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Updata qwen model info & add qwen2.5 & reorder provider list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Updata qwen model info & add qwen2.5 & reorder provider list, closes [#4020](https://github.com/lobehub/lobe-chat/issues/4020) ([d5e7578](https://github.com/lobehub/lobe-chat/commit/d5e7578))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.1](https://github.com/lobehub/lobe-chat/compare/v1.19.0...v1.19.1)
 
 <sup>Released on **2024-09-19**</sup>
