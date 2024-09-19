@@ -111,11 +111,16 @@ async function runProxyChainsConfGenerator(url) {
     try {
       const result = await dns.lookup(host, { family: 4 });
 
-      ip = result.address;
-      console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
-      console.log('-------------------------------------');
+      if (isValidIP(result.address)) {
+        ip = result.address;
+        console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
+        console.log('-------------------------------------');
+      } else {
+        console.error(`❌ ProxyChains: The host "${host}" resolved to an address "${result.address}", but it is not a valid IPv4 address. Please check your proxy server.`);
+        process.exit(1);
+      }
     } catch (error) {
-      console.error(`❌ ProxyChains: Unable to resolve the host "${host}". Please verify your DNS configuration. Error details:`);
+      console.error(`❌ ProxyChains: Unable to resolve the host "${host}". Please check your DNS configuration. Error details:`);
       console.error(error);
       process.exit(1);
     }
