@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
   "agentsAndConversations": "الوكلاء والمحادثات",
+  "artifact": {
+    "generating": "جاري الإنشاء",
+    "thinking": "جاري التفكير",
+    "thought": "عملية التفكير",
+    "unknownTitle": "عمل غير مسمى"
+  },
   "backToBottom": "العودة إلى الأسفل",
   "chatList": {
     "longMessageDetail": "عرض التفاصيل"

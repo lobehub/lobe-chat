@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
   "agentsAndConversations": "Assistenti e Conversazioni",
+  "artifact": {
+    "generating": "Generazione in corso",
+    "thinking": "In fase di riflessione",
+    "thought": "Processo di pensiero",
+    "unknownTitle": "Opera non nominata"
+  },
   "backToBottom": "Torna in fondo",
   "chatList": {
     "longMessageDetail": "Visualizza dettagli"

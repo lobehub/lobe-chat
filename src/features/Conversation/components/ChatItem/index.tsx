@@ -1,7 +1,7 @@
 import { ChatItem } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo, useCallback } from 'react';
+import { ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
@@ -22,8 +22,12 @@ import {
   renderMessages,
   useAvatarsClick,
 } from '../../Messages';
+import { markdownElements } from '../MarkdownElements';
 import ActionsBar from './ActionsBar';
 import HistoryDivider from './HistoryDivider';
+import { processWithArtifact } from './utils';
+
+const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
 
 const useStyles = createStyles(({ css, prefixCls }) => ({
   loading: css`
@@ -143,6 +147,22 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     );
   });
 
+  // remove line breaks in artifact tag to make the ast transform easier
+  const message =
+    !editing && item?.role === 'assistant' ? processWithArtifact(item?.content) : item?.content;
+
+  const components = useMemo(
+    () =>
+      Object.fromEntries(
+        markdownElements.map((element) => {
+          const Component = element.Component;
+
+          return [element.tag, (props: any) => <Component {...props} id={id} />];
+        }),
+      ),
+    [id],
+  );
+
   return (
     item && (
       <>
@@ -165,9 +185,11 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
           fontSize={fontSize}
           loading={isProcessing}
           markdownProps={{
+            components,
             customRender: markdownCustomRender,
+            rehypePlugins,
           }}
-          message={item.content}
+          message={message}
           messageExtra={<MessageExtra data={item} />}
           onAvatarClick={onAvatarsClick?.(item.role)}
           onChange={(value) => updateMessageContent(item.id, value)}

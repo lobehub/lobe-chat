@@ -445,9 +445,7 @@ export const chatPlugin: StateCreator<
         // if the apiName is md5, try to find the correct apiName in the plugins
         if (apiName.startsWith(PLUGIN_SCHEMA_API_MD5_PREFIX)) {
           const md5 = apiName.replace(PLUGIN_SCHEMA_API_MD5_PREFIX, '');
-          const manifest = pluginSelectors.getPluginManifestById(identifier)(
-            useToolStore.getState(),
-          );
+          const manifest = pluginSelectors.getToolManifestById(identifier)(useToolStore.getState());
 
           const api = manifest?.api.find((api) => Md5.hashStr(api.name).toString() === md5);
           if (api) {

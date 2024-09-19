@@ -154,7 +154,7 @@ describe('toolSelectors', () => {
     });
   });
 
-  describe('getPluginManifestLoadingStatus', () => {
+  describe('getToolManifestLoadingStatus', () => {
     it('should return "loading" if the plugin manifest is being loaded', () => {
       const result = toolSelectors.getManifestLoadingStatus('plugin-2')(mockState);
       expect(result).toBe('loading');

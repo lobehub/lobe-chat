@@ -3,7 +3,7 @@ import { ActionIcon, Highlighter, Icon, Tag } from '@lobehub/ui';
 import { Tabs, Typography } from 'antd';
 import isEqual from 'fast-deep-equal';
 import {
-  InspectionPanel,
+  BetweenVerticalStart,
   LucideBug,
   LucideBugOff,
   LucideChevronDown,
@@ -52,7 +52,7 @@ const Inspector = memo<InspectorProps>(
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
     const [isMessageToolUIOpen, openToolUI, togglePortal] = useChatStore((s) => [
-      chatPortalSelectors.isArtifactMessageUIOpen(id)(s),
+      chatPortalSelectors.isPluginUIOpen(id)(s),
       s.openToolUI,
       s.togglePortal,
     ]);
@@ -113,7 +113,7 @@ const Inspector = memo<InspectorProps>(
           <Flexbox horizontal>
             {!isMobile && showRightAction && (
               <ActionIcon
-                icon={InspectionPanel}
+                icon={BetweenVerticalStart}
                 onClick={() => {
                   if (!isMessageToolUIOpen) openToolUI(id, identifier);
                   else {

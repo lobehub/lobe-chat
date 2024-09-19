@@ -1,33 +1,67 @@
-import { ActionIcon } from '@lobehub/ui';
-import { Typography } from 'antd';
-import isEqual from 'fast-deep-equal';
-import { ArrowLeft } from 'lucide-react';
+import { ActionIcon, Icon } from '@lobehub/ui';
+import { ConfigProvider, Segmented, Typography } from 'antd';
+import { cx } from 'antd-style';
+import { ArrowLeft, CodeIcon, EyeIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import PluginAvatar from '@/features/PluginAvatar';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
-import { pluginHelpers, useToolStore } from '@/store/tool';
-import { toolSelectors } from '@/store/tool/selectors';
+import { oneLineEllipsis } from '@/styles';
 
 const Header = () => {
-  const [closeToolUI, toolUIIdentifier = ''] = useChatStore((s) => [
-    s.closeToolUI,
-    chatPortalSelectors.toolUIIdentifier(s),
-  ]);
+  const { t } = useTranslation('portal');
 
-  const { t } = useTranslation('plugin');
-  const pluginMeta = useToolStore(toolSelectors.getMetaById(toolUIIdentifier), isEqual);
-  const pluginTitle = pluginHelpers.getPluginTitle(pluginMeta) ?? t('unknownPlugin');
+  const [displayMode, artifactTitle, isArtifactTagClosed, closeArtifact] = useChatStore((s) => {
+    const messageId = chatPortalSelectors.artifactMessageId(s) || '';
+
+    return [
+      s.portalArtifactDisplayMode,
+      chatPortalSelectors.artifactTitle(s),
+      chatPortalSelectors.isArtifactTagClosed(messageId)(s),
+      s.closeArtifact,
+    ];
+  });
 
   return (
-    <Flexbox align={'center'} gap={4} horizontal>
-      <ActionIcon icon={ArrowLeft} onClick={() => closeToolUI()} />
-      <PluginAvatar identifier={toolUIIdentifier} size={28} />
-      <Typography.Text style={{ fontSize: 16 }} type={'secondary'}>
-        {pluginTitle}
-      </Typography.Text>
+    <Flexbox align={'center'} flex={1} gap={12} horizontal justify={'space-between'} width={'100%'}>
+      <Flexbox align={'center'} gap={4} horizontal>
+        <ActionIcon icon={ArrowLeft} onClick={() => closeArtifact()} />
+        <Typography.Text
+          className={cx(oneLineEllipsis)}
+          style={{ fontSize: 16 }}
+          type={'secondary'}
+        >
+          {artifactTitle}
+        </Typography.Text>
+      </Flexbox>
+      <ConfigProvider
+        theme={{
+          token: {
+            borderRadiusSM: 16,
+            borderRadiusXS: 16,
+            fontSize: 12,
+          },
+        }}
+      >
+        {isArtifactTagClosed && (
+          <Segmented
+            onChange={(value: 'code' | 'preview') => {
+              useChatStore.setState({ portalArtifactDisplayMode: value });
+            }}
+            options={[
+              {
+                icon: <Icon icon={EyeIcon} />,
+                label: t('artifacts.display.preview'),
+                value: 'preview',
+              },
+              { icon: <Icon icon={CodeIcon} />, label: t('artifacts.display.code'), value: 'code' },
+            ]}
+            size={'small'}
+            value={displayMode}
+          />
+        )}
+      </ConfigProvider>
     </Flexbox>
   );
 };

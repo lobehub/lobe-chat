@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met een gesprek!",
   "agentsAndConversations": "agenten en gesprekken",
+  "artifact": {
+    "generating": "Genereren",
+    "thinking": "Denken",
+    "thought": "Denken proces",
+    "unknownTitle": "Onbenoemd werk"
+  },
   "backToBottom": "Terug naar onderen",
   "chatList": {
     "longMessageDetail": "Bekijk details"

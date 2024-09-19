@@ -16,7 +16,7 @@ import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
 
 import { chatHelpers } from '../../helpers';
-import type { ChatStore } from '../../store';
+import type { ChatStoreState } from '../../initialState';
 
 const getMeta = (message: ChatMessage) => {
   switch (message.role) {
@@ -36,10 +36,10 @@ const getMeta = (message: ChatMessage) => {
   }
 };
 
-const currentChatKey = (s: ChatStore) => messageMapKey(s.activeId, s.activeTopicId);
+const currentChatKey = (s: ChatStoreState) => messageMapKey(s.activeId, s.activeTopicId);
 
 // 当前激活的消息列表
-const currentChats = (s: ChatStore): ChatMessage[] => {
+const currentChats = (s: ChatStoreState): ChatMessage[] => {
   if (!s.activeId) return [];
 
   const messages = s.messagesMap[currentChatKey(s)] || [];
@@ -47,19 +47,19 @@ const currentChats = (s: ChatStore): ChatMessage[] => {
   return messages.map((i) => ({ ...i, meta: getMeta(i) }));
 };
 
-const currentToolMessages = (s: ChatStore) => {
+const currentToolMessages = (s: ChatStoreState) => {
   const messages = currentChats(s);
 
   return messages.filter((m) => m.role === 'tool');
 };
 
-const currentUserMessages = (s: ChatStore) => {
+const currentUserMessages = (s: ChatStoreState) => {
   const messages = currentChats(s);
 
   return messages.filter((m) => m.role === 'user');
 };
 
-const currentUserFiles = (s: ChatStore) => {
+const currentUserFiles = (s: ChatStoreState) => {
   const userMessages = currentUserMessages(s);
 
   return userMessages
@@ -70,7 +70,7 @@ const currentUserFiles = (s: ChatStore) => {
 
 const initTime = Date.now();
 
-const showInboxWelcome = (s: ChatStore): boolean => {
+const showInboxWelcome = (s: ChatStoreState): boolean => {
   const isInbox = s.activeId === INBOX_SESSION_ID;
   if (!isInbox) return false;
 
@@ -83,7 +83,7 @@ const showInboxWelcome = (s: ChatStore): boolean => {
 // Custom message for new assistant initialization
 const currentChatsWithGuideMessage =
   (meta: MetaData) =>
-  (s: ChatStore): ChatMessage[] => {
+  (s: ChatStoreState): ChatMessage[] => {
     // skip tool message
     const data = currentChats(s).filter((m) => m.role !== 'tool');
 
@@ -120,47 +120,49 @@ const currentChatsWithGuideMessage =
     return [emptyInboxGuideMessage];
   };
 
-const currentChatIDsWithGuideMessage = (s: ChatStore) => {
+const currentChatIDsWithGuideMessage = (s: ChatStoreState) => {
   const meta = sessionMetaSelectors.currentAgentMeta(useSessionStore.getState());
 
   return currentChatsWithGuideMessage(meta)(s).map((s) => s.id);
 };
 
-const currentChatsWithHistoryConfig = (s: ChatStore): ChatMessage[] => {
+const currentChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
   const chats = currentChats(s);
   const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
 
   return chatHelpers.getSlicedMessagesWithConfig(chats, config);
 };
 
-const chatsMessageString = (s: ChatStore): string => {
+const chatsMessageString = (s: ChatStoreState): string => {
   const chats = currentChatsWithHistoryConfig(s);
   return chats.map((m) => m.content).join('');
 };
 
-const getMessageById = (id: string) => (s: ChatStore) =>
+const getMessageById = (id: string) => (s: ChatStoreState) =>
   chatHelpers.getMessageById(currentChats(s), id);
 
-const getMessageByToolCallId = (id: string) => (s: ChatStore) => {
+const getMessageByToolCallId = (id: string) => (s: ChatStoreState) => {
   const messages = currentChats(s);
   return messages.find((m) => m.tool_call_id === id);
 };
-const getTraceIdByMessageId = (id: string) => (s: ChatStore) => getMessageById(id)(s)?.traceId;
+const getTraceIdByMessageId = (id: string) => (s: ChatStoreState) => getMessageById(id)(s)?.traceId;
 
-const latestMessage = (s: ChatStore) => currentChats(s).at(-1);
+const latestMessage = (s: ChatStoreState) => currentChats(s).at(-1);
 
-const currentChatLoadingState = (s: ChatStore) => !s.messagesInit;
+const currentChatLoadingState = (s: ChatStoreState) => !s.messagesInit;
 
-const isCurrentChatLoaded = (s: ChatStore) => !!s.messagesMap[currentChatKey(s)];
+const isCurrentChatLoaded = (s: ChatStoreState) => !!s.messagesMap[currentChatKey(s)];
 
-const isMessageEditing = (id: string) => (s: ChatStore) => s.messageEditingIds.includes(id);
-const isMessageLoading = (id: string) => (s: ChatStore) => s.messageLoadingIds.includes(id);
+const isMessageEditing = (id: string) => (s: ChatStoreState) => s.messageEditingIds.includes(id);
+const isMessageLoading = (id: string) => (s: ChatStoreState) => s.messageLoadingIds.includes(id);
 
-const isMessageGenerating = (id: string) => (s: ChatStore) => s.chatLoadingIds.includes(id);
-const isMessageInRAGFlow = (id: string) => (s: ChatStore) => s.messageRAGLoadingIds.includes(id);
-const isPluginApiInvoking = (id: string) => (s: ChatStore) => s.pluginApiLoadingIds.includes(id);
+const isMessageGenerating = (id: string) => (s: ChatStoreState) => s.chatLoadingIds.includes(id);
+const isMessageInRAGFlow = (id: string) => (s: ChatStoreState) =>
+  s.messageRAGLoadingIds.includes(id);
+const isPluginApiInvoking = (id: string) => (s: ChatStoreState) =>
+  s.pluginApiLoadingIds.includes(id);
 
-const isToolCallStreaming = (id: string, index: number) => (s: ChatStore) => {
+const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) => {
   const isLoading = s.toolCallingStreamIds[id];
 
   if (!isLoading) return false;
@@ -168,15 +170,15 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStore) => {
   return isLoading[index];
 };
 
-const isAIGenerating = (s: ChatStore) => s.chatLoadingIds.length > 0;
-const isInRAGFlow = (s: ChatStore) => s.messageRAGLoadingIds.length > 0;
-const isCreatingMessage = (s: ChatStore) => s.isCreatingMessage;
-const isHasMessageLoading = (s: ChatStore) => s.messageLoadingIds.length > 0;
+const isAIGenerating = (s: ChatStoreState) => s.chatLoadingIds.length > 0;
+const isInRAGFlow = (s: ChatStoreState) => s.messageRAGLoadingIds.length > 0;
+const isCreatingMessage = (s: ChatStoreState) => s.isCreatingMessage;
+const isHasMessageLoading = (s: ChatStoreState) => s.messageLoadingIds.length > 0;
 
 /**
  * this function is used to determine whether the send button should be disabled
  */
-const isSendButtonDisabledByMessage = (s: ChatStore) =>
+const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
   // 1. when there is message loading
   isHasMessageLoading(s) ||
   // 2. when is creating the topic
