@@ -1,4 +1,4 @@
-// TODO: 未来所有路由需要全部迁移到 trpc
+// TODO: 未来路由需要迁移到 trpc or /webapi
 
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { transform } from 'lodash-es';
@@ -38,9 +38,11 @@ export const API_ENDPOINTS = mapWithBasePath({
   // image
   images: '/api/text-to-image/openai',
 
-  // TTS & STT
-  stt: '/api/openai/stt',
-  tts: '/api/openai/tts',
-  edge: '/api/tts/edge-speech',
-  microsoft: '/api/tts/microsoft-speech',
+  // STT
+  stt: '/webapi/stt/openai',
+
+  // TTS
+  tts: '/webapi/tts/openai',
+  edge: '/webapi/tts/edge',
+  microsoft: '/webapi/tts/microsoft',
 });

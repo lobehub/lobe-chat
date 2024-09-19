@@ -105,6 +105,7 @@ const Page = async ({ params, searchParams }: Props) => {
           />
         }
         /* ↓ cloud slot ↓ */
+
         /* ↑ cloud slot ↑ */
       >
         <Temp data={data} identifier={identifier} />

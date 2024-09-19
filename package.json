@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.19.2",
+  "version": "1.19.7",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -29,11 +29,11 @@
     "build": "next build",
     "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
-    "build-sitemap": "next-sitemap --config next-sitemap.config.mjs",
+    "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
     "build:analyze": "ANALYZE=true next build",
     "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "MIGRATION_DB=1 tsx scripts/migrateServerDB/index.ts",
+    "db:migrate": "MIGRATION_DB=1 tsx ./scripts/migrateServerDB/index.ts",
     "db:push": "drizzle-kit push",
     "db:push-test": "NODE_ENV=test drizzle-kit push",
     "db:studio": "drizzle-kit studio",
@@ -65,11 +65,11 @@
     "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",
-    "workflow:docs": "tsx scripts/docsWorkflow/index.ts",
-    "workflow:i18n": "tsx scripts/i18nWorkflow/index.ts",
+    "workflow:docs": "tsx ./scripts/docsWorkflow/index.ts",
+    "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts",
     "workflow:mdx": "tsx ./scripts/mdxWorkflow/index.ts",
     "workflow:mdx-with-lint": "tsx ./scripts/mdxWorkflow/index.ts && eslint \"docs/**/*.mdx\" --quiet --fix",
-    "workflow:readme": "tsx scripts/readmeWorkflow/index.ts"
+    "workflow:readme": "tsx ./scripts/readmeWorkflow/index.ts"
   },
   "lint-staged": {
     "*.md": [
@@ -172,7 +172,6 @@
     "next": "14.2.8",
     "next-auth": "beta",
     "next-mdx-remote": "^4.4.1",
-    "next-sitemap": "^4.2.3",
     "nextjs-toploader": "^3.6.15",
     "numeral": "^2.0.6",
     "nuqs": "^1.17.8",
