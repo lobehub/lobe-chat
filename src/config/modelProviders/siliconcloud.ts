@@ -4,6 +4,58 @@ import { ModelProviderCard } from '@/types/llm';
 const SiliconCloud: ModelProviderCard = {
   chatModels: [
     {
+      description: 'DeepSeek V2.5 集合了先前版本的优秀特征，增强了通用和编码能力。',
+      displayName: 'DeepSeek V2.5',
+      enabled: true,
+      id: 'deepseek-ai/DeepSeek-V2.5',
+      tokens: 32_768,
+    },
+    {
+      description: 'DeepSeek V2 具备67亿参数，支持英中文本处理。',
+      displayName: 'DeepSeek V2 Chat',
+      id: 'deepseek-ai/DeepSeek-V2-Chat',
+      tokens: 32_768,
+    },
+    {
+      description: 'DeepSeek Coder V2 为代码任务设计, 专注于高效的代码生成。',
+      displayName: 'DeepSeek V2 Coder',
+      id: 'deepseek-ai/DeepSeek-Coder-V2-Instruct',
+      tokens: 32_768,
+    },
+    {
+      description: 'DeepSeek 67B 是为高复杂性对话训练的先进模型。',
+      displayName: 'DeepSeek LLM 67B',
+      id: 'deepseek-ai/deepseek-llm-67b-chat',
+      tokens: 32_768,
+    },
+    {
+      description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
+      displayName: 'Qwen2.5 1.5B',
+      id: 'Qwen/Qwen2.5-1.5B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
+      displayName: 'Qwen2.5 7B',
+      enabled: true,
+      id: 'Qwen/Qwen2.5-7B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
+      displayName: 'Qwen2.5 32B',
+      enabled: true,
+      id: 'Qwen/Qwen2.5-32B-Instruct',
+      tokens: 32_768,
+    },
+    {
+      description: 'Qwen2.5 是全新的大型语言模型系列，具有更强的理解和生成能力。',
+      displayName: 'Qwen2.5 72B',
+      enabled: true,
+      id: 'Qwen/Qwen2.5-72B-Instruct',
+      tokens: 32_768,
+    },
+    {
       description: 'Qwen2 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2 1.5B',
       id: 'Qwen/Qwen2-1.5B-Instruct',
@@ -12,7 +64,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2 是全新的大型语言模型系列，具有更强的理解和生成能力。',
       displayName: 'Qwen2 7B',
-      enabled: true,
       id: 'Qwen/Qwen2-7B-Instruct',
       tokens: 32_768,
     },
@@ -25,14 +76,12 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2 是先进的通用语言模型，支持多种指令类型。',
       displayName: 'Qwen2 72B',
-      enabled: true,
       id: 'Qwen/Qwen2-72B-Instruct',
       tokens: 32_768,
     },
     {
       description: 'Qwen2-Math 专注于数学领域的问题求解，为高难度题提供专业解答。',
       displayName: 'Qwen2 Math 72B',
-      enabled: true,
       id: 'Qwen/Qwen2-Math-72B-Instruct',
       tokens: 32_768,
     },
@@ -69,14 +118,12 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Yi-1.5 9B 支持16K Tokens, 提供高效、流畅的语言生成能力。',
       displayName: 'Yi-1.5 9B',
-      enabled: true,
       id: '01-ai/Yi-1.5-9B-Chat-16K',
       tokens: 16_384,
     },
     {
       description: 'Yi-1.5 34B, 以丰富的训练样本在行业应用中提供优越表现。',
       displayName: 'Yi-1.5 34B',
-      enabled: true,
       id: '01-ai/Yi-1.5-34B-Chat-16K',
       tokens: 16_384,
     },
@@ -89,47 +136,19 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
       displayName: 'GLM-4 9B',
-      enabled: true,
       id: 'THUDM/glm-4-9b-chat',
       tokens: 32_768,
     },
     {
       description: 'InternLM2.5 提供多场景下的智能对话解决方案。',
       displayName: 'Internlm 2.5 7B',
-      enabled: true,
       id: 'internlm/internlm2_5-7b-chat',
       tokens: 32_768,
     },
     {
       description: '创新的开源模型InternLM2.5，通过大规模的参数提高了对话智能。',
       displayName: 'Internlm 2.5 20B',
-      enabled: true,
       id: 'internlm/internlm2_5-20b-chat',
-      tokens: 32_768,
-    },
-    {
-      description: 'DeepSeek V2.5 集合了先前版本的优秀特征，增强了通用和编码能力。',
-      displayName: 'DeepSeek V2.5',
-      enabled: true,
-      id: 'deepseek-ai/DeepSeek-V2.5',
-      tokens: 32_768,
-    },
-    {
-      description: 'DeepSeek V2 具备67亿参数，支持英中文本处理。',
-      displayName: 'DeepSeek V2 Chat',
-      id: 'deepseek-ai/DeepSeek-V2-Chat',
-      tokens: 32_768,
-    },
-    {
-      description: 'DeepSeek Coder V2 为代码任务设计, 专注于高效的代码生成。',
-      displayName: 'DeepSeek V2 Coder',
-      id: 'deepseek-ai/DeepSeek-Coder-V2-Instruct',
-      tokens: 32_768,
-    },
-    {
-      description: 'DeepSeek 67B 是为高复杂性对话训练的先进模型。',
-      displayName: 'DeepSeek LLM 67B',
-      id: 'deepseek-ai/deepseek-llm-67b-chat',
       tokens: 32_768,
     },
     {
