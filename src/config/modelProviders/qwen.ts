@@ -7,8 +7,12 @@ const Qwen: ModelProviderCard = {
       description:
         '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
       displayName: 'Qwen Long',
-      enabled: true,
       id: 'qwen-long',
+      pricing: {
+        currency: 'CNY',
+        input: 0.5,
+        output: 2,
+      },
       tokens: 1_000_000, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
@@ -17,6 +21,11 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-turbo-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 0.3,
+        output: 0.6,
+      },
       tokens: 131_072, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
@@ -25,6 +34,11 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-plus-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 0.8,
+        output: 2,
+      },
       tokens: 131_072, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
@@ -34,6 +48,11 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-max-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 60,
+      },
       tokens: 32_768, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
@@ -42,6 +61,11 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL Plus',
       enabled: true,
       id: 'qwen-vl-plus',
+      pricing: {
+        currency: 'CNY',
+        input: 8,
+        output: 8,
+      },
       tokens: 8192,
       vision: true, // https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-vl-plus-api
     },
@@ -51,6 +75,11 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen VL Max',
       enabled: true,
       id: 'qwen-vl-max',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 20,
+      },
       tokens: 32_768,
       vision: true, // https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-vl-plus-api
     },
