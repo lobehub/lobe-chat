@@ -1,5 +1,6 @@
 const dns = require('dns').promises;
 const fs = require('fs');
+const tls = require('tls');
 
 const { spawn } = require('child_process');
 
@@ -16,6 +17,42 @@ const PROXY_URL = process.env.PROXY_URL;
 function isValidIP(ip) {
   const IP_REGEX = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/;
   return IP_REGEX.test(ip);
+}
+
+// Function to check if a URL using a valid SSL certificate
+function isValidSSL(url) {
+  let { host, port } = parseUrl(url);
+  if (!port) {
+    port = 443
+  }
+
+  const options = {
+    host: host,
+    port: Number( port ) || 443,
+    servername: host
+  };
+
+  console.log(`🔄 Connecting to ${host}:${port} to verify SSL certificate...`);
+
+  return new Promise((resolve, reject) => {
+    const socket = tls.connect(options, () => {
+      if (socket.authorized) {
+        console.log(`✅ SSL Check: Certificate for ${host}:${port} is valid.`);
+        resolve();
+      }
+
+      socket.end();
+    });
+
+    socket.on('error', (err) => {
+      if (err.code === 'DEPTH_ZERO_SELF_SIGNED_CERT') {
+        console.error(`❌ SSL Check: Certificate for ${host}:${port} is not valid. You can set NODE_TLS_REJECT_UNAUTHORIZED="0" to fix it. Error details:`);
+      } else {
+        console.error(`❌ SSL Check: Unable to connect ${host}:${port}. Please check your network connection or firewall rule. Error details:`);
+      }
+      reject(err);
+    });
+  });
 }
 
 // Function to parse protocol, host and port from a URL
