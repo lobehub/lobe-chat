@@ -2,6 +2,399 @@
 
 # Changelog
 
+### [Version 1.19.1](https://github.com/lobehub/lobe-chat/compare/v1.19.0...v1.19.1)
+
+<sup>Released on **2024-09-19**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add mistral provider new models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add mistral provider new models, closes [#4014](https://github.com/lobehub/lobe-chat/issues/4014) ([0b70d57](https://github.com/lobehub/lobe-chat/commit/0b70d57))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.19.0](https://github.com/lobehub/lobe-chat/compare/v1.18.2...v1.19.0)
+
+<sup>Released on **2024-09-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Ai21Labs model provider, add Github Models provider, support native Artifacts just like Claude.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Ai21Labs model provider, closes [#3727](https://github.com/lobehub/lobe-chat/issues/3727) ([d2fe0f0](https://github.com/lobehub/lobe-chat/commit/d2fe0f0))
+- **misc**: Add Github Models provider, closes [#3869](https://github.com/lobehub/lobe-chat/issues/3869) ([8eac1bd](https://github.com/lobehub/lobe-chat/commit/8eac1bd))
+- **misc**: Support native Artifacts just like Claude, closes [#3985](https://github.com/lobehub/lobe-chat/issues/3985) ([0c42c46](https://github.com/lobehub/lobe-chat/commit/0c42c46))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.18.2](https://github.com/lobehub/lobe-chat/compare/v1.18.1...v1.18.2)
+
+<sup>Released on **2024-09-18**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix InterceptingRoutes in discover.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix InterceptingRoutes in discover, closes [#4011](https://github.com/lobehub/lobe-chat/issues/4011) ([2b75040](https://github.com/lobehub/lobe-chat/commit/2b75040))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.18.1](https://github.com/lobehub/lobe-chat/compare/v1.18.0...v1.18.1)
+
+<sup>Released on **2024-09-18**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.18.0](https://github.com/lobehub/lobe-chat/compare/v1.17.7...v1.18.0)
+
+<sup>Released on **2024-09-18**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Discover Page.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Discover Page, closes [#3848](https://github.com/lobehub/lobe-chat/issues/3848) ([f83cab6](https://github.com/lobehub/lobe-chat/commit/f83cab6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.7](https://github.com/lobehub/lobe-chat/compare/v1.17.6...v1.17.7)
+
+<sup>Released on **2024-09-16**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix a corner case of `tools_call` with empty object.
+
+#### 💄 Styles
+
+- **misc**: Delete duplicate models in ollama.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix a corner case of `tools_call` with empty object, closes [#3955](https://github.com/lobehub/lobe-chat/issues/3955) ([d3fabdc](https://github.com/lobehub/lobe-chat/commit/d3fabdc))
+
+#### Styles
+
+- **misc**: Delete duplicate models in ollama, closes [#3989](https://github.com/lobehub/lobe-chat/issues/3989) ([ece60ee](https://github.com/lobehub/lobe-chat/commit/ece60ee))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.6](https://github.com/lobehub/lobe-chat/compare/v1.17.5...v1.17.6)
+
+<sup>Released on **2024-09-15**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Rename artifacts to plugins in portal.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Rename artifacts to plugins in portal, closes [#3986](https://github.com/lobehub/lobe-chat/issues/3986) ([073b936](https://github.com/lobehub/lobe-chat/commit/073b936))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.5](https://github.com/lobehub/lobe-chat/compare/v1.17.4...v1.17.5)
+
+<sup>Released on **2024-09-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add MiniCPM-V 8B model entries to Ollama model providers.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add MiniCPM-V 8B model entries to Ollama model providers, closes [#3984](https://github.com/lobehub/lobe-chat/issues/3984) ([f9c26de](https://github.com/lobehub/lobe-chat/commit/f9c26de))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.4](https://github.com/lobehub/lobe-chat/compare/v1.17.3...v1.17.4)
+
+<sup>Released on **2024-09-15**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update fullscreen loading style.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update fullscreen loading style, closes [#3948](https://github.com/lobehub/lobe-chat/issues/3948) ([aec21d2](https://github.com/lobehub/lobe-chat/commit/aec21d2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.3](https://github.com/lobehub/lobe-chat/compare/v1.17.2...v1.17.3)
+
+<sup>Released on **2024-09-14**</sup>
+
+#### 💄 Styles
+
+- **misc**: Delete "-" in deepseek displayname.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Delete "-" in deepseek displayname, closes [#3958](https://github.com/lobehub/lobe-chat/issues/3958) ([c0e89f5](https://github.com/lobehub/lobe-chat/commit/c0e89f5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.2](https://github.com/lobehub/lobe-chat/compare/v1.17.1...v1.17.2)
+
+<sup>Released on **2024-09-13**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix o1 model list.
+
+#### 💄 Styles
+
+- **misc**: Update openrouter model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix o1 model list, closes [#3957](https://github.com/lobehub/lobe-chat/issues/3957) ([e04cdd9](https://github.com/lobehub/lobe-chat/commit/e04cdd9))
+
+#### Styles
+
+- **misc**: Update openrouter model list, closes [#3954](https://github.com/lobehub/lobe-chat/issues/3954) ([1a1572b](https://github.com/lobehub/lobe-chat/commit/1a1572b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.17.1](https://github.com/lobehub/lobe-chat/compare/v1.17.0...v1.17.1)
+
+<sup>Released on **2024-09-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update zhipu model info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update zhipu model info, closes [#3949](https://github.com/lobehub/lobe-chat/issues/3949) ([bbdbfde](https://github.com/lobehub/lobe-chat/commit/bbdbfde))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.17.0](https://github.com/lobehub/lobe-chat/compare/v1.16.14...v1.17.0)
+
+<sup>Released on **2024-09-13**</sup>
+
+#### ✨ Features
+
+- **misc**: Support openai new OpenAI o1-preview/o1-mini models.
+
+#### 💄 Styles
+
+- **misc**: Support Google Model List.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support openai new OpenAI o1-preview/o1-mini models, closes [#3943](https://github.com/lobehub/lobe-chat/issues/3943) ([61bfeb2](https://github.com/lobehub/lobe-chat/commit/61bfeb2))
+
+#### Styles
+
+- **misc**: Support Google Model List, closes [#3938](https://github.com/lobehub/lobe-chat/issues/3938) ([be4efc7](https://github.com/lobehub/lobe-chat/commit/be4efc7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.16.14](https://github.com/lobehub/lobe-chat/compare/v1.16.13...v1.16.14)
+
+<sup>Released on **2024-09-13**</sup>
+
+#### 💄 Styles
+
+- **model**: Remove `OpenAI` deprecated model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **model**: Remove `OpenAI` deprecated model, closes [#3465](https://github.com/lobehub/lobe-chat/issues/3465) ([68a4fb2](https://github.com/lobehub/lobe-chat/commit/68a4fb2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.16.13](https://github.com/lobehub/lobe-chat/compare/v1.16.12...v1.16.13)
+
+<sup>Released on **2024-09-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update siliconcloud model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update siliconcloud model, closes [#3935](https://github.com/lobehub/lobe-chat/issues/3935) ([882e981](https://github.com/lobehub/lobe-chat/commit/882e981))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.16.12](https://github.com/lobehub/lobe-chat/compare/v1.16.11...v1.16.12)
 
 <sup>Released on **2024-09-12**</sup>

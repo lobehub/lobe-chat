@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "Привет, я **{{name}}**, {{systemRole}}. Давай начнем разговор!",
   "agentDefaultMessageWithoutEdit": "Привет, я **{{name}}**, давай начнём разговор!",
   "agentsAndConversations": "Агенты и беседы",
+  "artifact": {
+    "generating": "Генерация",
+    "thinking": "В процессе размышлений",
+    "thought": "Процесс мышления",
+    "unknownTitle": "Безымянное произведение"
+  },
   "backToBottom": "Вернуться вниз",
   "chatList": {
     "longMessageDetail": "Посмотреть детали"

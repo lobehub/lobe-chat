@@ -51,6 +51,13 @@
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Nhập mã truy cập cá nhân Github của bạn, nhấp vào [đây](https://github.com/settings/tokens) để tạo",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",

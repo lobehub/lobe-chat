@@ -1,37 +1,79 @@
-import isEqual from 'fast-deep-equal';
+import { Highlighter } from '@lobehub/ui';
+import { memo, useEffect, useMemo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
-import { safeParseJSON } from '@/utils/safeParseJSON';
 
-import Footer from '../Footer';
-import ToolRender from './ToolRender';
+import Renderer from './Renderer';
 
-const ToolUI = () => {
-  const messageId = useChatStore(chatPortalSelectors.artifactMessageId);
-  const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
+const ArtifactsUI = memo(() => {
+  const [
+    messageId,
+    displayMode,
+    isMessageGenerating,
+    artifactType,
+    artifactContent,
+
+    isArtifactTagClosed,
+  ] = useChatStore((s) => {
+    const messageId = chatPortalSelectors.artifactMessageId(s) || '';
+
+    return [
+      messageId,
+      s.portalArtifactDisplayMode,
+      chatSelectors.isMessageGenerating(messageId)(s),
+      chatPortalSelectors.artifactType(s),
+      chatPortalSelectors.artifactCode(messageId)(s),
+      chatPortalSelectors.isArtifactTagClosed(messageId)(s),
+    ];
+  });
+
+  useEffect(() => {
+    // when message generating , check whether the artifact is closed
+    // if close, move the display mode to preview
+    if (isMessageGenerating && isArtifactTagClosed && displayMode === 'code') {
+      useChatStore.setState({ portalArtifactDisplayMode: 'preview' });
+    }
+  }, [isMessageGenerating, displayMode, isArtifactTagClosed]);
+
+  const language = useMemo(() => {
+    switch (artifactType) {
+      case 'application/lobe.artifacts.react': {
+        return 'tsx';
+      }
+
+      case 'python': {
+        return 'python';
+      }
+
+      default: {
+        return 'html';
+      }
+    }
+  }, [artifactType]);
 
   // make sure the message and id is valid
-  if (!messageId || !message) return;
-
-  const { plugin } = message;
-
-  // make sure the plugin and identifier is valid
-  if (!plugin || !plugin.identifier) return;
-
-  const args = safeParseJSON(plugin.arguments);
-
-  if (!args) return;
+  if (!messageId) return;
 
   return (
-    <>
-      <Flexbox flex={1} height={'100%'} paddingInline={12}>
-        <ToolRender />
-      </Flexbox>
-      <Footer />
-    </>
+    <Flexbox
+      className={'portal-artifact'}
+      flex={1}
+      gap={8}
+      height={'100%'}
+      paddingInline={12}
+      style={{ overflow: 'hidden' }}
+    >
+      {!isArtifactTagClosed || displayMode === 'code' ? (
+        <Highlighter language={language} style={{ maxHeight: '100%', overflow: 'hidden' }}>
+          {artifactContent}
+        </Highlighter>
+      ) : (
+        <Renderer content={artifactContent} type={artifactType} />
+      )}
+    </Flexbox>
   );
-};
+});
 
-export default ToolUI;
+export default ArtifactsUI;

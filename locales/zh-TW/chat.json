@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，讓我們開始對話吧！",
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，讓我們開始對話吧！",
   "agentsAndConversations": "助理與對話",
+  "artifact": {
+    "generating": "生成中",
+    "thinking": "思考中",
+    "thought": "思考過程",
+    "unknownTitle": "未命名作品"
+  },
   "backToBottom": "返回底部",
   "chatList": {
     "longMessageDetail": "查看詳情"

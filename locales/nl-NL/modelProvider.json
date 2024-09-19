@@ -51,6 +51,13 @@
       "title": "Gebruik aangepaste Bedrock-verificatiegegevens"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Vul je Github PAT in, klik [hier](https://github.com/settings/tokens) om er een te maken",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Test of het proxyadres correct is ingevuld",

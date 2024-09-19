@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+export type ModelPriceCurrency = 'CNY' | 'USD';
+
 export interface ChatModelCard {
   /**
    * only used in azure
@@ -39,7 +41,7 @@ export interface ChatModelCard {
      * the currency of the pricing
      * @default USD
      */
-    currency?: 'CNY' | 'USD';
+    currency?: ModelPriceCurrency;
     /**
      * the input pricing, e.g. $1 / 1M tokens
      */
@@ -128,7 +130,7 @@ export interface ModelProviderCard {
   /**
    * provider's website url
    */
-  url?: string;
+  url: string;
 }
 
 // 语言模型的设置参数

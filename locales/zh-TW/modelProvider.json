@@ -51,6 +51,13 @@
       "title": "使用自定義 Bedrock 驗證資訊"
     }
   },
+  "github": {
+    "personalAccessToken": {
+      "desc": "填入你的 Github 個人存取權杖，點擊[這裡](https://github.com/settings/tokens) 創建",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "測試代理地址是否正確填寫",

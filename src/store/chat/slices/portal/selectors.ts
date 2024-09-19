@@ -1,27 +1,71 @@
+import { ARTIFACT_TAG_CLOSED_REGEX, ARTIFACT_TAG_REGEX } from '@/const/plugin';
 import type { ChatStoreState } from '@/store/chat';
 
-const artifactMessageId = (s: ChatStoreState) => s.portalToolMessage?.id;
+import { chatSelectors } from '../message/selectors';
+
 const showPortal = (s: ChatStoreState) => s.showPortal;
 
-const isArtifactMessageUIOpen = (id: string) => (s: ChatStoreState) =>
-  artifactMessageId(s) === id && showPortal(s);
-
-const showArtifactUI = (s: ChatStoreState) => !!s.portalToolMessage;
-const showFilePreview = (s: ChatStoreState) => !!s.portalFile;
 const showMessageDetail = (s: ChatStoreState) => !!s.portalMessageDetail;
-const previewFileId = (s: ChatStoreState) => s.portalFile?.fileId;
 const messageDetailId = (s: ChatStoreState) => s.portalMessageDetail;
+
+const showPluginUI = (s: ChatStoreState) => !!s.portalToolMessage;
+
+const toolMessageId = (s: ChatStoreState) => s.portalToolMessage?.id;
+const isPluginUIOpen = (id: string) => (s: ChatStoreState) =>
+  toolMessageId(s) === id && showPortal(s);
+const toolUIIdentifier = (s: ChatStoreState) => s.portalToolMessage?.identifier;
+
+const showFilePreview = (s: ChatStoreState) => !!s.portalFile;
+const previewFileId = (s: ChatStoreState) => s.portalFile?.fileId;
 const chunkText = (s: ChatStoreState) => s.portalFile?.chunkText;
 
+const showArtifactUI = (s: ChatStoreState) => !!s.portalArtifact;
+const artifactTitle = (s: ChatStoreState) => s.portalArtifact?.title;
+const artifactIdentifier = (s: ChatStoreState) => s.portalArtifact?.identifier || '';
+const artifactMessageId = (s: ChatStoreState) => s.portalArtifact?.id;
+const artifactType = (s: ChatStoreState) => s.portalArtifact?.type;
+
+const artifactMessageContent = (id: string) => (s: ChatStoreState) => {
+  const message = chatSelectors.getMessageById(id)(s);
+  return message?.content || '';
+};
+
+const artifactCode = (id: string) => (s: ChatStoreState) => {
+  const messageContent = artifactMessageContent(id)(s);
+  const result = messageContent.match(ARTIFACT_TAG_REGEX);
+
+  return result?.groups?.content || '';
+};
+
+const isArtifactTagClosed = (id: string) => (s: ChatStoreState) => {
+  const content = artifactMessageContent(id)(s);
+
+  return ARTIFACT_TAG_CLOSED_REGEX.test(content || '');
+};
+
+/* eslint-disable sort-keys-fix/sort-keys-fix, typescript-sort-keys/interface */
 export const chatPortalSelectors = {
-  artifactMessageId,
-  chunkText,
-  isArtifactMessageUIOpen,
-  messageDetailId,
+  isPluginUIOpen,
+
   previewFileId,
-  showArtifactUI,
   showFilePreview,
+  chunkText,
+
+  messageDetailId,
   showMessageDetail,
+
+  showPluginUI,
   showPortal,
-  toolUIIdentifier: (s: ChatStoreState) => s.portalToolMessage?.identifier,
+
+  toolMessageId,
+  toolUIIdentifier,
+
+  showArtifactUI,
+  artifactTitle,
+  artifactIdentifier,
+  artifactMessageId,
+  artifactType,
+  artifactCode,
+  artifactMessageContent,
+  isArtifactTagClosed,
 };
