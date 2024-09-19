@@ -3,9 +3,26 @@
     "description": "{{appName}} oferuje najlepsze doświadczenia z ChatGPT, Claude, Gemini, OLLaMA WebUI",
     "title": "{{appName}}: osobiste narzędzie AI, które daje ci mądrzejszy umysł"
   },
-  "market": {
-    "description": "Tworzenie treści, copywriting, pytania i odpowiedzi, generowanie obrazów, generowanie wideo, generowanie głosu, inteligentni agenci, automatyzacja przepływów pracy, dostosuj swojego osobistego asystenta AI",
-    "title": "Rynek asystentów"
+  "discover": {
+    "assistants": {
+      "description": "Tworzenie treści, copywriting, pytania i odpowiedzi, generowanie obrazów, generowanie wideo, generowanie głosu, inteligentny agent, automatyzacja przepływów pracy, dostosuj swojego osobistego asystenta AI / GPTs / OLLaMA",
+      "title": "Asystenci AI"
+    },
+    "description": "Tworzenie treści, copywriting, pytania i odpowiedzi, generowanie obrazów, generowanie wideo, generowanie głosu, inteligentny agent, automatyzacja przepływów pracy, dostosowane aplikacje AI, stwórz swoje osobiste stanowisko pracy AI",
+    "models": {
+      "description": "Odkryj popularne modele AI OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
+      "title": "Modele AI"
+    },
+    "plugins": {
+      "description": "Odkrywaj generatory wykresów, akademickie, generatory obrazów, generatory wideo, generatory głosu oraz zautomatyzowane przepływy pracy, aby wzbogacić możliwości swojego asystenta dzięki różnorodnym wtyczkom.",
+      "title": "Wtyczki AI"
+    },
+    "providers": {
+      "description": "Odkryj głównych dostawców modeli OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
+      "title": "Dostawcy usług modeli AI"
+    },
+    "search": "Szukaj",
+    "title": "Odkryj"
   },
   "plugins": {
     "description": "Wyszukiwanie, generowanie wykresów, akademickie, generowanie obrazów, generowanie wideo, generowanie głosu, automatyzacja przepływów pracy, dostosuj możliwości wtyczek ToolCall dla ChatGPT / Claude",

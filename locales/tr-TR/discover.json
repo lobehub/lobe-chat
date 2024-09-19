@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Asistan Ekle",
+    "addAgentAndConverse": "Asistan Ekle ve Sohbet Et",
+    "addAgentSuccess": "Başarıyla Eklendi",
+    "conversation": {
+      "l1": "Merhaba, ben **{{name}}**. Bana her türlü soruyu sorabilirsin, elimden gelenin en iyisini yapacağım ~",
+      "l2": "İşte yeteneklerimin tanıtımı: ",
+      "l3": "Haydi sohbete başlayalım!"
+    },
+    "description": "Asistan Tanıtımı",
+    "detail": "Detaylar",
+    "list": "Asistan Listesi",
+    "more": "Daha Fazla",
+    "plugins": "Entegre Eklentiler",
+    "recentSubmits": "Son Güncellemeler",
+    "suggestions": "İlgili Öneriler",
+    "systemRole": "Asistan Ayarları",
+    "try": "Deneyin"
+  },
+  "back": "Geri Dön",
+  "category": {
+    "assistant": {
+      "academic": "Akademik",
+      "all": "Hepsi",
+      "career": "Kariyer",
+      "copywriting": "Metin Yazarlığı",
+      "design": "Tasarım",
+      "education": "Eğitim",
+      "emotions": "Duygular",
+      "entertainment": "Eğlence",
+      "games": "Oyunlar",
+      "general": "Genel",
+      "life": "Hayat",
+      "marketing": "Pazarlama",
+      "office": "Ofis",
+      "programming": "Programlama",
+      "translation": "Çeviri"
+    },
+    "plugin": {
+      "all": "Hepsi",
+      "gaming-entertainment": "Oyun Eğlencesi",
+      "life-style": "Yaşam Tarzı",
+      "media-generate": "Medya Üretimi",
+      "science-education": "Bilim ve Eğitim",
+      "social": "Sosyal Medya",
+      "stocks-finance": "Hisse Senedi ve Finans",
+      "tools": "Pratik Araçlar",
+      "web-search": "Web Arama"
+    }
+  },
+  "cleanFilter": "Filtreyi Temizle",
+  "create": "Oluştur",
+  "createGuide": {
+    "func1": {
+      "desc1": "Sohbet penceresinde sağ üst köşedeki ayarlar üzerinden eklemek istediğin asistanın ayar sayfasına git;",
+      "desc2": "Sağ üst köşedeki asistan pazarına gönder butonuna tıkla.",
+      "tag": "Yöntem 1",
+      "title": "LobeChat ile Gönder"
+    },
+    "func2": {
+      "button": "Github Asistan Deposu'na Git",
+      "desc": "Asistanı dizine eklemek istiyorsanız, plugins dizininde agent-template.json veya agent-template-full.json kullanarak bir giriş oluşturun, kısa bir açıklama yazın ve uygun şekilde etiketleyin, ardından bir çekme isteği oluşturun.",
+      "tag": "Yöntem 2",
+      "title": "Github ile Gönder"
+    }
+  },
+  "dislike": "Beğenmedim",
+  "filter": "Filtrele",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "Tüm Yazarlar",
+      "followed": "Takip Edilen Yazarlar",
+      "title": "Yazar Aralığı"
+    },
+    "contentLength": "Minimum Bağlam Uzunluğu",
+    "maxToken": {
+      "title": "Maksimum Uzunluğu Belirle (Token)",
+      "unlimited": "Sınırsız"
+    },
+    "other": {
+      "functionCall": "Fonksiyon Çağrısını Destekle",
+      "title": "Diğer",
+      "vision": "Görsel Tanımayı Destekle",
+      "withKnowledge": "Bilgi Tabanı ile",
+      "withTool": "Araç ile"
+    },
+    "pricing": "Model Fiyatı",
+    "timePeriod": {
+      "all": "Tüm Zamanlar",
+      "day": "Son 24 Saat",
+      "month": "Son 30 Gün",
+      "title": "Zaman Aralığı",
+      "week": "Son 7 Gün",
+      "year": "Son 1 Yıl"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Öne Çıkan Asistanlar",
+    "featuredModels": "Öne Çıkan Modeller",
+    "featuredProviders": "Öne Çıkan Model Sağlayıcıları",
+    "featuredTools": "Öne Çıkan Araçlar",
+    "more": "Daha Fazla Keşfet"
+  },
+  "like": "Beğendim",
+  "models": {
+    "chat": "Sohbete Başla",
+    "contentLength": "Maksimum Bağlam Uzunluğu",
+    "free": "Ücretsiz",
+    "guide": "Yapılandırma Kılavuzu",
+    "list": "Model Listesi",
+    "more": "Daha Fazla",
+    "parameterList": {
+      "defaultValue": "Varsayılan Değer",
+      "docs": "Belgeleri Görüntüle",
+      "frequency_penalty": {
+        "desc": "Bu ayar, modelin girdi içinde zaten bulunan belirli kelimelerin tekrar kullanım sıklığını ayarlamak için kullanılır. Daha yüksek değerler, bu tekrarların olasılığını azaltırken, negatif değerler ters etki yaratır. Kelime cezası, tekrar sayısına göre artmaz. Negatif değerler, kelimelerin tekrar kullanımını teşvik eder.",
+        "title": "Frekans Cezası"
+      },
+      "max_tokens": {
+        "desc": "Bu ayar, modelin tek bir yanıtında üretebileceği maksimum uzunluğu tanımlar. Daha yüksek bir değer ayarlamak, modelin daha uzun yanıtlar üretmesine izin verirken, daha düşük bir değer yanıtın uzunluğunu kısıtlayarak daha özlü hale getirir. Farklı uygulama senaryolarına göre bu değeri makul bir şekilde ayarlamak, beklenen yanıt uzunluğuna ve ayrıntı seviyesine ulaşmaya yardımcı olabilir.",
+        "title": "Tek Yanıt Sınırı"
+      },
+      "presence_penalty": {
+        "desc": "Bu ayar, kelimelerin girdi içinde görünme sıklığına göre tekrar kullanımını kontrol etmeyi amaçlar. Girdi içinde daha fazla bulunan kelimeleri daha az kullanmaya çalışır, kullanma sıklığı görünme sıklığı ile orantılıdır. Kelime cezası, tekrar sayısına göre artar. Negatif değerler, kelimelerin tekrar kullanımını teşvik eder.",
+        "title": "Konu Tazeliği"
+      },
+      "range": "Aralık",
+      "temperature": {
+        "desc": "Bu ayar, modelin yanıtlarının çeşitliliğini etkiler. Daha düşük değerler daha öngörülebilir ve tipik yanıtlar verirken, daha yüksek değerler daha çeşitli ve nadir yanıtları teşvik eder. Değer 0 olarak ayarlandığında, model belirli bir girdi için her zaman aynı yanıtı verir.",
+        "title": "Rastgelelik"
+      },
+      "title": "Model Parametreleri",
+      "top_p": {
+        "desc": "Bu ayar, modelin seçimlerini olasılığı en yüksek olan belirli bir oranla sınırlamak için kullanılır: yalnızca P'ye ulaşan toplam olasılığa sahip en iyi kelimeleri seçer. Daha düşük değerler, modelin yanıtlarını daha öngörülebilir hale getirirken, varsayılan ayar modelin tüm kelime yelpazesinden seçim yapmasına izin verir.",
+        "title": "Nükleer Örnekleme"
+      },
+      "type": "Tür"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat, bu sağlayıcı için özel API anahtarları kullanmayı destekler.",
+      "input": "Girdi Fiyatı",
+      "inputTooltip": "Her milyon Token için maliyet",
+      "latency": "Gecikme",
+      "latencyTooltip": "Sağlayıcının ilk Token'ı gönderme ortalama süresi",
+      "maxOutput": "Maksimum Çıktı Uzunluğu",
+      "maxOutputTooltip": "Bu uç noktanın üretebileceği maksimum Token sayısı",
+      "officialTooltip": "LobeHub Resmi Hizmeti",
+      "output": "Çıktı Fiyatı",
+      "outputTooltip": "Her milyon Token için maliyet",
+      "streamCancellationTooltip": "Bu sağlayıcı akış iptal işlevini destekler.",
+      "throughput": "Verim",
+      "throughputTooltip": "Akış talepleri başına saniyede iletilen ortalama Token sayısı"
+    },
+    "suggestions": "İlgili Modeller",
+    "supportedProviders": "Bu modeli destekleyen sağlayıcılar"
+  },
+  "plugins": {
+    "community": "Topluluk Eklentisi",
+    "install": "Eklenti Yükle",
+    "installed": "Yüklü",
+    "list": "Eklenti Listesi",
+    "meta": {
+      "description": "Açıklama",
+      "parameter": "Parametre",
+      "title": "Araç Parametreleri",
+      "type": "Tür"
+    },
+    "more": "Daha Fazla",
+    "official": "Resmi Eklenti",
+    "recentSubmits": "Son Güncellemeler",
+    "suggestions": "İlgili Öneriler"
+  },
+  "providers": {
+    "config": "Sağlayıcıyı Yapılandır",
+    "list": "Model Sağlayıcıları Listesi",
+    "modelCount": "{{count}} model",
+    "modelSite": "Model belgeleri",
+    "more": "Daha Fazla",
+    "officialSite": "Resmi site",
+    "showAllModels": "Tüm modelleri göster",
+    "suggestions": "İlgili Sağlayıcılar",
+    "supportedModels": "Desteklenen Modeller"
+  },
+  "search": {
+    "placeholder": "İsim, tanım veya anahtar kelime ara...",
+    "result": "{{count}} adet <highlight>{{keyword}}</highlight> ile ilgili arama sonucu",
+    "searching": "Aranıyor..."
+  },
+  "sort": {
+    "mostLiked": "En Çok Beğenilen",
+    "mostUsed": "En Çok Kullanılan",
+    "newest": "En Yeniler",
+    "oldest": "En Eski",
+    "recommended": "Tavsiye Edilen"
+  },
+  "tab": {
+    "assistants": "Asistanlar",
+    "home": "Ana Sayfa",
+    "models": "Modeller",
+    "plugins": "Eklentiler",
+    "providers": "Model Sağlayıcıları"
+  }
+}

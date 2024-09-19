@@ -59,6 +59,7 @@
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidClerkUser": "Entschuldigung, du bist derzeit nicht angemeldet. Bitte melde dich an oder registriere ein Konto, um fortzufahren.",
+    "InvalidGithubToken": "Der persönliche Zugriffstoken für Github ist ungültig oder leer. Bitte überprüfen Sie den persönlichen Zugriffstoken für Github und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
     "InvalidProviderAPIKey": "{{provider}} API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den {{provider}} API-Schlüssel und versuchen Sie es erneut.",
     "LocationNotSupportError": "Entschuldigung, Ihr Standort unterstützt diesen Modellservice möglicherweise aufgrund von regionalen Einschränkungen oder nicht aktivierten Diensten nicht. Bitte überprüfen Sie, ob der aktuelle Standort die Verwendung dieses Dienstes unterstützt, oder versuchen Sie, andere Standortinformationen zu verwenden.",

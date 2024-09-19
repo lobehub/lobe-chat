@@ -26,6 +26,8 @@ export const normalizeLocale = (locale?: string): string => {
 
   if (locale.startsWith('ar')) return 'ar';
 
+  if (locale.startsWith('cn')) return 'zh-CN';
+
   for (const l of locales) {
     if (l.startsWith(locale)) {
       return l;

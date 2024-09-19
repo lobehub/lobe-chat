@@ -6,6 +6,12 @@
   "agentDefaultMessageWithSystemRole": "Merhaba, Ben **{{name}}**, {{systemRole}}. Hemen sohbet etmeye başlayalım!",
   "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Konuşmaya başlayalım!",
   "agentsAndConversations": "Ajanlar ve Konuşmalar",
+  "artifact": {
+    "generating": "Üretiliyor",
+    "thinking": "Düşünülüyor",
+    "thought": "Düşünce Süreci",
+    "unknownTitle": "İsimsiz Eser"
+  },
   "backToBottom": "En alta git",
   "chatList": {
     "longMessageDetail": "Detayları görüntüle"

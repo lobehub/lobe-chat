@@ -24,6 +24,7 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
   const direction = isRtlLang(lang?.value || DEFAULT_LANG) ? 'rtl' : 'ltr';
+  const mobile = isMobileDevice();
 
   return (
     <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
@@ -31,7 +32,7 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
         <GlobalProvider>
           <AuthProvider>
             {children}
-            {modal}
+            {!mobile && modal}
           </AuthProvider>
           <PWAInstall />
         </GlobalProvider>

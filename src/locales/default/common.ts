@@ -188,8 +188,8 @@ export default {
   },
   tab: {
     chat: '会话',
+    discover: '发现',
     files: '文件',
-    market: '发现',
     me: '我',
     setting: '设置',
   },

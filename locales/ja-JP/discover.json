@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "アシスタントを追加",
+    "addAgentAndConverse": "アシスタントを追加して会話する",
+    "addAgentSuccess": "追加成功",
+    "conversation": {
+      "l1": "こんにちは、私は **{{name}}** です。何でも質問してください、できる限りお答えします ~",
+      "l2": "以下は私の能力の紹介です: ",
+      "l3": "さあ、会話を始めましょう！"
+    },
+    "description": "アシスタントの紹介",
+    "detail": "詳細",
+    "list": "アシスタントリスト",
+    "more": "もっと見る",
+    "plugins": "プラグインを統合",
+    "recentSubmits": "最近の更新",
+    "suggestions": "関連情報",
+    "systemRole": "アシスタント設定",
+    "try": "試してみる"
+  },
+  "back": "戻る",
+  "category": {
+    "assistant": {
+      "academic": "学術",
+      "all": "すべて",
+      "career": "キャリア",
+      "copywriting": "コピーライティング",
+      "design": "デザイン",
+      "education": "教育",
+      "emotions": "感情",
+      "entertainment": "エンターテイメント",
+      "games": "ゲーム",
+      "general": "一般",
+      "life": "生活",
+      "marketing": "マーケティング",
+      "office": "オフィス",
+      "programming": "プログラミング",
+      "translation": "翻訳"
+    },
+    "plugin": {
+      "all": "すべて",
+      "gaming-entertainment": "ゲーム・エンターテイメント",
+      "life-style": "ライフスタイル",
+      "media-generate": "メディア生成",
+      "science-education": "科学・教育",
+      "social": "ソーシャルメディア",
+      "stocks-finance": "株式・金融",
+      "tools": "実用ツール",
+      "web-search": "ウェブ検索"
+    }
+  },
+  "cleanFilter": "フィルターをクリア",
+  "create": "作成",
+  "createGuide": {
+    "func1": {
+      "desc1": "会話ウィンドウの右上隅の設定から、アシスタントを提出したい設定ページに入ります;",
+      "desc2": "右上隅のアシスタントマーケットに提出ボタンをクリックします。",
+      "tag": "方法1",
+      "title": "LobeChatを通じて提出"
+    },
+    "func2": {
+      "button": "Githubアシスタントリポジトリに移動",
+      "desc": "アシスタントをインデックスに追加したい場合は、pluginsディレクトリにagent-template.jsonまたはagent-template-full.jsonを使用してエントリを作成し、簡単な説明を書いて適切にタグ付けし、プルリクエストを作成してください。",
+      "tag": "方法2",
+      "title": "Githubを通じて提出"
+    }
+  },
+  "dislike": "嫌い",
+  "filter": "フィルター",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "すべての著者",
+      "followed": "フォローしている著者",
+      "title": "著者範囲"
+    },
+    "contentLength": "最小コンテキスト長",
+    "maxToken": {
+      "title": "最大長さを設定 (トークン)",
+      "unlimited": "無制限"
+    },
+    "other": {
+      "functionCall": "関数呼び出しをサポート",
+      "title": "その他",
+      "vision": "視覚認識をサポート",
+      "withKnowledge": "知識ベース付き",
+      "withTool": "プラグイン付き"
+    },
+    "pricing": "モデル価格",
+    "timePeriod": {
+      "all": "すべての時間",
+      "day": "過去24時間",
+      "month": "過去30日",
+      "title": "時間範囲",
+      "week": "過去7日",
+      "year": "過去1年"
+    }
+  },
+  "home": {
+    "featuredAssistants": "おすすめアシスタント",
+    "featuredModels": "おすすめモデル",
+    "featuredProviders": "おすすめモデルサービスプロバイダー",
+    "featuredTools": "おすすめプラグイン",
+    "more": "もっと発見する"
+  },
+  "like": "好き",
+  "models": {
+    "chat": "会話を始める",
+    "contentLength": "最大コンテキスト長",
+    "free": "無料",
+    "guide": "設定ガイド",
+    "list": "モデルリスト",
+    "more": "もっと見る",
+    "parameterList": {
+      "defaultValue": "デフォルト値",
+      "docs": "ドキュメントを見る",
+      "frequency_penalty": {
+        "desc": "この設定は、モデルが入力中に既に出現した特定の語彙の使用頻度を調整します。高い値はそのような繰り返しの可能性を低下させ、負の値は逆の効果を生み出します。語彙の罰則は出現回数に応じて増加しません。負の値は語彙の繰り返し使用を奨励します。",
+        "title": "頻度ペナルティ"
+      },
+      "max_tokens": {
+        "desc": "この設定は、モデルが一度の応答で生成できる最大の長さを定義します。値を高く設定すると、モデルはより長い応答を生成でき、値を低く設定すると、応答の長さが制限され、より簡潔になります。異なるアプリケーションシーンに応じて、この値を適切に調整することで、期待される応答の長さと詳細度を達成するのに役立ちます。",
+        "title": "一度の応答制限"
+      },
+      "presence_penalty": {
+        "desc": "この設定は、語彙が入力中に出現する頻度に基づいて語彙の繰り返し使用を制御することを目的としています。入力中に多く出現する語彙の使用を減らそうとし、その使用頻度は出現頻度に比例します。語彙の罰則は出現回数に応じて増加します。負の値は語彙の繰り返し使用を奨励します。",
+        "title": "トピックの新鮮さ"
+      },
+      "range": "範囲",
+      "temperature": {
+        "desc": "この設定は、モデルの応答の多様性に影響を与えます。低い値はより予測可能で典型的な応答をもたらし、高い値はより多様で珍しい応答を奨励します。値が0に設定されると、モデルは与えられた入力に対して常に同じ応答を返します。",
+        "title": "ランダム性"
+      },
+      "title": "モデルパラメータ",
+      "top_p": {
+        "desc": "この設定は、モデルの選択を可能性の高い一定の割合の語彙に制限します：累積確率がPに達するトップ語彙のみを選択します。低い値はモデルの応答をより予測可能にし、デフォルト設定はモデルが全範囲の語彙から選択できることを許可します。",
+        "title": "核サンプリング"
+      },
+      "type": "タイプ"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChatは、このプロバイダーに対してカスタムAPIキーを使用することをサポートしています。",
+      "input": "入力価格",
+      "inputTooltip": "百万トークンあたりのコスト",
+      "latency": "レイテンシ",
+      "latencyTooltip": "プロバイダーが最初のトークンを送信する平均応答時間",
+      "maxOutput": "最大出力長",
+      "maxOutputTooltip": "このエンドポイントが生成できる最大トークン数",
+      "officialTooltip": "LobeHub公式サービス",
+      "output": "出力価格",
+      "outputTooltip": "百万トークンあたりのコスト",
+      "streamCancellationTooltip": "このプロバイダーはストリームキャンセル機能をサポートしています。",
+      "throughput": "スループット",
+      "throughputTooltip": "ストリームリクエストが毎秒転送する平均トークン数"
+    },
+    "suggestions": "関連モデル",
+    "supportedProviders": "このモデルをサポートするプロバイダー"
+  },
+  "plugins": {
+    "community": "コミュニティプラグイン",
+    "install": "プラグインをインストール",
+    "installed": "インストール済み",
+    "list": "プラグインリスト",
+    "meta": {
+      "description": "説明",
+      "parameter": "パラメータ",
+      "title": "ツールパラメータ",
+      "type": "タイプ"
+    },
+    "more": "もっと見る",
+    "official": "公式プラグイン",
+    "recentSubmits": "最近の更新",
+    "suggestions": "関連する提案"
+  },
+  "providers": {
+    "config": "プロバイダーの設定",
+    "list": "モデルサービスプロバイダーリスト",
+    "modelCount": "{{count}} 個のモデル",
+    "modelSite": "モデルドキュメント",
+    "more": "もっと見る",
+    "officialSite": "公式サイト",
+    "showAllModels": "すべてのモデルを表示",
+    "suggestions": "関連プロバイダー",
+    "supportedModels": "サポートされているモデル"
+  },
+  "search": {
+    "placeholder": "名前、紹介、またはキーワードを検索...",
+    "result": "<highlight>{{keyword}}</highlight>に関する{{count}}件の検索結果",
+    "searching": "検索中..."
+  },
+  "sort": {
+    "mostLiked": "最も好まれた",
+    "mostUsed": "最も使用された",
+    "newest": "新しい順",
+    "oldest": "古い順",
+    "recommended": "おすすめ"
+  },
+  "tab": {
+    "assistants": "アシスタント",
+    "home": "ホーム",
+    "models": "モデル",
+    "plugins": "プラグイン",
+    "providers": "モデルプロバイダー"
+  }
+}
