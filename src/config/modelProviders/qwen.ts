@@ -4,18 +4,6 @@ import { ModelProviderCard } from '@/types/llm';
 const Qwen: ModelProviderCard = {
   chatModels: [
     {
-      description:
-        '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
-      displayName: 'Qwen Long',
-      id: 'qwen-long',
-      pricing: {
-        currency: 'CNY',
-        input: 0.5,
-        output: 2,
-      },
-      tokens: 1_000_000, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
-    },
-    {
       description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入',
       displayName: 'Qwen Turbo',
       enabled: true,
@@ -57,6 +45,42 @@ const Qwen: ModelProviderCard = {
     },
     {
       description:
+        '通义千问系列数学模型是专门用于数学解题的语言模型，推理速度快，成本低。',
+      displayName: 'Qwen Math Turbo',
+      enabled: true,
+      id: 'qwen-math-turbo-latest',
+      tokens: 4096, 
+    },
+    {
+      description:
+        '通义千问数学模型具有强大的数学解题能力,擅长处理中英文数学题，包括方程、计算、证明等方向。',
+      displayName: 'Qwen Math Plus',
+      enabled: true,
+      id: 'qwen-math-plus-latest',
+      tokens: 4096, 
+    },
+    {
+      description:
+        '通义千问系列代码及编程模型是专门用于编程和代码生成的语言模型，推理速度快，成本低。',
+      displayName: 'Qwen Coder Turbo',
+      enabled: true,
+      id: 'qwen-coder-turbo-latest',
+      tokens: 131_072, 
+    },
+    {
+      description:
+        '通义千问超大规模语言模型，支持长文本上下文，以及基于长文档、多文档等多个场景的对话功能。',
+      displayName: 'Qwen Long',
+      id: 'qwen-long',
+      pricing: {
+        currency: 'CNY',
+        input: 0.5,
+        output: 2,
+      },
+      tokens: 1_000_000, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
+    },
+    {
+      description:
         '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
       displayName: 'Qwen VL Plus',
       enabled: true,
@@ -92,6 +116,13 @@ const Qwen: ModelProviderCard = {
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
     },
     {
+      description: '通义千问2.5对外开源的14B规模的模型',
+      displayName: 'Qwen2.5 14B',
+      functionCall: true,
+      id: 'qwen2.5-14b-instruct',
+      tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-14B-Instruct
+    },
+    {
       description: '通义千问2.5对外开源的32B规模的模型',
       displayName: 'Qwen2.5 32B',
       functionCall: true,
@@ -106,32 +137,16 @@ const Qwen: ModelProviderCard = {
       tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-72B-Instruct
     },
     {
-      description: '通义千问2对外开源的7B规模的模型',
-      displayName: 'Qwen2 7B',
-      functionCall: true,
-      id: 'qwen2-7b-instruct',
-      tokens: 131_072, // https://huggingface.co/Qwen/Qwen2-7B-Instruct
+      description: 'Qwen2.5-Math 模型具有强大的数学解题能力',
+      displayName: 'Qwen2.5 Math 72B',
+      id: 'qwen2.5-math-72b-instruct',
+      tokens: 4096, // https://huggingface.co/Qwen/Qwen2.5-Math-72B-Instruct
     },
     {
-      description: '通义千问2对外开源的57B规模14B激活参数的MOE模型',
-      displayName: 'Qwen2 57B A14B MoE',
-      functionCall: true,
-      id: 'qwen2-57b-a14b-instruct',
-      tokens: 65_536, // https://huggingface.co/Qwen/Qwen2-57B-A14B-Instruct
-    },
-    {
-      description: '通义千问2对外开源的72B规模的模型',
-      displayName: 'Qwen2 72B',
-      functionCall: true,
-      id: 'qwen2-72b-instruct',
-      tokens: 131_072, // https://huggingface.co/Qwen/Qwen2-72B-Instruct
-    },
-    {
-      description: 'Qwen2-Math 模型具有强大的数学解题能力',
-      displayName: 'Qwen2 Math 72B',
-      functionCall: true,
-      id: 'qwen2-math-72b-instruct',
-      tokens: 4096, // https://help.aliyun.com/zh/dashscope/developer-reference/use-qwen2-math-by-calling-api
+      description: 'Qwen2.5-Coder 模型具有强大的代码生成能力',
+      displayName: 'Qwen2.5 Coder 7B',
+      id: 'qwen2.5-coder-7b-instruct',
+      tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct
     },
     {
       description: '以 Qwen-7B 语言模型初始化，添加图像模型，图像输入分辨率为448的预训练模型。',
@@ -148,7 +163,7 @@ const Qwen: ModelProviderCard = {
       vision: true,
     },
   ],
-  checkModel: 'qwen-turbo',
+  checkModel: 'qwen-turbo-latest',
   description:
     '通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。',
   disableBrowserRequest: true,
