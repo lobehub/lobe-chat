@@ -19,8 +19,8 @@ function isValidIP(ip) {
   return IP_REGEX.test(ip);
 }
 
-// Function to check if a URL using a valid SSL certificate
-function isValidSSL(url) {
+// Function to check if a URL using a valid TLS certificate
+function isValidTLS(url) {
   let { host, port } = parseUrl(url);
 
   const options = {
@@ -30,11 +30,11 @@ function isValidSSL(url) {
   };
 
   return new Promise((resolve, reject) => {
-    console.log(`🔄 SSL Check: Connecting to ${host}:${port} to verify SSL certificate...`);
+    console.log(`🔄 TLS Check: Connecting to ${host}:${port} to verify TLS certificate...`);
 
     const socket = tls.connect(options, () => {
       if (socket.authorized) {
-        console.log(`✅ SSL Check: Certificate for ${host}:${port} is valid.`);
+        console.log(`✅ TLS Check: Certificate for ${host}:${port} is valid.`);
         console.log('-------------------------------------');
         resolve();
       }
@@ -44,9 +44,9 @@ function isValidSSL(url) {
 
     socket.on('error', (err) => {
       if (err.code === 'DEPTH_ZERO_SELF_SIGNED_CERT' || err.code === 'CERT_HAS_EXPIRED') {
-        console.error(`❌ SSL Check: Certificate for ${host}:${port} is not valid. You can set NODE_TLS_REJECT_UNAUTHORIZED="0" to fix it. Error details:`);
+        console.error(`❌ TLS Check: Certificate for ${host}:${port} is not valid. You can set NODE_TLS_REJECT_UNAUTHORIZED="0" to fix it. Error details:`);
       } else {
-        console.error(`❌ SSL Check: Unable to connect ${host}:${port}. Please check your network connection or firewall rule. Error details:`);
+        console.error(`❌ TLS Check: Unable to connect ${host}:${port}. Please check your network connection or firewall rule. Error details:`);
       }
       reject(err);
     });
@@ -90,13 +90,13 @@ async function runDBMigrationScript() {
 
 // Function to run OSS connection checker
 async function runOSSConnChecker() {
-  isValidSSL(process.env.S3_ENDPOINT);
-  isValidSSL(process.env.S3_PUBLIC_DOMAIN);
+  isValidTLS(process.env.S3_ENDPOINT);
+  isValidTLS(process.env.S3_PUBLIC_DOMAIN);
 }
 
 // Function to run auth issuer connection checker
 async function runAuthIssuerConnChecker() {
-  isValidSSL(getEnvVarsByKeyword("_ISSUER"));
+  isValidTLS(getEnvVarsByKeyword("_ISSUER"));
 }
 
 // Function to run ProxyChains conf generator
