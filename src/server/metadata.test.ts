@@ -121,6 +121,7 @@ describe('Metadata', () => {
           'bg-BG',
           'de-DE',
           'en-US',
+          'es-ES',
           'fr-FR',
           'ja-JP',
           'ko-KR',

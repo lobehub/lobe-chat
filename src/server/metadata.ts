@@ -60,7 +60,6 @@ export class Meta {
     let links: any = {};
     const defaultLink = getCanonicalUrl(path);
     for (const alterLocales of locales) {
-      if (locale === alterLocales) continue;
       links[alterLocales] = qs.stringifyUrl({
         query: { hl: alterLocales },
         url: defaultLink,
@@ -126,7 +125,7 @@ export class Meta {
     };
 
     if (alternate) {
-      data['alternateLocale'] = locales.filter((l) => l !== locale);
+      data['alternateLocale'] = locales;
     }
 
     return data;
