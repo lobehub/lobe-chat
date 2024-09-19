@@ -27,9 +27,9 @@
   "sideEffects": false,
   "scripts": {
     "build": "npm run build-sitemap && next build",
-    "postbuild": "npm run build-migrate-db",
+    "postbuild": "npm run build-sitemap && npm run build-migrate-db",
     "build-migrate-db": "bun run db:migrate",
-    "build-sitemap": "tsx ./scripts/sitemapWorkflow/index.ts",
+    "build-sitemap": "tsx ./scripts/buildSitemapIndex/index.ts",
     "build:analyze": "ANALYZE=true next build",
     "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "db:generate": "drizzle-kit generate",
