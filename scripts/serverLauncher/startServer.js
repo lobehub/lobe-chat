@@ -22,9 +22,6 @@ function isValidIP(ip) {
 // Function to check if a URL using a valid SSL certificate
 function isValidSSL(url) {
   let { host, port } = parseUrl(url);
-  if (!port) {
-    port = 443
-  }
 
   const options = {
     host: host,
