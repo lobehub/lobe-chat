@@ -60,8 +60,8 @@ async function runProxyChainsConfGenerator(url) {
       console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
       console.log('-------------------------------------');
     } catch (error) {
-      console.error(`❌ ProxyChains: Unable to resolve the host "${host}". Please verify your DNS configuration. Error details:`, error);
-      console.log('-------------------------------------');
+      console.error(`❌ ProxyChains: Unable to resolve the host "${host}". Please verify your DNS configuration. Error details:`);
+      console.error(err);
       process.exit(1);
     }
   }
