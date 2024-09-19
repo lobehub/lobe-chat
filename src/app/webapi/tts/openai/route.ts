@@ -28,6 +28,7 @@ export const preferredRegion = [
 export const POST = async (req: Request) => {
   const payload = (await req.json()) as OpenAITTSPayload;
 
+  // need to be refactored with jwt auth mode
   const openaiOrErrResponse = createBizOpenAI(req);
 
   // if resOrOpenAI is a Response, it means there is an error,just return it

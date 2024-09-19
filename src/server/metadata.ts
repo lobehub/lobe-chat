@@ -3,8 +3,9 @@ import qs from 'query-string';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_LANG } from '@/const/locale';
-import { OG_URL, getCanonicalUrl } from '@/const/url';
+import { OG_URL } from '@/const/url';
 import { Locales, locales } from '@/locales/resources';
+import { getCanonicalUrl } from '@/server/utils/url';
 import { formatDescLength, formatTitleLength } from '@/utils/genOG';
 
 export class Meta {
@@ -59,7 +60,6 @@ export class Meta {
     let links: any = {};
     const defaultLink = getCanonicalUrl(path);
     for (const alterLocales of locales) {
-      if (locale === alterLocales) continue;
       links[alterLocales] = qs.stringifyUrl({
         query: { hl: alterLocales },
         url: defaultLink,
@@ -125,7 +125,7 @@ export class Meta {
     };
 
     if (alternate) {
-      data['alternateLocale'] = locales.filter((l) => l !== locale);
+      data['alternateLocale'] = locales;
     }
 
     return data;

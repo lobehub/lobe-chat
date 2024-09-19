@@ -1,6 +1,5 @@
 import OpenAI from 'openai';
 
-import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
 import { ChatModelCard } from '@/types/llm';
 
 import {
@@ -9,6 +8,9 @@ import {
   EmbeddingItem,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  TextToImagePayload,
+  TextToSpeechOptions,
+  TextToSpeechPayload,
 } from './types';
 
 export interface LobeRuntimeAI {
@@ -20,6 +22,11 @@ export interface LobeRuntimeAI {
   models?(): Promise<any>;
 
   textToImage?: (payload: TextToImagePayload) => Promise<string[]>;
+
+  textToSpeech?: (
+    payload: TextToSpeechPayload,
+    options?: TextToSpeechOptions,
+  ) => Promise<ArrayBuffer>;
 }
 
 export abstract class LobeOpenAICompatibleRuntime {
