@@ -29,12 +29,13 @@ function isValidSSL(url) {
     servername: host
   };
 
-  console.log(`🔄 SSL Check: Connecting to ${host}:${port} to verify SSL certificate...`);
-
   return new Promise((resolve, reject) => {
+    console.log(`🔄 SSL Check: Connecting to ${host}:${port} to verify SSL certificate...`);
+
     const socket = tls.connect(options, () => {
       if (socket.authorized) {
         console.log(`✅ SSL Check: Certificate for ${host}:${port} is valid.`);
+        console.log('-------------------------------------');
         resolve();
       }
 
