@@ -16,15 +16,15 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Turbo',
       enabled: true,
       functionCall: true,
-      id: 'qwen-turbo',
-      tokens: 8000, // https://www.alibabacloud.com/help/zh/model-studio/developer-reference/use-qwen-by-calling-api
+      id: 'qwen-turbo-latest',
+      tokens: 131_072, // https://www.alibabacloud.com/help/zh/model-studio/developer-reference/use-qwen-by-calling-api
     },
     {
       description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入',
       displayName: 'Qwen Plus',
       enabled: true,
       functionCall: true,
-      id: 'qwen-plus',
+      id: 'qwen-plus-latest',
       tokens: 131_072, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
@@ -33,16 +33,8 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Max',
       enabled: true,
       functionCall: true,
-      id: 'qwen-max',
-      tokens: 8000,
-    },
-    {
-      description:
-        '通义千问千亿级别超大规模语言模型，支持中文、英文等不同语言输入，扩展了上下文窗口',
-      displayName: 'Qwen Max LongContext',
-      functionCall: true,
-      id: 'qwen-max-longcontext',
-      tokens: 30_000,
+      id: 'qwen-max-latest',
+      tokens: 32_768,
     },
     {
       description:
@@ -63,6 +55,24 @@ const Qwen: ModelProviderCard = {
       vision: true,
     },
     // ref :https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-7b-14b-72b-api-detailes
+    {
+      description: '通义千问2.5对外开源的7B规模的模型',
+      displayName: 'Qwen2.5 7B',
+      id: 'qwen2.5-7b-instruct',
+      tokens: 131_072,
+    },
+    {
+      description: '通义千问2.5对外开源的32B规模的模型',
+      displayName: 'Qwen2.5 32B',
+      id: 'qwen2.5-32b-instruct',
+      tokens: 131_072,
+    },
+    {
+      description: '通义千问2.5对外开源的72B规模的模型',
+      displayName: 'Qwen2.5 72B',
+      id: 'qwen2.5-72b-instruct',
+      tokens: 131_072,
+    },
     {
       description: '通义千问2对外开源的7B规模的模型',
       displayName: 'Qwen2 7B',
