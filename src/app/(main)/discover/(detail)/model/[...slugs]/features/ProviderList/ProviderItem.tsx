@@ -67,6 +67,7 @@ const ProviderItem = memo<ProviderItemProps>(({ mobile, modelId, identifier }) =
         : '--',
     },
     /* ↓ cloud slot ↓ */
+
     /* ↑ cloud slot ↑ */
   ];
 

@@ -3,15 +3,9 @@ import urlJoin from 'url-join';
 
 import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_LANG } from '@/const/locale';
-import {
-  EMAIL_BUSINESS,
-  EMAIL_SUPPORT,
-  OFFICIAL_SITE,
-  OFFICIAL_URL,
-  X,
-  getCanonicalUrl,
-} from '@/const/url';
+import { EMAIL_BUSINESS, EMAIL_SUPPORT, OFFICIAL_SITE, OFFICIAL_URL, X } from '@/const/url';
 import { Locales } from '@/locales/resources';
+import { getCanonicalUrl } from '@/server/utils/url';
 
 import pkg from '../../package.json';
 
@@ -37,7 +31,7 @@ export const AUTHOR_LIST = {
   },
 };
 
-class Ld {
+export class Ld {
   generate({
     image = '/og/cover.png',
     article,
