@@ -30,10 +30,17 @@ function parseUrl(url) {
 
 // Function to run the DB Migration script
 async function runDBMigrationScript() {
-  const server = spawn('node', [DB_MIGRATION_SCRIPT_PATH], { stdio: 'inherit' });
+  return new Promise((resolve, reject) => {
+    const server = spawn('node', [DB_MIGRATION_SCRIPT_PATH], { stdio: 'inherit' });
 
-  server.on('close', (code) => {
-    console.log(`Server exited with code ${code}`);
+    server.on('close', (code) => {
+      if (code !== 0) {
+        console.error(`❌ DB Migration script failed with code ${code}`);
+        reject(new Error('❌ DB Migration script failed.'));
+      } else {
+        resolve();
+      }
+    });
   });
 }
 
