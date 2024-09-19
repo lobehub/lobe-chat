@@ -38,7 +38,14 @@ const LangButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement 
   return (
     <Popover
       arrow={false}
-      content={<Menu items={items} selectable selectedKeys={[language]} />}
+      content={
+        <Menu
+          items={items}
+          selectable
+          selectedKeys={[language]}
+          style={{ maxHeight: 400, overflowY: 'scroll' }}
+        />
+      }
       overlayInnerStyle={{
         padding: 0,
       }}
