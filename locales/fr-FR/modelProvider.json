@@ -112,26 +112,6 @@
       "title": "Download specified Ollama model"
     }
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "Entrez la clé d'accès de la plateforme Baidu Qianfan",
-      "placeholder": "Clé d'accès Qianfan",
-      "title": "Clé d'accès"
-    },
-    "checker": {
-      "desc": "Vérifiez si AccessKey / SecretAccess est correctement rempli"
-    },
-    "secretKey": {
-      "desc": "Entrez la clé secrète de la plateforme Baidu Qianfan",
-      "placeholder": "Clé secrète Qianfan",
-      "title": "Clé secrète"
-    },
-    "unlock": {
-      "customRegion": "Région de service personnalisée",
-      "description": "Entrez votre AccessKey / SecretKey pour commencer la session. L'application ne conservera pas votre configuration d'authentification",
-      "title": "Utiliser les informations d'authentification personnalisées de Wenxin"
-    }
-  },
   "zeroone": {
     "title": "01.AI Zéro Un Tout"
   },

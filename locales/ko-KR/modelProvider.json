@@ -112,26 +112,6 @@
       "title": "Download specified Ollama model"
     }
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "백도 천판 플랫폼의 액세스 키를 입력하세요",
-      "placeholder": "천판 액세스 키",
-      "title": "액세스 키"
-    },
-    "checker": {
-      "desc": "액세스 키/시크릿 액세스가 올바르게 입력되었는지 테스트합니다"
-    },
-    "secretKey": {
-      "desc": "백도 천판 플랫폼의 시크릿 키를 입력하세요",
-      "placeholder": "천판 시크릿 키",
-      "title": "시크릿 키"
-    },
-    "unlock": {
-      "customRegion": "사용자 정의 서비스 지역",
-      "description": "액세스 키/시크릿 키를 입력하면 세션을 시작할 수 있습니다. 앱은 권한 부여 구성을 기록하지 않습니다",
-      "title": "사용자 정의 원신 일단 권한 정보 사용"
-    }
-  },
   "zeroone": {
     "title": "01.AI Zero One All Things"
   },

@@ -112,26 +112,6 @@
       "title": "Tải xuống mô hình Ollama đã chỉ định"
     }
   },
-  "wenxin": {
-    "accessKey": {
-      "desc": "填入百度千帆平台的 Access Key",
-      "placeholder": "Qianfan Access Key",
-      "title": "Access Key"
-    },
-    "checker": {
-      "desc": "测试 AccessKey / SecretAccess 是否填写正确"
-    },
-    "secretKey": {
-      "desc": "填入百度千帆平台 Secret Key",
-      "placeholder": "Qianfan Secret Key",
-      "title": "Secret Key"
-    },
-    "unlock": {
-      "customRegion": "Vùng Dịch vụ Tùy chỉnh",
-      "description": "Nhập AccessKey / SecretKey của bạn để bắt đầu phiên làm việc. Ứng dụng sẽ không lưu cấu hình xác thực của bạn",
-      "title": "Sử dụng thông tin xác thực Wenxin tự tùy chỉnh"
-    }
-  },
   "zeroone": {
     "title": "01.AI Zero One"
   },
