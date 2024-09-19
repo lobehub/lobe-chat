@@ -9,7 +9,7 @@ const Qwen: ModelProviderCard = {
       displayName: 'Qwen Long',
       enabled: true,
       id: 'qwen-long',
-      tokens: 1_000_000,
+      tokens: 1_000_000, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
       description: '通义千问超大规模语言模型，支持中文、英文等不同语言输入',
@@ -17,7 +17,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-turbo-latest',
-      tokens: 131_072, // https://www.alibabacloud.com/help/zh/model-studio/developer-reference/use-qwen-by-calling-api
+      tokens: 131_072, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
       description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入',
@@ -34,7 +34,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'qwen-max-latest',
-      tokens: 32_768,
+      tokens: 32_768, // https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction
     },
     {
       description:
@@ -43,7 +43,7 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       id: 'qwen-vl-plus',
       tokens: 8192,
-      vision: true,
+      vision: true, // https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-vl-plus-api
     },
     {
       description:
@@ -52,26 +52,26 @@ const Qwen: ModelProviderCard = {
       enabled: true,
       id: 'qwen-vl-max',
       tokens: 32_768,
-      vision: true,
+      vision: true, // https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-vl-plus-api
     },
     // ref :https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-qianwen-7b-14b-72b-api-detailes
     {
       description: '通义千问2.5对外开源的7B规模的模型',
       displayName: 'Qwen2.5 7B',
       id: 'qwen2.5-7b-instruct',
-      tokens: 131_072,
+      tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-7B-Instruct
     },
     {
       description: '通义千问2.5对外开源的32B规模的模型',
       displayName: 'Qwen2.5 32B',
       id: 'qwen2.5-32b-instruct',
-      tokens: 131_072,
+      tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-32B-Instruct
     },
     {
       description: '通义千问2.5对外开源的72B规模的模型',
       displayName: 'Qwen2.5 72B',
       id: 'qwen2.5-72b-instruct',
-      tokens: 131_072,
+      tokens: 131_072, // https://huggingface.co/Qwen/Qwen2.5-72B-Instruct
     },
     {
       description: '通义千问2对外开源的7B规模的模型',
