@@ -31,8 +31,6 @@ function isValidTLS(url) {
   };
 
   return new Promise((resolve, reject) => {
-    console.log(`🔄 TLS Check: Connecting to ${host}:${port} to verify TLS certificate...`);
-
     const socket = tls.connect(options, () => {
       if (socket.authorized) {
         console.log(`✅ TLS Check: Certificate for ${host}:${port} is valid.`);
