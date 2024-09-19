@@ -15,7 +15,7 @@ const Qwen: ModelProviderCard = {
         output: 0.6,
       },
       tokens: 131_072,
-    }, 
+    },
     {
       description: '通义千问超大规模语言模型增强版，支持中文、英文等不同语言输入。',
       displayName: 'Qwen Plus',
