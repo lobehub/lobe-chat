@@ -108,6 +108,7 @@
     "@aws-sdk/s3-request-presigner": "^3.637.0",
     "@azure/core-rest-pipeline": "1.16.0",
     "@azure/openai": "1.0.0-beta.12",
+    "@baiducloud/qianfan": "^0.1.0",
     "@cfworker/json-schema": "^2.0.0",
     "@clerk/localizations": "^3.0.4",
     "@clerk/nextjs": "^5.3.3",

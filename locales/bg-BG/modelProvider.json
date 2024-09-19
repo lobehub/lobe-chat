@@ -112,6 +112,26 @@
       "title": "Download specified Ollama model"
     }
   },
+  "wenxin": {
+    "accessKey": {
+      "desc": "Въведете Access Key на платформата Qianfan на Baidu",
+      "placeholder": "Qianfan Access Key",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "Проверете дали AccessKey / SecretAccess са въведени правилно"
+    },
+    "secretKey": {
+      "desc": "Въведете Secret Key на платформата Qianfan на Baidu",
+      "placeholder": "Qianfan Secret Key",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "Персонализиран регион на услугата",
+      "description": "След като въведете вашия AccessKey / SecretKey, можете да започнете сесия. Приложението няма да запазва вашата удостоверителна конфигурация",
+      "title": "Използване на персонализирана информация за удостоверяване на Wenxin"
+    }
+  },
   "zeroone": {
     "title": "01.AI Зероуан Всичко"
   },

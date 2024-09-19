@@ -1,20 +1,10 @@
 {
   "about": "About",
   "advanceSettings": "Advanced Settings",
-  "alert": {
-    "cloud": {
-      "action": "Free Trial",
-      "desc": "We offer {{credit}} free computing credits to all registered users, no complex configuration required, ready to use out of the box, support unlimited conversation history and global cloud synchronization.",
-      "descOnMobile": "We provide {{credit}} free computing credits for all registered users, ready to use without complex configuration.",
-      "title": "Launch {{name}}"
-    }
-  },
-  "appInitializing": "Application is starting...",
+  "appInitializing": "The application is initializing, please wait for a moment...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
-  "back": "Back",
-  "batchDelete": "Batch Delete",
   "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
@@ -33,7 +23,6 @@
   "defaultSession": "Default Assistant",
   "delete": "Delete",
   "document": "User Manual",
-  "download": "Download",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
@@ -195,8 +184,7 @@
   },
   "tab": {
     "chat": "Chat",
-    "discover": "Discover",
-    "files": "Files",
+    "market": "Discover",
     "me": "Me",
     "setting": "Settings"
   },
@@ -218,7 +206,6 @@
   "userPanel": {
     "anonymousNickName": "Anonymous User",
     "billing": "Billing Management",
-    "cloud": "Launch {{name}}",
     "data": "Data Storage",
     "defaultNickname": "Community User",
     "discord": "Community Support",
