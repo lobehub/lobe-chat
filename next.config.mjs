@@ -108,6 +108,16 @@ const nextConfig = {
   reactStrictMode: true,
   redirects: async () => [
     {
+      destination: '/sitemap-index.xml',
+      permanent: true,
+      source: '/sitemap.xml',
+    },
+    {
+      destination: '/discover',
+      permanent: true,
+      source: '/market',
+    },
+    {
       destination: '/settings/common',
       permanent: true,
       source: '/settings',

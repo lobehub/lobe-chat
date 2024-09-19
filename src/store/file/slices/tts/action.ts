@@ -39,7 +39,7 @@ export const createTTSFileSlice: StateCreator<
     };
     const file = new File([blob], fileName, fileOptions);
 
-    const res = await get().uploadWithProgress({ file });
+    const res = await get().uploadWithProgress({ file, skipCheckFileType: true });
 
     return res?.id;
   },

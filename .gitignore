@@ -55,6 +55,8 @@ next-env.d.ts
 .next
 .env
 public/*.js
+public/sitemap.xml
+public/sitemap-index.xml
 bun.lockb
 sitemap*.xml
 robots.txt
