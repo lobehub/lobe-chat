@@ -44,8 +44,7 @@ const Qwen: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description:
-        '通义千问代码模型。',
+      description: '通义千问代码模型。',
       displayName: 'Qwen Coder',
       id: 'qwen-coder-turbo-latest',
       pricing: {
@@ -148,37 +147,11 @@ const Qwen: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      description: '通义千问2对外开源的7B规模的模型。',
-      displayName: 'Qwen2 7B',
-      functionCall: true,
-      id: 'qwen2-7b-instruct',
-      tokens: 131_072,
-    },
-    {
       description: '通义千问2对外开源的57B规模14B激活参数的MOE模型。',
       displayName: 'Qwen2 57B A14B MoE',
       functionCall: true,
       id: 'qwen2-57b-a14b-instruct',
       tokens: 65_536,
-    },
-    {
-      description: '通义千问2对外开源的72B规模的模型。',
-      displayName: 'Qwen2 72B',
-      functionCall: true,
-      id: 'qwen2-72b-instruct',
-      tokens: 131_072,
-    },
-    {
-      description: 'Qwen-Math 模型具有强大的数学解题能力。',
-      displayName: 'Qwen2.5 Math 72B',
-      id: 'qwen2.5-math-72b-instruct',
-      tokens: 4096,
-    },
-    {
-      description: 'Qwen-Math 模型具有强大的数学解题能力。',
-      displayName: 'Qwen2.5 Math 7B',
-      id: 'qwen2.5-math-7b-instruct',
-      tokens: 4096,
     },
     {
       description: 'Qwen-Math 模型具有强大的数学解题能力。',
@@ -192,10 +165,16 @@ const Qwen: ModelProviderCard = {
       tokens: 4096,
     },
     {
-      description: '通义千问代码模型开源版。',
-      displayName: 'Qwen2.5 Coder 7B',
-      id: 'qwen2.5-coder-7b-instruct',
-      tokens: 131_072,
+      description: 'Qwen-Math 模型具有强大的数学解题能力。',
+      displayName: 'Qwen2.5 Math 7B',
+      id: 'qwen2.5-math-7b-instruct',
+      tokens: 4096,
+    },
+    {
+      description: 'Qwen-Math 模型具有强大的数学解题能力。',
+      displayName: 'Qwen2.5 Math 72B',
+      id: 'qwen2.5-math-72b-instruct',
+      tokens: 4096,
     },
     {
       description: '通义千问代码模型开源版。',
@@ -206,6 +185,12 @@ const Qwen: ModelProviderCard = {
         input: 0,
         output: 0,
       },
+      tokens: 131_072,
+    },
+    {
+      description: '通义千问代码模型开源版。',
+      displayName: 'Qwen2.5 Coder 7B',
+      id: 'qwen2.5-coder-7b-instruct',
       tokens: 131_072,
     },
     {
