@@ -156,6 +156,8 @@ ENV \
     DEEPSEEK_API_KEY="" \
     # Fireworks AI
     FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
+    # GitHub
+    GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
