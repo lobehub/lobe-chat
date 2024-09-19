@@ -116,7 +116,7 @@ async function runProxyChainsConfGenerator(url) {
       console.log('-------------------------------------');
     } catch (error) {
       console.error(`❌ ProxyChains: Unable to resolve the host "${host}". Please verify your DNS configuration. Error details:`);
-      console.error(err);
+      console.error(error);
       process.exit(1);
     }
   }
