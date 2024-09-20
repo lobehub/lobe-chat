@@ -113,8 +113,15 @@ const nextConfig = {
       source: '/sitemap.xml',
     },
     {
-      destination: '/discover',
-      permanent: true,
+      destination: '/discover/assistant/:slug',
+      has: [
+        {
+          key: 'agent',
+          type: 'query',
+          value: '(?<slug>.*)',
+        },
+      ],
+      permanent: false,
       source: '/market',
     },
     {
