@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.10](https://github.com/lobehub/lobe-chat/compare/v1.19.9...v1.19.10)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add qwen2.5 math and coder model for siliconcloud provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add qwen2.5 math and coder model for siliconcloud provider, closes [#4043](https://github.com/lobehub/lobe-chat/issues/4043) ([d16578f](https://github.com/lobehub/lobe-chat/commit/d16578f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.9](https://github.com/lobehub/lobe-chat/compare/v1.19.8...v1.19.9)
 
 <sup>Released on **2024-09-20**</sup>
