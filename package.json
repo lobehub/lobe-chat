@@ -203,6 +203,7 @@
     "remark": "^14.0.3",
     "remark-gfm": "^3.0.1",
     "remark-html": "^15.0.2",
+    "request-filtering-agent": "^2.0.1",
     "resolve-accept-language": "^3.1.5",
     "rtl-detect": "^1.1.2",
     "semver": "^7.6.3",
