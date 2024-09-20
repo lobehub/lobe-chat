@@ -43,7 +43,9 @@ function isValidTLS(url) {
 
     socket.on('error', (err) => {
       if (err.code === 'DEPTH_ZERO_SELF_SIGNED_CERT' || err.code === 'CERT_HAS_EXPIRED') {
-        console.error(`❌ TLS Check: Certificate for ${host}:${port} is not valid. You can set NODE_TLS_REJECT_UNAUTHORIZED="0" to fix it. Error details:`);
+        console.error(`❌ TLS Check: Certificate for ${host}:${port} is not valid. You can set NODE_TLS_REJECT_UNAUTHORIZED="0" or map /etc/ssl/certs/ca-certificates.crt to your Docker container. Error details:`);
+      } else if (err.code === 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY') {
+        console.error(`❌ TLS Check: Unable to verify the issuer of the certificate for ${host}:${port}. Please ensure /etc/ssl/certs/ca-certificates.crt is correctly mapped in your Docker container. Error details:`);
       } else {
         console.error(`❌ TLS Check: Unable to connect ${host}:${port}. Please check your network connection or firewall rule. Error details:`);
       }
