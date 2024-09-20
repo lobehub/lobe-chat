@@ -127,8 +127,6 @@ async function runProxyChainsConfGenerator(url) {
 
       if (isValidIP(result.address)) {
         ip = result.address;
-        console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
-        console.log('-------------------------------------');
       } else {
         console.error(`❌ ProxyChains: The host "${host}" resolved to an address "${result.address}", but it is not a valid IPv4 address. Please check your proxy server.`);
         process.exit(1);
@@ -139,6 +137,9 @@ async function runProxyChainsConfGenerator(url) {
       process.exit(1);
     }
   }
+
+  console.log(`✅ ProxyChains: All outgoing traffic is now routed via ${protocol}://${ip}:${port}.`);
+  console.log('-------------------------------------');
 
   // Generate the proxychains configuration file
   const proxyChainsConfig = `
