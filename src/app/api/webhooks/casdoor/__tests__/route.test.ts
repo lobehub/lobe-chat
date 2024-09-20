@@ -42,8 +42,8 @@ const AUTH_CASDOOR_WEBHOOK_SECRET = 'casdoor-secret';
 // - Run this test with command:
 // pnpm vitest --run --testNamePattern='^ ?Test Casdoor Webhooks in Local dev'  src/app/api/webhooks/casdoor/__tests__/route.test.ts
 
-// describe.skip('Test Casdoor Webhooks in Local dev', () => {
-describe('Test Casdoor Webhooks in Local dev', () => {
+describe.skip('Test Casdoor Webhooks in Local dev', () => {
+  // describe('Test Casdoor Webhooks in Local dev', () => {
   it('should send a POST request with casdoor headers', async () => {
     const url = 'http://localhost:3010/api/webhooks/casdoor'; // 替换为目标URL
     const data = userDataUpdatedEvent;
