@@ -2,9 +2,6 @@
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B, zengin eğitim örnekleri ile endüstri uygulamalarında üstün performans sunar."
   },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5, Yi serisinin evrimsel versiyonudur, yüksek kaliteli ön eğitim ve zengin ince ayar verilerine sahiptir."
-  },
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B, 16K Token desteği sunar, etkili ve akıcı dil oluşturma yeteneği sağlar."
   },
@@ -53,35 +50,11 @@
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "Qwen2'nin test sürümü olan Qwen1.5, büyük ölçekli verilerle daha hassas diyalog yetenekleri sunar."
   },
-  "Qwen/Qwen1.5-14B-Chat": {
-    "description": "Qwen1.5, büyük ölçekli veri setleri ile eğitilmiş olup, karmaşık dil görevlerinde uzmandır."
-  },
-  "Qwen/Qwen1.5-32B-Chat": {
-    "description": "Qwen1.5, çok alanlı bilgi sorgulama ve metin oluşturma yeteneğine sahiptir."
-  },
   "Qwen/Qwen1.5-72B-Chat": {
     "description": "Qwen 1.5 Chat (72B), hızlı yanıt ve doğal diyalog yetenekleri sunar, çok dilli ortamlara uygundur."
   },
-  "Qwen/Qwen1.5-7B-Chat": {
-    "description": "Qwen1.5, gelişmiş ön eğitim ve ince ayar kombinasyonu ile diyalog ifade yeteneğini artırır."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2, talimat tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
-  },
-  "Qwen/Qwen2-57B-A14B-Instruct": {
-    "description": "Qwen2, talimat görevlerinde mükemmel performans gösteren 57B A14B modelidir."
-  },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2, çok çeşitli talimat türlerini destekleyen gelişmiş bir genel dil modelidir."
-  },
-  "Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2, daha güçlü anlama ve oluşturma yeteneklerine sahip yeni bir büyük dil modeli serisidir."
-  },
-  "Qwen/Qwen2-Math-72B-Instruct": {
-    "description": "Qwen2-Math, matematik alanındaki sorunları çözmeye odaklanır ve zorlu sorulara profesyonel yanıtlar sunar."
-  },
-  "THUDM/chatglm3-6b": {
-    "description": "Çift dilli diyalog dil modeli olarak, ChatGLM3, Çince ve İngilizce dönüşüm görevlerini işleyebilir."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B açık kaynak versiyonu, diyalog uygulamaları için optimize edilmiş bir diyalog deneyimi sunar."
@@ -262,12 +235,6 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct, yüksek güvenilirlikte talimat işleme yetenekleri sunar ve çok çeşitli endüstri uygulamalarını destekler."
-  },
-  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
-    "description": "DeepSeek Coder V2, kod görevleri için tasarlanmış olup, etkili kod oluşturma üzerine odaklanmaktadır."
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek V2, 6.7 milyar parametreye sahiptir ve İngilizce ve Çince metin işleme desteği sunar."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5, önceki sürümlerin mükemmel özelliklerini bir araya getirir, genel ve kodlama yeteneklerini artırır."
@@ -539,9 +506,6 @@
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B), çok dilli desteği ile zengin alan bilgilerini kapsar."
   },
-  "meta-llama/Meta-Llama-3-70B-Instruct": {
-    "description": "LLaMA 3, büyük hacimli metin oluşturma ve talimat çözümleme desteği sunar."
-  },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite, yüksek performans ve düşük gecikme gerektiren ortamlara uygundur."
   },
@@ -716,18 +680,6 @@
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."
   },
-  "qwen-max": {
-    "description": "Tongyi Qianwen, yüz milyar seviyesinde büyük ölçekli bir dil modelidir. Çince, İngilizce gibi farklı dillerde girişi destekler ve şu anda Tongyi Qianwen 2.5 ürün versiyonunun arkasındaki API modelidir."
-  },
-  "qwen-max-longcontext": {
-    "description": "Tongyi Qianwen, yüz milyar seviyesinde büyük ölçekli bir dil modelidir. Çince, İngilizce gibi farklı dillerde girişi destekler ve bağlam penceresini genişletmiştir."
-  },
-  "qwen-plus": {
-    "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dillerde girişi destekleyen büyük ölçekli dil modelinin geliştirilmiş versiyonudur."
-  },
-  "qwen-turbo": {
-    "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dillerde girişi destekleyen büyük ölçekli bir dil modelidir."
-  },
   "qwen-vl-chat-v1": {
     "description": "Tongyi Qianwen VL, çoklu görüntü, çok turlu soru-cevap, yaratım gibi esnek etkileşim yöntemlerini destekleyen bir modeldir."
   },
@@ -745,18 +697,6 @@
   },
   "qwen2": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
-  },
-  "qwen2-57b-a14b-instruct": {
-    "description": "Tongyi Qianwen 2, halka açık kaynak kodlu 57B ölçeğinde 14B etkin parametreli MOE modelidir."
-  },
-  "qwen2-72b-instruct": {
-    "description": "Tongyi Qianwen 2, halka açık kaynak kodlu 72B ölçeğinde bir modeldir."
-  },
-  "qwen2-7b-instruct": {
-    "description": "Tongyi Qianwen 2, halka açık kaynak kodlu 7B ölçeğinde bir modeldir."
-  },
-  "qwen2-math-72b-instruct": {
-    "description": "Qwen2-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
   },
   "qwen2:0.5b": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."

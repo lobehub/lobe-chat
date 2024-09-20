@@ -2,9 +2,6 @@
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B, com um rico conjunto de amostras de treinamento, oferece desempenho superior em aplicações industriais."
   },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5 é a versão evoluída da série Yi, com pré-treinamento de alta qualidade e dados de ajuste fino ricos."
-  },
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B suporta 16K Tokens, oferecendo capacidade de geração de linguagem eficiente e fluida."
   },
@@ -53,35 +50,11 @@
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "Como uma versão de teste do Qwen2, Qwen1.5 utiliza dados em larga escala para alcançar funcionalidades de diálogo mais precisas."
   },
-  "Qwen/Qwen1.5-14B-Chat": {
-    "description": "Qwen1.5 é treinado com um grande conjunto de dados, especializado em tarefas linguísticas complexas."
-  },
-  "Qwen/Qwen1.5-32B-Chat": {
-    "description": "Qwen1.5 possui habilidades de perguntas e respostas em múltiplos domínios e geração de texto."
-  },
   "Qwen/Qwen1.5-72B-Chat": {
     "description": "Qwen 1.5 Chat (72B) oferece respostas rápidas e capacidade de diálogo natural, adequado para ambientes multilíngues."
   },
-  "Qwen/Qwen1.5-7B-Chat": {
-    "description": "Qwen1.5 melhora a capacidade de expressão em diálogos ao combinar pré-treinamento avançado e ajuste fino."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2 é uma nova série de modelos de linguagem de grande porte, projetada para otimizar o processamento de tarefas instrucionais."
-  },
-  "Qwen/Qwen2-57B-A14B-Instruct": {
-    "description": "Qwen2 é uma nova série, com o modelo 57B A14B se destacando em tarefas instrucionais."
-  },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 é um modelo de linguagem universal avançado, suportando diversos tipos de instruções."
-  },
-  "Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2 é uma nova série de modelos de linguagem de grande porte, com capacidades de compreensão e geração mais robustas."
-  },
-  "Qwen/Qwen2-Math-72B-Instruct": {
-    "description": "Qwen2-Math foca na resolução de problemas na área de matemática, oferecendo respostas profissionais para questões de alta dificuldade."
-  },
-  "THUDM/chatglm3-6b": {
-    "description": "Como um modelo de linguagem de conversa bilíngue, ChatGLM3 pode lidar com tarefas de conversão entre chinês e inglês."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B é uma versão de código aberto, oferecendo uma experiência de diálogo otimizada para aplicações de conversa."
@@ -262,12 +235,6 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct oferece capacidade de processamento de instruções altamente confiável, suportando aplicações em diversos setores."
-  },
-  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
-    "description": "DeepSeek Coder V2 é projetado para tarefas de código, focando na geração de código eficiente."
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek V2 possui 6.7 bilhões de parâmetros, suportando processamento de texto em inglês e chinês."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 combina as excelentes características das versões anteriores, aprimorando a capacidade geral e de codificação."
@@ -539,9 +506,6 @@
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B) oferece suporte multilíngue, abrangendo um rico conhecimento em diversas áreas."
   },
-  "meta-llama/Meta-Llama-3-70B-Instruct": {
-    "description": "LLaMA 3 suporta geração de texto de grande capacidade e interpretação de instruções."
-  },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite é ideal para ambientes que exigem alta eficiência e baixa latência."
   },
@@ -716,18 +680,6 @@
   "qwen-long": {
     "description": "O Qwen é um modelo de linguagem em larga escala que suporta contextos de texto longos e funcionalidades de diálogo baseadas em documentos longos e múltiplos cenários."
   },
-  "qwen-max": {
-    "description": "O Qwen é um modelo de linguagem em larga escala com trilhões de parâmetros, suportando entradas em diferentes idiomas, incluindo chinês e inglês, atualmente a versão do produto Qwen 2.5 por trás do modelo API."
-  },
-  "qwen-max-longcontext": {
-    "description": "O Qwen é um modelo de linguagem em larga escala com trilhões de parâmetros, suportando entradas em diferentes idiomas, incluindo chinês e inglês, com uma janela de contexto expandida."
-  },
-  "qwen-plus": {
-    "description": "O Qwen é uma versão aprimorada do modelo de linguagem em larga escala, suportando entradas em diferentes idiomas, incluindo chinês e inglês."
-  },
-  "qwen-turbo": {
-    "description": "O Qwen é um modelo de linguagem em larga escala que suporta entradas em diferentes idiomas, incluindo chinês e inglês."
-  },
   "qwen-vl-chat-v1": {
     "description": "O Qwen VL suporta uma maneira de interação flexível, incluindo múltiplas imagens, perguntas e respostas em várias rodadas, e capacidades criativas."
   },
@@ -745,18 +697,6 @@
   },
   "qwen2": {
     "description": "Qwen2 é a nova geração de modelo de linguagem em larga escala da Alibaba, oferecendo desempenho excepcional para atender a diversas necessidades de aplicação."
-  },
-  "qwen2-57b-a14b-instruct": {
-    "description": "O Qwen2 é um modelo de 57B de código aberto com 14B de parâmetros ativados do MOE."
-  },
-  "qwen2-72b-instruct": {
-    "description": "O Qwen2 é um modelo de 72B de código aberto."
-  },
-  "qwen2-7b-instruct": {
-    "description": "O Qwen2 é um modelo de 7B de código aberto."
-  },
-  "qwen2-math-72b-instruct": {
-    "description": "O modelo Qwen2-Math possui uma forte capacidade de resolução de problemas matemáticos."
   },
   "qwen2:0.5b": {
     "description": "Qwen2 é a nova geração de modelo de linguagem em larga escala da Alibaba, oferecendo desempenho excepcional para atender a diversas necessidades de aplicação."
