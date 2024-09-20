@@ -23,6 +23,7 @@ function isValidIP(ip) {
 function isValidTLS(url) {
   if (!url) {
     console.log('⚠️ TLS Check: No URL provided. Skipping TLS check. Please ensure your ENV has been set up correctly.');
+    console.log('-------------------------------------');
     return Promise.resolve();  // Return a resolved promise to keep the function's return type consistent
   }
 
@@ -31,6 +32,7 @@ function isValidTLS(url) {
 
   if (protocol !== "https") {
     console.log(`⚠️ TLS Check: Protocol is not HTTPS (${protocol}). Skipping TLS check for ${url}.`);
+    console.log('-------------------------------------');
     return Promise.resolve();  // Skip if the protocol is not HTTPS
   }
 
