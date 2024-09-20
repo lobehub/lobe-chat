@@ -31,9 +31,10 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       'src/database/server/**/**',
-      'src/server/services/**/**',
+      'src/server/services/!(discover)/**/**',
     ],
     globals: true,
+    include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)', 'src/server/services/discover/**'],
     server: {
       deps: {
         inline: ['vitest-canvas-mock'],
