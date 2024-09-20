@@ -173,6 +173,7 @@ export const getServerGlobalConfig = () => {
       },
       ollama: {
         enabled: ENABLED_OLLAMA,
+        enabledModels: extractEnabledModels(OLLAMA_MODEL_LIST),
         fetchOnClient: !OLLAMA_PROXY_URL,
         serverModelCards: transformToChatModelCards({
           defaultChatModels: OllamaProviderCard.chatModels,
