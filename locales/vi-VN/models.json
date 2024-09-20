@@ -2,9 +2,6 @@
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B, với mẫu huấn luyện phong phú, cung cấp hiệu suất vượt trội trong ứng dụng ngành."
   },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5 là phiên bản tiến hóa của dòng Yi, có đào tạo trước chất lượng cao và dữ liệu tinh chỉnh phong phú."
-  },
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B hỗ trợ 16K Tokens, cung cấp khả năng tạo ngôn ngữ hiệu quả và mượt mà."
   },
@@ -53,35 +50,11 @@
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "Là phiên bản thử nghiệm của Qwen2, Qwen1.5 sử dụng dữ liệu quy mô lớn để đạt được chức năng đối thoại chính xác hơn."
   },
-  "Qwen/Qwen1.5-14B-Chat": {
-    "description": "Qwen1.5 được đào tạo từ bộ dữ liệu quy mô lớn, xuất sắc trong các nhiệm vụ ngôn ngữ phức tạp."
-  },
-  "Qwen/Qwen1.5-32B-Chat": {
-    "description": "Qwen1.5 có khả năng trả lời câu hỏi đa lĩnh vực và tạo văn bản."
-  },
   "Qwen/Qwen1.5-72B-Chat": {
     "description": "Qwen 1.5 Chat (72B) cung cấp phản hồi nhanh và khả năng đối thoại tự nhiên, phù hợp cho môi trường đa ngôn ngữ."
   },
-  "Qwen/Qwen1.5-7B-Chat": {
-    "description": "Qwen1.5 nâng cao khả năng diễn đạt trong đối thoại thông qua việc kết hợp giữa đào tạo trước cao cấp và tinh chỉnh."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2 là dòng mô hình ngôn ngữ lớn hoàn toàn mới, nhằm tối ưu hóa việc xử lý các nhiệm vụ theo hướng dẫn."
-  },
-  "Qwen/Qwen2-57B-A14B-Instruct": {
-    "description": "Qwen2 là dòng mới, mô hình 57B A14B thể hiện xuất sắc trong các nhiệm vụ theo hướng dẫn."
-  },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 là mô hình ngôn ngữ tổng quát tiên tiến, hỗ trợ nhiều loại chỉ dẫn."
-  },
-  "Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2 là dòng mô hình ngôn ngữ lớn hoàn toàn mới, có khả năng hiểu và tạo ra mạnh mẽ hơn."
-  },
-  "Qwen/Qwen2-Math-72B-Instruct": {
-    "description": "Qwen2-Math tập trung vào việc giải quyết các vấn đề trong lĩnh vực toán học, cung cấp giải pháp chuyên nghiệp cho các bài toán khó."
-  },
-  "THUDM/chatglm3-6b": {
-    "description": "Là mô hình ngôn ngữ hội thoại song ngữ, ChatGLM3 có khả năng xử lý các nhiệm vụ chuyển đổi giữa tiếng Trung và tiếng Anh."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B là phiên bản mã nguồn mở, cung cấp trải nghiệm đối thoại tối ưu cho các ứng dụng hội thoại."
@@ -262,12 +235,6 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct cung cấp khả năng xử lý chỉ dẫn đáng tin cậy, hỗ trợ nhiều ứng dụng trong ngành."
-  },
-  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
-    "description": "DeepSeek Coder V2 được thiết kế cho các nhiệm vụ mã, tập trung vào việc tạo mã hiệu quả."
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek V2 có 6.7 tỷ tham số, hỗ trợ xử lý văn bản tiếng Anh và tiếng Trung."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 kết hợp các đặc điểm xuất sắc của các phiên bản trước, tăng cường khả năng tổng quát và mã hóa."
@@ -539,9 +506,6 @@
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B) cung cấp hỗ trợ đa ngôn ngữ, bao gồm nhiều lĩnh vực kiến thức phong phú."
   },
-  "meta-llama/Meta-Llama-3-70B-Instruct": {
-    "description": "LLaMA 3 hỗ trợ tạo văn bản dung lượng lớn và phân tích theo hướng dẫn."
-  },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite phù hợp cho các môi trường cần hiệu suất cao và độ trễ thấp."
   },
@@ -716,18 +680,6 @@
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
   },
-  "qwen-max": {
-    "description": "Mô hình ngôn ngữ quy mô lớn Qwen với quy mô hàng trăm tỷ, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác, hiện là mô hình API đứng sau phiên bản sản phẩm Qwen 2.5."
-  },
-  "qwen-max-longcontext": {
-    "description": "Mô hình ngôn ngữ quy mô lớn Qwen với quy mô hàng trăm tỷ, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác, mở rộng cửa sổ ngữ cảnh."
-  },
-  "qwen-plus": {
-    "description": "Mô hình ngôn ngữ quy mô lớn Qwen phiên bản nâng cao, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác."
-  },
-  "qwen-turbo": {
-    "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và các ngôn ngữ khác."
-  },
   "qwen-vl-chat-v1": {
     "description": "Mô hình Qwen VL hỗ trợ các phương thức tương tác linh hoạt, bao gồm nhiều hình ảnh, nhiều vòng hỏi đáp, sáng tạo, v.v."
   },
@@ -745,18 +697,6 @@
   },
   "qwen2": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
-  },
-  "qwen2-57b-a14b-instruct": {
-    "description": "Mô hình Qwen2 quy mô 57B với 14B tham số kích hoạt MOE được mở nguồn cho công chúng."
-  },
-  "qwen2-72b-instruct": {
-    "description": "Mô hình Qwen2 quy mô 72B được mở nguồn cho công chúng."
-  },
-  "qwen2-7b-instruct": {
-    "description": "Mô hình Qwen2 quy mô 7B được mở nguồn cho công chúng."
-  },
-  "qwen2-math-72b-instruct": {
-    "description": "Mô hình Qwen2-Math có khả năng giải toán mạnh mẽ."
   },
   "qwen2:0.5b": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
