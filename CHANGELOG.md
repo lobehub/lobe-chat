@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.11](https://github.com/lobehub/lobe-chat/compare/v1.19.10...v1.19.11)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Custom model initialization not taking effect error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Custom model initialization not taking effect error, closes [#4038](https://github.com/lobehub/lobe-chat/issues/4038) ([0e0d208](https://github.com/lobehub/lobe-chat/commit/0e0d208))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.10](https://github.com/lobehub/lobe-chat/compare/v1.19.9...v1.19.10)
 
 <sup>Released on **2024-09-20**</sup>
