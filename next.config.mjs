@@ -121,8 +121,28 @@ const nextConfig = {
           value: '(?<slug>.*)',
         },
       ],
-      permanent: false,
+      permanent: true,
       source: '/market',
+    },
+    {
+      destination: '/discover/assistants',
+      permanent: true,
+      source: '/discover/assistant',
+    },
+    {
+      destination: '/discover/models',
+      permanent: true,
+      source: '/discover/model',
+    },
+    {
+      destination: '/discover/plugins',
+      permanent: true,
+      source: '/discover/plugin',
+    },
+    {
+      destination: '/discover/providers',
+      permanent: true,
+      source: '/discover/provider',
     },
     {
       destination: '/settings/common',
