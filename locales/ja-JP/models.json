@@ -2,9 +2,6 @@
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34Bは豊富な訓練サンプルを用いて業界アプリケーションで優れたパフォーマンスを提供します。"
   },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5はYiシリーズの進化版で、高品質な事前学習と豊富な微調整データを持っています。"
-  },
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9Bは16Kトークンをサポートし、高効率でスムーズな言語生成能力を提供します。"
   },
@@ -47,41 +44,56 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B)は、最適化された言語出力と多様なアプリケーションの可能性を提供します。"
   },
+  "Phi-3-5-mini-instruct": {
+    "description": "Phi-3-miniモデルのリフレッシュ版です。"
+  },
+  "Phi-3-medium-128k-instruct": {
+    "description": "同じPhi-3-mediumモデルですが、RAGまたは少数ショットプロンプティング用により大きなコンテキストサイズを持っています。"
+  },
+  "Phi-3-medium-4k-instruct": {
+    "description": "14Bパラメータのモデルで、Phi-3-miniよりも高品質で、質の高い推論密度のデータに焦点を当てています。"
+  },
+  "Phi-3-mini-128k-instruct": {
+    "description": "同じPhi-3-miniモデルですが、RAGまたは少数ショットプロンプティング用により大きなコンテキストサイズを持っています。"
+  },
+  "Phi-3-mini-4k-instruct": {
+    "description": "Phi-3ファミリーの最小メンバー。品質と低遅延の両方に最適化されています。"
+  },
+  "Phi-3-small-128k-instruct": {
+    "description": "同じPhi-3-smallモデルですが、RAGまたは少数ショットプロンプティング用により大きなコンテキストサイズを持っています。"
+  },
+  "Phi-3-small-8k-instruct": {
+    "description": "7Bパラメータのモデルで、Phi-3-miniよりも高品質で、質の高い推論密度のデータに焦点を当てています。"
+  },
   "Pro-128k": {
     "description": "Spark Pro-128Kは特大のコンテキスト処理能力を備え、最大128Kのコンテキスト情報を処理でき、特に全体分析や長期的な論理関連処理が必要な長文コンテンツに適しており、複雑なテキストコミュニケーションにおいて流暢で一貫した論理と多様な引用サポートを提供します。"
   },
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "Qwen2のテスト版として、Qwen1.5は大規模データを使用してより正確な対話機能を実現しました。"
   },
-  "Qwen/Qwen1.5-14B-Chat": {
-    "description": "Qwen1.5は大規模データセットで訓練され、複雑な言語タスクに優れています。"
-  },
-  "Qwen/Qwen1.5-32B-Chat": {
-    "description": "Qwen1.5は多分野の問答とテキスト生成の能力を備えています。"
-  },
   "Qwen/Qwen1.5-72B-Chat": {
     "description": "Qwen 1.5 Chat (72B)は、迅速な応答と自然な対話能力を提供し、多言語環境に適しています。"
-  },
-  "Qwen/Qwen1.5-7B-Chat": {
-    "description": "Qwen1.5は高度な事前学習と微調整を組み合わせて対話表現能力を向上させています。"
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2は全く新しい大型言語モデルシリーズで、指示タスクの処理を最適化することを目的としています。"
-  },
-  "Qwen/Qwen2-57B-A14B-Instruct": {
-    "description": "Qwen2は全く新しいシリーズで、57B A14Bモデルは指示タスクにおいて卓越したパフォーマンスを示します。"
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2は、先進的な汎用言語モデルであり、さまざまな指示タイプをサポートします。"
   },
-  "Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2は全く新しい大型言語モデルシリーズで、より強力な理解と生成能力を持っています。"
+  "Qwen/Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5は、新しい大型言語モデルシリーズで、指示型タスクの処理を最適化することを目的としています。"
   },
-  "Qwen/Qwen2-Math-72B-Instruct": {
-    "description": "Qwen2-Mathは数学分野の問題解決に特化しており、高難度の問題に専門的な解答を提供します。"
+  "Qwen/Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5は、新しい大型言語モデルシリーズで、指示型タスクの処理を最適化することを目的としています。"
   },
-  "THUDM/chatglm3-6b": {
-    "description": "ChatGLM3はバイリンガル会話言語モデルとして、中英の変換タスクを処理できます。"
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5は、新しい大型言語モデルシリーズで、より強力な理解と生成能力を持っています。"
+  },
+  "Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5は、新しい大型言語モデルシリーズで、指示型タスクの処理を最適化することを目的としています。"
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coderは、コード作成に特化しています。"
+  },
+  "Qwen/Qwen2.5-Math-72B-Instruct": {
+    "description": "Qwen2.5-Mathは、数学分野の問題解決に特化しており、高難度の問題に対して専門的な解答を提供します。"
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9Bはオープンソース版で、会話アプリケーションに最適化された対話体験を提供します。"
@@ -157,6 +169,15 @@
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Largeモデルは、卓越した多言語処理能力を持ち、さまざまな言語生成と理解タスクに使用できます。"
+  },
+  "ai21-jamba-1.5-large": {
+    "description": "398Bパラメータ（94Bアクティブ）の多言語モデルで、256Kの長いコンテキストウィンドウ、関数呼び出し、構造化出力、基盤生成を提供します。"
+  },
+  "ai21-jamba-1.5-mini": {
+    "description": "52Bパラメータ（12Bアクティブ）の多言語モデルで、256Kの長いコンテキストウィンドウ、関数呼び出し、構造化出力、基盤生成を提供します。"
+  },
+  "ai21-jamba-instruct": {
+    "description": "最高のパフォーマンス、品質、コスト効率を実現するための生産グレードのMambaベースのLLMモデルです。"
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnetは業界標準を向上させ、競合モデルやClaude 3 Opusを超える性能を持ち、広範な評価で優れたパフォーマンスを示し、私たちの中程度のモデルの速度とコストを兼ね備えています。"
@@ -254,6 +275,12 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22Bは指示遵守、対話、プログラミングのために設計されたモデルです。"
   },
+  "cohere-command-r": {
+    "description": "Command Rは、RAGとツール使用をターゲットにしたスケーラブルな生成モデルで、企業向けの生産規模のAIを実現します。"
+  },
+  "cohere-command-r-plus": {
+    "description": "Command R+は、企業グレードのワークロードに対応するために設計された最先端のRAG最適化モデルです。"
+  },
   "command-r": {
     "description": "Command Rは、対話と長いコンテキストタスクに最適化されたLLMであり、特に動的なインタラクションと知識管理に適しています。"
   },
@@ -262,12 +289,6 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instructは、高い信頼性の指示処理能力を提供し、多業界アプリケーションをサポートします。"
-  },
-  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
-    "description": "DeepSeek Coder V2はコードタスクのために設計されており、高効率なコード生成に特化しています。"
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek V2は67億パラメータを持ち、英中のテキスト処理をサポートします。"
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5は以前のバージョンの優れた特徴を集約し、汎用性とコーディング能力を強化しました。"
@@ -467,6 +488,8 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5は多様なシーンでのインテリジェントな対話ソリューションを提供します。"
   },
+  "jamba-1.5-large": {},
+  "jamba-1.5-mini": {},
   "llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instructモデルは、70Bパラメータを持ち、大規模なテキスト生成と指示タスクで卓越した性能を提供します。"
   },
@@ -530,6 +553,21 @@
   "mathstral": {
     "description": "MathΣtralは、科学研究と数学推論のために設計されており、効果的な計算能力と結果の解釈を提供します。"
   },
+  "meta-llama-3-70b-instruct": {
+    "description": "推論、コーディング、広範な言語アプリケーションに優れた70億パラメータの強力なモデルです。"
+  },
+  "meta-llama-3-8b-instruct": {
+    "description": "対話とテキスト生成タスクに最適化された多用途の80億パラメータモデルです。"
+  },
+  "meta-llama-3.1-405b-instruct": {
+    "description": "Llama 3.1の指示調整されたテキスト専用モデルは、多言語対話のユースケースに最適化されており、一般的な業界ベンチマークで多くのオープンソースおよびクローズドチャットモデルを上回ります。"
+  },
+  "meta-llama-3.1-70b-instruct": {
+    "description": "Llama 3.1の指示調整されたテキスト専用モデルは、多言語対話のユースケースに最適化されており、一般的な業界ベンチマークで多くのオープンソースおよびクローズドチャットモデルを上回ります。"
+  },
+  "meta-llama-3.1-8b-instruct": {
+    "description": "Llama 3.1の指示調整されたテキスト専用モデルは、多言語対話のユースケースに最適化されており、一般的な業界ベンチマークで多くのオープンソースおよびクローズドチャットモデルを上回ります。"
+  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B)は、優れた言語処理能力と素晴らしいインタラクション体験を提供します。"
   },
@@ -538,9 +576,6 @@
   },
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B)は、多言語サポートを提供し、豊富な分野知識をカバーしています。"
-  },
-  "meta-llama/Meta-Llama-3-70B-Instruct": {
-    "description": "LLaMA 3は大容量のテキスト生成と指示解析をサポートします。"
   },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Liteは、高効率と低遅延が求められる環境に適しています。"
@@ -620,11 +655,20 @@
   "mistral-large": {
     "description": "Mixtral Largeは、Mistralのフラッグシップモデルであり、コード生成、数学、推論の能力を組み合わせ、128kのコンテキストウィンドウをサポートします。"
   },
+  "mistral-large-2407": {
+    "description": "Mistral Large (2407)は、最先端の推論、知識、コーディング能力を持つ高度な大規模言語モデル（LLM）です。"
+  },
   "mistral-large-latest": {
     "description": "Mistral Largeは、フラッグシップの大モデルであり、多言語タスク、複雑な推論、コード生成に優れ、高端アプリケーションに理想的な選択肢です。"
   },
   "mistral-nemo": {
     "description": "Mistral Nemoは、Mistral AIとNVIDIAが共同で開発した高効率の12Bモデルです。"
+  },
+  "mistral-small": {
+    "description": "Mistral Smallは、高効率と低遅延を必要とする言語ベースのタスクで使用できます。"
+  },
+  "mistral-small-latest": {
+    "description": "Mistral Smallは、コスト効率が高く、迅速かつ信頼性の高い選択肢で、翻訳、要約、感情分析などのユースケースに適しています。"
   },
   "mistralai/Mistral-7B-Instruct-v0.1": {
     "description": "Mistral (7B) Instructは、高性能で知られ、多言語タスクに適しています。"
@@ -713,20 +757,29 @@
   "phi3:14b": {
     "description": "Phi-3は、Microsoftが提供する軽量オープンモデルであり、高効率な統合と大規模な知識推論に適しています。"
   },
+  "pixtral-12b-2409": {
+    "description": "Pixtralモデルは、グラフと画像理解、文書質問応答、多モーダル推論、指示遵守などのタスクで強力な能力を発揮し、自然な解像度とアスペクト比で画像を取り込み、最大128Kトークンの長いコンテキストウィンドウで任意の数の画像を処理できます。"
+  },
+  "qwen-coder-turbo-latest": {
+    "description": "通義千問のコードモデルです。"
+  },
   "qwen-long": {
     "description": "通義千問超大規模言語モデルで、長文コンテキストや長文書、複数文書に基づく対話機能をサポートしています。"
   },
-  "qwen-max": {
-    "description": "通義千問千億規模の超大規模言語モデルで、中国語、英語などの異なる言語入力をサポートし、現在通義千問2.5製品バージョンの背後にあるAPIモデルです。"
+  "qwen-math-plus-latest": {
+    "description": "通義千問の数学モデルは、数学の問題解決に特化した言語モデルです。"
   },
-  "qwen-max-longcontext": {
-    "description": "通義千問千億規模の超大規模言語モデルで、中国語、英語などの異なる言語入力をサポートし、コンテキストウィンドウを拡張しています。"
+  "qwen-math-turbo-latest": {
+    "description": "通義千問の数学モデルは、数学の問題解決に特化した言語モデルです。"
   },
-  "qwen-plus": {
-    "description": "通義千問超大規模言語モデルの強化版で、中国語、英語などの異なる言語入力をサポートしています。"
+  "qwen-max-latest": {
+    "description": "通義千問の千億レベルの超大規模言語モデルで、中国語、英語などの異なる言語入力をサポートし、現在の通義千問2.5製品バージョンの背後にあるAPIモデルです。"
   },
-  "qwen-turbo": {
-    "description": "通義千問超大規模言語モデルで、中国語、英語などの異なる言語入力をサポートしています。"
+  "qwen-plus-latest": {
+    "description": "通義千問の超大規模言語モデルの強化版で、中国語、英語などの異なる言語入力をサポートしています。"
+  },
+  "qwen-turbo-latest": {
+    "description": "通義千問の超大規模言語モデルで、中国語、英語などの異なる言語入力をサポートしています。"
   },
   "qwen-vl-chat-v1": {
     "description": "通義千問VLは、複数の画像、多段階の質問応答、創作などの柔軟なインタラクション方式をサポートするモデルです。"
@@ -746,17 +799,32 @@
   "qwen2": {
     "description": "Qwen2は、Alibabaの新世代大規模言語モデルであり、優れた性能で多様なアプリケーションニーズをサポートします。"
   },
-  "qwen2-57b-a14b-instruct": {
-    "description": "通義千問2が公開した57B規模14B活性化パラメータのMOEモデルです。"
+  "qwen2.5-14b-instruct": {
+    "description": "通義千問2.5の対外オープンソースの14B規模のモデルです。"
   },
-  "qwen2-72b-instruct": {
-    "description": "通義千問2が公開した72B規模のモデルです。"
+  "qwen2.5-32b-instruct": {
+    "description": "通義千問2.5の対外オープンソースの32B規模のモデルです。"
   },
-  "qwen2-7b-instruct": {
-    "description": "通義千問2が公開した7B規模のモデルです。"
+  "qwen2.5-72b-instruct": {
+    "description": "通義千問2.5の対外オープンソースの72B規模のモデルです。"
   },
-  "qwen2-math-72b-instruct": {
-    "description": "Qwen2-Mathモデルは強力な数学解決能力を持っています。"
+  "qwen2.5-7b-instruct": {
+    "description": "通義千問2.5の対外オープンソースの7B規模のモデルです。"
+  },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "通義千問のコードモデルのオープンソース版です。"
+  },
+  "qwen2.5-coder-7b-instruct": {
+    "description": "通義千問のコードモデルのオープンソース版です。"
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Qwen-Mathモデルは、強力な数学の問題解決能力を持っています。"
+  },
+  "qwen2.5-math-72b-instruct": {
+    "description": "Qwen-Mathモデルは、強力な数学の問題解決能力を持っています。"
+  },
+  "qwen2.5-math-7b-instruct": {
+    "description": "Qwen-Mathモデルは、強力な数学の問題解決能力を持っています。"
   },
   "qwen2:0.5b": {
     "description": "Qwen2は、Alibabaの新世代大規模言語モデルであり、優れた性能で多様なアプリケーションニーズをサポートします。"

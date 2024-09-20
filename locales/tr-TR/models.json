@@ -2,9 +2,6 @@
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B, zengin eğitim örnekleri ile endüstri uygulamalarında üstün performans sunar."
   },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5, Yi serisinin evrimsel versiyonudur, yüksek kaliteli ön eğitim ve zengin ince ayar verilerine sahiptir."
-  },
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B, 16K Token desteği sunar, etkili ve akıcı dil oluşturma yeteneği sağlar."
   },
@@ -47,41 +44,56 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B), optimize edilmiş dil çıktısı ve çeşitli uygulama olasılıkları sunar."
   },
+  "Phi-3-5-mini-instruct": {
+    "description": "Phi-3-mini modelinin yenilenmiş versiyonu."
+  },
+  "Phi-3-medium-128k-instruct": {
+    "description": "Aynı Phi-3-medium modeli, ancak RAG veya az sayıda örnek isteme için daha büyük bir bağlam boyutuna sahiptir."
+  },
+  "Phi-3-medium-4k-instruct": {
+    "description": "14B parametreli bir model, Phi-3-mini'den daha iyi kalite sunar, yüksek kaliteli, akıl yürütme yoğun veriye odaklanır."
+  },
+  "Phi-3-mini-128k-instruct": {
+    "description": "Aynı Phi-3-mini modeli, ancak RAG veya az sayıda örnek isteme için daha büyük bir bağlam boyutuna sahiptir."
+  },
+  "Phi-3-mini-4k-instruct": {
+    "description": "Phi-3 ailesinin en küçük üyesi. Hem kalite hem de düşük gecikme için optimize edilmiştir."
+  },
+  "Phi-3-small-128k-instruct": {
+    "description": "Aynı Phi-3-small modeli, ancak RAG veya az sayıda örnek isteme için daha büyük bir bağlam boyutuna sahiptir."
+  },
+  "Phi-3-small-8k-instruct": {
+    "description": "7B parametreli bir model, Phi-3-mini'den daha iyi kalite sunar, yüksek kaliteli, akıl yürütme yoğun veriye odaklanır."
+  },
   "Pro-128k": {
     "description": "Spark Pro-128K, olağanüstü bağlam işleme yeteneği ile donatılmıştır, 128K'ya kadar bağlam bilgisi işleyebilir, özellikle uzun metin içeriklerinde bütünsel analiz ve uzun vadeli mantıksal bağlantı işleme gerektiren durumlar için uygundur, karmaşık metin iletişiminde akıcı ve tutarlı bir mantık ile çeşitli alıntı desteği sunar."
   },
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "Qwen2'nin test sürümü olan Qwen1.5, büyük ölçekli verilerle daha hassas diyalog yetenekleri sunar."
   },
-  "Qwen/Qwen1.5-14B-Chat": {
-    "description": "Qwen1.5, büyük ölçekli veri setleri ile eğitilmiş olup, karmaşık dil görevlerinde uzmandır."
-  },
-  "Qwen/Qwen1.5-32B-Chat": {
-    "description": "Qwen1.5, çok alanlı bilgi sorgulama ve metin oluşturma yeteneğine sahiptir."
-  },
   "Qwen/Qwen1.5-72B-Chat": {
     "description": "Qwen 1.5 Chat (72B), hızlı yanıt ve doğal diyalog yetenekleri sunar, çok dilli ortamlara uygundur."
-  },
-  "Qwen/Qwen1.5-7B-Chat": {
-    "description": "Qwen1.5, gelişmiş ön eğitim ve ince ayar kombinasyonu ile diyalog ifade yeteneğini artırır."
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2, talimat tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
-  },
-  "Qwen/Qwen2-57B-A14B-Instruct": {
-    "description": "Qwen2, talimat görevlerinde mükemmel performans gösteren 57B A14B modelidir."
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2, çok çeşitli talimat türlerini destekleyen gelişmiş bir genel dil modelidir."
   },
-  "Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2, daha güçlü anlama ve oluşturma yeteneklerine sahip yeni bir büyük dil modeli serisidir."
+  "Qwen/Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5, talimat tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
   },
-  "Qwen/Qwen2-Math-72B-Instruct": {
-    "description": "Qwen2-Math, matematik alanındaki sorunları çözmeye odaklanır ve zorlu sorulara profesyonel yanıtlar sunar."
+  "Qwen/Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5, talimat tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
   },
-  "THUDM/chatglm3-6b": {
-    "description": "Çift dilli diyalog dil modeli olarak, ChatGLM3, Çince ve İngilizce dönüşüm görevlerini işleyebilir."
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5, daha güçlü anlama ve üretim yeteneklerine sahip yeni bir büyük dil modeli serisidir."
+  },
+  "Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5, talimat tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder, kod yazmaya odaklanır."
+  },
+  "Qwen/Qwen2.5-Math-72B-Instruct": {
+    "description": "Qwen2.5-Math, matematik alanındaki sorunları çözmeye odaklanır ve yüksek zorlukta sorulara profesyonel yanıtlar sunar."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B açık kaynak versiyonu, diyalog uygulamaları için optimize edilmiş bir diyalog deneyimi sunar."
@@ -157,6 +169,15 @@
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large modeli, mükemmel çok dilli işleme yetenekleri sunar ve her türlü dil üretimi ve anlama görevleri için uygundur."
+  },
+  "ai21-jamba-1.5-large": {
+    "description": "398B parametreli (94B aktif) çok dilli bir model, 256K uzun bağlam penceresi, fonksiyon çağrısı, yapılandırılmış çıktı ve temellendirilmiş üretim sunar."
+  },
+  "ai21-jamba-1.5-mini": {
+    "description": "52B parametreli (12B aktif) çok dilli bir model, 256K uzun bağlam penceresi, fonksiyon çağrısı, yapılandırılmış çıktı ve temellendirilmiş üretim sunar."
+  },
+  "ai21-jamba-instruct": {
+    "description": "En iyi performans, kalite ve maliyet verimliliği sağlamak için üretim sınıfı Mamba tabanlı LLM modelidir."
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u geride bırakarak geniş bir değerlendirmede mükemmel performans sergilerken, orta seviye modellerimizin hızı ve maliyeti ile birlikte gelir."
@@ -254,6 +275,12 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B, talimat takibi, diyalog ve programlama için tasarlanmış bir modeldir."
   },
+  "cohere-command-r": {
+    "description": "Command R, üretim ölçeğinde AI sağlamak için RAG ve Araç Kullanımına yönelik ölçeklenebilir bir üretken modeldir."
+  },
+  "cohere-command-r-plus": {
+    "description": "Command R+, kurumsal düzeyde iş yüklerini ele almak için tasarlanmış en son RAG optimize edilmiş bir modeldir."
+  },
   "command-r": {
     "description": "Command R, diyalog ve uzun bağlam görevleri için optimize edilmiş bir LLM'dir, dinamik etkileşim ve bilgi yönetimi için özellikle uygundur."
   },
@@ -262,12 +289,6 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct, yüksek güvenilirlikte talimat işleme yetenekleri sunar ve çok çeşitli endüstri uygulamalarını destekler."
-  },
-  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
-    "description": "DeepSeek Coder V2, kod görevleri için tasarlanmış olup, etkili kod oluşturma üzerine odaklanmaktadır."
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek V2, 6.7 milyar parametreye sahiptir ve İngilizce ve Çince metin işleme desteği sunar."
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5, önceki sürümlerin mükemmel özelliklerini bir araya getirir, genel ve kodlama yeteneklerini artırır."
@@ -467,6 +488,8 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."
   },
+  "jamba-1.5-large": {},
+  "jamba-1.5-mini": {},
   "llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct modeli, 70B parametreye sahiptir ve büyük metin üretimi ve talimat görevlerinde mükemmel performans sunar."
   },
@@ -530,6 +553,21 @@
   "mathstral": {
     "description": "MathΣtral, bilimsel araştırma ve matematik akıl yürütme için tasarlanmış, etkili hesaplama yetenekleri ve sonuç açıklamaları sunar."
   },
+  "meta-llama-3-70b-instruct": {
+    "description": "Akıl yürütme, kodlama ve geniş dil uygulamalarında mükemmel bir 70 milyar parametreli model."
+  },
+  "meta-llama-3-8b-instruct": {
+    "description": "Diyalog ve metin üretim görevleri için optimize edilmiş çok yönlü bir 8 milyar parametreli model."
+  },
+  "meta-llama-3.1-405b-instruct": {
+    "description": "Llama 3.1 talimat ayarlı yalnızca metin modelleri, çok dilli diyalog kullanım durumları için optimize edilmiştir ve mevcut açık kaynak ve kapalı sohbet modellerinin çoğunu yaygın endüstri standartlarında geride bırakmaktadır."
+  },
+  "meta-llama-3.1-70b-instruct": {
+    "description": "Llama 3.1 talimat ayarlı yalnızca metin modelleri, çok dilli diyalog kullanım durumları için optimize edilmiştir ve mevcut açık kaynak ve kapalı sohbet modellerinin çoğunu yaygın endüstri standartlarında geride bırakmaktadır."
+  },
+  "meta-llama-3.1-8b-instruct": {
+    "description": "Llama 3.1 talimat ayarlı yalnızca metin modelleri, çok dilli diyalog kullanım durumları için optimize edilmiştir ve mevcut açık kaynak ve kapalı sohbet modellerinin çoğunu yaygın endüstri standartlarında geride bırakmaktadır."
+  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B), mükemmel dil işleme yetenekleri ve olağanüstü etkileşim deneyimi sunar."
   },
@@ -538,9 +576,6 @@
   },
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B), çok dilli desteği ile zengin alan bilgilerini kapsar."
-  },
-  "meta-llama/Meta-Llama-3-70B-Instruct": {
-    "description": "LLaMA 3, büyük hacimli metin oluşturma ve talimat çözümleme desteği sunar."
   },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite, yüksek performans ve düşük gecikme gerektiren ortamlara uygundur."
@@ -620,11 +655,20 @@
   "mistral-large": {
     "description": "Mixtral Large, Mistral'ın amiral gemisi modelidir, kod üretimi, matematik ve akıl yürütme yeteneklerini birleştirir, 128k bağlam penceresini destekler."
   },
+  "mistral-large-2407": {
+    "description": "Mistral Large (2407), en son akıl yürütme, bilgi ve kodlama yetenekleri ile gelişmiş bir Büyük Dil Modelidir (LLM)."
+  },
   "mistral-large-latest": {
     "description": "Mistral Large, çok dilli görevler, karmaşık akıl yürütme ve kod üretimi için ideal bir seçimdir ve yüksek uç uygulamalar için tasarlanmıştır."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo, Mistral AI ve NVIDIA işbirliği ile sunulan, yüksek verimli 12B modelidir."
+  },
+  "mistral-small": {
+    "description": "Mistral Small, yüksek verimlilik ve düşük gecikme gerektiren her dil tabanlı görevde kullanılabilir."
+  },
+  "mistral-small-latest": {
+    "description": "Mistral Small, çeviri, özetleme ve duygu analizi gibi kullanım durumları için maliyet etkin, hızlı ve güvenilir bir seçenektir."
   },
   "mistralai/Mistral-7B-Instruct-v0.1": {
     "description": "Mistral (7B) Instruct, yüksek performansıyla tanınır ve çeşitli dil görevleri için uygundur."
@@ -713,20 +757,29 @@
   "phi3:14b": {
     "description": "Phi-3, Microsoft tarafından sunulan hafif bir açık modeldir, verimli entegrasyon ve büyük ölçekli bilgi akıl yürütme için uygundur."
   },
+  "pixtral-12b-2409": {
+    "description": "Pixtral modeli, grafik ve görüntü anlama, belge yanıtı, çok modlu akıl yürütme ve talimat takibi gibi görevlerde güçlü yetenekler sergiler, doğal çözünürlük ve en boy oranında görüntüleri alabilir ve 128K token uzunluğunda bir bağlam penceresinde herhangi bir sayıda görüntüyü işleyebilir."
+  },
+  "qwen-coder-turbo-latest": {
+    "description": "Tongyi Qianwen kodlama modeli."
+  },
   "qwen-long": {
     "description": "Tongyi Qianwen, uzun metin bağlamını destekleyen ve uzun belgeler, çoklu belgeler gibi çeşitli senaryolar için diyalog işlevselliği sunan büyük ölçekli bir dil modelidir."
   },
-  "qwen-max": {
-    "description": "Tongyi Qianwen, yüz milyar seviyesinde büyük ölçekli bir dil modelidir. Çince, İngilizce gibi farklı dillerde girişi destekler ve şu anda Tongyi Qianwen 2.5 ürün versiyonunun arkasındaki API modelidir."
+  "qwen-math-plus-latest": {
+    "description": "Tongyi Qianwen matematik modeli, matematik problemlerini çözmek için özel olarak tasarlanmış bir dil modelidir."
   },
-  "qwen-max-longcontext": {
-    "description": "Tongyi Qianwen, yüz milyar seviyesinde büyük ölçekli bir dil modelidir. Çince, İngilizce gibi farklı dillerde girişi destekler ve bağlam penceresini genişletmiştir."
+  "qwen-math-turbo-latest": {
+    "description": "Tongyi Qianwen matematik modeli, matematik problemlerini çözmek için özel olarak tasarlanmış bir dil modelidir."
   },
-  "qwen-plus": {
-    "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dillerde girişi destekleyen büyük ölçekli dil modelinin geliştirilmiş versiyonudur."
+  "qwen-max-latest": {
+    "description": "Tongyi Qianwen, 100 milyar seviyesinde büyük bir dil modeli, Çince, İngilizce ve diğer dillerde girişleri destekler, şu anda Tongyi Qianwen 2.5 ürün versiyonunun arkasındaki API modelidir."
   },
-  "qwen-turbo": {
-    "description": "Tongyi Qianwen, Çince, İngilizce gibi farklı dillerde girişi destekleyen büyük ölçekli bir dil modelidir."
+  "qwen-plus-latest": {
+    "description": "Tongyi Qianwen'in geliştirilmiş versiyonu, çok dilli girişleri destekler."
+  },
+  "qwen-turbo-latest": {
+    "description": "Tongyi Qianwen, çok dilli bir dil modeli, Çince, İngilizce ve diğer dillerde girişleri destekler."
   },
   "qwen-vl-chat-v1": {
     "description": "Tongyi Qianwen VL, çoklu görüntü, çok turlu soru-cevap, yaratım gibi esnek etkileşim yöntemlerini destekleyen bir modeldir."
@@ -746,17 +799,32 @@
   "qwen2": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."
   },
-  "qwen2-57b-a14b-instruct": {
-    "description": "Tongyi Qianwen 2, halka açık kaynak kodlu 57B ölçeğinde 14B etkin parametreli MOE modelidir."
+  "qwen2.5-14b-instruct": {
+    "description": "Tongyi Qianwen 2.5, halka açık 14B ölçeğinde bir modeldir."
   },
-  "qwen2-72b-instruct": {
-    "description": "Tongyi Qianwen 2, halka açık kaynak kodlu 72B ölçeğinde bir modeldir."
+  "qwen2.5-32b-instruct": {
+    "description": "Tongyi Qianwen 2.5, halka açık 32B ölçeğinde bir modeldir."
   },
-  "qwen2-7b-instruct": {
-    "description": "Tongyi Qianwen 2, halka açık kaynak kodlu 7B ölçeğinde bir modeldir."
+  "qwen2.5-72b-instruct": {
+    "description": "Tongyi Qianwen 2.5, halka açık 72B ölçeğinde bir modeldir."
   },
-  "qwen2-math-72b-instruct": {
-    "description": "Qwen2-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
+  "qwen2.5-7b-instruct": {
+    "description": "Tongyi Qianwen 2.5, halka açık 7B ölçeğinde bir modeldir."
+  },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "Tongyi Qianwen kodlama modelinin açık kaynak versiyonu."
+  },
+  "qwen2.5-coder-7b-instruct": {
+    "description": "Tongyi Qianwen kodlama modelinin açık kaynak versiyonu."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
+  },
+  "qwen2.5-math-72b-instruct": {
+    "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
+  },
+  "qwen2.5-math-7b-instruct": {
+    "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
   },
   "qwen2:0.5b": {
     "description": "Qwen2, Alibaba'nın yeni nesil büyük ölçekli dil modelidir, mükemmel performans ile çeşitli uygulama ihtiyaçlarını destekler."

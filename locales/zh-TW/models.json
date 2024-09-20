@@ -2,9 +2,6 @@
   "01-ai/Yi-1.5-34B-Chat-16K": {
     "description": "Yi-1.5 34B，以豐富的訓練樣本在行業應用中提供優越表現。"
   },
-  "01-ai/Yi-1.5-6B-Chat": {
-    "description": "Yi-1.5 是Yi系列的進化版本，擁有高品質的預訓練和豐富的微調數據。"
-  },
   "01-ai/Yi-1.5-9B-Chat-16K": {
     "description": "Yi-1.5 9B 支持16K Tokens，提供高效、流暢的語言生成能力。"
   },
@@ -47,41 +44,56 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B) 提供優化的語言輸出和多樣化的應用可能。"
   },
+  "Phi-3-5-mini-instruct": {
+    "description": "Phi-3-mini模型的更新版本。"
+  },
+  "Phi-3-medium-128k-instruct": {
+    "description": "相同的Phi-3-medium模型，但具有更大的上下文大小，適用於RAG或少量提示。"
+  },
+  "Phi-3-medium-4k-instruct": {
+    "description": "一個14B參數模型，質量優於Phi-3-mini，專注於高質量、推理密集型數據。"
+  },
+  "Phi-3-mini-128k-instruct": {
+    "description": "相同的Phi-3-mini模型，但具有更大的上下文大小，適用於RAG或少量提示。"
+  },
+  "Phi-3-mini-4k-instruct": {
+    "description": "Phi-3系列中最小的成員。優化了質量和低延遲。"
+  },
+  "Phi-3-small-128k-instruct": {
+    "description": "相同的Phi-3-small模型，但具有更大的上下文大小，適用於RAG或少量提示。"
+  },
+  "Phi-3-small-8k-instruct": {
+    "description": "一個7B參數模型，質量優於Phi-3-mini，專注於高質量、推理密集型數據。"
+  },
   "Pro-128k": {
     "description": "Spark Pro-128K 配置了特大上下文處理能力，能夠處理多達128K的上下文信息，特別適合需通篇分析和長期邏輯關聯處理的長文內容，可在複雜文本溝通中提供流暢一致的邏輯與多樣的引用支持。"
   },
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "作為 Qwen2 的測試版，Qwen1.5 使用大規模數據實現了更精確的對話功能。"
   },
-  "Qwen/Qwen1.5-14B-Chat": {
-    "description": "Qwen1.5 通過大規模數據集訓練，擅長複雜的語言任務。"
-  },
-  "Qwen/Qwen1.5-32B-Chat": {
-    "description": "Qwen1.5 具備多領域問答和文本生成的能力。"
-  },
   "Qwen/Qwen1.5-72B-Chat": {
     "description": "Qwen 1.5 Chat (72B) 提供快速響應和自然對話能力，適合多語言環境。"
-  },
-  "Qwen/Qwen1.5-7B-Chat": {
-    "description": "Qwen1.5 通過結合高級預訓練和微調提升對話表達能力。"
-  },
-  "Qwen/Qwen2-1.5B-Instruct": {
-    "description": "Qwen2 是全新的大型語言模型系列，旨在優化指令式任務的處理。"
-  },
-  "Qwen/Qwen2-57B-A14B-Instruct": {
-    "description": "Qwen2 是全新的系列，57B A14B 型號在指令任務中表現卓越。"
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 是先進的通用語言模型，支持多種指令類型。"
   },
-  "Qwen/Qwen2-7B-Instruct": {
-    "description": "Qwen2 是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  "Qwen/Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
-  "Qwen/Qwen2-Math-72B-Instruct": {
-    "description": "Qwen2-Math 專注於數學領域的問題求解，為高難度題提供專業解答。"
+  "Qwen/Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
-  "THUDM/chatglm3-6b": {
-    "description": "作為雙語會話語言模型，ChatGLM3能處理中英文轉換任務。"
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  },
+  "Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5是全新的大型語言模型系列，旨在優化指令式任務的處理。"
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder專注於代碼編寫。"
+  },
+  "Qwen/Qwen2.5-Math-72B-Instruct": {
+    "description": "Qwen2.5-Math專注於數學領域的問題求解，為高難度題提供專業解答。"
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 開放源碼版本，為會話應用提供優化後的對話體驗。"
@@ -157,6 +169,15 @@
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large 模型，具備卓越的多語言處理能力，可用於各類語言生成和理解任務。"
+  },
+  "ai21-jamba-1.5-large": {
+    "description": "一個398B參數（94B活躍）多語言模型，提供256K長上下文窗口、函數調用、結構化輸出和基於實體的生成。"
+  },
+  "ai21-jamba-1.5-mini": {
+    "description": "一個52B參數（12B活躍）多語言模型，提供256K長上下文窗口、函數調用、結構化輸出和基於實體的生成。"
+  },
+  "ai21-jamba-instruct": {
+    "description": "一個生產級的基於Mamba的LLM模型，以實現最佳性能、質量和成本效率。"
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet提升了行業標準，性能超過競爭對手模型和Claude 3 Opus，在廣泛的評估中表現出色，同時具有我們中等層級模型的速度和成本。"
@@ -254,6 +275,12 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B 是一款為指令遵循、對話和編程設計的模型。"
   },
+  "cohere-command-r": {
+    "description": "Command R是一個可擴展的生成模型，針對RAG和工具使用，旨在為企業提供生產級AI。"
+  },
+  "cohere-command-r-plus": {
+    "description": "Command R+是一個最先進的RAG優化模型，旨在應對企業級工作負載。"
+  },
   "command-r": {
     "description": "Command R 是優化用於對話和長上下文任務的 LLM，特別適合動態交互與知識管理。"
   },
@@ -262,12 +289,6 @@
   },
   "databricks/dbrx-instruct": {
     "description": "DBRX Instruct 提供高可靠性的指令處理能力，支持多行業應用。"
-  },
-  "deepseek-ai/DeepSeek-Coder-V2-Instruct": {
-    "description": "DeepSeek Coder V2 為代碼任務設計，專注於高效的代碼生成。"
-  },
-  "deepseek-ai/DeepSeek-V2-Chat": {
-    "description": "DeepSeek V2 具備67億參數，支持英中文本處理。"
   },
   "deepseek-ai/DeepSeek-V2.5": {
     "description": "DeepSeek V2.5 集合了先前版本的優秀特徵，增強了通用和編碼能力。"
@@ -467,6 +488,8 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
   },
+  "jamba-1.5-large": {},
+  "jamba-1.5-mini": {},
   "llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct 模型，具備 70B 參數，能在大型文本生成和指示任務中提供卓越性能。"
   },
@@ -530,6 +553,21 @@
   "mathstral": {
     "description": "MathΣtral 專為科學研究和數學推理設計，提供有效的計算能力和結果解釋。"
   },
+  "meta-llama-3-70b-instruct": {
+    "description": "一個強大的70億參數模型，在推理、編碼和廣泛的語言應用中表現出色。"
+  },
+  "meta-llama-3-8b-instruct": {
+    "description": "一個多功能的8億參數模型，優化了對話和文本生成任務。"
+  },
+  "meta-llama-3.1-405b-instruct": {
+    "description": "Llama 3.1指令調整的文本模型，針對多語言對話用例進行優化，並在許多可用的開源和封閉聊天模型中超越了常見行業基準。"
+  },
+  "meta-llama-3.1-70b-instruct": {
+    "description": "Llama 3.1指令調整的文本模型，針對多語言對話用例進行優化，並在許多可用的開源和封閉聊天模型中超越了常見行業基準。"
+  },
+  "meta-llama-3.1-8b-instruct": {
+    "description": "Llama 3.1指令調整的文本模型，針對多語言對話用例進行優化，並在許多可用的開源和封閉聊天模型中超越了常見行業基準。"
+  },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) 提供優秀的語言處理能力和出色的互動體驗。"
   },
@@ -538,9 +576,6 @@
   },
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B) 提供多語言支持，涵蓋豐富的領域知識。"
-  },
-  "meta-llama/Meta-Llama-3-70B-Instruct": {
-    "description": "LLaMA 3 支持大容量文本生成和指令解析。"
   },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite 適合需要高效能和低延遲的環境。"
@@ -620,11 +655,20 @@
   "mistral-large": {
     "description": "Mixtral Large 是 Mistral 的旗艦模型，結合代碼生成、數學和推理的能力，支持 128k 上下文窗口。"
   },
+  "mistral-large-2407": {
+    "description": "Mistral Large (2407)是一個先進的大型語言模型（LLM），具有最先進的推理、知識和編碼能力。"
+  },
   "mistral-large-latest": {
     "description": "Mistral Large 是旗艦大模型，擅長多語言任務、複雜推理和代碼生成，是高端應用的理想選擇。"
   },
   "mistral-nemo": {
     "description": "Mistral Nemo 由 Mistral AI 和 NVIDIA 合作推出，是高效性能的 12B 模型。"
+  },
+  "mistral-small": {
+    "description": "Mistral Small可用於任何需要高效率和低延遲的語言任務。"
+  },
+  "mistral-small-latest": {
+    "description": "Mistral Small是一個成本效益高、快速且可靠的選擇，適用於翻譯、摘要和情感分析等用例。"
   },
   "mistralai/Mistral-7B-Instruct-v0.1": {
     "description": "Mistral (7B) Instruct 以高性能著稱，適用於多種語言任務。"
@@ -713,20 +757,29 @@
   "phi3:14b": {
     "description": "Phi-3 是微軟推出的輕量級開放模型，適用於高效集成和大規模知識推理。"
   },
+  "pixtral-12b-2409": {
+    "description": "Pixtral模型在圖表和圖理解、文檔問答、多模態推理和指令遵循等任務上表現出強大的能力，能夠以自然分辨率和寬高比攝入圖像，還能夠在長達128K令牌的長上下文窗口中處理任意數量的圖像。"
+  },
+  "qwen-coder-turbo-latest": {
+    "description": "通義千問代碼模型。"
+  },
   "qwen-long": {
     "description": "通義千問超大規模語言模型，支持長文本上下文，以及基於長文檔、多文檔等多個場景的對話功能。"
   },
-  "qwen-max": {
-    "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，當前通義千問2.5產品版本背後的API模型"
+  "qwen-math-plus-latest": {
+    "description": "通義千問數學模型是專門用於數學解題的語言模型。"
   },
-  "qwen-max-longcontext": {
-    "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，擴展了上下文窗口"
+  "qwen-math-turbo-latest": {
+    "description": "通義千問數學模型是專門用於數學解題的語言模型。"
   },
-  "qwen-plus": {
-    "description": "通義千問超大規模語言模型增強版，支持中文、英文等不同語言輸入"
+  "qwen-max-latest": {
+    "description": "通義千問千億級別超大規模語言模型，支持中文、英文等不同語言輸入，當前通義千問2.5產品版本背後的API模型。"
   },
-  "qwen-turbo": {
-    "description": "通義千問超大規模語言模型，支持中文、英文等不同語言輸入"
+  "qwen-plus-latest": {
+    "description": "通義千問超大規模語言模型增強版，支持中文、英文等不同語言輸入。"
+  },
+  "qwen-turbo-latest": {
+    "description": "通義千問超大規模語言模型，支持中文、英文等不同語言輸入。"
   },
   "qwen-vl-chat-v1": {
     "description": "通義千問VL支持靈活的交互方式，包括多圖、多輪問答、創作等能力的模型。"
@@ -746,17 +799,32 @@
   "qwen2": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
   },
-  "qwen2-57b-a14b-instruct": {
-    "description": "通義千問2對外開源的57B規模14B激活參數的MOE模型"
+  "qwen2.5-14b-instruct": {
+    "description": "通義千問2.5對外開源的14B規模的模型。"
   },
-  "qwen2-72b-instruct": {
-    "description": "通義千問2對外開源的72B規模的模型"
+  "qwen2.5-32b-instruct": {
+    "description": "通義千問2.5對外開源的32B規模的模型。"
   },
-  "qwen2-7b-instruct": {
-    "description": "通義千問2對外開源的7B規模的模型"
+  "qwen2.5-72b-instruct": {
+    "description": "通義千問2.5對外開源的72B規模的模型。"
   },
-  "qwen2-math-72b-instruct": {
-    "description": "Qwen2-Math模型具有強大的數學解題能力"
+  "qwen2.5-7b-instruct": {
+    "description": "通義千問2.5對外開源的7B規模的模型。"
+  },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "通義千問代碼模型開源版。"
+  },
+  "qwen2.5-coder-7b-instruct": {
+    "description": "通義千問代碼模型開源版。"
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Qwen-Math模型具有強大的數學解題能力。"
+  },
+  "qwen2.5-math-72b-instruct": {
+    "description": "Qwen-Math模型具有強大的數學解題能力。"
+  },
+  "qwen2.5-math-7b-instruct": {
+    "description": "Qwen-Math模型具有強大的數學解題能力。"
   },
   "qwen2:0.5b": {
     "description": "Qwen2 是阿里巴巴的新一代大規模語言模型，以優異的性能支持多元化的應用需求。"
