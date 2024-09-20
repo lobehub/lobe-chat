@@ -101,6 +101,19 @@ const nextConfig = {
         ],
         source: '/apple-touch-icon.png',
       },
+      {
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/javascript; charset=utf-8',
+          },
+          {
+            key: 'Content-Security-Policy',
+            value: "default-src 'self'; script-src 'self'",
+          },
+        ],
+        source: '/sw.js',
+      },
     ];
   },
 
@@ -111,6 +124,11 @@ const nextConfig = {
       destination: '/sitemap-index.xml',
       permanent: true,
       source: '/sitemap.xml',
+    },
+    {
+      destination: '/manifest.webmanifest',
+      permanent: true,
+      source: '/manifest.json',
     },
     {
       destination: '/discover/assistant/:slug',
