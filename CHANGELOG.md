@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.15](https://github.com/lobehub/lobe-chat/compare/v1.19.14...v1.19.15)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve i18n in discover.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve i18n in discover, closes [#4049](https://github.com/lobehub/lobe-chat/issues/4049) ([8170889](https://github.com/lobehub/lobe-chat/commit/8170889))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.14](https://github.com/lobehub/lobe-chat/compare/v1.19.13...v1.19.14)
 
 <sup>Released on **2024-09-20**</sup>
