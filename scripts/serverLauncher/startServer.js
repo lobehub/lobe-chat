@@ -21,6 +21,11 @@ function isValidIP(ip) {
 
 // Function to check if a URL using a valid TLS certificate
 function isValidTLS(url) {
+  if (!url) {
+    console.log('⚠️ TLS Check: No URL provided, skipping TLS check. Please ensure your ENV has been set up correctly.');
+    return Promise.resolve();  // Return a resolved promise to keep the function's return type consistent
+  }
+
   let { host, port } = parseUrl(url);
   port = port || 443;
 
