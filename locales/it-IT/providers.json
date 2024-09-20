@@ -1,4 +1,5 @@
 {
+  "ai21": {},
   "ai360": {
     "description": "360 AI è una piattaforma di modelli e servizi AI lanciata da 360 Company, che offre vari modelli avanzati di elaborazione del linguaggio naturale, tra cui 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Questi modelli combinano parametri su larga scala e capacità multimodali, trovando ampio utilizzo in generazione di testo, comprensione semantica, sistemi di dialogo e generazione di codice. Con strategie di prezzo flessibili, 360 AI soddisfa le esigenze diversificate degli utenti, supportando l'integrazione degli sviluppatori e promuovendo l'innovazione e lo sviluppo delle applicazioni intelligenti."
   },
@@ -19,6 +20,9 @@
   },
   "fireworksai": {
     "description": "Fireworks AI è un fornitore leader di servizi di modelli linguistici avanzati, focalizzato su chiamate funzionali e elaborazione multimodale. Il suo ultimo modello Firefunction V2, basato su Llama-3, è ottimizzato per chiamate di funzione, dialogo e rispetto delle istruzioni. Il modello di linguaggio visivo FireLLaVA-13B supporta input misti di immagini e testo. Altri modelli notevoli includono la serie Llama e la serie Mixtral, offrendo supporto efficiente per il rispetto e la generazione di istruzioni multilingue."
+  },
+  "github": {
+    "description": "Con i modelli di GitHub, gli sviluppatori possono diventare ingegneri AI e costruire con i modelli AI leader del settore."
   },
   "google": {
     "description": "La serie Gemini di Google è il suo modello AI più avanzato e versatile, sviluppato da Google DeepMind, progettato per il multimodale, supportando la comprensione e l'elaborazione senza soluzione di continuità di testo, codice, immagini, audio e video. Adatto a una varietà di ambienti, dai data center ai dispositivi mobili, ha notevolmente migliorato l'efficienza e l'ampiezza delle applicazioni dei modelli AI."
