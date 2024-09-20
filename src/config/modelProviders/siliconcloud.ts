@@ -16,39 +16,6 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'DeepSeek V2 具备67亿参数，支持英中文本处理。',
-      displayName: 'DeepSeek V2 Chat',
-      id: 'deepseek-ai/DeepSeek-V2-Chat',
-      pricing: {
-        currency: 'CNY',
-        input: 1.33,
-        output: 1.33,
-      },
-      tokens: 32_768,
-    },
-    {
-      description: 'DeepSeek Coder V2 为代码任务设计, 专注于高效的代码生成。',
-      displayName: 'DeepSeek V2 Coder',
-      id: 'deepseek-ai/DeepSeek-Coder-V2-Instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 1.33,
-        output: 1.33,
-      },
-      tokens: 32_768,
-    },
-    {
-      description: 'DeepSeek 67B 是为高复杂性对话训练的先进模型。',
-      displayName: 'DeepSeek LLM 67B',
-      id: 'deepseek-ai/deepseek-llm-67b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
-      },
-      tokens: 32_768,
-    },
-    {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2.5 7B',
       enabled: true,
