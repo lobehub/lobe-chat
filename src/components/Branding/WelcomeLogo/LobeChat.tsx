@@ -7,7 +7,7 @@ import { Center } from 'react-layout-kit';
 const LogoThree = dynamic(() => import('@lobehub/ui/es/LogoThree'), { ssr: false });
 const LogoSpline = dynamic(() => import('@lobehub/ui/es/LogoThree/LogoSpline'), { ssr: false });
 
-const Logo = memo<{ mobile?: boolean }>(({ mobile }) => {
+const WelcomeLogo = memo<{ mobile?: boolean }>(({ mobile }) => {
   return mobile ? (
     <Center height={240} width={240}>
       <LogoThree size={240} />
@@ -27,4 +27,4 @@ const Logo = memo<{ mobile?: boolean }>(({ mobile }) => {
   );
 });
 
-export default Logo;
+export default WelcomeLogo;
