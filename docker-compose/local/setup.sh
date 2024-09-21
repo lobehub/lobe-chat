@@ -119,7 +119,7 @@ download_file() {
     return 0
   fi
 
-  wget -q --show-progress "$file_url" -O "$local_file" &
+  wget -q --show-progress "$file_url" -O "$local_file"
 }
 
 extract_file() {
@@ -174,9 +174,6 @@ download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
 download_file "$SOURCE_URL/${FILES[1]}" ".env"
 download_file "$SOURCE_URL/${FILES[2]}" "init_data.json.tar.gz"
 download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
-
-# Wait for download job finishes
-wait
 
 # Extract .tar.gz file without output
 extract_file "s3_data.tar.gz" "."
