@@ -82,7 +82,7 @@ services:
       - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
       - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
       - 'AUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-      - 'GENERIC_OIDC_ISSUER=http://localhost:${CASDOOR_PORT}'
+      - 'AUTH_CASDOOR_ISSUER=http://localhost:${CASDOOR_PORT}'
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
       - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
