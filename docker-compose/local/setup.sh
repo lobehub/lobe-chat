@@ -184,7 +184,7 @@ extract_file "init_data.json.tar.gz" "."
 
 # Display final message
 printf "\n%s\n\n" "$(show_message "tips_run_command")"
-print_centered "docker compose up" "green"
+print_centered "docker compose up -d" "green"
 printf "\n%s" "$(show_message "tips_show_documentation")"
-printf "\e[34m%s\e[0m" $(show_message "tips_show_documentation_url")
-printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
+printf "%s\n" $(show_message "tips_show_documentation_url")
+printf "\n%s\n" "$(show_message "tips_warning")"
