@@ -44,6 +44,27 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B) biedt geoptimaliseerde taaloutput en diverse toepassingsmogelijkheden."
   },
+  "Phi-3-5-mini-instruct": {
+    "description": "Vernieuwing van het Phi-3-mini model."
+  },
+  "Phi-3-medium-128k-instruct": {
+    "description": "Hetzelfde Phi-3-medium model, maar met een grotere contextgrootte voor RAG of few shot prompting."
+  },
+  "Phi-3-medium-4k-instruct": {
+    "description": "Een model met 14 miljard parameters, biedt betere kwaliteit dan Phi-3-mini, met een focus op hoogwaardige, redeneringsdichte gegevens."
+  },
+  "Phi-3-mini-128k-instruct": {
+    "description": "Hetzelfde Phi-3-mini model, maar met een grotere contextgrootte voor RAG of few shot prompting."
+  },
+  "Phi-3-mini-4k-instruct": {
+    "description": "De kleinste lid van de Phi-3 familie. Geoptimaliseerd voor zowel kwaliteit als lage latentie."
+  },
+  "Phi-3-small-128k-instruct": {
+    "description": "Hetzelfde Phi-3-small model, maar met een grotere contextgrootte voor RAG of few shot prompting."
+  },
+  "Phi-3-small-8k-instruct": {
+    "description": "Een model met 7 miljard parameters, biedt betere kwaliteit dan Phi-3-mini, met een focus op hoogwaardige, redeneringsdichte gegevens."
+  },
   "Pro-128k": {
     "description": "Spark Pro-128K is uitgerust met een enorme contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken, bijzonder geschikt voor lange teksten die volledige analyse en langdurige logische verbanden vereisen, en biedt vloeiende en consistente logica met diverse referenties in complexe tekstcommunicatie."
   },
@@ -55,6 +76,24 @@
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 is een geavanceerd algemeen taalmodel dat verschillende soorten instructies ondersteunt."
+  },
+  "Qwen/Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
+  },
+  "Qwen/Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
+  },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, met sterkere begrip- en generatiecapaciteiten."
+  },
+  "Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder richt zich op het schrijven van code."
+  },
+  "Qwen/Qwen2.5-Math-72B-Instruct": {
+    "description": "Qwen2.5-Math richt zich op het oplossen van wiskundige vraagstukken en biedt professionele antwoorden op moeilijke vragen."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is de open-source versie die een geoptimaliseerde gesprekservaring biedt voor gespreksapplicaties."
@@ -130,6 +169,15 @@
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Yi-Large model, met uitstekende meertalige verwerkingscapaciteiten, geschikt voor verschillende taalgeneratie- en begripstaken."
+  },
+  "ai21-jamba-1.5-large": {
+    "description": "Een meertalig model met 398 miljard parameters (94 miljard actief), biedt een contextvenster van 256K, functieaanroep, gestructureerde output en gegronde generatie."
+  },
+  "ai21-jamba-1.5-mini": {
+    "description": "Een meertalig model met 52 miljard parameters (12 miljard actief), biedt een contextvenster van 256K, functieaanroep, gestructureerde output en gegronde generatie."
+  },
+  "ai21-jamba-instruct": {
+    "description": "Een productieklare Mamba-gebaseerde LLM-model om de beste prestaties, kwaliteit en kostenefficiëntie te bereiken."
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en presteert uitstekend in brede evaluaties, met de snelheid en kosten van ons gemiddelde model."
@@ -226,6 +274,12 @@
   },
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B is een model ontworpen voor instructievolging, gesprekken en programmeren."
+  },
+  "cohere-command-r": {
+    "description": "Command R is een schaalbaar generatief model gericht op RAG en Tool Use om productie-schaal AI voor ondernemingen mogelijk te maken."
+  },
+  "cohere-command-r-plus": {
+    "description": "Command R+ is een state-of-the-art RAG-geoptimaliseerd model ontworpen om enterprise-grade workloads aan te pakken."
   },
   "command-r": {
     "description": "Command R is geoptimaliseerd voor conversatie- en lange contexttaken, bijzonder geschikt voor dynamische interactie en kennisbeheer."
@@ -434,6 +488,8 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
   },
+  "jamba-1.5-large": {},
+  "jamba-1.5-mini": {},
   "llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct model, met 70B parameters, biedt uitstekende prestaties in grote tekstgeneratie- en instructietaken."
   },
@@ -496,6 +552,21 @@
   },
   "mathstral": {
     "description": "MathΣtral is ontworpen voor wetenschappelijk onderzoek en wiskundige inferentie, biedt effectieve rekencapaciteiten en resultaatinterpretatie."
+  },
+  "meta-llama-3-70b-instruct": {
+    "description": "Een krachtig model met 70 miljard parameters dat uitblinkt in redeneren, coderen en brede taaltoepassingen."
+  },
+  "meta-llama-3-8b-instruct": {
+    "description": "Een veelzijdig model met 8 miljard parameters, geoptimaliseerd voor dialoog- en tekstgeneratietaken."
+  },
+  "meta-llama-3.1-405b-instruct": {
+    "description": "De Llama 3.1 instructie-geoptimaliseerde tekstmodellen zijn geoptimaliseerd voor meertalige dialoogtoepassingen en presteren beter dan veel beschikbare open source en gesloten chatmodellen op gangbare industriële benchmarks."
+  },
+  "meta-llama-3.1-70b-instruct": {
+    "description": "De Llama 3.1 instructie-geoptimaliseerde tekstmodellen zijn geoptimaliseerd voor meertalige dialoogtoepassingen en presteren beter dan veel beschikbare open source en gesloten chatmodellen op gangbare industriële benchmarks."
+  },
+  "meta-llama-3.1-8b-instruct": {
+    "description": "De Llama 3.1 instructie-geoptimaliseerde tekstmodellen zijn geoptimaliseerd voor meertalige dialoogtoepassingen en presteren beter dan veel beschikbare open source en gesloten chatmodellen op gangbare industriële benchmarks."
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) biedt uitstekende taalverwerkingscapaciteiten en een geweldige interactie-ervaring."
@@ -584,11 +655,20 @@
   "mistral-large": {
     "description": "Mixtral Large is het vlaggenschipmodel van Mistral, dat de capaciteiten van codegeneratie, wiskunde en inferentie combineert, ondersteunt een contextvenster van 128k."
   },
+  "mistral-large-2407": {
+    "description": "Mistral Large (2407) is een geavanceerd Large Language Model (LLM) met state-of-the-art redenerings-, kennis- en coderingscapaciteiten."
+  },
   "mistral-large-latest": {
     "description": "Mistral Large is het vlaggenschipmodel, dat uitblinkt in meertalige taken, complexe inferentie en codegeneratie, ideaal voor high-end toepassingen."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo is een 12B-model dat is ontwikkeld in samenwerking met Mistral AI en NVIDIA, biedt efficiënte prestaties."
+  },
+  "mistral-small": {
+    "description": "Mistral Small kan worden gebruikt voor elke taalkundige taak die hoge efficiëntie en lage latentie vereist."
+  },
+  "mistral-small-latest": {
+    "description": "Mistral Small is een kosteneffectieve, snelle en betrouwbare optie voor gebruikscases zoals vertaling, samenvatting en sentimentanalyse."
   },
   "mistralai/Mistral-7B-Instruct-v0.1": {
     "description": "Mistral (7B) Instruct staat bekend om zijn hoge prestaties en is geschikt voor verschillende taalgerelateerde taken."
@@ -677,8 +757,29 @@
   "phi3:14b": {
     "description": "Phi-3 is een lichtgewicht open model van Microsoft, geschikt voor efficiënte integratie en grootschalige kennisinferentie."
   },
+  "pixtral-12b-2409": {
+    "description": "Het Pixtral model toont sterke capaciteiten in taken zoals grafiek- en beeldbegrip, documentvraag-en-antwoord, multimodale redenering en instructievolging, en kan afbeeldingen met natuurlijke resolutie en beeldverhouding verwerken, evenals een onbeperkt aantal afbeeldingen in een lange contextvenster van maximaal 128K tokens."
+  },
+  "qwen-coder-turbo-latest": {
+    "description": "Het Tongyi Qianwen codeermodel."
+  },
   "qwen-long": {
     "description": "Qwen is een grootschalig taalmodel dat lange tekstcontexten ondersteunt, evenals dialoogfunctionaliteit op basis van lange documenten en meerdere documenten."
+  },
+  "qwen-math-plus-latest": {
+    "description": "Het Tongyi Qianwen wiskundemodel is speciaal ontworpen voor het oplossen van wiskundige problemen."
+  },
+  "qwen-math-turbo-latest": {
+    "description": "Het Tongyi Qianwen wiskundemodel is speciaal ontworpen voor het oplossen van wiskundige problemen."
+  },
+  "qwen-max-latest": {
+    "description": "Het Tongyi Qianwen model met een schaal van honderden miljarden, ondersteunt invoer in verschillende talen, waaronder Chinees en Engels, en is de API-model achter de huidige Tongyi Qianwen 2.5 productversie."
+  },
+  "qwen-plus-latest": {
+    "description": "De verbeterde versie van het Tongyi Qianwen supergrote taalmodel ondersteunt invoer in verschillende talen, waaronder Chinees en Engels."
+  },
+  "qwen-turbo-latest": {
+    "description": "De Tongyi Qianwen supergrote taalmodel ondersteunt invoer in verschillende talen, waaronder Chinees en Engels."
   },
   "qwen-vl-chat-v1": {
     "description": "Qwen VL ondersteunt flexibele interactiemethoden, inclusief meerdere afbeeldingen, meerdere rondes van vraag en antwoord, en creatiecapaciteiten."
@@ -697,6 +798,33 @@
   },
   "qwen2": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
+  },
+  "qwen2.5-14b-instruct": {
+    "description": "Het 14B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-32b-instruct": {
+    "description": "Het 32B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-72b-instruct": {
+    "description": "Het 72B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-7b-instruct": {
+    "description": "Het 7B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "De open source versie van het Tongyi Qianwen codeermodel."
+  },
+  "qwen2.5-coder-7b-instruct": {
+    "description": "De open source versie van het Tongyi Qianwen codeermodel."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
+  },
+  "qwen2.5-math-72b-instruct": {
+    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
+  },
+  "qwen2.5-math-7b-instruct": {
+    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
   },
   "qwen2:0.5b": {
     "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
