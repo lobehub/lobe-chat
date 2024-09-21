@@ -43,6 +43,7 @@ export const getAppConfig = () => {
       PLUGIN_SETTINGS: z.string().optional(),
 
       APP_URL: z.string().optional(),
+      CDN_USE_GLOBAL: z.boolean().optional(),
     },
     runtimeEnv: {
       NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
@@ -64,7 +65,10 @@ export const getAppConfig = () => {
         : 'https://chat-plugins.lobehub.com',
 
       PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
+
       APP_URL,
+
+      CDN_USE_GLOBAL: process.env.CDN_USE_GLOBAL === '1',
     },
   });
 };
