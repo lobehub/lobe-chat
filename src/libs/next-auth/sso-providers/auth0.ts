@@ -19,6 +19,7 @@ const provider = {
     profile(profile) {
       return {
         email: profile.email,
+        id: profile.sub,
         image: profile.picture,
         name: profile.name,
         providerAccountId: profile.sub,

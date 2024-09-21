@@ -25,6 +25,7 @@ function LobeCasdoorProvider(config: OIDCUserConfig<CasdoorProfile>): OIDCConfig
       return {
         email: profile.email,
         emailVerified: profile.emailVerified ? new Date() : null,
+        id: profile.id,
         image: profile.avatar,
         name: profile.displayName ?? profile.firstName ?? profile.lastName,
         providerAccountId: profile.id,
