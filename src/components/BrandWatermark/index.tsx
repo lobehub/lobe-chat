@@ -1,16 +1,15 @@
 'use client';
 
-import { LobeHub } from '@lobehub/ui/brand';
 import { createStyles } from 'antd-style';
 import Link from 'next/link';
 import { memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
+import { OrgBrand } from '@/components/Branding';
 import { UTM_SOURCE } from '@/const/url';
 
 const useStyles = createStyles(({ token, css }) => ({
   logoLink: css`
-    height: 20px;
     color: inherit;
 
     &:hover {
@@ -36,7 +35,7 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
         href={`https://lobehub.com?utm_source=${UTM_SOURCE}&utm_content=brand_watermark`}
         target={'_blank'}
       >
-        <LobeHub size={20} type={'text'} />
+        <OrgBrand size={20} type={'text'} />
       </Link>
     </Flexbox>
   );
