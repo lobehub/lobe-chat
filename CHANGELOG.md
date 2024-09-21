@@ -2,6 +2,73 @@
 
 # Changelog
 
+### [Version 1.19.20](https://github.com/lobehub/lobe-chat/compare/v1.19.19...v1.19.20)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Content-Security-Policy.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Content-Security-Policy, closes [#4056](https://github.com/lobehub/lobe-chat/issues/4056) ([d186062](https://github.com/lobehub/lobe-chat/commit/d186062))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.19](https://github.com/lobehub/lobe-chat/compare/v1.19.18...v1.19.19)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Casdoor webhooks providerAccountId not found.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Casdoor webhooks providerAccountId not found, closes [#4055](https://github.com/lobehub/lobe-chat/issues/4055) ([b832289](https://github.com/lobehub/lobe-chat/commit/b832289))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.18](https://github.com/lobehub/lobe-chat/compare/v1.19.17...v1.19.18)
+
+<sup>Released on **2024-09-21**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.17](https://github.com/lobehub/lobe-chat/compare/v1.19.16...v1.19.17)
 
 <sup>Released on **2024-09-21**</sup>
