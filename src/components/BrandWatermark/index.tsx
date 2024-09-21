@@ -10,6 +10,7 @@ import { UTM_SOURCE } from '@/const/url';
 
 const useStyles = createStyles(({ token, css }) => ({
   logoLink: css`
+    line-height: 1;
     color: inherit;
 
     &:hover {
@@ -35,7 +36,7 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
         href={`https://lobehub.com?utm_source=${UTM_SOURCE}&utm_content=brand_watermark`}
         target={'_blank'}
       >
-        <OrgBrand size={20} type={'text'} />
+        <OrgBrand type={'text'} />
       </Link>
     </Flexbox>
   );
