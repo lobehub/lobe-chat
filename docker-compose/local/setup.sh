@@ -65,48 +65,103 @@ FILES=(
 )
 
 # Supported languages and messages
-declare -A MESSAGES
-# en_US, zh_CN are Supported
-MESSAGES["en_US"]="en_US"
-MESSAGES["zh_CN"]="中文"
-# Declare messages
-MESSAGES["downloading_en_US"]="Downloading files..."
-MESSAGES["downloading_zh_CN"]="正在下载文件..."
-
-MESSAGES["downloaded_en_US"]=" already exists, skipping download."
-MESSAGES["downloaded_zh_CN"]=" 已经存在，跳过下载。"
-
-MESSAGES["extracted_success_en_US"]=" extracted successfully to directory: "
-MESSAGES["extracted_success_zh_CN"]=" 解压成功到目录："
-
-MESSAGES["extracted_failed_en_US"]=" extraction failed."
-MESSAGES["extracted_failed_zh_CN"]=" 解压失败。"
-
-MESSAGES["file_not_exists_en_US"]=" does not exist."
-MESSAGES["file_not_exists_zh_CN"]=" 不存在。"
-
-MESSAGES["tips_run_command_en_US"]="You have completed downloading all configuration files. Please run this command to start LobeChat:"
-MESSAGES["tips_run_command_zh_CN"]="您已经完成了所有配置文件的下载。请运行以下命令启动LobeChat："
-
-MESSAGES["tips_show_documentation_en_US"]="Full environment variables in the '.env' can be found at the documentation on "
-MESSAGES["tips_show_documentation_zh_CN"]="完整的环境变量在'.env'中可以在文档中找到："
-
-MESSAGES["tips_show_documentation_url_en_US"]="https://lobehub.com/docs/self-hosting/environment-variables"
-MESSAGES["tips_show_documentation_url_zh_CN"]="https://lobehub.com/zh/docs/self-hosting/environment-variables"
-
-MESSAGES["tips_warning_en_US"]="Warning: do not use this demo application in production!!!"
-MESSAGES["tips_warning_zh_CN"]="警告：不要在生产环境中使用此演示应用程序！！！"
-
 # Arg: -l --lang
 # If the language is not supported, default to English
-if [[ -z "${MESSAGES[$LANGUAGE]}" ]]; then
-  LANGUAGE="en_US"
-fi
-
 # Function to show messages
 show_message() {
-  local message_key="$1"
-  echo "${MESSAGES["$message_key"_"$LANGUAGE"]}"
+  local key="$1"
+  case $key in
+    downloading)
+      case $LANGUAGE in
+        zh_CN)
+          echo "正在下载文件..."
+          ;;
+        *)
+          echo "Downloading files..."
+          ;;
+      esac
+      ;;
+    downloaded)
+      case $LANGUAGE in
+        zh_CN)
+          echo " 已经存在，跳过下载。"
+          ;;
+        *)
+          echo " already exists, skipping download."
+          ;;
+      esac
+      ;;
+    extracted_success)
+      case $LANGUAGE in
+        zh_CN)
+          echo " 解压成功到目录："
+          ;;
+        *)
+          echo " extracted successfully to directory: "
+          ;;
+      esac
+      ;;
+    extracted_failed)
+      case $LANGUAGE in
+        zh_CN)
+          echo " 解压失败。"
+          ;;
+        *)
+          echo " extraction failed."
+          ;;
+      esac
+      ;;
+    file_not_exists)
+      case $LANGUAGE in
+        zh_CN)
+          echo " 不存在。"
+          ;;
+        *)
+          echo " does not exist."
+          ;;
+      esac
+      ;;
+    tips_run_command)
+      case $LANGUAGE in
+        zh_CN)
+          echo "您已经完成了所有配置文件的下载。请运行以下命令启动LobeChat："
+          ;;
+        *)
+          echo "You have completed downloading all configuration files. Please run this command to start LobeChat:"
+          ;;
+      esac
+      ;;
+    tips_show_documentation)
+      case $LANGUAGE in
+        zh_CN)
+          echo "完整的环境变量在'.env'中可以在文档中找到："
+          ;;
+        *)
+          echo "Full environment variables in the '.env' can be found at the documentation on "
+          ;;
+      esac
+      ;;
+    tips_show_documentation_url)
+      case $LANGUAGE in
+        zh_CN)
+          echo "https://lobehub.com/zh/docs/self-hosting/environment-variables"
+          ;;
+        *)
+          echo "https://lobehub.com/docs/self-hosting/environment-variables"
+          ;;
+      esac
+      ;;
+    tips_warning)
+      case $LANGUAGE in
+        zh_CN)
+          echo "警告：不要在生产环境中使用此演示应用程序！！！"
+          ;;
+        *)
+          echo "Warning: do not use this demo application in production!!!"
+          ;;
+      esac
+      ;;
+    esac
 }
 
 # Function to download files
@@ -183,5 +238,5 @@ extract_file "init_data.json.tar.gz" "."
 printf "\n%s\n\n" "$(show_message "tips_run_command")"
 print_centered "docker compose up -d" "green"
 printf "\n%s" "$(show_message "tips_show_documentation")"
-printf "%s\n" $(show_message "tips_show_documentation_url")
-printf "\n%s\n" "$(show_message "tips_warning")"
+printf "\e[34m%s\e[0m\n" $(show_message "tips_show_documentation_url")
+printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
