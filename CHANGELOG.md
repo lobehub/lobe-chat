@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.21](https://github.com/lobehub/lobe-chat/compare/v1.19.20...v1.19.21)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to improve branding customization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to improve branding customization, closes [#4061](https://github.com/lobehub/lobe-chat/issues/4061) ([6199e68](https://github.com/lobehub/lobe-chat/commit/6199e68))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.20](https://github.com/lobehub/lobe-chat/compare/v1.19.19...v1.19.20)
 
 <sup>Released on **2024-09-21**</sup>
