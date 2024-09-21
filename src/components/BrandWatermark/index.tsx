@@ -41,7 +41,7 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
           href={`https://lobehub.com?utm_source=${UTM_SOURCE}&utm_content=brand_watermark`}
           target={'_blank'}
         >
-          <LobeHub type={'text'} />
+          <LobeHub size={20} type={'text'} />
         </Link>
       )}
     </Flexbox>
