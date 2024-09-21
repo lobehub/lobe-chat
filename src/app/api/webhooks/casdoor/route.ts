@@ -23,11 +23,17 @@ export const POST = async (req: Request): Promise<NextResponse> => {
   const nextAuthUserService = new NextAuthUserService();
   switch (action) {
     case 'update-user': {
-      return nextAuthUserService.safeUpdateUser(extendedUser.id, {
-        avatar: extendedUser?.avatar,
-        email: extendedUser?.email,
-        fullName: extendedUser.displayName,
-      });
+      return nextAuthUserService.safeUpdateUser(
+        {
+          provider: 'casdoor',
+          providerAccountId: extendedUser.id,
+        },
+        {
+          avatar: extendedUser?.avatar,
+          email: extendedUser?.email,
+          fullName: extendedUser.displayName,
+        },
+      );
     }
 
     default: {

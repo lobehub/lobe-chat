@@ -24,7 +24,7 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getPluginById(locale, identifier);
-  if (!data) return notFound();
+  if (!data) return;
 
   const { meta, createdAt, homepage, author } = data;
 
