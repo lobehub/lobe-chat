@@ -14,7 +14,7 @@ const isValidIP = (ip) => /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[
 // Function to check TLS validity of a URL
 const isValidTLS = (url = '') => {
   if (!url) {
-    console.log('⚠️ TLS Check: No URL provided. Skipping TLS check. Please ensure your ENV has been set up correctly.');
+    console.log('⚠️ TLS Check: No URL provided. Skipping TLS check. Ensure correct setting ENV.');
     console.log('-------------------------------------');
     return Promise.resolve();
   }
@@ -82,10 +82,10 @@ const parseUrl = (url) => {
 const resolveHostIP = async (host) => {
   try {
     const { address } = await dns.lookup(host, { family: 4 });
-    if (!isValidIP(address)) console.error(`❌ DNS Error: Invalid resolved IP: ${address}`);
+    if (!isValidIP(address)) console.error(`❌ DNS Error: Invalid resolved IP: ${address}. IP address must be IPv4.`);
     return address;
   } catch (err) {
-    console.error(`❌ DNS Error: Could not resolve ${host}.`, err);
+    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server.`, err);
     process.exit(1);
   }
 };
@@ -95,7 +95,7 @@ const runProxyChainsConfGenerator = async (url) => {
   const { protocol, host, port } = parseUrl(url);
 
   if (!['http', 'socks4', 'socks5'].includes(protocol)) {
-    console.error(`❌ ProxyChains: Invalid protocol (${protocol}). Only supported 'http', 'socks4' and 'socks5'.`);
+    console.error(`❌ ProxyChains: Invalid protocol (${protocol}). Protocol must be 'http', 'socks4' and 'socks5'.`);
     process.exit(1);
   }
 
@@ -129,7 +129,7 @@ const runScript = (scriptPath, useProxy = false) => {
   const command = useProxy ? ['proxychains', '-q', 'node', scriptPath] : ['node', scriptPath];
   return new Promise((resolve, reject) => {
     const process = spawn(command.shift(), command, { stdio: 'inherit' });
-    process.on('close', (code) => (code === 0 ? resolve() : reject(new Error(`Process exited with code ${code}`))));
+    process.on('close', (code) => (code === 0 ? resolve() : reject(new Error(`🔴 Process exited with code ${code}`))));
   });
 };
 
@@ -156,7 +156,7 @@ const runServer = async () => {
       await runScript(DB_MIGRATION_SCRIPT_PATH);
       await checkTLSConnections();
     } catch (err) {
-      console.error('❌ Error during TLS connection check or DB migration:', err);
+      console.error('❌ Error during DB migration or TLS connection check:', err);
       process.exit(1);
     }
   }
