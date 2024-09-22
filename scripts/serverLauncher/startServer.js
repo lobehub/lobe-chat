@@ -97,6 +97,7 @@ const resolveHostIP = async (host, version = 4) => {
 
     if (!isValidIP(address, version)) {
       console.error(`❌ DNS Error: Invalid resolved IP: ${address}. IP address must be IPv${version}.`);
+      process.exit(1);
     }
 
     return address;
