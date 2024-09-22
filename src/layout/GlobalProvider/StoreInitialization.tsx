@@ -13,19 +13,21 @@ import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
-import { authSelectors } from '@/store/user/selectors';
+import { authSelectors, preferenceSelectors } from '@/store/user/selectors';
 
 const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
   useTranslation('error');
 
   const router = useRouter();
-  const [isLogin, isSignedIn, useInitUserState, importUrlShareSettings] = useUserStore((s) => [
-    authSelectors.isLogin(s),
-    s.isSignedIn,
-    s.useInitUserState,
-    s.importUrlShareSettings,
-  ]);
+  const [isLogin, isSignedIn, useInitUserState, importUrlShareSettings, isPreferenceInit] =
+    useUserStore((s) => [
+      authSelectors.isLogin(s),
+      s.isSignedIn,
+      s.useInitUserState,
+      s.importUrlShareSettings,
+      preferenceSelectors.isPreferenceInit(s),
+    ]);
 
   const { serverConfig } = useServerConfigStore();
 
@@ -74,8 +76,8 @@ const StoreInitialization = memo(() => {
   // Import settings from the url
   const searchParam = useSearchParams().get(LOBE_URL_IMPORT_NAME);
   useEffect(() => {
-    importUrlShareSettings(searchParam);
-  }, [searchParam]);
+    if (isPreferenceInit) importUrlShareSettings(searchParam);
+  }, [searchParam, isPreferenceInit]);
 
   useEffect(() => {
     if (mobile) {
