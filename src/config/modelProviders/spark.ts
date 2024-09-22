@@ -32,7 +32,7 @@ const Spark: ModelProviderCard = {
       functionCall: false,
       id: 'Pro-128k',
       maxOutput: 4096,
-      tokens: 128_000,
+      tokens: 131_072,
     },
     {
       description:
@@ -52,7 +52,7 @@ const Spark: ModelProviderCard = {
       functionCall: false,
       id: 'Max-32k',
       maxOutput: 8192,
-      tokens: 8192,
+      tokens: 32_768,
     },
     {
       description:
