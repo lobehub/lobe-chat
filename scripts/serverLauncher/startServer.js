@@ -9,7 +9,19 @@ const SERVER_SCRIPT_PATH = '/app/server.js';
 const PROXYCHAINS_CONF_PATH = '/etc/proxychains4.conf';
 
 // Function to check if a string is a valid IP address
-const isValidIP = (ip) => /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/.test(ip);
+const isValidIP = (ip, version = 4) => {
+  const ipv4Regex = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/;
+  const ipv6Regex = /^(([0-9a-f]{1,4}:){7,7}[0-9a-f]{1,4}|([0-9a-f]{1,4}:){1,7}:|([0-9a-f]{1,4}:){1,6}:[0-9a-f]{1,4}|([0-9a-f]{1,4}:){1,5}(:[0-9a-f]{1,4}){1,2}|([0-9a-f]{1,4}:){1,4}(:[0-9a-f]{1,4}){1,3}|([0-9a-f]{1,4}:){1,3}(:[0-9a-f]{1,4}){1,4}|([0-9a-f]{1,4}:){1,2}(:[0-9a-f]{1,4}){1,5}|[0-9a-f]{1,4}:((:[0-9a-f]{1,4}){1,6})|:((:[0-9a-f]{1,4}){1,7}|:)|fe80:(:[0-9a-f]{0,4}){0,4}%[0-9a-z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-f]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/;
+
+  switch (version) {
+    case 4:
+      return ipv4Regex.test(ip);
+    case 6:
+      return ipv6Regex.test(ip);
+    default:
+      return ipv4Regex.test(ip) || ipv6Regex.test(ip);
+  }
+};
 
 // Function to check TLS validity of a URL
 const isValidTLS = (url = '') => {
@@ -79,10 +91,14 @@ const parseUrl = (url) => {
 };
 
 // Function to resolve host IP via DNS
-const resolveHostIP = async (host) => {
+const resolveHostIP = async (host, version = 4) => {
   try {
-    const { address } = await dns.lookup(host, { family: 4 });
-    if (!isValidIP(address)) console.error(`❌ DNS Error: Invalid resolved IP: ${address}. IP address must be IPv4.`);
+    const { address } = await dns.lookup(host, { family: version });
+
+    if (!isValidIP(address, version)) {
+      console.error(`❌ DNS Error: Invalid resolved IP: ${address}. IP address must be IPv${version}.`);
+    }
+
     return address;
   } catch (err) {
     console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server.`, err);
@@ -105,7 +121,7 @@ const runProxyChainsConfGenerator = async (url) => {
     process.exit(1);
   }
 
-  let ip = isValidIP(host) ? host : await resolveHostIP(host);
+  let ip = isValidIP(host, 4) ? host : await resolveHostIP(host, 4);
 
   const configContent = `
 localnet 127.0.0.0/255.0.0.0
