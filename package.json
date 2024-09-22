@@ -171,7 +171,7 @@
     "nanoid": "^5.0.7",
     "next": "14.2.8",
     "next-auth": "beta",
-    "next-mdx-remote": "^4.4.1",
+    "next-mdx-remote": "^5.0.0",
     "nextjs-toploader": "^3.6.15",
     "numeral": "^2.0.6",
     "nuqs": "^1.17.8",
