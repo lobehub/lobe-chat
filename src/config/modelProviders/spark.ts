@@ -57,7 +57,7 @@ const Spark: ModelProviderCard = {
     {
       description:
         'Spark Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。',
-      displayName: 'Spark4.0 Ultra',
+      displayName: 'Spark Ultra',
       enabled: true,
       functionCall: false,
       id: '4.0Ultra',
