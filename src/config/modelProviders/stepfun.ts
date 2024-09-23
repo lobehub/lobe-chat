@@ -8,6 +8,7 @@ const Stepfun: ModelProviderCard = {
       description: '支持大规模上下文交互，适合复杂对话场景。',
       displayName: 'Step 2 16K',
       enabled: true,
+      functionCall: true,
       id: 'step-2-16k',
       tokens: 16_000,
     },
