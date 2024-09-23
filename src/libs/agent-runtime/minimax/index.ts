@@ -149,6 +149,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
         payload.max_tokens !== undefined 
         ? payload.max_tokens 
         : this.getMaxTokens(payload.model),
+      presence_penalty: undefined,
       stream: true,
       temperature: 
         temperature === undefined || temperature <= 0
