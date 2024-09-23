@@ -48,11 +48,12 @@ const useStyles = createStyles(({ css, token, isDarkMode }) => ({
 
 interface ArtifactProps extends MarkdownElementProps {
   identifier: string;
+  language?: string;
   title: string;
   type: string;
 }
 
-const Render = memo<ArtifactProps>(({ identifier, title, type, children, id }) => {
+const Render = memo<ArtifactProps>(({ identifier, title, type, language, children, id }) => {
   const { t } = useTranslation('chat');
   const { styles, cx } = useStyles();
 
@@ -71,14 +72,14 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, children, id }) =
     });
 
   const openArtifactUI = () => {
-    openArtifact({ id, identifier, title, type });
+    openArtifact({ id, identifier, language, title, type });
   };
 
   useEffect(() => {
     if (!hasChildren || !isGenerating) return;
 
     openArtifactUI();
-  }, [isGenerating, hasChildren, str, identifier, title, type, id]);
+  }, [isGenerating, hasChildren, str, identifier, title, type, id, language]);
 
   return (
     <p>

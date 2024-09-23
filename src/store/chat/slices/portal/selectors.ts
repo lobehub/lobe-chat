@@ -24,6 +24,7 @@ const artifactTitle = (s: ChatStoreState) => s.portalArtifact?.title;
 const artifactIdentifier = (s: ChatStoreState) => s.portalArtifact?.identifier || '';
 const artifactMessageId = (s: ChatStoreState) => s.portalArtifact?.id;
 const artifactType = (s: ChatStoreState) => s.portalArtifact?.type;
+const artifactCodeLanguage = (s: ChatStoreState) => s.portalArtifact?.language;
 
 const artifactMessageContent = (id: string) => (s: ChatStoreState) => {
   const message = chatSelectors.getMessageById(id)(s);
@@ -67,5 +68,6 @@ export const chatPortalSelectors = {
   artifactType,
   artifactCode,
   artifactMessageContent,
+  artifactCodeLanguage,
   isArtifactTagClosed,
 };

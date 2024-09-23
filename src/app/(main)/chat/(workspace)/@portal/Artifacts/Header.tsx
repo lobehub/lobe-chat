@@ -8,20 +8,26 @@ import { Flexbox } from 'react-layout-kit';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/selectors';
 import { oneLineEllipsis } from '@/styles';
+import { ArtifactType } from '@/types/artifact';
 
 const Header = () => {
   const { t } = useTranslation('portal');
 
-  const [displayMode, artifactTitle, isArtifactTagClosed, closeArtifact] = useChatStore((s) => {
-    const messageId = chatPortalSelectors.artifactMessageId(s) || '';
+  const [displayMode, artifactType, artifactTitle, isArtifactTagClosed, closeArtifact] =
+    useChatStore((s) => {
+      const messageId = chatPortalSelectors.artifactMessageId(s) || '';
 
-    return [
-      s.portalArtifactDisplayMode,
-      chatPortalSelectors.artifactTitle(s),
-      chatPortalSelectors.isArtifactTagClosed(messageId)(s),
-      s.closeArtifact,
-    ];
-  });
+      return [
+        s.portalArtifactDisplayMode,
+        chatPortalSelectors.artifactType(s),
+        chatPortalSelectors.artifactTitle(s),
+        chatPortalSelectors.isArtifactTagClosed(messageId)(s),
+        s.closeArtifact,
+      ];
+    });
+
+  // show switch only when artifact is closed and the type is not code
+  const showSwitch = isArtifactTagClosed && artifactType !== ArtifactType.Code;
 
   return (
     <Flexbox align={'center'} flex={1} gap={12} horizontal justify={'space-between'} width={'100%'}>
@@ -44,7 +50,7 @@ const Header = () => {
           },
         }}
       >
-        {isArtifactTagClosed && (
+        {showSwitch && (
           <Segmented
             onChange={(value: 'code' | 'preview') => {
               useChatStore.setState({ portalArtifactDisplayMode: value });
