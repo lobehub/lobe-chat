@@ -26,7 +26,6 @@ export const useStyles = createStyles(
       `,
       modalBackdrop: css`
         background: ${token.colorBgMask};
-        backdrop-filter: blur(2px);
       `,
       modalContent: css`
         &.${prefixCls}-modalContent {
