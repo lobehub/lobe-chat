@@ -8,6 +8,7 @@ export interface PortalArtifact {
   children?: string;
   id: string;
   identifier?: string;
+  language?: string;
   title?: string;
   type?: string;
 }
