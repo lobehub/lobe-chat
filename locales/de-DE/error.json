@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Fehlerdetails",
   "notFound": {
     "backHome": "Zurück zur Startseite",
-    "desc": "Die von Ihnen gesuchte Seite konnte nicht gefunden werden. Bitte überprüfen Sie, ob der Link korrekt ist.",
+    "check": "Bitte überprüfen Sie, ob Ihre URL korrekt ist.",
+    "desc": "Die von Ihnen gesuchte Seite konnte nicht gefunden werden.",
     "title": "In unbekanntes Gebiet geraten?"
   },
   "pluginSettings": {
@@ -58,6 +59,7 @@
     "InvalidAccessCode": "Das Passwort ist ungültig oder leer. Bitte geben Sie das richtige Zugangspasswort ein oder fügen Sie einen benutzerdefinierten API-Schlüssel hinzu.",
     "InvalidBedrockCredentials": "Die Bedrock-Authentifizierung ist fehlgeschlagen. Bitte überprüfen Sie AccessKeyId/SecretAccessKey und versuchen Sie es erneut.",
     "InvalidClerkUser": "Entschuldigung, du bist derzeit nicht angemeldet. Bitte melde dich an oder registriere ein Konto, um fortzufahren.",
+    "InvalidGithubToken": "Der persönliche Zugriffstoken für Github ist ungültig oder leer. Bitte überprüfen Sie den persönlichen Zugriffstoken für Github und versuchen Sie es erneut.",
     "InvalidOllamaArgs": "Ollama-Konfiguration ist ungültig. Bitte überprüfen Sie die Ollama-Konfiguration und versuchen Sie es erneut.",
     "InvalidProviderAPIKey": "{{provider}} API-Schlüssel ist ungültig oder leer. Bitte überprüfen Sie den {{provider}} API-Schlüssel und versuchen Sie es erneut.",
     "LocationNotSupportError": "Entschuldigung, Ihr Standort unterstützt diesen Modellservice möglicherweise aufgrund von regionalen Einschränkungen oder nicht aktivierten Diensten nicht. Bitte überprüfen Sie, ob der aktuelle Standort die Verwendung dieses Dienstes unterstützt, oder versuchen Sie, andere Standortinformationen zu verwenden.",
@@ -115,7 +117,7 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
-    "fileOnlySupportInServerMode": "Der aktuelle Bereitstellungsmodus unterstützt das Hochladen von Nicht-Bilddateien nicht. Um Dateien im {{ext}}-Format hochzuladen, wechseln Sie bitte zum Serverdatenbank-Bereitstellungsmodus oder verwenden Sie den LobeChat Cloud-Dienst.",
+    "fileOnlySupportInServerMode": "Der aktuelle Bereitstellungsmodus unterstützt das Hochladen von Nicht-Bilddateien nicht. Um Dateien im {{ext}}-Format hochzuladen, wechseln Sie bitte zum Serverdatenbank-Bereitstellungsmodus oder verwenden Sie den {{cloud}}-Dienst.",
     "networkError": "Bitte überprüfen Sie, ob Ihre Internetverbindung stabil ist, und prüfen Sie die Cross-Origin-Konfiguration des Dateispeicherdienstes.",
     "title": "Dateiupload fehlgeschlagen. Bitte überprüfen Sie Ihre Netzwerkverbindung und versuchen Sie es später erneut.",
     "unknownError": "Fehlerursache: {{reason}}",

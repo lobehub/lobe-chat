@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Error Details",
   "notFound": {
     "backHome": "Back to Home",
-    "desc": "We couldn't find the page you're looking for, please check if the link is correct",
+    "check": "Please check if your URL is correct.",
+    "desc": "We couldn't find the page you were looking for.",
     "title": "Entered Unknown Territory?"
   },
   "pluginSettings": {
@@ -58,6 +59,7 @@
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
+    "InvalidGithubToken": "The GitHub Personal Access Token is incorrect or empty. Please check your GitHub Personal Access Token and try again.",
     "InvalidOllamaArgs": "Invalid Ollama configuration, please check Ollama configuration and try again",
     "InvalidProviderAPIKey": "{{provider}} API Key is incorrect or empty, please check your {{provider}} API Key and try again",
     "LocationNotSupportError": "We're sorry, your current location does not support this model service. This may be due to regional restrictions or the service not being available. Please confirm if the current location supports using this service, or try using a different location.",
@@ -115,7 +117,7 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
-    "fileOnlySupportInServerMode": "The current deployment mode does not support uploading non-image files. To upload files in {{ext}} format, please switch to server database deployment or use LobeChat Cloud service.",
+    "fileOnlySupportInServerMode": "The current deployment mode does not support uploading non-image files. To upload files in {{ext}} format, please switch to server database deployment or use the {{cloud}} service.",
     "networkError": "Please check your network connection and ensure that the file storage service's cross-origin configuration is correct.",
     "title": "File upload failed. Please check your network connection or try again later",
     "unknownError": "Error reason: {{reason}}",

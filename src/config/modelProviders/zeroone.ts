@@ -1,6 +1,6 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://platform.lingyiwanwu.com/docs#%E6%A8%A1%E5%9E%8B
+// ref :https://platform.lingyiwanwu.com/docs#%E6%A8%A1%E5%9E%8B
 const ZeroOne: ModelProviderCard = {
   chatModels: [
     {
@@ -71,8 +71,12 @@ const ZeroOne: ModelProviderCard = {
     },
   ],
   checkModel: 'yi-spark',
+  description:
+    '01.AI 专注于AI 2.0时代的人工智能技术，大力推动“人+人工智能”的创新和应用，采用超强大模型和先进AI技术以提升人类生产力，实现技术赋能。',
   id: 'zeroone',
+  modelsUrl: 'https://platform.lingyiwanwu.com/docs',
   name: '01.AI',
+  url: 'https://01.ai',
 };
 
 export default ZeroOne;

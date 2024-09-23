@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Assistent hinzufügen",
+    "addAgentAndConverse": "Assistent hinzufügen und chatten",
+    "addAgentSuccess": "Erfolgreich hinzugefügt",
+    "conversation": {
+      "l1": "Hallo, ich bin **{{name}}**, du kannst mir jede Frage stellen, ich werde mein Bestes tun, um dir zu antworten ~",
+      "l2": "Hier sind meine Fähigkeiten: ",
+      "l3": "Lass uns das Gespräch beginnen!"
+    },
+    "description": "Assistentenbeschreibung",
+    "detail": "Details",
+    "list": "Assistentenliste",
+    "more": "Mehr",
+    "plugins": "Integrations-Plugins",
+    "recentSubmits": "Neueste Aktualisierungen",
+    "suggestions": "Ähnliche Empfehlungen",
+    "systemRole": "Assistenteneinstellungen",
+    "try": "Ausprobieren"
+  },
+  "back": "Zurück zur Entdeckung",
+  "category": {
+    "assistant": {
+      "academic": "Akademisch",
+      "all": "Alle",
+      "career": "Karriere",
+      "copywriting": "Texterstellung",
+      "design": "Design",
+      "education": "Bildung",
+      "emotions": "Emotionen",
+      "entertainment": "Unterhaltung",
+      "games": "Spiele",
+      "general": "Allgemein",
+      "life": "Leben",
+      "marketing": "Marketing",
+      "office": "Büro",
+      "programming": "Programmierung",
+      "translation": "Übersetzung"
+    },
+    "plugin": {
+      "all": "Alle",
+      "gaming-entertainment": "Gaming & Unterhaltung",
+      "life-style": "Lebensstil",
+      "media-generate": "Medienerstellung",
+      "science-education": "Wissenschaft & Bildung",
+      "social": "Soziale Medien",
+      "stocks-finance": "Aktien & Finanzen",
+      "tools": "Praktische Werkzeuge",
+      "web-search": "Websuche"
+    }
+  },
+  "cleanFilter": "Filter zurücksetzen",
+  "create": "Erstellen",
+  "createGuide": {
+    "func1": {
+      "desc1": "Gehe im Chatfenster über die Einstellungen in der oberen rechten Ecke zur Seite, auf der du deinen Assistenten einreichen möchtest;",
+      "desc2": "Klicke auf die Schaltfläche 'In den Assistentenmarkt einreichen' in der oberen rechten Ecke.",
+      "tag": "Methode Eins",
+      "title": "Einreichung über LobeChat"
+    },
+    "func2": {
+      "button": "Gehe zum Github-Assistenten-Repository",
+      "desc": "Wenn du den Assistenten im Index hinzufügen möchtest, erstelle einen Eintrag mit agent-template.json oder agent-template-full.json im plugins-Verzeichnis, schreibe eine kurze Beschreibung und markiere sie entsprechend, und erstelle dann eine Pull-Anfrage.",
+      "tag": "Methode Zwei",
+      "title": "Einreichung über Github"
+    }
+  },
+  "dislike": "Nicht mögen",
+  "filter": "Filter",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "Alle Autoren",
+      "followed": "Folgte Autoren",
+      "title": "Autorenbereich"
+    },
+    "contentLength": "Minimale Kontextlänge",
+    "maxToken": {
+      "title": "Maximale Länge festlegen (Token)",
+      "unlimited": "Unbegrenzt"
+    },
+    "other": {
+      "functionCall": "Funktionaufrufe unterstützen",
+      "title": "Sonstiges",
+      "vision": "Visuelle Erkennung unterstützen",
+      "withKnowledge": "Mit Wissensdatenbank",
+      "withTool": "Mit Plugin"
+    },
+    "pricing": "Modellpreise",
+    "timePeriod": {
+      "all": "Alle Zeiten",
+      "day": "Letzte 24 Stunden",
+      "month": "Letzte 30 Tage",
+      "title": "Zeitraum",
+      "week": "Letzte 7 Tage",
+      "year": "Letztes Jahr"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Empfohlene Assistenten",
+    "featuredModels": "Empfohlene Modelle",
+    "featuredProviders": "Empfohlene Modellanbieter",
+    "featuredTools": "Empfohlene Plugins",
+    "more": "Mehr entdecken"
+  },
+  "like": "Mögen",
+  "models": {
+    "chat": "Gespräch starten",
+    "contentLength": "Maximale Kontextlänge",
+    "free": "Kostenlos",
+    "guide": "Konfigurationsanleitung",
+    "list": "Modellliste",
+    "more": "Mehr",
+    "parameterList": {
+      "defaultValue": "Standardwert",
+      "docs": "Dokumentation ansehen",
+      "frequency_penalty": {
+        "desc": "Diese Einstellung passt die Häufigkeit an, mit der das Modell bestimmte Wörter, die bereits im Input erschienen sind, wiederverwendet. Höhere Werte verringern die Wahrscheinlichkeit dieser Wiederholung, während negative Werte den gegenteiligen Effekt haben. Die Wortstrafe erhöht sich nicht mit der Anzahl der Vorkommen. Negative Werte fördern die Wiederverwendung von Wörtern.",
+        "title": "Häufigkeitsstrafe"
+      },
+      "max_tokens": {
+        "desc": "Diese Einstellung definiert die maximale Länge, die das Modell in einer einzelnen Antwort generieren kann. Höhere Werte ermöglichen es dem Modell, längere Antworten zu generieren, während niedrigere Werte die Länge der Antwort einschränken und sie prägnanter machen. Eine angemessene Anpassung dieses Wertes je nach Anwendungsfall kann helfen, die gewünschte Länge und Detailgenauigkeit der Antwort zu erreichen.",
+        "title": "Begrenzung der Antwortlänge"
+      },
+      "presence_penalty": {
+        "desc": "Diese Einstellung soll die Wiederverwendung von Wörtern basierend auf deren Häufigkeit im Input steuern. Sie versucht, weniger häufig Wörter zu verwenden, die im Input häufig vorkommen, wobei die Verwendungshäufigkeit proportional zur Häufigkeit ist. Die Wortstrafe erhöht sich mit der Anzahl der Vorkommen. Negative Werte fördern die Wiederverwendung von Wörtern.",
+        "title": "Themenfrische"
+      },
+      "range": "Bereich",
+      "temperature": {
+        "desc": "Diese Einstellung beeinflusst die Vielfalt der Antworten des Modells. Niedrigere Werte führen zu vorhersehbareren und typischen Antworten, während höhere Werte zu vielfältigeren und weniger häufigen Antworten anregen. Wenn der Wert auf 0 gesetzt wird, gibt das Modell für einen bestimmten Input immer die gleiche Antwort.",
+        "title": "Zufälligkeit"
+      },
+      "title": "Modellparameter",
+      "top_p": {
+        "desc": "Diese Einstellung beschränkt die Auswahl des Modells auf die Wörter mit der höchsten Wahrscheinlichkeit, die einen bestimmten Anteil erreichen: Es werden nur die Wörter ausgewählt, deren kumulative Wahrscheinlichkeit P erreicht. Niedrigere Werte machen die Antworten des Modells vorhersehbarer, während die Standardeinstellung dem Modell erlaubt, aus dem gesamten Wortschatz auszuwählen.",
+        "title": "Kernsampling"
+      },
+      "type": "Typ"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat unterstützt die Verwendung eines benutzerdefinierten API-Schlüssels für diesen Anbieter.",
+      "input": "Eingabepreis",
+      "inputTooltip": "Kosten pro Million Token",
+      "latency": "Latenz",
+      "latencyTooltip": "Durchschnittliche Antwortzeit des Anbieters für das erste Token",
+      "maxOutput": "Maximale Ausgabelänge",
+      "maxOutputTooltip": "Maximale Anzahl von Tokens, die dieser Endpunkt generieren kann",
+      "officialTooltip": "Offizieller LobeHub-Dienst",
+      "output": "Ausgabepreis",
+      "outputTooltip": "Kosten pro Million Token",
+      "streamCancellationTooltip": "Dieser Anbieter unterstützt die Stream-Abbruchfunktion.",
+      "throughput": "Durchsatz",
+      "throughputTooltip": "Durchschnittliche Anzahl von Tokens, die pro Sekunde bei Stream-Anfragen übertragen werden"
+    },
+    "suggestions": "Verwandte Modelle",
+    "supportedProviders": "Anbieter, die dieses Modell unterstützen"
+  },
+  "plugins": {
+    "community": "Community-Plugins",
+    "install": "Plugin installieren",
+    "installed": "Installiert",
+    "list": "Plugin-Liste",
+    "meta": {
+      "description": "Beschreibung",
+      "parameter": "Parameter",
+      "title": "Werkzeugparameter",
+      "type": "Typ"
+    },
+    "more": "Mehr",
+    "official": "Offizielle Plugins",
+    "recentSubmits": "Neueste Aktualisierungen",
+    "suggestions": "Ähnliche Empfehlungen"
+  },
+  "providers": {
+    "config": "Anbieter konfigurieren",
+    "list": "Liste der Modellanbieter",
+    "modelCount": "{{count}} Modelle",
+    "modelSite": "Modell-Dokumentation",
+    "more": "Mehr",
+    "officialSite": "Offizielle Webseite",
+    "showAllModels": "Alle Modelle anzeigen",
+    "suggestions": "Verwandte Anbieter",
+    "supportedModels": "Unterstützte Modelle"
+  },
+  "search": {
+    "placeholder": "Suche nach Namen, Beschreibung oder Schlüsselwörtern...",
+    "result": "{{count}} Ergebnisse zu <highlight>{{keyword}}</highlight>",
+    "searching": "Suche läuft..."
+  },
+  "sort": {
+    "mostLiked": "Am meisten gemocht",
+    "mostUsed": "Am häufigsten verwendet",
+    "newest": "Neueste zuerst",
+    "oldest": "Älteste zuerst",
+    "recommended": "Empfohlen"
+  },
+  "tab": {
+    "assistants": "Assistenten",
+    "home": "Startseite",
+    "models": "Modelle",
+    "plugins": "Plugins",
+    "providers": "Modellanbieter"
+  }
+}

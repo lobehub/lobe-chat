@@ -9,7 +9,7 @@
       "title": "{{name}}'i Denemek İçin Hoş Geldiniz"
     }
   },
-  "appInitializing": "Uygulama başlatılıyor, lütfen bekleyin...",
+  "appInitializing": "Uygulama başlatılıyor...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
@@ -195,8 +195,8 @@
   },
   "tab": {
     "chat": "Chat",
+    "discover": "Keşfet",
     "files": "Dosyalar",
-    "market": "Keşfet",
     "me": "ben",
     "setting": "Ayarlar"
   },

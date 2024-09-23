@@ -1,7 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react';
+import { major, minor } from 'semver';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { withSWR } from '~test-utils';
 
+import { CURRENT_VERSION } from '@/const/version';
 import { globalService } from '@/services/global';
 import { useGlobalStore } from '@/store/global/index';
 import { initialState } from '@/store/global/initialState';
@@ -156,6 +158,57 @@ describe('createPreferenceSlice', () => {
 
       expect(useGlobalStore.getState().hasNewVersion).toBe(true);
       expect(useGlobalStore.getState().latestVersion).toBe(latestVersion);
+    });
+
+    it('should set hasNewVersion to false if the version is same minor', async () => {
+      const latestVersion = `${major(CURRENT_VERSION)}.${minor(CURRENT_VERSION)}.9999999`;
+
+      vi.spyOn(globalService, 'getLatestVersion').mockResolvedValueOnce(latestVersion);
+
+      const { result } = renderHook(() => useGlobalStore().useCheckLatestVersion(), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(result.current.data).toBe(latestVersion);
+      });
+
+      expect(useGlobalStore.getState().hasNewVersion).toBeUndefined();
+      expect(useGlobalStore.getState().latestVersion).toBeUndefined();
+    });
+
+    it('should set hasNewVersion to true if there is a minor version', async () => {
+      const latestVersion = `${major(CURRENT_VERSION)}.${minor(CURRENT_VERSION) + 10}.0`;
+
+      vi.spyOn(globalService, 'getLatestVersion').mockResolvedValueOnce(latestVersion);
+
+      const { result } = renderHook(() => useGlobalStore().useCheckLatestVersion(), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(result.current.data).toBe(latestVersion);
+      });
+
+      expect(useGlobalStore.getState().hasNewVersion).toBe(true);
+      expect(useGlobalStore.getState().latestVersion).toBe(latestVersion);
+    });
+
+    it('should handle invalid latest version', async () => {
+      const latestVersion = 'invalid.version';
+
+      vi.spyOn(globalService, 'getLatestVersion').mockResolvedValueOnce(latestVersion);
+
+      const { result } = renderHook(() => useGlobalStore().useCheckLatestVersion(), {
+        wrapper: withSWR,
+      });
+
+      await waitFor(() => {
+        expect(result.current.data).toBe(latestVersion);
+      });
+
+      expect(useGlobalStore.getState().hasNewVersion).toBeUndefined();
+      expect(useGlobalStore.getState().latestVersion).toBeUndefined();
     });
   });
 

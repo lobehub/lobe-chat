@@ -38,11 +38,24 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "AWS SSO/STS kullanıyorsanız, lütfen AWS Oturum Tokeninizi girin",
+      "placeholder": "AWS Oturum Tokeni",
+      "title": "AWS Oturum Tokeni (isteğe bağlı)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Özel Bölge",
+      "customSessionToken": "Özel Oturum Tokeni",
       "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama bilgilerinizi kaydetmez.",
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Github PAT'nizi girin, [buraya](https://github.com/settings/tokens) tıklayarak oluşturun",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
     }
   },
   "ollama": {

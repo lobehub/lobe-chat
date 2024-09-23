@@ -1,6 +1,11 @@
+import qs from 'query-string';
 import urlJoin from 'url-join';
 
+import { BRANDING_NAME } from '@/const/branding';
+import { DEFAULT_LANG } from '@/const/locale';
 import { EMAIL_BUSINESS, EMAIL_SUPPORT, OFFICIAL_SITE, OFFICIAL_URL, X } from '@/const/url';
+import { Locales } from '@/locales/resources';
+import { getCanonicalUrl } from '@/server/utils/url';
 
 import pkg from '../../package.json';
 
@@ -26,37 +31,48 @@ export const AUTHOR_LIST = {
   },
 };
 
-class Ld {
+export class Ld {
   generate({
     image = '/og/cover.png',
+    article,
     url,
     title,
     description,
     date,
+    locale = DEFAULT_LANG,
     webpage = {
       enable: true,
     },
   }: {
+    article?: {
+      author: string[];
+      enable?: boolean;
+      identifier: string;
+      tags?: string[];
+    };
     date?: string;
     description: string;
     image?: string;
+    locale?: Locales;
     title: string;
     url: string;
     webpage?: {
       enable?: boolean;
-      search?: boolean;
+      search?: string;
     };
   }) {
     return {
       '@context': 'https://schema.org',
       '@graph': [
         this.genWebSite(),
+        article?.enable && this.genArticle({ ...article, date, description, locale, title, url }),
         webpage?.enable &&
           this.genWebPage({
             ...webpage,
             date,
             description,
             image,
+            locale,
             title,
             url,
           }),
@@ -122,17 +138,19 @@ class Ld {
     search,
     description,
     title,
+    locale = DEFAULT_LANG,
     url,
   }: {
     breadcrumbs?: { title: string; url: string }[];
     date?: string;
     description: string;
     image?: string;
-    search?: boolean;
+    locale?: Locales;
+    search?: string;
     title: string;
     url: string;
   }) {
-    const fixedUrl = this.fixUrl(url);
+    const fixedUrl = getCanonicalUrl(url);
     const dateCreated = date ? new Date(date).toISOString() : LAST_MODIFIED;
     const dateModified = date ? new Date(date).toISOString() : LAST_MODIFIED;
 
@@ -151,7 +169,7 @@ class Ld {
       'image': {
         '@id': this.getId(fixedUrl, '#primaryimage'),
       },
-      'inLanguage': 'en-US',
+      'inLanguage': locale,
       'isPartOf': {
         '@id': this.getId(OFFICIAL_URL, '#website'),
       },
@@ -166,14 +184,17 @@ class Ld {
       baseInfo.potentialAction = {
         '@type': 'SearchAction',
         'query-input': 'required name=search_term_string',
-        'target': `${fixedUrl}?q={search_term_string}`,
+        'target': qs.stringifyUrl({
+          query: { q: '{search_term_string}' },
+          url: getCanonicalUrl(search),
+        }),
       };
 
     return baseInfo;
   }
 
   genImageObject({ image, url }: { image: string; url: string }) {
-    const fixedUrl = this.fixUrl(url);
+    const fixedUrl = getCanonicalUrl(url);
 
     return {
       '@id': this.getId(fixedUrl, '#primaryimage'),
@@ -190,7 +211,7 @@ class Ld {
       '@type': 'WebSite',
       'description': pkg.description,
       'inLanguage': 'en-US',
-      'name': 'LobeChat',
+      'name': BRANDING_NAME,
       'publisher': {
         '@id': this.getId(OFFICIAL_URL, '#organization'),
       },
@@ -200,16 +221,64 @@ class Ld {
     return baseInfo;
   }
 
+  genArticle({
+    description,
+    title,
+    url,
+    author,
+    date,
+    locale = DEFAULT_LANG,
+    tags,
+    identifier,
+  }: {
+    author: string[];
+    date?: string;
+    description: string;
+    identifier: string;
+    locale: Locales;
+    tags?: string[];
+    title: string;
+    url: string;
+  }) {
+    const fixedUrl = getCanonicalUrl(url);
+
+    const dateCreated = date ? new Date(date).toISOString() : LAST_MODIFIED;
+
+    const dateModified = date ? new Date(date).toISOString() : LAST_MODIFIED;
+    const baseInfo: any = {
+      '@type': 'Article',
+      'author': this.getAuthors(author),
+      'creator': author,
+      'dateCreated': dateCreated,
+      'dateModified': dateModified,
+      'datePublished': dateCreated,
+      'description': description,
+      'headline': this.fixTitle(title),
+      'identifier': identifier,
+      'image': {
+        '@id': this.getId(fixedUrl, '#primaryimage'),
+      },
+      'inLanguage': locale,
+      'keywords': tags?.join(' ') || 'LobeHub LobeChat',
+      'mainEntityOfPage': fixedUrl,
+      'name': title,
+      'publisher': {
+        '@id': this.getId(OFFICIAL_URL, '#organization'),
+      },
+      'url': fixedUrl,
+    };
+
+    return {
+      ...baseInfo,
+    };
+  }
+
   private getId(url: string, id: string) {
     return [url, id].join('/');
   }
 
   private fixTitle(title: string) {
-    return title.includes('LobeChat') ? title : `${title} · LobeChat`;
-  }
-
-  private fixUrl(url: string) {
-    return urlJoin(OFFICIAL_URL, url);
+    return title.includes(BRANDING_NAME) ? title : `${title} · ${BRANDING_NAME}`;
   }
 }
 

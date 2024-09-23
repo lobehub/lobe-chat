@@ -4,6 +4,10 @@ import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
+  BedrockProviderCard,
+  FireworksAIProviderCard,
+  GithubProviderCard,
+  GoogleProviderCard,
   GroqProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
@@ -34,10 +38,16 @@ export const getServerGlobalConfig = () => {
     ZHIPU_MODEL_LIST,
 
     ENABLED_AWS_BEDROCK,
+    AWS_BEDROCK_MODEL_LIST,
+
     ENABLED_GOOGLE,
+    GOOGLE_MODEL_LIST,
 
     ENABLED_GROQ,
     GROQ_MODEL_LIST,
+
+    ENABLED_GITHUB,
+    GITHUB_MODEL_LIST,
 
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
@@ -54,13 +64,16 @@ export const getServerGlobalConfig = () => {
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
+    ENABLED_AI21,
     ENABLED_AI360,
 
     ENABLED_SILICONCLOUD,
     SILICONCLOUD_MODEL_LIST,
 
     ENABLED_UPSTAGE,
-    
+
+    ENABLED_SPARK,
+
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
 
@@ -76,6 +89,9 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_TOGETHERAI,
     TOGETHERAI_MODEL_LIST,
+
+    ENABLED_FIREWORKSAI,
+    FIREWORKSAI_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -86,6 +102,7 @@ export const getServerGlobalConfig = () => {
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
     languageModel: {
+      ai21: { enabled: ENABLED_AI21 },
       ai360: { enabled: ENABLED_AI360 },
       anthropic: {
         enabled: ENABLED_ANTHROPIC,
@@ -100,9 +117,41 @@ export const getServerGlobalConfig = () => {
         }),
       },
       baichuan: { enabled: ENABLED_BAICHUAN },
-      bedrock: { enabled: ENABLED_AWS_BEDROCK },
+      bedrock: {
+        enabled: ENABLED_AWS_BEDROCK,
+        enabledModels: extractEnabledModels(AWS_BEDROCK_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: BedrockProviderCard.chatModels,
+          modelString: AWS_BEDROCK_MODEL_LIST,
+        }),
+      },
       deepseek: { enabled: ENABLED_DEEPSEEK },
-      google: { enabled: ENABLED_GOOGLE },
+
+      fireworksai: {
+        enabled: ENABLED_FIREWORKSAI,
+        enabledModels: extractEnabledModels(FIREWORKSAI_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: FireworksAIProviderCard.chatModels,
+          modelString: FIREWORKSAI_MODEL_LIST,
+        }),
+      },
+
+      github: {
+        enabled: ENABLED_GITHUB,
+        enabledModels: extractEnabledModels(GITHUB_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: GithubProviderCard.chatModels,
+          modelString: GITHUB_MODEL_LIST,
+        }),
+      },
+      google: {
+        enabled: ENABLED_GOOGLE,
+        enabledModels: extractEnabledModels(GOOGLE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: GoogleProviderCard.chatModels,
+          modelString: GOOGLE_MODEL_LIST,
+        }),
+      },
       groq: {
         enabled: ENABLED_GROQ,
         enabledModels: extractEnabledModels(GROQ_MODEL_LIST),
@@ -124,6 +173,7 @@ export const getServerGlobalConfig = () => {
       },
       ollama: {
         enabled: ENABLED_OLLAMA,
+        enabledModels: extractEnabledModels(OLLAMA_MODEL_LIST),
         fetchOnClient: !OLLAMA_PROXY_URL,
         serverModelCards: transformToChatModelCards({
           defaultChatModels: OllamaProviderCard.chatModels,
@@ -164,6 +214,7 @@ export const getServerGlobalConfig = () => {
           modelString: SILICONCLOUD_MODEL_LIST,
         }),
       },
+      spark: { enabled: ENABLED_SPARK },
       stepfun: { enabled: ENABLED_STEPFUN },
 
       taichu: { enabled: ENABLED_TAICHU },
@@ -184,12 +235,12 @@ export const getServerGlobalConfig = () => {
           modelString: ZEROONE_MODEL_LIST,
         }),
       },
-      zhipu: { 
-        enabled: ENABLED_ZHIPU, 
-        enabledModels: extractEnabledModels(ZHIPU_MODEL_LIST), 
-        serverModelCards: transformToChatModelCards({ 
-          defaultChatModels: ZhiPuProviderCard.chatModels, 
-          modelString: ZHIPU_MODEL_LIST 
+      zhipu: {
+        enabled: ENABLED_ZHIPU,
+        enabledModels: extractEnabledModels(ZHIPU_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: ZhiPuProviderCard.chatModels,
+          modelString: ZHIPU_MODEL_LIST,
         }),
       },
     },

@@ -251,9 +251,9 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Tongyi wanxiang Image Generator](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **YoungTx** on **2024-08-09**</sup> | This plugin uses Alibaba's Tongyi Wanxiang model to generate images based on text prompts.<br/>`image` `tongyi` `wanxiang`                |
 | [Shopping tools](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **shoppingtools** on **2024-07-19**</sup>            | Search for products on eBay & AliExpress, find eBay events & coupons. Get prompt examples.<br/>`shopping` `e-bay` `ali-express` `coupons` |
 | [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup>             | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                                   |
-| [Social Search](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **say-apps** on **2024-06-02**</sup>                  | The Social Search provides access to tweets, users, followers, images, media and more.<br/>`social` `twitter` `x` `search`                |
+| [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>                     | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                                             |
 
-> 📊 Total plugins: [<kbd>**51**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**50**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -285,20 +285,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                               | Description                                                                                                                                                                                                                                          |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [International Lyricist](https://chat-preview.lobehub.com/market?agent=letrista-internacional)<br/><sup>By **[mnector](https://github.com/mnector)** on **2024-08-29**</sup> | Specialized in writing lyrics for songs in Spanish, English, and French, with a focus on storytelling and the emotions of the provided content.<br/>`lyricism` `translation` `music`                                                                 |
-| [Backtracking Question Expert](https://chat-preview.lobehub.com/market?agent=step-back-expert)<br/><sup>By **[tiny656](https://github.com/tiny656)** on **2024-08-27**</sup> | Hello! I am an expert in world knowledge, skilled in using backtracking questioning strategies to help you gain a deeper understanding and analysis of issues. Please enter a question, and I will respond to it according to the following process: |
+| Recent Submits                                                                                                                                                                           | Description                                                                                                                                                     |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Advertising Copywriting Master](https://chat-preview.lobehub.com/market?agent=advertising-copywriting-master)<br/><sup>By **[leter](https://github.com/leter)** on **2024-09-23**</sup> | Specializing in product function analysis and advertising copywriting that resonates with user values<br/>`advertising-copy` `user-values` `marketing-strategy` |
+| [NovelAI Drawing Assistant](https://chat-preview.lobehub.com/market?agent=asis)<br/><sup>By **[samihalawa](https://github.com/samihalawa)** on **2024-09-23**</sup>                      | I can turn the scenes you describe into prompts for NovelAI<br/>`deep-learning` `image-generation` `algorithm` `prompt`                                         |
+| [Book Summary Expert](https://chat-preview.lobehub.com/market?agent=book-summary-expert-philo)<br/><sup>By **[saccohuo](https://github.com/saccohuo)** on **2024-09-23**</sup>           | A book summary expert providing concise and easy-to-read book summaries and structured outputs.<br/>`book-summary` `expert` `reading` `assistant`               |
+| [CEO GPT](https://chat-preview.lobehub.com/market?agent=ceo-gpt)<br/><sup>By **[leter](https://github.com/leter)** on **2024-09-23**</sup>                                               | AI mentor trained to advise startup CEOs based on the experiences<br/>`entrepreneurship` `consulting` `management` `strategy` `guidance`                        |
 
-1. Provide at least 3 optional backtracking questions that align with the strategy.
-2. Answer each of these backtracking questions.
-3. Use the above answers as evidence to logically and coherently provide a final answer to your question, assisted by visual charts.
-
-Please tell me what issue you would like to explore?<br/>`backtracking-questions` `thinking-strategies` `problem-analysis` |
-\| [Unreal Engine Master](https://chat-preview.lobehub.com/market?agent=unreal-engine-master)<br/><sup>By **[thedivergentai](https://github.com/thedivergentai)** on **2024-08-27**</sup> | Unreal Game Development Companion<br/>`game-development` `unreal-engine` `software-engineering` |
-\| [TypeScript Solution Architect](https://chat-preview.lobehub.com/market?agent=typescript-developer)<br/><sup>By **[swarfte](https://github.com/swarfte)** on **2024-08-24**</sup> | Expert in TypeScript, Node.js, Vue.js 3, Nuxt.js 3, Express.js, React.js, and modern UI libraries.<br/>`type-script` `java-script` `web-development` `coding-standards` `best-practices` |
-
-> 📊 Total agents: [<kbd>**321**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**389**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -462,9 +456,9 @@ If you want to deploy this service yourself on either Vercel or Zeabur, you can 
 
 <div align="center">
 
-|           Deploy with Vercel            |                     Deploy with Zeabur                      |                     Deploy with Sealos                      |
-| :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
-| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] |
+|           Deploy with Vercel            |                     Deploy with Zeabur                      |                     Deploy with Sealos                      |                       Deploy with RepoCloud                       |
+| :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------------: |
+| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![][deploy-on-repocloud-button-image]][deploy-on-repocloud-link] |
 
 </div>
 
@@ -711,6 +705,8 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button
 [deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY,ACCESS_CODE&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%7C%20Access%20Code%20can%20protect%20your%20website&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-on-repocloud-button-image]: https://d16t0pc4846x52.cloudfront.net/deploylobe.svg
+[deploy-on-repocloud-link]: https://repocloud.io/details/?app_id=248
 [deploy-on-sealos-button-image]: https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg
 [deploy-on-sealos-link]: https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dlobe-chat
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg

@@ -28,6 +28,7 @@ export const POST = async (req: Request): Promise<NextResponse> => {
   const userService = new UserService();
   switch (type) {
     case 'user.created': {
+      pino.info('creating user due to clerk webhook');
       return userService.createUser(data.id, data);
     }
     case 'user.deleted': {

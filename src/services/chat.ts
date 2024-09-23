@@ -3,6 +3,7 @@ import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
 import { createErrorResponse } from '@/app/api/errorResponse';
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
@@ -113,6 +114,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
           accessKeyId: providerAuthPayload?.awsAccessKeyId,
           accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
           region: providerAuthPayload?.awsRegion,
+          sessionToken: providerAuthPayload?.awsSessionToken,
         };
       }
       break;
@@ -133,12 +135,14 @@ export function initializeWithClientStore(provider: string, payload: any) {
     case ModelProvider.Qwen: {
       break;
     }
+
     case ModelProvider.Anthropic: {
       providerOptions = {
         baseURL: providerAuthPayload?.endpoint,
       };
       break;
     }
+
     case ModelProvider.Mistral: {
       break;
     }
@@ -304,6 +308,8 @@ class ChatService {
       provider,
     });
 
+    const providerConfig = DEFAULT_MODEL_PROVIDER_LIST.find((item) => item.id === provider);
+
     return fetchSSE(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
       fetcher: fetcher,
@@ -314,6 +320,9 @@ class ChatService {
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
       signal,
+      // use smoothing when enable client fetch
+      // https://github.com/lobehub/lobe-chat/issues/3800
+      smoothing: providerConfig?.smoothing || enableFetchOnClient,
     });
   };
 
@@ -326,7 +335,7 @@ class ChatService {
     const s = useToolStore.getState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
-    const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
+    const manifest = pluginSelectors.getToolManifestById(params.identifier)(s);
 
     const traceHeader = createTraceHeader(this.mapTrace(options?.trace, TraceTagMap.ToolCalling));
 

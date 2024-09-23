@@ -23,7 +23,6 @@ const nextConfig = {
       '@lobehub/ui',
       'gpt-tokenizer',
       'chroma-js',
-      'shiki',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
   },
@@ -108,6 +107,48 @@ const nextConfig = {
   output: buildWithDocker ? 'standalone' : undefined,
   reactStrictMode: true,
   redirects: async () => [
+    {
+      destination: '/sitemap-index.xml',
+      permanent: true,
+      source: '/sitemap.xml',
+    },
+    {
+      destination: '/manifest.webmanifest',
+      permanent: true,
+      source: '/manifest.json',
+    },
+    {
+      destination: '/discover/assistant/:slug',
+      has: [
+        {
+          key: 'agent',
+          type: 'query',
+          value: '(?<slug>.*)',
+        },
+      ],
+      permanent: true,
+      source: '/market',
+    },
+    {
+      destination: '/discover/assistants',
+      permanent: true,
+      source: '/discover/assistant',
+    },
+    {
+      destination: '/discover/models',
+      permanent: true,
+      source: '/discover/model',
+    },
+    {
+      destination: '/discover/plugins',
+      permanent: true,
+      source: '/discover/plugin',
+    },
+    {
+      destination: '/discover/providers',
+      permanent: true,
+      source: '/discover/provider',
+    },
     {
       destination: '/settings/common',
       permanent: true,

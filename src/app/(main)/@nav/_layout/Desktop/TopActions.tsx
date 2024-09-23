@@ -16,8 +16,7 @@ export interface TopActionProps {
 const TopActions = memo<TopActionProps>(({ tab }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
-  const { showMarket } = useServerConfigStore(featureFlagsSelectors);
-  const { enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
+  const { showMarket, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <>
@@ -49,13 +48,13 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
         </Link>
       )}
       {showMarket && (
-        <Link aria-label={t('tab.market')} href={'/market'}>
+        <Link aria-label={t('tab.discover')} href={'/discover'}>
           <ActionIcon
-            active={tab === SidebarTabKey.Market}
+            active={tab === SidebarTabKey.Discover}
             icon={Compass}
             placement={'right'}
             size="large"
-            title={t('tab.market')}
+            title={t('tab.discover')}
           />
         </Link>
       )}

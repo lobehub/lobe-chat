@@ -11,7 +11,7 @@ import { normalizeLocale } from '@/locales/resources';
 import { isDev, isOnServerSide } from '@/utils/env';
 
 const { I18N_DEBUG, I18N_DEBUG_BROWSER, I18N_DEBUG_SERVER } = getDebugConfig();
-const debugMode = I18N_DEBUG ?? isOnServerSide ? I18N_DEBUG_SERVER : I18N_DEBUG_BROWSER;
+const debugMode = (I18N_DEBUG ?? isOnServerSide) ? I18N_DEBUG_SERVER : I18N_DEBUG_BROWSER;
 
 export const createI18nNext = (lang?: string) => {
   const instance = i18n

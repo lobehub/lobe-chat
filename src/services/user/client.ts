@@ -23,7 +23,7 @@ export class ClientService implements IUserService {
 
     return {
       avatar: user.avatar,
-      canEnablePWAGuide: messageCount >= 2,
+      canEnablePWAGuide: messageCount >= 4,
       canEnableTrace: messageCount >= 4,
       hasConversation: messageCount > 0 || sessionCount > 0,
       isOnboard: true,
@@ -50,7 +50,7 @@ export class ClientService implements IUserService {
     await this.preferenceStorage.saveToLocalStorage(preference);
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars,unused-imports/no-unused-vars
   async updateGuide(guide: Partial<UserGuide>) {
     throw new Error('Method not implemented.');
   }

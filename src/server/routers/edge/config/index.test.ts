@@ -45,7 +45,7 @@ describe('configRouter', () => {
 
         it('should work correct with gpt-4', async () => {
           process.env.OPENAI_MODEL_LIST =
-            '-all,+gpt-3.5-turbo-1106,+gpt-3.5-turbo,+gpt-3.5-turbo-16k,+gpt-4,+gpt-4-32k,+gpt-4-1106-preview,+gpt-4-vision-preview';
+            '-all,+gpt-3.5-turbo-1106,+gpt-3.5-turbo,+gpt-4,+gpt-4-32k,+gpt-4-1106-preview,+gpt-4-vision-preview';
 
           const response = await router.getGlobalConfig();
 
@@ -90,13 +90,9 @@ describe('configRouter', () => {
 
           const result = response.languageModel?.openai?.serverModelCards;
 
-          expect(result?.find((o) => o.id === 'gpt-4-1106-preview')).toEqual({
-            displayName: 'GPT-4 Turbo Preview (1106)',
-            functionCall: true,
-            enabled: true,
-            id: 'gpt-4-1106-preview',
-            tokens: 128000,
-          });
+          const model = result?.find((o) => o.id === 'gpt-4-1106-preview');
+
+          expect(model).toMatchSnapshot();
 
           process.env.OPENAI_MODEL_LIST = '';
         });
@@ -136,7 +132,7 @@ describe('configRouter', () => {
       describe('OPENROUTER_MODEL_LIST', () => {
         it('custom deletion, addition, and renaming of models', async () => {
           process.env.OPENROUTER_MODEL_LIST =
-            '-all,+google/gemma-7b-it:free,+mistralai/mistral-7b-instruct:free';
+            '-all,+meta-llama/llama-3.1-8b-instruct:free,+google/gemma-2-9b-it:free';
 
           const response = await router.getGlobalConfig();
 
