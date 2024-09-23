@@ -20,7 +20,7 @@ const StoreInitialization = memo(() => {
   useTranslation('error');
 
   const router = useRouter();
-  const [isLogin, isSignedIn, useInitUserState, importUrlShareSettings, isPreferenceInit] =
+  const [isLogin, isSignedIn, useInitUserState, importUrlShareSettings, isUserStateInit] =
     useUserStore((s) => [
       authSelectors.isLogin(s),
       s.isSignedIn,
@@ -76,8 +76,10 @@ const StoreInitialization = memo(() => {
   // Import settings from the url
   const searchParam = useSearchParams().get(LOBE_URL_IMPORT_NAME);
   useEffect(() => {
-    if (isPreferenceInit) importUrlShareSettings(searchParam);
-  }, [searchParam, isPreferenceInit]);
+    // Why use `usUserStateInit`,
+    // see: https://github.com/lobehub/lobe-chat/pull/4072
+    if (searchParam && isUserStateInit) importUrlShareSettings(searchParam);
+  }, [searchParam, isUserStateInit]);
 
   useEffect(() => {
     if (mobile) {
