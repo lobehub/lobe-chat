@@ -13,7 +13,7 @@ import { useGlobalStore } from '@/store/global';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useUserStore } from '@/store/user';
-import { authSelectors, preferenceSelectors } from '@/store/user/selectors';
+import { authSelectors } from '@/store/user/selectors';
 
 const StoreInitialization = memo(() => {
   // prefetch error ns to avoid don't show error content correctly
@@ -26,7 +26,7 @@ const StoreInitialization = memo(() => {
       s.isSignedIn,
       s.useInitUserState,
       s.importUrlShareSettings,
-      preferenceSelectors.isPreferenceInit(s),
+      s.isUserStateInit,
     ]);
 
   const { serverConfig } = useServerConfigStore();
