@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.23](https://github.com/lobehub/lobe-chat/compare/v1.19.22...v1.19.23)
+
+<sup>Released on **2024-09-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add spark max-32k model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add spark max-32k model, closes [#4071](https://github.com/lobehub/lobe-chat/issues/4071) ([c11b57b](https://github.com/lobehub/lobe-chat/commit/c11b57b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.22](https://github.com/lobehub/lobe-chat/compare/v1.19.21...v1.19.22)
 
 <sup>Released on **2024-09-22**</sup>
