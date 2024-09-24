@@ -47,6 +47,7 @@ const Stepfun: ModelProviderCard = {
       description: '高速模型，适合实时对话。',
       displayName: 'Step 1 Flash',
       enabled: true,
+      functionCall: true,
       id: 'step-1-flash',
       tokens: 8000,
     },
