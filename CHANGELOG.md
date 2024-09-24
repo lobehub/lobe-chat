@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.27](https://github.com/lobehub/lobe-chat/compare/v1.19.26...v1.19.27)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve images display in chat messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve images display in chat messages, closes [#3475](https://github.com/lobehub/lobe-chat/issues/3475) ([c54c7ed](https://github.com/lobehub/lobe-chat/commit/c54c7ed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.26](https://github.com/lobehub/lobe-chat/compare/v1.19.25...v1.19.26)
 
 <sup>Released on **2024-09-24**</sup>
