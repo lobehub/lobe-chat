@@ -33,6 +33,118 @@ afterEach(() => {
 });
 
 describe('ChatPluginAction', () => {
+  describe('summaryPluginContent', () => {
+    it('should summarize plugin content', async () => {
+      const messageId = 'message-id';
+      const toolMessage = {
+        id: messageId,
+        role: 'tool',
+        content: 'Tool content to summarize',
+      } as ChatMessage;
+
+      const internal_coreProcessMessageMock = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          messagesMap: { [messageMapKey('session-id')]: [toolMessage] },
+          internal_coreProcessMessage: internal_coreProcessMessageMock,
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.summaryPluginContent(messageId);
+      });
+
+      expect(internal_coreProcessMessageMock).toHaveBeenCalledWith(
+        [
+          {
+            role: 'assistant',
+            content: '作为一名总结专家，请结合以上系统提示词，将以下内容进行总结：',
+          },
+          {
+            ...toolMessage,
+            meta: {
+              avatar: '🤯',
+              backgroundColor: 'rgba(0,0,0,0)',
+              description: undefined,
+              title: undefined,
+            },
+            content: toolMessage.content,
+            role: 'assistant',
+            name: undefined,
+            tool_call_id: undefined,
+          },
+        ],
+        messageId,
+      );
+    });
+
+    it('should not summarize non-tool messages', async () => {
+      const messageId = 'message-id';
+      const nonToolMessage = {
+        id: messageId,
+        role: 'user',
+        content: 'User message',
+      } as ChatMessage;
+
+      const internal_coreProcessMessageMock = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          activeId: 'session-id',
+          messagesMap: { [messageMapKey('session-id')]: [nonToolMessage] },
+          internal_coreProcessMessage: internal_coreProcessMessageMock,
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      await act(async () => {
+        await result.current.summaryPluginContent(messageId);
+      });
+
+      expect(internal_coreProcessMessageMock).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('internal_togglePluginApiCalling', () => {
+    it('should toggle plugin API calling state', () => {
+      const internal_toggleLoadingArraysMock = vi.fn();
+
+      act(() => {
+        useChatStore.setState({
+          internal_toggleLoadingArrays: internal_toggleLoadingArraysMock,
+        });
+      });
+
+      const { result } = renderHook(() => useChatStore());
+
+      const messageId = 'message-id';
+      const action = 'test-action';
+
+      result.current.internal_togglePluginApiCalling(true, messageId, action);
+
+      expect(internal_toggleLoadingArraysMock).toHaveBeenCalledWith(
+        'pluginApiLoadingIds',
+        true,
+        messageId,
+        action,
+      );
+
+      result.current.internal_togglePluginApiCalling(false, messageId, action);
+
+      expect(internal_toggleLoadingArraysMock).toHaveBeenCalledWith(
+        'pluginApiLoadingIds',
+        false,
+        messageId,
+        action,
+      );
+    });
+  });
+
   describe('fillPluginMessageContent', () => {
     it('should update message content and trigger the ai message', async () => {
       // 设置模拟函数的返回值

@@ -3,41 +3,1781 @@
 exports[`LobeOpenRouterAI > models > should get models 1`] = `
 [
   {
-    "description": "LLaVA is a large multimodal model that combines a vision encoder and Vicuna for general-purpose visual and language understanding, achieving impressive chat capabilities mimicking [GPT-4](/models/openai/gpt-4-vision-preview) and setting a new state-of-the-art accuracy on Science QA
+    "description": "Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and with a longer context than previous models. It can be used for complex workflows like code generation, retrieval augmented generation (RAG), tool use, and agents.
 
-#multimodal",
-    "displayName": "Llava 13B",
+Read the launch post [here](https://txt.cohere.com/command-r/).
+
+Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
+    "displayName": "Cohere: Command R (03-2024)",
     "enabled": false,
     "functionCall": false,
-    "id": "haotian-liu/llava-13b",
-    "maxTokens": undefined,
-    "tokens": 2048,
+    "id": "cohere/command-r-03-2024",
+    "maxTokens": 4000,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Command R+ is a new, 104B-parameter LLM from Cohere. It's useful for roleplay, general consumer usecases, and Retrieval Augmented Generation (RAG).
+
+It offers multilingual support for ten key languages to facilitate global business operations. See benchmarks and the launch post [here](https://txt.cohere.com/command-r-plus-microsoft-azure/).
+
+Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
+    "displayName": "Cohere: Command R+ (04-2024)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "cohere/command-r-plus-04-2024",
+    "maxTokens": 4000,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "command-r-plus-08-2024 is an update of the [Command R+](/models/cohere/command-r-plus) with roughly 50% higher throughput and 25% lower latencies as compared to the previous Command R+ version, while keeping the hardware footprint the same.
+
+Read the launch post [here](https://docs.cohere.com/changelog/command-gets-refreshed).
+
+Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
+    "displayName": "Cohere: Command R+ (08-2024)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "cohere/command-r-plus-08-2024",
+    "maxTokens": 4000,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "command-r-08-2024 is an update of the [Command R](/models/cohere/command-r) with improved performance for multilingual retrieval-augmented generation (RAG) and tool use. More broadly, it is better at math, code and reasoning and is competitive with the previous version of the larger Command R+ model.
+
+Read the launch post [here](https://docs.cohere.com/changelog/command-gets-refreshed).
+
+Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
+    "displayName": "Cohere: Command R (08-2024)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "cohere/command-r-08-2024",
+    "maxTokens": 4000,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Gemini 1.5 Flash 8B Experimental is an experimental, 8B parameter version of the [Gemini 1.5 Flash](/models/google/gemini-flash-1.5) model.
+
+Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.dev/terms).
+
+#multimodal
+
+Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
+    "displayName": "Google: Gemini Flash 8B 1.5 Experimental",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/gemini-flash-8b-1.5-exp",
+    "maxTokens": 32768,
+    "tokens": 4000000,
     "vision": true,
   },
   {
-    "description": "This vision-language model builds on innovations from the popular [OpenHermes-2.5](/models/teknium/openhermes-2.5-mistral-7b) model, by Teknium. It adds vision support, and is trained on a custom dataset enriched with function calling
+    "description": "Gemini 1.5 Flash Experimental is an experimental version of the [Gemini 1.5 Flash](/models/google/gemini-flash-1.5) model.
 
-This project is led by [qnguyen3](https://twitter.com/stablequan) and [teknium](https://twitter.com/Teknium1).
+Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.dev/terms).
 
-#multimodal",
-    "displayName": "Nous: Hermes 2 Vision 7B (alpha)",
+#multimodal
+
+Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
+    "displayName": "Google: Gemini Flash 1.5 Experimental",
+    "enabled": true,
+    "functionCall": false,
+    "id": "google/gemini-flash-1.5-exp",
+    "maxTokens": 32768,
+    "tokens": 4000000,
+    "vision": true,
+  },
+  {
+    "description": "Euryale L3.1 70B v2.2 is a model focused on creative roleplay from [Sao10k](https://ko-fi.com/sao10k). It is the successor of [Euryale L3 70B v2.1](/models/sao10k/l3-euryale-70b).",
+    "displayName": "Llama 3.1 Euryale 70B v2.2",
+    "enabled": false,
+    "functionCall": false,
+    "id": "sao10k/l3.1-euryale-70b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Jamba 1.5 Large is part of AI21's new family of open models, offering superior speed, efficiency, and quality.
+
+It features a 256K effective context window, the longest among open models, enabling improved performance on tasks like document summarization and analysis.
+
+Built on a novel SSM-Transformer architecture, it outperforms larger models like Llama 3.1 70B on benchmarks while maintaining resource efficiency.
+
+Read their [announcement](https://www.ai21.com/blog/announcing-jamba-model-family) to learn more.",
+    "displayName": "AI21: Jamba 1.5 Large",
+    "enabled": false,
+    "functionCall": false,
+    "id": "ai21/jamba-1-5-large",
+    "maxTokens": 4096,
+    "tokens": 256000,
+    "vision": false,
+  },
+  {
+    "description": "Jamba 1.5 Mini is the world's first production-grade Mamba-based model, combining SSM and Transformer architectures for a 256K context window and high efficiency.
+
+It works with 9 languages and can handle various writing and analysis tasks as well as or better than similar small models.
+
+This model uses less computer memory and works faster with longer texts than previous designs.
+
+Read their [announcement](https://www.ai21.com/blog/announcing-jamba-model-family) to learn more.",
+    "displayName": "AI21: Jamba 1.5 Mini",
+    "enabled": false,
+    "functionCall": false,
+    "id": "ai21/jamba-1-5-mini",
+    "maxTokens": 4096,
+    "tokens": 256000,
+    "vision": false,
+  },
+  {
+    "description": "Phi-3.5 models are lightweight, state-of-the-art open models. These models were trained with Phi-3 datasets that include both synthetic data and the filtered, publicly available websites data, with a focus on high quality and reasoning-dense properties. Phi-3.5 Mini uses 3.8B parameters, and is a dense decoder-only transformer model using the same tokenizer as [Phi-3 Mini](/models/microsoft/phi-3-mini-128k-instruct).
+
+The models underwent a rigorous enhancement process, incorporating both supervised fine-tuning, proximal policy optimization, and direct preference optimization to ensure precise instruction adherence and robust safety measures. When assessed against benchmarks that test common sense, language understanding, math, code, long context and logical reasoning, Phi-3.5 models showcased robust and state-of-the-art performance among models with less than 13 billion parameters.",
+    "displayName": "Phi-3.5 Mini 128K Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "microsoft/phi-3.5-mini-128k-instruct",
+    "maxTokens": undefined,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Hermes 3 is a generalist language model with many improvements over [Hermes 2](/models/nousresearch/nous-hermes-2-mistral-7b-dpo), including advanced agentic capabilities, much better roleplaying, reasoning, multi-turn conversation, long context coherence, and improvements across the board.
+
+Hermes 3 70B is a competitive, if not superior finetune of the [Llama-3.1 70B foundation model](/models/meta-llama/llama-3.1-70b-instruct), focused on aligning LLMs to the user, with powerful steering capabilities and control given to the end user.
+
+The Hermes 3 series builds and expands on the Hermes 2 set of capabilities, including more powerful and reliable function calling and structured output capabilities, generalist assistant capabilities, and improved code generation skills.",
+    "displayName": "Nous: Hermes 3 70B Instruct",
     "enabled": false,
     "functionCall": true,
-    "id": "nousresearch/nous-hermes-2-vision-7b",
+    "id": "nousresearch/hermes-3-llama-3.1-70b",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "Hermes 3 is a generalist language model with many improvements over Hermes 2, including advanced agentic capabilities, much better roleplaying, reasoning, multi-turn conversation, long context coherence, and improvements across the board.
+
+Hermes 3 405B is a frontier-level, full-parameter finetune of the Llama-3.1 405B foundation model, focused on aligning LLMs to the user, with powerful steering capabilities and control given to the end user.
+
+The Hermes 3 series builds and expands on the Hermes 2 set of capabilities, including more powerful and reliable function calling and structured output capabilities, generalist assistant capabilities, and improved code generation skills.
+
+Hermes 3 is competitive, if not superior, to Llama-3.1 Instruct models at general capabilities, with varying strengths and weaknesses attributable between the two.",
+    "displayName": "Nous: Hermes 3 405B Instruct",
+    "enabled": false,
+    "functionCall": true,
+    "id": "nousresearch/hermes-3-llama-3.1-405b",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "Hermes 3 is a generalist language model with many improvements over Hermes 2, including advanced agentic capabilities, much better roleplaying, reasoning, multi-turn conversation, long context coherence, and improvements across the board.
+
+Hermes 3 405B is a frontier-level, full-parameter finetune of the Llama-3.1 405B foundation model, focused on aligning LLMs to the user, with powerful steering capabilities and control given to the end user.
+
+The Hermes 3 series builds and expands on the Hermes 2 set of capabilities, including more powerful and reliable function calling and structured output capabilities, generalist assistant capabilities, and improved code generation skills.
+
+Hermes 3 is competitive, if not superior, to Llama-3.1 Instruct models at general capabilities, with varying strengths and weaknesses attributable between the two.
+
+_These are extended-context endpoints for [Hermes 3 405B Instruct](/models/nousresearch/hermes-3-llama-3.1-405b). They may have higher prices._",
+    "displayName": "Nous: Hermes 3 405B Instruct (extended)",
+    "enabled": false,
+    "functionCall": true,
+    "id": "nousresearch/hermes-3-llama-3.1-405b:extended",
+    "maxTokens": undefined,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance. The model is built upon the Llama 3.1 405B and has internet access.",
+    "displayName": "Perplexity: Llama 3.1 Sonar 405B Online",
+    "enabled": true,
+    "functionCall": false,
+    "id": "perplexity/llama-3.1-sonar-huge-128k-online",
+    "maxTokens": undefined,
+    "tokens": 127072,
+    "vision": false,
+  },
+  {
+    "description": "Dynamic model continuously updated to the current version of [GPT-4o](/models/openai/gpt-4o) in ChatGPT. Intended for research and evaluation.
+
+Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
+    "displayName": "OpenAI: ChatGPT-4o",
+    "enabled": true,
+    "functionCall": false,
+    "id": "openai/chatgpt-4o-latest",
+    "maxTokens": 16384,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Lunaris 8B is a versatile generalist and roleplaying model based on Llama 3. It's a strategic merge of multiple models, designed to balance creativity with improved logic and general knowledge.
+
+Created by [Sao10k](https://huggingface.co/Sao10k), this model aims to offer an improved experience over Stheno v3.2, with enhanced creativity and logical reasoning.
+
+For best results, use with Llama 3 Instruct context template, temperature 1.4, and min_p 0.1.",
+    "displayName": "Llama 3 8B Lunaris",
+    "enabled": false,
+    "functionCall": false,
+    "id": "sao10k/l3-lunaris-8b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Starcannon 12B is a creative roleplay and story writing model, using [nothingiisreal/mn-celeste-12b](https://openrouter.ai/models/nothingiisreal/mn-celeste-12b) as a base and [intervitens/mini-magnum-12b-v1.1](https://huggingface.co/intervitens/mini-magnum-12b-v1.1) merged in using the [TIES](https://arxiv.org/abs/2306.01708) method.
+
+Although more similar to Magnum overall, the model remains very creative, with a pleasant writing style. It is recommended for people wanting more variety than Magnum, and yet more verbose prose than Celeste.",
+    "displayName": "Mistral Nemo 12B Starcannon",
+    "enabled": false,
+    "functionCall": false,
+    "id": "aetherwiing/mn-starcannon-12b",
+    "maxTokens": undefined,
+    "tokens": 12000,
+    "vision": false,
+  },
+  {
+    "description": "The 2024-08-06 version of GPT-4o offers improved performance in structured outputs, with the ability to supply a JSON schema in the respone_format. Read more [here](https://openai.com/index/introducing-structured-outputs-in-the-api/).
+
+GPT-4o ("o" for "omni") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of [GPT-4 Turbo](/models/openai/gpt-4-turbo) while being twice as fast and 50% more cost-effective. GPT-4o also offers improved performance in processing non-English languages and enhanced visual capabilities.
+
+For benchmarking against other models, it was briefly called ["im-also-a-good-gpt2-chatbot"](https://twitter.com/LiamFedus/status/1790064963966370209)",
+    "displayName": "OpenAI: GPT-4o (2024-08-06)",
+    "enabled": true,
+    "functionCall": false,
+    "id": "openai/gpt-4o-2024-08-06",
+    "maxTokens": 16384,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3.1) launched with a variety of sizes & flavors. This is the base 405B pre-trained version.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Meta: Llama 3.1 405B (base)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3.1-405b",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "A specialized story writing and roleplaying model based on Mistral's NeMo 12B Instruct. Fine-tuned on curated datasets including Reddit Writing Prompts and Opus Instruct 25K.
+
+This model excels at creative writing, offering improved NSFW capabilities, with smarter and more active narration. It demonstrates remarkable versatility in both SFW and NSFW scenarios, with strong Out of Character (OOC) steering capabilities, allowing fine-tuned control over narrative direction and character behavior.
+
+Check out the model's [HuggingFace page](https://huggingface.co/nothingiisreal/MN-12B-Celeste-V1.9) for details on what parameters and prompts work best!",
+    "displayName": "Mistral Nemo 12B Celeste",
+    "enabled": false,
+    "functionCall": false,
+    "id": "nothingiisreal/mn-celeste-12b",
+    "maxTokens": undefined,
+    "tokens": 32000,
+    "vision": false,
+  },
+  {
+    "description": "Gemini 1.5 Pro (0827) is an experimental version of the [Gemini 1.5 Pro](/models/google/gemini-pro-1.5) model.
+
+Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.dev/terms).
+
+#multimodal
+
+Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
+    "displayName": "Google: Gemini Pro 1.5 Experimental",
+    "enabled": true,
+    "functionCall": false,
+    "id": "google/gemini-pro-1.5-exp",
+    "maxTokens": 32768,
+    "tokens": 4000000,
+    "vision": true,
+  },
+  {
+    "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is the online version of the [offline chat model](/models/perplexity/llama-3.1-sonar-large-128k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
+    "displayName": "Perplexity: Llama 3.1 Sonar 70B Online",
+    "enabled": true,
+    "functionCall": false,
+    "id": "perplexity/llama-3.1-sonar-large-128k-online",
+    "maxTokens": undefined,
+    "tokens": 127072,
+    "vision": false,
+  },
+  {
+    "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is a normal offline LLM, but the [online version](/models/perplexity/llama-3.1-sonar-large-128k-online) of this model has Internet access.",
+    "displayName": "Perplexity: Llama 3.1 Sonar 70B",
+    "enabled": true,
+    "functionCall": false,
+    "id": "perplexity/llama-3.1-sonar-large-128k-chat",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is the online version of the [offline chat model](/models/perplexity/llama-3.1-sonar-small-128k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
+    "displayName": "Perplexity: Llama 3.1 Sonar 8B Online",
+    "enabled": true,
+    "functionCall": false,
+    "id": "perplexity/llama-3.1-sonar-small-128k-online",
+    "maxTokens": undefined,
+    "tokens": 127072,
+    "vision": false,
+  },
+  {
+    "description": "Llama 3.1 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is a normal offline LLM, but the [online version](/models/perplexity/llama-3.1-sonar-small-128k-online) of this model has Internet access.",
+    "displayName": "Perplexity: Llama 3.1 Sonar 8B",
+    "enabled": true,
+    "functionCall": false,
+    "id": "perplexity/llama-3.1-sonar-small-128k-chat",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3.1) launched with a variety of sizes & flavors. This 70B instruct-tuned version is optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Meta: Llama 3.1 70B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3.1-70b-instruct",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3.1) launched with a variety of sizes & flavors. This 8B instruct-tuned version is fast and efficient.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).
+
+_These are free, rate-limited endpoints for [Llama 3.1 8B Instruct](/models/meta-llama/llama-3.1-8b-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Meta: Llama 3.1 8B Instruct (free)",
+    "enabled": true,
+    "functionCall": false,
+    "id": "meta-llama/llama-3.1-8b-instruct:free",
+    "maxTokens": 4096,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3.1) launched with a variety of sizes & flavors. This 8B instruct-tuned version is fast and efficient.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Meta: Llama 3.1 8B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3.1-8b-instruct",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "The highly anticipated 400B class of Llama3 is here! Clocking in at 128k context with impressive eval scores, the Meta AI team continues to push the frontier of open-source LLMs.
+
+Meta's latest class of model (Llama 3.1) launched with a variety of sizes & flavors. This 405B instruct-tuned version is optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Meta: Llama 3.1 405B Instruct",
+    "enabled": true,
+    "functionCall": false,
+    "id": "meta-llama/llama-3.1-405b-instruct",
+    "maxTokens": undefined,
+    "tokens": 131072,
+    "vision": false,
+  },
+  {
+    "description": "Dolphin 2.9 is designed for instruction following, conversational, and coding. This model is a fine-tune of [Llama 3 70B](/models/meta-llama/llama-3-70b-instruct). It demonstrates improvements in instruction, conversation, coding, and function calling abilities, when compared to the original.
+
+Uncensored and is stripped of alignment and bias, it requires an external alignment layer for ethical use. Users are cautioned to use this highly compliant model responsibly, as detailed in a blog post about uncensored models at [erichartford.com/uncensored-models](https://erichartford.com/uncensored-models).
+
+Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Dolphin Llama 3 70B 🐬",
+    "enabled": false,
+    "functionCall": true,
+    "id": "cognitivecomputations/dolphin-llama-3-70b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "A 7.3B parameter Mamba-based model designed for code and reasoning tasks.
+
+- Linear time inference, allowing for theoretically infinite sequence lengths
+- 256k token context window
+- Optimized for quick responses, especially beneficial for code productivity
+- Performs comparably to state-of-the-art transformer models in code and reasoning tasks
+- Available under the Apache 2.0 license for free use, modification, and distribution",
+    "displayName": "Mistral: Codestral Mamba",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/codestral-mamba",
+    "maxTokens": undefined,
+    "tokens": 256000,
+    "vision": false,
+  },
+  {
+    "description": "A 12B parameter model with a 128k token context length built by Mistral in collaboration with NVIDIA.
+
+The model is multilingual, supporting English, French, German, Spanish, Italian, Portuguese, Chinese, Japanese, Korean, Arabic, and Hindi.
+
+It supports function calling and is released under the Apache 2.0 license.",
+    "displayName": "Mistral: Mistral Nemo",
+    "enabled": false,
+    "functionCall": true,
+    "id": "mistralai/mistral-nemo",
+    "maxTokens": undefined,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4o mini is OpenAI's newest model after [GPT-4 Omni](/models/openai/gpt-4o), supporting both text and image inputs with text outputs.
+
+As their most advanced small model, it is many multiples more affordable than other recent frontier models, and more than 60% cheaper than [GPT-3.5 Turbo](/models/openai/gpt-3.5-turbo). It maintains SOTA intelligence, while being significantly more cost-effective.
+
+GPT-4o mini achieves an 82% score on MMLU and presently ranks higher than GPT-4 on chat preferences [common leaderboards](https://arena.lmsys.org/).
+
+Check out the [launch announcement](https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/) to learn more.",
+    "displayName": "OpenAI: GPT-4o-mini (2024-07-18)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-4o-mini-2024-07-18",
+    "maxTokens": 16384,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4o mini is OpenAI's newest model after [GPT-4 Omni](/models/openai/gpt-4o), supporting both text and image inputs with text outputs.
+
+As their most advanced small model, it is many multiples more affordable than other recent frontier models, and more than 60% cheaper than [GPT-3.5 Turbo](/models/openai/gpt-3.5-turbo). It maintains SOTA intelligence, while being significantly more cost-effective.
+
+GPT-4o mini achieves an 82% score on MMLU and presently ranks higher than GPT-4 on chat preferences [common leaderboards](https://arena.lmsys.org/).
+
+Check out the [launch announcement](https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/) to learn more.",
+    "displayName": "OpenAI: GPT-4o-mini",
+    "enabled": true,
+    "functionCall": false,
+    "id": "openai/gpt-4o-mini",
+    "maxTokens": 16384,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Qwen2 7B is a transformer-based model that excels in language understanding, multilingual capabilities, coding, mathematics, and reasoning.
+
+It features SwiGLU activation, attention QKV bias, and group query attention. It is pretrained on extensive data with supervised finetuning and direct preference optimization.
+
+For more details, see this [blog post](https://qwenlm.github.io/blog/qwen2/) and [GitHub repo](https://github.com/QwenLM/Qwen2).
+
+Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://huggingface.co/Qwen/Qwen1.5-110B-Chat/blob/main/LICENSE).
+
+_These are free, rate-limited endpoints for [Qwen 2 7B Instruct](/models/qwen/qwen-2-7b-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Qwen 2 7B Instruct (free)",
+    "enabled": true,
+    "functionCall": false,
+    "id": "qwen/qwen-2-7b-instruct:free",
+    "maxTokens": 4096,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "Qwen2 7B is a transformer-based model that excels in language understanding, multilingual capabilities, coding, mathematics, and reasoning.
+
+It features SwiGLU activation, attention QKV bias, and group query attention. It is pretrained on extensive data with supervised finetuning and direct preference optimization.
+
+For more details, see this [blog post](https://qwenlm.github.io/blog/qwen2/) and [GitHub repo](https://github.com/QwenLM/Qwen2).
+
+Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://huggingface.co/Qwen/Qwen1.5-110B-Chat/blob/main/LICENSE).",
+    "displayName": "Qwen 2 7B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "qwen/qwen-2-7b-instruct",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "Gemma 2 27B by Google is an open model built from the same research and technology used to create the [Gemini models](/models?q=gemini).
+
+Gemma models are well-suited for a variety of text generation tasks, including question answering, summarization, and reasoning.
+
+See the [launch announcement](https://blog.google/technology/developers/google-gemma-2/) for more details. Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
+    "displayName": "Google: Gemma 2 27B",
+    "enabled": true,
+    "functionCall": false,
+    "id": "google/gemma-2-27b-it",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "From the maker of [Goliath](https://openrouter.ai/models/alpindale/goliath-120b), Magnum 72B is the first in a new family of models designed to achieve the prose quality of the Claude 3 models, notably Opus & Sonnet.
+
+The model is based on [Qwen2 72B](https://openrouter.ai/models/qwen/qwen-2-72b-instruct) and trained with 55 million tokens of highly curated roleplay (RP) data.",
+    "displayName": "Magnum 72B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "alpindale/magnum-72b",
+    "maxTokens": 1024,
+    "tokens": 16384,
+    "vision": false,
+  },
+  {
+    "description": "An experimental merge model based on Llama 3, exhibiting a very distinctive style of writing. It combines the the best of [Meta's Llama 3 8B](https://openrouter.ai/models/meta-llama/llama-3-8b-instruct) and Nous Research's [Hermes 2 Pro](https://openrouter.ai/models/nousresearch/hermes-2-pro-llama-3-8b).
+
+Hermes-2 Θ (theta) was specifically designed with a few capabilities in mind: executing function calls, generating JSON output, and most remarkably, demonstrating metacognitive abilities (contemplating the nature of thought and recognizing the diversity of cognitive processes among individuals).",
+    "displayName": "Nous: Hermes 2 Theta 8B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "nousresearch/hermes-2-theta-llama-3-8b",
+    "maxTokens": 2048,
+    "tokens": 16384,
+    "vision": false,
+  },
+  {
+    "description": "Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.
+
+Designed for a wide variety of tasks, it empowers developers and researchers to build innovative applications, while maintaining accessibility, safety, and cost-effectiveness.
+
+See the [launch announcement](https://blog.google/technology/developers/google-gemma-2/) for more details. Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).
+
+_These are free, rate-limited endpoints for [Gemma 2 9B](/models/google/gemma-2-9b-it). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Google: Gemma 2 9B (free)",
+    "enabled": true,
+    "functionCall": false,
+    "id": "google/gemma-2-9b-it:free",
+    "maxTokens": 2048,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Gemma 2 9B by Google is an advanced, open-source language model that sets a new standard for efficiency and performance in its size class.
+
+Designed for a wide variety of tasks, it empowers developers and researchers to build innovative applications, while maintaining accessibility, safety, and cost-effectiveness.
+
+See the [launch announcement](https://blog.google/technology/developers/google-gemma-2/) for more details. Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
+    "displayName": "Google: Gemma 2 9B",
+    "enabled": true,
+    "functionCall": false,
+    "id": "google/gemma-2-9b-it",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Stheno 8B 32K is a creative writing/roleplay model from [Sao10k](https://ko-fi.com/sao10k). It was trained at 8K context, then expanded to 32K context.
+
+Compared to older Stheno version, this model is trained on:
+- 2x the amount of creative writing samples
+- Cleaned up roleplaying samples
+- Fewer low quality samples",
+    "displayName": "Llama 3 Stheno 8B v3.3 32K",
+    "enabled": false,
+    "functionCall": false,
+    "id": "sao10k/l3-stheno-8b",
+    "maxTokens": undefined,
+    "tokens": 32000,
+    "vision": false,
+  },
+  {
+    "description": "The Jamba-Instruct model, introduced by AI21 Labs, is an instruction-tuned variant of their hybrid SSM-Transformer Jamba model, specifically optimized for enterprise applications.
+
+- 256K Context Window: It can process extensive information, equivalent to a 400-page novel, which is beneficial for tasks involving large documents such as financial reports or legal documents
+- Safety and Accuracy: Jamba-Instruct is designed with enhanced safety features to ensure secure deployment in enterprise environments, reducing the risk and cost of implementation
+
+Read their [announcement](https://www.ai21.com/blog/announcing-jamba) to learn more.
+
+Jamba has a knowledge cutoff of February 2024.",
+    "displayName": "AI21: Jamba Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "ai21/jamba-instruct",
+    "maxTokens": 4096,
+    "tokens": 256000,
+    "vision": false,
+  },
+  {
+    "description": "Claude 3.5 Sonnet delivers better-than-Opus capabilities, faster-than-Sonnet speeds, at the same Sonnet prices. Sonnet is particularly good at:
+
+- Coding: Autonomously writes, edits, and runs code with reasoning and troubleshooting
+- Data science: Augments human data science expertise; navigates unstructured data while using multiple tools for insights
+- Visual processing: excelling at interpreting charts, graphs, and images, accurately transcribing text to derive insights beyond just the text alone
+- Agentic tasks: exceptional tool use, making it great at agentic tasks (i.e. complex, multi-step problem solving tasks that require engaging with other systems)
+
+#multimodal",
+    "displayName": "Anthropic: Claude 3.5 Sonnet",
+    "enabled": true,
+    "functionCall": true,
+    "id": "anthropic/claude-3.5-sonnet",
+    "maxTokens": 8192,
+    "tokens": 200000,
+    "vision": true,
+  },
+  {
+    "description": "Claude 3.5 Sonnet delivers better-than-Opus capabilities, faster-than-Sonnet speeds, at the same Sonnet prices. Sonnet is particularly good at:
+
+- Coding: Autonomously writes, edits, and runs code with reasoning and troubleshooting
+- Data science: Augments human data science expertise; navigates unstructured data while using multiple tools for insights
+- Visual processing: excelling at interpreting charts, graphs, and images, accurately transcribing text to derive insights beyond just the text alone
+- Agentic tasks: exceptional tool use, making it great at agentic tasks (i.e. complex, multi-step problem solving tasks that require engaging with other systems)
+
+#multimodal
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-3.5-sonnet) variant._",
+    "displayName": "Anthropic: Claude 3.5 Sonnet (self-moderated)",
+    "enabled": false,
+    "functionCall": true,
+    "id": "anthropic/claude-3.5-sonnet:beta",
+    "maxTokens": 8192,
+    "tokens": 200000,
+    "vision": true,
+  },
+  {
+    "description": "Euryale 70B v2.1 is a model focused on creative roleplay from [Sao10k](https://ko-fi.com/sao10k).
+
+- Better prompt adherence.
+- Better anatomy / spatial awareness.
+- Adapts much better to unique and custom formatting / reply formats.
+- Very creative, lots of unique swipes.
+- Is not restrictive during roleplays.",
+    "displayName": "Llama 3 Euryale 70B v2.1",
+    "enabled": false,
+    "functionCall": false,
+    "id": "sao10k/l3-euryale-70b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Phi-3 4K Medium is a powerful 14-billion parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
+
+At time of release, Phi-3 Medium demonstrated state-of-the-art performance among lightweight models. In the MMLU-Pro eval, the model even comes close to a Llama3 70B level of performance.
+
+For 128k context length, try [Phi-3 Medium 128K](/models/microsoft/phi-3-medium-128k-instruct).",
+    "displayName": "Phi-3 Medium 4K Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "microsoft/phi-3-medium-4k-instruct",
+    "maxTokens": undefined,
+    "tokens": 4000,
+    "vision": false,
+  },
+  {
+    "description": "Dolphin 2.9 is designed for instruction following, conversational, and coding. This model is a finetune of [Mixtral 8x22B Instruct](/models/mistralai/mixtral-8x22b-instruct). It features a 64k context length and was fine-tuned with a 16k sequence length using ChatML templates.
+
+This model is a successor to [Dolphin Mixtral 8x7B](/models/cognitivecomputations/dolphin-mixtral-8x7b).
+
+The model is uncensored and is stripped of alignment and bias. It requires an external alignment layer for ethical use. Users are cautioned to use this highly compliant model responsibly, as detailed in a blog post about uncensored models at [erichartford.com/uncensored-models](https://erichartford.com/uncensored-models).
+
+#moe #uncensored",
+    "displayName": "Dolphin 2.9.2 Mixtral 8x22B 🐬",
+    "enabled": false,
+    "functionCall": false,
+    "id": "cognitivecomputations/dolphin-mixtral-8x22b",
+    "maxTokens": undefined,
+    "tokens": 65536,
+    "vision": false,
+  },
+  {
+    "description": "Qwen2 72B is a transformer-based model that excels in language understanding, multilingual capabilities, coding, mathematics, and reasoning.
+
+It features SwiGLU activation, attention QKV bias, and group query attention. It is pretrained on extensive data with supervised finetuning and direct preference optimization.
+
+For more details, see this [blog post](https://qwenlm.github.io/blog/qwen2/) and [GitHub repo](https://github.com/QwenLM/Qwen2).
+
+Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://huggingface.co/Qwen/Qwen1.5-110B-Chat/blob/main/LICENSE).",
+    "displayName": "Qwen 2 72B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "qwen/qwen-2-72b-instruct",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "OpenChat 8B is a library of open-source language models, fine-tuned with "C-RLFT (Conditioned Reinforcement Learning Fine-Tuning)" - a strategy inspired by offline reinforcement learning. It has been trained on mixed-quality data without preference labels.
+
+It outperforms many similarly sized models including [Llama 3 8B Instruct](/models/meta-llama/llama-3-8b-instruct) and various fine-tuned models. It excels in general conversation, coding assistance, and mathematical reasoning.
+
+- For OpenChat fine-tuned on Mistral 7B, check out [OpenChat 7B](/models/openchat/openchat-7b).
+- For OpenChat fine-tuned on Llama 8B, check out [OpenChat 8B](/models/openchat/openchat-8b).
+
+#open-source",
+    "displayName": "OpenChat 3.6 8B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openchat/openchat-8b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Hermes 2 Pro is an upgraded, retrained version of Nous Hermes 2, consisting of an updated and cleaned version of the OpenHermes 2.5 Dataset, as well as a newly introduced Function Calling and JSON Mode dataset developed in-house.",
+    "displayName": "NousResearch: Hermes 2 Pro - Llama-3 8B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "nousresearch/hermes-2-pro-llama-3-8b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
+
+An improved version of [Mistral 7B Instruct v0.2](/models/mistralai/mistral-7b-instruct-v0.2), with the following changes:
+
+- Extended vocabulary to 32768
+- Supports v3 Tokenizer
+- Supports function calling
+
+NOTE: Support for function calling depends on the provider.",
+    "displayName": "Mistral: Mistral 7B Instruct v0.3",
+    "enabled": false,
+    "functionCall": true,
+    "id": "mistralai/mistral-7b-instruct-v0.3",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
+
+*Mistral 7B Instruct has multiple version variants, and this is intended to be the latest version.*
+
+_These are free, rate-limited endpoints for [Mistral 7B Instruct](/models/mistralai/mistral-7b-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Mistral: Mistral 7B Instruct (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-7b-instruct:free",
+    "maxTokens": 4096,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
+
+*Mistral 7B Instruct has multiple version variants, and this is intended to be the latest version.*",
+    "displayName": "Mistral: Mistral 7B Instruct",
+    "enabled": true,
+    "functionCall": false,
+    "id": "mistralai/mistral-7b-instruct",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
+
+*Mistral 7B Instruct has multiple version variants, and this is intended to be the latest version.*
+
+_These are higher-throughput endpoints for [Mistral 7B Instruct](/models/mistralai/mistral-7b-instruct). They may have higher prices._",
+    "displayName": "Mistral: Mistral 7B Instruct (nitro)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-7b-instruct:nitro",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "Phi-3 Mini is a powerful 3.8B parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
+
+At time of release, Phi-3 Medium demonstrated state-of-the-art performance among lightweight models. This model is static, trained on an offline dataset with an October 2023 cutoff date.
+
+_These are free, rate-limited endpoints for [Phi-3 Mini 128K Instruct](/models/microsoft/phi-3-mini-128k-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Phi-3 Mini 128K Instruct (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "microsoft/phi-3-mini-128k-instruct:free",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Phi-3 Mini is a powerful 3.8B parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
+
+At time of release, Phi-3 Medium demonstrated state-of-the-art performance among lightweight models. This model is static, trained on an offline dataset with an October 2023 cutoff date.",
+    "displayName": "Phi-3 Mini 128K Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "microsoft/phi-3-mini-128k-instruct",
+    "maxTokens": undefined,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Phi-3 128K Medium is a powerful 14-billion parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
+
+At time of release, Phi-3 Medium demonstrated state-of-the-art performance among lightweight models. In the MMLU-Pro eval, the model even comes close to a Llama3 70B level of performance.
+
+For 4k context length, try [Phi-3 Medium 4K](/models/microsoft/phi-3-medium-4k-instruct).
+
+_These are free, rate-limited endpoints for [Phi-3 Medium 128K Instruct](/models/microsoft/phi-3-medium-128k-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Phi-3 Medium 128K Instruct (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "microsoft/phi-3-medium-128k-instruct:free",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Phi-3 128K Medium is a powerful 14-billion parameter model designed for advanced language understanding, reasoning, and instruction following. Optimized through supervised fine-tuning and preference adjustments, it excels in tasks involving common sense, mathematics, logical reasoning, and code processing.
+
+At time of release, Phi-3 Medium demonstrated state-of-the-art performance among lightweight models. In the MMLU-Pro eval, the model even comes close to a Llama3 70B level of performance.
+
+For 4k context length, try [Phi-3 Medium 4K](/models/microsoft/phi-3-medium-4k-instruct).",
+    "displayName": "Phi-3 Medium 128K Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "microsoft/phi-3-medium-128k-instruct",
+    "maxTokens": undefined,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "The NeverSleep team is back, with a Llama 3 70B finetune trained on their curated roleplay data. Striking a balance between eRP and RP, Lumimaid was designed to be serious, yet uncensored when necessary.
+
+To enhance it's overall intelligence and chat capability, roughly 40% of the training data was not roleplay. This provides a breadth of knowledge to access, while still keeping roleplay as the primary strength.
+
+Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Llama 3 Lumimaid 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "neversleep/llama-3-lumimaid-70b",
+    "maxTokens": 2048,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Gemini 1.5 Flash is a foundation model that performs well at a variety of multimodal tasks such as visual understanding, classification, summarization, and creating content from image, audio and video. It's adept at processing visual and text inputs such as photographs, documents, infographics, and screenshots.
+
+Gemini 1.5 Flash is designed for high-volume, high-frequency tasks where cost and latency matter. On most common tasks, Flash achieves comparable quality to other Gemini Pro models at a significantly reduced cost. Flash is well-suited for applications like chat assistants and on-demand content generation where speed and scale matter.
+
+Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.dev/terms).
+
+#multimodal",
+    "displayName": "Google: Gemini Flash 1.5",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/gemini-flash-1.5",
+    "maxTokens": 32768,
+    "tokens": 4000000,
+    "vision": true,
+  },
+  {
+    "description": "DeepSeek-Coder-V2, an open-source Mixture-of-Experts (MoE) code language model. It is further pre-trained from an intermediate checkpoint of DeepSeek-V2 with additional 6 trillion tokens.
+
+The original V1 model was trained from scratch on 2T tokens, with a composition of 87% code and 13% natural language in both English and Chinese. It was pre-trained on project-level code corpus by employing a extra fill-in-the-blank task.",
+    "displayName": "DeepSeek-Coder-V2",
+    "enabled": false,
+    "functionCall": false,
+    "id": "deepseek/deepseek-coder",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "DeepSeek-V2 Chat is a conversational finetune of DeepSeek-V2, a Mixture-of-Experts (MoE) language model. It comprises 236B total parameters, of which 21B are activated for each token.
+
+Compared with DeepSeek 67B, DeepSeek-V2 achieves stronger performance, and meanwhile saves 42.5% of training costs, reduces the KV cache by 93.3%, and boosts the maximum generation throughput to 5.76 times.
+
+DeepSeek-V2 achieves remarkable performance on both standard benchmarks and open-ended generation evaluations.",
+    "displayName": "DeepSeek-V2 Chat",
+    "enabled": true,
+    "functionCall": false,
+    "id": "deepseek/deepseek-chat",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Llama3 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is the online version of the [offline chat model](/models/perplexity/llama-3-sonar-large-32k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
+    "displayName": "Perplexity: Llama3 Sonar 70B Online",
+    "enabled": false,
+    "functionCall": false,
+    "id": "perplexity/llama-3-sonar-large-32k-online",
+    "maxTokens": undefined,
+    "tokens": 28000,
+    "vision": false,
+  },
+  {
+    "description": "Llama3 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is a normal offline LLM, but the [online version](/models/perplexity/llama-3-sonar-large-32k-online) of this model has Internet access.",
+    "displayName": "Perplexity: Llama3 Sonar 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "perplexity/llama-3-sonar-large-32k-chat",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "Llama3 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is the online version of the [offline chat model](/models/perplexity/llama-3-sonar-small-32k-chat). It is focused on delivering helpful, up-to-date, and factual responses. #online",
+    "displayName": "Perplexity: Llama3 Sonar 8B Online",
+    "enabled": false,
+    "functionCall": false,
+    "id": "perplexity/llama-3-sonar-small-32k-online",
+    "maxTokens": undefined,
+    "tokens": 28000,
+    "vision": false,
+  },
+  {
+    "description": "Llama3 Sonar is Perplexity's latest model family. It surpasses their earlier Sonar models in cost-efficiency, speed, and performance.
+
+This is a normal offline LLM, but the [online version](/models/perplexity/llama-3-sonar-small-32k-online) of this model has Internet access.",
+    "displayName": "Perplexity: Llama3 Sonar 8B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "perplexity/llama-3-sonar-small-32k-chat",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "This safeguard model has 8B parameters and is based on the Llama 3 family. Just like is predecessor, [LlamaGuard 1](https://huggingface.co/meta-llama/LlamaGuard-7b), it can do both prompt and response classification.
+
+LlamaGuard 2 acts as a normal LLM would, generating text that indicates whether the given input/output is safe/unsafe. If deemed unsafe, it will also share the content categories violated.
+
+For best results, please use raw prompt input or the \`/completions\` endpoint, instead of the chat API.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Meta: LlamaGuard 2 8B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-guard-2-8b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4o ("o" for "omni") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of [GPT-4 Turbo](/models/openai/gpt-4-turbo) while being twice as fast and 50% more cost-effective. GPT-4o also offers improved performance in processing non-English languages and enhanced visual capabilities.
+
+For benchmarking against other models, it was briefly called ["im-also-a-good-gpt2-chatbot"](https://twitter.com/LiamFedus/status/1790064963966370209)",
+    "displayName": "OpenAI: GPT-4o (2024-05-13)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-4o-2024-05-13",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4o ("o" for "omni") is OpenAI's latest AI model, supporting both text and image inputs with text outputs. It maintains the intelligence level of [GPT-4 Turbo](/models/openai/gpt-4-turbo) while being twice as fast and 50% more cost-effective. GPT-4o also offers improved performance in processing non-English languages and enhanced visual capabilities.
+
+For benchmarking against other models, it was briefly called ["im-also-a-good-gpt2-chatbot"](https://twitter.com/LiamFedus/status/1790064963966370209)",
+    "displayName": "OpenAI: GPT-4o",
+    "enabled": true,
+    "functionCall": false,
+    "id": "openai/gpt-4o",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4o Extended is an experimental variant of GPT-4o with an extended max output tokens. This model supports only text input to text output.
+
+_These are extended-context endpoints for [GPT-4o](/models/openai/gpt-4o). They may have higher prices._",
+    "displayName": "OpenAI: GPT-4o (extended)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-4o:extended",
+    "maxTokens": 64000,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Qwen1.5 72B is the beta version of Qwen2, a transformer-based decoder-only language model pretrained on a large amount of data. In comparison with the previous released Qwen, the improvements include:
+
+- Significant performance improvement in human preference for chat models
+- Multilingual support of both base and chat models
+- Stable support of 32K context length for models of all sizes
+
+For more details, see this [blog post](https://qwenlm.github.io/blog/qwen1.5/) and [GitHub repo](https://github.com/QwenLM/Qwen1.5).
+
+Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://huggingface.co/Qwen/Qwen1.5-110B-Chat/blob/main/LICENSE).",
+    "displayName": "Qwen 1.5 72B Chat",
+    "enabled": false,
+    "functionCall": false,
+    "id": "qwen/qwen-72b-chat",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "Qwen1.5 110B is the beta version of Qwen2, a transformer-based decoder-only language model pretrained on a large amount of data. In comparison with the previous released Qwen, the improvements include:
+
+- Significant performance improvement in human preference for chat models
+- Multilingual support of both base and chat models
+- Stable support of 32K context length for models of all sizes
+
+For more details, see this [blog post](https://qwenlm.github.io/blog/qwen1.5/) and [GitHub repo](https://github.com/QwenLM/Qwen1.5).
+
+Usage of this model is subject to [Tongyi Qianwen LICENSE AGREEMENT](https://huggingface.co/Qwen/Qwen1.5-110B-Chat/blob/main/LICENSE).",
+    "displayName": "Qwen 1.5 110B Chat",
+    "enabled": false,
+    "functionCall": false,
+    "id": "qwen/qwen-110b-chat",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "The NeverSleep team is back, with a Llama 3 8B finetune trained on their curated roleplay data. Striking a balance between eRP and RP, Lumimaid was designed to be serious, yet uncensored when necessary.
+
+To enhance it's overall intelligence and chat capability, roughly 40% of the training data was not roleplay. This provides a breadth of knowledge to access, while still keeping roleplay as the primary strength.
+
+Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Llama 3 Lumimaid 8B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "neversleep/llama-3-lumimaid-8b",
+    "maxTokens": undefined,
+    "tokens": 24576,
+    "vision": false,
+  },
+  {
+    "description": "The NeverSleep team is back, with a Llama 3 8B finetune trained on their curated roleplay data. Striking a balance between eRP and RP, Lumimaid was designed to be serious, yet uncensored when necessary.
+
+To enhance it's overall intelligence and chat capability, roughly 40% of the training data was not roleplay. This provides a breadth of knowledge to access, while still keeping roleplay as the primary strength.
+
+Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).
+
+_These are extended-context endpoints for [Llama 3 Lumimaid 8B](/models/neversleep/llama-3-lumimaid-8b). They may have higher prices._",
+    "displayName": "Llama 3 Lumimaid 8B (extended)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "neversleep/llama-3-lumimaid-8b:extended",
+    "maxTokens": 2048,
+    "tokens": 24576,
+    "vision": false,
+  },
+  {
+    "description": "Creative writing model, routed with permission. It's fast, it keeps the conversation going, and it stays in character.
+
+If you submit a raw prompt, you can use Alpaca or Vicuna formats.",
+    "displayName": "Fimbulvetr 11B v2",
+    "enabled": false,
+    "functionCall": false,
+    "id": "sao10k/fimbulvetr-11b-v2",
+    "maxTokens": 2048,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3) launched with a variety of sizes & flavors. This 70B instruct-tuned version was optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Meta: Llama 3 70B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3-70b-instruct",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3) launched with a variety of sizes & flavors. This 70B instruct-tuned version was optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).
+
+_These are higher-throughput endpoints for [Llama 3 70B Instruct](/models/meta-llama/llama-3-70b-instruct). They may have higher prices._",
+    "displayName": "Meta: Llama 3 70B Instruct (nitro)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3-70b-instruct:nitro",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3) launched with a variety of sizes & flavors. This 8B instruct-tuned version was optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).
+
+_These are free, rate-limited endpoints for [Llama 3 8B Instruct](/models/meta-llama/llama-3-8b-instruct). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Meta: Llama 3 8B Instruct (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3-8b-instruct:free",
+    "maxTokens": 4096,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3) launched with a variety of sizes & flavors. This 8B instruct-tuned version was optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).",
+    "displayName": "Meta: Llama 3 8B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3-8b-instruct",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3) launched with a variety of sizes & flavors. This 8B instruct-tuned version was optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).
+
+_These are higher-throughput endpoints for [Llama 3 8B Instruct](/models/meta-llama/llama-3-8b-instruct). They may have higher prices._",
+    "displayName": "Meta: Llama 3 8B Instruct (nitro)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3-8b-instruct:nitro",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Meta's latest class of model (Llama 3) launched with a variety of sizes & flavors. This 8B instruct-tuned version was optimized for high quality dialogue usecases.
+
+It has demonstrated strong performance compared to leading closed-source models in human evaluations.
+
+To read more about the model release, [click here](https://ai.meta.com/blog/meta-llama-3/). Usage of this model is subject to [Meta's Acceptable Use Policy](https://llama.meta.com/llama3/use-policy/).
+
+_These are extended-context endpoints for [Llama 3 8B Instruct](/models/meta-llama/llama-3-8b-instruct). They may have higher prices._",
+    "displayName": "Meta: Llama 3 8B Instruct (extended)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-3-8b-instruct:extended",
+    "maxTokens": 2048,
+    "tokens": 16384,
+    "vision": false,
+  },
+  {
+    "description": "Mistral's official instruct fine-tuned version of [Mixtral 8x22B](/models/mistralai/mixtral-8x22b). It uses 39B active parameters out of 141B, offering unparalleled cost efficiency for its size. Its strengths include:
+- strong math, coding, and reasoning
+- large context length (64k)
+- fluency in English, French, Italian, German, and Spanish
+
+See benchmarks on the launch announcement [here](https://mistral.ai/news/mixtral-8x22b/).
+#moe",
+    "displayName": "Mistral: Mixtral 8x22B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mixtral-8x22b-instruct",
+    "maxTokens": undefined,
+    "tokens": 65536,
+    "vision": false,
+  },
+  {
+    "description": "WizardLM-2 7B is the smaller variant of Microsoft AI's latest Wizard model. It is the fastest and achieves comparable performance with existing 10x larger opensource leading models
+
+It is a finetune of [Mistral 7B Instruct](/models/mistralai/mistral-7b-instruct), using the same technique as [WizardLM-2 8x22B](/models/microsoft/wizardlm-2-8x22b).
+
+To read more about the model release, [click here](https://wizardlm.github.io/WizardLM2/).
+
+#moe",
+    "displayName": "WizardLM-2 7B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "microsoft/wizardlm-2-7b",
+    "maxTokens": undefined,
+    "tokens": 32000,
+    "vision": false,
+  },
+  {
+    "description": "WizardLM-2 8x22B is Microsoft AI's most advanced Wizard model. It demonstrates highly competitive performance compared to leading proprietary models, and it consistently outperforms all existing state-of-the-art opensource models.
+
+It is an instruct finetune of [Mixtral 8x22B](/models/mistralai/mixtral-8x22b).
+
+To read more about the model release, [click here](https://wizardlm.github.io/WizardLM2/).
+
+#moe",
+    "displayName": "WizardLM-2 8x22B",
+    "enabled": true,
+    "functionCall": false,
+    "id": "microsoft/wizardlm-2-8x22b",
+    "maxTokens": undefined,
+    "tokens": 65536,
+    "vision": false,
+  },
+  {
+    "description": "Google's latest multimodal model, supporting image and video in text or chat prompts.
+
+Optimized for language tasks including:
+
+- Code generation
+- Text generation
+- Text editing
+- Problem solving
+- Recommendations
+- Information extraction
+- Data extraction or generation
+- AI agents
+
+Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.dev/terms).
+
+#multimodal",
+    "displayName": "Google: Gemini Pro 1.5",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/gemini-pro-1.5",
+    "maxTokens": 32768,
+    "tokens": 4000000,
+    "vision": true,
+  },
+  {
+    "description": "The latest GPT-4 Turbo model with vision capabilities. Vision requests can now use JSON mode and function calling.
+
+Training data: up to December 2023.",
+    "displayName": "OpenAI: GPT-4 Turbo",
+    "enabled": false,
+    "functionCall": true,
+    "id": "openai/gpt-4-turbo",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": true,
+  },
+  {
+    "description": "Command R+ is a new, 104B-parameter LLM from Cohere. It's useful for roleplay, general consumer usecases, and Retrieval Augmented Generation (RAG).
+
+It offers multilingual support for ten key languages to facilitate global business operations. See benchmarks and the launch post [here](https://txt.cohere.com/command-r-plus-microsoft-azure/).
+
+Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
+    "displayName": "Cohere: Command R+",
+    "enabled": true,
+    "functionCall": false,
+    "id": "cohere/command-r-plus",
+    "maxTokens": 4000,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "DBRX is a new open source large language model developed by Databricks. At 132B, it outperforms existing open source LLMs like Llama 2 70B and [Mixtral-8x7b](/models/mistralai/mixtral-8x7b) on standard industry benchmarks for language understanding, programming, math, and logic.
+
+It uses a fine-grained mixture-of-experts (MoE) architecture. 36B parameters are active on any input. It was pre-trained on 12T tokens of text and code data. Compared to other open MoE models like Mixtral-8x7B and Grok-1, DBRX is fine-grained, meaning it uses a larger number of smaller experts.
+
+See the launch announcement and benchmark results [here](https://www.databricks.com/blog/introducing-dbrx-new-state-art-open-llm).
+
+#moe",
+    "displayName": "Databricks: DBRX 132B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "databricks/dbrx-instruct",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "A merge with a complex family tree, this model was crafted for roleplaying and storytelling. Midnight Rose is a successor to Rogue Rose and Aurora Nights and improves upon them both. It wants to produce lengthy output by default and is the best creative writing merge produced so far by sophosympatheia.
+
+Descending from earlier versions of Midnight Rose and [Wizard Tulu Dolphin 70B](https://huggingface.co/sophosympatheia/Wizard-Tulu-Dolphin-70B-v1.0), it inherits the best qualities of each.",
+    "displayName": "Midnight Rose 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "sophosympatheia/midnight-rose-70b",
     "maxTokens": undefined,
     "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "Command-R is a 35B parameter model that performs conversational language tasks at a higher quality, more reliably, and with a longer context than previous models. It can be used for complex workflows like code generation, retrieval augmented generation (RAG), tool use, and agents.
+
+Read the launch post [here](https://txt.cohere.com/command-r/).
+
+Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
+    "displayName": "Cohere: Command R",
+    "enabled": true,
+    "functionCall": false,
+    "id": "cohere/command-r",
+    "maxTokens": 4000,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "Command is an instruction-following conversational model that performs language tasks with high quality, more reliably and with a longer context than our base generative models.
+
+Use of this model is subject to Cohere's [Acceptable Use Policy](https://docs.cohere.com/docs/c4ai-acceptable-use-policy).",
+    "displayName": "Cohere: Command",
+    "enabled": false,
+    "functionCall": false,
+    "id": "cohere/command",
+    "maxTokens": 4000,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "Claude 3 Haiku is Anthropic's fastest and most compact model for
+near-instant responsiveness. Quick and accurate targeted performance.
+
+See the launch announcement and benchmark results [here](https://www.anthropic.com/news/claude-3-haiku)
+
+#multimodal",
+    "displayName": "Anthropic: Claude 3 Haiku",
+    "enabled": true,
+    "functionCall": false,
+    "id": "anthropic/claude-3-haiku",
+    "maxTokens": 4096,
+    "tokens": 200000,
     "vision": true,
+  },
+  {
+    "description": "Claude 3 Haiku is Anthropic's fastest and most compact model for
+near-instant responsiveness. Quick and accurate targeted performance.
+
+See the launch announcement and benchmark results [here](https://www.anthropic.com/news/claude-3-haiku)
+
+#multimodal
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-3-haiku) variant._",
+    "displayName": "Anthropic: Claude 3 Haiku (self-moderated)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-3-haiku:beta",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": true,
+  },
+  {
+    "description": "Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
+
+See the launch announcement and benchmark results [here](https://www.anthropic.com/news/claude-3-family)
+
+#multimodal",
+    "displayName": "Anthropic: Claude 3 Sonnet",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-3-sonnet",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": true,
+  },
+  {
+    "description": "Claude 3 Sonnet is an ideal balance of intelligence and speed for enterprise workloads. Maximum utility at a lower price, dependable, balanced for scaled deployments.
+
+See the launch announcement and benchmark results [here](https://www.anthropic.com/news/claude-3-family)
+
+#multimodal
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-3-sonnet) variant._",
+    "displayName": "Anthropic: Claude 3 Sonnet (self-moderated)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-3-sonnet:beta",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": true,
+  },
+  {
+    "description": "Claude 3 Opus is Anthropic's most powerful model for highly complex tasks. It boasts top-level performance, intelligence, fluency, and understanding.
+
+See the launch announcement and benchmark results [here](https://www.anthropic.com/news/claude-3-family)
+
+#multimodal",
+    "displayName": "Anthropic: Claude 3 Opus",
+    "enabled": true,
+    "functionCall": false,
+    "id": "anthropic/claude-3-opus",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": true,
+  },
+  {
+    "description": "Claude 3 Opus is Anthropic's most powerful model for highly complex tasks. It boasts top-level performance, intelligence, fluency, and understanding.
+
+See the launch announcement and benchmark results [here](https://www.anthropic.com/news/claude-3-family)
+
+#multimodal
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-3-opus) variant._",
+    "displayName": "Anthropic: Claude 3 Opus (self-moderated)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-3-opus:beta",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": true,
+  },
+  {
+    "description": "This is Mistral AI's flagship model, Mistral Large 2 (version \`mistral-large-2407\`). It's a proprietary weights-available model and excels at reasoning, code, JSON, chat, and more. Read the launch announcement [here](https://mistral.ai/news/mistral-large-2407/).
+
+It is fluent in English, French, Spanish, German, and Italian, with high grammatical accuracy, and its long context window allows precise information recall from large documents.",
+    "displayName": "Mistral Large",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-large",
+    "maxTokens": undefined,
+    "tokens": 128000,
+    "vision": false,
+  },
+  {
+    "description": "The preview GPT-4 model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Training data: up to Dec 2023.
+
+**Note:** heavily rate limited by OpenAI while in preview.",
+    "displayName": "OpenAI: GPT-4 Turbo Preview",
+    "enabled": false,
+    "functionCall": true,
+    "id": "openai/gpt-4-turbo-preview",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": false,
   },
   {
     "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.
 
-Updated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/gpt-3.5). Training data up to Sep 2021.",
-    "displayName": "OpenAI: GPT-3.5 Turbo",
+Training data up to Sep 2021.",
+    "displayName": "OpenAI: GPT-3.5 Turbo (older v0613)",
     "enabled": false,
     "functionCall": false,
-    "id": "openai/gpt-3.5-turbo",
+    "id": "openai/gpt-3.5-turbo-0613",
     "maxTokens": 4096,
-    "tokens": 16385,
+    "tokens": 4095,
+    "vision": false,
+  },
+  {
+    "description": "Nous Hermes 2 Mixtral 8x7B DPO is the new flagship Nous Research model trained over the [Mixtral 8x7B MoE LLM](/models/mistralai/mixtral-8x7b).
+
+The model was trained on over 1,000,000 entries of primarily [GPT-4](/models/openai/gpt-4) generated data, as well as other high quality data from open datasets across the AI landscape, achieving state of the art performance on a variety of tasks.
+
+#moe",
+    "displayName": "Nous: Hermes 2 Mixtral 8x7B DPO",
+    "enabled": false,
+    "functionCall": false,
+    "id": "nousresearch/nous-hermes-2-mixtral-8x7b-dpo",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "This is Mistral AI's closed-source, medium-sided model. It's powered by a closed-source prototype and excels at reasoning, code, JSON, chat, and more. In benchmarks, it compares with many of the flagship models of other companies.",
+    "displayName": "Mistral Medium",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-medium",
+    "maxTokens": undefined,
+    "tokens": 32000,
+    "vision": false,
+  },
+  {
+    "description": "This model is currently powered by Mixtral-8X7B-v0.1, a sparse mixture of experts model with 12B active parameters. It has better reasoning, exhibits more capabilities, can produce and reason about code, and is multiligual, supporting English, French, German, Italian, and Spanish.
+#moe",
+    "displayName": "Mistral Small",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-small",
+    "maxTokens": undefined,
+    "tokens": 32000,
+    "vision": false,
+  },
+  {
+    "description": "This model is currently powered by Mistral-7B-v0.2, and incorporates a "better" fine-tuning than [Mistral 7B](/models/mistralai/mistral-7b-instruct-v0.1), inspired by community work. It's best used for large batch processing tasks where cost is a significant factor but reasoning capabilities are not crucial.",
+    "displayName": "Mistral Tiny",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-tiny",
+    "maxTokens": undefined,
+    "tokens": 32000,
+    "vision": false,
+  },
+  {
+    "description": "A 75/25 merge of [Chronos 13b v2](https://huggingface.co/elinas/chronos-13b-v2) and [Nous Hermes Llama2 13b](/models/nousresearch/nous-hermes-llama2-13b). This offers the imaginative writing style of Chronos while retaining coherency. Outputs are long and use exceptional prose. #merge",
+    "displayName": "Chronos Hermes 13B v2",
+    "enabled": false,
+    "functionCall": false,
+    "id": "austism/chronos-hermes-13b",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "Nous Hermes 2 Yi 34B was trained on 1,000,000 entries of primarily GPT-4 generated data, as well as other high quality data from open datasets across the AI landscape.
+
+Nous-Hermes 2 on Yi 34B outperforms all Nous-Hermes & Open-Hermes models of the past, achieving new heights in all benchmarks for a Nous Research LLM as well as surpassing many popular finetunes.",
+    "displayName": "Nous: Hermes 2 Yi 34B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "nousresearch/nous-hermes-yi-34b",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "A high-performing, industry-standard 7.3B parameter model, with optimizations for speed and context length.
+
+An improved version of [Mistral 7B Instruct](/modelsmistralai/mistral-7b-instruct-v0.1), with the following changes:
+
+- 32k context window (vs 8k context in v0.1)
+- Rope-theta = 1e6
+- No Sliding-Window Attention",
+    "displayName": "Mistral: Mistral 7B Instruct v0.2",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-7b-instruct-v0.2",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "This is a 16k context fine-tune of [Mixtral-8x7b](/models/mistralai/mixtral-8x7b). It excels in coding tasks due to extensive training with coding data and is known for its obedience, although it lacks DPO tuning.
+
+The model is uncensored and is stripped of alignment and bias. It requires an external alignment layer for ethical use. Users are cautioned to use this highly compliant model responsibly, as detailed in a blog post about uncensored models at [erichartford.com/uncensored-models](https://erichartford.com/uncensored-models).
+
+#moe #uncensored",
+    "displayName": "Dolphin 2.6 Mixtral 8x7B 🐬",
+    "enabled": false,
+    "functionCall": false,
+    "id": "cognitivecomputations/dolphin-mixtral-8x7b",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "Google's flagship multimodal model, supporting image and video in text or chat prompts for a text or code response.
+
+See the benchmarks and prompting guidelines from [Deepmind](https://deepmind.google/technologies/gemini/).
+
+Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.dev/terms).
+
+#multimodal",
+    "displayName": "Google: Gemini Pro Vision 1.0",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/gemini-pro-vision",
+    "maxTokens": 8192,
+    "tokens": 65536,
+    "vision": true,
+  },
+  {
+    "description": "Google's flagship text generation model. Designed to handle natural language tasks, multiturn text and code chat, and code generation.
+
+See the benchmarks and prompting guidelines from [Deepmind](https://deepmind.google/technologies/gemini/).
+
+Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.dev/terms).",
+    "displayName": "Google: Gemini Pro 1.0",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/gemini-pro",
+    "maxTokens": 32768,
+    "tokens": 131040,
+    "vision": false,
+  },
+  {
+    "description": "A pretrained generative Sparse Mixture of Experts, by Mistral AI, for chat and instruction use. Incorporates 8 experts (feed-forward networks) for a total of 47 billion parameters.
+
+Instruct model fine-tuned by Mistral. #moe",
+    "displayName": "Mixtral 8x7B Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mixtral-8x7b-instruct",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "A pretrained generative Sparse Mixture of Experts, by Mistral AI, for chat and instruction use. Incorporates 8 experts (feed-forward networks) for a total of 47 billion parameters.
+
+Instruct model fine-tuned by Mistral. #moe
+
+_These are higher-throughput endpoints for [Mixtral 8x7B Instruct](/models/mistralai/mixtral-8x7b-instruct). They may have higher prices._",
+    "displayName": "Mixtral 8x7B Instruct (nitro)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mixtral-8x7b-instruct:nitro",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "A pretrained generative Sparse Mixture of Experts, by Mistral AI. Incorporates 8 experts (feed-forward networks) for a total of 47B parameters. Base model (not fine-tuned for instructions) - see [Mixtral 8x7B Instruct](/models/mistralai/mixtral-8x7b-instruct) for an instruct-tuned model.
+
+#moe",
+    "displayName": "Mixtral 8x7B (base)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mixtral-8x7b",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "This is the chat model variant of the [StripedHyena series](/models?q=stripedhyena) developed by Together in collaboration with Nous Research.
+
+StripedHyena uses a new architecture that competes with traditional Transformers, particularly in long-context data processing. It combines attention mechanisms with gated convolutions for improved speed, efficiency, and scaling. This model marks a significant advancement in AI architecture for sequence modeling tasks.",
+    "displayName": "StripedHyena Nous 7B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "togethercomputer/stripedhyena-nous-7b",
+    "maxTokens": undefined,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "From the creator of [MythoMax](/models/gryphe/mythomax-l2-13b), merges a suite of models to reduce word anticipation, ministrations, and other undesirable words in ChatGPT roleplaying data.
+
+It combines [Neural Chat 7B](/models/intel/neural-chat-7b), Airoboros 7b, [Toppy M 7B](/models/undi95/toppy-m-7b), [Zepher 7b beta](/models/huggingfaceh4/zephyr-7b-beta), [Nous Capybara 34B](/models/nousresearch/nous-capybara-34b), [OpenHeremes 2.5](/models/teknium/openhermes-2.5-mistral-7b), and many others.
+
+#merge
+
+_These are free, rate-limited endpoints for [MythoMist 7B](/models/gryphe/mythomist-7b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "MythoMist 7B (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "gryphe/mythomist-7b:free",
+    "maxTokens": 4096,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "From the creator of [MythoMax](/models/gryphe/mythomax-l2-13b), merges a suite of models to reduce word anticipation, ministrations, and other undesirable words in ChatGPT roleplaying data.
+
+It combines [Neural Chat 7B](/models/intel/neural-chat-7b), Airoboros 7b, [Toppy M 7B](/models/undi95/toppy-m-7b), [Zepher 7b beta](/models/huggingfaceh4/zephyr-7b-beta), [Nous Capybara 34B](/models/nousresearch/nous-capybara-34b), [OpenHeremes 2.5](/models/teknium/openhermes-2.5-mistral-7b), and many others.
+
+#merge",
+    "displayName": "MythoMist 7B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "gryphe/mythomist-7b",
+    "maxTokens": 2048,
+    "tokens": 32768,
+    "vision": false,
+  },
+  {
+    "description": "OpenChat 7B is a library of open-source language models, fine-tuned with "C-RLFT (Conditioned Reinforcement Learning Fine-Tuning)" - a strategy inspired by offline reinforcement learning. It has been trained on mixed-quality data without preference labels.
+
+- For OpenChat fine-tuned on Mistral 7B, check out [OpenChat 7B](/models/openchat/openchat-7b).
+- For OpenChat fine-tuned on Llama 8B, check out [OpenChat 8B](/models/openchat/openchat-8b).
+
+#open-source
+
+_These are free, rate-limited endpoints for [OpenChat 3.5 7B](/models/openchat/openchat-7b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "OpenChat 3.5 7B (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openchat/openchat-7b:free",
+    "maxTokens": 4096,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "OpenChat 7B is a library of open-source language models, fine-tuned with "C-RLFT (Conditioned Reinforcement Learning Fine-Tuning)" - a strategy inspired by offline reinforcement learning. It has been trained on mixed-quality data without preference labels.
+
+- For OpenChat fine-tuned on Mistral 7B, check out [OpenChat 7B](/models/openchat/openchat-7b).
+- For OpenChat fine-tuned on Llama 8B, check out [OpenChat 8B](/models/openchat/openchat-8b).
+
+#open-source",
+    "displayName": "OpenChat 3.5 7B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openchat/openchat-7b",
+    "maxTokens": undefined,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "A collab between IkariDev and Undi. This merge is suitable for RP, ERP, and general knowledge.
+
+#merge #uncensored",
+    "displayName": "Noromaid 20B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "neversleep/noromaid-20b",
+    "maxTokens": 2048,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's model for low-latency, high throughput text generation. Supports hundreds of pages of text.",
+    "displayName": "Anthropic: Claude Instant v1.1",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-instant-1.1",
+    "maxTokens": 2048,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "Claude 2 delivers advancements in key capabilities for enterprises—including an industry-leading 200K token context window, significant reductions in rates of model hallucination, system prompts and a new beta feature: tool use.",
+    "displayName": "Anthropic: Claude v2.1",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-2.1",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": false,
+  },
+  {
+    "description": "Claude 2 delivers advancements in key capabilities for enterprises—including an industry-leading 200K token context window, significant reductions in rates of model hallucination, system prompts and a new beta feature: tool use.
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-2.1) variant._",
+    "displayName": "Anthropic: Claude v2.1 (self-moderated)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-2.1:beta",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": false,
+  },
+  {
+    "description": "Claude 2 delivers advancements in key capabilities for enterprises—including an industry-leading 200K token context window, significant reductions in rates of model hallucination, system prompts and a new beta feature: tool use.",
+    "displayName": "Anthropic: Claude v2",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-2",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": false,
+  },
+  {
+    "description": "Claude 2 delivers advancements in key capabilities for enterprises—including an industry-leading 200K token context window, significant reductions in rates of model hallucination, system prompts and a new beta feature: tool use.
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-2) variant._",
+    "displayName": "Anthropic: Claude v2 (self-moderated)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-2:beta",
+    "maxTokens": 4096,
+    "tokens": 200000,
+    "vision": false,
+  },
+  {
+    "description": "A continuation of [OpenHermes 2 model](/models/teknium/openhermes-2-mistral-7b), trained on additional code datasets.
+Potentially the most interesting finding from training on a good ratio (est. of around 7-14% of the total dataset) of code instruction was that it has boosted several non-code benchmarks, including TruthfulQA, AGIEval, and GPT4All suite. It did however reduce BigBench benchmark score, but the net gain overall is significant.",
+    "displayName": "OpenHermes 2.5 Mistral 7B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "teknium/openhermes-2.5-mistral-7b",
+    "maxTokens": undefined,
+    "tokens": 4096,
     "vision": false,
   },
   {
@@ -55,27 +1795,474 @@ Updated by OpenAI to point to the [latest version of GPT-3.5](/models?q=openai/g
     "vision": true,
   },
   {
-    "description": "Gemma by Google is an advanced, open-source language model family, leveraging the latest in decoder-only, text-to-text technology. It offers English language capabilities across text generation tasks like question answering, summarization, and reasoning. The Gemma 7B variant is comparable in performance to leading open source models.
+    "description": "A Mythomax/MLewd_13B-style merge of selected 70B models.
+A multi-model merge of several LLaMA2 70B finetunes for roleplaying and creative work. The goal was to create a model that combines creativity with intelligence for an enhanced experience.
 
-Usage of Gemma is subject to Google's [Gemma Terms of Use](https://ai.google.dev/gemma/terms).",
-    "displayName": "Google: Gemma 7B",
+#merge #uncensored",
+    "displayName": "lzlv 70B",
     "enabled": false,
     "functionCall": false,
-    "id": "google/gemma-7b-it",
+    "id": "lizpreciatior/lzlv-70b-fp16-hf",
     "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "A large LLM created by combining two fine-tuned Llama 70B models into one 120B model. Combines Xwin and Euryale.
+
+Credits to
+- [@chargoddard](https://huggingface.co/chargoddard) for developing the framework used to merge the model - [mergekit](https://github.com/cg123/mergekit).
+- [@Undi95](https://huggingface.co/Undi95) for helping with the merge ratios.
+
+#merge",
+    "displayName": "Goliath 120B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "alpindale/goliath-120b",
+    "maxTokens": 400,
+    "tokens": 6144,
+    "vision": false,
+  },
+  {
+    "description": "A wild 7B parameter model that merges several models using the new task_arithmetic merge method from mergekit.
+List of merged models:
+- NousResearch/Nous-Capybara-7B-V1.9
+- [HuggingFaceH4/zephyr-7b-beta](/models/huggingfaceh4/zephyr-7b-beta)
+- lemonilia/AshhLimaRP-Mistral-7B
+- Vulkane/120-Days-of-Sodom-LoRA-Mistral-7b
+- Undi95/Mistral-pippa-sharegpt-7b-qlora
+
+#merge #uncensored
+
+_These are free, rate-limited endpoints for [Toppy M 7B](/models/undi95/toppy-m-7b). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Toppy M 7B (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "undi95/toppy-m-7b:free",
+    "maxTokens": 2048,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "A wild 7B parameter model that merges several models using the new task_arithmetic merge method from mergekit.
+List of merged models:
+- NousResearch/Nous-Capybara-7B-V1.9
+- [HuggingFaceH4/zephyr-7b-beta](/models/huggingfaceh4/zephyr-7b-beta)
+- lemonilia/AshhLimaRP-Mistral-7B
+- Vulkane/120-Days-of-Sodom-LoRA-Mistral-7b
+- Undi95/Mistral-pippa-sharegpt-7b-qlora
+
+#merge #uncensored",
+    "displayName": "Toppy M 7B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "undi95/toppy-m-7b",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "A wild 7B parameter model that merges several models using the new task_arithmetic merge method from mergekit.
+List of merged models:
+- NousResearch/Nous-Capybara-7B-V1.9
+- [HuggingFaceH4/zephyr-7b-beta](/models/huggingfaceh4/zephyr-7b-beta)
+- lemonilia/AshhLimaRP-Mistral-7B
+- Vulkane/120-Days-of-Sodom-LoRA-Mistral-7b
+- Undi95/Mistral-pippa-sharegpt-7b-qlora
+
+#merge #uncensored
+
+_These are higher-throughput endpoints for [Toppy M 7B](/models/undi95/toppy-m-7b). They may have higher prices._",
+    "displayName": "Toppy M 7B (nitro)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "undi95/toppy-m-7b:nitro",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "Depending on their size, subject, and complexity, your prompts will be sent to [Llama 3 70B Instruct](/models/meta-llama/llama-3-70b-instruct), [Claude 3.5 Sonnet (self-moderated)](/models/anthropic/claude-3.5-sonnet:beta) or [GPT-4o](/models/openai/gpt-4o).  To see which model was used, visit [Activity](/activity).
+
+A major redesign of this router is coming soon. Stay tuned on [Discord](https://discord.gg/fVyRaUDgxW) for updates.",
+    "displayName": "Auto (best for prompt)",
+    "enabled": true,
+    "functionCall": false,
+    "id": "openrouter/auto",
+    "maxTokens": undefined,
+    "tokens": 200000,
+    "vision": false,
+  },
+  {
+    "description": "The latest GPT-4 Turbo model with vision capabilities. Vision requests can now use JSON mode and function calling.
+
+Training data: up to April 2023.",
+    "displayName": "OpenAI: GPT-4 Turbo (older v1106)",
+    "enabled": false,
+    "functionCall": true,
+    "id": "openai/gpt-4-1106-preview",
+    "maxTokens": 4096,
+    "tokens": 128000,
+    "vision": true,
+  },
+  {
+    "description": "An older GPT-3.5 Turbo model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Training data: up to Sep 2021.",
+    "displayName": "OpenAI: GPT-3.5 Turbo 16k (older v1106)",
+    "enabled": false,
+    "functionCall": true,
+    "id": "openai/gpt-3.5-turbo-1106",
+    "maxTokens": 4096,
+    "tokens": 16385,
+    "vision": false,
+  },
+  {
+    "description": "PaLM 2 fine-tuned for chatbot conversations that help with code-related questions.",
+    "displayName": "Google: PaLM 2 Code Chat 32k",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/palm-2-codechat-bison-32k",
+    "maxTokens": 32768,
+    "tokens": 131040,
+    "vision": false,
+  },
+  {
+    "description": "PaLM 2 is a language model by Google with improved multilingual, reasoning and coding capabilities.",
+    "displayName": "Google: PaLM 2 Chat 32k",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/palm-2-chat-bison-32k",
+    "maxTokens": 32768,
+    "tokens": 131040,
+    "vision": false,
+  },
+  {
+    "description": "A Llama 2 70B fine-tune using synthetic data (the Airoboros dataset).
+
+Currently based on [jondurbin/airoboros-l2-70b](https://huggingface.co/jondurbin/airoboros-l2-70b-2.2.1), but might get updated in the future.",
+    "displayName": "Airoboros 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "jondurbin/airoboros-l2-70b",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "Xwin-LM aims to develop and open-source alignment tech for LLMs. Our first release, built-upon on the [Llama2](/models/\${Model.Llama_2_13B_Chat}) base models, ranked TOP-1 on AlpacaEval. Notably, it's the first to surpass [GPT-4](/models/\${Model.GPT_4}) on this benchmark. The project will be continuously updated.",
+    "displayName": "Xwin 70B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "xwin-lm/xwin-lm-70b",
+    "maxTokens": 400,
     "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "A 7.3B parameter model that outperforms Llama 2 13B on all benchmarks, with optimizations for speed and context length.",
+    "displayName": "Mistral: Mistral 7B Instruct v0.1",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mistralai/mistral-7b-instruct-v0.1",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "This model is a variant of GPT-3.5 Turbo tuned for instructional prompts and omitting chat-related optimizations. Training data: up to Sep 2021.",
+    "displayName": "OpenAI: GPT-3.5 Turbo Instruct",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-3.5-turbo-instruct",
+    "maxTokens": 4096,
+    "tokens": 4095,
+    "vision": false,
+  },
+  {
+    "description": "A blend of the new Pygmalion-13b and MythoMax. #merge",
+    "displayName": "Pygmalion: Mythalion 13B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "pygmalionai/mythalion-13b",
+    "maxTokens": 400,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4-32k is an extended version of GPT-4, with the same capabilities but quadrupled context length, allowing for processing up to 40 pages of text in a single pass. This is particularly beneficial for handling longer content like interacting with PDFs without an external vector database. Training data: up to Sep 2021.",
+    "displayName": "OpenAI: GPT-4 32k (older v0314)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-4-32k-0314",
+    "maxTokens": 4096,
+    "tokens": 32767,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4-32k is an extended version of GPT-4, with the same capabilities but quadrupled context length, allowing for processing up to 40 pages of text in a single pass. This is particularly beneficial for handling longer content like interacting with PDFs without an external vector database. Training data: up to Sep 2021.",
+    "displayName": "OpenAI: GPT-4 32k",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-4-32k",
+    "maxTokens": 4096,
+    "tokens": 32767,
+    "vision": false,
+  },
+  {
+    "description": "This model offers four times the context length of gpt-3.5-turbo, allowing it to support approximately 20 pages of text in a single request at a higher cost. Training data: up to Sep 2021.",
+    "displayName": "OpenAI: GPT-3.5 Turbo 16k",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-3.5-turbo-16k",
+    "maxTokens": 4096,
+    "tokens": 16385,
+    "vision": false,
+  },
+  {
+    "description": "A state-of-the-art language model fine-tuned on over 300k instructions by Nous Research, with Teknium and Emozilla leading the fine tuning process.",
+    "displayName": "Nous: Hermes 13B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "nousresearch/nous-hermes-llama2-13b",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "Zephyr is a series of language models that are trained to act as helpful assistants. Zephyr-7B-β is the second model in the series, and is a fine-tuned version of [mistralai/Mistral-7B-v0.1](/models/mistralai/mistral-7b-instruct-v0.1) that was trained on a mix of publicly available, synthetic datasets using Direct Preference Optimization (DPO).
+
+_These are free, rate-limited endpoints for [Zephyr 7B](/models/huggingfaceh4/zephyr-7b-beta). Outputs may be cached. Read about rate limits [here](/docs/limits)._",
+    "displayName": "Hugging Face: Zephyr 7B (free)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "huggingfaceh4/zephyr-7b-beta:free",
+    "maxTokens": 2048,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "An attempt to recreate Claude-style verbosity, but don't expect the same level of coherence or memory. Meant for use in roleplay/narrative situations.",
+    "displayName": "Mancer: Weaver (alpha)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "mancer/weaver",
+    "maxTokens": 1000,
+    "tokens": 8000,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's model for low-latency, high throughput text generation. Supports hundreds of pages of text.",
+    "displayName": "Anthropic: Claude Instant v1.0",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-instant-1.0",
+    "maxTokens": 4096,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's model for low-latency, high throughput text generation. Supports hundreds of pages of text.",
+    "displayName": "Anthropic: Claude v1.2",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-1.2",
+    "maxTokens": 4096,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's model for low-latency, high throughput text generation. Supports hundreds of pages of text.",
+    "displayName": "Anthropic: Claude v1",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-1",
+    "maxTokens": 4096,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's model for low-latency, high throughput text generation. Supports hundreds of pages of text.",
+    "displayName": "Anthropic: Claude Instant v1",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-instant-1",
+    "maxTokens": 4096,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's model for low-latency, high throughput text generation. Supports hundreds of pages of text.
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-instant-1) variant._",
+    "displayName": "Anthropic: Claude Instant v1 (self-moderated)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-instant-1:beta",
+    "maxTokens": 4096,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's flagship model. Superior performance on tasks that require complex reasoning. Supports hundreds of pages of text.",
+    "displayName": "Anthropic: Claude v2.0",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-2.0",
+    "maxTokens": 4096,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "Anthropic's flagship model. Superior performance on tasks that require complex reasoning. Supports hundreds of pages of text.
+
+_This is a faster endpoint, made available in collaboration with Anthropic, that is self-moderated: response moderation happens on the provider's side instead of OpenRouter's. For requests that pass moderation, it's identical to the [Standard](/models/anthropic/claude-2.0) variant._",
+    "displayName": "Anthropic: Claude v2.0 (self-moderated)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "anthropic/claude-2.0:beta",
+    "maxTokens": 4096,
+    "tokens": 100000,
+    "vision": false,
+  },
+  {
+    "description": "A recreation trial of the original MythoMax-L2-B13 but with updated models. #merge",
+    "displayName": "ReMM SLERP 13B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "undi95/remm-slerp-l2-13b",
+    "maxTokens": 400,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "A recreation trial of the original MythoMax-L2-B13 but with updated models. #merge
+
+_These are extended-context endpoints for [ReMM SLERP 13B](/models/undi95/remm-slerp-l2-13b). They may have higher prices._",
+    "displayName": "ReMM SLERP 13B (extended)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "undi95/remm-slerp-l2-13b:extended",
+    "maxTokens": 400,
+    "tokens": 6144,
+    "vision": false,
+  },
+  {
+    "description": "PaLM 2 fine-tuned for chatbot conversations that help with code-related questions.",
+    "displayName": "Google: PaLM 2 Code Chat",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/palm-2-codechat-bison",
+    "maxTokens": 4096,
+    "tokens": 28672,
+    "vision": false,
+  },
+  {
+    "description": "PaLM 2 is a language model by Google with improved multilingual, reasoning and coding capabilities.",
+    "displayName": "Google: PaLM 2 Chat",
+    "enabled": false,
+    "functionCall": false,
+    "id": "google/palm-2-chat-bison",
+    "maxTokens": 4096,
+    "tokens": 36864,
+    "vision": false,
+  },
+  {
+    "description": "One of the highest performing and most popular fine-tunes of Llama 2 13B, with rich descriptions and roleplay. #merge",
+    "displayName": "MythoMax 13B",
+    "enabled": false,
+    "functionCall": false,
+    "id": "gryphe/mythomax-l2-13b",
+    "maxTokens": undefined,
+    "tokens": 4096,
     "vision": false,
   },
   {
     "description": "One of the highest performing and most popular fine-tunes of Llama 2 13B, with rich descriptions and roleplay. #merge
 
-Note: this is a higher-throughput version of [this model](/models/gryphe/mythomax-l2-13b), and may have higher prices and slightly different outputs.",
+_These are higher-throughput endpoints for [MythoMax 13B](/models/gryphe/mythomax-l2-13b). They may have higher prices._",
     "displayName": "MythoMax 13B (nitro)",
     "enabled": false,
     "functionCall": false,
     "id": "gryphe/mythomax-l2-13b:nitro",
     "maxTokens": undefined,
     "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "One of the highest performing and most popular fine-tunes of Llama 2 13B, with rich descriptions and roleplay. #merge
+
+_These are extended-context endpoints for [MythoMax 13B](/models/gryphe/mythomax-l2-13b). They may have higher prices._",
+    "displayName": "MythoMax 13B (extended)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "gryphe/mythomax-l2-13b:extended",
+    "maxTokens": 400,
+    "tokens": 8192,
+    "vision": false,
+  },
+  {
+    "description": "A 13 billion parameter language model from Meta, fine tuned for chat completions",
+    "displayName": "Meta: Llama v2 13B Chat",
+    "enabled": false,
+    "functionCall": false,
+    "id": "meta-llama/llama-2-13b-chat",
+    "maxTokens": undefined,
+    "tokens": 4096,
+    "vision": false,
+  },
+  {
+    "description": "GPT-4-0314 is the first version of GPT-4 released, with a context length of 8,192 tokens, and was supported until June 14. Training data: up to Sep 2021.",
+    "displayName": "OpenAI: GPT-4 (older v0314)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-4-0314",
+    "maxTokens": 4096,
+    "tokens": 8191,
+    "vision": false,
+  },
+  {
+    "description": "OpenAI's flagship model, GPT-4 is a large-scale multimodal language model capable of solving difficult problems with greater accuracy than previous models due to its broader general knowledge and advanced reasoning capabilities. Training data: up to Sep 2021.",
+    "displayName": "OpenAI: GPT-4",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-4",
+    "maxTokens": 4096,
+    "tokens": 8191,
+    "vision": true,
+  },
+  {
+    "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.
+
+Training data up to Sep 2021.",
+    "displayName": "OpenAI: GPT-3.5 Turbo (older v0301)",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-3.5-turbo-0301",
+    "maxTokens": 4096,
+    "tokens": 4095,
+    "vision": false,
+  },
+  {
+    "description": "The latest GPT-3.5 Turbo model with improved instruction following, JSON mode, reproducible outputs, parallel function calling, and more. Training data: up to Sep 2021.
+
+This version has a higher accuracy at responding in requested formats and a fix for a bug which caused a text encoding issue for non-English language function calls.",
+    "displayName": "OpenAI: GPT-3.5 Turbo 16k",
+    "enabled": false,
+    "functionCall": true,
+    "id": "openai/gpt-3.5-turbo-0125",
+    "maxTokens": 4096,
+    "tokens": 16385,
+    "vision": false,
+  },
+  {
+    "description": "GPT-3.5 Turbo is OpenAI's fastest model. It can understand and generate natural language or code, and is optimized for chat and traditional completion tasks.
+
+Training data up to Sep 2021.",
+    "displayName": "OpenAI: GPT-3.5 Turbo",
+    "enabled": false,
+    "functionCall": false,
+    "id": "openai/gpt-3.5-turbo",
+    "maxTokens": 4096,
+    "tokens": 16385,
     "vision": false,
   },
 ]

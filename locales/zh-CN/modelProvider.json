@@ -38,11 +38,24 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "如果你正在使用 AWS SSO/STS，请输入你的 AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (可选)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "自定义服务区域",
+      "customSessionToken": "自定义 Session Token",
       "description": "输入你的 AWS AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置",
       "title": "使用自定义 Bedrock 鉴权信息"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "填入你的 Github PAT，点击[这里](https://github.com/settings/tokens) 创建",
+      "placeholder": "ghp_xxxxxx",
+      "title": "Github PAT"
     }
   },
   "ollama": {

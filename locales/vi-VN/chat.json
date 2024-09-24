@@ -2,11 +2,20 @@
   "ModelSwitch": {
     "title": "Mô hình"
   },
-  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay lập tức, hoặc đến [Cài đặt trợ lý](/chat/settings#session={{id}}) để hoàn thiện thông tin của tôi.",
+  "agentDefaultMessage": "Xin chào, tôi là **{{name}}**, bạn có thể bắt đầu trò chuyện với tôi ngay bây giờ, hoặc bạn có thể đến [Cài đặt trợ lý]({{url}}) để hoàn thiện thông tin của tôi.",
   "agentDefaultMessageWithSystemRole": "Xin chào, tôi là **{{name}}**, {{systemRole}}. Hãy bắt đầu trò chuyện ngay!",
   "agentDefaultMessageWithoutEdit": "Xin chào, tôi là **{{name}}**, chúng ta hãy bắt đầu trò chuyện nào!",
-  "agentsAndConversations": "Người hỗ trợ và cuộc trò chuyện",
+  "agents": "Trợ lý",
+  "artifact": {
+    "generating": "Đang tạo",
+    "thinking": "Đang suy nghĩ",
+    "thought": "Quá trình suy nghĩ",
+    "unknownTitle": "Tác phẩm chưa được đặt tên"
+  },
   "backToBottom": "Quay về dưới cùng",
+  "chatList": {
+    "longMessageDetail": "Xem chi tiết"
+  },
   "clearCurrentMessages": "Xóa tin nhắn hiện tại",
   "confirmClearCurrentMessages": "Bạn sắp xóa tin nhắn hiện tại. Hành động này không thể hoàn tác, vui lòng xác nhận.",
   "confirmRemoveSessionItemAlert": "Bạn sắp xóa trợ lý này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
@@ -36,6 +45,24 @@
     "stop": "Dừng",
     "warp": "Xuống dòng"
   },
+  "knowledgeBase": {
+    "all": "Tất cả nội dung",
+    "allFiles": "Tất cả tệp",
+    "allKnowledgeBases": "Tất cả kho kiến thức",
+    "disabled": "Chế độ triển khai hiện tại không hỗ trợ đối thoại với cơ sở kiến thức. Nếu bạn muốn sử dụng, hãy chuyển sang triển khai cơ sở dữ liệu máy chủ hoặc sử dụng dịch vụ {{cloud}}.",
+    "library": {
+      "action": {
+        "add": "Thêm",
+        "detail": "Chi tiết",
+        "remove": "Xóa"
+      },
+      "title": "Tệp/Kho kiến thức"
+    },
+    "relativeFilesOrKnowledgeBases": "Tệp/Kho kiến thức liên quan",
+    "title": "Kho kiến thức",
+    "uploadGuide": "Các tệp đã tải lên có thể được xem trong 'Kho kiến thức'",
+    "viewMore": "Xem thêm"
+  },
   "messageAction": {
     "delAndRegenerate": "Xóa và tạo lại",
     "regenerate": "Tạo lại"
@@ -43,9 +70,18 @@
   "newAgent": "Tạo trợ lý mới",
   "pin": "Ghim",
   "pinOff": "Bỏ ghim",
+  "rag": {
+    "referenceChunks": "Trích dẫn nguồn",
+    "userQuery": {
+      "actions": {
+        "delete": "Xóa truy vấn",
+        "regenerate": "Tạo lại truy vấn"
+      }
+    }
+  },
   "regenerate": "Tạo lại",
   "roleAndArchive": "Vai trò và lưu trữ",
-  "searchAgentPlaceholder": "Tìm kiếm trợ lý và cuộc trò chuyện...",
+  "searchAgentPlaceholder": "Trợ lý tìm kiếm...",
   "sendPlaceholder": "Nhập nội dung trò chuyện...",
   "sessionGroup": {
     "config": "Quản lý nhóm",
@@ -129,8 +165,24 @@
   },
   "updateAgent": "Cập nhật thông tin trợ lý",
   "upload": {
-    "actionFiletip": "Tải lên tập tin",
-    "actionTooltip": "Tải lên hình ảnh",
-    "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình trước khi sử dụng"
+    "action": {
+      "fileUpload": "Tải lên tệp",
+      "folderUpload": "Tải lên thư mục",
+      "imageDisabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh, vui lòng chuyển đổi mô hình để sử dụng",
+      "imageUpload": "Tải lên hình ảnh",
+      "tooltip": "Tải lên"
+    },
+    "clientMode": {
+      "actionFiletip": "Tải lên tệp",
+      "actionTooltip": "Tải lên",
+      "disabled": "Mô hình hiện tại không hỗ trợ nhận diện hình ảnh và phân tích tệp, vui lòng chuyển đổi mô hình để sử dụng"
+    },
+    "preview": {
+      "prepareTasks": "Chuẩn bị phân đoạn...",
+      "status": {
+        "pending": "Đang chuẩn bị tải lên...",
+        "processing": "Đang xử lý tệp..."
+      }
+    }
   }
 }

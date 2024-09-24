@@ -2,11 +2,20 @@
   "ModelSwitch": {
     "title": "Modelen"
   },
-  "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me praten of naar [Assistentinstellingen](/chat/settings#session={{id}}) gaan om mijn informatie aan te vullen.",
+  "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met een gesprek!",
-  "agentsAndConversations": "agenten en gesprekken",
+  "agents": "Assistent",
+  "artifact": {
+    "generating": "Genereren",
+    "thinking": "Denken",
+    "thought": "Denken proces",
+    "unknownTitle": "Onbenoemd werk"
+  },
   "backToBottom": "Terug naar onderen",
+  "chatList": {
+    "longMessageDetail": "Bekijk details"
+  },
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie.",
@@ -36,6 +45,24 @@
     "stop": "Stoppen",
     "warp": "Nieuwe regel"
   },
+  "knowledgeBase": {
+    "all": "Alle inhoud",
+    "allFiles": "Alle bestanden",
+    "allKnowledgeBases": "Alle kennisbanken",
+    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Als je dit wilt gebruiken, schakel dan over naar serverdatabase-implementatie of gebruik de {{cloud}}-dienst.",
+    "library": {
+      "action": {
+        "add": "Toevoegen",
+        "detail": "Details",
+        "remove": "Verwijderen"
+      },
+      "title": "Bestand/Kennisbank"
+    },
+    "relativeFilesOrKnowledgeBases": "Gerelateerde bestanden/kennisbanken",
+    "title": "Kennisbank",
+    "uploadGuide": "Geüploade bestanden kunnen worden bekeken in de 'Kennisbank'.",
+    "viewMore": "Bekijk meer"
+  },
   "messageAction": {
     "delAndRegenerate": "Verwijderen en opnieuw genereren",
     "regenerate": "Opnieuw genereren"
@@ -43,9 +70,18 @@
   "newAgent": "Nieuwe assistent",
   "pin": "Vastzetten",
   "pinOff": "Vastzetten uitschakelen",
+  "rag": {
+    "referenceChunks": "Referentiestukken",
+    "userQuery": {
+      "actions": {
+        "delete": "Verwijder Query herschrijving",
+        "regenerate": "Genereer Query opnieuw"
+      }
+    }
+  },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
-  "searchAgentPlaceholder": "Zoek assistenten en gesprekken...",
+  "searchAgentPlaceholder": "Zoekassistent...",
   "sendPlaceholder": "Voer chatbericht in...",
   "sessionGroup": {
     "config": "Groepsbeheer",
@@ -129,8 +165,24 @@
   },
   "updateAgent": "Assistentgegevens bijwerken",
   "upload": {
-    "actionFiletip": "Upload het bestand",
-    "actionTooltip": "Upload afbeelding",
-    "disabled": "Het huidige model ondersteunt geen visuele herkenning. Schakel over naar een ander model om dit te gebruiken."
+    "action": {
+      "fileUpload": "Bestand uploaden",
+      "folderUpload": "Map uploaden",
+      "imageDisabled": "Dit model ondersteunt momenteel geen visuele herkenning, schakel alstublieft naar een ander model.",
+      "imageUpload": "Afbeelding uploaden",
+      "tooltip": "Uploaden"
+    },
+    "clientMode": {
+      "actionFiletip": "Bestand uploaden",
+      "actionTooltip": "Uploaden",
+      "disabled": "Dit model ondersteunt momenteel geen visuele herkenning en bestandanalyse, schakel alstublieft naar een ander model."
+    },
+    "preview": {
+      "prepareTasks": "Voorbereiden van blokken...",
+      "status": {
+        "pending": "Voorbereiden om te uploaden...",
+        "processing": "Bestand wordt verwerkt..."
+      }
+    }
   }
 }

@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { getTestDBInstance } from '@/database/server/core/dbForTest';
 import { KeyVaultsGateKeeper } from '@/server/modules/KeyVaultsEncrypt';
-import { UserPreference } from '@/types/user';
+import { UserGuide, UserPreference } from '@/types/user';
 import { UserSettings } from '@/types/user/settings';
 
 import { userSettings, users } from '../../schemas/lobechat';
@@ -167,6 +167,24 @@ describe('UserModel', () => {
       const { plaintext } = await gateKeeper.decrypt(updatedSettings!.keyVaults!);
       expect(JSON.parse(plaintext)).toEqual(settings.keyVaults);
     });
+
+    it('should update user settings with encrypted keyVaults', async () => {
+      const settings = {
+        general: { language: 'en-US' },
+      } as UserSettings;
+      await serverDB.insert(users).values({ id: userId });
+      await serverDB.insert(userSettings).values({ ...settings, keyVaults: '', id: userId });
+
+      const newSettings = {
+        general: { fontSize: 16, language: 'zh-CN', themeMode: 'dark' },
+      } as UserSettings;
+      await userModel.updateSetting(userId, newSettings);
+
+      const updatedSettings = await serverDB.query.userSettings.findFirst({
+        where: eq(users.id, userId),
+      });
+      expect(updatedSettings?.general).toEqual(newSettings.general);
+    });
   });
 
   describe('updatePreference', () => {
@@ -181,6 +199,23 @@ describe('UserModel', () => {
 
       const updatedUser = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
       expect(updatedUser?.preference).toEqual({ ...preference, ...newPreference });
+    });
+  });
+
+  describe('updateGuide', () => {
+    it('should update user guide', async () => {
+      const preference = { guide: { topic: false } } as UserGuide;
+      await serverDB.insert(users).values({ id: userId, preference });
+
+      const newGuide: Partial<UserGuide> = {
+        topic: true,
+        moveSettingsToAvatar: true,
+        uploadFileInKnowledgeBase: true,
+      };
+      await userModel.updateGuide(userId, newGuide);
+
+      const updatedUser = await serverDB.query.users.findFirst({ where: eq(users.id, userId) });
+      expect(updatedUser?.preference).toEqual({ ...preference, guide: newGuide });
     });
   });
 });

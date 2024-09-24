@@ -38,11 +38,24 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "Если вы используете AWS SSO/STS, введите ваш AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (необязательно)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Пользовательский регион обслуживания",
+      "customSessionToken": "Пользовательский токен сессии",
       "description": "Введите свой ключ доступа AWS AccessKeyId / SecretAccessKey, чтобы начать сеанс. Приложение не будет сохранять вашу конфигурацию аутентификации",
       "title": "Использовать пользовательскую информацию аутентификации Bedrock"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Введите ваш персональный токен доступа GitHub (PAT), нажмите [здесь](https://github.com/settings/tokens), чтобы создать его",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
     }
   },
   "ollama": {

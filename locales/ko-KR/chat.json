@@ -2,11 +2,20 @@
   "ModelSwitch": {
     "title": "모델"
   },
-  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 즉시 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 내 정보를 완성할 수 있습니다.",
+  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작하시거나 [도우미 설정]({{url}})으로 가셔서 제 정보를 완성하실 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
   "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
-  "agentsAndConversations": "에이전트 및 대화",
+  "agents": "도우미",
+  "artifact": {
+    "generating": "생성 중",
+    "thinking": "생각 중",
+    "thought": "사고 과정",
+    "unknownTitle": "제목 없음"
+  },
   "backToBottom": "하단으로 이동",
+  "chatList": {
+    "longMessageDetail": "자세히 보기"
+  },
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
@@ -36,6 +45,24 @@
     "stop": "중지",
     "warp": "줄바꿈"
   },
+  "knowledgeBase": {
+    "all": "모든 내용",
+    "allFiles": "모든 파일",
+    "allKnowledgeBases": "모든 지식 베이스",
+    "disabled": "현재 배포 모드에서는 지식 기반 대화가 지원되지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주십시오.",
+    "library": {
+      "action": {
+        "add": "추가",
+        "detail": "상세",
+        "remove": "제거"
+      },
+      "title": "파일/지식 베이스"
+    },
+    "relativeFilesOrKnowledgeBases": "관련 파일/지식 베이스",
+    "title": "지식 베이스",
+    "uploadGuide": "업로드한 파일은 '지식 베이스'에서 확인할 수 있습니다.",
+    "viewMore": "더 보기"
+  },
   "messageAction": {
     "delAndRegenerate": "삭제하고 다시 생성",
     "regenerate": "다시 생성"
@@ -43,9 +70,18 @@
   "newAgent": "새 도우미",
   "pin": "고정",
   "pinOff": "고정 해제",
+  "rag": {
+    "referenceChunks": "참조 조각",
+    "userQuery": {
+      "actions": {
+        "delete": "쿼리 삭제",
+        "regenerate": "쿼리 재생성"
+      }
+    }
+  },
   "regenerate": "재생성",
   "roleAndArchive": "역할 및 아카이브",
-  "searchAgentPlaceholder": "도우미 및 대화 검색...",
+  "searchAgentPlaceholder": "검색 도우미...",
   "sendPlaceholder": "채팅 내용 입력...",
   "sessionGroup": {
     "config": "그룹 설정",
@@ -129,8 +165,24 @@
   },
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
-    "actionFiletip": "파일 업로드",
-    "actionTooltip": "이미지 업로드",
-    "disabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 전환한 후 사용해주세요."
+    "action": {
+      "fileUpload": "파일 업로드",
+      "folderUpload": "폴더 업로드",
+      "imageDisabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
+      "imageUpload": "이미지 업로드",
+      "tooltip": "업로드"
+    },
+    "clientMode": {
+      "actionFiletip": "파일 업로드",
+      "actionTooltip": "업로드",
+      "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경한 후 사용하세요."
+    },
+    "preview": {
+      "prepareTasks": "청크 준비 중...",
+      "status": {
+        "pending": "업로드 준비 중...",
+        "processing": "파일 처리 중..."
+      }
+    }
   }
 }

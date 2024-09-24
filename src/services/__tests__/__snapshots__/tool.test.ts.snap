@@ -78,7 +78,7 @@ getWolframCloudResults guidelines:
 }
 `;
 
-exports[`ToolService > getPluginManifest > support OpenAPI manifest > should get plugin manifest 1`] = `
+exports[`ToolService > getToolManifest > support OpenAPI manifest > should get plugin manifest 1`] = `
 {
   "$schema": "../node_modules/@lobehub/chat-plugin-sdk/schema.json",
   "api": [

@@ -5,6 +5,68 @@
     "dragFileTitle": "Subir archivo",
     "dragTitle": "Subir imagen"
   },
+  "FileManager": {
+    "actions": {
+      "addToKnowledgeBase": "Agregar a la base de conocimientos",
+      "addToOtherKnowledgeBase": "Agregar a otra base de conocimientos",
+      "batchChunking": "División por lotes",
+      "chunking": "División",
+      "chunkingTooltip": "Divida el archivo en múltiples bloques de texto y vectorícelos para su uso en búsqueda semántica y diálogo de archivos",
+      "confirmDelete": "Está a punto de eliminar este archivo. Una vez eliminado, no podrá recuperarlo. Por favor, confirme su acción.",
+      "confirmDeleteMultiFiles": "Está a punto de eliminar los {{count}} archivos seleccionados. Una vez eliminados, no podrá recuperarlos. Por favor, confirme su acción.",
+      "confirmRemoveFromKnowledgeBase": "Está a punto de eliminar los {{count}} archivos seleccionados de la base de conocimientos. Los archivos seguirán siendo visibles en todos los archivos. Por favor, confirme su acción.",
+      "copyUrl": "Copiar enlace",
+      "copyUrlSuccess": "Dirección del archivo copiada con éxito",
+      "createChunkingTask": "Preparando...",
+      "deleteSuccess": "Archivo eliminado con éxito",
+      "downloading": "Descargando archivo...",
+      "removeFromKnowledgeBase": "Eliminar de la base de conocimientos",
+      "removeFromKnowledgeBaseSuccess": "Archivo eliminado con éxito"
+    },
+    "bottom": "Ya has llegado al final",
+    "config": {
+      "showFilesInKnowledgeBase": "Mostrar contenido en la base de conocimientos"
+    },
+    "emptyStatus": {
+      "actions": {
+        "file": "Subir archivo",
+        "folder": "Subir carpeta",
+        "knowledgeBase": "Crear nueva base de conocimientos"
+      },
+      "or": "o",
+      "title": "Arrastra archivos o carpetas aquí"
+    },
+    "title": {
+      "createdAt": "Fecha de creación",
+      "size": "Tamaño",
+      "title": "Archivo"
+    },
+    "total": {
+      "fileCount": "Total {{count}} elementos",
+      "selectedCount": "Seleccionados {{count}} elementos"
+    }
+  },
+  "FileParsingStatus": {
+    "chunks": {
+      "embeddingStatus": {
+        "empty": "Los bloques de texto aún no están completamente vectorizados, lo que hará que la función de búsqueda semántica no esté disponible. Para mejorar la calidad de búsqueda, por favor vectorice los bloques de texto.",
+        "error": "Error de vectorización",
+        "errorResult": "Error de vectorización, por favor verifica y vuelve a intentarlo. Motivo del fallo:",
+        "processing": "Los bloques de texto están siendo vectorizados, por favor, tenga paciencia.",
+        "success": "Todos los bloques de texto actuales han sido vectorizados."
+      },
+      "embeddings": "Vectorización",
+      "status": {
+        "error": "Error en la división",
+        "errorResult": "Error en la división, por favor revise y vuelva a intentarlo. Razón del fallo:",
+        "processing": "Dividiendo",
+        "processingTip": "El servidor está dividiendo los bloques de texto, cerrar la página no afectará el progreso de la división."
+      }
+    }
+  },
+  "GoBack": {
+    "back": "Regresar"
+  },
   "ModelSelect": {
     "featureTag": {
       "custom": "Modelo personalizado: admite llamadas de función y reconocimiento visual. Verifique la disponibilidad de estas capacidades según sea necesario.",

@@ -45,7 +45,10 @@ export class LobeOllamaAI implements LobeRuntimeAI {
         options: {
           frequency_penalty: payload.frequency_penalty,
           presence_penalty: payload.presence_penalty,
-          temperature: payload.temperature,
+          temperature: 
+            payload.temperature !== undefined 
+            ? payload.temperature / 2
+            : undefined,
           top_p: payload.top_p,
         },
         stream: true,

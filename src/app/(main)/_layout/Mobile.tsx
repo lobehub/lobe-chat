@@ -10,7 +10,15 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 
 import { LayoutProps } from './type';
 
-const MOBILE_NAV_ROUTES = new Set(['/chat', '/market', '/me']);
+const MOBILE_NAV_ROUTES = new Set([
+  '/chat',
+  '/discover',
+  '/discover/assistants',
+  '/discover/plugins',
+  '/discover/models',
+  '/discover/providers',
+  '/me',
+]);
 
 const Layout = memo(({ children, nav }: LayoutProps) => {
   const { showMobileWorkspace } = useQuery();

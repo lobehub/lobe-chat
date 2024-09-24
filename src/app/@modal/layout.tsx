@@ -2,33 +2,70 @@
 
 import { Modal } from '@lobehub/ui';
 import { useTheme } from 'antd-style';
-import { useRouter } from 'next/navigation';
-import { PropsWithChildren, memo, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
-const SessionSettingsModal = memo<PropsWithChildren>(({ children }) => {
+import InterceptingLayout from './features/InterceptingContext';
+
+const InterceptingModal = memo<PropsWithChildren>(({ children }) => {
   const [open, setOpen] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
+  const isDiscover = pathname.startsWith('/discover');
   const theme = useTheme();
 
+  const inModal =
+    pathname.startsWith('/settings') ||
+    pathname.startsWith('/chat/settings') ||
+    pathname.startsWith('/discover/assistant/') ||
+    pathname.startsWith('/discover/model/') ||
+    pathname.startsWith('/discover/plugin/') ||
+    pathname.startsWith('/discover/provider/');
+
+  useEffect(() => {
+    if (!inModal) {
+      setOpen(false);
+    } else {
+      setOpen(true);
+    }
+  }, [inModal, router]);
+
+  if (!inModal) return null;
+
   return (
-    <Modal
-      afterClose={() => {
-        router.back();
-      }}
-      enableResponsive={false}
-      footer={null}
-      onCancel={() => setOpen(false)}
-      open={open}
-      styles={{
-        body: { display: 'flex', minHeight: 'min(75vh, 750px)', overflow: 'hidden', padding: 0 },
-        content: { border: 'none', boxShadow: `0 0 0 1px ${theme.colorBorderSecondary}` },
-      }}
-      title={false}
-      width={1024}
-    >
-      {children}
-    </Modal>
+    <InterceptingLayout>
+      <Modal
+        afterClose={() => {
+          if (inModal) {
+            router.back();
+          } else {
+            router.refresh();
+          }
+        }}
+        enableResponsive={false}
+        footer={null}
+        onCancel={() => {
+          setOpen(false);
+          router.back();
+        }}
+        open={open}
+        styles={{
+          body: {
+            display: 'flex',
+            maxHeight: isDiscover ? '80vh' : undefined,
+            minHeight: 750,
+            overflow: 'hidden',
+            padding: 0,
+          },
+          content: { border: 'none', boxShadow: `0 0 0 1px ${theme.colorBorderSecondary}` },
+        }}
+        title={false}
+        width={isDiscover ? 'min(80vw, 1280px)' : 'min(80vw, 1024px)'}
+      >
+        {children}
+      </Modal>
+    </InterceptingLayout>
   );
 });
 
-export default SessionSettingsModal;
+export default InterceptingModal;
