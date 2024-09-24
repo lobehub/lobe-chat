@@ -35,6 +35,9 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) is een innovatief model, geschikt voor toepassingen in meerdere domeinen en complexe taken."
   },
+  "Max-32k": {
+    "description": "Spark Max 32K is uitgerust met een grote contextverwerkingscapaciteit, verbeterd begrip van context en logische redeneervaardigheden, ondersteunt tekstinvoer van 32K tokens, geschikt voor het lezen van lange documenten, privé kennisvragen en andere scenario's."
+  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is een zeer flexibele multi-model combinatie, ontworpen om een uitstekende creatieve ervaring te bieden."
   },
