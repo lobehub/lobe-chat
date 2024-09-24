@@ -7,10 +7,11 @@ import { createCallbacksTransformer, createSSEProtocolTransformer } from './prot
 export const processDoubleData = (chunkValue: string): string => {
   const dataPattern = /data: \{"id":"/g;
   const matchCount = (chunkValue.match(dataPattern) || []).length;
+  let modifiedChunkValue = chunkValue;
   if (matchCount === 2) {
     const secondDataIdIndex = chunkValue.indexOf('data: {"id":', chunkValue.indexOf('data: {"id":') + 1);
     if (secondDataIdIndex !== -1) {
-      chunkValue = chunkValue.slice(0, secondDataIdIndex).trim();
+      modifiedChunkValue = chunkValue.slice(0, secondDataIdIndex).trim();
     }
   }
   return chunkValue;
