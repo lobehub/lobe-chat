@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.28](https://github.com/lobehub/lobe-chat/compare/v1.19.27...v1.19.28)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add function call support for Stepfun.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add function call support for Stepfun, closes [#4101](https://github.com/lobehub/lobe-chat/issues/4101) ([8d7d96e](https://github.com/lobehub/lobe-chat/commit/8d7d96e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.27](https://github.com/lobehub/lobe-chat/compare/v1.19.26...v1.19.27)
 
 <sup>Released on **2024-09-24**</sup>
