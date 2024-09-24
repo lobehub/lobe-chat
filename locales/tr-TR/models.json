@@ -35,6 +35,9 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B), çok alanlı uygulamalar ve karmaşık görevler için uygun yenilikçi bir modeldir."
   },
+  "Max-32k": {
+    "description": "Spark Max 32K, büyük bağlam işleme yeteneği, daha güçlü bağlam anlama ve mantıksal akıl yürütme yeteneği ile donatılmıştır. 32K token'lık metin girişi destekler ve uzun belgelerin okunması, özel bilgi sorgulamaları gibi senaryolar için uygundur."
+  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO, olağanüstü yaratıcı deneyimler sunmak için tasarlanmış son derece esnek bir çoklu model birleşimidir."
   },
