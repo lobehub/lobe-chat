@@ -38,11 +38,24 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "إذا كنت تستخدم AWS SSO/STS، يرجى إدخال رمز جلسة AWS الخاص بك",
+      "placeholder": "رمز جلسة AWS",
+      "title": "رمز جلسة AWS (اختياري)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "منطقة خدمة مخصصة",
+      "customSessionToken": "رمز الجلسة المخصص",
       "description": "أدخل معرف الوصول / مفتاح الوصول السري الخاص بك في AWS لبدء الجلسة. لن يتم تسجيل تكوين المصادقة الخاص بك من قبل التطبيق",
       "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "أدخل رمز الوصول الشخصي الخاص بك على Github، انقر [هنا](https://github.com/settings/tokens) لإنشاء واحد",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
     }
   },
   "ollama": {

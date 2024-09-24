@@ -52,7 +52,7 @@ tags:
 | `CLOUDFLARE_ZERO_TRUST_CLIENT_ID` | 必选 | 在 Cloudflare Zero Trust 生成的 `Client ID`，示例值是 `lobe-chat` |
 | `CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET` | 必选 | 在 Cloudflare Zero Trust 生成的 `Client secret`，示例值是 `insecure_secret` |
 | `CLOUDFLARE_ZERO_TRUST_ISSUER` | 必选 | 在 Cloudflare Zero Trust 生成的 `Issuer`，例如 `https://example.cloudflareaccess.com/cdn-cgi/access/sso/oidc/7db0f` |
-| `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://chat.example.com/api/auth` |
+| `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://chat.example.com/api/auth` |
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/zh/docs/self-hosting/environment-variable#Cloudflare%20Zero%20Trust) 可查阅相关变量详情。

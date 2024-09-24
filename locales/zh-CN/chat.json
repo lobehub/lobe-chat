@@ -5,8 +5,17 @@
   "agentDefaultMessage": "你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。",
   "agentDefaultMessageWithSystemRole": "你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！",
   "agentDefaultMessageWithoutEdit": "你好，我是 **{{name}}**，让我们开始对话吧！",
-  "agentsAndConversations": "助手与会话",
+  "agents": "助手",
+  "artifact": {
+    "generating": "生成中",
+    "thinking": "思考中",
+    "thought": "思考过程",
+    "unknownTitle": "未命名作品"
+  },
   "backToBottom": "跳转至当前",
+  "chatList": {
+    "longMessageDetail": "查看详情"
+  },
   "clearCurrentMessages": "清空当前会话消息",
   "confirmClearCurrentMessages": "即将清空当前会话消息，清空后将无法找回，请确认你的操作",
   "confirmRemoveSessionItemAlert": "即将删除该助手，删除后该将无法找回，请确认你的操作",
@@ -40,7 +49,7 @@
     "all": "所有内容",
     "allFiles": "所有文件",
     "allKnowledgeBases": "所有知识库",
-    "disabled": "当前部署模式不支持知识库对话，如需使用，请切换到服务端数据库部署或使用 LobeChat Cloud 服务",
+    "disabled": "当前部署模式不支持知识库对话，如需使用，请切换到服务端数据库部署或使用 {{cloud}} 服务",
     "library": {
       "action": {
         "add": "添加",
@@ -72,7 +81,7 @@
   },
   "regenerate": "重新生成",
   "roleAndArchive": "角色与记录",
-  "searchAgentPlaceholder": "搜索助手和对话...",
+  "searchAgentPlaceholder": "搜索助手...",
   "sendPlaceholder": "输入聊天内容...",
   "sessionGroup": {
     "config": "分组管理",

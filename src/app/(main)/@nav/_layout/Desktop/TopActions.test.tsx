@@ -57,7 +57,7 @@ describe('TopActions', () => {
     renderTopActions();
 
     expect(screen.getByText('tab.chat')).toBeInTheDocument();
-    expect(screen.getByText('tab.market')).toBeInTheDocument();
+    expect(screen.getByText('tab.discover')).toBeInTheDocument();
   });
 
   it('should render only Chat icon when `-market` is set', () => {
@@ -68,7 +68,7 @@ describe('TopActions', () => {
     renderTopActions();
 
     expect(screen.getByText('tab.chat')).toBeInTheDocument();
-    expect(screen.queryByText('tab.market')).not.toBeInTheDocument();
+    expect(screen.queryByText('tab.discover')).not.toBeInTheDocument();
   });
 
   it('should render File icon when `-knowledge_base` is set', () => {
@@ -90,7 +90,7 @@ describe('TopActions', () => {
     const { result: store } = renderHook(() => useGlobalStore((s) => s));
     const switchBackToChat = vi.spyOn(store.current, 'switchBackToChat');
 
-    renderTopActions({ tab: SidebarTabKey.Market });
+    renderTopActions({ tab: SidebarTabKey.Discover });
     fireEvent.click(screen.getByText('Mocked Link /chat'));
 
     expect(switchBackToChat).toBeCalledWith('1');

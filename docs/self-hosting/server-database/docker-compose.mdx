@@ -69,8 +69,8 @@ mkdir lobe-chat-db
 Pull the configuration files into your directory:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml > docker-compose.yml
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.example > .env
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local-logto/docker-compose.yml > docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local-logto/.env.example > .env
 ```
 
 ### Start Services
@@ -186,6 +186,7 @@ And the service port without reverse proxy:
 
 <Callout type="warning">
   Please note that CORS cross-origin is configured internally in MinIO / Logto service, do not configure CORS additionally in your reverse proxy, as this will cause errors.
+  For minio ports other than 443, Host must be $http_host (with port number), otherwise a 403 error will occur: proxy_set_header Host $http_host.
 
 If you need to configure SSL certificates, please configure them uniformly in the outer Nginx reverse proxy, rather than in MinIO.
 
@@ -503,7 +504,7 @@ KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
 # Required: Postgres database connection string
 # Format: postgresql://username:password@host:port/dbname
 # If using Docker, you can use the container name as the host
-DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
+DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/lobe
 
 # NEXT_AUTH related environment variables
 # Supports auth0, Azure AD, GitHub, Authentik, Zitadel, Logto, etc.

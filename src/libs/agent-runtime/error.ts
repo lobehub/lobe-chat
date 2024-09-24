@@ -13,6 +13,8 @@ export const AgentRuntimeErrorType = {
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
   StreamChunkError: 'StreamChunkError',
 
+  InvalidGithubToken: 'InvalidGithubToken',
+
   /**
    * @deprecated
    */

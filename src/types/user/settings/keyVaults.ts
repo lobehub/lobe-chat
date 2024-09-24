@@ -13,15 +13,19 @@ export interface AWSBedrockKeyVault {
   accessKeyId?: string;
   region?: string;
   secretAccessKey?: string;
+  sessionToken?: string;
 }
 
 export interface UserKeyVaults {
+  ai21?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
   anthropic?: OpenAICompatibleKeyVault;
   azure?: AzureOpenAIKeyVault;
   baichuan?: OpenAICompatibleKeyVault;
   bedrock?: AWSBedrockKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
+  fireworksai?: OpenAICompatibleKeyVault;
+  github?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
   lobehub?: any;
@@ -36,6 +40,7 @@ export interface UserKeyVaults {
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
+  spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;
   taichu?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;

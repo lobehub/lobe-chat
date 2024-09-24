@@ -5,8 +5,17 @@
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることもできますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
   "agentDefaultMessageWithoutEdit": "こんにちは、私は**{{name}}**です。会話しましょう！",
-  "agentsAndConversations": "エージェントと会話",
+  "agents": "エージェント",
+  "artifact": {
+    "generating": "生成中",
+    "thinking": "思考中",
+    "thought": "思考過程",
+    "unknownTitle": "未命名の作品"
+  },
   "backToBottom": "現在に戻る",
+  "chatList": {
+    "longMessageDetail": "詳細を見る"
+  },
   "clearCurrentMessages": "現在の会話をクリア",
   "confirmClearCurrentMessages": "現在の会話をクリアします。クリアした後は元に戻すことはできません。操作を確認してください。",
   "confirmRemoveSessionItemAlert": "このエージェントを削除します。削除した後は元に戻すことはできません。操作を確認してください。",
@@ -40,7 +49,7 @@
     "all": "すべてのコンテンツ",
     "allFiles": "すべてのファイル",
     "allKnowledgeBases": "すべての知識ベース",
-    "disabled": "現在のデプロイモードでは知識ベースの対話はサポートされていません。使用するには、サーバー側のデータベースデプロイに切り替えるか、LobeChat Cloud サービスを利用してください。",
+    "disabled": "現在のデプロイモードでは知識ベースの対話はサポートされていません。使用するには、サーバー側のデータベースデプロイに切り替えるか、{{cloud}} サービスを利用してください。",
     "library": {
       "action": {
         "add": "追加",
@@ -72,7 +81,7 @@
   },
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
-  "searchAgentPlaceholder": "エージェントや会話を検索...",
+  "searchAgentPlaceholder": "検索アシスタント...",
   "sendPlaceholder": "チャット内容を入力してください...",
   "sessionGroup": {
     "config": "グループ設定",

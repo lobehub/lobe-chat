@@ -5,8 +5,17 @@
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
   "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
-  "agentsAndConversations": "Assistants and Conversations",
+  "agents": "Assistants",
+  "artifact": {
+    "generating": "Generating",
+    "thinking": "Thinking",
+    "thought": "Thought Process",
+    "unknownTitle": "Untitled Work"
+  },
   "backToBottom": "Back to bottom",
+  "chatList": {
+    "longMessageDetail": "View Details"
+  },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
   "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
@@ -40,7 +49,7 @@
     "all": "All Content",
     "allFiles": "All Files",
     "allKnowledgeBases": "All Knowledge Bases",
-    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to server database deployment or use LobeChat Cloud service.",
+    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to server-side database deployment or use the {{cloud}} service.",
     "library": {
       "action": {
         "add": "Add",
@@ -72,7 +81,7 @@
   },
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
-  "searchAgentPlaceholder": "Search assistants and conversations...",
+  "searchAgentPlaceholder": "Search assistants...",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",

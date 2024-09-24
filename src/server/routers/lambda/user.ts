@@ -63,7 +63,7 @@ export const userRouter = router({
     const sessionCount = await sessionModel.count();
 
     return {
-      canEnablePWAGuide: messageCount >= 2,
+      canEnablePWAGuide: messageCount >= 4,
       canEnableTrace: messageCount >= 4,
       // 有消息，或者创建过助手，则认为有 conversation
       hasConversation: messageCount > 0 || sessionCount > 1,

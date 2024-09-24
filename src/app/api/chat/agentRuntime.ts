@@ -75,17 +75,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       };
     }
     case ModelProvider.Bedrock: {
-      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION } = getLLMConfig();
+      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } =
+        getLLMConfig();
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
       let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
       let region = AWS_REGION;
+      let sessionToken: string | undefined = AWS_SESSION_TOKEN;
       // if the payload has the api key, use user
       if (payload.apiKey) {
         accessKeyId = payload?.awsAccessKeyId;
         accessKeySecret = payload?.awsSecretAccessKey;
+        sessionToken = payload?.awsSessionToken;
         region = payload?.awsRegion;
       }
-      return { accessKeyId, accessKeySecret, region };
+      return { accessKeyId, accessKeySecret, region, sessionToken };
     }
     case ModelProvider.Ollama: {
       const { OLLAMA_PROXY_URL } = getLLMConfig();
@@ -130,6 +133,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURL };
     }
+    case ModelProvider.Github: {
+      const { GITHUB_TOKEN } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || GITHUB_TOKEN);
+
+      return { apiKey };
+    }
     case ModelProvider.OpenRouter: {
       const { OPENROUTER_API_KEY } = getLLMConfig();
 
@@ -148,6 +158,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { TOGETHERAI_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || TOGETHERAI_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.FireworksAI: {
+      const { FIREWORKSAI_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || FIREWORKSAI_API_KEY);
 
       return { apiKey };
     }
@@ -212,6 +229,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { UPSTAGE_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || UPSTAGE_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Spark: {
+      const { SPARK_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SPARK_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Ai21: {
+      const { AI21_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || AI21_API_KEY);
 
       return { apiKey };
     }

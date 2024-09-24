@@ -5,8 +5,17 @@
   "agentDefaultMessage": "Hallo, ich bin **{{name}}**. Du kannst sofort mit mir sprechen oder zu den [Assistenteneinstellungen]({{url}}) gehen, um meine Informationen zu vervollständigen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ich bin **{{name}}**, {{systemRole}}. Lass uns chatten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ich bin **{{name}}**. Lassen Sie uns ins Gespräch kommen!",
-  "agentsAndConversations": "Agenten und Unterhaltungen",
+  "agents": "Assistent",
+  "artifact": {
+    "generating": "Wird generiert",
+    "thinking": "Denken",
+    "thought": "Denkenprozess",
+    "unknownTitle": "Unbenanntes Werk"
+  },
   "backToBottom": "Zurück zum Ende",
+  "chatList": {
+    "longMessageDetail": "Details anzeigen"
+  },
   "clearCurrentMessages": "Aktuelle Nachrichten löschen",
   "confirmClearCurrentMessages": "Möchtest du wirklich die aktuellen Nachrichten löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
   "confirmRemoveSessionItemAlert": "Möchtest du diesen Assistenten wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
@@ -40,7 +49,7 @@
     "all": "Alle Inhalte",
     "allFiles": "Alle Dateien",
     "allKnowledgeBases": "Alle Wissensdatenbanken",
-    "disabled": "Der aktuelle Bereitstellungsmodus unterstützt keine Wissensdatenbankgespräche. Bitte wechseln Sie zur serverseitigen Datenbankbereitstellung oder verwenden Sie den LobeChat Cloud-Dienst.",
+    "disabled": "Der aktuelle Bereitstellungsmodus unterstützt keine Dialoge mit der Wissensdatenbank. Bitte wechseln Sie zur Bereitstellung mit einer Serverdatenbank oder nutzen Sie den {{cloud}}-Dienst.",
     "library": {
       "action": {
         "add": "Hinzufügen",
@@ -72,7 +81,7 @@
   },
   "regenerate": "Neu generieren",
   "roleAndArchive": "Rolle und Archiv",
-  "searchAgentPlaceholder": "Assistenten und Unterhaltungen durchsuchen...",
+  "searchAgentPlaceholder": "Suchassistent...",
   "sendPlaceholder": "Chat-Nachricht eingeben...",
   "sessionGroup": {
     "config": "Gruppenkonfiguration",

@@ -1,7 +1,6 @@
 import OpenAI, { ClientOptions } from 'openai';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
@@ -13,11 +12,15 @@ import {
   EmbeddingItem,
   EmbeddingsOptions,
   EmbeddingsPayload,
+  TextToImagePayload,
+  TextToSpeechOptions,
+  TextToSpeechPayload,
 } from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
+import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
 import { OpenAIStream } from '../streams';
 
@@ -158,9 +161,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
+        const messages = await convertOpenAIMessages(postPayload.messages);
+
         const response = await this.client.chat.completions.create(
           {
             ...postPayload,
+            messages,
             ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
           },
           {
@@ -244,6 +250,19 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       try {
         const res = await this.client.images.generate(payload);
         return res.data.map((o) => o.url) as string[];
+      } catch (error) {
+        throw this.handleError(error);
+      }
+    }
+
+    async textToSpeech(payload: TextToSpeechPayload, options?: TextToSpeechOptions) {
+      try {
+        const mp3 = await this.client.audio.speech.create(payload as any, {
+          headers: options?.headers,
+          signal: options?.signal,
+        });
+
+        return mp3.arrayBuffer();
       } catch (error) {
         throw this.handleError(error);
       }

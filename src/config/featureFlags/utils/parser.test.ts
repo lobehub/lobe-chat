@@ -24,6 +24,14 @@ describe('parseFeatureFlag', () => {
     });
   });
 
+  it('should hide content with commercial flags', () => {
+    const input = '+commercial_hide_github,+commercial_hide_docs';
+    expect(parseFeatureFlag(input)).toEqual({
+      commercial_hide_docs: true,
+      commercial_hide_github: true,
+    });
+  });
+
   it('invalid flag format return nothing', () => {
     const input = 'invalid_format';
     expect(parseFeatureFlag(input)).toEqual({});

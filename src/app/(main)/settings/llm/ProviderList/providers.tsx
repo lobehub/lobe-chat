@@ -1,10 +1,12 @@
 import { useMemo } from 'react';
 
 import {
+  Ai21ProviderCard,
   Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
   DeepSeekProviderCard,
+  FireworksAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   MinimaxProviderCard,
@@ -15,6 +17,7 @@ import {
   PerplexityProviderCard,
   QwenProviderCard,
   SiliconCloudProviderCard,
+  SparkProviderCard,
   StepfunProviderCard,
   TaichuProviderCard,
   TogetherAIProviderCard,
@@ -26,6 +29,7 @@ import {
 import { ProviderItem } from '../type';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
+import { useGithubProvider } from './Github';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 
@@ -34,34 +38,39 @@ export const useProviderList = (): ProviderItem[] => {
   const OllamaProvider = useOllamaProvider();
   const OpenAIProvider = useOpenAIProvider();
   const BedrockProvider = useBedrockProvider();
+  const GithubProvider = useGithubProvider();
 
   return useMemo(
     () => [
       OpenAIProvider,
-      OllamaProvider,
       AzureProvider,
-      GoogleProviderCard,
+      OllamaProvider,
       AnthropicProviderCard,
       BedrockProvider,
-      GroqProviderCard,
+      GoogleProviderCard,
+      DeepSeekProviderCard,
       OpenRouterProviderCard,
+      GithubProvider,
       NovitaProviderCard,
       TogetherAIProviderCard,
-      QwenProviderCard,
-      DeepSeekProviderCard,
-      MinimaxProviderCard,
-      MistralProviderCard,
-      MoonshotProviderCard,
+      FireworksAIProviderCard,
+      GroqProviderCard,
       PerplexityProviderCard,
+      MistralProviderCard,
+      Ai21ProviderCard,
+      UpstageProviderCard,
+      QwenProviderCard,
+      SparkProviderCard,
       ZhiPuProviderCard,
       ZeroOneProviderCard,
       StepfunProviderCard,
+      MoonshotProviderCard,
       BaichuanProviderCard,
-      TaichuProviderCard,
+      MinimaxProviderCard,
       Ai360ProviderCard,
       SiliconCloudProviderCard,
-      UpstageProviderCard,
+      TaichuProviderCard,
     ],
-    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider],
+    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider],
   );
 };

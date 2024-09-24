@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import Notification from '@/components/Notification';
+import { BRANDING_NAME } from '@/const/branding';
 import { PRIVACY_URL } from '@/const/url';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { serverConfigSelectors } from '@/store/serverConfig/selectors';
@@ -56,9 +57,11 @@ const TelemetryNotification = memo<{ mobile?: boolean }>(({ mobile }) => {
       </Flexbox>
       <Flexbox gap={16}>
         <Flexbox gap={12}>
-          <Flexbox className={styles.title}>{t('telemetry.title')}</Flexbox>
+          <Flexbox className={styles.title}>
+            {t('telemetry.title', { appName: BRANDING_NAME })}
+          </Flexbox>
           <div className={styles.desc}>
-            {t('telemetry.desc')}
+            {t('telemetry.desc', { appName: BRANDING_NAME })}
             <span>
               <Link href={PRIVACY_URL} target={'_blank'}>
                 {t('telemetry.learnMore')}

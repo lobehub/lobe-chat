@@ -3,6 +3,7 @@ import { sha256 } from 'js-sha256';
 import { StateCreator } from 'zustand/vanilla';
 
 import { message } from '@/components/AntdStaticMethods';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import { isServerMode } from '@/const/version';
 import { fileService } from '@/services/file';
 import { ServerService } from '@/services/file/server';
@@ -28,6 +29,12 @@ interface UploadWithProgressParams {
           type: 'removeFile';
         },
   ) => void;
+  /**
+   * Optional flag to indicate whether to skip the file type check.
+   * When set to `true`, any file type checks will be bypassed.
+   * Default is `false`, which means file type checks will be performed.
+   */
+  skipCheckFileType?: boolean;
 }
 
 interface UploadWithProgressResult {
@@ -51,11 +58,12 @@ export const createFileUploadSlice: StateCreator<
   [],
   FileUploadAction
 > = (set, get) => ({
-  internal_uploadToClientDB: async ({ file, onStatusUpdate }) => {
-    if (!file.type.startsWith('image')) {
+  internal_uploadToClientDB: async ({ file, onStatusUpdate, skipCheckFileType }) => {
+    if (!skipCheckFileType && !file.type.startsWith('image')) {
       onStatusUpdate?.({ id: file.name, type: 'removeFile' });
       message.info({
         content: t('upload.fileOnlySupportInServerMode', {
+          cloud: LOBE_CHAT_CLOUD,
           ext: file.name.split('.').pop(),
           ns: 'error',
         }),
@@ -156,11 +164,11 @@ export const createFileUploadSlice: StateCreator<
     return data;
   },
 
-  uploadWithProgress: async ({ file, onStatusUpdate, knowledgeBaseId }) => {
+  uploadWithProgress: async (payload) => {
     const { internal_uploadToServer, internal_uploadToClientDB } = get();
 
-    if (isServerMode) return internal_uploadToServer({ file, knowledgeBaseId, onStatusUpdate });
+    if (isServerMode) return internal_uploadToServer(payload);
 
-    return internal_uploadToClientDB({ file, onStatusUpdate });
+    return internal_uploadToClientDB(payload);
   },
 });

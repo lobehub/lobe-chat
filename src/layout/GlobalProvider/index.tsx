@@ -3,6 +3,7 @@ import { cookies, headers } from 'next/headers';
 import { FC, PropsWithChildren } from 'react';
 import { resolveAcceptLanguage } from 'resolve-accept-language';
 
+import { appEnv } from '@/config/app';
 import { getDebugConfig } from '@/config/debug';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
@@ -82,6 +83,7 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
           defaultAppearance={appearance?.value}
           defaultNeutralColor={neutralColor?.value as any}
           defaultPrimaryColor={primaryColor?.value as any}
+          globalCDN={appEnv.CDN_USE_GLOBAL}
         >
           <ServerConfigStoreProvider
             featureFlags={serverFeatureFlags}

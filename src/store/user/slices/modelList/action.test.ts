@@ -154,13 +154,9 @@ describe('LLMSettingsSliceAction', () => {
 
       const ollamaList = result.current.modelProviderList.find((r) => r.id === 'ollama');
       // Assert that setModelProviderConfig was not called
-      expect(ollamaList?.chatModels.find((c) => c.id === 'llava')).toEqual({
-        displayName: 'LLaVA 7B',
-        enabled: true,
-        id: 'llava',
-        tokens: 4096,
-        vision: true,
-      });
+      const model = ollamaList?.chatModels.find((c) => c.id === 'llava');
+
+      expect(model).toMatchSnapshot();
     });
 
     it('modelProviderListForModelSelect should return only enabled providers', () => {
