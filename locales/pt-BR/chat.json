@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Olá, eu sou **{{name}}**, você pode começar a conversar comigo agora ou ir para [Configurações do Assistente]({{url}}) para completar minhas informações.",
   "agentDefaultMessageWithSystemRole": "Olá, eu sou **{{name}}**, {{systemRole}}, vamos conversar!",
   "agentDefaultMessageWithoutEdit": "Olá, sou o **{{name}}**, vamos começar a conversa!",
-  "agentsAndConversations": "Agentes e Conversas",
+  "agents": "Assistente",
   "artifact": {
     "generating": "Gerando",
     "thinking": "Pensando",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Regenerar",
   "roleAndArchive": "Função e Arquivo",
-  "searchAgentPlaceholder": "Pesquisar assistentes e conversas...",
+  "searchAgentPlaceholder": "Assistente de busca...",
   "sendPlaceholder": "Digite a mensagem...",
   "sessionGroup": {
     "config": "Gerenciar grupos",

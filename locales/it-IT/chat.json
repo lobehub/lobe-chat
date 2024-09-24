@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
-  "agentsAndConversations": "Assistenti e Conversazioni",
+  "agents": "Assistente",
   "artifact": {
     "generating": "Generazione in corso",
     "thinking": "In fase di riflessione",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Rigenera",
   "roleAndArchive": "Ruolo e archivio",
-  "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
+  "searchAgentPlaceholder": "Assistente di ricerca...",
   "sendPlaceholder": "Inserisci il testo della chat...",
   "sessionGroup": {
     "config": "Gestione gruppi",
