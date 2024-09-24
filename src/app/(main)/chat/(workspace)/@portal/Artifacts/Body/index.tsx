@@ -4,6 +4,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
+import { ArtifactType } from '@/types/artifact';
 
 import Renderer from './Renderer';
 
@@ -14,7 +15,7 @@ const ArtifactsUI = memo(() => {
     isMessageGenerating,
     artifactType,
     artifactContent,
-
+    artifactCodeLanguage,
     isArtifactTagClosed,
   ] = useChatStore((s) => {
     const messageId = chatPortalSelectors.artifactMessageId(s) || '';
@@ -25,6 +26,7 @@ const ArtifactsUI = memo(() => {
       chatSelectors.isMessageGenerating(messageId)(s),
       chatPortalSelectors.artifactType(s),
       chatPortalSelectors.artifactCode(messageId)(s),
+      chatPortalSelectors.artifactCodeLanguage(s),
       chatPortalSelectors.isArtifactTagClosed(messageId)(s),
     ];
   });
@@ -39,11 +41,15 @@ const ArtifactsUI = memo(() => {
 
   const language = useMemo(() => {
     switch (artifactType) {
-      case 'application/lobe.artifacts.react': {
+      case ArtifactType.React: {
         return 'tsx';
       }
 
-      case 'python': {
+      case ArtifactType.Code: {
+        return artifactCodeLanguage;
+      }
+
+      case ArtifactType.Python: {
         return 'python';
       }
 
@@ -51,10 +57,14 @@ const ArtifactsUI = memo(() => {
         return 'html';
       }
     }
-  }, [artifactType]);
+  }, [artifactType, artifactCodeLanguage]);
 
   // make sure the message and id is valid
   if (!messageId) return;
+
+  // show code when the artifact is not closed or the display mode is code or the artifact type is code
+  const showCode =
+    !isArtifactTagClosed || displayMode === 'code' || artifactType === ArtifactType.Code;
 
   return (
     <Flexbox
@@ -65,8 +75,8 @@ const ArtifactsUI = memo(() => {
       paddingInline={12}
       style={{ overflow: 'hidden' }}
     >
-      {!isArtifactTagClosed || displayMode === 'code' ? (
-        <Highlighter language={language} style={{ maxHeight: '100%', overflow: 'hidden' }}>
+      {showCode ? (
+        <Highlighter language={language || 'txt'} style={{ maxHeight: '100%', overflow: 'hidden' }}>
           {artifactContent}
         </Highlighter>
       ) : (

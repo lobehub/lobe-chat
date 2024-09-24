@@ -100,11 +100,11 @@ When deploying LobeChat, you need to configure the following environment variabl
 | Environment Variable | Type | Description |
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate a key using the following command: `openssl rand -base64 32` |
-| `NEXT_AUTH_SSO_PROVIDERS` | Optional | Select the single sign-on provider for LoboChat. Use `zitadel` for ZITADEL. |
-| `ZITADEL_CLIENT_ID` | Required | Client ID (`ClientId` as shown in ZITADEL) of the ZITADEL application |
-| `ZITADEL_CLIENT_SECRET` | Required | Client Secret (`ClientSecret` as shown in ZITADEL) of the ZITADEL application |
-| `ZITADEL_ISSUER` | Required | Issuer URL of the ZITADEL application |
-| `NEXTAUTH_URL` | Optional | The URL is used to specify the callback address for the execution of OAuth authentication in Auth.js. It needs to be set only when the default address is incorrect. `https://example.com/api/auth` |
+| `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LoboChat. Use `zitadel` for ZITADEL. |
+| `AUTH_ZITADEL_ID` | Required | Client ID (`ClientId` as shown in ZITADEL) of the ZITADEL application |
+| `AUTH_ZITADEL_SECRET` | Required | Client Secret (`ClientSecret` as shown in ZITADEL) of the ZITADEL application |
+| `AUTH_ZITADEL_ISSUER` | Required | Issuer URL of the ZITADEL application |
+| `NEXTAUTH_URL` | Required | The URL is used to specify the callback address for the execution of OAuth authentication in Auth.js. It needs to be set only when the default address is incorrect. `https://example.com/api/auth` |
 
   <Callout type={'tip'}>
     You can refer to the related variable details at [📘Environment Variables](/docs/self-hosting/environment-variables/auth#zitadel).

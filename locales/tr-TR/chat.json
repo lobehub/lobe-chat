@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Merhaba, ben **{{name}}**. Hemen benimle konuşmaya başlayabilir veya [Asistan Ayarları]({{url}}) sayfasına giderek bilgilerimi güncelleyebilirsin.",
   "agentDefaultMessageWithSystemRole": "Merhaba, Ben **{{name}}**, {{systemRole}}. Hemen sohbet etmeye başlayalım!",
   "agentDefaultMessageWithoutEdit": "Merhaba, ben **{{name}}**. Konuşmaya başlayalım!",
-  "agentsAndConversations": "Ajanlar ve Konuşmalar",
+  "agents": "Asistan",
   "artifact": {
     "generating": "Üretiliyor",
     "thinking": "Düşünülüyor",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Tekrarla",
   "roleAndArchive": "Rol ve Arşiv",
-  "searchAgentPlaceholder": "Arama yardımcıları ve konuşmalar...",
+  "searchAgentPlaceholder": "Arama Asistanı...",
   "sendPlaceholder": "Mesajınızı buraya yazın...",
   "sessionGroup": {
     "config": "Grup Yönetimi",

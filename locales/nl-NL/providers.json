@@ -1,4 +1,5 @@
 {
+  "ai21": {},
   "ai360": {
     "description": "360 AI is een AI-model- en serviceplatform gelanceerd door het bedrijf 360, dat verschillende geavanceerde modellen voor natuurlijke taalverwerking biedt, waaronder 360GPT2 Pro, 360GPT Pro, 360GPT Turbo en 360GPT Turbo Responsibility 8K. Deze modellen combineren grootschalige parameters en multimodale capaciteiten, en worden breed toegepast in tekstgeneratie, semantisch begrip, dialoogsystemen en codegeneratie. Met flexibele prijsstrategieën voldoet 360 AI aan diverse gebruikersbehoeften, ondersteunt het ontwikkelaars bij integratie en bevordert het de innovatie en ontwikkeling van intelligente toepassingen."
   },
@@ -19,6 +20,9 @@
   },
   "fireworksai": {
     "description": "Fireworks AI is een toonaangevende aanbieder van geavanceerde taalmodellen, met een focus op functionele aanroepen en multimodale verwerking. Hun nieuwste model Firefunction V2 is gebaseerd op Llama-3 en geoptimaliseerd voor functieaanroepen, dialogen en het volgen van instructies. Het visuele taalmodel FireLLaVA-13B ondersteunt gemengde invoer van afbeeldingen en tekst. Andere opmerkelijke modellen zijn de Llama-serie en de Mixtral-serie, die efficiënte ondersteuning bieden voor meertalig volgen van instructies en genereren."
+  },
+  "github": {
+    "description": "Met GitHub-modellen kunnen ontwikkelaars AI-ingenieurs worden en bouwen met de toonaangevende AI-modellen in de industrie."
   },
   "google": {
     "description": "De Gemini-serie van Google is hun meest geavanceerde, algemene AI-modellen, ontwikkeld door Google DeepMind, speciaal ontworpen voor multimodale toepassingen, en ondersteunt naadloze begrip en verwerking van tekst, code, afbeeldingen, audio en video. Geschikt voor verschillende omgevingen, van datacenters tot mobiele apparaten, verhoogt het de efficiëntie en toepasbaarheid van AI-modellen aanzienlijk."

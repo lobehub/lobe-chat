@@ -60,6 +60,8 @@ export class DiscoverService {
       });
     }
 
+    if (!res.ok) return [];
+
     const json = await res.json();
 
     return json.agents;
@@ -78,6 +80,8 @@ export class DiscoverService {
         next: { revalidate: 12 * revalidate },
       });
     }
+
+    if (!res.ok) return;
 
     let assistant = await res.json();
 
@@ -148,7 +152,10 @@ export class DiscoverService {
       });
     }
 
+    if (!res.ok) return [];
+
     const json = await res.json();
+
     return json.plugins;
   };
 

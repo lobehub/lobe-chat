@@ -1,4 +1,5 @@
 {
+  "ai21": {},
   "ai360": {
     "description": "360 AI, 360 şirketi tarafından sunulan yapay zeka modeli ve hizmet platformudur. 360GPT2 Pro, 360GPT Pro, 360GPT Turbo ve 360GPT Turbo Responsibility 8K gibi çeşitli gelişmiş doğal dil işleme modelleri sunmaktadır. Bu modeller, büyük ölçekli parametreler ve çok modlu yetenekleri birleştirerek metin üretimi, anlamsal anlama, diyalog sistemleri ve kod üretimi gibi alanlarda geniş bir uygulama yelpazesine sahiptir. Esnek fiyatlandırma stratejileri ile 360 AI, çeşitli kullanıcı ihtiyaçlarını karşılamakta ve geliştiricilerin entegrasyonunu destekleyerek akıllı uygulamaların yenilik ve gelişimini teşvik etmektedir."
   },
@@ -19,6 +20,9 @@
   },
   "fireworksai": {
     "description": "Fireworks AI, işlev çağrısı ve çok modlu işleme üzerine odaklanan önde gelen bir gelişmiş dil modeli hizmet sağlayıcısıdır. En son modeli Firefunction V2, Llama-3 tabanlıdır ve işlev çağrısı, diyalog ve talimat takibi için optimize edilmiştir. Görsel dil modeli FireLLaVA-13B, görüntü ve metin karışık girişi desteklemektedir. Diğer dikkat çekici modeller arasında Llama serisi ve Mixtral serisi bulunmaktadır ve etkili çok dilli talimat takibi ve üretim desteği sunmaktadır."
+  },
+  "github": {
+    "description": "GitHub Modelleri ile geliştiriciler, AI mühendisleri olabilir ve sektörün önde gelen AI modelleri ile inşa edebilirler."
   },
   "google": {
     "description": "Google'ın Gemini serisi, Google DeepMind tarafından geliştirilen en gelişmiş ve genel yapay zeka modelleridir. Çok modlu tasarımı sayesinde metin, kod, görüntü, ses ve video gibi çeşitli veri türlerini sorunsuz bir şekilde anlama ve işleme yeteneğine sahiptir. Veri merkezlerinden mobil cihazlara kadar çeşitli ortamlarda kullanılabilir, yapay zeka modellerinin verimliliğini ve uygulama kapsamını büyük ölçüde artırmaktadır."

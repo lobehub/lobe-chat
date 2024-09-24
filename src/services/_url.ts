@@ -1,4 +1,4 @@
-// TODO: 未来路由需要迁移到 trpc or /webapi
+// TODO: 未来所有核心路由需要迁移到 trpc，部分不需要迁移的则走 webapi
 
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { transform } from 'lodash-es';
@@ -17,7 +17,7 @@ const mapWithBasePath = <T extends object>(apis: T): T => {
 };
 
 export const API_ENDPOINTS = mapWithBasePath({
-  proxy: '/api/proxy',
+  proxy: '/webapi/proxy',
   oauth: '/api/auth',
 
   // agent markets

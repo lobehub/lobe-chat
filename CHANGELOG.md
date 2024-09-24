@@ -2,6 +2,423 @@
 
 # Changelog
 
+### [Version 1.19.25](https://github.com/lobehub/lobe-chat/compare/v1.19.24...v1.19.25)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Add missing translations.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Add missing translations, closes [#4106](https://github.com/lobehub/lobe-chat/issues/4106) ([c24bf45](https://github.com/lobehub/lobe-chat/commit/c24bf45))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.24](https://github.com/lobehub/lobe-chat/compare/v1.19.23...v1.19.24)
+
+<sup>Released on **2024-09-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix artifacts code language highlight.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix artifacts code language highlight, closes [#4096](https://github.com/lobehub/lobe-chat/issues/4096) ([2d956a3](https://github.com/lobehub/lobe-chat/commit/2d956a3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.23](https://github.com/lobehub/lobe-chat/compare/v1.19.22...v1.19.23)
+
+<sup>Released on **2024-09-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add spark max-32k model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add spark max-32k model, closes [#4071](https://github.com/lobehub/lobe-chat/issues/4071) ([c11b57b](https://github.com/lobehub/lobe-chat/commit/c11b57b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.22](https://github.com/lobehub/lobe-chat/compare/v1.19.21...v1.19.22)
+
+<sup>Released on **2024-09-22**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix ollama model download panel.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix ollama model download panel, closes [#4070](https://github.com/lobehub/lobe-chat/issues/4070) ([fc33336](https://github.com/lobehub/lobe-chat/commit/fc33336))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.21](https://github.com/lobehub/lobe-chat/compare/v1.19.20...v1.19.21)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor to improve branding customization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor to improve branding customization, closes [#4061](https://github.com/lobehub/lobe-chat/issues/4061) ([6199e68](https://github.com/lobehub/lobe-chat/commit/6199e68))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.20](https://github.com/lobehub/lobe-chat/compare/v1.19.19...v1.19.20)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix Content-Security-Policy.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix Content-Security-Policy, closes [#4056](https://github.com/lobehub/lobe-chat/issues/4056) ([d186062](https://github.com/lobehub/lobe-chat/commit/d186062))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.19](https://github.com/lobehub/lobe-chat/compare/v1.19.18...v1.19.19)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Casdoor webhooks providerAccountId not found.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Casdoor webhooks providerAccountId not found, closes [#4055](https://github.com/lobehub/lobe-chat/issues/4055) ([b832289](https://github.com/lobehub/lobe-chat/commit/b832289))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.18](https://github.com/lobehub/lobe-chat/compare/v1.19.17...v1.19.18)
+
+<sup>Released on **2024-09-21**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.17](https://github.com/lobehub/lobe-chat/compare/v1.19.16...v1.19.17)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: `providerAccountId` not exist in provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: `providerAccountId` not exist in provider, closes [#4053](https://github.com/lobehub/lobe-chat/issues/4053) ([91d8999](https://github.com/lobehub/lobe-chat/commit/91d8999))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.16](https://github.com/lobehub/lobe-chat/compare/v1.19.15...v1.19.16)
+
+<sup>Released on **2024-09-21**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve i18n for discover and improve version check.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve i18n for discover and improve version check, closes [#4052](https://github.com/lobehub/lobe-chat/issues/4052) ([ef93712](https://github.com/lobehub/lobe-chat/commit/ef93712))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.15](https://github.com/lobehub/lobe-chat/compare/v1.19.14...v1.19.15)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve i18n in discover.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve i18n in discover, closes [#4049](https://github.com/lobehub/lobe-chat/issues/4049) ([8170889](https://github.com/lobehub/lobe-chat/commit/8170889))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.14](https://github.com/lobehub/lobe-chat/compare/v1.19.13...v1.19.14)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Pin `shiki@1.17.7` to fix code highlight.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Pin `shiki@1.17.7` to fix code highlight, closes [#4047](https://github.com/lobehub/lobe-chat/issues/4047) ([d12bf4c](https://github.com/lobehub/lobe-chat/commit/d12bf4c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.13](https://github.com/lobehub/lobe-chat/compare/v1.19.12...v1.19.13)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Try to implement better ssrf-protect.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Try to implement better ssrf-protect, closes [#4044](https://github.com/lobehub/lobe-chat/issues/4044) ([e960a23](https://github.com/lobehub/lobe-chat/commit/e960a23))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.12](https://github.com/lobehub/lobe-chat/compare/v1.19.11...v1.19.12)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support webhooks for casdoor.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support webhooks for casdoor, closes [#3942](https://github.com/lobehub/lobe-chat/issues/3942) ([1f2f6a5](https://github.com/lobehub/lobe-chat/commit/1f2f6a5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.11](https://github.com/lobehub/lobe-chat/compare/v1.19.10...v1.19.11)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Custom model initialization not taking effect error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Custom model initialization not taking effect error, closes [#4038](https://github.com/lobehub/lobe-chat/issues/4038) ([0e0d208](https://github.com/lobehub/lobe-chat/commit/0e0d208))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.10](https://github.com/lobehub/lobe-chat/compare/v1.19.9...v1.19.10)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add qwen2.5 math and coder model for siliconcloud provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add qwen2.5 math and coder model for siliconcloud provider, closes [#4043](https://github.com/lobehub/lobe-chat/issues/4043) ([d16578f](https://github.com/lobehub/lobe-chat/commit/d16578f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.9](https://github.com/lobehub/lobe-chat/compare/v1.19.8...v1.19.9)
+
+<sup>Released on **2024-09-20**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix a bug with server agent config when user not exist.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix a bug with server agent config when user not exist, closes [#4034](https://github.com/lobehub/lobe-chat/issues/4034) ([f6a232b](https://github.com/lobehub/lobe-chat/commit/f6a232b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.8](https://github.com/lobehub/lobe-chat/compare/v1.19.7...v1.19.8)
 
 <sup>Released on **2024-09-19**</sup>

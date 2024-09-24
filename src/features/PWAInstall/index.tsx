@@ -68,7 +68,11 @@ const PWAInstall = memo(() => {
 
   if (isPWA) return null;
   return (
-    <PWA description={t('chat.description', { appName: BRANDING_NAME })} id={PWA_INSTALL_ID} />
+    <PWA
+      description={t('chat.description', { appName: BRANDING_NAME })}
+      id={PWA_INSTALL_ID}
+      manifest-url={'/manifest.webmanifest'}
+    />
   );
 });
 
