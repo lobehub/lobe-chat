@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.30](https://github.com/lobehub/lobe-chat/compare/v1.19.29...v1.19.30)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Disable taichu2.0 functioncall & default disable taichu2.0v model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Disable taichu2.0 functioncall & default disable taichu2.0v model, closes [#4117](https://github.com/lobehub/lobe-chat/issues/4117) ([00da53b](https://github.com/lobehub/lobe-chat/commit/00da53b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.29](https://github.com/lobehub/lobe-chat/compare/v1.19.28...v1.19.29)
 
 <sup>Released on **2024-09-24**</sup>
