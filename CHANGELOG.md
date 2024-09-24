@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.24](https://github.com/lobehub/lobe-chat/compare/v1.19.23...v1.19.24)
+
+<sup>Released on **2024-09-23**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix artifacts code language highlight.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix artifacts code language highlight, closes [#4096](https://github.com/lobehub/lobe-chat/issues/4096) ([2d956a3](https://github.com/lobehub/lobe-chat/commit/2d956a3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.23](https://github.com/lobehub/lobe-chat/compare/v1.19.22...v1.19.23)
 
 <sup>Released on **2024-09-23**</sup>
