@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met een gesprek!",
-  "agentsAndConversations": "agenten en gesprekken",
+  "agents": "Assistent",
   "artifact": {
     "generating": "Genereren",
     "thinking": "Denken",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
-  "searchAgentPlaceholder": "Zoek assistenten en gesprekken...",
+  "searchAgentPlaceholder": "Zoekassistent...",
   "sendPlaceholder": "Voer chatbericht in...",
   "sessionGroup": {
     "config": "Groepsbeheer",

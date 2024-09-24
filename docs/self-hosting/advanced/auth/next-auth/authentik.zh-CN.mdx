@@ -51,10 +51,10 @@ https://your-domain/api/auth/callback/authentik
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
 | `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Authentik 请填写 `authentik`。 |
-| `AUTHENTIK_CLIENT_ID` | 必选 | Authentik 提供程序详情页的 客户端 ID |
-| `AUTHENTIK_CLIENT_SECRET` | 必选 | Authentik 提供程序详情页的 客户端 Secret |
-| `AUTHENTIK_ISSUER` | 必选 | Authentik 提供程序详情页的 OpenID 配置颁发者 |
-| `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
+| `AUTH_AUTHENTIK_ID` | 必选 | Authentik 提供程序详情页的 客户端 ID |
+| `AUTH_AUTHENTIK_SECRET` | 必选 | Authentik 提供程序详情页的 客户端 Secret |
+| `AUTH_AUTHENTIK_ISSUER` | 必选 | Authentik 提供程序详情页的 OpenID 配置颁发者 |
+| `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/zh/docs/self-hosting/environment-variable#Authentik) 可查阅相关变量详情。
