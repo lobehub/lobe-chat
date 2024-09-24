@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Only alphanumeric characters, hyphen -, and underscore _ are allowed"
       },
       "manifest": {
-        "desc": "LobeChat will install the plugin using this link",
+        "desc": "{{appName}} will install the plugin through this link.",
         "label": "Plugin Description (Manifest) URL",
         "preview": "Preview Manifest",
         "refresh": "Refresh"

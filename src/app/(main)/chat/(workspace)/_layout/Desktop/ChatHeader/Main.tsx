@@ -51,7 +51,7 @@ const Main = memo(() => {
     <Flexbox align={'center'} gap={4} horizontal>
       {
         <ActionIcon
-          aria-label={t('agentsAndConversations')}
+          aria-label={t('agents')}
           icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
           onClick={() => {
             updateSystemStatus({
@@ -60,7 +60,7 @@ const Main = memo(() => {
             });
           }}
           size={DESKTOP_HEADER_ICON_SIZE}
-          title={t('agentsAndConversations')}
+          title={t('agents')}
         />
       }
       <Avatar

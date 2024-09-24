@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Dettagli dell'errore",
   "notFound": {
     "backHome": "Torna alla homepage",
-    "desc": "Non riusciamo a trovare la pagina che stai cercando, controlla che il link sia corretto",
+    "check": "Controlla se l'URL è corretto",
+    "desc": "Non siamo riusciti a trovare la pagina che stai cercando",
     "title": "Hai raggiunto un territorio sconosciuto?"
   },
   "pluginSettings": {
@@ -58,6 +59,7 @@
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
+    "InvalidGithubToken": "Il token di accesso personale di Github non è corretto o è vuoto. Controlla il token di accesso personale di Github e riprova.",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
     "InvalidProviderAPIKey": "{{provider}} Chiave API non valida o vuota, controlla la Chiave API di {{provider}} e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
@@ -115,7 +117,7 @@
   },
   "upload": {
     "desc": "Dettagli: {{detail}}",
-    "fileOnlySupportInServerMode": "L'attuale modalità di distribuzione non supporta il caricamento di file non immagine. Se desideri caricare un formato {{ext}}, ti preghiamo di passare alla distribuzione del database sul server o di utilizzare il servizio LobeChat Cloud.",
+    "fileOnlySupportInServerMode": "L'attuale modalità di distribuzione non supporta il caricamento di file non immagine. Per caricare file in formato {{ext}}, si prega di passare alla distribuzione del database sul server o di utilizzare il servizio {{cloud}}.",
     "networkError": "Si prega di verificare che la connessione di rete sia stabile e controllare se la configurazione CORS del servizio di archiviazione file è corretta.",
     "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi",
     "unknownError": "Motivo dell'errore: {{reason}}",

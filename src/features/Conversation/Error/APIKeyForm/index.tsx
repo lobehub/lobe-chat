@@ -1,3 +1,4 @@
+import { ProviderIcon } from '@lobehub/icons';
 import { Button } from 'antd';
 import { memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +10,6 @@ import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import BedrockForm from './Bedrock';
 import ProviderApiKeyForm from './ProviderApiKeyForm';
-import ProviderAvatar from './ProviderAvatar';
 
 interface APIKeyFormProps {
   id: string;
@@ -51,6 +51,10 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
         return 'sk-********************************';
       }
 
+      case ModelProvider.Github: {
+        return 'ghp_*****************************';
+      }
+
       default: {
         return '*********************************';
       }
@@ -64,7 +68,7 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
       ) : (
         <ProviderApiKeyForm
           apiKeyPlaceholder={apiKeyPlaceholder}
-          avatar={<ProviderAvatar provider={provider as ModelProvider} />}
+          avatar={<ProviderIcon provider={provider} size={80} type={'avatar'} />}
           provider={provider as GlobalLLMProviderKey}
           showEndpoint={provider === ModelProvider.OpenAI}
         />

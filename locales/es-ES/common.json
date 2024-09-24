@@ -9,7 +9,7 @@
       "title": "Bienvenido a {{name}}"
     }
   },
-  "appInitializing": "Iniciando la aplicación, por favor espere...",
+  "appInitializing": "Iniciando la aplicación...",
   "autoGenerate": "Generación automática",
   "autoGenerateTooltip": "Completar automáticamente la descripción del asistente basándose en las sugerencias",
   "autoGenerateTooltipDisabled": "Por favor, complete la palabra clave antes de usar la función de autocompletar",
@@ -195,8 +195,8 @@
   },
   "tab": {
     "chat": "Chat",
+    "discover": "Descubrir",
     "files": "Archivos",
-    "market": "Descubrir",
     "me": "Yo",
     "setting": "Configuración"
   },

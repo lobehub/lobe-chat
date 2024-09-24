@@ -5,8 +5,17 @@
   "agentDefaultMessage": "Hallo, ik ben **{{name}}**. Je kunt meteen met me beginnen praten, of je kunt naar [Assistentinstellingen]({{url}}) gaan om mijn informatie aan te vullen.",
   "agentDefaultMessageWithSystemRole": "Hallo, ik ben **{{name}}**, {{systemRole}}, laten we beginnen met praten!",
   "agentDefaultMessageWithoutEdit": "Hallo, ik ben **{{name}}**. Laten we beginnen met een gesprek!",
-  "agentsAndConversations": "agenten en gesprekken",
+  "agents": "Assistent",
+  "artifact": {
+    "generating": "Genereren",
+    "thinking": "Denken",
+    "thought": "Denken proces",
+    "unknownTitle": "Onbenoemd werk"
+  },
   "backToBottom": "Terug naar onderen",
+  "chatList": {
+    "longMessageDetail": "Bekijk details"
+  },
   "clearCurrentMessages": "Huidige berichten wissen",
   "confirmClearCurrentMessages": "Huidige berichten worden gewist en kunnen niet worden hersteld. Bevestig je actie.",
   "confirmRemoveSessionItemAlert": "Deze assistent wordt verwijderd en kan niet worden hersteld. Bevestig je actie.",
@@ -40,7 +49,7 @@
     "all": "Alle inhoud",
     "allFiles": "Alle bestanden",
     "allKnowledgeBases": "Alle kennisbanken",
-    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Schakel over naar serverdatabase-implementatie of gebruik de LobeChat Cloud-service om dit te gebruiken.",
+    "disabled": "De huidige implementatiemodus ondersteunt geen kennisbankgesprekken. Als je dit wilt gebruiken, schakel dan over naar serverdatabase-implementatie of gebruik de {{cloud}}-dienst.",
     "library": {
       "action": {
         "add": "Toevoegen",
@@ -72,7 +81,7 @@
   },
   "regenerate": "Opnieuw genereren",
   "roleAndArchive": "Rol en archief",
-  "searchAgentPlaceholder": "Zoek assistenten en gesprekken...",
+  "searchAgentPlaceholder": "Zoekassistent...",
   "sendPlaceholder": "Voer chatbericht in...",
   "sessionGroup": {
     "config": "Groepsbeheer",

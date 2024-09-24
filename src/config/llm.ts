@@ -28,6 +28,7 @@ export const getLLMConfig = () => {
       ENABLED_GOOGLE: z.boolean(),
       GOOGLE_API_KEY: z.string().optional(),
       GOOGLE_PROXY_URL: z.string().optional(),
+      GOOGLE_MODEL_LIST: z.string().optional(),
 
       ENABLED_MOONSHOT: z.boolean(),
       MOONSHOT_API_KEY: z.string().optional(),
@@ -52,6 +53,10 @@ export const getLLMConfig = () => {
       GROQ_MODEL_LIST: z.string().optional(),
       GROQ_PROXY_URL: z.string().optional(),
 
+      ENABLED_GITHUB: z.boolean(),
+      GITHUB_TOKEN: z.string().optional(),
+      GITHUB_MODEL_LIST: z.string().optional(),
+
       ENABLED_OPENROUTER: z.boolean(),
       OPENROUTER_API_KEY: z.string().optional(),
       OPENROUTER_MODEL_LIST: z.string().optional(),
@@ -64,11 +69,16 @@ export const getLLMConfig = () => {
       TOGETHERAI_API_KEY: z.string().optional(),
       TOGETHERAI_MODEL_LIST: z.string().optional(),
 
+      ENABLED_FIREWORKSAI: z.boolean(),
+      FIREWORKSAI_API_KEY: z.string().optional(),
+      FIREWORKSAI_MODEL_LIST: z.string().optional(),
+
       ENABLED_AWS_BEDROCK: z.boolean(),
       AWS_BEDROCK_MODEL_LIST: z.string().optional(),
       AWS_REGION: z.string().optional(),
       AWS_ACCESS_KEY_ID: z.string().optional(),
       AWS_SECRET_ACCESS_KEY: z.string().optional(),
+      AWS_SESSION_TOKEN: z.string().optional(),
 
       ENABLED_OLLAMA: z.boolean(),
       OLLAMA_PROXY_URL: z.string().optional(),
@@ -101,6 +111,12 @@ export const getLLMConfig = () => {
 
       ENABLED_UPSTAGE: z.boolean(),
       UPSTAGE_API_KEY: z.string().optional(),
+
+      ENABLED_SPARK: z.boolean(),
+      SPARK_API_KEY: z.string().optional(),
+
+      ENABLED_AI21: z.boolean(),
+      AI21_API_KEY: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -126,6 +142,7 @@ export const getLLMConfig = () => {
       ENABLED_GOOGLE: !!process.env.GOOGLE_API_KEY,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
       GOOGLE_PROXY_URL: process.env.GOOGLE_PROXY_URL,
+      GOOGLE_MODEL_LIST: process.env.GOOGLE_MODEL_LIST,
 
       ENABLED_PERPLEXITY: !!process.env.PERPLEXITY_API_KEY,
       PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY,
@@ -149,6 +166,10 @@ export const getLLMConfig = () => {
       TOGETHERAI_API_KEY: process.env.TOGETHERAI_API_KEY,
       TOGETHERAI_MODEL_LIST: process.env.TOGETHERAI_MODEL_LIST,
 
+      ENABLED_FIREWORKSAI: !!process.env.FIREWORKSAI_API_KEY,
+      FIREWORKSAI_API_KEY: process.env.FIREWORKSAI_API_KEY,
+      FIREWORKSAI_MODEL_LIST: process.env.FIREWORKSAI_MODEL_LIST,
+
       ENABLED_MOONSHOT: !!process.env.MOONSHOT_API_KEY,
       MOONSHOT_API_KEY: process.env.MOONSHOT_API_KEY,
       MOONSHOT_PROXY_URL: process.env.MOONSHOT_PROXY_URL,
@@ -157,6 +178,10 @@ export const getLLMConfig = () => {
       GROQ_API_KEY: process.env.GROQ_API_KEY,
       GROQ_MODEL_LIST: process.env.GROQ_MODEL_LIST,
       GROQ_PROXY_URL: process.env.GROQ_PROXY_URL,
+
+      ENABLED_GITHUB: !!process.env.GITHUB_TOKEN,
+      GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+      GITHUB_MODEL_LIST: process.env.GITHUB_MODEL_LIST,
 
       ENABLED_ZEROONE: !!process.env.ZEROONE_API_KEY,
       ZEROONE_API_KEY: process.env.ZEROONE_API_KEY,
@@ -167,6 +192,7 @@ export const getLLMConfig = () => {
       AWS_REGION: process.env.AWS_REGION,
       AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
       AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+      AWS_SESSION_TOKEN: process.env.AWS_SESSION_TOKEN,
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
       OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
@@ -199,6 +225,12 @@ export const getLLMConfig = () => {
 
       ENABLED_UPSTAGE: !!process.env.UPSTAGE_API_KEY,
       UPSTAGE_API_KEY: process.env.UPSTAGE_API_KEY,
+
+      ENABLED_SPARK: !!process.env.SPARK_API_KEY,
+      SPARK_API_KEY: process.env.SPARK_API_KEY,
+
+      ENABLED_AI21: !!process.env.AI21_API_KEY,
+      AI21_API_KEY: process.env.AI21_API_KEY,
     },
   });
 };

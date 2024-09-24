@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Szczegóły błędu",
   "notFound": {
     "backHome": "Powrót do strony głównej",
-    "desc": "Nie możemy odnaleźć strony, której szukasz. Sprawdź, czy link jest poprawny.",
+    "check": "Proszę sprawdzić, czy Twój adres URL jest poprawny",
+    "desc": "Nie możemy znaleźć strony, której szukasz",
     "title": "Wkraczasz w nieznane terytorium?"
   },
   "pluginSettings": {
@@ -58,6 +59,7 @@
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",
     "InvalidBedrockCredentials": "Uwierzytelnienie Bedrock nie powiodło się, prosimy sprawdzić AccessKeyId/SecretAccessKey i spróbować ponownie.",
     "InvalidClerkUser": "Przepraszamy, nie jesteś obecnie zalogowany. Proszę najpierw zalogować się lub zarejestrować, aby kontynuować.",
+    "InvalidGithubToken": "Token dostępu osobistego do GitHub jest niewłaściwy lub pusty. Proszę sprawdzić Token dostępu osobistego do GitHub i spróbować ponownie.",
     "InvalidOllamaArgs": "Nieprawidłowa konfiguracja Ollama, sprawdź konfigurację Ollama i spróbuj ponownie",
     "InvalidProviderAPIKey": "{{provider}} Klucz API jest nieprawidłowy lub pusty. Sprawdź Klucz API {{provider}} i spróbuj ponownie.",
     "LocationNotSupportError": "Przepraszamy, Twoja lokalizacja nie obsługuje tego usługi modelu, być może ze względu na ograniczenia regionalne lub brak dostępności usługi. Proszę sprawdź, czy bieżąca lokalizacja obsługuje tę usługę, lub spróbuj użyć innych informacji o lokalizacji.",
@@ -115,7 +117,7 @@
   },
   "upload": {
     "desc": "Szczegóły: {{detail}}",
-    "fileOnlySupportInServerMode": "Aktualny tryb wdrożenia nie obsługuje przesyłania plików, które nie są obrazami. Aby przesłać pliki w formacie {{ext}}, przełącz się na wdrożenie bazy danych na serwerze lub skorzystaj z usługi LobeChat Cloud.",
+    "fileOnlySupportInServerMode": "Aktualny tryb wdrożenia nie obsługuje przesyłania plików, które nie są obrazami. Aby przesłać pliki w formacie {{ext}}, przełącz się na wdrożenie bazy danych na serwerze lub skorzystaj z usługi {{cloud}}.",
     "networkError": "Proszę upewnić się, że Twoja sieć działa poprawnie oraz sprawdzić, czy konfiguracja CORS dla usługi przechowywania plików jest prawidłowa.",
     "title": "Nie udało się przesłać pliku. Sprawdź połączenie sieciowe lub spróbuj ponownie później",
     "unknownError": "Przyczyna błędu: {{reason}}",

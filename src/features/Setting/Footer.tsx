@@ -10,7 +10,9 @@ import { Center, Flexbox } from 'react-layout-kit';
 
 import GuideModal from '@/components/GuideModal';
 import GuideVideo from '@/components/GuideVideo';
+import { BRANDING_NAME } from '@/const/branding';
 import { GITHUB, GITHUB_ISSUES } from '@/const/url';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { isOnServerSide } from '@/utils/env';
 
 const useStyles = createStyles(
@@ -25,7 +27,10 @@ const Footer = memo<PropsWithChildren>(() => {
   const [openStar, setOpenStar] = useState(false);
   const [openFeedback, setOpenFeedback] = useState(false);
   const { styles } = useStyles();
-  return (
+
+  const { hideGitHub } = useServerConfigStore(featureFlagsSelectors);
+
+  return hideGitHub ? null : (
     <>
       <Flexbox flex={1} justify={'flex-end'}>
         <Center
@@ -79,7 +84,7 @@ const Footer = memo<PropsWithChildren>(() => {
       <GuideModal
         cancelText={t('footer.later')}
         cover={<GuideVideo height={269} src={'/videos/feedback.mp4?v=1'} width={358} />}
-        desc={t('footer.feedback.desc')}
+        desc={t('footer.feedback.desc', { appName: BRANDING_NAME })}
         okText={t('footer.feedback.action')}
         onCancel={() => setOpenFeedback(false)}
         onOk={() => {

@@ -67,8 +67,8 @@ mkdir lobe-chat-db
 拉取配置文件到你的目录中：
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/docker-compose.yml > docker-compose.yml
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/.env.zh-CN.example > .env
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local-logto/docker-compose.yml > docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local-logto/.env.zh-CN.example > .env
 ```
 
 ### 启动服务
@@ -185,6 +185,7 @@ docker compose up -d
 
 <Callout type="warning">
   请务必注意，CORS 跨域是在 MinIO / Logto 服务端内部配置的，请勿在你的反向代理中额外配置 CORS，这会导致错误。
+  对于minio非443端口时，Host必须是$http_host（带端口号），否则会403错误：proxy_set_header Host $http_host。
 
 如果你需要配置 SSL 证书，请统一在外层的 Nginx 反向代理中配置，而不是在 MinIO 中配置。
 
@@ -499,7 +500,7 @@ APP_URL=https://lobe.example.com/
 KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
 # 必填，Postgres 数据库连接字符串，用于连接到数据库
 # 格式：postgresql://username:password@host:port/dbname，如果你的 pg 实例为 Docker 容器且位于同一 docker-compose 文件中，亦可使用容器名作为 host
-DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/postgres
+DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/lobe
 
 # NEXT_AUTH 相关，也即鉴权服务必需的环境变量
 # 可以使用 auth0、Azure AD、GitHub、Authentik、Zitadel、Logto 等，如有其他接入诉求欢迎提 PR

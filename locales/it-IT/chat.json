@@ -5,8 +5,17 @@
   "agentDefaultMessage": "Ciao, sono **{{name}}**, puoi iniziare subito a parlare con me oppure andare su [Impostazioni assistente]({{url}}) per completare le mie informazioni.",
   "agentDefaultMessageWithSystemRole": "Ciao, sono **{{name}}**, {{systemRole}}, iniziamo a chattare!",
   "agentDefaultMessageWithoutEdit": "Ciao, sono **{{name}}**. Cominciamo a chiacchierare!",
-  "agentsAndConversations": "Assistenti e Conversazioni",
+  "agents": "Assistente",
+  "artifact": {
+    "generating": "Generazione in corso",
+    "thinking": "In fase di riflessione",
+    "thought": "Processo di pensiero",
+    "unknownTitle": "Opera non nominata"
+  },
   "backToBottom": "Torna in fondo",
+  "chatList": {
+    "longMessageDetail": "Visualizza dettagli"
+  },
   "clearCurrentMessages": "Cancella messaggi attuali",
   "confirmClearCurrentMessages": "Stai per cancellare i messaggi attuali, questa operazione non potrà essere annullata. Confermi?",
   "confirmRemoveSessionItemAlert": "Stai per rimuovere questo assistente, l'operazione non potrà essere annullata. Confermi?",
@@ -40,7 +49,7 @@
     "all": "Tutti i contenuti",
     "allFiles": "Tutti i file",
     "allKnowledgeBases": "Tutte le basi di conoscenza",
-    "disabled": "La modalità di distribuzione attuale non supporta le conversazioni con la base di conoscenza. Per utilizzare questa funzione, passare alla distribuzione del database server o utilizzare il servizio LobeChat Cloud.",
+    "disabled": "L'attuale modalità di distribuzione non supporta le conversazioni con la base di conoscenza. Se desideri utilizzarla, passa alla distribuzione del database server o utilizza il servizio {{cloud}}.",
     "library": {
       "action": {
         "add": "Aggiungi",
@@ -72,7 +81,7 @@
   },
   "regenerate": "Rigenera",
   "roleAndArchive": "Ruolo e archivio",
-  "searchAgentPlaceholder": "Cerca assistente e conversazioni...",
+  "searchAgentPlaceholder": "Assistente di ricerca...",
   "sendPlaceholder": "Inserisci il testo della chat...",
   "sessionGroup": {
     "config": "Gestione gruppi",

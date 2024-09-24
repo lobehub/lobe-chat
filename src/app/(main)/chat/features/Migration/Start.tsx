@@ -6,6 +6,8 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 import Balancer from 'react-wrap-balancer';
 
+import { BRANDING_NAME } from '@/const/branding';
+
 import ExportConfigButton from './ExportConfigButton';
 import UpgradeButton, { UpgradeButtonProps } from './UpgradeButton';
 
@@ -72,7 +74,7 @@ const MigrationStart = memo<UpgradeButtonProps>((props) => {
     <>
       <Flexbox>
         <Flexbox className={styles.intro} style={{ textAlign: 'center' }} width={460}>
-          {t('dbV1.description')}
+          {t('dbV1.description', { appName: BRANDING_NAME })}
         </Flexbox>
       </Flexbox>
       <Flexbox gap={32}>
@@ -96,7 +98,7 @@ const MigrationStart = memo<UpgradeButtonProps>((props) => {
           <UpgradeButton {...props} />
         </Flexbox>
         <Flexbox align={'center'} className={styles.hint}>
-          <Balancer>{t('dbV1.upgradeTip')}</Balancer>
+          <Balancer>{t('dbV1.upgradeTip', { appName: BRANDING_NAME })}</Balancer>
         </Flexbox>
       </Flexbox>
     </>

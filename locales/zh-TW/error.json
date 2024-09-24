@@ -16,7 +16,8 @@
   "fetchErrorDetail": "錯誤詳情",
   "notFound": {
     "backHome": "返回首頁",
-    "desc": "我們找不到您正在尋找的頁面，請檢查連結是否正確",
+    "check": "請檢查你的 URL 是否正確",
+    "desc": "我們找不到您尋找的頁面",
     "title": "進入了未知領域？"
   },
   "pluginSettings": {
@@ -58,6 +59,7 @@
     "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或添加自定義 API 金鑰",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
     "InvalidClerkUser": "很抱歉，你當前尚未登錄，請先登錄或註冊帳號後繼續操作",
+    "InvalidGithubToken": "Github 個人存取權杖不正確或為空，請檢查 Github 個人存取權杖後再試一次",
     "InvalidOllamaArgs": "Ollama 配置不正確，請檢查 Ollama 配置後重試",
     "InvalidProviderAPIKey": "{{provider}} API 金鑰不正確或為空，請檢查 {{provider}} API 金鑰後重試",
     "LocationNotSupportError": "很抱歉，你的所在位置不支持此模型服務，可能是由於地區限制或服務未開通。請確認當前位置是否支持使用此服務，或嘗試使用其他位置信息。",
@@ -115,7 +117,7 @@
   },
   "upload": {
     "desc": "詳情: {{detail}}",
-    "fileOnlySupportInServerMode": "當前部署模式不支持上傳非圖片文件，如需上傳 {{ext}} 格式，請切換到伺服器端資料庫部署或使用 LobeChat Cloud 服務",
+    "fileOnlySupportInServerMode": "當前部署模式不支持上傳非圖片文件，如需上傳 {{ext}} 格式，請切換到伺服器數據庫部署或使用 {{cloud}} 服務",
     "networkError": "請確認你的網路是否正常，並檢查檔案儲存服務的跨域配置是否正確",
     "title": "檔案上傳失敗，請檢查網路連線或稍後再試",
     "unknownError": "錯誤原因: {{reason}}",

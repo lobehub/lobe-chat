@@ -1,22 +1,30 @@
 ## Base image for all the stages
-FROM node:20-alpine AS base
+FROM node:20-slim AS base
 
 ARG USE_CN_MIRROR
+
+ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        sed -i "s/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g" "/etc/apk/repositories"; \
+        sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
     fi \
     # Add required package & update base package
-    && apk update \
-    && apk add --no-cache bind-tools proxychains-ng \
-    && apk upgrade --no-cache \
-    # Add user nextjs to run the app
+    && apt update \
+    && apt install busybox proxychains-ng -qy \
+    && apt full-upgrade -qy \
+    && apt autoremove -qy --purge \
+    && apt clean -qy \
+    # Configure BusyBox
+    && busybox --install -s \
+    # Add nextjs:nodejs to run the app
     && addgroup --system --gid 1001 nodejs \
-    && adduser --system --uid 1001 nextjs \
-    && chown -R nextjs:nodejs "/etc/proxychains" \
-    && rm -rf /tmp/* /var/cache/apk/*
+    && adduser --system --home "/app" --gid 1001 -uid 1001 nextjs \
+    # Set permission for nextjs:nodejs
+    && chown -R nextjs:nodejs "/etc/proxychains4.conf" \
+    # Cleanup temp files
+    && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
 ## Builder image, install all the dependencies and build the app
 FROM base AS builder
@@ -63,8 +71,8 @@ RUN \
     # Install the dependencies
     && pnpm i \
     # Add sharp dependencies
-    && mkdir -p /sharp \
-    && pnpm add sharp --prefix /sharp
+    && mkdir -p /deps \
+    && pnpm add sharp --prefix /deps
 
 COPY . .
 
@@ -80,7 +88,7 @@ COPY --from=builder /app/public /app/public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
-COPY --from=builder /sharp/node_modules/.pnpm /app/node_modules/.pnpm
+COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
 ## Production image, copy all the files and run next
 FROM base
@@ -88,7 +96,8 @@ FROM base
 # Copy all the files from app, set the correct permission for prerender cache
 COPY --from=app --chown=nextjs:nodejs /app /app
 
-ENV NODE_ENV="production"
+ENV NODE_ENV="production" \
+    NODE_TLS_REJECT_UNAUTHORIZED=""
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
@@ -104,6 +113,8 @@ ENV ACCESS_CODE="" \
 
 # Model Variables
 ENV \
+    # AI21
+    AI21_API_KEY="" \
     # Ai360
     AI360_API_KEY="" \
     # Anthropic
@@ -116,6 +127,10 @@ ENV \
     BAICHUAN_API_KEY="" \
     # DeepSeek
     DEEPSEEK_API_KEY="" \
+    # Fireworks AI
+    FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
+    # GitHub
+    GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
@@ -140,6 +155,8 @@ ENV \
     QWEN_API_KEY="" QWEN_MODEL_LIST="" \
     # SiliconCloud
     SILICONCLOUD_API_KEY="" SILICONCLOUD_MODEL_LIST="" SILICONCLOUD_PROXY_URL="" \
+    # Spark
+    SPARK_API_KEY="" \
     # Stepfun
     STEPFUN_API_KEY="" \
     # Taichu
@@ -186,7 +203,7 @@ CMD \
             'tcp_read_time_out 15000' \
             '[ProxyList]' \
             "$protocol $host $port" \
-        > "/etc/proxychains/proxychains.conf"; \
+        > "/etc/proxychains4.conf"; \
     fi; \
     # Run the server
     ${PROXYCHAINS} node "/app/server.js";

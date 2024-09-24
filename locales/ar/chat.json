@@ -5,8 +5,17 @@
   "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
   "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
-  "agentsAndConversations": "الوكلاء والمحادثات",
+  "agents": "مساعد",
+  "artifact": {
+    "generating": "جاري الإنشاء",
+    "thinking": "جاري التفكير",
+    "thought": "عملية التفكير",
+    "unknownTitle": "عمل غير مسمى"
+  },
   "backToBottom": "العودة إلى الأسفل",
+  "chatList": {
+    "longMessageDetail": "عرض التفاصيل"
+  },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
@@ -40,7 +49,7 @@
     "all": "جميع المحتويات",
     "allFiles": "جميع الملفات",
     "allKnowledgeBases": "جميع قواعد المعرفة",
-    "disabled": "وضع النشر الحالي لا يدعم محادثات قاعدة المعرفة، إذا كنت ترغب في الاستخدام، يرجى التبديل إلى نشر قاعدة البيانات على الخادم أو استخدام خدمة LobeChat Cloud",
+    "disabled": "الوضع الحالي للنشر لا يدعم محادثات قاعدة المعرفة. إذا كنت بحاجة إلى استخدامها، يرجى التبديل إلى نشر قاعدة البيانات على الخادم أو استخدام خدمة {{cloud}}.",
     "library": {
       "action": {
         "add": "إضافة",
@@ -72,7 +81,7 @@
   },
   "regenerate": "إعادة الإنشاء",
   "roleAndArchive": "الدور والأرشيف",
-  "searchAgentPlaceholder": "البحث عن مساعد ومحادثة...",
+  "searchAgentPlaceholder": "مساعد البحث...",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
   "sessionGroup": {
     "config": "إدارة المجموعات",
