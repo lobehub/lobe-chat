@@ -60,10 +60,10 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
   | ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `NEXT_AUTH_SECRET`        | Required | The key used to encrypt Auth.js session tokens. You can generate a key using the command: `openssl rand -base64 32`                                                                    |
   | `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LobeChat. For Logto, enter `logto`.                                                                                                             |
-  | `LOGTO_CLIENT_ID`         | Required | The Client ID from the Logto App details page                                                                                                                                          |
-  | `LOGTO_CLIENT_SECRET`     | Required | The Client Secret from the Logto App details page                                                                                                                                      |
-  | `LOGTO_ISSUER` | Required | OpenID Connect issuer of the Logto provider |
-  | `NEXTAUTH_URL`            | Optional | This URL specifies the callback address for Auth.js during OAuth verification, needed only if the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
+  | `AUTH_LOGTO_ID`         | Required | The Client ID from the Logto App details page                                                                                                                                          |
+  | `AUTH_LOGTO_SECRET`     | Required | The Client Secret from the Logto App details page                                                                                                                                      |
+  | `AUTH_LOGTO_ISSUER` | Required | OpenID Connect issuer of the Logto provider |
+  | `NEXTAUTH_URL`            | Required | This URL specifies the callback address for Auth.js during OAuth verification, needed only if the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
 
   <Callout type={'tip'}>
     Visit [📘 Environment Variables](/docs/self-hosting/environment-variables/auth#logto) for details on related variables.

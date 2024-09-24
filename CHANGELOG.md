@@ -2,6 +2,40 @@
 
 # Changelog
 
+### [Version 1.19.26](https://github.com/lobehub/lobe-chat/compare/v1.19.25...v1.19.26)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix url config import after user state init.
+
+#### 💄 Styles
+
+- **misc**: Add support function call for 360AI, left sidebar has only assistants.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix url config import after user state init, closes [#4072](https://github.com/lobehub/lobe-chat/issues/4072) ([18a240c](https://github.com/lobehub/lobe-chat/commit/18a240c))
+
+#### Styles
+
+- **misc**: Add support function call for 360AI, closes [#4099](https://github.com/lobehub/lobe-chat/issues/4099) ([536696b](https://github.com/lobehub/lobe-chat/commit/536696b))
+- **misc**: Left sidebar has only assistants, closes [#4108](https://github.com/lobehub/lobe-chat/issues/4108) ([db1f81c](https://github.com/lobehub/lobe-chat/commit/db1f81c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.25](https://github.com/lobehub/lobe-chat/compare/v1.19.24...v1.19.25)
 
 <sup>Released on **2024-09-24**</sup>
