@@ -357,7 +357,7 @@ describe('LobeGoogleAI', () => {
           { content: 'Hi', role: 'assistant' },
         ];
 
-        const contents = await instance['buildGoogleMessages'](messages, 'gemini-pro');
+        const contents = await instance['buildGoogleMessages'](messages, 'gemini-1.0');
 
         expect(contents).toHaveLength(3);
         expect(contents).toEqual([
@@ -373,7 +373,7 @@ describe('LobeGoogleAI', () => {
           { content: 'Who are you', role: 'user' },
         ];
 
-        const contents = await instance['buildGoogleMessages'](messages, 'gemini-pro');
+        const contents = await instance['buildGoogleMessages'](messages, 'gemini-1.0');
 
         expect(contents).toHaveLength(3);
         expect(contents).toEqual([

@@ -22,7 +22,6 @@ const Google: ModelProviderCard = {
     {
       description: 'Gemini 1.5 Flash 0827 提供了优化后的多模态处理能力，适用多种复杂任务场景。',
       displayName: 'Gemini 1.5 Flash 0827',
-      enabled: true,
       functionCall: true,
       id: 'gemini-1.5-flash-exp-0827',
       maxOutput: 8192,
@@ -111,7 +110,6 @@ const Google: ModelProviderCard = {
     {
       description: 'Gemini 1.5 Pro 0827 结合最新优化技术，带来更高效的多模态数据处理能力。',
       displayName: 'Gemini 1.5 Pro 0827',
-      enabled: true,
       functionCall: true,
       id: 'gemini-1.5-pro-exp-0827',
       maxOutput: 8192,
@@ -158,6 +156,7 @@ const Google: ModelProviderCard = {
       description:
         'Gemini 1.5 Pro 002 是最新的生产就绪模型，提供更高质量的输出，特别在数学、长上下文和视觉任务方面有显著提升。',
       displayName: 'Gemini 1.5 Pro 002',
+      enabled: true,
       functionCall: true,
       id: 'gemini-1.5-pro-002',
       maxOutput: 8192,
