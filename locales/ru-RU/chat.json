@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Здравствуйте, я **{{name}}**. Вы можете сразу начать со мной разговор или перейти в [настройки помощника]({{url}}), чтобы дополнить мою информацию.",
   "agentDefaultMessageWithSystemRole": "Привет, я **{{name}}**, {{systemRole}}. Давай начнем разговор!",
   "agentDefaultMessageWithoutEdit": "Привет, я **{{name}}**, давай начнём разговор!",
-  "agentsAndConversations": "Агенты и беседы",
+  "agents": "Ассистент",
   "artifact": {
     "generating": "Генерация",
     "thinking": "В процессе размышлений",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Сгенерировать заново",
   "roleAndArchive": "Роль и архив",
-  "searchAgentPlaceholder": "Поиск помощников и разговоров...",
+  "searchAgentPlaceholder": "Поиск помощника...",
   "sendPlaceholder": "Введите сообщение...",
   "sessionGroup": {
     "config": "Управление группами",

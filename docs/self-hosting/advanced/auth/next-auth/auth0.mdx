@@ -77,12 +77,11 @@ When deploying LobeChat, you need to configure the following environment variabl
 | Environment Variable | Type | Description |
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | Required | Key used to encrypt Auth.js session tokens. You can generate a key using the following command: `openssl rand -base64 32` |
-| `NEXT_AUTH_SSO_PROVIDERS` | Optional | Select the single sign-on provider for LoboChat. Use `auth0` for Auth0. |
-| `AUTH0_CLIENT_ID` | Required | Client ID of the Auth0 application |
-| `AUTH0_CLIENT_SECRET` | Required | Client Secret of the Auth0 application |
-| `AUTH0_ISSUER` | Required | Domain of the Auth0 application, `https://example.auth0.com` |
-| `ACCESS_CODE` | Required | Add a password to access this service. You can set a sufficiently long random password to "disable" access code authorization. |
-| `NEXTAUTH_URL` | Optional | The URL is used to specify the callback address for the execution of OAuth authentication in Auth.js. It needs to be set only when the default address is incorrect. `https://example.com/api/auth` |
+| `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LoboChat. Use `auth0` for Auth0. |
+| `AUTH_AUTH0_ID` | Required | Client ID of the Auth0 application |
+| `AUTH_AUTH0_SECRET` | Required | Client Secret of the Auth0 application |
+| `AUTH_AUTH0_ISSUER` | Required | Domain of the Auth0 application, `https://example.auth0.com` |
+| `NEXTAUTH_URL` | Required | The URL is used to specify the callback address for the execution of OAuth authentication in Auth.js. It needs to be set only when the default address is incorrect. `https://example.com/api/auth` |
 
   <Callout type={'tip'}>
     You can refer to the related variable details at [📘Environment Variables](/docs/self-hosting/environment-variable#auth0).

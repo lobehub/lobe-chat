@@ -57,10 +57,10 @@ identity_providers:
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
 | `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Authelia 请填写 `authelia`。 |
-| `AUTHELIA_CLIENT_ID` | 必选 | 刚刚在 Authelia 配置的 `id`，示例值是 `lobe-chat` |
-| `AUTHELIA_CLIENT_SECRET` | 必选 | 刚刚在 Authelia 配置的 `secret` 对应的明文，示例值是 `insecure_secret` |
-| `AUTHELIA_ISSUER` | 必选 |您的 Authelia 的网址，例如 `https://sso.example.com` |
-| `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://chat.example.com/api/auth` |
+| `AUTH_AUTHELIA_ID` | 必选 | 刚刚在 Authelia 配置的 `id`，示例值是 `lobe-chat` |
+| `AUTH_AUTHELIA_SECRET` | 必选 | 刚刚在 Authelia 配置的 `secret` 对应的明文，示例值是 `insecure_secret` |
+| `AUTH_AUTHELIA_ISSUER` | 必选 |您的 Authelia 的网址，例如 `https://sso.example.com` |
+| `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://chat.example.com/api/auth` |
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/zh/docs/self-hosting/environment-variable#Authelia) 可查阅相关变量详情。
