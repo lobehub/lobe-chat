@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Cześć, jestem **{{name}}**, możesz od razu rozpocząć ze mną rozmowę lub przejść do [ustawień asystenta]({{url}}), aby uzupełnić moje informacje.",
   "agentDefaultMessageWithSystemRole": "Cześć, jestem **{{name}}**, {{systemRole}}, zacznijmy rozmowę!",
   "agentDefaultMessageWithoutEdit": "Cześć, jestem **{{name}}**. Zacznijmy rozmowę!",
-  "agentsAndConversations": "Agenci i rozmowy",
+  "agents": "Asystent",
   "artifact": {
     "generating": "Generowanie",
     "thinking": "Myślenie",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Wygeneruj ponownie",
   "roleAndArchive": "Rola i archiwum",
-  "searchAgentPlaceholder": "Szukaj asystentów i rozmów...",
+  "searchAgentPlaceholder": "Wyszukaj pomocnika...",
   "sendPlaceholder": "Wpisz treść rozmowy...",
   "sessionGroup": {
     "config": "Zarządzanie grupami",
