@@ -6,7 +6,6 @@ services:
       - '${MINIO_PORT}:${MINIO_PORT}'  # MinIO API
       - '9001:9001'  # MinIO Console
       - '${CASDOOR_PORT}:${CASDOOR_PORT}' # Casdoor
-      - '8000:8000'  # Casdoor Admin
       - '${LOBE_PORT}:3210' # LobeChat
     command: tail -f /dev/null
     networks:
