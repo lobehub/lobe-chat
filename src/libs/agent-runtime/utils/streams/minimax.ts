@@ -4,6 +4,18 @@ import { ChatStreamCallbacks } from '../../types';
 import { transformOpenAIStream } from './openai';
 import { createCallbacksTransformer, createSSEProtocolTransformer } from './protocol';
 
+export const processDoubleData = (chunkValue: string): string => {
+  const dataPattern = /data: \{"id":"/g;
+  const matchCount = (chunkValue.match(dataPattern) || []).length;
+  if (matchCount === 2) {
+    const secondDataIdIndex = chunkValue.indexOf('data: {"id":', chunkValue.indexOf('data: {"id":') + 1);
+    if (secondDataIdIndex !== -1) {
+      chunkValue = chunkValue.slice(0, secondDataIdIndex).trim();
+    }
+  }
+  return chunkValue;
+};
+
 const unit8ArrayToJSONChunk = (unit8Array: Uint8Array): OpenAI.ChatCompletionChunk => {
   const decoder = new TextDecoder();
 
@@ -12,17 +24,7 @@ const unit8ArrayToJSONChunk = (unit8Array: Uint8Array): OpenAI.ChatCompletionChu
   // chunkValue example:
   // data: {"id":"028a65377137d57aaceeffddf48ae99f","choices":[{"finish_reason":"tool_calls","index":0,"delta":{"role":"assistant","tool_calls":[{"id":"call_function_7371372822","type":"function","function":{"name":"realtime-weather____fetchCurrentWeather","arguments":"{\"city\": [\"杭州\", \"北京\"]}"}}]}}],"created":155511,"model":"abab6.5s-chat","object":"chat.completion.chunk"}
 
-  const dataIdPattern = /data: {"id":/g;
-  const matchCount = (chunkValue.match(dataIdPattern) || []).length;
-  if (matchCount === 2) {
-    const secondDataIdIndex = chunkValue.indexOf(
-      'data: {"id":',
-      chunkValue.indexOf('data: {"id":') + 1,
-    );
-    if (secondDataIdIndex !== -1) {
-      chunkValue = chunkValue.slice(0, secondDataIdIndex).trim();
-    }
-  }
+  chunkValue = processDoubleData(chunkValue);
 
   // so we need to remove `data:` prefix and then parse it as JSON
   if (chunkValue.startsWith('data:')) {
