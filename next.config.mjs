@@ -191,15 +191,13 @@ const noWrapper = (config) => config;
 
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
 
-const withPWA =
-  // isProd
-  // ?
-  withSerwistInit({
-    register: false,
-    swDest: 'public/sw.js',
-    swSrc: 'src/app/sw.ts',
-  });
-// : noWrapper;
+const withPWA = isProd
+  ? withSerwistInit({
+      register: false,
+      swDest: 'public/sw.js',
+      swSrc: 'src/app/sw.ts',
+    })
+  : noWrapper;
 
 const hasSentry = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
 const withSentry =
