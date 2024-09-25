@@ -82,16 +82,6 @@ const Google: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'Gemini 1.5 Flash 8B 0827 专为处理大规模任务场景设计，提供无与伦比的处理速度。',
-      displayName: 'Gemini 1.5 Flash 8B 0827',
-      functionCall: true,
-      id: 'gemini-1.5-flash-8b-exp-0827',
-      maxOutput: 8192,
-      releasedAt: '2024-08-27',
-      tokens: 1_000_000 + 8192,
-      vision: true,
-    },
-    {
       description:
         'Gemini 1.5 Pro 支持高达200万个tokens，是中型多模态模型的理想选择，适用于复杂任务的多方面支持。',
       displayName: 'Gemini 1.5 Pro',
