@@ -195,9 +195,8 @@ const withPWA =
   // isProd
   // ?
   withSerwistInit({
+    register: false,
     swDest: 'public/sw.js',
-    // Note: This is only an example. If you use Pages Router,
-    // use something else that works, such as "service-worker/index.ts".
     swSrc: 'src/app/sw.ts',
   });
 // : noWrapper;
