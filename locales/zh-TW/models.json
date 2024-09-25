@@ -332,8 +332,14 @@
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 是一款高效的多模態模型，支持廣泛應用的擴展。"
   },
+  "gemini-1.5-flash-002": {
+    "description": "Gemini 1.5 Flash 002 是一款高效的多模態模型，支持廣泛應用的擴展。"
+  },
   "gemini-1.5-flash-8b-exp-0827": {
     "description": "Gemini 1.5 Flash 8B 0827 專為處理大規模任務場景設計，提供無與倫比的處理速度。"
+  },
+  "gemini-1.5-flash-8b-exp-0924": {
+    "description": "Gemini 1.5 Flash 8B 0924 是最新的實驗性模型，在文本和多模態用例中都有顯著的性能提升。"
   },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 提供了優化後的多模態處理能力，適用多種複雜任務場景。"
@@ -343,6 +349,9 @@
   },
   "gemini-1.5-pro-001": {
     "description": "Gemini 1.5 Pro 001 是可擴展的多模態 AI 解決方案，支持廣泛的複雜任務。"
+  },
+  "gemini-1.5-pro-002": {
+    "description": "Gemini 1.5 Pro 002 是最新的生產就緒模型，提供更高品質的輸出，特別在數學、長上下文和視覺任務方面有顯著提升。"
   },
   "gemini-1.5-pro-exp-0801": {
     "description": "Gemini 1.5 Pro 0801 提供出色的多模態處理能力，為應用開發帶來更大靈活性。"
@@ -873,6 +882,9 @@
   },
   "taichu_llm": {
     "description": "紫東太初語言大模型具備超強語言理解能力以及文本創作、知識問答、代碼編程、數學計算、邏輯推理、情感分析、文本摘要等能力。創新性地將大數據預訓練與多源豐富知識相結合，通過持續打磨算法技術，並不斷吸收海量文本數據中詞彙、結構、語法、語義等方面的新知識，實現模型效果不斷進化。為用戶提供更加便捷的信息和服務以及更為智能化的體驗。"
+  },
+  "taichu_vqa": {
+    "description": "Taichu 2.0V 融合了圖像理解、知識遷移、邏輯歸因等能力，在圖文問答領域表現突出。"
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) 通過高效的策略和模型架構，提供增強的計算能力。"
