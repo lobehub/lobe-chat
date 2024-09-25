@@ -195,10 +195,10 @@ const withPWA =
   // isProd
   // ?
   withSerwistInit({
+    swDest: 'public/sw.js',
     // Note: This is only an example. If you use Pages Router,
     // use something else that works, such as "service-worker/index.ts".
     swSrc: 'src/app/sw.ts',
-    swDest: 'public/sw.js',
   });
 // : noWrapper;
 
@@ -246,4 +246,4 @@ const withSentry =
         )
     : noWrapper;
 
-export default withBundleAnalyzer(withPWA(withSentry(nextConfig)();
+export default withBundleAnalyzer(withPWA(withSentry(nextConfig)));
