@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
   "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
-  "agentsAndConversations": "Agents et conversations",
+  "agents": "Assistant",
   "artifact": {
     "generating": "Génération en cours",
     "thinking": "En réflexion",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Regénérer",
   "roleAndArchive": "Rôle et archivage",
-  "searchAgentPlaceholder": "Rechercher des agents et des conversations...",
+  "searchAgentPlaceholder": "Assistant de recherche...",
   "sendPlaceholder": "Saisissez votre message...",
   "sessionGroup": {
     "config": "Gestion des groupes",

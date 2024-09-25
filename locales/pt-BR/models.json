@@ -35,6 +35,9 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) é um modelo inovador, adequado para aplicações em múltiplas áreas e tarefas complexas."
   },
+  "Max-32k": {
+    "description": "O Spark Max 32K possui uma grande capacidade de processamento de contexto, com uma compreensão e raciocínio lógico mais robustos, suportando entradas de texto de 32K tokens, adequado para leitura de documentos longos, perguntas e respostas sobre conhecimento privado e outros cenários."
+  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO é uma fusão de múltiplos modelos altamente flexível, projetada para oferecer uma experiência criativa excepcional."
   },
@@ -329,8 +332,14 @@
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 é um modelo multimodal eficiente, suportando a expansão de aplicações amplas."
   },
+  "gemini-1.5-flash-002": {
+    "description": "O Gemini 1.5 Flash 002 é um modelo multimodal eficiente, que suporta uma ampla gama de aplicações."
+  },
   "gemini-1.5-flash-8b-exp-0827": {
     "description": "Gemini 1.5 Flash 8B 0827 é projetado para lidar com cenários de tarefas em larga escala, oferecendo velocidade de processamento incomparável."
+  },
+  "gemini-1.5-flash-8b-exp-0924": {
+    "description": "O Gemini 1.5 Flash 8B 0924 é o mais recente modelo experimental, com melhorias significativas de desempenho em casos de uso de texto e multimídia."
   },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 oferece capacidade de processamento multimodal otimizada, adequada para uma variedade de cenários de tarefas complexas."
@@ -340,6 +349,9 @@
   },
   "gemini-1.5-pro-001": {
     "description": "Gemini 1.5 Pro 001 é uma solução de IA multimodal escalável, suportando uma ampla gama de tarefas complexas."
+  },
+  "gemini-1.5-pro-002": {
+    "description": "O Gemini 1.5 Pro 002 é o mais recente modelo pronto para produção, oferecendo saídas de maior qualidade, com melhorias significativas em tarefas matemáticas, contextos longos e tarefas visuais."
   },
   "gemini-1.5-pro-exp-0801": {
     "description": "Gemini 1.5 Pro 0801 oferece excelente capacidade de processamento multimodal, proporcionando maior flexibilidade para o desenvolvimento de aplicações."
@@ -870,6 +882,9 @@
   },
   "taichu_llm": {
     "description": "O modelo de linguagem Taichu possui uma forte capacidade de compreensão de linguagem, além de habilidades em criação de texto, perguntas e respostas, programação de código, cálculos matemáticos, raciocínio lógico, análise de sentimentos e resumo de texto. Inova ao combinar pré-treinamento com grandes dados e conhecimento rico de múltiplas fontes, aprimorando continuamente a tecnologia de algoritmos e absorvendo novos conhecimentos de vocabulário, estrutura, gramática e semântica de grandes volumes de dados textuais, proporcionando aos usuários informações e serviços mais convenientes e uma experiência mais inteligente."
+  },
+  "taichu_vqa": {
+    "description": "O Taichu 2.0V combina habilidades de compreensão de imagem, transferência de conhecimento e atribuição lógica, destacando-se no campo de perguntas e respostas baseadas em texto e imagem."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) oferece capacidade de computação aprimorada através de estratégias e arquiteturas de modelo eficientes."

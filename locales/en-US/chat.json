@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
   "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
-  "agentsAndConversations": "Assistants and Conversations",
+  "agents": "Assistants",
   "artifact": {
     "generating": "Generating",
     "thinking": "Thinking",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
-  "searchAgentPlaceholder": "Search assistants and conversations...",
+  "searchAgentPlaceholder": "Search assistants...",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",

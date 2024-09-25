@@ -6,7 +6,7 @@ export default {
     '你好，我是 **{{name}}**，你可以立即与我开始对话，也可以前往 [助手设置]({{url}}) 完善我的信息。',
   agentDefaultMessageWithSystemRole: '你好，我是 **{{name}}**，{{systemRole}}，让我们开始对话吧！',
   agentDefaultMessageWithoutEdit: '你好，我是 **{{name}}**，让我们开始对话吧！',
-  agentsAndConversations: '助手与会话',
+  agents: '助手',
   artifact: {
     generating: '生成中',
     thinking: '思考中',
@@ -83,7 +83,7 @@ export default {
   },
   regenerate: '重新生成',
   roleAndArchive: '角色与记录',
-  searchAgentPlaceholder: '搜索助手和对话...',
+  searchAgentPlaceholder: '搜索助手...',
   sendPlaceholder: '输入聊天内容...',
   sessionGroup: {
     config: '分组管理',
