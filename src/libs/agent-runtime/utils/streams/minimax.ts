@@ -5,7 +5,7 @@ import { transformOpenAIStream } from './openai';
 import { createCallbacksTransformer, createSSEProtocolTransformer } from './protocol';
 
 export const processDoubleData = (chunkValue: string): string => {
-  const dataPattern = /data: \{"id":"/g;
+  const dataPattern = /data: {"id":"/g;
   const matchCount = (chunkValue.match(dataPattern) || []).length;
   let modifiedChunkValue = chunkValue;
   if (matchCount === 2) {
