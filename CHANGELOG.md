@@ -2,6 +2,223 @@
 
 # Changelog
 
+### [Version 1.19.33](https://github.com/lobehub/lobe-chat/compare/v1.19.32...v1.19.33)
+
+<sup>Released on **2024-09-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: MiniMax output long content interrupted by non-existent error.
+
+#### 💄 Styles
+
+- **misc**: Update google provider model info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: MiniMax output long content interrupted by non-existent error, closes [#4088](https://github.com/lobehub/lobe-chat/issues/4088) ([4f6e20d](https://github.com/lobehub/lobe-chat/commit/4f6e20d))
+
+#### Styles
+
+- **misc**: Update google provider model info, closes [#4129](https://github.com/lobehub/lobe-chat/issues/4129) ([b1442b9](https://github.com/lobehub/lobe-chat/commit/b1442b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.32](https://github.com/lobehub/lobe-chat/compare/v1.19.31...v1.19.32)
+
+<sup>Released on **2024-09-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add function call for `taichu_llm`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add function call for `taichu_llm`, closes [#4119](https://github.com/lobehub/lobe-chat/issues/4119) ([8f629d8](https://github.com/lobehub/lobe-chat/commit/8f629d8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.31](https://github.com/lobehub/lobe-chat/compare/v1.19.30...v1.19.31)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add google gemini 1.5 002 series.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add google gemini 1.5 002 series, closes [#4118](https://github.com/lobehub/lobe-chat/issues/4118) ([10145fa](https://github.com/lobehub/lobe-chat/commit/10145fa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.30](https://github.com/lobehub/lobe-chat/compare/v1.19.29...v1.19.30)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Disable taichu2.0 functioncall & default disable taichu2.0v model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Disable taichu2.0 functioncall & default disable taichu2.0v model, closes [#4117](https://github.com/lobehub/lobe-chat/issues/4117) ([00da53b](https://github.com/lobehub/lobe-chat/commit/00da53b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.29](https://github.com/lobehub/lobe-chat/compare/v1.19.28...v1.19.29)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update taichu provider info & add taichu vision model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update taichu provider info & add taichu vision model, closes [#4114](https://github.com/lobehub/lobe-chat/issues/4114) ([e5331db](https://github.com/lobehub/lobe-chat/commit/e5331db))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.28](https://github.com/lobehub/lobe-chat/compare/v1.19.27...v1.19.28)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add function call support for Stepfun.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add function call support for Stepfun, closes [#4101](https://github.com/lobehub/lobe-chat/issues/4101) ([8d7d96e](https://github.com/lobehub/lobe-chat/commit/8d7d96e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.27](https://github.com/lobehub/lobe-chat/compare/v1.19.26...v1.19.27)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve images display in chat messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve images display in chat messages, closes [#3475](https://github.com/lobehub/lobe-chat/issues/3475) ([c54c7ed](https://github.com/lobehub/lobe-chat/commit/c54c7ed))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.26](https://github.com/lobehub/lobe-chat/compare/v1.19.25...v1.19.26)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix url config import after user state init.
+
+#### 💄 Styles
+
+- **misc**: Add support function call for 360AI, left sidebar has only assistants.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix url config import after user state init, closes [#4072](https://github.com/lobehub/lobe-chat/issues/4072) ([18a240c](https://github.com/lobehub/lobe-chat/commit/18a240c))
+
+#### Styles
+
+- **misc**: Add support function call for 360AI, closes [#4099](https://github.com/lobehub/lobe-chat/issues/4099) ([536696b](https://github.com/lobehub/lobe-chat/commit/536696b))
+- **misc**: Left sidebar has only assistants, closes [#4108](https://github.com/lobehub/lobe-chat/issues/4108) ([db1f81c](https://github.com/lobehub/lobe-chat/commit/db1f81c))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.25](https://github.com/lobehub/lobe-chat/compare/v1.19.24...v1.19.25)
 
 <sup>Released on **2024-09-24**</sup>

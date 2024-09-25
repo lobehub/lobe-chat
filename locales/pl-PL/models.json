@@ -332,8 +332,14 @@
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 to wydajny model multimodalny, wspierający szerokie zastosowania."
   },
+  "gemini-1.5-flash-002": {
+    "description": "Gemini 1.5 Flash 002 to wydajny model multimodalny, który wspiera szeroką gamę zastosowań."
+  },
   "gemini-1.5-flash-8b-exp-0827": {
     "description": "Gemini 1.5 Flash 8B 0827 został zaprojektowany do obsługi dużych zadań, oferując niezrównaną prędkość przetwarzania."
+  },
+  "gemini-1.5-flash-8b-exp-0924": {
+    "description": "Gemini 1.5 Flash 8B 0924 to najnowszy eksperymentalny model, który wykazuje znaczące poprawy wydajności w zastosowaniach tekstowych i multimodalnych."
   },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 oferuje zoptymalizowane możliwości przetwarzania multimodalnego, odpowiednie do różnych złożonych scenariuszy zadań."
@@ -343,6 +349,9 @@
   },
   "gemini-1.5-pro-001": {
     "description": "Gemini 1.5 Pro 001 to skalowalne rozwiązanie AI multimodalnego, wspierające szeroki zakres złożonych zadań."
+  },
+  "gemini-1.5-pro-002": {
+    "description": "Gemini 1.5 Pro 002 to najnowszy model gotowy do produkcji, oferujący wyższą jakość wyników, ze szczególnym uwzględnieniem zadań matematycznych, długich kontekstów i zadań wizualnych."
   },
   "gemini-1.5-pro-exp-0801": {
     "description": "Gemini 1.5 Pro 0801 oferuje doskonałe możliwości przetwarzania multimodalnego, zapewniając większą elastyczność w rozwoju aplikacji."
@@ -873,6 +882,9 @@
   },
   "taichu_llm": {
     "description": "Model językowy TaiChu charakteryzuje się wyjątkową zdolnością rozumienia języka oraz umiejętnościami w zakresie tworzenia tekstów, odpowiadania na pytania, programowania, obliczeń matematycznych, wnioskowania logicznego, analizy emocji i streszczenia tekstu. Innowacyjnie łączy wstępne uczenie się na dużych zbiorach danych z bogatą wiedzą z wielu źródeł, stale doskonaląc technologię algorytmiczną i nieustannie przyswajając nową wiedzę z zakresu słownictwa, struktury, gramatyki i semantyki z ogromnych zbiorów danych tekstowych, co prowadzi do ciągłej ewolucji modelu. Umożliwia użytkownikom łatwiejszy dostęp do informacji i usług oraz bardziej inteligentne doświadczenia."
+  },
+  "taichu_vqa": {
+    "description": "Taichu 2.0V łączy zdolności rozumienia obrazów, transferu wiedzy i logicznego wnioskowania, osiągając znakomite wyniki w dziedzinie pytań i odpowiedzi na podstawie tekstu i obrazów."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) oferuje zwiększoną moc obliczeniową dzięki efektywnym strategiom i architekturze modelu."
