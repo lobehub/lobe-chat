@@ -35,6 +35,9 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) to innowacyjny model, idealny do zastosowań w wielu dziedzinach i złożonych zadań."
   },
+  "Max-32k": {
+    "description": "Spark Max 32K ma dużą zdolność przetwarzania kontekstu, lepsze zrozumienie kontekstu i zdolności logicznego rozumowania, obsługując teksty o długości 32K tokenów, odpowiednie do czytania długich dokumentów, prywatnych pytań o wiedzę i innych scenariuszy."
+  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO to wysoce elastyczna fuzja wielu modeli, mająca na celu zapewnienie doskonałego doświadczenia twórczego."
   },
@@ -43,6 +46,27 @@
   },
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B) oferuje zoptymalizowane wyjście językowe i różnorodne możliwości zastosowania."
+  },
+  "Phi-3-5-mini-instruct": {
+    "description": "Odświeżona wersja modelu Phi-3-mini."
+  },
+  "Phi-3-medium-128k-instruct": {
+    "description": "Ten sam model Phi-3-medium, ale z większym rozmiarem kontekstu do RAG lub kilku strzałowego wywoływania."
+  },
+  "Phi-3-medium-4k-instruct": {
+    "description": "Model z 14 miliardami parametrów, oferujący lepszą jakość niż Phi-3-mini, z naciskiem na dane o wysokiej jakości i gęstości rozumowania."
+  },
+  "Phi-3-mini-128k-instruct": {
+    "description": "Ten sam model Phi-3-mini, ale z większym rozmiarem kontekstu do RAG lub kilku strzałowego wywoływania."
+  },
+  "Phi-3-mini-4k-instruct": {
+    "description": "Najmniejszy członek rodziny Phi-3. Zoptymalizowany zarówno pod kątem jakości, jak i niskiej latencji."
+  },
+  "Phi-3-small-128k-instruct": {
+    "description": "Ten sam model Phi-3-small, ale z większym rozmiarem kontekstu do RAG lub kilku strzałowego wywoływania."
+  },
+  "Phi-3-small-8k-instruct": {
+    "description": "Model z 7 miliardami parametrów, oferujący lepszą jakość niż Phi-3-mini, z naciskiem na dane o wysokiej jakości i gęstości rozumowania."
   },
   "Pro-128k": {
     "description": "Spark Pro-128K ma wyjątkową zdolność przetwarzania kontekstu, mogąc obsługiwać do 128K informacji kontekstowych, szczególnie odpowiedni do analizy całościowej i długoterminowego przetwarzania logicznego w długich tekstach, zapewniając płynne i spójne logicznie komunikowanie się oraz różnorodne wsparcie cytatów."
@@ -55,6 +79,24 @@
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 to zaawansowany uniwersalny model językowy, wspierający różne typy poleceń."
+  },
+  "Qwen/Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5 to nowa seria dużych modeli językowych, zaprojektowana w celu optymalizacji przetwarzania zadań instrukcyjnych."
+  },
+  "Qwen/Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5 to nowa seria dużych modeli językowych, zaprojektowana w celu optymalizacji przetwarzania zadań instrukcyjnych."
+  },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5 to nowa seria dużych modeli językowych, z silniejszymi zdolnościami rozumienia i generacji."
+  },
+  "Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5 to nowa seria dużych modeli językowych, zaprojektowana w celu optymalizacji przetwarzania zadań instrukcyjnych."
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder koncentruje się na pisaniu kodu."
+  },
+  "Qwen/Qwen2.5-Math-72B-Instruct": {
+    "description": "Qwen2.5-Math koncentruje się na rozwiązywaniu problemów w dziedzinie matematyki, oferując profesjonalne odpowiedzi na trudne pytania."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B to otwarta wersja, oferująca zoptymalizowane doświadczenie dialogowe dla aplikacji konwersacyjnych."
@@ -130,6 +172,15 @@
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Model Yi-Large, oferujący doskonałe możliwości przetwarzania wielojęzycznego, nadający się do różnych zadań generowania i rozumienia języka."
+  },
+  "ai21-jamba-1.5-large": {
+    "description": "Model wielojęzyczny z 398 miliardami parametrów (94 miliardy aktywnych), oferujący okno kontekstowe o długości 256K, wywoływanie funkcji, strukturalne wyjście i generację opartą na kontekście."
+  },
+  "ai21-jamba-1.5-mini": {
+    "description": "Model wielojęzyczny z 52 miliardami parametrów (12 miliardów aktywnych), oferujący okno kontekstowe o długości 256K, wywoływanie funkcji, strukturalne wyjście i generację opartą na kontekście."
+  },
+  "ai21-jamba-instruct": {
+    "description": "Model LLM oparty na Mamba, zaprojektowany do osiągania najlepszej wydajności, jakości i efektywności kosztowej."
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet podnosi standardy branżowe, przewyższając modele konkurencji oraz Claude 3 Opus, osiągając doskonałe wyniki w szerokim zakresie ocen, jednocześnie oferując szybkość i koszty na poziomie naszych modeli średniej klasy."
@@ -227,6 +278,12 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B to model zaprojektowany do przestrzegania instrukcji, dialogów i programowania."
   },
+  "cohere-command-r": {
+    "description": "Command R to skalowalny model generatywny, który koncentruje się na RAG i użyciu narzędzi, aby umożliwić AI na skalę produkcyjną dla przedsiębiorstw."
+  },
+  "cohere-command-r-plus": {
+    "description": "Command R+ to model zoptymalizowany pod kątem RAG, zaprojektowany do obsługi obciążeń roboczych na poziomie przedsiębiorstwa."
+  },
   "command-r": {
     "description": "Command R to LLM zoptymalizowany do dialogów i zadań z długim kontekstem, szczególnie odpowiedni do dynamicznej interakcji i zarządzania wiedzą."
   },
@@ -275,8 +332,14 @@
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 to wydajny model multimodalny, wspierający szerokie zastosowania."
   },
+  "gemini-1.5-flash-002": {
+    "description": "Gemini 1.5 Flash 002 to wydajny model multimodalny, który wspiera szeroką gamę zastosowań."
+  },
   "gemini-1.5-flash-8b-exp-0827": {
     "description": "Gemini 1.5 Flash 8B 0827 został zaprojektowany do obsługi dużych zadań, oferując niezrównaną prędkość przetwarzania."
+  },
+  "gemini-1.5-flash-8b-exp-0924": {
+    "description": "Gemini 1.5 Flash 8B 0924 to najnowszy eksperymentalny model, który wykazuje znaczące poprawy wydajności w zastosowaniach tekstowych i multimodalnych."
   },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 oferuje zoptymalizowane możliwości przetwarzania multimodalnego, odpowiednie do różnych złożonych scenariuszy zadań."
@@ -286,6 +349,9 @@
   },
   "gemini-1.5-pro-001": {
     "description": "Gemini 1.5 Pro 001 to skalowalne rozwiązanie AI multimodalnego, wspierające szeroki zakres złożonych zadań."
+  },
+  "gemini-1.5-pro-002": {
+    "description": "Gemini 1.5 Pro 002 to najnowszy model gotowy do produkcji, oferujący wyższą jakość wyników, ze szczególnym uwzględnieniem zadań matematycznych, długich kontekstów i zadań wizualnych."
   },
   "gemini-1.5-pro-exp-0801": {
     "description": "Gemini 1.5 Pro 0801 oferuje doskonałe możliwości przetwarzania multimodalnego, zapewniając większą elastyczność w rozwoju aplikacji."
@@ -434,6 +500,8 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferuje inteligentne rozwiązania dialogowe w różnych scenariuszach."
   },
+  "jamba-1.5-large": {},
+  "jamba-1.5-mini": {},
   "llama-3.1-70b-instruct": {
     "description": "Model Llama 3.1 70B Instruct, z 70B parametrami, oferujący doskonałe osiągi w dużych zadaniach generowania tekstu i poleceń."
   },
@@ -496,6 +564,21 @@
   },
   "mathstral": {
     "description": "MathΣtral zaprojektowany do badań naukowych i wnioskowania matematycznego, oferujący efektywne możliwości obliczeniowe i interpretację wyników."
+  },
+  "meta-llama-3-70b-instruct": {
+    "description": "Potężny model z 70 miliardami parametrów, doskonały w rozumowaniu, kodowaniu i szerokich zastosowaniach językowych."
+  },
+  "meta-llama-3-8b-instruct": {
+    "description": "Wszechstronny model z 8 miliardami parametrów, zoptymalizowany do zadań dialogowych i generacji tekstu."
+  },
+  "meta-llama-3.1-405b-instruct": {
+    "description": "Modele tekstowe Llama 3.1 dostosowane do instrukcji, zoptymalizowane do wielojęzycznych przypadków użycia dialogowego, przewyższają wiele dostępnych modeli open source i zamkniętych w powszechnych benchmarkach branżowych."
+  },
+  "meta-llama-3.1-70b-instruct": {
+    "description": "Modele tekstowe Llama 3.1 dostosowane do instrukcji, zoptymalizowane do wielojęzycznych przypadków użycia dialogowego, przewyższają wiele dostępnych modeli open source i zamkniętych w powszechnych benchmarkach branżowych."
+  },
+  "meta-llama-3.1-8b-instruct": {
+    "description": "Modele tekstowe Llama 3.1 dostosowane do instrukcji, zoptymalizowane do wielojęzycznych przypadków użycia dialogowego, przewyższają wiele dostępnych modeli open source i zamkniętych w powszechnych benchmarkach branżowych."
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) oferuje doskonałe możliwości przetwarzania języka i znakomite doświadczenie interakcji."
@@ -584,11 +667,20 @@
   "mistral-large": {
     "description": "Mixtral Large to flagowy model Mistral, łączący zdolności generowania kodu, matematyki i wnioskowania, wspierający kontekst o długości 128k."
   },
+  "mistral-large-2407": {
+    "description": "Mistral Large (2407) to zaawansowany model językowy (LLM) z najnowocześniejszymi zdolnościami rozumowania, wiedzy i kodowania."
+  },
   "mistral-large-latest": {
     "description": "Mistral Large to flagowy model, doskonały w zadaniach wielojęzycznych, złożonym wnioskowaniu i generowaniu kodu, idealny do zaawansowanych zastosowań."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo, opracowany przez Mistral AI i NVIDIA, to model 12B o wysokiej wydajności."
+  },
+  "mistral-small": {
+    "description": "Mistral Small może być używany w każdym zadaniu opartym na języku, które wymaga wysokiej wydajności i niskiej latencji."
+  },
+  "mistral-small-latest": {
+    "description": "Mistral Small to opcja o wysokiej efektywności kosztowej, szybka i niezawodna, odpowiednia do tłumaczeń, podsumowań i analizy sentymentu."
   },
   "mistralai/Mistral-7B-Instruct-v0.1": {
     "description": "Mistral (7B) Instruct jest znany z wysokiej wydajności, idealny do różnorodnych zadań językowych."
@@ -677,8 +769,29 @@
   "phi3:14b": {
     "description": "Phi-3 to lekki model otwarty wydany przez Microsoft, odpowiedni do efektywnej integracji i dużej skali wnioskowania wiedzy."
   },
+  "pixtral-12b-2409": {
+    "description": "Model Pixtral wykazuje silne zdolności w zadaniach związanych z analizą wykresów i zrozumieniem obrazów, pytaniami dokumentowymi, wielomodalnym rozumowaniem i przestrzeganiem instrukcji, zdolny do przyjmowania obrazów w naturalnej rozdzielczości i proporcjach, a także do przetwarzania dowolnej liczby obrazów w długim oknie kontekstowym o długości do 128K tokenów."
+  },
+  "qwen-coder-turbo-latest": {
+    "description": "Model kodowania Qwen."
+  },
   "qwen-long": {
     "description": "Qwen to ultra-duży model językowy, który obsługuje długie konteksty tekstowe oraz funkcje dialogowe oparte na długich dokumentach i wielu dokumentach."
+  },
+  "qwen-math-plus-latest": {
+    "description": "Model matematyczny Qwen, stworzony specjalnie do rozwiązywania problemów matematycznych."
+  },
+  "qwen-math-turbo-latest": {
+    "description": "Model matematyczny Qwen, stworzony specjalnie do rozwiązywania problemów matematycznych."
+  },
+  "qwen-max-latest": {
+    "description": "Model językowy Qwen Max o skali miliardów parametrów, obsługujący różne języki, w tym chiński i angielski, będący API modelu za produktem Qwen 2.5."
+  },
+  "qwen-plus-latest": {
+    "description": "Wzmocniona wersja modelu językowego Qwen Plus, obsługująca różne języki, w tym chiński i angielski."
+  },
+  "qwen-turbo-latest": {
+    "description": "Model językowy Qwen Turbo, obsługujący różne języki, w tym chiński i angielski."
   },
   "qwen-vl-chat-v1": {
     "description": "Qwen VL obsługuje elastyczne interakcje, w tym wiele obrazów, wielokrotne pytania i odpowiedzi oraz zdolności twórcze."
@@ -697,6 +810,33 @@
   },
   "qwen2": {
     "description": "Qwen2 to nowa generacja dużego modelu językowego Alibaba, wspierająca różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
+  },
+  "qwen2.5-14b-instruct": {
+    "description": "Model Qwen 2.5 o skali 14B, udostępniony na zasadzie open source."
+  },
+  "qwen2.5-32b-instruct": {
+    "description": "Model Qwen 2.5 o skali 32B, udostępniony na zasadzie open source."
+  },
+  "qwen2.5-72b-instruct": {
+    "description": "Model Qwen 2.5 o skali 72B, udostępniony na zasadzie open source."
+  },
+  "qwen2.5-7b-instruct": {
+    "description": "Model Qwen 2.5 o skali 7B, udostępniony na zasadzie open source."
+  },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "Otwarta wersja modelu kodowania Qwen."
+  },
+  "qwen2.5-coder-7b-instruct": {
+    "description": "Otwarta wersja modelu kodowania Qwen."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Model Qwen-Math, który ma silne zdolności rozwiązywania problemów matematycznych."
+  },
+  "qwen2.5-math-72b-instruct": {
+    "description": "Model Qwen-Math, który ma silne zdolności rozwiązywania problemów matematycznych."
+  },
+  "qwen2.5-math-7b-instruct": {
+    "description": "Model Qwen-Math, który ma silne zdolności rozwiązywania problemów matematycznych."
   },
   "qwen2:0.5b": {
     "description": "Qwen2 to nowa generacja dużego modelu językowego Alibaba, wspierająca różnorodne potrzeby aplikacyjne dzięki doskonałej wydajności."
@@ -742,6 +882,9 @@
   },
   "taichu_llm": {
     "description": "Model językowy TaiChu charakteryzuje się wyjątkową zdolnością rozumienia języka oraz umiejętnościami w zakresie tworzenia tekstów, odpowiadania na pytania, programowania, obliczeń matematycznych, wnioskowania logicznego, analizy emocji i streszczenia tekstu. Innowacyjnie łączy wstępne uczenie się na dużych zbiorach danych z bogatą wiedzą z wielu źródeł, stale doskonaląc technologię algorytmiczną i nieustannie przyswajając nową wiedzę z zakresu słownictwa, struktury, gramatyki i semantyki z ogromnych zbiorów danych tekstowych, co prowadzi do ciągłej ewolucji modelu. Umożliwia użytkownikom łatwiejszy dostęp do informacji i usług oraz bardziej inteligentne doświadczenia."
+  },
+  "taichu_vqa": {
+    "description": "Taichu 2.0V łączy zdolności rozumienia obrazów, transferu wiedzy i logicznego wnioskowania, osiągając znakomite wyniki w dziedzinie pytań i odpowiedzi na podstawie tekstu i obrazów."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) oferuje zwiększoną moc obliczeniową dzięki efektywnym strategiom i architekturze modelu."

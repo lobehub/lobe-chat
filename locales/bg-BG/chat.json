@@ -5,7 +5,7 @@
   "agentDefaultMessage": "Здравейте, аз съм **{{name}}**, можете да започнете разговор с мен веднага или да отидете на [Настройки на асистента]({{url}}), за да попълните информацията ми.",
   "agentDefaultMessageWithSystemRole": "Здравей, аз съм **{{name}}**, {{systemRole}}. Нека започнем да чатим!",
   "agentDefaultMessageWithoutEdit": "Здравей, аз съм **{{name}}** и нека започнем разговора!",
-  "agentsAndConversations": "агенти и разговори",
+  "agents": "Асистент",
   "artifact": {
     "generating": "Генериране",
     "thinking": "В процес на мислене",
@@ -81,7 +81,7 @@
   },
   "regenerate": "Прегенерирай",
   "roleAndArchive": "Роля и архив",
-  "searchAgentPlaceholder": "Търсене на агенти и разговори...",
+  "searchAgentPlaceholder": "Търсач на помощ...",
   "sendPlaceholder": "Напиши съобщението си тук...",
   "sessionGroup": {
     "config": "Управление на групи",

@@ -35,6 +35,9 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) là một mô hình sáng tạo, phù hợp cho nhiều lĩnh vực ứng dụng và nhiệm vụ phức tạp."
   },
+  "Max-32k": {
+    "description": "Spark Max 32K được cấu hình với khả năng xử lý ngữ cảnh lớn, khả năng hiểu ngữ cảnh và lý luận logic mạnh mẽ hơn, hỗ trợ đầu vào văn bản 32K token, phù hợp cho việc đọc tài liệu dài, hỏi đáp kiến thức riêng tư và các tình huống khác."
+  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO là một mô hình kết hợp đa dạng, nhằm cung cấp trải nghiệm sáng tạo xuất sắc."
   },
@@ -43,6 +46,27 @@
   },
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B) cung cấp đầu ra ngôn ngữ tối ưu và khả năng ứng dụng đa dạng."
+  },
+  "Phi-3-5-mini-instruct": {
+    "description": "Cập nhật mô hình Phi-3-mini."
+  },
+  "Phi-3-medium-128k-instruct": {
+    "description": "Mô hình Phi-3-medium giống nhau, nhưng với kích thước ngữ cảnh lớn hơn cho RAG hoặc gợi ý ít."
+  },
+  "Phi-3-medium-4k-instruct": {
+    "description": "Mô hình 14B tham số, chứng minh chất lượng tốt hơn Phi-3-mini, tập trung vào dữ liệu dày đặc lý luận chất lượng cao."
+  },
+  "Phi-3-mini-128k-instruct": {
+    "description": "Mô hình Phi-3-mini giống nhau, nhưng với kích thước ngữ cảnh lớn hơn cho RAG hoặc gợi ý ít."
+  },
+  "Phi-3-mini-4k-instruct": {
+    "description": "Thành viên nhỏ nhất của gia đình Phi-3. Tối ưu hóa cho cả chất lượng và độ trễ thấp."
+  },
+  "Phi-3-small-128k-instruct": {
+    "description": "Mô hình Phi-3-small giống nhau, nhưng với kích thước ngữ cảnh lớn hơn cho RAG hoặc gợi ý ít."
+  },
+  "Phi-3-small-8k-instruct": {
+    "description": "Mô hình 7B tham số, chứng minh chất lượng tốt hơn Phi-3-mini, tập trung vào dữ liệu dày đặc lý luận chất lượng cao."
   },
   "Pro-128k": {
     "description": "Spark Pro-128K được cấu hình với khả năng xử lý ngữ cảnh cực lớn, có thể xử lý tới 128K thông tin ngữ cảnh, đặc biệt phù hợp cho việc phân tích toàn bộ và xử lý mối liên hệ logic lâu dài trong nội dung văn bản dài, có thể cung cấp logic mạch lạc và hỗ trợ trích dẫn đa dạng trong giao tiếp văn bản phức tạp."
@@ -55,6 +79,24 @@
   },
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 là mô hình ngôn ngữ tổng quát tiên tiến, hỗ trợ nhiều loại chỉ dẫn."
+  },
+  "Qwen/Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, nhằm tối ưu hóa việc xử lý các nhiệm vụ theo hướng dẫn."
+  },
+  "Qwen/Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, nhằm tối ưu hóa việc xử lý các nhiệm vụ theo hướng dẫn."
+  },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, có khả năng hiểu và tạo ra mạnh mẽ hơn."
+  },
+  "Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, nhằm tối ưu hóa việc xử lý các nhiệm vụ theo hướng dẫn."
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder tập trung vào việc viết mã."
+  },
+  "Qwen/Qwen2.5-Math-72B-Instruct": {
+    "description": "Qwen2.5-Math tập trung vào việc giải quyết các vấn đề trong lĩnh vực toán học, cung cấp giải pháp chuyên nghiệp cho các bài toán khó."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B là phiên bản mã nguồn mở, cung cấp trải nghiệm đối thoại tối ưu cho các ứng dụng hội thoại."
@@ -130,6 +172,15 @@
   },
   "accounts/yi-01-ai/models/yi-large": {
     "description": "Mô hình Yi-Large, có khả năng xử lý đa ngôn ngữ xuất sắc, có thể được sử dụng cho nhiều nhiệm vụ sinh và hiểu ngôn ngữ."
+  },
+  "ai21-jamba-1.5-large": {
+    "description": "Mô hình đa ngôn ngữ với 398B tham số (94B hoạt động), cung cấp cửa sổ ngữ cảnh dài 256K, gọi hàm, đầu ra có cấu trúc và tạo ra nội dung có căn cứ."
+  },
+  "ai21-jamba-1.5-mini": {
+    "description": "Mô hình đa ngôn ngữ với 52B tham số (12B hoạt động), cung cấp cửa sổ ngữ cảnh dài 256K, gọi hàm, đầu ra có cấu trúc và tạo ra nội dung có căn cứ."
+  },
+  "ai21-jamba-instruct": {
+    "description": "Mô hình LLM dựa trên Mamba đạt hiệu suất, chất lượng và hiệu quả chi phí tốt nhất trong ngành."
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet nâng cao tiêu chuẩn ngành, hiệu suất vượt trội hơn các mô hình cạnh tranh và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá, đồng thời có tốc độ và chi phí của mô hình tầm trung của chúng tôi."
@@ -227,6 +278,12 @@
   "cognitivecomputations/dolphin-mixtral-8x22b": {
     "description": "Dolphin Mixtral 8x22B là mô hình được thiết kế cho việc tuân thủ hướng dẫn, đối thoại và lập trình."
   },
+  "cohere-command-r": {
+    "description": "Command R là một mô hình sinh tạo có thể mở rộng, nhắm đến RAG và Sử dụng Công cụ để cho phép AI quy mô sản xuất cho doanh nghiệp."
+  },
+  "cohere-command-r-plus": {
+    "description": "Command R+ là mô hình tối ưu hóa RAG hiện đại, được thiết kế để xử lý khối lượng công việc cấp doanh nghiệp."
+  },
   "command-r": {
     "description": "Command R là LLM được tối ưu hóa cho các nhiệm vụ đối thoại và ngữ cảnh dài, đặc biệt phù hợp cho tương tác động và quản lý kiến thức."
   },
@@ -275,8 +332,14 @@
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 là một mô hình đa phương thức hiệu quả, hỗ trợ mở rộng cho nhiều ứng dụng."
   },
+  "gemini-1.5-flash-002": {
+    "description": "Gemini 1.5 Flash 002 là một mô hình đa phương thức hiệu quả, hỗ trợ mở rộng cho nhiều ứng dụng."
+  },
   "gemini-1.5-flash-8b-exp-0827": {
     "description": "Gemini 1.5 Flash 8B 0827 được thiết kế để xử lý các tình huống nhiệm vụ quy mô lớn, cung cấp tốc độ xử lý vô song."
+  },
+  "gemini-1.5-flash-8b-exp-0924": {
+    "description": "Gemini 1.5 Flash 8B 0924 là mô hình thử nghiệm mới nhất, có sự cải thiện đáng kể về hiệu suất trong các trường hợp sử dụng văn bản và đa phương thức."
   },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 cung cấp khả năng xử lý đa phương thức được tối ưu hóa, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
@@ -286,6 +349,9 @@
   },
   "gemini-1.5-pro-001": {
     "description": "Gemini 1.5 Pro 001 là giải pháp AI đa phương thức có thể mở rộng, hỗ trợ nhiều nhiệm vụ phức tạp."
+  },
+  "gemini-1.5-pro-002": {
+    "description": "Gemini 1.5 Pro 002 là mô hình sẵn sàng cho sản xuất mới nhất, cung cấp đầu ra chất lượng cao hơn, đặc biệt là trong các nhiệm vụ toán học, ngữ cảnh dài và thị giác."
   },
   "gemini-1.5-pro-exp-0801": {
     "description": "Gemini 1.5 Pro 0801 cung cấp khả năng xử lý đa phương thức xuất sắc, mang lại sự linh hoạt lớn hơn cho phát triển ứng dụng."
@@ -434,6 +500,8 @@
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
   },
+  "jamba-1.5-large": {},
+  "jamba-1.5-mini": {},
   "llama-3.1-70b-instruct": {
     "description": "Mô hình Llama 3.1 70B Instruct, có 70B tham số, có thể cung cấp hiệu suất xuất sắc trong các nhiệm vụ sinh văn bản và chỉ dẫn lớn."
   },
@@ -496,6 +564,21 @@
   },
   "mathstral": {
     "description": "MathΣtral được thiết kế cho nghiên cứu khoa học và suy luận toán học, cung cấp khả năng tính toán hiệu quả và giải thích kết quả."
+  },
+  "meta-llama-3-70b-instruct": {
+    "description": "Mô hình 70 tỷ tham số mạnh mẽ, xuất sắc trong lý luận, lập trình và các ứng dụng ngôn ngữ rộng lớn."
+  },
+  "meta-llama-3-8b-instruct": {
+    "description": "Mô hình 8 tỷ tham số đa năng, tối ưu hóa cho các tác vụ đối thoại và tạo văn bản."
+  },
+  "meta-llama-3.1-405b-instruct": {
+    "description": "Các mô hình văn bản chỉ được tinh chỉnh theo hướng dẫn Llama 3.1 được tối ưu hóa cho các trường hợp sử dụng đối thoại đa ngôn ngữ và vượt trội hơn nhiều mô hình trò chuyện mã nguồn mở và đóng có sẵn trên các tiêu chuẩn ngành phổ biến."
+  },
+  "meta-llama-3.1-70b-instruct": {
+    "description": "Các mô hình văn bản chỉ được tinh chỉnh theo hướng dẫn Llama 3.1 được tối ưu hóa cho các trường hợp sử dụng đối thoại đa ngôn ngữ và vượt trội hơn nhiều mô hình trò chuyện mã nguồn mở và đóng có sẵn trên các tiêu chuẩn ngành phổ biến."
+  },
+  "meta-llama-3.1-8b-instruct": {
+    "description": "Các mô hình văn bản chỉ được tinh chỉnh theo hướng dẫn Llama 3.1 được tối ưu hóa cho các trường hợp sử dụng đối thoại đa ngôn ngữ và vượt trội hơn nhiều mô hình trò chuyện mã nguồn mở và đóng có sẵn trên các tiêu chuẩn ngành phổ biến."
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) cung cấp khả năng xử lý ngôn ngữ xuất sắc và trải nghiệm tương tác tuyệt vời."
@@ -584,11 +667,20 @@
   "mistral-large": {
     "description": "Mixtral Large là mô hình hàng đầu của Mistral, kết hợp khả năng sinh mã, toán học và suy luận, hỗ trợ cửa sổ ngữ cảnh 128k."
   },
+  "mistral-large-2407": {
+    "description": "Mistral Large (2407) là một Mô hình Ngôn ngữ Lớn (LLM) tiên tiến với khả năng lý luận, kiến thức và lập trình hiện đại."
+  },
   "mistral-large-latest": {
     "description": "Mistral Large là mô hình lớn hàng đầu, chuyên về các nhiệm vụ đa ngôn ngữ, suy luận phức tạp và sinh mã, là lựa chọn lý tưởng cho các ứng dụng cao cấp."
   },
   "mistral-nemo": {
     "description": "Mistral Nemo được phát triển hợp tác giữa Mistral AI và NVIDIA, là mô hình 12B hiệu suất cao."
+  },
+  "mistral-small": {
+    "description": "Mistral Small có thể được sử dụng cho bất kỳ nhiệm vụ nào dựa trên ngôn ngữ yêu cầu hiệu suất cao và độ trễ thấp."
+  },
+  "mistral-small-latest": {
+    "description": "Mistral Small là lựa chọn hiệu quả về chi phí, nhanh chóng và đáng tin cậy, phù hợp cho các trường hợp như dịch thuật, tóm tắt và phân tích cảm xúc."
   },
   "mistralai/Mistral-7B-Instruct-v0.1": {
     "description": "Mistral (7B) Instruct nổi bật với hiệu suất cao, phù hợp cho nhiều nhiệm vụ ngôn ngữ."
@@ -677,8 +769,29 @@
   "phi3:14b": {
     "description": "Phi-3 là mô hình mở nhẹ do Microsoft phát hành, phù hợp cho việc tích hợp hiệu quả và suy luận kiến thức quy mô lớn."
   },
+  "pixtral-12b-2409": {
+    "description": "Mô hình Pixtral thể hiện khả năng mạnh mẽ trong các nhiệm vụ như hiểu biểu đồ và hình ảnh, hỏi đáp tài liệu, suy luận đa phương tiện và tuân thủ hướng dẫn, có khả năng tiếp nhận hình ảnh với độ phân giải và tỷ lệ khung hình tự nhiên, cũng như xử lý bất kỳ số lượng hình ảnh nào trong cửa sổ ngữ cảnh dài lên đến 128K token."
+  },
+  "qwen-coder-turbo-latest": {
+    "description": "Mô hình mã Qwen."
+  },
   "qwen-long": {
     "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ ngữ cảnh văn bản dài và chức năng đối thoại dựa trên tài liệu dài, nhiều tài liệu."
+  },
+  "qwen-math-plus-latest": {
+    "description": "Mô hình toán học Qwen được thiết kế đặc biệt để giải quyết các bài toán toán học."
+  },
+  "qwen-math-turbo-latest": {
+    "description": "Mô hình toán học Qwen được thiết kế đặc biệt để giải quyết các bài toán toán học."
+  },
+  "qwen-max-latest": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen với hàng trăm tỷ tham số, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác, là mô hình API đứng sau phiên bản sản phẩm Qwen 2.5 hiện tại."
+  },
+  "qwen-plus-latest": {
+    "description": "Phiên bản nâng cao của mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
+  },
+  "qwen-turbo-latest": {
+    "description": "Mô hình ngôn ngữ quy mô lớn Qwen, hỗ trợ đầu vào bằng tiếng Trung, tiếng Anh và nhiều ngôn ngữ khác."
   },
   "qwen-vl-chat-v1": {
     "description": "Mô hình Qwen VL hỗ trợ các phương thức tương tác linh hoạt, bao gồm nhiều hình ảnh, nhiều vòng hỏi đáp, sáng tạo, v.v."
@@ -697,6 +810,33 @@
   },
   "qwen2": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
+  },
+  "qwen2.5-14b-instruct": {
+    "description": "Mô hình 14B quy mô mở nguồn của Qwen 2.5."
+  },
+  "qwen2.5-32b-instruct": {
+    "description": "Mô hình 32B quy mô mở nguồn của Qwen 2.5."
+  },
+  "qwen2.5-72b-instruct": {
+    "description": "Mô hình 72B quy mô mở nguồn của Qwen 2.5."
+  },
+  "qwen2.5-7b-instruct": {
+    "description": "Mô hình 7B quy mô mở nguồn của Qwen 2.5."
+  },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
+  },
+  "qwen2.5-coder-7b-instruct": {
+    "description": "Phiên bản mã nguồn mở của mô hình mã Qwen."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Mô hình Qwen-Math có khả năng giải quyết bài toán toán học mạnh mẽ."
+  },
+  "qwen2.5-math-72b-instruct": {
+    "description": "Mô hình Qwen-Math có khả năng giải quyết bài toán toán học mạnh mẽ."
+  },
+  "qwen2.5-math-7b-instruct": {
+    "description": "Mô hình Qwen-Math có khả năng giải quyết bài toán toán học mạnh mẽ."
   },
   "qwen2:0.5b": {
     "description": "Qwen2 là mô hình ngôn ngữ quy mô lớn thế hệ mới của Alibaba, hỗ trợ các nhu cầu ứng dụng đa dạng với hiệu suất xuất sắc."
@@ -742,6 +882,9 @@
   },
   "taichu_llm": {
     "description": "Mô hình ngôn ngữ lớn Taichu có khả năng hiểu ngôn ngữ mạnh mẽ và các khả năng như sáng tạo văn bản, trả lời câu hỏi kiến thức, lập trình mã, tính toán toán học, suy luận logic, phân tích cảm xúc, tóm tắt văn bản. Đổi mới kết hợp giữa đào tạo trước với dữ liệu phong phú từ nhiều nguồn, thông qua việc liên tục cải tiến công nghệ thuật toán và hấp thụ kiến thức mới từ dữ liệu văn bản khổng lồ, giúp mô hình ngày càng hoàn thiện. Cung cấp thông tin và dịch vụ tiện lợi hơn cho người dùng cùng trải nghiệm thông minh hơn."
+  },
+  "taichu_vqa": {
+    "description": "Taichu 2.0V kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, v.v., thể hiện xuất sắc trong lĩnh vực hỏi đáp hình ảnh và văn bản."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) cung cấp khả năng tính toán nâng cao thông qua chiến lược và kiến trúc mô hình hiệu quả."

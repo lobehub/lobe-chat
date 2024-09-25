@@ -5,12 +5,20 @@ const Taichu: ModelProviderCard = {
   chatModels: [
     {
       description:
-        '紫东太初语言大模型具备超强语言理解能力以及文本创作、知识问答、代码编程、数学计算、逻辑推理、情感分析、文本摘要等能力。创新性地将大数据预训练与多源丰富知识相结合，通过持续打磨算法技术，并不断吸收海量文本数据中词汇、结构、语法、语义等方面的新知识，实现模型效果不断进化。为用户提供更加便捷的信息和服务以及更为智能化的体验。',
-      displayName: 'Taichu-2.0',
+        'Taichu 2.0 基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力',
+      displayName: 'Taichu 2.0',
       enabled: true,
       functionCall: false,
       id: 'taichu_llm',
       tokens: 32_768,
+    },
+      {
+      description:
+        'Taichu 2.0V 融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出',
+      displayName: 'Taichu 2.0V',
+      id: 'taichu_vqa',
+      tokens: 4096,
+      vision: true,
     },
   ],
   checkModel: 'taichu_llm',
