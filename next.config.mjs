@@ -246,4 +246,4 @@ const withSentry =
         )
     : noWrapper;
 
-export default withBundleAnalyzer(withSentry(nextConfig));
+export default withBundleAnalyzer(withPWA(withSentry(nextConfig)();
