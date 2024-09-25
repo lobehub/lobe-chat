@@ -13,7 +13,7 @@ describe('AssistantStore', () => {
 
   it('should return the index URL for a not supported language', () => {
     const agentMarket = new AssistantStore();
-    const url = agentMarket.getAgentIndexUrl('ko-KR');
+    const url = agentMarket.getAgentIndexUrl('xxx' as any);
     expect(url).toBe('https://chat-agents.lobehub.com');
   });
 

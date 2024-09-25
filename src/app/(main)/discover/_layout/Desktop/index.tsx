@@ -14,6 +14,7 @@ const Layout = ({ children }: PropsWithChildren) => {
         {children}
       </Flexbox>
       {/* ↓ cloud slot ↓ */}
+
       {/* ↑ cloud slot ↑ */}
     </>
   );

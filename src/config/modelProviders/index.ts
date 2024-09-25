@@ -86,8 +86,8 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BaichuanProvider,
   MinimaxProvider,
   Ai360Provider,
-  SiliconCloudProvider,
   TaichuProvider,
+  SiliconCloudProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {

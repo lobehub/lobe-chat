@@ -27,7 +27,7 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getAssistantById(locale, identifier);
-  if (!data) return notFound();
+  if (!data) return;
 
   const { meta, createdAt, homepage, author } = data;
 
@@ -105,6 +105,7 @@ const Page = async ({ params, searchParams }: Props) => {
           />
         }
         /* ↓ cloud slot ↓ */
+
         /* ↑ cloud slot ↑ */
       >
         <Temp data={data} identifier={identifier} />
