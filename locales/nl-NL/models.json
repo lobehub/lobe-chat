@@ -332,8 +332,14 @@
   "gemini-1.5-flash-001": {
     "description": "Gemini 1.5 Flash 001 is een efficiënt multimodaal model dat ondersteuning biedt voor brede toepassingsuitbreiding."
   },
+  "gemini-1.5-flash-002": {
+    "description": "Gemini 1.5 Flash 002 is een efficiënt multimodaal model dat ondersteuning biedt voor een breed scala aan toepassingen."
+  },
   "gemini-1.5-flash-8b-exp-0827": {
     "description": "Gemini 1.5 Flash 8B 0827 is ontworpen voor het verwerken van grootschalige taakscenario's en biedt ongeëvenaarde verwerkingssnelheid."
+  },
+  "gemini-1.5-flash-8b-exp-0924": {
+    "description": "Gemini 1.5 Flash 8B 0924 is het nieuwste experimentele model, met aanzienlijke prestatieverbeteringen in tekst- en multimodale toepassingen."
   },
   "gemini-1.5-flash-exp-0827": {
     "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
@@ -343,6 +349,9 @@
   },
   "gemini-1.5-pro-001": {
     "description": "Gemini 1.5 Pro 001 is een schaalbare multimodale AI-oplossing die ondersteuning biedt voor een breed scala aan complexe taken."
+  },
+  "gemini-1.5-pro-002": {
+    "description": "Gemini 1.5 Pro 002 is het nieuwste productieklare model, dat hogere kwaliteit output biedt, met name op het gebied van wiskunde, lange contexten en visuele taken."
   },
   "gemini-1.5-pro-exp-0801": {
     "description": "Gemini 1.5 Pro 0801 biedt uitstekende multimodale verwerkingscapaciteiten en biedt meer flexibiliteit voor applicatieontwikkeling."
@@ -873,6 +882,9 @@
   },
   "taichu_llm": {
     "description": "Het Zido Tai Chu-taalmodel heeft een sterke taalbegripcapaciteit en kan tekstcreatie, kennisvragen, codeprogrammering, wiskundige berekeningen, logische redenering, sentimentanalyse, tekstsamenvattingen en meer aan. Het combineert innovatief grote data voortraining met rijke kennis uit meerdere bronnen, door algoritmische technologie continu te verfijnen en voortdurend nieuwe kennis op te nemen uit enorme tekstdata op het gebied van vocabulaire, structuur, grammatica en semantiek, waardoor de modelprestaties voortdurend evolueren. Het biedt gebruikers gemakkelijkere informatie en diensten en een meer intelligente ervaring."
+  },
+  "taichu_vqa": {
+    "description": "Taichu 2.0V combineert capaciteiten zoals beeldbegrip, kennisoverdracht en logische toerekening, en presteert uitstekend in het domein van beeld-tekst vraag en antwoord."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) biedt verbeterde rekenkracht door middel van efficiënte strategieën en modelarchitectuur."

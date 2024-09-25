@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.31](https://github.com/lobehub/lobe-chat/compare/v1.19.30...v1.19.31)
+
+<sup>Released on **2024-09-24**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add google gemini 1.5 002 series.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add google gemini 1.5 002 series, closes [#4118](https://github.com/lobehub/lobe-chat/issues/4118) ([10145fa](https://github.com/lobehub/lobe-chat/commit/10145fa))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.30](https://github.com/lobehub/lobe-chat/compare/v1.19.29...v1.19.30)
 
 <sup>Released on **2024-09-24**</sup>
