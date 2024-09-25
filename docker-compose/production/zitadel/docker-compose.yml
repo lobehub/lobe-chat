@@ -37,31 +37,19 @@ services:
     restart: always
     image: ghcr.io/zitadel/zitadel:latest
     container_name: lobe-zitadel
-    command: start-from-init --masterkey "cft3Tekr/rQBOqwoQSCPoncA9BHbn7QJ"
-      --tlsMode external #MasterkeyNeedsToHave32Characters
-    environment:
-      - 'ZITADEL_EXTERNALPORT=443'
-      - 'ZITADEL_EXTERNALSECURE=true'
-      - 'ZITADEL_TLS_ENABLED=false'
-      - 'ZITADEL_EXTERNALDOMAIN=example.zitadel.com' #Your Zitadel's domain name
-      - 'ZITADEL_DATABASE_POSTGRES_HOST=postgresql'
-      - 'ZITADEL_DATABASE_POSTGRES_PORT=5432'
-      - 'ZITADEL_DATABASE_POSTGRES_DATABASE=zitadel'
-      - 'ZITADEL_DATABASE_POSTGRES_USER_USERNAME=zitadel'
-      - 'ZITADEL_DATABASE_POSTGRES_USER_PASSWORD=zitadel'
-      - 'ZITADEL_DATABASE_POSTGRES_USER_SSL_MODE=disable'
-      - 'ZITADEL_DATABASE_POSTGRES_ADMIN_USERNAME=postgres'
-      - 'ZITADEL_DATABASE_POSTGRES_ADMIN_PASSWORD=uWNZugjBqixf8dxC' #postgres password
-      - 'ZITADEL_DATABASE_POSTGRES_ADMIN_SSL_MODE=disable'
-      - 'ZITADEL_FIRSTINSTANCE_ORG_HUMAN_EMAIL_ADDRESS=example@lobechat.com' #Your Email Address
-      - 'ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD=YOUR PASSWORD' #The password must be at least 8 characters long and must contain numbers, uppercase and lowercase letters, and symbols.      
+    command: start-from-init --config /zitadel-config.yaml --steps
+      /zitadel-init-steps.yaml --masterkey "cft3Tekr/rQBOqwoQSCPoncA9BHbn7QJ"
+      --tlsMode external  #MasterkeyNeedsToHave32Characters
+    ports:
+      - 8080:8080
+    volumes:
+      - ./zitadel-config.yaml:/zitadel-config.yaml:ro
+      - ./zitadel-init-steps.yaml:/zitadel-init-steps.yaml:ro
     depends_on:
       postgresql:
         condition: service_healthy
-    ports:
-      - '8080:8080'
 
-    lobe:
+  lobe:
     image: lobehub/lobe-chat-database
     container_name: lobe-database
     ports:
