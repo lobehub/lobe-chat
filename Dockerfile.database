@@ -223,4 +223,6 @@ USER nextjs
 
 EXPOSE 3210/tcp
 
-CMD ["node", "/app/startServer.js"]
+ENTRYPOINT ["/bin/node"]
+
+CMD ["/app/startServer.js"]
