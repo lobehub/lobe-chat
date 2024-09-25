@@ -91,7 +91,7 @@ export class ServerService implements ISessionService {
     return lambdaClient.session.updateSessionChatConfig.mutate({ id, value }, { signal });
   }
 
-  getSessionsByType(type: 'agent' | 'group' | 'all' = 'all'): Promise<LobeSessions> {
+  getSessionsByType(_type: 'agent' | 'group' | 'all' = 'all'): Promise<LobeSessions> {
     // TODO: need be fixed
     // @ts-ignore
     return lambdaClient.session.getSessions.query({});
@@ -121,7 +121,7 @@ export class ServerService implements ISessionService {
     return lambdaClient.sessionGroup.getSessionGroup.query();
   }
 
-  batchCreateSessionGroups(groups: SessionGroups): Promise<BatchTaskResult> {
+  batchCreateSessionGroups(_groups: SessionGroups): Promise<BatchTaskResult> {
     return Promise.resolve({ added: 0, ids: [], skips: [], success: true });
   }
 
