@@ -19,13 +19,11 @@ export default defineConfig({
         // we will use pglite in the future
         // so the coverage of this file is not important
         'src/database/client/core/db.ts',
+        'src/utils/fetch/fetchEventSource/*.ts',
       ],
       provider: 'v8',
       reporter: ['text', 'json', 'lcov', 'text-summary'],
       reportsDirectory: './coverage/app',
-    },
-    deps: {
-      inline: ['vitest-canvas-mock'],
     },
     environment: 'happy-dom',
     exclude: [
@@ -33,9 +31,14 @@ export default defineConfig({
       '**/dist/**',
       '**/build/**',
       'src/database/server/**/**',
-      'src/server/modules/**/**',
+      'src/server/services/!(discover)/**/**',
     ],
     globals: true,
+    server: {
+      deps: {
+        inline: ['vitest-canvas-mock'],
+      },
+    },
     setupFiles: './tests/setup.ts',
   },
 });

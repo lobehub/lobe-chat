@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Foutdetails",
   "notFound": {
     "backHome": "Terug naar startpagina",
-    "desc": "We kunnen de pagina die je zoekt niet vinden, controleer of de link juist is",
+    "check": "Controleer of je URL correct is",
+    "desc": "We kunnen de pagina die je zoekt niet vinden",
     "title": "Betreden onbekend terrein?"
   },
   "pluginSettings": {
@@ -58,6 +59,7 @@
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",
     "InvalidBedrockCredentials": "Bedrock authentication failed, please check AccessKeyId/SecretAccessKey and retry",
     "InvalidClerkUser": "Sorry, you are not currently logged in. Please log in or register an account to continue.",
+    "InvalidGithubToken": "Github Persoonlijke Toegangstoken is ongeldig of leeg, controleer de Github Persoonlijke Toegangstoken en probeer het opnieuw.",
     "InvalidOllamaArgs": "Ollama-configuratie is onjuist, controleer de Ollama-configuratie en probeer het opnieuw",
     "InvalidProviderAPIKey": "{{provider}} API-sleutel is onjuist of leeg. Controleer de {{provider}} API-sleutel en probeer het opnieuw.",
     "LocationNotSupportError": "Sorry, your current location does not support this model service, possibly due to regional restrictions or service not being available. Please confirm if the current location supports using this service, or try using other location information.",
@@ -79,7 +81,9 @@
     "PluginServerError": "Fout bij serverrespons voor plug-in. Controleer de foutinformatie hieronder voor uw plug-inbeschrijvingsbestand, plug-inconfiguratie of serverimplementatie",
     "PluginSettingsInvalid": "Deze plug-in moet correct geconfigureerd zijn voordat deze kan worden gebruikt. Controleer of uw configuratie juist is",
     "ProviderBizError": "Er is een fout opgetreden bij het aanvragen van de {{provider}}-service. Controleer de volgende informatie of probeer het opnieuw.",
-    "SubscriptionPlanLimit": "Uw abonnementslimiet is bereikt en u kunt deze functie niet gebruiken. Upgrade naar een hoger plan of koop een resourcepakket om door te gaan met gebruiken."
+    "StreamChunkError": "Fout bij het parseren van het berichtblok van de streamingaanroep. Controleer of de huidige API-interface voldoet aan de standaardnormen, of neem contact op met uw API-leverancier voor advies.",
+    "SubscriptionPlanLimit": "Uw abonnementslimiet is bereikt en u kunt deze functie niet gebruiken. Upgrade naar een hoger plan of koop een resourcepakket om door te gaan met gebruiken.",
+    "UnknownChatFetchError": "Het spijt me, er is een onbekende verzoekfout opgetreden. Controleer de onderstaande informatie of probeer het opnieuw."
   },
   "stt": {
     "responseError": "Serviceverzoek mislukt. Controleer de configuratie of probeer opnieuw"
@@ -113,6 +117,10 @@
   },
   "upload": {
     "desc": "Details: {{detail}}",
-    "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw"
+    "fileOnlySupportInServerMode": "De huidige implementatiemodus ondersteunt het uploaden van niet-afbeeldingsbestanden niet. Als u bestanden in {{ext}}-formaat wilt uploaden, schakelt u over naar de serverdatabase-implementatie of gebruikt u de {{cloud}}-dienst.",
+    "networkError": "Controleer of je netwerk goed werkt en of de cross-origin configuratie van de bestandsopslagservice correct is.",
+    "title": "Bestand uploaden mislukt, controleer uw internetverbinding of probeer het later opnieuw",
+    "unknownError": "Foutreden: {{reason}}",
+    "uploadFailed": "Bestand uploaden is mislukt."
   }
 }

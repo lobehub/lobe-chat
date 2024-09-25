@@ -75,17 +75,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       };
     }
     case ModelProvider.Bedrock: {
-      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION } = getLLMConfig();
+      const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } =
+        getLLMConfig();
       let accessKeyId: string | undefined = AWS_ACCESS_KEY_ID;
       let accessKeySecret: string | undefined = AWS_SECRET_ACCESS_KEY;
       let region = AWS_REGION;
+      let sessionToken: string | undefined = AWS_SESSION_TOKEN;
       // if the payload has the api key, use user
       if (payload.apiKey) {
         accessKeyId = payload?.awsAccessKeyId;
         accessKeySecret = payload?.awsSecretAccessKey;
+        sessionToken = payload?.awsSessionToken;
         region = payload?.awsRegion;
       }
-      return { accessKeyId, accessKeySecret, region };
+      return { accessKeyId, accessKeySecret, region, sessionToken };
     }
     case ModelProvider.Ollama: {
       const { OLLAMA_PROXY_URL } = getLLMConfig();
@@ -130,6 +133,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURL };
     }
+    case ModelProvider.Github: {
+      const { GITHUB_TOKEN } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || GITHUB_TOKEN);
+
+      return { apiKey };
+    }
     case ModelProvider.OpenRouter: {
       const { OPENROUTER_API_KEY } = getLLMConfig();
 
@@ -151,6 +161,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.FireworksAI: {
+      const { FIREWORKSAI_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || FIREWORKSAI_API_KEY);
+
+      return { apiKey };
+    }
     case ModelProvider.ZeroOne: {
       const { ZEROONE_API_KEY } = getLLMConfig();
 
@@ -169,6 +186,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { STEPFUN_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || STEPFUN_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Novita: {
+      const { NOVITA_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || NOVITA_API_KEY);
 
       return { apiKey };
     }
@@ -197,6 +221,42 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURLOrAccountID };
     }
+    case ModelProvider.Ai360: {
+      const { AI360_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || AI360_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.SiliconCloud: {
+      const { SILICONCLOUD_API_KEY, SILICONCLOUD_PROXY_URL } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SILICONCLOUD_API_KEY);
+      const baseURL = payload?.endpoint || SILICONCLOUD_PROXY_URL;
+
+      return { apiKey, baseURL };
+    }
+    case ModelProvider.Upstage: {
+      const { UPSTAGE_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || UPSTAGE_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Spark: {
+      const { SPARK_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SPARK_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Ai21: {
+      const { AI21_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || AI21_API_KEY);
+
+      return { apiKey };
+    }
   }
 };
 
@@ -204,11 +264,16 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
  * Initializes the agent runtime with the user payload in backend
  * @param provider - The provider name.
  * @param payload - The JWT payload.
+ * @param params
  * @returns A promise that resolves when the agent runtime is initialized.
  */
-export const initAgentRuntimeWithUserPayload = (provider: string, payload: JWTPayload) => {
+export const initAgentRuntimeWithUserPayload = (
+  provider: string,
+  payload: JWTPayload,
+  params: any = {},
+) => {
   return AgentRuntime.initializeWithProviderOptions(provider, {
-    [provider]: getLlmOptionsFromPayload(provider, payload),
+    [provider]: { ...getLlmOptionsFromPayload(provider, payload), ...params },
   });
 };
 

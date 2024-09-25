@@ -1,10 +1,20 @@
 {
   "about": "Informazioni",
   "advanceSettings": "Impostazioni avanzate",
-  "appInitializing": "Inizializzazione dell'app in corso, attendere pazientemente...",
+  "alert": {
+    "cloud": {
+      "action": "Provalo gratuitamente",
+      "desc": "Abbiamo fornito a tutti gli utenti registrati {{credit}} crediti di calcolo gratuiti, senza la necessità di configurazioni complesse, pronto all'uso, supporta la cronologia delle conversazioni illimitata e la sincronizzazione cloud globale. Ci sono molte altre funzionalità avanzate che ti aspettano da scoprire.",
+      "descOnMobile": "Offriamo a tutti gli utenti registrati {{credit}} crediti di calcolo gratuiti, pronti all'uso senza configurazioni complesse.",
+      "title": "Benvenuto a {{name}}"
+    }
+  },
+  "appInitializing": "Applicazione in fase di avvio...",
   "autoGenerate": "Generazione automatica",
   "autoGenerateTooltip": "Completamento automatico basato su suggerimenti",
   "autoGenerateTooltipDisabled": "Si prega di compilare il campo suggerimento per abilitare la funzione di completamento automatico",
+  "back": "Indietro",
+  "batchDelete": "Elimina in batch",
   "blog": "Blog sui prodotti",
   "cancel": "Annulla",
   "changelog": "Registro modifiche",
@@ -23,6 +33,7 @@
   "defaultSession": "Sessione predefinita",
   "delete": "Elimina",
   "document": "Documento di utilizzo",
+  "download": "Scarica",
   "duplicate": "Duplicato",
   "edit": "Modifica",
   "export": "Esporta configurazione",
@@ -184,7 +195,8 @@
   },
   "tab": {
     "chat": "Chat",
-    "market": "Scopri",
+    "discover": "Scopri",
+    "files": "File",
     "me": "io",
     "setting": "Impostazioni"
   },
@@ -206,6 +218,7 @@
   "userPanel": {
     "anonymousNickName": "Utente Anonimo",
     "billing": "Gestione fatturazione",
+    "cloud": "Prova {{name}}",
     "data": "Archiviazione dati",
     "defaultNickname": "Utente Community",
     "discord": "Supporto della community",

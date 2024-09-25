@@ -9,13 +9,16 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSyncSettings } from '@/app/(main)/settings/hooks/useSyncSettings';
-import { enableAuth } from '@/const/auth';
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { imageUrl } from '@/const/url';
 import AvatarWithUpload from '@/features/AvatarWithUpload';
 import { Locales, localeOptions } from '@/locales/resources';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors, userGeneralSettingsSelectors } from '@/store/user/selectors';
+import {
+  authSelectors,
+  settingsSelectors,
+  userGeneralSettingsSelectors,
+} from '@/store/user/selectors';
 import { switchLang } from '@/utils/client/switchLang';
 
 import { ThemeSwatchesNeutral, ThemeSwatchesPrimary } from './ThemeSwatches';
@@ -28,7 +31,11 @@ const Theme = memo(() => {
   const [form] = Form.useForm();
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
   const themeMode = useUserStore(userGeneralSettingsSelectors.currentThemeMode);
-  const [setThemeMode, setSettings] = useUserStore((s) => [s.switchThemeMode, s.setSettings]);
+  const [setThemeMode, setSettings, enableAuth] = useUserStore((s) => [
+    s.switchThemeMode,
+    s.setSettings,
+    authSelectors.enabledAuth(s),
+  ]);
 
   useSyncSettings(form);
 

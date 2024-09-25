@@ -49,14 +49,14 @@ describe('parseModelString', () => {
 
     it('multi models', () => {
       const result = parseModelString(
-        'gemini-pro-vision=Gemini Pro Vision<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',
+        'gemini-1.5-flash-latest=Gemini 1.5 Flash<16000:vision>,gpt-4-all=ChatGPT Plus<128000:fc:vision:file>',
       );
 
       expect(result.add).toEqual([
         {
-          displayName: 'Gemini Pro Vision',
+          displayName: 'Gemini 1.5 Flash',
           vision: true,
-          id: 'gemini-pro-vision',
+          id: 'gemini-1.5-flash-latest',
           tokens: 16000,
         },
         {
@@ -266,25 +266,6 @@ describe('transformToChatModelCards', () => {
       defaultChatModels: OpenAIProviderCard.chatModels,
     });
 
-    expect(result).toEqual([
-      {
-        displayName: 'ChatGPT-4',
-        files: true,
-        functionCall: true,
-        enabled: true,
-        id: 'gpt-4-0125-preview',
-        tokens: 128000,
-      },
-      {
-        description: 'GPT-4 Turbo 视觉版 (240409)',
-        displayName: 'ChatGPT-4 Vision',
-        files: true,
-        functionCall: true,
-        enabled: true,
-        id: 'gpt-4-turbo-2024-04-09',
-        tokens: 128000,
-        vision: true,
-      },
-    ]);
+    expect(result).toMatchSnapshot();
   });
 });

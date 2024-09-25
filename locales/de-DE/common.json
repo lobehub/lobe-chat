@@ -1,10 +1,20 @@
 {
   "about": "Über",
   "advanceSettings": "Erweiterte Einstellungen",
-  "appInitializing": "Die App wird gestartet, bitte haben Sie etwas Geduld...",
+  "alert": {
+    "cloud": {
+      "action": "Kostenlose Testversion",
+      "desc": "Wir bieten allen registrierten Benutzern {{credit}} kostenlose Berechnungspunkte an, ohne komplizierte Konfiguration, sofort einsatzbereit, unterstützt unbegrenzte Chat-Verlaufsprotokolle und globale Cloud-Synchronisierung. Entdecken Sie gemeinsam weitere fortschrittliche Funktionen.",
+      "descOnMobile": "Wir bieten allen registrierten Benutzern {{credit}} kostenlose Rechenpunkte, die ohne komplizierte Konfiguration sofort einsatzbereit sind.",
+      "title": "Willkommen bei {{name}}"
+    }
+  },
+  "appInitializing": "Anwendung wird gestartet...",
   "autoGenerate": "Automatisch generieren",
   "autoGenerateTooltip": "Assistentenbeschreibung automatisch auf Basis von Vorschlägen vervollständigen",
   "autoGenerateTooltipDisabled": "Bitte geben Sie einen Hinweis ein, um die automatische Vervollständigung zu aktivieren",
+  "back": "Zurück",
+  "batchDelete": "Massenlöschung",
   "blog": "Produkt-Blog",
   "cancel": "Abbrechen",
   "changelog": "Änderungsprotokoll",
@@ -23,6 +33,7 @@
   "defaultSession": "Standardassistent",
   "delete": "Löschen",
   "document": "Dokumentation",
+  "download": "Herunterladen",
   "duplicate": "Duplikat erstellen",
   "edit": "Bearbeiten",
   "export": "Exportieren",
@@ -184,7 +195,8 @@
   },
   "tab": {
     "chat": "Chat",
-    "market": "Entdecken",
+    "discover": "Entdecken",
+    "files": "Dateien",
     "me": "Ich",
     "setting": "Einstellung"
   },
@@ -206,6 +218,7 @@
   "userPanel": {
     "anonymousNickName": "Anonymer Benutzer",
     "billing": "Abrechnung verwalten",
+    "cloud": "Erleben Sie {{name}}",
     "data": "Daten speichern",
     "defaultNickname": "Community User",
     "discord": "Community-Support",

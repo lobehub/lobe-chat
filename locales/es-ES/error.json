@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Detalles del error",
   "notFound": {
     "backHome": "Volver a la página de inicio",
-    "desc": "No podemos encontrar la página que estás buscando, por favor verifica si el enlace es correcto",
+    "check": "Por favor, verifica si tu URL es correcta",
+    "desc": "No podemos encontrar la página que estás buscando",
     "title": "¿Has entrado en un área desconocida?"
   },
   "pluginSettings": {
@@ -58,6 +59,7 @@
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidClerkUser": "Lo siento mucho, actualmente no has iniciado sesión. Por favor, inicia sesión o regístrate antes de continuar.",
+    "InvalidGithubToken": "El token de acceso personal de Github es incorrecto o está vacío. Por favor, verifica el token de acceso personal de Github y vuelve a intentarlo.",
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
     "InvalidProviderAPIKey": "{{provider}} API Key incorrecta o vacía, por favor revisa tu {{provider}} API Key e intenta de nuevo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",
@@ -79,7 +81,9 @@
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
     "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
-    "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando."
+    "StreamChunkError": "Error de análisis del bloque de mensajes de la solicitud en streaming. Por favor, verifica si la API actual cumple con las normas estándar o contacta a tu proveedor de API para más información.",
+    "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando.",
+    "UnknownChatFetchError": "Lo sentimos, se ha producido un error desconocido en la solicitud. Por favor, verifica la información a continuación o intenta de nuevo."
   },
   "stt": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
@@ -113,6 +117,10 @@
   },
   "upload": {
     "desc": "Detalles: {{detail}}",
-    "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde"
+    "fileOnlySupportInServerMode": "El modo de implementación actual no admite la carga de archivos que no sean imágenes. Si necesita cargar un archivo en formato {{ext}}, cambie a la implementación de base de datos en servidor o utilice el servicio {{cloud}}.",
+    "networkError": "Por favor, verifica que tu red esté funcionando correctamente y comprueba si la configuración de CORS del servicio de almacenamiento de archivos es correcta.",
+    "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde",
+    "unknownError": "Razón del error: {{reason}}",
+    "uploadFailed": "La carga del archivo ha fallado."
   }
 }

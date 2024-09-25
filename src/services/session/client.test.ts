@@ -20,6 +20,7 @@ vi.mock('@/database/client/models/session', () => {
       update: vi.fn(),
       count: vi.fn(),
       batchCreate: vi.fn(),
+      findById: vi.fn(),
       isEmpty: vi.fn(),
       queryByKeyword: vi.fn(),
       updateConfig: vi.fn(),

@@ -1,0 +1,94 @@
+{
+  "desc": "Beheer je bestanden en kennisbank",
+  "detail": {
+    "basic": {
+      "createdAt": "Aanmaakdatum",
+      "filename": "Bestandsnaam",
+      "size": "Bestandsgrootte",
+      "title": "Basisinformatie",
+      "type": "Formaat",
+      "updatedAt": "Bijwerkdatum"
+    },
+    "data": {
+      "chunkCount": "Aantal delen",
+      "embedding": {
+        "default": "Nog niet gevectoriseerd",
+        "error": "Mislukt",
+        "pending": "Te starten",
+        "processing": "Bezig",
+        "success": "Voltooid"
+      },
+      "embeddingStatus": "Vectorisatie"
+    }
+  },
+  "empty": "Geen bestanden/mappen geüpload",
+  "header": {
+    "actions": {
+      "newFolder": "Nieuwe map",
+      "uploadFile": "Bestand uploaden",
+      "uploadFolder": "Map uploaden"
+    },
+    "uploadButton": "Uploaden"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Je staat op het punt deze kennisbank te verwijderen. De bestanden hierin worden niet verwijderd, maar verplaatst naar 'Alle bestanden'. Een verwijderde kennisbank kan niet worden hersteld, wees voorzichtig.",
+      "empty": "Klik op <1>+</1> om een kennisbank te maken"
+    },
+    "new": "Nieuwe kennisbank",
+    "title": "Kennisbank"
+  },
+  "networkError": "Kon de kennisbank niet ophalen, controleer uw netwerkverbinding en probeer het opnieuw",
+  "notSupportGuide": {
+    "desc": "De huidige implementatie is in client-database modus, waardoor de bestandsbeheerfunctie niet beschikbaar is. Schakel over naar <1>server-database implementatiemodus</1>, of gebruik direct <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Ondersteunt gangbare bestandstypen, waaronder Word, PPT, Excel, PDF, TXT en andere veelvoorkomende documentformaten, evenals JS, Python en andere gangbare codebestanden",
+        "title": "Meerdere bestandstype-analyse"
+      },
+      "embeddings": {
+        "desc": "Gebruik hoogwaardige vectormodellen om tekstdelen te vectoriseren, waardoor semantische zoekopdrachten in de inhoud van bestanden mogelijk zijn",
+        "title": "Vector-semantisering"
+      },
+      "repos": {
+        "desc": "Ondersteunt het maken van kennisbanken en staat het toevoegen van verschillende bestandstypen toe, zodat je jouw eigen domeinkennis kunt opbouwen",
+        "title": "Kennisbank"
+      }
+    },
+    "title": "De huidige implementatiemodus ondersteunt geen bestandsbeheer"
+  },
+  "preview": {
+    "downloadFile": "Bestand downloaden",
+    "unsupportedFileAndContact": "Dit bestandsformaat wordt momenteel niet ondersteund voor online preview. Als u een preview wilt, neem dan gerust <1>contact met ons op</1>."
+  },
+  "searchFilePlaceholder": "Zoek bestand",
+  "tab": {
+    "all": "Alle bestanden",
+    "audios": "Audio's",
+    "documents": "Documenten",
+    "images": "Afbeeldingen",
+    "videos": "Video's",
+    "websites": "Websites"
+  },
+  "title": "Bestanden",
+  "uploadDock": {
+    "body": {
+      "collapse": "Samenvouwen",
+      "item": {
+        "done": "Geüpload",
+        "error": "Upload mislukt, probeer het opnieuw",
+        "pending": "Voorbereiden om te uploaden...",
+        "processing": "Bestand wordt verwerkt...",
+        "restTime": "Overgebleven {{time}}"
+      }
+    },
+    "totalCount": "Totaal {{count}} items",
+    "uploadStatus": {
+      "error": "Uploadfout",
+      "pending": "Wachten op upload",
+      "processing": "Bezig met uploaden",
+      "success": "Upload voltooid",
+      "uploading": "Bezig met uploaden"
+    }
+  }
+}

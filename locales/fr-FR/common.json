@@ -1,10 +1,20 @@
 {
   "about": "À propos",
   "advanceSettings": "Paramètres avancés",
-  "appInitializing": "L'application est en cours de démarrage, veuillez patienter...",
+  "alert": {
+    "cloud": {
+      "action": "Découvrir gratuitement",
+      "desc": "Nous offrons {{credit}} crédits de calcul gratuits à tous les utilisateurs inscrits, sans configuration compliquée, prêts à l'emploi, prenant en charge l'historique des conversations illimité et la synchronisation cloud globale. Découvrez davantage de fonctionnalités avancées ensemble.",
+      "descOnMobile": "Nous offrons {{credit}} crédits de calcul gratuits à tous les utilisateurs inscrits, sans configuration compliquée, prêts à l'emploi.",
+      "title": "Bienvenue à {{name}}"
+    }
+  },
+  "appInitializing": "L'application est en cours de démarrage...",
   "autoGenerate": "Générer automatiquement",
   "autoGenerateTooltip": "Générer automatiquement la description de l'agent basée sur les suggestions",
   "autoGenerateTooltipDisabled": "Veuillez saisir un mot-clé avant d'activer la fonction de complétion automatique",
+  "back": "Retour",
+  "batchDelete": "Suppression en masse",
   "blog": "Blog des produits",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
@@ -23,6 +33,7 @@
   "defaultSession": "Session par défaut",
   "delete": "Supprimer",
   "document": "Document d'utilisation",
+  "download": "Télécharger",
   "duplicate": "Dupliquer",
   "edit": "Modifier",
   "export": "Exporter",
@@ -184,7 +195,8 @@
   },
   "tab": {
     "chat": "Conversation",
-    "market": "Découvrir",
+    "discover": "Découvrir",
+    "files": "Fichiers",
     "me": "moi",
     "setting": "Paramètre"
   },
@@ -206,6 +218,7 @@
   "userPanel": {
     "anonymousNickName": "Utilisateur anonyme",
     "billing": "Gestion de la facturation",
+    "cloud": "Découvrir {{name}}",
     "data": "Stockage des données",
     "defaultNickname": "Utilisateur de la version communautaire",
     "discord": "Support de la communauté",

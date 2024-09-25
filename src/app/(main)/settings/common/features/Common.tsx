@@ -16,7 +16,7 @@ import { serverConfigSelectors } from '@/store/serverConfig/selectors';
 import { useSessionStore } from '@/store/session';
 import { useToolStore } from '@/store/tool';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { settingsSelectors } from '@/store/user/selectors';
 
 type SettingItemGroup = ItemGroup;
 
@@ -24,10 +24,7 @@ const Common = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
 
-  const isSignedIn = useUserStore((s) => s.isSignedIn);
   const showAccessCodeConfig = useServerConfigStore(serverConfigSelectors.enabledAccessCode);
-  const showOAuthLogin = useServerConfigStore(serverConfigSelectors.enabledOAuthSSO);
-  const user = useUserStore(userProfileSelectors.userProfile, isEqual);
 
   const [clearSessions, clearSessionGroups] = useSessionStore((s) => [
     s.clearSessions,
@@ -40,30 +37,9 @@ const Common = memo(() => {
   const [removeAllFiles] = useFileStore((s) => [s.removeAllFiles]);
   const removeAllPlugins = useToolStore((s) => s.removeAllPlugins);
   const settings = useUserStore(settingsSelectors.currentSettings, isEqual);
-  const [setSettings, resetSettings, signIn, signOut] = useUserStore((s) => [
-    s.setSettings,
-    s.resetSettings,
-    s.openLogin,
-    s.logout,
-  ]);
+  const [setSettings, resetSettings] = useUserStore((s) => [s.setSettings, s.resetSettings]);
 
   const { message, modal } = App.useApp();
-
-  const handleSignOut = useCallback(() => {
-    modal.confirm({
-      centered: true,
-      okButtonProps: { danger: true },
-      onOk: () => {
-        signOut();
-        message.success(t('settingSystem.oauth.signout.success'));
-      },
-      title: t('settingSystem.oauth.signout.confirm'),
-    });
-  }, []);
-
-  const handleSignIn = useCallback(() => {
-    signIn();
-  }, []);
 
   const handleReset = useCallback(() => {
     modal.confirm({
@@ -111,23 +87,6 @@ const Common = memo(() => {
         hidden: !showAccessCodeConfig,
         label: t('settingSystem.accessCode.title'),
         name: ['keyVaults', 'password'],
-      },
-      {
-        children: isSignedIn ? (
-          <Button onClick={handleSignOut}>{t('settingSystem.oauth.signout.action')}</Button>
-        ) : (
-          <Button onClick={handleSignIn} type="primary">
-            {t('settingSystem.oauth.signin.action')}
-          </Button>
-        ),
-        desc: isSignedIn
-          ? `${user?.email} ${t('settingSystem.oauth.info.desc')}`
-          : t('settingSystem.oauth.signin.desc'),
-        hidden: !showOAuthLogin,
-        label: isSignedIn
-          ? t('settingSystem.oauth.info.title')
-          : t('settingSystem.oauth.signin.title'),
-        minWidth: undefined,
       },
       {
         children: (

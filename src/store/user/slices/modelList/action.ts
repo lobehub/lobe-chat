@@ -107,6 +107,9 @@ export const createModelListSlice: StateCreator<
       const cloudflare = draft.find((d) => d.id === ModelProvider.Cloudflare);
       if (cloudflare)
         cloudflare.chatModels = mergeModels('cloudflare', cloudflare.chatModels);
+
+      const novita = draft.find((d) => d.id === ModelProvider.Novita);
+      if (novita) novita.chatModels = mergeModels('novita', novita.chatModels);
     });
 
     set({ defaultModelProviderList }, false, `refreshDefaultModelList - ${params?.trigger}`);

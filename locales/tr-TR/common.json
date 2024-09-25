@@ -1,10 +1,20 @@
 {
   "about": "Hakkında",
   "advanceSettings": "Gelişmiş Ayarlar",
-  "appInitializing": "Uygulama başlatılıyor, lütfen bekleyin...",
+  "alert": {
+    "cloud": {
+      "action": "Ücretsiz Deneyin",
+      "desc": "Tüm kayıtlı kullanıcılarımıza {{credit}} ücretsiz hesaplama puanı sunuyoruz, karmaşık yapılandırmaya gerek yok, hemen kullanıma hazır, sınırsız konuşma geçmişi ve global bulut senkronizasyonu desteği, daha fazla gelişmiş özellikleri keşfetmeye hazır olun.",
+      "descOnMobile": "Tüm kayıtlı kullanıcılara {{credit}} ücretsiz hesaplama puanı sunuyoruz, karmaşık yapılandırmaya gerek yok, hemen kullanıma hazır.",
+      "title": "{{name}}'i Denemek İçin Hoş Geldiniz"
+    }
+  },
+  "appInitializing": "Uygulama başlatılıyor...",
   "autoGenerate": "Otomatik Oluştur",
   "autoGenerateTooltip": "Auto-generate agent description based on prompts",
   "autoGenerateTooltipDisabled": "Otomatik tamamlama işlevini kullanmadan önce ipucu kelimesini girin",
+  "back": "Geri",
+  "batchDelete": "Toplu Sil",
   "blog": "Ürün Blogu",
   "cancel": "İptal",
   "changelog": "Changelog",
@@ -23,6 +33,7 @@
   "defaultSession": "Varsayılan Asistan",
   "delete": "Sil",
   "document": "Belge",
+  "download": "İndir",
   "duplicate": "Kopya oluştur",
   "edit": "Düzenle",
   "export": "Dışa Aktar",
@@ -184,7 +195,8 @@
   },
   "tab": {
     "chat": "Chat",
-    "market": "Keşfet",
+    "discover": "Keşfet",
+    "files": "Dosyalar",
     "me": "ben",
     "setting": "Ayarlar"
   },
@@ -206,6 +218,7 @@
   "userPanel": {
     "anonymousNickName": "Anonim Kullanıcı",
     "billing": "Fatura Yönetimi",
+    "cloud": "{{name}}'i Deneyin",
     "data": "Veri Depolama",
     "defaultNickname": "Topluluk Kullanıcısı",
     "discord": "Topluluk Destek",

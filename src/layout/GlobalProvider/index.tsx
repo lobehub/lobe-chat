@@ -3,6 +3,7 @@ import { cookies, headers } from 'next/headers';
 import { FC, PropsWithChildren } from 'react';
 import { resolveAcceptLanguage } from 'resolve-accept-language';
 
+import { appEnv } from '@/config/app';
 import { getDebugConfig } from '@/config/debug';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
@@ -19,6 +20,7 @@ import { isMobileDevice } from '@/utils/responsive';
 
 import AppTheme from './AppTheme';
 import Locale from './Locale';
+import QueryProvider from './Query';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
@@ -81,13 +83,14 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
           defaultAppearance={appearance?.value}
           defaultNeutralColor={neutralColor?.value as any}
           defaultPrimaryColor={primaryColor?.value as any}
+          globalCDN={appEnv.CDN_USE_GLOBAL}
         >
           <ServerConfigStoreProvider
             featureFlags={serverFeatureFlags}
             isMobile={isMobile}
             serverConfig={serverConfig}
           >
-            {children}
+            <QueryProvider>{children}</QueryProvider>
             <StoreInitialization />
           </ServerConfigStoreProvider>
           <DebugUI />

@@ -79,10 +79,11 @@ export interface AppThemeProps {
   defaultAppearance?: ThemeAppearance;
   defaultNeutralColor?: NeutralColors;
   defaultPrimaryColor?: PrimaryColors;
+  globalCDN?: boolean;
 }
 
 const AppTheme = memo<AppThemeProps>(
-  ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor }) => {
+  ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor, globalCDN }) => {
     // console.debug('server:appearance', defaultAppearance);
     // console.debug('server:primaryColor', defaultPrimaryColor);
     // console.debug('server:neutralColor', defaultNeutralColor);
@@ -116,7 +117,14 @@ const AppTheme = memo<AppThemeProps>(
       >
         <GlobalStyle />
         <AntdStaticMethods />
-        <ConfigProvider config={{ aAs: Link, imgAs: Image, imgUnoptimized: true }}>
+        <ConfigProvider
+          config={{
+            aAs: Link,
+            imgAs: Image,
+            imgUnoptimized: true,
+            proxy: globalCDN ? 'unpkg' : undefined,
+          }}
+        >
           {children}
         </ConfigProvider>
       </ThemeProvider>

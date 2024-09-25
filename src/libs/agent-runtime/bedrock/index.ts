@@ -7,7 +7,7 @@ import { experimental_buildLlama2Prompt } from 'ai/prompts';
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
-import { buildAnthropicMessages } from '../utils/anthropicHelpers';
+import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -21,6 +21,7 @@ export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
   region?: string;
+  sessionToken?: string;
 }
 
 export class LobeBedrockAI implements LobeRuntimeAI {
@@ -28,7 +29,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   region: string;
 
-  constructor({ region, accessKeyId, accessKeySecret }: LobeBedrockAIParams) {
+  constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
 
@@ -38,6 +39,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       credentials: {
         accessKeyId: accessKeyId,
         secretAccessKey: accessKeySecret,
+        sessionToken: sessionToken,
       },
       region: this.region,
     });
@@ -53,7 +55,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     payload: ChatStreamPayload,
     options?: ChatCompetitionOptions,
   ): Promise<Response> => {
-    const { max_tokens, messages, model, temperature, top_p } = payload;
+    const { max_tokens, messages, model, temperature, top_p, tools } = payload;
     const system_message = messages.find((m) => m.role === 'system');
     const user_messages = messages.filter((m) => m.role !== 'system');
 
@@ -62,9 +64,10 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       body: JSON.stringify({
         anthropic_version: 'bedrock-2023-05-31',
         max_tokens: max_tokens || 4096,
-        messages: buildAnthropicMessages(user_messages),
+        messages: await buildAnthropicMessages(user_messages),
         system: system_message?.content as string,
-        temperature: temperature,
+        temperature: temperature / 2,
+        tools: buildAnthropicTools(tools),
         top_p: top_p,
       }),
       contentType: 'application/json',

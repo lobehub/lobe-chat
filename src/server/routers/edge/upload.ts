@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 import { passwordProcedure, router } from '@/libs/trpc';
-import { S3 } from '@/server/files/s3';
+import { S3 } from '@/server/modules/S3';
 
 export const uploadRouter = router({
   createS3PreSignedUrl: passwordProcedure

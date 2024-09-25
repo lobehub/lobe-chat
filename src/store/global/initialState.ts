@@ -5,7 +5,8 @@ import { AsyncLocalStorage } from '@/utils/localStorage';
 
 export enum SidebarTabKey {
   Chat = 'chat',
-  Market = 'market',
+  Discover = 'discover',
+  Files = 'files',
   Me = 'me',
   Setting = 'settings',
 }
@@ -32,12 +33,14 @@ export enum SettingsTabs {
 export interface SystemStatus {
   // which sessionGroup should expand
   expandSessionGroupKeys: string[];
+  filePanelWidth: number;
   hidePWAInstaller?: boolean;
   inputHeight: number;
   mobileShowPortal?: boolean;
   mobileShowTopic?: boolean;
   sessionsWidth: number;
   showChatSideBar?: boolean;
+  showFilePanel?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;
 }
@@ -55,11 +58,13 @@ export interface GlobalState {
 
 export const INITIAL_STATUS = {
   expandSessionGroupKeys: [SessionDefaultGroup.Pinned, SessionDefaultGroup.Default],
+  filePanelWidth: 320,
   hidePWAInstaller: false,
   inputHeight: 200,
   mobileShowTopic: false,
   sessionsWidth: 320,
   showChatSideBar: true,
+  showFilePanel: true,
   showSessionPanel: true,
   showSystemRole: false,
 } satisfies SystemStatus;
