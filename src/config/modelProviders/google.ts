@@ -16,7 +16,7 @@ const Google: ModelProviderCard = {
         input: 0.075,
         output: 0.3,
       },
-      tokens: 1_048_576 + 8192,
+      tokens: 1_000_000 + 8192,
       vision: true,
     },
     {
@@ -31,33 +31,7 @@ const Google: ModelProviderCard = {
         output: 0.3,
       },
       releasedAt: '2024-08-27',
-      tokens: 1_048_576 + 8192,
-      vision: true,
-    },
-    {
-      description:
-        'Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。',
-      displayName: 'Gemini 1.5 Flash 8B 0924',
-      functionCall: true,
-      id: 'gemini-1.5-flash-8b-exp-0924',
-      maxOutput: 8192,
-      pricing: {
-        cachedInput: 0.018_75,
-        input: 0.075,
-        output: 0.3,
-      },
-      releasedAt: '2024-09-24',
-      tokens: 1_048_576 + 8192,
-      vision: true,
-    },
-    {
-      description: 'Gemini 1.5 Flash 8B 0827 专为处理大规模任务场景设计，提供无与伦比的处理速度。',
-      displayName: 'Gemini 1.5 Flash 8B 0827',
-      functionCall: true,
-      id: 'gemini-1.5-flash-8b-exp-0827',
-      maxOutput: 8192,
-      releasedAt: '2024-08-27',
-      tokens: 1_048_576 + 8192,
+      tokens: 1_000_000 + 8192,
       vision: true,
     },
     {
@@ -73,7 +47,7 @@ const Google: ModelProviderCard = {
         output: 0.3,
       },
       releasedAt: '2024-09-25',
-      tokens: 1_048_576 + 8192,
+      tokens: 1_000_000 + 8192,
       vision: true,
     },
     {
@@ -87,7 +61,33 @@ const Google: ModelProviderCard = {
         input: 0.075,
         output: 0.3,
       },
-      tokens: 1_048_576 + 8192,
+      tokens: 1_000_000 + 8192,
+      vision: true,
+    },
+    {
+      description:
+        'Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。',
+      displayName: 'Gemini 1.5 Flash 8B 0924',
+      functionCall: true,
+      id: 'gemini-1.5-flash-8b-exp-0924',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.018_75,
+        input: 0.075,
+        output: 0.3,
+      },
+      releasedAt: '2024-09-24',
+      tokens: 1_000_000 + 8192,
+      vision: true,
+    },
+    {
+      description: 'Gemini 1.5 Flash 8B 0827 专为处理大规模任务场景设计，提供无与伦比的处理速度。',
+      displayName: 'Gemini 1.5 Flash 8B 0827',
+      functionCall: true,
+      id: 'gemini-1.5-flash-8b-exp-0827',
+      maxOutput: 8192,
+      releasedAt: '2024-08-27',
+      tokens: 1_000_000 + 8192,
       vision: true,
     },
     {
@@ -104,7 +104,7 @@ const Google: ModelProviderCard = {
         output: 10.5,
       },
       releasedAt: '2024-02-15',
-      tokens: 2_097_152 + 8192,
+      tokens: 2_000_000 + 8192,
       vision: true,
     },
     {
@@ -119,7 +119,7 @@ const Google: ModelProviderCard = {
         output: 10.5,
       },
       releasedAt: '2024-08-27',
-      tokens: 2_097_152 + 8192,
+      tokens: 2_000_000 + 8192,
       vision: true,
     },
     {
@@ -134,7 +134,7 @@ const Google: ModelProviderCard = {
         output: 10.5,
       },
       releasedAt: '2024-08-01',
-      tokens: 2_097_152 + 8192,
+      tokens: 2_000_000 + 8192,
       vision: true,
     },
     {
@@ -151,7 +151,7 @@ const Google: ModelProviderCard = {
         output: 2.5,
       },
       releasedAt: '2024-09-24',
-      tokens: 2_097_152 + 8192,
+      tokens: 2_000_000 + 8192,
       vision: true,
     },
     {
@@ -166,7 +166,7 @@ const Google: ModelProviderCard = {
         output: 10.5,
       },
       releasedAt: '2024-02-15',
-      tokens: 2_097_152 + 8192,
+      tokens: 2_000_000 + 8192,
       vision: true,
     },
     {
