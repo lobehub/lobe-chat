@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.32](https://github.com/lobehub/lobe-chat/compare/v1.19.31...v1.19.32)
+
+<sup>Released on **2024-09-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add function call for `taichu_llm`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add function call for `taichu_llm`, closes [#4119](https://github.com/lobehub/lobe-chat/issues/4119) ([8f629d8](https://github.com/lobehub/lobe-chat/commit/8f629d8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.31](https://github.com/lobehub/lobe-chat/compare/v1.19.30...v1.19.31)
 
 <sup>Released on **2024-09-24**</sup>
