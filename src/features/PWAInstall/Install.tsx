@@ -9,6 +9,7 @@ import { PWA_INSTALL_ID } from '@/const/layoutTokens';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
+import { useUserStore } from '@/store/user';
 
 // @ts-ignore
 const PWA: any = dynamic(() => import('@khmyznikov/pwa-install/dist/pwa-install.react.js'), {
@@ -20,6 +21,7 @@ const PWAInstall = memo(() => {
 
   const { install, canInstall } = usePWAInstall();
 
+  const isShowPWAGuide = useUserStore((s) => s.isShowPWAGuide);
   const [hidePWAInstaller, updateSystemStatus] = useGlobalStore((s) => [
     systemStatusSelectors.hidePWAInstaller(s),
     s.updateSystemStatus,
@@ -58,11 +60,13 @@ const PWAInstall = memo(() => {
     if (!canInstall || hidePWAInstaller) return;
 
     // trigger the pwa installer and register the service worker
-    install();
-    if ('serviceWorker' in navigator && window.serwist !== undefined) {
-      window.serwist.register();
+    if (isShowPWAGuide) {
+      install();
+      if ('serviceWorker' in navigator && window.serwist !== undefined) {
+        window.serwist.register();
+      }
     }
-  }, [canInstall, hidePWAInstaller]);
+  }, [canInstall, hidePWAInstaller, isShowPWAGuide]);
 
   return (
     <PWA
