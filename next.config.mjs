@@ -1,6 +1,6 @@
-import nextPWA from '@ducanh2912/next-pwa';
 import analyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
+import withSerwistInit from '@serwist/next';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
@@ -192,12 +192,10 @@ const noWrapper = (config) => config;
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
 
 const withPWA = isProd
-  ? nextPWA({
-      dest: 'public',
-      register: true,
-      workboxOptions: {
-        skipWaiting: true,
-      },
+  ? withSerwistInit({
+      register: false,
+      swDest: 'public/sw.js',
+      swSrc: 'src/app/sw.ts',
     })
   : noWrapper;
 

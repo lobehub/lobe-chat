@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.19.31",
+  "version": "1.19.33",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -127,6 +127,7 @@
     "@next/third-parties": "^14.2.6",
     "@react-spring/web": "^9.7.3",
     "@sentry/nextjs": "^7.119.0",
+    "@serwist/next": "^9.0.8",
     "@t3-oss/env-nextjs": "^0.11.0",
     "@tanstack/react-query": "^5.52.1",
     "@trpc/client": "next",
@@ -232,7 +233,6 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
-    "@ducanh2912/next-pwa": "^10.2.8",
     "@edge-runtime/vm": "^4.0.2",
     "@lobehub/i18n-cli": "^1.19.1",
     "@lobehub/lint": "^1.24.4",
@@ -288,6 +288,7 @@
     "remark-cli": "^11.0.0",
     "remark-parse": "^10.0.2",
     "semantic-release": "^21.1.2",
+    "serwist": "^9.0.8",
     "stylelint": "^15.11.0",
     "supports-color": "8",
     "tsx": "^4.17.0",
