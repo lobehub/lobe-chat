@@ -1,6 +1,6 @@
-import nextPWA from '@ducanh2912/next-pwa';
 import analyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
+import withSerwistInit from '@serwist/next';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
@@ -191,15 +191,16 @@ const noWrapper = (config) => config;
 
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
 
-const withPWA = isProd
-  ? nextPWA({
-      dest: 'public',
-      register: true,
-      workboxOptions: {
-        skipWaiting: true,
-      },
-    })
-  : noWrapper;
+const withPWA =
+  // isProd
+  // ?
+  withSerwistInit({
+    // Note: This is only an example. If you use Pages Router,
+    // use something else that works, such as "service-worker/index.ts".
+    swSrc: 'src/app/sw.ts',
+    swDest: 'public/sw.js',
+  });
+// : noWrapper;
 
 const hasSentry = !!process.env.NEXT_PUBLIC_SENTRY_DSN;
 const withSentry =
@@ -245,4 +246,4 @@ const withSentry =
         )
     : noWrapper;
 
-export default withBundleAnalyzer(withPWA(withSentry(nextConfig)));
+export default withBundleAnalyzer(withSentry(nextConfig));
