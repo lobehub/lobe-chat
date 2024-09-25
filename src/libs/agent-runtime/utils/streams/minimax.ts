@@ -14,7 +14,7 @@ export const processDoubleData = (chunkValue: string): string => {
       modifiedChunkValue = chunkValue.slice(0, secondDataIdIndex).trim();
     }
   }
-  return chunkValue;
+  return modifiedChunkValue;
 };
 
 const unit8ArrayToJSONChunk = (unit8Array: Uint8Array): OpenAI.ChatCompletionChunk => {
