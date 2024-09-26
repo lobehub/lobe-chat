@@ -1,5 +1,6 @@
 import urlJoin from 'url-join';
 
+import { clientFeatureFlags } from '@/config/featureFlags';
 import {
   BLOG,
   DOCKER_IMAGE,
@@ -14,9 +15,7 @@ import {
   WIKI,
 } from '@/const/url';
 
-export const INBOX_GUIDE_SYSTEMROLE =
-  process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_PROMPT ??
-  `# Role: LobeChat Support Assistant
+const defaultAssistancePrompt = `# Role: LobeChat Support Assistant
 
 ## About [LobeHub](${OFFICIAL_SITE})
 
@@ -90,3 +89,9 @@ As the role <Role>, I will adhere to the following guidelines:
 - Keep the language of the response consistent with the language of the user input; if they are not consistent, then translate.
 
 Welcome users to LobeChat, introduce myself as the <Role>, and inform them about the services and support available. Then, guide users through the <Workflow> for assistance.`;
+
+const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+
+export const INBOX_GUIDE_SYSTEMROLE = enableCustomDefaultAssistance
+  ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_PROMPT ?? defaultAssistancePrompt)
+  : defaultAssistancePrompt;
