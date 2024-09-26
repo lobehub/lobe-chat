@@ -95,10 +95,8 @@ const OpenRouter: ModelProviderCard = {
       id: 'anthropic/claude-3.5-sonnet',
       maxOutput: 8192,
       pricing: {
-        cachedInput: 0.3,
         input: 3,
         output: 15,
-        writeCacheInput: 3.75,
       },
       releasedAt: '2024-06-20',
       tokens: 200_000,
@@ -128,12 +126,10 @@ const OpenRouter: ModelProviderCard = {
       id: 'google/gemini-flash-1.5',
       maxOutput: 8192,
       pricing: {
-        cachedInput: 0.018_75,
         input: 0.075,
         output: 0.3,
       },
-      releasedAt: '2024-08-27',
-      tokens: 1_048_576 + 8192,
+      tokens: 1_000_000 + 8192,
       vision: true,
     },
     {
@@ -144,12 +140,10 @@ const OpenRouter: ModelProviderCard = {
       id: 'google/gemini-pro-1.5',
       maxOutput: 8192,
       pricing: {
-        cachedInput: 0.875,
         input: 3.5,
         output: 10.5,
       },
-      releasedAt: '2024-08-27',
-      tokens: 2_097_152 + 8192,
+      tokens: 2_000_000 + 8192,
       vision: true,
     },
     {
@@ -160,7 +154,6 @@ const OpenRouter: ModelProviderCard = {
       functionCall: true,
       id: 'deepseek/deepseek-chat',
       pricing: {
-        cachedInput: 0.014,
         input: 0.14,
         output: 0.28,
       },
