@@ -15,7 +15,7 @@ import {
   WIKI,
 } from '@/const/url';
 
-const defaultAssistancePrompt = `# Role: LobeChat Support Assistant
+const defaultInboxPrompt = `# Role: LobeChat Support Assistant
 
 ## About [LobeHub](${OFFICIAL_SITE})
 
@@ -93,5 +93,5 @@ Welcome users to LobeChat, introduce myself as the <Role>, and inform them about
 const { enableCommercialInbox } = serverFeatureFlags();
 
 export const INBOX_GUIDE_SYSTEMROLE = enableCommercialInbox
-  ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_PROMPT ?? defaultAssistancePrompt)
-  : defaultAssistancePrompt;
+  ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_PROMPT ?? defaultInboxPrompt)
+  : defaultInboxPrompt;
