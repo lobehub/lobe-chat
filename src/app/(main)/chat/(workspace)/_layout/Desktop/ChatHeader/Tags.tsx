@@ -4,7 +4,6 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
-import { useModelName } from '@/hooks/useModelName';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useUserStore } from '@/store/user';
@@ -12,6 +11,7 @@ import { modelProviderSelectors } from '@/store/user/selectors';
 
 import PluginTag from '../../../features/PluginTag';
 import KnowledgeTag from './KnowledgeTag';
+import { useModelName } from './useModelName';
 
 const TitleTags = memo(() => {
   const [model, hasKnowledge] = useAgentStore((s) => [
