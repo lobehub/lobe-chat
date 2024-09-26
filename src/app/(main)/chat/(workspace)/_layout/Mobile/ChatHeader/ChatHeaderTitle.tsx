@@ -24,6 +24,7 @@ const ChatHeaderTitle = memo(() => {
     sessionMetaSelectors.currentAgentTitle(s),
   ]);
   const theme = useTheme();
+
   const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
   const displayTitle = isInbox
     ? enableCommercialInbox

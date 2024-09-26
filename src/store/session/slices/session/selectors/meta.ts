@@ -10,8 +10,9 @@ import { sessionSelectors } from './list';
 
 // ==========   Meta   ============== //
 const currentAgentMeta = (s: SessionStore): MetaData => {
-  const isInbox = sessionSelectors.isInboxSession(s);
   const { enableCommercialInbox } = serverFeatureFlags();
+
+  const isInbox = sessionSelectors.isInboxSession(s);
 
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,

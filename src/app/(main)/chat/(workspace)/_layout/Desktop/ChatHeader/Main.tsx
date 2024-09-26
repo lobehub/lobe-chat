@@ -20,6 +20,7 @@ import Tags from './Tags';
 
 const Main = memo(() => {
   const { t } = useTranslation('chat');
+
   useInitAgentConfig();
 
   const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
@@ -32,8 +33,8 @@ const Main = memo(() => {
   ]);
 
   const openChatSettings = useOpenChatSettings();
-  const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
 
+  const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
   const displayTitle = isInbox
     ? enableCommercialInbox
       ? t('chat.inbox.title', { ns: 'custom' })

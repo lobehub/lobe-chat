@@ -38,7 +38,6 @@ export const FeatureFlagsSchema = z.object({
   // please contact us for more information: hello@lobehub.com
   commercial_hide_github: z.boolean().optional(),
   commercial_hide_docs: z.boolean().optional(),
-
   commercial_inbox: z.boolean().optional(),
 });
 
@@ -75,7 +74,6 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   // please contact us for more information: hello@lobehub.com
   commercial_hide_github: false,
   commercial_hide_docs: false,
-
   commercial_inbox: false,
 };
 
@@ -107,7 +105,6 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     hideGitHub: config.commercial_hide_github,
     hideDocs: config.commercial_hide_docs,
-
     enableCommercialInbox: config.commercial_inbox,
   };
 };

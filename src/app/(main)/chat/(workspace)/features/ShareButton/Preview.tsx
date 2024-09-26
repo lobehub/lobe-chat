@@ -35,7 +35,6 @@ const Preview = memo<FieldType & { title?: string }>(
     const { styles } = useStyles(withBackground);
 
     const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
-
     const displayTitle = isInbox
       ? enableCommercialInbox
         ? t('chat.inbox.title', { ns: 'custom' })
