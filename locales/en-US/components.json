@@ -21,7 +21,8 @@
       "deleteSuccess": "File deleted successfully.",
       "downloading": "Downloading file...",
       "removeFromKnowledgeBase": "Remove from Knowledge Base",
-      "removeFromKnowledgeBaseSuccess": "File removed successfully."
+      "removeFromKnowledgeBaseSuccess": "File removed successfully.",
+      "unsupportChunkingFile": "Chunking is not supported for this file type."
     },
     "bottom": "You've reached the end.",
     "config": {

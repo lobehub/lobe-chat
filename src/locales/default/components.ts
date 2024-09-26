@@ -24,6 +24,7 @@ export default {
       downloading: '文件下载中...',
       removeFromKnowledgeBase: '从知识库中移除',
       removeFromKnowledgeBaseSuccess: '文件移除成功',
+      unsupportChunkingFile: '不支持对该文件类型进行分块',
     },
     bottom: '已经到底啦',
     config: {

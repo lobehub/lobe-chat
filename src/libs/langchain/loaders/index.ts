@@ -70,7 +70,7 @@ export class ChunkingLoader {
     }
   };
 
-  private getType = (filename: string): LangChainLoaderType | undefined => {
+  getType = (filename: string): LangChainLoaderType | undefined => {
     if (filename.endsWith('pptx')) {
       return 'ppt';
     }

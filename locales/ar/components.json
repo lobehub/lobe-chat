@@ -21,7 +21,8 @@
       "deleteSuccess": "تم حذف الملف بنجاح",
       "downloading": "جارٍ تحميل الملف...",
       "removeFromKnowledgeBase": "إزالة من قاعدة المعرفة",
-      "removeFromKnowledgeBaseSuccess": "تمت إزالة الملف بنجاح"
+      "removeFromKnowledgeBaseSuccess": "تمت إزالة الملف بنجاح",
+      "unsupportChunkingFile": "لا يدعم تقسيم هذا النوع من الملفات"
     },
     "bottom": "لقد وصلت إلى النهاية",
     "config": {

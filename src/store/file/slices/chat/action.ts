@@ -30,7 +30,9 @@ export interface FileAction {
   clearChatUploadFileList: () => void;
   dispatchChatUploadFileList: (payload: UploadFileListDispatch) => void;
 
+  isSupportedForChunking: (fileType: string) => Promise<boolean>;
   removeChatUploadFile: (id: string) => Promise<void>;
+
   startAsyncTask: (
     fileId: string,
     runner: (id: string) => Promise<string>,
@@ -54,6 +56,9 @@ export const createFileSlice: StateCreator<
     if (nextValue === get().chatUploadFileList) return;
 
     set({ chatUploadFileList: nextValue }, false, `dispatchChatFileList/${payload.type}`);
+  },
+  isSupportedForChunking: async (fileType) => {
+    return await ragService.isSupportedForChunking(fileType);
   },
   removeChatUploadFile: async (id) => {
     const { dispatchChatUploadFileList } = get();

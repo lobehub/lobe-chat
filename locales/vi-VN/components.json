@@ -21,7 +21,8 @@
       "deleteSuccess": "Tệp đã được xóa thành công",
       "downloading": "Đang tải tệp...",
       "removeFromKnowledgeBase": "Xóa khỏi kho tri thức",
-      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công"
+      "removeFromKnowledgeBaseSuccess": "Tệp đã được xóa thành công",
+      "unsupportChunkingFile": "Không hỗ trợ phân đoạn cho loại tệp này"
     },
     "bottom": "Đã đến cuối rồi",
     "config": {

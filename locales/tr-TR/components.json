@@ -21,7 +21,8 @@
       "deleteSuccess": "Dosya başarıyla silindi",
       "downloading": "Dosya indiriliyor...",
       "removeFromKnowledgeBase": "Bilgi tabanından kaldır",
-      "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı"
+      "removeFromKnowledgeBaseSuccess": "Dosya başarıyla kaldırıldı",
+      "unsupportChunkingFile": "Bu dosya türü için parça parça yükleme desteklenmiyor"
     },
     "bottom": "Artık sona geldik",
     "config": {

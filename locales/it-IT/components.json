@@ -21,7 +21,8 @@
       "deleteSuccess": "File eliminato con successo",
       "downloading": "Download del file in corso...",
       "removeFromKnowledgeBase": "Rimuovi dalla base di conoscenza",
-      "removeFromKnowledgeBaseSuccess": "File rimosso con successo"
+      "removeFromKnowledgeBaseSuccess": "File rimosso con successo",
+      "unsupportChunkingFile": "Il tipo di file non supporta il frazionamento"
     },
     "bottom": "Hai raggiunto il fondo",
     "config": {

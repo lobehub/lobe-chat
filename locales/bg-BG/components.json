@@ -21,7 +21,8 @@
       "deleteSuccess": "Файлът е изтрит успешно",
       "downloading": "Изтегляне на файла...",
       "removeFromKnowledgeBase": "Премахни от базата знания",
-      "removeFromKnowledgeBaseSuccess": "Файлът е премахнат успешно"
+      "removeFromKnowledgeBaseSuccess": "Файлът е премахнат успешно",
+      "unsupportChunkingFile": "Не се поддържа разделянето на този тип файл"
     },
     "bottom": "Достигнахте края",
     "config": {

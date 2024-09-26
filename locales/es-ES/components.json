@@ -21,7 +21,8 @@
       "deleteSuccess": "Archivo eliminado con éxito",
       "downloading": "Descargando archivo...",
       "removeFromKnowledgeBase": "Eliminar de la base de conocimientos",
-      "removeFromKnowledgeBaseSuccess": "Archivo eliminado con éxito"
+      "removeFromKnowledgeBaseSuccess": "Archivo eliminado con éxito",
+      "unsupportChunkingFile": "No se admite la fragmentación para este tipo de archivo"
     },
     "bottom": "Ya has llegado al final",
     "config": {

@@ -21,7 +21,8 @@
       "deleteSuccess": "Bestand succesvol verwijderd",
       "downloading": "Bestand aan het downloaden...",
       "removeFromKnowledgeBase": "Verwijderen uit kennisbank",
-      "removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd"
+      "removeFromKnowledgeBaseSuccess": "Bestand succesvol verwijderd",
+      "unsupportChunkingFile": "Deze bestandsindeling ondersteunt geen chunking."
     },
     "bottom": "Je bent onderaan aangekomen",
     "config": {

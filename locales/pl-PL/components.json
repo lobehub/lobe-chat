@@ -21,7 +21,8 @@
       "deleteSuccess": "Plik usunięty pomyślnie",
       "downloading": "Pobieranie pliku...",
       "removeFromKnowledgeBase": "Usuń z bazy wiedzy",
-      "removeFromKnowledgeBaseSuccess": "Plik usunięty pomyślnie"
+      "removeFromKnowledgeBaseSuccess": "Plik usunięty pomyślnie",
+      "unsupportChunkingFile": "Nieobsługiwany typ pliku do podziału na fragmenty"
     },
     "bottom": "To już wszystko",
     "config": {

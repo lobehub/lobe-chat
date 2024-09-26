@@ -70,6 +70,12 @@ export class ChunkService {
 
     if (!result) return;
 
+    const isSupported = await this.isSupportedForChunking(result.name);
+    if (!isSupported) {
+      console.log(`File type for ${result.name} is not supported for chunking`);
+      return;
+    }
+
     // skip if already exist chunk tasks
     if (skipExist && result.chunkTaskId) return;
 
@@ -99,5 +105,9 @@ export class ChunkService {
       });
 
     return asyncTaskId;
+  }
+
+  async isSupportedForChunking(fileType: string): Promise<boolean> {
+    return this.chunkClient.isSupportedForChunking(fileType);
   }
 }
