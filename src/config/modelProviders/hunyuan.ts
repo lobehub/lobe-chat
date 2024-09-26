@@ -27,6 +27,7 @@ const Hunyuan: ModelProviderCard = {
     {
       description: '采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-256K 在长度和效果上进一步突破，极大的扩展了可输入长度。',
       displayName: 'Hunyuan Standard 256K',
+      enabled: true,
       id: 'hunyuan-standard-256K',
       maxOutput: 6000,
       pricing: {

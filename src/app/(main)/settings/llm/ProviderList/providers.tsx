@@ -61,6 +61,7 @@ export const useProviderList = (): ProviderItem[] => {
       Ai21ProviderCard,
       UpstageProviderCard,
       QwenProviderCard,
+      HunyuanProviderCard,
       SparkProviderCard,
       ZhiPuProviderCard,
       ZeroOneProviderCard,
@@ -71,7 +72,6 @@ export const useProviderList = (): ProviderItem[] => {
       Ai360ProviderCard,
       TaichuProviderCard,
       SiliconCloudProviderCard,
-      HunyuanProviderCard,
     ],
     [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider],
   );

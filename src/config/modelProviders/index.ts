@@ -80,6 +80,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai21Provider,
   UpstageProvider,
   QwenProvider,
+  HunyuanProvider,
   SparkProvider,
   ZhiPuProvider,
   ZeroOneProvider,
@@ -90,7 +91,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   TaichuProvider,
   SiliconCloudProvider,
-  HunyuanProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
