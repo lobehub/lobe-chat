@@ -160,33 +160,31 @@ const FileRenderItem = memo<FileRenderItemProps>(
             }}
           >
             {isCreatingFileParseTask || isNull(chunkingStatus) || !chunkingStatus ? (
-              <div className={isCreatingFileParseTask ? undefined : styles.hover}>
-                <Tooltip
-                  overlayStyle={{ pointerEvents: 'none' }}
-                  title={t(
-                    isSupportedForChunking
-                      ? 'FileManager.actions.chunkingTooltip'
-                      : 'FileManager.actions.unsupportChunkingFile',
-                  )}
-                >
-                  <Button
-                    disabled={!isSupportedForChunking}
-                    icon={<Icon icon={FileBoxIcon} />}
-                    loading={isCreatingFileParseTask}
-                    onClick={() => {
-                      parseFiles([id]);
-                    }}
-                    size={'small'}
-                    type={'text'}
+              isSupportedForChunking && (
+                <div className={isCreatingFileParseTask ? undefined : styles.hover}>
+                  <Tooltip
+                    overlayStyle={{ pointerEvents: 'none' }}
+                    title={t('FileManager.actions.chunkingTooltip')}
                   >
-                    {t(
-                      isCreatingFileParseTask
-                        ? 'FileManager.actions.createChunkingTask'
-                        : 'FileManager.actions.chunking',
-                    )}
-                  </Button>
-                </Tooltip>
-              </div>
+                    <Button
+                      disabled={!isSupportedForChunking}
+                      icon={<Icon icon={FileBoxIcon} />}
+                      loading={isCreatingFileParseTask}
+                      onClick={() => {
+                        parseFiles([id]);
+                      }}
+                      size={'small'}
+                      type={'text'}
+                    >
+                      {t(
+                        isCreatingFileParseTask
+                          ? 'FileManager.actions.createChunkingTask'
+                          : 'FileManager.actions.chunking',
+                      )}
+                    </Button>
+                  </Tooltip>
+                </div>
+              )
             ) : (
               <div style={{ cursor: 'default' }}>
                 <ChunksBadge

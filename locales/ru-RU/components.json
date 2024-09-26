@@ -21,8 +21,7 @@
       "deleteSuccess": "Файл успешно удален",
       "downloading": "Загрузка файла...",
       "removeFromKnowledgeBase": "Удалить из базы знаний",
-      "removeFromKnowledgeBaseSuccess": "Файл успешно удален",
-      "unsupportChunkingFile": "Данный тип файла не поддерживает разбиение на части"
+      "removeFromKnowledgeBaseSuccess": "Файл успешно удален"
     },
     "bottom": "Вы достигли конца",
     "config": {

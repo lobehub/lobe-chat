@@ -21,8 +21,7 @@
       "deleteSuccess": "Arquivo excluído com sucesso",
       "downloading": "Baixando arquivo...",
       "removeFromKnowledgeBase": "Remover do banco de conhecimento",
-      "removeFromKnowledgeBaseSuccess": "Arquivo removido com sucesso",
-      "unsupportChunkingFile": "Não é possível realizar o particionamento deste tipo de arquivo"
+      "removeFromKnowledgeBaseSuccess": "Arquivo removido com sucesso"
     },
     "bottom": "Você chegou ao final",
     "config": {

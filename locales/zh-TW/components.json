@@ -21,8 +21,7 @@
       "deleteSuccess": "文件刪除成功",
       "downloading": "文件下載中...",
       "removeFromKnowledgeBase": "從知識庫中移除",
-      "removeFromKnowledgeBaseSuccess": "文件移除成功",
-      "unsupportChunkingFile": "不支援對該檔案類型進行分塊"
+      "removeFromKnowledgeBaseSuccess": "文件移除成功"
     },
     "bottom": "已經到底啦",
     "config": {

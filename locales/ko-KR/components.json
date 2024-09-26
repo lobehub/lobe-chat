@@ -21,8 +21,7 @@
       "deleteSuccess": "파일이 성공적으로 삭제되었습니다.",
       "downloading": "파일 다운로드 중...",
       "removeFromKnowledgeBase": "지식 베이스에서 제거",
-      "removeFromKnowledgeBaseSuccess": "파일이 성공적으로 제거되었습니다.",
-      "unsupportChunkingFile": "이 파일 유형에 대한 청크 처리를 지원하지 않습니다."
+      "removeFromKnowledgeBaseSuccess": "파일이 성공적으로 제거되었습니다."
     },
     "bottom": "끝까지 도달했습니다.",
     "config": {

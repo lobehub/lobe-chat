@@ -21,8 +21,7 @@
       "deleteSuccess": "ファイルが正常に削除されました",
       "downloading": "ファイルをダウンロード中...",
       "removeFromKnowledgeBase": "知識ベースから削除",
-      "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました",
-      "unsupportChunkingFile": "このファイルタイプのチャンク処理はサポートされていません"
+      "removeFromKnowledgeBaseSuccess": "ファイルが正常に削除されました"
     },
     "bottom": "これ以上ありません",
     "config": {

@@ -21,8 +21,7 @@
       "deleteSuccess": "Datei erfolgreich gelöscht",
       "downloading": "Datei wird heruntergeladen...",
       "removeFromKnowledgeBase": "Aus der Wissensdatenbank entfernen",
-      "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt",
-      "unsupportChunkingFile": "Für diesen Dateityp wird das Chunking nicht unterstützt"
+      "removeFromKnowledgeBaseSuccess": "Datei erfolgreich entfernt"
     },
     "bottom": "Das Ende ist erreicht",
     "config": {
