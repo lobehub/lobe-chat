@@ -17,6 +17,11 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-standard',
       maxOutput: 2000,
+      pricing: {
+        currency: 'CNY',
+        input: 4.5,
+        output: 5,
+      },
       tokens: 30_000,
     },
     {
@@ -24,6 +29,11 @@ const Hunyuan: ModelProviderCard = {
       displayName: 'Hunyuan Standard 256K',
       id: 'hunyuan-standard-256K',
       maxOutput: 6000,
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 60,
+      },
       tokens: 250_000,
     },
     {
@@ -32,6 +42,11 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-turbo',
       maxOutput: 4000,
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 50,
+      },
       tokens: 28_000,
     },
     {
@@ -41,6 +56,11 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-pro',
       maxOutput: 4000,
+      pricing: {
+        currency: 'CNY',
+        input: 30,
+        output: 100,
+      },
       tokens: 28_000,
     },
     {
@@ -49,6 +69,11 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-code',
       maxOutput: 4000,
+      pricing: {
+        currency: 'CNY',
+        input: 4,
+        output: 8,
+      },
       tokens: 4000,
     },
     {
@@ -57,6 +82,11 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-vision',
       maxOutput: 4000,
+      pricing: {
+        currency: 'CNY',
+        input: 18,
+        output: 18,
+      },
       tokens: 4000,
       vision: true,
     },
@@ -66,6 +96,11 @@ const Hunyuan: ModelProviderCard = {
       functionCall: true,
       id: 'hunyuan-functioncall',
       maxOutput: 4000,
+      pricing: {
+        currency: 'CNY',
+        input: 4,
+        output: 8,
+      },
       tokens: 28_000,
     },
     {
@@ -73,10 +108,18 @@ const Hunyuan: ModelProviderCard = {
       displayName: 'Hunyuan Role',
       id: 'hunyuan-role',
       maxOutput: 4000,
+      pricing: {
+        currency: 'CNY',
+        input: 4,
+        output: 8,
+      },
       tokens: 4000,
     },
   ],
   checkModel: 'hunyuan-lite',
+  description:
+    '由腾讯研发的大语言模型，具备强大的中文创作能力，复杂语境下的逻辑推理能力，以及可靠的任务执行能力',
+  disableBrowserRequest: true,
   id: 'hunyuan',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://cloud.tencent.com/document/product/1729/104753',
