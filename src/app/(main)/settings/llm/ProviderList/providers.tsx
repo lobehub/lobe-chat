@@ -9,6 +9,7 @@ import {
   FireworksAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HunyuanProviderCard,
   MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
@@ -70,6 +71,7 @@ export const useProviderList = (): ProviderItem[] => {
       Ai360ProviderCard,
       TaichuProviderCard,
       SiliconCloudProviderCard,
+      HunyuanProviderCard,
     ],
     [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider],
   );

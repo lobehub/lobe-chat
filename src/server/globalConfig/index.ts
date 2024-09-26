@@ -49,6 +49,8 @@ export const getServerGlobalConfig = () => {
     ENABLED_GITHUB,
     GITHUB_MODEL_LIST,
 
+    ENABLED_HUNYUAN,
+    
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
@@ -160,6 +162,7 @@ export const getServerGlobalConfig = () => {
           modelString: GROQ_MODEL_LIST,
         }),
       },
+      hunyuan: { enabled: ENABLED_HUNYUAN },
       minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },

@@ -11,6 +11,7 @@ import FireworksAIProvider from './fireworksai';
 import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
+import HunyuanProvider from './hunyuan';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
@@ -57,6 +58,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   UpstageProvider.chatModels,
   SparkProvider.chatModels,
   Ai21Provider.chatModels,
+  HunyuanProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -88,6 +90,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   TaichuProvider,
   SiliconCloudProvider,
+  HunyuanProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -110,6 +113,7 @@ export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
+export { default as HunyuanProviderCard } from './hunyuan';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';
