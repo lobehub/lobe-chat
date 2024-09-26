@@ -17,13 +17,9 @@ const isUploadingFiles = (s: FilesStoreState) =>
       (file.tasks && !file.tasks?.finishEmbedding),
   );
 
-const isSupportedForChunking = (s: FilesStoreState) =>
-  s.chatUploadFileList.some((file) => file.tasks?.finishEmbedding);
-
 export const filesSelectors = {
   chatUploadFileList,
   isImageUploading,
-  isSupportedForChunking,
 };
 
 export const fileChatSelectors = {

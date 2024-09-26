@@ -14,11 +14,11 @@ import { Center, Flexbox } from 'react-layout-kit';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
+import { isChunkingUnsupported } from '@/utils/chunkingSupportedType';
 import { formatSize } from '@/utils/format';
 
 import ChunksBadge from './ChunkTag';
 import DropdownMenu from './DropdownMenu';
-import { useIsSupportedForChunking } from './useIsSupportedForChunking';
 
 dayjs.extend(relativeTime);
 
@@ -108,7 +108,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
       s.parseFilesToChunks,
     ]);
 
-    const isSupportedForChunking = useIsSupportedForChunking(fileType);
+    const isSupportedForChunking = isChunkingUnsupported(fileType);
 
     const displayTime =
       dayjs().diff(dayjs(createdAt), 'd') < 7

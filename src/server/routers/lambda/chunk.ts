@@ -75,16 +75,6 @@ export const chunkRouter = router({
       };
     }),
 
-  isSupportedForChunking: chunkProcedure
-    .input(
-      z.object({
-        fileType: z.string(),
-      }),
-    )
-    .query(async ({ ctx, input }) => {
-      return await ctx.chunkService.isSupportedForChunking(input.fileType);
-    }),
-
   retryParseFileTask: chunkProcedure
     .input(
       z.object({

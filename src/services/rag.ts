@@ -25,10 +25,6 @@ class RAGService {
   async deleteMessageRagQuery(id: string) {
     return await lambdaClient.message.removeMessageQuery.mutate({ id });
   }
-
-  async isSupportedForChunking(fileType: string) {
-    return await lambdaClient.chunk.isSupportedForChunking.query({ fileType });
-  }
 }
 
 export const ragService = new RAGService();

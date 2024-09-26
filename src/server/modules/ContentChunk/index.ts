@@ -132,9 +132,4 @@ export class ContentChunk {
 
     return { chunks: documents };
   };
-
-  async isSupportedForChunking(fileType: string): Promise<boolean> {
-    const result = this.langchainClient.getType(fileType);
-    return result !== undefined;
-  }
 }
