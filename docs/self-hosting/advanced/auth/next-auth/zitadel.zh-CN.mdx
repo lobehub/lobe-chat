@@ -96,11 +96,11 @@ http(s)://your-domain/api/auth/callback/zitadel
 | 环境变量 | 类型 | 描述 |
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成密钥：`openssl rand -base64 32` |
-| `NEXT_AUTH_SSO_PROVIDERS` | 可选 | 为 LobeChat 选择单点登录提供程序。对于 ZITADEL，请填写 `zitadel`。 |
-| `ZITADEL_CLIENT_ID` | 必选 | ZITADEL 应用的 Client ID（`ClientId`）。 |
-| `ZITADEL_CLIENT_SECRET` | 必选 | ZITADEL 应用的 Client Secret（`ClientSecret`）。 |
-| `ZITADEL_ISSUER` | 必选 | ZITADEL 应用的 OpenID Connect 颁发者（issuer）URL。 |
-| `NEXTAUTH_URL` | 可选 | 该 URL 用于指定 Auth.js 中执行 OAuth 认证的回调地址。仅当默认地址不正确时才需要设置。`https://example.com/api/auth` |
+| `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 为 LobeChat 选择单点登录提供程序。对于 ZITADEL，请填写 `zitadel`。 |
+| `AUTH_ZITADEL_ID` | 必选 | ZITADEL 应用的 Client ID（`ClientId`）。 |
+| `AUTH_ZITADEL_SECRET` | 必选 | ZITADEL 应用的 Client Secret（`ClientSecret`）。 |
+| `AUTH_ZITADEL_ISSUER` | 必选 | ZITADEL 应用的 OpenID Connect 颁发者（issuer）URL。 |
+| `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 中执行 OAuth 认证的回调地址。仅当默认地址不正确时才需要设置。`https://example.com/api/auth` |
 
   <Callout type={'tip'}>
     您可以在 [📘 环境变量](/zh/docs/self-hosting/environment-variables/auth#zitadel) 中查看相关变量的详细信息。

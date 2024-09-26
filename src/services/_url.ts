@@ -1,4 +1,4 @@
-// TODO: 未来所有路由需要全部迁移到 trpc
+// TODO: 未来所有核心路由需要迁移到 trpc，部分不需要迁移的则走 webapi
 
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { transform } from 'lodash-es';
@@ -17,7 +17,7 @@ const mapWithBasePath = <T extends object>(apis: T): T => {
 };
 
 export const API_ENDPOINTS = mapWithBasePath({
-  proxy: '/api/proxy',
+  proxy: '/webapi/proxy',
   oauth: '/api/auth',
 
   // agent markets
@@ -38,9 +38,11 @@ export const API_ENDPOINTS = mapWithBasePath({
   // image
   images: '/api/text-to-image/openai',
 
-  // TTS & STT
-  stt: '/api/openai/stt',
-  tts: '/api/openai/tts',
-  edge: '/api/tts/edge-speech',
-  microsoft: '/api/tts/microsoft-speech',
+  // STT
+  stt: '/webapi/stt/openai',
+
+  // TTS
+  tts: '/webapi/tts/openai',
+  edge: '/webapi/tts/edge',
+  microsoft: '/webapi/tts/microsoft',
 });

@@ -1,10 +1,12 @@
 import { z } from 'zod';
 
 import { INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { AgentModel } from '@/database/server/models/agent';
 import { FileModel } from '@/database/server/models/file';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import { SessionModel } from '@/database/server/models/session';
+import { UserModel } from '@/database/server/models/user';
 import { pino } from '@/libs/logger';
 import { authedProcedure, router } from '@/libs/trpc';
 import { KnowledgeItem, KnowledgeType } from '@/types/knowledgeBase';
@@ -84,6 +86,10 @@ export const agentRouter = router({
         const item = await ctx.sessionModel.findByIdOrSlug(INBOX_SESSION_ID);
         // if there is no session for user, create one
         if (!item) {
+          // if there is no user, return default config
+          const user = await UserModel.findById(ctx.userId);
+          if (!user) return DEFAULT_AGENT_CONFIG;
+
           const res = await ctx.sessionModel.createInbox();
           pino.info('create inbox session', res);
         }

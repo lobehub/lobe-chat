@@ -5,7 +5,7 @@
   "agentDefaultMessage": "こんにちは、私は **{{name}}** です。すぐに私と会話を始めることもできますし、[アシスタント設定]({{url}}) に行って私の情報を充実させることもできます。",
   "agentDefaultMessageWithSystemRole": "こんにちは、私は **{{name}}** です、{{systemRole}}、さあ、チャットを始めましょう！",
   "agentDefaultMessageWithoutEdit": "こんにちは、私は**{{name}}**です。会話しましょう！",
-  "agentsAndConversations": "エージェントと会話",
+  "agents": "エージェント",
   "artifact": {
     "generating": "生成中",
     "thinking": "思考中",
@@ -81,7 +81,7 @@
   },
   "regenerate": "再生成",
   "roleAndArchive": "役割とアーカイブ",
-  "searchAgentPlaceholder": "エージェントや会話を検索...",
+  "searchAgentPlaceholder": "検索アシスタント...",
   "sendPlaceholder": "チャット内容を入力してください...",
   "sessionGroup": {
     "config": "グループ設定",

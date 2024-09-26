@@ -15,12 +15,15 @@ export class NextAuthUserService {
     this.adapter = LobeNextAuthDbAdapter(serverDB);
   }
 
-  safeUpdateUser = async (providerAccountId: string, data: Partial<UserItem>) => {
+  safeUpdateUser = async (
+    { providerAccountId, provider }: { provider: string; providerAccountId: string },
+    data: Partial<UserItem>,
+  ) => {
     pino.info('updating user due to webhook');
     // 1. Find User by account
     // @ts-expect-error: Already impl in `LobeNextauthDbAdapter`
     const user = await this.adapter.getUserByAccount({
-      provider: 'logto',
+      provider,
       providerAccountId,
     });
 
@@ -34,7 +37,7 @@ export class NextAuthUserService {
       });
     } else {
       pino.warn(
-        `[logto]: Webhooks handler user update for "${JSON.stringify(data)}", but no user was found by the providerAccountId.`,
+        `[${provider}]: Webhooks handler user update for "${JSON.stringify(data)}", but no user was found by the providerAccountId.`,
       );
     }
     return NextResponse.json({ message: 'user updated', success: true }, { status: 200 });

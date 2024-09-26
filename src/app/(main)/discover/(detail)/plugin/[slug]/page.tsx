@@ -24,7 +24,7 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
 
   const discoverService = new DiscoverService();
   const data = await discoverService.getPluginById(locale, identifier);
-  if (!data) return notFound();
+  if (!data) return;
 
   const { meta, createdAt, homepage, author } = data;
 
@@ -89,6 +89,7 @@ const Page = async ({ params, searchParams }: Props) => {
         mobile={mobile}
         sidebar={<InfoSidebar data={data} identifier={identifier} mobile={mobile} />}
         /* ↓ cloud slot ↓ */
+
         /* ↑ cloud slot ↑ */
       >
         <ParameterList data={data} />

@@ -9,10 +9,14 @@ const Layout = ({ children }: PropsWithChildren) => {
       align={'center'}
       flex={1}
       padding={24}
-      style={{ overflowX: 'hidden', overflowY: 'scroll', position: 'relative' }}
+      style={{ overflowX: 'hidden', overflowY: 'auto', position: 'relative' }}
       width={'100%'}
     >
-      <Flexbox gap={24} style={{ maxWidth: MAX_WIDTH, position: 'relative' }} width={'100%'}>
+      <Flexbox
+        gap={24}
+        style={{ maxWidth: MAX_WIDTH, minHeight: '100%', position: 'relative' }}
+        width={'100%'}
+      >
         {children}
       </Flexbox>
     </Flexbox>

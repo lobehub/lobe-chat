@@ -69,14 +69,14 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   DeepSeekProvider,
   OpenRouterProvider,
   GithubProvider,
-  GroqProvider,
   NovitaProvider,
-  PerplexityProvider,
-  MistralProvider,
   TogetherAIProvider,
   FireworksAIProvider,
-  UpstageProvider,
+  GroqProvider,
+  PerplexityProvider,
+  MistralProvider,
   Ai21Provider,
+  UpstageProvider,
   QwenProvider,
   SparkProvider,
   ZhiPuProvider,
@@ -86,8 +86,8 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BaichuanProvider,
   MinimaxProvider,
   Ai360Provider,
-  SiliconCloudProvider,
   TaichuProvider,
+  SiliconCloudProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
