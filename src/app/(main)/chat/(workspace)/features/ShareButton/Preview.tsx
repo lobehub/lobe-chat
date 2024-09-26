@@ -1,4 +1,3 @@
-import { ModelTag } from '@lobehub/icons';
 import { Avatar, ChatHeaderTitle, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -6,6 +5,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
 import { ProductLogo } from '@/components/Branding';
+import ModelTag from '@/components/ModelTag';
 import ChatList from '@/features/Conversation/components/ChatList';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';

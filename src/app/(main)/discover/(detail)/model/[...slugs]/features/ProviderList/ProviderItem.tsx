@@ -1,4 +1,4 @@
-import { ModelTag, ProviderCombine } from '@lobehub/icons';
+import { ProviderCombine } from '@lobehub/icons';
 import { ActionIcon, Grid, Icon, Tooltip } from '@lobehub/ui';
 import { Tag } from 'antd';
 import { createStyles, useResponsive } from 'antd-style';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import ModelTag from '@/components/ModelTag';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { BASE_PROVIDER_DOC_URL } from '@/const/url';
 import { DiscoverProviderItem } from '@/types/discover';

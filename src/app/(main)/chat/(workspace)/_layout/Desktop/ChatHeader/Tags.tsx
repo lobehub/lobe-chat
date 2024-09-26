@@ -1,8 +1,8 @@
-import { ModelTag } from '@lobehub/icons';
 import isEqual from 'fast-deep-equal';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import ModelTag from '@/components/ModelTag';
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -11,7 +11,6 @@ import { modelProviderSelectors } from '@/store/user/selectors';
 
 import PluginTag from '../../../features/PluginTag';
 import KnowledgeTag from './KnowledgeTag';
-import { useModelName } from './useModelName';
 
 const TitleTags = memo(() => {
   const [model, hasKnowledge] = useAgentStore((s) => [
@@ -23,12 +22,10 @@ const TitleTags = memo(() => {
 
   const showPlugin = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
 
-  const modelName = useModelName(model);
-
   return (
     <Flexbox align={'center'} horizontal>
       <ModelSwitchPanel>
-        <ModelTag model={modelName} />
+        <ModelTag model={model} />
       </ModelSwitchPanel>
       {showPlugin && plugins?.length > 0 && <PluginTag plugins={plugins} />}
       {hasKnowledge && <KnowledgeTag data={enabledKnowledge} />}
