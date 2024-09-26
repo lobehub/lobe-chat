@@ -61,5 +61,9 @@ bun.lockb
 sitemap*.xml
 robots.txt
 
+# Serwist
+public/sw*
+public/swe-worker*
+
 *.patch
 *.pdf

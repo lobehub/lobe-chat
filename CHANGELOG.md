@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 1.19.34](https://github.com/lobehub/lobe-chat/compare/v1.19.33...v1.19.34)
+
+<sup>Released on **2024-09-26**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.33](https://github.com/lobehub/lobe-chat/compare/v1.19.32...v1.19.33)
+
+<sup>Released on **2024-09-25**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: MiniMax output long content interrupted by non-existent error.
+
+#### 💄 Styles
+
+- **misc**: Update google provider model info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: MiniMax output long content interrupted by non-existent error, closes [#4088](https://github.com/lobehub/lobe-chat/issues/4088) ([4f6e20d](https://github.com/lobehub/lobe-chat/commit/4f6e20d))
+
+#### Styles
+
+- **misc**: Update google provider model info, closes [#4129](https://github.com/lobehub/lobe-chat/issues/4129) ([b1442b9](https://github.com/lobehub/lobe-chat/commit/b1442b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.32](https://github.com/lobehub/lobe-chat/compare/v1.19.31...v1.19.32)
+
+<sup>Released on **2024-09-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add function call for `taichu_llm`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add function call for `taichu_llm`, closes [#4119](https://github.com/lobehub/lobe-chat/issues/4119) ([8f629d8](https://github.com/lobehub/lobe-chat/commit/8f629d8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.31](https://github.com/lobehub/lobe-chat/compare/v1.19.30...v1.19.31)
 
 <sup>Released on **2024-09-24**</sup>
