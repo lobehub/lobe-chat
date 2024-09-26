@@ -12,6 +12,7 @@
       "batchChunking": "Batch-Zerteilung",
       "chunking": "Zerteilung",
       "chunkingTooltip": "Teilen Sie die Datei in mehrere Textblöcke und vektorisieren Sie sie, um sie für die semantische Suche und Dateidialoge zu verwenden.",
+      "chunkingUnsupported": "Diese Datei unterstützt kein Chunking.",
       "confirmDelete": "Die Datei wird gelöscht. Nach dem Löschen kann sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
       "confirmDeleteMultiFiles": "Die ausgewählten {{count}} Dateien werden gelöscht. Nach dem Löschen können sie nicht wiederhergestellt werden. Bitte bestätigen Sie Ihre Aktion.",
       "confirmRemoveFromKnowledgeBase": "Die ausgewählten {{count}} Dateien werden aus der Wissensdatenbank entfernt. Die Dateien sind weiterhin in allen Dateien sichtbar. Bitte bestätigen Sie Ihre Aktion.",

@@ -12,6 +12,7 @@
       "batchChunking": "バッチ分割",
       "chunking": "分割",
       "chunkingTooltip": "ファイルを複数のテキストブロックに分割し、ベクトル化した後、意味検索やファイル対話に使用できます",
+      "chunkingUnsupported": "このファイルはチャンク分割をサポートしていません",
       "confirmDelete": "このファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
       "confirmDeleteMultiFiles": "選択した {{count}} 個のファイルを削除しようとしています。削除後は復元できませんので、操作を確認してください",
       "confirmRemoveFromKnowledgeBase": "選択した {{count}} 個のファイルを知識ベースから削除しようとしています。削除後もファイルはすべてのファイルで表示できますので、操作を確認してください",

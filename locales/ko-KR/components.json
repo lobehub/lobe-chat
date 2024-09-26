@@ -12,6 +12,7 @@
       "batchChunking": "배치 청크 분할",
       "chunking": "청크 분할",
       "chunkingTooltip": "파일을 여러 텍스트 블록으로 분할하고 벡터화한 후, 의미 검색 및 파일 대화에 사용할 수 있습니다.",
+      "chunkingUnsupported": "이 파일은 청크 처리를 지원하지 않습니다.",
       "confirmDelete": "해당 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
       "confirmDeleteMultiFiles": "선택한 {{count}} 개 파일을 삭제하려고 합니다. 삭제 후에는 복구할 수 없으니, 작업을 확인해 주세요.",
       "confirmRemoveFromKnowledgeBase": "선택한 {{count}} 개 파일을 지식 베이스에서 제거하려고 합니다. 제거 후에도 파일은 모든 파일에서 볼 수 있으니, 작업을 확인해 주세요.",
