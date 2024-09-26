@@ -108,7 +108,7 @@ const FileRenderItem = memo<FileRenderItemProps>(
       s.parseFilesToChunks,
     ]);
 
-    const isSupportedForChunking = isChunkingUnsupported(fileType);
+    const isSupportedForChunking = !isChunkingUnsupported(fileType);
 
     const displayTime =
       dayjs().diff(dayjs(createdAt), 'd') < 7
