@@ -165,6 +165,10 @@ const OpenRouter: ModelProviderCard = {
       displayName: 'Llama 3.2 11B Vision',
       enabled: true,
       id: 'meta-llama/llama-3.2-11b-vision-instruct',
+      pricing: {
+        input: 0.162,
+        output: 0.162,
+      },
       tokens: 131_072,
       vision: true,
     },
@@ -173,6 +177,10 @@ const OpenRouter: ModelProviderCard = {
       displayName: 'Llama 3.2 90B Vision',
       enabled: true,
       id: 'meta-llama/llama-3.2-90b-vision-instruct',
+      pricing: {
+        input: 0.4,
+        output: 0.4,
+      },
       tokens: 131_072,
       vision: true,
     },
