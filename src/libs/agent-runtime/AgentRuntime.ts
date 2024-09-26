@@ -23,6 +23,7 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
+import { LobeSenseCoreAI } from './sensecore';
 import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
 import { LobeStepfunAI } from './stepfun';
@@ -142,6 +143,7 @@ class AgentRuntime {
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
+      sensecore: Partial<ClientOptions>;
       siliconcloud: Partial<ClientOptions>;
       spark: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
@@ -298,6 +300,11 @@ class AgentRuntime {
 
       case ModelProvider.Ai21: {
         runtimeModel = new LobeAi21AI(params.ai21);
+        break;
+      }
+
+      case ModelProvider.SenseCore: {
+        runtimeModel = new LobeSenseCoreAI(params.sensecore);
         break;
       }
     }

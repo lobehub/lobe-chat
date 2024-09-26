@@ -18,6 +18,7 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  SenseCoreProviderCard,
   SiliconCloudProviderCard,
   SparkProviderCard,
   StepfunProviderCard,
@@ -111,6 +112,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   qwen: {
     enabled: false,
     enabledModels: filterEnabledModels(QwenProviderCard),
+  },
+  sensecore: {
+    enabled: false,
+    enabledModels: filterEnabledModels(SenseCoreProviderCard),
   },
   siliconcloud: {
     enabled: false,

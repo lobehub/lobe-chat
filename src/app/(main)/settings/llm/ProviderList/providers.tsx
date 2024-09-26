@@ -16,6 +16,7 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  SenseCoreProviderCard,
   SiliconCloudProviderCard,
   SparkProviderCard,
   StepfunProviderCard,
@@ -70,6 +71,7 @@ export const useProviderList = (): ProviderItem[] => {
       Ai360ProviderCard,
       TaichuProviderCard,
       SiliconCloudProviderCard,
+      SenseCoreProviderCard,
     ],
     [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider],
   );

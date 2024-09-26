@@ -14,6 +14,7 @@ import {
   OpenAIProviderCard,
   OpenRouterProviderCard,
   QwenProviderCard,
+  SenseCoreProviderCard,
   SiliconCloudProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
@@ -66,6 +67,9 @@ export const getServerGlobalConfig = () => {
     ENABLED_TAICHU,
     ENABLED_AI21,
     ENABLED_AI360,
+
+    ENABLED_SENSECORE,
+    SENSECORE_MODEL_LIST,
 
     ENABLED_SILICONCLOUD,
     SILICONCLOUD_MODEL_LIST,
@@ -204,6 +208,14 @@ export const getServerGlobalConfig = () => {
         serverModelCards: transformToChatModelCards({
           defaultChatModels: QwenProviderCard.chatModels,
           modelString: QWEN_MODEL_LIST,
+        }),
+      },
+      sensecore: {
+        enabled: ENABLED_SENSECORE,
+        enabledModels: extractEnabledModels(SENSECORE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: SenseCoreProviderCard.chatModels,
+          modelString: SENSECORE_MODEL_LIST,
         }),
       },
       siliconcloud: {

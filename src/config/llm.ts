@@ -117,6 +117,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI21: z.boolean(),
       AI21_API_KEY: z.string().optional(),
+
+      ENABLED_SENSECORE: z.boolean(),
+      SENSECORE_API_KEY: z.string().optional(),
+      SENSECORE_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -231,6 +235,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI21: !!process.env.AI21_API_KEY,
       AI21_API_KEY: process.env.AI21_API_KEY,
+
+      ENABLED_SENSECORE: !!process.env.SENSECORE_API_KEY,
+      SENSECORE_API_KEY: process.env.SENSECORE_API_KEY,
+      SENSECORE_MODEL_LIST: process.env.SENSECORE_MODEL_LIST,
     },
   });
 };
