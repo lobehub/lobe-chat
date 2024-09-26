@@ -31,7 +31,7 @@ const Preview = memo<FieldType & { title?: string }>(
       sessionMetaSelectors.currentAgentBackgroundColor(s),
     ]);
 
-    const { t } = useTranslation('chat');
+    const { t } = useTranslation(['chat', 'custom']);
     const { styles } = useStyles(withBackground);
 
     const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);

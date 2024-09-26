@@ -12,7 +12,7 @@ import ListItem from '../ListItem';
 import { useSwitchSession } from '../useSwitchSession';
 
 const Inbox = memo(() => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation(['chat', 'custom']);
   const mobile = useServerConfigStore((s) => s.isMobile);
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
