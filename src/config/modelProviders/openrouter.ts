@@ -79,8 +79,10 @@ const OpenRouter: ModelProviderCard = {
       id: 'anthropic/claude-3-haiku',
       maxOutput: 4096,
       pricing: {
+        cachedInput: 0.025,
         input: 0.25,
         output: 1.25,
+        writeCacheInput: 0.3125,
       },
       releasedAt: '2024-03-07',
       tokens: 200_000,
@@ -95,8 +97,10 @@ const OpenRouter: ModelProviderCard = {
       id: 'anthropic/claude-3.5-sonnet',
       maxOutput: 8192,
       pricing: {
+        cachedInput: 0.3,
         input: 3,
         output: 15,
+        writeCacheInput: 3.75,
       },
       releasedAt: '2024-06-20',
       tokens: 200_000,
@@ -111,8 +115,10 @@ const OpenRouter: ModelProviderCard = {
       id: 'anthropic/claude-3-opus',
       maxOutput: 4096,
       pricing: {
+        cachedInput: 1.5,
         input: 15,
         output: 75,
+        writeCacheInput: 18.75,
       },
       releasedAt: '2024-02-29',
       tokens: 200_000,
