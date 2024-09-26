@@ -46,12 +46,6 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response> {
-    // Implement your logic here
-    // This method should handle the chat functionality using the provided payload and options
-    // It should return a Promise that resolves to a Response object
-    // You can make API calls, perform computations, or any other necessary operations
-
-    // Example implementation:
     try {
       const { model, tools, ...restPayload } = payload;
       const functions = tools?.map((tool) => tool.function);
