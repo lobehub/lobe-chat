@@ -28,7 +28,7 @@ const ChatHeaderTitle = memo(() => {
   const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
   const displayTitle = isInbox
     ? enableCustomDefaultAssistance
-      ? chatCustom('chat.defaultAssistance.title')
+      ? chatCustom('chat.inbox.title')
       : t('inbox.title')
     : title;
 

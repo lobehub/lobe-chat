@@ -1,8 +1,8 @@
 {
   "chat": {
-    "defaultAssistance": {
-      "desc": "Trả lời câu hỏi của bạn, cung cấp gợi ý và giúp bạn tận dụng tối đa Research Kick",
-      "title": "Research Kick"
+    "inbox": {
+      "desc": "Khởi động bộ não tập thể, kích thích những tia sáng tư duy. Trợ lý thông minh của bạn, ở đây để giao tiếp với bạn về mọi thứ.",
+      "title": "Nói chuyện thoải mái"
     }
   }
 }

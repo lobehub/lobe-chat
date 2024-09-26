@@ -1,8 +1,8 @@
 {
   "chat": {
-    "defaultAssistance": {
-      "desc": "Answer your questions, provide suggestions, and help you make the most of Research Kick.",
-      "title": "Research Kick"
+    "inbox": {
+      "desc": "Activate the brain cluster and spark creative ideas. Your intelligent assistant is here to discuss everything with you.",
+      "title": "Let's Chat"
     }
   }
 }

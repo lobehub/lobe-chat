@@ -37,12 +37,12 @@ const Main = memo(() => {
 
   const displayTitle = isInbox
     ? enableCustomDefaultAssistance
-      ? chatCustom('chat.defaultAssistance.title')
+      ? chatCustom('chat.inbox.title')
       : t('inbox.title')
     : title;
   const displayDesc = isInbox
     ? enableCustomDefaultAssistance
-      ? chatCustom('chat.defaultAssistance.desc')
+      ? chatCustom('chat.inbox.desc')
       : t('inbox.desc')
     : description;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);

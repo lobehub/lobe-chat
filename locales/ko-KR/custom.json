@@ -1,8 +1,8 @@
 {
   "chat": {
-    "defaultAssistance": {
-      "desc": "귀하의 질문에 답변하고, 조언을 제공하며, Research Kick을 최대한 활용할 수 있도록 도와드립니다.",
-      "title": "Research Kick"
+    "inbox": {
+      "desc": "두뇌 집단을 열고, 사고의 불꽃을 자극하세요. 당신의 스마트 어시스턴트가 여기서 모든 것에 대해 소통합니다.",
+      "title": "편하게 이야기해요"
     }
   }
 }

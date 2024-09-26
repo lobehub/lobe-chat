@@ -18,12 +18,12 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
     description: isInbox
       ? enableCustomDefaultAssistance
-        ? t('chat.defaultAssistance.desc', { ns: 'custom' })
+        ? t('chat.inbox.desc', { ns: 'custom' })
         : t('inbox.desc', { ns: 'chat' })
       : undefined,
     title: isInbox
       ? enableCustomDefaultAssistance
-        ? t('chat.defaultAssistance.title', { ns: 'custom' })
+        ? t('chat.inbox.title', { ns: 'custom' })
         : t('inbox.title', { ns: 'chat' })
       : t('defaultSession'),
   };

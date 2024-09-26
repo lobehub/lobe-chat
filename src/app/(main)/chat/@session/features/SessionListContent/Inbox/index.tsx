@@ -21,11 +21,7 @@ const Inbox = memo(() => {
   const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
   return (
     <Link
-      aria-label={
-        enableCustomDefaultAssistance
-          ? chatCustom('chat.defaultAssistance.title')
-          : t('inbox.title')
-      }
+      aria-label={enableCustomDefaultAssistance ? chatCustom('chat.inbox.title') : t('inbox.title')}
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
@@ -35,11 +31,7 @@ const Inbox = memo(() => {
       <ListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
-        title={
-          enableCustomDefaultAssistance
-            ? chatCustom('chat.defaultAssistance.title')
-            : t('inbox.title')
-        }
+        title={enableCustomDefaultAssistance ? chatCustom('chat.inbox.title') : t('inbox.title')}
       />
     </Link>
   );

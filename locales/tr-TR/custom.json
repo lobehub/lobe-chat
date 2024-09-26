@@ -1,8 +1,8 @@
 {
   "chat": {
-    "defaultAssistance": {
-      "desc": "Sorularınızı yanıtlayarak, önerilerde bulunarak ve Research Kick'ten en iyi şekilde yararlanmanıza yardımcı olarak destek sağlıyorum.",
-      "title": "Research Kick"
+    "inbox": {
+      "desc": "Zihin kümelerini açın, düşünce kıvılcımlarını ateşleyin. Akıllı asistanınız, burada her şey hakkında sizinle iletişim kuruyor.",
+      "title": "Sohbet Edelim"
     }
   }
 }

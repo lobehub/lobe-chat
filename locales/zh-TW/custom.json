@@ -1,8 +1,8 @@
 {
   "chat": {
-    "defaultAssistance": {
-      "desc": "回答您的問題，提供建議，並幫助您充分利用 Research Kick",
-      "title": "Research Kick"
+    "inbox": {
+      "desc": "開啟大腦集群，激發思維火花。你的智能助理，在這裡與你交流一切",
+      "title": "隨便聊聊"
     }
   }
 }
