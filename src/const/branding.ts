@@ -8,4 +8,4 @@ export const BRANDING_LOGO_URL = '';
 
 export const ORG_NAME = 'LobeHub';
 
-export const INBOX_GUIDE_SYSTEMROLE = '';
+export const INBOX_PROMPT = '';
