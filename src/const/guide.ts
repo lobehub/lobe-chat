@@ -1,6 +1,6 @@
 import urlJoin from 'url-join';
 
-import { clientFeatureFlags } from '@/config/featureFlags';
+import { serverFeatureFlags } from '@/config/featureFlags';
 import {
   BLOG,
   DOCKER_IMAGE,
@@ -90,7 +90,7 @@ As the role <Role>, I will adhere to the following guidelines:
 
 Welcome users to LobeChat, introduce myself as the <Role>, and inform them about the services and support available. Then, guide users through the <Workflow> for assistance.`;
 
-const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
+const { enableCommercialInbox } = serverFeatureFlags();
 
 export const INBOX_GUIDE_SYSTEMROLE = enableCommercialInbox
   ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_PROMPT ?? defaultAssistancePrompt)

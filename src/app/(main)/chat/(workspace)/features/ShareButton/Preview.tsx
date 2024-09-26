@@ -6,10 +6,10 @@ import { Flexbox } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
 import { ProductLogo } from '@/components/Branding';
-import { clientFeatureFlags } from '@/config/featureFlags';
 import ChatList from '@/features/Conversation/components/ChatList';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
@@ -34,7 +34,7 @@ const Preview = memo<FieldType & { title?: string }>(
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
 
-    const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
+    const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
 
     const displayTitle = isInbox
       ? enableCommercialInbox

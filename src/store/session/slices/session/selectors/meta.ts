@@ -1,6 +1,6 @@
 import { t } from 'i18next';
 
-import { clientFeatureFlags } from '@/config/featureFlags';
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { SessionStore } from '@/store/session';
 import { MetaData } from '@/types/meta';
@@ -11,7 +11,7 @@ import { sessionSelectors } from './list';
 // ==========   Meta   ============== //
 const currentAgentMeta = (s: SessionStore): MetaData => {
   const isInbox = sessionSelectors.isInboxSession(s);
-  const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
+  const { enableCommercialInbox } = serverFeatureFlags();
 
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
