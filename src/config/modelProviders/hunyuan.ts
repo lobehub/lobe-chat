@@ -9,6 +9,11 @@ const Hunyuan: ModelProviderCard = {
       enabled: true,
       id: 'hunyuan-lite',
       maxOutput: 6000,
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
       tokens: 256_000,
     },
     {
