@@ -4,6 +4,7 @@ import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import ModelSwitchPanel from '@/features/ModelSwitchPanel';
+import { useModelName } from '@/hooks/useModelName';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useUserStore } from '@/store/user';
@@ -22,10 +23,12 @@ const TitleTags = memo(() => {
 
   const showPlugin = useUserStore(modelProviderSelectors.isModelEnabledFunctionCall(model));
 
+  const modelName = useModelName(model);
+
   return (
     <Flexbox align={'center'} horizontal>
       <ModelSwitchPanel>
-        <ModelTag model={model} />
+        <ModelTag model={modelName} />
       </ModelSwitchPanel>
       {showPlugin && plugins?.length > 0 && <PluginTag plugins={plugins} />}
       {hasKnowledge && <KnowledgeTag data={enabledKnowledge} />}
