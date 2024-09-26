@@ -54,9 +54,10 @@ const InboxWelcome = memo(() => {
           <h1 className={styles.title}>{greeting}</h1>
         </Flexbox>
         <Markdown className={styles.desc} variant={'chat'}>
-          {t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
-            appName: BRANDING_NAME,
-          })}
+          {process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION ??
+            t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
+              appName: BRANDING_NAME,
+            })}
         </Markdown>
         {showWelcomeSuggest && (
           <>

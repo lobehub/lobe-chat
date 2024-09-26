@@ -34,7 +34,9 @@ const Preview = memo<FieldType & { title?: string }>(
     const { styles } = useStyles(withBackground);
 
     const displayTitle = isInbox ? t('inbox.title') : title;
-    const displayDesc = isInbox ? t('inbox.desc') : description;
+    const displayDesc = isInbox
+      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION_HEADING ?? t('inbox.desc'))
+      : description;
 
     return (
       <div className={styles.preview}>
