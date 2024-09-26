@@ -54,6 +54,7 @@ export interface GlobalState {
   sidebarKey: SidebarTabKey;
   status: SystemStatus;
   statusStorage: AsyncLocalStorage<SystemStatus>;
+  useCustomInbox: boolean;
 }
 
 export const INITIAL_STATUS = {
@@ -75,4 +76,5 @@ export const initialState: GlobalState = {
   sidebarKey: SidebarTabKey.Chat,
   status: INITIAL_STATUS,
   statusStorage: new AsyncLocalStorage('LOBE_SYSTEM_STATUS'),
+  useCustomInbox: false,
 };

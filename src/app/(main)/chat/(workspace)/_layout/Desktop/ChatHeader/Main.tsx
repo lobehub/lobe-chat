@@ -7,6 +7,7 @@ import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { clientFeatureFlags } from '@/config/featureFlags';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
@@ -19,7 +20,7 @@ import Tags from './Tags';
 
 const Main = memo(() => {
   const { t } = useTranslation('chat');
-
+  const { t: chatCustom } = useTranslation('custom');
   useInitAgentConfig();
 
   const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
@@ -32,12 +33,17 @@ const Main = memo(() => {
   ]);
 
   const openChatSettings = useOpenChatSettings();
+  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
 
   const displayTitle = isInbox
-    ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title'))
+    ? enableCustomDefaultAssistance
+      ? chatCustom('chat.defaultAssistance.title')
+      : t('inbox.title')
     : title;
   const displayDesc = isInbox
-    ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION ?? t('inbox.desc'))
+    ? enableCustomDefaultAssistance
+      ? chatCustom('chat.defaultAssistance.desc')
+      : t('inbox.desc')
     : description;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);

@@ -73,7 +73,7 @@ const mockedChats = [
       avatar: '🤯',
       backgroundColor: 'rgba(0,0,0,0)',
       description: 'inbox.desc',
-      title: process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? 'inbox.title',
+      title: 'inbox.title',
     },
     tools: [
       {

@@ -1,5 +1,6 @@
 import { t } from 'i18next';
 
+import { clientFeatureFlags } from '@/config/featureFlags';
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { SessionStore } from '@/store/session';
 import { MetaData } from '@/types/meta';
@@ -10,15 +11,20 @@ import { sessionSelectors } from './list';
 // ==========   Meta   ============== //
 const currentAgentMeta = (s: SessionStore): MetaData => {
   const isInbox = sessionSelectors.isInboxSession(s);
+  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
 
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
     description: isInbox
-      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION ?? t('inbox.desc', { ns: 'chat' }))
+      ? enableCustomDefaultAssistance
+        ? t('chat.defaultAssistance.desc', { ns: 'custom' })
+        : t('inbox.desc', { ns: 'chat' })
       : undefined,
     title: isInbox
-      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title', { ns: 'chat' }))
+      ? enableCustomDefaultAssistance
+        ? t('chat.defaultAssistance.title', { ns: 'custom' })
+        : t('inbox.title', { ns: 'chat' })
       : t('defaultSession'),
   };
 

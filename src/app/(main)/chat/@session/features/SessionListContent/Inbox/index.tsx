@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { clientFeatureFlags } from '@/config/featureFlags';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
@@ -13,13 +14,18 @@ import { useSwitchSession } from '../useSwitchSession';
 
 const Inbox = memo(() => {
   const { t } = useTranslation('chat');
+  const { t: chatCustom } = useTranslation('custom');
   const mobile = useServerConfigStore((s) => s.isMobile);
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
-
+  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
   return (
     <Link
-      aria-label={process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title')}
+      aria-label={
+        enableCustomDefaultAssistance
+          ? chatCustom('chat.defaultAssistance.title')
+          : t('inbox.title')
+      }
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
@@ -29,7 +35,11 @@ const Inbox = memo(() => {
       <ListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
-        title={process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title')}
+        title={
+          enableCustomDefaultAssistance
+            ? chatCustom('chat.defaultAssistance.title')
+            : t('inbox.title')
+        }
       />
     </Link>
   );

@@ -335,9 +335,6 @@
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 是一款高效的多模态模型，支持广泛应用的扩展。"
   },
-  "gemini-1.5-flash-8b-exp-0827": {
-    "description": "Gemini 1.5 Flash 8B 0827 专为处理大规模任务场景设计，提供无与伦比的处理速度。"
-  },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。"
   },
@@ -882,9 +879,6 @@
   },
   "taichu_llm": {
     "description": "Taichu 2.0 基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力"
-  },
-  "taichu_vqa": {
-    "description": "Taichu 2.0V 融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出"
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) 通过高效的策略和模型架构，提供增强的计算能力。"

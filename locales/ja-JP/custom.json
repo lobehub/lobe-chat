@@ -1,0 +1,8 @@
+{
+  "chat": {
+    "defaultAssistance": {
+      "desc": "あなたの質問に答え、提案を提供し、Research Kickを最大限に活用するお手伝いをします。",
+      "title": "Research Kick"
+    }
+  }
+}

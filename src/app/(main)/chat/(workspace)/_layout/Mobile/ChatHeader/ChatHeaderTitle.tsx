@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { clientFeatureFlags } from '@/config/featureFlags';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -13,6 +14,7 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 
 const ChatHeaderTitle = memo(() => {
   const { t } = useTranslation('chat');
+  const { t: chatCustom } = useTranslation('custom');
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const [topicLength, topic] = useChatStore((s) => [
     topicSelectors.currentTopicLength(s),
@@ -23,9 +25,11 @@ const ChatHeaderTitle = memo(() => {
     sessionMetaSelectors.currentAgentTitle(s),
   ]);
   const theme = useTheme();
-
+  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
   const displayTitle = isInbox
-    ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title'))
+    ? enableCustomDefaultAssistance
+      ? chatCustom('chat.defaultAssistance.title')
+      : t('inbox.title')
     : title;
 
   return (

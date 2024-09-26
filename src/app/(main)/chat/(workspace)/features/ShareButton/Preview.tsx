@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
 import { ProductLogo } from '@/components/Branding';
+import { clientFeatureFlags } from '@/config/featureFlags';
 import ChatList from '@/features/Conversation/components/ChatList';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
@@ -31,13 +32,20 @@ const Preview = memo<FieldType & { title?: string }>(
     ]);
 
     const { t } = useTranslation('chat');
+    const { t: chatCustom } = useTranslation('custom');
     const { styles } = useStyles(withBackground);
 
+    const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+
     const displayTitle = isInbox
-      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title'))
+      ? enableCustomDefaultAssistance
+        ? chatCustom('chat.defaultAssistance.title')
+        : t('inbox.title')
       : title;
     const displayDesc = isInbox
-      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION ?? t('inbox.desc'))
+      ? enableCustomDefaultAssistance
+        ? chatCustom('chat.defaultAssistance.desc')
+        : t('inbox.desc')
       : description;
 
     return (
