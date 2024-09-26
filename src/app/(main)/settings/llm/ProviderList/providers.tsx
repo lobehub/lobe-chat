@@ -5,6 +5,7 @@ import {
   Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
+  CloudflareProviderCard,
   DeepSeekProviderCard,
   FireworksAIProviderCard,
   GoogleProviderCard,
@@ -69,10 +70,18 @@ export const useProviderList = (): ProviderItem[] => {
       MoonshotProviderCard,
       BaichuanProviderCard,
       MinimaxProviderCard,
+      CloudflareProviderCard,
       Ai360ProviderCard,
       TaichuProviderCard,
       SiliconCloudProviderCard,
     ],
-    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, CloudflareProvider, GithubProvider],
+    [
+      AzureProvider,
+      OllamaProvider,
+      OpenAIProvider,
+      BedrockProvider,
+      CloudflareProvider,
+      GithubProvider,
+    ],
   );
 };
