@@ -14,8 +14,8 @@ import { Center, Flexbox } from 'react-layout-kit';
 import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
-import { isChunkingUnsupported } from '@/utils/chunkingSupportedType';
 import { formatSize } from '@/utils/format';
+import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import ChunksBadge from './ChunkTag';
 import DropdownMenu from './DropdownMenu';

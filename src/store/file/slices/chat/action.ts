@@ -17,7 +17,7 @@ import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { FileListItem } from '@/types/files';
 import { UploadFileItem } from '@/types/files/upload';
-import { isChunkingUnsupported } from '@/utils/chunkingSupportedType';
+import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 import { sleep } from '@/utils/sleep';
 import { setNamespace } from '@/utils/storeDebug';
 
