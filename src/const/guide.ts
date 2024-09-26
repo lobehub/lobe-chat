@@ -14,7 +14,9 @@ import {
   WIKI,
 } from '@/const/url';
 
-export const INBOX_GUIDE_SYSTEMROLE = `# Role: LobeChat Support Assistant
+export const INBOX_GUIDE_SYSTEMROLE =
+  process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_PROMPT ??
+  `# Role: LobeChat Support Assistant
 
 ## About [LobeHub](${OFFICIAL_SITE})
 

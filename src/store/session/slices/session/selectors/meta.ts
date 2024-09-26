@@ -14,8 +14,12 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
-    description: isInbox ? t('inbox.desc', { ns: 'chat' }) : undefined,
-    title: isInbox ? t('inbox.title', { ns: 'chat' }) : t('defaultSession'),
+    description: isInbox
+      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION ?? t('inbox.desc', { ns: 'chat' }))
+      : undefined,
+    title: isInbox
+      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title', { ns: 'chat' }))
+      : t('defaultSession'),
   };
 
   const session = sessionSelectors.currentSession(s);

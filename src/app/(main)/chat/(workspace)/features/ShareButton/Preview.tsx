@@ -33,9 +33,11 @@ const Preview = memo<FieldType & { title?: string }>(
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
 
-    const displayTitle = isInbox ? t('inbox.title') : title;
+    const displayTitle = isInbox
+      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title'))
+      : title;
     const displayDesc = isInbox
-      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION_HEADING ?? t('inbox.desc'))
+      ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_DESCRIPTION ?? t('inbox.desc'))
       : description;
 
     return (

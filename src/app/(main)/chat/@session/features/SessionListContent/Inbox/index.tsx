@@ -19,7 +19,7 @@ const Inbox = memo(() => {
 
   return (
     <Link
-      aria-label={t('inbox.title')}
+      aria-label={process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title')}
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
@@ -29,7 +29,7 @@ const Inbox = memo(() => {
       <ListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
-        title={t('inbox.title')}
+        title={process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_TITLE ?? t('inbox.title')}
       />
     </Link>
   );
