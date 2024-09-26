@@ -1,8 +1,8 @@
 export default {
   chat: {
     defaultAssistance: {
-      desc: '回答您的问题，提供建议，并帮助您充分利用 Research Kick',
-      title: 'Research Kick',
+      desc: '开启大脑集群，激发思维火花。你的智能助理，在这里与你交流一切',
+      title: '随便聊聊',
     },
   },
 };
