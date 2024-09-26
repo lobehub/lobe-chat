@@ -46,6 +46,7 @@ const Hunyuan: ModelProviderCard = {
       description: '混元全新一代大语言模型的预览版，采用全新的混合专家模型（MoE）结构，相比hunyuan-pro推理效率更快，效果表现更强。',
       displayName: 'Hunyuan Turbo',
       enabled: true,
+      functionCall: true,
       id: 'hunyuan-turbo',
       maxOutput: 4000,
       pricing: {
