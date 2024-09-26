@@ -8,7 +8,6 @@ import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import { KeyVaultsConfigKey } from '../../const';
 import { ProviderItem } from '../../type';
-import { CloudflareBrand } from '../providers';
 
 const providerKey: GlobalLLMProviderKey = 'cloudflare';
 
@@ -40,6 +39,5 @@ export const useCloudflareProvider = (): ProviderItem => {
         name: [KeyVaultsConfigKey, providerKey, 'baseURLOrAccountID'],
       },
     ],
-    title: <CloudflareBrand />,
   };
 };
