@@ -9,11 +9,12 @@ import { modelProviderSelectors } from '@/store/user/selectors';
 const CustomModelTag = memo<ModelTagProps>(({ type = 'mono', model, ...rest }) => {
   const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect);
 
-  const modelProvider = enabledList.find((provider) =>
-    provider.chatModels.some((chatModel) => chatModel.id === model),
-  );
+  let modelCard;
 
-  const modelCard = modelProvider?.chatModels.find((chatModel) => chatModel.id === model);
+  for (const provider of enabledList) {
+    modelCard = provider.chatModels.find((chatModel) => chatModel.id === model);
+    if (modelCard) break;
+  }
 
   return (
     <Tag icon={<ModelIcon model={model} type={type} />} {...rest}>
