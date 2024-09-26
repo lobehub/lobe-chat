@@ -20,7 +20,6 @@ import Tags from './Tags';
 
 const Main = memo(() => {
   const { t } = useTranslation('chat');
-  const { t: chatCustom } = useTranslation('custom');
   useInitAgentConfig();
 
   const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
@@ -33,16 +32,16 @@ const Main = memo(() => {
   ]);
 
   const openChatSettings = useOpenChatSettings();
-  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+  const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
 
   const displayTitle = isInbox
-    ? enableCustomDefaultAssistance
-      ? chatCustom('chat.inbox.title')
+    ? enableCommercialInbox
+      ? t('chat.inbox.title', { ns: 'custom' })
       : t('inbox.title')
     : title;
   const displayDesc = isInbox
-    ? enableCustomDefaultAssistance
-      ? chatCustom('chat.inbox.desc')
+    ? enableCommercialInbox
+      ? t('chat.inbox.desc', { ns: 'custom' })
       : t('inbox.desc')
     : description;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);

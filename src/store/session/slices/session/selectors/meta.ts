@@ -11,18 +11,18 @@ import { sessionSelectors } from './list';
 // ==========   Meta   ============== //
 const currentAgentMeta = (s: SessionStore): MetaData => {
   const isInbox = sessionSelectors.isInboxSession(s);
-  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+  const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
 
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
     description: isInbox
-      ? enableCustomDefaultAssistance
+      ? enableCommercialInbox
         ? t('chat.inbox.desc', { ns: 'custom' })
         : t('inbox.desc', { ns: 'chat' })
       : undefined,
     title: isInbox
-      ? enableCustomDefaultAssistance
+      ? enableCommercialInbox
         ? t('chat.inbox.title', { ns: 'custom' })
         : t('inbox.title', { ns: 'chat' })
       : t('defaultSession'),

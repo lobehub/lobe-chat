@@ -18,10 +18,10 @@ const Inbox = memo(() => {
   const mobile = useServerConfigStore((s) => s.isMobile);
   const activeId = useSessionStore((s) => s.activeId);
   const switchSession = useSwitchSession();
-  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+  const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
   return (
     <Link
-      aria-label={enableCustomDefaultAssistance ? chatCustom('chat.inbox.title') : t('inbox.title')}
+      aria-label={enableCommercialInbox ? chatCustom('chat.inbox.title') : t('inbox.title')}
       href={SESSION_CHAT_URL(INBOX_SESSION_ID, mobile)}
       onClick={(e) => {
         e.preventDefault();
@@ -31,7 +31,7 @@ const Inbox = memo(() => {
       <ListItem
         active={activeId === INBOX_SESSION_ID}
         avatar={DEFAULT_INBOX_AVATAR}
-        title={enableCustomDefaultAssistance ? chatCustom('chat.inbox.title') : t('inbox.title')}
+        title={enableCommercialInbox ? chatCustom('chat.inbox.title') : t('inbox.title')}
       />
     </Link>
   );

@@ -90,8 +90,8 @@ As the role <Role>, I will adhere to the following guidelines:
 
 Welcome users to LobeChat, introduce myself as the <Role>, and inform them about the services and support available. Then, guide users through the <Workflow> for assistance.`;
 
-const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
 
-export const INBOX_GUIDE_SYSTEMROLE = enableCustomDefaultAssistance
+export const INBOX_GUIDE_SYSTEMROLE = enableCommercialInbox
   ? (process.env.NEXT_PUBLIC_ASSISTANT_DEFAULT_PROMPT ?? defaultAssistancePrompt)
   : defaultAssistancePrompt;

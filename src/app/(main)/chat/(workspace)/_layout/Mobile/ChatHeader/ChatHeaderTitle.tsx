@@ -14,7 +14,6 @@ import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selector
 
 const ChatHeaderTitle = memo(() => {
   const { t } = useTranslation('chat');
-  const { t: chatCustom } = useTranslation('custom');
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const [topicLength, topic] = useChatStore((s) => [
     topicSelectors.currentTopicLength(s),
@@ -25,10 +24,10 @@ const ChatHeaderTitle = memo(() => {
     sessionMetaSelectors.currentAgentTitle(s),
   ]);
   const theme = useTheme();
-  const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+  const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
   const displayTitle = isInbox
-    ? enableCustomDefaultAssistance
-      ? chatCustom('chat.inbox.title')
+    ? enableCommercialInbox
+      ? t('chat.inbox.title', { ns: 'custom' })
       : t('inbox.title')
     : title;
 

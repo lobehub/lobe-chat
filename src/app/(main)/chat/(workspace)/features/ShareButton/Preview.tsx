@@ -32,19 +32,18 @@ const Preview = memo<FieldType & { title?: string }>(
     ]);
 
     const { t } = useTranslation('chat');
-    const { t: chatCustom } = useTranslation('custom');
     const { styles } = useStyles(withBackground);
 
-    const enableCustomDefaultAssistance = clientFeatureFlags().enableCustomDefaultAssistance;
+    const enableCommercialInbox = clientFeatureFlags().enableCommercialInbox;
 
     const displayTitle = isInbox
-      ? enableCustomDefaultAssistance
-        ? chatCustom('chat.inbox.title')
+      ? enableCommercialInbox
+        ? t('chat.inbox.title', { ns: 'custom' })
         : t('inbox.title')
       : title;
     const displayDesc = isInbox
-      ? enableCustomDefaultAssistance
-        ? chatCustom('chat.inbox.desc')
+      ? enableCommercialInbox
+        ? t('chat.inbox.desc', { ns: 'custom' })
         : t('inbox.desc')
       : description;
 
