@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/branding';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+import { isCustomBranding } from '@/const/version';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -34,7 +34,6 @@ const Hero = memo(() => {
   const { styles } = useStyles();
 
   const { t } = useTranslation(['welcome', 'custom']);
-  const { enableCommercialBranding } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <>
@@ -49,9 +48,7 @@ const Hero = memo(() => {
       >
         <strong style={{ fontSize: 'min(56px, 8vw)' }}>{BRANDING_NAME}</strong>
         <span>
-          {enableCommercialBranding
-            ? t('welcome.slogan.title', { ns: 'custom' })
-            : t('slogan.title')}
+          {isCustomBranding ? t('welcome.slogan.title', { ns: 'custom' }) : t('slogan.title')}
         </span>
       </Flexbox>
       <Flexbox
@@ -62,7 +59,7 @@ const Hero = memo(() => {
         justify={'center'}
         wrap={'wrap'}
       >
-        {enableCommercialBranding ? t('welcome.slogan.desc1', { ns: 'custom' }) : t('slogan.desc1')}
+        {isCustomBranding ? t('welcome.slogan.desc1', { ns: 'custom' }) : t('slogan.desc1')}
       </Flexbox>
     </>
   );
