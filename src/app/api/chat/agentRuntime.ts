@@ -12,8 +12,6 @@ import { TraceClient } from '@/libs/traces';
 
 import apiKeyManager from './apiKeyManager';
 
-import { encodeJwtTokenSenseCore } from '@/libs/agent-runtime/sensecore/authToken';
-
 export interface AgentChatOptions {
   enableTrace?: boolean;
   provider: string;
