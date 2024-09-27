@@ -11,18 +11,6 @@ import { UTM_SOURCE } from '@/const/url';
 import { isCustomORG } from '@/const/version';
 
 const useStyles = createStyles(({ token, css }) => ({
-  customLogo: css`
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    justify-content: center;
-
-    color: inherit;
-
-    &:hover {
-      color: ${token.colorLink};
-    }
-  `,
   logoLink: css`
     line-height: 1;
     color: inherit;
