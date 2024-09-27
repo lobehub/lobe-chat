@@ -140,6 +140,26 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
+      description: 'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.',
+      displayName: 'OpenAI o1-preview',
+      enabled: true,
+      functionCall: false,
+      id: 'o1-preview',
+      maxOutput: 32_768,
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description: 'Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations.',
+      displayName: 'OpenAI o1-mini',
+      enabled: true,
+      functionCall: false,
+      id: 'o1-mini',
+      maxOutput: 65_536,
+      tokens: 128_000,
+      vision: true,
+    },
+    {
       description:
         'Same Phi-3-medium model, but with a larger context size for RAG or few shot prompting.',
       displayName: 'Phi-3-medium instruct (128k)',
