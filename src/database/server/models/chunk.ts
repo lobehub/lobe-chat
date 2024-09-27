@@ -54,7 +54,7 @@ export class ChunkModel {
     const ids = orphanedChunks.map((chunk) => chunk.chunkId);
     if (ids.length === 0) return;
 
-    const list = chunk(ids, 3000);
+    const list = chunk(ids, 500);
 
     await serverDB.transaction(async (trx) => {
       await Promise.all(
