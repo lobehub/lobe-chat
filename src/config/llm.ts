@@ -117,6 +117,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI21: z.boolean(),
       AI21_API_KEY: z.string().optional(),
+
+      ENABLED_HUNYUAN: z.boolean(),
+      HUNYUAN_API_KEY: z.string().optional(),
+      HUNYUAN_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -231,6 +235,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI21: !!process.env.AI21_API_KEY,
       AI21_API_KEY: process.env.AI21_API_KEY,
+
+      ENABLED_HUNYUAN: !!process.env.HUNYUAN_API_KEY,
+      HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
+      HUNYUAN_MODEL_LIST: process.env.HUNYUAN_MODEL_LIST,
     },
   });
 };

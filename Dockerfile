@@ -135,6 +135,8 @@ ENV \
     GOOGLE_API_KEY="" GOOGLE_PROXY_URL="" \
     # Groq
     GROQ_API_KEY="" GROQ_MODEL_LIST="" GROQ_PROXY_URL="" \
+    # Hunyuan
+    HUNYUAN_API_KEY="" HUNYUAN_MODEL_LIST="" \
     # Minimax
     MINIMAX_API_KEY="" \
     # Mistral
