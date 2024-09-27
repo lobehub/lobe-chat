@@ -9,6 +9,7 @@ import {
   GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HunyuanProviderCard,
   MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
@@ -74,6 +75,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   groq: {
     enabled: false,
     enabledModels: filterEnabledModels(GroqProviderCard),
+  },
+  hunyuan: {
+    enabled: false,
+    enabledModels: filterEnabledModels(HunyuanProviderCard),
   },
   minimax: {
     enabled: false,
