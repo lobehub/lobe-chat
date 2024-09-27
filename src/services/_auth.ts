@@ -41,6 +41,15 @@ export const getProviderAuthPayload = (provider: string) => {
       return { endpoint: config?.baseURL };
     }
 
+    case ModelProvider.SenseCore: {
+      const config = keyVaultsConfigSelectors.sensecoreConfig(useUserStore.getState());
+
+      return { 
+        sensecoreAccessKeyID: config?.sensecoreAccessKeyID, 
+        sensecoreAccessKeySecret: config?.sensecoreAccessKeySecret, 
+      };
+    }
+
     default: {
       const config = keyVaultsConfigSelectors.getVaultByProvider(provider as GlobalLLMProviderKey)(
         useUserStore.getState(),

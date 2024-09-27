@@ -16,7 +16,6 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
-  SenseCoreProviderCard,
   SiliconCloudProviderCard,
   SparkProviderCard,
   StepfunProviderCard,
@@ -33,6 +32,7 @@ import { useBedrockProvider } from './Bedrock';
 import { useGithubProvider } from './Github';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
+import { useSenseCoreProvider } from './SenseCore';
 
 export const useProviderList = (): ProviderItem[] => {
   const AzureProvider = useAzureProvider();
@@ -40,6 +40,7 @@ export const useProviderList = (): ProviderItem[] => {
   const OpenAIProvider = useOpenAIProvider();
   const BedrockProvider = useBedrockProvider();
   const GithubProvider = useGithubProvider();
+  const SenseCoreProvider = useSenseCoreProvider();
 
   return useMemo(
     () => [
@@ -64,6 +65,7 @@ export const useProviderList = (): ProviderItem[] => {
       SparkProviderCard,
       ZhiPuProviderCard,
       ZeroOneProviderCard,
+      SenseCoreProvider,
       StepfunProviderCard,
       MoonshotProviderCard,
       BaichuanProviderCard,
@@ -71,8 +73,7 @@ export const useProviderList = (): ProviderItem[] => {
       Ai360ProviderCard,
       TaichuProviderCard,
       SiliconCloudProviderCard,
-      SenseCoreProviderCard,
     ],
-    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider],
+    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider, SenseCoreProvider],
   );
 };

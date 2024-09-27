@@ -8,7 +8,7 @@ export const LobeSenseCoreAI = LobeOpenAICompatibleFactory({
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
       const { frequency_penalty, temperature, top_p, ...rest } = payload;
-    
+
       return {
         ...rest,
         frequency_penalty: (frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 2) ? frequency_penalty : undefined,

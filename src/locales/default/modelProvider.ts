@@ -115,6 +115,18 @@ export default {
       title: '下载指定的 Ollama 模型',
     },
   },
+  sensecore: {
+    sensecoreAccessKeyID: {
+      desc: '填入 SenseCore Access Key ID',
+      placeholder: 'SenseCore Access Key ID',
+      title: 'SenseCore Access Key ID',
+    },
+    sensecoreAccessKeySecret: {
+      desc: '填入 SenseCore Access Key Secret',
+      placeholder: 'SenseCore Access Key Secret',
+      title: 'SenseCore Access Key Secret',
+    },
+  },
   zeroone: {
     title: '01.AI 零一万物',
   },
