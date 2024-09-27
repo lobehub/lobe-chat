@@ -14,6 +14,7 @@ import { LobeFireworksAI } from './fireworksai';
 import { LobeGithubAI } from './github';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
+import { LobeHunyuanAI } from './hunyuan';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
@@ -133,6 +134,7 @@ class AgentRuntime {
       github: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
+      hunyuan: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
@@ -298,6 +300,11 @@ class AgentRuntime {
 
       case ModelProvider.Ai21: {
         runtimeModel = new LobeAi21AI(params.ai21);
+        break;
+      }
+
+      case ModelProvider.Hunyuan: {
+        runtimeModel = new LobeHunyuanAI(params.hunyuan);
         break;
       }
     }
