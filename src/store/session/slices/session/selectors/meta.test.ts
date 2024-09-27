@@ -1,11 +1,15 @@
-import { describe, expect, it } from 'vitest';
+import { Mock, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
+import * as serverConfigSelectors from '@/store/serverConfig/selectors';
+import { featureFlagsSelectors } from '@/store/serverConfig/selectors';
+import * as serverConfigStore from '@/store/serverConfig/store';
 import { SessionStore } from '@/store/session';
 import { MetaData } from '@/types/meta';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
+import * as listSelectors from './list';
 import { sessionMetaSelectors } from './meta';
 
 vi.mock('i18next', () => ({
@@ -61,6 +65,82 @@ describe('sessionMetaSelectors', () => {
     it('should return the description from the session meta data', () => {
       const description = sessionMetaSelectors.currentAgentDescription(mockSessionStore);
       expect(description).toBe(mockSessionStore.sessions[0].meta.description);
+    });
+  });
+
+  describe('inbox session with enableCommercialInbox', () => {
+    let newMockSessionStore: SessionStore;
+
+    beforeEach(() => {
+      vi.spyOn(listSelectors.sessionSelectors, 'isInboxSession').mockReturnValue(true);
+      vi.spyOn(listSelectors.sessionSelectors, 'currentSession').mockReturnValue({
+        id: '1',
+        config: DEFAULT_AGENT_CONFIG,
+        type: LobeSessionType.Agent,
+      } as any);
+
+      newMockSessionStore = {
+        activeId: '1',
+        sessions: [
+          {
+            id: '1',
+            config: DEFAULT_AGENT_CONFIG,
+            type: LobeSessionType.Agent,
+          } as LobeAgentSession,
+        ],
+      } as unknown as SessionStore;
+    });
+
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+
+    it('should return the title from locales when enableCommercialInbox is true', () => {
+      vi.spyOn(serverConfigStore, 'createServerConfigStore').mockReturnValue({
+        getState: () => ({ featureFlags: { commercial_inbox: true } }),
+      } as any);
+      vi.spyOn(serverConfigSelectors, 'featureFlagsSelectors').mockReturnValue({
+        enableCommercialInbox: true,
+      } as any);
+
+      const title = sessionMetaSelectors.currentAgentTitle(newMockSessionStore);
+      expect(title).toBe('chat.inbox.title');
+    });
+
+    it('should return the title from locales when enableCommercialInbox is false', () => {
+      vi.spyOn(serverConfigStore, 'createServerConfigStore').mockReturnValue({
+        getState: () => ({ featureFlags: { commercial_inbox: false } }),
+      } as any);
+      vi.spyOn(serverConfigSelectors, 'featureFlagsSelectors').mockReturnValue({
+        enableCommercialInbox: false,
+      } as any);
+
+      const title = sessionMetaSelectors.currentAgentTitle(newMockSessionStore);
+      expect(title).toBe('inbox.title');
+    });
+
+    it('should return the description from locales when enableCommercialInbox is true', () => {
+      vi.spyOn(serverConfigStore, 'createServerConfigStore').mockReturnValue({
+        getState: () => ({ featureFlags: { commercial_inbox: true } }),
+      } as any);
+      vi.spyOn(serverConfigSelectors, 'featureFlagsSelectors').mockReturnValue({
+        enableCommercialInbox: true,
+      } as any);
+
+      const description = sessionMetaSelectors.currentAgentDescription(newMockSessionStore);
+      expect(description).toBe('chat.inbox.desc');
+    });
+
+    it('should return the description from locales when enableCommercialInbox is false', () => {
+      vi.spyOn(serverConfigStore, 'createServerConfigStore').mockReturnValue({
+        getState: () => ({ featureFlags: { commercial_inbox: false } }),
+      } as any);
+      vi.spyOn(serverConfigSelectors, 'featureFlagsSelectors').mockReturnValue({
+        enableCommercialInbox: false,
+      } as any);
+
+      const description = sessionMetaSelectors.currentAgentDescription(newMockSessionStore);
+      expect(description).toBe('inbox.desc');
     });
   });
 

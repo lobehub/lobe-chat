@@ -1,50 +1,35 @@
 import { ModelTag } from '@lobehub/icons';
 import { Avatar, ChatHeaderTitle, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
 import { ProductLogo } from '@/components/Branding';
 import ChatList from '@/features/Conversation/components/ChatList';
+import { useInboxAgentMeta } from '@/hooks/useInboxAgentMeta';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors } from '@/store/session/selectors';
 
 import PluginTag from '../PluginTag';
 import { useStyles } from './style';
 import { FieldType } from './type';
 
 const Preview = memo<FieldType & { title?: string }>(
-  ({ title, withSystemRole, withBackground, withFooter }) => {
+  ({ withSystemRole, withBackground, withFooter }) => {
     const [model, plugins, systemRole] = useAgentStore((s) => [
       agentSelectors.currentAgentModel(s),
       agentSelectors.currentAgentPlugins(s),
       agentSelectors.currentAgentSystemRole(s),
     ]);
-    const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
-      sessionSelectors.isInboxSession(s),
-      sessionMetaSelectors.currentAgentDescription(s),
-      sessionMetaSelectors.currentAgentAvatar(s),
+    const [backgroundColor] = useSessionStore((s) => [
       sessionMetaSelectors.currentAgentBackgroundColor(s),
     ]);
 
-    const { t } = useTranslation(['chat', 'custom']);
     const { styles } = useStyles(withBackground);
 
-    const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
-    const displayTitle = isInbox
-      ? enableCommercialInbox
-        ? t('chat.inbox.title', { ns: 'custom' })
-        : t('inbox.title')
-      : title;
-    const displayDesc = isInbox
-      ? enableCommercialInbox
-        ? t('chat.inbox.desc', { ns: 'custom' })
-        : t('inbox.desc')
-      : description;
+    const { title, description, avatar } = useInboxAgentMeta();
 
     return (
       <div className={styles.preview}>
@@ -54,14 +39,14 @@ const Preview = memo<FieldType & { title?: string }>(
               <Flexbox align={'flex-start'} gap={12} horizontal>
                 <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
                 <ChatHeaderTitle
-                  desc={displayDesc}
+                  desc={description}
                   tag={
                     <>
                       <ModelTag model={model} />
                       {plugins?.length > 0 && <PluginTag plugins={plugins} />}
                     </>
                   }
-                  title={displayTitle}
+                  title={title}
                 />
               </Flexbox>
               {withSystemRole && systemRole && (

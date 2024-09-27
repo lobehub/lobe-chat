@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useInboxAgentMeta } from '@/hooks/useInboxAgentMeta';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
@@ -23,28 +23,15 @@ const Main = memo(() => {
 
   useInitAgentConfig();
 
-  const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
+  const [init, backgroundColor] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
-    sessionSelectors.isInboxSession(s),
-    sessionMetaSelectors.currentAgentTitle(s),
-    sessionMetaSelectors.currentAgentDescription(s),
-    sessionMetaSelectors.currentAgentAvatar(s),
     sessionMetaSelectors.currentAgentBackgroundColor(s),
   ]);
 
   const openChatSettings = useOpenChatSettings();
 
-  const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
-  const displayTitle = isInbox
-    ? enableCommercialInbox
-      ? t('chat.inbox.title', { ns: 'custom' })
-      : t('inbox.title')
-    : title;
-  const displayDesc = isInbox
-    ? enableCommercialInbox
-      ? t('chat.inbox.desc', { ns: 'custom' })
-      : t('inbox.desc')
-    : description;
+  const { title, description, avatar } = useInboxAgentMeta();
+
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
@@ -80,7 +67,7 @@ const Main = memo(() => {
         size={40}
         title={title}
       />
-      <ChatHeaderTitle desc={displayDesc} tag={<Tags />} title={displayTitle} />
+      <ChatHeaderTitle desc={description} tag={<Tags />} title={title} />
     </Flexbox>
   );
 });

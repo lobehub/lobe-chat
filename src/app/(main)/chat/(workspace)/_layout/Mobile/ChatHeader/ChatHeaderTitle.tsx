@@ -5,12 +5,10 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useInboxAgentMeta } from '@/hooks/useInboxAgentMeta';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
-import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
-import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 const ChatHeaderTitle = memo(() => {
   const { t } = useTranslation(['chat', 'custom']);
@@ -19,18 +17,10 @@ const ChatHeaderTitle = memo(() => {
     topicSelectors.currentTopicLength(s),
     topicSelectors.currentActiveTopic(s),
   ]);
-  const [isInbox, title] = useSessionStore((s) => [
-    sessionSelectors.isInboxSession(s),
-    sessionMetaSelectors.currentAgentTitle(s),
-  ]);
-  const theme = useTheme();
 
-  const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
-  const displayTitle = isInbox
-    ? enableCommercialInbox
-      ? t('chat.inbox.title', { ns: 'custom' })
-      : t('inbox.title')
-    : title;
+  const { title } = useInboxAgentMeta();
+
+  const theme = useTheme();
 
   return (
     <MobileNavBarTitle
@@ -59,7 +49,7 @@ const ChatHeaderTitle = memo(() => {
             whiteSpace: 'nowrap',
           }}
         >
-          {displayTitle}
+          {title}
           {topicLength > 1 ? `(${topicLength + 1})` : ''}
         </div>
       }
