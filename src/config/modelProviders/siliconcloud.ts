@@ -91,18 +91,6 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
-      displayName: 'GLM-4 9B',
-      functionCall: true,
-      id: 'THUDM/glm-4-9b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
-      tokens: 32_768,
-    },
-    {
       description: 'InternLM2.5 提供多场景下的智能对话解决方案。',
       displayName: 'Internlm 2.5 7B',
       functionCall: true,
@@ -123,6 +111,18 @@ const SiliconCloud: ModelProviderCard = {
         currency: 'CNY',
         input: 1,
         output: 1,
+      },
+      tokens: 32_768,
+    },
+    {
+      description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
+      displayName: 'GLM-4 9B',
+      functionCall: true,
+      id: 'THUDM/glm-4-9b-chat',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
       },
       tokens: 32_768,
     },
