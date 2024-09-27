@@ -118,6 +118,10 @@ export const getLLMConfig = () => {
       ENABLED_AI21: z.boolean(),
       AI21_API_KEY: z.string().optional(),
 
+      ENABLED_HUNYUAN: z.boolean(),
+      HUNYUAN_API_KEY: z.string().optional(),
+      HUNYUAN_MODEL_LIST: z.string().optional(),
+
       ENABLED_SENSECORE: z.boolean(),
       SENSECORE_ACCESS_KEY_ID: z.string().optional(),
       SENSECORE_ACCESS_KEY_SECRET: z.string().optional(),
@@ -237,6 +241,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI21: !!process.env.AI21_API_KEY,
       AI21_API_KEY: process.env.AI21_API_KEY,
+
+      ENABLED_HUNYUAN: !!process.env.HUNYUAN_API_KEY,
+      HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
+      HUNYUAN_MODEL_LIST: process.env.HUNYUAN_MODEL_LIST,
 
       ENABLED_SENSECORE: !!process.env.SENSECORE_ACCESS_KEY_ID && !!process.env.SENSECORE_ACCESS_KEY_SECRET,
       SENSECORE_ACCESS_KEY_ID: process.env.SENSECORE_ACCESS_KEY_ID,
