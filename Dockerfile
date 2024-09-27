@@ -1,4 +1,4 @@
-## Base image for all building stages
+## Base image for all the stages
 FROM node:20-slim AS base
 
 ARG USE_CN_MIRROR
@@ -10,22 +10,19 @@ RUN \
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
         sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
     fi \
-    # Add required package
+    # Add required package & update base package
     && apt update \
-    && apt install ca-certificates proxychains-ng -qy \
-    # Prepare required package to distroless
-    && mkdir -p /distroless/bin /distroless/etc /distroless/etc/ssl/certs /distroless/lib \
-    # Copy proxychains to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libproxychains.so.4 /distroless/lib/libproxychains.so.4 \
-    && cp /usr/lib/$(arch)-linux-gnu/libdl.so.2 /distroless/lib/libdl.so.2 \
-    && cp /usr/bin/proxychains4 /distroless/bin/proxychains \
-    && cp /etc/proxychains4.conf /distroless/etc/proxychains4.conf \
-    # Copy node to distroless
-    && cp /usr/lib/$(arch)-linux-gnu/libstdc++.so.6 /distroless/lib/libstdc++.so.6 \
-    && cp /usr/lib/$(arch)-linux-gnu/libgcc_s.so.1 /distroless/lib/libgcc_s.so.1 \
-    && cp /usr/local/bin/node /distroless/bin/node \
-    # Copy CA certificates to distroless
-    && cp /etc/ssl/certs/ca-certificates.crt /distroless/etc/ssl/certs/ca-certificates.crt \
+    && apt install busybox proxychains-ng -qy \
+    && apt full-upgrade -qy \
+    && apt autoremove -qy --purge \
+    && apt clean -qy \
+    # Configure BusyBox
+    && busybox --install -s \
+    # Add nextjs:nodejs to run the app
+    && addgroup --system --gid 1001 nodejs \
+    && adduser --system --home "/app" --gid 1001 -uid 1001 nextjs \
+    # Set permission for nextjs:nodejs
+    && chown -R nextjs:nodejs "/etc/proxychains4.conf" \
     # Cleanup temp files
     && rm -rf /tmp/* /var/lib/apt/lists/* /var/tmp/*
 
@@ -83,9 +80,7 @@ COPY . .
 RUN npm run build:docker
 
 ## Application image, copy all the files for production
-FROM busybox:latest AS app
-
-COPY --from=base /distroless/ /
+FROM scratch AS app
 
 COPY --from=builder /app/public /app/public
 
@@ -95,25 +90,13 @@ COPY --from=builder /app/.next/standalone /app/
 COPY --from=builder /app/.next/static /app/.next/static
 COPY --from=builder /deps/node_modules/.pnpm /app/node_modules/.pnpm
 
-# Copy server launcher
-COPY --from=builder /app/scripts/serverLauncher/startServer.js /app/startServer.js
-
-RUN \
-    # Add nextjs:nodejs to run the app
-    addgroup -S -g 1001 nodejs \
-    && adduser -D -G nodejs -H -S -h /app -u 1001 nextjs \
-    # Set permission for nextjs:nodejs
-    && chown -R nextjs:nodejs /app /etc/proxychains4.conf
-
 ## Production image, copy all the files and run next
-FROM scratch
+FROM base
 
 # Copy all the files from app, set the correct permission for prerender cache
-COPY --from=app / /
+COPY --from=app --chown=nextjs:nodejs /app /app
 
 ENV NODE_ENV="production" \
-    NODE_OPTIONS="--use-openssl-ca" \
-    NODE_EXTRA_CA_CERTS="/etc/ssl/certs/ca-certificates.crt"
     NODE_TLS_REJECT_UNAUTHORIZED=""
 
 # set hostname to localhost
@@ -193,6 +176,36 @@ USER nextjs
 
 EXPOSE 3210/tcp
 
-ENTRYPOINT ["/bin/node"]
-
-CMD ["/app/startServer.js"]
+CMD \
+    if [ -n "$PROXY_URL" ]; then \
+        # Set regex for IPv4
+        IP_REGEX="^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$"; \
+        # Set proxychains command
+        PROXYCHAINS="proxychains -q"; \
+        # Parse the proxy URL
+        host_with_port="${PROXY_URL#*//}"; \
+        host="${host_with_port%%:*}"; \
+        port="${PROXY_URL##*:}"; \
+        protocol="${PROXY_URL%%://*}"; \
+        # Resolve to IP address if the host is a domain
+        if ! [[ "$host" =~ "$IP_REGEX" ]]; then \
+            nslookup=$(nslookup -q="A" "$host" | tail -n +3 | grep 'Address:'); \
+            if [ -n "$nslookup" ]; then \
+                host=$(echo "$nslookup" | tail -n 1 | awk '{print $2}'); \
+            fi; \
+        fi; \
+        # Generate proxychains configuration file
+        printf "%s\n" \
+            'localnet 127.0.0.0/255.0.0.0' \
+            'localnet ::1/128' \
+            'proxy_dns' \
+            'remote_dns_subnet 224' \
+            'strict_chain' \
+            'tcp_connect_time_out 8000' \
+            'tcp_read_time_out 15000' \
+            '[ProxyList]' \
+            "$protocol $host $port" \
+        > "/etc/proxychains4.conf"; \
+    fi; \
+    # Run the server
+    ${PROXYCHAINS} node "/app/server.js";
