@@ -10,26 +10,31 @@ import { useInboxAgentMeta } from '@/hooks/useInboxAgentMeta';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
-import { sessionMetaSelectors } from '@/store/session/selectors';
+import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import PluginTag from '../PluginTag';
 import { useStyles } from './style';
 import { FieldType } from './type';
 
 const Preview = memo<FieldType & { title?: string }>(
-  ({ withSystemRole, withBackground, withFooter }) => {
+  ({ title, withSystemRole, withBackground, withFooter }) => {
     const [model, plugins, systemRole] = useAgentStore((s) => [
       agentSelectors.currentAgentModel(s),
       agentSelectors.currentAgentPlugins(s),
       agentSelectors.currentAgentSystemRole(s),
     ]);
-    const [backgroundColor] = useSessionStore((s) => [
+    const [isInbox, description, avatar, backgroundColor] = useSessionStore((s) => [
+      sessionSelectors.isInboxSession(s),
+      sessionMetaSelectors.currentAgentDescription(s),
+      sessionMetaSelectors.currentAgentAvatar(s),
       sessionMetaSelectors.currentAgentBackgroundColor(s),
     ]);
 
+    const { title: inboxTitle, description: inboxDescription } = useInboxAgentMeta();
     const { styles } = useStyles(withBackground);
 
-    const { title, description, avatar } = useInboxAgentMeta();
+    const displayTitle = isInbox ? inboxTitle : title;
+    const displayDesc = isInbox ? inboxDescription : description;
 
     return (
       <div className={styles.preview}>
@@ -39,14 +44,14 @@ const Preview = memo<FieldType & { title?: string }>(
               <Flexbox align={'flex-start'} gap={12} horizontal>
                 <Avatar avatar={avatar} background={backgroundColor} size={40} title={title} />
                 <ChatHeaderTitle
-                  desc={description}
+                  desc={displayDesc}
                   tag={
                     <>
                       <ModelTag model={model} />
                       {plugins?.length > 0 && <PluginTag plugins={plugins} />}
                     </>
                   }
-                  title={title}
+                  title={displayTitle}
                 />
               </Flexbox>
               {withSystemRole && systemRole && (

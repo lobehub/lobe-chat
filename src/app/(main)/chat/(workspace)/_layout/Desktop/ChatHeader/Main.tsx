@@ -23,15 +23,20 @@ const Main = memo(() => {
 
   useInitAgentConfig();
 
-  const [init, backgroundColor] = useSessionStore((s) => [
+  const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
+    sessionSelectors.isInboxSession(s),
+    sessionMetaSelectors.currentAgentTitle(s),
+    sessionMetaSelectors.currentAgentDescription(s),
+    sessionMetaSelectors.currentAgentAvatar(s),
     sessionMetaSelectors.currentAgentBackgroundColor(s),
   ]);
 
   const openChatSettings = useOpenChatSettings();
+  const { title: inboxTitle, description: inboxDescription } = useInboxAgentMeta();
 
-  const { title, description, avatar } = useInboxAgentMeta();
-
+  const displayTitle = isInbox ? inboxTitle : title;
+  const displayDesc = isInbox ? inboxDescription : description;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 
@@ -67,7 +72,7 @@ const Main = memo(() => {
         size={40}
         title={title}
       />
-      <ChatHeaderTitle desc={description} tag={<Tags />} title={title} />
+      <ChatHeaderTitle desc={displayDesc} tag={<Tags />} title={displayTitle} />
     </Flexbox>
   );
 });
