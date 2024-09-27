@@ -9,9 +9,9 @@ import {
 } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
-import { LobeSenseCoreAI } from './index';
+import { LobeSenseNovaAI } from './index';
 
-const provider = ModelProvider.SenseCore;
+const provider = ModelProvider.SenseNova;
 const defaultBaseURL = 'https://api.sensenova.cn/compatible-mode/v1';
 
 const bizErrorType = 'ProviderBizError';
@@ -23,7 +23,7 @@ vi.spyOn(console, 'error').mockImplementation(() => {});
 let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
-  instance = new LobeSenseCoreAI({ apiKey: 'test' });
+  instance = new LobeSenseNovaAI({ apiKey: 'test' });
 
   // 使用 vi.spyOn 来模拟 chat.completions.create 方法
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
@@ -35,11 +35,11 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('LobeSenseCoreAI', () => {
+describe('LobeSenseNovaAI', () => {
   describe('init', () => {
     it('should correctly initialize with an API key', async () => {
-      const instance = new LobeSenseCoreAI({ apiKey: 'test_api_key' });
-      expect(instance).toBeInstanceOf(LobeSenseCoreAI);
+      const instance = new LobeSenseNovaAI({ apiKey: 'test_api_key' });
+      expect(instance).toBeInstanceOf(LobeSenseNovaAI);
       expect(instance.baseURL).toEqual(defaultBaseURL);
     });
   });
@@ -84,7 +84,7 @@ describe('LobeSenseCoreAI', () => {
 
       it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
         try {
-          new LobeSenseCoreAI({});
+          new LobeSenseNovaAI({});
         } catch (e) {
           expect(e).toEqual({ errorType: invalidErrorType });
         }
@@ -130,7 +130,7 @@ describe('LobeSenseCoreAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        instance = new LobeSenseCoreAI({
+        instance = new LobeSenseNovaAI({
           apiKey: 'test',
 
           baseURL: 'https://api.abc.com/v1',
@@ -158,7 +158,7 @@ describe('LobeSenseCoreAI', () => {
         }
       });
 
-      it('should throw an InvalidSenseCoreAPIKey error type on 401 status code', async () => {
+      it('should throw an InvalidSenseNovaAPIKey error type on 401 status code', async () => {
         // Mock the API call to simulate a 401 error
         const error = new Error('Unauthorized') as any;
         error.status = 401;
@@ -171,7 +171,7 @@ describe('LobeSenseCoreAI', () => {
             temperature: 0,
           });
         } catch (e) {
-          // Expect the chat method to throw an error with InvalidSenseCoreAPIKey
+          // Expect the chat method to throw an error with InvalidSenseNovaAPIKey
           expect(e).toEqual({
             endpoint: defaultBaseURL,
             error: new Error('Unauthorized'),
@@ -211,7 +211,7 @@ describe('LobeSenseCoreAI', () => {
     });
 
     describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_SENSECORE_CHAT_COMPLETION is 1', async () => {
+      it('should call debugStream and return StreamingTextResponse when DEBUG_SENSENOVA_CHAT_COMPLETION is 1', async () => {
         // Arrange
         const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
         const mockDebugStream = new ReadableStream({
@@ -228,10 +228,10 @@ describe('LobeSenseCoreAI', () => {
         });
 
         // 保存原始环境变量值
-        const originalDebugValue = process.env.DEBUG_SENSECORE_CHAT_COMPLETION;
+        const originalDebugValue = process.env.DEBUG_SENSENOVA_CHAT_COMPLETION;
 
         // 模拟环境变量
-        process.env.DEBUG_SENSECORE_CHAT_COMPLETION = '1';
+        process.env.DEBUG_SENSENOVA_CHAT_COMPLETION = '1';
         vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
 
         // 执行测试
@@ -248,7 +248,7 @@ describe('LobeSenseCoreAI', () => {
         expect(debugStreamModule.debugStream).toHaveBeenCalled();
 
         // 恢复原始环境变量值
-        process.env.DEBUG_SENSECORE_CHAT_COMPLETION = originalDebugValue;
+        process.env.DEBUG_SENSENOVA_CHAT_COMPLETION = originalDebugValue;
       });
     });
   });

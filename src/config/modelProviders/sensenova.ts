@@ -2,7 +2,7 @@ import { ModelProviderCard } from '@/types/llm';
 
 // ref https://console.sensecore.cn/help/docs/model-as-a-service/nova/model/llm/GeneralLLM
 // ref https://console.sensecore.cn/help/docs/model-as-a-service/nova/pricing
-const SenseCore: ModelProviderCard = {
+const SenseNova: ModelProviderCard = {
   chatModels: [
     {
       description: '版本：V5.5。日日新系列目前的主力大模型，国内首个流式多模态交互大模型，显著提升数理逻辑和指令跟随能力，综合性能较「SenseChat-5」提升30%，交互效果和多项核心指标实现对标GPT-4o。',
@@ -114,11 +114,11 @@ const SenseCore: ModelProviderCard = {
   ],
   checkModel: 'SenseChat-Turbo',
   disableBrowserRequest: true,
-  id: 'sensecore',
+  id: 'sensenova',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://console.sensecore.cn/help/docs/model-as-a-service/nova/model/llm/GeneralLLM',
-  name: 'SenseCore',
+  name: 'SenseNova',
   url: 'https://console.sensecore.cn/aistudio',
 };
 
-export default SenseCore;
+export default SenseNova;

@@ -122,9 +122,9 @@ export const getLLMConfig = () => {
       HUNYUAN_API_KEY: z.string().optional(),
       HUNYUAN_MODEL_LIST: z.string().optional(),
 
-      ENABLED_SENSECORE: z.boolean(),
-      SENSECORE_API_KEY: z.string().optional(),
-      SENSECORE_MODEL_LIST: z.string().optional(),
+      ENABLED_SENSENOVA: z.boolean(),
+      SENSENOVA_API_KEY: z.string().optional(),
+      SENSENOVA_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -244,9 +244,9 @@ export const getLLMConfig = () => {
       HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
       HUNYUAN_MODEL_LIST: process.env.HUNYUAN_MODEL_LIST,
 
-      ENABLED_SENSECORE: !!process.env.SENSECORE_API_KEY,
-      SENSECORE_API_KEY: process.env.SENSECORE_API_KEY,
-      SENSECORE_MODEL_LIST: process.env.SENSECORE_MODEL_LIST,
+      ENABLED_SENSENOVA: !!process.env.SENSENOVA_API_KEY,
+      SENSENOVA_API_KEY: process.env.SENSENOVA_API_KEY,
+      SENSENOVA_MODEL_LIST: process.env.SENSENOVA_MODEL_LIST,
     },
   });
 };

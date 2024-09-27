@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
-export const LobeSenseCoreAI = LobeOpenAICompatibleFactory({
+export const LobeSenseNovaAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.sensenova.cn/compatible-mode/v1',
   chatCompletion: {
     handlePayload: (payload: ChatStreamPayload) => {
@@ -18,7 +18,7 @@ export const LobeSenseCoreAI = LobeOpenAICompatibleFactory({
     }
   },
   debug: {
-    chatCompletion: () => process.env.DEBUG_SENSECORE_CHAT_COMPLETION === '1',
+    chatCompletion: () => process.env.DEBUG_SENSENOVA_CHAT_COMPLETION === '1',
   },
-  provider: ModelProvider.SenseCore,
+  provider: ModelProvider.SenseNova,
 });

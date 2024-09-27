@@ -253,10 +253,10 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
-    case ModelProvider.SenseCore: {
-      const { SENSECORE_API_KEY } = getLLMConfig();
+    case ModelProvider.SenseNova: {
+      const { SENSENOVA_API_KEY } = getLLMConfig();
 
-      const apiKey = apiKeyManager.pick(payload?.apiKey || SENSECORE_API_KEY);
+      const apiKey = apiKeyManager.pick(payload?.apiKey || SENSENOVA_API_KEY);
 
       return { apiKey };
     }
