@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.19.36](https://github.com/lobehub/lobe-chat/compare/v1.19.35...v1.19.36)
+
+<sup>Released on **2024-09-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add llama3.2 model for openrouter provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add llama3.2 model for openrouter provider, closes [#4151](https://github.com/lobehub/lobe-chat/issues/4151) ([6f1a966](https://github.com/lobehub/lobe-chat/commit/6f1a966))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.35](https://github.com/lobehub/lobe-chat/compare/v1.19.34...v1.19.35)
 
 <sup>Released on **2024-09-27**</sup>
