@@ -4,5 +4,11 @@
       "desc": "Zihin kümelerini açın, düşünce kıvılcımlarını ateşleyin. Akıllı asistanınız, burada her şey hakkında sizinle iletişim kuruyor.",
       "title": "Sohbet Edelim"
     }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Ben sizin özel akıllı asistanınız {{appName}}. Size şimdi nasıl yardımcı olabilirim?\nDaha profesyonel veya özel bir asistan istiyorsanız, `+` butonuna tıklayarak özel bir asistan oluşturabilirsiniz.",
+      "defaultMessageWithoutCreate": "Ben sizin özel akıllı asistanınız {{appName}}. Size şimdi nasıl yardımcı olabilirim?"
+    }
   }
 }

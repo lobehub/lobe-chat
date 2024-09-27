@@ -40,11 +40,12 @@ const useStyles = createStyles(({ css, responsive }) => ({
 }));
 
 const InboxWelcome = memo(() => {
-  const { t } = useTranslation('welcome');
+  const { t } = useTranslation(['welcome', 'custom']);
   const { styles } = useStyles();
   const mobile = useServerConfigStore((s) => s.isMobile);
   const greeting = useGreeting();
-  const { showWelcomeSuggest, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
+  const { showWelcomeSuggest, showCreateSession, enableCommercialInbox } =
+    useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Center padding={16} width={'100%'}>
@@ -54,9 +55,19 @@ const InboxWelcome = memo(() => {
           <h1 className={styles.title}>{greeting}</h1>
         </Flexbox>
         <Markdown className={styles.desc} variant={'chat'}>
-          {t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
-            appName: BRANDING_NAME,
-          })}
+          {enableCommercialInbox
+            ? t(
+                showCreateSession
+                  ? 'welcome.guide.defaultMessage'
+                  : 'welcome.guide.defaultMessageWithoutCreate',
+                {
+                  appName: BRANDING_NAME,
+                  ns: 'custom',
+                },
+              )
+            : t(showCreateSession ? 'guide.defaultMessage' : 'guide.defaultMessageWithoutCreate', {
+                appName: BRANDING_NAME,
+              })}
         </Markdown>
         {showWelcomeSuggest && (
           <>

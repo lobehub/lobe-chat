@@ -4,5 +4,11 @@
       "desc": "Ative o cérebro coletivo e desperte a centelha do pensamento. Seu assistente inteligente está aqui para conversar sobre tudo.",
       "title": "Vamos conversar"
     }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Eu sou seu assistente inteligente pessoal {{appName}}. Como posso ajudá-lo agora?\nSe você precisar de um assistente mais profissional ou personalizado, pode clicar em `+` para criar um assistente personalizado.",
+      "defaultMessageWithoutCreate": "Eu sou seu assistente inteligente pessoal {{appName}}. Como posso ajudá-lo agora?"
+    }
   }
 }

@@ -4,5 +4,11 @@
       "desc": "Activa el cerebro colectivo y enciende chispas de pensamiento. Tu asistente inteligente está aquí para hablar de todo contigo.",
       "title": "Hablemos de lo que sea"
     }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Soy su asistente inteligente personal {{appName}}. ¿En qué puedo ayudarle ahora?\nSi necesita un asistente más profesional o personalizado, puede hacer clic en `+` para crear un asistente personalizado.",
+      "defaultMessageWithoutCreate": "Soy su asistente inteligente personal {{appName}}. ¿En qué puedo ayudarle ahora?"
+    }
   }
 }

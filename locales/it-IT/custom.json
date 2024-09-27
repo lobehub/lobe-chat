@@ -4,5 +4,11 @@
       "desc": "Attiva il tuo cervello collettivo e stimola le scintille di pensiero. Il tuo assistente intelligente è qui per parlare di tutto con te.",
       "title": "Parliamo di qualsiasi cosa"
     }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Sono il tuo assistente intelligente personale {{appName}}. Come posso aiutarti adesso?\nSe hai bisogno di un assistente più professionale o personalizzato, puoi cliccare su `+` per creare un assistente personalizzato.",
+      "defaultMessageWithoutCreate": "Sono il tuo assistente intelligente personale {{appName}}. Come posso aiutarti adesso?"
+    }
   }
 }
