@@ -335,9 +335,6 @@
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002, geniş uygulama yelpazesini destekleyen verimli bir çok modlu modeldir."
   },
-  "gemini-1.5-flash-8b-exp-0827": {
-    "description": "Gemini 1.5 Flash 8B 0827, büyük ölçekli görev senaryolarını işlemek için tasarlanmış, eşsiz bir işleme hızı sunar."
-  },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924, metin ve çok modlu kullanım durumlarında önemli performans artışları sunan en son deneysel modeldir."
   },
@@ -882,9 +879,6 @@
   },
   "taichu_llm": {
     "description": "Zidong Taichu dil büyük modeli, güçlü dil anlama yeteneği ile metin oluşturma, bilgi sorgulama, kod programlama, matematik hesaplama, mantıksal akıl yürütme, duygu analizi, metin özeti gibi yeteneklere sahiptir. Yenilikçi bir şekilde büyük veri ön eğitimi ile çok kaynaklı zengin bilgiyi birleştirir, algoritma teknolojisini sürekli olarak geliştirir ve büyük metin verilerinden kelime, yapı, dil bilgisi, anlam gibi yeni bilgileri sürekli olarak edinir, modelin performansını sürekli olarak evrimleştirir. Kullanıcılara daha kolay bilgi ve hizmetler sunar ve daha akıllı bir deneyim sağlar."
-  },
-  "taichu_vqa": {
-    "description": "Taichu 2.0V, görüntü anlama, bilgi aktarımı, mantıksal çıkarım gibi yetenekleri birleştirerek, metin ve görsel soru-cevap alanında öne çıkmaktadır."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B), etkili stratejiler ve model mimarisi ile artırılmış hesaplama yetenekleri sunar."
