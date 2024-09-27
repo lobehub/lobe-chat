@@ -7,10 +7,24 @@ import { memo } from 'react';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
 import { ORG_NAME } from '@/const/branding';
-import { UTM_SOURCE } from '@/const/url';
+import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 import { isCustomORG } from '@/const/version';
 
+import { ProductLogo } from '../Branding';
+
 const useStyles = createStyles(({ token, css }) => ({
+  customLogo: css`
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: center;
+
+    color: inherit;
+
+    &:hover {
+      color: ${token.colorLink};
+    }
+  `,
   logoLink: css`
     line-height: 1;
     color: inherit;
@@ -34,7 +48,10 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
     >
       <span>Powered by</span>
       {isCustomORG ? (
-        <span>{ORG_NAME}</span>
+        <Link className={styles.customLogo} href={`${OFFICIAL_URL}`} target={'_blank'}>
+          <ProductLogo size={20} type={'mono'} />
+          <span>{ORG_NAME}</span>
+        </Link>
       ) : (
         <Link
           className={styles.logoLink}

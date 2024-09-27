@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Attiva il cluster cerebrale e stimola le scintille di pensiero. Il tuo assistente intelligente è qui per comunicare tutto con te.",
+      "title": "Parliamo un po'"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Sono il tuo assistente intelligente personale {{appName}}. Come posso aiutarti oggi?\nSe hai bisogno di un assistente più professionale o personalizzato, puoi cliccare su `+` per creare un assistente personalizzato.",
+      "defaultMessageWithoutCreate": "Sono il tuo assistente intelligente personale {{appName}}. Come posso aiutarti oggi?"
+    },
+    "slogan": {
+      "desc1": "Attiva il cluster cerebrale e stimola le scintille di pensiero. Il tuo assistente intelligente è sempre qui.",
+      "title": "Dai a te stesso un cervello più intelligente"
+    }
+  }
+}

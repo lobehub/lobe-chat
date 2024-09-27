@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Uruchom klaster mózgowy, aby pobudzić iskry myśli. Twój inteligentny asystent jest tutaj, aby rozmawiać o wszystkim.",
+      "title": "Porozmawiajmy swobodnie"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Jestem Twoim osobistym inteligentnym asystentem {{appName}}. Jak mogę Ci teraz pomóc?\nJeśli potrzebujesz bardziej profesjonalnego lub dostosowanego asystenta, kliknij `+`, aby stworzyć własnego asystenta.",
+      "defaultMessageWithoutCreate": "Jestem Twoim osobistym inteligentnym asystentem {{appName}}. Jak mogę Ci teraz pomóc?"
+    },
+    "slogan": {
+      "desc1": "Uruchom klaster mózgowy, aby pobudzić iskry myśli. Twój inteligentny asystent zawsze jest tutaj.",
+      "title": "Daj sobie mądrzejszy mózg"
+    }
+  }
+}

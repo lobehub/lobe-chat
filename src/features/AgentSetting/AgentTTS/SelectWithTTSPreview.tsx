@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useTTS } from '@/hooks/useTTS';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { TTSServer } from '@/types/agent';
 import { ChatMessageError } from '@/types/message';
 import { getMessageError } from '@/utils/fetch';
@@ -21,7 +22,12 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
     const [voice, setVoice] = useState<string>(value);
     const { t } = useTranslation('welcome');
     const theme = useTheme();
-    const PREVIEW_TEXT = ['Lobe Chat', t('slogan.title'), t('slogan.desc1')].join('. ');
+    const { enableCommercialBranding } = useServerConfigStore(featureFlagsSelectors);
+    const PREVIEW_TEXT = [
+      'Lobe Chat',
+      enableCommercialBranding ? t('welcome.slogan.title', { ns: 'custom' }) : t('slogan.title'),
+      enableCommercialBranding ? t('welcome.slogan.desc1', { ns: 'custom' }) : t('slogan.desc1'),
+    ].join('. ');
 
     const setDefaultError = useCallback(
       (err?: any) => {
