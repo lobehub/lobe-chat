@@ -7,6 +7,7 @@ const SiliconCloud: ModelProviderCard = {
       description: 'DeepSeek V2.5 集合了先前版本的优秀特征，增强了通用和编码能力。',
       displayName: 'DeepSeek V2.5',
       enabled: true,
+      functionCall: true,
       id: 'deepseek-ai/DeepSeek-V2.5',
       pricing: {
         currency: 'CNY',
@@ -19,6 +20,7 @@ const SiliconCloud: ModelProviderCard = {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2.5 7B',
       enabled: true,
+      functionCall: true,
       id: 'Qwen/Qwen2.5-7B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -30,6 +32,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2.5 14B',
+      functionCall: true,
       id: 'Qwen/Qwen2.5-14B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -41,6 +44,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2.5 32B',
+      functionCall: true,
       id: 'Qwen/Qwen2.5-32B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -53,6 +57,7 @@ const SiliconCloud: ModelProviderCard = {
       description: 'Qwen2.5 是全新的大型语言模型系列，具有更强的理解和生成能力。',
       displayName: 'Qwen2.5 72B',
       enabled: true,
+      functionCall: true,
       id: 'Qwen/Qwen2.5-72B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -86,6 +91,42 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
+      displayName: 'GLM-4 9B',
+      functionCall: true,
+      id: 'THUDM/glm-4-9b-chat',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      tokens: 32_768,
+    },
+    {
+      description: 'InternLM2.5 提供多场景下的智能对话解决方案。',
+      displayName: 'Internlm 2.5 7B',
+      functionCall: true,
+      id: 'internlm/internlm2_5-7b-chat',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      tokens: 32_768,
+    },
+    {
+      description: '创新的开源模型InternLM2.5，通过大规模的参数提高了对话智能。',
+      displayName: 'Internlm 2.5 20B',
+      functionCall: true,
+      id: 'internlm/internlm2_5-20b-chat',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 1,
+      },
+      tokens: 32_768,
+    },
+    {
       description: 'Yi-1.5 9B 支持16K Tokens, 提供高效、流畅的语言生成能力。',
       displayName: 'Yi-1.5 9B',
       id: '01-ai/Yi-1.5-9B-Chat-16K',
@@ -106,39 +147,6 @@ const SiliconCloud: ModelProviderCard = {
         output: 1.26,
       },
       tokens: 16_384,
-    },
-    {
-      description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
-      displayName: 'GLM-4 9B',
-      id: 'THUDM/glm-4-9b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
-      tokens: 32_768,
-    },
-    {
-      description: 'InternLM2.5 提供多场景下的智能对话解决方案。',
-      displayName: 'Internlm 2.5 7B',
-      id: 'internlm/internlm2_5-7b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
-      tokens: 32_768,
-    },
-    {
-      description: '创新的开源模型InternLM2.5，通过大规模的参数提高了对话智能。',
-      displayName: 'Internlm 2.5 20B',
-      id: 'internlm/internlm2_5-20b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 1,
-        output: 1,
-      },
-      tokens: 32_768,
     },
     {
       description: 'Gemma 2 是Google轻量化的开源文本模型系列。',
@@ -201,7 +209,7 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
   ],
-  checkModel: 'Qwen/Qwen2-1.5B-Instruct',
+  checkModel: 'Qwen/Qwen2.5-7B-Instruct',
   description: 'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
   id: 'siliconcloud',
   modelList: { showModelFetcher: true },
