@@ -1,11 +1,11 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://console.sensecore.cn/help/docs/model-as-a-service/nova/model/llm/GeneralLLM
-// ref https://console.sensecore.cn/help/docs/model-as-a-service/nova/pricing
+// ref https://platform.sensenova.cn/pricing
+// ref https://platform.sensenova.cn/release?path=/release-202409.md
 const SenseNova: ModelProviderCard = {
   chatModels: [
     {
-      description: '版本：V5.5。日日新系列目前的主力大模型，国内首个流式多模态交互大模型，显著提升数理逻辑和指令跟随能力，综合性能较「SenseChat-5」提升30%，交互效果和多项核心指标实现对标GPT-4o。',
+      description: '最新版本模型 (V5.5)，128K上下文长度，在数学推理、英文对话、指令跟随以及长文本理解等领域能力显著提升，比肩GPT-4o',
       displayName: 'SenseChat 5.5',
       enabled: true,
       functionCall: true,
@@ -18,19 +18,20 @@ const SenseNova: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      description: 'SenseChat-5.0，支持128k上下文长度，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
-      displayName: 'SenseChat 5.0 128K',
+      description: '最新版本模型 (V5.5)，16K上下文长度，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。',
+      displayName: 'SenseChat 5.5 Vision',
       enabled: true,
-      id: 'SenseChat-128K',
+      id: 'SenseChat-Vision',
       pricing: {
         currency: 'CNY',
-        input: 60,
-        output: 60,
+        input: 100,
+        output: 100,
       },
-      tokens: 131_072,
+      tokens: 16_384,
+      vision: true,
     },
     {
-      description: '基于SenseChat-5.0的轻量版本，模型运行速度更快，支持32k最大上下文长度。',
+      description: '适用于快速问答、模型微调场景',
       displayName: 'SenseChat 5.0 Turbo',
       enabled: true,
       id: 'SenseChat-Turbo',
@@ -42,20 +43,7 @@ const SenseNova: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: '版本：5.0。图文感知能力达到全球领先水平，在多模态大模型权威综合基准测试MMBench中综合得分排名首位，在多个知名多模态榜单MathVista、AI2D、ChartQA、TextVQA、DocVQA、MMMU 取得领先成绩。',
-      displayName: 'SenseChat 5.0 Vision',
-      enabled: true,
-      id: 'SenseChat-Vision',
-      pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
-      },
-      tokens: 4096,
-      vision: true,
-    },
-    {
-      description: '基于SenseChat-5.0专门为适应粤语语种地区的对话习惯、俚语及本地知识而设计，显著提升在粤语本土化对话理解方面的能力，支持32k长文本输入。',
+      description: '32K上下文长度，在粤语的对话理解上超越了GPT-4，在知识、推理、数学及代码编写等多个领域均能与GPT-4 Turbo相媲美',
       displayName: 'SenseChat 5.0 Cantonese',
       id: 'SenseChat-5-Cantonese',
       pricing: {
@@ -66,7 +54,7 @@ const SenseNova: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'SenseChat-4.0，支持4k上下文长度，响应快，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
+      description: '基础版本模型 (V4)，4K上下文长度，通用能力强大',
       displayName: 'SenseChat 4.0',
       enabled: true,
       id: 'SenseChat',
@@ -78,7 +66,7 @@ const SenseNova: ModelProviderCard = {
       tokens: 4096,
     },
     {
-      description: 'SenseChat-4.0，支持32k上下文长度，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
+      description: '基础版本模型 (V4)，32K上下文长度，灵活应用于各类场景',
       displayName: 'SenseChat 4.0 32K',
       enabled: true,
       id: 'SenseChat-32K',
@@ -90,7 +78,19 @@ const SenseNova: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: '商汤支持设置角色创建、知识库构建、多人群聊、角色其密度等能力，支持8K上下文长度。',
+      description: '基础版本模型 (V4)，128K上下文长度，在长文本理解及生成等任务中表现出色',
+      displayName: 'SenseChat 4.0 128K',
+      enabled: true,
+      id: 'SenseChat-128K',
+      pricing: {
+        currency: 'CNY',
+        input: 60,
+        output: 60,
+      },
+      tokens: 131_072,
+    },
+    {
+      description: '标准版模型，8K上下文长度，高响应速度',
       displayName: 'SenseChat Character',
       id: 'SenseChat-Character',
       pricing: {
@@ -101,7 +101,7 @@ const SenseNova: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: '在标准版的基础上，角色对话、人设、及剧情推动能力全面提升；支持32K上下文长度；支持中/英文对话，赋能海外拟人对话场景。',
+      description: '高级版模型，32K上下文长度，能力全面提升，支持中/英文对话',
       displayName: 'SenseChat Character Pro',
       id: 'SenseChat-Character-Pro',
       pricing: {
@@ -116,9 +116,9 @@ const SenseNova: ModelProviderCard = {
   disableBrowserRequest: true,
   id: 'sensenova',
   modelList: { showModelFetcher: true },
-  modelsUrl: 'https://console.sensecore.cn/help/docs/model-as-a-service/nova/model/llm/GeneralLLM',
+  modelsUrl: 'https://platform.sensenova.cn/pricing',
   name: 'SenseNova',
-  url: 'https://console.sensecore.cn/aistudio',
+  url: 'https://platform.sensenova.cn/home',
 };
 
 export default SenseNova;
