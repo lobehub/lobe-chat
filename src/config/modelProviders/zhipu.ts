@@ -46,6 +46,18 @@ const ZhiPu: ModelProviderCard = {
       tokens: 128_000,
     },
     {
+      description: 'GLM-4 是发布于2024年1月的旧旗舰版本，目前已被更强的 GLM-4-0520 取代。',
+      displayName: 'GLM-4',
+      functionCall: true,
+      id: 'glm-4',
+      pricing: {
+        currency: 'CNY',
+        input: 100,
+        output: 100,
+      },
+      tokens: 128_000,
+    },
+    {
       description: 'GLM-4-AirX 提供 GLM-4-Air 的高效版本，推理速度可达其2.6倍。',
       displayName: 'GLM-4-AirX',
       enabled: true,
