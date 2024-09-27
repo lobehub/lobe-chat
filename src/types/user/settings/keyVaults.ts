@@ -16,11 +16,6 @@ export interface AWSBedrockKeyVault {
   sessionToken?: string;
 }
 
-export interface SenseCoreKeyVault {
-  sensecoreAccessKeyID?: string;
-  sensecoreAccessKeySecret?: string;
-}
-
 export interface UserKeyVaults {
   ai21?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
@@ -45,7 +40,7 @@ export interface UserKeyVaults {
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
-  sensecore?: SenseCoreKeyVault;
+  sensecore?: OpenAICompatibleKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
   spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;

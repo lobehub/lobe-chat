@@ -42,8 +42,5 @@ export interface JWTPayload {
    * in server db mode it's a user id
    */
   userId?: string;
-
-  sensecoreAccessKeyID?: string;
-  sensecoreAccessKeySecret?: string;
 }
 /* eslint-enable */
