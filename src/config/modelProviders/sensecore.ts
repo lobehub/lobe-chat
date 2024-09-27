@@ -6,7 +6,7 @@ const SenseCore: ModelProviderCard = {
   chatModels: [
     {
       description: '版本：V5.5。日日新系列目前的主力大模型，国内首个流式多模态交互大模型，显著提升数理逻辑和指令跟随能力，综合性能较「SenseChat-5」提升30%，交互效果和多项核心指标实现对标GPT-4o。',
-      displayName: 'SenseChat 5',
+      displayName: 'SenseChat 5.5',
       enabled: true,
       functionCall: true,
       id: 'SenseChat-5',
@@ -18,43 +18,8 @@ const SenseCore: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      description: '基于SenseChat-5.0专门为适应粤语语种地区的对话习惯、俚语及本地知识而设计，显著提升在粤语本土化对话理解方面的能力，支持32k长文本输入。',
-      displayName: 'SenseChat 5 Cantonese',
-      id: 'SenseChat-5-Cantonese',
-      pricing: {
-        currency: 'CNY',
-        input: 27,
-        output: 27,
-      },
-      tokens: 32_768,
-    },
-    {
-      description: 'SenseChat-4.0，支持4k上下文长度，响应快，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
-      displayName: 'SenseChat',
-      enabled: true,
-      id: 'SenseChat',
-      pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
-      },
-      tokens: 4096,
-    },
-    {
-      description: 'SenseChat-4.0，支持32k上下文长度，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
-      displayName: 'SenseChat 32K',
-      enabled: true,
-      id: 'SenseChat-32K',
-      pricing: {
-        currency: 'CNY',
-        input: 36,
-        output: 36,
-      },
-      tokens: 32_768,
-    },
-    {
       description: 'SenseChat-5.0，支持128k上下文长度，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
-      displayName: 'SenseChat 128K',
+      displayName: 'SenseChat 5.0 128K',
       enabled: true,
       id: 'SenseChat-128K',
       pricing: {
@@ -66,7 +31,7 @@ const SenseCore: ModelProviderCard = {
     },
     {
       description: '基于SenseChat-5.0的轻量版本，模型运行速度更快，支持32k最大上下文长度。',
-      displayName: 'SenseChat Turbo',
+      displayName: 'SenseChat 5.0 Turbo',
       enabled: true,
       id: 'SenseChat-Turbo',
       pricing: {
@@ -78,7 +43,7 @@ const SenseCore: ModelProviderCard = {
     },
     {
       description: '版本：5.0。图文感知能力达到全球领先水平，在多模态大模型权威综合基准测试MMBench中综合得分排名首位，在多个知名多模态榜单MathVista、AI2D、ChartQA、TextVQA、DocVQA、MMMU 取得领先成绩。',
-      displayName: 'SenseChat Vision',
+      displayName: 'SenseChat 5.0 Vision',
       enabled: true,
       id: 'SenseChat-Vision',
       pricing: {
@@ -87,6 +52,42 @@ const SenseCore: ModelProviderCard = {
         output: 100,
       },
       tokens: 4096,
+      vision: true,
+    },
+    {
+      description: '基于SenseChat-5.0专门为适应粤语语种地区的对话习惯、俚语及本地知识而设计，显著提升在粤语本土化对话理解方面的能力，支持32k长文本输入。',
+      displayName: 'SenseChat 5.0 Cantonese',
+      id: 'SenseChat-5-Cantonese',
+      pricing: {
+        currency: 'CNY',
+        input: 27,
+        output: 27,
+      },
+      tokens: 32_768,
+    },
+    {
+      description: 'SenseChat-4.0，支持4k上下文长度，响应快，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
+      displayName: 'SenseChat 4.0',
+      enabled: true,
+      id: 'SenseChat',
+      pricing: {
+        currency: 'CNY',
+        input: 12,
+        output: 12,
+      },
+      tokens: 4096,
+    },
+    {
+      description: 'SenseChat-4.0，支持32k上下文长度，在各项能力表现较为均衡，尤其在生成创作、角色扮演、安全能力、工具使用上表现较好。',
+      displayName: 'SenseChat 4.0 32K',
+      enabled: true,
+      id: 'SenseChat-32K',
+      pricing: {
+        currency: 'CNY',
+        input: 36,
+        output: 36,
+      },
+      tokens: 32_768,
     },
     {
       description: '商汤支持设置角色创建、知识库构建、多人群聊、角色其密度等能力，支持8K上下文长度。',
@@ -112,6 +113,7 @@ const SenseCore: ModelProviderCard = {
     },
   ],
   checkModel: 'SenseChat-Turbo',
+  disableBrowserRequest: true,
   id: 'sensecore',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://console.sensecore.cn/help/docs/model-as-a-service/nova/model/llm/GeneralLLM',
