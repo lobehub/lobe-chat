@@ -19,7 +19,7 @@ import { useInitAgentConfig } from '../../useInitAgentConfig';
 import Tags from './Tags';
 
 const Main = memo(() => {
-  const { t } = useTranslation(['chat', 'custom']);
+  const { t } = useTranslation('chat');
 
   useInitAgentConfig();
 

@@ -13,7 +13,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 const ChatHeaderTitle = memo(() => {
-  const { t } = useTranslation(['chat', 'custom']);
+  const { t } = useTranslation('chat');
   const toggleConfig = useGlobalStore((s) => s.toggleMobileTopic);
   const [topicLength, topic] = useChatStore((s) => [
     topicSelectors.currentTopicLength(s),

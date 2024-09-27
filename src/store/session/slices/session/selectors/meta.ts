@@ -15,6 +15,9 @@ const currentAgentMeta = (s: SessionStore): MetaData => {
 
   const isInbox = sessionSelectors.isInboxSession(s);
 
+  console.log('enableCommercialInbox', enableCommercialInbox);
+  console.log('isInbox', isInbox);
+
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
