@@ -97,7 +97,20 @@ const ZhiPu: ModelProviderCard = {
       tokens: 1_024_000,
     },
     {
-      description: 'GLM-4-Flash 是处理简单任务的理想选择，速度最快且价格最优惠。',
+      description: 'GLM-4-FlashX 是Flash的增强版本，超快推理速度。',
+      displayName: 'GLM-4-FlashX',
+      enabled: true,
+      functionCall: true,
+      id: 'glm-4-flashx',
+      pricing: {
+        currency: 'CNY',
+        input: 0.1,
+        output: 0.1,
+      },
+      tokens: 128_000,
+    },
+    {
+      description: 'GLM-4-Flash 是处理简单任务的理想选择，速度最快且免费。',
       displayName: 'GLM-4-Flash',
       enabled: true,
       functionCall: true,
