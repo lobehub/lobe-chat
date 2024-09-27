@@ -125,7 +125,6 @@ export const getLLMConfig = () => {
       ENABLED_SENSECORE: z.boolean(),
       SENSECORE_ACCESS_KEY_ID: z.string().optional(),
       SENSECORE_ACCESS_KEY_SECRET: z.string().optional(),
-      SENSECORE_API_KEY: z.string().optional(),
       SENSECORE_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
@@ -249,7 +248,6 @@ export const getLLMConfig = () => {
       ENABLED_SENSECORE: !!process.env.SENSECORE_ACCESS_KEY_ID && !!process.env.SENSECORE_ACCESS_KEY_SECRET,
       SENSECORE_ACCESS_KEY_ID: process.env.SENSECORE_ACCESS_KEY_ID,
       SENSECORE_ACCESS_KEY_SECRET: process.env.SENSECORE_ACCESS_KEY_SECRET,
-      SENSECORE_API_KEY: process.env.SENSECORE_API_KEY,
       SENSECORE_MODEL_LIST: process.env.SENSECORE_MODEL_LIST,
     },
   });

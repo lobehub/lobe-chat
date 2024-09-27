@@ -1,7 +1,7 @@
 import { SignJWT } from 'jose';
 
 // https://console.sensecore.cn/help/docs/model-as-a-service/nova/overview/Authorization
-const encodeJwtTokenSenseCore = async (ak?: string, sk?: string): Promise<string> => {
+export const encodeJwtTokenSenseCore = async (ak?: string, sk?: string): Promise<string> => {
     const secret = new TextEncoder().encode(sk);
     const jwt = await new SignJWT({
             iss: ak,
