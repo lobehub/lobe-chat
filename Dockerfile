@@ -113,7 +113,7 @@ COPY --from=app / /
 
 ENV NODE_ENV="production" \
     NODE_OPTIONS="--use-openssl-ca" \
-    NODE_EXTRA_CA_CERTS="/etc/ssl/certs/ca-certificates.crt"
+    NODE_EXTRA_CA_CERTS="/etc/ssl/certs/ca-certificates.crt" \
     NODE_TLS_REJECT_UNAUTHORIZED=""
 
 # set hostname to localhost
