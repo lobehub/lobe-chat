@@ -335,9 +335,6 @@
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 là một mô hình đa phương thức hiệu quả, hỗ trợ mở rộng cho nhiều ứng dụng."
   },
-  "gemini-1.5-flash-8b-exp-0827": {
-    "description": "Gemini 1.5 Flash 8B 0827 được thiết kế để xử lý các tình huống nhiệm vụ quy mô lớn, cung cấp tốc độ xử lý vô song."
-  },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 là mô hình thử nghiệm mới nhất, có sự cải thiện đáng kể về hiệu suất trong các trường hợp sử dụng văn bản và đa phương thức."
   },
@@ -882,9 +879,6 @@
   },
   "taichu_llm": {
     "description": "Mô hình ngôn ngữ lớn Taichu có khả năng hiểu ngôn ngữ mạnh mẽ và các khả năng như sáng tạo văn bản, trả lời câu hỏi kiến thức, lập trình mã, tính toán toán học, suy luận logic, phân tích cảm xúc, tóm tắt văn bản. Đổi mới kết hợp giữa đào tạo trước với dữ liệu phong phú từ nhiều nguồn, thông qua việc liên tục cải tiến công nghệ thuật toán và hấp thụ kiến thức mới từ dữ liệu văn bản khổng lồ, giúp mô hình ngày càng hoàn thiện. Cung cấp thông tin và dịch vụ tiện lợi hơn cho người dùng cùng trải nghiệm thông minh hơn."
-  },
-  "taichu_vqa": {
-    "description": "Taichu 2.0V kết hợp khả năng hiểu hình ảnh, chuyển giao kiến thức, suy luận logic, v.v., thể hiện xuất sắc trong lĩnh vực hỏi đáp hình ảnh và văn bản."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) cung cấp khả năng tính toán nâng cao thông qua chiến lược và kiến trúc mô hình hiệu quả."
