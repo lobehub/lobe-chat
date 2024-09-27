@@ -202,8 +202,7 @@ const SiliconCloud: ModelProviderCard = {
     },
   ],
   checkModel: 'Qwen/Qwen2-1.5B-Instruct',
-  description:
-    'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
+  description: 'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
   id: 'siliconcloud',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://siliconflow.cn/zh-cn/models',

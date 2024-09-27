@@ -169,15 +169,15 @@ describe('OpenAIStream', () => {
         controller.enqueue({
           choices: [
             {
-              "index": 0,
-              "delta": {
-                "content": "Some contents",
-                "role": "",
-                "tool_calls": []
+              index: 0,
+              delta: {
+                content: 'Some contents',
+                role: '',
+                tool_calls: [],
               },
-              "finish_reason": "",
-              "logprobs": ""
-            }
+              finish_reason: '',
+              logprobs: '',
+            },
           ],
           id: '456',
         });

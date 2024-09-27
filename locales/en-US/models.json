@@ -335,9 +335,6 @@
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 is an efficient multimodal model that supports a wide range of applications."
   },
-  "gemini-1.5-flash-8b-exp-0827": {
-    "description": "Gemini 1.5 Flash 8B 0827 is designed for handling large-scale task scenarios, providing unparalleled processing speed."
-  },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is the latest experimental model, showcasing significant performance improvements in both text and multimodal use cases."
   },
@@ -882,9 +879,6 @@
   },
   "taichu_llm": {
     "description": "The ZD Taichu language model possesses strong language understanding capabilities and excels in text creation, knowledge Q&A, code programming, mathematical calculations, logical reasoning, sentiment analysis, and text summarization. It innovatively combines large-scale pre-training with rich knowledge from multiple sources, continuously refining algorithmic techniques and absorbing new knowledge in vocabulary, structure, grammar, and semantics from vast text data, resulting in an evolving model performance. It provides users with more convenient information and services, as well as a more intelligent experience."
-  },
-  "taichu_vqa": {
-    "description": "Taichu 2.0V integrates capabilities such as image understanding, knowledge transfer, and logical reasoning, excelling in the field of image-text question answering."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) provides enhanced computational capabilities through efficient strategies and model architecture."
