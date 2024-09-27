@@ -166,6 +166,7 @@ export default {
     clear: '删除语音',
   },
   updateAgent: '更新助理信息',
+
   upload: {
     action: {
       fileUpload: '上传文件',
