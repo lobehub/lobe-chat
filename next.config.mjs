@@ -113,6 +113,11 @@ const nextConfig = {
       source: '/sitemap.xml',
     },
     {
+      destination: '/sitemap-index.xml',
+      permanent: true,
+      source: '/sitemap-0.xml',
+    },
+    {
       destination: '/manifest.webmanifest',
       permanent: true,
       source: '/manifest.json',
