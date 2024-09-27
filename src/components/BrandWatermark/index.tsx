@@ -9,6 +9,7 @@ import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import { ORG_NAME } from '@/const/branding';
 import { OFFICIAL_URL, UTM_SOURCE } from '@/const/url';
 import { isCustomORG } from '@/const/version';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { ProductLogo } from '../Branding';
 
@@ -37,6 +38,8 @@ const useStyles = createStyles(({ token, css }) => ({
 
 const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest }) => {
   const { styles, theme } = useStyles();
+  const { enableCommercialBranding } = useServerConfigStore(featureFlagsSelectors);
+
   return (
     <Flexbox
       align={'center'}
@@ -48,10 +51,14 @@ const BrandWatermark = memo<Omit<FlexboxProps, 'children'>>(({ style, ...rest })
     >
       <span>Powered by</span>
       {isCustomORG ? (
-        <Link className={styles.customLogo} href={`${OFFICIAL_URL}`} target={'_blank'}>
-          <ProductLogo size={20} type={'mono'} />
+        enableCommercialBranding ? (
+          <Link className={styles.customLogo} href={`${OFFICIAL_URL}`} target={'_blank'}>
+            <ProductLogo size={20} type={'mono'} />
+            <span>{ORG_NAME}</span>
+          </Link>
+        ) : (
           <span>{ORG_NAME}</span>
-        </Link>
+        )
       ) : (
         <Link
           className={styles.logoLink}
