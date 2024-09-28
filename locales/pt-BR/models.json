@@ -335,9 +335,6 @@
   "gemini-1.5-flash-002": {
     "description": "O Gemini 1.5 Flash 002 é um modelo multimodal eficiente, que suporta uma ampla gama de aplicações."
   },
-  "gemini-1.5-flash-8b-exp-0827": {
-    "description": "Gemini 1.5 Flash 8B 0827 é projetado para lidar com cenários de tarefas em larga escala, oferecendo velocidade de processamento incomparável."
-  },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "O Gemini 1.5 Flash 8B 0924 é o mais recente modelo experimental, com melhorias significativas de desempenho em casos de uso de texto e multimídia."
   },
@@ -882,9 +879,6 @@
   },
   "taichu_llm": {
     "description": "O modelo de linguagem Taichu possui uma forte capacidade de compreensão de linguagem, além de habilidades em criação de texto, perguntas e respostas, programação de código, cálculos matemáticos, raciocínio lógico, análise de sentimentos e resumo de texto. Inova ao combinar pré-treinamento com grandes dados e conhecimento rico de múltiplas fontes, aprimorando continuamente a tecnologia de algoritmos e absorvendo novos conhecimentos de vocabulário, estrutura, gramática e semântica de grandes volumes de dados textuais, proporcionando aos usuários informações e serviços mais convenientes e uma experiência mais inteligente."
-  },
-  "taichu_vqa": {
-    "description": "O Taichu 2.0V combina habilidades de compreensão de imagem, transferência de conhecimento e atribuição lógica, destacando-se no campo de perguntas e respostas baseadas em texto e imagem."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) oferece capacidade de computação aprimorada através de estratégias e arquiteturas de modelo eficientes."

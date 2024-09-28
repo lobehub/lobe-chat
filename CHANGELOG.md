@@ -2,6 +2,165 @@
 
 # Changelog
 
+### [Version 1.20.3](https://github.com/lobehub/lobe-chat/compare/v1.20.2...v1.20.3)
+
+<sup>Released on **2024-09-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve delete orphan chunks when delete files.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve delete orphan chunks when delete files, closes [#4179](https://github.com/lobehub/lobe-chat/issues/4179) ([f3e0ffe](https://github.com/lobehub/lobe-chat/commit/f3e0ffe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.20.2](https://github.com/lobehub/lobe-chat/compare/v1.20.1...v1.20.2)
+
+<sup>Released on **2024-09-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add zhipu glm-4-flashx model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add zhipu glm-4-flashx model, closes [#4173](https://github.com/lobehub/lobe-chat/issues/4173) ([b0c3abc](https://github.com/lobehub/lobe-chat/commit/b0c3abc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.20.1](https://github.com/lobehub/lobe-chat/compare/v1.20.0...v1.20.1)
+
+<sup>Released on **2024-09-27**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.20.0](https://github.com/lobehub/lobe-chat/compare/v1.19.36...v1.20.0)
+
+<sup>Released on **2024-09-27**</sup>
+
+#### ✨ Features
+
+- **misc**: Add Hunyuan(Tencent) model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Add Hunyuan(Tencent) model provider, closes [#4147](https://github.com/lobehub/lobe-chat/issues/4147) ([8ddb41b](https://github.com/lobehub/lobe-chat/commit/8ddb41b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.36](https://github.com/lobehub/lobe-chat/compare/v1.19.35...v1.19.36)
+
+<sup>Released on **2024-09-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add llama3.2 model for openrouter provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add llama3.2 model for openrouter provider, closes [#4151](https://github.com/lobehub/lobe-chat/issues/4151) ([6f1a966](https://github.com/lobehub/lobe-chat/commit/6f1a966))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.35](https://github.com/lobehub/lobe-chat/compare/v1.19.34...v1.19.35)
+
+<sup>Released on **2024-09-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add o1-preview and o1-mini model to github model provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add o1-preview and o1-mini model to github model provider, closes [#4127](https://github.com/lobehub/lobe-chat/issues/4127) ([1e4d016](https://github.com/lobehub/lobe-chat/commit/1e4d016))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.19.34](https://github.com/lobehub/lobe-chat/compare/v1.19.33...v1.19.34)
+
+<sup>Released on **2024-09-26**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.19.33](https://github.com/lobehub/lobe-chat/compare/v1.19.32...v1.19.33)
 
 <sup>Released on **2024-09-25**</sup>
