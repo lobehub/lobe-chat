@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 1.20.4](https://github.com/lobehub/lobe-chat/compare/v1.20.3...v1.20.4)
+
+<sup>Released on **2024-09-28**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.20.3](https://github.com/lobehub/lobe-chat/compare/v1.20.2...v1.20.3)
+
+<sup>Released on **2024-09-28**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Improve delete orphan chunks when delete files.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Improve delete orphan chunks when delete files, closes [#4179](https://github.com/lobehub/lobe-chat/issues/4179) ([f3e0ffe](https://github.com/lobehub/lobe-chat/commit/f3e0ffe))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.20.2](https://github.com/lobehub/lobe-chat/compare/v1.20.1...v1.20.2)
 
 <sup>Released on **2024-09-27**</sup>
