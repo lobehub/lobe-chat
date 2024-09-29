@@ -10,6 +10,7 @@
       "addToKnowledgeBase": "Zur Wissensdatenbank hinzufügen",
       "addToOtherKnowledgeBase": "Zur anderen Wissensdatenbank hinzufügen",
       "batchChunking": "Batch-Zerteilung",
+      "batchChunkingUnsupported": "Die folgenden Dateitypen unterstützen kein Batch-Chunking: {{types}}",
       "chunking": "Zerteilung",
       "chunkingTooltip": "Teilen Sie die Datei in mehrere Textblöcke und vektorisieren Sie sie, um sie für die semantische Suche und Dateidialoge zu verwenden.",
       "chunkingUnsupported": "Diese Datei unterstützt kein Chunking.",

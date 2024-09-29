@@ -10,6 +10,7 @@
       "addToKnowledgeBase": "Adicionar ao banco de conhecimento",
       "addToOtherKnowledgeBase": "Adicionar a outro banco de conhecimento",
       "batchChunking": "Divisão em lotes",
+      "batchChunkingUnsupported": "Tipos de arquivo que não suportam divisão em lotes: {{types}}",
       "chunking": "Divisão",
       "chunkingTooltip": "Divida o arquivo em vários blocos de texto e vetorize, podendo ser usado para busca semântica e diálogo sobre o arquivo",
       "chunkingUnsupported": "Este arquivo não suporta divisão em partes.",

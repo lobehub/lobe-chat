@@ -10,6 +10,7 @@
       "addToKnowledgeBase": "Bilgi tabanına ekle",
       "addToOtherKnowledgeBase": "Diğer bilgi tabanına ekle",
       "batchChunking": "Toplu parçalara ayırma",
+      "batchChunkingUnsupported": "Toplu parça işlemi desteklenmeyen dosya türleri: {{types}}",
       "chunking": "Parçalara ayırma",
       "chunkingTooltip": "Dosyayı birden fazla metin parçasına ayırıp vektörleştirdikten sonra, anlamsal arama ve dosya diyalogları için kullanılabilir",
       "chunkingUnsupported": "Bu dosya parça parça yüklemeyi desteklemiyor.",

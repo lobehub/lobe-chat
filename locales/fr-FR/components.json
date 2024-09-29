@@ -10,6 +10,7 @@
       "addToKnowledgeBase": "Ajouter à la base de connaissances",
       "addToOtherKnowledgeBase": "Ajouter à une autre base de connaissances",
       "batchChunking": "Découpage par lots",
+      "batchChunkingUnsupported": "Types de fichiers ne prenant pas en charge le fractionnement par lots : {{types}}",
       "chunking": "Découpage",
       "chunkingTooltip": "Divisez le fichier en plusieurs blocs de texte et vectorisez-les pour une recherche sémantique et un dialogue sur le fichier",
       "chunkingUnsupported": "Ce fichier ne prend pas en charge le fractionnement",

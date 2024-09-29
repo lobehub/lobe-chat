@@ -103,6 +103,7 @@ const ToolBar = memo<MultiSelectActionsProps>(
             setSelectedFileIds(selectCount === total ? [] : totalFileIds);
           }}
           selectCount={selectCount}
+          selectFileIds={selectFileIds}
           total={total}
         />
         {showConfig && <Config config={config} onConfigChange={onConfigChange} />}

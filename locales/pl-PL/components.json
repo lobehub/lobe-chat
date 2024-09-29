@@ -10,6 +10,7 @@
       "addToKnowledgeBase": "Dodaj do bazy wiedzy",
       "addToOtherKnowledgeBase": "Dodaj do innej bazy wiedzy",
       "batchChunking": "Partycjonowanie wsadowe",
+      "batchChunkingUnsupported": "Nieobsługiwany typ pliku do przetwarzania w partiach: {{types}}",
       "chunking": "Partycjonowanie",
       "chunkingTooltip": "Podziel plik na wiele bloków tekstowych i wektoryzuj, aby umożliwić wyszukiwanie semantyczne i rozmowy o plikach",
       "chunkingUnsupported": "Ten plik nie obsługuje podziału na części.",
