@@ -137,7 +137,7 @@ tcp_read_time_out 15000
 ${protocol} ${ip} ${port}
 `.trim();
 
-  await fs.writeFileSync(PROXYCHAINS_CONF_PATH, configContent);
+  await fs.writeFile(PROXYCHAINS_CONF_PATH, configContent);
   console.log(`✅ ProxyChains: All outgoing traffic routed via ${protocol}://${ip}:${port}.`);
   console.log('-------------------------------------');
 };
