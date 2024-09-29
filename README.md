@@ -292,7 +292,7 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 | [Flux Prompt Generator](https://chat-preview.lobehub.com/market?agent=flux-prompt-generator)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2024-09-29**</sup>              | Flux Prompt Generation Assistant: Expert in crafting detailed, creative prompts for high-quality image outputs from the Flux model.<br/>`prompt-generation` `image-generation` `art-style` `creativity` `crafting`                     |
 | [God Bless You Messages](https://chat-preview.lobehub.com/market?agent=god-bless-you-message)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2024-09-29**</sup>             | Expert in crafting personalized "God Bless You" messages with spiritual sensitivity and language mastery.<br/>`message-composition` `personalization` `spiritual-sensitivity` `language-mastery` `interaction-approach`                |
 
-> 📊 Total agents: [<kbd>**402**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**403**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

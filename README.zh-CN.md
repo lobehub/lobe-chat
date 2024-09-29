@@ -280,7 +280,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [Flux 提示生成器](https://chat-preview.lobehub.com/market?agent=flux-prompt-generator)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2024-09-29**</sup>    | Flux 提示生成助手：专注于为 Flux 模型生成高质量图像输出而创作详细、创意提示的专家。<br/>`提示生成` `图像生成` `艺术风格` `创意` `创作` |
 | [上帝保佑你的信息](https://chat-preview.lobehub.com/market?agent=god-bless-you-message)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2024-09-29**</sup>   | 擅长以灵性敏感和语言掌握来创作个性化的 “上帝保佑你” 信息。<br/>`信息创作` `个性化` `灵性敏感` `语言掌握` `互动方式`                    |
 
-> 📊 Total agents: [<kbd>**402**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**403**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
