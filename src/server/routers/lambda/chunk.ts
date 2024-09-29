@@ -9,7 +9,6 @@ import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
 import { MessageModel } from '@/database/server/models/message';
 import { knowledgeBaseFiles } from '@/database/server/schemas/lobechat';
-import { ModelProvider } from '@/libs/agent-runtime';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
@@ -101,16 +100,14 @@ export const chunkRouter = router({
     .input(
       z.object({
         fileIds: z.array(z.string()).optional(),
-        model: z.string().default(DEFAULT_EMBEDDING_MODEL),
+        model: z.string().default(splitEmbeddingModelId().modelId),
+        provider: z.string().default(splitEmbeddingModelId().provider),
         query: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       console.time('embedding');
-      const agentRuntime = await initAgentRuntimeWithUserPayload(
-        ModelProvider.OpenAI,
-        ctx.jwtPayload,
-      );
+      const agentRuntime = await initAgentRuntimeWithUserPayload(input.provider, ctx.jwtPayload);
 
       const embeddings = await agentRuntime.embeddings({
         dimensions: 1024,
@@ -137,14 +134,14 @@ export const chunkRouter = router({
       if (!item || !item.embeddings) {
         // TODO: need to support customize
         const agentRuntime = await initAgentRuntimeWithUserPayload(
-          ModelProvider.OpenAI,
+          splitEmbeddingModelId().provider,
           ctx.jwtPayload,
         );
 
         const embeddings = await agentRuntime.embeddings({
           dimensions: 1024,
           input: input.rewriteQuery,
-          model: input.model || DEFAULT_EMBEDDING_MODEL,
+          model: splitEmbeddingModelId().modelId,
         });
 
         embedding = embeddings![0].embedding;
