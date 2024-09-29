@@ -80,8 +80,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         options,
       ),
     );
-    const embeddings = await Promise.all(promises);
-    return embeddings;
+    return Promise.all(promises);
   }
 
   private invokeEmbeddingModel = async (
