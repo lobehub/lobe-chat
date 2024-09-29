@@ -56,7 +56,7 @@ docker run --name my-postgres --network pg -e POSTGRES_PASSWORD=mysecretpassword
 
 <Callout type="warning">
   以上指令得到的 pg
-  实例并没有指定持久化存储位置，因此仅用于测试/演示，生产环境请自行配置持久化存储。
+  实例并没有指定持久化存储位置，因此仅用于测试/演示，生产环境请自行配置持久化存储。此外，腾讯云储存桶的使用方法见[配置腾讯云 COS 存储服务](/zh/docs/self-hosting/advanced/s3/tencent-cloud)。
 </Callout>
 
 ### 创建名为 `lobe-chat.env` 文件用于存放环境变量：
@@ -83,9 +83,11 @@ AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
 # S3 相关
 S3_ACCESS_KEY_ID=xxxxxxxxxx
 S3_SECRET_ACCESS_KEY=xxxxxxxxxx
-S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com # 用于 S3 API 访问的域名
+# 用于 S3 API 访问的域名
+S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com 
 S3_BUCKET=lobechat
-S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com # 用于外网访问 S3 的公共域名，需配置 CORS
+# 用于外网访问 S3 的公共域名，需配置 CORS
+S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com 
 # S3_REGION=ap-chengdu # 如果需要指定地域
 
 # 其他环境变量，视需求而定
