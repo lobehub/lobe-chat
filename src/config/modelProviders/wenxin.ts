@@ -6,6 +6,7 @@ const BaiduWenxin: ModelProviderCard = {
     {
       description: '百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。',
       displayName: 'ERNIE 3.5 8K',
+      enabled: true,
       id: 'ERNIE 3.5-8K',
       pricing: {
         currency: 'CNY',
