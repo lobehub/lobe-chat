@@ -52,7 +52,7 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_HUNYUAN,
     HUNYUAN_MODEL_LIST,
-    
+
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
@@ -241,6 +241,7 @@ export const getServerGlobalConfig = () => {
         }),
       },
       upstage: { enabled: ENABLED_UPSTAGE },
+      wenxin: { enabled: ENABLED_WENXIN },
       zeroone: {
         enabled: ENABLED_ZEROONE,
         enabledModels: extractEnabledModels(ZEROONE_MODEL_LIST),
@@ -257,7 +258,6 @@ export const getServerGlobalConfig = () => {
           modelString: ZHIPU_MODEL_LIST,
         }),
       },
-      wenxin: { enabled: ENABLED_WENXIN },
     },
     oAuthSSOProviders: authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
