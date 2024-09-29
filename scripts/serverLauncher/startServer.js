@@ -174,7 +174,7 @@ const runServer = async () => {
 
         await runScript(DB_MIGRATION_SCRIPT_PATH);
       } catch (error) {
-        console.log(`⚠️ DB Migration: Skipping DB migration as the script file does not exist.`);
+        console.log(`⚠️ DB Migration: Skipping DB migration. Ensure migrate database manually.`);
         console.log('-------------------------------------');
       }
 
