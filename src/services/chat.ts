@@ -114,6 +114,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
           accessKeyId: providerAuthPayload?.awsAccessKeyId,
           accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
           region: providerAuthPayload?.awsRegion,
+          sessionToken: providerAuthPayload?.awsSessionToken,
         };
       }
       break;
@@ -334,7 +335,7 @@ class ChatService {
     const s = useToolStore.getState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
-    const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
+    const manifest = pluginSelectors.getToolManifestById(params.identifier)(s);
 
     const traceHeader = createTraceHeader(this.mapTrace(options?.trace, TraceTagMap.ToolCalling));
 

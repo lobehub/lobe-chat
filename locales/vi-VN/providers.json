@@ -1,0 +1,84 @@
+{
+  "ai21": {},
+  "ai360": {
+    "description": "360 AI là nền tảng mô hình và dịch vụ AI do công ty 360 phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên tiên tiến, bao gồm 360GPT2 Pro, 360GPT Pro, 360GPT Turbo và 360GPT Turbo Responsibility 8K. Những mô hình này kết hợp giữa tham số quy mô lớn và khả năng đa phương thức, được ứng dụng rộng rãi trong tạo văn bản, hiểu ngữ nghĩa, hệ thống đối thoại và tạo mã. Thông qua chiến lược giá linh hoạt, 360 AI đáp ứng nhu cầu đa dạng của người dùng, hỗ trợ nhà phát triển tích hợp, thúc đẩy sự đổi mới và phát triển ứng dụng thông minh."
+  },
+  "anthropic": {
+    "description": "Anthropic là một công ty tập trung vào nghiên cứu và phát triển trí tuệ nhân tạo, cung cấp một loạt các mô hình ngôn ngữ tiên tiến như Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus và Claude 3 Haiku. Những mô hình này đạt được sự cân bằng lý tưởng giữa trí thông minh, tốc độ và chi phí, phù hợp cho nhiều ứng dụng từ khối lượng công việc doanh nghiệp đến phản hồi nhanh. Claude 3.5 Sonnet, là mô hình mới nhất của họ, thể hiện xuất sắc trong nhiều đánh giá, đồng thời duy trì tỷ lệ hiệu suất cao."
+  },
+  "azure": {
+    "description": "Azure cung cấp nhiều mô hình AI tiên tiến, bao gồm GPT-3.5 và dòng GPT-4 mới nhất, hỗ trợ nhiều loại dữ liệu và nhiệm vụ phức tạp, cam kết cung cấp các giải pháp AI an toàn, đáng tin cậy và bền vững."
+  },
+  "baichuan": {
+    "description": "Baichuan Intelligent là công ty tập trung vào nghiên cứu phát triển mô hình ngôn ngữ lớn AI, mô hình của họ thể hiện xuất sắc trong các nhiệm vụ tiếng Trung như bách khoa toàn thư, xử lý văn bản dài và sáng tác, vượt trội hơn so với các mô hình chính thống quốc tế. Baichuan Intelligent còn có khả năng đa phương thức hàng đầu trong ngành, thể hiện xuất sắc trong nhiều bài kiểm tra uy tín. Các mô hình của họ bao gồm Baichuan 4, Baichuan 3 Turbo và Baichuan 3 Turbo 128k, được tối ưu hóa cho các tình huống ứng dụng khác nhau, cung cấp giải pháp hiệu quả về chi phí."
+  },
+  "bedrock": {
+    "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
+  },
+  "deepseek": {
+    "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
+  },
+  "fireworksai": {
+    "description": "Fireworks AI là nhà cung cấp dịch vụ mô hình ngôn ngữ cao cấp hàng đầu, tập trung vào gọi chức năng và xử lý đa phương thức. Mô hình mới nhất của họ, Firefunction V2, dựa trên Llama-3, được tối ưu hóa cho gọi chức năng, đối thoại và tuân theo chỉ dẫn. Mô hình ngôn ngữ hình ảnh FireLLaVA-13B hỗ trợ đầu vào hỗn hợp hình ảnh và văn bản. Các mô hình đáng chú ý khác bao gồm dòng Llama và dòng Mixtral, cung cấp hỗ trợ cho việc tuân theo và tạo ra chỉ dẫn đa ngôn ngữ hiệu quả."
+  },
+  "github": {
+    "description": "Với GitHub Models, các nhà phát triển có thể trở thành kỹ sư AI và xây dựng với các mô hình AI hàng đầu trong ngành."
+  },
+  "google": {
+    "description": "Dòng Gemini của Google là mô hình AI tiên tiến và đa năng nhất của họ, được phát triển bởi Google DeepMind, được thiết kế cho đa phương thức, hỗ trợ hiểu và xử lý liền mạch văn bản, mã, hình ảnh, âm thanh và video. Phù hợp cho nhiều môi trường từ trung tâm dữ liệu đến thiết bị di động, nâng cao đáng kể hiệu quả và tính ứng dụng của mô hình AI."
+  },
+  "groq": {
+    "description": "Bộ máy suy diễn LPU của Groq thể hiện xuất sắc trong các bài kiểm tra chuẩn mô hình ngôn ngữ lớn (LLM) độc lập mới nhất, định nghĩa lại tiêu chuẩn cho các giải pháp AI với tốc độ và hiệu quả đáng kinh ngạc. Groq là đại diện cho tốc độ suy diễn tức thì, thể hiện hiệu suất tốt trong triển khai dựa trên đám mây."
+  },
+  "minimax": {
+    "description": "MiniMax là công ty công nghệ trí tuệ nhân tạo tổng quát được thành lập vào năm 2021, cam kết cùng người dùng sáng tạo trí thông minh. MiniMax đã tự phát triển nhiều mô hình lớn đa phương thức, bao gồm mô hình văn bản MoE với một triệu tham số, mô hình giọng nói và mô hình hình ảnh. Họ cũng đã phát hành các ứng dụng như AI Hải Lý."
+  },
+  "mistral": {
+    "description": "Mistral cung cấp các mô hình tiên tiến cho mục đích chung, chuyên nghiệp và nghiên cứu, được ứng dụng rộng rãi trong suy diễn phức tạp, nhiệm vụ đa ngôn ngữ, tạo mã, v.v. Thông qua giao diện gọi chức năng, người dùng có thể tích hợp các chức năng tùy chỉnh để thực hiện các ứng dụng cụ thể."
+  },
+  "moonshot": {
+    "description": "Moonshot là nền tảng mã nguồn mở do Công ty TNHH Công nghệ Mặt Trăng Bắc Kinh phát hành, cung cấp nhiều mô hình xử lý ngôn ngữ tự nhiên, ứng dụng rộng rãi trong nhiều lĩnh vực, bao gồm nhưng không giới hạn ở sáng tác nội dung, nghiên cứu học thuật, gợi ý thông minh, chẩn đoán y tế, v.v., hỗ trợ xử lý văn bản dài và nhiệm vụ tạo phức tạp."
+  },
+  "novita": {
+    "description": "Novita AI là một nền tảng cung cấp dịch vụ API cho nhiều mô hình ngôn ngữ lớn và tạo hình ảnh AI, linh hoạt, đáng tin cậy và hiệu quả về chi phí. Nó hỗ trợ các mô hình mã nguồn mở mới nhất như Llama3, Mistral, và cung cấp giải pháp API toàn diện, thân thiện với người dùng và tự động mở rộng cho phát triển ứng dụng AI, phù hợp cho sự phát triển nhanh chóng của các công ty khởi nghiệp AI."
+  },
+  "ollama": {
+    "description": "Mô hình do Ollama cung cấp bao quát rộng rãi các lĩnh vực như tạo mã, tính toán toán học, xử lý đa ngôn ngữ và tương tác đối thoại, hỗ trợ nhu cầu đa dạng cho triển khai doanh nghiệp và địa phương."
+  },
+  "openai": {
+    "description": "OpenAI là tổ chức nghiên cứu trí tuệ nhân tạo hàng đầu thế giới, với các mô hình như dòng GPT đã thúc đẩy ranh giới của xử lý ngôn ngữ tự nhiên. OpenAI cam kết thay đổi nhiều ngành công nghiệp thông qua các giải pháp AI sáng tạo và hiệu quả. Sản phẩm của họ có hiệu suất và tính kinh tế nổi bật, được sử dụng rộng rãi trong nghiên cứu, thương mại và ứng dụng đổi mới."
+  },
+  "openrouter": {
+    "description": "OpenRouter là một nền tảng dịch vụ cung cấp nhiều giao diện mô hình lớn tiên tiến, hỗ trợ OpenAI, Anthropic, LLaMA và nhiều hơn nữa, phù hợp cho nhu cầu phát triển và ứng dụng đa dạng. Người dùng có thể linh hoạt chọn mô hình và giá cả tối ưu theo nhu cầu của mình, giúp nâng cao trải nghiệm AI."
+  },
+  "perplexity": {
+    "description": "Perplexity là nhà cung cấp mô hình tạo đối thoại hàng đầu, cung cấp nhiều mô hình Llama 3.1 tiên tiến, hỗ trợ ứng dụng trực tuyến và ngoại tuyến, đặc biệt phù hợp cho các nhiệm vụ xử lý ngôn ngữ tự nhiên phức tạp."
+  },
+  "qwen": {
+    "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
+  },
+  "siliconcloud": {
+    "description": "SiliconFlow cam kết tăng tốc AGI để mang lại lợi ích cho nhân loại, nâng cao hiệu quả AI quy mô lớn thông qua một ngăn xếp GenAI dễ sử dụng và chi phí thấp."
+  },
+  "spark": {
+    "description": "Mô hình lớn Xinghuo của iFlytek cung cấp khả năng AI mạnh mẽ cho nhiều lĩnh vực và ngôn ngữ, sử dụng công nghệ xử lý ngôn ngữ tự nhiên tiên tiến để xây dựng các ứng dụng đổi mới phù hợp cho các lĩnh vực như phần cứng thông minh, y tế thông minh, tài chính thông minh, v.v."
+  },
+  "stepfun": {
+    "description": "Mô hình lớn Star Class có khả năng đa phương thức và suy diễn phức tạp hàng đầu trong ngành, hỗ trợ hiểu văn bản siêu dài và chức năng tìm kiếm tự động mạnh mẽ."
+  },
+  "taichu": {
+    "description": "Viện Nghiên cứu Tự động hóa Trung Quốc và Viện Nghiên cứu Trí tuệ Nhân tạo Vũ Hán đã phát hành mô hình lớn đa phương thức thế hệ mới, hỗ trợ các nhiệm vụ hỏi đáp toàn diện như hỏi đáp nhiều vòng, sáng tác văn bản, tạo hình ảnh, hiểu 3D, phân tích tín hiệu, v.v., với khả năng nhận thức, hiểu biết và sáng tác mạnh mẽ hơn, mang đến trải nghiệm tương tác hoàn toàn mới."
+  },
+  "togetherai": {
+    "description": "Together AI cam kết đạt được hiệu suất hàng đầu thông qua các mô hình AI sáng tạo, cung cấp khả năng tùy chỉnh rộng rãi, bao gồm hỗ trợ mở rộng nhanh chóng và quy trình triển khai trực quan, đáp ứng nhiều nhu cầu của doanh nghiệp."
+  },
+  "upstage": {
+    "description": "Upstage tập trung vào việc phát triển các mô hình AI cho nhiều nhu cầu thương mại khác nhau, bao gồm Solar LLM và AI tài liệu, nhằm đạt được trí thông minh nhân tạo tổng quát (AGI) cho công việc. Tạo ra các đại lý đối thoại đơn giản thông qua Chat API, và hỗ trợ gọi chức năng, dịch thuật, nhúng và ứng dụng trong các lĩnh vực cụ thể."
+  },
+  "zeroone": {
+    "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."
+  },
+  "zhipu": {
+    "description": "Zhipu AI cung cấp nền tảng mở cho mô hình đa phương thức và ngôn ngữ, hỗ trợ nhiều tình huống ứng dụng AI, bao gồm xử lý văn bản, hiểu hình ảnh và hỗ trợ lập trình."
+  }
+}

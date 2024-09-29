@@ -253,7 +253,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup>             | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                                   |
 | [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>                     | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                                             |
 
-> 📊 Total plugins: [<kbd>**50**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**49**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -285,14 +285,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                   | Description                                                                                                                                                                           |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [AI Agent Generator](https://chat-preview.lobehub.com/market?agent=ai-agent-generator)<br/><sup>By **[xyftw](https://github.com/xyftw)** on **2024-09-10**</sup> | Skilled at creating AI Agent character descriptions that meet the needs.<br/>`ai-agent` `character-creation`                                                                          |
-| [Desolate Friend](https://chat-preview.lobehub.com/market?agent=meu)<br/><sup>By **[adminewacc](https://github.com/adminewacc)** on **2024-09-10**</sup>         | Skilled at comforting and supporting friends<br/>`friendship` `sadness` `support`                                                                                                     |
-| [NetMaster](https://chat-preview.lobehub.com/market?agent=net-master)<br/><sup>By **[erhuoyan](https://github.com/erhuoyan)** on **2024-09-10**</sup>            | Network Engineer: Professional network topology construction and management<br/>`network-engineer` `network-configuration` `network-management` `network-topology` `network-security` |
-| [HTML to React](https://chat-preview.lobehub.com/market?agent=web-react)<br/><sup>By **[xingwang02](https://github.com/xingwang02)** on **2024-09-10**</sup>     | Input HTML snippets and convert them into React components<br/>`react` `html`                                                                                                         |
+| Recent Submits                                                                                                                                                                           | Description                                                                                                                                                                                                             |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Contract Clause Refiner v1.0](https://chat-preview.lobehub.com/market?agent=business-contract)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>          | Output: {Optimize contract clauses for professional and concise expression}<br/>`contract-optimization` `legal-consultation` `copywriting` `terminology` `project-management`                                           |
+| [Meeting Assistant v1.0](https://chat-preview.lobehub.com/market?agent=meeting)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>                          | Professional meeting report assistant, distilling meeting key points into report sentences<br/>`meeting-reports` `writing` `communication` `workflow` `professional-skills`                                             |
+| [Stable Album Cover Prompter](https://chat-preview.lobehub.com/market?agent=title-bpm-stimmung)<br/><sup>By **[MellowTrixX](https://github.com/MellowTrixX)** on **2024-09-24**</sup>    | Professional graphic designer for front cover design specializing in creating visual concepts and designs for melodic techno music albums.<br/>`album-cover` `prompt` `stable-diffusion` `cover-design` `cover-prompts` |
+| [Advertising Copywriting Master](https://chat-preview.lobehub.com/market?agent=advertising-copywriting-master)<br/><sup>By **[leter](https://github.com/leter)** on **2024-09-23**</sup> | Specializing in product function analysis and advertising copywriting that resonates with user values<br/>`advertising-copy` `user-values` `marketing-strategy`                                                         |
 
-> 📊 Total agents: [<kbd>**327**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**392**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

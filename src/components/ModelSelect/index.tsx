@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
 import { ChatModelCard } from '@/types/llm';
+import { formatTokenNumber } from '@/utils/format';
 
 const useStyles = createStyles(({ css, token }) => ({
   custom: css`
@@ -55,15 +56,6 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 4px;
   `,
 }));
-const formatTokenNumber = (num: number): string => {
-  if (num > 0 && num < 1024) return '1K';
-
-  let kiloToken = Math.floor(num / 1024);
-  if (num >= 128_000 && num < 1_024_000) {
-    kiloToken = Math.floor(num / 1000);
-  }
-  return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
-};
 
 interface ModelInfoTagsProps extends ChatModelCard {
   directionReverse?: boolean;

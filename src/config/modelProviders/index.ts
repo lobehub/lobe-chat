@@ -74,6 +74,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   FireworksAIProvider,
   UpstageProvider,
   QwenProvider,
+  DoubaoProvider,
   SparkProvider,
   ZhiPuProvider,
   ZeroOneProvider,
@@ -84,7 +85,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai360Provider,
   SiliconCloudProvider,
   TaichuProvider,
-  DoubaoProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {

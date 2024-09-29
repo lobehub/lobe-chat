@@ -3,9 +3,26 @@
     "description": "{{appName}} te ofrece la mejor experiencia de uso de ChatGPT, Claude, Gemini y OLLaMA WebUI",
     "title": "{{appName}}: Herramienta de productividad personal de IA, dale a tu cerebro un impulso más inteligente"
   },
-  "market": {
-    "description": "Creación de contenido, redacción, preguntas y respuestas, generación de imágenes, generación de videos, generación de voz, agentes inteligentes, flujos de trabajo automatizados, personaliza tu asistente inteligente de IA exclusivo",
-    "title": "Mercado de Asistentes"
+  "discover": {
+    "assistants": {
+      "description": "Creación de contenido, redacción, preguntas y respuestas, generación de imágenes, generación de videos, generación de voz, Agentes inteligentes, flujos de trabajo automatizados, personaliza tu asistente inteligente AI / GPTs / OLLaMA",
+      "title": "Asistentes de IA"
+    },
+    "description": "Creación de contenido, redacción, preguntas y respuestas, generación de imágenes, generación de videos, generación de voz, Agentes inteligentes, flujos de trabajo automatizados, aplicaciones de IA personalizadas, personaliza tu espacio de trabajo de aplicaciones AI",
+    "models": {
+      "description": "Explora los modelos de IA más populares OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek",
+      "title": "Modelos de IA"
+    },
+    "plugins": {
+      "description": "Explora la generación de gráficos, académicos, imágenes, videos, voces y flujos de trabajo automatizados, integrando capacidades ricas de plugins para tu asistente.",
+      "title": "Complementos de IA"
+    },
+    "providers": {
+      "description": "Explora los principales proveedores de modelos OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter",
+      "title": "Proveedores de servicios de modelos de IA"
+    },
+    "search": "Buscar",
+    "title": "Descubrir"
   },
   "plugins": {
     "description": "Búsqueda, generación de gráficos, académico, generación de imágenes, generación de videos, generación de voz, flujos de trabajo automatizados, personaliza las capacidades de los plugins ToolCall exclusivos de ChatGPT / Claude",

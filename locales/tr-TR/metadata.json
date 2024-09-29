@@ -3,9 +3,26 @@
     "description": "{{appName}} size en iyi ChatGPT, Claude, Gemini, OLLaMA WebUI deneyimini sunar",
     "title": "{{appName}}: Kişisel AI verimlilik aracı, kendinize daha akıllı bir zihin verin"
   },
-  "market": {
-    "description": "İçerik oluşturma, metin yazımı, soru-cevap, görsel oluşturma, video oluşturma, ses oluşturma, akıllı ajan, otomatik iş akışları, size özel AI akıllı asistanınızı özelleştirin",
-    "title": "Asistan Pazarı"
+  "discover": {
+    "assistants": {
+      "description": "İçerik oluşturma, metin yazımı, soru-cevap, görsel oluşturma, video oluşturma, ses oluşturma, akıllı Ajan, otomatik iş akışları, size özel AI / GPTs / OLLaMA akıllı asistanınızı özelleştirin.",
+      "title": "Yapay Zeka Asistanları"
+    },
+    "description": "İçerik oluşturma, metin yazımı, soru-cevap, görsel oluşturma, video oluşturma, ses oluşturma, akıllı Ajan, otomatik iş akışları, özelleştirilmiş AI uygulamaları, size özel AI uygulama çalışma alanınızı oluşturun.",
+    "models": {
+      "description": "Ana akım AI modellerini keşfedin: OpenAI / GPT / Claude 3 / Gemini / Ollama / Azure / DeepSeek.",
+      "title": "Yapay Zeka Modelleri"
+    },
+    "plugins": {
+      "description": "Grafik oluşturma, akademik, görüntü oluşturma, video oluşturma, ses oluşturma, otomatik iş akışları için asistanınıza zengin eklenti yetenekleri entegre edin.",
+      "title": "Yapay Zeka Eklentileri"
+    },
+    "providers": {
+      "description": "Ana akım model sağlayıcılarını keşfedin: OpenAI / Qwen / Ollama / Anthropic / DeepSeek / Google Gemini / OpenRouter.",
+      "title": "Yapay Zeka Modeli Sağlayıcıları"
+    },
+    "search": "Ara",
+    "title": "Keşfet"
   },
   "plugins": {
     "description": "Arama, grafik oluşturma, akademik, görsel oluşturma, video oluşturma, ses oluşturma, otomatik iş akışları, ChatGPT / Claude için özel ToolCall eklenti yeteneklerini özelleştirin",

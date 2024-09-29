@@ -1,0 +1,922 @@
+{
+  "01-ai/Yi-1.5-34B-Chat-16K": {
+    "description": "Yi-1.5 34B biedt superieure prestaties in de industrie met rijke trainingsvoorbeelden."
+  },
+  "01-ai/Yi-1.5-9B-Chat-16K": {
+    "description": "Yi-1.5 9B ondersteunt 16K tokens en biedt efficiënte, vloeiende taalgeneratiecapaciteiten."
+  },
+  "360gpt-pro": {
+    "description": "360GPT Pro, als een belangrijk lid van de 360 AI-modelreeks, voldoet aan de diverse natuurlijke taaltoepassingsscenario's met efficiënte tekstverwerkingscapaciteiten en ondersteunt lange tekstbegrip en meerdaagse gesprekken."
+  },
+  "360gpt-turbo": {
+    "description": "360GPT Turbo biedt krachtige reken- en gesprekscapaciteiten, met uitstekende semantische begrip en generatie-efficiëntie, en is de ideale intelligente assistentoplossing voor bedrijven en ontwikkelaars."
+  },
+  "360gpt-turbo-responsibility-8k": {
+    "description": "360GPT Turbo Responsibility 8K legt de nadruk op semantische veiligheid en verantwoordelijkheid, speciaal ontworpen voor toepassingen met hoge eisen aan inhoudsveiligheid, en zorgt voor nauwkeurigheid en robuustheid in de gebruikerservaring."
+  },
+  "360gpt2-pro": {
+    "description": "360GPT2 Pro is een geavanceerd natuurlijk taalverwerkingsmodel dat is ontwikkeld door 360, met uitstekende tekstgeneratie- en begripcapaciteiten, vooral in de generatieve en creatieve domeinen, en kan complexe taaltransformaties en rolinterpretatietaken aan."
+  },
+  "4.0Ultra": {
+    "description": "Spark4.0 Ultra is de krachtigste versie in de Spark-grootmodelserie, die de netwerkintegratie heeft geüpgraded en de tekstbegrip- en samenvattingscapaciteiten heeft verbeterd. Het is een allesomvattende oplossing voor het verbeteren van de kantoorproductiviteit en het nauwkeurig reageren op behoeften, en is een toonaangevend intelligent product in de industrie."
+  },
+  "Baichuan2-Turbo": {
+    "description": "Maakt gebruik van zoekversterkingstechnologie om een uitgebreide koppeling tussen het grote model en domeinspecifieke kennis en wereldwijde kennis te realiseren. Ondersteunt het uploaden van verschillende documenten zoals PDF en Word, evenals URL-invoer, met tijdige en uitgebreide informatieverzameling en nauwkeurige, professionele output."
+  },
+  "Baichuan3-Turbo": {
+    "description": "Geoptimaliseerd voor veelvoorkomende zakelijke scenario's, met aanzienlijke verbeteringen en een hoge prijs-kwaliteitverhouding. In vergelijking met het Baichuan2-model is de inhoudsgeneratie met 20% verbeterd, de kennisvraag met 17% en de rolspelcapaciteit met 40%. De algehele prestaties zijn beter dan die van GPT-3.5."
+  },
+  "Baichuan3-Turbo-128k": {
+    "description": "Met een 128K ultra-lange contextvenster, geoptimaliseerd voor veelvoorkomende zakelijke scenario's, met aanzienlijke verbeteringen en een hoge prijs-kwaliteitverhouding. In vergelijking met het Baichuan2-model is de inhoudsgeneratie met 20% verbeterd, de kennisvraag met 17% en de rolspelcapaciteit met 40%. De algehele prestaties zijn beter dan die van GPT-3.5."
+  },
+  "Baichuan4": {
+    "description": "Het model heeft de beste prestaties in het binnenland en overtreft buitenlandse mainstream modellen in kennisencyclopedieën, lange teksten en creatieve generaties. Het heeft ook toonaangevende multimodale capaciteiten en presteert uitstekend in verschillende autoritatieve evaluatiebenchmarks."
+  },
+  "Gryphe/MythoMax-L2-13b": {
+    "description": "MythoMax-L2 (13B) is een innovatief model, geschikt voor toepassingen in meerdere domeinen en complexe taken."
+  },
+  "Max-32k": {
+    "description": "Spark Max 32K is uitgerust met een grote contextverwerkingscapaciteit, verbeterd begrip van context en logische redeneervaardigheden, ondersteunt tekstinvoer van 32K tokens, geschikt voor het lezen van lange documenten, privé kennisvragen en andere scenario's."
+  },
+  "Nous-Hermes-2-Mixtral-8x7B-DPO": {
+    "description": "Hermes 2 Mixtral 8x7B DPO is een zeer flexibele multi-model combinatie, ontworpen om een uitstekende creatieve ervaring te bieden."
+  },
+  "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
+    "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) is een hoogprecisie instructiemodel, geschikt voor complexe berekeningen."
+  },
+  "NousResearch/Nous-Hermes-2-Yi-34B": {
+    "description": "Nous Hermes-2 Yi (34B) biedt geoptimaliseerde taaloutput en diverse toepassingsmogelijkheden."
+  },
+  "Phi-3-5-mini-instruct": {
+    "description": "Vernieuwing van het Phi-3-mini model."
+  },
+  "Phi-3-medium-128k-instruct": {
+    "description": "Hetzelfde Phi-3-medium model, maar met een grotere contextgrootte voor RAG of few shot prompting."
+  },
+  "Phi-3-medium-4k-instruct": {
+    "description": "Een model met 14 miljard parameters, biedt betere kwaliteit dan Phi-3-mini, met een focus op hoogwaardige, redeneringsdichte gegevens."
+  },
+  "Phi-3-mini-128k-instruct": {
+    "description": "Hetzelfde Phi-3-mini model, maar met een grotere contextgrootte voor RAG of few shot prompting."
+  },
+  "Phi-3-mini-4k-instruct": {
+    "description": "De kleinste lid van de Phi-3 familie. Geoptimaliseerd voor zowel kwaliteit als lage latentie."
+  },
+  "Phi-3-small-128k-instruct": {
+    "description": "Hetzelfde Phi-3-small model, maar met een grotere contextgrootte voor RAG of few shot prompting."
+  },
+  "Phi-3-small-8k-instruct": {
+    "description": "Een model met 7 miljard parameters, biedt betere kwaliteit dan Phi-3-mini, met een focus op hoogwaardige, redeneringsdichte gegevens."
+  },
+  "Pro-128k": {
+    "description": "Spark Pro-128K is uitgerust met een enorme contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken, bijzonder geschikt voor lange teksten die volledige analyse en langdurige logische verbanden vereisen, en biedt vloeiende en consistente logica met diverse referenties in complexe tekstcommunicatie."
+  },
+  "Qwen/Qwen1.5-110B-Chat": {
+    "description": "Als testversie van Qwen2 biedt Qwen1.5 nauwkeurigere gespreksfunctionaliteit door gebruik te maken van grootschalige gegevens."
+  },
+  "Qwen/Qwen1.5-72B-Chat": {
+    "description": "Qwen 1.5 Chat (72B) biedt snelle reacties en natuurlijke gesprekscapaciteiten, geschikt voor meertalige omgevingen."
+  },
+  "Qwen/Qwen2-72B-Instruct": {
+    "description": "Qwen2 is een geavanceerd algemeen taalmodel dat verschillende soorten instructies ondersteunt."
+  },
+  "Qwen/Qwen2.5-14B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
+  },
+  "Qwen/Qwen2.5-32B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
+  },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, met sterkere begrip- en generatiecapaciteiten."
+  },
+  "Qwen/Qwen2.5-7B-Instruct": {
+    "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
+  },
+  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+    "description": "Qwen2.5-Coder richt zich op het schrijven van code."
+  },
+  "Qwen/Qwen2.5-Math-72B-Instruct": {
+    "description": "Qwen2.5-Math richt zich op het oplossen van wiskundige vraagstukken en biedt professionele antwoorden op moeilijke vragen."
+  },
+  "THUDM/glm-4-9b-chat": {
+    "description": "GLM-4 9B is de open-source versie die een geoptimaliseerde gesprekservaring biedt voor gespreksapplicaties."
+  },
+  "abab5.5-chat": {
+    "description": "Gericht op productiviteitsscenario's, ondersteunt complexe taakverwerking en efficiënte tekstgeneratie, geschikt voor professionele toepassingen."
+  },
+  "abab5.5s-chat": {
+    "description": "Speciaal ontworpen voor Chinese personagegesprekken, biedt hoogwaardige Chinese gespreksgeneratiecapaciteiten, geschikt voor diverse toepassingsscenario's."
+  },
+  "abab6.5g-chat": {
+    "description": "Speciaal ontworpen voor meertalige personagegesprekken, ondersteunt hoogwaardige gespreksgeneratie in het Engels en andere talen."
+  },
+  "abab6.5s-chat": {
+    "description": "Geschikt voor een breed scala aan natuurlijke taalverwerkingstaken, waaronder tekstgeneratie, conversatiesystemen, enz."
+  },
+  "abab6.5t-chat": {
+    "description": "Geoptimaliseerd voor Chinese personagegesprekken, biedt vloeiende en cultureel passende gespreksgeneratiecapaciteiten."
+  },
+  "accounts/fireworks/models/firefunction-v1": {
+    "description": "Fireworks open-source functie-aanroepmodel biedt uitstekende instructie-uitvoeringscapaciteiten en aanpasbare functies."
+  },
+  "accounts/fireworks/models/firefunction-v2": {
+    "description": "Firefunction-v2, ontwikkeld door Fireworks, is een hoogpresterend functie-aanroepmodel, gebaseerd op Llama-3 en geoptimaliseerd voor functie-aanroepen, gesprekken en instructies."
+  },
+  "accounts/fireworks/models/firellava-13b": {
+    "description": "fireworks-ai/FireLLaVA-13b is een visueel taalmodel dat zowel afbeeldingen als tekstinvoer kan verwerken, getraind op hoogwaardige gegevens, geschikt voor multimodale taken."
+  },
+  "accounts/fireworks/models/gemma2-9b-it": {
+    "description": "Gemma 2 9B instructiemodel, gebaseerd op eerdere Google-technologie, geschikt voor vraagbeantwoording, samenvattingen en redenering."
+  },
+  "accounts/fireworks/models/llama-v3-70b-instruct": {
+    "description": "Llama 3 70B instructiemodel, speciaal geoptimaliseerd voor meertalige gesprekken en natuurlijke taalbegrip, presteert beter dan de meeste concurrerende modellen."
+  },
+  "accounts/fireworks/models/llama-v3-70b-instruct-hf": {
+    "description": "Llama 3 70B instructiemodel (HF-versie), consistent met de officiële implementatieresultaten, geschikt voor hoogwaardige instructietaken."
+  },
+  "accounts/fireworks/models/llama-v3-8b-instruct": {
+    "description": "Llama 3 8B instructiemodel, geoptimaliseerd voor gesprekken en meertalige taken, presteert uitstekend en efficiënt."
+  },
+  "accounts/fireworks/models/llama-v3-8b-instruct-hf": {
+    "description": "Llama 3 8B instructiemodel (HF-versie), consistent met de officiële implementatieresultaten, biedt hoge consistentie en cross-platform compatibiliteit."
+  },
+  "accounts/fireworks/models/llama-v3p1-405b-instruct": {
+    "description": "Llama 3.1 405B instructiemodel heeft een enorm aantal parameters, geschikt voor complexe taken en instructies in omgevingen met hoge belasting."
+  },
+  "accounts/fireworks/models/llama-v3p1-70b-instruct": {
+    "description": "Llama 3.1 70B instructiemodel biedt uitstekende natuurlijke taalbegrip en generatiecapaciteiten, ideaal voor gespreks- en analysetaken."
+  },
+  "accounts/fireworks/models/llama-v3p1-8b-instruct": {
+    "description": "Llama 3.1 8B instructiemodel, geoptimaliseerd voor meertalige gesprekken, kan de meeste open-source en gesloten-source modellen overtreffen op gangbare industriestandaarden."
+  },
+  "accounts/fireworks/models/mixtral-8x22b-instruct": {
+    "description": "Mixtral MoE 8x22B instructiemodel, met een groot aantal parameters en een multi-expertarchitectuur, biedt uitgebreide ondersteuning voor de efficiënte verwerking van complexe taken."
+  },
+  "accounts/fireworks/models/mixtral-8x7b-instruct": {
+    "description": "Mixtral MoE 8x7B instructiemodel, met een multi-expertarchitectuur die efficiënte instructievolging en uitvoering biedt."
+  },
+  "accounts/fireworks/models/mixtral-8x7b-instruct-hf": {
+    "description": "Mixtral MoE 8x7B instructiemodel (HF-versie), met prestaties die overeenkomen met de officiële implementatie, geschikt voor verschillende efficiënte taakscenario's."
+  },
+  "accounts/fireworks/models/mythomax-l2-13b": {
+    "description": "MythoMax L2 13B model, dat gebruik maakt van innovatieve samenvoegtechnologie, is goed in verhalen vertellen en rollenspellen."
+  },
+  "accounts/fireworks/models/phi-3-vision-128k-instruct": {
+    "description": "Phi 3 Vision instructiemodel, een lichtgewicht multimodaal model dat complexe visuele en tekstuele informatie kan verwerken, met sterke redeneercapaciteiten."
+  },
+  "accounts/fireworks/models/starcoder-16b": {
+    "description": "StarCoder 15.5B model, ondersteunt geavanceerde programmeertaken, met verbeterde meertalige capaciteiten, geschikt voor complexe codegeneratie en -begrip."
+  },
+  "accounts/fireworks/models/starcoder-7b": {
+    "description": "StarCoder 7B model, getraind op meer dan 80 programmeertalen, met uitstekende programmeervulcapaciteiten en contextbegrip."
+  },
+  "accounts/yi-01-ai/models/yi-large": {
+    "description": "Yi-Large model, met uitstekende meertalige verwerkingscapaciteiten, geschikt voor verschillende taalgeneratie- en begripstaken."
+  },
+  "ai21-jamba-1.5-large": {
+    "description": "Een meertalig model met 398 miljard parameters (94 miljard actief), biedt een contextvenster van 256K, functieaanroep, gestructureerde output en gegronde generatie."
+  },
+  "ai21-jamba-1.5-mini": {
+    "description": "Een meertalig model met 52 miljard parameters (12 miljard actief), biedt een contextvenster van 256K, functieaanroep, gestructureerde output en gegronde generatie."
+  },
+  "ai21-jamba-instruct": {
+    "description": "Een productieklare Mamba-gebaseerde LLM-model om de beste prestaties, kwaliteit en kostenefficiëntie te bereiken."
+  },
+  "anthropic.claude-3-5-sonnet-20240620-v1:0": {
+    "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en presteert uitstekend in brede evaluaties, met de snelheid en kosten van ons gemiddelde model."
+  },
+  "anthropic.claude-3-haiku-20240307-v1:0": {
+    "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, met bijna onmiddellijke reactietijden. Het kan snel eenvoudige vragen en verzoeken beantwoorden. Klanten kunnen een naadloze AI-ervaring creëren die menselijke interactie nabootst. Claude 3 Haiku kan afbeeldingen verwerken en tekstoutput retourneren, met een contextvenster van 200K."
+  },
+  "anthropic.claude-3-opus-20240229-v1:0": {
+    "description": "Claude 3 Opus is het krachtigste AI-model van Anthropic, met geavanceerde prestaties op zeer complexe taken. Het kan open prompts en ongeziene scenario's verwerken, met uitstekende vloeiendheid en mensachtige begrip. Claude 3 Opus toont de grenzen van de mogelijkheden van generatieve AI. Claude 3 Opus kan afbeeldingen verwerken en tekstoutput retourneren, met een contextvenster van 200K."
+  },
+  "anthropic.claude-3-sonnet-20240229-v1:0": {
+    "description": "Claude 3 Sonnet van Anthropic bereikt een ideale balans tussen intelligentie en snelheid - bijzonder geschikt voor bedrijfswerkbelasting. Het biedt maximale bruikbaarheid tegen lagere kosten dan concurrenten en is ontworpen als een betrouwbare, duurzame hoofdmachine, geschikt voor grootschalige AI-implementaties. Claude 3 Sonnet kan afbeeldingen verwerken en tekstoutput retourneren, met een contextvenster van 200K."
+  },
+  "anthropic.claude-instant-v1": {
+    "description": "Een snel, kosteneffectief en toch zeer capabel model dat een reeks taken kan verwerken, waaronder dagelijkse gesprekken, tekstanalyses, samenvattingen en documentvragen."
+  },
+  "anthropic.claude-v2": {
+    "description": "Anthropic's model toont hoge capaciteiten in een breed scala aan taken, van complexe gesprekken en creatieve inhoudgeneratie tot gedetailleerde instructievolging."
+  },
+  "anthropic.claude-v2:1": {
+    "description": "De bijgewerkte versie van Claude 2, met een verdubbeling van het contextvenster en verbeteringen in betrouwbaarheid, hallucinatiepercentages en op bewijs gebaseerde nauwkeurigheid in lange documenten en RAG-contexten."
+  },
+  "anthropic/claude-3-haiku": {
+    "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, ontworpen voor bijna onmiddellijke reacties. Het biedt snelle en nauwkeurige gerichte prestaties."
+  },
+  "anthropic/claude-3-opus": {
+    "description": "Claude 3 Opus is het krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het excelleert in prestaties, intelligentie, vloeiendheid en begrip."
+  },
+  "anthropic/claude-3.5-sonnet": {
+    "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en een snellere snelheid dan Sonnet, terwijl het dezelfde prijs als Sonnet behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
+  },
+  "aya": {
+    "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
+  },
+  "aya:35b": {
+    "description": "Aya 23 is een meertalig model van Cohere, ondersteunt 23 talen en biedt gemak voor diverse taaltoepassingen."
+  },
+  "charglm-3": {
+    "description": "CharGLM-3 is ontworpen voor rollenspellen en emotionele begeleiding, ondersteunt zeer lange meerdaagse herinneringen en gepersonaliseerde gesprekken, met brede toepassingen."
+  },
+  "chatgpt-4o-latest": {
+    "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
+  },
+  "claude-2.0": {
+    "description": "Claude 2 biedt belangrijke vooruitgangen in capaciteiten voor bedrijven, waaronder de toonaangevende 200K token context, een aanzienlijke vermindering van de frequentie van modelhallucinaties, systeemprompten en een nieuwe testfunctie: functie-aanroepen."
+  },
+  "claude-2.1": {
+    "description": "Claude 2 biedt belangrijke vooruitgangen in capaciteiten voor bedrijven, waaronder de toonaangevende 200K token context, een aanzienlijke vermindering van de frequentie van modelhallucinaties, systeemprompten en een nieuwe testfunctie: functie-aanroepen."
+  },
+  "claude-3-5-sonnet-20240620": {
+    "description": "Claude 3.5 Sonnet biedt mogelijkheden die verder gaan dan Opus en is sneller dan Sonnet, terwijl het dezelfde prijs behoudt. Sonnet is bijzonder goed in programmeren, datawetenschap, visuele verwerking en agenttaken."
+  },
+  "claude-3-haiku-20240307": {
+    "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, ontworpen voor bijna onmiddellijke reacties. Het heeft snelle en nauwkeurige gerichte prestaties."
+  },
+  "claude-3-opus-20240229": {
+    "description": "Claude 3 Opus is het krachtigste model van Anthropic voor het verwerken van zeer complexe taken. Het presteert uitstekend op het gebied van prestaties, intelligentie, vloeiendheid en begrip."
+  },
+  "claude-3-sonnet-20240229": {
+    "description": "Claude 3 Sonnet biedt een ideale balans tussen intelligentie en snelheid voor bedrijfswerkbelastingen. Het biedt maximale bruikbaarheid tegen een lagere prijs, betrouwbaar en geschikt voor grootschalige implementatie."
+  },
+  "claude-instant-1.2": {
+    "description": "Het model van Anthropic is ontworpen voor lage latentie en hoge doorvoer in tekstgeneratie, en ondersteunt het genereren van honderden pagina's tekst."
+  },
+  "codegeex-4": {
+    "description": "CodeGeeX-4 is een krachtige AI-programmeerassistent die slimme vraag- en antwoordmogelijkheden en code-aanvulling ondersteunt voor verschillende programmeertalen, waardoor de ontwikkelingssnelheid wordt verhoogd."
+  },
+  "codegemma": {
+    "description": "CodeGemma is een lichtgewicht taalmodel dat speciaal is ontworpen voor verschillende programmeertaken, ondersteunt snelle iteratie en integratie."
+  },
+  "codegemma:2b": {
+    "description": "CodeGemma is een lichtgewicht taalmodel dat speciaal is ontworpen voor verschillende programmeertaken, ondersteunt snelle iteratie en integratie."
+  },
+  "codellama": {
+    "description": "Code Llama is een LLM dat zich richt op codegeneratie en -discussie, met brede ondersteuning voor programmeertalen, geschikt voor ontwikkelaarsomgevingen."
+  },
+  "codellama:13b": {
+    "description": "Code Llama is een LLM dat zich richt op codegeneratie en -discussie, met brede ondersteuning voor programmeertalen, geschikt voor ontwikkelaarsomgevingen."
+  },
+  "codellama:34b": {
+    "description": "Code Llama is een LLM dat zich richt op codegeneratie en -discussie, met brede ondersteuning voor programmeertalen, geschikt voor ontwikkelaarsomgevingen."
+  },
+  "codellama:70b": {
+    "description": "Code Llama is een LLM dat zich richt op codegeneratie en -discussie, met brede ondersteuning voor programmeertalen, geschikt voor ontwikkelaarsomgevingen."
+  },
+  "codeqwen": {
+    "description": "CodeQwen1.5 is een groot taalmodel dat is getraind op een grote hoeveelheid codegegevens, speciaal ontworpen om complexe programmeertaken op te lossen."
+  },
+  "codestral": {
+    "description": "Codestral is het eerste codemodel van Mistral AI, biedt uitstekende ondersteuning voor codegeneratietaken."
+  },
+  "codestral-latest": {
+    "description": "Codestral is een geavanceerd generatief model dat zich richt op codegeneratie, geoptimaliseerd voor tussentijdse invulling en code-aanvultaken."
+  },
+  "cognitivecomputations/dolphin-mixtral-8x22b": {
+    "description": "Dolphin Mixtral 8x22B is een model ontworpen voor instructievolging, gesprekken en programmeren."
+  },
+  "cohere-command-r": {
+    "description": "Command R is een schaalbaar generatief model gericht op RAG en Tool Use om productie-schaal AI voor ondernemingen mogelijk te maken."
+  },
+  "cohere-command-r-plus": {
+    "description": "Command R+ is een state-of-the-art RAG-geoptimaliseerd model ontworpen om enterprise-grade workloads aan te pakken."
+  },
+  "command-r": {
+    "description": "Command R is geoptimaliseerd voor conversatie- en lange contexttaken, bijzonder geschikt voor dynamische interactie en kennisbeheer."
+  },
+  "command-r-plus": {
+    "description": "Command R+ is een hoogpresterend groot taalmodel, speciaal ontworpen voor echte zakelijke scenario's en complexe toepassingen."
+  },
+  "databricks/dbrx-instruct": {
+    "description": "DBRX Instruct biedt betrouwbare instructieverwerkingscapaciteiten en ondersteunt toepassingen in verschillende sectoren."
+  },
+  "deepseek-ai/DeepSeek-V2.5": {
+    "description": "DeepSeek V2.5 combineert de uitstekende kenmerken van eerdere versies en versterkt de algemene en coderingscapaciteiten."
+  },
+  "deepseek-ai/deepseek-llm-67b-chat": {
+    "description": "DeepSeek 67B is een geavanceerd model dat is getraind voor complexe gesprekken."
+  },
+  "deepseek-chat": {
+    "description": "Een nieuw open-source model dat algemene en code-capaciteiten combineert, behoudt niet alleen de algemene conversatiecapaciteiten van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model, maar is ook beter afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en andere gebieden."
+  },
+  "deepseek-coder-v2": {
+    "description": "DeepSeek Coder V2 is een open-source hybride expertcode-model, presteert uitstekend in code-taken en is vergelijkbaar met GPT4-Turbo."
+  },
+  "deepseek-coder-v2:236b": {
+    "description": "DeepSeek Coder V2 is een open-source hybride expertcode-model, presteert uitstekend in code-taken en is vergelijkbaar met GPT4-Turbo."
+  },
+  "deepseek-v2": {
+    "description": "DeepSeek V2 is een efficiënt Mixture-of-Experts taalmodel, geschikt voor kosteneffectieve verwerkingsbehoeften."
+  },
+  "deepseek-v2:236b": {
+    "description": "DeepSeek V2 236B is het ontwerpcode-model van DeepSeek, biedt krachtige codegeneratiecapaciteiten."
+  },
+  "deepseek/deepseek-chat": {
+    "description": "Een nieuw open-source model dat algemene en codeercapaciteiten combineert, niet alleen de algemene gespreksvaardigheden van het oorspronkelijke Chat-model en de krachtige codeverwerkingscapaciteiten van het Coder-model behoudt, maar ook beter is afgestemd op menselijke voorkeuren. Bovendien heeft DeepSeek-V2.5 aanzienlijke verbeteringen gerealiseerd in schrijfopdrachten, instructievolging en meer."
+  },
+  "emohaa": {
+    "description": "Emohaa is een psychologisch model met professionele adviescapaciteiten, dat gebruikers helpt emotionele problemen te begrijpen."
+  },
+  "gemini-1.0-pro-001": {
+    "description": "Gemini 1.0 Pro 001 (Tuning) biedt stabiele en afstelbare prestaties, ideaal voor oplossingen voor complexe taken."
+  },
+  "gemini-1.0-pro-002": {
+    "description": "Gemini 1.0 Pro 002 (Tuning) biedt uitstekende multimodale ondersteuning, gericht op effectieve oplossingen voor complexe taken."
+  },
+  "gemini-1.0-pro-latest": {
+    "description": "Gemini 1.0 Pro is Google's high-performance AI-model, ontworpen voor brede taakuitbreiding."
+  },
+  "gemini-1.5-flash-001": {
+    "description": "Gemini 1.5 Flash 001 is een efficiënt multimodaal model dat ondersteuning biedt voor brede toepassingsuitbreiding."
+  },
+  "gemini-1.5-flash-002": {
+    "description": "Gemini 1.5 Flash 002 is een efficiënt multimodaal model dat ondersteuning biedt voor een breed scala aan toepassingen."
+  },
+  "gemini-1.5-flash-8b-exp-0924": {
+    "description": "Gemini 1.5 Flash 8B 0924 is het nieuwste experimentele model, met aanzienlijke prestatieverbeteringen in tekst- en multimodale toepassingen."
+  },
+  "gemini-1.5-flash-exp-0827": {
+    "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
+  },
+  "gemini-1.5-flash-latest": {
+    "description": "Gemini 1.5 Flash is Google's nieuwste multimodale AI-model, met snelle verwerkingscapaciteiten, ondersteunt tekst-, beeld- en video-invoer, en is geschikt voor efficiënte opschaling van verschillende taken."
+  },
+  "gemini-1.5-pro-001": {
+    "description": "Gemini 1.5 Pro 001 is een schaalbare multimodale AI-oplossing die ondersteuning biedt voor een breed scala aan complexe taken."
+  },
+  "gemini-1.5-pro-002": {
+    "description": "Gemini 1.5 Pro 002 is het nieuwste productieklare model, dat hogere kwaliteit output biedt, met name op het gebied van wiskunde, lange contexten en visuele taken."
+  },
+  "gemini-1.5-pro-exp-0801": {
+    "description": "Gemini 1.5 Pro 0801 biedt uitstekende multimodale verwerkingscapaciteiten en biedt meer flexibiliteit voor applicatieontwikkeling."
+  },
+  "gemini-1.5-pro-exp-0827": {
+    "description": "Gemini 1.5 Pro 0827 combineert de nieuwste optimalisatietechnologieën en biedt efficiëntere multimodale gegevensverwerkingscapaciteiten."
+  },
+  "gemini-1.5-pro-latest": {
+    "description": "Gemini 1.5 Pro ondersteunt tot 2 miljoen tokens en is de ideale keuze voor middelgrote multimodale modellen, geschikt voor veelzijdige ondersteuning van complexe taken."
+  },
+  "gemma-7b-it": {
+    "description": "Gemma 7B is geschikt voor het verwerken van middelgrote taken, met een goede kosteneffectiviteit."
+  },
+  "gemma2": {
+    "description": "Gemma 2 is een efficiënt model van Google, dat een breed scala aan toepassingsscenario's dekt, van kleine toepassingen tot complexe gegevensverwerking."
+  },
+  "gemma2-9b-it": {
+    "description": "Gemma 2 9B is een model dat is geoptimaliseerd voor specifieke taken en toolintegratie."
+  },
+  "gemma2:27b": {
+    "description": "Gemma 2 is een efficiënt model van Google, dat een breed scala aan toepassingsscenario's dekt, van kleine toepassingen tot complexe gegevensverwerking."
+  },
+  "gemma2:2b": {
+    "description": "Gemma 2 is een efficiënt model van Google, dat een breed scala aan toepassingsscenario's dekt, van kleine toepassingen tot complexe gegevensverwerking."
+  },
+  "general": {
+    "description": "Spark Lite is een lichtgewicht groot taalmodel met extreem lage latentie en efficiënte verwerkingscapaciteiten, volledig gratis en open, met ondersteuning voor realtime online zoekfunctionaliteit. De snelle respons maakt het uitermate geschikt voor inferentie-toepassingen en modelfijnstelling op apparaten met lage rekenkracht, en biedt gebruikers uitstekende kosteneffectiviteit en een intelligente ervaring, vooral in kennisvragen, inhoudsgeneratie en zoekscenario's."
+  },
+  "generalv3": {
+    "description": "Spark Pro is een hoogwaardig groot taalmodel dat is geoptimaliseerd voor professionele domeinen, met een focus op wiskunde, programmeren, geneeskunde, onderwijs en meer, en ondersteunt online zoeken en ingebouwde plugins voor weer, datum, enz. Het geoptimaliseerde model toont uitstekende prestaties en efficiëntie in complexe kennisvragen, taalbegrip en hoogwaardig tekstcreatie, en is de ideale keuze voor professionele toepassingsscenario's."
+  },
+  "generalv3.5": {
+    "description": "Spark3.5 Max is de meest uitgebreide versie, met ondersteuning voor online zoeken en talrijke ingebouwde plugins. De volledig geoptimaliseerde kerncapaciteiten, systeemrolinstellingen en functieaanroepfunctionaliteit zorgen voor uitstekende prestaties in verschillende complexe toepassingsscenario's."
+  },
+  "glm-4": {
+    "description": "GLM-4 is de oude vlaggenschipversie die in januari 2024 is uitgebracht en is inmiddels vervangen door de krachtigere GLM-4-0520."
+  },
+  "glm-4-0520": {
+    "description": "GLM-4-0520 is de nieuwste modelversie, speciaal ontworpen voor zeer complexe en diverse taken, met uitstekende prestaties."
+  },
+  "glm-4-air": {
+    "description": "GLM-4-Air is een kosteneffectieve versie met prestaties die dicht bij GLM-4 liggen, met snelle snelheid en een betaalbare prijs."
+  },
+  "glm-4-airx": {
+    "description": "GLM-4-AirX biedt een efficiënte versie van GLM-4-Air, met een redeneersnelheid tot 2,6 keer sneller."
+  },
+  "glm-4-alltools": {
+    "description": "GLM-4-AllTools is een multifunctioneel intelligent model, geoptimaliseerd om complexe instructieplanning en toolaanroepen te ondersteunen, zoals webbrowser, code-interpretatie en tekstgeneratie, geschikt voor multitasking."
+  },
+  "glm-4-flash": {
+    "description": "GLM-4-Flash is de ideale keuze voor het verwerken van eenvoudige taken, met de snelste snelheid en de laagste prijs."
+  },
+  "glm-4-long": {
+    "description": "GLM-4-Long ondersteunt zeer lange tekstinvoer, geschikt voor geheugenintensieve taken en grootschalige documentverwerking."
+  },
+  "glm-4-plus": {
+    "description": "GLM-4-Plus, als vlaggenschip van hoge intelligentie, heeft krachtige capaciteiten voor het verwerken van lange teksten en complexe taken, met algehele prestatieverbeteringen."
+  },
+  "glm-4v": {
+    "description": "GLM-4V biedt krachtige beeldbegrip- en redeneercapaciteiten, ondersteunt verschillende visuele taken."
+  },
+  "glm-4v-plus": {
+    "description": "GLM-4V-Plus heeft de capaciteit om video-inhoud en meerdere afbeeldingen te begrijpen, geschikt voor multimodale taken."
+  },
+  "google/gemini-flash-1.5-exp": {
+    "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
+  },
+  "google/gemini-pro-1.5-exp": {
+    "description": "Gemini 1.5 Pro 0827 combineert de nieuwste optimalisatietechnologieën voor efficiëntere multimodale gegevensverwerking."
+  },
+  "google/gemma-2-27b-it": {
+    "description": "Gemma 2 behoudt het ontwerpprincipe van lichtgewicht en efficiëntie."
+  },
+  "google/gemma-2-9b-it": {
+    "description": "Gemma 2 is een lichtgewicht open-source tekstmodelserie van Google."
+  },
+  "google/gemma-2-9b-it:free": {
+    "description": "Gemma 2 is een lichtgewicht open-source tekstmodelserie van Google."
+  },
+  "google/gemma-2b-it": {
+    "description": "Gemma Instruct (2B) biedt basis instructieverwerkingscapaciteiten, geschikt voor lichte toepassingen."
+  },
+  "gpt-3.5-turbo": {
+    "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
+  },
+  "gpt-3.5-turbo-0125": {
+    "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
+  },
+  "gpt-3.5-turbo-1106": {
+    "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
+  },
+  "gpt-3.5-turbo-instruct": {
+    "description": "GPT 3.5 Turbo, geschikt voor verschillende tekstgeneratie- en begrijptaken, wijst momenteel naar gpt-3.5-turbo-0125."
+  },
+  "gpt-4": {
+    "description": "GPT-4 biedt een groter contextvenster en kan langere tekstinvoer verwerken, geschikt voor scenario's die uitgebreide informatie-integratie en data-analyse vereisen."
+  },
+  "gpt-4-0125-preview": {
+    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
+  },
+  "gpt-4-0613": {
+    "description": "GPT-4 biedt een groter contextvenster en kan langere tekstinvoer verwerken, geschikt voor scenario's die uitgebreide informatie-integratie en data-analyse vereisen."
+  },
+  "gpt-4-1106-preview": {
+    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
+  },
+  "gpt-4-1106-vision-preview": {
+    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
+  },
+  "gpt-4-32k": {
+    "description": "GPT-4 biedt een groter contextvenster en kan langere tekstinvoer verwerken, geschikt voor scenario's die uitgebreide informatie-integratie en data-analyse vereisen."
+  },
+  "gpt-4-32k-0613": {
+    "description": "GPT-4 biedt een groter contextvenster en kan langere tekstinvoer verwerken, geschikt voor scenario's die uitgebreide informatie-integratie en data-analyse vereisen."
+  },
+  "gpt-4-turbo": {
+    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
+  },
+  "gpt-4-turbo-2024-04-09": {
+    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
+  },
+  "gpt-4-turbo-preview": {
+    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
+  },
+  "gpt-4-vision-preview": {
+    "description": "Het nieuwste GPT-4 Turbo-model heeft visuele functies. Nu kunnen visuele verzoeken worden gedaan met behulp van JSON-indeling en functieaanroepen. GPT-4 Turbo is een verbeterde versie die kosteneffectieve ondersteuning biedt voor multimodale taken. Het vindt een balans tussen nauwkeurigheid en efficiëntie, geschikt voor toepassingen die realtime interactie vereisen."
+  },
+  "gpt-4o": {
+    "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
+  },
+  "gpt-4o-2024-05-13": {
+    "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
+  },
+  "gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
+  },
+  "gpt-4o-mini": {
+    "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "gryphe/mythomax-l2-13b": {
+    "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
+  },
+  "internlm/internlm2_5-20b-chat": {
+    "description": "Het innovatieve open-source model InternLM2.5 verhoogt de gespreksintelligentie door een groot aantal parameters."
+  },
+  "internlm/internlm2_5-7b-chat": {
+    "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
+  },
+  "jamba-1.5-large": {},
+  "jamba-1.5-mini": {},
+  "llama-3.1-70b-instruct": {
+    "description": "Llama 3.1 70B Instruct model, met 70B parameters, biedt uitstekende prestaties in grote tekstgeneratie- en instructietaken."
+  },
+  "llama-3.1-70b-versatile": {
+    "description": "Llama 3.1 70B biedt krachtigere AI-inferentiecapaciteiten, geschikt voor complexe toepassingen, ondersteunt een enorme rekenverwerking en garandeert efficiëntie en nauwkeurigheid."
+  },
+  "llama-3.1-8b-instant": {
+    "description": "Llama 3.1 8B is een hoogpresterend model dat snelle tekstgeneratiecapaciteiten biedt, zeer geschikt voor toepassingen die grootschalige efficiëntie en kosteneffectiviteit vereisen."
+  },
+  "llama-3.1-8b-instruct": {
+    "description": "Llama 3.1 8B Instruct model, met 8B parameters, ondersteunt de efficiënte uitvoering van visuele instructietaken en biedt hoogwaardige tekstgeneratiecapaciteiten."
+  },
+  "llama-3.1-sonar-huge-128k-online": {
+    "description": "Llama 3.1 Sonar Huge Online model, met 405B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, ontworpen voor complexe online chattoepassingen."
+  },
+  "llama-3.1-sonar-large-128k-chat": {
+    "description": "Llama 3.1 Sonar Large Chat model, met 70B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, geschikt voor complexe offline chattaken."
+  },
+  "llama-3.1-sonar-large-128k-online": {
+    "description": "Llama 3.1 Sonar Large Online model, met 70B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, geschikt voor hoge capaciteit en diverse chattaken."
+  },
+  "llama-3.1-sonar-small-128k-chat": {
+    "description": "Llama 3.1 Sonar Small Chat model, met 8B parameters, speciaal ontworpen voor offline chat, ondersteunt een contextlengte van ongeveer 127.000 tokens."
+  },
+  "llama-3.1-sonar-small-128k-online": {
+    "description": "Llama 3.1 Sonar Small Online model, met 8B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, speciaal ontworpen voor online chat en kan efficiënt verschillende tekstinteracties verwerken."
+  },
+  "llama3-70b-8192": {
+    "description": "Meta Llama 3 70B biedt ongeëvenaarde complexiteitsverwerkingscapaciteiten, op maat gemaakt voor veeleisende projecten."
+  },
+  "llama3-8b-8192": {
+    "description": "Meta Llama 3 8B biedt hoogwaardige inferentieprestaties, geschikt voor diverse toepassingsbehoeften."
+  },
+  "llama3-groq-70b-8192-tool-use-preview": {
+    "description": "Llama 3 Groq 70B Tool Use biedt krachtige tool-aanroepcapaciteiten en ondersteunt efficiënte verwerking van complexe taken."
+  },
+  "llama3-groq-8b-8192-tool-use-preview": {
+    "description": "Llama 3 Groq 8B Tool Use is een model dat is geoptimaliseerd voor efficiënt gebruik van tools, ondersteunt snelle parallelle berekeningen."
+  },
+  "llama3.1": {
+    "description": "Llama 3.1 is een toonaangevend model van Meta, ondersteunt tot 405B parameters en kan worden toegepast in complexe gesprekken, meertalige vertalingen en data-analyse."
+  },
+  "llama3.1:405b": {
+    "description": "Llama 3.1 is een toonaangevend model van Meta, ondersteunt tot 405B parameters en kan worden toegepast in complexe gesprekken, meertalige vertalingen en data-analyse."
+  },
+  "llama3.1:70b": {
+    "description": "Llama 3.1 is een toonaangevend model van Meta, ondersteunt tot 405B parameters en kan worden toegepast in complexe gesprekken, meertalige vertalingen en data-analyse."
+  },
+  "llava": {
+    "description": "LLaVA is een multimodaal model dat visuele encoder en Vicuna combineert, voor krachtige visuele en taalbegrip."
+  },
+  "llava-v1.5-7b-4096-preview": {
+    "description": "LLaVA 1.5 7B biedt visuele verwerkingscapaciteiten, genereert complexe output via visuele informatie-invoer."
+  },
+  "llava:13b": {
+    "description": "LLaVA is een multimodaal model dat visuele encoder en Vicuna combineert, voor krachtige visuele en taalbegrip."
+  },
+  "llava:34b": {
+    "description": "LLaVA is een multimodaal model dat visuele encoder en Vicuna combineert, voor krachtige visuele en taalbegrip."
+  },
+  "mathstral": {
+    "description": "MathΣtral is ontworpen voor wetenschappelijk onderzoek en wiskundige inferentie, biedt effectieve rekencapaciteiten en resultaatinterpretatie."
+  },
+  "meta-llama-3-70b-instruct": {
+    "description": "Een krachtig model met 70 miljard parameters dat uitblinkt in redeneren, coderen en brede taaltoepassingen."
+  },
+  "meta-llama-3-8b-instruct": {
+    "description": "Een veelzijdig model met 8 miljard parameters, geoptimaliseerd voor dialoog- en tekstgeneratietaken."
+  },
+  "meta-llama-3.1-405b-instruct": {
+    "description": "De Llama 3.1 instructie-geoptimaliseerde tekstmodellen zijn geoptimaliseerd voor meertalige dialoogtoepassingen en presteren beter dan veel beschikbare open source en gesloten chatmodellen op gangbare industriële benchmarks."
+  },
+  "meta-llama-3.1-70b-instruct": {
+    "description": "De Llama 3.1 instructie-geoptimaliseerde tekstmodellen zijn geoptimaliseerd voor meertalige dialoogtoepassingen en presteren beter dan veel beschikbare open source en gesloten chatmodellen op gangbare industriële benchmarks."
+  },
+  "meta-llama-3.1-8b-instruct": {
+    "description": "De Llama 3.1 instructie-geoptimaliseerde tekstmodellen zijn geoptimaliseerd voor meertalige dialoogtoepassingen en presteren beter dan veel beschikbare open source en gesloten chatmodellen op gangbare industriële benchmarks."
+  },
+  "meta-llama/Llama-2-13b-chat-hf": {
+    "description": "LLaMA-2 Chat (13B) biedt uitstekende taalverwerkingscapaciteiten en een geweldige interactie-ervaring."
+  },
+  "meta-llama/Llama-3-70b-chat-hf": {
+    "description": "LLaMA-3 Chat (70B) is een krachtig chatmodel dat complexe gespreksbehoeften ondersteunt."
+  },
+  "meta-llama/Llama-3-8b-chat-hf": {
+    "description": "LLaMA-3 Chat (8B) biedt meertalige ondersteuning en dekt een breed scala aan domeinkennis."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
+    "description": "Llama 3 70B Instruct Lite is geschikt voor omgevingen die hoge prestaties en lage latentie vereisen."
+  },
+  "meta-llama/Meta-Llama-3-70B-Instruct-Turbo": {
+    "description": "Llama 3 70B Instruct Turbo biedt uitstekende taalbegrip en generatiecapaciteiten, geschikt voor de meest veeleisende rekenkundige taken."
+  },
+  "meta-llama/Meta-Llama-3-8B-Instruct-Lite": {
+    "description": "Llama 3 8B Instruct Lite is geschikt voor omgevingen met beperkte middelen en biedt een uitstekende balans in prestaties."
+  },
+  "meta-llama/Meta-Llama-3-8B-Instruct-Turbo": {
+    "description": "Llama 3 8B Instruct Turbo is een krachtige grote taalmodel, geschikt voor een breed scala aan toepassingsscenario's."
+  },
+  "meta-llama/Meta-Llama-3.1-405B-Instruct": {
+    "description": "LLaMA 3.1 405B is een krachtig model voor voortraining en instructiefijnafstemming."
+  },
+  "meta-llama/Meta-Llama-3.1-405B-Instruct-Turbo": {
+    "description": "405B Llama 3.1 Turbo model biedt enorme contextondersteuning voor big data verwerking en presteert uitstekend in grootschalige AI-toepassingen."
+  },
+  "meta-llama/Meta-Llama-3.1-70B-Instruct": {
+    "description": "LLaMA 3.1 70B biedt efficiënte gespreksondersteuning in meerdere talen."
+  },
+  "meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo": {
+    "description": "Llama 3.1 70B model is fijn afgesteld voor toepassingen met hoge belasting, gekwantiseerd naar FP8 voor efficiëntere rekenkracht en nauwkeurigheid, en zorgt voor uitstekende prestaties in complexe scenario's."
+  },
+  "meta-llama/Meta-Llama-3.1-8B-Instruct": {
+    "description": "LLaMA 3.1 biedt meertalige ondersteuning en is een van de toonaangevende generatieve modellen in de industrie."
+  },
+  "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo": {
+    "description": "Llama 3.1 8B model maakt gebruik van FP8-kwantisering en ondersteunt tot 131.072 contexttokens, en is een van de beste open-source modellen, geschikt voor complexe taken en presteert beter dan veel industriestandaarden."
+  },
+  "meta-llama/llama-3-70b-instruct": {
+    "description": "Llama 3 70B Instruct is geoptimaliseerd voor hoogwaardige gespreksscenario's en presteert uitstekend in verschillende menselijke evaluaties."
+  },
+  "meta-llama/llama-3-8b-instruct": {
+    "description": "Llama 3 8B Instruct is geoptimaliseerd voor hoogwaardige gespreksscenario's en presteert beter dan veel gesloten modellen."
+  },
+  "meta-llama/llama-3.1-405b-instruct": {
+    "description": "Llama 3.1 405B Instruct is de nieuwste versie van Meta, geoptimaliseerd voor het genereren van hoogwaardige gesprekken en overtreft veel toonaangevende gesloten modellen."
+  },
+  "meta-llama/llama-3.1-70b-instruct": {
+    "description": "Llama 3.1 70B Instruct is ontworpen voor hoogwaardige gesprekken en presteert uitstekend in menselijke evaluaties, vooral in interactieve scenario's."
+  },
+  "meta-llama/llama-3.1-8b-instruct": {
+    "description": "Llama 3.1 8B Instruct is de nieuwste versie van Meta, geoptimaliseerd voor hoogwaardige gespreksscenario's en presteert beter dan veel toonaangevende gesloten modellen."
+  },
+  "meta-llama/llama-3.1-8b-instruct:free": {
+    "description": "LLaMA 3.1 biedt ondersteuning voor meerdere talen en is een van de toonaangevende generatiemodellen in de industrie."
+  },
+  "meta.llama3-1-405b-instruct-v1:0": {
+    "description": "Meta Llama 3.1 405B Instruct is het grootste en krachtigste model binnen het Llama 3.1 Instruct-model, een geavanceerd model voor conversatie-inferentie en synthetische datageneratie, dat ook kan worden gebruikt als basis voor gespecialiseerde continue pre-training of fine-tuning in specifieke domeinen. De meertalige grote taalmodellen (LLMs) die Llama 3.1 biedt, zijn een set van voorgetrainde, instructie-geoptimaliseerde generatieve modellen, waaronder 8B, 70B en 405B in grootte (tekstinvoer/uitvoer). De tekstmodellen van Llama 3.1, die zijn geoptimaliseerd voor meertalige conversatiegebruik, overtreffen veel beschikbare open-source chatmodellen in gangbare industriële benchmarktests. Llama 3.1 is ontworpen voor commercieel en onderzoeksgebruik in meerdere talen. De instructie-geoptimaliseerde tekstmodellen zijn geschikt voor assistentachtige chats, terwijl de voorgetrainde modellen zich kunnen aanpassen aan verschillende taken voor natuurlijke taalgeneratie. Het Llama 3.1-model ondersteunt ook het verbeteren van andere modellen door gebruik te maken van de output van zijn modellen, inclusief synthetische datageneratie en verfijning. Llama 3.1 is een autoregressief taalmodel dat gebruikmaakt van een geoptimaliseerde transformer-architectuur. De afgestelde versies gebruiken supervisie-finetuning (SFT) en versterkend leren met menselijke feedback (RLHF) om te voldoen aan menselijke voorkeuren voor behulpzaamheid en veiligheid."
+  },
+  "meta.llama3-1-70b-instruct-v1:0": {
+    "description": "De bijgewerkte versie van Meta Llama 3.1 70B Instruct, met een uitgebreid contextlengte van 128K, meertaligheid en verbeterde redeneercapaciteiten. De meertalige grote taalmodellen (LLMs) die door Llama 3.1 worden aangeboden, zijn een set voorgetrainde, instructie-aangepaste generatieve modellen, inclusief 8B, 70B en 405B in grootte (tekstinvoer/uitvoer). De instructie-aangepaste tekstmodellen (8B, 70B, 405B) zijn geoptimaliseerd voor meertalige dialoogtoepassingen en hebben veel beschikbare open-source chatmodellen overtroffen in gangbare industriële benchmarktests. Llama 3.1 is bedoeld voor commerciële en onderzoeksdoeleinden in meerdere talen. De instructie-aangepaste tekstmodellen zijn geschikt voor assistentachtige chats, terwijl de voorgetrainde modellen kunnen worden aangepast voor verschillende natuurlijke taalgeneratietaken. Llama 3.1-modellen ondersteunen ook het gebruik van hun output om andere modellen te verbeteren, inclusief synthetische gegevensgeneratie en verfijning. Llama 3.1 is een autoregressief taalmodel dat gebruikmaakt van een geoptimaliseerde transformerarchitectuur. De aangepaste versies maken gebruik van supervisie-fijnstelling (SFT) en versterkend leren met menselijke feedback (RLHF) om te voldoen aan menselijke voorkeuren voor behulpzaamheid en veiligheid."
+  },
+  "meta.llama3-1-8b-instruct-v1:0": {
+    "description": "De bijgewerkte versie van Meta Llama 3.1 8B Instruct, met een uitgebreid contextlengte van 128K, meertaligheid en verbeterde redeneercapaciteiten. De meertalige grote taalmodellen (LLMs) die door Llama 3.1 worden aangeboden, zijn een set voorgetrainde, instructie-aangepaste generatieve modellen, inclusief 8B, 70B en 405B in grootte (tekstinvoer/uitvoer). De instructie-aangepaste tekstmodellen (8B, 70B, 405B) zijn geoptimaliseerd voor meertalige dialoogtoepassingen en hebben veel beschikbare open-source chatmodellen overtroffen in gangbare industriële benchmarktests. Llama 3.1 is bedoeld voor commerciële en onderzoeksdoeleinden in meerdere talen. De instructie-aangepaste tekstmodellen zijn geschikt voor assistentachtige chats, terwijl de voorgetrainde modellen kunnen worden aangepast voor verschillende natuurlijke taalgeneratietaken. Llama 3.1-modellen ondersteunen ook het gebruik van hun output om andere modellen te verbeteren, inclusief synthetische gegevensgeneratie en verfijning. Llama 3.1 is een autoregressief taalmodel dat gebruikmaakt van een geoptimaliseerde transformerarchitectuur. De aangepaste versies maken gebruik van supervisie-fijnstelling (SFT) en versterkend leren met menselijke feedback (RLHF) om te voldoen aan menselijke voorkeuren voor behulpzaamheid en veiligheid."
+  },
+  "meta.llama3-70b-instruct-v1:0": {
+    "description": "Meta Llama 3 is een open groot taalmodel (LLM) gericht op ontwikkelaars, onderzoekers en bedrijven, ontworpen om hen te helpen bij het bouwen, experimenteren en verantwoordelijk opschalen van hun generatieve AI-ideeën. Als onderdeel van het basis systeem voor wereldwijde gemeenschapsinnovatie is het zeer geschikt voor contentcreatie, conversatie-AI, taalbegrip, R&D en zakelijke toepassingen."
+  },
+  "meta.llama3-8b-instruct-v1:0": {
+    "description": "Meta Llama 3 is een open groot taalmodel (LLM) gericht op ontwikkelaars, onderzoekers en bedrijven, ontworpen om hen te helpen bij het bouwen, experimenteren en verantwoordelijk opschalen van hun generatieve AI-ideeën. Als onderdeel van het basis systeem voor wereldwijde gemeenschapsinnovatie is het zeer geschikt voor apparaten met beperkte rekenkracht en middelen, edge-apparaten en snellere trainingstijden."
+  },
+  "microsoft/wizardlm 2-7b": {
+    "description": "WizardLM 2 7B is het nieuwste snelle en lichte model van Microsoft AI, met prestaties die bijna 10 keer beter zijn dan de huidige toonaangevende open-source modellen."
+  },
+  "microsoft/wizardlm-2-8x22b": {
+    "description": "WizardLM-2 8x22B is het meest geavanceerde Wizard-model van Microsoft AI, met een uiterst competitieve prestatie."
+  },
+  "minicpm-v": {
+    "description": "MiniCPM-V is de nieuwe generatie multimodale grote modellen van OpenBMB, met uitstekende OCR-herkenning en multimodaal begrip, geschikt voor een breed scala aan toepassingsscenario's."
+  },
+  "mistral": {
+    "description": "Mistral is het 7B-model van Mistral AI, geschikt voor variabele taalverwerkingsbehoeften."
+  },
+  "mistral-large": {
+    "description": "Mixtral Large is het vlaggenschipmodel van Mistral, dat de capaciteiten van codegeneratie, wiskunde en inferentie combineert, ondersteunt een contextvenster van 128k."
+  },
+  "mistral-large-2407": {
+    "description": "Mistral Large (2407) is een geavanceerd Large Language Model (LLM) met state-of-the-art redenerings-, kennis- en coderingscapaciteiten."
+  },
+  "mistral-large-latest": {
+    "description": "Mistral Large is het vlaggenschipmodel, dat uitblinkt in meertalige taken, complexe inferentie en codegeneratie, ideaal voor high-end toepassingen."
+  },
+  "mistral-nemo": {
+    "description": "Mistral Nemo is een 12B-model dat is ontwikkeld in samenwerking met Mistral AI en NVIDIA, biedt efficiënte prestaties."
+  },
+  "mistral-small": {
+    "description": "Mistral Small kan worden gebruikt voor elke taalkundige taak die hoge efficiëntie en lage latentie vereist."
+  },
+  "mistral-small-latest": {
+    "description": "Mistral Small is een kosteneffectieve, snelle en betrouwbare optie voor gebruikscases zoals vertaling, samenvatting en sentimentanalyse."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.1": {
+    "description": "Mistral (7B) Instruct staat bekend om zijn hoge prestaties en is geschikt voor verschillende taalgerelateerde taken."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.2": {
+    "description": "Mistral 7B is een model dat op aanvraag is fijn afgesteld om geoptimaliseerde antwoorden voor taken te bieden."
+  },
+  "mistralai/Mistral-7B-Instruct-v0.3": {
+    "description": "Mistral (7B) Instruct v0.3 biedt efficiënte rekenkracht en natuurlijke taalbegrip, geschikt voor een breed scala aan toepassingen."
+  },
+  "mistralai/Mixtral-8x22B-Instruct-v0.1": {
+    "description": "Mixtral-8x22B Instruct (141B) is een supergroot taalmodel dat extreem hoge verwerkingsbehoeften ondersteunt."
+  },
+  "mistralai/Mixtral-8x7B-Instruct-v0.1": {
+    "description": "Mixtral 8x7B is een voorgetraind spaarzaam mengexpertmodel, gebruikt voor algemene teksttaken."
+  },
+  "mistralai/mistral-7b-instruct": {
+    "description": "Mistral 7B Instruct is een hoogwaardig industrieel standaardmodel met snelheidoptimalisatie en ondersteuning voor lange contexten."
+  },
+  "mistralai/mistral-nemo": {
+    "description": "Mistral Nemo is een model met 7,3 miljard parameters dat meertalige ondersteuning en hoge prestaties biedt."
+  },
+  "mixtral": {
+    "description": "Mixtral is het expertmodel van Mistral AI, met open-source gewichten en biedt ondersteuning voor codegeneratie en taalbegrip."
+  },
+  "mixtral-8x7b-32768": {
+    "description": "Mixtral 8x7B biedt hoge fouttolerantie en parallelle verwerkingscapaciteiten, geschikt voor complexe taken."
+  },
+  "mixtral:8x22b": {
+    "description": "Mixtral is het expertmodel van Mistral AI, met open-source gewichten en biedt ondersteuning voor codegeneratie en taalbegrip."
+  },
+  "moonshot-v1-128k": {
+    "description": "Moonshot V1 128K is een model met een superlange contextverwerkingscapaciteit, geschikt voor het genereren van zeer lange teksten, voldoet aan de behoeften van complexe generatietaken en kan tot 128.000 tokens verwerken, zeer geschikt voor onderzoek, academische en grote documentgeneratie."
+  },
+  "moonshot-v1-32k": {
+    "description": "Moonshot V1 32K biedt een gemiddelde contextverwerkingscapaciteit, kan 32.768 tokens verwerken, bijzonder geschikt voor het genereren van verschillende lange documenten en complexe gesprekken, toegepast in contentcreatie, rapportgeneratie en conversatiesystemen."
+  },
+  "moonshot-v1-8k": {
+    "description": "Moonshot V1 8K is speciaal ontworpen voor het genereren van korte teksttaken, met efficiënte verwerkingsprestaties, kan 8.192 tokens verwerken, zeer geschikt voor korte gesprekken, notities en snelle contentgeneratie."
+  },
+  "nousresearch/hermes-2-pro-llama-3-8b": {
+    "description": "Hermes 2 Pro Llama 3 8B is een upgrade van Nous Hermes 2, met de nieuwste intern ontwikkelde datasets."
+  },
+  "o1-mini": {
+    "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "o1-preview": {
+    "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "open-codestral-mamba": {
+    "description": "Codestral Mamba is een Mamba 2-taalmodel dat zich richt op codegeneratie en krachtige ondersteuning biedt voor geavanceerde code- en inferentietaken."
+  },
+  "open-mistral-7b": {
+    "description": "Mistral 7B is een compact maar hoogpresterend model, dat uitblinkt in batchverwerking en eenvoudige taken zoals classificatie en tekstgeneratie, met goede inferentiecapaciteiten."
+  },
+  "open-mistral-nemo": {
+    "description": "Mistral Nemo is een 12B-model ontwikkeld in samenwerking met Nvidia, biedt uitstekende inferentie- en coderingsprestaties, gemakkelijk te integreren en te vervangen."
+  },
+  "open-mixtral-8x22b": {
+    "description": "Mixtral 8x22B is een groter expertmodel dat zich richt op complexe taken, biedt uitstekende inferentiecapaciteiten en een hogere doorvoer."
+  },
+  "open-mixtral-8x7b": {
+    "description": "Mixtral 8x7B is een spaarzaam expertmodel dat meerdere parameters benut om de inferentiesnelheid te verhogen, geschikt voor het verwerken van meertalige en codegeneratietaken."
+  },
+  "openai/gpt-4o-2024-08-06": {
+    "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
+  },
+  "openai/gpt-4o-mini": {
+    "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, dat tekst- en afbeeldingsinvoer ondersteunt en tekstuitvoer genereert. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "openai/o1-mini": {
+    "description": "o1-mini is een snel en kosteneffectief redeneermodel dat is ontworpen voor programmeer-, wiskunde- en wetenschappelijke toepassingen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "openai/o1-preview": {
+    "description": "o1 is het nieuwe redeneermodel van OpenAI, geschikt voor complexe taken die uitgebreide algemene kennis vereisen. Dit model heeft een context van 128K en een kennisafkapdatum van oktober 2023."
+  },
+  "openchat/openchat-7b": {
+    "description": "OpenChat 7B is een open-source taalmodelbibliotheek die is geoptimaliseerd met de 'C-RLFT (Conditionele Versterkingsleer Fijnstelling)' strategie."
+  },
+  "openrouter/auto": {
+    "description": "Afhankelijk van de contextlengte, het onderwerp en de complexiteit, wordt uw verzoek verzonden naar Llama 3 70B Instruct, Claude 3.5 Sonnet (zelfregulerend) of GPT-4o."
+  },
+  "phi3": {
+    "description": "Phi-3 is een lichtgewicht open model van Microsoft, geschikt voor efficiënte integratie en grootschalige kennisinferentie."
+  },
+  "phi3:14b": {
+    "description": "Phi-3 is een lichtgewicht open model van Microsoft, geschikt voor efficiënte integratie en grootschalige kennisinferentie."
+  },
+  "pixtral-12b-2409": {
+    "description": "Het Pixtral model toont sterke capaciteiten in taken zoals grafiek- en beeldbegrip, documentvraag-en-antwoord, multimodale redenering en instructievolging, en kan afbeeldingen met natuurlijke resolutie en beeldverhouding verwerken, evenals een onbeperkt aantal afbeeldingen in een lange contextvenster van maximaal 128K tokens."
+  },
+  "qwen-coder-turbo-latest": {
+    "description": "Het Tongyi Qianwen codeermodel."
+  },
+  "qwen-long": {
+    "description": "Qwen is een grootschalig taalmodel dat lange tekstcontexten ondersteunt, evenals dialoogfunctionaliteit op basis van lange documenten en meerdere documenten."
+  },
+  "qwen-math-plus-latest": {
+    "description": "Het Tongyi Qianwen wiskundemodel is speciaal ontworpen voor het oplossen van wiskundige problemen."
+  },
+  "qwen-math-turbo-latest": {
+    "description": "Het Tongyi Qianwen wiskundemodel is speciaal ontworpen voor het oplossen van wiskundige problemen."
+  },
+  "qwen-max-latest": {
+    "description": "Het Tongyi Qianwen model met een schaal van honderden miljarden, ondersteunt invoer in verschillende talen, waaronder Chinees en Engels, en is de API-model achter de huidige Tongyi Qianwen 2.5 productversie."
+  },
+  "qwen-plus-latest": {
+    "description": "De verbeterde versie van het Tongyi Qianwen supergrote taalmodel ondersteunt invoer in verschillende talen, waaronder Chinees en Engels."
+  },
+  "qwen-turbo-latest": {
+    "description": "De Tongyi Qianwen supergrote taalmodel ondersteunt invoer in verschillende talen, waaronder Chinees en Engels."
+  },
+  "qwen-vl-chat-v1": {
+    "description": "Qwen VL ondersteunt flexibele interactiemethoden, inclusief meerdere afbeeldingen, meerdere rondes van vraag en antwoord, en creatiecapaciteiten."
+  },
+  "qwen-vl-max": {
+    "description": "Qwen is een grootschalig visueel taalmodel. In vergelijking met de verbeterde versie biedt het een verdere verbetering van de visuele redeneercapaciteit en de naleving van instructies, met een hoger niveau van visuele waarneming en cognitie."
+  },
+  "qwen-vl-plus": {
+    "description": "Qwen is een verbeterde versie van het grootschalige visuele taalmodel. Het verbetert aanzienlijk de detailherkenning en tekstherkenning, en ondersteunt afbeeldingen met een resolutie van meer dan een miljoen pixels en een willekeurige beeldverhouding."
+  },
+  "qwen-vl-v1": {
+    "description": "Geïnitieerd met het Qwen-7B taalmodel, voegt het een afbeeldingsmodel toe, met een invoerresolutie van 448 voor het voorgetrainde model."
+  },
+  "qwen/qwen-2-7b-instruct:free": {
+    "description": "Qwen2 is een gloednieuwe serie grote taalmodellen met sterkere begrip- en generatiecapaciteiten."
+  },
+  "qwen2": {
+    "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
+  },
+  "qwen2.5-14b-instruct": {
+    "description": "Het 14B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-32b-instruct": {
+    "description": "Het 32B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-72b-instruct": {
+    "description": "Het 72B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-7b-instruct": {
+    "description": "Het 7B model van Tongyi Qianwen 2.5 is open source beschikbaar."
+  },
+  "qwen2.5-coder-1.5b-instruct": {
+    "description": "De open source versie van het Tongyi Qianwen codeermodel."
+  },
+  "qwen2.5-coder-7b-instruct": {
+    "description": "De open source versie van het Tongyi Qianwen codeermodel."
+  },
+  "qwen2.5-math-1.5b-instruct": {
+    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
+  },
+  "qwen2.5-math-72b-instruct": {
+    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
+  },
+  "qwen2.5-math-7b-instruct": {
+    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
+  },
+  "qwen2:0.5b": {
+    "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
+  },
+  "qwen2:1.5b": {
+    "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
+  },
+  "qwen2:72b": {
+    "description": "Qwen2 is Alibaba's nieuwe generatie grootschalig taalmodel, ondersteunt diverse toepassingsbehoeften met uitstekende prestaties."
+  },
+  "solar-1-mini-chat": {
+    "description": "Solar Mini is een compact LLM dat beter presteert dan GPT-3.5, met sterke meertalige capaciteiten, ondersteunt Engels en Koreaans, en biedt een efficiënte en compacte oplossing."
+  },
+  "solar-1-mini-chat-ja": {
+    "description": "Solar Mini (Ja) breidt de mogelijkheden van Solar Mini uit, met een focus op de Japanse taal, terwijl het ook efficiënt en uitstekend presteert in het gebruik van Engels en Koreaans."
+  },
+  "solar-pro": {
+    "description": "Solar Pro is een zeer intelligent LLM dat is uitgebracht door Upstage, gericht op instructievolging met één GPU, met een IFEval-score van boven de 80. Momenteel ondersteunt het Engels, met een officiële versie die gepland staat voor november 2024, die de taalondersteuning en contextlengte zal uitbreiden."
+  },
+  "step-1-128k": {
+    "description": "Biedt een balans tussen prestaties en kosten, geschikt voor algemene scenario's."
+  },
+  "step-1-256k": {
+    "description": "Heeft ultra-lange contextverwerkingscapaciteiten, vooral geschikt voor lange documentanalyse."
+  },
+  "step-1-32k": {
+    "description": "Ondersteunt gesprekken van gemiddelde lengte, geschikt voor verschillende toepassingsscenario's."
+  },
+  "step-1-8k": {
+    "description": "Klein model, geschikt voor lichte taken."
+  },
+  "step-1-flash": {
+    "description": "Hogesnelheidsmodel, geschikt voor realtime gesprekken."
+  },
+  "step-1v-32k": {
+    "description": "Ondersteunt visuele invoer, verbetert de multimodale interactie-ervaring."
+  },
+  "step-1v-8k": {
+    "description": "Klein visueel model, geschikt voor basis tekst- en afbeeldingtaken."
+  },
+  "step-2-16k": {
+    "description": "Ondersteunt grootschalige contextinteracties, geschikt voor complexe gespreksscenario's."
+  },
+  "taichu_llm": {
+    "description": "Het Zido Tai Chu-taalmodel heeft een sterke taalbegripcapaciteit en kan tekstcreatie, kennisvragen, codeprogrammering, wiskundige berekeningen, logische redenering, sentimentanalyse, tekstsamenvattingen en meer aan. Het combineert innovatief grote data voortraining met rijke kennis uit meerdere bronnen, door algoritmische technologie continu te verfijnen en voortdurend nieuwe kennis op te nemen uit enorme tekstdata op het gebied van vocabulaire, structuur, grammatica en semantiek, waardoor de modelprestaties voortdurend evolueren. Het biedt gebruikers gemakkelijkere informatie en diensten en een meer intelligente ervaring."
+  },
+  "togethercomputer/StripedHyena-Nous-7B": {
+    "description": "StripedHyena Nous (7B) biedt verbeterde rekenkracht door middel van efficiënte strategieën en modelarchitectuur."
+  },
+  "upstage/SOLAR-10.7B-Instruct-v1.0": {
+    "description": "Upstage SOLAR Instruct v1 (11B) is geschikt voor verfijnde instructietaken en biedt uitstekende taalverwerkingscapaciteiten."
+  },
+  "wizardlm2": {
+    "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, inferentie en intelligente assistentie."
+  },
+  "wizardlm2:8x22b": {
+    "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, inferentie en intelligente assistentie."
+  },
+  "yi-large": {
+    "description": "Een nieuw model met honderden miljarden parameters, biedt superieure vraag- en tekstgeneratiecapaciteiten."
+  },
+  "yi-large-fc": {
+    "description": "Bouwt voort op het yi-large model en versterkt de mogelijkheden voor functie-aanroepen, geschikt voor verschillende zakelijke scenario's die agent- of workflowopbouw vereisen."
+  },
+  "yi-large-preview": {
+    "description": "Vroegere versie, aanbevolen om yi-large (nieuwe versie) te gebruiken."
+  },
+  "yi-large-rag": {
+    "description": "Een geavanceerde service op basis van het yi-large model, die retrieval en generatietechnologie combineert om nauwkeurige antwoorden te bieden en realtime informatie van het hele web te doorzoeken."
+  },
+  "yi-large-turbo": {
+    "description": "Biedt een uitstekende prijs-kwaliteitverhouding en prestaties. Voert een nauwkeurige afstemming uit op basis van prestaties, redeneersnelheid en kosten."
+  },
+  "yi-medium": {
+    "description": "Gemiddeld formaat model met geoptimaliseerde afstemming, biedt een evenwichtige prijs-kwaliteitverhouding. Diep geoptimaliseerde instructievolgcapaciteiten."
+  },
+  "yi-medium-200k": {
+    "description": "200K ultra-lange contextvenster, biedt diepgaand begrip en generatiecapaciteiten voor lange teksten."
+  },
+  "yi-spark": {
+    "description": "Klein maar krachtig, een lichtgewicht en snelle model. Biedt versterkte wiskundige berekeningen en codeercapaciteiten."
+  },
+  "yi-vision": {
+    "description": "Model voor complexe visuele taken, biedt hoge prestaties in beeldbegrip en analyse."
+  }
+}

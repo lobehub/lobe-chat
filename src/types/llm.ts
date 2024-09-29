@@ -1,5 +1,7 @@
 import { ReactNode } from 'react';
 
+export type ModelPriceCurrency = 'CNY' | 'USD';
+
 export interface ChatModelCard {
   /**
    * only used in azure
@@ -33,10 +35,29 @@ export interface ChatModelCard {
    */
   legacy?: boolean;
   maxOutput?: number;
+  pricing?: {
+    cachedInput?: number;
+    /**
+     * the currency of the pricing
+     * @default USD
+     */
+    currency?: ModelPriceCurrency;
+    /**
+     * the input pricing, e.g. $1 / 1M tokens
+     */
+    input?: number;
+    /**
+     * the output pricing, e.g. $2 / 1M tokens
+     */
+    output?: number;
+    writeCacheInput?: number;
+  };
+  releasedAt?: string;
   /**
    * the context window (or input + output tokens limit)
    */
   tokens?: number;
+
   /**
    *  whether model supports vision
    */
@@ -61,6 +82,7 @@ export interface ModelProviderCard {
    * @default false
    */
   defaultShowBrowserRequest?: boolean;
+  description?: string;
   /**
    * some provider server like stepfun and aliyun don't support browser request,
    * So we should disable it
@@ -80,6 +102,10 @@ export interface ModelProviderCard {
     showModelFetcher?: boolean;
   };
   /**
+   * the url show the all models in the provider
+   */
+  modelsUrl?: string;
+  /**
    * the name show for end user
    */
   name: string;
@@ -90,16 +116,21 @@ export interface ModelProviderCard {
         title?: string;
       }
     | false;
+
   /**
    * whether show api key in the provider config
    * so provider like ollama don't need api key field
    */
   showApiKey?: boolean;
-
   /**
    * whether to smoothing the output
    */
   smoothing?: SmoothingParams;
+
+  /**
+   * provider's website url
+   */
+  url: string;
 }
 
 // 语言模型的设置参数

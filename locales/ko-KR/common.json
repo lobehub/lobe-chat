@@ -9,7 +9,7 @@
       "title": "환영합니다 {{name}}"
     }
   },
-  "appInitializing": "앱을 시작하는 중입니다. 잠시 기다려주세요...",
+  "appInitializing": "앱 초기화 중...",
   "autoGenerate": "자동 생성",
   "autoGenerateTooltip": "힌트 단어를 기반으로 에이전트 설명을 자동으로 완성합니다",
   "autoGenerateTooltipDisabled": "자동 완성 기능을 사용하려면 툴팁을 입력하십시오",
@@ -195,8 +195,8 @@
   },
   "tab": {
     "chat": "채팅",
+    "discover": "발견하기",
     "files": "파일",
-    "market": "발견",
     "me": "나",
     "setting": "설정"
   },

@@ -245,7 +245,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | 实时股票、加密货币和其他投资数据。<br/>`股票` `分析`                                                               |
 | [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>         | 搜索聚合服务，专为 LLMs 设计<br/>`web` `search`                                                                    |
 
-> 📊 Total plugins: [<kbd>**50**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**49**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -273,14 +273,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                     | 助手说明                                                                                        |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- |
-| [AI 代理生成器](https://chat-preview.lobehub.com/market?agent=ai-agent-generator)<br/><sup>By **[xyftw](https://github.com/xyftw)** on **2024-09-10**</sup>  | 擅长创建满足需求的 AI 代理角色描述。<br/>`ai-agent` `角色创建`                                  |
-| [孤独的朋友](https://chat-preview.lobehub.com/market?agent=meu)<br/><sup>By **[adminewacc](https://github.com/adminewacc)** on **2024-09-10**</sup>          | 擅长安慰和支持朋友<br/>`友谊` `悲伤` `支持`                                                     |
-| [NetMaster](https://chat-preview.lobehub.com/market?agent=net-master)<br/><sup>By **[erhuoyan](https://github.com/erhuoyan)** on **2024-09-10**</sup>        | 网络工程师：专业网络拓扑搭建与管理<br/>`网络工程师` `网络配置` `网络管理` `网络拓扑` `网络安全` |
-| [HTML to React](https://chat-preview.lobehub.com/market?agent=web-react)<br/><sup>By **[xingwang02](https://github.com/xingwang02)** on **2024-09-10**</sup> | 输入 HTML 片段，转化为 React 组件<br/>`react、-html`                                            |
+| 最近新增                                                                                                                                                                         | 助手说明                                                                                                              |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [合同条款精炼师 v1.0](https://chat-preview.lobehub.com/market?agent=business-contract)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>           | 输出: {优化合同条款，专业简洁表达}<br/>`合同优化` `法律咨询` `文案撰写` `专业术语` `项目管理`                         |
+| [会议助手 v1.0](https://chat-preview.lobehub.com/market?agent=meeting)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>                           | 专业会议汇报助手，提炼会议要点成汇报句子<br/>`会议汇报` `撰写` `沟通` `工作流程` `专业技能`                           |
+| [稳定专辑封面提示生成器](https://chat-preview.lobehub.com/market?agent=title-bpm-stimmung)<br/><sup>By **[MellowTrixX](https://github.com/MellowTrixX)** on **2024-09-24**</sup> | 专业的平面设计师，专注于为旋律科技音乐专辑创建视觉概念和设计。<br/>`专辑封面` `提示` `稳定扩散` `封面设计` `封面提示` |
+| [广告文案创作大师](https://chat-preview.lobehub.com/market?agent=advertising-copywriting-master)<br/><sup>By **[leter](https://github.com/leter)** on **2024-09-23**</sup>       | 擅长产品功能分析与用户价值观广告文案创作<br/>`广告文案` `用户价值观` `营销策略`                                       |
 
-> 📊 Total agents: [<kbd>**327**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**392**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

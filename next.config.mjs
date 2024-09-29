@@ -1,6 +1,6 @@
-import nextPWA from '@ducanh2912/next-pwa';
 import analyzer from '@next/bundle-analyzer';
 import { withSentryConfig } from '@sentry/nextjs';
+import withSerwistInit from '@serwist/next';
 
 const isProd = process.env.NODE_ENV === 'production';
 const buildWithDocker = process.env.DOCKER === 'true';
@@ -108,6 +108,53 @@ const nextConfig = {
   reactStrictMode: true,
   redirects: async () => [
     {
+      destination: '/sitemap-index.xml',
+      permanent: true,
+      source: '/sitemap.xml',
+    },
+    {
+      destination: '/sitemap-index.xml',
+      permanent: true,
+      source: '/sitemap-0.xml',
+    },
+    {
+      destination: '/manifest.webmanifest',
+      permanent: true,
+      source: '/manifest.json',
+    },
+    {
+      destination: '/discover/assistant/:slug',
+      has: [
+        {
+          key: 'agent',
+          type: 'query',
+          value: '(?<slug>.*)',
+        },
+      ],
+      permanent: true,
+      source: '/market',
+    },
+    {
+      destination: '/discover/assistants',
+      permanent: true,
+      source: '/discover/assistant',
+    },
+    {
+      destination: '/discover/models',
+      permanent: true,
+      source: '/discover/model',
+    },
+    {
+      destination: '/discover/plugins',
+      permanent: true,
+      source: '/discover/plugin',
+    },
+    {
+      destination: '/discover/providers',
+      permanent: true,
+      source: '/discover/provider',
+    },
+    {
       destination: '/settings/common',
       permanent: true,
       source: '/settings',
@@ -150,12 +197,10 @@ const noWrapper = (config) => config;
 const withBundleAnalyzer = process.env.ANALYZE === 'true' ? analyzer() : noWrapper;
 
 const withPWA = isProd
-  ? nextPWA({
-      dest: 'public',
-      register: true,
-      workboxOptions: {
-        skipWaiting: true,
-      },
+  ? withSerwistInit({
+      register: false,
+      swDest: 'public/sw.js',
+      swSrc: 'src/app/sw.ts',
     })
   : noWrapper;
 

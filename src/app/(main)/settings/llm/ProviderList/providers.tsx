@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import {
+  Ai21ProviderCard,
   Ai360ProviderCard,
   AnthropicProviderCard,
   BaichuanProviderCard,
@@ -9,6 +10,7 @@ import {
   FireworksAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HunyuanProviderCard,
   MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
@@ -29,6 +31,7 @@ import {
 import { ProviderItem } from '../type';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
+import { useGithubProvider } from './Github';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 
@@ -37,6 +40,7 @@ export const useProviderList = (): ProviderItem[] => {
   const OllamaProvider = useOllamaProvider();
   const OpenAIProvider = useOpenAIProvider();
   const BedrockProvider = useBedrockProvider();
+  const GithubProvider = useGithubProvider();
 
   return useMemo(
     () => [
@@ -49,14 +53,17 @@ export const useProviderList = (): ProviderItem[] => {
       DeepSeekProviderCard,
       DoubaoProviderCard,
       OpenRouterProviderCard,
-      GroqProviderCard,
+      GithubProvider,
       NovitaProviderCard,
-      PerplexityProviderCard,
-      MistralProviderCard,
       TogetherAIProviderCard,
       FireworksAIProviderCard,
+      GroqProviderCard,
+      PerplexityProviderCard,
+      MistralProviderCard,
+      Ai21ProviderCard,
       UpstageProviderCard,
       QwenProviderCard,
+      HunyuanProviderCard,
       SparkProviderCard,
       ZhiPuProviderCard,
       ZeroOneProviderCard,
@@ -65,9 +72,9 @@ export const useProviderList = (): ProviderItem[] => {
       BaichuanProviderCard,
       MinimaxProviderCard,
       Ai360ProviderCard,
-      SiliconCloudProviderCard,
       TaichuProviderCard,
+      SiliconCloudProviderCard,
     ],
-    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider],
+    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider],
   );
 };

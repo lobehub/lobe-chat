@@ -16,7 +16,8 @@ export default {
   fetchErrorDetail: '错误详情',
   notFound: {
     backHome: '返回首页',
-    desc: '我们找不到你正在寻找的页面，请检查链接是否正确',
+    check: '请检查你的 URL 是否正确',
+    desc: '我们找不到你寻找的页面',
     title: '进入了未知领域？',
   },
   pluginSettings: {
@@ -105,6 +106,9 @@ export default {
     FreePlanLimit: '当前为免费用户，无法使用该功能，请升级到付费计划后继续使用',
     SubscriptionPlanLimit:
       '您的订阅额度已用尽，无法使用该功能，请升级到更高计划，或购买资源包后继续使用',
+
+    // Github Token
+    InvalidGithubToken: 'Github PAT 不正确或为空，请检查 Github PAT 后重试',
 
     /* eslint-enable */
   },

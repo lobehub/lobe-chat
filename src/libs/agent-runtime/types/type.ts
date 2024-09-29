@@ -22,6 +22,7 @@ export interface CreateChatCompletionOptions {
 }
 
 export enum ModelProvider {
+  Ai21 = 'ai21',
   Ai360 = 'ai360',
   Anthropic = 'anthropic',
   Azure = 'azure',
@@ -30,8 +31,10 @@ export enum ModelProvider {
   DeepSeek = 'deepseek',
   Doubao = 'doubao',
   FireworksAI = 'fireworksai',
+  Github = 'github',
   Google = 'google',
   Groq = 'groq',
+  Hunyuan = 'hunyuan',
   Minimax = 'minimax',
   Mistral = 'mistral',
   Moonshot = 'moonshot',

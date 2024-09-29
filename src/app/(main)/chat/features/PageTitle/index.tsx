@@ -3,15 +3,16 @@
 import { memo } from 'react';
 
 import PageTitle from '@/components/PageTitle';
+import { useChatStore } from '@/store/chat';
+import { topicSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 
 const Title = memo(() => {
-  const [avatar, title] = useSessionStore((s) => [
-    sessionMetaSelectors.currentAgentAvatar(s),
-    sessionMetaSelectors.currentAgentTitle(s),
-  ]);
+  const agentTitle = useSessionStore(sessionMetaSelectors.currentAgentTitle);
 
-  return <PageTitle title={[avatar, title].filter(Boolean).join(' ')} />;
+  const topicTitle = useChatStore((s) => topicSelectors.currentActiveTopic(s)?.title);
+  return <PageTitle title={[topicTitle, agentTitle].filter(Boolean).join(' · ')} />;
 });
+
 export default Title;
