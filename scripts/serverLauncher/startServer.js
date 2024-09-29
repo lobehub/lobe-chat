@@ -174,7 +174,7 @@ const runServer = async () => {
 
         await runScript(DB_MIGRATION_SCRIPT_PATH);
       } catch (err) {
-        if (error.code === 'ENOENT') {
+        if (err.code === 'ENOENT') {
           console.log(`⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure to migrate database manually.`);
           console.log('-------------------------------------');
         } else {
