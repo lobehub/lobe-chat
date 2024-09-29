@@ -102,7 +102,7 @@ const resolveHostIP = async (host, version = 4) => {
 
     return address;
   } catch (err) {
-    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server.`);
+    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server:`);
     console.error(err);
     process.exit(1);
   }
