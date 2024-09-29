@@ -2,7 +2,14 @@ import OpenAI, { ClientOptions } from 'openai';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  EmbeddingItem,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
+  ModelProvider,
+} from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
@@ -62,6 +69,34 @@ export class LobeZhipuAI implements LobeRuntimeAI {
       return StreamingResponse(OpenAIStream(prod, options?.callback), {
         headers: options?.headers,
       });
+    } catch (error) {
+      const { errorResult, RuntimeError } = handleOpenAIError(error);
+
+      const errorType = RuntimeError || AgentRuntimeErrorType.ProviderBizError;
+      let desensitizedEndpoint = this.baseURL;
+
+      if (this.baseURL !== DEFAULT_BASE_URL) {
+        desensitizedEndpoint = desensitizeUrl(this.baseURL);
+      }
+      throw AgentRuntimeError.chat({
+        endpoint: desensitizedEndpoint,
+        error: errorResult,
+        errorType,
+        provider: ModelProvider.ZhiPu,
+      });
+    }
+  }
+
+  async embeddings(
+    payload: EmbeddingsPayload,
+    options?: EmbeddingsOptions,
+  ): Promise<EmbeddingItem[]> {
+    try {
+      const res = await this.client.embeddings.create(
+        { ...payload, user: options?.user },
+        { headers: options?.headers, signal: options?.signal },
+      );
+      return res.data;
     } catch (error) {
       const { errorResult, RuntimeError } = handleOpenAIError(error);
 
