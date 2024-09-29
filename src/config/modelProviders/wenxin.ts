@@ -6,7 +6,7 @@ const BaiduWenxin: ModelProviderCard = {
     {
       displayName: 'ERNIE-4.0-8K',
       enabled: true,
-      id: 'ERNIE-4.0-8K',
+      id: 'ERNIE-4.0-8K0',
       tokens: 8192,
     },
     {
