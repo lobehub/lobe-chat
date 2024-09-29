@@ -1,5 +1,6 @@
 import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 
+import Ai21Provider from './ai21';
 import Ai360Provider from './ai360';
 import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
@@ -8,8 +9,10 @@ import BedrockProvider from './bedrock';
 import DeepSeekProvider from './deepseek';
 import DoubaoProvider from './doubao';
 import FireworksAIProvider from './fireworksai';
+import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
+import HunyuanProvider from './hunyuan';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
@@ -36,6 +39,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   DeepSeekProvider.chatModels,
   GoogleProvider.chatModels,
   GroqProvider.chatModels,
+  GithubProvider.chatModels,
   MinimaxProvider.chatModels,
   MistralProvider.chatModels,
   MoonshotProvider.chatModels,
@@ -54,6 +58,8 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   SiliconCloudProvider.chatModels,
   UpstageProvider.chatModels,
   SparkProvider.chatModels,
+  Ai21Provider.chatModels,
+  HunyuanProvider.chatModels,
   DoubaoProvider.chatModels,
 ].flat();
 
@@ -66,15 +72,18 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   GoogleProvider,
   DeepSeekProvider,
   OpenRouterProvider,
-  GroqProvider,
+  GithubProvider,
   NovitaProvider,
-  PerplexityProvider,
-  MistralProvider,
   TogetherAIProvider,
   FireworksAIProvider,
+  GroqProvider,
+  PerplexityProvider,
+  MistralProvider,
+  Ai21Provider,
   UpstageProvider,
   QwenProvider,
   DoubaoProvider,
+  HunyuanProvider,
   SparkProvider,
   ZhiPuProvider,
   ZeroOneProvider,
@@ -83,8 +92,8 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BaichuanProvider,
   MinimaxProvider,
   Ai360Provider,
-  SiliconCloudProvider,
   TaichuProvider,
+  SiliconCloudProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -96,6 +105,7 @@ export const isProviderDisableBroswerRequest = (id: string) => {
   return !!provider;
 };
 
+export { default as Ai21ProviderCard } from './ai21';
 export { default as Ai360ProviderCard } from './ai360';
 export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
@@ -104,8 +114,10 @@ export { default as BedrockProviderCard } from './bedrock';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as DoubaoProviderCard } from './doubao';
 export { default as FireworksAIProviderCard } from './fireworksai';
+export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
+export { default as HunyuanProviderCard } from './hunyuan';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';
