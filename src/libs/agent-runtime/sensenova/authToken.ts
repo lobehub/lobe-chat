@@ -2,9 +2,9 @@ import CryptoJS from 'crypto-js';
 
 const base64UrlEncode = (obj: object) => {
     return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(JSON.stringify(obj)))
-      .replace(/=/g, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_')
+      .replaceAll('=', '')
+      .replaceAll('+', '-')
+      .replaceAll('/', '_')
 }
 
 // https://console.sensecore.cn/help/docs/model-as-a-service/nova/overview/Authorization
@@ -24,9 +24,9 @@ export const generateJwtTokenSenseNova = (accessKeyID: string = '', accessKeySec
 
       const signature = CryptoJS.HmacSHA256(data, accessKeySecret)
         .toString(CryptoJS.enc.Base64)
-        .replace(/=/g, '')
-        .replace(/\+/g, '-')
-        .replace(/\//g, '_')
+        .replaceAll('=', '')
+        .replaceAll('+', '-')
+        .replaceAll('/', '_')
 
       const apiKey = `${ data }.${ signature }`
 
