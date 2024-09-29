@@ -147,6 +147,13 @@ const Groq: ModelProviderCard = {
       },
       tokens: 32_768,
     },
+    {
+      description: 'LLaVA 1.5 7B 提供视觉处理能力融合，通过视觉信息输入生成复杂输出。',
+      displayName: 'LLaVA 1.5 7B',
+      id: 'llava-v1.5-7b-4096-preview',
+      tokens: 4096,
+      vision: true,
+    },
   ],
   checkModel: 'llama-3.1-8b-instant',
   description:
