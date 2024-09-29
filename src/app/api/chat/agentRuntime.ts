@@ -10,6 +10,8 @@ import {
 import { AgentRuntime, ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
 import { TraceClient } from '@/libs/traces';
 
+import { generateJwtTokenSenseNova } from '@/libs/agent-runtime/sensenova/authToken';
+
 import apiKeyManager from './apiKeyManager';
 
 export interface AgentChatOptions {
@@ -256,7 +258,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
     case ModelProvider.SenseNova: {
       const { SENSENOVA_API_KEY } = getLLMConfig();
 
-      const apiKey = apiKeyManager.pick(payload?.apiKey || SENSENOVA_API_KEY);
+      const sensenovaAccessKey = apiKeyManager.pick(payload?.apiKey || SENSENOVA_API_KEY);
+
+      // TODO: remove this after split accesskeyID & accesskeySecret (Only for functional verification)
+      const [ sensenovaAccessKeyID, sensenovaAccessKeySecret ] = sensenovaAccessKey.split( ':' );
+
+      const apiKey = generateJwtTokenSenseNova(sensenovaAccessKeyID, sensenovaAccessKeySecret, 15, 5);
 
       return { apiKey };
     }
