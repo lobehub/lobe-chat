@@ -173,14 +173,20 @@ const runServer = async () => {
         await fs.access(DB_MIGRATION_SCRIPT_PATH);
 
         await runScript(DB_MIGRATION_SCRIPT_PATH);
-      } catch (error) {
-        console.log(`⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure migrate database manually.`);
-        console.log('-------------------------------------');
+      } catch (err) {
+        if (error.code === 'ENOENT') {
+          console.log(`⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure to migrate database manually.`);
+          console.log('-------------------------------------');
+        } else {
+          console.error('❌ Error during DB migration:');
+          console.error(err);
+          process.exit(1);
+        }
       }
 
       await checkTLSConnections();
     } catch (err) {
-      console.error('❌ Error during DB migration or TLS connection check:');
+      console.error('❌ Error during TLS connection check:');
       console.error(err);
       process.exit(1);
     }
