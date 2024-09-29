@@ -168,7 +168,13 @@ const runServer = async () => {
 
   if (process.env.DATABASE_DRIVER) {
     try {
-      await runScript(DB_MIGRATION_SCRIPT_PATH);
+      if (!process.env.SKIP_DB_MIGRATION) {
+        await runScript(DB_MIGRATION_SCRIPT_PATH);
+      } else {
+        console.log(`⚠️ DB Migration: Skipping DB migration. Ensure migrate database manually.`);
+        console.log('-------------------------------------');
+      }
+
       await checkTLSConnections();
     } catch (err) {
       console.error('❌ Error during DB migration or TLS connection check:', err);
