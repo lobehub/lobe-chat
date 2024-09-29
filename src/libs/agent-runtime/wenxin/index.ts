@@ -1,6 +1,7 @@
 import { ChatCompletion } from '@baiducloud/qianfan';
-import type QianFanClient from '@baiducloud/qianfan/src/ChatCompletion/index';
 
+// 如果引入了这个类型，那么在跑 type-check 的 tsc 检查中就会抛错，大无语
+// import type QianFanClient from '@baiducloud/qianfan/src/ChatCompletion/index';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { LobeRuntimeAI } from '../BaseAI';
@@ -24,7 +25,7 @@ export interface LobeWenxinAIParams {
 }
 
 export class LobeWenxinAI implements LobeRuntimeAI {
-  private client: QianFanClient;
+  private client: any;
   baseURL?: string;
 
   constructor({ accessKey, baseURL, secretKey }: LobeWenxinAIParams = {}) {
