@@ -1,6 +1,7 @@
 import { getLLMConfig } from '@/config/llm';
 import { JWTPayload } from '@/const/auth';
 import { INBOX_SESSION_ID } from '@/const/session';
+import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings/llm';
 import {
   LOBE_CHAT_OBSERVATION_ID,
   LOBE_CHAT_TRACE_ID,
@@ -16,6 +17,11 @@ export interface AgentChatOptions {
   enableTrace?: boolean;
   provider: string;
   trace?: TracePayload;
+}
+
+export interface SplitEmbeddingModelObj {
+  modelId: string;
+  provider: string;
 }
 
 /**
@@ -177,4 +183,17 @@ export const createTraceOptions = (
       [LOBE_CHAT_TRACE_ID]: trace?.id,
     },
   };
+};
+
+export const splitEmbeddingModelId = (): SplitEmbeddingModelObj => {
+  const splitEmbeddingModelObj: SplitEmbeddingModelObj = {
+    modelId: '',
+    provider: '',
+  };
+  let spli = DEFAULT_EMBEDDING_MODEL ? DEFAULT_EMBEDDING_MODEL.split('/') : [];
+  if (spli.length === 2) {
+    splitEmbeddingModelObj.provider = spli[0];
+    splitEmbeddingModelObj.modelId = spli[1];
+  }
+  return splitEmbeddingModelObj;
 };
