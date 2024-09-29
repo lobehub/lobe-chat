@@ -102,7 +102,8 @@ const resolveHostIP = async (host, version = 4) => {
 
     return address;
   } catch (err) {
-    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server.`, err);
+    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server.`);
+    console.error(err);
     process.exit(1);
   }
 };
@@ -177,7 +178,8 @@ const runServer = async () => {
 
       await checkTLSConnections();
     } catch (err) {
-      console.error('❌ Error during DB migration or TLS connection check:', err);
+      console.error('❌ Error during DB migration or TLS connection check:');
+      console.error(err);
       process.exit(1);
     }
   }
