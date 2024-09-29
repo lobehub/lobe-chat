@@ -50,6 +50,7 @@ describe('mapFeatureFlagsEnvToState', () => {
       showDalle: true,
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
+      modelTagUseModelName: false,
     };
 
     const mappedState = mapFeatureFlagsEnvToState(config);
