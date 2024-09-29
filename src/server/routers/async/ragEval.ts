@@ -2,9 +2,12 @@ import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
+import {
+  initAgentRuntimeWithUserPayload,
+  splitEmbeddingModelId,
+} from '@/app/api/chat/agentRuntime';
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
-import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_MODEL } from '@/const/settings';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
@@ -13,7 +16,6 @@ import {
   EvalEvaluationModel,
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
-import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
@@ -40,6 +42,8 @@ export const ragEvalRouter = router({
     .input(
       z.object({
         evalRecordId: z.number(),
+        model: z.string().default(splitEmbeddingModelId().modelId),
+        provider: z.string().default(splitEmbeddingModelId().provider),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -51,10 +55,7 @@ export const ragEvalRouter = router({
 
       const now = Date.now();
       try {
-        const agentRuntime = await initAgentRuntimeWithUserPayload(
-          ModelProvider.OpenAI,
-          ctx.jwtPayload,
-        );
+        const agentRuntime = await initAgentRuntimeWithUserPayload(input.provider, ctx.jwtPayload);
 
         const { question, languageModel, embeddingModel } = evalRecord;
 
@@ -66,7 +67,7 @@ export const ragEvalRouter = router({
           const embeddings = await agentRuntime.embeddings({
             dimensions: 1024,
             input: question,
-            model: !!embeddingModel ? embeddingModel : DEFAULT_EMBEDDING_MODEL,
+            model: input.model,
           });
 
           const embeddingId = await ctx.embeddingModel.create({
