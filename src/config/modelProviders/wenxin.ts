@@ -75,7 +75,9 @@ const BaiduWenxin: ModelProviderCard = {
   checkModel: 'ERNIE-4.0-8K',
   disableBrowserRequest: true,
   id: 'wenxin',
+  modelsUrl: 'https://cloud.baidu.com/doc/WENXINWORKSHOP/s/Nlks5zkzu#%E5%AF%B9%E8%AF%9Dchat',
   name: 'Wenxin',
+  url: 'https://cloud.baidu.com/wenxin.html',
 };
 
 export default BaiduWenxin;

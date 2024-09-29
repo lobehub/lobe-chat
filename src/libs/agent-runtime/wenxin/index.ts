@@ -1,16 +1,21 @@
 import { ChatCompletion } from '@baiducloud/qianfan';
+import type QianFanClient from '@baiducloud/qianfan/src/ChatCompletion/index';
 
-// TODO: 没法直接引用该包的类型，会抛错
-// import type QianFanClient from '@baiducloud/qianfan/src/ChatCompletion/index';
-import { debugStream } from '@/libs/agent-runtime/utils/debugStream';
-import { StreamingResponse } from '@/libs/agent-runtime/utils/response';
-import { WenxinResultToStream, WenxinStream } from '@/libs/agent-runtime/utils/streams/wenxin';
+import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
+import { debugStream } from '../utils/debugStream';
+import { StreamingResponse } from '../utils/response';
+import { WenxinResultToStream, WenxinStream } from '../utils/streams/wenxin';
 import { ChatResp } from './type';
+
+interface ChatErrorCode {
+  error_code: number;
+  error_msg: string;
+}
 
 export interface LobeWenxinAIParams {
   accessKey?: string;
@@ -19,10 +24,10 @@ export interface LobeWenxinAIParams {
 }
 
 export class LobeWenxinAI implements LobeRuntimeAI {
-  private client: any;
+  private client: QianFanClient;
   baseURL?: string;
 
-  constructor({ accessKey, baseURL, secretKey }: LobeWenxinAIParams) {
+  constructor({ accessKey, baseURL, secretKey }: LobeWenxinAIParams = {}) {
     if (!accessKey || !secretKey)
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
@@ -34,22 +39,57 @@ export class LobeWenxinAI implements LobeRuntimeAI {
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
-    const result = await this.client.chat(
-      { messages: payload.messages as any, stream: true, user_id: options?.user },
-      payload.model,
-    );
+    try {
+      const result = await this.client.chat(
+        { messages: payload.messages as any, stream: true, user_id: options?.user },
+        payload.model,
+      );
 
-    const wenxinStream = WenxinResultToStream(result as AsyncIterable<ChatResp>);
+      const wenxinStream = WenxinResultToStream(result as AsyncIterable<ChatResp>);
 
-    const [prod, useForDebug] = wenxinStream.tee();
+      const [prod, useForDebug] = wenxinStream.tee();
 
-    if (process.env.DEBUG_WENXIN_CHAT_COMPLETION === '1') {
-      debugStream(useForDebug).catch();
+      if (process.env.DEBUG_WENXIN_CHAT_COMPLETION === '1') {
+        debugStream(useForDebug).catch();
+      }
+
+      const stream = WenxinStream(prod, options?.callback);
+
+      // Respond with the stream
+      return StreamingResponse(stream, { headers: options?.headers });
+    } catch (e) {
+      const err = e as Error;
+
+      const error: ChatErrorCode | undefined = safeParseJSON(err.message);
+
+      if (!error) {
+        throw AgentRuntimeError.createError(AgentRuntimeErrorType.AgentRuntimeError, {
+          message: err.message,
+          name: err.name,
+        });
+      }
+
+      // 文心一言错误码
+      // https://cloud.baidu.com/doc/WENXINWORKSHOP/s/tlmyncueh
+      switch (error.error_code) {
+        // Invalid API key or access key
+        case 100:
+        case 13:
+        case 14: {
+          throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey, error);
+        }
+
+        // quota limit
+        case 4:
+        case 17:
+        case 18:
+        case 19: {
+          throw AgentRuntimeError.createError(AgentRuntimeErrorType.QuotaLimitReached, error);
+        }
+      }
+
+      throw AgentRuntimeError.createError(AgentRuntimeErrorType.ProviderBizError, error);
     }
-    const stream = WenxinStream(prod, options?.callback);
-
-    // Respond with the stream
-    return StreamingResponse(stream, { headers: options?.headers });
   }
 }
 
