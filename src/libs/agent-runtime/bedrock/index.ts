@@ -68,9 +68,9 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     payload: EmbeddingsPayload,
     options?: EmbeddingsOptions,
   ): Promise<EmbeddingItem[]> {
-    const input = payload.input as string[];
+    const input = Array.isArray(payload.input) ? payload.input : [payload.input];
     const promises = input.map((inputText: string, index: number) =>
-      this.invokeTitanModel(
+      this.invokeEmbeddingModel(
         {
           dimensions: payload.dimensions,
           index: index,
@@ -84,7 +84,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     return embeddings;
   }
 
-  private invokeTitanModel = async (
+  private invokeEmbeddingModel = async (
     payload: BedRockEmbeddingsParams,
     options?: EmbeddingsOptions,
   ): Promise<EmbeddingItem> => {
