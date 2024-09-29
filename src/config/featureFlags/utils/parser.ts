@@ -17,13 +17,20 @@ export function parseFeatureFlag(flagString?: string): Partial<IFeatureFlags> {
     flag = flag.trim();
     if (flag.startsWith('+') || flag.startsWith('-')) {
       const operation = flag[0];
-      const key = flag.slice(1);
+      const [key, ...valueParts] = flag.slice(1).split('=');
 
-      const featureKey = key as keyof IFeatureFlags;
+      const featureKey = key.trim() as keyof IFeatureFlags;
+      const value = valueParts.join('=').trim();
 
       // 检查 key 是否存在于 FeatureFlagsSchema 中
       if (FeatureFlagsSchema.shape[featureKey]) {
-        flags[featureKey] = operation === '+';
+        if (value === '') {
+          // @ts-ignore
+          flags[featureKey] = operation === '+';
+        } else {
+          // @ts-ignore
+          flags[featureKey] = value;
+        }
       }
     }
   }

@@ -24,6 +24,22 @@ describe('parseFeatureFlag', () => {
     });
   });
 
+  it('should handle flags with values', () => {
+    const input = '+model_tag_display_mode=model_name';
+    expect(parseFeatureFlag(input)).toEqual({
+      model_tag_display_mode: 'model_name',
+    });
+  });
+
+  it('should handle multiple flags with and without values', () => {
+    const input = '+webrtc_sync,-openai_api_key,+model_tag_display_mode=model_name';
+    expect(parseFeatureFlag(input)).toEqual({
+      webrtc_sync: true,
+      openai_api_key: false,
+      model_tag_display_mode: 'model_name',
+    });
+  });
+
   it('should hide content with commercial flags', () => {
     const input = '+commercial_hide_github,+commercial_hide_docs';
     expect(parseFeatureFlag(input)).toEqual({
@@ -32,37 +48,38 @@ describe('parseFeatureFlag', () => {
     });
   });
 
-  it('invalid flag format return nothing', () => {
+  it('should ignore invalid flag format', () => {
     const input = 'invalid_format';
     expect(parseFeatureFlag(input)).toEqual({});
   });
 
-  it('invalid format return empty object', () => {
-    const input = '+webrtc_sync:unexpected';
-    expect(parseFeatureFlag(input)).toEqual({});
-  });
-
-  it('invalid flag format return nothing', () => {
-    const input = 'invalid_format';
-    expect(parseFeatureFlag(input)).toEqual({});
-  });
-
-  it('invalid format return empty object', () => {
+  it('should ignore invalid flag format with colon', () => {
     const input = '+webrtc_sync:unexpected';
     expect(parseFeatureFlag(input)).toEqual({});
   });
 
   it('should handle flags separated by Chinese commas', () => {
-    const input = '+webrtc_sync，-openai_api_key';
+    const input = '+webrtc_sync，-openai_api_key，+model_tag_display_mode=model_name';
 
     expect(parseFeatureFlag(input)).toEqual({
       webrtc_sync: true,
       openai_api_key: false,
+      model_tag_display_mode: 'model_name',
     });
   });
 
   it('should ignore whitespace around flags', () => {
-    const input = '  +webrtc_sync  ,  -openai_api_key  ';
+    const input = '  +webrtc_sync  ,  -openai_api_key  , +model_tag_display_mode = model_name ';
+
+    expect(parseFeatureFlag(input)).toEqual({
+      webrtc_sync: true,
+      openai_api_key: false,
+      model_tag_display_mode: 'model_name',
+    });
+  });
+
+  it('should ignore flags not defined in FeatureFlagsSchema', () => {
+    const input = '+webrtc_sync,-openai_api_key,+unknown_feature,+another_unknown=value';
 
     expect(parseFeatureFlag(input)).toEqual({
       webrtc_sync: true,
@@ -70,27 +87,7 @@ describe('parseFeatureFlag', () => {
     });
   });
 
-  it('should handle flags with underscores and numbers', () => {
-    const input = '+feature_1,-feature_2';
-
-    expect(parseFeatureFlag(input)).toEqual({});
-  });
-
-  it('should handle flags in camelCase', () => {
-    const input = '+webrtcSync,-openaiApiKey';
-
-    expect(parseFeatureFlag(input)).toEqual({});
-  });
-
-  it('should handle flags in PascalCase', () => {
-    const input = '+WebrtcSync,-OpenaiApiKey';
-
-    expect(parseFeatureFlag(input)).toEqual({});
-  });
-
-  it('should handle flags with special characters', () => {
-    const input = '+webrtc-sync,-openai.api.key';
-
-    expect(parseFeatureFlag(input)).toEqual({});
+  it('should handle undefined input', () => {
+    expect(parseFeatureFlag(undefined)).toEqual({});
   });
 });
