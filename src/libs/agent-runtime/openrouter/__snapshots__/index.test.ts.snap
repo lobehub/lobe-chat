@@ -83,7 +83,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 
 Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
     "displayName": "Google: Gemini Flash 1.5 Experimental",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemini-flash-1.5-exp",
     "maxTokens": 32768,
@@ -291,7 +291,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 
 Note: This model is experimental and not suited for production use-cases. It may be removed or redirected to another model in the future.",
     "displayName": "Google: Gemini Pro 1.5 Experimental",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "google/gemini-pro-1.5-exp",
     "maxTokens": 32768,
@@ -878,7 +878,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 
 #multimodal",
     "displayName": "Google: Gemini Flash 1.5",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "google/gemini-flash-1.5",
     "maxTokens": 32768,
@@ -1249,7 +1249,7 @@ Usage of Gemini is subject to Google's [Gemini Terms of Use](https://ai.google.d
 
 #multimodal",
     "displayName": "Google: Gemini Pro 1.5",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "google/gemini-pro-1.5",
     "maxTokens": 32768,
