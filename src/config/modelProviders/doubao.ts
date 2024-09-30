@@ -6,6 +6,7 @@ const Doubao: ModelProviderCard = {
   disableBrowserRequest: true, // CORS error
   id: 'doubao',
   name: '豆包',
+  url: 'https://www.volcengine.com/product/doubao',
 };
 
 export default Doubao;
