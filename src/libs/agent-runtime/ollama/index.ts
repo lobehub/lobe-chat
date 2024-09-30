@@ -91,29 +91,18 @@ export class LobeOllamaAI implements LobeRuntimeAI {
   }
 
   async embeddings(payload: EmbeddingsPayload): Promise<EmbeddingItem[]> {
-    try {
-      const responseBody = await this.client.embed({
-        input: payload.input,
-        model: payload.model,
-      });
-      const embeddings = responseBody.embeddings.map(
-        (embedding, index) =>
-          ({
-            embedding: embedding,
-            index: index,
-            object: 'embedding',
-          }) as EmbeddingItem,
-      );
-      return embeddings;
-    } catch (error) {
-      const e = error as { message: string; name: string; status_code: number };
-
-      throw AgentRuntimeError.chat({
-        error: { message: e.message, name: e.name, status_code: e.status_code },
-        errorType: AgentRuntimeErrorType.OllamaBizError,
-        provider: ModelProvider.Ollama,
-      });
-    }
+    const input = Array.isArray(payload.input) ? payload.input : [payload.input];
+    const promises = input.map((inputText: string, index: number) =>
+      this.invokeEmbeddingModel(
+        {
+          dimensions: payload.dimensions,
+          input: inputText,
+          model: payload.model,
+        },
+        index,
+      ),
+    );
+    return await Promise.all(promises);
   }
 
   async models(): Promise<ChatModelCard[]> {
@@ -124,14 +113,13 @@ export class LobeOllamaAI implements LobeRuntimeAI {
   }
 
   private invokeEmbeddingModel = async (
-    inputText: string,
-    model: string,
+    payload: EmbeddingsPayload,
     index: number,
   ): Promise<EmbeddingItem> => {
     try {
       const responseBody = await this.client.embeddings({
-        model: model,
-        prompt: inputText,
+        model: payload.model,
+        prompt: payload.input as string,
       });
       return { embedding: responseBody.embedding, index: index, object: 'embedding' };
     } catch (error) {

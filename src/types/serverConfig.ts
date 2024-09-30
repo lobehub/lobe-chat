@@ -1,5 +1,6 @@
 import { DeepPartial } from 'utility-types';
 
+import { SystemEmbeddingConfig } from '@/const/settings/knowledge';
 import { ChatModelCard } from '@/types/llm';
 import {
   GlobalLLMProviderKey,
@@ -21,6 +22,7 @@ export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerMod
 
 export interface GlobalServerConfig {
   defaultAgent?: DeepPartial<UserDefaultAgent>;
+  defaultEmbed?: DeepPartial<SystemEmbeddingConfig>;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
   enabledOAuthSSO?: boolean;
