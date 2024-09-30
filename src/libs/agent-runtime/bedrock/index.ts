@@ -13,6 +13,7 @@ import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import {
   AWSBedrockClaudeStream,
+  AWSBedrockCohereStream,
   AWSBedrockLlamaStream,
   createBedrockStream,
 } from '../utils/streams';
@@ -47,6 +48,8 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload, options);
+
+    if (payload.model.startsWith('cohere')) return this.invokeCohereModel(payload, options);
 
     return this.invokeClaudeModel(payload, options);
   }
@@ -97,6 +100,66 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         error: {
           body: err.$metadata,
           message: err.message,
+          type: err.name,
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
+    }
+  };
+
+  private invokeCohereModel = async (
+    payload: ChatStreamPayload,
+    options?: ChatCompetitionOptions,
+  ): Promise<Response> => {
+    const { frequency_penalty, max_tokens, messages, model, presence_penalty, temperature, top_p } = payload;
+
+    const chat_history = messages.map(msg => {
+      return {
+        message: msg.content,
+        role: msg.role === 'user' ? 'USER' : 'CHATBOT',
+      };
+    });
+
+    const command = new InvokeModelWithResponseStreamCommand({
+      accept: 'application/json',
+      body: JSON.stringify({
+        chat_history: chat_history,
+        frequency_penalty: frequency_penalty,
+        max_tokens: max_tokens || 4096,
+        message: messages[0].content,
+        p: (top_p !== undefined && top_p > 0 && top_p < 1) ? top_p : undefined,
+        presence_penalty: presence_penalty,
+        temperature: temperature,
+      }),
+      contentType: 'application/json',
+      modelId: model,
+    });
+
+    try {
+      // Ask Claude for a streaming chat completion given the prompt
+      const res = await this.client.send(command);
+
+      const stream = createBedrockStream(res);
+
+      const [prod, debug] = stream.tee();
+
+      if (process.env.DEBUG_BEDROCK_CHAT_COMPLETION === '1') {
+        debugStream(debug).catch(console.error);
+      }
+      // Respond with the stream
+      return StreamingResponse(AWSBedrockCohereStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
+    } catch (e) {
+      const err = e as Error & { $metadata: any };
+
+      throw AgentRuntimeError.chat({
+        error: {
+          body: err.$metadata,
+          message: err.message,
+          region: this.region,
           type: err.name,
         },
         errorType: AgentRuntimeErrorType.ProviderBizError,
