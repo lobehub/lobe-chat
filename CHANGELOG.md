@@ -2,6 +2,48 @@
 
 # Changelog
 
+### [Version 1.20.7](https://github.com/lobehub/lobe-chat/compare/v1.20.6...v1.20.7)
+
+<sup>Released on **2024-09-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update groq model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update groq model list, closes [#4195](https://github.com/lobehub/lobe-chat/issues/4195) ([ef5164d](https://github.com/lobehub/lobe-chat/commit/ef5164d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.20.6](https://github.com/lobehub/lobe-chat/compare/v1.20.5...v1.20.6)
+
+<sup>Released on **2024-09-29**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.20.5](https://github.com/lobehub/lobe-chat/compare/v1.20.4...v1.20.5)
 
 <sup>Released on **2024-09-29**</sup>
