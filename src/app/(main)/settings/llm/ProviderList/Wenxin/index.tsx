@@ -1,6 +1,5 @@
 'use client';
 
-import { Wenxin } from '@lobehub/icons';
 import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
