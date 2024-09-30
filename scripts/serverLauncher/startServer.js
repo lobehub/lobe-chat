@@ -75,6 +75,7 @@ const isValidTLS = (url = '') => {
     req.on('timeout', () => {
         console.error(`${errMsg} Connection timeout. Check firewall or DNS.`);
         req.destroy();
+        reject();
     });
 
     req.end();
