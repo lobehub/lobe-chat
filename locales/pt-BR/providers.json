@@ -30,6 +30,9 @@
   "groq": {
     "description": "O motor de inferência LPU da Groq se destacou em testes de benchmark independentes de modelos de linguagem de grande escala (LLM), redefinindo os padrões de soluções de IA com sua velocidade e eficiência impressionantes. A Groq representa uma velocidade de inferência em tempo real, demonstrando bom desempenho em implantações baseadas em nuvem."
   },
+  "hunyuan": {
+    "description": "Um modelo de linguagem desenvolvido pela Tencent, com forte capacidade de criação em chinês, habilidade de raciocínio lógico em contextos complexos e capacidade confiável de execução de tarefas."
+  },
   "minimax": {
     "description": "MiniMax é uma empresa de tecnologia de inteligência artificial geral fundada em 2021, dedicada a co-criar inteligência com os usuários. A MiniMax desenvolveu internamente diferentes modelos gerais de grande escala, incluindo um modelo de texto MoE com trilhões de parâmetros, um modelo de voz e um modelo de imagem. Também lançou aplicações como Conch AI."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage se concentra no desenvolvimento de modelos de IA para diversas necessidades comerciais, incluindo Solar LLM e Document AI, visando alcançar uma inteligência geral artificial (AGI) que funcione. Crie agentes de diálogo simples por meio da API de Chat e suporte chamadas de função, tradução, incorporação e aplicações em domínios específicos."
+  },
+  "wenxin": {
+    "description": "Plataforma de desenvolvimento e serviços de aplicativos nativos de IA e modelos de grande escala, voltada para empresas, que oferece a mais completa e fácil ferramenta de cadeia de ferramentas para o desenvolvimento de modelos de inteligência artificial generativa e aplicativos."
   },
   "zeroone": {
     "description": "01.AI se concentra na tecnologia de inteligência artificial da era 2.0, promovendo fortemente a inovação e aplicação de 'humano + inteligência artificial', utilizando modelos poderosos e tecnologia de IA avançada para aumentar a produtividade humana e realizar a capacitação tecnológica."

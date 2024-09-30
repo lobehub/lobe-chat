@@ -30,6 +30,9 @@
   "groq": {
     "description": "Der LPU-Inferenz-Engine von Groq hat in den neuesten unabhängigen Benchmark-Tests für große Sprachmodelle (LLM) hervorragende Leistungen gezeigt und definiert mit seiner erstaunlichen Geschwindigkeit und Effizienz die Standards für KI-Lösungen neu. Groq ist ein Beispiel für sofortige Inferenzgeschwindigkeit und zeigt in cloudbasierten Bereitstellungen eine gute Leistung."
   },
+  "hunyuan": {
+    "description": "Ein von Tencent entwickeltes großes Sprachmodell, das über starke Fähigkeiten zur Erstellung von Inhalten in chinesischer Sprache, logisches Denkvermögen in komplexen Kontexten und zuverlässige Fähigkeiten zur Aufgabenerfüllung verfügt."
+  },
   "minimax": {
     "description": "MiniMax ist ein im Jahr 2021 gegründetes Unternehmen für allgemeine künstliche Intelligenz, das sich der gemeinsamen Schaffung von Intelligenz mit den Nutzern widmet. MiniMax hat verschiedene multimodale allgemeine große Modelle entwickelt, darunter ein Textmodell mit Billionen von Parametern, ein Sprachmodell und ein Bildmodell. Außerdem wurden Anwendungen wie Conch AI eingeführt."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage konzentriert sich auf die Entwicklung von KI-Modellen für verschiedene geschäftliche Anforderungen, einschließlich Solar LLM und Dokumenten-KI, mit dem Ziel, künstliche allgemeine Intelligenz (AGI) zu erreichen. Es ermöglicht die Erstellung einfacher Dialogagenten über die Chat-API und unterstützt Funktionsaufrufe, Übersetzungen, Einbettungen und spezifische Anwendungsbereiche."
+  },
+  "wenxin": {
+    "description": "Eine unternehmensweite, umfassende Plattform für die Entwicklung und den Service von großen Modellen und KI-nativen Anwendungen, die die vollständigsten und benutzerfreundlichsten Werkzeuge für die Entwicklung generativer KI-Modelle und den gesamten Anwendungsentwicklungsprozess bietet."
   },
   "zeroone": {
     "description": "01.AI konzentriert sich auf die künstliche Intelligenz-Technologie der AI 2.0-Ära und fördert aktiv die Innovation und Anwendung von 'Mensch + künstliche Intelligenz', indem sie leistungsstarke Modelle und fortschrittliche KI-Technologien einsetzt, um die Produktivität der Menschen zu steigern und technologische Befähigung zu erreichen."

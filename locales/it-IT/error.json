@@ -81,6 +81,7 @@
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
     "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
     "ProviderBizError": "Errore di business del fornitore {{provider}}. Si prega di controllare le informazioni seguenti o riprovare.",
+    "QuotaLimitReached": "Ci dispiace, l'uso attuale dei token o il numero di richieste ha raggiunto il limite di quota per questa chiave. Si prega di aumentare la quota di questa chiave o riprovare più tardi.",
     "StreamChunkError": "Erro di analisi del blocco di messaggi della richiesta in streaming. Controlla se l'interfaccia API attuale è conforme agli standard o contatta il tuo fornitore di API per ulteriori informazioni.",
     "SubscriptionPlanLimit": "Il tuo piano di abbonamento ha raggiunto il limite e non puoi utilizzare questa funzione. Per favore, passa a un piano superiore o acquista un pacchetto di risorse per continuare.",
     "UnknownChatFetchError": "Ci scusiamo, si è verificato un errore di richiesta sconosciuto. Si prega di controllare le informazioni seguenti o riprovare."
