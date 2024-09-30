@@ -25,6 +25,7 @@ import {
   TaichuProviderCard,
   TogetherAIProviderCard,
   UpstageProviderCard,
+  WenxinProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
   filterEnabledModels,
@@ -140,6 +141,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   upstage: {
     enabled: false,
     enabledModels: filterEnabledModels(UpstageProviderCard),
+  },
+  wenxin: {
+    enabled: false,
+    enabledModels: filterEnabledModels(WenxinProviderCard),
   },
   zeroone: {
     enabled: false,
