@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Mô hình có khả năng hàng đầu trong nước, vượt trội hơn các mô hình chính thống nước ngoài trong các nhiệm vụ tiếng Trung như bách khoa toàn thư, văn bản dài, sáng tạo nội dung. Cũng có khả năng đa phương tiện hàng đầu trong ngành, thể hiện xuất sắc trong nhiều tiêu chuẩn đánh giá uy tín."
   },
+  "ERNIE 3.5-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  },
+  "ERNIE 3.5-8K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  },
+  "ERNIE 3.5-8K-Preview": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, so với ERNIE 3.5 đã nâng cấp toàn diện khả năng của mô hình, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, so với ERNIE 3.5 đã nâng cấp toàn diện khả năng của mô hình, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, có hiệu suất tổng thể xuất sắc, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật. So với ERNIE 4.0, hiệu suất tốt hơn."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, có hiệu suất tổng thể xuất sắc, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật. So với ERNIE 4.0, hiệu suất tốt hơn."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn cho các tình huống chuyên biệt do Baidu tự phát triển, phù hợp cho các ứng dụng như NPC trong game, đối thoại dịch vụ khách hàng, và vai trò trong đối thoại, phong cách nhân vật rõ ràng và nhất quán hơn, khả năng tuân thủ chỉ dẫn mạnh mẽ, hiệu suất suy diễn tốt hơn."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn nhẹ do Baidu tự phát triển, kết hợp hiệu suất mô hình xuất sắc với khả năng suy diễn, hiệu quả tốt hơn ERNIE Lite, phù hợp cho việc suy diễn trên thẻ tăng tốc AI có công suất thấp."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hiệu suất cao do Baidu phát hành vào năm 2024, có khả năng tổng quát xuất sắc, phù hợp làm mô hình nền để tinh chỉnh, xử lý tốt hơn các vấn đề trong các tình huống cụ thể, đồng thời có khả năng suy diễn tuyệt vời."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hiệu suất cao do Baidu phát hành vào năm 2024, có khả năng tổng quát xuất sắc, hiệu quả tốt hơn ERNIE Speed, phù hợp làm mô hình nền để tinh chỉnh, xử lý tốt hơn các vấn đề trong các tình huống cụ thể, đồng thời có khả năng suy diễn tuyệt vời."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) là một mô hình sáng tạo, phù hợp cho nhiều lĩnh vực ứng dụng và nhiệm vụ phức tạp."
   },

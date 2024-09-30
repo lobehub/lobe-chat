@@ -60,6 +60,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   SparkProvider.chatModels,
   Ai21Provider.chatModels,
   HunyuanProvider.chatModels,
+  WenxinProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [

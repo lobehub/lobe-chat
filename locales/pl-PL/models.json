@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Model o najwyższej wydajności w kraju, przewyższający zagraniczne modele w zadaniach związanych z encyklopedią, długimi tekstami i generowaniem treści w języku chińskim. Posiada również wiodące w branży zdolności multimodalne, osiągając doskonałe wyniki w wielu autorytatywnych testach."
   },
+  "ERNIE 3.5-128K": {
+    "description": "Flagowy model dużego języka opracowany przez Baidu, obejmujący ogromne zbiory danych w języku chińskim i angielskim, charakteryzujący się silnymi zdolnościami ogólnymi, zdolny do spełnienia wymagań większości scenariuszy związanych z pytaniami i odpowiedziami, generowaniem treści oraz aplikacjami wtyczek; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji."
+  },
+  "ERNIE 3.5-8K": {
+    "description": "Flagowy model dużego języka opracowany przez Baidu, obejmujący ogromne zbiory danych w języku chińskim i angielskim, charakteryzujący się silnymi zdolnościami ogólnymi, zdolny do spełnienia wymagań większości scenariuszy związanych z pytaniami i odpowiedziami, generowaniem treści oraz aplikacjami wtyczek; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji."
+  },
+  "ERNIE 3.5-8K-Preview": {
+    "description": "Flagowy model dużego języka opracowany przez Baidu, obejmujący ogromne zbiory danych w języku chińskim i angielskim, charakteryzujący się silnymi zdolnościami ogólnymi, zdolny do spełnienia wymagań większości scenariuszy związanych z pytaniami i odpowiedziami, generowaniem treści oraz aplikacjami wtyczek; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Flagowy model ultra dużego języka opracowany przez Baidu, w porównaniu do ERNIE 3.5, oferujący kompleksową aktualizację możliwości modelu, szeroko stosowany w złożonych scenariuszach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Flagowy model ultra dużego języka opracowany przez Baidu, w porównaniu do ERNIE 3.5, oferujący kompleksową aktualizację możliwości modelu, szeroko stosowany w złożonych scenariuszach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Flagowy model ultra dużego języka opracowany przez Baidu, charakteryzujący się doskonałymi wynikami ogólnymi, szeroko stosowany w złożonych scenariuszach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji. W porównaniu do ERNIE 4.0, oferuje lepsze wyniki wydajności."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Flagowy model ultra dużego języka opracowany przez Baidu, charakteryzujący się doskonałymi wynikami ogólnymi, szeroko stosowany w złożonych scenariuszach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji. W porównaniu do ERNIE 4.0, oferuje lepsze wyniki wydajności."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Model dużego języka opracowany przez Baidu, skoncentrowany na specyficznych scenariuszach, odpowiedni do zastosowań takich jak NPC w grach, rozmowy z obsługą klienta, odgrywanie ról w dialogach, charakteryzujący się wyraźnym i spójnym stylem postaci, silniejszą zdolnością do przestrzegania poleceń oraz lepszą wydajnością wnioskowania."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Lekki model dużego języka opracowany przez Baidu, łączący doskonałe wyniki modelu z wydajnością wnioskowania, oferujący lepsze wyniki niż ERNIE Lite, odpowiedni do użycia w niskomocowych kartach przyspieszających AI."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Najnowocześniejszy model dużego języka opracowany przez Baidu w 2024 roku, charakteryzujący się doskonałymi zdolnościami ogólnymi, odpowiedni jako model bazowy do dalszego dostosowywania, lepiej radzący sobie z problemami w specyficznych scenariuszach, a także zapewniający doskonałą wydajność wnioskowania."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Najnowocześniejszy model dużego języka opracowany przez Baidu w 2024 roku, charakteryzujący się doskonałymi zdolnościami ogólnymi, oferujący lepsze wyniki niż ERNIE Speed, odpowiedni jako model bazowy do dalszego dostosowywania, lepiej radzący sobie z problemami w specyficznych scenariuszach, a także zapewniający doskonałą wydajność wnioskowania."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) to innowacyjny model, idealny do zastosowań w wielu dziedzinach i złożonych zadań."
   },

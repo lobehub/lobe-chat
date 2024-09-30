@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Het model heeft de beste prestaties in het binnenland en overtreft buitenlandse mainstream modellen in kennisencyclopedieën, lange teksten en creatieve generaties. Het heeft ook toonaangevende multimodale capaciteiten en presteert uitstekend in verschillende autoritatieve evaluatiebenchmarks."
   },
+  "ERNIE 3.5-128K": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een grootschalig taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatie en plug-in toepassingen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE 3.5-8K": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een grootschalig taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatie en plug-in toepassingen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE 3.5-8K-Preview": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een grootschalig taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatie en plug-in toepassingen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat in vergelijking met ERNIE 3.5 een algehele upgrade van de modelcapaciteiten heeft gerealiseerd, en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat in vergelijking met ERNIE 3.5 een algehele upgrade van de modelcapaciteiten heeft gerealiseerd, en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat uitstekende algehele prestaties levert en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen. In vergelijking met ERNIE 4.0 presteert het beter."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat uitstekende algehele prestaties levert en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen. In vergelijking met ERNIE 4.0 presteert het beter."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Het door Baidu ontwikkelde verticale taalmodel, geschikt voor toepassingen zoals game NPC's, klantenservice gesprekken en rollenspellen, met een duidelijker en consistenter karakterontwerp, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Het door Baidu ontwikkelde lichte taalmodel, dat zowel uitstekende modelprestaties als inferentieprestaties biedt, met betere resultaten dan ERNIE Lite, en geschikt is voor inferentie op AI-versnelling kaarten met lage rekencapaciteit."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Het door Baidu in 2024 gepresenteerde nieuwe hoge-prestatie taalmodel, met uitstekende algemene capaciteiten, geschikt als basis model voor fine-tuning, om beter specifieke probleemstellingen aan te pakken, met uitstekende inferentieprestaties."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Het door Baidu in 2024 gepresenteerde nieuwe hoge-prestatie taalmodel, met uitstekende algemene capaciteiten, betere resultaten dan ERNIE Speed, en geschikt als basis model voor fine-tuning, om beter specifieke probleemstellingen aan te pakken, met uitstekende inferentieprestaties."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) is een innovatief model, geschikt voor toepassingen in meerdere domeinen en complexe taken."
   },

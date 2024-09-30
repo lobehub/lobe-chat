@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "El modelo tiene la mejor capacidad en el país, superando a los modelos principales extranjeros en tareas en chino como enciclopedias, textos largos y creación generativa. También cuenta con capacidades multimodales líderes en la industria, destacándose en múltiples evaluaciones de referencia autorizadas."
   },
+  "ERNIE 3.5-128K": {
+    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una gran cantidad de corpus en chino e inglés, con potentes capacidades generales, capaz de satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  },
+  "ERNIE 3.5-8K": {
+    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una gran cantidad de corpus en chino e inglés, con potentes capacidades generales, capaz de satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  },
+  "ERNIE 3.5-8K-Preview": {
+    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una gran cantidad de corpus en chino e inglés, con potentes capacidades generales, capaz de satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Modelo de lenguaje a gran escala ultra avanzado desarrollado por Baidu, que ha logrado una actualización completa de las capacidades del modelo en comparación con ERNIE 3.5, siendo ampliamente aplicable a escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Modelo de lenguaje a gran escala ultra avanzado desarrollado por Baidu, que ha logrado una actualización completa de las capacidades del modelo en comparación con ERNIE 3.5, siendo ampliamente aplicable a escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Modelo de lenguaje a gran escala ultra avanzado desarrollado por Baidu, con un rendimiento excepcional en efectos generales, siendo ampliamente aplicable a escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas. En comparación con ERNIE 4.0, ofrece un rendimiento superior."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Modelo de lenguaje a gran escala ultra avanzado desarrollado por Baidu, con un rendimiento excepcional en efectos generales, siendo ampliamente aplicable a escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas. En comparación con ERNIE 4.0, ofrece un rendimiento superior."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Modelo de lenguaje vertical desarrollado por Baidu, adecuado para aplicaciones como NPC en juegos, diálogos de servicio al cliente, y juegos de rol conversacionales, con un estilo de personaje más distintivo y coherente, y una mayor capacidad de seguir instrucciones, además de un rendimiento de inferencia superior."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Modelo de lenguaje ligero desarrollado por Baidu, que combina un excelente rendimiento del modelo con una alta eficiencia de inferencia, superando a ERNIE Lite, adecuado para su uso en tarjetas de aceleración de IA de bajo consumo."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Modelo de lenguaje de alto rendimiento desarrollado por Baidu, lanzado en 2024, con capacidades generales excepcionales, adecuado como modelo base para ajustes finos, manejando mejor problemas en escenarios específicos, y con un rendimiento de inferencia excelente."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Modelo de lenguaje de alto rendimiento desarrollado por Baidu, lanzado en 2024, con capacidades generales excepcionales, superando a ERNIE Speed, adecuado como modelo base para ajustes finos, manejando mejor problemas en escenarios específicos, y con un rendimiento de inferencia excelente."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) es un modelo innovador, adecuado para aplicaciones en múltiples campos y tareas complejas."
   },

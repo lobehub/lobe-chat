@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Das Modell hat die höchste Fähigkeit im Inland und übertrifft ausländische Mainstream-Modelle in Aufgaben wie Wissensdatenbanken, langen Texten und kreativer Generierung. Es verfügt auch über branchenführende multimodale Fähigkeiten und zeigt in mehreren autoritativen Bewertungsbenchmarks hervorragende Leistungen."
   },
+  "ERNIE 3.5-128K": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und erfüllt die Anforderungen der meisten Dialogfragen, kreativen Generierungen und Anwendungsfälle für Plugins; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE 3.5-8K": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und erfüllt die Anforderungen der meisten Dialogfragen, kreativen Generierungen und Anwendungsfälle für Plugins; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE 3.5-8K-Preview": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und erfüllt die Anforderungen der meisten Dialogfragen, kreativen Generierungen und Anwendungsfälle für Plugins; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das im Vergleich zu ERNIE 3.5 eine umfassende Verbesserung der Modellfähigkeiten erreicht hat und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das im Vergleich zu ERNIE 3.5 eine umfassende Verbesserung der Modellfähigkeiten erreicht hat und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das in der Gesamtleistung herausragend ist und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten. Im Vergleich zu ERNIE 4.0 bietet es eine bessere Leistungsfähigkeit."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das in der Gesamtleistung herausragend ist und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten. Im Vergleich zu ERNIE 4.0 bietet es eine bessere Leistungsfähigkeit."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Das von Baidu entwickelte Sprachmodell für vertikale Szenarien, das sich für Anwendungen wie Spiel-NPCs, Kundenservice-Dialoge und Rollenspiele eignet. Es hat einen klareren und konsistenteren Charakterstil, eine stärkere Befolgung von Anweisungen und eine bessere Inferenzleistung."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Das von Baidu entwickelte leichte Sprachmodell, das hervorragende Modellleistung und Inferenzleistung kombiniert. Es bietet bessere Ergebnisse als ERNIE Lite und eignet sich für die Inferenznutzung auf AI-Beschleunigungskarten mit geringer Rechenleistung."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Das neueste von Baidu im Jahr 2024 veröffentlichte hochleistungsfähige Sprachmodell, das überragende allgemeine Fähigkeiten bietet und sich als Basis-Modell für Feinabstimmungen eignet, um spezifische Szenarien besser zu bearbeiten, und bietet gleichzeitig hervorragende Inferenzleistung."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Das neueste von Baidu im Jahr 2024 veröffentlichte hochleistungsfähige Sprachmodell, das überragende allgemeine Fähigkeiten bietet und bessere Ergebnisse als ERNIE Speed erzielt. Es eignet sich als Basis-Modell für Feinabstimmungen, um spezifische Szenarien besser zu bearbeiten, und bietet gleichzeitig hervorragende Inferenzleistung."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) ist ein innovatives Modell, das sich für Anwendungen in mehreren Bereichen und komplexe Aufgaben eignet."
   },

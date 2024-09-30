@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Model yetenekleri ülke içinde birinci sırada, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde yurtdışındaki önde gelen modelleri geride bırakmaktadır. Ayrıca, sektör lideri çok modlu yeteneklere sahiptir ve birçok yetkili değerlendirme kriterinde mükemmel performans göstermektedir."
   },
+  "ERNIE 3.5-128K": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi büyük ölçekli dil modeli, geniş bir Çin ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog yanıtı, içerik oluşturma ve eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE 3.5-8K": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi büyük ölçekli dil modeli, geniş bir Çin ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog yanıtı, içerik oluşturma ve eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE 3.5-8K-Preview": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi büyük ölçekli dil modeli, geniş bir Çin ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog yanıtı, içerik oluşturma ve eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e kıyasla model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e kıyasla model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel olup, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar. ERNIE 4.0'a kıyasla performans açısından daha üstündür."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel olup, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar. ERNIE 4.0'a kıyasla performans açısından daha üstündür."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Baidu'nun kendi geliştirdiği dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryoları için uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimatları takip etme yeteneği daha güçlüdür ve çıkarım performansı daha iyidir."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Baidu'nun kendi geliştirdiği hafif büyük dil modeli, mükemmel model performansı ve çıkarım yeteneklerini dengeler, ERNIE Lite'dan daha iyi sonuçlar verir, düşük hesaplama gücüne sahip AI hızlandırıcı kartları için uygundur."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Baidu'nun 2024 yılında piyasaya sürdüğü kendi geliştirdiği yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel olup, belirli senaryo sorunlarını daha iyi işlemek için temel model olarak ince ayar yapmak için uygundur ve mükemmel çıkarım performansına sahiptir."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Baidu'nun 2024 yılında piyasaya sürdüğü kendi geliştirdiği yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel olup, ERNIE Speed'den daha iyi sonuçlar verir, belirli senaryo sorunlarını daha iyi işlemek için temel model olarak ince ayar yapmak için uygundur ve mükemmel çıkarım performansına sahiptir."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B), çok alanlı uygulamalar ve karmaşık görevler için uygun yenilikçi bir modeldir."
   },

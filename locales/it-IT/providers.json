@@ -78,7 +78,9 @@
   "upstage": {
     "description": "Upstage si concentra sullo sviluppo di modelli AI per varie esigenze commerciali, inclusi Solar LLM e document AI, con l'obiettivo di realizzare un'intelligenza artificiale generale artificiale (AGI) per il lavoro. Crea semplici agenti di dialogo tramite Chat API e supporta chiamate funzionali, traduzioni, embedding e applicazioni specifiche del settore."
   },
-  "wenxin": {},
+  "wenxin": {
+    "description": "Piattaforma di sviluppo e servizi per modelli di grandi dimensioni e applicazioni AI native, a livello aziendale, che offre la catena di strumenti completa e facile da usare per lo sviluppo di modelli di intelligenza artificiale generativa e per l'intero processo di sviluppo delle applicazioni."
+  },
   "zeroone": {
     "description": "01.AI si concentra sulla tecnologia AI dell'era 2.0, promuovendo attivamente l'innovazione e l'applicazione di \"uomo + intelligenza artificiale\", utilizzando modelli potenti e tecnologie AI avanzate per migliorare la produttività umana e realizzare l'abilitazione tecnologica."
   },
