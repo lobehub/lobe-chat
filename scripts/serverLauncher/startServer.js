@@ -1,5 +1,5 @@
 const dns = require('dns').promises;
-const fs = require('fs');
+const fs = require('fs').promises;
 const tls = require('tls');
 const { spawn } = require('child_process');
 
@@ -102,7 +102,8 @@ const resolveHostIP = async (host, version = 4) => {
 
     return address;
   } catch (err) {
-    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server.`, err);
+    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server:`);
+    console.error(err);
     process.exit(1);
   }
 };
@@ -136,7 +137,7 @@ tcp_read_time_out 15000
 ${protocol} ${ip} ${port}
 `.trim();
 
-  fs.writeFileSync(PROXYCHAINS_CONF_PATH, configContent);
+  await fs.writeFile(PROXYCHAINS_CONF_PATH, configContent);
   console.log(`✅ ProxyChains: All outgoing traffic routed via ${protocol}://${ip}:${port}.`);
   console.log('-------------------------------------');
 };
@@ -168,10 +169,25 @@ const runServer = async () => {
 
   if (process.env.DATABASE_DRIVER) {
     try {
-      await runScript(DB_MIGRATION_SCRIPT_PATH);
+      try {
+        await fs.access(DB_MIGRATION_SCRIPT_PATH);
+
+        await runScript(DB_MIGRATION_SCRIPT_PATH);
+      } catch (err) {
+        if (err.code === 'ENOENT') {
+          console.log(`⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure to migrate database manually.`);
+          console.log('-------------------------------------');
+        } else {
+          console.error('❌ Error during DB migration:');
+          console.error(err);
+          process.exit(1);
+        }
+      }
+
       await checkTLSConnections();
     } catch (err) {
-      console.error('❌ Error during DB migration or TLS connection check:', err);
+      console.error('❌ Error during TLS connection check:');
+      console.error(err);
       process.exit(1);
     }
   }
