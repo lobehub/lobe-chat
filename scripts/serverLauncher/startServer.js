@@ -1,6 +1,6 @@
 const dns = require('dns').promises;
 const fs = require('fs').promises;
-const tls = require('tls');
+const https = require('https');
 const { spawn } = require('child_process');
 
 // Set file paths
@@ -38,27 +38,30 @@ const isValidTLS = (url = '') => {
     return Promise.resolve();
   }
 
-  const options = { host, port, servername: host };
+  const options = {
+    host,
+    port: port,
+  };
+
   return new Promise((resolve, reject) => {
-    const socket = tls.connect(options, () => {
+    const req = https.request(options, (res) => {
       console.log(`✅ TLS Check: Valid certificate for ${host}:${port}.`);
       console.log('-------------------------------------');
-
-      socket.end();
-
+      res.resume();
       resolve();
     });
 
-    socket.on('error', (err) => {
+    req.on('error', (err) => {
       const errMsg = `❌ TLS Check: Error for ${host}:${port}. Details:`;
       switch (err.code) {
         case 'CERT_HAS_EXPIRED':
         case 'DEPTH_ZERO_SELF_SIGNED_CERT':
         case 'ERR_TLS_CERT_ALTNAME_INVALID':
-          console.error(`${errMsg} Certificate is not valid. Consider setting NODE_TLS_REJECT_UNAUTHORIZED="0" or mapping /etc/ssl/certs/ca-certificates.crt.`);
+        case 'UNABLE_TO_VERIFY_LEAF_SIGNATURE':
+          console.error(`${errMsg} Certificate is not valid. Consider setting NODE_EXTRA_CA_CERTS or NODE_TLS_REJECT_UNAUTHORIZED="0".`);
           break;
         case 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY':
-          console.error(`${errMsg} Unable to verify issuer. Ensure correct mapping of /etc/ssl/certs/ca-certificates.crt.`);
+          console.error(`${errMsg} Unable to verify issuer. Ensure correct mapping of ${process.env.SSL_CERT_DIR}.`);
           break;
         default:
           console.error(`${errMsg} Network issue. Check firewall or DNS.`);
@@ -66,6 +69,8 @@ const isValidTLS = (url = '') => {
       }
       reject(err);
     });
+
+    req.end();
   });
 };
 
