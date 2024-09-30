@@ -127,8 +127,9 @@ COPY --from=app / /
 
 ENV NODE_ENV="production" \
     NODE_OPTIONS="--use-openssl-ca" \
-    NODE_EXTRA_CA_CERTS="/etc/ssl/certs/ca-certificates.crt" \
-    NODE_TLS_REJECT_UNAUTHORIZED=""
+    NODE_EXTRA_CA_CERTS="" \
+    NODE_TLS_REJECT_UNAUTHORIZED="" \
+    SSL_CERT_DIR="/etc/ssl/certs/ca-certificates.crt"
 
 # set hostname to localhost
 ENV HOSTNAME="0.0.0.0" \
@@ -217,6 +218,8 @@ ENV \
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
     # Upstage
     UPSTAGE_API_KEY="" \
+    # Wenxin
+    WENXIN_ACCESS_KEY="" WENXIN_SECRET_KEY="" \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
