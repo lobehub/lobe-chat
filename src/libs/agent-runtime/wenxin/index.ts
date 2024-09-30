@@ -84,7 +84,13 @@ export class LobeWenxinAI implements LobeRuntimeAI {
         case 4:
         case 17:
         case 18:
-        case 19: {
+        case 19:
+        case 336_501:
+        case 336_502:
+        case 336_503:
+        case 336_504:
+        case 336_505:
+        case 336_507: {
           throw AgentRuntimeError.createError(AgentRuntimeErrorType.QuotaLimitReached, {
             errorCode: error.error_code,
             message: `${error.error_msg} | you can visit https://cloud.baidu.com/doc/WENXINWORKSHOP/s/tlmyncueh for more information about the error code`,
