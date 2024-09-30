@@ -1,6 +1,5 @@
 'use client';
 
-import { SenseNova } from '@lobehub/icons';
 import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
