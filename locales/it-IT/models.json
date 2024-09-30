@@ -32,13 +32,13 @@
   "Baichuan4": {
     "description": "Il modello ha la migliore capacità in Cina, superando i modelli mainstream esteri in compiti cinesi come enciclopedie, testi lunghi e creazione di contenuti. Ha anche capacità multimodali leader nel settore, con prestazioni eccellenti in vari benchmark di valutazione."
   },
-  "ERNIE 3.5-128K": {
+  "ERNIE-3.5-128K": {
     "description": "Modello di linguaggio di grande scala di punta sviluppato da Baidu, che copre un'enorme quantità di dati in cinese e inglese, con potenti capacità generali, in grado di soddisfare la maggior parte delle esigenze di domande e risposte, generazione creativa e scenari di applicazione dei plugin; supporta l'integrazione automatica con il plugin di ricerca di Baidu, garantendo l'aggiornamento delle informazioni nelle risposte."
   },
-  "ERNIE 3.5-8K": {
+  "ERNIE-3.5-8K": {
     "description": "Modello di linguaggio di grande scala di punta sviluppato da Baidu, che copre un'enorme quantità di dati in cinese e inglese, con potenti capacità generali, in grado di soddisfare la maggior parte delle esigenze di domande e risposte, generazione creativa e scenari di applicazione dei plugin; supporta l'integrazione automatica con il plugin di ricerca di Baidu, garantendo l'aggiornamento delle informazioni nelle risposte."
   },
-  "ERNIE 3.5-8K-Preview": {
+  "ERNIE-3.5-8K-Preview": {
     "description": "Modello di linguaggio di grande scala di punta sviluppato da Baidu, che copre un'enorme quantità di dati in cinese e inglese, con potenti capacità generali, in grado di soddisfare la maggior parte delle esigenze di domande e risposte, generazione creativa e scenari di applicazione dei plugin; supporta l'integrazione automatica con il plugin di ricerca di Baidu, garantendo l'aggiornamento delle informazioni nelle risposte."
   },
   "ERNIE-4.0-8K-Latest": {

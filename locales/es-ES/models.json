@@ -32,14 +32,14 @@
   "Baichuan4": {
     "description": "El modelo tiene la mejor capacidad en el país, superando a los modelos principales extranjeros en tareas en chino como enciclopedias, textos largos y creación generativa. También cuenta con capacidades multimodales líderes en la industria, destacándose en múltiples evaluaciones de referencia autorizadas."
   },
-  "ERNIE 3.5-128K": {
-    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una gran cantidad de corpus en chino e inglés, con potentes capacidades generales, capaz de satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  "ERNIE-3.5-128K": {
+    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una vasta cantidad de corpus en chino y en inglés, con potentes capacidades generales que pueden satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación de contenido y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
   },
-  "ERNIE 3.5-8K": {
-    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una gran cantidad de corpus en chino e inglés, con potentes capacidades generales, capaz de satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  "ERNIE-3.5-8K": {
+    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una vasta cantidad de corpus en chino y en inglés, con potentes capacidades generales que pueden satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación de contenido y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
   },
-  "ERNIE 3.5-8K-Preview": {
-    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una gran cantidad de corpus en chino e inglés, con potentes capacidades generales, capaz de satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación creativa y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
+  "ERNIE-3.5-8K-Preview": {
+    "description": "Modelo de lenguaje a gran escala de primera línea desarrollado por Baidu, que abarca una vasta cantidad de corpus en chino y en inglés, con potentes capacidades generales que pueden satisfacer la mayoría de los requisitos de preguntas y respuestas en diálogos, generación de contenido y aplicaciones de plugins; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."
   },
   "ERNIE-4.0-8K-Latest": {
     "description": "Modelo de lenguaje a gran escala ultra avanzado desarrollado por Baidu, que ha logrado una actualización completa de las capacidades del modelo en comparación con ERNIE 3.5, siendo ampliamente aplicable a escenarios de tareas complejas en diversos campos; soporta la integración automática con el plugin de búsqueda de Baidu, garantizando la actualidad de la información en las respuestas."

@@ -32,14 +32,14 @@
   "Baichuan4": {
     "description": "Model yetenekleri ülke içinde birinci sırada, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde yurtdışındaki önde gelen modelleri geride bırakmaktadır. Ayrıca, sektör lideri çok modlu yeteneklere sahiptir ve birçok yetkili değerlendirme kriterinde mükemmel performans göstermektedir."
   },
-  "ERNIE 3.5-128K": {
-    "description": "Baidu'nun kendi geliştirdiği amiral gemisi büyük ölçekli dil modeli, geniş bir Çin ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog yanıtı, içerik oluşturma ve eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  "ERNIE-3.5-128K": {
+    "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
   },
-  "ERNIE 3.5-8K": {
-    "description": "Baidu'nun kendi geliştirdiği amiral gemisi büyük ölçekli dil modeli, geniş bir Çin ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog yanıtı, içerik oluşturma ve eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  "ERNIE-3.5-8K": {
+    "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
   },
-  "ERNIE 3.5-8K-Preview": {
-    "description": "Baidu'nun kendi geliştirdiği amiral gemisi büyük ölçekli dil modeli, geniş bir Çin ve İngilizce veri kümesini kapsar, güçlü genel yeteneklere sahiptir ve çoğu diyalog yanıtı, içerik oluşturma ve eklenti uygulama senaryolarını karşılayabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  "ERNIE-3.5-8K-Preview": {
+    "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
   },
   "ERNIE-4.0-8K-Latest": {
     "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e kıyasla model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."

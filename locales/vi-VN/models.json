@@ -32,14 +32,14 @@
   "Baichuan4": {
     "description": "Mô hình có khả năng hàng đầu trong nước, vượt trội hơn các mô hình chính thống nước ngoài trong các nhiệm vụ tiếng Trung như bách khoa toàn thư, văn bản dài, sáng tạo nội dung. Cũng có khả năng đa phương tiện hàng đầu trong ngành, thể hiện xuất sắc trong nhiều tiêu chuẩn đánh giá uy tín."
   },
-  "ERNIE 3.5-128K": {
-    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  "ERNIE-3.5-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
   },
-  "ERNIE 3.5-8K": {
-    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  "ERNIE-3.5-8K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
   },
-  "ERNIE 3.5-8K-Preview": {
-    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  "ERNIE-3.5-8K-Preview": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
   },
   "ERNIE-4.0-8K-Latest": {
     "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, so với ERNIE 3.5 đã nâng cấp toàn diện khả năng của mô hình, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
