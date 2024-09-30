@@ -10,6 +10,7 @@ import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 import BedrockForm from './Bedrock';
 import ProviderApiKeyForm from './ProviderApiKeyForm';
+import SenseNovaForm from './SenseNova';
 import WenxinForm from './Wenxin';
 
 interface APIKeyFormProps {
