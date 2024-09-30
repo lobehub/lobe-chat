@@ -41,6 +41,7 @@ const isValidTLS = (url = '') => {
   const options = {
     host,
     port: port,
+    timeout: 3000,
   };
 
   return new Promise((resolve, reject) => {
@@ -51,8 +52,9 @@ const isValidTLS = (url = '') => {
       resolve();
     });
 
+    const errMsg = `❌ TLS Check: Error for ${host}:${port}. Details:`;
+
     req.on('error', (err) => {
-      const errMsg = `❌ TLS Check: Error for ${host}:${port}. Details:`;
       switch (err.code) {
         case 'CERT_HAS_EXPIRED':
         case 'DEPTH_ZERO_SELF_SIGNED_CERT':
@@ -64,10 +66,15 @@ const isValidTLS = (url = '') => {
           console.error(`${errMsg} Unable to verify issuer. Ensure correct mapping of ${process.env.SSL_CERT_DIR}.`);
           break;
         default:
-          console.error(`${errMsg} Network issue. Check firewall or DNS.`);
+          console.error(`${errMsg} Unknown error. Details:`);
           break;
       }
       reject(err);
+    });
+
+    req.on('timeout', () => {
+        console.error(`${errMsg} Connection timeout. Check firewall or DNS.`);
+        req.destroy();
     });
 
     req.end();
