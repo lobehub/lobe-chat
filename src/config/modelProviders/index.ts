@@ -81,6 +81,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai21Provider,
   UpstageProvider,
   QwenProvider,
+  WenxinProvider,
   HunyuanProvider,
   SparkProvider,
   ZhiPuProvider,
@@ -90,7 +91,6 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BaichuanProvider,
   MinimaxProvider,
   Ai360Provider,
-  WenxinProvider,
   TaichuProvider,
   SiliconCloudProvider,
 ];
