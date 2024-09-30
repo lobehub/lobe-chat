@@ -1,6 +1,7 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
+import { LobeHuggingFaceAI } from '@/libs/agent-runtime/huggingface';
 
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAi21AI } from './ai21';
@@ -134,6 +135,7 @@ class AgentRuntime {
       github: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
+      huggingface: { apiKey?: string; baseURL?: string };
       hunyuan: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
@@ -210,6 +212,11 @@ class AgentRuntime {
 
       case ModelProvider.DeepSeek: {
         runtimeModel = new LobeDeepSeekAI(params.deepseek);
+        break;
+      }
+
+      case ModelProvider.HuggingFace: {
+        runtimeModel = new LobeHuggingFaceAI(params.huggingface);
         break;
       }
 
