@@ -9,22 +9,19 @@ if (!!process.env.NEXT_PUBLIC_SENTRY_DSN) {
     debug: false,
 
     dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    // You can remove this option if you're not planning to use the Sentry Session Replay feature:
-    integrations: [
-      Sentry.replayIntegration({
-        blockAllMedia: true,
-        // Additional Replay configuration goes in here, for example:
-        maskAllText: true,
-      }),
-    ],
 
+    // Add optional integrations for additional features
+    integrations: [Sentry.replayIntegration()],
+
+    // Define how likely Replay events are sampled when an error occurs.
     replaysOnErrorSampleRate: 1,
 
+    // Define how likely Replay events are sampled.
     // This sets the sample rate to be 10%. You may want this to be 100% while
     // in development and sample at a lower rate in production
     replaysSessionSampleRate: 0.1,
 
-    // Adjust this value in production, or use tracesSampler for greater control
+    // Define how likely traces are sampled. Adjust this value in production, or use tracesSampler for greater control.
     tracesSampleRate: 1,
   });
 }
