@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Model yetenekleri ülke içinde birinci sırada, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde yurtdışındaki önde gelen modelleri geride bırakmaktadır. Ayrıca, sektör lideri çok modlu yeteneklere sahiptir ve birçok yetkili değerlendirme kriterinde mükemmel performans göstermektedir."
   },
+  "ERNIE-3.5-128K": {
+    "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
+  },
+  "ERNIE-3.5-8K": {
+    "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
+  },
+  "ERNIE-3.5-8K-Preview": {
+    "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e kıyasla model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e kıyasla model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel olup, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar. ERNIE 4.0'a kıyasla performans açısından daha üstündür."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel olup, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar. ERNIE 4.0'a kıyasla performans açısından daha üstündür."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Baidu'nun kendi geliştirdiği dikey senaryo büyük dil modeli, oyun NPC'leri, müşteri hizmetleri diyalogları, diyalog karakter rolü gibi uygulama senaryoları için uygundur, karakter tarzı daha belirgin ve tutarlıdır, talimatları takip etme yeteneği daha güçlüdür ve çıkarım performansı daha iyidir."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Baidu'nun kendi geliştirdiği hafif büyük dil modeli, mükemmel model performansı ve çıkarım yeteneklerini dengeler, ERNIE Lite'dan daha iyi sonuçlar verir, düşük hesaplama gücüne sahip AI hızlandırıcı kartları için uygundur."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Baidu'nun 2024 yılında piyasaya sürdüğü kendi geliştirdiği yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel olup, belirli senaryo sorunlarını daha iyi işlemek için temel model olarak ince ayar yapmak için uygundur ve mükemmel çıkarım performansına sahiptir."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Baidu'nun 2024 yılında piyasaya sürdüğü kendi geliştirdiği yüksek performanslı büyük dil modeli, genel yetenekleri mükemmel olup, ERNIE Speed'den daha iyi sonuçlar verir, belirli senaryo sorunlarını daha iyi işlemek için temel model olarak ince ayar yapmak için uygundur ve mükemmel çıkarım performansına sahiptir."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B), çok alanlı uygulamalar ve karmaşık görevler için uygun yenilikçi bir modeldir."
   },
@@ -401,6 +434,9 @@
   "glm-4-flash": {
     "description": "GLM-4-Flash, basit görevleri işlemek için ideal bir seçimdir, en hızlı ve en uygun fiyatlıdır."
   },
+  "glm-4-flashx": {
+    "description": "GLM-4-FlashX, Flash'ın geliştirilmiş bir versiyonudur ve ultra hızlı çıkarım hızı sunar."
+  },
   "glm-4-long": {
     "description": "GLM-4-Long, ultra uzun metin girişlerini destekler, bellek tabanlı görevler ve büyük ölçekli belge işleme için uygundur."
   },
@@ -413,11 +449,11 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus, video içeriği ve çoklu görüntüleri anlama yeteneğine sahiptir, çok modlu görevler için uygundur."
   },
-  "google/gemini-flash-1.5-exp": {
-    "description": "Gemini 1.5 Flash 0827, optimize edilmiş çok modlu işleme yetenekleri sunar ve çeşitli karmaşık görev senaryolarına uygundur."
+  "google/gemini-flash-1.5": {
+    "description": "Gemini 1.5 Flash, optimize edilmiş çok modlu işleme yetenekleri sunar ve çeşitli karmaşık görev senaryolarına uygundur."
   },
-  "google/gemini-pro-1.5-exp": {
-    "description": "Gemini 1.5 Pro 0827, en son optimize edilmiş teknolojileri birleştirerek daha verimli çok modlu veri işleme yetenekleri sunar."
+  "google/gemini-pro-1.5": {
+    "description": "Gemini 1.5 Pro, en son optimize edilmiş teknolojileri birleştirerek daha verimli çok modlu veri işleme yetenekleri sunar."
   },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2, hafiflik ve verimlilik tasarım felsefesini sürdürmektedir."
@@ -490,6 +526,33 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
+  },
+  "hunyuan-code": {
+    "description": "Hunyuan'ın en son kod oluşturma modeli, 200B yüksek kaliteli kod verisi ile artırılmış temel model ile altı ay boyunca yüksek kaliteli SFT verisi eğitimi almıştır. Bağlam penceresi uzunluğu 8K'ya çıkarılmıştır ve beş büyük dil için kod oluşturma otomatik değerlendirme göstergelerinde ön sıralardadır; beş büyük dilde 10 kriterin her yönüyle yüksek kaliteli değerlendirmelerde performansı birinci sıradadır."
+  },
+  "hunyuan-functioncall": {
+    "description": "Hunyuan'ın en son MOE mimarisi FunctionCall modeli, yüksek kaliteli FunctionCall verisi ile eğitilmiş olup, bağlam penceresi 32K'ya ulaşmıştır ve birçok boyutta değerlendirme göstergelerinde lider konumdadır."
+  },
+  "hunyuan-lite": {
+    "description": "MOE yapısına yükseltilmiş, bağlam penceresi 256k, NLP, kod, matematik, endüstri gibi birçok değerlendirme setinde birçok açık kaynak modelden önde."
+  },
+  "hunyuan-pro": {
+    "description": "Trilyon seviyesinde parametre ölçeğine sahip MOE-32K uzun metin modeli. Çeşitli benchmarklarda kesin bir liderlik seviyesine ulaşarak, karmaşık talimatlar ve akıl yürütme yetenekleri ile karmaşık matematik yetenekleri sunar, functioncall desteği ile çok dilli çeviri, finans, hukuk ve sağlık gibi alanlarda önemli optimizasyonlar sağlar."
+  },
+  "hunyuan-role": {
+    "description": "Hunyuan'ın en son rol yapma modeli, Hunyuan resmi ince ayar eğitimi ile geliştirilmiş rol yapma modelidir. Hunyuan modeli ile rol yapma senaryosu veri seti birleştirilerek artırılmıştır ve rol yapma senaryolarında daha iyi temel performans sunmaktadır."
+  },
+  "hunyuan-standard": {
+    "description": "Daha iyi bir yönlendirme stratejisi kullanarak, yük dengeleme ve uzman yakınsaması sorunlarını hafifletir. Uzun metinlerde, iğne arama göstergesi %99.9'a ulaşmaktadır. MOE-32K, uzun metin girişlerini işleme yeteneği ile etki ve fiyat dengesini sağlarken, maliyet açısından daha yüksek bir değer sunar."
+  },
+  "hunyuan-standard-256K": {
+    "description": "Daha iyi bir yönlendirme stratejisi kullanarak, yük dengeleme ve uzman yakınsaması sorunlarını hafifletir. Uzun metinlerde, iğne arama göstergesi %99.9'a ulaşmaktadır. MOE-256K, uzunluk ve etki açısından daha fazla bir sıçrama yaparak, girdi uzunluğunu büyük ölçüde genişletir."
+  },
+  "hunyuan-turbo": {
+    "description": "Hunyuan'ın yeni nesil büyük dil modelinin önizleme sürümü, tamamen yeni bir karma uzman modeli (MoE) yapısı kullanır ve hunyuan-pro'ya kıyasla daha hızlı çıkarım verimliliği ve daha güçlü performans sunar."
+  },
+  "hunyuan-vision": {
+    "description": "Hunyuan'ın en son çok modlu modeli, resim + metin girişi ile metin içeriği oluşturmayı destekler."
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "Yenilikçi açık kaynak modeli InternLM2.5, büyük ölçekli parametreler ile diyalog zekasını artırmıştır."
@@ -633,6 +696,12 @@
   },
   "meta-llama/llama-3.1-8b-instruct:free": {
     "description": "LLaMA 3.1, çok dilli destek sunar ve sektördeki en önde gelen üretim modellerinden biridir."
+  },
+  "meta-llama/llama-3.2-11b-vision-instruct": {
+    "description": "LLaMA 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru yanıtlama gibi görevlerde mükemmel performans sergileyerek dil üretimi ve görsel akıl yürütme arasındaki boşluğu kapatmaktadır."
+  },
+  "meta-llama/llama-3.2-90b-vision-instruct": {
+    "description": "LLaMA 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru yanıtlama gibi görevlerde mükemmel performans sergileyerek dil üretimi ve görsel akıl yürütme arasındaki boşluğu kapatmaktadır."
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct, Llama 3.1 Instruct modelinin en büyük ve en güçlü versiyonudur. Bu, son derece gelişmiş bir diyalog akıl yürütme ve veri sentezleme modelidir ve belirli alanlarda uzmanlaşmış sürekli ön eğitim veya ince ayar için bir temel olarak da kullanılabilir. Llama 3.1, çok dilli büyük dil modelleri (LLM'ler) sunar ve 8B, 70B ve 405B boyutlarında önceden eğitilmiş, talimat ayarlı üretim modellerinden oluşur (metin girişi/çıkışı). Llama 3.1'in talimat ayarlı metin modelleri (8B, 70B, 405B), çok dilli diyalog kullanım durumları için optimize edilmiştir ve yaygın endüstri benchmark testlerinde birçok mevcut açık kaynaklı sohbet modelini geride bırakmıştır. Llama 3.1, çok dilli ticari ve araştırma amaçları için tasarlanmıştır. Talimat ayarlı metin modelleri, asistan benzeri sohbetler için uygundur, önceden eğitilmiş modeller ise çeşitli doğal dil üretim görevlerine uyum sağlayabilir. Llama 3.1 modeli, diğer modellerin çıktısını iyileştirmek için de kullanılabilir, bu da veri sentezleme ve rafine etme işlemlerini içerir. Llama 3.1, optimize edilmiş bir transformer mimarisi kullanarak oluşturulmuş bir otoregresif dil modelidir. Ayarlanmış versiyon, insan yardımseverliği ve güvenlik tercihleri ile uyumlu hale getirmek için denetimli ince ayar (SFT) ve insan geri bildirimi ile güçlendirilmiş öğrenme (RLHF) kullanır."
