@@ -81,6 +81,7 @@
     "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
     "ProviderBizError": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
+    "QuotaLimitReached": "Xin lỗi, lượng Token hiện tại hoặc số lần yêu cầu đã đạt đến giới hạn quota của khóa này, vui lòng tăng quota của khóa hoặc thử lại sau.",
     "StreamChunkError": "Lỗi phân tích khối tin nhắn yêu cầu luồng, vui lòng kiểm tra xem API hiện tại có tuân thủ tiêu chuẩn hay không, hoặc liên hệ với nhà cung cấp API của bạn để được tư vấn.",
     "SubscriptionPlanLimit": "Số lượng đăng ký của bạn đã hết, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói cao hơn hoặc mua gói tài nguyên để tiếp tục sử dụng.",
     "UnknownChatFetchError": "Xin lỗi, đã xảy ra lỗi yêu cầu không xác định. Vui lòng kiểm tra hoặc thử lại theo thông tin dưới đây."
