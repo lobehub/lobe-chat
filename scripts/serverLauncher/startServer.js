@@ -54,6 +54,7 @@ const isValidTLS = (url = '') => {
       switch (err.code) {
         case 'CERT_HAS_EXPIRED':
         case 'DEPTH_ZERO_SELF_SIGNED_CERT':
+        case 'ERR_TLS_CERT_ALTNAME_INVALID':
           console.error(`${errMsg} Certificate is not valid. Consider setting NODE_TLS_REJECT_UNAUTHORIZED="0" or mapping /etc/ssl/certs/ca-certificates.crt.`);
           break;
         case 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY':
