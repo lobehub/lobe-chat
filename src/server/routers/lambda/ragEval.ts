@@ -194,7 +194,7 @@ export const ragEvalRouter = router({
           question: record.question!,
           ideal: record.ideal,
           status: EvalEvaluationStatus.Pending,
-          embeddingModel: DEFAULT_EMBEDDING_MODEL,
+          embeddingModel: DEFAULT_EMBEDDING_MODEL.model,
           languageModel: DEFAULT_MODEL,
         })),
       );

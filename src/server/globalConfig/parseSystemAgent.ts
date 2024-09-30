@@ -1,23 +1,16 @@
 import { DEFAULT_SYSTEM_AGENT_CONFIG } from '@/const/settings';
 import { SYSTEM_EMBEDDING_CONFIG } from '@/const/settings/knowledge';
-import { SystemAgentItem, UserSystemAgentConfig } from '@/types/user/settings';
+import { SystemEmbeddingConfig } from '@/types/knowledgeBase';
+import { UserSystemAgentConfig } from '@/types/user/settings';
 
 const protectedKeys = Object.keys({ ...DEFAULT_SYSTEM_AGENT_CONFIG, ...SYSTEM_EMBEDDING_CONFIG });
 
-interface assertType {
-  agentMeta: SystemAgentItem;
-  embedding_model: SystemAgentItem;
-  queryRewrite: SystemAgentItem;
-  query_mode: SystemAgentItem;
-  reranker_model: SystemAgentItem;
-  topic: SystemAgentItem;
-  translation: SystemAgentItem;
-}
+export interface CommonSystemConfig extends UserSystemAgentConfig, SystemEmbeddingConfig {}
 
-export const parseSystemAgent = (envString: string = ''): Partial<UserSystemAgentConfig> => {
+export const parseSystemAgent = (envString: string = ''): Partial<CommonSystemConfig> => {
   if (!envString) return {};
 
-  const config: Partial<assertType> = {};
+  const config: Partial<CommonSystemConfig> = {};
 
   // 处理全角逗号和多余空格
   let envValue = envString.replaceAll('，', ',').trim();

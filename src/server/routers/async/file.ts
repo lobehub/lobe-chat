@@ -3,11 +3,9 @@ import { chunk } from 'lodash-es';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import {
-  initAgentRuntimeWithUserPayload,
-  splitEmbeddingModelId,
-} from '@/app/api/chat/agentRuntime';
+import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
 import { fileEnv } from '@/config/file';
+import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
@@ -44,8 +42,6 @@ export const fileRouter = router({
     .input(
       z.object({
         fileId: z.string(),
-        model: z.string().default(splitEmbeddingModelId().modelId),
-        provider: z.string().default(splitEmbeddingModelId().provider),
         taskId: z.string(),
       }),
     )
@@ -57,6 +53,13 @@ export const fileRouter = router({
       }
 
       const asyncTask = await ctx.asyncTaskModel.findById(input.taskId);
+
+      const model =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.model ??
+        DEFAULT_EMBEDDING_MODEL.model;
+      const provider =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.provider ??
+        DEFAULT_EMBEDDING_MODEL.provider;
 
       if (!asyncTask) throw new TRPCError({ code: 'BAD_REQUEST', message: 'Async Task not found' });
 
@@ -85,13 +88,14 @@ export const fileRouter = router({
 
           const chunks = await ctx.chunkModel.getChunksTextByFileId(input.fileId);
           const requestArray = chunk(chunks, CHUNK_SIZE);
-
+          console.log('embeddingProvider:', provider);
+          console.log('embeddingModel:', model);
           try {
             await pMap(
               requestArray,
               async (chunks, index) => {
                 const agentRuntime = await initAgentRuntimeWithUserPayload(
-                  getServerGlobalConfig().defaultEmbed?.embedding_model?.provider || 'openai',
+                  provider,
                   ctx.jwtPayload,
                 );
 
@@ -103,7 +107,7 @@ export const fileRouter = router({
                 const embeddings = await agentRuntime.embeddings({
                   dimensions: 1024,
                   input: chunks.map((c) => c.text),
-                  model: input.model,
+                  model: model,
                 });
                 console.timeEnd(`任务[${number}]: embeddings`);
 
@@ -112,7 +116,7 @@ export const fileRouter = router({
                     chunkId: chunks[e.index].id,
                     embeddings: e.embedding,
                     fileId: input.fileId,
-                    model: input.model,
+                    model: model,
                   })) || [];
 
                 console.time(`任务[${number}]: insert db`);

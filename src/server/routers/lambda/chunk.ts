@@ -1,10 +1,8 @@
 import { inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
-import {
-  initAgentRuntimeWithUserPayload,
-  splitEmbeddingModelId,
-} from '@/app/api/chat/agentRuntime';
+import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
+import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
 import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
@@ -14,6 +12,7 @@ import { MessageModel } from '@/database/server/models/message';
 import { knowledgeBaseFiles } from '@/database/server/schemas/lobechat';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
+import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ChunkService } from '@/server/services/chunk';
 import { SemanticSearchSchema } from '@/types/rag';
 
@@ -102,19 +101,23 @@ export const chunkRouter = router({
     .input(
       z.object({
         fileIds: z.array(z.string()).optional(),
-        model: z.string().default(splitEmbeddingModelId().modelId),
-        provider: z.string().default(splitEmbeddingModelId().provider),
         query: z.string(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
       console.time('embedding');
-      const agentRuntime = await initAgentRuntimeWithUserPayload(input.provider, ctx.jwtPayload);
+      const model =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.model ??
+        DEFAULT_EMBEDDING_MODEL.model;
+      const provider =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.provider ??
+        DEFAULT_EMBEDDING_MODEL.provider;
+      const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
       const embeddings = await agentRuntime.embeddings({
         dimensions: 1024,
         input: input.query,
-        model: input.model,
+        model: model,
       });
       console.timeEnd('embedding');
 
@@ -129,27 +132,31 @@ export const chunkRouter = router({
     .input(SemanticSearchSchema)
     .mutation(async ({ ctx, input }) => {
       const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
+      const model =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.model ??
+        DEFAULT_EMBEDDING_MODEL.model;
+      const provider =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.provider ??
+        DEFAULT_EMBEDDING_MODEL.provider;
       let embedding: number[];
       let ragQueryId: string;
-
+      console.log('embeddingProvider:', provider);
+      console.log('embeddingModel:', model);
       // if there is no message rag or it's embeddings, then we need to create one
       if (!item || !item.embeddings) {
         // TODO: need to support customize
-        const agentRuntime = await initAgentRuntimeWithUserPayload(
-          splitEmbeddingModelId().provider,
-          ctx.jwtPayload,
-        );
+        const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
         const embeddings = await agentRuntime.embeddings({
           dimensions: 1024,
           input: input.rewriteQuery,
-          model: splitEmbeddingModelId().modelId,
+          model: model,
         });
 
         embedding = embeddings![0].embedding;
         const embeddingsId = await ctx.embeddingModel.create({
           embeddings: embedding,
-          model: input.model,
+          model: model,
         });
 
         const result = await ctx.messageModel.createMessageQuery({

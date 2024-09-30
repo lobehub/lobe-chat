@@ -61,7 +61,7 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
     onDelete: 'cascade',
   }),
   languageModel: text('language_model').$defaultFn(() => DEFAULT_MODEL),
-  embeddingModel: text('embedding_model').$defaultFn(() => DEFAULT_EMBEDDING_MODEL),
+  embeddingModel: text('embedding_model').$defaultFn(() => DEFAULT_EMBEDDING_MODEL.model),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
   createdAt: createdAt(),
