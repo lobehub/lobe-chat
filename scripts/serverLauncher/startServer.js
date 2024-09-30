@@ -41,12 +41,12 @@ const isValidTLS = (url = '') => {
   const options = { host, port, servername: host };
   return new Promise((resolve, reject) => {
     const socket = tls.connect(options, () => {
-      if (socket.authorized) {
-        console.log(`✅ TLS Check: Valid certificate for ${host}:${port}.`);
-        console.log('-------------------------------------');
-        resolve();
-      }
+      console.log(`✅ TLS Check: Valid certificate for ${host}:${port}.`);
+      console.log('-------------------------------------');
+
       socket.end();
+
+      resolve();
     });
 
     socket.on('error', (err) => {
