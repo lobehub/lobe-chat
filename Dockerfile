@@ -186,6 +186,8 @@ ENV \
     TOGETHERAI_API_KEY="" TOGETHERAI_MODEL_LIST="" \
     # Upstage
     UPSTAGE_API_KEY="" \
+    # Wenxin
+    WENXIN_ACCESS_KEY="" WENXIN_SECRET_KEY="" \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
