@@ -131,6 +131,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math, matematik alanındaki sorunları çözmeye odaklanır ve yüksek zorlukta sorulara profesyonel yanıtlar sunar."
   },
+  "SenseChat": {
+    "description": "Temel sürüm model (V4), 4K bağlam uzunluğu ile genel yetenekleri güçlüdür."
+  },
+  "SenseChat-128K": {
+    "description": "Temel sürüm model (V4), 128K bağlam uzunluğu ile uzun metin anlama ve üretme görevlerinde mükemmel performans sergilemektedir."
+  },
+  "SenseChat-32K": {
+    "description": "Temel sürüm model (V4), 32K bağlam uzunluğu ile çeşitli senaryolarda esnek bir şekilde uygulanabilir."
+  },
+  "SenseChat-5": {
+    "description": "En son sürüm model (V5.5), 128K bağlam uzunluğu, matematiksel akıl yürütme, İngilizce diyalog, talimat takibi ve uzun metin anlama gibi alanlarda önemli gelişmeler göstermektedir ve GPT-4o ile karşılaştırılabilir."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "32K bağlam uzunluğu ile, Kantonca diyalog anlama konusunda GPT-4'ü aşmakta, bilgi, akıl yürütme, matematik ve kod yazma gibi birçok alanda GPT-4 Turbo ile rekabet edebilmektedir."
+  },
+  "SenseChat-Character": {
+    "description": "Standart sürüm model, 8K bağlam uzunluğu ile yüksek yanıt hızı sunmaktadır."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Gelişmiş sürüm model, 32K bağlam uzunluğu ile yetenekleri tamamen geliştirilmiş, Çince/İngilizce diyalogları desteklemektedir."
+  },
+  "SenseChat-Turbo": {
+    "description": "Hızlı soru-cevap ve model ince ayar senaryoları için uygundur."
+  },
+  "SenseChat-Vision": {
+    "description": "En son sürüm model (V5.5), 16K bağlam uzunluğu, çoklu görüntü girişini destekler, modelin temel yetenek optimizasyonunu tam olarak gerçekleştirir ve nesne özellik tanıma, mekansal ilişkiler, eylem olayı tanıma, sahne anlama, duygu tanıma, mantıksal bilgi akıl yürütme ve metin anlama üretiminde önemli iyileştirmeler sağlamıştır."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B açık kaynak versiyonu, diyalog uygulamaları için optimize edilmiş bir diyalog deneyimi sunar."
   },
@@ -588,6 +615,12 @@
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online modeli, 8B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, çevrimiçi sohbet için tasarlanmıştır ve çeşitli metin etkileşimlerini etkili bir şekilde işler."
+  },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru-cevap gibi görevlerde mükemmel performans sergileyerek dil üretimi ile görsel akıl yürütme arasındaki boşluğu kapatmaktadır."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru-cevap gibi görevlerde mükemmel performans sergileyerek dil üretimi ile görsel akıl yürütme arasındaki boşluğu kapatmaktadır."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B, eşsiz karmaşıklık işleme yeteneği sunar ve yüksek talepli projeler için özel olarak tasarlanmıştır."

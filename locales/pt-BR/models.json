@@ -131,6 +131,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math foca na resolução de problemas na área de matemática, oferecendo respostas especializadas para questões de alta dificuldade."
   },
+  "SenseChat": {
+    "description": "Modelo da versão básica (V4), com comprimento de contexto de 4K, com capacidades gerais poderosas."
+  },
+  "SenseChat-128K": {
+    "description": "Modelo da versão básica (V4), com comprimento de contexto de 128K, se destaca em tarefas de compreensão e geração de textos longos."
+  },
+  "SenseChat-32K": {
+    "description": "Modelo da versão básica (V4), com comprimento de contexto de 32K, aplicável de forma flexível em diversos cenários."
+  },
+  "SenseChat-5": {
+    "description": "Modelo da versão mais recente (V5.5), com comprimento de contexto de 128K, com capacidades significativamente aprimoradas em raciocínio matemático, diálogos em inglês, seguimento de instruções e compreensão de textos longos, rivalizando com o GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "Comprimento de contexto de 32K, superando o GPT-4 na compreensão de diálogos em cantonês, competindo com o GPT-4 Turbo em várias áreas, incluindo conhecimento, raciocínio, matemática e programação."
+  },
+  "SenseChat-Character": {
+    "description": "Modelo padrão, com comprimento de contexto de 8K, alta velocidade de resposta."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Modelo avançado, com comprimento de contexto de 32K, com capacidades amplamente aprimoradas, suportando diálogos em chinês e inglês."
+  },
+  "SenseChat-Turbo": {
+    "description": "Adequado para perguntas rápidas e cenários de ajuste fino do modelo."
+  },
+  "SenseChat-Vision": {
+    "description": "Modelo da versão mais recente (V5.5), com comprimento de contexto de 16K, suporta entrada de múltiplas imagens, implementa otimizações abrangentes nas capacidades básicas do modelo, com grandes melhorias em reconhecimento de propriedades de objetos, relações espaciais, reconhecimento de eventos de ação, compreensão de cenas, reconhecimento de emoções, raciocínio lógico e compreensão e geração de texto."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B é uma versão de código aberto, oferecendo uma experiência de diálogo otimizada para aplicações de conversa."
   },
@@ -588,6 +615,12 @@
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "O modelo Llama 3.1 Sonar Small Online possui 8B de parâmetros, suportando um comprimento de contexto de aproximadamente 127.000 tokens, projetado para chats online, capaz de processar eficientemente diversas interações textuais."
+  },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 é projetado para lidar com tarefas que combinam dados visuais e textuais. Ele se destaca em tarefas como descrição de imagens e perguntas visuais, superando a lacuna entre geração de linguagem e raciocínio visual."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 é projetado para lidar com tarefas que combinam dados visuais e textuais. Ele se destaca em tarefas como descrição de imagens e perguntas visuais, superando a lacuna entre geração de linguagem e raciocínio visual."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B oferece capacidade de processamento incomparável para complexidade, projetado sob medida para projetos de alta demanda."

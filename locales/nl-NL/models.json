@@ -131,6 +131,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math richt zich op het oplossen van wiskundige vraagstukken en biedt professionele antwoorden op moeilijke vragen."
   },
+  "SenseChat": {
+    "description": "Basisversie van het model (V4), met een contextlengte van 4K, heeft sterke algemene capaciteiten."
+  },
+  "SenseChat-128K": {
+    "description": "Basisversie van het model (V4), met een contextlengte van 128K, presteert uitstekend in taken van begrip en generatie van lange teksten."
+  },
+  "SenseChat-32K": {
+    "description": "Basisversie van het model (V4), met een contextlengte van 32K, flexibel toepasbaar in verschillende scenario's."
+  },
+  "SenseChat-5": {
+    "description": "De nieuwste versie van het model (V5.5), met een contextlengte van 128K, heeft aanzienlijke verbeteringen in wiskundig redeneren, Engelse conversatie, instructievolging en begrip van lange teksten, en kan zich meten met GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "Met een contextlengte van 32K overtreft het de conversatiebegrip in het Kantonees van GPT-4 en kan het zich in verschillende domeinen zoals kennis, redeneren, wiskunde en coderen meten met GPT-4 Turbo."
+  },
+  "SenseChat-Character": {
+    "description": "Standaardversie van het model, met een contextlengte van 8K, hoge responsnelheid."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Geavanceerde versie van het model, met een contextlengte van 32K, met uitgebreide verbeteringen in capaciteiten, ondersteunt zowel Chinese als Engelse conversaties."
+  },
+  "SenseChat-Turbo": {
+    "description": "Geschikt voor snelle vraag-en-antwoord en modelafstemming."
+  },
+  "SenseChat-Vision": {
+    "description": "De nieuwste versie van het model (V5.5), met een contextlengte van 16K, ondersteunt meerdere afbeeldingsinvoeren en heeft de basiscapaciteiten van het model geoptimaliseerd, met aanzienlijke verbeteringen in objecteigenschappenherkenning, ruimtelijke relaties, actie-evenementherkenning, scènebegrip, emotieherkenning, logische redenering en tekstbegrip en -generatie."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is de open-source versie die een geoptimaliseerde gesprekservaring biedt voor gespreksapplicaties."
   },
@@ -588,6 +615,12 @@
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online model, met 8B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, speciaal ontworpen voor online chat en kan efficiënt verschillende tekstinteracties verwerken."
+  },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 is ontworpen om taken te verwerken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visueel redeneren."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 is ontworpen om taken te verwerken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visueel redeneren."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B biedt ongeëvenaarde complexiteitsverwerkingscapaciteiten, op maat gemaakt voor veeleisende projecten."
