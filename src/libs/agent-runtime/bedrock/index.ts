@@ -8,7 +8,7 @@ import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
-import { buildCohereChatHistory } from '../utils/cohereHelpers';
+import { buildCohereChatHistory, buildCohereMessage } from '../utils/cohereHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -122,7 +122,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         chat_history: buildCohereChatHistory(messages),
         frequency_penalty: frequency_penalty,
         max_tokens: max_tokens || 4096,
-        message: messages[0].content,
+        message: buildCohereMessage(messages),
         p: (top_p !== undefined && top_p > 0 && top_p < 1) ? top_p : undefined,
         presence_penalty: presence_penalty,
         temperature: temperature,
