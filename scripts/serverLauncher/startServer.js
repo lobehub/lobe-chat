@@ -1,6 +1,5 @@
 const dns = require('dns').promises;
 const fs = require('fs').promises;
-const https = require('https');
 const { spawn } = require('child_process');
 
 // Set file paths
@@ -21,81 +20,6 @@ const isValidIP = (ip, version = 4) => {
     default:
       return ipv4Regex.test(ip) || ipv6Regex.test(ip);
   }
-};
-
-// Function to check TLS validity of a URL
-const isValidTLS = (url = '') => {
-  if (!url) {
-    console.log('⚠️ TLS Check: No URL provided. Skipping TLS check. Ensure correct setting ENV.');
-    console.log('-------------------------------------');
-    return Promise.resolve();
-  }
-
-  const { protocol, host, port } = parseUrl(url);
-  if (protocol !== 'https') {
-    console.log(`⚠️ TLS Check: Non-HTTPS protocol (${protocol}). Skipping TLS check for ${url}.`);
-    console.log('-------------------------------------');
-    return Promise.resolve();
-  }
-
-  const options = {
-    host,
-    port: port,
-    timeout: 3000,
-  };
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
-      console.log(`✅ TLS Check: Valid certificate for ${host}:${port}.`);
-      console.log('-------------------------------------');
-      res.resume();
-      resolve();
-    });
-
-    const errMsg = `❌ TLS Check: Error for ${host}:${port}. Details:`;
-
-    req.on('error', (err) => {
-      switch (err.code) {
-        case 'CERT_HAS_EXPIRED':
-        case 'DEPTH_ZERO_SELF_SIGNED_CERT':
-        case 'ERR_TLS_CERT_ALTNAME_INVALID':
-        case 'UNABLE_TO_VERIFY_LEAF_SIGNATURE':
-          console.error(`${errMsg} Certificate is not valid. Consider setting NODE_EXTRA_CA_CERTS or NODE_TLS_REJECT_UNAUTHORIZED="0".`);
-          break;
-        case 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY':
-          console.error(`${errMsg} Unable to verify issuer. Ensure correct mapping of ${process.env.SSL_CERT_DIR}.`);
-          break;
-        default:
-          console.error(`${errMsg} Unknown error. Details:`);
-          break;
-      }
-      reject(err);
-    });
-
-    req.on('timeout', () => {
-        console.error(`${errMsg} Connection timeout. Check firewall or DNS.`);
-        req.destroy();
-        reject();
-    });
-
-    req.end();
-  });
-};
-
-// Function to check TLS connections for OSS and Auth Issuer
-const checkTLSConnections = async () => {
-  await Promise.all([
-    isValidTLS(process.env.S3_ENDPOINT),
-    isValidTLS(process.env.S3_PUBLIC_DOMAIN),
-    isValidTLS(getEnvVarsByKeyword('_ISSUER')),
-  ]);
-};
-
-// Function to get environment variable by keyword
-const getEnvVarsByKeyword = (keyword) => {
-  return Object.entries(process.env)
-    .filter(([key, value]) => key.includes(keyword) && value)
-    .map(([, value]) => value)[0] || null;
 };
 
 // Function to parse protocol, host and port from a URL
@@ -183,26 +107,18 @@ const runServer = async () => {
 
   if (process.env.DATABASE_DRIVER) {
     try {
-      try {
-        await fs.access(DB_MIGRATION_SCRIPT_PATH);
+      await fs.access(DB_MIGRATION_SCRIPT_PATH);
 
-        await runScript(DB_MIGRATION_SCRIPT_PATH);
-      } catch (err) {
-        if (err.code === 'ENOENT') {
-          console.log(`⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure to migrate database manually.`);
-          console.log('-------------------------------------');
-        } else {
-          console.error('❌ Error during DB migration:');
-          console.error(err);
-          process.exit(1);
-        }
-      }
-
-      await checkTLSConnections();
+      await runScript(DB_MIGRATION_SCRIPT_PATH);
     } catch (err) {
-      console.error('❌ Error during TLS connection check:');
-      console.error(err);
-      process.exit(1);
+      if (err.code === 'ENOENT') {
+        console.log(`⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure to migrate database manually.`);
+        console.log('-------------------------------------');
+      } else {
+        console.error('❌ Error during DB migration:');
+        console.error(err);
+        process.exit(1);
+      }
     }
   }
 
