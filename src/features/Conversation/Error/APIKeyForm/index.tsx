@@ -66,6 +66,8 @@ const APIKeyForm = memo<APIKeyFormProps>(({ id, provider }) => {
     <Center gap={16} style={{ maxWidth: 300 }}>
       {provider === ModelProvider.Bedrock ? (
         <BedrockForm />
+      ) : provider === ModelProvider.SenseNova ? (
+        <SenseNovaForm />
       ) : provider === ModelProvider.Wenxin ? (
         <WenxinForm />
       ) : (

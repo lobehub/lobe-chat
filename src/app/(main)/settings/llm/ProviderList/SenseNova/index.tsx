@@ -41,6 +41,6 @@ export const useSenseNovaProvider = (): ProviderItem => {
         name: [KeyVaultsConfigKey, providerKey, 'sensenovaAccessKeySecret'],
       },
     ],
-    title: <SenseNova.Combine size={32} type={'color'} />,
+    title: <SenseNova.Combine size={28} type={'color'} />,
   };
 };
