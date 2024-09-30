@@ -22,7 +22,8 @@ tags:
 <Callout type="info">
   本文已经假定你了解了 LobeChat 服务端数据库版本（下简称 DB
   版）的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat DB
-  版的部署原理，请先查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
+  版的部署原理，请先查阅 [使用服务端数据库部署](https://lobehub.com/zh/docs/self-hosting/advanced/s3/tencent-cloud) 。
+  此外，针对国内的腾讯云储存桶用户，可查询[配置腾讯云 COS 存储服务](https://lobehub.com/zh/docs/self-hosting/advanced/s3/tencent-cloud)。
 </Callout>
 
 <Callout type="warning">
@@ -83,9 +84,11 @@ AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
 # S3 相关
 S3_ACCESS_KEY_ID=xxxxxxxxxx
 S3_SECRET_ACCESS_KEY=xxxxxxxxxx
-S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com # 用于 S3 API 访问的域名
+# 用于 S3 API 访问的域名
+S3_ENDPOINT=https://xxxxxxxxxx.r2.cloudflarestorage.com 
 S3_BUCKET=lobechat
-S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com # 用于外网访问 S3 的公共域名，需配置 CORS
+# 用于外网访问 S3 的公共域名，需配置 CORS
+S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com 
 # S3_REGION=ap-chengdu # 如果需要指定地域
 
 # 其他环境变量，视需求而定
