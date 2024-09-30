@@ -1,5 +1,6 @@
 import {
   Content,
+  FunctionCallPart,
   FunctionDeclaration,
   FunctionDeclarationSchemaProperty,
   FunctionDeclarationSchemaType,
@@ -11,6 +12,7 @@ import { JSONSchema7 } from 'json-schema';
 import { transform } from 'lodash-es';
 
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
+import { safeParseJSON } from '@/utils/safeParseJSON';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../error';
@@ -50,8 +52,9 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     this.baseURL = baseURL;
   }
 
-  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+  async chat(rawPayload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     try {
+      const payload = this.buildPayload(rawPayload);
       const model = payload.model;
 
       const contents = await this.buildGoogleMessages(payload.messages, model);
@@ -88,7 +91,11 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           },
           { apiVersion: 'v1beta', baseUrl: this.baseURL },
         )
-        .generateContentStream({ contents, tools: this.buildGoogleTools(payload.tools) });
+        .generateContentStream({
+          contents,
+          systemInstruction: payload.system as string,
+          tools: this.buildGoogleTools(payload.tools),
+        });
 
       const googleStream = googleGenAIResultToStream(geminiStreamResult);
       const [prod, useForDebug] = googleStream.tee();
@@ -111,6 +118,16 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     }
   }
 
+  private buildPayload(payload: ChatStreamPayload) {
+    const system_message = payload.messages.find((m) => m.role === 'system');
+    const user_messages = payload.messages.filter((m) => m.role !== 'system');
+
+    return {
+      ...payload,
+      messages: user_messages,
+      system: system_message?.content,
+    };
+  }
   private convertContentToGooglePart = async (content: UserMessageContentPart): Promise<Part> => {
     switch (content.type) {
       case 'text': {
@@ -152,6 +169,17 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     message: OpenAIChatMessage,
   ): Promise<Content> => {
     const content = message.content as string | UserMessageContentPart[];
+    if (!!message.tool_calls) {
+      return {
+        parts: message.tool_calls.map<FunctionCallPart>((tool) => ({
+          functionCall: {
+            args: safeParseJSON(tool.function.arguments)!,
+            name: tool.function.name,
+          },
+        })),
+        role: 'function',
+      };
+    }
 
     return {
       parts:
@@ -168,44 +196,44 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     messages: OpenAIChatMessage[],
     model: string,
   ): Promise<Content[]> => {
-    // if the model is gemini-1.5-pro-latest, we don't need any special handling
-    if (model === 'gemini-1.5-pro-latest') {
-      const pools = messages
-        .filter((message) => message.role !== 'function')
-        .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg));
+    // if the model is gemini-1.0 we don't need to pair messages
+    if (model.startsWith('gemini-1.0')) {
+      const contents: Content[] = [];
+      let lastRole = 'model';
 
-      return Promise.all(pools);
-    }
+      for (const message of messages) {
+        // current to filter function message
+        if (message.role === 'function') {
+          continue;
+        }
+        const googleMessage = await this.convertOAIMessagesToGoogleMessage(message);
 
-    const contents: Content[] = [];
-    let lastRole = 'model';
+        // if the last message is a model message and the current message is a model message
+        // then we need to add a user message to separate them
+        if (lastRole === googleMessage.role) {
+          contents.push({ parts: [{ text: '' }], role: lastRole === 'user' ? 'model' : 'user' });
+        }
 
-    for (const message of messages) {
-      // current to filter function message
-      if (message.role === 'function') {
-        continue;
+        // add the current message to the contents
+        contents.push(googleMessage);
+
+        // update the last role
+        lastRole = googleMessage.role;
       }
-      const googleMessage = await this.convertOAIMessagesToGoogleMessage(message);
 
-      // if the last message is a model message and the current message is a model message
-      // then we need to add a user message to separate them
-      if (lastRole === googleMessage.role) {
-        contents.push({ parts: [{ text: '' }], role: lastRole === 'user' ? 'model' : 'user' });
+      // if the last message is a user message, then we need to add a model message to separate them
+      if (lastRole === 'model') {
+        contents.push({ parts: [{ text: '' }], role: 'user' });
       }
 
-      // add the current message to the contents
-      contents.push(googleMessage);
-
-      // update the last role
-      lastRole = googleMessage.role;
+      return contents;
     }
 
-    // if the last message is a user message, then we need to add a model message to separate them
-    if (lastRole === 'model') {
-      contents.push({ parts: [{ text: '' }], role: 'user' });
-    }
+    const pools = messages
+      .filter((message) => message.role !== 'function')
+      .map(async (msg) => await this.convertOAIMessagesToGoogleMessage(msg));
 
-    return contents;
+    return Promise.all(pools);
   };
 
   private parseErrorMessage(message: string): {

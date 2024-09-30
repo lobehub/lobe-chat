@@ -61,7 +61,7 @@ export const createPluginSlice: StateCreator<
   },
   useCheckPluginsIsInstalled: (plugins) => useSWR(plugins, get().checkPluginsIsInstalled),
   validatePluginSettings: async (identifier) => {
-    const manifest = pluginSelectors.getPluginManifestById(identifier)(get());
+    const manifest = pluginSelectors.getToolManifestById(identifier)(get());
     if (!manifest || !manifest.settings) return;
     const settings = pluginSelectors.getPluginSettingsById(identifier)(get());
 

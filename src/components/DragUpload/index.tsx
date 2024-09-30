@@ -58,7 +58,6 @@ const useStyles = createStyles(({ css, token }) => {
       height: 100%;
 
       background: ${token.colorBgMask};
-      backdrop-filter: blur(4px);
 
       transition: all 0.3s ease-in-out;
     `,

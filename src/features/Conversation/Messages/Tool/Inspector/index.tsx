@@ -52,7 +52,7 @@ const Inspector = memo<InspectorProps>(
     const { styles } = useStyles();
     const [open, setOpen] = useState(false);
     const [isMessageToolUIOpen, openToolUI, togglePortal] = useChatStore((s) => [
-      chatPortalSelectors.isArtifactMessageUIOpen(id)(s),
+      chatPortalSelectors.isPluginUIOpen(id)(s),
       s.openToolUI,
       s.togglePortal,
     ]);

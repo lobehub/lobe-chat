@@ -79,7 +79,7 @@ export class ServerService implements IMessageService {
     return lambdaClient.message.updatePluginState.mutate({ id, value });
   }
 
-  bindMessagesToTopic(topicId: string, messageIds: string[]): Promise<any> {
+  bindMessagesToTopic(_topicId: string, _messageIds: string[]): Promise<any> {
     throw new Error('Method not implemented.');
   }
 

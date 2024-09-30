@@ -13,7 +13,7 @@ export interface PluginStandaloneTypeProps {
 }
 
 const PluginDefaultType = memo<PluginStandaloneTypeProps>(({ payload, id, name = 'unknown' }) => {
-  const manifest = useToolStore(pluginSelectors.getPluginManifestById(name));
+  const manifest = useToolStore(pluginSelectors.getToolManifestById(name));
 
   if (!manifest?.ui) return;
 

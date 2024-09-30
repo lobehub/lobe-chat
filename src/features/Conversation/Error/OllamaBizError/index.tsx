@@ -23,7 +23,7 @@ interface OllamaErrorResponse {
   error: OllamaError;
 }
 
-const UNRESOLVED_MODEL_REGEXP = /model '([\w+,-_]+)' not found/;
+const UNRESOLVED_MODEL_REGEXP = /model "([\w+,-_]+)" not found/;
 
 const OllamaBizError = memo<ChatMessage>(({ error, id }) => {
   const errorBody: OllamaErrorResponse = (error as any)?.body;

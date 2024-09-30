@@ -8,6 +8,7 @@ import { checkAuth } from './auth';
 import { createOpenai } from './createOpenai';
 
 /**
+ * @deprecated
  * createOpenAI Instance with Auth and azure openai support
  * if auth not pass ,just return error response
  */

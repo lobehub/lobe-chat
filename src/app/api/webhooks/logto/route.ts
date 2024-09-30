@@ -23,11 +23,17 @@ export const POST = async (req: Request): Promise<NextResponse> => {
   const nextAuthUserService = new NextAuthUserService();
   switch (event) {
     case 'User.Data.Updated': {
-      return nextAuthUserService.safeUpdateUser(data.id, {
-        avatar: data?.avatar,
-        email: data?.primaryEmail,
-        fullName: data?.name,
-      });
+      return nextAuthUserService.safeUpdateUser(
+        {
+          provider: 'logto',
+          providerAccountId: data.id,
+        },
+        {
+          avatar: data?.avatar,
+          email: data?.primaryEmail,
+          fullName: data?.name,
+        },
+      );
     }
 
     default: {

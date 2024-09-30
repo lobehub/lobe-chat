@@ -133,6 +133,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURL };
     }
+    case ModelProvider.Github: {
+      const { GITHUB_TOKEN } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || GITHUB_TOKEN);
+
+      return { apiKey };
+    }
     case ModelProvider.OpenRouter: {
       const { OPENROUTER_API_KEY } = getLLMConfig();
 
@@ -229,6 +236,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { SPARK_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || SPARK_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Ai21: {
+      const { AI21_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || AI21_API_KEY);
+
+      return { apiKey };
+    }
+    case ModelProvider.Hunyuan: {
+      const { HUNYUAN_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || HUNYUAN_API_KEY);
 
       return { apiKey };
     }

@@ -112,6 +112,13 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：`https://generativelanguage.googleapis.com`
 - 示例：`https://api.genai.gd.edu.kg/google`
 
+### `GOOGLE_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+gemini-1.5-flash-latest,+gemini-1.5-pro-latest`
+
 ## Anthropic AI
 
 ### `ANTHROPIC_API_KEY`
@@ -179,9 +186,25 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 ### `OPENROUTER_MODEL_LIST`
 
 - 类型：可选
-- 描述：用于指定自定义 OpenRouter 模型列表。模型定义语法规则见 [模型列表][model-list]
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
 - 默认值：`-`
 - 示例：`-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
+
+## Github
+
+### `GITHUB_TOKEN`
+
+- 类型：必选
+- 描述：这是你在 Github 申请的 Personal access tokens
+- 默认值：-
+- 示例：`ghp_xxxxxx...xxxxxx=`
+
+### `GITHUB_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+gpt-4o,+gpt-4o-mini`
 
 ## TogetherAI
 
@@ -195,9 +218,25 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 ### `TOGETHERAI_MODEL_LIST`
 
 - 类型：可选
-- 描述：用于指定自定义 Together AI 的模型列表。模型定义语法规则见 [模型列表][model-list]
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
 - 默认值：`-`
-- 示例：`01-ai/yi-34b-chat`
+- 示例：`-all,+meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo,+meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo`
+
+## Fireworks AI
+
+### `FIREWORKSAI_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Fireworks AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+### `FIREWORKSAI_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+accounts/fireworks/models/firefunction-v2,+accounts/fireworks/models/firefunction-v1`
 
 ## Ollama
 
@@ -240,6 +279,13 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：-
 - 示例：`pplx-xxxxxx...xxxxxx`
 
+### `PERPLEXITY_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Perplexity 接口代理，可以使用此配置项来覆盖默认的 Perplexity API 请求基础 URL
+- 默认值：`https://api.Perplexity.ai`
+- 示例：`https://my-Perplexity-proxy.com`
+
 ## Minimax AI
 
 ### `MINIMAX_API_KEY`
@@ -267,6 +313,20 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：-
 - 示例：`gsk_xxxxxx...xxxxxx`
 
+### `GROQ_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+gemma2-9b-it,+llama-3.1-8b-instant`
+
+### `GROQ_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Groq 接口代理，可以使用此配置项来覆盖默认的 Groq API 请求基础 URL
+- 默认值：`https://api.groq.com/openai/v1`
+- 示例：`https://my-groq-proxy.com/v1`
+
 ## 智谱 AI
 
 ### `ZHIPU_API_KEY`
@@ -275,6 +335,13 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 描述：这是你在 智谱 AI 服务中申请的 API 密钥
 - 默认值：-
 - 示例：`4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
+
+### `ZHIPU_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+glm-4-alltools,+glm-4-plus`
 
 ## 01 AI
 
@@ -285,7 +352,12 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 默认值：-
 - 示例：`xxxxxx...xxxxxx`
 
-[model-list]: /zh/docs/self-hosting/advanced/model-list
+### `ZEROONE_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+yi-large,+yi-large-rag`
 
 ## 通义千问
 
@@ -295,3 +367,130 @@ LobeChat 在部署时提供了丰富的模型服务商相关的环境变量，�
 - 描述：这是你在阿里云百炼平台上获取的 DashScope API 密钥
 - 默认值：-
 - 示例：`sk-xxxxx...xxxxx`
+
+### `QWEN_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+qwen-turbo-latest,+qwen-plus-latest`
+
+## Stepfun AI
+
+### `STEPFUN_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Stepfun AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+## Novita AI
+
+### `NOVITA_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Novita AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+### `NOVITA_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+meta-llama/llama-3.1-8b-instruct,+meta-llama/llama-3.1-70b-instruct`
+
+## 百川
+
+### `BAICHUAN_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 百川智能 服务平台申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+## 紫东太初
+
+### `TAICHU_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 紫东太初 服务平台申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+## 360 AI
+
+### `AI360_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 360智脑 服务平台申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+## Siliconflow
+
+### `SILICONCLOUD_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Siliconflow 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+### `SILICONCLOUD_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+deepseek-ai/DeepSeek-V2.5,+Qwen/Qwen2.5-7B-Instruct`
+
+### `SILICONCLOUD_PROXY_URL`
+
+- 类型：可选
+- 描述：如果你手动配置了 Siliconflow 接口代理，可以使用此配置项来覆盖默认的 Siliconflow API 请求基础 URL
+- 默认值：`https://api.siliconflow.cn/v1`
+- 示例：`https://my-siliconflow-proxy.com/v1`
+
+## Upstage AI
+
+### `UPSTAGE_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Upstage AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+## Spark AI
+
+### `SPARK_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 Spark AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+## A21 AI
+
+### `AI21_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 A21 AI 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+## 腾讯混元
+
+### `HUNYUAN_API_KEY`
+
+- 类型：必选
+- 描述：这是你在 腾讯混元 服务中申请的 API 密钥
+- 默认值：-
+- 示例：`xxxxxx...xxxxxx`
+
+### `HUNYUAN_MODEL_LIST`
+
+- 类型：可选
+- 描述：用来控制模型列表，使用 `+` 增加一个模型，使用 `-` 来隐藏一个模型，使用 `模型名=展示名<扩展配置>` 来自定义模型的展示名，用英文逗号隔开。模型定义语法规则见 [模型列表][model-list]
+- 默认值：`-`
+- 示例：`-all,+hunyuan-lite,+hunyuan-standard`
+
+[model-list]: /zh/docs/self-hosting/advanced/model-list

@@ -6,8 +6,10 @@ import { getLLMConfig } from '@/config/llm';
 import {
   BedrockProviderCard,
   FireworksAIProviderCard,
+  GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HunyuanProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
@@ -45,6 +47,12 @@ export const getServerGlobalConfig = () => {
     ENABLED_GROQ,
     GROQ_MODEL_LIST,
 
+    ENABLED_GITHUB,
+    GITHUB_MODEL_LIST,
+
+    ENABLED_HUNYUAN,
+    HUNYUAN_MODEL_LIST,
+
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
@@ -60,6 +68,7 @@ export const getServerGlobalConfig = () => {
     ENABLED_STEPFUN,
     ENABLED_BAICHUAN,
     ENABLED_TAICHU,
+    ENABLED_AI21,
     ENABLED_AI360,
 
     ENABLED_SILICONCLOUD,
@@ -87,6 +96,8 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_FIREWORKSAI,
     FIREWORKSAI_MODEL_LIST,
+
+    ENABLED_WENXIN,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -97,6 +108,7 @@ export const getServerGlobalConfig = () => {
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
     languageModel: {
+      ai21: { enabled: ENABLED_AI21 },
       ai360: { enabled: ENABLED_AI360 },
       anthropic: {
         enabled: ENABLED_ANTHROPIC,
@@ -130,6 +142,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
 
+      github: {
+        enabled: ENABLED_GITHUB,
+        enabledModels: extractEnabledModels(GITHUB_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: GithubProviderCard.chatModels,
+          modelString: GITHUB_MODEL_LIST,
+        }),
+      },
       google: {
         enabled: ENABLED_GOOGLE,
         enabledModels: extractEnabledModels(GOOGLE_MODEL_LIST),
@@ -146,6 +166,14 @@ export const getServerGlobalConfig = () => {
           modelString: GROQ_MODEL_LIST,
         }),
       },
+      hunyuan: {
+        enabled: ENABLED_HUNYUAN,
+        enabledModels: extractEnabledModels(HUNYUAN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: HunyuanProviderCard.chatModels,
+          modelString: HUNYUAN_MODEL_LIST,
+        }),
+      },
       minimax: { enabled: ENABLED_MINIMAX },
       mistral: { enabled: ENABLED_MISTRAL },
       moonshot: { enabled: ENABLED_MOONSHOT },
@@ -159,6 +187,7 @@ export const getServerGlobalConfig = () => {
       },
       ollama: {
         enabled: ENABLED_OLLAMA,
+        enabledModels: extractEnabledModels(OLLAMA_MODEL_LIST),
         fetchOnClient: !OLLAMA_PROXY_URL,
         serverModelCards: transformToChatModelCards({
           defaultChatModels: OllamaProviderCard.chatModels,
@@ -212,6 +241,7 @@ export const getServerGlobalConfig = () => {
         }),
       },
       upstage: { enabled: ENABLED_UPSTAGE },
+      wenxin: { enabled: ENABLED_WENXIN },
       zeroone: {
         enabled: ENABLED_ZEROONE,
         enabledModels: extractEnabledModels(ZEROONE_MODEL_LIST),
