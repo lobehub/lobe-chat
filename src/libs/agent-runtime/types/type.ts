@@ -33,6 +33,7 @@ export enum ModelProvider {
   Github = 'github',
   Google = 'google',
   Groq = 'groq',
+  Hunyuan = 'hunyuan',
   Minimax = 'minimax',
   Mistral = 'mistral',
   Moonshot = 'moonshot',
