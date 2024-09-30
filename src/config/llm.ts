@@ -127,7 +127,8 @@ export const getLLMConfig = () => {
       HUNYUAN_MODEL_LIST: z.string().optional(),
 
       ENABLED_SENSENOVA: z.boolean(),
-      SENSENOVA_API_KEY: z.string().optional(),
+      SENSENOVA_ACCESS_KEY_ID: z.string().optional(),
+      SENSENOVA_ACCESS_KEY_SECRET: z.string().optional(),
       SENSENOVA_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
@@ -252,8 +253,9 @@ export const getLLMConfig = () => {
       HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
       HUNYUAN_MODEL_LIST: process.env.HUNYUAN_MODEL_LIST,
 
-      ENABLED_SENSENOVA: !!process.env.SENSENOVA_API_KEY,
-      SENSENOVA_API_KEY: process.env.SENSENOVA_API_KEY,
+      ENABLED_SENSENOVA: !!process.env.SENSENOVA_ACCESS_KEY_ID && !!process.env.SENSENOVA_ACCESS_KEY_SECRET,
+      SENSENOVA_ACCESS_KEY_ID: process.env.SENSENOVA_ACCESS_KEY_ID,
+      SENSENOVA_ACCESS_KEY_SECRET: process.env.SENSENOVA_ACCESS_KEY_SECRET,
       SENSENOVA_MODEL_LIST: process.env.SENSENOVA_MODEL_LIST,
     },
   });

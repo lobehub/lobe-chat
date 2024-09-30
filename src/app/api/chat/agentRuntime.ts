@@ -10,8 +10,6 @@ import {
 import { AgentRuntime, ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
 import { TraceClient } from '@/libs/traces';
 
-import { generateJwtTokenSenseNova } from '@/libs/agent-runtime/sensenova/authToken';
-
 import apiKeyManager from './apiKeyManager';
 
 export interface AgentChatOptions {
@@ -252,19 +250,6 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const { HUNYUAN_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || HUNYUAN_API_KEY);
-
-      return { apiKey };
-    }
-    case ModelProvider.SenseNova: {
-      const { SENSENOVA_API_KEY } = getLLMConfig();
-
-      let apiKey = apiKeyManager.pick(payload?.apiKey || SENSENOVA_API_KEY);
-
-      if (apiKey.includes(':')) {
-        const [ sensenovaAccessKeyID, sensenovaAccessKeySecret ] = apiKey.split(':');
-
-        apiKey = generateJwtTokenSenseNova(sensenovaAccessKeyID, sensenovaAccessKeySecret, 5, 5);
-      }
 
       return { apiKey };
     }
