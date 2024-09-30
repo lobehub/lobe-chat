@@ -91,6 +91,25 @@ export class LobeZhipuAI implements LobeRuntimeAI {
     payload: EmbeddingsPayload,
     options?: EmbeddingsOptions,
   ): Promise<EmbeddingItem[]> {
+    const input = Array.isArray(payload.input) ? payload.input : [payload.input];
+    const promises = input.map((inputText: string) =>
+      this.invokeEmbeddingModel(
+        {
+          dimensions: payload.dimensions,
+          input: inputText,
+          model: payload.model,
+        },
+        options,
+      ),
+    );
+    const results = await Promise.all(promises);
+    return results.flat();
+  }
+
+  private invokeEmbeddingModel = async (
+    payload: EmbeddingsPayload,
+    options?: EmbeddingsOptions,
+  ): Promise<EmbeddingItem[]> => {
     try {
       const res = await this.client.embeddings.create(
         { ...payload, user: options?.user },
@@ -113,7 +132,7 @@ export class LobeZhipuAI implements LobeRuntimeAI {
         provider: ModelProvider.ZhiPu,
       });
     }
-  }
+  };
 
   private async buildCompletionsParams(payload: ChatStreamPayload) {
     const { messages, temperature, top_p, ...params } = payload;
