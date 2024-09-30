@@ -18,7 +18,7 @@ export const getServerGlobalConfig = () => {
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
-    defaultEmbed: parseAgentConfig(knowledgeEnv.DEFAULT_FILES_CONFIG),
+    defaultEmbed: parseSystemAgent(knowledgeEnv.DEFAULT_FILES_CONFIG),
     enableUploadFileToServer: !!fileEnv.S3_SECRET_ACCESS_KEY,
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,

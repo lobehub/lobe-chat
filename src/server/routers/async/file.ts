@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 import { serverDBEnv } from '@/config/db';
 import { fileEnv } from '@/config/file';
+import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';

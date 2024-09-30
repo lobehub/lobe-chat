@@ -1,12 +1,13 @@
 import { DeepPartial } from 'utility-types';
 
-import { SystemEmbeddingConfig } from '@/const/settings/knowledge';
 import { ChatModelCard } from '@/types/llm';
 import {
   GlobalLLMProviderKey,
   UserDefaultAgent,
   UserSystemAgentConfig,
 } from '@/types/user/settings';
+
+import { SystemEmbeddingConfig } from './knowledgeBase';
 
 export interface ServerModelProviderConfig {
   enabled?: boolean;

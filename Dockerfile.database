@@ -149,9 +149,6 @@ ENV NODE_ENV="production" \
 ENV HOSTNAME="0.0.0.0" \
     PORT="3210"
 
-# set the default embedding model
-ENV DEFAULT_EMBEDDING_MODEL="openai/text-embedding-3-small"
-
 # General Variables
 ENV ACCESS_CODE="" \
     APP_URL="" \
