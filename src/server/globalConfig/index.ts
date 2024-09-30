@@ -53,7 +53,7 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_HUNYUAN,
     HUNYUAN_MODEL_LIST,
-    
+
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
     ENABLED_ANTHROPIC,
@@ -100,6 +100,8 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_FIREWORKSAI,
     FIREWORKSAI_MODEL_LIST,
+
+    ENABLED_WENXIN,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -251,6 +253,7 @@ export const getServerGlobalConfig = () => {
         }),
       },
       upstage: { enabled: ENABLED_UPSTAGE },
+      wenxin: { enabled: ENABLED_WENXIN },
       zeroone: {
         enabled: ENABLED_ZEROONE,
         enabledModels: extractEnabledModels(ZEROONE_MODEL_LIST),

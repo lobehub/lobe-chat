@@ -28,6 +28,7 @@ import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
+import WenxinProvider from './wenxin';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -60,6 +61,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   SparkProvider.chatModels,
   Ai21Provider.chatModels,
   HunyuanProvider.chatModels,
+  WenxinProvider.chatModels,
   SenseNovaProvider.chatModels,
 ].flat();
 
@@ -82,6 +84,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai21Provider,
   UpstageProvider,
   QwenProvider,
+  WenxinProvider,
   HunyuanProvider,
   SparkProvider,
   ZhiPuProvider,
@@ -133,5 +136,6 @@ export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
+export { default as WenxinProviderCard } from './wenxin';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';
