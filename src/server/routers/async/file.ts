@@ -14,6 +14,7 @@ import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
 import { NewChunkItem, NewEmbeddingsItem } from '@/database/server/schemas/lobechat';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
+import { getServerGlobalConfig } from '@/server/globalConfig';
 import { S3 } from '@/server/modules/S3';
 import { ChunkService } from '@/server/services/chunk';
 import {
@@ -90,7 +91,7 @@ export const fileRouter = router({
               requestArray,
               async (chunks, index) => {
                 const agentRuntime = await initAgentRuntimeWithUserPayload(
-                  input.provider,
+                  getServerGlobalConfig().defaultEmbed?.embedding_model?.provider || 'openai',
                   ctx.jwtPayload,
                 );
 

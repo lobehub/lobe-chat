@@ -102,7 +102,6 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       const responseBody = JSON.parse(new TextDecoder().decode(res.body));
       return { embedding: responseBody.embedding, index: payload.index, object: 'embedding' };
     } catch (e) {
-      console.log('error', e);
       const err = e as Error & { $metadata: any };
       throw AgentRuntimeError.chat({
         error: {
