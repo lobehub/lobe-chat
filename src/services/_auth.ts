@@ -34,11 +34,7 @@ export const getProviderAuthPayload = (provider: string) => {
 
       const apiKey = generateJwtTokenSenseNova(sensenovaAccessKeyID, sensenovaAccessKeySecret, 5, 5);
 
-      return { 
-        apiKey,
-        sensenovaAccessKeyID: sensenovaAccessKeyID, 
-        sensenovaAccessKeySecret: sensenovaAccessKeySecret, 
-      };
+      return { apiKey };
     }
 
     case ModelProvider.Wenxin: {
