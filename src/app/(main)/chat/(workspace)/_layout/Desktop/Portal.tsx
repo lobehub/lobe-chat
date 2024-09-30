@@ -6,7 +6,6 @@ import { rgba } from 'polished';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_DOCK_TOOL_UI_WIDTH, CHAT_DOCK_WIDTH, MAX_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
@@ -69,7 +68,6 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
             minWidth: CHAT_DOCK_WIDTH,
           }}
         >
-          <SafeSpacing />
           <Flexbox className={styles.panel}>{children}</Flexbox>
         </DraggablePanelContainer>
       </DraggablePanel>
