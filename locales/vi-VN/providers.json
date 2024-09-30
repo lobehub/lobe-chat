@@ -30,6 +30,9 @@
   "groq": {
     "description": "Bộ máy suy diễn LPU của Groq thể hiện xuất sắc trong các bài kiểm tra chuẩn mô hình ngôn ngữ lớn (LLM) độc lập mới nhất, định nghĩa lại tiêu chuẩn cho các giải pháp AI với tốc độ và hiệu quả đáng kinh ngạc. Groq là đại diện cho tốc độ suy diễn tức thì, thể hiện hiệu suất tốt trong triển khai dựa trên đám mây."
   },
+  "hunyuan": {
+    "description": "Mô hình ngôn ngữ lớn được phát triển bởi Tencent, có khả năng sáng tạo tiếng Trung mạnh mẽ, khả năng suy luận logic trong các ngữ cảnh phức tạp, và khả năng thực hiện nhiệm vụ đáng tin cậy."
+  },
   "minimax": {
     "description": "MiniMax là công ty công nghệ trí tuệ nhân tạo tổng quát được thành lập vào năm 2021, cam kết cùng người dùng sáng tạo trí thông minh. MiniMax đã tự phát triển nhiều mô hình lớn đa phương thức, bao gồm mô hình văn bản MoE với một triệu tham số, mô hình giọng nói và mô hình hình ảnh. Họ cũng đã phát hành các ứng dụng như AI Hải Lý."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage tập trung vào việc phát triển các mô hình AI cho nhiều nhu cầu thương mại khác nhau, bao gồm Solar LLM và AI tài liệu, nhằm đạt được trí thông minh nhân tạo tổng quát (AGI) cho công việc. Tạo ra các đại lý đối thoại đơn giản thông qua Chat API, và hỗ trợ gọi chức năng, dịch thuật, nhúng và ứng dụng trong các lĩnh vực cụ thể."
+  },
+  "wenxin": {
+    "description": "Nền tảng phát triển và dịch vụ ứng dụng AI gốc với mô hình lớn một cửa dành cho doanh nghiệp, cung cấp chuỗi công cụ toàn diện và dễ sử dụng cho phát triển mô hình trí tuệ nhân tạo sinh sinh và phát triển ứng dụng."
   },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."

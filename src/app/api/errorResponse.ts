@@ -16,6 +16,10 @@ const getStatus = (errorType: ILobeAgentRuntimeErrorType | ErrorType) => {
       return 403;
     }
 
+    case AgentRuntimeErrorType.QuotaLimitReached: {
+      return 429;
+    }
+
     // define the 471~480 as provider error
     case AgentRuntimeErrorType.AgentRuntimeError: {
       return 470;

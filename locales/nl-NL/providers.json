@@ -30,6 +30,9 @@
   "groq": {
     "description": "De LPU-inferentie-engine van Groq presteert uitstekend in de nieuwste onafhankelijke benchmarktests voor grote taalmodellen (LLM), en herdefinieert de normen voor AI-oplossingen met zijn verbazingwekkende snelheid en efficiëntie. Groq is een vertegenwoordiger van onmiddellijke inferentiesnelheid en toont goede prestaties in cloudgebaseerde implementaties."
   },
+  "hunyuan": {
+    "description": "Een door Tencent ontwikkeld groot taalmodel, dat beschikt over krachtige Chinese creatiecapaciteiten, logische redeneervaardigheden in complexe contexten, en betrouwbare taakuitvoeringscapaciteiten."
+  },
   "minimax": {
     "description": "MiniMax is een algemeen kunstmatige intelligentietechnologiebedrijf dat in 2021 is opgericht, en zich richt op co-creatie van intelligentie met gebruikers. MiniMax heeft verschillende multimodale algemene grote modellen ontwikkeld, waaronder een MoE-tekstgrootmodel met triljoenen parameters, een spraakgrootmodel en een afbeeldingsgrootmodel. Ze hebben ook toepassingen zoals Conch AI gelanceerd."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage richt zich op het ontwikkelen van AI-modellen voor verschillende zakelijke behoeften, waaronder Solar LLM en document AI, met als doel het realiseren van kunstmatige algemene intelligentie (AGI). Het creëert eenvoudige dialoogagenten via de Chat API en ondersteunt functionele aanroepen, vertalingen, insluitingen en specifieke domeintoepassingen."
+  },
+  "wenxin": {
+    "description": "Een enterprise-grade, alles-in-één platform voor de ontwikkeling en service van grote modellen en AI-native applicaties, dat de meest uitgebreide en gebruiksvriendelijke toolchain biedt voor de ontwikkeling van generatieve kunstmatige intelligentiemodellen en applicaties."
   },
   "zeroone": {
     "description": "01.AI richt zich op kunstmatige intelligentietechnologie in het tijdperk van AI 2.0, en bevordert sterk de innovatie en toepassing van 'mens + kunstmatige intelligentie', met behulp van krachtige modellen en geavanceerde AI-technologie om de productiviteit van de mens te verbeteren en technologische capaciteiten te realiseren."

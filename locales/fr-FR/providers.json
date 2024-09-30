@@ -30,6 +30,9 @@
   "groq": {
     "description": "Le moteur d'inférence LPU de Groq a excellé dans les derniers tests de référence des grands modèles de langage (LLM), redéfinissant les normes des solutions IA grâce à sa vitesse et son efficacité impressionnantes. Groq représente une vitesse d'inférence instantanée, montrant de bonnes performances dans les déploiements basés sur le cloud."
   },
+  "hunyuan": {
+    "description": "Un modèle de langage développé par Tencent, doté d'une puissante capacité de création en chinois, d'une capacité de raisonnement logique dans des contextes complexes, ainsi que d'une capacité fiable d'exécution des tâches."
+  },
   "minimax": {
     "description": "MiniMax est une entreprise de technologie d'intelligence artificielle générale fondée en 2021, dédiée à la co-création d'intelligence avec les utilisateurs. MiniMax a développé de manière autonome différents modèles de grande taille, y compris un modèle de texte MoE à un trillion de paramètres, un modèle vocal et un modèle d'image. Elle a également lancé des applications telles que Conch AI."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage se concentre sur le développement de modèles IA pour divers besoins commerciaux, y compris Solar LLM et Document AI, visant à réaliser une intelligence générale artificielle (AGI) pour le travail. Créez des agents de dialogue simples via l'API Chat, et prenez en charge les appels de fonction, la traduction, l'intégration et les applications spécifiques à un domaine."
+  },
+  "wenxin": {
+    "description": "Plateforme de développement et de services d'applications AI natives et de modèles de grande envergure, tout-en-un pour les entreprises, offrant la chaîne d'outils la plus complète et facile à utiliser pour le développement de modèles d'intelligence artificielle générative et le développement d'applications."
   },
   "zeroone": {
     "description": "01.AI se concentre sur les technologies d'intelligence artificielle de l'ère IA 2.0, promouvant activement l'innovation et l'application de \"l'homme + l'intelligence artificielle\", utilisant des modèles puissants et des technologies IA avancées pour améliorer la productivité humaine et réaliser l'autonomisation technologique."

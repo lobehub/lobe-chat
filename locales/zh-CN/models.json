@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
   },
+  "ERNIE-3.5-128K": {
+    "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ERNIE-3.5-8K": {
+    "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ERNIE-3.5-8K-Preview": {
+    "description": "百度自研的旗舰级大规模⼤语⾔模型，覆盖海量中英文语料，具有强大的通用能力，可满足绝大部分对话问答、创作生成、插件应用场景要求；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，相较ERNIE 3.5实现了模型能力全面升级，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，相较ERNIE 3.5实现了模型能力全面升级，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
+  },
+  "ERNIE-Character-8K": {
+    "description": "百度自研的垂直场景大语言模型，适合游戏NPC、客服对话、对话角色扮演等应用场景，人设风格更为鲜明、一致，指令遵循能力更强，推理性能更优。"
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "百度自研的轻量级大语言模型，兼顾优异的模型效果与推理性能，效果比ERNIE Lite更优，适合低算力AI加速卡推理使用。"
+  },
+  "ERNIE-Speed-128K": {
+    "description": "百度2024年最新发布的自研高性能大语言模型，通用能力优异，适合作为基座模型进行精调，更好地处理特定场景问题，同时具备极佳的推理性能。"
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "百度2024年最新发布的自研高性能大语言模型，通用能力优异，效果比ERNIE Speed更优，适合作为基座模型进行精调，更好地处理特定场景问题，同时具备极佳的推理性能。"
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) 是一种创新模型，适合多领域应用和复杂任务。"
   },
@@ -399,7 +432,10 @@
     "description": "GLM-4-AllTools 是一个多功能智能体模型，优化以支持复杂指令规划与工具调用，如网络浏览、代码解释和文本生成，适用于多任务执行。"
   },
   "glm-4-flash": {
-    "description": "GLM-4-Flash 是处理简单任务的理想选择，速度最快且价格最优惠。"
+    "description": "GLM-4-Flash 是处理简单任务的理想选择，速度最快且免费。"
+  },
+  "glm-4-flashx": {
+    "description": "GLM-4-FlashX 是Flash的增强版本，超快推理速度。"
   },
   "glm-4-long": {
     "description": "GLM-4-Long 支持超长文本输入，适合记忆型任务与大规模文档处理。"
@@ -413,11 +449,11 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus 具备对视频内容及多图片的理解能力，适合多模态任务。"
   },
-  "google/gemini-flash-1.5-exp": {
-    "description": "Gemini 1.5 Flash 0827 提供了优化后的多模态处理能力，适用多种复杂任务场景。"
+  "google/gemini-flash-1.5": {
+    "description": "Gemini 1.5 Flash 提供了优化后的多模态处理能力，适用多种复杂任务场景。"
   },
-  "google/gemini-pro-1.5-exp": {
-    "description": "Gemini 1.5 Pro 0827 结合最新优化技术，带来更高效的多模态数据处理能力。"
+  "google/gemini-pro-1.5": {
+    "description": "Gemini 1.5 Pro 结合最新优化技术，带来更高效的多模态数据处理能力。"
   },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 延续了轻量化与高效的设计理念。"
@@ -490,6 +526,33 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合并了多个顶尖模型的创意与智能相结合的语言模型。"
+  },
+  "hunyuan-code": {
+    "description": "混元最新代码生成模型，经过 200B 高质量代码数据增训基座模型，迭代半年高质量 SFT 数据训练，上下文长窗口长度增大到 8K，五大语言代码生成自动评测指标上位居前列；五大语言10项考量各方面综合代码任务人工高质量评测上，性能处于第一梯队"
+  },
+  "hunyuan-functioncall": {
+    "description": "混元最新 MOE 架构 FunctionCall 模型，经过高质量的 FunctionCall 数据训练，上下文窗口达 32K，在多个维度的评测指标上处于领先。"
+  },
+  "hunyuan-lite": {
+    "description": "升级为 MOE 结构，上下文窗口为 256k ，在 NLP，代码，数学，行业等多项评测集上领先众多开源模型。"
+  },
+  "hunyuan-pro": {
+    "description": "万亿级参数规模 MOE-32K 长文模型。在各种 benchmark 上达到绝对领先的水平，复杂指令和推理，具备复杂数学能力，支持 functioncall，在多语言翻译、金融法律医疗等领域应用重点优化。"
+  },
+  "hunyuan-role": {
+    "description": "混元最新版角色扮演模型，混元官方精调训练推出的角色扮演模型，基于混元模型结合角色扮演场景数据集进行增训，在角色扮演场景具有更好的基础效果。"
+  },
+  "hunyuan-standard": {
+    "description": "采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-32K 性价比相对更高，在平衡效果、价格的同时，可对实现对长文本输入的处理。"
+  },
+  "hunyuan-standard-256K": {
+    "description": "采用更优的路由策略，同时缓解了负载均衡和专家趋同的问题。长文方面，大海捞针指标达到99.9%。MOE-256K 在长度和效果上进一步突破，极大的扩展了可输入长度。"
+  },
+  "hunyuan-turbo": {
+    "description": "混元全新一代大语言模型的预览版，采用全新的混合专家模型（MoE）结构，相比hunyuan-pro推理效率更快，效果表现更强。"
+  },
+  "hunyuan-vision": {
+    "description": "混元最新多模态模型，支持图片+文本输入生成文本内容。"
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "创新的开源模型InternLM2.5，通过大规模的参数提高了对话智能。"
@@ -634,6 +697,12 @@
   "meta-llama/llama-3.1-8b-instruct:free": {
     "description": "LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。"
   },
+  "meta-llama/llama-3.2-11b-vision-instruct": {
+    "description": "LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
+  },
+  "meta-llama/llama-3.2-90b-vision-instruct": {
+    "description": "LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct 是 Llama 3.1 Instruct 模型中最大、最强大的模型，是一款高度先进的对话推理和合成数据生成模型，也可以用作在特定领域进行专业持续预训练或微调的基础。Llama 3.1 提供的多语言大型语言模型 (LLMs) 是一组预训练的、指令调整的生成模型，包括 8B、70B 和 405B 大小 (文本输入/输出)。Llama 3.1 指令调整的文本模型 (8B、70B、405B) 专为多语言对话用例进行了优化，并在常见的行业基准测试中超过了许多可用的开源聊天模型。Llama 3.1 旨在用于多种语言的商业和研究用途。指令调整的文本模型适用于类似助手的聊天，而预训练模型可以适应各种自然语言生成任务。Llama 3.1 模型还支持利用其模型的输出来改进其他模型，包括合成数据生成和精炼。Llama 3.1 是使用优化的变压器架构的自回归语言模型。调整版本使用监督微调 (SFT) 和带有人类反馈的强化学习 (RLHF) 来符合人类对帮助性和安全性的偏好。"
   },
@@ -722,10 +791,10 @@
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2的升级版本，包含最新的内部开发的数据集。"
   },
   "o1-mini": {
-    "description": "o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。"
+    "description": "Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations."
   },
   "o1-preview": {
-    "description": "o1是OpenAI新的推理模型，适用于需要广泛通用知识的复杂任务。该模型具有128K上下文和2023年10月的知识截止日期。"
+    "description": "Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows."
   },
   "open-codestral-mamba": {
     "description": "Codestral Mamba是专注于代码生成的Mamba 2语言模型，为先进的代码和推理任务提供强力支持。"
