@@ -41,6 +41,6 @@ export const useWenxinProvider = (): ProviderItem => {
         name: [KeyVaultsConfigKey, providerKey, 'secretKey'],
       },
     ],
-    title: <Wenxin.Combine size={24} type={'color'} />,
+    title: <Wenxin.Combine size={24} type={'color'} extra={'一言'} />,
   };
 };
