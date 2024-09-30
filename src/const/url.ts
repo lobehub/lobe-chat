@@ -9,9 +9,9 @@ import { INBOX_SESSION_ID } from './session';
 
 export const UTM_SOURCE = 'chat_preview';
 
-export const OFFICIAL_URL = 'https://lobechat.com/';
-export const OFFICIAL_PREVIEW_URL = 'https://chat-preview.lobehub.com/';
-export const OFFICIAL_SITE = 'https://lobehub.com/';
+export const OFFICIAL_URL = 'https://github.com/MilkFoam-L';
+export const OFFICIAL_PREVIEW_URL = 'https://github.com/MilkFoam-L';
+export const OFFICIAL_SITE = 'https://github.com/MilkFoam-L';
 
 export const OG_URL = '/og/cover.png?v=1';
 
@@ -27,7 +27,7 @@ export const WEBRTC_SYNC_DOCUMENTS = urlJoin(SELF_HOSTING_DOCUMENTS, '/advanced/
 export const DATABASE_SELF_HOSTING_URL = urlJoin(SELF_HOSTING_DOCUMENTS, '/server-database');
 
 // use this for the link
-export const DOCUMENTS_REFER_URL = `${DOCUMENTS}?utm_source=${UTM_SOURCE}`;
+export const DOCUMENTS_REFER_URL = 'https://github.com/MilkFoam-L';
 
 export const WIKI = urlJoin(GITHUB, 'wiki');
 export const WIKI_PLUGIN_GUIDE = urlJoin(USAGE_DOCUMENTS, '/plugins/development');
