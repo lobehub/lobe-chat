@@ -22,7 +22,7 @@ export const buildCohereTools = (tools: any[] | undefined) => {
 
     return {
       description: functionDef.description,
-      name: functionDef.name.replace(/-/g, '_'),
+      name: functionDef.name.replace(/-/g, '_'), // Cohere's tools name only support [0-0a-zA-Z_] TODO: 暂时无法调用 LobeChat 插件
       parameter_definitions: Object.entries(functionDef.parameters.properties ?? {}).reduce((acc, [key, value]) => {
         const paramValue = value as { description: string; type: string };
         acc[key] = {

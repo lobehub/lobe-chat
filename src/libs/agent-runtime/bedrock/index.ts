@@ -8,7 +8,7 @@ import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
 import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
-import { buildCohereChatHistory, buildCohereMessage } from '../utils/cohereHelpers';
+import { buildCohereChatHistory, buildCohereMessage, buildCohereTools } from '../utils/cohereHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -114,7 +114,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
     payload: ChatStreamPayload,
     options?: ChatCompetitionOptions,
   ): Promise<Response> => {
-    const { frequency_penalty, max_tokens, messages, model, presence_penalty, temperature, top_p } = payload;
+    const { frequency_penalty, max_tokens, messages, model, presence_penalty, temperature, tools, top_p } = payload;
 
     const command = new InvokeModelWithResponseStreamCommand({
       accept: 'application/json',
@@ -126,6 +126,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         p: (top_p !== undefined && top_p > 0 && top_p < 1) ? top_p : undefined,
         presence_penalty: presence_penalty,
         temperature: temperature,
+        tools: buildCohereTools(tools),
       }),
       contentType: 'application/json',
       modelId: model,
