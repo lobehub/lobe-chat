@@ -112,6 +112,26 @@
       "title": "下載指定的 Ollama 模型"
     }
   },
+  "wenxin": {
+    "accessKey": {
+      "desc": "填入百度千帆平台的 Access Key",
+      "placeholder": "千帆 Access Key",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "測試 AccessKey / SecretAccess 是否填寫正確"
+    },
+    "secretKey": {
+      "desc": "填入百度千帆平台 Secret Key",
+      "placeholder": "千帆 Secret Key",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "自訂服務區域",
+      "description": "輸入你的 AccessKey / SecretKey 即可開始會話。應用不會記錄你的鑑權配置",
+      "title": "使用自訂文心一言鑑權資訊"
+    }
+  },
   "zeroone": {
     "title": "01.AI 零一萬物"
   },
