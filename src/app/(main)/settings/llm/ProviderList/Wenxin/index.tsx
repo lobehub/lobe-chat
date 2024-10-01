@@ -1,6 +1,5 @@
 'use client';
 
-import { Wenxin } from '@lobehub/icons';
 import { Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 
@@ -41,6 +40,5 @@ export const useWenxinProvider = (): ProviderItem => {
         name: [KeyVaultsConfigKey, providerKey, 'secretKey'],
       },
     ],
-    title: <Wenxin.Combine size={32} type={'color'} />,
   };
 };
