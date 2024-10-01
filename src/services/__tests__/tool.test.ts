@@ -35,7 +35,7 @@ describe('ToolService', () => {
 
       // Assert
       expect(globalHelpers.getCurrentLanguage).toHaveBeenCalled();
-      expect(fetch).toHaveBeenCalledWith('/api/plugin/store?locale=tt');
+      expect(fetch).toHaveBeenCalledWith('/webapi/plugin/store?locale=tt');
       expect(pluginList).toEqual(fakeResponse.plugins);
     });
 
