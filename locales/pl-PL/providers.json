@@ -30,6 +30,9 @@
   "groq": {
     "description": "Silnik inferencyjny LPU firmy Groq wyróżnia się w najnowszych niezależnych testach benchmarkowych dużych modeli językowych (LLM), redefiniując standardy rozwiązań AI dzięki niesamowitej szybkości i wydajności. Groq jest reprezentantem natychmiastowej szybkości inferencji, wykazując dobrą wydajność w wdrożeniach opartych na chmurze."
   },
+  "hunyuan": {
+    "description": "Model językowy opracowany przez Tencent, który posiada potężne zdolności twórcze w języku chińskim, umiejętność logicznego wnioskowania w złożonych kontekstach oraz niezawodne zdolności wykonawcze w zadaniach."
+  },
   "minimax": {
     "description": "MiniMax to firma technologiczna zajmująca się ogólną sztuczną inteligencją, założona w 2021 roku, dążąca do współtworzenia inteligencji z użytkownikami. MiniMax opracowało różne modele dużych modeli o różnych modalnościach, w tym model tekstowy MoE z bilionem parametrów, model głosowy oraz model obrazowy. Wprowadziło również aplikacje takie jak Conch AI."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage koncentruje się na opracowywaniu modeli AI dla różnych potrzeb biznesowych, w tym Solar LLM i dokumentów AI, mając na celu osiągnięcie sztucznej ogólnej inteligencji (AGI). Umożliwia tworzenie prostych agentów konwersacyjnych za pomocą Chat API oraz wspiera wywołania funkcji, tłumaczenia, osadzenia i zastosowania w określonych dziedzinach."
+  },
+  "wenxin": {
+    "description": "Platforma do rozwoju i usług aplikacji AI oraz dużych modeli w skali przedsiębiorstwa, oferująca najbardziej kompleksowy i łatwy w użyciu zestaw narzędzi do rozwoju modeli sztucznej inteligencji generatywnej oraz całego procesu tworzenia aplikacji."
   },
   "zeroone": {
     "description": "01.AI koncentruje się na technologiach sztucznej inteligencji w erze AI 2.0, intensywnie promując innowacje i zastosowania „człowiek + sztuczna inteligencja”, wykorzystując potężne modele i zaawansowane technologie AI w celu zwiększenia wydajności ludzkiej produkcji i realizacji technologicznego wsparcia."

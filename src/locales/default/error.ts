@@ -79,6 +79,8 @@ export default {
     InvalidClerkUser: '很抱歉，你当前尚未登录，请先登录或注册账号后继续操作',
     LocationNotSupportError:
       '很抱歉，你的所在地区不支持此模型服务，可能是由于区域限制或服务未开通。请确认当前地区是否支持使用此服务，或尝试使用切换到其他地区后重试。',
+    QuotaLimitReached:
+      '很抱歉，当前 Token 用量或请求次数已达该秘钥的配额(quota)上限，请增加该秘钥的配额或稍后再试',
 
     InvalidProviderAPIKey: '{{provider}} API Key 不正确或为空，请检查 {{provider}} API Key 后重试',
     ProviderBizError: '请求 {{provider}} 服务出错，请根据以下信息排查或重试',

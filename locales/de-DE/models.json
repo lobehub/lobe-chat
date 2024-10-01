@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Das Modell hat die höchste Fähigkeit im Inland und übertrifft ausländische Mainstream-Modelle in Aufgaben wie Wissensdatenbanken, langen Texten und kreativer Generierung. Es verfügt auch über branchenführende multimodale Fähigkeiten und zeigt in mehreren autoritativen Bewertungsbenchmarks hervorragende Leistungen."
   },
+  "ERNIE-3.5-128K": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und kann die meisten Anforderungen an Dialogfragen, kreative Generierung und Anwendungsfälle von Plugins erfüllen. Es unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-3.5-8K": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und kann die meisten Anforderungen an Dialogfragen, kreative Generierung und Anwendungsfälle von Plugins erfüllen. Es unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-3.5-8K-Preview": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und kann die meisten Anforderungen an Dialogfragen, kreative Generierung und Anwendungsfälle von Plugins erfüllen. Es unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das im Vergleich zu ERNIE 3.5 eine umfassende Verbesserung der Modellfähigkeiten erreicht hat und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das im Vergleich zu ERNIE 3.5 eine umfassende Verbesserung der Modellfähigkeiten erreicht hat und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das in der Gesamtleistung herausragend ist und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten. Im Vergleich zu ERNIE 4.0 bietet es eine bessere Leistungsfähigkeit."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das in der Gesamtleistung herausragend ist und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten. Im Vergleich zu ERNIE 4.0 bietet es eine bessere Leistungsfähigkeit."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Das von Baidu entwickelte Sprachmodell für vertikale Szenarien, das sich für Anwendungen wie Spiel-NPCs, Kundenservice-Dialoge und Rollenspiele eignet. Es hat einen klareren und konsistenteren Charakterstil, eine stärkere Befolgung von Anweisungen und eine bessere Inferenzleistung."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Das von Baidu entwickelte leichte Sprachmodell, das hervorragende Modellleistung und Inferenzleistung kombiniert. Es bietet bessere Ergebnisse als ERNIE Lite und eignet sich für die Inferenznutzung auf AI-Beschleunigungskarten mit geringer Rechenleistung."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Das neueste von Baidu im Jahr 2024 veröffentlichte hochleistungsfähige Sprachmodell, das überragende allgemeine Fähigkeiten bietet und sich als Basis-Modell für Feinabstimmungen eignet, um spezifische Szenarien besser zu bearbeiten, und bietet gleichzeitig hervorragende Inferenzleistung."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Das neueste von Baidu im Jahr 2024 veröffentlichte hochleistungsfähige Sprachmodell, das überragende allgemeine Fähigkeiten bietet und bessere Ergebnisse als ERNIE Speed erzielt. Es eignet sich als Basis-Modell für Feinabstimmungen, um spezifische Szenarien besser zu bearbeiten, und bietet gleichzeitig hervorragende Inferenzleistung."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) ist ein innovatives Modell, das sich für Anwendungen in mehreren Bereichen und komplexe Aufgaben eignet."
   },
@@ -401,6 +434,9 @@
   "glm-4-flash": {
     "description": "GLM-4-Flash ist die ideale Wahl für die Verarbeitung einfacher Aufgaben, mit der schnellsten Geschwindigkeit und dem besten Preis."
   },
+  "glm-4-flashx": {
+    "description": "GLM-4-FlashX ist eine verbesserte Version von Flash mit extrem schneller Inferenzgeschwindigkeit."
+  },
   "glm-4-long": {
     "description": "GLM-4-Long unterstützt extrem lange Texteingaben und eignet sich für Gedächtnisaufgaben und die Verarbeitung großer Dokumente."
   },
@@ -413,11 +449,11 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus hat die Fähigkeit, Videoinhalte und mehrere Bilder zu verstehen und eignet sich für multimodale Aufgaben."
   },
-  "google/gemini-flash-1.5-exp": {
-    "description": "Gemini 1.5 Flash 0827 bietet optimierte multimodale Verarbeitungsfähigkeiten und ist für eine Vielzahl komplexer Aufgaben geeignet."
+  "google/gemini-flash-1.5": {
+    "description": "Gemini 1.5 Flash bietet optimierte multimodale Verarbeitungsfähigkeiten, die für verschiedene komplexe Aufgabenszenarien geeignet sind."
   },
-  "google/gemini-pro-1.5-exp": {
-    "description": "Gemini 1.5 Pro 0827 kombiniert die neuesten Optimierungstechnologien und bietet effizientere multimodale Datenverarbeitungsfähigkeiten."
+  "google/gemini-pro-1.5": {
+    "description": "Gemini 1.5 Pro kombiniert die neuesten Optimierungstechnologien und bietet eine effizientere Verarbeitung multimodaler Daten."
   },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 setzt das Designkonzept von Leichtbau und Effizienz fort."
@@ -490,6 +526,33 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B ist ein Sprachmodell, das Kreativität und Intelligenz kombiniert und mehrere führende Modelle integriert."
+  },
+  "hunyuan-code": {
+    "description": "Das neueste Code-Generierungsmodell von Hunyuan, das auf einem Basismodell mit 200B hochwertigen Code-Daten trainiert wurde, hat ein halbes Jahr lang mit hochwertigen SFT-Daten trainiert, das Kontextfenster auf 8K erhöht und belegt in den automatischen Bewertungsmetriken für die fünf großen Programmiersprachen Spitzenplätze; in den zehn Aspekten der umfassenden Codeaufgabenbewertung für die fünf großen Sprachen liegt die Leistung in der ersten Reihe."
+  },
+  "hunyuan-functioncall": {
+    "description": "Das neueste MOE-Architektur-FunctionCall-Modell von Hunyuan, das mit hochwertigen FunctionCall-Daten trainiert wurde, hat ein Kontextfenster von 32K und führt in mehreren Bewertungsmetriken."
+  },
+  "hunyuan-lite": {
+    "description": "Aufgerüstet auf eine MOE-Struktur mit einem Kontextfenster von 256k, führt es in mehreren Bewertungssets in NLP, Code, Mathematik und Industrie zahlreiche Open-Source-Modelle an."
+  },
+  "hunyuan-pro": {
+    "description": "Ein MOE-32K-Modell für lange Texte mit einer Billion Parametern. Es erreicht in verschiedenen Benchmarks ein absolut führendes Niveau, hat komplexe Anweisungen und Schlussfolgerungen, verfügt über komplexe mathematische Fähigkeiten und unterstützt Funktionsaufrufe, mit Schwerpunkt auf Optimierung in den Bereichen mehrsprachige Übersetzung, Finanzrecht und Medizin."
+  },
+  "hunyuan-role": {
+    "description": "Das neueste Rollenspielmodell von Hunyuan, das auf dem offiziellen feinabgestimmten Training von Hunyuan basiert, wurde mit einem Datensatz für Rollenspiel-Szenarien weiter trainiert und bietet in Rollenspiel-Szenarien bessere Grundeffekte."
+  },
+  "hunyuan-standard": {
+    "description": "Verwendet eine verbesserte Routing-Strategie und mildert gleichzeitig die Probleme der Lastenverteilung und Expertenkonvergenz. Bei langen Texten erreicht der Needle-in-a-Haystack-Indikator 99,9%. MOE-32K bietet ein besseres Preis-Leistungs-Verhältnis und ermöglicht die Verarbeitung von langen Texteingaben bei ausgewogenem Effekt und Preis."
+  },
+  "hunyuan-standard-256K": {
+    "description": "Verwendet eine verbesserte Routing-Strategie und mildert gleichzeitig die Probleme der Lastenverteilung und Expertenkonvergenz. Bei langen Texten erreicht der Needle-in-a-Haystack-Indikator 99,9%. MOE-256K bricht in Länge und Effektivität weiter durch und erweitert die eingabefähige Länge erheblich."
+  },
+  "hunyuan-turbo": {
+    "description": "Die Vorschauversion des neuen großen Sprachmodells von Hunyuan verwendet eine neuartige hybride Expertenmodellstruktur (MoE) und bietet im Vergleich zu Hunyuan-Pro eine schnellere Inferenz und bessere Leistung."
+  },
+  "hunyuan-vision": {
+    "description": "Das neueste multimodale Modell von Hunyuan unterstützt die Eingabe von Bildern und Text zur Generierung von Textinhalten."
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "Das innovative Open-Source-Modell InternLM2.5 hat durch eine große Anzahl von Parametern die Dialogintelligenz erhöht."
@@ -633,6 +696,12 @@
   },
   "meta-llama/llama-3.1-8b-instruct:free": {
     "description": "LLaMA 3.1 bietet Unterstützung für mehrere Sprachen und gehört zu den führenden generativen Modellen der Branche."
+  },
+  "meta-llama/llama-3.2-11b-vision-instruct": {
+    "description": "LLaMA 3.2 ist darauf ausgelegt, Aufgaben zu bearbeiten, die visuelle und textuelle Daten kombinieren. Es zeigt hervorragende Leistungen bei Aufgaben wie Bildbeschreibung und visuellem Fragen und Antworten und überbrückt die Kluft zwischen Sprachgenerierung und visueller Schlussfolgerung."
+  },
+  "meta-llama/llama-3.2-90b-vision-instruct": {
+    "description": "LLaMA 3.2 ist darauf ausgelegt, Aufgaben zu bearbeiten, die visuelle und textuelle Daten kombinieren. Es zeigt hervorragende Leistungen bei Aufgaben wie Bildbeschreibung und visuellem Fragen und Antworten und überbrückt die Kluft zwischen Sprachgenerierung und visueller Schlussfolgerung."
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct ist das größte und leistungsstärkste Modell innerhalb des Llama 3.1 Instruct Modells. Es handelt sich um ein hochentwickeltes Modell für dialogbasierte Schlussfolgerungen und die Generierung synthetischer Daten, das auch als Grundlage für die professionelle kontinuierliche Vorab- und Feinabstimmung in bestimmten Bereichen verwendet werden kann. Die mehrsprachigen großen Sprachmodelle (LLMs) von Llama 3.1 sind eine Gruppe von vortrainierten, anweisungsoptimierten Generierungsmodellen, die in den Größen 8B, 70B und 405B (Text-Eingabe/Ausgabe) verfügbar sind. Die anweisungsoptimierten Textmodelle (8B, 70B, 405B) sind speziell für mehrsprachige Dialoganwendungen optimiert und haben in gängigen Branchenbenchmarks viele verfügbare Open-Source-Chat-Modelle übertroffen. Llama 3.1 ist für kommerzielle und Forschungszwecke in mehreren Sprachen konzipiert. Die anweisungsoptimierten Textmodelle eignen sich für assistentengleiche Chats, während die vortrainierten Modelle für verschiedene Aufgaben der natürlichen Sprachgenerierung angepasst werden können. Das Llama 3.1 Modell unterstützt auch die Nutzung seiner Ausgaben zur Verbesserung anderer Modelle, einschließlich der Generierung synthetischer Daten und der Verfeinerung. Llama 3.1 ist ein autoregressives Sprachmodell, das auf einer optimierten Transformer-Architektur basiert. Die angepasste Version verwendet überwachte Feinabstimmung (SFT) und verstärkendes Lernen mit menschlichem Feedback (RLHF), um den menschlichen Präferenzen für Hilfsbereitschaft und Sicherheit zu entsprechen."
