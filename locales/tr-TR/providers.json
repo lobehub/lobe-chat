@@ -30,6 +30,9 @@
   "groq": {
     "description": "Groq'un LPU çıkarım motoru, en son bağımsız büyük dil modeli (LLM) benchmark testlerinde mükemmel performans sergilemekte ve olağanüstü hız ve verimliliği ile yapay zeka çözümlerinin standartlarını yeniden tanımlamaktadır. Groq, bulut tabanlı dağıtımlarda iyi bir performans sergileyen anlık çıkarım hızının temsilcisidir."
   },
+  "hunyuan": {
+    "description": "Tencent tarafından geliştirilen büyük bir dil modeli, güçlü Çince yaratım yeteneklerine, karmaşık bağlamlarda mantıksal akıl yürütme yeteneğine ve güvenilir görev yerine getirme yeteneğine sahiptir."
+  },
   "minimax": {
     "description": "MiniMax, 2021 yılında kurulan genel yapay zeka teknolojisi şirketidir ve kullanıcılarla birlikte akıllı çözümler yaratmayı hedeflemektedir. MiniMax, farklı modlarda genel büyük modeller geliştirmiştir. Bunlar arasında trilyon parametreli MoE metin büyük modeli, ses büyük modeli ve görüntü büyük modeli bulunmaktadır. Ayrıca, Conch AI gibi uygulamalar da sunmaktadır."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage, çeşitli ticari ihtiyaçlar için yapay zeka modelleri geliştirmeye odaklanmaktadır. Solar LLM ve belge AI gibi modeller, insan yapımı genel zeka (AGI) hedeflemektedir. Chat API aracılığıyla basit diyalog ajanları oluşturmakta ve işlev çağrısı, çeviri, gömme ve belirli alan uygulamalarını desteklemektedir."
+  },
+  "wenxin": {
+    "description": "Kurumsal düzeyde tek duraklı büyük model ve AI yerel uygulama geliştirme ve hizmet platformu, en kapsamlı ve kullanımı kolay üretken yapay zeka modeli geliştirme, uygulama geliştirme için tam süreç araç zinciri sunar."
   },
   "zeroone": {
     "description": "01.AI, yapay zeka 2.0 çağının yapay zeka teknolojisine odaklanmakta ve 'insan + yapay zeka' yenilik ve uygulamalarını teşvik etmektedir. Son derece güçlü modeller ve gelişmiş yapay zeka teknolojileri kullanarak insan üretkenliğini artırmayı ve teknolojik güçlendirmeyi hedeflemektedir."

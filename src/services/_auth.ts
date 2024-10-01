@@ -25,6 +25,20 @@ export const getProviderAuthPayload = (provider: string) => {
       };
     }
 
+    case ModelProvider.Wenxin: {
+      const { secretKey, accessKey } = keyVaultsConfigSelectors.wenxinConfig(
+        useUserStore.getState(),
+      );
+
+      const apiKey = (accessKey || '') + (secretKey || '');
+
+      return {
+        apiKey,
+        wenxinAccessKey: accessKey,
+        wenxinSecretKey: secretKey,
+      };
+    }
+
     case ModelProvider.Azure: {
       const azure = keyVaultsConfigSelectors.azureConfig(useUserStore.getState());
 

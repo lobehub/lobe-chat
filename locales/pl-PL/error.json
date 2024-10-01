@@ -81,6 +81,7 @@
     "PluginServerError": "Błąd zwrócony przez serwer wtyczki. Proszę sprawdź plik opisowy wtyczki, konfigurację wtyczki lub implementację serwera zgodnie z poniższymi informacjami o błędzie",
     "PluginSettingsInvalid": "Ta wtyczka wymaga poprawnej konfiguracji przed użyciem. Proszę sprawdź, czy Twoja konfiguracja jest poprawna",
     "ProviderBizError": "Wystąpił błąd usługi {{provider}}, proszę sprawdzić poniższe informacje lub spróbować ponownie",
+    "QuotaLimitReached": "Przykro nam, bieżące zużycie tokenów lub liczba żądań osiągnęła limit kwoty dla tego klucza. Proszę zwiększyć limit kwoty dla tego klucza lub spróbować ponownie później.",
     "StreamChunkError": "Błąd analizy bloku wiadomości w żądaniu strumieniowym. Proszę sprawdzić, czy aktualny interfejs API jest zgodny z normami, lub skontaktować się z dostawcą API w celu uzyskania informacji.",
     "SubscriptionPlanLimit": "Wykorzystałeś limit swojego abonamentu i nie możesz korzystać z tej funkcji. Proszę uaktualnić do wyższego planu lub zakupić dodatkowy pakiet zasobów, aby kontynuować korzystanie.",
     "UnknownChatFetchError": "Przykro nam, wystąpił nieznany błąd żądania. Proszę sprawdzić poniższe informacje lub spróbować ponownie."
