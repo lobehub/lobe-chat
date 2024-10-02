@@ -10,6 +10,7 @@ const ReactRenderer = memo<ReactRendererProps>(({ code }) => {
       customSetup={{
         dependencies: {
           antd: 'latest',
+          recharts: 'latest',
         },
       }}
       files={{
