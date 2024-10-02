@@ -2,6 +2,56 @@
 
 # Changelog
 
+### [Version 1.21.3](https://github.com/lobehub/lobe-chat/compare/v1.21.2...v1.21.3)
+
+<sup>Released on **2024-10-01**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move most `/api` to `/webapi`.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move most `/api` to `/webapi`, closes [#4233](https://github.com/lobehub/lobe-chat/issues/4233) ([542c359](https://github.com/lobehub/lobe-chat/commit/542c359))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.2](https://github.com/lobehub/lobe-chat/compare/v1.21.1...v1.21.2)
+
+<sup>Released on **2024-10-01**</sup>
+
+#### 💄 Styles
+
+- **misc**: Adjust Wenxin icon size.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Adjust Wenxin icon size, closes [#4229](https://github.com/lobehub/lobe-chat/issues/4229) ([6ae79ce](https://github.com/lobehub/lobe-chat/commit/6ae79ce))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.21.1](https://github.com/lobehub/lobe-chat/compare/v1.21.0...v1.21.1)
 
 <sup>Released on **2024-09-30**</sup>
