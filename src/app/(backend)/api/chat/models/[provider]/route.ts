@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 
-import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
+import { createErrorResponse } from '@/utils/errorResponse';
 
 import { checkAuth } from '../../../middleware/auth';
 

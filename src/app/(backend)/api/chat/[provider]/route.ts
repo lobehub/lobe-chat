@@ -1,8 +1,8 @@
-import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { AgentRuntime, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { createTraceOptions, initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
+import { createErrorResponse } from '@/utils/errorResponse';
 import { getTracePayload } from '@/utils/trace';
 
 import { checkAuth } from '../../middleware/auth';
