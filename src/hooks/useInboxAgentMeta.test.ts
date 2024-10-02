@@ -15,6 +15,12 @@ vi.mock('@/store/serverConfig', () => ({
   useServerConfigStore: vi.fn(),
 }));
 
+const versionMock = vi.hoisted(() => ({
+  isCustomBranding: false,
+}));
+
+vi.mock('@/const/version', () => versionMock);
+
 describe('useInboxAgentMeta', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -23,8 +29,7 @@ describe('useInboxAgentMeta', () => {
   it('should return correct meta when enableCommercialInbox is false', () => {
     const mockTranslation = vi.fn((key) => `translated_${key}`);
     (useTranslation as Mock).mockReturnValue({ t: mockTranslation });
-    (useServerConfigStore as Mock).mockReturnValue({ enableCommercialInbox: false });
-
+    versionMock.isCustomBranding = false;
     const { result } = renderHook(() => useInboxAgentMeta());
 
     expect(result.current).toEqual({
@@ -38,8 +43,7 @@ describe('useInboxAgentMeta', () => {
   it('should return correct meta when enableCommercialInbox is true', () => {
     const mockTranslation = vi.fn((key, options) => `translated_${key}_${options.ns}`);
     (useTranslation as Mock).mockReturnValue({ t: mockTranslation });
-    (useServerConfigStore as Mock).mockReturnValue({ enableCommercialInbox: true });
-
+    versionMock.isCustomBranding = true;
     const { result } = renderHook(() => useInboxAgentMeta());
 
     expect(result.current).toEqual({

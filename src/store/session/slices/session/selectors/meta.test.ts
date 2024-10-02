@@ -47,6 +47,11 @@ describe('sessionMetaSelectors', () => {
     });
 
     describe('when it is an inbox session', () => {
+      const versionMock = vi.hoisted(() => ({
+        isCustomBranding: false,
+      }));
+
+      vi.mock('@/const/version', () => versionMock);
       beforeEach(() => {
         vi.spyOn(listSelectors.sessionSelectors, 'isInboxSession').mockReturnValue(true);
         vi.spyOn(listSelectors.sessionSelectors, 'currentSession').mockReturnValue(undefined);
@@ -54,9 +59,10 @@ describe('sessionMetaSelectors', () => {
 
       afterEach(() => {
         vi.restoreAllMocks();
+        versionMock.isCustomBranding = false;
       });
 
-      it('should return default inbox if enableCommercialInbox is false', () => {
+      it('should return default inbox if isCustomBranding is false', () => {
         const meta = sessionMetaSelectors.currentAgentMeta(mockSessionStore);
         expect(meta).toEqual(
           expect.objectContaining({
@@ -66,10 +72,9 @@ describe('sessionMetaSelectors', () => {
         );
       });
 
-      it('should return commercial inbox if enableCommercialInbox is true', () => {
-        vi.spyOn(serverConfigSelectors, 'featureFlagsSelectors').mockReturnValue({
-          enableCommercialInbox: true,
-        } as any);
+      it('should return custom inbox if isCustomBranding is true', () => {
+        versionMock.isCustomBranding = true;
+
         const meta = sessionMetaSelectors.currentAgentMeta(mockSessionStore);
         expect(meta).toEqual(
           expect.objectContaining({
