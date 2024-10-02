@@ -1,7 +1,7 @@
 import { OpenAISTTPayload } from '@lobehub/tts';
 import { createOpenaiAudioTranscriptions } from '@lobehub/tts/server';
 
-import { createBizOpenAI } from '@/app/api/openai/createBizOpenAI';
+import { createBizOpenAI } from '@/app/(backend)/api/openai/createBizOpenAI';
 
 export const runtime = 'edge';
 

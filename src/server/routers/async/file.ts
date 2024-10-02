@@ -3,7 +3,7 @@ import { chunk } from 'lodash-es';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
+import { initAgentRuntimeWithUserPayload } from '@/app/(backend)/api/chat/agentRuntime';
 import { fileEnv } from '@/config/file';
 import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
