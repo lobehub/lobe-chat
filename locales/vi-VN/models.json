@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Mô hình có khả năng hàng đầu trong nước, vượt trội hơn các mô hình chính thống nước ngoài trong các nhiệm vụ tiếng Trung như bách khoa toàn thư, văn bản dài, sáng tạo nội dung. Cũng có khả năng đa phương tiện hàng đầu trong ngành, thể hiện xuất sắc trong nhiều tiêu chuẩn đánh giá uy tín."
   },
+  "ERNIE-3.5-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
+  },
+  "ERNIE-3.5-8K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
+  },
+  "ERNIE-3.5-8K-Preview": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hàng đầu do Baidu tự phát triển, bao phủ một lượng lớn tài liệu tiếng Trung và tiếng Anh, có khả năng tổng quát mạnh mẽ, có thể đáp ứng hầu hết các yêu cầu về đối thoại, hỏi đáp, sáng tạo nội dung và các tình huống ứng dụng plugin; hỗ trợ tự động kết nối với plugin tìm kiếm của Baidu, đảm bảo thông tin hỏi đáp luôn được cập nhật kịp thời."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, so với ERNIE 3.5 đã nâng cấp toàn diện khả năng của mô hình, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, so với ERNIE 3.5 đã nâng cấp toàn diện khả năng của mô hình, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, có hiệu suất tổng thể xuất sắc, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật. So với ERNIE 4.0, hiệu suất tốt hơn."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Mô hình ngôn ngữ quy mô siêu lớn hàng đầu do Baidu tự phát triển, có hiệu suất tổng thể xuất sắc, phù hợp rộng rãi với các nhiệm vụ phức tạp trong nhiều lĩnh vực; hỗ trợ tự động kết nối với plugin tìm kiếm Baidu, đảm bảo thông tin hỏi đáp luôn cập nhật. So với ERNIE 4.0, hiệu suất tốt hơn."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn cho các tình huống chuyên biệt do Baidu tự phát triển, phù hợp cho các ứng dụng như NPC trong game, đối thoại dịch vụ khách hàng, và vai trò trong đối thoại, phong cách nhân vật rõ ràng và nhất quán hơn, khả năng tuân thủ chỉ dẫn mạnh mẽ, hiệu suất suy diễn tốt hơn."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn nhẹ do Baidu tự phát triển, kết hợp hiệu suất mô hình xuất sắc với khả năng suy diễn, hiệu quả tốt hơn ERNIE Lite, phù hợp cho việc suy diễn trên thẻ tăng tốc AI có công suất thấp."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hiệu suất cao do Baidu phát hành vào năm 2024, có khả năng tổng quát xuất sắc, phù hợp làm mô hình nền để tinh chỉnh, xử lý tốt hơn các vấn đề trong các tình huống cụ thể, đồng thời có khả năng suy diễn tuyệt vời."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Mô hình ngôn ngữ quy mô lớn hiệu suất cao do Baidu phát hành vào năm 2024, có khả năng tổng quát xuất sắc, hiệu quả tốt hơn ERNIE Speed, phù hợp làm mô hình nền để tinh chỉnh, xử lý tốt hơn các vấn đề trong các tình huống cụ thể, đồng thời có khả năng suy diễn tuyệt vời."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) là một mô hình sáng tạo, phù hợp cho nhiều lĩnh vực ứng dụng và nhiệm vụ phức tạp."
   },
@@ -401,6 +434,9 @@
   "glm-4-flash": {
     "description": "GLM-4-Flash là lựa chọn lý tưởng cho các nhiệm vụ đơn giản, tốc độ nhanh nhất và giá cả phải chăng nhất."
   },
+  "glm-4-flashx": {
+    "description": "GLM-4-FlashX là phiên bản nâng cấp của Flash, với tốc độ suy diễn siêu nhanh."
+  },
   "glm-4-long": {
     "description": "GLM-4-Long hỗ trợ đầu vào văn bản siêu dài, phù hợp cho các nhiệm vụ ghi nhớ và xử lý tài liệu quy mô lớn."
   },
@@ -413,11 +449,11 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus có khả năng hiểu nội dung video và nhiều hình ảnh, phù hợp cho các nhiệm vụ đa phương tiện."
   },
-  "google/gemini-flash-1.5-exp": {
-    "description": "Gemini 1.5 Flash 0827 cung cấp khả năng xử lý đa phương thức tối ưu, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
+  "google/gemini-flash-1.5": {
+    "description": "Gemini 1.5 Flash cung cấp khả năng xử lý đa phương thức được tối ưu hóa, phù hợp cho nhiều tình huống nhiệm vụ phức tạp."
   },
-  "google/gemini-pro-1.5-exp": {
-    "description": "Gemini 1.5 Pro 0827 kết hợp công nghệ tối ưu mới nhất, mang lại khả năng xử lý dữ liệu đa phương thức hiệu quả hơn."
+  "google/gemini-pro-1.5": {
+    "description": "Gemini 1.5 Pro kết hợp công nghệ tối ưu hóa mới nhất, mang lại khả năng xử lý dữ liệu đa phương thức hiệu quả hơn."
   },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 tiếp tục triết lý thiết kế nhẹ và hiệu quả."
@@ -490,6 +526,33 @@
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B là mô hình ngôn ngữ kết hợp giữa sáng tạo và trí thông minh, kết hợp nhiều mô hình hàng đầu."
+  },
+  "hunyuan-code": {
+    "description": "Mô hình sinh mã mới nhất của Hunyuan, được huấn luyện trên 200B dữ liệu mã chất lượng cao, trải qua nửa năm huấn luyện dữ liệu SFT chất lượng cao, độ dài cửa sổ ngữ cảnh tăng lên 8K, đứng đầu trong các chỉ số đánh giá tự động sinh mã cho năm ngôn ngữ lớn; trong đánh giá chất lượng cao của 10 tiêu chí mã tổng hợp cho năm ngôn ngữ, hiệu suất nằm trong nhóm đầu."
+  },
+  "hunyuan-functioncall": {
+    "description": "Mô hình FunctionCall với cấu trúc MOE mới nhất của Hunyuan, được huấn luyện trên dữ liệu FunctionCall chất lượng cao, với cửa sổ ngữ cảnh đạt 32K, dẫn đầu trong nhiều chỉ số đánh giá."
+  },
+  "hunyuan-lite": {
+    "description": "Nâng cấp lên cấu trúc MOE, với cửa sổ ngữ cảnh 256k, dẫn đầu nhiều mô hình mã nguồn mở trong các bộ đánh giá NLP, mã, toán học, ngành nghề, v.v."
+  },
+  "hunyuan-pro": {
+    "description": "Mô hình văn bản dài MOE-32K với quy mô hàng triệu tham số. Đạt được mức độ dẫn đầu tuyệt đối trên nhiều benchmark, có khả năng xử lý các lệnh phức tạp và suy diễn, có khả năng toán học phức tạp, hỗ trợ functioncall, được tối ưu hóa cho các lĩnh vực dịch thuật đa ngôn ngữ, tài chính, pháp lý và y tế."
+  },
+  "hunyuan-role": {
+    "description": "Mô hình đóng vai trò mới nhất của Hunyuan, được tinh chỉnh và huấn luyện bởi Hunyuan, dựa trên mô hình Hunyuan kết hợp với bộ dữ liệu tình huống đóng vai trò để tăng cường huấn luyện, có hiệu suất cơ bản tốt hơn trong các tình huống đóng vai trò."
+  },
+  "hunyuan-standard": {
+    "description": "Sử dụng chiến lược định tuyến tốt hơn, đồng thời giảm thiểu vấn đề cân bằng tải và đồng nhất chuyên gia. Về mặt văn bản dài, chỉ số tìm kiếm đạt 99.9%. MOE-32K có giá trị hiệu suất tương đối cao, cân bằng giữa hiệu quả và giá cả, có thể xử lý đầu vào văn bản dài."
+  },
+  "hunyuan-standard-256K": {
+    "description": "Sử dụng chiến lược định tuyến tốt hơn, đồng thời giảm thiểu vấn đề cân bằng tải và đồng nhất chuyên gia. Về mặt văn bản dài, chỉ số tìm kiếm đạt 99.9%. MOE-256K đã có bước đột phá về độ dài và hiệu quả, mở rộng đáng kể độ dài đầu vào có thể."
+  },
+  "hunyuan-turbo": {
+    "description": "Phiên bản xem trước của thế hệ mới mô hình ngôn ngữ lớn Hunyuan, sử dụng cấu trúc mô hình chuyên gia hỗn hợp (MoE) hoàn toàn mới, so với hunyuan-pro, hiệu suất suy diễn nhanh hơn và hiệu quả mạnh mẽ hơn."
+  },
+  "hunyuan-vision": {
+    "description": "Mô hình đa phương thức mới nhất của Hunyuan, hỗ trợ đầu vào hình ảnh + văn bản để tạo ra nội dung văn bản."
   },
   "internlm/internlm2_5-20b-chat": {
     "description": "Mô hình mã nguồn mở sáng tạo InternLM2.5, thông qua số lượng tham số lớn, nâng cao trí thông minh trong đối thoại."
@@ -633,6 +696,12 @@
   },
   "meta-llama/llama-3.1-8b-instruct:free": {
     "description": "LLaMA 3.1 cung cấp hỗ trợ đa ngôn ngữ, là một trong những mô hình sinh hàng đầu trong ngành."
+  },
+  "meta-llama/llama-3.2-11b-vision-instruct": {
+    "description": "LLaMA 3.2 được thiết kế để xử lý các nhiệm vụ kết hợp dữ liệu hình ảnh và văn bản. Nó thể hiện xuất sắc trong các nhiệm vụ mô tả hình ảnh và hỏi đáp hình ảnh, vượt qua ranh giới giữa sinh ngôn ngữ và suy diễn hình ảnh."
+  },
+  "meta-llama/llama-3.2-90b-vision-instruct": {
+    "description": "LLaMA 3.2 được thiết kế để xử lý các nhiệm vụ kết hợp dữ liệu hình ảnh và văn bản. Nó thể hiện xuất sắc trong các nhiệm vụ mô tả hình ảnh và hỏi đáp hình ảnh, vượt qua ranh giới giữa sinh ngôn ngữ và suy diễn hình ảnh."
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct là mô hình lớn nhất và mạnh mẽ nhất trong mô hình Llama 3.1 Instruct, là một mô hình sinh dữ liệu và suy luận đối thoại tiên tiến, cũng có thể được sử dụng làm nền tảng cho việc tiền huấn luyện hoặc tinh chỉnh chuyên sâu trong các lĩnh vực cụ thể. Các mô hình ngôn ngữ lớn đa ngôn ngữ (LLMs) mà Llama 3.1 cung cấp là một tập hợp các mô hình sinh đã được tiền huấn luyện và điều chỉnh theo chỉ dẫn, bao gồm kích thước 8B, 70B và 405B (đầu vào/đầu ra văn bản). Các mô hình văn bản điều chỉnh theo chỉ dẫn của Llama 3.1 (8B, 70B, 405B) được tối ưu hóa cho các trường hợp đối thoại đa ngôn ngữ và đã vượt qua nhiều mô hình trò chuyện mã nguồn mở có sẵn trong các bài kiểm tra chuẩn ngành phổ biến. Llama 3.1 được thiết kế để sử dụng cho nhiều mục đích thương mại và nghiên cứu bằng nhiều ngôn ngữ. Các mô hình văn bản điều chỉnh theo chỉ dẫn phù hợp cho các cuộc trò chuyện giống như trợ lý, trong khi các mô hình đã được tiền huấn luyện có thể thích ứng với nhiều nhiệm vụ sinh ngôn ngữ tự nhiên khác nhau. Mô hình Llama 3.1 cũng hỗ trợ việc cải thiện các mô hình khác bằng cách sử dụng đầu ra của nó, bao gồm sinh dữ liệu tổng hợp và tinh chỉnh. Llama 3.1 là một mô hình ngôn ngữ tự hồi quy sử dụng kiến trúc biến áp tối ưu. Phiên bản điều chỉnh sử dụng tinh chỉnh có giám sát (SFT) và học tăng cường có phản hồi từ con người (RLHF) để phù hợp với sở thích của con người về tính hữu ích và an toàn."

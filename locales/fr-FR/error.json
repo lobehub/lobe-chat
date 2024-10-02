@@ -81,6 +81,7 @@
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
     "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
+    "QuotaLimitReached": "Désolé, l'utilisation actuelle des tokens ou le nombre de requêtes a atteint la limite de quota de cette clé. Veuillez augmenter le quota de cette clé ou réessayer plus tard.",
     "StreamChunkError": "Erreur de parsing du bloc de message de la requête en streaming. Veuillez vérifier si l'API actuelle respecte les normes ou contacter votre fournisseur d'API pour des conseils.",
     "SubscriptionPlanLimit": "Vous avez atteint votre limite d'abonnement et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan supérieur ou acheter un pack de ressources pour continuer à l'utiliser.",
     "UnknownChatFetchError": "Désolé, une erreur de requête inconnue s'est produite. Veuillez vérifier les informations ci-dessous ou réessayer."
