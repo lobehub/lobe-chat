@@ -34,7 +34,6 @@ describe('featureFlagsSelectors', () => {
       enableClerkSignUp: true,
       showMarket: true,
       enableSTT: true,
-      enableCommercialInbox: false,
     });
   });
 });

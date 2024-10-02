@@ -1,3 +1,5 @@
+import { isCustomBranding } from '@/const/version';
+
 import tool from '../default/tool';
 import auth from './auth';
 import chat from './chat';
@@ -43,5 +45,10 @@ const resources = {
   tool,
   welcome,
 } as const;
+
+if (!isCustomBranding) {
+  // @ts-ignore
+  delete resources.custom;
+}
 
 export default resources;

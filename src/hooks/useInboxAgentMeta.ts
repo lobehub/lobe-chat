@@ -1,20 +1,15 @@
 import { useTranslation } from 'react-i18next';
 
-import { useServerConfigStore } from '@/store/serverConfig';
-import { featureFlagsSelectors } from '@/store/serverConfig/selectors';
+import { isCustomBranding } from '@/const/version';
 
 export const useInboxAgentMeta = () => {
   const { t } = useTranslation(['chat', 'custom']);
 
-  const { enableCommercialInbox } = useServerConfigStore(featureFlagsSelectors);
-
-  const displayTitle = enableCommercialInbox
+  const displayTitle = isCustomBranding
     ? t('chat.inbox.title', { ns: 'custom' })
     : t('inbox.title');
 
-  const displayDesc = enableCommercialInbox
-    ? t('chat.inbox.desc', { ns: 'custom' })
-    : t('inbox.desc');
+  const displayDesc = isCustomBranding ? t('chat.inbox.desc', { ns: 'custom' }) : t('inbox.desc');
 
   return {
     description: displayDesc,

@@ -44,8 +44,7 @@ const InboxWelcome = memo(() => {
   const { styles } = useStyles();
   const mobile = useServerConfigStore((s) => s.isMobile);
   const greeting = useGreeting();
-  const { showWelcomeSuggest, showCreateSession, enableCommercialInbox } =
-    useServerConfigStore(featureFlagsSelectors);
+  const { showWelcomeSuggest, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
 
   return (
     <Center padding={16} width={'100%'}>
@@ -55,7 +54,7 @@ const InboxWelcome = memo(() => {
           <h1 className={styles.title}>{greeting}</h1>
         </Flexbox>
         <Markdown className={styles.desc} variant={'chat'}>
-          {enableCommercialInbox
+          {isCustomBranding
             ? t(
                 showCreateSession
                   ? 'welcome.guide.defaultMessage'

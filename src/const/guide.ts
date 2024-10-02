@@ -16,7 +16,7 @@ import {
 } from '@/const/url';
 
 export const INBOX_GUIDE_SYSTEMROLE =
-  INBOX_PROMPT ||
+  INBOX_PROMPT ??
   `# Role: LobeChat Support Assistant
 
 ## About [LobeHub](${OFFICIAL_SITE})

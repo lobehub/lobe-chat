@@ -1,8 +1,7 @@
 import { t } from 'i18next';
 
 import { DEFAULT_AVATAR, DEFAULT_BACKGROUND_COLOR, DEFAULT_INBOX_AVATAR } from '@/const/meta';
-import { featureFlagsSelectors } from '@/store/serverConfig/selectors';
-import { createServerConfigStore } from '@/store/serverConfig/store';
+import { isCustomBranding } from '@/const/version';
 import { SessionStore } from '@/store/session';
 import { MetaData } from '@/types/meta';
 import { merge } from '@/utils/merge';
@@ -11,20 +10,18 @@ import { sessionSelectors } from './list';
 
 // ==========   Meta   ============== //
 const currentAgentMeta = (s: SessionStore): MetaData => {
-  const { enableCommercialInbox } = featureFlagsSelectors(createServerConfigStore().getState());
-
   const isInbox = sessionSelectors.isInboxSession(s);
 
   const defaultMeta = {
     avatar: isInbox ? DEFAULT_INBOX_AVATAR : DEFAULT_AVATAR,
     backgroundColor: DEFAULT_BACKGROUND_COLOR,
     description: isInbox
-      ? enableCommercialInbox
+      ? isCustomBranding
         ? t('chat.inbox.desc', { ns: 'custom' })
         : t('inbox.desc', { ns: 'chat' })
       : undefined,
     title: isInbox
-      ? enableCommercialInbox
+      ? isCustomBranding
         ? t('chat.inbox.title', { ns: 'custom' })
         : t('inbox.title', { ns: 'chat' })
       : t('defaultSession'),
