@@ -10,7 +10,6 @@
       "addToKnowledgeBase": "Add to Knowledge Base",
       "addToOtherKnowledgeBase": "Add to Other Knowledge Base",
       "batchChunking": "Batch Chunking",
-      "batchChunkingUnsupported": "The following file types do not support batch chunking: {{types}}",
       "chunking": "Chunking",
       "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
       "chunkingUnsupported": "This file does not support chunking.",

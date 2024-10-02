@@ -10,7 +10,6 @@
       "addToKnowledgeBase": "Thêm vào kho tri thức",
       "addToOtherKnowledgeBase": "Thêm vào kho tri thức khác",
       "batchChunking": "Chia nhỏ theo lô",
-      "batchChunkingUnsupported": "Các loại tệp không hỗ trợ phân khối hàng loạt: {{types}}",
       "chunking": "Chia nhỏ",
       "chunkingTooltip": "Chia tách tệp thành nhiều khối văn bản và vector hóa, có thể sử dụng cho tìm kiếm ngữ nghĩa và đối thoại tệp",
       "chunkingUnsupported": "Tập tin này không hỗ trợ phân mảnh",

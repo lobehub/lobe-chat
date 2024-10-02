@@ -10,7 +10,6 @@
       "addToKnowledgeBase": "Aggiungi alla base di conoscenza",
       "addToOtherKnowledgeBase": "Aggiungi a un'altra base di conoscenza",
       "batchChunking": "Suddivisione in batch",
-      "batchChunkingUnsupported": "Tipi di file non supportati per il caricamento in blocchi: {{types}}",
       "chunking": "Suddivisione",
       "chunkingTooltip": "Dividi il file in più blocchi di testo e vettorizzali, utilizzabili per la ricerca semantica e il dialogo sui file",
       "chunkingUnsupported": "Questo file non supporta il frazionamento",

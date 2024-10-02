@@ -10,7 +10,6 @@
       "addToKnowledgeBase": "지식 베이스에 추가",
       "addToOtherKnowledgeBase": "다른 지식 베이스에 추가",
       "batchChunking": "배치 청크 분할",
-      "batchChunkingUnsupported": "배치 청크 처리가 지원되지 않는 파일 유형: {{types}}",
       "chunking": "청크 분할",
       "chunkingTooltip": "파일을 여러 텍스트 블록으로 분할하고 벡터화한 후, 의미 검색 및 파일 대화에 사용할 수 있습니다.",
       "chunkingUnsupported": "이 파일은 청크 처리를 지원하지 않습니다.",

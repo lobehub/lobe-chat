@@ -10,7 +10,6 @@
       "addToKnowledgeBase": "Toevoegen aan kennisbank",
       "addToOtherKnowledgeBase": "Toevoegen aan andere kennisbank",
       "batchChunking": "Batchverdeling",
-      "batchChunkingUnsupported": "Bestandstypen die batchchunking niet ondersteunen: {{types}}",
       "chunking": "Verdeling",
       "chunkingTooltip": "Splits het bestand in meerdere tekstblokken en vectoriseer deze voor semantische zoekopdrachten en bestandsdialoog",
       "chunkingUnsupported": "Dit bestand ondersteunt geen chunking",

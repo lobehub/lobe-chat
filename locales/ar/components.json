@@ -10,7 +10,6 @@
       "addToKnowledgeBase": "إضافة إلى قاعدة المعرفة",
       "addToOtherKnowledgeBase": "إضافة إلى قاعدة معرفة أخرى",
       "batchChunking": "تقسيم دفعي",
-      "batchChunkingUnsupported": "أنواع الملفات التي لا تدعم تقسيم الدفعات: {{types}}",
       "chunking": "تقسيم",
       "chunkingTooltip": "قم بتقسيم الملف إلى عدة كتل نصية وتحويلها إلى متجهات، يمكن استخدامها في البحث الدلالي والمحادثة حول الملفات",
       "chunkingUnsupported": "هذا الملف لا يدعم تقسيم الأجزاء",
