@@ -1,13 +1,11 @@
 import { Icon } from '@lobehub/ui';
 import { App, Button, Checkbox, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { BookMinusIcon, BookPlusIcon, Trash2Icon } from 'lucide-react';
+import { BookMinusIcon, BookPlusIcon, FileBoxIcon, Trash2Icon } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
-
-import BatchChunkingButton from './BatchChunkingButton';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   container: css`
@@ -33,12 +31,11 @@ interface MultiSelectActionsProps {
   onActionClick: (type: MultiSelectActionType) => Promise<void>;
   onClickCheckbox: () => void;
   selectCount: number;
-  selectFileIds: string[];
   total?: number;
 }
 
 const MultiSelectActions = memo<MultiSelectActionsProps>(
-  ({ selectCount, isInKnowledgeBase, total, onActionClick, onClickCheckbox, selectFileIds }) => {
+  ({ selectCount, isInKnowledgeBase, total, onActionClick, onClickCheckbox }) => {
     const { t } = useTranslation(['components', 'common']);
     const { styles } = useStyles();
 
@@ -117,10 +114,15 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
                 {t('FileManager.actions.addToKnowledgeBase')}
               </Button>
             )}
-            <BatchChunkingButton
-              onClick={() => onActionClick('batchChunking')}
-              selectFileIds={selectFileIds}
-            />
+            <Button
+              icon={<Icon icon={FileBoxIcon} />}
+              onClick={async () => {
+                await onActionClick('batchChunking');
+              }}
+              size={'small'}
+            >
+              {t('FileManager.actions.batchChunking')}
+            </Button>
             <Button
               danger
               icon={<Icon icon={Trash2Icon} />}
