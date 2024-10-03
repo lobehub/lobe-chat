@@ -1,13 +1,11 @@
 name: Build and Publish
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # manual trigger
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: ${{ github.repository_owner }}/lobe-chat-database
 
 jobs:
   build-and-push:
@@ -19,6 +17,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          repository: lobehub/lobe-chat
 
       - name: Log in to the Container registry
         uses: docker/login-action@v2
