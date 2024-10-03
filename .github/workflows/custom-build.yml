@@ -1,11 +1,11 @@
-name: Build and Publish
+name: Build Custom Image
 
 on:
-  workflow_dispatch: # manual trigger
+  workflow_dispatch: # Manual trigger
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository_owner }}/lobe-chat-database
+  IMAGE_NAME: ${{ github.repository_owner }}/lobe-chat-database # Name of your image
 
 jobs:
   build-and-push:
@@ -37,9 +37,11 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: Dockerfile.database
+          file: Dockerfile.database # Change dockerfile if needed
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          # List all variables you need to overwrite
           build-args: |
             NEXT_PUBLIC_BASE_PATH=${{ secrets.NEXT_PUBLIC_BASE_PATH }}
+            NEXT_PUBLIC_SERVICE_MODE=${{ secrets.NEXT_PUBLIC_SERVICE_MODE }}
