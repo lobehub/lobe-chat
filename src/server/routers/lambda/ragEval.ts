@@ -263,7 +263,7 @@ export const ragEvalRouter = router({
         // 保存数据
         await ctx.evaluationModel.update(input.id, {
           status: EvalEvaluationStatus.Success,
-          evalRecordsUrl: getFullFileUrl(path),
+          evalRecordsUrl: await getFullFileUrl(path),
         });
       }
 
