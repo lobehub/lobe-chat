@@ -1,3 +1,4 @@
+version: '3'
 services:
   network-service:
     image: alpine
