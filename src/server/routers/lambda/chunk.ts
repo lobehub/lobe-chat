@@ -1,7 +1,7 @@
 import { inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
+import { initAgentRuntimeWithUserPayload } from '@/app/(backend)/api/chat/agentRuntime';
 import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
 import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
