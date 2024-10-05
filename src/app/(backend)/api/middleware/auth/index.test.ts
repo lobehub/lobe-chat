@@ -12,7 +12,7 @@ vi.mock('@clerk/nextjs/server', () => ({
   getAuth: vi.fn(),
 }));
 
-vi.mock('@/app/api/errorResponse', () => ({
+vi.mock('@/app/(backend)/api/errorResponse', () => ({
   createErrorResponse: vi.fn(),
 }));
 
