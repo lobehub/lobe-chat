@@ -1,6 +1,6 @@
 import { ListResponse, Ollama as OllamaBrowser, ProgressResponse } from 'ollama/browser';
 
-import { createErrorResponse } from '@/app/api/errorResponse';
+import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';

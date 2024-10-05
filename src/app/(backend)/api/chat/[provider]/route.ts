@@ -1,4 +1,4 @@
-import { createErrorResponse } from '@/app/api/errorResponse';
+import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { AgentRuntime, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatStreamPayload } from '@/types/openai/chat';
