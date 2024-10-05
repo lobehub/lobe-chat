@@ -1,12 +1,13 @@
-import { shadcnComponentFiles } from './shadcn';
-
-export const templateFiles = {
+interface TemplateFilesParams {
+  title?: string;
+}
+export const createTemplateFiles = ({ title }: TemplateFilesParams = {}) => ({
   'index.html': `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Artifacts App</title>
+    <title>${title || 'Artifacts App'}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
   <body>
@@ -18,16 +19,14 @@ export const templateFiles = {
   'vite.config.ts': {
     code: `import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@/components/ui': '@lshay/ui/components/default',
     },
   },
 });`,
   },
-  ...shadcnComponentFiles,
-};
+});

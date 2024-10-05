@@ -1,12 +1,18 @@
 import { SandpackLayout, SandpackPreview, SandpackProvider } from '@codesandbox/sandpack-react';
 import { memo } from 'react';
 
-import { templateFiles } from './template';
+import { useChatStore } from '@/store/chat';
+import { chatPortalSelectors } from '@/store/chat/selectors';
+
+import { createTemplateFiles } from './template';
 
 interface ReactRendererProps {
   code: string;
 }
+
 const ReactRenderer = memo<ReactRendererProps>(({ code }) => {
+  const title = useChatStore(chatPortalSelectors.artifactTitle);
+
   return (
     <SandpackProvider
       customSetup={{
@@ -25,7 +31,7 @@ const ReactRenderer = memo<ReactRendererProps>(({ code }) => {
       }}
       files={{
         'App.tsx': code,
-        ...templateFiles,
+        ...createTemplateFiles({ title }),
       }}
       options={{
         externalResources: ['https://cdn.tailwindcss.com'],
