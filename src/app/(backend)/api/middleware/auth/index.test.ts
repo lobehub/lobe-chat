@@ -1,7 +1,7 @@
 import { getAuth } from '@clerk/nextjs/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createErrorResponse } from '@/app/api/errorResponse';
+import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 
@@ -12,7 +12,7 @@ vi.mock('@clerk/nextjs/server', () => ({
   getAuth: vi.fn(),
 }));
 
-vi.mock('@/app/api/errorResponse', () => ({
+vi.mock('@/app/(backend)/api/errorResponse', () => ({
   createErrorResponse: vi.fn(),
 }));
 
