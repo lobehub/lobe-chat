@@ -2,7 +2,7 @@ import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
+import { initAgentRuntimeWithUserPayload } from '@/app/(backend)/api/chat/agentRuntime';
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
 import { ChunkModel } from '@/database/server/models/chunk';
