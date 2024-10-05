@@ -53,20 +53,7 @@
       "enableLinkWithEmail": false,
       "orgChoiceMode": "",
       "samlReplyUrl": "",
-      "providers": [
-        {
-          "owner": "",
-          "name": "provider_captcha_default",
-          "canSignUp": false,
-          "canSignIn": false,
-          "canUnlink": false,
-          "countryCodes": null,
-          "prompted": false,
-          "signupGroup": "",
-          "rule": "None",
-          "provider": null
-        }
-      ],
+      "providers": [],
       "signinMethods": [
         {
           "name": "Password",
