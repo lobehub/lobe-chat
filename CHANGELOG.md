@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.21.6](https://github.com/lobehub/lobe-chat/compare/v1.21.5...v1.21.6)
+
+<sup>Released on **2024-10-05**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move backend api to (backend) folder group.
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix txt-to-image api.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move backend api to (backend) folder group, closes [#4262](https://github.com/lobehub/lobe-chat/issues/4262) ([d8afb46](https://github.com/lobehub/lobe-chat/commit/d8afb46))
+
+#### What's fixed
+
+- **misc**: Fix txt-to-image api, closes [#4264](https://github.com/lobehub/lobe-chat/issues/4264) ([d1ff4ba](https://github.com/lobehub/lobe-chat/commit/d1ff4ba))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.21.5](https://github.com/lobehub/lobe-chat/compare/v1.21.4...v1.21.5)
 
 <sup>Released on **2024-10-05**</sup>
