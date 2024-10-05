@@ -50,7 +50,7 @@
       "enableSamlC14n10": false,
       "enableSamlPostBinding": false,
       "enableWebAuthn": false,
-      "enableLinkWithEmail": false,
+      "enableLinkWithEmail": true,
       "orgChoiceMode": "",
       "samlReplyUrl": "",
       "providers": [],
