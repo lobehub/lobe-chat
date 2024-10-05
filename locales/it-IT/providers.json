@@ -1,5 +1,6 @@
 {
-  "ai21": {},
+  "ai21": {
+  },
   "ai360": {
     "description": "360 AI è una piattaforma di modelli e servizi AI lanciata da 360 Company, che offre vari modelli avanzati di elaborazione del linguaggio naturale, tra cui 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Questi modelli combinano parametri su larga scala e capacità multimodali, trovando ampio utilizzo in generazione di testo, comprensione semantica, sistemi di dialogo e generazione di codice. Con strategie di prezzo flessibili, 360 AI soddisfa le esigenze diversificate degli utenti, supportando l'integrazione degli sviluppatori e promuovendo l'innovazione e lo sviluppo delle applicazioni intelligenti."
   },
@@ -67,7 +68,8 @@
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },
-  "sensenova": {},
+  "sensenova": {
+  },
   "siliconcloud": {
     "description": "SiliconFlow si impegna ad accelerare l'AGI per il bene dell'umanità, migliorando l'efficienza dell'AI su larga scala attraverso stack GenAI facili da usare e a basso costo."
   },

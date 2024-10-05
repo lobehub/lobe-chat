@@ -98,6 +98,7 @@
       "title": "Client Fetch-Modus verwenden"
     },
     "fetcher": {
+      "clear": "Abgerufenes Modell löschen",
       "fetch": "Modelle abrufen",
       "fetching": "Modelle werden abgerufen...",
       "latestTime": "Letzte Aktualisierung: {{time}}",

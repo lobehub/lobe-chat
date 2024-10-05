@@ -98,6 +98,7 @@
       "title": "İstemci Tarafından Veri Alımı"
     },
     "fetcher": {
+      "clear": "Alınan modeli temizle",
       "fetch": "Modelleri Al",
       "fetching": "Modelleri alınıyor...",
       "latestTime": "Son güncelleme zamanı: {{time}}",

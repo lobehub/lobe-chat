@@ -1,5 +1,6 @@
 {
-  "ai21": {},
+  "ai21": {
+  },
   "ai360": {
     "description": "360 AI is een AI-model- en serviceplatform gelanceerd door het bedrijf 360, dat verschillende geavanceerde modellen voor natuurlijke taalverwerking biedt, waaronder 360GPT2 Pro, 360GPT Pro, 360GPT Turbo en 360GPT Turbo Responsibility 8K. Deze modellen combineren grootschalige parameters en multimodale capaciteiten, en worden breed toegepast in tekstgeneratie, semantisch begrip, dialoogsystemen en codegeneratie. Met flexibele prijsstrategieën voldoet 360 AI aan diverse gebruikersbehoeften, ondersteunt het ontwikkelaars bij integratie en bevordert het de innovatie en ontwikkeling van intelligente toepassingen."
   },
@@ -67,7 +68,8 @@
   "qwen": {
     "description": "Tongyi Qianwen is een door Alibaba Cloud zelf ontwikkeld grootschalig taalmodel met krachtige mogelijkheden voor natuurlijke taalbegrip en -generatie. Het kan verschillende vragen beantwoorden, tekstinhoud creëren, meningen uiten, code schrijven, en speelt een rol in verschillende domeinen."
   },
-  "sensenova": {},
+  "sensenova": {
+  },
   "siliconcloud": {
     "description": "SiliconFlow streeft ernaar AGI te versnellen ten behoeve van de mensheid, door de efficiëntie van grootschalige AI te verbeteren met een gebruiksvriendelijke en kosteneffectieve GenAI-stack."
   },

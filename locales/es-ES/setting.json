@@ -98,6 +98,7 @@
       "title": "Usar el modo de solicitud en el cliente"
     },
     "fetcher": {
+      "clear": "Eliminar el modelo obtenido",
       "fetch": "Obtener lista de modelos",
       "fetching": "Obteniendo lista de modelos...",
       "latestTime": "Última actualización: {{time}}",

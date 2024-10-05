@@ -98,6 +98,7 @@
       "title": "Utiliser le mode de requête client"
     },
     "fetcher": {
+      "clear": "Effacer le modèle récupéré",
       "fetch": "Obtenir la liste des modèles",
       "fetching": "Récupération de la liste des modèles en cours...",
       "latestTime": "Dernière mise à jour : {{time}}",

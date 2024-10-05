@@ -98,6 +98,7 @@
       "title": "使用客戶端請求模式"
     },
     "fetcher": {
+      "clear": "清除獲取的模型",
       "fetch": "獲取模型列表",
       "fetching": "正在獲取模型列表...",
       "latestTime": "上次更新時間：{{time}}",

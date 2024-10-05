@@ -98,6 +98,7 @@
       "title": "使用客户端请求模式"
     },
     "fetcher": {
+      "clear": "Wyczyść pobrany model",
       "fetch": "Pobierz listę modeli",
       "fetching": "Trwa pobieranie listy modeli...",
       "latestTime": "Ostatnia aktualizacja: {{time}}",
