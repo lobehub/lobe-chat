@@ -27,7 +27,7 @@ const Header = () => {
     });
 
   // show switch only when artifact is closed and the type is not code
-  const showSwitch = isArtifactTagClosed && artifactType !== ArtifactType.Code;
+  const showSwitch = isArtifactTagClosed && artifactType !== ArtifactType?.Code;
 
   return (
     <Flexbox align={'center'} flex={1} gap={12} horizontal justify={'space-between'} width={'100%'}>

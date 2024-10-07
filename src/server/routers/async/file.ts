@@ -173,7 +173,7 @@ export const fileRouter = router({
       } catch (e) {
         console.error(e);
         // if file not found, delete it from db
-        if ((e as any).Code === 'NoSuchKey') {
+        if ((e as any)?.Code === 'NoSuchKey') {
           await ctx.fileModel.delete(input.fileId);
           throw new TRPCError({ code: 'BAD_REQUEST', message: 'File not found' });
         }

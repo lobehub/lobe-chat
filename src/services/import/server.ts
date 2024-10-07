@@ -17,10 +17,10 @@ export class ServerService {
       const error = e as DefaultErrorShape;
 
       callbacks?.onError?.({
-        code: error.data.code,
-        httpStatus: error.data.httpStatus,
-        message: error.message,
-        path: error.data.path,
+        code: error?.data?.code,
+        httpStatus: error?.data?.httpStatus,
+        message: error?.message,
+        path: error?.data?.path,
       });
     };
 
