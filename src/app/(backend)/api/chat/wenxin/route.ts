@@ -6,7 +6,7 @@ import { POST as UniverseRoute } from '../[provider]/route';
 
 export const runtime = 'nodejs';
 
-export const maxDuration = 30;
+export const maxDuration = 60;
 
 export const POST = async (req: Request) =>
   UniverseRoute(req, {
