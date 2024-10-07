@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
-import { createErrorResponse } from '@/app/api/errorResponse';
-import { checkAuth } from '@/app/api/middleware/auth';
+import { initAgentRuntimeWithUserPayload } from '@/app/(backend)/api/chat/agentRuntime';
+import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
+import { checkAuth } from '@/app/(backend)/api/middleware/auth';
 import { ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { TextToImagePayload } from '@/libs/agent-runtime/types';
 import { ChatErrorType } from '@/types/fetch';
