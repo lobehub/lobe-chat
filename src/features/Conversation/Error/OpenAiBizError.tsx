@@ -19,7 +19,7 @@ interface OpenAIErrorResponse {
 const OpenAiBizError = memo<ChatMessage>(({ error, id }) => {
   const errorBody: OpenAIErrorResponse = (error as any)?.body;
 
-  const errorCode = errorBody.error?.code;
+  const errorCode = errorBody?.error?.code;
 
   if (errorCode === 'invalid_api_key') return <InvalidAPIKey id={id} />;
 

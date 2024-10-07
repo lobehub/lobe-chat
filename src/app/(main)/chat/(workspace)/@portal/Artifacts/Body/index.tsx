@@ -45,7 +45,7 @@ const ArtifactsUI = memo(() => {
         return 'tsx';
       }
 
-      case ArtifactType.Code: {
+      case ArtifactType?.Code: {
         return artifactCodeLanguage;
       }
 
@@ -64,7 +64,7 @@ const ArtifactsUI = memo(() => {
 
   // show code when the artifact is not closed or the display mode is code or the artifact type is code
   const showCode =
-    !isArtifactTagClosed || displayMode === 'code' || artifactType === ArtifactType.Code;
+    !isArtifactTagClosed || displayMode === 'code' || artifactType === ArtifactType?.Code;
 
   return (
     <Flexbox

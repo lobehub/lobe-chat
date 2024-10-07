@@ -53,8 +53,8 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
     } catch (e) {
       let error = e as { [key: string]: any; code: string; message: string };
 
-      if (error.code) {
-        switch (error.code) {
+      if (error?.code) {
+        switch (error?.code) {
           case 'DeploymentNotFound': {
             error = { ...error, deployId: model };
           }
@@ -67,7 +67,7 @@ export class LobeAzureOpenAI implements LobeRuntimeAI {
         } as any;
       }
 
-      const errorType = error.code
+      const errorType = error?.code
         ? AgentRuntimeErrorType.ProviderBizError
         : AgentRuntimeErrorType.AgentRuntimeError;
 
