@@ -84,6 +84,9 @@ RUN \
 
 COPY . .
 
+# Replace edge runtime with nodejs for all files in src
+RUN find src -type f -exec sed -i "s/export const runtime = 'edge';/export const runtime = 'nodejs';/g" {} +
+
 # run build standalone for docker version
 RUN npm run build:docker
 
