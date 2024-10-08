@@ -291,7 +291,7 @@
     "semantic-release": "^21.1.2",
     "serwist": "^9.0.8",
     "stylelint": "^15.11.0",
-    "supports-color": "8",
+    "supports-color": "9",
     "tsx": "^4.17.0",
     "typescript": "^5.5.4",
     "unified": "^11.0.5",
