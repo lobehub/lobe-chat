@@ -2,6 +2,39 @@
 
 # Changelog
 
+### [Version 1.21.8](https://github.com/lobehub/lobe-chat/compare/v1.21.7...v1.21.8)
+
+<sup>Released on **2024-10-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix auto rewrite query when user message is too long.
+
+#### 💄 Styles
+
+- **misc**: Support yml in file chunk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix auto rewrite query when user message is too long, closes [#4288](https://github.com/lobehub/lobe-chat/issues/4288) ([a2d3d32](https://github.com/lobehub/lobe-chat/commit/a2d3d32))
+
+#### Styles
+
+- **misc**: Support yml in file chunk, closes [#4283](https://github.com/lobehub/lobe-chat/issues/4283) ([cec7ec0](https://github.com/lobehub/lobe-chat/commit/cec7ec0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.21.7](https://github.com/lobehub/lobe-chat/compare/v1.21.6...v1.21.7)
 
 <sup>Released on **2024-10-08**</sup>
