@@ -14,6 +14,7 @@ import { StreamingResponse } from '../utils/response';
 import {
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,
+  AWSBedrockMistralStream,
   createBedrockStream,
 } from '../utils/streams';
 
@@ -47,6 +48,8 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
     if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload, options);
+
+    if (payload.model.startsWith('mistral')) return this.invokeMistralModel(payload, options);
 
     return this.invokeClaudeModel(payload, options);
   }
@@ -134,6 +137,57 @@ export class LobeBedrockAI implements LobeRuntimeAI {
       }
       // Respond with the stream
       return StreamingResponse(AWSBedrockLlamaStream(prod, options?.callback), {
+        headers: options?.headers,
+      });
+    } catch (e) {
+      const err = e as Error & { $metadata: any };
+
+      throw AgentRuntimeError.chat({
+        error: {
+          body: err.$metadata,
+          message: err.message,
+          region: this.region,
+          type: err.name,
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
+    }
+  };
+
+  private invokeMistralModel = async (
+    payload: ChatStreamPayload,
+    options?: ChatCompetitionOptions,
+  ): Promise<Response> => {
+    const { max_tokens, messages, model, temperature, tool_choice, tools, top_p } = payload;
+    const command = new InvokeModelWithResponseStreamCommand({
+      accept: 'application/json',
+      body: JSON.stringify({
+        max_tokens: max_tokens || 4096,
+        messages: messages,
+        temperature: temperature,
+        tool_choice: tool_choice,
+        tools: tools,
+        top_p: top_p,
+      }),
+      contentType: 'application/json',
+      modelId: model,
+    });
+
+    try {
+      // Ask Claude for a streaming chat completion given the prompt
+      const res = await this.client.send(command);
+
+      const stream = createBedrockStream(res);
+
+      const [prod, debug] = stream.tee();
+
+      if (process.env.DEBUG_BEDROCK_CHAT_COMPLETION === '1') {
+        debugStream(debug).catch(console.error);
+      }
+      // Respond with the stream
+      return StreamingResponse(AWSBedrockMistralStream(prod, options?.callback), {
         headers: options?.headers,
       });
     } catch (e) {

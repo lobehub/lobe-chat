@@ -192,6 +192,7 @@ const Bedrock: ModelProviderCard = {
       id: 'mistral.mixtral-8x7b-instruct-v0:1',
       tokens: 32_000,
     },
+*/
     {
       description: 'Mistral Small is perfectly suited for straightforward tasks that can be performed in bulk, such as classification, customer support, or text generation. It provides outstanding performance at a cost-effective price point.',
       displayName: 'Mistral Small',
@@ -215,7 +216,6 @@ const Bedrock: ModelProviderCard = {
       id: 'mistral.mistral-large-2402-v1:0',
       tokens: 32_000,
     },
-*/
     /*
     // TODO: Not support for now
     {
