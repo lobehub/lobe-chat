@@ -3,6 +3,7 @@ import { Mock, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
+import { useServerConfigStore } from '@/store/serverConfig';
 import { ChatMessage } from '@/types/message';
 
 import { AssistantMessageExtra } from './Assistant';
@@ -18,6 +19,10 @@ vi.mock('./Translate', () => ({
 // Mock dependencies
 vi.mock('@/store/agent', () => ({
   useAgentStore: vi.fn(),
+}));
+vi.mock('@/store/serverConfig', () => ({
+  useServerConfigStore: vi.fn(),
+  featureFlagsSelectors: vi.fn(),
 }));
 vi.mock('@/store/agent/selectors', () => ({
   agentSelectors: {
@@ -41,6 +46,7 @@ describe('AssistantMessageExtra', () => {
       chatLoadingId: null,
     }));
     (agentSelectors.currentAgentModel as Mock).mockReturnValue('defaultModel');
+    (useServerConfigStore as unknown as Mock).mockReturnValue({});
   });
 
   it('should not render content if extra is undefined', async () => {

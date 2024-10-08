@@ -34,6 +34,7 @@ describe('featureFlagsSelectors', () => {
       enableClerkSignUp: true,
       showMarket: true,
       enableSTT: true,
+      modelTagUseModelName: false,
     });
   });
 });

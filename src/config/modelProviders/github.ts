@@ -140,7 +140,8 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.',
+      description:
+        'Focused on advanced reasoning and solving complex problems, including math and science tasks. Ideal for applications that require deep contextual understanding and agentic workflows.',
       displayName: 'OpenAI o1-preview',
       enabled: true,
       functionCall: false,
@@ -150,7 +151,8 @@ const Github: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations.',
+      description:
+        'Smaller, faster, and 80% cheaper than o1-preview, performs well at code generation and small context operations.',
       displayName: 'OpenAI o1-mini',
       enabled: true,
       functionCall: false,

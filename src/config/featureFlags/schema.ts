@@ -20,7 +20,7 @@ export const FeatureFlagsSchema = z.object({
   dalle: z.boolean().optional(),
   speech_to_text: z.boolean().optional(),
   token_counter: z.boolean().optional(),
-
+  model_tag_display_mode: z.enum(['model_id', 'model_name']).optional(),
   welcome_suggest: z.boolean().optional(),
 
   clerk_sign_up: z.boolean().optional(),
@@ -67,6 +67,7 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
 
   market: true,
   speech_to_text: true,
+  model_tag_display_mode: 'model_id',
 
   // the flags below can only be used with commercial license
   // if you want to use it in the commercial usage
@@ -100,6 +101,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     showMarket: config.market,
     enableSTT: config.speech_to_text,
+    modelTagUseModelName: config.model_tag_display_mode === 'model_name',
 
     hideGitHub: config.commercial_hide_github,
     hideDocs: config.commercial_hide_docs,
