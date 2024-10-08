@@ -47,6 +47,44 @@ const OpenAI: ModelProviderCard = {
       vision: true,
     },
     {
+      description: '非官方接口 专门用于识图',
+      displayName: 'gpt-4-v',
+      enabled: true,
+      id: 'gpt-4-v',
+      pricing: {
+        input: 0,
+        output: 0,
+      },
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description:
+        '非官方接口 集合官方GPT-4、联网、读图、绘图功能、code interpreter一体，文件链接可放 prompt 任意位置',
+      displayName: 'gpt-4-all',
+      enabled: true,
+      id: 'gpt-4-all',
+      pricing: {
+        input: 0,
+        output: 0,
+      },
+      tokens: 128_000,
+      vision: true,
+    },
+    {
+      description:
+        '非官方接口 集合官方GPT-4、联网、读图、绘图功能、code interpreter一体，文件链接可放 prompt 任意位置',
+      displayName: 'gpt-4o-all',
+      enabled: true,
+      id: 'gpt-4o-all',
+      pricing: {
+        input: 0,
+        output: 0,
+      },
+      tokens: 128_000,
+      vision: true,
+    },
+    {
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o',
