@@ -80,6 +80,10 @@ export const getLLMConfig = () => {
       AWS_SECRET_ACCESS_KEY: z.string().optional(),
       AWS_SESSION_TOKEN: z.string().optional(),
 
+      ENABLED_WENXIN: z.boolean(),
+      WENXIN_ACCESS_KEY: z.string().optional(),
+      WENXIN_SECRET_KEY: z.string().optional(),
+
       ENABLED_OLLAMA: z.boolean(),
       OLLAMA_PROXY_URL: z.string().optional(),
       OLLAMA_MODEL_LIST: z.string().optional(),
@@ -117,6 +121,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI21: z.boolean(),
       AI21_API_KEY: z.string().optional(),
+
+      ENABLED_HUNYUAN: z.boolean(),
+      HUNYUAN_API_KEY: z.string().optional(),
+      HUNYUAN_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -194,6 +202,10 @@ export const getLLMConfig = () => {
       AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
       AWS_SESSION_TOKEN: process.env.AWS_SESSION_TOKEN,
 
+      ENABLED_WENXIN: !!process.env.WENXIN_ACCESS_KEY && !!process.env.WENXIN_SECRET_KEY,
+      WENXIN_ACCESS_KEY: process.env.WENXIN_ACCESS_KEY,
+      WENXIN_SECRET_KEY: process.env.WENXIN_SECRET_KEY,
+
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
       OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
       OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST,
@@ -231,6 +243,10 @@ export const getLLMConfig = () => {
 
       ENABLED_AI21: !!process.env.AI21_API_KEY,
       AI21_API_KEY: process.env.AI21_API_KEY,
+
+      ENABLED_HUNYUAN: !!process.env.HUNYUAN_API_KEY,
+      HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
+      HUNYUAN_MODEL_LIST: process.env.HUNYUAN_MODEL_LIST,
     },
   });
 };

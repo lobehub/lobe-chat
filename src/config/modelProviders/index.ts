@@ -11,6 +11,7 @@ import FireworksAIProvider from './fireworksai';
 import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
+import HunyuanProvider from './hunyuan';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
@@ -26,6 +27,7 @@ import StepfunProvider from './stepfun';
 import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
+import WenxinProvider from './wenxin';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -57,6 +59,8 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   UpstageProvider.chatModels,
   SparkProvider.chatModels,
   Ai21Provider.chatModels,
+  HunyuanProvider.chatModels,
+  WenxinProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -78,6 +82,8 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   Ai21Provider,
   UpstageProvider,
   QwenProvider,
+  WenxinProvider,
+  HunyuanProvider,
   SparkProvider,
   ZhiPuProvider,
   ZeroOneProvider,
@@ -110,6 +116,7 @@ export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
+export { default as HunyuanProviderCard } from './hunyuan';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';
@@ -125,5 +132,6 @@ export { default as StepfunProviderCard } from './stepfun';
 export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
+export { default as WenxinProviderCard } from './wenxin';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

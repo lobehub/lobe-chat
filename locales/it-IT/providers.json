@@ -30,6 +30,9 @@
   "groq": {
     "description": "Il motore di inferenza LPU di Groq ha mostrato prestazioni eccezionali nei recenti benchmark indipendenti sui modelli di linguaggio di grandi dimensioni (LLM), ridefinendo gli standard delle soluzioni AI con la sua incredibile velocità ed efficienza. Groq rappresenta una velocità di inferenza istantanea, mostrando buone prestazioni nelle implementazioni basate su cloud."
   },
+  "hunyuan": {
+    "description": "Un modello di linguaggio sviluppato da Tencent, dotato di potenti capacità di creazione in cinese, abilità di ragionamento logico in contesti complessi e capacità affidabili di esecuzione dei compiti."
+  },
   "minimax": {
     "description": "MiniMax è un'azienda di tecnologia dell'intelligenza artificiale generale fondata nel 2021, dedicata alla co-creazione di intelligenza con gli utenti. MiniMax ha sviluppato modelli generali di diverse modalità, tra cui un modello di testo MoE con trilioni di parametri, un modello vocale e un modello visivo. Ha anche lanciato applicazioni come Conch AI."
   },
@@ -74,6 +77,9 @@
   },
   "upstage": {
     "description": "Upstage si concentra sullo sviluppo di modelli AI per varie esigenze commerciali, inclusi Solar LLM e document AI, con l'obiettivo di realizzare un'intelligenza artificiale generale artificiale (AGI) per il lavoro. Crea semplici agenti di dialogo tramite Chat API e supporta chiamate funzionali, traduzioni, embedding e applicazioni specifiche del settore."
+  },
+  "wenxin": {
+    "description": "Piattaforma di sviluppo e servizi per modelli di grandi dimensioni e applicazioni AI native, a livello aziendale, che offre la catena di strumenti completa e facile da usare per lo sviluppo di modelli di intelligenza artificiale generativa e per l'intero processo di sviluppo delle applicazioni."
   },
   "zeroone": {
     "description": "01.AI si concentra sulla tecnologia AI dell'era 2.0, promuovendo attivamente l'innovazione e l'applicazione di \"uomo + intelligenza artificiale\", utilizzando modelli potenti e tecnologie AI avanzate per migliorare la produttività umana e realizzare l'abilitazione tecnologica."

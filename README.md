@@ -253,7 +253,7 @@ In addition, these plugins are not limited to news aggregation, but can also ext
 | [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup>             | Realtime stock, crypto and other investment data.<br/>`stock` `analyze`                                                                   |
 | [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>                     | Search aggregation service, specifically designed for LLMs<br/>`web` `search`                                                             |
 
-> 📊 Total plugins: [<kbd>**50**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**49**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -285,14 +285,14 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 <!-- AGENT LIST -->
 
-| Recent Submits                                                                                                                                                                           | Description                                                                                                                                                                                                             |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [Contract Clause Refiner v1.0](https://chat-preview.lobehub.com/market?agent=business-contract)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>          | Output: {Optimize contract clauses for professional and concise expression}<br/>`contract-optimization` `legal-consultation` `copywriting` `terminology` `project-management`                                           |
-| [Meeting Assistant v1.0](https://chat-preview.lobehub.com/market?agent=meeting)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>                          | Professional meeting report assistant, distilling meeting key points into report sentences<br/>`meeting-reports` `writing` `communication` `workflow` `professional-skills`                                             |
-| [Stable Album Cover Prompter](https://chat-preview.lobehub.com/market?agent=title-bpm-stimmung)<br/><sup>By **[MellowTrixX](https://github.com/MellowTrixX)** on **2024-09-24**</sup>    | Professional graphic designer for front cover design specializing in creating visual concepts and designs for melodic techno music albums.<br/>`album-cover` `prompt` `stable-diffusion` `cover-design` `cover-prompts` |
-| [Advertising Copywriting Master](https://chat-preview.lobehub.com/market?agent=advertising-copywriting-master)<br/><sup>By **[leter](https://github.com/leter)** on **2024-09-23**</sup> | Specializing in product function analysis and advertising copywriting that resonates with user values<br/>`advertising-copy` `user-values` `marketing-strategy`                                                         |
+| Recent Submits                                                                                                                                                                              | Description                                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [A More Diligent Assistant](https://chat-preview.lobehub.com/market?agent=web-development)<br/><sup>By **[fasdfsdf-alt](https://github.com/fasdfsdf-alt)** on **2024-10-02**</sup>          | A More Diligent Assistant<br/>`learning`                                                                                                                                                                                               |
+| [C++/Qt](https://chat-preview.lobehub.com/market?agent=qt-c)<br/><sup>By **[liangyuR](https://github.com/liangyuR)** on **2024-09-30**</sup>                                                | Excels in teaching C++/Qt coding practices<br/>`c` `qt`                                                                                                                                                                                |
+| [Birthday Invitation Messages](https://chat-preview.lobehub.com/market?agent=birthday-invitation-message)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2024-09-29**</sup> | Specializes in crafting engaging and personalized Birthday Invitation messages, catering to various themes and tones.<br/>`message-composition` `personalization` `tone-versatility` `event-detail-integration` `interaction-approach` |
+| [Death Anniversary Messages](https://chat-preview.lobehub.com/market?agent=death-anniversary-message)<br/><sup>By **[tcmonster](https://github.com/tcmonster)** on **2024-09-29**</sup>     | Specializes in crafting sensitive and heartfelt Death Anniversary messages with compassion and empathy.<br/>`condolences` `message-composition` `grief-support` `cultural-awareness` `emotional-sensitivity`                           |
 
-> 📊 Total agents: [<kbd>**392**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**405**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

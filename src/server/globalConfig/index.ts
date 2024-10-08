@@ -9,6 +9,7 @@ import {
   GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HunyuanProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
@@ -48,6 +49,9 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_GITHUB,
     GITHUB_MODEL_LIST,
+
+    ENABLED_HUNYUAN,
+    HUNYUAN_MODEL_LIST,
 
     ENABLED_DEEPSEEK,
     ENABLED_PERPLEXITY,
@@ -92,6 +96,8 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_FIREWORKSAI,
     FIREWORKSAI_MODEL_LIST,
+
+    ENABLED_WENXIN,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -158,6 +164,14 @@ export const getServerGlobalConfig = () => {
         serverModelCards: transformToChatModelCards({
           defaultChatModels: GroqProviderCard.chatModels,
           modelString: GROQ_MODEL_LIST,
+        }),
+      },
+      hunyuan: {
+        enabled: ENABLED_HUNYUAN,
+        enabledModels: extractEnabledModels(HUNYUAN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: HunyuanProviderCard.chatModels,
+          modelString: HUNYUAN_MODEL_LIST,
         }),
       },
       minimax: { enabled: ENABLED_MINIMAX },
@@ -227,6 +241,7 @@ export const getServerGlobalConfig = () => {
         }),
       },
       upstage: { enabled: ENABLED_UPSTAGE },
+      wenxin: { enabled: ENABLED_WENXIN },
       zeroone: {
         enabled: ENABLED_ZEROONE,
         enabledModels: extractEnabledModels(ZEROONE_MODEL_LIST),

@@ -86,39 +86,6 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
-      description: 'Yi-1.5 9B 支持16K Tokens, 提供高效、流畅的语言生成能力。',
-      displayName: 'Yi-1.5 9B',
-      id: '01-ai/Yi-1.5-9B-Chat-16K',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
-      tokens: 16_384,
-    },
-    {
-      description: 'Yi-1.5 34B, 以丰富的训练样本在行业应用中提供优越表现。',
-      displayName: 'Yi-1.5 34B',
-      id: '01-ai/Yi-1.5-34B-Chat-16K',
-      pricing: {
-        currency: 'CNY',
-        input: 1.26,
-        output: 1.26,
-      },
-      tokens: 16_384,
-    },
-    {
-      description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
-      displayName: 'GLM-4 9B',
-      id: 'THUDM/glm-4-9b-chat',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
-      tokens: 32_768,
-    },
-    {
       description: 'InternLM2.5 提供多场景下的智能对话解决方案。',
       displayName: 'Internlm 2.5 7B',
       id: 'internlm/internlm2_5-7b-chat',
@@ -139,6 +106,39 @@ const SiliconCloud: ModelProviderCard = {
         output: 1,
       },
       tokens: 32_768,
+    },
+    {
+      description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
+      displayName: 'GLM-4 9B',
+      id: 'THUDM/glm-4-9b-chat',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      tokens: 32_768,
+    },
+    {
+      description: 'Yi-1.5 9B 支持16K Tokens, 提供高效、流畅的语言生成能力。',
+      displayName: 'Yi-1.5 9B',
+      id: '01-ai/Yi-1.5-9B-Chat-16K',
+      pricing: {
+        currency: 'CNY',
+        input: 0,
+        output: 0,
+      },
+      tokens: 16_384,
+    },
+    {
+      description: 'Yi-1.5 34B, 以丰富的训练样本在行业应用中提供优越表现。',
+      displayName: 'Yi-1.5 34B',
+      id: '01-ai/Yi-1.5-34B-Chat-16K',
+      pricing: {
+        currency: 'CNY',
+        input: 1.26,
+        output: 1.26,
+      },
+      tokens: 16_384,
     },
     {
       description: 'Gemma 2 是Google轻量化的开源文本模型系列。',
@@ -201,9 +201,8 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
   ],
-  checkModel: 'Qwen/Qwen2-1.5B-Instruct',
-  description:
-    'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
+  checkModel: 'Qwen/Qwen2.5-7B-Instruct',
+  description: 'SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务',
   id: 'siliconcloud',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://siliconflow.cn/zh-cn/models',

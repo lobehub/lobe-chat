@@ -16,6 +16,11 @@ export interface AWSBedrockKeyVault {
   sessionToken?: string;
 }
 
+export interface WenxinKeyVault {
+  accessKey?: string;
+  secretKey?: string;
+}
+
 export interface UserKeyVaults {
   ai21?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
@@ -28,6 +33,7 @@ export interface UserKeyVaults {
   github?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;
+  hunyuan?: OpenAICompatibleKeyVault;
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;
@@ -45,6 +51,7 @@ export interface UserKeyVaults {
   taichu?: OpenAICompatibleKeyVault;
   togetherai?: OpenAICompatibleKeyVault;
   upstage?: OpenAICompatibleKeyVault;
+  wenxin?: WenxinKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
 }
