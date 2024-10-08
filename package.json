@@ -117,7 +117,7 @@
     "@cyntler/react-doc-viewer": "^1.16.6",
     "@google/generative-ai": "^0.16.0",
     "@icons-pack/react-simple-icons": "9.6.0",
-    "@khmyznikov/pwa-install": "^0.3.9",
+    "@khmyznikov/pwa-install": "^0.4.0",
     "@langchain/community": "^0.2.31",
     "@lobehub/chat-plugin-sdk": "^1.32.4",
     "@lobehub/chat-plugins-gateway": "^1.9.0",
