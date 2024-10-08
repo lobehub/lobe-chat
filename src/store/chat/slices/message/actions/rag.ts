@@ -67,9 +67,10 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     // 1. get the rewrite query
     let rewriteQuery = message?.ragQuery || userQuery;
 
+    // only rewrite query length is less than 10 characters
     // if there is no ragQuery and there is a chat history
     // we need to rewrite the user message to get better results
-    if (!message?.ragQuery && messages.length > 0) {
+    if (rewriteQuery.length < 10 && !message?.ragQuery && messages.length > 0) {
       rewriteQuery = await get().internal_rewriteQuery(id, userQuery, messages);
     }
 
