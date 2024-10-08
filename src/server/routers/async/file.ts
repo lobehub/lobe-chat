@@ -3,7 +3,6 @@ import { chunk } from 'lodash-es';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/(backend)/api/chat/agentRuntime';
 import { fileEnv } from '@/config/file';
 import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
 import { ASYNC_TASK_TIMEOUT, AsyncTaskModel } from '@/database/server/models/asyncTask';
@@ -13,6 +12,7 @@ import { FileModel } from '@/database/server/models/file';
 import { NewChunkItem, NewEmbeddingsItem } from '@/database/server/schemas/lobechat';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
+import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { S3 } from '@/server/modules/S3';
 import { ChunkService } from '@/server/services/chunk';
 import {

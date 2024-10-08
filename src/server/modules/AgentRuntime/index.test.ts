@@ -27,7 +27,7 @@ import { AgentRuntime } from '@/libs/agent-runtime';
 import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
 import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
 
-import { initAgentRuntimeWithUserPayload } from './agentRuntime';
+import { initAgentRuntimeWithUserPayload } from './index';
 
 // 模拟依赖项
 vi.mock('@/config/llm', () => ({
