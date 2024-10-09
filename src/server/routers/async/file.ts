@@ -88,8 +88,6 @@ export const fileRouter = router({
 
           const chunks = await ctx.chunkModel.getChunksTextByFileId(input.fileId);
           const requestArray = chunk(chunks, CHUNK_SIZE);
-          console.log('embeddingProvider:', provider);
-          console.log('embeddingModel:', model);
           try {
             await pMap(
               requestArray,
