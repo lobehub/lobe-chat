@@ -1,9 +1,12 @@
+import { isCustomBranding } from '@/const/version';
+
 import tool from '../default/tool';
 import auth from './auth';
 import chat from './chat';
 import clerk from './clerk';
 import common from './common';
 import components from './components';
+import custom from './custom';
 import discover from './discover';
 import error from './error';
 import file from './file';
@@ -25,6 +28,7 @@ const resources = {
   clerk,
   common,
   components,
+  custom,
   discover,
   error,
   file,
@@ -41,5 +45,10 @@ const resources = {
   tool,
   welcome,
 } as const;
+
+if (!isCustomBranding) {
+  // @ts-ignore
+  delete resources.custom;
+}
 
 export default resources;
