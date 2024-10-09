@@ -29,8 +29,7 @@ export const parseSystemAgent = (envString: string = ''): Partial<CommonSystemCo
       }
 
       if (protectedKeys.includes(key)) {
-        config[key as keyof UserSystemAgentConfig] = {
-          enabled: key === 'queryRewrite' ? true : undefined,
+        config[key as keyof CommonSystemConfig] = {
           model: model.trim(),
           provider: provider.trim(),
         } as any;

@@ -188,6 +188,7 @@ export const chunkRouter = router({
         fileIds: finalFileIds,
         query: input.rewriteQuery,
       });
+      // TODO: need to rerank the chunks
       console.timeEnd('semanticSearch');
 
       return { chunks, queryId: ragQueryId };
