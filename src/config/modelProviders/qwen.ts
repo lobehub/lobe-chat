@@ -66,7 +66,7 @@ const Qwen: ModelProviderCard = {
         input: 8,
         output: 8,
       },
-      tokens: 8000,
+      tokens: 32_000,
       vision: true,
     },
     {
