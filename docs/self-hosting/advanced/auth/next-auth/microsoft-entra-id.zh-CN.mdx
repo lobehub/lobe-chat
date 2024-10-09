@@ -24,7 +24,7 @@ tags:
 在 `Redirect URI (optional)` 中，应用类型选择 `Web`，Callback URL, 处填写：
 
 ```bash
-https://your-domain/api/auth/callback/azure-ad
+https://your-domain/api/auth/callback/microsoft-entra-id
 ```
 
 <Callout type={'info'}>
@@ -69,10 +69,10 @@ https://your-domain/api/auth/callback/azure-ad
 | 环境变量 | 类型 | 描述 |
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令生成秘钥： `openssl rand -base64 32` |
-| `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Microsoft Entra ID 请填写 `azure-ad`。 |
-| `AUTH_AZURE_AD_ID` | 必选 | Microsoft Entra ID 应用程序的 Client ID |
-| `AUTH_AZURE_AD_SECRET` | 必选 | Microsoft Entra ID 应用程序的 Client Secret |
-| `AUTH_AZURE_AD_TENANT_ID` | 必选 | Microsoft Entra ID 应用程序的 Tenant ID |
+| `NEXT_AUTH_SSO_PROVIDERS` | 必选 | 选择 LoboChat 的单点登录提供商。使用 Microsoft Entra ID 请填写 `microsoft-entra-id`。 |
+| `AUTH_MICROSOFT_ENTRA_ID_ID` | 必选 | Microsoft Entra ID 应用程序的 Client ID |
+| `AUTH_MICROSOFT_ENTRA_ID_SECRET` | 必选 | Microsoft Entra ID 应用程序的 Client Secret |
+| `AUTH_MICROSOFT_ENTRA_ID_TENANT_ID` | 必选 | Microsoft Entra ID 应用程序的 Tenant ID |
 | `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
 
   <Callout type={'tip'}>
