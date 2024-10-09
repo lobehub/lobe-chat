@@ -2,7 +2,7 @@ import { Icon, Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
-import { LucideLoaderCircle, LucideRefreshCcwDot } from 'lucide-react';
+import { CircleX, LucideLoaderCircle, LucideRefreshCcwDot } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -16,6 +16,10 @@ import {
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 
 const useStyles = createStyles(({ css, token }) => ({
+  buttons: css`
+    display: flex;
+  `,
+
   hover: css`
     cursor: pointer;
 
@@ -40,8 +44,9 @@ interface ModelFetcherProps {
 const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
   const { styles } = useStyles();
   const { t } = useTranslation('setting');
-  const [useFetchProviderModelList] = useUserStore((s) => [
+  const [useFetchProviderModelList, clearObtainedModels] = useUserStore((s) => [
     s.useFetchProviderModelList,
+    s.clearObtainedModels,
     s.setModelProviderConfig,
   ]);
   const enabledAutoFetch = useUserStore(modelConfigSelectors.isAutoFetchModelsEnabled(provider));
@@ -52,37 +57,55 @@ const ModelFetcher = memo<ModelFetcherProps>(({ provider }) => {
     (s) => modelProviderSelectors.getModelCardsById(provider)(s).length,
   );
 
+  const remoteModels = useUserStore((s) =>
+    modelProviderSelectors.remoteProviderModelCards(provider)(s),
+  );
+
   const { mutate, isValidating } = useFetchProviderModelList(provider, enabledAutoFetch);
 
   return (
     <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
       <Flexbox align={'center'} gap={0} horizontal justify={'space-between'}>
         <div>{t('llm.modelList.total', { count: totalModels })}</div>
-        <Tooltip
-          overlayStyle={{ pointerEvents: 'none' }}
-          title={
-            latestFetchTime
-              ? t('llm.fetcher.latestTime', {
-                  time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
-                })
-              : t('llm.fetcher.noLatestTime')
-          }
-        >
-          <Flexbox
-            align={'center'}
-            className={styles.hover}
-            gap={4}
-            horizontal
-            onClick={() => mutate()}
+        <div className={styles.buttons}>
+          <Tooltip
+            overlayStyle={{ pointerEvents: 'none' }}
+            title={
+              latestFetchTime
+                ? t('llm.fetcher.latestTime', {
+                    time: dayjs(latestFetchTime).format('YYYY-MM-DD HH:mm:ss'),
+                  })
+                : t('llm.fetcher.noLatestTime')
+            }
           >
-            <Icon
-              icon={isValidating ? LucideLoaderCircle : LucideRefreshCcwDot}
-              size={'small'}
-              spin={isValidating}
-            />
-            <div>{isValidating ? t('llm.fetcher.fetching') : t('llm.fetcher.fetch')}</div>
-          </Flexbox>
-        </Tooltip>
+            <Flexbox
+              align={'center'}
+              className={styles.hover}
+              gap={4}
+              horizontal
+              onClick={() => mutate()}
+            >
+              <Icon
+                icon={isValidating ? LucideLoaderCircle : LucideRefreshCcwDot}
+                size={'small'}
+                spin={isValidating}
+              />
+              <div>{isValidating ? t('llm.fetcher.fetching') : t('llm.fetcher.fetch')}</div>
+            </Flexbox>
+          </Tooltip>
+          {remoteModels && remoteModels.length > 0 && (
+            <Flexbox
+              align={'center'}
+              className={styles.hover}
+              gap={4}
+              horizontal
+              onClick={() => clearObtainedModels(provider)}
+            >
+              <Icon icon={CircleX} size={'small'} />
+              <div>{t('llm.fetcher.clear')}</div>
+            </Flexbox>
+          )}
+        </div>
       </Flexbox>
     </Typography.Text>
   );
