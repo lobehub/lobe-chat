@@ -235,7 +235,7 @@ extract_file "s3_data.tar.gz" "."
 
 # Display final message
 printf "\n%s\n\n" "$(show_message "tips_run_command")"
-print_centered "docker compose up -d" "green"
+print_centered "docker compose -p lobechat-starter up -d" "green"
 printf "\n%s" "$(show_message "tips_show_documentation")"
 printf "%s\n" $(show_message "tips_show_documentation_url")
 printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
