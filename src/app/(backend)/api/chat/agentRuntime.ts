@@ -18,6 +18,11 @@ export interface AgentChatOptions {
   trace?: TracePayload;
 }
 
+export interface SplitEmbeddingModelObj {
+  modelId: string;
+  provider: string;
+}
+
 /**
  * Retrieves the options object from environment and apikeymanager
  * based on the provider and payload.

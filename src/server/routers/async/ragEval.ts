@@ -13,8 +13,8 @@ import {
   EvalEvaluationModel,
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
-import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
+import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
 import { EvalEvaluationStatus } from '@/types/eval';
@@ -44,6 +44,12 @@ export const ragEvalRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const evalRecord = await ctx.evalRecordModel.findById(input.evalRecordId);
+      const model =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.model ??
+        DEFAULT_EMBEDDING_MODEL.model;
+      const provider =
+        getServerGlobalConfig().defaultEmbed?.embedding_model?.provider ??
+        DEFAULT_EMBEDDING_MODEL.provider;
 
       if (!evalRecord) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Evaluation not found' });
@@ -51,10 +57,7 @@ export const ragEvalRouter = router({
 
       const now = Date.now();
       try {
-        const agentRuntime = await initAgentRuntimeWithUserPayload(
-          ModelProvider.OpenAI,
-          ctx.jwtPayload,
-        );
+        const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
         const { question, languageModel, embeddingModel } = evalRecord;
 
@@ -66,7 +69,7 @@ export const ragEvalRouter = router({
           const embeddings = await agentRuntime.embeddings({
             dimensions: 1024,
             input: question,
-            model: !!embeddingModel ? embeddingModel : DEFAULT_EMBEDDING_MODEL,
+            model: model,
           });
 
           const embeddingId = await ctx.embeddingModel.create({

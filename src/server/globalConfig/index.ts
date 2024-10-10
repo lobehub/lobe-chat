@@ -1,6 +1,7 @@
 import { appEnv, getAppConfig } from '@/config/app';
 import { authEnv } from '@/config/auth';
 import { fileEnv } from '@/config/file';
+import { knowledgeEnv } from '@/config/knowledge';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
@@ -104,6 +105,7 @@ export const getServerGlobalConfig = () => {
     defaultAgent: {
       config: parseAgentConfig(DEFAULT_AGENT_CONFIG),
     },
+    defaultEmbed: parseSystemAgent(knowledgeEnv.DEFAULT_FILES_CONFIG),
     enableUploadFileToServer: !!fileEnv.S3_SECRET_ACCESS_KEY,
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,

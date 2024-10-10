@@ -1,12 +1,20 @@
 import {
   BedrockRuntimeClient,
+  InvokeModelCommand,
   InvokeModelWithResponseStreamCommand,
 } from '@aws-sdk/client-bedrock-runtime';
 import { experimental_buildLlama2Prompt } from 'ai/prompts';
 
 import { LobeRuntimeAI } from '../BaseAI';
 import { AgentRuntimeErrorType } from '../error';
-import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import {
+  ChatCompetitionOptions,
+  ChatStreamPayload,
+  EmbeddingItem,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
+  ModelProvider,
+} from '../types';
 import { buildAnthropicMessages, buildAnthropicTools } from '../utils/anthropicHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
@@ -16,6 +24,13 @@ import {
   AWSBedrockLlamaStream,
   createBedrockStream,
 } from '../utils/streams';
+
+interface BedRockEmbeddingsParams {
+  dimensions: number;
+  index: number;
+  input: string;
+  modelId: string;
+}
 
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
@@ -32,9 +47,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   constructor({ region, accessKeyId, accessKeySecret, sessionToken }: LobeBedrockAIParams = {}) {
     if (!(accessKeyId && accessKeySecret))
       throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidBedrockCredentials);
-
     this.region = region ?? 'us-east-1';
-
     this.client = new BedrockRuntimeClient({
       credentials: {
         accessKeyId: accessKeyId,
@@ -50,6 +63,58 @@ export class LobeBedrockAI implements LobeRuntimeAI {
 
     return this.invokeClaudeModel(payload, options);
   }
+
+  async embeddings(
+    payload: EmbeddingsPayload,
+    options?: EmbeddingsOptions,
+  ): Promise<EmbeddingItem[]> {
+    const input = Array.isArray(payload.input) ? payload.input : [payload.input];
+    const promises = input.map((inputText: string, index: number) =>
+      this.invokeEmbeddingModel(
+        {
+          dimensions: payload.dimensions,
+          index: index,
+          input: inputText,
+          modelId: payload.model,
+        } as BedRockEmbeddingsParams,
+        options,
+      ),
+    );
+    return Promise.all(promises);
+  }
+
+  private invokeEmbeddingModel = async (
+    payload: BedRockEmbeddingsParams,
+    options?: EmbeddingsOptions,
+  ): Promise<EmbeddingItem> => {
+    const command = new InvokeModelCommand({
+      accept: 'application/json',
+      body: JSON.stringify({
+        dimensions: payload.dimensions,
+        inputText: payload.input,
+        normalize: true,
+      }),
+      contentType: 'application/json',
+      modelId: payload.modelId,
+    });
+    try {
+      const res = await this.client.send(command, { abortSignal: options?.signal });
+      const responseBody = JSON.parse(new TextDecoder().decode(res.body));
+      return { embedding: responseBody.embedding, index: payload.index, object: 'embedding' };
+    } catch (e) {
+      const err = e as Error & { $metadata: any };
+      throw AgentRuntimeError.chat({
+        error: {
+          body: err.$metadata,
+          message: err.message,
+          type: err.name,
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
+    }
+  };
 
   private invokeClaudeModel = async (
     payload: ChatStreamPayload,

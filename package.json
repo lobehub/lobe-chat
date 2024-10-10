@@ -178,7 +178,7 @@
     "numeral": "^2.0.6",
     "nuqs": "^1.17.8",
     "officeparser": "^4.1.1",
-    "ollama": "^0.5.8",
+    "ollama": "^0.5.9",
     "openai": "^4.56.0",
     "openapi-fetch": "^0.9.7",
     "partial-json": "^0.1.7",

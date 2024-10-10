@@ -44,5 +44,19 @@ describe('getServerConfig', () => {
       expect(config.AGENTS_INDEX_URL).toBe('https://chat-agents.lobehub.com');
       expect(config.PLUGINS_INDEX_URL).toBe('https://chat-plugins.lobehub.com');
     });
+
+    it('should return default embed when environment variables are set', () => {
+      process.env.DEFAULT_AGENT_CONFIG = 'embed.model=embedding-3;embed.provider=zhipu';
+      const config = getAppConfig();
+      expect(config.DEFAULT_AGENT_CONFIG).toBe('embed.model=embedding-3;embed.provider=zhipu');
+    });
+
+    it('should return default embed when environment variables are empty string', () => {
+      process.env.DEFAULT_AGENT_CONFIG = '';
+      const config = getAppConfig();
+      expect(config.DEFAULT_AGENT_CONFIG).toBe(
+        'embed.model=text-embedding-3-small;embed.provider=openai',
+      );
+    });
   });
 });

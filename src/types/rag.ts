@@ -6,7 +6,6 @@ export const SemanticSearchSchema = z.object({
   fileIds: z.array(z.string()).optional(),
   knowledgeIds: z.array(z.string()).optional(),
   messageId: z.string(),
-  model: z.string().optional(),
   rewriteQuery: z.string(),
   userQuery: z.string(),
 });

@@ -391,4 +391,20 @@ describe('LobeBedrockAI', () => {
       expect(onStart).toHaveBeenCalled();
     });
   });
+
+  describe('embeddings', () => {
+    it('should call invokeEmbeddingsModel with correct payload', async () => {
+      process.env.DEBUG_BEDROCK_CHAT_COMPLETION = '1';
+      // @ts-ignore
+      const spy = vi.spyOn(instance, 'invokeEmbeddingModel');
+      await instance.embeddings({
+        dimensions: 1024,
+        input: 'Hello,World',
+        model: 'amazon.titan-embed-text-v2:0',
+      });
+      // Assert
+      expect(spy).toHaveBeenCalled;
+      delete process.env.DEBUG_BEDROCK_CHAT_COMPLETION;
+    });
+  });
 });
