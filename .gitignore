@@ -67,3 +67,6 @@ public/swe-worker*
 
 *.patch
 *.pdf
+
+# Sentry Config File
+.env.sentry-build-plugin
