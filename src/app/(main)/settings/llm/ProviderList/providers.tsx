@@ -34,6 +34,7 @@ import { useGithubProvider } from './Github';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 import { useWenxinProvider } from './Wenxin';
+import { useSenseNovaProvider } from './SenseNova';
 
 export const useProviderList = (): ProviderItem[] => {
   const AzureProvider = useAzureProvider();
@@ -42,6 +43,7 @@ export const useProviderList = (): ProviderItem[] => {
   const BedrockProvider = useBedrockProvider();
   const GithubProvider = useGithubProvider();
   const WenxinProvider = useWenxinProvider();
+  const SenseNovaProvider = useSenseNovaProvider();
 
   return useMemo(
     () => [
@@ -68,6 +70,7 @@ export const useProviderList = (): ProviderItem[] => {
       SparkProviderCard,
       ZhiPuProviderCard,
       ZeroOneProviderCard,
+      SenseNovaProvider,
       StepfunProviderCard,
       MoonshotProviderCard,
       BaichuanProviderCard,
@@ -76,6 +79,6 @@ export const useProviderList = (): ProviderItem[] => {
       TaichuProviderCard,
       SiliconCloudProviderCard,
     ],
-    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider,WenxinProvider],
+    [AzureProvider, OllamaProvider, OpenAIProvider, BedrockProvider, GithubProvider, WenxinProvider, SenseNovaProvider],
   );
 };

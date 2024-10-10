@@ -15,6 +15,7 @@ import {
   OpenAIProviderCard,
   OpenRouterProviderCard,
   QwenProviderCard,
+  SenseNovaProviderCard,
   SiliconCloudProviderCard,
   TogetherAIProviderCard,
   ZeroOneProviderCard,
@@ -70,6 +71,9 @@ export const getServerGlobalConfig = () => {
     ENABLED_TAICHU,
     ENABLED_AI21,
     ENABLED_AI360,
+
+    ENABLED_SENSENOVA,
+    SENSENOVA_MODEL_LIST,
 
     ENABLED_SILICONCLOUD,
     SILICONCLOUD_MODEL_LIST,
@@ -218,6 +222,14 @@ export const getServerGlobalConfig = () => {
         serverModelCards: transformToChatModelCards({
           defaultChatModels: QwenProviderCard.chatModels,
           modelString: QWEN_MODEL_LIST,
+        }),
+      },
+      sensenova: {
+        enabled: ENABLED_SENSENOVA,
+        enabledModels: extractEnabledModels(SENSENOVA_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: SenseNovaProviderCard.chatModels,
+          modelString: SENSENOVA_MODEL_LIST,
         }),
       },
       siliconcloud: {

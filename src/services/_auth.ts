@@ -5,6 +5,8 @@ import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/sel
 import { GlobalLLMProviderKey } from '@/types/user/settings';
 import { createJWT } from '@/utils/jwt';
 
+import { generateJwtTokenSenseNova } from '@/libs/agent-runtime/sensenova/authToken';
+
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
@@ -22,6 +24,20 @@ export const getProviderAuthPayload = (provider: string) => {
         awsRegion: region,
         awsSecretAccessKey,
         awsSessionToken: sessionToken,
+      };
+    }
+
+    case ModelProvider.SenseNova: {
+      const { sensenovaAccessKeyID, sensenovaAccessKeySecret } = keyVaultsConfigSelectors.sensenovaConfig(
+        useUserStore.getState(),
+      );
+
+      const apiKey = generateJwtTokenSenseNova(sensenovaAccessKeyID, sensenovaAccessKeySecret, 60, 15);
+
+      return { 
+        apiKey,
+        sensenovaAccessKeyID: sensenovaAccessKeyID, 
+        sensenovaAccessKeySecret: sensenovaAccessKeySecret, 
       };
     }
 

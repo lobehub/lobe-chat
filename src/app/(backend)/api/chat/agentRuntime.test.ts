@@ -24,6 +24,7 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
+import { LobeSenseNovaAI } from '@/libs/agent-runtime/sensenova';
 import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
 import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
 
@@ -58,6 +59,9 @@ vi.mock('@/config/llm', () => ({
 
     WENXIN_ACCESS_KEY: 'test-wenxin-access-key',
     WENXIN_SECRET_KEY: 'test-wenxin-secret-key',
+
+    SENSENOVA_ACCESS_KEY_ID: 'test-sensenova-access-key-id',
+    SENSENOVA_ACCESS_KEY_SECRET: 'test-sensenova-access-key-secret',
   })),
 }));
 
@@ -206,6 +210,16 @@ describe('initAgentRuntimeWithUserPayload method', () => {
       expect(runtime['_runtime']).toBeInstanceOf(LobeStepfunAI);
     });
 
+    it.skip('SenseNova AI provider: with apikey', async () => {
+      const jwtPayload: JWTPayload = {
+        sensenovaAccessKeyID: 'user-sensenova-access-key-id',
+        sensenovaAccessKeySecret: 'sensenova-access-key-secret',
+      };
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.SenseNova, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeSenseNovaAI);
+    });
+
     it.skip('Wenxin AI provider: with apikey', async () => {
       const jwtPayload: JWTPayload = {
         wenxinAccessKey: 'user-wenxin-accessKey',
@@ -351,6 +365,13 @@ describe('initAgentRuntimeWithUserPayload method', () => {
 
       // 假设 LobeTogetherAI 是 TogetherAI 提供者的实现类
       expect(runtime['_runtime']).toBeInstanceOf(LobeTogetherAI);
+    });
+
+    it.skip('SenseNova AI provider: without apikey', async () => {
+      const jwtPayload = {};
+      const runtime = await initAgentRuntimeWithUserPayload(ModelProvider.SenseNova, jwtPayload);
+      expect(runtime).toBeInstanceOf(AgentRuntime);
+      expect(runtime['_runtime']).toBeInstanceOf(LobeSenseNovaAI);
     });
 
     it.skip('Wenxin AI provider: without apikey', async () => {
