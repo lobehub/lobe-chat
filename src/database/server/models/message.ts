@@ -127,10 +127,10 @@ export class MessageModel {
       .leftJoin(files, eq(files.id, messagesFiles.fileId))
       .where(inArray(messagesFiles.messageId, messageIds));
 
-    const relatedFileList = rawRelatedFileList.map((file) => ({
-      ...file,
-      url: getFullFileUrl(file.url),
-    }));
+    const relatedFileList = [] as any[];
+    for (const file of rawRelatedFileList) {
+      relatedFileList.push({ ...file, url: await getFullFileUrl(file.url) });
+    }
 
     const imageList = relatedFileList.filter((i) => (i.fileType || '').startsWith('image'));
     const fileList = relatedFileList.filter((i) => !(i.fileType || '').startsWith('image'));
