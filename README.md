@@ -290,9 +290,9 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 | [Fitness Expert](https://chat-preview.lobehub.com/market?agent=assistants-health-better)<br/><sup>By **[Lockeysama](https://github.com/Lockeysama)** on **2024-10-08**</sup>                  | Knowledgeable fitness expert<br/>`fitness` `consultation` `lifestyle-issues` `advice`                                                                                                                |
 | [Code Optimization/Error Correction](https://chat-preview.lobehub.com/market?agent=code-review-and-fix)<br/><sup>By **[alphandbelt](https://github.com/alphandbelt)** on **2024-10-08**</sup> | Proficient in multiple programming languages, optimizing code structure, fixing errors, and providing elegant solutions.<br/>`code-optimization` `error-correction` `multiple-programming-languages` |
 | [Ethical Security Analyst](https://chat-preview.lobehub.com/market?agent=cyber-specialist)<br/><sup>By **[ayeantics](https://github.com/ayeantics)** on **2024-10-08**</sup>                  | Specializes in identifying and mitigating security vulnerabilities in web and mobile platforms.<br/>`cybersecurity` `ethical-hacking` `vulnerability-assessment` `consulting` `technical-assistance` |
-| [Minimal Artifact Architect](https://chat-preview.lobehub.com/market?agent=minimal-artifact-architect)<br/><sup>By **[yaleh](https://github.com/yaleh)** on **2024-10-06**</sup>              | Expert in evaluating and creating reusable content artifacts<br/>`content-creation` `artifact-management` `conversation-design`                                                                      |
+| [Mistaker](https://chat-preview.lobehub.com/market?agent=english)<br/><sup>By **[Vork-IT](https://github.com/Vork-IT)** on **2024-10-08**</sup>                                               | killed in clear explanations and examples of grammar and pronunciation.<br/>`english`                                                                                                                |
 
-> 📊 Total agents: [<kbd>**410**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**411**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
