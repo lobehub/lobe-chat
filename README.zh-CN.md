@@ -278,9 +278,9 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [健身专家](https://chat-preview.lobehub.com/market?agent=assistants-health-better)<br/><sup>By **[Lockeysama](https://github.com/Lockeysama)** on **2024-10-08**</sup>         | 知识渊博的健身专家<br/>`健身` `咨询` `生活问题` `建议`                                                  |
 | [代码优化 / 错误修改](https://chat-preview.lobehub.com/market?agent=code-review-and-fix)<br/><sup>By **[alphandbelt](https://github.com/alphandbelt)** on **2024-10-08**</sup> | 精通多种编程语言，优化代码结构，修复错误并提供优雅的解决方案。<br/>`代码优化` `错误修改` `多种编程语言` |
 | [伦理安全分析师](https://chat-preview.lobehub.com/market?agent=cyber-specialist)<br/><sup>By **[ayeantics](https://github.com/ayeantics)** on **2024-10-08**</sup>             | 专注于识别和减轻网络和移动平台中的安全漏洞。<br/>`网络安全` `伦理黑客` `漏洞评估` `咨询` `技术支持`     |
-| [最小化的工件架构师](https://chat-preview.lobehub.com/market?agent=minimal-artifact-architect)<br/><sup>By **[yaleh](https://github.com/yaleh)** on **2024-10-06**</sup>       | 擅长评估和创建可重用的内容工件<br/>`内容创作` `工件管理` `对话设计`                                     |
+| [Mistaker](https://chat-preview.lobehub.com/market?agent=english)<br/><sup>By **[Vork-IT](https://github.com/Vork-IT)** on **2024-10-08**</sup>                                | 通过清晰的解释和语法、发音示例来消除错误。<br/>`英语`                                                   |
 
-> 📊 Total agents: [<kbd>**410**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**411**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
