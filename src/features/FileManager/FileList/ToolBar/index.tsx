@@ -6,6 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import { useAddFilesToKnowledgeBaseModal } from '@/features/KnowledgeBaseModal';
 import { useFileStore } from '@/store/file';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
+import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import Config from './Config';
 import MultiSelectActions, { MultiSelectActionType } from './MultiSelectActions';
@@ -44,9 +45,10 @@ const ToolBar = memo<MultiSelectActionsProps>(
   }) => {
     const { styles } = useStyles();
 
-    const [removeFiles, parseFilesToChunks] = useFileStore((s) => [
+    const [removeFiles, parseFilesToChunks, fileList] = useFileStore((s) => [
       s.removeFiles,
       s.parseFilesToChunks,
+      s.fileList,
     ]);
     const [removeFromKnowledgeBase] = useKnowledgeBaseStore((s) => [
       s.removeFilesFromKnowledgeBase,
@@ -86,7 +88,11 @@ const ToolBar = memo<MultiSelectActionsProps>(
         }
 
         case 'batchChunking': {
-          await parseFilesToChunks(selectFileIds, { skipExist: true });
+          const chunkableFileIds = selectFileIds.filter((id) => {
+            const file = fileList.find((f) => f.id === id);
+            return file && !isChunkingUnsupported(file.fileType);
+          });
+          await parseFilesToChunks(chunkableFileIds, { skipExist: true });
           setSelectedFileIds([]);
           return;
         }
