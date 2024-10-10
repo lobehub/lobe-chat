@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Kích hoạt cụm não, khơi dậy những tia sáng tư duy. Trợ lý thông minh của bạn, ở đây để giao tiếp với bạn về mọi thứ.",
+      "title": "Nói chuyện thoải mái"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}. Xin hỏi tôi có thể giúp gì cho bạn ngay bây giờ?\nNếu bạn cần một trợ lý chuyên nghiệp hoặc tùy chỉnh hơn, hãy nhấp vào `+` để tạo trợ lý tùy chỉnh.",
+      "defaultMessageWithoutCreate": "Tôi là trợ lý thông minh cá nhân của bạn {{appName}}. Xin hỏi tôi có thể giúp gì cho bạn ngay bây giờ?"
+    },
+    "slogan": {
+      "desc1": "Kích hoạt cụm não, khơi dậy những tia sáng tư duy. Trợ lý thông minh của bạn, luôn ở đây.",
+      "title": "Cho bản thân một bộ não thông minh hơn"
+    }
+  }
+}

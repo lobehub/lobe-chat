@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Activez le cerveau collectif, stimulez les étincelles de pensée. Votre assistant intelligent est ici pour discuter de tout avec vous.",
+      "title": "Discutons librement"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Je suis votre assistant intelligent personnel {{appName}}. Que puis-je faire pour vous maintenant ?\nSi vous avez besoin d'un assistant plus professionnel ou personnalisé, vous pouvez cliquer sur `+` pour créer un assistant sur mesure.",
+      "defaultMessageWithoutCreate": "Je suis votre assistant intelligent personnel {{appName}}. Que puis-je faire pour vous maintenant ?"
+    },
+    "slogan": {
+      "desc1": "Activez le cerveau collectif, stimulez les étincelles de pensée. Votre assistant intelligent est toujours là.",
+      "title": "Offrez-vous un cerveau plus intelligent"
+    }
+  }
+}

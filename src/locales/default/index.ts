@@ -4,6 +4,7 @@ import chat from './chat';
 import clerk from './clerk';
 import common from './common';
 import components from './components';
+import custom from './custom';
 import discover from './discover';
 import error from './error';
 import file from './file';
@@ -25,6 +26,7 @@ const resources = {
   clerk,
   common,
   components,
+  custom,
   discover,
   error,
   file,

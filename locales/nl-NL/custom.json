@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Activeer de hersencluster en stimuleer de vonken van creatief denken. Jouw slimme assistent is hier om met je te communiceren over alles.",
+      "title": "Laten we gewoon praten"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Ik ben jouw persoonlijke slimme assistent {{appName}}. Hoe kan ik je nu helpen?\nAls je een meer professionele of op maat gemaakte assistent nodig hebt, klik dan op `+` om een aangepaste assistent te maken.",
+      "defaultMessageWithoutCreate": "Ik ben jouw persoonlijke slimme assistent {{appName}}. Hoe kan ik je nu helpen?"
+    },
+    "slogan": {
+      "desc1": "Activeer de hersencluster en stimuleer de vonken van creatief denken. Jouw slimme assistent is altijd bij je.",
+      "title": "Geef jezelf een slimmer brein"
+    }
+  }
+}
