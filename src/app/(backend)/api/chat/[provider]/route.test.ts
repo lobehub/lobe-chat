@@ -2,7 +2,7 @@
 import { getAuth } from '@clerk/nextjs/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { checkAuthMethod, getJWTPayload } from '@/app/(backend)/api/middleware/auth/utils';
+import { checkAuthMethod, getJWTPayload } from '@/app/(backend)/middleware/auth/utils';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import { AgentRuntime, LobeRuntimeAI } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
@@ -13,7 +13,7 @@ vi.mock('@clerk/nextjs/server', () => ({
   getAuth: vi.fn(),
 }));
 
-vi.mock('../../middleware/auth/utils', () => ({
+vi.mock('@/app/(backend)/middleware/auth/utils', () => ({
   getJWTPayload: vi.fn(),
   checkAuthMethod: vi.fn(),
 }));
