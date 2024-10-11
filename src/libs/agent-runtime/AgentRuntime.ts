@@ -176,7 +176,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.ZhiPu: {
-        runtimeModel = await LobeZhipuAI.fromAPIKey(params.zhipu);
+        runtimeModel = new LobeZhipuAI(params.zhipu);
         break;
       }
 

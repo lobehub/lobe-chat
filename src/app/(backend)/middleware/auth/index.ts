@@ -2,12 +2,13 @@ import { AuthObject } from '@clerk/backend';
 import { getAuth } from '@clerk/nextjs/server';
 import { NextRequest } from 'next/server';
 
-import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableClerk } from '@/const/auth';
 import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
+import { createErrorResponse } from '@/utils/errorResponse';
+import { getJWTPayload } from '@/utils/server/jwt';
 
-import { checkAuthMethod, getJWTPayload } from './utils';
+import { checkAuthMethod } from './utils';
 
 type CreateRuntime = (jwtPayload: JWTPayload) => AgentRuntime;
 type RequestOptions = { createRuntime?: CreateRuntime; params: { provider: string } };

@@ -2,6 +2,189 @@
 
 # Changelog
 
+### [Version 1.21.13](https://github.com/lobehub/lobe-chat/compare/v1.21.12...v1.21.13)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor agent runtime implement of stream and ZHIPU provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor agent runtime implement of stream and ZHIPU provider, closes [#4323](https://github.com/lobehub/lobe-chat/issues/4323) ([59661a1](https://github.com/lobehub/lobe-chat/commit/59661a1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.12](https://github.com/lobehub/lobe-chat/compare/v1.21.11...v1.21.12)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the jwt code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the jwt code, closes [#4322](https://github.com/lobehub/lobe-chat/issues/4322) ([b7258b9](https://github.com/lobehub/lobe-chat/commit/b7258b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.11](https://github.com/lobehub/lobe-chat/compare/v1.21.10...v1.21.11)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the backend code for better organization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the backend code for better organization, closes [#4287](https://github.com/lobehub/lobe-chat/issues/4287) ([9a369ac](https://github.com/lobehub/lobe-chat/commit/9a369ac))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.10](https://github.com/lobehub/lobe-chat/compare/v1.21.9...v1.21.10)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Updata gpt-4o model info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Updata gpt-4o model info, closes [#4318](https://github.com/lobehub/lobe-chat/issues/4318) ([fa27ddf](https://github.com/lobehub/lobe-chat/commit/fa27ddf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.9](https://github.com/lobehub/lobe-chat/compare/v1.21.8...v1.21.9)
+
+<sup>Released on **2024-10-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update qwen vl model to latest.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update qwen vl model to latest, closes [#4307](https://github.com/lobehub/lobe-chat/issues/4307) ([25a7ea2](https://github.com/lobehub/lobe-chat/commit/25a7ea2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.8](https://github.com/lobehub/lobe-chat/compare/v1.21.7...v1.21.8)
+
+<sup>Released on **2024-10-08**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix auto rewrite query when user message is too long.
+
+#### 💄 Styles
+
+- **misc**: Support yml in file chunk.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix auto rewrite query when user message is too long, closes [#4288](https://github.com/lobehub/lobe-chat/issues/4288) ([a2d3d32](https://github.com/lobehub/lobe-chat/commit/a2d3d32))
+
+#### Styles
+
+- **misc**: Support yml in file chunk, closes [#4283](https://github.com/lobehub/lobe-chat/issues/4283) ([cec7ec0](https://github.com/lobehub/lobe-chat/commit/cec7ec0))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.7](https://github.com/lobehub/lobe-chat/compare/v1.21.6...v1.21.7)
+
+<sup>Released on **2024-10-08**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor `text-to-image` endpoint.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor `text-to-image` endpoint, closes [#4272](https://github.com/lobehub/lobe-chat/issues/4272) ([0c02073](https://github.com/lobehub/lobe-chat/commit/0c02073))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.21.6](https://github.com/lobehub/lobe-chat/compare/v1.21.5...v1.21.6)
 
 <sup>Released on **2024-10-05**</sup>

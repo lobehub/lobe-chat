@@ -60,7 +60,7 @@ SUB_DIR="docker-compose/local"
 FILES=(
   "$SUB_DIR/docker-compose.yml"
   "$SUB_DIR/.env.example"
-  "$SUB_DIR/init_data.json.tar.gz"
+  "$SUB_DIR/init_data.json"
   "$SUB_DIR/s3_data.tar.gz"
 )
 
@@ -227,16 +227,15 @@ print_centered() {
 # Download files asynchronously
 download_file "$SOURCE_URL/${FILES[0]}" "docker-compose.yml"
 download_file "$SOURCE_URL/${FILES[1]}" ".env"
-download_file "$SOURCE_URL/${FILES[2]}" "init_data.json.tar.gz"
+download_file "$SOURCE_URL/${FILES[2]}" "init_data.json"
 download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
 
 # Extract .tar.gz file without output
 extract_file "s3_data.tar.gz" "."
-extract_file "init_data.json.tar.gz" "."
 
 # Display final message
 printf "\n%s\n\n" "$(show_message "tips_run_command")"
-print_centered "docker compose up -d" "green"
+print_centered "docker compose -p lobechat-starter up -d" "green"
 printf "\n%s" "$(show_message "tips_show_documentation")"
 printf "%s\n" $(show_message "tips_show_documentation_url")
 printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
