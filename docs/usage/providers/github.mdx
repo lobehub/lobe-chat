@@ -1,0 +1,92 @@
+---
+title: Using GitHub Models in LobeChat
+description: Learn how to integrate and utilize GitHub Models in LobeChat. 
+tags:
+  - LobeChat
+  - GitHub
+  - GitHub Models
+  - API Key
+  - Web UI
+---
+# Using GitHub Models in LobeChat
+
+<Image
+cover
+src={
+'https://github.com/user-attachments/assets/3050839a-cb16-485d-8bae-1bc2f9ade632'
+}
+/>
+
+[GitHub Models](https://github.com/marketplace/models) is a new feature recently launched by GitHub, designed to provide developers with a free platform to access and experiment with various AI models. GitHub Models offers an interactive sandbox environment where users can test different model parameters and prompts, and observe the responses of the models. The platform supports advanced language models, including OpenAI's GPT-4o, Meta's Llama 3.1, and Mistral's Large 2, covering a wide range of applications from large-scale language models to task-specific models.
+
+This article will guide you on how to use GitHub Models in LobeChat.
+
+## Rate Limits for GitHub Models
+
+Currently, the usage of the Playground and free API is subject to limits on the number of requests per minute, the number of requests per day, the number of tokens per request, and the number of concurrent requests. If you hit the rate limit, you will need to wait for the limit to reset before making further requests. The rate limits vary for different models (low, high, and embedding models). For model type information, please refer to the GitHub Marketplace.
+
+<Image
+alt={'GitHub Models Rate Limits'}
+inStep
+src={'https://github.com/user-attachments/assets/21c52e2a-b2f8-4de8-a5d4-cf3444608db7'}
+/>
+
+<Callout type="note">
+  These limits are subject to change at any time. For specific information, please refer to the [GitHub Official Documentation](https://docs.github.com/en/github-models/prototyping-with-ai-models#rate-limits).
+</Callout>
+
+---
+
+## Configuration Guide for GitHub Models
+
+<Steps>
+### Step 1: Obtain a GitHub Access Token
+
+- Log in to GitHub and open the [Access Tokens](https://github.com/settings/tokens) page.
+- Create and configure a new access token.
+
+<Image
+alt={'Creating Access Token'}
+inStep
+src={'https://github.com/user-attachments/assets/8570db14-dac6-4279-ab71-04a072c15490'}
+/>
+
+- Copy and save the generated token from the results returned.
+
+<Image
+alt={'Saving Access Token'}
+inStep
+src={'https://github.com/user-attachments/assets/3c1a492d-a3d4-4570-9e74-785c2942ca41'}
+/>
+
+<Callout type={"warning"}>
+  
+- During the testing phase of GitHub Models, users must apply to join the [waitlist](https://github.com/marketplace/models/waitlist/join) in order to gain access.
+
+- Please store the access token securely, as it will only be displayed once. If you accidentally lose it, you will need to create a new token.
+</Callout>
+
+### Step 2: Configure GitHub Models in LobeChat
+
+- Navigate to the `Settings` interface in LobeChat.
+- Under `Language Models`, find the GitHub settings.
+
+<Image
+alt={'Entering Access Token'}
+inStep
+src={'https://github.com/user-attachments/assets/a00f06cc-da7c-41e8-a4d5-d4b675a22673'}
+/>
+
+- Enter the access token you obtained.
+- Select a GitHub model for your AI assistant to start the conversation.
+
+<Image
+alt={'Selecting GitHub Model and Starting Conversation'}
+inStep
+src={'https://github.com/user-attachments/assets/aead3c6c-891e-47c3-9f34-bdc33875e0c2'}
+/>
+
+</Steps>
+
+You are now ready to use the models provided by GitHub for conversations within LobeChat.
+
