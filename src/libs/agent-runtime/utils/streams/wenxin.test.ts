@@ -2,8 +2,9 @@ import { describe, expect, it, vi } from 'vitest';
 
 import * as uuidModule from '@/utils/uuid';
 
+import { convertIterableToStream } from '../../utils/streams/protocol';
 import { ChatResp } from '../../wenxin/type';
-import { WenxinResultToStream, WenxinStream } from './wenxin';
+import { WenxinStream } from './wenxin';
 
 const dataStream = [
   {
@@ -95,7 +96,7 @@ describe('WenxinStream', () => {
       },
     };
 
-    const stream = WenxinResultToStream(mockWenxinStream);
+    const stream = convertIterableToStream(mockWenxinStream);
 
     const onStartMock = vi.fn();
     const onTextMock = vi.fn();
@@ -142,7 +143,10 @@ describe('WenxinStream', () => {
 
     expect(onStartMock).toHaveBeenCalledTimes(1);
     expect(onTextMock).toHaveBeenNthCalledWith(1, '"当然可以，"');
-    expect(onTextMock).toHaveBeenNthCalledWith(2, '"以下是一些建议的自驾游路线，它们涵盖了各种不同的风景和文化体验：\\n\\n1. **西安-敦煌历史文化之旅**：\\n\\n\\n\\t* 路线：西安"');
+    expect(onTextMock).toHaveBeenNthCalledWith(
+      2,
+      '"以下是一些建议的自驾游路线，它们涵盖了各种不同的风景和文化体验：\\n\\n1. **西安-敦煌历史文化之旅**：\\n\\n\\n\\t* 路线：西安"',
+    );
     expect(onTokenMock).toHaveBeenCalledTimes(6);
     expect(onCompletionMock).toHaveBeenCalledTimes(1);
   });
