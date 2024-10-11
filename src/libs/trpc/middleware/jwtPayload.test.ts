@@ -2,7 +2,7 @@
 import { TRPCError } from '@trpc/server';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import * as utils from '@/app/(backend)/api/middleware/auth/utils';
+import * as utils from '@/app/(backend)/middleware/auth/utils';
 import { createCallerFactory } from '@/libs/trpc';
 import { trpc } from '@/libs/trpc/init';
 import { AuthContext, createContextInner } from '@/server/context';
