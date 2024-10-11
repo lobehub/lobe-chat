@@ -1,13 +1,9 @@
 import { HfInference } from '@huggingface/inference';
 
-import {
-  AgentRuntimeError,
-  AgentRuntimeErrorType,
-  ChatCompetitionOptions,
-  ChatStreamPayload,
-  LobeRuntimeAI,
-} from '@/libs/agent-runtime';
+import { ChatCompetitionOptions, ChatStreamPayload, LobeRuntimeAI } from '@/libs/agent-runtime';
 
+import { AgentRuntimeErrorType } from '../error';
+import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream, convertIterableToStream } from '../utils/streams';
