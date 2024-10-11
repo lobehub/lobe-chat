@@ -5,7 +5,6 @@ import { ChatResp } from '../../wenxin/type';
 import {
   StreamProtocolChunk,
   StreamStack,
-  convertIterableToStream,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
 } from './protocol';
@@ -25,11 +24,6 @@ const transformERNIEBotStream = (chunk: ChatResp): StreamProtocolChunk => {
     id: chunk.id,
     type: 'data',
   };
-};
-
-export const WenxinResultToStream = (stream: AsyncIterable<ChatResp>) => {
-  // make the response to the streamable format
-  return convertIterableToStream(stream);
 };
 
 export const WenxinStream = (
