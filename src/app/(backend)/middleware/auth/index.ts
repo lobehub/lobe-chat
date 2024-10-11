@@ -6,8 +6,9 @@ import { JWTPayload, LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableClerk } from
 import { AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
 import { createErrorResponse } from '@/utils/errorResponse';
+import { getJWTPayload } from '@/utils/server/jwt';
 
-import { checkAuthMethod, getJWTPayload } from './utils';
+import { checkAuthMethod } from './utils';
 
 type CreateRuntime = (jwtPayload: JWTPayload) => AgentRuntime;
 type RequestOptions = { createRuntime?: CreateRuntime; params: { provider: string } };
