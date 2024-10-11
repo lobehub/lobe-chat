@@ -2,7 +2,7 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import { createErrorResponse } from '@/app/api/errorResponse';
+import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';

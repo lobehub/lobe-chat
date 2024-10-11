@@ -4,7 +4,7 @@ import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { ClientOptions } from 'openai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createTraceOptions } from '@/app/api/chat/agentRuntime';
+import { createTraceOptions } from '@/app/(backend)/api/chat/agentRuntime';
 import * as langfuseCfg from '@/config/langfuse';
 import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
