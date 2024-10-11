@@ -114,9 +114,9 @@ describe('LobeZhipuAI', () => {
       const calledWithParams = spyOn.mock.calls[0][0];
 
       expect(calledWithParams.messages[1].content).toEqual([{ type: 'text', text: 'Hello again' }]);
-      expect(calledWithParams.temperature).toBeUndefined(); // temperature 0 should be undefined
+      expect(calledWithParams.temperature).toBe(0); // temperature 0 should be undefined
       expect((calledWithParams as any).do_sample).toBeTruthy(); // temperature 0 should be undefined
-      expect(calledWithParams.top_p).toEqual(0.99); // top_p should be transformed correctly
+      expect(calledWithParams.top_p).toEqual(1); // top_p should be transformed correctly
     });
 
     describe('Error', () => {

@@ -11,6 +11,7 @@ export const LobeZhipuAI = LobeOpenAICompatibleFactory({
         ...payload,
         do_sample: temperature === 0,
         stream: true,
+        temperature,
       }) as OpenAI.ChatCompletionCreateParamsStreaming,
   },
   debug: {
