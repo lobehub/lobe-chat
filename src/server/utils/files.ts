@@ -6,7 +6,7 @@ import { S3 } from '@/server/modules/S3';
 export const getFullFileUrl = async (url?: string | null) => {
   if (!url) return '';
 
-  // 如果未设置公共读，则需要每次重新生成预览地址
+  // If bucket is not set public read, the preview address needs to be regenerated each time
   if (!fileEnv.S3_SET_ACL) {
     const s3 = new S3();
     return await s3.createPreSignedUrlForPreview(url);
