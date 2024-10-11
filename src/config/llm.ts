@@ -129,6 +129,7 @@ export const getLLMConfig = () => {
       ENABLED_HUGGINGFACE: z.boolean(),
       HUGGINGFACE_API_KEY: z.string().optional(),
       HUGGINGFACE_PROXY_URL: z.string().optional(),
+      HUGGINGFACE_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -255,6 +256,7 @@ export const getLLMConfig = () => {
       ENABLED_HUGGINGFACE: !!process.env.HUGGINGFACE_API_KEY,
       HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
       HUGGINGFACE_PROXY_URL: process.env.HUGGINGFACE_PROXY_URL,
+      HUGGINGFACE_MODEL_LIST: process.env.HUGGINGFACE_MODEL_LIST,
     },
   });
 };
