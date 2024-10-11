@@ -1,6 +1,5 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref https://cloud.tencent.com/document/product/1729/104753
 const HuggingFace: ModelProviderCard = {
   chatModels: [
     {

@@ -1,7 +1,6 @@
 import { ClientOptions } from 'openai';
 
 import type { TracePayload } from '@/const/trace';
-import { LobeHuggingFaceAI } from '@/libs/agent-runtime/huggingface';
 
 import { LobeRuntimeAI } from './BaseAI';
 import { LobeAi21AI } from './ai21';
@@ -15,6 +14,7 @@ import { LobeFireworksAI } from './fireworksai';
 import { LobeGithubAI } from './github';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
+import { LobeHuggingFaceAI } from './huggingface';
 import { LobeHunyuanAI } from './hunyuan';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
