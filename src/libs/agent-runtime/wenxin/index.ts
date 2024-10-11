@@ -10,7 +10,8 @@ import { ChatCompetitionOptions, ChatStreamPayload } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { WenxinResultToStream, WenxinStream } from '../utils/streams/wenxin';
+import { convertIterableToStream } from '../utils/streams';
+import { WenxinStream } from '../utils/streams/wenxin';
 import { ChatResp } from './type';
 
 interface ChatErrorCode {
@@ -46,7 +47,7 @@ export class LobeWenxinAI implements LobeRuntimeAI {
         payload.model,
       );
 
-      const wenxinStream = WenxinResultToStream(result as AsyncIterable<ChatResp>);
+      const wenxinStream = convertIterableToStream(result as AsyncIterable<ChatResp>);
 
       const [prod, useForDebug] = wenxinStream.tee();
 

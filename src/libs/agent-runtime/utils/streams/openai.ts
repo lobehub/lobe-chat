@@ -1,4 +1,3 @@
-import { readableFromAsyncIterable } from 'ai';
 import OpenAI from 'openai';
 import type { Stream } from 'openai/streaming';
 
@@ -10,6 +9,7 @@ import {
   StreamProtocolToolCallChunk,
   StreamStack,
   StreamToolCallChunkData,
+  convertIterableToStream,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
@@ -105,12 +105,6 @@ export const transformOpenAIStream = (
   }
 };
 
-const chatStreamable = async function* (stream: AsyncIterable<OpenAI.ChatCompletionChunk>) {
-  for await (const response of stream) {
-    yield response;
-  }
-};
-
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
   callbacks?: ChatStreamCallbacks,
@@ -118,7 +112,7 @@ export const OpenAIStream = (
   const streamStack: StreamStack = { id: '' };
 
   const readableStream =
-    stream instanceof ReadableStream ? stream : readableFromAsyncIterable(chatStreamable(stream));
+    stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
   return readableStream
     .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))

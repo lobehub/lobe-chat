@@ -1,3 +1,5 @@
+import { readableFromAsyncIterable } from 'ai';
+
 import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 
 export interface StreamStack {
@@ -40,6 +42,11 @@ export const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
   for await (const response of stream) {
     yield response;
   }
+};
+
+// make the response to the streamable format
+export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
+  return readableFromAsyncIterable(chatStreamable(stream));
 };
 
 export const createSSEProtocolTransformer = (

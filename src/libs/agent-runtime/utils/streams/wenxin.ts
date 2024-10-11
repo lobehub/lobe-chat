@@ -1,5 +1,3 @@
-import { readableFromAsyncIterable } from 'ai';
-
 import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 import { nanoid } from '@/utils/uuid';
 
@@ -7,7 +5,6 @@ import { ChatResp } from '../../wenxin/type';
 import {
   StreamProtocolChunk,
   StreamStack,
-  chatStreamable,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
 } from './protocol';
@@ -27,11 +24,6 @@ const transformERNIEBotStream = (chunk: ChatResp): StreamProtocolChunk => {
     id: chunk.id,
     type: 'data',
   };
-};
-
-export const WenxinResultToStream = (stream: AsyncIterable<ChatResp>) => {
-  // make the response to the streamable format
-  return readableFromAsyncIterable(chatStreamable(stream));
 };
 
 export const WenxinStream = (
