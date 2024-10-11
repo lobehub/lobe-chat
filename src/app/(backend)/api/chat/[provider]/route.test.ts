@@ -13,7 +13,7 @@ vi.mock('@clerk/nextjs/server', () => ({
   getAuth: vi.fn(),
 }));
 
-vi.mock('../../middleware/auth/utils', () => ({
+vi.mock('@/app/(backend)/middleware/auth/utils', () => ({
   getJWTPayload: vi.fn(),
   checkAuthMethod: vi.fn(),
 }));
