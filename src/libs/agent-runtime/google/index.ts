@@ -27,7 +27,7 @@ import { ModelProvider } from '../types/type';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { GoogleGenerativeAIStream, googleGenAIResultToStream } from '../utils/streams';
+import { GoogleGenerativeAIStream, convertIterableToStream } from '../utils/streams';
 import { parseDataUri } from '../utils/uriParser';
 
 enum HarmCategory {
@@ -97,7 +97,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
           tools: this.buildGoogleTools(payload.tools),
         });
 
-      const googleStream = googleGenAIResultToStream(geminiStreamResult);
+      const googleStream = convertIterableToStream(geminiStreamResult.stream);
       const [prod, useForDebug] = googleStream.tee();
 
       if (process.env.DEBUG_GOOGLE_CHAT_COMPLETION === '1') {
