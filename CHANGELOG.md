@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.21.10](https://github.com/lobehub/lobe-chat/compare/v1.21.9...v1.21.10)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Updata gpt-4o model info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Updata gpt-4o model info, closes [#4318](https://github.com/lobehub/lobe-chat/issues/4318) ([fa27ddf](https://github.com/lobehub/lobe-chat/commit/fa27ddf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.21.9](https://github.com/lobehub/lobe-chat/compare/v1.21.8...v1.21.9)
 
 <sup>Released on **2024-10-10**</sup>

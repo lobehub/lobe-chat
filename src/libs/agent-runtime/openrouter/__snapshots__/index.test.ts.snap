@@ -247,7 +247,7 @@ GPT-4o ("o" for "omni") is OpenAI's latest AI model, supporting both text and im
 
 For benchmarking against other models, it was briefly called ["im-also-a-good-gpt2-chatbot"](https://twitter.com/LiamFedus/status/1790064963966370209)",
     "displayName": "OpenAI: GPT-4o (2024-08-06)",
-    "enabled": true,
+    "enabled": false,
     "functionCall": false,
     "id": "openai/gpt-4o-2024-08-06",
     "maxTokens": 16384,
