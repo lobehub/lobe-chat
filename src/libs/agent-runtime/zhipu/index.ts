@@ -81,17 +81,24 @@ export class LobeZhipuAI implements LobeRuntimeAI {
   }
 
   private async buildCompletionsParams(payload: ChatStreamPayload) {
-    const { messages, temperature, top_p, ...params } = payload;
+    const { messages, model, temperature, top_p, ...params } = payload;
 
     return {
       messages: await convertOpenAIMessages(messages as any),
       ...params,
-      do_sample: temperature === 0,
       stream: true,
-      // 当前的模型侧不支持 top_p=1 和 temperature 为 0
-      // refs: https://zhipu-ai.feishu.cn/wiki/TUo0w2LT7iswnckmfSEcqTD0ncd
-      temperature: temperature === 0 ? undefined : temperature,
-      top_p: top_p === 1 ? 0.99 : top_p,
+      ...(model === "glm-4-alltools" ? {
+        temperature: temperature 
+          ? Math.max(0.01, Math.min(0.99, temperature / 2)) 
+          : undefined,
+        top_p: top_p 
+          ? Math.max(0.01, Math.min(0.99, top_p)) 
+          : undefined,
+      } : {
+        temperature: temperature === undefined 
+          ? temperature / 2
+          : undefined,
+      }),
     };
   }
 }

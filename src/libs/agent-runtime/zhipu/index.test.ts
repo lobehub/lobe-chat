@@ -132,8 +132,6 @@ describe('LobeZhipuAI', () => {
 
       expect(calledWithParams.messages[1].content).toEqual([{ type: 'text', text: 'Hello again' }]);
       expect(calledWithParams.temperature).toBeUndefined(); // temperature 0 should be undefined
-      expect((calledWithParams as any).do_sample).toBeTruthy(); // temperature 0 should be undefined
-      expect(calledWithParams.top_p).toEqual(0.99); // top_p should be transformed correctly
     });
 
     describe('Error', () => {
