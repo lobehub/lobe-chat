@@ -183,7 +183,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             debugStream(useForDebug.toReadableStream()).catch(console.error);
           }
 
-          return StreamingResponse(OpenAIStream(prod, options?.callback), {
+          return StreamingResponse(OpenAIStream(prod, { callbacks: options?.callback }), {
             headers: options?.headers,
           });
         }
@@ -196,7 +196,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
         const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
-        return StreamingResponse(OpenAIStream(stream, options?.callback), {
+        return StreamingResponse(OpenAIStream(stream, { callbacks: options?.callback, provider }), {
           headers: options?.headers,
         });
       } catch (error) {

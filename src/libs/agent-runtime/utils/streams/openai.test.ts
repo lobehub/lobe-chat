@@ -45,10 +45,12 @@ describe('OpenAIStream', () => {
     const onCompletionMock = vi.fn();
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
-      onStart: onStartMock,
-      onText: onTextMock,
-      onToken: onTokenMock,
-      onCompletion: onCompletionMock,
+      callbacks: {
+        onStart: onStartMock,
+        onText: onTextMock,
+        onToken: onTokenMock,
+        onCompletion: onCompletionMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -189,7 +191,9 @@ describe('OpenAIStream', () => {
     const onToolCallMock = vi.fn();
 
     const protocolStream = OpenAIStream(mockOpenAIStream, {
-      onToolCall: onToolCallMock,
+      callbacks: {
+        onToolCall: onToolCallMock,
+      },
     });
 
     const decoder = new TextDecoder();
@@ -316,7 +320,9 @@ describe('OpenAIStream', () => {
       const onToolCallMock = vi.fn();
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
-        onToolCall: onToolCallMock,
+        callbacks: {
+          onToolCall: onToolCallMock,
+        },
       });
 
       const decoder = new TextDecoder();
@@ -447,7 +453,9 @@ describe('OpenAIStream', () => {
       const onToolCallMock = vi.fn();
 
       const protocolStream = OpenAIStream(mockOpenAIStream, {
-        onToolCall: onToolCallMock,
+        callbacks: {
+          onToolCall: onToolCallMock,
+        },
       });
 
       const decoder = new TextDecoder();

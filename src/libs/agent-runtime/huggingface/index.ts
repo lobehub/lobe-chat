@@ -3,6 +3,7 @@ import { HfInference } from '@huggingface/inference';
 import { ChatCompetitionOptions, ChatStreamPayload, LobeRuntimeAI } from '@/libs/agent-runtime';
 
 import { AgentRuntimeErrorType } from '../error';
+import { ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
@@ -39,7 +40,21 @@ export class LobeHuggingFaceAI implements LobeRuntimeAI {
         debugStream(debug).catch(console.error);
       }
 
-      const stream = OpenAIStream(output, options?.callback);
+      const stream = OpenAIStream(output, {
+        bizErrorTypeTransformer: (error) => {
+          // e.g.: Server meta-llama/Meta-Llama-3.1-8B-Instruct does not seem to support chat completion. Error: Model requires a Pro subscription; check out hf.co/pricing to learn more. Make sure to include your HF token in your query.
+          if (error.message?.includes('Model requires a Pro subscription')) {
+            return AgentRuntimeErrorType.PermissionDenied;
+          }
+
+          // e.g.: Server meta-llama/Meta-Llama-3.1-8B-Instruct does not seem to support chat completion. Error: Authorization header is correct, but the token seems invalid
+          if (error.message?.includes('the token seems invalid')) {
+            return AgentRuntimeErrorType.InvalidProviderAPIKey;
+          }
+        },
+        callbacks: options?.callback,
+        provider: ModelProvider.HuggingFace,
+      });
 
       // Response with the stream
       return StreamingResponse(stream, { headers: options?.headers });
