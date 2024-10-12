@@ -67,6 +67,7 @@
     "OllamaBizError": "請求 Ollama 服務出錯，請根據以下資訊排查或重試",
     "OllamaServiceUnavailable": "Ollama 服務暫時無法使用，請檢查 Ollama 是否運作正常，或是否正確設定 Ollama 的跨域配置",
     "OpenAIBizError": "請求 OpenAI 服務出錯，請根據以下資訊排查或重試",
+    "PermissionDenied": "很抱歉，您沒有權限訪問該服務，請檢查您的金鑰是否具有訪問權限",
     "PluginApiNotFound": "抱歉，外掛描述檔案中不存在該 API。請檢查您的請求方法與外掛清單 API 是否相符",
     "PluginApiParamsError": "抱歉，該外掛請求的輸入參數驗證失敗。請檢查輸入參數與 API 描述資訊是否相符",
     "PluginFailToTransformArguments": "很抱歉，插件無法轉換參數，請嘗試重新生成助手消息，或更換功能更強大的 AI 模型後重試",

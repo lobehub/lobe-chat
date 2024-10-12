@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Entrez votre jeton HuggingFace, cliquez [ici](https://huggingface.co/settings/tokens) pour en créer un",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Jeton HuggingFace"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Vérifiez si l'adresse du proxy est correctement saisie",
