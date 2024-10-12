@@ -30,6 +30,9 @@
   "groq": {
     "description": "Bộ máy suy diễn LPU của Groq thể hiện xuất sắc trong các bài kiểm tra chuẩn mô hình ngôn ngữ lớn (LLM) độc lập mới nhất, định nghĩa lại tiêu chuẩn cho các giải pháp AI với tốc độ và hiệu quả đáng kinh ngạc. Groq là đại diện cho tốc độ suy diễn tức thì, thể hiện hiệu suất tốt trong triển khai dựa trên đám mây."
   },
+  "huggingface": {
+    "description": "HuggingFace Inference API cung cấp một cách nhanh chóng và miễn phí để bạn khám phá hàng ngàn mô hình cho nhiều nhiệm vụ khác nhau. Dù bạn đang thiết kế nguyên mẫu cho một ứng dụng mới hay đang thử nghiệm khả năng của học máy, API này cho phép bạn truy cập ngay lập tức vào các mô hình hiệu suất cao trong nhiều lĩnh vực."
+  },
   "hunyuan": {
     "description": "Mô hình ngôn ngữ lớn được phát triển bởi Tencent, có khả năng sáng tạo tiếng Trung mạnh mẽ, khả năng suy luận logic trong các ngữ cảnh phức tạp, và khả năng thực hiện nhiệm vụ đáng tin cậy."
   },

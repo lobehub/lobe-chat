@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "あなたの HuggingFace トークンを入力してください。 [こちら](https://huggingface.co/settings/tokens) をクリックして作成します。",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace トークン"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "プロキシアドレスが正しく入力されているかをテストします",
