@@ -2,10 +2,11 @@
 import { getAuth } from '@clerk/nextjs/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { checkAuthMethod, getJWTPayload } from '@/app/(backend)/api/middleware/auth/utils';
+import { checkAuthMethod } from '@/app/(backend)/middleware/auth/utils';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED } from '@/const/auth';
 import { AgentRuntime, LobeRuntimeAI } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
+import { getJWTPayload } from '@/utils/server/jwt';
 
 import { POST } from './route';
 
@@ -13,9 +14,12 @@ vi.mock('@clerk/nextjs/server', () => ({
   getAuth: vi.fn(),
 }));
 
-vi.mock('../../middleware/auth/utils', () => ({
-  getJWTPayload: vi.fn(),
+vi.mock('@/app/(backend)/middleware/auth/utils', () => ({
   checkAuthMethod: vi.fn(),
+}));
+
+vi.mock('@/utils/server/jwt', () => ({
+  getJWTPayload: vi.fn(),
 }));
 
 // 定义一个变量来存储 enableAuth 的值

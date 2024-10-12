@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 
-import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
+import { checkAuth } from '@/app/(backend)/middleware/auth';
 import { ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
+import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChatErrorType } from '@/types/fetch';
-
-import { checkAuth } from '../../../middleware/auth';
-import { initAgentRuntimeWithUserPayload } from '../../agentRuntime';
+import { createErrorResponse } from '@/utils/errorResponse';
 
 export const runtime = 'edge';
 
