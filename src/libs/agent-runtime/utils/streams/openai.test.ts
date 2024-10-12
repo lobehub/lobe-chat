@@ -1,6 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
 
+import { AgentRuntimeErrorType } from '@/libs/agent-runtime';
+
 import { OpenAIStream } from './openai';
+import { FIRST_CHUNK_ERROR_KEY } from './protocol';
 
 describe('OpenAIStream', () => {
   it('should transform OpenAI stream to protocol stream', async () => {
@@ -283,6 +286,66 @@ describe('OpenAIStream', () => {
         `data: {"body":{"message":"chat response streaming chunk parse error, please contact your API Provider to fix it.","context":{"error":{"message":"Cannot read properties of undefined (reading '0')","name":"TypeError"},"chunk":{"id":"1"}}},"type":"StreamChunkError"}\n`,
       ].map((i) => `${i}\n`),
     );
+  });
+
+  it('should handle FIRST_CHUNK_ERROR_KEY', async () => {
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue({
+          [FIRST_CHUNK_ERROR_KEY]: true,
+          errorType: AgentRuntimeErrorType.ProviderBizError,
+          message: 'Test error',
+        });
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream);
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: first_chunk_error\n',
+      'event: error\n',
+      `data: {"body":{"errorType":"ProviderBizError","message":"Test error"},"type":"ProviderBizError"}\n\n`,
+    ]);
+  });
+
+  it('should use bizErrorTypeTransformer', async () => {
+    const mockOpenAIStream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(
+          '%FIRST_CHUNK_ERROR%: ' +
+            JSON.stringify({ message: 'Custom error', name: 'CustomError' }),
+        );
+        controller.close();
+      },
+    });
+
+    const protocolStream = OpenAIStream(mockOpenAIStream, {
+      bizErrorTypeTransformer: () => AgentRuntimeErrorType.PermissionDenied,
+      provider: 'grok',
+    });
+
+    const decoder = new TextDecoder();
+    const chunks = [];
+
+    // @ts-ignore
+    for await (const chunk of protocolStream) {
+      chunks.push(decoder.decode(chunk, { stream: true }));
+    }
+
+    expect(chunks).toEqual([
+      'id: first_chunk_error\n',
+      'event: error\n',
+      `data: {"body":{"message":"Custom error","errorType":"PermissionDenied","provider":"grok"},"type":"PermissionDenied"}\n\n`,
+    ]);
   });
 
   describe('Tools Calling', () => {

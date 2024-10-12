@@ -1,5 +1,7 @@
 import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 
+import { AgentRuntimeErrorType } from '../../error';
+
 export interface StreamStack {
   id: string;
   tool?: {
@@ -68,7 +70,7 @@ export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
         else controller.enqueue(value);
       } catch (e) {
         const error = e as Error;
-        console.log('[convertIterableToStream] error:', error);
+
         controller.enqueue(
           (ERROR_CHUNK_PREFIX +
             JSON.stringify({ message: error.message, name: error.name, stack: error.stack })) as T,
@@ -159,7 +161,7 @@ export const createFirstErrorHandleTransformer = (
         controller.enqueue({
           ...errorData,
           [FIRST_CHUNK_ERROR_KEY]: true,
-          errorType: errorHandler?.(errorData),
+          errorType: errorHandler?.(errorData) || AgentRuntimeErrorType.ProviderBizError,
           provider,
         });
       } else {

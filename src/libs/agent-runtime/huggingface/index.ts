@@ -6,10 +6,11 @@ import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
+import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { StreamingResponse } from '../utils/response';
 import { OpenAIStream, convertIterableToStream } from '../utils/streams';
 
-export class LobeHuggingFaceAI implements LobeRuntimeAI {
+export class LobeHFAI implements LobeRuntimeAI {
   private client: HfInference;
   baseURL?: string;
 
@@ -65,3 +66,43 @@ export class LobeHuggingFaceAI implements LobeRuntimeAI {
     }
   }
 }
+
+export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
+  baseURL: 'https://api.groq.com/openai/v1',
+  chatCompletion: {
+    handleError: (error) => {
+      // 403 means the location is not supported
+      if (error.status === 403)
+        return { error, errorType: AgentRuntimeErrorType.LocationNotSupportError };
+    },
+    handlePayload: (payload) => {
+      const { temperature, ...restPayload } = payload;
+      return {
+        ...restPayload,
+        // disable stream for tools due to groq dont support
+        stream: !payload.tools,
+
+        temperature: temperature <= 0 ? undefined : temperature,
+      } as any;
+    },
+  },
+  customClient: {
+    createChatCompletionStream: (client: HfInference, payload,instance) => {
+      const hfRes = client.chatCompletionStream({
+        endpointUrl: instance.baseURL,
+        messages: payload.messages,
+        model: payload.model,
+        stream: true,
+        // temperature: payload.temperature,
+        // top_p: payload.top_p,
+      });
+
+      return convertIterableToStream(hfRes);
+    },
+    createClient: (options) => new HfInference(options.apiKey),
+  },
+  debug: {
+    chatCompletion: () => process.env.DEBUG_GROQ_CHAT_COMPLETION === '1',
+  },
+  provider: ModelProvider.Groq,
+});
