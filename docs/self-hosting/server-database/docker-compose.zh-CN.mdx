@@ -56,7 +56,7 @@ tags:
 </Callout>
 
 <Steps>
-  ### 拉取脚本
+  ### 一键启动脚本
 
 新建一个 `lobe-chat-db` 目录，用于存放你的配置文件和后续的数据库文件。
 
@@ -67,28 +67,75 @@ cd lobe-chat-db
 
 我们提供了一个一键启动脚本 `setup.sh`，可以自动使用默认配置并启动服务：
 
-拉取脚本到你的目录中：
-
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh > setup.sh
+bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
 ```
 
-### 启动脚本
+### 启动 Docker
 
 ```sh
-./setup.sh
+docker compose -p lobechat-starter up -d
+```
+
+### 检查日志
+
+```sh
+docker logs -f lobe-database
+```
+
+如果你在容器中看到了以下日志，则说明已经启动成功：
+
+```log
+[Database] Start to migration...
+✅ database migration pass.
+-------------------------------------
+  ▲ Next.js 14.x.x
+  - Local:        http://localhost:3210
+  - Network:      http://0.0.0.0:3210
+
+ ✓ Starting...
+ ✓ Ready in 95ms
+```
+
+</Steps>
+
+至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `http://localhost:3210` 访问你的 LobeChat 服务。
+
+如果你遇到问题，请尝试查看 Docker 日志和控制台日志进行排查。
+
+## 发布到生产（IP 模式）
+
+下文假设局域网内需要运行 LobeChat 服务的机器 IP 为 `your_server_ip`。
+
+想要通过局域网 IP 访问，你需要首先按照本地启动运行：
+
+```sh
+bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
+docker compose -p lobechat-starter up -d
+```
+
+接着，你需要修改下载下来的 `docker-compose.yml` 文件，执行一次全文替换，将 `localhost` 替换为 `your_server_ip`，随后重新启动：
+
+```sh
+sed -i 's/localhost/your_server_ip/g' docker-compose.yml
 docker compose -p lobechat-starter up -d
 ```
 
 ### 配置 Casdoor
 
-1. 使用 `setup.sh` 脚本启动后，Casdoor WebUI 默认端口为 `8000`，你可以通过 `http://localhost:8000` 访问，默认用户名 `admin`，密码 `123`
+1. 使用 `setup.sh` 脚本启动后，Casdoor WebUI 默认端口为 `8000`，你可以通过 `http://your_server_ip:8000` 访问，默认用户名 `admin`，密码 `123`
 
-2. 大多数配置保持默认即可，你也可以在 `身份认证 -> 应用` 中修改默认配置
+2. 在 `身份认证 -> 应用` 中添加一行
+
+    ```
+    http://your_server_ip:3210/api/auth/callback/casdoor
+    ```
+
+3. 其他配置大多保持默认即可，你也可以在 `身份认证 -> 应用` 中修改默认配置
 
 ### 配置 MinIO S3
 
-1. 使用 `setup.sh` 脚本启动后，MinIO WebUI 默认端口为 `9001`，你可以通过 `http://localhost:9001` 访问，默认用户名 `YOUR_MINIO_USER`，密码 `YOUR_MINIO_PASSWORD`
+1. 使用 `setup.sh` 脚本启动后，MinIO WebUI 默认端口为 `9001`，你可以通过 `http://your_server_ip:9001` 访问，默认用户名 `YOUR_MINIO_USER`，密码 `YOUR_MINIO_PASSWORD`
 
 2. 大多数配置保持默认即可，如果你希望能允许用户更换头像功能，你需要首先在 `buckets` 中创建一个名为 `casdoor` 的桶，选择自定义策略，复制并粘贴如下内容（如果你修改了桶名，请自行查找替换）
 
@@ -133,71 +180,18 @@ docker compose -p lobechat-starter up -d
 
 4. 在 Casdoor 的 `身份认证 -> 提供商` 中关联 MinIO S3 服务，以下是一个示例配置：
 
-    ![casdoor](https://github.com/user-attachments/assets/75dc5fa7-904c-4107-9012-dcc942a9efd7)
+    ![casdoor](https://github.com/user-attachments/assets/71035610-0706-434e-9488-ab5819b55330)
 
-    其中，客户端 ID、客户端密钥为上一步创建的访问密钥中的 `Access Key` 和 `Secret Key`
+    其中，客户端 ID、客户端密钥为上一步创建的访问密钥中的 `Access Key` 和 `Secret Key`，`192.168.31.251` 应当被替换为 `your_server_ip`。
 
 5. 在 Casdoor 的 `身份认证 -> 应用` 中，对 `app-built-in` 应用添加提供商，选择 `minio`，保存并退出
 
 6. 你可以在 Casdoor 的 `身份认证 -> 资源` 中，尝试上传文件以测试配置是否正确
 
-### 检查日志
-
-```sh
-docker logs -f lobe-database
-```
-
-如果你在容器中看到了以下日志，则说明已经启动成功：
-
-```log
-[Database] Start to migration...
-✅ database migration pass.
--------------------------------------
-  ▲ Next.js 14.x.x
-  - Local:        http://localhost:3210
-  - Network:      http://0.0.0.0:3210
-
- ✓ Starting...
- ✓ Ready in 95ms
-```
-
-</Steps>
-
-至此，你已经成功部署了 LobeChat 数据库版本，你可以通过 `http://localhost:3210` 访问你的 LobeChat 服务。
-
-如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
-
-## 发布到生产（局域网 IP）
-
-下文假设局域网内需要运行 LobeChat 服务的机器 IP 为 `your_server_ip`。
-
-想要通过局域网 IP 访问，你需要首先按照本地启动运行：
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh > setup.sh
-./setup.sh
-docker compose -p lobechat-starter up -d
-```
-
-随后，打开 `http://your_server_ip:8000` 访问 Casdoor WebUI，在 `身份认证 -> 应用` 中添加一行
-
-```
-http://your_server_ip:3210/api/auth/callback/casdoor
-```
-
-接着，你需要修改下载下来的 `docker-compose.yml` 文件，执行一次全文替换，将 `localhost` 替换为 `your_server_ip`，随后重新启动：
-
-```sh
-sed -i 's/localhost/your_server_ip/g' docker-compose.yml
-docker compose -p lobechat-starter up -d
-```
-
-你也可以仿照前文一样，设置 MinIO 以支持更换头像功能，但是请注意将所有字段中的 `localhost` 替换为 `your_server_ip`。
-
-## 发布到生产（公网域名）
+## 发布到生产（域名模式）
 
 <Callout type="info">
-  对于拥有域名的部署，我们推荐使用 [Logto](https://logto.io/) 作为登录鉴权服务。本文剩余部分也将以其为例进行说明。
+  对于拥有域名的部署，我们推荐使用 [Logto](https://logto.io/) 作为登录鉴权服务。本文剩余部分也将以其为例进行说明。如果你使用其他诸如 Casdoor 等其他登录鉴权服务，流程应当相近，但请注意不同的登录鉴权服务的端口配置可能有所差异。
 
 </Callout>
 
@@ -373,155 +367,7 @@ docker compose up -d # 重新启动
 
 为方便一键复制，在此汇总域名方式下生产部署配置服务端数据库所需要的示例配置文件（对于本地快速启动、局域网 IP 访问等场景，请直接使用 `setup.sh` 脚本生成后自行修改）：
 
-### 本地部署
-
-#### `.env`
-
-```sh
-# Logto secret
-AUTH_LOGTO_ID=
-AUTH_LOGTO_SECRET=
-
-# MinIO S3 配置
-MINIO_ROOT_USER=YOUR_MINIO_USER
-MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD
-
-# 在下方配置 minio 中添加的桶
-MINIO_LOBE_BUCKET=lobe
-S3_ACCESS_KEY_ID=
-S3_SECRET_ACCESS_KEY=
-
-# Proxy，如果你需要的话（比如你使用 GitHub 作为鉴权服务提供商）
-# HTTP_PROXY=http://localhost:7890
-# HTTPS_PROXY=http://localhost:7890
-
-# 其他环境变量，视需求而定，可以参照客户端版本的环境变量配置，注意不要有 ACCESS_CODE
-# OPENAI_API_KEY=sk-xxxx
-# OPENAI_PROXY_URL=https://api.openai.com/v1
-# OPENAI_MODEL_LIST=...
-
-# ----- 相关配置 start -----
-# 如没有特殊需要不用更改
-LOBE_PORT=3210
-LOGTO_PORT=3001
-MINIO_PORT=9000
-
-# Postgres 相关，也即 DB 必须的环境变量
-LOBE_DB_NAME=lobechat
-POSTGRES_PASSWORD=uWNZugjBqixf8dxC
-
-```
-
-#### `docker-compose.yml`
-
-```yaml
-services:
-  network-service:
-    image: alpine
-    container_name: lobe-network
-    ports:
-      - '${MINIO_PORT}:${MINIO_PORT}'  # MinIO API
-      - '9001:9001'  # MinIO Console
-      - '${LOGTO_PORT}:${LOGTO_PORT}' # Logto
-      - '3002:3002'  # Logto Admin
-      - '${LOBE_PORT}:3210' # LobeChat
-    command: tail -f /dev/null
-    networks:
-      - lobe-network
-
-  postgresql:
-    image: pgvector/pgvector:pg16
-    container_name: lobe-postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - './data:/var/lib/postgresql/data'
-    environment:
-      - 'POSTGRES_DB=${LOBE_DB_NAME}'
-      - 'POSTGRES_PASSWORD=${POSTGRES_PASSWORD}'
-    healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U postgres']
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    restart: always
-    networks:
-      - lobe-network
-
-  minio:
-    image: minio/minio
-    container_name: lobe-minio
-    network_mode: 'service:network-service'
-    volumes:
-      - './s3_data:/etc/minio/data'
-    environment:
-      - 'MINIO_ROOT_USER=${MINIO_ROOT_USER}'
-      - 'MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}'
-      - 'MINIO_API_CORS_ALLOW_ORIGIN=http://localhost:${LOBE_PORT}'
-    restart: always
-    command: >
-      server /etc/minio/data --address ":${MINIO_PORT}" --console-address ":9001"
-
-  logto:
-    image: svhd/logto
-    container_name: lobe-logto
-    network_mode: 'service:network-service'
-    depends_on:
-      postgresql:
-        condition: service_healthy
-    environment:
-      - 'TRUST_PROXY_HEADER=1'
-      - 'PORT=${LOGTO_PORT}'
-      - 'DB_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/logto'
-      - 'ENDPOINT=http://localhost:${LOGTO_PORT}'
-      - 'ADMIN_ENDPOINT=http://localhost:3002'
-    entrypoint: ['sh', '-c', 'npm run cli db seed -- --swe && npm start']
-
-  lobe:
-    image: lobehub/lobe-chat-database
-    container_name: lobe-database
-    network_mode: 'service:network-service'
-    depends_on:
-      postgresql:
-        condition: service_healthy
-      network-service:
-        condition: service_started
-      minio:
-        condition: service_started
-      logto:
-        condition: service_started
-
-    environment:
-      - 'APP_URL=http://localhost:3210'
-      - 'NEXT_AUTH_SSO_PROVIDERS=logto'
-      - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
-      - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
-      - 'NEXTAUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-      - 'AUTH_LOGTO_ISSUER=http://localhost:${LOGTO_PORT}/oidc'
-      - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
-      - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
-      - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
-      - 'S3_PUBLIC_DOMAIN=http://localhost:${MINIO_PORT}'
-      - 'S3_ENABLE_PATH_STYLE=1'
-    env_file:
-      - .env
-    restart: always
-
-volumes:
-  data:
-    driver: local
-  s3_data:
-    driver: local
-
-networks:
-  lobe-network:
-    driver: bridge
-
-```
-
-### 发布到生产
-
-#### `.env`
+### `.env`
 
 ```sh
 # 必填，LobeChat 域名，用于 tRPC 调用
@@ -582,7 +428,7 @@ S3_ENABLE_PATH_STYLE=1
 
 ```
 
-#### `docker-compose.yml`
+### `docker-compose.yml`
 
 ```yaml
 services:
@@ -657,7 +503,7 @@ volumes:
 
 ```
 
-#### `minio-bucket-config.json`
+### `minio-bucket-config.json`
 
 ```json
 {
