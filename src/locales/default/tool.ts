@@ -7,4 +7,19 @@ export default {
     images: '图片:',
     prompt: '提示词',
   },
+  search: {
+    createNewSearch: '创建新的搜索记录',
+    emptyResult: '没有搜索到结果，请修改关键词后重试',
+    includedTooltip: '当前搜索结果会进入会话的上下文中',
+    keywords: '关键词：',
+    scoreTooltip: '相关性分数，该分数越高说明与查询关键词越相关',
+    searchBar: {
+      button: '搜索',
+      placeholder: '关键词',
+      tooltip: '将会重新获取搜索结果，并创建一条新的总结消息',
+    },
+    searchEngine: '搜索引擎：',
+    searchResult: '搜索数量：',
+    viewMoreResults: '查看更多 {{results}} 个结果',
+  },
 };
