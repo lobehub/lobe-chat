@@ -9,7 +9,9 @@ export const POST = async (req: Request) => {
   const url = await req.text();
 
   try {
-    const res = await fetch(url, { agent: ssrfAgent(url) });
+    const res = await fetch(url, {
+      agent: ssrfAgent(url, { allowPrivateIPAddress: process.env.PROXY_URL === '' ? false : true }),
+    });
 
     return new Response(await res.arrayBuffer(), { headers: { ...res.headers } });
   } catch (err) {

@@ -7,6 +7,7 @@ import { LANGCHAIN_SUPPORT_TEXT_LIST } from '@/libs/langchain/file';
 import { LangChainLoaderType } from '@/libs/langchain/types';
 
 import { CodeLoader } from './code';
+import { CsVLoader } from './csv';
 import { DocxLoader } from './docx';
 import { LatexLoader } from './latex';
 import { MarkdownLoader } from './markdown';
@@ -57,6 +58,10 @@ export class ChunkingLoader {
 
         case 'text': {
           return await TextLoader(txt);
+        }
+
+        case 'csv': {
+          return await CsVLoader(fileBlob);
         }
 
         default: {
