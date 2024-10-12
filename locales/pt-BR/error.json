@@ -67,6 +67,7 @@
     "OllamaBizError": "Erro de negócio ao solicitar o serviço Ollama, verifique as informações a seguir ou tente novamente",
     "OllamaServiceUnavailable": "O serviço Ollama não está disponível. Verifique se o Ollama está em execução corretamente ou se a configuração de CORS do Ollama está correta",
     "OpenAIBizError": "Erro no serviço OpenAI solicitado. Por favor, verifique as informações abaixo ou tente novamente.",
+    "PermissionDenied": "Desculpe, você não tem permissão para acessar este serviço. Verifique se sua chave tem as permissões necessárias.",
     "PluginApiNotFound": "Desculpe, o API especificado não existe no manifesto do plugin. Verifique se o método de solicitação corresponde ao API do manifesto do plugin",
     "PluginApiParamsError": "Desculpe, a validação dos parâmetros de entrada da solicitação do plugin falhou. Verifique se os parâmetros de entrada correspondem às informações de descrição do API",
     "PluginFailToTransformArguments": "Desculpe, falha ao transformar os argumentos da chamada do plugin. Por favor, tente regerar a mensagem do assistente ou tente novamente com um modelo de IA de chamada de ferramentas mais robusto.",

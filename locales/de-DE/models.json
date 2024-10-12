@@ -458,6 +458,9 @@
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 setzt das Designkonzept von Leichtbau und Effizienz fort."
   },
+  "google/gemma-2-2b-it": {
+    "description": "Das leichtgewichtige Anweisungsoptimierungsmodell von Google."
+  },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 ist eine leichtgewichtige Open-Source-Textmodellreihe von Google."
   },
@@ -589,6 +592,12 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Das Llama 3.1 Sonar Small Online-Modell hat 8B Parameter und unterstützt eine Kontextlänge von etwa 127.000 Markierungen, es wurde speziell für Online-Chat entwickelt und kann verschiedene Textinteraktionen effizient verarbeiten."
   },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 ist darauf ausgelegt, Aufgaben zu bearbeiten, die visuelle und textuelle Daten kombinieren. Es zeigt hervorragende Leistungen bei Aufgaben wie Bildbeschreibung und visuellen Fragen und Antworten und überbrückt die Kluft zwischen Sprachgenerierung und visueller Schlussfolgerung."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 ist darauf ausgelegt, Aufgaben zu bearbeiten, die visuelle und textuelle Daten kombinieren. Es zeigt hervorragende Leistungen bei Aufgaben wie Bildbeschreibung und visuellen Fragen und Antworten und überbrückt die Kluft zwischen Sprachgenerierung und visueller Schlussfolgerung."
+  },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B bietet unvergleichliche Fähigkeiten zur Verarbeitung von Komplexität und ist maßgeschneidert für Projekte mit hohen Anforderungen."
   },
@@ -642,6 +651,9 @@
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) bietet hervorragende Sprachverarbeitungsfähigkeiten und ein ausgezeichnetes Interaktionserlebnis."
+  },
+  "meta-llama/Llama-2-7b-chat-hf": {
+    "description": "Eines der besten Dialogmodelle."
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) ist ein leistungsstarkes Chat-Modell, das komplexe Dialoganforderungen unterstützt."
@@ -811,8 +823,8 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B ist ein spärliches Expertenmodell, das mehrere Parameter nutzt, um die Schlussfolgerungsgeschwindigkeit zu erhöhen und sich für die Verarbeitung mehrsprachiger und Codegenerierungsaufgaben eignet."
   },
-  "openai/gpt-4o-2024-08-06": {
-    "description": "ChatGPT-4o ist ein dynamisches Modell, das in Echtzeit aktualisiert wird, um die neueste Version zu gewährleisten. Es kombiniert starke Sprachverständnis- und Generierungsfähigkeiten und eignet sich für großangelegte Anwendungsszenarien, einschließlich Kundenservice, Bildung und technische Unterstützung."
+  "openai/gpt-4o": {
+    "description": "ChatGPT-4o ist ein dynamisches Modell, das in Echtzeit aktualisiert wird, um die neueste Version zu gewährleisten. Es kombiniert starke Sprachverständnis- und Generierungsfähigkeiten und eignet sich für großangelegte Anwendungsszenarien, einschließlich Kundenservice, Bildung und technischem Support."
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini ist das neueste Modell von OpenAI, das nach GPT-4 Omni veröffentlicht wurde und Text- und Bild-Eingaben unterstützt. Als ihr fortschrittlichstes kleines Modell ist es viel günstiger als andere neueste Modelle und über 60 % günstiger als GPT-3.5 Turbo. Es behält die fortschrittlichste Intelligenz bei und bietet gleichzeitig ein hervorragendes Preis-Leistungs-Verhältnis. GPT-4o mini erzielte 82 % im MMLU-Test und rangiert derzeit in den Chat-Präferenzen über GPT-4."
@@ -862,11 +874,11 @@
   "qwen-vl-chat-v1": {
     "description": "Qwen VL unterstützt flexible Interaktionsmethoden, einschließlich Mehrbild-, Mehrfachfragen und kreativen Fähigkeiten."
   },
-  "qwen-vl-max": {
-    "description": "Qwen ist ein groß angelegtes visuelles Sprachmodell. Im Vergleich zur verbesserten Version hat es die visuelle Schlussfolgerungsfähigkeit und die Befolgung von Anweisungen weiter verbessert und bietet ein höheres Maß an visueller Wahrnehmung und Kognition."
+  "qwen-vl-max-latest": {
+    "description": "Das Tongyi Qianwen Ultra-Scale Visuelle Sprachmodell. Im Vergleich zur verbesserten Version wurden die Fähigkeiten zur visuellen Schlussfolgerung und Befolgung von Anweisungen weiter gesteigert, was ein höheres Niveau an visueller Wahrnehmung und Kognition bietet."
   },
-  "qwen-vl-plus": {
-    "description": "Qwen ist eine verbesserte Version des groß angelegten visuellen Sprachmodells. Es verbessert erheblich die Fähigkeit zur Detailerkennung und Texterkennung und unterstützt Bilder mit über einer Million Pixeln und beliebigen Seitenverhältnissen."
+  "qwen-vl-plus-latest": {
+    "description": "Die verbesserte Version des Tongyi Qianwen, eines großangelegten visuellen Sprachmodells. Deutlich verbesserte Fähigkeiten zur Detailerkennung und Texterkennung, unterstützt Bildauflösungen von über einer Million Pixel und beliebige Seitenverhältnisse."
   },
   "qwen-vl-v1": {
     "description": "Initiiert mit dem Qwen-7B-Sprachmodell, fügt es ein Bildmodell hinzu, das für Bildeingaben mit einer Auflösung von 448 vortrainiert wurde."

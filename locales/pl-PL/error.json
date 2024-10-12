@@ -67,6 +67,7 @@
     "OllamaBizError": "Błąd usługi Ollama, sprawdź poniższe informacje lub spróbuj ponownie",
     "OllamaServiceUnavailable": "Usługa Ollama jest niedostępna. Sprawdź, czy Ollama działa poprawnie, lub czy poprawnie skonfigurowano ustawienia przekraczania domeny Ollama",
     "OpenAIBizError": "Wystąpił błąd usługi OpenAI, proszę sprawdzić poniższe informacje lub spróbować ponownie",
+    "PermissionDenied": "Przykro nam, nie masz uprawnień do dostępu do tej usługi. Proszę sprawdzić, czy Twój klucz ma odpowiednie uprawnienia dostępu.",
     "PluginApiNotFound": "Przepraszamy, w manifestach wtyczki nie istnieje to API. Proszę sprawdź, czy metoda żądania jest zgodna z API w manifestach wtyczki",
     "PluginApiParamsError": "Przepraszamy, walidacja parametrów wejściowych żądanej wtyczki nie powiodła się. Proszę sprawdź, czy parametry wejściowe są zgodne z informacjami opisującymi API",
     "PluginFailToTransformArguments": "Przepraszamy, nie udało się przekształcić argumentów wywołania wtyczki. Spróbuj ponownie wygenerować wiadomość pomocnika lub zmień model AI o większej zdolności do wywoływania narzędzi i spróbuj ponownie",

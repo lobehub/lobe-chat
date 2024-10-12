@@ -458,6 +458,9 @@
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 延续了轻量化与高效的设计理念。"
   },
+  "google/gemma-2-2b-it": {
+    "description": "Google的轻量级指令调优模型"
+  },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 是Google轻量化的开源文本模型系列。"
   },
@@ -589,6 +592,12 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online 模型，具备8B参数，支持约127,000个标记的上下文长度，专为在线聊天设计，能高效处理各种文本交互。"
   },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。"
+  },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B 提供无与伦比的复杂性处理能力，为高要求项目量身定制。"
   },
@@ -642,6 +651,9 @@
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) 提供优秀的语言处理能力和出色的交互体验。"
+  },
+  "meta-llama/Llama-2-7b-chat-hf": {
+    "description": "最佳对话模型之一"
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) 是功能强大的聊天模型，支持复杂的对话需求。"
@@ -752,7 +764,7 @@
     "description": "Mistral (7B) Instruct 以高性能著称，适用于多种语言任务。"
   },
   "mistralai/Mistral-7B-Instruct-v0.2": {
-    "description": "Mistral (7B) Instruct v0.2 提供改进的指令处理能力和更精确的结果。"
+    "description": "Mistral AI的指令调优模型"
   },
   "mistralai/Mistral-7B-Instruct-v0.3": {
     "description": "Mistral (7B) Instruct v0.3 提供高效的计算能力和自然语言理解，适合广泛的应用。"
@@ -811,7 +823,7 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B是一个稀疏专家模型，利用多个参数提高推理速度，适合处理多语言和代码生成任务。"
   },
-  "openai/gpt-4o-2024-08-06": {
+  "openai/gpt-4o": {
     "description": "ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。"
   },
   "openai/gpt-4o-mini": {
@@ -862,10 +874,10 @@
   "qwen-vl-chat-v1": {
     "description": "通义千问VL支持灵活的交互方式，包括多图、多轮问答、创作等能力的模型。"
   },
-  "qwen-vl-max": {
+  "qwen-vl-max-latest": {
     "description": "通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。"
   },
-  "qwen-vl-plus": {
+  "qwen-vl-plus-latest": {
     "description": "通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。"
   },
   "qwen-vl-v1": {
