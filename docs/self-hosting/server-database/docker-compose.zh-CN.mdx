@@ -77,25 +77,20 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
 
 ```sh
 ./setup.sh
+docker compose -p lobechat-starter up -d
 ```
 
 ### 配置 Casdoor
 
-1. 打开 `http://localhost:8000`，访问 Casdoor WebUI，登录管理员账号，默认账号为 admin，密码为 123
+1. 使用 `setup.sh` 脚本启动后，Casdoor WebUI 默认端口为 `8000`，你可以通过 `http://localhost:8000` 访问，默认用户名 `admin`，密码 `123`
 
 2. 大多数配置保持默认即可，你也可以在 `身份认证 -> 应用` 中修改默认配置
 
-3. 如果你希望支持更换用户头像的功能，你需要在 Casdoor 中关联 MinIO S3 服务，以下是一个示例配置：
-
-    
-
 ### 配置 MinIO S3
 
-1. 打开 `http://localhost:9001`，访问 MinIO WebUI，默认管理员账号密码在 `.env` 中配置
+1. 使用 `setup.sh` 脚本启动后，MinIO WebUI 默认端口为 `9001`，你可以通过 `http://localhost:9001` 访问，默认用户名 `YOUR_MINIO_USER`，密码 `YOUR_MINIO_PASSWORD`
 
-2. 创建符合你的 `.env` 文件中 `MINIO_LOBE_BUCKET` 字段的桶，默认为 `lobe`
-
-3. 选择自定义策略，复制并粘贴如下内容（如果你修改了桶名，请自行查找替换）
+2. 大多数配置保持默认即可，如果你希望能允许用户更换头像功能，你需要首先在 `buckets` 中创建一个名为 `casdoor` 的桶，选择自定义策略，复制并粘贴如下内容（如果你修改了桶名，请自行查找替换）
 
    ```json
    {
@@ -106,7 +101,7 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
            "AWS": ["*"]
          },
          "Action": ["s3:GetBucketLocation"],
-         "Resource": ["arn:aws:s3:::lobe"]
+         "Resource": ["arn:aws:s3:::casdoor"]
        },
        {
          "Effect": "Allow",
@@ -114,7 +109,7 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
            "AWS": ["*"]
          },
          "Action": ["s3:ListBucket"],
-         "Resource": ["arn:aws:s3:::lobe"],
+         "Resource": ["arn:aws:s3:::casdoor"],
          "Condition": {
            "StringEquals": {
              "s3:prefix": ["files/*"]
@@ -127,26 +122,30 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
            "AWS": ["*"]
          },
          "Action": ["s3:PutObject", "s3:DeleteObject", "s3:GetObject"],
-         "Resource": ["arn:aws:s3:::lobe/files/**"]
+         "Resource": ["arn:aws:s3:::casdoor/**"]
        }
      ],
      "Version": "2012-10-17"
    }
    ```
 
-4. 创建一个新的访问密钥，将生成的 `Access Key` 和 `Secret Key` 填入你的 `.env` 文件中的 `S3_ACCESS_KEY_ID` 和 `S3_SECRET_ACCESS_KEY` 中
+3. 创建一个新的访问密钥，将生成的 `Access Key` 和 `Secret Key` 存储之
 
-### 重启 LobeChat 服务
+4. 在 Casdoor 的 `身份认证 -> 提供商` 中关联 MinIO S3 服务，以下是一个示例配置：
+
+    ![casdoor](https://github.com/user-attachments/assets/75dc5fa7-904c-4107-9012-dcc942a9efd7)
+
+    其中，客户端 ID、客户端密钥为上一步创建的访问密钥中的 `Access Key` 和 `Secret Key`
+
+5. 在 Casdoor 的 `身份认证 -> 应用` 中，对 `app-built-in` 应用添加提供商，选择 `minio`，保存并退出
+
+6. 你可以在 Casdoor 的 `身份认证 -> 资源` 中，尝试上传文件以测试配置是否正确
+
+### 检查日志
 
 ```sh
-docker compose up -d
+docker logs -f lobe-database
 ```
-
-<Callout typr="warning">
-  此时，请勿使用 `docker compose restart lobe` 来重启，因为这种重启方式不会重新加载环境变量，你的
-  S3 配置将不会生效。
-
-</Callout>
 
 如果你在容器中看到了以下日志，则说明已经启动成功：
 
@@ -168,7 +167,39 @@ docker compose up -d
 
 如果你遇到问题，请尝试查看 Docker 日志和控制台日志，并根据后文的详细指引进行排查。
 
-## 发布到生产
+## 发布到生产（局域网 IP）
+
+下文假设局域网内需要运行 LobeChat 服务的机器 IP 为 `your_server_ip`。
+
+想要通过局域网 IP 访问，你需要首先按照本地启动运行：
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh > setup.sh
+./setup.sh
+docker compose -p lobechat-starter up -d
+```
+
+随后，打开 `http://your_server_ip:8000` 访问 Casdoor WebUI，在 `身份认证 -> 应用` 中添加一行
+
+```
+http://your_server_ip:3210/api/auth/callback/casdoor
+```
+
+接着，你需要修改下载下来的 `docker-compose.yml` 文件，执行一次全文替换，将 `localhost` 替换为 `your_server_ip`，随后重新启动：
+
+```sh
+sed -i 's/localhost/your_server_ip/g' docker-compose.yml
+docker compose -p lobechat-starter up -d
+```
+
+你也可以仿照前文一样，设置 MinIO 以支持更换头像功能，但是请注意将所有字段中的 `localhost` 替换为 `your_server_ip`。
+
+## 发布到生产（公网域名）
+
+<Callout type="info">
+  对于拥有域名的部署，我们推荐使用 [Logto](https://logto.io/) 作为登录鉴权服务。本文剩余部分也将以其为例进行说明。
+
+</Callout>
 
 生产和本地运行存在一个很大的差别，就是在于需要使用域名地址而不是 localhost。我们假设在上述服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
 
@@ -195,8 +226,8 @@ docker compose up -d
 ### 配置文件
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/docker-compose.yml > docker-compose.yml
-curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/.env.zh-CN.example > .env
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/logto/docker-compose.yml > docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/logto/.env.zh-CN.example > .env
 ```
 
 配置文件包括 `.env` 和 `docker-compose.yml` 两个文件，其中 `.env` 文件用于配置 LobeChat 的环境变量，`docker-compose.yml` 文件用于配置 Postgres、MinIO 和 Logto 服务。
@@ -339,7 +370,7 @@ docker compose up -d # 重新启动
 
 ## 附录
 
-为方便一键复制，在此汇总配置服务端数据库所需要的示例配置文件：
+为方便一键复制，在此汇总域名方式下生产部署配置服务端数据库所需要的示例配置文件（对于本地快速启动、局域网 IP 访问等场景，请直接使用 `setup.sh` 脚本生成后自行修改）：
 
 ### 本地部署
 
