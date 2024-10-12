@@ -15,17 +15,6 @@ const provider = {
     clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID || authEnv.MICROSOFT_ENTRA_ID_ID,
     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET || authEnv.MICROSOFT_ENTRA_ID_SECRET,
     tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID || authEnv.MICROSOFT_ENTRA_ID_TENANT_ID,
-    // Remove end
-    // TODO(NextAuth): map unique user id to `providerAccountId` field
-    // profile(profile) {
-    //   return {
-    //     email: profile.email,
-    //     image: profile.picture,
-    //     name: profile.name,
-    //     providerAccountId: profile.user_id,
-    //     id: profile.user_id,
-    //   };
-    // },
   }),
 };
 
