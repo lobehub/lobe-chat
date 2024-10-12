@@ -215,7 +215,10 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           const [prod, useForDebug] = response.tee();
 
           if (debug?.chatCompletion?.()) {
-            debugStream(useForDebug.toReadableStream()).catch(console.error);
+            const useForDebugStream =
+              useForDebug instanceof ReadableStream ? useForDebug : useForDebug.toReadableStream();
+
+            debugStream(useForDebugStream).catch(console.error);
           }
 
           return StreamingResponse(OpenAIStream(prod, streamOptions), {
