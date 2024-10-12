@@ -1,23 +1,26 @@
-import { getAuth } from '@clerk/nextjs/server';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
 import { ChatErrorType } from '@/types/fetch';
+import { createErrorResponse } from '@/utils/errorResponse';
+import { getJWTPayload } from '@/utils/server/jwt';
 
 import { RequestHandler, checkAuth } from './index';
-import { checkAuthMethod, getJWTPayload } from './utils';
+import { checkAuthMethod } from './utils';
 
 vi.mock('@clerk/nextjs/server', () => ({
   getAuth: vi.fn(),
 }));
 
-vi.mock('@/app/(backend)/api/errorResponse', () => ({
+vi.mock('@/utils/errorResponse', () => ({
   createErrorResponse: vi.fn(),
 }));
 
 vi.mock('./utils', () => ({
   checkAuthMethod: vi.fn(),
+}));
+
+vi.mock('@/utils/server/jwt', () => ({
   getJWTPayload: vi.fn(),
 }));
 

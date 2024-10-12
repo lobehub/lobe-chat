@@ -2,6 +2,131 @@
 
 # Changelog
 
+### [Version 1.21.14](https://github.com/lobehub/lobe-chat/compare/v1.21.13...v1.21.14)
+
+<sup>Released on **2024-10-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix artifacts render markdown.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix artifacts render markdown, closes [#4327](https://github.com/lobehub/lobe-chat/issues/4327) ([6bb6ea6](https://github.com/lobehub/lobe-chat/commit/6bb6ea6))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.13](https://github.com/lobehub/lobe-chat/compare/v1.21.12...v1.21.13)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor agent runtime implement of stream and ZHIPU provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor agent runtime implement of stream and ZHIPU provider, closes [#4323](https://github.com/lobehub/lobe-chat/issues/4323) ([59661a1](https://github.com/lobehub/lobe-chat/commit/59661a1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.12](https://github.com/lobehub/lobe-chat/compare/v1.21.11...v1.21.12)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the jwt code.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the jwt code, closes [#4322](https://github.com/lobehub/lobe-chat/issues/4322) ([b7258b9](https://github.com/lobehub/lobe-chat/commit/b7258b9))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.11](https://github.com/lobehub/lobe-chat/compare/v1.21.10...v1.21.11)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the backend code for better organization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the backend code for better organization, closes [#4287](https://github.com/lobehub/lobe-chat/issues/4287) ([9a369ac](https://github.com/lobehub/lobe-chat/commit/9a369ac))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.21.10](https://github.com/lobehub/lobe-chat/compare/v1.21.9...v1.21.10)
+
+<sup>Released on **2024-10-11**</sup>
+
+#### 💄 Styles
+
+- **misc**: Updata gpt-4o model info.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Updata gpt-4o model info, closes [#4318](https://github.com/lobehub/lobe-chat/issues/4318) ([fa27ddf](https://github.com/lobehub/lobe-chat/commit/fa27ddf))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.21.9](https://github.com/lobehub/lobe-chat/compare/v1.21.8...v1.21.9)
 
 <sup>Released on **2024-10-10**</sup>
