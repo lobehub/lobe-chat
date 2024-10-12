@@ -458,6 +458,9 @@
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 poursuit le concept de conception légère et efficace."
   },
+  "google/gemma-2-2b-it": {
+    "description": "Modèle d'optimisation des instructions léger de Google."
+  },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 est une série de modèles de texte open source allégés de Google."
   },
@@ -589,6 +592,12 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Le modèle Llama 3.1 Sonar Small Online, avec 8B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, conçu pour le chat en ligne, capable de traiter efficacement diverses interactions textuelles."
   },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 est conçu pour traiter des tâches combinant des données visuelles et textuelles. Il excelle dans des tâches telles que la description d'images et les questions-réponses visuelles, comblant le fossé entre la génération de langage et le raisonnement visuel."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 est conçu pour traiter des tâches combinant des données visuelles et textuelles. Il excelle dans des tâches telles que la description d'images et les questions-réponses visuelles, comblant le fossé entre la génération de langage et le raisonnement visuel."
+  },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B offre une capacité de traitement de complexité inégalée, sur mesure pour des projets exigeants."
   },
@@ -642,6 +651,9 @@
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) offre d'excellentes capacités de traitement du langage et une expérience interactive exceptionnelle."
+  },
+  "meta-llama/Llama-2-7b-chat-hf": {
+    "description": "L'un des meilleurs modèles de conversation."
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) est un modèle de chat puissant, prenant en charge des besoins de dialogue complexes."
@@ -811,7 +823,7 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B est un modèle d'expert épars, utilisant plusieurs paramètres pour améliorer la vitesse de raisonnement, adapté au traitement de tâches multilingues et de génération de code."
   },
-  "openai/gpt-4o-2024-08-06": {
+  "openai/gpt-4o": {
     "description": "ChatGPT-4o est un modèle dynamique, mis à jour en temps réel pour rester à jour avec la dernière version. Il combine une compréhension et une génération de langage puissantes, adapté à des scénarios d'application à grande échelle, y compris le service client, l'éducation et le support technique."
   },
   "openai/gpt-4o-mini": {
@@ -862,11 +874,11 @@
   "qwen-vl-chat-v1": {
     "description": "Qwen VL prend en charge des modes d'interaction flexibles, y compris la capacité de poser des questions à plusieurs images, des dialogues multi-tours, et plus encore."
   },
-  "qwen-vl-max": {
-    "description": "Qwen est un modèle de langage visuel à grande échelle. Par rapport à la version améliorée, elle améliore encore la capacité de raisonnement visuel et de suivi des instructions, offrant un niveau de perception et de cognition visuelle plus élevé."
+  "qwen-vl-max-latest": {
+    "description": "Modèle de langage visuel à très grande échelle Tongyi Qianwen. Par rapport à la version améliorée, il améliore encore les capacités de raisonnement visuel et de suivi des instructions, offrant un niveau de perception visuelle et de cognition plus élevé."
   },
-  "qwen-vl-plus": {
-    "description": "Qwen est une version améliorée du modèle de langage visuel à grande échelle. Elle améliore considérablement la capacité de reconnaissance des détails et de reconnaissance de texte, prenant en charge des images avec une résolution de plus d'un million de pixels et des spécifications de rapport d'aspect arbitraire."
+  "qwen-vl-plus-latest": {
+    "description": "Version améliorée du modèle de langage visuel à grande échelle Tongyi Qianwen. Amélioration significative des capacités de reconnaissance des détails et de reconnaissance de texte, prenant en charge des résolutions d'image de plus d'un million de pixels et des rapports d'aspect de n'importe quelle taille."
   },
   "qwen-vl-v1": {
     "description": "Initialisé avec le modèle de langage Qwen-7B, ajoutant un modèle d'image, un modèle pré-entraîné avec une résolution d'entrée d'image de 448."

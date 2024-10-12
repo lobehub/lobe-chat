@@ -458,6 +458,9 @@
   "google/gemma-2-27b-it": {
     "description": "Gemma 2는 경량화와 효율적인 설계를 이어갑니다."
   },
+  "google/gemma-2-2b-it": {
+    "description": "Google의 경량 지시 조정 모델"
+  },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2는 Google의 경량화된 오픈 소스 텍스트 모델 시리즈입니다."
   },
@@ -589,6 +592,12 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online 모델은 8B 매개변수를 갖추고 있으며, 약 127,000개의 토큰의 컨텍스트 길이를 지원하여 온라인 채팅을 위해 설계되었습니다."
   },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2는 시각 및 텍스트 데이터를 결합한 작업을 처리하기 위해 설계되었습니다. 이미지 설명 및 시각적 질문 응답과 같은 작업에서 뛰어난 성능을 보이며, 언어 생성과 시각적 추론 간의 간극을 넘습니다."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2는 시각 및 텍스트 데이터를 결합한 작업을 처리하기 위해 설계되었습니다. 이미지 설명 및 시각적 질문 응답과 같은 작업에서 뛰어난 성능을 보이며, 언어 생성과 시각적 추론 간의 간극을 넘습니다."
+  },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B는 비할 데 없는 복잡성 처리 능력을 제공하며, 높은 요구 사항을 가진 프로젝트에 맞춤형으로 설계되었습니다."
   },
@@ -642,6 +651,9 @@
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B)는 뛰어난 언어 처리 능력과 우수한 상호작용 경험을 제공합니다."
+  },
+  "meta-llama/Llama-2-7b-chat-hf": {
+    "description": "최고의 대화 모델 중 하나"
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B)는 강력한 채팅 모델로, 복잡한 대화 요구를 지원합니다."
@@ -811,7 +823,7 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B는 희소 전문가 모델로, 여러 매개변수를 활용하여 추론 속도를 높이며, 다국어 및 코드 생성 작업 처리에 적합합니다."
   },
-  "openai/gpt-4o-2024-08-06": {
+  "openai/gpt-4o": {
     "description": "ChatGPT-4o는 동적 모델로, 최신 버전을 유지하기 위해 실시간으로 업데이트됩니다. 강력한 언어 이해 및 생성 능력을 결합하여 고객 서비스, 교육 및 기술 지원을 포함한 대규모 응용 프로그램에 적합합니다."
   },
   "openai/gpt-4o-mini": {
@@ -862,11 +874,11 @@
   "qwen-vl-chat-v1": {
     "description": "통의천문 VL은 다중 이미지, 다중 회차 질문 응답, 창작 등 유연한 상호작용 방식을 지원하는 모델입니다."
   },
-  "qwen-vl-max": {
-    "description": "통의천문 초대규모 시각 언어 모델로, 강화 버전보다 시각적 추론 능력과 지시 준수 능력을 다시 향상시켜 더 높은 시각적 인식 및 인지 수준을 제공합니다."
+  "qwen-vl-max-latest": {
+    "description": "통의천문 초대규모 비주얼 언어 모델. 강화판에 비해 시각적 추론 능력과 지시 준수 능력을 다시 한 번 향상시켜, 더 높은 시각적 인식과 인지 수준을 제공합니다."
   },
-  "qwen-vl-plus": {
-    "description": "통의천문 대규모 시각 언어 모델의 강화 버전으로, 세부 사항 인식 능력과 문자 인식 능력을 크게 향상시켰으며, 백만 화소 이상의 해상도와 임의의 가로 세로 비율의 이미지를 지원합니다."
+  "qwen-vl-plus-latest": {
+    "description": "통의천문 대규모 비주얼 언어 모델 강화판. 세부 사항 인식 능력과 문자 인식 능력을 크게 향상시켰으며, 백만 화소 이상의 해상도와 임의의 가로 세로 비율의 이미지를 지원합니다."
   },
   "qwen-vl-v1": {
     "description": "Qwen-7B 언어 모델로 초기화된 모델로, 이미지 모델을 추가하여 이미지 입력 해상도가 448인 사전 훈련 모델입니다."
