@@ -111,7 +111,9 @@ export class S3 {
       Key: key,
     });
 
-    return getSignedUrl(this.client, command, { expiresIn: expiresIn ?? 7200 });
+    return getSignedUrl(this.client, command, {
+      expiresIn: expiresIn ?? fileEnv.S3_PREVIEW_URL_EXPIRE_IN,
+    });
   }
 
   public async uploadContent(path: string, content: string) {
