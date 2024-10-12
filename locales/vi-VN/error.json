@@ -67,6 +67,7 @@
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem Ollama có hoạt động bình thường không, hoặc xem xét cấu hình chéo đúng của Ollama",
     "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
+    "PermissionDenied": "Xin lỗi, bạn không có quyền truy cập dịch vụ này, vui lòng kiểm tra xem khóa của bạn có quyền truy cập hay không",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
     "PluginFailToTransformArguments": "Xin lỗi, không thể chuyển đổi đối số của plugin, vui lòng thử tạo lại tin nhắn trợ giúp hoặc thay đổi mô hình AI có khả năng gọi Tools mạnh hơn và thử lại",

@@ -67,6 +67,7 @@
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
     "OllamaServiceUnavailable": "Le service Ollama n'est pas disponible. Veuillez vérifier si Ollama fonctionne correctement ou si la configuration de la communication inter-domaines d'Ollama est correcte.",
     "OpenAIBizError": "Erreur de service OpenAI. Veuillez vérifier les informations suivantes ou réessayer.",
+    "PermissionDenied": "Désolé, vous n'avez pas la permission d'accéder à ce service. Veuillez vérifier si votre clé a les droits d'accès.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
     "PluginFailToTransformArguments": "Désolé, échec de la transformation des arguments de l'appel du plugin. Veuillez essayer de régénérer le message d'assistance ou de changer de modèle d'IA avec une capacité d'appel d'outils plus puissante, puis réessayer.",
