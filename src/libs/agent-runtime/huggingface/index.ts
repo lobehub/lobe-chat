@@ -27,7 +27,14 @@ export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
         model: payload.model,
         stream: true,
         temperature: payload.temperature,
-        top_p: payload.top_p,
+        //  `top_p` must be > 0.0 and < 1.0
+        top_p: payload?.top_p
+          ? payload?.top_p >= 1
+            ? 1
+            : payload?.top_p <= 0
+              ? 0.01
+              : payload?.top_p
+          : undefined,
       });
 
       return convertIterableToStream(hfRes);

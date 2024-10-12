@@ -3,24 +3,10 @@ import { ModelProviderCard } from '@/types/llm';
 const HuggingFace: ModelProviderCard = {
   chatModels: [
     {
-      description: 'Google的轻量级指令调优模型',
-      displayName: 'Gemma 2B Instruct',
-      enabled: true,
-      id: 'google/gemma-2-2b-it',
-      tokens: 8192,
-    },
-    {
       description: 'Mistral AI的指令调优模型',
       displayName: 'Mistral 7B Instruct v0.2',
       enabled: true,
       id: 'mistralai/Mistral-7B-Instruct-v0.2',
-      tokens: 8192,
-    },
-    {
-      description: '高质量多语言聊天模型,具有较大上下文长度',
-      displayName: 'Meta Llama 3.1 8B Instruct',
-      enabled: true,
-      id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       tokens: 8192,
     },
     {
@@ -31,10 +17,23 @@ const HuggingFace: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      description: '高质量多语言聊天模型,具有较大上下文长度',
+      displayName: 'Meta Llama 3.1 8B Instruct',
+      enabled: true,
+      id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+      tokens: 8192,
+    },
+    {
       description: '最佳对话模型之一',
       displayName: 'Llama 2 7B Chat',
       id: 'meta-llama/Llama-2-7b-chat-hf',
       tokens: 4096,
+    },
+    {
+      description: 'Google的轻量级指令调优模型',
+      displayName: 'Gemma 2B Instruct',
+      id: 'google/gemma-2-2b-it',
+      tokens: 8192,
     },
   ],
   checkModel: 'mistralai/Mistral-7B-Instruct-v0.2',
