@@ -1,4 +1,3 @@
-import { readableFromAsyncIterable } from 'ai';
 import { ChatCompletionContentPartText } from 'ai/prompts';
 import OpenAI from 'openai';
 import { ChatCompletionContentPart } from 'openai/resources/index.mjs';
@@ -9,7 +8,7 @@ import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
   StreamToolCallChunkData,
-  chatStreamable,
+  convertIterableToStream,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
@@ -86,7 +85,7 @@ export const QwenAIStream = (
   callbacks?: ChatStreamCallbacks,
 ) => {
   const readableStream =
-    stream instanceof ReadableStream ? stream : readableFromAsyncIterable(chatStreamable(stream));
+    stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
   return readableStream
     .pipeThrough(createSSEProtocolTransformer(transformQwenStream))

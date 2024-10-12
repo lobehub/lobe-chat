@@ -88,7 +88,7 @@ docker compose up -d
    - `Redirect URI` should be `http://localhost:3210/api/auth/callback/logto`
    - `Post sign-out redirect URI` should be `http://localhost:3210/`
 
-3. Obtain the `App ID` and `App secrets`, and fill them into your `.env` file corresponding to `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
+3. Obtain the `App ID` and `App secrets`, and fill them into your `.env` file corresponding to `AUTH_LOGTO_ID` and `AUTH_LOGTO_SECRET`.
 
 ### Configure MinIO S3
 
@@ -258,9 +258,9 @@ You need to first access the WebUI for configuration:
      src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
    />
 
-5. Obtain `App ID` and `App secrets`, and fill them into your `.env` file under `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET`.
+5. Obtain `App ID` and `App secrets`, and fill them into your `.env` file under `AUTH_LOGTO_ID` and `AUTH_LOGTO_SECRET`.
 
-6. Set `LOGTO_ISSUER` in your `.env` file to `https://lobe-auth-api.example.com/oidc`.
+6. Set `AUTH_LOGTO_ISSUER` in your `.env` file to `https://lobe-auth-api.example.com/oidc`.
 
    <Image
      alt="Configure environment variables"
@@ -349,8 +349,8 @@ To facilitate one-click copying, here are the example configuration files needed
 
 ```sh
 # Logto secret
-LOGTO_CLIENT_ID=
-LOGTO_CLIENT_SECRET=
+AUTH_LOGTO_ID=
+AUTH_LOGTO_SECRET=
 
 # MinIO S3 configuration
 MINIO_ROOT_USER=YOUR_MINIO_USER
@@ -467,7 +467,7 @@ services:
       - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
       - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
       - 'NEXTAUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-      - 'LOGTO_ISSUER=http://localhost:${LOGTO_PORT}/oidc'
+      - 'AUTH_LOGTO_ISSUER=http://localhost:${LOGTO_PORT}/oidc'
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
       - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
@@ -519,9 +519,9 @@ NEXTAUTH_URL=https://lobe.example.com/api/auth
 
 # NextAuth providers configuration (example using Logto)
 # For other providers, see: https://lobehub.com/docs/self-hosting/environment-variables/auth
-LOGTO_CLIENT_ID=YOUR_LOGTO_CLIENT_ID
-LOGTO_CLIENT_SECRET=YOUR_LOGTO_CLIENT_SECRET
-LOGTO_ISSUER=https://lobe-auth-api.example.com/oidc
+AUTH_LOGTO_ID=YOUR_LOGTO_CLIENT_ID
+AUTH_LOGTO_SECRET=YOUR_LOGTO_CLIENT_SECRET
+AUTH_LOGTO_ISSUER=https://lobe-auth-api.example.com/oidc
 
 # Proxy settings (if needed, e.g., when using GitHub as an auth provider)
 # HTTP_PROXY=http://localhost:7890

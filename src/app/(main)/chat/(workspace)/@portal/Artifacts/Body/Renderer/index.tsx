@@ -1,3 +1,4 @@
+import { Markdown } from '@lobehub/ui';
 import dynamic from 'next/dynamic';
 import { memo } from 'react';
 
@@ -14,6 +15,10 @@ const Renderer = memo<{ content: string; type?: string }>(({ content, type }) =>
 
     case 'image/svg+xml': {
       return <SVGRender content={content} />;
+    }
+
+    case 'text/markdown': {
+      return <Markdown>{content}</Markdown>;
     }
 
     default: {
