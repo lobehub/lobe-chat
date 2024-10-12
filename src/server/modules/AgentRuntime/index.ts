@@ -225,6 +225,16 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURL };
     }
+
+    case ModelProvider.HuggingFace: {
+      const { HUGGINGFACE_PROXY_URL, HUGGINGFACE_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || HUGGINGFACE_API_KEY);
+      const baseURL = payload?.endpoint || HUGGINGFACE_PROXY_URL;
+
+      return { apiKey, baseURL };
+    }
+
     case ModelProvider.Upstage: {
       const { UPSTAGE_API_KEY } = getLLMConfig();
 

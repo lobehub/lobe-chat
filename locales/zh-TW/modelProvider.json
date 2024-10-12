@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "填入你的 HuggingFace Token，點擊 [這裡](https://huggingface.co/settings/tokens) 創建",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace Token"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "測試代理地址是否正確填寫",

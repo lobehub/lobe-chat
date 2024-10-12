@@ -67,6 +67,7 @@
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "OllamaServiceUnavailable": "Ollama servisi kullanılamıyor, lütfen Ollama'nın düzgün çalışıp çalışmadığını kontrol edin veya Ollama'nın çapraz kaynak yapılandırmasının doğru olup olmadığını kontrol edin",
     "OpenAIBizError": "OpenAI hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
+    "PermissionDenied": "Üzgünüm, bu hizmete erişim izniniz yok. Lütfen anahtarınızın erişim iznine sahip olup olmadığını kontrol edin.",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
     "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",
     "PluginFailToTransformArguments": "Özür dilerim, eklenti çağrı parametrelerini dönüştürme başarısız oldu, lütfen yardımcı mesajı yeniden oluşturmayı deneyin veya daha güçlü bir AI modeli olan Tools Calling'i değiştirip tekrar deneyin",
