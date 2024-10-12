@@ -1,26 +1,39 @@
 import OpenAI from 'openai';
-import { SignJWT } from 'jose';
+import CryptoJS from 'crypto-js';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
+// Helper function for base64 URL encoding
+const base64UrlEncode = (obj: object) => {
+  return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(JSON.stringify(obj)))
+    .replaceAll('=', '')
+    .replaceAll('+', '-')
+    .replaceAll('/', '_');
+};
+
 // Function to generate JWT token
-const generateJwtTokenSenseNova = async (
-  accessKeyID: string = '',
-  accessKeySecret: string = '',
-  expiredAfter: number = 1800,
-  notBefore: number = 5
-) => {
+const generateJwtTokenSenseNova = (accessKeyID: string = '', accessKeySecret: string = '', expiredAfter: number = 1800, notBefore: number = 5) => {
+  const headers = {
+    alg: 'HS256',
+    typ: 'JWT',
+  };
+
   const payload = {
     exp: Math.floor(Date.now() / 1000) + expiredAfter,
     iss: accessKeyID,
     nbf: Math.floor(Date.now() / 1000) - notBefore,
   };
 
-  // Create the JWT using the jose library
-  const apiKey = await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-    .sign(new TextEncoder().encode(accessKeySecret));
+  const data = `${base64UrlEncode(headers)}.${base64UrlEncode(payload)}`;
+
+  const signature = CryptoJS.HmacSHA256(data, accessKeySecret)
+    .toString(CryptoJS.enc.Base64)
+    .replaceAll('=', '')
+    .replaceAll('+', '-')
+    .replaceAll('/', '_');
+
+  const apiKey = `${data}.${signature}`;
 
   return apiKey;
 };
@@ -50,8 +63,8 @@ export const LobeSenseNovaAI = (() => {
 
   // Use Object.assign to add the generateJWTToken method
   return Object.assign(factory, {
-    generateJWTToken: async (ak: string, sk: string, expiredAfter: number = 1800, notBefore: number = 5) => {
-      return await generateJwtTokenSenseNova(ak, sk, expiredAfter, notBefore);
+    generateJWTToken: (ak: string, sk: string, expiredAfter: number = 1800, notBefore: number = 5) => {
+      return generateJwtTokenSenseNova(ak, sk, expiredAfter, notBefore);
     },
   });
 })();
