@@ -64,7 +64,7 @@ const SiliconCloud: ModelProviderCard = {
         input: 4.13,
         output: 4.13,
       },
-      tokens: 32_768,
+      tokens: 131_072,
     },
     {
       description: 'Qwen2.5-Math 专注于数学领域的问题求解，为高难度题提供专业解答。',
