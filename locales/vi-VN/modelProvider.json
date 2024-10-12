@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Nhập mã thông báo HuggingFace của bạn, nhấp vào [đây](https://huggingface.co/settings/tokens) để tạo",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Mã thông báo HuggingFace"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Kiểm tra địa chỉ proxy có được nhập chính xác không",

@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "당신의 HuggingFace 토큰을 입력하세요. [여기](https://huggingface.co/settings/tokens)를 클릭하여 생성하세요.",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace 토큰"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",

@@ -11,6 +11,7 @@ import FireworksAIProvider from './fireworksai';
 import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
+import HuggingFaceProvider from './huggingface';
 import HunyuanProvider from './hunyuan';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
@@ -50,6 +51,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   FireworksAIProvider.chatModels,
   PerplexityProvider.chatModels,
   AnthropicProvider.chatModels,
+  HuggingFaceProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
@@ -73,6 +75,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BedrockProvider,
   GoogleProvider,
   DeepSeekProvider,
+  HuggingFaceProvider,
   OpenRouterProvider,
   GithubProvider,
   NovitaProvider,
@@ -119,6 +122,7 @@ export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
+export { default as HuggingFaceProviderCard } from './huggingface';
 export { default as HunyuanProviderCard } from './hunyuan';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';

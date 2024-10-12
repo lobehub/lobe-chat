@@ -30,6 +30,9 @@
   "groq": {
     "description": "Il motore di inferenza LPU di Groq ha mostrato prestazioni eccezionali nei recenti benchmark indipendenti sui modelli di linguaggio di grandi dimensioni (LLM), ridefinendo gli standard delle soluzioni AI con la sua incredibile velocità ed efficienza. Groq rappresenta una velocità di inferenza istantanea, mostrando buone prestazioni nelle implementazioni basate su cloud."
   },
+  "huggingface": {
+    "description": "L'API di Inferenza di HuggingFace offre un modo rapido e gratuito per esplorare migliaia di modelli per una varietà di compiti. Che tu stia prototipando una nuova applicazione o cercando di sperimentare le funzionalità del machine learning, questa API ti consente di accedere immediatamente a modelli ad alte prestazioni in diversi ambiti."
+  },
   "hunyuan": {
     "description": "Un modello di linguaggio sviluppato da Tencent, dotato di potenti capacità di creazione in cinese, abilità di ragionamento logico in contesti complessi e capacità affidabili di esecuzione dei compiti."
   },

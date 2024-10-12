@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "HuggingFace Token'inizi buraya girin, [buraya](https://huggingface.co/settings/tokens) tıklayarak oluşturun",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace Token"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Proxy adresinin doğru girilip girilmediğini test edin",

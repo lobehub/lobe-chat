@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "أدخل رمز HuggingFace الخاص بك، انقر [هنا](https://huggingface.co/settings/tokens) لإنشاء واحد",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "رمز HuggingFace"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",

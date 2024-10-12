@@ -30,6 +30,9 @@
   "groq": {
     "description": "Groq'un LPU çıkarım motoru, en son bağımsız büyük dil modeli (LLM) benchmark testlerinde mükemmel performans sergilemekte ve olağanüstü hız ve verimliliği ile yapay zeka çözümlerinin standartlarını yeniden tanımlamaktadır. Groq, bulut tabanlı dağıtımlarda iyi bir performans sergileyen anlık çıkarım hızının temsilcisidir."
   },
+  "huggingface": {
+    "description": "HuggingFace Inference API, binlerce modeli keşfetmenin hızlı ve ücretsiz bir yolunu sunar, çeşitli görevler için uygundur. Yeni uygulamalar için prototip oluşturuyor ya da makine öğreniminin yeteneklerini deniyorsanız, bu API size birçok alanda yüksek performanslı modellere anında erişim sağlar."
+  },
   "hunyuan": {
     "description": "Tencent tarafından geliştirilen büyük bir dil modeli, güçlü Çince yaratım yeteneklerine, karmaşık bağlamlarda mantıksal akıl yürütme yeteneğine ve güvenilir görev yerine getirme yeteneğine sahiptir."
   },

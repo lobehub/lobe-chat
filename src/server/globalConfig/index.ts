@@ -9,6 +9,7 @@ import {
   GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HuggingFaceProviderCard,
   HunyuanProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
@@ -102,6 +103,9 @@ export const getServerGlobalConfig = () => {
     FIREWORKSAI_MODEL_LIST,
 
     ENABLED_WENXIN,
+
+    ENABLED_HUGGINGFACE,
+    HUGGINGFACE_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -170,6 +174,14 @@ export const getServerGlobalConfig = () => {
           modelString: GROQ_MODEL_LIST,
         }),
       },
+      huggingface: {
+        enabled: ENABLED_HUGGINGFACE,
+        enabledModels: extractEnabledModels(HUGGINGFACE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: HuggingFaceProviderCard.chatModels,
+          modelString: HUGGINGFACE_MODEL_LIST,
+        }),
+      },
       hunyuan: {
         enabled: ENABLED_HUNYUAN,
         enabledModels: extractEnabledModels(HUNYUAN_MODEL_LIST),
@@ -206,7 +218,6 @@ export const getServerGlobalConfig = () => {
           modelString: OPENAI_MODEL_LIST,
         }),
       },
-
       openrouter: {
         enabled: ENABLED_OPENROUTER,
         enabledModels: extractEnabledModels(OPENROUTER_MODEL_LIST),

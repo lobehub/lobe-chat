@@ -67,6 +67,7 @@
     "OllamaBizError": "Fout bij het aanroepen van de Ollama-service, controleer de onderstaande informatie en probeer opnieuw",
     "OllamaServiceUnavailable": "Ollama-service niet beschikbaar. Controleer of Ollama correct werkt en of de cross-origin configuratie van Ollama juist is ingesteld.",
     "OpenAIBizError": "Er is een fout opgetreden bij het aanvragen van de OpenAI-service. Controleer de volgende informatie of probeer het opnieuw.",
+    "PermissionDenied": "Het spijt ons, je hebt geen toestemming om deze service te gebruiken. Controleer of je sleutel de juiste toegangsrechten heeft.",
     "PluginApiNotFound": "Sorry, de API van de plug-inbeschrijvingslijst bestaat niet. Controleer of uw verzoeksmethode overeenkomt met de plug-inbeschrijvingslijst API",
     "PluginApiParamsError": "Sorry, de validatie van de invoerparameters van de plug-in is mislukt. Controleer of de invoerparameters overeenkomen met de API-beschrijving",
     "PluginFailToTransformArguments": "Sorry, the plugin failed to parse the arguments. Please try regenerating the assistant message or retry with a more powerful AI model with Tools Calling capability.",

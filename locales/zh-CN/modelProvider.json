@@ -53,9 +53,16 @@
   },
   "github": {
     "personalAccessToken": {
-      "desc": "填入你的 Github PAT，点击[这里](https://github.com/settings/tokens) 创建",
+      "desc": "填入你的 Github PAT，点击 [这里](https://github.com/settings/tokens) 创建",
       "placeholder": "ghp_xxxxxx",
       "title": "Github PAT"
+    }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "填入你的 HuggingFace Token，点击 [这里](https://huggingface.co/settings/tokens) 创建",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace Token"
     }
   },
   "ollama": {
