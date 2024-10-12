@@ -123,7 +123,7 @@ export const transformOpenAIStream = (
   }
 };
 
-interface OpenAIStreamOptions {
+export interface OpenAIStreamOptions {
   bizErrorTypeTransformer?: (error: {
     message: string;
     name: string;

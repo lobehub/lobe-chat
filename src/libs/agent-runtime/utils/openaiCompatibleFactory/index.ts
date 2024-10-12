@@ -23,7 +23,7 @@ import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
 import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
-import { OpenAIStream } from '../streams';
+import { OpenAIStream, OpenAIStreamOptions } from '../streams';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 const CHAT_MODELS_BLOCK_LIST = [
@@ -44,7 +44,7 @@ export interface CustomClientOptions<T extends Record<string, any> = any> {
   createChatCompletionStream?: (
     client: any,
     payload: ChatStreamPayload,
-    this,
+    instance: any,
   ) => ReadableStream<any>;
   createClient?: (options: ConstructorOptions<T>) => any;
 }
@@ -60,7 +60,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       payload: ChatStreamPayload,
       options: ConstructorOptions<T>,
     ) => OpenAI.ChatCompletionCreateParamsStreaming;
-    handleStreamBizErrorType: (error: {
+    handleStreamBizErrorType?: (error: {
       message: string;
       name: string;
     }) => ILobeAgentRuntimeErrorType | undefined;
@@ -188,6 +188,12 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         const messages = await convertOpenAIMessages(postPayload.messages);
 
         let response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
+
+        const streamOptions: OpenAIStreamOptions = {
+          bizErrorTypeTransformer: chatCompletion?.handleStreamBizErrorType,
+          callbacks: options?.callback,
+          provider,
+        };
         if (customClient?.createChatCompletionStream) {
           response = customClient.createChatCompletionStream(this.client, payload, this) as any;
         } else {
@@ -204,6 +210,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             },
           );
         }
+
         if (postPayload.stream) {
           const [prod, useForDebug] = response.tee();
 
@@ -211,7 +218,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
             debugStream(useForDebug.toReadableStream()).catch(console.error);
           }
 
-          return StreamingResponse(OpenAIStream(prod, { callbacks: options?.callback }), {
+          return StreamingResponse(OpenAIStream(prod, streamOptions), {
             headers: options?.headers,
           });
         }
@@ -224,16 +231,9 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
         const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
-        return StreamingResponse(
-          OpenAIStream(stream, {
-            bizErrorTypeTransformer: handleStreamBizErrorType,
-            callbacks: options?.callback,
-            provider,
-          }),
-          {
-            headers: options?.headers,
-          },
-        );
+        return StreamingResponse(OpenAIStream(stream, streamOptions), {
+          headers: options?.headers,
+        });
       } catch (error) {
         throw this.handleError(error);
       }
