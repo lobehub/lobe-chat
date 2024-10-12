@@ -202,6 +202,11 @@ export const getAuthConfig = () => {
       LOGTO_ISSUER: z.string().optional(),
       LOGTO_WEBHOOK_SIGNING_KEY: z.string().optional(),
 
+      // Microsoft Entra ID
+      MICROSOFT_ENTRA_ID_ID: z.string().optional(),
+      MICROSOFT_ENTRA_ID_SECRET: z.string().optional(),
+      MICROSOFT_ENTRA_ID_TENANT_ID: z.string().optional(),
+
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
     },
@@ -265,6 +270,13 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
+
+      // Microsoft Entra ID
+      MICROSOFT_ENTRA_ID_ID: process.env.MICROSOFT_ENTRA_ID_ID || process.env.AZURE_AD_CLIENT_ID,
+      MICROSOFT_ENTRA_ID_SECRET:
+        process.env.MICROSOFT_ENTRA_ID_SECRET || process.env.AZURE_AD_CLIENT_SECRET,
+      MICROSOFT_ENTRA_ID_TENANT_ID:
+        process.env.MICROSOFT_ENTRA_ID_TENANT_ID || process.env.AZURE_AD_TENANT_ID,
     },
   });
 };
