@@ -20,7 +20,11 @@ tags:
 </div>
 
 <Callout type="info">
-  This article assumes you are familiar with the basic principles and processes of deploying the LobeChat server database version (hereinafter referred to as DB version), so it only includes core environment variable configurations. If you are not familiar with the deployment principles of LobeChat DB version, please refer to [Deploying with a Server Database](/docs/self-hosting/server-database).
+  This article assumes you are familiar with the basic principles and processes of deploying the
+  LobeChat server database version (hereinafter referred to as DB version), so it only includes core
+  environment variable configurations. If you are not familiar with the deployment principles of
+  LobeChat DB version, please refer to [Deploying with a Server
+  Database](/docs/self-hosting/server-database).
 </Callout>
 
 <Callout type="warning">
@@ -48,7 +52,9 @@ We default to using [MinIO](https://github.com/minio/minio) as the local S3 obje
 To facilitate a quick start, this section uses the `docker-compose/local` directory's `docker-compose.yml` configuration file. The started LobeChat application runs at `http://localhost:3210` and can be run locally.
 
 <Callout type="warning">
-  For a quick start, this `docker-compose.yml` contains a large number of sensitive Secret/Password fields, suitable only for quick demonstrations or personal local use. Do not use it directly in a production environment! Otherwise, you will be responsible for any security issues encountered!
+  For a quick start, this `docker-compose.yml` contains a large number of sensitive Secret/Password
+  fields, suitable only for quick demonstrations or personal local use. Do not use it directly in a
+  production environment! Otherwise, you will be responsible for any security issues encountered!
 </Callout>
 
 <Steps>
@@ -70,13 +76,15 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 ### Start Docker
 
 ```sh
-docker compose -p lobechat-starter up -d
+docker compose up -d
 ```
+
+The default login account is the default account of Casdoor, with the username `admin` and password `123`.
 
 ### Check Logs
 
 ```sh
-docker logs -f lobe-database
+docker logs -f lobe-chat
 ```
 
 If you see the following logs in the container, it means the startup was successful:
@@ -107,14 +115,14 @@ To access via the local network IP, you first need to run the local startup:
 
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f
-docker compose -p lobechat-starter up -d
+docker compose up -d
 ```
 
 Next, you need to modify the downloaded `docker-compose.yml` file, performing a global replacement to change `localhost` to `your_server_ip`, and then restart:
 
 ```sh
 sed -i 's/localhost/your_server_ip/g' docker-compose.yml
-docker compose -p lobechat-starter up -d
+docker compose up -d
 ```
 
 ### Configuring Casdoor
@@ -123,9 +131,9 @@ docker compose -p lobechat-starter up -d
 
 2. In `Identity -> Applications`, add a new line:
 
-    ```
-    http://your_server_ip:3210/api/auth/callback/casdoor
-    ```
+   ```
+   http://your_server_ip:3210/api/auth/callback/casdoor
+   ```
 
 3. Most other configurations can remain default; you can modify the default configurations in `Identity -> Applications`.
 
@@ -176,9 +184,9 @@ docker compose -p lobechat-starter up -d
 
 4. In Casdoor's `Identity -> Providers`, associate the MinIO S3 service. Here is a sample configuration:
 
-    ![casdoor](https://github.com/user-attachments/assets/71035610-0706-434e-9488-ab5819b55330)
+   ![casdoor](https://github.com/user-attachments/assets/71035610-0706-434e-9488-ab5819b55330)
 
-    The Client ID and Client Secret should be the `Access Key` and `Secret Key` from the previous step, and `192.168.31.251` should be replaced with `your_server_ip`.
+   The Client ID and Client Secret should be the `Access Key` and `Secret Key` from the previous step, and `192.168.31.251` should be replaced with `your_server_ip`.
 
 5. In Casdoor's `Identity -> Applications`, add the provider to the `app-built-in` application, select `minio`, save and exit.
 
@@ -187,7 +195,10 @@ docker compose -p lobechat-starter up -d
 ## Publishing to Production (Domain Name Mode)
 
 <Callout type="info">
-  For deployments with a domain name, we recommend using [Logto](https://logto.io/) as the login authentication service. The remainder of this article will use it as an example. If you use other authentication services like Casdoor, the process should be similar, but note that different authentication services may have different port configurations.
+  For deployments with a domain name, we recommend using [Logto](https://logto.io/) as the login
+  authentication service. The remainder of this article will use it as an example. If you use other
+  authentication services like Casdoor, the process should be similar, but note that different
+  authentication services may have different port configurations.
 </Callout>
 
 In the following text, we assume that in addition to the above services, you are also running a layer of Nginx for reverse proxy and SSL configuration.
@@ -207,9 +218,10 @@ And the service ports that do not require reverse proxy:
 <Callout type="warning">
   Please note that CORS cross-domain is configured internally in MinIO / Logto services. Do not configure CORS additionally in your reverse proxy, as this will cause errors.
 
-  For MinIO not on port 443, the Host must be `$http_host` (with port number), otherwise a 403 error will occur: `proxy_set_header Host $http_host`.
+For MinIO not on port 443, the Host must be `$http_host` (with port number), otherwise a 403 error will occur: `proxy_set_header Host $http_host`.
 
 If you need to configure an SSL certificate, please configure it uniformly in the outer Nginx reverse proxy and not in MinIO.
+
 </Callout>
 
 ### Configuration Files
@@ -230,11 +242,14 @@ Refer to the appendix for example configurations.
 You can check the logs with the following command:
 
 ```sh
-docker logs -f lobe-database
+docker logs -f lobe-chat
 ```
 
 <Callout type="tip">
-  In our official Docker image, database schema migration is automatically executed before starting the image. Our official image promises stability in the automatic creation of tables from "empty database -> complete tables." Therefore, we recommend that your database instance use an empty table instance to avoid the hassle of manual table structure maintenance or migration.
+  In our official Docker image, database schema migration is automatically executed before starting
+  the image. Our official image promises stability in the automatic creation of tables from "empty
+  database -> complete tables." Therefore, we recommend that your database instance use an empty
+  table instance to avoid the hassle of manual table structure maintenance or migration.
 </Callout>
 
 If you encounter issues when creating tables, you can try the following command to force remove the database container and restart:
@@ -253,6 +268,7 @@ This article uses Logto as an example to explain the configuration process. If y
   Please remember to configure the CORS cross-domain settings for the corresponding login authentication service provider to ensure LobeChat can access the authentication service properly.
 
 In this article, you need to allow cross-domain requests from `https://lobe.example.com`.
+
 </Callout>
 
 You first need to visit the WebUI for configuration:
@@ -296,7 +312,8 @@ You first need to visit the WebUI for configuration:
    ```
 
 <Callout type="warning">
-  Please note that the administrator account is not the same as a registered user. Do not log in to LobeChat with your administrator account, as this will only result in an error.
+  Please note that the administrator account is not the same as a registered user. Do not log in to
+  LobeChat with your administrator account, as this will only result in an error.
 </Callout>
 
 ### S3 Object Storage Service Configuration
@@ -309,6 +326,7 @@ This article uses MinIO as an example to explain the configuration process. If y
 In this article, you need to allow cross-domain requests from `https://lobe.example.com`. This can be configured in MinIO WebUI under `Configuration - API - Cors Allow Origin`, or in the Docker Compose under `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN`.
 
 If you use the second method (which is also the default method) for configuration, you will not be able to configure it in MinIO WebUI anymore.
+
 </Callout>
 
 You first need to visit the WebUI for configuration:
@@ -419,8 +437,8 @@ S3_ENABLE_PATH_STYLE=1
 
 ### `docker-compose.yml`
 
-
 ```yaml
+name: lobe-chat-database
 services:
   postgresql:
     image: pgvector/pgvector:pg16
@@ -456,6 +474,7 @@ services:
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
 
+
   logto:
     image: svhd/logto
     container_name: lobe-logto
@@ -474,7 +493,7 @@ services:
 
   lobe:
     image: lobehub/lobe-chat-database
-    container_name: lobe-database
+    container_name: lobe-chat
     ports:
       - '3210:3210'
     depends_on:
@@ -490,7 +509,6 @@ volumes:
     driver: local
   s3_data:
     driver: local
-
 ```
 
 ### `minio-bucket-config.json`
