@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.22.5](https://github.com/lobehub/lobe-chat/compare/v1.22.4...v1.22.5)
+
+<sup>Released on **2024-10-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Reorder github model list & updata info & add new model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Reorder github model list & updata info & add new model, closes [#4360](https://github.com/lobehub/lobe-chat/issues/4360) ([e7767a5](https://github.com/lobehub/lobe-chat/commit/e7767a5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.4](https://github.com/lobehub/lobe-chat/compare/v1.22.3...v1.22.4)
 
 <sup>Released on **2024-10-13**</sup>
