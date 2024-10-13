@@ -291,8 +291,6 @@ export const chatAiChat: StateCreator<
 
       ragQueryId = queryId;
 
-      console.log('召回 chunks', chunks);
-
       // 2. build the retrieve context messages
       const retrieveContext = chainAnswerWithContext({
         context: chunks.map((c) => c.text as string),

@@ -310,6 +310,46 @@ describe('chatMessage actions', () => {
       });
     });
 
+    it('should handle RAG query when internal_shouldUseRAG returns true', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const message = 'Test RAG query';
+
+      vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(true);
+
+      await act(async () => {
+        await result.current.sendMessage({ message });
+      });
+
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        expect.any(Array),
+        expect.any(String),
+        expect.objectContaining({
+          ragQuery: message,
+        }),
+      );
+    });
+
+    it('should not use RAG when internal_shouldUseRAG returns false', async () => {
+      const { result } = renderHook(() => useChatStore());
+      const message = 'Test without RAG';
+
+      vi.spyOn(result.current, 'internal_shouldUseRAG').mockReturnValue(false);
+      vi.spyOn(result.current, 'internal_retrieveChunks');
+
+      await act(async () => {
+        await result.current.sendMessage({ message });
+      });
+
+      expect(result.current.internal_retrieveChunks).not.toHaveBeenCalled();
+      expect(result.current.internal_coreProcessMessage).toHaveBeenCalledWith(
+        expect.any(Array),
+        expect.any(String),
+        expect.not.objectContaining({
+          ragQuery: expect.anything(),
+        }),
+      );
+    });
+
     it('should add user message and not call internal_coreProcessMessage if onlyAddUserMessage = true', async () => {
       const { result } = renderHook(() => useChatStore());
 
