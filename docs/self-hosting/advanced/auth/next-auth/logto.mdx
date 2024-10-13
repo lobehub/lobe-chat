@@ -15,9 +15,9 @@ tags:
 [Logto](https://github.com/logto-io/logto) is an open-source authentication service with a simple and beautiful interface, rich in features and easy to use. You can choose to use the official Logto Cloud or opt for a private deployment of Logto.
 
 <Callout type={'tip'}>
-
-If you want to deploy Logto privately, we recommend using Docker Compose to deploy it together with the LobeChat database version. In this case, LobeChat can share the same Postgres instance with it.
-
+  If you want to deploy Logto privately, we recommend using Docker Compose to deploy it together
+  with the LobeChat database version. In this case, LobeChat can share the same Postgres instance
+  with it.
 </Callout>
 
 ## Logto Configuration Process
@@ -49,7 +49,7 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
 
   Set the obtained `Client ID` and `Client Secret` as `LOGTO_CLIENT_ID` and `LOGTO_CLIENT_SECRET` in the LobeChat environment variables.
 
-  Configure `LOGTO_ISSUER` in the LobeChat environment variables as follows:
+  Configure `AUTH_LOGTO_ISSUER` in the LobeChat environment variables as follows:
 
   - `https://lobe-auth-api.example.com/oidc` if you are using a privately deployed Logto
   - `https://example.logto.app/oidc` if you are using Logto Cloud
@@ -60,9 +60,9 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
   | ------------------------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   | `NEXT_AUTH_SECRET`        | Required | The key used to encrypt Auth.js session tokens. You can generate a key using the command: `openssl rand -base64 32`                                                                    |
   | `NEXT_AUTH_SSO_PROVIDERS` | Required | Select the single sign-on provider for LobeChat. For Logto, enter `logto`.                                                                                                             |
-  | `AUTH_LOGTO_ID`         | Required | The Client ID from the Logto App details page                                                                                                                                          |
-  | `AUTH_LOGTO_SECRET`     | Required | The Client Secret from the Logto App details page                                                                                                                                      |
-  | `AUTH_LOGTO_ISSUER` | Required | OpenID Connect issuer of the Logto provider |
+  | `AUTH_LOGTO_ID`           | Required | The Client ID from the Logto App details page                                                                                                                                          |
+  | `AUTH_LOGTO_SECRET`       | Required | The Client Secret from the Logto App details page                                                                                                                                      |
+  | `AUTH_LOGTO_ISSUER`       | Required | OpenID Connect issuer of the Logto provider                                                                                                                                            |
   | `NEXTAUTH_URL`            | Required | This URL specifies the callback address for Auth.js during OAuth verification, needed only if the default generated redirect address is incorrect. `https://lobe.example.com/api/auth` |
 
   <Callout type={'tip'}>
@@ -71,4 +71,6 @@ If you are using Logto Cloud, assume its endpoint domain is `https://example.log
 </Callout>
 </Steps>
 
-<Callout type={'info'}>After successful deployment, users will be able to authenticate via Logto and use LobeChat.</Callout>
+<Callout type={'info'}>
+  After successful deployment, users will be able to authenticate via Logto and use LobeChat.
+</Callout>
