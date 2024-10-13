@@ -232,6 +232,7 @@ download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
 
 # Extract .tar.gz file without output
 extract_file "s3_data.tar.gz" "."
+rm s3_data.tar.gz
 
 # Display final message
 printf "\n%s\n\n" "$(show_message "tips_run_command")"
