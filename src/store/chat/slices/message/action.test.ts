@@ -3,13 +3,10 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { mutate } from 'swr';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { DEFAULT_AGENT_CHAT_CONFIG, DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TraceEventType } from '@/const/trace';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
-import { agentSelectors } from '@/store/agent/selectors';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { sessionMetaSelectors } from '@/store/session/selectors';
 import { ChatMessage } from '@/types/message';
 
 import { useChatStore } from '../../store';
@@ -39,16 +36,6 @@ vi.mock('@/services/topic', () => ({
     removeTopic: vi.fn(() => Promise.resolve()),
   },
 }));
-vi.mock('@/services/chat', async (importOriginal) => {
-  const module = await importOriginal();
-
-  return {
-    chatService: {
-      createAssistantMessage: vi.fn(() => Promise.resolve('assistant-message')),
-      createAssistantMessageStream: (module as any).chatService.createAssistantMessageStream,
-    },
-  };
-});
 
 const realRefreshMessages = useChatStore.getState().refreshMessages;
 // Mock state
@@ -65,11 +52,6 @@ const mockState = {
 beforeEach(() => {
   vi.clearAllMocks();
   useChatStore.setState(mockState, false);
-  vi.spyOn(agentSelectors, 'currentAgentConfig').mockImplementation(() => DEFAULT_AGENT_CONFIG);
-  vi.spyOn(agentSelectors, 'currentAgentChatConfig').mockImplementation(
-    () => DEFAULT_AGENT_CHAT_CONFIG,
-  );
-  vi.spyOn(sessionMetaSelectors, 'currentAgentMeta').mockImplementation(() => ({ tags: [] }));
 });
 
 afterEach(() => {

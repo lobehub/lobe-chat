@@ -12,7 +12,6 @@ import { topicService } from '@/services/topic';
 import { traceService } from '@/services/trace';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
-import { UploadFileItem } from '@/types/files/upload';
 import {
   ChatMessage,
   ChatMessageError,
@@ -32,17 +31,6 @@ const n = setNamespace('m');
 
 const SWR_USE_FETCH_MESSAGES = 'SWR_USE_FETCH_MESSAGES';
 
-export interface SendMessageParams {
-  message: string;
-  files?: UploadFileItem[];
-  onlyAddUserMessage?: boolean;
-  /**
-   *
-   * https://github.com/lobehub/lobe-chat/pull/2086
-   */
-  isWelcomeQuestion?: boolean;
-}
-
 export interface ChatMessageAction {
   // create
   addAIMessage: () => Promise<void>;
@@ -57,11 +45,11 @@ export interface ChatMessageAction {
   // update
   updateInputMessage: (message: string) => void;
   modifyMessageContent: (id: string, content: string) => Promise<void>;
+  toggleMessageEditing: (id: string, editing: boolean) => void;
   // query
   useFetchMessages: (sessionId: string, topicId?: string) => SWRResponse<ChatMessage[]>;
   copyMessage: (id: string, content: string) => Promise<void>;
   refreshMessages: () => Promise<void>;
-  toggleMessageEditing: (id: string, editing: boolean) => void;
 
   // =========  ↓ Internal Method ↓  ========== //
   // ========================================== //
