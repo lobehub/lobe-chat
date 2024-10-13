@@ -167,7 +167,8 @@ const OpenRouter: ModelProviderCard = {
       tokens: 128_000,
     },
     {
-      description: 'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
+      description:
+        'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
       displayName: 'Llama 3.2 11B Vision',
       enabled: true,
       id: 'meta-llama/llama-3.2-11b-vision-instruct',
@@ -179,7 +180,8 @@ const OpenRouter: ModelProviderCard = {
       vision: true,
     },
     {
-      description: 'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
+      description:
+        'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
       displayName: 'Llama 3.2 90B Vision',
       enabled: true,
       id: 'meta-llama/llama-3.2-90b-vision-instruct',

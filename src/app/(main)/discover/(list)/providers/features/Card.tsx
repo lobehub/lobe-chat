@@ -1,4 +1,4 @@
-import { ModelTag, ProviderCombine } from '@lobehub/icons';
+import { ProviderCombine } from '@lobehub/icons';
 import { Tag } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox, FlexboxProps } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
+import ModelTag from '@/components/ModelTag';
 import { DiscoverProviderItem } from '@/types/discover';
 
 const Link = dynamic(() => import('next/link'), {
