@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.22.3](https://github.com/lobehub/lobe-chat/compare/v1.22.2...v1.22.3)
+
+<sup>Released on **2024-10-13**</sup>
+
+#### 💄 Styles
+
+- **misc**: Support multi-windows for PWA.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Support multi-windows for PWA, closes [#4334](https://github.com/lobehub/lobe-chat/issues/4334) ([0284606](https://github.com/lobehub/lobe-chat/commit/0284606))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.2](https://github.com/lobehub/lobe-chat/compare/v1.22.1...v1.22.2)
 
 <sup>Released on **2024-10-13**</sup>
