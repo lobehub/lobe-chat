@@ -24,7 +24,7 @@ import { setNamespace } from '@/utils/storeDebug';
 import { chatSelectors, topicSelectors } from '../../selectors';
 import { ChatRAGAction, chatRag } from './actions/rag';
 
-const n = setNamespace('m');
+const n = setNamespace('ai');
 
 export interface SendMessageParams {
   message: string;
@@ -140,7 +140,7 @@ export const chatAiChat: StateCreator<
     // if message is empty or no files, then stop
     if (!message && !hasFile) return;
 
-    set({ isCreatingMessage: true }, false, 'creatingMessage/start');
+    set({ isCreatingMessage: true }, false, n('creatingMessage/start'));
 
     const newMessage: CreateMessageParams = {
       content: message,
@@ -185,10 +185,7 @@ export const chatAiChat: StateCreator<
             ...get().messagesMap,
             [messageMapKey(activeId, topicId)]: get().messagesMap[mapKey],
           };
-          set({ messagesMap: newMaps }, false, 'internal_copyMessages');
-
-          // get().internal_dispatchMessage({ type: 'deleteMessage', id: tempMessageId });
-          get().internal_toggleMessageLoading(false, tempMessageId);
+          set({ messagesMap: newMaps }, false, n('moveMessagesToNewTopic'));
 
           // make the topic loading
           get().internal_updateTopicLoading(topicId, true);
@@ -200,7 +197,7 @@ export const chatAiChat: StateCreator<
 
     const id = await get().internal_createMessage(newMessage, {
       tempMessageId,
-      skipRefresh: !onlyAddUserMessage,
+      skipRefresh: !onlyAddUserMessage && newMessage.fileList?.length === 0,
     });
 
     // switch to the new topic if create the new topic
@@ -229,7 +226,7 @@ export const chatAiChat: StateCreator<
       ragQuery: get().internal_shouldUseRAG() ? message : undefined,
     });
 
-    set({ isCreatingMessage: false }, false, 'creatingMessage/stop');
+    set({ isCreatingMessage: false }, false, n('creatingMessage/stop'));
 
     const summaryTitle = async () => {
       // if autoCreateTopic is false, then stop

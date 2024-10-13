@@ -301,6 +301,7 @@ export const chatMessage: StateCreator<
 
     const id = await messageService.createMessage(message);
     if (!context?.skipRefresh) {
+      internal_toggleMessageLoading(true, tempId);
       await refreshMessages();
     }
 
