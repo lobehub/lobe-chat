@@ -10,18 +10,18 @@ const HuggingFace: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description: '高质量多语言聊天模型,具有大型上下文长度',
-      displayName: 'Meta Llama 3.1 70B Instruct',
-      enabled: true,
-      id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
-      tokens: 32_768,
-    },
-    {
       description: '高质量多语言聊天模型,具有较大上下文长度',
-      displayName: 'Meta Llama 3.1 8B Instruct',
+      displayName: 'Llama 3.1 8B Instruct',
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       tokens: 8192,
+    },
+    {
+      description: '高质量多语言聊天模型,具有大型上下文长度',
+      displayName: 'Llama 3.1 70B Instruct',
+      enabled: true,
+      id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
+      tokens: 32_768,
     },
     {
       description: '最佳对话模型之一',
@@ -31,7 +31,7 @@ const HuggingFace: ModelProviderCard = {
     },
     {
       description: 'Google的轻量级指令调优模型',
-      displayName: 'Gemma 2B Instruct',
+      displayName: 'Gemma 2 2B Instruct',
       id: 'google/gemma-2-2b-it',
       tokens: 8192,
     },
