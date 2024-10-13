@@ -47,25 +47,25 @@ interface ProcessMessageParams {
 }
 
 export interface ChatAIChatAction extends ChatRAGAction {
-  // create
+  /**
+   * Sends a new message to the AI chat system
+   */
   sendMessage: (params: SendMessageParams) => Promise<void>;
   /**
-   * regenerate message
-   * trace enabled
-   * @param id
+   * Regenerates a specific message in the chat
    */
   regenerateMessage: (id: string) => Promise<void>;
-
-  // delete
-  delAndRegenerateMessage: (id: string) => Promise<void>;
-  stopGenerateMessage: () => void;
-
-  // =========  ↓ Internal Method ↓  ========== //
-  // ========================================== //
-  // ========================================== //
-
   /**
-   * core process of the AI message (include preprocess and postprocess)
+   * Deletes an existing message and generates a new one in its place
+   */
+  delAndRegenerateMessage: (id: string) => Promise<void>;
+  /**
+   * Interrupts the ongoing ai message generation process
+   */
+  stopGenerateMessage: () => void;
+  /**
+   * Executes the core processing logic for AI messages
+   * including preprocessing and postprocessing steps
    */
   internal_coreProcessMessage: (
     messages: ChatMessage[],
@@ -73,7 +73,7 @@ export interface ChatAIChatAction extends ChatRAGAction {
     params?: ProcessMessageParams,
   ) => Promise<void>;
   /**
-   * the method to fetch the AI message
+   * Retrieves an AI-generated chat message from the backend service
    */
   internal_fetchAIChatMessage: (
     messages: ChatMessage[],
@@ -83,11 +83,12 @@ export interface ChatAIChatAction extends ChatRAGAction {
     isFunctionCall: boolean;
     traceId?: string;
   }>;
-
-  internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
-
   /**
-   * method to toggle ai message generating loading
+   * Resends a specific message, optionally using a trace ID for tracking
+   */
+  internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
+  /**
+   * Toggles the loading state for AI message generation, managing the UI feedback
    */
   internal_toggleChatLoading: (
     loading: boolean,
@@ -95,7 +96,7 @@ export interface ChatAIChatAction extends ChatRAGAction {
     action?: string,
   ) => AbortController | undefined;
   /**
-   * method to toggle the tool calling loading state
+   * Controls the streaming state of tool calling processes, updating the UI accordingly
    */
   internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
 }
