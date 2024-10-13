@@ -63,6 +63,11 @@ export interface ChatAIChatAction extends ChatRAGAction {
    * Interrupts the ongoing ai message generation process
    */
   stopGenerateMessage: () => void;
+
+  // =========  ↓ Internal Method ↓  ========== //
+  // ========================================== //
+  // ========================================== //
+
   /**
    * Executes the core processing logic for AI messages
    * including preprocessing and postprocessing steps
