@@ -47,30 +47,6 @@ const Github: ModelProviderCard = {
     },
     {
       description:
-        'Mistral Nemo is a cutting-edge Language Model (LLM) boasting state-of-the-art reasoning, world knowledge, and coding capabilities within its size category.',
-      displayName: 'Mistral Nemo',
-      id: 'mistral-nemo',
-      maxOutput: 4096,
-      tokens: 131_072,
-    },
-    {
-      description:
-        'Mistral Small can be used on any language-based task that requires high efficiency and low latency.',
-      displayName: 'Mistral Small',
-      id: 'mistral-small',
-      maxOutput: 4096,
-      tokens: 33_000,
-    },
-    {
-      description:
-        "Mistral's flagship model that's ideal for complex tasks that require large reasoning capabilities or are highly specialized (Synthetic Text Generation, Code Generation, RAG, or Agents).",
-      displayName: 'Mistral Large',
-      id: 'mistral-large',
-      maxOutput: 4096,
-      tokens: 33_000,
-    },
-    {
-      description:
         'A 52B parameters (12B active) multilingual model, offering a 256K long context window, function calling, structured output, and grounded generation.',
       displayName: 'AI21 Jamba 1.5 Mini',
       functionCall: true,
@@ -100,6 +76,30 @@ const Github: ModelProviderCard = {
         'Command R+ is a state-of-the-art RAG-optimized model designed to tackle enterprise-grade workloads.',
       displayName: 'Cohere Command R+',
       id: 'cohere-command-r-plus',
+      maxOutput: 4096,
+      tokens: 131_072,
+    },
+    {
+      description:
+        'Mistral Nemo is a cutting-edge Language Model (LLM) boasting state-of-the-art reasoning, world knowledge, and coding capabilities within its size category.',
+      displayName: 'Mistral Nemo',
+      id: 'mistral-nemo',
+      maxOutput: 4096,
+      tokens: 131_072,
+    },
+    {
+      description:
+        'Mistral Small can be used on any language-based task that requires high efficiency and low latency.',
+      displayName: 'Mistral Small',
+      id: 'mistral-small',
+      maxOutput: 4096,
+      tokens: 131_072,
+    },
+    {
+      description:
+        "Mistral's flagship model that's ideal for complex tasks that require large reasoning capabilities or are highly specialized (Synthetic Text Generation, Code Generation, RAG, or Agents).",
+      displayName: 'Mistral Large',
+      id: 'mistral-large',
       maxOutput: 4096,
       tokens: 131_072,
     },
