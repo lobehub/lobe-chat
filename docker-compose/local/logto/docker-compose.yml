@@ -1,12 +1,13 @@
+name: lobe-chat-database
 services:
   network-service:
     image: alpine
     container_name: lobe-network
     ports:
-      - '${MINIO_PORT}:${MINIO_PORT}'  # MinIO API
-      - '9001:9001'  # MinIO Console
+      - '${MINIO_PORT}:${MINIO_PORT}' # MinIO API
+      - '9001:9001' # MinIO Console
       - '${LOGTO_PORT}:${LOGTO_PORT}' # Logto
-      - '3002:3002'  # Logto Admin
+      - '3002:3002' # Logto Admin
       - '${LOBE_PORT}:3210' # LobeChat
     command: tail -f /dev/null
     networks:
@@ -16,7 +17,7 @@ services:
     image: pgvector/pgvector:pg16
     container_name: lobe-postgres
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - './data:/var/lib/postgresql/data'
     environment:
@@ -45,6 +46,7 @@ services:
     command: >
       server /etc/minio/data --address ":${MINIO_PORT}" --console-address ":9001"
 
+
   logto:
     image: svhd/logto
     container_name: lobe-logto
@@ -60,10 +62,9 @@ services:
       - 'ADMIN_ENDPOINT=http://localhost:3002'
     entrypoint: ['sh', '-c', 'npm run cli db seed -- --swe && npm start']
 
-
   lobe:
     image: lobehub/lobe-chat-database
-    container_name: lobe-database
+    container_name: lobe-chat
     network_mode: 'service:network-service'
     depends_on:
       postgresql:
@@ -81,7 +82,7 @@ services:
       - 'KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ='
       - 'NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg'
       - 'NEXTAUTH_URL=http://localhost:${LOBE_PORT}/api/auth'
-      - 'LOGTO_ISSUER=http://localhost:${LOGTO_PORT}/oidc'
+      - 'AUTH_LOGTO_ISSUER=http://localhost:${LOGTO_PORT}/oidc'
       - 'DATABASE_URL=postgresql://postgres:${POSTGRES_PASSWORD}@postgresql:5432/${LOBE_DB_NAME}'
       - 'S3_ENDPOINT=http://localhost:${MINIO_PORT}'
       - 'S3_BUCKET=${MINIO_LOBE_BUCKET}'
