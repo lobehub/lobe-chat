@@ -8,20 +8,20 @@ export const runtime = 'nodejs';
 
 export const maxDuration = 30;
 
-export const POST = async (req: Request) => {
-  const { SENSENOVA_ACCESS_KEY_ID, SENSENOVA_ACCESS_KEY_SECRET } = getLLMConfig();
-
-  let sensenovaAccessKeyID: string | undefined = SENSENOVA_ACCESS_KEY_ID;
-  let sensenovaAccessKeySecret: string | undefined = SENSENOVA_ACCESS_KEY_SECRET;
-
-  const apiKey = await LobeSenseNovaAI.generateJWTToken(sensenovaAccessKeyID || '', sensenovaAccessKeySecret || '', 60, 15);
-
-  return UniverseRoute(req, {
+export const POST = async (req: Request) =>
+  UniverseRoute(req, {
     createRuntime: (payload) => {
+      const { SENSENOVA_ACCESS_KEY_ID, SENSENOVA_ACCESS_KEY_SECRET } = getLLMConfig();
+
+      let sensenovaAccessKeyID: string | undefined = payload?.sensenovaAccessKeyID || SENSENOVA_ACCESS_KEY_ID;
+      let sensenovaAccessKeySecret: string | undefined = payload?.sensenovaAccessKeySecret || SENSENOVA_ACCESS_KEY_SECRET;
+
+      const apiKey = LobeSenseNovaAI.generateJWTToken(sensenovaAccessKeyID || '', sensenovaAccessKeySecret || '', 60, 15);
+
       const params = {
         apiKey,
-        sensenovaAccessKeyID: payload?.sensenovaAccessKeyID || sensenovaAccessKeyID,
-        sensenovaAccessKeySecret: payload?.sensenovaAccessKeySecret || sensenovaAccessKeySecret,
+        sensenovaAccessKeyID,
+        sensenovaAccessKeySecret,
       };
 
       const instance = new LobeSenseNovaAI(params);
@@ -30,4 +30,3 @@ export const POST = async (req: Request) => {
     },
     params: { provider: 'sensenova' },
   });
-};
