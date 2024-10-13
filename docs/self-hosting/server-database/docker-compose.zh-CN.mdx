@@ -105,7 +105,7 @@ docker logs -f lobe-database
 
 ## 发布到生产（IP 模式）
 
-下文假设局域网内需要运行 LobeChat 服务的机器 IP 为 `your_server_ip`。
+下文假设局域网 / 公网需要运行 LobeChat 服务的机器 IP 为 `your_server_ip`。
 
 想要通过局域网 IP 访问，你需要首先按照本地启动运行：
 
@@ -195,7 +195,7 @@ docker compose -p lobechat-starter up -d
 
 </Callout>
 
-生产和本地运行存在一个很大的差别，就是在于需要使用域名地址而不是 localhost。我们假设在上述服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
+在下文中，我们假设在上述服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
 
 域名和配套服务端口说明如下：
 

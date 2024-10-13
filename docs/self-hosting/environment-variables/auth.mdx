@@ -134,21 +134,21 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Cloudflare Zero Trust
 
-#### `CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
+#### `AUTH_CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the Cloudflare Zero Trust provider application.
 - Default: `-`
 - Example: `711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
 
-#### `CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
+#### `AUTH_CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
 
 - Type: Required
 - Description: The plaintext of the Client Secret for the Cloudflare Zero Trust provider
 - Default: `-`
 - Example: `8f26d4ef834a828045b401e032ae128dbb00471bca53f0d25332323f525dfa30`
 
-#### `CLOUDFLARE_ZERO_TRUST_ISSUER`
+#### `AUTH_CLOUDFLARE_ZERO_TRUST_ISSUER`
 
 - Type: Required
 - Description: Issuer of the Cloudflare Zero Trust provider application.
@@ -157,14 +157,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Github
 
-#### `GITHUB_CLIENT_ID`
+#### `AUTH_GITHUB_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the Github application. You can access it [here](https://github.com/settings/apps) and navigate to the application settings to view.
 - Default: `-`
 - Example: `abd94200333283550508`
 
-#### `GITHUB_CLIENT_SECRET`
+#### `AUTH_GITHUB_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Github application.
@@ -173,21 +173,21 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Logto
 
-#### `LOGTO_CLIENT_ID`
+#### `AUTH_LOGTO_CLIENT_ID`
 
 - Type: Required
 - Description: The Client ID of the Logto application. You can find it in the Logto console for private deployment or [Logto Cloud](http://cloud.logto.io/) depending on the deployment mode.
 - Default value: `-`
 - Example: `123456789012345678@your-project`
 
-#### `LOGTO_CLIENT_SECRET`
+#### `AUTH_LOGTO_CLIENT_SECRET`
 
 - Type: Required
 - Description: The Client Secret of the Logto application.
 - Default value: `-`
 - Example: `9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
 
-#### `LOGTO_ISSUER`
+#### `AUTH_LOGTO_ISSUER`
 
 - Type: Required
 - Description: The OpenID Connect issuer of the Logto application. You can find it in the Logto console for private deployment or [Logto Cloud](http://cloud.logto.io/) depending on the deployment mode.
@@ -196,21 +196,21 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Microsoft Entra ID
 
-#### `AZURE_AD_CLIENT_ID`
+#### `AUTH_AZURE_AD_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the Microsoft Entra ID application.
 - Default: `-`
 - Example: `be8f6da1-58c3-4f16-ff1b-78f5148e10df`
 
-#### `AZURE_AD_CLIENT_SECRET`
+#### `AUTH_AZURE_AD_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Microsoft Entra ID application.
 - Default: `-`
 - Example: `~gI8Q.pTiN1vwB6Gl.E1yFT1ojcXABkdACfJXaNj`
 
-#### `AZURE_AD_TENANT_ID`
+#### `AUTH_AZURE_AD_TENANT_ID`
 
 - Type: Required
 - Description: Tenant ID of the Microsoft Entra ID application.
@@ -219,21 +219,21 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### ZITADEL
 
-#### `ZITADEL_CLIENT_ID`
+#### `AUTH_ZITADEL_CLIENT_ID`
 
 - Type: Required
 - Description: Client ID of the ZITADEL application. This can be found under your application in the ZITADEL console.
 - Default: `-`
 - Example: `123456789012345678@your-project`
 
-#### `ZITADEL_CLIENT_SECRET`
+#### `AUTH_ZITADEL_CLIENT_SECRET`
 
 - Type: Required
 - Description: Client Secret of the ZITADEL application.
 - Default: `-`
 - Example: `9QF1n5ATzU7Z3mHp2Iw4gKX8kY6oR7uW1DnKcV3LqX2jF6iG3fBmJ1kV7nS5zE6A`
 
-#### `ZITADEL_ISSUER`
+#### `AUTH_ZITADEL_ISSUER`
 
 - Type: Required
 - Description: Issuer of the ZITADEL application. This is usually the URL of the ZITADEL instance, and can be found in `URLs` tab of your application in the console.

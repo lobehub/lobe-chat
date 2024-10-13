@@ -101,7 +101,7 @@ If you encounter problems, try checking the Docker logs and console logs for tro
 
 ## Publishing to Production (IP Mode)
 
-The following assumes that the machine that needs to run the LobeChat service in the local area network has an IP of `your_server_ip`.
+The following assumes that the machine IP running the LobeChat service on the LAN/public network is `your_server_ip`.
 
 To access via the local network IP, you first need to run the local startup:
 
@@ -190,7 +190,7 @@ docker compose -p lobechat-starter up -d
   For deployments with a domain name, we recommend using [Logto](https://logto.io/) as the login authentication service. The remainder of this article will use it as an example. If you use other authentication services like Casdoor, the process should be similar, but note that different authentication services may have different port configurations.
 </Callout>
 
-The main difference between production and local running is that a domain address is required instead of localhost. We assume that in addition to the above services, you also run an Nginx layer for reverse proxy and SSL configuration.
+In the following text, we assume that in addition to the above services, you are also running a layer of Nginx for reverse proxy and SSL configuration.
 
 The domain and associated service port descriptions are as follows:
 
