@@ -74,13 +74,15 @@ bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docke
 ### 启动 Docker
 
 ```sh
-docker compose -p lobechat-starter up -d
+docker compose up -d
 ```
+
+默认登录账号即 Casdoor 的默认账号，账号名 `admin`，密码 `123`
 
 ### 检查日志
 
 ```sh
-docker logs -f lobe-database
+docker logs -f lobe-chat
 ```
 
 如果你在容器中看到了以下日志，则说明已经启动成功：
@@ -111,14 +113,14 @@ docker logs -f lobe-database
 
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f -l zh_CN
-docker compose -p lobechat-starter up -d
+docker compose up -d
 ```
 
 接着，你需要修改下载下来的 `docker-compose.yml` 文件，执行一次全文替换，将 `localhost` 替换为 `your_server_ip`，随后重新启动：
 
 ```sh
 sed -i 's/localhost/your_server_ip/g' docker-compose.yml
-docker compose -p lobechat-starter up -d
+docker compose up -d
 ```
 
 ### 配置 Casdoor
@@ -127,9 +129,9 @@ docker compose -p lobechat-starter up -d
 
 2. 在 `身份认证 -> 应用` 中添加一行
 
-    ```
-    http://your_server_ip:3210/api/auth/callback/casdoor
-    ```
+   ```
+   http://your_server_ip:3210/api/auth/callback/casdoor
+   ```
 
 3. 其他配置大多保持默认即可，你也可以在 `身份认证 -> 应用` 中修改默认配置
 
@@ -180,9 +182,9 @@ docker compose -p lobechat-starter up -d
 
 4. 在 Casdoor 的 `身份认证 -> 提供商` 中关联 MinIO S3 服务，以下是一个示例配置：
 
-    ![casdoor](https://github.com/user-attachments/assets/71035610-0706-434e-9488-ab5819b55330)
+   ![casdoor](https://github.com/user-attachments/assets/71035610-0706-434e-9488-ab5819b55330)
 
-    其中，客户端 ID、客户端密钥为上一步创建的访问密钥中的 `Access Key` 和 `Secret Key`，`192.168.31.251` 应当被替换为 `your_server_ip`。
+   其中，客户端 ID、客户端密钥为上一步创建的访问密钥中的 `Access Key` 和 `Secret Key`，`192.168.31.251` 应当被替换为 `your_server_ip`。
 
 5. 在 Casdoor 的 `身份认证 -> 应用` 中，对 `app-built-in` 应用添加提供商，选择 `minio`，保存并退出
 
@@ -191,8 +193,9 @@ docker compose -p lobechat-starter up -d
 ## 发布到生产（域名模式）
 
 <Callout type="info">
-  对于拥有域名的部署，我们推荐使用 [Logto](https://logto.io/) 作为登录鉴权服务。本文剩余部分也将以其为例进行说明。如果你使用其他诸如 Casdoor 等其他登录鉴权服务，流程应当相近，但请注意不同的登录鉴权服务的端口配置可能有所差异。
-
+  对于拥有域名的部署，我们推荐使用 [Logto](https://logto.io/)
+  作为登录鉴权服务。本文剩余部分也将以其为例进行说明。如果你使用其他诸如 Casdoor
+  等其他登录鉴权服务，流程应当相近，但请注意不同的登录鉴权服务的端口配置可能有所差异。
 </Callout>
 
 在下文中，我们假设在上述服务之外，你还运行了一层 Nginx 来进行反向代理、配置 SSL。
@@ -212,7 +215,7 @@ docker compose -p lobechat-starter up -d
 <Callout type="warning">
   请务必注意，CORS 跨域是在 MinIO / Logto 服务端内部配置的，请勿在你的反向代理中额外配置 CORS，这会导致错误。
 
-  对于 minio 非 443 端口时，Host 必须是 `$http_host`（带端口号），否则会 403 错误：`proxy_set_header Host $http_host`。
+对于 minio 非 443 端口时，Host 必须是 `$http_host`（带端口号），否则会 403 错误：`proxy_set_header Host $http_host`。
 
 如果你需要配置 SSL 证书，请统一在外层的 Nginx 反向代理中配置，而不是在 MinIO 中配置。
 
@@ -236,7 +239,7 @@ curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compo
 你可以使用下述指令检查日志：
 
 ```sh
-docker logs -f lobe-database
+docker logs -f lobe-chat
 ```
 
 <Callout type="tip">
@@ -425,12 +428,12 @@ S3_ENABLE_PATH_STYLE=1
 # OPENAI_API_KEY=sk-xxxx
 # OPENAI_PROXY_URL=https://api.openai.com/v1
 # OPENAI_MODEL_LIST=...
-
 ```
 
 ### `docker-compose.yml`
 
 ```yaml
+name: lobe-chat-database
 services:
   postgresql:
     image: pgvector/pgvector:pg16
@@ -466,6 +469,7 @@ services:
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
 
+
   logto:
     image: svhd/logto
     container_name: lobe-logto
@@ -484,7 +488,7 @@ services:
 
   lobe:
     image: lobehub/lobe-chat-database
-    container_name: lobe-database
+    container_name: lobe-chat
     ports:
       - '3210:3210'
     depends_on:
@@ -500,7 +504,6 @@ volumes:
     driver: local
   s3_data:
     driver: local
-
 ```
 
 ### `minio-bucket-config.json`
