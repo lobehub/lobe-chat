@@ -1,12 +1,12 @@
 import OpenAI from 'openai';
-import CryptoES from 'crypto-es';
+import CryptoJS from 'crypto-js';
 
 import { ChatStreamPayload, ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 // Helper function for base64 URL encoding
 const base64UrlEncode = (obj: object) => {
-  return CryptoES.enc.Base64.stringify(CryptoES.enc.Utf8.parse(JSON.stringify(obj)))
+  return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(JSON.stringify(obj)))
     .replaceAll('=', '')
     .replaceAll('+', '-')
     .replaceAll('/', '_');
@@ -27,8 +27,8 @@ const generateJwtTokenSenseNova = (accessKeyID: string = '', accessKeySecret: st
 
   const data = `${base64UrlEncode(headers)}.${base64UrlEncode(payload)}`;
 
-  const signature = CryptoES.HmacSHA256(data, accessKeySecret)
-    .toString(CryptoES.enc.Base64)
+  const signature = CryptoJS.HmacSHA256(data, accessKeySecret)
+    .toString(CryptoJS.enc.Base64)
     .replaceAll('=', '')
     .replaceAll('+', '-')
     .replaceAll('/', '_');
