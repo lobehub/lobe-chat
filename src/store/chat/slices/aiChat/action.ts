@@ -205,6 +205,8 @@ export const chatAiChat: StateCreator<
       skipRefresh: !onlyAddUserMessage && newMessage.fileList?.length === 0,
     });
 
+    if (tempMessageId) get().internal_toggleMessageLoading(false, tempMessageId);
+
     // switch to the new topic if create the new topic
     if (!!newTopicId) {
       await get().switchTopic(newTopicId, true);
