@@ -4,7 +4,7 @@ import { ChatPortalState, initialChatPortalState } from './slices/portal/initial
 import { ChatMessageState, initialMessageState } from './slices/message/initialState';
 import { ChatShareState, initialShareState } from './slices/share/initialState';
 import { ChatTopicState, initialTopicState } from './slices/topic/initialState';
-import { ChatAIChatState, initialAiChatState } from '@/store/chat/slices/aiChat/initialState';
+import { ChatAIChatState, initialAiChatState } from './slices/aiChat/initialState';
 
 export type ChatStoreState = ChatTopicState &
   ChatMessageState &
