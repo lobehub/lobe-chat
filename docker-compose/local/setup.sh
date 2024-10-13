@@ -9,7 +9,7 @@
 # ======================
 
 # 1. Default values of arguments
-# Arg: -f 
+# Arg: -f
 # Determine force download asserts, default is not
 FORCE_DOWNLOAD=false
 
@@ -33,10 +33,12 @@ while getopts "fl:-:" opt; do
     -)
       case "${OPTARG}" in
         lang)
-          LANGUAGE="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+          LANGUAGE="${!OPTIND}"
+          OPTIND=$(($OPTIND + 1))
           ;;
         url)
-          SOURCE_URL="${!OPTIND}"; OPTIND=$(( $OPTIND + 1 ))
+          SOURCE_URL="${!OPTIND}"
+          OPTIND=$(($OPTIND + 1))
           ;;
         *)
           echo "Usage: $0 [-f] [-l language|--lang language] [--url source]" >&2
@@ -50,7 +52,6 @@ while getopts "fl:-:" opt; do
       ;;
   esac
 done
-
 
 # ===============
 # == Variables ==
@@ -161,7 +162,7 @@ show_message() {
           ;;
       esac
       ;;
-    esac
+  esac
 }
 
 # Function to download files
@@ -186,7 +187,7 @@ extract_file() {
     if [ $? -eq 0 ]; then
       echo "$file_name" $(show_message "extracted_success") "$target_dir"
     else
-      echo "$file_name" $(show_message "extracted_failed") 
+      echo "$file_name" $(show_message "extracted_failed")
       exit 1
     fi
   else
@@ -198,30 +199,30 @@ extract_file() {
 # Define colors
 declare -A colors
 colors=(
-    [black]="\e[30m"
-    [red]="\e[31m"
-    [green]="\e[32m"
-    [yellow]="\e[33m"
-    [blue]="\e[34m"
-    [magenta]="\e[35m"
-    [cyan]="\e[36m"
-    [white]="\e[37m"
-    [reset]="\e[0m"
+  [black]="\e[30m"
+  [red]="\e[31m"
+  [green]="\e[32m"
+  [yellow]="\e[33m"
+  [blue]="\e[34m"
+  [magenta]="\e[35m"
+  [cyan]="\e[36m"
+  [white]="\e[37m"
+  [reset]="\e[0m"
 )
 
 print_centered() {
-    local text="$1"  # Get input texts
-    local color="${2:-reset}"  # Get color, default to reset
-    local term_width=$(tput cols)  # Get terminal width
-    local text_length=${#text}  # Get text length
-    local padding=$(( (term_width - text_length) / 2 ))  # Get padding
-    # Check if the color is valid
-    if [[ -z "${colors[$color]}" ]]; then
-        echo "Invalid color specified. Available colors: ${!colors[@]}"
-        return 1
-    fi
-    # Print the text with padding
-    printf "%*s${colors[$color]}%s${colors[reset]}\n" $padding "" "$text"
+  local text="$1"                                   # Get input texts
+  local color="${2:-reset}"                         # Get color, default to reset
+  local term_width=$(tput cols)                     # Get terminal width
+  local text_length=${#text}                        # Get text length
+  local padding=$(((term_width - text_length) / 2)) # Get padding
+  # Check if the color is valid
+  if [[ -z "${colors[$color]}" ]]; then
+    echo "Invalid color specified. Available colors: ${!colors[@]}"
+    return 1
+  fi
+  # Print the text with padding
+  printf "%*s${colors[$color]}%s${colors[reset]}\n" $padding "" "$text"
 }
 
 # Download files asynchronously
@@ -232,10 +233,11 @@ download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
 
 # Extract .tar.gz file without output
 extract_file "s3_data.tar.gz" "."
+rm s3_data.tar.gz
 
 # Display final message
 printf "\n%s\n\n" "$(show_message "tips_run_command")"
-print_centered "docker compose -p lobechat-starter up -d" "green"
+print_centered "docker compose up -d" "green"
 printf "\n%s" "$(show_message "tips_show_documentation")"
 printf "%s\n" $(show_message "tips_show_documentation_url")
 printf "\n\e[33m%s\e[0m\n" "$(show_message "tips_warning")"
