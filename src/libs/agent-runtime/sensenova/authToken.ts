@@ -11,17 +11,17 @@ export const generateApiToken = async (apiKey?: string): Promise<string> => {
     throw new Error('Invalid apiKey');
   }
 
-  const encoder = new TextEncoder();
+  const currentTime = Math.floor(Date.now() / 1000);
 
   const payload = {
-    exp: Math.floor(Date.now() / 1000) + 60,
+    exp: currentTime + 1800,
     iss: id,
-    nbf: Math.floor(Date.now() / 1000) - 15,
+    nbf: currentTime - 5,
   };
 
   const jwt = await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
-    .sign(encoder.encode(secret));
+    .sign(new TextEncoder().encode(secret));
 
   return jwt;
 };
