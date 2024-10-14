@@ -5,8 +5,7 @@ import JSONL from 'jsonl-parse-stringify';
 import pMap from 'p-map';
 import { z } from 'zod';
 
-import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
-import { serverDB } from '@/database/server';
+import { DEFAULT_MODEL } from '@/const/settings';
 import { FileModel } from '@/database/server/models/file';
 import {
   EvalDatasetModel,
@@ -16,6 +15,7 @@ import {
 } from '@/database/server/models/ragEval';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
+import { getServerGlobalConfig } from '@/server/globalConfig';
 import { S3 } from '@/server/modules/S3';
 import { createAsyncServerClient } from '@/server/routers/async';
 import { getFullFileUrl } from '@/server/utils/files';
@@ -195,7 +195,7 @@ export const ragEvalRouter = router({
           question: record.question!,
           ideal: record.ideal,
           status: EvalEvaluationStatus.Pending,
-          embeddingModel: DEFAULT_EMBEDDING_MODEL.model,
+          embeddingModel: getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string,
           languageModel: DEFAULT_MODEL,
         })),
       );
