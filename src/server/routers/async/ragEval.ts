@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { z } from 'zod';
 
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
-import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_MODEL } from '@/const/settings';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
@@ -43,12 +43,8 @@ export const ragEvalRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const evalRecord = await ctx.evalRecordModel.findById(input.evalRecordId);
-      const model =
-        getServerGlobalConfig().defaultEmbed?.embedding_model?.model ??
-        DEFAULT_EMBEDDING_MODEL.model;
-      const provider =
-        getServerGlobalConfig().defaultEmbed?.embedding_model?.provider ??
-        DEFAULT_EMBEDDING_MODEL.provider;
+      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
+      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
 
       if (!evalRecord) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Evaluation not found' });
