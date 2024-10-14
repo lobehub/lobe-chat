@@ -77,9 +77,9 @@ DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
 NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
 NEXT_AUTH_SSO_PROVIDERS=auth0
 NEXTAUTH_URL=https://your-prod-domain.com/api/auth
-AUTH0_CLIENT_ID=xxxxxx
-AUTH0_CLIENT_SECRET=cSX_xxxxx
-AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
+AUTH_AUTH0_ID=xxxxxx
+AUTH_AUTH0_SECRET=cSX_xxxxx
+AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
 
 # S3 相关
 S3_ACCESS_KEY_ID=xxxxxxxxxx
@@ -147,9 +147,9 @@ $ docker run -it -d --name lobe-chat-database -p 3210:3210 \
   -e KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk= \
   -e NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250 \
   -e NEXT_AUTH_SSO_PROVIDERS=auth0 \
-  -e AUTH0_CLIENT_ID=xxxxxx \
-  -e AUTH0_CLIENT_SECRET=cSX_xxxxx \
-  -e AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com \
+  -e AUTH_AUTH0_ID=xxxxxx \
+  -e AUTH_AUTH0_SECRET=cSX_xxxxx \
+  -e AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com \
   -e APP_URL=http://localhost:3210 \
   -e NEXTAUTH_URL=http://localhost:3210/api/auth \
   -e S3_ACCESS_KEY_ID=xxxxxxxxxx \
