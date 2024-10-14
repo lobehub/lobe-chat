@@ -14,9 +14,9 @@ export const generateApiToken = async (apiKey?: string): Promise<string> => {
   const encoder = new TextEncoder();
 
   const payload = {
-    exp: Math.floor(Date.now() / 1000) + 1800,
+    exp: Math.floor(Date.now() / 1000) + 60,
     iss: id,
-    nbf: Math.floor(Date.now() / 1000) - 5,
+    nbf: Math.floor(Date.now() / 1000) - 15,
   };
 
   const jwt = await new SignJWT(payload)
