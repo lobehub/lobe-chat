@@ -10,13 +10,12 @@ import {
   Trash,
   Wand2,
 } from 'lucide-react';
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import BubblesLoading from '@/components/BubblesLoading';
 import { LOADING_FLAT } from '@/const/message';
-import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 
 const useStyles = createStyles(({ css }) => ({
@@ -43,8 +42,6 @@ interface TopicContentProps {
 
 const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
   const { t } = useTranslation('common');
-
-  const mobile = useIsMobile();
 
   const [
     editing,
@@ -138,6 +135,9 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
     [],
   );
 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen2, setDropdownOpen2] = useState(false);
+
   return (
     <Flexbox
       align={'center'}
@@ -148,6 +148,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         if (!id) return;
         if (e.altKey) toggleEditing(true);
       }}
+      style={{ position: 'relative' }}
     >
       <ActionIcon
         color={fav && !isLoading ? theme.colorWarning : undefined}
@@ -160,6 +161,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         }}
         size={'small'}
         spin={isLoading}
+        style={{ zIndex: 1 }}
       />
       {!editing ? (
         title === LOADING_FLAT ? (
@@ -194,26 +196,55 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
           value={title}
         />
       )}
-      {(showMore || mobile) && !editing && (
-        <Dropdown
-          arrow={false}
-          menu={{
-            items: items,
-            onClick: ({ domEvent }) => {
-              domEvent.stopPropagation();
-            },
-          }}
-          trigger={['click']}
-        >
-          <ActionIcon
-            className="topic-more"
-            icon={MoreVertical}
-            onClick={(e) => {
-              e.stopPropagation();
+      {(showMore || dropdownOpen || dropdownOpen2) && !editing && (
+        <>
+          <Dropdown
+            arrow={false}
+            menu={{
+              items: items,
+              onClick: ({ domEvent }) => {
+                domEvent.stopPropagation();
+              },
             }}
-            size={'small'}
-          />
-        </Dropdown>
+            onOpenChange={(dropdownOpen) => {
+              if (!dropdownOpen) {
+                setTimeout(() => setDropdownOpen(dropdownOpen), 300);
+              } else {
+                setDropdownOpen(dropdownOpen);
+              }
+            }}
+            trigger={['contextMenu']}
+          >
+            <div style={{ height: '100%', position: 'absolute', width: '100%' }}></div>
+          </Dropdown>
+
+          <Dropdown
+            arrow={false}
+            menu={{
+              items: items,
+              onClick: ({ domEvent }) => {
+                domEvent.stopPropagation();
+              },
+            }}
+            onOpenChange={(dropdownOpen2) => {
+              if (!dropdownOpen2) {
+                setTimeout(() => setDropdownOpen2(dropdownOpen2), 300);
+              } else {
+                setDropdownOpen2(dropdownOpen2);
+              }
+            }}
+            trigger={['click']}
+          >
+            <ActionIcon
+              className="topic-more"
+              icon={MoreVertical}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              size={'small'}
+            />
+          </Dropdown>
+        </>
       )}
     </Flexbox>
   );
