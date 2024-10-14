@@ -3,14 +3,17 @@ import type { Stream } from 'openai/streaming';
 
 import { ChatMessageError } from '@/types/message';
 
+import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
 import { ChatStreamCallbacks } from '../../types';
 import {
+  FIRST_CHUNK_ERROR_KEY,
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
   StreamStack,
   StreamToolCallChunkData,
   convertIterableToStream,
   createCallbacksTransformer,
+  createFirstErrorHandleTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
 } from './protocol';
@@ -19,6 +22,21 @@ export const transformOpenAIStream = (
   chunk: OpenAI.ChatCompletionChunk,
   stack?: StreamStack,
 ): StreamProtocolChunk => {
+  // handle the first chunk error
+  if (FIRST_CHUNK_ERROR_KEY in chunk) {
+    delete chunk[FIRST_CHUNK_ERROR_KEY];
+    // @ts-ignore
+    delete chunk['name'];
+    // @ts-ignore
+    delete chunk['stack'];
+
+    const errorData = {
+      body: chunk,
+      type: 'errorType' in chunk ? chunk.errorType : AgentRuntimeErrorType.ProviderBizError,
+    } as ChatMessageError;
+    return { data: errorData, id: 'first_chunk_error', type: 'error' };
+  }
+
   // maybe need another structure to add support for multiple choices
 
   try {
@@ -97,7 +115,7 @@ export const transformOpenAIStream = (
           'chat response streaming chunk parse error, please contact your API Provider to fix it.',
         context: { error: { message: err.message, name: err.name }, chunk },
       },
-      type: 'StreamChunkError',
+      type: errorName,
     } as ChatMessageError;
     /* eslint-enable */
 
@@ -105,16 +123,31 @@ export const transformOpenAIStream = (
   }
 };
 
+export interface OpenAIStreamOptions {
+  bizErrorTypeTransformer?: (error: {
+    message: string;
+    name: string;
+  }) => ILobeAgentRuntimeErrorType | undefined;
+  callbacks?: ChatStreamCallbacks;
+  provider?: string;
+}
+
 export const OpenAIStream = (
   stream: Stream<OpenAI.ChatCompletionChunk> | ReadableStream,
-  callbacks?: ChatStreamCallbacks,
+  { callbacks, provider, bizErrorTypeTransformer }: OpenAIStreamOptions = {},
 ) => {
   const streamStack: StreamStack = { id: '' };
 
   const readableStream =
     stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
-  return readableStream
-    .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
-    .pipeThrough(createCallbacksTransformer(callbacks));
+  return (
+    readableStream
+      // 1. handle the first error if exist
+      // provider like huggingface or minimax will return error in the stream,
+      // so in the first Transformer, we need to handle the error
+      .pipeThrough(createFirstErrorHandleTransformer(bizErrorTypeTransformer, provider))
+      .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, streamStack))
+      .pipeThrough(createCallbacksTransformer(callbacks))
+  );
 };

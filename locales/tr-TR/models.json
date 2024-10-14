@@ -458,6 +458,9 @@
   "google/gemma-2-27b-it": {
     "description": "Gemma 2, hafiflik ve verimlilik tasarım felsefesini sürdürmektedir."
   },
+  "google/gemma-2-2b-it": {
+    "description": "Google'ın hafif talimat ayarlama modeli"
+  },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2, Google'ın hafif açık kaynak metin modeli serisidir."
   },
@@ -589,6 +592,12 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online modeli, 8B parametreye sahiptir ve yaklaşık 127,000 belirteçlik bağlam uzunluğunu destekler, çevrimiçi sohbet için tasarlanmıştır ve çeşitli metin etkileşimlerini etkili bir şekilde işler."
   },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru-cevap gibi görevlerde mükemmel performans sergiler, dil üretimi ile görsel akıl yürütme arasındaki uçurumu aşar."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2, görsel ve metin verilerini birleştiren görevleri işlemek için tasarlanmıştır. Görüntü tanımlama ve görsel soru-cevap gibi görevlerde mükemmel performans sergiler, dil üretimi ile görsel akıl yürütme arasındaki uçurumu aşar."
+  },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B, eşsiz karmaşıklık işleme yeteneği sunar ve yüksek talepli projeler için özel olarak tasarlanmıştır."
   },
@@ -642,6 +651,9 @@
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B), mükemmel dil işleme yetenekleri ve olağanüstü etkileşim deneyimi sunar."
+  },
+  "meta-llama/Llama-2-7b-chat-hf": {
+    "description": "En iyi sohbet modellerinden biri"
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B), karmaşık diyalog ihtiyaçlarını destekleyen güçlü bir sohbet modelidir."
@@ -811,8 +823,8 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B, birden fazla parametre kullanarak akıl yürütme hızını artıran seyrek uzman modelidir, çok dilli ve kod üretim görevlerini işlemek için uygundur."
   },
-  "openai/gpt-4o-2024-08-06": {
-    "description": "ChatGPT-4o, dinamik bir modeldir; en güncel versiyonu korumak için gerçek zamanlı olarak güncellenir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, geniş ölçekli uygulama senaryoları için uygundur; müşteri hizmetleri, eğitim ve teknik destek gibi."
+  "openai/gpt-4o": {
+    "description": "ChatGPT-4o, güncel en son sürümü korumak için gerçek zamanlı olarak güncellenen dinamik bir modeldir. Güçlü dil anlama ve üretme yeteneklerini birleştirir, müşteri hizmetleri, eğitim ve teknik destek gibi büyük ölçekli uygulama senaryoları için uygundur."
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra sunduğu en son modeldir; görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde bir sıralamaya sahiptir."
@@ -862,11 +874,11 @@
   "qwen-vl-chat-v1": {
     "description": "Tongyi Qianwen VL, çoklu görüntü, çok turlu soru-cevap, yaratım gibi esnek etkileşim yöntemlerini destekleyen bir modeldir."
   },
-  "qwen-vl-max": {
-    "description": "Tongyi Qianwen, büyük ölçekli görsel dil modelidir. Geliştirilmiş versiyonuna göre görsel akıl yürütme ve talimatları takip etme yeteneklerini daha da artırır, daha yüksek görsel algı ve biliş düzeyi sunar."
+  "qwen-vl-max-latest": {
+    "description": "Tongyi Qianwen ultra büyük ölçekli görsel dil modeli. Geliştirilmiş versiyona kıyasla, görsel akıl yürütme yeteneğini ve talimatlara uyum yeteneğini bir kez daha artırır, daha yüksek görsel algı ve bilişsel seviyeler sunar."
   },
-  "qwen-vl-plus": {
-    "description": "Tongyi Qianwen, büyük ölçekli görsel dil modelinin geliştirilmiş versiyonudur. Detay tanıma ve metin tanıma yeteneklerini önemli ölçüde artırır, bir milyondan fazla piksel çözünürlüğü ve herhangi bir en-boy oranı spesifikasyonunu destekler."
+  "qwen-vl-plus-latest": {
+    "description": "Tongyi Qianwen büyük ölçekli görsel dil modelinin geliştirilmiş versiyonu. Detay tanıma ve metin tanıma yeteneklerini büyük ölçüde artırır, bir milyondan fazla piksel çözünürlüğü ve herhangi bir en-boy oranındaki görüntüleri destekler."
   },
   "qwen-vl-v1": {
     "description": "Qwen-7B dil modeli ile başlatılan, 448 çözünürlükte görüntü girişi olan önceden eğitilmiş bir modeldir."

@@ -1,3 +1,4 @@
+name: lobe-chat-database
 services:
   postgresql:
     image: pgvector/pgvector:pg16
@@ -52,7 +53,7 @@ services:
 
   lobe:
     image: lobehub/lobe-chat-database
-    container_name: lobe-database
+    container_name: lobe-chat
     ports:
       - '3210:3210'
     depends_on:
