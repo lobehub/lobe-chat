@@ -1,8 +1,6 @@
 import { inArray } from 'drizzle-orm/expressions';
 import { z } from 'zod';
 
-import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
-import { knowledgeBaseFiles } from '@/database/schemas';
 import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
 import { ChunkModel } from '@/database/server/models/chunk';
@@ -106,12 +104,8 @@ export const chunkRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       console.time('embedding');
-      const model =
-        getServerGlobalConfig().defaultEmbed?.embedding_model?.model ??
-        DEFAULT_EMBEDDING_MODEL.model;
-      const provider =
-        getServerGlobalConfig().defaultEmbed?.embedding_model?.provider ??
-        DEFAULT_EMBEDDING_MODEL.provider;
+      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
+      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
       const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
       const embeddings = await agentRuntime.embeddings({
@@ -132,12 +126,8 @@ export const chunkRouter = router({
     .input(SemanticSearchSchema)
     .mutation(async ({ ctx, input }) => {
       const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
-      const model =
-        getServerGlobalConfig().defaultEmbed?.embedding_model?.model ??
-        DEFAULT_EMBEDDING_MODEL.model;
-      const provider =
-        getServerGlobalConfig().defaultEmbed?.embedding_model?.provider ??
-        DEFAULT_EMBEDDING_MODEL.provider;
+      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
+      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
       let embedding: number[];
       let ragQueryId: string;
       console.log('embeddingProvider:', provider);

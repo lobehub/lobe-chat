@@ -280,15 +280,33 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
       options?: EmbeddingsOptions,
     ): Promise<Embeddings[]> {
       try {
-        const res = await this.client.embeddings.create(
-          { ...payload, user: options?.user },
-          { headers: options?.headers, signal: options?.signal },
+        const input = Array.isArray(payload.input) ? payload.input : [payload.input];
+        const promises = input.map((inputText: string) =>
+          this.invokeEmbeddings(
+            {
+              dimensions: payload.dimensions,
+              input: inputText,
+              model: payload.model,
+            },
+            options,
+          ),
         );
-
-        return res.data.map((item) => item.embedding);
+        const results = await Promise.all(promises);
+        return results.flat();
       } catch (error) {
         throw this.handleError(error);
       }
+    }
+
+    async invokeEmbeddings(
+      payload: EmbeddingsPayload,
+      options?: EmbeddingsOptions,
+    ): Promise<EmbeddingItem[]> {
+      const res = await this.client.embeddings.create(
+        { ...payload, user: options?.user },
+        { headers: options?.headers, signal: options?.signal },
+      );
+      return res.data;
     }
 
     async textToImage(payload: TextToImagePayload) {
