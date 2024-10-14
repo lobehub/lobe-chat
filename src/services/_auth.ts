@@ -1,5 +1,5 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
-import { LobeSenseNovaAI, ModelProvider } from '@/libs/agent-runtime';
+import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
 import { GlobalLLMProviderKey } from '@/types/user/settings';
@@ -30,7 +30,7 @@ export const getProviderAuthPayload = (provider: string) => {
         useUserStore.getState(),
       );
 
-      const apiKey = LobeSenseNovaAI.generateJWTToken(sensenovaAccessKeyID || '', sensenovaAccessKeySecret || '', 60, 15);
+      const apiKey = (sensenovaAccessKeyID || '') + ':' + (sensenovaAccessKeySecret || '')
 
       return { 
         apiKey,

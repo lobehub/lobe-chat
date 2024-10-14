@@ -1,68 +1,102 @@
-import OpenAI from 'openai';
-import CryptoJS from 'crypto-js';
+import OpenAI, { ClientOptions } from 'openai';
 
-import { ChatStreamPayload, ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import { LobeRuntimeAI } from '../BaseAI';
+import { AgentRuntimeErrorType } from '../error';
+import { ChatCompetitionOptions, ChatStreamPayload, ModelProvider } from '../types';
+import { AgentRuntimeError } from '../utils/createError';
+import { debugStream } from '../utils/debugStream';
+import { desensitizeUrl } from '../utils/desensitizeUrl';
+import { handleOpenAIError } from '../utils/handleOpenAIError';
+import { convertOpenAIMessages } from '../utils/openaiHelpers';
+import { StreamingResponse } from '../utils/response';
+import { OpenAIStream } from '../utils/streams';
+import { generateApiToken } from './authToken';
 
-// Helper function for base64 URL encoding
-const base64UrlEncode = (obj: object) => {
-  return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(JSON.stringify(obj)))
-    .replaceAll('=', '')
-    .replaceAll('+', '-')
-    .replaceAll('/', '_');
-};
+const DEFAULT_BASE_URL = 'https://api.sensenova.cn/compatible-mode/v1';
 
-// Function to generate JWT token
-// https://console.sensecore.cn/help/docs/model-as-a-service/nova/overview/Authorization
-const generateJwtTokenSenseNova = (accessKeyID: string = '', accessKeySecret: string = '', expiredAfter: number = 1800, notBefore: number = 5) => {
-  const headers = {
-    alg: 'HS256',
-    typ: 'JWT',
-  };
+export class LobeSenseNovaAI implements LobeRuntimeAI {
+  private client: OpenAI;
 
-  const payload = {
-    exp: Math.floor(Date.now() / 1000) + expiredAfter,
-    iss: accessKeyID,
-    nbf: Math.floor(Date.now() / 1000) - notBefore,
-  };
+  baseURL: string;
 
-  const data = `${base64UrlEncode(headers)}.${base64UrlEncode(payload)}`;
+  constructor(oai: OpenAI) {
+    this.client = oai;
+    this.baseURL = this.client.baseURL;
+  }
 
-  const signature = CryptoJS.HmacSHA256(data, accessKeySecret)
-    .toString(CryptoJS.enc.Base64)
-    .replaceAll('=', '')
-    .replaceAll('+', '-')
-    .replaceAll('/', '_');
+  static async fromAPIKey({ apiKey, baseURL = DEFAULT_BASE_URL, ...res }: ClientOptions = {}) {
+    const invalidSenseNovaAPIKey = AgentRuntimeError.createError(
+      AgentRuntimeErrorType.InvalidProviderAPIKey,
+    );
 
-  const apiKey = `${data}.${signature}`;
+    if (!apiKey) throw invalidSenseNovaAPIKey;
 
-  return apiKey;
-};
+    let token: string;
 
-export const LobeSenseNovaAI = (() => {
-  const factory = LobeOpenAICompatibleFactory({
-    baseURL: 'https://api.sensenova.cn/compatible-mode/v1',
-    chatCompletion: {
-      handlePayload: (payload: ChatStreamPayload) => {
-        const { frequency_penalty, temperature, top_p, ...rest } = payload;
+    try {
+      token = await generateApiToken(apiKey);
+    } catch {
+      throw invalidSenseNovaAPIKey;
+    }
 
-        return {
-          ...rest,
-          frequency_penalty: (frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 2) ? frequency_penalty : undefined,
-          temperature: (temperature !== undefined && temperature > 0 && temperature <= 2) ? temperature : undefined,
-          top_p: (top_p !== undefined && top_p > 0 && top_p < 1) ? top_p : undefined,
-        } as OpenAI.ChatCompletionCreateParamsStreaming;
-      },
-    },
-    debug: {
-      chatCompletion: () => process.env.DEBUG_SENSENOVA_CHAT_COMPLETION === '1',
-    },
-    provider: ModelProvider.SenseNova,
-  });
+    console.log(token);
+    
+    const header = { Authorization: `Bearer ${token}` };
 
-  return Object.assign(factory, {
-    generateJWTToken: (ak: string, sk: string, expiredAfter: number = 1800, notBefore: number = 5) => {
-      return generateJwtTokenSenseNova(ak, sk, expiredAfter, notBefore);
-    },
-  });
-})();
+    console.log(header);
+
+    const llm = new OpenAI({ apiKey, baseURL, defaultHeaders: header, ...res });
+
+    return new LobeSenseNovaAI(llm);
+  }
+
+  async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    try {
+      const params = await this.buildCompletionsParams(payload);
+
+      const response = await this.client.chat.completions.create(
+        params as unknown as OpenAI.ChatCompletionCreateParamsStreaming,
+      );
+
+      const [prod, debug] = response.tee();
+
+      if (process.env.DEBUG_SENSENOVA_CHAT_COMPLETION === '1') {
+        debugStream(debug.toReadableStream()).catch(console.error);
+      }
+
+      return StreamingResponse(OpenAIStream(prod), {
+        headers: options?.headers,
+      });
+    } catch (error) {
+      const { errorResult, RuntimeError } = handleOpenAIError(error);
+
+      const errorType = RuntimeError || AgentRuntimeErrorType.ProviderBizError;
+      let desensitizedEndpoint = this.baseURL;
+
+      if (this.baseURL !== DEFAULT_BASE_URL) {
+        desensitizedEndpoint = desensitizeUrl(this.baseURL);
+      }
+      throw AgentRuntimeError.chat({
+        endpoint: desensitizedEndpoint,
+        error: errorResult,
+        errorType,
+        provider: ModelProvider.SenseNova,
+      });
+    }
+  }
+
+  private async buildCompletionsParams(payload: ChatStreamPayload) {
+    const { frequency_penalty, messages, temperature, top_p, ...params } = payload;
+
+    return {
+      messages: await convertOpenAIMessages(messages as any),
+      ...params,
+      frequency_penalty: (frequency_penalty !== undefined && frequency_penalty > 0 && frequency_penalty <= 2) ? frequency_penalty : undefined,
+      stream: true,
+      temperature: (temperature !== undefined && temperature > 0 && temperature <= 2) ? temperature : undefined,
+      top_p: (top_p !== undefined && top_p > 0 && top_p < 1) ? top_p : undefined,
+    };
+  }
+}
+
+export default LobeSenseNovaAI;
