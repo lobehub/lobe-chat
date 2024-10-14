@@ -273,14 +273,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                       | 助手说明                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
-| [健身专家](https://chat-preview.lobehub.com/market?agent=assistants-health-better)<br/><sup>By **[Lockeysama](https://github.com/Lockeysama)** on **2024-10-08**</sup>         | 知识渊博的健身专家<br/>`健身` `咨询` `生活问题` `建议`                                                  |
-| [代码优化 / 错误修改](https://chat-preview.lobehub.com/market?agent=code-review-and-fix)<br/><sup>By **[alphandbelt](https://github.com/alphandbelt)** on **2024-10-08**</sup> | 精通多种编程语言，优化代码结构，修复错误并提供优雅的解决方案。<br/>`代码优化` `错误修改` `多种编程语言` |
-| [伦理安全分析师](https://chat-preview.lobehub.com/market?agent=cyber-specialist)<br/><sup>By **[ayeantics](https://github.com/ayeantics)** on **2024-10-08**</sup>             | 专注于识别和减轻网络和移动平台中的安全漏洞。<br/>`网络安全` `伦理黑客` `漏洞评估` `咨询` `技术支持`     |
-| [Mistaker](https://chat-preview.lobehub.com/market?agent=english)<br/><sup>By **[Vork-IT](https://github.com/Vork-IT)** on **2024-10-08**</sup>                                | 通过清晰的解释和语法、发音示例来消除错误。<br/>`英语`                                                   |
+| 最近新增                                                                                                                                                                                    | 助手说明                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| [GitHub 项目文档助手](https://chat-preview.lobehub.com/market?agent=github-doc-asst)<br/><sup>By **[Luyi-2333](https://github.com/Luyi-2333)** on **2024-10-14**</sup>                      | 专注开源项目文档编写与优化<br/>`文档优化` `开源项目` `撰写技巧` `git-hub`                       |
+| [眼科医生](https://chat-preview.lobehub.com/market?agent=ophthalmologist)<br/><sup>By **[yuphone](https://github.com/yuphone)** on **2024-10-14**</sup>                                     | 擅长眼科诊断与治疗建议提供<br/>`医疗` `眼科` `诊断` `建议` `专业`                               |
+| [半导体文本优化专家](https://chat-preview.lobehub.com/market?agent=semiconductor-article-optimization-expert)<br/><sup>By **[yuphone](https://github.com/yuphone)** on **2024-10-14**</sup> | 擅长半导体行业文本优化与规范化写作<br/>`文本优化` `行业专业` `语法纠正` `逻辑改善` `标准化写作` |
+| [无线通信专家](https://chat-preview.lobehub.com/market?agent=wireless-communication-expert)<br/><sup>By **[yuphone](https://github.com/yuphone)** on **2024-10-14**</sup>                   | 擅长无线通信技术，精通 4G 至 6G 的行业知识<br/>`通信技术` `专家` `咨询` `4-g` `5-g`             |
 
-> 📊 Total agents: [<kbd>**411**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**416**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
