@@ -8,6 +8,7 @@ const config = {
   S3_ENABLE_PATH_STYLE: false,
   S3_PUBLIC_DOMAIN: 'https://example.com',
   S3_BUCKET: 'my-bucket',
+  S3_SET_ACL: true,
 };
 
 vi.mock('@/config/file', () => ({
