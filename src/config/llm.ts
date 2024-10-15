@@ -80,6 +80,10 @@ export const getLLMConfig = () => {
       AWS_SECRET_ACCESS_KEY: z.string().optional(),
       AWS_SESSION_TOKEN: z.string().optional(),
 
+      ENABLED_WENXIN: z.boolean(),
+      WENXIN_ACCESS_KEY: z.string().optional(),
+      WENXIN_SECRET_KEY: z.string().optional(),
+
       ENABLED_OLLAMA: z.boolean(),
       OLLAMA_PROXY_URL: z.string().optional(),
       OLLAMA_MODEL_LIST: z.string().optional(),
@@ -121,6 +125,11 @@ export const getLLMConfig = () => {
       ENABLED_HUNYUAN: z.boolean(),
       HUNYUAN_API_KEY: z.string().optional(),
       HUNYUAN_MODEL_LIST: z.string().optional(),
+
+      ENABLED_HUGGINGFACE: z.boolean(),
+      HUGGINGFACE_API_KEY: z.string().optional(),
+      HUGGINGFACE_PROXY_URL: z.string().optional(),
+      HUGGINGFACE_MODEL_LIST: z.string().optional(),
 
       ENABLED_DOUBAO: z.boolean(),
       ARK_API_KEY: z.string().optional(),
@@ -202,6 +211,10 @@ export const getLLMConfig = () => {
       AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
       AWS_SESSION_TOKEN: process.env.AWS_SESSION_TOKEN,
 
+      ENABLED_WENXIN: !!process.env.WENXIN_ACCESS_KEY && !!process.env.WENXIN_SECRET_KEY,
+      WENXIN_ACCESS_KEY: process.env.WENXIN_ACCESS_KEY,
+      WENXIN_SECRET_KEY: process.env.WENXIN_SECRET_KEY,
+
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
       OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
       OLLAMA_MODEL_LIST: process.env.OLLAMA_MODEL_LIST,
@@ -243,6 +256,11 @@ export const getLLMConfig = () => {
       ENABLED_HUNYUAN: !!process.env.HUNYUAN_API_KEY,
       HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
       HUNYUAN_MODEL_LIST: process.env.HUNYUAN_MODEL_LIST,
+
+      ENABLED_HUGGINGFACE: !!process.env.HUGGINGFACE_API_KEY,
+      HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
+      HUGGINGFACE_PROXY_URL: process.env.HUGGINGFACE_PROXY_URL,
+      HUGGINGFACE_MODEL_LIST: process.env.HUGGINGFACE_MODEL_LIST,
 
       ENABLED_DOUBAO: !!(process.env.ARK_API_KEY && process.env.ARK_MODEL_LIST),
       ARK_API_KEY: process.env.ARK_API_KEY,

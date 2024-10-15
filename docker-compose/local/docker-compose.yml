@@ -1,10 +1,11 @@
+name: lobe-chat-database
 services:
   network-service:
     image: alpine
     container_name: lobe-network
     ports:
-      - '${MINIO_PORT}:${MINIO_PORT}'  # MinIO API
-      - '9001:9001'  # MinIO Console
+      - '${MINIO_PORT}:${MINIO_PORT}' # MinIO API
+      - '9001:9001' # MinIO Console
       - '${CASDOOR_PORT}:${CASDOOR_PORT}' # Casdoor
       - '${LOBE_PORT}:3210' # LobeChat
     command: tail -f /dev/null
@@ -15,7 +16,7 @@ services:
     image: pgvector/pgvector:pg16
     container_name: lobe-postgres
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - './data:/var/lib/postgresql/data'
     environment:
@@ -44,6 +45,7 @@ services:
     command: >
       server /etc/minio/data --address ":${MINIO_PORT}" --console-address ":9001"
 
+
   casdoor:
     image: casbin/casdoor
     container_name: lobe-casdoor
@@ -53,17 +55,17 @@ services:
       postgresql:
         condition: service_healthy
     environment:
-      RUNNING_IN_DOCKER: "true"
-      driverName: "postgres"
-      dataSourceName: "user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor"
-      origin: "http://localhost:${CASDOOR_PORT}"
-      runmode: "dev"
+      RUNNING_IN_DOCKER: 'true'
+      driverName: 'postgres'
+      dataSourceName: 'user=postgres password=${POSTGRES_PASSWORD} host=postgresql port=5432 sslmode=disable dbname=casdoor'
+      origin: 'http://localhost:${CASDOOR_PORT}'
+      runmode: 'dev'
     volumes:
       - ./init_data.json:/init_data.json
 
   lobe:
     image: lobehub/lobe-chat-database
-    container_name: lobe-database
+    container_name: lobe-chat
     network_mode: 'service:network-service'
     depends_on:
       postgresql:

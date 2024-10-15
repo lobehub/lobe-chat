@@ -1,6 +1,5 @@
 const dns = require('dns').promises;
-const fs = require('fs');
-const tls = require('tls');
+const fs = require('fs').promises;
 const { spawn } = require('child_process');
 
 // Set file paths
@@ -23,67 +22,6 @@ const isValidIP = (ip, version = 4) => {
   }
 };
 
-// Function to check TLS validity of a URL
-const isValidTLS = (url = '') => {
-  if (!url) {
-    console.log('⚠️ TLS Check: No URL provided. Skipping TLS check. Ensure correct setting ENV.');
-    console.log('-------------------------------------');
-    return Promise.resolve();
-  }
-
-  const { protocol, host, port } = parseUrl(url);
-  if (protocol !== 'https') {
-    console.log(`⚠️ TLS Check: Non-HTTPS protocol (${protocol}). Skipping TLS check for ${url}.`);
-    console.log('-------------------------------------');
-    return Promise.resolve();
-  }
-
-  const options = { host, port, servername: host };
-  return new Promise((resolve, reject) => {
-    const socket = tls.connect(options, () => {
-      if (socket.authorized) {
-        console.log(`✅ TLS Check: Valid certificate for ${host}:${port}.`);
-        console.log('-------------------------------------');
-        resolve();
-      }
-      socket.end();
-    });
-
-    socket.on('error', (err) => {
-      const errMsg = `❌ TLS Check: Error for ${host}:${port}. Details:`;
-      switch (err.code) {
-        case 'CERT_HAS_EXPIRED':
-        case 'DEPTH_ZERO_SELF_SIGNED_CERT':
-          console.error(`${errMsg} Certificate is not valid. Consider setting NODE_TLS_REJECT_UNAUTHORIZED="0" or mapping /etc/ssl/certs/ca-certificates.crt.`);
-          break;
-        case 'UNABLE_TO_GET_ISSUER_CERT_LOCALLY':
-          console.error(`${errMsg} Unable to verify issuer. Ensure correct mapping of /etc/ssl/certs/ca-certificates.crt.`);
-          break;
-        default:
-          console.error(`${errMsg} Network issue. Check firewall or DNS.`);
-          break;
-      }
-      reject(err);
-    });
-  });
-};
-
-// Function to check TLS connections for OSS and Auth Issuer
-const checkTLSConnections = async () => {
-  await Promise.all([
-    isValidTLS(process.env.S3_ENDPOINT),
-    isValidTLS(process.env.S3_PUBLIC_DOMAIN),
-    isValidTLS(getEnvVarsByKeyword('_ISSUER')),
-  ]);
-};
-
-// Function to get environment variable by keyword
-const getEnvVarsByKeyword = (keyword) => {
-  return Object.entries(process.env)
-    .filter(([key, value]) => key.includes(keyword) && value)
-    .map(([, value]) => value)[0] || null;
-};
-
 // Function to parse protocol, host and port from a URL
 const parseUrl = (url) => {
   const { protocol, hostname: host, port } = new URL(url);
@@ -102,7 +40,8 @@ const resolveHostIP = async (host, version = 4) => {
 
     return address;
   } catch (err) {
-    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server.`, err);
+    console.error(`❌ DNS Error: Could not resolve ${host}. Check DNS server:`);
+    console.error(err);
     process.exit(1);
   }
 };
@@ -136,7 +75,7 @@ tcp_read_time_out 15000
 ${protocol} ${ip} ${port}
 `.trim();
 
-  fs.writeFileSync(PROXYCHAINS_CONF_PATH, configContent);
+  await fs.writeFile(PROXYCHAINS_CONF_PATH, configContent);
   console.log(`✅ ProxyChains: All outgoing traffic routed via ${protocol}://${ip}:${port}.`);
   console.log('-------------------------------------');
 };
@@ -168,11 +107,18 @@ const runServer = async () => {
 
   if (process.env.DATABASE_DRIVER) {
     try {
+      await fs.access(DB_MIGRATION_SCRIPT_PATH);
+
       await runScript(DB_MIGRATION_SCRIPT_PATH);
-      await checkTLSConnections();
     } catch (err) {
-      console.error('❌ Error during DB migration or TLS connection check:', err);
-      process.exit(1);
+      if (err.code === 'ENOENT') {
+        console.log(`⚠️ DB Migration: Not found ${DB_MIGRATION_SCRIPT_PATH}. Skipping DB migration. Ensure to migrate database manually.`);
+        console.log('-------------------------------------');
+      } else {
+        console.error('❌ Error during DB migration:');
+        console.error(err);
+        process.exit(1);
+      }
     }
   }
 
