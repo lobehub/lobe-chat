@@ -8,7 +8,30 @@ import { FilesTabs, SortType } from '@/types/files';
 import { files, globalFiles, knowledgeBaseFiles, knowledgeBases, users } from '../../../schemas';
 import { FileModel } from '../file';
 
-const serverDB = await getTestDBInstance();
+let serverDB = await getTestDBInstance();
+
+vi.mock('@/database/server/core/db', async () => ({
+  get serverDB() {
+    return serverDB;
+  },
+}));
+
+let DISABLE_REMOVE_GLOBAL_FILE = false;
+
+vi.mock('@/config/db', async () => ({
+  get serverDBEnv() {
+    return {
+      get DISABLE_REMOVE_GLOBAL_FILE() {
+        return DISABLE_REMOVE_GLOBAL_FILE;
+      },
+      DATABASE_TEST_URL: process.env.DATABASE_TEST_URL,
+      DATABASE_DRIVER: 'node',
+    };
+  },
+  getServerDBConfig: vi.fn().mockReturnValue({
+    NEXT_PUBLIC_ENABLED_SERVER_SERVICE: true,
+  }),
+}));
 
 const userId = 'file-model-test-user-id';
 const fileModel = new FileModel(serverDB, userId);

@@ -25,13 +25,6 @@ import {
   createBedrockStream,
 } from '../utils/streams';
 
-interface BedRockEmbeddingsParams {
-  dimensions: number;
-  index: number;
-  input: string;
-  modelId: string;
-}
-
 export interface LobeBedrockAIParams {
   accessKeyId?: string;
   accessKeySecret?: string;
@@ -75,8 +68,8 @@ export class LobeBedrockAI implements LobeRuntimeAI {
           dimensions: payload.dimensions,
           index: index,
           input: inputText,
-          modelId: payload.model,
-        } as BedRockEmbeddingsParams,
+          model: payload.model,
+        },
         options,
       ),
     );
@@ -84,7 +77,7 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   }
 
   private invokeEmbeddingModel = async (
-    payload: BedRockEmbeddingsParams,
+    payload: EmbeddingsPayload,
     options?: EmbeddingsOptions,
   ): Promise<EmbeddingItem> => {
     const command = new InvokeModelCommand({
@@ -95,12 +88,16 @@ export class LobeBedrockAI implements LobeRuntimeAI {
         normalize: true,
       }),
       contentType: 'application/json',
-      modelId: payload.modelId,
+      modelId: payload.model,
     });
     try {
       const res = await this.client.send(command, { abortSignal: options?.signal });
       const responseBody = JSON.parse(new TextDecoder().decode(res.body));
-      return { embedding: responseBody.embedding, index: payload.index, object: 'embedding' };
+      return {
+        embedding: responseBody.embedding,
+        index: payload.index as number,
+        object: 'embedding',
+      };
     } catch (e) {
       const err = e as Error & { $metadata: any };
       throw AgentRuntimeError.chat({
