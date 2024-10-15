@@ -32,6 +32,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2.5 14B',
+      enabled: true,
       functionCall: true,
       id: 'Qwen/Qwen2.5-14B-Instruct',
       pricing: {
@@ -44,6 +45,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。',
       displayName: 'Qwen2.5 32B',
+      enabled: true,
       functionCall: true,
       id: 'Qwen/Qwen2.5-32B-Instruct',
       pricing: {
@@ -164,7 +166,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Gemma 2 是Google轻量化的开源文本模型系列。',
       displayName: 'Gemma 2 9B',
-      enabled: true,
       id: 'google/gemma-2-9b-it',
       pricing: {
         currency: 'CNY',
@@ -176,7 +177,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Gemma 2 延续了轻量化与高效的设计理念。',
       displayName: 'Gemma 2 27B',
-      enabled: true,
       id: 'google/gemma-2-27b-it',
       pricing: {
         currency: 'CNY',
@@ -188,7 +188,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。',
       displayName: 'Llama 3.1 8B',
-      enabled: true,
       functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
@@ -201,7 +200,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'LLaMA 3.1 70B 提供多语言的高效对话支持。',
       displayName: 'Llama 3.1 70B',
-      enabled: true,
       functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
       pricing: {
@@ -214,7 +212,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'LLaMA 3.1 405B 指令微调模型针对多语言对话场景进行了优化。',
       displayName: 'Llama 3.1 405B',
-      enabled: true,
       functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
       pricing: {
