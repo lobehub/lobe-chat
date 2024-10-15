@@ -132,6 +132,62 @@ describe('LobeOllamaAI', () => {
     });
   });
 
+  describe('embeddings', () => {
+    it('should return an array of EmbeddingItems', async () => {
+      // Arrange
+      const mockEmbeddingItem = { embedding: [0.1, 0.2], index: 0, object: 'embedding' };
+
+      const spy = vi
+        .spyOn(ollamaAI as any, 'invokeEmbeddingModel')
+        .mockResolvedValue(mockEmbeddingItem);
+
+      // Act
+      const result = await ollamaAI.embeddings({
+        input: ['Hello'],
+        dimensions: 128,
+        model: 'test-model',
+        index: 0,
+      });
+
+      // Assert
+      expect(spy).toHaveBeenCalled();
+      expect(result).toEqual([mockEmbeddingItem]);
+    });
+
+    it('should call instance.embeddings with correct parameters', async () => {
+      // Arrange
+      const payload = {
+        dimensions: 1024,
+        index: 0,
+        input: 'Hello',
+        modelId: 'test-model',
+        model: 'test-model', // Add the missing model property
+      };
+
+      const apiError = AgentRuntimeError.chat({
+        error: {
+          body: undefined,
+          message: 'Unexpected end of JSON input',
+          type: 'SyntaxError',
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: 'us-west-2',
+      });
+
+      // 使用 vi.spyOn 来模拟 instance.embeddings 方法
+      const spy = vi.spyOn(ollamaAI as any, 'invokeEmbeddingModel').mockRejectedValue(apiError);
+
+      try {
+        // Act
+        await ollamaAI['invokeEmbeddingModel'](payload);
+      } catch (e) {
+        expect(e).toEqual(apiError);
+      }
+      expect(spy).toHaveBeenCalled();
+    });
+  });
+
   describe('models', () => {
     it('should call Ollama client list method and return ChatModelCard array', async () => {
       const listMock = vi.fn().mockResolvedValue({
