@@ -6,6 +6,8 @@ import { forwardRef, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { BRANDING_NAME } from '@/const/branding';
+import { isCustomBranding } from '@/const/version';
 import { useTTS } from '@/hooks/useTTS';
 import { TTSServer } from '@/types/agent';
 import { ChatMessageError } from '@/types/message';
@@ -21,7 +23,11 @@ const SelectWithTTSPreview = forwardRef<RefSelectProps, SelectWithTTSPreviewProp
     const [voice, setVoice] = useState<string>(value);
     const { t } = useTranslation('welcome');
     const theme = useTheme();
-    const PREVIEW_TEXT = ['Lobe Chat', t('slogan.title'), t('slogan.desc1')].join('. ');
+    const PREVIEW_TEXT = [
+      BRANDING_NAME,
+      isCustomBranding ? t('welcome.slogan.title', { ns: 'custom' }) : t('slogan.title'),
+      isCustomBranding ? t('welcome.slogan.desc1', { ns: 'custom' }) : t('slogan.desc1'),
+    ].join('. ');
 
     const setDefaultError = useCallback(
       (err?: any) => {

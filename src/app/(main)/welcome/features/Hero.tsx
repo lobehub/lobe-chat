@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { BRANDING_NAME } from '@/const/branding';
+import { isCustomBranding } from '@/const/version';
 
 const useStyles = createStyles(({ css, token }) => {
   return {
@@ -32,7 +33,7 @@ const useStyles = createStyles(({ css, token }) => {
 const Hero = memo(() => {
   const { styles } = useStyles();
 
-  const { t } = useTranslation('welcome');
+  const { t } = useTranslation(['welcome', 'custom']);
 
   return (
     <>
@@ -46,7 +47,9 @@ const Hero = memo(() => {
         wrap={'wrap'}
       >
         <strong style={{ fontSize: 'min(56px, 8vw)' }}>{BRANDING_NAME}</strong>
-        <span>{t('slogan.title')}</span>
+        <span>
+          {isCustomBranding ? t('welcome.slogan.title', { ns: 'custom' }) : t('slogan.title')}
+        </span>
       </Flexbox>
       <Flexbox
         align={'center'}
@@ -56,7 +59,7 @@ const Hero = memo(() => {
         justify={'center'}
         wrap={'wrap'}
       >
-        {t('slogan.desc1')}
+        {isCustomBranding ? t('welcome.slogan.desc1', { ns: 'custom' }) : t('slogan.desc1')}
       </Flexbox>
     </>
   );
