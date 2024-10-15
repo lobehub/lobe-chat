@@ -58,13 +58,26 @@ const SiliconCloud: ModelProviderCard = {
       displayName: 'Qwen2.5 72B',
       enabled: true,
       functionCall: true,
-      id: 'Qwen/Qwen2.5-72B-Instruct',
+      id: 'Qwen/Qwen2.5-72B-Instruct-128K',
+      pricing: {
+        currency: 'CNY',
+        input: 4.13,
+        output: 4.13,
+      },
+      tokens: 131_072,
+    },
+    {
+      description: 'Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能。',
+      displayName: 'Qwen2 VL 72B',
+      enabled: true,
+      id: 'Qwen/Qwen2-VL-72B-Instruct',
       pricing: {
         currency: 'CNY',
         input: 4.13,
         output: 4.13,
       },
       tokens: 32_768,
+      vision: true,
     },
     {
       description: 'Qwen2.5-Math 专注于数学领域的问题求解，为高难度题提供专业解答。',
@@ -175,6 +188,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。',
       displayName: 'Llama 3.1 8B',
+      functionCall: true,
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
@@ -187,6 +201,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'LLaMA 3.1 70B 提供多语言的高效对话支持。',
       displayName: 'Llama 3.1 70B',
+      functionCall: true,
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
       pricing: {
@@ -199,6 +214,7 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'LLaMA 3.1 405B 指令微调模型针对多语言对话场景进行了优化。',
       displayName: 'Llama 3.1 405B',
+      functionCall: true,
       enabled: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
       pricing: {
