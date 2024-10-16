@@ -128,6 +128,39 @@ const SiliconCloud: ModelProviderCard = {
       tokens: 32_768,
     },
     {
+      description: 'InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。',
+      displayName: 'InternVL2 8B',
+      id: 'Pro/OpenGVLab/InternVL2-8B',
+      pricing: {
+        currency: 'CNY',
+        input: 0.35,
+        output: 0.35,
+      },
+      tokens: 8192,
+    },
+    {
+      description: 'InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。',
+      displayName: 'InternVL2 26B',
+      id: 'OpenGVLab/InternVL2-26B',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 1,
+      },
+      tokens: 8192,
+    },
+    {
+      description: 'InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。',
+      displayName: 'InternVL2 Llama3 76B',
+      id: 'OpenGVLab/InternVL2-Llama3-76B',
+      pricing: {
+        currency: 'CNY',
+        input: 4.13,
+        output: 4.13,
+      },
+      tokens: 8192,
+    },
+    {
       description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
       displayName: 'GLM-4 9B',
       functionCall: true,
@@ -189,7 +222,6 @@ const SiliconCloud: ModelProviderCard = {
       description: 'LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。',
       displayName: 'Llama 3.1 8B',
       enabled: true,
-      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -202,7 +234,6 @@ const SiliconCloud: ModelProviderCard = {
       description: 'LLaMA 3.1 70B 提供多语言的高效对话支持。',
       displayName: 'Llama 3.1 70B',
       enabled: true,
-      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -215,7 +246,6 @@ const SiliconCloud: ModelProviderCard = {
       description: 'LLaMA 3.1 405B 指令微调模型针对多语言对话场景进行了优化。',
       displayName: 'Llama 3.1 405B',
       enabled: true,
-      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-405B-Instruct',
       pricing: {
         currency: 'CNY',
