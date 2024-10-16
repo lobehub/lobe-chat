@@ -68,6 +68,19 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       description: 'Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能。',
+      displayName: 'Qwen2 VL 7B',
+      enabled: true,
+      id: 'Pro/Qwen/Qwen2-VL-7B-Instruct',
+      pricing: {
+        currency: 'CNY',
+        input: 0.35,
+        output: 0.35,
+      },
+      tokens: 32_768,
+      vision: true,
+    },
+    {
+      description: 'Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在视觉理解基准测试中达到了最先进的性能。',
       displayName: 'Qwen2 VL 72B',
       enabled: true,
       id: 'Qwen/Qwen2-VL-72B-Instruct',
@@ -136,7 +149,7 @@ const SiliconCloud: ModelProviderCard = {
         input: 0.35,
         output: 0.35,
       },
-      tokens: 8192,
+      tokens: 32_768,
       vision: true,
     },
     {
@@ -148,7 +161,7 @@ const SiliconCloud: ModelProviderCard = {
         input: 1,
         output: 1,
       },
-      tokens: 8192,
+      tokens: 32_768,
       vision: true,
     },
     {
