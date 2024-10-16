@@ -137,6 +137,7 @@ const SiliconCloud: ModelProviderCard = {
         output: 0.35,
       },
       tokens: 8192,
+      vision: true,
     },
     {
       description: 'InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。',
@@ -148,6 +149,7 @@ const SiliconCloud: ModelProviderCard = {
         output: 1,
       },
       tokens: 8192,
+      vision: true,
     },
     {
       description: 'InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。',
@@ -159,6 +161,7 @@ const SiliconCloud: ModelProviderCard = {
         output: 4.13,
       },
       tokens: 8192,
+      vision: true,
     },
     {
       description: 'GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。',
