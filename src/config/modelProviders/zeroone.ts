@@ -1,8 +1,15 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref :https://platform.lingyiwanwu.com/docs#%E6%A8%A1%E5%9E%8B
+// ref: https://platform.lingyiwanwu.com/docs#%E6%A8%A1%E5%9E%8B
 const ZeroOne: ModelProviderCard = {
   chatModels: [
+    {
+      description: '最新高性能模型，保证高质量输出同时，推理速度大幅提升。',
+      displayName: 'Yi Lightning',
+      enabled: true,
+      id: 'yi-lightning',
+      tokens: 16_384,
+    },
     {
       description: '全新千亿参数模型，提供超强问答及文本生成能力。',
       displayName: 'Yi Large',
