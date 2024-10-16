@@ -15,7 +15,11 @@ export interface StreamStack {
 export interface StreamProtocolChunk {
   data: any;
   id?: string;
-  type: 'text' | 'tool_calls' | 'data' | 'stop' | 'error';
+  /**
+    * - thoughts: the thoughts of the AI
+    * - tool_using: the tool is using
+    */
+  type: 'text' | 'tool_calls' | 'data' | 'stop' | 'error' | 'thoughts' | 'tool_using'
 }
 
 export interface StreamToolCallChunkData {

@@ -17,6 +17,7 @@ const bedrockConfig = (s: UserStore) => keyVaultsSettings(s).bedrock || {};
 const wenxinConfig = (s: UserStore) => keyVaultsSettings(s).wenxin || {};
 const ollamaConfig = (s: UserStore) => keyVaultsSettings(s).ollama || {};
 const azureConfig = (s: UserStore) => keyVaultsSettings(s).azure || {};
+const difyConfig = (s: UserStore) => keyVaultsSettings(s).dify || {};
 const getVaultByProvider = (provider: GlobalLLMProviderKey) => (s: UserStore) =>
   (keyVaultsSettings(s)[provider] || {}) as OpenAICompatibleKeyVault &
     AzureOpenAIKeyVault &
@@ -44,4 +45,5 @@ export const keyVaultsConfigSelectors = {
   openAIConfig,
   password,
   wenxinConfig,
+  difyConfig,
 };

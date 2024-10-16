@@ -21,6 +21,12 @@ export interface WenxinKeyVault {
   secretKey?: string;
 }
 
+export interface DifyKeyValut {
+  token?: string;
+  baseUrl?: string;
+  userId?: string;
+}
+
 export interface UserKeyVaults {
   ai21?: OpenAICompatibleKeyVault;
   ai360?: OpenAICompatibleKeyVault;
@@ -55,4 +61,5 @@ export interface UserKeyVaults {
   wenxin?: WenxinKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
+  dify?: DifyKeyValut;
 }

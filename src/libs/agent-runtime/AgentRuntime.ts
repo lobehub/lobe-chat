@@ -42,6 +42,7 @@ import {
 import { LobeUpstageAI } from './upstage';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
+import LobeDify from './dify';
 
 export interface AgentChatOptions {
   enableTrace?: boolean;
@@ -154,6 +155,7 @@ class AgentRuntime {
       upstage: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
+      dify: Partial<{ baseUrl: string; token: string; userId: string; conversation_id: string}>;
     }>,
   ) {
     let runtimeModel: LobeRuntimeAI;
@@ -313,6 +315,11 @@ class AgentRuntime {
       case ModelProvider.Hunyuan: {
         runtimeModel = new LobeHunyuanAI(params.hunyuan);
         break;
+      }
+
+      case ModelProvider.Dify: {
+        runtimeModel = new LobeDify(params.dify || {})
+        break
       }
     }
 

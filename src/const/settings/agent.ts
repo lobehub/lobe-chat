@@ -22,6 +22,12 @@ export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
 
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   chatConfig: DEFAULT_AGENT_CHAT_CONFIG,
+  dify: {
+    baseUrl: 'https://api.dify.ai/v1',
+    enabled: false,
+    token: '',
+    userId: 'devTest',
+  },
   model: DEFAULT_MODEL,
   params: {
     frequency_penalty: 0,
@@ -32,7 +38,7 @@ export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {
   plugins: [],
   provider: ModelProvider.OpenAI,
   systemRole: '',
-  tts: DEFAUTT_AGENT_TTS_CONFIG,
+  tts: DEFAUTT_AGENT_TTS_CONFIG
 };
 
 export const DEFAULT_AGENT: UserDefaultAgent = {

@@ -351,6 +351,11 @@ export const fetchSSE = async (url: string, options: RequestInit & FetchSSEOptio
             options.onMessageHandle?.({ tool_calls: toolCalls, type: 'tool_calls' });
           }
         }
+
+        case 'thoughts':
+          // TODO: add process logit
+          console.log('[fetchSSE - dify]: ', data);
+          break;
       }
     },
     onopen: async (res) => {

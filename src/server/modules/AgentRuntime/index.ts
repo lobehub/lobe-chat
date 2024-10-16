@@ -263,6 +263,9 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Dify: {
+      return payload
+    }
   }
 };
 

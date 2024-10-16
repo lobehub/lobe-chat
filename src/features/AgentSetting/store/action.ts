@@ -58,8 +58,8 @@ export interface Action extends PublicAction {
   resetAgentMeta: () => void;
   setAgentConfig: (config: DeepPartial<LobeAgentConfig>) => void;
   setAgentMeta: (meta: Partial<MetaData>) => void;
-
   setChatConfig: (config: Partial<LobeAgentChatConfig>) => void;
+
   streamUpdateMetaArray: (key: keyof MetaData) => any;
   streamUpdateMetaString: (key: keyof MetaData) => any;
   toggleAgentPlugin: (pluginId: string, state?: boolean) => void;
@@ -290,6 +290,7 @@ export const store: StateCreator<Store, [['zustand/devtools', never]]> = (set, g
       }
     };
   },
+
 
   toggleAgentPlugin: (id, state) => {
     get().dispatchConfig({ pluginId: id, state, type: 'togglePlugin' });

@@ -165,6 +165,14 @@ export function initializeWithClientStore(provider: string, payload: any) {
     case ModelProvider.ZeroOne: {
       break;
     }
+    case ModelProvider.Dify: {
+      providerOptions = {
+        token: providerAuthPayload?.apiKey,
+        baseUrl: providerAuthPayload?.endpoint,
+        userId: providerAuthPayload?.userId,
+      }
+      break;
+    }
   }
 
   /**
