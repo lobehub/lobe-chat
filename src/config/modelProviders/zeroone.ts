@@ -127,7 +127,7 @@ const ZeroOne: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      description: '轻量化版本，推荐使用 yi-lightning 。',
+      description: '轻量化版本，推荐使用 yi-lightning。',
       displayName: 'Yi Lightning Lite',
       id: 'yi-lightning-lite',
       pricing: {
@@ -138,11 +138,11 @@ const ZeroOne: ModelProviderCard = {
       tokens: 16_384,
     },
   ],
-  checkModel: 'yi-spark',
+  checkModel: 'yi-lightning',
   description:
     '零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。',
   id: 'zeroone',
-  modelsUrl: 'https://platform.lingyiwanwu.com/docs',
+  modelsUrl: 'https://platform.lingyiwanwu.com/docs#模型与计费',
   name: '01.AI',
   url: 'https://www.lingyiwanwu.com/',
 };
