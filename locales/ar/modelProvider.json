@@ -119,6 +119,22 @@
       "title": "Download specified Ollama model"
     }
   },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "أدخل معرف مفتاح الوصول لـ SenseNova",
+      "placeholder": "معرف مفتاح الوصول لـ SenseNova",
+      "title": "معرف مفتاح الوصول"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "أدخل سر مفتاح الوصول لـ SenseNova",
+      "placeholder": "سر مفتاح الوصول لـ SenseNova",
+      "title": "سر مفتاح الوصول"
+    },
+    "unlock": {
+      "description": "أدخل معرف مفتاح الوصول / سر مفتاح الوصول لبدء الجلسة. التطبيق لن يسجل إعدادات المصادقة الخاصة بك",
+      "title": "استخدم معلومات مصادقة SenseNova المخصصة"
+    }
+  },
   "wenxin": {
     "accessKey": {
       "desc": "أدخل مفتاح الوصول من منصة بايدو تشيانفان",
