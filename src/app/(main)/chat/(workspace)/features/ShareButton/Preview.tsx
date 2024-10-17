@@ -1,12 +1,12 @@
 import { ModelTag } from '@lobehub/icons';
 import { Avatar, ChatHeaderTitle, Markdown } from '@lobehub/ui';
 import { memo } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import pkg from '@/../package.json';
 import { ProductLogo } from '@/components/Branding';
 import ChatList from '@/features/Conversation/components/ChatList';
+import { useInboxAgentMeta } from '@/hooks/useInboxAgentMeta';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
@@ -30,11 +30,11 @@ const Preview = memo<FieldType & { title?: string }>(
       sessionMetaSelectors.currentAgentBackgroundColor(s),
     ]);
 
-    const { t } = useTranslation('chat');
+    const { title: inboxTitle, description: inboxDescription } = useInboxAgentMeta();
     const { styles } = useStyles(withBackground);
 
-    const displayTitle = isInbox ? t('inbox.title') : title;
-    const displayDesc = isInbox ? t('inbox.desc') : description;
+    const displayTitle = isInbox ? inboxTitle : title;
+    const displayDesc = isInbox ? inboxDescription : description;
 
     return (
       <div className={styles.preview}>

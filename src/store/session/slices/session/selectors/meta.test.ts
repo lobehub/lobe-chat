@@ -1,11 +1,14 @@
-import { describe, expect, it } from 'vitest';
+import { Mock, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AVATAR } from '@/const/meta';
 import { DEFAULT_AGENT_CONFIG, DEFAUTT_AGENT_TTS_CONFIG } from '@/const/settings';
+import * as serverConfigSelectors from '@/store/serverConfig/selectors';
+import * as serverConfigStore from '@/store/serverConfig/store';
 import { SessionStore } from '@/store/session';
 import { MetaData } from '@/types/meta';
 import { LobeAgentSession, LobeSessionType } from '@/types/session';
 
+import * as listSelectors from './list';
 import { sessionMetaSelectors } from './meta';
 
 vi.mock('i18next', () => ({
@@ -43,10 +46,43 @@ describe('sessionMetaSelectors', () => {
       expect(meta).toEqual(expect.objectContaining(mockSessionStore.sessions[0].meta));
     });
 
-    it('should return inbox defaults if it is an inbox session', () => {
-      // Assume sessionSelectors.isInboxSession() is mocked to return true for this test
-      const meta = sessionMetaSelectors.currentAgentMeta(mockSessionStore);
-      expect(meta.avatar).toBe(DEFAULT_AVATAR);
+    describe('when it is an inbox session', () => {
+      const versionMock = vi.hoisted(() => ({
+        isCustomBranding: false,
+      }));
+
+      vi.mock('@/const/version', () => versionMock);
+      beforeEach(() => {
+        vi.spyOn(listSelectors.sessionSelectors, 'isInboxSession').mockReturnValue(true);
+        vi.spyOn(listSelectors.sessionSelectors, 'currentSession').mockReturnValue(undefined);
+      });
+
+      afterEach(() => {
+        vi.restoreAllMocks();
+        versionMock.isCustomBranding = false;
+      });
+
+      it('should return default inbox if isCustomBranding is false', () => {
+        const meta = sessionMetaSelectors.currentAgentMeta(mockSessionStore);
+        expect(meta).toEqual(
+          expect.objectContaining({
+            title: 'inbox.title',
+            description: 'inbox.desc',
+          }),
+        );
+      });
+
+      it('should return custom inbox if isCustomBranding is true', () => {
+        versionMock.isCustomBranding = true;
+
+        const meta = sessionMetaSelectors.currentAgentMeta(mockSessionStore);
+        expect(meta).toEqual(
+          expect.objectContaining({
+            title: 'chat.inbox.title',
+            description: 'chat.inbox.desc',
+          }),
+        );
+      });
     });
   });
 
