@@ -67,6 +67,7 @@
     "OllamaBizError": "Fehler bei der Anforderung des Ollama-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
     "OllamaServiceUnavailable": "Der Ollama-Dienst ist nicht verfügbar. Bitte überprüfen Sie, ob Ollama ordnungsgemäß ausgeführt wird und ob die CORS-Konfiguration von Ollama korrekt ist.",
     "OpenAIBizError": "Fehler bei der Anforderung des OpenAI-Dienstes. Bitte überprüfen Sie die folgenden Informationen oder versuchen Sie es erneut.",
+    "PermissionDenied": "Es tut uns leid, Sie haben keine Berechtigung, auf diesen Dienst zuzugreifen. Bitte überprüfen Sie, ob Ihr Schlüssel die erforderlichen Zugriffsrechte hat.",
     "PluginApiNotFound": "Entschuldigung, das API des Plugins im Plugin-Manifest existiert nicht. Bitte überprüfen Sie, ob Ihre Anfragemethode mit dem Plugin-Manifest-API übereinstimmt",
     "PluginApiParamsError": "Entschuldigung, die Eingabeüberprüfung der Plugin-Anfrage ist fehlgeschlagen. Bitte überprüfen Sie, ob die Eingabe mit den API-Beschreibungsinformationen übereinstimmt",
     "PluginFailToTransformArguments": "Es tut uns leid, die Plugin-Aufrufargumente konnten nicht transformiert werden. Bitte versuchen Sie, die Assistentennachricht erneut zu generieren, oder wechseln Sie zu einem leistungsstärkeren AI-Modell mit Tools Calling-Fähigkeiten und versuchen Sie es erneut.",

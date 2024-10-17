@@ -67,6 +67,7 @@
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
     "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controllare che Ollama sia in esecuzione correttamente o che la configurazione di cross-origin di Ollama sia corretta",
     "OpenAIBizError": "Errore di business di OpenAI. Si prega di controllare le informazioni seguenti o riprovare.",
+    "PermissionDenied": "Ci dispiace, non hai il permesso di accedere a questo servizio. Controlla se la tua chiave ha i diritti di accesso.",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
     "PluginFailToTransformArguments": "Spiacenti, la trasformazione degli argomenti della chiamata al plugin non è riuscita. Si prega di provare a rigenerare il messaggio dell'assistente o riprovare dopo aver cambiato il modello AI di Tools Calling con capacità più avanzate.",

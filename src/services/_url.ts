@@ -1,5 +1,3 @@
-// TODO: 未来所有核心路由需要迁移到 trpc，部分不需要迁移的则走 webapi
-
 /* eslint-disable sort-keys-fix/sort-keys-fix */
 import { transform } from 'lodash-es';
 
@@ -17,9 +15,6 @@ const mapWithBasePath = <T extends object>(apis: T): T => {
 };
 
 export const API_ENDPOINTS = mapWithBasePath({
-  // chat
-  chat: (provider: string) => withBasePath(`/api/chat/${provider}`),
-  chatModels: (provider: string) => withBasePath(`/api/chat/models/${provider}`),
   oauth: '/api/auth',
 
   proxy: '/webapi/proxy',
@@ -35,8 +30,12 @@ export const API_ENDPOINTS = mapWithBasePath({
   // trace
   trace: '/webapi/trace',
 
+  // chat
+  chat: (provider: string) => withBasePath(`/webapi/chat/${provider}`),
+  chatModels: (provider: string) => withBasePath(`/webapi/chat/models/${provider}`),
+
   // image
-  images: '/webapi/text-to-image/openai',
+  images: (provider: string) => `/webapi/text-to-image/${provider}`,
 
   // STT
   stt: '/webapi/stt/openai',

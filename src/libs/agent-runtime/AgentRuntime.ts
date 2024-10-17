@@ -14,6 +14,7 @@ import { LobeFireworksAI } from './fireworksai';
 import { LobeGithubAI } from './github';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
+import { LobeHuggingFaceAI } from './huggingface';
 import { LobeHunyuanAI } from './hunyuan';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
@@ -134,6 +135,7 @@ class AgentRuntime {
       github: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
+      huggingface: { apiKey?: string; baseURL?: string };
       hunyuan: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
@@ -174,7 +176,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.ZhiPu: {
-        runtimeModel = await LobeZhipuAI.fromAPIKey(params.zhipu);
+        runtimeModel = new LobeZhipuAI(params.zhipu);
         break;
       }
 
@@ -210,6 +212,11 @@ class AgentRuntime {
 
       case ModelProvider.DeepSeek: {
         runtimeModel = new LobeDeepSeekAI(params.deepseek);
+        break;
+      }
+
+      case ModelProvider.HuggingFace: {
+        runtimeModel = new LobeHuggingFaceAI(params.huggingface);
         break;
       }
 
