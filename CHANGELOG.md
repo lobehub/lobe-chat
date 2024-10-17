@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.22.7](https://github.com/lobehub/lobe-chat/compare/v1.22.6...v1.22.7)
+
+<sup>Released on **2024-10-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add qwen vision model & update qwen2.5 72b to 128k for siliconcloud.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add qwen vision model & update qwen2.5 72b to 128k for siliconcloud, closes [#4380](https://github.com/lobehub/lobe-chat/issues/4380) ([e8c009b](https://github.com/lobehub/lobe-chat/commit/e8c009b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.6](https://github.com/lobehub/lobe-chat/compare/v1.22.5...v1.22.6)
 
 <sup>Released on **2024-10-13**</sup>
