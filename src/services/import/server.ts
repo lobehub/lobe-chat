@@ -1,12 +1,37 @@
 import { DefaultErrorShape } from '@trpc/server/unstable-core-do-not-import';
 
 import { edgeClient, lambdaClient } from '@/libs/trpc/client';
+import { IImportService } from '@/services/import/type';
 import { useUserStore } from '@/store/user';
+import { ConfigFile } from '@/types/exportConfig';
 import { ImportStage, ImporterEntryData, OnImportCallbacks } from '@/types/importer';
 import { UserSettings } from '@/types/user/settings';
 import { uuid } from '@/utils/uuid';
 
-export class ServerService {
+export class ServerService implements IImportService {
+  importConfigState = async (config: ConfigFile, callbacks?: OnImportCallbacks): Promise<void> => {
+    if (config.exportType === 'settings') {
+      await this.importSettings(config.state.settings);
+      callbacks?.onStageChange?.(ImportStage.Success);
+      return;
+    }
+
+    if (config.exportType === 'all') {
+      await this.importSettings(config.state.settings);
+    }
+
+    await this.importData(
+      {
+        messages: (config.state as any).messages || [],
+        sessionGroups: (config.state as any).sessionGroups || [],
+        sessions: (config.state as any).sessions || [],
+        topics: (config.state as any).topics || [],
+        version: config.version,
+      },
+      callbacks,
+    );
+  };
+
   importSettings = async (settings: UserSettings) => {
     await useUserStore.getState().importAppSettings(settings);
   };
