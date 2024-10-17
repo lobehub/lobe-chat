@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.22.8](https://github.com/lobehub/lobe-chat/compare/v1.22.7...v1.22.8)
+
+<sup>Released on **2024-10-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Yi-Lightning model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Yi-Lightning model, closes [#4390](https://github.com/lobehub/lobe-chat/issues/4390) ([9e9fb9a](https://github.com/lobehub/lobe-chat/commit/9e9fb9a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.7](https://github.com/lobehub/lobe-chat/compare/v1.22.6...v1.22.7)
 
 <sup>Released on **2024-10-17**</sup>
