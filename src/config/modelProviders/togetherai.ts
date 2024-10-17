@@ -6,7 +6,7 @@ const TogetherAI: ModelProviderCard = {
   chatModels: [
     {
       description: 'LLaMA 3.2 旨在处理结合视觉和文本数据的任务。它在图像描述和视觉问答等任务中表现出色，跨越了语言生成和视觉推理之间的鸿沟。',
-      displayName: 'Llama 3.2 8B Instruct Turbo',
+      displayName: 'Llama 3.2 3B Instruct Turbo',
       enabled: true,
       id: 'meta-llama/Llama-3.2-3B-Instruct-Turbo',
       tokens: 131_072,
