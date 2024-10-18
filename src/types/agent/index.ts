@@ -17,8 +17,29 @@ export interface LobeAgentTTSConfig {
   };
 }
 
+export interface DifyConfig {
+  /**
+   * API地址
+   */
+  baseUrl?: string;
+  /**
+   * 是否启用
+   */
+  enabled: boolean;
+  /**
+   * token
+   */
+  token?: string
+
+  /**
+   * 用户id
+   */
+  userId: string
+}
+
 export interface LobeAgentConfig {
   chatConfig: LobeAgentChatConfig;
+  dify: DifyConfig;
   fewShots?: FewShots;
   files?: FileItem[];
   id?: string;
@@ -43,6 +64,7 @@ export interface LobeAgentConfig {
    *  模型供应商
    */
   provider?: string;
+
   /**
    * 系统角色
    */

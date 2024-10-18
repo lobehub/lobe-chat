@@ -355,7 +355,7 @@ export const chatAiChat: StateCreator<
 
     const agentConfig = getAgentConfig();
     const chatConfig = agentConfig.chatConfig;
-
+    
     const compiler = template(chatConfig.inputTemplate, { interpolate: /{{([\S\s]+?)}}/g });
 
     // ================================== //
@@ -444,6 +444,7 @@ export const chatAiChat: StateCreator<
         await internal_updateMessageContent(assistantId, content, toolCalls);
       },
       onMessageHandle: async (chunk) => {
+        console.log('[onMessageHandle] :', chunk);
         switch (chunk.type) {
           case 'text': {
             output += chunk.text;

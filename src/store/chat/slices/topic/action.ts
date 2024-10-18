@@ -26,10 +26,13 @@ import { setNamespace } from '@/utils/storeDebug';
 import { chatSelectors } from '../message/selectors';
 import { ChatTopicDispatch, topicReducer } from './reducer';
 import { topicSelectors } from './selectors';
+import { sessionService } from '@/services/session';
+import urlJoin from 'url-join';
 
 const n = setNamespace('t');
 
 const SWR_USE_FETCH_TOPIC = 'SWR_USE_FETCH_TOPIC';
+const SWR_USE_FETCH_TOPIC_FROM_DIFY = 'SWR_USE_FETCH_FROM_DIFY'
 const SWR_USE_SEARCH_TOPIC = 'SWR_USE_SEARCH_TOPIC';
 
 export interface ChatTopicAction {
@@ -193,7 +196,34 @@ export const chatTopic: StateCreator<
   useFetchTopics: (sessionId) =>
     useClientDataSWR<ChatTopic[]>(
       [SWR_USE_FETCH_TOPIC, sessionId],
-      async ([, sessionId]: [string, string]) => topicService.getTopics({ sessionId }),
+      async ([, sessionId]: [string, string]) => {
+        const session = await sessionService.getSessionConfig(sessionId)
+        // If Dify is disable, return from internal storage service
+        if (!session.dify.enabled)
+          return topicService.getTopics({ sessionId })
+        // Else, fetch from dify
+        const response = await fetch(
+          urlJoin(
+            session.dify.baseUrl ?? 'https://api.dify.ai/v1',
+            `/conversations?user=${session.dify.userId ?? 'dev'}`
+          ), {
+          headers: {
+            Authorization: `Bearer ${session.dify.token}`
+          },
+        })
+        const topics = await response.json()
+        // TODO: Should catch error gratefully
+        const { data } = topics
+        return data.map((item: {
+          id: string;
+          name: string;
+        }) => {
+          return {
+            title: item.name,
+            sessionId: item.id,
+          } as ChatTopic
+        })
+      },
       {
         suspense: true,
         fallbackData: [],
