@@ -458,6 +458,9 @@
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 continua a filosofia de design leve e eficiente."
   },
+  "google/gemma-2-2b-it": {
+    "description": "Modelo leve de ajuste de instruções do Google."
+  },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 é uma série de modelos de texto de código aberto leve da Google."
   },
@@ -589,6 +592,12 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "O modelo Llama 3.1 Sonar Small Online possui 8B de parâmetros, suportando um comprimento de contexto de aproximadamente 127.000 tokens, projetado para chats online, capaz de processar eficientemente diversas interações textuais."
   },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 é projetado para lidar com tarefas que combinam dados visuais e textuais. Ele se destaca em tarefas como descrição de imagens e perguntas visuais, superando a lacuna entre geração de linguagem e raciocínio visual."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 é projetado para lidar com tarefas que combinam dados visuais e textuais. Ele se destaca em tarefas como descrição de imagens e perguntas visuais, superando a lacuna entre geração de linguagem e raciocínio visual."
+  },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B oferece capacidade de processamento incomparável para complexidade, projetado sob medida para projetos de alta demanda."
   },
@@ -642,6 +651,9 @@
   },
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) oferece excelente capacidade de processamento de linguagem e uma experiência interativa notável."
+  },
+  "meta-llama/Llama-2-7b-chat-hf": {
+    "description": "Um dos melhores modelos de diálogo."
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) é um modelo de chat poderoso, suportando necessidades de diálogo complexas."
@@ -811,8 +823,8 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B é um modelo de especialistas esparsos, utilizando múltiplos parâmetros para aumentar a velocidade de raciocínio, adequado para tarefas de geração de linguagem e código."
   },
-  "openai/gpt-4o-2024-08-06": {
-    "description": "ChatGPT-4o é um modelo dinâmico, atualizado em tempo real para manter a versão mais atual. Ele combina forte compreensão e capacidade de geração de linguagem, adequado para cenários de aplicação em larga escala, incluindo atendimento ao cliente, educação e suporte técnico."
+  "openai/gpt-4o": {
+    "description": "ChatGPT-4o é um modelo dinâmico, atualizado em tempo real para manter a versão mais recente. Combina uma poderosa capacidade de compreensão e geração de linguagem, adequado para cenários de aplicação em larga escala, incluindo atendimento ao cliente, educação e suporte técnico."
   },
   "openai/gpt-4o-mini": {
     "description": "GPT-4o mini é o mais recente modelo da OpenAI, lançado após o GPT-4 Omni, que suporta entrada de texto e imagem e saída de texto. Como seu modelo compacto mais avançado, é muito mais barato do que outros modelos de ponta recentes e custa mais de 60% menos que o GPT-3.5 Turbo. Ele mantém inteligência de ponta, ao mesmo tempo que oferece uma relação custo-benefício significativa. O GPT-4o mini obteve uma pontuação de 82% no teste MMLU e atualmente está classificado acima do GPT-4 em preferências de chat."
@@ -862,11 +874,11 @@
   "qwen-vl-chat-v1": {
     "description": "O Qwen VL suporta uma maneira de interação flexível, incluindo múltiplas imagens, perguntas e respostas em várias rodadas, e capacidades criativas."
   },
-  "qwen-vl-max": {
-    "description": "O Qwen é um modelo de linguagem visual em larga escala. Em comparação com a versão aprimorada, ele melhora ainda mais a capacidade de raciocínio visual e a adesão a instruções, oferecendo um nível mais alto de percepção e cognição visual."
+  "qwen-vl-max-latest": {
+    "description": "Modelo de linguagem visual em escala ultra grande Qwen. Em comparação com a versão aprimorada, melhora ainda mais a capacidade de raciocínio visual e de seguir instruções, oferecendo um nível mais alto de percepção e cognição visual."
   },
-  "qwen-vl-plus": {
-    "description": "O Qwen é uma versão aprimorada do modelo de linguagem visual em larga escala, melhorando significativamente a capacidade de reconhecimento de detalhes e texto, suportando imagens com resolução superior a um milhão de pixels e qualquer proporção de largura e altura."
+  "qwen-vl-plus-latest": {
+    "description": "Versão aprimorada do modelo de linguagem visual em larga escala Qwen. Aumenta significativamente a capacidade de reconhecimento de detalhes e de texto, suportando resolução de mais de um milhão de pixels e imagens de qualquer proporção."
   },
   "qwen-vl-v1": {
     "description": "Inicializado com o modelo de linguagem Qwen-7B, adicionando um modelo de imagem, um modelo pré-treinado com resolução de entrada de imagem de 448."

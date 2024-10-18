@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { SendMessageParams } from '@/store/chat/slices/message/action';
+import { SendMessageParams } from '@/store/chat/slices/aiChat/action';
 import { fileChatSelectors, useFileStore } from '@/store/file';
 
 export type UseSendMessageParams = Pick<

@@ -1,13 +1,30 @@
 import { ModelProviderCard } from '@/types/llm';
 
-// ref :https://platform.lingyiwanwu.com/docs#%E6%A8%A1%E5%9E%8B
+// ref: https://platform.lingyiwanwu.com/docs#%E6%A8%A1%E5%9E%8B%E4%B8%8E%E8%AE%A1%E8%B4%B9
 const ZeroOne: ModelProviderCard = {
   chatModels: [
+    {
+      description: '最新高性能模型，保证高质量输出同时，推理速度大幅提升。',
+      displayName: 'Yi Lightning',
+      enabled: true,
+      id: 'yi-lightning',
+      pricing: {
+        currency: 'CNY',
+        input: 0.99,
+        output: 0.99,
+      },
+      tokens: 16_384,
+    },
     {
       description: '全新千亿参数模型，提供超强问答及文本生成能力。',
       displayName: 'Yi Large',
       enabled: true,
       id: 'yi-large',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 20,
+      },
       tokens: 32_768,
     },
     {
@@ -17,6 +34,11 @@ const ZeroOne: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'yi-large-fc',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 20,
+      },
       tokens: 32_768,
     },
     {
@@ -25,6 +47,11 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large RAG',
       enabled: true,
       id: 'yi-large-rag',
+      pricing: {
+        currency: 'CNY',
+        input: 25,
+        output: 25,
+      },
       tokens: 16_384,
     },
     {
@@ -32,6 +59,11 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Large Turbo',
       enabled: true,
       id: 'yi-large-turbo',
+      pricing: {
+        currency: 'CNY',
+        input: 12,
+        output: 12,
+      },
       tokens: 16_384,
     },
     {
@@ -39,6 +71,11 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Medium',
       enabled: true,
       id: 'yi-medium',
+      pricing: {
+        currency: 'CNY',
+        input: 2.5,
+        output: 2.5,
+      },
       tokens: 16_384,
     },
     {
@@ -46,6 +83,11 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Medium 200K',
       enabled: true,
       id: 'yi-medium-200k',
+      pricing: {
+        currency: 'CNY',
+        input: 12,
+        output: 12,
+      },
       tokens: 200_000,
     },
     {
@@ -53,6 +95,11 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Spark',
       enabled: true,
       id: 'yi-spark',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 1,
+      },
       tokens: 16_384,
     },
     {
@@ -60,23 +107,44 @@ const ZeroOne: ModelProviderCard = {
       displayName: 'Yi Vision',
       enabled: true,
       id: 'yi-vision',
+      pricing: {
+        currency: 'CNY',
+        input: 6,
+        output: 6,
+      },
       tokens: 16_384,
       vision: true,
     },
     {
-      description: '初期版本，推荐使用 yi-large（新版本）',
+      description: '初期版本，推荐使用 yi-large（新版本）。',
       displayName: 'Yi Large Preview',
       id: 'yi-large-preview',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 20,
+      },
+      tokens: 16_384,
+    },
+    {
+      description: '轻量化版本，推荐使用 yi-lightning。',
+      displayName: 'Yi Lightning Lite',
+      id: 'yi-lightning-lite',
+      pricing: {
+        currency: 'CNY',
+        input: 0.99,
+        output: 0.99,
+      },
       tokens: 16_384,
     },
   ],
-  checkModel: 'yi-spark',
+  checkModel: 'yi-lightning',
   description:
-    '01.AI 专注于AI 2.0时代的人工智能技术，大力推动“人+人工智能”的创新和应用，采用超强大模型和先进AI技术以提升人类生产力，实现技术赋能。',
+    '零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。',
   id: 'zeroone',
-  modelsUrl: 'https://platform.lingyiwanwu.com/docs',
+  modelsUrl: 'https://platform.lingyiwanwu.com/docs#模型与计费',
   name: '01.AI',
-  url: 'https://01.ai',
+  url: 'https://www.lingyiwanwu.com/',
 };
 
 export default ZeroOne;

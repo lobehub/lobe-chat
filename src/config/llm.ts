@@ -125,6 +125,11 @@ export const getLLMConfig = () => {
       ENABLED_HUNYUAN: z.boolean(),
       HUNYUAN_API_KEY: z.string().optional(),
       HUNYUAN_MODEL_LIST: z.string().optional(),
+
+      ENABLED_HUGGINGFACE: z.boolean(),
+      HUGGINGFACE_API_KEY: z.string().optional(),
+      HUGGINGFACE_PROXY_URL: z.string().optional(),
+      HUGGINGFACE_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -247,6 +252,11 @@ export const getLLMConfig = () => {
       ENABLED_HUNYUAN: !!process.env.HUNYUAN_API_KEY,
       HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,
       HUNYUAN_MODEL_LIST: process.env.HUNYUAN_MODEL_LIST,
+
+      ENABLED_HUGGINGFACE: !!process.env.HUGGINGFACE_API_KEY,
+      HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
+      HUGGINGFACE_PROXY_URL: process.env.HUGGINGFACE_PROXY_URL,
+      HUGGINGFACE_MODEL_LIST: process.env.HUGGINGFACE_MODEL_LIST,
     },
   });
 };
