@@ -184,7 +184,7 @@
     "openapi-fetch": "^0.9.7",
     "partial-json": "^0.1.7",
     "pdf-parse": "^1.1.1",
-    "pdfjs-dist": "4.4.168",
+    "pdfjs-dist": "4.7.76",
     "pg": "^8.12.0",
     "pino": "^9.3.2",
     "polished": "^4.3.1",
