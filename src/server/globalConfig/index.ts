@@ -102,6 +102,9 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_HUGGINGFACE,
     HUGGINGFACE_MODEL_LIST,
+
+    ENABLED_DOUBAO,
+    ARK_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -136,7 +139,13 @@ export const getServerGlobalConfig = () => {
         }),
       },
       deepseek: { enabled: ENABLED_DEEPSEEK },
-
+      doubao: { enabled: ENABLED_DOUBAO,
+        enabledModels: extractEnabledModels(ARK_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: [],
+          modelString: ARK_MODEL_LIST,
+        }),
+      },
       fireworksai: {
         enabled: ENABLED_FIREWORKSAI,
         enabledModels: extractEnabledModels(FIREWORKSAI_MODEL_LIST),
@@ -241,7 +250,6 @@ export const getServerGlobalConfig = () => {
       },
       spark: { enabled: ENABLED_SPARK },
       stepfun: { enabled: ENABLED_STEPFUN },
-
       taichu: { enabled: ENABLED_TAICHU },
       togetherai: {
         enabled: ENABLED_TOGETHERAI,
