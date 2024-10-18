@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Ative o cluster cerebral e desperte faíscas de pensamento. Seu assistente inteligente está aqui para conversar sobre tudo.",
+      "title": "Vamos conversar"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Eu sou seu assistente inteligente pessoal {{appName}}. Como posso ajudá-lo agora?\nSe precisar de um assistente mais profissional ou personalizado, clique em `+` para criar um assistente personalizado.",
+      "defaultMessageWithoutCreate": "Eu sou seu assistente inteligente pessoal {{appName}}. Como posso ajudá-lo agora?"
+    },
+    "slogan": {
+      "desc1": "Ative o cluster cerebral e desperte faíscas de pensamento. Seu assistente inteligente está sempre aqui.",
+      "title": "Dê a si mesmo um cérebro mais inteligente"
+    }
+  }
+}

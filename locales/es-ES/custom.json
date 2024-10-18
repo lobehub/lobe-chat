@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Activa el grupo de cerebros y enciende la chispa del pensamiento. Tu asistente inteligente está aquí para hablar de todo contigo.",
+      "title": "Hablemos de lo que sea"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Soy su asistente inteligente personal {{appName}}. ¿En qué puedo ayudarle ahora?\nSi necesita un asistente más profesional o personalizado, puede hacer clic en `+` para crear un asistente personalizado.",
+      "defaultMessageWithoutCreate": "Soy su asistente inteligente personal {{appName}}. ¿En qué puedo ayudarle ahora?"
+    },
+    "slogan": {
+      "desc1": "Activa el grupo de cerebros y enciende la chispa del pensamiento. Tu asistente inteligente siempre está aquí.",
+      "title": "Dale a tu cerebro una mayor inteligencia"
+    }
+  }
+}
