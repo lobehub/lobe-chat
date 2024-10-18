@@ -35,6 +35,7 @@ import { useHuggingFaceProvider } from './HuggingFace';
 import { useOllamaProvider } from './Ollama';
 import { useOpenAIProvider } from './OpenAI';
 import { useWenxinProvider } from './Wenxin';
+import { useSenseNovaProvider } from './SenseNova';
 
 export const useProviderList = (): ProviderItem[] => {
   const AzureProvider = useAzureProvider();
@@ -44,6 +45,7 @@ export const useProviderList = (): ProviderItem[] => {
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
   const WenxinProvider = useWenxinProvider();
+  const SenseNovaProvider = useSenseNovaProvider();
 
   return useMemo(
     () => [
@@ -71,6 +73,7 @@ export const useProviderList = (): ProviderItem[] => {
       SparkProviderCard,
       ZhiPuProviderCard,
       ZeroOneProviderCard,
+      SenseNovaProvider,
       StepfunProviderCard,
       MoonshotProviderCard,
       BaichuanProviderCard,
@@ -87,6 +90,7 @@ export const useProviderList = (): ProviderItem[] => {
       GithubProvider,
       WenxinProvider,
       HuggingFaceProvider,
+      SenseNovaProvider,
     ],
   );
 };
