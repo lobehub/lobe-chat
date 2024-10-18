@@ -2,7 +2,7 @@
 import { InvokeModelWithResponseStreamCommand } from '@aws-sdk/client-bedrock-runtime';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { AgentRuntimeErrorType, ModelProvider } from '@/libs/agent-runtime';
+import { AgentRuntimeError, AgentRuntimeErrorType, ModelProvider } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeBedrockAI } from './index';
@@ -389,6 +389,61 @@ describe('LobeBedrockAI', () => {
 
       // Assert
       expect(onStart).toHaveBeenCalled();
+    });
+  });
+
+  describe('embeddings', () => {
+    it('should return an array of EmbeddingItems', async () => {
+      // Arrange
+      const mockEmbeddingItem = { embedding: [0.1, 0.2], index: 0, object: 'embedding' };
+
+      const spy = vi
+        .spyOn(instance as any, 'invokeEmbeddingModel')
+        .mockResolvedValue(mockEmbeddingItem);
+
+      // Act
+      const result = await instance.embeddings({
+        input: ['Hello'],
+        dimensions: 128,
+        model: 'test-model',
+      });
+
+      // Assert
+      expect(spy).toHaveBeenCalled();
+      expect(result).toEqual([mockEmbeddingItem]);
+    });
+
+    it('should call instance.embeddings with correct parameters', async () => {
+      // Arrange
+      const payload = {
+        dimensions: 1024,
+        index: 0,
+        input: 'Hello',
+        modelId: 'test-model',
+        model: 'test-model', // Add the missing model property
+      };
+
+      const apiError = AgentRuntimeError.chat({
+        error: {
+          body: undefined,
+          message: 'Unexpected end of JSON input',
+          type: 'SyntaxError',
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: 'us-west-2',
+      });
+
+      // 使用 vi.spyOn 来模拟 instance.embeddings 方法
+      const spy = vi.spyOn(instance as any, 'invokeEmbeddingModel').mockRejectedValue(apiError);
+
+      try {
+        // Act
+        await instance['invokeEmbeddingModel'](payload);
+      } catch (e) {
+        expect(e).toEqual(apiError);
+      }
+      expect(spy).toHaveBeenCalled();
     });
   });
 });

@@ -35,6 +35,9 @@ vi.mock('@/config/db', async () => ({
       DATABASE_DRIVER: 'node',
     };
   },
+  getServerDBConfig: vi.fn().mockReturnValue({
+    NEXT_PUBLIC_ENABLED_SERVER_SERVICE: true,
+  }),
 }));
 
 const userId = 'file-model-test-user-id';
