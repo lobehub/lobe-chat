@@ -11,10 +11,9 @@ const provider = {
     // Specify auth scope, at least include 'openid email'
     // all scopes in Azure AD ref: https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc#openid-connect-scopes
     authorization: { params: { scope: 'openid email profile' } },
-    // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
-    clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID || authEnv.MICROSOFT_ENTRA_ID_ID,
-    clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET || authEnv.MICROSOFT_ENTRA_ID_SECRET,
-    tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID || authEnv.MICROSOFT_ENTRA_ID_TENANT_ID,
+    clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
+    clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
+    tenantId: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
   }),
 };
 
