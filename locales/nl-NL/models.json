@@ -32,6 +32,39 @@
   "Baichuan4": {
     "description": "Het model heeft de beste prestaties in het binnenland en overtreft buitenlandse mainstream modellen in kennisencyclopedieën, lange teksten en creatieve generaties. Het heeft ook toonaangevende multimodale capaciteiten en presteert uitstekend in verschillende autoritatieve evaluatiebenchmarks."
   },
+  "ERNIE-3.5-128K": {
+    "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
+  },
+  "ERNIE-3.5-8K": {
+    "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
+  },
+  "ERNIE-3.5-8K-Preview": {
+    "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat in vergelijking met ERNIE 3.5 een algehele upgrade van de modelcapaciteiten heeft gerealiseerd, en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat in vergelijking met ERNIE 3.5 een algehele upgrade van de modelcapaciteiten heeft gerealiseerd, en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE-4.0-Turbo-8K": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat uitstekende algehele prestaties levert en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen. In vergelijking met ERNIE 4.0 presteert het beter."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat uitstekende algehele prestaties levert en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen. In vergelijking met ERNIE 4.0 presteert het beter."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Het door Baidu ontwikkelde verticale taalmodel, geschikt voor toepassingen zoals game NPC's, klantenservice gesprekken en rollenspellen, met een duidelijker en consistenter karakterontwerp, sterkere instructievolgcapaciteiten en betere inferentieprestaties."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Het door Baidu ontwikkelde lichte taalmodel, dat zowel uitstekende modelprestaties als inferentieprestaties biedt, met betere resultaten dan ERNIE Lite, en geschikt is voor inferentie op AI-versnelling kaarten met lage rekencapaciteit."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Het door Baidu in 2024 gepresenteerde nieuwe hoge-prestatie taalmodel, met uitstekende algemene capaciteiten, geschikt als basis model voor fine-tuning, om beter specifieke probleemstellingen aan te pakken, met uitstekende inferentieprestaties."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Het door Baidu in 2024 gepresenteerde nieuwe hoge-prestatie taalmodel, met uitstekende algemene capaciteiten, betere resultaten dan ERNIE Speed, en geschikt als basis model voor fine-tuning, om beter specifieke probleemstellingen aan te pakken, met uitstekende inferentieprestaties."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) is een innovatief model, geschikt voor toepassingen in meerdere domeinen en complexe taken."
   },
@@ -401,6 +434,9 @@
   "glm-4-flash": {
     "description": "GLM-4-Flash is de ideale keuze voor het verwerken van eenvoudige taken, met de snelste snelheid en de laagste prijs."
   },
+  "glm-4-flashx": {
+    "description": "GLM-4-FlashX is een verbeterde versie van Flash met een super snelle inferentiesnelheid."
+  },
   "glm-4-long": {
     "description": "GLM-4-Long ondersteunt zeer lange tekstinvoer, geschikt voor geheugenintensieve taken en grootschalige documentverwerking."
   },
@@ -413,14 +449,17 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus heeft de capaciteit om video-inhoud en meerdere afbeeldingen te begrijpen, geschikt voor multimodale taken."
   },
-  "google/gemini-flash-1.5-exp": {
-    "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
+  "google/gemini-flash-1.5": {
+    "description": "Gemini 1.5 Flash biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
   },
-  "google/gemini-pro-1.5-exp": {
-    "description": "Gemini 1.5 Pro 0827 combineert de nieuwste optimalisatietechnologieën voor efficiëntere multimodale gegevensverwerking."
+  "google/gemini-pro-1.5": {
+    "description": "Gemini 1.5 Pro combineert de nieuwste optimalisatietechnologieën en biedt efficiëntere multimodale gegevensverwerkingscapaciteiten."
   },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 behoudt het ontwerpprincipe van lichtgewicht en efficiëntie."
+  },
+  "google/gemma-2-2b-it": {
+    "description": "Google's lichtgewicht instructieafstemmingsmodel"
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 is een lichtgewicht open-source tekstmodelserie van Google."
@@ -491,6 +530,33 @@
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
   },
+  "hunyuan-code": {
+    "description": "Het nieuwste codegeneratiemodel van Hunyuan, getraind op 200B hoogwaardige codegegevens, met een half jaar training op hoogwaardige SFT-gegevens, met een vergroot contextvenster van 8K, en staat bovenaan de automatische evaluatie-indicatoren voor codegeneratie in vijf grote programmeertalen; presteert in de eerste divisie op basis van handmatige kwaliteitsbeoordelingen van 10 aspecten van code-taken in vijf grote talen."
+  },
+  "hunyuan-functioncall": {
+    "description": "Het nieuwste MOE-architectuur FunctionCall-model van Hunyuan, getraind op hoogwaardige FunctionCall-gegevens, met een contextvenster van 32K, en staat voorop in meerdere dimensies van evaluatie-indicatoren."
+  },
+  "hunyuan-lite": {
+    "description": "Geüpgraded naar een MOE-structuur, met een contextvenster van 256k, en leidt in verschillende evaluatiesets op het gebied van NLP, code, wiskunde en industrie ten opzichte van vele open-source modellen."
+  },
+  "hunyuan-pro": {
+    "description": "Een MOE-32K lange tekstmodel met triljoenen parameters. Bereikt een absoluut leidend niveau op verschillende benchmarks, met complexe instructies en redenering, beschikt over complexe wiskundige capaciteiten, ondersteunt function calls, en is geoptimaliseerd voor toepassingen in meertalige vertaling, financiële, juridische en medische gebieden."
+  },
+  "hunyuan-role": {
+    "description": "Het nieuwste rolspelmodel van Hunyuan, een rolspelmodel dat is ontwikkeld door de officiële fine-tuning training van Hunyuan, dat is getraind op basis van rolspel-scenario datasets, en betere basisprestaties biedt in rolspel-scenario's."
+  },
+  "hunyuan-standard": {
+    "description": "Maakt gebruik van een betere routeringsstrategie en verlicht tegelijkertijd de problemen van load balancing en expert convergentie. Voor lange teksten bereikt de naald in een hooiberg-index 99,9%. MOE-32K biedt een relatief betere prijs-kwaliteitverhouding, en kan lange tekstinvoer verwerken terwijl het effect en prijs in balans houdt."
+  },
+  "hunyuan-standard-256K": {
+    "description": "Maakt gebruik van een betere routeringsstrategie en verlicht tegelijkertijd de problemen van load balancing en expert convergentie. Voor lange teksten bereikt de naald in een hooiberg-index 99,9%. MOE-256K doorbreekt verder in lengte en effectiviteit, waardoor de invoerlengte aanzienlijk wordt vergroot."
+  },
+  "hunyuan-turbo": {
+    "description": "Een previewversie van het nieuwe generatie grote taalmodel van Hunyuan, met een nieuwe hybride expertmodel (MoE) structuur, die sneller inferentie-efficiëntie biedt en betere prestaties levert dan hunyan-pro."
+  },
+  "hunyuan-vision": {
+    "description": "Het nieuwste multimodale model van Hunyuan, ondersteunt het genereren van tekstinhoud op basis van afbeelding + tekstinvoer."
+  },
   "internlm/internlm2_5-20b-chat": {
     "description": "Het innovatieve open-source model InternLM2.5 verhoogt de gespreksintelligentie door een groot aantal parameters."
   },
@@ -525,6 +591,12 @@
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online model, met 8B parameters, ondersteunt een contextlengte van ongeveer 127.000 tokens, speciaal ontworpen voor online chat en kan efficiënt verschillende tekstinteracties verwerken."
+  },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 is ontworpen om taken te verwerken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visuele redeneervaardigheden."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 is ontworpen om taken te verwerken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visuele redeneervaardigheden."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B biedt ongeëvenaarde complexiteitsverwerkingscapaciteiten, op maat gemaakt voor veeleisende projecten."
@@ -580,6 +652,9 @@
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) biedt uitstekende taalverwerkingscapaciteiten en een geweldige interactie-ervaring."
   },
+  "meta-llama/Llama-2-7b-chat-hf": {
+    "description": "Een van de beste gespreksmodellen"
+  },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) is een krachtig chatmodel dat complexe gespreksbehoeften ondersteunt."
   },
@@ -633,6 +708,12 @@
   },
   "meta-llama/llama-3.1-8b-instruct:free": {
     "description": "LLaMA 3.1 biedt ondersteuning voor meerdere talen en is een van de toonaangevende generatiemodellen in de industrie."
+  },
+  "meta-llama/llama-3.2-11b-vision-instruct": {
+    "description": "LLaMA 3.2 is ontworpen voor taken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visuele redenering."
+  },
+  "meta-llama/llama-3.2-90b-vision-instruct": {
+    "description": "LLaMA 3.2 is ontworpen voor taken die visuele en tekstuele gegevens combineren. Het presteert uitstekend in taken zoals afbeeldingsbeschrijving en visuele vraag-en-antwoord, en overbrugt de kloof tussen taalgeneratie en visuele redenering."
   },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct is het grootste en krachtigste model binnen het Llama 3.1 Instruct-model, een geavanceerd model voor conversatie-inferentie en synthetische datageneratie, dat ook kan worden gebruikt als basis voor gespecialiseerde continue pre-training of fine-tuning in specifieke domeinen. De meertalige grote taalmodellen (LLMs) die Llama 3.1 biedt, zijn een set van voorgetrainde, instructie-geoptimaliseerde generatieve modellen, waaronder 8B, 70B en 405B in grootte (tekstinvoer/uitvoer). De tekstmodellen van Llama 3.1, die zijn geoptimaliseerd voor meertalige conversatiegebruik, overtreffen veel beschikbare open-source chatmodellen in gangbare industriële benchmarktests. Llama 3.1 is ontworpen voor commercieel en onderzoeksgebruik in meerdere talen. De instructie-geoptimaliseerde tekstmodellen zijn geschikt voor assistentachtige chats, terwijl de voorgetrainde modellen zich kunnen aanpassen aan verschillende taken voor natuurlijke taalgeneratie. Het Llama 3.1-model ondersteunt ook het verbeteren van andere modellen door gebruik te maken van de output van zijn modellen, inclusief synthetische datageneratie en verfijning. Llama 3.1 is een autoregressief taalmodel dat gebruikmaakt van een geoptimaliseerde transformer-architectuur. De afgestelde versies gebruiken supervisie-finetuning (SFT) en versterkend leren met menselijke feedback (RLHF) om te voldoen aan menselijke voorkeuren voor behulpzaamheid en veiligheid."
@@ -742,7 +823,7 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B is een spaarzaam expertmodel dat meerdere parameters benut om de inferentiesnelheid te verhogen, geschikt voor het verwerken van meertalige en codegeneratietaken."
   },
-  "openai/gpt-4o-2024-08-06": {
+  "openai/gpt-4o": {
     "description": "ChatGPT-4o is een dynamisch model dat in realtime wordt bijgewerkt om de meest actuele versie te behouden. Het combineert krachtige taalbegrip- en generatiecapaciteiten, geschikt voor grootschalige toepassingsscenario's, waaronder klantenservice, onderwijs en technische ondersteuning."
   },
   "openai/gpt-4o-mini": {
@@ -793,11 +874,11 @@
   "qwen-vl-chat-v1": {
     "description": "Qwen VL ondersteunt flexibele interactiemethoden, inclusief meerdere afbeeldingen, meerdere rondes van vraag en antwoord, en creatiecapaciteiten."
   },
-  "qwen-vl-max": {
-    "description": "Qwen is een grootschalig visueel taalmodel. In vergelijking met de verbeterde versie biedt het een verdere verbetering van de visuele redeneercapaciteit en de naleving van instructies, met een hoger niveau van visuele waarneming en cognitie."
+  "qwen-vl-max-latest": {
+    "description": "Het Tongyi Qianwen ultra-grootschalige visuele taalmodel. In vergelijking met de verbeterde versie, verhoogt het opnieuw de visuele redeneervaardigheden en de naleving van instructies, en biedt het een hoger niveau van visuele waarneming en cognitie."
   },
-  "qwen-vl-plus": {
-    "description": "Qwen is een verbeterde versie van het grootschalige visuele taalmodel. Het verbetert aanzienlijk de detailherkenning en tekstherkenning, en ondersteunt afbeeldingen met een resolutie van meer dan een miljoen pixels en een willekeurige beeldverhouding."
+  "qwen-vl-plus-latest": {
+    "description": "De verbeterde versie van het Tongyi Qianwen grootschalige visuele taalmodel. Het verbetert aanzienlijk de detailherkenning en tekstherkenning, ondersteunt resoluties van meer dan een miljoen pixels en afbeeldingen met elke verhouding."
   },
   "qwen-vl-v1": {
     "description": "Geïnitieerd met het Qwen-7B taalmodel, voegt het een afbeeldingsmodel toe, met een invoerresolutie van 448 voor het voorgetrainde model."

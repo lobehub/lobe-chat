@@ -1,4 +1,3 @@
-import { readableFromAsyncIterable } from 'ai';
 import { ChatResponse } from 'ollama/browser';
 
 import { ChatStreamCallbacks } from '@/libs/agent-runtime';
@@ -7,6 +6,7 @@ import { nanoid } from '@/utils/uuid';
 import {
   StreamProtocolChunk,
   StreamStack,
+  convertIterableToStream,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
 } from './protocol';
@@ -20,19 +20,13 @@ const transformOllamaStream = (chunk: ChatResponse, stack: StreamStack): StreamP
   return { data: chunk.message.content, id: stack.id, type: 'text' };
 };
 
-const chatStreamable = async function* (stream: AsyncIterable<ChatResponse>) {
-  for await (const response of stream) {
-    yield response;
-  }
-};
-
 export const OllamaStream = (
   res: AsyncIterable<ChatResponse>,
   cb?: ChatStreamCallbacks,
 ): ReadableStream<string> => {
   const streamStack: StreamStack = { id: 'chat_' + nanoid() };
 
-  return readableFromAsyncIterable(chatStreamable(res))
+  return convertIterableToStream(res)
     .pipeThrough(createSSEProtocolTransformer(transformOllamaStream, streamStack))
     .pipeThrough(createCallbacksTransformer(cb));
 };

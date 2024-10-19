@@ -1,10 +1,10 @@
 import { ListResponse, Ollama as OllamaBrowser, ProgressResponse } from 'ollama/browser';
 
-import { createErrorResponse } from '@/app/api/errorResponse';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
 import { keyVaultsConfigSelectors } from '@/store/user/selectors';
 import { ChatErrorType } from '@/types/fetch';
+import { createErrorResponse } from '@/utils/errorResponse';
 import { getMessageError } from '@/utils/fetch';
 
 const DEFAULT_BASE_URL = 'http://127.0.0.1:11434';

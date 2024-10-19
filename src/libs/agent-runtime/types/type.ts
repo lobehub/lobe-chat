@@ -33,6 +33,7 @@ export enum ModelProvider {
   Github = 'github',
   Google = 'google',
   Groq = 'groq',
+  HuggingFace = 'huggingface',
   Hunyuan = 'hunyuan',
   Minimax = 'minimax',
   Mistral = 'mistral',
@@ -49,6 +50,7 @@ export enum ModelProvider {
   Taichu = 'taichu',
   TogetherAI = 'togetherai',
   Upstage = 'upstage',
+  Wenxin = 'wenxin',
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
 }
