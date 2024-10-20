@@ -2,6 +2,73 @@
 
 # Changelog
 
+### [Version 1.22.12](https://github.com/lobehub/lobe-chat/compare/v1.22.11...v1.22.12)
+
+<sup>Released on **2024-10-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Llama 3.1 Nemotron 70B model & reorder some provider model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Llama 3.1 Nemotron 70B model & reorder some provider model list, closes [#4424](https://github.com/lobehub/lobe-chat/issues/4424) ([9355a3d](https://github.com/lobehub/lobe-chat/commit/9355a3d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.11](https://github.com/lobehub/lobe-chat/compare/v1.22.10...v1.22.11)
+
+<sup>Released on **2024-10-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor azure ad to ms entra id.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor azure ad to ms entra id, closes [#4168](https://github.com/lobehub/lobe-chat/issues/4168) ([4fa9588](https://github.com/lobehub/lobe-chat/commit/4fa9588))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.10](https://github.com/lobehub/lobe-chat/compare/v1.22.9...v1.22.10)
+
+<sup>Released on **2024-10-20**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.9](https://github.com/lobehub/lobe-chat/compare/v1.22.8...v1.22.9)
 
 <sup>Released on **2024-10-18**</sup>
