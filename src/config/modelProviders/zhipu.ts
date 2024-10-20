@@ -151,7 +151,6 @@ const ZhiPu: ModelProviderCard = {
       description:
         'CodeGeeX-4 是强大的AI编程助手，支持多种编程语言的智能问答与代码补全，提升开发效率。',
       displayName: 'CodeGeeX-4',
-      enabled: true,
       id: 'codegeex-4',
       pricing: {
         currency: 'CNY',
