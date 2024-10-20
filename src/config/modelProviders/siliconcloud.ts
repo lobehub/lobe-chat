@@ -95,7 +95,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5-Math 专注于数学领域的问题求解，为高难度题提供专业解答。',
       displayName: 'Qwen2.5 Math 72B',
-      enabled: true,
       id: 'Qwen/Qwen2.5-Math-72B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -107,7 +106,6 @@ const SiliconCloud: ModelProviderCard = {
     {
       description: 'Qwen2.5-Coder 专注于代码编写。',
       displayName: 'Qwen2.5 Coder 7B',
-      enabled: true,
       id: 'Qwen/Qwen2.5-Coder-7B-Instruct',
       pricing: {
         currency: 'CNY',
