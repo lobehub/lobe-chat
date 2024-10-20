@@ -1,7 +1,5 @@
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 
-import { authEnv } from '@/config/auth';
-
 import { CommonProviderConfig } from './sso.config';
 
 const provider = {
