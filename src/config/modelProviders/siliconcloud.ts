@@ -238,6 +238,7 @@ const SiliconCloud: ModelProviderCard = {
       description: 'LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。',
       displayName: 'Llama 3.1 8B',
       enabled: true,
+      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -250,6 +251,7 @@ const SiliconCloud: ModelProviderCard = {
       description: 'LLaMA 3.1 70B 提供多语言的高效对话支持。',
       displayName: 'Llama 3.1 70B',
       enabled: true,
+      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -267,6 +269,18 @@ const SiliconCloud: ModelProviderCard = {
         currency: 'CNY',
         input: 21,
         output: 21,
+      },
+      tokens: 32_768,
+    },
+    {
+      description: 'Llama 3.1 Nemotron 70B 是由 NVIDIA 定制的大型语言模型，旨在提高 LLM 生成的响应对用户查询的帮助程度。',
+      displayName: 'Llama 3.1 Nemotron 70B',
+      enabled: true,
+      id: 'nvidia/Llama-3.1-Nemotron-70B-Instruct',
+      pricing: {
+        currency: 'CNY',
+        input: 4.13,
+        output: 4.13,
       },
       tokens: 32_768,
     },
