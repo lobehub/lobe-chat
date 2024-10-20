@@ -238,7 +238,6 @@ const SiliconCloud: ModelProviderCard = {
       description: 'LLaMA 3.1 提供多语言支持，是业界领先的生成模型之一。',
       displayName: 'Llama 3.1 8B',
       enabled: true,
-      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
       pricing: {
         currency: 'CNY',
@@ -251,7 +250,6 @@ const SiliconCloud: ModelProviderCard = {
       description: 'LLaMA 3.1 70B 提供多语言的高效对话支持。',
       displayName: 'Llama 3.1 70B',
       enabled: true,
-      functionCall: true,
       id: 'meta-llama/Meta-Llama-3.1-70B-Instruct',
       pricing: {
         currency: 'CNY',
