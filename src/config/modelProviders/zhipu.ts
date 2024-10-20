@@ -71,6 +71,19 @@ const ZhiPu: ModelProviderCard = {
     },
     {
       description:
+        'GLM-4-AllTools 是一个多功能智能体模型，优化以支持复杂指令规划与工具调用，如网络浏览、代码解释和文本生成，适用于多任务执行。',
+      displayName: 'GLM-4-AllTools',
+      functionCall: true,
+      id: 'glm-4-alltools',
+      pricing: {
+        currency: 'CNY',
+        input: 100,
+        output: 100,
+      },
+      tokens: 128_000,
+    },
+    {
+      description:
         'GLM-4-Plus 作为高智能旗舰，具备强大的处理长文本和复杂任务的能力，性能全面提升。',
       displayName: 'GLM-4-Plus',
       enabled: true,
@@ -130,21 +143,6 @@ const ZhiPu: ModelProviderCard = {
         output: 50,
       },
       tokens: 2048,
-      vision: true,
-    },
-    {
-      description:
-        'GLM-4-AllTools 是一个多功能智能体模型，优化以支持复杂指令规划与工具调用，如网络浏览、代码解释和文本生成，适用于多任务执行。',
-      displayName: 'GLM-4-AllTools',
-      enabled: true,
-      functionCall: true,
-      id: 'glm-4-alltools',
-      pricing: {
-        currency: 'CNY',
-        input: 100,
-        output: 100,
-      },
-      tokens: 128_000,
       vision: true,
     },
     {
