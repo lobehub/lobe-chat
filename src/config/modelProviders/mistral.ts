@@ -69,7 +69,7 @@ const Mistral: ModelProviderCard = {
     },
     {
       description:
-        'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
+        'Ministral 3B 是Mistral的世界顶级边缘模型。',
       displayName: 'Ministral 3B',
       id: 'ministral-3b-latest',
       pricing: {
@@ -80,7 +80,7 @@ const Mistral: ModelProviderCard = {
     },
     {
       description:
-        'Mistral 7B是一款紧凑但高性能的模型，擅长批量处理和简单任务，如分类和文本生成，具有良好的推理能力。',
+        'Ministral 8B 是Mistral的性价比极高的边缘模型。',
       displayName: 'Ministral 8B',
       id: 'ministral-8b-latest',
       pricing: {
