@@ -34,7 +34,6 @@ const ZhiPu: ModelProviderCard = {
     {
       description: 'GLM-4-Long 支持超长文本输入，适合记忆型任务与大规模文档处理。',
       displayName: 'GLM-4-Long',
-      enabled: true,
       functionCall: true,
       id: 'glm-4-long',
       pricing: {
