@@ -47,8 +47,8 @@
   "ERNIE-4.0-8K-Preview": {
     "description": "Flagowy model ultra dużego języka opracowany przez Baidu, w porównaniu do ERNIE 3.5, oferujący kompleksową aktualizację możliwości modelu, szeroko stosowany w złożonych scenariuszach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji."
   },
-  "ERNIE-4.0-Turbo-8K": {
-    "description": "Flagowy model ultra dużego języka opracowany przez Baidu, charakteryzujący się doskonałymi wynikami ogólnymi, szeroko stosowany w złożonych scenariuszach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji. W porównaniu do ERNIE 4.0, oferuje lepsze wyniki wydajności."
+  "ERNIE-4.0-Turbo-8K-Latest": {
+    "description": "Opracowany przez Baidu flagowy, ultra-duży model językowy, który wykazuje doskonałe ogólne rezultaty i jest szeroko stosowany w złożonych zadaniach w różnych dziedzinach; obsługuje automatyczne łączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji odpowiadających na pytania. W porównaniu do ERNIE 4.0 wykazuje lepszą wydajność."
   },
   "ERNIE-4.0-Turbo-8K-Preview": {
     "description": "Flagowy model ultra dużego języka opracowany przez Baidu, charakteryzujący się doskonałymi wynikami ogólnymi, szeroko stosowany w złożonych scenariuszach w różnych dziedzinach; wspiera automatyczne połączenie z wtyczką wyszukiwania Baidu, zapewniając aktualność informacji. W porównaniu do ERNIE 4.0, oferuje lepsze wyniki wydajności."
@@ -80,8 +80,11 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B) oferuje zoptymalizowane wyjście językowe i różnorodne możliwości zastosowania."
   },
-  "Phi-3-5-mini-instruct": {
-    "description": "Odświeżona wersja modelu Phi-3-mini."
+  "OpenGVLab/InternVL2-26B": {
+    "description": "InternVL2 pokazuje wyjątkowe wyniki w różnych zadaniach językowych i wizualnych, w tym zrozumieniu dokumentów i wykresów, zrozumieniu tekstu w scenach, OCR, rozwiązywaniu problemów naukowych i matematycznych."
+  },
+  "OpenGVLab/InternVL2-Llama3-76B": {
+    "description": "InternVL2 pokazuje wyjątkowe wyniki w różnych zadaniach językowych i wizualnych, w tym zrozumieniu dokumentów i wykresów, zrozumieniu tekstu w scenach, OCR, rozwiązywaniu problemów naukowych i matematycznych."
   },
   "Phi-3-medium-128k-instruct": {
     "description": "Ten sam model Phi-3-medium, ale z większym rozmiarem kontekstu do RAG lub kilku strzałowego wywoływania."
@@ -101,8 +104,20 @@
   "Phi-3-small-8k-instruct": {
     "description": "Model z 7 miliardami parametrów, oferujący lepszą jakość niż Phi-3-mini, z naciskiem na dane o wysokiej jakości i gęstości rozumowania."
   },
+  "Phi-3.5-mini-instruct": {
+    "description": "Zaktualizowana wersja modelu Phi-3-mini."
+  },
+  "Phi-3.5-vision-instrust": {
+    "description": "Zaktualizowana wersja modelu Phi-3-vision."
+  },
   "Pro-128k": {
     "description": "Spark Pro-128K ma wyjątkową zdolność przetwarzania kontekstu, mogąc obsługiwać do 128K informacji kontekstowych, szczególnie odpowiedni do analizy całościowej i długoterminowego przetwarzania logicznego w długich tekstach, zapewniając płynne i spójne logicznie komunikowanie się oraz różnorodne wsparcie cytatów."
+  },
+  "Pro/OpenGVLab/InternVL2-8B": {
+    "description": "InternVL2 pokazuje wyjątkowe wyniki w różnych zadaniach językowych i wizualnych, w tym zrozumieniu dokumentów i wykresów, zrozumieniu tekstu w scenach, OCR, rozwiązywaniu problemów naukowych i matematycznych."
+  },
+  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
+    "description": "Qwen2-VL to najnowsza iteracja modelu Qwen-VL, osiągająca najnowocześniejsze wyniki w benchmarkach zrozumienia wizualnego."
   },
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "Jako wersja testowa Qwen2, Qwen1.5 wykorzystuje dużą ilość danych do osiągnięcia bardziej precyzyjnych funkcji dialogowych."
@@ -113,17 +128,26 @@
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 to zaawansowany uniwersalny model językowy, wspierający różne typy poleceń."
   },
+  "Qwen/Qwen2-VL-72B-Instruct": {
+    "description": "Qwen2-VL to najnowsza iteracja modelu Qwen-VL, osiągająca najnowocześniejsze wyniki w benchmarkach zrozumienia wizualnego."
+  },
   "Qwen/Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5 to nowa seria dużych modeli językowych, zaprojektowana w celu optymalizacji przetwarzania zadań instrukcyjnych."
   },
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 to nowa seria dużych modeli językowych, zaprojektowana w celu optymalizacji przetwarzania zadań instrukcyjnych."
   },
-  "Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5 to nowa seria dużych modeli językowych, z silniejszymi zdolnościami rozumienia i generacji."
+  "Qwen/Qwen2.5-72B-Instruct-128K": {
+    "description": "Qwen2.5 to nowa seria dużych modeli językowych, charakteryzująca się mocniejszymi zdolnościami rozumienia i generowania."
+  },
+  "Qwen/Qwen2.5-72B-Instruct-Turbo": {
+    "description": "Qwen2.5 to nowa seria dużych modeli językowych, mająca na celu optymalizację przetwarzania zadań instruktażowych."
   },
   "Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5 to nowa seria dużych modeli językowych, zaprojektowana w celu optymalizacji przetwarzania zadań instrukcyjnych."
+  },
+  "Qwen/Qwen2.5-7B-Instruct-Turbo": {
+    "description": "Qwen2.5 to nowa seria dużych modeli językowych, mająca na celu optymalizację przetwarzania zadań instruktażowych."
   },
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder koncentruje się na pisaniu kodu."
@@ -158,9 +182,6 @@
   "accounts/fireworks/models/firellava-13b": {
     "description": "fireworks-ai/FireLLaVA-13b to model językowy wizualny, który może jednocześnie przyjmować obrazy i tekst, przeszkolony na wysokiej jakości danych, idealny do zadań multimodalnych."
   },
-  "accounts/fireworks/models/gemma2-9b-it": {
-    "description": "Model Gemma 2 9B Instruct, oparty na wcześniejszej technologii Google, idealny do zadań generowania tekstu, takich jak odpowiadanie na pytania, podsumowywanie i wnioskowanie."
-  },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Model Llama 3 70B Instruct, zaprojektowany do wielojęzycznych dialogów i rozumienia języka naturalnego, przewyższa większość konkurencyjnych modeli."
   },
@@ -182,6 +203,18 @@
   "accounts/fireworks/models/llama-v3p1-8b-instruct": {
     "description": "Model Llama 3.1 8B Instruct, zoptymalizowany do wielojęzycznych dialogów, potrafi przewyższyć większość modeli open source i closed source w powszechnych standardach branżowych."
   },
+  "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
+    "description": "Model wnioskowania wizualnego z 11B parametrów od Meta. Model zoptymalizowany do rozpoznawania wizualnego, wnioskowania obrazów, opisywania obrazów oraz odpowiadania na ogólne pytania dotyczące obrazów. Model potrafi rozumieć dane wizualne, takie jak wykresy i grafiki, a dzięki generowaniu tekstowych opisów szczegółów obrazów, łączy wizję z językiem."
+  },
+  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
+    "description": "Model instruktażowy Llama 3.2 1B to lekki model wielojęzyczny zaprezentowany przez Meta. Zaprojektowany, aby poprawić wydajność, oferując znaczące usprawnienia w opóźnieniu i kosztach w porównaniu do większych modeli. Przykładowe przypadki użycia tego modelu obejmują wyszukiwanie i podsumowywanie."
+  },
+  "accounts/fireworks/models/llama-v3p2-3b-instruct": {
+    "description": "Model instruktażowy Llama 3.2 3B to lekki model wielojęzyczny zaprezentowany przez Meta. Zaprojektowany, aby poprawić wydajność, oferując znaczące usprawnienia w opóźnieniu i kosztach w porównaniu do większych modeli. Przykładowe przypadki użycia tego modelu obejmują zapytania i przepisanie sugestii oraz pomoc w pisaniu."
+  },
+  "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
+    "description": "Model wnioskowania wizualnego z 90B parametrów od Meta. Model zoptymalizowany do rozpoznawania wizualnego, wnioskowania obrazów, opisywania obrazów oraz odpowiadania na ogólne pytania dotyczące obrazów. Model potrafi rozumieć dane wizualne, takie jak wykresy i grafiki, a dzięki generowaniu tekstowych opisów szczegółów obrazów, łączy wizję z językiem."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Model Mixtral MoE 8x22B Instruct, z dużą liczbą parametrów i architekturą wielu ekspertów, kompleksowo wspierający efektywne przetwarzanie złożonych zadań."
   },
@@ -197,6 +230,9 @@
   "accounts/fireworks/models/phi-3-vision-128k-instruct": {
     "description": "Model Phi 3 Vision Instruct, lekki model multimodalny, zdolny do przetwarzania złożonych informacji wizualnych i tekstowych, z silnymi zdolnościami wnioskowania."
   },
+  "accounts/fireworks/models/qwen2p5-72b-instruct": {
+    "description": "Qwen2.5 to seria modeli językowych opracowana przez zespół Qwen na chmurze Alibaba, która zawiera jedynie dekodery. Modele te występują w różnych rozmiarach, w tym 0.5B, 1.5B, 3B, 7B, 14B, 32B i 72B, i oferują dwie wersje: bazową (base) i instruktażową (instruct)."
+  },
   "accounts/fireworks/models/starcoder-16b": {
     "description": "Model StarCoder 15.5B, wspierający zaawansowane zadania programistyczne, z wzmocnionymi możliwościami wielojęzycznymi, idealny do złożonego generowania i rozumienia kodu."
   },
@@ -211,9 +247,6 @@
   },
   "ai21-jamba-1.5-mini": {
     "description": "Model wielojęzyczny z 52 miliardami parametrów (12 miliardów aktywnych), oferujący okno kontekstowe o długości 256K, wywoływanie funkcji, strukturalne wyjście i generację opartą na kontekście."
-  },
-  "ai21-jamba-instruct": {
-    "description": "Model LLM oparty na Mamba, zaprojektowany do osiągania najlepszej wydajności, jakości i efektywności kosztowej."
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet podnosi standardy branżowe, przewyższając modele konkurencji oraz Claude 3 Opus, osiągając doskonałe wyniki w szerokim zakresie ocen, jednocześnie oferując szybkość i koszty na poziomie naszych modeli średniej klasy."
@@ -592,8 +625,14 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Model Llama 3.1 Sonar Small Online, z 8B parametrami, obsługujący kontekst o długości około 127,000 tokenów, zaprojektowany do czatów online, efektywnie przetwarzający różne interakcje tekstowe."
   },
+  "llama-3.2-11b-vision-instruct": {
+    "description": "Wyjątkowe zdolności wnioskowania wizualnego na obrazach o wysokiej rozdzielczości, idealne do zastosowań związanych ze zrozumieniem wizualnym."
+  },
   "llama-3.2-11b-vision-preview": {
     "description": "Llama 3.2 jest zaprojektowana do obsługi zadań łączących dane wizualne i tekstowe. Wykazuje doskonałe wyniki w zadaniach takich jak opisywanie obrazów i wizualne pytania i odpowiedzi, przekraczając przepaść między generowaniem języka a wnioskowaniem wizualnym."
+  },
+  "llama-3.2-90b-vision-instruct": {
+    "description": "Zaawansowane zdolności wnioskowania obrazów dla zastosowań w agentach zrozumienia wizualnego."
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 jest zaprojektowana do obsługi zadań łączących dane wizualne i tekstowe. Wykazuje doskonałe wyniki w zadaniach takich jak opisywanie obrazów i wizualne pytania i odpowiedzi, przekraczając przepaść między generowaniem języka a wnioskowaniem wizualnym."
@@ -652,14 +691,26 @@
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) oferuje doskonałe możliwości przetwarzania języka i znakomite doświadczenie interakcji."
   },
-  "meta-llama/Llama-2-7b-chat-hf": {
-    "description": "Jeden z najlepszych modeli do rozmów."
+  "meta-llama/Llama-2-70b-hf": {
+    "description": "LLaMA-2 oferuje doskonałe zdolności przetwarzania języka i znakomite doświadczenie interakcyjne."
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) to potężny model czatu, wspierający złożone potrzeby dialogowe."
   },
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B) oferuje wsparcie dla wielu języków, obejmując bogatą wiedzę z różnych dziedzin."
+  },
+  "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2 zaprojektowana do przetwarzania zadań łączących dane wizualne i tekstowe. Doskonała w zadaniach takich jak opisywanie obrazów i wizualne pytania odpowiedzi, przekracza granice między generowaniem języka a wnioskowaniem wizualnym."
+  },
+  "meta-llama/Llama-3.2-3B-Instruct-Turbo": {
+    "description": "LLaMA 3.2 zaprojektowana do przetwarzania zadań łączących dane wizualne i tekstowe. Doskonała w zadaniach takich jak opisywanie obrazów i wizualne pytania odpowiedzi, przekracza granice między generowaniem języka a wnioskowaniem wizualnym."
+  },
+  "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2 zaprojektowana do przetwarzania zadań łączących dane wizualne i tekstowe. Doskonała w zadaniach takich jak opisywanie obrazów i wizualne pytania odpowiedzi, przekracza granice między generowaniem języka a wnioskowaniem wizualnym."
+  },
+  "meta-llama/Llama-Vision-Free": {
+    "description": "LLaMA 3.2 zaprojektowana do przetwarzania zadań łączących dane wizualne i tekstowe. Doskonała w zadaniach takich jak opisywanie obrazów i wizualne pytania odpowiedzi, przekracza granice między generowaniem języka a wnioskowaniem wizualnym."
   },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite jest idealny do środowisk wymagających wysokiej wydajności i niskiego opóźnienia."
@@ -739,14 +790,17 @@
   "minicpm-v": {
     "description": "MiniCPM-V to nowa generacja multimodalnego dużego modelu wydanego przez OpenBMB, który posiada doskonałe zdolności rozpoznawania OCR oraz zrozumienia multimodalnego, wspierając szeroki zakres zastosowań."
   },
+  "ministral-3b-latest": {
+    "description": "Ministral 3B to czołowy model brzegowy Mistrala."
+  },
+  "ministral-8b-latest": {
+    "description": "Ministral 8B to opłacalny model brzegowy Mistrala."
+  },
   "mistral": {
     "description": "Mistral to model 7B wydany przez Mistral AI, odpowiedni do zmiennych potrzeb przetwarzania języka."
   },
   "mistral-large": {
     "description": "Mixtral Large to flagowy model Mistral, łączący zdolności generowania kodu, matematyki i wnioskowania, wspierający kontekst o długości 128k."
-  },
-  "mistral-large-2407": {
-    "description": "Mistral Large (2407) to zaawansowany model językowy (LLM) z najnowocześniejszymi zdolnościami rozumowania, wiedzy i kodowania."
   },
   "mistral-large-latest": {
     "description": "Mistral Large to flagowy model, doskonały w zadaniach wielojęzycznych, złożonym wnioskowaniu i generowaniu kodu, idealny do zaawansowanych zastosowań."
@@ -769,11 +823,17 @@
   "mistralai/Mistral-7B-Instruct-v0.3": {
     "description": "Mistral (7B) Instruct v0.3 oferuje efektywne możliwości obliczeniowe i rozumienia języka naturalnego, idealne do szerokiego zakresu zastosowań."
   },
+  "mistralai/Mistral-7B-v0.1": {
+    "description": "Mistral 7B to kompaktowy, ale wysokowydajny model, dobrze radzący sobie z przetwarzaniem wsadowym i prostymi zadaniami, takimi jak klasyfikacja i generowanie tekstu, z dobrą zdolnością wnioskowania."
+  },
   "mistralai/Mixtral-8x22B-Instruct-v0.1": {
     "description": "Mixtral-8x22B Instruct (141B) to super duży model językowy, wspierający ekstremalne wymagania przetwarzania."
   },
   "mistralai/Mixtral-8x7B-Instruct-v0.1": {
     "description": "Mixtral 8x7B to wstępnie wytrenowany model rzadkiego mieszania ekspertów, przeznaczony do ogólnych zadań tekstowych."
+  },
+  "mistralai/Mixtral-8x7B-v0.1": {
+    "description": "Mixtral 8x7B to model sparsity expert, który korzysta z wielu parametrów, aby zwiększyć prędkość wnioskowania, idealny do przetwarzania zadań wielojęzycznych i generowania kodu."
   },
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instruct to model o wysokiej wydajności, który łączy optymalizację prędkości z obsługą długiego kontekstu."
@@ -801,6 +861,9 @@
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B to ulepszona wersja Nous Hermes 2, zawierająca najnowsze wewnętrznie opracowane zbiory danych."
+  },
+  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
+    "description": "Llama 3.1 Nemotron 70B to duży model językowy stworzony przez NVIDIA, zaprojektowany w celu zwiększenia użyteczności odpowiedzi generowanych przez LLM dla zapytań użytkowników."
   },
   "o1-mini": {
     "description": "o1-mini to szybki i ekonomiczny model wnioskowania zaprojektowany z myślą o programowaniu, matematyce i zastosowaniach naukowych. Model ten ma kontekst 128K i datę graniczną wiedzy z października 2023 roku."
@@ -987,6 +1050,12 @@
   },
   "yi-large-turbo": {
     "description": "Model o doskonałym stosunku jakości do ceny, z doskonałymi osiągami. Wysokiej precyzji optymalizacja w oparciu o wydajność, szybkość wnioskowania i koszty."
+  },
+  "yi-lightning": {
+    "description": "Najnowocześniejszy model o wysokiej wydajności, zapewniający wysoką jakość wyjściową przy znacznie zwiększonej prędkości wnioskowania."
+  },
+  "yi-lightning-lite": {
+    "description": "Lekka wersja, zaleca się użycie yi-lightning."
   },
   "yi-medium": {
     "description": "Model średniej wielkości, zrównoważony pod względem możliwości i kosztów. Głęboko zoptymalizowana zdolność do przestrzegania poleceń."
