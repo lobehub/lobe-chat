@@ -105,6 +105,17 @@ export class S3 {
     return getSignedUrl(this.client, command, { expiresIn: 3600 });
   }
 
+  public async createPreSignedUrlForPreview(key: string, expiresIn?: number): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: this.bucket,
+      Key: key,
+    });
+
+    return getSignedUrl(this.client, command, {
+      expiresIn: expiresIn ?? fileEnv.S3_PREVIEW_URL_EXPIRE_IN,
+    });
+  }
+
   public async uploadContent(path: string, content: string) {
     const command = new PutObjectCommand({
       ACL: this.setAcl ? 'public-read' : undefined,

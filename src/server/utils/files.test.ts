@@ -8,6 +8,7 @@ const config = {
   S3_ENABLE_PATH_STYLE: false,
   S3_PUBLIC_DOMAIN: 'https://example.com',
   S3_BUCKET: 'my-bucket',
+  S3_SET_ACL: true,
 };
 
 vi.mock('@/config/file', () => ({
@@ -17,20 +18,20 @@ vi.mock('@/config/file', () => ({
 }));
 
 describe('getFullFileUrl', () => {
-  it('should return empty string for null or undefined input', () => {
-    expect(getFullFileUrl(null)).toBe('');
-    expect(getFullFileUrl(undefined)).toBe('');
+  it('should return empty string for null or undefined input', async () => {
+    expect(await getFullFileUrl(null)).toBe('');
+    expect(await getFullFileUrl(undefined)).toBe('');
   });
 
-  it('should return correct URL when S3_ENABLE_PATH_STYLE is false', () => {
+  it('should return correct URL when S3_ENABLE_PATH_STYLE is false', async () => {
     const url = 'path/to/file.jpg';
-    expect(getFullFileUrl(url)).toBe('https://example.com/path/to/file.jpg');
+    expect(await getFullFileUrl(url)).toBe('https://example.com/path/to/file.jpg');
   });
 
-  it('should return correct URL when S3_ENABLE_PATH_STYLE is true', () => {
+  it('should return correct URL when S3_ENABLE_PATH_STYLE is true', async () => {
     config.S3_ENABLE_PATH_STYLE = true;
     const url = 'path/to/file.jpg';
-    expect(getFullFileUrl(url)).toBe('https://example.com/my-bucket/path/to/file.jpg');
+    expect(await getFullFileUrl(url)).toBe('https://example.com/my-bucket/path/to/file.jpg');
     config.S3_ENABLE_PATH_STYLE = false;
   });
 });
