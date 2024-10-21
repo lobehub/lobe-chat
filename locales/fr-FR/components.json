@@ -12,6 +12,7 @@
       "batchChunking": "Découpage par lots",
       "chunking": "Découpage",
       "chunkingTooltip": "Divisez le fichier en plusieurs blocs de texte et vectorisez-les pour une recherche sémantique et un dialogue sur le fichier",
+      "chunkingUnsupported": "Ce fichier ne prend pas en charge le fractionnement",
       "confirmDelete": "Vous allez supprimer ce fichier. Une fois supprimé, il ne pourra pas être récupéré. Veuillez confirmer votre action.",
       "confirmDeleteMultiFiles": "Vous allez supprimer les {{count}} fichiers sélectionnés. Une fois supprimés, ils ne pourront pas être récupérés. Veuillez confirmer votre action.",
       "confirmRemoveFromKnowledgeBase": "Vous allez retirer les {{count}} fichiers sélectionnés de la base de connaissances. Une fois retirés, les fichiers resteront visibles dans tous les fichiers. Veuillez confirmer votre action.",

@@ -12,6 +12,7 @@
       "batchChunking": "División por lotes",
       "chunking": "División",
       "chunkingTooltip": "Divida el archivo en múltiples bloques de texto y vectorícelos para su uso en búsqueda semántica y diálogo de archivos",
+      "chunkingUnsupported": "Este archivo no admite la fragmentación",
       "confirmDelete": "Está a punto de eliminar este archivo. Una vez eliminado, no podrá recuperarlo. Por favor, confirme su acción.",
       "confirmDeleteMultiFiles": "Está a punto de eliminar los {{count}} archivos seleccionados. Una vez eliminados, no podrá recuperarlos. Por favor, confirme su acción.",
       "confirmRemoveFromKnowledgeBase": "Está a punto de eliminar los {{count}} archivos seleccionados de la base de conocimientos. Los archivos seguirán siendo visibles en todos los archivos. Por favor, confirme su acción.",
