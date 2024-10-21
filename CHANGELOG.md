@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.22.14](https://github.com/lobehub/lobe-chat/compare/v1.22.13...v1.22.14)
+
+<sup>Released on **2024-10-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update wenxin 4.0 turbo model to latest.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update wenxin 4.0 turbo model to latest, closes [#4428](https://github.com/lobehub/lobe-chat/issues/4428) ([3389fbb](https://github.com/lobehub/lobe-chat/commit/3389fbb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.13](https://github.com/lobehub/lobe-chat/compare/v1.22.12...v1.22.13)
 
 <sup>Released on **2024-10-20**</sup>
