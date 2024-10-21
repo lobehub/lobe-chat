@@ -250,15 +250,13 @@ const Bedrock: ModelProviderCard = {
       tokens: 4000,
     },
 */
-    /*
-    // TODO: Not support for now
     {
       description: 'The latest Foundation Model from AI21 Labs, Jamba-Instruct offers an impressive 256K context window and delivers the best value per price on core text generation, summarization, and question answering tasks for the enterprise.',
       displayName: 'Jamba-Instruct',
+      enabled: true,
       id: 'ai21.jamba-instruct-v1:0',
       tokens: 256_000,
     },
-*/
     /*
     // Cohere Command (Text) and AI21 Labs Jurassic-2 (Text) don't support chat with the Converse API
     {
