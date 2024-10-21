@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
+import { useInboxAgentMeta } from '@/hooks/useInboxAgentMeta';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
@@ -32,9 +33,10 @@ const Main = memo(() => {
   ]);
 
   const openChatSettings = useOpenChatSettings();
+  const { title: inboxTitle, description: inboxDescription } = useInboxAgentMeta();
 
-  const displayTitle = isInbox ? t('inbox.title') : title;
-  const displayDesc = isInbox ? t('inbox.desc') : description;
+  const displayTitle = isInbox ? inboxTitle : title;
+  const displayDesc = isInbox ? inboxDescription : description;
   const showSessionPanel = useGlobalStore(systemStatusSelectors.showSessionPanel);
   const updateSystemStatus = useGlobalStore((s) => s.updateSystemStatus);
 

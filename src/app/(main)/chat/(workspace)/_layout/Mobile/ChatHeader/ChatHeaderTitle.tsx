@@ -5,6 +5,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useInboxAgentMeta } from '@/hooks/useInboxAgentMeta';
 import { useChatStore } from '@/store/chat';
 import { topicSelectors } from '@/store/chat/selectors';
 import { useGlobalStore } from '@/store/global';
@@ -24,7 +25,8 @@ const ChatHeaderTitle = memo(() => {
   ]);
   const theme = useTheme();
 
-  const displayTitle = isInbox ? t('inbox.title') : title;
+  const { title: inboxTitle } = useInboxAgentMeta();
+  const displayTitle = isInbox ? inboxTitle : title;
 
   return (
     <MobileNavBarTitle
