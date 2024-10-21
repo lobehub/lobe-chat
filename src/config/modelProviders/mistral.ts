@@ -46,7 +46,6 @@ const Mistral: ModelProviderCard = {
     {
       description: 'Codestral是专注于代码生成的尖端生成模型，优化了中间填充和代码补全任务。',
       displayName: 'Codestral',
-      enabled: true,
       id: 'codestral-latest',
       pricing: {
         input: 0.2,
