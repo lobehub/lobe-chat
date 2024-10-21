@@ -1,0 +1,62 @@
+name: Daily i18n Update
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  update-i18n:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ secrets.BUN_VERSION }}
+
+      - name: Check if branch exists
+        id: check_branch
+        run: |
+          git ls-remote --exit-code --heads origin style/auto-i18n
+          echo "::set-output name=branch_exists::$?"
+
+      - name: Install deps
+        run: bun i
+
+      - name: Run i18n update
+        if: steps.check_branch.outputs.branch_exists != 0
+        run: npm run i18n
+
+      - name: Check for changes
+        id: git_status
+        run: |
+          git diff --exit-code || echo "::set-output name=changes_exist::true"
+
+      - name: Create Pull Request
+        if: steps.check_branch.outputs.branch_exists != 0 && steps.git_status.outputs.changes_exist == 'true'
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+          commit-message: '🤖 style: update i18n'
+          branch: 'style/auto-i18n'
+          delete-branch: true
+          title: '🤖 style: update i18n'
+          body: 'This PR updates the i18n files.'
+          base: main
+
+      - name: Check Pull Request Status
+        if: steps.check_branch.outputs.branch_exists != 0 && steps.git_status.outputs.changes_exist == 'true'
+        run: |
+          if [ ${{ steps.create_pull_request.outputs.pull-request-number }} ]; then
+            echo "Pull request created successfully."
+          else
+            echo "Failed to create pull request."
+            exit 1
+          fi
+
+      - name: No changes
+        if: steps.git_status.outputs.changes_exist != 'true'
+        run: echo "No changes to commit. Skipping PR creation."
