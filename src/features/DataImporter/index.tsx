@@ -8,10 +8,10 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import DataStyleModal from '@/components/DataStyleModal';
-import { ImportResult, ImportResults, configService } from '@/services/config';
+import { ImportResult, importService } from '@/services/import';
 import { useChatStore } from '@/store/chat';
 import { useSessionStore } from '@/store/session';
-import { ErrorShape, FileUploadState, ImportStage } from '@/types/importer';
+import { ErrorShape, FileUploadState, ImportResults, ImportStage } from '@/types/importer';
 import { importConfigFile } from '@/utils/config';
 
 import ImportError from './Error';
@@ -148,7 +148,7 @@ const DataImporter = memo<DataImporterProps>(({ children, onFinishImport }) => {
           await importConfigFile(file, async (config) => {
             setImportState(ImportStage.Preparing);
 
-            await configService.importConfigState(config, {
+            await importService.importConfigState(config, {
               onError: (error) => {
                 setImportError(error);
               },
