@@ -2,6 +2,199 @@
 
 # Changelog
 
+### [Version 1.22.14](https://github.com/lobehub/lobe-chat/compare/v1.22.13...v1.22.14)
+
+<sup>Released on **2024-10-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update wenxin 4.0 turbo model to latest.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update wenxin 4.0 turbo model to latest, closes [#4428](https://github.com/lobehub/lobe-chat/issues/4428) ([3389fbb](https://github.com/lobehub/lobe-chat/commit/3389fbb))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.13](https://github.com/lobehub/lobe-chat/compare/v1.22.12...v1.22.13)
+
+<sup>Released on **2024-10-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Ministral model, update Together AI model list, add function call & vision.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Ministral model, closes [#4427](https://github.com/lobehub/lobe-chat/issues/4427) ([2042df8](https://github.com/lobehub/lobe-chat/commit/2042df8))
+- **misc**: Update Together AI model list, add function call & vision, closes [#4393](https://github.com/lobehub/lobe-chat/issues/4393) ([d7fbf1b](https://github.com/lobehub/lobe-chat/commit/d7fbf1b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.12](https://github.com/lobehub/lobe-chat/compare/v1.22.11...v1.22.12)
+
+<sup>Released on **2024-10-20**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Llama 3.1 Nemotron 70B model & reorder some provider model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Llama 3.1 Nemotron 70B model & reorder some provider model list, closes [#4424](https://github.com/lobehub/lobe-chat/issues/4424) ([9355a3d](https://github.com/lobehub/lobe-chat/commit/9355a3d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.11](https://github.com/lobehub/lobe-chat/compare/v1.22.10...v1.22.11)
+
+<sup>Released on **2024-10-20**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor azure ad to ms entra id.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor azure ad to ms entra id, closes [#4168](https://github.com/lobehub/lobe-chat/issues/4168) ([4fa9588](https://github.com/lobehub/lobe-chat/commit/4fa9588))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.10](https://github.com/lobehub/lobe-chat/compare/v1.22.9...v1.22.10)
+
+<sup>Released on **2024-10-20**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.9](https://github.com/lobehub/lobe-chat/compare/v1.22.8...v1.22.9)
+
+<sup>Released on **2024-10-18**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update Fireworks AI model list.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update Fireworks AI model list, closes [#4394](https://github.com/lobehub/lobe-chat/issues/4394) ([fe8ffdd](https://github.com/lobehub/lobe-chat/commit/fe8ffdd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.8](https://github.com/lobehub/lobe-chat/compare/v1.22.7...v1.22.8)
+
+<sup>Released on **2024-10-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Yi-Lightning model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Yi-Lightning model, closes [#4390](https://github.com/lobehub/lobe-chat/issues/4390) ([9e9fb9a](https://github.com/lobehub/lobe-chat/commit/9e9fb9a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.7](https://github.com/lobehub/lobe-chat/compare/v1.22.6...v1.22.7)
+
+<sup>Released on **2024-10-17**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add qwen vision model & update qwen2.5 72b to 128k for siliconcloud.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add qwen vision model & update qwen2.5 72b to 128k for siliconcloud, closes [#4380](https://github.com/lobehub/lobe-chat/issues/4380) ([e8c009b](https://github.com/lobehub/lobe-chat/commit/e8c009b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.6](https://github.com/lobehub/lobe-chat/compare/v1.22.5...v1.22.6)
 
 <sup>Released on **2024-10-13**</sup>

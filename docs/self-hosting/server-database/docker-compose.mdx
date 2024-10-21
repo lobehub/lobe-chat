@@ -1,6 +1,8 @@
 ---
 title: Deploying LobeChat with Docker Compose
-description: Learn how to deploy the LobeChat service using Docker Compose, including configuration tutorials for various services.
+description: >-
+  Learn how to deploy the LobeChat service using Docker Compose, including
+  configuration tutorials for various services.
 tags:
   - Docker Compose
   - LobeChat
@@ -402,8 +404,8 @@ NEXTAUTH_URL=https://lobe.example.com/api/auth
 
 # NextAuth providers configuration (example using Logto)
 # For other providers, see: https://lobehub.com/docs/self-hosting/environment-variables/auth
-AUTH_LOGTO_CLIENT_ID=YOUR_LOGTO_CLIENT_ID
-AUTH_LOGTO_CLIENT_SECRET=YOUR_LOGTO_CLIENT_SECRET
+AUTH_LOGTO_ID=YOUR_LOGTO_ID
+AUTH_LOGTO_SECRET=YOUR_LOGTO_SECRET
 AUTH_LOGTO_ISSUER=https://lobe-auth-api.example.com/oidc
 
 # Proxy settings (if needed, e.g., when using GitHub as an auth provider)
@@ -473,7 +475,6 @@ services:
     restart: always
     command: >
       server /etc/minio/data --address ":9000" --console-address ":9001"
-
 
   logto:
     image: svhd/logto
