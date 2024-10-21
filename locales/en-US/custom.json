@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Activate the brain cluster and spark creative ideas. Your intelligent assistant is here to discuss everything with you.",
+      "title": "Let's Chat"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "I am your personal intelligent assistant {{appName}}. How can I assist you today?\nIf you need a more professional or customized assistant, you can click `+` to create a custom assistant.",
+      "defaultMessageWithoutCreate": "I am your personal intelligent assistant {{appName}}. How can I assist you today?"
+    },
+    "slogan": {
+      "desc1": "Activate the brain cluster and spark creative ideas. Your intelligent assistant is always here for you.",
+      "title": "Give Yourself a Smarter Brain"
+    }
+  }
+}
