@@ -216,8 +216,6 @@ const Bedrock: ModelProviderCard = {
       tokens: 32_000,
     },
 */
-    /*
-    // TODO: Not support for now
     {
       description: 'Command R+ is a highly performant generative language model optimized for large scale production workloads.',
       displayName: 'Command R+',
@@ -234,7 +232,6 @@ const Bedrock: ModelProviderCard = {
       id: 'cohere.command-r-v1:0',
       tokens: 128_000,
     },
-*/
     /*
     // Cohere Command (Text) and AI21 Labs Jurassic-2 (Text) don't support chat with the Converse API
     {
