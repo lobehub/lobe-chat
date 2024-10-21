@@ -29,6 +29,7 @@ export enum ModelProvider {
   Baichuan = 'baichuan',
   Bedrock = 'bedrock',
   DeepSeek = 'deepseek',
+  Doubao = 'doubao',
   FireworksAI = 'fireworksai',
   Github = 'github',
   Google = 'google',
