@@ -53,6 +53,7 @@ export enum ModelProvider {
   Wenxin = 'wenxin',
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
+  Dify = 'dify'
 }
 
 export type ModelProviderKey = Lowercase<keyof typeof ModelProvider>;

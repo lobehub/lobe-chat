@@ -10,6 +10,7 @@ export const runtime = 'edge';
 
 export const POST = checkAuth(async (req: Request, { params, jwtPayload, createRuntime }) => {
   const { provider } = params;
+  console.log(jwtPayload);
 
   try {
     // ============  1. init chat model   ============ //

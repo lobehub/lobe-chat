@@ -55,6 +55,15 @@ export const getProviderAuthPayload = (provider: string) => {
       return { endpoint: config?.baseURL };
     }
 
+    case ModelProvider.Dify: {
+      const { token, baseUrl, userId } = keyVaultsConfigSelectors.difyConfig(useUserStore.getState())
+      return {
+        token,
+        baseUrl,
+        userId,
+      }
+    }
+
     default: {
       const config = keyVaultsConfigSelectors.getVaultByProvider(provider as GlobalLLMProviderKey)(
         useUserStore.getState(),
