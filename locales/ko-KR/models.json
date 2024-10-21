@@ -155,6 +155,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math는 수학 분야의 문제 해결에 중점을 두고 있으며, 고난이도 문제에 대한 전문적인 해답을 제공합니다."
   },
+  "SenseChat": {
+    "description": "기본 버전 모델(V4), 4K 컨텍스트 길이, 일반적인 능력이 강력합니다."
+  },
+  "SenseChat-128K": {
+    "description": "기본 버전 모델(V4), 128K 컨텍스트 길이, 긴 텍스트 이해 및 생성 작업에서 뛰어난 성능을 발휘합니다."
+  },
+  "SenseChat-32K": {
+    "description": "기본 버전 모델(V4), 32K 컨텍스트 길이, 다양한 시나리오에 유연하게 적용됩니다."
+  },
+  "SenseChat-5": {
+    "description": "최신 버전 모델(V5.5), 128K 컨텍스트 길이, 수학적 추론, 영어 대화, 지시 따르기 및 긴 텍스트 이해 등 분야에서 능력이 크게 향상되어 GPT-4o와 견줄 수 있습니다."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "32K 컨텍스트 길이, 광둥어 대화 이해에서 GPT-4를 초월하며, 지식, 추론, 수학 및 코드 작성 등 여러 분야에서 GPT-4 Turbo와 견줄 수 있습니다."
+  },
+  "SenseChat-Character": {
+    "description": "표준 버전 모델, 8K 컨텍스트 길이, 높은 응답 속도를 자랑합니다."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "고급 버전 모델, 32K 컨텍스트 길이, 능력이 전반적으로 향상되었으며, 중/영어 대화를 지원합니다."
+  },
+  "SenseChat-Turbo": {
+    "description": "빠른 질문 응답 및 모델 미세 조정 시나리오에 적합합니다."
+  },
+  "SenseChat-Vision": {
+    "description": "최신 버전 모델(V5.5), 16K 컨텍스트 길이, 다중 이미지 입력을 지원하며, 모델의 기본 능력 최적화를 전면적으로 구현하여 객체 속성 인식, 공간 관계, 동작 사건 인식, 장면 이해, 감정 인식, 논리 상식 추론 및 텍스트 이해 생성에서 큰 향상을 이루었습니다."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 오픈 소스 버전으로, 대화 응용을 위한 최적화된 대화 경험을 제공합니다."
   },
