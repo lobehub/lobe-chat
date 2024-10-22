@@ -6,7 +6,6 @@ import { rgba } from 'polished';
 import { PropsWithChildren, memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_DOCK_TOOL_UI_WIDTH, CHAT_DOCK_WIDTH, MAX_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
@@ -39,8 +38,9 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const { md = true } = useResponsive();
 
-  const [showInspector, showToolUI] = useChatStore((s) => [
+  const [showInspector, showToolUI, showArtifactUI] = useChatStore((s) => [
     chatPortalSelectors.showPortal(s),
+    chatPortalSelectors.showPluginUI(s),
     chatPortalSelectors.showArtifactUI(s),
   ]);
 
@@ -54,7 +54,7 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
         expand
         hanlderStyle={{ display: 'none' }}
         maxWidth={MAX_WIDTH}
-        minWidth={showToolUI ? CHAT_DOCK_TOOL_UI_WIDTH : CHAT_DOCK_WIDTH}
+        minWidth={showArtifactUI || showToolUI ? CHAT_DOCK_TOOL_UI_WIDTH : CHAT_DOCK_WIDTH}
         mode={md ? 'fixed' : 'float'}
         placement={'right'}
         showHandlerWhenUnexpand={false}
@@ -68,7 +68,6 @@ const PortalPanel = memo(({ children }: PropsWithChildren) => {
             minWidth: CHAT_DOCK_WIDTH,
           }}
         >
-          <SafeSpacing />
           <Flexbox className={styles.panel}>{children}</Flexbox>
         </DraggablePanelContainer>
       </DraggablePanel>

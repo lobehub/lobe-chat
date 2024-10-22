@@ -47,20 +47,5 @@ export const useOpenChatSettings = (tab: ChatSettingsTabs = ChatSettingsTabs.Met
 };
 
 export const useInterceptingRoutes = () => {
-  const router = useQueryRoute();
-  const mobile = useIsMobile();
-  const isIntercepted = useContext(InterceptContext);
-  return useMemo(
-    () => ({
-      isIntercepted,
-      push: (url: string, disableIntercepting?: boolean) => {
-        if (disableIntercepting || mobile) {
-          router.push(`/redirect`, { query: { url } });
-          return;
-        }
-        router.push(url);
-      },
-    }),
-    [mobile, router, isIntercepted],
-  );
+  return useContext(InterceptContext);
 };

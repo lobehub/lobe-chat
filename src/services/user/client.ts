@@ -23,7 +23,7 @@ export class ClientService implements IUserService {
 
     return {
       avatar: user.avatar,
-      canEnablePWAGuide: messageCount >= 2,
+      canEnablePWAGuide: messageCount >= 4,
       canEnableTrace: messageCount >= 4,
       hasConversation: messageCount > 0 || sessionCount > 0,
       isOnboard: true,

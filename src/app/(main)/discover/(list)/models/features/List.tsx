@@ -1,11 +1,11 @@
 'use client';
 
 import { Empty } from 'antd';
+import Link from 'next/link';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import urlJoin from 'url-join';
 
-import InterceptingLink from '@/components/InterceptingLink';
 import { DiscoverModelItem } from '@/types/discover';
 
 import SearchResultCount from '../../../components/SearchResultCount';
@@ -32,12 +32,9 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
           data={items}
           initialItemCount={24}
           itemContent={(_, item) => (
-            <InterceptingLink
-              href={urlJoin('/discover/model/', item.identifier)}
-              key={item.identifier}
-            >
+            <Link href={urlJoin('/discover/model/', item.identifier)} key={item.identifier}>
               <Card showCategory {...item} />
-            </InterceptingLink>
+            </Link>
           )}
           style={{
             minHeight: '75vh',
@@ -54,12 +51,9 @@ const List = memo<ListProps>(({ category, searchKeywords, items = [] }) => {
         data={items}
         initialItemCount={24}
         itemContent={(_, item) => (
-          <InterceptingLink
-            href={urlJoin('/discover/model/', item.identifier)}
-            key={item.identifier}
-          >
+          <Link href={urlJoin('/discover/model/', item.identifier)} key={item.identifier}>
             <Card showCategory={!category} {...item} />
-          </InterceptingLink>
+          </Link>
         )}
         style={{
           minHeight: '75vh',

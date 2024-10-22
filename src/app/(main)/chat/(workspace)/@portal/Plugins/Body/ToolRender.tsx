@@ -8,7 +8,7 @@ import { BuiltinToolsPortals } from '@/tools/portals';
 import { safeParseJSON } from '@/utils/safeParseJSON';
 
 const ToolRender = memo(() => {
-  const messageId = useChatStore(chatPortalSelectors.artifactMessageId);
+  const messageId = useChatStore(chatPortalSelectors.toolMessageId);
   const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
 
   // make sure the message and id is valid

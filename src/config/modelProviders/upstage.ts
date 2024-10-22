@@ -5,15 +5,6 @@ const Upstage: ModelProviderCard = {
   chatModels: [
     {
       description:
-        'Solar Pro 是 Upstage 推出的一款高智能LLM，专注于单GPU的指令跟随能力，IFEval得分80以上。目前支持英语，正式版本计划于2024年11月推出，将扩展语言支持和上下文长度。',
-      displayName: 'Solar Pro',
-      enabled: true,
-      functionCall: false,
-      id: 'solar-pro',
-      tokens: 4096,
-    },
-    {
-      description:
         'Solar Mini 是一种紧凑型 LLM，性能优于 GPT-3.5，具备强大的多语言能力，支持英语和韩语，提供高效小巧的解决方案。',
       displayName: 'Solar Mini',
       enabled: true,
@@ -28,6 +19,15 @@ const Upstage: ModelProviderCard = {
       functionCall: false,
       id: 'solar-1-mini-chat-ja',
       tokens: 32_768,
+    },
+    {
+      description:
+        'Solar Pro 是 Upstage 推出的一款高智能LLM，专注于单GPU的指令跟随能力，IFEval得分80以上。目前支持英语，正式版本计划于2024年11月推出，将扩展语言支持和上下文长度。',
+      displayName: 'Solar Pro',
+      enabled: true,
+      functionCall: false,
+      id: 'solar-pro',
+      tokens: 4096,
     },
   ],
   checkModel: 'solar-1-mini-chat',

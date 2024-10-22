@@ -6,10 +6,26 @@
       "file": "檔案"
     }
   },
+  "Plugins": "外掛",
   "actions": {
     "genAiMessage": "生成助手訊息",
     "summary": "摘要",
     "summaryTooltip": "總結目前內容"
+  },
+  "artifacts": {
+    "display": {
+      "code": "程式碼",
+      "preview": "預覽"
+    },
+    "svg": {
+      "copyAsImage": "複製為圖片",
+      "copyFail": "複製失敗，錯誤原因:{{error}}",
+      "copySuccess": "圖片複製成功",
+      "download": {
+        "png": "下載為 PNG",
+        "svg": "下載為 SVG"
+      }
+    }
   },
   "emptyArtifactList": "當前文物列表為空，請在會話中按需使用插件後再查看",
   "emptyKnowledgeList": "當前知識列表為空，請在會話中按需開啟知識庫後再查看",

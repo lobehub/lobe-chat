@@ -14,6 +14,7 @@ const provider = {
     // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
     clientId: authEnv.AZURE_AD_CLIENT_ID ?? process.env.AUTH_AZURE_AD_ID,
     clientSecret: authEnv.AZURE_AD_CLIENT_SECRET ?? process.env.AUTH_AZURE_AD_SECRET,
+    // @ts-ignore
     tenantId: authEnv.AZURE_AD_TENANT_ID ?? process.env.AUTH_AZURE_AD_TENANT_ID,
     // Remove end
     // TODO(NextAuth): map unique user id to `providerAccountId` field
@@ -23,6 +24,7 @@ const provider = {
     //     image: profile.picture,
     //     name: profile.name,
     //     providerAccountId: profile.user_id,
+    //     id: profile.user_id,
     //   };
     // },
   }),

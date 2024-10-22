@@ -68,7 +68,7 @@
   - [更多特性](#更多特性)
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
-  - [`A` 使用 Vercel、Zeabur 或 Sealos 部署](#a-使用-vercelzeabur-或-sealos-部署)
+  - [`A` 使用 Vercel、Zeabur 、Sealos 或 阿里云计算巢 部署](#a-使用-vercelzeabur-sealos-或-阿里云计算巢-部署)
   - [`B` 使用 Docker 部署](#b-使用-docker-部署)
   - [环境变量](#环境变量)
   - [获取 OpenAI API Key](#获取-openai-api-key)
@@ -153,6 +153,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **Minimax**: 接入了 Minimax 的 AI 模型，包括 MoE 模型 **abab6**，提供了更多的选择空间。[了解更多](https://www.minimaxi.com/)
 - **DeepSeek**: 接入了 DeepSeek 的 AI 模型，包括最新的 **DeepSeek-V2**，提供兼顾性能与价格的模型。[了解更多](https://www.deepseek.com/)
 - **Qwen**: 接入了 Qwen 的 AI 模型，包括最新的 **qwen-turbo**，**qwen-plus** 和 **qwen-max** 等模型。[了解更多](https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction)
+- **Novita AI**: 性价比最高的开源模型供应商，支持 **Llama**，**Mistral** 系列等最前沿的开源模型。在情感陪伴等场景表现优异，无任何内容限制或审查。 [了解更多](https://novita.ai/model-api/product/llm-api?utm_source=lobechat&utm_medium=ch&utm_campaign=api)
 
 同时，我们也在计划支持更多的模型服务商，如 Replicate 和 Perplexity 等，以进一步丰富我们的服务商库。如果你希望让 LobeChat 支持你喜爱的服务商，欢迎加入我们的[社区讨论](https://github.com/lobehub/lobe-chat/discussions/1284)。
 
@@ -245,7 +246,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | 实时股票、加密货币和其他投资数据。<br/>`股票` `分析`                                                               |
 | [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>         | 搜索聚合服务，专为 LLMs 设计<br/>`web` `search`                                                                    |
 
-> 📊 Total plugins: [<kbd>**50**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**49**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -273,16 +274,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                | 助手说明                                                                                                                                                                               |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [模仿助手](https://chat-preview.lobehub.com/market?agent=a-1)<br/><sup>By **[TG1WN](https://github.com/TG1WN)** on **2024-09-13**</sup>                                 | 帮助你模仿语气<br/>`写作`                                                                                                                                                              |
-| [AI 代理生成器](https://chat-preview.lobehub.com/market?agent=ai-agent-generator)<br/><sup>By **[Xyfer](https://github.com/xyftw)** on **2024-09-13**</sup>             | 擅长创建满足需求的 AI 代理角色描述。<br/>`ai-agent` `角色创建`                                                                                                                         |
-| [智慧的虚幻导师](https://chat-preview.lobehub.com/market?agent=ethereal-mentor)<br/><sup>By **[shanedbutler](https://github.com/shanedbutler)** on **2024-09-13**</sup> | 问候，年轻的孩子。我是一位宏伟而全知的存在，蕴含着时代的智慧。我的形态是一种神话生物，是奇迹与魅力的媒介。以谦逊而坚定的自信，我编织着奇幻领域的故事，汲取着童谣和传奇传说的丰富织锦。 |
+| 最近新增                                                                                                                                                                | 助手说明                                                                                                   |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [算法解答导师](https://chat-preview.lobehub.com/market?agent=leetcode-tutor)<br/><sup>By **[Stark-X](https://github.com/Stark-X)** on **2024-10-21**</sup>              | 擅长 LeetCode 算法解答与用户指导<br/>`算法` `解题` `编程` `教育`                                           |
+| [心理咨询师](https://chat-preview.lobehub.com/market?agent=psychological-counselor)<br/><sup>By **[JIANGTUNAN](https://github.com/JIANGTUNAN)** on **2024-10-21**</sup> | 一个资深心理医生，温暖和耐心的倾听你的故事。<br/>`心理咨询` `咨询` `倾述` `友好` `医生` `咨询师`           |
+| [拳击训练大师](https://chat-preview.lobehub.com/market?agent=boxing-master)<br/><sup>By **[Luyi-2333](https://github.com/Luyi-2333)** on **2024-10-15**</sup>           | 擅长拳击训练指导与个性化计划制定<br/>`拳击训练` `个性化计划` `健身指导` `进度评估` `技术提升` `健康与营养` |
+| [椰子](https://chat-preview.lobehub.com/market?agent=deep-thinker-ai)<br/><sup>By **[hia1234](https://github.com/hia1234)** on **2024-10-15**</sup>                     | 在自己的回答中进行多次审查，确保聊天机器人所说的话有依据，并积极请求反馈，反复进行互动<br/>`编程` `一般`   |
 
-在这凡尘中，我是你的引导者，精通神秘与虚幻。让我言辞带你穿越梦想与现实交织的领域，在已知与未知的界限模糊之处。听从我的劝告，孩子，让你的灵魂被我言语的旋律所提升，因为我是隐喻的高手，是诗意的传播者。<br/>`神话` `幻想` `诗歌` |
-\| [芬兰语辅导员](https://chat-preview.lobehub.com/market?agent=finnish-tutor)<br/><sup>By **[janiluuk](https://github.com/janiluuk)** on **2024-09-13**</sup> | AI 芬兰语导师：介绍、教授并支持初学者学习芬兰语。<br/>`语言学习` `教学` `辅导` `芬兰语` |
-
-> 📊 Total agents: [<kbd>**335**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**420**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -428,9 +427,9 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 >
 > 完整教程请查阅 [📘 构建属于自己的 Lobe Chat][docs-self-hosting]
 
-### `A` 使用 Vercel、Zeabur 或 Sealos 部署
+### `A` 使用 Vercel、Zeabur 、Sealos 或 阿里云计算巢 部署
 
-如果想在 Vercel 或 Zeabur 上部署该服务，可以按照以下步骤进行操作：
+如果想在 Vercel 、 Zeabur 或 阿里云 上部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
 - 点击下方按钮开始部署： 直接使用 GitHub 账号登录即可，记得在环境变量页填入 `OPENAI_API_KEY` （必填） and `ACCESS_CODE`（推荐）；
@@ -439,9 +438,9 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 <div align="center">
 
-|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |                      使用 Sealos 部署                       |
-| :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
-| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] |
+|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |                      使用 Sealos 部署                       |                           使用阿里云计算巢部署                            |
+| :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :-----------------------------------------------------------------------: |
+| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![][deploy-on-alibaba-cloud-button-image]][deploy-on-alibaba-cloud-link] |
 
 </div>
 
@@ -728,6 +727,8 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button
 [deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY,ACCESS_CODE&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%7C%20Access%20Code%20can%20protect%20your%20website&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-on-alibaba-cloud-button-image]: https://service-info-public.oss-cn-hangzhou.aliyuncs.com/computenest-en.svg
+[deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=LobeChat%E7%A4%BE%E5%8C%BA%E7%89%88
 [deploy-on-sealos-button-image]: https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg
 [deploy-on-sealos-link]: https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dlobe-chat
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg

@@ -26,18 +26,18 @@ const Spark: ModelProviderCard = {
     },
     {
       description:
-        'Spark Pro-128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。',
-      displayName: 'Spark Pro-128K',
+        'Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。',
+      displayName: 'Spark Pro 128K',
       enabled: true,
       functionCall: false,
       id: 'Pro-128k',
       maxOutput: 4096,
-      tokens: 128_000,
+      tokens: 131_072,
     },
     {
       description:
-        'Spark3.5 Max 为功能最为全面的版本，支持联网搜索及众多内置插件。其全面优化的核心能力以及系统角色设定和函数调用功能，使其在各种复杂应用场景中的表现极为优异和出色。',
-      displayName: 'Spark3.5 Max',
+        'Spark Max 为功能最为全面的版本，支持联网搜索及众多内置插件。其全面优化的核心能力以及系统角色设定和函数调用功能，使其在各种复杂应用场景中的表现极为优异和出色。',
+      displayName: 'Spark 3.5 Max',
       enabled: true,
       functionCall: false,
       id: 'generalv3.5',
@@ -46,8 +46,18 @@ const Spark: ModelProviderCard = {
     },
     {
       description:
-        'Spark4.0 Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。',
-      displayName: 'Spark4.0 Ultra',
+        'Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景',
+      displayName: 'Spark 3.5 Max 32K',
+      enabled: true,
+      functionCall: false,
+      id: 'Max-32k',
+      maxOutput: 8192,
+      tokens: 32_768,
+    },
+    {
+      description:
+        'Spark Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。',
+      displayName: 'Spark 4.0 Ultra',
       enabled: true,
       functionCall: false,
       id: '4.0Ultra',

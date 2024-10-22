@@ -1,6 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk';
 import type { Stream } from '@anthropic-ai/sdk/streaming';
-import { readableFromAsyncIterable } from 'ai';
 
 import { ChatStreamCallbacks } from '../../types';
 import {
@@ -8,6 +7,7 @@ import {
   StreamProtocolToolCallChunk,
   StreamStack,
   StreamToolCallChunkData,
+  convertIterableToStream,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
 } from './protocol';
@@ -96,12 +96,6 @@ export const transformAnthropicStream = (
   }
 };
 
-const chatStreamable = async function* (stream: AsyncIterable<Anthropic.MessageStreamEvent>) {
-  for await (const response of stream) {
-    yield response;
-  }
-};
-
 export const AnthropicStream = (
   stream: Stream<Anthropic.MessageStreamEvent> | ReadableStream,
   callbacks?: ChatStreamCallbacks,
@@ -109,7 +103,7 @@ export const AnthropicStream = (
   const streamStack: StreamStack = { id: '' };
 
   const readableStream =
-    stream instanceof ReadableStream ? stream : readableFromAsyncIterable(chatStreamable(stream));
+    stream instanceof ReadableStream ? stream : convertIterableToStream(stream);
 
   return readableStream
     .pipeThrough(createSSEProtocolTransformer(transformAnthropicStream, streamStack))

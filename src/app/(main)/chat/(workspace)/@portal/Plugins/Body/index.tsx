@@ -9,7 +9,7 @@ import Footer from '../Footer';
 import ToolRender from './ToolRender';
 
 const ToolUI = () => {
-  const messageId = useChatStore(chatPortalSelectors.artifactMessageId);
+  const messageId = useChatStore(chatPortalSelectors.toolMessageId);
   const message = useChatStore(chatSelectors.getMessageById(messageId || ''), isEqual);
 
   // make sure the message and id is valid
