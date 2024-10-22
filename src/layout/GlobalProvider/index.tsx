@@ -1,10 +1,8 @@
-import dynamic from 'next/dynamic';
 import { cookies, headers } from 'next/headers';
-import { FC, PropsWithChildren } from 'react';
+import { PropsWithChildren } from 'react';
 import { resolveAcceptLanguage } from 'resolve-accept-language';
 
 import { appEnv } from '@/config/app';
-import { getDebugConfig } from '@/config/debug';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
 import { LOBE_LOCALE_COOKIE } from '@/const/locale';
 import {
@@ -12,6 +10,7 @@ import {
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
+import DebugUI from '@/features/DebugUI';
 import { locales } from '@/locales/resources';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig';
@@ -23,17 +22,6 @@ import Locale from './Locale';
 import QueryProvider from './Query';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
-
-let DebugUI: FC = () => null;
-
-// we need use Constant Folding to remove code below in production
-// refs: https://webpack.js.org/plugins/internal-plugins/#constplugin
-if (process.env.NODE_ENV === 'development') {
-  // eslint-disable-next-line unicorn/no-lonely-if
-  if (getDebugConfig().DEBUG_MODE) {
-    DebugUI = dynamic(() => import('@/features/DebugUI'), { ssr: false }) as FC;
-  }
-}
 
 const parserFallbackLang = () => {
   /**
