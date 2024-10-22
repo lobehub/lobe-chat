@@ -10,6 +10,7 @@ import {
   LOBE_THEME_NEUTRAL_COLOR,
   LOBE_THEME_PRIMARY_COLOR,
 } from '@/const/theme';
+import DebugUI from '@/features/DebugUI';
 import { locales } from '@/locales/resources';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig';
@@ -80,6 +81,7 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
             <QueryProvider>{children}</QueryProvider>
             <StoreInitialization />
           </ServerConfigStoreProvider>
+          <DebugUI />
         </AppTheme>
       </Locale>
     </StyleRegistry>
