@@ -3,7 +3,11 @@ import { AssistantStore } from '@/server/modules/AssistantStore';
 
 export const runtime = 'edge';
 
-export const GET = async (req: Request, { params }: { params: { id: string } }) => {
+type Params = Promise<{ id: string }>;
+
+export const GET = async (req: Request, segmentData: { params: Params }) => {
+  const params = await segmentData.params;
+
   const { searchParams } = new URL(req.url);
 
   const locale = searchParams.get('locale');
