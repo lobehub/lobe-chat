@@ -9,7 +9,7 @@ import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 const inVercel = process.env.VERCEL === '1';
 

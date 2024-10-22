@@ -1,5 +1,5 @@
 import Conversation from '@/features/Conversation';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import ChatHydration from './features/ChatHydration';
 import DesktopChatInput from './features/ChatInput/Desktop';
