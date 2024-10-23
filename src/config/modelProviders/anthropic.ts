@@ -24,7 +24,7 @@ const Anthropic: ModelProviderCard = {
     {
       description:
         'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
-      displayName: 'Claude 3.5 Sonnet 0624',
+      displayName: 'Claude 3.5 Sonnet 0620',
       functionCall: true,
       id: 'claude-3-5-sonnet-20240620',
       maxOutput: 8192,
