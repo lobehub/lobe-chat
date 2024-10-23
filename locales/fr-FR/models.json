@@ -299,6 +299,9 @@
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet offre des capacités dépassant celles d'Opus et une vitesse plus rapide que Sonnet, tout en maintenant le même prix que Sonnet. Sonnet excelle particulièrement dans la programmation, la science des données, le traitement visuel et les tâches d'agent."
   },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnet offre des capacités dépassant celles d'Opus et une vitesse supérieure à celle de Sonnet, tout en maintenant le même tarif que Sonnet. Sonnet excelle particulièrement dans la programmation, la science des données, le traitement visuel et les tâches d'agent."
+  },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku est le modèle le plus rapide et le plus compact d'Anthropic, conçu pour des réponses quasi instantanées. Il présente des performances directionnelles rapides et précises."
   },
@@ -307,9 +310,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un équilibre idéal entre intelligence et vitesse pour les charges de travail d'entreprise. Il fournit une utilité maximale à un coût inférieur, fiable et adapté à un déploiement à grande échelle."
-  },
-  "claude-instant-1.2": {
-    "description": "Le modèle d'Anthropic est conçu pour une génération de texte à faible latence et à haut débit, prenant en charge la génération de centaines de pages de texte."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 est un puissant assistant de programmation AI, prenant en charge des questions intelligentes et l'achèvement de code dans divers langages de programmation, améliorant l'efficacité du développement."
@@ -1011,6 +1011,9 @@
   },
   "step-1-flash": {
     "description": "Modèle à haute vitesse, adapté aux dialogues en temps réel."
+  },
+  "step-1.5v-turbo": {
+    "description": "Ce modèle possède de puissantes capacités de compréhension vidéo."
   },
   "step-1v-32k": {
     "description": "Prend en charge les entrées visuelles, améliorant l'expérience d'interaction multimodale."

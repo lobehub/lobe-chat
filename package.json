@@ -1,6 +1,6 @@
 {
   "name": "@lobehub/chat",
-  "version": "1.22.20",
+  "version": "1.22.25",
   "description": "Lobe Chat - an open-source, high-performance chatbot framework that supports speech synthesis, multimodal, and extensible Function Call plugin system. Supports one-click free deployment of your private ChatGPT/LLM web application.",
   "keywords": [
     "framework",
@@ -65,6 +65,7 @@
     "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",
+    "workflow:countCharters": "tsx scripts/countEnWord.ts",
     "workflow:docs": "tsx ./scripts/docsWorkflow/index.ts",
     "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts",
     "workflow:mdx": "tsx ./scripts/mdxWorkflow/index.ts",

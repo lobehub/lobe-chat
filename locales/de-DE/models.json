@@ -299,6 +299,9 @@
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet bietet Fähigkeiten, die über Opus hinausgehen, und ist schneller als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in Programmierung, Datenwissenschaft, visueller Verarbeitung und Agenturaufgaben."
   },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnet bietet überlegene Fähigkeiten im Vergleich zu Opus und schnellere Geschwindigkeiten als Sonnet, während es den gleichen Preis wie Sonnet beibehält. Sonnet ist besonders gut in den Bereichen Programmierung, Datenwissenschaft, visuelle Verarbeitung und Aufgabenübertragung."
+  },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku ist das schnellste und kompakteste Modell von Anthropic, das darauf abzielt, nahezu sofortige Antworten zu liefern. Es bietet schnelle und präzise zielgerichtete Leistungen."
   },
@@ -307,9 +310,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet bietet eine ideale Balance zwischen Intelligenz und Geschwindigkeit für Unternehmensarbeitslasten. Es bietet maximalen Nutzen zu einem niedrigeren Preis, ist zuverlässig und für großflächige Bereitstellungen geeignet."
-  },
-  "claude-instant-1.2": {
-    "description": "Das Modell von Anthropic wird für latenzarme, hochdurchsatzfähige Textgenerierung verwendet und unterstützt die Generierung von Hunderten von Seiten Text."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 ist ein leistungsstarker AI-Programmierassistent, der intelligente Fragen und Codevervollständigung in verschiedenen Programmiersprachen unterstützt und die Entwicklungseffizienz steigert."
@@ -1011,6 +1011,9 @@
   },
   "step-1-flash": {
     "description": "Hochgeschwindigkeitsmodell, geeignet für Echtzeitdialoge."
+  },
+  "step-1.5v-turbo": {
+    "description": "Dieses Modell verfügt über starke Fähigkeiten im Verständnis von Videos."
   },
   "step-1v-32k": {
     "description": "Unterstützt visuelle Eingaben und verbessert die multimodale Interaktionserfahrung."
