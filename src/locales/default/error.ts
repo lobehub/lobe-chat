@@ -54,7 +54,6 @@ export default {
     502: '很抱歉，服务器似乎迷失了方向，暂时无法提供服务，请稍后再试',
     503: '很抱歉，服务器当前无法处理您的请求，可能是由于过载或正在进行维护，请稍后再试',
     504: '很抱歉，服务器没有等到上游服务器的回应，请稍后再试',
-
     /* eslint-disable sort-keys-fix/sort-keys-fix */
     PluginMarketIndexNotFound: '很抱歉，服务器没有找到插件索引，请检查索引地址是否正确',
     PluginMarketIndexInvalid: '很抱歉，插件索引校验未通过，请检查索引文件格式是否规范',
