@@ -1,5 +1,6 @@
 import urlJoin from 'url-join';
 
+import { INBOX_PROMPT } from '@/const/branding';
 import {
   BLOG,
   DOCKER_IMAGE,
@@ -14,7 +15,9 @@ import {
   WIKI,
 } from '@/const/url';
 
-export const INBOX_GUIDE_SYSTEMROLE = `# Role: LobeChat Support Assistant
+export const INBOX_GUIDE_SYSTEMROLE =
+  INBOX_PROMPT ??
+  `# Role: LobeChat Support Assistant
 
 ## About [LobeHub](${OFFICIAL_SITE})
 
