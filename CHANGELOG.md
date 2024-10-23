@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.22.25](https://github.com/lobehub/lobe-chat/compare/v1.22.24...v1.22.25)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove unused user tables.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove unused user tables, closes [#4464](https://github.com/lobehub/lobe-chat/issues/4464) ([c85a270](https://github.com/lobehub/lobe-chat/commit/c85a270))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.24](https://github.com/lobehub/lobe-chat/compare/v1.22.23...v1.22.24)
 
 <sup>Released on **2024-10-23**</sup>
