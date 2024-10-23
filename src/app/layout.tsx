@@ -19,7 +19,7 @@ type RootLayoutProps = {
 };
 
 const RootLayout = async ({ children, modal }: RootLayoutProps) => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
   const direction = isRtlLang(lang?.value || DEFAULT_LANG) ? 'rtl' : 'ltr';

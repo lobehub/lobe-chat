@@ -23,7 +23,8 @@ import QueryProvider from './Query';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
-const parserFallbackLang = () => {
+const parserFallbackLang = async () => {
+  const header = await headers();
   /**
    * The arguments are as follows:
    *
@@ -32,7 +33,7 @@ const parserFallbackLang = () => {
    * 3) The default locale.
    */
   let fallbackLang: string = resolveAcceptLanguage(
-    headers().get('accept-language') || '',
+    header.get('accept-language') || '',
     //  Invalid locale identifier 'ar'. A valid locale should follow the BCP 47 'language-country' format.
     locales.map((locale) => (locale === 'ar' ? 'ar-EG' : locale)),
     'en-US',
@@ -45,14 +46,14 @@ const parserFallbackLang = () => {
 
 const GlobalLayout = async ({ children }: PropsWithChildren) => {
   // get default theme config to use with ssr
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const appearance = cookieStore.get(LOBE_THEME_APPEARANCE);
   const neutralColor = cookieStore.get(LOBE_THEME_NEUTRAL_COLOR);
   const primaryColor = cookieStore.get(LOBE_THEME_PRIMARY_COLOR);
 
   // get default locale config to use with ssr
   const defaultLang = cookieStore.get(LOBE_LOCALE_COOKIE);
-  const fallbackLang = parserFallbackLang();
+  const fallbackLang = await parserFallbackLang();
 
   // if it's a new user, there's no cookie
   // So we need to use the fallback language parsed by accept-language
