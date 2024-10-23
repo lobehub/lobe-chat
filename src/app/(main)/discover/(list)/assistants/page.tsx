@@ -8,9 +8,10 @@ import { isMobileDevice } from '@/utils/server/responsive';
 
 import List from './features/List';
 
-type Props = { searchParams: { hl?: Locales } };
+type Props = { searchParams: Promise<{ hl?: Locales }> };
 
-export const generateMetadata = async ({ searchParams }: Props) => {
+export const generateMetadata = async (props: Props) => {
+  const searchParams = await props.searchParams;
   const { t, locale } = await translation('metadata', searchParams?.hl);
   return metadataModule.generate({
     alternate: true,
@@ -21,7 +22,8 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   });
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async (props: Props) => {
+  const searchParams = await props.searchParams;
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 

@@ -4,7 +4,7 @@ import { Webhook } from 'svix';
 
 export const validateRequest = async (request: Request, secret: string) => {
   const payloadString = await request.text();
-  const headerPayload = headers();
+  const headerPayload = await headers();
 
   const svixHeaders = {
     'svix-id': headerPayload.get('svix-id')!,
