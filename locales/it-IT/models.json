@@ -299,6 +299,9 @@
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet offre capacità superiori a Opus e velocità più elevate rispetto a Sonnet, mantenendo lo stesso prezzo. Sonnet è particolarmente abile in programmazione, scienza dei dati, elaborazione visiva e compiti di agenti."
   },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnet offre capacità superiori a Opus e velocità maggiore rispetto a Sonnet, mantenendo lo stesso prezzo di Sonnet. Sonnet è particolarmente abile nella programmazione, nella scienza dei dati, nell'elaborazione visiva e nei compiti di agenzia."
+  },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku è il modello più veloce e compatto di Anthropic, progettato per risposte quasi istantanee. Ha prestazioni di orientamento rapide e accurate."
   },
@@ -307,9 +310,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un equilibrio ideale tra intelligenza e velocità per i carichi di lavoro aziendali. Fornisce la massima utilità a un prezzo inferiore, affidabile e adatto per distribuzioni su larga scala."
-  },
-  "claude-instant-1.2": {
-    "description": "Il modello di Anthropic è progettato per generazione di testi a bassa latenza e alta capacità, supportando la generazione di centinaia di pagine di testo."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 è un potente assistente di programmazione AI, supporta domande intelligenti e completamento del codice in vari linguaggi di programmazione, migliorando l'efficienza dello sviluppo."
@@ -1011,6 +1011,9 @@
   },
   "step-1-flash": {
     "description": "Modello ad alta velocità, adatto per dialoghi in tempo reale."
+  },
+  "step-1.5v-turbo": {
+    "description": "Questo modello ha potenti capacità di comprensione video."
   },
   "step-1v-32k": {
     "description": "Supporta input visivi, migliorando l'esperienza di interazione multimodale."

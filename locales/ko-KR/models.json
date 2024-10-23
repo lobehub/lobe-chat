@@ -299,6 +299,9 @@
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 시각 처리 및 대리 작업에 특히 강합니다."
   },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 빠른 속도를 제공하면서도 Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 비주얼 처리 및 대리 작업에 특히 뛰어납니다."
+  },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku는 Anthropic의 가장 빠르고 컴팩트한 모델로, 거의 즉각적인 응답을 목표로 합니다. 빠르고 정확한 방향성 성능을 갖추고 있습니다."
   },
@@ -307,9 +310,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet은 기업 작업 부하에 이상적인 균형을 제공하며, 더 낮은 가격으로 최대 효용을 제공합니다. 신뢰성이 높고 대규모 배포에 적합합니다."
-  },
-  "claude-instant-1.2": {
-    "description": "Anthropic의 모델은 낮은 지연 시간과 높은 처리량의 텍스트 생성을 위해 설계되었으며, 수백 페이지의 텍스트 생성을 지원합니다."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4는 강력한 AI 프로그래밍 도우미로, 다양한 프로그래밍 언어에 대한 스마트 Q&A 및 코드 완성을 지원하여 개발 효율성을 높입니다."
@@ -1011,6 +1011,9 @@
   },
   "step-1-flash": {
     "description": "고속 모델로, 실시간 대화에 적합합니다."
+  },
+  "step-1.5v-turbo": {
+    "description": "이 모델은 강력한 비디오 이해 능력을 가지고 있습니다."
   },
   "step-1v-32k": {
     "description": "시각 입력을 지원하여 다중 모달 상호작용 경험을 강화합니다."

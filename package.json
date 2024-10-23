@@ -65,6 +65,7 @@
     "test:update": "vitest -u",
     "type-check": "tsc --noEmit",
     "webhook:ngrok": "ngrok http http://localhost:3011",
+    "workflow:countCharters": "tsx scripts/countEnWord.ts",
     "workflow:docs": "tsx ./scripts/docsWorkflow/index.ts",
     "workflow:i18n": "tsx ./scripts/i18nWorkflow/index.ts",
     "workflow:mdx": "tsx ./scripts/mdxWorkflow/index.ts",

@@ -299,6 +299,9 @@
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。"
   },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。"
+  },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。"
   },
@@ -307,9 +310,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面为企业工作负载提供了理想的平衡。它以更低的价格提供最大效用，可靠且适合大规模部署。"
-  },
-  "claude-instant-1.2": {
-    "description": "Anthropic 的模型用于低延迟、高吞吐量的文本生成，支持生成数百页的文本。"
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 是强大的AI编程助手，支持多种编程语言的智能问答与代码补全，提升开发效率。"
@@ -1011,6 +1011,9 @@
   },
   "step-1-flash": {
     "description": "高速模型，适合实时对话。"
+  },
+  "step-1.5v-turbo": {
+    "description": "该模型拥有强大的视频理解能力。"
   },
   "step-1v-32k": {
     "description": "支持视觉输入，增强多模态交互体验。"
