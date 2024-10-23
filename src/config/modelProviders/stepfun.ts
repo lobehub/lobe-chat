@@ -10,6 +10,11 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-flash',
+      pricing: {
+        currency: 'CNY',
+        input: 1,
+        output: 4,
+      },
       tokens: 8000,
     },
     {
@@ -18,6 +23,11 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-8k',
+      pricing: {
+        currency: 'CNY',
+        input: 5,
+        output: 20,
+      },
       tokens: 8000,
     },
     {
@@ -26,6 +36,11 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-32k',
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 70,
+      },
       tokens: 32_000,
     },
     {
@@ -34,6 +49,11 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1-128k',
+      pricing: {
+        currency: 'CNY',
+        input: 40,
+        output: 200,
+      },
       tokens: 128_000,
     },
     {
@@ -41,6 +61,11 @@ const Stepfun: ModelProviderCard = {
       displayName: 'Step 1 256K',
       functionCall: true,
       id: 'step-1-256k',
+      pricing: {
+        currency: 'CNY',
+        input: 95,
+        output: 300,
+      },
       tokens: 256_000,
     },
     {
@@ -49,6 +74,11 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-2-16k',
+      pricing: {
+        currency: 'CNY',
+        input: 38,
+        output: 120,
+      },
       tokens: 16_000,
     },
     {
@@ -57,6 +87,11 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1v-8k',
+      pricing: {
+        currency: 'CNY',
+        input: 5,
+        output: 20,
+      },
       tokens: 8000,
       vision: true,
     },
@@ -66,6 +101,24 @@ const Stepfun: ModelProviderCard = {
       enabled: true,
       functionCall: true,
       id: 'step-1v-32k',
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 70,
+      },
+      tokens: 32_000,
+      vision: true,
+    },
+    {
+      description: '该模型拥有强大的视频理解能力。',
+      displayName: 'Step 1.5V Turbo',
+      enabled: true,
+      id: 'step-1.5v-turbo',
+      pricing: {
+        currency: 'CNY',
+        input: 8,
+        output: 35,
+      },
       tokens: 32_000,
       vision: true,
     },
