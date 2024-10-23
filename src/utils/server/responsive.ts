@@ -26,7 +26,7 @@ export const gerServerDeviceInfo = () => {
     throw new Error('[Server method] you are importing a server-only module outside of server');
   }
 
-  const { get } = headers() as unknown as UnsafeUnwrappedHeaders;
+  const { get } = headers();
   const ua = get('user-agent');
 
   // console.debug(ua);
