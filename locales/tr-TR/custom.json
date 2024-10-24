@@ -1,0 +1,18 @@
+{
+  "chat": {
+    "inbox": {
+      "desc": "Beyin kümesini açın, düşünce kıvılcımlarını ateşleyin. Akıllı asistanınız burada sizinle her şeyi konuşmak için.",
+      "title": "Rastgele sohbet edelim"
+    }
+  },
+  "welcome": {
+    "guide": {
+      "defaultMessage": "Ben sizin özel akıllı asistanınız {{appName}}. Size şimdi ne yardımcı olabilirim?\nDaha profesyonel veya özel bir asistan istiyorsanız, `+` butonuna tıklayarak özel bir asistan oluşturabilirsiniz.",
+      "defaultMessageWithoutCreate": "Ben sizin özel akıllı asistanınız {{appName}}. Size şimdi ne yardımcı olabilirim?"
+    },
+    "slogan": {
+      "desc1": "Beyin kümesini açın, düşünce kıvılcımlarını ateşleyin. Akıllı asistanınız her zaman burada.",
+      "title": "Kendinize daha akıllı bir beyin verin"
+    }
+  }
+}
