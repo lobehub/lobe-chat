@@ -47,8 +47,8 @@
   "ERNIE-4.0-8K-Preview": {
     "description": "百度自研的旗艦級超大規模語言模型，相較ERNIE 3.5實現了模型能力全面升級，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。"
   },
-  "ERNIE-4.0-Turbo-8K": {
-    "description": "百度自研的旗艦級超大規模語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀。"
+  "ERNIE-4.0-Turbo-8K-Latest": {
+    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現優異，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於 ERNIE 4.0 在性能表現上更為優秀。"
   },
   "ERNIE-4.0-Turbo-8K-Preview": {
     "description": "百度自研的旗艦級超大規模語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀。"
@@ -80,8 +80,11 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B) 提供優化的語言輸出和多樣化的應用可能。"
   },
-  "Phi-3-5-mini-instruct": {
-    "description": "Phi-3-mini模型的更新版本。"
+  "OpenGVLab/InternVL2-26B": {
+    "description": "InternVL2在各種視覺語言任務上展現出了卓越的性能，包括文檔和圖表理解、場景文本理解、OCR、科學和數學問題解決等。"
+  },
+  "OpenGVLab/InternVL2-Llama3-76B": {
+    "description": "InternVL2在各種視覺語言任務上展現出了卓越的性能，包括文檔和圖表理解、場景文本理解、OCR、科學和數學問題解決等。"
   },
   "Phi-3-medium-128k-instruct": {
     "description": "相同的Phi-3-medium模型，但具有更大的上下文大小，適用於RAG或少量提示。"
@@ -101,8 +104,20 @@
   "Phi-3-small-8k-instruct": {
     "description": "一個7B參數模型，質量優於Phi-3-mini，專注於高質量、推理密集型數據。"
   },
+  "Phi-3.5-mini-instruct": {
+    "description": "Phi-3-mini模型的更新版。"
+  },
+  "Phi-3.5-vision-instrust": {
+    "description": "Phi-3-vision模型的更新版。"
+  },
   "Pro-128k": {
     "description": "Spark Pro-128K 配置了特大上下文處理能力，能夠處理多達128K的上下文信息，特別適合需通篇分析和長期邏輯關聯處理的長文內容，可在複雜文本溝通中提供流暢一致的邏輯與多樣的引用支持。"
+  },
+  "Pro/OpenGVLab/InternVL2-8B": {
+    "description": "InternVL2在各種視覺語言任務上展現出了卓越的性能，包括文檔和圖表理解、場景文本理解、OCR、科學和數學問題解決等。"
+  },
+  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
+    "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在視覺理解基準測試中達到了最先進的性能。"
   },
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "作為 Qwen2 的測試版，Qwen1.5 使用大規模數據實現了更精確的對話功能。"
@@ -113,17 +128,26 @@
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 是先進的通用語言模型，支持多種指令類型。"
   },
+  "Qwen/Qwen2-VL-72B-Instruct": {
+    "description": "Qwen2-VL 是 Qwen-VL 模型的最新迭代版本，在視覺理解基準測試中達到了最先進的性能。"
+  },
   "Qwen/Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
-  "Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  "Qwen/Qwen2.5-72B-Instruct-128K": {
+    "description": "Qwen2.5 是全新的大型語言模型系列，具有更強的理解和生成能力。"
+  },
+  "Qwen/Qwen2.5-72B-Instruct-Turbo": {
+    "description": "Qwen2.5 是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
   "Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5是全新的大型語言模型系列，旨在優化指令式任務的處理。"
+  },
+  "Qwen/Qwen2.5-7B-Instruct-Turbo": {
+    "description": "Qwen2.5 是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder專注於代碼編寫。"
@@ -158,9 +182,6 @@
   "accounts/fireworks/models/firellava-13b": {
     "description": "fireworks-ai/FireLLaVA-13b 是一款視覺語言模型，可以同時接收圖像和文本輸入，經過高質量數據訓練，適合多模態任務。"
   },
-  "accounts/fireworks/models/gemma2-9b-it": {
-    "description": "Gemma 2 9B 指令模型，基於之前的 Google 技術，適合回答問題、總結和推理等多種文本生成任務。"
-  },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B 指令模型，專為多語言對話和自然語言理解優化，性能優於多數競爭模型。"
   },
@@ -182,6 +203,18 @@
   "accounts/fireworks/models/llama-v3p1-8b-instruct": {
     "description": "Llama 3.1 8B 指令模型，專為多語言對話優化，能夠在常見行業基準上超越多數開源及閉源模型。"
   },
+  "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
+    "description": "Meta的11B參數指令調整圖像推理模型。該模型針對視覺識別、圖像推理、圖像描述和回答關於圖像的一般性問題進行了優化。該模型能夠理解視覺數據，如圖表和圖形，並通過生成文本描述圖像細節來弥合視覺與語言之間的差距。"
+  },
+  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
+    "description": "Llama 3.2 1B 指令模型是Meta推出的一款輕量級多語言模型。該模型旨在提高效率，與更大型的模型相比，在延遲和成本方面提供了顯著的改進。該模型的示例用例包括檢索和摘要。"
+  },
+  "accounts/fireworks/models/llama-v3p2-3b-instruct": {
+    "description": "Llama 3.2 3B 指令模型是Meta推出的一款輕量級多語言模型。該模型旨在提高效率，與更大型的模型相比，在延遲和成本方面提供了顯著的改進。該模型的示例用例包括查詢和提示重寫以及寫作輔助。"
+  },
+  "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
+    "description": "Meta的90B參數指令調整圖像推理模型。該模型針對視覺識別、圖像推理、圖像描述和回答關於圖像的一般性問題進行了優化。該模型能夠理解視覺數據，如圖表和圖形，並通過生成文本描述圖像細節來弥合視覺與語言之間的差距。"
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B 指令模型，大規模參數和多專家架構，全方位支持複雜任務的高效處理。"
   },
@@ -197,6 +230,9 @@
   "accounts/fireworks/models/phi-3-vision-128k-instruct": {
     "description": "Phi 3 Vision 指令模型，輕量級多模態模型，能夠處理複雜的視覺和文本信息，具備較強的推理能力。"
   },
+  "accounts/fireworks/models/qwen2p5-72b-instruct": {
+    "description": "Qwen2.5 是由阿里雲 Qwen 團隊開發的一系列僅包含解碼器的語言模型。這些模型提供不同的大小，包括 0.5B、1.5B、3B、7B、14B、32B 和 72B，並且有基礎版（base）和指令版（instruct）兩種變體。"
+  },
   "accounts/fireworks/models/starcoder-16b": {
     "description": "StarCoder 15.5B 模型，支持高級編程任務，多語言能力增強，適合複雜代碼生成和理解。"
   },
@@ -211,9 +247,6 @@
   },
   "ai21-jamba-1.5-mini": {
     "description": "一個52B參數（12B活躍）多語言模型，提供256K長上下文窗口、函數調用、結構化輸出和基於實體的生成。"
-  },
-  "ai21-jamba-instruct": {
-    "description": "一個生產級的基於Mamba的LLM模型，以實現最佳性能、質量和成本效率。"
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet提升了行業標準，性能超過競爭對手模型和Claude 3 Opus，在廣泛的評估中表現出色，同時具有我們中等層級模型的速度和成本。"
@@ -266,6 +299,9 @@
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長編程、數據科學、視覺處理、代理任務。"
   },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長編程、數據科學、視覺處理、代理任務。"
+  },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku 是 Anthropic 的最快且最緊湊的模型，旨在實現近乎即時的響應。它具有快速且準確的定向性能。"
   },
@@ -274,9 +310,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet 在智能和速度方面為企業工作負載提供了理想的平衡。它以更低的價格提供最大效用，可靠且適合大規模部署。"
-  },
-  "claude-instant-1.2": {
-    "description": "Anthropic 的模型用於低延遲、高吞吐量的文本生成，支持生成數百頁的文本。"
   },
   "codegeex-4": {
     "description": "CodeGeeX-4是一個強大的AI編程助手，支持多種編程語言的智能問答與代碼補全，提升開發效率。"
@@ -592,8 +625,14 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Online 模型，具備 8B 參數，支持約 127,000 個標記的上下文長度，專為在線聊天設計，能高效處理各種文本交互。"
   },
+  "llama-3.2-11b-vision-instruct": {
+    "description": "在高解析度圖像上表現優異的圖像推理能力，適用於視覺理解應用。"
+  },
   "llama-3.2-11b-vision-preview": {
     "description": "Llama 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
+  },
+  "llama-3.2-90b-vision-instruct": {
+    "description": "適合視覺理解代理應用的高階圖像推理能力。"
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
@@ -652,14 +691,26 @@
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) 提供優秀的語言處理能力和出色的互動體驗。"
   },
-  "meta-llama/Llama-2-7b-chat-hf": {
-    "description": "最佳對話模型之一"
+  "meta-llama/Llama-2-70b-hf": {
+    "description": "LLaMA-2 提供優秀的語言處理能力和出色的互動體驗。"
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) 是功能強大的聊天模型，支持複雜的對話需求。"
   },
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B) 提供多語言支持，涵蓋豐富的領域知識。"
+  },
+  "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
+  },
+  "meta-llama/Llama-3.2-3B-Instruct-Turbo": {
+    "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
+  },
+  "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
+  },
+  "meta-llama/Llama-Vision-Free": {
+    "description": "LLaMA 3.2 旨在處理結合視覺和文本數據的任務。它在圖像描述和視覺問答等任務中表現出色，跨越了語言生成和視覺推理之間的鴻溝。"
   },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite 適合需要高效能和低延遲的環境。"
@@ -739,14 +790,17 @@
   "minicpm-v": {
     "description": "MiniCPM-V 是 OpenBMB 推出的新一代多模態大模型，具備卓越的 OCR 識別和多模態理解能力，支持廣泛的應用場景。"
   },
+  "ministral-3b-latest": {
+    "description": "Ministral 3B 是 Mistral 的全球頂尖邊緣模型。"
+  },
+  "ministral-8b-latest": {
+    "description": "Ministral 8B 是 Mistral 的性價比極高的邊緣模型。"
+  },
   "mistral": {
     "description": "Mistral 是 Mistral AI 發布的 7B 模型，適合多變的語言處理需求。"
   },
   "mistral-large": {
     "description": "Mixtral Large 是 Mistral 的旗艦模型，結合代碼生成、數學和推理的能力，支持 128k 上下文窗口。"
-  },
-  "mistral-large-2407": {
-    "description": "Mistral Large (2407)是一個先進的大型語言模型（LLM），具有最先進的推理、知識和編碼能力。"
   },
   "mistral-large-latest": {
     "description": "Mistral Large 是旗艦大模型，擅長多語言任務、複雜推理和代碼生成，是高端應用的理想選擇。"
@@ -769,11 +823,17 @@
   "mistralai/Mistral-7B-Instruct-v0.3": {
     "description": "Mistral (7B) Instruct v0.3 提供高效的計算能力和自然語言理解，適合廣泛的應用。"
   },
+  "mistralai/Mistral-7B-v0.1": {
+    "description": "Mistral 7B 是一款緊湊但高效能的模型，擅長批次處理和簡單任務，如分類和文本生成，具有良好的推理能力。"
+  },
   "mistralai/Mixtral-8x22B-Instruct-v0.1": {
     "description": "Mixtral-8x22B Instruct (141B) 是一款超級大語言模型，支持極高的處理需求。"
   },
   "mistralai/Mixtral-8x7B-Instruct-v0.1": {
     "description": "Mixtral 8x7B 是預訓練的稀疏混合專家模型，用於通用性文本任務。"
+  },
+  "mistralai/Mixtral-8x7B-v0.1": {
+    "description": "Mixtral 8x7B 是一個稀疏專家模型，利用多個參數提高推理速度，適合處理多語言和代碼生成任務。"
   },
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instruct 是一款兼具速度優化和長上下文支持的高性能行業標準模型。"
@@ -801,6 +861,9 @@
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B 是 Nous Hermes 2 的升級版本，包含最新的內部開發的數據集。"
+  },
+  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
+    "description": "Llama 3.1 Nemotron 70B 是由 NVIDIA 定製的大型語言模型，旨在提升 LLM 生成的回應對用戶查詢的幫助程度。"
   },
   "o1-mini": {
     "description": "o1-mini是一款針對程式設計、數學和科學應用場景而設計的快速、經濟高效的推理模型。該模型具有128K上下文和2023年10月的知識截止日期。"
@@ -949,6 +1012,9 @@
   "step-1-flash": {
     "description": "高速模型，適合實時對話。"
   },
+  "step-1.5v-turbo": {
+    "description": "該模型擁有強大的視頻理解能力。"
+  },
   "step-1v-32k": {
     "description": "支持視覺輸入，增強多模態交互體驗。"
   },
@@ -987,6 +1053,12 @@
   },
   "yi-large-turbo": {
     "description": "超高性價比、卓越性能。根據性能和推理速度、成本，進行平衡性高精度調優。"
+  },
+  "yi-lightning": {
+    "description": "最新高性能模型，保證高品質輸出同時，推理速度大幅提升。"
+  },
+  "yi-lightning-lite": {
+    "description": "輕量化版本，推薦使用 yi-lightning。"
   },
   "yi-medium": {
     "description": "中型尺寸模型升級微調，能力均衡，性價比高。深度優化指令遵循能力。"

@@ -8,3 +8,9 @@ export const BRANDING_NAME = 'LobeChat';
 export const BRANDING_LOGO_URL = '';
 
 export const ORG_NAME = 'LobeHub';
+
+export const BRANDING_URL = {
+  help: undefined,
+  privacy: undefined,
+  terms: undefined,
+};

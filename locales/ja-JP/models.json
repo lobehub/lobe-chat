@@ -47,8 +47,8 @@
   "ERNIE-4.0-8K-Preview": {
     "description": "百度が独自に開発したフラッグシップの超大規模言語モデルで、ERNIE 3.5に比べてモデル能力が全面的にアップグレードされ、さまざまな分野の複雑なタスクシナリオに広く適用されます。百度検索プラグインとの自動接続をサポートし、質問応答情報のタイムリーさを保証します。"
   },
-  "ERNIE-4.0-Turbo-8K": {
-    "description": "百度が独自に開発したフラッグシップの超大規模言語モデルで、総合的なパフォーマンスが優れており、さまざまな分野の複雑なタスクシナリオに広く適用されます。百度検索プラグインとの自動接続をサポートし、質問応答情報のタイムリーさを保証します。ERNIE 4.0に比べてパフォーマンスがさらに優れています。"
+  "ERNIE-4.0-Turbo-8K-Latest": {
+    "description": "百度が自主開発したフラッグシップの超大規模な言語モデルで、総合的なパフォーマンスが優れており、各分野の複雑なタスクシナリオに広く適応します；百度検索プラグインとの自動連携をサポートし、質問応答情報のタイムリーさを保証します。ERNIE 4.0に比べてパフォーマンスが向上しています。"
   },
   "ERNIE-4.0-Turbo-8K-Preview": {
     "description": "百度が独自に開発したフラッグシップの超大規模言語モデルで、総合的なパフォーマンスが優れており、さまざまな分野の複雑なタスクシナリオに広く適用されます。百度検索プラグインとの自動接続をサポートし、質問応答情報のタイムリーさを保証します。ERNIE 4.0に比べてパフォーマンスがさらに優れています。"
@@ -80,8 +80,11 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B)は、最適化された言語出力と多様なアプリケーションの可能性を提供します。"
   },
-  "Phi-3-5-mini-instruct": {
-    "description": "Phi-3-miniモデルのリフレッシュ版です。"
+  "OpenGVLab/InternVL2-26B": {
+    "description": "InternVL2はさまざまな視覚と言語タスクで卓越した性能を発揮しており、文書や図表の理解、シーンテキストの理解、OCR、科学および数学の問題解決などを含みます。"
+  },
+  "OpenGVLab/InternVL2-Llama3-76B": {
+    "description": "InternVL2はさまざまな視覚と言語タスクで卓越した性能を発揮しており、文書や図表の理解、シーンテキストの理解、OCR、科学および数学の問題解決などを含みます。"
   },
   "Phi-3-medium-128k-instruct": {
     "description": "同じPhi-3-mediumモデルですが、RAGまたは少数ショットプロンプティング用により大きなコンテキストサイズを持っています。"
@@ -101,8 +104,20 @@
   "Phi-3-small-8k-instruct": {
     "description": "7Bパラメータのモデルで、Phi-3-miniよりも高品質で、質の高い推論密度のデータに焦点を当てています。"
   },
+  "Phi-3.5-mini-instruct": {
+    "description": "Phi-3-miniモデルの更新版です。"
+  },
+  "Phi-3.5-vision-instrust": {
+    "description": "Phi-3-visionモデルの更新版です。"
+  },
   "Pro-128k": {
     "description": "Spark Pro-128Kは特大のコンテキスト処理能力を備え、最大128Kのコンテキスト情報を処理でき、特に全体分析や長期的な論理関連処理が必要な長文コンテンツに適しており、複雑なテキストコミュニケーションにおいて流暢で一貫した論理と多様な引用サポートを提供します。"
+  },
+  "Pro/OpenGVLab/InternVL2-8B": {
+    "description": "InternVL2はさまざまな視覚と言語タスクで卓越した性能を発揮しており、文書や図表の理解、シーンテキストの理解、OCR、科学および数学の問題解決などを含みます。"
+  },
+  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
+    "description": "Qwen2-VLはQwen-VLモデルの最新のイテレーションで、視覚理解のベンチマークテストで最先端の性能を達成しました。"
   },
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "Qwen2のテスト版として、Qwen1.5は大規模データを使用してより正確な対話機能を実現しました。"
@@ -113,17 +128,26 @@
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2は、先進的な汎用言語モデルであり、さまざまな指示タイプをサポートします。"
   },
+  "Qwen/Qwen2-VL-72B-Instruct": {
+    "description": "Qwen2-VLはQwen-VLモデルの最新のイテレーションで、視覚理解のベンチマークテストで最先端の性能を達成しました。"
+  },
   "Qwen/Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5は、新しい大型言語モデルシリーズで、指示型タスクの処理を最適化することを目的としています。"
   },
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5は、新しい大型言語モデルシリーズで、指示型タスクの処理を最適化することを目的としています。"
   },
-  "Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5は、新しい大型言語モデルシリーズで、より強力な理解と生成能力を持っています。"
+  "Qwen/Qwen2.5-72B-Instruct-128K": {
+    "description": "Qwen2.5は新しい大型言語モデルシリーズで、より強力な理解と生成能力を持っています。"
+  },
+  "Qwen/Qwen2.5-72B-Instruct-Turbo": {
+    "description": "Qwen2.5は新しい大型言語モデルシリーズで、指示タスクの処理を最適化することを目的としています。"
   },
   "Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5は、新しい大型言語モデルシリーズで、指示型タスクの処理を最適化することを目的としています。"
+  },
+  "Qwen/Qwen2.5-7B-Instruct-Turbo": {
+    "description": "Qwen2.5は新しい大型言語モデルシリーズで、指示タスクの処理を最適化することを目的としています。"
   },
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coderは、コード作成に特化しています。"
@@ -158,9 +182,6 @@
   "accounts/fireworks/models/firellava-13b": {
     "description": "fireworks-ai/FireLLaVA-13bは、画像とテキストの入力を同時に受け取ることができる視覚言語モデルであり、高品質なデータで訓練されており、多モーダルタスクに適しています。"
   },
-  "accounts/fireworks/models/gemma2-9b-it": {
-    "description": "Gemma 2 9B指示モデルは、以前のGoogle技術に基づいており、質問応答、要約、推論などのさまざまなテキスト生成タスクに適しています。"
-  },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Llama 3 70B指示モデルは、多言語対話と自然言語理解に最適化されており、ほとんどの競合モデルを上回る性能を持っています。"
   },
@@ -182,6 +203,18 @@
   "accounts/fireworks/models/llama-v3p1-8b-instruct": {
     "description": "Llama 3.1 8B指示モデルは、多言語対話の最適化のために設計されており、一般的な業界ベンチマークを超える性能を発揮します。"
   },
+  "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
+    "description": "Metaの11Bパラメータ指示調整画像推論モデルです。このモデルは視覚認識、画像推論、画像説明、および画像に関する一般的な質問への回答に最適化されています。このモデルは、グラフや図表などの視覚データを理解し、画像の詳細をテキストで記述することで、視覚と言語の間のギャップを埋めることができます。"
+  },
+  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
+    "description": "Llama 3.2 1B指示モデルはMetaが発表した軽量な多言語モデルです。このモデルは効率を向上させることを目的としており、より大規模なモデルと比較して遅延とコストの面で大きな改善を提供します。このモデルの使用例には、情報検索や要約が含まれます。"
+  },
+  "accounts/fireworks/models/llama-v3p2-3b-instruct": {
+    "description": "Llama 3.2 3B指示モデルはMetaが発表した軽量な多言語モデルです。このモデルは効率を向上させることを目的としており、より大規模なモデルと比較して遅延とコストの面で大きな改善を提供します。このモデルの使用例には、問い合わせやプロンプトのリライト、執筆支援が含まれます。"
+  },
+  "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
+    "description": "Metaの90Bパラメータ指示調整画像推論モデルです。このモデルは視覚認識、画像推論、画像説明、および画像に関する一般的な質問への回答に最適化されています。このモデルは、グラフや図表などの視覚データを理解し、画像の詳細をテキストで記述することで、視覚と言語の間のギャップを埋めることができます。"
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Mixtral MoE 8x22B指示モデルは、大規模なパラメータと多専門家アーキテクチャを持ち、複雑なタスクの高効率処理を全方位でサポートします。"
   },
@@ -197,6 +230,9 @@
   "accounts/fireworks/models/phi-3-vision-128k-instruct": {
     "description": "Phi 3 Vision指示モデルは、軽量の多モーダルモデルであり、複雑な視覚とテキスト情報を処理でき、強力な推論能力を持っています。"
   },
+  "accounts/fireworks/models/qwen2p5-72b-instruct": {
+    "description": "Qwen2.5はAlibaba Cloud Qwenチームによって開発された一連のデコーダーのみを含む言語モデルです。これらのモデルは、0.5B、1.5B、3B、7B、14B、32B、72Bなど、さまざまなサイズを提供し、ベース版と指示版の2種類のバリエーションがあります。"
+  },
   "accounts/fireworks/models/starcoder-16b": {
     "description": "StarCoder 15.5Bモデルは、高度なプログラミングタスクをサポートし、多言語能力を強化し、複雑なコード生成と理解に適しています。"
   },
@@ -211,9 +247,6 @@
   },
   "ai21-jamba-1.5-mini": {
     "description": "52Bパラメータ（12Bアクティブ）の多言語モデルで、256Kの長いコンテキストウィンドウ、関数呼び出し、構造化出力、基盤生成を提供します。"
-  },
-  "ai21-jamba-instruct": {
-    "description": "最高のパフォーマンス、品質、コスト効率を実現するための生産グレードのMambaベースのLLMモデルです。"
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnetは業界標準を向上させ、競合モデルやClaude 3 Opusを超える性能を持ち、広範な評価で優れたパフォーマンスを示し、私たちの中程度のモデルの速度とコストを兼ね備えています。"
@@ -266,6 +299,9 @@
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnetは、Opusを超える能力とSonnetよりも速い速度を提供し、Sonnetと同じ価格を維持します。Sonnetは特にプログラミング、データサイエンス、視覚処理、エージェントタスクに優れています。"
   },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnetは、Opusを超える能力とSonnetよりも速い速度を提供しつつ、Sonnetと同じ価格を維持します。Sonnetは特にプログラミング、データサイエンス、視覚処理、代理タスクに優れています。"
+  },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haikuは、Anthropicの最も速く、最もコンパクトなモデルであり、ほぼ瞬時の応答を実現することを目的としています。迅速かつ正確な指向性能を持っています。"
   },
@@ -274,9 +310,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnetは、企業のワークロードに理想的なバランスを提供し、より低価格で最大の効用を提供し、信頼性が高く、大規模な展開に適しています。"
-  },
-  "claude-instant-1.2": {
-    "description": "Anthropicのモデルは、低遅延、高スループットのテキスト生成に使用され、数百ページのテキストを生成することをサポートします。"
   },
   "codegeex-4": {
     "description": "CodeGeeX-4は強力なAIプログラミングアシスタントで、さまざまなプログラミング言語のインテリジェントな質問応答とコード補完をサポートし、開発効率を向上させます。"
@@ -592,8 +625,14 @@
   "llama-3.1-sonar-small-128k-online": {
     "description": "Llama 3.1 Sonar Small Onlineモデルは、8Bパラメータを持ち、約127,000トークンのコンテキスト長をサポートし、オンラインチャット用に設計されており、さまざまなテキストインタラクションを効率的に処理できます。"
   },
+  "llama-3.2-11b-vision-instruct": {
+    "description": "高解像度画像で優れた画像推論能力を発揮し、視覚理解アプリケーションに適しています。"
+  },
   "llama-3.2-11b-vision-preview": {
     "description": "Llama 3.2は、視覚データとテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的質問応答などのタスクで優れたパフォーマンスを発揮し、言語生成と視覚推論の間のギャップを埋めます。"
+  },
+  "llama-3.2-90b-vision-instruct": {
+    "description": "視覚理解エージェントアプリケーション向けの高度な画像推論能力を提供します。"
   },
   "llama-3.2-90b-vision-preview": {
     "description": "Llama 3.2は、視覚データとテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的質問応答などのタスクで優れたパフォーマンスを発揮し、言語生成と視覚推論の間のギャップを埋めます。"
@@ -652,14 +691,26 @@
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B)は、優れた言語処理能力と素晴らしいインタラクション体験を提供します。"
   },
-  "meta-llama/Llama-2-7b-chat-hf": {
-    "description": "最高の対話モデルの一つ"
+  "meta-llama/Llama-2-70b-hf": {
+    "description": "LLaMA-2は優れた言語処理能力と素晴らしいインタラクティブ体験を提供します。"
   },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B)は、強力なチャットモデルであり、複雑な対話ニーズをサポートします。"
   },
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B)は、多言語サポートを提供し、豊富な分野知識をカバーしています。"
+  },
+  "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2は視覚データとテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的質問応答などのタスクで優れた性能を発揮し、言語生成と視覚推論の間のギャップを埋めます。"
+  },
+  "meta-llama/Llama-3.2-3B-Instruct-Turbo": {
+    "description": "LLaMA 3.2は視覚データとテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的質問応答などのタスクで優れた性能を発揮し、言語生成と視覚推論の間のギャップを埋めます。"
+  },
+  "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2は視覚データとテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的質問応答などのタスクで優れた性能を発揮し、言語生成と視覚推論の間のギャップを埋めます。"
+  },
+  "meta-llama/Llama-Vision-Free": {
+    "description": "LLaMA 3.2は視覚データとテキストデータを組み合わせたタスクを処理することを目的としています。画像の説明や視覚的質問応答などのタスクで優れた性能を発揮し、言語生成と視覚推論の間のギャップを埋めます。"
   },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Liteは、高効率と低遅延が求められる環境に適しています。"
@@ -739,14 +790,17 @@
   "minicpm-v": {
     "description": "MiniCPM-VはOpenBMBが発表した次世代のマルチモーダル大モデルで、優れたOCR認識能力とマルチモーダル理解能力を備え、幅広いアプリケーションシーンをサポートします。"
   },
+  "ministral-3b-latest": {
+    "description": "Ministral 3BはMistralの世界トップクラスのエッジモデルです。"
+  },
+  "ministral-8b-latest": {
+    "description": "Ministral 8BはMistralのコストパフォーマンスに優れたエッジモデルです。"
+  },
   "mistral": {
     "description": "Mistralは、Mistral AIがリリースした7Bモデルであり、多様な言語処理ニーズに適しています。"
   },
   "mistral-large": {
     "description": "Mixtral Largeは、Mistralのフラッグシップモデルであり、コード生成、数学、推論の能力を組み合わせ、128kのコンテキストウィンドウをサポートします。"
-  },
-  "mistral-large-2407": {
-    "description": "Mistral Large (2407)は、最先端の推論、知識、コーディング能力を持つ高度な大規模言語モデル（LLM）です。"
   },
   "mistral-large-latest": {
     "description": "Mistral Largeは、フラッグシップの大モデルであり、多言語タスク、複雑な推論、コード生成に優れ、高端アプリケーションに理想的な選択肢です。"
@@ -769,11 +823,17 @@
   "mistralai/Mistral-7B-Instruct-v0.3": {
     "description": "Mistral (7B) Instruct v0.3は、高効率の計算能力と自然言語理解を提供し、幅広いアプリケーションに適しています。"
   },
+  "mistralai/Mistral-7B-v0.1": {
+    "description": "Mistral 7Bはコンパクトで高性能なモデルで、バッチ処理や分類、テキスト生成などの簡単なタスクに優れた推論能力を持っています。"
+  },
   "mistralai/Mixtral-8x22B-Instruct-v0.1": {
     "description": "Mixtral-8x22B Instruct (141B)は、超大規模な言語モデルであり、非常に高い処理要求をサポートします。"
   },
   "mistralai/Mixtral-8x7B-Instruct-v0.1": {
     "description": "Mixtral 8x7Bは、一般的なテキストタスクに使用される事前訓練されたスパースミックス専門家モデルです。"
+  },
+  "mistralai/Mixtral-8x7B-v0.1": {
+    "description": "Mixtral 8x7Bはスパースエキスパートモデルで、複数のパラメータを利用して推論速度を向上させ、多言語処理やコード生成タスクに適しています。"
   },
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instructは速度最適化と長いコンテキストサポートを兼ね備えた高性能な業界標準モデルです。"
@@ -801,6 +861,9 @@
   },
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8BはNous Hermes 2のアップグレード版で、最新の内部開発データセットを含んでいます。"
+  },
+  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
+    "description": "Llama 3.1 Nemotron 70BはNVIDIAがカスタマイズした大型言語モデルで、LLMが生成した応答がユーザーの問い合わせをサポートする程度を向上させることを目的としています。"
   },
   "o1-mini": {
     "description": "o1-miniは、プログラミング、数学、科学のアプリケーションシーンに特化して設計された迅速で経済的な推論モデルです。このモデルは128Kのコンテキストを持ち、2023年10月の知識のカットオフがあります。"
@@ -949,6 +1012,9 @@
   "step-1-flash": {
     "description": "高速モデルであり、リアルタイムの対話に適しています。"
   },
+  "step-1.5v-turbo": {
+    "description": "このモデルは強力なビデオ理解能力を持っています。"
+  },
   "step-1v-32k": {
     "description": "視覚入力をサポートし、多モーダルインタラクション体験を強化します。"
   },
@@ -987,6 +1053,12 @@
   },
   "yi-large-turbo": {
     "description": "超高コストパフォーマンス、卓越した性能。性能と推論速度、コストに基づいて、高精度のバランス調整を行います。"
+  },
+  "yi-lightning": {
+    "description": "最新の高性能モデルで、高品質な出力を保証しつつ、推論速度が大幅に向上しています。"
+  },
+  "yi-lightning-lite": {
+    "description": "軽量版で、yi-lightningの使用を推奨します。"
   },
   "yi-medium": {
     "description": "中型サイズモデルのアップグレード微調整であり、能力が均衡しており、コストパフォーマンスが高いです。指示遵守能力を深く最適化しています。"

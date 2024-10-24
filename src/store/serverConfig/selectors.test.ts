@@ -19,6 +19,7 @@ describe('featureFlagsSelectors', () => {
     expect(result).toEqual({
       enableWebrtc: false,
       isAgentEditable: false,
+      enablePlugins: true,
       showCreateSession: true,
       enableRAGEval: false,
       showDalle: true,
