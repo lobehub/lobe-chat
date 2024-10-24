@@ -63,6 +63,7 @@
   "qwen": {
     "description": "Qwen è un modello di linguaggio di grande scala sviluppato autonomamente da Alibaba Cloud, con potenti capacità di comprensione e generazione del linguaggio naturale. Può rispondere a varie domande, creare contenuti testuali, esprimere opinioni e scrivere codice, svolgendo un ruolo in vari settori."
   },
+  "sensenova": {},
   "siliconcloud": {
     "description": "SiliconFlow si impegna ad accelerare l'AGI per il bene dell'umanità, migliorando l'efficienza dell'AI su larga scala attraverso stack GenAI facili da usare e a basso costo."
   },

@@ -155,6 +155,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math tập trung vào việc giải quyết các vấn đề trong lĩnh vực toán học, cung cấp giải pháp chuyên nghiệp cho các bài toán khó."
   },
+  "SenseChat": {
+    "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 4K, khả năng tổng quát mạnh mẽ."
+  },
+  "SenseChat-128K": {
+    "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 128K, thể hiện xuất sắc trong các nhiệm vụ hiểu và sinh văn bản dài."
+  },
+  "SenseChat-32K": {
+    "description": "Mô hình phiên bản cơ bản (V4), độ dài ngữ cảnh 32K, linh hoạt áp dụng trong nhiều tình huống."
+  },
+  "SenseChat-5": {
+    "description": "Phiên bản mô hình mới nhất (V5.5), độ dài ngữ cảnh 128K, khả năng cải thiện đáng kể trong suy luận toán học, đối thoại tiếng Anh, theo dõi chỉ dẫn và hiểu biết văn bản dài, ngang tầm với GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "Độ dài ngữ cảnh 32K, vượt qua GPT-4 trong hiểu biết đối thoại tiếng Quảng Đông, có thể so sánh với GPT-4 Turbo trong nhiều lĩnh vực như kiến thức, suy luận, toán học và lập trình mã."
+  },
+  "SenseChat-Character": {
+    "description": "Mô hình phiên bản tiêu chuẩn, độ dài ngữ cảnh 8K, tốc độ phản hồi cao."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Mô hình phiên bản cao cấp, độ dài ngữ cảnh 32K, khả năng được cải thiện toàn diện, hỗ trợ đối thoại tiếng Trung/tiếng Anh."
+  },
+  "SenseChat-Turbo": {
+    "description": "Phù hợp cho các tình huống hỏi đáp nhanh và tinh chỉnh mô hình."
+  },
+  "SenseChat-Vision": {
+    "description": "Phiên bản mô hình mới nhất (V5.5), độ dài ngữ cảnh 16K, hỗ trợ đầu vào nhiều hình ảnh, hoàn thiện khả năng cơ bản của mô hình, đạt được sự cải thiện lớn trong nhận diện thuộc tính đối tượng, mối quan hệ không gian, nhận diện sự kiện hành động, hiểu biết cảnh, nhận diện cảm xúc, suy luận kiến thức logic và hiểu biết sinh văn bản."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B là phiên bản mã nguồn mở, cung cấp trải nghiệm đối thoại tối ưu cho các ứng dụng hội thoại."
   },

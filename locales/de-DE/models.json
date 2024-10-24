@@ -155,6 +155,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math konzentriert sich auf die Problemlösung im Bereich Mathematik und bietet professionelle Lösungen für schwierige Aufgaben."
   },
+  "SenseChat": {
+    "description": "Basisversion des Modells (V4) mit 4K Kontextlänge, die über starke allgemeine Fähigkeiten verfügt."
+  },
+  "SenseChat-128K": {
+    "description": "Basisversion des Modells (V4) mit 128K Kontextlänge, das in Aufgaben des Verständnisses und der Generierung langer Texte hervorragende Leistungen zeigt."
+  },
+  "SenseChat-32K": {
+    "description": "Basisversion des Modells (V4) mit 32K Kontextlänge, flexibel einsetzbar in verschiedenen Szenarien."
+  },
+  "SenseChat-5": {
+    "description": "Die neueste Modellversion (V5.5) mit 128K Kontextlänge hat signifikante Verbesserungen in den Bereichen mathematische Schlussfolgerungen, englische Konversation, Befolgen von Anweisungen und Verständnis langer Texte, vergleichbar mit GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "Mit 32K Kontextlänge übertrifft es GPT-4 im Verständnis von Konversationen auf Kantonesisch und kann in mehreren Bereichen wie Wissen, Schlussfolgerungen, Mathematik und Programmierung mit GPT-4 Turbo konkurrieren."
+  },
+  "SenseChat-Character": {
+    "description": "Standardmodell mit 8K Kontextlänge und hoher Reaktionsgeschwindigkeit."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Premium-Modell mit 32K Kontextlänge, das umfassende Verbesserungen in den Fähigkeiten bietet und sowohl chinesische als auch englische Konversationen unterstützt."
+  },
+  "SenseChat-Turbo": {
+    "description": "Geeignet für schnelle Fragen und Antworten sowie Szenarien zur Feinabstimmung des Modells."
+  },
+  "SenseChat-Vision": {
+    "description": "Die neueste Modellversion (V5.5) mit 16K Kontextlänge unterstützt die Eingabe mehrerer Bilder und optimiert umfassend die grundlegenden Fähigkeiten des Modells. Es hat erhebliche Fortschritte in der Erkennung von Objektattributen, räumlichen Beziehungen, Erkennung von Handlungsereignissen, Szenenverständnis, Emotionserkennung, logischem Wissen und Textverständnis und -generierung erzielt."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B ist die Open-Source-Version, die ein optimiertes Dialogerlebnis für Konversationsanwendungen bietet."
   },
