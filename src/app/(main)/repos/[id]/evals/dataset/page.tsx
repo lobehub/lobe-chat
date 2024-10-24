@@ -6,7 +6,7 @@ import { Flexbox } from 'react-layout-kit';
 import CircleLoading from '@/components/CircleLoading';
 import { useKnowledgeBaseStore } from '@/store/knowledgeBase';
 
-import { PageProps } from '../type';
+import { PageProps } from '../../type';
 import DatasetDetail from './DatasetDetail';
 import DatasetList from './DatasetList';
 import EmptyGuide from './EmptyGuide';

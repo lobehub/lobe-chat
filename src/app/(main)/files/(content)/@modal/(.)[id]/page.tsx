@@ -6,9 +6,11 @@ interface Params {
   id: string;
 }
 
-type Props = { params: Params };
+type Props = { params: Promise<Params> };
 
-const Page = ({ params }: Props) => {
+const Page = async (props: Props) => {
+  const params = await props.params;
+
   return (
     <FullscreenModal detail={<FileDetail id={params.id} />}>
       <FilePreview id={params.id} />

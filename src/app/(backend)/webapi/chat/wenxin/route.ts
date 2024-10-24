@@ -26,5 +26,5 @@ export const POST = async (req: Request) =>
 
       return new AgentRuntime(instance);
     },
-    params: { provider: 'wenxin' },
+    params: Promise.resolve({ provider: 'wenxin' }),
   });

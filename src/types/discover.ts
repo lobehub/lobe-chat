@@ -6,8 +6,8 @@ import { ChatModelCard, ModelProviderCard } from '@/types/llm';
 import { MetaData } from '@/types/meta';
 import { LobeAgentSettings } from '@/types/session';
 
-export interface DiscoverPageProps {
-  params: Promise<{ slug: string }>;
+export interface DiscoverPageProps<T = string> {
+  params: Promise<{ slug: T }>;
   searchParams: Promise<{ hl?: Locales }>;
 }
 

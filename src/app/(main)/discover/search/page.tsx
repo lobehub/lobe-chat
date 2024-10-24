@@ -25,14 +25,16 @@ const ProvidersResult = dynamic(() => import('./features/ProvidersResult'), {
 });
 
 type Props = {
-  searchParams: {
+  searchParams: Promise<{
     hl?: Locales;
     q?: string;
     type?: 'assistants' | 'plugins' | 'models' | 'providers';
-  };
+  }>;
 };
 
-export const generateMetadata = async ({ searchParams }: Props) => {
+export const generateMetadata = async (props: Props) => {
+  const searchParams = await props.searchParams;
+
   const { t, locale } = await translation('metadata', searchParams?.hl);
 
   return metadataModule.generate({
@@ -44,7 +46,9 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   });
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async (props: Props) => {
+  const searchParams = await props.searchParams;
+
   const { q, type = 'assistants' } = searchParams;
   if (!q) redirect(urlJoin(`/discover`, type));
   const keywords = decodeURIComponent(q);

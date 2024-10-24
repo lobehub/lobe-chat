@@ -17,9 +17,12 @@ import InfoSidebar from './features/InfoSidebar';
 import ParameterList from './features/ParameterList';
 import ProviderList from './features/ProviderList';
 
-type Props = { params: { slugs: string[] }; searchParams: { hl?: Locales } };
+type Props = { params: Promise<{ slugs: string[] }>; searchParams: Promise<{ hl?: Locales }> };
 
-export const generateMetadata = async ({ params, searchParams }: Props) => {
+export const generateMetadata = async (props: Props) => {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+
   const { slugs } = params;
   const identifier = decodeURIComponent(slugs.join('/'));
   const { t, locale } = await translation('metadata', searchParams?.hl);
@@ -59,7 +62,10 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
   };
 };
 
-const Page = async ({ params, searchParams }: Props) => {
+const Page = async (props: Props) => {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+
   const { slugs } = params;
 
   const identifier = decodeURIComponent(slugs.join('/'));

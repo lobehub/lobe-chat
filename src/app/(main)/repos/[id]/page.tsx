@@ -3,13 +3,11 @@ import { redirect } from 'next/navigation';
 import { KnowledgeBaseModel } from '@/database/server/models/knowledgeBase';
 import FileManager from '@/features/FileManager';
 
-interface Params {
-  id: string;
-}
+import { PageProps } from './type';
 
-type Props = { params: Params };
+export default async (props: PageProps) => {
+  const params = await props.params;
 
-export default async ({ params }: Props) => {
   const item = await KnowledgeBaseModel.findById(params.id);
 
   if (!item) return redirect('/repos');

@@ -2,19 +2,19 @@ import urlJoin from 'url-join';
 
 import StructuredData from '@/components/StructuredData';
 import { DEFAULT_LANG } from '@/const/locale';
-import { Locales } from '@/locales/resources';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { AssistantCategory } from '@/types/discover';
+import { DiscoverPageProps } from '@/types/discover';
 import { isMobileDevice } from '@/utils/server/responsive';
 
 import List from '../features/List';
 
-type Props = { params: { slug: AssistantCategory }; searchParams: { hl?: Locales } };
+export const generateMetadata = async (props: DiscoverPageProps) => {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
 
-export const generateMetadata = async ({ params, searchParams }: Props) => {
   const { t, locale } = await translation('metadata', searchParams?.hl);
 
   const discoverService = new DiscoverService();
@@ -30,7 +30,10 @@ export const generateMetadata = async ({ params, searchParams }: Props) => {
   });
 };
 
-const Page = async ({ params, searchParams }: Props) => {
+const Page = async (props: DiscoverPageProps) => {
+  const params = await props.params;
+  const searchParams = await props.searchParams;
+
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 

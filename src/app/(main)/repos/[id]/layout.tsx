@@ -8,6 +8,4 @@ const Layout = ServerLayout<LayoutProps>({ Desktop, Mobile });
 
 Layout.displayName = 'RepoLayout';
 
-export default (props: LayoutProps) => {
-  return <Layout {...props} />;
-};
+export default (props: LayoutProps) => <Layout {...props} />;

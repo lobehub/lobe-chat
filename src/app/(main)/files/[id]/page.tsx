@@ -13,11 +13,13 @@ interface Params {
   id: string;
 }
 
-type Props = { params: Params };
+type Props = { params: Promise<Params> };
 
 const createCaller = createCallerFactory(lambdaRouter);
 
-const FilePage = async ({ params }: Props) => {
+const FilePage = async (props: Props) => {
+  const params = await props.params;
+
   const { userId } = await getUserAuth();
 
   const caller = createCaller({ userId });

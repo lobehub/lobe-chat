@@ -12,7 +12,7 @@ const noNeedAPIKey = (provider: string) =>
   [ModelProvider.OpenRouter, ModelProvider.TogetherAI].includes(provider as any);
 
 export const GET = checkAuth(async (req, { params, jwtPayload }) => {
-  const { provider } = params;
+  const { provider } = await params;
 
   try {
     const hasDefaultApiKey = jwtPayload.apiKey || 'dont-need-api-key-for-model-list';
