@@ -26,6 +26,7 @@ export const parseSystemAgent = (envString: string = ''): Partial<UserSystemAgen
 
       if (protectedKeys.includes(key)) {
         config[key as keyof UserSystemAgentConfig] = {
+          enabled: true,
           model: model.trim(),
           provider: provider.trim(),
         };

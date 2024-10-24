@@ -372,10 +372,16 @@
       "modelDesc": "Asistan adı, açıklaması, avatar ve etiket oluşturmak için belirlenen model",
       "title": "Asistan Bilgilerini Otomatik Oluştur"
     },
+    "customPrompt": {
+      "addPrompt": "Özel İpucu Ekle",
+      "desc": "Doldurduğunuzda, sistem asistanı içerik oluştururken özel ipucunu kullanacaktır",
+      "placeholder": "Lütfen özel ipucu kelimelerini girin",
+      "title": "Özel İpucu"
+    },
     "queryRewrite": {
       "label": "Soru Yeniden Yazım Modeli",
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",
-      "title": "Bilgi Tabanı"
+      "title": "Bilgi Tabanı Soru Yeniden Yazımı"
     },
     "title": "Sistem Asistanı",
     "topic": {

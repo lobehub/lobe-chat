@@ -372,10 +372,16 @@
       "modelDesc": "Modelo designado para generar el nombre, descripción, avatar y etiquetas del asistente",
       "title": "Generación automática de información del asistente"
     },
+    "customPrompt": {
+      "addPrompt": "Agregar aviso personalizado",
+      "desc": "Al completarlo, el asistente del sistema utilizará el aviso personalizado al generar contenido",
+      "placeholder": "Introduce la palabra clave personalizada",
+      "title": "Palabra clave personalizada"
+    },
     "queryRewrite": {
       "label": "Modelo de reescritura de preguntas",
       "modelDesc": "Modelo designado para optimizar las preguntas de los usuarios",
-      "title": "Base de conocimientos"
+      "title": "Reescritura de preguntas de la base de conocimientos"
     },
     "title": "Asistente del sistema",
     "topic": {

@@ -372,10 +372,16 @@
       "modelDesc": "Modello specificato per generare nome, descrizione, avatar e etichetta dell'assistente",
       "title": "Genera automaticamente informazioni sull'assistente"
     },
+    "customPrompt": {
+      "addPrompt": "Aggiungi suggerimento personalizzato",
+      "desc": "Una volta compilato, l'assistente di sistema utilizzerà il suggerimento personalizzato nella generazione dei contenuti",
+      "placeholder": "Inserisci il suggerimento personalizzato",
+      "title": "Suggerimento personalizzato"
+    },
     "queryRewrite": {
       "label": "Modello di riscrittura delle domande",
       "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
-      "title": "Banca dati"
+      "title": "Riscrittura delle domande del knowledge base"
     },
     "title": "Assistente di sistema",
     "topic": {

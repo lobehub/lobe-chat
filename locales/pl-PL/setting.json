@@ -372,10 +372,16 @@
       "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
       "title": "Automatyczne generowanie informacji o asystencie"
     },
+    "customPrompt": {
+      "addPrompt": "Dodaj niestandardowy podpowiedź",
+      "desc": "Po wypełnieniu, asystent systemowy użyje niestandardowej podpowiedzi podczas generowania treści",
+      "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
+      "title": "Niestandardowe słowo podpowiedzi"
+    },
     "queryRewrite": {
       "label": "Model przekształcania zapytań",
       "modelDesc": "Model używany do optymalizacji zapytań użytkowników",
-      "title": "Baza wiedzy"
+      "title": "Przekształcenie zapytań w bazie wiedzy"
     },
     "title": "Asystent Systemowy",
     "topic": {

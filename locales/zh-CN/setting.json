@@ -372,10 +372,16 @@
       "modelDesc": "指定用于生成助理名称、描述、头像、标签的模型",
       "title": "自动生成助理信息"
     },
+    "customPrompt": {
+      "addPrompt": "添加自定义提示",
+      "desc": "填写后，系统助理将在生成内容时使用自定义提示",
+      "placeholder": "请输入自定义提示词",
+      "title": "自定义提示词"
+    },
     "queryRewrite": {
       "label": "提问重写模型",
       "modelDesc": "指定用于优化用户提问的模型",
-      "title": "知识库"
+      "title": "知识库提问重写"
     },
     "title": "系统助手",
     "topic": {

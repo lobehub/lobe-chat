@@ -32,7 +32,10 @@ export interface UserSettingsAction {
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
 
-  updateSystemAgent: (key: UserSystemAgentConfigKey, value: SystemAgentItem) => Promise<void>;
+  updateSystemAgent: (
+    key: UserSystemAgentConfigKey,
+    value: Partial<SystemAgentItem>,
+  ) => Promise<void>;
 }
 
 export const createSettingsSlice: StateCreator<
@@ -109,9 +112,9 @@ export const createSettingsSlice: StateCreator<
   updateKeyVaults: async (keyVaults) => {
     await get().setSettings({ keyVaults });
   },
-  updateSystemAgent: async (key, { provider, model }) => {
+  updateSystemAgent: async (key, value) => {
     await get().setSettings({
-      systemAgent: { [key]: { model, provider } },
+      systemAgent: { [key]: { ...value } },
     });
   },
 });

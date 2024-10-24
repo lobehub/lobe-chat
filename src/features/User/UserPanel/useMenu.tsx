@@ -92,20 +92,20 @@ export const useMenu = () => {
 
   const settings: MenuProps['items'] = [
     {
+      extra: (
+        <ActionIcon
+          icon={Maximize}
+          onClick={() => router.push(urlJoin('/settings', SettingsTabs.Common))}
+          size={'small'}
+          title={t('fullscreen')}
+        />
+      ),
       icon: <Icon icon={Settings2} />,
       key: 'setting',
       label: (
-        <Flexbox align={'center'} gap={8} horizontal>
-          <NewVersionBadge onClick={openSettings} showBadge={hasNewVersion}>
-            {t('userPanel.setting')}
-          </NewVersionBadge>
-          <ActionIcon
-            icon={Maximize}
-            onClick={() => router.push(urlJoin('/settings', SettingsTabs.Common))}
-            size={'small'}
-            title={t('fullscreen')}
-          />
-        </Flexbox>
+        <NewVersionBadge onClick={openSettings} showBadge={hasNewVersion}>
+          {t('userPanel.setting')}
+        </NewVersionBadge>
       ),
     },
     {

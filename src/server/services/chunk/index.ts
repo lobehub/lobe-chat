@@ -53,7 +53,7 @@ export class ChunkService {
       await this.asyncTaskModel.update(asyncTaskId, {
         error: new AsyncTaskError(
           AsyncTaskErrorType.TaskTriggerError,
-          'trigger chunk embedding async task error. Please check your app is public available or check your proxy settings is set correctly.',
+          'trigger chunk embedding async task error. Please make sure the APP_URL is available from your server. You can check the proxy config or WAF blocking',
         ),
         status: AsyncTaskStatus.Error,
       });
@@ -92,7 +92,7 @@ export class ChunkService {
         await this.asyncTaskModel.update(asyncTaskId, {
           error: new AsyncTaskError(
             AsyncTaskErrorType.TaskTriggerError,
-            'trigger file parse async task error. Please check your app is public available or check your proxy settings is set correctly.',
+            'trigger chunk embedding async task error. Please make sure the APP_URL is available from your server. You can check the proxy config or WAF blocking',
           ),
           status: AsyncTaskStatus.Error,
         });

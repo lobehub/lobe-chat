@@ -11,7 +11,6 @@ import { toggleBooleanList } from '@/store/chat/utils';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatSemanticSearchChunk } from '@/types/chunk';
-import { merge } from '@/utils/merge';
 
 export interface ChatRAGAction {
   deleteUserMessageRagQuery: (id: string) => Promise<void>;
@@ -67,10 +66,10 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     // 1. get the rewrite query
     let rewriteQuery = message?.ragQuery || userQuery;
 
-    // only rewrite query length is less than 10 characters, refs: https://github.com/lobehub/lobe-chat/pull/4288
+    // only rewrite query length is less than 15 characters, refs: https://github.com/lobehub/lobe-chat/pull/4288
     // if there is no ragQuery and there is a chat history
     // we need to rewrite the user message to get better results
-    if (rewriteQuery.length < 10 && !message?.ragQuery && messages.length > 0) {
+    if (rewriteQuery.length < 15 && !message?.ragQuery && messages.length > 0) {
       rewriteQuery = await get().internal_rewriteQuery(id, userQuery, messages);
     }
 
@@ -92,7 +91,17 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     let rewriteQuery = content;
 
     const queryRewriteConfig = systemAgentSelectors.queryRewrite(useUserStore.getState());
-    const rewriteQueryParams = merge(queryRewriteConfig, chainRewriteQuery(content, messages));
+    if (!queryRewriteConfig.enabled) return content;
+
+    const rewriteQueryParams = {
+      model: queryRewriteConfig.model,
+      provider: queryRewriteConfig.provider,
+      ...chainRewriteQuery(
+        content,
+        messages,
+        !!queryRewriteConfig.customPrompt ? queryRewriteConfig.customPrompt : undefined,
+      ),
+    };
 
     let ragQuery = '';
     await chatService.fetchPresetTaskResult({
