@@ -1,4 +1,6 @@
 export interface SystemAgentItem {
+  customPrompt?: string;
+  enabled?: boolean;
   model: string;
   provider: string;
 }

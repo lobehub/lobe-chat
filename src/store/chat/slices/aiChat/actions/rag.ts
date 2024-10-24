@@ -92,7 +92,18 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     let rewriteQuery = content;
 
     const queryRewriteConfig = systemAgentSelectors.queryRewrite(useUserStore.getState());
-    const rewriteQueryParams = merge(queryRewriteConfig, chainRewriteQuery(content, messages));
+    if (!queryRewriteConfig.enabled) return content;
+
+    delete queryRewriteConfig.enabled;
+
+    const rewriteQueryParams = merge(
+      queryRewriteConfig,
+      chainRewriteQuery(
+        content,
+        messages,
+        !!queryRewriteConfig.customPrompt ? queryRewriteConfig.customPrompt : undefined,
+      ),
+    );
 
     let ragQuery = '';
     await chatService.fetchPresetTaskResult({
