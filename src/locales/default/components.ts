@@ -12,6 +12,7 @@ export default {
       batchChunking: '批量分块',
       chunking: '分块',
       chunkingTooltip: '将文件拆分为多个文本块并向量化后，可用于语义检索和文件对话',
+      chunkingUnsupported: '该文件不支持分块',
       confirmDelete: '即将删除该文件，删除后该将无法找回，请确认你的操作',
       confirmDeleteMultiFiles:
         '即将删除选中的 {{count}} 个文件，删除后该将无法找回，请确认你的操作',
