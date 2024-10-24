@@ -4,7 +4,6 @@ import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
 import { MESSAGE_CANCEL_FLAT } from '@/const/message';
-import { DEFAULT_SYSTEM_AGENT_CONFIG } from '@/const/settings';
 import { shareService } from '@/services/share';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
@@ -115,7 +114,7 @@ export const createSettingsSlice: StateCreator<
   },
   updateSystemAgent: async (key, value) => {
     await get().setSettings({
-      systemAgent: { [key]: { ...DEFAULT_SYSTEM_AGENT_CONFIG[key], ...value } },
+      systemAgent: { [key]: { ...value } },
     });
   },
 });

@@ -45,11 +45,12 @@ const SystemAgentForm = memo(
                 updateSystemAgent(systemAgentKey, props);
               }}
               showAbility={false}
+              // value={value}
             />
           ),
           desc: t(`systemAgent.${systemAgentKey}.modelDesc`),
           label: t(`systemAgent.${systemAgentKey}.label`),
-          name: [systemAgentKey, 'model'],
+          name: systemAgentKey,
         },
         (!!allowCustomPrompt && {
           children: !!value.customPrompt ? (
