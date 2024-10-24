@@ -1,5 +1,6 @@
 'use client';
 
+import { DEFAULT_REWRITE_QUERY } from '@/const/settings';
 import { isServerMode } from '@/const/version';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
@@ -13,7 +14,12 @@ const Page = () => {
       <SystemAgentForm systemAgentKey="translation" />
       <SystemAgentForm systemAgentKey="agentMeta" />
       {isServerMode && enableKnowledgeBase && (
-        <SystemAgentForm allowCustomPrompt systemAgentKey="queryRewrite" />
+        <SystemAgentForm
+          allowCustomPrompt
+          allowDisable
+          defaultPrompt={DEFAULT_REWRITE_QUERY}
+          systemAgentKey="queryRewrite"
+        />
       )}
     </>
   );

@@ -5,9 +5,13 @@ export interface SystemAgentItem {
   provider: string;
 }
 
+export interface QueryRewriteSystemAgent extends Omit<SystemAgentItem, 'enabled'> {
+  enabled: boolean;
+}
+
 export interface UserSystemAgentConfig {
   agentMeta: SystemAgentItem;
-  queryRewrite: SystemAgentItem;
+  queryRewrite: QueryRewriteSystemAgent;
   topic: SystemAgentItem;
   translation: SystemAgentItem;
 }

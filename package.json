@@ -143,7 +143,7 @@
     "ahooks": "^3.8.1",
     "ai": "^3.4.16",
     "antd": "^5.21.4",
-    "antd-style": "^3.7.0",
+    "antd-style": "^3.7.1",
     "brotli-wasm": "^3.0.1",
     "chroma-js": "^2.6.0",
     "dayjs": "^1.11.13",
