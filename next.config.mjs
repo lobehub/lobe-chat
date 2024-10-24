@@ -25,6 +25,7 @@ const nextConfig = {
       'chroma-js',
     ],
     webVitalsAttribution: ['CLS', 'LCP'],
+    reactCompiler: true,
   },
 
   async headers() {
