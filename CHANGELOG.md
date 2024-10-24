@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.22.26](https://github.com/lobehub/lobe-chat/compare/v1.22.25...v1.22.26)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix some custom branding detail.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix some custom branding detail, closes [#4465](https://github.com/lobehub/lobe-chat/issues/4465) ([3fb1f6a](https://github.com/lobehub/lobe-chat/commit/3fb1f6a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.25](https://github.com/lobehub/lobe-chat/compare/v1.22.24...v1.22.25)
 
 <sup>Released on **2024-10-23**</sup>
