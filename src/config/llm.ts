@@ -130,6 +130,10 @@ export const getLLMConfig = () => {
       HUGGINGFACE_API_KEY: z.string().optional(),
       HUGGINGFACE_PROXY_URL: z.string().optional(),
       HUGGINGFACE_MODEL_LIST: z.string().optional(),
+
+      ENABLED_DOUBAO: z.boolean(),
+      ARK_API_KEY: z.string().optional(),
+      ARK_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -257,6 +261,10 @@ export const getLLMConfig = () => {
       HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
       HUGGINGFACE_PROXY_URL: process.env.HUGGINGFACE_PROXY_URL,
       HUGGINGFACE_MODEL_LIST: process.env.HUGGINGFACE_MODEL_LIST,
+
+      ENABLED_DOUBAO: !!(process.env.ARK_API_KEY && process.env.ARK_MODEL_LIST),
+      ARK_API_KEY: process.env.ARK_API_KEY,
+      ARK_MODEL_LIST: process.env.ARK_MODEL_LIST,
     },
   });
 };
