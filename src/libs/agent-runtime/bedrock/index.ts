@@ -12,6 +12,7 @@ import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
 import {
+  AWSBedrockAi21Stream,
   AWSBedrockClaudeStream,
   AWSBedrockLlamaStream,
   createBedrockStream,
@@ -46,10 +47,63 @@ export class LobeBedrockAI implements LobeRuntimeAI {
   }
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    if (payload.model.startsWith('ai21')) return this.invokeAi21Model(payload, options);
+
     if (payload.model.startsWith('meta')) return this.invokeLlamaModel(payload, options);
 
     return this.invokeClaudeModel(payload, options);
   }
+
+  private invokeAi21Model = async (
+    payload: ChatStreamPayload,
+    options?: ChatCompetitionOptions,
+  ): Promise<Response> => {
+    const { frequency_penalty, max_tokens, messages, model, presence_penalty, temperature, top_p } = payload;
+    const command = new InvokeModelWithResponseStreamCommand({
+      accept: 'application/json',
+      body: JSON.stringify({
+        frequency_penalty: frequency_penalty,
+        max_tokens: max_tokens || 4096,
+        messages: messages,
+        presence_penalty: presence_penalty,
+        temperature: temperature,
+        top_p: top_p,
+      }),
+      contentType: 'application/json',
+      modelId: model,
+    });
+
+    try {
+      // Ask Claude for a streaming chat completion given the prompt
+      const res = await this.client.send(command);
+
+      const stream = createBedrockStream(res);
+
+      const [prod, debug] = stream.tee();
+
+      if (process.env.DEBUG_BEDROCK_CHAT_COMPLETION === '1') {
+        debugStream(debug).catch(console.error);
+      }
+      // Respond with the stream
+      return StreamingResponse(AWSBedrockAi21Stream(prod, options?.callback), {
+        headers: options?.headers,
+      });
+    } catch (e) {
+      const err = e as Error & { $metadata: any };
+
+      throw AgentRuntimeError.chat({
+        error: {
+          body: err.$metadata,
+          message: err.message,
+          region: this.region,
+          type: err.name,
+        },
+        errorType: AgentRuntimeErrorType.ProviderBizError,
+        provider: ModelProvider.Bedrock,
+        region: this.region,
+      });
+    }
+  };
 
   private invokeClaudeModel = async (
     payload: ChatStreamPayload,
