@@ -24,6 +24,7 @@ export const getLLMConfig = () => {
 
       ENABLED_DEEPSEEK: z.boolean(),
       DEEPSEEK_API_KEY: z.string().optional(),
+      DEEPSEEK_MODEL_LIST: z.string().optional(),
 
       ENABLED_GOOGLE: z.boolean(),
       GOOGLE_API_KEY: z.string().optional(),
@@ -32,21 +33,26 @@ export const getLLMConfig = () => {
 
       ENABLED_MOONSHOT: z.boolean(),
       MOONSHOT_API_KEY: z.string().optional(),
+      MOONSHOT_MODEL_LIST: z.string().optional(),
       MOONSHOT_PROXY_URL: z.string().optional(),
 
       ENABLED_PERPLEXITY: z.boolean(),
       PERPLEXITY_API_KEY: z.string().optional(),
+      PERPLEXITY_MODEL_LIST: z.string().optional(),
       PERPLEXITY_PROXY_URL: z.string().optional(),
 
       ENABLED_ANTHROPIC: z.boolean(),
       ANTHROPIC_API_KEY: z.string().optional(),
+      ANTHROPIC_MODEL_LIST: z.string().optional(),
       ANTHROPIC_PROXY_URL: z.string().optional(),
 
       ENABLED_MINIMAX: z.boolean(),
+      MINIMAX_MODEL_LIST: z.string().optional(),
       MINIMAX_API_KEY: z.string().optional(),
 
       ENABLED_MISTRAL: z.boolean(),
       MISTRAL_API_KEY: z.string().optional(),
+      MISTRAL_MODEL_LIST: z.string().optional(),
 
       ENABLED_GROQ: z.boolean(),
       GROQ_API_KEY: z.string().optional(),
@@ -83,6 +89,7 @@ export const getLLMConfig = () => {
       ENABLED_WENXIN: z.boolean(),
       WENXIN_ACCESS_KEY: z.string().optional(),
       WENXIN_SECRET_KEY: z.string().optional(),
+      WENXIN_MODEL_LIST: z.string().optional(),
 
       ENABLED_OLLAMA: z.boolean(),
       OLLAMA_PROXY_URL: z.string().optional(),
@@ -94,6 +101,7 @@ export const getLLMConfig = () => {
 
       ENABLED_STEPFUN: z.boolean(),
       STEPFUN_API_KEY: z.string().optional(),
+      STEPFUN_MODEL_LIST: z.string().optional(),
 
       ENABLED_NOVITA: z.boolean(),
       NOVITA_API_KEY: z.string().optional(),
@@ -101,12 +109,15 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: z.boolean(),
       BAICHUAN_API_KEY: z.string().optional(),
+      BAICHUAN_MODEL_LIST: z.string().optional(),
 
       ENABLED_TAICHU: z.boolean(),
       TAICHU_API_KEY: z.string().optional(),
+      TAICHU_MODEL_LIST: z.string().optional(),
 
       ENABLED_AI360: z.boolean(),
       AI360_API_KEY: z.string().optional(),
+      AI360_MODEL_LIST: z.string().optional(),
 
       ENABLED_SILICONCLOUD: z.boolean(),
       SILICONCLOUD_API_KEY: z.string().optional(),
@@ -115,12 +126,15 @@ export const getLLMConfig = () => {
 
       ENABLED_UPSTAGE: z.boolean(),
       UPSTAGE_API_KEY: z.string().optional(),
+      UPSTAGE_MODEL_LIST: z.string().optional(),
 
       ENABLED_SPARK: z.boolean(),
       SPARK_API_KEY: z.string().optional(),
+      SPARK_MODEL_LIST: z.string().optional(),
 
       ENABLED_AI21: z.boolean(),
       AI21_API_KEY: z.string().optional(),
+      AI21_MODEL_LIST: z.string().optional(),
 
       ENABLED_HUNYUAN: z.boolean(),
       HUNYUAN_API_KEY: z.string().optional(),
@@ -151,6 +165,7 @@ export const getLLMConfig = () => {
 
       ENABLED_DEEPSEEK: !!process.env.DEEPSEEK_API_KEY,
       DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
+      DEEPSEEK_MODEL_LIST: process.env.DEEPSEEK_MODEL_LIST,
 
       ENABLED_GOOGLE: !!process.env.GOOGLE_API_KEY,
       GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
@@ -159,17 +174,21 @@ export const getLLMConfig = () => {
 
       ENABLED_PERPLEXITY: !!process.env.PERPLEXITY_API_KEY,
       PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY,
+      PERPLEXITY_MODEL_LIST: process.env.PERPLEXITY_MODEL_LIST,
       PERPLEXITY_PROXY_URL: process.env.PERPLEXITY_PROXY_URL,
 
       ENABLED_ANTHROPIC: !!process.env.ANTHROPIC_API_KEY,
       ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+      ANTHROPIC_MODEL_LIST: process.env.ANTHROPIC_MODEL_LIST,
       ANTHROPIC_PROXY_URL: process.env.ANTHROPIC_PROXY_URL,
 
       ENABLED_MINIMAX: !!process.env.MINIMAX_API_KEY,
       MINIMAX_API_KEY: process.env.MINIMAX_API_KEY,
+      MINIMAX_MODEL_LIST: process.env.MINIMAX_MODEL_LIST,
 
       ENABLED_MISTRAL: !!process.env.MISTRAL_API_KEY,
       MISTRAL_API_KEY: process.env.MISTRAL_API_KEY,
+      MISTRAL_MODEL_LIST: process.env.MISTRAL_MODEL_LIST,
 
       ENABLED_OPENROUTER: !!process.env.OPENROUTER_API_KEY,
       OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY,
@@ -185,6 +204,7 @@ export const getLLMConfig = () => {
 
       ENABLED_MOONSHOT: !!process.env.MOONSHOT_API_KEY,
       MOONSHOT_API_KEY: process.env.MOONSHOT_API_KEY,
+      MOONSHOT_MODEL_LIST: process.env.MOONSHOT_MODEL_LIST,
       MOONSHOT_PROXY_URL: process.env.MOONSHOT_PROXY_URL,
 
       ENABLED_GROQ: !!process.env.GROQ_API_KEY,
@@ -210,6 +230,7 @@ export const getLLMConfig = () => {
       ENABLED_WENXIN: !!process.env.WENXIN_ACCESS_KEY && !!process.env.WENXIN_SECRET_KEY,
       WENXIN_ACCESS_KEY: process.env.WENXIN_ACCESS_KEY,
       WENXIN_SECRET_KEY: process.env.WENXIN_SECRET_KEY,
+      WENXIN_MODEL_LIST: process.env.WENXIN_MODEL_LIST,
 
       ENABLED_OLLAMA: process.env.ENABLED_OLLAMA !== '0',
       OLLAMA_PROXY_URL: process.env.OLLAMA_PROXY_URL || '',
@@ -221,6 +242,7 @@ export const getLLMConfig = () => {
 
       ENABLED_STEPFUN: !!process.env.STEPFUN_API_KEY,
       STEPFUN_API_KEY: process.env.STEPFUN_API_KEY,
+      STEPFUN_MODEL_LIST: process.env.STEPFUN_MODEL_LIST,
 
       ENABLED_NOVITA: !!process.env.NOVITA_API_KEY,
       NOVITA_API_KEY: process.env.NOVITA_API_KEY,
@@ -228,12 +250,15 @@ export const getLLMConfig = () => {
 
       ENABLED_BAICHUAN: !!process.env.BAICHUAN_API_KEY,
       BAICHUAN_API_KEY: process.env.BAICHUAN_API_KEY,
+      BAICHUAN_MODEL_LIST: process.env.BAICHUAN_MODEL_LIST,
 
       ENABLED_TAICHU: !!process.env.TAICHU_API_KEY,
       TAICHU_API_KEY: process.env.TAICHU_API_KEY,
+      TAICHU_MODEL_LIST: process.env.TAICHU_MODEL_LIST,
 
       ENABLED_AI360: !!process.env.AI360_API_KEY,
       AI360_API_KEY: process.env.AI360_API_KEY,
+      AI360_MODEL_LIST: process.env.AI360_MODEL_LIST,
 
       ENABLED_SILICONCLOUD: !!process.env.SILICONCLOUD_API_KEY,
       SILICONCLOUD_API_KEY: process.env.SILICONCLOUD_API_KEY,
@@ -242,12 +267,15 @@ export const getLLMConfig = () => {
 
       ENABLED_UPSTAGE: !!process.env.UPSTAGE_API_KEY,
       UPSTAGE_API_KEY: process.env.UPSTAGE_API_KEY,
+      UPSTAGE_MODEL_LIST: process.env.UPSTAGE_MODEL_LIST,
 
       ENABLED_SPARK: !!process.env.SPARK_API_KEY,
       SPARK_API_KEY: process.env.SPARK_API_KEY,
+      SPARK_MODEL_LIST: process.env.SPARK_MODEL_LIST,
 
       ENABLED_AI21: !!process.env.AI21_API_KEY,
       AI21_API_KEY: process.env.AI21_API_KEY,
+      AI21_MODEL_LIST: process.env.AI21_MODEL_LIST,
 
       ENABLED_HUNYUAN: !!process.env.HUNYUAN_API_KEY,
       HUNYUAN_API_KEY: process.env.HUNYUAN_API_KEY,

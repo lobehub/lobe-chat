@@ -2,6 +2,32 @@
 
 # Changelog
 
+### [Version 1.23.1](https://github.com/lobehub/lobe-chat/compare/v1.23.0...v1.23.1)
+
+<sup>Released on **2024-10-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add `*_MODEL_LIST` env to all models, update Spark model id & display name.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add `*_MODEL_LIST` env to all models, closes [#4481](https://github.com/lobehub/lobe-chat/issues/4481) ([a969b9c](https://github.com/lobehub/lobe-chat/commit/a969b9c))
+- **misc**: Update Spark model id & display name, closes [#4482](https://github.com/lobehub/lobe-chat/issues/4482) ([852dd47](https://github.com/lobehub/lobe-chat/commit/852dd47))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.23.0](https://github.com/lobehub/lobe-chat/compare/v1.22.27...v1.23.0)
 
 <sup>Released on **2024-10-25**</sup>
