@@ -26,10 +26,10 @@ export const parseSystemAgent = (envString: string = ''): Partial<UserSystemAgen
 
       if (protectedKeys.includes(key)) {
         config[key as keyof UserSystemAgentConfig] = {
-          enabled: true,
+          enabled: key === 'queryRewrite' ? true : undefined,
           model: model.trim(),
           provider: provider.trim(),
-        };
+        } as any;
       }
     } else {
       throw new Error('Invalid environment variable format');
