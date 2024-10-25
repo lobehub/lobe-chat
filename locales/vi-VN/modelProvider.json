@@ -119,6 +119,22 @@
       "title": "Tải xuống mô hình Ollama đã chỉ định"
     }
   },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Nhập SenseNova Access Key ID",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Nhập SenseNova Access Key Secret",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "Nhập Access Key ID / Access Key Secret của bạn để bắt đầu phiên. Ứng dụng sẽ không ghi lại cấu hình xác thực của bạn",
+      "title": "Sử dụng thông tin xác thực SenseNova tùy chỉnh"
+    }
+  },
   "wenxin": {
     "accessKey": {
       "desc": "Nhập Access Key từ nền tảng Qianfan của Baidu",

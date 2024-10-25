@@ -155,6 +155,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math focuses on problem-solving in the field of mathematics, providing expert solutions for challenging problems."
   },
+  "SenseChat": {
+    "description": "Basic version model (V4) with a context length of 4K, featuring strong general capabilities."
+  },
+  "SenseChat-128K": {
+    "description": "Basic version model (V4) with a context length of 128K, excelling in long text comprehension and generation tasks."
+  },
+  "SenseChat-32K": {
+    "description": "Basic version model (V4) with a context length of 32K, flexibly applicable to various scenarios."
+  },
+  "SenseChat-5": {
+    "description": "The latest version model (V5.5) with a context length of 128K shows significant improvements in mathematical reasoning, English conversation, instruction following, and long text comprehension, comparable to GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "With a context length of 32K, it surpasses GPT-4 in Cantonese conversation comprehension and is competitive with GPT-4 Turbo in knowledge, reasoning, mathematics, and code writing across multiple domains."
+  },
+  "SenseChat-Character": {
+    "description": "Standard version model with an 8K context length and high response speed."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Advanced version model with a context length of 32K, offering comprehensive capability enhancements and supporting both Chinese and English conversations."
+  },
+  "SenseChat-Turbo": {
+    "description": "Suitable for fast question answering and model fine-tuning scenarios."
+  },
+  "SenseChat-Vision": {
+    "description": "The latest version model (V5.5) with a context length of 16K supports multi-image input and fully optimizes the model's foundational capabilities, achieving substantial improvements in object attribute recognition, spatial relationships, action event recognition, scene understanding, emotion recognition, logical reasoning, and text comprehension and generation."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is an open-source version that provides an optimized conversational experience for chat applications."
   },

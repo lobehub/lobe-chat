@@ -155,6 +155,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math專注於數學領域的問題求解，為高難度題提供專業解答。"
   },
+  "SenseChat": {
+    "description": "基礎版本模型 (V4)，4K上下文長度，通用能力強大"
+  },
+  "SenseChat-128K": {
+    "description": "基礎版本模型 (V4)，128K上下文長度，在長文本理解及生成等任務中表現出色"
+  },
+  "SenseChat-32K": {
+    "description": "基礎版本模型 (V4)，32K上下文長度，靈活應用於各類場景"
+  },
+  "SenseChat-5": {
+    "description": "最新版本模型 (V5.5)，128K上下文長度，在數學推理、英文對話、指令跟隨以及長文本理解等領域能力顯著提升，比肩GPT-4o"
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "32K上下文長度，在粵語的對話理解上超越了GPT-4，在知識、推理、數學及程式編寫等多個領域均能與GPT-4 Turbo相媲美"
+  },
+  "SenseChat-Character": {
+    "description": "標準版模型，8K上下文長度，高響應速度"
+  },
+  "SenseChat-Character-Pro": {
+    "description": "高級版模型，32K上下文長度，能力全面提升，支持中/英文對話"
+  },
+  "SenseChat-Turbo": {
+    "description": "適用於快速問答、模型微調場景"
+  },
+  "SenseChat-Vision": {
+    "description": "最新版本模型 (V5.5)，16K上下文長度，支持多圖的輸入，全面實現模型基礎能力優化，在物件屬性識別、空間關係、動作事件識別、場景理解、情感識別、邏輯常識推理和文本理解生成上都實現了較大提升。"
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 開放源碼版本，為會話應用提供優化後的對話體驗。"
   },
