@@ -17,6 +17,7 @@ export const FeatureFlagsSchema = z.object({
   create_session: z.boolean().optional(),
   edit_agent: z.boolean().optional(),
 
+  plugins: z.boolean().optional(),
   dalle: z.boolean().optional(),
   speech_to_text: z.boolean().optional(),
   token_counter: z.boolean().optional(),
@@ -53,10 +54,12 @@ export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   create_session: true,
   edit_agent: true,
 
+  plugins: true,
   dalle: true,
 
   check_updates: true,
   welcome_suggest: true,
+  token_counter: true,
 
   knowledge_base: true,
   rag_eval: false,
@@ -86,6 +89,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
     showOpenAIApiKey: config.openai_api_key,
     showOpenAIProxyUrl: config.openai_proxy_url,
 
+    enablePlugins: config.plugins,
     showDalle: config.dalle,
 
     enableCheckUpdates: config.check_updates,

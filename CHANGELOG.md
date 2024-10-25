@@ -2,6 +2,348 @@
 
 # Changelog
 
+## [Version 1.23.0](https://github.com/lobehub/lobe-chat/compare/v1.22.27...v1.23.0)
+
+<sup>Released on **2024-10-25**</sup>
+
+#### ✨ Features
+
+- **misc**: Support system agent config.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support system agent config, closes [#4474](https://github.com/lobehub/lobe-chat/issues/4474) ([63ba4d3](https://github.com/lobehub/lobe-chat/commit/63ba4d3))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.27](https://github.com/lobehub/lobe-chat/compare/v1.22.26...v1.22.27)
+
+<sup>Released on **2024-10-25**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add bedrock claude-3.5-sonnect-v2.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add bedrock claude-3.5-sonnect-v2, closes [#4468](https://github.com/lobehub/lobe-chat/issues/4468) ([a7fc251](https://github.com/lobehub/lobe-chat/commit/a7fc251))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.26](https://github.com/lobehub/lobe-chat/compare/v1.22.25...v1.22.26)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Fix some custom branding detail.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Fix some custom branding detail, closes [#4465](https://github.com/lobehub/lobe-chat/issues/4465) ([3fb1f6a](https://github.com/lobehub/lobe-chat/commit/3fb1f6a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.25](https://github.com/lobehub/lobe-chat/compare/v1.22.24...v1.22.25)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Remove unused user tables.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Remove unused user tables, closes [#4464](https://github.com/lobehub/lobe-chat/issues/4464) ([c85a270](https://github.com/lobehub/lobe-chat/commit/c85a270))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.24](https://github.com/lobehub/lobe-chat/compare/v1.22.23...v1.22.24)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Support `plugin` flag.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Support `plugin` flag, closes [#4463](https://github.com/lobehub/lobe-chat/issues/4463) ([9b4be23](https://github.com/lobehub/lobe-chat/commit/9b4be23))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.23](https://github.com/lobehub/lobe-chat/compare/v1.22.22...v1.22.23)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve error i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve error i18n, closes [#4462](https://github.com/lobehub/lobe-chat/issues/4462) ([74fb5e7](https://github.com/lobehub/lobe-chat/commit/74fb5e7))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.22](https://github.com/lobehub/lobe-chat/compare/v1.22.21...v1.22.22)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve i18n.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve i18n, closes [#4461](https://github.com/lobehub/lobe-chat/issues/4461) ([4c37928](https://github.com/lobehub/lobe-chat/commit/4c37928))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.21](https://github.com/lobehub/lobe-chat/compare/v1.22.20...v1.22.21)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor cookie/headers to async mode.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor cookie/headers to async mode, closes [#4459](https://github.com/lobehub/lobe-chat/issues/4459) ([98c5d21](https://github.com/lobehub/lobe-chat/commit/98c5d21))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.20](https://github.com/lobehub/lobe-chat/compare/v1.22.19...v1.22.20)
+
+<sup>Released on **2024-10-23**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add new claude-3.5-sonnet model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add new claude-3.5-sonnet model, closes [#4452](https://github.com/lobehub/lobe-chat/issues/4452) ([7102393](https://github.com/lobehub/lobe-chat/commit/7102393))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.19](https://github.com/lobehub/lobe-chat/compare/v1.22.18...v1.22.19)
+
+<sup>Released on **2024-10-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Move responsive to server utils folder.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Move responsive to server utils folder, closes [#4447](https://github.com/lobehub/lobe-chat/issues/4447) ([fe7fe64](https://github.com/lobehub/lobe-chat/commit/fe7fe64))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.18](https://github.com/lobehub/lobe-chat/compare/v1.22.17...v1.22.18)
+
+<sup>Released on **2024-10-22**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.17](https://github.com/lobehub/lobe-chat/compare/v1.22.16...v1.22.17)
+
+<sup>Released on **2024-10-22**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Fix dynamic import in rsc layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Fix dynamic import in rsc layout, closes [#4445](https://github.com/lobehub/lobe-chat/issues/4445) ([011d62a](https://github.com/lobehub/lobe-chat/commit/011d62a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.16](https://github.com/lobehub/lobe-chat/compare/v1.22.15...v1.22.16)
+
+<sup>Released on **2024-10-21**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix azure-ad.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix azure-ad, closes [#4438](https://github.com/lobehub/lobe-chat/issues/4438) ([8077317](https://github.com/lobehub/lobe-chat/commit/8077317))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.22.15](https://github.com/lobehub/lobe-chat/compare/v1.22.14...v1.22.15)
+
+<sup>Released on **2024-10-21**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Update format utils and shared layout.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Update format utils and shared layout, closes [#4431](https://github.com/lobehub/lobe-chat/issues/4431) ([56ed073](https://github.com/lobehub/lobe-chat/commit/56ed073))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.22.14](https://github.com/lobehub/lobe-chat/compare/v1.22.13...v1.22.14)
 
 <sup>Released on **2024-10-20**</sup>
