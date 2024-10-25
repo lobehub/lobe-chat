@@ -155,6 +155,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math koncentruje się na rozwiązywaniu problemów w dziedzinie matematyki, oferując profesjonalne odpowiedzi na trudne pytania."
   },
+  "SenseChat": {
+    "description": "Podstawowa wersja modelu (V4), długość kontekstu 4K, silne zdolności ogólne."
+  },
+  "SenseChat-128K": {
+    "description": "Podstawowa wersja modelu (V4), długość kontekstu 128K, doskonałe wyniki w zadaniach związanych z rozumieniem i generowaniem długich tekstów."
+  },
+  "SenseChat-32K": {
+    "description": "Podstawowa wersja modelu (V4), długość kontekstu 32K, elastycznie stosowana w różnych scenariuszach."
+  },
+  "SenseChat-5": {
+    "description": "Najnowsza wersja modelu (V5.5), długość kontekstu 128K, znacznie poprawione zdolności w zakresie rozumowania matematycznego, rozmów w języku angielskim, podążania za instrukcjami oraz rozumienia długich tekstów, dorównująca GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "Długość kontekstu 32K, w rozumieniu rozmów w języku kantońskim przewyższa GPT-4, w wielu dziedzinach, takich jak wiedza, rozumowanie, matematyka i programowanie, dorównuje GPT-4 Turbo."
+  },
+  "SenseChat-Character": {
+    "description": "Standardowa wersja modelu, długość kontekstu 8K, wysoka szybkość reakcji."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Zaawansowana wersja modelu, długość kontekstu 32K, znacznie poprawione zdolności, obsługuje rozmowy w języku chińskim i angielskim."
+  },
+  "SenseChat-Turbo": {
+    "description": "Idealny do szybkich odpowiedzi i scenariuszy dostosowywania modelu."
+  },
+  "SenseChat-Vision": {
+    "description": "Najnowsza wersja modelu (V5.5), długość kontekstu 16K, obsługuje wiele obrazów jako wejście, w pełni realizuje optymalizację podstawowych zdolności modelu, osiągając znaczne postępy w rozpoznawaniu atrybutów obiektów, relacjach przestrzennych, rozpoznawaniu zdarzeń, rozumieniu scen, rozpoznawaniu emocji, rozumowaniu logicznym oraz generowaniu i rozumieniu tekstu."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B to otwarta wersja, oferująca zoptymalizowane doświadczenie dialogowe dla aplikacji konwersacyjnych."
   },

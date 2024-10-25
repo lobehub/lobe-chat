@@ -25,6 +25,7 @@ import { LobeOpenAI } from './openai';
 import { LobeOpenRouterAI } from './openrouter';
 import { LobePerplexityAI } from './perplexity';
 import { LobeQwenAI } from './qwen';
+import { LobeSenseNovaAI } from './sensenova';
 import { LobeSiliconCloudAI } from './siliconcloud';
 import { LobeSparkAI } from './spark';
 import { LobeStepfunAI } from './stepfun';
@@ -146,6 +147,7 @@ class AgentRuntime {
       openrouter: Partial<ClientOptions>;
       perplexity: Partial<ClientOptions>;
       qwen: Partial<ClientOptions>;
+      sensenova: Partial<ClientOptions>;
       siliconcloud: Partial<ClientOptions>;
       spark: Partial<ClientOptions>;
       stepfun: Partial<ClientOptions>;
@@ -312,6 +314,11 @@ class AgentRuntime {
 
       case ModelProvider.Hunyuan: {
         runtimeModel = new LobeHunyuanAI(params.hunyuan);
+        break;
+      }
+
+      case ModelProvider.SenseNova: {
+        runtimeModel = await LobeSenseNovaAI.fromAPIKey(params.sensenova);
         break;
       }
     }
