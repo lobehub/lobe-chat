@@ -144,6 +144,11 @@ export const getLLMConfig = () => {
       HUGGINGFACE_API_KEY: z.string().optional(),
       HUGGINGFACE_PROXY_URL: z.string().optional(),
       HUGGINGFACE_MODEL_LIST: z.string().optional(),
+
+      ENABLED_SENSENOVA: z.boolean(),
+      SENSENOVA_ACCESS_KEY_ID: z.string().optional(),
+      SENSENOVA_ACCESS_KEY_SECRET: z.string().optional(),
+      SENSENOVA_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -285,6 +290,11 @@ export const getLLMConfig = () => {
       HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
       HUGGINGFACE_PROXY_URL: process.env.HUGGINGFACE_PROXY_URL,
       HUGGINGFACE_MODEL_LIST: process.env.HUGGINGFACE_MODEL_LIST,
+
+      ENABLED_SENSENOVA: !!process.env.SENSENOVA_ACCESS_KEY_ID && !!process.env.SENSENOVA_ACCESS_KEY_SECRET,
+      SENSENOVA_ACCESS_KEY_ID: process.env.SENSENOVA_ACCESS_KEY_ID,
+      SENSENOVA_ACCESS_KEY_SECRET: process.env.SENSENOVA_ACCESS_KEY_SECRET,
+      SENSENOVA_MODEL_LIST: process.env.SENSENOVA_MODEL_LIST,
     },
   });
 };
