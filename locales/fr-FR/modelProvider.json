@@ -119,6 +119,22 @@
       "title": "Download specified Ollama model"
     }
   },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Entrez l'ID de clé d'accès SenseNova",
+      "placeholder": "ID de clé d'accès SenseNova",
+      "title": "ID de clé d'accès"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Entrez le secret de clé d'accès SenseNova",
+      "placeholder": "Secret de clé d'accès SenseNova",
+      "title": "Secret de clé d'accès"
+    },
+    "unlock": {
+      "description": "Entrez votre ID de clé d'accès / secret de clé d'accès pour commencer la session. L'application ne conservera pas vos configurations d'authentification",
+      "title": "Utiliser des informations d'authentification SenseNova personnalisées"
+    }
+  },
   "wenxin": {
     "accessKey": {
       "desc": "Entrez la clé d'accès de la plateforme Qianfan de Baidu",

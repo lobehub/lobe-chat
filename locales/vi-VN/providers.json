@@ -63,6 +63,7 @@
   "qwen": {
     "description": "Qwen là mô hình ngôn ngữ quy mô lớn tự phát triển của Alibaba Cloud, có khả năng hiểu và tạo ngôn ngữ tự nhiên mạnh mẽ. Nó có thể trả lời nhiều câu hỏi, sáng tác nội dung văn bản, bày tỏ quan điểm, viết mã, v.v., hoạt động trong nhiều lĩnh vực."
   },
+  "sensenova": {},
   "siliconcloud": {
     "description": "SiliconFlow cam kết tăng tốc AGI để mang lại lợi ích cho nhân loại, nâng cao hiệu quả AI quy mô lớn thông qua một ngăn xếp GenAI dễ sử dụng và chi phí thấp."
   },
