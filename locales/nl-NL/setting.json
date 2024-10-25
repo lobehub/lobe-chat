@@ -372,10 +372,16 @@
       "modelDesc": "Model voor het genereren van assistentnaam, beschrijving, profielfoto en labels",
       "title": "Automatisch assistentinformatie genereren"
     },
+    "customPrompt": {
+      "addPrompt": "Voeg aangepaste prompt toe",
+      "desc": "Vul dit in, zodat de systeemassistent de aangepaste prompt gebruikt bij het genereren van inhoud",
+      "placeholder": "Voer aangepaste prompt in",
+      "title": "Aangepaste prompt"
+    },
     "queryRewrite": {
       "label": "Vraag herschrijvingsmodel",
       "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
-      "title": "Kennisbank"
+      "title": "Herformuleren van vragen in de kennisbank"
     },
     "title": "Systeemassistent",
     "topic": {
