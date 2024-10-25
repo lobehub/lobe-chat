@@ -56,7 +56,7 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
   return (
     <Select
       onChange={(value, option) => {
-        const [, model] = value.split('/');
+        const model = value.split('/').slice(1).join('/');
         onChange?.({ model, provider: (option as unknown as ModelOption).provider });
       }}
       options={options}
