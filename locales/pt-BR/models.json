@@ -155,6 +155,33 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math foca na resolução de problemas na área de matemática, oferecendo respostas especializadas para questões de alta dificuldade."
   },
+  "SenseChat": {
+    "description": "Modelo da versão básica (V4), com comprimento de contexto de 4K, com capacidades gerais poderosas."
+  },
+  "SenseChat-128K": {
+    "description": "Modelo da versão básica (V4), com comprimento de contexto de 128K, se destaca em tarefas de compreensão e geração de textos longos."
+  },
+  "SenseChat-32K": {
+    "description": "Modelo da versão básica (V4), com comprimento de contexto de 32K, aplicável de forma flexível em diversos cenários."
+  },
+  "SenseChat-5": {
+    "description": "Modelo da versão mais recente (V5.5), com comprimento de contexto de 128K, com capacidades significativamente aprimoradas em raciocínio matemático, diálogos em inglês, seguimento de instruções e compreensão de textos longos, rivalizando com o GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "Comprimento de contexto de 32K, superando o GPT-4 na compreensão de diálogos em cantonês, competindo com o GPT-4 Turbo em várias áreas, incluindo conhecimento, raciocínio, matemática e programação."
+  },
+  "SenseChat-Character": {
+    "description": "Modelo padrão, com comprimento de contexto de 8K, alta velocidade de resposta."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Modelo avançado, com comprimento de contexto de 32K, com capacidades amplamente aprimoradas, suportando diálogos em chinês e inglês."
+  },
+  "SenseChat-Turbo": {
+    "description": "Adequado para perguntas rápidas e cenários de ajuste fino do modelo."
+  },
+  "SenseChat-Vision": {
+    "description": "Modelo da versão mais recente (V5.5), com comprimento de contexto de 16K, suporta entrada de múltiplas imagens, implementa otimizações abrangentes nas capacidades básicas do modelo, com grandes melhorias em reconhecimento de propriedades de objetos, relações espaciais, reconhecimento de eventos de ação, compreensão de cenas, reconhecimento de emoções, raciocínio lógico e compreensão e geração de texto."
+  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B é uma versão de código aberto, oferecendo uma experiência de diálogo otimizada para aplicações de conversa."
   },

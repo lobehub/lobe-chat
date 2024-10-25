@@ -119,6 +119,22 @@
       "title": "Download specified Ollama model"
     }
   },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "SenseNova Access Key ID를 입력하세요",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "SenseNova Access Key Secret를 입력하세요",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "Access Key ID / Access Key Secret를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
+      "title": "사용자 정의 SenseNova 인증 정보 사용"
+    }
+  },
   "wenxin": {
     "accessKey": {
       "desc": "바이두 천범 플랫폼의 Access Key를 입력하세요",

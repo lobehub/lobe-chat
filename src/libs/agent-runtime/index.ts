@@ -15,6 +15,7 @@ export { LobeOpenAI } from './openai';
 export { LobeOpenRouterAI } from './openrouter';
 export { LobePerplexityAI } from './perplexity';
 export { LobeQwenAI } from './qwen';
+export { LobeSenseNovaAI } from './sensenova';
 export { LobeTogetherAI } from './togetherai';
 export * from './types';
 export { AgentRuntimeError } from './utils/createError';
