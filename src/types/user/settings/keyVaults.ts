@@ -71,6 +71,7 @@ export interface UserKeyVaults {
   vllm?: OpenAICompatibleKeyVault;
   volcengine?: OpenAICompatibleKeyVault;
   wenxin?: OpenAICompatibleKeyVault;
+  vertexai?: undefined;
   xai?: OpenAICompatibleKeyVault;
   zeroone?: OpenAICompatibleKeyVault;
   zhipu?: OpenAICompatibleKeyVault;
