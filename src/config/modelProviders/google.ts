@@ -64,7 +64,22 @@ const Google: ModelProviderCard = {
       tokens: 1_000_000 + 8192,
       vision: true,
     },
-
+    {
+      description: 'Gemini 1.5 Flash 8B 是一款高效的多模态模型，支持广泛应用的扩展。',
+      displayName: 'Gemini 1.5 Flash 8B',
+      enabled: true,
+      functionCall: true,
+      id: 'gemini-1.5-flash-8b',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.02,
+        input: 0.075,
+        output: 0.3,
+      },
+      releasedAt: '2024-10-03',
+      tokens: 1_000_000 + 8192,
+      vision: true,
+    },
     {
       description:
         'Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。',
