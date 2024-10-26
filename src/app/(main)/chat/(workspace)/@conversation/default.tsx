@@ -4,6 +4,7 @@ import { isMobileDevice } from '@/utils/server/responsive';
 import ChatHydration from './features/ChatHydration';
 import DesktopChatInput from './features/ChatInput/Desktop';
 import MobileChatInput from './features/ChatInput/Mobile';
+import ZenModeToast from './features/ZenModeToast';
 
 const ChatConversation = () => {
   const mobile = isMobileDevice();
@@ -11,6 +12,7 @@ const ChatConversation = () => {
 
   return (
     <>
+      <ZenModeToast />
       <Conversation mobile={mobile} />
       <ChatInput />
       <ChatHydration />
