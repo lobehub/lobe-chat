@@ -68,9 +68,6 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) é um modelo inovador, adequado para aplicações em múltiplas áreas e tarefas complexas."
   },
-  "Max-32k": {
-    "description": "O Spark Max 32K possui uma grande capacidade de processamento de contexto, com uma compreensão e raciocínio lógico mais robustos, suportando entradas de texto de 32K tokens, adequado para leitura de documentos longos, perguntas e respostas sobre conhecimento privado e outros cenários."
-  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO é uma fusão de múltiplos modelos altamente flexível, projetada para oferecer uma experiência criativa excepcional."
   },
@@ -109,9 +106,6 @@
   },
   "Phi-3.5-vision-instrust": {
     "description": "Versão atualizada do modelo Phi-3-vision."
-  },
-  "Pro-128k": {
-    "description": "Spark Pro-128K possui capacidade de processamento de contexto extremamente grande, capaz de lidar com até 128K de informações de contexto, especialmente adequado para análise completa e processamento de associações lógicas de longo prazo em conteúdos longos, podendo fornecer lógica fluida e consistente e suporte a diversas citações em comunicações textuais complexas."
   },
   "Pro/OpenGVLab/InternVL2-8B": {
     "description": "InternVL2 demonstrou desempenho excepcional em diversas tarefas de linguagem visual, incluindo compreensão de documentos e gráficos, compreensão de texto em cena, OCR, e resolução de problemas científicos e matemáticos."
@@ -277,6 +271,9 @@
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "O Claude 3.5 Sonnet eleva o padrão da indústria, superando modelos concorrentes e o Claude 3 Opus, apresentando um desempenho excepcional em avaliações amplas, ao mesmo tempo que mantém a velocidade e o custo de nossos modelos de nível médio."
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet elevou o padrão da indústria, superando modelos concorrentes e o Claude 3 Opus, apresentando um desempenho excepcional em avaliações amplas, enquanto mantém a velocidade e o custo de nossos modelos de nível médio."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "O Claude 3 Haiku é o modelo mais rápido e compacto da Anthropic, oferecendo uma velocidade de resposta quase instantânea. Ele pode responder rapidamente a consultas e solicitações simples. Os clientes poderão construir uma experiência de IA sem costura que imita a interação humana. O Claude 3 Haiku pode processar imagens e retornar saídas de texto, com uma janela de contexto de 200K."
@@ -467,9 +464,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 é um modelo eficiente lançado pelo Google, abrangendo uma variedade de cenários de aplicação, desde aplicações pequenas até processamento de dados complexos."
   },
-  "general": {
-    "description": "Spark Lite é um modelo de linguagem leve, com latência extremamente baixa e alta capacidade de processamento, totalmente gratuito e aberto, suportando funcionalidade de busca online em tempo real. Sua característica de resposta rápida o torna excelente em aplicações de inferência e ajuste de modelo em dispositivos de baixa potência, proporcionando aos usuários um excelente custo-benefício e experiência inteligente, especialmente em perguntas e respostas, geração de conteúdo e cenários de busca."
-  },
   "generalv3": {
     "description": "Spark Pro é um modelo de linguagem de alto desempenho otimizado para áreas profissionais, focando em matemática, programação, medicina, educação e outros campos, e suportando busca online e plugins integrados como clima e data. Seu modelo otimizado apresenta desempenho excepcional e eficiência em perguntas e respostas complexas, compreensão de linguagem e criação de texto de alto nível, sendo a escolha ideal para cenários de aplicação profissional."
   },
@@ -625,6 +619,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "lite": {
+    "description": "Spark Lite é um modelo de linguagem grande leve, com latência extremamente baixa e alta eficiência de processamento, totalmente gratuito e aberto, suportando funcionalidades de busca online em tempo real. Sua característica de resposta rápida o torna excelente para aplicações de inferência em dispositivos de baixo poder computacional e ajuste fino de modelos, proporcionando aos usuários uma excelente relação custo-benefício e experiência inteligente, especialmente em cenários de perguntas e respostas, geração de conteúdo e busca."
+  },
   "llama-3.1-70b-instruct": {
     "description": "O modelo Llama 3.1 70B Instruct possui 70B de parâmetros, capaz de oferecer desempenho excepcional em tarefas de geração de texto e instrução em larga escala."
   },
@@ -699,6 +696,9 @@
   },
   "mathstral": {
     "description": "MathΣtral é projetado para pesquisa científica e raciocínio matemático, oferecendo capacidade de cálculo eficaz e interpretação de resultados."
+  },
+  "max-32k": {
+    "description": "Spark Max 32K possui uma capacidade de processamento de contexto grande, com melhor compreensão de contexto e capacidade de raciocínio lógico, suportando entradas de texto de 32K tokens, adequado para leitura de documentos longos, perguntas e respostas de conhecimento privado e outros cenários."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Um poderoso modelo com 70 bilhões de parâmetros, destacando-se em raciocínio, codificação e amplas aplicações linguísticas."
@@ -939,6 +939,9 @@
   },
   "pixtral-12b-2409": {
     "description": "O modelo Pixtral demonstra forte capacidade em tarefas de compreensão de gráficos e imagens, perguntas e respostas de documentos, raciocínio multimodal e seguimento de instruções, podendo ingerir imagens em resolução natural e proporções, além de processar um número arbitrário de imagens em uma janela de contexto longa de até 128K tokens."
+  },
+  "pro-128k": {
+    "description": "Spark Pro 128K possui uma capacidade de processamento de contexto extremamente grande, capaz de lidar com até 128K de informações contextuais, especialmente adequado para análise completa e processamento de associações lógicas de longo prazo em conteúdos longos, podendo oferecer lógica fluida e consistente e suporte a diversas citações em comunicações textuais complexas."
   },
   "qwen-coder-turbo-latest": {
     "description": "Modelo de código Qwen."
