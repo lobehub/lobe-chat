@@ -20,10 +20,8 @@ tags:
 </div>
 
 <Callout type="info">
-  本文已经假定你了解了 LobeChat 服务端数据库版本（下简称 DB
-  版）的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat DB
-  版的部署原理，请先查阅 [使用服务端数据库部署](https://lobehub.com/zh/docs/self-hosting/advanced/s3/tencent-cloud) 。
-  此外，针对国内的腾讯云储存桶用户，可查询[配置腾讯云 COS 存储服务](https://lobehub.com/zh/docs/self-hosting/advanced/s3/tencent-cloud)。
+  本文已经假定你了解了 LobeChat 服务端数据库版本（下简称 DB 版）的部署基本原理和流程，因此只包含核心环境变量配置的内容。如果你还不了解 LobeChat DB 版的部署原理，请先查阅 [使用服务端数据库部署](/zh/docs/self-hosting/server-database) 。
+  此外，针对国内的腾讯云储存桶用户，可查询[配置腾讯云 COS 存储服务](/zh/docs/self-hosting/advanced/s3/tencent-cloud)。
 </Callout>
 
 <Callout type="warning">
@@ -77,9 +75,9 @@ DATABASE_URL=postgres://postgres:mysecretpassword@my-postgres:5432/postgres
 NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250
 NEXT_AUTH_SSO_PROVIDERS=auth0
 NEXTAUTH_URL=https://your-prod-domain.com/api/auth
-AUTH0_CLIENT_ID=xxxxxx
-AUTH0_CLIENT_SECRET=cSX_xxxxx
-AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
+AUTH_AUTH0_ID=xxxxxx
+AUTH_AUTH0_SECRET=cSX_xxxxx
+AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com
 
 # S3 相关
 S3_ACCESS_KEY_ID=xxxxxxxxxx
@@ -147,9 +145,9 @@ $ docker run -it -d --name lobe-chat-database -p 3210:3210 \
   -e KEY_VAULTS_SECRET=jgwsK28dspyVQoIf8/M3IIHl1h6LYYceSYNXeLpy6uk= \
   -e NEXT_AUTH_SECRET=3904039cd41ea1bdf6c93db0db96e250 \
   -e NEXT_AUTH_SSO_PROVIDERS=auth0 \
-  -e AUTH0_CLIENT_ID=xxxxxx \
-  -e AUTH0_CLIENT_SECRET=cSX_xxxxx \
-  -e AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com \
+  -e AUTH_AUTH0_ID=xxxxxx \
+  -e AUTH_AUTH0_SECRET=cSX_xxxxx \
+  -e AUTH_AUTH0_ISSUER=https://lobe-chat-demo.us.auth0.com \
   -e APP_URL=http://localhost:3210 \
   -e NEXTAUTH_URL=http://localhost:3210/api/auth \
   -e S3_ACCESS_KEY_ID=xxxxxxxxxx \
@@ -164,6 +162,7 @@ $ docker run -it -d --name lobe-chat-database -p 3210:3210 \
   `Docker` 在 `Windows` 和 `macOS` 上走的是虚拟机方案，如果使用 `localhost` / `127.0.0.1`
   ，将会走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
 </Callout>
+
 
 [docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
 [docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square

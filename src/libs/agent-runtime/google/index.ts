@@ -2,14 +2,11 @@ import {
   Content,
   FunctionCallPart,
   FunctionDeclaration,
-  FunctionDeclarationSchemaProperty,
-  FunctionDeclarationSchemaType,
   Tool as GoogleFunctionCallTool,
   GoogleGenerativeAI,
   Part,
+  SchemaType,
 } from '@google/generative-ai';
-import { JSONSchema7 } from 'json-schema';
-import { transform } from 'lodash-es';
 
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
 import { safeParseJSON } from '@/utils/safeParseJSON';
@@ -190,13 +187,12 @@ export class LobeGoogleAI implements LobeRuntimeAI {
     };
   };
 
-  // convert messages from the Vercel AI SDK Format to the format
-  // that is expected by the Google GenAI SDK
+  // convert messages from the OpenAI format to Google GenAI SDK
   private buildGoogleMessages = async (
     messages: OpenAIChatMessage[],
     model: string,
   ): Promise<Content[]> => {
-    // if the model is gemini-1.0 we don't need to pair messages
+    // if the model is gemini-1.0 we need to pair messages
     if (model.startsWith('gemini-1.0')) {
       const contents: Content[] = [];
       let lastRole = 'model';
@@ -298,52 +294,12 @@ export class LobeGoogleAI implements LobeRuntimeAI {
       name: functionDeclaration.name,
       parameters: {
         description: parameters?.description,
-        properties: transform(parameters?.properties, (result, value, key: string) => {
-          result[key] = this.convertSchemaObject(value as JSONSchema7);
-        }),
+        properties: parameters?.properties,
         required: parameters?.required,
-        type: FunctionDeclarationSchemaType.OBJECT,
+        type: SchemaType.OBJECT,
       },
     };
   };
-
-  private convertSchemaObject(schema: JSONSchema7): FunctionDeclarationSchemaProperty {
-    switch (schema.type) {
-      default:
-      case 'object': {
-        return {
-          ...schema,
-          properties: Object.fromEntries(
-            Object.entries(schema.properties || {}).map(([key, value]) => [
-              key,
-              this.convertSchemaObject(value as JSONSchema7),
-            ]),
-          ),
-          type: FunctionDeclarationSchemaType.OBJECT,
-        } as any;
-      }
-
-      case 'array': {
-        return {
-          ...schema,
-          items: this.convertSchemaObject(schema.items as JSONSchema7),
-          type: FunctionDeclarationSchemaType.ARRAY,
-        } as any;
-      }
-
-      case 'string': {
-        return { ...schema, type: FunctionDeclarationSchemaType.STRING } as any;
-      }
-
-      case 'number': {
-        return { ...schema, type: FunctionDeclarationSchemaType.NUMBER } as any;
-      }
-
-      case 'boolean': {
-        return { ...schema, type: FunctionDeclarationSchemaType.BOOLEAN } as any;
-      }
-    }
-  }
 }
 
 export default LobeGoogleAI;

@@ -71,19 +71,6 @@ const Hunyuan: ModelProviderCard = {
       tokens: 32_000,
     },
     {
-      description: '混元最新代码生成模型，经过 200B 高质量代码数据增训基座模型，迭代半年高质量 SFT 数据训练，上下文长窗口长度增大到 8K，五大语言代码生成自动评测指标上位居前列；五大语言10项考量各方面综合代码任务人工高质量评测上，性能处于第一梯队',
-      displayName: 'Hunyuan Code',
-      enabled: true,
-      id: 'hunyuan-code',
-      maxOutput: 4000,
-      pricing: {
-        currency: 'CNY',
-        input: 4,
-        output: 8,
-      },
-      tokens: 8000,
-    },
-    {
       description: '混元最新多模态模型，支持图片+文本输入生成文本内容。',
       displayName: 'Hunyuan Vision',
       enabled: true,
@@ -96,6 +83,18 @@ const Hunyuan: ModelProviderCard = {
       },
       tokens: 8000,
       vision: true,
+    },
+    {
+      description: '混元最新代码生成模型，经过 200B 高质量代码数据增训基座模型，迭代半年高质量 SFT 数据训练，上下文长窗口长度增大到 8K，五大语言代码生成自动评测指标上位居前列；五大语言10项考量各方面综合代码任务人工高质量评测上，性能处于第一梯队',
+      displayName: 'Hunyuan Code',
+      id: 'hunyuan-code',
+      maxOutput: 4000,
+      pricing: {
+        currency: 'CNY',
+        input: 4,
+        output: 8,
+      },
+      tokens: 8000,
     },
     {
       description: '混元最新 MOE 架构 FunctionCall 模型，经过高质量的 FunctionCall 数据训练，上下文窗口达 32K，在多个维度的评测指标上处于领先。',

@@ -27,9 +27,9 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 #### `NEXT_AUTH_SSO_PROVIDERS`
 
 - 类型：可选
-- 描述：选择 LoboChat 的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,azure-ad,authentik`
+- 描述：选择 LoboChat 的单点登录提供商。如果有多个单点登录提供商，请用逗号分隔，例如 `auth0,microsoft-entra-id,authentik`
 - 默认值: `auth0`
-- 示例: `auth0,azure-ad,authentik`
+- 示例: `auth0,microsoft-entra-id,authentik`
 
 #### `NEXTAUTH_URL`
 
@@ -40,14 +40,14 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Auth0
 
-#### `AUTH_AUTH0_CLIENT_ID`
+#### `AUTH_AUTH0_ID`
 
 - 类型：必选
 - 描述: Auth0 应用程序的 Client ID，您可以访问[这里](https://manage.auth0.com/dashboard)并导航至应用程序设置来查看
 - 默认值: `-`
 - 示例: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
 
-#### `AUTH_AUTH0_CLIENT_SECRET`
+#### \`AUTH_AUTH_SECRET
 
 - 类型：必选
 - 描述: Auth0 应用程序的 Client Secret
@@ -63,14 +63,14 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Authelia
 
-#### `AUTH_AUTHELIA_CLIENT_ID`
+#### `AUTH_AUTHELIA_ID`
 
 - 类型：必选
 - 描述: Authelia 提供程序的 Client ID
 - 默认值: `-`
 - 示例: `lobe-chat`
 
-#### `AUTH_AUTHELIA_CLIENT_SECRET`
+#### `AUTH_AUTHELIA_SECRET`
 
 - 类型：必选
 - 描述: Authelia 提供程序的 Client Secret 的明文
@@ -86,14 +86,14 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Authentik
 
-#### `AUTH_AUTHENTIK_CLIENT_ID`
+#### `AUTH_AUTHENTIK_ID`
 
 - 类型：必选
 - 描述: Authentik 提供程序的 Client ID
 - 默认值: `-`
 - 示例: `YNtbIRlYF8Kj66mTLue59nsGLlb7HNyx1qjPH6VS`
 
-#### `AUTH_AUTHENTIK_CLIENT_SECRET`
+#### `AUTH_AUTHENTIK_SECRET`
 
 - 类型：必选
 - 描述: Authentik 提供程序的 Client Secret
@@ -109,14 +109,14 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Casdoor
 
-#### `AUTH_CASDOOR_CLIENT_ID`
+#### `AUTH_CASDOOR_ID`
 
 - 类型：必选
 - 描述: Casdoor 提供程序的 Client ID
 - 默认值: `-`
 - 示例: `570bfa85a21800a25198`
 
-#### `AUTH_CASDOOR_CLIENT_SECRET`
+#### `AUTH_CASDOOR_SECRET`
 
 - 类型：必选
 - 描述: Casdoor 提供程序的 Client Secret 的明文
@@ -132,14 +132,14 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Cloudflare Zero Trust
 
-#### `AUTH_CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
+#### `AUTH_CLOUDFLARE_ZERO_TRUST_ID`
 
 - 类型：必选
 - 描述: Cloudflare Zero Trust 提供程序的 Client ID
 - 默认值: `-`
 - 示例: `711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
 
-#### `AUTH_CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
+#### `AUTH_CLOUDFLARE_ZERO_TRUST_SECRET`
 
 - 类型：必选
 - 描述: Cloudflare Zero Trust 提供程序的 Client Secret 的明文
@@ -155,30 +155,30 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Github
 
-#### `AUTH_GITHUB_CLIENT_ID`
+#### `AUTH_GITHUB_ID`
 
 - 类型：必选
 - 描述: Github 应用的客户端 ID。您可以在[这里](https://github.com/settings/apps)访问，并导航到应用程序设置以查看。
 - 默认值: `-`
 - 示例: `abd94200333283550508`
 
-#### `AUTH_GITHUB_CLIENT_SECRET`
+#### `AUTH_GITHUB_SECRET`
 
 - 类型：必选
-- 描述: Github应用的客户端密钥。
+- 描述: Github 应用的客户端密钥。
 - 默认值: `-`
 - 示例: `dd262976ac0931d947e104891586a053f3d3750b`
 
 ### Logto
 
-#### `AUTH_LOGTO_CLIENT_ID`
+#### `AUTH_LOGTO_ID`
 
 - 类型：必选
 - 描述：Logto 应用程序的 Client ID。您可以在根据部署模式，在私有部署的 Logto 控制台或 [Logto Cloud](http://cloud.logto.io/) 中找到。
 - 默认值：`-`
 - 示例：`123456789012345678@your-project`
 
-#### `AUTH_LOGTO_CLIENT_SECRET`
+#### `AUTH_LOGTO_SECRET`
 
 - 类型：必选
 - 描述：Logto 应用程序的 Client Secret。
@@ -194,14 +194,14 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Microsoft Entra ID
 
-#### `AUTH_AZURE_AD_CLIENT_ID`
+#### `AUTH_AZURE_AD_ID`
 
 - 类型：必选
 - 描述：Microsoft Entra ID 应用程序的客户端 ID。
 - 默认值：`-`
 - 示例：`be8f6da1-58c3-4f16-ff1b-78f5148e10df`
 
-#### `AUTH_AZURE_AD_CLIENT_SECRET`
+#### `AUTH_AZURE_AD_SECRET`
 
 - 类型：必选
 - 描述：Microsoft Entra ID 应用程序的客户端密钥。
@@ -217,14 +217,14 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### ZITADEL
 
-#### `AUTH_ZITADEL_CLIENT_ID`
+#### `AUTH_ZITADEL_ID`
 
 - 类型：必选
 - 描述：ZITADEL 应用的 Client ID。您可以在 ZITADEL 控制台应用设置中找到 Client ID。
 - 默认值：`-`
 - 示例：`123456789012345678@your-project`
 
-#### `AUTH_ZITADEL_CLIENT_SECRET`
+#### `AUTH_ZITADEL_SECRET`
 
 - 类型：必选
 - 描述：ZITADEL 应用的 Client Secret。
@@ -240,21 +240,21 @@ LobeChat 在部署时提供了完善的身份验证服务能力，以下是相�
 
 ### Generic OIDC
 
-#### `GENERIC_OIDC_CLIENT_ID`
+#### `AUTH_GENERIC_OIDC_ID`
 
 - 类型：必选
 - 描述: Generic OIDC 提供程序的 Client ID
 - 默认值: `-`
 - 示例: `_client_id_for_lobe_chat_`
 
-#### `GENERIC_OIDC_CLIENT_SECRET`
+#### `AUTH_GENERIC_OIDC_SECRET`
 
 - 类型：必选
 - 描述: Generic OIDC 提供程序的 Client Secret 的明文
 - 默认值: `-`
 - 示例: `_client_secret_for_lobe_chat_`
 
-#### `GENERIC_OIDC_ISSUER`
+#### `AUTH_GENERIC_OIDC_ISSUER`
 
 - 类型：必选
 - 描述: Generic OIDC 提供程序的 OpenID Connect 颁发者

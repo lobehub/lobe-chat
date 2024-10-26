@@ -1,6 +1,5 @@
 // @vitest-environment edge-runtime
-import { FunctionDeclarationSchemaType, FunctionDeclarationsTool } from '@google/generative-ai';
-import { JSONSchema7 } from 'json-schema';
+import { FunctionDeclarationsTool } from '@google/generative-ai';
 import OpenAI from 'openai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -479,100 +478,14 @@ describe('LobeGoogleAI', () => {
           name: 'testTool',
           description: 'A test tool',
           parameters: {
-            type: FunctionDeclarationSchemaType.OBJECT,
+            type: 'object',
             properties: {
-              param1: { type: FunctionDeclarationSchemaType.STRING },
-              param2: { type: FunctionDeclarationSchemaType.NUMBER },
+              param1: { type: 'string' },
+              param2: { type: 'number' },
             },
             required: ['param1'],
           },
         });
-      });
-    });
-
-    describe('convertSchemaObject', () => {
-      it('should correctly convert object schema', () => {
-        const schema: JSONSchema7 = {
-          type: 'object',
-          properties: {
-            prop1: { type: 'string' },
-            prop2: { type: 'number' },
-          },
-        };
-
-        const converted = instance['convertSchemaObject'](schema);
-
-        expect(converted).toEqual({
-          type: FunctionDeclarationSchemaType.OBJECT,
-          properties: {
-            prop1: { type: FunctionDeclarationSchemaType.STRING },
-            prop2: { type: FunctionDeclarationSchemaType.NUMBER },
-          },
-        });
-      });
-
-      it('should correctly convert nested schema', () => {
-        const schema: JSONSchema7 = {
-          type: 'object',
-          properties: {
-            nested: {
-              type: 'array',
-              items: {
-                type: 'object',
-                properties: {
-                  prop: { type: 'string' },
-                },
-              },
-            },
-          },
-        };
-
-        const converted = instance['convertSchemaObject'](schema);
-
-        expect(converted).toEqual({
-          type: FunctionDeclarationSchemaType.OBJECT,
-          properties: {
-            nested: {
-              type: FunctionDeclarationSchemaType.ARRAY,
-              items: {
-                type: FunctionDeclarationSchemaType.OBJECT,
-                properties: {
-                  prop: { type: FunctionDeclarationSchemaType.STRING },
-                },
-              },
-            },
-          },
-        });
-      });
-
-      it('should correctly convert array schema', () => {
-        const schema: JSONSchema7 = {
-          type: 'array',
-          items: { type: 'string' },
-        };
-        const converted = instance['convertSchemaObject'](schema);
-        expect(converted).toEqual({
-          type: FunctionDeclarationSchemaType.ARRAY,
-          items: { type: FunctionDeclarationSchemaType.STRING },
-        });
-      });
-
-      it('should correctly convert string schema', () => {
-        const schema: JSONSchema7 = { type: 'string' };
-        const converted = instance['convertSchemaObject'](schema);
-        expect(converted).toEqual({ type: FunctionDeclarationSchemaType.STRING });
-      });
-
-      it('should correctly convert number schema', () => {
-        const schema: JSONSchema7 = { type: 'number' };
-        const converted = instance['convertSchemaObject'](schema);
-        expect(converted).toEqual({ type: FunctionDeclarationSchemaType.NUMBER });
-      });
-
-      it('should correctly convert boolean schema', () => {
-        const schema: JSONSchema7 = { type: 'boolean' };
-        const converted = instance['convertSchemaObject'](schema);
-        expect(converted).toEqual({ type: FunctionDeclarationSchemaType.BOOLEAN });
       });
     });
 

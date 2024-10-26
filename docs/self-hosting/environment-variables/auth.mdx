@@ -29,9 +29,9 @@ LobeChat provides a complete authentication service capability when deployed. Th
 #### `NEXT_AUTH_SSO_PROVIDERS`
 
 - Type: Optional
-- Description: Select the single sign-on provider for LoboChat. For multiple SSO Providers separating them with commas, for example, `auth0,azure-ad,authentik`.
+- Description: Select the single sign-on provider for LoboChat. For multiple SSO Providers separating them with commas, for example, `auth0,microsoft-entra-id,authentik`.
 - Default: `auth0`
-- Example: `auth0,azure-ad,authentik`
+- Example: `auth0,microsoft-entra-id,authentik`
 
 #### `NEXTAUTH_URL`
 
@@ -42,14 +42,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Auth0
 
-#### `AUTH_AUTH_AUTH0_CLIENT_ID`
+#### `AUTH_AUTH0_ID`
 
 - Type: Required
 - Description: Client ID of the Auth0 application. You can access it [here](https://manage.auth0.com/dashboard) and navigate to the application settings to view.
 - Default: `-`
 - Example: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
 
-#### `AUTH_AUTH0_CLIENT_SECRET`
+#### `AUTH_AUTH0_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Auth0 application.
@@ -65,14 +65,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Authelia
 
-#### `AUTH_AUTHELIA_CLIENT_ID`
+#### `AUTH_AUTHELIA_ID`
 
 - Type: Required
 - Description: Client ID of the Authelia provider application.
 - Default: `-`
 - Example: `lobe-chat`
 
-#### `AUTH_AUTHELIA_CLIENT_SECRET`
+#### `AUTH_AUTHELIA_SECRET`
 
 - Type: Required
 - Description: The plaintext of the Client Secret for the Authelia provider
@@ -88,14 +88,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Authentik
 
-#### `AUTH_AUTHENTIK_CLIENT_ID`
+#### `AUTH_AUTHENTIK_ID`
 
 - Type: Required
 - Description: Client ID of the Authentik provider application.
 - Default: `-`
 - Example: `evCnOJP1UX8FMnXR9Xkj5t0NyFn5p70P`
 
-#### `AUTH_AUTHENTIK_CLIENT_SECRET`
+#### `AUTH_AUTHENTIK_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Authentik provider application.
@@ -111,14 +111,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Casdoor
 
-#### `AUTH_CASDOOR_CLIENT_ID`
+#### `AUTH_CASDOOR_ID`
 
 - Type: Required
 - Description: Client ID provided by Casdoor
 - Default: `-`
 - Example: `570bfa85a21800a25198`
 
-#### `AUTH_CASDOOR_CLIENT_SECRET`
+#### `AUTH_CASDOOR_SECRET`
 
 - Type: Required
 - Description: Plaintext Client Secret provided by Casdoor
@@ -134,14 +134,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Cloudflare Zero Trust
 
-#### `AUTH_CLOUDFLARE_ZERO_TRUST_CLIENT_ID`
+#### `AUTH_CLOUDFLARE_ZERO_TRUST_ID`
 
 - Type: Required
 - Description: Client ID of the Cloudflare Zero Trust provider application.
 - Default: `-`
 - Example: `711963a58df8c943cfd6c487cac99ce9f6ee0c88c0b7bf94584b8ff052fcb09c`
 
-#### `AUTH_CLOUDFLARE_ZERO_TRUST_CLIENT_SECRET`
+#### `AUTH_CLOUDFLARE_ZERO_TRUST_SECRET`
 
 - Type: Required
 - Description: The plaintext of the Client Secret for the Cloudflare Zero Trust provider
@@ -157,14 +157,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Github
 
-#### `AUTH_GITHUB_CLIENT_ID`
+#### `AUTH_GITHUB_ID`
 
 - Type: Required
 - Description: Client ID of the Github application. You can access it [here](https://github.com/settings/apps) and navigate to the application settings to view.
 - Default: `-`
 - Example: `abd94200333283550508`
 
-#### `AUTH_GITHUB_CLIENT_SECRET`
+#### `AUTH_GITHUB_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Github application.
@@ -173,14 +173,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Logto
 
-#### `AUTH_LOGTO_CLIENT_ID`
+#### `AUTH_LOGTO_ID`
 
 - Type: Required
 - Description: The Client ID of the Logto application. You can find it in the Logto console for private deployment or [Logto Cloud](http://cloud.logto.io/) depending on the deployment mode.
 - Default value: `-`
 - Example: `123456789012345678@your-project`
 
-#### `AUTH_LOGTO_CLIENT_SECRET`
+#### `AUTH_LOGTO_SECRET`
 
 - Type: Required
 - Description: The Client Secret of the Logto application.
@@ -196,14 +196,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Microsoft Entra ID
 
-#### `AUTH_AZURE_AD_CLIENT_ID`
+#### `AUTH_AZURE_AD_ID`
 
 - Type: Required
 - Description: Client ID of the Microsoft Entra ID application.
 - Default: `-`
 - Example: `be8f6da1-58c3-4f16-ff1b-78f5148e10df`
 
-#### `AUTH_AZURE_AD_CLIENT_SECRET`
+#### `AUTH_AZURE_AD_SECRET`
 
 - Type: Required
 - Description: Client Secret of the Microsoft Entra ID application.
@@ -219,14 +219,14 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### ZITADEL
 
-#### `AUTH_ZITADEL_CLIENT_ID`
+#### `AUTH_ZITADEL_ID`
 
 - Type: Required
 - Description: Client ID of the ZITADEL application. This can be found under your application in the ZITADEL console.
 - Default: `-`
 - Example: `123456789012345678@your-project`
 
-#### `AUTH_ZITADEL_CLIENT_SECRET`
+#### `AUTH_ZITADEL_SECRET`
 
 - Type: Required
 - Description: Client Secret of the ZITADEL application.
@@ -242,21 +242,21 @@ LobeChat provides a complete authentication service capability when deployed. Th
 
 ### Generic OIDC
 
-#### `GENERIC_OIDC_CLIENT_ID`
+#### `AUTH_GENERIC_OIDC_ID`
 
 - Type: Required
 - Description: Client ID of the Generic OIDC provider application.
 - Default: `-`
 - Example: `_client_id_for_lobe_chat_`
 
-#### `GENERIC_OIDC_CLIENT_SECRET`
+#### `AUTH_GENERIC_OIDC_SECRET`
 
 - Type: Required
 - Description: The plaintext of the Client Secret for the Generic OIDC provider
 - Default: `-`
 - Example: `_client_secret_for_lobe_chat_`
 
-#### `GENERIC_OIDC_ISSUER`
+#### `AUTH_GENERIC_OIDC_ISSUER`
 
 - Type: Required
 - Description: Issuer of the Generic OIDC provider application.
