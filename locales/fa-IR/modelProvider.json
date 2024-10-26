@@ -1,111 +1,111 @@
 {
   "azure": {
     "azureApiVersion": {
-      "desc": "نسخه API Azure، با فرمت YYYY-MM-DD، برای مشاهده [آخرین نسخه](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
+      "desc": "نسخه API Azure، با فرمت YYYY-MM-DD، برای مشاهده [آخرین نسخه](https://learn.microsoft.com/fa-ir/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "دریافت لیست",
       "title": "نسخه API Azure"
     },
     "empty": "لطفاً شناسه مدل را وارد کنید تا اولین مدل را اضافه کنید",
     "endpoint": {
-      "desc": "این مقدار را می‌توانید در بخش «کلیدها و نقطه پایانی» در پورتال Azure پیدا کنید",
+      "desc": "هنگام بررسی منابع از پورتال Azure، این مقدار را می‌توانید در بخش «کلیدها و نقاط پایانی» پیدا کنید",
       "placeholder": "https://docs-test-001.openai.azure.com",
       "title": "آدرس API Azure"
     },
-    "modelListPlaceholder": "لطفاً مدل OpenAI که مستقر کرده‌اید را انتخاب یا اضافه کنید",
+    "modelListPlaceholder": "لطفاً مدل OpenAI مستقر شده خود را انتخاب یا اضافه کنید",
     "title": "Azure OpenAI",
     "token": {
-      "desc": "این مقدار را می‌توانید در بخش «کلیدها و نقطه پایانی» در پورتال Azure پیدا کنید. می‌توانید از KEY1 یا KEY2 استفاده کنید",
+      "desc": "هنگام بررسی منابع از پورتال Azure، این مقدار را می‌توانید در بخش «کلیدها و نقاط پایانی» پیدا کنید. می‌توانید از KEY1 یا KEY2 استفاده کنید",
       "placeholder": "کلید API Azure",
       "title": "کلید API"
     }
   },
   "bedrock": {
     "accessKeyId": {
-      "desc": "شناسه کلید دسترسی AWS را وارد کنید",
-      "placeholder": "شناسه کلید دسترسی AWS",
-      "title": "شناسه کلید دسترسی AWS"
+      "desc": "AWS Access Key Id را وارد کنید",
+      "placeholder": "AWS Access Key Id",
+      "title": "AWS Access Key Id"
     },
     "checker": {
-      "desc": "آزمون صحت شناسه کلید دسترسی / کلید دسترسی مخفی"
+      "desc": "بررسی کنید که آیا AccessKeyId / SecretAccessKey به درستی وارد شده است"
     },
     "region": {
-      "desc": "منطقه AWS را وارد کنید",
-      "placeholder": "منطقه AWS",
-      "title": "منطقه AWS"
+      "desc": "AWS Region را وارد کنید",
+      "placeholder": "AWS Region",
+      "title": "AWS Region"
     },
     "secretAccessKey": {
-      "desc": "کلید دسترسی مخفی AWS را وارد کنید",
-      "placeholder": "کلید دسترسی مخفی AWS",
-      "title": "کلید دسترسی مخفی AWS"
+      "desc": "AWS Secret Access Key را وارد کنید",
+      "placeholder": "AWS Secret Access Key",
+      "title": "AWS Secret Access Key"
     },
     "sessionToken": {
-      "desc": "اگر از AWS SSO/STS استفاده می‌کنید، لطفاً توکن جلسه AWS خود را وارد کنید",
-      "placeholder": "توکن جلسه AWS",
-      "title": "توکن جلسه AWS (اختیاری)"
+      "desc": "اگر از AWS SSO/STS استفاده می‌کنید، لطفاً AWS Session Token خود را وارد کنید",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (اختیاری)"
     },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "منطقه خدمات سفارشی",
-      "customSessionToken": "توکن جلسه سفارشی",
-      "description": "شناسه کلید دسترسی AWS / کلید دسترسی مخفی خود را وارد کنید تا جلسه را شروع کنید. برنامه اطلاعات احراز هویت شما را ثبت نخواهد کرد",
+      "customSessionToken": "توکن نشست سفارشی",
+      "description": "برای شروع جلسه، AWS AccessKeyId / SecretAccessKey خود را وارد کنید. برنامه تنظیمات احراز هویت شما را ذخیره نخواهد کرد",
       "title": "استفاده از اطلاعات احراز هویت سفارشی Bedrock"
     }
   },
   "github": {
     "personalAccessToken": {
-      "desc": "توکن دسترسی شخصی Github خود را وارد کنید، برای ایجاد آن [اینجا](https://github.com/settings/tokens) کلیک کنید",
+      "desc": "توکن دسترسی شخصی Github خود را وارد کنید، برای ایجاد [اینجا](https://github.com/settings/tokens) کلیک کنید",
       "placeholder": "ghp_xxxxxx",
-      "title": "PAT Github"
+      "title": "توکن دسترسی شخصی Github"
     }
   },
   "huggingface": {
     "accessToken": {
-      "desc": "توکن HuggingFace خود را وارد کنید، برای ایجاد آن [اینجا](https://huggingface.co/settings/tokens) کلیک کنید",
+      "desc": "توکن HuggingFace خود را وارد کنید، برای ایجاد [اینجا](https://huggingface.co/settings/tokens) کلیک کنید",
       "placeholder": "hf_xxxxxxxxx",
       "title": "توکن HuggingFace"
     }
   },
   "ollama": {
     "checker": {
-      "desc": "آزمون صحت آدرس پروکسی",
+      "desc": "آزمایش کنید که آیا آدرس پروکسی به درستی وارد شده است",
       "title": "بررسی اتصال"
     },
     "customModelName": {
-      "desc": "مدل سفارشی را اضافه کنید، چندین مدل را با کاما (,) جدا کنید",
+      "desc": "مدل‌های سفارشی را اضافه کنید، چندین مدل را با کاما (,) جدا کنید",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "نام مدل سفارشی"
     },
     "download": {
-      "desc": "Ollama در حال دانلود این مدل است، لطفاً سعی کنید این صفحه را نبندید. در صورت دانلود مجدد، دانلود از نقطه قطع ادامه خواهد یافت",
+      "desc": "Ollama در حال دانلود این مدل است، لطفاً تا حد امکان این صفحه را نبندید. در صورت دانلود مجدد، از نقطه قطع شده ادامه خواهد یافت",
       "remainingTime": "زمان باقی‌مانده",
       "speed": "سرعت دانلود",
-      "title": "در حال دانلود مدل {{model}}"
+      "title": "در حال دانلود مدل {{model}} "
     },
     "endpoint": {
-      "desc": "آدرس پروکسی رابط Ollama را وارد کنید، اگر محلی به‌طور اضافی مشخص نشده است، می‌توانید خالی بگذارید",
-      "title": "آدرس خدمات Ollama"
+      "desc": "آدرس پروکسی رابط Ollama را وارد کنید، اگر به صورت محلی تنظیم نشده است، می‌توانید خالی بگذارید",
+      "title": "آدرس سرویس Ollama"
     },
     "setup": {
       "cors": {
-        "description": "به دلیل محدودیت‌های امنیتی مرورگر، شما باید برای Ollama پیکربندی CORS انجام دهید تا به‌طور صحیح استفاده شود.",
+        "description": "به دلیل محدودیت‌های امنیتی مرورگر، شما باید پیکربندی‌های Cross-Origin را برای Ollama انجام دهید تا بتوانید به درستی از آن استفاده کنید.",
         "linux": {
-          "env": "در بخش [Service] `Environment` را اضافه کنید و متغیر محیطی OLLAMA_ORIGINS را اضافه کنید:",
-          "reboot": "systemd را بارگذاری مجدد کرده و Ollama را راه‌اندازی مجدد کنید",
-          "systemd": "برای ویرایش سرویس ollama از systemd استفاده کنید:"
+          "env": "در بخش [Service]، `Environment` را اضافه کنید و متغیر محیطی OLLAMA_ORIGINS را اضافه کنید:",
+          "reboot": "systemd را مجدداً بارگذاری کرده و Ollama را راه‌اندازی مجدد کنید",
+          "systemd": "با استفاده از systemd سرویس ollama را ویرایش کنید:"
         },
-        "macos": "لطفاً برنامه «ترمینال» را باز کرده و دستورات زیر را چسبانده و با Enter اجرا کنید",
-        "reboot": "لطفاً پس از اتمام اجرا، سرویس Ollama را راه‌اندازی مجدد کنید",
-        "title": "پیکربندی Ollama برای دسترسی CORS",
-        "windows": "در ویندوز، روی «کنترل پنل» کلیک کنید و به ویرایش متغیرهای محیطی سیستم بروید. برای حساب کاربری خود متغیر محیطی به نام «OLLAMA_ORIGINS» ایجاد کنید و مقدار آن را * قرار دهید، سپس روی «OK/اعمال» کلیک کنید"
+        "macos": "لطفاً برنامه «ترمینال» را باز کنید و دستور زیر را کپی و اجرا کنید",
+        "reboot": "پس از اتمام، سرویس Ollama را مجدداً راه‌اندازی کنید",
+        "title": "پیکربندی Ollama برای دسترسی Cross-Origin",
+        "windows": "در ویندوز، به «کنترل پنل» بروید و متغیرهای محیطی سیستم را ویرایش کنید. برای حساب کاربری خود یک متغیر محیطی جدید به نام «OLLAMA_ORIGINS» با مقدار * ایجاد کنید و روی «OK/اعمال» کلیک کنید تا ذخیره شود"
       },
       "install": {
-        "description": "لطفاً اطمینان حاصل کنید که Ollama را فعال کرده‌اید، اگر Ollama را دانلود نکرده‌اید، لطفاً به وب‌سایت رسمی <1>دانلود</1> بروید",
-        "docker": "اگر تمایل دارید از Docker استفاده کنید، Ollama همچنین تصویر Docker رسمی را ارائه می‌دهد، می‌توانید با استفاده از دستور زیر آن را بارگیری کنید:",
+        "description": "لطفاً مطمئن شوید که Ollama را فعال کرده‌اید. اگر Ollama را دانلود نکرده‌اید، لطفاً به وب‌سایت رسمی مراجعه کرده و <1>دانلود</1> کنید",
+        "docker": "اگر ترجیح می‌دهید از Docker استفاده کنید، Ollama یک تصویر رسمی Docker نیز ارائه می‌دهد که می‌توانید با دستور زیر آن را دریافت کنید:",
         "linux": {
-          "command": "با استفاده از دستور زیر نصب کنید:",
-          "manual": "یا می‌توانید به <1>راهنمای نصب دستی Linux</1> مراجعه کنید و خودتان نصب کنید"
+          "command": "با دستور زیر نصب کنید:",
+          "manual": "یا می‌توانید به <1>راهنمای نصب دستی لینوکس</1> مراجعه کنید"
         },
-        "title": "نصب و راه‌اندازی محلی برنامه Ollama",
+        "title": "Ollama را به صورت محلی نصب و فعال کنید",
         "windowsTab": "ویندوز (نسخه پیش‌نمایش)"
       }
     },
@@ -113,17 +113,17 @@
     "unlock": {
       "cancel": "لغو دانلود",
       "confirm": "دانلود",
-      "description": "برچسب مدل Ollama خود را وارد کنید تا جلسه ادامه یابد",
+      "description": "برچسب مدل Ollama خود را وارد کنید تا بتوانید به مکالمه ادامه دهید",
       "downloaded": "{{completed}} / {{total}}",
-      "starting": "در حال شروع دانلود...",
+      "starting": "شروع دانلود...",
       "title": "دانلود مدل مشخص شده Ollama"
     }
   },
   "sensenova": {
     "sensenovaAccessKeyID": {
-      "desc": "شناسه کلید دسترسی SenseNova را وارد کنید",
-      "placeholder": "شناسه کلید دسترسی SenseNova",
-      "title": "شناسه کلید دسترسی"
+      "desc": "کلید دسترسی SenseNova را وارد کنید",
+      "placeholder": "کلید دسترسی SenseNova",
+      "title": "کلید دسترسی"
     },
     "sensenovaAccessKeySecret": {
       "desc": "رمز کلید دسترسی SenseNova را وارد کنید",
@@ -131,34 +131,34 @@
       "title": "رمز کلید دسترسی"
     },
     "unlock": {
-      "description": "شناسه کلید دسترسی / رمز کلید دسترسی خود را وارد کنید تا جلسه آغاز شود. برنامه هیچ‌گونه پیکربندی احراز هویت شما را ثبت نخواهد کرد",
+      "description": "کلید دسترسی و رمز کلید دسترسی خود را وارد کنید تا مکالمه را شروع کنید. این برنامه اطلاعات احراز هویت شما را ذخیره نمی‌کند.",
       "title": "استفاده از اطلاعات احراز هویت سفارشی SenseNova"
     }
   },
   "wenxin": {
     "accessKey": {
-      "desc": "کلید دسترسی پلتفرم Qianfan بایدو را وارد کنید",
+      "desc": "کلید دسترسی Qianfan پلتفرم بایدو را وارد کنید",
       "placeholder": "کلید دسترسی Qianfan",
       "title": "کلید دسترسی"
     },
     "checker": {
-      "desc": "آزمون صحت AccessKey / SecretAccess"
+      "desc": "تست کنید که آیا AccessKey / SecretAccess به درستی وارد شده است"
     },
     "secretKey": {
-      "desc": "کلید مخفی پلتفرم Qianfan بایدو را وارد کنید",
+      "desc": "کلید مخفی Qianfan پلتفرم بایدو را وارد کنید",
       "placeholder": "کلید مخفی Qianfan",
       "title": "کلید مخفی"
     },
     "unlock": {
       "customRegion": "منطقه خدمات سفارشی",
-      "description": "شناسه AccessKey / SecretKey خود را وارد کنید تا جلسه را شروع کنید. برنامه اطلاعات احراز هویت شما را ثبت نخواهد کرد",
-      "title": "استفاده از اطلاعات احراز هویت سفارشی Wenxin"
+      "description": "کلید دسترسی / کلید مخفی خود را وارد کنید تا مکالمه را شروع کنید. برنامه تنظیمات احراز هویت شما را ذخیره نخواهد کرد",
+      "title": "استفاده از اطلاعات احراز هویت سفارشی Wenxin Yiyan"
     }
   },
   "zeroone": {
-    "title": "01.AI صفر و یک"
+    "title": "01.AI صفر و یک همه چیز"
   },
   "zhipu": {
-    "title": "Zhiyu"
+    "title": "ژھیپو"
   }
 }
