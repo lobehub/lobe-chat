@@ -68,9 +68,6 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) 是一种创新模型，适合多领域应用和复杂任务。"
   },
-  "Max-32k": {
-    "description": "Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景"
-  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度灵活的多模型合并，旨在提供卓越的创造性体验。"
   },
@@ -109,9 +106,6 @@
   },
   "Phi-3.5-vision-instrust": {
     "description": "Phi-3-vision模型的更新版。"
-  },
-  "Pro-128k": {
-    "description": "Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。"
   },
   "Pro/OpenGVLab/InternVL2-8B": {
     "description": "InternVL2在各种视觉语言任务上展现出了卓越的性能，包括文档和图表理解、场景文本理解、OCR、科学和数学问题解决等。"
@@ -276,6 +270,9 @@
     "description": "一个52B参数（12B活跃）的多语言模型，提供256K长上下文窗口、函数调用、结构化输出和基于事实的生成。"
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
+    "description": "Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。"
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
     "description": "Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。"
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
@@ -467,9 +464,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 是 Google 推出的高效模型，涵盖从小型应用到复杂数据处理的多种应用场景。"
   },
-  "general": {
-    "description": "Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。"
-  },
   "generalv3": {
     "description": "Spark Pro 是一款为专业领域优化的高性能大语言模型，专注数学、编程、医疗、教育等多个领域，并支持联网搜索及内置天气、日期等插件。其优化后模型在复杂知识问答、语言理解及高层次文本创作中展现出色表现和高效性能，是适合专业应用场景的理想选择。"
   },
@@ -625,6 +619,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "lite": {
+    "description": "Spark Lite 是一款轻量级大语言模型，具备极低的延迟与高效的处理能力，完全免费开放，支持实时在线搜索功能。其快速响应的特性使其在低算力设备上的推理应用和模型微调中表现出色，为用户带来出色的成本效益和智能体验，尤其在知识问答、内容生成及搜索场景下表现不俗。"
+  },
   "llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct 模型，具备70B参数，能在大型文本生成和指示任务中提供卓越性能。"
   },
@@ -699,6 +696,9 @@
   },
   "mathstral": {
     "description": "MathΣtral 专为科学研究和数学推理设计，提供有效的计算能力和结果解释。"
+  },
+  "max-32k": {
+    "description": "Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景"
   },
   "meta-llama-3-70b-instruct": {
     "description": "一个强大的700亿参数模型，在推理、编码和广泛的语言应用方面表现出色。"
@@ -939,6 +939,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Pixtral 模型在图表和图理解、文档问答、多模态推理和指令遵循等任务上表现出强大的能力，能够以自然分辨率和宽高比摄入图像，还能够在长达 128K 令牌的长上下文窗口中处理任意数量的图像。"
+  },
+  "pro-128k": {
+    "description": "Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。"
   },
   "qwen-coder-turbo-latest": {
     "description": "通义千问代码模型。"

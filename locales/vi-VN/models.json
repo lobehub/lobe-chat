@@ -68,9 +68,6 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) là một mô hình sáng tạo, phù hợp cho nhiều lĩnh vực ứng dụng và nhiệm vụ phức tạp."
   },
-  "Max-32k": {
-    "description": "Spark Max 32K được cấu hình với khả năng xử lý ngữ cảnh lớn, khả năng hiểu ngữ cảnh và lý luận logic mạnh mẽ hơn, hỗ trợ đầu vào văn bản 32K token, phù hợp cho việc đọc tài liệu dài, hỏi đáp kiến thức riêng tư và các tình huống khác."
-  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO là một mô hình kết hợp đa dạng, nhằm cung cấp trải nghiệm sáng tạo xuất sắc."
   },
@@ -109,9 +106,6 @@
   },
   "Phi-3.5-vision-instrust": {
     "description": "Phi-3-vision là phiên bản cập nhật của mô hình."
-  },
-  "Pro-128k": {
-    "description": "Spark Pro-128K được cấu hình với khả năng xử lý ngữ cảnh cực lớn, có thể xử lý tới 128K thông tin ngữ cảnh, đặc biệt phù hợp cho việc phân tích toàn bộ và xử lý mối liên hệ logic lâu dài trong nội dung văn bản dài, có thể cung cấp logic mạch lạc và hỗ trợ trích dẫn đa dạng trong giao tiếp văn bản phức tạp."
   },
   "Pro/OpenGVLab/InternVL2-8B": {
     "description": "InternVL2 đã thể hiện hiệu suất xuất sắc trong nhiều tác vụ ngôn ngữ hình ảnh, bao gồm hiểu tài liệu và biểu đồ, hiểu văn bản trong cảnh, OCR, giải quyết vấn đề khoa học và toán học."
@@ -277,6 +271,9 @@
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet nâng cao tiêu chuẩn ngành, hiệu suất vượt trội hơn các mô hình cạnh tranh và Claude 3 Opus, thể hiện xuất sắc trong nhiều đánh giá, đồng thời có tốc độ và chi phí của mô hình tầm trung của chúng tôi."
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet nâng cao tiêu chuẩn ngành, hiệu suất vượt trội so với các mô hình đối thủ và Claude 3 Opus, thể hiện xuất sắc trong các đánh giá rộng rãi, đồng thời có tốc độ và chi phí tương đương với các mô hình tầm trung của chúng tôi."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku là mô hình nhanh nhất và gọn nhẹ nhất của Anthropic, cung cấp tốc độ phản hồi gần như ngay lập tức. Nó có thể nhanh chóng trả lời các truy vấn và yêu cầu đơn giản. Khách hàng sẽ có thể xây dựng trải nghiệm AI liền mạch mô phỏng tương tác của con người. Claude 3 Haiku có thể xử lý hình ảnh và trả về đầu ra văn bản, với cửa sổ ngữ cảnh 200K."
@@ -467,9 +464,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 là mô hình hiệu quả do Google phát hành, bao gồm nhiều ứng dụng từ nhỏ đến xử lý dữ liệu phức tạp."
   },
-  "general": {
-    "description": "Spark Lite là một mô hình ngôn ngữ lớn nhẹ, có độ trễ cực thấp và khả năng xử lý hiệu quả, hoàn toàn miễn phí và mở, hỗ trợ chức năng tìm kiếm trực tuyến theo thời gian thực. Đặc điểm phản hồi nhanh giúp nó thể hiện xuất sắc trong các ứng dụng suy luận trên thiết bị có công suất thấp và tinh chỉnh mô hình, mang lại hiệu quả chi phí và trải nghiệm thông minh xuất sắc cho người dùng, đặc biệt trong các tình huống hỏi đáp kiến thức, tạo nội dung và tìm kiếm."
-  },
   "generalv3": {
     "description": "Spark Pro là một mô hình ngôn ngữ lớn hiệu suất cao được tối ưu hóa cho các lĩnh vực chuyên môn, tập trung vào toán học, lập trình, y tế, giáo dục và nhiều lĩnh vực khác, đồng thời hỗ trợ tìm kiếm trực tuyến và các plugin tích hợp như thời tiết, ngày tháng. Mô hình đã được tối ưu hóa thể hiện xuất sắc và hiệu suất cao trong các nhiệm vụ hỏi đáp kiến thức phức tạp, hiểu ngôn ngữ và sáng tạo văn bản cấp cao, là lựa chọn lý tưởng cho các tình huống ứng dụng chuyên nghiệp."
   },
@@ -625,6 +619,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "lite": {
+    "description": "Spark Lite là một mô hình ngôn ngữ lớn nhẹ, có độ trễ cực thấp và khả năng xử lý hiệu quả, hoàn toàn miễn phí và mở, hỗ trợ chức năng tìm kiếm trực tuyến theo thời gian thực. Đặc điểm phản hồi nhanh của nó giúp nó nổi bật trong các ứng dụng suy diễn trên thiết bị có công suất thấp và tinh chỉnh mô hình, mang lại hiệu quả chi phí và trải nghiệm thông minh xuất sắc cho người dùng, đặc biệt trong các tình huống hỏi đáp kiến thức, tạo nội dung và tìm kiếm."
+  },
   "llama-3.1-70b-instruct": {
     "description": "Mô hình Llama 3.1 70B Instruct, có 70B tham số, có thể cung cấp hiệu suất xuất sắc trong các nhiệm vụ sinh văn bản và chỉ dẫn lớn."
   },
@@ -699,6 +696,9 @@
   },
   "mathstral": {
     "description": "MathΣtral được thiết kế cho nghiên cứu khoa học và suy luận toán học, cung cấp khả năng tính toán hiệu quả và giải thích kết quả."
+  },
+  "max-32k": {
+    "description": "Spark Max 32K được cấu hình với khả năng xử lý ngữ cảnh lớn, có khả năng hiểu ngữ cảnh và suy luận logic mạnh mẽ hơn, hỗ trợ đầu vào văn bản 32K tokens, phù hợp cho việc đọc tài liệu dài, hỏi đáp kiến thức riêng tư và các tình huống khác."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Mô hình 70 tỷ tham số mạnh mẽ, xuất sắc trong lý luận, lập trình và các ứng dụng ngôn ngữ rộng lớn."
@@ -939,6 +939,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Mô hình Pixtral thể hiện khả năng mạnh mẽ trong các nhiệm vụ như hiểu biểu đồ và hình ảnh, hỏi đáp tài liệu, suy luận đa phương tiện và tuân thủ hướng dẫn, có khả năng tiếp nhận hình ảnh với độ phân giải và tỷ lệ khung hình tự nhiên, cũng như xử lý bất kỳ số lượng hình ảnh nào trong cửa sổ ngữ cảnh dài lên đến 128K token."
+  },
+  "pro-128k": {
+    "description": "Spark Pro 128K được cấu hình với khả năng xử lý ngữ cảnh cực lớn, có thể xử lý tới 128K thông tin ngữ cảnh, đặc biệt phù hợp cho việc phân tích toàn bộ và xử lý mối liên hệ logic lâu dài trong nội dung văn bản dài, có thể cung cấp logic mạch lạc và hỗ trợ trích dẫn đa dạng trong giao tiếp văn bản phức tạp."
   },
   "qwen-coder-turbo-latest": {
     "description": "Mô hình mã Qwen."
