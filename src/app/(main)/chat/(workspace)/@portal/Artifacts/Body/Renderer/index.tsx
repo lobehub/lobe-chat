@@ -18,7 +18,7 @@ const Renderer = memo<{ content: string; type?: string }>(({ content, type }) =>
     }
 
     case 'text/markdown': {
-      return <Markdown>{content}</Markdown>;
+      return <Markdown style={{ overflow: 'auto' }}>{content}</Markdown>;
     }
 
     default: {
