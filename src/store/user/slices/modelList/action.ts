@@ -89,44 +89,11 @@ export const createModelListSlice: StateCreator<
     };
 
     const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
-      const providers = [
-        { id: ModelProvider.Ai21, name: 'ai21' },
-        { id: ModelProvider.Ai360, name: 'ai360' },
-        { id: ModelProvider.Anthropic, name: 'anthropic' },
-        { id: ModelProvider.Azure, name: 'azure' },
-        { id: ModelProvider.Baichuan, name: 'baichuan' },
-        { id: ModelProvider.Bedrock, name: 'bedrock' },
-        { id: ModelProvider.DeepSeek, name: 'deekseek' },
-        { id: ModelProvider.FireworksAI, name: 'fireworksai' },
-        { id: ModelProvider.Github, name: 'github' },
-        { id: ModelProvider.Google, name: 'google' },
-        { id: ModelProvider.Groq, name: 'groq' },
-        { id: ModelProvider.HuggingFace, name: 'huggingface' },
-        { id: ModelProvider.Hunyuan, name: 'hunyuan' },
-        { id: ModelProvider.Minimax, name: 'minimax' },
-        { id: ModelProvider.Mistral, name: 'mistral' },
-        { id: ModelProvider.Moonshot, name: 'moonshot' },
-        { id: ModelProvider.Novita, name: 'novita' },
-        { id: ModelProvider.Ollama, name: 'ollama' },
-        { id: ModelProvider.OpenAI, name: 'openai' },
-        { id: ModelProvider.OpenRouter, name: 'openrouter' },
-        { id: ModelProvider.Perplexity, name: 'perplexity' },
-        { id: ModelProvider.Qwen, name: 'qwen' },
-        { id: ModelProvider.SenseNova, name: 'sensenova' },
-        { id: ModelProvider.SiliconCloud, name: 'siliconcloud' },
-        { id: ModelProvider.Spark, name: 'spark' },
-        { id: ModelProvider.Stepfun, name: 'stepfun' },
-        { id: ModelProvider.Taichu, name: 'taichu' },
-        { id: ModelProvider.TogetherAI, name: 'togetherai' },
-        { id: ModelProvider.Upstage, name: 'upstage' },
-        { id: ModelProvider.Wenxin, name: 'wenxin' },
-        { id: ModelProvider.ZeroOne, name: 'zeroone' },
-        { id: ModelProvider.ZhiPu, name: 'zhipu' },
-      ];
+      const providers = Object.values(ModelProvider).map((id) => ({ id }));
 
-      providers.forEach(({ id, name }) => {
+      providers.forEach(({ id }) => {
         const provider = draft.find((d) => d.id === id);
-        if (provider) provider.chatModels = mergeModels(name as any, provider.chatModels);
+        if (provider) provider.chatModels = mergeModels(id as any, provider.chatModels);
       });
     });
 
