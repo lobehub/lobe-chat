@@ -68,9 +68,6 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) is an innovative model suitable for multi-domain applications and complex tasks."
   },
-  "Max-32k": {
-    "description": "Spark Max 32K is equipped with enhanced context processing capabilities, stronger context understanding, and logical reasoning abilities, supporting text input of up to 32K tokens, suitable for scenarios such as long document reading and private knowledge Q&A."
-  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is a highly flexible multi-model fusion designed to provide an exceptional creative experience."
   },
@@ -109,9 +106,6 @@
   },
   "Phi-3.5-vision-instrust": {
     "description": "An updated version of the Phi-3-vision model."
-  },
-  "Pro-128k": {
-    "description": "Spark Pro-128K is configured with ultra-large context processing capabilities, able to handle up to 128K of contextual information, particularly suitable for long texts requiring comprehensive analysis and long-term logical connections, providing smooth and consistent logic and diverse citation support in complex text communication."
   },
   "Pro/OpenGVLab/InternVL2-8B": {
     "description": "InternVL2 demonstrates exceptional performance across various visual language tasks, including document and chart understanding, scene text understanding, OCR, and solving scientific and mathematical problems."
@@ -277,6 +271,9 @@
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet raises the industry standard, outperforming competitor models and Claude 3 Opus, excelling in a wide range of evaluations while maintaining the speed and cost of our mid-tier models."
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet raises the industry standard, outperforming competing models and Claude 3 Opus, excelling in extensive evaluations while maintaining the speed and cost of our mid-tier models."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku is Anthropic's fastest and most compact model, providing near-instantaneous response times. It can quickly answer simple queries and requests. Customers will be able to build seamless AI experiences that mimic human interaction. Claude 3 Haiku can process images and return text output, with a context window of 200K."
@@ -467,9 +464,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 is an efficient model launched by Google, covering a variety of application scenarios from small applications to complex data processing."
   },
-  "general": {
-    "description": "Spark Lite is a lightweight large language model with extremely low latency and efficient processing capabilities, completely free and open, supporting real-time online search functionality. Its fast response characteristics make it excel in inference applications and model fine-tuning on low-power devices, providing users with excellent cost-effectiveness and intelligent experiences, particularly in knowledge Q&A, content generation, and search scenarios."
-  },
   "generalv3": {
     "description": "Spark Pro is a high-performance large language model optimized for professional fields, focusing on mathematics, programming, healthcare, education, and more, supporting online search and built-in plugins for weather, dates, etc. Its optimized model demonstrates excellent performance and efficiency in complex knowledge Q&A, language understanding, and high-level text creation, making it an ideal choice for professional application scenarios."
   },
@@ -625,6 +619,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "lite": {
+    "description": "Spark Lite is a lightweight large language model with extremely low latency and efficient processing capabilities, completely free and open, supporting real-time online search functionality. Its quick response feature makes it excel in inference applications and model fine-tuning on low-power devices, providing users with excellent cost-effectiveness and intelligent experiences, particularly in knowledge Q&A, content generation, and search scenarios."
+  },
   "llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct model, featuring 70B parameters, delivers outstanding performance in large text generation and instruction tasks."
   },
@@ -699,6 +696,9 @@
   },
   "mathstral": {
     "description": "MathΣtral is designed for scientific research and mathematical reasoning, providing effective computational capabilities and result interpretation."
+  },
+  "max-32k": {
+    "description": "Spark Max 32K is configured with large context processing capabilities, enhanced contextual understanding, and logical reasoning abilities, supporting text input of 32K tokens, suitable for long document reading, private knowledge Q&A, and other scenarios."
   },
   "meta-llama-3-70b-instruct": {
     "description": "A powerful 70-billion parameter model excelling in reasoning, coding, and broad language applications."
@@ -939,6 +939,9 @@
   },
   "pixtral-12b-2409": {
     "description": "The Pixtral model demonstrates strong capabilities in tasks such as chart and image understanding, document question answering, multimodal reasoning, and instruction following. It can ingest images at natural resolutions and aspect ratios and handle an arbitrary number of images within a long context window of up to 128K tokens."
+  },
+  "pro-128k": {
+    "description": "Spark Pro 128K is equipped with an extra-large context processing capability, able to handle up to 128K of contextual information, making it particularly suitable for long-form content that requires comprehensive analysis and long-term logical connections, providing smooth and consistent logic and diverse citation support in complex text communication."
   },
   "qwen-coder-turbo-latest": {
     "description": "The Tongyi Qianwen Coder model."

@@ -184,5 +184,6 @@
         "processing": "Traitement du fichier..."
       }
     }
-  }
+  },
+  "zenMode": "Mode de concentration"
 }

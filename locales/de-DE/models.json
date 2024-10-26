@@ -68,9 +68,6 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) ist ein innovatives Modell, das sich für Anwendungen in mehreren Bereichen und komplexe Aufgaben eignet."
   },
-  "Max-32k": {
-    "description": "Spark Max 32K ist mit einer hohen Kontextverarbeitungsfähigkeit ausgestattet, die ein besseres Verständnis des Kontexts und eine stärkere logische Schlussfolgerung ermöglicht. Es unterstützt Texteingaben von bis zu 32K Tokens und eignet sich für Szenarien wie das Lesen langer Dokumente und private Wissensabfragen."
-  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO ist eine hochflexible Multi-Modell-Kombination, die darauf abzielt, außergewöhnliche kreative Erlebnisse zu bieten."
   },
@@ -109,9 +106,6 @@
   },
   "Phi-3.5-vision-instrust": {
     "description": "Aktualisierte Version des Phi-3-vision-Modells."
-  },
-  "Pro-128k": {
-    "description": "Spark Pro-128K ist mit einer extrem großen Kontextverarbeitungsfähigkeit ausgestattet, die bis zu 128K Kontextinformationen verarbeiten kann, besonders geeignet für lange Texte, die eine umfassende Analyse und langfristige logische Verknüpfung erfordern, und bietet in komplexen Textkommunikationen flüssige und konsistente Logik sowie vielfältige Zitationsunterstützung."
   },
   "Pro/OpenGVLab/InternVL2-8B": {
     "description": "InternVL2 zeigt herausragende Leistungen in verschiedenen visuellen Sprachaufgaben, einschließlich Dokumenten- und Diagrammverständnis, Szenentexterkennung, OCR, wissenschaftlicher und mathematischer Problemlösung."
@@ -277,6 +271,9 @@
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet hebt den Branchenstandard an, übertrifft die Konkurrenzmodelle und Claude 3 Opus und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittleren Modelle beibehält."
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet setzt neue Maßstäbe in der Branche, übertrifft die Modelle der Konkurrenz und Claude 3 Opus, und zeigt in umfassenden Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku ist das schnellste und kompakteste Modell von Anthropic und bietet nahezu sofortige Reaktionsgeschwindigkeiten. Es kann schnell einfache Anfragen und Anforderungen beantworten. Kunden werden in der Lage sein, nahtlose AI-Erlebnisse zu schaffen, die menschliche Interaktionen nachahmen. Claude 3 Haiku kann Bilder verarbeiten und Textausgaben zurückgeben, mit einem Kontextfenster von 200K."
@@ -467,9 +464,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 ist ein effizientes Modell von Google, das eine Vielzahl von Anwendungsszenarien von kleinen Anwendungen bis hin zu komplexen Datenverarbeitungen abdeckt."
   },
-  "general": {
-    "description": "Spark Lite ist ein leichtgewichtiges großes Sprachmodell mit extrem niedriger Latenz und hoher Verarbeitungsfähigkeit, das vollständig kostenlos und offen ist und eine Echtzeitsuchfunktion unterstützt. Seine schnelle Reaktionsfähigkeit macht es in der Inferenzanwendung und Modellanpassung auf Geräten mit geringer Rechenleistung besonders effektiv und bietet den Nutzern ein hervorragendes Kosten-Nutzen-Verhältnis und intelligente Erfahrungen, insbesondere in den Bereichen Wissensabfrage, Inhaltserstellung und Suchszenarien."
-  },
   "generalv3": {
     "description": "Spark Pro ist ein hochleistungsfähiges großes Sprachmodell, das für professionelle Bereiche optimiert ist und sich auf Mathematik, Programmierung, Medizin, Bildung und andere Bereiche konzentriert, und unterstützt die Online-Suche sowie integrierte Plugins für Wetter, Datum usw. Das optimierte Modell zeigt hervorragende Leistungen und hohe Effizienz in komplexen Wissensabfragen, Sprachverständnis und hochrangiger Textgenerierung und ist die ideale Wahl für professionelle Anwendungsszenarien."
   },
@@ -625,6 +619,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "lite": {
+    "description": "Spark Lite ist ein leichtgewichtiges großes Sprachmodell mit extrem niedriger Latenz und effizienter Verarbeitung, das vollständig kostenlos und offen ist und Echtzeitsuchfunktionen unterstützt. Seine schnelle Reaktionsfähigkeit macht es besonders geeignet für Inferenzanwendungen und Modellanpassungen auf Geräten mit geringer Rechenleistung und bietet den Nutzern ein hervorragendes Kosten-Nutzen-Verhältnis sowie ein intelligentes Erlebnis, insbesondere in den Bereichen Wissensabfragen, Inhaltserstellung und Suchszenarien."
+  },
   "llama-3.1-70b-instruct": {
     "description": "Das Llama 3.1 70B Instruct-Modell hat 70B Parameter und bietet herausragende Leistungen bei der Generierung großer Texte und Anweisungsaufgaben."
   },
@@ -699,6 +696,9 @@
   },
   "mathstral": {
     "description": "MathΣtral ist für wissenschaftliche Forschung und mathematische Schlussfolgerungen konzipiert und bietet effektive Rechenfähigkeiten und Ergebnisinterpretationen."
+  },
+  "max-32k": {
+    "description": "Spark Max 32K bietet eine große Kontextverarbeitungsfähigkeit mit verbesserter Kontextverständnis und logischer Schlussfolgerungsfähigkeit und unterstützt Texteingaben von bis zu 32K Tokens, was es ideal für das Lesen langer Dokumente und private Wissensabfragen macht."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Ein leistungsstarkes Modell mit 70 Milliarden Parametern, das in den Bereichen Schlussfolgerungen, Programmierung und breiten Sprachanwendungen herausragt."
@@ -939,6 +939,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Das Pixtral-Modell zeigt starke Fähigkeiten in Aufgaben wie Diagramm- und Bildverständnis, Dokumentenfragen, multimodale Schlussfolgerungen und Befolgung von Anweisungen. Es kann Bilder in natürlicher Auflösung und Seitenverhältnis aufnehmen und in einem langen Kontextfenster von bis zu 128K Tokens beliebig viele Bilder verarbeiten."
+  },
+  "pro-128k": {
+    "description": "Spark Pro 128K verfügt über eine außergewöhnliche Kontextverarbeitungsfähigkeit und kann bis zu 128K Kontextinformationen verarbeiten, was es besonders geeignet für die Analyse langer Texte und die Verarbeitung langfristiger logischer Zusammenhänge macht. Es bietet in komplexen Textkommunikationen flüssige und konsistente Logik sowie vielfältige Unterstützung für Zitate."
   },
   "qwen-coder-turbo-latest": {
     "description": "Das Tongyi Qianwen Code-Modell."
