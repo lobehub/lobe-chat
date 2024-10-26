@@ -188,4 +188,5 @@ export default {
       },
     },
   },
+  zenMode: '专注模式',
 };
