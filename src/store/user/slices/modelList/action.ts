@@ -89,12 +89,10 @@ export const createModelListSlice: StateCreator<
     };
 
     const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
-      const providers = Object.values(ModelProvider).map((id) => ({ id }));
-
-      providers.forEach(({ id }) => {
-        const provider = draft.find((d) => d.id === id);
-        if (provider) provider.chatModels = mergeModels(id as any, provider.chatModels);
-      });
+      Object.values(ModelProvider).forEach((id) =>{
+         const provider = draft.find((d) => d.id === id);
+         if (provider) provider.chatModels = mergeModels(id as any, provider.chatModels); 
+      })
     });
 
     set({ defaultModelProviderList }, false, `refreshDefaultModelList - ${params?.trigger}`);
