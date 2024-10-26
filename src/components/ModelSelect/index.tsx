@@ -2,7 +2,7 @@ import { IconAvatarProps, ModelIcon, ProviderIcon } from '@lobehub/icons';
 import { Icon, Tooltip } from '@lobehub/ui';
 import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import { Infinity, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
+import { Infinity, Info, LucideEye, LucidePaperclip, ToyBrick } from 'lucide-react';
 import numeral from 'numeral';
 import { rgba } from 'polished';
 import { FC, memo } from 'react';
@@ -25,6 +25,8 @@ const useStyles = createStyles(({ css, token }) => ({
     border-radius: 4px;
   `,
   tag: css`
+    color: ${token.colorTextSecondary};
+
     cursor: default;
 
     display: flex;
@@ -99,6 +101,17 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
           >
             <div className={cx(styles.tag, styles.tagBlue)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={ToyBrick} />
+            </div>
+          </Tooltip>
+        )}
+        {model.description && (
+          <Tooltip
+            overlayStyle={{ pointerEvents: 'none' }}
+            placement={placement}
+            title={model.description}
+          >
+            <div className={cx(styles.tag)} style={{ cursor: 'pointer' }} title="">
+              <Icon icon={Info} />
             </div>
           </Tooltip>
         )}
