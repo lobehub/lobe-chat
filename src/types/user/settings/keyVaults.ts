@@ -16,6 +16,11 @@ export interface AWSBedrockKeyVault {
   sessionToken?: string;
 }
 
+export interface SenseNovaKeyVault {
+  sensenovaAccessKeyID?: string;
+  sensenovaAccessKeySecret?: string;
+}
+
 export interface WenxinKeyVault {
   accessKey?: string;
   secretKey?: string;
@@ -47,6 +52,7 @@ export interface UserKeyVaults {
   password?: string;
   perplexity?: OpenAICompatibleKeyVault;
   qwen?: OpenAICompatibleKeyVault;
+  sensenova?: SenseNovaKeyVault;
   siliconcloud?: OpenAICompatibleKeyVault;
   spark?: OpenAICompatibleKeyVault;
   stepfun?: OpenAICompatibleKeyVault;

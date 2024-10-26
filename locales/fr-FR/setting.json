@@ -372,10 +372,16 @@
       "modelDesc": "Modèle spécifié pour générer le nom, la description, l'avatar et les balises de l'assistant",
       "title": "Génération automatique des informations de l'assistant"
     },
+    "customPrompt": {
+      "addPrompt": "Ajouter un prompt personnalisé",
+      "desc": "Une fois rempli, l'assistant système utilisera le prompt personnalisé lors de la génération de contenu",
+      "placeholder": "Veuillez entrer le mot-clé personnalisé",
+      "title": "Mot-clé personnalisé"
+    },
     "queryRewrite": {
       "label": "Modèle de reformulation des questions",
       "modelDesc": "Modèle utilisé pour optimiser les questions des utilisateurs",
-      "title": "Base de connaissances"
+      "title": "Réécriture de la question de la base de connaissances"
     },
     "title": "Agent système",
     "topic": {
