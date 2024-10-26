@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.25.1](https://github.com/lobehub/lobe-chat/compare/v1.25.0...v1.25.1)
+
+<sup>Released on **2024-10-26**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix `modelList` merge.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix `modelList` merge, closes [#4491](https://github.com/lobehub/lobe-chat/issues/4491) ([ea422d8](https://github.com/lobehub/lobe-chat/commit/ea422d8))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ## [Version 1.25.0](https://github.com/lobehub/lobe-chat/compare/v1.24.2...v1.25.0)
 
 <sup>Released on **2024-10-26**</sup>
