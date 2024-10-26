@@ -9,6 +9,7 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 
 import Avatar from './Avatar';
 import BottomActions from './BottomActions';
+import PinList from './PinList';
 import TopActions from './TopActions';
 
 const Nav = memo(() => {
@@ -21,7 +22,12 @@ const Nav = memo(() => {
         avatar={<Avatar />}
         bottomActions={<BottomActions />}
         style={{ height: '100%', zIndex: 100 }}
-        topActions={<TopActions tab={sidebarKey} />}
+        topActions={
+          <>
+            <TopActions tab={sidebarKey} />
+            <PinList />
+          </>
+        }
       />
     )
   );
