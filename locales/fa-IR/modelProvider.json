@@ -119,6 +119,22 @@
       "title": "دانلود مدل مشخص شده Ollama"
     }
   },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "شناسه کلید دسترسی SenseNova را وارد کنید",
+      "placeholder": "شناسه کلید دسترسی SenseNova",
+      "title": "شناسه کلید دسترسی"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "رمز کلید دسترسی SenseNova را وارد کنید",
+      "placeholder": "رمز کلید دسترسی SenseNova",
+      "title": "رمز کلید دسترسی"
+    },
+    "unlock": {
+      "description": "شناسه کلید دسترسی / رمز کلید دسترسی خود را وارد کنید تا جلسه آغاز شود. برنامه هیچ‌گونه پیکربندی احراز هویت شما را ثبت نخواهد کرد",
+      "title": "استفاده از اطلاعات احراز هویت سفارشی SenseNova"
+    }
+  },
   "wenxin": {
     "accessKey": {
       "desc": "کلید دسترسی پلتفرم Qianfan بایدو را وارد کنید",
