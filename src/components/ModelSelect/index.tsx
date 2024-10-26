@@ -67,6 +67,7 @@ interface ModelInfoTagsProps extends ChatModelCard {
 export const ModelInfoTags = memo<ModelInfoTagsProps>(
   ({ directionReverse, placement = 'right', ...model }) => {
     const { t } = useTranslation('components');
+    const { t: td } = useTranslation('models');
     const { styles, cx } = useStyles();
 
     return (
@@ -108,7 +109,7 @@ export const ModelInfoTags = memo<ModelInfoTagsProps>(
           <Tooltip
             overlayStyle={{ pointerEvents: 'none' }}
             placement={placement}
-            title={model.description}
+            title={td(`${model.id}.description`)}
           >
             <div className={cx(styles.tag)} style={{ cursor: 'pointer' }} title="">
               <Icon icon={Info} />
