@@ -1,6 +1,12 @@
 'use client';
 
-import { ConfigProvider, NeutralColors, PrimaryColors, ThemeProvider } from '@lobehub/ui';
+import {
+  ConfigProvider,
+  FontLoader,
+  NeutralColors,
+  PrimaryColors,
+  ThemeProvider,
+} from '@lobehub/ui';
 import { ConfigProvider as AntdConfigProvider } from 'antd';
 import { ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
@@ -77,6 +83,8 @@ const useStyles = createStyles(({ css, token }) => ({
 
 export interface AppThemeProps {
   children?: ReactNode;
+  customFontFamily?: string;
+  customFontURL?: string;
   defaultAppearance?: ThemeAppearance;
   defaultNeutralColor?: NeutralColors;
   defaultPrimaryColor?: PrimaryColors;
@@ -84,12 +92,20 @@ export interface AppThemeProps {
 }
 
 const AppTheme = memo<AppThemeProps>(
-  ({ children, defaultAppearance, defaultPrimaryColor, defaultNeutralColor, globalCDN }) => {
+  ({
+    children,
+    defaultAppearance,
+    defaultPrimaryColor,
+    defaultNeutralColor,
+    globalCDN,
+    customFontURL,
+    customFontFamily,
+  }) => {
     // console.debug('server:appearance', defaultAppearance);
     // console.debug('server:primaryColor', defaultPrimaryColor);
     // console.debug('server:neutralColor', defaultNeutralColor);
     const themeMode = useUserStore(userGeneralSettingsSelectors.currentThemeMode);
-    const { styles, cx } = useStyles();
+    const { styles, cx, theme } = useStyles();
     const [primaryColor, neutralColor] = useUserStore((s) => [
       userGeneralSettingsSelectors.primaryColor(s),
       userGeneralSettingsSelectors.neutralColor(s),
@@ -115,8 +131,12 @@ const AppTheme = memo<AppThemeProps>(
           onAppearanceChange={(appearance) => {
             setCookie(LOBE_THEME_APPEARANCE, appearance);
           }}
+          style={{
+            fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
+          }}
           themeMode={themeMode}
         >
+          {!!customFontURL && <FontLoader url={customFontURL} />}
           <GlobalStyle />
           <AntdStaticMethods />
           <ConfigProvider
