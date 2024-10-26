@@ -29,16 +29,16 @@ const useStyles = createStyles(({ css, token }) => ({
 const TopicPanel = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const { md = true, lg = true } = useResponsive();
-  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
+  const [showTopic, toggleConfig] = useGlobalStore((s) => [
     systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
   ]);
   const showPortal = useChatStore(chatPortalSelectors.showPortal);
 
-  const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showAgentSettings));
+  const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showTopic));
 
   const handleExpand = (expand: boolean) => {
-    if (isEqual(expand, Boolean(showAgentSettings))) return;
+    if (isEqual(expand, Boolean(showTopic))) return;
     toggleConfig(expand);
     setCacheExpand(expand);
   };
@@ -55,7 +55,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
         classNames={{
           content: styles.content,
         }}
-        expand={showAgentSettings}
+        expand={showTopic}
         minWidth={CHAT_SIDEBAR_WIDTH}
         mode={md ? 'fixed' : 'float'}
         onExpandChange={handleExpand}

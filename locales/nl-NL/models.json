@@ -68,9 +68,6 @@
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) is een innovatief model, geschikt voor toepassingen in meerdere domeinen en complexe taken."
   },
-  "Max-32k": {
-    "description": "Spark Max 32K is uitgerust met een grote contextverwerkingscapaciteit, verbeterd begrip van context en logische redeneervaardigheden, ondersteunt tekstinvoer van 32K tokens, geschikt voor het lezen van lange documenten, privé kennisvragen en andere scenario's."
-  },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO is een zeer flexibele multi-model combinatie, ontworpen om een uitstekende creatieve ervaring te bieden."
   },
@@ -109,9 +106,6 @@
   },
   "Phi-3.5-vision-instrust": {
     "description": "Een geüpdatete versie van het Phi-3-vision model."
-  },
-  "Pro-128k": {
-    "description": "Spark Pro-128K is uitgerust met een enorme contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken, bijzonder geschikt voor lange teksten die volledige analyse en langdurige logische verbanden vereisen, en biedt vloeiende en consistente logica met diverse referenties in complexe tekstcommunicatie."
   },
   "Pro/OpenGVLab/InternVL2-8B": {
     "description": "InternVL2 toont uitstekende prestaties bij diverse visuele taaltaken, waaronder document- en grafiekbegrip, scène-tekstbegrip, OCR, en het oplossen van wetenschappelijke en wiskundige problemen."
@@ -277,6 +271,9 @@
   },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en presteert uitstekend in brede evaluaties, met de snelheid en kosten van ons gemiddelde model."
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet heeft de industrienormen verhoogd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen. Het presteert uitstekend in uitgebreide evaluaties, terwijl het de snelheid en kosten van onze middelgrote modellen behoudt."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku is het snelste en meest compacte model van Anthropic, met bijna onmiddellijke reactietijden. Het kan snel eenvoudige vragen en verzoeken beantwoorden. Klanten kunnen een naadloze AI-ervaring creëren die menselijke interactie nabootst. Claude 3 Haiku kan afbeeldingen verwerken en tekstoutput retourneren, met een contextvenster van 200K."
@@ -467,9 +464,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 is een efficiënt model van Google, dat een breed scala aan toepassingsscenario's dekt, van kleine toepassingen tot complexe gegevensverwerking."
   },
-  "general": {
-    "description": "Spark Lite is een lichtgewicht groot taalmodel met extreem lage latentie en efficiënte verwerkingscapaciteiten, volledig gratis en open, met ondersteuning voor realtime online zoekfunctionaliteit. De snelle respons maakt het uitermate geschikt voor inferentie-toepassingen en modelfijnstelling op apparaten met lage rekenkracht, en biedt gebruikers uitstekende kosteneffectiviteit en een intelligente ervaring, vooral in kennisvragen, inhoudsgeneratie en zoekscenario's."
-  },
   "generalv3": {
     "description": "Spark Pro is een hoogwaardig groot taalmodel dat is geoptimaliseerd voor professionele domeinen, met een focus op wiskunde, programmeren, geneeskunde, onderwijs en meer, en ondersteunt online zoeken en ingebouwde plugins voor weer, datum, enz. Het geoptimaliseerde model toont uitstekende prestaties en efficiëntie in complexe kennisvragen, taalbegrip en hoogwaardig tekstcreatie, en is de ideale keuze voor professionele toepassingsscenario's."
   },
@@ -625,6 +619,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "lite": {
+    "description": "Spark Lite is een lichtgewicht groot taalmodel met extreem lage latentie en efficiënte verwerkingscapaciteit. Het is volledig gratis en open, en ondersteunt realtime online zoekfunctionaliteit. De snelle respons maakt het uitermate geschikt voor inferentie op apparaten met lage rekenkracht en modelafstemming, wat gebruikers uitstekende kosteneffectiviteit en een slimme ervaring biedt, vooral in kennisvragen, contentgeneratie en zoekscenario's."
+  },
   "llama-3.1-70b-instruct": {
     "description": "Llama 3.1 70B Instruct model, met 70B parameters, biedt uitstekende prestaties in grote tekstgeneratie- en instructietaken."
   },
@@ -699,6 +696,9 @@
   },
   "mathstral": {
     "description": "MathΣtral is ontworpen voor wetenschappelijk onderzoek en wiskundige inferentie, biedt effectieve rekencapaciteiten en resultaatinterpretatie."
+  },
+  "max-32k": {
+    "description": "Spark Max 32K is uitgerust met een grote contextverwerkingscapaciteit, met verbeterd begrip van context en logische redeneervaardigheden. Het ondersteunt tekstinvoer van 32K tokens en is geschikt voor het lezen van lange documenten, privé kennisvragen en andere scenario's."
   },
   "meta-llama-3-70b-instruct": {
     "description": "Een krachtig model met 70 miljard parameters dat uitblinkt in redeneren, coderen en brede taaltoepassingen."
@@ -939,6 +939,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Het Pixtral model toont sterke capaciteiten in taken zoals grafiek- en beeldbegrip, documentvraag-en-antwoord, multimodale redenering en instructievolging, en kan afbeeldingen met natuurlijke resolutie en beeldverhouding verwerken, evenals een onbeperkt aantal afbeeldingen in een lange contextvenster van maximaal 128K tokens."
+  },
+  "pro-128k": {
+    "description": "Spark Pro 128K is uitgerust met een zeer grote contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken. Het is bijzonder geschikt voor lange teksten die een volledige analyse en langdurige logische verbanden vereisen, en biedt een vloeiende en consistente logica met diverse ondersteuningen voor citaten in complexe tekstcommunicatie."
   },
   "qwen-coder-turbo-latest": {
     "description": "Het Tongyi Qianwen codeermodel."
