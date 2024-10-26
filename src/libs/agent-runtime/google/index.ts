@@ -2,10 +2,10 @@ import {
   Content,
   FunctionCallPart,
   FunctionDeclaration,
+  FunctionDeclarationSchemaType,
   Tool as GoogleFunctionCallTool,
   GoogleGenerativeAI,
   Part,
-  SchemaType,
 } from '@google/generative-ai';
 
 import { imageUrlToBase64 } from '@/utils/imageToBase64';
@@ -296,7 +296,7 @@ export class LobeGoogleAI implements LobeRuntimeAI {
         description: parameters?.description,
         properties: parameters?.properties,
         required: parameters?.required,
-        type: SchemaType.OBJECT,
+        type: FunctionDeclarationSchemaType.OBJECT,
       },
     };
   };
