@@ -42,6 +42,7 @@ const useStyles = createStyles(({ css, token }) => ({
 
   text: css`
     font-size: ${token.fontSizeLG}px;
+    color: ${token.colorBgBase};
   `,
 
   toast: css`
@@ -50,8 +51,6 @@ const useStyles = createStyles(({ css, token }) => ({
 
     padding-block: 12px;
     padding-inline: 16px;
-
-    color: ${token.colorWhite};
 
     background: ${token.colorText};
     border-radius: 9999px;
