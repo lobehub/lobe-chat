@@ -2,6 +2,81 @@
 
 # Changelog
 
+## [Version 1.26.0](https://github.com/lobehub/lobe-chat/compare/v1.25.3...v1.26.0)
+
+<sup>Released on **2024-10-27**</sup>
+
+#### ✨ Features
+
+- **misc**: experimentally support to pin assistant to sidebar.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: experimentally support to pin assistant to sidebar, closes [#4514](https://github.com/lobehub/lobe-chat/issues/4514) ([6e55865](https://github.com/lobehub/lobe-chat/commit/6e55865))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.25.3](https://github.com/lobehub/lobe-chat/compare/v1.25.2...v1.25.3)
+
+<sup>Released on **2024-10-27**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the issue of the switch assistant portal not closing.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the issue of the switch assistant portal not closing, closes [#4500](https://github.com/lobehub/lobe-chat/issues/4500) ([83f896b](https://github.com/lobehub/lobe-chat/commit/83f896b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.25.2](https://github.com/lobehub/lobe-chat/compare/v1.25.1...v1.25.2)
+
+<sup>Released on **2024-10-27**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update stepfun models.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update stepfun models, closes [#4512](https://github.com/lobehub/lobe-chat/issues/4512) ([4a26d8a](https://github.com/lobehub/lobe-chat/commit/4a26d8a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.25.1](https://github.com/lobehub/lobe-chat/compare/v1.25.0...v1.25.1)
 
 <sup>Released on **2024-10-26**</sup>
