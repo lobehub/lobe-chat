@@ -6,6 +6,7 @@ import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
+import HotKeys from '@/components/HotKeys';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
@@ -57,8 +58,17 @@ const PinList = () => {
       <>
         <Divider style={{ margin: '8px 12px' }} />
         <Flexbox flex={1} gap={12} height={'100%'}>
-          {list.slice(0, 9).map((item) => (
-            <Tooltip key={item.id} placement={'right'} title={sessionHelpers.getTitle(item.meta)}>
+          {list.slice(0, 9).map((item, index) => (
+            <Tooltip
+              key={item.id}
+              placement={'right'}
+              title={
+                <Flexbox gap={8} horizontal>
+                  {sessionHelpers.getTitle(item.meta)}
+                  <HotKeys inverseTheme keys={`ctrl+${index + 1}`} />
+                </Flexbox>
+              }
+            >
               <Avatar
                 avatar={sessionHelpers.getAvatar(item.meta)}
                 background={item.meta.backgroundColor}
