@@ -6,8 +6,8 @@ import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
-import { useSwitchSession } from '@/app/(main)/chat/@session/features/SessionListContent/useSwitchSession';
 import HotKeys from '@/components/HotKeys';
+import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';

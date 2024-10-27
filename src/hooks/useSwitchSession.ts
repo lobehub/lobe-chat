@@ -17,7 +17,6 @@ export const useSwitchSession = () => {
     (id: string) => {
       switchSession(id);
       togglePortal(false);
-      console.log(pathname);
 
       const chatPath = '/chat';
       if (mobile || pathname !== chatPath) {
