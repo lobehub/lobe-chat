@@ -55,7 +55,7 @@ const PinList = () => {
     hasList && (
       <>
         <Divider style={{ margin: '8px 12px' }} />
-        <Flexbox gap={12}>
+        <Flexbox flex={1} gap={12} height={'100%'}>
           {list.map((item) => (
             <Tooltip key={item.id} placement={'right'} title={item.meta.title}>
               <Avatar
