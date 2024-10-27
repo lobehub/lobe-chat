@@ -7,6 +7,7 @@ import { useHotkeys } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
 import { useSessionStore } from '@/store/session';
+import { sessionHelpers } from '@/store/session/helpers';
 import { sessionSelectors } from '@/store/session/selectors';
 
 const useStyles = createStyles(({ css, token }) => ({
@@ -56,10 +57,10 @@ const PinList = () => {
       <>
         <Divider style={{ margin: '8px 12px' }} />
         <Flexbox flex={1} gap={12} height={'100%'}>
-          {list.map((item) => (
-            <Tooltip key={item.id} placement={'right'} title={item.meta.title}>
+          {list.slice(0, 9).map((item) => (
+            <Tooltip key={item.id} placement={'right'} title={sessionHelpers.getTitle(item.meta)}>
               <Avatar
-                avatar={item.meta.avatar}
+                avatar={sessionHelpers.getAvatar(item.meta)}
                 background={item.meta.backgroundColor}
                 className={cx(
                   styles.avatar,
