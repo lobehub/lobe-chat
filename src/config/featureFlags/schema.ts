@@ -7,6 +7,7 @@ export const FeatureFlagsSchema = z.object({
    */
   webrtc_sync: z.boolean().optional(),
   check_updates: z.boolean().optional(),
+  pin_list: z.boolean().optional(),
 
   // settings
   language_model_settings: z.boolean().optional(),
@@ -45,6 +46,7 @@ export type IFeatureFlags = z.infer<typeof FeatureFlagsSchema>;
 
 export const DEFAULT_FEATURE_FLAGS: IFeatureFlags = {
   webrtc_sync: false,
+  pin_list: false,
 
   language_model_settings: true,
 
@@ -85,6 +87,7 @@ export const mapFeatureFlagsEnvToState = (config: IFeatureFlags) => {
 
     showCreateSession: config.create_session,
     showLLM: config.language_model_settings,
+    showPinList: config.pin_list,
 
     showOpenAIApiKey: config.openai_api_key,
     showOpenAIProxyUrl: config.openai_proxy_url,
