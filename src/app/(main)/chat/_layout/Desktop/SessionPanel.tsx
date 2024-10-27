@@ -59,7 +59,9 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
     <DraggablePanel
       className={styles.panel}
       defaultSize={{ width: tmpWidth }}
-      expand={sessionExpandable && !isPinned}
+      // 当进入 pin 模式下，不可展开
+      expand={!isPinned && sessionExpandable}
+      expandable={!isPinned}
       maxWidth={400}
       minWidth={FOLDER_WIDTH}
       mode={md ? 'fixed' : 'float'}
