@@ -6,6 +6,7 @@ import { parseAsBoolean, useQueryState } from 'nuqs';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { Flexbox } from 'react-layout-kit';
 
+import { useSwitchSession } from '@/app/(main)/chat/@session/features/SessionListContent/useSwitchSession';
 import HotKeys from '@/components/HotKeys';
 import { useSessionStore } from '@/store/session';
 import { sessionHelpers } from '@/store/session/helpers';
@@ -29,7 +30,8 @@ const useStyles = createStyles(({ css, token }) => ({
 const PinList = () => {
   const { styles, cx } = useStyles();
   const list = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
-  const [activeId, switchSession] = useSessionStore((s) => [s.activeId, s.switchSession]);
+  const [activeId] = useSessionStore((s) => [s.activeId]);
+  const switchSession = useSwitchSession();
 
   const hasList = list.length > 0;
   const [isPinned, setPinned] = useQueryState('pinned', parseAsBoolean);
