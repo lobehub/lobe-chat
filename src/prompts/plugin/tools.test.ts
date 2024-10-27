@@ -31,7 +31,7 @@ describe('Prompt Generation Utils', () => {
       };
 
       const expected = `<tool name="testTool" identifier="test-id">
-<system_role>Test System Role</system_role>
+<tool_instructions>Test System Role</tool_instructions>
 <api name="api1">API 1 Description</api>
 </tool>`;
 
@@ -85,7 +85,8 @@ describe('Prompt Generation Utils', () => {
         },
       ];
 
-      const expected = `<tools><description>The tools you can use below</description>
+      const expected = `<tools>
+<description>The tools you can use below</description>
 <tool name="tool1" identifier="id1">
 
 <api name="api1">API 1</api>

@@ -17,14 +17,15 @@ describe('pluginPrompts', () => {
       },
     ];
 
-    const expected = `<plugins>
-<tools><description>The tools you can use below</description>
+    const expected = `<plugins_info>
+<tools>
+<description>The tools you can use below</description>
 <tool name="tool1" identifier="id1">
 
 <api name="api1">API 1</api>
 </tool>
 </tools>
-</plugins>`;
+</plugins_info>`;
 
     expect(pluginPrompts({ tools })).toBe(expected);
   });
@@ -32,9 +33,9 @@ describe('pluginPrompts', () => {
   it('should generate plugin prompts without tools', () => {
     const tools: Tool[] = [];
 
-    const expected = `<plugins>
+    const expected = `<plugins_info>
 
-</plugins>`;
+</plugins_info>`;
 
     expect(pluginPrompts({ tools })).toBe(expected);
   });
