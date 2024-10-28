@@ -22,13 +22,16 @@
     "description": "Fireworks AI 是一家领先的高级语言模型服务商，专注于功能调用和多模态处理。其最新模型 Firefunction V2 基于 Llama-3，优化用于函数调用、对话及指令跟随。视觉语言模型 FireLLaVA-13B 支持图像和文本混合输入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多语言指令跟随与生成支持。"
   },
   "github": {
-    "description": "With GitHub Models, developers can become AI engineers and build with the industry's leading AI models."
+    "description": "通过GitHub模型，开发人员可以成为AI工程师，并使用行业领先的AI模型进行构建。"
   },
   "google": {
     "description": "Google 的 Gemini 系列是其最先进、通用的 AI模型，由 Google DeepMind 打造，专为多模态设计，支持文本、代码、图像、音频和视频的无缝理解与处理。适用于从数据中心到移动设备的多种环境，极大提升了AI模型的效率与应用广泛性。"
   },
   "groq": {
     "description": "Groq 的 LPU 推理引擎在最新的独立大语言模型（LLM）基准测试中表现卓越，以其惊人的速度和效率重新定义了 AI 解决方案的标准。Groq 是一种即时推理速度的代表，在基于云的部署中展现了良好的性能。"
+  },
+  "huggingface": {
+    "description": "HuggingFace Inference API 提供了一种快速且免费的方式，让您可以探索成千上万种模型，适用于各种任务。无论您是在为新应用程序进行原型设计，还是在尝试机器学习的功能，这个 API 都能让您即时访问多个领域的高性能模型。"
   },
   "hunyuan": {
     "description": "由腾讯研发的大语言模型，具备强大的中文创作能力，复杂语境下的逻辑推理能力，以及可靠的任务执行能力"
@@ -60,6 +63,7 @@
   "qwen": {
     "description": "通义千问是阿里云自主研发的超大规模语言模型，具有强大的自然语言理解和生成能力。它可以回答各种问题、创作文字内容、表达观点看法、撰写代码等，在多个领域发挥作用。"
   },
+  "sensenova": {},
   "siliconcloud": {
     "description": "SiliconCloud，基于优秀开源基础模型的高性价比 GenAI 云服务"
   },
@@ -82,7 +86,7 @@
     "description": "企业级一站式大模型与AI原生应用开发及服务平台，提供最全面易用的生成式人工智能模型开发、应用开发全流程工具链"
   },
   "zeroone": {
-    "description": "01.AI 专注于AI 2.0时代的人工智能技术，大力推动“人+人工智能”的创新和应用，采用超强大模型和先进AI技术以提升人类生产力，实现技术赋能。"
+    "description": "零一万物致力于推动以人为本的AI 2.0技术革命，旨在通过大语言模型创造巨大的经济和社会价值，并开创新的AI生态与商业模式。"
   },
   "zhipu": {
     "description": "智谱 AI 提供多模态与语言模型的开放平台，支持广泛的AI应用场景，包括文本处理、图像理解与编程辅助等。"

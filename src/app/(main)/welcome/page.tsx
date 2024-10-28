@@ -4,7 +4,7 @@ import { BRANDING_NAME } from '@/const/branding';
 import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import Actions from './features/Actions';
 import Hero from './features/Hero';

@@ -3,6 +3,7 @@
 import { ActionIcon, Avatar, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
 import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
+import { parseAsBoolean, useQueryState } from 'nuqs';
 import { Suspense, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -22,6 +23,7 @@ const Main = memo(() => {
   const { t } = useTranslation('chat');
 
   useInitAgentConfig();
+  const [isPinned] = useQueryState('pinned', parseAsBoolean);
 
   const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
@@ -51,7 +53,7 @@ const Main = memo(() => {
     </Flexbox>
   ) : (
     <Flexbox align={'center'} gap={4} horizontal>
-      {
+      {!isPinned && (
         <ActionIcon
           aria-label={t('agents')}
           icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
@@ -64,7 +66,7 @@ const Main = memo(() => {
           size={DESKTOP_HEADER_ICON_SIZE}
           title={t('agents')}
         />
-      }
+      )}
       <Avatar
         avatar={avatar}
         background={backgroundColor}

@@ -5,14 +5,16 @@ import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import List from './features/List';
 
-type Props = { searchParams: { hl?: Locales } };
+type Props = { searchParams: Promise<{ hl?: Locales }> };
 
-export const generateMetadata = async ({ searchParams }: Props) => {
-  const { t, locale } = await translation('metadata', searchParams?.hl);
+export const generateMetadata = async (props: Props) => {
+  const searchParams = await props.searchParams;
+
+  const { t, locale } = await translation('metadata', searchParams.hl);
 
   return metadataModule.generate({
     alternate: true,
@@ -23,7 +25,9 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   });
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async (props: Props) => {
+  const searchParams = await props.searchParams;
+
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const mobile = isMobileDevice();
 

@@ -1,14 +1,14 @@
 import { PluginRequestPayload } from '@lobehub/chat-plugin-sdk';
 import { createGatewayOnEdgeRuntime } from '@lobehub/chat-plugins-gateway';
 
-import { createErrorResponse } from '@/app/(backend)/api/errorResponse';
-import { getJWTPayload } from '@/app/(backend)/api/middleware/auth/utils';
 import { getAppConfig } from '@/config/app';
 import { LOBE_CHAT_AUTH_HEADER, OAUTH_AUTHORIZED, enableNextAuth } from '@/const/auth';
 import { LOBE_CHAT_TRACE_ID, TraceNameMap } from '@/const/trace';
 import { AgentRuntimeError } from '@/libs/agent-runtime';
 import { TraceClient } from '@/libs/traces';
 import { ChatErrorType, ErrorType } from '@/types/fetch';
+import { createErrorResponse } from '@/utils/errorResponse';
+import { getJWTPayload } from '@/utils/server/jwt';
 import { getTracePayload } from '@/utils/trace';
 
 import { parserPluginSettings } from './settings';

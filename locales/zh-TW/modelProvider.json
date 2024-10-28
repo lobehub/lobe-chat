@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "填入你的 HuggingFace Token，點擊 [這裡](https://huggingface.co/settings/tokens) 創建",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace Token"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "測試代理地址是否正確填寫",
@@ -110,6 +117,22 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "開始下載...",
       "title": "下載指定的 Ollama 模型"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "填入 SenseNova Access Key ID",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "填入 SenseNova Access Key Secret",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "輸入你的 Access Key ID / Access Key Secret 即可開始會話。應用不會記錄你的鑑權配置",
+      "title": "使用自訂的 SenseNova 鑑權資訊"
     }
   },
   "wenxin": {

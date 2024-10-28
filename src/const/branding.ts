@@ -11,3 +11,9 @@ export const ORG_NAME = 'LobeHub';
 
 export const INBOX_LOGO_URL = '';
 export const INBOX_PROMPT = undefined;
+
+export const BRANDING_URL = {
+  help: undefined,
+  privacy: undefined,
+  terms: undefined,
+};
