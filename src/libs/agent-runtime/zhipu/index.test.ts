@@ -107,6 +107,26 @@ describe('LobeZhipuAI', () => {
           { content: [{ type: 'text', text: 'Hello again' }], role: 'user' },
         ],
         model: 'glm-4',
+        temperature: 1.6,
+        top_p: 1,
+      });
+
+      const calledWithParams = spyOn.mock.calls[0][0];
+
+      expect(calledWithParams.messages[1].content).toEqual([{ type: 'text', text: 'Hello again' }]);
+      expect(calledWithParams.temperature).toBe(0.8); // temperature should be divided by two
+      expect(calledWithParams.top_p).toEqual(1);
+    });
+
+    it('should pass arameters correctly', async () => {
+      const spyOn = vi.spyOn(instance['client'].chat.completions, 'create');
+
+      await instance.chat({
+        messages: [
+          { content: 'Hello', role: 'user' },
+          { content: [{ type: 'text', text: 'Hello again' }], role: 'user' },
+        ],
+        model: 'glm-4-alltools',
         temperature: 0,
         top_p: 1,
       });
@@ -114,9 +134,8 @@ describe('LobeZhipuAI', () => {
       const calledWithParams = spyOn.mock.calls[0][0];
 
       expect(calledWithParams.messages[1].content).toEqual([{ type: 'text', text: 'Hello again' }]);
-      expect(calledWithParams.temperature).toBe(0); // temperature 0 should be undefined
-      expect((calledWithParams as any).do_sample).toBeTruthy(); // temperature 0 should be undefined
-      expect(calledWithParams.top_p).toEqual(1); // top_p should be transformed correctly
+      expect(calledWithParams.temperature).toBe(0.01);
+      expect(calledWithParams.top_p).toEqual(0.99);
     });
 
     describe('Error', () => {
