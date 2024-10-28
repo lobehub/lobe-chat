@@ -372,10 +372,16 @@
       "modelDesc": "Especifica o modelo usado para gerar o nome, descrição, avatar e tags do assistente",
       "title": "Geração Automática de Informações do Assistente"
     },
+    "customPrompt": {
+      "addPrompt": "Adicionar prompt personalizado",
+      "desc": "Após preenchido, o assistente do sistema usará o prompt personalizado ao gerar conteúdo",
+      "placeholder": "Digite a palavra-chave personalizada",
+      "title": "Palavra-chave personalizada"
+    },
     "queryRewrite": {
       "label": "Modelo de Reescrita de Perguntas",
       "modelDesc": "Modelo designado para otimizar as perguntas dos usuários",
-      "title": "Base de Conhecimento"
+      "title": "Reescrita de perguntas do banco de dados"
     },
     "title": "Assistente do Sistema",
     "topic": {

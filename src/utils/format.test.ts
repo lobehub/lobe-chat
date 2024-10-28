@@ -1,6 +1,11 @@
+import dayjs from 'dayjs';
 import { describe, expect, it } from 'vitest';
 
+import { CNY_TO_USD } from '@/const/discover';
+
 import {
+  formatDate,
+  formatIntergerNumber,
   formatNumber,
   formatPrice,
   formatPriceByCurrency,
@@ -37,6 +42,15 @@ describe('format', () => {
       expect(formatSize(1023)).toBe('1.0 KB');
       expect(formatSize(1073741823)).toBe('1024.0 MB');
     });
+
+    it('should handle undefined input', () => {
+      expect(formatSize(undefined as any)).toBe('--');
+    });
+
+    it('should use custom fraction digits', () => {
+      expect(formatSize(1536, 2)).toBe('1.50 KB');
+      expect(formatSize(1572864, 3)).toBe('1.500 MB');
+    });
   });
 
   describe('formatSpeed', () => {
@@ -59,6 +73,14 @@ describe('format', () => {
       expect(formatSpeed(0)).toBe('0.00 Byte/s');
       expect(formatSpeed(1000 * 1024)).toBe('1000.00 KB/s');
       expect(formatSpeed(1000.01 * 1024)).toBe('0.98 MB/s');
+    });
+
+    it('should handle undefined input', () => {
+      expect(formatSpeed(undefined as any)).toBe('--');
+    });
+
+    it('should use custom fraction digits', () => {
+      expect(formatSpeed(1024, 3)).toBe('1.000 KB/s');
     });
   });
 
@@ -88,12 +110,16 @@ describe('format', () => {
       expect(formatTime(59.99)).toBe('60.0 s');
       expect(formatTime(3599.99)).toBe('60.0 min');
     });
+    it('should handle non-number inputs', () => {
+      expect(formatTime('not a number' as any)).toBe('not a number');
+      expect(formatTime(undefined as any)).toBe('--');
+    });
   });
 
   describe('formatShortenNumber', () => {
     it('should return the input if it is not a number', () => {
       expect(formatShortenNumber('not a number')).toBe('not a number');
-      expect(formatShortenNumber(null)).toBe(null);
+      expect(formatShortenNumber(null)).toBe('--');
     });
 
     it('should format numbers less than 10,000 correctly', () => {
@@ -125,7 +151,22 @@ describe('format', () => {
     it('should handle non-number inputs', () => {
       expect(formatNumber('1000')).toBe('1,000');
       expect(formatNumber('not a number')).toBe(Number.NaN.toString());
-      expect(formatNumber(null)).toBe(undefined);
+      expect(formatNumber(0)).toBe('0');
+      expect(formatNumber(0, 1)).toBe('0.0');
+      expect(formatNumber(null)).toBe('--');
+    });
+
+    it('should handle fraction digits correctly', () => {
+      expect(formatNumber(1234.5678, 2)).toBe('1,234.57');
+      expect(formatNumber(1234.5678, 3)).toBe('1,234.568');
+    });
+  });
+
+  describe('formatIntergerNumber', () => {
+    it('should format numbers with commas correctly', () => {
+      expect(formatIntergerNumber(1000.12)).toBe('1,000');
+      expect(formatIntergerNumber(0)).toBe('0');
+      expect(formatIntergerNumber(null)).toBe('--');
     });
   });
 
@@ -149,6 +190,12 @@ describe('format', () => {
       const CNY_TO_USD = 6.5;
       expect(formatPriceByCurrency(1000, 'CNY')).toBe('140.06');
       expect(formatPriceByCurrency(6500, 'CNY')).toBe('910.36');
+    });
+
+    it('should use the correct CNY_TO_USD conversion rate', () => {
+      const price = 1000;
+      const expectedCNY = formatPrice(price / CNY_TO_USD);
+      expect(formatPriceByCurrency(price, 'CNY')).toBe(expectedCNY);
     });
   });
 
@@ -190,6 +237,23 @@ describe('format', () => {
       expect(formatTokenNumber(1048576)).toBe('1M'); // Gemini Flash
       expect(formatTokenNumber(2000000)).toBe('2M');
       expect(formatTokenNumber(2097152)).toBe('2M'); // Gemini Pro
+    });
+  });
+
+  describe('formatDate', () => {
+    it('should format date correctly', () => {
+      const date = new Date('2023-05-15T12:00:00Z');
+      expect(formatDate(date)).toBe('2023-05-15');
+    });
+
+    it('should handle undefined input', () => {
+      expect(formatDate(undefined)).toBe('--');
+    });
+
+    it('should use dayjs for formatting', () => {
+      const date = new Date('2023-05-15T12:00:00Z');
+      const expectedFormat = dayjs(date).format('YYYY-MM-DD');
+      expect(formatDate(date)).toBe(expectedFormat);
     });
   });
 });

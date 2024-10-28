@@ -1,3 +1,5 @@
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
+
 import AgentChat from './AgentChat';
 import AgentMeta from './AgentMeta';
 import AgentModal from './AgentModal';
@@ -10,6 +12,7 @@ import { Provider, createStore } from './store';
 type AgentSettingsProps = StoreUpdaterProps;
 
 export const AgentSettings = (props: AgentSettingsProps) => {
+  const { enablePlugins } = useServerConfigStore(featureFlagsSelectors);
   return (
     <Provider createStore={createStore}>
       <StoreUpdater {...props} />
@@ -18,7 +21,7 @@ export const AgentSettings = (props: AgentSettingsProps) => {
       <AgentChat />
       <AgentModal />
       <AgentTTS />
-      <AgentPlugin />
+      {enablePlugins && <AgentPlugin />}
     </Provider>
   );
 };
