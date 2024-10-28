@@ -274,9 +274,9 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { apiKey };
     }
     case ModelProvider.Doubao: {
-      const { ARK_API_KEY } = getLLMConfig();
+      const { DOUBAO_API_KEY } = getLLMConfig();
 
-      const apiKey = apiKeyManager.pick(payload?.apiKey || ARK_API_KEY);
+      const apiKey = apiKeyManager.pick(payload?.apiKey || DOUBAO_API_KEY);
 
       return { apiKey };
     }

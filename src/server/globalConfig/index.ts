@@ -145,7 +145,7 @@ export const getServerGlobalConfig = () => {
     HUGGINGFACE_MODEL_LIST,
 
     ENABLED_DOUBAO,
-    ARK_MODEL_LIST,
+    DOUBAO_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -214,10 +214,11 @@ export const getServerGlobalConfig = () => {
         }),
       },
       doubao: { enabled: ENABLED_DOUBAO,
-        enabledModels: extractEnabledModels(ARK_MODEL_LIST),
+        enabledModels: extractEnabledModels(DOUBAO_MODEL_LIST, true),
         serverModelCards: transformToChatModelCards({
           defaultChatModels: [],
-          modelString: ARK_MODEL_LIST,
+          modelString: DOUBAO_MODEL_LIST,
+          withDeploymentName: true,
         }),
       },
       fireworksai: {
