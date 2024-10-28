@@ -40,6 +40,9 @@ export interface JWTPayload {
   wenxinAccessKey?: string;
   wenxinSecretKey?: string;
 
+  sensenovaAccessKeyID?: string;
+  sensenovaAccessKeySecret?: string;
+
   /**
    * user id
    * in client db mode it's a uuid
