@@ -11,24 +11,12 @@ import { useFileStore } from '@/store/file';
 import { useGlobalStore } from '@/store/global';
 
 const HotKeys = () => {
-  const [regenerateMessage, clearMessage] = useChatStore((s) => [
+  const [regenerateMessage] = useChatStore((s) => [
     s.regenerateMessage,
-    s.clearMessage,
   ]);
   const lastMessage = useChatStore(chatSelectors.latestMessage, isEqual);
 
-  const [clearImageList] = useFileStore((s) => [s.clearChatUploadFileList]);
   const toggleZenMode = useGlobalStore((s) => s.toggleZenMode);
-
-  const resetConversation = useCallback(() => {
-    clearMessage();
-    clearImageList();
-  }, []);
-
-  useHotkeys(HOTKEYS.clear, resetConversation, {
-    enableOnFormTags: true,
-    preventDefault: true,
-  });
 
   useHotkeys(HOTKEYS.zenMode, toggleZenMode, {
     enableOnFormTags: true,
