@@ -19,16 +19,6 @@ const UserBanner = memo(() => {
     authSelectors.enabledNextAuth(s),
   ]);
 
-  const handleSignIn = () => {
-    // If use NextAuth, call openLogin method directly
-    if (enabledNextAuth) {
-      signIn();
-      return;
-    }
-
-    openSignIn();
-  };
-
   return (
     <Flexbox gap={12} paddingBlock={8}>
       {!enableAuth ? (
@@ -48,7 +38,7 @@ const UserBanner = memo(() => {
           <DataStatistics paddingInline={12} />
         </>
       ) : (
-        <UserLoginOrSignup onClick={handleSignIn} />
+        <UserLoginOrSignup onClick={()=> signIn()} />
       )}
     </Flexbox>
   );
