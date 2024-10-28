@@ -111,9 +111,9 @@ const Stepfun: ModelProviderCard = {
     },
     {
       description: '该模型拥有强大的视频理解能力。',
-      displayName: 'Step 1.5V Turbo',
+      displayName: 'Step 1.5V Mini',
       enabled: true,
-      id: 'step-1.5v-turbo',
+      id: 'step-1.5v-mini',
       pricing: {
         currency: 'CNY',
         input: 8,
