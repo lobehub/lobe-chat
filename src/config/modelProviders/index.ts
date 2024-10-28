@@ -11,6 +11,7 @@ import FireworksAIProvider from './fireworksai';
 import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
+import HuggingFaceProvider from './huggingface';
 import HunyuanProvider from './hunyuan';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
@@ -21,6 +22,7 @@ import OpenAIProvider from './openai';
 import OpenRouterProvider from './openrouter';
 import PerplexityProvider from './perplexity';
 import QwenProvider from './qwen';
+import SenseNovaProvider from './sensenova';
 import SiliconCloudProvider from './siliconcloud';
 import SparkProvider from './spark';
 import StepfunProvider from './stepfun';
@@ -49,6 +51,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   FireworksAIProvider.chatModels,
   PerplexityProvider.chatModels,
   AnthropicProvider.chatModels,
+  HuggingFaceProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
@@ -61,6 +64,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   Ai21Provider.chatModels,
   HunyuanProvider.chatModels,
   WenxinProvider.chatModels,
+  SenseNovaProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -71,6 +75,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   BedrockProvider,
   GoogleProvider,
   DeepSeekProvider,
+  HuggingFaceProvider,
   OpenRouterProvider,
   GithubProvider,
   NovitaProvider,
@@ -87,6 +92,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   SparkProvider,
   ZhiPuProvider,
   ZeroOneProvider,
+  SenseNovaProvider,
   StepfunProvider,
   MoonshotProvider,
   BaichuanProvider,
@@ -116,6 +122,7 @@ export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
+export { default as HuggingFaceProviderCard } from './huggingface';
 export { default as HunyuanProviderCard } from './hunyuan';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
@@ -126,6 +133,7 @@ export { default as OpenAIProviderCard } from './openai';
 export { default as OpenRouterProviderCard } from './openrouter';
 export { default as PerplexityProviderCard } from './perplexity';
 export { default as QwenProviderCard } from './qwen';
+export { default as SenseNovaProviderCard } from './sensenova';
 export { default as SiliconCloudProviderCard } from './siliconcloud';
 export { default as SparkProviderCard } from './spark';
 export { default as StepfunProviderCard } from './stepfun';

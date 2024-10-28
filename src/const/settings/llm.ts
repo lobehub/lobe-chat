@@ -9,6 +9,7 @@ import {
   GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HuggingFaceProviderCard,
   HunyuanProviderCard,
   MinimaxProviderCard,
   MistralProviderCard,
@@ -19,6 +20,7 @@ import {
   OpenRouterProviderCard,
   PerplexityProviderCard,
   QwenProviderCard,
+  SenseNovaProviderCard,
   SiliconCloudProviderCard,
   SparkProviderCard,
   StepfunProviderCard,
@@ -77,6 +79,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
     enabled: false,
     enabledModels: filterEnabledModels(GroqProviderCard),
   },
+  huggingface: {
+    enabled: false,
+    enabledModels: filterEnabledModels(HuggingFaceProviderCard),
+  },
   hunyuan: {
     enabled: false,
     enabledModels: filterEnabledModels(HunyuanProviderCard),
@@ -117,6 +123,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   qwen: {
     enabled: false,
     enabledModels: filterEnabledModels(QwenProviderCard),
+  },
+  sensenova: {
+    enabled: false,
+    enabledModels: filterEnabledModels(SenseNovaProviderCard),
   },
   siliconcloud: {
     enabled: false,

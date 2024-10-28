@@ -30,6 +30,9 @@
   "groq": {
     "description": "Silnik inferencyjny LPU firmy Groq wyróżnia się w najnowszych niezależnych testach benchmarkowych dużych modeli językowych (LLM), redefiniując standardy rozwiązań AI dzięki niesamowitej szybkości i wydajności. Groq jest reprezentantem natychmiastowej szybkości inferencji, wykazując dobrą wydajność w wdrożeniach opartych na chmurze."
   },
+  "huggingface": {
+    "description": "HuggingFace Inference API oferuje szybki i bezpłatny sposób na eksplorację tysięcy modeli, które nadają się do różnych zadań. Niezależnie od tego, czy prototypujesz nową aplikację, czy próbujesz funkcji uczenia maszynowego, to API zapewnia natychmiastowy dostęp do wysokowydajnych modeli z wielu dziedzin."
+  },
   "hunyuan": {
     "description": "Model językowy opracowany przez Tencent, który posiada potężne zdolności twórcze w języku chińskim, umiejętność logicznego wnioskowania w złożonych kontekstach oraz niezawodne zdolności wykonawcze w zadaniach."
   },
@@ -60,6 +63,7 @@
   "qwen": {
     "description": "Tongyi Qianwen to samodzielnie opracowany przez Alibaba Cloud model językowy o dużej skali, charakteryzujący się silnymi zdolnościami rozumienia i generowania języka naturalnego. Może odpowiadać na różnorodne pytania, tworzyć treści pisemne, wyrażać opinie, pisać kod i działać w wielu dziedzinach."
   },
+  "sensenova": {},
   "siliconcloud": {
     "description": "SiliconFlow dąży do przyspieszenia AGI, aby przynieść korzyści ludzkości, poprawiając wydajność dużych modeli AI dzięki łatwemu w użyciu i niskokosztowemu stosowi GenAI."
   },

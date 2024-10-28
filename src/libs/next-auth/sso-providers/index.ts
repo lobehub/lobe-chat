@@ -7,6 +7,7 @@ import CloudflareZeroTrust from './cloudflare-zero-trust';
 import GenericOIDC from './generic-oidc';
 import Github from './github';
 import Logto from './logto';
+import MicrosoftEntraID from './microsoft-entra-id';
 import Zitadel from './zitadel';
 
 export const ssoProviders = [
@@ -20,4 +21,5 @@ export const ssoProviders = [
   Logto,
   CloudflareZeroTrust,
   Casdoor,
+  MicrosoftEntraID,
 ];

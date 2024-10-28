@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Введите ваш токен HuggingFace, нажмите [здесь](https://huggingface.co/settings/tokens) для создания",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Токен HuggingFace"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Проверить правильность адреса прокси",
@@ -110,6 +117,22 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Введите SenseNova Access Key ID",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Введите SenseNova Access Key Secret",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "Введите ваш Access Key ID / Access Key Secret, чтобы начать сессию. Приложение не будет записывать ваши настройки аутентификации",
+      "title": "Используйте пользовательскую аутентификацию SenseNova"
     }
   },
   "wenxin": {

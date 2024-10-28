@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "أدخل رمز HuggingFace الخاص بك، انقر [هنا](https://huggingface.co/settings/tokens) لإنشاء واحد",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "رمز HuggingFace"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "اختبر ما إذا تم إدخال عنوان الوكيل بشكل صحيح",
@@ -110,6 +117,22 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "أدخل معرف مفتاح الوصول لـ SenseNova",
+      "placeholder": "معرف مفتاح الوصول لـ SenseNova",
+      "title": "معرف مفتاح الوصول"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "أدخل سر مفتاح الوصول لـ SenseNova",
+      "placeholder": "سر مفتاح الوصول لـ SenseNova",
+      "title": "سر مفتاح الوصول"
+    },
+    "unlock": {
+      "description": "أدخل معرف مفتاح الوصول / سر مفتاح الوصول لبدء الجلسة. التطبيق لن يسجل إعدادات المصادقة الخاصة بك",
+      "title": "استخدم معلومات مصادقة SenseNova المخصصة"
     }
   },
   "wenxin": {

@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Introduce tu token de HuggingFace, haz clic [aquí](https://huggingface.co/settings/tokens) para crear uno",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Token de HuggingFace"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Prueba si la dirección del proxy de la interfaz se ha introducido correctamente",
@@ -110,6 +117,22 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Introduce el ID de clave de acceso de SenseNova",
+      "placeholder": "ID de clave de acceso de SenseNova",
+      "title": "ID de clave de acceso"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Introduce la clave secreta de acceso de SenseNova",
+      "placeholder": "Clave secreta de acceso de SenseNova",
+      "title": "Clave secreta de acceso"
+    },
+    "unlock": {
+      "description": "Introduce tu ID de clave de acceso / clave secreta de acceso para comenzar la sesión. La aplicación no registrará tu configuración de autenticación",
+      "title": "Usar información de autenticación personalizada de SenseNova"
     }
   },
   "wenxin": {

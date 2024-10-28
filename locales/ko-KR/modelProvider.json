@@ -58,6 +58,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "당신의 HuggingFace 토큰을 입력하세요. [여기](https://huggingface.co/settings/tokens)를 클릭하여 생성하세요.",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace 토큰"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "프록시 주소가 올바르게 입력되었는지 테스트합니다",
@@ -110,6 +117,22 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "SenseNova Access Key ID를 입력하세요",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "SenseNova Access Key Secret를 입력하세요",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "Access Key ID / Access Key Secret를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
+      "title": "사용자 정의 SenseNova 인증 정보 사용"
     }
   },
   "wenxin": {
