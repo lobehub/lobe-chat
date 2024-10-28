@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { DEFAULT_INBOX_AVATAR } from '@/const/meta';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { SESSION_CHAT_URL } from '@/const/url';
+import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
 import ListItem from '../ListItem';
-import { useSwitchSession } from '../useSwitchSession';
 
 const Inbox = memo(() => {
   const { t } = useTranslation('chat');
