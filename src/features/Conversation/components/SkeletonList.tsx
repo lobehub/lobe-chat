@@ -30,7 +30,7 @@ const SkeletonList = memo<SkeletonListProps>(({ mobile }) => {
   const { cx, styles } = useStyles();
 
   return (
-    <Flexbox gap={24} padding={mobile ? 8 : 12} style={{ marginTop: 24 + (mobile ? 0 : 64) }}>
+    <Flexbox gap={24} padding={mobile ? 8 : 12} style={{ marginTop: 24 }}>
       <Skeleton
         active
         avatar={{ size: mobile ? 32 : 40 }}

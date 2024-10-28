@@ -212,7 +212,7 @@ export class DiscoverService {
   // Providers
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  getProviderList = async (locale: Locales): Promise<DiscoverProviderItem[]> => {
+  getProviderList = async (_locale: Locales): Promise<DiscoverProviderItem[]> => {
     const list = DEFAULT_MODEL_PROVIDER_LIST.filter((item) => item.chatModels.length > 0);
     return list.map((item) => {
       const provider = {

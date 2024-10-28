@@ -68,7 +68,7 @@
   - [更多特性](#更多特性)
 - [⚡️ 性能测试](#️-性能测试)
 - [🛳 开箱即用](#-开箱即用)
-  - [`A` 使用 Vercel、Zeabur 或 Sealos 部署](#a-使用-vercelzeabur-或-sealos-部署)
+  - [`A` 使用 Vercel、Zeabur 、Sealos 或 阿里云计算巢 部署](#a-使用-vercelzeabur-sealos-或-阿里云计算巢-部署)
   - [`B` 使用 Docker 部署](#b-使用-docker-部署)
   - [环境变量](#环境变量)
   - [获取 OpenAI API Key](#获取-openai-api-key)
@@ -153,6 +153,7 @@ LobeChat 支持文件上传与知识库功能，你可以上传文件、图片�
 - **Minimax**: 接入了 Minimax 的 AI 模型，包括 MoE 模型 **abab6**，提供了更多的选择空间。[了解更多](https://www.minimaxi.com/)
 - **DeepSeek**: 接入了 DeepSeek 的 AI 模型，包括最新的 **DeepSeek-V2**，提供兼顾性能与价格的模型。[了解更多](https://www.deepseek.com/)
 - **Qwen**: 接入了 Qwen 的 AI 模型，包括最新的 **qwen-turbo**，**qwen-plus** 和 **qwen-max** 等模型。[了解更多](https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction)
+- **Novita AI**: 性价比最高的开源模型供应商，支持 **Llama**，**Mistral** 系列等最前沿的开源模型。在情感陪伴等场景表现优异，无任何内容限制或审查。 [了解更多](https://novita.ai/model-api/product/llm-api?utm_source=lobechat&utm_medium=ch&utm_campaign=api)
 
 同时，我们也在计划支持更多的模型服务商，如 Replicate 和 Perplexity 等，以进一步丰富我们的服务商库。如果你希望让 LobeChat 支持你喜爱的服务商，欢迎加入我们的[社区讨论](https://github.com/lobehub/lobe-chat/discussions/1284)。
 
@@ -245,7 +246,7 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 | [Savvy Trader AI](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **savvytrader** on **2024-06-27**</sup> | 实时股票、加密货币和其他投资数据。<br/>`股票` `分析`                                                               |
 | [Search1API](https://chat-preview.lobehub.com/settings/agent)<br/><sup>By **fatwang2** on **2024-05-06**</sup>         | 搜索聚合服务，专为 LLMs 设计<br/>`web` `search`                                                                    |
 
-> 📊 Total plugins: [<kbd>**50**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
+> 📊 Total plugins: [<kbd>**49**</kbd>](https://github.com/lobehub/lobe-chat-plugins)
 
  <!-- PLUGIN LIST -->
 
@@ -273,14 +274,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                         | 助手说明                                                                                                              |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [合同条款精炼师 v1.0](https://chat-preview.lobehub.com/market?agent=business-contract)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>           | 输出: {优化合同条款，专业简洁表达}<br/>`合同优化` `法律咨询` `文案撰写` `专业术语` `项目管理`                         |
-| [会议助手 v1.0](https://chat-preview.lobehub.com/market?agent=meeting)<br/><sup>By **[houhoufm](https://github.com/houhoufm)** on **2024-09-24**</sup>                           | 专业会议汇报助手，提炼会议要点成汇报句子<br/>`会议汇报` `撰写` `沟通` `工作流程` `专业技能`                           |
-| [稳定专辑封面提示生成器](https://chat-preview.lobehub.com/market?agent=title-bpm-stimmung)<br/><sup>By **[MellowTrixX](https://github.com/MellowTrixX)** on **2024-09-24**</sup> | 专业的平面设计师，专注于为旋律科技音乐专辑创建视觉概念和设计。<br/>`专辑封面` `提示` `稳定扩散` `封面设计` `封面提示` |
-| [广告文案创作大师](https://chat-preview.lobehub.com/market?agent=advertising-copywriting-master)<br/><sup>By **[leter](https://github.com/leter)** on **2024-09-23**</sup>       | 擅长产品功能分析与用户价值观广告文案创作<br/>`广告文案` `用户价值观` `营销策略`                                       |
+| 最近新增                                                                                                                                                                | 助手说明                                                                                                   |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [矢量 Logo 生成器](https://chat-preview.lobehub.com/market?agent=svg-logo)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-10-27**</sup>            | 擅长 UI/UX 设计与 Logo 创作<br/>`ui-ux设计` `logo设计` `用户需求` `交互设计` `工具使用`                    |
+| [算法解答导师](https://chat-preview.lobehub.com/market?agent=leetcode-tutor)<br/><sup>By **[Stark-X](https://github.com/Stark-X)** on **2024-10-21**</sup>              | 擅长 LeetCode 算法解答与用户指导<br/>`算法` `解题` `编程` `教育`                                           |
+| [心理咨询师](https://chat-preview.lobehub.com/market?agent=psychological-counselor)<br/><sup>By **[JIANGTUNAN](https://github.com/JIANGTUNAN)** on **2024-10-21**</sup> | 一个资深心理医生，温暖和耐心的倾听你的故事。<br/>`心理咨询` `咨询` `倾述` `友好` `医生` `咨询师`           |
+| [拳击训练大师](https://chat-preview.lobehub.com/market?agent=boxing-master)<br/><sup>By **[Luyi-2333](https://github.com/Luyi-2333)** on **2024-10-15**</sup>           | 擅长拳击训练指导与个性化计划制定<br/>`拳击训练` `个性化计划` `健身指导` `进度评估` `技术提升` `健康与营养` |
 
-> 📊 Total agents: [<kbd>**392**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**421**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
@@ -426,9 +427,9 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 >
 > 完整教程请查阅 [📘 构建属于自己的 Lobe Chat][docs-self-hosting]
 
-### `A` 使用 Vercel、Zeabur 或 Sealos 部署
+### `A` 使用 Vercel、Zeabur 、Sealos 或 阿里云计算巢 部署
 
-如果想在 Vercel 或 Zeabur 上部署该服务，可以按照以下步骤进行操作：
+如果想在 Vercel 、 Zeabur 或 阿里云 上部署该服务，可以按照以下步骤进行操作：
 
 - 准备好你的 [OpenAI API Key](https://platform.openai.com/account/api-keys) 。
 - 点击下方按钮开始部署： 直接使用 GitHub 账号登录即可，记得在环境变量页填入 `OPENAI_API_KEY` （必填） and `ACCESS_CODE`（推荐）；
@@ -437,9 +438,9 @@ LobeChat 提供了 Vercel 的 自托管版本 和 [Docker 镜像][docker-release
 
 <div align="center">
 
-|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |                      使用 Sealos 部署                       |
-| :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: |
-| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] |
+|            使用 Vercel 部署             |                      使用 Zeabur 部署                       |                      使用 Sealos 部署                       |                           使用阿里云计算巢部署                            |
+| :-------------------------------------: | :---------------------------------------------------------: | :---------------------------------------------------------: | :-----------------------------------------------------------------------: |
+| [![][deploy-button-image]][deploy-link] | [![][deploy-on-zeabur-button-image]][deploy-on-zeabur-link] | [![][deploy-on-sealos-button-image]][deploy-on-sealos-link] | [![][deploy-on-alibaba-cloud-button-image]][deploy-on-alibaba-cloud-link] |
 
 </div>
 
@@ -726,6 +727,8 @@ This project is [Apache 2.0](./LICENSE) licensed.
 [codespaces-shield]: https://github.com/codespaces/badge.svg
 [deploy-button-image]: https://vercel.com/button
 [deploy-link]: https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flobehub%2Flobe-chat&env=OPENAI_API_KEY,ACCESS_CODE&envDescription=Find%20your%20OpenAI%20API%20Key%20by%20click%20the%20right%20Learn%20More%20button.%20%7C%20Access%20Code%20can%20protect%20your%20website&envLink=https%3A%2F%2Fplatform.openai.com%2Faccount%2Fapi-keys&project-name=lobe-chat&repository-name=lobe-chat
+[deploy-on-alibaba-cloud-button-image]: https://service-info-public.oss-cn-hangzhou.aliyuncs.com/computenest-en.svg
+[deploy-on-alibaba-cloud-link]: https://computenest.console.aliyun.com/service/instance/create/default?type=user&ServiceName=LobeChat%E7%A4%BE%E5%8C%BA%E7%89%88
 [deploy-on-sealos-button-image]: https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg
 [deploy-on-sealos-link]: https://cloud.sealos.io/?openapp=system-template%3FtemplateName%3Dlobe-chat
 [deploy-on-zeabur-button-image]: https://zeabur.com/button.svg
