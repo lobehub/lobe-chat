@@ -7,13 +7,13 @@ import { Center } from 'react-layout-kit';
 import LazyLoad from 'react-lazy-load';
 
 import { SESSION_CHAT_URL } from '@/const/url';
+import { useSwitchSession } from '@/hooks/useSwitchSession';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
 import { LobeAgentSession } from '@/types/session';
 
 import SkeletonList from '../../SkeletonList';
-import { useSwitchSession } from '../useSwitchSession';
 import AddButton from './AddButton';
 import SessionItem from './Item';
 

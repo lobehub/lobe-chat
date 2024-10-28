@@ -1,3 +1,4 @@
+import { usePathname } from 'next/navigation';
 import { useCallback } from 'react';
 
 import { useQueryRoute } from '@/hooks/useQueryRoute';
@@ -10,15 +11,17 @@ export const useSwitchSession = () => {
   const togglePortal = useChatStore((s) => s.togglePortal);
   const mobile = useServerConfigStore((s) => s.isMobile);
   const router = useQueryRoute();
+  const pathname = usePathname();
 
   return useCallback(
     (id: string) => {
       switchSession(id);
       togglePortal(false);
 
-      if (mobile) {
+      const chatPath = '/chat';
+      if (mobile || pathname !== chatPath) {
         setTimeout(() => {
-          router.push('/chat', {
+          router.push(chatPath, {
             query: { session: id, showMobileWorkspace: 'true' },
           });
         }, 50);
