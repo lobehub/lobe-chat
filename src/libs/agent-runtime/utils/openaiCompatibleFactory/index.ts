@@ -1,18 +1,29 @@
 import OpenAI, { ClientOptions } from 'openai';
+import { Stream } from 'openai/streaming';
 
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
-import { TextToImagePayload } from '@/libs/agent-runtime/types/textToImage';
 import { ChatModelCard } from '@/types/llm';
 
 import { LobeRuntimeAI } from '../../BaseAI';
 import { AgentRuntimeErrorType, ILobeAgentRuntimeErrorType } from '../../error';
-import { ChatCompetitionOptions, ChatCompletionErrorPayload, ChatStreamPayload } from '../../types';
+import {
+  ChatCompetitionOptions,
+  ChatCompletionErrorPayload,
+  ChatStreamPayload,
+  EmbeddingItem,
+  EmbeddingsOptions,
+  EmbeddingsPayload,
+  TextToImagePayload,
+  TextToSpeechOptions,
+  TextToSpeechPayload,
+} from '../../types';
 import { AgentRuntimeError } from '../createError';
 import { debugResponse, debugStream } from '../debugStream';
 import { desensitizeUrl } from '../desensitizeUrl';
 import { handleOpenAIError } from '../handleOpenAIError';
+import { convertOpenAIMessages } from '../openaiHelpers';
 import { StreamingResponse } from '../response';
-import { OpenAIStream } from '../streams';
+import { OpenAIStream, OpenAIStreamOptions } from '../streams';
 
 // the model contains the following keywords is not a chat model, so we should filter them out
 const CHAT_MODELS_BLOCK_LIST = [
@@ -29,6 +40,15 @@ const CHAT_MODELS_BLOCK_LIST = [
 
 type ConstructorOptions<T extends Record<string, any> = any> = ClientOptions & T;
 
+export interface CustomClientOptions<T extends Record<string, any> = any> {
+  createChatCompletionStream?: (
+    client: any,
+    payload: ChatStreamPayload,
+    instance: any,
+  ) => ReadableStream<any>;
+  createClient?: (options: ConstructorOptions<T>) => any;
+}
+
 interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
   baseURL?: string;
   chatCompletion?: {
@@ -40,8 +60,14 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
       payload: ChatStreamPayload,
       options: ConstructorOptions<T>,
     ) => OpenAI.ChatCompletionCreateParamsStreaming;
+    handleStreamBizErrorType?: (error: {
+      message: string;
+      name: string;
+    }) => ILobeAgentRuntimeErrorType | undefined;
+    noUserId?: boolean;
   };
   constructorOptions?: ConstructorOptions<T>;
+  customClient?: CustomClientOptions<T>;
   debug?: {
     chatCompletion: () => boolean;
   };
@@ -118,6 +144,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
   constructorOptions,
   chatCompletion,
   models,
+  customClient,
 }: OpenAICompatibleFactoryOptions<T>) => {
   const ErrorType = {
     bizError: errorType?.bizError || AgentRuntimeErrorType.ProviderBizError,
@@ -125,9 +152,9 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
   };
 
   return class LobeOpenAICompatibleAI implements LobeRuntimeAI {
-    client: OpenAI;
+    client!: OpenAI;
 
-    baseURL: string;
+    baseURL!: string;
     private _options: ConstructorOptions<T>;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
@@ -137,11 +164,19 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
 
       if (!apiKey) throw AgentRuntimeError.createError(ErrorType?.invalidAPIKey);
 
-      this.client = new OpenAI({ apiKey, baseURL, ...constructorOptions, ...res });
-      this.baseURL = this.client.baseURL;
+      const initOptions = { apiKey, baseURL, ...constructorOptions, ...res };
+
+      // if the custom client is provided, use it as client
+      if (customClient?.createClient) {
+        this.client = customClient.createClient(initOptions as any);
+      } else {
+        this.client = new OpenAI(initOptions);
+      }
+
+      this.baseURL = baseURL || this.client.baseURL;
     }
 
-    async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions) {
+    async chat({ responseMode, ...payload }: ChatStreamPayload, options?: ChatCompetitionOptions) {
       try {
         const postPayload = chatCompletion?.handlePayload
           ? chatCompletion.handlePayload(payload, this._options)
@@ -150,23 +185,43 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
               stream: payload.stream ?? true,
             } as OpenAI.ChatCompletionCreateParamsStreaming);
 
-        const response = await this.client.chat.completions.create(
-          { ...postPayload, user: options?.user },
-          {
-            // https://github.com/lobehub/lobe-chat/pull/318
-            headers: { Accept: '*/*' },
-            signal: options?.signal,
-          },
-        );
+        const messages = await convertOpenAIMessages(postPayload.messages);
+
+        let response: Stream<OpenAI.Chat.Completions.ChatCompletionChunk>;
+
+        const streamOptions: OpenAIStreamOptions = {
+          bizErrorTypeTransformer: chatCompletion?.handleStreamBizErrorType,
+          callbacks: options?.callback,
+          provider,
+        };
+        if (customClient?.createChatCompletionStream) {
+          response = customClient.createChatCompletionStream(this.client, payload, this) as any;
+        } else {
+          response = await this.client.chat.completions.create(
+            {
+              ...postPayload,
+              messages,
+              ...(chatCompletion?.noUserId ? {} : { user: options?.user }),
+            },
+            {
+              // https://github.com/lobehub/lobe-chat/pull/318
+              headers: { Accept: '*/*' },
+              signal: options?.signal,
+            },
+          );
+        }
 
         if (postPayload.stream) {
           const [prod, useForDebug] = response.tee();
 
           if (debug?.chatCompletion?.()) {
-            debugStream(useForDebug.toReadableStream()).catch(console.error);
+            const useForDebugStream =
+              useForDebug instanceof ReadableStream ? useForDebug : useForDebug.toReadableStream();
+
+            debugStream(useForDebugStream).catch(console.error);
           }
 
-          return StreamingResponse(OpenAIStream(prod, options?.callback), {
+          return StreamingResponse(OpenAIStream(prod, streamOptions), {
             headers: options?.headers,
           });
         }
@@ -175,9 +230,11 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
           debugResponse(response);
         }
 
+        if (responseMode === 'json') return Response.json(response);
+
         const stream = transformResponseToStream(response as unknown as OpenAI.ChatCompletion);
 
-        return StreamingResponse(OpenAIStream(stream, options?.callback), {
+        return StreamingResponse(OpenAIStream(stream, streamOptions), {
           headers: options?.headers,
         });
       } catch (error) {
@@ -211,10 +268,39 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         .filter(Boolean) as ChatModelCard[];
     }
 
+    async embeddings(
+      payload: EmbeddingsPayload,
+      options?: EmbeddingsOptions,
+    ): Promise<EmbeddingItem[]> {
+      try {
+        const res = await this.client.embeddings.create(
+          { ...payload, user: options?.user },
+          { headers: options?.headers, signal: options?.signal },
+        );
+
+        return res.data;
+      } catch (error) {
+        throw this.handleError(error);
+      }
+    }
+
     async textToImage(payload: TextToImagePayload) {
       try {
         const res = await this.client.images.generate(payload);
         return res.data.map((o) => o.url) as string[];
+      } catch (error) {
+        throw this.handleError(error);
+      }
+    }
+
+    async textToSpeech(payload: TextToSpeechPayload, options?: TextToSpeechOptions) {
+      try {
+        const mp3 = await this.client.audio.speech.create(payload as any, {
+          headers: options?.headers,
+          signal: options?.signal,
+        });
+
+        return mp3.arrayBuffer();
       } catch (error) {
         throw this.handleError(error);
       }

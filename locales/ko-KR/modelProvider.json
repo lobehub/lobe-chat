@@ -38,11 +38,31 @@
       "placeholder": "AWS 비밀 액세스 키",
       "title": "AWS 비밀 액세스 키"
     },
+    "sessionToken": {
+      "desc": "AWS SSO/STS를 사용 중이라면 AWS 세션 토큰을 입력하세요.",
+      "placeholder": "AWS 세션 토큰",
+      "title": "AWS 세션 토큰 (선택 사항)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "사용자 정의 서비스 지역",
+      "customSessionToken": "사용자 정의 세션 토큰",
       "description": "AWS AccessKeyId / SecretAccessKey를 입력하면 세션이 시작됩니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
       "title": "사용자 정의 Bedrock 인증 정보 사용"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "당신의 Github PAT를 입력하세요. [여기](https://github.com/settings/tokens)를 클릭하여 생성하세요.",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "당신의 HuggingFace 토큰을 입력하세요. [여기](https://huggingface.co/settings/tokens)를 클릭하여 생성하세요.",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace 토큰"
     }
   },
   "ollama": {
@@ -97,6 +117,42 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "SenseNova Access Key ID를 입력하세요",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "SenseNova Access Key Secret를 입력하세요",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "Access Key ID / Access Key Secret를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 인증 구성을 기록하지 않습니다.",
+      "title": "사용자 정의 SenseNova 인증 정보 사용"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "바이두 천범 플랫폼의 Access Key를 입력하세요",
+      "placeholder": "Qianfan Access Key",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "AccessKey / SecretAccess가 올바르게 입력되었는지 테스트합니다"
+    },
+    "secretKey": {
+      "desc": "바이두 천범 플랫폼의 Secret Key를 입력하세요",
+      "placeholder": "Qianfan Secret Key",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "사용자 정의 서비스 지역",
+      "description": "당신의 AccessKey / SecretKey를 입력하면 대화를 시작할 수 있습니다. 애플리케이션은 당신의 인증 구성을 기록하지 않습니다",
+      "title": "사용자 정의 문신 일언 인증 정보 사용"
     }
   },
   "zeroone": {

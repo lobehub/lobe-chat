@@ -4,7 +4,6 @@ import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { ClientOptions } from 'openai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createTraceOptions } from '@/app/api/chat/agentRuntime';
 import * as langfuseCfg from '@/config/langfuse';
 import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
@@ -27,6 +26,8 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
+import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
+import { createTraceOptions } from '@/server/modules/AgentRuntime';
 
 import { AgentChatOptions } from './AgentRuntime';
 import { LobeBedrockAIParams } from './bedrock';
@@ -76,7 +77,7 @@ describe('AgentRuntime', () => {
         const jwtPayload = {
           apikey: 'user-azure-key',
           endpoint: 'user-azure-endpoint',
-          apiVersion: '2024-02-01',
+          apiVersion: '2024-06-01',
         };
 
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Azure, {

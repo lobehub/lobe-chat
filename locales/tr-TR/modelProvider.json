@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "Azure'un API versiyonu, YYYY-AA-GG formatına uygun, [en son versiyonu](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions) kontrol edin",
       "fetch": "Listeyi al",
-      "title": "Azure Api Versiyonu"
+      "title": "Azure API Versiyonu"
     },
     "empty": "İlk modeli eklemek için model kimliğini girin",
     "endpoint": {
@@ -38,11 +38,31 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "AWS SSO/STS kullanıyorsanız, lütfen AWS Oturum Tokeninizi girin",
+      "placeholder": "AWS Oturum Tokeni",
+      "title": "AWS Oturum Tokeni (isteğe bağlı)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Özel Bölge",
+      "customSessionToken": "Özel Oturum Tokeni",
       "description": "AWS AccessKeyId / SecretAccessKey bilgilerinizi girerek oturumu başlatabilirsiniz. Uygulama kimlik doğrulama bilgilerinizi kaydetmez.",
       "title": "Özel Bedrock Kimlik Bilgilerini Kullan"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Github PAT'nizi girin, [buraya](https://github.com/settings/tokens) tıklayarak oluşturun",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "HuggingFace Token'inizi buraya girin, [buraya](https://huggingface.co/settings/tokens) tıklayarak oluşturun",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace Token"
     }
   },
   "ollama": {
@@ -97,6 +117,42 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "开始下载...",
       "title": "下载指定的 Ollama 模型"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "SenseNova Erişim Anahtar Kimliği girin",
+      "placeholder": "SenseNova Erişim Anahtar Kimliği",
+      "title": "Erişim Anahtar Kimliği"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "SenseNova Erişim Anahtar Gizli Anahtarını girin",
+      "placeholder": "SenseNova Erişim Anahtar Gizli Anahtarı",
+      "title": "Erişim Anahtar Gizli Anahtarı"
+    },
+    "unlock": {
+      "description": "Oturuma başlamak için Erişim Anahtar Kimliğinizi / Erişim Anahtar Gizli Anahtarınızı girin. Uygulama kimlik doğrulama yapılandırmanızı kaydetmeyecek",
+      "title": "Özel SenseNova kimlik doğrulama bilgilerini kullan"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "Baidu Qianfan platform için Access Key girin",
+      "placeholder": "Qianfan Access Key",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "AccessKey / SecretAccess'ın doğru girilip girilmediğini test et"
+    },
+    "secretKey": {
+      "desc": "Baidu Qianfan platform için Secret Key girin",
+      "placeholder": "Qianfan Secret Key",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "Özel hizmet bölgesi",
+      "description": "Oturuma başlamak için AccessKey / SecretKey'nizi girin. Uygulama kimlik doğrulama yapılandırmanızı kaydetmeyecek",
+      "title": "Özel Wenxin Yiyan kimlik doğrulama bilgilerini kullan"
     }
   },
   "zeroone": {

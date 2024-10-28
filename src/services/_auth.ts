@@ -8,16 +8,49 @@ import { createJWT } from '@/utils/jwt';
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
-      const { accessKeyId, region, secretAccessKey } = keyVaultsConfigSelectors.bedrockConfig(
-        useUserStore.getState(),
-      );
+      const { accessKeyId, region, secretAccessKey, sessionToken } =
+        keyVaultsConfigSelectors.bedrockConfig(useUserStore.getState());
 
       const awsSecretAccessKey = secretAccessKey;
       const awsAccessKeyId = accessKeyId;
 
       const apiKey = (awsSecretAccessKey || '') + (awsAccessKeyId || '');
 
-      return { apiKey, awsAccessKeyId, awsRegion: region, awsSecretAccessKey };
+      return {
+        apiKey,
+        awsAccessKeyId,
+        awsRegion: region,
+        awsSecretAccessKey,
+        awsSessionToken: sessionToken,
+      };
+    }
+
+    case ModelProvider.SenseNova: {
+      const { sensenovaAccessKeyID, sensenovaAccessKeySecret } = keyVaultsConfigSelectors.sensenovaConfig(
+        useUserStore.getState(),
+      );
+
+      const apiKey = (sensenovaAccessKeyID || '') + ':' + (sensenovaAccessKeySecret || '')
+
+      return { 
+        apiKey,
+        sensenovaAccessKeyID: sensenovaAccessKeyID, 
+        sensenovaAccessKeySecret: sensenovaAccessKeySecret, 
+      };
+    }
+
+    case ModelProvider.Wenxin: {
+      const { secretKey, accessKey } = keyVaultsConfigSelectors.wenxinConfig(
+        useUserStore.getState(),
+      );
+
+      const apiKey = (accessKey || '') + (secretKey || '');
+
+      return {
+        apiKey,
+        wenxinAccessKey: accessKey,
+        wenxinSecretKey: secretKey,
+      };
     }
 
     case ModelProvider.Azure: {

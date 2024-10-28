@@ -9,10 +9,12 @@
       "title": "Launch {{name}}"
     }
   },
-  "appInitializing": "The application is initializing, please wait for a moment...",
+  "appInitializing": "Application is starting...",
   "autoGenerate": "Auto Generate",
   "autoGenerateTooltip": "Auto-generate assistant description based on prompts",
   "autoGenerateTooltipDisabled": "Please enter a tooltip before using the autocomplete feature",
+  "back": "Back",
+  "batchDelete": "Batch Delete",
   "blog": "Product Blog",
   "cancel": "Cancel",
   "changelog": "Changelog",
@@ -31,6 +33,7 @@
   "defaultSession": "Default Assistant",
   "delete": "Delete",
   "document": "User Manual",
+  "download": "Download",
   "duplicate": "Create Duplicate",
   "edit": "Edit",
   "export": "Export Configuration",
@@ -192,7 +195,8 @@
   },
   "tab": {
     "chat": "Chat",
-    "market": "Discover",
+    "discover": "Discover",
+    "files": "Files",
     "me": "Me",
     "setting": "Settings"
   },

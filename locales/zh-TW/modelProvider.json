@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查閱[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "獲取列表",
-      "title": "Azure Api 版本"
+      "title": "Azure API 版本"
     },
     "empty": "請輸入模型 ID 添加第一個模型",
     "endpoint": {
@@ -38,11 +38,31 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "如果你正在使用 AWS SSO/STS，請輸入你的 AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (可選)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "自定義服務區域",
+      "customSessionToken": "自訂 Session Token",
       "description": "輸入你的 AWS AccessKeyId / SecretAccessKey 即可開始會話。應用程式不會記錄你的驗證配置",
       "title": "使用自定義 Bedrock 驗證資訊"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "填入你的 Github 個人存取權杖，點擊[這裡](https://github.com/settings/tokens) 創建",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "填入你的 HuggingFace Token，點擊 [這裡](https://huggingface.co/settings/tokens) 創建",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace Token"
     }
   },
   "ollama": {
@@ -97,6 +117,42 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "開始下載...",
       "title": "下載指定的 Ollama 模型"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "填入 SenseNova Access Key ID",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "填入 SenseNova Access Key Secret",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "輸入你的 Access Key ID / Access Key Secret 即可開始會話。應用不會記錄你的鑑權配置",
+      "title": "使用自訂的 SenseNova 鑑權資訊"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "填入百度千帆平台的 Access Key",
+      "placeholder": "千帆 Access Key",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "測試 AccessKey / SecretAccess 是否填寫正確"
+    },
+    "secretKey": {
+      "desc": "填入百度千帆平台 Secret Key",
+      "placeholder": "千帆 Secret Key",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "自訂服務區域",
+      "description": "輸入你的 AccessKey / SecretKey 即可開始會話。應用不會記錄你的鑑權配置",
+      "title": "使用自訂文心一言鑑權資訊"
     }
   },
   "zeroone": {

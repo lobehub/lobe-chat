@@ -38,11 +38,31 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "Если вы используете AWS SSO/STS, введите ваш AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (необязательно)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Пользовательский регион обслуживания",
+      "customSessionToken": "Пользовательский токен сессии",
       "description": "Введите свой ключ доступа AWS AccessKeyId / SecretAccessKey, чтобы начать сеанс. Приложение не будет сохранять вашу конфигурацию аутентификации",
       "title": "Использовать пользовательскую информацию аутентификации Bedrock"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Введите ваш персональный токен доступа GitHub (PAT), нажмите [здесь](https://github.com/settings/tokens), чтобы создать его",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Введите ваш токен HuggingFace, нажмите [здесь](https://huggingface.co/settings/tokens) для создания",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Токен HuggingFace"
     }
   },
   "ollama": {
@@ -97,6 +117,42 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Введите SenseNova Access Key ID",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Введите SenseNova Access Key Secret",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "Введите ваш Access Key ID / Access Key Secret, чтобы начать сессию. Приложение не будет записывать ваши настройки аутентификации",
+      "title": "Используйте пользовательскую аутентификацию SenseNova"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "Введите Access Key платформы Baidu Qianfan",
+      "placeholder": "Access Key Qianfan",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "Проверьте, правильно ли заполнены AccessKey / SecretAccess"
+    },
+    "secretKey": {
+      "desc": "Введите Secret Key платформы Baidu Qianfan",
+      "placeholder": "Secret Key Qianfan",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "Пользовательский регион сервиса",
+      "description": "Введите ваш AccessKey / SecretKey, чтобы начать сессию. Приложение не будет сохранять ваши данные аутентификации",
+      "title": "Использовать пользовательскую информацию аутентификации Wenxin Yiyan"
     }
   },
   "zeroone": {

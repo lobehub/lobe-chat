@@ -38,11 +38,31 @@
       "placeholder": "Chiave di accesso segreta AWS",
       "title": "Chiave di accesso segreta AWS"
     },
+    "sessionToken": {
+      "desc": "Se stai utilizzando AWS SSO/STS, inserisci il tuo AWS Session Token",
+      "placeholder": "AWS Session Token",
+      "title": "AWS Session Token (opzionale)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Regione del servizio personalizzata",
+      "customSessionToken": "Token di sessione personalizzato",
       "description": "Inserisci la tua chiave di accesso AWS AccessKeyId / SecretAccessKey per avviare la sessione. L'applicazione non memorizzerà la tua configurazione di autenticazione",
       "title": "Usa le informazioni di autenticazione Bedrock personalizzate"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "Inserisci il tuo PAT di Github, clicca [qui](https://github.com/settings/tokens) per crearne uno",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Inserisci il tuo token HuggingFace, clicca [qui](https://huggingface.co/settings/tokens) per crearne uno",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Token HuggingFace"
     }
   },
   "ollama": {
@@ -97,6 +117,42 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Inizio download...",
       "title": "Scarica il modello Ollama specificato"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Inserisci l'ID chiave di accesso SenseNova",
+      "placeholder": "ID chiave di accesso SenseNova",
+      "title": "ID chiave di accesso"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Inserisci il segreto della chiave di accesso SenseNova",
+      "placeholder": "Segreto della chiave di accesso SenseNova",
+      "title": "Segreto della chiave di accesso"
+    },
+    "unlock": {
+      "description": "Inserisci il tuo ID chiave di accesso / segreto della chiave di accesso per iniziare la sessione. L'app non registrerà la tua configurazione di autenticazione",
+      "title": "Utilizza informazioni di autenticazione personalizzate di SenseNova"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "Inserisci l'Access Key della piattaforma Qianfan di Baidu",
+      "placeholder": "Access Key Qianfan",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "Verifica se l'AccessKey / SecretAccess è stato inserito correttamente"
+    },
+    "secretKey": {
+      "desc": "Inserisci il Secret Key della piattaforma Qianfan di Baidu",
+      "placeholder": "Secret Key Qianfan",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "Regione di servizio personalizzata",
+      "description": "Inserisci il tuo AccessKey / SecretKey per iniziare la sessione. L'app non registrerà la tua configurazione di autenticazione",
+      "title": "Utilizza le informazioni di autenticazione personalizzate di Wenxin Yiyan"
     }
   },
   "zeroone": {

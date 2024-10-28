@@ -1,0 +1,74 @@
+---
+title: LobeChat 身份验证服务配置
+description: 了解如何使用 Clerk 或 Next Auth 配置外部身份验证服务，以统一管理用户授权。支持的身份验证服务包括 Auth0、 Azure ID 等。
+tags:
+  - 身份验证服务
+  - LobeChat
+  - SSO
+  - Clerk
+---
+
+# 身份验证服务
+
+LobeChat 支持使用 Clerk 或者 Next Auth 配置外部身份验证服务，供企业 / 组织内部使用，统一管理用户授权。
+
+## Clerk
+
+Clerk 是一个近期流行起来的全面的身份验证解决方案，它提供了简单而强大的 API 和服务来处理用户认证和会话管理。Clerk 的设计哲学是提供一套简洁、现代的认证解决方案，使得开发者可以轻松集成和使用。
+
+LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全、便捷的登录和注册体验，同时也为开发者减轻了管理身份验证逻辑的负担。Clerk 的简洁和现代的设计理念与 LobeChat 的目标非常契合，使得整个平台的用户管理更加高效和可靠。
+
+在 LobeChat 的环境变量中设置 `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` 和 `CLERK_SECRET_KEY`，即可开启和使用 Clerk。
+
+## Next Auth
+
+在使用 NextAuth 之前，请先在 LobeChat 的环境变量中设置以下变量：
+
+| 环境变量 | 类型 | 描述 |
+| --- | --- | --- |
+| `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令： `openssl rand -base64 32`，或者访问 `https://generate-secret.vercel.app/32` 生成秘钥。 |
+| `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
+| `NEXT_AUTH_SSO_PROVIDERS` | 可选 | 该环境变量用于同时启用多个身份验证源，以逗号 `,` 分割，例如 `auth0,microsoft-entra-id,authentik`。 |
+
+目前支持的身份验证服务有：
+
+<Cards>
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/auth0'} title={'Auth0'} />
+  <Card
+    href={'/zh/docs/self-hosting/advanced/auth/next-auth/microsoft-entra-id'}
+    title={'Microsoft Entra ID'}
+  />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/authentik'} title={'Authentik'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/github'} title={'Github'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/zitadel'} title={'ZITADEL'} />
+  <Card
+    href={'/zh/docs/self-hosting/advanced/auth/next-auth/cloudflare-zero-trust'}
+    title={'Cloudflare Zero Trust'}
+  />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/authelia'} title={'Authelia'} />
+  <Card href={'/zh/docs/self-hosting/advanced/auth/next-auth/logto'} title={'Logto'} />
+</Cards>
+
+点击即可查看对应平台的配置文档。
+
+## 进阶配置
+
+同时启用多个身份验证源请设置 `NEXT_AUTH_SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,microsoft-entra-id,authentik`。
+
+顺序为 SSO 提供商的显示顺序。
+
+| SSO 提供商         | 值          |
+| ------------------ | ----------- |
+| Auth0              | `auth0`     |
+| Authenlia          | `authenlia` |
+| Authentik          | `authentik` |
+| Casdoor            | `casdoor`   |
+| Cloudflare Zero Trust | `cloudflare-zero-trust` |
+| Github             | `github`    |
+| Logto              | `logto`     |
+| Microsoft Entra ID | `microsoft-entra-id`  |
+| ZITADEL            | `zitadel`   |
+
+## 其他 SSO 提供商
+
+请参考 [NextAuth.js](https://next-auth.js.org/providers) 文档，欢迎提交 Pull Request。

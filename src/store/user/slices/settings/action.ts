@@ -3,6 +3,7 @@ import isEqual from 'fast-deep-equal';
 import { DeepPartial } from 'utility-types';
 import type { StateCreator } from 'zustand/vanilla';
 
+import { MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { shareService } from '@/services/share';
 import { userService } from '@/services/user';
 import type { UserStore } from '@/store/user';
@@ -31,7 +32,10 @@ export interface UserSettingsAction {
   updateGeneralConfig: (settings: Partial<UserGeneralConfig>) => Promise<void>;
   updateKeyVaults: (settings: Partial<UserKeyVaults>) => Promise<void>;
 
-  updateSystemAgent: (key: UserSystemAgentConfigKey, value: SystemAgentItem) => Promise<void>;
+  updateSystemAgent: (
+    key: UserSystemAgentConfigKey,
+    value: Partial<SystemAgentItem>,
+  ) => Promise<void>;
 }
 
 export const createSettingsSlice: StateCreator<
@@ -63,7 +67,8 @@ export const createSettingsSlice: StateCreator<
 
   internal_createSignal: () => {
     const abortController = get().updateSettingsSignal;
-    if (abortController && !abortController.signal.aborted) abortController.abort('canceled');
+    if (abortController && !abortController.signal.aborted)
+      abortController.abort(MESSAGE_CANCEL_FLAT);
 
     const newSignal = new AbortController();
 
@@ -107,9 +112,9 @@ export const createSettingsSlice: StateCreator<
   updateKeyVaults: async (keyVaults) => {
     await get().setSettings({ keyVaults });
   },
-  updateSystemAgent: async (key, { provider, model }) => {
+  updateSystemAgent: async (key, value) => {
     await get().setSettings({
-      systemAgent: { [key]: { model, provider } },
+      systemAgent: { [key]: { ...value } },
     });
   },
 });

@@ -13,7 +13,7 @@ import { SessionGroupItem } from '@/types/session';
 
 import GroupItem from './GroupItem';
 
-const useStyles = createStyles(({ css, token, stylish }) => ({
+const useStyles = createStyles(({ css, token }) => ({
   container: css`
     height: 36px;
     padding-inline: 8px;
@@ -21,7 +21,6 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
     transition: background 0.2s ease-in-out;
 
     &:hover {
-      ${stylish.blur};
       background: ${token.colorFillTertiary};
     }
   `,

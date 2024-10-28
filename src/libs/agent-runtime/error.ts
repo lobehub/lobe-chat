@@ -3,6 +3,8 @@
 export const AgentRuntimeErrorType = {
   AgentRuntimeError: 'AgentRuntimeError', // Agent Runtime 模块运行时错误
   LocationNotSupportError: 'LocationNotSupportError',
+  QuotaLimitReached: 'QuotaLimitReached',
+  PermissionDenied: 'PermissionDenied',
 
   InvalidProviderAPIKey: 'InvalidProviderAPIKey',
   ProviderBizError: 'ProviderBizError',
@@ -11,6 +13,9 @@ export const AgentRuntimeErrorType = {
   OllamaBizError: 'OllamaBizError',
 
   InvalidBedrockCredentials: 'InvalidBedrockCredentials',
+  StreamChunkError: 'StreamChunkError',
+
+  InvalidGithubToken: 'InvalidGithubToken',
 
   /**
    * @deprecated

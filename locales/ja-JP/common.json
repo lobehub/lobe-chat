@@ -9,10 +9,12 @@
       "title": "{{name}} を体験してみてください"
     }
   },
-  "appInitializing": "アプリケーションを初期化しています。しばらくお待ちください...",
+  "appInitializing": "アプリケーションを初期化しています...",
   "autoGenerate": "自動生成",
   "autoGenerateTooltip": "ヒントに基づいてエージェントの説明を自動生成します",
   "autoGenerateTooltipDisabled": "ツールチップを入力してから自動生成機能を使用してください",
+  "back": "戻る",
+  "batchDelete": "バッチ削除",
   "blog": "製品ブログ",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
@@ -31,6 +33,7 @@
   "defaultSession": "デフォルトセッション",
   "delete": "削除",
   "document": "ドキュメント",
+  "download": "ダウンロード",
   "duplicate": "コピーを作成する",
   "edit": "編集",
   "export": "エクスポート",
@@ -192,7 +195,8 @@
   },
   "tab": {
     "chat": "チャット",
-    "market": "探す",
+    "discover": "発見",
+    "files": "ファイル",
     "me": "私",
     "setting": "設定"
   },

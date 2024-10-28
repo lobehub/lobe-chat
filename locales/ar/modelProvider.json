@@ -3,7 +3,7 @@
     "azureApiVersion": {
       "desc": "نسخة API الخاصة بـ Azure، والتي تتبع تنسيق YYYY-MM-DD، راجع [الإصدارات الأحدث](https://learn.microsoft.com/zh-en/azure/ai-services/openai/reference#chat-completions)",
       "fetch": "جلب القائمة",
-      "title": "Azure Api Version"
+      "title": "Azure API Version"
     },
     "empty": "الرجاء إدخال معرف النموذج لإضافة أول نموذج",
     "endpoint": {
@@ -38,11 +38,31 @@
       "placeholder": "AWS Secret Access Key",
       "title": "AWS Secret Access Key"
     },
+    "sessionToken": {
+      "desc": "إذا كنت تستخدم AWS SSO/STS، يرجى إدخال رمز جلسة AWS الخاص بك",
+      "placeholder": "رمز جلسة AWS",
+      "title": "رمز جلسة AWS (اختياري)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "منطقة خدمة مخصصة",
+      "customSessionToken": "رمز الجلسة المخصص",
       "description": "أدخل معرف الوصول / مفتاح الوصول السري الخاص بك في AWS لبدء الجلسة. لن يتم تسجيل تكوين المصادقة الخاص بك من قبل التطبيق",
       "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
+    }
+  },
+  "github": {
+    "personalAccessToken": {
+      "desc": "أدخل رمز الوصول الشخصي الخاص بك على Github، انقر [هنا](https://github.com/settings/tokens) لإنشاء واحد",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
+    }
+  },
+  "huggingface": {
+    "accessToken": {
+      "desc": "أدخل رمز HuggingFace الخاص بك، انقر [هنا](https://huggingface.co/settings/tokens) لإنشاء واحد",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "رمز HuggingFace"
     }
   },
   "ollama": {
@@ -97,6 +117,42 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "أدخل معرف مفتاح الوصول لـ SenseNova",
+      "placeholder": "معرف مفتاح الوصول لـ SenseNova",
+      "title": "معرف مفتاح الوصول"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "أدخل سر مفتاح الوصول لـ SenseNova",
+      "placeholder": "سر مفتاح الوصول لـ SenseNova",
+      "title": "سر مفتاح الوصول"
+    },
+    "unlock": {
+      "description": "أدخل معرف مفتاح الوصول / سر مفتاح الوصول لبدء الجلسة. التطبيق لن يسجل إعدادات المصادقة الخاصة بك",
+      "title": "استخدم معلومات مصادقة SenseNova المخصصة"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "أدخل مفتاح الوصول من منصة بايدو تشيانفان",
+      "placeholder": "مفتاح الوصول لتشيانفان",
+      "title": "مفتاح الوصول"
+    },
+    "checker": {
+      "desc": "اختبر ما إذا كان مفتاح الوصول / مفتاح السر صحيحًا"
+    },
+    "secretKey": {
+      "desc": "أدخل مفتاح السر من منصة بايدو تشيانفان",
+      "placeholder": "مفتاح السر لتشيانفان",
+      "title": "مفتاح السر"
+    },
+    "unlock": {
+      "customRegion": "منطقة الخدمة المخصصة",
+      "description": "أدخل مفتاح الوصول / مفتاح السر لبدء المحادثة. التطبيق لن يسجل إعدادات المصادقة الخاصة بك",
+      "title": "استخدام معلومات مصادقة وينشين يي يان المخصصة"
     }
   },
   "zeroone": {

@@ -19,15 +19,23 @@ describe('featureFlagsSelectors', () => {
     expect(result).toEqual({
       enableWebrtc: false,
       isAgentEditable: false,
+      enablePlugins: true,
       showCreateSession: true,
+      enableRAGEval: false,
       showDalle: true,
+      enableKnowledgeBase: true,
       showLLM: false,
       showCloudPromotion: false,
       showOpenAIApiKey: true,
+      hideDocs: false,
+      hideGitHub: false,
       showOpenAIProxyUrl: true,
       enableCheckUpdates: true,
       showWelcomeSuggest: true,
       enableClerkSignUp: true,
+      showMarket: true,
+      showPinList: false,
+      enableSTT: true,
     });
   });
 });

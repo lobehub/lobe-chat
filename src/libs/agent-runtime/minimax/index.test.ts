@@ -231,7 +231,7 @@ describe('LobeMinimaxAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'text-davinci-003',
           stream: true,
-          temperature: 0.5,
+          temperature: 0.25,
           top_p: 0.8,
         });
       });
@@ -253,10 +253,10 @@ describe('LobeMinimaxAI', () => {
         });
       });
 
-      it('should include max tokens when model is abab6.5-chat', () => {
+      it('should include max tokens when model is abab6.5t-chat', () => {
         const payload: ChatStreamPayload = {
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'abab6.5-chat',
+          model: 'abab6.5t-chat',
           temperature: 0,
           top_p: 0,
         };
@@ -265,9 +265,9 @@ describe('LobeMinimaxAI', () => {
 
         expect(result).toEqual({
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'abab6.5-chat',
+          model: 'abab6.5t-chat',
           stream: true,
-          max_tokens: 2048,
+          max_tokens: 4096,
         });
       });
     });

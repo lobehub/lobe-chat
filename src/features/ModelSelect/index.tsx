@@ -25,7 +25,7 @@ interface ModelOption {
 interface ModelSelectProps {
   onChange?: (props: { model: string; provider: string }) => void;
   showAbility?: boolean;
-  value?: string;
+  value?: { model: string; provider?: string };
 }
 
 const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = true }) => {
@@ -38,7 +38,7 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
       provider.chatModels.map((model) => ({
         label: <ModelItemRender {...model} showInfoTag={showAbility} />,
         provider: provider.id,
-        value: model.id,
+        value: `${provider.id}/${model.id}`,
       }));
 
     if (enabledList.length === 1) {
@@ -55,13 +55,14 @@ const ModelSelect = memo<ModelSelectProps>(({ value, onChange, showAbility = tru
 
   return (
     <Select
-      onChange={(model, option) => {
+      onChange={(value, option) => {
+        const model = value.split('/').slice(1).join('/');
         onChange?.({ model, provider: (option as unknown as ModelOption).provider });
       }}
       options={options}
       popupClassName={styles.select}
       popupMatchSelectWidth={false}
-      value={value}
+      value={`${value?.provider}/${value?.model}`}
     />
   );
 });

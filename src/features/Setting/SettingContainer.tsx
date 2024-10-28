@@ -2,34 +2,50 @@
 
 import { useResponsive } from 'antd-style';
 import { PropsWithChildren, ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-const SettingContainer = memo<
-  PropsWithChildren<{ addonAfter?: ReactNode; addonBefore?: ReactNode }>
->(({ children, addonAfter, addonBefore }) => {
-  const { mobile = false } = useResponsive();
-  return (
-    <Flexbox
-      align={'center'}
-      height={'100%'}
-      paddingBlock={mobile ? undefined : 32}
-      style={{ overflowX: 'hidden', overflowY: 'auto' }}
-      width={'100%'}
-    >
-      {addonBefore}
+interface SettingContainerProps extends FlexboxProps {
+  addonAfter?: ReactNode;
+  addonBefore?: ReactNode;
+
+  maxWidth?: number;
+}
+const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
+  ({
+    id = 'lobe-desktop-scroll-container',
+    maxWidth = 1024,
+    children,
+    addonAfter,
+    addonBefore,
+    style,
+    ...rest
+  }) => {
+    const { mobile = false } = useResponsive();
+    return (
       <Flexbox
-        gap={64}
-        paddingInline={mobile ? undefined : 24}
-        style={{
-          maxWidth: 1024,
-        }}
+        align={'center'}
+        height={'100%'}
+        id={id}
+        paddingBlock={mobile ? undefined : 32}
+        style={{ overflowX: 'hidden', overflowY: 'auto', ...style }}
         width={'100%'}
+        {...rest}
       >
-        {children}
+        {addonBefore}
+        <Flexbox
+          gap={64}
+          paddingInline={mobile ? undefined : 24}
+          style={{
+            maxWidth,
+          }}
+          width={'100%'}
+        >
+          {children}
+        </Flexbox>
+        {addonAfter}
       </Flexbox>
-      {addonAfter}
-    </Flexbox>
-  );
-});
+    );
+  },
+);
 
 export default SettingContainer;

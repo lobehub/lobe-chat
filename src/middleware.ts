@@ -2,25 +2,28 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 import { authEnv } from '@/config/auth';
-import { auth } from '@/libs/next-auth';
+import NextAuthEdge from '@/libs/next-auth/edge';
 
 import { OAUTH_AUTHORIZED } from './const/auth';
 
 export const config = {
   matcher: [
     // include any files in the api or trpc folders that might have an extension
-    '/(api|trpc)(.*)',
+    '/(api|trpc|webapi)(.*)',
     // include the /
     '/',
     '/chat(.*)',
     '/settings(.*)',
+    '/files(.*)',
+    '/repos(.*)',
     // ↓ cloud ↓
   ],
 };
 
 const defaultMiddleware = () => NextResponse.next();
 
-const nextAuthMiddleware = auth((req) => {
+// Initialize an Edge compatible NextAuth middleware
+const nextAuthMiddleware = NextAuthEdge.auth((req) => {
   // skip the '/' route
   if (req.nextUrl.pathname === '/') return NextResponse.next();
 
@@ -45,6 +48,7 @@ const nextAuthMiddleware = auth((req) => {
 
 const isProtectedRoute = createRouteMatcher([
   '/settings(.*)',
+  '/files(.*)',
   // ↓ cloud ↓
 ]);
 

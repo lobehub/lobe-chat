@@ -16,7 +16,8 @@
   "fetchErrorDetail": "Dettagli dell'errore",
   "notFound": {
     "backHome": "Torna alla homepage",
-    "desc": "Non riusciamo a trovare la pagina che stai cercando, controlla che il link sia corretto",
+    "check": "Controlla se l'URL è corretto",
+    "desc": "Non siamo riusciti a trovare la pagina che stai cercando",
     "title": "Hai raggiunto un territorio sconosciuto?"
   },
   "pluginSettings": {
@@ -50,14 +51,22 @@
     "431": "Spiacenti, le intestazioni della tua richiesta sono troppo grandi per il server da gestire",
     "451": "Spiacenti, per motivi legali, il server rifiuta di fornire questa risorsa",
     "500": "Spiacenti, il server sembra avere qualche difficoltà al momento e non può completare la tua richiesta. Riprova più tardi",
+    "501": "Ci dispiace, il server non sa ancora come gestire questa richiesta, per favore verifica che la tua operazione sia corretta",
     "502": "Spiacenti, il server sembra smarrito e non può fornire servizio al momento. Riprova più tardi",
     "503": "Spiacenti, il server non può elaborare la tua richiesta al momento, probabilmente a causa di sovraccarico o manutenzione in corso. Riprova più tardi",
     "504": "Spiacenti, il server non ha ricevuto risposta dal server upstream. Riprova più tardi",
+    "505": "Ci dispiace, il server non supporta la versione HTTP che stai utilizzando, per favore aggiorna e riprova",
+    "506": "Ci dispiace, c'è un problema di configurazione del server, contatta l'amministratore per risolverlo",
+    "507": "Ci dispiace, lo spazio di archiviazione del server è insufficiente per elaborare la tua richiesta, per favore riprova più tardi",
+    "509": "Ci dispiace, la larghezza di banda del server è esaurita, per favore riprova più tardi",
+    "510": "Ci dispiace, il server non supporta le funzionalità di estensione richieste, contatta l'amministratore",
+    "524": "Ci dispiace, il server ha superato il timeout in attesa di una risposta, potrebbe essere a causa di una risposta troppo lenta, per favore riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
     "FreePlanLimit": "Attualmente sei un utente gratuito e non puoi utilizzare questa funzione. Per favore, passa a un piano a pagamento per continuare.",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",
     "InvalidClerkUser": "Spiacenti, al momento non hai effettuato l'accesso. Per favore, effettua l'accesso o registrati prima di continuare.",
+    "InvalidGithubToken": "Il token di accesso personale di Github non è corretto o è vuoto. Controlla il token di accesso personale di Github e riprova.",
     "InvalidOllamaArgs": "Configurazione Ollama non valida, controllare la configurazione di Ollama e riprovare",
     "InvalidProviderAPIKey": "{{provider}} Chiave API non valida o vuota, controlla la Chiave API di {{provider}} e riprova",
     "LocationNotSupportError": "Spiacenti, la tua posizione attuale non supporta questo servizio modello, potrebbe essere a causa di restrizioni geografiche o servizi non attivati. Verifica se la posizione attuale supporta l'uso di questo servizio o prova a utilizzare un'altra posizione.",
@@ -65,6 +74,7 @@
     "OllamaBizError": "Errore di servizio Ollama, controllare le informazioni seguenti o riprovare",
     "OllamaServiceUnavailable": "Servizio Ollama non disponibile: controllare che Ollama sia in esecuzione correttamente o che la configurazione di cross-origin di Ollama sia corretta",
     "OpenAIBizError": "Errore di business di OpenAI. Si prega di controllare le informazioni seguenti o riprovare.",
+    "PermissionDenied": "Ci dispiace, non hai il permesso di accedere a questo servizio. Controlla se la tua chiave ha i diritti di accesso.",
     "PluginApiNotFound": "Spiacenti, l'API specificata non esiste nel manifesto del plugin. Verifica che il metodo di richiesta corrisponda all'API del manifesto del plugin",
     "PluginApiParamsError": "Spiacenti, la convalida dei parametri di input della richiesta del plugin non è riuscita. Verifica che i parametri di input corrispondano alle informazioni dell'API",
     "PluginFailToTransformArguments": "Spiacenti, la trasformazione degli argomenti della chiamata al plugin non è riuscita. Si prega di provare a rigenerare il messaggio dell'assistente o riprovare dopo aver cambiato il modello AI di Tools Calling con capacità più avanzate.",
@@ -79,7 +89,10 @@
     "PluginServerError": "Errore nella risposta del server del plugin. Verifica il file descrittivo del plugin, la configurazione del plugin o l'implementazione del server",
     "PluginSettingsInvalid": "Il plugin deve essere configurato correttamente prima di poter essere utilizzato. Verifica che la tua configurazione sia corretta",
     "ProviderBizError": "Errore di business del fornitore {{provider}}. Si prega di controllare le informazioni seguenti o riprovare.",
-    "SubscriptionPlanLimit": "Il tuo piano di abbonamento ha raggiunto il limite e non puoi utilizzare questa funzione. Per favore, passa a un piano superiore o acquista un pacchetto di risorse per continuare."
+    "QuotaLimitReached": "Ci dispiace, l'uso attuale dei token o il numero di richieste ha raggiunto il limite di quota per questa chiave. Si prega di aumentare la quota di questa chiave o riprovare più tardi.",
+    "StreamChunkError": "Erro di analisi del blocco di messaggi della richiesta in streaming. Controlla se l'interfaccia API attuale è conforme agli standard o contatta il tuo fornitore di API per ulteriori informazioni.",
+    "SubscriptionPlanLimit": "Il tuo piano di abbonamento ha raggiunto il limite e non puoi utilizzare questa funzione. Per favore, passa a un piano superiore o acquista un pacchetto di risorse per continuare.",
+    "UnknownChatFetchError": "Ci scusiamo, si è verificato un errore di richiesta sconosciuto. Si prega di controllare le informazioni seguenti o riprovare."
   },
   "stt": {
     "responseError": "Errore nella richiesta del servizio. Verifica la configurazione o riprova"
@@ -113,6 +126,10 @@
   },
   "upload": {
     "desc": "Dettagli: {{detail}}",
-    "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi"
+    "fileOnlySupportInServerMode": "L'attuale modalità di distribuzione non supporta il caricamento di file non immagine. Per caricare file in formato {{ext}}, si prega di passare alla distribuzione del database sul server o di utilizzare il servizio {{cloud}}.",
+    "networkError": "Si prega di verificare che la connessione di rete sia stabile e controllare se la configurazione CORS del servizio di archiviazione file è corretta.",
+    "title": "Caricamento del file fallito, controlla la connessione di rete o riprova più tardi",
+    "unknownError": "Motivo dell'errore: {{reason}}",
+    "uploadFailed": "Caricamento del file non riuscito."
   }
 }
