@@ -372,10 +372,16 @@
       "modelDesc": "Model designated for generating assistant name, description, avatar, and tags",
       "title": "Automatically Generate Assistant Information"
     },
+    "customPrompt": {
+      "addPrompt": "Add Custom Prompt",
+      "desc": "Once filled out, the system assistant will use the custom prompt when generating content",
+      "placeholder": "Please enter custom prompt",
+      "title": "Custom Prompt"
+    },
     "queryRewrite": {
       "label": "Question Rewriting Model",
       "modelDesc": "Specify the model used to optimize user inquiries",
-      "title": "Knowledge Base"
+      "title": "Knowledge Base Question Rewrite"
     },
     "title": "System Assistants",
     "topic": {

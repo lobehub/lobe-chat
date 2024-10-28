@@ -23,7 +23,7 @@ export type ServerLanguageModel = Partial<Record<GlobalLLMProviderKey, ServerMod
 
 export interface GlobalServerConfig {
   defaultAgent?: DeepPartial<UserDefaultAgent>;
-  defaultEmbed?: DeepPartial<SystemEmbeddingConfig>;
+  defaultFiles?: DeepPartial<SystemEmbeddingConfig>;
   enableUploadFileToServer?: boolean;
   enabledAccessCode?: boolean;
   enabledOAuthSSO?: boolean;

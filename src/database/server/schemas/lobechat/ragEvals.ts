@@ -63,7 +63,7 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
   }),
   languageModel: text('language_model').$defaultFn(() => DEFAULT_MODEL),
   embeddingModel: text('embedding_model').$defaultFn(
-    () => getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string,
+    () => getServerGlobalConfig().defaultFiles!!.embedding_model!!.model as string,
   ),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),

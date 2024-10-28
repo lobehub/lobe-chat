@@ -53,8 +53,8 @@ export const fileRouter = router({
 
       const asyncTask = await ctx.asyncTaskModel.findById(input.taskId);
 
-      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
+      const model = getServerGlobalConfig().defaultFiles!!.embedding_model!!.model as string;
+      const provider = getServerGlobalConfig().defaultFiles!!.embedding_model!!.provider as string;
 
       console.log('embeddingProvider:', provider);
       console.log('embeddingModel:', model);

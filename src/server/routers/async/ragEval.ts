@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import { z } from 'zod';
 
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
-import { DEFAULT_MODEL } from '@/const/settings';
+import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
 import { ChunkModel } from '@/database/server/models/chunk';
 import { EmbeddingModel } from '@/database/server/models/embedding';
 import { FileModel } from '@/database/server/models/file';
@@ -12,8 +12,8 @@ import {
   EvalEvaluationModel,
   EvaluationRecordModel,
 } from '@/database/server/models/ragEval';
+import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
-import { getServerGlobalConfig } from '@/server/globalConfig';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
@@ -44,8 +44,6 @@ export const ragEvalRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const evalRecord = await ctx.evalRecordModel.findById(input.evalRecordId);
-      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
 
       if (!evalRecord) {
         throw new TRPCError({ code: 'BAD_REQUEST', message: 'Evaluation not found' });
@@ -53,7 +51,10 @@ export const ragEvalRouter = router({
 
       const now = Date.now();
       try {
-        const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
+        const agentRuntime = await initAgentRuntimeWithUserPayload(
+          ModelProvider.OpenAI,
+          ctx.jwtPayload,
+        );
 
         const { question, languageModel, embeddingModel } = evalRecord;
 
@@ -65,7 +66,7 @@ export const ragEvalRouter = router({
           const embeddings = await agentRuntime.embeddings({
             dimensions: 1024,
             input: question,
-            model: model,
+            model: !!embeddingModel ? embeddingModel : DEFAULT_EMBEDDING_MODEL,
           });
 
           const embeddingId = await ctx.embeddingModel.create({

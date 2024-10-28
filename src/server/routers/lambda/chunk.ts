@@ -105,8 +105,8 @@ export const chunkRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       console.time('embedding');
-      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
+      const model = getServerGlobalConfig().defaultFiles!!.embedding_model!!.model as string;
+      const provider = getServerGlobalConfig().defaultFiles!!.embedding_model!!.provider as string;
       const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
       const embeddings = await agentRuntime.embeddings({
@@ -127,8 +127,8 @@ export const chunkRouter = router({
     .input(SemanticSearchSchema)
     .mutation(async ({ ctx, input }) => {
       const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
-      const model = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultEmbed!!.embedding_model!!.provider as string;
+      const model = getServerGlobalConfig().defaultFiles!!.embedding_model!!.model as string;
+      const provider = getServerGlobalConfig().defaultFiles!!.embedding_model!!.provider as string;
       let embedding: number[];
       let ragQueryId: string;
       console.log('embeddingProvider:', provider);

@@ -30,9 +30,10 @@ export const parseSystemAgent = (envString: string = ''): Partial<CommonSystemCo
 
       if (protectedKeys.includes(key)) {
         config[key as keyof CommonSystemConfig] = {
+          enabled: key === 'queryRewrite' ? true : undefined,
           model: model.trim(),
           provider: provider.trim(),
-        };
+        } as any;
       }
     } else {
       throw new Error('Invalid environment variable format');

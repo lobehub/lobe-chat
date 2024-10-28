@@ -184,5 +184,6 @@
         "processing": "Datei wird verarbeitet..."
       }
     }
-  }
+  },
+  "zenMode": "Fokusmodus"
 }
