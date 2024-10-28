@@ -276,12 +276,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                | 助手说明                                                                                                   |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [矢量 Logo 生成器](https://chat-preview.lobehub.com/market?agent=svg-logo)<br/><sup>By **[Justin3go](https://github.com/Justin3go)** on **2024-10-27**</sup>            | 擅长 UI/UX 设计与 Logo 创作<br/>`ui-ux设计` `logo设计` `用户需求` `交互设计` `工具使用`                    |
 | [算法解答导师](https://chat-preview.lobehub.com/market?agent=leetcode-tutor)<br/><sup>By **[Stark-X](https://github.com/Stark-X)** on **2024-10-21**</sup>              | 擅长 LeetCode 算法解答与用户指导<br/>`算法` `解题` `编程` `教育`                                           |
 | [心理咨询师](https://chat-preview.lobehub.com/market?agent=psychological-counselor)<br/><sup>By **[JIANGTUNAN](https://github.com/JIANGTUNAN)** on **2024-10-21**</sup> | 一个资深心理医生，温暖和耐心的倾听你的故事。<br/>`心理咨询` `咨询` `倾述` `友好` `医生` `咨询师`           |
 | [拳击训练大师](https://chat-preview.lobehub.com/market?agent=boxing-master)<br/><sup>By **[Luyi-2333](https://github.com/Luyi-2333)** on **2024-10-15**</sup>           | 擅长拳击训练指导与个性化计划制定<br/>`拳击训练` `个性化计划` `健身指导` `进度评估` `技术提升` `健康与营养` |
-| [椰子](https://chat-preview.lobehub.com/market?agent=deep-thinker-ai)<br/><sup>By **[hia1234](https://github.com/hia1234)** on **2024-10-15**</sup>                     | 在自己的回答中进行多次审查，确保聊天机器人所说的话有依据，并积极请求反馈，反复进行互动<br/>`编程` `一般`   |
 
-> 📊 Total agents: [<kbd>**420**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**421**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
