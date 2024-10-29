@@ -25,6 +25,14 @@ export const browserInfo = {
 
 export const isMacOS = () => getPlatform() === 'Mac OS';
 
+export const isArc = () => {
+  if (isOnServerSide) return false;
+  return (
+    window.matchMedia('(--arc-palette-focus: var(--arc-background-simple-color))').matches ||
+    Boolean('arc' in window || 'ArcControl' in window || 'ARCControl' in window)
+  );
+};
+
 export const isInStandaloneMode = () => {
   if (isOnServerSide) return false;
   return (

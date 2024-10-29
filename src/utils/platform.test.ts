@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { isSonomaOrLaterSafari } from './platform';
+import { isArc, isSonomaOrLaterSafari } from './platform';
 
 describe('isSonomaOrLaterSafari', () => {
   beforeEach(() => {
@@ -79,5 +79,59 @@ describe('isSonomaOrLaterSafari', () => {
       },
     );
     expect(isSonomaOrLaterSafari()).toBe(true);
+  });
+
+  describe('isArc', () => {
+    // 保存原始的 window 对象
+    const originalWindow = { ...window };
+
+    beforeEach(() => {
+      // 重置 window 对象
+      vi.stubGlobal('window', { ...originalWindow });
+      // 模拟 matchMedia
+      window.matchMedia = vi.fn().mockReturnValue({ matches: false });
+    });
+
+    afterEach(() => {
+      // 清理所有模拟
+      vi.restoreAllMocks();
+    });
+
+    it('should return false when on server side', () => {
+      vi.mock('./platform', async (importOriginal) => {
+        const mod = await importOriginal();
+
+        return {
+          // @ts-ignore
+          ...mod,
+          isOnServerSide: true,
+        };
+      });
+      expect(isArc()).toBe(false);
+    });
+
+    it('should return true when CSS custom property matches', () => {
+      window.matchMedia = vi.fn().mockReturnValue({ matches: true });
+      expect(isArc()).toBe(true);
+    });
+
+    it('should return true when "arc" is in window', () => {
+      (window as any).arc = {};
+      expect(isArc()).toBe(true);
+    });
+
+    it('should return true when "ArcControl" is in window', () => {
+      (window as any).ArcControl = {};
+      expect(isArc()).toBe(true);
+    });
+
+    it('should return true when "ARCControl" is in window', () => {
+      (window as any).ARCControl = {};
+      expect(isArc()).toBe(true);
+    });
+
+    it('should return false when none of the conditions are met', () => {
+      expect(isArc()).toBe(false);
+    });
   });
 });

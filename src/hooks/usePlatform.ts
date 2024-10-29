@@ -1,9 +1,9 @@
 import { useMemo, useRef } from 'react';
 
-import { isOnServerSide } from '@/utils/env';
 import {
   getBrowser,
   getPlatform,
+  isArc,
   isInStandaloneMode,
   isSonomaOrLaterSafari,
 } from '@/utils/platform';
@@ -13,19 +13,18 @@ export const usePlatform = () => {
   const browser = useRef(getBrowser());
 
   const platformInfo = {
-    isApple: platform.current && ['Mac OS', 'iOS'].includes(platform.current.toLowerCase()),
-    isArc:
-      (!isOnServerSide &&
-        window.matchMedia('(--arc-palette-focus: var(--arc-background-simple-color))').matches) ||
-      Boolean('arc' in window || 'ArcControl' in window || 'ARCControl' in window),
-    isChrome: browser.current === 'Chrome',
-    isChromium: browser.current && ['Chrome', 'Edge', 'Opera', 'Brave'].includes(browser.current),
-    isEdge: browser.current === 'Edge',
-    isFirefox: browser.current === 'Firefox',
-    isIOS: platform.current === 'iOS',
-    isMacOS: platform.current === 'Mac OS',
+    isApple: platform.current && ['mac os', 'ios'].includes(platform.current?.toLowerCase()),
+    isArc: isArc(),
+    isChrome: browser.current?.toLowerCase() === 'chrome',
+    isChromium:
+      browser.current &&
+      ['chrome', 'edge', 'opera', 'brave'].includes(browser.current?.toLowerCase()),
+    isEdge: browser.current?.toLowerCase() === 'edge',
+    isFirefox: browser.current?.toLowerCase() === 'firefox',
+    isIOS: platform.current?.toLowerCase() === 'ios',
+    isMacOS: platform.current?.toLowerCase() === 'mac os',
     isPWA: isInStandaloneMode(),
-    isSafari: browser.current === 'Safari',
+    isSafari: browser.current?.toLowerCase() === 'safari',
     isSonomaOrLaterSafari: isSonomaOrLaterSafari(),
   };
 
