@@ -13,7 +13,10 @@
     "title": "La pagina ha riscontrato un problema.."
   },
   "fetchError": "Errore di richiesta",
-  "fetchErrorDetail": "Dettagli dell'errore",
+  "loginRequired": {
+    "desc": "Verrai reindirizzato automaticamente alla pagina di accesso",
+    "title": "Accedi per utilizzare questa funzione"
+  },
   "notFound": {
     "backHome": "Torna alla homepage",
     "check": "Controlla se l'URL è corretto",

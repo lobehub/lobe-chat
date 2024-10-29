@@ -13,7 +13,10 @@
     "title": "Ein Problem ist aufgetreten auf der Seite.."
   },
   "fetchError": "Anforderung fehlgeschlagen",
-  "fetchErrorDetail": "Fehlerdetails",
+  "loginRequired": {
+    "desc": "Sie werden in Kürze zur Anmeldeseite weitergeleitet",
+    "title": "Bitte melden Sie sich an, um diese Funktion zu nutzen"
+  },
   "notFound": {
     "backHome": "Zurück zur Startseite",
     "check": "Bitte überprüfen Sie, ob Ihre URL korrekt ist.",

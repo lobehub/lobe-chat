@@ -13,7 +13,10 @@
     "title": "페이지에서 문제가 발생했습니다."
   },
   "fetchError": "요청 실패",
-  "fetchErrorDetail": "오류 상세",
+  "loginRequired": {
+    "desc": "곧 로그인 페이지로 자동 이동합니다",
+    "title": "이 기능을 사용하려면 로그인해 주세요"
+  },
   "notFound": {
     "backHome": "홈페이지로 돌아가기",
     "check": "URL이 올바른지 확인해 주세요.",

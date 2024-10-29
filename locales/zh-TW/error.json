@@ -13,7 +13,10 @@
     "title": "頁面遇到一點問題.."
   },
   "fetchError": "請求失敗",
-  "fetchErrorDetail": "錯誤詳情",
+  "loginRequired": {
+    "desc": "即將自動跳轉到登入頁面",
+    "title": "請登入後使用該功能"
+  },
   "notFound": {
     "backHome": "返回首頁",
     "check": "請檢查你的 URL 是否正確",

@@ -13,7 +13,10 @@
     "title": "Sayfa bir sorunla karşılaştı.."
   },
   "fetchError": "İstek başarısız oldu",
-  "fetchErrorDetail": "Hata detayı",
+  "loginRequired": {
+    "desc": "Otomatik olarak giriş sayfasına yönlendirileceksiniz",
+    "title": "Lütfen bu özelliği kullanmadan önce giriş yapın"
+  },
   "notFound": {
     "backHome": "Ana Sayfaya Dön",
     "check": "Lütfen URL'nizin doğru olduğundan emin olun",

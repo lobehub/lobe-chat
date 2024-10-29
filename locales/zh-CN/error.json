@@ -12,8 +12,14 @@
     "retry": "重新加载",
     "title": "页面遇到一点问题.."
   },
-  "fetchError": "请求失败",
-  "fetchErrorDetail": "错误详情",
+  "fetchError": {
+    "detail": "错误详情",
+    "title": "请求失败"
+  },
+  "loginRequired": {
+    "desc": "即将自动跳转到登录页面",
+    "title": "请登录后使用该功能"
+  },
   "notFound": {
     "backHome": "返回首页",
     "check": "请检查你的 URL 是否正确",

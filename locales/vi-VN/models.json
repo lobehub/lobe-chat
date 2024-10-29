@@ -173,9 +173,6 @@
   "SenseChat-Turbo": {
     "description": "Phù hợp cho các tình huống hỏi đáp nhanh và tinh chỉnh mô hình."
   },
-  "SenseChat-Vision": {
-    "description": "Phiên bản mô hình mới nhất (V5.5), độ dài ngữ cảnh 16K, hỗ trợ đầu vào nhiều hình ảnh, hoàn thiện khả năng cơ bản của mô hình, đạt được sự cải thiện lớn trong nhận diện thuộc tính đối tượng, mối quan hệ không gian, nhận diện sự kiện hành động, hiểu biết cảnh, nhận diện cảm xúc, suy luận kiến thức logic và hiểu biết sinh văn bản."
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B là phiên bản mã nguồn mở, cung cấp trải nghiệm đối thoại tối ưu cho các ứng dụng hội thoại."
   },
@@ -424,6 +421,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 là một mô hình đa phương thức hiệu quả, hỗ trợ mở rộng cho nhiều ứng dụng."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B là một mô hình đa phương thức hiệu quả, hỗ trợ mở rộng cho nhiều ứng dụng."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 là mô hình thử nghiệm mới nhất, có sự cải thiện đáng kể về hiệu suất trong các trường hợp sử dụng văn bản và đa phương thức."
@@ -1042,8 +1042,8 @@
   "step-1-flash": {
     "description": "Mô hình tốc độ cao, phù hợp cho đối thoại thời gian thực."
   },
-  "step-1.5v-turbo": {
-    "description": "Mô hình này sở hữu khả năng hiểu video mạnh mẽ."
+  "step-1.5v-mini": {
+    "description": "Mô hình này có khả năng hiểu video mạnh mẽ."
   },
   "step-1v-32k": {
     "description": "Hỗ trợ đầu vào hình ảnh, tăng cường trải nghiệm tương tác đa mô hình."

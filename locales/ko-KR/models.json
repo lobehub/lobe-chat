@@ -173,9 +173,6 @@
   "SenseChat-Turbo": {
     "description": "빠른 질문 응답 및 모델 미세 조정 시나리오에 적합합니다."
   },
-  "SenseChat-Vision": {
-    "description": "최신 버전 모델(V5.5), 16K 컨텍스트 길이, 다중 이미지 입력을 지원하며, 모델의 기본 능력 최적화를 전면적으로 구현하여 객체 속성 인식, 공간 관계, 동작 사건 인식, 장면 이해, 감정 인식, 논리 상식 추론 및 텍스트 이해 생성에서 큰 향상을 이루었습니다."
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 오픈 소스 버전으로, 대화 응용을 위한 최적화된 대화 경험을 제공합니다."
   },
@@ -424,6 +421,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002는 효율적인 다중 모달 모델로, 광범위한 응용 프로그램의 확장을 지원합니다."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B는 효율적인 다중 모달 모델로, 광범위한 응용 프로그램의 확장을 지원합니다."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924는 최신 실험 모델로, 텍스트 및 다중 모달 사용 사례에서 상당한 성능 향상을 보여줍니다."
@@ -1042,7 +1042,7 @@
   "step-1-flash": {
     "description": "고속 모델로, 실시간 대화에 적합합니다."
   },
-  "step-1.5v-turbo": {
+  "step-1.5v-mini": {
     "description": "이 모델은 강력한 비디오 이해 능력을 가지고 있습니다."
   },
   "step-1v-32k": {

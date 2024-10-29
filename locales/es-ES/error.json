@@ -13,7 +13,10 @@
     "title": "Se ha producido un problema en la página.."
   },
   "fetchError": "Error en la solicitud",
-  "fetchErrorDetail": "Detalles del error",
+  "loginRequired": {
+    "desc": "Serás redirigido automáticamente a la página de inicio de sesión",
+    "title": "Por favor, inicie sesión para utilizar esta función"
+  },
   "notFound": {
     "backHome": "Volver a la página de inicio",
     "check": "Por favor, verifica si tu URL es correcta",

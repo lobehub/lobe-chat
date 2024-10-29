@@ -13,7 +13,10 @@
     "title": "Er is een probleem opgetreden op de pagina.."
   },
   "fetchError": "Verzoek mislukt",
-  "fetchErrorDetail": "Foutdetails",
+  "loginRequired": {
+    "desc": "U wordt binnenkort automatisch doorgestuurd naar de inlogpagina",
+    "title": "Log in om deze functie te gebruiken"
+  },
   "notFound": {
     "backHome": "Terug naar startpagina",
     "check": "Controleer of je URL correct is",

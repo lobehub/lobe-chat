@@ -13,7 +13,10 @@
     "title": "Oops, something went wrong.."
   },
   "fetchError": "Request Failed",
-  "fetchErrorDetail": "Error Details",
+  "loginRequired": {
+    "desc": "You will be redirected to the login page shortly",
+    "title": "Please log in to use this feature"
+  },
   "notFound": {
     "backHome": "Back to Home",
     "check": "Please check if your URL is correct.",
