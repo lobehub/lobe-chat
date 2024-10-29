@@ -2,6 +2,7 @@ import { IPluginErrorType } from '@lobehub/chat-plugin-sdk';
 
 import { ILobeAgentRuntimeErrorType } from '@/libs/agent-runtime';
 import { ErrorType } from '@/types/fetch';
+import { UploadFileItem } from '@/types/files';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 
 import { BaseDataModel } from '../meta';
@@ -130,4 +131,15 @@ export interface CreateMessageParams
   sessionId: string;
   topicId?: string;
   traceId?: string;
+}
+
+export interface SendMessageParams {
+  files?: UploadFileItem[];
+  /**
+   *
+   * https://github.com/lobehub/lobe-chat/pull/2086
+   */
+  isWelcomeQuestion?: boolean;
+  message: string;
+  onlyAddUserMessage?: boolean;
 }

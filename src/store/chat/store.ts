@@ -13,7 +13,7 @@ import { ChatMessageAction, chatMessage } from './slices/message/action';
 import { ChatPluginAction, chatPlugin } from './slices/plugin/action';
 import { ShareAction, chatShare } from './slices/share/action';
 import { ChatTopicAction, chatTopic } from './slices/topic/action';
-import { chatAiChat, ChatAIChatAction } from './slices/aiChat/action';
+import { chatAiChat, ChatAIChatAction } from './slices/aiChat/actions';
 
 export interface ChatStoreAction
   extends ChatMessageAction,

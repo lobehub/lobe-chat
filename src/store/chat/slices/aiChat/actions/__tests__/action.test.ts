@@ -14,7 +14,7 @@ import { sessionMetaSelectors } from '@/store/session/selectors';
 import { UploadFileItem } from '@/types/files/upload';
 import { ChatMessage } from '@/types/message';
 
-import { useChatStore } from '../../store';
+import { useChatStore } from '../../../../store';
 
 vi.stubGlobal(
   'fetch',

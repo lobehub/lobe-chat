@@ -16,26 +16,13 @@ import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
-import { UploadFileItem } from '@/types/files/upload';
-import { ChatMessage, CreateMessageParams } from '@/types/message';
+import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../selectors';
-import { ChatRAGAction, chatRag } from './actions/rag';
+import { chatSelectors, topicSelectors } from '../../../selectors';
 
 const n = setNamespace('ai');
-
-export interface SendMessageParams {
-  message: string;
-  files?: UploadFileItem[];
-  onlyAddUserMessage?: boolean;
-  /**
-   *
-   * https://github.com/lobehub/lobe-chat/pull/2086
-   */
-  isWelcomeQuestion?: boolean;
-}
 
 interface ProcessMessageParams {
   traceId?: string;
@@ -46,7 +33,7 @@ interface ProcessMessageParams {
   ragQuery?: string;
 }
 
-export interface ChatAIChatAction extends ChatRAGAction {
+export interface AIGenerateAction {
   /**
    * Sends a new message to the AI chat system
    */
@@ -110,14 +97,12 @@ const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.get
 const getAgentChatConfig = () => agentSelectors.currentAgentChatConfig(useAgentStore.getState());
 const getAgentKnowledge = () => agentSelectors.currentEnabledKnowledge(useAgentStore.getState());
 
-export const chatAiChat: StateCreator<
+export const generateAIChat: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatAIChatAction
-> = (set, get, ...rest) => ({
-  ...chatRag(set, get, ...rest),
-
+  AIGenerateAction
+> = (set, get) => ({
   delAndRegenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
     get().internal_resendMessage(id, traceId);
