@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.26.8](https://github.com/lobehub/lobe-chat/compare/v1.26.7...v1.26.8)
+
+<sup>Released on **2024-10-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update zhipu param process.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update zhipu param process, closes [#4523](https://github.com/lobehub/lobe-chat/issues/4523) ([3317fbd](https://github.com/lobehub/lobe-chat/commit/3317fbd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.26.7](https://github.com/lobehub/lobe-chat/compare/v1.26.6...v1.26.7)
 
 <sup>Released on **2024-10-29**</sup>
