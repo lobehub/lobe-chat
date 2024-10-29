@@ -6,9 +6,10 @@ const filePrompt = (item: ChatFileItem) =>
 export const filePrompts = (fileList: ChatFileItem[]) => {
   if (fileList.length === 0) return '';
 
-  const prompt = `<images>
+  const prompt = `<files>
+<files_docstring>here are user upload files you can refer to</files_docstring>
 ${fileList.map((item) => filePrompt(item)).join('\n')}
-</images>`;
+</files>`;
 
   return prompt.trim();
 };

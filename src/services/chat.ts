@@ -414,6 +414,7 @@ class ChatService {
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
     const getContent = (m: ChatMessage) => {
+      // only if message doesn't have images and files, then return the plain content
       if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
         return m.content;
 

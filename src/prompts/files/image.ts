@@ -6,6 +6,7 @@ export const imagesPrompts = (imageList: ChatImageItem[]) => {
   if (imageList.length === 0) return '';
 
   const prompt = `<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
 ${imageList.map((item) => imagePrompt(item)).join('\n')}
 </images>`;
 
