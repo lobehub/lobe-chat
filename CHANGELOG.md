@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.26.6](https://github.com/lobehub/lobe-chat/compare/v1.26.5...v1.26.6)
+
+<sup>Released on **2024-10-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Qwen2.5-72B-Instruct model on HF provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Qwen2.5-72B-Instruct model on HF provider, closes [#4530](https://github.com/lobehub/lobe-chat/issues/4530) ([d3c2f7a](https://github.com/lobehub/lobe-chat/commit/d3c2f7a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.26.5](https://github.com/lobehub/lobe-chat/compare/v1.26.4...v1.26.5)
 
 <sup>Released on **2024-10-29**</sup>
