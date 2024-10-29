@@ -4,10 +4,10 @@ import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
-import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
+import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
@@ -269,6 +269,7 @@ export const generateAIChat: StateCreator<
 
     let fileChunks: MessageSemanticSearchChunk[] | undefined;
     let ragQueryId;
+
     // go into RAG flow if there is ragQuery flag
     if (params?.ragQuery) {
       // 1. get the relative chunks from semantic search
@@ -282,17 +283,16 @@ export const generateAIChat: StateCreator<
       ragQueryId = queryId;
 
       // 2. build the retrieve context messages
-      const retrieveContext = chainAnswerWithContext({
-        context: chunks.map((c) => c.text as string),
-        question: params?.ragQuery,
-        knowledge: getAgentKnowledge().map((knowledge) => knowledge.name),
+      const retrieveContext = knowledgeBaseQAPrompts({
+        chunks,
+        userQuery: params.ragQuery,
+        knowledge: getAgentKnowledge(),
       });
 
       // 3. add the retrieve context messages to the messages history
-      if (retrieveContext.messages && retrieveContext.messages?.length > 0) {
-        // remove the last message due to the query is in the retrieveContext
-        messages.pop();
-        retrieveContext.messages?.forEach((m) => messages.push(m as ChatMessage));
+      if (!!retrieveContext) {
+        const lastMsg = messages.pop() as ChatMessage;
+        messages.push({ ...lastMsg, content: lastMsg.content + '\n\n' + retrieveContext });
       }
 
       fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
