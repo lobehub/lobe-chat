@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5, talimat tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Alibaba Cloud Tongyi Qianwen ekibi tarafından geliştirilen büyük bir dil modeli"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5, daha güçlü anlama ve üretim yeteneği ile yeni bir büyük dil modeli serisidir."
   },

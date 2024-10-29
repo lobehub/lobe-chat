@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, nhằm tối ưu hóa việc xử lý các nhiệm vụ theo hướng dẫn."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Mô hình ngôn ngữ lớn được phát triển bởi đội ngũ Qianwen của Alibaba Cloud"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 là một loạt mô hình ngôn ngữ lớn hoàn toàn mới, sở hữu khả năng hiểu và tạo ra mạnh mẽ hơn."
   },
