@@ -1,7 +1,7 @@
 import { KnowledgeItem } from '@/types/knowledgeBase';
 
 const knowledgePrompt = (item: KnowledgeItem) =>
-  `<knowledge id="${item.id}" name="${item.name}" type="${item.type}"${item.fileType ? ` fileType="${item.fileType}" ` : ''}>${item.description}</knowledge>`;
+  `<knowledge id="${item.id}" name="${item.name}" type="${item.type}"${item.fileType ? ` fileType="${item.fileType}" ` : ''}>${item.description || ''}</knowledge>`;
 
 export const knowledgePrompts = (list?: KnowledgeItem[]) => {
   if ((list || []).length === 0) return '';
