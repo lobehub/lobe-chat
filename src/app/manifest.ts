@@ -47,8 +47,6 @@ const manifest = async (): Promise<MetadataRoute.Manifest | any> => {
           },
           {
             form_factor: 'narrow',
-            sizes: '640x1138',
-
             url: '/screenshots/shot-3.mobile.png',
           },
           {

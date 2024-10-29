@@ -173,9 +173,6 @@
   "SenseChat-Turbo": {
     "description": "Adecuado para preguntas rápidas y escenarios de ajuste fino del modelo."
   },
-  "SenseChat-Vision": {
-    "description": "Modelo de última versión (V5.5), longitud de contexto de 16K, admite entradas de múltiples imágenes, optimizando las capacidades básicas del modelo, logrando mejoras significativas en el reconocimiento de propiedades de objetos, relaciones espaciales, identificación de eventos de acción, comprensión de escenas, reconocimiento de emociones, razonamiento lógico y generación de comprensión de texto."
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B es una versión de código abierto, que proporciona una experiencia de conversación optimizada para aplicaciones de diálogo."
   },
@@ -424,6 +421,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 es un modelo multimodal eficiente, que admite una amplia gama de aplicaciones."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B es un modelo multimodal eficiente que admite una amplia gama de aplicaciones."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 es el último modelo experimental, con mejoras significativas en el rendimiento tanto en casos de uso de texto como multimodal."
@@ -1042,8 +1042,8 @@
   "step-1-flash": {
     "description": "Modelo de alta velocidad, adecuado para diálogos en tiempo real."
   },
-  "step-1.5v-turbo": {
-    "description": "Este modelo cuenta con potentes capacidades de comprensión de video."
+  "step-1.5v-mini": {
+    "description": "Este modelo tiene una potente capacidad de comprensión de video."
   },
   "step-1v-32k": {
     "description": "Soporta entradas visuales, mejorando la experiencia de interacción multimodal."

@@ -8,6 +8,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
+import { filesPrompts } from '@/prompts/files';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -413,22 +414,15 @@ class ChatService {
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
     const getContent = (m: ChatMessage) => {
-      if (!m.imageList) return m.content;
-
-      const imageList = m.imageList;
-
-      if (imageList.length === 0) return m.content;
-
-      const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
-        useUserStore.getState(),
-      );
-
-      if (!canUploadFile) {
+      // only if message doesn't have images and files, then return the plain content
+      if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
         return m.content;
-      }
 
+      const imageList = m.imageList || [];
+
+      const filesContext = filesPrompts({ fileList: m.fileList, imageList });
       return [
-        { text: m.content, type: 'text' },
+        { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageList.map(
           (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
         ),

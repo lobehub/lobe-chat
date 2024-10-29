@@ -173,9 +173,6 @@
   "SenseChat-Turbo": {
     "description": "適用於快速問答、模型微調場景"
   },
-  "SenseChat-Vision": {
-    "description": "最新版本模型 (V5.5)，16K上下文長度，支持多圖的輸入，全面實現模型基礎能力優化，在物件屬性識別、空間關係、動作事件識別、場景理解、情感識別、邏輯常識推理和文本理解生成上都實現了較大提升。"
-  },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 開放源碼版本，為會話應用提供優化後的對話體驗。"
   },
@@ -424,6 +421,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 是一款高效的多模態模型，支持廣泛應用的擴展。"
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B 是一款高效的多模態模型，支持廣泛應用的擴展。"
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的實驗性模型，在文本和多模態用例中都有顯著的性能提升。"
@@ -1042,7 +1042,7 @@
   "step-1-flash": {
     "description": "高速模型，適合實時對話。"
   },
-  "step-1.5v-turbo": {
+  "step-1.5v-mini": {
     "description": "該模型擁有強大的視頻理解能力。"
   },
   "step-1v-32k": {
