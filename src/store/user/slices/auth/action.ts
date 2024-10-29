@@ -44,7 +44,6 @@ export const createAuthSlice: StateCreator<
       const reditectUrl = location.toString();
       get().clerkSignIn?.({
         fallbackRedirectUrl: reditectUrl,
-        forceRedirectUrl: reditectUrl,
         signUpForceRedirectUrl: reditectUrl,
         signUpUrl: '/signup',
       });
