@@ -2,6 +2,148 @@
 
 # Changelog
 
+### [Version 1.26.10](https://github.com/lobehub/lobe-chat/compare/v1.26.9...v1.26.10)
+
+<sup>Released on **2024-10-29**</sup>
+
+#### ♻ Code Refactoring
+
+- **misc**: Refactor the aiChat slice actions.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Code refactoring
+
+- **misc**: Refactor the aiChat slice actions, closes [#4542](https://github.com/lobehub/lobe-chat/issues/4542) ([8b33ba4](https://github.com/lobehub/lobe-chat/commit/8b33ba4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.26.9](https://github.com/lobehub/lobe-chat/compare/v1.26.8...v1.26.9)
+
+<sup>Released on **2024-10-29**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.26.8](https://github.com/lobehub/lobe-chat/compare/v1.26.7...v1.26.8)
+
+<sup>Released on **2024-10-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Update zhipu param process.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Update zhipu param process, closes [#4523](https://github.com/lobehub/lobe-chat/issues/4523) ([3317fbd](https://github.com/lobehub/lobe-chat/commit/3317fbd))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.26.7](https://github.com/lobehub/lobe-chat/compare/v1.26.6...v1.26.7)
+
+<sup>Released on **2024-10-29**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove PWA Install in Firefox and Arc.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove PWA Install in Firefox and Arc, closes [#4532](https://github.com/lobehub/lobe-chat/issues/4532) ([4a380c5](https://github.com/lobehub/lobe-chat/commit/4a380c5))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.26.6](https://github.com/lobehub/lobe-chat/compare/v1.26.5...v1.26.6)
+
+<sup>Released on **2024-10-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Qwen2.5-72B-Instruct model on HF provider.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Qwen2.5-72B-Instruct model on HF provider, closes [#4530](https://github.com/lobehub/lobe-chat/issues/4530) ([d3c2f7a](https://github.com/lobehub/lobe-chat/commit/d3c2f7a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.26.5](https://github.com/lobehub/lobe-chat/compare/v1.26.4...v1.26.5)
+
+<sup>Released on **2024-10-29**</sup>
+
+#### 💄 Styles
+
+- **misc**: Improve user guide when user not login.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Improve user guide when user not login, closes [#4531](https://github.com/lobehub/lobe-chat/issues/4531) ([7513e3b](https://github.com/lobehub/lobe-chat/commit/7513e3b))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.26.4](https://github.com/lobehub/lobe-chat/compare/v1.26.3...v1.26.4)
 
 <sup>Released on **2024-10-28**</sup>

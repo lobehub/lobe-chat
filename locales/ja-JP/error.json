@@ -13,7 +13,10 @@
     "title": "ページに問題が発生しました.."
   },
   "fetchError": "リクエストが失敗しました",
-  "fetchErrorDetail": "エラーの詳細",
+  "loginRequired": {
+    "desc": "自動的にログインページにリダイレクトされます",
+    "title": "この機能を使用するにはログインしてください"
+  },
   "notFound": {
     "backHome": "ホームに戻る",
     "check": "URLが正しいかどうかを確認してください",

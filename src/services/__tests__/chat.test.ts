@@ -126,6 +126,92 @@ describe('ChatService', () => {
       );
     });
 
+    describe('handle with files content', () => {
+      it('should includes files', async () => {
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'imagecx1',
+                url: 'http://example.com/xxx0asd-dsd.png',
+                alt: 'ttt.png',
+              },
+            ],
+            fileList: [
+              {
+                fileType: 'plain/txt',
+                size: 100000,
+                id: 'file1',
+                url: 'http://abc.com/abc.txt',
+                name: 'abc.png',
+              },
+              {
+                id: 'file_oKMve9qySLMI',
+                name: '2402.16667v1.pdf',
+                type: 'application/pdf',
+                size: 11256078,
+                url: 'https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf',
+              },
+            ],
+          }, // Message with files
+          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
+
+        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+        await chatService.createAssistantMessage({
+          messages,
+          plugins: [],
+          model: 'gpt-4o',
+        });
+
+        expect(getChatCompletionSpy).toHaveBeenCalledWith(
+          {
+            messages: [
+              {
+                content: [
+                  {
+                    text: `Hello
+
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="ttt.png" url="http://example.com/xxx0asd-dsd.png"></image>
+</images>
+<files>
+<files_docstring>here are user upload files you can refer to</files_docstring>
+<file id="file1" name="abc.png" type="plain/txt" size="100000" url="http://abc.com/abc.txt"></file>
+<file id="file_oKMve9qySLMI" name="2402.16667v1.pdf" type="undefined" size="11256078" url="https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf"></file>
+</files>
+</files_info>`,
+                    type: 'text',
+                  },
+                  {
+                    image_url: { detail: 'auto', url: 'http://example.com/xxx0asd-dsd.png' },
+                    type: 'image_url',
+                  },
+                ],
+                role: 'user',
+              },
+              {
+                content: 'Hi',
+                name: 'plugin1____api1',
+                role: 'tool',
+              },
+              {
+                content: 'Hey',
+                role: 'assistant',
+              },
+            ],
+            model: 'gpt-4o',
+          },
+          undefined,
+        );
+      });
+    });
+
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
         const messages = [
@@ -156,7 +242,18 @@ describe('ChatService', () => {
             messages: [
               {
                 content: [
-                  { text: 'Hello', type: 'text' },
+                  {
+                    text: `Hello
+
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="abc.png" url="http://example.com/image.jpg"></image>
+</images>
+
+</files_info>`,
+                    type: 'text',
+                  },
                   {
                     image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
                     type: 'image_url',
