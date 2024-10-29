@@ -34,7 +34,7 @@ const Description = memo<{ message: string; status: number }>(({ message, status
         }}
         style={{ cursor: 'pointer', fontSize: 12 }}
       >
-        {t('fetchErrorDetail')} <Icon icon={show ? ChevronUp : ChevronDown} />
+        {t('fetchError.detail')} <Icon icon={show ? ChevronUp : ChevronDown} />
       </Flexbox>
       <Highlighter
         className={cx(container)}
