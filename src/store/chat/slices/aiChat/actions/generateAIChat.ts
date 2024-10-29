@@ -273,7 +273,7 @@ export const generateAIChat: StateCreator<
     // go into RAG flow if there is ragQuery flag
     if (params?.ragQuery) {
       // 1. get the relative chunks from semantic search
-      const { chunks, queryId } = await get().internal_retrieveChunks(
+      const { chunks, queryId, rewriteQuery } = await get().internal_retrieveChunks(
         userMessageId,
         params?.ragQuery,
         // should skip the last content
@@ -285,15 +285,18 @@ export const generateAIChat: StateCreator<
       const lastMsg = messages.pop() as ChatMessage;
 
       // 2. build the retrieve context messages
-      const retrieveContext = knowledgeBaseQAPrompts({
+      const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
         chunks,
         userQuery: lastMsg.content,
-        rewriteQuery: lastMsg.content === params.ragQuery ? undefined : params.ragQuery,
+        rewriteQuery,
         knowledge: getAgentKnowledge(),
       });
 
       // 3. add the retrieve context messages to the messages history
-      messages.push({ ...lastMsg, content: (lastMsg.content + '\n\n' + retrieveContext).trim() });
+      messages.push({
+        ...lastMsg,
+        content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
+      });
 
       fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
     }
@@ -497,7 +500,10 @@ export const generateAIChat: StateCreator<
 
     if (!latestMsg) return;
 
-    await internal_coreProcessMessage(contextMessages, latestMsg.id, { traceId });
+    await internal_coreProcessMessage(contextMessages, latestMsg.id, {
+      traceId,
+      ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
+    });
   },
 
   // ----- Loading ------- //

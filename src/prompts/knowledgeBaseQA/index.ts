@@ -19,8 +19,7 @@ export const knowledgeBaseQAPrompts = ({
 
   const domains = (knowledge || []).map((v) => v.name).join('/');
 
-  return `
-<knowledge_base_qa_info>
+  return `<knowledge_base_qa_info>
 You are also a helpful assistant good answering questions related to ${domains}. And you'll be provided with a question and several passages that might be relevant. And currently your task is to provide answer based on the question and passages.
 <knowledge_base_anwser_instruction>
 - Note that passages might not be relevant to the question, please only use the passages that are relevant.

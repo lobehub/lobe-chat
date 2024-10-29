@@ -40,6 +40,7 @@ export interface FileChunk {
 
 export interface SemanticSearchChunk {
   fileId: string | null;
+  fileName: string | null;
   id: string;
   metadata: ChunkMetadata | null;
   pageNumber?: number | null;

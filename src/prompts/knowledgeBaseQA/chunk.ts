@@ -1,7 +1,7 @@
 import { ChatSemanticSearchChunk } from '@/types/chunk';
 
 const chunkPrompt = (item: ChatSemanticSearchChunk) =>
-  `<chunk fileId="${item.fileId}" similarity="${item.similarity}" ${item.pageNumber ? ` pageNumber="${item.pageNumber}" ` : ''}>${item.text}</chunk>`;
+  `<chunk fileId="${item.fileId}" fileName="${item.fileName}" similarity="${item.similarity}" ${item.pageNumber ? ` pageNumber="${item.pageNumber}" ` : ''}>${item.text}</chunk>`;
 
 export const chunkPrompts = (fileList: ChatSemanticSearchChunk[]) => {
   if (fileList.length === 0) return '';
