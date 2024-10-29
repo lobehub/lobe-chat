@@ -7,7 +7,6 @@ import {
   PrimaryColors,
   ThemeProvider,
 } from '@lobehub/ui';
-import { ConfigProvider as AntdConfigProvider } from 'antd';
 import { ThemeAppearance, createStyles } from 'antd-style';
 import 'antd/dist/reset.css';
 import Image from 'next/image';
@@ -120,37 +119,38 @@ const AppTheme = memo<AppThemeProps>(
     }, [neutralColor]);
 
     return (
-      <AntdConfigProvider theme={{ cssVar: true }}>
-        <ThemeProvider
-          className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
-          customTheme={{
-            neutralColor: neutralColor ?? defaultNeutralColor,
-            primaryColor: primaryColor ?? defaultPrimaryColor,
-          }}
-          defaultAppearance={defaultAppearance}
-          onAppearanceChange={(appearance) => {
-            setCookie(LOBE_THEME_APPEARANCE, appearance);
-          }}
-          style={{
+      <ThemeProvider
+        className={cx(styles.app, styles.scrollbar, styles.scrollbarPolyfill)}
+        customTheme={{
+          neutralColor: neutralColor ?? defaultNeutralColor,
+          primaryColor: primaryColor ?? defaultPrimaryColor,
+        }}
+        defaultAppearance={defaultAppearance}
+        onAppearanceChange={(appearance) => {
+          setCookie(LOBE_THEME_APPEARANCE, appearance);
+        }}
+        theme={{
+          cssVar: true,
+          token: {
             fontFamily: customFontFamily ? `${customFontFamily},${theme.fontFamily}` : undefined,
+          },
+        }}
+        themeMode={themeMode}
+      >
+        {!!customFontURL && <FontLoader url={customFontURL} />}
+        <GlobalStyle />
+        <AntdStaticMethods />
+        <ConfigProvider
+          config={{
+            aAs: Link,
+            imgAs: Image,
+            imgUnoptimized: true,
+            proxy: globalCDN ? 'unpkg' : undefined,
           }}
-          themeMode={themeMode}
         >
-          {!!customFontURL && <FontLoader url={customFontURL} />}
-          <GlobalStyle />
-          <AntdStaticMethods />
-          <ConfigProvider
-            config={{
-              aAs: Link,
-              imgAs: Image,
-              imgUnoptimized: true,
-              proxy: globalCDN ? 'unpkg' : undefined,
-            }}
-          >
-            {children}
-          </ConfigProvider>
-        </ThemeProvider>
-      </AntdConfigProvider>
+          {children}
+        </ConfigProvider>
+      </ThemeProvider>
     );
   },
 );
