@@ -38,6 +38,7 @@ describe('usePWAInstall', () => {
   });
 
   it('should return canInstall based on canInstall state when support PWA', () => {
+    document.body.innerHTML = `<div id="${PWA_INSTALL_ID}"></div>`;
     vi.mocked(usePlatform).mockReturnValue({ isSupportInstallPWA: true, isPWA: false } as any);
 
     const { result, rerender } = renderHook(() => usePWAInstall());

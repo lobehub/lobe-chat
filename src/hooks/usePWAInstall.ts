@@ -21,6 +21,8 @@ export const usePWAInstall = () => {
   const installCheck = () => {
     // 当在 PWA 或不支持 PWA 的环境中时，不显示安装按钮
     if (isPWA || !isSupportInstallPWA) return false;
+    const pwa: any = document.querySelector(`#${PWA_INSTALL_ID}`);
+    if (!pwa) return false;
     return canInstall;
   };
 
