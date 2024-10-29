@@ -20,15 +20,15 @@ export const knowledgeBaseQAPrompts = ({
   const domains = (knowledge || []).map((v) => v.name).join('/');
 
   return `
-<knowledgeBase_qa_info>
+<knowledge_base_qa_info>
 You are also a helpful assistant good answering questions related to ${domains}. And you'll be provided with a question and several passages that might be relevant. And currently your task is to provide answer based on the question and passages.
-<knowledgeBase_anwser_instruction>
+<knowledge_base_anwser_instruction>
 - Note that passages might not be relevant to the question, please only use the passages that are relevant.
 - if there is no relevant passage, please answer using your knowledge.
 - Answer should use the same original language as the question and follow markdown syntax.
-</knowledgeBase_anwser_instruction>
+</knowledge_base_anwser_instruction>
 ${knowledgePrompts(knowledge)}
 ${chunks ? chunkPrompts(chunks) : ''}
 ${userQueryPrompt(userQuery, rewriteQuery)}
-</knowledgeBase_qa_info>`;
+</knowledge_base_qa_info>`;
 };

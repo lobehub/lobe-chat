@@ -282,18 +282,18 @@ export const generateAIChat: StateCreator<
 
       ragQueryId = queryId;
 
+      const lastMsg = messages.pop() as ChatMessage;
+
       // 2. build the retrieve context messages
       const retrieveContext = knowledgeBaseQAPrompts({
         chunks,
-        userQuery: params.ragQuery,
+        userQuery: lastMsg.content,
+        rewriteQuery: lastMsg.content === params.ragQuery ? undefined : params.ragQuery,
         knowledge: getAgentKnowledge(),
       });
 
       // 3. add the retrieve context messages to the messages history
-      if (!!retrieveContext) {
-        const lastMsg = messages.pop() as ChatMessage;
-        messages.push({ ...lastMsg, content: lastMsg.content + '\n\n' + retrieveContext });
-      }
+      messages.push({ ...lastMsg, content: (lastMsg.content + '\n\n' + retrieveContext).trim() });
 
       fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
     }
@@ -497,10 +497,7 @@ export const generateAIChat: StateCreator<
 
     if (!latestMsg) return;
 
-    await internal_coreProcessMessage(contextMessages, latestMsg.id, {
-      traceId,
-      ragQuery: get().internal_shouldUseRAG() ? currentMessage.content : undefined,
-    });
+    await internal_coreProcessMessage(contextMessages, latestMsg.id, { traceId });
   },
 
   // ----- Loading ------- //

@@ -148,6 +148,7 @@ export class ChunkModel {
 
     const data = await serverDB
       .select({
+        fileId: fileChunks.fileId,
         id: chunks.id,
         index: chunks.index,
         metadata: chunks.metadata,
@@ -205,6 +206,7 @@ export class ChunkModel {
 
     return result.map((item) => {
       return {
+        fileId: item.fileId,
         id: item.id,
         index: item.index,
         similarity: item.similarity,
