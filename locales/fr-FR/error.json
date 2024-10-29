@@ -13,7 +13,10 @@
     "title": "Un problème est survenu sur la page.."
   },
   "fetchError": "Échec de la requête",
-  "fetchErrorDetail": "Détails de l'erreur",
+  "loginRequired": {
+    "desc": "Vous allez être redirigé vers la page de connexion",
+    "title": "Veuillez vous connecter pour utiliser cette fonctionnalité"
+  },
   "notFound": {
     "backHome": "Retour à la page d'accueil",
     "check": "Veuillez vérifier si votre URL est correcte",
