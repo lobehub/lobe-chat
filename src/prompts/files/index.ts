@@ -10,6 +10,8 @@ export const filesPrompts = ({
   fileList?: ChatFileItem[];
   imageList: ChatImageItem[];
 }) => {
+  if (imageList.length === 0 && (fileList || []).length === 0) return '';
+
   const prompt = `<files_info>
 ${imagesPrompts(imageList)}
 ${fileList ? filePrompts(fileList) : ''}

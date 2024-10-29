@@ -422,7 +422,7 @@ class ChatService {
 
       const filesContext = filesPrompts({ fileList: m.fileList, imageList });
       return [
-        { text: m.content + '\n\n' + filesContext, type: 'text' },
+        { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageList.map(
           (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
         ),
