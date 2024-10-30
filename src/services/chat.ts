@@ -7,6 +7,7 @@ import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
+import { isServerMode } from '@/const/version';
 import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
 import { filesPrompts } from '@/prompts/files';
 import { useSessionStore } from '@/store/session';
@@ -420,7 +421,7 @@ class ChatService {
 
       const imageList = m.imageList || [];
 
-      const filesContext = filesPrompts({ fileList: m.fileList, imageList });
+      const filesContext = isServerMode ? filesPrompts({ fileList: m.fileList, imageList }) : '';
       return [
         { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageList.map(

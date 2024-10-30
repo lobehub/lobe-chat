@@ -26,7 +26,7 @@ const ToolUI = () => {
 
   return (
     <>
-      <Flexbox flex={1} height={'100%'} paddingInline={12}>
+      <Flexbox flex={1} height={'100%'} paddingInline={12} style={{ overflow: 'auto' }}>
         <ToolRender />
       </Flexbox>
       <Footer />

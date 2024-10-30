@@ -16,7 +16,7 @@ const Body = ({ children }: PropsWithChildren) => {
     <Flexbox
       className={cx(body, 'portal-body')}
       height={'100%'}
-      style={{ position: 'relative' }}
+      style={{ flex: 1, height: 0, position: 'relative' }}
       width={'100%'}
     >
       {children}
