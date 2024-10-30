@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 es una nueva serie de modelos de lenguaje a gran escala, diseñada para optimizar el procesamiento de tareas de instrucción."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Modelo de lenguaje de gran escala desarrollado por el equipo de Tongyi Qianwen de Alibaba Cloud"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 es una nueva serie de grandes modelos de lenguaje, con capacidades de comprensión y generación más fuertes."
   },
