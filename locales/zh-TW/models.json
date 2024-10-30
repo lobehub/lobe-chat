@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "阿里雲通義千問團隊開發的大型語言模型"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 是全新的大型語言模型系列，具有更強的理解和生成能力。"
   },
