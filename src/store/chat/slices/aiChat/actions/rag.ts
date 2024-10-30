@@ -21,7 +21,7 @@ export interface ChatRAGAction {
     id: string,
     userQuery: string,
     messages: string[],
-  ) => Promise<{ chunks: ChatSemanticSearchChunk[]; queryId: string }>;
+  ) => Promise<{ chunks: ChatSemanticSearchChunk[]; queryId: string; rewriteQuery?: string }>;
   /**
    * Rewrite user content to better RAG query
    */
@@ -64,12 +64,11 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
     const message = chatSelectors.getMessageById(id)(get());
 
     // 1. get the rewrite query
-    let rewriteQuery = message?.ragQuery || userQuery;
+    let rewriteQuery = message?.ragQuery as string | undefined;
 
-    // only rewrite query length is less than 15 characters, refs: https://github.com/lobehub/lobe-chat/pull/4288
     // if there is no ragQuery and there is a chat history
     // we need to rewrite the user message to get better results
-    if (rewriteQuery.length < 15 && !message?.ragQuery && messages.length > 0) {
+    if (!message?.ragQuery && messages.length > 0) {
       rewriteQuery = await get().internal_rewriteQuery(id, userQuery, messages);
     }
 
@@ -79,13 +78,13 @@ export const chatRag: StateCreator<ChatStore, [['zustand/devtools', never]], [],
       fileIds: knowledgeIds().fileIds.concat(files),
       knowledgeIds: knowledgeIds().knowledgeBaseIds,
       messageId: id,
-      rewriteQuery,
+      rewriteQuery: rewriteQuery || userQuery,
       userQuery,
     });
 
     get().internal_toggleMessageRAGLoading(false, id);
 
-    return { chunks, queryId };
+    return { chunks, queryId, rewriteQuery };
   },
   internal_rewriteQuery: async (id, content, messages) => {
     let rewriteQuery = content;
