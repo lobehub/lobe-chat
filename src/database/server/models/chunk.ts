@@ -3,7 +3,7 @@ import { and, desc, isNull } from 'drizzle-orm/expressions';
 import { chunk } from 'lodash-es';
 
 import { serverDB } from '@/database/server';
-import { ChunkMetadata, FileChunk, SemanticSearchChunk } from '@/types/chunk';
+import { ChunkMetadata, FileChunk } from '@/types/chunk';
 
 import {
   NewChunkItem,
@@ -148,6 +148,8 @@ export class ChunkModel {
 
     const data = await serverDB
       .select({
+        fileId: fileChunks.fileId,
+        fileName: files.name,
         id: chunks.id,
         index: chunks.index,
         metadata: chunks.metadata,
@@ -158,16 +160,15 @@ export class ChunkModel {
       .from(chunks)
       .leftJoin(embeddings, eq(chunks.id, embeddings.chunkId))
       .leftJoin(fileChunks, eq(chunks.id, fileChunks.chunkId))
+      .leftJoin(files, eq(fileChunks.fileId, files.id))
       .where(fileIds ? inArray(fileChunks.fileId, fileIds) : undefined)
       .orderBy((t) => desc(t.similarity))
       .limit(30);
 
-    return data.map(
-      (item): SemanticSearchChunk => ({
-        ...item,
-        metadata: item.metadata as ChunkMetadata,
-      }),
-    );
+    return data.map((item) => ({
+      ...item,
+      metadata: item.metadata as ChunkMetadata,
+    }));
   }
 
   async semanticSearchForChat({
@@ -187,7 +188,7 @@ export class ChunkModel {
     const result = await serverDB
       .select({
         fileId: files.id,
-        filename: files.name,
+        fileName: files.name,
         id: chunks.id,
         index: chunks.index,
         metadata: chunks.metadata,
@@ -205,6 +206,8 @@ export class ChunkModel {
 
     return result.map((item) => {
       return {
+        fileId: item.fileId,
+        fileName: item.fileName,
         id: item.id,
         index: item.index,
         similarity: item.similarity,
