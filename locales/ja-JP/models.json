@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5は、新しい大型言語モデルシリーズで、指示型タスクの処理を最適化することを目的としています。"
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "アリババクラウドの通義千問チームが開発した大規模言語モデル"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5は新しい大型言語モデルシリーズで、より強力な理解と生成能力を持っています。"
   },
