@@ -69,6 +69,8 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
     <StyleRegistry>
       <Locale antdLocale={antdLocale} defaultLang={userLocale}>
         <AppTheme
+          customFontFamily={appEnv.CUSTOM_FONT_FAMILY}
+          customFontURL={appEnv.CUSTOM_FONT_URL}
           defaultAppearance={appearance?.value}
           defaultNeutralColor={neutralColor?.value as any}
           defaultPrimaryColor={primaryColor?.value as any}

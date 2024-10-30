@@ -15,6 +15,7 @@ export const locales = [
   'zh-CN',
   'zh-TW',
   'vi-VN',
+  'fa-IR',
 ] as const;
 
 export type DefaultResources = typeof resources;
@@ -110,6 +111,10 @@ export const localeOptions: LocaleOptions = [
   {
     label: 'Български',
     value: 'bg-BG',
+  },
+  {
+    label: 'فارسی',
+    value: 'fa-IR',
   },
 ] as LocaleOptions;
 

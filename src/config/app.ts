@@ -44,6 +44,8 @@ export const getAppConfig = () => {
 
       APP_URL: z.string().optional(),
       CDN_USE_GLOBAL: z.boolean().optional(),
+      CUSTOM_FONT_FAMILY: z.string().optional(),
+      CUSTOM_FONT_URL: z.string().optional(),
     },
     runtimeEnv: {
       NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
@@ -67,7 +69,8 @@ export const getAppConfig = () => {
       PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
 
       APP_URL,
-
+      CUSTOM_FONT_FAMILY: process.env.CUSTOM_FONT_FAMILY,
+      CUSTOM_FONT_URL: process.env.CUSTOM_FONT_URL,
       CDN_USE_GLOBAL: process.env.CDN_USE_GLOBAL === '1',
     },
   });
