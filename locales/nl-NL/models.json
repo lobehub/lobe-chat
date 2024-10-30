@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Een groot taalmodel ontwikkeld door het Alibaba Cloud Tongyi Qianwen-team"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 is een geheel nieuwe serie grote taalmodellen, met sterkere begrip- en generatiecapaciteiten."
   },
