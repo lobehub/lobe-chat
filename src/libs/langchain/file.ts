@@ -10,6 +10,7 @@ export const LANGCHAIN_SUPPORT_TEXT_LIST = [
 
   'sh',
   'patch',
+  'log',
   // js
   'js',
   'jsx',

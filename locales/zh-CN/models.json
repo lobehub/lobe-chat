@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。"
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "阿里云通义千问团队开发的大型语言模型"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 是全新的大型语言模型系列，具有更强的理解和生成能力。"
   },
@@ -172,9 +175,6 @@
   },
   "SenseChat-Turbo": {
     "description": "适用于快速问答、模型微调场景"
-  },
-  "SenseChat-Vision": {
-    "description": "最新版本模型 (V5.5)，16K上下文长度，支持多图的输入，全面实现模型基础能力优化，在对象属性识别、空间关系、动作事件识别、场景理解、情感识别、逻辑常识推理和文本理解生成上都实现了较大提升。"
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。"
@@ -424,6 +424,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 是一款高效的多模态模型，支持广泛应用的扩展。"
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B 是一款高效的多模态模型，支持广泛应用的扩展。"
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的实验性模型，在文本和多模态用例中都有显著的性能提升。"
@@ -1042,7 +1045,7 @@
   "step-1-flash": {
     "description": "高速模型，适合实时对话。"
   },
-  "step-1.5v-turbo": {
+  "step-1.5v-mini": {
     "description": "该模型拥有强大的视频理解能力。"
   },
   "step-1v-32k": {

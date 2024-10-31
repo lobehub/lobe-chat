@@ -61,7 +61,7 @@ export class ChunkingLoader {
 
         default: {
           throw new Error(
-            'Unsupported file type, please check your file is a supported type, or just create an issue.',
+            `Unsupported file type [${type}], please check your file is supported, or create report issue here: https://github.com/lobehub/lobe-chat/discussions/3550`,
           );
         }
       }

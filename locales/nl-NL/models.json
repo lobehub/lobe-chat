@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 is een geheel nieuwe serie van grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Een groot taalmodel ontwikkeld door het Alibaba Cloud Tongyi Qianwen-team"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 is een geheel nieuwe serie grote taalmodellen, met sterkere begrip- en generatiecapaciteiten."
   },
@@ -172,9 +175,6 @@
   },
   "SenseChat-Turbo": {
     "description": "Geschikt voor snelle vraag-en-antwoord en modelafstemming."
-  },
-  "SenseChat-Vision": {
-    "description": "De nieuwste versie van het model (V5.5), met een contextlengte van 16K, ondersteunt meerdere afbeeldingsinvoeren en heeft de basiscapaciteiten van het model geoptimaliseerd, met aanzienlijke verbeteringen in objecteigenschappenherkenning, ruimtelijke relaties, actie-evenementherkenning, scènebegrip, emotieherkenning, logische redenering en tekstbegrip en -generatie."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is de open-source versie die een geoptimaliseerde gesprekservaring biedt voor gespreksapplicaties."
@@ -424,6 +424,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 is een efficiënt multimodaal model dat ondersteuning biedt voor een breed scala aan toepassingen."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B is een efficiënte multimodale model dat een breed scala aan toepassingen ondersteunt."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is het nieuwste experimentele model, met aanzienlijke prestatieverbeteringen in tekst- en multimodale toepassingen."
@@ -1042,8 +1045,8 @@
   "step-1-flash": {
     "description": "Hogesnelheidsmodel, geschikt voor realtime gesprekken."
   },
-  "step-1.5v-turbo": {
-    "description": "Dit model heeft krachtige mogelijkheden voor video begrip."
+  "step-1.5v-mini": {
+    "description": "Dit model heeft krachtige video begrip capaciteiten."
   },
   "step-1v-32k": {
     "description": "Ondersteunt visuele invoer, verbetert de multimodale interactie-ervaring."

@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 est une toute nouvelle série de modèles de langage à grande échelle, conçue pour optimiser le traitement des tâches d'instruction."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Un grand modèle de langage développé par l'équipe Tongyi Qianwen d'Alibaba Cloud"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 est une toute nouvelle série de modèles de langage de grande taille avec des capacités de compréhension et de génération améliorées."
   },
@@ -172,9 +175,6 @@
   },
   "SenseChat-Turbo": {
     "description": "Conçu pour des questions-réponses rapides et des scénarios de micro-ajustement du modèle."
-  },
-  "SenseChat-Vision": {
-    "description": "Modèle de dernière version (V5.5), longueur de contexte de 16K, prenant en charge l'entrée de plusieurs images, optimisant les capacités fondamentales du modèle, avec des améliorations significatives dans la reconnaissance des attributs d'objets, les relations spatiales, la reconnaissance d'événements d'action, la compréhension de scènes, la reconnaissance des émotions, le raisonnement logique et la génération de texte."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B est une version open source, offrant une expérience de dialogue optimisée pour les applications de conversation."
@@ -424,6 +424,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 est un modèle multimodal efficace, prenant en charge une large gamme d'applications."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B est un modèle multimodal efficace, prenant en charge une large gamme d'applications."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 est le dernier modèle expérimental, offrant des améliorations significatives en termes de performance dans les cas d'utilisation textuels et multimodaux."
@@ -1042,7 +1045,7 @@
   "step-1-flash": {
     "description": "Modèle à haute vitesse, adapté aux dialogues en temps réel."
   },
-  "step-1.5v-turbo": {
+  "step-1.5v-mini": {
     "description": "Ce modèle possède de puissantes capacités de compréhension vidéo."
   },
   "step-1v-32k": {

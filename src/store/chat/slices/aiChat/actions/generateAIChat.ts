@@ -4,10 +4,10 @@ import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
-import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
+import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
@@ -16,26 +16,13 @@ import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
-import { UploadFileItem } from '@/types/files/upload';
-import { ChatMessage, CreateMessageParams } from '@/types/message';
+import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
-import { chatSelectors, topicSelectors } from '../../selectors';
-import { ChatRAGAction, chatRag } from './actions/rag';
+import { chatSelectors, topicSelectors } from '../../../selectors';
 
 const n = setNamespace('ai');
-
-export interface SendMessageParams {
-  message: string;
-  files?: UploadFileItem[];
-  onlyAddUserMessage?: boolean;
-  /**
-   *
-   * https://github.com/lobehub/lobe-chat/pull/2086
-   */
-  isWelcomeQuestion?: boolean;
-}
 
 interface ProcessMessageParams {
   traceId?: string;
@@ -46,7 +33,7 @@ interface ProcessMessageParams {
   ragQuery?: string;
 }
 
-export interface ChatAIChatAction extends ChatRAGAction {
+export interface AIGenerateAction {
   /**
    * Sends a new message to the AI chat system
    */
@@ -110,14 +97,12 @@ const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.get
 const getAgentChatConfig = () => agentSelectors.currentAgentChatConfig(useAgentStore.getState());
 const getAgentKnowledge = () => agentSelectors.currentEnabledKnowledge(useAgentStore.getState());
 
-export const chatAiChat: StateCreator<
+export const generateAIChat: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatAIChatAction
-> = (set, get, ...rest) => ({
-  ...chatRag(set, get, ...rest),
-
+  AIGenerateAction
+> = (set, get) => ({
   delAndRegenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
     get().internal_resendMessage(id, traceId);
@@ -284,10 +269,11 @@ export const chatAiChat: StateCreator<
 
     let fileChunks: MessageSemanticSearchChunk[] | undefined;
     let ragQueryId;
+
     // go into RAG flow if there is ragQuery flag
     if (params?.ragQuery) {
       // 1. get the relative chunks from semantic search
-      const { chunks, queryId } = await get().internal_retrieveChunks(
+      const { chunks, queryId, rewriteQuery } = await get().internal_retrieveChunks(
         userMessageId,
         params?.ragQuery,
         // should skip the last content
@@ -296,19 +282,21 @@ export const chatAiChat: StateCreator<
 
       ragQueryId = queryId;
 
+      const lastMsg = messages.pop() as ChatMessage;
+
       // 2. build the retrieve context messages
-      const retrieveContext = chainAnswerWithContext({
-        context: chunks.map((c) => c.text as string),
-        question: params?.ragQuery,
-        knowledge: getAgentKnowledge().map((knowledge) => knowledge.name),
+      const knowledgeBaseQAContext = knowledgeBaseQAPrompts({
+        chunks,
+        userQuery: lastMsg.content,
+        rewriteQuery,
+        knowledge: getAgentKnowledge(),
       });
 
       // 3. add the retrieve context messages to the messages history
-      if (retrieveContext.messages && retrieveContext.messages?.length > 0) {
-        // remove the last message due to the query is in the retrieveContext
-        messages.pop();
-        retrieveContext.messages?.forEach((m) => messages.push(m as ChatMessage));
-      }
+      messages.push({
+        ...lastMsg,
+        content: (lastMsg.content + '\n\n' + knowledgeBaseQAContext).trim(),
+      });
 
       fileChunks = chunks.map((c) => ({ id: c.id, similarity: c.similarity }));
     }
@@ -514,7 +502,7 @@ export const chatAiChat: StateCreator<
 
     await internal_coreProcessMessage(contextMessages, latestMsg.id, {
       traceId,
-      ragQuery: get().internal_shouldUseRAG() ? currentMessage.content : undefined,
+      ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
     });
   },
 

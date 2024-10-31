@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 ist eine brandneue Serie von großen Sprachmodellen, die darauf abzielt, die Verarbeitung von Anweisungsaufgaben zu optimieren."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Ein großes Sprachmodell, das vom Alibaba Cloud Tongyi Qianwen-Team entwickelt wurde."
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 ist eine neue Serie großer Sprachmodelle mit stärkeren Verständnis- und Generierungsfähigkeiten."
   },
@@ -172,9 +175,6 @@
   },
   "SenseChat-Turbo": {
     "description": "Geeignet für schnelle Fragen und Antworten sowie Szenarien zur Feinabstimmung des Modells."
-  },
-  "SenseChat-Vision": {
-    "description": "Die neueste Modellversion (V5.5) mit 16K Kontextlänge unterstützt die Eingabe mehrerer Bilder und optimiert umfassend die grundlegenden Fähigkeiten des Modells. Es hat erhebliche Fortschritte in der Erkennung von Objektattributen, räumlichen Beziehungen, Erkennung von Handlungsereignissen, Szenenverständnis, Emotionserkennung, logischem Wissen und Textverständnis und -generierung erzielt."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B ist die Open-Source-Version, die ein optimiertes Dialogerlebnis für Konversationsanwendungen bietet."
@@ -424,6 +424,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 ist ein effizientes multimodales Modell, das eine breite Palette von Anwendungen unterstützt."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B ist ein leistungsstarkes multimodales Modell, das eine breite Palette von Anwendungen unterstützt."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 ist das neueste experimentelle Modell, das in Text- und multimodalen Anwendungsfällen erhebliche Leistungsverbesserungen aufweist."
@@ -1042,8 +1045,8 @@
   "step-1-flash": {
     "description": "Hochgeschwindigkeitsmodell, geeignet für Echtzeitdialoge."
   },
-  "step-1.5v-turbo": {
-    "description": "Dieses Modell verfügt über starke Fähigkeiten im Verständnis von Videos."
+  "step-1.5v-mini": {
+    "description": "Dieses Modell verfügt über starke Fähigkeiten zur Videoanalyse."
   },
   "step-1v-32k": {
     "description": "Unterstützt visuelle Eingaben und verbessert die multimodale Interaktionserfahrung."

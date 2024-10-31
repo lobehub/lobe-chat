@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5 is a brand new series of large language models designed to optimize the handling of instruction-based tasks."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "A large language model developed by the Alibaba Cloud Tongyi Qianwen team"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5 is a new large language model series with enhanced understanding and generation capabilities."
   },
@@ -172,9 +175,6 @@
   },
   "SenseChat-Turbo": {
     "description": "Suitable for fast question answering and model fine-tuning scenarios."
-  },
-  "SenseChat-Vision": {
-    "description": "The latest version model (V5.5) with a context length of 16K supports multi-image input and fully optimizes the model's foundational capabilities, achieving substantial improvements in object attribute recognition, spatial relationships, action event recognition, scene understanding, emotion recognition, logical reasoning, and text comprehension and generation."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is an open-source version that provides an optimized conversational experience for chat applications."
@@ -424,6 +424,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 is an efficient multimodal model that supports a wide range of applications."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B is an efficient multimodal model that supports a wide range of applications."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is the latest experimental model, showcasing significant performance improvements in both text and multimodal use cases."
@@ -1042,8 +1045,8 @@
   "step-1-flash": {
     "description": "High-speed model, suitable for real-time dialogues."
   },
-  "step-1.5v-turbo": {
-    "description": "This model possesses strong video understanding capabilities."
+  "step-1.5v-mini": {
+    "description": "This model has powerful video understanding capabilities."
   },
   "step-1v-32k": {
     "description": "Supports visual input, enhancing multimodal interaction experiences."

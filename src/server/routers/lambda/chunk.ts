@@ -117,7 +117,7 @@ export const chunkRouter = router({
       console.timeEnd('embedding');
 
       return ctx.chunkModel.semanticSearch({
-        embedding: embeddings![0].embedding,
+        embedding: embeddings![0],
         fileIds: input.fileIds,
         query: input.query,
       });
@@ -144,7 +144,7 @@ export const chunkRouter = router({
           model: model,
         });
 
-        embedding = embeddings![0].embedding;
+        embedding = embeddings![0];
         const embeddingsId = await ctx.embeddingModel.create({
           embeddings: embedding,
           model: model,

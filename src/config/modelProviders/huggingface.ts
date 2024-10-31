@@ -15,6 +15,12 @@ const HuggingFace: ModelProviderCard = {
       id: 'google/gemma-2-2b-it',
       tokens: 8192,
     },
+    {
+      description: '阿里云通义千问团队开发的大型语言模型',
+      displayName: 'Qwen 2.5 72B Instruct',
+      id: 'Qwen/Qwen2.5-72B-Instruct',
+      tokens: 32_768,
+    },
   ],
   checkModel: 'mistralai/Mistral-7B-Instruct-v0.2',
   description:
