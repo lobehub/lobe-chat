@@ -27,5 +27,7 @@ export const AgentRuntimeErrorType = {
   OpenAIBizError: 'OpenAIBizError',
 } as const;
 
+export const AGENT_RUNTIME_ERROR_SET = new Set<string>(Object.values(AgentRuntimeErrorType));
+
 export type ILobeAgentRuntimeErrorType =
   (typeof AgentRuntimeErrorType)[keyof typeof AgentRuntimeErrorType];
