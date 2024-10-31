@@ -2,7 +2,6 @@ import { checkAuth } from '@/app/(backend)/middleware/auth';
 import {
   AGENT_RUNTIME_ERROR_SET,
   AgentRuntime,
-  AgentRuntimeErrorType,
   ChatCompletionErrorPayload,
 } from '@/libs/agent-runtime';
 import { createTraceOptions, initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
