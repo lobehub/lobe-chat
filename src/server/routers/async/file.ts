@@ -105,9 +105,9 @@ export const fileRouter = router({
                 console.timeEnd(`任务[${number}]: embeddings`);
 
                 const items: NewEmbeddingsItem[] =
-                  embeddings?.map((e) => ({
-                    chunkId: chunks[e.index].id,
-                    embeddings: e.embedding,
+                  embeddings?.map((e, idx) => ({
+                    chunkId: chunks[idx].id,
+                    embeddings: e,
                     fileId: input.fileId,
                     model: input.model,
                   })) || [];
