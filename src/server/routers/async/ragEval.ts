@@ -70,7 +70,7 @@ export const ragEvalRouter = router({
           });
 
           const embeddingId = await ctx.embeddingModel.create({
-            embeddings: embeddings?.[0].embedding,
+            embeddings: embeddings?.[0],
             model: embeddingModel,
           });
 

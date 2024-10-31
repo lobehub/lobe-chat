@@ -10,7 +10,7 @@ import {
   ChatCompetitionOptions,
   ChatCompletionErrorPayload,
   ChatStreamPayload,
-  EmbeddingItem,
+  Embeddings,
   EmbeddingsOptions,
   EmbeddingsPayload,
   TextToImagePayload,
@@ -271,14 +271,14 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     async embeddings(
       payload: EmbeddingsPayload,
       options?: EmbeddingsOptions,
-    ): Promise<EmbeddingItem[]> {
+    ): Promise<Embeddings[]> {
       try {
         const res = await this.client.embeddings.create(
           { ...payload, user: options?.user },
           { headers: options?.headers, signal: options?.signal },
         );
 
-        return res.data;
+        return res.data.map((item) => item.embedding);
       } catch (error) {
         throw this.handleError(error);
       }
