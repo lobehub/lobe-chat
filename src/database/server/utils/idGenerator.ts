@@ -22,6 +22,6 @@ export const idGenerator = (namespace: keyof typeof prefixes, size = 12) => {
 
   return `${prefix}_${hash()}`;
 };
-export const randomSlug = () => (generate(2) as string[]).join('-');
+export const randomSlug = (count = 2) => (generate(count) as string[]).join('-');
 
 export const inboxSessionId = (userId: string) => `ssn_inbox_${userId}`;
