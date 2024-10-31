@@ -1,8 +1,9 @@
 import { Metadata } from 'next';
 
 import { appEnv } from '@/config/app';
-import { BRANDING_NAME } from '@/const/branding';
+import { BRANDING_LOGO_URL, BRANDING_NAME, ORG_NAME } from '@/const/branding';
 import { OFFICIAL_URL, OG_URL } from '@/const/url';
+import { isCustomBranding, isCustomORG } from '@/const/version';
 import { translation } from '@/server/translation';
 
 const BASE_PATH = appEnv.NEXT_PUBLIC_BASE_PATH;
@@ -22,11 +23,13 @@ export const generateMetadata = async (): Promise<Metadata> => {
       title: BRANDING_NAME,
     },
     description: t('chat.description', { appName: BRANDING_NAME }),
-    icons: {
-      apple: '/apple-touch-icon.png?v=1',
-      icon: '/favicon.ico?v=1',
-      shortcut: '/favicon-32x32.ico?v=1',
-    },
+    icons: isCustomBranding
+      ? BRANDING_LOGO_URL
+      : {
+          apple: '/apple-touch-icon.png?v=1',
+          icon: '/favicon.ico?v=1',
+          shortcut: '/favicon-32x32.ico?v=1',
+        },
     manifest: noManifest ? undefined : '/manifest.json',
     metadataBase: new URL(OFFICIAL_URL),
     openGraph: {
@@ -53,7 +56,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
       card: 'summary_large_image',
       description: t('chat.description', { appName: BRANDING_NAME }),
       images: [OG_URL],
-      site: '@lobehub',
+      site: isCustomORG ? `@${ORG_NAME}` : '@lobehub',
       title: t('chat.title', { appName: BRANDING_NAME }),
     },
   };

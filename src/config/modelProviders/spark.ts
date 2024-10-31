@@ -10,7 +10,7 @@ const Spark: ModelProviderCard = {
       displayName: 'Spark Lite',
       enabled: true,
       functionCall: false,
-      id: 'general',
+      id: 'lite',
       maxOutput: 4096,
       tokens: 8192,
     },
@@ -30,14 +30,14 @@ const Spark: ModelProviderCard = {
       displayName: 'Spark Pro 128K',
       enabled: true,
       functionCall: false,
-      id: 'Pro-128k',
+      id: 'pro-128k',
       maxOutput: 4096,
       tokens: 131_072,
     },
     {
       description:
         'Spark Max 为功能最为全面的版本，支持联网搜索及众多内置插件。其全面优化的核心能力以及系统角色设定和函数调用功能，使其在各种复杂应用场景中的表现极为优异和出色。',
-      displayName: 'Spark 3.5 Max',
+      displayName: 'Spark Max',
       enabled: true,
       functionCall: false,
       id: 'generalv3.5',
@@ -47,10 +47,10 @@ const Spark: ModelProviderCard = {
     {
       description:
         'Spark Max 32K 配置了大上下文处理能力，更强的上下文理解和逻辑推理能力，支持32K tokens的文本输入，适用于长文档阅读、私有知识问答等场景',
-      displayName: 'Spark 3.5 Max 32K',
+      displayName: 'Spark Max 32K',
       enabled: true,
       functionCall: false,
-      id: 'Max-32k',
+      id: 'max-32k',
       maxOutput: 8192,
       tokens: 32_768,
     },
@@ -65,7 +65,7 @@ const Spark: ModelProviderCard = {
       tokens: 8192,
     },
   ],
-  checkModel: 'general',
+  checkModel: 'lite',
   description:
     '科大讯飞星火大模型提供多领域、多语言的强大 AI 能力，利用先进的自然语言处理技术，构建适用于智能硬件、智慧医疗、智慧金融等多种垂直场景的创新应用。',
   id: 'spark',

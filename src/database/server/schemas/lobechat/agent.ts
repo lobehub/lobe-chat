@@ -19,7 +19,7 @@ export const agents = pgTable('agents', {
     .$defaultFn(() => idGenerator('agents'))
     .notNull(),
   slug: varchar('slug', { length: 100 })
-    .$defaultFn(() => randomSlug())
+    .$defaultFn(() => randomSlug(4))
     .unique(),
   title: text('title'),
   description: text('description'),

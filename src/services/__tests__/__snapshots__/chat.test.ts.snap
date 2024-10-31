@@ -4,13 +4,11 @@ exports[`ChatService > createAssistantMessage > with tools messages > work with 
 {
   "messages": [
     {
-      "content": "## Tools
-
-You can use these tools below:
-
-### DALL·E 3
-
-Whenever a description of an image is given, use lobe-image-designer to create the images and then summarize the prompts used to generate the images in plain text. If the user does not ask for a specific number of images, default to creating four captions to send to lobe-image-designer that are written to be as diverse as possible.
+      "content": "<plugins_info>
+<tools>
+<description>The tools you can use below</description>
+<tool name="DALL·E 3" identifier="lobe-image-designer">
+<tool_instructions>Whenever a description of an image is given, use lobe-image-designer to create the images and then summarize the prompts used to generate the images in plain text. If the user does not ask for a specific number of images, default to creating four captions to send to lobe-image-designer that are written to be as diverse as possible.
 
   All captions sent to lobe-image-designer must abide by the following policies:
 
@@ -33,13 +31,11 @@ Whenever a description of an image is given, use lobe-image-designer to create t
   - If any creative professional or studio is named, substitute the name with a description of their style that does not reference any specific people, or delete the reference if they are unknown. DO NOT refer to the artist or studio's style.
 
 The prompt must intricately describe every part of the image in concrete, objective detail. THINK about what the end goal of the description is, and extrapolate that to what would make satisfying images.
-All descriptions sent to lobe-image-designer should be a paragraph of text that is extremely descriptive and detailed. Each should be more than 3 sentences long.
-
-The APIs you can use:
-
-#### lobe-image-designer____text2image____builtin
-
-Create images from a text-only prompt.",
+All descriptions sent to lobe-image-designer should be a paragraph of text that is extremely descriptive and detailed. Each should be more than 3 sentences long.</tool_instructions>
+<api name="lobe-image-designer____text2image____builtin">Create images from a text-only prompt.</api>
+</tool>
+</tools>
+</plugins_info>",
       "role": "system",
     },
     {

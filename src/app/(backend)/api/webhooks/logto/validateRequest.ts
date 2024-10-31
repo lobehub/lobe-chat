@@ -26,7 +26,7 @@ interface LogtoWebhookPayload {
 
 export const validateRequest = async (request: Request, signingKey: string) => {
   const payloadString = await request.text();
-  const headerPayload = headers();
+  const headerPayload = await headers();
   const logtoHeaderSignature = headerPayload.get('logto-signature-sha-256')!;
   try {
     const hmac = createHmac('sha256', signingKey);

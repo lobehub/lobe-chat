@@ -184,5 +184,6 @@
         "processing": "Processando arquivo..."
       }
     }
-  }
+  },
+  "zenMode": "Modo de Foco"
 }

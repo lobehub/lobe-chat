@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { gerServerDeviceInfo, isMobileDevice } from '@/utils/responsive';
+import { gerServerDeviceInfo, isMobileDevice } from '@/utils/server/responsive';
 
 import Page from './index';
 

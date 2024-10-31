@@ -149,7 +149,7 @@ const Github: ModelProviderCard = {
     {
       description: 'Phi-3-mini模型的更新版。',
       displayName: 'Phi-3.5-mini 128K',
-      id: 'Phi-3-5-mini-instruct',
+      id: 'Phi-3.5-mini-instruct',
       maxOutput: 4096,
       tokens: 131_072,
     },

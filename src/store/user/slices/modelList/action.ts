@@ -89,23 +89,10 @@ export const createModelListSlice: StateCreator<
     };
 
     const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
-      const openai = draft.find((d) => d.id === ModelProvider.OpenAI);
-      if (openai) openai.chatModels = mergeModels('openai', openai.chatModels);
-
-      const azure = draft.find((d) => d.id === ModelProvider.Azure);
-      if (azure) azure.chatModels = mergeModels('azure', azure.chatModels);
-
-      const ollama = draft.find((d) => d.id === ModelProvider.Ollama);
-      if (ollama) ollama.chatModels = mergeModels('ollama', ollama.chatModels);
-
-      const openrouter = draft.find((d) => d.id === ModelProvider.OpenRouter);
-      if (openrouter) openrouter.chatModels = mergeModels('openrouter', openrouter.chatModels);
-
-      const togetherai = draft.find((d) => d.id === ModelProvider.TogetherAI);
-      if (togetherai) togetherai.chatModels = mergeModels('togetherai', togetherai.chatModels);
-
-      const novita = draft.find((d) => d.id === ModelProvider.Novita);
-      if (novita) novita.chatModels = mergeModels('novita', novita.chatModels);
+      Object.values(ModelProvider).forEach((id) =>{
+         const provider = draft.find((d) => d.id === id);
+         if (provider) provider.chatModels = mergeModels(id as any, provider.chatModels); 
+      })
     });
 
     set({ defaultModelProviderList }, false, `refreshDefaultModelList - ${params?.trigger}`);

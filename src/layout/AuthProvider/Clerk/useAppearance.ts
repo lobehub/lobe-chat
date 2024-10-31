@@ -4,6 +4,8 @@ import { dark } from '@clerk/themes';
 import { ElementsConfig, Theme } from '@clerk/types';
 import { createStyles, useThemeMode } from 'antd-style';
 
+import { BRANDING_URL } from '@/const/branding';
+
 const prefixCls = 'cl';
 
 export const useStyles = createStyles(
@@ -101,10 +103,10 @@ export const useAppearance = () => {
     baseTheme: isDarkMode ? dark : undefined,
     elements: styles,
     layout: {
-      helpPageUrl: 'https://lobehub.com/docs',
-      privacyPageUrl: 'https://lobehub.com/privacy',
+      helpPageUrl: BRANDING_URL.help ?? 'https://lobehub.com/docs',
+      privacyPageUrl: BRANDING_URL.privacy ?? 'https://lobehub.com/privacy',
       socialButtonsVariant: 'blockButton',
-      termsPageUrl: 'https://lobehub.com/terms',
+      termsPageUrl: BRANDING_URL.terms ?? 'https://lobehub.com/terms',
     },
     variables: {
       borderRadius: `${theme.borderRadius}px`,

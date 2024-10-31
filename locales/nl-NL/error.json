@@ -13,7 +13,10 @@
     "title": "Er is een probleem opgetreden op de pagina.."
   },
   "fetchError": "Verzoek mislukt",
-  "fetchErrorDetail": "Foutdetails",
+  "loginRequired": {
+    "desc": "U wordt binnenkort automatisch doorgestuurd naar de inlogpagina",
+    "title": "Log in om deze functie te gebruiken"
+  },
   "notFound": {
     "backHome": "Terug naar startpagina",
     "check": "Controleer of je URL correct is",
@@ -51,9 +54,16 @@
     "431": "Sorry, de kop van uw verzoek is te groot en kan niet worden verwerkt door de server",
     "451": "Sorry, vanwege juridische redenen weigert de server deze bron te leveren",
     "500": "Sorry, de server lijkt problemen te ondervinden en kan uw verzoek tijdelijk niet voltooien. Probeer het later opnieuw",
+    "501": "Het spijt ons, de server weet nog niet hoe deze aanvraag te verwerken, controleer alstublieft of uw handeling correct is",
     "502": "Sorry, de server lijkt de weg kwijt te zijn en kan tijdelijk geen service verlenen. Probeer het later opnieuw",
     "503": "Sorry, de server kan uw verzoek momenteel niet verwerken vanwege overbelasting of onderhoud. Probeer het later opnieuw",
     "504": "Sorry, de server heeft geen reactie ontvangen van de upstream server. Probeer het later opnieuw",
+    "505": "Het spijt ons, de server ondersteunt de door u gebruikte HTTP-versie niet, probeer het alstublieft opnieuw na een update",
+    "506": "Het spijt ons, er is een probleem met de serverconfiguratie, neem contact op met de beheerder voor hulp",
+    "507": "Het spijt ons, de server heeft onvoldoende opslagruimte om uw aanvraag te verwerken, probeer het alstublieft later opnieuw",
+    "509": "Het spijt ons, de bandbreedte van de server is op, probeer het alstublieft later opnieuw",
+    "510": "Het spijt ons, de server ondersteunt de gevraagde uitbreidingsfunctie niet, neem contact op met de beheerder",
+    "524": "Het spijt ons, de server heeft een time-out terwijl hij op een antwoord wacht, mogelijk omdat de reactie te traag is, probeer het alstublieft later opnieuw",
     "AgentRuntimeError": "Lobe language model runtime execution error, please troubleshoot or retry based on the following information",
     "FreePlanLimit": "U bent momenteel een gratis gebruiker en kunt deze functie niet gebruiken. Upgrade naar een betaald plan om door te gaan met gebruiken.",
     "InvalidAccessCode": "Ongeldige toegangscode: het wachtwoord is onjuist of leeg. Voer de juiste toegangscode in of voeg een aangepaste API-sleutel toe.",

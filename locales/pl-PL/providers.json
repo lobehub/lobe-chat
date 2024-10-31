@@ -63,6 +63,7 @@
   "qwen": {
     "description": "Tongyi Qianwen to samodzielnie opracowany przez Alibaba Cloud model językowy o dużej skali, charakteryzujący się silnymi zdolnościami rozumienia i generowania języka naturalnego. Może odpowiadać na różnorodne pytania, tworzyć treści pisemne, wyrażać opinie, pisać kod i działać w wielu dziedzinach."
   },
+  "sensenova": {},
   "siliconcloud": {
     "description": "SiliconFlow dąży do przyspieszenia AGI, aby przynieść korzyści ludzkości, poprawiając wydajność dużych modeli AI dzięki łatwemu w użyciu i niskokosztowemu stosowi GenAI."
   },

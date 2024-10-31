@@ -13,7 +13,10 @@
     "title": "Sayfa bir sorunla karşılaştı.."
   },
   "fetchError": "İstek başarısız oldu",
-  "fetchErrorDetail": "Hata detayı",
+  "loginRequired": {
+    "desc": "Otomatik olarak giriş sayfasına yönlendirileceksiniz",
+    "title": "Lütfen bu özelliği kullanmadan önce giriş yapın"
+  },
   "notFound": {
     "backHome": "Ana Sayfaya Dön",
     "check": "Lütfen URL'nizin doğru olduğundan emin olun",
@@ -51,9 +54,16 @@
     "431": "Üzgünüz, istek başlık alanı çok büyük, sunucu işleyemiyor",
     "451": "Üzgünüz, yasal nedenlerle sunucu bu kaynağı sağlamayı reddediyor",
     "500": "Üzgünüm, sunucu bazı zorluklar yaşıyor ve geçici olarak isteğinizi tamamlayamıyor. Lütfen daha sonra tekrar deneyin.",
+    "501": "Üzgünüm, sunucu bu isteği nasıl işleyeceğini henüz bilmiyor, lütfen işleminizin doğru olduğundan emin olun",
     "502": "Üzgünüm, sunucu kayboldu ve geçici olarak hizmet veremiyor. Lütfen daha sonra tekrar deneyin.",
     "503": "Üzgünüm, sunucu şu anda isteğinizi işleyemiyor, muhtemelen aşırı yüklenme veya bakım nedeniyle. Lütfen daha sonra tekrar deneyin.",
     "504": "Üzgünüm, sunucu yukarı akış sunucusundan bir yanıt alamadı. Lütfen daha sonra tekrar deneyin.",
+    "505": "Üzgünüm, sunucu kullandığınız HTTP sürümünü desteklemiyor, lütfen güncelleyip tekrar deneyin",
+    "506": "Üzgünüm, sunucu yapılandırmasında bir sorun var, lütfen çözüm için yöneticinizle iletişime geçin",
+    "507": "Üzgünüm, sunucunun depolama alanı yetersiz, isteğinizi işleyemiyor, lütfen daha sonra tekrar deneyin",
+    "509": "Üzgünüm, sunucunun bant genişliği tükendi, lütfen daha sonra tekrar deneyin",
+    "510": "Üzgünüm, sunucu isteğinizi genişletme işlevini desteklemiyor, lütfen yöneticinizle iletişime geçin",
+    "524": "Üzgünüm, sunucu yanıt beklerken zaman aşımına uğradı, bu muhtemelen yanıtın çok yavaş olmasından kaynaklanıyor, lütfen daha sonra tekrar deneyin",
     "AgentRuntimeError": "Lobe dil modeli çalışma zamanı hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "FreePlanLimit": "Şu anda ücretsiz bir kullanıcısınız, bu özelliği kullanamazsınız. Lütfen devam etmek için bir ücretli plana yükseltin.",
     "InvalidAccessCode": "Geçersiz Erişim Kodu: Geçersiz veya boş bir şifre girdiniz. Lütfen doğru erişim şifresini girin veya özel API Anahtarı ekleyin.",

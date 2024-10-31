@@ -7,7 +7,7 @@ import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
 import { PluginCategory } from '@/types/discover';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import List from '../features/List';
 

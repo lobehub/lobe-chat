@@ -16,53 +16,14 @@ const ZeroOne: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      description: '全新千亿参数模型，提供超强问答及文本生成能力。',
-      displayName: 'Yi Large',
+      description: '小而精悍，轻量极速模型。提供强化数学运算和代码编写能力。',
+      displayName: 'Yi Spark',
       enabled: true,
-      id: 'yi-large',
+      id: 'yi-spark',
       pricing: {
         currency: 'CNY',
-        input: 20,
-        output: 20,
-      },
-      tokens: 32_768,
-    },
-    {
-      description:
-        '在 yi-large 模型的基础上支持并强化了工具调用的能力，适用于各种需要搭建 agent 或 workflow 的业务场景。',
-      displayName: 'Yi Large FC',
-      enabled: true,
-      functionCall: true,
-      id: 'yi-large-fc',
-      pricing: {
-        currency: 'CNY',
-        input: 20,
-        output: 20,
-      },
-      tokens: 32_768,
-    },
-    {
-      description:
-        '基于 yi-large 超强模型的高阶服务，结合检索与生成技术提供精准答案，实时全网检索信息服务。',
-      displayName: 'Yi Large RAG',
-      enabled: true,
-      id: 'yi-large-rag',
-      pricing: {
-        currency: 'CNY',
-        input: 25,
-        output: 25,
-      },
-      tokens: 16_384,
-    },
-    {
-      description: '超高性价比、卓越性能。根据性能和推理速度、成本，进行平衡性高精度调优。',
-      displayName: 'Yi Large Turbo',
-      enabled: true,
-      id: 'yi-large-turbo',
-      pricing: {
-        currency: 'CNY',
-        input: 12,
-        output: 12,
+        input: 1,
+        output: 1,
       },
       tokens: 16_384,
     },
@@ -91,16 +52,54 @@ const ZeroOne: ModelProviderCard = {
       tokens: 200_000,
     },
     {
-      description: '小而精悍，轻量极速模型。提供强化数学运算和代码编写能力。',
-      displayName: 'Yi Spark',
+      description: '超高性价比、卓越性能。根据性能和推理速度、成本，进行平衡性高精度调优。',
+      displayName: 'Yi Large Turbo',
       enabled: true,
-      id: 'yi-spark',
+      id: 'yi-large-turbo',
       pricing: {
         currency: 'CNY',
-        input: 1,
-        output: 1,
+        input: 12,
+        output: 12,
       },
       tokens: 16_384,
+    },
+    {
+      description:
+        '基于 yi-large 超强模型的高阶服务，结合检索与生成技术提供精准答案，实时全网检索信息服务。',
+      displayName: 'Yi Large RAG',
+      enabled: true,
+      id: 'yi-large-rag',
+      pricing: {
+        currency: 'CNY',
+        input: 25,
+        output: 25,
+      },
+      tokens: 16_384,
+    },
+    {
+      description:
+        '在 yi-large 模型的基础上支持并强化了工具调用的能力，适用于各种需要搭建 agent 或 workflow 的业务场景。',
+      displayName: 'Yi Large FC',
+      enabled: true,
+      functionCall: true,
+      id: 'yi-large-fc',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 20,
+      },
+      tokens: 32_768,
+    },
+    {
+      description: '全新千亿参数模型，提供超强问答及文本生成能力。',
+      displayName: 'Yi Large',
+      id: 'yi-large',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 20,
+      },
+      tokens: 32_768,
     },
     {
       description: '复杂视觉任务模型，提供高性能图片理解、分析能力。',

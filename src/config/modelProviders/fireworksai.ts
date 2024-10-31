@@ -32,6 +32,40 @@ const FireworksAI: ModelProviderCard = {
     },
     {
       description:
+        'Llama 3.2 1B 指令模型是Meta推出的一款轻量级多语言模型。该模型旨在提高效率，与更大型的模型相比，在延迟和成本方面提供了显著的改进。该模型的示例用例包括检索和摘要。',
+      displayName: 'Llama 3.2 1B Instruct',
+      enabled: true,
+      id: 'accounts/fireworks/models/llama-v3p2-1b-instruct',
+      tokens: 131_072,
+    },
+    {
+      description:
+        'Llama 3.2 3B 指令模型是Meta推出的一款轻量级多语言模型。该模型旨在提高效率，与更大型的模型相比，在延迟和成本方面提供了显著的改进。该模型的示例用例包括查询和提示重写以及写作辅助。',
+      displayName: 'Llama 3.2 3B Instruct',
+      enabled: true,
+      id: 'accounts/fireworks/models/llama-v3p2-3b-instruct',
+      tokens: 131_072,
+    },
+    {
+      description:
+        'Meta的11B参数指令调整图像推理模型。该模型针对视觉识别、图像推理、图像描述和回答关于图像的一般性问题进行了优化。该模型能够理解视觉数据，如图表和图形，并通过生成文本描述图像细节来弥合视觉与语言之间的差距。',
+      displayName: 'Llama 3.2 11B Vision Instruct',
+      enabled: true,
+      id: 'accounts/fireworks/models/llama-v3p2-11b-vision-instruct',
+      tokens: 131_072,
+      vision: true,
+    },
+    {
+      description:
+        'Meta的90B参数指令调整图像推理模型。该模型针对视觉识别、图像推理、图像描述和回答关于图像的一般性问题进行了优化。该模型能够理解视觉数据，如图表和图形，并通过生成文本描述图像细节来弥合视觉与语言之间的差距。',
+      displayName: 'Llama 3.2 90B Vision Instruct',
+      enabled: true,
+      id: 'accounts/fireworks/models/llama-v3p2-90b-vision-instruct',
+      tokens: 131_072,
+      vision: true,
+    },
+    {
+      description:
         'Llama 3.1 8B 指令模型，专为多语言对话优化，能够在常见行业基准上超越多数开源及闭源模型。',
       displayName: 'Llama 3.1 8B Instruct',
       enabled: true,
@@ -88,15 +122,6 @@ const FireworksAI: ModelProviderCard = {
       tokens: 8192,
     },
     {
-      description:
-        'Gemma 2 9B 指令模型，基于之前的Google技术，适合回答问题、总结和推理等多种文本生成任务。',
-      displayName: 'Gemma 2 9B Instruct',
-      enabled: true,
-      functionCall: false,
-      id: 'accounts/fireworks/models/gemma2-9b-it',
-      tokens: 8192,
-    },
-    {
       description: 'Mixtral MoE 8x7B 指令模型，多专家架构提供高效的指令跟随及执行。',
       displayName: 'Mixtral MoE 8x7B Instruct',
       enabled: true,
@@ -123,13 +148,21 @@ const FireworksAI: ModelProviderCard = {
     },
     {
       description:
-        'Phi 3 Vision 指令模型，轻量级多模态模型，能够处理复杂的视觉和文本信息，具备较强的推理能力。',
-      displayName: 'Phi 3 Vision Instruct',
+        'Phi-3-Vision-128K-Instruct 是一个轻量级的、最先进的开放多模态模型，它基于包括合成数据和经过筛选的公开网站在内的数据集构建，专注于非常高质量、推理密集型的数据，这些数据既包括文本也包括视觉。该模型属于 Phi-3 模型系列，其多模态版本支持 128K 的上下文长度（以标记为单位）。该模型经过严格的增强过程，结合了监督微调和直接偏好优化，以确保精确遵循指令和强大的安全措施。',
+      displayName: 'Phi 3.5 Vision Instruct',
       enabled: true,
       functionCall: false,
       id: 'accounts/fireworks/models/phi-3-vision-128k-instruct',
-      tokens: 8192,
+      tokens: 32_064,
       vision: true,
+    },
+    {
+      description: 'Qwen2.5 是由阿里云 Qwen 团队开发的一系列仅包含解码器的语言模型。这些模型提供不同的大小，包括 0.5B、1.5B、3B、7B、14B、32B 和 72B，并且有基础版（base）和指令版（instruct）两种变体。',
+      displayName: 'Qwen2.5 72B Instruct',
+      enabled: true,
+      functionCall: false,
+      id: 'accounts/fireworks/models/qwen2p5-72b-instruct',
+      tokens: 32_768,
     },
     {
       description: 'Yi-Large 模型，具备卓越的多语言处理能力，可用于各类语言生成和理解任务。',

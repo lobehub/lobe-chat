@@ -1,7 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 
 import Loading from '@/components/CircleLoading';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';

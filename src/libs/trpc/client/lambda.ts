@@ -2,7 +2,8 @@ import { createTRPCClient, httpBatchLink } from '@trpc/client';
 import { createTRPCReact } from '@trpc/react-query';
 import superjson from 'superjson';
 
-import { fetchErrorNotification } from '@/components/FetchErrorNotification';
+import { fetchErrorNotification } from '@/components/Error/fetchErrorNotification';
+import { loginRequired } from '@/components/Error/loginRequiredNotification';
 import { ModelProvider } from '@/libs/agent-runtime';
 import type { LambdaRouter } from '@/server/routers/lambda';
 
@@ -20,7 +21,16 @@ const links = [
         const errorData = item.error.json;
 
         const status = errorData.data.httpStatus;
-        fetchErrorNotification.error({ errorMessage: errorData.message, status });
+
+        switch (status) {
+          case 401: {
+            loginRequired.redirect();
+            break;
+          }
+          default: {
+            fetchErrorNotification.error({ errorMessage: errorData.message, status });
+          }
+        }
       });
 
       return response;

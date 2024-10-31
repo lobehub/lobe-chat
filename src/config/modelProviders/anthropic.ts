@@ -9,6 +9,23 @@ const Anthropic: ModelProviderCard = {
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
       functionCall: true,
+      id: 'claude-3-5-sonnet-20241022',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.3,
+        input: 3,
+        output: 15,
+        writeCacheInput: 3.75,
+      },
+      releasedAt: '2024-10-22',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
+        'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
+      displayName: 'Claude 3.5 Sonnet 0620',
+      functionCall: true,
       id: 'claude-3-5-sonnet-20240620',
       maxOutput: 8192,
       pricing: {
@@ -93,18 +110,6 @@ const Anthropic: ModelProviderCard = {
         output: 24,
       },
       releasedAt: '2023-07-11',
-      tokens: 100_000,
-    },
-    {
-      description: 'Anthropic 的模型用于低延迟、高吞吐量的文本生成，支持生成数百页的文本。',
-      displayName: 'Claude Instant 1.2',
-      id: 'claude-instant-1.2',
-      maxOutput: 4096,
-      pricing: {
-        input: 0.8,
-        output: 2.4,
-      },
-      releasedAt: '2023-08-09',
       tokens: 100_000,
     },
   ],

@@ -17,7 +17,7 @@ interface CasdoorWebhookPayload {
 
 export const validateRequest = async (request: Request, secret?: string) => {
   const payloadString = await request.text();
-  const headerPayload = headers();
+  const headerPayload = await headers();
   const casdoorSecret = headerPayload.get('casdoor-secret')!;
   try {
     if (casdoorSecret === secret) {

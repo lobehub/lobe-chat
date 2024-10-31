@@ -7,7 +7,7 @@ import { ldModule } from '@/server/ld';
 import { metadataModule } from '@/server/metadata';
 import { DiscoverService } from '@/server/services/discover';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import DetailLayout from '../../features/DetailLayout';
 import Actions from './features/Actions';

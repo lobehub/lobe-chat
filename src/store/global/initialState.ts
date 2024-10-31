@@ -43,6 +43,7 @@ export interface SystemStatus {
   showFilePanel?: boolean;
   showSessionPanel?: boolean;
   showSystemRole?: boolean;
+  zenMode?: boolean;
 }
 
 export interface GlobalState {
@@ -67,6 +68,7 @@ export const INITIAL_STATUS = {
   showFilePanel: true,
   showSessionPanel: true,
   showSystemRole: false,
+  zenMode: false,
 } satisfies SystemStatus;
 
 export const initialState: GlobalState = {

@@ -63,6 +63,7 @@
   "qwen": {
     "description": "通義千問是阿里雲自主研發的超大規模語言模型，具有強大的自然語言理解和生成能力。它可以回答各種問題、創作文字內容、表達觀點看法、撰寫代碼等，在多個領域發揮作用。"
   },
+  "sensenova": {},
   "siliconcloud": {
     "description": "SiliconFlow 致力於加速 AGI，以惠及人類，通過易用與成本低的 GenAI 堆疊提升大規模 AI 效率。"
   },

@@ -63,6 +63,13 @@
       "when": 1725366565650,
       "tag": "0008_add_rag_evals",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1729699958471,
+      "tag": "0009_remove_unused_user_tables",
+      "breakpoints": true
     }
   ],
   "version": "6"

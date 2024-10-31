@@ -13,7 +13,10 @@
     "title": "Un problème est survenu sur la page.."
   },
   "fetchError": "Échec de la requête",
-  "fetchErrorDetail": "Détails de l'erreur",
+  "loginRequired": {
+    "desc": "Vous allez être redirigé vers la page de connexion",
+    "title": "Veuillez vous connecter pour utiliser cette fonctionnalité"
+  },
   "notFound": {
     "backHome": "Retour à la page d'accueil",
     "check": "Veuillez vérifier si votre URL est correcte",
@@ -51,9 +54,16 @@
     "431": "Désolé, les en-têtes de votre demande sont trop volumineux pour être traités par le serveur",
     "451": "Désolé, pour des raisons légales, le serveur refuse de fournir cette ressource",
     "500": "Désolé, le serveur semble rencontrer des difficultés et ne peut temporairement pas traiter votre requête. Veuillez réessayer plus tard",
+    "501": "Désolé, le serveur ne sait pas encore comment traiter cette demande, veuillez vérifier si votre opération est correcte.",
     "502": "Désolé, le serveur semble perdu et ne peut temporairement pas fournir de service. Veuillez réessayer plus tard",
     "503": "Désolé, le serveur ne peut actuellement pas traiter votre requête, probablement en raison d'une surcharge ou de travaux de maintenance. Veuillez réessayer plus tard",
     "504": "Désolé, le serveur n'a pas reçu de réponse de la part du serveur amont. Veuillez réessayer plus tard",
+    "505": "Désolé, le serveur ne prend pas en charge la version HTTP que vous utilisez, veuillez mettre à jour et réessayer.",
+    "506": "Désolé, il y a un problème de configuration du serveur, veuillez contacter l'administrateur pour résoudre ce problème.",
+    "507": "Désolé, le serveur n'a pas suffisamment d'espace de stockage pour traiter votre demande, veuillez réessayer plus tard.",
+    "509": "Désolé, la bande passante du serveur est épuisée, veuillez réessayer plus tard.",
+    "510": "Désolé, le serveur ne prend pas en charge l'extension demandée, veuillez contacter l'administrateur.",
+    "524": "Désolé, le serveur a dépassé le délai d'attente en attendant une réponse, cela peut être dû à une réponse trop lente, veuillez réessayer plus tard.",
     "AgentRuntimeError": "Erreur d'exécution du modèle linguistique Lobe, veuillez vérifier les informations ci-dessous ou réessayer",
     "FreePlanLimit": "Vous êtes actuellement un utilisateur gratuit et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan payant pour continuer à l'utiliser.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",

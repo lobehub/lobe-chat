@@ -25,6 +25,20 @@ export const getProviderAuthPayload = (provider: string) => {
       };
     }
 
+    case ModelProvider.SenseNova: {
+      const { sensenovaAccessKeyID, sensenovaAccessKeySecret } = keyVaultsConfigSelectors.sensenovaConfig(
+        useUserStore.getState(),
+      );
+
+      const apiKey = (sensenovaAccessKeyID || '') + ':' + (sensenovaAccessKeySecret || '')
+
+      return { 
+        apiKey,
+        sensenovaAccessKeyID: sensenovaAccessKeyID, 
+        sensenovaAccessKeySecret: sensenovaAccessKeySecret, 
+      };
+    }
+
     case ModelProvider.Wenxin: {
       const { secretKey, accessKey } = keyVaultsConfigSelectors.wenxinConfig(
         useUserStore.getState(),

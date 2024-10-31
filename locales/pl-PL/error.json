@@ -13,7 +13,10 @@
     "title": "Napotkano problem na stronie.."
   },
   "fetchError": "Błąd żądania",
-  "fetchErrorDetail": "Szczegóły błędu",
+  "loginRequired": {
+    "desc": "Zaraz nastąpi automatyczne przekierowanie do strony logowania",
+    "title": "Proszę zalogować się, aby korzystać z tej funkcji"
+  },
   "notFound": {
     "backHome": "Powrót do strony głównej",
     "check": "Proszę sprawdzić, czy Twój adres URL jest poprawny",
@@ -51,9 +54,16 @@
     "431": "Przepraszamy, nagłówek żądania jest zbyt duży, serwer nie może go przetworzyć",
     "451": "Przepraszamy, z powodów prawnych serwer odmawia dostarczenia tego zasobu",
     "500": "Przepraszamy, serwer napotkał pewne trudności i tymczasowo nie może zrealizować Twojego żądania. Proszę spróbuj ponownie później",
+    "501": "Przykro nam, serwer nie wie, jak obsłużyć to żądanie, proszę upewnić się, że Twoje działanie jest poprawne",
     "502": "Przepraszamy, serwer wydaje się zgubić kierunek i tymczasowo nie może świadczyć usług. Proszę spróbuj ponownie później",
     "503": "Przepraszamy, serwer tymczasowo nie może przetworzyć Twojego żądania, prawdopodobnie z powodu przeciążenia lub konserwacji. Proszę spróbuj ponownie później",
     "504": "Przepraszamy, serwer nie otrzymał odpowiedzi od serwera nadrzędnego. Proszę spróbuj ponownie później",
+    "505": "Przykro nam, serwer nie obsługuje używanej wersji HTTP, proszę zaktualizować i spróbować ponownie",
+    "506": "Przykro nam, wystąpił problem z konfiguracją serwera, proszę skontaktować się z administratorem w celu rozwiązania",
+    "507": "Przykro nam, serwer ma niewystarczającą przestrzeń dyskową, aby obsłużyć Twoje żądanie, proszę spróbować ponownie później",
+    "509": "Przykro nam, pasmo serwera zostało wyczerpane, proszę spróbować ponownie później",
+    "510": "Przykro nam, serwer nie obsługuje żądanej funkcji rozszerzenia, proszę skontaktować się z administratorem",
+    "524": "Przykro nam, serwer przekroczył czas oczekiwania na odpowiedź, może to być spowodowane zbyt wolną odpowiedzią, proszę spróbować ponownie później",
     "AgentRuntimeError": "Wystąpił błąd wykonania modelu językowego Lobe, prosimy o sprawdzenie poniższych informacji lub ponowne próbowanie.",
     "FreePlanLimit": "Jesteś obecnie użytkownikiem darmowej wersji, nie możesz korzystać z tej funkcji. Proszę uaktualnić do planu płatnego, aby kontynuować korzystanie.",
     "InvalidAccessCode": "Nieprawidłowy kod dostępu: Hasło jest nieprawidłowe lub puste. Proszę wprowadzić poprawne hasło dostępu lub dodać niestandardowy klucz API.",

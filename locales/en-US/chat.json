@@ -184,5 +184,6 @@
         "processing": "Processing file..."
       }
     }
-  }
+  },
+  "zenMode": "Zen Mode"
 }

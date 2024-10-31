@@ -1,36 +1,20 @@
 'use client';
 
-import { Icon } from '@lobehub/ui';
-import { App, FloatButton, Spin } from 'antd';
-import { DatabaseIcon, Loader2 } from 'lucide-react';
-import { memo, useState } from 'react';
+import dynamic from 'next/dynamic';
+import { FC } from 'react';
 
-import { debugService } from '@/services/debug';
+import { getDebugConfig } from '@/config/debug';
 
-const DebugUI = memo(() => {
-  const [loading, setLoading] = useState(false);
-  const { message } = App.useApp();
-  return (
-    <>
-      {loading && <Spin fullscreen />}
-      <FloatButton
-        icon={<Icon icon={loading ? Loader2 : DatabaseIcon} spin={loading} />}
-        onClick={async () => {
-          setLoading(true);
+let DebugUI: FC = () => null;
 
-          const startTime = Date.now();
-
-          await debugService.insertLargeDataToDB();
-
-          const duration = Date.now() - startTime;
-
-          setLoading(false);
-          message.success(`插入成功，耗时：${(duration / 1000).toFixed(1)} s`);
-        }}
-        tooltip={'性能压测，插入100w数据'}
-      />
-    </>
-  );
-});
+// we need use Constant Folding to remove code below in production
+// refs: https://webpack.js.org/plugins/internal-plugins/#constplugin
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line unicorn/no-lonely-if
+  if (getDebugConfig().DEBUG_MODE) {
+    // @ts-ignore
+    DebugUI = dynamic(() => import('./Content'), { ssr: false });
+  }
+}
 
 export default DebugUI;

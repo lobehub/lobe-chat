@@ -21,8 +21,10 @@ export const LobeHuggingFaceAI = LobeOpenAICompatibleFactory({
   },
   customClient: {
     createChatCompletionStream: (client: HfInference, payload, instance) => {
+      const { max_tokens = 4096} = payload;
       const hfRes = client.chatCompletionStream({
         endpointUrl: instance.baseURL,
+        max_tokens: max_tokens,
         messages: payload.messages,
         model: payload.model,
         stream: true,
