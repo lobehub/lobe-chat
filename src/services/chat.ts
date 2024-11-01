@@ -32,6 +32,7 @@ import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
+import {enableAuth} from "@/const/auth";
 
 interface FetchOptions extends FetchSSEOptions {
   isWelcomeQuestion?: boolean;
@@ -278,6 +279,13 @@ class ChatService {
     let fetcher: typeof fetch | undefined = undefined;
 
     if (enableFetchOnClient) {
+      /**
+       * if enable login and not signed in, return unauthorized error
+       */
+      const userStore = useUserStore.getState();
+      if (enableAuth && !userStore.isSignedIn) {
+        return createErrorResponse(ChatErrorType.Unauthorized, { error: {errorType: "InvalidAccessCode"}, provider });
+      }
       /**
        * Notes:
        * 1. Browser agent runtime will skip auth check if a key and endpoint provided by
