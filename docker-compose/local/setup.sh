@@ -21,6 +21,10 @@ LANGUAGE="en_US"
 # Determine the source URL to download files
 SOURCE_URL="https://raw.githubusercontent.com/lobehub/lobe-chat/main"
 
+# Arg: --host
+# Determine the server host
+HOST=""
+
 # 2. Parse script arguments
 while getopts "fl:-:" opt; do
   case $opt in
@@ -40,8 +44,12 @@ while getopts "fl:-:" opt; do
           SOURCE_URL="${!OPTIND}"
           OPTIND=$(($OPTIND + 1))
           ;;
+        host)
+          HOST="${!OPTIND}"
+          OPTIND=$(($OPTIND + 1))
+          ;;
         *)
-          echo "Usage: $0 [-f] [-l language|--lang language] [--url source]" >&2
+          echo "Usage: $0 [-f] [-l language|--lang language] [--url source] [--host serverhost]" >&2
           exit 1
           ;;
       esac
@@ -234,6 +242,61 @@ download_file "$SOURCE_URL/${FILES[3]}" "s3_data.tar.gz"
 # Extract .tar.gz file without output
 extract_file "s3_data.tar.gz" "."
 rm s3_data.tar.gz
+
+# ==========================
+# === Regenerate Secrets ===
+# ==========================
+
+# Generate CASDOOR_SECRET
+CASDOOR_SECRET=$(openssl rand -base64 32)
+if [ $? -ne 0 ]; then
+  echo "[Warning] Failed to generate CASDOOR_SECRET with openssl, keep default"
+  exit 1
+else
+  # Search and replace the value of CASDOOR_SECRET in .env
+  sed -i "s|^AUTH_CASDOOR_SECRET=.*|AUTH_CASDOOR_SECRET=${CASDOOR_SECRET}|" .env
+  # replace `clientSecrect` in init_data.json
+  sed -i "s/"dbf205949d704de81b0b5b3603174e23fbecc354"/${CASDOOR_SECRET}/" init_data.json
+fi
+
+# Generate Minio S3 access key
+S3_SECRET_ACCESS_KEY=$(openssl rand -base64 32)
+if [ $? -ne 0 ]; then
+  echo "[Warning] Failed to generate S3_SECRET_ACCESS_KEY with openssl, keep default"
+  exit 1
+else
+  # Search and replace the value of S3_SECRET_ACCESS_KEY in .env
+  sed -i "s|^S3_SECRET_ACCESS_KEY=.*|S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY}|" .env
+fi
+
+# Generate Minio S3 user
+MINIO_ROOT_USER="admin"
+MINIO_ROOT_PASSWORD=$(openssl rand -base64 16)
+if [ $? -ne 0 ]; then
+  echo "[Warning] Failed to generate MINIO_ROOT_PASSWORD with openssl, keep default"
+  exit 1
+else
+  # Search and replace the value of MINIO_ROOT_PASSWORD in .env
+  sed -i "s|^MINIO_ROOT_PASSWORD=.*|MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}|" .env
+  # Modify user
+  sed -i "s/^MINIO_ROOT_USER=.*/MINIO_ROOT_USER=${MINIO_ROOT_USER}/" .env
+fi
+
+# Modify the .env file if the host is specified
+if [ -n "$HOST" ]; then
+  # Modify env
+  sed -i "s/localhost/$HOST/g" .env
+  # Modify casdoor init data
+  sed -i "s/localhost/$HOST/g" init_data.json
+fi
+
+# Display configuration reports
+echo -e "\nConfiguration details:\n"
+if [ -n "$HOST" ]; then
+  echo -e "Server Host: $HOST"
+fi
+echo -e "Casdoor: \n - Username: admin\n  - Password: 123\n  - Client Secret: ${CASDOOR_SECRET}"
+echo -e "Minio S3: \n - MinIO User: ${MINIO_ROOT_USER}\n  - MinIO PassWord: ${MINIO_ROOT_PASSWORD}\n  - MinIO Access Key: ${S3_SECRET_ACCESS_KEY}\n"
 
 # Display final message
 printf "\n%s\n\n" "$(show_message "tips_run_command")"
