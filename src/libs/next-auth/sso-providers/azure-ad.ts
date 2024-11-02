@@ -15,7 +15,7 @@ const provider = {
     clientId: authEnv.AZURE_AD_CLIENT_ID ?? process.env.AUTH_AZURE_AD_ID,
     clientSecret: authEnv.AZURE_AD_CLIENT_SECRET ?? process.env.AUTH_AZURE_AD_SECRET,
     // @ts-ignore
-    tenantId: authEnv.AZURE_AD_TENANT_ID ?? process.env.AUTH_AZURE_AD_TENANT_ID,
+    issuer: authEnv.AZURE_AD_TENANT_ID ?? process.env.AUTH_AZURE_AD_TENANT_ID,
     // Remove end
     // TODO(NextAuth): map unique user id to `providerAccountId` field
     // profile(profile) {

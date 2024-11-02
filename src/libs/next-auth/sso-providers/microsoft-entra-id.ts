@@ -9,9 +9,9 @@ const provider = {
     // Specify auth scope, at least include 'openid email'
     // all scopes in Azure AD ref: https://learn.microsoft.com/en-us/entra/identity-platform/scopes-oidc#openid-connect-scopes
     authorization: { params: { scope: 'openid email profile' } },
-    clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID,
-    clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET,
-    issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID,
+    clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID ?? process.env.AUTH_AZURE_AD_ID,
+    clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET ?? process.env.AUTH_AZURE_AD_SECRET,
+    issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID ?? process.env.AUTH_AZURE_AD_TENANT_ID,
   }),
 };
 
