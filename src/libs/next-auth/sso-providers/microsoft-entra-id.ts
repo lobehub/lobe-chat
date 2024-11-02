@@ -1,5 +1,6 @@
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
 
+import { getMicrosoftEntraIdIssuer } from './microsoft-entra-id-helper';
 import { CommonProviderConfig } from './sso.config';
 
 const provider = {
@@ -11,7 +12,7 @@ const provider = {
     authorization: { params: { scope: 'openid email profile' } },
     clientId: process.env.AUTH_MICROSOFT_ENTRA_ID_ID ?? process.env.AUTH_AZURE_AD_ID,
     clientSecret: process.env.AUTH_MICROSOFT_ENTRA_ID_SECRET ?? process.env.AUTH_AZURE_AD_SECRET,
-    issuer: process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID ?? process.env.AUTH_AZURE_AD_TENANT_ID,
+    issuer: getMicrosoftEntraIdIssuer(),
   }),
 };
 
