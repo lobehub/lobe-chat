@@ -8,7 +8,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
-import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
+import {AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload, ModelProvider} from '@/libs/agent-runtime';
 import { filesPrompts } from '@/prompts/files';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
@@ -280,13 +280,6 @@ class ChatService {
 
     if (enableFetchOnClient) {
       /**
-       * if enable login and not signed in, return unauthorized error
-       */
-      const userStore = useUserStore.getState();
-      if (enableAuth && !userStore.isSignedIn) {
-        return createErrorResponse(ChatErrorType.Unauthorized, { error: {errorType: "InvalidAccessCode"}, provider });
-      }
-      /**
        * Notes:
        * 1. Browser agent runtime will skip auth check if a key and endpoint provided by
        *    user which will cause abuse of plugins services
@@ -540,6 +533,14 @@ class ChatService {
   }) => {
     const agentRuntime = await initializeWithClientStore(params.provider, params.payload);
     const data = params.payload as ChatStreamPayload;
+
+    /**
+     * if enable login and not signed in, return unauthorized error
+     */
+    const userStore = useUserStore.getState();
+    if (enableAuth && !userStore.isSignedIn) {
+      throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
+    }
 
     return agentRuntime.chat(data, { signal: params.signal });
   };
