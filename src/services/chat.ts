@@ -32,7 +32,6 @@ import { createTraceHeader, getTraceId } from '@/utils/trace';
 
 import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
-import {enableAuth} from "@/const/auth";
 
 interface FetchOptions extends FetchSSEOptions {
   isWelcomeQuestion?: boolean;
@@ -538,7 +537,7 @@ class ChatService {
      * if enable login and not signed in, return unauthorized error
      */
     const userStore = useUserStore.getState();
-    if (enableAuth && !userStore.isSignedIn) {
+    if (userStore.enableAuth() && !userStore.isSignedIn) {
       throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
     }
 
