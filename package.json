@@ -224,7 +224,7 @@
     "url-join": "^5.0.0",
     "use-merge-value": "^1.2.0",
     "utility-types": "^3.11.0",
-    "uuid": "^10.0.0",
+    "uuid": "^11.0.0",
     "ws": "^8.18.0",
     "y-protocols": "^1.0.6",
     "y-webrtc": "^10.3.0",
