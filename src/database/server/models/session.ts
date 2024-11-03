@@ -144,6 +144,11 @@ export class SessionModel {
   }
 
   async createInbox() {
+    const item = await serverDB.query.sessions.findFirst({
+      where: and(eq(sessions.userId, this.userId), eq(sessions.slug, INBOX_SESSION_ID)),
+    });
+    if (item) return;
+
     const serverAgentConfig = parseAgentConfig(appEnv.DEFAULT_AGENT_CONFIG) || {};
 
     return await this.create({
