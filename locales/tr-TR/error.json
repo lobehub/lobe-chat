@@ -12,7 +12,10 @@
     "retry": "Yeniden Yükle",
     "title": "Sayfa bir sorunla karşılaştı.."
   },
-  "fetchError": "İstek başarısız oldu",
+  "fetchError": {
+    "detail": "Hata Detayı",
+    "title": "İstek Başarısız"
+  },
   "loginRequired": {
     "desc": "Otomatik olarak giriş sayfasına yönlendirileceksiniz",
     "title": "Lütfen bu özelliği kullanmadan önce giriş yapın"

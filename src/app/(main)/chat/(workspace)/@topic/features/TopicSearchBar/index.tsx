@@ -9,7 +9,7 @@ import { useChatStore } from '@/store/chat';
 import { useServerConfigStore } from '@/store/serverConfig';
 
 const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation('topic');
 
   const [keywords, setKeywords] = useState('');
   const mobile = useServerConfigStore((s) => s.isMobile);
@@ -31,7 +31,7 @@ const TopicSearchBar = memo<{ onClear?: () => void }>(({ onClear }) => {
         setKeywords(value);
         useChatStore.setState({ isSearchingTopic: !!value });
       }}
-      placeholder={t('topic.searchPlaceholder')}
+      placeholder={t('searchPlaceholder')}
       spotlight={!mobile}
       type={mobile ? 'block' : 'ghost'}
       value={keywords}

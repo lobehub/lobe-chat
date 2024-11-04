@@ -12,7 +12,10 @@
     "retry": "Recharger",
     "title": "Un problème est survenu sur la page.."
   },
-  "fetchError": "Échec de la requête",
+  "fetchError": {
+    "detail": "Détails de l'erreur",
+    "title": "Échec de la requête"
+  },
   "loginRequired": {
     "desc": "Vous allez être redirigé vers la page de connexion",
     "title": "Veuillez vous connecter pour utiliser cette fonctionnalité"

@@ -115,7 +115,6 @@
     "loading": "Reconhecendo...",
     "prettifying": "Embelezando..."
   },
-  "temp": "Temporário",
   "tokenDetails": {
     "chats": "Mensagens de bate-papo",
     "rest": "Restante disponível",
@@ -131,29 +130,10 @@
     "used": "Usado"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Renomeação Automática",
-      "duplicate": "Criar Cópia",
-      "export": "Exportar Tópico"
-    },
     "checkOpenNewTopic": "Deseja abrir um novo tópico?",
     "checkSaveCurrentMessages": "Salvar a conversa atual como tópico?",
-    "confirmRemoveAll": "Você está prestes a remover todos os tópicos. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
-    "confirmRemoveTopic": "Você está prestes a remover este tópico. Depois de remover, não será possível recuperá-lo. Por favor, confirme sua ação.",
-    "confirmRemoveUnstarred": "Você está prestes a remover os tópicos não favoritados. Depois de remover, não será possível recuperá-los. Por favor, confirme sua ação.",
-    "defaultTitle": "Tópico Padrão",
-    "duplicateLoading": "Tópico sendo duplicado...",
-    "duplicateSuccess": "Tópico duplicado com sucesso",
-    "guide": {
-      "desc": "Clique em enviar no botão esquerdo para salvar a conversa atual como um tópico histórico e iniciar uma nova rodada de conversa",
-      "title": "Lista de Tópicos"
-    },
     "openNewTopic": "Abrir Novo Tópico",
-    "removeAll": "Remover Todos os Tópicos",
-    "removeUnstarred": "Remover Tópicos Não Favoritados",
-    "saveCurrentMessages": "Salvar Mensagens Atuais como Tópico",
-    "searchPlaceholder": "Pesquisar tópicos...",
-    "title": "Lista de Tópicos"
+    "saveCurrentMessages": "Salvar Mensagens Atuais como Tópico"
   },
   "translate": {
     "action": "Traduzir",

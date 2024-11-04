@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.26.21](https://github.com/lobehub/lobe-chat/compare/v1.26.20...v1.26.21)
+
+<sup>Released on **2024-11-04**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: If enable login and not signed in, return unauthorized error.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: If enable login and not signed in, return unauthorized error, closes [#4571](https://github.com/lobehub/lobe-chat/issues/4571) ([e00c90e](https://github.com/lobehub/lobe-chat/commit/e00c90e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.26.20](https://github.com/lobehub/lobe-chat/compare/v1.26.19...v1.26.20)
 
 <sup>Released on **2024-11-04**</sup>
