@@ -1,6 +1,7 @@
 import { ActionIcon } from '@lobehub/ui';
 import { Compass, FolderClosed, MessageSquare } from 'lucide-react';
 import Link from 'next/link';
+import { parseAsBoolean, useQueryState } from 'nuqs';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,6 +18,7 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
   const { t } = useTranslation('common');
   const switchBackToChat = useGlobalStore((s) => s.switchBackToChat);
   const { showMarket, enableKnowledgeBase } = useServerConfigStore(featureFlagsSelectors);
+  const [isPinned] = useQueryState('pinned', parseAsBoolean);
 
   return (
     <>
@@ -29,7 +31,7 @@ const TopActions = memo<TopActionProps>(({ tab }) => {
         }}
       >
         <ActionIcon
-          active={tab === SidebarTabKey.Chat}
+          active={tab === SidebarTabKey.Chat && !isPinned}
           icon={MessageSquare}
           placement={'right'}
           size="large"
