@@ -7,6 +7,6 @@ export const DEFAULT_PREFERENCE: UserPreference = {
     topic: true,
   },
   telemetry: null,
-  topicDisplayMode: TopicDisplayMode.Flat,
+  topicDisplayMode: TopicDisplayMode.ByTime,
   useCmdEnterToSend: false,
 };
