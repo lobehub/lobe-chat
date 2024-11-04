@@ -3,7 +3,7 @@
 [![][image-banner]][vercel-link]
 
 # Lobe Chat
-
+edit
 オープンソースのモダンデザインChatGPT/LLMs UI/フレームワーク。<br/>
 音声合成、マルチモーダル、拡張可能な（[function call][docs-functionc-call]）プラグインシステムをサポート。<br/>
 プライベートなOpenAI ChatGPT/Claude/Gemini/Groq/Ollamaチャットアプリケーションをワンクリックで**無料**でデプロイ。
