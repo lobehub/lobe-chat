@@ -12,6 +12,7 @@
       "batchChunking": "Batch Chunking",
       "chunking": "Chunking",
       "chunkingTooltip": "Split the file into multiple text chunks and embedding them for semantic search and file dialogue.",
+      "chunkingUnsupported": "This file does not support chunking.",
       "confirmDelete": "You are about to delete this file. Once deleted, it cannot be recovered. Please confirm your action.",
       "confirmDeleteMultiFiles": "You are about to delete the selected {{count}} files. Once deleted, they cannot be recovered. Please confirm your action.",
       "confirmRemoveFromKnowledgeBase": "You are about to remove the selected {{count}} files from the knowledge base. They will still be viewable in all files. Please confirm your action.",

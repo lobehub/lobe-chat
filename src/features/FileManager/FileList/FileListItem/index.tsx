@@ -15,6 +15,7 @@ import FileIcon from '@/components/FileIcon';
 import { fileManagerSelectors, useFileStore } from '@/store/file';
 import { FileListItem } from '@/types/files';
 import { formatSize } from '@/utils/format';
+import { isChunkingUnsupported } from '@/utils/isChunkingUnsupported';
 
 import ChunksBadge from './ChunkTag';
 import DropdownMenu from './DropdownMenu';
@@ -107,6 +108,8 @@ const FileRenderItem = memo<FileRenderItemProps>(
       s.parseFilesToChunks,
     ]);
 
+    const isSupportedForChunking = !isChunkingUnsupported(fileType);
+
     const displayTime =
       dayjs().diff(dayjs(createdAt), 'd') < 7
         ? dayjs(createdAt).fromNow()
@@ -160,9 +163,14 @@ const FileRenderItem = memo<FileRenderItemProps>(
               <div className={isCreatingFileParseTask ? undefined : styles.hover}>
                 <Tooltip
                   overlayStyle={{ pointerEvents: 'none' }}
-                  title={t('FileManager.actions.chunkingTooltip')}
+                  title={t(
+                    isSupportedForChunking
+                      ? 'FileManager.actions.chunkingTooltip'
+                      : 'FileManager.actions.chunkingUnsupported',
+                  )}
                 >
                   <Button
+                    disabled={!isSupportedForChunking}
                     icon={<Icon icon={FileBoxIcon} />}
                     loading={isCreatingFileParseTask}
                     onClick={() => {

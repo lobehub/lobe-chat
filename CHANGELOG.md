@@ -2,6 +2,81 @@
 
 # Changelog
 
+### [Version 1.26.20](https://github.com/lobehub/lobe-chat/compare/v1.26.19...v1.26.20)
+
+<sup>Released on **2024-11-04**</sup>
+
+#### 💄 Styles
+
+- **misc**: Disable chunking button for unsupported files.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Disable chunking button for unsupported files, closes [#4153](https://github.com/lobehub/lobe-chat/issues/4153) ([87ac46d](https://github.com/lobehub/lobe-chat/commit/87ac46d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.26.19](https://github.com/lobehub/lobe-chat/compare/v1.26.18...v1.26.19)
+
+<sup>Released on **2024-11-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix duplicate key value violates unique constraint "slug_user_id_unique" when create inbox session.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix duplicate key value violates unique constraint "slug_user_id_unique" when create inbox session, closes [#4596](https://github.com/lobehub/lobe-chat/issues/4596) ([c5af96e](https://github.com/lobehub/lobe-chat/commit/c5af96e))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.26.18](https://github.com/lobehub/lobe-chat/compare/v1.26.17...v1.26.18)
+
+<sup>Released on **2024-11-03**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix MS Entra ID and Azure AD authorization.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix MS Entra ID and Azure AD authorization, closes [#4579](https://github.com/lobehub/lobe-chat/issues/4579) ([ced8a08](https://github.com/lobehub/lobe-chat/commit/ced8a08))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.26.17](https://github.com/lobehub/lobe-chat/compare/v1.26.16...v1.26.17)
 
 <sup>Released on **2024-10-31**</sup>
