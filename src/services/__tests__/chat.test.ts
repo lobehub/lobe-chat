@@ -542,21 +542,31 @@ describe('ChatService', () => {
       vi.spyOn(useUserStore, 'getState').mockImplementation(() => mockUserStore as any);
       vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementation(mockModelConfigSelectors.isProviderFetchOnClient);
 
-      const params = {
+      const params: Partial<ChatStreamPayload> = {
         model: 'test-model',
         messages: [],
-        provider: 'openai',
+      };
+      const options = {};
+      const expectedPayload = {
+        model: DEFAULT_AGENT_CONFIG.model,
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+        ...params,
       };
 
-      const result = await chatService.getChatCompletion(params);
+      const result = await chatService.getChatCompletion(params,options);
 
-      expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
-        body: JSON.stringify(params),
-        headers: expect.any(Object),
-        method: 'POST',
-      });
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        {
+          body: JSON.stringify(expectedPayload),
+          headers: expect.objectContaining({
+            'Content-Type': 'application/json',
+          }),
+          method: 'POST',
+        },
+      );
       expect(result.status).toBe(401);
-
     });
 
     // Add more test cases to cover different scenarios and edge cases
