@@ -1,6 +1,8 @@
 import { UserStore } from '@/store/user';
+import { TopicDisplayMode } from '@/types/topic';
 
 const useCmdEnterToSend = (s: UserStore): boolean => s.preference.useCmdEnterToSend || false;
+const topicDisplayMode = (s: UserStore) => s.preference.topicDisplayMode || TopicDisplayMode.Flat;
 
 const userAllowTrace = (s: UserStore) => s.preference.telemetry;
 
@@ -22,6 +24,7 @@ export const preferenceSelectors = {
   isPreferenceInit,
   shouldTriggerFileInKnowledgeBaseTip,
   showUploadFileInKnowledgeBaseTip,
+  topicDisplayMode,
   useCmdEnterToSend,
   userAllowTrace,
 };
