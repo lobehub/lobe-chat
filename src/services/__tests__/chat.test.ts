@@ -38,6 +38,9 @@ import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
 import { chatService, initializeWithClientStore } from '../chat';
+import { useUserStore } from '@/store/user';
+import { ChatErrorType } from '@/types/fetch';
+import {modelConfigSelectors} from "@/store/user/selectors";
 
 // Mocking external dependencies
 vi.mock('i18next', () => ({
@@ -522,6 +525,34 @@ describe('ChatService', () => {
         headers: expect.any(Object),
         method: 'POST',
       });
+    });
+
+    it('should throw InvalidAccessCode error when enableFetchOnClient is true and auth is enabled but user is not signed in', async () => {
+      // Mock userStore
+      const mockUserStore = {
+        enableAuth: () => true,
+        isSignedIn: false,
+      };
+
+      // Mock modelConfigSelectors
+      const mockModelConfigSelectors = {
+        isProviderFetchOnClient: () => () => true,
+      };
+
+      vi.spyOn(useUserStore, 'getState').mockImplementation(() => mockUserStore as any);
+      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementation(mockModelConfigSelectors.isProviderFetchOnClient);
+
+      const params = {
+        model: 'test-model',
+        messages: [],
+        provider: 'openai',
+      };
+
+      await expect(chatService.getChatCompletion(params)).rejects.toEqual(
+        expect.objectContaining({
+          errorType: ChatErrorType.InvalidAccessCode,
+        })
+      );
     });
 
     // Add more test cases to cover different scenarios and edge cases
