@@ -12,8 +12,8 @@ import { ChatTopic } from '@/types/topic';
 import TopicItem from '../TopicItem';
 import TopicGroupItem from './GroupItem';
 
-const GroupMode = memo(() => {
-  const { t } = useTranslation('chat');
+const ByTimeMode = memo(() => {
+  const { t } = useTranslation('topic');
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [activeTopicId] = useChatStore((s) => [s.activeTopicId]);
   const groupTopics = useChatStore(topicSelectors.groupedTopicsSelector, isEqual);
@@ -26,7 +26,7 @@ const GroupMode = memo(() => {
         ...groupTopics.map((group) => ({ id: group.id, title: group.title })),
       ],
       topics: [
-        { favorite: false, id: 'default', title: t('topic.defaultTitle') } as ChatTopic,
+        { favorite: false, id: 'default', title: t('defaultTitle') } as ChatTopic,
         ...groupTopics.flatMap((group) => group.children),
       ],
     };
@@ -67,6 +67,6 @@ const GroupMode = memo(() => {
   );
 });
 
-GroupMode.displayName = 'GroupMode';
+ByTimeMode.displayName = 'ByTimeMode';
 
-export default GroupMode;
+export default ByTimeMode;

@@ -12,14 +12,14 @@ import { ChatTopic } from '@/types/topic';
 import TopicItem from '../TopicItem';
 
 const FlatMode = memo(() => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation('topic');
   const virtuosoRef = useRef<VirtuosoHandle>(null);
   const [activeTopicId] = useChatStore((s) => [s.activeTopicId]);
   const activeTopicList = useChatStore(topicSelectors.displayTopics, isEqual);
 
   const topics = useMemo(
     () => [
-      { favorite: false, id: 'default', title: t('topic.defaultTitle') } as ChatTopic,
+      { favorite: false, id: 'default', title: t('defaultTitle') } as ChatTopic,
       ...(activeTopicList || []),
     ],
     [activeTopicList],
