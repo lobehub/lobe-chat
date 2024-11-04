@@ -548,11 +548,15 @@ describe('ChatService', () => {
         provider: 'openai',
       };
 
-      await expect(chatService.getChatCompletion(params)).rejects.toEqual(
-        expect.objectContaining({
-          errorType: ChatErrorType.InvalidAccessCode,
-        })
-      );
+      const result = await chatService.getChatCompletion(params);
+
+      expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
+        body: JSON.stringify(params),
+        headers: expect.any(Object),
+        method: 'POST',
+      });
+      expect(result.status).toBe(401);
+
     });
 
     // Add more test cases to cover different scenarios and edge cases
