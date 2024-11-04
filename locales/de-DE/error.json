@@ -12,7 +12,10 @@
     "retry": "Erneut laden",
     "title": "Ein Problem ist aufgetreten auf der Seite.."
   },
-  "fetchError": "Anforderung fehlgeschlagen",
+  "fetchError": {
+    "detail": "Fehlerdetails",
+    "title": "Anfrage fehlgeschlagen"
+  },
   "loginRequired": {
     "desc": "Sie werden in Kürze zur Anmeldeseite weitergeleitet",
     "title": "Bitte melden Sie sich an, um diese Funktion zu nutzen"

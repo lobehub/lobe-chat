@@ -115,7 +115,6 @@
     "loading": "En cours de reconnaissance...",
     "prettifying": "En cours d'embellissement..."
   },
-  "temp": "Temporaire",
   "tokenDetails": {
     "chats": "Messages de discussion",
     "rest": "Restant disponible",
@@ -131,29 +130,10 @@
     "used": "Utilisé"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Renommer automatiquement",
-      "duplicate": "Créer une copie",
-      "export": "Exporter le sujet"
-    },
     "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
     "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
-    "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",
-    "defaultTitle": "Sujet par défaut",
-    "duplicateLoading": "Duplication du sujet en cours...",
-    "duplicateSuccess": "Sujet dupliqué avec succès",
-    "guide": {
-      "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme un sujet historique et démarrer une nouvelle session.",
-      "title": "Liste des sujets"
-    },
     "openNewTopic": "Ouvrir un nouveau sujet",
-    "removeAll": "Supprimer tous les sujets",
-    "removeUnstarred": "Supprimer les sujets non favoris",
-    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet",
-    "searchPlaceholder": "Rechercher un sujet...",
-    "title": "Liste des sujets"
+    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet"
   },
   "translate": {
     "action": "Traduire",
