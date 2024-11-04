@@ -9,7 +9,7 @@ import { Flexbox } from 'react-layout-kit';
 const { Paragraph } = Typography;
 
 const DefaultContent = memo(() => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('topic');
 
   const theme = useTheme();
 
@@ -19,7 +19,7 @@ const DefaultContent = memo(() => {
         <Icon color={theme.colorTextDescription} icon={MessageSquareDashed} />
       </Flexbox>
       <Paragraph ellipsis={{ rows: 1 }} style={{ margin: 0 }}>
-        {t('topic.defaultTitle', { ns: 'chat' })}
+        {t('defaultTitle')}
       </Paragraph>
       <Tag>{t('temp')}</Tag>
     </Flexbox>
