@@ -12,6 +12,7 @@
       "batchChunking": "Toplu parçalara ayırma",
       "chunking": "Parçalara ayırma",
       "chunkingTooltip": "Dosyayı birden fazla metin parçasına ayırıp vektörleştirdikten sonra, anlamsal arama ve dosya diyalogları için kullanılabilir",
+      "chunkingUnsupported": "Bu dosya parça parça yüklemeyi desteklemiyor.",
       "confirmDelete": "Bu dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
       "confirmDeleteMultiFiles": "Seçilen {{count}} dosya silinecek, silindikten sonra geri alınamaz, lütfen işleminizi onaylayın",
       "confirmRemoveFromKnowledgeBase": "Seçilen {{count}} dosya bilgi tabanından kaldırılacak, kaldırıldıktan sonra dosyalar tüm dosyalar arasında görüntülenebilir, lütfen işleminizi onaylayın",
