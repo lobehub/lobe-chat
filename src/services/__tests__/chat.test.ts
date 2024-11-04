@@ -2,10 +2,8 @@ import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { merge } from 'lodash-es';
 import OpenAI from 'openai';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppConfig } from '@/config/app';
-import { getServerDBConfig } from '@/config/db';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   LobeAnthropicAI,
@@ -28,7 +26,6 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
-import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { UserStore } from '@/store/user';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
@@ -39,7 +36,6 @@ import { LobeTool } from '@/types/tool';
 
 import { chatService, initializeWithClientStore } from '../chat';
 import { useUserStore } from '@/store/user';
-import { ChatErrorType } from '@/types/fetch';
 import {modelConfigSelectors} from "@/store/user/selectors";
 
 // Mocking external dependencies
