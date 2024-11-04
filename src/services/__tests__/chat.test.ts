@@ -535,8 +535,8 @@ describe('ChatService', () => {
         isProviderFetchOnClient: () => () => true,
       };
 
-      vi.spyOn(useUserStore, 'getState').mockImplementation(() => mockUserStore as any);
-      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementation(mockModelConfigSelectors.isProviderFetchOnClient);
+      vi.spyOn(useUserStore, 'getState').mockImplementationOnce(() => mockUserStore as any);
+      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementationOnce(mockModelConfigSelectors.isProviderFetchOnClient);
 
       const params: Partial<ChatStreamPayload> = {
         model: 'test-model',
