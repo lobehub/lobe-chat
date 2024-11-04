@@ -8,17 +8,6 @@ import { ChatTopic, GroupedTopic, TimeGroupId } from '@/types/topic';
 dayjs.extend(isToday);
 dayjs.extend(isYesterday);
 
-// i18n key 常量
-export const TIME_GROUP_I18N_KEY = {
-  currentMonth: 'chat.group.currentMonth',
-  monthFormat: 'chat.group.monthFormat',
-  today: 'chat.group.today',
-  week: 'chat.group.week',
-  // 例如 "{year}年{month}月" 的格式
-  yearFormat: 'chat.group.yearFormat',
-  yesterday: 'chat.group.yesterday', // 例如 "{year}年" 的格式
-} as const;
-
 const getTopicGroupId = (timestamp: number): TimeGroupId => {
   const date = dayjs(timestamp);
   const now = dayjs();
