@@ -19,10 +19,8 @@ const useStyles = createStyles(({ css, token, stylish }) => ({
 const TopicGroupItem = memo<Omit<GroupedTopic, 'children'>>(({ id, title }) => {
   const { t } = useTranslation('topic');
   const { styles } = useStyles();
-  console.log(id);
   const timeTitle = preformat(id) ?? t(`groupTitle.byTime.${id}` as any);
 
-  console.log(timeTitle);
   return (
     <Flexbox className={styles.container} paddingBlock={8} paddingInline={12}>
       {title ? title : timeTitle}
