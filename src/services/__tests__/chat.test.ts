@@ -2,10 +2,8 @@ import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { merge } from 'lodash-es';
 import OpenAI from 'openai';
-import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { getAppConfig } from '@/config/app';
-import { getServerDBConfig } from '@/config/db';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   LobeAnthropicAI,
@@ -28,7 +26,6 @@ import {
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
-import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { UserStore } from '@/store/user';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
@@ -38,6 +35,8 @@ import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
 import { chatService, initializeWithClientStore } from '../chat';
+import { useUserStore } from '@/store/user';
+import {modelConfigSelectors} from "@/store/user/selectors";
 
 // Mocking external dependencies
 vi.mock('i18next', () => ({
@@ -522,6 +521,48 @@ describe('ChatService', () => {
         headers: expect.any(Object),
         method: 'POST',
       });
+    });
+
+    it('should throw InvalidAccessCode error when enableFetchOnClient is true and auth is enabled but user is not signed in', async () => {
+      // Mock userStore
+      const mockUserStore = {
+        enableAuth: () => true,
+        isSignedIn: false,
+      };
+
+      // Mock modelConfigSelectors
+      const mockModelConfigSelectors = {
+        isProviderFetchOnClient: () => () => true,
+      };
+
+      vi.spyOn(useUserStore, 'getState').mockImplementationOnce(() => mockUserStore as any);
+      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementationOnce(mockModelConfigSelectors.isProviderFetchOnClient);
+
+      const params: Partial<ChatStreamPayload> = {
+        model: 'test-model',
+        messages: [],
+      };
+      const options = {};
+      const expectedPayload = {
+        model: DEFAULT_AGENT_CONFIG.model,
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+        ...params,
+      };
+
+      const result = await chatService.getChatCompletion(params,options);
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        {
+          body: JSON.stringify(expectedPayload),
+          headers: expect.objectContaining({
+            'Content-Type': 'application/json',
+          }),
+          method: 'POST',
+        },
+      );
+      expect(result.status).toBe(401);
     });
 
     // Add more test cases to cover different scenarios and edge cases
