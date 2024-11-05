@@ -84,7 +84,7 @@ export const chatTopic: StateCreator<
     set({ creatingTopic: true }, false, n('creatingTopic/start'));
     const topicId = await internal_createTopic({
       sessionId: activeId,
-      title: t('topic.defaultTitle', { ns: 'chat' }),
+      title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
     });
     set({ creatingTopic: false }, false, n('creatingTopic/end'));
@@ -102,7 +102,7 @@ export const chatTopic: StateCreator<
     // 1. create topic and bind these messages
     const topicId = await internal_createTopic({
       sessionId: activeId,
-      title: t('topic.defaultTitle', { ns: 'chat' }),
+      title: t('defaultTitle', { ns: 'topic' }),
       messages: messages.map((m) => m.id),
     });
 
@@ -122,7 +122,7 @@ export const chatTopic: StateCreator<
     const newTitle = t('duplicateTitle', { ns: 'chat', title: topic?.title });
 
     message.loading({
-      content: t('topic.duplicateLoading', { ns: 'chat' }),
+      content: t('duplicateLoading', { ns: 'topic' }),
       key: 'duplicateTopic',
       duration: 0,
     });
@@ -130,7 +130,7 @@ export const chatTopic: StateCreator<
     const newTopicId = await topicService.cloneTopic(id, newTitle);
     await refreshTopic();
     message.destroy('duplicateTopic');
-    message.success(t('topic.duplicateSuccess', { ns: 'chat' }));
+    message.success(t('duplicateSuccess', { ns: 'topic' }));
 
     await switchTopic(newTopicId);
   },
