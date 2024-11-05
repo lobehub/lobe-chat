@@ -193,10 +193,10 @@ show_message() {
     tips_warning)
       case $LANGUAGE in
         zh_CN)
-          echo "警告：不要在生产环境中使用此演示应用程序！！！"
+          echo "警告：如果你正在生产环境中使用，请在日志中检查密钥是否已经生成！！！"
           ;;
         *)
-          echo "Warning: do not use this demo application in production!!!"
+          echo "Warning: If you are using it in a production environment, please check if the keys have been generated in the logs!!!"
           ;;
       esac
       ;;
