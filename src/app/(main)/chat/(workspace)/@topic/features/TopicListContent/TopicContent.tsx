@@ -42,7 +42,7 @@ interface TopicContentProps {
 }
 
 const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['topic', 'common']);
 
   const mobile = useIsMobile();
 
@@ -76,7 +76,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       {
         icon: <Icon icon={Wand2} />,
         key: 'autoRename',
-        label: t('topic.actions.autoRename', { ns: 'chat' }),
+        label: t('actions.autoRename'),
         onClick: () => {
           autoRenameTopicTitle(id);
         },
@@ -84,7 +84,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       {
         icon: <Icon icon={PencilLine} />,
         key: 'rename',
-        label: t('rename'),
+        label: t('rename', { ns: 'common' }),
         onClick: () => {
           toggleEditing(true);
         },
@@ -95,7 +95,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       {
         icon: <Icon icon={LucideCopy} />,
         key: 'duplicate',
-        label: t('topic.actions.duplicate', { ns: 'chat' }),
+        label: t('actions.duplicate'),
         onClick: () => {
           duplicateTopic(id);
         },
@@ -103,7 +103,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
       // {
       //   icon: <Icon icon={LucideDownload} />,
       //   key: 'export',
-      //   label: t('topic.actions.export', { ns: 'chat' }),
+      //   label: t('topic.actions.export'),
       //   onClick: () => {
       //     configService.exportSingleTopic(sessionId, id);
       //   },
@@ -120,7 +120,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
         danger: true,
         icon: <Icon icon={Trash} />,
         key: 'delete',
-        label: t('delete'),
+        label: t('delete', { ns: 'common' }),
         onClick: () => {
           if (!id) return;
 
@@ -130,7 +130,7 @@ const TopicContent = memo<TopicContentProps>(({ id, title, fav, showMore }) => {
             onOk: async () => {
               await removeTopic(id);
             },
-            title: t('topic.confirmRemoveTopic', { ns: 'chat' }),
+            title: t('actions.confirmRemoveTopic'),
           });
         },
       },

@@ -4,6 +4,7 @@ import { Modal } from '@lobehub/ui';
 import { PropsWithChildren, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useFetchTopics } from '@/hooks/useFetchTopics';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
@@ -15,7 +16,9 @@ const Topics = memo(({ children }: PropsWithChildren) => {
     s.toggleMobileTopic,
   ]);
   const [open, setOpen] = useWorkspaceModal(showAgentSettings, toggleConfig);
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation('topic');
+
+  useFetchTopics();
 
   return (
     <Modal
@@ -25,7 +28,7 @@ const Topics = memo(({ children }: PropsWithChildren) => {
       styles={{
         body: { padding: 0 },
       }}
-      title={t('topic.title')}
+      title={t('title')}
     >
       {children}
     </Modal>

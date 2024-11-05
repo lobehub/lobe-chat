@@ -487,7 +487,7 @@ describe('topic action', () => {
       expect(createTopicSpy).toHaveBeenCalledWith({
         sessionId: activeId,
         messages: messages.map((m) => m.id),
-        title: 'topic.defaultTitle',
+        title: 'defaultTitle',
       });
       expect(refreshTopicSpy).toHaveBeenCalled();
     });

@@ -12,7 +12,10 @@
     "retry": "Reintentar",
     "title": "Se ha producido un problema en la página.."
   },
-  "fetchError": "Error en la solicitud",
+  "fetchError": {
+    "detail": "Detalles del error",
+    "title": "Solicitud fallida"
+  },
   "loginRequired": {
     "desc": "Serás redirigido automáticamente a la página de inicio de sesión",
     "title": "Por favor, inicie sesión para utilizar esta función"
