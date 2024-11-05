@@ -5,7 +5,7 @@ const Anthropic: ModelProviderCard = {
   chatModels: [
     {
       description:
-        'Claude 3.5 Haiku 在许多评估中与我们的前一个最大模型 Claude 3 Opus 的性能相当，速度与上一代 Haiku 类似。',
+        'Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
       displayName: 'Claude 3.5 Haiku',
       enabled: true,
       functionCall: true,
@@ -60,7 +60,6 @@ const Anthropic: ModelProviderCard = {
       description:
         'Claude 3 Haiku 是 Anthropic 的最快且最紧凑的模型，旨在实现近乎即时的响应。它具有快速且准确的定向性能。',
       displayName: 'Claude 3 Haiku',
-      enabled: true,
       functionCall: true,
       id: 'claude-3-haiku-20240307',
       maxOutput: 4096,
