@@ -1,6 +1,7 @@
 import { DeepPartial } from 'utility-types';
 import { z } from 'zod';
 
+import { TopicDisplayMode } from '@/types/topic';
 import { UserSettings } from '@/types/user/settings';
 
 export interface LobeUser {
@@ -36,6 +37,7 @@ export interface UserPreference {
   guide?: UserGuide;
   hideSyncAlert?: boolean;
   telemetry: boolean | null;
+  topicDisplayMode?: TopicDisplayMode;
   /**
    * whether to use cmd + enter to send message
    */
