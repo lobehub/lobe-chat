@@ -320,6 +320,9 @@
   "claude-2.1": {
     "description": "Claude 2 為企業提供了關鍵能力的進步，包括業界領先的 200K token 上下文、大幅降低模型幻覺的發生率、系統提示以及一個新的測試功能：工具調用。"
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku 是 Anthropic 最快的下一代模型。與 Claude 3 Haiku 相比，Claude 3.5 Haiku 在各項技能上都有所提升，並在許多智力基準測試中超越了上一代最大的模型 Claude 3 Opus。"
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同時保持與 Sonnet 相同的價格。Sonnet 特別擅長編程、數據科學、視覺處理、代理任務。"
   },

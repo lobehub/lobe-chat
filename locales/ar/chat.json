@@ -100,14 +100,20 @@
     "tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20"
   },
   "shareModal": {
+    "copy": "نسخ",
     "download": "تحميل اللقطة",
+    "downloadFile": "تحميل الملف",
+    "exportTitle": "العنوان الافتراضي",
     "imageType": "نوع الصورة",
+    "includeTool": "تضمين رسالة الأداة",
+    "includeUser": "تضمين رسالة المستخدم",
     "screenshot": "لقطة شاشة",
     "settings": "إعدادات التصدير",
-    "shareToShareGPT": "إنشاء رابط مشاركة ShareGPT",
+    "text": "نص",
     "withBackground": "تضمين صورة الخلفية",
     "withFooter": "تضمين تذييل",
     "withPluginInfo": "تضمين معلومات البرنامج المساعد",
+    "withRole": "تضمين رسالة الدور",
     "withSystemRole": "تضمين دور المساعد"
   },
   "stt": {

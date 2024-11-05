@@ -320,6 +320,9 @@
   "claude-2.1": {
     "description": "Claude 2 cung cấp những tiến bộ quan trọng trong khả năng cho doanh nghiệp, bao gồm ngữ cảnh 200K token hàng đầu trong ngành, giảm đáng kể tỷ lệ ảo giác của mô hình, nhắc nhở hệ thống và một tính năng kiểm tra mới: gọi công cụ."
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku là mô hình thế hệ tiếp theo nhanh nhất của Anthropic. So với Claude 3 Haiku, Claude 3.5 Haiku đã cải thiện ở nhiều kỹ năng và vượt qua mô hình lớn nhất thế hệ trước là Claude 3 Opus trong nhiều bài kiểm tra trí tuệ."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet cung cấp khả năng vượt trội so với Opus và tốc độ nhanh hơn Sonnet, đồng thời giữ nguyên mức giá như Sonnet. Sonnet đặc biệt xuất sắc trong lập trình, khoa học dữ liệu, xử lý hình ảnh và các nhiệm vụ đại lý."
   },

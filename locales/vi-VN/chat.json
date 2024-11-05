@@ -100,14 +100,20 @@
     "tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự"
   },
   "shareModal": {
+    "copy": "Sao chép",
     "download": "Tải xuống ảnh chụp màn hình",
+    "downloadFile": "Tải tệp",
+    "exportTitle": "Tiêu đề mặc định",
     "imageType": "Định dạng ảnh",
+    "includeTool": "Bao gồm thông điệp công cụ",
+    "includeUser": "Bao gồm thông điệp người dùng",
     "screenshot": "Ảnh chụp màn hình",
     "settings": "Cài đặt xuất",
-    "shareToShareGPT": "Tạo liên kết chia sẻ ShareGPT",
+    "text": "Văn bản",
     "withBackground": "Bao gồm hình nền",
     "withFooter": "Bao gồm chân trang",
     "withPluginInfo": "Bao gồm thông tin plugin",
+    "withRole": "Bao gồm vai trò thông điệp",
     "withSystemRole": "Bao gồm thiết lập vai trò trợ lý"
   },
   "stt": {
