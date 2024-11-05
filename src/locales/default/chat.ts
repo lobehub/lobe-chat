@@ -111,7 +111,6 @@ export default {
     includeUser: '包含用户消息',
     screenshot: '截图',
     settings: '导出设置',
-    shareToShareGPT: '生成 ShareGPT 分享链接',
     text: '文本',
     withBackground: '包含背景图片',
     withFooter: '包含页脚',
