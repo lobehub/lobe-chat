@@ -19,7 +19,6 @@ const Anthropic: ModelProviderCard = {
       },
       releasedAt: '2024-11-05',
       tokens: 200_000,
-      vision: true,
     },
     {
       description:
