@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
-import pkg from '@/../package.json';
+import PluginTag from '@/app/(main)/chat/(workspace)/features/PluginTag';
 import { ProductLogo } from '@/components/Branding';
 import ChatList from '@/features/Conversation/components/ChatList';
 import { useAgentStore } from '@/store/agent';
@@ -12,7 +12,7 @@ import { agentSelectors } from '@/store/agent/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
-import PluginTag from '../PluginTag';
+import pkg from '../../../../package.json';
 import { useStyles } from './style';
 import { FieldType } from './type';
 
