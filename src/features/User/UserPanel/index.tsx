@@ -2,7 +2,9 @@
 
 import { Popover } from 'antd';
 import { createStyles } from 'antd-style';
-import { PropsWithChildren, memo, useState } from 'react';
+import { PropsWithChildren, memo, useEffect, useState } from 'react';
+
+import { useUserStore } from '@/store/user';
 
 import PanelContent from './PanelContent';
 import UpgradeBadge from './UpgradeBadge';
@@ -19,6 +21,12 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
   const hasNewVersion = useNewVersion();
   const [open, setOpen] = useState(false);
   const { styles } = useStyles();
+  const userStore = useUserStore();
+  useEffect(() => {
+    if (userStore.enableAuth() && !userStore.isSignedIn) {
+      setOpen(true);
+    }
+  }, [userStore.isSignedIn]);
 
   return (
     <UpgradeBadge showBadge={hasNewVersion}>
