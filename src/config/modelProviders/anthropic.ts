@@ -75,7 +75,6 @@ const Anthropic: ModelProviderCard = {
       description:
         'Claude 3 Sonnet 在智能和速度方面为企业工作负载提供了理想的平衡。它以更低的价格提供最大效用，可靠且适合大规模部署。',
       displayName: 'Claude 3 Sonnet',
-      enabled: true,
       functionCall: true,
       id: 'claude-3-sonnet-20240229',
       maxOutput: 4096,
