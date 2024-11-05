@@ -17,7 +17,7 @@ enum Tab {
 }
 
 const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
-  const [tab, setTab] = useState<Tab>(Tab.Text);
+  const [tab, setTab] = useState<Tab>(Tab.Screenshot);
   const { t } = useTranslation('chat');
 
   const options: SegmentedProps['options'] = useMemo(
