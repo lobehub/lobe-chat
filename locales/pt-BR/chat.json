@@ -100,14 +100,20 @@
     "tooLong": "O nome do grupo deve ter entre 1 e 20 caracteres"
   },
   "shareModal": {
+    "copy": "Copiar",
     "download": "Baixar Captura de Tela",
+    "downloadFile": "Baixar arquivo",
+    "exportTitle": "Título padrão",
     "imageType": "Tipo de Imagem",
+    "includeTool": "Incluir mensagens de ferramentas",
+    "includeUser": "Incluir mensagens de usuários",
     "screenshot": "Captura de Tela",
     "settings": "Configurações de Exportação",
-    "shareToShareGPT": "Gerar Link de Compartilhamento ShareGPT",
+    "text": "Texto",
     "withBackground": "Com Imagem de Fundo",
     "withFooter": "Com Rodapé",
     "withPluginInfo": "Com Informações do Plugin",
+    "withRole": "Incluir papel da mensagem",
     "withSystemRole": "Com Função do Assistente"
   },
   "stt": {

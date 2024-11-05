@@ -100,14 +100,20 @@
     "tooLong": "De groepsnaam moet tussen 1 en 20 tekens lang zijn"
   },
   "shareModal": {
+    "copy": "Kopiëren",
     "download": "Screenshot downloaden",
+    "downloadFile": "Bestand downloaden",
+    "exportTitle": "Standaardtitel",
     "imageType": "Afbeeldingstype",
+    "includeTool": "Inclusief pluginbericht",
+    "includeUser": "Inclusief gebruikersbericht",
     "screenshot": "Screenshot",
     "settings": "Exportinstellingen",
-    "shareToShareGPT": "Genereer ShareGPT-deellink",
+    "text": "Tekst",
     "withBackground": "Met achtergrondafbeelding",
     "withFooter": "Met voettekst",
     "withPluginInfo": "Met plug-in informatie",
+    "withRole": "Inclusief berichtrol",
     "withSystemRole": "Met assistentrolinstelling"
   },
   "stt": {
