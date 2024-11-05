@@ -2,6 +2,64 @@
 
 # Changelog
 
+### [Version 1.27.3](https://github.com/lobehub/lobe-chat/compare/v1.27.2...v1.27.3)
+
+<sup>Released on **2024-11-05**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add claude 3.5 haiku model.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add claude 3.5 haiku model, closes [#4608](https://github.com/lobehub/lobe-chat/issues/4608) ([0fdf43f](https://github.com/lobehub/lobe-chat/commit/0fdf43f))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.27.2](https://github.com/lobehub/lobe-chat/compare/v1.27.1...v1.27.2)
+
+<sup>Released on **2024-11-05**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Remove the 'resetConversation' hot key tip.
+
+#### 💄 Styles
+
+- **misc**: Improve group topic styles.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Remove the 'resetConversation' hot key tip, closes [#4607](https://github.com/lobehub/lobe-chat/issues/4607) ([1a13562](https://github.com/lobehub/lobe-chat/commit/1a13562))
+
+#### Styles
+
+- **misc**: Improve group topic styles, closes [#4610](https://github.com/lobehub/lobe-chat/issues/4610) ([65e816a](https://github.com/lobehub/lobe-chat/commit/65e816a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.27.1](https://github.com/lobehub/lobe-chat/compare/v1.27.0...v1.27.1)
 
 <sup>Released on **2024-11-04**</sup>

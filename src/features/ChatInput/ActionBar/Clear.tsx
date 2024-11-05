@@ -4,8 +4,6 @@ import { Eraser } from 'lucide-react';
 import { memo, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import HotKeys from '@/components/HotKeys';
-import { ALT_KEY, CLEAN_MESSAGE_KEY, META_KEY } from '@/const/hotkeys';
 import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { useFileStore } from '@/store/file';
@@ -14,7 +12,6 @@ const Clear = memo(() => {
   const { t } = useTranslation('setting');
   const [clearMessage] = useChatStore((s) => [s.clearMessage]);
   const [clearImageList] = useFileStore((s) => [s.clearChatUploadFileList]);
-  const hotkeys = [META_KEY, ALT_KEY, CLEAN_MESSAGE_KEY].join('+');
   const [confirmOpened, updateConfirmOpened] = useState(false);
   const mobile = useIsMobile();
 
@@ -23,11 +20,7 @@ const Clear = memo(() => {
     clearImageList();
   }, []);
 
-  const actionTitle: any = confirmOpened ? (
-    void 0
-  ) : (
-    <HotKeys desc={t('clearCurrentMessages', { ns: 'chat' })} inverseTheme keys={hotkeys} />
-  );
+  const actionTitle: any = confirmOpened ? void 0 : t('clearCurrentMessages', { ns: 'chat' });
 
   const popconfirmPlacement = mobile ? 'top' : 'topRight';
 
