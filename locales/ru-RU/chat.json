@@ -100,14 +100,20 @@
     "tooLong": "Название группы должно содержать от 1 до 20 символов"
   },
   "shareModal": {
+    "copy": "Копировать",
     "download": "Скачать скриншот",
+    "downloadFile": "Скачать файл",
+    "exportTitle": "Заголовок по умолчанию",
     "imageType": "Тип изображения",
+    "includeTool": "Включить сообщения плагина",
+    "includeUser": "Включить сообщения пользователя",
     "screenshot": "Скриншот",
     "settings": "Настройки экспорта",
-    "shareToShareGPT": "Создать ссылку для обмена ShareGPT",
+    "text": "Текст",
     "withBackground": "С фоном",
     "withFooter": "С нижним колонтитулом",
     "withPluginInfo": "С информацией о плагинах",
+    "withRole": "Включить роль сообщения",
     "withSystemRole": "С ролью помощника"
   },
   "stt": {

@@ -100,14 +100,20 @@
     "tooLong": "分组名称长度需在 1-20 之内"
   },
   "shareModal": {
+    "copy": "复制",
     "download": "下载截图",
+    "downloadFile": "下载文件",
+    "exportTitle": "默认标题",
     "imageType": "图片格式",
+    "includeTool": "包含插件消息",
+    "includeUser": "包含用户消息",
     "screenshot": "截图",
     "settings": "导出设置",
-    "shareToShareGPT": "生成 ShareGPT 分享链接",
+    "text": "文本",
     "withBackground": "包含背景图片",
     "withFooter": "包含页脚",
     "withPluginInfo": "包含插件信息",
+    "withRole": "包含消息角色",
     "withSystemRole": "包含助手角色设定"
   },
   "stt": {

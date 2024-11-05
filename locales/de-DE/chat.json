@@ -100,14 +100,20 @@
     "tooLong": "Gruppenname muss zwischen 1 und 20 Zeichen lang sein"
   },
   "shareModal": {
+    "copy": "Kopieren",
     "download": "Screenshot herunterladen",
+    "downloadFile": "Datei herunterladen",
+    "exportTitle": "Standardtitel",
     "imageType": "Bildformat",
+    "includeTool": "Plugin-Nachricht einfügen",
+    "includeUser": "Benutzernachricht einfügen",
     "screenshot": "Screenshot",
     "settings": "Exporteinstellungen",
-    "shareToShareGPT": "ShareGPT-Link generieren",
+    "text": "Text",
     "withBackground": "Mit Hintergrundbild",
     "withFooter": "Mit Fußzeile",
     "withPluginInfo": "Mit Plugin-Informationen",
+    "withRole": "Nachrichtenrolle einfügen",
     "withSystemRole": "Mit Assistentenrolle"
   },
   "stt": {

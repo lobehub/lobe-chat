@@ -100,14 +100,20 @@
     "tooLong": "グループ名は1〜20文字で入力してください"
   },
   "shareModal": {
+    "copy": "コピー",
     "download": "スクリーンショットをダウンロード",
+    "downloadFile": "ファイルをダウンロード",
+    "exportTitle": "デフォルトタイトル",
     "imageType": "画像形式",
+    "includeTool": "ツールメッセージを含める",
+    "includeUser": "ユーザーメッセージを含める",
     "screenshot": "スクリーンショット",
     "settings": "エクスポート設定",
-    "shareToShareGPT": "ShareGPT 共有リンクを生成",
+    "text": "テキスト",
     "withBackground": "背景画像を含む",
     "withFooter": "フッターを含む",
     "withPluginInfo": "プラグイン情報を含む",
+    "withRole": "メッセージの役割を含める",
     "withSystemRole": "エージェントの役割を含む"
   },
   "stt": {
