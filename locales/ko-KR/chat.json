@@ -100,14 +100,20 @@
     "tooLong": "그룹 이름은 1-20자여야 합니다"
   },
   "shareModal": {
+    "copy": "복사",
     "download": "스크린샷 다운로드",
+    "downloadFile": "파일 다운로드",
+    "exportTitle": "기본 제목",
     "imageType": "이미지 형식",
+    "includeTool": "플러그인 메시지 포함",
+    "includeUser": "사용자 메시지 포함",
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
-    "shareToShareGPT": "ShareGPT 공유 링크 생성",
+    "text": "텍스트",
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
+    "withRole": "메시지 역할 포함",
     "withSystemRole": "도우미 역할 포함"
   },
   "stt": {

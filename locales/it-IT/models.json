@@ -320,6 +320,9 @@
   "claude-2.1": {
     "description": "Claude 2 offre progressi nelle capacità chiave per le aziende, inclusi contesti leader del settore fino a 200K token, riduzione significativa della frequenza di allucinazioni del modello, suggerimenti di sistema e una nuova funzionalità di test: chiamate di strumenti."
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku è il modello di prossima generazione più veloce di Anthropic. Rispetto a Claude 3 Haiku, Claude 3.5 Haiku ha migliorato le proprie capacità in vari ambiti e ha superato il modello di generazione precedente, Claude 3 Opus, in molti test di intelligenza."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet offre capacità superiori a Opus e velocità più elevate rispetto a Sonnet, mantenendo lo stesso prezzo. Sonnet è particolarmente abile in programmazione, scienza dei dati, elaborazione visiva e compiti di agenti."
   },
