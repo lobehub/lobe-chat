@@ -100,14 +100,20 @@
     "tooLong": "Group name length should be between 1-20"
   },
   "shareModal": {
+    "copy": "Copy",
     "download": "Download Screenshot",
+    "downloadFile": "Download File",
+    "exportTitle": "Default Title",
     "imageType": "Image Format",
+    "includeTool": "Include Plugin Messages",
+    "includeUser": "Include User Messages",
     "screenshot": "Screenshot",
     "settings": "Export Settings",
-    "shareToShareGPT": "Generate ShareGPT Sharing Link",
+    "text": "Text",
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
+    "withRole": "Include Message Role",
     "withSystemRole": "Include Assistant Role Setting"
   },
   "stt": {
