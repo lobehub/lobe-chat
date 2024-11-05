@@ -19,8 +19,8 @@ export const generateMessages = ({
     .map((m) => ({
       content: m.content.trim(),
       role: m.role,
-      tool_call_id: includeTool ? m.tool_call_id : undefined,
-      tools: includeTool ? m.tools : undefined,
+      tool_call_id: includeTool && m.tool_call_id ? m.tool_call_id : undefined,
+      tools: includeTool && m.tools ? m.tools : undefined,
     }));
 
   return withSystemRole && !!systemRole
