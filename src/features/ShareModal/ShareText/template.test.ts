@@ -68,7 +68,7 @@ describe('generateMarkdown', () => {
       systemRole,
     });
 
-    expect(result).toContain('```\nI am a helpful assistant\n```');
+    expect(result).toContain('````md\nI am a helpful assistant\n````');
   });
 
   it('should not include system role when withSystemRole is false', () => {

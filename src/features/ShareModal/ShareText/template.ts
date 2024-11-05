@@ -8,9 +8,9 @@ const markdownTemplate = template(
   `# {{title}}
 
 <% if (systemRole) { %>
-\`\`\`
+\`\`\`\`md
 {{systemRole}}
-\`\`\`
+\`\`\`\`
 <% } %>
 
 <% messages.forEach(function(chat) { %>
