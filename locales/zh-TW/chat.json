@@ -115,7 +115,6 @@
     "loading": "識別中...",
     "prettifying": "潤色中..."
   },
-  "temp": "臨時",
   "tokenDetails": {
     "chats": "聊天訊息",
     "rest": "剩餘可用",
@@ -131,29 +130,10 @@
     "used": "使用"
   },
   "topic": {
-    "actions": {
-      "autoRename": "智能重新命名",
-      "duplicate": "建立副本",
-      "export": "匯出主題"
-    },
     "checkOpenNewTopic": "是否開啟新主題?",
     "checkSaveCurrentMessages": "是否將當前對話保存為話題？",
-    "confirmRemoveAll": "即將刪除全部話題，刪除後將不可恢復，請謹慎操作。",
-    "confirmRemoveTopic": "即將刪除該話題，刪除後將不可恢復，請謹慎操作。",
-    "confirmRemoveUnstarred": "即將刪除未收藏話題，刪除後將不可恢復，請謹慎操作。",
-    "defaultTitle": "默認話題",
-    "duplicateLoading": "話題複製中...",
-    "duplicateSuccess": "話題複製成功",
-    "guide": {
-      "desc": "點擊發送左側按鈕可將當前對話保存為歷史話題，並開啟新一輪對話",
-      "title": "話題列表"
-    },
     "openNewTopic": "開啟新話題",
-    "removeAll": "刪除全部話題",
-    "removeUnstarred": "刪除未收藏話題",
-    "saveCurrentMessages": "將當前對話保存為話題",
-    "searchPlaceholder": "搜索話題...",
-    "title": "話題列表"
+    "saveCurrentMessages": "將當前對話保存為話題"
   },
   "translate": {
     "action": "翻譯",

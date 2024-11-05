@@ -115,7 +115,6 @@
     "loading": "Reconociendo...",
     "prettifying": "Embelleciendo..."
   },
-  "temp": "Temporal",
   "tokenDetails": {
     "chats": "Mensajes de chat",
     "rest": "Restante",
@@ -131,29 +130,10 @@
     "used": "Usado"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Renombrar automáticamente",
-      "duplicate": "Crear copia",
-      "export": "Exportar tema"
-    },
     "checkOpenNewTopic": "¿Abrir un nuevo tema?",
     "checkSaveCurrentMessages": "¿Desea guardar la conversación actual como tema?",
-    "confirmRemoveAll": "Estás a punto de eliminar todos los temas. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
-    "confirmRemoveTopic": "Estás a punto de eliminar este tema. Una vez eliminado, no se podrá recuperar. Por favor, procede con precaución.",
-    "confirmRemoveUnstarred": "Estás a punto de eliminar los temas no marcados como favoritos. Una vez eliminados, no se podrán recuperar. Por favor, procede con precaución.",
-    "defaultTitle": "Tema predeterminado",
-    "duplicateLoading": "Duplicando tema...",
-    "duplicateSuccess": "Tema duplicado exitosamente",
-    "guide": {
-      "desc": "Haz clic en el botón izquierdo para guardar la conversación actual como un tema histórico y comenzar una nueva sesión",
-      "title": "Lista de temas"
-    },
     "openNewTopic": "Abrir nuevo tema",
-    "removeAll": "Eliminar todos los temas",
-    "removeUnstarred": "Eliminar temas no marcados como favoritos",
-    "saveCurrentMessages": "Guardar la conversación actual como tema",
-    "searchPlaceholder": "Buscar temas...",
-    "title": "Lista de temas"
+    "saveCurrentMessages": "Guardar la conversación actual como tema"
   },
   "translate": {
     "action": "Traducir",

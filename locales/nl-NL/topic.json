@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Slim hernoemen",
+    "confirmRemoveAll": "U staat op het punt om alle onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
+    "confirmRemoveTopic": "U staat op het punt om dit onderwerp te verwijderen. Na verwijdering kan het niet worden hersteld, wees voorzichtig.",
+    "confirmRemoveUnstarred": "U staat op het punt om niet-gemarkeerde onderwerpen te verwijderen. Na verwijdering kunnen ze niet worden hersteld, wees voorzichtig.",
+    "duplicate": "Maak een kopie",
+    "export": "Exporteer onderwerp",
+    "removeAll": "Verwijder alle onderwerpen",
+    "removeUnstarred": "Verwijder niet-gemarkeerde onderwerpen"
+  },
+  "defaultTitle": "Standaard onderwerp",
+  "duplicateLoading": "Onderwerp wordt gekopieerd...",
+  "duplicateSuccess": "Onderwerp succesvol gekopieerd",
+  "favorite": "Favoriet",
+  "groupMode": {
+    "ascMessages": "Op volgorde van totaal aantal berichten",
+    "byTime": "Groeperen op tijd",
+    "descMessages": "Op volgorde van totaal aantal berichten (aflopend)",
+    "flat": "Niet groeperen"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Deze maand",
+      "today": "Vandaag",
+      "week": "Deze week",
+      "yesterday": "Gisteren"
+    }
+  },
+  "guide": {
+    "desc": "Klik op de knop aan de linkerkant om de huidige conversatie op te slaan als een historisch onderwerp en een nieuwe conversatie te starten.",
+    "title": "Onderwerpenlijst"
+  },
+  "searchPlaceholder": "Zoek onderwerpen...",
+  "temp": "Tijdelijk",
+  "title": "Onderwerp"
+}

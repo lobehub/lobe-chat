@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Renommage intelligent",
+    "confirmRemoveAll": "Vous allez supprimer tous les sujets. Cette action est irréversible, veuillez agir avec prudence.",
+    "confirmRemoveTopic": "Vous allez supprimer ce sujet. Cette action est irréversible, veuillez agir avec prudence.",
+    "confirmRemoveUnstarred": "Vous allez supprimer les sujets non favoris. Cette action est irréversible, veuillez agir avec prudence.",
+    "duplicate": "Créer une copie",
+    "export": "Exporter le sujet",
+    "removeAll": "Supprimer tous les sujets",
+    "removeUnstarred": "Supprimer les sujets non favoris"
+  },
+  "defaultTitle": "Sujet par défaut",
+  "duplicateLoading": "Copie du sujet en cours...",
+  "duplicateSuccess": "Copie du sujet réussie",
+  "favorite": "Favori",
+  "groupMode": {
+    "ascMessages": "Par ordre croissant du nombre de messages",
+    "byTime": "Groupé par temps",
+    "descMessages": "Par ordre décroissant du nombre de messages",
+    "flat": "Non groupé"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Ce mois-ci",
+      "today": "Aujourd'hui",
+      "week": "Cette semaine",
+      "yesterday": "Hier"
+    }
+  },
+  "guide": {
+    "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle en tant que sujet historique et commencer une nouvelle conversation.",
+    "title": "Liste des sujets"
+  },
+  "searchPlaceholder": "Rechercher des sujets...",
+  "temp": "Temporaire",
+  "title": "Sujet"
+}

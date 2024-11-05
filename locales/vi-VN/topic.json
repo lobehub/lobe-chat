@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Đặt tên tự động",
+    "confirmRemoveAll": "Sắp xóa tất cả các chủ đề, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
+    "confirmRemoveTopic": "Sắp xóa chủ đề này, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
+    "confirmRemoveUnstarred": "Sắp xóa các chủ đề chưa được đánh dấu, sau khi xóa sẽ không thể khôi phục, xin hãy cẩn thận.",
+    "duplicate": "Tạo bản sao",
+    "export": "Xuất chủ đề",
+    "removeAll": "Xóa tất cả các chủ đề",
+    "removeUnstarred": "Xóa các chủ đề chưa được đánh dấu"
+  },
+  "defaultTitle": "Chủ đề mặc định",
+  "duplicateLoading": "Đang sao chép chủ đề...",
+  "duplicateSuccess": "Sao chép chủ đề thành công",
+  "favorite": "Yêu thích",
+  "groupMode": {
+    "ascMessages": "Theo thứ tự tổng số tin nhắn",
+    "byTime": "Theo thời gian",
+    "descMessages": "Theo thứ tự tổng số tin nhắn giảm dần",
+    "flat": "Không phân nhóm"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Tháng này",
+      "today": "Hôm nay",
+      "week": "Tuần này",
+      "yesterday": "Hôm qua"
+    }
+  },
+  "guide": {
+    "desc": "Nhấn nút bên trái để lưu cuộc trò chuyện hiện tại thành chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới.",
+    "title": "Danh sách chủ đề"
+  },
+  "searchPlaceholder": "Tìm kiếm chủ đề...",
+  "temp": "Tạm thời",
+  "title": "Chủ đề"
+}
