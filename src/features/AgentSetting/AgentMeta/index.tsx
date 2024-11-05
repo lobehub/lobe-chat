@@ -9,6 +9,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 
 import { useStore } from '../store';
 import { SessionLoadingState } from '../store/initialState';
@@ -126,7 +127,17 @@ const AgentMeta = memo(() => {
     title: t('settingAgent.title'),
   };
 
-  return <Form items={[metaData]} itemsType={'group'} variant={'pure'} {...FORM_STYLE} />;
+  const { isAgentEditable } = useServerConfigStore(featureFlagsSelectors);
+
+  return (
+    <Form
+      disabled={!isAgentEditable}
+      items={[metaData]}
+      itemsType={'group'}
+      variant={'pure'}
+      {...FORM_STYLE}
+    />
+  );
 });
 
 export default AgentMeta;
