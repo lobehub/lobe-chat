@@ -2,7 +2,7 @@ import { createStyles } from 'antd-style';
 
 import { imageUrl } from '@/const/url';
 
-export const useStyles = createStyles(({ css, token, stylish, cx }, withBackground: boolean) => ({
+export const useStyles = createStyles(({ css, token, cx }, withBackground: boolean) => ({
   background: css`
     padding: 24px;
 
@@ -33,28 +33,6 @@ export const useStyles = createStyles(({ css, token, stylish, cx }, withBackgrou
     background: ${token.colorBgContainer};
     border-block-end: 1px solid ${token.colorBorder};
   `,
-  preview: cx(
-    stylish.noScrollbar,
-    css`
-      overflow: hidden scroll;
-
-      width: 100%;
-      max-height: 40dvh;
-
-      background: ${token.colorBgLayout};
-      border: 1px solid ${token.colorBorder};
-      border-radius: ${token.borderRadiusLG}px;
-
-      * {
-        pointer-events: none;
-
-        ::-webkit-scrollbar {
-          width: 0 !important;
-          height: 0 !important;
-        }
-      }
-    `,
-  ),
   role: css`
     margin-block-start: 12px;
     padding-block-start: 12px;

@@ -100,14 +100,20 @@
     "tooLong": "Grup adı 1-20 karakter arasında olmalıdır"
   },
   "shareModal": {
+    "copy": "Kopyala",
     "download": "Ekran Görüntüsünü İndir",
+    "downloadFile": "Dosyayı İndir",
+    "exportTitle": "Varsayılan Başlık",
     "imageType": "Format",
+    "includeTool": "Eklenti mesajını dahil et",
+    "includeUser": "Kullanıcı mesajını dahil et",
     "screenshot": "Ekran Görüntüsü",
     "settings": "Ayarlar",
-    "shareToShareGPT": "ShareGPT Link Oluştur",
+    "text": "Metin",
     "withBackground": "Arka Plan",
     "withFooter": "Footer",
     "withPluginInfo": "Plugin Bilgileri",
+    "withRole": "Mesaj rolünü dahil et",
     "withSystemRole": "Asistan Rol"
   },
   "stt": {
