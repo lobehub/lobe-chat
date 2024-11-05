@@ -7,7 +7,7 @@ const Preview = memo<{ content: string }>(({ content }) => {
   const { styles } = useContainerStyles();
 
   return (
-    <div className={styles.preview}>
+    <div className={styles.preview} style={{ padding: 12 }}>
       <Markdown>{content}</Markdown>
     </div>
   );
