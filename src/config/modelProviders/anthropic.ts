@@ -17,7 +17,7 @@ const Anthropic: ModelProviderCard = {
         output: 5,
         writeCacheInput: 1.25,
       },
-      releasedAt: '2024-10-22',
+      releasedAt: '2024-11-05',
       tokens: 200_000,
       vision: true,
     },
