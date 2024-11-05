@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
@@ -72,8 +73,9 @@ const ShareText = memo(() => {
     title,
   }).replaceAll('\n\n\n', '\n');
 
+  const isMobile = useIsMobile();
   return (
-    <Flexbox gap={16} horizontal>
+    <Flexbox gap={16} horizontal={!isMobile}>
       <Preview content={content} />
       <Flexbox gap={16}>
         <Form
@@ -92,20 +94,23 @@ const ShareText = memo(() => {
             message.success(t('copySuccess', { defaultValue: 'Copy Success', ns: 'common' }));
           }}
           size={'large'}
+          style={isMobile ? { bottom: 0, position: 'sticky' } : undefined}
           type={'primary'}
         >
           {t('copy', { ns: 'common' })}
         </Button>
-        <Button
-          block
-          onClick={() => {
-            exportFile(content, `${title}.md`);
-          }}
-          size={'large'}
-          variant={'filled'}
-        >
-          {t('shareModal.downloadFile')}
-        </Button>
+        {!isMobile && (
+          <Button
+            block
+            onClick={() => {
+              exportFile(content, `${title}.md`);
+            }}
+            size={'large'}
+            variant={'filled'}
+          >
+            {t('shareModal.downloadFile')}
+          </Button>
+        )}
       </Flexbox>
     </Flexbox>
   );

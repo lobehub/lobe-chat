@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 import Preview from './Preview';
 import { FieldType, ImageType } from './type';
@@ -72,8 +73,9 @@ const ShareImage = memo(() => {
     },
   ];
 
+  const isMobile = useIsMobile();
   return (
-    <Flexbox gap={16} horizontal>
+    <Flexbox gap={16} horizontal={!isMobile}>
       <Preview title={title} {...fieldValue} />
       <Flexbox gap={16}>
         <Form
@@ -83,7 +85,14 @@ const ShareImage = memo(() => {
           onValuesChange={(_, v) => setFieldValue(v)}
           {...FORM_STYLE}
         />
-        <Button block loading={loading} onClick={onDownload} size={'large'} type={'primary'}>
+        <Button
+          block
+          loading={loading}
+          onClick={onDownload}
+          size={'large'}
+          style={isMobile ? { bottom: 0, position: 'sticky' } : undefined}
+          type={'primary'}
+        >
           {t('shareModal.download')}
         </Button>
       </Flexbox>

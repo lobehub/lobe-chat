@@ -4,6 +4,8 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
+
 import ShareImage from './ShareImage';
 import ShareJSON from './ShareJSON';
 import ShareText from './ShareText';
@@ -36,6 +38,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
     [],
   );
 
+  const isMobile = useIsMobile();
   return (
     <Modal
       allowFullscreen
@@ -47,7 +50,7 @@ const ShareModal = memo<ModalProps>(({ onCancel, open }) => {
       title={t('share', { ns: 'common' })}
       width={1440}
     >
-      <Flexbox gap={24}>
+      <Flexbox gap={isMobile ? 8 : 24}>
         <Segmented
           block
           onChange={(value) => setTab(value as Tab)}

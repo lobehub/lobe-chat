@@ -13,6 +13,7 @@ import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
 import pkg from '../../../../package.json';
+import { useContainerStyles } from '../style';
 import { useStyles } from './style';
 import { FieldType } from './type';
 
@@ -32,12 +33,13 @@ const Preview = memo<FieldType & { title?: string }>(
 
     const { t } = useTranslation('chat');
     const { styles } = useStyles(withBackground);
+    const { styles: containerStyles } = useContainerStyles();
 
     const displayTitle = isInbox ? t('inbox.title') : title;
     const displayDesc = isInbox ? t('inbox.desc') : description;
 
     return (
-      <div className={styles.preview}>
+      <div className={containerStyles.preview}>
         <div className={withBackground ? styles.background : undefined} id={'preview'}>
           <Flexbox className={styles.container} gap={16}>
             <div className={styles.header}>
