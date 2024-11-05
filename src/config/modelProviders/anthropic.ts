@@ -5,6 +5,24 @@ const Anthropic: ModelProviderCard = {
   chatModels: [
     {
       description:
+        'Claude 3.5 Haiku 在许多评估中与我们的前一个最大模型 Claude 3 Opus 的性能相当，速度与上一代 Haiku 类似。',
+      displayName: 'Claude 3.5 Haiku',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-3-5-haiku-20241022',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.1,
+        input: 1,
+        output: 5,
+        writeCacheInput: 1.25,
+      },
+      releasedAt: '2024-10-22',
+      tokens: 200_000,
+      vision: true,
+    },
+    {
+      description:
         'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
