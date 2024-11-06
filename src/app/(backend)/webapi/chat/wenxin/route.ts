@@ -1,5 +1,5 @@
 import { getLLMConfig } from '@/config/llm';
-import { AgentRuntime } from '@/libs/agent-runtime';
+import { AgentRuntime, ModelProvider } from '@/libs/agent-runtime';
 import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
 
 import { POST as UniverseRoute } from '../[provider]/route';
@@ -26,5 +26,5 @@ export const POST = async (req: Request) =>
 
       return new AgentRuntime(instance);
     },
-    params: { provider: 'wenxin' },
+    params: { provider: ModelProvider.Wenxin },
   });
