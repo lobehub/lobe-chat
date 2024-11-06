@@ -3,7 +3,7 @@ import { ModelProviderCard } from '@/types/llm';
 const XAI: ModelProviderCard = {
   chatModels: [
     {
-      description: 'Comparable performance to Grok 2 but with improved efficiency, speed and capabilities.',
+      description: '拥有与 Grok 2 相当的性能，但具有更高的效率、速度和功能。',
       displayName: 'Grok Beta',
       enabled: true,
       functionCall: true,
