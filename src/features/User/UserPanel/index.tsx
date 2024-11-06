@@ -25,6 +25,8 @@ const UserPanel = memo<PropsWithChildren>(({ children }) => {
   useEffect(() => {
     if (userStore.enableAuth() && !userStore.isSignedIn) {
       setOpen(true);
+    } else {
+      setOpen(false);
     }
   }, [userStore.isSignedIn]);
 
