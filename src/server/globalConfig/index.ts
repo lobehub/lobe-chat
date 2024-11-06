@@ -103,7 +103,7 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_AI21,
     AI21_MODEL_LIST,
-    
+
     ENABLED_AI360,
     AI360_MODEL_LIST,
 
