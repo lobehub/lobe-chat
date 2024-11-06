@@ -17,7 +17,7 @@ import { type ChatCompetitionOptions, type ChatStreamPayload, ModelProvider } fr
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
 import { StreamingResponse } from '../utils/response';
-import { AzureOpenAIStream, convertToStream } from '../utils/streams';
+import { AzureOpenAIStream, convertToStream } from '../utils/streams/azureOpenai';
 
 function convertResponseMode(
   responseMode?: 'streamText' | 'json',
