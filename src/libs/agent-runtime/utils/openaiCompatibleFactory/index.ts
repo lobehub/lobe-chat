@@ -87,7 +87,7 @@ interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
  * make the OpenAI response data as a stream
  */
 export function transformResponseToStream(data: OpenAI.ChatCompletion) {
-  return new ReadableStream({
+  return new ReadableStream<OpenAI.ChatCompletionChunk>({
     start(controller) {
       const chunk: OpenAI.ChatCompletionChunk = {
         choices: data.choices.map((choice: OpenAI.ChatCompletion.Choice) => ({

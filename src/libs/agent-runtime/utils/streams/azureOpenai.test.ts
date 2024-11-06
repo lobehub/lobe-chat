@@ -1,7 +1,18 @@
 import { desc } from 'drizzle-orm/expressions';
+import type {
+  ChatCompletion,
+  ChatCompletionChunk,
+  ChatCompletionMessageToolCall,
+} from 'openai/resources/chat/completions';
+import { Stream } from 'openai/streaming';
 import { describe, expect, it, vi } from 'vitest';
 
-import { AzureOpenAIStream } from './azureOpenai';
+import * as OpenaiCompatibleFactory from '../openaiCompatibleFactory';
+import { AzureOpenAIStream, convertToStream } from './azureOpenai';
+
+afterEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe('AzureOpenAIStream', () => {
   it('should transform AzureOpenAI stream to protocol stream', async () => {
@@ -29,7 +40,7 @@ describe('AzureOpenAIStream', () => {
           choices: [
             {
               delta: null,
-              finishReason: 'stop',
+              finish_reason: 'stop',
               index: 2,
             },
           ],
@@ -177,7 +188,7 @@ describe('AzureOpenAIStream', () => {
               delta: {
                 content: null,
                 role: 'assistant',
-                toolCalls: [
+                tool_calls: [
                   {
                     function: { arguments: '', name: 'realtime-weather____fetchCurrentWeather' },
                     id: 'call_1GT6no85IuAal06XHH2CZe8Q',
@@ -188,7 +199,7 @@ describe('AzureOpenAIStream', () => {
               },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -201,10 +212,10 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:14.698Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: '{"' }, index: 0 }] },
+              delta: { tool_calls: [{ function: { arguments: '{"' }, index: 0 }] },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -217,10 +228,10 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:14.698Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: 'city' }, index: 0 }] },
+              delta: { tool_calls: [{ function: { arguments: 'city' }, index: 0 }] },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -233,10 +244,10 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:14.698Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: '":"' }, index: 0 }] },
+              delta: { tool_calls: [{ function: { arguments: '":"' }, index: 0 }] },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -249,10 +260,10 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:14.698Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: '杭州' }, index: 0 }] },
+              delta: { tool_calls: [{ function: { arguments: '杭州' }, index: 0 }] },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilteesults: {},
             },
           ],
@@ -265,10 +276,10 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:14.698Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: '"}' }, index: 0 }] },
+              delta: { tool_calls: [{ function: { arguments: '"}' }, index: 0 }] },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -284,7 +295,7 @@ describe('AzureOpenAIStream', () => {
               delta: {},
               index: 0,
               logprobs: null,
-              finishReason: 'tool_calls',
+              finish_reason: 'tool_calls',
               contentFilterResults: {},
             },
           ],
@@ -353,7 +364,7 @@ describe('AzureOpenAIStream', () => {
           choices: [
             {
               delta: {
-                toolCalls: [
+                tool_calls: [
                   {
                     function: { arguments: '', name: 'realtime-weather____fetchCurrentWeather' },
                     id: 'call_cnQ80VjcWCS69wWKp4jz0nJd',
@@ -364,7 +375,7 @@ describe('AzureOpenAIStream', () => {
               },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -377,10 +388,10 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:16.635Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: '{"city": "杭州"}' }, index: 0 }] },
+              delta: { tool_calls: [{ function: { arguments: '{"city": "杭州"}' }, index: 0 }] },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -394,7 +405,7 @@ describe('AzureOpenAIStream', () => {
           choices: [
             {
               delta: {
-                toolCalls: [
+                tool_calls: [
                   {
                     function: { arguments: '', name: 'realtime-weather____fetchCurrentWeather' },
                     id: 'call_LHrpPTrT563QkP9chVddzXQk',
@@ -405,7 +416,7 @@ describe('AzureOpenAIStream', () => {
               },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -418,10 +429,10 @@ describe('AzureOpenAIStream', () => {
           created: '1970-01-20T21:36:16.635Z',
           choices: [
             {
-              delta: { toolCalls: [{ function: { arguments: '{"city": "北京"}' }, index: 1 }] },
+              delta: { tool_calls: [{ function: { arguments: '{"city": "北京"}' }, index: 1 }] },
               index: 0,
               logprobs: null,
-              finishReason: null,
+              finish_reason: null,
               contentFilterResults: {},
             },
           ],
@@ -437,7 +448,7 @@ describe('AzureOpenAIStream', () => {
               delta: {},
               index: 0,
               logprobs: null,
-              finishReason: 'tool_calls',
+              finish_reason: 'tool_calls',
               contentFilterResults: {},
             },
           ],
@@ -496,7 +507,7 @@ describe('AzureOpenAIStream', () => {
             choices: [
               {
                 delta: {
-                  toolCalls: [
+                  tool_calls: [
                     {
                       function: { name: 'tool1', arguments: '{}' },
                       id: 'call_1',
@@ -533,5 +544,139 @@ describe('AzureOpenAIStream', () => {
         `data: [{"function":{"name":"tool1","arguments":"{}"},"id":"call_1","index":0,"type":"function"},{"function":{"name":"tool2","arguments":"{}"},"id":"call_2","index":1,"type":"function"}]\n\n`,
       ]);
     });
+  });
+});
+
+describe('convertToStream', () => {
+  beforeEach(() => {
+    vi.spyOn(OpenaiCompatibleFactory, 'transformResponseToStream').mockReturnValue(
+      new ReadableStream(),
+    );
+  });
+
+  it('should return Stream as is', () => {
+    const data = [
+      {
+        choices: [],
+        created: 0,
+        id: '',
+        model: '',
+        object: '',
+        prompt_filter_results: [
+          {
+            prompt_index: 0,
+            content_filter_results: {
+              hate: { filtered: false, severity: 'safe' },
+              self_harm: { filtered: false, severity: 'safe' },
+              sexual: { filtered: false, severity: 'safe' },
+              violence: { filtered: false, severity: 'safe' },
+            },
+          },
+        ],
+      },
+      {
+        choices: [
+          {
+            content_filter_results: {
+              hate: { filtered: false, severity: 'safe' },
+              self_harm: { filtered: false, severity: 'safe' },
+              sexual: { filtered: false, severity: 'safe' },
+              violence: { filtered: false, severity: 'safe' },
+            },
+            delta: { content: '你' },
+            finish_reason: null,
+            index: 0,
+            logprobs: null,
+          },
+        ],
+        created: 1715516381,
+        id: 'chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+        model: 'gpt-35-turbo-16k',
+        object: 'chat.completion.chunk',
+        system_fingerprint: null,
+      },
+      {
+        choices: [
+          {
+            content_filter_results: {
+              hate: { filtered: false, severity: 'safe' },
+              self_harm: { filtered: false, severity: 'safe' },
+              sexual: { filtered: false, severity: 'safe' },
+              violence: { filtered: false, severity: 'safe' },
+            },
+            delta: { content: '好' },
+            finish_reason: null,
+            index: 0,
+            logprobs: null,
+          },
+        ],
+        created: 1715516381,
+        id: 'chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+        model: 'gpt-35-turbo-16k',
+        object: 'chat.completion.chunk',
+        system_fingerprint: null,
+      },
+      {
+        choices: [
+          {
+            content_filter_results: {
+              hate: { filtered: false, severity: 'safe' },
+              self_harm: { filtered: false, severity: 'safe' },
+              sexual: { filtered: false, severity: 'safe' },
+              violence: { filtered: false, severity: 'safe' },
+            },
+            delta: { content: '！' },
+            finish_reason: null,
+            index: 0,
+            logprobs: null,
+          },
+        ],
+        created: 1715516381,
+        id: 'chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+        model: 'gpt-35-turbo-16k',
+        object: 'chat.completion.chunk',
+        system_fingerprint: null,
+      },
+    ];
+
+    const mockStream = new ReadableStream({
+      start(controller) {
+        data.forEach((chunk) => controller.enqueue(chunk));
+        controller.close();
+      },
+    });
+    const controller = new AbortController();
+    const stream = Stream.fromReadableStream<ChatCompletionChunk>(mockStream, controller);
+
+    const response = convertToStream(stream);
+
+    expect(response).toBe(stream);
+  });
+
+  it('should transform ChatCompletion to Stream', () => {
+    const data: ChatCompletion = {
+      choices: [
+        {
+          message: {
+            content: '你好！',
+            role: 'assistant',
+            refusal: null,
+          },
+          finish_reason: 'stop',
+          index: 0,
+          logprobs: null,
+        },
+      ],
+      created: 1715516381,
+      id: 'chatcmpl-9O2SzeGv5xy6yz0TcQNA1DHHLJ8N1',
+      model: 'gpt-35-turbo-16k',
+      object: 'chat.completion',
+      system_fingerprint: undefined,
+    };
+
+    const response = convertToStream(data);
+
+    expect(OpenaiCompatibleFactory.transformResponseToStream).toHaveBeenCalledWith(data);
+    expect(response).toBeInstanceOf(ReadableStream);
   });
 });

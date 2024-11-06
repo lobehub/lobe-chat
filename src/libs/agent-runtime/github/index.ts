@@ -1,5 +1,5 @@
 import { AgentRuntimeErrorType } from '../error';
-import { o1Models, pruneO1Payload } from '../openai';
+import { isO1Model, pruneO1Payload } from '../openai';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
@@ -9,7 +9,7 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
     handlePayload: (payload) => {
       const { model } = payload;
 
-      if (o1Models.has(model)) {
+      if (isO1Model(model)) {
         return pruneO1Payload(payload) as any;
       }
 

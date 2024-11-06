@@ -1,8 +1,13 @@
-import { ChatCompletions, ChatCompletionsFunctionToolCall } from '@azure/openai';
 import OpenAI from 'openai';
-import type { Stream } from 'openai/streaming';
+import type {
+  ChatCompletion,
+  ChatCompletionChunk,
+  ChatCompletionMessageToolCall,
+} from 'openai/resources/chat/completions';
+import { Stream } from 'openai/streaming';
 
 import { ChatStreamCallbacks } from '../../types';
+import { transformResponseToStream } from '../openaiCompatibleFactory';
 import {
   StreamProtocolChunk,
   StreamProtocolToolCallChunk,
@@ -13,8 +18,13 @@ import {
   createSSEProtocolTransformer,
 } from './protocol';
 
-const transformOpenAIStream = (chunk: ChatCompletions, stack: StreamStack): StreamProtocolChunk => {
+const transformOpenAIStream = (
+  chunk: ChatCompletionChunk,
+  stack: StreamStack,
+): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
+  // const textDecoder = new TextDecoder();
+  // const chunk: ChatCompletionChunk = _chunk instanceof Uint8Array ? JSON.parse(textDecoder.decode(_chunk)) : _chunk;
 
   const item = chunk.choices[0];
   if (!item) {
@@ -25,14 +35,14 @@ const transformOpenAIStream = (chunk: ChatCompletions, stack: StreamStack): Stre
     return { data: item.delta.content, id: chunk.id, type: 'text' };
   }
 
-  if (item.delta?.toolCalls) {
+  if (item.delta?.tool_calls) {
     return {
-      data: item.delta.toolCalls.map((value, index): StreamToolCallChunkData => {
-        const func = (value as ChatCompletionsFunctionToolCall).function;
+      data: item.delta.tool_calls.map((value, index): StreamToolCallChunkData => {
+        const func = (value as ChatCompletionMessageToolCall).function;
 
         // at first time, set tool id
         if (!stack.tool) {
-          stack.tool = { id: value.id, index, name: func.name };
+          stack.tool = { id: value.id!, index, name: func.name }; // TODO: undefined id
         } else {
           // in the parallel tool calling, set the new tool id
           if (value.id && stack.tool.id !== value.id) {
@@ -53,8 +63,8 @@ const transformOpenAIStream = (chunk: ChatCompletions, stack: StreamStack): Stre
   }
 
   // 给定结束原因
-  if (item.finishReason) {
-    return { data: item.finishReason, id: chunk.id, type: 'stop' };
+  if (item.finish_reason) {
+    return { data: item.finish_reason, id: chunk.id, type: 'stop' };
   }
 
   if (item.delta?.content === null) {
@@ -81,3 +91,13 @@ export const AzureOpenAIStream = (
     .pipeThrough(createSSEProtocolTransformer(transformOpenAIStream, stack))
     .pipeThrough(createCallbacksTransformer(callbacks));
 };
+
+export function convertToStream(
+  response: Stream<ChatCompletionChunk> | ChatCompletion,
+): Stream<ChatCompletionChunk> | ReadableStream<ChatCompletionChunk> {
+  if (response instanceof Stream) {
+    return response;
+  }
+
+  return transformResponseToStream(response);
+}

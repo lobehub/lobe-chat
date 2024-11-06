@@ -45,8 +45,8 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const endpoint = payload?.endpoint || AZURE_ENDPOINT;
       const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
       return {
+        apiKey,
         apiVersion,
-        apikey: apiKey,
         endpoint,
       };
     }
@@ -266,8 +266,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
     case ModelProvider.SenseNova: {
       const { SENSENOVA_ACCESS_KEY_ID, SENSENOVA_ACCESS_KEY_SECRET } = getLLMConfig();
 
-      const sensenovaAccessKeyID = apiKeyManager.pick(payload?.sensenovaAccessKeyID || SENSENOVA_ACCESS_KEY_ID);
-      const sensenovaAccessKeySecret = apiKeyManager.pick(payload?.sensenovaAccessKeySecret || SENSENOVA_ACCESS_KEY_SECRET);
+      const sensenovaAccessKeyID = apiKeyManager.pick(
+        payload?.sensenovaAccessKeyID || SENSENOVA_ACCESS_KEY_ID,
+      );
+      const sensenovaAccessKeySecret = apiKeyManager.pick(
+        payload?.sensenovaAccessKeySecret || SENSENOVA_ACCESS_KEY_SECRET,
+      );
 
       const apiKey = sensenovaAccessKeyID + ':' + sensenovaAccessKeySecret;
 

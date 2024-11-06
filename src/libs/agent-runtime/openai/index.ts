@@ -9,6 +9,8 @@ export const o1Models = new Set([
   'o1-mini-2024-09-12',
 ]);
 
+export const isO1Model = (model: string) => o1Models.has(model);
+
 export const pruneO1Payload = (payload: ChatStreamPayload) => ({
   ...payload,
   frequency_penalty: 0,
@@ -28,7 +30,7 @@ export const LobeOpenAI = LobeOpenAICompatibleFactory({
     handlePayload: (payload) => {
       const { model } = payload;
 
-      if (o1Models.has(model)) {
+      if (isO1Model(model)) {
         return pruneO1Payload(payload) as any;
       }
 
