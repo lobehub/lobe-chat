@@ -4,7 +4,6 @@ import { pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 
 import { agents, agentsFiles, agentsKnowledgeBases } from './agent';
 import { asyncTasks } from './asyncTask';
-import { agentsTags, plugins, pluginsTags, tags } from './discover';
 import { files, knowledgeBases } from './file';
 import { messages, messagesFiles } from './message';
 import { unstructuredChunks } from './rag';
@@ -48,26 +47,6 @@ export const topicRelations = relations(topics, ({ one }) => ({
   }),
 }));
 
-export const pluginsRelations = relations(plugins, ({ many }) => ({
-  pluginsTags: many(pluginsTags),
-}));
-
-export const pluginsTagsRelations = relations(pluginsTags, ({ one }) => ({
-  plugin: one(plugins, {
-    fields: [pluginsTags.pluginId],
-    references: [plugins.id],
-  }),
-  tag: one(tags, {
-    fields: [pluginsTags.tagId],
-    references: [tags.id],
-  }),
-}));
-
-export const tagsRelations = relations(tags, ({ many }) => ({
-  agentsTags: many(agentsTags),
-  pluginsTags: many(pluginsTags),
-}));
-
 export const messagesRelations = relations(messages, ({ many, one }) => ({
   filesToMessages: many(messagesFiles),
 
@@ -91,7 +70,6 @@ export const agentsRelations = relations(agents, ({ many }) => ({
   agentsToSessions: many(agentsToSessions),
   knowledgeBases: many(agentsKnowledgeBases),
   files: many(agentsFiles),
-  agentsTags: many(agentsTags),
 }));
 
 export const agentsToSessionsRelations = relations(agentsToSessions, ({ one }) => ({
@@ -113,17 +91,6 @@ export const agentsKnowledgeBasesRelations = relations(agentsKnowledgeBases, ({ 
   agent: one(agents, {
     fields: [agentsKnowledgeBases.agentId],
     references: [agents.id],
-  }),
-}));
-
-export const agentsTagsRelations = relations(agentsTags, ({ one }) => ({
-  agent: one(agents, {
-    fields: [agentsTags.agentId],
-    references: [agents.id],
-  }),
-  tag: one(tags, {
-    fields: [agentsTags.tagId],
-    references: [tags.id],
   }),
 }));
 
