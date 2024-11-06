@@ -12,7 +12,7 @@ import {
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator } from '../../utils/idGenerator';
-import { createdAt, updatedAt } from './_helpers';
+import { accessedAt, createdAt, timestamps } from './_helpers';
 import { asyncTasks } from './asyncTask';
 import { chunks } from './rag';
 import { users } from './user';
@@ -23,7 +23,9 @@ export const globalFiles = pgTable('global_files', {
   size: integer('size').notNull(),
   url: text('url').notNull(),
   metadata: jsonb('metadata'),
+
   createdAt: createdAt(),
+  accessedAt: accessedAt(),
 });
 
 export type NewGlobalFile = typeof globalFiles.$inferInsert;
@@ -51,8 +53,7 @@ export const files = pgTable('files', {
     onDelete: 'set null',
   }),
 
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+  ...timestamps,
 });
 
 export type NewFile = typeof files.$inferInsert;
@@ -91,8 +92,7 @@ export const knowledgeBases = pgTable('knowledge_bases', {
 
   settings: jsonb('settings'),
 
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+  ...timestamps,
 });
 
 export const insertKnowledgeBasesSchema = createInsertSchema(knowledgeBases);
