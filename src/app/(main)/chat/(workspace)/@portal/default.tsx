@@ -6,7 +6,7 @@ import { isMobileDevice } from '@/utils/server/responsive';
 import Desktop from './_layout/Desktop';
 import Mobile from './_layout/Mobile';
 
-const PortalBody = lazy(() => import('./router'));
+const PortalBody = lazy(() => import('@/features/Portal/router'));
 
 const Inspector = () => {
   const mobile = isMobileDevice();
