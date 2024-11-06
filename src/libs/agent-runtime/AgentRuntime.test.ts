@@ -75,7 +75,7 @@ describe('AgentRuntime', () => {
     describe('Azure OpenAI provider', () => {
       it('should initialize correctly', async () => {
         const jwtPayload = {
-          apikey: 'user-azure-key',
+          apiKey: 'user-azure-key',
           endpoint: 'user-azure-endpoint',
           apiVersion: '2024-06-01',
         };
@@ -90,7 +90,7 @@ describe('AgentRuntime', () => {
       });
       it('should initialize with azureOpenAIParams correctly', async () => {
         const jwtPayload = {
-          apikey: 'user-openai-key',
+          apiKey: 'user-openai-key',
           endpoint: 'user-endpoint',
           apiVersion: 'custom-version',
         };
@@ -106,7 +106,8 @@ describe('AgentRuntime', () => {
 
       it('should initialize with AzureAI correctly', async () => {
         const jwtPayload = {
-          apikey: 'user-azure-key',
+          apiKey: 'user-azure-key',
+          apiVersion: '2024-06-01',
           endpoint: 'user-azure-endpoint',
         };
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Azure, {
