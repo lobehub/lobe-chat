@@ -170,7 +170,7 @@ describe('chatSelectors', () => {
         activeId: 'abc',
       });
 
-      const chats = chatSelectors.currentChatsWithHistoryConfig(state);
+      const chats = chatSelectors.mainAIChatsWithHistoryConfig(state);
       expect(chats).toHaveLength(3);
       expect(chats).toEqual(mockedChats);
     });
@@ -196,7 +196,7 @@ describe('chatSelectors', () => {
         });
       });
 
-      const chats = chatSelectors.currentChatsWithHistoryConfig(state);
+      const chats = chatSelectors.mainAIChatsWithHistoryConfig(state);
 
       expect(chats).toHaveLength(2);
       expect(chats).toEqual([
@@ -262,7 +262,7 @@ describe('chatSelectors', () => {
         .join('');
 
       // Call the selector and verify the result
-      const concatenatedString = chatSelectors.chatsMessageString(state);
+      const concatenatedString = chatSelectors.mainAIChatsMessageString(state);
       expect(concatenatedString).toBe(expectedString);
 
       // Restore the mocks after the test

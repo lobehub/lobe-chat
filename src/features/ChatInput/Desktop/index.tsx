@@ -14,6 +14,7 @@ import Head from './Header';
 interface DesktopChatInputProps {
   footer?: {
     saveTopic?: boolean;
+    sendMore?: boolean;
     shortcutHint?: boolean;
   };
   inputHeight: number;

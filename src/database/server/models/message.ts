@@ -69,6 +69,7 @@ export class MessageModel {
         updatedAt: messages.updatedAt,
 
         parentId: messages.parentId,
+        threadId: messages.threadId,
 
         tools: messages.tools,
         tool_call_id: messagePlugins.toolCallId,

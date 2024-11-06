@@ -9,10 +9,13 @@ import { MessageRoleType } from '@/types/message';
 import { renderActions, useActionsClick } from '../../Actions';
 import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
 
-export type ActionsBarProps = ActionIconGroupProps;
+export interface ActionsBarProps extends ActionIconGroupProps {
+  inThread?: boolean;
+}
 
 const ActionsBar = memo<ActionsBarProps>((props) => {
   const { regenerate, edit, copy, divider, del } = useChatListActionsBar();
+
   return (
     <ActionIconGroup
       dropdownMenu={[edit, copy, regenerate, divider, del]}
@@ -25,12 +28,13 @@ const ActionsBar = memo<ActionsBarProps>((props) => {
 
 interface ActionsProps {
   id: string;
+  inThread?: boolean;
 }
 
-const Actions = memo<ActionsProps>(({ id }) => {
+const Actions = memo<ActionsProps>(({ id, inThread }) => {
   const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
   const [toggleMessageEditing] = useChatStore((s) => [s.toggleMessageEditing]);
-  const onActionsClick = useActionsClick();
+  const onActionsClick = useActionsClick(inThread);
 
   const handleActionClick = useCallback(
     async (action: ActionEvent) => {
@@ -48,7 +52,7 @@ const Actions = memo<ActionsProps>(({ id }) => {
 
   const RenderFunction = renderActions[(item?.role || '') as MessageRoleType] ?? ActionsBar;
 
-  return <RenderFunction {...item!} onActionClick={handleActionClick} />;
+  return <RenderFunction {...item!} inThread={inThread} onActionClick={handleActionClick} />;
 });
 
 export default Actions;

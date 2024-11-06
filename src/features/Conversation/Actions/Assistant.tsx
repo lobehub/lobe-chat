@@ -1,36 +1,46 @@
 import { ActionIconGroup } from '@lobehub/ui';
-import { memo } from 'react';
+import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
+import { memo, useMemo } from 'react';
 
 import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { RenderAction } from '../types';
 import { ErrorActionsBar } from './Error';
 import { useCustomActions } from './customAction';
 
-export const AssistantActionsBar: RenderAction = memo(({ id, onActionClick, error, tools }) => {
-  const { regenerate, edit, delAndRegenerate, copy, divider, del } = useChatListActionsBar();
-  const { translate, tts } = useCustomActions();
-  const hasTools = !!tools;
+export const AssistantActionsBar: RenderAction = memo(
+  ({ onActionClick, error, tools, inThread }) => {
+    const { regenerate, edit, delAndRegenerate, copy, divider, del, branching } =
+      useChatListActionsBar();
+    const { translate, tts } = useCustomActions();
+    const hasTools = !!tools;
 
-  if (id === 'default') return;
+    const items = useMemo(
+      () =>
+        [hasTools ? delAndRegenerate : edit, copy, inThread ? null : branching].filter(
+          Boolean,
+        ) as ActionIconGroupItems[],
+      [inThread],
+    );
 
-  if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
+    if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 
-  return (
-    <ActionIconGroup
-      dropdownMenu={[
-        edit,
-        copy,
-        divider,
-        tts,
-        translate,
-        divider,
-        regenerate,
-        delAndRegenerate,
-        del,
-      ]}
-      items={[hasTools ? delAndRegenerate : edit, copy]}
-      onActionClick={onActionClick}
-      type="ghost"
-    />
-  );
-});
+    return (
+      <ActionIconGroup
+        dropdownMenu={[
+          edit,
+          copy,
+          divider,
+          tts,
+          translate,
+          divider,
+          regenerate,
+          delAndRegenerate,
+          del,
+        ]}
+        items={items}
+        onActionClick={onActionClick}
+        type="ghost"
+      />
+    );
+  },
+);

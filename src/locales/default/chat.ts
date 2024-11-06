@@ -123,6 +123,9 @@ export default {
     loading: '识别中...',
     prettifying: '润色中...',
   },
+  thread: {
+    divider: '子话题',
+  },
   tokenDetails: {
     chats: '会话消息',
     historySummary: '历史总结',
@@ -152,8 +155,8 @@ export default {
     action: '语音朗读',
     clear: '删除语音',
   },
-  updateAgent: '更新助理信息',
 
+  updateAgent: '更新助理信息',
   upload: {
     action: {
       fileUpload: '上传文件',

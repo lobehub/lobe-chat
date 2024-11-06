@@ -18,7 +18,7 @@ export const renderActions: Record<MessageRoleType, RenderAction> = {
   user: UserActionsBar,
 };
 
-export const useActionsClick = (): OnActionsClick => {
+export const useActionsClick = (inThread?: boolean): OnActionsClick => {
   const { t } = useTranslation('common');
   const [
     deleteMessage,
@@ -27,6 +27,9 @@ export const useActionsClick = (): OnActionsClick => {
     ttsMessage,
     delAndRegenerateMessage,
     copyMessage,
+    openThreadCreator,
+    resendThreadMessage,
+    delAndResendThreadMessage,
   ] = useChatStore((s) => [
     s.deleteMessage,
     s.regenerateMessage,
@@ -34,6 +37,9 @@ export const useActionsClick = (): OnActionsClick => {
     s.ttsMessage,
     s.delAndRegenerateMessage,
     s.copyMessage,
+    s.openThreadCreator,
+    s.resendThreadMessage,
+    s.delAndResendThreadMessage,
   ]);
   const { message } = App.useApp();
 
@@ -44,6 +50,10 @@ export const useActionsClick = (): OnActionsClick => {
         message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
         break;
       }
+      case 'branching': {
+        openThreadCreator(id);
+        break;
+      }
 
       case 'del': {
         deleteMessage(id);
@@ -51,14 +61,21 @@ export const useActionsClick = (): OnActionsClick => {
       }
 
       case 'regenerate': {
-        regenerateMessage(id);
+        if (inThread) {
+          resendThreadMessage(id);
+        } else regenerateMessage(id);
+
         // if this message is an error message, we need to delete it
         if (error) deleteMessage(id);
         break;
       }
 
       case 'delAndRegenerate': {
-        delAndRegenerateMessage(id);
+        if (inThread) {
+          delAndResendThreadMessage(id);
+        } else {
+          delAndRegenerateMessage(id);
+        }
         break;
       }
 
