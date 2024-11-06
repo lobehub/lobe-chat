@@ -23,6 +23,7 @@ import {
   TaichuProviderCard,
   TogetherAIProviderCard,
   UpstageProviderCard,
+  XAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
@@ -67,6 +68,7 @@ export const useProviderList = (): ProviderItem[] => {
       MistralProviderCard,
       Ai21ProviderCard,
       UpstageProviderCard,
+      XAIProviderCard,
       QwenProviderCard,
       WenxinProvider,
       HunyuanProviderCard,

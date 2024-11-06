@@ -41,6 +41,7 @@ import {
   TextToSpeechPayload,
 } from './types';
 import { LobeUpstageAI } from './upstage';
+import { LobeXAI } from './xai';
 import { LobeZeroOneAI } from './zeroone';
 import { LobeZhipuAI } from './zhipu';
 
@@ -154,6 +155,7 @@ class AgentRuntime {
       taichu: Partial<ClientOptions>;
       togetherai: Partial<ClientOptions>;
       upstage: Partial<ClientOptions>;
+      xai: Partial<ClientOptions>;
       zeroone: Partial<ClientOptions>;
       zhipu: Partial<ClientOptions>;
     }>,
@@ -319,6 +321,11 @@ class AgentRuntime {
 
       case ModelProvider.SenseNova: {
         runtimeModel = await LobeSenseNovaAI.fromAPIKey(params.sensenova);
+        break;
+      }
+
+      case ModelProvider.XAI: {
+        runtimeModel = new LobeXAI(params.xai);
         break;
       }
     }
