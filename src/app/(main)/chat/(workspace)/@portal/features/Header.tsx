@@ -5,9 +5,8 @@ import { XIcon } from 'lucide-react';
 import { memo } from 'react';
 
 import SidebarHeader from '@/components/SidebarHeader';
+import { PortalHeader } from '@/features/Portal/router';
 import { useChatStore } from '@/store/chat';
-
-import { PortalHeader } from '../router';
 
 const Header = memo(() => {
   const [toggleInspector] = useChatStore((s) => [s.togglePortal]);
