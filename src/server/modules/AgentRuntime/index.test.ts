@@ -37,6 +37,7 @@ vi.mock('@/config/llm', () => ({
     GOOGLE_API_KEY: 'test-google-key',
 
     AZURE_API_KEY: 'test-azure-key',
+    AZURE_API_VERSION: 'test-azure-version',
     AZURE_ENDPOINT: 'endpoint',
 
     ZHIPU_API_KEY: 'test.zhipu-key',

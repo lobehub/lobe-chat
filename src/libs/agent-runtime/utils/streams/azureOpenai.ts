@@ -23,8 +23,6 @@ const transformOpenAIStream = (
   stack: StreamStack,
 ): StreamProtocolChunk => {
   // maybe need another structure to add support for multiple choices
-  // const textDecoder = new TextDecoder();
-  // const chunk: ChatCompletionChunk = _chunk instanceof Uint8Array ? JSON.parse(textDecoder.decode(_chunk)) : _chunk;
 
   const item = chunk.choices[0];
   if (!item) {
