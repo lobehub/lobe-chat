@@ -430,6 +430,7 @@ describe('TopicModel', () => {
         clientId: null,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
+        accessedAt: expect.any(Date),
       });
 
       // 断言 topic 已在数据库中创建
@@ -476,6 +477,7 @@ describe('TopicModel', () => {
         userId,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
+        accessedAt: expect.any(Date),
       });
 
       // 断言 topic 已在数据库中创建

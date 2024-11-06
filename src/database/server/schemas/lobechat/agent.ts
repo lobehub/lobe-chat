@@ -5,7 +5,7 @@ import { createInsertSchema } from 'drizzle-zod';
 import { LobeAgentChatConfig, LobeAgentTTSConfig } from '@/types/agent';
 
 import { idGenerator, randomSlug } from '../../utils/idGenerator';
-import { createdAt, updatedAt } from './_helpers';
+import { timestamps } from './_helpers';
 import { files, knowledgeBases } from './file';
 import { users } from './user';
 
@@ -41,8 +41,7 @@ export const agents = pgTable('agents', {
   systemRole: text('system_role'),
   tts: jsonb('tts').$type<LobeAgentTTSConfig>(),
 
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+  ...timestamps,
 });
 
 export const insertAgentSchema = createInsertSchema(agents);
@@ -63,8 +62,8 @@ export const agentsKnowledgeBases = pgTable(
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
     enabled: boolean('enabled').default(true),
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
+
+    ...timestamps,
   },
   (t) => ({
     pk: primaryKey({ columns: [t.agentId, t.knowledgeBaseId] }),
@@ -84,8 +83,8 @@ export const agentsFiles = pgTable(
     userId: text('user_id')
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
+
+    ...timestamps,
   },
   (t) => ({
     pk: primaryKey({ columns: [t.fileId, t.agentId, t.userId] }),
