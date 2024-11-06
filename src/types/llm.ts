@@ -123,6 +123,10 @@ export interface ModelProviderCard {
    */
   showApiKey?: boolean;
   /**
+   * whether show checker in the provider config
+   */
+  showChecker?: boolean;
+  /**
    * whether to smoothing the output
    */
   smoothing?: SmoothingParams;
