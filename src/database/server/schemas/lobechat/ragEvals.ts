@@ -4,7 +4,7 @@ import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
 import { EvalEvaluationStatus } from '@/types/eval';
 
-import { createdAt, updatedAt } from './_helpers';
+import { timestamps } from './_helpers';
 import { knowledgeBases } from './file';
 import { embeddings } from './rag';
 import { users } from './user';
@@ -20,8 +20,7 @@ export const evalDatasets = pgTable('rag_eval_datasets', {
   }),
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
 
-  updatedAt: updatedAt(),
-  createdAt: createdAt(),
+  ...timestamps,
 });
 
 export type NewEvalDatasetsItem = typeof evalDatasets.$inferInsert;
@@ -39,7 +38,7 @@ export const evalDatasetRecords = pgTable('rag_eval_dataset_records', {
   metadata: jsonb('metadata'),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: createdAt(),
+  ...timestamps,
 });
 
 export type NewEvalDatasetRecordsItem = typeof evalDatasetRecords.$inferInsert;
@@ -64,8 +63,7 @@ export const evalEvaluation = pgTable('rag_eval_evaluations', {
   embeddingModel: text('embedding_model').$defaultFn(() => DEFAULT_EMBEDDING_MODEL),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+  ...timestamps,
 });
 
 export type NewEvalEvaluationItem = typeof evalEvaluation.$inferInsert;
@@ -98,7 +96,7 @@ export const evaluationRecords = pgTable('rag_eval_evaluation_records', {
     .notNull(),
 
   userId: text('user_id').references(() => users.id, { onDelete: 'cascade' }),
-  createdAt: createdAt(),
+  ...timestamps,
 });
 
 export type NewEvaluationRecordsItem = typeof evaluationRecords.$inferInsert;

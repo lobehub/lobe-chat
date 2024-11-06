@@ -5,7 +5,7 @@ import { boolean, jsonb, pgTable, primaryKey, text } from 'drizzle-orm/pg-core';
 import { DEFAULT_PREFERENCE } from '@/const/user';
 import { CustomPluginParams } from '@/types/tool/plugin';
 
-import { createdAt, timestamptz, updatedAt } from './_helpers';
+import { timestamps, timestamptz } from './_helpers';
 
 export const users = pgTable('users', {
   id: text('id').primaryKey().notNull(),
@@ -27,8 +27,7 @@ export const users = pgTable('users', {
 
   preference: jsonb('preference').$defaultFn(() => DEFAULT_PREFERENCE),
 
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+  ...timestamps,
 });
 
 export type NewUser = typeof users.$inferInsert;
@@ -61,8 +60,7 @@ export const installedPlugins = pgTable(
     settings: jsonb('settings'),
     customParams: jsonb('custom_params').$type<CustomPluginParams>(),
 
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
+    ...timestamps,
   },
   (self) => ({
     id: primaryKey({ columns: [self.userId, self.identifier] }),
