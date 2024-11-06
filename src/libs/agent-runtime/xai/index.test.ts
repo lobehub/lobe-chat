@@ -23,7 +23,7 @@ vi.spyOn(console, 'error').mockImplementation(() => {});
 let instance: LobeOpenAICompatibleRuntime;
 
 beforeEach(() => {
-  instance = new LobeXAIAI({ apiKey: 'test' });
+  instance = new LobeXAI({ apiKey: 'test' });
 
   // 使用 vi.spyOn 来模拟 chat.completions.create 方法
   vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
@@ -35,11 +35,11 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-describe('LobeXAIAI', () => {
+describe('LobeXAI', () => {
   describe('init', () => {
     it('should correctly initialize with an API key', async () => {
-      const instance = new LobeXAIAI({ apiKey: 'test_api_key' });
-      expect(instance).toBeInstanceOf(LobeXAIAI);
+      const instance = new LobeXAI({ apiKey: 'test_api_key' });
+      expect(instance).toBeInstanceOf(LobeXAI);
       expect(instance.baseURL).toEqual(defaultBaseURL);
     });
   });
@@ -84,7 +84,7 @@ describe('LobeXAIAI', () => {
 
       it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
         try {
-          new LobeXAIAI({});
+          new LobeXAI({});
         } catch (e) {
           expect(e).toEqual({ errorType: invalidErrorType });
         }
@@ -130,7 +130,7 @@ describe('LobeXAIAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        instance = new LobeXAIAI({
+        instance = new LobeXAI({
           apiKey: 'test',
 
           baseURL: 'https://api.abc.com/v1',
