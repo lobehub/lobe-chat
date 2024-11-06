@@ -1,6 +1,5 @@
 export * from './agent';
 export * from './asyncTask';
-export * from './discover';
 export * from './file';
 export * from './message';
 export * from './nextauth';

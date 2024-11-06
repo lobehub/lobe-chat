@@ -70,6 +70,13 @@
       "when": 1729699958471,
       "tag": "0009_remove_unused_user_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1730900133049,
+      "tag": "0010_add_accessed_at_and_clean_tables",
+      "breakpoints": true
     }
   ],
   "version": "6"
