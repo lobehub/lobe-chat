@@ -12,7 +12,10 @@
     "retry": "Ponów próbę",
     "title": "Napotkano problem na stronie.."
   },
-  "fetchError": "Błąd żądania",
+  "fetchError": {
+    "detail": "Szczegóły błędu",
+    "title": "Żądanie nie powiodło się"
+  },
   "loginRequired": {
     "desc": "Zaraz nastąpi automatyczne przekierowanie do strony logowania",
     "title": "Proszę zalogować się, aby korzystać z tej funkcji"

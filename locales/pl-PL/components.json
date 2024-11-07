@@ -12,6 +12,7 @@
       "batchChunking": "Partycjonowanie wsadowe",
       "chunking": "Partycjonowanie",
       "chunkingTooltip": "Podziel plik na wiele bloków tekstowych i wektoryzuj, aby umożliwić wyszukiwanie semantyczne i rozmowy o plikach",
+      "chunkingUnsupported": "Ten plik nie obsługuje podziału na części.",
       "confirmDelete": "Zaraz usuniesz ten plik. Po usunięciu nie będzie można go odzyskać, proszę potwierdź swoje działanie",
       "confirmDeleteMultiFiles": "Zaraz usuniesz wybrane {{count}} plików. Po usunięciu nie będzie można ich odzyskać, proszę potwierdź swoje działanie",
       "confirmRemoveFromKnowledgeBase": "Zaraz usuniesz wybrane {{count}} plików z bazy wiedzy. Po usunięciu pliki będą nadal widoczne wśród wszystkich plików, proszę potwierdź swoje działanie",

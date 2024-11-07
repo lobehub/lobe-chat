@@ -320,6 +320,9 @@
   "claude-2.1": {
     "description": "Claude 2は、業界をリードする200Kトークンのコンテキスト、モデルの幻覚の発生率を大幅に低下させる、システムプロンプト、および新しいテスト機能：ツール呼び出しを含む、企業にとって重要な能力の進歩を提供します。"
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haikuは、Anthropicの最も高速な次世代モデルです。Claude 3 Haikuと比較して、Claude 3.5 Haikuはすべてのスキルで向上しており、多くの知能ベンチマークテストで前の世代の最大モデルであるClaude 3 Opusを超えています。"
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnetは、Opusを超える能力とSonnetよりも速い速度を提供し、Sonnetと同じ価格を維持します。Sonnetは特にプログラミング、データサイエンス、視覚処理、エージェントタスクに優れています。"
   },

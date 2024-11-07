@@ -320,6 +320,9 @@
   "claude-2.1": {
     "description": "Claude 2는 기업에 중요한 능력의 발전을 제공하며, 업계 최고의 200K 토큰 컨텍스트, 모델 환각 발생률 대폭 감소, 시스템 프롬프트 및 새로운 테스트 기능인 도구 호출을 포함합니다."
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 Haiku와 비교할 때, Claude 3.5 Haiku는 모든 기술에서 향상되었으며, 많은 지능 기준 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 Opus를 초월했습니다."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 시각 처리 및 대리 작업에 특히 강합니다."
   },

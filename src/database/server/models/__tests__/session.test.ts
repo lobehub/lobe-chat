@@ -9,7 +9,6 @@ import {
   agents,
   agentsToSessions,
   messages,
-  plugins,
   sessionGroups,
   sessions,
   topics,
@@ -30,7 +29,6 @@ const userId = 'session-user';
 const sessionModel = new SessionModel(userId);
 
 beforeEach(async () => {
-  await serverDB.delete(plugins);
   await serverDB.delete(users);
   // 并创建初始用户
   await serverDB.insert(users).values({ id: userId });
