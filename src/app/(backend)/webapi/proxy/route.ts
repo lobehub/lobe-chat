@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import fetch from 'node-fetch';
 import { RequestFilteringAgentOptions, useAgent as ssrfAgent } from 'request-filtering-agent';
 
+import { appEnv } from '@/config/app';
+
 /**
  * just for a proxy
  */
@@ -11,10 +13,10 @@ export const POST = async (req: Request) => {
   try {
     // https://www.npmjs.com/package/request-filtering-agent
     const options: RequestFilteringAgentOptions = {
-      allowIPAddressList: process.env.SSRF_ALLOW_IP_ADDRESS_LIST?.split(',') || [],
-      allowMetaIPAddress: process.env.SSRF_ALLOW_META_IP_ADDRESS?.toLowerCase() === 'true',
-      allowPrivateIPAddress: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS?.toLowerCase() === 'true',
-      denyIPAddressList: process.env.SSRF_DENY_IP_ADDRESS_LIST?.split(',') || [],
+      allowIPAddressList: appEnv.SSRF_ALLOW_IP_ADDRESS_LIST?.split(',') || [],
+      allowMetaIPAddress: appEnv.SSRF_ALLOW_PRIVATE_IP_ADDRESS,
+      allowPrivateIPAddress: appEnv.SSRF_ALLOW_PRIVATE_IP_ADDRESS,
+      denyIPAddressList: [],
     };
     const res = await fetch(url, { agent: ssrfAgent(url, options) });
 
