@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.28.4](https://github.com/lobehub/lobe-chat/compare/v1.28.3...v1.28.4)
+
+<sup>Released on **2024-11-07**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disable model fetch for GitHub.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disable model fetch for GitHub, closes [#4638](https://github.com/lobehub/lobe-chat/issues/4638) ([e1f6a3a](https://github.com/lobehub/lobe-chat/commit/e1f6a3a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.28.3](https://github.com/lobehub/lobe-chat/compare/v1.28.2...v1.28.3)
 
 <sup>Released on **2024-11-06**</sup>
