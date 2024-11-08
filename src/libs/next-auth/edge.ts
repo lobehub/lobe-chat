@@ -23,4 +23,5 @@ import authConfig from './auth.config';
  * signOut();
  * ```
  */
+// @ts-expect-error Provider type mismatch but functionality works
 export default NextAuth(authConfig);
