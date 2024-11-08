@@ -22,9 +22,10 @@ import {
   renderMessages,
   useAvatarsClick,
 } from '../../Messages';
+import History from '../../Messages/History';
 import { markdownElements } from '../MarkdownElements';
 import ActionsBar from './ActionsBar';
-import HistoryDivider from './HistoryDivider';
+import HistoryDivider from '../HistoryDivider';
 import { processWithArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
@@ -163,6 +164,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [id],
   );
 
+  if (item?.role === 'history') return <History {...item} />;
   return (
     item && (
       <>
