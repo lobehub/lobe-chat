@@ -297,7 +297,6 @@ class DataSync {
   };
 }
 
-console.trace('run dataSync');
 export const dataSync = new DataSync();
 
 interface IWebsocketClient {
