@@ -4,6 +4,7 @@ import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
+import { summaryHistory } from '@/chains/summaryHistory';
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
@@ -16,6 +17,8 @@ import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
+import { useUserStore } from '@/store/user';
+import { systemAgentSelectors } from '@/store/user/slices/settings/selectors';
 import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
@@ -91,6 +94,8 @@ export interface AIGenerateAction {
    * Controls the streaming state of tool calling processes, updating the UI accordingly
    */
   internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
+
+  internal_summaryHistory: (messages: ChatMessage[]) => Promise<void>;
 }
 
 const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
@@ -325,6 +330,46 @@ export const generateAIChat: StateCreator<
       await refreshMessages();
       await triggerToolCalls(assistantId);
     }
+
+    // 5. summary history if context messages is larger than X
+    // TODO: 需要改成 context message 限制
+    if (originalMessages.length > 6) {
+      const historyMessages = originalMessages.slice(0, -6);
+      await get().internal_summaryHistory(historyMessages);
+    }
+  },
+  internal_summaryHistory: async (messages) => {
+    const { model, provider } = getAgentConfig();
+
+    const historyCompressConfig = systemAgentSelectors.historyCompress(useUserStore.getState());
+
+    let historySummary = '';
+    await chatService.fetchPresetTaskResult({
+      onFinish: async (text) => {
+        historySummary = text;
+      },
+
+      params: {
+        ...summaryHistory(messages),
+        model: historyCompressConfig.model,
+        provider: historyCompressConfig.provider,
+        stream: false,
+      },
+    });
+
+    const historyMessage: CreateMessageParams = {
+      role: 'history',
+      content: historySummary,
+      fromModel: model,
+      fromProvider: provider,
+      parentId: messages[0].id,
+      sessionId: get().activeId,
+      topicId: get().activeTopicId,
+      createdAt: messages.at(-1)?.createdAt,
+    };
+
+    await messageService.createMessage(historyMessage);
+    await get().refreshMessages();
   },
   internal_fetchAIChatMessage: async (messages, assistantId, params) => {
     const {

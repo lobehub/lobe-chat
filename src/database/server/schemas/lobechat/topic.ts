@@ -19,7 +19,7 @@ export const topics = pgTable(
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
     clientId: text('client_id'),
-
+    historyMessageId: text('history_message_id'),
     ...timestamps,
   },
   (t) => ({

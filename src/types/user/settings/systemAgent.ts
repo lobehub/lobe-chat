@@ -11,6 +11,7 @@ export interface QueryRewriteSystemAgent extends Omit<SystemAgentItem, 'enabled'
 
 export interface UserSystemAgentConfig {
   agentMeta: SystemAgentItem;
+  historyCompress: SystemAgentItem;
   queryRewrite: QueryRewriteSystemAgent;
   topic: SystemAgentItem;
   translation: SystemAgentItem;

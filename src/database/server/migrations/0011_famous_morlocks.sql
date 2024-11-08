@@ -1,0 +1,1 @@
+ALTER TABLE "topics" ADD COLUMN "history_message_id" text;
