@@ -8,6 +8,7 @@ import {
   TraceTagMap,
 } from '@/const/trace';
 import { AgentRuntime, ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
+import { getUserSubscription } from '@/libs/api/rylai';
 import { TraceClient } from '@/libs/traces';
 
 import apiKeyManager from './apiKeyManager';
@@ -287,13 +288,28 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
  * @param params
  * @returns A promise that resolves when the agent runtime is initialized.
  */
-export const initAgentRuntimeWithUserPayload = (
+export const initAgentRuntimeWithUserPayload = async (
   provider: string,
   payload: JWTPayload,
   params: any = {},
 ) => {
-  // TODO: 根据payload.userId 从rylai获取OneAI的apiKey
-  console.log('payload', payload);
+  // user subscription
+  if (payload.userId) {
+    try {
+      // TODO: 考虑增加缓存
+      const subscription = await getUserSubscription(payload.userId);
+      console.log('subscription', subscription);
+      if (subscription.is_subscribed === 1) {
+        payload.endpoint = subscription.oneai_base_url;
+        payload.apiKey = subscription.oneai_token;
+      } else {
+        throw new Error('User is not subscribed');
+      }
+    } catch (error) {
+      console.error('Failed to get user subscription:', error);
+    }
+  }
+
   return AgentRuntime.initializeWithProviderOptions(provider, {
     [provider]: { ...getLlmOptionsFromPayload(provider, payload), ...params },
   });
