@@ -1,5 +1,5 @@
 {
-  "id": "316aac1e-94ed-4b6f-bde2-d5591a59d542",
+  "id": "1b1a0430-ca2b-467e-ab33-d7e2c122e7df",
   "prevId": "3cb81077-e3b2-4871-8a14-056dd8eceaed",
   "version": "7",
   "dialect": "postgresql",
@@ -3147,9 +3147,15 @@
           "primaryKey": false,
           "notNull": false
         },
-        "history_message_id": {
-          "name": "history_message_id",
+        "summary": {
+          "name": "summary",
           "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "metadata": {
+          "name": "metadata",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },

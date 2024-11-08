@@ -24,9 +24,16 @@ export interface GroupedTopic {
   title?: string;
 }
 
+export interface ChatTopicMetadata {
+  model?: string;
+  provider?: string;
+}
+
 export interface ChatTopic extends Omit<BaseDataModel, 'meta'> {
   favorite?: boolean;
+  metadata?: ChatTopicMetadata | null;
   sessionId?: string;
+  summary?: string;
   title: string;
 }
 

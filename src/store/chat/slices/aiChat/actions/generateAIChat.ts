@@ -12,7 +12,6 @@ import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -24,6 +23,7 @@ import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
+import { getAgentChatConfig, getAgentConfig, getAgentKnowledge } from './helpers';
 
 const n = setNamespace('ai');
 
@@ -94,13 +94,7 @@ export interface AIGenerateAction {
    * Controls the streaming state of tool calling processes, updating the UI accordingly
    */
   internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
-
-  internal_summaryHistory: (messages: ChatMessage[]) => Promise<void>;
 }
-
-const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
-const getAgentChatConfig = () => agentSelectors.currentAgentChatConfig(useAgentStore.getState());
-const getAgentKnowledge = () => agentSelectors.currentEnabledKnowledge(useAgentStore.getState());
 
 export const generateAIChat: StateCreator<
   ChatStore,
@@ -270,7 +264,7 @@ export const generateAIChat: StateCreator<
     // create a new array to avoid the original messages array change
     const messages = [...originalMessages];
 
-    const { model, provider } = getAgentConfig();
+    const { model, provider, chatConfig } = getAgentConfig();
 
     let fileChunks: MessageSemanticSearchChunk[] | undefined;
     let ragQueryId;
@@ -331,45 +325,14 @@ export const generateAIChat: StateCreator<
       await triggerToolCalls(assistantId);
     }
 
-    // 5. summary history if context messages is larger than X
-    // TODO: 需要改成 context message 限制
-    if (originalMessages.length > 6) {
-      const historyMessages = originalMessages.slice(0, -6);
+    // 5. summary history if context messages is larger than historyCount
+    const historyCount = chatConfig.historyCount || 6;
+
+    if (chatConfig.enableHistoryCount && originalMessages.length > historyCount) {
+      const historyMessages = originalMessages.slice(0, -historyCount);
+
       await get().internal_summaryHistory(historyMessages);
     }
-  },
-  internal_summaryHistory: async (messages) => {
-    const { model, provider } = getAgentConfig();
-
-    const historyCompressConfig = systemAgentSelectors.historyCompress(useUserStore.getState());
-
-    let historySummary = '';
-    await chatService.fetchPresetTaskResult({
-      onFinish: async (text) => {
-        historySummary = text;
-      },
-
-      params: {
-        ...summaryHistory(messages),
-        model: historyCompressConfig.model,
-        provider: historyCompressConfig.provider,
-        stream: false,
-      },
-    });
-
-    const historyMessage: CreateMessageParams = {
-      role: 'history',
-      content: historySummary,
-      fromModel: model,
-      fromProvider: provider,
-      parentId: messages[0].id,
-      sessionId: get().activeId,
-      topicId: get().activeTopicId,
-      createdAt: messages.at(-1)?.createdAt,
-    };
-
-    await messageService.createMessage(historyMessage);
-    await get().refreshMessages();
   },
   internal_fetchAIChatMessage: async (messages, assistantId, params) => {
     const {
