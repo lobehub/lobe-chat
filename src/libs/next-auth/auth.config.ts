@@ -40,7 +40,6 @@ export default {
       return session;
     },
   },
-  // @ts-expect-error Provider type mismatch but functionality works
   providers: initSSOProviders(),
   redirectProxyUrl: process.env.APP_URL ? urlJoin(process.env.APP_URL, '/api/auth') : undefined,
   secret: authEnv.NEXT_AUTH_SECRET,

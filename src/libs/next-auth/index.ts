@@ -24,7 +24,6 @@ const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
  * The difference and usage of the two different NextAuth modules is can be
  * ref to: https://github.com/lobehub/lobe-chat/pull/2935
  */
-// @ts-expect-error Provider type mismatch but functionality works
 export default NextAuth({
   ...config,
   adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter(serverDB) : undefined,
