@@ -10,7 +10,7 @@ import { DiscoverService } from '@/server/services/discover';
 import { DocService } from '@/server/services/doc';
 import { translation } from '@/server/translation';
 import { DiscoverModelItem } from '@/types/discover';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import DetailLayout from '../../features/DetailLayout';
 import Actions from './features/Actions';

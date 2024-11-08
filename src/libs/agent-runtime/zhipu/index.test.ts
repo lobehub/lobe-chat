@@ -2,7 +2,7 @@
 import { OpenAI } from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, LobeOpenAI } from '@/libs/agent-runtime';
+import { ChatStreamCallbacks, LobeOpenAI, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
 
 import * as authTokenModule from './authToken';
@@ -24,28 +24,11 @@ describe('LobeZhipuAI', () => {
     vi.restoreAllMocks();
   });
 
-  describe('fromAPIKey', () => {
-    it('should correctly initialize with an API key', async () => {
-      const lobeZhipuAI = await LobeZhipuAI.fromAPIKey({ apiKey: 'test_api_key' });
-      expect(lobeZhipuAI).toBeInstanceOf(LobeZhipuAI);
-      expect(lobeZhipuAI.baseURL).toEqual('https://open.bigmodel.cn/api/paas/v4');
-    });
-
-    it('should throw an error if API key is invalid', async () => {
-      vi.spyOn(authTokenModule, 'generateApiToken').mockRejectedValue(new Error('Invalid API Key'));
-      try {
-        await LobeZhipuAI.fromAPIKey({ apiKey: 'asd' });
-      } catch (e) {
-        expect(e).toEqual({ errorType: invalidErrorType });
-      }
-    });
-  });
-
   describe('chat', () => {
-    let instance: LobeZhipuAI;
+    let instance: LobeOpenAICompatibleRuntime;
 
     beforeEach(async () => {
-      instance = await LobeZhipuAI.fromAPIKey({
+      instance = new LobeZhipuAI({
         apiKey: 'test_api_key',
       });
 
@@ -124,6 +107,26 @@ describe('LobeZhipuAI', () => {
           { content: [{ type: 'text', text: 'Hello again' }], role: 'user' },
         ],
         model: 'glm-4',
+        temperature: 1.6,
+        top_p: 1,
+      });
+
+      const calledWithParams = spyOn.mock.calls[0][0];
+
+      expect(calledWithParams.messages[1].content).toEqual([{ type: 'text', text: 'Hello again' }]);
+      expect(calledWithParams.temperature).toBe(0.8); // temperature should be divided by two
+      expect(calledWithParams.top_p).toEqual(1);
+    });
+
+    it('should pass arameters correctly', async () => {
+      const spyOn = vi.spyOn(instance['client'].chat.completions, 'create');
+
+      await instance.chat({
+        messages: [
+          { content: 'Hello', role: 'user' },
+          { content: [{ type: 'text', text: 'Hello again' }], role: 'user' },
+        ],
+        model: 'glm-4-alltools',
         temperature: 0,
         top_p: 1,
       });
@@ -131,9 +134,8 @@ describe('LobeZhipuAI', () => {
       const calledWithParams = spyOn.mock.calls[0][0];
 
       expect(calledWithParams.messages[1].content).toEqual([{ type: 'text', text: 'Hello again' }]);
-      expect(calledWithParams.temperature).toBeUndefined(); // temperature 0 should be undefined
-      expect((calledWithParams as any).do_sample).toBeTruthy(); // temperature 0 should be undefined
-      expect(calledWithParams.top_p).toEqual(0.99); // top_p should be transformed correctly
+      expect(calledWithParams.temperature).toBe(0.01);
+      expect(calledWithParams.top_p).toEqual(0.99);
     });
 
     describe('Error', () => {
@@ -175,7 +177,7 @@ describe('LobeZhipuAI', () => {
 
       it('should throw AgentRuntimeError with NoOpenAIAPIKey if no apiKey is provided', async () => {
         try {
-          await LobeZhipuAI.fromAPIKey({ apiKey: '' });
+          new LobeZhipuAI({ apiKey: '' });
         } catch (e) {
           expect(e).toEqual({ errorType: invalidErrorType });
         }
@@ -221,7 +223,7 @@ describe('LobeZhipuAI', () => {
         };
         const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
 
-        instance = await LobeZhipuAI.fromAPIKey({
+        instance = new LobeZhipuAI({
           apiKey: 'test',
 
           baseURL: 'https://abc.com/v2',

@@ -1,6 +1,6 @@
 ---
-title: 在 LobeChat 中使用 SiliconCloud API Key
-description: 学习如何在 LobeChat 中配置和使用 SiliconCloud 提供的大语言模型，获取 API 密钥并开始对话。
+title: 在 LobeChat 中使用 SiliconCloud
+description: 学习如何在 LobeChat 中配置和使用 SiliconCloud 的API Key，以便开始对话和交互。
 tags:
   - LobeChat
   - SiliconCloud
@@ -8,33 +8,51 @@ tags:
   - Web UI
 ---
 
-# 在 LobeChat 中使用 SiliconCloud
+# 在 LobeChat 中使用 SiliconCloud 
 
-[SiliconCloud](https://siliconflow.cn/zh-cn/siliconcloud) 是高性价比的大模型服务提供商，提供文本生成与图片生成等多种服务。
+<Image
+  cover
+  src={
+    'https://github.com/user-attachments/assets/9a78bbb9-7c96-4f32-9b66-e57f92660410'
+  }
+/>
 
-本文档将指导你如何在 LobeChat 中使用 SiliconCloud:
+[SiliconCloud](https://siliconflow.cn/) 是一个基于开源基础模型的人工智能服务平台，提供多种生成式AI（GenAI）服务。
+
+本文将指导你如何在 LobeChat 中使用 SiliconCloud。
 
 <Steps>
+### 步骤一：获得 SiliconCloud 的 API Key
 
-### 步骤一：获取 SiliconCloud API 密钥
+- 注册并登录 [SiliconCloud](https://cloud.siliconflow.cn/account/ak)
+- 点击左侧 `API 密钥` 菜单
+- 创建一个 API 密钥并复制
 
-- 首先，你需要注册并登录 [SiliconCloud](https://cloud.siliconflow.cn/auth/login) 
+<Image
+  alt={'创建API密钥'}
+  inStep
+  src={'https://github.com/user-attachments/assets/872756dc-305e-4e63-9fb7-60550280fc12'}
+/>
 
-<Callout type={'info'}>当前新用户注册可获赠 14 元免费额度</Callout>
+### 步骤二：在 LobeChat 中配置 SiliconCloud 
 
-- 进入 `API密钥` 菜单，并点击 `创建新API密钥`
+- 访问 LobeChat 的`设置`界面
+- 在`语言模型`下找到 `SiliconFlow` 的设置项
 
-- 点击复制 API 密钥并妥善保存
+<Image
+  alt={'填入 API 密钥'}
+  inStep
+  src={'https://github.com/user-attachments/assets/4c792f62-5203-4f13-8f23-df228f70d67f'}
+/>
 
-### 步骤二：在 LobeChat 中配置 SiliconCloud
+- 填入获得的 API 密钥
+- 为你的 AI 助手选择一个 SiliconCloud 的模型即可开始对话
 
-- 访问 LobeChat 的 `应用设置` 界面
-
-- 在 `语言模型` 下找到 `SiliconCloud` 的设置项
-
-- 打开 SiliconCloud 并填入获取的 API 密钥
-
-- 为你的助手选择一个 SiliconCloud 模型即可开始对话
+<Image
+  alt={'选择 SiliconCloud 模型并开始对话'}
+  inStep
+  src={'https://github.com/user-attachments/assets/f4dbbadb-7461-4370-a836-09c487fdd206'}
+/>
 
 <Callout type={'warning'}>
   在使用过程中你可能需要向 API 服务提供商付费，请参考 SiliconCloud 的相关费用政策。

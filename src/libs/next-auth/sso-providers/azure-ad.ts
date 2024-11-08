@@ -2,6 +2,7 @@ import AzureAD from 'next-auth/providers/azure-ad';
 
 import { authEnv } from '@/config/auth';
 
+import { getMicrosoftEntraIdIssuer } from './microsoft-entra-id-helper';
 import { CommonProviderConfig } from './sso.config';
 
 const provider = {
@@ -14,7 +15,7 @@ const provider = {
     // TODO(NextAuth ENVs Migration): Remove once nextauth envs migration time end
     clientId: authEnv.AZURE_AD_CLIENT_ID ?? process.env.AUTH_AZURE_AD_ID,
     clientSecret: authEnv.AZURE_AD_CLIENT_SECRET ?? process.env.AUTH_AZURE_AD_SECRET,
-    tenantId: authEnv.AZURE_AD_TENANT_ID ?? process.env.AUTH_AZURE_AD_TENANT_ID,
+    issuer: getMicrosoftEntraIdIssuer(),
     // Remove end
     // TODO(NextAuth): map unique user id to `providerAccountId` field
     // profile(profile) {

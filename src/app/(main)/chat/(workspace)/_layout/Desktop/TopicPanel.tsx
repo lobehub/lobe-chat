@@ -5,7 +5,6 @@ import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
-import SafeSpacing from '@/components/SafeSpacing';
 import { CHAT_SIDEBAR_WIDTH } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors } from '@/store/chat/slices/portal/selectors';
@@ -30,16 +29,16 @@ const useStyles = createStyles(({ css, token }) => ({
 const TopicPanel = memo(({ children }: PropsWithChildren) => {
   const { styles } = useStyles();
   const { md = true, lg = true } = useResponsive();
-  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
+  const [showTopic, toggleConfig] = useGlobalStore((s) => [
     systemStatusSelectors.showChatSideBar(s),
     s.toggleChatSideBar,
   ]);
   const showPortal = useChatStore(chatPortalSelectors.showPortal);
 
-  const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showAgentSettings));
+  const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(showTopic));
 
   const handleExpand = (expand: boolean) => {
-    if (isEqual(expand, Boolean(showAgentSettings))) return;
+    if (isEqual(expand, Boolean(showTopic))) return;
     toggleConfig(expand);
     setCacheExpand(expand);
   };
@@ -56,7 +55,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
         classNames={{
           content: styles.content,
         }}
-        expand={showAgentSettings}
+        expand={showTopic}
         minWidth={CHAT_SIDEBAR_WIDTH}
         mode={md ? 'fixed' : 'float'}
         onExpandChange={handleExpand}
@@ -71,7 +70,6 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
             minWidth: CHAT_SIDEBAR_WIDTH,
           }}
         >
-          <SafeSpacing />
           {children}
         </DraggablePanelContainer>
       </DraggablePanel>

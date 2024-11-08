@@ -6,7 +6,7 @@ export const LobeGroq = LobeOpenAICompatibleFactory({
   baseURL: 'https://api.groq.com/openai/v1',
   chatCompletion: {
     handleError: (error) => {
-      // 403 means the location is not supporteds
+      // 403 means the location is not supported
       if (error.status === 403)
         return { error, errorType: AgentRuntimeErrorType.LocationNotSupportError };
     },

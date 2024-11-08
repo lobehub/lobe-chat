@@ -50,9 +50,6 @@ export class Manifest {
       icons: icons.map((item) => this._getIcon(item)),
       id: id,
       immutable: 'true',
-      launch_handler: {
-        client_mode: ['navigate-existing', 'auto'],
-      },
       max_age: MAX_AGE,
       name: name,
       orientation: 'portrait',

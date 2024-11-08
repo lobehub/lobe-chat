@@ -60,13 +60,13 @@ const Qwen: ModelProviderCard = {
         '通义千问大规模视觉语言模型增强版。大幅提升细节识别能力和文字识别能力，支持超百万像素分辨率和任意长宽比规格的图像。',
       displayName: 'Qwen VL Plus',
       enabled: true,
-      id: 'qwen-vl-plus',
+      id: 'qwen-vl-plus-latest',
       pricing: {
         currency: 'CNY',
         input: 8,
         output: 8,
       },
-      tokens: 8000,
+      tokens: 32_000,
       vision: true,
     },
     {
@@ -74,7 +74,7 @@ const Qwen: ModelProviderCard = {
         '通义千问超大规模视觉语言模型。相比增强版，再次提升视觉推理能力和指令遵循能力，提供更高的视觉感知和认知水平。',
       displayName: 'Qwen VL Max',
       enabled: true,
-      id: 'qwen-vl-max',
+      id: 'qwen-vl-max-latest',
       pricing: {
         currency: 'CNY',
         input: 20,

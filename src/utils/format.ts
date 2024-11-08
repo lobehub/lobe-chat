@@ -1,10 +1,13 @@
+import dayjs from 'dayjs';
 import { isNumber } from 'lodash-es';
 import numeral from 'numeral';
 
 import { CNY_TO_USD } from '@/const/discover';
 import { ModelPriceCurrency } from '@/types/llm';
 
-export const formatSize = (bytes: number, fractionDigits = 1): string => {
+export const formatSize = (bytes: number, fractionDigits: number = 1): string => {
+  if (!bytes && bytes !== 0) return '--';
+
   const kbSize = bytes / 1024;
   if (kbSize < 1024) {
     return `${kbSize.toFixed(fractionDigits)} KB`;
@@ -21,6 +24,8 @@ export const formatSize = (bytes: number, fractionDigits = 1): string => {
  * format speed from Byte number to string like KB/s, MB/s or GB/s
  */
 export const formatSpeed = (byte: number, fractionDigits = 2) => {
+  if (!byte && byte !== 0) return '--';
+
   let word = '';
 
   // Byte
@@ -44,6 +49,9 @@ export const formatSpeed = (byte: number, fractionDigits = 2) => {
 };
 
 export const formatTime = (timeInSeconds: number): string => {
+  if (!timeInSeconds && timeInSeconds !== 0) return '--';
+  if (!isNumber(timeInSeconds)) return timeInSeconds;
+
   if (timeInSeconds < 60) {
     return `${timeInSeconds.toFixed(1)} s`;
   } else if (timeInSeconds < 3600) {
@@ -54,7 +62,9 @@ export const formatTime = (timeInSeconds: number): string => {
 };
 
 export const formatShortenNumber = (num: any) => {
+  if (!num && num !== 0) return '--';
   if (!isNumber(num)) return num;
+
   // 使用Intl.NumberFormat来添加千分号
   const formattedWithComma = new Intl.NumberFormat('en-US').format(num);
 
@@ -70,16 +80,23 @@ export const formatShortenNumber = (num: any) => {
   }
 };
 
-/**
- * format number with comma
- * @param num
- */
-export const formatNumber = (num: any) => {
-  if (!num) return;
-  return new Intl.NumberFormat('en-US').format(num);
+export const formatNumber = (num: any, fractionDigits?: number) => {
+  if (!num && num !== 0) return '--';
+
+  if (!fractionDigits) return new Intl.NumberFormat('en-US').format(num);
+  const [a, b] = num.toFixed(fractionDigits).split('.');
+  return `${numeral(a).format('0,0')}.${b}`;
+};
+
+export const formatIntergerNumber = (num: any) => {
+  if (!num && num !== 0) return '--';
+
+  return numeral(num).format('0,0');
 };
 
 export const formatTokenNumber = (num: number): string => {
+  if (!num && num !== 0) return '--';
+
   if (num > 0 && num < 1024) return '1K';
 
   let kiloToken = Math.floor(num / 1024);
@@ -90,8 +107,10 @@ export const formatTokenNumber = (num: number): string => {
   return kiloToken < 1000 ? `${kiloToken}K` : `${Math.floor(kiloToken / 1000)}M`;
 };
 
-export const formatPrice = (price: number) => {
-  const [a, b] = price.toFixed(2).split('.');
+export const formatPrice = (price: number, fractionDigits: number = 2) => {
+  if (!price && price !== 0) return '--';
+
+  const [a, b] = price.toFixed(fractionDigits).split('.');
   return `${numeral(a).format('0,0')}.${b}`;
 };
 
@@ -100,4 +119,10 @@ export const formatPriceByCurrency = (price: number, currency?: ModelPriceCurren
     return formatPrice(price / CNY_TO_USD);
   }
   return formatPrice(price);
+};
+
+export const formatDate = (date?: Date) => {
+  if (!date) return '--';
+
+  return dayjs(date).format('YYYY-MM-DD');
 };

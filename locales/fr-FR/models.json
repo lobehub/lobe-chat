@@ -32,11 +32,41 @@
   "Baichuan4": {
     "description": "Le modèle est le meilleur en Chine, surpassant les modèles étrangers dans des tâches en chinois telles que l'encyclopédie, les longs textes et la création. Il possède également des capacités multimodales de pointe, avec d'excellentes performances dans plusieurs évaluations de référence."
   },
+  "ERNIE-3.5-128K": {
+    "description": "Modèle de langage à grande échelle de pointe développé par Baidu, couvrant une vaste quantité de corpus en chinois et en anglais, avec de puissantes capacités générales, capable de répondre à la plupart des exigences en matière de dialogue, de questions-réponses, de création de contenu et d'applications de plugins ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ERNIE-3.5-8K": {
+    "description": "Modèle de langage à grande échelle de pointe développé par Baidu, couvrant une vaste quantité de corpus en chinois et en anglais, avec de puissantes capacités générales, capable de répondre à la plupart des exigences en matière de dialogue, de questions-réponses, de création de contenu et d'applications de plugins ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ERNIE-3.5-8K-Preview": {
+    "description": "Modèle de langage à grande échelle de pointe développé par Baidu, couvrant une vaste quantité de corpus en chinois et en anglais, avec de puissantes capacités générales, capable de répondre à la plupart des exigences en matière de dialogue, de questions-réponses, de création de contenu et d'applications de plugins ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant la pertinence des informations de réponse."
+  },
+  "ERNIE-4.0-8K-Latest": {
+    "description": "Modèle de langage ultra-large de premier plan développé par Baidu, ayant réalisé une mise à niveau complète des capacités par rapport à ERNIE 3.5, largement applicable à des scénarios de tâches complexes dans divers domaines ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant l'actualité des informations de réponse."
+  },
+  "ERNIE-4.0-8K-Preview": {
+    "description": "Modèle de langage ultra-large de premier plan développé par Baidu, ayant réalisé une mise à niveau complète des capacités par rapport à ERNIE 3.5, largement applicable à des scénarios de tâches complexes dans divers domaines ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant l'actualité des informations de réponse."
+  },
+  "ERNIE-4.0-Turbo-8K-Latest": {
+    "description": "Modèle linguistique ultramoderne et de grande taille auto-développé par Baidu, avec d'excellentes performances générales, largement applicable à divers scénarios de tâches complexes ; prend en charge la connexion automatique aux plugins de recherche Baidu pour assurer la pertinence des informations de réponse. Par rapport à ERNIE 4.0, il affiche de meilleures performances."
+  },
+  "ERNIE-4.0-Turbo-8K-Preview": {
+    "description": "Modèle de langage ultra-large de premier plan développé par Baidu, offrant d'excellentes performances globales, largement applicable à des scénarios de tâches complexes dans divers domaines ; prend en charge l'intégration automatique avec le plugin de recherche Baidu, garantissant l'actualité des informations de réponse. Par rapport à ERNIE 4.0, il offre de meilleures performances."
+  },
+  "ERNIE-Character-8K": {
+    "description": "Modèle de langage pour scénarios verticaux développé par Baidu, adapté aux applications telles que les NPC de jeux, les dialogues de service client, et les jeux de rôle, avec des styles de personnages plus distincts et cohérents, une meilleure capacité à suivre les instructions et des performances d'inférence supérieures."
+  },
+  "ERNIE-Lite-Pro-128K": {
+    "description": "Modèle de langage léger développé par Baidu, alliant d'excellentes performances du modèle et efficacité d'inférence, offrant de meilleures performances que ERNIE Lite, adapté à l'inférence sur des cartes d'accélération AI à faible puissance de calcul."
+  },
+  "ERNIE-Speed-128K": {
+    "description": "Modèle de langage haute performance développé par Baidu, publié en 2024, avec d'excellentes capacités générales, adapté comme modèle de base pour un ajustement fin, permettant de mieux traiter les problèmes de scénarios spécifiques, tout en offrant d'excellentes performances d'inférence."
+  },
+  "ERNIE-Speed-Pro-128K": {
+    "description": "Modèle de langage haute performance développé par Baidu, publié en 2024, avec d'excellentes capacités générales, offrant de meilleures performances que ERNIE Speed, adapté comme modèle de base pour un ajustement fin, permettant de mieux traiter les problèmes de scénarios spécifiques, tout en offrant d'excellentes performances d'inférence."
+  },
   "Gryphe/MythoMax-L2-13b": {
     "description": "MythoMax-L2 (13B) est un modèle innovant, adapté à des applications dans plusieurs domaines et à des tâches complexes."
-  },
-  "Max-32k": {
-    "description": "Spark Max 32K est équipé d'une grande capacité de traitement de contexte, offrant une meilleure compréhension du contexte et des capacités de raisonnement logique, prenant en charge des entrées textuelles de 32K tokens, adapté à la lecture de longs documents, aux questions-réponses sur des connaissances privées et à d'autres scénarios."
   },
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO est une fusion de modèles hautement flexible, visant à offrir une expérience créative exceptionnelle."
@@ -47,8 +77,11 @@
   "NousResearch/Nous-Hermes-2-Yi-34B": {
     "description": "Nous Hermes-2 Yi (34B) offre une sortie linguistique optimisée et des possibilités d'application diversifiées."
   },
-  "Phi-3-5-mini-instruct": {
-    "description": "Rafraîchissement du modèle Phi-3-mini."
+  "OpenGVLab/InternVL2-26B": {
+    "description": "InternVL2 a démontré des performances exceptionnelles sur diverses tâches de langage visuel, y compris la compréhension de documents et de graphiques, la compréhension de texte de scène, l'OCR, ainsi que la résolution de problèmes scientifiques et mathématiques."
+  },
+  "OpenGVLab/InternVL2-Llama3-76B": {
+    "description": "InternVL2 a démontré des performances exceptionnelles sur diverses tâches de langage visuel, y compris la compréhension de documents et de graphiques, la compréhension de texte de scène, l'OCR, ainsi que la résolution de problèmes scientifiques et mathématiques."
   },
   "Phi-3-medium-128k-instruct": {
     "description": "Même modèle Phi-3-medium, mais avec une taille de contexte plus grande pour RAG ou un prompt à quelques exemples."
@@ -68,8 +101,17 @@
   "Phi-3-small-8k-instruct": {
     "description": "Un modèle de 7 milliards de paramètres, prouvant une meilleure qualité que Phi-3-mini, avec un accent sur des données denses en raisonnement de haute qualité."
   },
-  "Pro-128k": {
-    "description": "Spark Pro-128K est configuré avec une capacité de traitement de contexte exceptionnel, capable de gérer jusqu'à 128K d'informations contextuelles, particulièrement adapté pour l'analyse complète et le traitement des relations logiques à long terme dans des contenus longs, offrant une logique fluide et cohérente ainsi qu'un support varié pour les références dans des communications textuelles complexes."
+  "Phi-3.5-mini-instruct": {
+    "description": "Version améliorée du modèle Phi-3-mini."
+  },
+  "Phi-3.5-vision-instrust": {
+    "description": "Version améliorée du modèle Phi-3-vision."
+  },
+  "Pro/OpenGVLab/InternVL2-8B": {
+    "description": "InternVL2 a démontré des performances exceptionnelles sur diverses tâches de langage visuel, y compris la compréhension de documents et de graphiques, la compréhension de texte de scène, l'OCR, ainsi que la résolution de problèmes scientifiques et mathématiques."
+  },
+  "Pro/Qwen/Qwen2-VL-7B-Instruct": {
+    "description": "Qwen2-VL est la dernière itération du modèle Qwen-VL, atteignant des performances de pointe dans les tests de référence de compréhension visuelle."
   },
   "Qwen/Qwen1.5-110B-Chat": {
     "description": "En tant que version bêta de Qwen2, Qwen1.5 utilise des données à grande échelle pour réaliser des fonctionnalités de dialogue plus précises."
@@ -80,6 +122,9 @@
   "Qwen/Qwen2-72B-Instruct": {
     "description": "Qwen2 est un modèle de langage général avancé, prenant en charge divers types d'instructions."
   },
+  "Qwen/Qwen2-VL-72B-Instruct": {
+    "description": "Qwen2-VL est la dernière itération du modèle Qwen-VL, atteignant des performances de pointe dans les tests de référence de compréhension visuelle."
+  },
   "Qwen/Qwen2.5-14B-Instruct": {
     "description": "Qwen2.5 est une toute nouvelle série de modèles de langage à grande échelle, conçue pour optimiser le traitement des tâches d'instruction."
   },
@@ -87,16 +132,49 @@
     "description": "Qwen2.5 est une toute nouvelle série de modèles de langage à grande échelle, conçue pour optimiser le traitement des tâches d'instruction."
   },
   "Qwen/Qwen2.5-72B-Instruct": {
-    "description": "Qwen2.5 est une toute nouvelle série de modèles de langage à grande échelle, avec une capacité de compréhension et de génération améliorée."
+    "description": "Un grand modèle de langage développé par l'équipe Tongyi Qianwen d'Alibaba Cloud"
+  },
+  "Qwen/Qwen2.5-72B-Instruct-128K": {
+    "description": "Qwen2.5 est une toute nouvelle série de modèles de langage de grande taille avec des capacités de compréhension et de génération améliorées."
+  },
+  "Qwen/Qwen2.5-72B-Instruct-Turbo": {
+    "description": "Qwen2.5 est une toute nouvelle série de modèles de langage de grande taille, conçue pour optimiser le traitement des tâches d'instruction."
   },
   "Qwen/Qwen2.5-7B-Instruct": {
     "description": "Qwen2.5 est une toute nouvelle série de modèles de langage à grande échelle, conçue pour optimiser le traitement des tâches d'instruction."
+  },
+  "Qwen/Qwen2.5-7B-Instruct-Turbo": {
+    "description": "Qwen2.5 est une toute nouvelle série de modèles de langage de grande taille, conçue pour optimiser le traitement des tâches d'instruction."
   },
   "Qwen/Qwen2.5-Coder-7B-Instruct": {
     "description": "Qwen2.5-Coder se concentre sur la rédaction de code."
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math se concentre sur la résolution de problèmes dans le domaine des mathématiques, fournissant des réponses professionnelles pour des questions de haute difficulté."
+  },
+  "SenseChat": {
+    "description": "Modèle de version de base (V4), longueur de contexte de 4K, avec de puissantes capacités générales."
+  },
+  "SenseChat-128K": {
+    "description": "Modèle de version de base (V4), longueur de contexte de 128K, excellent dans les tâches de compréhension et de génération de longs textes."
+  },
+  "SenseChat-32K": {
+    "description": "Modèle de version de base (V4), longueur de contexte de 32K, appliqué de manière flexible à divers scénarios."
+  },
+  "SenseChat-5": {
+    "description": "Modèle de dernière version (V5.5), longueur de contexte de 128K, avec des capacités significativement améliorées dans le raisonnement mathématique, les dialogues en anglais, le suivi d'instructions et la compréhension de longs textes, rivalisant avec GPT-4o."
+  },
+  "SenseChat-5-Cantonese": {
+    "description": "Longueur de contexte de 32K, surpassant GPT-4 dans la compréhension des dialogues en cantonais, rivalisant avec GPT-4 Turbo dans plusieurs domaines tels que les connaissances, le raisonnement, les mathématiques et la rédaction de code."
+  },
+  "SenseChat-Character": {
+    "description": "Modèle standard, longueur de contexte de 8K, avec une grande rapidité de réponse."
+  },
+  "SenseChat-Character-Pro": {
+    "description": "Modèle avancé, longueur de contexte de 32K, avec des capacités globalement améliorées, prenant en charge les dialogues en chinois et en anglais."
+  },
+  "SenseChat-Turbo": {
+    "description": "Conçu pour des questions-réponses rapides et des scénarios de micro-ajustement du modèle."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B est une version open source, offrant une expérience de dialogue optimisée pour les applications de conversation."
@@ -125,9 +203,6 @@
   "accounts/fireworks/models/firellava-13b": {
     "description": "fireworks-ai/FireLLaVA-13b est un modèle de langage visuel capable de recevoir simultanément des entrées d'images et de texte, entraîné sur des données de haute qualité, adapté aux tâches multimodales."
   },
-  "accounts/fireworks/models/gemma2-9b-it": {
-    "description": "Le modèle d'instructions Gemma 2 9B, basé sur la technologie antérieure de Google, est adapté à diverses tâches de génération de texte telles que la réponse aux questions, le résumé et le raisonnement."
-  },
   "accounts/fireworks/models/llama-v3-70b-instruct": {
     "description": "Le modèle d'instructions Llama 3 70B est optimisé pour les dialogues multilingues et la compréhension du langage naturel, surpassant la plupart des modèles concurrents."
   },
@@ -149,6 +224,18 @@
   "accounts/fireworks/models/llama-v3p1-8b-instruct": {
     "description": "Le modèle d'instructions Llama 3.1 8B est optimisé pour les dialogues multilingues, capable de surpasser la plupart des modèles open source et fermés sur des benchmarks industriels courants."
   },
+  "accounts/fireworks/models/llama-v3p2-11b-vision-instruct": {
+    "description": "Modèle d'inférence d'image ajusté par instructions de Meta avec 11B paramètres. Ce modèle est optimisé pour la reconnaissance visuelle, l'inférence d'image, la description d'image et pour répondre à des questions générales sur l'image. Il est capable de comprendre des données visuelles, comme des graphiques et des diagrammes, et de combler le fossé entre la vision et le langage en générant des descriptions textuelles des détails de l'image."
+  },
+  "accounts/fireworks/models/llama-v3p2-1b-instruct": {
+    "description": "Le modèle d'instructions Llama 3.2 1B est un modèle multilingue léger lancé par Meta. Ce modèle vise à améliorer l'efficacité, offrant des améliorations significatives en matière de latence et de coût par rapport aux modèles plus grands. Les cas d'utilisation incluent la recherche et le résumé."
+  },
+  "accounts/fireworks/models/llama-v3p2-3b-instruct": {
+    "description": "Le modèle d'instructions Llama 3.2 3B est un modèle multilingue léger lancé par Meta. Ce modèle vise à améliorer l'efficacité, offrant des améliorations significatives en matière de latence et de coût par rapport aux modèles plus grands. Les cas d'utilisation incluent les requêtes, la réécriture de prompts et l'assistance à l'écriture."
+  },
+  "accounts/fireworks/models/llama-v3p2-90b-vision-instruct": {
+    "description": "Modèle d'inférence d'image ajusté par instructions de Meta avec 90B paramètres. Ce modèle est optimisé pour la reconnaissance visuelle, l'inférence d'image, la description d'image et pour répondre à des questions générales sur l'image. Il est capable de comprendre des données visuelles, comme des graphiques et des diagrammes, et de combler le fossé entre la vision et le langage en générant des descriptions textuelles des détails de l'image."
+  },
   "accounts/fireworks/models/mixtral-8x22b-instruct": {
     "description": "Le modèle d'instructions Mixtral MoE 8x22B, avec des paramètres à grande échelle et une architecture multi-experts, prend en charge efficacement le traitement de tâches complexes."
   },
@@ -163,6 +250,9 @@
   },
   "accounts/fireworks/models/phi-3-vision-128k-instruct": {
     "description": "Le modèle d'instructions Phi 3 Vision est un modèle multimodal léger, capable de traiter des informations visuelles et textuelles complexes, avec une forte capacité de raisonnement."
+  },
+  "accounts/fireworks/models/qwen2p5-72b-instruct": {
+    "description": "Qwen2.5 est une série de modèles de langage à décodage uniquement développée par l'équipe Qwen d'Alibaba Cloud. Ces modèles sont offerts en différentes tailles, y compris 0.5B, 1.5B, 3B, 7B, 14B, 32B et 72B, avec des variantes de base (base) et d'instruction (instruct)."
   },
   "accounts/fireworks/models/starcoder-16b": {
     "description": "Le modèle StarCoder 15.5B prend en charge des tâches de programmation avancées, avec des capacités multilingues améliorées, adapté à la génération et à la compréhension de code complexes."
@@ -179,11 +269,11 @@
   "ai21-jamba-1.5-mini": {
     "description": "Un modèle multilingue de 52 milliards de paramètres (12 milliards actifs), offrant une fenêtre de contexte longue de 256K, des appels de fonction, une sortie structurée et une génération ancrée."
   },
-  "ai21-jamba-instruct": {
-    "description": "Un modèle LLM basé sur Mamba de qualité production pour atteindre des performances, une qualité et une efficacité de coût de premier ordre."
-  },
   "anthropic.claude-3-5-sonnet-20240620-v1:0": {
     "description": "Claude 3.5 Sonnet élève les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, avec d'excellentes performances dans une large gamme d'évaluations, tout en offrant la vitesse et le coût de nos modèles de niveau intermédiaire."
+  },
+  "anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet a élevé les normes de l'industrie, surpassant les modèles concurrents et Claude 3 Opus, tout en affichant d'excellentes performances dans une large gamme d'évaluations, tout en conservant la vitesse et le coût de nos modèles de niveau intermédiaire."
   },
   "anthropic.claude-3-haiku-20240307-v1:0": {
     "description": "Claude 3 Haiku est le modèle le plus rapide et le plus compact d'Anthropic, offrant une vitesse de réponse quasi instantanée. Il peut répondre rapidement à des requêtes et demandes simples. Les clients pourront construire une expérience AI transparente imitant l'interaction humaine. Claude 3 Haiku peut traiter des images et retourner des sorties textuelles, avec une fenêtre contextuelle de 200K."
@@ -230,8 +320,14 @@
   "claude-2.1": {
     "description": "Claude 2 offre des avancées clés pour les entreprises, y compris un contexte de 200K jetons, une réduction significative du taux d'illusion du modèle, des invites système et une nouvelle fonctionnalité de test : l'appel d'outils."
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku est le modèle de prochaine génération le plus rapide d'Anthropic. Par rapport à Claude 3 Haiku, Claude 3.5 Haiku a amélioré ses compétences dans tous les domaines et a surpassé le plus grand modèle de la génération précédente, Claude 3 Opus, dans de nombreux tests de référence intellectuels."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet offre des capacités dépassant celles d'Opus et une vitesse plus rapide que Sonnet, tout en maintenant le même prix que Sonnet. Sonnet excelle particulièrement dans la programmation, la science des données, le traitement visuel et les tâches d'agent."
+  },
+  "claude-3-5-sonnet-20241022": {
+    "description": "Claude 3.5 Sonnet offre des capacités dépassant celles d'Opus et une vitesse supérieure à celle de Sonnet, tout en maintenant le même tarif que Sonnet. Sonnet excelle particulièrement dans la programmation, la science des données, le traitement visuel et les tâches d'agent."
   },
   "claude-3-haiku-20240307": {
     "description": "Claude 3 Haiku est le modèle le plus rapide et le plus compact d'Anthropic, conçu pour des réponses quasi instantanées. Il présente des performances directionnelles rapides et précises."
@@ -241,9 +337,6 @@
   },
   "claude-3-sonnet-20240229": {
     "description": "Claude 3 Sonnet offre un équilibre idéal entre intelligence et vitesse pour les charges de travail d'entreprise. Il fournit une utilité maximale à un coût inférieur, fiable et adapté à un déploiement à grande échelle."
-  },
-  "claude-instant-1.2": {
-    "description": "Le modèle d'Anthropic est conçu pour une génération de texte à faible latence et à haut débit, prenant en charge la génération de centaines de pages de texte."
   },
   "codegeex-4": {
     "description": "CodeGeeX-4 est un puissant assistant de programmation AI, prenant en charge des questions intelligentes et l'achèvement de code dans divers langages de programmation, améliorant l'efficacité du développement."
@@ -335,8 +428,8 @@
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002 est un modèle multimodal efficace, prenant en charge une large gamme d'applications."
   },
-  "gemini-1.5-flash-8b-exp-0827": {
-    "description": "Gemini 1.5 Flash 8B 0827 est conçu pour traiter des scénarios de tâches à grande échelle, offrant une vitesse de traitement inégalée."
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B est un modèle multimodal efficace, prenant en charge une large gamme d'applications."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 est le dernier modèle expérimental, offrant des améliorations significatives en termes de performance dans les cas d'utilisation textuels et multimodaux."
@@ -377,9 +470,6 @@
   "gemma2:2b": {
     "description": "Gemma 2 est un modèle efficace lancé par Google, couvrant une variété de scénarios d'application allant des petites applications au traitement de données complexes."
   },
-  "general": {
-    "description": "Spark Lite est un modèle de langage léger, offrant une latence extrêmement faible et une capacité de traitement efficace, entièrement gratuit et ouvert, supportant une fonction de recherche en temps réel. Sa rapidité de réponse le rend exceptionnel dans les applications d'inférence sur des appareils à faible puissance de calcul et dans l'ajustement des modèles, offrant aux utilisateurs un excellent rapport coût-efficacité et une expérience intelligente, en particulier dans les scénarios de questions-réponses, de génération de contenu et de recherche."
-  },
   "generalv3": {
     "description": "Spark Pro est un modèle de langage de haute performance optimisé pour des domaines professionnels, se concentrant sur les mathématiques, la programmation, la médecine, l'éducation, etc., et supportant la recherche en ligne ainsi que des plugins intégrés pour la météo, la date, etc. Son modèle optimisé affiche d'excellentes performances et une efficacité dans des tâches complexes de questions-réponses, de compréhension linguistique et de création de textes de haut niveau, en faisant un choix idéal pour des applications professionnelles."
   },
@@ -404,6 +494,9 @@
   "glm-4-flash": {
     "description": "GLM-4-Flash est le choix idéal pour traiter des tâches simples, avec la vitesse la plus rapide et le prix le plus avantageux."
   },
+  "glm-4-flashx": {
+    "description": "GLM-4-FlashX est une version améliorée de Flash, offrant une vitesse d'inférence ultra-rapide."
+  },
   "glm-4-long": {
     "description": "GLM-4-Long prend en charge des entrées de texte ultra-longues, adapté aux tâches de mémoire et au traitement de documents à grande échelle."
   },
@@ -416,14 +509,17 @@
   "glm-4v-plus": {
     "description": "GLM-4V-Plus possède la capacité de comprendre le contenu vidéo et plusieurs images, adapté aux tâches multimodales."
   },
-  "google/gemini-flash-1.5-exp": {
-    "description": "Gemini 1.5 Flash 0827 offre des capacités de traitement multimodal optimisées, adaptées à divers scénarios de tâches complexes."
+  "google/gemini-flash-1.5": {
+    "description": "Gemini 1.5 Flash propose des capacités de traitement multimodal optimisées, adaptées à divers scénarios de tâches complexes."
   },
-  "google/gemini-pro-1.5-exp": {
-    "description": "Gemini 1.5 Pro 0827 combine les dernières technologies d'optimisation pour offrir des capacités de traitement de données multimodales plus efficaces."
+  "google/gemini-pro-1.5": {
+    "description": "Gemini 1.5 Pro combine les dernières technologies d'optimisation pour offrir une capacité de traitement de données multimodales plus efficace."
   },
   "google/gemma-2-27b-it": {
     "description": "Gemma 2 poursuit le concept de conception légère et efficace."
+  },
+  "google/gemma-2-2b-it": {
+    "description": "Modèle d'optimisation des instructions léger de Google."
   },
   "google/gemma-2-9b-it": {
     "description": "Gemma 2 est une série de modèles de texte open source allégés de Google."
@@ -494,6 +590,33 @@
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B est un modèle linguistique combinant créativité et intelligence, intégrant plusieurs modèles de pointe."
   },
+  "hunyuan-code": {
+    "description": "Dernier modèle de génération de code Hunyuan, formé sur un modèle de base avec 200B de données de code de haute qualité, entraîné pendant six mois avec des données SFT de haute qualité, avec une longueur de fenêtre contextuelle augmentée à 8K, se classant parmi les meilleurs sur les indicateurs d'évaluation automatique de génération de code dans cinq langages ; en première ligne des évaluations de qualité humaine sur dix aspects de tâches de code dans cinq langages."
+  },
+  "hunyuan-functioncall": {
+    "description": "Dernier modèle FunctionCall de l'architecture MOE Hunyuan, formé sur des données FunctionCall de haute qualité, avec une fenêtre contextuelle atteignant 32K, se classant parmi les meilleurs sur plusieurs dimensions d'évaluation."
+  },
+  "hunyuan-lite": {
+    "description": "Mise à niveau vers une structure MOE, avec une fenêtre contextuelle de 256k, en tête de nombreux modèles open source dans les évaluations NLP, code, mathématiques, industrie, etc."
+  },
+  "hunyuan-pro": {
+    "description": "Modèle de long texte MOE-32K avec un milliard de paramètres. Atteint un niveau de performance absolument supérieur sur divers benchmarks, capable de traiter des instructions complexes et de raisonner, avec des capacités mathématiques avancées, prenant en charge les appels de fonction, optimisé pour des domaines tels que la traduction multilingue, le droit financier et médical."
+  },
+  "hunyuan-role": {
+    "description": "Dernier modèle de jeu de rôle Hunyuan, un modèle de jeu de rôle affiné et formé par l'équipe officielle de Hunyuan, basé sur le modèle Hunyuan et des ensembles de données de scénarios de jeu de rôle, offrant de meilleures performances de base dans les scénarios de jeu de rôle."
+  },
+  "hunyuan-standard": {
+    "description": "Utilise une stratégie de routage améliorée tout en atténuant les problèmes d'équilibrage de charge et de convergence des experts. Pour les longs textes, l'indice de recherche atteint 99,9 %. MOE-32K offre un meilleur rapport qualité-prix, équilibrant efficacité et coût tout en permettant le traitement des entrées de longs textes."
+  },
+  "hunyuan-standard-256K": {
+    "description": "Utilise une stratégie de routage améliorée tout en atténuant les problèmes d'équilibrage de charge et de convergence des experts. Pour les longs textes, l'indice de recherche atteint 99,9 %. MOE-256K franchit de nouvelles étapes en termes de longueur et d'efficacité, élargissant considérablement la longueur d'entrée possible."
+  },
+  "hunyuan-turbo": {
+    "description": "Version préliminaire du nouveau modèle de langage de génération Hunyuan, utilisant une nouvelle structure de modèle d'experts mixtes (MoE), offrant une efficacité d'inférence plus rapide et de meilleures performances par rapport à Hunyuan-Pro."
+  },
+  "hunyuan-vision": {
+    "description": "Dernier modèle multimodal Hunyuan, prenant en charge l'entrée d'images et de textes pour générer du contenu textuel."
+  },
   "internlm/internlm2_5-20b-chat": {
     "description": "Le modèle open source innovant InternLM2.5 améliore l'intelligence des dialogues grâce à un grand nombre de paramètres."
   },
@@ -502,6 +625,9 @@
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
+  "lite": {
+    "description": "Spark Lite est un modèle de langage léger, offrant une latence extrêmement faible et une capacité de traitement efficace, entièrement gratuit et ouvert, prenant en charge la recherche en temps réel. Sa capacité de réponse rapide le rend exceptionnel pour les applications d'inférence sur des appareils à faible puissance de calcul et pour le réglage des modèles, offrant aux utilisateurs un excellent rapport coût-efficacité et une expérience intelligente, en particulier dans les scénarios de questions-réponses, de génération de contenu et de recherche."
+  },
   "llama-3.1-70b-instruct": {
     "description": "Le modèle Llama 3.1 70B Instruct, avec 70B de paramètres, offre des performances exceptionnelles dans la génération de texte et les tâches d'instructions."
   },
@@ -528,6 +654,18 @@
   },
   "llama-3.1-sonar-small-128k-online": {
     "description": "Le modèle Llama 3.1 Sonar Small Online, avec 8B de paramètres, prend en charge une longueur de contexte d'environ 127 000 jetons, conçu pour le chat en ligne, capable de traiter efficacement diverses interactions textuelles."
+  },
+  "llama-3.2-11b-vision-instruct": {
+    "description": "Capacités d'inférence d'image exceptionnelles sur des images haute résolution, adaptées aux applications de compréhension visuelle."
+  },
+  "llama-3.2-11b-vision-preview": {
+    "description": "Llama 3.2 est conçu pour traiter des tâches combinant des données visuelles et textuelles. Il excelle dans des tâches telles que la description d'images et les questions-réponses visuelles, comblant le fossé entre la génération de langage et le raisonnement visuel."
+  },
+  "llama-3.2-90b-vision-instruct": {
+    "description": "Capacités d'inférence d'image avancées pour les applications d'agents de compréhension visuelle."
+  },
+  "llama-3.2-90b-vision-preview": {
+    "description": "Llama 3.2 est conçu pour traiter des tâches combinant des données visuelles et textuelles. Il excelle dans des tâches telles que la description d'images et les questions-réponses visuelles, comblant le fossé entre la génération de langage et le raisonnement visuel."
   },
   "llama3-70b-8192": {
     "description": "Meta Llama 3 70B offre une capacité de traitement de complexité inégalée, sur mesure pour des projets exigeants."
@@ -565,6 +703,9 @@
   "mathstral": {
     "description": "MathΣtral est conçu pour la recherche scientifique et le raisonnement mathématique, offrant des capacités de calcul efficaces et des interprétations de résultats."
   },
+  "max-32k": {
+    "description": "Spark Max 32K est équipé d'une grande capacité de traitement de contexte, avec une compréhension contextuelle et des capacités de raisonnement logique renforcées, prenant en charge des entrées textuelles de 32K tokens, adapté à la lecture de documents longs, aux questions-réponses privées et à d'autres scénarios."
+  },
   "meta-llama-3-70b-instruct": {
     "description": "Un puissant modèle de 70 milliards de paramètres excelling dans le raisonnement, le codage et les applications linguistiques larges."
   },
@@ -583,11 +724,26 @@
   "meta-llama/Llama-2-13b-chat-hf": {
     "description": "LLaMA-2 Chat (13B) offre d'excellentes capacités de traitement du langage et une expérience interactive exceptionnelle."
   },
+  "meta-llama/Llama-2-70b-hf": {
+    "description": "LLaMA-2 offre d'excellentes capacités de traitement du langage et une expérience d'interaction exceptionnelle."
+  },
   "meta-llama/Llama-3-70b-chat-hf": {
     "description": "LLaMA-3 Chat (70B) est un modèle de chat puissant, prenant en charge des besoins de dialogue complexes."
   },
   "meta-llama/Llama-3-8b-chat-hf": {
     "description": "LLaMA-3 Chat (8B) offre un support multilingue, couvrant un large éventail de connaissances."
+  },
+  "meta-llama/Llama-3.2-11B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2 est conçu pour traiter des tâches qui combinent des données visuelles et textuelles. Il excelle dans des tâches comme la description d'image et le questionnement visuel, comblant le fossé entre génération de langage et raisonnement visuel."
+  },
+  "meta-llama/Llama-3.2-3B-Instruct-Turbo": {
+    "description": "LLaMA 3.2 est conçu pour traiter des tâches qui combinent des données visuelles et textuelles. Il excelle dans des tâches comme la description d'image et le questionnement visuel, comblant le fossé entre génération de langage et raisonnement visuel."
+  },
+  "meta-llama/Llama-3.2-90B-Vision-Instruct-Turbo": {
+    "description": "LLaMA 3.2 est conçu pour traiter des tâches qui combinent des données visuelles et textuelles. Il excelle dans des tâches comme la description d'image et le questionnement visuel, comblant le fossé entre génération de langage et raisonnement visuel."
+  },
+  "meta-llama/Llama-Vision-Free": {
+    "description": "LLaMA 3.2 est conçu pour traiter des tâches qui combinent des données visuelles et textuelles. Il excelle dans des tâches comme la description d'image et le questionnement visuel, comblant le fossé entre génération de langage et raisonnement visuel."
   },
   "meta-llama/Meta-Llama-3-70B-Instruct-Lite": {
     "description": "Llama 3 70B Instruct Lite est adapté aux environnements nécessitant une haute performance et une faible latence."
@@ -637,6 +793,12 @@
   "meta-llama/llama-3.1-8b-instruct:free": {
     "description": "LLaMA 3.1 offre un support multilingue et est l'un des modèles génératifs les plus avancés de l'industrie."
   },
+  "meta-llama/llama-3.2-11b-vision-instruct": {
+    "description": "LLaMA 3.2 est conçu pour traiter des tâches combinant des données visuelles et textuelles. Il excelle dans des tâches telles que la description d'images et les questions-réponses visuelles, comblant le fossé entre la génération de langage et le raisonnement visuel."
+  },
+  "meta-llama/llama-3.2-90b-vision-instruct": {
+    "description": "LLaMA 3.2 est conçu pour traiter des tâches combinant des données visuelles et textuelles. Il excelle dans des tâches telles que la description d'images et les questions-réponses visuelles, comblant le fossé entre la génération de langage et le raisonnement visuel."
+  },
   "meta.llama3-1-405b-instruct-v1:0": {
     "description": "Meta Llama 3.1 405B Instruct est le modèle le plus grand et le plus puissant du modèle Llama 3.1 Instruct. C'est un modèle de génération de données de dialogue et de raisonnement hautement avancé, qui peut également servir de base pour un pré-entraînement ou un ajustement fin spécialisé dans des domaines spécifiques. Les modèles de langage multilingues (LLMs) fournis par Llama 3.1 sont un ensemble de modèles génératifs pré-entraînés et ajustés par instructions, comprenant des tailles de 8B, 70B et 405B (entrée/sortie de texte). Les modèles de texte ajustés par instructions de Llama 3.1 (8B, 70B, 405B) sont optimisés pour des cas d'utilisation de dialogue multilingue et ont surpassé de nombreux modèles de chat open source disponibles dans des benchmarks industriels courants. Llama 3.1 est conçu pour des usages commerciaux et de recherche dans plusieurs langues. Les modèles de texte ajustés par instructions conviennent aux chats de type assistant, tandis que les modèles pré-entraînés peuvent s'adapter à diverses tâches de génération de langage naturel. Le modèle Llama 3.1 prend également en charge l'amélioration d'autres modèles en utilisant sa sortie, y compris la génération de données synthétiques et le raffinement. Llama 3.1 est un modèle de langage autoregressif utilisant une architecture de transformateur optimisée. Les versions ajustées utilisent un ajustement fin supervisé (SFT) et un apprentissage par renforcement avec retour humain (RLHF) pour répondre aux préférences humaines en matière d'utilité et de sécurité."
   },
@@ -661,14 +823,17 @@
   "minicpm-v": {
     "description": "MiniCPM-V est un nouveau modèle multimodal de nouvelle génération lancé par OpenBMB, offrant d'excellentes capacités de reconnaissance OCR et de compréhension multimodale, prenant en charge une large gamme d'applications."
   },
+  "ministral-3b-latest": {
+    "description": "Ministral 3B est le modèle de pointe de Mistral sur le marché."
+  },
+  "ministral-8b-latest": {
+    "description": "Ministral 8B est un modèle à excellent rapport qualité-prix de Mistral."
+  },
   "mistral": {
     "description": "Mistral est le modèle 7B lancé par Mistral AI, adapté aux besoins variés de traitement du langage."
   },
   "mistral-large": {
     "description": "Mixtral Large est le modèle phare de Mistral, combinant des capacités de génération de code, de mathématiques et de raisonnement, prenant en charge une fenêtre de contexte de 128k."
-  },
-  "mistral-large-2407": {
-    "description": "Mistral Large (2407) est un modèle de langage avancé (LLM) avec des capacités de raisonnement, de connaissance et de codage à la pointe de la technologie."
   },
   "mistral-large-latest": {
     "description": "Mistral Large est le modèle phare, excellent pour les tâches multilingues, le raisonnement complexe et la génération de code, idéal pour des applications haut de gamme."
@@ -691,11 +856,17 @@
   "mistralai/Mistral-7B-Instruct-v0.3": {
     "description": "Mistral (7B) Instruct v0.3 offre une capacité de calcul efficace et une compréhension du langage naturel, adapté à un large éventail d'applications."
   },
+  "mistralai/Mistral-7B-v0.1": {
+    "description": "Mistral 7B est un modèle compact mais performant, excellent pour le traitement par lot et les tâches simples, comme la classification et la génération de texte, avec de bonnes capacités d'inférence."
+  },
   "mistralai/Mixtral-8x22B-Instruct-v0.1": {
     "description": "Mixtral-8x22B Instruct (141B) est un super grand modèle de langage, prenant en charge des besoins de traitement extrêmement élevés."
   },
   "mistralai/Mixtral-8x7B-Instruct-v0.1": {
     "description": "Mixtral 8x7B est un modèle de mélange d'experts pré-entraîné, utilisé pour des tâches textuelles générales."
+  },
+  "mistralai/Mixtral-8x7B-v0.1": {
+    "description": "Mixtral 8x7B est un modèle d'experts clairsemés qui utilise de multiples paramètres pour améliorer la vitesse d'inférence, adapté au traitement des tâches multilingues et de génération de code."
   },
   "mistralai/mistral-7b-instruct": {
     "description": "Mistral 7B Instruct est un modèle standard de l'industrie, alliant optimisation de la vitesse et support de longs contextes."
@@ -724,6 +895,9 @@
   "nousresearch/hermes-2-pro-llama-3-8b": {
     "description": "Hermes 2 Pro Llama 3 8B est une version améliorée de Nous Hermes 2, intégrant les derniers ensembles de données développés en interne."
   },
+  "nvidia/Llama-3.1-Nemotron-70B-Instruct": {
+    "description": "Llama 3.1 Nemotron 70B est un modèle de langage de grande taille personnalisé par NVIDIA, conçu pour améliorer le degré d'aide des réponses générées par LLM aux requêtes des utilisateurs."
+  },
   "o1-mini": {
     "description": "o1-mini est un modèle de raisonnement rapide et économique conçu pour les applications de programmation, de mathématiques et de sciences. Ce modèle dispose d'un contexte de 128K et d'une date limite de connaissance en octobre 2023."
   },
@@ -745,7 +919,7 @@
   "open-mixtral-8x7b": {
     "description": "Mixtral 8x7B est un modèle d'expert épars, utilisant plusieurs paramètres pour améliorer la vitesse de raisonnement, adapté au traitement de tâches multilingues et de génération de code."
   },
-  "openai/gpt-4o-2024-08-06": {
+  "openai/gpt-4o": {
     "description": "ChatGPT-4o est un modèle dynamique, mis à jour en temps réel pour rester à jour avec la dernière version. Il combine une compréhension et une génération de langage puissantes, adapté à des scénarios d'application à grande échelle, y compris le service client, l'éducation et le support technique."
   },
   "openai/gpt-4o-mini": {
@@ -772,6 +946,9 @@
   "pixtral-12b-2409": {
     "description": "Le modèle Pixtral montre de puissantes capacités dans des tâches telles que la compréhension des graphiques et des images, le questionnement de documents, le raisonnement multimodal et le respect des instructions, capable d'ingérer des images à résolution naturelle et à rapport d'aspect, tout en traitant un nombre quelconque d'images dans une fenêtre de contexte longue allant jusqu'à 128K tokens."
   },
+  "pro-128k": {
+    "description": "Spark Pro 128K est doté d'une capacité de traitement de contexte très étendue, capable de gérer jusqu'à 128K d'informations contextuelles, particulièrement adapté pour l'analyse complète et le traitement des relations logiques à long terme dans des contenus longs, offrant une logique fluide et cohérente ainsi qu'un soutien varié pour les références dans des communications textuelles complexes."
+  },
   "qwen-coder-turbo-latest": {
     "description": "Le modèle de code Tongyi Qwen."
   },
@@ -796,11 +973,11 @@
   "qwen-vl-chat-v1": {
     "description": "Qwen VL prend en charge des modes d'interaction flexibles, y compris la capacité de poser des questions à plusieurs images, des dialogues multi-tours, et plus encore."
   },
-  "qwen-vl-max": {
-    "description": "Qwen est un modèle de langage visuel à grande échelle. Par rapport à la version améliorée, elle améliore encore la capacité de raisonnement visuel et de suivi des instructions, offrant un niveau de perception et de cognition visuelle plus élevé."
+  "qwen-vl-max-latest": {
+    "description": "Modèle de langage visuel à très grande échelle Tongyi Qianwen. Par rapport à la version améliorée, il améliore encore les capacités de raisonnement visuel et de suivi des instructions, offrant un niveau de perception visuelle et de cognition plus élevé."
   },
-  "qwen-vl-plus": {
-    "description": "Qwen est une version améliorée du modèle de langage visuel à grande échelle. Elle améliore considérablement la capacité de reconnaissance des détails et de reconnaissance de texte, prenant en charge des images avec une résolution de plus d'un million de pixels et des spécifications de rapport d'aspect arbitraire."
+  "qwen-vl-plus-latest": {
+    "description": "Version améliorée du modèle de langage visuel à grande échelle Tongyi Qianwen. Amélioration significative des capacités de reconnaissance des détails et de reconnaissance de texte, prenant en charge des résolutions d'image de plus d'un million de pixels et des rapports d'aspect de n'importe quelle taille."
   },
   "qwen-vl-v1": {
     "description": "Initialisé avec le modèle de langage Qwen-7B, ajoutant un modèle d'image, un modèle pré-entraîné avec une résolution d'entrée d'image de 448."
@@ -871,6 +1048,9 @@
   "step-1-flash": {
     "description": "Modèle à haute vitesse, adapté aux dialogues en temps réel."
   },
+  "step-1.5v-mini": {
+    "description": "Ce modèle possède de puissantes capacités de compréhension vidéo."
+  },
   "step-1v-32k": {
     "description": "Prend en charge les entrées visuelles, améliorant l'expérience d'interaction multimodale."
   },
@@ -882,9 +1062,6 @@
   },
   "taichu_llm": {
     "description": "Le modèle de langage Taichu Zidong possède une forte capacité de compréhension linguistique ainsi que des compétences en création de texte, questions-réponses, programmation, calcul mathématique, raisonnement logique, analyse des sentiments, et résumé de texte. Il combine de manière innovante le pré-entraînement sur de grandes données avec des connaissances riches provenant de multiples sources, en perfectionnant continuellement la technologie algorithmique et en intégrant de nouvelles connaissances sur le vocabulaire, la structure, la grammaire et le sens à partir de vastes ensembles de données textuelles, offrant aux utilisateurs des informations et des services plus pratiques ainsi qu'une expérience plus intelligente."
-  },
-  "taichu_vqa": {
-    "description": "Taichu 2.0V intègre des capacités de compréhension d'image, de transfert de connaissances et d'attribution logique, se distinguant dans le domaine des questions-réponses textuelles et visuelles."
   },
   "togethercomputer/StripedHyena-Nous-7B": {
     "description": "StripedHyena Nous (7B) offre une capacité de calcul améliorée grâce à des stratégies et une architecture de modèle efficaces."
@@ -912,6 +1089,12 @@
   },
   "yi-large-turbo": {
     "description": "Un excellent rapport qualité-prix avec des performances exceptionnelles. Optimisé pour un équilibre de haute précision en fonction des performances, de la vitesse de raisonnement et des coûts."
+  },
+  "yi-lightning": {
+    "description": "Modèle haute performance dernier cri, garantissant une sortie de haute qualité tout en améliorant considérablement la vitesse d'inférence."
+  },
+  "yi-lightning-lite": {
+    "description": "Version allégée, l'utilisation de yi-lightning est recommandée."
   },
   "yi-medium": {
     "description": "Modèle de taille moyenne, optimisé et ajusté, offrant un équilibre de capacités et un bon rapport qualité-prix. Optimisation approfondie des capacités de suivi des instructions."

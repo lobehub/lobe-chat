@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
 import { integer, jsonb, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 
-import { createdAt, updatedAt } from './_helpers';
+import { timestamps } from './_helpers';
 import { users } from './user';
 
 export const asyncTasks = pgTable('async_tasks', {
@@ -16,8 +16,7 @@ export const asyncTasks = pgTable('async_tasks', {
     .notNull(),
   duration: integer('duration'),
 
-  createdAt: createdAt(),
-  updatedAt: updatedAt(),
+  ...timestamps,
 });
 
 export type NewAsyncTaskItem = typeof asyncTasks.$inferInsert;

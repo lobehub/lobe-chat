@@ -43,10 +43,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
 
   const data = useChatStore((s) => {
     const showInboxWelcome = chatSelectors.showInboxWelcome(s);
-    const ids = showInboxWelcome
+    return showInboxWelcome
       ? [WELCOME_GUIDE_CHAT_ID]
       : chatSelectors.currentChatIDsWithGuideMessage(s);
-    return ['empty', ...ids];
   }, isEqual);
 
   useEffect(() => {
@@ -71,11 +70,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
     (index: number, id: string) => {
       if (id === WELCOME_GUIDE_CHAT_ID) return <InboxWelcome />;
 
-      return index === 0 ? (
-        <div style={{ height: 24 + (mobile ? 0 : 64) }} />
-      ) : (
-        <Item id={id} index={index - 1} />
-      );
+      return <Item id={id} index={index} />;
     },
     [mobile],
   );

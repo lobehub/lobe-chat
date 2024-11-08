@@ -6,7 +6,7 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { useAgentStore } from '@/store/agent';
 import { ChatStore } from '@/store/chat';
 import { initialState } from '@/store/chat/initialState';
-import { messageMapKey } from '@/store/chat/slices/message/utils';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { createServerConfigStore } from '@/store/serverConfig/store';
 import { LobeAgentConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';

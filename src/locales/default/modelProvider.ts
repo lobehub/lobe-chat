@@ -66,9 +66,16 @@ export default {
   },
   github: {
     personalAccessToken: {
-      desc: '填入你的 Github PAT，点击[这里](https://github.com/settings/tokens) 创建',
+      desc: '填入你的 Github PAT，点击 [这里](https://github.com/settings/tokens) 创建',
       placeholder: 'ghp_xxxxxx',
       title: 'Github PAT',
+    },
+  },
+  huggingface: {
+    accessToken: {
+      desc: '填入你的 HuggingFace Token，点击 [这里](https://huggingface.co/settings/tokens) 创建',
+      placeholder: 'hf_xxxxxxxxx',
+      title: 'HuggingFace Token',
     },
   },
   ollama: {
@@ -125,6 +132,43 @@ export default {
       downloaded: '{{completed}} / {{total}}',
       starting: '开始下载...',
       title: '下载指定的 Ollama 模型',
+    },
+  },
+  sensenova: {
+    sensenovaAccessKeyID: {
+      desc: '填入 SenseNova Access Key ID',
+      placeholder: 'SenseNova Access Key ID',
+      title: 'Access Key ID',
+    },
+    sensenovaAccessKeySecret: {
+      desc: '填入 SenseNova Access Key Secret',
+      placeholder: 'SenseNova Access Key Secret',
+      title: 'Access Key Secret',
+    },
+    unlock: {
+      description:
+        '输入你的 Access Key ID / Access Key Secret 即可开始会话。应用不会记录你的鉴权配置',
+      title: '使用自定义 SenseNova 鉴权信息',
+    },
+  },
+  wenxin: {
+    accessKey: {
+      desc: '填入百度千帆平台的 Access Key',
+      placeholder: 'Qianfan Access Key',
+      title: 'Access Key',
+    },
+    checker: {
+      desc: '测试 AccessKey / SecretAccess 是否填写正确',
+    },
+    secretKey: {
+      desc: '填入百度千帆平台 Secret Key',
+      placeholder: 'Qianfan Secret Key',
+      title: 'Secret Key',
+    },
+    unlock: {
+      customRegion: '自定义服务区域',
+      description: '输入你的 AccessKey / SecretKey 即可开始会话。应用不会记录你的鉴权配置',
+      title: '使用自定义文心一言鉴权信息',
     },
   },
   zeroone: {

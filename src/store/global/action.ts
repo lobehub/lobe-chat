@@ -27,6 +27,7 @@ export interface GlobalStoreAction {
   toggleMobilePortal: (visible?: boolean) => void;
   toggleMobileTopic: (visible?: boolean) => void;
   toggleSystemRole: (visible?: boolean) => void;
+  toggleZenMode: () => void;
   updateSystemStatus: (status: Partial<SystemStatus>, action?: any) => void;
   useCheckLatestVersion: (enabledCheck?: boolean) => SWRResponse<string>;
   useInitSystemStatus: () => SWRResponse;
@@ -76,6 +77,12 @@ export const globalActionSlice: StateCreator<
     const showSystemRole = typeof newValue === 'boolean' ? newValue : !get().status.mobileShowTopic;
 
     get().updateSystemStatus({ showSystemRole }, n('toggleMobileTopic', newValue));
+  },
+  toggleZenMode: () => {
+    const { status } = get();
+    const nextZenMode = !status.zenMode;
+
+    get().updateSystemStatus({ zenMode: nextZenMode }, n('toggleZenMode'));
   },
   updateSystemStatus: (status, action) => {
     // Status cannot be modified when it is not initialized

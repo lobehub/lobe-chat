@@ -2,30 +2,41 @@
 
 import { useResponsive } from 'antd-style';
 import { PropsWithChildren, ReactNode, memo } from 'react';
-import { Flexbox } from 'react-layout-kit';
+import { Flexbox, FlexboxProps } from 'react-layout-kit';
 
-interface SettingContainerProps {
+interface SettingContainerProps extends FlexboxProps {
   addonAfter?: ReactNode;
   addonBefore?: ReactNode;
-  fullWidth?: boolean;
+
+  maxWidth?: number;
 }
 const SettingContainer = memo<PropsWithChildren<SettingContainerProps>>(
-  ({ children, addonAfter, addonBefore, fullWidth }) => {
+  ({
+    id = 'lobe-desktop-scroll-container',
+    maxWidth = 1024,
+    children,
+    addonAfter,
+    addonBefore,
+    style,
+    ...rest
+  }) => {
     const { mobile = false } = useResponsive();
     return (
       <Flexbox
         align={'center'}
         height={'100%'}
+        id={id}
         paddingBlock={mobile ? undefined : 32}
-        style={{ overflowX: 'hidden', overflowY: 'auto' }}
+        style={{ overflowX: 'hidden', overflowY: 'auto', ...style }}
         width={'100%'}
+        {...rest}
       >
         {addonBefore}
         <Flexbox
           gap={64}
           paddingInline={mobile ? undefined : 24}
           style={{
-            maxWidth: fullWidth ? undefined : 1024,
+            maxWidth,
           }}
           width={'100%'}
         >

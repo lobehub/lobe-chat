@@ -12,8 +12,14 @@
     "retry": "Recharger",
     "title": "Un problème est survenu sur la page.."
   },
-  "fetchError": "Échec de la requête",
-  "fetchErrorDetail": "Détails de l'erreur",
+  "fetchError": {
+    "detail": "Détails de l'erreur",
+    "title": "Échec de la requête"
+  },
+  "loginRequired": {
+    "desc": "Vous allez être redirigé vers la page de connexion",
+    "title": "Veuillez vous connecter pour utiliser cette fonctionnalité"
+  },
   "notFound": {
     "backHome": "Retour à la page d'accueil",
     "check": "Veuillez vérifier si votre URL est correcte",
@@ -51,9 +57,16 @@
     "431": "Désolé, les en-têtes de votre demande sont trop volumineux pour être traités par le serveur",
     "451": "Désolé, pour des raisons légales, le serveur refuse de fournir cette ressource",
     "500": "Désolé, le serveur semble rencontrer des difficultés et ne peut temporairement pas traiter votre requête. Veuillez réessayer plus tard",
+    "501": "Désolé, le serveur ne sait pas encore comment traiter cette demande, veuillez vérifier si votre opération est correcte.",
     "502": "Désolé, le serveur semble perdu et ne peut temporairement pas fournir de service. Veuillez réessayer plus tard",
     "503": "Désolé, le serveur ne peut actuellement pas traiter votre requête, probablement en raison d'une surcharge ou de travaux de maintenance. Veuillez réessayer plus tard",
     "504": "Désolé, le serveur n'a pas reçu de réponse de la part du serveur amont. Veuillez réessayer plus tard",
+    "505": "Désolé, le serveur ne prend pas en charge la version HTTP que vous utilisez, veuillez mettre à jour et réessayer.",
+    "506": "Désolé, il y a un problème de configuration du serveur, veuillez contacter l'administrateur pour résoudre ce problème.",
+    "507": "Désolé, le serveur n'a pas suffisamment d'espace de stockage pour traiter votre demande, veuillez réessayer plus tard.",
+    "509": "Désolé, la bande passante du serveur est épuisée, veuillez réessayer plus tard.",
+    "510": "Désolé, le serveur ne prend pas en charge l'extension demandée, veuillez contacter l'administrateur.",
+    "524": "Désolé, le serveur a dépassé le délai d'attente en attendant une réponse, cela peut être dû à une réponse trop lente, veuillez réessayer plus tard.",
     "AgentRuntimeError": "Erreur d'exécution du modèle linguistique Lobe, veuillez vérifier les informations ci-dessous ou réessayer",
     "FreePlanLimit": "Vous êtes actuellement un utilisateur gratuit et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan payant pour continuer à l'utiliser.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
@@ -67,6 +80,7 @@
     "OllamaBizError": "Erreur commerciale lors de la demande de service Ollama, veuillez vérifier les informations ci-dessous ou réessayer",
     "OllamaServiceUnavailable": "Le service Ollama n'est pas disponible. Veuillez vérifier si Ollama fonctionne correctement ou si la configuration de la communication inter-domaines d'Ollama est correcte.",
     "OpenAIBizError": "Erreur de service OpenAI. Veuillez vérifier les informations suivantes ou réessayer.",
+    "PermissionDenied": "Désolé, vous n'avez pas la permission d'accéder à ce service. Veuillez vérifier si votre clé a les droits d'accès.",
     "PluginApiNotFound": "Désolé, l'API spécifiée n'existe pas dans le manifeste du plugin. Veuillez vérifier que votre méthode de requête correspond à l'API du manifeste du plugin",
     "PluginApiParamsError": "Désolé, la validation des paramètres d'entrée de la requête de ce plugin a échoué. Veuillez vérifier que les paramètres d'entrée correspondent aux informations de l'API",
     "PluginFailToTransformArguments": "Désolé, échec de la transformation des arguments de l'appel du plugin. Veuillez essayer de régénérer le message d'assistance ou de changer de modèle d'IA avec une capacité d'appel d'outils plus puissante, puis réessayer.",
@@ -81,6 +95,7 @@
     "PluginServerError": "Erreur de réponse du serveur du plugin. Veuillez vérifier le fichier de description du plugin, la configuration du plugin ou la mise en œuvre côté serveur en fonction des informations d'erreur ci-dessous",
     "PluginSettingsInvalid": "Ce plugin doit être correctement configuré avant de pouvoir être utilisé. Veuillez vérifier votre configuration",
     "ProviderBizError": "Erreur de service {{provider}}. Veuillez vérifier les informations suivantes ou réessayer.",
+    "QuotaLimitReached": "Désolé, l'utilisation actuelle des tokens ou le nombre de requêtes a atteint la limite de quota de cette clé. Veuillez augmenter le quota de cette clé ou réessayer plus tard.",
     "StreamChunkError": "Erreur de parsing du bloc de message de la requête en streaming. Veuillez vérifier si l'API actuelle respecte les normes ou contacter votre fournisseur d'API pour des conseils.",
     "SubscriptionPlanLimit": "Vous avez atteint votre limite d'abonnement et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan supérieur ou acheter un pack de ressources pour continuer à l'utiliser.",
     "UnknownChatFetchError": "Désolé, une erreur de requête inconnue s'est produite. Veuillez vérifier les informations ci-dessous ou réessayer."

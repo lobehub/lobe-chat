@@ -4,7 +4,7 @@ import { Center } from 'react-layout-kit';
 import BrandWatermark from '@/components/BrandWatermark';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import Category from './features/Category';
 import UserBanner from './features/UserBanner';

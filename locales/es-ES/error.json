@@ -12,8 +12,14 @@
     "retry": "Reintentar",
     "title": "Se ha producido un problema en la página.."
   },
-  "fetchError": "Error en la solicitud",
-  "fetchErrorDetail": "Detalles del error",
+  "fetchError": {
+    "detail": "Detalles del error",
+    "title": "Solicitud fallida"
+  },
+  "loginRequired": {
+    "desc": "Serás redirigido automáticamente a la página de inicio de sesión",
+    "title": "Por favor, inicie sesión para utilizar esta función"
+  },
   "notFound": {
     "backHome": "Volver a la página de inicio",
     "check": "Por favor, verifica si tu URL es correcta",
@@ -51,9 +57,16 @@
     "431": "Lo sentimos, el campo de encabezado de su solicitud es demasiado grande para ser procesado por el servidor",
     "451": "Lo sentimos, el servidor se niega a proporcionar este recurso debido a razones legales",
     "500": "Lo sentimos, el servidor parece estar experimentando dificultades y no puede completar su solicitud en este momento. Por favor, inténtelo de nuevo más tarde",
+    "501": "Lo sentimos, el servidor aún no sabe cómo manejar esta solicitud, por favor confirme que su operación es correcta",
     "502": "Lo sentimos, el servidor parece estar desorientado y no puede proporcionar servicio en este momento. Por favor, inténtelo de nuevo más tarde",
     "503": "Lo sentimos, el servidor no puede procesar su solicitud en este momento, posiblemente debido a una sobrecarga o mantenimiento. Por favor, inténtelo de nuevo más tarde",
     "504": "Lo sentimos, el servidor no recibió respuesta del servidor upstream. Por favor, inténtelo de nuevo más tarde",
+    "505": "Lo sentimos, el servidor no soporta la versión HTTP que está utilizando, por favor actualice y vuelva a intentarlo",
+    "506": "Lo sentimos, hay un problema con la configuración del servidor, por favor contacte al administrador para resolverlo",
+    "507": "Lo sentimos, el servidor no tiene suficiente espacio de almacenamiento para procesar su solicitud, por favor inténtelo de nuevo más tarde",
+    "509": "Lo sentimos, el ancho de banda del servidor se ha agotado, por favor inténtelo de nuevo más tarde",
+    "510": "Lo sentimos, el servidor no soporta la funcionalidad de extensión solicitada, por favor contacte al administrador",
+    "524": "Lo sentimos, el servidor ha agotado el tiempo de espera mientras esperaba una respuesta, puede ser debido a que la respuesta es demasiado lenta, por favor inténtelo de nuevo más tarde",
     "AgentRuntimeError": "Se produjo un error en la ejecución del tiempo de ejecución del modelo de lenguaje Lobe, por favor, verifica la siguiente información o inténtalo de nuevo",
     "FreePlanLimit": "Actualmente eres un usuario gratuito y no puedes utilizar esta función. Por favor, actualiza a un plan de pago para seguir utilizando.",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
@@ -67,6 +80,7 @@
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
     "OllamaServiceUnavailable": "El servicio Ollama no está disponible. Por favor, verifica si Ollama está funcionando correctamente o si la configuración de Ollama para el acceso entre dominios está configurada correctamente.",
     "OpenAIBizError": "Se produjo un error al solicitar el servicio de OpenAI, por favor, revise la siguiente información o inténtelo de nuevo",
+    "PermissionDenied": "Lo sentimos, no tienes permiso para acceder a este servicio. Por favor, verifica si tu clave tiene los permisos necesarios.",
     "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
     "PluginApiParamsError": "Lo sentimos, la validación de los parámetros de entrada de la solicitud del complemento no ha pasado. Verifique si los parámetros de entrada coinciden con la información de descripción del API",
     "PluginFailToTransformArguments": "Lo siento, no se pudieron transformar los argumentos de la llamada al plugin. Por favor, intenta generar de nuevo el mensaje del asistente o prueba con un modelo de IA de Tools Calling más potente.",
@@ -81,6 +95,7 @@
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
     "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
+    "QuotaLimitReached": "Lo sentimos, el uso actual de tokens o el número de solicitudes ha alcanzado el límite de cuota de esta clave. Por favor, aumenta la cuota de esta clave o intenta de nuevo más tarde.",
     "StreamChunkError": "Error de análisis del bloque de mensajes de la solicitud en streaming. Por favor, verifica si la API actual cumple con las normas estándar o contacta a tu proveedor de API para más información.",
     "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando.",
     "UnknownChatFetchError": "Lo sentimos, se ha producido un error desconocido en la solicitud. Por favor, verifica la información a continuación o intenta de nuevo."

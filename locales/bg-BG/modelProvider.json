@@ -70,6 +70,13 @@
       "title": "GitHub PAT"
     }
   },
+  "huggingface": {
+    "accessToken": {
+      "desc": "Въведете вашия HuggingFace токен, кликнете [тук](https://huggingface.co/settings/tokens), за да създадете",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "HuggingFace токен"
+    }
+  },
   "ollama": {
     "checker": {
       "desc": "Тестване дали адресът на прокси е попълнен правилно",
@@ -122,6 +129,42 @@
       "downloaded": "{{completed}} / {{total}}",
       "starting": "Starting download...",
       "title": "Download specified Ollama model"
+    }
+  },
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Въведете SenseNova Access Key ID",
+      "placeholder": "SenseNova Access Key ID",
+      "title": "Access Key ID"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Въведете SenseNova Access Key Secret",
+      "placeholder": "SenseNova Access Key Secret",
+      "title": "Access Key Secret"
+    },
+    "unlock": {
+      "description": "Въведете вашия Access Key ID / Access Key Secret, за да започнете сесия. Приложението няма да записва вашите конфигурации за удостоверяване",
+      "title": "Използвайте персонализирана информация за удостоверяване на SenseNova"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "Въведете Access Key от платформата Baidu Qianfan",
+      "placeholder": "Qianfan Access Key",
+      "title": "Access Key"
+    },
+    "checker": {
+      "desc": "Тествайте дали AccessKey / SecretAccess е попълнен правилно"
+    },
+    "secretKey": {
+      "desc": "Въведете Secret Key от платформата Baidu Qianfan",
+      "placeholder": "Qianfan Secret Key",
+      "title": "Secret Key"
+    },
+    "unlock": {
+      "customRegion": "Персонализиран регион на услугата",
+      "description": "Въведете вашия AccessKey / SecretKey, за да започнете сесия. Приложението няма да запомня вашите конфигурации за удостоверяване",
+      "title": "Използвайте персонализирана информация за удостоверяване на Wenxin Yiyan"
     }
   },
   "zeroone": {

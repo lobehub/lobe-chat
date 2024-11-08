@@ -141,7 +141,9 @@ export const chatPlugin: StateCreator<
 
     try {
       content = JSON.parse(data);
-    } catch {}
+    } catch {
+      /* empty block */
+    }
 
     if (!content) return;
 

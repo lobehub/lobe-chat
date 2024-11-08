@@ -372,10 +372,16 @@
       "modelDesc": "Das Modell, das zur Generierung von Assistentennamen, -beschreibungen, -avatars und -tags verwendet wird",
       "title": "Automatische Generierung von Assistenteninformationen"
     },
+    "customPrompt": {
+      "addPrompt": "Benutzerdefinierte Eingabe hinzufügen",
+      "desc": "Nachdem Sie dies ausgefüllt haben, verwendet der Systemassistent die benutzerdefinierte Eingabe zur Generierung von Inhalten",
+      "placeholder": "Bitte benutzerdefinierte Eingabe eingeben",
+      "title": "Benutzerdefinierte Eingabe"
+    },
     "queryRewrite": {
       "label": "Fragenumformulierung Modell",
       "modelDesc": "Modell zur Optimierung der Benutzeranfragen",
-      "title": "Wissensdatenbank"
+      "title": "Wiederformulierung von Fragen aus der Wissensdatenbank"
     },
     "title": "Systemassistent",
     "topic": {

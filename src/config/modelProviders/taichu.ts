@@ -8,11 +8,13 @@ const Taichu: ModelProviderCard = {
         'Taichu 2.0 基于海量高质数据训练，具有更强的文本理解、内容创作、对话问答等能力',
       displayName: 'Taichu 2.0',
       enabled: true,
-      functionCall: false,
+      functionCall: true,
       id: 'taichu_llm',
       tokens: 32_768,
     },
-      {
+    /*
+    // TODO: Not support for now
+    {
       description:
         'Taichu 2.0V 融合了图像理解、知识迁移、逻辑归因等能力，在图文问答领域表现突出',
       displayName: 'Taichu 2.0V',
@@ -20,6 +22,7 @@ const Taichu: ModelProviderCard = {
       tokens: 4096,
       vision: true,
     },
+*/
   ],
   checkModel: 'taichu_llm',
   description:

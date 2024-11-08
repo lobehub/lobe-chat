@@ -7,8 +7,8 @@ import { PLUGIN_SCHEMA_API_MD5_PREFIX, PLUGIN_SCHEMA_SEPARATOR } from '@/const/p
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { chatSelectors } from '@/store/chat/selectors';
-import { messageMapKey } from '@/store/chat/slices/message/utils';
 import { useChatStore } from '@/store/chat/store';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useToolStore } from '@/store/tool';
 import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, ChatToolPayload, MessageToolCall } from '@/types/message';

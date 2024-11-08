@@ -54,8 +54,8 @@ const OpenAI: ModelProviderCard = {
       functionCall: true,
       id: 'gpt-4o',
       pricing: {
-        input: 5,
-        output: 15,
+        input: 2.5,
+        output: 10,
       },
       tokens: 128_000,
       vision: true,
@@ -64,7 +64,6 @@ const OpenAI: ModelProviderCard = {
       description:
         'ChatGPT-4o 是一款动态模型，实时更新以保持当前最新版本。它结合了强大的语言理解与生成能力，适合于大规模应用场景，包括客户服务、教育和技术支持。',
       displayName: 'GPT-4o 0806',
-      enabled: true,
       functionCall: true,
       id: 'gpt-4o-2024-08-06',
       pricing: {

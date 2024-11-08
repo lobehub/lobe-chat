@@ -6,7 +6,7 @@ import { LOADING_FLAT } from '@/const/message';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { topicService } from '@/services/topic';
-import { messageMapKey } from '@/store/chat/slices/message/utils';
+import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { ChatMessage } from '@/types/message';
 import { ChatTopic } from '@/types/topic';
 
@@ -487,7 +487,7 @@ describe('topic action', () => {
       expect(createTopicSpy).toHaveBeenCalledWith({
         sessionId: activeId,
         messages: messages.map((m) => m.id),
-        title: 'topic.defaultTitle',
+        title: 'defaultTitle',
       });
       expect(refreshTopicSpy).toHaveBeenCalled();
     });

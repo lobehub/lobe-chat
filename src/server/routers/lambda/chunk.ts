@@ -1,7 +1,6 @@
 import { inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
 import { DEFAULT_EMBEDDING_MODEL } from '@/const/settings';
 import { serverDB } from '@/database/server';
 import { AsyncTaskModel } from '@/database/server/models/asyncTask';
@@ -13,6 +12,7 @@ import { knowledgeBaseFiles } from '@/database/server/schemas/lobechat';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
+import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { SemanticSearchSchema } from '@/types/rag';
 
@@ -120,7 +120,7 @@ export const chunkRouter = router({
       console.timeEnd('embedding');
 
       return ctx.chunkModel.semanticSearch({
-        embedding: embeddings![0].embedding,
+        embedding: embeddings![0],
         fileIds: input.fileIds,
         query: input.query,
       });
@@ -147,7 +147,7 @@ export const chunkRouter = router({
           model: input.model || DEFAULT_EMBEDDING_MODEL,
         });
 
-        embedding = embeddings![0].embedding;
+        embedding = embeddings![0];
         const embeddingsId = await ctx.embeddingModel.create({
           embeddings: embedding,
           model: input.model,

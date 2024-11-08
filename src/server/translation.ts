@@ -11,7 +11,7 @@ import { isDev } from '@/utils/env';
 
 export const getLocale = async (hl?: string): Promise<Locales> => {
   if (hl) return normalizeLocale(hl) as Locales;
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
   const defaultLang = cookieStore.get(LOBE_LOCALE_COOKIE);
   return (defaultLang?.value || DEFAULT_LANG) as Locales;
 };

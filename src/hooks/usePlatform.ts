@@ -1,8 +1,9 @@
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 
 import {
   getBrowser,
   getPlatform,
+  isArc,
   isInStandaloneMode,
   isSonomaOrLaterSafari,
 } from '@/utils/platform';
@@ -12,21 +13,30 @@ export const usePlatform = () => {
   const browser = useRef(getBrowser());
 
   const platformInfo = {
-    isApple: platform.current && ['Mac OS', 'iOS'].includes(platform.current),
-    isChrome: browser.current === 'Chrome',
-    isChromium: browser.current && ['Chrome', 'Edge', 'Opera', 'Brave'].includes(browser.current),
-    isEdge: browser.current === 'Edge',
-    isIOS: platform.current === 'iOS',
-    isMacOS: platform.current === 'Mac OS',
+    isApple: platform.current && ['mac os', 'ios'].includes(platform.current?.toLowerCase()),
+    isArc: isArc(),
+    isChrome: browser.current?.toLowerCase() === 'chrome',
+    isChromium:
+      browser.current &&
+      ['chrome', 'edge', 'opera', 'brave'].includes(browser.current?.toLowerCase()),
+    isEdge: browser.current?.toLowerCase() === 'edge',
+    isFirefox: browser.current?.toLowerCase() === 'firefox',
+    isIOS: platform.current?.toLowerCase() === 'ios',
+    isMacOS: platform.current?.toLowerCase() === 'mac os',
     isPWA: isInStandaloneMode(),
-    isSafari: browser.current === 'Safari',
+    isSafari: browser.current?.toLowerCase() === 'safari',
     isSonomaOrLaterSafari: isSonomaOrLaterSafari(),
   };
 
-  return {
-    ...platformInfo,
-    isSupportInstallPWA:
-      (platformInfo.isChromium && !platformInfo.isIOS) ||
-      (platformInfo.isMacOS && platformInfo.isSonomaOrLaterSafari),
-  };
+  return useMemo(
+    () => ({
+      ...platformInfo,
+      isSupportInstallPWA:
+        !platformInfo.isArc &&
+        !platformInfo.isFirefox &&
+        ((platformInfo.isChromium && !platformInfo.isIOS) ||
+          (platformInfo.isMacOS && platformInfo.isSonomaOrLaterSafari)),
+    }),
+    [platformInfo],
+  );
 };

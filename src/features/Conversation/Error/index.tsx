@@ -34,6 +34,8 @@ const getErrorAlertConfig = (
     };
 
   switch (errorType) {
+    case AgentRuntimeErrorType.PermissionDenied:
+    case AgentRuntimeErrorType.QuotaLimitReached:
     case AgentRuntimeErrorType.LocationNotSupportError: {
       return {
         type: 'warning',

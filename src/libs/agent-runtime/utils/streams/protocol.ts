@@ -1,5 +1,7 @@
 import { ChatStreamCallbacks } from '@/libs/agent-runtime';
 
+import { AgentRuntimeErrorType } from '../../error';
+
 export interface StreamStack {
   id: string;
   tool?: {
@@ -36,12 +38,52 @@ export interface StreamProtocolToolCallChunk {
 export const generateToolCallId = (index: number, functionName?: string) =>
   `${functionName || 'unknown_tool_call'}_${index}`;
 
-export const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
+const chatStreamable = async function* <T>(stream: AsyncIterable<T>) {
   for await (const response of stream) {
     yield response;
   }
 };
 
+const ERROR_CHUNK_PREFIX = '%FIRST_CHUNK_ERROR%: ';
+// make the response to the streamable format
+export const convertIterableToStream = <T>(stream: AsyncIterable<T>) => {
+  const iterable = chatStreamable(stream);
+
+  // copy from https://github.com/vercel/ai/blob/d3aa5486529e3d1a38b30e3972b4f4c63ea4ae9a/packages/ai/streams/ai-stream.ts#L284
+  // and add an error handle
+  let it = iterable[Symbol.asyncIterator]();
+
+  return new ReadableStream<T>({
+    async cancel(reason) {
+      await it.return?.(reason);
+    },
+    async pull(controller) {
+      const { done, value } = await it.next();
+      if (done) controller.close();
+      else controller.enqueue(value);
+    },
+
+    async start(controller) {
+      try {
+        const { done, value } = await it.next();
+        if (done) controller.close();
+        else controller.enqueue(value);
+      } catch (e) {
+        const error = e as Error;
+
+        controller.enqueue(
+          (ERROR_CHUNK_PREFIX +
+            JSON.stringify({ message: error.message, name: error.name, stack: error.stack })) as T,
+        );
+        controller.close();
+      }
+    },
+  });
+};
+
+/**
+ * Create a transformer to convert the response into an SSE format
+ */
 export const createSSEProtocolTransformer = (
   transformer: (chunk: any, stack: StreamStack) => StreamProtocolChunk,
   streamStack?: StreamStack,
@@ -104,3 +146,27 @@ export function createCallbacksTransformer(cb: ChatStreamCallbacks | undefined) 
     },
   });
 }
+
+export const FIRST_CHUNK_ERROR_KEY = '_isFirstChunkError';
+
+export const createFirstErrorHandleTransformer = (
+  errorHandler?: (errorJson: any) => any,
+  provider?: string,
+) => {
+  return new TransformStream({
+    transform(chunk, controller) {
+      if (chunk.toString().startsWith(ERROR_CHUNK_PREFIX)) {
+        const errorData = JSON.parse(chunk.toString().replace(ERROR_CHUNK_PREFIX, ''));
+
+        controller.enqueue({
+          ...errorData,
+          [FIRST_CHUNK_ERROR_KEY]: true,
+          errorType: errorHandler?.(errorData) || AgentRuntimeErrorType.ProviderBizError,
+          provider,
+        });
+      } else {
+        controller.enqueue(chunk);
+      }
+    },
+  });
+};

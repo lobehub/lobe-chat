@@ -7,9 +7,10 @@ import { translation } from '@/server/translation';
 
 import Client from './Client';
 
-type Props = { searchParams: { hl?: Locales } };
+type Props = { searchParams: Promise<{ hl?: Locales }> };
 
-export const generateMetadata = async ({ searchParams }: Props) => {
+export const generateMetadata = async (props: Props) => {
+  const searchParams = await props.searchParams;
   const { t, locale } = await translation('metadata', searchParams?.hl);
   return metadataModule.generate({
     alternate: true,
@@ -20,7 +21,8 @@ export const generateMetadata = async ({ searchParams }: Props) => {
   });
 };
 
-const Page = async ({ searchParams }: Props) => {
+const Page = async (props: Props) => {
+  const searchParams = await props.searchParams;
   const { t, locale } = await translation('metadata', searchParams?.hl);
   const ld = ldModule.generate({
     description: t('discover.description'),

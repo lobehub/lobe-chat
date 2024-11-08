@@ -2,7 +2,6 @@ import { TRPCError } from '@trpc/server';
 import OpenAI from 'openai';
 import { z } from 'zod';
 
-import { initAgentRuntimeWithUserPayload } from '@/app/api/chat/agentRuntime';
 import { chainAnswerWithContext } from '@/chains/answerWithContext';
 import { DEFAULT_EMBEDDING_MODEL, DEFAULT_MODEL } from '@/const/settings';
 import { ChunkModel } from '@/database/server/models/chunk';
@@ -15,6 +14,7 @@ import {
 } from '@/database/server/models/ragEval';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { asyncAuthedProcedure, asyncRouter as router } from '@/libs/trpc/async';
+import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { AsyncTaskError } from '@/types/asyncTask';
 import { EvalEvaluationStatus } from '@/types/eval';
@@ -70,7 +70,7 @@ export const ragEvalRouter = router({
           });
 
           const embeddingId = await ctx.embeddingModel.create({
-            embeddings: embeddings?.[0].embedding,
+            embeddings: embeddings?.[0],
             model: embeddingModel,
           });
 

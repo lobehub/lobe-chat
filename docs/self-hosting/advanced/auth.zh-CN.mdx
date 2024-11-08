@@ -28,7 +28,7 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 | --- | --- | --- |
 | `NEXT_AUTH_SECRET` | 必选 | 用于加密 Auth.js 会话令牌的密钥。您可以使用以下命令： `openssl rand -base64 32`，或者访问 `https://generate-secret.vercel.app/32` 生成秘钥。 |
 | `NEXTAUTH_URL` | 必选 | 该 URL 用于指定 Auth.js 在执行 OAuth 验证时的回调地址，当默认生成的重定向地址发生不正确时才需要设置。`https://example.com/api/auth` |
-| `NEXT_AUTH_SSO_PROVIDERS` | 可选 | 该环境变量用于同时启用多个身份验证源，以逗号 `,` 分割，例如 `auth0,azure-ad,authentik`。 |
+| `NEXT_AUTH_SSO_PROVIDERS` | 可选 | 该环境变量用于同时启用多个身份验证源，以逗号 `,` 分割，例如 `auth0,microsoft-entra-id,authentik`。 |
 
 目前支持的身份验证服务有：
 
@@ -53,16 +53,20 @@ LobeChat 与 Clerk 做了深度集成，能够为用户提供一个更加安全�
 
 ## 进阶配置
 
-同时启用多个身份验证源请设置 `NEXT_AUTH_SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,azure-ad,authentik`。
+同时启用多个身份验证源请设置 `NEXT_AUTH_SSO_PROVIDERS` 环境变量，以逗号 `,` 分割，例如 `auth0,microsoft-entra-id,authentik`。
 
 顺序为 SSO 提供商的显示顺序。
 
 | SSO 提供商         | 值          |
 | ------------------ | ----------- |
 | Auth0              | `auth0`     |
-| Microsoft Entra ID | `azure-ad`  |
+| Authenlia          | `authenlia` |
 | Authentik          | `authentik` |
+| Casdoor            | `casdoor`   |
+| Cloudflare Zero Trust | `cloudflare-zero-trust` |
 | Github             | `github`    |
+| Logto              | `logto`     |
+| Microsoft Entra ID | `microsoft-entra-id`  |
 | ZITADEL            | `zitadel`   |
 
 ## 其他 SSO 提供商

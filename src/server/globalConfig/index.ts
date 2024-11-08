@@ -4,18 +4,35 @@ import { fileEnv } from '@/config/file';
 import { langfuseEnv } from '@/config/langfuse';
 import { getLLMConfig } from '@/config/llm';
 import {
+  Ai21ProviderCard,
+  Ai360ProviderCard,
+  AnthropicProviderCard,
+  BaichuanProviderCard,
   BedrockProviderCard,
+  DeepSeekProviderCard,
   FireworksAIProviderCard,
   GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HuggingFaceProviderCard,
+  HunyuanProviderCard,
+  MinimaxProviderCard,
+  MistralProviderCard,
+  MoonshotProviderCard,
   NovitaProviderCard,
   OllamaProviderCard,
   OpenAIProviderCard,
   OpenRouterProviderCard,
+  PerplexityProviderCard,
   QwenProviderCard,
+  SenseNovaProviderCard,
   SiliconCloudProviderCard,
+  SparkProviderCard,
+  StepfunProviderCard,
+  TaichuProviderCard,
   TogetherAIProviderCard,
+  UpstageProviderCard,
+  WenxinProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
@@ -34,6 +51,8 @@ export const getServerGlobalConfig = () => {
     OPENAI_MODEL_LIST,
 
     ENABLED_MOONSHOT,
+    MOONSHOT_MODEL_LIST,
+
     ENABLED_ZHIPU,
     ZHIPU_MODEL_LIST,
 
@@ -49,11 +68,23 @@ export const getServerGlobalConfig = () => {
     ENABLED_GITHUB,
     GITHUB_MODEL_LIST,
 
+    ENABLED_HUNYUAN,
+    HUNYUAN_MODEL_LIST,
+
     ENABLED_DEEPSEEK,
+    DEEPSEEK_MODEL_LIST,
+
     ENABLED_PERPLEXITY,
+    PERPLEXITY_MODEL_LIST,
+
     ENABLED_ANTHROPIC,
+    ANTHROPIC_MODEL_LIST,
+
     ENABLED_MINIMAX,
+    MINIMAX_MODEL_LIST,
+
     ENABLED_MISTRAL,
+    MISTRAL_MODEL_LIST,
 
     ENABLED_NOVITA,
     NOVITA_MODEL_LIST,
@@ -62,19 +93,34 @@ export const getServerGlobalConfig = () => {
     QWEN_MODEL_LIST,
 
     ENABLED_STEPFUN,
+    STEPFUN_MODEL_LIST,
+
     ENABLED_BAICHUAN,
+    BAICHUAN_MODEL_LIST,
+
     ENABLED_TAICHU,
+
     ENABLED_CLOUDFLARE,
 
+    TAICHU_MODEL_LIST,
+
     ENABLED_AI21,
+    AI21_MODEL_LIST,
+
     ENABLED_AI360,
+    AI360_MODEL_LIST,
+
+    ENABLED_SENSENOVA,
+    SENSENOVA_MODEL_LIST,
 
     ENABLED_SILICONCLOUD,
     SILICONCLOUD_MODEL_LIST,
 
     ENABLED_UPSTAGE,
+    UPSTAGE_MODEL_LIST,
 
     ENABLED_SPARK,
+    SPARK_MODEL_LIST,
 
     ENABLED_AZURE_OPENAI,
     AZURE_MODEL_LIST,
@@ -94,6 +140,12 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_FIREWORKSAI,
     FIREWORKSAI_MODEL_LIST,
+
+    ENABLED_WENXIN,
+    WENXIN_MODEL_LIST,
+
+    ENABLED_HUGGINGFACE,
+    HUGGINGFACE_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -104,10 +156,29 @@ export const getServerGlobalConfig = () => {
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
     languageModel: {
-      ai21: { enabled: ENABLED_AI21 },
-      ai360: { enabled: ENABLED_AI360 },
+      ai21: {
+        enabled: ENABLED_AI21,
+        enabledModels: extractEnabledModels(AI21_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: Ai21ProviderCard.chatModels,
+          modelString: AI21_MODEL_LIST,
+        }),
+      },
+      ai360: {
+        enabled: ENABLED_AI360,
+        enabledModels: extractEnabledModels(AI360_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: Ai360ProviderCard.chatModels,
+          modelString: AI360_MODEL_LIST,
+        }),
+      },
       anthropic: {
         enabled: ENABLED_ANTHROPIC,
+        enabledModels: extractEnabledModels(ANTHROPIC_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: AnthropicProviderCard.chatModels,
+          modelString: ANTHROPIC_MODEL_LIST,
+        }),
       },
       azure: {
         enabled: ENABLED_AZURE_OPENAI,
@@ -118,7 +189,14 @@ export const getServerGlobalConfig = () => {
           withDeploymentName: true,
         }),
       },
-      baichuan: { enabled: ENABLED_BAICHUAN },
+      baichuan: {
+        enabled: ENABLED_BAICHUAN,
+        enabledModels: extractEnabledModels(BAICHUAN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: BaichuanProviderCard.chatModels,
+          modelString: BAICHUAN_MODEL_LIST,
+        }),
+      },
       bedrock: {
         enabled: ENABLED_AWS_BEDROCK,
         enabledModels: extractEnabledModels(AWS_BEDROCK_MODEL_LIST),
@@ -128,8 +206,14 @@ export const getServerGlobalConfig = () => {
         }),
       },
       cloudflare: { enabled: ENABLED_CLOUDFLARE },
-      deepseek: { enabled: ENABLED_DEEPSEEK },
-
+      deepseek: {
+        enabled: ENABLED_DEEPSEEK,
+        enabledModels: extractEnabledModels(DEEPSEEK_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: DeepSeekProviderCard.chatModels,
+          modelString: DEEPSEEK_MODEL_LIST,
+        }),
+      },
       fireworksai: {
         enabled: ENABLED_FIREWORKSAI,
         enabledModels: extractEnabledModels(FIREWORKSAI_MODEL_LIST),
@@ -138,7 +222,6 @@ export const getServerGlobalConfig = () => {
           modelString: FIREWORKSAI_MODEL_LIST,
         }),
       },
-
       github: {
         enabled: ENABLED_GITHUB,
         enabledModels: extractEnabledModels(GITHUB_MODEL_LIST),
@@ -163,9 +246,46 @@ export const getServerGlobalConfig = () => {
           modelString: GROQ_MODEL_LIST,
         }),
       },
-      minimax: { enabled: ENABLED_MINIMAX },
-      mistral: { enabled: ENABLED_MISTRAL },
-      moonshot: { enabled: ENABLED_MOONSHOT },
+      huggingface: {
+        enabled: ENABLED_HUGGINGFACE,
+        enabledModels: extractEnabledModels(HUGGINGFACE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: HuggingFaceProviderCard.chatModels,
+          modelString: HUGGINGFACE_MODEL_LIST,
+        }),
+      },
+      hunyuan: {
+        enabled: ENABLED_HUNYUAN,
+        enabledModels: extractEnabledModels(HUNYUAN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: HunyuanProviderCard.chatModels,
+          modelString: HUNYUAN_MODEL_LIST,
+        }),
+      },
+      minimax: {
+        enabled: ENABLED_MINIMAX,
+        enabledModels: extractEnabledModels(MINIMAX_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: MinimaxProviderCard.chatModels,
+          modelString: MINIMAX_MODEL_LIST,
+        }),
+      },
+      mistral: {
+        enabled: ENABLED_MISTRAL,
+        enabledModels: extractEnabledModels(MISTRAL_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: MistralProviderCard.chatModels,
+          modelString: MISTRAL_MODEL_LIST,
+        }),
+      },
+      moonshot: {
+        enabled: ENABLED_MOONSHOT,
+        enabledModels: extractEnabledModels(MOONSHOT_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: MoonshotProviderCard.chatModels,
+          modelString: MOONSHOT_MODEL_LIST,
+        }),
+      },
       novita: {
         enabled: ENABLED_NOVITA,
         enabledModels: extractEnabledModels(NOVITA_MODEL_LIST),
@@ -191,7 +311,6 @@ export const getServerGlobalConfig = () => {
           modelString: OPENAI_MODEL_LIST,
         }),
       },
-
       openrouter: {
         enabled: ENABLED_OPENROUTER,
         enabledModels: extractEnabledModels(OPENROUTER_MODEL_LIST),
@@ -200,13 +319,28 @@ export const getServerGlobalConfig = () => {
           modelString: OPENROUTER_MODEL_LIST,
         }),
       },
-      perplexity: { enabled: ENABLED_PERPLEXITY },
+      perplexity: {
+        enabled: ENABLED_PERPLEXITY,
+        enabledModels: extractEnabledModels(PERPLEXITY_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: PerplexityProviderCard.chatModels,
+          modelString: PERPLEXITY_MODEL_LIST,
+        }),
+      },
       qwen: {
         enabled: ENABLED_QWEN,
         enabledModels: extractEnabledModels(QWEN_MODEL_LIST),
         serverModelCards: transformToChatModelCards({
           defaultChatModels: QwenProviderCard.chatModels,
           modelString: QWEN_MODEL_LIST,
+        }),
+      },
+      sensenova: {
+        enabled: ENABLED_SENSENOVA,
+        enabledModels: extractEnabledModels(SENSENOVA_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: SenseNovaProviderCard.chatModels,
+          modelString: SENSENOVA_MODEL_LIST,
         }),
       },
       siliconcloud: {
@@ -217,10 +351,30 @@ export const getServerGlobalConfig = () => {
           modelString: SILICONCLOUD_MODEL_LIST,
         }),
       },
-      spark: { enabled: ENABLED_SPARK },
-      stepfun: { enabled: ENABLED_STEPFUN },
-
-      taichu: { enabled: ENABLED_TAICHU },
+      spark: {
+        enabled: ENABLED_SPARK,
+        enabledModels: extractEnabledModels(SPARK_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: SparkProviderCard.chatModels,
+          modelString: SPARK_MODEL_LIST,
+        }),
+      },
+      stepfun: {
+        enabled: ENABLED_STEPFUN,
+        enabledModels: extractEnabledModels(STEPFUN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: StepfunProviderCard.chatModels,
+          modelString: STEPFUN_MODEL_LIST,
+        }),
+      },
+      taichu: {
+        enabled: ENABLED_TAICHU,
+        enabledModels: extractEnabledModels(TAICHU_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: TaichuProviderCard.chatModels,
+          modelString: TAICHU_MODEL_LIST,
+        }),
+      },
       togetherai: {
         enabled: ENABLED_TOGETHERAI,
         enabledModels: extractEnabledModels(TOGETHERAI_MODEL_LIST),
@@ -229,7 +383,22 @@ export const getServerGlobalConfig = () => {
           modelString: TOGETHERAI_MODEL_LIST,
         }),
       },
-      upstage: { enabled: ENABLED_UPSTAGE },
+      upstage: {
+        enabled: ENABLED_UPSTAGE,
+        enabledModels: extractEnabledModels(UPSTAGE_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: UpstageProviderCard.chatModels,
+          modelString: UPSTAGE_MODEL_LIST,
+        }),
+      },
+      wenxin: {
+        enabled: ENABLED_WENXIN,
+        enabledModels: extractEnabledModels(WENXIN_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: WenxinProviderCard.chatModels,
+          modelString: WENXIN_MODEL_LIST,
+        }),
+      },
       zeroone: {
         enabled: ENABLED_ZEROONE,
         enabledModels: extractEnabledModels(ZEROONE_MODEL_LIST),

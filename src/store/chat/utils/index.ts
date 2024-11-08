@@ -9,7 +9,7 @@ export const preventLeavingFn = (e: BeforeUnloadEvent) => {
 export const toggleBooleanList = (ids: string[], id: string, loading: boolean) => {
   return produce(ids, (draft) => {
     if (loading) {
-      draft.push(id);
+      if (!draft.includes(id)) draft.push(id);
     } else {
       const index = draft.indexOf(id);
 

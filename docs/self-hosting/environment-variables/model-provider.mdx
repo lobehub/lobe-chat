@@ -479,4 +479,20 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example: `xxxxxx...xxxxxx`
 
+## HUNYUAN
+
+### `HUNYUAN_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from HUNYUAN service
+- Default: -
+- Example: `xxxxxx...xxxxxx`
+
+### `HUNYUAN_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+hunyuan-lite,+hunyuan-standard`
+
 [model-list]: /docs/self-hosting/advanced/model-list

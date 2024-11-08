@@ -42,6 +42,22 @@ describe('createPreferenceSlice', () => {
 
       expect(result.current.status.showChatSideBar).toBe(true);
     });
+    it('should set chat sidebar to specified value', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
+        result.current.toggleChatSideBar(true);
+      });
+
+      expect(result.current.status.showChatSideBar).toBe(true);
+
+      act(() => {
+        result.current.toggleChatSideBar(false);
+      });
+
+      expect(result.current.status.showChatSideBar).toBe(false);
+    });
   });
 
   describe('toggleExpandSessionGroup', () => {
@@ -55,6 +71,120 @@ describe('createPreferenceSlice', () => {
       });
 
       expect(result.current.status.expandSessionGroupKeys).toContain(groupId);
+    });
+
+    const groupId = 'group-id';
+    const anotherGroupId = 'another-group-id';
+
+    beforeEach(() => {
+      // 确保每个测试前状态都是已初始化的
+      useGlobalStore.setState({ isStatusInit: true });
+    });
+
+    it('should add group id when expanding and id not exists', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        result.current.toggleExpandSessionGroup(groupId, true);
+      });
+
+      expect(result.current.status.expandSessionGroupKeys).toEqual(['pinned', 'default', groupId]);
+    });
+
+    it('should not add duplicate group id when expanding', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        // 先添加一个组
+        result.current.toggleExpandSessionGroup(groupId, true);
+        // 再次尝试添加同一个组
+        result.current.toggleExpandSessionGroup(groupId, true);
+      });
+
+      // 确保数组中只有一个实例
+      expect(result.current.status.expandSessionGroupKeys).toEqual(['pinned', 'default', groupId]);
+    });
+
+    it('should remove group id when collapsing', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        // 先设置初始状态为展开
+        result.current.toggleExpandSessionGroup(groupId, true);
+        result.current.toggleExpandSessionGroup(anotherGroupId, true);
+
+        // 验证初始状态
+        // 收起第一个组
+        result.current.toggleExpandSessionGroup(groupId, false);
+      });
+
+      // 验证只移除了指定的组
+      expect(result.current.status.expandSessionGroupKeys).toEqual([
+        'pinned',
+        'default',
+        anotherGroupId,
+      ]);
+    });
+
+    it('should do nothing when collapsing non-existent group', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        // 先添加一个组
+        result.current.toggleExpandSessionGroup(groupId, true);
+
+        // 尝试收起一个不存在的组
+        result.current.toggleExpandSessionGroup('non-existent-id', false);
+      });
+
+      // 验证原有的组没有受影响
+      expect(result.current.status.expandSessionGroupKeys).toEqual(['pinned', 'default', groupId]);
+    });
+
+    it('should handle multiple groups correctly', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        // 添加多个组
+        result.current.toggleExpandSessionGroup(groupId, true);
+        result.current.toggleExpandSessionGroup(anotherGroupId, true);
+        result.current.toggleExpandSessionGroup('third-group', true);
+      });
+
+      expect(result.current.status.expandSessionGroupKeys).toEqual([
+        'pinned',
+        'default',
+        groupId,
+        anotherGroupId,
+        'third-group',
+      ]);
+
+      act(() => {
+        // 收起中间的组
+        result.current.toggleExpandSessionGroup(anotherGroupId, false);
+      });
+
+      expect(result.current.status.expandSessionGroupKeys).toEqual([
+        'pinned',
+        'default',
+        groupId,
+        'third-group',
+      ]);
+    });
+
+    it('should save to localStorage when groups are toggled', () => {
+      const { result } = renderHook(() => useGlobalStore());
+      const saveToLocalStorageSpy = vi.spyOn(result.current.statusStorage, 'saveToLocalStorage');
+
+      act(() => {
+        result.current.toggleExpandSessionGroup(groupId, true);
+      });
+
+      expect(saveToLocalStorageSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          expandSessionGroupKeys: ['pinned', 'default', groupId],
+        }),
+      );
     });
   });
 
@@ -81,6 +211,28 @@ describe('createPreferenceSlice', () => {
       });
 
       expect(result.current.status.mobileShowPortal).toBe(true);
+    });
+  });
+
+  describe('toggleZenMode', () => {
+    it('should toggle zen mode', () => {
+      const { result } = renderHook(() => useGlobalStore());
+
+      act(() => {
+        useGlobalStore.setState({ isStatusInit: true });
+        // 初始值应该是 false
+        expect(result.current.status.zenMode).toBe(false);
+
+        result.current.toggleZenMode();
+      });
+
+      expect(result.current.status.zenMode).toBe(true);
+
+      act(() => {
+        result.current.toggleZenMode();
+      });
+
+      expect(result.current.status.zenMode).toBe(false);
     });
   });
 
@@ -209,6 +361,16 @@ describe('createPreferenceSlice', () => {
 
       expect(useGlobalStore.getState().hasNewVersion).toBeUndefined();
       expect(useGlobalStore.getState().latestVersion).toBeUndefined();
+    });
+
+    it('should not fetch version when check is disabled', () => {
+      const getLatestVersionSpy = vi.spyOn(globalService, 'getLatestVersion');
+
+      renderHook(() => useGlobalStore().useCheckLatestVersion(false), {
+        wrapper: withSWR,
+      });
+
+      expect(getLatestVersionSpy).not.toHaveBeenCalled();
     });
   });
 
