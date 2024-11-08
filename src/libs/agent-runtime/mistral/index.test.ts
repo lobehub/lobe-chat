@@ -9,8 +9,8 @@ import { LobeMistralAI } from './index';
 
 const provider = 'mistral';
 const defaultBaseURL = 'https://api.mistral.ai/v1';
-const bizErrorType = 'MistralBizError';
-const invalidErrorType = 'InvalidMistralAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -81,7 +81,7 @@ describe('LobeMistralAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'open-mistral-7b',
           stream: true,
-          temperature: 0.7,
+          temperature: 0.35,
           top_p: 1,
         },
         { headers: { Accept: '*/*' } },
@@ -114,7 +114,7 @@ describe('LobeMistralAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'open-mistral-7b',
           stream: true,
-          temperature: 0.7,
+          temperature: 0.35,
           top_p: 1,
         },
         { headers: { Accept: '*/*' } },

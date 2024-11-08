@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Novo",
+    "description": {
+      "placeholder": "Descrição do conjunto de dados (opcional)"
+    },
+    "name": {
+      "placeholder": "Nome do conjunto de dados",
+      "required": "Por favor, preencha o nome do conjunto de dados"
+    },
+    "title": "Adicionar Conjunto de Dados"
+  },
+  "dataset": {
+    "addNewButton": "Criar Conjunto de Dados",
+    "emptyGuide": "O conjunto de dados atual está vazio, por favor crie um conjunto de dados.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Importar Dados"
+        },
+        "columns": {
+          "actions": "Ações",
+          "ideal": {
+            "title": "Resposta Esperada"
+          },
+          "question": {
+            "title": "Pergunta"
+          },
+          "referenceFiles": {
+            "title": "Arquivos de Referência"
+          }
+        },
+        "notSelected": "Por favor, selecione um conjunto de dados à esquerda",
+        "title": "Detalhes do Conjunto de Dados"
+      },
+      "title": "Conjunto de Dados"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Novo",
+      "datasetId": {
+        "placeholder": "Por favor, selecione seu conjunto de dados de avaliação",
+        "required": "Por favor, selecione o conjunto de dados de avaliação"
+      },
+      "description": {
+        "placeholder": "Descrição da tarefa de avaliação (opcional)"
+      },
+      "name": {
+        "placeholder": "Nome da tarefa de avaliação",
+        "required": "Por favor, preencha o nome da tarefa de avaliação"
+      },
+      "title": "Adicionar Tarefa de Avaliação"
+    },
+    "addNewButton": "Criar Avaliação",
+    "emptyGuide": "A tarefa de avaliação atual está vazia, comece a criar uma avaliação.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Verificar Status",
+          "confirmDelete": "Deseja excluir esta avaliação?",
+          "confirmRun": "Deseja iniciar a execução? A execução será realizada de forma assíncrona em segundo plano, fechar a página não afetará a execução da tarefa assíncrona.",
+          "downloadRecords": "Baixar Avaliação",
+          "retry": "Tentar Novamente",
+          "run": "Executar",
+          "title": "Ações"
+        },
+        "datasetId": {
+          "title": "Conjunto de Dados"
+        },
+        "name": {
+          "title": "Nome da Tarefa de Avaliação"
+        },
+        "records": {
+          "title": "Número de Registros de Avaliação"
+        },
+        "referenceFiles": {
+          "title": "Arquivos de Referência"
+        },
+        "status": {
+          "error": "Erro na Execução",
+          "pending": "Aguardando Execução",
+          "processing": "Executando",
+          "success": "Execução Bem-Sucedida",
+          "title": "Status"
+        }
+      },
+      "title": "Lista de Tarefas de Avaliação"
+    }
+  }
+}

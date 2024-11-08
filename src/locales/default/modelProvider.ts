@@ -1,21 +1,9 @@
 export default {
-  anthropic: {
-    title: 'Anthropic',
-    token: {
-      desc: '填入来自 Anthropic 的 API Key',
-      placeholder: 'Anthropic API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Anthropic API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Anthropic API Key',
-    },
-  },
   azure: {
     azureApiVersion: {
       desc: 'Azure 的 API 版本，遵循 YYYY-MM-DD 格式，查阅[最新版本](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)',
       fetch: '获取列表',
-      title: 'Azure Api Version',
+      title: 'Azure API Version',
     },
     empty: '请输入模型 ID 添加第一个模型',
     endpoint: {
@@ -29,10 +17,6 @@ export default {
       desc: '从 Azure 门户检查资源时，可在“密钥和终结点”部分中找到此值。 可以使用 KEY1 或 KEY2',
       placeholder: 'Azure API Key',
       title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Azure OpenAI API Key 即可开始会话',
-      title: '使用自定义 Azure OpenAI API Key',
     },
   },
   bedrock: {
@@ -54,84 +38,32 @@ export default {
       placeholder: 'AWS Secret Access Key',
       title: 'AWS Secret Access Key',
     },
+    sessionToken: {
+      desc: '如果你正在使用 AWS SSO/STS，请输入你的 AWS Session Token',
+      placeholder: 'AWS Session Token',
+      title: 'AWS Session Token (可选)',
+    },
     title: 'Bedrock',
     unlock: {
       customRegion: '自定义服务区域',
+      customSessionToken: '自定义 Session Token',
       description:
         '输入你的 AWS AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
       title: '使用自定义 Bedrock 鉴权信息',
     },
   },
-  deepseek: {
-    title: 'DeepSeek',
-    token: {
-      desc: '填入来自 DeepSeek 的 API Key',
-      placeholder: 'DeepSeek API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 DeepSeek API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 DeepSeek API Key',
+  github: {
+    personalAccessToken: {
+      desc: '填入你的 Github PAT，点击 [这里](https://github.com/settings/tokens) 创建',
+      placeholder: 'ghp_xxxxxx',
+      title: 'Github PAT',
     },
   },
-  google: {
-    title: 'Google',
-    token: {
-      desc: '填入来自 Google 的 API Key',
-      placeholder: 'Google API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Google API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Google API Key',
-    },
-  },
-  groq: {
-    title: 'Groq',
-    token: {
-      desc: '填入来自 Groq 的 API Key',
-      placeholder: 'Groq API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Groq API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Groq API Key',
-    },
-  },
-  minimax: {
-    title: 'Minimax',
-    token: {
-      desc: '填入来自 Minimax 的 API Key',
-      placeholder: 'Minimax API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Minimax API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Minimax API Key',
-    },
-  },
-  mistral: {
-    title: 'Mistral AI',
-    token: {
-      desc: '填入来自 Mistral AI 的 API Key',
-      placeholder: 'Mistral AI API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Mistral AI API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Mistral AI API Key',
-    },
-  },
-  moonshot: {
-    title: 'Moonshot AI',
-    token: {
-      desc: '填入来自 Moonshot AI 的 API Key',
-      placeholder: 'Moonshot AI API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Moonshot AI API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Moonshot AI API Key',
+  huggingface: {
+    accessToken: {
+      desc: '填入你的 HuggingFace Token，点击 [这里](https://huggingface.co/settings/tokens) 创建',
+      placeholder: 'hf_xxxxxxxxx',
+      title: 'HuggingFace Token',
     },
   },
   ollama: {
@@ -143,6 +75,12 @@ export default {
       desc: '增加自定义模型，多个模型使用逗号（,）隔开',
       placeholder: 'vicuna,llava,codellama,llama2:13b-text',
       title: '自定义模型名称',
+    },
+    download: {
+      desc: 'Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续',
+      remainingTime: '剩余时间',
+      speed: '下载速度',
+      title: '正在下载模型 {{model}} ',
     },
     endpoint: {
       desc: '填入 Ollama 接口代理地址，本地未额外指定可留空',
@@ -175,94 +113,56 @@ export default {
       },
     },
     title: 'Ollama',
+    unlock: {
+      cancel: '取消下载',
+      confirm: '下载',
+      description: '输入你的 Ollama 模型标签，完成即可继续会话',
+      downloaded: '{{completed}} / {{total}}',
+      starting: '开始下载...',
+      title: '下载指定的 Ollama 模型',
+    },
   },
-  openai: {
-    title: 'OpenAI',
-    token: {
-      desc: '使用自己的 OpenAI Key',
-      placeholder: 'OpenAI API Key',
-      title: 'OpenAI API Key',
+  sensenova: {
+    sensenovaAccessKeyID: {
+      desc: '填入 SenseNova Access Key ID',
+      placeholder: 'SenseNova Access Key ID',
+      title: 'Access Key ID',
+    },
+    sensenovaAccessKeySecret: {
+      desc: '填入 SenseNova Access Key Secret',
+      placeholder: 'SenseNova Access Key Secret',
+      title: 'Access Key Secret',
     },
     unlock: {
-      description: '输入你的 OpenAI API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 OpenAI API Key',
+      description:
+        '输入你的 Access Key ID / Access Key Secret 即可开始会话。应用不会记录你的鉴权配置',
+      title: '使用自定义 SenseNova 鉴权信息',
     },
   },
-  openrouter: {
+  wenxin: {
+    accessKey: {
+      desc: '填入百度千帆平台的 Access Key',
+      placeholder: 'Qianfan Access Key',
+      title: 'Access Key',
+    },
     checker: {
-      desc: '测试代理地址是否正确填写',
+      desc: '测试 AccessKey / SecretAccess 是否填写正确',
     },
-    customModelName: {
-      desc: '增加自定义模型，多个模型使用逗号（,）隔开',
-      placeholder: 'mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free',
-      title: '自定义模型名称',
-    },
-    title: 'OpenRouter',
-    token: {
-      desc: '填入来自 OpenRouter AI 的 API Key',
-      placeholder: 'OpenRouter AI API Key',
-      title: 'API Key',
-    },
-
-    unlock: {
-      description: '输入你的 OpenRouter API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 OpenRouter API Key',
-    },
-  },
-  perplexity: {
-    title: 'Perplexity',
-    token: {
-      desc: '填入来自 Perplexity AI 的 API Key',
-      placeholder: 'Perplexity AI API Key',
-      title: 'API Key',
+    secretKey: {
+      desc: '填入百度千帆平台 Secret Key',
+      placeholder: 'Qianfan Secret Key',
+      title: 'Secret Key',
     },
     unlock: {
-      description: '输入你的 Perplexity API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Perplexity API Key',
-    },
-  },
-  togetherai: {
-    checker: {
-      desc: '测试代理地址是否正确填写',
-    },
-    customModelName: {
-      desc: '增加自定义模型，多个模型使用逗号（,）隔开',
-      placeholder: 'togethercomputer/Llama-2-7B-32K-Instruct,teknium/OpenHermes-2-Mistral-7B',
-      title: '自定义模型名称',
-    },
-    title: 'TogetherAI',
-    token: {
-      desc: '填入来自 TogetherAI AI 的 API Key',
-      placeholder: 'TogetherAI AI API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 TogetherAI API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 TogetherAI API Key',
+      customRegion: '自定义服务区域',
+      description: '输入你的 AccessKey / SecretKey 即可开始会话。应用不会记录你的鉴权配置',
+      title: '使用自定义文心一言鉴权信息',
     },
   },
   zeroone: {
     title: '01.AI 零一万物',
-    token: {
-      desc: '填入来自 01.AI 零一万物的 API Key',
-      placeholder: '01.AI 零一万物 API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的零一万物 API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义零一万物 API Key',
-    },
   },
   zhipu: {
     title: '智谱',
-    token: {
-      desc: '填入来自智谱的 API Key',
-      placeholder: 'Zhipu API Key',
-      title: 'API Key',
-    },
-    unlock: {
-      description: '输入你的 Zhipu API Key 即可开始会话。应用不会记录你的 API Key',
-      title: '使用自定义 Zhipu API Key',
-    },
   },
 };

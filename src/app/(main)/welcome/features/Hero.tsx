@@ -6,6 +6,8 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { BRANDING_NAME } from '@/const/branding';
+
 const useStyles = createStyles(({ css, token }) => {
   return {
     desc: css`
@@ -16,7 +18,7 @@ const useStyles = createStyles(({ css, token }) => {
       text-wrap: balance;
     `,
     title: css`
-      margin-bottom: 0;
+      margin-block-end: 0;
 
       font-size: min(56px, 7vw);
       font-weight: 800;
@@ -43,7 +45,7 @@ const Hero = memo(() => {
         justify={'center'}
         wrap={'wrap'}
       >
-        <strong style={{ fontSize: 'min(56px, 8vw)' }}>LobeChat</strong>
+        <strong style={{ fontSize: 'min(56px, 8vw)' }}>{BRANDING_NAME}</strong>
         <span>{t('slogan.title')}</span>
       </Flexbox>
       <Flexbox

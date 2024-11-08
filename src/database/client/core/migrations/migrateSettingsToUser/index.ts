@@ -1,11 +1,9 @@
-import { DB_Settings } from '@/database/client/schemas/user';
-
-import { V4Settings } from './type';
+import { V4Settings, V5Settings } from './type';
 
 export const migrateSettingsToUser = (
   settings: V4Settings,
-): { avatar: string; settings: DB_Settings } => {
-  const dbSettings: DB_Settings = {
+): { avatar: string; settings: V5Settings } => {
+  const dbSettings: V5Settings = {
     defaultAgent: settings.defaultAgent,
     fontSize: settings.fontSize,
     language: settings.language,

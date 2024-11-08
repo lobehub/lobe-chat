@@ -9,6 +9,9 @@ import { LobeAnthropicAI } from './index';
 
 const provider = 'anthropic';
 
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
+
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -19,10 +22,6 @@ beforeEach(() => {
 
   // 使用 vi.spyOn 来模拟 chat.completions.create 方法
   vi.spyOn(instance['client'].messages, 'create').mockReturnValue(new ReadableStream() as any);
-
-  vi.spyOn(instance['client'].beta.tools.messages, 'create').mockReturnValue({
-    content: [],
-  } as any);
 });
 
 afterEach(() => {
@@ -156,7 +155,7 @@ describe('LobeAnthropicAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'claude-3-haiku-20240307',
           stream: true,
-          temperature: 0.5,
+          temperature: 0.25,
           top_p: 1,
         },
         {},
@@ -193,7 +192,7 @@ describe('LobeAnthropicAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'claude-3-haiku-20240307',
           stream: true,
-          temperature: 0.5,
+          temperature: 0.25,
           top_p: 1,
         },
         {},
@@ -257,34 +256,8 @@ describe('LobeAnthropicAI', () => {
         });
 
         // Assert
-        expect(instance['client'].beta.tools.messages.create).toHaveBeenCalled();
+        expect(instance['client'].messages.create).toHaveBeenCalled();
         expect(spyOn).toHaveBeenCalledWith(tools);
-      });
-
-      it('should handle text and tool_use content correctly in transformResponseToStream', async () => {
-        // Arrange
-        const mockResponse = {
-          content: [
-            { type: 'text', text: 'Hello' },
-            { type: 'tool_use', id: 'tool1', name: 'tool1', input: 'input1' },
-          ],
-        };
-        // @ts-ignore
-        vi.spyOn(instance, 'transformResponseToStream').mockReturnValue(new ReadableStream());
-        vi.spyOn(instance['client'].beta.tools.messages, 'create').mockResolvedValue(
-          mockResponse as any,
-        );
-
-        // Act
-        await instance.chat({
-          messages: [{ content: 'Hello', role: 'user' }],
-          model: 'claude-3-haiku-20240307',
-          temperature: 0,
-          tools: [{ function: { name: 'tool1', description: 'desc1' }, type: 'function' }],
-        });
-
-        // Assert
-        expect(instance['transformResponseToStream']).toHaveBeenCalledWith(mockResponse);
       });
     });
 
@@ -315,7 +288,7 @@ describe('LobeAnthropicAI', () => {
           expect(e).toEqual({
             endpoint: 'https://api.anthropic.com',
             error: apiError,
-            errorType: 'InvalidAnthropicAPIKey',
+            errorType: invalidErrorType,
             provider,
           });
         }
@@ -346,7 +319,7 @@ describe('LobeAnthropicAI', () => {
           expect(e).toEqual({
             endpoint: 'https://api.anthropic.com',
             error: apiError,
-            errorType: 'AnthropicBizError',
+            errorType: bizErrorType,
             provider,
           });
         }
@@ -356,7 +329,7 @@ describe('LobeAnthropicAI', () => {
         try {
           new LobeAnthropicAI({});
         } catch (e) {
-          expect(e).toEqual({ errorType: 'InvalidAnthropicAPIKey' });
+          expect(e).toEqual({ errorType: invalidErrorType });
         }
       });
     });
@@ -397,7 +370,7 @@ describe('LobeAnthropicAI', () => {
         ).rejects.toEqual({
           endpoint: 'https://api.anthropic.com',
           error: apiError,
-          errorType: 'AnthropicBizError',
+          errorType: bizErrorType,
           provider,
         });
       });
@@ -421,7 +394,7 @@ describe('LobeAnthropicAI', () => {
         ).rejects.toEqual({
           endpoint: 'https://api.cu****om.com/v1',
           error: apiError,
-          errorType: 'InvalidAnthropicAPIKey',
+          errorType: invalidErrorType,
           provider,
         });
       });

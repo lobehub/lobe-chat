@@ -1,9 +1,9 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { SendMessageParams } from '@/store/chat/slices/message/action';
-import { filesSelectors, useFileStore } from '@/store/file';
+import { fileChatSelectors, useFileStore } from '@/store/file';
+import { SendMessageParams } from '@/types/message';
 
 export type UseSendMessageParams = Pick<
   SendMessageParams,
@@ -16,20 +16,47 @@ export const useSendMessage = () => {
     s.updateInputMessage,
   ]);
 
-  return useCallback((params: UseSendMessageParams = {}) => {
+  const clearChatUploadFileList = useFileStore((s) => s.clearChatUploadFileList);
+
+  const isUploadingFiles = useFileStore(fileChatSelectors.isUploadingFiles);
+  const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
+
+  const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
+
+  const send = useCallback((params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
     if (chatSelectors.isAIGenerating(store)) return;
-    if (!store.inputMessage) return;
 
-    const imageList = filesSelectors.imageUrlOrBase64List(useFileStore.getState());
+    // if uploading file or send button is disabled by message, then we should not send the message
+    const isUploadingFiles = fileChatSelectors.isUploadingFiles(useFileStore.getState());
+    const isSendButtonDisabledByMessage = chatSelectors.isSendButtonDisabledByMessage(
+      useChatStore.getState(),
+    );
+
+    const canSend = !isUploadingFiles && !isSendButtonDisabledByMessage;
+    if (!canSend) return;
+
+    const fileList = fileChatSelectors.chatUploadFileList(useFileStore.getState());
+    // if there is no message and no image, then we should not send the message
+    if (!store.inputMessage && fileList.length === 0) return;
 
     sendMessage({
-      files: imageList,
+      files: fileList,
       message: store.inputMessage,
       ...params,
     });
 
     updateInputMessage('');
-    useFileStore.getState().clearImageList();
+    clearChatUploadFileList();
+
+    // const hasSystemRole = agentSelectors.hasSystemRole(useAgentStore.getState());
+    // const agentSetting = useAgentStore.getState().agentSettingInstance;
+
+    // // if there is a system role, then we need to use agent setting instance to autocomplete agent meta
+    // if (hasSystemRole && !!agentSetting) {
+    //   agentSetting.autocompleteAllMeta();
+    // }
   }, []);
+
+  return useMemo(() => ({ canSend, send }), [canSend]);
 };

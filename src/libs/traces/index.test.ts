@@ -1,14 +1,15 @@
+// @vitest-environment node
 import { Langfuse } from 'langfuse';
 import { CreateLangfuseTraceBody } from 'langfuse-core';
 import { describe, expect, it, vi } from 'vitest';
 
-import * as server from '@/config/server';
+import * as server from '@/config/langfuse';
 
 import { TraceClient } from './index';
 
 describe('TraceClient', () => {
   it('should not initialize Langfuse client when ENABLE_LANGFUSE is false', () => {
-    vi.spyOn(server, 'getServerConfig').mockReturnValue({
+    vi.spyOn(server, 'getLangfuseConfig').mockReturnValue({
       ENABLE_LANGFUSE: false,
     } as any);
     const client = new TraceClient();
@@ -16,7 +17,7 @@ describe('TraceClient', () => {
   });
 
   it('should throw error if LANGFUSE keys are missing', () => {
-    vi.spyOn(server, 'getServerConfig').mockReturnValue({
+    vi.spyOn(server, 'getLangfuseConfig').mockReturnValue({
       ENABLE_LANGFUSE: true,
     } as any);
     expect(() => new TraceClient()).toThrow('NO_LANGFUSE_KEY_ERROR');
@@ -27,7 +28,7 @@ describe('TraceClient', () => {
 
     vi.spyOn(Langfuse.prototype, 'trace').mockImplementation(mockTrace);
 
-    vi.spyOn(server, 'getServerConfig').mockReturnValue({
+    vi.spyOn(server, 'getLangfuseConfig').mockReturnValue({
       ENABLE_LANGFUSE: true,
       LANGFUSE_PUBLIC_KEY: 'public-key',
       LANGFUSE_SECRET_KEY: 'secret-key',
@@ -45,7 +46,7 @@ describe('TraceClient', () => {
     const mockShutdownAsync = vi.fn();
 
     vi.spyOn(Langfuse.prototype, 'shutdownAsync').mockImplementation(mockShutdownAsync);
-    vi.spyOn(server, 'getServerConfig').mockReturnValue({
+    vi.spyOn(server, 'getLangfuseConfig').mockReturnValue({
       ENABLE_LANGFUSE: true,
       LANGFUSE_PUBLIC_KEY: 'public-key',
       LANGFUSE_SECRET_KEY: 'secret-key',

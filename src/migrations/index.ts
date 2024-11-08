@@ -6,12 +6,25 @@ import { MigrationV0ToV1 } from './FromV0ToV1';
 import { MigrationV1ToV2 } from './FromV1ToV2';
 import { MigrationV3ToV4 } from './FromV3ToV4';
 import { MigrationV4ToV5 } from './FromV4ToV5';
+import { MigrationV5ToV6 } from './FromV5ToV6';
+import { MigrationV6ToV7 } from './FromV6ToV7';
 
 // Current latest version
-export const CURRENT_CONFIG_VERSION = 5;
+export const CURRENT_CONFIG_VERSION = 7;
 
 // Version migrations module
 const ConfigMigrations = [
+  /**
+   * 2024.05.27
+   *
+   * apiKey in languageModel change to keyVaults
+   */
+  MigrationV6ToV7,
+  /**
+   * 2024.05.24
+   *
+   * some config in agentConfig change to chatConfig
+   */ MigrationV5ToV6,
   /**
    * 2024.05.11
    *

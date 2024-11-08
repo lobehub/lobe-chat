@@ -1,11 +1,19 @@
 import { DiscordIcon } from '@lobehub/ui';
-import { Book, CircleUserRound, Database, Download, Feather, Settings2 } from 'lucide-react';
+import {
+  Book,
+  CircleUserRound,
+  Database,
+  Download,
+  Feather,
+  LogOut,
+  Settings2,
+} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { enableAuth } from '@/const/auth';
 import { DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
+import { isServerMode } from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/slices/auth/selectors';
@@ -16,11 +24,15 @@ export const useCategory = () => {
   const router = useRouter();
   const { canInstall, install } = usePWAInstall();
   const { t } = useTranslation(['common', 'setting', 'auth']);
-  const [isLogin, isLoginWithAuth, isLoginWithClerk] = useUserStore((s) => [
-    authSelectors.isLogin(s),
-    authSelectors.isLoginWithAuth(s),
-    authSelectors.isLoginWithClerk(s),
-  ]);
+  const [isLogin, isLoginWithAuth, isLoginWithClerk, enableAuth, signOut, isLoginWithNextAuth] =
+    useUserStore((s) => [
+      authSelectors.isLogin(s),
+      authSelectors.isLoginWithAuth(s),
+      authSelectors.isLoginWithClerk(s),
+      authSelectors.enabledAuth(s),
+      s.logout,
+      authSelectors.isLoginWithNextAuth(s),
+    ]);
 
   const profile: CellProps[] = [
     {
@@ -62,6 +74,10 @@ export const useCategory = () => {
     },
   ];
 
+  /* ↓ cloud slot ↓ */
+
+  /* ↑ cloud slot ↑ */
+
   const data: CellProps[] = [
     {
       icon: Database,
@@ -95,15 +111,28 @@ export const useCategory = () => {
     },
   ];
 
+  const nextAuthSignOut: CellProps[] = [
+    {
+      icon: LogOut,
+      key: 'nextauthSignout',
+      label: t('auth:signout'),
+      onClick: signOut,
+    },
+  ];
+
   const mainItems = [
     {
       type: 'divider',
     },
     ...(isLoginWithClerk ? profile : []),
     ...(enableAuth ? (isLoginWithAuth ? settings : []) : settingsWithoutAuth),
+    /* ↓ cloud slot ↓ */
+
+    /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
-    ...(isLogin ? data : []),
+    ...(isLogin && !isServerMode ? data : []),
     ...helps,
+    ...(enableAuth && isLoginWithNextAuth ? nextAuthSignOut : []),
   ].filter(Boolean) as CellProps[];
 
   return mainItems;

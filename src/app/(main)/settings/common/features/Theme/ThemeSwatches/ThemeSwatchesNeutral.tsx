@@ -8,17 +8,17 @@ import {
 import { memo } from 'react';
 
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const ThemeSwatchesNeutral = memo(() => {
-  const [neutralColor, setSettings] = useUserStore((s) => [
-    settingsSelectors.currentSettings(s).neutralColor,
-    s.setSettings,
+  const [neutralColor, updateGeneralConfig] = useUserStore((s) => [
+    userGeneralSettingsSelectors.neutralColor(s),
+    s.updateGeneralConfig,
   ]);
 
   const handleSelect = (v: any) => {
     const name = findCustomThemeName('neutral', v) as NeutralColors;
-    setSettings({ neutralColor: name || '' });
+    updateGeneralConfig({ neutralColor: name || '' });
   };
 
   return (

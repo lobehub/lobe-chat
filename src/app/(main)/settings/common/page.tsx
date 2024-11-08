@@ -9,4 +9,5 @@ export const generateMetadata = async () => {
     url: '/settings/common',
   });
 };
+
 export { default } from './index';

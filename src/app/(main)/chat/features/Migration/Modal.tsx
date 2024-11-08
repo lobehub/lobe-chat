@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Center } from 'react-layout-kit';
 
 import DataStyleModal from '@/components/DataStyleModal';
+import { BRANDING_NAME } from '@/const/branding';
 
 import Failed from './Failed';
 import MigrationStart from './Start';
@@ -51,7 +52,7 @@ const MigrationModal = memo<MigrationModalProps>(({ setOpen, open, state: dbStat
             icon={<Icon icon={CheckCircle} />}
             status={'success'}
             style={{ paddingBlock: 24 }}
-            subTitle={t('dbV1.upgrade.success.subTitle')}
+            subTitle={t('dbV1.upgrade.success.subTitle', { appName: BRANDING_NAME })}
             title={t('dbV1.upgrade.success.title')}
           />
         );
@@ -71,7 +72,7 @@ const MigrationModal = memo<MigrationModalProps>(({ setOpen, open, state: dbStat
   };
 
   return (
-    <DataStyleModal icon={CpuIcon} open={open} title={t('dbV1.title')}>
+    <DataStyleModal icon={CpuIcon} open={open} title={t('dbV1.title', { appName: BRANDING_NAME })}>
       <Center gap={48}>{renderContent()}</Center>
     </DataStyleModal>
   );

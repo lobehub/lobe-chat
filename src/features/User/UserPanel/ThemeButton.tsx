@@ -1,5 +1,5 @@
 import { ActionIcon, Icon } from '@lobehub/ui';
-import { Popover } from 'antd';
+import { Popover, type PopoverProps } from 'antd';
 import { useTheme } from 'antd-style';
 import { Monitor, Moon, Sun } from 'lucide-react';
 import { memo, useMemo } from 'react';
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import Menu, { type MenuProps } from '@/components/Menu';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const themeIcons = {
   auto: Monitor,
@@ -15,10 +15,10 @@ const themeIcons = {
   light: Sun,
 };
 
-const ThemeButton = memo(() => {
+const ThemeButton = memo<{ placement?: PopoverProps['placement'] }>(({ placement = 'right' }) => {
   const theme = useTheme();
   const [themeMode, switchThemeMode] = useUserStore((s) => [
-    settingsSelectors.currentSettings(s).themeMode,
+    userGeneralSettingsSelectors.currentThemeMode(s),
     s.switchThemeMode,
   ]);
 
@@ -55,7 +55,7 @@ const ThemeButton = memo(() => {
       overlayInnerStyle={{
         padding: 0,
       }}
-      placement={'right'}
+      placement={placement}
       trigger={['click', 'hover']}
     >
       <ActionIcon

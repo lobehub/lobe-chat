@@ -2,13 +2,14 @@ import { PluginRequestPayload, createHeadersWithPluginSettings } from '@lobehub/
 import { produce } from 'immer';
 import { merge } from 'lodash-es';
 
-import { createErrorResponse } from '@/app/api/errorResponse';
+import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { INBOX_GUIDE_SYSTEMROLE } from '@/const/guide';
 import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
-import { AgentRuntime, ChatCompletionErrorPayload, ModelProvider } from '@/libs/agent-runtime';
-import { filesSelectors, useFileStore } from '@/store/file';
+import { isServerMode } from '@/const/version';
+import {AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload, ModelProvider} from '@/libs/agent-runtime';
+import { filesPrompts } from '@/prompts/files';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -24,6 +25,7 @@ import { ChatErrorType } from '@/types/fetch';
 import { ChatMessage, MessageToolCall } from '@/types/message';
 import type { ChatStreamPayload, OpenAIChatMessage } from '@/types/openai/chat';
 import { UserMessageContentPart } from '@/types/openai/chat';
+import { createErrorResponse } from '@/utils/errorResponse';
 import { FetchSSEOptions, fetchSSE, getMessageError } from '@/utils/fetch';
 import { genToolCallingName } from '@/utils/toolCall';
 import { createTraceHeader, getTraceId } from '@/utils/trace';
@@ -114,6 +116,7 @@ export function initializeWithClientStore(provider: string, payload: any) {
           accessKeyId: providerAuthPayload?.awsAccessKeyId,
           accessKeySecret: providerAuthPayload?.awsSecretAccessKey,
           region: providerAuthPayload?.awsRegion,
+          sessionToken: providerAuthPayload?.awsSessionToken,
         };
       }
       break;
@@ -125,18 +128,31 @@ export function initializeWithClientStore(provider: string, payload: any) {
       break;
     }
     case ModelProvider.Perplexity: {
+      providerOptions = {
+        apikey: providerAuthPayload?.apiKey,
+        baseURL: providerAuthPayload?.endpoint,
+      };
       break;
     }
+    case ModelProvider.Qwen: {
+      break;
+    }
+
     case ModelProvider.Anthropic: {
       providerOptions = {
         baseURL: providerAuthPayload?.endpoint,
       };
       break;
     }
+
     case ModelProvider.Mistral: {
       break;
     }
     case ModelProvider.Groq: {
+      providerOptions = {
+        apikey: providerAuthPayload?.apiKey,
+        baseURL: providerAuthPayload?.endpoint,
+      };
       break;
     }
     case ModelProvider.DeepSeek: {
@@ -294,6 +310,8 @@ class ChatService {
       provider,
     });
 
+    const providerConfig = DEFAULT_MODEL_PROVIDER_LIST.find((item) => item.id === provider);
+
     return fetchSSE(API_ENDPOINTS.chat(provider), {
       body: JSON.stringify(payload),
       fetcher: fetcher,
@@ -304,6 +322,9 @@ class ChatService {
       onFinish: options?.onFinish,
       onMessageHandle: options?.onMessageHandle,
       signal,
+      // use smoothing when enable client fetch
+      // https://github.com/lobehub/lobe-chat/issues/3800
+      smoothing: providerConfig?.smoothing || enableFetchOnClient,
     });
   };
 
@@ -316,7 +337,7 @@ class ChatService {
     const s = useToolStore.getState();
 
     const settings = pluginSelectors.getPluginSettingsById(params.identifier)(s);
-    const manifest = pluginSelectors.getPluginManifestById(params.identifier)(s);
+    const manifest = pluginSelectors.getToolManifestById(params.identifier)(s);
 
     const traceHeader = createTraceHeader(this.mapTrace(options?.trace, TraceTagMap.ToolCalling));
 
@@ -356,23 +377,26 @@ class ChatService {
         return;
       }
       onError?.(error, errorContent);
+      console.error(error);
     };
 
     onLoadingChange?.(true);
 
-    const data = await this.getChatCompletion(params, {
-      onErrorHandle: (error) => {
-        errorHandle(new Error(error.message), error);
-      },
-      onFinish,
-      onMessageHandle,
-      signal: abortController?.signal,
-      trace: this.mapTrace(trace, TraceTagMap.SystemChain),
-    }).catch(errorHandle);
+    try {
+      await this.getChatCompletion(params, {
+        onErrorHandle: (error) => {
+          errorHandle(new Error(error.message), error);
+        },
+        onFinish,
+        onMessageHandle,
+        signal: abortController?.signal,
+        trace: this.mapTrace(trace, TraceTagMap.SystemChain),
+      });
 
-    onLoadingChange?.(false);
-
-    return await data?.text();
+      onLoadingChange?.(false);
+    } catch (e) {
+      errorHandle(e as Error);
+    }
   };
 
   private processMessages = (
@@ -391,29 +415,22 @@ class ChatService {
     // for the models with visual ability, add image url to content
     // refs: https://platform.openai.com/docs/guides/vision/quick-start
     const getContent = (m: ChatMessage) => {
-      if (!m.files) return m.content;
-
-      const imageList = filesSelectors.getImageUrlOrBase64ByList(m.files)(useFileStore.getState());
-
-      if (imageList.length === 0) return m.content;
-
-      const canUploadFile = modelProviderSelectors.isModelEnabledUpload(model)(
-        useUserStore.getState(),
-      );
-
-      if (!canUploadFile) {
+      // only if message doesn't have images and files, then return the plain content
+      if ((!m.imageList || m.imageList.length === 0) && (!m.fileList || m.fileList.length === 0))
         return m.content;
-      }
 
+      const imageList = m.imageList || [];
+
+      const filesContext = isServerMode ? filesPrompts({ fileList: m.fileList, imageList }) : '';
       return [
-        { text: m.content, type: 'text' },
+        { text: (m.content + '\n\n' + filesContext).trim(), type: 'text' },
         ...imageList.map(
           (i) => ({ image_url: { detail: 'auto', url: i.url }, type: 'image_url' }) as const,
         ),
       ] as UserMessageContentPart[];
     };
 
-    const postMessages = messages.map((m): OpenAIChatMessage => {
+    let postMessages = messages.map((m): OpenAIChatMessage => {
       switch (m.role) {
         case 'user': {
           return { content: getContent(m), role: m.role };
@@ -451,7 +468,7 @@ class ChatService {
       }
     });
 
-    return produce(postMessages, (draft) => {
+    postMessages = produce(postMessages, (draft) => {
       // if it's a welcome question, inject InboxGuide SystemRole
       const inboxGuideSystemRole =
         options?.isWelcomeQuestion &&
@@ -485,6 +502,8 @@ class ChatService {
         });
       }
     });
+
+    return this.reorderToolMessages(postMessages);
   };
 
   private mapTrace(trace?: TracePayload, tag?: TraceTagMap): TracePayload {
@@ -514,7 +533,55 @@ class ChatService {
     const agentRuntime = await initializeWithClientStore(params.provider, params.payload);
     const data = params.payload as ChatStreamPayload;
 
+    /**
+     * if enable login and not signed in, return unauthorized error
+     */
+    const userStore = useUserStore.getState();
+    if (userStore.enableAuth() && !userStore.isSignedIn) {
+      throw AgentRuntimeError.createError(ChatErrorType.InvalidAccessCode);
+    }
+
     return agentRuntime.chat(data, { signal: params.signal });
+  };
+
+  /**
+   * Reorder tool messages to ensure that tool messages are displayed in the correct order.
+   * see https://github.com/lobehub/lobe-chat/pull/3155
+   */
+  private reorderToolMessages = (messages: OpenAIChatMessage[]): OpenAIChatMessage[] => {
+    const reorderedMessages: OpenAIChatMessage[] = [];
+    const toolMessages: Record<string, OpenAIChatMessage> = {};
+
+    // 1. collect all tool messages
+    messages.forEach((message) => {
+      if (message.role === 'tool' && message.tool_call_id) {
+        toolMessages[message.tool_call_id] = message;
+      }
+    });
+
+    // 2. reorder messages
+    messages.forEach((message) => {
+      const hasPushed = reorderedMessages.some(
+        (m) => !!message.tool_call_id && m.tool_call_id === message.tool_call_id,
+      );
+
+      if (hasPushed) return;
+
+      reorderedMessages.push(message);
+
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall) => {
+          const correspondingToolMessage = toolMessages[toolCall.id];
+          if (correspondingToolMessage) {
+            reorderedMessages.push(correspondingToolMessage);
+            // 从 toolMessages 中删除已处理的消息，避免重复
+            delete toolMessages[toolCall.id];
+          }
+        });
+      }
+    });
+
+    return reorderedMessages;
   };
 }
 

@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Adicionar Assistente",
+    "addAgentAndConverse": "Adicionar Assistente e Conversar",
+    "addAgentSuccess": "Adição bem-sucedida",
+    "conversation": {
+      "l1": "Olá, eu sou **{{name}}**, você pode me fazer qualquer pergunta e eu farei o meu melhor para responder ~",
+      "l2": "Aqui estão minhas capacidades: ",
+      "l3": "Vamos começar a conversa!"
+    },
+    "description": "Introdução ao Assistente",
+    "detail": "Detalhes",
+    "list": "Lista de Assistentes",
+    "more": "Mais",
+    "plugins": "Integrar plugins",
+    "recentSubmits": "Atualizações Recentes",
+    "suggestions": "Sugestões Relacionadas",
+    "systemRole": "Configuração do Assistente",
+    "try": "Experimente"
+  },
+  "back": "Voltar à descoberta",
+  "category": {
+    "assistant": {
+      "academic": "Acadêmico",
+      "all": "Todos",
+      "career": "Carreira",
+      "copywriting": "Redação",
+      "design": "Design",
+      "education": "Educação",
+      "emotions": "Emoções",
+      "entertainment": "Entretenimento",
+      "games": "Jogos",
+      "general": "Geral",
+      "life": "Vida",
+      "marketing": "Marketing",
+      "office": "Escritório",
+      "programming": "Programação",
+      "translation": "Tradução"
+    },
+    "plugin": {
+      "all": "Todos",
+      "gaming-entertainment": "Jogos e Entretenimento",
+      "life-style": "Estilo de Vida",
+      "media-generate": "Geração de Mídia",
+      "science-education": "Ciência e Educação",
+      "social": "Mídias Sociais",
+      "stocks-finance": "Ações e Finanças",
+      "tools": "Ferramentas Úteis",
+      "web-search": "Busca na Web"
+    }
+  },
+  "cleanFilter": "Limpar Filtro",
+  "create": "Criar",
+  "createGuide": {
+    "func1": {
+      "desc1": "No painel de conversa, acesse a página de configurações do assistente que você deseja enviar pelo canto superior direito;",
+      "desc2": "Clique no botão de enviar para o mercado de assistentes no canto superior direito.",
+      "tag": "Método Um",
+      "title": "Enviar através do LobeChat"
+    },
+    "func2": {
+      "button": "Ir para o repositório de Assistentes no Github",
+      "desc": "Se você deseja adicionar o assistente ao índice, crie uma entrada usando agent-template.json ou agent-template-full.json no diretório plugins, escreva uma breve descrição e marque adequadamente, em seguida, crie um pull request.",
+      "tag": "Método Dois",
+      "title": "Enviar através do Github"
+    }
+  },
+  "dislike": "Não Gosto",
+  "filter": "Filtrar",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "Todos os Autores",
+      "followed": "Autores Seguidos",
+      "title": "Faixa de Autores"
+    },
+    "contentLength": "Comprimento Mínimo do Contexto",
+    "maxToken": {
+      "title": "Definir Comprimento Máximo (Token)",
+      "unlimited": "Ilimitado"
+    },
+    "other": {
+      "functionCall": "Suporte a Chamadas de Função",
+      "title": "Outros",
+      "vision": "Suporte a Reconhecimento Visual",
+      "withKnowledge": "Com Base de Conhecimento",
+      "withTool": "Com Plugins"
+    },
+    "pricing": "Preço do Modelo",
+    "timePeriod": {
+      "all": "Todo o Tempo",
+      "day": "Últimas 24 Horas",
+      "month": "Últimos 30 Dias",
+      "title": "Faixa de Tempo",
+      "week": "Últimos 7 Dias",
+      "year": "Último Ano"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Assistentes Recomendados",
+    "featuredModels": "Modelos Recomendados",
+    "featuredProviders": "Provedores de Modelos Recomendados",
+    "featuredTools": "Plugins Recomendados",
+    "more": "Descubra Mais"
+  },
+  "like": "Gosto",
+  "models": {
+    "chat": "Iniciar Conversa",
+    "contentLength": "Comprimento Máximo do Contexto",
+    "free": "Gratuito",
+    "guide": "Guia de Configuração",
+    "list": "Lista de Modelos",
+    "more": "Mais",
+    "parameterList": {
+      "defaultValue": "Valor Padrão",
+      "docs": "Ver Documentação",
+      "frequency_penalty": {
+        "desc": "Esta configuração ajusta a frequência com que o modelo reutiliza vocabulário específico que já apareceu na entrada. Valores mais altos reduzem a probabilidade de repetição, enquanto valores negativos têm o efeito oposto. A penalidade de vocabulário não aumenta com o número de ocorrências. Valores negativos incentivam a reutilização de vocabulário.",
+        "title": "Penalidade de Frequência"
+      },
+      "max_tokens": {
+        "desc": "Esta configuração define o comprimento máximo que o modelo pode gerar em uma única resposta. Definir um valor mais alto permite que o modelo produza respostas mais longas, enquanto um valor mais baixo limita o comprimento da resposta, tornando-a mais concisa. Ajustar esse valor de forma razoável de acordo com diferentes cenários de aplicação pode ajudar a alcançar o comprimento e o nível de detalhe desejados na resposta.",
+        "title": "Limite de resposta única"
+      },
+      "presence_penalty": {
+        "desc": "Esta configuração visa controlar a reutilização de vocabulário com base na frequência com que aparece na entrada. Ela tenta usar menos palavras que aparecem com frequência, proporcionalmente à sua frequência de ocorrência. A penalidade de vocabulário aumenta com o número de ocorrências. Valores negativos incentivam a reutilização de vocabulário.",
+        "title": "Novidade do Tópico"
+      },
+      "range": "Faixa",
+      "temperature": {
+        "desc": "Esta configuração afeta a diversidade das respostas do modelo. Valores mais baixos resultam em respostas mais previsíveis e típicas, enquanto valores mais altos incentivam respostas mais variadas e incomuns. Quando o valor é 0, o modelo sempre dá a mesma resposta para uma entrada dada.",
+        "title": "Aleatoriedade"
+      },
+      "title": "Parâmetros do Modelo",
+      "top_p": {
+        "desc": "Esta configuração limita a seleção do modelo a uma certa proporção de vocabulário com maior probabilidade: seleciona apenas aquelas palavras cujo total acumulado de probabilidade atinge P. Valores mais baixos tornam as respostas do modelo mais previsíveis, enquanto a configuração padrão permite que o modelo escolha de todo o vocabulário disponível.",
+        "title": "Amostragem Nuclear"
+      },
+      "type": "Tipo"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat suporta o uso de chaves API personalizadas para este provedor.",
+      "input": "Preço de Entrada",
+      "inputTooltip": "Custo por milhão de Tokens",
+      "latency": "Latência",
+      "latencyTooltip": "Tempo médio de resposta do provedor para enviar o primeiro Token",
+      "maxOutput": "Comprimento Máximo de Saída",
+      "maxOutputTooltip": "Número máximo de Tokens que este endpoint pode gerar",
+      "officialTooltip": "Serviço Oficial do LobeHub",
+      "output": "Preço de Saída",
+      "outputTooltip": "Custo por milhão de Tokens",
+      "streamCancellationTooltip": "Este provedor suporta a funcionalidade de cancelamento de fluxo.",
+      "throughput": "Taxa de Transferência",
+      "throughputTooltip": "Número médio de Tokens transmitidos por segundo em solicitações de fluxo"
+    },
+    "suggestions": "Modelos Relacionados",
+    "supportedProviders": "Provedores que suportam este modelo"
+  },
+  "plugins": {
+    "community": "Plugins da Comunidade",
+    "install": "Instalar Plugin",
+    "installed": "Instalado",
+    "list": "Lista de Plugins",
+    "meta": {
+      "description": "Descrição",
+      "parameter": "Parâmetro",
+      "title": "Parâmetros da Ferramenta",
+      "type": "Tipo"
+    },
+    "more": "Mais",
+    "official": "Plugins Oficiais",
+    "recentSubmits": "Atualizações Recentes",
+    "suggestions": "Sugestões Relacionadas"
+  },
+  "providers": {
+    "config": "Configurar Provedor",
+    "list": "Lista de Provedores de Modelos",
+    "modelCount": "{{count}} modelos",
+    "modelSite": "Documentação do modelo",
+    "more": "Mais",
+    "officialSite": "Site oficial",
+    "showAllModels": "Mostrar todos os modelos",
+    "suggestions": "Provedores Relacionados",
+    "supportedModels": "Modelos Suportados"
+  },
+  "search": {
+    "placeholder": "Pesquisar nome, descrição ou palavras-chave...",
+    "result": "{{count}} resultados de busca sobre <highlight>{{keyword}}</highlight>",
+    "searching": "Buscando..."
+  },
+  "sort": {
+    "mostLiked": "Mais Curtido",
+    "mostUsed": "Mais Usado",
+    "newest": "Mais Novo",
+    "oldest": "Mais Antigo",
+    "recommended": "Recomendado"
+  },
+  "tab": {
+    "assistants": "Assistentes",
+    "home": "Início",
+    "models": "Modelos",
+    "plugins": "Plugins",
+    "providers": "Provedores de Modelos"
+  }
+}

@@ -66,7 +66,7 @@ const AgentPlugin = memo(() => {
 
   // 检查出不在 installedPlugins 中的插件
   const deprecatedList = userEnabledPlugins
-    .filter((pluginId) => installedPlugins.findIndex((p) => p.identifier === pluginId) < 0)
+    .filter((pluginId) => !installedPlugins.some((p) => p.identifier === pluginId))
     .map((id) => ({
       avatar: <Avatar avatar={'♻️'} />,
       children: (

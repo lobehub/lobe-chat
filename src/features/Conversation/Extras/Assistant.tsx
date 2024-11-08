@@ -1,7 +1,7 @@
+import { ModelTag } from '@lobehub/icons';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
-import ModelTag from '@/components/ModelTag';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useChatStore } from '@/store/chat';

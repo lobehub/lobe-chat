@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { DEFAULT_MODEL } from '@/const/settings';
+import { AgentChatConfigSchema } from '@/types/agent';
 import { LobeMetaDataSchema } from '@/types/meta';
 
 const fewShotsSchema = z.array(
@@ -23,22 +25,14 @@ const ttsSchema = z.object({
 });
 
 export const AgentSchema = z.object({
-  autoCreateTopicThreshold: z.number().default(2),
-  compressThreshold: z.number().optional(),
-  displayMode: z.enum(['chat', 'docs']).optional(),
-  enableAutoCreateTopic: z.boolean().default(true),
-  enableCompressThreshold: z.boolean().optional(),
-  enableHistoryCount: z.boolean().optional(),
-  enableMaxTokens: z.boolean().optional(),
+  chatConfig: AgentChatConfigSchema,
   fewShots: fewShotsSchema.optional(),
-  historyCount: z.number().default(8).optional(),
-  inputTemplate: z.string().optional(),
-  model: z.string().default('gpt-3.5-turbo'),
+  model: z.string().default(DEFAULT_MODEL),
   params: z.object({
     frequency_penalty: z.number().default(0).optional(),
     max_tokens: z.number().optional(),
     presence_penalty: z.number().default(0).optional(),
-    temperature: z.number().default(0.6).optional(),
+    temperature: z.number().default(1).optional(),
     top_p: z.number().default(1).optional(),
   }),
   plugins: z.array(z.string()).optional(),

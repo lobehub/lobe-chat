@@ -1,8 +1,10 @@
 import { ActionIcon, DiscordIcon, Icon } from '@lobehub/ui';
 import { Badge } from 'antd';
+import { ItemType } from 'antd/es/menu/interface';
 import {
   Book,
   CircleUserRound,
+  Cloudy,
   Download,
   Feather,
   HardDriveDownload,
@@ -20,13 +22,24 @@ import { Flexbox } from 'react-layout-kit';
 import urlJoin from 'url-join';
 
 import type { MenuProps } from '@/components/Menu';
-import { DISCORD, DOCUMENTS, EMAIL_SUPPORT, GITHUB_ISSUES } from '@/const/url';
+import { LOBE_CHAT_CLOUD } from '@/const/branding';
+import {
+  DISCORD,
+  DOCUMENTS_REFER_URL,
+  EMAIL_SUPPORT,
+  GITHUB_ISSUES,
+  OFFICIAL_URL,
+  UTM_SOURCE,
+  mailTo,
+} from '@/const/url';
+import { isServerMode } from '@/const/version';
 import DataImporter from '@/features/DataImporter';
 import { useOpenSettings } from '@/hooks/useInterceptingRoutes';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useQueryRoute } from '@/hooks/useQueryRoute';
 import { configService } from '@/services/config';
 import { SettingsTabs } from '@/store/global/initialState';
+import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useUserStore } from '@/store/user';
 import { authSelectors } from '@/store/user/selectors';
 
@@ -60,6 +73,7 @@ export const useMenu = () => {
   const hasNewVersion = useNewVersion();
   const openSettings = useOpenSettings();
   const { t } = useTranslation(['common', 'setting', 'auth']);
+  const { showCloudPromotion, hideDocs } = useServerConfigStore(featureFlagsSelectors);
   const [isLogin, isLoginWithAuth, isLoginWithClerk, openUserProfile] = useUserStore((s) => [
     authSelectors.isLogin(s),
     authSelectors.isLoginWithAuth(s),
@@ -78,26 +92,30 @@ export const useMenu = () => {
 
   const settings: MenuProps['items'] = [
     {
+      extra: (
+        <ActionIcon
+          icon={Maximize}
+          onClick={() => router.push(urlJoin('/settings', SettingsTabs.Common))}
+          size={'small'}
+          title={t('fullscreen')}
+        />
+      ),
       icon: <Icon icon={Settings2} />,
       key: 'setting',
       label: (
-        <Flexbox align={'center'} gap={8} horizontal>
-          <NewVersionBadge onClick={openSettings} showBadge={hasNewVersion}>
-            {t('userPanel.setting')}
-          </NewVersionBadge>
-          <ActionIcon
-            icon={Maximize}
-            onClick={() => router.push(urlJoin('/settings', SettingsTabs.Common))}
-            size={'small'}
-            title={t('fullscreen')}
-          />
-        </Flexbox>
+        <NewVersionBadge onClick={openSettings} showBadge={hasNewVersion}>
+          {t('userPanel.setting')}
+        </NewVersionBadge>
       ),
     },
     {
       type: 'divider',
     },
   ];
+
+  /* ↓ cloud slot ↓ */
+
+  /* ↑ cloud slot ↑ */
 
   const pwa: MenuProps['items'] = [
     {
@@ -111,104 +129,122 @@ export const useMenu = () => {
     },
   ];
 
-  const data: MenuProps['items'] = [
-    {
-      icon: <Icon icon={HardDriveUpload} />,
-      key: 'import',
-      label: <DataImporter>{t('import')}</DataImporter>,
-    },
-    {
-      children: [
+  const data = !isLogin
+    ? []
+    : ([
         {
-          key: 'allAgent',
-          label: t('exportType.allAgent'),
-          onClick: configService.exportAgents,
+          icon: <Icon icon={HardDriveDownload} />,
+          key: 'import',
+          label: <DataImporter>{t('import')}</DataImporter>,
+        },
+        isServerMode
+          ? null
+          : {
+              children: [
+                {
+                  key: 'allAgent',
+                  label: t('exportType.allAgent'),
+                  onClick: configService.exportAgents,
+                },
+                {
+                  key: 'allAgentWithMessage',
+                  label: t('exportType.allAgentWithMessage'),
+                  onClick: configService.exportSessions,
+                },
+                {
+                  key: 'globalSetting',
+                  label: t('exportType.globalSetting'),
+                  onClick: configService.exportSettings,
+                },
+                {
+                  type: 'divider',
+                },
+                {
+                  key: 'all',
+                  label: t('exportType.all'),
+                  onClick: configService.exportAll,
+                },
+              ],
+              icon: <Icon icon={HardDriveUpload} />,
+              key: 'export',
+              label: t('export'),
+            },
+        {
+          type: 'divider',
+        },
+      ].filter(Boolean) as ItemType[]);
+
+  const helps: MenuProps['items'] = hideDocs
+    ? []
+    : ([
+        showCloudPromotion && {
+          icon: <Icon icon={Cloudy} />,
+          key: 'cloud',
+          label: (
+            <Link href={`${OFFICIAL_URL}?utm_source=${UTM_SOURCE}`} target={'_blank'}>
+              {t('userPanel.cloud', { name: LOBE_CHAT_CLOUD })}
+            </Link>
+          ),
         },
         {
-          key: 'allAgentWithMessage',
-          label: t('exportType.allAgentWithMessage'),
-          onClick: configService.exportSessions,
+          icon: <Icon icon={DiscordIcon} />,
+          key: 'discord',
+          label: (
+            <Link href={DISCORD} target={'_blank'}>
+              {t('userPanel.discord')}
+            </Link>
+          ),
         },
         {
-          key: 'globalSetting',
-          label: t('exportType.globalSetting'),
-          onClick: configService.exportSettings,
+          children: [
+            {
+              icon: <Icon icon={Book} />,
+              key: 'docs',
+              label: (
+                <Link href={DOCUMENTS_REFER_URL} target={'_blank'}>
+                  {t('userPanel.docs')}
+                </Link>
+              ),
+            },
+            {
+              icon: <Icon icon={Feather} />,
+              key: 'feedback',
+              label: (
+                <Link href={GITHUB_ISSUES} target={'_blank'}>
+                  {t('userPanel.feedback')}
+                </Link>
+              ),
+            },
+            {
+              icon: <Icon icon={Mail} />,
+              key: 'email',
+              label: (
+                <Link href={mailTo(EMAIL_SUPPORT)} target={'_blank'}>
+                  {t('userPanel.email')}
+                </Link>
+              ),
+            },
+          ],
+          icon: <Icon icon={LifeBuoy} />,
+          key: 'help',
+          label: t('userPanel.help'),
         },
         {
           type: 'divider',
         },
-        {
-          key: 'all',
-          label: t('exportType.all'),
-          onClick: configService.exportAll,
-        },
-      ],
-      icon: <Icon icon={HardDriveDownload} />,
-      key: 'export',
-      label: t('export'),
-    },
-    {
-      type: 'divider',
-    },
-  ];
-
-  const helps: MenuProps['items'] = [
-    {
-      icon: <Icon icon={DiscordIcon} />,
-      key: 'discord',
-      label: (
-        <Link href={DISCORD} target={'_blank'}>
-          {t('userPanel.discord')}
-        </Link>
-      ),
-    },
-    {
-      children: [
-        {
-          icon: <Icon icon={Book} />,
-          key: 'docs',
-          label: (
-            <Link href={DOCUMENTS} target={'_blank'}>
-              {t('userPanel.docs')}
-            </Link>
-          ),
-        },
-        {
-          icon: <Icon icon={Feather} />,
-          key: 'feedback',
-          label: (
-            <Link href={GITHUB_ISSUES} target={'_blank'}>
-              {t('userPanel.feedback')}
-            </Link>
-          ),
-        },
-        {
-          icon: <Icon icon={Mail} />,
-          key: 'email',
-          label: (
-            <Link href={`mailto:${EMAIL_SUPPORT}`} target={'_blank'}>
-              {t('userPanel.email')}
-            </Link>
-          ),
-        },
-      ],
-      icon: <Icon icon={LifeBuoy} />,
-      key: 'help',
-      label: t('userPanel.help'),
-    },
-    {
-      type: 'divider',
-    },
-  ];
+      ].filter(Boolean) as ItemType[]);
 
   const mainItems = [
     {
       type: 'divider',
     },
-    ...(isLoginWithClerk ? profile : []),
     ...(isLogin ? settings : []),
+    ...(isLoginWithClerk ? profile : []),
+    /* ↓ cloud slot ↓ */
+
+    /* ↑ cloud slot ↑ */
     ...(canInstall ? pwa : []),
-    ...(isLogin ? data : []),
+    ...data,
     ...helps,
   ].filter(Boolean) as MenuProps['items'];
 

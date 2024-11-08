@@ -2,7 +2,7 @@ import { ActionIcon, Alert, Highlighter } from '@lobehub/ui';
 import { Button, Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
 import { Mic, MicOff } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
@@ -43,6 +43,11 @@ const CommonSTT = memo<{
   }) => {
     const { t } = useTranslation('chat');
     const { styles } = useStyles();
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+
+    const handleDropdownVisibleChange = (open: boolean) => {
+      setDropdownOpen(open);
+    };
 
     return (
       <Dropdown
@@ -75,6 +80,14 @@ const CommonSTT = memo<{
           activeKey: 'time',
           items: [
             {
+              key: 'title',
+              label: (
+                <Flexbox>
+                  <div style={{ fontWeight: 'bolder' }}>{t('stt.action')}</div>
+                </Flexbox>
+              ),
+            },
+            {
               key: 'time',
               label: (
                 <Flexbox align={'center'} gap={8} horizontal>
@@ -85,7 +98,8 @@ const CommonSTT = memo<{
             },
           ],
         }}
-        open={!!error || isRecording || isLoading}
+        onOpenChange={handleDropdownVisibleChange}
+        open={dropdownOpen || !!error || isRecording || isLoading}
         placement={mobile ? 'topRight' : 'top'}
         trigger={['click']}
       >
@@ -96,7 +110,7 @@ const CommonSTT = memo<{
           placement={'bottom'}
           size={mobile ? { blockSize: 36, fontSize: 16 } : { fontSize: 22 }}
           style={{ flex: 'none' }}
-          title={desc}
+          title={dropdownOpen ? '' : desc}
         />
       </Dropdown>
     );

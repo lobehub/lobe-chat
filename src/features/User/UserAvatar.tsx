@@ -2,8 +2,9 @@
 
 import { Avatar, type AvatarProps } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
-import { memo } from 'react';
+import { forwardRef } from 'react';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { DEFAULT_USER_AVATAR_URL } from '@/const/meta';
 import { useUserStore } from '@/store/user';
 import { authSelectors, userProfileSelectors } from '@/store/user/selectors';
@@ -44,8 +45,8 @@ export interface UserAvatarProps extends AvatarProps {
   clickable?: boolean;
 }
 
-const UserAvatar = memo<UserAvatarProps>(
-  ({ size = 40, background, clickable, className, style, ...rest }) => {
+const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
+  ({ size = 40, background, clickable, className, style, ...rest }, ref) => {
     const { styles, cx } = useStyles();
     const [avatar, username] = useUserStore((s) => [
       userProfileSelectors.userAvatar(s),
@@ -56,10 +57,11 @@ const UserAvatar = memo<UserAvatarProps>(
 
     return (
       <Avatar
-        alt={isSignedIn ? (username as string) : 'LobeChat'}
+        alt={isSignedIn ? (username as string) : BRANDING_NAME}
         avatar={isSignedIn ? avatar || DEFAULT_USER_AVATAR_URL : DEFAULT_USER_AVATAR_URL}
         background={isSignedIn && avatar ? background : undefined}
         className={cx(clickable && styles.clickable, className)}
+        ref={ref}
         size={size}
         style={{ flex: 'none', ...style }}
         unoptimized

@@ -2,10 +2,20 @@
   "ModelSwitch": {
     "title": "Modèle"
   },
-  "agentDefaultMessage": "Bonjour, je suis **{{name}}**. Vous pouvez commencer à discuter avec moi dès maintenant ou aller dans [Paramètres de l'agent](/chat/settings#session={{id}}) pour compléter mes informations.",
+  "agentDefaultMessage": "Bonjour, je suis **{{name}}**, vous pouvez commencer à discuter avec moi immédiatement ou vous rendre dans [Paramètres de l'assistant]({{url}}) pour compléter mes informations.",
   "agentDefaultMessageWithSystemRole": "Bonjour, je suis **{{name}}**, {{systemRole}}. Commençons la conversation !",
-  "agentsAndConversations": "Agents et conversations",
+  "agentDefaultMessageWithoutEdit": "Bonjour, je suis **{{name}}**. Commençons notre conversation !",
+  "agents": "Assistant",
+  "artifact": {
+    "generating": "Génération en cours",
+    "thinking": "En réflexion",
+    "thought": "Processus de pensée",
+    "unknownTitle": "Œuvre sans nom"
+  },
   "backToBottom": "Retour en bas",
+  "chatList": {
+    "longMessageDetail": "Voir les détails"
+  },
   "clearCurrentMessages": "Effacer les messages actuels",
   "confirmClearCurrentMessages": "Vous êtes sur le point d'effacer les messages de cette session. Cette action est irréversible. Veuillez confirmer.",
   "confirmRemoveSessionItemAlert": "Vous êtes sur le point de supprimer cet agent. Cette action est irréversible. Veuillez confirmer.",
@@ -35,17 +45,43 @@
     "stop": "Arrêter",
     "warp": "Saut de ligne"
   },
+  "knowledgeBase": {
+    "all": "Tout le contenu",
+    "allFiles": "Tous les fichiers",
+    "allKnowledgeBases": "Toutes les bases de connaissances",
+    "disabled": "Le mode de déploiement actuel ne prend pas en charge les dialogues de la base de connaissances. Pour l'utiliser, veuillez passer à un déploiement de base de données sur serveur ou utiliser le service {{cloud}}.",
+    "library": {
+      "action": {
+        "add": "Ajouter",
+        "detail": "Détails",
+        "remove": "Supprimer"
+      },
+      "title": "Fichiers/Bases de connaissances"
+    },
+    "relativeFilesOrKnowledgeBases": "Fichiers/Bases de connaissances associés",
+    "title": "Base de connaissances",
+    "uploadGuide": "Les fichiers téléchargés peuvent être consultés dans la « Base de connaissances ».",
+    "viewMore": "Voir plus"
+  },
   "messageAction": {
     "delAndRegenerate": "Supprimer et régénérer",
     "regenerate": "Régénérer"
   },
   "newAgent": "Nouvel agent",
-  "noDescription": "Aucune description disponible",
   "pin": "Épingler",
   "pinOff": "Désépingler",
+  "rag": {
+    "referenceChunks": "Références",
+    "userQuery": {
+      "actions": {
+        "delete": "Supprimer la réécriture de la requête",
+        "regenerate": "Régénérer la requête"
+      }
+    }
+  },
   "regenerate": "Regénérer",
   "roleAndArchive": "Rôle et archivage",
-  "searchAgentPlaceholder": "Rechercher des agents et des conversations...",
+  "searchAgentPlaceholder": "Assistant de recherche...",
   "sendPlaceholder": "Saisissez votre message...",
   "sessionGroup": {
     "config": "Gestion des groupes",
@@ -64,14 +100,20 @@
     "tooLong": "Le nom du groupe doit comporter entre 1 et 20 caractères"
   },
   "shareModal": {
+    "copy": "Copier",
     "download": "Télécharger la capture d'écran",
+    "downloadFile": "Télécharger le fichier",
+    "exportTitle": "Titre par défaut",
     "imageType": "Type d'image",
+    "includeTool": "Inclure les messages de l'outil",
+    "includeUser": "Inclure les messages de l'utilisateur",
     "screenshot": "Capture d'écran",
     "settings": "Paramètres d'exportation",
-    "shareToShareGPT": "Générer un lien de partage ShareGPT",
+    "text": "Texte",
     "withBackground": "Avec image de fond",
     "withFooter": "Avec pied de page",
     "withPluginInfo": "Avec informations sur le plugin",
+    "withRole": "Inclure le rôle du message",
     "withSystemRole": "Avec rôle de l'agent"
   },
   "stt": {
@@ -79,11 +121,11 @@
     "loading": "En cours de reconnaissance...",
     "prettifying": "En cours d'embellissement..."
   },
-  "temp": "Temporaire",
   "tokenDetails": {
     "chats": "Messages de discussion",
     "rest": "Restant disponible",
     "systemRole": "Rôle système",
+    "title": "Détails du jeton",
     "tools": "Paramètres du plugin",
     "total": "Total disponible",
     "used": "Total utilisé"
@@ -94,27 +136,10 @@
     "used": "Utilisé"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Renommer automatiquement",
-      "duplicate": "Créer une copie",
-      "export": "Exporter le sujet"
-    },
-    "confirmRemoveAll": "Vous êtes sur le point de supprimer tous les sujets. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveTopic": "Vous êtes sur le point de supprimer ce sujet. Cette action est irréversible. Veuillez confirmer.",
-    "confirmRemoveUnstarred": "Vous êtes sur le point de supprimer les sujets non favoris. Cette action est irréversible. Veuillez confirmer.",
-    "defaultTitle": "Sujet par défaut",
-    "duplicateLoading": "Duplication du sujet en cours...",
-    "duplicateSuccess": "Sujet dupliqué avec succès",
-    "guide": {
-      "desc": "Cliquez sur le bouton à gauche pour enregistrer la conversation actuelle comme un sujet historique et démarrer une nouvelle session.",
-      "title": "Liste des sujets"
-    },
+    "checkOpenNewTopic": "Voulez-vous ouvrir un nouveau sujet ?",
+    "checkSaveCurrentMessages": "Voulez-vous enregistrer la conversation actuelle en tant que sujet ?",
     "openNewTopic": "Ouvrir un nouveau sujet",
-    "removeAll": "Supprimer tous les sujets",
-    "removeUnstarred": "Supprimer les sujets non favoris",
-    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet",
-    "searchPlaceholder": "Rechercher un sujet...",
-    "title": "Liste des sujets"
+    "saveCurrentMessages": "Enregistrer la conversation actuelle en tant que sujet"
   },
   "translate": {
     "action": "Traduire",
@@ -126,12 +151,25 @@
   },
   "updateAgent": "Mettre à jour les informations de l'agent",
   "upload": {
-    "actionFiletip": "Télécharger le fichier",
-    "actionTooltip": "Télécharger une image",
-    "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle. Veuillez changer de modèle pour utiliser cette fonctionnalité.",
-    "dragDesc": "Faites glisser les fichiers ici pour télécharger plusieurs images. Maintenez la touche Maj enfoncée pour envoyer directement les images.",
-    "dragFileDesc": "Faites glisser les images et les fichiers ici pour prendre en charge le téléchargement de plusieurs images et fichiers. Maintenez la touche Shift enfoncée pour envoyer directement une image ou un fichier.",
-    "dragFileTitle": "Télécharger le fichier",
-    "dragTitle": "Télécharger une image"
-  }
+    "action": {
+      "fileUpload": "Télécharger un fichier",
+      "folderUpload": "Télécharger un dossier",
+      "imageDisabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle, veuillez changer de modèle pour l'utiliser",
+      "imageUpload": "Télécharger une image",
+      "tooltip": "Télécharger"
+    },
+    "clientMode": {
+      "actionFiletip": "Télécharger un fichier",
+      "actionTooltip": "Télécharger",
+      "disabled": "Le modèle actuel ne prend pas en charge la reconnaissance visuelle et l'analyse de fichiers, veuillez changer de modèle pour l'utiliser"
+    },
+    "preview": {
+      "prepareTasks": "Préparation des morceaux...",
+      "status": {
+        "pending": "Préparation du téléchargement...",
+        "processing": "Traitement du fichier..."
+      }
+    }
+  },
+  "zenMode": "Mode de concentration"
 }

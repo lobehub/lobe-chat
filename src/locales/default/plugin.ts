@@ -70,7 +70,7 @@ export default {
         pattenErrorMessage: '只能输入英文字符、数字 、- 和_ 这两个符号',
       },
       manifest: {
-        desc: 'LobeChat 将会通过该链接安装插件',
+        desc: '{{appName}}将会通过该链接安装插件',
         label: '插件描述文件 (Manifest) URL',
         preview: '预览 Manifest',
         refresh: '刷新',
@@ -104,7 +104,7 @@ export default {
       edit: '编辑自定义插件',
     },
     type: {
-      lobe: 'LobeChat 插件',
+      lobe: '{{appName}} 插件',
       openai: 'OpenAI 插件',
     },
     update: '更新',
@@ -140,6 +140,7 @@ export default {
     modalDesc: '配置插件市场的地址后，可以使用自定义的插件市场',
     title: '设置插件市场',
   },
+  showInPortal: '请在工作区中查看详情',
   store: {
     actions: {
       confirmUninstall: '即将卸载该插件，卸载后将清除该插件配置，请确认你的操作',

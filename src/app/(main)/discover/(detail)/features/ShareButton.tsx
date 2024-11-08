@@ -1,0 +1,160 @@
+import { ActionIcon, Avatar, CopyButton, Icon, Input, Modal, Tag } from '@lobehub/ui';
+import { Button, ButtonProps, Skeleton, Typography } from 'antd';
+import { createStyles } from 'antd-style';
+import { startCase } from 'lodash-es';
+import { LinkIcon, Share2Icon } from 'lucide-react';
+import Link from 'next/link';
+import { ReactNode, memo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Center, Flexbox } from 'react-layout-kit';
+
+import { useShare } from '@/hooks/useShare';
+
+import CardBanner from '../../components/CardBanner';
+
+const useStyles = createStyles(({ css, token }) => {
+  return {
+    banner: css`
+      overflow: hidden;
+
+      background: ${token.colorBgContainer};
+      border: 1px solid ${token.colorBorderSecondary};
+      border-radius: ${token.borderRadiusLG}px;
+      box-shadow: ${token.boxShadowTertiary};
+    `,
+    copy: css`
+      background: ${token.colorPrimary};
+
+      &:hover {
+        background: ${token.colorPrimaryHover};
+      }
+    `,
+    icon: css`
+      border: 1px solid ${token.colorFillSecondary};
+
+      svg {
+        fill: ${token.colorTextSecondary};
+      }
+
+      &:hover {
+        border: 1px solid ${token.colorBorderSecondary};
+
+        svg {
+          fill: ${token.colorText};
+        }
+      }
+    `,
+  };
+});
+
+interface ShareButtonProps extends ButtonProps {
+  meta?: {
+    avatar?: string | ReactNode;
+    desc?: string;
+    hashtags?: string[];
+    tags?: ReactNode;
+    title?: string;
+    url: string;
+  };
+}
+
+const ShareButton = memo<ShareButtonProps>(({ meta, ...rest }) => {
+  const { x, reddit, telegram, whatsapp, mastodon, linkedin, weibo } = useShare({
+    avatar: '',
+    desc: '',
+    hashtags: [],
+    title: '',
+    url: '',
+    ...meta,
+  });
+  const { t } = useTranslation('common');
+  const { styles, theme } = useStyles();
+  const [open, setOpen] = useState(false);
+
+  let content;
+
+  if (meta) {
+    content = (
+      <Center gap={16} style={{ position: 'relative' }} width={'100%'}>
+        <Flexbox align={'center'} className={styles.banner} width={'100%'}>
+          <CardBanner avatar={meta.avatar} size={640} style={{ height: 72, marginBottom: -36 }} />
+          <Center
+            flex={'none'}
+            height={72}
+            style={{
+              backgroundColor: theme.colorBgContainer,
+              borderRadius: '50%',
+              overflow: 'hidden',
+              zIndex: 2,
+            }}
+            width={72}
+          >
+            <Avatar animation avatar={meta.avatar} shape={'circle'} size={64} />
+          </Center>
+          <Center padding={12} width={'100%'}>
+            <h3 style={{ fontWeight: 'bold', textAlign: 'center' }}>{meta.title}</h3>
+            <Typography.Paragraph style={{ color: theme.colorTextSecondary, textAlign: 'center' }}>
+              {meta.desc}
+            </Typography.Paragraph>
+            {meta.hashtags && (
+              <Flexbox align={'center'} gap={4} horizontal justify={'center'} wrap={'wrap'}>
+                {meta.hashtags.map((tag, index) => (
+                  <Tag key={index} style={{ margin: 0 }}>
+                    {startCase(tag).trim()}
+                  </Tag>
+                ))}
+              </Flexbox>
+            )}
+            {meta.tags}
+          </Center>
+        </Flexbox>
+        <Flexbox align={'center'} gap={8} horizontal justify={'center'} wrap={'wrap'}>
+          {[x, reddit, telegram, whatsapp, mastodon, linkedin, weibo].map((item) => (
+            <Link href={item.link} key={item.title} target={'_blank'}>
+              <ActionIcon
+                className={styles.icon}
+                icon={item.icon as any}
+                size={{ blockSize: 36, borderRadius: 18, fontSize: 16 }}
+                title={item.title}
+              />
+            </Link>
+          ))}
+        </Flexbox>
+        <Flexbox align={'center'} gap={8} horizontal width={'100%'}>
+          <Input type={'block'} value={meta.url} />
+          <CopyButton
+            className={styles.copy}
+            color={theme.colorBgLayout}
+            content={meta.url}
+            icon={LinkIcon}
+            size={{ blockSize: 36, fontSize: 16 }}
+          />
+        </Flexbox>
+      </Center>
+    );
+  } else {
+    content = <Skeleton active paragraph={{ rows: 4 }} title={false} />;
+  }
+
+  return (
+    <>
+      <Button
+        icon={<Icon icon={Share2Icon} />}
+        onClick={() => setOpen(true)}
+        size={'large'}
+        {...rest}
+      />
+      <Modal
+        footer={null}
+        onCancel={() => setOpen(false)}
+        open={open}
+        title={t('share')}
+        width={360}
+      >
+        {content}
+      </Modal>
+    </>
+  );
+});
+
+export default ShareButton;

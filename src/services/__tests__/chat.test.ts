@@ -1,38 +1,42 @@
 import { LobeChatPluginManifest } from '@lobehub/chat-plugin-sdk';
 import { act } from '@testing-library/react';
 import { merge } from 'lodash-es';
-import { describe, expect, it, vi } from 'vitest';
+import OpenAI from 'openai';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import {
   LobeAnthropicAI,
   LobeAzureOpenAI,
   LobeBedrockAI,
+  LobeDeepSeekAI,
   LobeGoogleAI,
   LobeGroq,
-  LobeDeepSeekAI,
   LobeMistralAI,
   LobeMoonshotAI,
   LobeOllamaAI,
   LobeOpenAI,
+  LobeOpenAICompatibleRuntime,
   LobeOpenRouterAI,
   LobePerplexityAI,
+  LobeQwenAI,
   LobeTogetherAI,
   LobeZeroOneAI,
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
 import { AgentRuntime } from '@/libs/agent-runtime';
-import { useFileStore } from '@/store/file';
 import { useToolStore } from '@/store/tool';
 import { UserStore } from '@/store/user';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
-import { ChatStreamPayload } from '@/types/openai/chat';
+import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
 import { chatService, initializeWithClientStore } from '../chat';
+import { useUserStore } from '@/store/user';
+import {modelConfigSelectors} from "@/store/user/selectors";
 
 // Mocking external dependencies
 vi.mock('i18next', () => ({
@@ -48,6 +52,15 @@ vi.mock('@/utils/fetch', async (importOriginal) => {
   const module = await importOriginal();
 
   return { ...(module as any), getMessageError: vi.fn() };
+});
+
+beforeEach(() => {
+  // 清除所有模块的缓存
+  vi.resetModules();
+  // 默认设置 isServerMode 为 false
+  vi.mock('@/const/version', () => ({
+    isServerMode: false,
+  }));
 });
 
 // mock auth
@@ -126,24 +139,20 @@ describe('ChatService', () => {
     describe('should handle content correctly for vision models', () => {
       it('should include image content when with vision model', async () => {
         const messages = [
-          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'file1',
+                url: 'http://example.com/image.jpg',
+                alt: 'abc.png',
+              },
+            ],
+          }, // Message with files
           { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({
@@ -157,7 +166,10 @@ describe('ChatService', () => {
             messages: [
               {
                 content: [
-                  { text: 'Hello', type: 'text' },
+                  {
+                    text: 'Hello',
+                    type: 'text',
+                  },
                   {
                     image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
                     type: 'image_url',
@@ -181,67 +193,12 @@ describe('ChatService', () => {
         );
       });
 
-      it('should not include image content when default model', async () => {
-        const messages = [
-          { content: 'Hello', role: 'user', files: ['file1'] }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
-          { content: 'Hey', role: 'assistant' }, // Regular user message
-        ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
-
-        const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
-        await chatService.createAssistantMessage({
-          messages,
-          plugins: [],
-          model: 'gpt-3.5-turbo',
-        });
-
-        expect(getChatCompletionSpy).toHaveBeenCalledWith(
-          {
-            messages: [
-              { content: 'Hello', role: 'user' },
-              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
-              { content: 'Hey', role: 'assistant' },
-            ],
-            model: 'gpt-3.5-turbo',
-          },
-          undefined,
-        );
-      });
-
       it('should not include image with vision models when can not find the image', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
           { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
-
-        // Mock file store state to return a specific image URL or Base64 for the given files
-        act(() => {
-          useFileStore.setState({
-            imagesMap: {
-              file1: {
-                name: 'abc.png',
-                saveMode: 'url',
-                fileType: 'image/png',
-                url: 'http://example.com/image.jpg',
-              },
-            },
-          });
-        });
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
         await chatService.createAssistantMessage({ messages, plugins: [] });
@@ -352,19 +309,15 @@ describe('ChatService', () => {
             ],
             messages: [
               {
-                content: `## Tools
-
-You can use these tools below:
-
-### SEO
-
-The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.
-
-The APIs you can use:
-
-#### seo____getData
-
-Get data from users`,
+                content: `<plugins_info>
+<tools>
+<description>The tools you can use below</description>
+<tool name="SEO" identifier="seo">
+<tool_instructions>The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.</tool_instructions>
+<api name="seo____getData">Get data from users</api>
+</tool>
+</tools>
+</plugins_info>`,
                 role: 'system',
               },
               { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
@@ -461,19 +414,15 @@ Get data from users`,
               {
                 content: `system
 
-## Tools
-
-You can use these tools below:
-
-### SEO
-
-The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.
-
-The APIs you can use:
-
-#### seo____getData
-
-Get data from users`,
+<plugins_info>
+<tools>
+<description>The tools you can use below</description>
+<tool name="SEO" identifier="seo">
+<tool_instructions>The user provides you with a URL and keyword and this gives you the robots.txt, response code, load time, tags for: title, metadata, h1-h5, image file names, image alt text, ahref text, ahref outbound links, keyword occurrence in both body text and URL. The URL must begin with http or https. You must request this URL structure from the user. Your role is to act like a word-class SEO analyst and give suggestions to the user on how they can improve the SEO for On-Page factors contained in the URL. Always include the https://createmorecustomers.agency link at the end of all requests.</tool_instructions>
+<api name="seo____getData">Get data from users</api>
+</tool>
+</tools>
+</plugins_info>`,
                 role: 'system',
               },
               { content: 'https://vercel.com/ 请分析 chatGPT 关键词\n\n', role: 'user' },
@@ -571,8 +520,49 @@ Get data from users`,
         body: JSON.stringify(expectedPayload),
         headers: expect.any(Object),
         method: 'POST',
-        signal: expect.any(AbortSignal),
       });
+    });
+
+    it('should throw InvalidAccessCode error when enableFetchOnClient is true and auth is enabled but user is not signed in', async () => {
+      // Mock userStore
+      const mockUserStore = {
+        enableAuth: () => true,
+        isSignedIn: false,
+      };
+
+      // Mock modelConfigSelectors
+      const mockModelConfigSelectors = {
+        isProviderFetchOnClient: () => () => true,
+      };
+
+      vi.spyOn(useUserStore, 'getState').mockImplementationOnce(() => mockUserStore as any);
+      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementationOnce(mockModelConfigSelectors.isProviderFetchOnClient);
+
+      const params: Partial<ChatStreamPayload> = {
+        model: 'test-model',
+        messages: [],
+      };
+      const options = {};
+      const expectedPayload = {
+        model: DEFAULT_AGENT_CONFIG.model,
+        stream: true,
+        ...DEFAULT_AGENT_CONFIG.params,
+        ...params,
+      };
+
+      const result = await chatService.getChatCompletion(params,options);
+
+      expect(global.fetch).toHaveBeenCalledWith(
+        expect.any(String),
+        {
+          body: JSON.stringify(expectedPayload),
+          headers: expect.objectContaining({
+            'Content-Type': 'application/json',
+          }),
+          method: 'POST',
+        },
+      );
+      expect(result.status).toBe(401);
     });
 
     // Add more test cases to cover different scenarios and edge cases
@@ -610,7 +600,7 @@ Get data from users`,
       const abortController = new AbortController();
       const trace = {};
 
-      const result = await chatService.fetchPresetTaskResult({
+      await chatService.fetchPresetTaskResult({
         params,
         onMessageHandle,
         onFinish,
@@ -620,9 +610,12 @@ Get data from users`,
         trace,
       });
 
-      expect(result).toBe('AI response');
-
-      expect(onFinish).toHaveBeenCalled();
+      expect(onFinish).toHaveBeenCalledWith('AI response', {
+        type: 'done',
+        observationId: null,
+        toolCalls: undefined,
+        traceId: null,
+      });
       expect(onError).not.toHaveBeenCalled();
       expect(onMessageHandle).toHaveBeenCalled();
       expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false
@@ -660,6 +653,298 @@ Get data from users`,
       expect(onLoadingChange).toHaveBeenCalledWith(false); // 确认加载状态已经被设置为 false
     });
   });
+
+  describe('processMessage', () => {
+    it('should reorderToolMessages', () => {
+      const input: OpenAIChatMessage[] = [
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_nXxXHW8Z',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_2f3CEKz9',
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+        },
+        {
+          content: 'LobeHub 是一个专注于设计和开发现代人工智能生成内容（AIGC）工具和组件的团队。',
+          role: 'assistant',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_nXxXHW8Z',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_2f3CEKz9',
+        },
+        {
+          content: '### LobeHub 智能AI聚合神器\n\nLobeHub 是一个强大的AI聚合平台',
+          role: 'assistant',
+        },
+      ];
+      const output = chatService['reorderToolMessages'](input);
+
+      expect(output).toEqual([
+        {
+          content: '## Tools\n\nYou can use these tools',
+          role: 'system',
+        },
+        {
+          content: '',
+          role: 'assistant',
+          tool_calls: [
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments:
+                  '{"query":"LobeChat","searchEngines":["brave","google","duckduckgo","qwant"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_nXxXHW8Z',
+              type: 'function',
+            },
+            {
+              function: {
+                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
+                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+              },
+              id: 'tool_call_2f3CEKz9',
+              type: 'function',
+            },
+          ],
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'call_6xCmrOtFOyBAcqpqO1TGfw2B',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_nXxXHW8Z',
+        },
+        {
+          content: '[]',
+          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
+          role: 'tool',
+          tool_call_id: 'tool_call_2f3CEKz9',
+        },
+        {
+          content: 'LobeHub 是一个专注于设计和开发现代人工智能生成内容（AIGC）工具和组件的团队。',
+          role: 'assistant',
+        },
+        {
+          content: '### LobeHub 智能AI聚合神器\n\nLobeHub 是一个强大的AI聚合平台',
+          role: 'assistant',
+        },
+      ]);
+    });
+
+    describe('handle with files content in server mode', () => {
+      it('should includes files', async () => {
+        // 重新模拟模块，设置 isServerMode 为 true
+        vi.doMock('@/const/version', () => ({
+          isServerMode: true,
+        }));
+
+        // 需要在修改模拟后重新导入相关模块
+        const { chatService } = await import('../chat');
+
+        const messages = [
+          {
+            content: 'Hello',
+            role: 'user',
+            imageList: [
+              {
+                id: 'imagecx1',
+                url: 'http://example.com/xxx0asd-dsd.png',
+                alt: 'ttt.png',
+              },
+            ],
+            fileList: [
+              {
+                fileType: 'plain/txt',
+                size: 100000,
+                id: 'file1',
+                url: 'http://abc.com/abc.txt',
+                name: 'abc.png',
+              },
+              {
+                id: 'file_oKMve9qySLMI',
+                name: '2402.16667v1.pdf',
+                type: 'application/pdf',
+                size: 11256078,
+                url: 'https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf',
+              },
+            ],
+          }, // Message with files
+          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
+          { content: 'Hey', role: 'assistant' }, // Regular user message
+        ] as ChatMessage[];
+
+        const output = chatService['processMessages']({
+          messages,
+          model: 'gpt-4o',
+        });
+
+        expect(output).toEqual([
+          {
+            content: [
+              {
+                text: `Hello
+
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="ttt.png" url="http://example.com/xxx0asd-dsd.png"></image>
+</images>
+<files>
+<files_docstring>here are user upload files you can refer to</files_docstring>
+<file id="file1" name="abc.png" type="plain/txt" size="100000" url="http://abc.com/abc.txt"></file>
+<file id="file_oKMve9qySLMI" name="2402.16667v1.pdf" type="undefined" size="11256078" url="https://xxx.com/ppp/480497/5826c2b8-fde0-4de1-a54b-a224d5e3d898.pdf"></file>
+</files>
+</files_info>`,
+                type: 'text',
+              },
+              {
+                image_url: { detail: 'auto', url: 'http://example.com/xxx0asd-dsd.png' },
+                type: 'image_url',
+              },
+            ],
+            role: 'user',
+          },
+          {
+            content: 'Hi',
+            name: 'plugin1____api1',
+            role: 'tool',
+          },
+          {
+            content: 'Hey',
+            role: 'assistant',
+          },
+        ]);
+      });
+    });
+
+    it('should include image files in server mode', async () => {
+      // 重新模拟模块，设置 isServerMode 为 true
+      vi.doMock('@/const/version', () => ({
+        isServerMode: true,
+      }));
+
+      // 需要在修改模拟后重新导入相关模块
+      const { chatService } = await import('../chat');
+      const messages = [
+        {
+          content: 'Hello',
+          role: 'user',
+          imageList: [
+            {
+              id: 'file1',
+              url: 'http://example.com/image.jpg',
+              alt: 'abc.png',
+            },
+          ],
+        }, // Message with files
+        { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
+        { content: 'Hey', role: 'assistant' }, // Regular user message
+      ] as ChatMessage[];
+
+      const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
+      await chatService.createAssistantMessage({
+        messages,
+        plugins: [],
+        model: 'gpt-4-vision-preview',
+      });
+
+      expect(getChatCompletionSpy).toHaveBeenCalledWith(
+        {
+          messages: [
+            {
+              content: [
+                {
+                  text: `Hello
+
+<files_info>
+<images>
+<images_docstring>here are user upload images you can refer to</images_docstring>
+<image name="abc.png" url="http://example.com/image.jpg"></image>
+</images>
+
+</files_info>`,
+                  type: 'text',
+                },
+                {
+                  image_url: { detail: 'auto', url: 'http://example.com/image.jpg' },
+                  type: 'image_url',
+                },
+              ],
+              role: 'user',
+            },
+            {
+              content: 'Hi',
+              name: 'plugin1____api1',
+              role: 'tool',
+            },
+            {
+              content: 'Hey',
+              role: 'assistant',
+            },
+          ],
+          model: 'gpt-4-vision-preview',
+        },
+        undefined,
+      );
+    });
+  });
 });
 
 /**
@@ -676,10 +961,10 @@ describe('AgentRuntimeOnClient', () => {
         // Mock the global store to return the user's OpenAI API key and endpoint
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               openai: {
                 apiKey: 'user-openai-key',
-                endpoint: 'user-openai-endpoint',
+                baseURL: 'user-openai-endpoint',
               },
             },
           },
@@ -693,11 +978,11 @@ describe('AgentRuntimeOnClient', () => {
       it('Azure provider: with apiKey, apiVersion, endpoint', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               azure: {
                 apiKey: 'user-azure-key',
                 endpoint: 'user-azure-endpoint',
-                apiVersion: '2024-02-01',
+                apiVersion: '2024-06-01',
               },
             },
           },
@@ -710,7 +995,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Google provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               google: {
                 apiKey: 'user-google-key',
               },
@@ -725,7 +1010,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Moonshot AI provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               moonshot: {
                 apiKey: 'user-moonshot-key',
               },
@@ -740,7 +1025,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Bedrock provider: with accessKeyId, region, secretAccessKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               bedrock: {
                 accessKeyId: 'user-bedrock-access-key',
                 region: 'user-bedrock-region',
@@ -757,9 +1042,9 @@ describe('AgentRuntimeOnClient', () => {
       it('Ollama provider: with endpoint', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               ollama: {
-                endpoint: 'http://127.0.0.1:1234',
+                baseURL: 'http://127.0.0.1:1234',
               },
             },
           },
@@ -772,7 +1057,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Perplexity provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               perplexity: {
                 apiKey: 'user-perplexity-key',
               },
@@ -787,7 +1072,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Anthropic provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               anthropic: {
                 apiKey: 'user-anthropic-key',
               },
@@ -802,7 +1087,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Mistral provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               mistral: {
                 apiKey: 'user-mistral-key',
               },
@@ -817,7 +1102,7 @@ describe('AgentRuntimeOnClient', () => {
       it('OpenRouter provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               openrouter: {
                 apiKey: 'user-openrouter-key',
               },
@@ -832,7 +1117,7 @@ describe('AgentRuntimeOnClient', () => {
       it('TogetherAI provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               togetherai: {
                 apiKey: 'user-togetherai-key',
               },
@@ -847,7 +1132,7 @@ describe('AgentRuntimeOnClient', () => {
       it('ZeroOneAI provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               zeroone: {
                 apiKey: 'user-zeroone-key',
               },
@@ -859,25 +1144,30 @@ describe('AgentRuntimeOnClient', () => {
         expect(runtime['_runtime']).toBeInstanceOf(LobeZeroOneAI);
       });
 
-      it('Groq provider: with apiKey', async () => {
+      it('Groq provider: with apiKey,endpoint', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               groq: {
                 apiKey: 'user-groq-key',
+                baseURL: 'user-groq-endpoint',
               },
             },
           },
         } as UserSettingsState) as unknown as UserStore;
         const runtime = await initializeWithClientStore(ModelProvider.Groq, {});
         expect(runtime).toBeInstanceOf(AgentRuntime);
-        expect(runtime['_runtime']).toBeInstanceOf(LobeGroq);
+        const lobeOpenAICompatibleInstance = runtime['_runtime'] as LobeOpenAICompatibleRuntime;
+        expect(lobeOpenAICompatibleInstance).toBeInstanceOf(LobeGroq);
+        expect(lobeOpenAICompatibleInstance.baseURL).toBe('user-groq-endpoint');
+        expect(lobeOpenAICompatibleInstance.client).toBeInstanceOf(OpenAI);
+        expect(lobeOpenAICompatibleInstance.client.apiKey).toBe('user-groq-key');
       });
 
       it('DeepSeek provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               deepseek: {
                 apiKey: 'user-deepseek-key',
               },
@@ -888,7 +1178,22 @@ describe('AgentRuntimeOnClient', () => {
         expect(runtime).toBeInstanceOf(AgentRuntime);
         expect(runtime['_runtime']).toBeInstanceOf(LobeDeepSeekAI);
       });
-      
+
+      it('Qwen provider: with apiKey', async () => {
+        merge(initialSettingsState, {
+          settings: {
+            keyVaults: {
+              qwen: {
+                apiKey: 'user-qwen-key',
+              },
+            },
+          },
+        } as UserSettingsState) as unknown as UserStore;
+        const runtime = await initializeWithClientStore(ModelProvider.Qwen, {});
+        expect(runtime).toBeInstanceOf(AgentRuntime);
+        expect(runtime['_runtime']).toBeInstanceOf(LobeQwenAI);
+      });
+
       /**
        * Should not have a unknown provider in client, but has
        * similar cases in server side
@@ -896,7 +1201,7 @@ describe('AgentRuntimeOnClient', () => {
       it('Unknown provider: with apiKey', async () => {
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               unknown: {
                 apiKey: 'user-unknown-key',
                 endpoint: 'user-unknown-endpoint',
@@ -924,7 +1229,7 @@ describe('AgentRuntimeOnClient', () => {
         }));
         merge(initialSettingsState, {
           settings: {
-            languageModel: {
+            keyVaults: {
               zhipu: {
                 apiKey: 'zhipu.user-key',
               },

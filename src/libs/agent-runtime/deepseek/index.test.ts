@@ -13,8 +13,9 @@ import { LobeDeepSeekAI } from './index';
 
 const provider = ModelProvider.DeepSeek;
 const defaultBaseURL = 'https://api.deepseek.com/v1';
-const bizErrorType = 'DeepSeekBizError';
-const invalidErrorType = 'InvalidDeepSeekAPIKey';
+
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});

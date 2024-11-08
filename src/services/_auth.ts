@@ -1,25 +1,60 @@
 import { JWTPayload, LOBE_CHAT_AUTH_HEADER } from '@/const/auth';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { useUserStore } from '@/store/user';
-import { modelConfigSelectors, settingsSelectors } from '@/store/user/selectors';
+import { keyVaultsConfigSelectors, userProfileSelectors } from '@/store/user/selectors';
+import { GlobalLLMProviderKey } from '@/types/user/settings';
 import { createJWT } from '@/utils/jwt';
 
 export const getProviderAuthPayload = (provider: string) => {
   switch (provider) {
     case ModelProvider.Bedrock: {
-      const { accessKeyId, region, secretAccessKey } = modelConfigSelectors.bedrockConfig(
-        useUserStore.getState(),
-      );
+      const { accessKeyId, region, secretAccessKey, sessionToken } =
+        keyVaultsConfigSelectors.bedrockConfig(useUserStore.getState());
+
       const awsSecretAccessKey = secretAccessKey;
       const awsAccessKeyId = accessKeyId;
 
       const apiKey = (awsSecretAccessKey || '') + (awsAccessKeyId || '');
 
-      return { apiKey, awsAccessKeyId, awsRegion: region, awsSecretAccessKey };
+      return {
+        apiKey,
+        awsAccessKeyId,
+        awsRegion: region,
+        awsSecretAccessKey,
+        awsSessionToken: sessionToken,
+      };
+    }
+
+    case ModelProvider.SenseNova: {
+      const { sensenovaAccessKeyID, sensenovaAccessKeySecret } = keyVaultsConfigSelectors.sensenovaConfig(
+        useUserStore.getState(),
+      );
+
+      const apiKey = (sensenovaAccessKeyID || '') + ':' + (sensenovaAccessKeySecret || '')
+
+      return { 
+        apiKey,
+        sensenovaAccessKeyID: sensenovaAccessKeyID, 
+        sensenovaAccessKeySecret: sensenovaAccessKeySecret, 
+      };
+    }
+
+    case ModelProvider.Wenxin: {
+      const { secretKey, accessKey } = keyVaultsConfigSelectors.wenxinConfig(
+        useUserStore.getState(),
+      );
+
+      const apiKey = (accessKey || '') + (secretKey || '');
+
+      return {
+        apiKey,
+        wenxinAccessKey: accessKey,
+        wenxinSecretKey: secretKey,
+      };
     }
 
     case ModelProvider.Azure: {
-      const azure = modelConfigSelectors.azureConfig(useUserStore.getState());
+      const azure = keyVaultsConfigSelectors.azureConfig(useUserStore.getState());
 
       return {
         apiKey: azure.apiKey,
@@ -29,23 +64,26 @@ export const getProviderAuthPayload = (provider: string) => {
     }
 
     case ModelProvider.Ollama: {
-      const config = modelConfigSelectors.ollamaConfig(useUserStore.getState());
+      const config = keyVaultsConfigSelectors.ollamaConfig(useUserStore.getState());
 
-      return { endpoint: config?.endpoint };
+      return { endpoint: config?.baseURL };
     }
 
     default: {
-      const config = settingsSelectors.providerConfig(provider)(useUserStore.getState());
+      const config = keyVaultsConfigSelectors.getVaultByProvider(provider as GlobalLLMProviderKey)(
+        useUserStore.getState(),
+      );
 
-      return { apiKey: config?.apiKey, endpoint: config?.endpoint };
+      return { apiKey: config?.apiKey, endpoint: config?.baseURL };
     }
   }
 };
 
 const createAuthTokenWithPayload = async (payload = {}) => {
-  const accessCode = settingsSelectors.password(useUserStore.getState());
+  const accessCode = keyVaultsConfigSelectors.password(useUserStore.getState());
+  const userId = userProfileSelectors.userId(useUserStore.getState());
 
-  return await createJWT<JWTPayload>({ accessCode, ...payload });
+  return await createJWT<JWTPayload>({ accessCode, userId, ...payload });
 };
 
 interface AuthParams {

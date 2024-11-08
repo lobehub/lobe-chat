@@ -1,0 +1,85 @@
+---
+title: 在 LobeChat 中使用 DeepSeek API Key
+description: 学习如何在 LobeChat 中配置和使用 DeepSeek 语言模型，获取 API 密钥并开始对话。
+tags:
+  - LobeChat
+  - DeepSeek
+  - API密钥
+  - Web UI
+---
+
+# 在 LobeChat 中使用 DeepSeek
+
+<Image
+  alt={'在 LobeChat 中使用 DeepSeek'}
+  cover
+  src={'https://github.com/lobehub/lobe-chat/assets/34400653/b4d12904-9d5d-46de-bd66-901eeb9c8e52'}
+/>
+
+[DeepSeek](https://www.deepseek.com/) 是一款先进的开源大型语言模型（LLM）。最新版本 DeepSeek-V2 在架构和性能上进行了显著优化，同时训练成本降低了42.5%,推理成本降低了93.3%。
+
+本文档将指导你如何在 LobeChat 中使用 DeepSeek:
+
+<Steps>
+
+### 步骤一：获取 DeepSeek API 密钥
+
+- 首先，你需要注册并登录 [DeepSeek](https://platform.deepseek.com/) 开放平台
+
+<Callout type={'info'}>当前新用户将会获赠 500M Tokens 的免费额度</Callout>
+
+- 进入 `API keys` 菜单，并点击 `创建 API Key`
+
+<Image
+  alt={'创建 Deepseek API 密钥'}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/34400653/5707b392-1ee6-4db6-95cb-9d6c902747d2'}
+/>
+
+- 在弹出的对话框中输入 API 密钥名称
+
+<Image
+  alt={'填写 Deepseek API 名称'}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/34400653/c1d1d816-6339-41a6-9bc9-e2c3b2762291'}
+/>
+
+- 复制得到的 API 密钥并妥善保存
+
+<Image
+  alt={'保存 Deepseek API 密钥'}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/34400653/198217a6-84fa-441c-bcbe-8cded1106d6c'}
+/>
+
+<Callout type={'warning'}>
+  请安全地存储密钥，因为它只会出现一次。如果你意外丢失它，您将需要创建一个新密钥。
+</Callout>
+
+### 步骤二：在 LobeChat 中配置 DeepSeek
+
+- 访问 LobeChat 的 `应用设置`界面
+- 在 `语言模型` 下找到 `DeepSeek` 的设置项
+
+<Image
+  alt={'填写 Deepseek API 密钥'}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/34400653/bae262d6-0d49-47f3-bc9c-356cf6f3f34e'}
+/>
+
+- 打开 DeepSeek 并填入获取的 API 密钥
+- 为你的助手选择一个 DeepSeek 模型即可开始对话
+
+<Image
+  alt={'选择 Deepseek 模型'}
+  inStep
+  src={'https://github.com/lobehub/lobe-chat/assets/34400653/84568505-6efe-4518-8888-682ccdd92197'}
+/>
+
+<Callout type={'warning'}>
+  在使用过程中你可能需要向 API 服务提供商付费，请参考 DeepSeek 的相关费用政策。
+</Callout>
+
+</Steps>
+
+至此你已经可以在 LobeChat 中使用 Deepseek 提供的模型进行对话了。

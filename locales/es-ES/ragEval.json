@@ -1,0 +1,91 @@
+{
+  "addDataset": {
+    "confirm": "Nuevo",
+    "description": {
+      "placeholder": "Descripción del conjunto de datos (opcional)"
+    },
+    "name": {
+      "placeholder": "Nombre del conjunto de datos",
+      "required": "Por favor, complete el nombre del conjunto de datos"
+    },
+    "title": "Agregar conjunto de datos"
+  },
+  "dataset": {
+    "addNewButton": "Crear conjunto de datos",
+    "emptyGuide": "El conjunto de datos actual está vacío, por favor crea un conjunto de datos.",
+    "list": {
+      "table": {
+        "actions": {
+          "importData": "Importar datos"
+        },
+        "columns": {
+          "actions": "Acciones",
+          "ideal": {
+            "title": "Respuesta ideal"
+          },
+          "question": {
+            "title": "Pregunta"
+          },
+          "referenceFiles": {
+            "title": "Archivos de referencia"
+          }
+        },
+        "notSelected": "Por favor, selecciona un conjunto de datos a la izquierda",
+        "title": "Detalles del conjunto de datos"
+      },
+      "title": "Conjunto de datos"
+    }
+  },
+  "evaluation": {
+    "addEvaluation": {
+      "confirm": "Nuevo",
+      "datasetId": {
+        "placeholder": "Por favor, selecciona tu conjunto de datos de evaluación",
+        "required": "Por favor, selecciona un conjunto de datos de evaluación"
+      },
+      "description": {
+        "placeholder": "Descripción de la tarea de evaluación (opcional)"
+      },
+      "name": {
+        "placeholder": "Nombre de la tarea de evaluación",
+        "required": "Por favor, complete el nombre de la tarea de evaluación"
+      },
+      "title": "Agregar tarea de evaluación"
+    },
+    "addNewButton": "Crear evaluación",
+    "emptyGuide": "La tarea de evaluación actual está vacía, comienza a crear una evaluación.",
+    "table": {
+      "columns": {
+        "actions": {
+          "checkStatus": "Verificar estado",
+          "confirmDelete": "¿Deseas eliminar esta evaluación?",
+          "confirmRun": "¿Deseas comenzar a ejecutar? Al comenzar, la tarea de evaluación se ejecutará de forma asíncrona en segundo plano, cerrar la página no afectará la ejecución de la tarea asíncrona.",
+          "downloadRecords": "Descargar evaluación",
+          "retry": "Reintentar",
+          "run": "Ejecutar",
+          "title": "Acciones"
+        },
+        "datasetId": {
+          "title": "Conjunto de datos"
+        },
+        "name": {
+          "title": "Nombre de la tarea de evaluación"
+        },
+        "records": {
+          "title": "Número de registros de evaluación"
+        },
+        "referenceFiles": {
+          "title": "Archivos de referencia"
+        },
+        "status": {
+          "error": "Error en la ejecución",
+          "pending": "Pendiente de ejecución",
+          "processing": "Ejecutando",
+          "success": "Ejecución exitosa",
+          "title": "Estado"
+        }
+      },
+      "title": "Lista de tareas de evaluación"
+    }
+  }
+}

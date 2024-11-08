@@ -10,33 +10,33 @@
     "clear": {
       "confirm": "Lokale gegevens worden binnenkort gewist (globale instellingen blijven ongewijzigd). Zorg ervoor dat je een gegevensback-up hebt gedownload."
     },
-    "description": "In de nieuwe versie heeft LobeChat een enorme sprong gemaakt in gegevensopslag. Daarom moeten we de oude versiegegevens upgraden om je een betere gebruikerservaring te bieden.",
+    "description": "In de nieuwe versie heeft de gegevensopslag van {{appName}} een enorme sprong voorwaarts gemaakt. Daarom moeten we de oude gegevens upgraden om je een betere gebruikerservaring te bieden.",
     "features": {
       "capability": {
-        "desc": "Gebaseerd op IndexedDB-technologie, groot genoeg om al je gespreksberichten voor het leven op te slaan",
+        "desc": "Gebaseerd op IndexedDB-technologie, genoeg om al je levenslange chatberichten op te slaan.",
         "title": "Grote capaciteit"
       },
       "performance": {
-        "desc": "Automatische indexering van miljoenen berichten, met milliseconde-respons bij opzoeken en doorzoeken",
+        "desc": "Miljoenen berichten worden automatisch geïndexeerd, met milliseconde-respons op zoekopdrachten.",
         "title": "Hoge prestaties"
       },
       "use": {
-        "desc": "Ondersteunt het zoeken naar titels, beschrijvingen, labels, berichtinhoud en zelfs vertaalde tekst, waardoor de dagelijkse zoekefficiëntie aanzienlijk verbetert",
+        "desc": "Ondersteunt het doorzoeken van titels, beschrijvingen, labels, berichtinhoud en zelfs vertaalde teksten, waardoor de dagelijkse zoekefficiëntie aanzienlijk is verbeterd.",
         "title": "Gebruiksvriendelijker"
       }
     },
-    "title": "LobeChat-gegevens evolueren",
+    "title": "Evolutie van {{appName}}-gegevens",
     "upgrade": {
       "error": {
-        "subTitle": "Onze excuses, er is een uitzondering opgetreden tijdens het upgraden van de database. Probeer de volgende oplossingen: A. Wis lokale gegevens en importeer de back-upgegevens opnieuw; B. Klik op de knop 'Opnieuw upgraden'.<br><br> Als het probleem aanhoudt, <1>di dien een probleem in</1>, dan zullen we je zo snel mogelijk helpen bij het oplossen",
+        "subTitle": "Het spijt ons, er is een fout opgetreden tijdens het upgraden van de database. Probeer de volgende oplossingen: A. Wis lokale gegevens en importeer de back-upgegevens opnieuw; B. Klik op de knop 'Opnieuw upgraden'.<br><br> Als het probleem aanhoudt, <1>dien een probleem in</1> en we zullen je zo snel mogelijk helpen.",
         "title": "Database-upgrade mislukt"
       },
       "success": {
-        "subTitle": "De database van LobeChat is succesvol bijgewerkt naar de nieuwste versie. Begin nu meteen met de ervaring",
-        "title": "Database-upgrade gelukt"
+        "subTitle": "De database van {{appName}} is succesvol geüpgraded naar de nieuwste versie, begin nu met ervaren!",
+        "title": "Database-upgrade succesvol"
       }
     },
-    "upgradeTip": "De upgrade duurt ongeveer 10-20 seconden. Sluit LobeChat niet af tijdens het upgraden."
+    "upgradeTip": "De upgrade duurt ongeveer 10-20 seconden, sluit {{appName}} niet tijdens het upgraden."
   },
   "migrateError": {
     "missVersion": "De geïmporteerde gegevens missen een versienummer. Controleer het bestand en probeer het opnieuw.",

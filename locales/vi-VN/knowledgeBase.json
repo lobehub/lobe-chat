@@ -1,0 +1,32 @@
+{
+  "addToKnowledgeBase": {
+    "addSuccess": "Tài liệu đã được thêm thành công, <1>xem ngay</1>",
+    "confirm": "Thêm",
+    "id": {
+      "placeholder": "Vui lòng chọn kho kiến thức để thêm",
+      "required": "Vui lòng chọn kho kiến thức",
+      "title": "Kho kiến thức mục tiêu"
+    },
+    "title": "Thêm vào kho kiến thức",
+    "totalFiles": "Đã chọn {{count}} tệp"
+  },
+  "createNew": {
+    "confirm": "Tạo mới",
+    "description": {
+      "placeholder": "Mô tả kho kiến thức (tùy chọn)"
+    },
+    "formTitle": "Thông tin cơ bản",
+    "name": {
+      "placeholder": "Tên kho kiến thức",
+      "required": "Vui lòng điền tên kho kiến thức"
+    },
+    "title": "Tạo kho kiến thức mới"
+  },
+  "tab": {
+    "evals": "Đánh giá",
+    "files": "Tài liệu",
+    "settings": "Cài đặt",
+    "testing": "Kiểm tra hồi phục"
+  },
+  "title": "Kho kiến thức"
+}

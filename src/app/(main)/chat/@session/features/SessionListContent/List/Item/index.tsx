@@ -1,9 +1,10 @@
+import { ModelTag } from '@lobehub/icons';
 import { memo, useMemo, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 import { shallow } from 'zustand/shallow';
 
-import ModelTag from '@/components/ModelTag';
 import { useAgentStore } from '@/store/agent';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { useSessionStore } from '@/store/session';
@@ -21,7 +22,7 @@ interface SessionItemProps {
 const SessionItem = memo<SessionItemProps>(({ id }) => {
   const [open, setOpen] = useState(false);
   const [createGroupModalOpen, setCreateGroupModalOpen] = useState(false);
-  const [defaultModel] = useAgentStore((s) => [s.defaultAgentConfig.model]);
+  const [defaultModel] = useAgentStore((s) => [agentSelectors.inboxAgentModel(s)]);
 
   const [active] = useSessionStore((s) => [s.activeId === id]);
   const [loading] = useChatStore((s) => [chatSelectors.isAIGenerating(s) && id === s.activeId]);
@@ -75,7 +76,7 @@ const SessionItem = memo<SessionItemProps>(({ id }) => {
         addon={addon}
         avatar={avatar}
         avatarBackground={avatarBackground}
-        date={updateAt}
+        date={updateAt?.valueOf()}
         description={description}
         loading={loading}
         pin={pin}

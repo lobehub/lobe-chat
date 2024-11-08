@@ -23,7 +23,7 @@ export interface StartDataSyncParams {
   onAwarenessChange: OnAwarenessChange;
   onSyncEvent: OnSyncEvent;
   onSyncStatusChange: OnSyncStatusChange;
-  signaling?: string;
+  signaling: string;
   user: SyncUserInfo;
 }
 

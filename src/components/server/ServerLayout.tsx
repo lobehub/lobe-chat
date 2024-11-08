@@ -1,6 +1,6 @@
 import { FC, PropsWithChildren } from 'react';
 
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 interface ServerLayoutProps<T> {
   Desktop: FC<T>;

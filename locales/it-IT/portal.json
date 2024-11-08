@@ -1,0 +1,35 @@
+{
+  "Artifacts": "Artefatti",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Blocco",
+      "file": "File"
+    }
+  },
+  "Plugins": "Plugin",
+  "actions": {
+    "genAiMessage": "Genera messaggio AI",
+    "summary": "Sommario",
+    "summaryTooltip": "Sommario del contenuto attuale"
+  },
+  "artifacts": {
+    "display": {
+      "code": "Codice",
+      "preview": "Anteprima"
+    },
+    "svg": {
+      "copyAsImage": "Copia come immagine",
+      "copyFail": "Copia fallita, motivo dell'errore: {{error}}",
+      "copySuccess": "Immagine copiata con successo",
+      "download": {
+        "png": "Scarica come PNG",
+        "svg": "Scarica come SVG"
+      }
+    }
+  },
+  "emptyArtifactList": "La lista degli Artefatti attuale è vuota, si prega di utilizzare i plugin necessari durante la sessione e poi controllare di nuovo",
+  "emptyKnowledgeList": "L'elenco delle conoscenze attuale è vuoto. Si prega di attivare il database delle conoscenze durante la conversazione per visualizzarlo.",
+  "files": "File",
+  "messageDetail": "Dettagli del messaggio",
+  "title": "Finestra di espansione"
+}

@@ -1,5 +1,4 @@
 // @vitest-environment edge-runtime
-import { StreamingTextResponse } from 'ai';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatStreamPayload, ModelProvider } from '@/libs/agent-runtime';
@@ -8,8 +7,9 @@ import * as debugStreamModule from '@/libs/agent-runtime/utils/debugStream';
 import { LobeMinimaxAI } from './index';
 
 const provider = ModelProvider.Minimax;
-const bizErrorType = 'MinimaxBizError';
-const invalidErrorType = 'InvalidMinimaxAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
+
 const encoder = new TextEncoder();
 
 // Mock the console.error to avoid polluting test output
@@ -231,7 +231,7 @@ describe('LobeMinimaxAI', () => {
           messages: [{ content: 'Hello', role: 'user' }],
           model: 'text-davinci-003',
           stream: true,
-          temperature: 0.5,
+          temperature: 0.25,
           top_p: 0.8,
         });
       });
@@ -253,10 +253,10 @@ describe('LobeMinimaxAI', () => {
         });
       });
 
-      it('should include max tokens when model is abab6.5-chat', () => {
+      it('should include max tokens when model is abab6.5t-chat', () => {
         const payload: ChatStreamPayload = {
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'abab6.5-chat',
+          model: 'abab6.5t-chat',
           temperature: 0,
           top_p: 0,
         };
@@ -265,9 +265,9 @@ describe('LobeMinimaxAI', () => {
 
         expect(result).toEqual({
           messages: [{ content: 'Hello', role: 'user' }],
-          model: 'abab6.5-chat',
+          model: 'abab6.5t-chat',
           stream: true,
-          max_tokens: 2048,
+          max_tokens: 4096,
         });
       });
     });

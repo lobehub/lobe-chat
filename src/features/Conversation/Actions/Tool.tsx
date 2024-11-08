@@ -7,18 +7,24 @@ import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { RenderAction } from '../types';
 
 export const ToolActionsBar: RenderAction = memo(({ id }) => {
-  const { regenerate } = useChatListActionsBar();
-  const [reInvokeToolMessage] = useChatStore((s) => [s.reInvokeToolMessage]);
+  const { regenerate, del } = useChatListActionsBar();
+  const [reInvokeToolMessage, deleteToolMessage] = useChatStore((s) => [
+    s.reInvokeToolMessage,
+    s.deleteToolMessage,
+  ]);
 
   return (
     <ActionIconGroup
-      // dropdownMenu={[regenerate]}
-      items={[regenerate]}
-      onActionClick={(event) => {
+      items={[regenerate, del]}
+      onActionClick={async (event) => {
         switch (event.key) {
           case 'regenerate': {
-            reInvokeToolMessage(id);
+            await reInvokeToolMessage(id);
             break;
+          }
+
+          case 'del': {
+            await deleteToolMessage(id);
           }
         }
       }}

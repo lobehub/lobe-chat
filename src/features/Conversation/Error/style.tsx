@@ -1,7 +1,7 @@
 import { Avatar } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import { ReactNode, memo } from 'react';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Center, CenterProps, Flexbox } from 'react-layout-kit';
 
 export const useStyles = createStyles(({ css, token }) => ({
   container: css`
@@ -14,38 +14,63 @@ export const useStyles = createStyles(({ css, token }) => ({
     color: ${token.colorTextTertiary};
     text-align: center;
   `,
+  form: css`
+    width: 100%;
+    max-width: 300px;
+  `,
 }));
 
-export const ErrorActionContainer = memo<{ children: ReactNode }>(({ children }) => {
-  const { styles } = useStyles();
+export const ErrorActionContainer = memo<CenterProps>(
+  ({ children, className, gap = 24, padding = 24, ...rest }) => {
+    const { cx, styles } = useStyles();
 
-  return (
-    <Center className={styles.container} gap={24} padding={24}>
-      {children}
-    </Center>
-  );
-});
+    return (
+      <Center className={cx(styles.container, className)} gap={gap} padding={padding} {...rest}>
+        {children}
+      </Center>
+    );
+  },
+);
 
-export const FormAction = memo<{
-  avatar: ReactNode;
-  background?: string;
-  children: ReactNode;
-  description: string;
-  title: string;
-}>(({ children, background, title, description, avatar }) => {
-  const { styles, theme } = useStyles();
+export const FormAction = memo<
+  {
+    animation?: boolean;
+    avatar: ReactNode;
+    background?: string;
+    description: string;
+    title: string;
+  } & CenterProps
+>(
+  ({
+    children,
+    background,
+    title,
+    description,
+    avatar,
+    animation,
+    className,
+    gap = 16,
+    ...rest
+  }) => {
+    const { cx, styles, theme } = useStyles();
 
-  return (
-    <Center gap={16} style={{ maxWidth: 300, width: '100%' }}>
-      <Avatar
-        avatar={avatar}
-        background={background ?? theme.colorFillContent}
-        gap={12}
-        size={80}
-      />
-      <Flexbox style={{ fontSize: 20, textAlign: 'center' }}>{title}</Flexbox>
-      <Flexbox className={styles.desc}>{description}</Flexbox>
-      {children}
-    </Center>
-  );
-});
+    return (
+      <Center className={cx(styles.form, className)} gap={gap} {...rest}>
+        <Avatar
+          animation={animation}
+          avatar={avatar}
+          background={background ?? theme.colorFillContent}
+          gap={12}
+          size={80}
+        />
+        <Flexbox gap={8} width={'100%'}>
+          <Flexbox style={{ fontSize: 18, fontWeight: 'bold', textAlign: 'center' }}>
+            {title}
+          </Flexbox>
+          <Flexbox className={styles.desc}>{description}</Flexbox>
+        </Flexbox>
+        {children}
+      </Center>
+    );
+  },
+);

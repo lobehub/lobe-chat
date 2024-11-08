@@ -2,15 +2,16 @@
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { ChatStreamCallbacks, LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
+import { LobeOpenAICompatibleRuntime } from '@/libs/agent-runtime';
 
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeGroq } from './index';
 
 const provider = 'groq';
 const defaultBaseURL = 'https://api.groq.com/openai/v1';
-const bizErrorType = 'GroqBizError';
-const invalidErrorType = 'InvalidGroqAPIKey';
+
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -84,7 +85,7 @@ describe('LobeGroqAI', () => {
             choices: [
               {
                 index: 0,
-                message: { role: 'assistant', content: 'hello' },
+                message: { role: 'assistant', content: 'hello', refusal: null },
                 logprobs: null,
                 finish_reason: 'stop',
               },
@@ -315,5 +316,46 @@ describe('LobeGroqAI', () => {
         process.env.DEBUG_GROQ_CHAT_COMPLETION = originalDebugValue;
       });
     });
+  });
+});
+
+describe('LobeGroqAI Temperature Tests', () => {
+  it('should set temperature to 0.7', async () => {
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'mistralai/mistral-7b-instruct:free',
+      temperature: 0.7,
+    });
+
+    expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+      expect.objectContaining({ temperature: 0.7 }),
+      expect.anything(),
+    );
+  });
+
+  it('should set temperature to 0', async () => {
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'mistralai/mistral-7b-instruct:free',
+      temperature: 0,
+    });
+
+    expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+      expect.objectContaining({ temperature: undefined }),
+      expect.anything(),
+    );
+  });
+
+  it('should set temperature to negative', async () => {
+    await instance.chat({
+      messages: [{ content: 'Hello', role: 'user' }],
+      model: 'mistralai/mistral-7b-instruct:free',
+      temperature: -1.0,
+    });
+
+    expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+      expect.objectContaining({ temperature: undefined }),
+      expect.anything(),
+    );
   });
 });

@@ -70,7 +70,7 @@
         "pattenErrorMessage": "只允許英數字元、連字號 -，以及底線 _"
       },
       "manifest": {
-        "desc": "LobeChat 會使用此連結安裝外掛",
+        "desc": "{{appName}}將會透過該連結安裝插件",
         "label": "插件描述檔 (Manifest) URL",
         "preview": "預覽 Manifest",
         "refresh": "重新載入"
@@ -139,6 +139,7 @@
     "modalDesc": "設定外掛市集的網址後，您可以使用自訂的外掛市集",
     "title": "設定外掛市集"
   },
+  "showInPortal": "請在入口網站中查看",
   "store": {
     "actions": {
       "confirmUninstall": "即將卸載該插件，卸載後將清除該插件配置，請確認你的操作",

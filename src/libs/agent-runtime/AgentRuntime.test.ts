@@ -4,8 +4,7 @@ import { LangfuseGenerationClient, LangfuseTraceClient } from 'langfuse-core';
 import { ClientOptions } from 'openai';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { createTraceOptions } from '@/app/api/chat/agentRuntime';
-import { getServerConfig } from '@/config/server';
+import * as langfuseCfg from '@/config/langfuse';
 import { JWTPayload } from '@/const/auth';
 import { TraceNameMap } from '@/const/trace';
 import {
@@ -26,6 +25,9 @@ import {
   LobeZhipuAI,
   ModelProvider,
 } from '@/libs/agent-runtime';
+import { LobeStepfunAI } from '@/libs/agent-runtime/stepfun';
+import LobeWenxinAI from '@/libs/agent-runtime/wenxin';
+import { createTraceOptions } from '@/server/modules/AgentRuntime';
 
 import { AgentChatOptions } from './AgentRuntime';
 import { LobeBedrockAIParams } from './bedrock';
@@ -75,7 +77,7 @@ describe('AgentRuntime', () => {
         const jwtPayload = {
           apikey: 'user-azure-key',
           endpoint: 'user-azure-endpoint',
-          apiVersion: '2024-02-01',
+          apiVersion: '2024-06-01',
         };
 
         const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Azure, {
@@ -227,6 +229,17 @@ describe('AgentRuntime', () => {
       });
     });
 
+    describe('Stepfun AI provider', () => {
+      it('should initialize correctly', async () => {
+        const jwtPayload: JWTPayload = { apiKey: 'user-stepfun-key' };
+        const runtime = await AgentRuntime.initializeWithProviderOptions(ModelProvider.Stepfun, {
+          stepfun: jwtPayload,
+        });
+
+        expect(runtime['_runtime']).toBeInstanceOf(LobeStepfunAI);
+      });
+    });
+
     describe('Together AI provider', () => {
       it('should initialize correctly', async () => {
         const jwtPayload: JWTPayload = { apiKey: 'user-togetherai-key' };
@@ -312,15 +325,14 @@ describe('AgentRuntime', () => {
       };
 
       const updateMock = vi.fn();
-      beforeEach(() => {
-        vi.mocked(getServerConfig).mockReturnValue({
+
+      it('should call experimental_onToolCall correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
           ENABLE_LANGFUSE: true,
           LANGFUSE_PUBLIC_KEY: 'abc',
           LANGFUSE_SECRET_KEY: 'DDD',
         } as any);
-      });
 
-      it('should call experimental_onToolCall correctly', async () => {
         // 使用 spyOn 模拟 chat 方法
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
@@ -338,6 +350,12 @@ describe('AgentRuntime', () => {
         expect(updateMock).toHaveBeenCalledWith({ tags: ['Tools Call'] });
       });
       it('should call onStart correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
+          ENABLE_LANGFUSE: true,
+          LANGFUSE_PUBLIC_KEY: 'abc',
+          LANGFUSE_SECRET_KEY: 'DDD',
+        } as any);
+
         vi.spyOn(LangfuseGenerationClient.prototype, 'update').mockImplementation(updateMock);
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
@@ -355,6 +373,11 @@ describe('AgentRuntime', () => {
       });
 
       it('should call onCompletion correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
+          ENABLE_LANGFUSE: true,
+          LANGFUSE_PUBLIC_KEY: 'abc',
+          LANGFUSE_SECRET_KEY: 'DDD',
+        } as any);
         // Spy on the chat method and trigger onCompletion callback
         vi.spyOn(LangfuseGenerationClient.prototype, 'update').mockImplementation(updateMock);
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
@@ -379,6 +402,12 @@ describe('AgentRuntime', () => {
         });
       });
       it('should call onFinal correctly', async () => {
+        vi.spyOn(langfuseCfg, 'getLangfuseConfig').mockReturnValue({
+          ENABLE_LANGFUSE: true,
+          LANGFUSE_PUBLIC_KEY: 'abc',
+          LANGFUSE_SECRET_KEY: 'DDD',
+        } as any);
+
         vi.spyOn(LobeOpenAI.prototype, 'chat').mockImplementation(
           async (payload, { callback }: any) => {
             if (callback?.onFinal) {

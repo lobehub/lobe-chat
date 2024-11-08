@@ -15,6 +15,13 @@ When deploying LobeChat, a rich set of environment variables related to model se
 
 ## OpenAI
 
+### `ENABLED_OPENAI`
+
+- Type：Optional
+- Description：Enables OpenAI as a model provider by default, turns off the OpenAI service when set to `0`
+- Default：`1`
+- Example：`0`
+
 ### `OPENAI_API_KEY`
 
 - Type: Required
@@ -107,6 +114,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `https://generativelanguage.googleapis.com`
 - Example: `https://api.genai.gd.edu.kg/google`
 
+### `GOOGLE_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+gemini-1.5-flash-latest,+gemini-1.5-pro-latest`
+
 ## Anthropic AI
 
 ### `ANTHROPIC_API_KEY`
@@ -124,6 +138,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Example: `https://my-anthropic-proxy.com`
 
 ## AWS Bedrock
+
+### `ENABLED_AWS_BEDROCK`
+
+- Type：Optional
+- Description：Enables AWS Bedrock as a model provider by default, turns on the AWS Bedrock service when set to `1`
+- Default：`0`
+- Example：`1`
 
 ### `AWS_ACCESS_KEY_ID`
 
@@ -171,6 +192,22 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: `-`
 - Example: `-all,+01-ai/yi-34b-chat,+huggingfaceh4/zephyr-7b-beta`
 
+## Github
+
+### `GITHUB_TOKEN`
+
+- Type: Required
+- Description: This is your Personal access tokens you got for in the Github
+- Default: `-`
+- Example：`ghp_xxxxxx...xxxxxx=`
+
+### `GITHUB_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+gpt-4o,+gpt-4o-mini`
+
 ## TogetherAI
 
 ### `TOGETHERAI_API_KEY`
@@ -185,9 +222,32 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Type: Optional
 - Description: Used to specify a custom TogetherAI model list. Model definition syntax rules see [model-list][model-list]
 - Default: `-`
-- Example: `01-ai/yi-34b-chat`
+- Example: `-all,+meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo,+meta-llama/Meta-Llama-3.1-70B-Instruct-Turbo`
+
+## Fireworks AI
+
+### `FIREWORKSAI_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Fireworks AI service
+- Default: `-`
+- Example：`xxxxxx...xxxxxx`
+
+### `FIREWORKSAI_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+accounts/fireworks/models/firefunction-v2,+accounts/fireworks/models/firefunction-v1`
 
 ## Ollama
+
+### `ENABLED_OLLAMA`
+
+- Type：Optional
+- Description：Enables Ollama as a model provider by default, turns off the Ollama service when set to `0`
+- Default：`1`
+- Example：`0`
 
 ### `OLLAMA_PROXY_URL`
 
@@ -221,6 +281,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example: `pplx-xxxxxx...xxxxxx`
 
+### `PERPLEXITY_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Perplexity API proxy, you can use this configuration item to override the default Perplexity API request base URL
+- Default: `https://api.Perplexity.ai`
+- Example: `https://my-Perplexity-proxy.com`
+
 ## Minimax AI
 
 ### `MINIMAX_API_KEY`
@@ -248,6 +315,20 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example: `gsk_xxxxxx...xxxxxx`
 
+### `GROQ_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Groq API proxy, you can use this configuration item to override the default Groq API request base URL
+- Default: `https://api.groq.com/openai/v1`
+- Example: `https://my-groq-proxy.com/v1`
+
+### `GROQ_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+gemma2-9b-it,+llama-3.1-8b-instant`
+
 ## ZHIPU AI
 
 ### `ZHIPU_API_KEY`
@@ -257,6 +338,13 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Default: -
 - Example: `4582d332441a313f5c2ed9824d1798ca.rC8EcTAhgbOuAuVT`
 
+### `ZHIPU_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+glm-4-alltools,+glm-4-plus`
+
 ## 01.AI
 
 ### `ZEROONE_API_KEY`
@@ -264,6 +352,147 @@ If you need to use Azure OpenAI to provide model services, you can refer to the 
 - Type: Required
 - Description: This is the API key you applied for in the 01.AI service
 - Default: -
-- 示例：`xxxxxx...xxxxxx`
+- Example：`xxxxxx...xxxxxx`
+
+### `ZEROONE_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+yi-large,+yi-large-rag`
+
+## Qwen
+
+### `QWEN_API_KEY`
+
+- Type: Required
+- Description: This is the DashScope API key you can obtain from Alibaba Cloud
+- Default: -
+- Example：`sk-xxxxx...xxxxx`
+
+### `QWEN_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+qwen-turbo-latest,+qwen-plus-latest`
+
+## Stepfun AI
+
+### `STEPFUN_API_KEY`
+
+- Type: Required
+- Description: This is the DashScope API key you can obtain from Stepfun AI service
+- Default: -
+- Example：`sk-xxxxx...xxxxx`
+
+## Novita AI
+
+### `NOVITA_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the Novita AI service
+- Default: -
+- Example：`xxxxxx...xxxxxx`
+
+### `NOVITA_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+meta-llama/llama-3.1-8b-instruct,+meta-llama/llama-3.1-70b-instruct`
+
+## BAICHUAN
+
+### `BAICHUAN_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the BAICHUAN service
+- Default: -
+- Example：`xxxxxx...xxxxxx`
+
+## TAICHU
+
+### `TAICHU_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the TAICHU service
+- Default: -
+- Example：`xxxxxx...xxxxxx`
+
+## 360 AI
+
+### `AI360_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied for in the 360 AI service
+- Default: -
+- Example：`xxxxxx...xxxxxx`
+
+## Siliconflow
+
+### `SILICONCLOUD_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from Siliconflow service
+- Default: -
+- Example: `xxxxxx...xxxxxx`
+
+### `SILICONCLOUD_PROXY_URL`
+
+- Type: Optional
+- Description: If you manually configure the Siliconflow API proxy, you can use this configuration item to override the default Siliconflow API request base URL
+- Default: `https://api.siliconflow.cn/v1`
+- Example: `https://my-siliconflow-proxy.com/v1`
+
+### `SILICONCLOUD_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+deepseek-ai/DeepSeek-V2.5,+Qwen/Qwen2.5-7B-Instruct`
+
+## Upstage AI
+
+### `UPSTAGE_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from Upstage AI service
+- Default: -
+- Example: `xxxxxx...xxxxxx`
+
+## Spark AI
+
+### `SPARK_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from Spark AI service
+- Default: -
+- Example: `xxxxxx...xxxxxx`
+
+## A21 AI
+
+### `AI21_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from AI21_API_KEY service
+- Default: -
+- Example: `xxxxxx...xxxxxx`
+
+## HUNYUAN
+
+### `HUNYUAN_API_KEY`
+
+- Type: Required
+- Description: This is the API key you applied from HUNYUAN service
+- Default: -
+- Example: `xxxxxx...xxxxxx`
+
+### `HUNYUAN_MODEL_LIST`
+
+- Type: Optional
+- Description: Used to control the model list, use `+` to add a model, use `-` to hide a model, use `model_name=display_name` to customize the display name of a model, separated by commas. Definition syntax rules see [model-list][model-list]
+- Default: `-`
+- Example: `-all,+hunyuan-lite,+hunyuan-standard`
 
 [model-list]: /docs/self-hosting/advanced/model-list

@@ -1,14 +1,25 @@
 {
   "about": "Sobre",
   "advanceSettings": "Configurações avançadas",
-  "appInitializing": "LobeChat inicializando, por favor aguarde...",
+  "alert": {
+    "cloud": {
+      "action": "Experimente de graça",
+      "desc": "Oferecemos {{credit}} pontos de computação gratuitos para todos os usuários registrados, sem necessidade de configuração complicada, pronto para uso, suporta histórico de conversas ilimitado e sincronização em nuvem global. Mais recursos avançados esperam por você para explorar.",
+      "descOnMobile": "Oferecemos {{credit}} créditos de computação gratuitos para todos os usuários registrados, sem necessidade de configurações complicadas, pronto para uso.",
+      "title": "Bem-vindo para experimentar {{name}}"
+    }
+  },
+  "appInitializing": "Aplicativo iniciando...",
   "autoGenerate": "Auto completar",
   "autoGenerateTooltip": "Auto completar descrição do assistente com base em sugestões",
   "autoGenerateTooltipDisabled": "Por favor, preencha a dica antes de usar a função de preenchimento automático",
+  "back": "Voltar",
+  "batchDelete": "Excluir em massa",
   "blog": "Blog de Produtos",
   "cancel": "Cancelar",
   "changelog": "Registro de alterações",
   "close": "Fechar",
+  "contact": "Entre em contato",
   "copy": "Copiar",
   "copyFail": "Falha ao copiar",
   "copySuccess": "Cópia bem-sucedida",
@@ -22,6 +33,7 @@
   "defaultSession": "Sessão padrão",
   "delete": "Excluir",
   "document": "Documento de Uso",
+  "download": "Baixar",
   "duplicate": "Duplicar",
   "edit": "Editar",
   "export": "Exportar configuração",
@@ -35,10 +47,33 @@
   },
   "feedback": "Feedback e sugestões",
   "follow": "Siga-nos no {{name}}",
+  "footer": {
+    "action": {
+      "feedback": "Compartilhe seus valiosos comentários",
+      "star": "Dê uma estrela no GitHub"
+    },
+    "and": "e",
+    "feedback": {
+      "action": "Compartilhar feedback",
+      "desc": "Cada uma de suas ideias e sugestões é extremamente valiosa para nós. Mal podemos esperar para saber o que você pensa! Sinta-se à vontade para entrar em contato conosco para fornecer feedback sobre os recursos do produto e a experiência de uso, ajudando-nos a tornar o LobeChat ainda melhor.",
+      "title": "Compartilhe seu valioso feedback no GitHub"
+    },
+    "later": "Mais tarde",
+    "star": {
+      "action": "Dar uma estrela",
+      "desc": "Se você ama nosso produto e deseja nos apoiar, poderia nos dar uma estrela no GitHub? Esse pequeno gesto é significativo para nós e nos motiva a continuar oferecendo uma experiência de qualidade para você.",
+      "title": "Dê uma estrela para nós no GitHub"
+    },
+    "title": "Está gostando do nosso produto?"
+  },
   "fullscreen": "Modo de Tela Cheia",
   "historyRange": "Intervalo de histórico",
   "import": "Importar configuração",
   "importModal": {
+    "error": {
+      "desc": "Desculpe, ocorreu um erro durante o processo de importação de dados. Por favor, tente importar novamente ou <1>envie um problema</1>, e nós iremos ajudá-lo a resolver o problema o mais rápido possível.",
+      "title": "Falha na importação de dados"
+    },
     "finish": {
       "onlySettings": "Configurações do sistema importadas com sucesso",
       "start": "Começar a usar",
@@ -46,6 +81,7 @@
       "title": "Importação de dados concluída"
     },
     "loading": "Importando dados, por favor aguarde...",
+    "preparing": "Preparando módulo de importação de dados...",
     "result": {
       "added": "Importação bem-sucedida",
       "errors": "Erros na importação",
@@ -56,8 +92,14 @@
       "topics": "Tópicos",
       "type": "Tipo de dados"
     },
-    "title": "Importar dados"
+    "title": "Importar dados",
+    "uploading": {
+      "desc": "O arquivo atual é grande, estamos fazendo o upload...",
+      "restTime": "Tempo restante",
+      "speed": "Velocidade de upload"
+    }
   },
+  "information": "Comunidade e Informações",
   "installPWA": "Instalar aplicativo de navegador",
   "lang": {
     "ar": "árabe",
@@ -70,6 +112,7 @@
     "en": "Inglês",
     "en-US": "Inglês",
     "es-ES": "Espanhol",
+    "fa-IR": "Persa",
     "fi-FI": "Finlandês",
     "fr-FR": "Francês",
     "hi-IN": "Hindi",
@@ -97,7 +140,12 @@
     "zh-TW": "Chinês tradicional"
   },
   "layoutInitializing": "Inicializando layout...",
-  "noDescription": "Sem descrição",
+  "legal": "Aviso Legal",
+  "loading": "Carregando...",
+  "mail": {
+    "business": "Parcerias Comerciais",
+    "support": "Suporte por E-mail"
+  },
   "oauth": "Login SSO",
   "officialSite": "Site Oficial",
   "ok": "OK",
@@ -148,7 +196,8 @@
   },
   "tab": {
     "chat": "Chat",
-    "market": "Descobrir",
+    "discover": "Descobrir",
+    "files": "Arquivos",
     "me": "eu",
     "setting": "Configuração"
   },
@@ -170,6 +219,7 @@
   "userPanel": {
     "anonymousNickName": "Usuário Anônimo",
     "billing": "Gerenciamento de faturas",
+    "cloud": "Experimente {{name}}",
     "data": "Armazenamento de dados",
     "defaultNickname": "Usuário da Comunidade",
     "discord": "Suporte da Comunidade",
@@ -183,5 +233,6 @@
     "profile": "Gerenciamento de Conta",
     "setting": "Configurações do Aplicativo",
     "usages": "Estatísticas de Uso"
-  }
+  },
+  "version": "Versão"
 }

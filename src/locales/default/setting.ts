@@ -2,9 +2,17 @@ export default {
   about: {
     title: '关于',
   },
+  agentTab: {
+    chat: '聊天偏好',
+    meta: '助手信息',
+    modal: '模型设置',
+    plugin: '插件设置',
+    prompt: '角色设定',
+    tts: '语音服务',
+  },
   analytics: {
     telemetry: {
-      desc: '通过选择发送遥测数据，你可以帮助我们改善 LobeChat 整体用户体验',
+      desc: '通过选择发送遥测数据，你可以帮助我们改善 {{appName}} 整体用户体验',
       title: '发送匿名使用数据',
     },
     title: '数据统计',
@@ -35,6 +43,12 @@ export default {
     title: '设置',
   },
   llm: {
+    aesGcm: '您的秘钥与代理地址等将使用 <1>AES-GCM</1> 加密算法进行加密',
+    apiKey: {
+      desc: '请填写你的 {{name}} API Key',
+      placeholder: '{{name}} API Key',
+      title: 'API Key',
+    },
     checker: {
       button: '检查',
       desc: '测试 Api Key 与代理地址是否正确填写',
@@ -56,13 +70,12 @@ export default {
           title: '模型展示名称',
         },
         files: {
-          extra:
-            '当前 LobeChat 的文件上传实现仅为一种 Hack 方案，仅限自行尝试。完整文件上传能力请等待后续实现',
+          extra: '当前文件上传实现仅为一种 Hack 方案，仅限自行尝试。完整文件上传能力请等待后续实现',
           title: '支持文件上传',
         },
         functionCall: {
           extra:
-            '此配置将仅开启 LobeChat 中的函数调用能力，是否支持函数调用完全取决于模型本身，请自行测试该模型的函数调用能力可用性',
+            '此配置将仅开启应用中的函数调用能力，是否支持函数调用完全取决于模型本身，请自行测试该模型的函数调用能力可用性',
           title: '支持函数调用',
         },
         id: {
@@ -77,7 +90,7 @@ export default {
         },
         vision: {
           extra:
-            '此配置将仅开启 LobeChat 中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性',
+            '此配置将仅开启应用中的图片上传配置，是否支持识别完全取决于模型本身，请自行测试该模型的视觉识别能力可用性',
           title: '支持视觉识别',
         },
       },
@@ -92,6 +105,7 @@ export default {
       latestTime: '上次更新时间：{{time}}',
       noLatestTime: '暂未获取列表',
     },
+    helpDoc: '配置教程',
     modelList: {
       desc: '选择在会话中展示的模型，选择的模型会在模型列表中展示',
       placeholder: '请从列表中选择模型',
@@ -102,15 +116,7 @@ export default {
       desc: '除默认地址外，必须包含 http(s)://',
       title: 'API 代理地址',
     },
-    waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待 ✨',
-  },
-  ollama: {
-    download: {
-      desc: 'Ollama 正在下载该模型，请尽量不要关闭本页面。重新下载时将会中断处继续',
-      remainingTime: '剩余时间',
-      speed: '下载速度',
-      title: '正在下载模型 {{model}} ',
-    },
+    waitingForMore: '更多模型正在 <1>计划接入</1> 中，敬请期待',
   },
   plugin: {
     addTooltip: '自定义插件',
@@ -177,6 +183,7 @@ export default {
     enableHistoryCount: {
       alias: '不限制',
       limited: '只包含 {{number}} 条会话消息',
+      setlimited: '使用历史消息数',
       title: '限制历史消息数',
       unlimited: '不限历史消息数',
     },
@@ -204,13 +211,7 @@ export default {
       title: '单次回复限制',
     },
     model: {
-      desc: 'ChatGPT 模型',
-      list: {
-        'gpt-3.5-turbo': 'GPT 3.5',
-        'gpt-3.5-turbo-16k': 'GPT 3.5 (16K)',
-        'gpt-4': 'GPT 4',
-        'gpt-4-32k': 'GPT 4 (32K)',
-      },
+      desc: '{{provider}} 模型',
       title: '模型',
     },
     presencePenalty: {
@@ -340,7 +341,7 @@ export default {
       unknownOS: '未知系统',
     },
     warning: {
-      message: '本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。',
+      tip: '经过较长一段时间社区公测，WebRTC 同步可能无法稳定满足通用的数据同步诉求。请自行 <1>部署信令服务器</1> 后使用。',
     },
     webrtc: {
       channelName: {
@@ -356,21 +357,55 @@ export default {
       },
       desc: '实时、点对点的数据通信，需设备同时在线才可同步',
       enabled: {
-        invalid: '请填写同步频道名称后再开启',
-        // desc: 'WebRTC 将使用此名创建同步频道，确保频道名称唯一',
+        invalid: '请填写信令服务器和同步频道名称后再开启',
         title: '开启同步',
+      },
+      signaling: {
+        desc: 'WebRTC 将使用该地址进行同步',
+        placeholder: '请输入信令服务器地址',
+        title: '信令服务器',
       },
       title: 'WebRTC 同步',
     },
   },
+  systemAgent: {
+    agentMeta: {
+      label: '助理元数据生成模型',
+      modelDesc: '指定用于生成助理名称、描述、头像、标签的模型',
+      title: '自动生成助理信息',
+    },
+    customPrompt: {
+      addPrompt: '添加自定义提示',
+      desc: '填写后，系统助理将在生成内容时使用自定义提示',
+      placeholder: '请输入自定义提示词',
+      title: '自定义提示词',
+    },
+    queryRewrite: {
+      label: '提问重写模型',
+      modelDesc: '指定用于优化用户提问的模型',
+      title: '知识库提问重写',
+    },
+    title: '系统助手',
+    topic: {
+      label: '话题命名模型',
+      modelDesc: '指定用于话题自动重命名的模型',
+      title: '话题自动命名',
+    },
+    translation: {
+      label: '翻译模型',
+      modelDesc: '指定用于翻译的模型',
+      title: '消息内容翻译',
+    },
+  },
   tab: {
-    about: '关于',
-    agent: '默认助手',
-    common: '通用设置',
-    experiment: '实验',
-    llm: '语言模型',
-    sync: '云端同步',
-    tts: '语音服务',
+    'about': '关于',
+    'agent': '默认助手',
+    'common': '通用设置',
+    'experiment': '实验',
+    'llm': '语言模型',
+    'sync': '云端同步',
+    'system-agent': '系统助手',
+    'tts': '语音服务',
   },
   tools: {
     builtins: {

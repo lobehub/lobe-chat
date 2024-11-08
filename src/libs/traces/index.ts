@@ -1,7 +1,7 @@
 import { Langfuse } from 'langfuse';
 import { CreateLangfuseTraceBody } from 'langfuse-core';
 
-import { getServerConfig } from '@/config/server';
+import { getLangfuseConfig } from '@/config/langfuse';
 import { CURRENT_VERSION } from '@/const/version';
 import { TraceEventClient } from '@/libs/traces/event';
 
@@ -13,7 +13,7 @@ export class TraceClient {
 
   constructor() {
     const { ENABLE_LANGFUSE, LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, LANGFUSE_HOST } =
-      getServerConfig();
+      getLangfuseConfig();
 
     if (!ENABLE_LANGFUSE) return;
 

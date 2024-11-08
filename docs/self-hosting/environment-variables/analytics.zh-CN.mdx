@@ -32,44 +32,30 @@ tags:
 
 ## Google Analytics
 
-### `ENABLE_GOOGLE_ANALYTICS`
-
-- 类型：必选
-- 描述：用于配置 Google Analytics 的环境变量，当设为 `1` 时开启 Google Analytics
-- 默认值： `-`
-- 示例：`1`
-
 ### `GOOGLE_ANALYTICS_MEASUREMENT_ID`
 
 - 类型：必选
-- 描述：Google Analytics 的 Measurement ID，如果开启了 Google Analytics，此项必填
+- 描述：Google Analytics 的 Measurement ID，填写此项后将自动开启 Google Analytics
 - 默认值： `-`
 - 示例：`G-63LP2TV03T`
 
 ## Posthog Analytics
 
-### `NEXT_PUBLIC_ANALYTICS_POSTHOG`
+### `POSTHOG_KEY`
 
-- 类型：可选
-- 描述：用于开启 [PostHog Analytics][posthog-analytics-url] 的环境变量，设为 `1` 时开启 PostHog Analytics
-- 默认值： `-`
-- 示例：`1`
-
-### `NEXT_PUBLIC_POSTHOG_KEY`
-
-- 类型：可选
-- 描述：设置 PostHog 项目 Key
+- 类型：必选
+- 描述：设置 PostHog 项目 Key，设置此项后将自动开启 PostHog Analytics
 - 默认值： `-`
 - 示例：`phc_xxxxxxxx`
 
-### `NEXT_PUBLIC_POSTHOG_HOST`
+### `POSTHOG_HOST`
 
 - 类型：可选
-- 描述：设置 PostHog 服务的部署地址，默认为官方的 SAAS 地址
+- 描述：设置 PostHog 服务的部署地址，默认为官方的 SaaS 地址
 - 默认值：`https://app.posthog.com`
 - 示例：`https://example.com`
 
-### `NEXT_PUBLIC_POSTHOG_DEBUG`
+### `POSTHOG_DEBUG`
 
 - 类型：可选
 - 描述：开启 PostHog 的调试模式
@@ -78,26 +64,19 @@ tags:
 
 ## Umami Analytics
 
-### `NEXT_PUBLIC_ANALYTICS_UMAMI`
+### `UMAMI_WEBSITE_ID`
 
-- 类型：可选
-- 描述：用于开启 [Umami Analytics][umami-analytics-url] 的环境变量，设为 `1` 时开启 Umami Analytics
-- 默认值： `-`
-- 示例：`1`
+- 类型：必选
+- 描述：你的 Umami 的 Website ID，填写此项后将自动开启 Umami Analytics
+- 默认值：`-`
+- 示例：`E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
 
-### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
+### `UMAMI_SCRIPT_URL`
 
 - 类型：可选
 - 描述：Umami 脚本的网址，默认为 Umami Cloud 提供的脚本网址
 - 默认值：`https://analytics.umami.is/script.js`
 - 示例：`https://umami.your-site.com/script.js`
-
-### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
-
-- 类型：必选
-- 描述：你的 Umami 的 Website ID
-- 默认值：`-`
-- 示例：`E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
 
 [posthog-analytics-url]: https://posthog.com
 [umami-analytics-url]: https://umami.is

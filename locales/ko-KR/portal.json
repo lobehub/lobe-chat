@@ -1,0 +1,35 @@
+{
+  "Artifacts": "아티팩트",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "청크",
+      "file": "파일"
+    }
+  },
+  "Plugins": "플러그인",
+  "actions": {
+    "genAiMessage": "AI 메시지 생성",
+    "summary": "요약",
+    "summaryTooltip": "현재 콘텐츠를 요약합니다"
+  },
+  "artifacts": {
+    "display": {
+      "code": "코드",
+      "preview": "미리보기"
+    },
+    "svg": {
+      "copyAsImage": "이미지로 복사",
+      "copyFail": "복사 실패, 오류 원인: {{error}}",
+      "copySuccess": "이미지 복사 성공",
+      "download": {
+        "png": "PNG로 다운로드",
+        "svg": "SVG로 다운로드"
+      }
+    }
+  },
+  "emptyArtifactList": "현재 아티팩트 목록이 비어 있습니다. 플러그인을 사용한 후에 다시 확인해주세요.",
+  "emptyKnowledgeList": "현재 지식 목록이 비어 있습니다. 대화 중에 필요에 따라 지식 베이스를 활성화한 후 다시 확인해 주세요.",
+  "files": "파일",
+  "messageDetail": "메시지 세부정보",
+  "title": "확장 창"
+}

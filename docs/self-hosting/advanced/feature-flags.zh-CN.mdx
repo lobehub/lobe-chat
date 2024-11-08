@@ -1,0 +1,47 @@
+---
+title: LobeChat 特性标志环境变量配置指南
+description: 了解如何使用环境变量自定义 LobeChat 的特性标志，包括控制否启用某个功能、或者根据需要对特定用户群体或环境启用或禁用功能。
+tags:
+  - LobeChat
+  - 环境变量
+  - 配置指南
+  - 特征标志
+---
+
+# 特性标志
+
+除了基础的环境变量配置外，LobeChat 还提供了一些特性标志（Feature Flags），用于控制是否全局启用某个功能，或者根据需要对特定用户群体或环境启用或禁用功能。
+
+## 特性标志环境变量 `FEATURE_FLAGS`
+
+- 类型：可选
+- 描述：用于控制 LobeChat 的特性功能，支持多个功能标志，使用 `+` 增加一个功能，使用 `-` 来关闭一个功能，多个功能标志之间使用英文逗号 `,` 隔开，最外层建议添加引号 `"` 以避免解析错误。
+- 默认值：`-`
+- 示例：`"-welcome_suggest"`
+
+所有的功能统一以特性标志 `FEATURE_FLAGS` 作为唯一的配置变量。
+
+你可以通过上述配置语法来实现更多的功能组合。所有的功能配置项都是布尔类型，通过 `+` 来启用，通过 `-` 来关闭。
+
+<Callout type={'tip'}>
+  注意：与 `OPENAI_MODEL_LIST` 变量不同，`FEATURE_FLAGS` 变量不支持 `all`
+  关键字，你需要手动控制所有的功能标志（否则它们会采用对应的默认值）。
+</Callout>
+
+| 配置项                    | 解释                             | 默认值 |
+| ------------------------- | -------------------------------- | ------ |
+| `webrtc_sync`             | 启用 WebRTC 同步功能。           | 关闭   |
+| `language_model_settings` | 启用语言模型设置。               | 开启   |
+| `openai_api_key`          | 允许用户自定义 OpenAI API Key。  | 开启   |
+| `openai_proxy_url`        | 允许用户自定义 OpenAI 代理 URL。 | 开启   |
+| `create_session`          | 允许用户创建会话。               | 开启   |
+| `edit_agent`              | 允许用户编辑助手。               | 开启   |
+| `dalle`                   | 启用 DALL-E 功能。               | 开启   |
+| `check_updates`           | 允许检查更新。                   | 开启   |
+| `welcome_suggest`         | 显示欢迎建议。                   | 开启   |
+| `market`                  | 启用助手市场功能。               | 开启   |
+| `speech_to_text`          | 启用语音转文本功能。             | 开启   |
+| `knowledge_base`          | 启用知识库功能。                 | 开启   |
+| `clerk_sign_up`          | 启用Clerk注册功能。                 | 开启   |
+
+你可以随时检查 [featureFlags](https://github.com/lobehub/lobe-chat/blob/main/src/config/featureFlags/schema.ts) 以获取最新的特性标志列表。

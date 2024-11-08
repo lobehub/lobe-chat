@@ -25,9 +25,16 @@ const WebRTC = memo(() => {
   useSyncSettings(form);
 
   const channelName = AntForm.useWatch(['sync', 'webrtc', 'channelName'], form);
+  const signaling = AntForm.useWatch(['sync', 'webrtc', 'signaling'], form);
 
   const config: SettingItemGroup = {
     children: [
+      {
+        children: <Input placeholder={t('sync.webrtc.signaling.placeholder')} />,
+        desc: t('sync.webrtc.signaling.desc'),
+        label: t('sync.webrtc.signaling.title'),
+        name: ['sync', 'webrtc', 'signaling'],
+      },
       {
         children: <ChannelNameInput form={form} />,
         desc: t('sync.webrtc.channelName.desc'),
@@ -46,14 +53,14 @@ const WebRTC = memo(() => {
         name: ['sync', 'webrtc', 'channelPassword'],
       },
       {
-        children: !channelName ? (
-          <Tooltip title={t('sync.webrtc.enabled.invalid')}>
-            <Switch disabled />
-          </Tooltip>
-        ) : (
-          <Switch />
-          // <SyncSwitch />
-        ),
+        children:
+          !channelName || !signaling ? (
+            <Tooltip title={t('sync.webrtc.enabled.invalid')}>
+              <Switch disabled />
+            </Tooltip>
+          ) : (
+            <Switch />
+          ),
 
         label: t('sync.webrtc.enabled.title'),
         minWidth: undefined,

@@ -43,10 +43,9 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
 
   const data = useChatStore((s) => {
     const showInboxWelcome = chatSelectors.showInboxWelcome(s);
-    const ids = showInboxWelcome
+    return showInboxWelcome
       ? [WELCOME_GUIDE_CHAT_ID]
       : chatSelectors.currentChatIDsWithGuideMessage(s);
-    return ['empty', ...ids];
   }, isEqual);
 
   useEffect(() => {
@@ -64,18 +63,14 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
   }, [data.length]);
 
   const theme = useTheme();
-  // overscan should be 1.5 times the height of the window
-  const overscan = typeof window !== 'undefined' ? window.innerHeight * 1.5 : 0;
+  // overscan should be 3 times the height of the window
+  const overscan = typeof window !== 'undefined' ? window.innerHeight * 3 : 0;
 
   const itemContent = useCallback(
     (index: number, id: string) => {
       if (id === WELCOME_GUIDE_CHAT_ID) return <InboxWelcome />;
 
-      return index === 0 ? (
-        <div style={{ height: 24 + (mobile ? 0 : 64) }} />
-      ) : (
-        <Item id={id} index={index - 1} />
-      );
+      return <Item id={id} index={index} />;
     },
     [mobile],
   );
@@ -107,7 +102,7 @@ const VirtualizedList = memo<VirtualizedListProps>(({ mobile }) => {
         computeItemKey={(_, item) => item}
         data={data}
         followOutput={getFollowOutput}
-        // increaseViewportBy={overscan}
+        increaseViewportBy={overscan}
         initialTopMostItemIndex={data?.length - 1}
         isScrolling={setIsScrolling}
         itemContent={itemContent}

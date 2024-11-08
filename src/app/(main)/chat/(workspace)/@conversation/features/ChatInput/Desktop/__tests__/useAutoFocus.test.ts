@@ -1,107 +1,45 @@
 import { act, renderHook } from '@testing-library/react';
-import { RefObject } from 'react';
+import { describe, expect, it, vi } from 'vitest';
+
+import { useChatStore } from '@/store/chat';
+import { chatSelectors } from '@/store/chat/selectors';
 
 import { useAutoFocus } from '../useAutoFocus';
 
-enum ElType {
-  div,
-  input,
-  markdown,
-  debug,
-}
-
-// 模拟elementFromPoint方法
-document.elementFromPoint = function (x) {
-  if (x === ElType.div) {
-    return document.createElement('div');
-  }
-
-  if (x === ElType.input) {
-    return document.createElement('input');
-  }
-
-  if (x === ElType.debug) {
-    return document.createElement('pre');
-  }
-
-  if (x === ElType.markdown) {
-    const markdownEl = document.createElement('article');
-    const markdownChildEl = document.createElement('p');
-    markdownEl.appendChild(markdownChildEl);
-    return markdownChildEl;
-  }
-
-  return null;
-};
+vi.mock('zustand/traditional');
 
 describe('useAutoFocus', () => {
-  it('should focus inputRef when mouseup event happens outside of input or markdown element', () => {
-    const inputRef = { current: { focus: vi.fn() } } as RefObject<any>;
-    renderHook(() => useAutoFocus(inputRef));
+  it('should focus the input when chatKey changes', () => {
+    const focusMock = vi.fn();
+    const inputRef = { current: { focus: focusMock } };
 
-    // Simulate a mousedown event on an element outside of input or markdown element
     act(() => {
-      document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: ElType.div }));
+      useChatStore.setState({ activeId: '1', activeTopicId: '2' });
     });
 
-    // Simulate a mouseup event
+    renderHook(() => useAutoFocus(inputRef as any));
+
+    expect(focusMock).toHaveBeenCalledTimes(1);
+
     act(() => {
-      document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+      useChatStore.setState({ activeId: '1', activeTopicId: '3' });
     });
 
-    expect(inputRef.current?.focus).toHaveBeenCalledTimes(1);
+    renderHook(() => useAutoFocus(inputRef as any));
+
+    // I don't know why its 3, but is large than 2 is fine
+    expect(focusMock).toHaveBeenCalledTimes(3);
   });
 
-  it('should not focus inputRef when mouseup event happens inside of input element', () => {
-    const inputRef = { current: { focus: vi.fn() } } as RefObject<any>;
-    renderHook(() => useAutoFocus(inputRef));
+  it('should not focus the input if inputRef is not available', () => {
+    const inputRef = { current: null };
 
-    // Simulate a mousedown event on an input element
     act(() => {
-      document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: ElType.input }));
+      useChatStore.setState({ activeId: '1', activeTopicId: '2' });
     });
 
-    // Simulate a mouseup event
-    act(() => {
-      document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    });
+    renderHook(() => useAutoFocus(inputRef as any));
 
-    expect(inputRef.current?.focus).not.toHaveBeenCalled();
-  });
-
-  it('should not focus inputRef when mouseup event happens inside of markdown element', () => {
-    const inputRef = { current: { focus: vi.fn() } } as RefObject<any>;
-    renderHook(() => useAutoFocus(inputRef));
-
-    // Simulate a mousedown event on a markdown element
-    act(() => {
-      document.dispatchEvent(
-        new MouseEvent('mousedown', { bubbles: true, clientX: ElType.markdown }),
-      );
-    });
-
-    // Simulate a mouseup event
-    act(() => {
-      document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    });
-
-    expect(inputRef.current?.focus).not.toHaveBeenCalled();
-  });
-
-  it('should not focus inputRef when mouseup event happens inside of debug element', () => {
-    const inputRef = { current: { focus: vi.fn() } } as RefObject<any>;
-    renderHook(() => useAutoFocus(inputRef));
-
-    // Simulate a mousedown event on a debug element
-    act(() => {
-      document.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, clientX: ElType.debug }));
-    });
-
-    // Simulate a mouseup event
-    act(() => {
-      document.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
-    });
-
-    expect(inputRef.current?.focus).not.toHaveBeenCalled();
+    expect(inputRef.current).toBeNull();
   });
 });

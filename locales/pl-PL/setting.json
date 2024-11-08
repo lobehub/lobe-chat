@@ -2,9 +2,17 @@
   "about": {
     "title": "O nas"
   },
+  "agentTab": {
+    "chat": "Preferencje czatu",
+    "meta": "Informacje o asystencie",
+    "modal": "Ustawienia modalne",
+    "plugin": "Ustawienia wtyczki",
+    "prompt": "Ustawienia roli",
+    "tts": "Usługi głosowe"
+  },
   "analytics": {
     "telemetry": {
-      "desc": "Poprzez wybór wysyłania danych telemetrycznych możesz pomóc nam poprawić ogólny użytkowy interfejs LobeChat",
+      "desc": "Wybierając wysyłanie danych telemetrycznych, możesz pomóc nam poprawić ogólne doświadczenie użytkowników {{appName}}.",
       "title": "Wysyłanie anonimowych danych użytkowych"
     },
     "title": "Analiza danych"
@@ -35,6 +43,12 @@
     "title": "Ustawienia"
   },
   "llm": {
+    "aesGcm": "Twój klucz, adres proxy i inne będą szyfrowane za pomocą algorytmu szyfrowania <1>AES-GCM</1>",
+    "apiKey": {
+      "desc": "Proszę wprowadź swój klucz API {{name}}",
+      "placeholder": "{{name}} klucz API",
+      "title": "Klucz API"
+    },
     "checker": {
       "button": "Sprawdź",
       "desc": "Sprawdź poprawność wypełnienia klucza API i adresu proxy",
@@ -56,11 +70,11 @@
           "title": "Nazwa wyświetlana modelu"
         },
         "files": {
-          "extra": "Obecna implementacja przesyłania plików w LobeChat to tylko tymczasowe rozwiązanie, przeznaczone wyłącznie do własnego użytku. Pełna funkcjonalność przesyłania plików będzie dostępna w przyszłości",
+          "extra": "Obecna implementacja przesyłania plików to jedynie rozwiązanie typu hack, przeznaczone wyłącznie do samodzielnego testowania. Pełna funkcjonalność przesyłania plików będzie dostępna w późniejszej wersji.",
           "title": "Obsługa przesyłania plików"
         },
         "functionCall": {
-          "extra": "Ta konfiguracja aktywuje tylko możliwość wywoływania funkcji w LobeChat. Możliwość obsługi wywołań funkcji zależy wyłącznie od samego modelu. Proszę przetestować dostępność wywołań funkcji tego modelu",
+          "extra": "Ta konfiguracja włączy jedynie możliwość wywoływania funkcji w aplikacji, a to, czy wywołania funkcji będą wspierane, zależy całkowicie od samego modelu. Proszę samodzielnie przetestować dostępność wywołań funkcji w tym modelu.",
           "title": "Obsługa wywołań funkcji"
         },
         "id": {
@@ -74,7 +88,7 @@
           "unlimited": "Nieograniczony"
         },
         "vision": {
-          "extra": "Ta konfiguracja aktywuje tylko możliwość przesyłania obrazów w LobeChat. Możliwość rozpoznawania zależy wyłącznie od modelu. Proszę przetestować dostępność rozpoznawania wizyjnego tego modelu",
+          "extra": "Ta konfiguracja włączy jedynie możliwość przesyłania obrazów w aplikacji, a to, czy rozpoznawanie będzie wspierane, zależy całkowicie od samego modelu. Proszę samodzielnie przetestować dostępność rozpoznawania wizualnego w tym modelu.",
           "title": "Obsługa rozpoznawania wizyjnego"
         }
       }
@@ -89,6 +103,7 @@
       "latestTime": "Ostatnia aktualizacja: {{time}}",
       "noLatestTime": "Brak dostępnej listy"
     },
+    "helpDoc": "Poradnik konfiguracji",
     "modelList": {
       "desc": "Wybierz modele do wyświetlenia w sesji. Wybrane modele będą widoczne na liście modeli",
       "placeholder": "Wybierz model z listy",
@@ -99,15 +114,7 @@
       "desc": "Oprócz domyślnego adresu, musi zawierać http(s)://",
       "title": "Adres proxy API"
     },
-    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama pobiera ten model. Prosimy nie zamykać tej strony. Gdy pobieranie zostanie wznowione, będzie kontynuowane od miejsca przerwania.",
-      "remainingTime": "Czas pozostały",
-      "speed": "Prędkość pobierania",
-      "title": "Pobieranie modelu {{model}}"
-    }
+    "waitingForMore": "Więcej modeli jest obecnie w <1>planach dołączenia</1>, prosimy o cierpliwość"
   },
   "plugin": {
     "addTooltip": "Dodaj niestandardowy dodatek",
@@ -174,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "Bez limitu",
       "limited": "Zawiera tylko {{number}} wiadomości",
+      "setlimited": "Ustaw limit wiadomości historycznych",
       "title": "Ograniczenie liczby wiadomości w historii",
       "unlimited": "Bez limitu wiadomości w historii"
     },
@@ -201,13 +209,7 @@
       "title": "Limit jednorazowej odpowiedzi"
     },
     "model": {
-      "desc": "Model ChatGPT",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "{{provider}} model",
       "title": "Model"
     },
     "presencePenalty": {
@@ -328,44 +330,79 @@
   "sync": {
     "device": {
       "deviceName": {
-        "hint": "添加名称以便于识别",
-        "placeholder": "请输入设备名称",
-        "title": "设备名称"
+        "hint": "Dodaj nazwę, aby ułatwić identyfikację",
+        "placeholder": "Wprowadź nazwę urządzenia",
+        "title": "Nazwa urządzenia"
       },
-      "title": "设备信息",
-      "unknownBrowser": "未知浏览器",
-      "unknownOS": "未知系统"
+      "title": "Informacje o urządzeniu",
+      "unknownBrowser": "Nieznana przeglądarka",
+      "unknownOS": "Nieznany system"
     },
     "warning": {
-      "message": "本功能目前仍为实验性功能，可能存在预期外或不稳定的情况，如遇到问题请及时提交反馈。"
+      "tip": "After a long period of community testing, WebRTC synchronization may not be able to reliably meet general data synchronization needs. Please <1>deploy a signaling server</1> before use."
     },
     "webrtc": {
       "channelName": {
-        "desc": "WebRTC 将使用此名创建同步频道，确保频道名称唯一",
-        "placeholder": "请输入同步频道名称",
-        "shuffle": "随机生成",
-        "title": "同步频道名称"
+        "desc": "WebRTC użyje tej nazwy do utworzenia kanału synchronizacji, upewnij się, że nazwa kanału jest unikalna",
+        "placeholder": "Wprowadź nazwę kanału synchronizacji",
+        "shuffle": "Wygeneruj losowo",
+        "title": "Nazwa kanału synchronizacji"
       },
       "channelPassword": {
-        "desc": "添加密码确保频道私密性，只有密码正确时，设备才可加入频道",
-        "placeholder": "请输入同步频道密码",
-        "title": "同步频道密码"
+        "desc": "Dodaj hasło, aby zapewnić prywatność kanału. Tylko urządzenia z poprawnym hasłem mogą dołączyć do kanału",
+        "placeholder": "Wprowadź hasło kanału synchronizacji",
+        "title": "Hasło kanału synchronizacji"
       },
-      "desc": "实时、点对点的数据通信，需设备同时在线才可同步",
+      "desc": "Bezpośrednia, punkt-do-punktu komunikacja danych w czasie rzeczywistym, wymaga jednoczesnej obecności urządzeń online do synchronizacji",
       "enabled": {
-        "invalid": "请填写同步频道名称后再开启",
-        "title": "开启同步"
+        "invalid": "Please fill in the signaling server and synchronization channel name before enabling.",
+        "title": "Włącz synchronizację"
       },
-      "title": "WebRTC 同步"
+      "signaling": {
+        "desc": "WebRTC will use this address for synchronization",
+        "placeholder": "Enter signaling server address",
+        "title": "Signaling Server"
+      },
+      "title": "Synchronizacja WebRTC"
+    }
+  },
+  "systemAgent": {
+    "agentMeta": {
+      "label": "Model generowania metadanych asystenta",
+      "modelDesc": "Określa model używany do generowania nazwy, opisu, awatara i etykiety asystenta",
+      "title": "Automatyczne generowanie informacji o asystencie"
+    },
+    "customPrompt": {
+      "addPrompt": "Dodaj niestandardowy podpowiedź",
+      "desc": "Po wypełnieniu, asystent systemowy użyje niestandardowej podpowiedzi podczas generowania treści",
+      "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
+      "title": "Niestandardowe słowo podpowiedzi"
+    },
+    "queryRewrite": {
+      "label": "Model przekształcania zapytań",
+      "modelDesc": "Model używany do optymalizacji zapytań użytkowników",
+      "title": "Przekształcenie zapytań w bazie wiedzy"
+    },
+    "title": "Asystent Systemowy",
+    "topic": {
+      "label": "Model nazewnictwa tematów",
+      "modelDesc": "Określa model używany do automatycznego zmieniania nazw tematów",
+      "title": "Automatyczne nadawanie nazw tematom"
+    },
+    "translation": {
+      "label": "Model Tłumaczenia",
+      "modelDesc": "Określ model używany do tłumaczenia",
+      "title": "Ustawienia Asystenta Tłumaczenia"
     }
   },
   "tab": {
     "about": "O nas",
     "agent": "Domyślny asystent",
     "common": "Ustawienia ogólne",
-    "experiment": "实验",
+    "experiment": "Eksperyment",
     "llm": "Model językowy",
-    "sync": "云端同步",
+    "sync": "Synchronizacja w chmurze",
+    "system-agent": "System Agent",
     "tts": "Usługa głosowa"
   },
   "tools": {

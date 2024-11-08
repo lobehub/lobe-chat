@@ -1,7 +1,7 @@
 import { Avatar, Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
-import type { ItemType } from 'antd/es/menu/hooks/useItems';
+import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { ArrowRight, Store, ToyBrick } from 'lucide-react';
 import { PropsWithChildren, memo } from 'react';

@@ -3,14 +3,18 @@
 import { ActionIcon, Avatar, Grid } from '@lobehub/ui';
 import { Skeleton, Typography } from 'antd';
 import { createStyles } from 'antd-style';
-import isEqual from 'fast-deep-equal';
 import { RefreshCw } from 'lucide-react';
 import Link from 'next/link';
 import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
+import useSWR from 'swr';
+import urlJoin from 'url-join';
 
-import { useMarketStore } from '@/store/market';
+import { assistantService } from '@/services/assistant';
+import { useUserStore } from '@/store/user';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
+import { DiscoverAssistantItem } from '@/types/discover';
 
 const { Paragraph } = Typography;
 
@@ -56,11 +60,19 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
 
 const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   const { t } = useTranslation('welcome');
-
+  const locale = useUserStore(userGeneralSettingsSelectors.currentLanguage);
   const [sliceStart, setSliceStart] = useState(0);
-  const useFetchAgentList = useMarketStore((s) => s.useFetchAgentList);
-  const { isLoading } = useFetchAgentList();
-  const agentList = useMarketStore((s) => s.agentList, isEqual);
+
+  const { data: assistantList, isLoading } = useSWR(
+    ['assistant-list', locale].join('-'),
+    async () => await assistantService.getAssistantList(),
+    {
+      refreshWhenOffline: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    },
+  );
+
   const { styles } = useStyles();
 
   const agentLength = mobile ? 2 : 4;
@@ -72,8 +84,8 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
   ));
 
   const handleRefresh = () => {
-    if (!agentList) return;
-    setSliceStart(Math.floor((Math.random() * agentList.length) / 2));
+    if (!assistantList) return;
+    setSliceStart(Math.floor((Math.random() * assistantList.length) / 2));
   };
 
   return (
@@ -88,23 +100,25 @@ const AgentsSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
         />
       </Flexbox>
       <Grid gap={8} rows={2}>
-        {isLoading
+        {isLoading || !assistantList
           ? loadingCards
-          : agentList.slice(sliceStart, sliceStart + agentLength).map((agent) => (
-              <Link href={`/market?agent=${agent.identifier}`} key={agent.identifier}>
-                <Flexbox className={styles.card} gap={8} horizontal>
-                  <Avatar avatar={agent.meta.avatar} style={{ flex: 'none' }} />
-                  <Flexbox gap={mobile ? 2 : 8} style={{ overflow: 'hidden', width: '100%' }}>
-                    <Paragraph className={styles.cardTitle} ellipsis={{ rows: 1 }}>
-                      {agent.meta.title}
-                    </Paragraph>
-                    <Paragraph className={styles.cardDesc} ellipsis={{ rows: mobile ? 1 : 2 }}>
-                      {agent.meta.description}
-                    </Paragraph>
+          : assistantList
+              .slice(sliceStart, sliceStart + agentLength)
+              .map((item: DiscoverAssistantItem) => (
+                <Link href={urlJoin('/discover/assistant/', item.identifier)} key={item.identifier}>
+                  <Flexbox className={styles.card} gap={8} horizontal>
+                    <Avatar avatar={item.meta.avatar} style={{ flex: 'none' }} />
+                    <Flexbox gap={mobile ? 2 : 8} style={{ overflow: 'hidden', width: '100%' }}>
+                      <Paragraph className={styles.cardTitle} ellipsis={{ rows: 1 }}>
+                        {item.meta.title}
+                      </Paragraph>
+                      <Paragraph className={styles.cardDesc} ellipsis={{ rows: mobile ? 1 : 2 }}>
+                        {item.meta.description}
+                      </Paragraph>
+                    </Flexbox>
                   </Flexbox>
-                </Flexbox>
-              </Link>
-            ))}
+                </Link>
+              ))}
       </Grid>
     </Flexbox>
   );

@@ -3,56 +3,31 @@
 export const AgentRuntimeErrorType = {
   AgentRuntimeError: 'AgentRuntimeError', // Agent Runtime 模块运行时错误
   LocationNotSupportError: 'LocationNotSupportError',
+  QuotaLimitReached: 'QuotaLimitReached',
+  PermissionDenied: 'PermissionDenied',
 
-  OpenAIBizError: 'OpenAIBizError',
-
-  NoOpenAIAPIKey: 'NoOpenAIAPIKey',
-
-  InvalidAzureAPIKey: 'InvalidAzureAPIKey',
-  AzureBizError: 'AzureBizError',
-
-  InvalidZhipuAPIKey: 'InvalidZhipuAPIKey',
-  ZhipuBizError: 'ZhipuBizError',
-
-  InvalidGoogleAPIKey: 'InvalidGoogleAPIKey',
-  GoogleBizError: 'GoogleBizError',
-
-  InvalidBedrockCredentials: 'InvalidBedrockCredentials',
-  BedrockBizError: 'BedrockBizError',
-
-  InvalidMistralAPIKey: 'InvalidMistralAPIKey',
-  MistralBizError: 'MistralBizError',
-
-  InvalidMoonshotAPIKey: 'InvalidMoonshotAPIKey',
-  MoonshotBizError: 'MoonshotBizError',
+  InvalidProviderAPIKey: 'InvalidProviderAPIKey',
+  ProviderBizError: 'ProviderBizError',
 
   InvalidOllamaArgs: 'InvalidOllamaArgs',
   OllamaBizError: 'OllamaBizError',
 
-  InvalidPerplexityAPIKey: 'InvalidPerplexityAPIKey',
-  PerplexityBizError: 'PerplexityBizError',
+  InvalidBedrockCredentials: 'InvalidBedrockCredentials',
+  StreamChunkError: 'StreamChunkError',
 
-  InvalidAnthropicAPIKey: 'InvalidAnthropicAPIKey',
-  AnthropicBizError: 'AnthropicBizError',
+  InvalidGithubToken: 'InvalidGithubToken',
 
-  InvalidGroqAPIKey: 'InvalidGroqAPIKey',
-  GroqBizError: 'GroqBizError',
-
-  InvalidZeroOneAPIKey: 'InvalidZeroOneAPIKey',
-  ZeroOneBizError: 'ZeroOneBizError',
-
-  InvalidOpenRouterAPIKey: 'InvalidOpenRouterAPIKey',
-  OpenRouterBizError: 'OpenRouterBizError',
-
-  InvalidTogetherAIAPIKey: 'InvalidTogetherAIAPIKey',
-  TogetherAIBizError: 'TogetherAIBizError',
-
-  InvalidMinimaxAPIKey: 'InvalidMinimaxAPIKey',
-  MinimaxBizError: 'MinimaxBizError',
-
-  InvalidDeepSeekAPIKey: 'InvalidDeepSeekAPIKey',
-  DeepSeekBizError: 'DeepSeekBizError',
+  /**
+   * @deprecated
+   */
+  NoOpenAIAPIKey: 'NoOpenAIAPIKey',
+  /**
+   * @deprecated
+   */
+  OpenAIBizError: 'OpenAIBizError',
 } as const;
+
+export const AGENT_RUNTIME_ERROR_SET = new Set<string>(Object.values(AgentRuntimeErrorType));
 
 export type ILobeAgentRuntimeErrorType =
   (typeof AgentRuntimeErrorType)[keyof typeof AgentRuntimeErrorType];

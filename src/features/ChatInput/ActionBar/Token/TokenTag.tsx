@@ -1,8 +1,10 @@
 import { TokenTag, Tooltip } from '@lobehub/ui';
+import { Popover } from 'antd';
+import { useTheme } from 'antd-style';
 import numeral from 'numeral';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flexbox } from 'react-layout-kit';
+import { Center, Flexbox } from 'react-layout-kit';
 
 import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
@@ -14,10 +16,11 @@ import { toolSelectors } from '@/store/tool/selectors';
 import { useUserStore } from '@/store/user';
 import { modelProviderSelectors } from '@/store/user/selectors';
 
-const format = (number: number) => numeral(number).format('0,0');
+import TokenProgress from './TokenProgress';
 
 const Token = memo(() => {
-  const { t } = useTranslation('chat');
+  const { t } = useTranslation(['chat', 'components']);
+  const theme = useTheme();
 
   const [input, messageString] = useChatStore((s) => [
     s.inputMessage,
@@ -55,38 +58,79 @@ const Token = memo(() => {
 
   // Total token
   const totalToken = systemRoleToken + toolsToken + chatsToken;
+
+  const content = (
+    <Flexbox gap={12} style={{ minWidth: 200 }}>
+      <Flexbox align={'center'} gap={4} horizontal justify={'space-between'} width={'100%'}>
+        <div style={{ color: theme.colorTextDescription }}>{t('tokenDetails.title')}</div>
+        <Tooltip
+          overlayStyle={{ maxWidth: 'unset', pointerEvents: 'none' }}
+          title={t('ModelSelect.featureTag.tokens', {
+            ns: 'components',
+            tokens: numeral(maxTokens).format('0,0'),
+          })}
+        >
+          <Center
+            height={20}
+            paddingInline={4}
+            style={{
+              background: theme.colorFillTertiary,
+              borderRadius: 4,
+              color: theme.colorTextSecondary,
+              fontFamily: theme.fontFamilyCode,
+              fontSize: 11,
+            }}
+          >
+            TOKEN
+          </Center>
+        </Tooltip>
+      </Flexbox>
+      <TokenProgress
+        data={[
+          {
+            color: theme.magenta,
+            id: 'systemRole',
+            title: t('tokenDetails.systemRole'),
+            value: systemRoleToken,
+          },
+          {
+            color: theme.geekblue,
+            id: 'tools',
+            title: t('tokenDetails.tools'),
+            value: toolsToken,
+          },
+          {
+            color: theme.gold,
+            id: 'chats',
+            title: t('tokenDetails.chats'),
+            value: chatsToken,
+          },
+        ]}
+        showIcon
+      />
+      <TokenProgress
+        data={[
+          {
+            color: theme.colorSuccess,
+            id: 'used',
+            title: t('tokenDetails.used'),
+            value: totalToken,
+          },
+          {
+            color: theme.colorFill,
+            id: 'rest',
+            title: t('tokenDetails.rest'),
+            value: maxTokens - totalToken,
+          },
+        ]}
+        showIcon
+        showTotal={t('tokenDetails.total')}
+      />
+    </Flexbox>
+  );
+
   return (
-    <Tooltip
-      placement={'bottom'}
-      title={
-        <Flexbox width={150}>
-          <Flexbox horizontal justify={'space-between'}>
-            <span>{t('tokenDetails.systemRole')}</span>
-            <span>{format(systemRoleToken)}</span>
-          </Flexbox>
-          <Flexbox horizontal justify={'space-between'}>
-            <span>{t('tokenDetails.tools')}</span>
-            <span>{format(toolsToken)}</span>
-          </Flexbox>
-          <Flexbox horizontal justify={'space-between'}>
-            <span>{t('tokenDetails.chats')}</span>
-            <span>{format(chatsToken)}</span>
-          </Flexbox>
-          <Flexbox horizontal justify={'space-between'}>
-            <span>{t('tokenDetails.used')}</span>
-            <span>{format(totalToken)}</span>
-          </Flexbox>
-          <Flexbox horizontal justify={'space-between'} style={{ marginTop: 8 }}>
-            <span>{t('tokenDetails.total')}</span>
-            <span>{format(maxTokens)}</span>
-          </Flexbox>
-          <Flexbox horizontal justify={'space-between'}>
-            <span>{t('tokenDetails.rest')}</span>
-            <span>{format(maxTokens - totalToken)}</span>
-          </Flexbox>
-        </Flexbox>
-      }
-    >
+    <Popover arrow={false} content={content} placement={'top'} trigger={['hover', 'click']}>
       <TokenTag
         displayMode={'used'}
         maxValue={maxTokens}
@@ -98,7 +142,7 @@ const Token = memo(() => {
         }}
         value={totalToken}
       />
-    </Tooltip>
+    </Popover>
   );
 });
 

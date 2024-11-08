@@ -1,46 +1,33 @@
 import NextAuth from 'next-auth';
 
-import { authEnv } from '@/config/auth';
+import { getServerDBConfig } from '@/config/db';
+import { serverDB } from '@/database/server';
 
-import { ssoProviders } from './sso-providers';
+import { LobeNextAuthDbAdapter } from './adapter';
+import config from './auth.config';
 
-export const initSSOProviders = () => {
-  return authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
-    ? authEnv.NEXT_AUTH_SSO_PROVIDERS.split(/[,，]/).map((provider) => {
-        const validProvider = ssoProviders.find((item) => item.id === provider);
+const { NEXT_PUBLIC_ENABLED_SERVER_SERVICE } = getServerDBConfig();
 
-        if (validProvider) return validProvider.provider;
-
-        throw new Error(`[NextAuth] provider ${provider} is not supported`);
-      })
-    : [];
-};
-
-const nextAuth = NextAuth({
-  callbacks: {
-    // Note: Data processing order of callback: authorize --> jwt --> session
-    async jwt({ token, account }) {
-      // Auth.js will process the `providerAccountId` automatically
-      // ref: https://authjs.dev/reference/core/types#provideraccountid
-      if (account) {
-        token.userId = account.providerAccountId;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      // Pick userid from token
-      if (session.user) {
-        session.user.id = (token.userId ?? session.user.id) as string;
-      }
-      return session;
-    },
+/**
+ * NextAuth initialization with Database adapter
+ *
+ * @example
+ * ```ts
+ * import NextAuthNode from '@/libs/next-auth';
+ * const { handlers } = NextAuthNode;
+ * ```
+ *
+ * @note
+ * If you meet the edge runtime compatible problem,
+ * you can import from `@/libs/next-auth/edge` which is not initial with the database adapter.
+ *
+ * The difference and usage of the two different NextAuth modules is can be
+ * ref to: https://github.com/lobehub/lobe-chat/pull/2935
+ */
+export default NextAuth({
+  ...config,
+  adapter: NEXT_PUBLIC_ENABLED_SERVER_SERVICE ? LobeNextAuthDbAdapter(serverDB) : undefined,
+  session: {
+    strategy: 'jwt',
   },
-  providers: initSSOProviders(),
-  secret: authEnv.NEXT_AUTH_SECRET,
-  trustHost: true,
 });
-
-export const {
-  handlers: { GET, POST },
-  auth,
-} = nextAuth;

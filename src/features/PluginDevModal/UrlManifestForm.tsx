@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import ManifestPreviewer from '@/components/ManifestPreviewer';
+import { BRANDING_NAME } from '@/const/branding';
 import { toolService } from '@/services/tool';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
@@ -49,7 +50,7 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
         <FormItem
           extra={
             <Flexbox horizontal justify={'space-between'} style={{ marginTop: 8 }}>
-              {t('dev.meta.manifest.desc')}
+              {t('dev.meta.manifest.desc', { appName: BRANDING_NAME })}
               {manifest && (
                 <ManifestPreviewer manifest={manifest}>
                   <ActionIcon
@@ -77,7 +78,7 @@ const UrlManifestForm = memo<{ form: FormInstance; isEditMode: boolean }>(
 
                 try {
                   const useProxy = form.getFieldValue(proxyKey);
-                  const data = await toolService.getPluginManifest(value, useProxy);
+                  const data = await toolService.getToolManifest(value, useProxy);
                   setManifest(data);
 
                   form.setFieldsValue({ identifier: data.identifier, manifest: data });

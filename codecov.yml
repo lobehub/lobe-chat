@@ -1,0 +1,11 @@
+coverage:
+  status:
+    project:
+      default: off
+      server:
+        flags:
+          - server
+      app:
+        flags:
+          - app
+    patch: off

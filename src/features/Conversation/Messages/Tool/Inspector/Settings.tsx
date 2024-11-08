@@ -8,7 +8,7 @@ import { pluginHelpers, useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 
 const Settings = memo<{ id: string }>(({ id }) => {
-  const item = useToolStore(pluginSelectors.getPluginManifestById(id));
+  const item = useToolStore(pluginSelectors.getToolManifestById(id));
   const [open, setOpen] = useState(false);
   const { t } = useTranslation('plugin');
   const hasSettings = pluginHelpers.isSettingSchemaNonEmpty(item?.settings);

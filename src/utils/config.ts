@@ -1,4 +1,5 @@
 import { notification } from '@/components/AntdStaticMethods';
+import { BRANDING_NAME } from '@/const/branding';
 import { CURRENT_CONFIG_VERSION, Migration } from '@/migrations';
 import {
   ConfigFile,
@@ -12,7 +13,7 @@ import {
 } from '@/types/exportConfig';
 
 export const exportConfigFile = (config: object, fileName?: string) => {
-  const file = `LobeChat-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
+  const file = `${BRANDING_NAME}-${fileName || '-config'}-v${CURRENT_CONFIG_VERSION}.json`;
 
   // 创建一个 Blob 对象
   const blob = new Blob([JSON.stringify(config)], { type: 'application/json' });
@@ -34,21 +35,24 @@ export const exportConfigFile = (config: object, fileName?: string) => {
   a.remove();
 };
 
-export const importConfigFile = (file: File, onConfigImport: (config: ConfigFile) => void) => {
-  file.text().then((text) => {
-    try {
-      const config = JSON.parse(text);
-      const { state } = Migration.migrate(config);
+export const importConfigFile = async (
+  file: File,
+  onConfigImport: (config: ConfigFile) => Promise<void>,
+) => {
+  const text = await file.text();
 
-      onConfigImport({ ...config, state });
-    } catch (error) {
-      console.error(error);
-      notification.error({
-        description: `出错原因: ${(error as Error).message}`,
-        message: '导入失败',
-      });
-    }
-  });
+  try {
+    const config = JSON.parse(text);
+    const { state, version } = Migration.migrate(config);
+
+    await onConfigImport({ ...config, state, version });
+  } catch (error) {
+    console.error(error);
+    notification.error({
+      description: `出错原因: ${(error as Error).message}`,
+      message: '导入失败',
+    });
+  }
 };
 
 type CreateConfigFileState<T extends ExportType> = ConfigModelMap[T]['state'];

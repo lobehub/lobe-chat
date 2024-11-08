@@ -12,9 +12,18 @@
     "retry": "Reintentar",
     "title": "Se ha producido un problema en la página.."
   },
+  "fetchError": {
+    "detail": "Detalles del error",
+    "title": "Solicitud fallida"
+  },
+  "loginRequired": {
+    "desc": "Serás redirigido automáticamente a la página de inicio de sesión",
+    "title": "Por favor, inicie sesión para utilizar esta función"
+  },
   "notFound": {
     "backHome": "Volver a la página de inicio",
-    "desc": "No podemos encontrar la página que estás buscando, por favor verifica si el enlace es correcto",
+    "check": "Por favor, verifica si tu URL es correcta",
+    "desc": "No podemos encontrar la página que estás buscando",
     "title": "¿Has entrado en un área desconocida?"
   },
   "pluginSettings": {
@@ -48,45 +57,33 @@
     "431": "Lo sentimos, el campo de encabezado de su solicitud es demasiado grande para ser procesado por el servidor",
     "451": "Lo sentimos, el servidor se niega a proporcionar este recurso debido a razones legales",
     "500": "Lo sentimos, el servidor parece estar experimentando dificultades y no puede completar su solicitud en este momento. Por favor, inténtelo de nuevo más tarde",
+    "501": "Lo sentimos, el servidor aún no sabe cómo manejar esta solicitud, por favor confirme que su operación es correcta",
     "502": "Lo sentimos, el servidor parece estar desorientado y no puede proporcionar servicio en este momento. Por favor, inténtelo de nuevo más tarde",
     "503": "Lo sentimos, el servidor no puede procesar su solicitud en este momento, posiblemente debido a una sobrecarga o mantenimiento. Por favor, inténtelo de nuevo más tarde",
     "504": "Lo sentimos, el servidor no recibió respuesta del servidor upstream. Por favor, inténtelo de nuevo más tarde",
+    "505": "Lo sentimos, el servidor no soporta la versión HTTP que está utilizando, por favor actualice y vuelva a intentarlo",
+    "506": "Lo sentimos, hay un problema con la configuración del servidor, por favor contacte al administrador para resolverlo",
+    "507": "Lo sentimos, el servidor no tiene suficiente espacio de almacenamiento para procesar su solicitud, por favor inténtelo de nuevo más tarde",
+    "509": "Lo sentimos, el ancho de banda del servidor se ha agotado, por favor inténtelo de nuevo más tarde",
+    "510": "Lo sentimos, el servidor no soporta la funcionalidad de extensión solicitada, por favor contacte al administrador",
+    "524": "Lo sentimos, el servidor ha agotado el tiempo de espera mientras esperaba una respuesta, puede ser debido a que la respuesta es demasiado lenta, por favor inténtelo de nuevo más tarde",
     "AgentRuntimeError": "Se produjo un error en la ejecución del tiempo de ejecución del modelo de lenguaje Lobe, por favor, verifica la siguiente información o inténtalo de nuevo",
-    "AnthropicBizError": "Se ha producido un error al solicitar el servicio de inteligencia artificial de Anthropic. Por favor, revisa la siguiente información o inténtalo de nuevo.",
-    "AzureBizError": "Se produjo un error al solicitar el servicio de Azure AI, por favor, verifica la siguiente información o inténtalo de nuevo",
-    "BedrockBizError": "Se produjo un error al solicitar el servicio de Bedrock, por favor, verifica la siguiente información o inténtalo de nuevo",
-    "DeepSeekBizError": "Error al solicitar el servicio de DeepSeek. Por favor, revisa la siguiente información e inténtalo de nuevo.",
-    "GoogleBizError": "Se produjo un error al solicitar el servicio de Google, por favor, verifica la siguiente información o inténtalo de nuevo",
-    "GroqBizError": "Se produjo un error al solicitar el servicio Groq. Por favor, revise la siguiente información o inténtelo de nuevo",
+    "FreePlanLimit": "Actualmente eres un usuario gratuito y no puedes utilizar esta función. Por favor, actualiza a un plan de pago para seguir utilizando.",
     "InvalidAccessCode": "La contraseña no es válida o está vacía. Por favor, introduce una contraseña de acceso válida o añade una clave API personalizada",
-    "InvalidAnthropicAPIKey": "La clave de API de Anthropic es incorrecta o está vacía. Por favor, revisa la clave de API de Anthropic e inténtalo de nuevo.",
-    "InvalidAzureAPIKey": "La clave de API de Azure es incorrecta o está vacía, por favor, verifica la clave de API de Azure e inténtalo de nuevo",
     "InvalidBedrockCredentials": "La autenticación de Bedrock no se ha completado con éxito, por favor, verifica AccessKeyId/SecretAccessKey e inténtalo de nuevo",
     "InvalidClerkUser": "Lo siento mucho, actualmente no has iniciado sesión. Por favor, inicia sesión o regístrate antes de continuar.",
-    "InvalidDeepSeekAPIKey": "La clave de API de DeepSeek no es válida o está vacía. Por favor, revisa la clave de API de DeepSeek e inténtalo de nuevo.",
-    "InvalidGoogleAPIKey": "La clave de API de Google es incorrecta o está vacía, por favor, verifica la clave de API de Google e inténtalo de nuevo",
-    "InvalidGroqAPIKey": "La clave de API de Groq es incorrecta o está vacía. Por favor, revisa la clave de API de Groq e inténtalo de nuevo.",
-    "InvalidMinimaxAPIKey": "Clave de API de Minimax incorrecta o vacía, por favor, revise la clave de API de Minimax e inténtelo de nuevo",
-    "InvalidMistralAPIKey": "La clave de API de Mistral AI es incorrecta o está vacía. Por favor, revise la clave de API de Mistral y vuelva a intentarlo.",
-    "InvalidMoonshotAPIKey": "La clave de API de Moonshot AI no es válida o está vacía. Por favor, revise la clave de API de Moonshot e inténtelo de nuevo.",
+    "InvalidGithubToken": "El token de acceso personal de Github es incorrecto o está vacío. Por favor, verifica el token de acceso personal de Github y vuelve a intentarlo.",
     "InvalidOllamaArgs": "La configuración de Ollama no es válida, por favor revisa la configuración de Ollama e inténtalo de nuevo",
-    "InvalidOpenRouterAPIKey": "La clave de API de OpenRouter es incorrecta o está vacía. Por favor, revisa la clave de API de OpenRouter e inténtalo de nuevo",
-    "InvalidPerplexityAPIKey": "La clave de API de Perplexity es inválida o está vacía. Por favor, verifica la clave de API de Perplexity e inténtalo de nuevo",
-    "InvalidTogetherAIAPIKey": "La clave de API de TogetherAI es incorrecta o está vacía. Por favor, revisa la clave de API de TogetherAI e inténtalo de nuevo",
-    "InvalidZeroOneAPIKey": "La clave de API de ZeroOneBiz es incorrecta o está vacía. Por favor, revise la clave de API de ZeroOneBiz e inténtelo de nuevo.",
-    "InvalidZhipuAPIKey": "La clave de API de Zhipu es incorrecta o está vacía, por favor, verifica la clave de API de Zhipu e inténtalo de nuevo",
+    "InvalidProviderAPIKey": "{{provider}} API Key incorrecta o vacía, por favor revisa tu {{provider}} API Key e intenta de nuevo",
     "LocationNotSupportError": "Lo sentimos, tu ubicación actual no es compatible con este servicio de modelo, puede ser debido a restricciones geográficas o a que el servicio no está disponible. Por favor, verifica si tu ubicación actual es compatible con este servicio o intenta usar otra información de ubicación.",
-    "MinimaxBizError": "Error al solicitar el servicio Minimax, por favor, revise la siguiente información o inténtelo de nuevo",
-    "MistralBizError": "Se produjo un error al solicitar el servicio Mistral AI. Por favor, revise la siguiente información o inténtelo de nuevo.",
-    "MoonshotBizError": "Se produjo un error al solicitar el servicio de Moonshot en el lado oscuro de la luna. Por favor, revise la siguiente información o inténtelo de nuevo.",
     "NoOpenAIAPIKey": "La clave de API de OpenAI está vacía. Agregue una clave de API de OpenAI personalizada",
     "OllamaBizError": "Error al solicitar el servicio de Ollama, por favor verifica la siguiente información o inténtalo de nuevo",
     "OllamaServiceUnavailable": "El servicio Ollama no está disponible. Por favor, verifica si Ollama está funcionando correctamente o si la configuración de Ollama para el acceso entre dominios está configurada correctamente.",
-    "OpenAIBizError": "Error al solicitar el servicio OpenAI. Depure o reintente según la siguiente información",
-    "OpenRouterBizError": "Error al solicitar el servicio de IA de OpenRouter. Por favor, revisa la siguiente información o inténtalo de nuevo",
-    "PerplexityBizError": "Error comercial al solicitar el servicio de IA de Perplexity. Por favor, revisa la siguiente información o inténtalo de nuevo",
+    "OpenAIBizError": "Se produjo un error al solicitar el servicio de OpenAI, por favor, revise la siguiente información o inténtelo de nuevo",
+    "PermissionDenied": "Lo sentimos, no tienes permiso para acceder a este servicio. Por favor, verifica si tu clave tiene los permisos necesarios.",
     "PluginApiNotFound": "Lo sentimos, el API especificado no existe en el manifiesto del complemento. Verifique si su método de solicitud coincide con el API del manifiesto del complemento",
     "PluginApiParamsError": "Lo sentimos, la validación de los parámetros de entrada de la solicitud del complemento no ha pasado. Verifique si los parámetros de entrada coinciden con la información de descripción del API",
+    "PluginFailToTransformArguments": "Lo siento, no se pudieron transformar los argumentos de la llamada al plugin. Por favor, intenta generar de nuevo el mensaje del asistente o prueba con un modelo de IA de Tools Calling más potente.",
     "PluginGatewayError": "Lo sentimos, se ha producido un error en la puerta de enlace del complemento. Verifique si la configuración de la puerta de enlace del complemento es correcta",
     "PluginManifestInvalid": "Lo sentimos, la validación del manifiesto del complemento no ha pasado. Por favor, verifique si el formato del manifiesto es correcto",
     "PluginManifestNotFound": "Lo sentimos, el servidor no puede encontrar el manifiesto de descripción del complemento (manifest.json). Verifique si la dirección del archivo de descripción del complemento es correcta",
@@ -97,9 +94,11 @@
     "PluginOpenApiInitError": "Lo sentimos, la inicialización del cliente OpenAPI ha fallado. Verifique si la información de configuración de OpenAPI es correcta",
     "PluginServerError": "Error al recibir la respuesta del servidor del complemento. Verifique el archivo de descripción del complemento, la configuración del complemento o la implementación del servidor según la información de error a continuación",
     "PluginSettingsInvalid": "Este complemento necesita una configuración correcta antes de poder usarse. Verifique si su configuración es correcta",
-    "TogetherAIBizError": "Error al solicitar el servicio de IA de TogetherAI. Por favor, revisa la siguiente información o inténtalo de nuevo",
-    "ZeroOneBizError": "Se produjo un error al solicitar el servicio ZeroOneBiz. Por favor, revise la siguiente información o inténtelo de nuevo.",
-    "ZhipuBizError": "Se produjo un error al solicitar el servicio Zhipu, por favor, verifica la siguiente información o inténtalo de nuevo"
+    "ProviderBizError": "Se produjo un error al solicitar el servicio de {{provider}}, por favor, revise la siguiente información o inténtelo de nuevo",
+    "QuotaLimitReached": "Lo sentimos, el uso actual de tokens o el número de solicitudes ha alcanzado el límite de cuota de esta clave. Por favor, aumenta la cuota de esta clave o intenta de nuevo más tarde.",
+    "StreamChunkError": "Error de análisis del bloque de mensajes de la solicitud en streaming. Por favor, verifica si la API actual cumple con las normas estándar o contacta a tu proveedor de API para más información.",
+    "SubscriptionPlanLimit": "Has alcanzado el límite de tu suscripción y no puedes utilizar esta función. Por favor, actualiza a un plan superior o compra un paquete de recursos para seguir utilizando.",
+    "UnknownChatFetchError": "Lo sentimos, se ha producido un error desconocido en la solicitud. Por favor, verifica la información a continuación o intenta de nuevo."
   },
   "stt": {
     "responseError": "Error en la solicitud de servicio. Verifique la configuración o reintente"
@@ -109,6 +108,10 @@
   },
   "unlock": {
     "addProxyUrl": "Agregar URL de proxy de OpenAI (opcional)",
+    "apiKey": {
+      "description": "Ingresa tu API Key de {{name}} para comenzar la sesión",
+      "title": "Usar tu propia API Key de {{name}}"
+    },
     "closeMessage": "Cerrar mensaje",
     "confirm": "Confirmar y volver a intentar",
     "oauth": {
@@ -116,14 +119,6 @@
       "success": "Inicio de sesión exitoso",
       "title": "Iniciar sesión",
       "welcome": "¡Bienvenido!"
-    },
-    "ollama": {
-      "cancel": "Cancelar descarga",
-      "confirm": "Descargar",
-      "description": "Ingresa las etiquetas de tu modelo Ollama para continuar la sesión",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Iniciando descarga...",
-      "title": "Descargar modelo Ollama específico"
     },
     "password": {
       "description": "El administrador ha activado el cifrado de la aplicación. Ingresa la contraseña de la aplicación para desbloquearla. La contraseña solo se necesita ingresar una vez",
@@ -134,5 +129,13 @@
       "apiKey": "Clave de API personalizada",
       "password": "Contraseña"
     }
+  },
+  "upload": {
+    "desc": "Detalles: {{detail}}",
+    "fileOnlySupportInServerMode": "El modo de implementación actual no admite la carga de archivos que no sean imágenes. Si necesita cargar un archivo en formato {{ext}}, cambie a la implementación de base de datos en servidor o utilice el servicio {{cloud}}.",
+    "networkError": "Por favor, verifica que tu red esté funcionando correctamente y comprueba si la configuración de CORS del servicio de almacenamiento de archivos es correcta.",
+    "title": "Error al subir el archivo, por favor verifica la conexión a internet o inténtalo de nuevo más tarde",
+    "unknownError": "Razón del error: {{reason}}",
+    "uploadFailed": "La carga del archivo ha fallado."
   }
 }

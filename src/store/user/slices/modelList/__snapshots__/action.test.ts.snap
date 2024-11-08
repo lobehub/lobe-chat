@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LLMSettingsSliceAction > refreshModelProviderList > visible 1`] = `
+{
+  "description": "LLaVA 是结合视觉编码器和 Vicuna 的多模态模型，用于强大的视觉和语言理解。",
+  "displayName": "LLaVA 7B",
+  "enabled": true,
+  "id": "llava",
+  "tokens": 4096,
+  "vision": true,
+}
+`;

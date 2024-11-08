@@ -1,8 +1,4 @@
-import {
-  EnhancedGenerateContentResponse,
-  GenerateContentStreamResult,
-} from '@google/generative-ai';
-import { readableFromAsyncIterable } from 'ai';
+import { EnhancedGenerateContentResponse } from '@google/generative-ai';
 
 import { nanoid } from '@/utils/uuid';
 
@@ -11,7 +7,6 @@ import {
   StreamProtocolChunk,
   StreamStack,
   StreamToolCallChunkData,
-  chatStreamable,
   createCallbacksTransformer,
   createSSEProtocolTransformer,
   generateToolCallId,
@@ -48,12 +43,6 @@ const transformGoogleGenerativeAIStream = (
     id: stack?.id,
     type: 'text',
   };
-};
-
-// only use for debug
-export const googleGenAIResultToStream = (stream: GenerateContentStreamResult) => {
-  // make the response to the streamable format
-  return readableFromAsyncIterable(chatStreamable(stream.stream));
 };
 
 export const GoogleGenerativeAIStream = (

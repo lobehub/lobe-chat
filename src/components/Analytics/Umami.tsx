@@ -3,13 +3,14 @@
 import Script from 'next/script';
 import { memo } from 'react';
 
-import { getClientConfig } from '@/config/client';
+interface UmamiAnalyticsProps {
+  scriptUrl: string;
+  websiteId?: string;
+}
 
-const { UMAMI_SCRIPT_URL, UMAMI_WEBSITE_ID } = getClientConfig();
-
-const UmamiAnalytics = memo(
-  () =>
-    UMAMI_WEBSITE_ID && <Script data-website-id={UMAMI_WEBSITE_ID} defer src={UMAMI_SCRIPT_URL} />,
+const UmamiAnalytics = memo<UmamiAnalyticsProps>(
+  ({ scriptUrl, websiteId }) =>
+    websiteId && <Script data-website-id={websiteId} defer src={scriptUrl} />,
 );
 
 export default UmamiAnalytics;

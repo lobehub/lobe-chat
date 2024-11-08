@@ -18,8 +18,8 @@ const useStyles = createStyles(({ css, token, prefixCls }) => ({
   action: css`
     position: absolute;
     z-index: 100;
-    top: 4px;
-    right: 4px;
+    inset-block-start: 4px;
+    inset-inline-end: 4px;
   `,
   container: css`
     overflow: scroll;
@@ -56,7 +56,7 @@ const ImageItem = memo<DallEImageItem & { index: number; messageId: string }>(
       );
 
     if (imageId || previewUrl)
-      return <ImagePreview imageId={imageId} previewUrl={previewUrl} prompt={prompt} />;
+      return <ImagePreview imageId={imageId} previewUrl={previewUrl}  prompt={prompt} />;
 
     return (
       <Flexbox className={styles.container} padding={8}>

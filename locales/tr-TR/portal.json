@@ -1,0 +1,35 @@
+{
+  "Artifacts": "Artefaktlar",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Parça",
+      "file": "Dosya"
+    }
+  },
+  "Plugins": "Eklentiler",
+  "actions": {
+    "genAiMessage": "Yapay Zeka Mesajı Oluştur",
+    "summary": "Özet",
+    "summaryTooltip": "Mevcut içeriği özetle"
+  },
+  "artifacts": {
+    "display": {
+      "code": "Kod",
+      "preview": "Önizleme"
+    },
+    "svg": {
+      "copyAsImage": "Resmi Kopyala",
+      "copyFail": "Kopyalama başarısız, hata nedeni: {{error}}",
+      "copySuccess": "Resim başarıyla kopyalandı",
+      "download": {
+        "png": "PNG olarak indir",
+        "svg": "SVG olarak indir"
+      }
+    }
+  },
+  "emptyArtifactList": "Mevcut Artefakt listesi boş, lütfen eklentileri kullanarak oturumda gerektiğinde göz atın",
+  "emptyKnowledgeList": "Mevcut bilgi listesi boş. Lütfen sohbet sırasında ihtiyaç duyduğunuz bilgi havuzunu açtıktan sonra tekrar kontrol edin.",
+  "files": "Dosyalar",
+  "messageDetail": "Mesaj Detayı",
+  "title": "Genişletme Penceresi"
+}

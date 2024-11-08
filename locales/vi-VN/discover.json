@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Thêm trợ lý",
+    "addAgentAndConverse": "Thêm trợ lý và trò chuyện",
+    "addAgentSuccess": "Thêm thành công",
+    "conversation": {
+      "l1": "Xin chào, tôi là **{{name}}**, bạn có thể hỏi tôi bất kỳ câu hỏi nào, tôi sẽ cố gắng trả lời bạn ~",
+      "l2": "Dưới đây là giới thiệu về khả năng của tôi: ",
+      "l3": "Hãy bắt đầu cuộc trò chuyện nào!"
+    },
+    "description": "Giới thiệu trợ lý",
+    "detail": "Chi tiết",
+    "list": "Danh sách trợ lý",
+    "more": "Thêm",
+    "plugins": "Tích hợp plugin",
+    "recentSubmits": "Cập nhật gần đây",
+    "suggestions": "Gợi ý liên quan",
+    "systemRole": "Cài đặt trợ lý",
+    "try": "Thử ngay"
+  },
+  "back": "Quay lại khám phá",
+  "category": {
+    "assistant": {
+      "academic": "Học thuật",
+      "all": "Tất cả",
+      "career": "Nghề nghiệp",
+      "copywriting": "Viết nội dung",
+      "design": "Thiết kế",
+      "education": "Giáo dục",
+      "emotions": "Cảm xúc",
+      "entertainment": "Giải trí",
+      "games": "Trò chơi",
+      "general": "Chung",
+      "life": "Cuộc sống",
+      "marketing": "Tiếp thị",
+      "office": "Văn phòng",
+      "programming": "Lập trình",
+      "translation": "Dịch thuật"
+    },
+    "plugin": {
+      "all": "Tất cả",
+      "gaming-entertainment": "Giải trí trò chơi",
+      "life-style": "Phong cách sống",
+      "media-generate": "Tạo nội dung truyền thông",
+      "science-education": "Khoa học và giáo dục",
+      "social": "Mạng xã hội",
+      "stocks-finance": "Chứng khoán và tài chính",
+      "tools": "Công cụ hữu ích",
+      "web-search": "Tìm kiếm trên web"
+    }
+  },
+  "cleanFilter": "Xóa bộ lọc",
+  "create": "Tạo mới",
+  "createGuide": {
+    "func1": {
+      "desc1": "Vào trang cài đặt của trợ lý bạn muốn gửi thông qua biểu tượng cài đặt ở góc trên bên phải trong cửa sổ trò chuyện;",
+      "desc2": "Nhấn nút gửi đến thị trường trợ lý ở góc trên bên phải.",
+      "tag": "Phương pháp một",
+      "title": "Gửi qua LobeChat"
+    },
+    "func2": {
+      "button": "Đi đến kho trợ lý trên Github",
+      "desc": "Nếu bạn muốn thêm trợ lý vào chỉ mục, hãy sử dụng agent-template.json hoặc agent-template-full.json để tạo một mục trong thư mục plugins, viết mô tả ngắn gọn và gán thẻ phù hợp, sau đó tạo một yêu cầu kéo.",
+      "tag": "Phương pháp hai",
+      "title": "Gửi qua Github"
+    }
+  },
+  "dislike": "Không thích",
+  "filter": "Bộ lọc",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "Tất cả tác giả",
+      "followed": "Tác giả đã theo dõi",
+      "title": "Phạm vi tác giả"
+    },
+    "contentLength": "Độ dài ngữ cảnh tối thiểu",
+    "maxToken": {
+      "title": "Đặt độ dài tối đa (Token)",
+      "unlimited": "Không giới hạn"
+    },
+    "other": {
+      "functionCall": "Hỗ trợ gọi hàm",
+      "title": "Khác",
+      "vision": "Hỗ trợ nhận diện hình ảnh",
+      "withKnowledge": "Kèm theo kho kiến thức",
+      "withTool": "Kèm theo plugin"
+    },
+    "pricing": "Giá mô hình",
+    "timePeriod": {
+      "all": "Tất cả thời gian",
+      "day": "24 giờ qua",
+      "month": "30 ngày qua",
+      "title": "Phạm vi thời gian",
+      "week": "7 ngày qua",
+      "year": "1 năm qua"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Trợ lý nổi bật",
+    "featuredModels": "Mô hình nổi bật",
+    "featuredProviders": "Nhà cung cấp mô hình nổi bật",
+    "featuredTools": "Plugin nổi bật",
+    "more": "Khám phá thêm"
+  },
+  "like": "Thích",
+  "models": {
+    "chat": "Bắt đầu cuộc trò chuyện",
+    "contentLength": "Độ dài ngữ cảnh tối đa",
+    "free": "Miễn phí",
+    "guide": "Hướng dẫn cấu hình",
+    "list": "Danh sách mô hình",
+    "more": "Thêm",
+    "parameterList": {
+      "defaultValue": "Giá trị mặc định",
+      "docs": "Xem tài liệu",
+      "frequency_penalty": {
+        "desc": "Cài đặt này điều chỉnh tần suất mà mô hình lặp lại các từ cụ thể đã xuất hiện trong đầu vào. Giá trị cao hơn làm giảm khả năng lặp lại này, trong khi giá trị âm tạo ra hiệu ứng ngược lại. Hình phạt từ vựng không tăng theo số lần xuất hiện. Giá trị âm sẽ khuyến khích việc lặp lại từ vựng.",
+        "title": "Hình phạt tần suất"
+      },
+      "max_tokens": {
+        "desc": "Cài đặt này xác định độ dài tối đa mà mô hình có thể tạo ra trong một lần phản hồi. Việc đặt giá trị cao hơn cho phép mô hình tạo ra những phản hồi dài hơn, trong khi giá trị thấp hơn sẽ giới hạn độ dài của phản hồi, giúp nó ngắn gọn hơn. Tùy thuộc vào các tình huống ứng dụng khác nhau, điều chỉnh giá trị này một cách hợp lý có thể giúp đạt được độ dài và mức độ chi tiết mong muốn của phản hồi.",
+        "title": "Giới hạn phản hồi một lần"
+      },
+      "presence_penalty": {
+        "desc": "Cài đặt này nhằm kiểm soát việc lặp lại từ vựng dựa trên tần suất xuất hiện của từ trong đầu vào. Nó cố gắng sử dụng ít hơn những từ đã xuất hiện nhiều trong đầu vào, với tần suất sử dụng tỷ lệ thuận với tần suất xuất hiện. Hình phạt từ vựng tăng theo số lần xuất hiện. Giá trị âm sẽ khuyến khích việc lặp lại từ vựng.",
+        "title": "Độ mới của chủ đề"
+      },
+      "range": "Phạm vi",
+      "temperature": {
+        "desc": "Cài đặt này ảnh hưởng đến sự đa dạng trong phản hồi của mô hình. Giá trị thấp hơn dẫn đến phản hồi dễ đoán và điển hình hơn, trong khi giá trị cao hơn khuyến khích phản hồi đa dạng và không thường gặp. Khi giá trị được đặt là 0, mô hình sẽ luôn đưa ra cùng một phản hồi cho đầu vào nhất định.",
+        "title": "Ngẫu nhiên"
+      },
+      "title": "Tham số mô hình",
+      "top_p": {
+        "desc": "Cài đặt này giới hạn lựa chọn của mô hình chỉ trong một tỷ lệ từ có khả năng cao nhất: chỉ chọn những từ hàng đầu có xác suất tích lũy đạt P. Giá trị thấp hơn làm cho phản hồi của mô hình dễ đoán hơn, trong khi cài đặt mặc định cho phép mô hình chọn từ toàn bộ phạm vi từ vựng.",
+        "title": "Lấy mẫu hạt nhân"
+      },
+      "type": "Loại"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat hỗ trợ sử dụng khóa API tùy chỉnh cho nhà cung cấp này.",
+      "input": "Giá đầu vào",
+      "inputTooltip": "Chi phí cho mỗi triệu Token",
+      "latency": "Độ trễ",
+      "latencyTooltip": "Thời gian phản hồi trung bình để nhà cung cấp gửi Token đầu tiên",
+      "maxOutput": "Độ dài đầu ra tối đa",
+      "maxOutputTooltip": "Số Token tối đa mà điểm cuối này có thể tạo ra",
+      "officialTooltip": "Dịch vụ chính thức của LobeHub",
+      "output": "Giá đầu ra",
+      "outputTooltip": "Chi phí cho mỗi triệu Token",
+      "streamCancellationTooltip": "Nhà cung cấp này hỗ trợ chức năng hủy luồng.",
+      "throughput": "Thông lượng",
+      "throughputTooltip": "Số Token trung bình được truyền trong mỗi yêu cầu luồng mỗi giây"
+    },
+    "suggestions": "Mô hình liên quan",
+    "supportedProviders": "Nhà cung cấp hỗ trợ mô hình này"
+  },
+  "plugins": {
+    "community": "Plugin cộng đồng",
+    "install": "Cài đặt plugin",
+    "installed": "Đã cài đặt",
+    "list": "Danh sách plugin",
+    "meta": {
+      "description": "Mô tả",
+      "parameter": "Tham số",
+      "title": "Tham số công cụ",
+      "type": "Loại"
+    },
+    "more": "Thêm",
+    "official": "Plugin chính thức",
+    "recentSubmits": "Cập nhật gần đây",
+    "suggestions": "Gợi ý liên quan"
+  },
+  "providers": {
+    "config": "Cấu hình nhà cung cấp",
+    "list": "Danh sách nhà cung cấp mô hình",
+    "modelCount": "{{count}} mô hình",
+    "modelSite": "Tài liệu mô hình",
+    "more": "Thêm",
+    "officialSite": "Trang web chính thức",
+    "showAllModels": "Hiển thị tất cả các mô hình",
+    "suggestions": "Nhà cung cấp liên quan",
+    "supportedModels": "Mô hình được hỗ trợ"
+  },
+  "search": {
+    "placeholder": "Tìm kiếm tên, mô tả hoặc từ khóa...",
+    "result": "{{count}} kết quả tìm kiếm về <highlight>{{keyword}}</highlight>",
+    "searching": "Đang tìm kiếm..."
+  },
+  "sort": {
+    "mostLiked": "Nhiều người thích nhất",
+    "mostUsed": "Sử dụng nhiều nhất",
+    "newest": "Mới nhất",
+    "oldest": "Cũ nhất",
+    "recommended": "Được đề xuất"
+  },
+  "tab": {
+    "assistants": "Trợ lý",
+    "home": "Trang chủ",
+    "models": "Mô hình",
+    "plugins": "Plugin",
+    "providers": "Nhà cung cấp mô hình"
+  }
+}

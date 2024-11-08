@@ -1,4 +1,5 @@
 export const LLMProviderConfigKey = 'languageModel';
+export const KeyVaultsConfigKey = 'keyVaults';
 
 /**
  * we use this key to define default api key
@@ -10,7 +11,7 @@ export const LLMProviderApiTokenKey = 'apiKey';
  * we use this key to define the baseURL
  * equal OPENAI_PROXY_URL
  */
-export const LLMProviderBaseUrlKey = 'endpoint';
+export const LLMProviderBaseUrlKey = 'baseURL';
 
 /**
  * we use this key to define the custom model name

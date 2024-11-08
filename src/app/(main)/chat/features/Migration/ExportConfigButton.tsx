@@ -2,6 +2,8 @@ import { Button } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { BRANDING_NAME } from '@/const/branding';
+
 const ExportConfigButton = memo<{ primary?: boolean; state: any }>(({ state, primary }) => {
   const { t } = useTranslation('migration');
 
@@ -14,7 +16,7 @@ const ExportConfigButton = memo<{ primary?: boolean; state: any }>(({ state, pri
 
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'LobeChat-backup-v1.json';
+    a.download = `${BRANDING_NAME}-backup-v1.json`;
 
     document.body.append(a);
     a.click();

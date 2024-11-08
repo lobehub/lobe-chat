@@ -12,6 +12,9 @@ const MobileLayout = ({ children }: PropsWithChildren) => {
         <SessionSearchBar mobile />
       </div>
       {children}
+      {/* ↓ cloud slot ↓ */}
+
+      {/* ↑ cloud slot ↑ */}
     </MobileContentLayout>
   );
 };

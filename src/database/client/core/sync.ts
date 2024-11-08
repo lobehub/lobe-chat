@@ -48,14 +48,7 @@ class DataSync {
   };
 
   connect = async (params: StartDataSyncParams) => {
-    const {
-      channel,
-      onSyncEvent,
-      onSyncStatusChange,
-      user,
-      onAwarenessChange,
-      signaling = 'wss://y-webrtc-signaling.lobehub.com',
-    } = params;
+    const { channel, onSyncEvent, onSyncStatusChange, user, onAwarenessChange, signaling } = params;
     // ====== 1. init yjs doc ====== //
 
     await this.initYDoc();

@@ -10,33 +10,33 @@
     "clear": {
       "confirm": "Estás a punto de borrar los datos locales (la configuración global no se verá afectada). Por favor, asegúrate de haber descargado una copia de seguridad de los datos."
     },
-    "description": "En la nueva versión, el almacenamiento de datos de LobeChat ha experimentado un gran avance. Por lo tanto, necesitamos actualizar los datos de la versión anterior para brindarte una mejor experiencia de uso.",
+    "description": "En la nueva versión, el almacenamiento de datos de {{appName}} ha dado un gran salto. Por lo tanto, vamos a actualizar los datos de la versión anterior para ofrecerte una mejor experiencia de uso.",
     "features": {
       "capability": {
-        "desc": "Basado en la tecnología IndexedDB, capaz de almacenar todos tus mensajes de conversación de por vida",
-        "title": "Alta capacidad"
+        "desc": "Basado en la tecnología IndexedDB, suficiente para almacenar todos los mensajes de tu vida.",
+        "title": "Gran capacidad"
       },
       "performance": {
-        "desc": "Índice automático de millones de mensajes, respuesta a consultas en milisegundos",
+        "desc": "Indexación automática de millones de mensajes, con respuestas de búsqueda en milisegundos.",
         "title": "Alto rendimiento"
       },
       "use": {
-        "desc": "Búsqueda eficiente de títulos, descripciones, etiquetas, contenido de mensajes e incluso texto traducido, mejorando significativamente la eficiencia de búsqueda diaria",
+        "desc": "Soporta la búsqueda de títulos, descripciones, etiquetas, contenido de mensajes e incluso textos traducidos, mejorando significativamente la eficiencia de búsqueda diaria.",
         "title": "Más fácil de usar"
       }
     },
-    "title": "Evolución de datos de LobeChat",
+    "title": "Evolución de datos de {{appName}}",
     "upgrade": {
       "error": {
-        "subTitle": "Lamentablemente, se produjo un error durante el proceso de actualización de la base de datos. Por favor, intenta las siguientes soluciones: A. Borrar los datos locales y luego importar de nuevo los datos de la copia de seguridad; B. Haz clic en el botón 'Volver a actualizar'.<br><br> Si el problema persiste, por favor <1>envía un informe de problema</1>, y te ayudaremos a resolverlo lo antes posible",
+        "subTitle": "Lo sentimos, ha ocurrido un error durante el proceso de actualización de la base de datos. Por favor, intenta las siguientes soluciones: A. Borra los datos locales y vuelve a importar los datos de respaldo; B. Haz clic en el botón 'Reactualizar'.<br><br> Si el problema persiste, por favor <1>informa del problema</1>, y te ayudaremos a resolverlo lo antes posible.",
         "title": "Error en la actualización de la base de datos"
       },
       "success": {
-        "subTitle": "La base de datos de LobeChat se ha actualizado a la última versión. ¡Empieza a disfrutarla de inmediato!",
+        "subTitle": "La base de datos de {{appName}} se ha actualizado a la última versión, ¡comienza a disfrutarla ahora!",
         "title": "Actualización de la base de datos exitosa"
       }
     },
-    "upgradeTip": "La actualización tomará aproximadamente de 10 a 20 segundos. Durante el proceso de actualización, por favor no cierres LobeChat"
+    "upgradeTip": "La actualización tomará aproximadamente de 10 a 20 segundos, por favor no cierres {{appName}} durante el proceso."
   },
   "migrateError": {
     "missVersion": "La importación de datos no incluye el número de versión. Por favor, verifica el archivo e inténtalo de nuevo",

@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 
 import { FORM_STYLE } from '@/const/layoutTokens';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 import { useStore } from '../store';
 import { useAgentSyncSettings } from '../useSyncAgemtSettings';
@@ -24,7 +24,7 @@ const AgentTTS = memo(() => {
   const { t } = useTranslation('setting');
   const [form] = Form.useForm();
   const voiceList = useUserStore((s) => {
-    const locale = settingsSelectors.currentLanguage(s);
+    const locale = userGeneralSettingsSelectors.currentLanguage(s);
     return (all?: boolean) => new VoiceList(all ? undefined : locale);
   });
   const [showAllLocaleVoice, ttsService, updateConfig] = useStore((s) => [

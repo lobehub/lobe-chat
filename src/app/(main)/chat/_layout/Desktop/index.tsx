@@ -10,7 +10,7 @@ const Layout = ({ children, session }: LayoutProps) => {
       <Flexbox
         height={'100%'}
         horizontal
-        style={{ maxWidth: 'calc(100vw - 64px)', overflow: 'hidden', position: 'relative' }}
+        style={{ maxWidth: '100%', overflow: 'hidden', position: 'relative' }}
         width={'100%'}
       >
         <SessionPanel>{session}</SessionPanel>
@@ -19,6 +19,9 @@ const Layout = ({ children, session }: LayoutProps) => {
         </Flexbox>
       </Flexbox>
       <Migration />
+      {/* ↓ cloud slot ↓ */}
+
+      {/* ↑ cloud slot ↑ */}
     </>
   );
 };

@@ -1,12 +1,30 @@
 'use client';
 
 import { ConfigProvider } from 'antd';
+import dayjs from 'dayjs';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 import { isRtlLang } from 'rtl-detect';
 
 import { createI18nNext } from '@/locales/create';
 import { isOnServerSide } from '@/utils/env';
 import { getAntdLocale } from '@/utils/locale';
+
+const updateDayjs = async (lang: string) => {
+  // load default lang
+  let dayJSLocale;
+  try {
+    // dayjs locale is using `en` instead of `en-US`
+    // refs: https://github.com/lobehub/lobe-chat/issues/3396
+    const locale = lang!.toLowerCase() === 'en-us' ? 'en' : lang!.toLowerCase();
+
+    dayJSLocale = await import(`dayjs/locale/${locale}.js`);
+  } catch {
+    console.warn(`dayjs locale for ${lang} not found, fallback to en`);
+    dayJSLocale = await import(`dayjs/locale/en.js`);
+  }
+
+  dayjs.locale(dayJSLocale.default);
+};
 
 interface LocaleLayoutProps extends PropsWithChildren {
   antdLocale?: any;
@@ -21,12 +39,21 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
   // if run on server side, init i18n instance everytime
   if (isOnServerSide) {
     i18n.init();
+
+    // load the dayjs locale
+    // if (lang) {
+    //   const dayJSLocale = require(`dayjs/locale/${lang!.toLowerCase()}.js`);
+    //
+    //   dayjs.locale(dayJSLocale);
+    // }
   } else {
     // if on browser side, init i18n instance only once
     if (!i18n.instance.isInitialized)
       // console.debug('locale', lang);
-      i18n.init().then(() => {
-        // console.debug('inited.');
+      i18n.init().then(async () => {
+        if (!lang) return;
+
+        await updateDayjs(lang);
       });
   }
 
@@ -39,6 +66,8 @@ const Locale = memo<LocaleLayoutProps>(({ children, defaultLang, antdLocale }) =
 
       const newLocale = await getAntdLocale(lng);
       setLocale(newLocale);
+
+      await updateDayjs(lng);
     };
 
     i18n.instance.on('languageChanged', handleLang);

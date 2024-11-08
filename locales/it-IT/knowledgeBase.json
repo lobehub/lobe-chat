@@ -1,0 +1,32 @@
+{
+  "addToKnowledgeBase": {
+    "addSuccess": "File aggiunto con successo, <1>visualizza subito</1>",
+    "confirm": "Aggiungi",
+    "id": {
+      "placeholder": "Seleziona il knowledge base da aggiungere",
+      "required": "Seleziona il knowledge base",
+      "title": "Knowledge base di destinazione"
+    },
+    "title": "Aggiungi al knowledge base",
+    "totalFiles": "Hai selezionato {{count}} file"
+  },
+  "createNew": {
+    "confirm": "Crea nuovo",
+    "description": {
+      "placeholder": "Descrizione del knowledge base (opzionale)"
+    },
+    "formTitle": "Informazioni di base",
+    "name": {
+      "placeholder": "Nome del knowledge base",
+      "required": "Per favore, inserisci il nome del knowledge base"
+    },
+    "title": "Crea knowledge base"
+  },
+  "tab": {
+    "evals": "Valutazioni",
+    "files": "Documenti",
+    "settings": "Impostazioni",
+    "testing": "Test di richiamo"
+  },
+  "title": "Knowledge base"
+}

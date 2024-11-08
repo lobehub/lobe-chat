@@ -20,6 +20,7 @@ vi.mock('@/database/client/models/session', () => {
       update: vi.fn(),
       count: vi.fn(),
       batchCreate: vi.fn(),
+      findById: vi.fn(),
       isEmpty: vi.fn(),
       queryByKeyword: vi.fn(),
       updateConfig: vi.fn(),
@@ -205,7 +206,7 @@ describe('SessionService', () => {
   describe('updateSessionConfig', () => {
     it('should update the config of a session', async () => {
       // Setup
-      const newConfig = { compressThreshold: 2 } as LobeAgentConfig;
+      const newConfig = { model: 'abc' } as LobeAgentConfig;
       (SessionModel.updateConfig as Mock).mockResolvedValue({ ...mockSession, config: newConfig });
 
       // Execute

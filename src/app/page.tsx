@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 
-import { getCanonicalUrl } from '@/const/url';
+import { getCanonicalUrl } from '@/server/utils/url';
 
 import Client from './(loading)/Client';
 import Redirect from './(loading)/Redirect';

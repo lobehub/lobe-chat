@@ -1,5 +1,7 @@
 import { SignUp } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
 
+import { serverFeatureFlags } from '@/config/featureFlags';
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
 
@@ -13,6 +15,12 @@ export const generateMetadata = async () => {
 };
 
 const Page = () => {
+  const enableClerkSignUp = serverFeatureFlags().enableClerkSignUp;
+
+  if (!enableClerkSignUp) {
+    redirect('/login');
+  }
+
   return <SignUp path="/signup" />;
 };
 

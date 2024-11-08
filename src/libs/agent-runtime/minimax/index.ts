@@ -35,7 +35,7 @@ function throwIfErrorResponse(data: MinimaxResponse) {
         code: data.base_resp.status_code,
         message: data.base_resp.status_msg,
       },
-      errorType: AgentRuntimeErrorType.InvalidMinimaxAPIKey,
+      errorType: AgentRuntimeErrorType.InvalidProviderAPIKey,
       provider: ModelProvider.Minimax,
     });
   }
@@ -44,7 +44,7 @@ function throwIfErrorResponse(data: MinimaxResponse) {
       code: data.base_resp.status_code,
       message: data.base_resp.status_msg,
     },
-    errorType: AgentRuntimeErrorType.MinimaxBizError,
+    errorType: AgentRuntimeErrorType.ProviderBizError,
     provider: ModelProvider.Minimax,
   });
 }
@@ -63,8 +63,8 @@ function parseMinimaxResponse(chunk: string): MinimaxResponse | undefined {
 export class LobeMinimaxAI implements LobeRuntimeAI {
   apiKey: string;
 
-  constructor({ apiKey }: { apiKey?: string }) {
-    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidMinimaxAPIKey);
+  constructor({ apiKey }: { apiKey?: string } = {}) {
+    if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
 
     this.apiKey = apiKey;
   }
@@ -85,7 +85,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
             status: response.status,
             statusText: response.statusText,
           },
-          errorType: AgentRuntimeErrorType.MinimaxBizError,
+          errorType: AgentRuntimeErrorType.ProviderBizError,
           provider: ModelProvider.Minimax,
         });
       }
@@ -115,7 +115,7 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
       };
       throw AgentRuntimeError.chat({
         error: errorResult,
-        errorType: AgentRuntimeErrorType.MinimaxBizError,
+        errorType: AgentRuntimeErrorType.ProviderBizError,
         provider: ModelProvider.Minimax,
       });
     }
@@ -127,9 +127,14 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
   // https://www.minimaxi.com/document/guides/chat-model/V2
   private getMaxTokens(model: string): number | undefined {
     switch (model) {
-      case 'abab6.5-chat':
+      case 'abab6.5t-chat':
+      case 'abab6.5g-chat':
+      case 'abab5.5s-chat': 
+      case 'abab5.5-chat':{
+        return 4096;
+      }
       case 'abab6.5s-chat': {
-        return 2048;
+        return 8192;
       }
     }
   }
@@ -139,9 +144,17 @@ export class LobeMinimaxAI implements LobeRuntimeAI {
 
     return {
       ...params,
-      max_tokens: this.getMaxTokens(payload.model),
+      frequency_penalty: undefined,
+      max_tokens: 
+        payload.max_tokens !== undefined 
+        ? payload.max_tokens 
+        : this.getMaxTokens(payload.model),
+      presence_penalty: undefined,
       stream: true,
-      temperature: temperature === 0 ? undefined : temperature,
+      temperature: 
+        temperature === undefined || temperature <= 0
+        ? undefined
+        : temperature / 2,
 
       tools: params.tools?.map((tool) => ({
         function: {

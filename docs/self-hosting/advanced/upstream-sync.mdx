@@ -40,6 +40,18 @@ After forking the project, due to Github's limitations, you need to manually ena
   src="https://github-production-user-asset-6210df.s3.amazonaws.com/17870709/266985177-7677b4ce-c348-4145-9f60-829d448d5be6.png"
 />
 
+If you encounter a sync failure, you need to manually click "Update Branch" once.
+
+<Image
+  alt="GitHub Action Sync Failure"
+  src="https://github.com/user-attachments/assets/9baacac6-5af4-460b-862d-682b76c18459"
+/>
+
+<Image
+  alt="Manually Sync 'Update Branch'"
+  src="https://github.com/user-attachments/assets/d524c20d-306a-45bc-971b-96920b87fab4"
+/>
+
 ## `B` Docker Deployment
 
 Upgrading the Docker deployment version is very simple, you just need to redeploy the latest LobeChat image. Here are the commands required to perform these steps:
@@ -126,20 +138,20 @@ if [ $? -eq 0 ]; then
   exit 0
 fi
 
-echo "Detected Lobe-Chat update"
+echo "Detected lobe-chat update"
 
 # Remove the old container
-echo "Removed: $(docker rm -f Lobe-Chat)"
+echo "Removed: $(docker rm -f lobe-chat)"
 
-# Run the new container
-echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=Lobe-Chat --restart=always lobehub/lobe-chat)"
+# Run the new container(Please change the path to the env file)
+echo "Started: $(docker run -d --network=host --env-file /path/to/lobe.env --name=lobe-chat --restart=always lobehub/lobe-chat)"
 
 # Print the update time and version
 echo "Update time: $(date)"
 echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
 # Clean up unused images
-docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
 echo "Removed old images."
 ```
 

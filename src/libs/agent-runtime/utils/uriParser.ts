@@ -1,16 +1,24 @@
-export const parseDataUri = (
-  dataUri: string,
-): { base64: string | null; mimeType: string | null } => {
+interface UriParserResult {
+  base64: string | null;
+  mimeType: string | null;
+  type: 'url' | 'base64' | null;
+}
+
+export const parseDataUri = (dataUri: string): UriParserResult => {
   // 正则表达式匹配整个 Data URI 结构
   const dataUriMatch = dataUri.match(/^data:([^;]+);base64,(.+)$/);
 
-  // 如果匹配成功，则返回 mimeType 和 base64，否则返回 null
   if (dataUriMatch) {
-    return {
-      base64: dataUriMatch[2],
-      mimeType: dataUriMatch[1],
-    };
+    // 如果是合法的 Data URI
+    return { base64: dataUriMatch[2], mimeType: dataUriMatch[1], type: 'base64' };
   }
 
-  return { base64: null, mimeType: null };
+  try {
+    new URL(dataUri);
+    // 如果是合法的 URL
+    return { base64: null, mimeType: null, type: 'url' };
+  } catch {
+    // 既不是 Data URI 也不是合法 URL
+    return { base64: null, mimeType: null, type: null };
+  }
 };

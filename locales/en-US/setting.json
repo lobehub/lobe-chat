@@ -2,9 +2,17 @@
   "about": {
     "title": "About"
   },
+  "agentTab": {
+    "chat": "Chat Preferences",
+    "meta": "Assistant Info",
+    "modal": "Model Settings",
+    "plugin": "Plugin Settings",
+    "prompt": "Role Configuration",
+    "tts": "Voice Service"
+  },
   "analytics": {
     "telemetry": {
-      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of LobeChat",
+      "desc": "By opting to send telemetry data, you can help us improve the overall user experience of {{appName}}.",
       "title": "Send Anonymous Usage Data"
     },
     "title": "Analytics"
@@ -13,7 +21,7 @@
     "clear": {
       "action": "Clear Now",
       "confirm": "Confirm to clear all chat data?",
-      "desc": "This will clear all session data, including agent, files, messages, plugins, etc.",
+      "desc": "This will clear all session data, including assistant, files, messages, plugins, etc.",
       "success": "All session messages have been cleared",
       "title": "Clear All Session Messages"
     },
@@ -35,9 +43,15 @@
     "title": "Settings"
   },
   "llm": {
+    "aesGcm": "Your keys and proxy address will be encrypted using the <1>AES-GCM</1> encryption algorithm",
+    "apiKey": {
+      "desc": "Please enter your {{name}} API Key",
+      "placeholder": "{{name}} API Key",
+      "title": "API Key"
+    },
     "checker": {
       "button": "Check",
-      "desc": "Test if the Api Key and proxy address are filled in correctly",
+      "desc": "Test if the API Key and proxy address are filled in correctly",
       "pass": "Check Passed",
       "title": "Connectivity Check"
     },
@@ -56,11 +70,11 @@
           "title": "Model Display Name"
         },
         "files": {
-          "extra": "The current file upload implementation in LobeChat is only a hack solution for self-attempt. Please wait for the complete file upload capability in future implementations.",
+          "extra": "The current file upload implementation is merely a hack solution and is intended for personal experimentation only. Please wait for a complete file upload capability in future updates.",
           "title": "Support File Upload"
         },
         "functionCall": {
-          "extra": "This configuration will only enable the function call capability in LobeChat. Whether function calls are supported depends entirely on the model itself. Please test the availability of function calls in this model on your own.",
+          "extra": "This configuration will only enable function calling capabilities within the application. Whether function calling is supported depends entirely on the model itself; please test the model's function calling capabilities on your own.",
           "title": "Support Function Call"
         },
         "id": {
@@ -74,7 +88,7 @@
           "unlimited": "unlimited"
         },
         "vision": {
-          "extra": "This configuration will only enable the image upload configuration in LobeChat. Whether recognition is supported depends entirely on the model itself. Please test the availability of visual recognition in this model on your own.",
+          "extra": "This configuration will only enable image upload capabilities within the application. Whether recognition is supported depends entirely on the model itself; please test the model's visual recognition capabilities on your own.",
           "title": "Support Visual Recognition"
         }
       }
@@ -89,6 +103,7 @@
       "latestTime": "Last Updated: {{time}}",
       "noLatestTime": "No list available yet"
     },
+    "helpDoc": "Configuration Guide",
     "modelList": {
       "desc": "Select the models to display in the session. The selected models will be displayed in the model list.",
       "placeholder": "Please select a model from the list",
@@ -99,15 +114,7 @@
       "desc": "Must include http(s):// in addition to the default address",
       "title": "API Proxy Address"
     },
-    "waitingForMore": "More models are <1>planned to be added</1>, stay tuned ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama is currently downloading the model. Please try not to close this page. It will resume from where it left off if you restart the download.",
-      "remainingTime": "Remaining Time",
-      "speed": "Download Speed",
-      "title": "Downloading model {{model}}"
-    }
+    "waitingForMore": "More models are <1>planned to be added</1>, stay tuned"
   },
   "plugin": {
     "addTooltip": "Custom Plugin",
@@ -131,11 +138,11 @@
       "title": "Background Color"
     },
     "description": {
-      "placeholder": "Enter agent description",
-      "title": "Agent Description"
+      "placeholder": "Enter assistant description",
+      "title": "Assistant Description"
     },
     "name": {
-      "placeholder": "Enter agent name",
+      "placeholder": "Enter assistant name",
       "title": "Name"
     },
     "prompt": {
@@ -146,7 +153,7 @@
       "placeholder": "Enter tag",
       "title": "Tag"
     },
-    "title": "Agent Information"
+    "title": "Assistant Information"
   },
   "settingChat": {
     "autoCreateTopicThreshold": {
@@ -174,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "Unlimited",
       "limited": "Include only {{number}} conversation messages",
+      "setlimited": "Set limited history messages",
       "title": "Limit History Message Count",
       "unlimited": "Unlimited history message count"
     },
@@ -201,13 +209,7 @@
       "title": "Max Tokens Limit"
     },
     "model": {
-      "desc": "ChatGPT model",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "{{provider}} model",
       "title": "Model"
     },
     "presencePenalty": {
@@ -282,7 +284,7 @@
       "title": "Text-to-Speech Service"
     },
     "voice": {
-      "desc": "Select a voice for the current agent, different TTS services support different voices",
+      "desc": "Select a voice for the current assistant, different TTS services support different voices",
       "preview": "Voice Preview",
       "title": "Text-to-Speech Voice"
     }
@@ -319,11 +321,11 @@
     "title": "Theme Settings"
   },
   "submitAgentModal": {
-    "button": "Submit Agent",
-    "identifier": "Agent Identifier",
-    "metaMiss": "Please complete the agent information before submitting. It should include name, description, and tags",
-    "placeholder": "Enter a unique identifier for the agent, e.g. web-development",
-    "tooltips": "Share to the agent marketplace"
+    "button": "Submit Assistant",
+    "identifier": "Assistant Identifier",
+    "metaMiss": "Please complete the assistant information before submitting. It should include name, description, and tags",
+    "placeholder": "Enter a unique identifier for the assistant, e.g. web-development",
+    "tooltips": "Share to the assistant marketplace"
   },
   "sync": {
     "device": {
@@ -337,7 +339,7 @@
       "unknownOS": "Unknown OS"
     },
     "warning": {
-      "message": "This feature is currently experimental and may have unexpected or unstable behavior. If you encounter any issues, please submit feedback promptly."
+      "tip": "After a long period of community testing, WebRTC synchronization may not reliably meet general data synchronization needs. Please <1>deploy a signaling server</1> before use."
     },
     "webrtc": {
       "channelName": {
@@ -353,19 +355,54 @@
       },
       "desc": "Real-time, peer-to-peer data communication requires all devices to be online for synchronization.",
       "enabled": {
-        "invalid": "Please enter a sync channel name before enabling",
+        "invalid": "Please fill in the signaling server and synchronization channel name before enabling.",
         "title": "Enable Sync"
+      },
+      "signaling": {
+        "desc": "WebRTC will use this address for synchronization",
+        "placeholder": "Enter signaling server address",
+        "title": "Signaling Server"
       },
       "title": "WebRTC Sync"
     }
   },
+  "systemAgent": {
+    "agentMeta": {
+      "label": "Assistant Metadata Generation Model",
+      "modelDesc": "Model designated for generating assistant name, description, avatar, and tags",
+      "title": "Automatically Generate Assistant Information"
+    },
+    "customPrompt": {
+      "addPrompt": "Add Custom Prompt",
+      "desc": "Once filled out, the system assistant will use the custom prompt when generating content",
+      "placeholder": "Please enter custom prompt",
+      "title": "Custom Prompt"
+    },
+    "queryRewrite": {
+      "label": "Question Rewriting Model",
+      "modelDesc": "Specify the model used to optimize user inquiries",
+      "title": "Knowledge Base Question Rewrite"
+    },
+    "title": "System Assistants",
+    "topic": {
+      "label": "Topic Naming Model",
+      "modelDesc": "Model designated for automatic topic renaming",
+      "title": "Automatic Topic Naming"
+    },
+    "translation": {
+      "label": "Translation Assistant",
+      "modelDesc": "Specific model for translate message",
+      "title": "Translation Settings"
+    }
+  },
   "tab": {
     "about": "About",
-    "agent": "Default Agent",
+    "agent": "Default Assistant",
     "common": "Common Settings",
     "experiment": "Experiment",
     "llm": "Language Model",
     "sync": "Cloud Sync",
+    "system-agent": "System Assistant",
     "tts": "Text-to-Speech"
   },
   "tools": {

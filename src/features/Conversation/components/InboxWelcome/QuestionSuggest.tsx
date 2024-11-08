@@ -9,6 +9,7 @@ import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { BRANDING_NAME } from '@/const/branding';
 import { USAGE_DOCUMENTS } from '@/const/url';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
@@ -17,7 +18,8 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
   card: css`
     cursor: pointer;
 
-    padding: 12px 24px;
+    padding-block: 12px;
+    padding-inline: 24px;
 
     color: ${token.colorText};
 
@@ -29,7 +31,8 @@ const useStyles = createStyles(({ css, token, responsive }) => ({
     }
 
     ${responsive.mobile} {
-      padding: 8px 16px;
+      padding-block: 8px;
+      padding-inline: 16px;
     }
   `,
   icon: css`
@@ -63,7 +66,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
 
   const { t } = useTranslation('welcome');
   const { styles } = useStyles();
-  const sendMessage = useSendMessage();
+  const { send: sendMessage } = useSendMessage();
 
   return (
     <Flexbox gap={8} width={'100%'}>
@@ -79,7 +82,7 @@ const QuestionSuggest = memo<{ mobile?: boolean }>(({ mobile }) => {
       </Flexbox>
       <Flexbox gap={8} horizontal wrap={'wrap'}>
         {qa.slice(0, mobile ? 2 : 5).map((item) => {
-          const text = t(`guide.qa.${item}` as any);
+          const text = t(`guide.qa.${item}` as any, { appName: BRANDING_NAME });
           return (
             <Flexbox
               align={'center'}

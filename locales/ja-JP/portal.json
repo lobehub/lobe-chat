@@ -1,0 +1,35 @@
+{
+  "Artifacts": "アーティファクト",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "チャンク",
+      "file": "ファイル"
+    }
+  },
+  "Plugins": "プラグイン",
+  "actions": {
+    "genAiMessage": "AIメッセージを生成",
+    "summary": "サマリー",
+    "summaryTooltip": "現在の内容を要約"
+  },
+  "artifacts": {
+    "display": {
+      "code": "コード",
+      "preview": "プレビュー"
+    },
+    "svg": {
+      "copyAsImage": "画像としてコピー",
+      "copyFail": "コピーに失敗しました。エラーの理由: {{error}}",
+      "copySuccess": "画像のコピーに成功しました",
+      "download": {
+        "png": "PNGとしてダウンロード",
+        "svg": "SVGとしてダウンロード"
+      }
+    }
+  },
+  "emptyArtifactList": "現在、アーティファクトリストは空です。プラグインを使用してセッション中に追加してください。",
+  "emptyKnowledgeList": "現在の知識リストは空です。会話中に必要に応じて知識ベースを開いてからご覧ください。",
+  "files": "ファイル",
+  "messageDetail": "メッセージの詳細",
+  "title": "拡張ウィンドウ"
+}

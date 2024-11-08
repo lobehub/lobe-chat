@@ -1,6 +1,6 @@
 {
-  "addAgent": "Add Agent",
-  "addAgentAndConverse": "Add Agent and Converse",
+  "addAgent": "Add Assistant",
+  "addAgentAndConverse": "Add Assistant and Converse",
   "addAgentSuccess": "Successfully Added",
   "guide": {
     "func1": {
@@ -17,16 +17,16 @@
     }
   },
   "search": {
-    "placeholder": "Search agent name, description or keywords..."
+    "placeholder": "Search assistant name, description or keywords..."
   },
   "sidebar": {
     "comment": "Comments",
     "prompt": "Prompts",
-    "title": "Agent Details"
+    "title": "Assistant Details"
   },
-  "submitAgent": "Submit Agent",
+  "submitAgent": "Submit Assistant",
   "title": {
-    "allAgents": "All Agents",
+    "allAgents": "All Assistants",
     "recentSubmits": "Recent Submits"
   }
 }

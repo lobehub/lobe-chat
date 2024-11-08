@@ -1,8 +1,8 @@
 import { createStyles } from 'antd-style';
 
 export const MIN_IMAGE_SIZE = 64;
-export const MAX_SIZE_DESKTOP = 640;
-export const MAX_SIZE_MOBILE = 280;
+export const MAX_SIZE_DESKTOP = 200;
+export const MAX_SIZE_MOBILE = 90;
 export const useStyles = createStyles(
   ({ css }, { col, gap, max, min }: { col: number; gap: number; max: number; min: number }) => ({
     container: css`

@@ -2,9 +2,17 @@
   "about": {
     "title": "Informazioni"
   },
+  "agentTab": {
+    "chat": "Preferenze di chat",
+    "meta": "Informazioni assistente",
+    "modal": "Impostazioni modello",
+    "plugin": "Impostazioni plugin",
+    "prompt": "Impostazioni ruolo",
+    "tts": "Servizio vocale"
+  },
   "analytics": {
     "telemetry": {
-      "desc": "Attivando l'invio dei dati di telemetria, ci aiuti a migliorare complessivamente l'esperienza utente di LobeChat",
+      "desc": "Selezionando di inviare i dati di telemetria, puoi aiutarci a migliorare l'esperienza complessiva degli utenti di {{appName}}",
       "title": "Invio dati anonimi"
     },
     "title": "Analisi"
@@ -35,6 +43,12 @@
     "title": "Impostazioni"
   },
   "llm": {
+    "aesGcm": "La tua chiave e l'indirizzo dell'agente saranno crittografati utilizzando l'algoritmo di crittografia <1>AES-GCM</1>",
+    "apiKey": {
+      "desc": "Inserisci la tua chiave API {{name}}",
+      "placeholder": "Chiave API {{name}}",
+      "title": "Chiave API"
+    },
     "checker": {
       "button": "Verifica",
       "desc": "Verifica se la chiave API e l'indirizzo del proxy sono stati inseriti correttamente",
@@ -56,11 +70,11 @@
           "title": "Nome di visualizzazione del modello"
         },
         "files": {
-          "extra": "L'attuale implementazione del caricamento dei file in LobeChat è solo un hack temporaneo, da utilizzare a proprio rischio. Per un'implementazione completa del caricamento dei file, attendere futuri aggiornamenti.",
+          "extra": "L'attuale implementazione del caricamento dei file è solo una soluzione temporanea, limitata a tentativi personali. Ti preghiamo di attendere implementazioni complete per la capacità di caricamento dei file.",
           "title": "Supporto per il caricamento dei file"
         },
         "functionCall": {
-          "extra": "Questa configurazione abiliterà solo la capacità di chiamata di funzione in LobeChat. La reale disponibilità del supporto alle chiamate di funzione dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",
+          "extra": "Questa configurazione attiverà solo la capacità di chiamata di funzioni all'interno dell'app, se la chiamata di funzioni è supportata dipende interamente dal modello stesso, ti invitiamo a testare l'usabilità della chiamata di funzioni di questo modello.",
           "title": "Supporto per la chiamata di funzione"
         },
         "id": {
@@ -74,7 +88,7 @@
           "unlimited": "illimitato"
         },
         "vision": {
-          "extra": "Questa configurazione abiliterà solo la funzionalità di caricamento delle immagini in LobeChat. La reale capacità di riconoscimento dipende interamente dal modello stesso, si consiglia di testare autonomamente la disponibilità di questa funzionalità nel modello.",
+          "extra": "Questa configurazione attiverà solo la capacità di caricamento delle immagini nell'app, se il riconoscimento è supportato dipende interamente dal modello stesso, ti invitiamo a testare l'usabilità del riconoscimento visivo di questo modello.",
           "title": "Supporto per il riconoscimento visivo"
         }
       }
@@ -89,6 +103,7 @@
       "latestTime": "Ultimo aggiornamento: {{time}}",
       "noLatestTime": "Nessun elenco disponibile al momento"
     },
+    "helpDoc": "Guida alla configurazione",
     "modelList": {
       "desc": "Seleziona i modelli da visualizzare durante la sessione, i modelli selezionati verranno mostrati nell'elenco dei modelli",
       "placeholder": "Seleziona un modello dall'elenco",
@@ -99,15 +114,7 @@
       "desc": "Deve includere http(s):// oltre all'indirizzo predefinito",
       "title": "Indirizzo del proxy API"
     },
-    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama sta scaricando questo modello. Si prega di non chiudere questa pagina. Il download verrà ripreso dal punto in cui è stato interrotto in caso di riavvio.",
-      "remainingTime": "Tempo rimanente",
-      "speed": "Velocità di download",
-      "title": "Download del modello {{model}} in corso"
-    }
+    "waitingForMore": "Altri modelli sono in fase di <1> pianificazione per l'integrazione </1>, resta sintonizzato"
   },
   "plugin": {
     "addTooltip": "Aggiungi plugin personalizzato",
@@ -174,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "Illimitato",
       "limited": "Include solo {{number}} messaggi di conversazione",
+      "setlimited": "Imposta il numero di messaggi storici da utilizzare",
       "title": "Limita il numero di messaggi storici",
       "unlimited": "Numero illimitato di messaggi storici"
     },
@@ -201,13 +209,7 @@
       "title": "Limite di risposta singola"
     },
     "model": {
-      "desc": "Modello ChatGPT",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "Modello {{provider}}",
       "title": "Modello"
     },
     "presencePenalty": {
@@ -337,7 +339,7 @@
       "unknownOS": "Sistema operativo sconosciuto"
     },
     "warning": {
-      "message": "Questa funzione è attualmente sperimentale e potrebbe comportare comportamenti imprevisti o instabili. In caso di problemi, invia tempestivamente un feedback."
+      "tip": "Dopo un lungo periodo di test della comunità, la sincronizzazione WebRTC potrebbe non essere in grado di soddisfare in modo stabile le esigenze generali di sincronizzazione dei dati. Si prega di <1>configurare un server di segnalazione</1> prima di utilizzarlo."
     },
     "webrtc": {
       "channelName": {
@@ -353,10 +355,44 @@
       },
       "desc": "Comunicazione dati in tempo reale punto a punto, entrambi i dispositivi devono essere online per sincronizzarsi",
       "enabled": {
-        "invalid": "Per favore, inserisci un nome per il canale di sincronizzazione prima di abilitarlo",
+        "invalid": "Si prega di inserire l'indirizzo del server di segnalazione e il nome del canale di sincronizzazione prima di abilitare.",
         "title": "Abilita la sincronizzazione"
       },
+      "signaling": {
+        "desc": "WebRTC utilizzerà questo indirizzo per la sincronizzazione",
+        "placeholder": "Inserisci l'indirizzo del server di segnalazione",
+        "title": "Server di segnalazione"
+      },
       "title": "Sincronizzazione WebRTC"
+    }
+  },
+  "systemAgent": {
+    "agentMeta": {
+      "label": "Modello di generazione metadati assistente",
+      "modelDesc": "Modello specificato per generare nome, descrizione, avatar e etichetta dell'assistente",
+      "title": "Genera automaticamente informazioni sull'assistente"
+    },
+    "customPrompt": {
+      "addPrompt": "Aggiungi suggerimento personalizzato",
+      "desc": "Una volta compilato, l'assistente di sistema utilizzerà il suggerimento personalizzato nella generazione dei contenuti",
+      "placeholder": "Inserisci il suggerimento personalizzato",
+      "title": "Suggerimento personalizzato"
+    },
+    "queryRewrite": {
+      "label": "Modello di riscrittura delle domande",
+      "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
+      "title": "Riscrittura delle domande del knowledge base"
+    },
+    "title": "Assistente di sistema",
+    "topic": {
+      "label": "Modello di denominazione degli argomenti",
+      "modelDesc": "Modello designato per la ridenominazione automatica degli argomenti",
+      "title": "Ridenominazione automatica degli argomenti"
+    },
+    "translation": {
+      "label": "Modello di traduzione",
+      "modelDesc": "Modello specificato per la traduzione",
+      "title": "Impostazioni dell'assistente di traduzione"
     }
   },
   "tab": {
@@ -366,6 +402,7 @@
     "experiment": "实验",
     "llm": "Modello linguistico",
     "sync": "云端同步",
+    "system-agent": "Assistente di sistema",
     "tts": "Servizio vocale"
   },
   "tools": {

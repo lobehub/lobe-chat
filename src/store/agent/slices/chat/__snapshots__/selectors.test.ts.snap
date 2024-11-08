@@ -2,10 +2,12 @@
 
 exports[`agentSelectors > defaultAgentConfig > should merge DEFAULT_AGENT_CONFIG and defaultAgent(s).config correctly 1`] = `
 {
-  "autoCreateTopicThreshold": 2,
-  "displayMode": "chat",
-  "enableAutoCreateTopic": true,
-  "historyCount": 1,
+  "chatConfig": {
+    "autoCreateTopicThreshold": 2,
+    "displayMode": "chat",
+    "enableAutoCreateTopic": true,
+    "historyCount": 1,
+  },
   "model": "gpt-3.5-turbo",
   "params": {
     "frequency_penalty": 0,

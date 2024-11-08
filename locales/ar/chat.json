@@ -2,10 +2,20 @@
   "ModelSwitch": {
     "title": "النموذج"
   },
-  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك البدء في الدردشة معي على الفور، أو يمكنك الانتقال إلى [إعدادات المساعد](/chat/settings#session={{id}}) لتحسين معلوماتي.",
+  "agentDefaultMessage": "مرحبًا، أنا **{{name}}**، يمكنك بدء المحادثة معي على الفور، أو يمكنك الذهاب إلى [إعدادات المساعد]({{url}}) لإكمال معلوماتي.",
   "agentDefaultMessageWithSystemRole": "مرحبًا، أنا **{{name}}**، {{systemRole}}، دعنا نبدأ الدردشة!",
-  "agentsAndConversations": "الوكلاء والمحادثات",
+  "agentDefaultMessageWithoutEdit": "مرحبًا، أنا **{{name}}**، دعنا نبدأ المحادثة!",
+  "agents": "مساعد",
+  "artifact": {
+    "generating": "جاري الإنشاء",
+    "thinking": "جاري التفكير",
+    "thought": "عملية التفكير",
+    "unknownTitle": "عمل غير مسمى"
+  },
   "backToBottom": "العودة إلى الأسفل",
+  "chatList": {
+    "longMessageDetail": "عرض التفاصيل"
+  },
   "clearCurrentMessages": "مسح رسائل الجلسة الحالية",
   "confirmClearCurrentMessages": "سيتم مسح رسائل الجلسة الحالية قريبًا، وبمجرد المسح لن يمكن استعادتها، يرجى تأكيد الإجراء الخاص بك",
   "confirmRemoveSessionItemAlert": "سيتم حذف هذا المساعد قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى تأكيد الإجراء الخاص بك",
@@ -35,17 +45,43 @@
     "stop": "توقف",
     "warp": "تغيير السطر"
   },
+  "knowledgeBase": {
+    "all": "جميع المحتويات",
+    "allFiles": "جميع الملفات",
+    "allKnowledgeBases": "جميع قواعد المعرفة",
+    "disabled": "الوضع الحالي للنشر لا يدعم محادثات قاعدة المعرفة. إذا كنت بحاجة إلى استخدامها، يرجى التبديل إلى نشر قاعدة البيانات على الخادم أو استخدام خدمة {{cloud}}.",
+    "library": {
+      "action": {
+        "add": "إضافة",
+        "detail": "تفاصيل",
+        "remove": "إزالة"
+      },
+      "title": "الملفات/قاعدة المعرفة"
+    },
+    "relativeFilesOrKnowledgeBases": "ملفات/قواعد معرفة مرتبطة",
+    "title": "قاعدة المعرفة",
+    "uploadGuide": "يمكنك عرض الملفات التي تم تحميلها في «قاعدة المعرفة»",
+    "viewMore": "عرض المزيد"
+  },
   "messageAction": {
     "delAndRegenerate": "حذف وإعادة الإنشاء",
     "regenerate": "إعادة الإنشاء"
   },
   "newAgent": "مساعد جديد",
-  "noDescription": "لا توجد وصف",
   "pin": "تثبيت",
   "pinOff": "إلغاء التثبيت",
+  "rag": {
+    "referenceChunks": "مراجع",
+    "userQuery": {
+      "actions": {
+        "delete": "حذف الاستعلام",
+        "regenerate": "إعادة توليد الاستعلام"
+      }
+    }
+  },
   "regenerate": "إعادة الإنشاء",
   "roleAndArchive": "الدور والأرشيف",
-  "searchAgentPlaceholder": "البحث عن مساعد ومحادثة...",
+  "searchAgentPlaceholder": "مساعد البحث...",
   "sendPlaceholder": "أدخل محتوى الدردشة...",
   "sessionGroup": {
     "config": "إدارة المجموعات",
@@ -64,14 +100,20 @@
     "tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20"
   },
   "shareModal": {
+    "copy": "نسخ",
     "download": "تحميل اللقطة",
+    "downloadFile": "تحميل الملف",
+    "exportTitle": "العنوان الافتراضي",
     "imageType": "نوع الصورة",
+    "includeTool": "تضمين رسالة الأداة",
+    "includeUser": "تضمين رسالة المستخدم",
     "screenshot": "لقطة شاشة",
     "settings": "إعدادات التصدير",
-    "shareToShareGPT": "إنشاء رابط مشاركة ShareGPT",
+    "text": "نص",
     "withBackground": "تضمين صورة الخلفية",
     "withFooter": "تضمين تذييل",
     "withPluginInfo": "تضمين معلومات البرنامج المساعد",
+    "withRole": "تضمين رسالة الدور",
     "withSystemRole": "تضمين دور المساعد"
   },
   "stt": {
@@ -79,11 +121,11 @@
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
   },
-  "temp": "مؤقت",
   "tokenDetails": {
     "chats": "رسائل المحادثة",
     "rest": "المتبقي",
     "systemRole": "تعيين الدور",
+    "title": "تفاصيل الرمز",
     "tools": "تعيين الإضافات",
     "total": "الإجمالي",
     "used": "المستخدم"
@@ -94,27 +136,10 @@
     "used": "مستخدم"
   },
   "topic": {
-    "actions": {
-      "autoRename": "إعادة تسمية ذكية",
-      "duplicate": "إنشاء نسخة",
-      "export": "تصدير الموضوع"
-    },
-    "confirmRemoveAll": "سيتم حذف جميع المواضيع قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
-    "confirmRemoveTopic": "سيتم حذف هذا الموضوع قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى التحلي بالحذر.",
-    "confirmRemoveUnstarred": "سيتم حذف المواضيع غير المحفوظة قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
-    "defaultTitle": "الموضوع الافتراضي",
-    "duplicateLoading": "جاري نسخ الموضوع...",
-    "duplicateSuccess": "تم نسخ الموضوع بنجاح",
-    "guide": {
-      "desc": "انقر فوق زر الإرسال الأيسر لحفظ الجلسة الحالية كموضوع تاريخي وبدء جلسة جديدة",
-      "title": "قائمة المواضيع"
-    },
+    "checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
+    "checkSaveCurrentMessages": "هل ترغب في حفظ الدردشة الحالية كموضوع؟",
     "openNewTopic": "فتح موضوع جديد",
-    "removeAll": "حذف جميع المواضيع",
-    "removeUnstarred": "حذف المواضيع غير المحفوظة",
-    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع",
-    "searchPlaceholder": "البحث في المواضيع...",
-    "title": "الموضوع"
+    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع"
   },
   "translate": {
     "action": "ترجمة",
@@ -126,12 +151,25 @@
   },
   "updateAgent": "تحديث معلومات المساعد",
   "upload": {
-    "actionFiletip": "تحميل المستند",
-    "actionTooltip": "تحميل الصورة",
-    "disabled": "النموذج الحالي لا يدعم التعرف على الرؤية، يرجى تغيير النموذج المستخدم",
-    "dragDesc": "اسحب الملفات إلى هنا، يدعم تحميل عدة صور. اضغط على Shift لإرسال الصور مباشرة",
-    "dragFileDesc": "اسحب الصور والملفات هنا لدعم تحميل صور وملفات متعددة. اضغط باستمرار على Shift لإرسال صورة أو ملف مباشرة",
-    "dragFileTitle": "تحميل المستند",
-    "dragTitle": "تحميل الصورة"
-  }
+    "action": {
+      "fileUpload": "رفع ملف",
+      "folderUpload": "رفع مجلد",
+      "imageDisabled": "النموذج الحالي لا يدعم التعرف على الصور، يرجى تغيير النموذج لاستخدامه",
+      "imageUpload": "رفع صورة",
+      "tooltip": "رفع"
+    },
+    "clientMode": {
+      "actionFiletip": "رفع ملف",
+      "actionTooltip": "رفع",
+      "disabled": "النموذج الحالي لا يدعم التعرف على الصور وتحليل الملفات، يرجى تغيير النموذج لاستخدامه"
+    },
+    "preview": {
+      "prepareTasks": "تحضير الأجزاء...",
+      "status": {
+        "pending": "يتم التحضير للتحميل...",
+        "processing": "يتم معالجة الملف..."
+      }
+    }
+  },
+  "zenMode": "وضع التركيز"
 }

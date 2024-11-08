@@ -64,7 +64,7 @@ Command explanation:
 
 - Replace `sk-xxxx` in the above command with your OpenAI API Key.
 
-- For the complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](/docs/self-hosting/environment-ariable) section.
+- For the complete list of environment variables supported by LobeChat, please refer to the [Environment Variables](/docs/self-hosting/environment-variables) section.
 
 <Callout type="tip">
   Since the official Docker image build takes about half an hour, if you see the "update available"
@@ -147,7 +147,7 @@ echo "Update time: $(date)"
 echo "Version: $(docker inspect lobehub/lobe-chat:latest | grep 'org.opencontainers.image.version' | awk -F'"' '{print $4}')"
 
 # Clean up unused images
-docker images | grep 'lobehub/lobe-chat' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
+docker images | grep 'lobehub/lobe-chat' | grep -v 'lobehub/lobe-chat-database' | grep -v 'latest' | awk '{print $3}' | xargs -r docker rmi > /dev/null 2>&1
 echo "Removed old images."
 ```
 

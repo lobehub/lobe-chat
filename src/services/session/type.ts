@@ -1,7 +1,8 @@
 /* eslint-disable typescript-sort-keys/interface */
 import { DeepPartial } from 'utility-types';
 
-import { LobeAgentConfig } from '@/types/agent';
+import { LobeAgentChatConfig, LobeAgentConfig } from '@/types/agent';
+import { MetaData } from '@/types/meta';
 import { BatchTaskResult } from '@/types/service';
 import {
   ChatSessionList,
@@ -30,7 +31,19 @@ export interface ISessionService {
   ): Promise<any>;
 
   getSessionConfig(id: string): Promise<LobeAgentConfig>;
-  updateSessionConfig(id: string, config: DeepPartial<LobeAgentConfig>): Promise<any>;
+  updateSessionConfig(
+    id: string,
+    config: DeepPartial<LobeAgentConfig>,
+    signal?: AbortSignal,
+  ): Promise<any>;
+
+  updateSessionMeta(id: string, meta: Partial<MetaData>, signal?: AbortSignal): Promise<any>;
+
+  updateSessionChatConfig(
+    id: string,
+    config: DeepPartial<LobeAgentChatConfig>,
+    signal?: AbortSignal,
+  ): Promise<any>;
 
   removeSession(id: string): Promise<any>;
   removeAllSessions(): Promise<any>;

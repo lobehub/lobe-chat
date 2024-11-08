@@ -3,8 +3,12 @@ import { createStyles } from 'antd-style';
 export const useStyles = createStyles(({ css, token }) => ({
   prompt: css`
     overflow: hidden auto;
-    padding: 0 16px 16px;
+
+    padding-block: 0 16px;
+    padding-inline: 16px;
+
     opacity: 0.75;
+
     transition: opacity 200ms ${token.motionEaseOut};
 
     &:hover {
@@ -14,15 +18,15 @@ export const useStyles = createStyles(({ css, token }) => ({
   promptBox: css`
     position: relative;
     overflow: hidden;
-    border-bottom: 1px solid ${token.colorBorder};
+    border-block-end: 1px solid ${token.colorBorder};
   `,
   promptMask: css`
     pointer-events: none;
 
     position: absolute;
     z-index: 10;
-    bottom: 0;
-    left: 0;
+    inset-block-end: 0;
+    inset-inline-start: 0;
 
     width: 100%;
     height: 32px;

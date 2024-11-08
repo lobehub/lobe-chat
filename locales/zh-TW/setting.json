@@ -2,9 +2,17 @@
   "about": {
     "title": "關於"
   },
+  "agentTab": {
+    "chat": "聊天偏好",
+    "meta": "助手資訊",
+    "modal": "模型設定",
+    "plugin": "外掛程式設定",
+    "prompt": "角色設定",
+    "tts": "語音服務"
+  },
   "analytics": {
     "telemetry": {
-      "desc": "通過選擇發送遙測數據，你可以幫助我們改善 LobeChat 整體用戶體驗",
+      "desc": "透過選擇發送遙測數據，你可以幫助我們改善 {{appName}} 整體用戶體驗",
       "title": "發送匿名使用數據"
     },
     "title": "數據統計"
@@ -35,6 +43,12 @@
     "title": "設定"
   },
   "llm": {
+    "aesGcm": "您的金鑰與代理地址等將使用 <1>AES-GCM</1> 加密演算法進行加密",
+    "apiKey": {
+      "desc": "請填寫您的 {{name}} API 金鑰",
+      "placeholder": "{{name}} API 金鑰",
+      "title": "API 金鑰"
+    },
     "checker": {
       "button": "檢查",
       "desc": "測試 API 金鑰與代理地址是否正確填寫",
@@ -56,11 +70,11 @@
           "title": "模型展示名稱"
         },
         "files": {
-          "extra": "當前 LobeChat 的文件上傳實現僅為一種 Hack 方案，僅限自行嘗試。完整文件上傳能力請等待後續實現",
+          "extra": "當前文件上傳實現僅為一種 Hack 方案，僅限自行嘗試。完整文件上傳能力請等待後續實現",
           "title": "支援文件上傳"
         },
         "functionCall": {
-          "extra": "此配置將僅開啟 LobeChat 中的函數調用能力，是否支持函數調用完全取決於模型本身，請自行測試該模型的函數調用能力可用性",
+          "extra": "此配置將僅開啟應用中的函數調用能力，是否支持函數調用完全取決於模型本身，請自行測試該模型的函數調用能力可用性",
           "title": "支援函數調用"
         },
         "id": {
@@ -74,7 +88,7 @@
           "unlimited": "無限制"
         },
         "vision": {
-          "extra": "此配置將僅開啟 LobeChat 中的圖片上傳配置，是否支持識別完全取決於模型本身，請自行測試該模型的視覺識別能力可用性",
+          "extra": "此配置將僅開啟應用中的圖片上傳配置，是否支持識別完全取決於模型本身，請自行測試該模型的視覺識別能力可用性",
           "title": "支援視覺識別"
         }
       }
@@ -89,6 +103,7 @@
       "latestTime": "上次更新時間：{{time}}",
       "noLatestTime": "暫未獲取列表"
     },
+    "helpDoc": "配置說明文件",
     "modelList": {
       "desc": "選擇在會話中展示的模型，選擇的模型會在模型列表中展示",
       "placeholder": "請從列表中選擇模型",
@@ -99,15 +114,7 @@
       "desc": "必須包含 http(s):// 以外的預設地址",
       "title": "API 代理位址"
     },
-    "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待 ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama 正在下載該模型，請儘量不要關閉本頁面。重新下載時將會中斷處繼續",
-      "remainingTime": "剩餘時間",
-      "speed": "下載速度",
-      "title": "正在下載模型 {{model}}"
-    }
+    "waitingForMore": "更多模型正在 <1>計劃接入</1> 中，敬請期待"
   },
   "plugin": {
     "addTooltip": "新增自訂外掛程式",
@@ -174,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "不限制",
       "limited": "只包含 {{number}} 條對話訊息",
+      "setlimited": "設置限制",
       "title": "限制歷史訊息數",
       "unlimited": "不限歷史訊息數"
     },
@@ -201,13 +209,7 @@
       "title": "單次回覆限制"
     },
     "model": {
-      "desc": "ChatGPT 模型",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "{{provider}} 模型",
       "title": "模型"
     },
     "presencePenalty": {
@@ -337,7 +339,7 @@
       "unknownOS": "未知系統"
     },
     "warning": {
-      "message": "本功能目前仍為實驗性功能，可能存在預期外或不穩定的情況，如遇到問題請及時提交反饋。"
+      "tip": "經過較長一段時間社區公測，WebRTC 同步可能無法穩定滿足通用的資料同步需求。請自行 <1>部署信令伺服器</1> 後使用。"
     },
     "webrtc": {
       "channelName": {
@@ -353,10 +355,44 @@
       },
       "desc": "實時、點對點的數據通信，需裝置同時在線才可同步",
       "enabled": {
-        "invalid": "請填寫同步頻道名稱後再開啟",
+        "invalid": "請填寫信令伺服器和同步頻道名稱後再啟用",
         "title": "開啟同步"
       },
+      "signaling": {
+        "desc": "WebRTC 將使用該地址進行同步",
+        "placeholder": "請輸入信令伺服器地址",
+        "title": "信令伺服器"
+      },
       "title": "WebRTC 同步"
+    }
+  },
+  "systemAgent": {
+    "agentMeta": {
+      "label": "助理元數據生成模型",
+      "modelDesc": "指定用於生成助理名稱、描述、頭像、標籤的模型",
+      "title": "自動生成助理資訊"
+    },
+    "customPrompt": {
+      "addPrompt": "新增自訂提示",
+      "desc": "填寫後，系統助理將在生成內容時使用自訂提示",
+      "placeholder": "請輸入自訂提示詞",
+      "title": "自訂提示詞"
+    },
+    "queryRewrite": {
+      "label": "提問重寫模型",
+      "modelDesc": "指定用於優化用戶提問的模型",
+      "title": "知識庫提問重寫"
+    },
+    "title": "系統助手",
+    "topic": {
+      "label": "話題命名模型",
+      "modelDesc": "指定用於話題自動重命名的模型",
+      "title": "話題自動命名"
+    },
+    "translation": {
+      "label": "翻譯模型",
+      "modelDesc": "指定用於翻譯的模型",
+      "title": "翻譯助手設定"
     }
   },
   "tab": {
@@ -366,6 +402,7 @@
     "experiment": "實驗",
     "llm": "語言模型",
     "sync": "雲端同步",
+    "system-agent": "系統助手",
     "tts": "語音服務"
   },
   "tools": {

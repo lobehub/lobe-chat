@@ -70,7 +70,7 @@
         "pattenErrorMessage": "Chỉ có thể nhập ký tự tiếng Anh, số, - và _"
       },
       "manifest": {
-        "desc": "LobeChat sẽ cài đặt plugin thông qua liên kết này",
+        "desc": "{{appName}} sẽ cài đặt plugin qua liên kết này",
         "label": "Tệp mô tả plugin (Manifest) URL",
         "preview": "Xem trước Manifest",
         "refresh": "Làm mới"
@@ -139,6 +139,7 @@
     "modalDesc": "Sau khi cấu hình địa chỉ thị trường plugin, bạn có thể sử dụng thị trường plugin tùy chỉnh",
     "title": "Cài đặt thị trường plugin"
   },
+  "showInPortal": "Vui lòng xem chi tiết trong khu vực làm việc",
   "store": {
     "actions": {
       "confirmUninstall": "Sắp gỡ bỏ plugin này, sau khi gỡ bỏ sẽ xóa cấu hình của plugin này, vui lòng xác nhận hành động của bạn",

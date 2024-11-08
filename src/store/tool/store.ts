@@ -1,10 +1,8 @@
-import { devtools } from 'zustand/middleware';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 import { StateCreator } from 'zustand/vanilla';
 
-import { isDev } from '@/utils/env';
-
+import { createDevtools } from '../middleware/createDevtools';
 import { ToolStoreState, initialState } from './initialState';
 import { BuiltinToolAction, createBuiltinToolSlice } from './slices/builtin';
 import { CustomPluginAction, createCustomPluginSlice } from './slices/customPlugin';
@@ -29,9 +27,6 @@ const createStore: StateCreator<ToolStore, [['zustand/devtools', never]]> = (...
 
 //  ===============  实装 useStore ============ //
 
-export const useToolStore = createWithEqualityFn<ToolStore>()(
-  devtools(createStore, {
-    name: 'LobeChat_Tool' + (isDev ? '_DEV' : ''),
-  }),
-  shallow,
-);
+const devtools = createDevtools('tools');
+
+export const useToolStore = createWithEqualityFn<ToolStore>()(devtools(createStore), shallow);

@@ -3,16 +3,22 @@ import { z } from 'zod';
 import { AgentSchema } from '@/database/client/schemas/session';
 import { LobeMetaDataSchema } from '@/types/meta';
 
+const generalSechma = z.object({
+  fontSize: z.number().default(14),
+  language: z.string(),
+  neutralColor: z.string().optional(),
+  password: z.string(),
+  themeMode: z.string(),
+});
+
 const settingsSchema = z.object({
   defaultAgent: z.object({
     config: AgentSchema,
     meta: LobeMetaDataSchema,
   }),
-  fontSize: z.number().default(14),
-  language: z.string(),
+  general: generalSechma.partial().optional(),
+  keyVaults: z.any().optional(),
   languageModel: z.any().optional(),
-  password: z.string(),
-  themeMode: z.string(),
   tts: z.object({
     openAI: z.object({
       sttModel: z.string(),

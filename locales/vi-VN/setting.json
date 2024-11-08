@@ -2,9 +2,17 @@
   "about": {
     "title": "Về chúng tôi"
   },
+  "agentTab": {
+    "chat": "Tùy chọn Trò chuyện",
+    "meta": "Thông tin Trợ lý",
+    "modal": "Cài đặt Mô hình",
+    "plugin": "Cài đặt Plugin",
+    "prompt": "Thiết lập Nhân vật",
+    "tts": "Dịch vụ Giọng nói"
+  },
   "analytics": {
     "telemetry": {
-      "desc": "Bằng cách chọn gửi dữ liệu telemetri, bạn có thể giúp chúng tôi cải thiện trải nghiệm người dùng toàn diện của LobeChat",
+      "desc": "Bằng cách chọn gửi dữ liệu telemetry, bạn có thể giúp chúng tôi cải thiện trải nghiệm người dùng tổng thể của {{appName}}",
       "title": "Gửi dữ liệu sử dụng ẩn danh"
     },
     "title": "Thống kê dữ liệu"
@@ -35,9 +43,15 @@
     "title": "Cài đặt"
   },
   "llm": {
+    "aesGcm": "Khóa và địa chỉ proxy của bạn sẽ được mã hóa bằng thuật toán mã hóa <1>AES-GCM</1>",
+    "apiKey": {
+      "desc": "Vui lòng nhập {{name}} API Key của bạn",
+      "placeholder": "{{name}} API Key",
+      "title": "API Key"
+    },
     "checker": {
       "button": "Kiểm tra",
-      "desc": "Kiểm tra xem Api Key và địa chỉ proxy đã được điền đúng chưa",
+      "desc": "Kiểm tra xem API Key và địa chỉ proxy đã được điền đúng chưa",
       "pass": "Kiểm tra thành công",
       "title": "Kiểm tra kết nối"
     },
@@ -56,11 +70,11 @@
           "title": "Tên hiển thị mô hình"
         },
         "files": {
-          "extra": "Hiện tại, việc tải lên tệp trong LobeChat chỉ là một phương pháp tạm thời, chỉ dành cho mục đích thử nghiệm. Chờ đợi tính năng tải lên tệp đầy đủ trong tương lai",
+          "extra": "Hiện tại, việc tải lên tệp chỉ là một giải pháp Hack, chỉ dành cho việc thử nghiệm cá nhân. Vui lòng chờ đợi khả năng tải lên tệp đầy đủ trong các phiên bản sau.",
           "title": "Hỗ trợ tải lên tệp"
         },
         "functionCall": {
-          "extra": "Cấu hình này chỉ mở khả năng gọi hàm trong LobeChat, việc hỗ trợ gọi hàm hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng gọi hàm của mô hình",
+          "extra": "Cấu hình này chỉ mở khả năng gọi hàm trong ứng dụng, việc hỗ trợ gọi hàm hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra khả năng gọi hàm của mô hình đó.",
           "title": "Hỗ trợ gọi hàm"
         },
         "id": {
@@ -74,7 +88,7 @@
           "unlimited": "vô hạn"
         },
         "vision": {
-          "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong LobeChat, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào mô hình chính mình, hãy tự kiểm tra tính khả dụng của khả năng nhận diện hình ảnh của mô hình",
+          "extra": "Cấu hình này chỉ mở khả năng tải lên hình ảnh trong ứng dụng, việc hỗ trợ nhận diện hoàn toàn phụ thuộc vào chính mô hình, vui lòng tự kiểm tra khả năng nhận diện hình ảnh của mô hình đó.",
           "title": "Hỗ trợ nhận diện hình ảnh"
         }
       }
@@ -89,6 +103,7 @@
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
       "noLatestTime": "Chưa có danh sách nào được lấy"
     },
+    "helpDoc": "Hướng dẫn cấu hình",
     "modelList": {
       "desc": "Chọn mô hình hiển thị trong cuộc trò chuyện, mô hình đã chọn sẽ được hiển thị trong danh sách mô hình",
       "placeholder": "Vui lòng chọn mô hình từ danh sách",
@@ -99,15 +114,7 @@
       "desc": "Ngoài địa chỉ mặc định, phải bao gồm http(s)://",
       "title": "Địa chỉ Proxy API"
     },
-    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi ✨"
-  },
-  "ollama": {
-    "download": {
-      "desc": "Ollama đang tải xuống mô hình này, vui lòng không đóng trang này. Quá trình tải xuống sẽ tiếp tục từ nơi đã bị gián đoạn khi tải lại",
-      "remainingTime": "Thời gian còn lại",
-      "speed": "Tốc độ tải xuống",
-      "title": "Đang tải xuống mô hình {{model}}"
-    }
+    "waitingForMore": "Có thêm mô hình đang <1>được lên kế hoạch tích hợp</1>, hãy chờ đợi"
   },
   "plugin": {
     "addTooltip": "Thêm tiện ích",
@@ -174,6 +181,7 @@
     "enableHistoryCount": {
       "alias": "Không giới hạn",
       "limited": "Chỉ chứa {{number}} tin nhắn trò chuyện",
+      "setlimited": "Thiết lập số lượng tin nhắn lịch sử",
       "title": "Giới hạn số lượng tin nhắn lịch sử",
       "unlimited": "Không giới hạn số lượng tin nhắn lịch sử"
     },
@@ -201,13 +209,7 @@
       "title": "Giới hạn phản hồi một lần"
     },
     "model": {
-      "desc": "Mô hình ChatGPT",
-      "list": {
-        "gpt-3.5-turbo": "GPT 3.5",
-        "gpt-3.5-turbo-16k": "GPT 3.5 (16K)",
-        "gpt-4": "GPT 4",
-        "gpt-4-32k": "GPT 4 (32K)"
-      },
+      "desc": "Mô hình {{provider}}",
       "title": "Mô hình"
     },
     "presencePenalty": {
@@ -337,7 +339,7 @@
       "unknownOS": "Hệ điều hành không xác định"
     },
     "warning": {
-      "message": "Chức năng này hiện vẫn đang trong thử nghiệm, có thể gặp phải tình huống ngoài dự kiến hoặc không ổn định, nếu gặp vấn đề vui lòng gửi phản hồi ngay lập tức."
+      "tip": "经过较长一段时间社区公测，WebRTC 同步可能无法稳定满足通用的数据同步诉求。请自行 <1>部署信令服务器</1> 后使用。"
     },
     "webrtc": {
       "channelName": {
@@ -353,10 +355,44 @@
       },
       "desc": "Truyền thông dữ liệu thời gian thực, điểm-điểm, cần thiết bị cùng online mới có thể đồng bộ",
       "enabled": {
-        "invalid": "Vui lòng nhập tên kênh đồng bộ trước khi bật",
+        "invalid": "Vui lòng nhập địa chỉ máy chủ tín hiệu và tên kênh đồng bộ trước khi bật",
         "title": "Bật đồng bộ"
       },
+      "signaling": {
+        "desc": "WebRTC sẽ sử dụng địa chỉ này để đồng bộ",
+        "placeholder": "Vui lòng nhập địa chỉ máy chủ tín hiệu",
+        "title": "Máy chủ tín hiệu"
+      },
       "title": "WebRTC Đồng bộ"
+    }
+  },
+  "systemAgent": {
+    "agentMeta": {
+      "label": "Mô hình tạo siêu dữ liệu trợ lý",
+      "modelDesc": "Xác định mô hình được sử dụng để tạo tên, mô tả, hình đại diện, nhãn cho trợ lý",
+      "title": "Tự động tạo thông tin trợ lý"
+    },
+    "customPrompt": {
+      "addPrompt": "Thêm gợi ý tùy chỉnh",
+      "desc": "Sau khi điền, trợ lý hệ thống sẽ sử dụng gợi ý tùy chỉnh khi tạo nội dung",
+      "placeholder": "Nhập từ gợi ý tùy chỉnh",
+      "title": "Từ gợi ý tùy chỉnh"
+    },
+    "queryRewrite": {
+      "label": "Mô hình viết lại câu hỏi",
+      "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",
+      "title": "Viết lại câu hỏi trong kho kiến thức"
+    },
+    "title": "Trợ lý hệ thống",
+    "topic": {
+      "label": "Mô hình đặt tên chủ đề",
+      "modelDesc": "Mô hình được chỉ định để tự động đặt tên chủ đề",
+      "title": "Tự động đặt tên chủ đề"
+    },
+    "translation": {
+      "label": "Mô hình dịch",
+      "modelDesc": "Chọn mô hình để dịch",
+      "title": "Cài đặt trợ lý dịch"
     }
   },
   "tab": {
@@ -366,6 +402,7 @@
     "experiment": "Thử nghiệm",
     "llm": "Mô hình ngôn ngữ",
     "sync": "Đồng bộ trên đám mây",
+    "system-agent": "Trợ lý hệ thống",
     "tts": "Dịch vụ giọng nói"
   },
   "tools": {

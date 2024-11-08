@@ -1,6 +1,6 @@
 import { metadataModule } from '@/server/metadata';
 import { translation } from '@/server/translation';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
 
 import Client from './Client';
 

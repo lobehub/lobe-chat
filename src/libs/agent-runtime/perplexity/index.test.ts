@@ -9,8 +9,8 @@ import { LobePerplexityAI } from './index';
 
 const provider = 'perplexity';
 const defaultBaseURL = 'https://api.perplexity.ai';
-const bizErrorType = 'PerplexityBizError';
-const invalidErrorType = 'InvalidPerplexityAPIKey';
+const bizErrorType = 'ProviderBizError';
+const invalidErrorType = 'InvalidProviderAPIKey';
 
 // Mock the console.error to avoid polluting test output
 vi.spyOn(console, 'error').mockImplementation(() => {});
@@ -244,6 +244,48 @@ describe('LobePerplexityAI', () => {
         // 恢复原始环境变量值
         process.env.DEBUG_PERPLEXITY_CHAT_COMPLETION = originalDebugValue;
       });
+    });
+
+    it('should call chat method with temperature', async () => {
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+        new ReadableStream() as any,
+      );
+
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'text-davinci-003',
+        temperature: 1.5,
+      });
+
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: expect.any(Array),
+          model: 'text-davinci-003',
+          temperature: 1.5,
+        }),
+        expect.any(Object),
+      );
+    });
+
+    it('should be undefined when temperature >= 2', async () => {
+      vi.spyOn(instance['client'].chat.completions, 'create').mockResolvedValue(
+        new ReadableStream() as any,
+      );
+
+      await instance.chat({
+        messages: [{ content: 'Hello', role: 'user' }],
+        model: 'text-davinci-003',
+        temperature: 2,
+      });
+
+      expect(instance['client'].chat.completions.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          messages: expect.any(Array),
+          model: 'text-davinci-003',
+          temperature: undefined,
+        }),
+        expect.any(Object),
+      );
     });
   });
 });

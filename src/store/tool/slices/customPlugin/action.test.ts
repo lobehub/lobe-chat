@@ -21,7 +21,7 @@ vi.mock('@/services/plugin', () => ({
 
 vi.mock('@/services/tool', () => ({
   toolService: {
-    getPluginManifest: vi.fn(),
+    getToolManifest: vi.fn(),
   },
 }));
 

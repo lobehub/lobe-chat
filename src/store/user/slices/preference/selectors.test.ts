@@ -72,10 +72,10 @@ describe('preferenceSelectors', () => {
 
   describe('isPreferenceInit', () => {
     it('should return the value of isPreferenceInit state', () => {
-      store.isPreferenceInit = true;
+      store.isUserStateInit = true;
       expect(preferenceSelectors.isPreferenceInit(store)).toBe(true);
 
-      store.isPreferenceInit = false;
+      store.isUserStateInit = false;
       expect(preferenceSelectors.isPreferenceInit(store)).toBe(false);
     });
   });

@@ -1,0 +1,94 @@
+{
+  "ai21": {},
+  "ai360": {
+    "description": "360 AI é a plataforma de modelos e serviços de IA lançada pela empresa 360, oferecendo uma variedade de modelos avançados de processamento de linguagem natural, incluindo 360GPT2 Pro, 360GPT Pro, 360GPT Turbo e 360GPT Turbo Responsibility 8K. Esses modelos combinam grandes parâmetros e capacidades multimodais, sendo amplamente aplicados em geração de texto, compreensão semântica, sistemas de diálogo e geração de código. Com uma estratégia de preços flexível, a 360 AI atende a diversas necessidades dos usuários, apoiando a integração de desenvolvedores e promovendo a inovação e o desenvolvimento de aplicações inteligentes."
+  },
+  "anthropic": {
+    "description": "A Anthropic é uma empresa focada em pesquisa e desenvolvimento de inteligência artificial, oferecendo uma gama de modelos de linguagem avançados, como Claude 3.5 Sonnet, Claude 3 Sonnet, Claude 3 Opus e Claude 3 Haiku. Esses modelos alcançam um equilíbrio ideal entre inteligência, velocidade e custo, adequando-se a uma variedade de cenários de aplicação, desde cargas de trabalho empresariais até respostas rápidas. O Claude 3.5 Sonnet, como seu modelo mais recente, se destacou em várias avaliações, mantendo uma alta relação custo-benefício."
+  },
+  "azure": {
+    "description": "Azure oferece uma variedade de modelos avançados de IA, incluindo GPT-3.5 e a mais recente série GPT-4, suportando diversos tipos de dados e tarefas complexas, com foco em soluções de IA seguras, confiáveis e sustentáveis."
+  },
+  "baichuan": {
+    "description": "Baichuan Intelligent é uma empresa focada no desenvolvimento de grandes modelos de inteligência artificial, cujos modelos se destacam em tarefas em chinês, como enciclopédias de conhecimento, processamento de textos longos e criação de conteúdo, superando modelos mainstream estrangeiros. A Baichuan Intelligent também possui capacidades multimodais líderes do setor, destacando-se em várias avaliações de autoridade. Seus modelos incluem Baichuan 4, Baichuan 3 Turbo e Baichuan 3 Turbo 128k, otimizados para diferentes cenários de aplicação, oferecendo soluções com alta relação custo-benefício."
+  },
+  "bedrock": {
+    "description": "Bedrock é um serviço oferecido pela Amazon AWS, focado em fornecer modelos de linguagem e visão de IA avançados para empresas. Sua família de modelos inclui a série Claude da Anthropic, a série Llama 3.1 da Meta, entre outros, abrangendo uma variedade de opções, desde modelos leves até de alto desempenho, suportando geração de texto, diálogos, processamento de imagens e outras tarefas, adequando-se a aplicações empresariais de diferentes escalas e necessidades."
+  },
+  "deepseek": {
+    "description": "A DeepSeek é uma empresa focada em pesquisa e aplicação de tecnologia de inteligência artificial, cujo modelo mais recente, DeepSeek-V2.5, combina capacidades de diálogo geral e processamento de código, alcançando melhorias significativas em alinhamento com preferências humanas, tarefas de escrita e seguimento de instruções."
+  },
+  "fireworksai": {
+    "description": "Fireworks AI é um fornecedor líder de serviços de modelos de linguagem avançados, focando em chamadas de função e processamento multimodal. Seu modelo mais recente, Firefunction V2, baseado em Llama-3, é otimizado para chamadas de função, diálogos e seguimento de instruções. O modelo de linguagem visual FireLLaVA-13B suporta entradas mistas de imagem e texto. Outros modelos notáveis incluem a série Llama e a série Mixtral, oferecendo suporte eficiente para seguimento e geração de instruções multilíngues."
+  },
+  "github": {
+    "description": "Com os Modelos do GitHub, os desenvolvedores podem se tornar engenheiros de IA e construir com os principais modelos de IA da indústria."
+  },
+  "google": {
+    "description": "A série Gemini do Google é seu modelo de IA mais avançado e versátil, desenvolvido pela Google DeepMind, projetado para ser multimodal, suportando compreensão e processamento sem costura de texto, código, imagens, áudio e vídeo. Adequado para uma variedade de ambientes, desde data centers até dispositivos móveis, melhorando significativamente a eficiência e a aplicabilidade dos modelos de IA."
+  },
+  "groq": {
+    "description": "O motor de inferência LPU da Groq se destacou em testes de benchmark independentes de modelos de linguagem de grande escala (LLM), redefinindo os padrões de soluções de IA com sua velocidade e eficiência impressionantes. A Groq representa uma velocidade de inferência em tempo real, demonstrando bom desempenho em implantações baseadas em nuvem."
+  },
+  "huggingface": {
+    "description": "A API de Inferência do HuggingFace oferece uma maneira rápida e gratuita de explorar milhares de modelos para diversas tarefas. Seja você um protótipo para um novo aplicativo ou tentando as funcionalidades de aprendizado de máquina, esta API permite acesso instantâneo a modelos de alto desempenho em múltiplas áreas."
+  },
+  "hunyuan": {
+    "description": "Um modelo de linguagem desenvolvido pela Tencent, com forte capacidade de criação em chinês, habilidade de raciocínio lógico em contextos complexos e capacidade confiável de execução de tarefas."
+  },
+  "minimax": {
+    "description": "MiniMax é uma empresa de tecnologia de inteligência artificial geral fundada em 2021, dedicada a co-criar inteligência com os usuários. A MiniMax desenvolveu internamente diferentes modelos gerais de grande escala, incluindo um modelo de texto MoE com trilhões de parâmetros, um modelo de voz e um modelo de imagem. Também lançou aplicações como Conch AI."
+  },
+  "mistral": {
+    "description": "A Mistral oferece modelos avançados gerais, especializados e de pesquisa, amplamente utilizados em raciocínio complexo, tarefas multilíngues, geração de código, entre outros, permitindo que os usuários integrem funcionalidades personalizadas por meio de interfaces de chamada de função."
+  },
+  "moonshot": {
+    "description": "Moonshot é uma plataforma de código aberto lançada pela Beijing Dark Side Technology Co., Ltd., oferecendo uma variedade de modelos de processamento de linguagem natural, com ampla gama de aplicações, incluindo, mas não se limitando a, criação de conteúdo, pesquisa acadêmica, recomendações inteligentes e diagnósticos médicos, suportando processamento de textos longos e tarefas de geração complexas."
+  },
+  "novita": {
+    "description": "Novita AI é uma plataforma que oferece uma variedade de modelos de linguagem de grande escala e serviços de geração de imagens de IA, sendo flexível, confiável e econômica. Suporta os mais recentes modelos de código aberto, como Llama3 e Mistral, e fornece soluções de API abrangentes, amigáveis ao usuário e escaláveis para o desenvolvimento de aplicações de IA, adequadas para o rápido crescimento de startups de IA."
+  },
+  "ollama": {
+    "description": "Os modelos oferecidos pela Ollama abrangem amplamente áreas como geração de código, operações matemáticas, processamento multilíngue e interações de diálogo, atendendo a diversas necessidades de implantação em nível empresarial e local."
+  },
+  "openai": {
+    "description": "OpenAI é uma das principais instituições de pesquisa em inteligência artificial do mundo, cujos modelos, como a série GPT, estão na vanguarda do processamento de linguagem natural. A OpenAI se dedica a transformar vários setores por meio de soluções de IA inovadoras e eficientes. Seus produtos apresentam desempenho e custo-benefício significativos, sendo amplamente utilizados em pesquisa, negócios e aplicações inovadoras."
+  },
+  "openrouter": {
+    "description": "OpenRouter é uma plataforma de serviço que oferece interfaces para diversos modelos de ponta, suportando OpenAI, Anthropic, LLaMA e mais, adequada para diversas necessidades de desenvolvimento e aplicação. Os usuários podem escolher flexivelmente o modelo e o preço mais adequados às suas necessidades, melhorando a experiência de IA."
+  },
+  "perplexity": {
+    "description": "Perplexity é um fornecedor líder de modelos de geração de diálogo, oferecendo uma variedade de modelos avançados Llama 3.1, suportando aplicações online e offline, especialmente adequados para tarefas complexas de processamento de linguagem natural."
+  },
+  "qwen": {
+    "description": "Qwen é um modelo de linguagem de grande escala desenvolvido pela Alibaba Cloud, com forte capacidade de compreensão e geração de linguagem natural. Ele pode responder a várias perguntas, criar conteúdo escrito, expressar opiniões e escrever código, atuando em vários campos."
+  },
+  "sensenova": {},
+  "siliconcloud": {
+    "description": "SiliconFlow se dedica a acelerar a AGI para beneficiar a humanidade, melhorando a eficiência da IA em larga escala por meio de uma pilha GenAI fácil de usar e de baixo custo."
+  },
+  "spark": {
+    "description": "O modelo Spark da iFlytek oferece poderosas capacidades de IA em múltiplos domínios e idiomas, utilizando tecnologia avançada de processamento de linguagem natural para construir aplicações inovadoras adequadas a cenários verticais como hardware inteligente, saúde inteligente e finanças inteligentes."
+  },
+  "stepfun": {
+    "description": "O modelo StepFun possui capacidades de multimodalidade e raciocínio complexo líderes do setor, suportando compreensão de textos longos e um poderoso mecanismo de busca autônomo."
+  },
+  "taichu": {
+    "description": "O Instituto de Automação da Academia Chinesa de Ciências e o Instituto de Pesquisa em Inteligência Artificial de Wuhan lançaram uma nova geração de grandes modelos multimodais, suportando tarefas abrangentes de perguntas e respostas, criação de texto, geração de imagens, compreensão 3D, análise de sinais, entre outras, com capacidades cognitivas, de compreensão e criação mais fortes, proporcionando uma nova experiência interativa."
+  },
+  "togetherai": {
+    "description": "A Together AI se dedica a alcançar desempenho de ponta por meio de modelos de IA inovadores, oferecendo amplas capacidades de personalização, incluindo suporte para escalabilidade rápida e processos de implantação intuitivos, atendendo a diversas necessidades empresariais."
+  },
+  "upstage": {
+    "description": "Upstage se concentra no desenvolvimento de modelos de IA para diversas necessidades comerciais, incluindo Solar LLM e Document AI, visando alcançar uma inteligência geral artificial (AGI) que funcione. Crie agentes de diálogo simples por meio da API de Chat e suporte chamadas de função, tradução, incorporação e aplicações em domínios específicos."
+  },
+  "wenxin": {
+    "description": "Plataforma de desenvolvimento e serviços de aplicativos nativos de IA e modelos de grande escala, voltada para empresas, que oferece a mais completa e fácil ferramenta de cadeia de ferramentas para o desenvolvimento de modelos de inteligência artificial generativa e aplicativos."
+  },
+  "zeroone": {
+    "description": "01.AI se concentra na tecnologia de inteligência artificial da era 2.0, promovendo fortemente a inovação e aplicação de 'humano + inteligência artificial', utilizando modelos poderosos e tecnologia de IA avançada para aumentar a produtividade humana e realizar a capacitação tecnológica."
+  },
+  "zhipu": {
+    "description": "Zhipu AI oferece uma plataforma aberta para modelos multimodais e de linguagem, suportando uma ampla gama de cenários de aplicação de IA, incluindo processamento de texto, compreensão de imagens e assistência em programação."
+  }
+}

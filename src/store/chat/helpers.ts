@@ -1,4 +1,4 @@
-import { LobeAgentConfig } from '@/types/agent';
+import { LobeAgentChatConfig } from '@/types/agent';
 import { ChatMessage } from '@/types/message';
 import { OpenAIChatMessage } from '@/types/openai/chat';
 import { encodeAsync } from '@/utils/tokenizer';
@@ -11,7 +11,7 @@ export const getMessageById = (messages: ChatMessage[], id: string) =>
 
 const getSlicedMessagesWithConfig = (
   messages: ChatMessage[],
-  config: LobeAgentConfig,
+  config: LobeAgentChatConfig,
 ): ChatMessage[] => {
   // if historyCount is not enabled or set to 0, return all messages
   if (!config.enableHistoryCount || !config.historyCount) return messages;

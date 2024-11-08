@@ -12,9 +12,18 @@
     "retry": "Yeniden Yükle",
     "title": "Sayfa bir sorunla karşılaştı.."
   },
+  "fetchError": {
+    "detail": "Hata Detayı",
+    "title": "İstek Başarısız"
+  },
+  "loginRequired": {
+    "desc": "Otomatik olarak giriş sayfasına yönlendirileceksiniz",
+    "title": "Lütfen bu özelliği kullanmadan önce giriş yapın"
+  },
   "notFound": {
     "backHome": "Ana Sayfaya Dön",
-    "desc": "Aradığınız sayfayı bulamadık, lütfen bağlantının doğru olduğundan emin olun",
+    "check": "Lütfen URL'nizin doğru olduğundan emin olun",
+    "desc": "Aradığınız sayfa bulunamadı",
     "title": "Bilinmeyen bir alana mı girdiniz?"
   },
   "pluginSettings": {
@@ -48,45 +57,33 @@
     "431": "Üzgünüz, istek başlık alanı çok büyük, sunucu işleyemiyor",
     "451": "Üzgünüz, yasal nedenlerle sunucu bu kaynağı sağlamayı reddediyor",
     "500": "Üzgünüm, sunucu bazı zorluklar yaşıyor ve geçici olarak isteğinizi tamamlayamıyor. Lütfen daha sonra tekrar deneyin.",
+    "501": "Üzgünüm, sunucu bu isteği nasıl işleyeceğini henüz bilmiyor, lütfen işleminizin doğru olduğundan emin olun",
     "502": "Üzgünüm, sunucu kayboldu ve geçici olarak hizmet veremiyor. Lütfen daha sonra tekrar deneyin.",
     "503": "Üzgünüm, sunucu şu anda isteğinizi işleyemiyor, muhtemelen aşırı yüklenme veya bakım nedeniyle. Lütfen daha sonra tekrar deneyin.",
     "504": "Üzgünüm, sunucu yukarı akış sunucusundan bir yanıt alamadı. Lütfen daha sonra tekrar deneyin.",
+    "505": "Üzgünüm, sunucu kullandığınız HTTP sürümünü desteklemiyor, lütfen güncelleyip tekrar deneyin",
+    "506": "Üzgünüm, sunucu yapılandırmasında bir sorun var, lütfen çözüm için yöneticinizle iletişime geçin",
+    "507": "Üzgünüm, sunucunun depolama alanı yetersiz, isteğinizi işleyemiyor, lütfen daha sonra tekrar deneyin",
+    "509": "Üzgünüm, sunucunun bant genişliği tükendi, lütfen daha sonra tekrar deneyin",
+    "510": "Üzgünüm, sunucu isteğinizi genişletme işlevini desteklemiyor, lütfen yöneticinizle iletişime geçin",
+    "524": "Üzgünüm, sunucu yanıt beklerken zaman aşımına uğradı, bu muhtemelen yanıtın çok yavaş olmasından kaynaklanıyor, lütfen daha sonra tekrar deneyin",
     "AgentRuntimeError": "Lobe dil modeli çalışma zamanı hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "AnthropicBizError": "Anthropic AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "AzureBizError": "Azure AI servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "BedrockBizError": "Bedrock servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "DeepSeekBizError": "DeepSeek hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "GoogleBizError": "Google servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "GroqBizError": "Groq hizmeti isteği sırasında bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
+    "FreePlanLimit": "Şu anda ücretsiz bir kullanıcısınız, bu özelliği kullanamazsınız. Lütfen devam etmek için bir ücretli plana yükseltin.",
     "InvalidAccessCode": "Geçersiz Erişim Kodu: Geçersiz veya boş bir şifre girdiniz. Lütfen doğru erişim şifresini girin veya özel API Anahtarı ekleyin.",
-    "InvalidAnthropicAPIKey": "Anthropic API Key geçersiz veya boş, lütfen Anthropic API Key'inizi kontrol edip tekrar deneyin",
-    "InvalidAzureAPIKey": "Azure API Anahtarı yanlış veya boş, lütfen Azure API Anahtarınızı kontrol edip tekrar deneyin",
     "InvalidBedrockCredentials": "Bedrock kimlik doğrulaması geçersiz, lütfen AccessKeyId/SecretAccessKey bilgilerinizi kontrol edip tekrar deneyin",
     "InvalidClerkUser": "Üzgünüz, şu anda giriş yapmadınız. Lütfen işlemlere devam etmeden önce giriş yapın veya hesap oluşturun",
-    "InvalidDeepSeekAPIKey": "DeepSeek API Anahtarı geçersiz veya boş, lütfen DeepSeek API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidGoogleAPIKey": "Google API Anahtarı yanlış veya boş, lütfen Google API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidGroqAPIKey": "Groq API Anahtarı yanlış veya boş, lütfen Groq API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidMinimaxAPIKey": "Minimax API Anahtarı geçersiz veya boş, lütfen Minimax API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidMistralAPIKey": "Mistral AI API Anahtarı geçersiz veya boş. Lütfen Mistral API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidMoonshotAPIKey": "Geçersiz veya boş Moonshot AI API Anahtarı, lütfen Moonshot API Anahtarınızı kontrol edip tekrar deneyin",
+    "InvalidGithubToken": "Github Kişisel Erişim Token'ı hatalı veya boş. Lütfen Github Kişisel Erişim Token'ınızı kontrol edin ve tekrar deneyin.",
     "InvalidOllamaArgs": "Ollama yapılandırması yanlış, lütfen Ollama yapılandırmasını kontrol edip tekrar deneyin",
-    "InvalidOpenRouterAPIKey": "OpenRouter API Anahtarı geçersiz veya boş, lütfen OpenRouter API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidPerplexityAPIKey": "Perplexity API Key geçersiz veya boş, lütfen Perplexity API Key'inizi kontrol edip tekrar deneyin",
-    "InvalidTogetherAIAPIKey": "TogetherAI API Anahtarı geçersiz veya boş, lütfen TogetherAI API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidZeroOneAPIKey": "SıfırBirIoT API Anahtarı geçersiz veya boş. Lütfen SıfırBirIoT API Anahtarınızı kontrol edip tekrar deneyin",
-    "InvalidZhipuAPIKey": "Zhipu API Anahtarı yanlış veya boş, lütfen Zhipu API Anahtarınızı kontrol edip tekrar deneyin",
+    "InvalidProviderAPIKey": "{{provider}} API Anahtarı geçersiz veya boş, lütfen {{provider}} API Anahtarını kontrol edip tekrar deneyin",
     "LocationNotSupportError": "Üzgünüz, bulunduğunuz konum bu model hizmetini desteklemiyor, muhtemelen bölge kısıtlamaları veya hizmetin henüz açılmamış olması nedeniyle. Lütfen mevcut konumun bu hizmeti kullanmaya uygun olup olmadığını doğrulayın veya başka bir konum bilgisi kullanmayı deneyin.",
-    "MinimaxBizError": "Minimax hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
-    "MistralBizError": "Mistral AI hizmeti isteği sırasında bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
-    "MoonshotBizError": "Moonshot hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
     "NoOpenAIAPIKey": "OpenAI API Anahtarı boş, lütfen özel bir OpenAI API Anahtarı ekleyin",
     "OllamaBizError": "Ollama servisine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
     "OllamaServiceUnavailable": "Ollama servisi kullanılamıyor, lütfen Ollama'nın düzgün çalışıp çalışmadığını kontrol edin veya Ollama'nın çapraz kaynak yapılandırmasının doğru olup olmadığını kontrol edin",
-    "OpenAIBizError": "OpenAI hizmeti talep ederken hata oluştu. Aşağıdaki bilgilere dayanarak sorun giderin veya tekrar deneyin.",
-    "OpenRouterBizError": "OpenRouter AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "PerplexityBizError": "Perplexity AI hizmetine yapılan istekte hata oluştu, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
+    "OpenAIBizError": "OpenAI hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
+    "PermissionDenied": "Üzgünüm, bu hizmete erişim izniniz yok. Lütfen anahtarınızın erişim iznine sahip olup olmadığını kontrol edin.",
     "PluginApiNotFound": "Üzgünüm, eklentinin bildiriminde API mevcut değil. Lütfen istek yönteminizin eklenti bildirim API'sı ile eşleşip eşleşmediğini kontrol edin",
     "PluginApiParamsError": "Üzgünüm, eklenti isteği için giriş parametre doğrulaması başarısız oldu. Lütfen giriş parametrelerinin API açıklamasıyla eşleşip eşleşmediğini kontrol edin",
+    "PluginFailToTransformArguments": "Özür dilerim, eklenti çağrı parametrelerini dönüştürme başarısız oldu, lütfen yardımcı mesajı yeniden oluşturmayı deneyin veya daha güçlü bir AI modeli olan Tools Calling'i değiştirip tekrar deneyin",
     "PluginGatewayError": "Üzgünüz, eklenti ağ geçidinde bir hata oluştu, lütfen eklenti ağ geçidi yapılandırmasını kontrol edin",
     "PluginManifestInvalid": "Üzgünüm, eklentinin bildirim doğrulaması başarısız oldu. Lütfen bildirim formatının doğru olup olmadığını kontrol edin",
     "PluginManifestNotFound": "Üzgünüm, sunucu eklentinin bildirim dosyasını (manifest.json) bulamadı. Lütfen eklenti bildirim dosyası adresinin doğru olup olmadığını kontrol edin",
@@ -97,9 +94,11 @@
     "PluginOpenApiInitError": "Üzgünüz, OpenAPI istemci başlatma hatası, lütfen OpenAPI yapılandırma bilgilerini kontrol edin",
     "PluginServerError": "Eklenti sunucusu isteği bir hata ile döndü. Lütfen aşağıdaki hata bilgilerine dayanarak eklenti bildirim dosyanızı, eklenti yapılandırmanızı veya sunucu uygulamanızı kontrol edin",
     "PluginSettingsInvalid": "Bu eklenti, kullanılmadan önce doğru şekilde yapılandırılmalıdır. Lütfen yapılandırmanızın doğru olup olmadığını kontrol edin",
-    "TogetherAIBizError": "TogetherAI AI hizmetine yönelik istek hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "ZeroOneBizError": "SıfırBirIoT hizmetine yapılan istekte bir hata oluştu. Lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin",
-    "ZhipuBizError": "Zhipu servisi isteği hatası, lütfen aşağıdaki bilgilere göre sorunu gidermeye çalışın veya tekrar deneyin"
+    "ProviderBizError": "Talep {{provider}} hizmetinde bir hata oluştu, lütfen aşağıdaki bilgilere göre sorunu giderin veya tekrar deneyin",
+    "QuotaLimitReached": "Üzgünüz, mevcut Token kullanımı veya istek sayısı bu anahtarın kota (quota) sınırına ulaştı. Lütfen bu anahtarın kotasını artırın veya daha sonra tekrar deneyin.",
+    "StreamChunkError": "Akış isteği mesaj parçası çözümleme hatası, lütfen mevcut API arayüzünün standartlara uygun olup olmadığını kontrol edin veya API sağlayıcınızla iletişime geçin.",
+    "SubscriptionPlanLimit": "Abonelik kotası tükenmiş, bu özelliği kullanamazsınız. Lütfen daha yüksek bir plana yükseltin veya kaynak paketi satın alarak devam edin.",
+    "UnknownChatFetchError": "Üzgünüm, bilinmeyen bir istek hatasıyla karşılaştık. Lütfen aşağıdaki bilgileri kontrol edin veya tekrar deneyin."
   },
   "stt": {
     "responseError": "Hizmet isteği başarısız oldu, lütfen yapılandırmayı kontrol edin veya tekrar deneyin"
@@ -109,6 +108,10 @@
   },
   "unlock": {
     "addProxyUrl": "OpenAI vekil adresi ekle (isteğe bağlı)",
+    "apiKey": {
+      "description": "{{name}} API Anahtarınızı girerek oturumu başlatabilirsiniz",
+      "title": "Özel {{name}} API Anahtarını kullan"
+    },
     "closeMessage": "Mesajı kapat",
     "confirm": "Onayla ve Yeniden Dene",
     "oauth": {
@@ -116,14 +119,6 @@
       "success": "Giriş başarılı",
       "title": "Hesaba giriş yap",
       "welcome": "Hoş geldiniz!"
-    },
-    "ollama": {
-      "cancel": "İptal",
-      "confirm": "Onayla",
-      "description": "Ollama model etiketinizi girin ve sohbeti devam ettirmek için tamamlayın",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "İndirme başlıyor...",
-      "title": "Belirtilen Ollama modelini indir"
     },
     "password": {
       "description": "Uygulama şifrelemesi yönetici tarafından etkinleştirilmiştir. Uygulamayı açmak için uygulama şifresini girin. Şifre sadece bir kez doldurulmalıdır.",
@@ -134,5 +129,13 @@
       "apiKey": "Özel API Anahtarı",
       "password": "Şifre"
     }
+  },
+  "upload": {
+    "desc": "Detay: {{detail}}",
+    "fileOnlySupportInServerMode": "Mevcut dağıtım modu, yalnızca resim dosyalarının yüklenmesini desteklemektedir. {{ext}} formatında bir dosya yüklemek istiyorsanız, lütfen sunucu veritabanı dağıtımına geçin veya {{cloud}} hizmetini kullanın.",
+    "networkError": "Lütfen ağ bağlantınızın düzgün çalıştığından emin olun ve dosya depolama hizmetinin çapraz alan yapılandırmasının doğru olup olmadığını kontrol edin.",
+    "title": "Dosya yükleme başarısız, lütfen ağ bağlantınızı kontrol edin veya daha sonra tekrar deneyin",
+    "unknownError": "Hata nedeni: {{reason}}",
+    "uploadFailed": "Dosya yüklemesi başarısız oldu."
   }
 }

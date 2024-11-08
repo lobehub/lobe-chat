@@ -8,17 +8,17 @@ import {
 import { memo } from 'react';
 
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const ThemeSwatchesPrimary = memo(() => {
-  const [primaryColor, setSettings] = useUserStore((s) => [
-    settingsSelectors.currentSettings(s).primaryColor,
-    s.setSettings,
+  const [primaryColor, updateGeneralConfig] = useUserStore((s) => [
+    userGeneralSettingsSelectors.primaryColor(s),
+    s.updateGeneralConfig,
   ]);
 
   const handleSelect = (v: any) => {
     const name = findCustomThemeName('primary', v) as PrimaryColors;
-    setSettings({ primaryColor: name || '' });
+    updateGeneralConfig({ primaryColor: name || '' });
   };
 
   return (

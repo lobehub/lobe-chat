@@ -7,13 +7,13 @@ import { useTranslation } from 'react-i18next';
 import { useToolStore } from '@/store/tool';
 import { pluginSelectors } from '@/store/tool/selectors';
 import { useUserStore } from '@/store/user';
-import { settingsSelectors } from '@/store/user/selectors';
+import { userGeneralSettingsSelectors } from '@/store/user/selectors';
 
 const EmojiPicker = dynamic(() => import('@lobehub/ui/es/EmojiPicker'), { ssr: false });
 
 const LocalForm = memo<{ form: FormInstance; mode?: 'edit' | 'create' }>(({ form, mode }) => {
   const isEditMode = mode === 'edit';
-  const locale = useUserStore(settingsSelectors.currentLanguage);
+  const locale = useUserStore(userGeneralSettingsSelectors.currentLanguage);
   const { t } = useTranslation('plugin');
 
   const pluginIds = useToolStore(pluginSelectors.storeAndInstallPluginsIdList);

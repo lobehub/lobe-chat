@@ -6,9 +6,12 @@ import { isRtlLang } from 'rtl-detect';
 
 import Analytics from '@/components/Analytics';
 import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
+import PWAInstall from '@/features/PWAInstall';
 import AuthProvider from '@/layout/AuthProvider';
 import GlobalProvider from '@/layout/GlobalProvider';
-import { isMobileDevice } from '@/utils/responsive';
+import { isMobileDevice } from '@/utils/server/responsive';
+
+const inVercel = process.env.VERCEL === '1';
 
 type RootLayoutProps = {
   children: ReactNode;
@@ -16,10 +19,11 @@ type RootLayoutProps = {
 };
 
 const RootLayout = async ({ children, modal }: RootLayoutProps) => {
-  const cookieStore = cookies();
+  const cookieStore = await cookies();
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
   const direction = isRtlLang(lang?.value || DEFAULT_LANG) ? 'rtl' : 'ltr';
+  const mobile = isMobileDevice();
 
   return (
     <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
@@ -27,11 +31,12 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
         <GlobalProvider>
           <AuthProvider>
             {children}
-            {modal}
+            {!mobile && modal}
           </AuthProvider>
+          <PWAInstall />
         </GlobalProvider>
         <Analytics />
-        <SpeedInsights />
+        {inVercel && <SpeedInsights />}
       </body>
     </html>
   );

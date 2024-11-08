@@ -1,0 +1,35 @@
+{
+  "Artifacts": "Artefakty",
+  "FilePreview": {
+    "tabs": {
+      "chunk": "Część",
+      "file": "Plik"
+    }
+  },
+  "Plugins": "Wtyczki",
+  "actions": {
+    "genAiMessage": "Tworzenie wiadomości AI",
+    "summary": "Podsumowanie",
+    "summaryTooltip": "Podsumowanie bieżącej zawartości"
+  },
+  "artifacts": {
+    "display": {
+      "code": "Kod",
+      "preview": "Podgląd"
+    },
+    "svg": {
+      "copyAsImage": "Skopiuj jako obraz",
+      "copyFail": "Kopiowanie nie powiodło się, powód błędu: {{error}}",
+      "copySuccess": "Obraz skopiowany pomyślnie",
+      "download": {
+        "png": "Pobierz jako PNG",
+        "svg": "Pobierz jako SVG"
+      }
+    }
+  },
+  "emptyArtifactList": "Obecna lista Artefaktów jest pusta. Proszę użyć wtyczek w trakcie sesji, a następnie sprawdzić ponownie.",
+  "emptyKnowledgeList": "Aktualna lista wiedzy jest pusta. Proszę otworzyć bazę wiedzy w trakcie rozmowy, aby ją przeglądać.",
+  "files": "Pliki",
+  "messageDetail": "Szczegóły wiadomości",
+  "title": "Okno rozszerzenia"
+}

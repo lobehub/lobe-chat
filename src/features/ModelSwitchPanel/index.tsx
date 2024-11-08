@@ -1,6 +1,7 @@
 import { Icon } from '@lobehub/ui';
 import { Dropdown } from 'antd';
 import { createStyles } from 'antd-style';
+import type { ItemType } from 'antd/es/menu/interface';
 import isEqual from 'fast-deep-equal';
 import { LucideArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -9,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { ModelItemRender, ProviderItemRender } from '@/components/ModelSelect';
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/slices/chat';
 import { useUserStore } from '@/store/user';
@@ -37,21 +39,27 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
   `,
 }));
 
+const menuKey = (provider: string, model: string) => `${provider}-${model}`;
+
 const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   const { t } = useTranslation('components');
   const { styles, theme } = useStyles();
-  const [model, updateAgentConfig] = useAgentStore((s) => [
+  const [model, provider, updateAgentConfig] = useAgentStore((s) => [
     agentSelectors.currentAgentModel(s),
+    agentSelectors.currentAgentModelProvider(s),
     s.updateAgentConfig,
   ]);
 
+  const isMobile = useIsMobile();
+
   const router = useRouter();
+
   const enabledList = useUserStore(modelProviderSelectors.modelProviderListForModelSelect, isEqual);
 
-  const items = useMemo(() => {
+  const items = useMemo<ItemType[]>(() => {
     const getModelItems = (provider: ModelProviderCard) => {
       const items = provider.chatModels.map((model) => ({
-        key: model.id,
+        key: menuKey(provider.id, model.id),
         label: <ModelItemRender {...model} />,
         onClick: () => {
           updateAgentConfig({ model: model.id, provider: provider.id });
@@ -82,7 +90,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
     return enabledList.map((provider) => ({
       children: getModelItems(provider),
       key: provider.id,
-      label: <ProviderItemRender provider={provider.id} />,
+      label: <ProviderItemRender name={provider.name} provider={provider.id} />,
       type: 'group',
     }));
   }, [enabledList]);
@@ -90,7 +98,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
   return (
     <Dropdown
       menu={{
-        activeKey: model,
+        activeKey: menuKey(provider, model),
         className: styles.menu,
         items,
         style: {
@@ -98,7 +106,7 @@ const ModelSwitchPanel = memo<PropsWithChildren>(({ children }) => {
           overflowY: 'scroll',
         },
       }}
-      placement={'topLeft'}
+      placement={isMobile ? 'top' : 'topLeft'}
       trigger={['click']}
     >
       <div className={styles.tag}>{children}</div>

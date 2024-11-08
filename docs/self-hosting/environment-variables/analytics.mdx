@@ -1,7 +1,5 @@
 ---
-title: >-
-  Integrating Data Analytics Services in LobeChat: Environment Variables and
-  Configuration
+title: Integrating Analytics in LobeChat
 description: >-
   Learn how to configure environment variables for Vercel Analytics, Google
   Analytics, PostHog Analytics, and Umami Analytics in LobeChat for data
@@ -36,44 +34,30 @@ We have integrated several free/open-source data analytics services in LobeChat 
 
 ## Google Analytics
 
-### `ENABLE_GOOGLE_ANALYTICS`
-
-- Type: Optional
-- Description: Used to configure the environment variable for Google Analytics. Set to `1` to enable Google Analytics.
-- Default: `-`
-- Example: `1`
-
 ### `GOOGLE_ANALYTICS_MEASUREMENT_ID`
 
 - Type: Required
-- Description: Google Analytics Measurement ID，you can get it from the Google Analytics dashboard.
+- Description: Google Analytics Measurement ID，you can get it from the Google Analytics dashboard. Add it will auto enable Google Analytics.
 - Default: `-`
 - Example: `G-63LP2TV03T`
 
 ## Posthog Analytics
 
-### `NEXT_PUBLIC_ANALYTICS_POSTHOG`
+### `POSTHOG_KEY`
 
-- Type: Optional
-- Description: Used to enable the environment variable for [PostHog Analytics][posthog-analytics-url]. Set to `1` to enable PostHog Analytics.
-- Default: `-`
-- Example: `1`
-
-### `NEXT_PUBLIC_POSTHOG_KEY`
-
-- Type: Optional
-- Description: Set the PostHog project Key.
+- Type: Required
+- Description: Set the PostHog project Key. Add it will auto enable PostHog Analytics.
 - Default: `-`
 - Example: `phc_xxxxxxxx`
 
-### `NEXT_PUBLIC_POSTHOG_HOST`
+### `POSTHOG_HOST`
 
 - Type: Optional
 - Description: Set the deployment address of the PostHog service, defaulting to the official SAAS address.
 - Default: `https://app.posthog.com`
 - Example: `https://example.com`
 
-### `NEXT_PUBLIC_POSTHOG_DEBUG`
+### `DEBUG_POSTHOG_ANALYTICS`
 
 - Type: Optional
 - Description: Enable the debug mode for PostHog.
@@ -82,26 +66,19 @@ We have integrated several free/open-source data analytics services in LobeChat 
 
 ## Umami Analytics
 
-### `NEXT_PUBLIC_ANALYTICS_UMAMI`
+### `UMAMI_WEBSITE_ID`
 
-- Type: Optional
-- Description: Used to enable the environment variable for [Umami Analytics][umami-analytics-url]. Set to `1` to enable Umami Analytics.
+- Type: Required
+- Description: Your Umami Website ID. Add it will auto enable Umami Analytics.
 - Default: `-`
-- Example: `1`
+- Example: `E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
 
-### `NEXT_PUBLIC_UMAMI_SCRIPT_URL`
+### `UMAMI_SCRIPT_URL`
 
 - Type: Optional
 - Description: The URL of the Umami script, defaulting to the script URL provided by Umami Cloud.
 - Default: `https://analytics.umami.is/script.js`
 - Example: `https://umami.your-site.com/script.js`
-
-### `NEXT_PUBLIC_UMAMI_WEBSITE_ID`
-
-- Type: Required
-- Description: Your Umami Website ID.
-- Default: `-`
-- Example: `E738D82A-EE9E-4806-A81F-0CA3CAE57F65`
 
 [posthog-analytics-url]: https://posthog.com
 [umami-analytics-url]: https://umami.is

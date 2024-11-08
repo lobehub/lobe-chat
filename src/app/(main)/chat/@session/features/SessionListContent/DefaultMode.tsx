@@ -4,9 +4,11 @@ import { memo, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useGlobalStore } from '@/store/global';
-import { preferenceSelectors } from '@/store/global/selectors';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionSelectors } from '@/store/session/selectors';
+import { useUserStore } from '@/store/user';
+import { authSelectors } from '@/store/user/selectors';
 import { SessionDefaultGroup } from '@/types/session';
 
 import Actions from '../SessionListContent/CollapseGroup/Actions';
@@ -23,16 +25,17 @@ const DefaultMode = memo(() => {
   const [renameGroupModalOpen, setRenameGroupModalOpen] = useState(false);
   const [configGroupModalOpen, setConfigGroupModalOpen] = useState(false);
 
+  const isLogin = useUserStore(authSelectors.isLogin);
   const [useFetchSessions] = useSessionStore((s) => [s.useFetchSessions]);
-  useFetchSessions();
+  useFetchSessions(isLogin);
 
   const defaultSessions = useSessionStore(sessionSelectors.defaultSessions, isEqual);
   const customSessionGroups = useSessionStore(sessionSelectors.customSessionGroups, isEqual);
   const pinnedSessions = useSessionStore(sessionSelectors.pinnedSessions, isEqual);
 
-  const [sessionGroupKeys, updatePreference] = useGlobalStore((s) => [
-    preferenceSelectors.sessionGroupKeys(s),
-    s.updatePreference,
+  const [sessionGroupKeys, updateSystemStatus] = useGlobalStore((s) => [
+    systemStatusSelectors.sessionGroupKeys(s),
+    s.updateSystemStatus,
   ]);
 
   const items = useMemo(
@@ -80,7 +83,7 @@ const DefaultMode = memo(() => {
         onChange={(keys) => {
           const expandSessionGroupKeys = typeof keys === 'string' ? [keys] : keys;
 
-          updatePreference({ expandSessionGroupKeys });
+          updateSystemStatus({ expandSessionGroupKeys });
         }}
       />
       {activeGroupId && (

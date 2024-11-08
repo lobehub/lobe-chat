@@ -1,0 +1,32 @@
+{
+  "addToKnowledgeBase": {
+    "addSuccess": "Archivo añadido con éxito, <1>ver ahora</1>",
+    "confirm": "Añadir",
+    "id": {
+      "placeholder": "Seleccione la base de conocimiento a añadir",
+      "required": "Seleccione la base de conocimiento",
+      "title": "Base de conocimiento objetivo"
+    },
+    "title": "Añadir a la base de conocimiento",
+    "totalFiles": "Se han seleccionado {{count}} archivos"
+  },
+  "createNew": {
+    "confirm": "Crear nuevo",
+    "description": {
+      "placeholder": "Descripción de la base de conocimiento (opcional)"
+    },
+    "formTitle": "Información básica",
+    "name": {
+      "placeholder": "Nombre de la base de conocimiento",
+      "required": "Por favor, introduzca el nombre de la base de conocimiento"
+    },
+    "title": "Crear nueva base de conocimiento"
+  },
+  "tab": {
+    "evals": "Evaluaciones",
+    "files": "Documentos",
+    "settings": "Configuraciones",
+    "testing": "Prueba de recuperación"
+  },
+  "title": "Base de conocimiento"
+}

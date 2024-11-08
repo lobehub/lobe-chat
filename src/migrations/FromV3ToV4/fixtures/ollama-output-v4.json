@@ -45,6 +45,7 @@
           "endpoint": "",
           "customModelCards": [
             {
+              "description": "LLaVA 是结合视觉编码器和 Vicuna 的多模态模型，用于强大的视觉和语言理解。",
               "displayName": "LLaVA 7B",
               "enabled": true,
               "id": "llava",

@@ -58,9 +58,9 @@ const mockState = {
 } as ToolStoreState;
 
 describe('pluginSelectors', () => {
-  describe('getPluginManifestById', () => {
-    it('getPluginManifestById should return the correct manifest', () => {
-      const result = pluginSelectors.getPluginManifestById('plugin-1')(mockState);
+  describe('getToolManifestById', () => {
+    it('getToolManifestById should return the correct manifest', () => {
+      const result = pluginSelectors.getToolManifestById('plugin-1')(mockState);
       expect(result).toEqual(mockState.installedPlugins[0].manifest);
     });
   });

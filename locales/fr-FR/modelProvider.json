@@ -1,16 +1,4 @@
 {
-  "anthropic": {
-    "title": "Anthropic",
-    "token": {
-      "desc": "Saisissez la clé API d'Anthropic",
-      "placeholder": "Clé API Anthropic",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Anthropic pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Anthropic personnalisée"
-    }
-  },
   "azure": {
     "azureApiVersion": {
       "desc": "Version de l'API Azure, au format YYYY-MM-DD, consultez [la dernière version](https://learn.microsoft.com/zh-cn/azure/ai-services/openai/reference#chat-completions)",
@@ -29,10 +17,6 @@
       "desc": "Lors de l'inspection des ressources sur le portail Azure, vous pouvez trouver cette valeur dans la section 'Clés et points de terminaison'. Vous pouvez utiliser KEY1 ou KEY2",
       "placeholder": "Clé API Azure",
       "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Azure OpenAI pour commencer la session. L'application ne stockera pas votre configuration d'authentification.",
-      "title": "Utiliser une clé API Azure OpenAI personnalisée"
     }
   },
   "bedrock": {
@@ -54,83 +38,31 @@
       "placeholder": "Clé d'accès secrète AWS",
       "title": "Clé d'accès secrète AWS"
     },
+    "sessionToken": {
+      "desc": "Si vous utilisez AWS SSO/STS, veuillez entrer votre jeton de session AWS",
+      "placeholder": "Jeton de session AWS",
+      "title": "Jeton de session AWS (facultatif)"
+    },
     "title": "Bedrock",
     "unlock": {
       "customRegion": "Région de service personnalisée",
+      "customSessionToken": "Jeton de session personnalisé",
       "description": "Entrez votre ID de clé d'accès AWS / SecretAccessKey pour commencer la session. L'application ne stockera pas votre configuration d'authentification.",
       "title": "Utiliser des informations d'authentification Bedrock personnalisées"
     }
   },
-  "deepseek": {
-    "title": "DeepSeek",
-    "token": {
-      "desc": "Enter your API Key from DeepSeek",
-      "placeholder": "DeepSeek API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your DeepSeek API Key to start the session. The app will not store your API Key.",
-      "title": "Use Custom DeepSeek API Key"
+  "github": {
+    "personalAccessToken": {
+      "desc": "Entrez votre PAT GitHub, cliquez [ici](https://github.com/settings/tokens) pour en créer un.",
+      "placeholder": "ghp_xxxxxx",
+      "title": "GitHub PAT"
     }
   },
-  "google": {
-    "title": "Google",
-    "token": {
-      "desc": "Saisissez la clé API de Google",
-      "placeholder": "Clé API Google",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Google pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Google personnalisée"
-    }
-  },
-  "groq": {
-    "title": "Groq",
-    "token": {
-      "desc": "Saisissez la clé API de Groq",
-      "placeholder": "Clé API Groq",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Groq pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Groq personnalisée"
-    }
-  },
-  "minimax": {
-    "title": "Minimax",
-    "token": {
-      "desc": "Entrez la clé API de Minimax",
-      "placeholder": "Clé API Minimax",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Minimax pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Minimax personnalisée"
-    }
-  },
-  "mistral": {
-    "title": "Mistral AI",
-    "token": {
-      "desc": "Saisissez la clé API de Mistral AI",
-      "placeholder": "Clé API Mistral AI",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Mistral AI pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Mistral AI personnalisée"
-    }
-  },
-  "moonshot": {
-    "title": "Moonshot AI",
-    "token": {
-      "desc": "Saisissez la clé API de Moonshot AI",
-      "placeholder": "Clé API Moonshot AI",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Moonshot AI pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Moonshot AI personnalisée"
+  "huggingface": {
+    "accessToken": {
+      "desc": "Entrez votre jeton HuggingFace, cliquez [ici](https://huggingface.co/settings/tokens) pour en créer un",
+      "placeholder": "hf_xxxxxxxxx",
+      "title": "Jeton HuggingFace"
     }
   },
   "ollama": {
@@ -142,6 +74,12 @@
       "desc": "Ajoutez un modèle personnalisé, séparez les modèles multiples par des virgules (,)",
       "placeholder": "vicuna,llava,codellama,llama2:13b-text",
       "title": "Nom du modèle personnalisé"
+    },
+    "download": {
+      "desc": "Ollama is downloading the model. Please try not to close this page. The download will resume from where it left off if interrupted.",
+      "remainingTime": "Remaining Time",
+      "speed": "Download Speed",
+      "title": "Downloading model {{model}}"
     },
     "endpoint": {
       "desc": "Saisissez l'adresse du proxy Ollama, laissez vide si non spécifié localement",
@@ -171,94 +109,56 @@
         "windowsTab": "Windows (Preview)"
       }
     },
-    "title": "Ollama"
-  },
-  "openai": {
-    "title": "OpenAI",
-    "token": {
-      "desc": "Utilisez votre propre clé OpenAI",
-      "placeholder": "Clé API OpenAI",
-      "title": "Clé API OpenAI"
-    },
+    "title": "Ollama",
     "unlock": {
-      "description": "Entrez votre clé API OpenAI pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API OpenAI personnalisée"
+      "cancel": "Cancel Download",
+      "confirm": "Download",
+      "description": "Enter your Ollama model tag to continue the session",
+      "downloaded": "{{completed}} / {{total}}",
+      "starting": "Starting download...",
+      "title": "Download specified Ollama model"
     }
   },
-  "openrouter": {
+  "sensenova": {
+    "sensenovaAccessKeyID": {
+      "desc": "Entrez l'ID de clé d'accès SenseNova",
+      "placeholder": "ID de clé d'accès SenseNova",
+      "title": "ID de clé d'accès"
+    },
+    "sensenovaAccessKeySecret": {
+      "desc": "Entrez le secret de clé d'accès SenseNova",
+      "placeholder": "Secret de clé d'accès SenseNova",
+      "title": "Secret de clé d'accès"
+    },
+    "unlock": {
+      "description": "Entrez votre ID de clé d'accès / secret de clé d'accès pour commencer la session. L'application ne conservera pas vos configurations d'authentification",
+      "title": "Utiliser des informations d'authentification SenseNova personnalisées"
+    }
+  },
+  "wenxin": {
+    "accessKey": {
+      "desc": "Entrez la clé d'accès de la plateforme Qianfan de Baidu",
+      "placeholder": "Clé d'accès Qianfan",
+      "title": "Clé d'accès"
+    },
     "checker": {
-      "desc": "Vérifiez si l'adresse du proxy est correctement saisie"
+      "desc": "Vérifiez si la clé d'accès / SecretAccess est correctement remplie"
     },
-    "customModelName": {
-      "desc": "Ajoutez un modèle personnalisé, séparez les modèles multiples par des virgules (,)",
-      "placeholder": "mistralai/mistral-7b-instruct:free,openchat/openchat-7b:free",
-      "title": "Nom du modèle personnalisé"
-    },
-    "title": "OpenRouter",
-    "token": {
-      "desc": "Saisissez la clé API d'OpenRouter AI",
-      "placeholder": "Clé API OpenRouter AI",
-      "title": "Clé API"
+    "secretKey": {
+      "desc": "Entrez la clé secrète de la plateforme Qianfan de Baidu",
+      "placeholder": "Clé secrète Qianfan",
+      "title": "Clé secrète"
     },
     "unlock": {
-      "description": "Entrez votre clé API OpenRouter pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API OpenRouter personnalisée"
-    }
-  },
-  "perplexity": {
-    "title": "Perplexity",
-    "token": {
-      "desc": "Enter your API Key from Perplexity AI",
-      "placeholder": "Perplexity AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your Perplexity API Key to start the session. The application will not store your API Key",
-      "title": "Use custom Perplexity API Key"
-    }
-  },
-  "togetherai": {
-    "checker": {
-      "desc": "Test if the proxy address is correctly filled in"
-    },
-    "customModelName": {
-      "desc": "Add custom models, separate multiple models with commas",
-      "placeholder": "togethercomputer/Llama-2-7B-32K-Instruct, teknium/OpenHermes-2-Mistral-7B",
-      "title": "Custom model name"
-    },
-    "title": "TogetherAI",
-    "token": {
-      "desc": "Enter your API Key from TogetherAI AI",
-      "placeholder": "TogetherAI AI API Key",
-      "title": "API Key"
-    },
-    "unlock": {
-      "description": "Enter your TogetherAI API Key to start the session. The application will not store your API Key",
-      "title": "Use custom TogetherAI API Key"
+      "customRegion": "Région de service personnalisée",
+      "description": "Entrez votre AccessKey / SecretKey pour commencer la session. L'application ne conservera pas votre configuration d'authentification",
+      "title": "Utiliser les informations d'authentification personnalisées de Wenxin Yiyan"
     }
   },
   "zeroone": {
-    "title": "01.AI Zéro Un Tout",
-    "token": {
-      "desc": "Entrez la clé API de 01.AI Zéro Un Tout",
-      "placeholder": "Clé API 01.AI Zéro Un Tout",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Zéro Un Tout pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Zéro Un Tout personnalisée"
-    }
+    "title": "01.AI Zéro Un Tout"
   },
   "zhipu": {
-    "title": "Zhipu",
-    "token": {
-      "desc": "Entrez la clé API de Zhipu",
-      "placeholder": "Clé API Zhipu",
-      "title": "Clé API"
-    },
-    "unlock": {
-      "description": "Entrez votre clé API Zhipu pour commencer la session. L'application ne stockera pas votre clé API.",
-      "title": "Utiliser une clé API Zhipu personnalisée"
-    }
+    "title": "Zhipu"
   }
 }

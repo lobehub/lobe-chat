@@ -102,7 +102,7 @@ describe('sessionMetaSelectors', () => {
     it('should return the default description if none is defined in the meta data', () => {
       const meta: MetaData = {};
       const description = sessionMetaSelectors.getDescription(meta);
-      expect(description).toBe('noDescription'); // Assuming translation returns this key
+      expect(description).toBe(undefined); // Assuming translation returns this key
     });
   });
 });

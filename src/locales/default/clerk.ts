@@ -636,7 +636,7 @@ export default {
     mobileButton__menu: '菜单',
     navbar: {
       account: '个人资料',
-      description: '管理您的帐户信息。',
+      description: '管理您的帐户信息',
       security: '安全',
       title: '帐户',
     },

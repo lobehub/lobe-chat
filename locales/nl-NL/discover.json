@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Voeg assistent toe",
+    "addAgentAndConverse": "Voeg assistent toe en begin een gesprek",
+    "addAgentSuccess": "Toevoegen geslaagd",
+    "conversation": {
+      "l1": "Hallo, ik ben **{{name}}**, je kunt me alles vragen en ik zal mijn best doen om je te helpen ~",
+      "l2": "Hier zijn mijn mogelijkheden: ",
+      "l3": "Laten we het gesprek beginnen!"
+    },
+    "description": "Assistent introductie",
+    "detail": "Details",
+    "list": "Assistentenlijst",
+    "more": "Meer",
+    "plugins": "Geïntegreerde plugins",
+    "recentSubmits": "Recent bijgewerkt",
+    "suggestions": "Gerelateerde aanbevelingen",
+    "systemRole": "Assistent instellingen",
+    "try": "Probeer het"
+  },
+  "back": "Terug naar Ontdekken",
+  "category": {
+    "assistant": {
+      "academic": "Academisch",
+      "all": "Alle",
+      "career": "Carrière",
+      "copywriting": "Copywriting",
+      "design": "Ontwerp",
+      "education": "Onderwijs",
+      "emotions": "Emoties",
+      "entertainment": "Entertainment",
+      "games": "Spellen",
+      "general": "Algemeen",
+      "life": "Leven",
+      "marketing": "Marketing",
+      "office": "Kantoor",
+      "programming": "Programmeren",
+      "translation": "Vertaling"
+    },
+    "plugin": {
+      "all": "Alles",
+      "gaming-entertainment": "Gaming en Entertainment",
+      "life-style": "Levensstijl",
+      "media-generate": "Media Generatie",
+      "science-education": "Wetenschap en Educatie",
+      "social": "Sociale Media",
+      "stocks-finance": "Aandelen en Financiën",
+      "tools": "Hulpmiddelen",
+      "web-search": "Webzoektocht"
+    }
+  },
+  "cleanFilter": "Filter wissen",
+  "create": "Creëren",
+  "createGuide": {
+    "func1": {
+      "desc1": "Ga naar de instellingenpagina van de assistent die je wilt indienen via de instellingen in de rechterbovenhoek van het gespreksscherm;",
+      "desc2": "Klik op de knop 'Indienen naar assistentmarkt' in de rechterbovenhoek.",
+      "tag": "Methode één",
+      "title": "Indienen via LobeChat"
+    },
+    "func2": {
+      "button": "Ga naar de Github assistent repository",
+      "desc": "Als je de assistent aan de index wilt toevoegen, maak dan een item aan in de plugins map met agent-template.json of agent-template-full.json, schrijf een korte beschrijving en markeer het correct, en dien vervolgens een pull request in.",
+      "tag": "Methode twee",
+      "title": "Indienen via Github"
+    }
+  },
+  "dislike": "Niet leuk",
+  "filter": "Filter",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "Alle auteurs",
+      "followed": "Gevolgde auteurs",
+      "title": "Auteur bereik"
+    },
+    "contentLength": "Minimale contextlengte",
+    "maxToken": {
+      "title": "Stel maximale lengte in (Token)",
+      "unlimited": "Onbeperkt"
+    },
+    "other": {
+      "functionCall": "Ondersteunt functie-aanroep",
+      "title": "Overige",
+      "vision": "Ondersteunt visuele herkenning",
+      "withKnowledge": "Met kennisbank",
+      "withTool": "Met plugin"
+    },
+    "pricing": "Modelprijs",
+    "timePeriod": {
+      "all": "Alle tijd",
+      "day": "Laatste 24 uur",
+      "month": "Laatste 30 dagen",
+      "title": "Tijd bereik",
+      "week": "Laatste 7 dagen",
+      "year": "Laatste jaar"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Aanbevolen assistenten",
+    "featuredModels": "Aanbevolen modellen",
+    "featuredProviders": "Aanbevolen modelproviders",
+    "featuredTools": "Aanbevolen plugins",
+    "more": "Ontdek meer"
+  },
+  "like": "Leuk",
+  "models": {
+    "chat": "Begin gesprek",
+    "contentLength": "Maximale contextlengte",
+    "free": "Gratis",
+    "guide": "Configuratiegids",
+    "list": "Modellenlijst",
+    "more": "Meer",
+    "parameterList": {
+      "defaultValue": "Standaardwaarde",
+      "docs": "Bekijk documentatie",
+      "frequency_penalty": {
+        "desc": "Deze instelling past de frequentie aan waarmee het model specifieke woorden die al in de invoer zijn verschenen, herhaalt. Hogere waarden verminderen de kans op herhaling, terwijl negatieve waarden het tegenovergestelde effect hebben. Woordstraffen nemen niet toe met het aantal verschijningen. Negatieve waarden moedigen herhaling aan.",
+        "title": "Frequentie straf"
+      },
+      "max_tokens": {
+        "desc": "Deze instelling definieert de maximale lengte die het model kan genereren in één enkele reactie. Een hogere waarde stelt het model in staat om langere antwoorden te genereren, terwijl een lagere waarde de lengte van de reactie beperkt, waardoor deze beknopter wordt. Het is raadzaam om deze waarde aan te passen op basis van verschillende toepassingsscenario's om de gewenste lengte en detailniveau van de reactie te bereiken.",
+        "title": "Beperking van de reactie in één keer"
+      },
+      "presence_penalty": {
+        "desc": "Deze instelling is bedoeld om de herhaling van woorden te beheersen op basis van hun frequentie in de invoer. Het probeert minder gebruik te maken van woorden die vaker in de invoer voorkomen, in verhouding tot hun gebruiksfrequentie. Woordstraffen nemen toe met het aantal verschijningen. Negatieve waarden moedigen herhaling aan.",
+        "title": "Onderwerp versheid"
+      },
+      "range": "Bereik",
+      "temperature": {
+        "desc": "Deze instelling beïnvloedt de diversiteit van de reacties van het model. Lagere waarden leiden tot meer voorspelbare en typische reacties, terwijl hogere waarden meer diverse en ongebruikelijke reacties aanmoedigen. Wanneer de waarde op 0 is ingesteld, geeft het model altijd dezelfde reactie op een gegeven invoer.",
+        "title": "Willekeurigheid"
+      },
+      "title": "Modelparameters",
+      "top_p": {
+        "desc": "Deze instelling beperkt de keuze van het model tot een bepaald percentage van de meest waarschijnlijke woorden: alleen die woorden waarvan de cumulatieve waarschijnlijkheid P bereikt. Lagere waarden maken de reacties van het model voorspelbaarder, terwijl de standaardinstelling het model toestaat om uit het volledige bereik van woorden te kiezen.",
+        "title": "Nucleus sampling"
+      },
+      "type": "Type"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat ondersteunt het gebruik van een aangepaste API-sleutel voor deze provider.",
+      "input": "Invoerkosten",
+      "inputTooltip": "Kosten per miljoen tokens",
+      "latency": "Latentie",
+      "latencyTooltip": "Gemiddelde responstijd voor de eerste token van de provider",
+      "maxOutput": "Maximale uitvoerlengte",
+      "maxOutputTooltip": "Maximaal aantal tokens dat deze endpoint kan genereren",
+      "officialTooltip": "Officiële LobeHub service",
+      "output": "Uitvoerkosten",
+      "outputTooltip": "Kosten per miljoen tokens",
+      "streamCancellationTooltip": "Deze provider ondersteunt stream annulering.",
+      "throughput": "Doorvoer",
+      "throughputTooltip": "Gemiddeld aantal tokens dat per seconde wordt verzonden in stream aanvragen"
+    },
+    "suggestions": "Gerelateerde modellen",
+    "supportedProviders": "Providers die dit model ondersteunen"
+  },
+  "plugins": {
+    "community": "Gemeenschapsplugins",
+    "install": "Plugin installeren",
+    "installed": "Geïnstalleerd",
+    "list": "Pluginlijst",
+    "meta": {
+      "description": "Beschrijving",
+      "parameter": "Parameter",
+      "title": "Hulpmiddelparameters",
+      "type": "Type"
+    },
+    "more": "Meer",
+    "official": "Officiële plugins",
+    "recentSubmits": "Recent ingediend",
+    "suggestions": "Gerelateerde aanbevelingen"
+  },
+  "providers": {
+    "config": "Configuratie aanbieder",
+    "list": "Lijst van modelproviders",
+    "modelCount": "{{count}} modellen",
+    "modelSite": "Modeldocumentatie",
+    "more": "Meer",
+    "officialSite": "Officiële website",
+    "showAllModels": "Toon alle modellen",
+    "suggestions": "Gerelateerde aanbieders",
+    "supportedModels": "Ondersteunde modellen"
+  },
+  "search": {
+    "placeholder": "Zoek naam, beschrijving of trefwoord...",
+    "result": "{{count}} resultaten over <highlight>{{keyword}}</highlight>",
+    "searching": "Zoeken..."
+  },
+  "sort": {
+    "mostLiked": "Meest Geliket",
+    "mostUsed": "Meest Gebruikt",
+    "newest": "Nieuwste Eerst",
+    "oldest": "Oudste Eerst",
+    "recommended": "Aanbevolen"
+  },
+  "tab": {
+    "assistants": "Assistenten",
+    "home": "Startpagina",
+    "models": "Modellen",
+    "plugins": "Plugins",
+    "providers": "Modelleveranciers"
+  }
+}

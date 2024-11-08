@@ -10,8 +10,8 @@ import { useNewVersion } from './useNewVersion';
 
 const useStyles = createStyles(({ css }) => ({
   popover: css`
-    top: 8px !important;
-    left: 8px !important;
+    inset-block-start: 8px !important;
+    inset-inline-start: 8px !important;
   `,
 }));
 

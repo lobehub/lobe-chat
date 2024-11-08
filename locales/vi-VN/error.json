@@ -12,9 +12,18 @@
     "retry": "Thử lại",
     "title": "Trang gặp một chút vấn đề.."
   },
+  "fetchError": {
+    "detail": "Chi tiết lỗi",
+    "title": "Yêu cầu thất bại"
+  },
+  "loginRequired": {
+    "desc": "Sẽ tự động chuyển hướng đến trang đăng nhập",
+    "title": "Vui lòng đăng nhập để sử dụng tính năng này"
+  },
   "notFound": {
     "backHome": "Quay về Trang chủ",
-    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm, vui lòng kiểm tra xem liên kết có đúng không",
+    "check": "Vui lòng kiểm tra xem URL của bạn có đúng không",
+    "desc": "Chúng tôi không thể tìm thấy trang bạn đang tìm kiếm",
     "title": "Bước vào vùng đất chưa biết?"
   },
   "pluginSettings": {
@@ -48,45 +57,33 @@
     "431": "Xin lỗi, trường tiêu đề yêu cầu của bạn quá lớn, máy chủ không thể xử lý",
     "451": "Xin lỗi, do lý do pháp lý, máy chủ từ chối cung cấp tài nguyên này",
     "500": "Xin lỗi, máy chủ có vẻ gặp một số khó khăn, tạm thời không thể hoàn thành yêu cầu của bạn, vui lòng thử lại sau",
+    "501": "Xin lỗi, máy chủ chưa biết cách xử lý yêu cầu này, vui lòng xác nhận rằng thao tác của bạn là chính xác",
     "502": "Xin lỗi, máy chủ có vẻ lạc đường, tạm thời không thể cung cấp dịch vụ, vui lòng thử lại sau",
     "503": "Xin lỗi, máy chủ hiện không thể xử lý yêu cầu của bạn, có thể do quá tải hoặc đang bảo trì, vui lòng thử lại sau",
     "504": "Xin lỗi, máy chủ không đợi được phản hồi từ máy chủ upstream, vui lòng thử lại sau",
+    "505": "Xin lỗi, máy chủ không hỗ trợ phiên bản HTTP bạn đang sử dụng, vui lòng cập nhật và thử lại",
+    "506": "Xin lỗi, có vấn đề với cấu hình máy chủ, vui lòng liên hệ với quản trị viên để giải quyết",
+    "507": "Xin lỗi, máy chủ không đủ dung lượng lưu trữ để xử lý yêu cầu của bạn, vui lòng thử lại sau",
+    "509": "Xin lỗi, băng thông của máy chủ đã hết, vui lòng thử lại sau",
+    "510": "Xin lỗi, máy chủ không hỗ trợ chức năng mở rộng được yêu cầu, vui lòng liên hệ với quản trị viên",
+    "524": "Xin lỗi, máy chủ đã hết thời gian chờ khi đang chờ phản hồi, có thể do phản hồi quá chậm, vui lòng thử lại sau",
     "AgentRuntimeError": "Lobe mô hình ngôn ngữ thực thi gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "AnthropicBizError": "Yêu cầu dịch vụ AI Anthropic gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "AzureBizError": "Yêu cầu dịch vụ Azure AI gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "BedrockBizError": "Yêu cầu dịch vụ Bedrock gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "DeepSeekBizError": "Yêu cầu dịch vụ DeepSeek gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "GoogleBizError": "Yêu cầu dịch vụ Google gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây",
-    "GroqBizError": "Yêu cầu dịch vụ Groq gặp sự cố, vui lòng kiểm tra thông tin bên dưới hoặc thử lại",
+    "FreePlanLimit": "Hiện tại bạn đang sử dụng tài khoản miễn phí, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói trả phí để tiếp tục sử dụng.",
     "InvalidAccessCode": "Mật khẩu truy cập không hợp lệ hoặc trống, vui lòng nhập mật khẩu truy cập đúng hoặc thêm Khóa API tùy chỉnh",
-    "InvalidAnthropicAPIKey": "Khóa API Anthropic không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidAzureAPIKey": "Khóa API Azure không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Azure và thử lại",
     "InvalidBedrockCredentials": "Xác thực Bedrock không thành công, vui lòng kiểm tra AccessKeyId/SecretAccessKey và thử lại",
     "InvalidClerkUser": "Xin lỗi, bạn chưa đăng nhập. Vui lòng đăng nhập hoặc đăng ký tài khoản trước khi tiếp tục.",
-    "InvalidDeepSeekAPIKey": "Khóa API DeepSeek không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidGoogleAPIKey": "Khóa API Google không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Google và thử lại",
-    "InvalidGroqAPIKey": "Khóa API Groq không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Groq và thử lại",
-    "InvalidMinimaxAPIKey": "Khóa API Minimax không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Minimax và thử lại",
-    "InvalidMistralAPIKey": "Mistral AI API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại Mistral API Key và thử lại",
-    "InvalidMoonshotAPIKey": "Khóa API Moonshot AI không hợp lệ hoặc trống, vui lòng kiểm tra lại Khóa API Moonshot và thử lại",
+    "InvalidGithubToken": "Mã truy cập cá nhân Github không chính xác hoặc để trống, vui lòng kiểm tra lại Mã truy cập cá nhân Github và thử lại",
     "InvalidOllamaArgs": "Cấu hình Ollama không hợp lệ, vui lòng kiểm tra lại cấu hình Ollama và thử lại",
-    "InvalidOpenRouterAPIKey": "OpenRouter API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidPerplexityAPIKey": "Khóa API Perplexity không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại sau",
-    "InvalidTogetherAIAPIKey": "TogetherAI API Key không hợp lệ hoặc trống, vui lòng kiểm tra lại và thử lại",
-    "InvalidZeroOneAPIKey": "Khóa API ZeroOne không hợp lệ hoặc trống, vui lòng kiểm tra lại khóa API ZeroOne và thử lại",
-    "InvalidZhipuAPIKey": "Khóa API Zhipu không chính xác hoặc trống, vui lòng kiểm tra lại Khóa API Zhipu và thử lại",
+    "InvalidProviderAPIKey": "{{provider}} API Key không hợp lệ hoặc trống, vui lòng kiểm tra và thử lại",
     "LocationNotSupportError": "Xin lỗi, vị trí của bạn không hỗ trợ dịch vụ mô hình này, có thể do hạn chế vùng miền hoặc dịch vụ chưa được mở. Vui lòng xác nhận xem vị trí hiện tại có hỗ trợ sử dụng dịch vụ này không, hoặc thử sử dụng thông tin vị trí khác.",
-    "MinimaxBizError": "Yêu cầu dịch vụ Minimax gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "MistralBizError": "Yêu cầu dịch vụ Mistral AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "MoonshotBizError": "Yêu cầu dịch vụ Mặt Trăng Tối gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "NoOpenAIAPIKey": "Khóa API OpenAI trống, vui lòng thêm Khóa API OpenAI tùy chỉnh",
     "OllamaBizError": "Yêu cầu dịch vụ Ollama gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
     "OllamaServiceUnavailable": "Dịch vụ Ollama không khả dụng, vui lòng kiểm tra xem Ollama có hoạt động bình thường không, hoặc xem xét cấu hình chéo đúng của Ollama",
-    "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp lỗi, vui lòng xác minh hoặc thử lại dựa trên thông tin dưới đây",
-    "OpenRouterBizError": "Yêu cầu dịch vụ OpenRouter AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "PerplexityBizError": "Yêu cầu dịch vụ AI Perplexity gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại sau",
+    "OpenAIBizError": "Yêu cầu dịch vụ OpenAI gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
+    "PermissionDenied": "Xin lỗi, bạn không có quyền truy cập dịch vụ này, vui lòng kiểm tra xem khóa của bạn có quyền truy cập hay không",
     "PluginApiNotFound": "Xin lỗi, không có API nào trong tệp mô tả plugin, vui lòng kiểm tra phương thức yêu cầu của bạn có khớp với API mô tả plugin không",
     "PluginApiParamsError": "Xin lỗi, kiểm tra tham số đầu vào yêu cầu của plugin không thông qua, vui lòng kiểm tra tham số đầu vào có khớp với thông tin mô tả API không",
+    "PluginFailToTransformArguments": "Xin lỗi, không thể chuyển đổi đối số của plugin, vui lòng thử tạo lại tin nhắn trợ giúp hoặc thay đổi mô hình AI có khả năng gọi Tools mạnh hơn và thử lại",
     "PluginGatewayError": "Xin lỗi, cổng plugin gặp lỗi, vui lòng kiểm tra cấu hình cổng plugin có đúng không",
     "PluginManifestInvalid": "Xin lỗi, kiểm tra mô tả plugin không thông qua, vui lòng kiểm tra định dạng mô tả có đúng không",
     "PluginManifestNotFound": "Xin lỗi, máy chủ không tìm thấy tệp mô tả plugin (manifest.json), vui lòng kiểm tra địa chỉ tệp mô tả plugin có đúng không",
@@ -97,9 +94,11 @@
     "PluginOpenApiInitError": "Xin lỗi, khởi tạo khách hàng OpenAPI thất bại, vui lòng kiểm tra thông tin cấu hình OpenAPI có đúng không",
     "PluginServerError": "Lỗi trả về từ máy chủ plugin, vui lòng kiểm tra tệp mô tả plugin, cấu hình plugin hoặc triển khai máy chủ theo thông tin lỗi dưới đây",
     "PluginSettingsInvalid": "Plugin cần phải được cấu hình đúng trước khi sử dụng, vui lòng kiểm tra cấu hình của bạn có đúng không",
-    "TogetherAIBizError": "Yêu cầu dịch vụ TogetherAI AI gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "ZeroOneBizError": "Yêu cầu dịch vụ ZeroOneBiz gặp lỗi, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
-    "ZhipuBizError": "Yêu cầu dịch vụ Zhipu gặp lỗi, vui lòng kiểm tra và thử lại dựa trên thông tin dưới đây"
+    "ProviderBizError": "Yêu cầu dịch vụ {{provider}} gặp sự cố, vui lòng kiểm tra thông tin dưới đây hoặc thử lại",
+    "QuotaLimitReached": "Xin lỗi, lượng Token hiện tại hoặc số lần yêu cầu đã đạt đến giới hạn quota của khóa này, vui lòng tăng quota của khóa hoặc thử lại sau.",
+    "StreamChunkError": "Lỗi phân tích khối tin nhắn yêu cầu luồng, vui lòng kiểm tra xem API hiện tại có tuân thủ tiêu chuẩn hay không, hoặc liên hệ với nhà cung cấp API của bạn để được tư vấn.",
+    "SubscriptionPlanLimit": "Số lượng đăng ký của bạn đã hết, không thể sử dụng tính năng này. Vui lòng nâng cấp lên gói cao hơn hoặc mua gói tài nguyên để tiếp tục sử dụng.",
+    "UnknownChatFetchError": "Xin lỗi, đã xảy ra lỗi yêu cầu không xác định. Vui lòng kiểm tra hoặc thử lại theo thông tin dưới đây."
   },
   "stt": {
     "responseError": "Yêu cầu dịch vụ thất bại, vui lòng kiểm tra cấu hình hoặc thử lại"
@@ -109,6 +108,10 @@
   },
   "unlock": {
     "addProxyUrl": "Thêm URL proxy OpenAI (tùy chọn)",
+    "apiKey": {
+      "description": "Nhập {{name}} API Key của bạn để bắt đầu phiên làm việc",
+      "title": "Sử dụng {{name}} API Key tùy chỉnh"
+    },
     "closeMessage": "Đóng thông báo",
     "confirm": "Xác nhận và thử lại",
     "oauth": {
@@ -116,14 +119,6 @@
       "success": "Đăng nhập thành công",
       "title": "Đăng nhập tài khoản",
       "welcome": "Chào mừng bạn!"
-    },
-    "ollama": {
-      "cancel": "Hủy bỏ",
-      "confirm": "Tải xuống",
-      "description": "Nhập nhãn mô hình Ollama của bạn để tiếp tục cuộc trò chuyện",
-      "downloaded": "{{completed}} / {{total}}",
-      "starting": "Bắt đầu tải xuống...",
-      "title": "Tải xuống mô hình Ollama cụ thể"
     },
     "password": {
       "description": "Quản trị viên đã kích hoạt mã hóa ứng dụng. Nhập mật khẩu ứng dụng để mở khóa. Chỉ cần nhập mật khẩu một lần",
@@ -134,5 +129,13 @@
       "apiKey": "Khóa API tùy chỉnh",
       "password": "Mật khẩu"
     }
+  },
+  "upload": {
+    "desc": "Chi tiết: {{detail}}",
+    "fileOnlySupportInServerMode": "Chế độ triển khai hiện tại không hỗ trợ tải lên các tệp không phải hình ảnh. Nếu bạn muốn tải lên định dạng {{ext}}, vui lòng chuyển sang triển khai cơ sở dữ liệu trên máy chủ hoặc sử dụng dịch vụ {{cloud}}.",
+    "networkError": "Vui lòng kiểm tra xem mạng của bạn có hoạt động bình thường không và kiểm tra cấu hình chia sẻ tệp giữa các miền có đúng không",
+    "title": "Tải lên tệp thất bại, vui lòng kiểm tra kết nối mạng hoặc thử lại sau",
+    "unknownError": "Lỗi: {{reason}}",
+    "uploadFailed": "Tải tệp lên không thành công"
   }
 }

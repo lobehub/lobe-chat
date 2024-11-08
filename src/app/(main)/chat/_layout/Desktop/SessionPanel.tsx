@@ -3,10 +3,12 @@
 import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import isEqual from 'fast-deep-equal';
+import { parseAsBoolean, useQueryState } from 'nuqs';
 import { PropsWithChildren, memo, useEffect, useState } from 'react';
 
 import { FOLDER_WIDTH } from '@/const/layoutTokens';
 import { useGlobalStore } from '@/store/global';
+import { systemStatusSelectors } from '@/store/global/selectors';
 
 export const useStyles = createStyles(({ css, token }) => ({
   panel: css`
@@ -19,12 +21,15 @@ export const useStyles = createStyles(({ css, token }) => ({
 const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const { md = true } = useResponsive();
 
+  const [isPinned] = useQueryState('pinned', parseAsBoolean);
+
   const { styles } = useStyles();
   const [sessionsWidth, sessionExpandable, updatePreference] = useGlobalStore((s) => [
-    s.preference.sessionsWidth,
-    s.preference.showSessionPanel,
-    s.updatePreference,
+    systemStatusSelectors.sessionWidth(s),
+    systemStatusSelectors.showSessionPanel(s),
+    s.updateSystemStatus,
   ]);
+
   const [cacheExpand, setCacheExpand] = useState<boolean>(Boolean(sessionExpandable));
   const [tmpWidth, setWidth] = useState(sessionsWidth);
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
@@ -38,6 +43,8 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   const handleSizeChange: DraggablePanelProps['onSizeChange'] = (_, size) => {
     if (!size) return;
     const nextWidth = typeof size.width === 'string' ? Number.parseInt(size.width) : size.width;
+    if (!nextWidth) return;
+
     if (isEqual(nextWidth, sessionsWidth)) return;
     setWidth(nextWidth);
     updatePreference({ sessionsWidth: nextWidth });
@@ -52,7 +59,9 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
     <DraggablePanel
       className={styles.panel}
       defaultSize={{ width: tmpWidth }}
-      expand={sessionExpandable}
+      // 当进入 pin 模式下，不可展开
+      expand={!isPinned && sessionExpandable}
+      expandable={!isPinned}
       maxWidth={400}
       minWidth={FOLDER_WIDTH}
       mode={md ? 'fixed' : 'float'}

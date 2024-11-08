@@ -1,0 +1,94 @@
+{
+  "desc": "Dosyalarınızı ve bilgi tabanınızı yönetin",
+  "detail": {
+    "basic": {
+      "createdAt": "Oluşturulma Zamanı",
+      "filename": "Dosya Adı",
+      "size": "Dosya Boyutu",
+      "title": "Temel Bilgiler",
+      "type": "Format",
+      "updatedAt": "Güncellenme Zamanı"
+    },
+    "data": {
+      "chunkCount": "Parça Sayısı",
+      "embedding": {
+        "default": "Henüz vektörleştirilmedi",
+        "error": "Başarısız",
+        "pending": "Başlatılmayı Bekliyor",
+        "processing": "İşleniyor",
+        "success": "Tamamlandı"
+      },
+      "embeddingStatus": "Vektörleştirme"
+    }
+  },
+  "empty": "Henüz yüklenmiş dosya/klasör yok",
+  "header": {
+    "actions": {
+      "newFolder": "Yeni Klasör",
+      "uploadFile": "Dosya Yükle",
+      "uploadFolder": "Klasör Yükle"
+    },
+    "uploadButton": "Yükle"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Bu bilgi tabanı silinecek, içindeki dosyalar silinmeyecek, tüm dosyalar içine taşınacaktır. Bilgi tabanı silindikten sonra geri alınamaz, lütfen dikkatli olun.",
+      "empty": "Bilgi tabanı oluşturmak için <1>+</1> tıklayın"
+    },
+    "new": "Yeni Bilgi Tabanı",
+    "title": "Bilgi Tabanı"
+  },
+  "networkError": "Bilgi bankası alınamadı, lütfen ağ bağlantınızı kontrol edip tekrar deneyin",
+  "notSupportGuide": {
+    "desc": "Mevcut dağıtım örneği istemci veritabanı modunda, dosya yönetim işlevini kullanamazsınız. Lütfen <1>sunucu veritabanı dağıtım moduna</1> geçin veya doğrudan <3>LobeChat Cloud</3> kullanın.",
+    "features": {
+      "allKind": {
+        "desc": "Word, PPT, Excel, PDF, TXT gibi yaygın belge formatları ve JS, Python gibi popüler kod dosyalarını destekler.",
+        "title": "Çeşitli Dosya Türleri Analizi"
+      },
+      "embeddings": {
+        "desc": "Yüksek performanslı vektör modelleri kullanarak, metin parçalarını vektörleştirir ve dosya içeriğinin anlamsal olarak aranmasını sağlar.",
+        "title": "Vektör Anlamlandırma"
+      },
+      "repos": {
+        "desc": "Bilgi tabanı oluşturmayı destekler ve farklı türde dosyalar eklemeye izin verir, kendi alan bilginizi oluşturun.",
+        "title": "Bilgi Tabanı"
+      }
+    },
+    "title": "Mevcut dağıtım modu dosya yönetimini desteklemiyor"
+  },
+  "preview": {
+    "downloadFile": "Dosyayı İndir",
+    "unsupportedFileAndContact": "Bu dosya formatı çevrimiçi önizleme için desteklenmiyor. Önizleme talebiniz varsa, lütfen <1>bize geri bildirimde bulunun</1>."
+  },
+  "searchFilePlaceholder": "Dosya Ara",
+  "tab": {
+    "all": "Tüm Dosyalar",
+    "audios": "Sesler",
+    "documents": "Belgeler",
+    "images": "Görseller",
+    "videos": "Videolar",
+    "websites": "Web Siteleri"
+  },
+  "title": "Dosya",
+  "uploadDock": {
+    "body": {
+      "collapse": "Kapat",
+      "item": {
+        "done": "Yüklendi",
+        "error": "Yükleme başarısız, lütfen tekrar deneyin",
+        "pending": "Yüklenmek için hazırlanıyor...",
+        "processing": "Dosya işleniyor...",
+        "restTime": "Kalan {{time}}"
+      }
+    },
+    "totalCount": "Toplam {{count}} öğe",
+    "uploadStatus": {
+      "error": "Yükleme hatası",
+      "pending": "Yükleme bekleniyor",
+      "processing": "Yükleniyor",
+      "success": "Yükleme tamamlandı",
+      "uploading": "Yükleniyor"
+    }
+  }
+}

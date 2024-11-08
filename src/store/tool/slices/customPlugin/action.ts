@@ -42,7 +42,7 @@ export const createCustomPluginSlice: StateCreator<
     const { refreshPlugins, updateInstallLoadingState } = get();
     try {
       updateInstallLoadingState(id, true);
-      const manifest = await toolService.getPluginManifest(
+      const manifest = await toolService.getToolManifest(
         plugin.customParams?.manifestUrl,
         plugin.customParams?.useProxy,
       );

@@ -1,0 +1,32 @@
+{
+  "addToKnowledgeBase": {
+    "addSuccess": "文件添加成功，<1>立即查看</1>",
+    "confirm": "添加",
+    "id": {
+      "placeholder": "請選擇要添加的知識庫",
+      "required": "請選擇知識庫",
+      "title": "目標知識庫"
+    },
+    "title": "添加到知識庫",
+    "totalFiles": "已選擇 {{count}} 個文件"
+  },
+  "createNew": {
+    "confirm": "新建",
+    "description": {
+      "placeholder": "知識庫簡介（選填）"
+    },
+    "formTitle": "基本信息",
+    "name": {
+      "placeholder": "知識庫名稱",
+      "required": "請填寫知識庫名稱"
+    },
+    "title": "新建知識庫"
+  },
+  "tab": {
+    "evals": "評測",
+    "files": "文檔",
+    "settings": "設置",
+    "testing": "召回測試"
+  },
+  "title": "知識庫"
+}

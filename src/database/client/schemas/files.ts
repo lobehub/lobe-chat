@@ -8,7 +8,7 @@ export const DB_FileSchema = z.object({
   /**
    * file data array buffer
    */
-  data: z.instanceof(ArrayBuffer),
+  data: z.instanceof(ArrayBuffer).optional(),
   /**
    * file type
    * @example 'image/png'
@@ -33,7 +33,7 @@ export const DB_FileSchema = z.object({
   /**
    * file url if saveMode is url
    */
-  url: z.string().url().optional(),
+  url: z.string().optional(),
 });
 
 export type DB_File = z.infer<typeof DB_FileSchema>;

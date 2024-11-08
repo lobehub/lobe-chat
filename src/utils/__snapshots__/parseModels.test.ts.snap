@@ -61,3 +61,35 @@ exports[`parseModelString > only add the model 1`] = `
   "removed": [],
 }
 `;
+
+exports[`transformToChatModelCards > should have file with builtin models like gpt-4-0125-preview 1`] = `
+[
+  {
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
+    "displayName": "ChatGPT-4",
+    "enabled": true,
+    "files": true,
+    "functionCall": true,
+    "id": "gpt-4-0125-preview",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
+    "tokens": 128000,
+  },
+  {
+    "description": "最新的 GPT-4 Turbo 模型具备视觉功能。现在，视觉请求可以使用 JSON 模式和函数调用。 GPT-4 Turbo 是一个增强版本，为多模态任务提供成本效益高的支持。它在准确性和效率之间找到平衡，适合需要进行实时交互的应用程序场景。",
+    "displayName": "ChatGPT-4 Vision",
+    "enabled": true,
+    "files": true,
+    "functionCall": true,
+    "id": "gpt-4-turbo-2024-04-09",
+    "pricing": {
+      "input": 10,
+      "output": 30,
+    },
+    "tokens": 128000,
+    "vision": true,
+  },
+]
+`;

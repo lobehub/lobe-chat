@@ -1,0 +1,559 @@
+---
+title: Deploying LobeChat with Docker Compose
+description: >-
+  Learn how to deploy the LobeChat service using Docker Compose, including
+  configuration tutorials for various services.
+tags:
+  - Docker Compose
+  - LobeChat
+  - Docker Containers
+  - Deployment Guide
+---
+
+# Deploying LobeChat Server Database Version with Docker Compose
+
+<div style={{display:"flex", gap: 4}}>
+  [![][docker-release-shield]][docker-release-link]
+
+[![][docker-size-shield]][docker-size-link]
+
+[![][docker-pulls-shield]][docker-pulls-link]
+
+</div>
+
+<Callout type="info">
+  This article assumes you are familiar with the basic principles and processes of deploying the
+  LobeChat server database version (hereinafter referred to as DB version), so it only includes core
+  environment variable configurations. If you are not familiar with the deployment principles of
+  LobeChat DB version, please refer to [Deploying with a Server
+  Database](/docs/self-hosting/server-database).
+</Callout>
+
+<Callout type="warning">
+  Due to the inability to expose `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` using Docker environment variables, you cannot use Clerk as a login authentication service when deploying LobeChat with Docker / Docker Compose.
+
+If you need Clerk as a login authentication service, consider deploying with Vercel or building your own image.
+
+</Callout>
+
+In general, to fully run the LobeChat database version, you need at least the following four services:
+
+- The LobeChat database version itself
+- A PostgreSQL database with the PGVector plugin
+- An object storage service that supports S3 protocol
+- An SSO login authentication service supported by LobeChat
+
+These services can be combined through self-built or online cloud services to meet different levels of deployment needs.
+
+In this article, we provide a Docker Compose configuration entirely based on open-source self-built services. You can use this configuration file directly to start the LobeChat database version or modify it to suit your needs.
+
+We default to using [MinIO](https://github.com/minio/minio) as the local S3 object storage service and [Casdoor](https://github.com/casdoor/casdoor) as the local authentication service.
+
+## Quick Start
+
+To facilitate a quick start, this section uses the `docker-compose/local` directory's `docker-compose.yml` configuration file. The started LobeChat application runs at `http://localhost:3210` and can be run locally.
+
+<Callout type="warning">
+  For a quick start, this `docker-compose.yml` contains a large number of sensitive Secret/Password
+  fields, suitable only for quick demonstrations or personal local use. Do not use it directly in a
+  production environment! Otherwise, you will be responsible for any security issues encountered!
+</Callout>
+
+<Steps>
+  ### One-click Startup Script
+
+Create a new directory named `lobe-chat-db` to store your configuration files and subsequent database files.
+
+```sh
+mkdir lobe-chat-db
+cd lobe-chat-db
+```
+
+We provide a one-click startup script `setup.sh`, which can automatically use the default configuration and start the service:
+
+```sh
+bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f
+```
+
+### Start Docker
+
+```sh
+docker compose up -d
+```
+
+The default login account is the default account of Casdoor, with the username `admin` and password `123`.
+
+### Check Logs
+
+```sh
+docker logs -f lobe-chat
+```
+
+If you see the following logs in the container, it means the startup was successful:
+
+```log
+[Database] Start to migration...
+✅ database migration pass.
+-------------------------------------
+  ▲ Next.js 14.x.x
+  - Local:        http://localhost:3210
+  - Network:      http://0.0.0.0:3210
+
+ ✓ Starting...
+ ✓ Ready in 95ms
+```
+
+</Steps>
+
+At this point, you have successfully deployed the LobeChat database version, and you can access your LobeChat service at `http://localhost:3210`.
+
+If you encounter problems, try checking the Docker logs and console logs for troubleshooting.
+
+## Publishing to Production (IP Mode)
+
+The following assumes that the machine IP running the LobeChat service on the LAN/public network is `your_server_ip`.
+
+To access via the local network IP, you first need to run the local startup:
+
+```sh
+bash <(curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/local/setup.sh) -f
+docker compose up -d
+```
+
+Next, you need to modify the downloaded `docker-compose.yml` file, performing a global replacement to change `localhost` to `your_server_ip`, and then restart:
+
+```sh
+sed -i 's/localhost/your_server_ip/g' docker-compose.yml
+docker compose up -d
+```
+
+### Configuring Casdoor
+
+1. After starting with the `setup.sh` script, the default port for Casdoor WebUI is `8000`. You can access it via `http://your_server_ip:8000`, with the default username `admin` and password `123`.
+
+2. In `Identity -> Applications`, add a new line:
+
+   ```
+   http://your_server_ip:3210/api/auth/callback/casdoor
+   ```
+
+3. Most other configurations can remain default; you can modify the default configurations in `Identity -> Applications`.
+
+### Configuring MinIO S3
+
+1. After starting with the `setup.sh` script, the default port for MinIO WebUI is `9001`. You can access it via `http://your_server_ip:9001`, with the default username `YOUR_MINIO_USER` and password `YOUR_MINIO_PASSWORD`.
+
+2. Most configurations can remain default. If you wish to allow users to change their avatars, you need to create a bucket named `casdoor` in `buckets`, select custom policy, and copy and paste the following content (if you have changed the bucket name, please find and replace):
+
+   ```json
+   {
+     "Statement": [
+       {
+         "Effect": "Allow",
+         "Principal": {
+           "AWS": ["*"]
+         },
+         "Action": ["s3:GetBucketLocation"],
+         "Resource": ["arn:aws:s3:::casdoor"]
+       },
+       {
+         "Effect": "Allow",
+         "Principal": {
+           "AWS": ["*"]
+         },
+         "Action": ["s3:ListBucket"],
+         "Resource": ["arn:aws:s3:::casdoor"],
+         "Condition": {
+           "StringEquals": {
+             "s3:prefix": ["files/*"]
+           }
+         }
+       },
+       {
+         "Effect": "Allow",
+         "Principal": {
+           "AWS": ["*"]
+         },
+         "Action": ["s3:PutObject", "s3:DeleteObject", "s3:GetObject"],
+         "Resource": ["arn:aws:s3:::casdoor/**"]
+       }
+     ],
+     "Version": "2012-10-17"
+   }
+   ```
+
+3. Create a new access key and store the generated `Access Key` and `Secret Key`.
+
+4. In Casdoor's `Identity -> Providers`, associate the MinIO S3 service. Here is a sample configuration:
+
+   ![casdoor](https://github.com/user-attachments/assets/71035610-0706-434e-9488-ab5819b55330)
+
+   The Client ID and Client Secret should be the `Access Key` and `Secret Key` from the previous step, and `192.168.31.251` should be replaced with `your_server_ip`.
+
+5. In Casdoor's `Identity -> Applications`, add the provider to the `app-built-in` application, select `minio`, save and exit.
+
+6. You can try uploading a file in Casdoor's `Identity -> Resources` to test if the configuration is correct.
+
+## Publishing to Production (Domain Name Mode)
+
+<Callout type="info">
+  For deployments with a domain name, we recommend using [Logto](https://logto.io/) as the login
+  authentication service. The remainder of this article will use it as an example. If you use other
+  authentication services like Casdoor, the process should be similar, but note that different
+  authentication services may have different port configurations.
+</Callout>
+
+In the following text, we assume that in addition to the above services, you are also running a layer of Nginx for reverse proxy and SSL configuration.
+
+The domain and associated service port descriptions are as follows:
+
+- `lobe.example.com`: Your LobeChat service domain, which needs to reverse proxy to the LobeChat service port, defaulting to `3210`.
+- `lobe-auth-api.example.com`: Your Logto service domain, which needs to reverse proxy to the Logto API service port, defaulting to `3001`.
+- `lobe-auth-ui.example.com`: Your Logto UI domain, which needs to reverse proxy to the Logto WebUI service port, defaulting to `3002`.
+- `lobe-s3-api.example.com`: Your MinIO API domain, which needs to reverse proxy to the MinIO API service port, defaulting to `9000`.
+- `lobe-s3-ui.example.com`: Optional, your MinIO UI domain, which needs to reverse proxy to the MinIO WebUI service port, defaulting to `9001`.
+
+And the service ports that do not require reverse proxy:
+
+- `postgresql`: Your PostgreSQL database service port, defaulting to `5432`.
+
+<Callout type="warning">
+  Please note that CORS cross-domain is configured internally in MinIO / Logto services. Do not configure CORS additionally in your reverse proxy, as this will cause errors.
+
+For MinIO not on port 443, the Host must be `$http_host` (with port number), otherwise a 403 error will occur: `proxy_set_header Host $http_host`.
+
+If you need to configure an SSL certificate, please configure it uniformly in the outer Nginx reverse proxy and not in MinIO.
+
+</Callout>
+
+### Configuration Files
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/logto/docker-compose.yml > docker-compose.yml
+curl -fsSL https://raw.githubusercontent.com/lobehub/lobe-chat/HEAD/docker-compose/production/logto/.env.example > .env
+```
+
+The configuration files include both `.env` and `docker-compose.yml`, where the `.env` file is used to configure the environment variables for LobeChat, and the `docker-compose.yml` file is used to configure the Postgres, MinIO, and Logto services.
+
+Generally, you should only modify sensitive information such as domain names and account passwords, while keeping other configuration items at their default values.
+
+Refer to the appendix for example configurations.
+
+### Postgres Database Configuration
+
+You can check the logs with the following command:
+
+```sh
+docker logs -f lobe-chat
+```
+
+<Callout type="tip">
+  In our official Docker image, database schema migration is automatically executed before starting
+  the image. Our official image promises stability in the automatic creation of tables from "empty
+  database -> complete tables." Therefore, we recommend that your database instance use an empty
+  table instance to avoid the hassle of manual table structure maintenance or migration.
+</Callout>
+
+If you encounter issues when creating tables, you can try the following command to force remove the database container and restart:
+
+```sh
+docker compose down  # Stop the service
+sudo rm -rf ./data   # Remove mounted database data
+docker compose up -d # Restart
+```
+
+### Login Authentication Service Configuration
+
+This article uses Logto as an example to explain the configuration process. If you are using other authentication service providers, please refer to their documentation for configuration.
+
+<Callout type="warning">
+  Please remember to configure the CORS cross-domain settings for the corresponding login authentication service provider to ensure LobeChat can access the authentication service properly.
+
+In this article, you need to allow cross-domain requests from `https://lobe.example.com`.
+
+</Callout>
+
+You first need to visit the WebUI for configuration:
+
+- If you have configured the reverse proxy as mentioned earlier, open `https://lobe-auth-ui.example.com`.
+- Otherwise, open `http://localhost:3002` after performing port mapping.
+
+1. Register a new account; the first registered account will automatically become an administrator.
+
+2. In `Applications`, create a `Next.js (App Router)` application with any name.
+
+3. Set `Redirect URI` to `https://lobe.example.com/api/auth/callback/logto`, and `Post sign-out redirect URI` to `https://lobe.example.com/`.
+
+4. Set `CORS allowed origins` to `https://lobe.example.com`.
+
+   <Image
+     alt="Configuring Logto"
+     src="https://github.com/user-attachments/assets/5b816379-c07b-40ea-bde4-df16e2e4e523"
+   />
+
+5. Obtain `App ID` and `App secrets`, and fill them into your `.env` file under `AUTH_LOGTO_ID` and `AUTH_LOGTO_SECRET`.
+
+6. Set `AUTH_LOGTO_ISSUER` in your `.env` file to `https://lobe-auth-api.example.com/oidc`.
+
+   <Image
+     alt="Configuring Logto Environment Variables"
+     src="https://github.com/user-attachments/assets/15af6d94-af4f-4aa9-bbab-7a46e9f9e837"
+   />
+
+7. Optionally, in the left panel under `Sign-in experience`, you can disable `Enable user registration` in `Sign-up and sign-in - Advanced Options` to prevent users from registering on their own. If you disable user registration, you will need to manually add users in the left panel under `User Management`.
+
+   <Image
+     alt="Disable User Registration"
+     src="https://github.com/user-attachments/assets/6b2e6f7b-fec5-41c6-864a-a1add40f74a0"
+   />
+
+8. Restart the LobeChat service:
+
+   ```sh
+   docker compose up -d
+   ```
+
+<Callout type="warning">
+  Please note that the administrator account is not the same as a registered user. Do not log in to
+  LobeChat with your administrator account, as this will only result in an error.
+</Callout>
+
+### S3 Object Storage Service Configuration
+
+This article uses MinIO as an example to explain the configuration process. If you are using other S3 service providers, please refer to their documentation for configuration.
+
+<Callout type="warning">
+  Please remember to configure the CORS cross-domain settings for the corresponding S3 service provider to ensure LobeChat can access the S3 service properly.
+
+In this article, you need to allow cross-domain requests from `https://lobe.example.com`. This can be configured in MinIO WebUI under `Configuration - API - Cors Allow Origin`, or in the Docker Compose under `minio - environment - MINIO_API_CORS_ALLOW_ORIGIN`.
+
+If you use the second method (which is also the default method) for configuration, you will not be able to configure it in MinIO WebUI anymore.
+
+</Callout>
+
+You first need to visit the WebUI for configuration:
+
+- If you have configured the reverse proxy as mentioned earlier, open `https://lobe-s3-ui.example.com`.
+- Otherwise, open `http://localhost:9001` after performing port mapping.
+
+1. Enter your set `MINIO_ROOT_USER` and `MINIO_ROOT_PASSWORD` on the login page, then click login.
+
+2. In the left panel under Administer / Buckets, click `Create Bucket`, enter `lobe` (which corresponds to your `S3_BUCKET` environment variable), and then click `Create`.
+
+   <Image
+     alt="Create MinIO Bucket"
+     src="https://github.com/user-attachments/assets/79f44a13-00d3-4302-a6bc-5f4c6cdbffab"
+   />
+
+3. Select your bucket, click Summary - Access Policy, edit, choose `Custom`, input the content from `minio-bucket-config.json` (see appendix), and save (assuming your bucket name is `lobe`):
+
+   <Image
+     alt="Select MinIO Bucket Policy"
+     src="https://github.com/user-attachments/assets/57032a82-7604-45d3-ba12-884af6fbcb7c"
+   />
+
+   <Image
+     alt="Configure MinIO Bucket Policy"
+     src="https://github.com/user-attachments/assets/d8109f4e-71fc-4ba8-8402-ede92669d5e0"
+   />
+
+4. In the left panel under User / Access Keys, click `Create New Access Key`, without any extra modifications, and fill the generated `Access Key` and `Secret Key` into your `.env` file under `S3_ACCESS_KEY_ID` and `S3_SECRET_ACCESS_KEY`.
+
+   <Image
+     alt="Create MinIO Access Key"
+     src="https://github.com/user-attachments/assets/72f02ce5-9991-425b-9864-9113ee1ed6bf"
+   />
+
+5. Restart the LobeChat service:
+
+   ```sh
+   docker compose up -d
+   ```
+
+At this point, you have successfully deployed the LobeChat database version, and you can access your LobeChat service at `https://lobe.example.com`.
+
+## Appendix
+
+For convenience, here is a summary of the example configuration files needed for deploying the server database in domain name mode (for local quick start, local IP access, etc., please directly use the `setup.sh` script to generate and modify it yourself):
+
+### `.env`
+
+```sh
+# Required: LobeChat domain for tRPC calls
+# Ensure this domain is whitelisted in your NextAuth providers and S3 service CORS settings
+APP_URL=https://lobe.example.com/
+
+# Postgres related environment variables
+# Required: Secret key for encrypting sensitive information. Generate with: openssl rand -base64 32
+KEY_VAULTS_SECRET=Kix2wcUONd4CX51E/ZPAd36BqM4wzJgKjPtz2sGztqQ=
+# Required: Postgres database connection string
+# Format: postgresql://username:password@host:port/dbname
+# If using Docker, you can use the container name as the host
+DATABASE_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/lobe
+
+# NEXT_AUTH related environment variables
+# Supports auth0, Azure AD, GitHub, Authentik, Zitadel, Logto, etc.
+# For supported providers, see: https://lobehub.com/docs/self-hosting/advanced/auth#next-auth
+# If you have ACCESS_CODE, please remove it. We use NEXT_AUTH as the sole authentication source
+# Required: NextAuth secret key. Generate with: openssl rand -base64 32
+NEXT_AUTH_SECRET=NX2kaPE923dt6BL2U8e9oSre5RfoT7hg
+# Required: Specify the authentication provider (e.g., Logto)
+NEXT_AUTH_SSO_PROVIDERS=logto
+# Required: NextAuth URL for callbacks
+NEXTAUTH_URL=https://lobe.example.com/api/auth
+
+# NextAuth providers configuration (example using Logto)
+# For other providers, see: https://lobehub.com/docs/self-hosting/environment-variables/auth
+AUTH_LOGTO_ID=YOUR_LOGTO_ID
+AUTH_LOGTO_SECRET=YOUR_LOGTO_SECRET
+AUTH_LOGTO_ISSUER=https://lobe-auth-api.example.com/oidc
+
+# Proxy settings (if needed, e.g., when using GitHub as an auth provider)
+# HTTP_PROXY=http://localhost:7890
+# HTTPS_PROXY=http://localhost:7890
+
+# S3 related environment variables (example using MinIO)
+# Required: S3 Access Key ID (for MinIO, invalid until manually created in MinIO UI)
+S3_ACCESS_KEY_ID=YOUR_S3_ACCESS_KEY_ID
+# Required: S3 Secret Access Key (for MinIO, invalid until manually created in MinIO UI)
+S3_SECRET_ACCESS_KEY=YOUR_S3_SECRET_ACCESS_KEY
+# Required: S3 Endpoint for server/client connections to S3 API
+S3_ENDPOINT=https://lobe-s3-api.example.com
+# Required: S3 Bucket (invalid until manually created in MinIO UI)
+S3_BUCKET=lobe
+# Required: S3 Public Domain for client access to unstructured data
+S3_PUBLIC_DOMAIN=https://lobe-s3-api.example.com
+# Optional: S3 Enable Path Style
+# Use 0 for mainstream S3 cloud providers; use 1 for self-hosted MinIO
+# See: https://lobehub.com/docs/self-hosting/advanced/s3#s-3-enable-path-style
+S3_ENABLE_PATH_STYLE=1
+
+# Other basic environment variables (as needed)
+# See: https://lobehub.com/docs/self-hosting/environment-variables/basic
+# Note: For server versions, the API must support embedding models (OpenAI text-embedding-3-small) for file processing
+# You don't need to specify this model in OPENAI_MODEL_LIST
+# OPENAI_API_KEY=sk-xxxx
+# OPENAI_PROXY_URL=https://api.openai.com/v1
+# OPENAI_MODEL_LIST=...
+```
+
+### `docker-compose.yml`
+
+```yaml
+name: lobe-chat-database
+services:
+  postgresql:
+    image: pgvector/pgvector:pg16
+    container_name: lobe-postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - './data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_DB=lobe'
+      - 'POSTGRES_PASSWORD=uWNZugjBqixf8dxC'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: always
+
+  minio:
+    image: minio/minio
+    container_name: lobe-minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - './s3_data:/etc/minio/data'
+    environment:
+      - 'MINIO_ROOT_USER=YOUR_MINIO_USER'
+      - 'MINIO_ROOT_PASSWORD=YOUR_MINIO_PASSWORD'
+      - 'MINIO_DOMAIN=lobe-s3-api.example.com'
+      - 'MINIO_API_CORS_ALLOW_ORIGIN=https://lobe.example.com' # Your LobeChat's domain name.
+    restart: always
+    command: >
+      server /etc/minio/data --address ":9000" --console-address ":9001"
+
+  logto:
+    image: svhd/logto
+    container_name: lobe-logto
+    ports:
+      - '3001:3001'
+      - '3002:3002'
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    environment:
+      - 'TRUST_PROXY_HEADER=1'
+      - 'DB_URL=postgresql://postgres:uWNZugjBqixf8dxC@postgresql:5432/logto'
+      - 'ENDPOINT=https://lobe-auth-api.example.com'
+      - 'ADMIN_ENDPOINT=https://lobe-auth-ui.example.com'
+    entrypoint: ['sh', '-c', 'npm run cli db seed -- --swe && npm start']
+
+  lobe:
+    image: lobehub/lobe-chat-database
+    container_name: lobe-chat
+    ports:
+      - '3210:3210'
+    depends_on:
+      - postgresql
+      - minio
+      - logto
+    env_file:
+      - .env
+    restart: always
+
+volumes:
+  data:
+    driver: local
+  s3_data:
+    driver: local
+```
+
+### `minio-bucket-config.json`
+
+```json
+{
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:GetBucketLocation"],
+      "Resource": ["arn:aws:s3:::lobe"]
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:ListBucket"],
+      "Resource": ["arn:aws:s3:::lobe"],
+      "Condition": {
+        "StringEquals": {
+          "s3:prefix": ["files/*"]
+        }
+      }
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": ["s3:PutObject", "s3:DeleteObject", "s3:GetObject"],
+      "Resource": ["arn:aws:s3:::lobe/files/**"]
+    }
+  ],
+  "Version": "2012-10-17"
+}
+```
+
+[docker-pulls-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-pulls-shield]: https://img.shields.io/docker/pulls/lobehub/lobe-chat-database?color=45cc11&labelColor=black&style=flat-square
+[docker-release-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-release-shield]: https://img.shields.io/docker/v/lobehub/lobe-chat-database?color=369eff&label=docker&labelColor=black&logo=docker&logoColor=white&style=flat-square
+[docker-size-link]: https://hub.docker.com/r/lobehub/lobe-chat-database
+[docker-size-shield]: https://img.shields.io/docker/image-size/lobehub/lobe-chat-database?color=369eff&labelColor=black&style=flat-square

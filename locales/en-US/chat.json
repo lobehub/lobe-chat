@@ -2,17 +2,27 @@
   "ModelSwitch": {
     "title": "Model"
   },
-  "agentDefaultMessage": "Hello, I'm **{{name}}**. You can start chatting with me right away, or go to [Agent Settings](/chat/settings#session={{id}}) to complete my information.",
+  "agentDefaultMessage": "Hello, I am **{{name}}**. You can start a conversation with me right away, or you can go to [Assistant Settings]({{url}}) to complete my information.",
   "agentDefaultMessageWithSystemRole": "Hello, I'm **{{name}}**, {{systemRole}}. Let's start chatting!",
-  "agentsAndConversations": "Agents and Conversations",
+  "agentDefaultMessageWithoutEdit": "Hello, I'm **{{name}}**, let's start chatting!",
+  "agents": "Assistants",
+  "artifact": {
+    "generating": "Generating",
+    "thinking": "Thinking",
+    "thought": "Thought Process",
+    "unknownTitle": "Untitled Work"
+  },
   "backToBottom": "Back to bottom",
+  "chatList": {
+    "longMessageDetail": "View Details"
+  },
   "clearCurrentMessages": "Clear current session messages",
   "confirmClearCurrentMessages": "You are about to clear the current session messages. Once cleared, they cannot be retrieved. Please confirm your action.",
-  "confirmRemoveSessionItemAlert": "You are about to delete this agent. Once deleted, it cannot be retrieved. Please confirm your action.",
-  "confirmRemoveSessionSuccess": "Agent removed successfully",
-  "defaultAgent": "Default Agent",
+  "confirmRemoveSessionItemAlert": "You are about to delete this assistant. Once deleted, it cannot be retrieved. Please confirm your action.",
+  "confirmRemoveSessionSuccess": "Assistant removed successfully",
+  "defaultAgent": "Default Assistant",
   "defaultList": "Default List",
-  "defaultSession": "Default Agent",
+  "defaultSession": "Default Assistant",
   "duplicateSession": {
     "loading": "Copying...",
     "success": "Copy successful",
@@ -22,7 +32,7 @@
   "emptyAgent": "No assistant available",
   "historyRange": "History Range",
   "inbox": {
-    "desc": "Activate the brain cluster and spark creative thinking. Your virtual agent is here to communicate with you about everything.",
+    "desc": "Activate the brain cluster and spark creative thinking. Your virtual assistant is here to communicate with you about everything.",
     "title": "Just Chat"
   },
   "input": {
@@ -35,25 +45,51 @@
     "stop": "Stop",
     "warp": "New Line"
   },
+  "knowledgeBase": {
+    "all": "All Content",
+    "allFiles": "All Files",
+    "allKnowledgeBases": "All Knowledge Bases",
+    "disabled": "The current deployment mode does not support knowledge base conversations. To use this feature, please switch to server-side database deployment or use the {{cloud}} service.",
+    "library": {
+      "action": {
+        "add": "Add",
+        "detail": "Details",
+        "remove": "Remove"
+      },
+      "title": "Files/Knowledge Base"
+    },
+    "relativeFilesOrKnowledgeBases": "Related Files/Knowledge Bases",
+    "title": "Knowledge Base",
+    "uploadGuide": "Uploaded files can be viewed in the 'Knowledge Base'.",
+    "viewMore": "View More"
+  },
   "messageAction": {
     "delAndRegenerate": "Delete and Regenerate",
     "regenerate": "Regenerate"
   },
-  "newAgent": "New Agent",
-  "noDescription": "No description available",
+  "newAgent": "New Assistant",
   "pin": "Pin",
   "pinOff": "Unpin",
+  "rag": {
+    "referenceChunks": "Reference Source",
+    "userQuery": {
+      "actions": {
+        "delete": "Delete Query Rewrite",
+        "regenerate": "Regenerate Query"
+      }
+    }
+  },
   "regenerate": "Regenerate",
   "roleAndArchive": "Role and Archive",
-  "searchAgentPlaceholder": "Search agents and conversations...",
+  "searchAgentPlaceholder": "Search assistants...",
   "sendPlaceholder": "Type your message here...",
   "sessionGroup": {
     "config": "Group Management",
-    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the agents in this group will be moved to the default list. Please confirm your operation.",
-    "createAgentSuccess": "Agent created successfully",
+    "confirmRemoveGroupAlert": "This group is about to be deleted. After deletion, the assistants in this group will be moved to the default list. Please confirm your operation.",
+    "createAgentSuccess": "Assistant created successfully",
     "createGroup": "Add New Group",
     "createSuccess": "Created successfully",
-    "creatingAgent": "Creating agent...",
+    "creatingAgent": "Creating assistant...",
     "inputPlaceholder": "Please enter group name...",
     "moveGroup": "Move to Group",
     "newGroup": "New Group",
@@ -64,26 +100,32 @@
     "tooLong": "Group name length should be between 1-20"
   },
   "shareModal": {
+    "copy": "Copy",
     "download": "Download Screenshot",
+    "downloadFile": "Download File",
+    "exportTitle": "Default Title",
     "imageType": "Image Format",
+    "includeTool": "Include Plugin Messages",
+    "includeUser": "Include User Messages",
     "screenshot": "Screenshot",
     "settings": "Export Settings",
-    "shareToShareGPT": "Generate ShareGPT Sharing Link",
+    "text": "Text",
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
-    "withSystemRole": "Include Agent Role Setting"
+    "withRole": "Include Message Role",
+    "withSystemRole": "Include Assistant Role Setting"
   },
   "stt": {
     "action": "Voice Input",
     "loading": "Recognizing...",
     "prettifying": "Polishing..."
   },
-  "temp": "Temporary",
   "tokenDetails": {
     "chats": "Chat Messages",
     "rest": "Remaining",
     "systemRole": "Role Settings",
+    "title": "Context Details",
     "tools": "Plugin Settings",
     "total": "Total Available",
     "used": "Total Used"
@@ -94,27 +136,10 @@
     "used": "Used"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Auto Rename",
-      "duplicate": "Create Copy",
-      "export": "Export Topic"
-    },
-    "confirmRemoveAll": "You are about to delete all topics. Once deleted, they cannot be recovered. Please proceed with caution.",
-    "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
-    "confirmRemoveUnstarred": "You are about to delete unstarred topics. Once deleted, they cannot be recovered. Please proceed with caution.",
-    "defaultTitle": "Default Topic",
-    "duplicateLoading": "Topic duplicating...",
-    "duplicateSuccess": "Topic duplicated successfully",
-    "guide": {
-      "desc": "Click the button on the left to save the current session as a historical topic and start a new session.",
-      "title": "Topic List"
-    },
+    "checkOpenNewTopic": "Enable new topic?",
+    "checkSaveCurrentMessages": "Do you want to save the current conversation as a topic?",
     "openNewTopic": "Open New Topic",
-    "removeAll": "Remove All Topics",
-    "removeUnstarred": "Remove Unstarred Topics",
-    "saveCurrentMessages": "Save current session as topic",
-    "searchPlaceholder": "Search topics...",
-    "title": "Topic List"
+    "saveCurrentMessages": "Save current session as topic"
   },
   "translate": {
     "action": "Translate",
@@ -124,14 +149,27 @@
     "action": "Text-to-Speech",
     "clear": "Clear Speech"
   },
-  "updateAgent": "Update Agent Information",
+  "updateAgent": "Update Assistant Information",
   "upload": {
-    "actionFiletip": "Update File",
-    "actionTooltip": "Upload Image",
-    "disabled": "The current model does not support visual recognition. Please switch models to use this feature.",
-    "dragDesc": "Drag and drop files here, support uploading multiple images. Hold down Shift to send images directly.",
-    "dragFileDesc": "Drag pictures and files here to support uploading multiple pictures and files. Hold down Shift to send an image or file directly.",
-    "dragFileTitle": "Update File",
-    "dragTitle": "Upload Image"
-  }
+    "action": {
+      "fileUpload": "Upload File",
+      "folderUpload": "Upload Folder",
+      "imageDisabled": "The current model does not support visual recognition. Please switch models to use this feature.",
+      "imageUpload": "Upload Image",
+      "tooltip": "Upload"
+    },
+    "clientMode": {
+      "actionFiletip": "Upload File",
+      "actionTooltip": "Upload",
+      "disabled": "The current model does not support visual recognition and file analysis. Please switch models to use this feature."
+    },
+    "preview": {
+      "prepareTasks": "Preparing chunks...",
+      "status": {
+        "pending": "Preparing to upload...",
+        "processing": "Processing file..."
+      }
+    }
+  },
+  "zenMode": "Zen Mode"
 }

@@ -10,33 +10,33 @@
     "clear": {
       "confirm": "Yerel verileri temizlemek üzeresiniz (global ayarlar etkilenmeyecek). Lütfen yedeği indirdiğinizi onaylayın."
     },
-    "description": "Yeni sürümde, LobeChat'in veri arttı. Bu nedenle, size daha iyi bir kullanıcı deneyimi sunmak için eski sürüm verilerini yükseltmemiz gerekiyor.",
+    "description": "{{appName}}'in yeni versiyonunda veri depolama alanında büyük bir sıçrama yaşandı. Bu nedenle, eski verileri güncelleyerek size daha iyi bir kullanım deneyimi sunmak istiyoruz.",
     "features": {
       "capability": {
-        "desc": "IndexedDB teknolojisine ile ömür boyu konuşma mesajları depolayabilir.",
-        "title": "Yüksek Kapasite"
+        "desc": "IndexedDB teknolojisine dayalı, hayatınız boyunca saklayabileceğiniz sohbet mesajlarını barındıracak kadar geniş",
+        "title": "Büyük Kapasite"
       },
       "performance": {
-        "desc": "Milyonlarca mesaj otomatik olarak indekslenir ve sorgu yanıtları milisaniyeler içinde gerçekleşir.",
+        "desc": "Milyonlarca mesaj otomatik olarak indekslenir, sorgulama yanıt süresi milisaniye seviyesindedir",
         "title": "Yüksek Performans"
       },
       "use": {
-        "desc": "Başlıkları, açıklamaları, etiketleri, mesaj içeriğini ve hatta çevrilmiş metni aramayı destekler, günlük arama verimliliğini büyük ölçüde artırır.",
-        "title": "Daha Kullanıcı Dostu"
+        "desc": "Başlık, açıklama, etiket, mesaj içeriği ve hatta çeviri metni aramalarını destekler, günlük arama verimliliği büyük ölçüde artar",
+        "title": "Daha Kullanışlı"
       }
     },
-    "title": "LobeChat Data Evolution",
+    "title": "{{appName}} Veri Evrimi",
     "upgrade": {
       "error": {
-        "subTitle": "Üzgünüz, veritabanı yükseltme işlemi sırasında bir hata oluştu. Lütfen şu çözümleri deneyin: A. Yerel verileri temizleyin ve yedek verileri yeniden içe aktarın; B. 'Yükseltmeyi Yeniden Dene' düğmesine tıklayın.<br><br> Sorun devam ederse, lütfen <1>bir istek gönderin</1>, en kısa sürede size yardımcı olacağız.",
-        "title": "Veritabanı Yükseltmesi Başarısız Oldu"
+        "subTitle": "Üzgünüz, veritabanı güncelleme sürecinde bir hata oluştu. Lütfen aşağıdaki çözümleri deneyin: A. Yerel verileri temizleyip yedek verileri yeniden içe aktarın; B. 'Yeniden Güncelle' butonuna tıklayın.<br><br> Hala hata alıyorsanız, lütfen <1>sorun bildirin</1>, size en kısa sürede yardımcı olacağız.",
+        "title": "Veritabanı Güncellemesi Başarısız"
       },
       "success": {
-        "subTitle": "LobeChat'in veritabanı en son sürüme başarıyla yükseltildi. Şimdi deneyimlemeye başlayın!",
-        "title": "Veritabanı Yükseltmesi Başarılı"
+        "subTitle": "{{appName}}'in veritabanı en son sürüme güncellendi, hemen deneyimlemeye başlayın.",
+        "title": "Veritabanı Güncellemesi Başarılı"
       }
     },
-    "upgradeTip": "Yükseltme işlemi yaklaşık 10 ila 20 saniye sürecektir. Lütfen yükseltme sırasında LobeChat'i kapatmayın."
+    "upgradeTip": "Güncelleme yaklaşık 10-20 saniye sürecektir, lütfen güncelleme sırasında {{appName}}'i kapatmayın."
   },
   "migrateError": {
     "missVersion": "İçe aktarılan verilerde bir sürüm numarası eksik. Lütfen dosyayı kontrol edin ve tekrar deneyin.",

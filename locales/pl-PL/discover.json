@@ -1,0 +1,204 @@
+{
+  "assistants": {
+    "addAgent": "Dodaj asystenta",
+    "addAgentAndConverse": "Dodaj asystenta i rozpocznij rozmowę",
+    "addAgentSuccess": "Dodano pomyślnie",
+    "conversation": {
+      "l1": "Cześć, jestem **{{name}}**, możesz zadać mi dowolne pytanie, postaram się odpowiedzieć ~",
+      "l2": "Oto moje umiejętności: ",
+      "l3": "Zacznijmy rozmowę!"
+    },
+    "description": "Opis asystenta",
+    "detail": "Szczegóły",
+    "list": "Lista asystentów",
+    "more": "Więcej",
+    "plugins": "Zintegrowane wtyczki",
+    "recentSubmits": "Ostatnie aktualizacje",
+    "suggestions": "Podobne rekomendacje",
+    "systemRole": "Ustawienia asystenta",
+    "try": "Spróbuj"
+  },
+  "back": "Powrót do odkryć",
+  "category": {
+    "assistant": {
+      "academic": "Akademicki",
+      "all": "Wszystko",
+      "career": "Kariera",
+      "copywriting": "Copywriting",
+      "design": "Projektowanie",
+      "education": "Edukacja",
+      "emotions": "Emocje",
+      "entertainment": "Rozrywka",
+      "games": "Gry",
+      "general": "Ogólne",
+      "life": "Życie",
+      "marketing": "Marketing",
+      "office": "Biuro",
+      "programming": "Programowanie",
+      "translation": "Tłumaczenie"
+    },
+    "plugin": {
+      "all": "Wszystko",
+      "gaming-entertainment": "Gry i rozrywka",
+      "life-style": "Styl życia",
+      "media-generate": "Generowanie mediów",
+      "science-education": "Nauka i edukacja",
+      "social": "Media społecznościowe",
+      "stocks-finance": "Akcje i finanse",
+      "tools": "Narzędzia",
+      "web-search": "Wyszukiwanie w sieci"
+    }
+  },
+  "cleanFilter": "Wyczyść filtr",
+  "create": "Utwórz",
+  "createGuide": {
+    "func1": {
+      "desc1": "W oknie rozmowy przejdź do ustawień w prawym górnym rogu, aby wejść na stronę ustawień asystenta, który chcesz dodać;",
+      "desc2": "Kliknij przycisk 'Wyślij do rynku asystentów' w prawym górnym rogu.",
+      "tag": "Metoda pierwsza",
+      "title": "Zgłoś przez LobeChat"
+    },
+    "func2": {
+      "button": "Przejdź do repozytorium asystentów na Githubie",
+      "desc": "Jeśli chcesz dodać asystenta do indeksu, użyj agent-template.json lub agent-template-full.json, aby utworzyć wpis w katalogu plugins, napisz krótki opis i odpowiednio oznacz, a następnie utwórz prośbę o ściągnięcie.",
+      "tag": "Metoda druga",
+      "title": "Zgłoś przez Github"
+    }
+  },
+  "dislike": "Nie lubię",
+  "filter": "Filtr",
+  "filterBy": {
+    "authorRange": {
+      "everyone": "Wszyscy autorzy",
+      "followed": "Obserwowani autorzy",
+      "title": "Zakres autorów"
+    },
+    "contentLength": "Minimalna długość kontekstu",
+    "maxToken": {
+      "title": "Ustaw maksymalną długość (Token)",
+      "unlimited": "Bez ograniczeń"
+    },
+    "other": {
+      "functionCall": "Obsługuje wywołania funkcji",
+      "title": "Inne",
+      "vision": "Obsługuje rozpoznawanie wizualne",
+      "withKnowledge": "Z dołączoną bazą wiedzy",
+      "withTool": "Z dołączoną wtyczką"
+    },
+    "pricing": "Cena modelu",
+    "timePeriod": {
+      "all": "Wszystkie czasy",
+      "day": "Ostatnie 24 godziny",
+      "month": "Ostatnie 30 dni",
+      "title": "Zakres czasowy",
+      "week": "Ostatnie 7 dni",
+      "year": "Ostatni rok"
+    }
+  },
+  "home": {
+    "featuredAssistants": "Polecani asystenci",
+    "featuredModels": "Polecane modele",
+    "featuredProviders": "Polecani dostawcy modeli",
+    "featuredTools": "Polecane wtyczki",
+    "more": "Odkryj więcej"
+  },
+  "like": "Lubię",
+  "models": {
+    "chat": "Rozpocznij rozmowę",
+    "contentLength": "Maksymalna długość kontekstu",
+    "free": "Darmowe",
+    "guide": "Przewodnik konfiguracyjny",
+    "list": "Lista modeli",
+    "more": "Więcej",
+    "parameterList": {
+      "defaultValue": "Wartość domyślna",
+      "docs": "Zobacz dokumentację",
+      "frequency_penalty": {
+        "desc": "To ustawienie dostosowuje częstotliwość powtarzania określonych słów, które już pojawiły się w wejściu. Wyższa wartość zmniejsza prawdopodobieństwo powtórzeń, podczas gdy wartość ujemna ma odwrotny efekt. Kara za słownictwo nie wzrasta wraz z liczbą wystąpień. Wartości ujemne zachęcają do powtarzania słownictwa.",
+        "title": "Kara za częstotliwość"
+      },
+      "max_tokens": {
+        "desc": "To ustawienie definiuje maksymalną długość, jaką model może wygenerować w jednej odpowiedzi. Ustawienie wyższej wartości pozwala modelowi na generowanie dłuższych odpowiedzi, podczas gdy niższa wartość ogranicza długość odpowiedzi, czyniąc ją bardziej zwięzłą. W zależności od różnych scenariuszy zastosowania, odpowiednie dostosowanie tej wartości może pomóc osiągnąć oczekiwaną długość i szczegółowość odpowiedzi.",
+        "title": "Limit odpowiedzi na raz"
+      },
+      "presence_penalty": {
+        "desc": "To ustawienie ma na celu kontrolowanie powtarzania słownictwa w zależności od częstotliwości jego występowania w wejściu. Stara się rzadziej używać słów, które pojawiają się w wejściu, proporcjonalnie do ich częstotliwości. Kara za słownictwo wzrasta wraz z liczbą wystąpień. Wartości ujemne zachęcają do powtarzania słownictwa.",
+        "title": "Świeżość tematu"
+      },
+      "range": "Zakres",
+      "temperature": {
+        "desc": "To ustawienie wpływa na różnorodność odpowiedzi modelu. Niższe wartości prowadzą do bardziej przewidywalnych i typowych odpowiedzi, podczas gdy wyższe wartości zachęcają do bardziej zróżnicowanych i rzadziej spotykanych odpowiedzi. Gdy wartość wynosi 0, model zawsze daje tę samą odpowiedź na dane wejście.",
+        "title": "Losowość"
+      },
+      "title": "Parametry modelu",
+      "top_p": {
+        "desc": "To ustawienie ogranicza wybór modelu do słów o najwyższej prawdopodobieństwie: wybiera tylko te słowa, których skumulowane prawdopodobieństwo osiąga P. Niższe wartości sprawiają, że odpowiedzi modelu są bardziej przewidywalne, podczas gdy domyślne ustawienie pozwala modelowi wybierać z całego zakresu słownictwa.",
+        "title": "Próbkowanie jądra"
+      },
+      "type": "Typ"
+    },
+    "providerInfo": {
+      "apiTooltip": "LobeChat obsługuje użycie niestandardowego klucza API dla tego dostawcy.",
+      "input": "Cena wejściowa",
+      "inputTooltip": "Koszt za milion tokenów",
+      "latency": "Opóźnienie",
+      "latencyTooltip": "Średni czas odpowiedzi dostawcy na pierwszy token",
+      "maxOutput": "Maksymalna długość wyjścia",
+      "maxOutputTooltip": "Maksymalna liczba tokenów, które ten punkt końcowy może wygenerować",
+      "officialTooltip": "Oficjalna usługa LobeHub",
+      "output": "Cena wyjściowa",
+      "outputTooltip": "Koszt za milion tokenów",
+      "streamCancellationTooltip": "Ten dostawca obsługuje funkcję anulowania strumienia.",
+      "throughput": "Przepustowość",
+      "throughputTooltip": "Średnia liczba tokenów przesyłanych na sekundę w żądaniach strumieniowych"
+    },
+    "suggestions": "Podobne modele",
+    "supportedProviders": "Dostawcy obsługujący ten model"
+  },
+  "plugins": {
+    "community": "Wtyczki społecznościowe",
+    "install": "Zainstaluj wtyczkę",
+    "installed": "Zainstalowane",
+    "list": "Lista wtyczek",
+    "meta": {
+      "description": "Opis",
+      "parameter": "Parametr",
+      "title": "Parametry narzędzia",
+      "type": "Typ"
+    },
+    "more": "Więcej",
+    "official": "Oficjalne wtyczki",
+    "recentSubmits": "Ostatnie aktualizacje",
+    "suggestions": "Podobne rekomendacje"
+  },
+  "providers": {
+    "config": "Konfiguracja dostawcy",
+    "list": "Lista dostawców modeli",
+    "modelCount": "{{count}} modeli",
+    "modelSite": "Dokumentacja modeli",
+    "more": "Więcej",
+    "officialSite": "Oficjalna strona",
+    "showAllModels": "Pokaż wszystkie modele",
+    "suggestions": "Powiązani dostawcy",
+    "supportedModels": "Obsługiwane modele"
+  },
+  "search": {
+    "placeholder": "Szukaj nazwy, opisu lub słowa kluczowego...",
+    "result": "{{count}} wyników wyszukiwania dotyczących <highlight>{{keyword}}</highlight>",
+    "searching": "Wyszukiwanie..."
+  },
+  "sort": {
+    "mostLiked": "Najbardziej lubiane",
+    "mostUsed": "Najczęściej używane",
+    "newest": "Od najnowszych",
+    "oldest": "Od najstarszych",
+    "recommended": "Polecane"
+  },
+  "tab": {
+    "assistants": "Asystenci",
+    "home": "Strona główna",
+    "models": "Modele",
+    "plugins": "Wtyczki",
+    "providers": "Dostawcy modeli"
+  }
+}

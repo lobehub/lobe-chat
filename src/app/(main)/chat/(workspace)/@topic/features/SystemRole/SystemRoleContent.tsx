@@ -15,6 +15,7 @@ import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useGlobalStore } from '@/store/global';
 import { ChatSettingsTabs } from '@/store/global/initialState';
+import { systemStatusSelectors } from '@/store/global/selectors';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors, sessionSelectors } from '@/store/session/selectors';
 
@@ -35,7 +36,7 @@ const SystemRole = memo(() => {
   ]);
 
   const [showSystemRole, toggleSystemRole] = useGlobalStore((s) => [
-    s.preference.showSystemRole,
+    systemStatusSelectors.showSystemRole(s),
     s.toggleSystemRole,
   ]);
 

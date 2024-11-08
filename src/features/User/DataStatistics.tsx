@@ -17,7 +17,8 @@ import { useServerConfigStore } from '@/store/serverConfig';
 
 const useStyles = createStyles(({ css, token }) => ({
   card: css`
-    padding: 6px 8px;
+    padding-block: 6px;
+    padding-inline: 8px;
     background: ${token.colorFillTertiary};
     border-radius: ${token.borderRadius}px;
   `,

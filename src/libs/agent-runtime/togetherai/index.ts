@@ -1,6 +1,5 @@
 import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
 
-import { AgentRuntimeErrorType } from '../error';
 import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 import { TogetherAIModel } from './type';
@@ -16,10 +15,6 @@ export const LobeTogetherAI = LobeOpenAICompatibleFactory({
   },
   debug: {
     chatCompletion: () => process.env.DEBUG_TOGETHERAI_CHAT_COMPLETION === '1',
-  },
-  errorType: {
-    bizError: AgentRuntimeErrorType.TogetherAIBizError,
-    invalidAPIKey: AgentRuntimeErrorType.InvalidTogetherAIAPIKey,
   },
   models: async ({ apiKey }) => {
     const data = await fetch(`${baseURL}/api/models`, {

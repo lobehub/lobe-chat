@@ -1,13 +1,6 @@
-// import { getClientConfig } from '@/config/client';
-//
-// import { ClientService } from './client';
-// import { ServerService } from './server';
-//
-// const { ENABLED_SERVER_SERVICE } = getClientConfig();
-//
-// export const userService = ENABLED_SERVER_SERVICE ? new ServerService() : new ClientService();
+import { isServerMode } from '@/const/version';
+
 import { ClientService } from './client';
+import { ServerService } from './server';
 
-export type { UserConfig } from './client';
-
-export const userService = new ClientService();
+export const userService = isServerMode ? new ServerService() : new ClientService();

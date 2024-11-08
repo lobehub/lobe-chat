@@ -1,0 +1,94 @@
+{
+  "desc": "Gérez vos fichiers et votre base de connaissances",
+  "detail": {
+    "basic": {
+      "createdAt": "Date de création",
+      "filename": "Nom du fichier",
+      "size": "Taille du fichier",
+      "title": "Informations de base",
+      "type": "Format",
+      "updatedAt": "Date de mise à jour"
+    },
+    "data": {
+      "chunkCount": "Nombre de segments",
+      "embedding": {
+        "default": "Non vectorisé",
+        "error": "Échec",
+        "pending": "En attente de démarrage",
+        "processing": "En cours",
+        "success": "Terminé"
+      },
+      "embeddingStatus": "Vectorisation"
+    }
+  },
+  "empty": "Aucun fichier/dossier téléchargé pour le moment",
+  "header": {
+    "actions": {
+      "newFolder": "Nouveau dossier",
+      "uploadFile": "Télécharger un fichier",
+      "uploadFolder": "Télécharger un dossier"
+    },
+    "uploadButton": "Télécharger"
+  },
+  "knowledgeBase": {
+    "list": {
+      "confirmRemoveKnowledgeBase": "Vous allez supprimer cette base de connaissances. Les fichiers ne seront pas supprimés, mais déplacés dans tous les fichiers. La suppression de la base de connaissances est irréversible, veuillez agir avec prudence.",
+      "empty": "Cliquez sur <1>+</1> pour commencer à créer une base de connaissances"
+    },
+    "new": "Nouvelle base de connaissances",
+    "title": "Base de connaissances"
+  },
+  "networkError": "Échec de l'accès à la base de connaissances, veuillez vérifier votre connexion réseau et réessayer",
+  "notSupportGuide": {
+    "desc": "L'instance déployée actuellement est en mode base de données client, la fonction de gestion des fichiers n'est pas disponible. Veuillez passer en <1>mode de déploiement de base de données serveur</1>, ou utilisez directement <3>LobeChat Cloud</3>",
+    "features": {
+      "allKind": {
+        "desc": "Prend en charge les types de fichiers courants, y compris Word, PPT, Excel, PDF, TXT et d'autres formats de documents courants, ainsi que des fichiers de code populaires comme JS et Python",
+        "title": "Analyse de divers types de fichiers"
+      },
+      "embeddings": {
+        "desc": "Utilise des modèles vectoriels haute performance pour vectoriser les segments de texte, permettant une recherche sémantique du contenu des fichiers",
+        "title": "Sémantisation vectorielle"
+      },
+      "repos": {
+        "desc": "Prend en charge la création de bases de connaissances et permet d'ajouter différents types de fichiers, construisant ainsi votre propre savoir-faire",
+        "title": "Base de connaissances"
+      }
+    },
+    "title": "Le mode de déploiement actuel ne prend pas en charge la gestion des fichiers"
+  },
+  "preview": {
+    "downloadFile": "Télécharger le fichier",
+    "unsupportedFileAndContact": "Ce format de fichier n'est pas encore pris en charge pour l'aperçu en ligne. Si vous souhaitez un aperçu, n'hésitez pas à <1>nous contacter</1>."
+  },
+  "searchFilePlaceholder": "Rechercher un fichier",
+  "tab": {
+    "all": "Tous les fichiers",
+    "audios": "Audio",
+    "documents": "Documents",
+    "images": "Images",
+    "videos": "Vidéos",
+    "websites": "Sites web"
+  },
+  "title": "Fichiers",
+  "uploadDock": {
+    "body": {
+      "collapse": "Réduire",
+      "item": {
+        "done": "Téléchargé",
+        "error": "Échec du téléchargement, veuillez réessayer",
+        "pending": "Préparation au téléchargement...",
+        "processing": "Traitement du fichier...",
+        "restTime": "Temps restant {{time}}"
+      }
+    },
+    "totalCount": "Total {{count}} éléments",
+    "uploadStatus": {
+      "error": "Erreur de téléchargement",
+      "pending": "En attente de téléchargement",
+      "processing": "Téléchargement en cours",
+      "success": "Téléchargement terminé",
+      "uploading": "Téléchargement en cours"
+    }
+  }
+}

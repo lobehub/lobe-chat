@@ -2,10 +2,20 @@
   "ModelSwitch": {
     "title": "모델"
   },
-  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 즉시 대화를 시작하거나 [도우미 설정](/chat/settings#session={{id}})으로 이동하여 내 정보를 완성할 수 있습니다.",
+  "agentDefaultMessage": "안녕하세요, 저는 **{{name}}**입니다. 지금 바로 저와 대화를 시작하시거나 [도우미 설정]({{url}})으로 가셔서 제 정보를 완성하실 수 있습니다.",
   "agentDefaultMessageWithSystemRole": "안녕하세요, 저는 **{{name}}**입니다. {{systemRole}}입니다. 대화를 시작해 봅시다!",
-  "agentsAndConversations": "에이전트 및 대화",
+  "agentDefaultMessageWithoutEdit": "안녕하세요, 저는 **{{name}}**입니다. 대화를 시작해보세요!",
+  "agents": "도우미",
+  "artifact": {
+    "generating": "생성 중",
+    "thinking": "생각 중",
+    "thought": "사고 과정",
+    "unknownTitle": "제목 없음"
+  },
   "backToBottom": "하단으로 이동",
+  "chatList": {
+    "longMessageDetail": "자세히 보기"
+  },
   "clearCurrentMessages": "현재 대화 지우기",
   "confirmClearCurrentMessages": "현재 대화를 지우시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
   "confirmRemoveSessionItemAlert": "이 도우미를 삭제하시면 되돌릴 수 없습니다. 작업을 확인하시겠습니까?",
@@ -35,17 +45,43 @@
     "stop": "중지",
     "warp": "줄바꿈"
   },
+  "knowledgeBase": {
+    "all": "모든 내용",
+    "allFiles": "모든 파일",
+    "allKnowledgeBases": "모든 지식 베이스",
+    "disabled": "현재 배포 모드에서는 지식 기반 대화가 지원되지 않습니다. 사용하려면 서버 데이터베이스 배포로 전환하거나 {{cloud}} 서비스를 이용해 주십시오.",
+    "library": {
+      "action": {
+        "add": "추가",
+        "detail": "상세",
+        "remove": "제거"
+      },
+      "title": "파일/지식 베이스"
+    },
+    "relativeFilesOrKnowledgeBases": "관련 파일/지식 베이스",
+    "title": "지식 베이스",
+    "uploadGuide": "업로드한 파일은 '지식 베이스'에서 확인할 수 있습니다.",
+    "viewMore": "더 보기"
+  },
   "messageAction": {
     "delAndRegenerate": "삭제하고 다시 생성",
     "regenerate": "다시 생성"
   },
   "newAgent": "새 도우미",
-  "noDescription": "설명 없음",
   "pin": "고정",
   "pinOff": "고정 해제",
+  "rag": {
+    "referenceChunks": "참조 조각",
+    "userQuery": {
+      "actions": {
+        "delete": "쿼리 삭제",
+        "regenerate": "쿼리 재생성"
+      }
+    }
+  },
   "regenerate": "재생성",
   "roleAndArchive": "역할 및 아카이브",
-  "searchAgentPlaceholder": "도우미 및 대화 검색...",
+  "searchAgentPlaceholder": "검색 도우미...",
   "sendPlaceholder": "채팅 내용 입력...",
   "sessionGroup": {
     "config": "그룹 설정",
@@ -64,14 +100,20 @@
     "tooLong": "그룹 이름은 1-20자여야 합니다"
   },
   "shareModal": {
+    "copy": "복사",
     "download": "스크린샷 다운로드",
+    "downloadFile": "파일 다운로드",
+    "exportTitle": "기본 제목",
     "imageType": "이미지 형식",
+    "includeTool": "플러그인 메시지 포함",
+    "includeUser": "사용자 메시지 포함",
     "screenshot": "스크린샷",
     "settings": "내보내기 설정",
-    "shareToShareGPT": "ShareGPT 공유 링크 생성",
+    "text": "텍스트",
     "withBackground": "배경 이미지 포함",
     "withFooter": "푸터 포함",
     "withPluginInfo": "플러그인 정보 포함",
+    "withRole": "메시지 역할 포함",
     "withSystemRole": "도우미 역할 포함"
   },
   "stt": {
@@ -79,11 +121,11 @@
     "loading": "인식 중...",
     "prettifying": "정제 중..."
   },
-  "temp": "임시",
   "tokenDetails": {
     "chats": "채팅 메시지",
     "rest": "남은 사용량",
     "systemRole": "시스템 역할",
+    "title": "컨텍스트 세부 정보",
     "tools": "도구 설정",
     "total": "총 사용량",
     "used": "총 사용"
@@ -94,27 +136,10 @@
     "used": "사용됨"
   },
   "topic": {
-    "actions": {
-      "autoRename": "자동으로 이름 바꾸기",
-      "duplicate": "복사본 만들기",
-      "export": "주제 내보내기"
-    },
-    "confirmRemoveAll": "모든 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "confirmRemoveTopic": "이 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "confirmRemoveUnstarred": "별표가 없는 주제를 삭제하시면 되돌릴 수 없습니다. 신중하게 작업하시겠습니까?",
-    "defaultTitle": "기본 주제",
-    "duplicateLoading": "주제 복사 중...",
-    "duplicateSuccess": "주제 복사 성공",
-    "guide": {
-      "desc": "현재 대화를 히스토리 토픽으로 저장하고 새 대화를 시작하려면 왼쪽 버튼을 클릭하세요.",
-      "title": "토픽 목록"
-    },
+    "checkOpenNewTopic": "새 주제를 열까요?",
+    "checkSaveCurrentMessages": "현재 대화를 주제로 저장하시겠습니까?",
     "openNewTopic": "새 주제 열기",
-    "removeAll": "모든 주제 삭제",
-    "removeUnstarred": "별표가 없는 주제 삭제",
-    "saveCurrentMessages": "현재 대화를 주제로 저장",
-    "searchPlaceholder": "주제 검색...",
-    "title": "주제 목록"
+    "saveCurrentMessages": "현재 대화를 주제로 저장"
   },
   "translate": {
     "action": "번역",
@@ -126,12 +151,25 @@
   },
   "updateAgent": "도우미 정보 업데이트",
   "upload": {
-    "actionFiletip": "파일 업로드",
-    "actionTooltip": "이미지 업로드",
-    "disabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 전환한 후 사용해주세요.",
-    "dragDesc": "여기로 파일을 끌어다 놓거나 여러 이미지를 업로드할 수 있습니다. Shift를 누른 채로 이미지를 직접 보내기",
-    "dragFileDesc": "여러 사진과 파일 업로드를 지원하려면 여기로 사진과 파일을 드래그하세요. 이미지나 파일을 직접 보내려면 Shift 키를 누르세요",
-    "dragFileTitle": "파일 업로드",
-    "dragTitle": "이미지 업로드"
-  }
+    "action": {
+      "fileUpload": "파일 업로드",
+      "folderUpload": "폴더 업로드",
+      "imageDisabled": "현재 모델은 시각 인식을 지원하지 않습니다. 모델을 변경한 후 사용하세요.",
+      "imageUpload": "이미지 업로드",
+      "tooltip": "업로드"
+    },
+    "clientMode": {
+      "actionFiletip": "파일 업로드",
+      "actionTooltip": "업로드",
+      "disabled": "현재 모델은 시각 인식 및 파일 분석을 지원하지 않습니다. 모델을 변경한 후 사용하세요."
+    },
+    "preview": {
+      "prepareTasks": "청크 준비 중...",
+      "status": {
+        "pending": "업로드 준비 중...",
+        "processing": "파일 처리 중..."
+      }
+    }
+  },
+  "zenMode": "집중 모드"
 }

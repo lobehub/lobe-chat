@@ -13,8 +13,8 @@ import { useCategory } from './useCategory';
 
 const CategoryContent = memo(() => {
   const cateItems = useCategory();
-  const router = useQueryRoute();
   const { tab = ChatSettingsTabs.Meta } = useQuery();
+  const router = useQueryRoute();
 
   return (
     <>
