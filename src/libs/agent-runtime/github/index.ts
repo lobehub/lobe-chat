@@ -1,7 +1,35 @@
+import { LOBE_DEFAULT_MODEL_LIST } from '@/config/modelProviders';
+import type { ChatModelCard } from '@/types/llm';
+
 import { AgentRuntimeErrorType } from '../error';
 import { o1Models, pruneO1Payload } from '../openai';
 import { ModelProvider } from '../types';
-import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
+import {
+  CHAT_MODELS_BLOCK_LIST,
+  LobeOpenAICompatibleFactory,
+} from '../utils/openaiCompatibleFactory';
+
+enum Task {
+  'chat-completion',
+  'embeddings',
+}
+
+/* eslint-disable typescript-sort-keys/interface */
+type Model = {
+  id: string;
+  name: string;
+  friendly_name: string;
+  model_version: number;
+  publisher: string;
+  model_family: string;
+  model_registry: string;
+  license: string;
+  task: Task;
+  description: string;
+  summary: string;
+  tags: string[];
+};
+/* eslint-enable typescript-sort-keys/interface */
 
 export const LobeGithubAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://models.inference.ai.azure.com',
@@ -22,6 +50,28 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
   errorType: {
     bizError: AgentRuntimeErrorType.ProviderBizError,
     invalidAPIKey: AgentRuntimeErrorType.InvalidGithubToken,
+  },
+  models: async ({ client }) => {
+    const modelsPage = (await client.models.list()) as any;
+    const modelList: Model[] = modelsPage.body;
+    return modelList
+      .filter((model) => {
+        return CHAT_MODELS_BLOCK_LIST.every(
+          (keyword) => !model.name.toLowerCase().includes(keyword),
+        );
+      })
+      .map((model) => {
+        const knownModel = LOBE_DEFAULT_MODEL_LIST.find((m) => m.id === model.name);
+
+        if (knownModel) return knownModel;
+
+        return {
+          description: model.description,
+          displayName: model.friendly_name,
+          id: model.name,
+        };
+      })
+      .filter(Boolean) as ChatModelCard[];
   },
   provider: ModelProvider.Github,
 });

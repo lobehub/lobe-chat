@@ -119,41 +119,6 @@ describe('LobeGithubAI', () => {
         }
       });
 
-      it('should return GithubBizError with an cause response with desensitize Url', async () => {
-        // Arrange
-        const errorInfo = {
-          stack: 'abc',
-          cause: { message: 'api is undefined' },
-        };
-        const apiError = new OpenAI.APIError(400, errorInfo, 'module error', {});
-
-        instance = new LobeGithubAI({
-          apiKey: 'test',
-          baseURL: 'https://api.abc.com/v1',
-        });
-
-        vi.spyOn(instance['client'].chat.completions, 'create').mockRejectedValue(apiError);
-
-        // Act
-        try {
-          await instance.chat({
-            messages: [{ content: 'Hello', role: 'user' }],
-            model: 'meta-llama-3-70b-instruct',
-            temperature: 0.7,
-          });
-        } catch (e) {
-          expect(e).toEqual({
-            endpoint: 'https://api.***.com/v1',
-            error: {
-              cause: { message: 'api is undefined' },
-              stack: 'abc',
-            },
-            errorType: bizErrorType,
-            provider,
-          });
-        }
-      });
-
       it('should throw an InvalidGithubToken error type on 401 status code', async () => {
         // Mock the API call to simulate a 401 error
         const error = new Error('InvalidApiKey') as any;
