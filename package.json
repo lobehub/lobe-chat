@@ -34,6 +34,7 @@
     "build:docker": "DOCKER=true next build && npm run build-sitemap",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "MIGRATION_DB=1 tsx ./scripts/migrateServerDB/index.ts",
+    "db:migrate:pg": "tsx ./scripts/migrateServerDB/pg.ts",
     "db:push": "drizzle-kit push",
     "db:push-test": "NODE_ENV=test drizzle-kit push",
     "db:studio": "drizzle-kit studio",
