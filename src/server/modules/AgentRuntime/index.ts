@@ -292,6 +292,8 @@ export const initAgentRuntimeWithUserPayload = (
   payload: JWTPayload,
   params: any = {},
 ) => {
+  // TODO: 根据payload.userId 从rylai获取OneAI的apiKey
+  console.log('payload', payload);
   return AgentRuntime.initializeWithProviderOptions(provider, {
     [provider]: { ...getLlmOptionsFromPayload(provider, payload), ...params },
   });
