@@ -5,6 +5,7 @@ import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
+import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
 import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
@@ -323,7 +324,8 @@ export const generateAIChat: StateCreator<
     }
 
     // 5. summary history if context messages is larger than historyCount
-    const historyCount = chatConfig.historyCount || 6;
+    const historyCount =
+      chatConfig.historyCount || (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number);
 
     if (chatConfig.enableHistoryCount && originalMessages.length > historyCount) {
       const historyMessages = originalMessages.slice(0, -historyCount);
