@@ -17,7 +17,7 @@ export const clientEncodeAsync = (str: string): Promise<number> =>
       return;
     }
 
-    const id = Date.now().toString();
+    const id = str;
 
     const handleMessage = (event: MessageEvent) => {
       if (event.data.id === id) {

@@ -175,8 +175,8 @@
       "desc": "대화 중에 자동으로 주제를 만들지 여부를 설정합니다. 일시적인 주제에서만 작동합니다",
       "title": "자동 주제 생성 활성화"
     },
-    "enableCompressThreshold": {
-      "title": "이전 메시지 길이 압축 임계값 활성화"
+    "enableCompressHistory": {
+      "title": "역사 메시지 자동 요약 활성화"
     },
     "enableHistoryCount": {
       "alias": "제한 없음",
@@ -377,6 +377,11 @@
       "desc": "작성 후, 시스템 어시스턴트는 콘텐츠 생성 시 사용자 정의 프롬프트를 사용합니다.",
       "placeholder": "사용자 정의 프롬프트 입력",
       "title": "사용자 정의 프롬프트"
+    },
+    "historyCompress": {
+      "label": "대화 기록 모델",
+      "modelDesc": "대화 기록 압축에 사용되는 모델을 지정합니다",
+      "title": "대화 기록 자동 요약"
     },
     "queryRewrite": {
       "label": "질문 재작성 모델",

@@ -17,7 +17,9 @@ export const DEFAULT_AGENT_CHAT_CONFIG: LobeAgentChatConfig = {
   autoCreateTopicThreshold: 2,
   displayMode: 'chat',
   enableAutoCreateTopic: true,
-  historyCount: 1,
+  enableCompressHistory: true,
+  enableHistoryCount: true,
+  historyCount: 8,
 };
 
 export const DEFAULT_AGENT_CONFIG: LobeAgentConfig = {

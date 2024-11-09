@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Tin nhắn trò chuyện",
+    "historySummary": "Tóm tắt lịch sử",
     "rest": "Còn lại",
     "systemRole": "Vai trò hệ thống",
     "title": "Chi tiết Ngữ cảnh",
