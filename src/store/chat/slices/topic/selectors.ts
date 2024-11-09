@@ -33,7 +33,7 @@ const currentActiveTopicSummary = (s: ChatStoreState): ChatTopicSummary | undefi
   if (!activeTopic) return undefined;
 
   return {
-    content: activeTopic.summary || '',
+    content: activeTopic.historySummary || '',
     model: activeTopic.metadata?.model || '',
     provider: activeTopic.metadata?.provider || '',
   };
