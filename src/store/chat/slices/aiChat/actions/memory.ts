@@ -8,8 +8,6 @@ import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatMessage } from '@/types/message';
 
-import { getAgentConfig } from './helpers';
-
 export interface ChatMemoryAction {
   internal_summaryHistory: (messages: ChatMessage[]) => Promise<void>;
 }
@@ -24,9 +22,7 @@ export const chatMemory: StateCreator<
     const topicId = get().activeTopicId;
     if (messages.length <= 1 || !topicId) return;
 
-    const { model, provider } = getAgentConfig();
-
-    const historyCompressConfig = systemAgentSelectors.historyCompress(useUserStore.getState());
+    const { model, provider } = systemAgentSelectors.historyCompress(useUserStore.getState());
 
     let historySummary = '';
     await chatService.fetchPresetTaskResult({
@@ -34,17 +30,12 @@ export const chatMemory: StateCreator<
         historySummary = text;
       },
 
-      params: {
-        ...chainSummaryHistory(messages),
-        model: historyCompressConfig.model,
-        provider: historyCompressConfig.provider,
-        stream: false,
-      },
+      params: { ...chainSummaryHistory(messages), model, provider, stream: false },
     });
 
     await topicService.updateTopic(topicId, {
+      historySummary,
       metadata: { model, provider },
-      summary: historySummary,
     });
     await get().refreshTopic();
     await get().refreshMessages();
