@@ -73,7 +73,8 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
       "autoCreateTopicThreshold": 2,
       "displayMode": "chat",
       "enableAutoCreateTopic": true,
-      "historyCount": 1,
+      "enableHistoryCount": true,
+      "historyCount": 6,
     },
     "model": "gpt-3.5-turbo",
     "params": {
