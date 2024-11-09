@@ -1,6 +1,6 @@
 import { StateCreator } from 'zustand/vanilla';
 
-import { summaryHistory } from '@/chains/summaryHistory';
+import { chainSummaryHistory } from '@/chains/summaryHistory';
 import { chatService } from '@/services/chat';
 import { topicService } from '@/services/topic';
 import { ChatStore } from '@/store/chat';
@@ -35,7 +35,7 @@ export const chatMemory: StateCreator<
       },
 
       params: {
-        ...summaryHistory(messages),
+        ...chainSummaryHistory(messages),
         model: historyCompressConfig.model,
         provider: historyCompressConfig.provider,
         stream: false,

@@ -107,7 +107,7 @@ export const generateAIChat: StateCreator<
     // trace the delete and regenerate message
     get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
   },
-  regenerateMessage: async (id: string) => {
+  regenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
     await get().internal_resendMessage(id, traceId);
 
