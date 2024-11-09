@@ -4,7 +4,6 @@ import { produce } from 'immer';
 import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
-import { summaryHistory } from '@/chains/summaryHistory';
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
@@ -16,8 +15,6 @@ import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
 import { useSessionStore } from '@/store/session';
-import { useUserStore } from '@/store/user';
-import { systemAgentSelectors } from '@/store/user/slices/settings/selectors';
 import { ChatMessage, CreateMessageParams, SendMessageParams } from '@/types/message';
 import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
@@ -359,7 +356,7 @@ export const generateAIChat: StateCreator<
     // ================================== //
 
     // 1. slice messages with config
-    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig);
+    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig, true);
 
     // 2. replace inputMessage template
     preprocessMsgs = !chatConfig.inputTemplate
@@ -402,6 +399,7 @@ export const generateAIChat: StateCreator<
     let msgTraceId: string | undefined;
     let output = '';
 
+    const historySummary = topicSelectors.currentActiveTopicSummary(get());
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
@@ -411,6 +409,7 @@ export const generateAIChat: StateCreator<
         ...agentConfig.params,
         plugins: agentConfig.plugins,
       },
+      historySummary: historySummary?.content,
       trace: {
         traceId: params?.traceId,
         sessionId: get().activeId,

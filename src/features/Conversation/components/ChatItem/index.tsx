@@ -22,10 +22,9 @@ import {
   renderMessages,
   useAvatarsClick,
 } from '../../Messages';
-import History from '../../Messages/History';
+import History from '../History';
 import { markdownElements } from '../MarkdownElements';
 import ActionsBar from './ActionsBar';
-import HistoryDivider from '../HistoryDivider';
 import { processWithArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
@@ -62,10 +61,8 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
     if (index >= chats.length) return;
 
-    return chatSelectors.currentChatsWithGuideMessage(meta)(s)[index];
+    return chats[index];
   }, isEqual);
-
-  const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
 
   const [
     isMessageLoading,
@@ -139,12 +136,13 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const error = useErrorContent(item?.error);
 
+  const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
   const enableHistoryDivider = useAgentStore((s) => {
     const config = agentSelectors.currentAgentChatConfig(s);
     return (
       config.enableHistoryCount &&
       historyLength > (config.historyCount ?? 0) &&
-      config.historyCount === historyLength - index + 1
+      config.historyCount === historyLength - index
     );
   });
 
@@ -164,11 +162,10 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [id],
   );
 
-  if (item?.role === 'history') return <History {...item} />;
   return (
     item && (
       <>
-        <HistoryDivider enable={enableHistoryDivider} />
+        {enableHistoryDivider && <History  />}
         <ChatItem
           actions={
             <ActionsBar

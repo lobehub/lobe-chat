@@ -9,7 +9,7 @@ import { BaseDataModel } from '../meta';
 import { ChatPluginPayload, ChatToolPayload } from './tools';
 import { Translate } from './translate';
 
-export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool';
+export type MessageRoleType = 'user' | 'system' | 'assistant' | 'tool' | string;
 
 /**
  * 聊天消息错误对象

@@ -56,13 +56,12 @@ export interface LobeAgentConfig {
 
 export interface LobeAgentChatConfig {
   autoCreateTopicThreshold: number;
-  compressThreshold?: number;
   displayMode?: 'chat' | 'docs';
   enableAutoCreateTopic?: boolean;
   /**
    * 历史消息长度压缩阈值
    */
-  enableCompressThreshold?: boolean;
+  enableCompressHistory?: boolean;
   /**
    * 开启历史记录条数
    */

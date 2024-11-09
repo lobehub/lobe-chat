@@ -47,5 +47,6 @@ export const chatMemory: StateCreator<
       summary: historySummary,
     });
     await get().refreshTopic();
+    await get().refreshMessages();
   },
 });

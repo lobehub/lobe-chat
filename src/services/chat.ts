@@ -8,8 +8,14 @@ import { INBOX_SESSION_ID } from '@/const/session';
 import { DEFAULT_AGENT_CONFIG } from '@/const/settings';
 import { TracePayload, TraceTagMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
-import {AgentRuntime, AgentRuntimeError, ChatCompletionErrorPayload, ModelProvider} from '@/libs/agent-runtime';
+import {
+  AgentRuntime,
+  AgentRuntimeError,
+  ChatCompletionErrorPayload,
+  ModelProvider,
+} from '@/libs/agent-runtime';
 import { filesPrompts } from '@/prompts/files';
+import { BuiltinSystemRolePrompts } from '@/prompts/systemRole';
 import { useSessionStore } from '@/store/session';
 import { sessionMetaSelectors } from '@/store/session/selectors';
 import { useToolStore } from '@/store/tool';
@@ -34,6 +40,7 @@ import { createHeaderWithAuth, getProviderAuthPayload } from './_auth';
 import { API_ENDPOINTS } from './_url';
 
 interface FetchOptions extends FetchSSEOptions {
+  historySummary?: string;
   isWelcomeQuestion?: boolean;
   signal?: AbortSignal | undefined;
   trace?: TracePayload;
@@ -60,6 +67,7 @@ interface FetchAITaskResultParams extends FetchSSEOptions {
 
 interface CreateAssistantMessageStream extends FetchSSEOptions {
   abortController?: AbortController;
+  historySummary?: string;
   isWelcomeQuestion?: boolean;
   params: GetChatCompletionPayload;
   trace?: TracePayload;
@@ -234,8 +242,10 @@ class ChatService {
     onFinish,
     trace,
     isWelcomeQuestion,
+    historySummary,
   }: CreateAssistantMessageStream) => {
     await this.createAssistantMessage(params, {
+      historySummary,
       isWelcomeQuestion,
       onAbort,
       onErrorHandle,
@@ -463,7 +473,7 @@ class ChatService {
         }
 
         default: {
-          return { content: m.content, role: m.role };
+          return { content: m.content, role: m.role as any };
         }
       }
     });
@@ -483,9 +493,11 @@ class ChatService {
       const toolsSystemRoles =
         hasFC && toolSelectors.enabledSystemRoles(tools)(useToolStore.getState());
 
-      const injectSystemRoles = [inboxGuideSystemRole, toolsSystemRoles]
-        .filter(Boolean)
-        .join('\n\n');
+      const injectSystemRoles = BuiltinSystemRolePrompts({
+        historySummary: options?.historySummary,
+        plugins: toolsSystemRoles as string,
+        welcome: inboxGuideSystemRole as string,
+      });
 
       if (!injectSystemRoles) return;
 

@@ -13,7 +13,6 @@ import { UserActionsBar } from './User';
 
 export const renderActions: Record<MessageRoleType, RenderAction> = {
   assistant: AssistantActionsBar,
-  history: () => null,
   system: DefaultActionsBar,
   tool: ToolActionsBar,
   user: UserActionsBar,
