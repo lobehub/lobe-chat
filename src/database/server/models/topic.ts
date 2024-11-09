@@ -35,9 +35,9 @@ export class TopicModel {
         .select({
           createdAt: topics.createdAt,
           favorite: topics.favorite,
+          historySummary: topics.historySummary,
           id: topics.id,
           metadata: topics.metadata,
-          summary: topics.historySummary,
           title: topics.title,
           updatedAt: topics.updatedAt,
         })
@@ -49,20 +49,6 @@ export class TopicModel {
         .limit(pageSize)
         .offset(offset)
     );
-
-    // return result.map(({ summary, metadata, ...item }) => {
-    //   const meta = metadata as ChatTopicMetadata;
-    //   return {
-    //     ...item,
-    //     summary: !!summary
-    //       ? ({
-    //           content: summary,
-    //           model: meta?.model,
-    //           provider: meta?.provider,
-    //         } as ChatTopicSummary)
-    //       : undefined,
-    //   };
-    // });
   }
 
   async findById(id: string) {
