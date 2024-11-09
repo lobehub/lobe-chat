@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.28.6](https://github.com/lobehub/lobe-chat/compare/v1.28.5...v1.28.6)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix env typo of MS Entra ID.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix env typo of MS Entra ID, closes [#4651](https://github.com/lobehub/lobe-chat/issues/4651) ([f145252](https://github.com/lobehub/lobe-chat/commit/f145252))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.28.5](https://github.com/lobehub/lobe-chat/compare/v1.28.4...v1.28.5)
 
 <sup>Released on **2024-11-08**</sup>
