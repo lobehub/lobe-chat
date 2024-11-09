@@ -378,6 +378,11 @@
       "placeholder": "Veuillez entrer le mot-clé personnalisé",
       "title": "Mot-clé personnalisé"
     },
+    "historyCompress": {
+      "label": "Modèle d'historique de conversation",
+      "modelDesc": "Modèle utilisé pour compresser l'historique des conversations",
+      "title": "Résumé automatique de l'historique des conversations"
+    },
     "queryRewrite": {
       "label": "Modèle de reformulation des questions",
       "modelDesc": "Modèle utilisé pour optimiser les questions des utilisateurs",

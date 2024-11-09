@@ -378,6 +378,11 @@
       "placeholder": "Nhập từ gợi ý tùy chỉnh",
       "title": "Từ gợi ý tùy chỉnh"
     },
+    "historyCompress": {
+      "label": "Mô hình lịch sử cuộc trò chuyện",
+      "modelDesc": "Chỉ định mô hình được sử dụng để nén lịch sử cuộc trò chuyện",
+      "title": "Tóm tắt tự động lịch sử cuộc trò chuyện"
+    },
     "queryRewrite": {
       "label": "Mô hình viết lại câu hỏi",
       "modelDesc": "Mô hình được chỉ định để tối ưu hóa câu hỏi của người dùng",

@@ -378,6 +378,11 @@
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
     },
+    "historyCompress": {
+      "label": "Oturum Geçmişi Modeli",
+      "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",
+      "title": "Oturum Geçmişini Otomatik Olarak Özetle"
+    },
     "queryRewrite": {
       "label": "Soru Yeniden Yazım Modeli",
       "modelDesc": "Kullanıcı sorularını optimize etmek için kullanılan model",

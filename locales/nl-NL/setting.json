@@ -378,6 +378,11 @@
       "placeholder": "Voer aangepaste prompt in",
       "title": "Aangepaste prompt"
     },
+    "historyCompress": {
+      "label": "Gespreksgeschiedenismodel",
+      "modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",
+      "title": "Automatisch samenvatten van gespreksgeschiedenis"
+    },
     "queryRewrite": {
       "label": "Vraag herschrijvingsmodel",
       "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",

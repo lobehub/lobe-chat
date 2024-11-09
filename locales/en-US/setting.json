@@ -378,6 +378,11 @@
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
     },
+    "historyCompress": {
+      "label": "Conversation History Model",
+      "modelDesc": "Specify the model used to compress conversation history",
+      "title": "Automatically Summarize Conversation History"
+    },
     "queryRewrite": {
       "label": "Question Rewriting Model",
       "modelDesc": "Specify the model used to optimize user inquiries",

@@ -378,6 +378,11 @@
       "placeholder": "请输入自定义提示词",
       "title": "自定义提示词"
     },
+    "historyCompress": {
+      "label": "会话历史模型",
+      "modelDesc": "指定用于压缩会话历史的模型",
+      "title": "自动总结会话历史"
+    },
     "queryRewrite": {
       "label": "提问重写模型",
       "modelDesc": "指定用于优化用户提问的模型",

@@ -378,6 +378,11 @@
       "placeholder": "Bitte benutzerdefinierte Eingabe eingeben",
       "title": "Benutzerdefinierte Eingabe"
     },
+    "historyCompress": {
+      "label": "Gesprächshistorienmodell",
+      "modelDesc": "Das Modell, das zur Komprimierung der Gesprächshistorie verwendet wird",
+      "title": "Automatische Zusammenfassung der Gesprächshistorie"
+    },
     "queryRewrite": {
       "label": "Fragenumformulierung Modell",
       "modelDesc": "Modell zur Optimierung der Benutzeranfragen",

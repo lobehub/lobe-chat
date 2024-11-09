@@ -378,6 +378,11 @@
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
     },
+    "historyCompress": {
+      "label": "Model historii rozmów",
+      "modelDesc": "Model używany do kompresji historii rozmów",
+      "title": "Automatyczne podsumowanie historii rozmów"
+    },
     "queryRewrite": {
       "label": "Model przekształcania zapytań",
       "modelDesc": "Model używany do optymalizacji zapytań użytkowników",

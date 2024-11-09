@@ -378,6 +378,11 @@
       "placeholder": "カスタムプロンプトを入力してください",
       "title": "カスタムプロンプト"
     },
+    "historyCompress": {
+      "label": "会話履歴モデル",
+      "modelDesc": "会話履歴を圧縮するために指定されたモデル",
+      "title": "会話履歴の自動要約"
+    },
     "queryRewrite": {
       "label": "質問リライトモデル",
       "modelDesc": "ユーザーの質問を最適化するために指定されたモデル",

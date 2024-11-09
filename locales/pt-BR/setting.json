@@ -378,6 +378,11 @@
       "placeholder": "Digite a palavra-chave personalizada",
       "title": "Palavra-chave personalizada"
     },
+    "historyCompress": {
+      "label": "Modelo de Histórico de Conversa",
+      "modelDesc": "Especifica o modelo usado para comprimir o histórico de conversa",
+      "title": "Resumo Automático do Histórico de Conversa"
+    },
     "queryRewrite": {
       "label": "Modelo de Reescrita de Perguntas",
       "modelDesc": "Modelo designado para otimizar as perguntas dos usuários",

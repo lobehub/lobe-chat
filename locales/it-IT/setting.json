@@ -378,6 +378,11 @@
       "placeholder": "Inserisci il suggerimento personalizzato",
       "title": "Suggerimento personalizzato"
     },
+    "historyCompress": {
+      "label": "Modello di storia delle conversazioni",
+      "modelDesc": "Specifica il modello utilizzato per comprimere la storia delle conversazioni",
+      "title": "Riepilogo automatico della storia delle conversazioni"
+    },
     "queryRewrite": {
       "label": "Modello di riscrittura delle domande",
       "modelDesc": "Modello specificato per ottimizzare le domande degli utenti",
