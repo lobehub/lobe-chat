@@ -175,8 +175,8 @@
       "desc": "Automatische Erstellung eines Themas während des Gesprächs, nur in temporären Themen aktiv",
       "title": "Automatische Themen-Erstellung aktivieren"
     },
-    "enableCompressThreshold": {
-      "title": "Aktivieren der Komprimierungsschwelle für Historienlänge"
+    "enableCompressHistory": {
+      "title": "Automatische Zusammenfassung der Verlaufnachrichten aktivieren"
     },
     "enableHistoryCount": {
       "alias": "Unbegrenzt",

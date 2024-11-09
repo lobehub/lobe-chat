@@ -175,8 +175,8 @@
       "desc": "Automatisch een onderwerp maken tijdens het gesprek, alleen van toepassing op tijdelijke onderwerpen",
       "title": "Automatisch onderwerp maken"
     },
-    "enableCompressThreshold": {
-      "title": "Compressiedrempel voor berichtlengte inschakelen"
+    "enableCompressHistory": {
+      "title": "Automatisch samenvatten van historische berichten inschakelen"
     },
     "enableHistoryCount": {
       "alias": "Onbeperkt",

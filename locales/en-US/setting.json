@@ -175,8 +175,8 @@
       "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics",
       "title": "Auto Create Topic"
     },
-    "enableCompressThreshold": {
-      "title": "Enable History Message Length Compression Threshold"
+    "enableCompressHistory": {
+      "title": "Enable Automatic Summary of Chat History"
     },
     "enableHistoryCount": {
       "alias": "Unlimited",

@@ -175,8 +175,8 @@
       "desc": "会话过程中是否自动创建话题，仅在临时话题中生效",
       "title": "自动创建话题"
     },
-    "enableCompressThreshold": {
-      "title": "是否开启历史消息长度压缩阈值"
+    "enableCompressHistory": {
+      "title": "开启历史消息自动总结"
     },
     "enableHistoryCount": {
       "alias": "不限制",

@@ -175,8 +175,8 @@
       "desc": "Se creare automaticamente un argomento durante la conversazione, valido solo per le conversazioni temporanee",
       "title": "Abilita la creazione automatica di argomenti"
     },
-    "enableCompressThreshold": {
-      "title": "Abilita la soglia di compressione della lunghezza dei messaggi storici"
+    "enableCompressHistory": {
+      "title": "Attiva il riassunto automatico della cronologia dei messaggi"
     },
     "enableHistoryCount": {
       "alias": "Illimitato",

@@ -175,8 +175,8 @@
       "desc": "Se deve criar automaticamente um tópico durante a conversa, apenas válido em tópicos temporários",
       "title": "Criar tópico automaticamente"
     },
-    "enableCompressThreshold": {
-      "title": "Ativar limite de compactação de mensagens"
+    "enableCompressHistory": {
+      "title": "Ativar resumo automático de mensagens históricas"
     },
     "enableHistoryCount": {
       "alias": "Sem limite",

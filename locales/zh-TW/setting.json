@@ -175,8 +175,8 @@
       "desc": "對話過程中是否自動建立話題，僅在臨時話題中生效",
       "title": "自動建立話題"
     },
-    "enableCompressThreshold": {
-      "title": "是否開啟歷史訊息長度壓縮閾值"
+    "enableCompressHistory": {
+      "title": "開啟歷史消息自動總結"
     },
     "enableHistoryCount": {
       "alias": "不限制",

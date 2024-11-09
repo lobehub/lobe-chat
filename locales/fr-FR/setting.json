@@ -175,8 +175,8 @@
       "desc": "Activer la création automatique de sujets pendant la conversation, uniquement valable pour les sujets temporaires",
       "title": "Activer la création automatique de sujets"
     },
-    "enableCompressThreshold": {
-      "title": "Activer le seuil de compression de la longueur des messages"
+    "enableCompressHistory": {
+      "title": "Activer le résumé automatique des messages historiques"
     },
     "enableHistoryCount": {
       "alias": "Illimité",

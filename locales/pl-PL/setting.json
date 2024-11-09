@@ -175,8 +175,8 @@
       "desc": "Automatyczne tworzenie tematu podczas rozmowy, działa tylko w przypadku tymczasowych tematów",
       "title": "Automatyczne tworzenie tematu"
     },
-    "enableCompressThreshold": {
-      "title": "Włącz próg kompresji historii"
+    "enableCompressHistory": {
+      "title": "Włącz automatyczne podsumowywanie historii wiadomości"
     },
     "enableHistoryCount": {
       "alias": "Bez limitu",
