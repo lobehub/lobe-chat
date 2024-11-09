@@ -43,8 +43,8 @@ export const chatMemory: StateCreator<
     });
 
     await topicService.updateTopic(topicId, {
+      historySummary,
       metadata: { model, provider },
-      summary: historySummary,
     });
     await get().refreshTopic();
     await get().refreshMessages();
