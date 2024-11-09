@@ -77,6 +77,13 @@
       "when": 1730900133049,
       "tag": "0010_add_accessed_at_and_clean_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1731138670427,
+      "tag": "0011_add_topic_history_summary",
+      "breakpoints": true
     }
   ],
   "version": "6"

@@ -5,6 +5,7 @@ import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 
@@ -12,17 +13,18 @@ const History = memo(() => {
   const { t } = useTranslation('setting');
   const [popoverOpen, setPopoverOpen] = useState(false);
 
-  const [historyCount, unlimited, updateAgentConfig] = useAgentStore((s) => {
+  const [historyCount, enableHistoryCount, updateAgentConfig] = useAgentStore((s) => {
     const config = agentSelectors.currentAgentChatConfig(s);
-    return [config.historyCount, !config.enableHistoryCount, s.updateAgentChatConfig];
+    return [config.historyCount, config.enableHistoryCount, s.updateAgentChatConfig];
   });
 
   const title = t(
-    unlimited
-      ? 'settingChat.enableHistoryCount.unlimited'
-      : 'settingChat.enableHistoryCount.limited',
+    enableHistoryCount
+      ? 'settingChat.enableHistoryCount.limited'
+      : 'settingChat.enableHistoryCount.unlimited',
     { number: historyCount || 0 },
   );
+  const mobile = useIsMobile();
 
   return (
     <Popover
@@ -30,36 +32,37 @@ const History = memo(() => {
       content={
         <Flexbox align={'center'} gap={16} horizontal>
           <SliderWithInput
-            disabled={unlimited}
-            max={30}
-            min={1}
+            disabled={!enableHistoryCount}
+            max={20}
+            min={0}
             onChange={(v) => {
               updateAgentConfig({ historyCount: v });
             }}
             step={1}
-            style={{ width: 160 }}
+            style={{ width: mobile ? 160 : 300 }}
             value={historyCount}
           />
-          <Flexbox align={'center'} gap={4} horizontal>
-            <Switch
-              checked={unlimited}
-              onChange={(checked) => {
-                updateAgentConfig({ enableHistoryCount: !checked });
-              }}
-              size={'small'}
-            />
-            {t('settingChat.enableHistoryCount.alias')}
-          </Flexbox>
         </Flexbox>
       }
       onOpenChange={setPopoverOpen}
       open={popoverOpen}
       placement={'top'}
-      title={t('settingChat.enableHistoryCount.setlimited')}
+      title={
+        <Flexbox align={'center'} gap={4} horizontal>
+          <Switch
+            checked={enableHistoryCount}
+            onChange={(enableHistoryCount) => {
+              updateAgentConfig({ enableHistoryCount });
+            }}
+            size={'small'}
+          />
+          {t('settingChat.enableHistoryCount.title')}
+        </Flexbox>
+      }
       trigger={'click'}
     >
       <ActionIcon
-        icon={unlimited ? TimerOff : Timer}
+        icon={enableHistoryCount ? Timer : TimerOff}
         placement={'bottom'}
         title={popoverOpen ? undefined : title}
       />

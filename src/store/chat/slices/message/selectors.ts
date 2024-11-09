@@ -75,9 +75,7 @@ const showInboxWelcome = (s: ChatStoreState): boolean => {
   if (!isInbox) return false;
 
   const data = currentChats(s);
-  const isBrandNewChat = data.length === 0;
-
-  return isBrandNewChat;
+  return data.length === 0;
 };
 
 // Custom message for new assistant initialization

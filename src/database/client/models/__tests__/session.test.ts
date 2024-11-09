@@ -24,7 +24,6 @@ describe('SessionModel', () => {
       group: 'testGroup',
       meta: {},
       config: DEFAULT_AGENT_CONFIG,
-      // ... other properties based on LobeAgentSession
     };
   });
 
