@@ -125,6 +125,7 @@ export default {
   },
   tokenDetails: {
     chats: '会话消息',
+    historySummary: '历史总结',
     rest: '剩余可用',
     systemRole: '角色设定',
     title: '上下文明细',

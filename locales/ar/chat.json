@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "رسائل المحادثة",
+    "historySummary": "ملخص التاريخ",
     "rest": "المتبقي",
     "systemRole": "تعيين الدور",
     "title": "تفاصيل الرمز",

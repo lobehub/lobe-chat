@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Chat",
+    "historySummary": "Riepilogo storico",
     "rest": "Rimanenti",
     "systemRole": "Ruolo di sistema",
     "title": "Dettagli del Token",
