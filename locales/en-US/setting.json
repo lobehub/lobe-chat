@@ -175,8 +175,8 @@
       "desc": "Whether to automatically create a topic during the conversation, only effective in temporary topics",
       "title": "Auto Create Topic"
     },
-    "enableCompressThreshold": {
-      "title": "Enable History Message Length Compression Threshold"
+    "enableCompressHistory": {
+      "title": "Enable Automatic Summary of Chat History"
     },
     "enableHistoryCount": {
       "alias": "Unlimited",
@@ -377,6 +377,11 @@
       "desc": "Once filled out, the system assistant will use the custom prompt when generating content",
       "placeholder": "Please enter custom prompt",
       "title": "Custom Prompt"
+    },
+    "historyCompress": {
+      "label": "Conversation History Model",
+      "modelDesc": "Specify the model used to compress conversation history",
+      "title": "Automatically Summarize Conversation History"
     },
     "queryRewrite": {
       "label": "Question Rewriting Model",

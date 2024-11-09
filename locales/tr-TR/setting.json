@@ -175,8 +175,8 @@
       "desc": "Sohbet sırasında otomatik olarak bir konu oluşturup oluşturmayacağınız, yalnızca geçici konularda etkilidir",
       "title": "Otomatik Konu Oluştur"
     },
-    "enableCompressThreshold": {
-      "title": "Geçmiş Mesaj Uzunluğu Sıkıştırma Eşiği Kullan"
+    "enableCompressHistory": {
+      "title": "Geçmiş mesajların otomatik özetini aç"
     },
     "enableHistoryCount": {
       "alias": "Sınırsız",
@@ -377,6 +377,11 @@
       "desc": "Doldurduğunuzda, sistem asistanı içerik oluştururken özel ipucunu kullanacaktır",
       "placeholder": "Lütfen özel ipucu kelimelerini girin",
       "title": "Özel İpucu"
+    },
+    "historyCompress": {
+      "label": "Oturum Geçmişi Modeli",
+      "modelDesc": "Oturum geçmişini sıkıştırmak için kullanılan modeli belirtin",
+      "title": "Oturum Geçmişini Otomatik Olarak Özetle"
     },
     "queryRewrite": {
       "label": "Soru Yeniden Yazım Modeli",

@@ -11,38 +11,28 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useUserStore } from '@/store/user';
 import { systemAgentSelectors } from '@/store/user/selectors';
-import { ChatTTS, ChatTranslate } from '@/types/message';
+import { ChatTranslate } from '@/types/message';
 import { merge } from '@/utils/merge';
 import { setNamespace } from '@/utils/storeDebug';
 
 const n = setNamespace('enhance');
 
 /**
- * enhance chat action like translate,tts
+ * chat translate
  */
-export interface ChatEnhanceAction {
-  clearTTS: (id: string) => Promise<void>;
+export interface ChatTranslateAction {
   clearTranslate: (id: string) => Promise<void>;
   getCurrentTracePayload: (data: Partial<TracePayload>) => TracePayload;
   translateMessage: (id: string, targetLang: string) => Promise<void>;
-  ttsMessage: (
-    id: string,
-    state?: { contentMd5?: string; file?: string; voice?: string },
-  ) => Promise<void>;
-  updateMessageTTS: (id: string, data: Partial<ChatTTS> | false) => Promise<void>;
   updateMessageTranslate: (id: string, data: Partial<ChatTranslate> | false) => Promise<void>;
 }
 
-export const chatEnhance: StateCreator<
+export const chatTranslate: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
   [],
-  ChatEnhanceAction
+  ChatTranslateAction
 > = (set, get) => ({
-  clearTTS: async (id) => {
-    await get().updateMessageTTS(id, false);
-  },
-
   clearTranslate: async (id) => {
     await get().updateMessageTranslate(id, false);
   },
@@ -105,15 +95,6 @@ export const chatEnhance: StateCreator<
       params: merge(translationSetting, chainTranslate(message.content, targetLang)),
       trace: get().getCurrentTracePayload({ traceName: TraceNameMap.Translator }),
     });
-  },
-
-  ttsMessage: async (id, state = {}) => {
-    await get().updateMessageTTS(id, state);
-  },
-
-  updateMessageTTS: async (id, data) => {
-    await messageService.updateMessageTTS(id, data);
-    await get().refreshMessages();
   },
 
   updateMessageTranslate: async (id, data) => {
