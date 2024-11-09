@@ -17,6 +17,7 @@ const ReactRenderer = memo<ReactRendererProps>(({ code }) => {
     <SandpackProvider
       customSetup={{
         dependencies: {
+          '@ant-design/icons': 'latest',
           '@lshay/ui': 'latest',
           '@radix-ui/react-alert-dialog': 'latest',
           '@radix-ui/react-dialog': 'latest',
