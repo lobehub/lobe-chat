@@ -177,8 +177,8 @@ export default {
       desc: '会话过程中是否自动创建话题，仅在临时话题中生效',
       title: '自动创建话题',
     },
-    enableCompressThreshold: {
-      title: '是否开启历史消息长度压缩阈值',
+    enableCompressHistory: {
+      title: '开启历史消息自动总结',
     },
     enableHistoryCount: {
       alias: '不限制',
@@ -379,6 +379,11 @@ export default {
       desc: '填写后，系统助理将在生成内容时使用自定义提示',
       placeholder: '请输入自定义提示词',
       title: '自定义提示词',
+    },
+    historyCompress: {
+      label: '会话历史模型',
+      modelDesc: '指定用于压缩会话历史的模型',
+      title: '自动总结会话历史',
     },
     queryRewrite: {
       label: '提问重写模型',
