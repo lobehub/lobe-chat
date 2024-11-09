@@ -88,6 +88,20 @@ LobeChat 在部署时提供了一些额外的配置项，你可以使用环境�
   是走到自身容器的 `localhost`，此时请尝试用 `host.docker.internal` 替代 `localhost`
 </Callout>
 
+### `SSRF_ALLOW_PRIVATE_IP_ADDRESS`
+
+- 类型：可选
+- 描述：是否允许连接私有IP地址。在可信环境中可以设置为true来关闭SSRF防护。
+- 默认值：`0`
+- 示例：`1` or `0`
+
+### `SSRF_ALLOW_IP_ADDRESS_LIST`
+
+- 类型：可选
+- 描述：允许连接的私有IP地址列表，多个IP地址时使用逗号分隔。当 `SSRF_ALLOW_PRIVATE_IP_ADDRESS` 为 `0` 时才会生效。
+- 默认值：-
+- 示例：`198.18.1.62,224.0.0.3`
+
 ## 插件服务
 
 ### `PLUGINS_INDEX_URL`
