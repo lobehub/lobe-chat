@@ -12,6 +12,7 @@ const Page = () => {
     <>
       <SystemAgentForm systemAgentKey="topic" />
       <SystemAgentForm systemAgentKey="translation" />
+      <SystemAgentForm systemAgentKey="historyCompress" />
       <SystemAgentForm systemAgentKey="agentMeta" />
       {isServerMode && enableKnowledgeBase && (
         <SystemAgentForm

@@ -175,8 +175,8 @@
       "desc": "Se deve criar automaticamente um tópico durante a conversa, apenas válido em tópicos temporários",
       "title": "Criar tópico automaticamente"
     },
-    "enableCompressThreshold": {
-      "title": "Ativar limite de compactação de mensagens"
+    "enableCompressHistory": {
+      "title": "Ativar resumo automático de mensagens históricas"
     },
     "enableHistoryCount": {
       "alias": "Sem limite",
@@ -377,6 +377,11 @@
       "desc": "Após preenchido, o assistente do sistema usará o prompt personalizado ao gerar conteúdo",
       "placeholder": "Digite a palavra-chave personalizada",
       "title": "Palavra-chave personalizada"
+    },
+    "historyCompress": {
+      "label": "Modelo de Histórico de Conversa",
+      "modelDesc": "Especifica o modelo usado para comprimir o histórico de conversa",
+      "title": "Resumo Automático do Histórico de Conversa"
     },
     "queryRewrite": {
       "label": "Modelo de Reescrita de Perguntas",

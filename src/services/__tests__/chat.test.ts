@@ -28,6 +28,8 @@ import {
 import { AgentRuntime } from '@/libs/agent-runtime';
 import { useToolStore } from '@/store/tool';
 import { UserStore } from '@/store/user';
+import { useUserStore } from '@/store/user';
+import { modelConfigSelectors } from '@/store/user/selectors';
 import { UserSettingsState, initialSettingsState } from '@/store/user/slices/settings/initialState';
 import { DalleManifest } from '@/tools/dalle';
 import { ChatMessage } from '@/types/message';
@@ -35,8 +37,6 @@ import { ChatStreamPayload, type OpenAIChatMessage } from '@/types/openai/chat';
 import { LobeTool } from '@/types/tool';
 
 import { chatService, initializeWithClientStore } from '../chat';
-import { useUserStore } from '@/store/user';
-import {modelConfigSelectors} from "@/store/user/selectors";
 
 // Mocking external dependencies
 vi.mock('i18next', () => ({
@@ -150,8 +150,6 @@ describe('ChatService', () => {
               },
             ],
           }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
-          { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
         const getChatCompletionSpy = vi.spyOn(chatService, 'getChatCompletion');
@@ -177,15 +175,6 @@ describe('ChatService', () => {
                 ],
                 role: 'user',
               },
-              {
-                content: 'Hi',
-                name: 'plugin1____api1',
-                role: 'tool',
-              },
-              {
-                content: 'Hey',
-                role: 'assistant',
-              },
             ],
             model: 'gpt-4-vision-preview',
           },
@@ -196,7 +185,6 @@ describe('ChatService', () => {
       it('should not include image with vision models when can not find the image', async () => {
         const messages = [
           { content: 'Hello', role: 'user', files: ['file2'] }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with function role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
@@ -207,7 +195,6 @@ describe('ChatService', () => {
           {
             messages: [
               { content: 'Hello', role: 'user' },
-              { content: 'Hi', name: 'plugin1____api1', role: 'tool' },
               { content: 'Hey', role: 'assistant' },
             ],
           },
@@ -536,7 +523,9 @@ describe('ChatService', () => {
       };
 
       vi.spyOn(useUserStore, 'getState').mockImplementationOnce(() => mockUserStore as any);
-      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementationOnce(mockModelConfigSelectors.isProviderFetchOnClient);
+      vi.spyOn(modelConfigSelectors, 'isProviderFetchOnClient').mockImplementationOnce(
+        mockModelConfigSelectors.isProviderFetchOnClient,
+      );
 
       const params: Partial<ChatStreamPayload> = {
         model: 'test-model',
@@ -550,18 +539,15 @@ describe('ChatService', () => {
         ...params,
       };
 
-      const result = await chatService.getChatCompletion(params,options);
+      const result = await chatService.getChatCompletion(params, options);
 
-      expect(global.fetch).toHaveBeenCalledWith(
-        expect.any(String),
-        {
-          body: JSON.stringify(expectedPayload),
-          headers: expect.objectContaining({
-            'Content-Type': 'application/json',
-          }),
-          method: 'POST',
-        },
-      );
+      expect(global.fetch).toHaveBeenCalledWith(expect.any(String), {
+        body: JSON.stringify(expectedPayload),
+        headers: expect.objectContaining({
+          'Content-Type': 'application/json',
+        }),
+        method: 'POST',
+      });
       expect(result.status).toBe(401);
     });
 
@@ -683,14 +669,6 @@ describe('ChatService', () => {
               id: 'tool_call_nXxXHW8Z',
               type: 'function',
             },
-            {
-              function: {
-                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
-                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
-              },
-              id: 'tool_call_2f3CEKz9',
-              type: 'function',
-            },
           ],
         },
         {
@@ -749,14 +727,6 @@ describe('ChatService', () => {
               id: 'tool_call_nXxXHW8Z',
               type: 'function',
             },
-            {
-              function: {
-                arguments: '{"query":"LobeHub","searchEngines":["bilibili"]}',
-                name: 'lobe-web-browsing____searchWithSearXNG____builtin',
-              },
-              id: 'tool_call_2f3CEKz9',
-              type: 'function',
-            },
           ],
         },
         {
@@ -770,12 +740,6 @@ describe('ChatService', () => {
           name: 'lobe-web-browsing____searchWithSearXNG____builtin',
           role: 'tool',
           tool_call_id: 'tool_call_nXxXHW8Z',
-        },
-        {
-          content: '[]',
-          name: 'lobe-web-browsing____searchWithSearXNG____builtin',
-          role: 'tool',
-          tool_call_id: 'tool_call_2f3CEKz9',
         },
         {
           content: 'LobeHub 是一个专注于设计和开发现代人工智能生成内容（AIGC）工具和组件的团队。',
@@ -826,7 +790,6 @@ describe('ChatService', () => {
               },
             ],
           }, // Message with files
-          { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
           { content: 'Hey', role: 'assistant' }, // Regular user message
         ] as ChatMessage[];
 
@@ -862,11 +825,6 @@ describe('ChatService', () => {
             role: 'user',
           },
           {
-            content: 'Hi',
-            name: 'plugin1____api1',
-            role: 'tool',
-          },
-          {
             content: 'Hey',
             role: 'assistant',
           },
@@ -894,7 +852,6 @@ describe('ChatService', () => {
             },
           ],
         }, // Message with files
-        { content: 'Hi', role: 'tool', plugin: { identifier: 'plugin1', apiName: 'api1' } }, // Message with tool role
         { content: 'Hey', role: 'assistant' }, // Regular user message
       ] as ChatMessage[];
 
@@ -928,11 +885,6 @@ describe('ChatService', () => {
                 },
               ],
               role: 'user',
-            },
-            {
-              content: 'Hi',
-              name: 'plugin1____api1',
-              role: 'tool',
             },
             {
               content: 'Hey',
