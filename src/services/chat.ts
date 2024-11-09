@@ -561,18 +561,40 @@ class ChatService {
    * see https://github.com/lobehub/lobe-chat/pull/3155
    */
   private reorderToolMessages = (messages: OpenAIChatMessage[]): OpenAIChatMessage[] => {
-    const reorderedMessages: OpenAIChatMessage[] = [];
-    const toolMessages: Record<string, OpenAIChatMessage> = {};
-
-    // 1. collect all tool messages
+    // 1. 先收集所有 assistant 消息中的有效 tool_call_id
+    const validToolCallIds = new Set<string>();
     messages.forEach((message) => {
-      if (message.role === 'tool' && message.tool_call_id) {
+      if (message.role === 'assistant' && message.tool_calls) {
+        message.tool_calls.forEach((toolCall) => {
+          validToolCallIds.add(toolCall.id);
+        });
+      }
+    });
+
+    // 2. 收集所有有效的 tool 消息
+    const toolMessages: Record<string, OpenAIChatMessage> = {};
+    messages.forEach((message) => {
+      if (
+        message.role === 'tool' &&
+        message.tool_call_id &&
+        validToolCallIds.has(message.tool_call_id)
+      ) {
         toolMessages[message.tool_call_id] = message;
       }
     });
 
-    // 2. reorder messages
+    // 3. 重新排序消息
+    const reorderedMessages: OpenAIChatMessage[] = [];
     messages.forEach((message) => {
+      // 跳过无效的 tool 消息
+      if (
+        message.role === 'tool' &&
+        (!message.tool_call_id || !validToolCallIds.has(message.tool_call_id))
+      ) {
+        return;
+      }
+
+      // 检查是否已经添加过该 tool 消息
       const hasPushed = reorderedMessages.some(
         (m) => !!message.tool_call_id && m.tool_call_id === message.tool_call_id,
       );
@@ -581,12 +603,12 @@ class ChatService {
 
       reorderedMessages.push(message);
 
+      // 如果是 assistant 消息且有 tool_calls，添加对应的 tool 消息
       if (message.role === 'assistant' && message.tool_calls) {
         message.tool_calls.forEach((toolCall) => {
           const correspondingToolMessage = toolMessages[toolCall.id];
           if (correspondingToolMessage) {
             reorderedMessages.push(correspondingToolMessage);
-            // 从 toolMessages 中删除已处理的消息，避免重复
             delete toolMessages[toolCall.id];
           }
         });

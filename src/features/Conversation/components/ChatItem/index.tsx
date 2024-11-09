@@ -137,6 +137,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   const error = useErrorContent(item?.error);
 
   const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
+
   const enableHistoryDivider = useAgentStore((s) => {
     const config = agentSelectors.currentAgentChatConfig(s);
     return (
