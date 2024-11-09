@@ -1,5 +1,6 @@
-import { generateLLMConfig } from './generateLLMConfig';
 import { describe, expect, it, vi } from 'vitest';
+
+import { generateLLMConfig } from './generateLLMConfig';
 
 // Mock ModelProvider enum
 vi.mock('@/libs/agent-runtime', () => ({
@@ -38,8 +39,14 @@ vi.mock('@/config/llm', () => ({
 
 // Mock parse models utils
 vi.mock('@/utils/parseModels', () => ({
-  extractEnabledModels: (modelString: string, withDeploymentName?: boolean) => [modelString],
-  transformToChatModelCards: ({ defaultChatModels, modelString, withDeploymentName }: any) => defaultChatModels,
+  extractEnabledModels: (modelString: string, withDeploymentName?: boolean) => {
+    // Returns different format if withDeploymentName is true
+    return withDeploymentName ? [`${modelString}_withDeployment`] : [modelString];
+  },
+  transformToChatModelCards: ({ defaultChatModels, modelString, withDeploymentName }: any) => {
+    // Simulate transformation based on withDeploymentName
+    return withDeploymentName ? [`${modelString}_transformed`] : defaultChatModels;
+  },
 }));
 
 describe('generateLLMConfig', () => {
@@ -48,8 +55,8 @@ describe('generateLLMConfig', () => {
     
     expect(config.azure).toEqual({
       enabled: true,
-      enabledModels: ['azureModels'],
-      serverModelCards: [],
+      enabledModels: ['azureModels_withDeployment'],
+      serverModelCards: ['azureModels_transformed'],
     });
 
     expect(config.bedrock).toEqual({
