@@ -56,13 +56,12 @@ export interface LobeAgentConfig {
 
 export interface LobeAgentChatConfig {
   autoCreateTopicThreshold: number;
-  compressThreshold?: number;
   displayMode?: 'chat' | 'docs';
   enableAutoCreateTopic?: boolean;
   /**
    * 历史消息长度压缩阈值
    */
-  enableCompressThreshold?: boolean;
+  enableCompressHistory?: boolean;
   /**
    * 开启历史记录条数
    */
@@ -78,10 +77,9 @@ export interface LobeAgentChatConfig {
 
 export const AgentChatConfigSchema = z.object({
   autoCreateTopicThreshold: z.number().default(2),
-  compressThreshold: z.number().optional(),
   displayMode: z.enum(['chat', 'docs']).optional(),
   enableAutoCreateTopic: z.boolean().optional(),
-  enableCompressThreshold: z.boolean().optional(),
+  enableCompressHistory: z.boolean().optional(),
   enableHistoryCount: z.boolean().optional(),
   enableMaxTokens: z.boolean().optional(),
   historyCount: z.number().optional(),

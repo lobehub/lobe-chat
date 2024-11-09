@@ -175,8 +175,8 @@
       "desc": "Automatische Erstellung eines Themas während des Gesprächs, nur in temporären Themen aktiv",
       "title": "Automatische Themen-Erstellung aktivieren"
     },
-    "enableCompressThreshold": {
-      "title": "Aktivieren der Komprimierungsschwelle für Historienlänge"
+    "enableCompressHistory": {
+      "title": "Automatische Zusammenfassung der Verlaufnachrichten aktivieren"
     },
     "enableHistoryCount": {
       "alias": "Unbegrenzt",
@@ -377,6 +377,11 @@
       "desc": "Nachdem Sie dies ausgefüllt haben, verwendet der Systemassistent die benutzerdefinierte Eingabe zur Generierung von Inhalten",
       "placeholder": "Bitte benutzerdefinierte Eingabe eingeben",
       "title": "Benutzerdefinierte Eingabe"
+    },
+    "historyCompress": {
+      "label": "Gesprächshistorienmodell",
+      "modelDesc": "Das Modell, das zur Komprimierung der Gesprächshistorie verwendet wird",
+      "title": "Automatische Zusammenfassung der Gesprächshistorie"
     },
     "queryRewrite": {
       "label": "Fragenumformulierung Modell",

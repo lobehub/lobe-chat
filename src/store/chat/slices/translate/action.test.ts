@@ -52,19 +52,6 @@ afterEach(() => {
 });
 
 describe('ChatEnhanceAction', () => {
-  describe('clearTTS', () => {
-    it('should clear TTS for a message and refresh messages', async () => {
-      const { result } = renderHook(() => useChatStore());
-      const messageId = 'message-id';
-
-      await act(async () => {
-        await result.current.clearTTS(messageId);
-      });
-
-      expect(messageService.updateMessageTTS).toHaveBeenCalledWith(messageId, false);
-    });
-  });
-
   describe('translateMessage', () => {
     it('should translate a message to the target language and refresh messages', async () => {
       const { result } = renderHook(() => useChatStore());
