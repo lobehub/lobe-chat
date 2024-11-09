@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useChatStore } from '@/store/chat';
-import { LLMRoleType } from '@/types/llm';
+import { MessageRoleType } from '@/types/message';
 
 import { OnActionsClick, RenderAction } from '../types';
 import { AssistantActionsBar } from './Assistant';
@@ -11,7 +11,7 @@ import { DefaultActionsBar } from './Fallback';
 import { ToolActionsBar } from './Tool';
 import { UserActionsBar } from './User';
 
-export const renderActions: Record<LLMRoleType, RenderAction> = {
+export const renderActions: Record<MessageRoleType, RenderAction> = {
   assistant: AssistantActionsBar,
   system: DefaultActionsBar,
   tool: ToolActionsBar,

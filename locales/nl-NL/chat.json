@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Chats",
+    "historySummary": "Geschiedenis samenvatting",
     "rest": "Rust",
     "systemRole": "Systeemrol",
     "title": "Contextuele details",

@@ -10,7 +10,7 @@ import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { useUserStore } from '@/store/user';
@@ -22,15 +22,23 @@ const Token = memo(() => {
   const { t } = useTranslation(['chat', 'components']);
   const theme = useTheme();
 
-  const [input, messageString] = useChatStore((s) => [
+  const [input, messageString, historySummary] = useChatStore((s) => [
     s.inputMessage,
     chatSelectors.chatsMessageString(s),
+    topicSelectors.currentActiveTopicSummary(s)?.content || '',
   ]);
 
-  const [systemRole, model] = useAgentStore((s) => [
-    agentSelectors.currentAgentSystemRole(s),
-    agentSelectors.currentAgentModel(s) as string,
-  ]);
+  const [systemRole, model] = useAgentStore((s) => {
+    const config = agentSelectors.currentAgentChatConfig(s);
+
+    return [
+      agentSelectors.currentAgentSystemRole(s),
+      agentSelectors.currentAgentModel(s) as string,
+      // add these two params to enable the component to re-render
+      config.historyCount,
+      config.enableHistoryCount,
+    ];
+  });
 
   const maxTokens = useUserStore(modelProviderSelectors.modelMaxToken(model));
 
@@ -55,9 +63,10 @@ const Token = memo(() => {
 
   // SystemRole token
   const systemRoleToken = useTokenCount(systemRole);
+  const historySummaryToken = useTokenCount(historySummary);
 
   // Total token
-  const totalToken = systemRoleToken + toolsToken + chatsToken;
+  const totalToken = systemRoleToken + historySummaryToken + toolsToken + chatsToken;
 
   const content = (
     <Flexbox gap={12} style={{ minWidth: 200 }}>
@@ -98,6 +107,12 @@ const Token = memo(() => {
             id: 'tools',
             title: t('tokenDetails.tools'),
             value: toolsToken,
+          },
+          {
+            color: theme.orange,
+            id: 'historySummary',
+            title: t('tokenDetails.historySummary'),
+            value: historySummaryToken,
           },
           {
             color: theme.gold,

@@ -175,8 +175,8 @@
       "desc": "Indica si se debe crear automáticamente un tema durante la conversación, solo se aplica en temas temporales",
       "title": "Crear tema automáticamente"
     },
-    "enableCompressThreshold": {
-      "title": "Activar umbral de compresión de longitud de mensajes históricos"
+    "enableCompressHistory": {
+      "title": "Activar resumen automático de mensajes históricos"
     },
     "enableHistoryCount": {
       "alias": "Sin límite",
@@ -377,6 +377,11 @@
       "desc": "Al completarlo, el asistente del sistema utilizará el aviso personalizado al generar contenido",
       "placeholder": "Introduce la palabra clave personalizada",
       "title": "Palabra clave personalizada"
+    },
+    "historyCompress": {
+      "label": "Modelo de historial de conversación",
+      "modelDesc": "Especifica el modelo utilizado para comprimir el historial de conversación",
+      "title": "Resumen automático del historial de conversación"
     },
     "queryRewrite": {
       "label": "Modelo de reescritura de preguntas",
