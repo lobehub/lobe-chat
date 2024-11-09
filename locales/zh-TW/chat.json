@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "聊天訊息",
+    "historySummary": "歷史總結",
     "rest": "剩餘可用",
     "systemRole": "角色設定",
     "title": "上下文詳細資訊",

@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Chats",
+    "historySummary": "Historische Zusammenfassung",
     "rest": "Verbleibend",
     "systemRole": "Systemrolle",
     "title": "Kontextdetails",
