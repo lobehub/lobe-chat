@@ -37,7 +37,7 @@ export class TopicModel {
           favorite: topics.favorite,
           id: topics.id,
           metadata: topics.metadata,
-          summary: topics.summary,
+          summary: topics.historySummary,
           title: topics.title,
           updatedAt: topics.updatedAt,
         })
