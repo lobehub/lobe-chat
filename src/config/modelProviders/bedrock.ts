@@ -32,7 +32,7 @@ const Bedrock: ModelProviderCard = {
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
       functionCall: true,
-      id: 'us.anthropic.claude-3-5-sonnet-20241022-v2:0',
+      id: 'us-east-1:706092902407:inference-profile/us.anthropic.claude-3-5-sonnet-20241022-v2:0',
       pricing: {
         input: 3,
         output: 15,
