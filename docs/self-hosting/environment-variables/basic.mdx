@@ -92,17 +92,18 @@ For specific content, please refer to the [Feature Flags](/docs/self-hosting/adv
   `localhost` / `127.0.0.1` refers to the localhost of the container itself. In such cases, please
   try using `host.docker.internal` instead of `localhost`.
 </Callout>
+
 ### `SSRF_ALLOW_PRIVATE_IP_ADDRESS`
 
 - Type: Optional
 - Description: Allow to connect private IP address. In a trusted environment, it can be set to true to turn off SSRF protection.
-- Default: false
-- Example: `true` or `false`
+- Default: `0`
+- Example: `1` or `0`
 
 ### `SSRF_ALLOW_IP_ADDRESS_LIST`
 
 - Type: Optional
-- Description: Allow private IP address list, multiple IP addresses are separated by commas. Only when SSRF_ALLOW_PRIVATE_IP_ADDRESS is false, it takes effect.
+- Description: Allow private IP address list, multiple IP addresses are separated by commas. Only when `SSRF_ALLOW_PRIVATE_IP_ADDRESS` is `0`, it takes effect.
 - Default: -
 - Example: `198.18.1.62,224.0.0.3`
 

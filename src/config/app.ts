@@ -76,8 +76,7 @@ export const getAppConfig = () => {
       CUSTOM_FONT_URL: process.env.CUSTOM_FONT_URL,
       CDN_USE_GLOBAL: process.env.CDN_USE_GLOBAL === '1',
 
-      SSRF_ALLOW_PRIVATE_IP_ADDRESS:
-        process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS?.toLowerCase() === 'true',
+      SSRF_ALLOW_PRIVATE_IP_ADDRESS: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
       SSRF_ALLOW_IP_ADDRESS_LIST: process.env.SSRF_ALLOW_IP_ADDRESS_LIST,
     },
   });
