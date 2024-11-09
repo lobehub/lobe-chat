@@ -327,7 +327,11 @@ export const generateAIChat: StateCreator<
     const historyCount =
       chatConfig.historyCount || (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number);
 
-    if (chatConfig.enableHistoryCount && originalMessages.length > historyCount) {
+    if (
+      chatConfig.enableHistoryCount &&
+      chatConfig.enableCompressHistory &&
+      originalMessages.length > historyCount
+    ) {
       const historyMessages = originalMessages.slice(0, -historyCount);
 
       await get().internal_summaryHistory(historyMessages);

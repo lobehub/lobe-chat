@@ -103,9 +103,10 @@ const AgentChat = memo(() => {
       },
       {
         children: <Switch />,
-        label: t('settingChat.enableCompressThreshold.title'),
+        hidden: !enableHistoryCount,
+        label: t('settingChat.enableCompressHistory.title'),
         minWidth: undefined,
-        name: 'enableHistoryCompress',
+        name: 'enableCompressHistory',
         valuePropName: 'checked',
       },
     ],
