@@ -80,7 +80,7 @@ export const AgentChatConfigSchema = z.object({
   compressThreshold: z.number().optional(),
   displayMode: z.enum(['chat', 'docs']).optional(),
   enableAutoCreateTopic: z.boolean().optional(),
-  enableCompressThreshold: z.boolean().optional(),
+  enableCompressHistory: z.boolean().optional(),
   enableHistoryCount: z.boolean().optional(),
   enableMaxTokens: z.boolean().optional(),
   historyCount: z.number().optional(),

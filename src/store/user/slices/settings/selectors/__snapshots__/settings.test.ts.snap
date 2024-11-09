@@ -73,6 +73,7 @@ exports[`settingsSelectors > defaultAgent > should merge DEFAULT_AGENT and s.set
       "autoCreateTopicThreshold": 2,
       "displayMode": "chat",
       "enableAutoCreateTopic": true,
+      "enableCompressHistory": true,
       "enableHistoryCount": true,
       "historyCount": 8,
     },
