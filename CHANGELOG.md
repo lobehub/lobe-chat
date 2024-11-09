@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.29.3](https://github.com/lobehub/lobe-chat/compare/v1.29.2...v1.29.3)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the display model of history summary.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the display model of history summary, closes [#4656](https://github.com/lobehub/lobe-chat/issues/4656) ([66cf2c1](https://github.com/lobehub/lobe-chat/commit/66cf2c1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.29.2](https://github.com/lobehub/lobe-chat/compare/v1.29.1...v1.29.2)
 
 <sup>Released on **2024-11-09**</sup>
