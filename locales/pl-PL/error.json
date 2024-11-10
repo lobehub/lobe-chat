@@ -12,8 +12,14 @@
     "retry": "Ponów próbę",
     "title": "Napotkano problem na stronie.."
   },
-  "fetchError": "Błąd żądania",
-  "fetchErrorDetail": "Szczegóły błędu",
+  "fetchError": {
+    "detail": "Szczegóły błędu",
+    "title": "Żądanie nie powiodło się"
+  },
+  "loginRequired": {
+    "desc": "Zaraz nastąpi automatyczne przekierowanie do strony logowania",
+    "title": "Proszę zalogować się, aby korzystać z tej funkcji"
+  },
   "notFound": {
     "backHome": "Powrót do strony głównej",
     "check": "Proszę sprawdzić, czy Twój adres URL jest poprawny",

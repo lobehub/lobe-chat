@@ -100,14 +100,20 @@
     "tooLong": "Il nome del gruppo deve essere lungo 1-20 caratteri"
   },
   "shareModal": {
+    "copy": "Copia",
     "download": "Scarica screenshot",
+    "downloadFile": "Scarica file",
+    "exportTitle": "Titolo predefinito",
     "imageType": "Tipo di immagine",
+    "includeTool": "Includi messaggio dello strumento",
+    "includeUser": "Includi messaggio dell'utente",
     "screenshot": "Screenshot",
     "settings": "Impostazioni di esportazione",
-    "shareToShareGPT": "Genera link di condivisione ShareGPT",
+    "text": "Testo",
     "withBackground": "Con immagine di sfondo",
     "withFooter": "Con piè di pagina",
     "withPluginInfo": "Con informazioni sul plugin",
+    "withRole": "Includi ruolo del messaggio",
     "withSystemRole": "Con impostazione del ruolo dell'assistente"
   },
   "stt": {
@@ -115,9 +121,9 @@
     "loading": "Riconoscimento in corso...",
     "prettifying": "Miglioramento in corso..."
   },
-  "temp": "Temporaneo",
   "tokenDetails": {
     "chats": "Chat",
+    "historySummary": "Riepilogo storico",
     "rest": "Rimanenti",
     "systemRole": "Ruolo di sistema",
     "title": "Dettagli del Token",
@@ -131,29 +137,10 @@
     "used": "Utilizzati"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Rinomina automaticamente",
-      "duplicate": "Crea copia",
-      "export": "Esporta argomento"
-    },
     "checkOpenNewTopic": "Abilitare un nuovo argomento?",
     "checkSaveCurrentMessages": "Vuoi salvare la conversazione attuale come argomento?",
-    "confirmRemoveAll": "Stai per rimuovere tutti gli argomenti, questa operazione non potrà essere annullata. Procedere con cautela.",
-    "confirmRemoveTopic": "Stai per rimuovere questo argomento, l'operazione non potrà essere annullata. Procedere con cautela.",
-    "confirmRemoveUnstarred": "Stai per rimuovere gli argomenti non contrassegnati, questa operazione non potrà essere annullata. Procedere con cautela.",
-    "defaultTitle": "Argomento predefinito",
-    "duplicateLoading": "Duplicazione dell'argomento in corso...",
-    "duplicateSuccess": "Argomento duplicato con successo",
-    "guide": {
-      "desc": "Fare clic sul pulsante a sinistra per salvare l'attuale sessione come argomento storico e avviare una nuova sessione",
-      "title": "Elenco argomenti"
-    },
     "openNewTopic": "Apri nuovo argomento",
-    "removeAll": "Rimuovi tutti gli argomenti",
-    "removeUnstarred": "Rimuovi argomenti non contrassegnati",
-    "saveCurrentMessages": "Salva la conversazione attuale come argomento",
-    "searchPlaceholder": "Cerca argomenti...",
-    "title": "Elenco argomenti"
+    "saveCurrentMessages": "Salva la conversazione attuale come argomento"
   },
   "translate": {
     "action": "Traduci",

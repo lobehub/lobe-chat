@@ -44,6 +44,11 @@ export const getAppConfig = () => {
 
       APP_URL: z.string().optional(),
       CDN_USE_GLOBAL: z.boolean().optional(),
+      CUSTOM_FONT_FAMILY: z.string().optional(),
+      CUSTOM_FONT_URL: z.string().optional(),
+
+      SSRF_ALLOW_PRIVATE_IP_ADDRESS: z.boolean().optional(),
+      SSRF_ALLOW_IP_ADDRESS_LIST: z.string().optional(),
     },
     runtimeEnv: {
       NEXT_PUBLIC_BASE_PATH: process.env.NEXT_PUBLIC_BASE_PATH || '',
@@ -67,8 +72,12 @@ export const getAppConfig = () => {
       PLUGIN_SETTINGS: process.env.PLUGIN_SETTINGS,
 
       APP_URL,
-
+      CUSTOM_FONT_FAMILY: process.env.CUSTOM_FONT_FAMILY,
+      CUSTOM_FONT_URL: process.env.CUSTOM_FONT_URL,
       CDN_USE_GLOBAL: process.env.CDN_USE_GLOBAL === '1',
+
+      SSRF_ALLOW_PRIVATE_IP_ADDRESS: process.env.SSRF_ALLOW_PRIVATE_IP_ADDRESS === '1',
+      SSRF_ALLOW_IP_ADDRESS_LIST: process.env.SSRF_ALLOW_IP_ADDRESS_LIST,
     },
   });
 };

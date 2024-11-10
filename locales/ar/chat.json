@@ -100,14 +100,20 @@
     "tooLong": "يجب أن يكون طول اسم المجموعة بين 1 و 20"
   },
   "shareModal": {
+    "copy": "نسخ",
     "download": "تحميل اللقطة",
+    "downloadFile": "تحميل الملف",
+    "exportTitle": "العنوان الافتراضي",
     "imageType": "نوع الصورة",
+    "includeTool": "تضمين رسالة الأداة",
+    "includeUser": "تضمين رسالة المستخدم",
     "screenshot": "لقطة شاشة",
     "settings": "إعدادات التصدير",
-    "shareToShareGPT": "إنشاء رابط مشاركة ShareGPT",
+    "text": "نص",
     "withBackground": "تضمين صورة الخلفية",
     "withFooter": "تضمين تذييل",
     "withPluginInfo": "تضمين معلومات البرنامج المساعد",
+    "withRole": "تضمين رسالة الدور",
     "withSystemRole": "تضمين دور المساعد"
   },
   "stt": {
@@ -115,9 +121,9 @@
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
   },
-  "temp": "مؤقت",
   "tokenDetails": {
     "chats": "رسائل المحادثة",
+    "historySummary": "ملخص التاريخ",
     "rest": "المتبقي",
     "systemRole": "تعيين الدور",
     "title": "تفاصيل الرمز",
@@ -131,29 +137,10 @@
     "used": "مستخدم"
   },
   "topic": {
-    "actions": {
-      "autoRename": "إعادة تسمية ذكية",
-      "duplicate": "إنشاء نسخة",
-      "export": "تصدير الموضوع"
-    },
     "checkOpenNewTopic": "هل ترغب في فتح موضوع جديد؟",
     "checkSaveCurrentMessages": "هل ترغب في حفظ الدردشة الحالية كموضوع؟",
-    "confirmRemoveAll": "سيتم حذف جميع المواضيع قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
-    "confirmRemoveTopic": "سيتم حذف هذا الموضوع قريبًا، وبمجرد الحذف لن يمكن استعادته، يرجى التحلي بالحذر.",
-    "confirmRemoveUnstarred": "سيتم حذف المواضيع غير المحفوظة قريبًا، وبمجرد الحذف لن يمكن استعادتها، يرجى التحلي بالحذر.",
-    "defaultTitle": "الموضوع الافتراضي",
-    "duplicateLoading": "جاري نسخ الموضوع...",
-    "duplicateSuccess": "تم نسخ الموضوع بنجاح",
-    "guide": {
-      "desc": "انقر فوق زر الإرسال الأيسر لحفظ الجلسة الحالية كموضوع تاريخي وبدء جلسة جديدة",
-      "title": "قائمة المواضيع"
-    },
     "openNewTopic": "فتح موضوع جديد",
-    "removeAll": "حذف جميع المواضيع",
-    "removeUnstarred": "حذف المواضيع غير المحفوظة",
-    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع",
-    "searchPlaceholder": "البحث في المواضيع...",
-    "title": "الموضوع"
+    "saveCurrentMessages": "حفظ الجلسة الحالية كموضوع"
   },
   "translate": {
     "action": "ترجمة",

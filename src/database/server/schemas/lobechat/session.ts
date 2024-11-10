@@ -3,7 +3,7 @@ import { boolean, integer, pgTable, text, unique, uniqueIndex, varchar } from 'd
 import { createInsertSchema } from 'drizzle-zod';
 
 import { idGenerator, randomSlug } from '../../utils/idGenerator';
-import { createdAt, updatedAt } from './_helpers';
+import { timestamps } from './_helpers';
 import { users } from './user';
 
 //  ======= sessionGroups ======= //
@@ -22,8 +22,7 @@ export const sessionGroups = pgTable(
       .notNull(),
 
     clientId: text('client_id'),
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
+    ...timestamps,
   },
   (table) => ({
     clientIdUnique: unique('session_group_client_id_user_unique').on(table.clientId, table.userId),
@@ -60,8 +59,7 @@ export const sessions = pgTable(
     clientId: text('client_id'),
     pinned: boolean('pinned').default(false),
 
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
+    ...timestamps,
   },
   (t) => ({
     slugUserIdUnique: uniqueIndex('slug_user_id_unique').on(t.slug, t.userId),

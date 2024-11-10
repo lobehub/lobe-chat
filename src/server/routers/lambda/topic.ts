@@ -120,7 +120,14 @@ export const topicRouter = router({
         id: z.string(),
         value: z.object({
           favorite: z.boolean().optional(),
+          historySummary: z.string().optional(),
           messages: z.array(z.string()).optional(),
+          metadata: z
+            .object({
+              model: z.string().optional(),
+              provider: z.string().optional(),
+            })
+            .optional(),
           sessionId: z.string().optional(),
           title: z.string().optional(),
         }),

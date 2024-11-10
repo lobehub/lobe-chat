@@ -6,12 +6,24 @@ import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 export const LobeZhipuAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://open.bigmodel.cn/api/paas/v4',
   chatCompletion: {
-    handlePayload: ({ temperature, ...payload }: ChatStreamPayload) =>
+    handlePayload: ({ model, temperature, top_p, ...payload }: ChatStreamPayload) =>
       ({
         ...payload,
-        do_sample: temperature === 0,
+        model,
         stream: true,
-        temperature,
+        ...(model === "glm-4-alltools" ? {
+          temperature: temperature !== undefined 
+            ? Math.max(0.01, Math.min(0.99, temperature / 2)) 
+            : undefined,
+          top_p: top_p !== undefined 
+            ? Math.max(0.01, Math.min(0.99, top_p)) 
+            : undefined,
+        } : {
+          temperature: temperature !== undefined 
+            ? temperature / 2
+            : undefined,
+          top_p,
+        }),
       }) as OpenAI.ChatCompletionCreateParamsStreaming,
   },
   debug: {

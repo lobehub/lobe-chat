@@ -1,0 +1,37 @@
+{
+  "actions": {
+    "autoRename": "Inteligentne zmienianie nazw",
+    "confirmRemoveAll": "Zaraz usuniesz wszystkie tematy. Po usunięciu nie będzie możliwości ich przywrócenia, proszę działać ostrożnie.",
+    "confirmRemoveTopic": "Zaraz usuniesz ten temat. Po usunięciu nie będzie możliwości jego przywrócenia, proszę działać ostrożnie.",
+    "confirmRemoveUnstarred": "Zaraz usuniesz tematy, które nie są ulubione. Po usunięciu nie będzie możliwości ich przywrócenia, proszę działać ostrożnie.",
+    "duplicate": "Utwórz kopię",
+    "export": "Eksportuj temat",
+    "removeAll": "Usuń wszystkie tematy",
+    "removeUnstarred": "Usuń tematy, które nie są ulubione"
+  },
+  "defaultTitle": "Domyślny temat",
+  "duplicateLoading": "Kopiowanie tematu...",
+  "duplicateSuccess": "Temat skopiowany pomyślnie",
+  "favorite": "Ulubione",
+  "groupMode": {
+    "ascMessages": "Według liczby wiadomości rosnąco",
+    "byTime": "Grupuj według czasu",
+    "descMessages": "Według liczby wiadomości malejąco",
+    "flat": "Bez grupowania"
+  },
+  "groupTitle": {
+    "byTime": {
+      "month": "Ten miesiąc",
+      "today": "Dziś",
+      "week": "Ten tydzień",
+      "yesterday": "Wczoraj"
+    }
+  },
+  "guide": {
+    "desc": "Kliknij przycisk po lewej stronie, aby zapisać bieżącą rozmowę jako temat historyczny i rozpocząć nową rozmowę.",
+    "title": "Lista tematów"
+  },
+  "searchPlaceholder": "Szukaj tematów...",
+  "temp": "Tymczasowy",
+  "title": "Temat"
+}

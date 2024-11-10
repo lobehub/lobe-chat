@@ -12,8 +12,14 @@
     "retry": "Thử lại",
     "title": "Trang gặp một chút vấn đề.."
   },
-  "fetchError": "Yêu cầu thất bại",
-  "fetchErrorDetail": "Chi tiết lỗi",
+  "fetchError": {
+    "detail": "Chi tiết lỗi",
+    "title": "Yêu cầu thất bại"
+  },
+  "loginRequired": {
+    "desc": "Sẽ tự động chuyển hướng đến trang đăng nhập",
+    "title": "Vui lòng đăng nhập để sử dụng tính năng này"
+  },
   "notFound": {
     "backHome": "Quay về Trang chủ",
     "check": "Vui lòng kiểm tra xem URL của bạn có đúng không",

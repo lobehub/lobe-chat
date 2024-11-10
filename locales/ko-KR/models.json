@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5는 지시형 작업 처리를 최적화하기 위해 설계된 새로운 대형 언어 모델 시리즈입니다."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "알리바바 클라우드 통의 천문 팀이 개발한 대형 언어 모델"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5는 더 강력한 이해 및 생성 능력을 갖춘 새로운 대형 언어 모델 시리즈입니다."
   },
@@ -172,9 +175,6 @@
   },
   "SenseChat-Turbo": {
     "description": "빠른 질문 응답 및 모델 미세 조정 시나리오에 적합합니다."
-  },
-  "SenseChat-Vision": {
-    "description": "최신 버전 모델(V5.5), 16K 컨텍스트 길이, 다중 이미지 입력을 지원하며, 모델의 기본 능력 최적화를 전면적으로 구현하여 객체 속성 인식, 공간 관계, 동작 사건 인식, 장면 이해, 감정 인식, 논리 상식 추론 및 텍스트 이해 생성에서 큰 향상을 이루었습니다."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 오픈 소스 버전으로, 대화 응용을 위한 최적화된 대화 경험을 제공합니다."
@@ -320,6 +320,9 @@
   "claude-2.1": {
     "description": "Claude 2는 기업에 중요한 능력의 발전을 제공하며, 업계 최고의 200K 토큰 컨텍스트, 모델 환각 발생률 대폭 감소, 시스템 프롬프트 및 새로운 테스트 기능인 도구 호출을 포함합니다."
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku는 Anthropic의 가장 빠른 차세대 모델입니다. Claude 3 Haiku와 비교할 때, Claude 3.5 Haiku는 모든 기술에서 향상되었으며, 많은 지능 기준 테스트에서 이전 세대의 가장 큰 모델인 Claude 3 Opus를 초월했습니다."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet은 Opus를 초월하는 능력과 Sonnet보다 더 빠른 속도를 제공하며, Sonnet과 동일한 가격을 유지합니다. Sonnet은 프로그래밍, 데이터 과학, 시각 처리 및 대리 작업에 특히 강합니다."
   },
@@ -424,6 +427,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002는 효율적인 다중 모달 모델로, 광범위한 응용 프로그램의 확장을 지원합니다."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B는 효율적인 다중 모달 모델로, 광범위한 응용 프로그램의 확장을 지원합니다."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924는 최신 실험 모델로, 텍스트 및 다중 모달 사용 사례에서 상당한 성능 향상을 보여줍니다."
@@ -1042,7 +1048,7 @@
   "step-1-flash": {
     "description": "고속 모델로, 실시간 대화에 적합합니다."
   },
-  "step-1.5v-turbo": {
+  "step-1.5v-mini": {
     "description": "이 모델은 강력한 비디오 이해 능력을 가지고 있습니다."
   },
   "step-1v-32k": {

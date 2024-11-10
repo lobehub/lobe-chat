@@ -13,7 +13,7 @@ import {
 import { createSelectSchema } from 'drizzle-zod';
 
 import { idGenerator } from '../../utils/idGenerator';
-import { createdAt, updatedAt } from './_helpers';
+import { timestamps } from './_helpers';
 import { agents } from './agent';
 import { files } from './file';
 import { chunks, embeddings } from './rag';
@@ -58,8 +58,7 @@ export const messages = pgTable(
     // used for group chat
     agentId: text('agent_id').references(() => agents.id, { onDelete: 'set null' }),
 
-    createdAt: createdAt(),
-    updatedAt: updatedAt(),
+    ...timestamps,
   },
   (table) => ({
     createdAtIdx: index('messages_created_at_idx').on(table.createdAt),

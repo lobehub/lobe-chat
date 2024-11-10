@@ -5,8 +5,8 @@ import type { StateCreator } from 'zustand/vanilla';
 import { DEFAULT_MODEL_PROVIDER_LIST } from '@/config/modelProviders';
 import { ModelProvider } from '@/libs/agent-runtime';
 import { UserStore } from '@/store/user';
-import { ChatModelCard } from '@/types/llm';
-import {
+import type { ChatModelCard, ModelProviderCard } from '@/types/llm';
+import type {
   GlobalLLMProviderKey,
   UserKeyVaults,
   UserModelProviderConfig,
@@ -79,20 +79,21 @@ export const createModelListSlice: StateCreator<
      * 3 - default model cards
      */
 
-    // eslint-disable-next-line unicorn/consistent-function-scoping
-    const mergeModels = (provider: GlobalLLMProviderKey, defaultChatModels: ChatModelCard[]) => {
+    const mergeModels = (providerKey: GlobalLLMProviderKey, providerCard: ModelProviderCard) => {
       // if the chat model is config in the server side, use the server side model cards
-      const serverChatModels = modelProviderSelectors.serverProviderModelCards(provider)(get());
-      const remoteChatModels = modelProviderSelectors.remoteProviderModelCards(provider)(get());
+      const serverChatModels = modelProviderSelectors.serverProviderModelCards(providerKey)(get());
+      const remoteChatModels = providerCard.modelList?.showModelFetcher
+        ? modelProviderSelectors.remoteProviderModelCards(providerKey)(get())
+        : undefined;
 
-      return serverChatModels ?? remoteChatModels ?? defaultChatModels;
+      return serverChatModels ?? remoteChatModels ?? providerCard.chatModels;
     };
 
     const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
-      Object.values(ModelProvider).forEach((id) =>{
-         const provider = draft.find((d) => d.id === id);
-         if (provider) provider.chatModels = mergeModels(id as any, provider.chatModels); 
-      })
+      Object.values(ModelProvider).forEach((id) => {
+        const provider = draft.find((d) => d.id === id);
+        if (provider) provider.chatModels = mergeModels(id as any, provider);
+      });
     });
 
     set({ defaultModelProviderList }, false, `refreshDefaultModelList - ${params?.trigger}`);

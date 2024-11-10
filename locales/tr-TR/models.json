@@ -131,6 +131,9 @@
   "Qwen/Qwen2.5-32B-Instruct": {
     "description": "Qwen2.5, talimat tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
   },
+  "Qwen/Qwen2.5-72B-Instruct": {
+    "description": "Alibaba Cloud Tongyi Qianwen ekibi tarafından geliştirilen büyük bir dil modeli"
+  },
   "Qwen/Qwen2.5-72B-Instruct-128K": {
     "description": "Qwen2.5, daha güçlü anlama ve üretim yeteneği ile yeni bir büyük dil modeli serisidir."
   },
@@ -172,9 +175,6 @@
   },
   "SenseChat-Turbo": {
     "description": "Hızlı soru-cevap ve model ince ayar senaryoları için uygundur."
-  },
-  "SenseChat-Vision": {
-    "description": "En son sürüm model (V5.5), 16K bağlam uzunluğu, çoklu görüntü girişini destekler, modelin temel yetenek optimizasyonunu tam olarak gerçekleştirir ve nesne özellik tanıma, mekansal ilişkiler, eylem olayı tanıma, sahne anlama, duygu tanıma, mantıksal bilgi akıl yürütme ve metin anlama üretiminde önemli iyileştirmeler sağlamıştır."
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B açık kaynak versiyonu, diyalog uygulamaları için optimize edilmiş bir diyalog deneyimi sunar."
@@ -320,6 +320,9 @@
   "claude-2.1": {
     "description": "Claude 2, işletmelere kritik yeteneklerin ilerlemesini sunar, sektördeki en iyi 200K token bağlamı, model yanılsamalarının önemli ölçüde azaltılması, sistem ipuçları ve yeni bir test özelliği: araç çağrısı içerir."
   },
+  "claude-3-5-haiku-20241022": {
+    "description": "Claude 3.5 Haiku, Anthropic'in en hızlı bir sonraki nesil modelidir. Claude 3 Haiku ile karşılaştırıldığında, Claude 3.5 Haiku, tüm becerilerde gelişim göstermiştir ve birçok zeka standart testinde bir önceki neslin en büyük modeli olan Claude 3 Opus'u geride bırakmıştır."
+  },
   "claude-3-5-sonnet-20240620": {
     "description": "Claude 3.5 Sonnet, Opus'tan daha fazla yetenek ve Sonnet'ten daha hızlı bir performans sunar, aynı zamanda Sonnet ile aynı fiyatı korur. Sonnet, programlama, veri bilimi, görsel işleme ve ajan görevlerinde özellikle başarılıdır."
   },
@@ -424,6 +427,9 @@
   },
   "gemini-1.5-flash-002": {
     "description": "Gemini 1.5 Flash 002, geniş uygulama yelpazesini destekleyen verimli bir çok modlu modeldir."
+  },
+  "gemini-1.5-flash-8b": {
+    "description": "Gemini 1.5 Flash 8B, geniş uygulama yelpazesini destekleyen verimli bir çok modlu modeldir."
   },
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924, metin ve çok modlu kullanım durumlarında önemli performans artışları sunan en son deneysel modeldir."
@@ -1042,7 +1048,7 @@
   "step-1-flash": {
     "description": "Yüksek hızlı model, gerçek zamanlı diyaloglar için uygundur."
   },
-  "step-1.5v-turbo": {
+  "step-1.5v-mini": {
     "description": "Bu model, güçlü bir video anlama yeteneğine sahiptir."
   },
   "step-1v-32k": {

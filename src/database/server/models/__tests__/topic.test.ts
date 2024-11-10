@@ -427,9 +427,12 @@ describe('TopicModel', () => {
         favorite: true,
         sessionId,
         userId,
+        historySummary: null,
+        metadata: null,
         clientId: null,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
+        accessedAt: expect.any(Date),
       });
 
       // 断言 topic 已在数据库中创建
@@ -472,10 +475,13 @@ describe('TopicModel', () => {
         title: 'New Topic',
         favorite: false,
         clientId: null,
+        historySummary: null,
+        metadata: null,
         sessionId,
         userId,
         createdAt: expect.any(Date),
         updatedAt: expect.any(Date),
+        accessedAt: expect.any(Date),
       });
 
       // 断言 topic 已在数据库中创建
