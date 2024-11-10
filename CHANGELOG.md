@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.29.5](https://github.com/lobehub/lobe-chat/compare/v1.29.4...v1.29.5)
+
+<sup>Released on **2024-11-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix summary range.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix summary range, closes [#4664](https://github.com/lobehub/lobe-chat/issues/4664) ([140c301](https://github.com/lobehub/lobe-chat/commit/140c301))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.29.4](https://github.com/lobehub/lobe-chat/compare/v1.29.3...v1.29.4)
 
 <sup>Released on **2024-11-09**</sup>
