@@ -7,3 +7,5 @@ export const CHANGELOG_FILE = {
   v0: resolve(CHANGELOG_DIR, 'CHANGELOG.v0.md'),
   v1: resolve(ROOT, 'CHANGELOG.md'),
 };
+export const STATICS_DIR = resolve(DOCS_DIR, '__statics__');
+export const CHANGELOG_INDEX = resolve(DOCS_DIR, 'index.json');

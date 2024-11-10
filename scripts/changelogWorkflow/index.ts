@@ -4,7 +4,7 @@ import { buildStaticChangelog } from './buildStaticChangelog';
 
 const run = () => {
   consola.start('Building static changelog...');
-  buildStaticChangelog();
+  buildStaticChangelog.run();
 };
 
 run();

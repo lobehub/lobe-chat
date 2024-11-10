@@ -11,6 +11,10 @@
       "items": {
         "type": "object",
         "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^\\d+-\\d+-\\d+$"
+          },
           "id": {
             "type": "string"
           },
@@ -33,6 +37,10 @@
       "items": {
         "type": "object",
         "properties": {
+          "date": {
+            "type": "string",
+            "pattern": "^\\d+-\\d+-\\d+$"
+          },
           "id": {
             "type": "string"
           },
