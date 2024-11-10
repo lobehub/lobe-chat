@@ -332,7 +332,11 @@ export const generateAIChat: StateCreator<
       chatConfig.enableCompressHistory &&
       originalMessages.length > historyCount
     ) {
-      const historyMessages = originalMessages.slice(0, -historyCount);
+      // after generation: [u1,a1,u2,a2,u3,a3]
+      // but the `originalMessages` is still: [u1,a1,u2,a2,u3]
+      // So if historyCount=2, we need to summary [u1,a1,u2,a2]
+      // because user find UI is [u1,a1,u2,a2 | u3,a3]
+      const historyMessages = originalMessages.slice(0, -historyCount + 1);
 
       await get().internal_summaryHistory(historyMessages);
     }
