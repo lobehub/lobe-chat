@@ -102,7 +102,7 @@
   "dependencies": {
     "@ant-design/icons": "^5.5.1",
     "@ant-design/pro-components": "^2.7.18",
-    "@anthropic-ai/sdk": "^0.31.0",
+    "@anthropic-ai/sdk": "^0.32.0",
     "@auth/core": "^0.37.0",
     "@aws-sdk/client-bedrock-runtime": "^3.675.0",
     "@aws-sdk/client-s3": "^3.675.0",
@@ -271,7 +271,7 @@
     "consola": "^3.2.3",
     "dotenv": "^16.4.5",
     "dpdm-fast": "^1.0.4",
-    "drizzle-kit": "^0.27.0",
+    "drizzle-kit": "^0.28.0",
     "eslint": "^8.57.1",
     "eslint-plugin-mdx": "^2.3.4",
     "eslint-plugin-unused-imports": "4.0.1",
