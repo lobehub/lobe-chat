@@ -1,25 +1,56 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "items": {
-    "type": "object",
-    "properties": {
-      "id": {
-        "type": "string"
-      },
-      "versionRange": {
-        "type": "array",
-        "items": {
-          "type": "string"
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "format": "uri"
+    },
+    "community": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "versionRange": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
         },
-        "minItems": 1,
-        "maxItems": 2
-      },
-      "type": {
-        "type": "string",
-        "enum": ["all", "cloud", "public"]
+        "required": ["id", "versionRange"],
+        "additionalProperties": false
       }
     },
-    "required": ["id", "versionRange", "type"]
+    "cloud": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "versionRange": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^\\d+\\.\\d+\\.\\d+$"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "required": ["id", "versionRange"],
+        "additionalProperties": false
+      }
+    }
   },
-  "type": "array"
+  "required": ["$schema", "community", "cloud"],
+  "type": "object"
 }
