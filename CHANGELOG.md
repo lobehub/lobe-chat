@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.29.6](https://github.com/lobehub/lobe-chat/compare/v1.29.5...v1.29.6)
+
+<sup>Released on **2024-11-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Sonnet 3.5 v2 inference model to BedRock.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Sonnet 3.5 v2 inference model to BedRock, closes [#4652](https://github.com/lobehub/lobe-chat/issues/4652) ([1a8584d](https://github.com/lobehub/lobe-chat/commit/1a8584d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.29.5](https://github.com/lobehub/lobe-chat/compare/v1.29.4...v1.29.5)
 
 <sup>Released on **2024-11-10**</sup>
