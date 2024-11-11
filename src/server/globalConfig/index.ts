@@ -33,6 +33,7 @@ import {
   TogetherAIProviderCard,
   UpstageProviderCard,
   WenxinProviderCard,
+  XAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
 } from '@/config/modelProviders';
@@ -146,6 +147,9 @@ export const getServerGlobalConfig = () => {
 
     ENABLED_HUGGINGFACE,
     HUGGINGFACE_MODEL_LIST,
+
+    ENABLED_XAI,
+    XAI_MODEL_LIST,
   } = getLLMConfig();
 
   const config: GlobalServerConfig = {
@@ -397,6 +401,14 @@ export const getServerGlobalConfig = () => {
         serverModelCards: transformToChatModelCards({
           defaultChatModels: WenxinProviderCard.chatModels,
           modelString: WENXIN_MODEL_LIST,
+        }),
+      },
+      xai: {
+        enabled: ENABLED_XAI,
+        enabledModels: extractEnabledModels(XAI_MODEL_LIST),
+        serverModelCards: transformToChatModelCards({
+          defaultChatModels: XAIProviderCard.chatModels,
+          modelString: XAI_MODEL_LIST,
         }),
       },
       zeroone: {
