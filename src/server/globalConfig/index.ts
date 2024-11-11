@@ -99,6 +99,9 @@ export const getServerGlobalConfig = () => {
     BAICHUAN_MODEL_LIST,
 
     ENABLED_TAICHU,
+
+    ENABLED_CLOUDFLARE,
+
     TAICHU_MODEL_LIST,
 
     ENABLED_AI21,
@@ -202,6 +205,7 @@ export const getServerGlobalConfig = () => {
           modelString: AWS_BEDROCK_MODEL_LIST,
         }),
       },
+      cloudflare: { enabled: ENABLED_CLOUDFLARE },
       deepseek: {
         enabled: ENABLED_DEEPSEEK,
         enabledModels: extractEnabledModels(DEEPSEEK_MODEL_LIST),

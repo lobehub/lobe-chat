@@ -4,6 +4,7 @@ import {
   AnthropicProviderCard,
   BaichuanProviderCard,
   BedrockProviderCard,
+  CloudflareProviderCard,
   DeepSeekProviderCard,
   FireworksAIProviderCard,
   GithubProviderCard,
@@ -58,6 +59,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   bedrock: {
     enabled: false,
     enabledModels: filterEnabledModels(BedrockProviderCard),
+  },
+  cloudflare: {
+    enabled: false,
+    enabledModels: filterEnabledModels(CloudflareProviderCard),
   },
   deepseek: {
     enabled: false,

@@ -6,6 +6,7 @@ import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
+import CloudflareProvider from './cloudflare';
 import DeepSeekProvider from './deepseek';
 import FireworksAIProvider from './fireworksai';
 import GithubProvider from './github';
@@ -57,6 +58,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   NovitaProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
+  CloudflareProvider.chatModels,
   Ai360Provider.chatModels,
   SiliconCloudProvider.chatModels,
   UpstageProvider.chatModels,
@@ -99,6 +101,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MinimaxProvider,
   Ai360Provider,
   TaichuProvider,
+  CloudflareProvider,
   SiliconCloudProvider,
 ];
 
@@ -117,6 +120,7 @@ export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
+export { default as CloudflareProviderCard } from './cloudflare';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GithubProviderCard } from './github';
