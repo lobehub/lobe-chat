@@ -296,9 +296,7 @@ export const initAgentRuntimeWithUserPayload = async (
   // user subscription
   if (payload.userId) {
     try {
-      // TODO: 考虑增加缓存
       const subscription = await getUserSubscription(payload.userId);
-      console.log('subscription', subscription);
       if (subscription.is_subscribed === 1) {
         payload.endpoint = subscription.oneai_base_url;
         payload.apiKey = subscription.oneai_token;
