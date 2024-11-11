@@ -327,7 +327,7 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
         if (errorResult)
           return AgentRuntimeError.chat({
             ...errorResult,
-            provider: provider,
+            provider,
           } as ChatCompletionErrorPayload);
       }
 
