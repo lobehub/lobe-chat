@@ -21,7 +21,7 @@ export default {
   },
   bedrock: {
     accessKeyId: {
-      desc: '填入AWS Access Key Id',
+      desc: '填入 AWS Access Key Id',
       placeholder: 'AWS Access Key Id',
       title: 'AWS Access Key Id',
     },
@@ -51,6 +51,18 @@ export default {
         '输入你的 AWS AccessKeyId / SecretAccessKey 即可开始会话。应用不会记录你的鉴权配置',
       title: '使用自定义 Bedrock 鉴权信息',
     },
+  },
+  cloudflare: {
+    apiKey: {
+      desc: '请填写 Cloudflare API Key',
+      placeholder: 'Cloudflare API Key',
+      title: 'Cloudflare API Key',
+    },
+    baseURLOrAccountID: {
+      desc: '填入 Cloudflare 账户 ID 或 自定义 API 地址',
+      placeholder: 'Cloudflare Account ID / custom API URL',
+      title: 'Cloudflare 账户 ID / API 地址',
+    }
   },
   github: {
     personalAccessToken: {

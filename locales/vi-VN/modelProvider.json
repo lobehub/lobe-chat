@@ -51,6 +51,18 @@
       "title": "Sử dụng Thông tin Xác thực Bedrock tùy chỉnh"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Vui lòng nhập Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Nhập ID tài khoản Cloudflare hoặc địa chỉ API tùy chỉnh",
+      "placeholder": "ID tài khoản Cloudflare / địa chỉ API tùy chỉnh",
+      "title": "ID tài khoản Cloudflare / địa chỉ API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Nhập mã truy cập cá nhân Github của bạn, nhấp vào [đây](https://github.com/settings/tokens) để tạo",
