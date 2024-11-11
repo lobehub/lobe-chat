@@ -175,8 +175,8 @@
       "desc": "Automatisch een onderwerp maken tijdens het gesprek, alleen van toepassing op tijdelijke onderwerpen",
       "title": "Automatisch onderwerp maken"
     },
-    "enableCompressThreshold": {
-      "title": "Compressiedrempel voor berichtlengte inschakelen"
+    "enableCompressHistory": {
+      "title": "Automatisch samenvatten van historische berichten inschakelen"
     },
     "enableHistoryCount": {
       "alias": "Onbeperkt",
@@ -377,6 +377,11 @@
       "desc": "Vul dit in, zodat de systeemassistent de aangepaste prompt gebruikt bij het genereren van inhoud",
       "placeholder": "Voer aangepaste prompt in",
       "title": "Aangepaste prompt"
+    },
+    "historyCompress": {
+      "label": "Gespreksgeschiedenismodel",
+      "modelDesc": "Specificeer het model dat wordt gebruikt voor het comprimeren van gespreksgeschiedenis",
+      "title": "Automatisch samenvatten van gespreksgeschiedenis"
     },
     "queryRewrite": {
       "label": "Vraag herschrijvingsmodel",

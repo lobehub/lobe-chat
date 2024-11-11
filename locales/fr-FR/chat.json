@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Messages de discussion",
+    "historySummary": "Résumé historique",
     "rest": "Restant disponible",
     "systemRole": "Rôle système",
     "title": "Détails du jeton",

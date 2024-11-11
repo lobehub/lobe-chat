@@ -2,6 +2,223 @@
 
 # Changelog
 
+### [Version 1.29.6](https://github.com/lobehub/lobe-chat/compare/v1.29.5...v1.29.6)
+
+<sup>Released on **2024-11-10**</sup>
+
+#### 💄 Styles
+
+- **misc**: Add Sonnet 3.5 v2 inference model to BedRock.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Add Sonnet 3.5 v2 inference model to BedRock, closes [#4652](https://github.com/lobehub/lobe-chat/issues/4652) ([1a8584d](https://github.com/lobehub/lobe-chat/commit/1a8584d))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.29.5](https://github.com/lobehub/lobe-chat/compare/v1.29.4...v1.29.5)
+
+<sup>Released on **2024-11-10**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix summary range.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix summary range, closes [#4664](https://github.com/lobehub/lobe-chat/issues/4664) ([140c301](https://github.com/lobehub/lobe-chat/commit/140c301))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.29.4](https://github.com/lobehub/lobe-chat/compare/v1.29.3...v1.29.4)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Disregard remoteModelCards when showModelFetcher is disabled.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Disregard remoteModelCards when showModelFetcher is disabled, closes [#4644](https://github.com/lobehub/lobe-chat/issues/4644) ([a4431f2](https://github.com/lobehub/lobe-chat/commit/a4431f2))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.29.3](https://github.com/lobehub/lobe-chat/compare/v1.29.2...v1.29.3)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix the display model of history summary.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix the display model of history summary, closes [#4656](https://github.com/lobehub/lobe-chat/issues/4656) ([66cf2c1](https://github.com/lobehub/lobe-chat/commit/66cf2c1))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.29.2](https://github.com/lobehub/lobe-chat/compare/v1.29.1...v1.29.2)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### 💄 Styles
+
+- **misc**: Allow users to disable SSRF or set a whitelist.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Allow users to disable SSRF or set a whitelist, closes [#4633](https://github.com/lobehub/lobe-chat/issues/4633) ([7175145](https://github.com/lobehub/lobe-chat/commit/7175145))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.29.1](https://github.com/lobehub/lobe-chat/compare/v1.29.0...v1.29.1)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix topic summary field on server db.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix topic summary field on server db, closes [#4655](https://github.com/lobehub/lobe-chat/issues/4655) ([ce10f9a](https://github.com/lobehub/lobe-chat/commit/ce10f9a))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+## [Version 1.29.0](https://github.com/lobehub/lobe-chat/compare/v1.28.6...v1.29.0)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### ✨ Features
+
+- **misc**: Support compress history messages.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's improved
+
+- **misc**: Support compress history messages, closes [#4639](https://github.com/lobehub/lobe-chat/issues/4639) ([145bbb4](https://github.com/lobehub/lobe-chat/commit/145bbb4))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.28.6](https://github.com/lobehub/lobe-chat/compare/v1.28.5...v1.28.6)
+
+<sup>Released on **2024-11-09**</sup>
+
+#### 🐛 Bug Fixes
+
+- **misc**: Fix env typo of MS Entra ID.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### What's fixed
+
+- **misc**: Fix env typo of MS Entra ID, closes [#4651](https://github.com/lobehub/lobe-chat/issues/4651) ([f145252](https://github.com/lobehub/lobe-chat/commit/f145252))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
+### [Version 1.28.5](https://github.com/lobehub/lobe-chat/compare/v1.28.4...v1.28.5)
+
+<sup>Released on **2024-11-08**</sup>
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.28.4](https://github.com/lobehub/lobe-chat/compare/v1.28.3...v1.28.4)
 
 <sup>Released on **2024-11-07**</sup>

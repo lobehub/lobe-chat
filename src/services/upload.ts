@@ -1,5 +1,4 @@
 import { fileEnv } from '@/config/file';
-import { FileModel } from '@/database/client/models/file';
 import { edgeClient } from '@/libs/trpc/client';
 import { API_ENDPOINTS } from '@/services/_url';
 import { FileMetadata, UploadFileParams } from '@/types/files';
@@ -68,6 +67,7 @@ class UploadService {
   };
 
   uploadToClientDB = async (params: UploadFileParams, file: File) => {
+    const { FileModel } = await import('@/database/client/models/file');
     const fileArrayBuffer = await file.arrayBuffer();
 
     // save to local storage

@@ -175,8 +175,8 @@
       "desc": "Se creare automaticamente un argomento durante la conversazione, valido solo per le conversazioni temporanee",
       "title": "Abilita la creazione automatica di argomenti"
     },
-    "enableCompressThreshold": {
-      "title": "Abilita la soglia di compressione della lunghezza dei messaggi storici"
+    "enableCompressHistory": {
+      "title": "Attiva il riassunto automatico della cronologia dei messaggi"
     },
     "enableHistoryCount": {
       "alias": "Illimitato",
@@ -377,6 +377,11 @@
       "desc": "Una volta compilato, l'assistente di sistema utilizzerà il suggerimento personalizzato nella generazione dei contenuti",
       "placeholder": "Inserisci il suggerimento personalizzato",
       "title": "Suggerimento personalizzato"
+    },
+    "historyCompress": {
+      "label": "Modello di storia delle conversazioni",
+      "modelDesc": "Specifica il modello utilizzato per comprimere la storia delle conversazioni",
+      "title": "Riepilogo automatico della storia delle conversazioni"
     },
     "queryRewrite": {
       "label": "Modello di riscrittura delle domande",
