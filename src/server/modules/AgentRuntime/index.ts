@@ -210,6 +210,17 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Cloudflare: {
+      const { CLOUDFLARE_API_KEY, CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || CLOUDFLARE_API_KEY);
+      const baseURLOrAccountID =
+        payload.apiKey && payload.cloudflareBaseURLOrAccountID
+          ? payload.cloudflareBaseURLOrAccountID
+          : CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID;
+
+      return { apiKey, baseURLOrAccountID };
+    }
     case ModelProvider.Ai360: {
       const { AI360_API_KEY } = getLLMConfig();
 
@@ -274,6 +285,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       );
 
       const apiKey = sensenovaAccessKeyID + ':' + sensenovaAccessKeySecret;
+
+      return { apiKey };
+    }
+    case ModelProvider.XAI: {
+      const { XAI_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || XAI_API_KEY);
 
       return { apiKey };
     }

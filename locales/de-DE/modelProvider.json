@@ -51,6 +51,18 @@
       "title": "Verwenden Sie benutzerdefinierte Bedrock-Authentifizierungsinformationen"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Bitte füllen Sie die Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Eingeben Sie die Cloudflare-Kundenkennung oder die benutzerdefinierte API-Adresse",
+      "placeholder": "Cloudflare-Kundenkennung / benutzerdefinierte API-Adresse",
+      "title": "Cloudflare-Kundenkennung / API-Adresse"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Geben Sie Ihr GitHub-PAT ein und klicken Sie [hier](https://github.com/settings/tokens), um eines zu erstellen.",
