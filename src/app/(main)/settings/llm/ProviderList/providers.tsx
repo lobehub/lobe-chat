@@ -31,6 +31,7 @@ import {
 import { ProviderItem } from '../type';
 import { useAzureProvider } from './Azure';
 import { useBedrockProvider } from './Bedrock';
+import { useCloudflareProvider } from './Cloudflare';
 import { useGithubProvider } from './Github';
 import { useHuggingFaceProvider } from './HuggingFace';
 import { useOllamaProvider } from './Ollama';
@@ -43,6 +44,7 @@ export const useProviderList = (): ProviderItem[] => {
   const OllamaProvider = useOllamaProvider();
   const OpenAIProvider = useOpenAIProvider();
   const BedrockProvider = useBedrockProvider();
+  const CloudflareProvider = useCloudflareProvider();
   const GithubProvider = useGithubProvider();
   const HuggingFaceProvider = useHuggingFaceProvider();
   const WenxinProvider = useWenxinProvider();
@@ -59,6 +61,7 @@ export const useProviderList = (): ProviderItem[] => {
       DeepSeekProviderCard,
       HuggingFaceProvider,
       OpenRouterProviderCard,
+      CloudflareProvider,
       GithubProvider,
       NovitaProviderCard,
       TogetherAIProviderCard,
@@ -89,6 +92,7 @@ export const useProviderList = (): ProviderItem[] => {
       OllamaProvider,
       OpenAIProvider,
       BedrockProvider,
+      CloudflareProvider,
       GithubProvider,
       WenxinProvider,
       HuggingFaceProvider,

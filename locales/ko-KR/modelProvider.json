@@ -51,6 +51,18 @@
       "title": "사용자 정의 Bedrock 인증 정보 사용"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Cloudflare API Key 를 작성해 주세요.",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "클라우드 플레어 계정 ID 또는 사용자 지정 API 주소 입력",
+      "placeholder": "클라우드 플레어 계정 ID / 사용자 지정 API 주소",
+      "title": "클라우드 플레어 계정 ID / API 주소"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "당신의 Github PAT를 입력하세요. [여기](https://github.com/settings/tokens)를 클릭하여 생성하세요.",
