@@ -4,6 +4,7 @@ import {
   AnthropicProviderCard,
   BaichuanProviderCard,
   BedrockProviderCard,
+  CloudflareProviderCard,
   DeepSeekProviderCard,
   FireworksAIProviderCard,
   GithubProviderCard,
@@ -28,6 +29,7 @@ import {
   TogetherAIProviderCard,
   UpstageProviderCard,
   WenxinProviderCard,
+  XAIProviderCard,
   ZeroOneProviderCard,
   ZhiPuProviderCard,
   filterEnabledModels,
@@ -58,6 +60,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   bedrock: {
     enabled: false,
     enabledModels: filterEnabledModels(BedrockProviderCard),
+  },
+  cloudflare: {
+    enabled: false,
+    enabledModels: filterEnabledModels(CloudflareProviderCard),
   },
   deepseek: {
     enabled: false,
@@ -155,6 +161,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   wenxin: {
     enabled: false,
     enabledModels: filterEnabledModels(WenxinProviderCard),
+  },
+  xai: {
+    enabled: false,
+    enabledModels: filterEnabledModels(XAIProviderCard),
   },
   zeroone: {
     enabled: false,

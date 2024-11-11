@@ -6,6 +6,7 @@ import AnthropicProvider from './anthropic';
 import AzureProvider from './azure';
 import BaichuanProvider from './baichuan';
 import BedrockProvider from './bedrock';
+import CloudflareProvider from './cloudflare';
 import DeepSeekProvider from './deepseek';
 import FireworksAIProvider from './fireworksai';
 import GithubProvider from './github';
@@ -30,6 +31,7 @@ import TaichuProvider from './taichu';
 import TogetherAIProvider from './togetherai';
 import UpstageProvider from './upstage';
 import WenxinProvider from './wenxin';
+import XAIProvider from './xai';
 import ZeroOneProvider from './zeroone';
 import ZhiPuProvider from './zhipu';
 
@@ -52,11 +54,13 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   PerplexityProvider.chatModels,
   AnthropicProvider.chatModels,
   HuggingFaceProvider.chatModels,
+  XAIProvider.chatModels,
   ZeroOneProvider.chatModels,
   StepfunProvider.chatModels,
   NovitaProvider.chatModels,
   BaichuanProvider.chatModels,
   TaichuProvider.chatModels,
+  CloudflareProvider.chatModels,
   Ai360Provider.chatModels,
   SiliconCloudProvider.chatModels,
   UpstageProvider.chatModels,
@@ -86,6 +90,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MistralProvider,
   Ai21Provider,
   UpstageProvider,
+  XAIProvider,
   QwenProvider,
   WenxinProvider,
   HunyuanProvider,
@@ -99,6 +104,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MinimaxProvider,
   Ai360Provider,
   TaichuProvider,
+  CloudflareProvider,
   SiliconCloudProvider,
 ];
 
@@ -117,6 +123,7 @@ export { default as AnthropicProviderCard } from './anthropic';
 export { default as AzureProviderCard } from './azure';
 export { default as BaichuanProviderCard } from './baichuan';
 export { default as BedrockProviderCard } from './bedrock';
+export { default as CloudflareProviderCard } from './cloudflare';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FireworksAIProviderCard } from './fireworksai';
 export { default as GithubProviderCard } from './github';
@@ -141,5 +148,6 @@ export { default as TaichuProviderCard } from './taichu';
 export { default as TogetherAIProviderCard } from './togetherai';
 export { default as UpstageProviderCard } from './upstage';
 export { default as WenxinProviderCard } from './wenxin';
+export { default as XAIProviderCard } from './xai';
 export { default as ZeroOneProviderCard } from './zeroone';
 export { default as ZhiPuProviderCard } from './zhipu';

@@ -51,6 +51,18 @@
       "title": "使用カスタム Bedrock 認証情報"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Cloudflare API Key を入力してください",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Cloudflare アカウント ID またはカスタム API アドレスを入力してください。",
+      "placeholder": "Cloudflare アカウント ID / カスタム API URL",
+      "title": "Cloudflare アカウント ID / API アドレス"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "あなたのGithub PATを入力してください。[こちら](https://github.com/settings/tokens)をクリックして作成します",

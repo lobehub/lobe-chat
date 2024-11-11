@@ -51,6 +51,18 @@
       "title": "Использовать пользовательскую информацию аутентификации Bedrock"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Пожалуйста, заполните Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Введите ID аккаунта Cloudflare или адрес API по умолчанию",
+      "placeholder": "ID аккаунта Cloudflare / адрес API по умолчанию",
+      "title": "ID аккаунта Cloudflare / адрес API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Введите ваш персональный токен доступа GitHub (PAT), нажмите [здесь](https://github.com/settings/tokens), чтобы создать его",
