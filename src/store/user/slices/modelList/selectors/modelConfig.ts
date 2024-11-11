@@ -69,6 +69,7 @@ const openAIConfig = (s: UserStore) => currentLLMSettings(s).openai;
 const bedrockConfig = (s: UserStore) => currentLLMSettings(s).bedrock;
 const ollamaConfig = (s: UserStore) => currentLLMSettings(s).ollama;
 const azureConfig = (s: UserStore) => currentLLMSettings(s).azure;
+const cloudflareConfig = (s: UserStore) => currentLLMSettings(s).cloudflare;
 const sensenovaConfig = (s: UserStore) => currentLLMSettings(s).sensenova;
 
 const isAzureEnabled = (s: UserStore) => currentLLMSettings(s).azure.enabled;
@@ -76,6 +77,7 @@ const isAzureEnabled = (s: UserStore) => currentLLMSettings(s).azure.enabled;
 export const modelConfigSelectors = {
   azureConfig,
   bedrockConfig,
+  cloudflareConfig,
 
   currentEditingCustomModelCard,
   getCustomModelCard,
