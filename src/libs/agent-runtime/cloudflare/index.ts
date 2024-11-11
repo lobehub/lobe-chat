@@ -115,7 +115,9 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
     const models: any[] = j['result'].filter(
       (model: any) => model['task']['name'] === 'Text Generation',
     );
-    const chatModels: ChatModelCard[] = models.map((model) => convertModelManifest(model));
+    const chatModels: ChatModelCard[] = models
+      .map((model) => convertModelManifest(model))
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
     return chatModels;
   }
 }

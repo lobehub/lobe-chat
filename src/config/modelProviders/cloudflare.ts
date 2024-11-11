@@ -11,12 +11,6 @@ const Cloudflare: ModelProviderCard = {
       tokens: 16_384,
     },
     {
-      displayName: 'deepseek-math-7b-instruct',
-      enabled: true,
-      id: '@hf/thebloke/deepseek-math-7b-instruct',
-      tokens: 4096,
-    },
-    {
       displayName: 'gemma-7b-it',
       enabled: true,
       id: '@hf/google/gemma-7b-it',
