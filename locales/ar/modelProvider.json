@@ -51,6 +51,18 @@
       "title": "استخدام معلومات المصادقة الخاصة بـ Bedrock المخصصة"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "يرجى ملء Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "أدخل رقم حساب Cloudflare أو عنوان URL API المخصص",
+      "placeholder": "رقم حساب Cloudflare / عنوان URL API المخصص",
+      "title": "رقم حساب Cloudflare / عنوان URL API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "أدخل رمز الوصول الشخصي الخاص بك على Github، انقر [هنا](https://github.com/settings/tokens) لإنشاء واحد",

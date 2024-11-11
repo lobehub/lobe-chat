@@ -51,6 +51,18 @@
       "title": "Użyj niestandardowych informacji uwierzytelniających Bedrock"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Wprowadź klucz Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Wprowadź ID konta Cloudflare lub adres API niestandardowy",
+      "placeholder": "ID konta Cloudflare / adres API niestandardowy",
+      "title": "ID konta Cloudflare / adres API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Wprowadź swój osobisty token dostępu GitHub (PAT), kliknij [tutaj](https://github.com/settings/tokens), aby go utworzyć",
