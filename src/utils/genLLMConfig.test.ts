@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { generateLLMConfig } from './generateLLMConfig';
+import { genServerLLMConfig } from './genLLMConfig';
 
 // Mock ModelProvider enum
 vi.mock('@/libs/agent-runtime', () => ({
@@ -49,9 +49,9 @@ vi.mock('@/utils/parseModels', () => ({
   },
 }));
 
-describe('generateLLMConfig', () => {
+describe('genServerLLMConfig', () => {
   it('should generate correct LLM config for Azure, Bedrock, and Ollama', () => {
-    const config = generateLLMConfig();
+    const config = genServerLLMConfig();
     
     expect(config.azure).toEqual({
       enabled: true,

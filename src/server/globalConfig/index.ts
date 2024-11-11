@@ -8,7 +8,7 @@ import { GlobalServerConfig } from '@/types/serverConfig';
 
 import { parseAgentConfig } from './parseDefaultAgent';
 
-import { generateLLMConfig } from './generateLLMConfig'
+import { genServerLLMConfig } from '@/utils/genLLMConfig'
 
 export const getServerGlobalConfig = () => {
   const { ACCESS_CODES, DEFAULT_AGENT_CONFIG } = getAppConfig();
@@ -20,7 +20,7 @@ export const getServerGlobalConfig = () => {
     enableUploadFileToServer: !!fileEnv.S3_SECRET_ACCESS_KEY,
     enabledAccessCode: ACCESS_CODES?.length > 0,
     enabledOAuthSSO: enableNextAuth,
-    languageModel: generateLLMConfig(),
+    languageModel: genServerLLMConfig(),
     oAuthSSOProviders: authEnv.NEXT_AUTH_SSO_PROVIDERS.trim().split(/[,，]/),
     systemAgent: parseSystemAgent(appEnv.SYSTEM_AGENT),
     telemetry: {
