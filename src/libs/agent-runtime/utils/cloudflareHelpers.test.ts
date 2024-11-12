@@ -1,6 +1,7 @@
 // @vitest-environment node
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import type { OpenAIChatMessage } from '../types';
 import * as desensitizeTool from '../utils/desensitizeUrl';
 import {
   CloudflareStreamTransformer,
@@ -10,6 +11,7 @@ import {
   getModelDisplayName,
   getModelFunctionCalling,
   getModelTokens,
+  removePluginInfo,
 } from './cloudflareHelpers';
 
 declare module './cloudflareHelpers' {
@@ -30,6 +32,68 @@ describe('cloudflareHelpers', () => {
       transformer = new CloudflareStreamTransformer();
     });
 
+    describe('constructor', () => {
+      describe('stream', () => {
+        const testCases = [true, false, undefined];
+        testCases.forEach((stream) => {
+          it(`should set stream to ${stream}`, () => {
+            // Act
+            const transformer = new CloudflareStreamTransformer(stream);
+
+            // Assert
+            expect(transformer['stream']).toBe(stream);
+          });
+        });
+      });
+    });
+
+    describe('transformDispatch', () => {
+      let chunk: Uint8Array;
+      let controller: TransformStreamDefaultController;
+      beforeEach(() => {
+        chunk = new Uint8Array();
+        controller = Object.create(TransformStreamDefaultController.prototype);
+        if (!transformer) {
+          throw new Error('transformer is undefined');
+        }
+        vi.spyOn(transformer as any, 'transformStream').mockImplementation(async (_, __) => {});
+        vi.spyOn(transformer as any, 'transformNonStream').mockImplementation(async (_, __) => {});
+      });
+
+      it('should call transformStream when stream is true', async () => {
+        // Arrange
+        transformer['stream'] = true;
+
+        // Act
+        await transformer.transform(chunk, controller);
+
+        // Assert
+        expect(transformer['transformStream']).toHaveBeenCalled(); // Why does toHaveBeenCalledWith here throw undefined error?
+      });
+
+      it('should call transformStream when stream is undefined', async () => {
+        // Arrange
+        transformer['stream'] = undefined;
+
+        // Act
+        await transformer.transform(chunk, controller);
+
+        // Assert
+        expect(transformer['transformStream']).toHaveBeenCalled();
+      });
+
+      it('should call transformNonStream when stream is undefined', async () => {
+        // Arrange
+        transformer['stream'] = false;
+
+        // Act
+        await transformer.transform(chunk, controller);
+
+        // Assert
+        expect(transformer['transformNonStream']).toHaveBeenCalled();
+      });
+    });
+
     describe('parseChunk', () => {
       let chunks: string[];
       let controller: TransformStreamDefaultController;
@@ -45,7 +109,6 @@ describe('cloudflareHelpers', () => {
       it('should parse chunk', () => {
         // Arrange
         const chunk = 'data: {"key": "value", "response": "response1"}';
-        const textDecoder = new TextDecoder();
 
         // Act
         transformer['parseChunk'](chunk, controller);
@@ -59,7 +122,6 @@ describe('cloudflareHelpers', () => {
       it('should not replace `data` in text', () => {
         // Arrange
         const chunk = 'data: {"key": "value", "response": "data: a"}';
-        const textDecoder = new TextDecoder();
 
         // Act
         transformer['parseChunk'](chunk, controller);
@@ -69,113 +131,337 @@ describe('cloudflareHelpers', () => {
         expect(chunks[0]).toBe('event: text\n');
         expect(chunks[1]).toBe('data: "data: a"\n\n');
       });
+
+      it('should stop at <|im_end|>', () => {
+        // Arrange
+        const chunk = 'data: {"key": "value", "response": "<|im_end|>"}';
+
+        // Act
+        transformer['parseChunk'](chunk, controller);
+
+        // Assert
+        expect(chunks.length).toBe(2);
+        expect(chunks[0]).toBe('event: stop\n');
+        expect(chunks[1]).toBe('data: "<|im_end|>"\n\n');
+      });
     });
 
     describe('transform', () => {
-      const textDecoder = new TextDecoder();
       const textEncoder = new TextEncoder();
       let chunks: string[];
 
       beforeEach(() => {
         chunks = [];
-        vi.spyOn(
-          transformer as any as {
-            parseChunk: (chunk: string, controller: TransformStreamDefaultController) => void;
-          },
-          'parseChunk',
-        ).mockImplementation((chunk: string, _) => {
-          chunks.push(chunk);
+      });
+
+      describe('transformStream', () => {
+        beforeEach(() => {
+          vi.spyOn(
+            transformer as any as {
+              parseChunk: (chunk: string, controller: TransformStreamDefaultController) => void;
+            },
+            'parseChunk',
+          ).mockImplementation((chunk: string, _) => {
+            chunks.push(chunk);
+          });
+        });
+
+        it('should split single chunk', async () => {
+          // Arrange
+          const chunk = textEncoder.encode('data: {"key": "value", "response": "response1"}\n\n');
+
+          // Act
+          await transformer['transformStream'](chunk, undefined!);
+
+          // Assert
+          expect(chunks.length).toBe(1);
+          expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
+        });
+
+        it('should split multiple chunks', async () => {
+          // Arrange
+          const chunk = textEncoder.encode(
+            'data: {"key": "value", "response": "response1"}\n\n' +
+              'data: {"key": "value", "response": "response2"}\n\n',
+          );
+
+          // Act
+          await transformer['transformStream'](chunk, undefined!);
+
+          // Assert
+          expect(chunks.length).toBe(2);
+          expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
+          expect(chunks[1]).toBe('data: {"key": "value", "response": "response2"}');
+        });
+
+        it('should ignore empty chunk', async () => {
+          // Arrange
+          const chunk = textEncoder.encode('\n\n');
+
+          // Act
+          await transformer['transformStream'](chunk, undefined!);
+
+          // Assert
+          expect(chunks.join()).toBe('');
+        });
+
+        it('should split and concat delayed chunks', async () => {
+          // Arrange
+          const chunk1 = textEncoder.encode('data: {"key": "value", "respo');
+          const chunk2 = textEncoder.encode('nse": "response1"}\n\ndata: {"key": "val');
+          const chunk3 = textEncoder.encode('ue", "response": "response2"}\n\n');
+
+          // Act & Assert
+          await transformer['transformStream'](chunk1, undefined!);
+          expect(transformer['parseChunk']).not.toHaveBeenCalled();
+          expect(chunks.length).toBe(0);
+          expect(transformer['buffer']).toBe('data: {"key": "value", "respo');
+
+          await transformer['transformStream'](chunk2, undefined!);
+          expect(chunks.length).toBe(1);
+          expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
+          expect(transformer['buffer']).toBe('data: {"key": "val');
+
+          await transformer['transformStream'](chunk3, undefined!);
+          expect(chunks.length).toBe(2);
+          expect(chunks[1]).toBe('data: {"key": "value", "response": "response2"}');
+          expect(transformer['buffer']).toBe('');
+        });
+
+        it('should ignore standalone [DONE]', async () => {
+          // Arrange
+          const chunk = textEncoder.encode('data: [DONE]\n\n');
+
+          // Act
+          await transformer['transformStream'](chunk, undefined!);
+
+          // Assert
+          expect(transformer['parseChunk']).not.toHaveBeenCalled();
+          expect(chunks.length).toBe(0);
+          expect(transformer['buffer']).toBe('');
+        });
+
+        it('should ignore [DONE] in chunk', async () => {
+          // Arrange
+          const chunk = textEncoder.encode(
+            'data: {"key": "value", "response": "response1"}\n\ndata: [DONE]\n\n',
+          );
+
+          // Act
+          await transformer['transformStream'](chunk, undefined!);
+
+          // Assert
+          expect(chunks.length).toBe(1);
+          expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
+          expect(transformer['buffer']).toBe('');
         });
       });
 
-      it('should split single chunk', async () => {
-        // Arrange
-        const chunk = textEncoder.encode('data: {"key": "value", "response": "response1"}\n\n');
+      describe('transformNonStream', () => {
+        let controller: TransformStreamDefaultController;
 
-        // Act
-        await transformer.transform(chunk, undefined!);
+        beforeEach(() => {
+          controller = Object.create(TransformStreamDefaultController.prototype);
+          vi.spyOn(controller, 'enqueue').mockImplementation((chunk) => {
+            chunks.push(chunk);
+          });
+        });
 
-        // Assert
-        expect(chunks.length).toBe(1);
-        expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
+        it('should parse text response', async () => {
+          // Arrange
+          const chunk = textEncoder.encode('{"result": {"key": "value", "response": "result1"}}');
+
+          // Act
+          await transformer['transformNonStream'](chunk, controller);
+
+          // Assert
+          expect(chunks.length).toBe(2);
+          expect(chunks[0]).toBe('event: text\n');
+          expect(chunks[1]).toBe('data: "result1"\n\n');
+        });
+
+        it('should parse tool response', async () => {
+          // Arrange
+          const chunk = textEncoder.encode(
+            '{"result": {"response": null, "tool_calls": [{"key": "value"}]}}',
+          );
+          vi.spyOn(CloudflareStreamTransformer as any, 'enqueueToolCalls').mockImplementation(
+            (_, controller: any) => {
+              controller.enqueue('event: tool_calls\n');
+              controller.enqueue('data: [{"key": "value"}]\n\n');
+            },
+          );
+
+          // Act
+          await transformer['transformNonStream'](chunk, controller);
+
+          // Assert
+          expect(chunks.length).toBe(2);
+          expect(chunks[0]).toBe('event: tool_calls\n');
+          expect(chunks[1]).toBe('data: [{"key": "value"}]\n\n');
+          expect(CloudflareStreamTransformer['enqueueToolCalls']).toHaveBeenCalled();
+        });
+
+        it('should combine text and tool response', async () => {
+          // Arrange
+          const chunk = textEncoder.encode(
+            '{"result": {"key": "value", "response": "result1", "tool_calls": [{"key": "value"}]}}',
+          );
+          vi.spyOn(CloudflareStreamTransformer as any, 'enqueueToolCalls').mockImplementation(
+            (_, controller: any) => {
+              controller.enqueue('event: tool_calls\n');
+              controller.enqueue('data: [{"key": "value"}]\n\n');
+            },
+          );
+
+          // Act
+          await transformer['transformNonStream'](chunk, controller);
+
+          // Assert
+          expect(chunks.length).toBe(4);
+          expect(chunks[0]).toBe('event: text\n');
+          expect(chunks[1]).toBe('data: "result1"\n\n');
+          expect(chunks[2]).toBe('event: tool_calls\n');
+          expect(chunks[3]).toBe('data: [{"key": "value"}]\n\n');
+          expect(CloudflareStreamTransformer['enqueueToolCalls']).toHaveBeenCalled();
+        });
       });
 
-      it('should split multiple chunks', async () => {
-        // Arrange
-        const chunk = textEncoder.encode(
-          'data: {"key": "value", "response": "response1"}\n\n' +
-            'data: {"key": "value", "response": "response2"}\n\n',
-        );
+      describe('getRandomId', () => {
+        it('should contain prefix', () => {
+          // Arrange
+          const prefix = 'prefix';
+          const length = 8;
 
-        // Act
-        await transformer.transform(chunk, undefined!);
+          // Act
+          const id = CloudflareStreamTransformer['getRandomId'](prefix, length);
 
-        // Assert
-        expect(chunks.length).toBe(2);
-        expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
-        expect(chunks[1]).toBe('data: {"key": "value", "response": "response2"}');
+          // Assert
+          expect(id).toSatisfy((id: string) => id.startsWith(prefix));
+        });
+
+        it('should have correct length', () => {
+          // Arrange
+          const prefix = 'prefix';
+          const length = 8;
+          const expectedLength = prefix.length + length;
+
+          // Act
+          const id = CloudflareStreamTransformer['getRandomId'](prefix, length);
+          const idLength = id.length;
+
+          // Assert
+          expect(idLength).toBe(expectedLength);
+        });
+
+        it('should contain only alphanumeric characters', () => {
+          // Arrange
+          const prefix = '';
+          const length = 32;
+
+          // Act
+          const id = CloudflareStreamTransformer['getRandomId'](prefix, length);
+
+          // Assert
+          expect(id).toMatch(/^[a-zA-Z0-9]+$/);
+        });
+
+        it('should be unique', () => {
+          // Arrange
+          const prefix = '';
+          const length = 8;
+          const arrLen = 16;
+
+          // Act
+          const ids = Array.from({ length: arrLen }, () =>
+            CloudflareStreamTransformer['getRandomId'](prefix, length),
+          );
+          const uniqueIds = new Set(ids);
+          const uniqueCount = uniqueIds.size;
+
+          // Assert
+          expect(uniqueCount).toBe(arrLen);
+        });
       });
 
-      it('should ignore empty chunk', async () => {
-        // Arrange
-        const chunk = textEncoder.encode('\n\n');
+      describe('convertToolCall', () => {
+        const randomId = 'randomId';
+        beforeEach(() => {
+          vi.spyOn(CloudflareStreamTransformer as any, 'getRandomId').mockReturnValue(randomId);
+          vi.spyOn(JSON, 'stringify');
+        });
 
-        // Act
-        await transformer.transform(chunk, undefined!);
+        it('should convert tool call', () => {
+          // Arrange
+          const toolCall = { name: 'name', arguments: { key: 'value' } };
+          const index = 6;
 
-        // Assert
-        expect(chunks.join()).toBe('');
+          // Act & Assert
+          const converted = CloudflareStreamTransformer['convertToolCall'](toolCall, index);
+          expect(converted).toBeInstanceOf(Object);
+
+          const keys = Object.keys(converted);
+          expect(keys.length).toBe(4);
+
+          expect(keys).toContain('function');
+          expect(converted['function']).toBeInstanceOf(Object);
+
+          const functionKeys = Object.keys(converted['function']);
+          expect(functionKeys.length).toBe(2);
+          expect(functionKeys).toContain('arguments');
+          expect(functionKeys).toContain('name');
+
+          const _functionArguments = converted['function']['arguments'];
+          expect(JSON.stringify).toHaveBeenCalledWith(toolCall.arguments);
+          expect(typeof _functionArguments).toBe('string');
+
+          const functionArguments = JSON.parse(_functionArguments);
+          expect(functionArguments).toEqual(toolCall.arguments);
+
+          expect(converted['function']['name']).toBe(toolCall.name);
+
+          expect(keys).toContain('id');
+          expect(CloudflareStreamTransformer['getRandomId']).toHaveBeenCalledWith('call_', 24);
+          expect(converted['id']).toBe(randomId);
+
+          expect(keys).toContain('index');
+          expect(converted['index']).toBe(index);
+
+          expect(keys).toContain('type');
+          expect(converted['type']).toBe('function');
+        });
       });
 
-      it('should split and concat delayed chunks', async () => {
-        // Arrange
-        const chunk1 = textEncoder.encode('data: {"key": "value", "respo');
-        const chunk2 = textEncoder.encode('nse": "response1"}\n\ndata: {"key": "val');
-        const chunk3 = textEncoder.encode('ue", "response": "response2"}\n\n');
+      describe('enqueueToolCalls', () => {
+        let controller: TransformStreamDefaultController;
+        const convertedToolCall = { name: 'convertedToolCall' };
 
-        // Act & Assert
-        await transformer.transform(chunk1, undefined!);
-        expect(transformer['parseChunk']).not.toHaveBeenCalled();
-        expect(chunks.length).toBe(0);
-        expect(transformer['buffer']).toBe('data: {"key": "value", "respo');
+        beforeEach(() => {
+          controller = Object.create(TransformStreamDefaultController.prototype);
+          vi.spyOn(controller, 'enqueue').mockImplementation((chunk) => {
+            chunks.push(chunk);
+          });
+          vi.spyOn(CloudflareStreamTransformer as any, 'convertToolCall').mockReturnValue(
+            convertedToolCall,
+          );
+        });
 
-        await transformer.transform(chunk2, undefined!);
-        expect(chunks.length).toBe(1);
-        expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
-        expect(transformer['buffer']).toBe('data: {"key": "val');
+        it('should enqueue tool calls', async () => {
+          // Arrange
+          const toolCalls = [
+            { name: 'name1', arguments: { key1: 'value1', key2: 'value2' } },
+            { name: 'name2', arguments: { key: 'value' } },
+          ];
+          const expected = `data: ${JSON.stringify([convertedToolCall, convertedToolCall])}\n\n`;
 
-        await transformer.transform(chunk3, undefined!);
-        expect(chunks.length).toBe(2);
-        expect(chunks[1]).toBe('data: {"key": "value", "response": "response2"}');
-        expect(transformer['buffer']).toBe('');
-      });
+          // Act
+          await CloudflareStreamTransformer['enqueueToolCalls'](toolCalls, controller);
 
-      it('should ignore standalone [DONE]', async () => {
-        // Arrange
-        const chunk = textEncoder.encode('data: [DONE]\n\n');
-
-        // Act
-        await transformer.transform(chunk, undefined!);
-
-        // Assert
-        expect(transformer['parseChunk']).not.toHaveBeenCalled();
-        expect(chunks.length).toBe(0);
-        expect(transformer['buffer']).toBe('');
-      });
-
-      it('should ignore [DONE] in chunk', async () => {
-        // Arrange
-        const chunk = textEncoder.encode(
-          'data: {"key": "value", "response": "response1"}\n\ndata: [DONE]\n\n',
-        );
-
-        // Act
-        await transformer.transform(chunk, undefined!);
-
-        // Assert
-        expect(chunks.length).toBe(1);
-        expect(chunks[0]).toBe('data: {"key": "value", "response": "response1"}');
-        expect(transformer['buffer']).toBe('');
+          // Assert
+          expect(chunks.length).toBe(2);
+          expect(chunks[0]).toBe('event: tool_calls\n');
+          expect(chunks[1]).toBe(expected);
+        });
       });
     });
   });
@@ -314,6 +600,12 @@ describe('cloudflareHelpers', () => {
         const functionCalling = getModelFunctionCalling(model);
         expect(functionCalling).toBe(false);
       });
+
+      it('should return false if exception occurs', () => {
+        const model = {};
+        const functionCalling = getModelFunctionCalling(model);
+        expect(functionCalling).toBe(false);
+      });
     });
 
     describe('getModelTokens', () => {
@@ -328,6 +620,54 @@ describe('cloudflareHelpers', () => {
         const tokens = getModelTokens(model);
         expect(tokens).toBeUndefined();
       });
+    });
+  });
+
+  describe('removePluginInfo', () => {
+    it('should return messages as is if no plugin info', () => {
+      // Arrange
+      const messages: OpenAIChatMessage[] = [
+        { content: 'content1', role: 'system' },
+        { content: 'content2', role: 'user' },
+      ];
+
+      // Act
+      const result = removePluginInfo(messages);
+
+      // Assert
+      expect(result).toEqual(messages);
+    });
+
+    it('should remove plugin info', () => {
+      // Arrange
+      const system: OpenAIChatMessage = {
+        content: '<plugins_info>plugin info</plugins_info>',
+        role: 'system',
+      };
+      const user: OpenAIChatMessage = { content: 'content', role: 'user' };
+      const messages: OpenAIChatMessage[] = [system, user];
+
+      // Act
+      const result = removePluginInfo(messages);
+
+      // Assert
+      expect(result).toEqual([user]);
+    });
+
+    it('should remove plugin info and keep other system messages', () => {
+      // Arrange
+      const system: OpenAIChatMessage = {
+        content: 'system<plugins_info>plugin info</plugins_info>',
+        role: 'system',
+      };
+      const user: OpenAIChatMessage = { content: 'content', role: 'user' };
+      const messages: OpenAIChatMessage[] = [system, user];
+
+      // Act
+      const result = removePluginInfo(messages);
+
+      // Assert
+      expect(result).toEqual([{ content: 'system', role: 'system' }, user]);
     });
   });
 });
