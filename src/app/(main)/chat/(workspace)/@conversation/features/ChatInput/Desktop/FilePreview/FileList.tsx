@@ -24,6 +24,8 @@ const FileList = memo(() => {
   const showFileList = useFileStore(fileChatSelectors.chatUploadFileListHasItem);
   const { styles } = useStyles();
 
+  if (!inputFilesList.length) return null;
+
   return (
     <Flexbox
       className={styles.container}
