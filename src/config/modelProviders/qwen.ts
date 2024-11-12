@@ -119,6 +119,17 @@ const Qwen: ModelProviderCard = {
       tokens: 131_072,
     },
     {
+      description: '通义千问代码模型。',
+      displayName: 'Qwen Coder Plus',
+      id: 'qwen-coder-plus-latest',
+      pricing: {
+        currency: 'CNY',
+        input: 3.5,
+        output: 7,
+      },
+      tokens: 131_072,
+    },
+    {
       description: '通义千问2.5对外开源的7B规模的模型。',
       displayName: 'Qwen2.5 7B',
       functionCall: true,
@@ -168,17 +179,6 @@ const Qwen: ModelProviderCard = {
     },
     {
       description: 'Qwen-Math 模型具有强大的数学解题能力。',
-      displayName: 'Qwen2.5 Math 1.5B',
-      id: 'qwen2.5-math-1.5b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
-      tokens: 4096,
-    },
-    {
-      description: 'Qwen-Math 模型具有强大的数学解题能力。',
       displayName: 'Qwen2.5 Math 7B',
       id: 'qwen2.5-math-7b-instruct',
       pricing: {
@@ -201,23 +201,23 @@ const Qwen: ModelProviderCard = {
     },
     {
       description: '通义千问代码模型开源版。',
-      displayName: 'Qwen2.5 Coder 1.5B',
-      id: 'qwen2.5-coder-1.5b-instruct',
-      pricing: {
-        currency: 'CNY',
-        input: 0,
-        output: 0,
-      },
-      tokens: 131_072,
-    },
-    {
-      description: '通义千问代码模型开源版。',
       displayName: 'Qwen2.5 Coder 7B',
       id: 'qwen2.5-coder-7b-instruct',
       pricing: {
         currency: 'CNY',
         input: 1,
         output: 2,
+      },
+      tokens: 131_072,
+    },
+    {
+      description: '通义千问代码模型开源版。',
+      displayName: 'Qwen2.5 Coder 32B',
+      id: 'qwen2.5-coder-32b-instruct',
+      pricing: {
+        currency: 'CNY',
+        input: 3.5,
+        output: 7,
       },
       tokens: 131_072,
     },
