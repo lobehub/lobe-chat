@@ -7,22 +7,8 @@ import { extractEnabledModels, transformToChatModelCards } from '@/utils/parseMo
 
 import { ModelProviderCard } from '@/types/llm';
 
-export const genServerLLMConfig = () => {
+export const genServerLLMConfig = (specificConfig: Record<any, any>) => {
   const llmConfig = getLLMConfig() as Record<string, any>;
-
-  const specificConfig: Record<any, any> = {
-    azure: {
-      enabledKey: 'ENABLED_AZURE_OPENAI',
-      withDeploymentName: true,
-    },
-    bedrock: {
-      enabledKey: 'ENABLED_AWS_BEDROCK',
-      modelListKey: 'AWS_BEDROCK_MODEL_LIST',
-    },
-    ollama: {
-      fetchOnClient: !llmConfig.OLLAMA_PROXY_URL,
-    },
-  };
 
   return Object.values(ModelProvider).reduce((config, provider) => {
     const providerUpperCase = provider.toUpperCase();

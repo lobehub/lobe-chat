@@ -2,6 +2,8 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { genServerLLMConfig } from './genServerLLMConfig';
 
+import { getLLMConfig } from '@/config/llm';
+
 // Mock ModelProvider enum
 vi.mock('@/libs/agent-runtime', () => ({
   ModelProvider: {
@@ -51,7 +53,20 @@ vi.mock('@/utils/parseModels', () => ({
 
 describe('genServerLLMConfig', () => {
   it('should generate correct LLM config for Azure, Bedrock, and Ollama', () => {
-    const config = genServerLLMConfig();
+    const specificConfig = {
+      azure: {
+        enabledKey: 'ENABLED_AZURE_OPENAI',
+        withDeploymentName: true,
+      },
+      bedrock: {
+        enabledKey: 'ENABLED_AWS_BEDROCK',
+        modelListKey: 'AWS_BEDROCK_MODEL_LIST',
+      },
+      ollama: {
+        fetchOnClient: !getLLMConfig().OLLAMA_PROXY_URL,
+      },
+    };
+    const config = genServerLLMConfig(specificConfig);
     
     expect(config.azure).toEqual({
       enabled: true,
