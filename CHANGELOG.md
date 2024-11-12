@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.31.5](https://github.com/lobehub/lobe-chat/compare/v1.31.4...v1.31.5)
+
+<sup>Released on **2024-11-12**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update some provider modellist & fix ai360 baseurl.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update some provider modellist & fix ai360 baseurl, closes [#4679](https://github.com/lobehub/lobe-chat/issues/4679) ([1b19fae](https://github.com/lobehub/lobe-chat/commit/1b19fae))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.31.4](https://github.com/lobehub/lobe-chat/compare/v1.31.3...v1.31.4)
 
 <sup>Released on **2024-11-12**</sup>
