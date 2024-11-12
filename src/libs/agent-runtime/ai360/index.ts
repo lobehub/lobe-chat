@@ -2,7 +2,7 @@ import { ModelProvider } from '../types';
 import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 
 export const LobeAi360AI = LobeOpenAICompatibleFactory({
-  baseURL: 'https://ai.360.cn/v1',
+  baseURL: 'https://api.360.cn/v1',
   chatCompletion: {
     handlePayload: (payload) => {
       return {
