@@ -1,18 +1,52 @@
+import { OpenAIChatMessage } from '../types';
 import { desensitizeUrl } from '../utils/desensitizeUrl';
+
+type CloudflareToolCall = {
+  arguments: object;
+  name: string;
+};
+
+const RANDOM_CHARSET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
 class CloudflareStreamTransformer {
   private textDecoder = new TextDecoder();
   private buffer: string = '';
+  private stream: boolean | undefined;
+  private static readonly END_TOKEN = '<|im_end|>';
+
+  constructor(stream: boolean | undefined = undefined) {
+    this.stream = stream;
+  }
+
+  public async transform(
+    chunk: Uint8Array,
+    controller: TransformStreamDefaultController,
+  ): Promise<void> {
+    if (this.stream === false) {
+      await this.transformNonStream(chunk, controller);
+    } else {
+      await this.transformStream(chunk, controller);
+    }
+  }
 
   private parseChunk(chunk: string, controller: TransformStreamDefaultController) {
     const dataPrefix = /^data: /;
     const json = chunk.replace(dataPrefix, '');
     const parsedChunk = JSON.parse(json);
+    const response = parsedChunk.response;
+    if (response === CloudflareStreamTransformer.END_TOKEN) {
+      controller.enqueue(`event: stop\n`);
+      controller.enqueue(`data: ${JSON.stringify(response)}\n\n`);
+      return;
+    }
     controller.enqueue(`event: text\n`);
-    controller.enqueue(`data: ${JSON.stringify(parsedChunk.response)}\n\n`);
+    controller.enqueue(`data: ${JSON.stringify(response)}\n\n`);
   }
 
-  public async transform(chunk: Uint8Array, controller: TransformStreamDefaultController) {
+  private async transformStream(
+    chunk: Uint8Array,
+    controller: TransformStreamDefaultController,
+  ): Promise<void> {
     let textChunk = this.textDecoder.decode(chunk);
     if (this.buffer.trim() !== '') {
       textChunk = this.buffer + textChunk;
@@ -20,7 +54,8 @@ class CloudflareStreamTransformer {
     }
     const splits = textChunk.split('\n\n');
     for (let i = 0; i < splits.length - 1; i++) {
-      if (/\[DONE]/.test(splits[i].trim())) {
+      const trimmed = splits[i].trim();
+      if (/\[DONE]/.test(trimmed)) {
         return;
       }
       this.parseChunk(splits[i], controller);
@@ -29,6 +64,55 @@ class CloudflareStreamTransformer {
     if (lastChunk.trim() !== '') {
       this.buffer += lastChunk; // does not need to be trimmed.
     } // else drop.
+  }
+
+  private async transformNonStream(
+    chunk: Uint8Array,
+    controller: TransformStreamDefaultController,
+  ): Promise<void> {
+    const textChunk = this.textDecoder.decode(chunk);
+    const j = JSON.parse(textChunk);
+    const result = j['result'];
+    const response: string | null | undefined = result['response'];
+    const toolCalls: CloudflareToolCall[] | undefined = result['tool_calls'];
+    if (response) {
+      controller.enqueue(`event: text\n`);
+      controller.enqueue(`data: ${JSON.stringify(response)}\n\n`);
+    }
+    if (toolCalls) {
+      await CloudflareStreamTransformer.enqueueToolCalls(toolCalls, controller);
+    }
+  }
+
+  private static async enqueueToolCalls(
+    toolCalls: CloudflareToolCall[],
+    controller: TransformStreamDefaultController,
+  ) {
+    controller.enqueue(`event: tool_calls\n`);
+    controller.enqueue(
+      `data: ${JSON.stringify(
+        // eslint-disable-next-line unicorn/no-array-callback-reference
+        toolCalls.map(CloudflareStreamTransformer.convertToolCall),
+      )}\n\n`,
+    );
+  }
+
+  private static convertToolCall(toolCall: CloudflareToolCall, index: number) {
+    return {
+      function: {
+        arguments: JSON.stringify(toolCall.arguments),
+        name: toolCall.name,
+      },
+      id: CloudflareStreamTransformer.getRandomId('call_', 24),
+      index,
+      type: 'function',
+    };
+  }
+
+  private static getRandomId(prefix: string, length: number): string {
+    const array = new Uint8Array(length);
+    crypto.getRandomValues(array);
+    return prefix + Array.from(array, (n) => RANDOM_CHARSET[n % RANDOM_CHARSET.length]).join('');
   }
 }
 
@@ -80,7 +164,6 @@ function getModelDisplayName(model: any, beta: boolean): string {
   return name;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, unused-imports/no-unused-vars
 function getModelFunctionCalling(model: any): boolean {
   try {
     const fcProperty = model['properties'].filter(
@@ -115,10 +198,33 @@ function convertModelManifest(model: any) {
     description: model['description'],
     displayName: getModelDisplayName(model, modelBeta),
     enabled: !modelBeta,
-    functionCall: false, //getModelFunctionCalling(model),
+    functionCall: getModelFunctionCalling(model),
     id: model['name'],
     tokens: getModelTokens(model),
   };
+}
+
+const PLUGIN_INFO_REGEX = /(<plugins_info>.*<\/plugins_info>)/s;
+
+function removePluginInfo(messages: OpenAIChatMessage[]): OpenAIChatMessage[] {
+  const [systemMessage, ...restMesssages] = messages;
+  if (systemMessage?.role !== 'system') {
+    // Unlikely
+    return messages;
+  }
+  const message = systemMessage.content as string;
+  const system = message.replace(PLUGIN_INFO_REGEX, '');
+  if (system.trim() === '') {
+    return restMesssages;
+  } else {
+    return [
+      {
+        ...systemMessage,
+        content: system,
+      },
+      ...restMesssages,
+    ];
+  }
 }
 
 export {
@@ -127,8 +233,15 @@ export {
   DEFAULT_BASE_URL_PREFIX,
   desensitizeCloudflareUrl,
   fillUrl,
-  getModelBeta,
-  getModelDisplayName,
-  getModelFunctionCalling,
-  getModelTokens,
+  removePluginInfo,
 };
+
+if (process?.env?.NODE_ENV === 'test') {
+  module.exports = {
+    ...module.exports,
+    getModelBeta,
+    getModelDisplayName,
+    getModelFunctionCalling,
+    getModelTokens,
+  };
+}

@@ -12,18 +12,12 @@ import {
   getModelTokens,
 } from './cloudflareHelpers';
 
-//const {
-//  getModelBeta,
-//  getModelDisplayName,
-//  getModelFunctionCalling,
-//  getModelTokens,
-//} = require('./cloudflareHelpers');
-
-//const cloudflareHelpers = require('./cloudflareHelpers');
-//const getModelBeta = cloudflareHelpers.__get__('getModelBeta');
-//const getModelDisplayName = cloudflareHelpers.__get__('getModelDisplayName');
-//const getModelFunctionCalling = cloudflareHelpers.__get__('getModelFunctionCalling');
-//const getModelTokens = cloudflareHelpers.__get__('getModelTokens');
+declare module './cloudflareHelpers' {
+  function getModelBeta(model: any): boolean;
+  function getModelDisplayName(model: any, beta: boolean): string;
+  function getModelFunctionCalling(model: any): boolean;
+  function getModelTokens(model: any): number | undefined;
+}
 
 afterEach(() => {
   vi.restoreAllMocks();

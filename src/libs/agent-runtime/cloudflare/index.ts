@@ -9,6 +9,7 @@ import {
   convertModelManifest,
   desensitizeCloudflareUrl,
   fillUrl,
+  removePluginInfo,
 } from '../utils/cloudflareHelpers';
 import { AgentRuntimeError } from '../utils/createError';
 import { debugStream } from '../utils/debugStream';
@@ -47,7 +48,9 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
   async chat(payload: ChatStreamPayload, options?: ChatCompetitionOptions): Promise<Response> {
     try {
-      const { model, tools, ...restPayload } = payload;
+      const { messages: _messages, model, stream: _stream, tools, ...restPayload } = payload;
+      const messages = tools ? removePluginInfo(_messages) : _messages;
+      const stream = tools ? false : _stream;
       const functions = tools?.map((tool) => tool.function);
       const headers = options?.headers || {};
       if (this.apiKey) {
@@ -55,7 +58,12 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
       }
       const url = new URL(model, this.baseURL);
       const response = await fetch(url, {
-        body: JSON.stringify({ tools: functions, ...restPayload }),
+        body: JSON.stringify({
+          messages,
+          stream,
+          tools: functions,
+          ...restPayload,
+        }),
         headers: { 'Content-Type': 'application/json', ...headers },
         method: 'POST',
         signal: options?.signal,
@@ -86,7 +94,7 @@ export class LobeCloudflareAI implements LobeRuntimeAI {
 
       return StreamingResponse(
         responseBody
-          .pipeThrough(new TransformStream(new CloudflareStreamTransformer()))
+          .pipeThrough(new TransformStream(new CloudflareStreamTransformer(stream)))
           .pipeThrough(createCallbacksTransformer(options?.callback)),
         { headers: options?.headers },
       );
