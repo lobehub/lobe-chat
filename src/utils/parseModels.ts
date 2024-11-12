@@ -34,6 +34,11 @@ export const parseModelString = (modelString: string = '', withDeploymentName = 
       continue;
     }
 
+    // remove empty model name
+    if (!item.trim().length) {
+      continue;
+    }
+
     // Remove duplicate model entries.
     const existingIndex = models.findIndex(({ id: n }) => n === id);
     if (existingIndex !== -1) {
