@@ -105,12 +105,12 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       description: 'Qwen2.5-Coder 专注于代码编写。',
-      displayName: 'Qwen2.5 Coder 7B',
-      id: 'Qwen/Qwen2.5-Coder-7B-Instruct',
+      displayName: 'Qwen2.5 Coder 32B',
+      id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
       pricing: {
         currency: 'CNY',
-        input: 0,
-        output: 0,
+        input: 1.26,
+        output: 1.26,
       },
       tokens: 32_768,
     },
