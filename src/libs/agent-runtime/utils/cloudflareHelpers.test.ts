@@ -641,7 +641,9 @@ describe('cloudflareHelpers', () => {
     it('should remove plugin info', () => {
       // Arrange
       const system: OpenAIChatMessage = {
-        content: '<plugins_info>plugin info</plugins_info>',
+        content: `<plugins_info>
+plugin info
+</plugins_info>`,
         role: 'system',
       };
       const user: OpenAIChatMessage = { content: 'content', role: 'user' };
@@ -657,7 +659,10 @@ describe('cloudflareHelpers', () => {
     it('should remove plugin info and keep other system messages', () => {
       // Arrange
       const system: OpenAIChatMessage = {
-        content: 'system<plugins_info>plugin info</plugins_info>',
+        content: `system
+<plugins_info>
+plugin info
+</plugins_info>`,
         role: 'system',
       };
       const user: OpenAIChatMessage = { content: 'content', role: 'user' };
@@ -667,7 +672,7 @@ describe('cloudflareHelpers', () => {
       const result = removePluginInfo(messages);
 
       // Assert
-      expect(result).toEqual([{ content: 'system', role: 'system' }, user]);
+      expect(result).toEqual([{ content: 'system\n', role: 'system' }, user]);
     });
   });
 });
