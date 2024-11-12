@@ -50,6 +50,7 @@ export interface CustomClientOptions<T extends Record<string, any> = any> {
 }
 
 interface OpenAICompatibleFactoryOptions<T extends Record<string, any> = any> {
+  apiKey?: string;
   baseURL?: string;
   chatCompletion?: {
     handleError?: (
@@ -139,6 +140,7 @@ export function transformResponseToStream(data: OpenAI.ChatCompletion) {
 export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>({
   provider,
   baseURL: DEFAULT_BASE_URL,
+  apiKey: DEFAULT_API_LEY,
   errorType,
   debug,
   constructorOptions,
@@ -158,7 +160,11 @@ export const LobeOpenAICompatibleFactory = <T extends Record<string, any> = any>
     private _options: ConstructorOptions<T>;
 
     constructor(options: ClientOptions & Record<string, any> = {}) {
-      const _options = { ...options, baseURL: options.baseURL?.trim() || DEFAULT_BASE_URL };
+      const _options = {
+        ...options,
+        apiKey: options.apiKey?.trim() || DEFAULT_API_LEY,
+        baseURL: options.baseURL?.trim() || DEFAULT_BASE_URL,
+      };
       const { apiKey, baseURL = DEFAULT_BASE_URL, ...res } = _options;
       this._options = _options as ConstructorOptions<T>;
 

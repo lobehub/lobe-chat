@@ -100,14 +100,20 @@
     "tooLong": "Tên nhóm phải có độ dài từ 1-20 ký tự"
   },
   "shareModal": {
+    "copy": "Sao chép",
     "download": "Tải xuống ảnh chụp màn hình",
+    "downloadFile": "Tải tệp",
+    "exportTitle": "Tiêu đề mặc định",
     "imageType": "Định dạng ảnh",
+    "includeTool": "Bao gồm thông điệp công cụ",
+    "includeUser": "Bao gồm thông điệp người dùng",
     "screenshot": "Ảnh chụp màn hình",
     "settings": "Cài đặt xuất",
-    "shareToShareGPT": "Tạo liên kết chia sẻ ShareGPT",
+    "text": "Văn bản",
     "withBackground": "Bao gồm hình nền",
     "withFooter": "Bao gồm chân trang",
     "withPluginInfo": "Bao gồm thông tin plugin",
+    "withRole": "Bao gồm vai trò thông điệp",
     "withSystemRole": "Bao gồm thiết lập vai trò trợ lý"
   },
   "stt": {
@@ -115,9 +121,9 @@
     "loading": "Đang nhận dạng...",
     "prettifying": "Đang tinh chỉnh..."
   },
-  "temp": "Tạm thời",
   "tokenDetails": {
     "chats": "Tin nhắn trò chuyện",
+    "historySummary": "Tóm tắt lịch sử",
     "rest": "Còn lại",
     "systemRole": "Vai trò hệ thống",
     "title": "Chi tiết Ngữ cảnh",
@@ -131,29 +137,10 @@
     "used": "Đã sử dụng"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Đổi tên tự động",
-      "duplicate": "Tạo bản sao",
-      "export": "Xuất chủ đề"
-    },
     "checkOpenNewTopic": "Có muốn mở chủ đề mới không?",
     "checkSaveCurrentMessages": "Bạn có muốn lưu cuộc trò chuyện hiện tại thành chủ đề không?",
-    "confirmRemoveAll": "Bạn sắp xóa tất cả chủ đề. Hành động này không thể hoàn tác, vui lòng xác nhận.",
-    "confirmRemoveTopic": "Bạn sắp xóa chủ đề này. Hành động này không thể hoàn tác, vui lòng xác nhận.",
-    "confirmRemoveUnstarred": "Bạn sắp xóa các chủ đề chưa được đánh dấu. Hành động này không thể hoàn tác, vui lòng xác nhận.",
-    "defaultTitle": "Chủ đề mặc định",
-    "duplicateLoading": "Đang sao chép chủ đề...",
-    "duplicateSuccess": "Chủ đề đã được sao chép thành công",
-    "guide": {
-      "desc": "Nhấn vào nút bên trái để lưu cuộc trò chuyện hiện tại như một chủ đề lịch sử và bắt đầu một cuộc trò chuyện mới",
-      "title": "Danh sách chủ đề"
-    },
     "openNewTopic": "Mở chủ đề mới",
-    "removeAll": "Xóa tất cả chủ đề",
-    "removeUnstarred": "Xóa chủ đề chưa được đánh dấu",
-    "saveCurrentMessages": "Lưu cuộc trò chuyện hiện tại thành chủ đề",
-    "searchPlaceholder": "Tìm kiếm chủ đề...",
-    "title": "Danh sách chủ đề"
+    "saveCurrentMessages": "Lưu cuộc trò chuyện hiện tại thành chủ đề"
   },
   "translate": {
     "action": "Dịch",

@@ -100,14 +100,20 @@
     "tooLong": "Group name length should be between 1-20"
   },
   "shareModal": {
+    "copy": "Copy",
     "download": "Download Screenshot",
+    "downloadFile": "Download File",
+    "exportTitle": "Default Title",
     "imageType": "Image Format",
+    "includeTool": "Include Plugin Messages",
+    "includeUser": "Include User Messages",
     "screenshot": "Screenshot",
     "settings": "Export Settings",
-    "shareToShareGPT": "Generate ShareGPT Sharing Link",
+    "text": "Text",
     "withBackground": "Include Background Image",
     "withFooter": "Include Footer",
     "withPluginInfo": "Include Plugin Information",
+    "withRole": "Include Message Role",
     "withSystemRole": "Include Assistant Role Setting"
   },
   "stt": {
@@ -115,9 +121,9 @@
     "loading": "Recognizing...",
     "prettifying": "Polishing..."
   },
-  "temp": "Temporary",
   "tokenDetails": {
     "chats": "Chat Messages",
+    "historySummary": "History Summary",
     "rest": "Remaining",
     "systemRole": "Role Settings",
     "title": "Context Details",
@@ -131,29 +137,10 @@
     "used": "Used"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Auto Rename",
-      "duplicate": "Create Copy",
-      "export": "Export Topic"
-    },
     "checkOpenNewTopic": "Enable new topic?",
     "checkSaveCurrentMessages": "Do you want to save the current conversation as a topic?",
-    "confirmRemoveAll": "You are about to delete all topics. Once deleted, they cannot be recovered. Please proceed with caution.",
-    "confirmRemoveTopic": "You are about to delete this topic. Once deleted, it cannot be recovered. Please proceed with caution.",
-    "confirmRemoveUnstarred": "You are about to delete unstarred topics. Once deleted, they cannot be recovered. Please proceed with caution.",
-    "defaultTitle": "Default Topic",
-    "duplicateLoading": "Topic duplicating...",
-    "duplicateSuccess": "Topic duplicated successfully",
-    "guide": {
-      "desc": "Click the button on the left to save the current session as a historical topic and start a new session.",
-      "title": "Topic List"
-    },
     "openNewTopic": "Open New Topic",
-    "removeAll": "Remove All Topics",
-    "removeUnstarred": "Remove Unstarred Topics",
-    "saveCurrentMessages": "Save current session as topic",
-    "searchPlaceholder": "Search topics...",
-    "title": "Topic List"
+    "saveCurrentMessages": "Save current session as topic"
   },
   "translate": {
     "action": "Translate",

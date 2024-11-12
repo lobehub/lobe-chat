@@ -10,7 +10,7 @@ import { MessageModel } from '@/database/server/models/message';
 import { knowledgeBaseFiles } from '@/database/server/schemas/lobechat';
 import { authedProcedure, router } from '@/libs/trpc';
 import { keyVaults } from '@/libs/trpc/middleware/keyVaults';
-import { getServerGlobalConfig } from '@/server/globalConfig';
+import { getServerDefaultFilesConfig } from '@/server/globalConfig';
 import { initAgentRuntimeWithUserPayload } from '@/server/modules/AgentRuntime';
 import { ChunkService } from '@/server/services/chunk';
 import { SemanticSearchSchema } from '@/types/rag';
@@ -105,8 +105,8 @@ export const chunkRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       console.time('embedding');
-      const model = getServerGlobalConfig().defaultFiles!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultFiles!!.embedding_model!!.provider as string;
+      const model = getServerDefaultFilesConfig().getEmbeddingModel();
+      const provider = getServerDefaultFilesConfig().getEmbeddingProvider();
       const agentRuntime = await initAgentRuntimeWithUserPayload(provider, ctx.jwtPayload);
 
       const embeddings = await agentRuntime.embeddings({
@@ -127,12 +127,11 @@ export const chunkRouter = router({
     .input(SemanticSearchSchema)
     .mutation(async ({ ctx, input }) => {
       const item = await ctx.messageModel.findMessageQueriesById(input.messageId);
-      const model = getServerGlobalConfig().defaultFiles!!.embedding_model!!.model as string;
-      const provider = getServerGlobalConfig().defaultFiles!!.embedding_model!!.provider as string;
+      const model = getServerDefaultFilesConfig().getEmbeddingModel();
+      const provider = getServerDefaultFilesConfig().getEmbeddingProvider();
       let embedding: number[];
       let ragQueryId: string;
-      console.log('embeddingProvider:', provider);
-      console.log('embeddingModel:', model);
+
       // if there is no message rag or it's embeddings, then we need to create one
       if (!item || !item.embeddings) {
         // TODO: need to support customize

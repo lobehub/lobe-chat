@@ -100,14 +100,20 @@
     "tooLong": "Gruppenname muss zwischen 1 und 20 Zeichen lang sein"
   },
   "shareModal": {
+    "copy": "Kopieren",
     "download": "Screenshot herunterladen",
+    "downloadFile": "Datei herunterladen",
+    "exportTitle": "Standardtitel",
     "imageType": "Bildformat",
+    "includeTool": "Plugin-Nachricht einfügen",
+    "includeUser": "Benutzernachricht einfügen",
     "screenshot": "Screenshot",
     "settings": "Exporteinstellungen",
-    "shareToShareGPT": "ShareGPT-Link generieren",
+    "text": "Text",
     "withBackground": "Mit Hintergrundbild",
     "withFooter": "Mit Fußzeile",
     "withPluginInfo": "Mit Plugin-Informationen",
+    "withRole": "Nachrichtenrolle einfügen",
     "withSystemRole": "Mit Assistentenrolle"
   },
   "stt": {
@@ -115,9 +121,9 @@
     "loading": "Erkenne...",
     "prettifying": "Verschönern..."
   },
-  "temp": "Temporär",
   "tokenDetails": {
     "chats": "Chats",
+    "historySummary": "Historische Zusammenfassung",
     "rest": "Verbleibend",
     "systemRole": "Systemrolle",
     "title": "Kontextdetails",
@@ -131,29 +137,10 @@
     "used": "Verwendet"
   },
   "topic": {
-    "actions": {
-      "autoRename": "Intelligent umbenennen",
-      "duplicate": "Kopie erstellen",
-      "export": "Thema exportieren"
-    },
     "checkOpenNewTopic": "Soll ein neues Thema eröffnet werden?",
     "checkSaveCurrentMessages": "Möchten Sie die aktuelle Konversation als Thema speichern?",
-    "confirmRemoveAll": "Möchtest du wirklich alle Themen löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "confirmRemoveTopic": "Möchtest du dieses Thema wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "confirmRemoveUnstarred": "Möchtest du die nicht markierten Themen wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
-    "defaultTitle": "Standardthema",
-    "duplicateLoading": "Thema wird kopiert...",
-    "duplicateSuccess": "Thema erfolgreich kopiert",
-    "guide": {
-      "desc": "Klicken Sie auf die Schaltfläche links, um das aktuelle Gespräch als historisches Thema zu speichern und eine neue Gesprächsrunde zu starten",
-      "title": "Themenliste"
-    },
     "openNewTopic": "Neues Thema öffnen",
-    "removeAll": "Alle Themen löschen",
-    "removeUnstarred": "Nicht markierte Themen löschen",
-    "saveCurrentMessages": "Aktuelle Unterhaltung als Thema speichern",
-    "searchPlaceholder": "Themen durchsuchen...",
-    "title": "Themenliste"
+    "saveCurrentMessages": "Aktuelle Unterhaltung als Thema speichern"
   },
   "translate": {
     "action": "Übersetzen",

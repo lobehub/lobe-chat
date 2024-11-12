@@ -51,6 +51,18 @@
       "title": "使用自定義 Bedrock 驗證資訊"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "請填入 Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "填入 Cloudflare 帳戶 ID 或 自定義 API 位址",
+      "placeholder": "Cloudflare 帳戶 ID / 自定義 API 位址",
+      "title": "Cloudflare 帳戶 ID / API 位址"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "填入你的 Github 個人存取權杖，點擊[這裡](https://github.com/settings/tokens) 創建",

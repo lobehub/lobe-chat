@@ -175,8 +175,8 @@
       "desc": "Automatyczne tworzenie tematu podczas rozmowy, działa tylko w przypadku tymczasowych tematów",
       "title": "Automatyczne tworzenie tematu"
     },
-    "enableCompressThreshold": {
-      "title": "Włącz próg kompresji historii"
+    "enableCompressHistory": {
+      "title": "Włącz automatyczne podsumowywanie historii wiadomości"
     },
     "enableHistoryCount": {
       "alias": "Bez limitu",
@@ -377,6 +377,11 @@
       "desc": "Po wypełnieniu, asystent systemowy użyje niestandardowej podpowiedzi podczas generowania treści",
       "placeholder": "Wprowadź niestandardowe słowo podpowiedzi",
       "title": "Niestandardowe słowo podpowiedzi"
+    },
+    "historyCompress": {
+      "label": "Model historii rozmów",
+      "modelDesc": "Model używany do kompresji historii rozmów",
+      "title": "Automatyczne podsumowanie historii rozmów"
     },
     "queryRewrite": {
       "label": "Model przekształcania zapytań",
