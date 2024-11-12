@@ -3,6 +3,8 @@ import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { ChatCompletionTool } from '@/libs/agent-runtime';
 
+import type { OpenAIChatMessage } from '../types';
+import * as CloudflareUtils from '../utils/cloudflareHelpers';
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeCloudflareAI } from './index';
 
@@ -272,12 +274,47 @@ describe('LobeCloudflareAI', () => {
     });
 
     describe('chat with tools', () => {
-      it('should call client.beta.tools.messages.create when tools are provided', async () => {
-        // Arrange
-        const tools: ChatCompletionTool[] = [
-          { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
-        ];
+      const tools: ChatCompletionTool[] = [
+        { function: { name: 'tool1', description: 'desc1' }, type: 'function' },
+      ];
 
+      it('should disable stream when tools are provided', async () => {
+        // Act & Assert
+        await instance.chat({
+          messages: [{ content: 'Hello', role: 'user' }],
+          model: '@hf/meta-llama/meta-llama-3-8b-instruct',
+          temperature: 1,
+          tools,
+        });
+        expect(globalThis.fetch).toHaveBeenCalled();
+
+        const fetchCallArgs = (globalThis.fetch as Mock).mock.calls[0];
+        const body = JSON.parse(fetchCallArgs[1].body);
+        expect(body).toEqual(
+          expect.objectContaining({
+            stream: false,
+          }),
+        );
+      });
+
+      it('should remove plugin info from messages', async () => {
+        // Arrange
+        vi.spyOn(CloudflareUtils, 'removePluginInfo').mockImplementation((messages) => messages);
+        const messages: OpenAIChatMessage[] = [{ content: 'Hello', role: 'user' }];
+
+        // Act
+        await instance.chat({
+          messages,
+          model: '@hf/meta-llama/meta-llama-3-8b-instruct',
+          temperature: 1,
+          tools,
+        });
+
+        // Assert
+        expect(CloudflareUtils.removePluginInfo).toHaveBeenCalledWith(messages);
+      });
+
+      it('should include tools', async () => {
         // Act
         await instance.chat({
           messages: [{ content: 'Hello', role: 'user' }],
