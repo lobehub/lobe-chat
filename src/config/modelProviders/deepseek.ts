@@ -17,7 +17,7 @@ const DeepSeek: ModelProviderCard = {
         output: 2,
       },
       releasedAt: '2024-09-05',
-      tokens: 64_000,
+      tokens: 65_536,
     },
   ],
   checkModel: 'deepseek-chat',
