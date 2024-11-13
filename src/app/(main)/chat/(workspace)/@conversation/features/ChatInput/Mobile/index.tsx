@@ -5,6 +5,7 @@ import { TextAreaRef } from 'antd/es/input/TextArea';
 import { memo, useRef, useState } from 'react';
 
 import ActionBar from '@/features/ChatInput/ActionBar';
+import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
 import STT from '@/features/ChatInput/STT';
 import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
@@ -14,6 +15,18 @@ import { chatSelectors } from '@/store/chat/selectors';
 import Files from './Files';
 import InputArea from './InputArea';
 import SendButton from './Send';
+
+const defaultLeftActions = [
+  'model',
+  'fileUpload',
+  'knowledgeBase',
+  'temperature',
+  'history',
+  'tools',
+  'token',
+] as ActionKeys[];
+
+const defaultRightActions = ['clear'] as ActionKeys[];
 
 const MobileChatInput = memo(() => {
   const theme = useTheme();
@@ -52,7 +65,12 @@ const MobileChatInput = memo(() => {
       topAddons={
         <>
           <Files />
-          <ActionBar mobile padding={'0 8px'} rightAreaStartRender={<SaveTopic mobile />} />
+          <ActionBar
+            leftActions={defaultLeftActions}
+            padding={'0 8px'}
+            rightActions={defaultRightActions}
+            rightAreaStartRender={<SaveTopic mobile />}
+          />
         </>
       }
       value={value}
