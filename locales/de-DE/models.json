@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra ist die leistungsstärkste Version der Spark-Großmodellreihe, die die Online-Suchverbindung aktualisiert und die Fähigkeit zur Textverständnis und -zusammenfassung verbessert. Es ist eine umfassende Lösung zur Steigerung der Büroproduktivität und zur genauen Reaktion auf Anforderungen und ein führendes intelligentes Produkt in der Branche."
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Generation über Generation zeigt Meta Llama 3 eine Spitzenleistung in einer Vielzahl von Branchenbenchmarks und bietet neue Fähigkeiten, einschließlich verbesserter Argumentation."
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Verwendet Suchverbesserungstechnologie, um eine umfassende Verknüpfung zwischen großen Modellen und Fachwissen sowie Wissen aus dem gesamten Internet zu ermöglichen. Unterstützt das Hochladen von Dokumenten wie PDF, Word und die Eingabe von URLs, um Informationen zeitnah und umfassend zu erhalten, mit genauen und professionellen Ergebnissen."
   },
@@ -31,6 +45,12 @@
   },
   "Baichuan4": {
     "description": "Das Modell hat die höchste Fähigkeit im Inland und übertrifft ausländische Mainstream-Modelle in Aufgaben wie Wissensdatenbanken, langen Texten und kreativer Generierung. Es verfügt auch über branchenführende multimodale Fähigkeiten und zeigt in mehreren autoritativen Bewertungsbenchmarks hervorragende Leistungen."
+  },
+  "Baichuan4-Air": {
+    "description": "Das Modell hat die höchste Leistungsfähigkeit im Inland und übertrifft ausländische Mainstream-Modelle in Aufgaben wie Wissensdatenbanken, langen Texten und kreativen Generierungen auf Chinesisch. Es verfügt auch über branchenführende multimodale Fähigkeiten und zeigt in mehreren anerkannten Bewertungsbenchmarks hervorragende Leistungen."
+  },
+  "Baichuan4-Turbo": {
+    "description": "Das Modell hat die höchste Leistungsfähigkeit im Inland und übertrifft ausländische Mainstream-Modelle in Aufgaben wie Wissensdatenbanken, langen Texten und kreativen Generierungen auf Chinesisch. Es verfügt auch über branchenführende multimodale Fähigkeiten und zeigt in mehreren anerkannten Bewertungsbenchmarks hervorragende Leistungen."
   },
   "ERNIE-3.5-128K": {
     "description": "Das von Baidu entwickelte Flaggschiff-Modell für großangelegte Sprachverarbeitung, das eine riesige Menge an chinesischen und englischen Texten abdeckt. Es verfügt über starke allgemeine Fähigkeiten und kann die meisten Anforderungen an Dialogfragen, kreative Generierung und Anwendungsfälle von Plugins erfüllen. Es unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Das von Baidu entwickelte Flaggschiff-Modell für ultra-große Sprachverarbeitung, das im Vergleich zu ERNIE 3.5 eine umfassende Verbesserung der Modellfähigkeiten erreicht hat und sich breit für komplexe Aufgaben in verschiedenen Bereichen eignet; unterstützt die automatische Anbindung an das Baidu-Such-Plugin, um die Aktualität der Antwortinformationen zu gewährleisten."
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "Das von Baidu entwickelte Flaggschiff-Modell für groß angelegte Sprachverarbeitung zeigt hervorragende Gesamtergebnisse und ist weit verbreitet in komplexen Aufgabenbereichen anwendbar; unterstützt die automatische Anbindung an das Baidu-Suchplugin, um die Aktualität der Frage-Antwort-Informationen zu gewährleisten. Im Vergleich zu ERNIE 4.0 zeigt es eine bessere Leistungsfähigkeit."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "Baidus selbstentwickeltes Flaggschiff-Modell für großflächige Sprachverarbeitung, das in vielen komplexen Aufgaben hervorragende Ergebnisse zeigt und umfassend in verschiedenen Bereichen eingesetzt werden kann; unterstützt die automatische Anbindung an Baidu-Suchplugins, um die Aktualität von Antwortinformationen zu gewährleisten. Im Vergleich zu ERNIE 4.0 hat es eine bessere Leistung."
@@ -146,8 +169,8 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5 ist eine neue Serie großer Sprachmodelle, die darauf abzielt, die Verarbeitung von instructiven Aufgaben zu optimieren."
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
-    "description": "Qwen2.5-Coder konzentriert sich auf die Programmierung."
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder konzentriert sich auf das Programmieren."
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math konzentriert sich auf die Problemlösung im Bereich Mathematik und bietet professionelle Lösungen für schwierige Aufgaben."
@@ -178,6 +201,9 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B ist die Open-Source-Version, die ein optimiertes Dialogerlebnis für Konversationsanwendungen bietet."
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Large ist das größte Open-Source-Transformer-Architektur MoE-Modell der Branche mit insgesamt 389 Milliarden Parametern und 52 Milliarden aktiven Parametern."
   },
   "abab5.5-chat": {
     "description": "Für produktivitätsorientierte Szenarien konzipiert, unterstützt es die Verarbeitung komplexer Aufgaben und die effiziente Textgenerierung, geeignet für professionelle Anwendungen."
@@ -587,6 +613,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini ist das neueste Modell von OpenAI, das nach GPT-4 Omni veröffentlicht wurde und sowohl Text- als auch Bildinput unterstützt. Als ihr fortschrittlichstes kleines Modell ist es viel günstiger als andere neueste Modelle und kostet über 60 % weniger als GPT-3.5 Turbo. Es behält die fortschrittliche Intelligenz bei und bietet gleichzeitig ein hervorragendes Preis-Leistungs-Verhältnis. GPT-4o mini erzielte 82 % im MMLU-Test und rangiert derzeit in den Chat-Präferenzen über GPT-4."
   },
+  "grok-beta": {
+    "description": "Bietet eine Leistung, die mit Grok 2 vergleichbar ist, jedoch mit höherer Effizienz, Geschwindigkeit und Funktionalität."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B ist ein Sprachmodell, das Kreativität und Intelligenz kombiniert und mehrere führende Modelle integriert."
   },
@@ -949,6 +978,9 @@
   "pro-128k": {
     "description": "Spark Pro 128K verfügt über eine außergewöhnliche Kontextverarbeitungsfähigkeit und kann bis zu 128K Kontextinformationen verarbeiten, was es besonders geeignet für die Analyse langer Texte und die Verarbeitung langfristiger logischer Zusammenhänge macht. Es bietet in komplexen Textkommunikationen flüssige und konsistente Logik sowie vielfältige Unterstützung für Zitate."
   },
+  "qwen-coder-plus-latest": {
+    "description": "Tongyi Qianwen Code-Modell."
+  },
   "qwen-coder-turbo-latest": {
     "description": "Das Tongyi Qianwen Code-Modell."
   },
@@ -1000,14 +1032,11 @@
   "qwen2.5-7b-instruct": {
     "description": "Das 7B-Modell von Tongyi Qianwen 2.5 ist öffentlich zugänglich."
   },
-  "qwen2.5-coder-1.5b-instruct": {
-    "description": "Die Open-Source-Version des Tongyi Qianwen Code-Modells."
+  "qwen2.5-coder-32b-instruct": {
+    "description": "Open-Source-Version des Tongyi Qianwen Code-Modells."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "Die Open-Source-Version des Tongyi Qianwen Code-Modells."
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "Das Qwen-Math-Modell verfügt über starke Fähigkeiten zur Lösung mathematischer Probleme."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Das Qwen-Math-Modell verfügt über starke Fähigkeiten zur Lösung mathematischer Probleme."
@@ -1068,6 +1097,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) eignet sich für präzise Anweisungsaufgaben und bietet hervorragende Sprachverarbeitungsfähigkeiten."
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet hebt den Branchenstandard an, übertrifft die Konkurrenzmodelle und Claude 3 Opus und zeigt in umfangreichen Bewertungen hervorragende Leistungen, während es die Geschwindigkeit und Kosten unserer mittelgroßen Modelle beibehält."
   },
   "wizardlm2": {
     "description": "WizardLM 2 ist ein Sprachmodell von Microsoft AI, das in komplexen Dialogen, mehrsprachigen Anwendungen, Schlussfolgerungen und intelligenten Assistenten besonders gut abschneidet."

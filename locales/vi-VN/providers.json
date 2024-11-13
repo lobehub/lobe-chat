@@ -15,6 +15,7 @@
   "bedrock": {
     "description": "Bedrock là dịch vụ do Amazon AWS cung cấp, tập trung vào việc cung cấp các mô hình ngôn ngữ AI và mô hình hình ảnh tiên tiến cho doanh nghiệp. Gia đình mô hình của nó bao gồm dòng Claude của Anthropic, dòng Llama 3.1 của Meta, v.v., bao quát nhiều lựa chọn từ nhẹ đến hiệu suất cao, hỗ trợ nhiều nhiệm vụ như tạo văn bản, đối thoại, xử lý hình ảnh, phù hợp cho các ứng dụng doanh nghiệp với quy mô và nhu cầu khác nhau."
   },
+  "cloudflare": {},
   "deepseek": {
     "description": "DeepSeek là một công ty tập trung vào nghiên cứu và ứng dụng công nghệ trí tuệ nhân tạo, mô hình mới nhất của họ, DeepSeek-V2.5, kết hợp khả năng đối thoại chung và xử lý mã, đồng thời đạt được sự cải thiện đáng kể trong việc căn chỉnh sở thích của con người, nhiệm vụ viết và tuân theo chỉ dẫn."
   },
@@ -84,6 +85,9 @@
   },
   "wenxin": {
     "description": "Nền tảng phát triển và dịch vụ ứng dụng AI gốc với mô hình lớn một cửa dành cho doanh nghiệp, cung cấp chuỗi công cụ toàn diện và dễ sử dụng cho phát triển mô hình trí tuệ nhân tạo sinh sinh và phát triển ứng dụng."
+  },
+  "xai": {
+    "description": "xAI là một công ty cam kết xây dựng trí tuệ nhân tạo để tăng tốc khám phá khoa học của nhân loại. Sứ mệnh của chúng tôi là thúc đẩy sự hiểu biết chung của chúng ta về vũ trụ."
   },
   "zeroone": {
     "description": "01.AI tập trung vào công nghệ trí tuệ nhân tạo trong kỷ nguyên AI 2.0, thúc đẩy mạnh mẽ sự đổi mới và ứng dụng của \"người + trí tuệ nhân tạo\", sử dụng các mô hình mạnh mẽ và công nghệ AI tiên tiến để nâng cao năng suất của con người và thực hiện sự trao quyền công nghệ."
