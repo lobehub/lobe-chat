@@ -78,6 +78,7 @@ const Cloudflare: ModelProviderCard = {
     },
   ],
   checkModel: '@hf/meta-llama/meta-llama-3-8b-instruct',
+  disableBrowserRequest: true,
   id: 'cloudflare',
   modelList: {
     showModelFetcher: true,

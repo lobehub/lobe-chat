@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultraは星火大モデルシリーズの中で最も強力なバージョンで、ネットワーク検索のリンクをアップグレードし、テキストコンテンツの理解と要約能力を向上させています。これは、オフィスの生産性を向上させ、要求に正確に応えるための全方位のソリューションであり、業界をリードするインテリジェントな製品です。"
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Generation over generation, Meta Llama 3は幅広い業界ベンチマークで最先端のパフォーマンスを示し、改善された推論を含む新しい機能を提供します。"
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "検索強化技術を採用し、大モデルと分野知識、全網知識の全面的なリンクを実現しています。PDF、Wordなどのさまざまな文書のアップロードやURL入力をサポートし、情報取得が迅速かつ包括的で、出力結果は正確かつ専門的です。"
   },
@@ -31,6 +45,12 @@
   },
   "Baichuan4": {
     "description": "モデル能力は国内でトップであり、知識百科、長文、生成創作などの中国語タスクで海外の主流モデルを超えています。また、業界をリードするマルチモーダル能力を備え、複数の権威ある評価基準で優れたパフォーマンスを示しています。"
+  },
+  "Baichuan4-Air": {
+    "description": "モデル能力は国内で第一であり、知識百科、長文、生成創作などの中国語タスクで海外の主流モデルを超えています。また、業界をリードするマルチモーダル能力を持ち、多くの権威ある評価基準で優れたパフォーマンスを示しています。"
+  },
+  "Baichuan4-Turbo": {
+    "description": "モデル能力は国内で第一であり、知識百科、長文、生成創作などの中国語タスクで海外の主流モデルを超えています。また、業界をリードするマルチモーダル能力を持ち、多くの権威ある評価基準で優れたパフォーマンスを示しています。"
   },
   "ERNIE-3.5-128K": {
     "description": "百度が独自に開発したフラッグシップの大規模言語モデルで、膨大な中英語のコーパスをカバーし、強力な汎用能力を持っています。ほとんどの対話型質問応答、創作生成、プラグインアプリケーションの要件を満たすことができます。また、百度検索プラグインとの自動接続をサポートし、質問応答情報のタイムリーさを保証します。"
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "百度が独自に開発したフラッグシップの超大規模言語モデルで、ERNIE 3.5に比べてモデル能力が全面的にアップグレードされ、さまざまな分野の複雑なタスクシナリオに広く適用されます。百度検索プラグインとの自動接続をサポートし、質問応答情報のタイムリーさを保証します。"
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "百度が独自に開発したフラッグシップの超大規模言語モデルで、総合的な効果が優れており、さまざまな分野の複雑なタスクシーンに広く適用可能です。百度検索プラグインとの自動接続をサポートし、問答情報のタイムリーさを保証します。ERNIE 4.0に比べて性能がさらに優れています。"
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "百度が自主開発したフラッグシップの超大規模な言語モデルで、総合的なパフォーマンスが優れており、各分野の複雑なタスクシナリオに広く適応します；百度検索プラグインとの自動連携をサポートし、質問応答情報のタイムリーさを保証します。ERNIE 4.0に比べてパフォーマンスが向上しています。"
@@ -146,8 +169,8 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5は新しい大型言語モデルシリーズで、指示タスクの処理を最適化することを目的としています。"
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
-    "description": "Qwen2.5-Coderは、コード作成に特化しています。"
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coderはコード作成に特化しています。"
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Mathは、数学分野の問題解決に特化しており、高難度の問題に対して専門的な解答を提供します。"
@@ -178,6 +201,9 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9Bはオープンソース版で、会話アプリケーションに最適化された対話体験を提供します。"
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Largeは業界最大のオープンソースTransformerアーキテクチャMoEモデルで、3890億の総パラメータ数と520億のアクティブパラメータ数を持っています。"
   },
   "abab5.5-chat": {
     "description": "生産性シーン向けであり、複雑なタスク処理と効率的なテキスト生成をサポートし、専門分野のアプリケーションに適しています。"
@@ -587,6 +613,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o miniは、OpenAIがGPT-4 Omniの後に発表した最新のモデルで、画像とテキストの入力をサポートし、テキストを出力します。最先端の小型モデルとして、最近の他の先進モデルよりもはるかに安価で、GPT-3.5 Turboよりも60%以上安価です。最先端の知能を維持しつつ、コストパフォーマンスが大幅に向上しています。GPT-4o miniはMMLUテストで82%のスコアを獲得し、現在チャットの好みではGPT-4よりも高い評価を得ています。"
   },
+  "grok-beta": {
+    "description": "Grok 2と同等の性能を持ちながら、より高い効率、速度、機能を備えています。"
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13Bは複数のトップモデルを統合した創造性と知性を兼ね備えた言語モデルです。"
   },
@@ -949,6 +978,9 @@
   "pro-128k": {
     "description": "Spark Pro 128Kは特大のコンテキスト処理能力を備え、最大128Kのコンテキスト情報を処理できます。特に、全体を通じての分析や長期的な論理的関連性の処理が必要な長文コンテンツに適しており、複雑なテキストコミュニケーションにおいて滑らかで一貫した論理と多様な引用サポートを提供します。"
   },
+  "qwen-coder-plus-latest": {
+    "description": "通義千問コードモデル。"
+  },
   "qwen-coder-turbo-latest": {
     "description": "通義千問のコードモデルです。"
   },
@@ -1000,14 +1032,11 @@
   "qwen2.5-7b-instruct": {
     "description": "通義千問2.5の対外オープンソースの7B規模のモデルです。"
   },
-  "qwen2.5-coder-1.5b-instruct": {
-    "description": "通義千問のコードモデルのオープンソース版です。"
+  "qwen2.5-coder-32b-instruct": {
+    "description": "通義千問コードモデルのオープンソース版。"
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "通義千問のコードモデルのオープンソース版です。"
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "Qwen-Mathモデルは、強力な数学の問題解決能力を持っています。"
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Qwen-Mathモデルは、強力な数学の問題解決能力を持っています。"
@@ -1068,6 +1097,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B)は、精密な指示タスクに適しており、優れた言語処理能力を提供します。"
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnetは業界標準を向上させ、競合モデルやClaude 3 Opusを超える性能を持ち、広範な評価で優れた結果を示し、我々の中程度のモデルの速度とコストを兼ね備えています。"
   },
   "wizardlm2": {
     "description": "WizardLM 2は、Microsoft AIが提供する言語モデルであり、複雑な対話、多言語、推論、インテリジェントアシスタントの分野で特に優れた性能を発揮します。"

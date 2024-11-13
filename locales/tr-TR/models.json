@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra, Xinghuo büyük model serisinin en güçlü versiyonudur, çevrimiçi arama bağlantısını yükseltirken, metin içeriğini anlama ve özetleme yeteneğini artırır. Ofis verimliliğini artırmak ve taleplere doğru yanıt vermek için kapsamlı bir çözüm sunar, sektördeki akıllı ürünlerin öncüsüdür."
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Nesil nesil, Meta Llama 3, geniş bir endüstri ölçütleri yelpazesinde en son performansı sergilemekte ve geliştirilmiş akıl yürütme gibi yeni yetenekler sunmaktadır."
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Arama artırma teknolojisi kullanarak büyük model ile alan bilgisi ve tüm ağ bilgisi arasında kapsamlı bir bağlantı sağlar. PDF, Word gibi çeşitli belge yüklemelerini ve URL girişini destekler, bilgi edinimi zamanında ve kapsamlıdır, çıktı sonuçları doğru ve profesyoneldir."
   },
@@ -31,6 +45,12 @@
   },
   "Baichuan4": {
     "description": "Model yetenekleri ülke içinde birinci sırada, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde yurtdışındaki önde gelen modelleri geride bırakmaktadır. Ayrıca, sektör lideri çok modlu yeteneklere sahiptir ve birçok yetkili değerlendirme kriterinde mükemmel performans göstermektedir."
+  },
+  "Baichuan4-Air": {
+    "description": "Model yetenekleri ülke içinde birinci, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde uluslararası ana akım modelleri aşmaktadır. Ayrıca, sektörde lider çok modlu yeteneklere sahip olup, birçok yetkili değerlendirme ölçütünde mükemmel performans sergilemektedir."
+  },
+  "Baichuan4-Turbo": {
+    "description": "Model yetenekleri ülke içinde birinci, bilgi ansiklopedisi, uzun metinler, yaratıcı üretim gibi Çince görevlerde uluslararası ana akım modelleri aşmaktadır. Ayrıca, sektörde lider çok modlu yeteneklere sahip olup, birçok yetkili değerlendirme ölçütünde mükemmel performans sergilemektedir."
   },
   "ERNIE-3.5-128K": {
     "description": "Baidu'nun kendi geliştirdiği, büyük ölçekli bir dil modeli olan ERNIE-3.5, geniş bir Çin ve İngilizce veri kümesini kapsar. Güçlü genel yeteneklere sahip olup, çoğu diyalog, soru-cevap, yaratıcı içerik üretimi ve eklenti uygulama senaryolarını karşılayabilir; ayrıca, Baidu arama eklentisi ile otomatik entegrasyonu destekleyerek, soru-cevap bilgilerinin güncelliğini sağlar."
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, ERNIE 3.5'e kıyasla model yeteneklerinde kapsamlı bir yükseltme gerçekleştirmiştir, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgilerini güncel tutar."
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "Baidu'nun kendi geliştirdiği amiral gemisi ultra büyük ölçekli dil modeli, genel performansı mükemmel olup, çeşitli alanlardaki karmaşık görev senaryolarında geniş bir şekilde uygulanabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, soru-cevap bilgilerini güncel tutar. ERNIE 4.0'a kıyasla performans açısından daha üstündür."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "Baidu tarafından geliştirilen, geniş ölçekli büyük dil modeli, genel performansı mükemmeldir ve her alanda karmaşık görev sahneleri için geniş bir şekilde kullanılabilir; Baidu arama eklentisi ile otomatik entegrasyonu destekler, yanıt bilgi güncellemelerinin zamanlamasını güvence altına alır. ERNIE 4.0'a kıyasla, performans olarak daha üstündür."
@@ -146,8 +169,8 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5, komut tabanlı görevlerin işlenmesini optimize etmek için tasarlanmış yeni bir büyük dil modeli serisidir."
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
-    "description": "Qwen2.5-Coder, kod yazmaya odaklanır."
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder, kod yazımına odaklanmaktadır."
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math, matematik alanındaki sorunları çözmeye odaklanır ve yüksek zorlukta sorulara profesyonel yanıtlar sunar."
@@ -178,6 +201,9 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B açık kaynak versiyonu, diyalog uygulamaları için optimize edilmiş bir diyalog deneyimi sunar."
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Large, sektördeki en büyük açık kaynaklı Transformer mimarisi MoE modelidir ve toplam 389 milyar parametre ile 52 milyar etkin parametreye sahiptir."
   },
   "abab5.5-chat": {
     "description": "Üretkenlik senaryoları için tasarlanmış, karmaşık görev işleme ve verimli metin üretimini destekler, profesyonel alan uygulamaları için uygundur."
@@ -587,6 +613,9 @@
   "gpt-4o-mini": {
     "description": "GPT-4o mini, OpenAI'nin GPT-4 Omni'den sonra tanıttığı en yeni modeldir. Görsel ve metin girişi destekler ve metin çıktısı verir. En gelişmiş küçük model olarak, diğer son zamanlardaki öncü modellere göre çok daha ucuzdur ve GPT-3.5 Turbo'dan %60'tan fazla daha ucuzdur. En son teknolojiyi korurken, önemli bir maliyet etkinliği sunar. GPT-4o mini, MMLU testinde %82 puan almış olup, şu anda sohbet tercihleri açısından GPT-4'ün üzerinde yer almaktadır."
   },
+  "grok-beta": {
+    "description": "Grok 2 ile karşılaştırılabilir performansa sahip, ancak daha yüksek verimlilik, hız ve işlevsellik sunar."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
   },
@@ -949,6 +978,9 @@
   "pro-128k": {
     "description": "Spark Pro 128K, olağanüstü bağlam işleme yeteneği ile donatılmıştır ve 128K'ya kadar bağlam bilgilerini işleyebilir. Özellikle uzun metinlerin bütünsel analizi ve uzun vadeli mantıksal ilişkilerin işlenmesi gereken durumlar için uygundur ve karmaşık metin iletişiminde akıcı ve tutarlı bir mantık ile çeşitli alıntı desteği sunmaktadır."
   },
+  "qwen-coder-plus-latest": {
+    "description": "Tongyi Qianwen kod modeli."
+  },
   "qwen-coder-turbo-latest": {
     "description": "Tongyi Qianwen kodlama modeli."
   },
@@ -1000,14 +1032,11 @@
   "qwen2.5-7b-instruct": {
     "description": "Tongyi Qianwen 2.5, halka açık 7B ölçeğinde bir modeldir."
   },
-  "qwen2.5-coder-1.5b-instruct": {
-    "description": "Tongyi Qianwen kodlama modelinin açık kaynak versiyonu."
+  "qwen2.5-coder-32b-instruct": {
+    "description": "Tongyi Qianwen kod modeli açık kaynak versiyonu."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "Tongyi Qianwen kodlama modelinin açık kaynak versiyonu."
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Qwen-Math modeli, güçlü matematik problem çözme yeteneklerine sahiptir."
@@ -1068,6 +1097,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B), ince ayar gerektiren talimat görevleri için uygundur ve mükemmel dil işleme yetenekleri sunar."
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet, endüstri standartlarını yükselterek, rakip modelleri ve Claude 3 Opus'u aşan performans sergilemekte; geniş değerlendirmelerde mükemmel sonuçlar verirken, orta seviye modellerimizin hız ve maliyetine sahiptir."
   },
   "wizardlm2": {
     "description": "WizardLM 2, Microsoft AI tarafından sunulan bir dil modelidir, karmaşık diyaloglar, çok dilli, akıl yürütme ve akıllı asistan alanlarında özellikle başarılıdır."
