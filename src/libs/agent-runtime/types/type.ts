@@ -28,6 +28,7 @@ export enum ModelProvider {
   Azure = 'azure',
   Baichuan = 'baichuan',
   Bedrock = 'bedrock',
+  Cloudflare = 'cloudflare',
   DeepSeek = 'deepseek',
   FireworksAI = 'fireworksai',
   Github = 'github',
@@ -52,6 +53,7 @@ export enum ModelProvider {
   TogetherAI = 'togetherai',
   Upstage = 'upstage',
   Wenxin = 'wenxin',
+  XAI = 'xai',
   ZeroOne = 'zeroone',
   ZhiPu = 'zhipu',
 }

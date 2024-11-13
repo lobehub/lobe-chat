@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Чаты",
+    "historySummary": "Историческое резюме",
     "rest": "Остаток",
     "systemRole": "Роль системы",
     "title": "Детали контекста",

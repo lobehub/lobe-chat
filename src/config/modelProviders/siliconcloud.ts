@@ -4,6 +4,18 @@ import { ModelProviderCard } from '@/types/llm';
 const SiliconCloud: ModelProviderCard = {
   chatModels: [
     {
+      description: 'Hunyuan-Large 是业界最大的开源 Transformer 架构 MoE 模型，拥有 3890 亿总参数量和 520 亿激活参数量。',
+      displayName: 'Hunyuan Large',
+      enabled: true,
+      id: 'Tencent/Hunyuan-A52B-Instruct',
+      pricing: {
+        currency: 'CNY',
+        input: 21,
+        output: 21,
+      },
+      tokens: 32_768,
+    },
+    {
       description: 'DeepSeek V2.5 集合了先前版本的优秀特征，增强了通用和编码能力。',
       displayName: 'DeepSeek V2.5',
       enabled: true,
@@ -105,12 +117,12 @@ const SiliconCloud: ModelProviderCard = {
     },
     {
       description: 'Qwen2.5-Coder 专注于代码编写。',
-      displayName: 'Qwen2.5 Coder 7B',
-      id: 'Qwen/Qwen2.5-Coder-7B-Instruct',
+      displayName: 'Qwen2.5 Coder 32B',
+      id: 'Qwen/Qwen2.5-Coder-32B-Instruct',
       pricing: {
         currency: 'CNY',
-        input: 0,
-        output: 0,
+        input: 1.26,
+        output: 1.26,
       },
       tokens: 32_768,
     },

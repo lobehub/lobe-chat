@@ -1,36 +1,47 @@
 import { t } from 'i18next';
 
-import { ChatTopic, GroupedTopic } from '@/types/topic';
+import { ChatTopic, ChatTopicSummary, GroupedTopic } from '@/types/topic';
 import { groupTopicsByTime } from '@/utils/client/topic';
 
-import { ChatStore } from '../../store';
+import { ChatStoreState } from '../../initialState';
 
-const currentTopics = (s: ChatStore): ChatTopic[] | undefined => s.topicMaps[s.activeId];
+const currentTopics = (s: ChatStoreState): ChatTopic[] | undefined => s.topicMaps[s.activeId];
 
-const currentActiveTopic = (s: ChatStore): ChatTopic | undefined => {
+const currentActiveTopic = (s: ChatStoreState): ChatTopic | undefined => {
   return currentTopics(s)?.find((topic) => topic.id === s.activeTopicId);
 };
-const searchTopics = (s: ChatStore): ChatTopic[] => s.searchTopics;
+const searchTopics = (s: ChatStoreState): ChatTopic[] => s.searchTopics;
 
-const displayTopics = (s: ChatStore): ChatTopic[] | undefined =>
+const displayTopics = (s: ChatStoreState): ChatTopic[] | undefined =>
   s.isSearchingTopic ? searchTopics(s) : currentTopics(s);
 
-const currentFavTopics = (s: ChatStore): ChatTopic[] =>
+const currentFavTopics = (s: ChatStoreState): ChatTopic[] =>
   currentTopics(s)?.filter((s) => s.favorite) || [];
 
-const currentUnFavTopics = (s: ChatStore): ChatTopic[] =>
+const currentUnFavTopics = (s: ChatStoreState): ChatTopic[] =>
   currentTopics(s)?.filter((s) => !s.favorite) || [];
 
-const currentTopicLength = (s: ChatStore): number => currentTopics(s)?.length || 0;
+const currentTopicLength = (s: ChatStoreState): number => currentTopics(s)?.length || 0;
 
 const getTopicById =
   (id: string) =>
-  (s: ChatStore): ChatTopic | undefined =>
+  (s: ChatStoreState): ChatTopic | undefined =>
     currentTopics(s)?.find((topic) => topic.id === id);
 
-const isCreatingTopic = (s: ChatStore) => s.creatingTopic;
+const currentActiveTopicSummary = (s: ChatStoreState): ChatTopicSummary | undefined => {
+  const activeTopic = currentActiveTopic(s);
+  if (!activeTopic) return undefined;
 
-const groupedTopicsSelector = (s: ChatStore): GroupedTopic[] => {
+  return {
+    content: activeTopic.historySummary || '',
+    model: activeTopic.metadata?.model || '',
+    provider: activeTopic.metadata?.provider || '',
+  };
+};
+
+const isCreatingTopic = (s: ChatStoreState) => s.creatingTopic;
+
+const groupedTopicsSelector = (s: ChatStoreState): GroupedTopic[] => {
   const topics = currentTopics(s);
 
   if (!topics) return [];
@@ -51,6 +62,7 @@ const groupedTopicsSelector = (s: ChatStore): GroupedTopic[] => {
 
 export const topicSelectors = {
   currentActiveTopic,
+  currentActiveTopicSummary,
   currentTopicLength,
   currentTopics,
   currentUnFavTopics,

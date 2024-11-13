@@ -12,7 +12,7 @@ import * as debugStreamModule from '../utils/debugStream';
 import { LobeAi360AI } from './index';
 
 const provider = ModelProvider.Ai360;
-const defaultBaseURL = 'https://ai.360.cn/v1';
+const defaultBaseURL = 'https://api.360.cn/v1';
 
 const bizErrorType = 'ProviderBizError';
 const invalidErrorType = 'InvalidProviderAPIKey';

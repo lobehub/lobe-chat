@@ -1,7 +1,6 @@
 import useSWR, { SWRResponse } from 'swr';
 import type { StateCreator } from 'zustand/vanilla';
 
-import { syncService } from '@/services/sync';
 import type { UserStore } from '@/store/user';
 import { OnSyncEvent, PeerSyncStatus } from '@/types/sync';
 import { browserInfo } from '@/utils/platform';
@@ -53,6 +52,8 @@ export const createSyncSlice: StateCreator<
     const defaultUserName = `My ${browserInfo.browser} (${browserInfo.os})`;
 
     set({ syncStatus: PeerSyncStatus.Connecting });
+    const { syncService } = await import('@/services/sync');
+
     return syncService.enabledSync({
       channel: {
         name: sync.channelName,
@@ -83,7 +84,10 @@ export const createSyncSlice: StateCreator<
         if (!userId) return false;
 
         // if user don't enable sync, stop sync
-        if (!userEnableSync) return syncService.disableSync();
+        if (!userEnableSync) {
+          const { syncService } = await import('@/services/sync');
+          return syncService.disableSync();
+        }
 
         return get().triggerEnableSync(userId, onEvent);
       },

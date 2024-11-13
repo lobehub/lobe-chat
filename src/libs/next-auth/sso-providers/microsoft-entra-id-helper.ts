@@ -2,7 +2,7 @@ import { authEnv } from '@/config/auth';
 
 function getTenantId() {
   return (
-    process.env.MICROSOFT_ENTRA_ID_TENANT_ID ??
+    process.env.AUTH_MICROSOFT_ENTRA_ID_TENANT_ID ??
     process.env.AUTH_AZURE_AD_TENANT_ID ??
     authEnv.AZURE_AD_TENANT_ID
   );

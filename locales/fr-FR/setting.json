@@ -175,8 +175,8 @@
       "desc": "Activer la création automatique de sujets pendant la conversation, uniquement valable pour les sujets temporaires",
       "title": "Activer la création automatique de sujets"
     },
-    "enableCompressThreshold": {
-      "title": "Activer le seuil de compression de la longueur des messages"
+    "enableCompressHistory": {
+      "title": "Activer le résumé automatique des messages historiques"
     },
     "enableHistoryCount": {
       "alias": "Illimité",
@@ -377,6 +377,11 @@
       "desc": "Une fois rempli, l'assistant système utilisera le prompt personnalisé lors de la génération de contenu",
       "placeholder": "Veuillez entrer le mot-clé personnalisé",
       "title": "Mot-clé personnalisé"
+    },
+    "historyCompress": {
+      "label": "Modèle d'historique de conversation",
+      "modelDesc": "Modèle utilisé pour compresser l'historique des conversations",
+      "title": "Résumé automatique de l'historique des conversations"
     },
     "queryRewrite": {
       "label": "Modèle de reformulation des questions",

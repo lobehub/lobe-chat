@@ -1,5 +1,5 @@
 /* eslint-disable sort-keys-fix/sort-keys-fix  */
-import { boolean, pgTable, text, unique } from 'drizzle-orm/pg-core';
+import { boolean, jsonb, pgTable, text, unique } from 'drizzle-orm/pg-core';
 
 import { idGenerator } from '../../utils/idGenerator';
 import { timestamps } from './_helpers';
@@ -19,7 +19,8 @@ export const topics = pgTable(
       .references(() => users.id, { onDelete: 'cascade' })
       .notNull(),
     clientId: text('client_id'),
-
+    historySummary: text('history_summary'),
+    metadata: jsonb('metadata'),
     ...timestamps,
   },
   (t) => ({

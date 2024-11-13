@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Mensagens de bate-papo",
+    "historySummary": "Resumo Histórico",
     "rest": "Restante disponível",
     "systemRole": "Configuração de papel do sistema",
     "title": "Detalhes do Token",

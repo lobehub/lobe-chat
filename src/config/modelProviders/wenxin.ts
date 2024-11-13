@@ -82,6 +82,19 @@ const BaiduWenxin: ModelProviderCard = {
     {
       description:
         '百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀',
+      displayName: 'ERNIE 4.0 Turbo 128K',
+      enabled: true,
+      id: 'ERNIE-4.0-Turbo-128K',
+      pricing: {
+        currency: 'CNY',
+        input: 20,
+        output: 60,
+      },
+      tokens: 128_000,
+    },
+    {
+      description:
+        '百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀',
       displayName: 'ERNIE 4.0 Turbo 8K Preview',
       id: 'ERNIE-4.0-Turbo-8K-Preview',
       pricing: {

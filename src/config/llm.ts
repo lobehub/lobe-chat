@@ -115,6 +115,10 @@ export const getLLMConfig = () => {
       TAICHU_API_KEY: z.string().optional(),
       TAICHU_MODEL_LIST: z.string().optional(),
 
+      ENABLED_CLOUDFLARE: z.boolean(),
+      CLOUDFLARE_API_KEY: z.string().optional(),
+      CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID: z.string().optional(),
+
       ENABLED_AI360: z.boolean(),
       AI360_API_KEY: z.string().optional(),
       AI360_MODEL_LIST: z.string().optional(),
@@ -149,6 +153,10 @@ export const getLLMConfig = () => {
       SENSENOVA_ACCESS_KEY_ID: z.string().optional(),
       SENSENOVA_ACCESS_KEY_SECRET: z.string().optional(),
       SENSENOVA_MODEL_LIST: z.string().optional(),
+
+      ENABLED_XAI: z.boolean(),
+      XAI_API_KEY: z.string().optional(),
+      XAI_MODEL_LIST: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -261,6 +269,11 @@ export const getLLMConfig = () => {
       TAICHU_API_KEY: process.env.TAICHU_API_KEY,
       TAICHU_MODEL_LIST: process.env.TAICHU_MODEL_LIST,
 
+      ENABLED_CLOUDFLARE:
+        !!process.env.CLOUDFLARE_API_KEY && !!process.env.CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID,
+      CLOUDFLARE_API_KEY: process.env.CLOUDFLARE_API_KEY,
+      CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID: process.env.CLOUDFLARE_BASE_URL_OR_ACCOUNT_ID,
+
       ENABLED_AI360: !!process.env.AI360_API_KEY,
       AI360_API_KEY: process.env.AI360_API_KEY,
       AI360_MODEL_LIST: process.env.AI360_MODEL_LIST,
@@ -295,6 +308,10 @@ export const getLLMConfig = () => {
       SENSENOVA_ACCESS_KEY_ID: process.env.SENSENOVA_ACCESS_KEY_ID,
       SENSENOVA_ACCESS_KEY_SECRET: process.env.SENSENOVA_ACCESS_KEY_SECRET,
       SENSENOVA_MODEL_LIST: process.env.SENSENOVA_MODEL_LIST,
+
+      ENABLED_XAI: !!process.env.XAI_API_KEY,
+      XAI_API_KEY: process.env.XAI_API_KEY,
+      XAI_MODEL_LIST: process.env.XAI_MODEL_LIST,
     },
   });
 };

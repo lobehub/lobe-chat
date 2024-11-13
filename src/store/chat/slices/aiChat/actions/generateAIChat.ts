@@ -5,13 +5,13 @@ import { template } from 'lodash-es';
 import { StateCreator } from 'zustand/vanilla';
 
 import { LOADING_FLAT, MESSAGE_CANCEL_FLAT } from '@/const/message';
+import { DEFAULT_AGENT_CHAT_CONFIG } from '@/const/settings';
 import { TraceEventType, TraceNameMap } from '@/const/trace';
 import { isServerMode } from '@/const/version';
 import { knowledgeBaseQAPrompts } from '@/prompts/knowledgeBaseQA';
 import { chatService } from '@/services/chat';
 import { messageService } from '@/services/message';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/selectors';
 import { chatHelpers } from '@/store/chat/helpers';
 import { ChatStore } from '@/store/chat/store';
 import { messageMapKey } from '@/store/chat/utils/messageMapKey';
@@ -21,6 +21,7 @@ import { MessageSemanticSearchChunk } from '@/types/rag';
 import { setNamespace } from '@/utils/storeDebug';
 
 import { chatSelectors, topicSelectors } from '../../../selectors';
+import { getAgentChatConfig, getAgentConfig, getAgentKnowledge } from './helpers';
 
 const n = setNamespace('ai');
 
@@ -93,10 +94,6 @@ export interface AIGenerateAction {
   internal_toggleToolCallingStreaming: (id: string, streaming: boolean[] | undefined) => void;
 }
 
-const getAgentConfig = () => agentSelectors.currentAgentConfig(useAgentStore.getState());
-const getAgentChatConfig = () => agentSelectors.currentAgentChatConfig(useAgentStore.getState());
-const getAgentKnowledge = () => agentSelectors.currentEnabledKnowledge(useAgentStore.getState());
-
 export const generateAIChat: StateCreator<
   ChatStore,
   [['zustand/devtools', never]],
@@ -111,7 +108,7 @@ export const generateAIChat: StateCreator<
     // trace the delete and regenerate message
     get().internal_traceMessage(id, { eventType: TraceEventType.DeleteAndRegenerateMessage });
   },
-  regenerateMessage: async (id: string) => {
+  regenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
     await get().internal_resendMessage(id, traceId);
 
@@ -265,7 +262,7 @@ export const generateAIChat: StateCreator<
     // create a new array to avoid the original messages array change
     const messages = [...originalMessages];
 
-    const { model, provider } = getAgentConfig();
+    const { model, provider, chatConfig } = getAgentConfig();
 
     let fileChunks: MessageSemanticSearchChunk[] | undefined;
     let ragQueryId;
@@ -325,6 +322,24 @@ export const generateAIChat: StateCreator<
       await refreshMessages();
       await triggerToolCalls(assistantId);
     }
+
+    // 5. summary history if context messages is larger than historyCount
+    const historyCount =
+      chatConfig.historyCount || (DEFAULT_AGENT_CHAT_CONFIG.historyCount as number);
+
+    if (
+      chatConfig.enableHistoryCount &&
+      chatConfig.enableCompressHistory &&
+      originalMessages.length > historyCount
+    ) {
+      // after generation: [u1,a1,u2,a2,u3,a3]
+      // but the `originalMessages` is still: [u1,a1,u2,a2,u3]
+      // So if historyCount=2, we need to summary [u1,a1,u2,a2]
+      // because user find UI is [u1,a1,u2,a2 | u3,a3]
+      const historyMessages = originalMessages.slice(0, -historyCount + 1);
+
+      await get().internal_summaryHistory(historyMessages);
+    }
   },
   internal_fetchAIChatMessage: async (messages, assistantId, params) => {
     const {
@@ -351,7 +366,7 @@ export const generateAIChat: StateCreator<
     // ================================== //
 
     // 1. slice messages with config
-    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig);
+    let preprocessMsgs = chatHelpers.getSlicedMessagesWithConfig(messages, chatConfig, true);
 
     // 2. replace inputMessage template
     preprocessMsgs = !chatConfig.inputTemplate
@@ -394,6 +409,7 @@ export const generateAIChat: StateCreator<
     let msgTraceId: string | undefined;
     let output = '';
 
+    const historySummary = topicSelectors.currentActiveTopicSummary(get());
     await chatService.createAssistantMessageStream({
       abortController,
       params: {
@@ -403,6 +419,7 @@ export const generateAIChat: StateCreator<
         ...agentConfig.params,
         plugins: agentConfig.plugins,
       },
+      historySummary: historySummary?.content,
       trace: {
         traceId: params?.traceId,
         sessionId: get().activeId,
