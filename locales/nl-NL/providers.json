@@ -15,6 +15,7 @@
   "bedrock": {
     "description": "Bedrock is een dienst van Amazon AWS die zich richt op het bieden van geavanceerde AI-taalmodellen en visuele modellen voor bedrijven. De modellenfamilie omvat de Claude-serie van Anthropic, de Llama 3.1-serie van Meta, en meer, met opties variërend van lichtgewicht tot hoge prestaties, en ondersteunt tekstgeneratie, dialogen, beeldverwerking en meer, geschikt voor bedrijfsapplicaties van verschillende schalen en behoeften."
   },
+  "cloudflare": {},
   "deepseek": {
     "description": "DeepSeek is een bedrijf dat zich richt op onderzoek en toepassing van kunstmatige intelligentietechnologie, en hun nieuwste model DeepSeek-V2.5 combineert algemene dialoog- en codeverwerkingscapaciteiten, met significante verbeteringen in het afstemmen op menselijke voorkeuren, schrijfopdrachten en het volgen van instructies."
   },
@@ -84,6 +85,9 @@
   },
   "wenxin": {
     "description": "Een enterprise-grade, alles-in-één platform voor de ontwikkeling en service van grote modellen en AI-native applicaties, dat de meest uitgebreide en gebruiksvriendelijke toolchain biedt voor de ontwikkeling van generatieve kunstmatige intelligentiemodellen en applicaties."
+  },
+  "xai": {
+    "description": "xAI is ein bedrijf dat zich richt op het bouwen van kunstmatige intelligentie om menselijke wetenschappelijke ontdekkingen te versnellen. Onze missie is om onze gezamenlijke begrip van het universum te bevorderen."
   },
   "zeroone": {
     "description": "01.AI richt zich op kunstmatige intelligentietechnologie in het tijdperk van AI 2.0, en bevordert sterk de innovatie en toepassing van 'mens + kunstmatige intelligentie', met behulp van krachtige modellen en geavanceerde AI-technologie om de productiviteit van de mens te verbeteren en technologische capaciteiten te realiseren."

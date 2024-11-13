@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark Ultra 是星火大模型系列中最为强大的版本，在升级联网搜索链路同时，提升对文本内容的理解和总结能力。它是用于提升办公生产力和准确响应需求的全方位解决方案，是引领行业的智能产品。"
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning.\t"
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "采用搜索增强技术实现大模型与领域知识、全网知识的全面链接。支持PDF、Word等多种文档上传及网址输入，信息获取及时、全面，输出结果准确、专业。"
   },
@@ -30,6 +44,12 @@
     "description": "具备 128K 超长上下文窗口，针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。"
   },
   "Baichuan4": {
+    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
+  },
+  "Baichuan4-Air": {
+    "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
+  },
+  "Baichuan4-Turbo": {
     "description": "模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。"
   },
   "ERNIE-3.5-128K": {
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "百度自研的旗舰级超大规模⼤语⾔模型，相较ERNIE 3.5实现了模型能力全面升级，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。"
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "百度自研的旗舰级超大规模⼤语⾔模型，综合效果表现出色，广泛适用于各领域复杂任务场景；支持自动对接百度搜索插件，保障问答信息时效。相较于ERNIE 4.0在性能表现上更优秀"
@@ -146,7 +169,7 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5 是全新的大型语言模型系列，旨在优化指令式任务的处理。"
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder 专注于代码编写。"
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
@@ -178,6 +201,9 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 开放源码版本，为会话应用提供优化后的对话体验。"
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Large 是业界最大的开源 Transformer 架构 MoE 模型，拥有 3890 亿总参数量和 520 亿激活参数量。"
   },
   "abab5.5-chat": {
     "description": "面向生产力场景，支持复杂任务处理和高效文本生成，适用于专业领域应用。"
@@ -587,6 +613,9 @@
   "gpt-4o-mini": {
     "description": "一种经济高效的AI解决方案，适用于多种文本和图像任务。"
   },
+  "grok-beta": {
+    "description": "拥有与 Grok 2 相当的性能，但具有更高的效率、速度和功能。"
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合并了多个顶尖模型的创意与智能相结合的语言模型。"
   },
@@ -949,6 +978,9 @@
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文处理能力，能够处理多达128K的上下文信息，特别适合需通篇分析和长期逻辑关联处理的长文内容，可在复杂文本沟通中提供流畅一致的逻辑与多样的引用支持。"
   },
+  "qwen-coder-plus-latest": {
+    "description": "通义千问代码模型。"
+  },
   "qwen-coder-turbo-latest": {
     "description": "通义千问代码模型。"
   },
@@ -1000,14 +1032,11 @@
   "qwen2.5-7b-instruct": {
     "description": "通义千问2.5对外开源的7B规模的模型。"
   },
-  "qwen2.5-coder-1.5b-instruct": {
+  "qwen2.5-coder-32b-instruct": {
     "description": "通义千问代码模型开源版。"
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "通义千问代码模型开源版。"
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "Qwen-Math 模型具有强大的数学解题能力。"
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Qwen-Math 模型具有强大的数学解题能力。"
@@ -1068,6 +1097,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) 适用于精细化指令任务，提供出色的语言处理能力。"
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet 提升了行业标准，性能超过竞争对手模型和 Claude 3 Opus，在广泛的评估中表现出色，同时具有我们中等层级模型的速度和成本。"
   },
   "wizardlm2": {
     "description": "WizardLM 2 是微软AI提供的语言模型，在复杂对话、多语言、推理和智能助手领域表现尤为出色。"

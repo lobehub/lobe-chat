@@ -166,7 +166,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   return (
     item && (
       <>
-        {enableHistoryDivider && <History  />}
+        {enableHistoryDivider && <History />}
         <ChatItem
           actions={
             <ActionsBar
