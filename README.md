@@ -287,12 +287,12 @@ Our marketplace is not just a showcase platform but also a collaborative space. 
 
 | Recent Submits                                                                                                                                                                          | Description                                                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Thinking Claude](https://chat-preview.lobehub.com/market?agent=thinking-claude)<br/><sup>By **[AnoyiX](https://github.com/AnoyiX)** on **2024-11-14**</sup>                            | Let Claude think comprehensively before responding!<br/>`common`                                                                                               |
 | [Machine Vision LaTeX](https://chat-preview.lobehub.com/market?agent=cv-latex)<br/><sup>By **[5xiao0qing5](https://github.com/5xiao0qing5)** on **2024-10-29**</sup>                    | Specializes in explaining concepts of machine learning and deep learning<br/>`machine-learning` `deep-learning` `image-processing` `computer-vision` `la-te-x` |
 | [Domain Analysis Master](https://chat-preview.lobehub.com/market?agent=domain)<br/><sup>By **[ccbikai](https://github.com/ccbikai)** on **2024-10-29**</sup>                            | Expert in domain analysis and humorous suggestions<br/>`domain-analysis` `humor` `culture` `website-suggestions` `purchase-advice`                             |
 | [Ingo Hausmann](https://chat-preview.lobehub.com/market?agent=pc-beschaffung-ingo-hausmann)<br/><sup>By **[bionicprompter](https://github.com/bionicprompter)** on **2024-10-29**</sup> | Ingo Hausmann wants to be advised on a new purchase of PCs<br/>`company` `hardware` `needs-assessment` `it` `applications`                                     |
-| [Print to Table](https://chat-preview.lobehub.com/market?agent=print-to-table)<br/><sup>By **[printtotable](https://github.com/printtotable)** on **2024-10-29**</sup>                  | Transform data from images into organized tables in Excel.<br/>`data-extraction` `tables` `advertising` `influencer` `excel`                                   |
 
-> 📊 Total agents: [<kbd>**430**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**431**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
