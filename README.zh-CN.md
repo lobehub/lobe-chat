@@ -276,12 +276,12 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 | 最近新增                                                                                                                                                                               | 助手说明                                                                                   |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [思考克劳德](https://chat-preview.lobehub.com/market?agent=thinking-claude)<br/><sup>By **[AnoyiX](https://github.com/AnoyiX)** on **2024-11-14**</sup>                                | 让克劳德在回应之前全面思考！<br/>`常见`                                                    |
 | [机器视觉 latex](https://chat-preview.lobehub.com/market?agent=cv-latex)<br/><sup>By **[5xiao0qing5](https://github.com/5xiao0qing5)** on **2024-10-29**</sup>                         | 擅长机器学习与深度学习概念解析<br/>`机器学习` `深度学习` `图像处理` `计算机视觉` `la-te-x` |
 | [域名分析大师](https://chat-preview.lobehub.com/market?agent=domain)<br/><sup>By **[ccbikai](https://github.com/ccbikai)** on **2024-10-29**</sup>                                     | 擅长域名分析与幽默建议<br/>`域名分析` `幽默` `文化` `建站建议` `购买建议`                  |
 | [英戈・豪斯曼](https://chat-preview.lobehub.com/market?agent=pc-beschaffung-ingo-hausmann)<br/><sup>By **[bionicprompter](https://github.com/bionicprompter)** on **2024-10-29**</sup> | 英戈・豪斯曼希望就新购置的电脑进行咨询<br/>`公司` `硬件` `需求分析` `it` `应用`            |
-| [打印到表格](https://chat-preview.lobehub.com/market?agent=print-to-table)<br/><sup>By **[printtotable](https://github.com/printtotable)** on **2024-10-29**</sup>                     | 将图像数据转换为 Excel 中的组织表格。<br/>`数据提取` `表格` `广告` `影响者` `excel`        |
 
-> 📊 Total agents: [<kbd>**430**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**431**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 
