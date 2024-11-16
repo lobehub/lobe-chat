@@ -1,59 +1,50 @@
 'use client';
 
 import { DraggablePanel } from '@lobehub/ui';
-import { memo, useState } from 'react';
+import { ReactNode, memo, useCallback, useState } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { CHAT_TEXTAREA_HEIGHT, CHAT_TEXTAREA_MAX_HEIGHT } from '@/const/layoutTokens';
-import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
-import { useGlobalStore } from '@/store/global';
-import { systemStatusSelectors } from '@/store/global/selectors';
 
+import { ActionKeys } from '../ActionBar/config';
 import LocalFiles from './FilePreview';
 import Footer from './Footer';
 import Head from './Header';
-import TextArea from './TextArea';
-
-const defaultLeftActions = [
-  'model',
-  'fileUpload',
-  'knowledgeBase',
-  'temperature',
-  'history',
-  'stt',
-  'tools',
-  'token',
-] as ActionKeys[];
-
-const defaultRightActions = ['clear'] as ActionKeys[];
 
 interface DesktopChatInputProps {
-  leftActions?: ActionKeys[];
-  rightActions?: ActionKeys[];
+  footer?: {
+    saveTopic?: boolean;
+    shortcutHint?: boolean;
+  };
+  inputHeight: number;
+  leftActions: ActionKeys[];
+  onInputHeightChange?: (height: number) => void;
+  renderTextArea: (onSend: () => void) => ReactNode;
+  rightActions: ActionKeys[];
 }
+
 const DesktopChatInput = memo<DesktopChatInputProps>(
-  ({ leftActions = defaultLeftActions, rightActions = defaultRightActions }) => {
+  ({ leftActions, rightActions, footer, renderTextArea, inputHeight, onInputHeightChange }) => {
     const [expand, setExpand] = useState<boolean>(false);
 
-    const [inputHeight, updatePreference] = useGlobalStore((s) => [
-      systemStatusSelectors.inputHeight(s),
-      s.updateSystemStatus,
-    ]);
+    const onSend = useCallback(() => {
+      setExpand(false);
+    }, []);
 
     return (
       <>
-        {!expand && <LocalFiles />}
+        {!expand && leftActions.includes('fileUpload') && <LocalFiles />}
         <DraggablePanel
           fullscreen={expand}
           maxHeight={CHAT_TEXTAREA_MAX_HEIGHT}
           minHeight={CHAT_TEXTAREA_HEIGHT}
           onSizeChange={(_, size) => {
             if (!size) return;
+            const height =
+              typeof size.height === 'string' ? Number.parseInt(size.height) : size.height;
+            if (!height) return;
 
-            updatePreference({
-              inputHeight:
-                typeof size.height === 'string' ? Number.parseInt(size.height) : size.height,
-            });
+            onInputHeightChange?.(height);
           }}
           placement="bottom"
           size={{ height: inputHeight, width: '100%' }}
@@ -71,8 +62,8 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
               rightActions={rightActions}
               setExpand={setExpand}
             />
-            <TextArea setExpand={setExpand} />
-            <Footer expand={expand} setExpand={setExpand} />
+            {renderTextArea(onSend)}
+            <Footer expand={expand} setExpand={setExpand} {...footer} />
           </Flexbox>
         </DraggablePanel>
       </>
