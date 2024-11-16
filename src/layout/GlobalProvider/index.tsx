@@ -19,7 +19,6 @@ import { isMobileDevice } from '@/utils/server/responsive';
 
 import AppTheme from './AppTheme';
 import Locale from './Locale';
-import QueryProvider from './Query';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
@@ -81,7 +80,7 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
             isMobile={isMobile}
             serverConfig={serverConfig}
           >
-            <QueryProvider>{children}</QueryProvider>
+            {children}
             <StoreInitialization />
           </ServerConfigStoreProvider>
           <DebugUI />
