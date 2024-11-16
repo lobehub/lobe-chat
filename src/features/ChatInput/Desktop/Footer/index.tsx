@@ -1,23 +1,20 @@
-import { Icon } from '@lobehub/ui';
-import { Button, Skeleton, Space } from 'antd';
+import { Button, Space } from 'antd';
 import { createStyles } from 'antd-style';
-import { ChevronUp, CornerDownLeft, LucideCommand } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Center, Flexbox } from 'react-layout-kit';
+import { Flexbox } from 'react-layout-kit';
 
 import StopLoadingIcon from '@/components/StopLoading';
-import SaveTopic from '@/features/ChatInput/Topic';
 import { useSendMessage } from '@/features/ChatInput/useSend';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
-import { useUserStore } from '@/store/user';
-import { preferenceSelectors } from '@/store/user/selectors';
 import { isMacOS } from '@/utils/platform';
 
+import SaveTopic from '../../Topic';
 import LocalFiles from '../FilePreview';
 import SendMore from './SendMore';
+import ShortcutHint from './ShortcutHint';
 
 const useStyles = createStyles(({ css, prefixCls, token }) => {
   return {
@@ -48,50 +45,28 @@ const useStyles = createStyles(({ css, prefixCls, token }) => {
 
 interface FooterProps {
   expand: boolean;
+  saveTopic?: boolean;
   setExpand?: (expand: boolean) => void;
+  shortcutHint?: boolean;
 }
 
-const Footer = memo<FooterProps>(({ setExpand, expand }) => {
+const Footer = memo<FooterProps>(({ setExpand, expand, shortcutHint = true, saveTopic = true }) => {
   const { t } = useTranslation('chat');
 
-  const { theme, styles } = useStyles();
+  const { styles } = useStyles();
 
   const [isAIGenerating, stopGenerateMessage] = useChatStore((s) => [
     chatSelectors.isAIGenerating(s),
     s.stopGenerateMessage,
   ]);
 
-  const [useCmdEnterToSend] = useUserStore((s) => [preferenceSelectors.useCmdEnterToSend(s)]);
-
   const { send: sendMessage, canSend } = useSendMessage();
 
   const [isMac, setIsMac] = useState<boolean>();
+
   useEffect(() => {
     setIsMac(isMacOS());
   }, [setIsMac]);
-
-  const cmdEnter = (
-    <Flexbox gap={2} horizontal>
-      {typeof isMac === 'boolean' ? (
-        <Icon icon={isMac ? LucideCommand : ChevronUp} />
-      ) : (
-        <Skeleton.Node active style={{ height: '100%', width: 12 }}>
-          {' '}
-        </Skeleton.Node>
-      )}
-      <Icon icon={CornerDownLeft} />
-    </Flexbox>
-  );
-
-  const enter = (
-    <Center>
-      <Icon icon={CornerDownLeft} />
-    </Center>
-  );
-
-  const sendShortcut = useCmdEnterToSend ? cmdEnter : enter;
-
-  const wrapperShortcut = useCmdEnterToSend ? enter : cmdEnter;
 
   return (
     <Flexbox
@@ -107,18 +82,8 @@ const Footer = memo<FooterProps>(({ setExpand, expand }) => {
         {expand && <LocalFiles />}
       </Flexbox>
       <Flexbox align={'center'} flex={'none'} gap={8} horizontal>
-        <Flexbox
-          gap={4}
-          horizontal
-          style={{ color: theme.colorTextDescription, fontSize: 12, marginRight: 12 }}
-        >
-          {sendShortcut}
-          <span>{t('input.send')}</span>
-          <span>/</span>
-          {wrapperShortcut}
-          <span>{t('input.warp')}</span>
-        </Flexbox>
-        <SaveTopic />
+        {shortcutHint && <ShortcutHint />}
+        {saveTopic && <SaveTopic />}
         <Flexbox style={{ minWidth: 92 }}>
           {isAIGenerating ? (
             <Button
