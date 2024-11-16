@@ -4,14 +4,11 @@ import { TextAreaRef } from 'antd/es/input/TextArea';
 import { memo, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useSendMessage } from '@/features/ChatInput/useSend';
-import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
 import { useUserStore } from '@/store/user';
 import { preferenceSelectors } from '@/store/user/selectors';
 import { isCommandPressed } from '@/utils/keyboard';
 
-import { useAutoFocus } from './useAutoFocus';
+import { useAutoFocus } from '../useAutoFocus';
 
 const useStyles = createStyles(({ css }) => {
   return {
@@ -34,24 +31,19 @@ const useStyles = createStyles(({ css }) => {
 });
 
 interface InputAreaProps {
-  setExpand?: (expand: boolean) => void;
+  loading?: boolean;
+  onChange: (string: string) => void;
+  onSend: () => void;
+  value: string;
 }
 
-const InputArea = memo<InputAreaProps>(({ setExpand }) => {
+const InputArea = memo<InputAreaProps>(({ onSend, value, loading, onChange }) => {
   const { t } = useTranslation('chat');
   const { styles } = useStyles();
   const ref = useRef<TextAreaRef>(null);
   const isChineseInput = useRef(false);
 
-  const [loading, value, updateInputMessage] = useChatStore((s) => [
-    chatSelectors.isAIGenerating(s),
-    s.inputMessage,
-    s.updateInputMessage,
-  ]);
-
   const useCmdEnterToSend = useUserStore(preferenceSelectors.useCmdEnterToSend);
-
-  const { send: sendMessage } = useSendMessage();
 
   useAutoFocus(ref);
 
@@ -78,10 +70,10 @@ const InputArea = memo<InputAreaProps>(({ setExpand }) => {
         autoFocus
         className={styles.textarea}
         onBlur={(e) => {
-          updateInputMessage?.(e.target.value);
+          onChange?.(e.target.value);
         }}
         onChange={(e) => {
-          updateInputMessage?.(e.target.value);
+          onChange?.(e.target.value);
         }}
         onCompositionEnd={() => {
           isChineseInput.current = false;
@@ -98,8 +90,7 @@ const InputArea = memo<InputAreaProps>(({ setExpand }) => {
             // refs: https://github.com/lobehub/lobe-chat/pull/989
             e.preventDefault();
 
-            sendMessage();
-            setExpand?.(false);
+            onSend();
           };
           const commandKey = isCommandPressed(e);
 
@@ -109,7 +100,7 @@ const InputArea = memo<InputAreaProps>(({ setExpand }) => {
           } else {
             // cmd + enter to wrap
             if (commandKey) {
-              updateInputMessage?.((e.target as any).value + '\n');
+              onChange?.((e.target as any).value + '\n');
               return;
             }
 
@@ -125,6 +116,6 @@ const InputArea = memo<InputAreaProps>(({ setExpand }) => {
   );
 });
 
-InputArea.displayName = 'InputArea';
+InputArea.displayName = 'DesktopInputArea';
 
 export default InputArea;
