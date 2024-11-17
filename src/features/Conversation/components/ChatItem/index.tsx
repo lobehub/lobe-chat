@@ -1,7 +1,9 @@
+'use client';
+
 import { ChatItem } from '@lobehub/ui';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
-import { ReactNode, memo, useCallback, useMemo } from 'react';
+import { MouseEventHandler, ReactNode, memo, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useAgentStore } from '@/store/agent';
@@ -42,11 +44,13 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
 }));
 
 export interface ChatListItemProps {
+  hideActionBar?: boolean;
   id: string;
   index: number;
+  showThreadDivider?: boolean;
 }
 
-const Item = memo<ChatListItemProps>(({ index, id }) => {
+const Item = memo<ChatListItemProps>(({ index, id, hideActionBar }) => {
   const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
   const { t } = useTranslation('common');
   const { styles, cx } = useStyles();
@@ -61,7 +65,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
     if (index >= chats.length) return;
 
-    return chats[index];
+    return chats.find((s) => s.id === id);
   }, isEqual);
 
   const [
@@ -83,18 +87,18 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   // when the message is in RAG flow or the AI generating, it should be in loading state
   const isProcessing = isInRAGFlow || generating;
 
-  const onAvatarsClick = useAvatarsClick();
+  const onAvatarsClick = useAvatarsClick(item?.role);
 
-  const RenderMessage = useCallback(
-    ({ editableContent, data }: { data: ChatMessage; editableContent: ReactNode }) => {
+  const renderMessage = useCallback(
+    (editableContent: ReactNode) => {
       if (!item?.role) return;
       const RenderFunction = renderMessages[item.role] ?? renderMessages['default'];
 
       if (!RenderFunction) return;
 
-      return <RenderFunction {...data} editableContent={editableContent} />;
+      return <RenderFunction {...item} editableContent={editableContent} />;
     },
-    [item?.role],
+    [item],
   );
 
   const BelowMessage = useCallback(
@@ -136,7 +140,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
 
   const error = useErrorContent(item?.error);
 
-  const historyLength = useChatStore((s) => chatSelectors.currentChats(s).length);
+  const [historyLength] = useChatStore((s) => [chatSelectors.currentChats(s).length]);
 
   const enableHistoryDivider = useAgentStore((s) => {
     const config = agentSelectors.currentAgentChatConfig(s);
@@ -151,6 +155,11 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
   const message =
     !editing && item?.role === 'assistant' ? processWithArtifact(item?.content) : item?.content;
 
+  // ======================= Performance Optimization ======================= //
+  // these useMemo/useCallback are all for the performance optimization
+  // maybe we can remove it in React 19
+  // ======================================================================== //
+
   const components = useMemo(
     () =>
       Object.fromEntries(
@@ -163,55 +172,83 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     [id],
   );
 
+  const markdownProps = useMemo(
+    () => ({
+      components,
+      customRender: markdownCustomRender,
+      rehypePlugins,
+    }),
+    [components, markdownCustomRender],
+  );
+
+  const onChange = useCallback((value: string) => updateMessageContent(id, value), [id]);
+
+  const onDoubleClick = useCallback<MouseEventHandler<HTMLDivElement>>(
+    (e) => {
+      if (!item) return;
+      if (item.id === 'default' || item.error) return;
+      if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
+        toggleMessageEditing(id, true);
+      }
+    },
+    [item],
+  );
+
+  const text = useMemo(
+    () => ({
+      cancel: t('cancel'),
+      confirm: t('ok'),
+      edit: t('edit'),
+    }),
+    [t],
+  );
+
+  const onEditingChange = useCallback((edit: boolean) => {
+    toggleMessageEditing(id, edit);
+  }, []);
+
+  const actions = useMemo(
+    () =>
+      !hideActionBar && (
+        <ActionsBar
+          index={index}
+          setEditing={(edit) => {
+            toggleMessageEditing(id, edit);
+          }}
+        />
+      ),
+    [hideActionBar, index, id],
+  );
+
+  const belowMessage = useMemo(() => item && <BelowMessage data={item} />, [item]);
+  const errorMessage = useMemo(() => item && <ErrorMessageExtra data={item} />, [item]);
+  const messageExtra = useMemo(() => item && <MessageExtra data={item} />, [item]);
+
   return (
     item && (
       <>
         {enableHistoryDivider && <History />}
         <ChatItem
-          actions={
-            <ActionsBar
-              index={index}
-              setEditing={(edit) => {
-                toggleMessageEditing(id, edit);
-              }}
-            />
-          }
+          actions={actions}
           avatar={item.meta}
-          belowMessage={<BelowMessage data={item} />}
+          belowMessage={belowMessage}
           className={cx(styles.message, isMessageLoading && styles.loading)}
           editing={editing}
           error={error}
-          errorMessage={<ErrorMessageExtra data={item} />}
+          errorMessage={errorMessage}
           fontSize={fontSize}
           loading={isProcessing}
-          markdownProps={{
-            components,
-            customRender: markdownCustomRender,
-            rehypePlugins,
-          }}
+          markdownProps={markdownProps}
           message={message}
-          messageExtra={<MessageExtra data={item} />}
-          onAvatarClick={onAvatarsClick?.(item.role)}
-          onChange={(value) => updateMessageContent(item.id, value)}
-          onDoubleClick={(e) => {
-            if (item.id === 'default' || item.error) return;
-            if (item.role && ['assistant', 'user'].includes(item.role) && e.altKey) {
-              toggleMessageEditing(id, true);
-            }
-          }}
-          onEditingChange={(edit) => {
-            toggleMessageEditing(id, edit);
-          }}
+          messageExtra={messageExtra}
+          onAvatarClick={onAvatarsClick}
+          onChange={onChange}
+          onDoubleClick={onDoubleClick}
+          onEditingChange={onEditingChange}
           placement={type === 'chat' ? (item.role === 'user' ? 'right' : 'left') : 'left'}
           primary={item.role === 'user'}
-          renderMessage={(editableContent) => (
-            <RenderMessage data={item} editableContent={editableContent} />
-          )}
-          text={{
-            cancel: t('cancel'),
-            confirm: t('ok'),
-            edit: t('edit'),
-          }}
+          renderMessage={renderMessage}
+          text={text}
           time={item.updatedAt || item.createdAt}
           type={type === 'chat' ? 'block' : 'pure'}
         />
@@ -219,5 +256,7 @@ const Item = memo<ChatListItemProps>(({ index, id }) => {
     )
   );
 });
+
+Item.displayName = 'ChatItem';
 
 export default Item;
