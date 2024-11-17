@@ -1,6 +1,7 @@
-import DesktopChatInput from '@/features/ChatInput/Desktop';
 import MobileChatInput from '@/features/ChatInput/Mobile';
 import { isMobileDevice } from '@/utils/server/responsive';
+
+import DesktopChatInput from './Desktop';
 
 const ChatInput = () => {
   const mobile = isMobileDevice();
