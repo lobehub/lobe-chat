@@ -472,6 +472,9 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro suporta até 2 milhões de tokens, sendo a escolha ideal para modelos multimodais de médio porte, adequados para suporte multifacetado em tarefas complexas."
   },
+  "gemini-exp-1114": {
+    "description": "O Gemini Exp 1114 é o mais recente modelo experimental de IA multimodal da Google, com capacidade de processamento rápido, suportando entradas de texto, imagem e vídeo, adequado para a expansão eficiente de várias tarefas."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B é adequado para o processamento de tarefas de pequeno a médio porte, combinando custo e eficiência."
   },
