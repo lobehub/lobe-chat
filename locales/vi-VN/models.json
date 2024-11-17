@@ -472,6 +472,9 @@
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro hỗ trợ lên đến 2 triệu tokens, là lựa chọn lý tưởng cho mô hình đa phương thức trung bình, phù hợp cho hỗ trợ đa diện cho các nhiệm vụ phức tạp."
   },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 là mô hình AI đa phương thức thử nghiệm mới nhất của Google, có khả năng xử lý nhanh, hỗ trợ đầu vào văn bản, hình ảnh và video, phù hợp với việc mở rộng hiệu quả cho nhiều nhiệm vụ."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B phù hợp cho việc xử lý các nhiệm vụ quy mô vừa và nhỏ, đồng thời mang lại hiệu quả chi phí."
   },
