@@ -35,14 +35,14 @@ const Gitee: ModelProviderCard = {
       displayName: 'Yi 34B Chat',
       enabled: true,
       id: 'Yi-34B-Chat',
-      tokens: 4_000,
+      tokens: 4000,
     },
     {
       description: 'DeepSeek Coder 33B 是一个代码语言模型， 基于 2 万亿数据训练而成，其中 87% 为代码， 13% 为中英文语言。模型引入 16K 窗口大小和填空任务，提供项目级别的代码补全和片段填充功能。',
       displayName: 'DeepSeek Coder 33B Instruct',
       enabled: true,
       id: 'deepseek-coder-33B-instruct',
-      tokens: 8_000,
+      tokens: 8000,
     },
     {
       description: 'CodeGeeX4-ALL-9B 是一个多语言代码生成模型，支持包括代码补全和生成、代码解释器、网络搜索、函数调用、仓库级代码问答在内的全面功能，覆盖软件开发的各种场景。是参数少于 10B 的顶尖代码生成模型。',
