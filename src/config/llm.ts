@@ -229,7 +229,7 @@ export const getLLMConfig = () => {
 
       ENABLED_GITEE: !!process.env.GITEE_API_KEY,
       GITEE_API_KEY: process.env.GITEE_API_KEY,
-      
+
       ENABLED_UPSTAGE: !!process.env.UPSTAGE_API_KEY,
       UPSTAGE_API_KEY: process.env.UPSTAGE_API_KEY,
 
