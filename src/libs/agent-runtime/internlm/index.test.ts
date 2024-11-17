@@ -1,4 +1,3 @@
-
 // @vitest-environment node
 import OpenAI from 'openai';
 import { Mock, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
