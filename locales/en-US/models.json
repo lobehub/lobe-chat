@@ -460,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is the latest experimental model, showcasing significant performance improvements in both text and multimodal use cases."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 offers optimized multimodal processing capabilities, suitable for a variety of complex task scenarios."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash is Google's latest multimodal AI model, featuring fast processing capabilities and supporting text, image, and video inputs, making it suitable for efficient scaling across various tasks."
   },
@@ -471,12 +468,6 @@
   },
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 is the latest production-ready model, delivering higher quality outputs, with notable enhancements in mathematics, long-context, and visual tasks."
-  },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 offers excellent multimodal processing capabilities, providing greater flexibility for application development."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 combines the latest optimization technologies to deliver more efficient multimodal data processing capabilities."
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro supports up to 2 million tokens, making it an ideal choice for medium-sized multimodal models, providing multifaceted support for complex tasks."
