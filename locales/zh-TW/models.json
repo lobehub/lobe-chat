@@ -460,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的實驗性模型，在文本和多模態用例中都有顯著的性能提升。"
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 提供了優化後的多模態處理能力，適用多種複雜任務場景。"
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash 是 Google 最新的多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
   },
@@ -471,12 +468,6 @@
   },
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 是最新的生產就緒模型，提供更高品質的輸出，特別在數學、長上下文和視覺任務方面有顯著提升。"
-  },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 提供出色的多模態處理能力，為應用開發帶來更大靈活性。"
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 結合最新優化技術，帶來更高效的多模態數據處理能力。"
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高達 200 萬個 tokens，是中型多模態模型的理想選擇，適用於複雜任務的多方面支持。"
