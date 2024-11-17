@@ -22,7 +22,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: lobehub/lobe-chat-database
+          images: ${{ secrets.DOCKER_REGISTRY_USER }}/lobe-chat-clerk
           tags: |
             type=raw,value=latest
             type=ref,event=tag
@@ -44,3 +44,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+            CLERK_WEBHOOK_SECRET=${{ secrets.CLERK_WEBHOOK_SECRET }}
