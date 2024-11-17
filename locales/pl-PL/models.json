@@ -30,7 +30,7 @@
   "@hf/mistral/mistral-7b-instruct-v0.2": {},
   "@hf/nexusflow/starling-lm-7b-beta": {},
   "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
   "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
   "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
   "@hf/thebloke/zephyr-7b-beta-awq": {},
@@ -471,6 +471,9 @@
   },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro obsługuje do 2 milionów tokenów, co czyni go idealnym wyborem dla średniej wielkości modeli multimodalnych, odpowiednim do wszechstronnej obsługi złożonych zadań."
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 to najnowszy eksperymentalny model AI o wielu modalnościach od Google, który charakteryzuje się szybkim przetwarzaniem i obsługuje wejścia tekstowe, obrazowe oraz wideo, co umożliwia wydajne rozszerzanie go na różne zadania."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B nadaje się do przetwarzania zadań średniej i małej skali, łącząc efektywność kosztową."
