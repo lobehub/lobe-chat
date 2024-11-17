@@ -59,7 +59,7 @@ const Gitee: ModelProviderCard = {
   id: 'gitee',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://ai.gitee.com/docs/openapi/v1#tag/serverless/POST/chat/completions',
-  name: 'Gitee',
+  name: 'Gitee AI',
   url: 'https://ai.gitee.com',
 };
 
