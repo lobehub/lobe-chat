@@ -31,17 +31,11 @@ class BuildStaticChangelog {
       case 'bug fixes': {
         return 'fixes';
       }
-      case 'styles': {
-        return 'improvements';
-      }
-      case 'code refactoring': {
-        return 'improvements';
-      }
       case 'features': {
-        return 'improvements';
+        return 'features';
       }
       default: {
-        return '';
+        return 'improvements';
       }
     }
   };
