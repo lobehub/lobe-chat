@@ -29,7 +29,7 @@
   },
   {
     "children": {
-      "improvements": ["Support compress history messages."]
+      "features": ["Support compress history messages."]
     },
     "date": "2024-11-09",
     "version": "1.29.0"
@@ -76,7 +76,7 @@
   },
   {
     "children": {
-      "improvements": ["Support export as markdown and JSON."]
+      "features": ["Support export as markdown and JSON."]
     },
     "date": "2024-11-05",
     "version": "1.28.0"
@@ -105,7 +105,7 @@
   },
   {
     "children": {
-      "improvements": ["Support group topics by time."]
+      "features": ["Support group topics by time."]
     },
     "date": "2024-11-04",
     "version": "1.27.0"
@@ -258,7 +258,7 @@
   },
   {
     "children": {
-      "improvements": ["experimentally support to pin assistant to sidebar."]
+      "features": ["experimentally support to pin assistant to sidebar."]
     },
     "date": "2024-10-27",
     "version": "1.26.0"
@@ -286,7 +286,7 @@
   },
   {
     "children": {
-      "improvements": ["Support ZEN mode."]
+      "features": ["Support ZEN mode."]
     },
     "date": "2024-10-26",
     "version": "1.25.0"
@@ -307,7 +307,7 @@
   },
   {
     "children": {
-      "improvements": ["Add SenseNova (商汤) model provider."]
+      "features": ["Add SenseNova (商汤) model provider."]
     },
     "date": "2024-10-25",
     "version": "1.24.0"
@@ -321,7 +321,7 @@
   },
   {
     "children": {
-      "improvements": ["Support system agent config."]
+      "features": ["Support system agent config."]
     },
     "date": "2024-10-25",
     "version": "1.23.0"
@@ -515,7 +515,8 @@
   },
   {
     "children": {
-      "improvements": ["Add HuggingFace Model Provider."]
+      "improvements": ["Refactor the chat webapi."],
+      "features": ["Add HuggingFace Model Provider."]
     },
     "date": "2024-10-12",
     "version": "1.22.0"
@@ -630,7 +631,7 @@
   },
   {
     "children": {
-      "improvements": ["Add wenxin model provider."]
+      "features": ["Add wenxin model provider."]
     },
     "date": "2024-09-30",
     "version": "1.21.0"
@@ -683,7 +684,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Hunyuan(Tencent) model provider."]
+      "features": ["Add Hunyuan(Tencent) model provider."]
     },
     "date": "2024-09-27",
     "version": "1.20.0"
@@ -938,7 +939,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Add Ai21Labs model provider, add Github Models provider, support native Artifacts just like Claude."
       ]
     },
@@ -959,7 +960,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Discover Page."]
+      "features": ["Add Discover Page."]
     },
     "date": "2024-09-18",
     "version": "1.18.0"
@@ -1017,6 +1018,7 @@
   },
   {
     "children": {
+      "features": ["Support openai new OpenAI o1-preview/o1-mini models."],
       "improvements": ["Support Google Model List."]
     },
     "date": "2024-09-13",
@@ -1120,7 +1122,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Fireworks AI Model Provider, Add Spark model provider."]
+      "features": ["Add Fireworks AI Model Provider, Add Spark model provider."]
     },
     "date": "2024-09-10",
     "version": "1.16.0"
@@ -1362,7 +1364,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Upstage model provider support."]
+      "features": ["Add Upstage model provider support."]
     },
     "date": "2024-08-30",
     "version": "1.15.0"
@@ -1452,7 +1454,7 @@
   },
   {
     "children": {
-      "improvements": ["Supports Cloudflare Zero Trust login."]
+      "features": ["Supports Cloudflare Zero Trust login."]
     },
     "date": "2024-08-27",
     "version": "1.14.0"
@@ -1473,7 +1475,7 @@
   },
   {
     "children": {
-      "improvements": ["Supports Authelia login."]
+      "features": ["Supports Authelia login."]
     },
     "date": "2024-08-27",
     "version": "1.13.0"
@@ -1614,7 +1616,7 @@
   },
   {
     "children": {
-      "improvements": ["Files and knowledge base."]
+      "features": ["Files and knowledge base."]
     },
     "date": "2024-08-21",
     "version": "1.12.0"
@@ -1684,7 +1686,7 @@
   },
   {
     "children": {
-      "improvements": ["Add 2 new models to openai provider."]
+      "features": ["Add 2 new models to openai provider."]
     },
     "date": "2024-08-14",
     "version": "1.11.0"
@@ -1696,7 +1698,7 @@
   },
   {
     "children": {
-      "improvements": ["Add SiliconCloud model provider."]
+      "features": ["Add SiliconCloud model provider."]
     },
     "date": "2024-08-14",
     "version": "1.10.0"
@@ -1753,7 +1755,7 @@
   },
   {
     "children": {
-      "improvements": ["Skip login page if only one provider exists."]
+      "features": ["Skip login page if only one provider exists."]
     },
     "date": "2024-08-05",
     "version": "1.9.0"
@@ -1774,7 +1776,7 @@
   },
   {
     "children": {
-      "improvements": ["Add NextAuth as authentication service in server database."]
+      "features": ["Add NextAuth as authentication service in server database."]
     },
     "date": "2024-08-02",
     "version": "1.8.0"
@@ -1851,7 +1853,7 @@
   },
   {
     "children": {
-      "improvements": ["Enabled function calling on Deepseek models."]
+      "features": ["Enabled function calling on Deepseek models."]
     },
     "date": "2024-07-26",
     "version": "1.7.0"
@@ -1959,7 +1961,7 @@
   },
   {
     "children": {
-      "improvements": ["Add gpt-4o-mini in OpenAI Provider and set it as the default model."]
+      "features": ["Add gpt-4o-mini in OpenAI Provider and set it as the default model."]
     },
     "date": "2024-07-19",
     "version": "1.6.0"
@@ -2001,7 +2003,7 @@
   },
   {
     "children": {
-      "improvements": ["Spport qwen-vl and tool call for qwen."]
+      "features": ["Spport qwen-vl and tool call for qwen."]
     },
     "date": "2024-07-17",
     "version": "1.5.0"
@@ -2029,7 +2031,7 @@
   },
   {
     "children": {
-      "improvements": ["Add 360AI model provider."]
+      "features": ["Add 360AI model provider."]
     },
     "date": "2024-07-12",
     "version": "1.4.0"
@@ -2076,7 +2078,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Taichu model provider."]
+      "features": ["Add Taichu model provider."]
     },
     "date": "2024-07-09",
     "version": "1.3.0"
@@ -2183,7 +2185,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Baichuan model provider."]
+      "features": ["Add Baichuan model provider."]
     },
     "date": "2024-07-01",
     "version": "1.2.0"
@@ -2314,7 +2316,7 @@
   },
   {
     "children": {
-      "improvements": ["Supoort Claude 3.5 Sonnet."]
+      "features": ["Supoort Claude 3.5 Sonnet."]
     },
     "date": "2024-06-20",
     "version": "1.1.0"
@@ -2418,7 +2420,14 @@
   },
   {
     "children": {
-      "improvements": ["Release LobeChat 1.0."]
+      "features": ["Release LobeChat 1.0."],
+      "improvements": [
+        "Bump version.",
+        "Release LobeChat 1.0, closes #2897 (97bb377)",
+        "Bump version, closes #2896 (6e2d03b)",
+        "Update LICENSE to Apache 2.0",
+        "update to 1.0.0"
+      ]
     },
     "date": "2024-06-17",
     "version": "1.0.0"

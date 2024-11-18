@@ -1,7 +1,7 @@
 [
   {
     "children": {
-      "improvements": ["Support server db mode with Postgres / Drizzle ORM / tRPC."]
+      "features": ["Support server db mode with Postgres / Drizzle ORM / tRPC."]
     },
     "date": "2024-06-17",
     "version": "0.163.0"
@@ -179,7 +179,7 @@
   },
   {
     "children": {
-      "improvements": ["Support topic agent."]
+      "features": ["Support topic agent."]
     },
     "date": "2024-05-27",
     "version": "0.162.0"
@@ -358,7 +358,7 @@
   },
   {
     "children": {
-      "improvements": ["Add system agent to select another model provider for translation."]
+      "features": ["Add system agent to select another model provider for translation."]
     },
     "date": "2024-05-21",
     "version": "0.161.0"
@@ -425,7 +425,7 @@
   },
   {
     "children": {
-      "improvements": ["Bump version and add enable ollama env."]
+      "features": ["Bump version and add enable ollama env."]
     },
     "date": "2024-05-18",
     "version": "0.160.0"
@@ -516,7 +516,7 @@
   },
   {
     "children": {
-      "improvements": ["Support DeepSeek as new model provider."]
+      "features": ["Support DeepSeek as new model provider."]
     },
     "date": "2024-05-14",
     "version": "0.159.0"
@@ -537,7 +537,7 @@
   },
   {
     "children": {
-      "improvements": ["Add user profile page."]
+      "features": ["Add user profile page."]
     },
     "date": "2024-05-13",
     "version": "0.158.0"
@@ -558,7 +558,7 @@
   },
   {
     "children": {
-      "improvements": ["upgrade to the new tool calls mode."]
+      "features": ["upgrade to the new tool calls mode."]
     },
     "date": "2024-05-11",
     "version": "0.157.0"
@@ -580,6 +580,7 @@
       "improvements": [
         "Improve groq location error, improve location error, improve model provider ux, support groq proxy url."
       ],
+      "features": ["Support perplexity proxy url."],
       "fixes": [
         "Fix anthropic messages need pairs, fix parameter conditions for perplexity, fix Perplexity duplicate token."
       ]
@@ -646,7 +647,7 @@
   },
   {
     "children": {
-      "improvements": ["Add DataStatistics."]
+      "features": ["Add DataStatistics."]
     },
     "date": "2024-05-07",
     "version": "0.155.0"
@@ -702,7 +703,7 @@
   },
   {
     "children": {
-      "improvements": ["Support clerk as auth provider."]
+      "features": ["Support clerk as auth provider."]
     },
     "date": "2024-05-05",
     "version": "0.154.0"
@@ -716,7 +717,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Settings Intercepting Routes."]
+      "features": ["Add Settings Intercepting Routes."]
     },
     "date": "2024-05-04",
     "version": "0.153.0"
@@ -784,7 +785,7 @@
   },
   {
     "children": {
-      "improvements": ["Import settings from url."]
+      "features": ["Import settings from url."]
     },
     "date": "2024-04-30",
     "version": "0.152.0"
@@ -869,7 +870,7 @@
   },
   {
     "children": {
-      "improvements": ["Support minimax as a new provider."]
+      "features": ["Support minimax as a new provider."]
     },
     "date": "2024-04-29",
     "version": "0.151.0"
@@ -944,7 +945,7 @@
   },
   {
     "children": {
-      "improvements": ["Support feature flags."]
+      "features": ["Support feature flags."]
     },
     "date": "2024-04-26",
     "version": "0.150.0"
@@ -992,7 +993,7 @@
   },
   {
     "children": {
-      "improvements": ["Fully support ollama with browser request mode."]
+      "features": ["Fully support ollama with browser request mode."]
     },
     "date": "2024-04-24",
     "version": "0.149.0"
@@ -1070,7 +1071,7 @@
   },
   {
     "children": {
-      "improvements": ["Support chat completion call at client side."]
+      "features": ["Support chat completion call at client side."]
     },
     "date": "2024-04-20",
     "version": "0.148.0"
@@ -1235,6 +1236,9 @@
       "improvements": [
         "Fix i18n of model list fetcher, improve detail design, improve logo style, update locale."
       ],
+      "features": [
+        "Refactor to support azure openai provider, support close openai, support display model list, support model config modal, support model list with model providers, support open router auto model list, support openai model fetcher, support update model config, support user config model."
+      ],
       "fixes": ["Fix db migration, fix db migration."]
     },
     "date": "2024-04-10",
@@ -1254,7 +1258,7 @@
   },
   {
     "children": {
-      "improvements": ["Add support for ZITADEL SSO provider."]
+      "features": ["Add support for ZITADEL SSO provider."]
     },
     "date": "2024-04-08",
     "version": "0.146.0"
@@ -1350,7 +1354,7 @@
   },
   {
     "children": {
-      "improvements": ["Support TogetherAI as new model provider."]
+      "features": ["Support TogetherAI as new model provider."]
     },
     "date": "2024-03-29",
     "version": "0.145.0"
@@ -1362,14 +1366,14 @@
   },
   {
     "children": {
-      "improvements": ["Support authentik as sso."]
+      "features": ["Support authentik as sso."]
     },
     "date": "2024-03-29",
     "version": "0.144.0"
   },
   {
     "children": {
-      "improvements": ["Add Bulgarian translation."]
+      "features": ["Add Bulgarian translation."]
     },
     "date": "2024-03-28",
     "version": "0.143.0"
@@ -1435,7 +1439,7 @@
   },
   {
     "children": {
-      "improvements": ["Support 01.AI as a new provider."]
+      "features": ["Support 01.AI as a new provider."]
     },
     "date": "2024-03-25",
     "version": "0.142.0"
@@ -1456,7 +1460,7 @@
   },
   {
     "children": {
-      "improvements": ["Using YJS and WebRTC to support sync data between different devices."]
+      "features": ["Using YJS and WebRTC to support sync data between different devices."]
     },
     "date": "2024-03-22",
     "version": "0.141.0"
@@ -1470,7 +1474,7 @@
   },
   {
     "children": {
-      "improvements": ["Add gemini 1.5 pro support."]
+      "features": ["Add gemini 1.5 pro support."]
     },
     "date": "2024-03-22",
     "version": "0.140.0"
@@ -1492,7 +1496,7 @@
   },
   {
     "children": {
-      "improvements": ["Support openrouter as a new model provider."]
+      "features": ["Support openrouter as a new model provider."]
     },
     "date": "2024-03-16",
     "version": "0.139.0"
@@ -1513,7 +1517,7 @@
   },
   {
     "children": {
-      "improvements": ["Support groq as a model provider."]
+      "features": ["Support groq as a model provider."]
     },
     "date": "2024-03-15",
     "version": "0.138.0"
@@ -1525,7 +1529,7 @@
   },
   {
     "children": {
-      "improvements": ["Support azure-ad as a new sso provider."]
+      "features": ["Support azure-ad as a new sso provider."]
     },
     "date": "2024-03-15",
     "version": "0.136.0"
@@ -1556,7 +1560,7 @@
   },
   {
     "children": {
-      "improvements": ["Add claude 3 to bedrock provider."]
+      "features": ["Add claude 3 to bedrock provider."]
     },
     "date": "2024-03-14",
     "version": "0.135.0"
@@ -1570,7 +1574,7 @@
   },
   {
     "children": {
-      "improvements": ["Support anthropic proxy url."]
+      "features": ["Support anthropic proxy url."]
     },
     "date": "2024-03-13",
     "version": "0.134.0"
@@ -1610,7 +1614,7 @@
   },
   {
     "children": {
-      "improvements": ["Support Mistral model provider."]
+      "features": ["Support Mistral model provider."]
     },
     "date": "2024-03-07",
     "version": "0.133.0"
@@ -1631,14 +1635,14 @@
   },
   {
     "children": {
-      "improvements": ["Support anthropic as model provider."]
+      "features": ["Support anthropic as model provider."]
     },
     "date": "2024-03-05",
     "version": "0.132.0"
   },
   {
     "children": {
-      "improvements": ["Support langfuse integration."]
+      "features": ["Support langfuse integration."]
     },
     "date": "2024-03-05",
     "version": "0.131.0"
@@ -1692,7 +1696,7 @@
   },
   {
     "children": {
-      "improvements": ["Support multiple API Keys."]
+      "features": ["Support multiple API Keys."]
     },
     "date": "2024-02-27",
     "version": "0.130.0"
@@ -1739,7 +1743,7 @@
   },
   {
     "children": {
-      "improvements": ["Support perplexity AI provider."]
+      "features": ["Support perplexity AI provider."]
     },
     "date": "2024-02-22",
     "version": "0.129.0"
@@ -1814,7 +1818,7 @@
   },
   {
     "children": {
-      "improvements": ["Support define default agent config with DEFAULT_AGENT_CONFIG ENV."]
+      "features": ["Support define default agent config with DEFAULT_AGENT_CONFIG ENV."]
     },
     "date": "2024-02-14",
     "version": "0.128.0"
@@ -1877,7 +1881,7 @@
   },
   {
     "children": {
-      "improvements": ["Support umami analytics."],
+      "features": ["Support umami analytics."],
       "fixes": [
         "The back button on the chat setting page can correctly return to the configured Agent chat page."
       ]
@@ -1887,7 +1891,7 @@
   },
   {
     "children": {
-      "improvements": ["Support login & session authentication via OAuth 2.0 (Auth0)."]
+      "features": ["Support login & session authentication via OAuth 2.0 (Auth0)."]
     },
     "date": "2024-02-08",
     "version": "0.125.0"
@@ -1915,7 +1919,7 @@
   },
   {
     "children": {
-      "improvements": ["Support Moonshot AI Provider."]
+      "features": ["Support Moonshot AI Provider."]
     },
     "date": "2024-02-06",
     "version": "0.124.0"
@@ -1951,7 +1955,7 @@
   },
   {
     "children": {
-      "improvements": ["Support Google / Zhipu / AWS Bedrock model providers."]
+      "features": ["Support Google / Zhipu / AWS Bedrock model providers."]
     },
     "date": "2024-02-05",
     "version": "0.123.0"
@@ -2017,7 +2021,7 @@
   },
   {
     "children": {
-      "improvements": ["Add create agent action in group menu."]
+      "features": ["Add create agent action in group menu."]
     },
     "date": "2024-01-29",
     "version": "0.122.0"
@@ -2053,7 +2057,7 @@
   },
   {
     "children": {
-      "improvements": ["Add session group manager."]
+      "features": ["Add session group manager."]
     },
     "date": "2024-01-24",
     "version": "0.121.0"
@@ -2102,7 +2106,7 @@
   },
   {
     "children": {
-      "improvements": ["Adding Arabic Language Support."]
+      "features": ["Adding Arabic Language Support."]
     },
     "date": "2024-01-15",
     "version": "0.120.0"
@@ -2201,7 +2205,8 @@
   },
   {
     "children": {
-      "improvements": [
+      "improvements": ["Refactor the ChatList."],
+      "features": [
         "Support auto rename topic, support delete and regenerate message, support duplicate session, support duplicate topic."
       ],
       "fixes": ["Fix can't uninstall custom plugin in custom plugin modal."]
@@ -2281,7 +2286,7 @@
   },
   {
     "children": {
-      "improvements": ["Support markdown type plugin."]
+      "features": ["Support markdown type plugin."]
     },
     "date": "2023-12-29",
     "version": "0.118.0"
@@ -2323,7 +2328,7 @@
   },
   {
     "children": {
-      "improvements": ["Support plugin settings env."],
+      "features": ["Support plugin settings env."],
       "fixes": ["Improve topic search experience."]
     },
     "date": "2023-12-27",
@@ -2366,7 +2371,7 @@
   },
   {
     "children": {
-      "improvements": ["Support OpenAI tool calls."]
+      "features": ["Support OpenAI tool calls."]
     },
     "date": "2023-12-26",
     "version": "0.116.0"
@@ -2466,7 +2471,7 @@
   },
   {
     "children": {
-      "improvements": ["Support Dall·E 3."]
+      "features": ["Support Dall·E 3."]
     },
     "date": "2023-12-22",
     "version": "0.115.0"
@@ -2530,7 +2535,7 @@
   },
   {
     "children": {
-      "improvements": ["Supports setting multiple access code."]
+      "features": ["Supports setting multiple access code."]
     },
     "date": "2023-12-16",
     "version": "0.114.0"
@@ -2558,6 +2563,9 @@
     "children": {
       "improvements": [
         "Fix function message style, fix mobile padding of plugin dev modal, improve settings display, Update tool style."
+      ],
+      "features": [
+        "Introduce plugin detail modal, support OpenAI plugin manifest, support OpenAPI Authentication, support OpenAPI schema in lobe plugin, support parse openapi schema."
       ],
       "fixes": ["Fix function apiName length, try with node mode plugins."]
     },
@@ -2682,7 +2690,7 @@
   },
   {
     "children": {
-      "improvements": ["Local TTS Player."]
+      "features": ["Local TTS Player."]
     },
     "date": "2023-12-07",
     "version": "0.110.0"
@@ -2696,16 +2704,14 @@
   },
   {
     "children": {
-      "improvements": ["Introducing plugin store and refactor with tool concept."]
+      "features": ["Introducing plugin store and refactor with tool concept."]
     },
     "date": "2023-12-06",
     "version": "0.109.0"
   },
   {
     "children": {
-      "improvements": [
-        "Hide the password form item in the settings when there is no ACCESS_CODE env."
-      ]
+      "features": ["Hide the password form item in the settings when there is no ACCESS_CODE env."]
     },
     "date": "2023-12-03",
     "version": "0.108.0"
@@ -2827,14 +2833,14 @@
   },
   {
     "children": {
-      "improvements": ["Refactor the persist layer from zustand's persist to dexie ORM."]
+      "features": ["Refactor the persist layer from zustand's persist to dexie ORM."]
     },
     "date": "2023-11-30",
     "version": "0.107.0"
   },
   {
     "children": {
-      "improvements": ["Support custom deletion, addition, and renaming of models."]
+      "features": ["Support custom deletion, addition, and renaming of models."]
     },
     "date": "2023-11-29",
     "version": "0.106.0"
@@ -2855,14 +2861,14 @@
   },
   {
     "children": {
-      "improvements": ["Standalone pluginn can get more arguments on init."]
+      "features": ["Standalone pluginn can get more arguments on init."]
     },
     "date": "2023-11-22",
     "version": "0.105.0"
   },
   {
     "children": {
-      "improvements": ["Support using env variable to set regions for OpenAI Edge Functions.."]
+      "features": ["Support using env variable to set regions for OpenAI Edge Functions.."]
     },
     "date": "2023-11-21",
     "version": "0.104.0"
@@ -2876,7 +2882,7 @@
   },
   {
     "children": {
-      "improvements": ["Support the auto create topic configuration."]
+      "features": ["Support the auto create topic configuration."]
     },
     "date": "2023-11-20",
     "version": "0.103.0"
@@ -2909,7 +2915,7 @@
   },
   {
     "children": {
-      "improvements": ["Support TTS & STT."]
+      "features": ["Support TTS & STT."]
     },
     "date": "2023-11-19",
     "version": "0.102.0"
@@ -2965,7 +2971,7 @@
   },
   {
     "children": {
-      "improvements": ["Support upload images to chat with gpt4-vision model."]
+      "features": ["Support upload images to chat with gpt4-vision model."]
     },
     "date": "2023-11-14",
     "version": "0.101.0"
@@ -3005,7 +3011,7 @@
   },
   {
     "children": {
-      "improvements": ["Platform check utils."]
+      "features": ["Platform check utils."]
     },
     "date": "2023-11-09",
     "version": "0.100.0"
@@ -3019,7 +3025,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Environment Variable for custom model name when deploying."]
+      "features": ["Add Environment Variable for custom model name when deploying."]
     },
     "date": "2023-11-08",
     "version": "0.99.0"
@@ -3047,7 +3053,7 @@
   },
   {
     "children": {
-      "improvements": ["Support latest openai model."]
+      "features": ["Support latest openai model."]
     },
     "date": "2023-11-07",
     "version": "0.98.0"
@@ -3061,7 +3067,7 @@
   },
   {
     "children": {
-      "improvements": ["Add open new topic when open a topic."],
+      "features": ["Add open new topic when open a topic."],
       "fixes": ["Fix toggle back to default topic when clearing topic."]
     },
     "date": "2023-11-05",
@@ -3132,7 +3138,7 @@
   },
   {
     "children": {
-      "improvements": ["Improve pin mode about session group."]
+      "features": ["Improve pin mode about session group."]
     },
     "date": "2023-10-27",
     "version": "0.96.0"
@@ -3146,7 +3152,8 @@
   },
   {
     "children": {
-      "improvements": [
+      "improvements": ["优化 plugin 文件夹命名以支持 standalone 类型的插件."],
+      "features": [
         "Support function call at message end, support plugin settings modal, support plugin state and settings."
       ]
     },
@@ -3190,28 +3197,29 @@
   },
   {
     "children": {
-      "improvements": ["Add agent share."]
+      "features": ["Add agent share."]
     },
     "date": "2023-10-18",
     "version": "0.94.0"
   },
   {
     "children": {
-      "improvements": ["Support multi-language translate."]
+      "improvements": ["Refactor chain."],
+      "features": ["Support multi-language translate."]
     },
     "date": "2023-10-18",
     "version": "0.93.0"
   },
   {
     "children": {
-      "improvements": ["Support translate message to current language."]
+      "features": ["Support translate message to current language."]
     },
     "date": "2023-10-18",
     "version": "0.92.0"
   },
   {
     "children": {
-      "improvements": ["Add hotkeys."]
+      "features": ["Add hotkeys."]
     },
     "date": "2023-10-17",
     "version": "0.91.0"
@@ -3239,7 +3247,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Lazyload."]
+      "features": ["Add Lazyload."]
     },
     "date": "2023-10-17",
     "version": "0.90.0"
@@ -3322,7 +3330,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Add mobile responsiveness, create new component, modify properties, make API calls, Dynamically import components using \"dynamic\" function."
       ]
     },
@@ -3331,7 +3339,7 @@
   },
   {
     "children": {
-      "improvements": ["Support custom model name."]
+      "features": ["Support custom model name."]
     },
     "date": "2023-10-11",
     "version": "0.87.0"
@@ -3371,7 +3379,7 @@
   },
   {
     "children": {
-      "improvements": ["Support docker deploy."]
+      "features": ["Support docker deploy."]
     },
     "date": "2023-10-10",
     "version": "0.86.0"
@@ -3401,14 +3409,14 @@
   },
   {
     "children": {
-      "improvements": ["Add ja_JP, ko_KR and update workflow."]
+      "features": ["Add ja_JP, ko_KR and update workflow."]
     },
     "date": "2023-10-10",
     "version": "0.85.0"
   },
   {
     "children": {
-      "improvements": ["Support detect new version and upgrade action."]
+      "features": ["Support detect new version and upgrade action."]
     },
     "date": "2023-10-10",
     "version": "0.84.0"
@@ -3482,7 +3490,7 @@
   },
   {
     "children": {
-      "improvements": ["Upgrade locale with SSR."]
+      "features": ["Upgrade locale with SSR."]
     },
     "date": "2023-10-06",
     "version": "0.83.0"
@@ -3557,7 +3565,7 @@
   },
   {
     "children": {
-      "improvements": ["Add several analytics sdk."]
+      "features": ["Add several analytics sdk."]
     },
     "date": "2023-09-27",
     "version": "0.81.0"
@@ -3578,7 +3586,7 @@
   },
   {
     "children": {
-      "improvements": ["Improve user experience and ensure consistency."]
+      "features": ["Improve user experience and ensure consistency."]
     },
     "date": "2023-09-27",
     "version": "0.80.0"
@@ -3647,7 +3655,7 @@
   },
   {
     "children": {
-      "improvements": ["Auto create topic when chatting."]
+      "features": ["Auto create topic when chatting."]
     },
     "date": "2023-09-17",
     "version": "0.78.0"
@@ -3666,7 +3674,7 @@
   },
   {
     "children": {
-      "improvements": ["Update localization files and add translations for different languages."]
+      "features": ["Update localization files and add translations for different languages."]
     },
     "date": "2023-09-14",
     "version": "0.77.0"
@@ -3687,7 +3695,7 @@
   },
   {
     "children": {
-      "improvements": ["Support Azure OpenAI Deploy env."]
+      "features": ["Support Azure OpenAI Deploy env."]
     },
     "date": "2023-09-11",
     "version": "0.76.0"
@@ -3695,6 +3703,9 @@
   {
     "children": {
       "improvements": ["Update loading style and compatible with unknown agent identifier."],
+      "features": [
+        "Add agents market and improve UI components, Add and refactor components for chat input feature, Add functions for generating and analyzing JSON files, generating resource files and table of contents, and formatting console output, Add new settings for Azure OpenAI and OpenAI in locales files, Add new string, create AgentModal component, implement GridCardItem and Loading components, import AgentModal, Add SideBar component, new actions, and update market store state and selectors, Add translations and new setting to \"setting.json\", Improve functionality and user interface of market page, Modify market features components and update CSS styles, support add agent to chat."
+      ],
       "fixes": ["Fix fetcher, Fix market sidebar scroll and add i18n."]
     },
     "date": "2023-09-11",
@@ -3702,14 +3713,14 @@
   },
   {
     "children": {
-      "improvements": ["Add russian locally, Update Russian and English locally (LLM tab)."]
+      "features": ["Add russian locally, Update Russian and English locally (LLM tab)."]
     },
     "date": "2023-09-11",
     "version": "0.74.0"
   },
   {
     "children": {
-      "improvements": ["Support Azure OpenAI."]
+      "features": ["Support Azure OpenAI."]
     },
     "date": "2023-09-10",
     "version": "0.73.0"
@@ -3744,8 +3755,11 @@
   },
   {
     "children": {
-      "improvements": ["优化 manifest 预览的尺寸."],
-      "fixes": ["修正删除插件时错误开启的问题."]
+      "features": [
+        "Add plugin market Setting Modal, 支持快速刷新与预览 manifest, 适配插件 i18n 方案."
+      ],
+      "fixes": ["修正删除插件时错误开启的问题."],
+      "improvements": ["优化 manifest 预览的尺寸."]
     },
     "date": "2023-09-09",
     "version": "0.72.0"
@@ -3759,7 +3773,7 @@
   },
   {
     "children": {
-      "improvements": ["Migrate localStorage to indexedDB."]
+      "features": ["Migrate localStorage to indexedDB."]
     },
     "date": "2023-09-09",
     "version": "0.71.0"
@@ -3794,7 +3808,7 @@
   },
   {
     "children": {
-      "improvements": ["Refactor to url state."]
+      "features": ["Refactor to url state."]
     },
     "date": "2023-09-08",
     "version": "0.70.0"
@@ -3808,7 +3822,7 @@
   },
   {
     "children": {
-      "improvements": ["Add new import statement for \"Flexbox\" component in \"Empty\" component."]
+      "features": ["Add new import statement for \"Flexbox\" component in \"Empty\" component."]
     },
     "date": "2023-09-06",
     "version": "0.69.0"
@@ -3822,7 +3836,7 @@
   },
   {
     "children": {
-      "improvements": ["Plugin default use iframe render."]
+      "features": ["Plugin default use iframe render."]
     },
     "date": "2023-09-03",
     "version": "0.68.0"
@@ -3834,7 +3848,7 @@
   },
   {
     "children": {
-      "improvements": ["Add russian locally."]
+      "features": ["Add russian locally."]
     },
     "date": "2023-09-02",
     "version": "0.66.0"
@@ -3848,7 +3862,7 @@
   },
   {
     "children": {
-      "improvements": ["支持本地插件自定义 gateway."]
+      "features": ["支持本地插件自定义 gateway."]
     },
     "date": "2023-08-29",
     "version": "0.65.0"
@@ -3862,7 +3876,8 @@
   },
   {
     "children": {
-      "improvements": [
+      "improvements": ["Remove no need i18n."],
+      "features": [
         "增加自定义插件的增删改配置功能，完善自定义插件表单的校验逻辑，支持本地插件侧的请求与错误呈现，新增插件配置 Dev 弹窗，绑定本地插件的增删改逻辑."
       ]
     },
@@ -3892,7 +3907,7 @@
   },
   {
     "children": {
-      "improvements": ["support sharing to shareGPT."]
+      "features": ["support sharing to shareGPT."]
     },
     "date": "2023-08-27",
     "version": "0.63.0"
@@ -3906,15 +3921,16 @@
   },
   {
     "children": {
-      "improvements": ["优化清理会话的操作路径，优化默认角色的配置."],
-      "fixes": ["Fix plugin settings error."]
+      "features": ["支持超过 4k 的会话使用 16k 总结标题."],
+      "fixes": ["Fix plugin settings error."],
+      "improvements": ["优化清理会话的操作路径，优化默认角色的配置."]
     },
     "date": "2023-08-26",
     "version": "0.62.0"
   },
   {
     "children": {
-      "improvements": ["新增自动滚动."]
+      "features": ["新增自动滚动."]
     },
     "date": "2023-08-26",
     "version": "0.61.0"
@@ -3949,28 +3965,30 @@
   },
   {
     "children": {
-      "improvements": ["支持插件 manifest 加载失败后重试."]
+      "improvements": ["Refactor with new market index url."],
+      "features": ["支持插件 manifest 加载失败后重试."]
     },
     "date": "2023-08-26",
     "version": "0.60.0"
   },
   {
     "children": {
-      "improvements": ["支持展示插件插件状态，支持插件 i18n 模式展示."]
+      "features": ["支持展示插件插件状态，支持插件 i18n 模式展示."]
     },
     "date": "2023-08-26",
     "version": "0.59.0"
   },
   {
     "children": {
-      "improvements": ["Implement responsive design for mobile devices."]
+      "features": ["Implement responsive design for mobile devices."]
     },
     "date": "2023-08-26",
     "version": "0.58.0"
   },
   {
     "children": {
-      "improvements": [
+      "improvements": ["Refactor to ChatErrorType."],
+      "features": [
         "完善插件请求的错误处理，支持修改与记录插件的配置，支持发送插件配置信息，支持渲染 manifest 中的 settings, 支持设置不正确时进行插件的配置，新增插件请求状态的错误处理."
       ],
       "fixes": ["修正缓存旧数据的报错问题."]
@@ -3980,7 +3998,7 @@
   },
   {
     "children": {
-      "improvements": ["Use new plugin manifest to support plugin’s multi api."]
+      "features": ["Use new plugin manifest to support plugin’s multi api."]
     },
     "date": "2023-08-24",
     "version": "0.56.0"
@@ -3995,6 +4013,7 @@
   {
     "children": {
       "improvements": ["完成插件市场 loading 态样式."],
+      "features": ["初步完成插件市场动态加载全链路，实现插件组件的动态加载."],
       "fixes": ["Fix error, 修正无法正常开启插件的问题，修正测试，补充插件 store 的水合逻辑."]
     },
     "date": "2023-08-22",
@@ -4030,7 +4049,7 @@
   },
   {
     "children": {
-      "improvements": ["Add new features and improve user interface and functionality."]
+      "features": ["Add new features and improve user interface and functionality."]
     },
     "date": "2023-08-15",
     "version": "0.54.0"
@@ -4049,21 +4068,21 @@
   },
   {
     "children": {
-      "improvements": ["Add avatar compress."]
+      "features": ["Add avatar compress."]
     },
     "date": "2023-08-15",
     "version": "0.52.0"
   },
   {
     "children": {
-      "improvements": ["Add Footer component and modify Token and index files."]
+      "features": ["Add Footer component and modify Token and index files."]
     },
     "date": "2023-08-15",
     "version": "0.51.0"
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Update messages, settings, error codes, plugin names, weather data display, and UI."
       ]
     },
@@ -4072,23 +4091,21 @@
   },
   {
     "children": {
-      "improvements": [
-        "Add BackToBottom to conversation, Update icons and text in various components."
-      ]
+      "features": ["Add BackToBottom to conversation, Update icons and text in various components."]
     },
     "date": "2023-08-15",
     "version": "0.49.0"
   },
   {
     "children": {
-      "improvements": ["Import SiOpenai icon and replace 'Tag' component in chat feature."]
+      "features": ["Import SiOpenai icon and replace 'Tag' component in chat feature."]
     },
     "date": "2023-08-15",
     "version": "0.48.0"
   },
   {
     "children": {
-      "improvements": ["Add and update UI elements and agent configuration."]
+      "features": ["Add and update UI elements and agent configuration."]
     },
     "date": "2023-08-15",
     "version": "0.47.0"
@@ -4102,7 +4119,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Update styling and functionality of AgentPrompt and EditableMessage components, 支持停止生成消息."
       ],
       "fixes": ["Remove input highlight."]
@@ -4112,6 +4129,7 @@
   },
   {
     "children": {
+      "features": ["优化每个角色的初始引导."],
       "improvements": ["优化初始化加载状态，等到会话加载完毕再显示内容."]
     },
     "date": "2023-08-14",
@@ -4148,6 +4166,9 @@
     "children": {
       "improvements": [
         "Fix Inbox defaultMessage avatar, 优化 header 的 setting 展示，优化门禁下默认的解锁方式，补充 ChatList 的 Loading 态."
+      ],
+      "features": [
+        "支持 inbox 消息导出，支持 inbox 的会话功能，新增 inbox 数据模型，新增 inbox 模块入口."
       ]
     },
     "date": "2023-08-12",
@@ -4155,7 +4176,7 @@
   },
   {
     "children": {
-      "improvements": ["支持切换语言."]
+      "features": ["支持切换语言."]
     },
     "date": "2023-08-12",
     "version": "0.43.0"
@@ -4186,7 +4207,7 @@
   },
   {
     "children": {
-      "improvements": ["Add Welcome page."]
+      "features": ["Add Welcome page."]
     },
     "date": "2023-08-11",
     "version": "0.42.0"
@@ -4209,6 +4230,7 @@
   },
   {
     "children": {
+      "features": ["支持持久化隐藏 Topic 功能."],
       "improvements": ["优化第一次水合逻辑."]
     },
     "date": "2023-08-10",
@@ -4265,7 +4287,7 @@
   },
   {
     "children": {
-      "improvements": ["Add new dependency, add Tag and PluginTag components, update HeaderTitle."]
+      "features": ["Add new dependency, add Tag and PluginTag components, update HeaderTitle."]
     },
     "date": "2023-08-05",
     "version": "0.40.0"
@@ -4300,6 +4322,7 @@
   },
   {
     "children": {
+      "features": ["支持多轮的插件意图识别，支持自定义 OpenAI 代理地址."],
       "improvements": ["优化插件的展示逻辑."]
     },
     "date": "2023-08-04",
@@ -4307,14 +4330,14 @@
   },
   {
     "children": {
-      "improvements": ["Add topic empty."]
+      "features": ["Add topic empty."]
     },
     "date": "2023-08-04",
     "version": "0.38.0"
   },
   {
     "children": {
-      "improvements": ["支持使用全局助手的设置作为默认助手的创建角色."]
+      "features": ["支持使用全局助手的设置作为默认助手的创建角色."]
     },
     "date": "2023-08-03",
     "version": "0.37.0"
@@ -4328,8 +4351,9 @@
   },
   {
     "children": {
-      "improvements": ["Fix session item height."],
-      "fixes": ["Fix setting type."]
+      "features": ["实现自定义历史消息数功能."],
+      "fixes": ["Fix setting type."],
+      "improvements": ["Fix session item height."]
     },
     "date": "2023-08-03",
     "version": "0.36.0"
@@ -4343,7 +4367,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Add agent settings functionality, new components, and features for AgentMeta, Add and modify translations for various keys in JSON code files."
       ]
     },
@@ -4352,7 +4376,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Add agent settings functionality, Add new components and features for AgentMeta, Improve organization and functionality of settings and configuration features."
       ]
     },
@@ -4361,21 +4385,21 @@
   },
   {
     "children": {
-      "improvements": ["支持输入模板预处理."]
+      "features": ["支持输入模板预处理."]
     },
     "date": "2023-07-30",
     "version": "0.33.0"
   },
   {
     "children": {
-      "improvements": ["支持会话置顶."]
+      "features": ["支持会话置顶."]
     },
     "date": "2023-07-30",
     "version": "0.32.0"
   },
   {
     "children": {
-      "improvements": ["支持展示 token 使用量."]
+      "features": ["支持展示 token 使用量."]
     },
     "date": "2023-07-30",
     "version": "0.31.0"
@@ -4389,7 +4413,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "优化保存为话题功能，实现 Topic 重命名功能，实现话题删除功能，支持缓存角色面板的展开折叠状态."
       ]
     },
@@ -4398,14 +4422,15 @@
   },
   {
     "children": {
-      "improvements": ["实现单个会话和角色的导出功能，实现清空所有会话消息."]
+      "features": ["实现单个会话和角色的导出功能，实现清空所有会话消息."]
     },
     "date": "2023-07-30",
     "version": "0.29.0"
   },
   {
     "children": {
-      "improvements": [
+      "improvements": ["重构 settings 相关类型."],
+      "features": [
         "优化 SideBar 实现，激活态指示更加明确，实现 session 导入功能，实现配置导出功能."
       ]
     },
@@ -4443,6 +4468,7 @@
   },
   {
     "children": {
+      "features": ["优化搜索引擎插件交互展示."],
       "improvements": ["优化兜底结果展示."]
     },
     "date": "2023-07-29",
@@ -4457,7 +4483,7 @@
   },
   {
     "children": {
-      "improvements": ["support password auth and error."]
+      "features": ["support password auth and error."]
     },
     "date": "2023-07-28",
     "version": "0.26.0"
@@ -4469,7 +4495,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Add new translations, update existing translations, add functionality to components, modify styling, and adjust placeholder text"
       ]
     },
@@ -4478,9 +4504,7 @@
   },
   {
     "children": {
-      "improvements": [
-        "Add new features, update URLs, customize appearance, and implement components"
-      ]
+      "features": ["Add new features, update URLs, customize appearance, and implement components"]
     },
     "date": "2023-07-26",
     "version": "0.23.0"
@@ -4501,28 +4525,30 @@
   },
   {
     "children": {
-      "improvements": ["支持使用自定义 OpenAI Key."]
+      "features": ["支持使用自定义 OpenAI Key."]
     },
     "date": "2023-07-25",
     "version": "0.22.0"
   },
   {
     "children": {
-      "improvements": ["支持快捷配置模型、温度."]
+      "improvements": ["Move component folder."],
+      "features": ["支持快捷配置模型、温度."]
     },
     "date": "2023-07-25",
     "version": "0.21.0"
   },
   {
     "children": {
-      "improvements": ["实现话题模块."]
+      "features": ["实现话题模块."]
     },
     "date": "2023-07-25",
     "version": "0.20.0"
   },
   {
     "children": {
-      "improvements": ["数据结构层完成 topic 模型改造."]
+      "improvements": ["将 message reducer 提取到独立文件夹中，清理无用代码实现."],
+      "features": ["数据结构层完成 topic 模型改造."]
     },
     "date": "2023-07-24",
     "version": "0.19.0"
@@ -4543,14 +4569,14 @@
   },
   {
     "children": {
-      "improvements": ["实现会话展示模式切换，并优化默认创建角色的配置."]
+      "features": ["实现会话展示模式切换，并优化默认创建角色的配置."]
     },
     "date": "2023-07-24",
     "version": "0.18.0"
   },
   {
     "children": {
-      "improvements": ["表单配置支持设定各项高级参数."]
+      "features": ["表单配置支持设定各项高级参数."]
     },
     "date": "2023-07-24",
     "version": "0.17.0"
@@ -4564,6 +4590,7 @@
   },
   {
     "children": {
+      "features": ["支持自动跳转到第一条会话."],
       "improvements": ["修正插件的展示文案."]
     },
     "date": "2023-07-24",
@@ -4578,7 +4605,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Add new features and improve user experience, Import and use constants from \"meta.ts\" instead of \"agentConfig\"."
       ]
     },
@@ -4587,7 +4614,7 @@
   },
   {
     "children": {
-      "improvements": ["支持网页抓取."]
+      "features": ["支持网页抓取."]
     },
     "date": "2023-07-24",
     "version": "0.14.0"
@@ -4601,7 +4628,7 @@
   },
   {
     "children": {
-      "improvements": ["优化插件模式下的用户体验."]
+      "features": ["优化插件模式下的用户体验."]
     },
     "date": "2023-07-23",
     "version": "0.13.0"
@@ -4615,14 +4642,15 @@
   },
   {
     "children": {
-      "improvements": ["支持插件列表 与 基于 Serpapi 的搜索引擎插件."]
+      "features": ["支持插件列表 与 基于 Serpapi 的搜索引擎插件."]
     },
     "date": "2023-07-23",
     "version": "0.12.0"
   },
   {
     "children": {
-      "improvements": ["Update manifest, 增加国际化文案."]
+      "improvements": ["Update manifest, 增加国际化文案."],
+      "features": ["支持查询天气."]
     },
     "date": "2023-07-23",
     "version": "0.11.0"
@@ -4643,14 +4671,14 @@
   },
   {
     "children": {
-      "improvements": ["支持复制与编辑会话消息."]
+      "features": ["支持复制与编辑会话消息."]
     },
     "date": "2023-07-22",
     "version": "0.10.0"
   },
   {
     "children": {
-      "improvements": ["展示模型类型."]
+      "features": ["展示模型类型."]
     },
     "date": "2023-07-22",
     "version": "0.9.0"
@@ -4671,14 +4699,14 @@
   },
   {
     "children": {
-      "improvements": ["支持 pwa 模式."]
+      "features": ["支持 pwa 模式."]
     },
     "date": "2023-07-22",
     "version": "0.8.0"
   },
   {
     "children": {
-      "improvements": ["支持展示来自模型的标记信息."]
+      "features": ["支持展示来自模型的标记信息."]
     },
     "date": "2023-07-22",
     "version": "0.7.0"
@@ -4692,14 +4720,15 @@
   },
   {
     "children": {
-      "improvements": ["补充 token 详情."]
+      "improvements": ["重构 selector 文件组织."],
+      "features": ["补充 token 详情."]
     },
     "date": "2023-07-22",
     "version": "0.6.0"
   },
   {
     "children": {
-      "improvements": ["支持选择 Emoji."],
+      "features": ["支持选择 Emoji."],
       "fixes": ["修正 total token 计算不正确的问题."]
     },
     "date": "2023-07-22",
@@ -4728,7 +4757,7 @@
   },
   {
     "children": {
-      "improvements": [
+      "features": [
         "Add styles and modify layout of FolderPanel, SliderWithInput, SessionList, EditPage, ChatLayout, and SettingLayout components, Introduce FOLDER_WIDTH constant and update components."
       ]
     },
@@ -4737,14 +4766,14 @@
   },
   {
     "children": {
-      "improvements": ["Add new files, modify components, and adjust layout and styling."]
+      "features": ["Add new files, modify components, and adjust layout and styling."]
     },
     "date": "2023-07-18",
     "version": "0.3.0"
   },
   {
     "children": {
-      "improvements": ["Add import statement and define CSS styles for Avatar component."]
+      "features": ["Add import statement and define CSS styles for Avatar component."]
     },
     "date": "2023-07-18",
     "version": "0.2.0"

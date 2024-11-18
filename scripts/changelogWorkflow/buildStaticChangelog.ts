@@ -26,7 +26,8 @@ class BuildStaticChangelog {
   };
 
   private formatCategory = (category: string): string => {
-    const cate = category.toLowerCase();
+    const cate = category.trim().toLowerCase();
+
     switch (cate) {
       case 'bug fixes': {
         return 'fixes';
