@@ -11,6 +11,9 @@
       "items": {
         "type": "object",
         "properties": {
+          "image": {
+            "type": "string"
+          },
           "date": {
             "type": "string",
             "pattern": "^\\d+-\\d+-\\d+$"
@@ -24,11 +27,11 @@
               "type": "string",
               "pattern": "^\\d+\\.\\d+\\.\\d+$"
             },
-            "minItems": 2,
+            "minItems": 1,
             "maxItems": 2
           }
         },
-        "required": ["id", "versionRange"],
+        "required": ["date", "id", "versionRange"],
         "additionalProperties": false
       }
     },
@@ -37,6 +40,9 @@
       "items": {
         "type": "object",
         "properties": {
+          "image": {
+            "type": "string"
+          },
           "date": {
             "type": "string",
             "pattern": "^\\d+-\\d+-\\d+$"
@@ -50,15 +56,15 @@
               "type": "string",
               "pattern": "^\\d+\\.\\d+\\.\\d+$"
             },
-            "minItems": 2,
+            "minItems": 1,
             "maxItems": 2
           }
         },
-        "required": ["id", "versionRange"],
+        "required": ["date", "id", "versionRange"],
         "additionalProperties": false
       }
     }
   },
-  "required": ["$schema", "community", "cloud"],
+  "required": ["$schema", "community"],
   "type": "object"
 }

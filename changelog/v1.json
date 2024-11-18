@@ -1,5 +1,101 @@
 [
   {
+    "children": {},
+    "date": "2024-11-16",
+    "version": "1.31.10"
+  },
+  {
+    "children": {
+      "improvements": ["Add gemini-exp-1114 model."]
+    },
+    "date": "2024-11-16",
+    "version": "1.31.9"
+  },
+  {
+    "children": {
+      "improvements": ["Move ChatInput to features/ChatInput."]
+    },
+    "date": "2024-11-15",
+    "version": "1.31.8"
+  },
+  {
+    "children": {
+      "improvements": ["genServerLLMConfig function, get *_MODEL_LIST from env."]
+    },
+    "date": "2024-11-15",
+    "version": "1.31.7"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the chat conversation implement."]
+    },
+    "date": "2024-11-13",
+    "version": "1.31.6"
+  },
+  {
+    "children": {
+      "improvements": ["Update some provider modellist & fix ai360 baseurl."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.5"
+  },
+  {
+    "children": {
+      "improvements": ["Fix Cloudflare Workers AI Sort."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.4"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor languageModel & DEFAULT_LLM_CONFIG generate."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.3"
+  },
+  {
+    "children": {
+      "improvements": ["Update deepseek model."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.2"
+  },
+  {
+    "children": {
+      "improvements": ["Fix Windows always showing scrollbar."]
+    },
+    "date": "2024-11-12",
+    "version": "1.31.1"
+  },
+  {
+    "children": {
+      "features": ["Add support xAI provider."]
+    },
+    "date": "2024-11-11",
+    "version": "1.31.0"
+  },
+  {
+    "children": {
+      "features": ["Support Cloudflare Workers AI."]
+    },
+    "date": "2024-11-11",
+    "version": "1.30.0"
+  },
+  {
+    "children": {
+      "improvements": ["Add Sonnet 3.5 v2 inference model to BedRock."]
+    },
+    "date": "2024-11-10",
+    "version": "1.29.6"
+  },
+  {
+    "children": {
+      "fixes": ["Fix summary range."]
+    },
+    "date": "2024-11-10",
+    "version": "1.29.5"
+  },
+  {
     "children": {
       "fixes": ["Disregard remoteModelCards when showModelFetcher is disabled."]
     },
