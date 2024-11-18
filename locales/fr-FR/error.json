@@ -68,6 +68,7 @@
     "510": "Désolé, le serveur ne prend pas en charge l'extension demandée, veuillez contacter l'administrateur.",
     "524": "Désolé, le serveur a dépassé le délai d'attente en attendant une réponse, cela peut être dû à une réponse trop lente, veuillez réessayer plus tard.",
     "AgentRuntimeError": "Erreur d'exécution du modèle linguistique Lobe, veuillez vérifier les informations ci-dessous ou réessayer",
+    "ConnectionCheckFailed": "La réponse est vide, veuillez vérifier si l'URL du proxy API se termine par `/v1`",
     "FreePlanLimit": "Vous êtes actuellement un utilisateur gratuit et ne pouvez pas utiliser cette fonction. Veuillez passer à un plan payant pour continuer à l'utiliser.",
     "InvalidAccessCode": "Le mot de passe est incorrect ou vide. Veuillez saisir le mot de passe d'accès correct ou ajouter une clé API personnalisée.",
     "InvalidBedrockCredentials": "L'authentification Bedrock a échoué, veuillez vérifier AccessKeyId/SecretAccessKey et réessayer",
