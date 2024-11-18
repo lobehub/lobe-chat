@@ -61,7 +61,7 @@ export class SessionModel {
 
     const keywordLowerCase = keyword.toLowerCase();
 
-    const data = await this.findSessions({ keyword: keywordLowerCase });
+    const data = await this.findSessionsByKeywords({ keyword: keywordLowerCase });
 
     return data.map((item) => this.mapSessionItem(item as any));
   }
@@ -281,20 +281,53 @@ export class SessionModel {
         pinned !== undefined ? eq(sessions.pinned, pinned) : eq(sessions.userId, this.userId),
         keyword
           ? or(
-              like(
-                sql`lower(${sessions.title})` as unknown as Column,
-                `%${keyword.toLowerCase()}%`,
-              ),
-              like(
-                sql`lower(${sessions.description})` as unknown as Column,
-                `%${keyword.toLowerCase()}%`,
-              ),
-            )
+            like(
+              sql`lower(${sessions.title})` as unknown as Column,
+              `%${keyword.toLowerCase()}%`,
+            ),
+            like(
+              sql`lower(${sessions.description})` as unknown as Column,
+              `%${keyword.toLowerCase()}%`,
+            ),
+          )
           : eq(sessions.userId, this.userId),
         group ? eq(sessions.groupId, group) : isNull(sessions.groupId),
       ),
 
       with: { agentsToSessions: { columns: {}, with: { agent: true } }, group: true },
     });
+  }
+
+  async findSessionsByKeywords(params: {
+    current?: number;
+    keyword: string;
+    pageSize?: number;
+  }) {
+    const { keyword, pageSize = 9999, current = 0 } = params;
+    const offset = current * pageSize;
+    const results = await serverDB.query.agents.findMany({
+      limit: pageSize,
+      offset,
+      orderBy: [desc(agents.updatedAt)],
+      where: and(
+        eq(agents.userId, this.userId),
+        or(
+          like(
+            sql`lower(${agents.title})` as unknown as Column,
+            `%${keyword.toLowerCase()}%`,
+          ),
+          like(
+            sql`lower(${agents.description})` as unknown as Column,
+            `%${keyword.toLowerCase()}%`,
+          ),
+        )
+      ),
+      with: { agentsToSessions: { columns: {}, with: { session: true } } },
+    });
+    try {
+      // @ts-expect-error
+      return results.map((item) => item.agentsToSessions[0].session);
+    } catch {}
+    return []
   }
 }
