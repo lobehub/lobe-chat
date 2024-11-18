@@ -68,6 +68,7 @@
     "510": "Desculpe, o servidor não suporta a funcionalidade de extensão solicitada. Por favor, entre em contato com o administrador.",
     "524": "Desculpe, o servidor excedeu o tempo de espera enquanto aguardava uma resposta, possivelmente devido à lentidão da resposta. Por favor, tente novamente mais tarde.",
     "AgentRuntimeError": "Erro de execução do modelo de linguagem Lobe, por favor, verifique as informações abaixo ou tente novamente",
+    "ConnectionCheckFailed": "A resposta da solicitação está vazia. Verifique se o endereço do proxy da API não termina com `/v1`",
     "FreePlanLimit": "Atualmente, você é um usuário gratuito e não pode usar essa função. Por favor, faça upgrade para um plano pago para continuar usando.",
     "InvalidAccessCode": "Senha de acesso inválida ou em branco. Por favor, insira a senha de acesso correta ou adicione uma Chave de API personalizada.",
     "InvalidBedrockCredentials": "Credenciais Bedrock inválidas, por favor, verifique AccessKeyId/SecretAccessKey e tente novamente",
