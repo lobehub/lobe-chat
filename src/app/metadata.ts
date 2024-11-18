@@ -2,6 +2,7 @@ import { Metadata } from 'next';
 
 import { appEnv } from '@/config/app';
 import { BRANDING_LOGO_URL, BRANDING_NAME, ORG_NAME } from '@/const/branding';
+import { DEFAULT_LANG } from '@/const/locale';
 import { OFFICIAL_URL, OG_URL } from '@/const/url';
 import { isCustomBranding, isCustomORG } from '@/const/version';
 import { translation } from '@/server/translation';
@@ -42,7 +43,7 @@ export const generateMetadata = async (): Promise<Metadata> => {
           width: 1200,
         },
       ],
-      locale: 'en-US',
+      locale: DEFAULT_LANG,
       siteName: BRANDING_NAME,
       title: BRANDING_NAME,
       type: 'website',
