@@ -68,6 +68,7 @@
     "510": "Sorry, the server does not support the requested extension. Please contact the administrator.",
     "524": "Sorry, the server timed out while waiting for a response, possibly due to a slow reply. Please try again later.",
     "AgentRuntimeError": "Lobe language model runtime execution error. Please troubleshoot or retry based on the following information.",
+    "ConnectionCheckFailed": "The request returned empty. Please check if the API proxy address does not end with `/v1`.",
     "FreePlanLimit": "You are currently a free user and cannot use this feature. Please upgrade to a paid plan to continue using it.",
     "InvalidAccessCode": "Invalid access code or empty. Please enter the correct access code or add a custom API Key.",
     "InvalidBedrockCredentials": "Bedrock authentication failed. Please check the AccessKeyId/SecretAccessKey and retry.",

@@ -68,6 +68,7 @@
     "510": "很抱歉，伺服器不支援請求的擴展功能，請聯繫管理員",
     "524": "很抱歉，伺服器在等待回覆時超時，可能是因為回應太慢，請稍後再試",
     "AgentRuntimeError": "Lobe 語言模型運行時執行出錯，請根據以下信息排查或重試",
+    "ConnectionCheckFailed": "請求返回為空，請檢查 API 代理地址末尾是否未包含 `/v1`",
     "FreePlanLimit": "目前為免費用戶，無法使用該功能，請升級到付費計劃後繼續使用",
     "InvalidAccessCode": "密碼不正確或為空，請輸入正確的訪問密碼，或添加自定義 API 金鑰",
     "InvalidBedrockCredentials": "Bedrock 驗證未通過，請檢查 AccessKeyId/SecretAccessKey 後重試",
