@@ -68,6 +68,7 @@
     "510": "Ci dispiace, il server non supporta le funzionalità di estensione richieste, contatta l'amministratore",
     "524": "Ci dispiace, il server ha superato il timeout in attesa di una risposta, potrebbe essere a causa di una risposta troppo lenta, per favore riprova più tardi",
     "AgentRuntimeError": "Errore di esecuzione del modello linguistico Lobe, controlla le informazioni seguenti o riprova",
+    "ConnectionCheckFailed": "La risposta è vuota, controlla se l'indirizzo del proxy API termina con `/v1`",
     "FreePlanLimit": "Attualmente sei un utente gratuito e non puoi utilizzare questa funzione. Per favore, passa a un piano a pagamento per continuare.",
     "InvalidAccessCode": "Password incorrect or empty, please enter the correct access password, or add a custom API Key",
     "InvalidBedrockCredentials": "Autenticazione Bedrock non riuscita, controlla AccessKeyId/SecretAccessKey e riprova",

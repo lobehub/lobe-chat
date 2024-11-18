@@ -110,7 +110,7 @@
     "@azure/core-rest-pipeline": "1.16.0",
     "@azure/openai": "1.0.0-beta.12",
     "@baiducloud/qianfan": "^0.1.9",
-    "@cfworker/json-schema": "^2.0.1",
+    "@cfworker/json-schema": "^3.0.0",
     "@clerk/localizations": "^3.3.0",
     "@clerk/nextjs": "^5.7.5",
     "@clerk/themes": "^2.1.37",
@@ -302,7 +302,7 @@
     "vitest": "~1.2.2",
     "vitest-canvas-mock": "^0.3.3"
   },
-  "packageManager": "pnpm@9.12.3",
+  "packageManager": "pnpm@9.13.2",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
