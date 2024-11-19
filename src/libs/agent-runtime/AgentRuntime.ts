@@ -17,6 +17,7 @@ import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
 import { LobeHuggingFaceAI } from './huggingface';
 import { LobeHunyuanAI } from './hunyuan';
+import { LobeInternLMAI } from './internlm';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
@@ -141,6 +142,7 @@ class AgentRuntime {
       groq: Partial<ClientOptions>;
       huggingface: { apiKey?: string; baseURL?: string };
       hunyuan: Partial<ClientOptions>;
+      internlm: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
@@ -333,6 +335,11 @@ class AgentRuntime {
 
       case ModelProvider.Cloudflare: {
         runtimeModel = new LobeCloudflareAI(params.cloudflare ?? {});
+        break;
+      }
+
+      case ModelProvider.InternLM: {
+        runtimeModel = new LobeInternLMAI(params.internlm);
         break;
       }
     }
