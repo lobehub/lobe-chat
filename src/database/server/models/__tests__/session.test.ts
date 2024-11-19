@@ -231,8 +231,18 @@ describe('SessionModel', () => {
 
     it('should return sessions with matching title', async () => {
       await serverDB.insert(sessions).values([
-        { id: '1', userId, title: 'Hello World', description: 'Some description' },
-        { id: '2', userId, title: 'Another Session', description: 'Another description' },
+        { id: '1', userId },
+        { id: '2', userId },
+      ]);
+
+      await serverDB.insert(agents).values([
+        { id: 'agent-1', userId, model: 'gpt-3.5-turbo', title: 'Hello, Agent 1' },
+        { id: 'agent-2', userId, model: 'gpt-4', title: 'Agent 2' },
+      ]);
+
+      await serverDB.insert(agentsToSessions).values([
+        { agentId: 'agent-1', sessionId: '1' },
+        { agentId: 'agent-2', sessionId: '2' },
       ]);
 
       const result = await sessionModel.queryByKeyword('hello');
@@ -241,9 +251,21 @@ describe('SessionModel', () => {
     });
 
     it('should return sessions with matching description', async () => {
+      // The sessions has no title and desc,
+      // see: https://github.com/lobehub/lobe-chat/pull/4725
       await serverDB.insert(sessions).values([
-        { id: '1', userId, title: 'Session 1', description: 'Description with keyword' },
-        { id: '2', userId, title: 'Session 2', description: 'Another description' },
+        { id: '1', userId },
+        { id: '2', userId },
+      ]);
+
+      await serverDB.insert(agents).values([
+        { id: 'agent-1', userId, model: 'gpt-3.5-turbo', title: 'Agent 1', description: 'Description with Keyword' },
+        { id: 'agent-2', userId, model: 'gpt-4', title: 'Agent 2' },
+      ]);
+
+      await serverDB.insert(agentsToSessions).values([
+        { agentId: 'agent-1', sessionId: '1' },
+        { agentId: 'agent-2', sessionId: '2' },
       ]);
 
       const result = await sessionModel.queryByKeyword('keyword');
@@ -253,9 +275,21 @@ describe('SessionModel', () => {
 
     it('should return sessions with matching title or description', async () => {
       await serverDB.insert(sessions).values([
+        { id: '1', userId },
+        { id: '2', userId },
+        { id: '3', userId },
+      ]);
+
+      await serverDB.insert(agents).values([
         { id: '1', userId, title: 'Title with keyword', description: 'Some description' },
         { id: '2', userId, title: 'Another Session', description: 'Description with keyword' },
         { id: '3', userId, title: 'Third Session', description: 'Third description' },
+      ]);
+
+      await serverDB.insert(agentsToSessions).values([
+        { agentId: '1', sessionId: '1' },
+        { agentId: '2', sessionId: '2' },
+        { agentId: '3', sessionId: '3' },
       ]);
 
       const result = await sessionModel.queryByKeyword('keyword');

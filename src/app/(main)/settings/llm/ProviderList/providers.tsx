@@ -10,6 +10,7 @@ import {
   GoogleProviderCard,
   GroqProviderCard,
   HunyuanProviderCard,
+  InternLMProviderCard,
   MinimaxProviderCard,
   MistralProviderCard,
   MoonshotProviderCard,
@@ -85,6 +86,7 @@ export const useProviderList = (): ProviderItem[] => {
       MinimaxProviderCard,
       Ai360ProviderCard,
       TaichuProviderCard,
+      InternLMProviderCard,
       SiliconCloudProviderCard,
     ],
     [

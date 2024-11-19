@@ -85,7 +85,12 @@ export class TopicModel {
             serverDB
               .select()
               .from(messages)
-              .where(and(eq(messages.topicId, topics.id), or(matchKeyword(messages.content)))),
+              .where(
+                and(
+                  eq(messages.topicId, topics.id),
+                  matchKeyword(messages.content)
+                )
+              ),
           ),
         ),
       ),
