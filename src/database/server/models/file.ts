@@ -1,5 +1,6 @@
 import { asc, count, eq, ilike, inArray, notExists, or, sum } from 'drizzle-orm';
 import { and, desc, like } from 'drizzle-orm/expressions';
+import type { PgTransaction } from 'drizzle-orm/pg-core';
 
 import { serverDBEnv } from '@/config/db';
 import { serverDB } from '@/database/server/core/db';
@@ -9,6 +10,9 @@ import {
   FileItem,
   NewFile,
   NewGlobalFile,
+  chunks,
+  embeddings,
+  fileChunks,
   files,
   globalFiles,
   knowledgeBaseFiles,
@@ -68,6 +72,10 @@ export class FileModel {
     const fileHash = file.fileHash!;
 
     return await serverDB.transaction(async (trx) => {
+      // 1. 删除相关的 chunks
+      await this.deleteFileChunks(trx as any, [id]);
+
+      // 2. 删除文件记录
       await trx.delete(files).where(and(eq(files.id, id), eq(files.userId, this.userId)));
 
       const result = await trx
@@ -107,6 +115,9 @@ export class FileModel {
     const hashList = fileList.map((file) => file.fileHash!);
 
     return await serverDB.transaction(async (trx) => {
+      // 1. 删除相关的 chunks
+      await this.deleteFileChunks(trx as any, ids);
+
       // delete the files
       await trx.delete(files).where(and(inArray(files.id, ids), eq(files.userId, this.userId)));
 
@@ -288,5 +299,31 @@ export class FileModel {
         eq(files.userId, this.userId),
       ),
     });
+  }
+
+  // 抽象出通用的删除 chunks 方法
+  private async deleteFileChunks(trx: PgTransaction<any>, fileIds: string[]) {
+    const BATCH_SIZE = 1000; // 每批处理的数量
+
+    // 1. 获取所有关联的 chunk IDs
+    const relatedChunks = await trx
+      .select({ chunkId: fileChunks.chunkId })
+      .from(fileChunks)
+      .where(inArray(fileChunks.fileId, fileIds));
+
+    const chunkIds = relatedChunks.map((c) => c.chunkId).filter(Boolean) as string[];
+
+    if (chunkIds.length === 0) return;
+
+    // 2. 分批处理删除
+    for (let i = 0; i < chunkIds.length; i += BATCH_SIZE) {
+      const batchChunkIds = chunkIds.slice(i, i + BATCH_SIZE);
+
+      await trx.delete(embeddings).where(inArray(embeddings.chunkId, batchChunkIds));
+
+      await trx.delete(chunks).where(inArray(chunks.id, batchChunkIds));
+    }
+
+    return chunkIds;
   }
 }
