@@ -30,7 +30,7 @@
   "@hf/mistral/mistral-7b-instruct-v0.2": {},
   "@hf/nexusflow/starling-lm-7b-beta": {},
   "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
-  "@hf/thebloke/deepseek-coder-6.7b-instruct": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
   "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
   "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
   "@hf/thebloke/zephyr-7b-beta-awq": {},
@@ -460,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 to najnowszy eksperymentalny model, który wykazuje znaczące poprawy wydajności w zastosowaniach tekstowych i multimodalnych."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 oferuje zoptymalizowane możliwości przetwarzania multimodalnego, odpowiednie do różnych złożonych scenariuszy zadań."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash to najnowszy model AI Google o wielu modalnościach, który charakteryzuje się szybkim przetwarzaniem i obsługuje wejścia tekstowe, obrazowe i wideo, co czyni go odpowiednim do efektywnego rozszerzania w różnych zadaniach."
   },
@@ -472,14 +469,11 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 to najnowszy model gotowy do produkcji, oferujący wyższą jakość wyników, ze szczególnym uwzględnieniem zadań matematycznych, długich kontekstów i zadań wizualnych."
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 oferuje doskonałe możliwości przetwarzania multimodalnego, zapewniając większą elastyczność w rozwoju aplikacji."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 łączy najnowsze technologie optymalizacji, oferując bardziej efektywne możliwości przetwarzania danych multimodalnych."
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro obsługuje do 2 milionów tokenów, co czyni go idealnym wyborem dla średniej wielkości modeli multimodalnych, odpowiednim do wszechstronnej obsługi złożonych zadań."
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 to najnowszy eksperymentalny model AI o wielu modalnościach od Google, który charakteryzuje się szybkim przetwarzaniem i obsługuje wejścia tekstowe, obrazowe oraz wideo, co umożliwia wydajne rozszerzanie go na różne zadania."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B nadaje się do przetwarzania zadań średniej i małej skali, łącząc efektywność kosztową."

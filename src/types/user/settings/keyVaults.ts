@@ -47,6 +47,7 @@ export interface UserKeyVaults {
   groq?: OpenAICompatibleKeyVault;
   huggingface?: OpenAICompatibleKeyVault;
   hunyuan?: OpenAICompatibleKeyVault;
+  internlm?: OpenAICompatibleKeyVault;
   lobehub?: any;
   minimax?: OpenAICompatibleKeyVault;
   mistral?: OpenAICompatibleKeyVault;

@@ -460,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924, metin ve çok modlu kullanım durumlarında önemli performans artışları sunan en son deneysel modeldir."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827, çeşitli karmaşık görev senaryoları için optimize edilmiş çok modlu işleme yeteneği sunar."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash, Google'ın en son çok modlu AI modelidir, hızlı işleme yeteneğine sahiptir ve metin, görüntü ve video girişi destekler, çeşitli görevlerin verimli bir şekilde genişletilmesine olanak tanır."
   },
@@ -472,14 +469,11 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002, daha yüksek kaliteli çıktılar sunan en son üretim hazır modeldir; özellikle matematik, uzun bağlam ve görsel görevlerde önemli iyileştirmeler sağlamaktadır."
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801, mükemmel çok modlu işleme yeteneği sunar ve uygulama geliştirmeye daha fazla esneklik kazandırır."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827, en son optimize edilmiş teknolojileri bir araya getirerek daha verimli çok modlu veri işleme yeteneği sunar."
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro, 2 milyon token'a kadar destekler, orta ölçekli çok modlu modeller için ideal bir seçimdir ve karmaşık görevler için çok yönlü destek sunar."
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114, Google'ın en son deneysel çok modlu AI modeli olup, hızlı işleme yeteneğine sahip, metin, görüntü ve video girişlerini desteklemekte ve çeşitli görevlerde verimli bir şekilde ölçeklenmektedir."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."

@@ -60,10 +60,17 @@ const Checker = memo<ConnectionCheckerProps>(({ model, provider }) => {
         setPass(false);
         isError = true;
       },
-      onFinish: async () => {
-        if (!isError) {
+      onFinish: async (value) => {
+        if (!isError && value) {
           setError(undefined);
           setPass(true);
+        } else {
+          setPass(false);
+          setError({
+            body: value,
+            message: t('response.ConnectionCheckFailed', { ns: 'error' }),
+            type: 'ConnectionCheckFailed',
+          });
         }
       },
       onLoadingChange: (loading) => {

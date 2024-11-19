@@ -460,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "O Gemini 1.5 Flash 8B 0924 é o mais recente modelo experimental, com melhorias significativas de desempenho em casos de uso de texto e multimídia."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 oferece capacidade de processamento multimodal otimizada, adequada para uma variedade de cenários de tarefas complexas."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash é o mais recente modelo de IA multimodal do Google, com capacidade de processamento rápido, suportando entradas de texto, imagem e vídeo, adequado para uma variedade de tarefas de expansão eficiente."
   },
@@ -472,14 +469,11 @@
   "gemini-1.5-pro-002": {
     "description": "O Gemini 1.5 Pro 002 é o mais recente modelo pronto para produção, oferecendo saídas de maior qualidade, com melhorias significativas em tarefas matemáticas, contextos longos e tarefas visuais."
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 oferece excelente capacidade de processamento multimodal, proporcionando maior flexibilidade para o desenvolvimento de aplicações."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 combina as mais recentes tecnologias de otimização, trazendo maior eficiência no processamento de dados multimodais."
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro suporta até 2 milhões de tokens, sendo a escolha ideal para modelos multimodais de médio porte, adequados para suporte multifacetado em tarefas complexas."
+  },
+  "gemini-exp-1114": {
+    "description": "O Gemini Exp 1114 é o mais recente modelo experimental de IA multimodal da Google, com capacidade de processamento rápido, suportando entradas de texto, imagem e vídeo, adequado para a expansão eficiente de várias tarefas."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B é adequado para o processamento de tarefas de pequeno a médio porte, combinando custo e eficiência."

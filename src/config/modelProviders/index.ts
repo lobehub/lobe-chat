@@ -15,6 +15,7 @@ import GoogleProvider from './google';
 import GroqProvider from './groq';
 import HuggingFaceProvider from './huggingface';
 import HunyuanProvider from './hunyuan';
+import InternLMProvider from './internlm';
 import MinimaxProvider from './minimax';
 import MistralProvider from './mistral';
 import MoonshotProvider from './moonshot';
@@ -71,6 +72,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   HunyuanProvider.chatModels,
   WenxinProvider.chatModels,
   SenseNovaProvider.chatModels,
+  InternLMProvider.chatModels,
 ].flat();
 
 export const DEFAULT_MODEL_PROVIDER_LIST = [
@@ -107,6 +109,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   MinimaxProvider,
   Ai360Provider,
   TaichuProvider,
+  InternLMProvider,
   SiliconCloudProvider,
   GiteeProvider,
 ];
@@ -135,6 +138,7 @@ export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
 export { default as HuggingFaceProviderCard } from './huggingface';
 export { default as HunyuanProviderCard } from './hunyuan';
+export { default as InternLMProviderCard } from './internlm';
 export { default as MinimaxProviderCard } from './minimax';
 export { default as MistralProviderCard } from './mistral';
 export { default as MoonshotProviderCard } from './moonshot';

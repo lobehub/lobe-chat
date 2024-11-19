@@ -124,6 +124,7 @@ export default {
 
     // Github Token
     InvalidGithubToken: 'Github PAT 不正确或为空，请检查 Github PAT 后重试',
+    ConnectionCheckFailed: '请求返回为空，请检查 API 代理地址末尾是否未包含 `/v1`',
 
     /* eslint-enable */
   },
