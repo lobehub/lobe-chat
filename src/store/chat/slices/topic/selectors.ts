@@ -42,7 +42,7 @@ const currentActiveTopicSummary = (s: ChatStoreState): ChatTopicSummary | undefi
 const isCreatingTopic = (s: ChatStoreState) => s.creatingTopic;
 
 const groupedTopicsSelector = (s: ChatStoreState): GroupedTopic[] => {
-  const topics = currentTopics(s);
+  const topics = displayTopics(s);
 
   if (!topics) return [];
   const favTopics = currentFavTopics(s);
