@@ -37,6 +37,23 @@ exports[`parseModelString > duplicate naming model 1`] = `
 }
 `;
 
+exports[`parseModelString > empty string model 1`] = `
+{
+  "add": [
+    {
+      "displayName": "gpt-4-turbo",
+      "id": "gpt-4-1106-preview",
+    },
+    {
+      "displayName": undefined,
+      "id": "claude-2",
+    },
+  ],
+  "removeAll": false,
+  "removed": [],
+}
+`;
+
 exports[`parseModelString > only add the model 1`] = `
 {
   "add": [

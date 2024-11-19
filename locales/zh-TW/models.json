@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra 是星火大模型系列中最為強大的版本，在升級聯網搜索鏈路同時，提升對文本內容的理解和總結能力。它是用於提升辦公生產力和準確響應需求的全方位解決方案，是引領行業的智能產品。"
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning."
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "採用搜索增強技術實現大模型與領域知識、全網知識的全面連結。支持PDF、Word等多種文檔上傳及網址輸入，信息獲取及時、全面，輸出結果準確、專業。"
   },
@@ -30,6 +44,12 @@
     "description": "具備 128K 超長上下文窗口，針對企業高頻場景優化，效果大幅提升，高性價比。相對於Baichuan2模型，內容創作提升20%，知識問答提升17%，角色扮演能力提升40%。整體效果比GPT3.5更優。"
   },
   "Baichuan4": {
+    "description": "模型能力國內第一，在知識百科、長文本、生成創作等中文任務上超越國外主流模型。還具備行業領先的多模態能力，多項權威評測基準表現優異。"
+  },
+  "Baichuan4-Air": {
+    "description": "模型能力國內第一，在知識百科、長文本、生成創作等中文任務上超越國外主流模型。還具備行業領先的多模態能力，多項權威評測基準表現優異。"
+  },
+  "Baichuan4-Turbo": {
     "description": "模型能力國內第一，在知識百科、長文本、生成創作等中文任務上超越國外主流模型。還具備行業領先的多模態能力，多項權威評測基準表現優異。"
   },
   "ERNIE-3.5-128K": {
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "百度自研的旗艦級超大規模語言模型，相較ERNIE 3.5實現了模型能力全面升級，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。"
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現出色，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於ERNIE 4.0在性能表現上更優秀"
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "百度自研的旗艦級超大規模大語言模型，綜合效果表現優異，廣泛適用於各領域複雜任務場景；支持自動對接百度搜索插件，保障問答信息時效。相較於 ERNIE 4.0 在性能表現上更為優秀。"
@@ -146,8 +169,8 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5 是全新的大型語言模型系列，旨在優化指令式任務的處理。"
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
-    "description": "Qwen2.5-Coder專注於代碼編寫。"
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
+    "description": "Qwen2.5-Coder 專注於代碼編寫。"
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math專注於數學領域的問題求解，為高難度題提供專業解答。"
@@ -178,6 +201,9 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B 開放源碼版本，為會話應用提供優化後的對話體驗。"
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Large 是業界最大的開源 Transformer 架構 MoE 模型，擁有 3890 億總參數量和 520 億激活參數量。"
   },
   "abab5.5-chat": {
     "description": "面向生產力場景，支持複雜任務處理和高效文本生成，適用於專業領域應用。"
@@ -434,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 是最新的實驗性模型，在文本和多模態用例中都有顯著的性能提升。"
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 提供了優化後的多模態處理能力，適用多種複雜任務場景。"
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash 是 Google 最新的多模態 AI 模型，具備快速處理能力，支持文本、圖像和視頻輸入，適用於多種任務的高效擴展。"
   },
@@ -446,14 +469,11 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 是最新的生產就緒模型，提供更高品質的輸出，特別在數學、長上下文和視覺任務方面有顯著提升。"
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 提供出色的多模態處理能力，為應用開發帶來更大靈活性。"
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 結合最新優化技術，帶來更高效的多模態數據處理能力。"
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro 支持高達 200 萬個 tokens，是中型多模態模型的理想選擇，適用於複雜任務的多方面支持。"
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 是 Google 最新的實驗性多模態 AI 模型，具備快速處理能力，支持文本、影像和影片輸入，適用於多種任務的高效擴展。"
   },
   "gemma-7b-it": {
     "description": "Gemma 7B 適合中小規模任務處理，兼具成本效益。"
@@ -586,6 +606,9 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini是OpenAI在GPT-4 Omni之後推出的最新模型，支持圖文輸入並輸出文本。作為他們最先進的小型模型，它比其他近期的前沿模型便宜很多，並且比GPT-3.5 Turbo便宜超過60%。它保持了最先進的智能，同時具有顯著的性價比。GPT-4o mini在MMLU測試中獲得了82%的得分，目前在聊天偏好上排名高於GPT-4。"
+  },
+  "grok-beta": {
+    "description": "擁有與 Grok 2 相當的性能，但具備更高的效率、速度和功能。"
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
@@ -949,6 +972,9 @@
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文處理能力，能夠處理多達128K的上下文信息，特別適合需通篇分析和長期邏輯關聯處理的長文內容，可在複雜文本溝通中提供流暢一致的邏輯與多樣的引用支持。"
   },
+  "qwen-coder-plus-latest": {
+    "description": "通義千問代碼模型。"
+  },
   "qwen-coder-turbo-latest": {
     "description": "通義千問代碼模型。"
   },
@@ -1000,14 +1026,11 @@
   "qwen2.5-7b-instruct": {
     "description": "通義千問2.5對外開源的7B規模的模型。"
   },
-  "qwen2.5-coder-1.5b-instruct": {
+  "qwen2.5-coder-32b-instruct": {
     "description": "通義千問代碼模型開源版。"
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "通義千問代碼模型開源版。"
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "Qwen-Math模型具有強大的數學解題能力。"
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Qwen-Math模型具有強大的數學解題能力。"
@@ -1068,6 +1091,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) 適用於精細化指令任務，提供出色的語言處理能力。"
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet 提升了行業標準，性能超越競爭對手模型和 Claude 3 Opus，在廣泛的評估中表現出色，同時具備我們中等層級模型的速度和成本。"
   },
   "wizardlm2": {
     "description": "WizardLM 2 是微軟 AI 提供的語言模型，在複雜對話、多語言、推理和智能助手領域表現尤為出色。"

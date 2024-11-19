@@ -175,8 +175,8 @@
       "desc": "對話過程中是否自動建立話題，僅在臨時話題中生效",
       "title": "自動建立話題"
     },
-    "enableCompressThreshold": {
-      "title": "是否開啟歷史訊息長度壓縮閾值"
+    "enableCompressHistory": {
+      "title": "開啟歷史消息自動總結"
     },
     "enableHistoryCount": {
       "alias": "不限制",
@@ -377,6 +377,11 @@
       "desc": "填寫後，系統助理將在生成內容時使用自訂提示",
       "placeholder": "請輸入自訂提示詞",
       "title": "自訂提示詞"
+    },
+    "historyCompress": {
+      "label": "會話歷史模型",
+      "modelDesc": "指定用於壓縮會話歷史的模型",
+      "title": "自動總結會話歷史"
     },
     "queryRewrite": {
       "label": "提問重寫模型",

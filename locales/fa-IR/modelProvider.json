@@ -51,6 +51,18 @@
       "title": "استفاده از اطلاعات احراز هویت سفارشی Bedrock"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "لطفاً کلید API Cloudflare را وارد کنید",
+      "placeholder": "کلید API Cloudflare",
+      "title": "کلید API Cloudflare"
+    },
+    "baseURLOrAccountID": {
+      "desc": "شناسه حساب Cloudflare یا آدرس API سفارشی را وارد کنید",
+      "placeholder": "شناسه حساب Cloudflare / آدرس API سفارشی",
+      "title": "شناسه حساب Cloudflare / آدرس API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "توکن دسترسی شخصی Github خود را وارد کنید، برای ایجاد [اینجا](https://github.com/settings/tokens) کلیک کنید",

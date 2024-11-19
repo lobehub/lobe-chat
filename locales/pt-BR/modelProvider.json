@@ -51,6 +51,18 @@
       "title": "Usar informações de autenticação Bedrock personalizadas"
     }
   },
+  "cloudflare": {
+    "apiKey": {
+      "desc": "Insira o Cloudflare API Key",
+      "placeholder": "Cloudflare API Key",
+      "title": "Cloudflare API Key"
+    },
+    "baseURLOrAccountID": {
+      "desc": "Insira o ID da conta do Cloudflare ou o endereço da API personalizado",
+      "placeholder": "ID da conta do Cloudflare / URL da API personalizada",
+      "title": "ID da conta do Cloudflare / Endereço da API"
+    }
+  },
   "github": {
     "personalAccessToken": {
       "desc": "Insira seu PAT do Github, clique [aqui](https://github.com/settings/tokens) para criar",

@@ -35,7 +35,9 @@ export class TopicModel {
         .select({
           createdAt: topics.createdAt,
           favorite: topics.favorite,
+          historySummary: topics.historySummary,
           id: topics.id,
+          metadata: topics.metadata,
           title: topics.title,
           updatedAt: topics.updatedAt,
         })
@@ -83,7 +85,12 @@ export class TopicModel {
             serverDB
               .select()
               .from(messages)
-              .where(and(eq(messages.topicId, topics.id), or(matchKeyword(messages.content)))),
+              .where(
+                and(
+                  eq(messages.topicId, topics.id),
+                  matchKeyword(messages.content)
+                )
+              ),
           ),
         ),
       ),

@@ -20,9 +20,38 @@ const Baichuan: ModelProviderCard = {
     },
     {
       description:
+        '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
+      displayName: 'Baichuan 4 Turbo',
+      enabled: true,
+      functionCall: true,
+      id: 'Baichuan4-Turbo',
+      maxOutput: 4096,
+      pricing: {
+        currency: 'CNY',
+        input: 15,
+        output: 15,
+      },
+      tokens: 32_768,
+    },
+    {
+      description:
+        '模型能力国内第一，在知识百科、长文本、生成创作等中文任务上超越国外主流模型。还具备行业领先的多模态能力，多项权威评测基准表现优异。',
+      displayName: 'Baichuan 4 Air',
+      enabled: true,
+      functionCall: true,
+      id: 'Baichuan4-Air',
+      maxOutput: 4096,
+      pricing: {
+        currency: 'CNY',
+        input: 0.98,
+        output: 0.98,
+      },
+      tokens: 32_768,
+    },
+    {
+      description:
         '针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。',
       displayName: 'Baichuan 3 Turbo',
-      enabled: true,
       functionCall: true,
       id: 'Baichuan3-Turbo',
       maxOutput: 8192,
@@ -37,7 +66,6 @@ const Baichuan: ModelProviderCard = {
       description:
         '具备 128K 超长上下文窗口，针对企业高频场景优化，效果大幅提升，高性价比。相对于Baichuan2模型，内容创作提升20%，知识问答提升17%， 角色扮演能力提升40%。整体效果比GPT3.5更优。',
       displayName: 'Baichuan 3 Turbo 128k',
-      enabled: true,
       id: 'Baichuan3-Turbo-128k',
       maxOutput: 4096,
       pricing: {

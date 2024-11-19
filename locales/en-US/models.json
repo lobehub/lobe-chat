@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra is the most powerful version in the Spark large model series, enhancing text content understanding and summarization capabilities while upgrading online search links. It is a comprehensive solution for improving office productivity and accurately responding to demands, leading the industry as an intelligent product."
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Generation over generation, Meta Llama 3 demonstrates state-of-the-art performance on a wide range of industry benchmarks and offers new capabilities, including improved reasoning."
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Utilizes search enhancement technology to achieve comprehensive links between large models and domain knowledge, as well as knowledge from the entire web. Supports uploads of various documents such as PDF and Word, and URL input, providing timely and comprehensive information retrieval with accurate and professional output."
   },
@@ -31,6 +45,12 @@
   },
   "Baichuan4": {
     "description": "The model is the best in the country, surpassing mainstream foreign models in Chinese tasks such as knowledge encyclopedias, long texts, and creative generation. It also boasts industry-leading multimodal capabilities, excelling in multiple authoritative evaluation benchmarks."
+  },
+  "Baichuan4-Air": {
+    "description": "The leading model in the country, surpassing mainstream foreign models in Chinese tasks such as knowledge encyclopedias, long texts, and creative generation. It also possesses industry-leading multimodal capabilities, excelling in multiple authoritative evaluation benchmarks."
+  },
+  "Baichuan4-Turbo": {
+    "description": "The leading model in the country, surpassing mainstream foreign models in Chinese tasks such as knowledge encyclopedias, long texts, and creative generation. It also possesses industry-leading multimodal capabilities, excelling in multiple authoritative evaluation benchmarks."
   },
   "ERNIE-3.5-128K": {
     "description": "Baidu's self-developed flagship large-scale language model, covering a vast amount of Chinese and English corpus. It possesses strong general capabilities, meeting the requirements for most dialogue Q&A, creative generation, and plugin application scenarios; it supports automatic integration with Baidu's search plugin to ensure the timeliness of Q&A information."
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Baidu's self-developed flagship ultra-large-scale language model, which has achieved a comprehensive upgrade in model capabilities compared to ERNIE 3.5, widely applicable to complex task scenarios across various fields; supports automatic integration with Baidu search plugins to ensure the timeliness of Q&A information."
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "Baidu's self-developed flagship ultra-large-scale language model, demonstrating excellent overall performance, widely applicable to complex task scenarios across various fields; supports automatic integration with Baidu search plugins to ensure timely Q&A information. Compared to ERNIE 4.0, it performs even better."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "Baidu's self-developed flagship ultra-large-scale language model, demonstrating excellent overall performance, suitable for complex task scenarios across various fields; supports automatic integration with Baidu search plugins to ensure the timeliness of Q&A information. It offers better performance compared to ERNIE 4.0."
@@ -146,7 +169,7 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5 is a new large language model series designed to optimize instruction-based task processing."
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder focuses on code writing."
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
@@ -178,6 +201,9 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is an open-source version that provides an optimized conversational experience for chat applications."
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Large is the industry's largest open-source Transformer architecture MoE model, with a total of 389 billion parameters and 52 billion active parameters."
   },
   "abab5.5-chat": {
     "description": "Targeted at productivity scenarios, supporting complex task processing and efficient text generation, suitable for professional applications."
@@ -434,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is the latest experimental model, showcasing significant performance improvements in both text and multimodal use cases."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 offers optimized multimodal processing capabilities, suitable for a variety of complex task scenarios."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash is Google's latest multimodal AI model, featuring fast processing capabilities and supporting text, image, and video inputs, making it suitable for efficient scaling across various tasks."
   },
@@ -446,14 +469,11 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 is the latest production-ready model, delivering higher quality outputs, with notable enhancements in mathematics, long-context, and visual tasks."
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 offers excellent multimodal processing capabilities, providing greater flexibility for application development."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 combines the latest optimization technologies to deliver more efficient multimodal data processing capabilities."
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro supports up to 2 million tokens, making it an ideal choice for medium-sized multimodal models, providing multifaceted support for complex tasks."
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 is Google's latest experimental multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it suitable for efficient scaling across various tasks."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is suitable for medium to small-scale task processing, offering cost-effectiveness."
@@ -586,6 +606,9 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is the latest model released by OpenAI after GPT-4 Omni, supporting both image and text input while outputting text. As their most advanced small model, it is significantly cheaper than other recent cutting-edge models, costing over 60% less than GPT-3.5 Turbo. It maintains state-of-the-art intelligence while offering remarkable cost-effectiveness. GPT-4o mini scored 82% on the MMLU test and currently ranks higher than GPT-4 in chat preferences."
+  },
+  "grok-beta": {
+    "description": "Offers performance comparable to Grok 2 but with higher efficiency, speed, and functionality."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is a language model that combines creativity and intelligence by merging multiple top models."
@@ -949,6 +972,9 @@
   "pro-128k": {
     "description": "Spark Pro 128K is equipped with an extra-large context processing capability, able to handle up to 128K of contextual information, making it particularly suitable for long-form content that requires comprehensive analysis and long-term logical connections, providing smooth and consistent logic and diverse citation support in complex text communication."
   },
+  "qwen-coder-plus-latest": {
+    "description": "Tongyi Qianwen code model."
+  },
   "qwen-coder-turbo-latest": {
     "description": "The Tongyi Qianwen Coder model."
   },
@@ -1000,14 +1026,11 @@
   "qwen2.5-7b-instruct": {
     "description": "The 7B model of Tongyi Qianwen 2.5 is open-sourced."
   },
-  "qwen2.5-coder-1.5b-instruct": {
-    "description": "The open-source version of the Tongyi Qianwen Coder model."
+  "qwen2.5-coder-32b-instruct": {
+    "description": "Open-source version of the Tongyi Qianwen code model."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "The open-source version of the Tongyi Qianwen Coder model."
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "The Qwen-Math model possesses strong capabilities for solving mathematical problems."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "The Qwen-Math model possesses strong capabilities for solving mathematical problems."
@@ -1068,6 +1091,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) is suitable for refined instruction tasks, offering excellent language processing capabilities."
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet raises the industry standard, outperforming competitor models and Claude 3 Opus, excelling in a wide range of evaluations while maintaining the speed and cost of our mid-tier models."
   },
   "wizardlm2": {
     "description": "WizardLM 2 is a language model provided by Microsoft AI, excelling in complex dialogues, multilingual capabilities, reasoning, and intelligent assistant applications."

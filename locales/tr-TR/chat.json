@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "Sohbetler",
+    "historySummary": "Tarih Özeti",
     "rest": "Kalan",
     "systemRole": "Sistem Rolü",
     "title": "Bağlam Detayları",

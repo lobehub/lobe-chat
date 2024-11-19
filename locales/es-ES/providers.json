@@ -15,6 +15,7 @@
   "bedrock": {
     "description": "Bedrock es un servicio proporcionado por Amazon AWS, enfocado en ofrecer modelos de lenguaje y visuales avanzados para empresas. Su familia de modelos incluye la serie Claude de Anthropic, la serie Llama 3.1 de Meta, entre otros, abarcando una variedad de opciones desde ligeras hasta de alto rendimiento, apoyando tareas como generación de texto, diálogos y procesamiento de imágenes, adecuadas para aplicaciones empresariales de diferentes escalas y necesidades."
   },
+  "cloudflare": {},
   "deepseek": {
     "description": "DeepSeek es una empresa centrada en la investigación y aplicación de tecnologías de inteligencia artificial, cuyo modelo más reciente, DeepSeek-V2.5, combina capacidades de diálogo general y procesamiento de código, logrando mejoras significativas en alineación con preferencias humanas, tareas de escritura y seguimiento de instrucciones."
   },
@@ -84,6 +85,9 @@
   },
   "wenxin": {
     "description": "Plataforma de desarrollo y servicios de modelos grandes y aplicaciones nativas de IA de nivel empresarial, que ofrece la cadena de herramientas más completa y fácil de usar para el desarrollo de modelos de inteligencia artificial generativa y el desarrollo de aplicaciones en todo el proceso."
+  },
+  "xai": {
+    "description": "xAI es una empresa dedicada a construir inteligencia artificial para acelerar los descubrimientos científicos humanos. Nuestra misión es promover nuestra comprensión compartida del universo."
   },
   "zeroone": {
     "description": "01.AI se centra en la tecnología de inteligencia artificial de la era 2.0, promoviendo enérgicamente la innovación y aplicación de 'humano + inteligencia artificial', utilizando modelos extremadamente potentes y tecnologías de IA avanzadas para mejorar la productividad humana y lograr el empoderamiento tecnológico."

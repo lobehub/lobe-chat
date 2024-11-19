@@ -123,6 +123,7 @@
   },
   "tokenDetails": {
     "chats": "チャットメッセージ",
+    "historySummary": "履歴の要約",
     "rest": "残り利用可能",
     "systemRole": "システムロール設定",
     "title": "コンテキストの詳細",

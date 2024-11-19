@@ -10,7 +10,7 @@ export const LobeGithubAI = LobeOpenAICompatibleFactory({
       const { model } = payload;
 
       if (o1Models.has(model)) {
-        return pruneO1Payload(payload) as any;
+        return { ...pruneO1Payload(payload), stream: false } as any;
       }
 
       return { ...payload, stream: payload.stream ?? true };

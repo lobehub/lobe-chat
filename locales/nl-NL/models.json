@@ -20,6 +20,20 @@
   "4.0Ultra": {
     "description": "Spark4.0 Ultra is de krachtigste versie in de Spark-grootmodelserie, die de netwerkintegratie heeft geüpgraded en de tekstbegrip- en samenvattingscapaciteiten heeft verbeterd. Het is een allesomvattende oplossing voor het verbeteren van de kantoorproductiviteit en het nauwkeurig reageren op behoeften, en is een toonaangevend intelligent product in de industrie."
   },
+  "@cf/meta/llama-3-8b-instruct-awq": {},
+  "@cf/openchat/openchat-3.5-0106": {},
+  "@cf/qwen/qwen1.5-14b-chat-awq": {},
+  "@hf/google/gemma-7b-it": {},
+  "@hf/meta-llama/meta-llama-3-8b-instruct": {
+    "description": "Generatie na generatie toont Meta Llama 3 state-of-the-art prestaties op een breed scala aan industriële benchmarks en biedt nieuwe mogelijkheden, waaronder verbeterd redeneren."
+  },
+  "@hf/mistral/mistral-7b-instruct-v0.2": {},
+  "@hf/nexusflow/starling-lm-7b-beta": {},
+  "@hf/nousresearch/hermes-2-pro-mistral-7b": {},
+  "@hf/thebloke/deepseek-coder-6.7b-instruct-awq": {},
+  "@hf/thebloke/neural-chat-7b-v3-1-awq": {},
+  "@hf/thebloke/openhermes-2.5-mistral-7b-awq": {},
+  "@hf/thebloke/zephyr-7b-beta-awq": {},
   "Baichuan2-Turbo": {
     "description": "Maakt gebruik van zoekversterkingstechnologie om een uitgebreide koppeling tussen het grote model en domeinspecifieke kennis en wereldwijde kennis te realiseren. Ondersteunt het uploaden van verschillende documenten zoals PDF en Word, evenals URL-invoer, met tijdige en uitgebreide informatieverzameling en nauwkeurige, professionele output."
   },
@@ -31,6 +45,12 @@
   },
   "Baichuan4": {
     "description": "Het model heeft de beste prestaties in het binnenland en overtreft buitenlandse mainstream modellen in kennisencyclopedieën, lange teksten en creatieve generaties. Het heeft ook toonaangevende multimodale capaciteiten en presteert uitstekend in verschillende autoritatieve evaluatiebenchmarks."
+  },
+  "Baichuan4-Air": {
+    "description": "Modelcapaciteiten zijn nationaal de beste, overtreft buitenlandse mainstream modellen in kennisencyclopedie, lange teksten en creatieve generatie in Chinese taken. Beschikt ook over toonaangevende multimodale capaciteiten en presteert uitstekend op verschillende autoritatieve evaluatiebenchmarks."
+  },
+  "Baichuan4-Turbo": {
+    "description": "Modelcapaciteiten zijn nationaal de beste, overtreft buitenlandse mainstream modellen in kennisencyclopedie, lange teksten en creatieve generatie in Chinese taken. Beschikt ook over toonaangevende multimodale capaciteiten en presteert uitstekend op verschillende autoritatieve evaluatiebenchmarks."
   },
   "ERNIE-3.5-128K": {
     "description": "De door Baidu ontwikkelde vlaggenschip grote taalmodel, dat een enorme hoeveelheid Chinese en Engelse gegevens dekt, met krachtige algemene capaciteiten die voldoen aan de meeste eisen voor dialoogvragen, creatieve generatie en plug-in toepassingsscenario's; ondersteunt automatische integratie met de Baidu zoekplug-in, wat de actualiteit van vraag- en antwoordinformatie waarborgt."
@@ -46,6 +66,9 @@
   },
   "ERNIE-4.0-8K-Preview": {
     "description": "Het door Baidu ontwikkelde vlaggenschip van een ultra-groot taalmodel, dat in vergelijking met ERNIE 3.5 een algehele upgrade van de modelcapaciteiten heeft gerealiseerd, en breed toepasbaar is in complexe taken in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in om de actualiteit van vraag- en antwoordinformatie te waarborgen."
+  },
+  "ERNIE-4.0-Turbo-128K": {
+    "description": "Het vlaggenschip supergrote taalmodel van Baidu, met uitstekende algehele prestaties, breed toepasbaar in complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met Baidu zoekplug-ins, wat de actualiteit van vraag- en antwoordinformatie waarborgt. In vergelijking met ERNIE 4.0 presteert het beter."
   },
   "ERNIE-4.0-Turbo-8K-Latest": {
     "description": "De zelfontwikkelde vlaggenschip super-grote taalmodel van Baidu, dat uitmuntend presteert in diverse complexe taakscenario's in verschillende domeinen; ondersteunt automatische integratie met de Baidu-zoekplug-in, waarborgt de actualiteit van vraag-antwoordinformatie. Overtreft in performance ten opzichte van ERNIE 4.0."
@@ -146,7 +169,7 @@
   "Qwen/Qwen2.5-7B-Instruct-Turbo": {
     "description": "Qwen2.5 is een geheel nieuwe serie grote taalmodellen, ontworpen om de verwerking van instructietaken te optimaliseren."
   },
-  "Qwen/Qwen2.5-Coder-7B-Instruct": {
+  "Qwen/Qwen2.5-Coder-32B-Instruct": {
     "description": "Qwen2.5-Coder richt zich op het schrijven van code."
   },
   "Qwen/Qwen2.5-Math-72B-Instruct": {
@@ -178,6 +201,9 @@
   },
   "THUDM/glm-4-9b-chat": {
     "description": "GLM-4 9B is de open-source versie die een geoptimaliseerde gesprekservaring biedt voor gespreksapplicaties."
+  },
+  "Tencent/Hunyuan-A52B-Instruct": {
+    "description": "Hunyuan-Large is het grootste open source Transformer-architectuur MoE-model in de industrie, met een totaal van 389 miljard parameters en 52 miljard geactiveerde parameters."
   },
   "abab5.5-chat": {
     "description": "Gericht op productiviteitsscenario's, ondersteunt complexe taakverwerking en efficiënte tekstgeneratie, geschikt voor professionele toepassingen."
@@ -434,9 +460,6 @@
   "gemini-1.5-flash-8b-exp-0924": {
     "description": "Gemini 1.5 Flash 8B 0924 is het nieuwste experimentele model, met aanzienlijke prestatieverbeteringen in tekst- en multimodale toepassingen."
   },
-  "gemini-1.5-flash-exp-0827": {
-    "description": "Gemini 1.5 Flash 0827 biedt geoptimaliseerde multimodale verwerkingscapaciteiten, geschikt voor verschillende complexe taakscenario's."
-  },
   "gemini-1.5-flash-latest": {
     "description": "Gemini 1.5 Flash is Google's nieuwste multimodale AI-model, met snelle verwerkingscapaciteiten, ondersteunt tekst-, beeld- en video-invoer, en is geschikt voor efficiënte opschaling van verschillende taken."
   },
@@ -446,14 +469,11 @@
   "gemini-1.5-pro-002": {
     "description": "Gemini 1.5 Pro 002 is het nieuwste productieklare model, dat hogere kwaliteit output biedt, met name op het gebied van wiskunde, lange contexten en visuele taken."
   },
-  "gemini-1.5-pro-exp-0801": {
-    "description": "Gemini 1.5 Pro 0801 biedt uitstekende multimodale verwerkingscapaciteiten en biedt meer flexibiliteit voor applicatieontwikkeling."
-  },
-  "gemini-1.5-pro-exp-0827": {
-    "description": "Gemini 1.5 Pro 0827 combineert de nieuwste optimalisatietechnologieën en biedt efficiëntere multimodale gegevensverwerkingscapaciteiten."
-  },
   "gemini-1.5-pro-latest": {
     "description": "Gemini 1.5 Pro ondersteunt tot 2 miljoen tokens en is de ideale keuze voor middelgrote multimodale modellen, geschikt voor veelzijdige ondersteuning van complexe taken."
+  },
+  "gemini-exp-1114": {
+    "description": "Gemini Exp 1114 is Google's nieuwste experimentele multimodale AI-model, met een snelle verwerkingscapaciteit, ondersteunt tekst-, beeld- en video-invoer, geschikt voor efficiënte schaling van diverse taken."
   },
   "gemma-7b-it": {
     "description": "Gemma 7B is geschikt voor het verwerken van middelgrote taken, met een goede kosteneffectiviteit."
@@ -586,6 +606,9 @@
   },
   "gpt-4o-mini": {
     "description": "GPT-4o mini is het nieuwste model van OpenAI, gelanceerd na GPT-4 Omni, en ondersteunt zowel tekst- als beeldinvoer met tekstuitvoer. Als hun meest geavanceerde kleine model is het veel goedkoper dan andere recente toonaangevende modellen en meer dan 60% goedkoper dan GPT-3.5 Turbo. Het behoudt de meest geavanceerde intelligentie met een aanzienlijke prijs-kwaliteitverhouding. GPT-4o mini behaalde 82% op de MMLU-test en staat momenteel hoger in chatvoorkeuren dan GPT-4."
+  },
+  "grok-beta": {
+    "description": "Biedt prestaties vergelijkbaar met Grok 2, maar met hogere efficiëntie, snelheid en functionaliteit."
   },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
@@ -949,6 +972,9 @@
   "pro-128k": {
     "description": "Spark Pro 128K is uitgerust met een zeer grote contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken. Het is bijzonder geschikt voor lange teksten die een volledige analyse en langdurige logische verbanden vereisen, en biedt een vloeiende en consistente logica met diverse ondersteuningen voor citaten in complexe tekstcommunicatie."
   },
+  "qwen-coder-plus-latest": {
+    "description": "Tongyi Qianwen code model."
+  },
   "qwen-coder-turbo-latest": {
     "description": "Het Tongyi Qianwen codeermodel."
   },
@@ -1000,14 +1026,11 @@
   "qwen2.5-7b-instruct": {
     "description": "Het 7B model van Tongyi Qianwen 2.5 is open source beschikbaar."
   },
-  "qwen2.5-coder-1.5b-instruct": {
-    "description": "De open source versie van het Tongyi Qianwen codeermodel."
+  "qwen2.5-coder-32b-instruct": {
+    "description": "Open source versie van het Tongyi Qianwen code model."
   },
   "qwen2.5-coder-7b-instruct": {
     "description": "De open source versie van het Tongyi Qianwen codeermodel."
-  },
-  "qwen2.5-math-1.5b-instruct": {
-    "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
   },
   "qwen2.5-math-72b-instruct": {
     "description": "Het Qwen-Math model heeft krachtige capaciteiten voor het oplossen van wiskundige problemen."
@@ -1068,6 +1091,9 @@
   },
   "upstage/SOLAR-10.7B-Instruct-v1.0": {
     "description": "Upstage SOLAR Instruct v1 (11B) is geschikt voor verfijnde instructietaken en biedt uitstekende taalverwerkingscapaciteiten."
+  },
+  "us.anthropic.claude-3-5-sonnet-20241022-v2:0": {
+    "description": "Claude 3.5 Sonnet heeft de industrienormen verbeterd, met prestaties die de concurrentiemodellen en Claude 3 Opus overtreffen, en excelleert in uitgebreide evaluaties, terwijl het de snelheid en kosten van onze middelgrote modellen behoudt."
   },
   "wizardlm2": {
     "description": "WizardLM 2 is een taalmodel van Microsoft AI dat uitblinkt in complexe gesprekken, meertaligheid, inferentie en intelligente assistentie."

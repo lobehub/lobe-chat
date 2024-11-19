@@ -25,6 +25,11 @@ describe('parseModelString', () => {
     expect(result).toMatchSnapshot();
   });
 
+  it('empty string model', () => {
+    const result = parseModelString('gpt-4-1106-preview=gpt-4-turbo,,  ,\n  ，+claude-2');
+    expect(result).toMatchSnapshot();
+  });
+
   describe('extension capabilities', () => {
     it('with token', () => {
       const result = parseModelString('chatglm-6b=ChatGLM 6B<4096>');

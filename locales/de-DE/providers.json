@@ -15,6 +15,7 @@
   "bedrock": {
     "description": "Bedrock ist ein Service von Amazon AWS, der sich darauf konzentriert, Unternehmen fortschrittliche KI-Sprach- und visuelle Modelle bereitzustellen. Die Modellfamilie umfasst die Claude-Serie von Anthropic, die Llama 3.1-Serie von Meta und mehr, und bietet eine Vielzahl von Optionen von leichtgewichtig bis hochleistungsfähig, die Textgenerierung, Dialoge, Bildverarbeitung und andere Aufgaben unterstützen und für Unternehmensanwendungen unterschiedlicher Größen und Anforderungen geeignet sind."
   },
+  "cloudflare": {},
   "deepseek": {
     "description": "DeepSeek ist ein Unternehmen, das sich auf die Forschung und Anwendung von KI-Technologien spezialisiert hat. Ihr neuestes Modell, DeepSeek-V2.5, kombiniert allgemeine Dialog- und Codeverarbeitungsfähigkeiten und hat signifikante Fortschritte in den Bereichen menschliche Präferenzanpassung, Schreibaufgaben und Befehlsbefolgung erzielt."
   },
@@ -84,6 +85,9 @@
   },
   "wenxin": {
     "description": "Eine unternehmensweite, umfassende Plattform für die Entwicklung und den Service von großen Modellen und KI-nativen Anwendungen, die die vollständigsten und benutzerfreundlichsten Werkzeuge für die Entwicklung generativer KI-Modelle und den gesamten Anwendungsentwicklungsprozess bietet."
+  },
+  "xai": {
+    "description": "xAI ist ein Unternehmen, das sich der Entwicklung von Künstlicher Intelligenz widmet, um menschliche wissenschaftliche Entdeckungen zu beschleunigen. Unsere Mission ist es, unser gemeinsames Verständnis des Universums voranzutreiben."
   },
   "zeroone": {
     "description": "01.AI konzentriert sich auf die künstliche Intelligenz-Technologie der AI 2.0-Ära und fördert aktiv die Innovation und Anwendung von 'Mensch + künstliche Intelligenz', indem sie leistungsstarke Modelle und fortschrittliche KI-Technologien einsetzt, um die Produktivität der Menschen zu steigern und technologische Befähigung zu erreichen."
