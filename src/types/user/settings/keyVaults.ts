@@ -41,7 +41,7 @@ export interface UserKeyVaults {
   cloudflare?: CloudflareKeyVault;
   deepseek?: OpenAICompatibleKeyVault;
   fireworksai?: OpenAICompatibleKeyVault;
-  gitee?: OpenAICompatibleKeyVault;
+  giteeai?: OpenAICompatibleKeyVault;
   github?: OpenAICompatibleKeyVault;
   google?: OpenAICompatibleKeyVault;
   groq?: OpenAICompatibleKeyVault;

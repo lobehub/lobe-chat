@@ -11,7 +11,7 @@ import {
 import * as debugStreamModule from '../utils/debugStream';
 import { LobeGiteeAI } from './index';
 
-const provider = ModelProvider.Gitee;
+const provider = ModelProvider.GiteeAI;
 const defaultBaseURL = 'https://ai.gitee.com/v1';
 
 const bizErrorType = 'ProviderBizError';
@@ -211,7 +211,7 @@ describe('LobeGiteeAI', () => {
     });
 
     describe('DEBUG', () => {
-      it('should call debugStream and return StreamingTextResponse when DEBUG_GITEE_CHAT_COMPLETION is 1', async () => {
+      it('should call debugStream and return StreamingTextResponse when DEBUG_GITEE_AI_CHAT_COMPLETION is 1', async () => {
         // Arrange
         const mockProdStream = new ReadableStream() as any; // 模拟的 prod 流
         const mockDebugStream = new ReadableStream({
@@ -228,10 +228,10 @@ describe('LobeGiteeAI', () => {
         });
 
         // 保存原始环境变量值
-        const originalDebugValue = process.env.DEBUG_GITEE_CHAT_COMPLETION;
+        const originalDebugValue = process.env.DEBUG_GITEE_AI_CHAT_COMPLETION;
 
         // 模拟环境变量
-        process.env.DEBUG_GITEE_CHAT_COMPLETION = '1';
+        process.env.DEBUG_GITEE_AI_CHAT_COMPLETION = '1';
         vi.spyOn(debugStreamModule, 'debugStream').mockImplementation(() => Promise.resolve());
 
         // 执行测试
@@ -248,7 +248,7 @@ describe('LobeGiteeAI', () => {
         expect(debugStreamModule.debugStream).toHaveBeenCalled();
 
         // 恢复原始环境变量值
-        process.env.DEBUG_GITEE_CHAT_COMPLETION = originalDebugValue;
+        process.env.DEBUG_GITEE_AI_CHAT_COMPLETION = originalDebugValue;
       });
     });
   });

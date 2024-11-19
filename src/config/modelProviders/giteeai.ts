@@ -1,7 +1,7 @@
 import { ModelProviderCard } from '@/types/llm';
 
 // ref: https://ai.gitee.com/serverless-api/packages/1493
-const Gitee: ModelProviderCard = {
+const GiteeAI: ModelProviderCard = {
   chatModels: [
     {
       description: 'Qwen2.5-72B-Instruct  支持 16k 上下文, 生成长文本超过 8K 。支持 function call 与外部系统无缝交互，极大提升了灵活性和扩展性。模型知识明显增加，并且大大提高了编码和数学能力, 多语言支持超过 29 种',
@@ -56,11 +56,11 @@ const Gitee: ModelProviderCard = {
   description:
     'Gitee AI 的 Serverless API 为 AI 开发者提供开箱即用的大模型推理 API 服务。',
   disableBrowserRequest: true,
-  id: 'gitee',
+  id: 'giteeai',
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://ai.gitee.com/docs/openapi/v1#tag/serverless/POST/chat/completions',
   name: 'Gitee AI',
   url: 'https://ai.gitee.com',
 };
 
-export default Gitee;
+export default GiteeAI;

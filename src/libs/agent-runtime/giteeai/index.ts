@@ -4,7 +4,7 @@ import { LobeOpenAICompatibleFactory } from '../utils/openaiCompatibleFactory';
 export const LobeGiteeAI = LobeOpenAICompatibleFactory({
   baseURL: 'https://ai.gitee.com/v1',
   debug: {
-    chatCompletion: () => process.env.DEBUG_GITEE_CHAT_COMPLETION === '1',
+    chatCompletion: () => process.env.DEBUG_GITEE_AI_CHAT_COMPLETION === '1',
   },
-  provider: ModelProvider.Gitee,
+  provider: ModelProvider.GiteeAI,
 });

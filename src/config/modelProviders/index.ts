@@ -9,7 +9,7 @@ import BedrockProvider from './bedrock';
 import CloudflareProvider from './cloudflare';
 import DeepSeekProvider from './deepseek';
 import FireworksAIProvider from './fireworksai';
-import GiteeProvider from './gitee';
+import GiteeAIProvider from './giteeai';
 import GithubProvider from './github';
 import GoogleProvider from './google';
 import GroqProvider from './groq';
@@ -65,7 +65,7 @@ export const LOBE_DEFAULT_MODEL_LIST: ChatModelCard[] = [
   CloudflareProvider.chatModels,
   Ai360Provider.chatModels,
   SiliconCloudProvider.chatModels,
-  GiteeProvider.chatModels,
+  GiteeAIProvider.chatModels,
   UpstageProvider.chatModels,
   SparkProvider.chatModels,
   Ai21Provider.chatModels,
@@ -111,7 +111,7 @@ export const DEFAULT_MODEL_PROVIDER_LIST = [
   TaichuProvider,
   InternLMProvider,
   SiliconCloudProvider,
-  GiteeProvider,
+  GiteeAIProvider,
 ];
 
 export const filterEnabledModels = (provider: ModelProviderCard) => {
@@ -132,7 +132,7 @@ export { default as BedrockProviderCard } from './bedrock';
 export { default as CloudflareProviderCard } from './cloudflare';
 export { default as DeepSeekProviderCard } from './deepseek';
 export { default as FireworksAIProviderCard } from './fireworksai';
-export { default as GiteeProviderCard } from './gitee';
+export { default as GiteeAIProviderCard } from './giteeai';
 export { default as GithubProviderCard } from './github';
 export { default as GoogleProviderCard } from './google';
 export { default as GroqProviderCard } from './groq';
