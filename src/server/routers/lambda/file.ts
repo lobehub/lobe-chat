@@ -154,8 +154,6 @@ export const fileRouter = router({
   removeFile: fileProcedure.input(z.object({ id: z.string() })).mutation(async ({ input, ctx }) => {
     const file = await ctx.fileModel.delete(input.id);
 
-    // delete the orphan chunks
-    await ctx.chunkModel.deleteOrphanChunks();
     if (!file) return;
 
     // delele the file from remove from S3 if it is not used by other files
@@ -186,9 +184,6 @@ export const fileRouter = router({
     .input(z.object({ ids: z.array(z.string()) }))
     .mutation(async ({ input, ctx }) => {
       const needToRemoveFileList = await ctx.fileModel.deleteMany(input.ids);
-
-      // delete the orphan chunks
-      await ctx.chunkModel.deleteOrphanChunks();
 
       if (!needToRemoveFileList || needToRemoveFileList.length === 0) return;
 
