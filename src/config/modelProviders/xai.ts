@@ -15,6 +15,19 @@ const XAI: ModelProviderCard = {
       },
       tokens: 131_072,
     },
+    {
+      description: '拥有与 Grok 2 相当的性能，但具有更高的效率、速度和功能。',
+      displayName: 'Grok Vision Beta',
+      enabled: true,
+      functionCall: true,
+      id: 'grok-vision-beta',
+      pricing: {
+        input: 5,
+        output: 15,
+      },
+      tokens: 8192,
+      vision: true,
+    },
   ],
   checkModel: 'grok-beta',
   description:
@@ -23,7 +36,7 @@ const XAI: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://docs.x.ai/docs#models',
   name: 'xAI',
-  url: 'https://console.x.ai',
+  url: 'https://x.ai/api',
 };
 
 export default XAI;
