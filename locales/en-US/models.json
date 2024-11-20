@@ -610,6 +610,9 @@
   "grok-beta": {
     "description": "Offers performance comparable to Grok 2 but with higher efficiency, speed, and functionality."
   },
+  "grok-vision-beta": {
+    "description": "The latest image understanding model that can handle a wide range of visual information, including documents, charts, screenshots, and photographs."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is a language model that combines creativity and intelligence by merging multiple top models."
   },
@@ -645,6 +648,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offers intelligent dialogue solutions across multiple scenarios."
+  },
+  "internlm2-pro-chat": {
+    "description": "An older version of the model that we still maintain, available in various parameter sizes of 7B and 20B."
+  },
+  "internlm2.5-latest": {
+    "description": "Our latest model series, featuring exceptional reasoning performance, supporting a context length of 1M, and enhanced instruction following and tool invocation capabilities."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -968,6 +977,9 @@
   },
   "pixtral-12b-2409": {
     "description": "The Pixtral model demonstrates strong capabilities in tasks such as chart and image understanding, document question answering, multimodal reasoning, and instruction following. It can ingest images at natural resolutions and aspect ratios and handle an arbitrary number of images within a long context window of up to 128K tokens."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large is an open-source multimodal model with 124 billion parameters, built on Mistral Large 2. This is the second model in our multimodal family, showcasing cutting-edge image understanding capabilities."
   },
   "pro-128k": {
     "description": "Spark Pro 128K is equipped with an extra-large context processing capability, able to handle up to 128K of contextual information, making it particularly suitable for long-form content that requires comprehensive analysis and long-term logical connections, providing smooth and consistent logic and diverse citation support in complex text communication."

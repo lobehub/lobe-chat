@@ -274,14 +274,14 @@ LobeChat 的插件生态系统是其核心功能的重要扩展，它极大地�
 
 <!-- AGENT LIST -->
 
-| 最近新增                                                                                                                                                                               | 助手说明                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [思考克劳德](https://chat-preview.lobehub.com/market?agent=thinking-claude)<br/><sup>By **[AnoyiX](https://github.com/AnoyiX)** on **2024-11-14**</sup>                                | 让克劳德在回应之前全面思考！<br/>`常见`                                                    |
-| [机器视觉 latex](https://chat-preview.lobehub.com/market?agent=cv-latex)<br/><sup>By **[5xiao0qing5](https://github.com/5xiao0qing5)** on **2024-10-29**</sup>                         | 擅长机器学习与深度学习概念解析<br/>`机器学习` `深度学习` `图像处理` `计算机视觉` `la-te-x` |
-| [域名分析大师](https://chat-preview.lobehub.com/market?agent=domain)<br/><sup>By **[ccbikai](https://github.com/ccbikai)** on **2024-10-29**</sup>                                     | 擅长域名分析与幽默建议<br/>`域名分析` `幽默` `文化` `建站建议` `购买建议`                  |
-| [英戈・豪斯曼](https://chat-preview.lobehub.com/market?agent=pc-beschaffung-ingo-hausmann)<br/><sup>By **[bionicprompter](https://github.com/bionicprompter)** on **2024-10-29**</sup> | 英戈・豪斯曼希望就新购置的电脑进行咨询<br/>`公司` `硬件` `需求分析` `it` `应用`            |
+| 最近新增                                                                                                                                                                                | 助手说明                                                                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| [Master E 的技术执行助理（EA）](https://chat-preview.lobehub.com/market?agent=alex)<br/><sup>By **[ApexAppdevelopment](https://github.com/ApexAppdevelopment)** on **2024-11-20**</sup> | 高度智能且忠诚的执行助理（EA），专注于为 Master E 提供软件工程支持和战略解决方案。<br/>`执行助理` `软件工程` `项目管理` `技术支持` `优化` |
+| [人类作者模拟器](https://chat-preview.lobehub.com/market?agent=human-writer-simulator)<br/><sup>By **[yufei96](https://github.com/yufei96)** on **2024-11-20**</sup>                    | 消除 AI 生成内容的特征<br/>`ai交互` `写作` `优化` `咨询`                                                                                  |
+| [智慧引导者](https://chat-preview.lobehub.com/market?agent=life-wisdom-guides)<br/><sup>By **[changjiong](https://github.com/changjiong)** on **2024-11-20**</sup>                      | 擅长引导<br/>`人生指导` `哲学思考` `咨询` `启发式对话`                                                                                    |
+| [Prompt 提示词](https://chat-preview.lobehub.com/market?agent=prompt-ts)<br/><sup>By **[qw1295353129](https://github.com/qw1295353129)** on **2024-11-20**</sup>                        | Prompt 提示词<br/>`prompt提示词`                                                                                                          |
 
-> 📊 Total agents: [<kbd>**431**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
+> 📊 Total agents: [<kbd>**439**</kbd> ](https://github.com/lobehub/lobe-chat-agents)
 
  <!-- AGENT LIST -->
 

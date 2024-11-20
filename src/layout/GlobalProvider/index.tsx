@@ -4,7 +4,7 @@ import { resolveAcceptLanguage } from 'resolve-accept-language';
 
 import { appEnv } from '@/config/app';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
-import { LOBE_LOCALE_COOKIE } from '@/const/locale';
+import { DEFAULT_LANG, LOBE_LOCALE_COOKIE } from '@/const/locale';
 import {
   LOBE_THEME_APPEARANCE,
   LOBE_THEME_NEUTRAL_COLOR,
@@ -36,7 +36,7 @@ const parserFallbackLang = async () => {
     header.get('accept-language') || '',
     //  Invalid locale identifier 'ar'. A valid locale should follow the BCP 47 'language-country' format.
     locales.map((locale) => (locale === 'ar' ? 'ar-EG' : locale)),
-    'en-US',
+    DEFAULT_LANG,
   );
   // if match the ar-EG then fallback to ar
   if (fallbackLang === 'ar-EG') fallbackLang = 'ar';
