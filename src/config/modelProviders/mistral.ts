@@ -58,6 +58,7 @@ const Mistral: ModelProviderCard = {
         'Pixtral Large 是一款拥有 1240 亿参数的开源多模态模型，基于 Mistral Large 2 构建。这是我们多模态家族中的第二款模型，展现了前沿水平的图像理解能力。',
       displayName: 'Pixtral Large',
       enabled: true,
+      functionCall: true,
       id: 'pixtral-large-latest',
       pricing: {
         input: 2,
