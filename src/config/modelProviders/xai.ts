@@ -36,6 +36,9 @@ const XAI: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://docs.x.ai/docs#models',
   name: 'xAI',
+  proxyUrl: {
+    placeholder: 'https://api.x.ai/v1',
+  },
   url: 'https://x.ai/api',
 };
 
