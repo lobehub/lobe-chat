@@ -610,6 +610,9 @@
   "grok-beta": {
     "description": "Grok 2 ile karşılaştırılabilir performansa sahip, ancak daha yüksek verimlilik, hız ve işlevsellik sunar."
   },
+  "grok-vision-beta": {
+    "description": "En son görüntü anlama modeli, belgeler, grafikler, ekran görüntüleri ve fotoğraflar gibi çeşitli görsel bilgileri işleyebilir."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B, birden fazla üst düzey modelin birleşimiyle yaratıcı ve zeka odaklı bir dil modelidir."
   },
@@ -645,6 +648,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5, çoklu senaryolarda akıllı diyalog çözümleri sunar."
+  },
+  "internlm2-pro-chat": {
+    "description": "Hala bakımını yaptığımız eski sürüm model, 7B ve 20B gibi çeşitli model parametreleri sunmaktadır."
+  },
+  "internlm2.5-latest": {
+    "description": "En son model serimiz, olağanüstü çıkarım performansına sahiptir, 1M bağlam uzunluğunu destekler ve daha güçlü talimat takibi ve araç çağırma yetenekleri sunar."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -968,6 +977,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Pixtral modeli, grafik ve görüntü anlama, belge yanıtı, çok modlu akıl yürütme ve talimat takibi gibi görevlerde güçlü yetenekler sergiler, doğal çözünürlük ve en boy oranında görüntüleri alabilir ve 128K token uzunluğunda bir bağlam penceresinde herhangi bir sayıda görüntüyü işleyebilir."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large, 1240 milyar parametreye sahip açık kaynaklı çok modlu bir modeldir ve Mistral Large 2 üzerine inşa edilmiştir. Bu, çok modlu ailemizdeki ikinci modeldir ve öncü düzeyde görüntü anlama yetenekleri sergilemektedir."
   },
   "pro-128k": {
     "description": "Spark Pro 128K, olağanüstü bağlam işleme yeteneği ile donatılmıştır ve 128K'ya kadar bağlam bilgilerini işleyebilir. Özellikle uzun metinlerin bütünsel analizi ve uzun vadeli mantıksal ilişkilerin işlenmesi gereken durumlar için uygundur ve karmaşık metin iletişiminde akıcı ve tutarlı bir mantık ile çeşitli alıntı desteği sunmaktadır."
