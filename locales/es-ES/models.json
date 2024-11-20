@@ -610,6 +610,9 @@
   "grok-beta": {
     "description": "Ofrece un rendimiento comparable al de Grok 2, pero con mayor eficiencia, velocidad y funcionalidad."
   },
+  "grok-vision-beta": {
+    "description": "El último modelo de comprensión de imágenes, capaz de manejar una amplia variedad de información visual, incluyendo documentos, gráficos, capturas de pantalla y fotos."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B es un modelo de lenguaje que combina creatividad e inteligencia, fusionando múltiples modelos de vanguardia."
   },
@@ -645,6 +648,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 ofrece soluciones de diálogo inteligente en múltiples escenarios."
+  },
+  "internlm2-pro-chat": {
+    "description": "Modelo de versión anterior que seguimos manteniendo, disponible en opciones de 7B y 20B parámetros."
+  },
+  "internlm2.5-latest": {
+    "description": "Nuestra última serie de modelos, con un rendimiento de inferencia excepcional, que admite una longitud de contexto de 1M y una mayor capacidad de seguimiento de instrucciones y llamadas a herramientas."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -968,6 +977,9 @@
   },
   "pixtral-12b-2409": {
     "description": "El modelo Pixtral muestra una fuerte capacidad en tareas como comprensión de gráficos e imágenes, preguntas y respuestas de documentos, razonamiento multimodal y seguimiento de instrucciones, capaz de ingerir imágenes en resolución y proporción natural, y manejar una cantidad arbitraria de imágenes en una ventana de contexto larga de hasta 128K tokens."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large es un modelo multimodal de código abierto con 124 mil millones de parámetros, construido sobre Mistral Large 2. Este es nuestro segundo modelo en la familia multimodal, que muestra un nivel de comprensión de imágenes de vanguardia."
   },
   "pro-128k": {
     "description": "Spark Pro 128K está equipado con una capacidad de procesamiento de contexto extragrande, capaz de manejar hasta 128K de información contextual, especialmente adecuado para el análisis completo y el manejo de relaciones lógicas a largo plazo en contenido extenso, proporcionando una lógica fluida y coherente y un soporte diverso de citas en comunicaciones de texto complejas."
