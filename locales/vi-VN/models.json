@@ -610,6 +610,9 @@
   "grok-beta": {
     "description": "Có hiệu suất tương đương với Grok 2, nhưng hiệu quả, tốc độ và tính năng cao hơn."
   },
+  "grok-vision-beta": {
+    "description": "Mô hình hiểu hình ảnh mới nhất, có khả năng xử lý nhiều loại thông tin hình ảnh khác nhau, bao gồm tài liệu, biểu đồ, ảnh chụp màn hình và ảnh."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B là mô hình ngôn ngữ kết hợp giữa sáng tạo và trí thông minh, kết hợp nhiều mô hình hàng đầu."
   },
@@ -645,6 +648,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 cung cấp giải pháp đối thoại thông minh cho nhiều tình huống."
+  },
+  "internlm2-pro-chat": {
+    "description": "Mô hình phiên bản cũ mà chúng tôi vẫn đang duy trì, có sẵn với nhiều tùy chọn tham số 7B và 20B."
+  },
+  "internlm2.5-latest": {
+    "description": "Dòng mô hình mới nhất của chúng tôi, có hiệu suất suy luận xuất sắc, hỗ trợ độ dài ngữ cảnh 1M và khả năng theo dõi chỉ dẫn và gọi công cụ mạnh mẽ hơn."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -968,6 +977,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Mô hình Pixtral thể hiện khả năng mạnh mẽ trong các nhiệm vụ như hiểu biểu đồ và hình ảnh, hỏi đáp tài liệu, suy luận đa phương tiện và tuân thủ hướng dẫn, có khả năng tiếp nhận hình ảnh với độ phân giải và tỷ lệ khung hình tự nhiên, cũng như xử lý bất kỳ số lượng hình ảnh nào trong cửa sổ ngữ cảnh dài lên đến 128K token."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large là một mô hình đa phương thức mã nguồn mở với 1240 tỷ tham số, được xây dựng dựa trên Mistral Large 2. Đây là mô hình thứ hai trong gia đình đa phương thức của chúng tôi, thể hiện khả năng hiểu hình ảnh ở mức tiên tiến."
   },
   "pro-128k": {
     "description": "Spark Pro 128K được cấu hình với khả năng xử lý ngữ cảnh cực lớn, có thể xử lý tới 128K thông tin ngữ cảnh, đặc biệt phù hợp cho việc phân tích toàn bộ và xử lý mối liên hệ logic lâu dài trong nội dung văn bản dài, có thể cung cấp logic mạch lạc và hỗ trợ trích dẫn đa dạng trong giao tiếp văn bản phức tạp."

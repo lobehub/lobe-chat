@@ -610,6 +610,9 @@
   "grok-beta": {
     "description": "Oferuje wydajność porównywalną z Grok 2, ale z wyższą efektywnością, prędkością i funkcjonalnością."
   },
+  "grok-vision-beta": {
+    "description": "Najnowszy model rozumienia obrazów, który potrafi przetwarzać różnorodne informacje wizualne, w tym dokumenty, wykresy, zrzuty ekranu i zdjęcia."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B to model językowy łączący kreatywność i inteligencję, zintegrowany z wieloma wiodącymi modelami."
   },
@@ -645,6 +648,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 oferuje inteligentne rozwiązania dialogowe w różnych scenariuszach."
+  },
+  "internlm2-pro-chat": {
+    "description": "Starsza wersja modelu, którą nadal utrzymujemy, dostępna w różnych wariantach parametrów: 7B i 20B."
+  },
+  "internlm2.5-latest": {
+    "description": "Nasza najnowsza seria modeli, charakteryzująca się doskonałymi osiągami wnioskowania, obsługująca długość kontekstu do 1M oraz lepsze możliwości śledzenia instrukcji i wywoływania narzędzi."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -968,6 +977,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Model Pixtral wykazuje silne zdolności w zadaniach związanych z analizą wykresów i zrozumieniem obrazów, pytaniami dokumentowymi, wielomodalnym rozumowaniem i przestrzeganiem instrukcji, zdolny do przyjmowania obrazów w naturalnej rozdzielczości i proporcjach, a także do przetwarzania dowolnej liczby obrazów w długim oknie kontekstowym o długości do 128K tokenów."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large to otwarty model wielomodalny z 124 miliardami parametrów, zbudowany na bazie Mistral Large 2. To nasz drugi model w rodzinie wielomodalnej, który wykazuje zaawansowane zdolności rozumienia obrazów."
   },
   "pro-128k": {
     "description": "Spark Pro 128K jest wyposażony w wyjątkową zdolność przetwarzania kontekstu, mogąc obsługiwać do 128K informacji kontekstowych, co czyni go idealnym do analizy całościowej i długoterminowego przetwarzania logicznych powiązań w długich treściach, zapewniając płynność i spójność logiczną oraz różnorodne wsparcie cytatów w złożonej komunikacji tekstowej."

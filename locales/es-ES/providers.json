@@ -37,6 +37,9 @@
   "hunyuan": {
     "description": "Un modelo de lenguaje desarrollado por Tencent, que posee una poderosa capacidad de creación en chino, habilidades de razonamiento lógico en contextos complejos y una capacidad confiable para ejecutar tareas."
   },
+  "internlm": {
+    "description": "Organización de código abierto dedicada a la investigación y desarrollo de herramientas para modelos grandes. Proporciona a todos los desarrolladores de IA una plataforma de código abierto eficiente y fácil de usar, permitiendo el acceso a las tecnologías y algoritmos más avanzados."
+  },
   "minimax": {
     "description": "MiniMax es una empresa de tecnología de inteligencia artificial general fundada en 2021, dedicada a co-crear inteligencia con los usuarios. MiniMax ha desarrollado de forma independiente modelos de gran tamaño de diferentes modalidades, que incluyen un modelo de texto MoE de un billón de parámetros, un modelo de voz y un modelo de imagen. También ha lanzado aplicaciones como Conch AI."
   },

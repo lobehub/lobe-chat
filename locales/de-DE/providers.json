@@ -37,6 +37,9 @@
   "hunyuan": {
     "description": "Ein von Tencent entwickeltes großes Sprachmodell, das über starke Fähigkeiten zur Erstellung von Inhalten in chinesischer Sprache, logisches Denkvermögen in komplexen Kontexten und zuverlässige Fähigkeiten zur Aufgabenerfüllung verfügt."
   },
+  "internlm": {
+    "description": "Eine Open-Source-Organisation, die sich der Forschung und Entwicklung von großen Modellen und Werkzeugketten widmet. Sie bietet allen KI-Entwicklern eine effiziente und benutzerfreundliche Open-Source-Plattform, die den Zugang zu den neuesten Technologien und Algorithmen für große Modelle ermöglicht."
+  },
   "minimax": {
     "description": "MiniMax ist ein im Jahr 2021 gegründetes Unternehmen für allgemeine künstliche Intelligenz, das sich der gemeinsamen Schaffung von Intelligenz mit den Nutzern widmet. MiniMax hat verschiedene multimodale allgemeine große Modelle entwickelt, darunter ein Textmodell mit Billionen von Parametern, ein Sprachmodell und ein Bildmodell. Außerdem wurden Anwendungen wie Conch AI eingeführt."
   },
