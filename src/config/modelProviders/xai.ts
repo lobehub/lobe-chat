@@ -16,7 +16,7 @@ const XAI: ModelProviderCard = {
       tokens: 131_072,
     },
     {
-      description: '拥有与 Grok 2 相当的性能，但具有更高的效率、速度和功能。',
+      description: '最新的图像理解模型，可以处理各种各样的视觉信息，包括文档、图表、截图和照片等。',
       displayName: 'Grok Vision Beta',
       enabled: true,
       functionCall: true,
