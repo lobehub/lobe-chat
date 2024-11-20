@@ -15,6 +15,19 @@ const XAI: ModelProviderCard = {
       },
       tokens: 131_072,
     },
+    {
+      description: '最新的图像理解模型，可以处理各种各样的视觉信息，包括文档、图表、截图和照片等。',
+      displayName: 'Grok Vision Beta',
+      enabled: true,
+      functionCall: true,
+      id: 'grok-vision-beta',
+      pricing: {
+        input: 5,
+        output: 15,
+      },
+      tokens: 8192,
+      vision: true,
+    },
   ],
   checkModel: 'grok-beta',
   description:
@@ -23,7 +36,10 @@ const XAI: ModelProviderCard = {
   modelList: { showModelFetcher: true },
   modelsUrl: 'https://docs.x.ai/docs#models',
   name: 'xAI',
-  url: 'https://console.x.ai',
+  proxyUrl: {
+    placeholder: 'https://api.x.ai/v1',
+  },
+  url: 'https://x.ai/api',
 };
 
 export default XAI;
