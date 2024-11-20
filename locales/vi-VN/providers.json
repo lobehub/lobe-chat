@@ -37,6 +37,9 @@
   "hunyuan": {
     "description": "Mô hình ngôn ngữ lớn được phát triển bởi Tencent, có khả năng sáng tạo tiếng Trung mạnh mẽ, khả năng suy luận logic trong các ngữ cảnh phức tạp, và khả năng thực hiện nhiệm vụ đáng tin cậy."
   },
+  "internlm": {
+    "description": "Tổ chức mã nguồn mở chuyên nghiên cứu và phát triển công cụ cho mô hình lớn. Cung cấp nền tảng mã nguồn mở hiệu quả, dễ sử dụng cho tất cả các nhà phát triển AI, giúp tiếp cận công nghệ mô hình lớn và thuật toán tiên tiến nhất."
+  },
   "minimax": {
     "description": "MiniMax là công ty công nghệ trí tuệ nhân tạo tổng quát được thành lập vào năm 2021, cam kết cùng người dùng sáng tạo trí thông minh. MiniMax đã tự phát triển nhiều mô hình lớn đa phương thức, bao gồm mô hình văn bản MoE với một triệu tham số, mô hình giọng nói và mô hình hình ảnh. Họ cũng đã phát hành các ứng dụng như AI Hải Lý."
   },

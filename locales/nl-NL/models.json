@@ -610,6 +610,9 @@
   "grok-beta": {
     "description": "Biedt prestaties vergelijkbaar met Grok 2, maar met hogere efficiëntie, snelheid en functionaliteit."
   },
+  "grok-vision-beta": {
+    "description": "Het nieuwste model voor beeldbegrip, dat een breed scala aan visuele informatie kan verwerken, waaronder documenten, grafieken, screenshots en foto's."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B is een taalmodel dat creativiteit en intelligentie combineert door meerdere topmodellen te integreren."
   },
@@ -645,6 +648,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 biedt intelligente gespreksoplossingen voor meerdere scenario's."
+  },
+  "internlm2-pro-chat": {
+    "description": "Onze oudere modelversie die we nog steeds onderhouden, met opties voor 7B en 20B parameters."
+  },
+  "internlm2.5-latest": {
+    "description": "Onze nieuwste modelreeks met uitstekende redeneervaardigheden, ondersteunt een contextlengte van 1M en heeft verbeterde instructievolging en toolaanroepmogelijkheden."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -968,6 +977,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Het Pixtral model toont sterke capaciteiten in taken zoals grafiek- en beeldbegrip, documentvraag-en-antwoord, multimodale redenering en instructievolging, en kan afbeeldingen met natuurlijke resolutie en beeldverhouding verwerken, evenals een onbeperkt aantal afbeeldingen in een lange contextvenster van maximaal 128K tokens."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large is een open-source multimodaal model met 124 miljard parameters, gebaseerd op Mistral Large 2. Dit is ons tweede model in de multimodale familie en toont geavanceerde beeldbegripcapaciteiten."
   },
   "pro-128k": {
     "description": "Spark Pro 128K is uitgerust met een zeer grote contextverwerkingscapaciteit, in staat om tot 128K contextinformatie te verwerken. Het is bijzonder geschikt voor lange teksten die een volledige analyse en langdurige logische verbanden vereisen, en biedt een vloeiende en consistente logica met diverse ondersteuningen voor citaten in complexe tekstcommunicatie."

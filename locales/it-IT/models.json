@@ -610,6 +610,9 @@
   "grok-beta": {
     "description": "Offre prestazioni comparabili a Grok 2, ma con maggiore efficienza, velocità e funzionalità."
   },
+  "grok-vision-beta": {
+    "description": "L'ultimo modello di comprensione delle immagini, in grado di gestire una vasta gamma di informazioni visive, tra cui documenti, grafici, screenshot e fotografie."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B è un modello linguistico che combina creatività e intelligenza, unendo diversi modelli di punta."
   },
@@ -645,6 +648,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 offre soluzioni di dialogo intelligente in vari scenari."
+  },
+  "internlm2-pro-chat": {
+    "description": "Un modello della vecchia versione che stiamo ancora mantenendo, disponibile in diverse dimensioni di parametri: 7B e 20B."
+  },
+  "internlm2.5-latest": {
+    "description": "La nostra ultima serie di modelli, con prestazioni di ragionamento eccezionali, supporta una lunghezza di contesto di 1M e offre una migliore capacità di seguire istruzioni e chiamare strumenti."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -968,6 +977,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Il modello Pixtral dimostra potenti capacità in compiti di comprensione di grafici e immagini, domande e risposte su documenti, ragionamento multimodale e rispetto delle istruzioni, in grado di elaborare immagini a risoluzione naturale e proporzioni, e di gestire un numero arbitrario di immagini in una finestra di contesto lunga fino a 128K token."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large è un modello multimodale open source con 124 miliardi di parametri, costruito su Mistral Large 2. Questo è il nostro secondo modello nella famiglia multimodale, che mostra capacità di comprensione delle immagini a livello all'avanguardia."
   },
   "pro-128k": {
     "description": "Spark Pro 128K è dotato di una capacità di elaborazione del contesto eccezionale, in grado di gestire fino a 128K di informazioni contestuali, particolarmente adatto per l'analisi completa e la gestione di associazioni logiche a lungo termine in contenuti lunghi, fornendo una logica fluida e coerente e un supporto variegato per le citazioni in comunicazioni testuali complesse."
