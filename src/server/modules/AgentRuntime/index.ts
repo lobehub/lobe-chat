@@ -31,13 +31,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
     default: // Use Openai options as default
     case ModelProvider.OpenAI: {
       const { OPENAI_API_KEY } = getLLMConfig();
+
       const openaiApiKey = payload?.apiKey || OPENAI_API_KEY;
       const baseURL = payload?.endpoint || process.env.OPENAI_PROXY_URL;
       const apiKey = apiKeyManager.pick(openaiApiKey);
-      return {
-        apiKey,
-        baseURL,
-      };
+
+      return { apiKey, baseURL };
     }
     case ModelProvider.Azure: {
       const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT } = getLLMConfig();
@@ -52,27 +51,26 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
     }
     case ModelProvider.ZhiPu: {
       const { ZHIPU_API_KEY } = getLLMConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || ZHIPU_API_KEY);
-      return {
-        apiKey,
-      };
+
+      return { apiKey };
     }
     case ModelProvider.Google: {
       const { GOOGLE_API_KEY } = getLLMConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
       const baseURL = payload?.endpoint || process.env.GOOGLE_PROXY_URL;
-      return {
-        apiKey,
-        baseURL,
-      };
+
+      return { apiKey, baseURL };
     }
     case ModelProvider.Moonshot: {
       const { MOONSHOT_API_KEY } = getLLMConfig();
+
       const apiKey = apiKeyManager.pick(payload?.apiKey || MOONSHOT_API_KEY);
-      return {
-        apiKey,
-        baseURL: process.env.MOONSHOT_PROXY_URL,
-      };
+      const baseURL = payload?.endpoint || process.env.MOONSHOT_PROXY_URL;
+
+      return { apiKey, baseURL };
     }
     case ModelProvider.Bedrock: {
       const { AWS_SECRET_ACCESS_KEY, AWS_ACCESS_KEY_ID, AWS_REGION, AWS_SESSION_TOKEN } =
