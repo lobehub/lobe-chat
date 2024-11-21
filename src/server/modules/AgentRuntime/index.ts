@@ -30,9 +30,9 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
   switch (provider) {
     default: // Use Openai options as default
     case ModelProvider.OpenAI: {
-      const { OPENAI_API_KEY, OPENAI_PROXY_URL } = getLLMConfig();
+      const { OPENAI_API_KEY } = getLLMConfig();
       const openaiApiKey = payload?.apiKey || OPENAI_API_KEY;
-      const baseURL = payload?.endpoint || OPENAI_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.OPENAI_PROXY_URL;
       const apiKey = apiKeyManager.pick(openaiApiKey);
       return {
         apiKey,
@@ -58,20 +58,20 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       };
     }
     case ModelProvider.Google: {
-      const { GOOGLE_API_KEY, GOOGLE_PROXY_URL } = getLLMConfig();
+      const { GOOGLE_API_KEY } = getLLMConfig();
       const apiKey = apiKeyManager.pick(payload?.apiKey || GOOGLE_API_KEY);
-      const baseURL = payload?.endpoint || GOOGLE_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.GOOGLE_PROXY_URL;
       return {
         apiKey,
         baseURL,
       };
     }
     case ModelProvider.Moonshot: {
-      const { MOONSHOT_API_KEY, MOONSHOT_PROXY_URL } = getLLMConfig();
+      const { MOONSHOT_API_KEY } = getLLMConfig();
       const apiKey = apiKeyManager.pick(payload?.apiKey || MOONSHOT_API_KEY);
       return {
         apiKey,
-        baseURL: MOONSHOT_PROXY_URL,
+        baseURL: process.env.MOONSHOT_PROXY_URL,
       };
     }
     case ModelProvider.Bedrock: {
@@ -91,23 +91,22 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { accessKeyId, accessKeySecret, region, sessionToken };
     }
     case ModelProvider.Ollama: {
-      const { OLLAMA_PROXY_URL } = getLLMConfig();
-      const baseURL = payload?.endpoint || OLLAMA_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.OLLAMA_PROXY_URL;
       return { baseURL };
     }
     case ModelProvider.Perplexity: {
-      const { PERPLEXITY_API_KEY, PERPLEXITY_PROXY_URL } = getLLMConfig();
+      const { PERPLEXITY_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || PERPLEXITY_API_KEY);
-      const baseURL = payload?.endpoint || PERPLEXITY_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.PERPLEXITY_PROXY_URL;
 
       return { apiKey, baseURL };
     }
     case ModelProvider.Anthropic: {
-      const { ANTHROPIC_API_KEY, ANTHROPIC_PROXY_URL } = getLLMConfig();
+      const { ANTHROPIC_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || ANTHROPIC_API_KEY);
-      const baseURL = payload?.endpoint || ANTHROPIC_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.ANTHROPIC_PROXY_URL;
 
       return { apiKey, baseURL };
     }
@@ -126,10 +125,10 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { apiKey };
     }
     case ModelProvider.Groq: {
-      const { GROQ_API_KEY, GROQ_PROXY_URL } = getLLMConfig();
+      const { GROQ_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || GROQ_API_KEY);
-      const baseURL = payload?.endpoint || GROQ_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.GROQ_PROXY_URL;
 
       return { apiKey, baseURL };
     }
@@ -229,19 +228,19 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { apiKey };
     }
     case ModelProvider.SiliconCloud: {
-      const { SILICONCLOUD_API_KEY, SILICONCLOUD_PROXY_URL } = getLLMConfig();
+      const { SILICONCLOUD_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || SILICONCLOUD_API_KEY);
-      const baseURL = payload?.endpoint || SILICONCLOUD_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.SILICONCLOUD_PROXY_URL;
 
       return { apiKey, baseURL };
     }
 
     case ModelProvider.HuggingFace: {
-      const { HUGGINGFACE_PROXY_URL, HUGGINGFACE_API_KEY } = getLLMConfig();
+      const { HUGGINGFACE_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || HUGGINGFACE_API_KEY);
-      const baseURL = payload?.endpoint || HUGGINGFACE_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.HUGGINGFACE_PROXY_URL;
 
       return { apiKey, baseURL };
     }
@@ -289,10 +288,10 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { apiKey };
     }
     case ModelProvider.XAI: {
-      const { XAI_API_KEY, XAI_PROXY_URL } = getLLMConfig();
+      const { XAI_API_KEY } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || XAI_API_KEY);
-      const baseURL = payload?.endpoint || XAI_PROXY_URL;
+      const baseURL = payload?.endpoint || process.env.XAI_PROXY_URL;
 
       return { apiKey, baseURL };
     }
