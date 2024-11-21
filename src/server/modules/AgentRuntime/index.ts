@@ -289,11 +289,12 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       return { apiKey };
     }
     case ModelProvider.XAI: {
-      const { XAI_API_KEY } = getLLMConfig();
+      const { XAI_API_KEY, XAI_PROXY_URL } = getLLMConfig();
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || XAI_API_KEY);
+      const baseURL = payload?.endpoint || XAI_PROXY_URL;
 
-      return { apiKey };
+      return { apiKey, baseURL };
     }
     case ModelProvider.InternLM: {
       const { INTERNLM_API_KEY } = getLLMConfig();

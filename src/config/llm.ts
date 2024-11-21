@@ -124,6 +124,7 @@ export const getLLMConfig = () => {
 
       ENABLED_XAI: z.boolean(),
       XAI_API_KEY: z.string().optional(),
+      XAI_PROXY_URL: z.string().optional(),
 
       ENABLED_INTERNLM: z.boolean(),
       INTERNLM_API_KEY: z.string().optional(),
@@ -249,6 +250,7 @@ export const getLLMConfig = () => {
 
       ENABLED_XAI: !!process.env.XAI_API_KEY,
       XAI_API_KEY: process.env.XAI_API_KEY,
+      XAI_PROXY_URL: process.env.XAI_PROXY_URL,
 
       ENABLED_INTERNLM: !!process.env.INTERNLM_API_KEY,
       INTERNLM_API_KEY: process.env.INTERNLM_API_KEY,
