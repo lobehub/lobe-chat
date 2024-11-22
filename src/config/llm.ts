@@ -127,6 +127,11 @@ export const getLLMConfig = () => {
 
       ENABLED_INTERNLM: z.boolean(),
       INTERNLM_API_KEY: z.string().optional(),
+
+      ENABLED_HIGRESS: z.boolean(),
+      HIGRESS_API_KEY: z.string().optional(),
+      HIGRESS_MODEL_LIST: z.string().optional(),
+      HIGRESS_PROXY_URL: z.string().optional(),
     },
     runtimeEnv: {
       API_KEY_SELECT_MODE: process.env.API_KEY_SELECT_MODE,
@@ -243,7 +248,8 @@ export const getLLMConfig = () => {
       HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
       HUGGINGFACE_PROXY_URL: process.env.HUGGINGFACE_PROXY_URL,
 
-      ENABLED_SENSENOVA: !!process.env.SENSENOVA_ACCESS_KEY_ID && !!process.env.SENSENOVA_ACCESS_KEY_SECRET,
+      ENABLED_SENSENOVA:
+        !!process.env.SENSENOVA_ACCESS_KEY_ID && !!process.env.SENSENOVA_ACCESS_KEY_SECRET,
       SENSENOVA_ACCESS_KEY_ID: process.env.SENSENOVA_ACCESS_KEY_ID,
       SENSENOVA_ACCESS_KEY_SECRET: process.env.SENSENOVA_ACCESS_KEY_SECRET,
 
@@ -252,6 +258,11 @@ export const getLLMConfig = () => {
 
       ENABLED_INTERNLM: !!process.env.INTERNLM_API_KEY,
       INTERNLM_API_KEY: process.env.INTERNLM_API_KEY,
+
+      ENABLED_HIGRESS: !!process.env.HIGRESS_API_KEY,
+      HIGRESS_API_KEY: process.env.HIGRESS_API_KEY,
+      HIGRESS_MODEL_LIST: process.env.HIGRESS_MODEL_LIST,
+      HIGRESS_PROXY_URL: process.env.HIGRESS_PROXY_URL,
     },
   });
 };
