@@ -9,6 +9,7 @@ import {
   GithubProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
+  HigressProviderCard,
   HuggingFaceProviderCard,
   HunyuanProviderCard,
   MinimaxProviderCard,
@@ -78,6 +79,10 @@ export const DEFAULT_LLM_CONFIG: UserModelProviderConfig = {
   groq: {
     enabled: false,
     enabledModels: filterEnabledModels(GroqProviderCard),
+  },
+  higress: {
+    enabled: false,
+    enabledModels: filterEnabledModels(HigressProviderCard),
   },
   huggingface: {
     enabled: false,

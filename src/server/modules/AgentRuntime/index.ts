@@ -277,6 +277,14 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey };
     }
+    case ModelProvider.Higress: {
+      const { HIGRESS_API_KEY, HIGRESS_PROXY_URL } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || HIGRESS_API_KEY);
+      const baseURL = payload?.endpoint || HIGRESS_PROXY_URL;
+
+      return { apiKey, baseURL };
+    }
   }
 };
 
