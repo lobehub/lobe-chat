@@ -202,7 +202,7 @@ export const chatPlugin: StateCreator<
 
   triggerAIMessage: async ({ parentId, traceId }) => {
     const { internal_coreProcessMessage } = get();
-    const chats = chatSelectors.currentChats(get());
+    const chats = chatSelectors.activeBaseChats(get());
     await internal_coreProcessMessage(chats, parentId ?? chats.at(-1)!.id, { traceId });
   },
 
