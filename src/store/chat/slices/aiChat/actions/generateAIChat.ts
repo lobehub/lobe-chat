@@ -148,7 +148,7 @@ export const generateAIChat: StateCreator<
     // if autoCreateTopic is enabled, check to whether we need to create a topic
     if (!onlyAddUserMessage && !activeTopicId && agentConfig.enableAutoCreateTopic) {
       // check activeTopic and then auto create topic
-      const chats = chatSelectors.currentChats(get());
+      const chats = chatSelectors.activeBaseChats(get());
 
       // we will add two messages (user and assistant), so the finial length should +2
       const featureLength = chats.length + 2;
@@ -207,7 +207,7 @@ export const generateAIChat: StateCreator<
     }
 
     // Get the current messages to generate AI response
-    const messages = chatSelectors.currentChats(get());
+    const messages = chatSelectors.mainDisplayChats(get());
     const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
 
     await internal_coreProcessMessage(messages, id, {
@@ -223,7 +223,7 @@ export const generateAIChat: StateCreator<
 
       // check activeTopic and then auto update topic title
       if (newTopicId) {
-        const chats = chatSelectors.currentChats(get());
+        const chats = chatSelectors.activeBaseChats(get());
         await get().summaryTopicTitle(newTopicId, chats);
         return;
       }
@@ -231,7 +231,7 @@ export const generateAIChat: StateCreator<
       const topic = topicSelectors.currentActiveTopic(get());
 
       if (topic && !topic.title) {
-        const chats = chatSelectors.currentChats(get());
+        const chats = chatSelectors.activeBaseChats(get());
         await get().summaryTopicTitle(topic.id, chats);
       }
     };
@@ -484,7 +484,7 @@ export const generateAIChat: StateCreator<
 
   internal_resendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
-    const chats = chatSelectors.currentChats(get());
+    const chats = chatSelectors.mainDisplayChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
     if (currentIndex < 0) return;
