@@ -98,7 +98,6 @@
       "title": "Gebruik de ophaalmodus aan de clientzijde"
     },
     "fetcher": {
-      "clear": "Verwijder opgehaalde model",
       "fetch": "Haal model lijst op",
       "fetching": "Model lijst wordt opgehaald...",
       "latestTime": "Laatst bijgewerkt: {{time}}",
