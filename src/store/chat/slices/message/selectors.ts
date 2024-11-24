@@ -57,8 +57,8 @@ const activeBaseChatsWithoutTool = (s: ChatStoreState) => {
  * 根据当前不同的状态，返回不同的消息列表
  */
 const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
+  return activeBaseChatsWithoutTool(s);
   // 如果没有 activeThreadId，则返回所有的主消息
-  return activeBaseChats(s);
   // const mains = activeBaseChats(s).filter((m) => !m.threadId);
   // if (!s.activeThreadId) return mains;
   //
@@ -72,9 +72,7 @@ const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
   // return [...sliced, ...activeBaseChats(s).filter((m) => m.threadId === s.activeThreadId)];
 };
 
-const mainDisplayChatIDs = (s: ChatStoreState) => {
-  return mainDisplayChats(s).map((s) => s.id);
-};
+const mainDisplayChatIDs = (s: ChatStoreState) => mainDisplayChats(s).map((s) => s.id);
 
 const currentChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
   const chats = activeBaseChats(s);
