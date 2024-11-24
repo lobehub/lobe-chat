@@ -205,7 +205,7 @@ ENV \
     # Wenxin
     WENXIN_ACCESS_KEY="" WENXIN_SECRET_KEY="" WENXIN_MODEL_LIST="" \
     # xAI
-    XAI_API_KEY="" XAI_MODEL_LIST="" \
+    XAI_API_KEY="" XAI_MODEL_LIST="" XAI_PROXY_URL="" \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu
