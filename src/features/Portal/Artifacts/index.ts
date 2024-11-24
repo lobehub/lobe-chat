@@ -5,6 +5,6 @@ import { useEnable } from './useEnable';
 
 export const Artifacts: PortalImpl = {
   Body,
-  Header,
+  Title: Header,
   useEnable,
 };

@@ -94,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO 是一款高度靈活的多模型合併，旨在提供卓越的創造性體驗。"
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) 是高精度的指令模型，適用於複雜計算。"
   },
@@ -610,6 +611,9 @@
   "grok-beta": {
     "description": "擁有與 Grok 2 相當的性能，但具備更高的效率、速度和功能。"
   },
+  "grok-vision-beta": {
+    "description": "最新的圖像理解模型，可以處理各種各樣的視覺信息，包括文檔、圖表、截圖和照片等。"
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B 是一款合併了多個頂尖模型的創意與智能相結合的語言模型。"
   },
@@ -645,6 +649,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 提供多場景下的智能對話解決方案。"
+  },
+  "internlm2-pro-chat": {
+    "description": "我們仍在維護的舊版本模型，有 7B、20B 多種模型參數量可選。"
+  },
+  "internlm2.5-latest": {
+    "description": "我們最新的模型系列，有著卓越的推理性能，支持 1M 的上下文長度以及更強的指令跟隨和工具調用能力。"
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -837,6 +847,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 是一款面向開發者、研究人員和企業的開放大型語言模型 (LLM)，旨在幫助他們構建、實驗並負責任地擴展他們的生成 AI 想法。作為全球社區創新的基礎系統的一部分，它非常適合計算能力和資源有限、邊緣設備和更快的訓練時間。"
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B 是微軟AI最新的快速輕量化模型，性能接近於現有開源領導模型的10倍。"
   },
@@ -968,6 +979,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Pixtral模型在圖表和圖理解、文檔問答、多模態推理和指令遵循等任務上表現出強大的能力，能夠以自然分辨率和寬高比攝入圖像，還能夠在長達128K令牌的長上下文窗口中處理任意數量的圖像。"
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large 是一款擁有 1240 億參數的開源多模態模型，基於 Mistral Large 2 構建。這是我們多模態家族中的第二款模型，展現了前沿水平的圖像理解能力。"
   },
   "pro-128k": {
     "description": "Spark Pro 128K 配置了特大上下文處理能力，能夠處理多達128K的上下文信息，特別適合需通篇分析和長期邏輯關聯處理的長文內容，可在複雜文本溝通中提供流暢一致的邏輯與多樣的引用支持。"

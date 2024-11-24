@@ -94,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPOは非常に柔軟なマルチモデル統合で、卓越した創造的体験を提供することを目的としています。"
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)は、高精度の指示モデルであり、複雑な計算に適しています。"
   },
@@ -610,6 +611,9 @@
   "grok-beta": {
     "description": "Grok 2と同等の性能を持ちながら、より高い効率、速度、機能を備えています。"
   },
+  "grok-vision-beta": {
+    "description": "最新の画像理解モデルで、文書、グラフ、スクリーンショット、写真など、さまざまな視覚情報を処理できます。"
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13Bは複数のトップモデルを統合した創造性と知性を兼ね備えた言語モデルです。"
   },
@@ -645,6 +649,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5は多様なシーンでのインテリジェントな対話ソリューションを提供します。"
+  },
+  "internlm2-pro-chat": {
+    "description": "私たちがまだ維持している旧バージョンのモデルで、7B、20Bのさまざまなモデルパラメータ量が選択可能です。"
+  },
+  "internlm2.5-latest": {
+    "description": "私たちの最新のモデルシリーズで、卓越した推論性能を持ち、1Mのコンテキスト長をサポートし、より強力な指示追従とツール呼び出し能力を備えています。"
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -837,6 +847,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3は、開発者、研究者、企業向けのオープンな大規模言語モデル（LLM）であり、生成AIのアイデアを構築、実験、責任を持って拡張するのを支援することを目的としています。世界的なコミュニティの革新の基盤システムの一部として、計算能力とリソースが限られたエッジデバイスや、より迅速なトレーニング時間に非常に適しています。"
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7BはMicrosoft AIの最新の高速軽量モデルで、既存のオープンソースリーダーモデルの10倍に近い性能を持っています。"
   },
@@ -968,6 +979,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Pixtralモデルは、グラフと画像理解、文書質問応答、多モーダル推論、指示遵守などのタスクで強力な能力を発揮し、自然な解像度とアスペクト比で画像を取り込み、最大128Kトークンの長いコンテキストウィンドウで任意の数の画像を処理できます。"
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Largeは、1240億のパラメータを持つオープンソースのマルチモーダルモデルで、Mistral Large 2に基づいて構築されています。これは私たちのマルチモーダルファミリーの中で2番目のモデルであり、最先端の画像理解能力を示しています。"
   },
   "pro-128k": {
     "description": "Spark Pro 128Kは特大のコンテキスト処理能力を備え、最大128Kのコンテキスト情報を処理できます。特に、全体を通じての分析や長期的な論理的関連性の処理が必要な長文コンテンツに適しており、複雑なテキストコミュニケーションにおいて滑らかで一貫した論理と多様な引用サポートを提供します。"

@@ -94,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO est une fusion de modèles hautement flexible, visant à offrir une expérience créative exceptionnelle."
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) est un modèle d'instructions de haute précision, adapté aux calculs complexes."
   },
@@ -610,6 +611,9 @@
   "grok-beta": {
     "description": "Offre des performances comparables à Grok 2, mais avec une efficacité, une vitesse et des fonctionnalités supérieures."
   },
+  "grok-vision-beta": {
+    "description": "Le dernier modèle de compréhension d'image, capable de traiter une variété d'informations visuelles, y compris des documents, des graphiques, des captures d'écran et des photos."
+  },
   "gryphe/mythomax-l2-13b": {
     "description": "MythoMax l2 13B est un modèle linguistique combinant créativité et intelligence, intégrant plusieurs modèles de pointe."
   },
@@ -645,6 +649,12 @@
   },
   "internlm/internlm2_5-7b-chat": {
     "description": "InternLM2.5 fournit des solutions de dialogue intelligent dans divers scénarios."
+  },
+  "internlm2-pro-chat": {
+    "description": "Une ancienne version du modèle que nous maintenons encore, avec des options de paramètres de 7B et 20B disponibles."
+  },
+  "internlm2.5-latest": {
+    "description": "Notre dernière série de modèles, offrant des performances d'inférence exceptionnelles, prenant en charge une longueur de contexte de 1M et des capacités améliorées de suivi des instructions et d'appel d'outils."
   },
   "jamba-1.5-large": {},
   "jamba-1.5-mini": {},
@@ -837,6 +847,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 est un modèle de langage ouvert (LLM) destiné aux développeurs, chercheurs et entreprises, conçu pour les aider à construire, expérimenter et étendre de manière responsable leurs idées d'IA générative. En tant que partie intégrante d'un système de base pour l'innovation de la communauté mondiale, il est particulièrement adapté aux appareils à capacité de calcul et de ressources limitées, ainsi qu'à des temps d'entraînement plus rapides."
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B est le dernier modèle léger et rapide de Microsoft AI, offrant des performances proches de dix fois celles des modèles leaders open source existants."
   },
@@ -968,6 +979,9 @@
   },
   "pixtral-12b-2409": {
     "description": "Le modèle Pixtral montre de puissantes capacités dans des tâches telles que la compréhension des graphiques et des images, le questionnement de documents, le raisonnement multimodal et le respect des instructions, capable d'ingérer des images à résolution naturelle et à rapport d'aspect, tout en traitant un nombre quelconque d'images dans une fenêtre de contexte longue allant jusqu'à 128K tokens."
+  },
+  "pixtral-large-latest": {
+    "description": "Pixtral Large est un modèle multimodal open source avec 124 milliards de paramètres, basé sur Mistral Large 2. C'est notre deuxième modèle de la famille multimodale, démontrant des capacités de compréhension d'image à la pointe de la technologie."
   },
   "pro-128k": {
     "description": "Spark Pro 128K est doté d'une capacité de traitement de contexte très étendue, capable de gérer jusqu'à 128K d'informations contextuelles, particulièrement adapté pour l'analyse complète et le traitement des relations logiques à long terme dans des contenus longs, offrant une logique fluide et cohérente ainsi qu'un soutien varié pour les références dans des communications textuelles complexes."

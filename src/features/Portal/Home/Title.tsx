@@ -4,7 +4,7 @@ import { Typography } from 'antd';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const Header = memo(() => {
+const Title = memo(() => {
   const { t } = useTranslation('portal');
 
   return (
@@ -14,4 +14,4 @@ const Header = memo(() => {
   );
 });
 
-export default Header;
+export default Title;

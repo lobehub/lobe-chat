@@ -46,7 +46,7 @@ const ShareImage = memo(() => {
   ];
 
   const systemRole = useAgentStore(agentSelectors.currentAgentSystemRole);
-  const messages = useChatStore(chatSelectors.currentChats, isEqual);
+  const messages = useChatStore(chatSelectors.activeBaseChats, isEqual);
   const data = generateMessages({ ...fieldValue, messages, systemRole });
   const content = JSON.stringify(data, null, 2);
 

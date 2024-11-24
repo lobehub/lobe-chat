@@ -98,6 +98,7 @@
       "title": "Use Client-Side Fetching Mode"
     },
     "fetcher": {
+      "clear": "Clear fetched model",
       "fetch": "Get Model List",
       "fetching": "Fetching Model List...",
       "latestTime": "Last Updated: {{time}}",
