@@ -141,7 +141,7 @@
     "@vercel/edge-config": "^1.3.0",
     "@vercel/speed-insights": "^1.0.12",
     "ahooks": "^3.8.1",
-    "ai": "^3.4.16",
+    "ai": "^4.0.0",
     "antd": "^5.21.4",
     "antd-style": "^3.7.1",
     "brotli-wasm": "^3.0.1",
