@@ -18,6 +18,7 @@ import { getAntdLocale } from '@/utils/locale';
 import { isMobileDevice } from '@/utils/server/responsive';
 
 import AppTheme from './AppTheme';
+import Debug from './Debug';
 import Locale from './Locale';
 import QueryProvider from './Query';
 import StoreInitialization from './StoreInitialization';
@@ -85,6 +86,7 @@ const GlobalLayout = async ({ children }: PropsWithChildren) => {
             <StoreInitialization />
           </ServerConfigStoreProvider>
           <DebugUI />
+          <Debug />
         </AppTheme>
       </Locale>
     </StyleRegistry>
