@@ -67,7 +67,7 @@ describe('genServerLLMConfig', () => {
         modelListKey: 'AWS_BEDROCK_MODEL_LIST',
       },
       ollama: {
-        fetchOnClient: !getLLMConfig().OLLAMA_PROXY_URL,
+        fetchOnClient: !process.env.OLLAMA_PROXY_URL,
       },
     };
     const config = genServerLLMConfig(specificConfig);
