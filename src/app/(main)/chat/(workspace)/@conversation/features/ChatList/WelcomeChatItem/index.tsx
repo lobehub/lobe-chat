@@ -7,12 +7,9 @@ import InboxWelcome from './InboxWelcome';
 import WelcomeMessage from './WelcomeMessage';
 
 const WelcomeChatItem = memo(() => {
-  const [showInboxWelcome, isCurrentChatLoaded] = useChatStore((s) => [
-    chatSelectors.showInboxWelcome(s),
-    chatSelectors.isCurrentChatLoaded(s),
-  ]);
+  const showInboxWelcome = useChatStore(chatSelectors.showInboxWelcome);
 
-  if (showInboxWelcome && isCurrentChatLoaded) return <InboxWelcome />;
+  if (showInboxWelcome) return <InboxWelcome />;
 
   return <WelcomeMessage />;
 });
