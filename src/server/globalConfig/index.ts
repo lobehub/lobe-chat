@@ -29,6 +29,10 @@ export const getServerGlobalConfig = () => {
         enabledKey: 'ENABLED_AWS_BEDROCK',
         modelListKey: 'AWS_BEDROCK_MODEL_LIST',
       },
+      giteeai: {
+        enabledKey: 'ENABLED_GITEE_AI',
+        modelListKey: 'GITEE_AI_MODEL_LIST',
+      },
       ollama: {
         fetchOnClient: !process.env.OLLAMA_PROXY_URL,
       },
