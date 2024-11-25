@@ -14,13 +14,11 @@ export const AssistantActionsBar: RenderAction = memo(
     const { translate, tts } = useCustomActions();
     const hasTools = !!tools;
 
-    const items = useMemo(
-      () =>
-        [hasTools ? delAndRegenerate : edit, copy, inThread ? null : branching].filter(
-          Boolean,
-        ) as ActionIconGroupItems[],
-      [inThread],
-    );
+    const items = useMemo(() => {
+      if (hasTools) return [delAndRegenerate, copy];
+
+      return [edit, copy, inThread ? null : branching].filter(Boolean) as ActionIconGroupItems[];
+    }, [inThread]);
 
     if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
 

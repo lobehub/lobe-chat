@@ -25,6 +25,7 @@ import {
 } from '../../Messages';
 import History from '../History';
 import { markdownElements } from '../MarkdownElements';
+import { InThreadContext } from './InThreadContext';
 import { processWithArtifact } from './utils';
 
 const rehypePlugins = markdownElements.map((element) => element.rehypePlugin);
@@ -49,11 +50,20 @@ export interface ChatListItemProps {
   enableHistoryDivider?: boolean;
   endRender?: ReactNode;
   id: string;
+  inThread?: boolean;
   index: number;
 }
 
 const Item = memo<ChatListItemProps>(
-  ({ className, enableHistoryDivider, id, actionBar, endRender, disableEditing }) => {
+  ({
+    className,
+    enableHistoryDivider,
+    id,
+    actionBar,
+    endRender,
+    disableEditing,
+    inThread = false,
+  }) => {
     const fontSize = useUserStore(userGeneralSettingsSelectors.fontSize);
     const { t } = useTranslation('common');
     const { styles, cx } = useStyles();
@@ -94,7 +104,7 @@ const Item = memo<ChatListItemProps>(
 
         return <RenderFunction {...item} editableContent={editableContent} />;
       },
-      [item],
+      [item, inThread],
     );
 
     const BelowMessage = useCallback(
@@ -198,7 +208,7 @@ const Item = memo<ChatListItemProps>(
 
     return (
       item && (
-        <>
+        <InThreadContext.Provider value={inThread}>
           {enableHistoryDivider && <History />}
           <Flexbox className={cx(styles.message, className, isMessageLoading && styles.loading)}>
             <ChatItem
@@ -226,7 +236,7 @@ const Item = memo<ChatListItemProps>(
             />
             {endRender}
           </Flexbox>
-        </>
+        </InThreadContext.Provider>
       )
     );
   },

@@ -9,6 +9,7 @@ export default {
   agents: '助手',
   artifact: {
     generating: '生成中',
+    inThread: '子话题中无法查看，请切换到主对话区打开',
     thinking: '思考中',
     thought: '思考过程',
     unknownTitle: '未命名作品',

@@ -3,7 +3,7 @@ import React, { memo, useMemo } from 'react';
 import { ChatItem } from '@/features/Conversation';
 import ActionsBar from '@/features/Conversation/components/ChatItem/ActionsBar';
 import { useAgentStore } from '@/store/agent';
-import { agentSelectors } from '@/store/agent/slices/chat';
+import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
 
@@ -51,9 +51,12 @@ const ThreadChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
       enableHistoryDivider={enableHistoryDivider}
       endRender={endRender}
       id={id}
+      inThread
       index={index}
     />
   );
 });
+
+ThreadChatItem.displayName = 'ThreadChatItem';
 
 export default ThreadChatItem;

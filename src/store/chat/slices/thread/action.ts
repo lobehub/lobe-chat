@@ -13,7 +13,7 @@ import { threadSelectors } from '@/store/chat/selectors';
 import { ChatStore } from '@/store/chat/store';
 import { useSessionStore } from '@/store/session';
 import { useUserStore } from '@/store/user';
-import { systemAgentSelectors } from '@/store/user/slices/settings/selectors';
+import { systemAgentSelectors } from '@/store/user/selectors';
 import { ChatMessage, CreateMessageParams, SendThreadMessageParams } from '@/types/message';
 import { ThreadItem, ThreadType } from '@/types/topic';
 import { merge } from '@/utils/merge';
@@ -161,7 +161,7 @@ export const chatThreadMessage: StateCreator<
     useSessionStore.getState().triggerSessionUpdate(get().activeId);
 
     // Get the current messages to generate AI response
-    const messages = threadSelectors.portalDisplayChats(get());
+    const messages = threadSelectors.portalAIChats(get());
 
     await internal_coreProcessMessage(messages, parentMessageId, {
       ragQuery: get().internal_shouldUseRAG() ? message : undefined,
@@ -177,12 +177,12 @@ export const chatThreadMessage: StateCreator<
 
       if (!portalThread) return;
 
-      const chats = threadSelectors.portalDisplayChats(get());
+      const chats = threadSelectors.portalAIChats(get());
       await get().summaryThreadTitle(portalThread.id, chats);
     }
   },
   resendThreadMessage: async (messageId) => {
-    const chats = threadSelectors.portalDisplayChats(get());
+    const chats = threadSelectors.portalAIChats(get());
 
     await get().internal_resendMessage(messageId, {
       messages: chats,
