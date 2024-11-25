@@ -115,9 +115,6 @@ export function initializeWithClientStore(provider: string, payload: any) {
       };
       break;
     }
-    case ModelProvider.Moonshot: {
-      break;
-    }
     case ModelProvider.Bedrock: {
       if (providerAuthPayload?.apiKey) {
         providerOptions = {
