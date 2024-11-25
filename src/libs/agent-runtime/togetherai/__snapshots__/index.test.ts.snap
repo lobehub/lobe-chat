@@ -565,7 +565,7 @@ exports[`LobeTogetherAI > models > should get models 1`] = `
   {
     "description": "The Yi series models are large language models trained from scratch by developers at 01.AI",
     "displayName": "01-ai Yi Chat (34B)",
-    "enabled": false,
+    "enabled": true,
     "functionCall": false,
     "id": "zero-one-ai/Yi-34B-Chat",
     "maxOutput": 4096,

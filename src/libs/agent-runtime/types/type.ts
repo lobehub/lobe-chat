@@ -31,6 +31,7 @@ export enum ModelProvider {
   Cloudflare = 'cloudflare',
   DeepSeek = 'deepseek',
   FireworksAI = 'fireworksai',
+  GiteeAI = 'giteeai',
   Github = 'github',
   Google = 'google',
   Groq = 'groq',

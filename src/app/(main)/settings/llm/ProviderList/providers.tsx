@@ -7,6 +7,7 @@ import {
   BaichuanProviderCard,
   DeepSeekProviderCard,
   FireworksAIProviderCard,
+  GiteeAIProviderCard,
   GoogleProviderCard,
   GroqProviderCard,
   HunyuanProviderCard,
@@ -88,6 +89,7 @@ export const useProviderList = (): ProviderItem[] => {
       TaichuProviderCard,
       InternLMProviderCard,
       SiliconCloudProviderCard,
+      GiteeAIProviderCard,
     ],
     [
       AzureProvider,
