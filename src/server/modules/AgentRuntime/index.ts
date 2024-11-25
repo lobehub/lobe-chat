@@ -44,7 +44,11 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const apiKey = apiKeyManager.pick(payload?.apiKey || AZURE_API_KEY);
       const endpoint = payload?.endpoint || AZURE_ENDPOINT;
       const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
-      return { apiKey, apiVersion, endpoint };
+      return {
+        apiVersion,
+        apikey: apiKey,
+        endpoint,
+      };
     }
 
     case ModelProvider.Bedrock: {
