@@ -232,6 +232,19 @@ describe('chatSelectors', () => {
     });
   });
 
+  describe('mainDisplayChats', () => {
+    it('should return existing messages except tool message', () => {
+      const state = merge(initialStore, {
+        messagesMap: {
+          [messageMapKey('someActiveId')]: mockMessages,
+        },
+        activeId: 'someActiveId',
+      });
+      const chats = chatSelectors.mainDisplayChats(state);
+      expect(chats).toEqual(mockedChats.slice(0, 2));
+    });
+  });
+
   describe('chatsMessageString', () => {
     it('should concatenate the contents of all messages returned by currentChatsWithHistoryConfig', () => {
       // Prepare a state with a few messages
