@@ -2,12 +2,16 @@ import { ActionIconGroup } from '@lobehub/ui';
 import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
 import { memo, useMemo } from 'react';
 
+import { useChatStore } from '@/store/chat';
+import { threadSelectors } from '@/store/chat/slices/thread/selectors';
+
 import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { RenderAction } from '../types';
 import { useCustomActions } from './customAction';
 
-export const UserActionsBar: RenderAction = memo(({ onActionClick, inThread }) => {
-  const { regenerate, edit, copy, divider, del, branching } = useChatListActionsBar();
+export const UserActionsBar: RenderAction = memo(({ onActionClick, inThread, id }) => {
+  const hasThread = useChatStore(threadSelectors.hasThreadBySourceMsgId(id));
+  const { regenerate, edit, copy, divider, del, branching } = useChatListActionsBar({ hasThread });
   const { translate, tts } = useCustomActions();
 
   const items = useMemo(

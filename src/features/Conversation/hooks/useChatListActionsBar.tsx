@@ -15,7 +15,9 @@ interface ChatListActionsBar {
   regenerate: ActionIconGroupItems;
 }
 
-export const useChatListActionsBar = (): ChatListActionsBar => {
+export const useChatListActionsBar = ({
+  hasThread,
+}: { hasThread?: boolean } = {}): ChatListActionsBar => {
   const { t } = useTranslation('common');
 
   return useMemo(
@@ -35,11 +37,13 @@ export const useChatListActionsBar = (): ChatListActionsBar => {
       },
       del: {
         danger: true,
+        disable: hasThread,
         icon: Trash,
         key: 'del',
-        label: t('delete', { defaultValue: 'Delete' }),
+        label: hasThread ? t('messageAction.deleteDisabledByThreads', { ns: 'chat' }) : t('delete'),
       },
       delAndRegenerate: {
+        disable: hasThread,
         icon: ListRestart,
         key: 'delAndRegenerate',
         label: t('messageAction.delAndRegenerate', {
@@ -61,6 +65,6 @@ export const useChatListActionsBar = (): ChatListActionsBar => {
         label: t('regenerate', { defaultValue: 'Regenerate' }),
       },
     }),
-    [],
+    [hasThread],
   );
 };

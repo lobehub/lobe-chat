@@ -68,6 +68,7 @@ export default {
   },
   messageAction: {
     delAndRegenerate: '删除并重新生成',
+    deleteDisabledByThreads: '存在子话题，不能删除',
     regenerate: '重新生成',
   },
   newAgent: '新建助手',

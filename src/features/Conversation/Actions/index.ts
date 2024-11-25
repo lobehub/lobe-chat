@@ -1,11 +1,6 @@
-import { App } from 'antd';
-import { useCallback } from 'react';
-import { useTranslation } from 'react-i18next';
-
-import { useChatStore } from '@/store/chat';
 import { MessageRoleType } from '@/types/message';
 
-import { OnActionsClick, RenderAction } from '../types';
+import { RenderAction } from '../types';
 import { AssistantActionsBar } from './Assistant';
 import { DefaultActionsBar } from './Fallback';
 import { ToolActionsBar } from './Tool';
@@ -16,81 +11,4 @@ export const renderActions: Record<MessageRoleType, RenderAction> = {
   system: DefaultActionsBar,
   tool: ToolActionsBar,
   user: UserActionsBar,
-};
-
-export const useActionsClick = (inThread?: boolean): OnActionsClick => {
-  const { t } = useTranslation('common');
-  const [
-    deleteMessage,
-    regenerateMessage,
-    translateMessage,
-    ttsMessage,
-    delAndRegenerateMessage,
-    copyMessage,
-    openThreadCreator,
-    resendThreadMessage,
-    delAndResendThreadMessage,
-  ] = useChatStore((s) => [
-    s.deleteMessage,
-    s.regenerateMessage,
-    s.translateMessage,
-    s.ttsMessage,
-    s.delAndRegenerateMessage,
-    s.copyMessage,
-    s.openThreadCreator,
-    s.resendThreadMessage,
-    s.delAndResendThreadMessage,
-  ]);
-  const { message } = App.useApp();
-
-  return useCallback<OnActionsClick>(async (action, { id, content, error }) => {
-    switch (action.key) {
-      case 'copy': {
-        await copyMessage(id, content);
-        message.success(t('copySuccess', { defaultValue: 'Copy Success' }));
-        break;
-      }
-      case 'branching': {
-        openThreadCreator(id);
-        break;
-      }
-
-      case 'del': {
-        deleteMessage(id);
-        break;
-      }
-
-      case 'regenerate': {
-        if (inThread) {
-          resendThreadMessage(id);
-        } else regenerateMessage(id);
-
-        // if this message is an error message, we need to delete it
-        if (error) deleteMessage(id);
-        break;
-      }
-
-      case 'delAndRegenerate': {
-        if (inThread) {
-          delAndResendThreadMessage(id);
-        } else {
-          delAndRegenerateMessage(id);
-        }
-        break;
-      }
-
-      case 'tts': {
-        ttsMessage(id);
-        break;
-      }
-    }
-
-    if (action.keyPath.at(-1) === 'translate') {
-      // click the menu item with translate item, the result is:
-      // key: 'en-US'
-      // keyPath: ['en-US','translate']
-      const lang = action.keyPath[0];
-      translateMessage(id, lang);
-    }
-  }, []);
 };
