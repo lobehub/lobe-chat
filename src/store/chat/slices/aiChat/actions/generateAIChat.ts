@@ -207,7 +207,7 @@ export const generateAIChat: StateCreator<
     }
 
     // Get the current messages to generate AI response
-    const messages = chatSelectors.mainDisplayChats(get());
+    const messages = chatSelectors.activeBaseChats(get());
     const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
 
     await internal_coreProcessMessage(messages, id, {
@@ -484,7 +484,7 @@ export const generateAIChat: StateCreator<
 
   internal_resendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
-    const chats = chatSelectors.mainDisplayChats(get());
+    const chats = chatSelectors.activeBaseChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
     if (currentIndex < 0) return;
