@@ -158,6 +158,8 @@ ENV \
     DEEPSEEK_API_KEY="" DEEPSEEK_MODEL_LIST="" \
     # Fireworks AI
     FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
+    # Gitee AI
+    GITEE_AI_API_KEY="" GITEE_AI_MODEL_LIST="" \
     # GitHub
     GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
