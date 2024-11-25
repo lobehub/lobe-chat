@@ -94,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO è un modello altamente flessibile, progettato per offrire un'esperienza creativa eccezionale."
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B) è un modello di istruzioni ad alta precisione, adatto per calcoli complessi."
   },
@@ -846,6 +847,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3 è un modello di linguaggio di grandi dimensioni (LLM) open source progettato per sviluppatori, ricercatori e aziende, per aiutarli a costruire, sperimentare e scalare responsabilmente le loro idee di AI generativa. Come parte di un sistema di base per l'innovazione della comunità globale, è particolarmente adatto per dispositivi a bassa potenza e risorse limitate, oltre a garantire tempi di addestramento più rapidi."
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B è il modello leggero e veloce più recente di Microsoft AI, con prestazioni vicine a quelle dei modelli leader open source esistenti."
   },

@@ -22,11 +22,13 @@ const RootLayout = async ({ children, modal }: RootLayoutProps) => {
   const cookieStore = await cookies();
 
   const lang = cookieStore.get(LOBE_LOCALE_COOKIE);
-  const direction = isRtlLang(lang?.value || DEFAULT_LANG) ? 'rtl' : 'ltr';
+  const locale = lang?.value || DEFAULT_LANG;
+
+  const direction = isRtlLang(locale) ? 'rtl' : 'ltr';
   const mobile = isMobileDevice();
 
   return (
-    <html dir={direction} lang={lang?.value || DEFAULT_LANG} suppressHydrationWarning>
+    <html dir={direction} lang={locale} suppressHydrationWarning>
       <body>
         <GlobalProvider>
           <AuthProvider>
