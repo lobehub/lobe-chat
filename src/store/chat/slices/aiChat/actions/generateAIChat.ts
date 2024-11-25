@@ -503,7 +503,7 @@ export const generateAIChat: StateCreator<
     { traceId, messages: outChats, threadId: outThreadId, inPortalThread } = {},
   ) => {
     // 1. 构造所有相关的历史记录
-    const chats = outChats ?? chatSelectors.mainDisplayChats(get());
+    const chats = outChats ?? chatSelectors.mainAIChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
     if (currentIndex < 0) return;

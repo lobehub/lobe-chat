@@ -52,29 +52,38 @@ const activeBaseChatsWithoutTool = (s: ChatStoreState) => {
   return messages.filter((m) => m.role !== 'tool');
 };
 
-/**
- * Main display chats
- * 根据当前不同的状态，返回不同的消息列表
- */
-const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
+const getChatsWithThread = (s: ChatStoreState, messages: ChatMessage[]) => {
   // 如果没有 activeThreadId，则返回所有的主消息
-  const displayChats = activeBaseChatsWithoutTool(s);
-  if (!s.activeThreadId) return displayChats.filter((m) => !m.threadId);
+  if (!s.activeThreadId) return messages.filter((m) => !m.threadId);
 
   const thread = s.threadMaps[s.activeTopicId!]?.find((t) => t.id === s.activeThreadId);
 
-  if (!thread) return displayChats.filter((m) => !m.threadId);
+  if (!thread) return messages.filter((m) => !m.threadId);
 
-  const sourceIndex = displayChats.findIndex((m) => m.id === thread.sourceMessageId);
-  const sliced = displayChats.slice(0, sourceIndex + 1);
+  const sourceIndex = messages.findIndex((m) => m.id === thread.sourceMessageId);
+  const sliced = messages.slice(0, sourceIndex + 1);
 
-  return [...sliced, ...displayChats.filter((m) => m.threadId === s.activeThreadId)];
+  return [...sliced, ...messages.filter((m) => m.threadId === s.activeThreadId)];
+};
+
+// ============= Main Display Chats ========== //
+// =========================================== //
+const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
+  const displayChats = activeBaseChatsWithoutTool(s);
+
+  return getChatsWithThread(s, displayChats);
 };
 
 const mainDisplayChatIDs = (s: ChatStoreState) => mainDisplayChats(s).map((s) => s.id);
 
+const mainAIChats = (s: ChatStoreState): ChatMessage[] => {
+  const messages = activeBaseChats(s);
+
+  return getChatsWithThread(s, messages);
+};
+
 const mainAIChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
-  const chats = activeBaseChats(s);
+  const chats = mainAIChats(s);
   const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
 
   return chatHelpers.getSlicedMessagesWithConfig(chats, config);
@@ -193,6 +202,7 @@ export const chatSelectors = {
   isSendButtonDisabledByMessage,
   isToolCallStreaming,
   latestMessage,
+  mainAIChats,
   mainAIChatsMessageString,
   mainAIChatsWithHistoryConfig,
   mainDisplayChatIDs,

@@ -18,7 +18,7 @@ const ThreadChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
   const [threadMessageId, threadStartMessageIndex, historyLength] = useChatStore((s) => [
     threadSelectors.threadSourceMessageId(s),
     threadSelectors.threadSourceMessageIndex(s),
-    threadSelectors.portalDisplayChats(s).length,
+    threadSelectors.portalDisplayChatsLength(s),
   ]);
 
   const enableThreadDivider = threadMessageId === id;

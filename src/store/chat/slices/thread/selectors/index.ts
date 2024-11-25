@@ -1,4 +1,4 @@
-import { MESSAGE_THREAD_DIVIDER_ID, THREAD_DRAFT_ID } from '@/const/message';
+import { THREAD_DRAFT_ID } from '@/const/message';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import type { ChatStoreState } from '@/store/chat';
@@ -57,13 +57,6 @@ const portalDisplayParentMessages = (s: ChatStoreState): ChatMessage[] => {
   return getTheadParentMessages(s, data);
 };
 
-const portalDisplayParentMessageIDs = (s: ChatStoreState): string[] => {
-  const ids = portalDisplayParentMessages(s).map((i) => i.id);
-  // 如果是独立话题模式，则只显示话题开始消息
-
-  return [...ids, MESSAGE_THREAD_DIVIDER_ID].filter(Boolean) as string[];
-};
-
 /**
  * these messages are the messages that are in the thread
  *
@@ -77,12 +70,6 @@ const portalDisplayChildChatsByThreadId =
     return data.filter((m) => !!id && m.threadId === id);
   };
 
-const portalDisplayChildChatIDsByThreadId =
-  (id?: string) =>
-  (s: ChatStoreState): string[] => {
-    return portalDisplayChildChatsByThreadId(id)(s).map((i) => i.id);
-  };
-
 const portalDisplayChats = (s: ChatStoreState) => {
   const parentMessages = portalDisplayParentMessages(s);
   const afterMessages = portalDisplayChildChatsByThreadId(s.portalThreadId)(s);
@@ -92,24 +79,21 @@ const portalDisplayChats = (s: ChatStoreState) => {
   return [...parentMessages, draftMessage, ...afterMessages].filter(Boolean) as ChatMessage[];
 };
 
+const portalDisplayChatsLength = (s: ChatStoreState) => {
+  // history length include a thread divider
+  return portalDisplayChats(s).length;
+};
 const portalDisplayChatsString = (s: ChatStoreState) => {
   const messages = portalDisplayChats(s);
 
   return messages.map((m) => m.content).join('');
 };
 
-const portalDisplayChatIDs = (s: ChatStoreState): string[] => {
-  const parentMessages = portalDisplayParentMessageIDs(s);
-  const portalMessages = portalDisplayChildChatIDsByThreadId(s.portalThreadId)(s);
+const portalDisplayChatIDs = (s: ChatStoreState): string[] =>
+  portalDisplayChats(s).map((i) => i.id);
 
-  // use for optimistic update
-  const draftMessage = chatSelectors.activeBaseChats(s).find((m) => m.threadId === THREAD_DRAFT_ID);
-
-  return [...parentMessages, draftMessage?.id, ...portalMessages].filter(Boolean) as string[];
-};
-
-// ======= Portal Thread AI Chats ======= //
-// =========================================== //
+// ========= Portal Thread AI Chats ========= //
+// ========================================== //
 
 const portalAIParentMessages = (s: ChatStoreState): ChatMessage[] => {
   const data = chatSelectors.activeBaseChats(s);
@@ -185,8 +169,8 @@ export const threadSelectors = {
   portalAIChatsWithHistoryConfig,
   portalDisplayChatIDs,
   portalDisplayChats,
+  portalDisplayChatsLength,
   portalDisplayChatsString,
-  portalDisplayChildChatIDsByThreadId,
   portalDisplayChildChatsByThreadId,
   threadSourceMessageId,
   threadSourceMessageIndex,
