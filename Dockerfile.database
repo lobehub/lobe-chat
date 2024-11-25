@@ -193,6 +193,8 @@ ENV \
     DEEPSEEK_API_KEY="" DEEPSEEK_MODEL_LIST="" \
     # Fireworks AI
     FIREWORKSAI_API_KEY="" FIREWORKSAI_MODEL_LIST="" \
+    # Gitee AI
+    GITEE_AI_API_KEY="" GITEE_AI_MODEL_LIST="" \
     # GitHub
     GITHUB_TOKEN="" GITHUB_MODEL_LIST="" \
     # Google
@@ -240,7 +242,7 @@ ENV \
     # Wenxin
     WENXIN_ACCESS_KEY="" WENXIN_SECRET_KEY="" WENXIN_MODEL_LIST="" \
     # xAI
-    XAI_API_KEY="" XAI_MODEL_LIST="" \
+    XAI_API_KEY="" XAI_MODEL_LIST="" XAI_PROXY_URL="" \
     # 01.AI
     ZEROONE_API_KEY="" ZEROONE_MODEL_LIST="" \
     # Zhipu

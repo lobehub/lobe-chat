@@ -100,6 +100,7 @@ export default {
       title: '使用客户端请求模式',
     },
     fetcher: {
+      clear: '清除获取的模型',
       fetch: '获取模型列表',
       fetching: '正在获取模型列表...',
       latestTime: '上次更新时间：{{time}}',
