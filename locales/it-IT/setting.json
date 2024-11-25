@@ -98,6 +98,7 @@
       "title": "Utilizzo del modo di richiesta del client"
     },
     "fetcher": {
+      "clear": "Cancella il modello ottenuto",
       "fetch": "Ottenere l'elenco dei modelli",
       "fetching": "Recupero dell'elenco dei modelli in corso...",
       "latestTime": "Ultimo aggiornamento: {{time}}",
