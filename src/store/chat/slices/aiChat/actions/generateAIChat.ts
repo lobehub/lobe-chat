@@ -484,7 +484,7 @@ export const generateAIChat: StateCreator<
 
   internal_resendMessage: async (messageId, traceId) => {
     // 1. 构造所有相关的历史记录
-    const chats = chatSelectors.mainDisplayChats(get());
+    const chats = chatSelectors.activeBaseChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
     if (currentIndex < 0) return;
