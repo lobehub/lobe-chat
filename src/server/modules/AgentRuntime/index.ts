@@ -233,6 +233,13 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
       return { apiKey, baseURL };
     }
+    case ModelProvider.GiteeAI: {
+      const { GITEE_AI_API_KEY } = getLLMConfig();
+
+      const apiKey = apiKeyManager.pick(payload?.apiKey || GITEE_AI_API_KEY);
+
+      return { apiKey };
+    }
 
     case ModelProvider.HuggingFace: {
       const { HUGGINGFACE_API_KEY } = getLLMConfig();
