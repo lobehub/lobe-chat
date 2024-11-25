@@ -20,6 +20,7 @@ import { modelProviderSelectors } from './selectors/modelProvider';
  * 设置操作
  */
 export interface ModelListAction {
+  clearObtainedModels: (provider: GlobalLLMProviderKey) => Promise<void>;
   dispatchCustomModelCards: (
     provider: GlobalLLMProviderKey,
     payload: CustomModelCardDispatch,
@@ -61,6 +62,13 @@ export const createModelListSlice: StateCreator<
   [],
   ModelListAction
 > = (set, get) => ({
+  clearObtainedModels: async (provider: GlobalLLMProviderKey) => {
+    await get().setModelProviderConfig(provider, {
+      remoteModelCards: [],
+    });
+
+    get().refreshDefaultModelProviderList();
+  },
   dispatchCustomModelCards: async (provider, payload) => {
     const prevState = settingsSelectors.providerConfig(provider)(get());
 
@@ -86,7 +94,14 @@ export const createModelListSlice: StateCreator<
         ? modelProviderSelectors.remoteProviderModelCards(providerKey)(get())
         : undefined;
 
-      return serverChatModels ?? remoteChatModels ?? providerCard.chatModels;
+      if (serverChatModels && serverChatModels.length > 0) {
+        return serverChatModels;
+      }
+      if (remoteChatModels && remoteChatModels.length > 0) {
+        return remoteChatModels;
+      }
+
+      return providerCard.chatModels;
     };
 
     const defaultModelProviderList = produce(DEFAULT_MODEL_PROVIDER_LIST, (draft) => {
