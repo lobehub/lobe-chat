@@ -94,6 +94,7 @@
   "Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Hermes 2 Mixtral 8x7B DPO는 뛰어난 창의적 경험을 제공하기 위해 설계된 고도로 유연한 다중 모델 통합입니다."
   },
+  "NousResearch/Hermes-3-Llama-3.1-8B": {},
   "NousResearch/Nous-Hermes-2-Mixtral-8x7B-DPO": {
     "description": "Nous Hermes 2 - Mixtral 8x7B-DPO (46.7B)는 고정밀 지시 모델로, 복잡한 계산에 적합합니다."
   },
@@ -846,6 +847,7 @@
   "meta.llama3-8b-instruct-v1:0": {
     "description": "Meta Llama 3은 개발자, 연구자 및 기업을 위한 오픈 대형 언어 모델(LLM)로, 생성 AI 아이디어를 구축하고 실험하며 책임감 있게 확장하는 데 도움을 주기 위해 설계되었습니다. 전 세계 커뮤니티 혁신의 기초 시스템의 일환으로, 계산 능력과 자원이 제한된 환경, 엣지 장치 및 더 빠른 훈련 시간에 매우 적합합니다."
   },
+  "microsoft/Phi-3.5-mini-instruct": {},
   "microsoft/wizardlm 2-7b": {
     "description": "WizardLM 2 7B는 Microsoft AI의 최신 경량 모델로, 기존 오픈 소스 선도 모델의 성능에 근접합니다."
   },

@@ -98,6 +98,7 @@
       "title": "Sử dụng chế độ yêu cầu từ khách hàng"
     },
     "fetcher": {
+      "clear": "Xóa mô hình đã lấy",
       "fetch": "Lấy danh sách mô hình",
       "fetching": "Đang lấy danh sách mô hình...",
       "latestTime": "Thời gian cập nhật lần cuối: {{time}}",
