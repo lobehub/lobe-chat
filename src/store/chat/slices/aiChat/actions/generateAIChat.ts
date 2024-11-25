@@ -207,7 +207,7 @@ export const generateAIChat: StateCreator<
     }
 
     // Get the current messages to generate AI response
-    const messages = chatSelectors.mainDisplayChats(get());
+    const messages = chatSelectors.activeBaseChats(get());
     const userFiles = chatSelectors.currentUserFiles(get()).map((f) => f.id);
 
     await internal_coreProcessMessage(messages, id, {
