@@ -1,6 +1,7 @@
 'use client';
 
 import { Modal } from '@lobehub/ui';
+import { createStyles } from 'antd-style';
 import { PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -8,13 +9,25 @@ import { Flexbox } from 'react-layout-kit';
 import { PortalHeader } from '@/features/Portal/router';
 import { useChatStore } from '@/store/chat';
 
+const useStyles = createStyles(({ css, token }) => ({
+  container: css`
+    background: linear-gradient(${token.colorBgElevated}, ${token.colorBgLayout}) !important;
+  `,
+}));
+
 const Layout = ({ children }: PropsWithChildren) => {
-  const [showMobilePortal, togglePortal] = useChatStore((s) => [s.showPortal, s.togglePortal]);
+  const { styles, cx } = useStyles();
+  const [showMobilePortal, isPortalThread, togglePortal] = useChatStore((s) => [
+    s.showPortal,
+    !!s.portalThreadId,
+    s.togglePortal,
+  ]);
   const { t } = useTranslation('portal');
 
   return (
     <Modal
       allowFullscreen
+      className={cx(isPortalThread && styles.container)}
       height={'95%'}
       onCancel={() => togglePortal(false)}
       open={showMobilePortal}
@@ -25,7 +38,12 @@ const Layout = ({ children }: PropsWithChildren) => {
       title={t('title')}
     >
       <PortalHeader />
-      <Flexbox gap={8} height={'calc(100% - 52px)'} padding={'8px 8px 0'} style={{ overflow: 'hidden' }}>
+      <Flexbox
+        gap={8}
+        height={'calc(100% - 52px)'}
+        padding={'0 8px'}
+        style={{ overflow: 'hidden' }}
+      >
         <Flexbox
           height={'100%'}
           style={{ marginInline: -8, overflow: 'hidden', position: 'relative' }}
