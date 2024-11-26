@@ -8,6 +8,7 @@
   "agents": "Asistente",
   "artifact": {
     "generating": "Generando",
+    "inThread": "No se puede ver en el subtema, cambie a la zona de conversación principal para abrirlo",
     "thinking": "Pensando",
     "thought": "Proceso de pensamiento",
     "unknownTitle": "Obra sin título"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Eliminar y Regenerar",
+    "deleteDisabledByThreads": "Existen subtemas, no se puede eliminar",
     "regenerate": "Regenerar"
   },
   "newAgent": "Nuevo asistente",
@@ -120,6 +122,11 @@
     "action": "Entrada de voz",
     "loading": "Reconociendo...",
     "prettifying": "Embelleciendo..."
+  },
+  "thread": {
+    "divider": "Subtema",
+    "threadMessageCount": "{{messageCount}} mensajes",
+    "title": "Subtema"
   },
   "tokenDetails": {
     "chats": "Mensajes de chat",

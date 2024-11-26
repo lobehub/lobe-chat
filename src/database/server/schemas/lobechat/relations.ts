@@ -8,7 +8,7 @@ import { files, knowledgeBases } from './file';
 import { messages, messagesFiles } from './message';
 import { unstructuredChunks } from './rag';
 import { sessionGroups, sessions } from './session';
-import { topics } from './topic';
+import { threads, topics } from './topic';
 
 export const agentsToSessions = pgTable(
   'agents_to_sessions',
@@ -47,6 +47,13 @@ export const topicRelations = relations(topics, ({ one }) => ({
   }),
 }));
 
+export const threadsRelations = relations(threads, ({ one }) => ({
+  sourceMessage: one(messages, {
+    fields: [threads.sourceMessageId],
+    references: [messages.id],
+  }),
+}));
+
 export const messagesRelations = relations(messages, ({ many, one }) => ({
   filesToMessages: many(messagesFiles),
 
@@ -63,6 +70,11 @@ export const messagesRelations = relations(messages, ({ many, one }) => ({
   topic: one(topics, {
     fields: [messages.topicId],
     references: [topics.id],
+  }),
+
+  thread: one(threads, {
+    fields: [messages.threadId],
+    references: [threads.id],
   }),
 }));
 
