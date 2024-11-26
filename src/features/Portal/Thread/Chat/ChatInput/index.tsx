@@ -5,10 +5,11 @@ import Link from 'next/link';
 import { memo } from 'react';
 
 import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
-import DesktopChatInput from '@/features/ChatInput/Desktop';
+import DesktopChatInput, { FooterRender } from '@/features/ChatInput/Desktop';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
+import Footer from './Footer';
 import TextArea from './TextArea';
 
 const leftActions = ['stt', 'portalToken'] as ActionKeys[];
@@ -16,6 +17,7 @@ const leftActions = ['stt', 'portalToken'] as ActionKeys[];
 const rightActions = [] as ActionKeys[];
 
 const renderTextArea = (onSend: () => void) => <TextArea onSend={onSend} />;
+const renderFooter: FooterRender = (props) => <Footer {...props} />;
 
 const Desktop = memo(() => {
   const [inputHeight, hideThreadLimitAlert, updateSystemStatus] = useGlobalStore((s) => [
@@ -57,6 +59,7 @@ const Desktop = memo(() => {
         onInputHeightChange={(height) => {
           updateSystemStatus({ threadInputHeight: height });
         }}
+        renderFooter={renderFooter}
         renderTextArea={renderTextArea}
         rightActions={rightActions}
       />

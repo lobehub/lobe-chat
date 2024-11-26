@@ -3,10 +3,11 @@
 import { memo } from 'react';
 
 import { ActionKeys } from '@/features/ChatInput/ActionBar/config';
-import DesktopChatInput from '@/features/ChatInput/Desktop';
+import DesktopChatInput, { FooterRender } from '@/features/ChatInput/Desktop';
 import { useGlobalStore } from '@/store/global';
 import { systemStatusSelectors } from '@/store/global/selectors';
 
+import Footer from './Footer';
 import TextArea from './TextArea';
 
 const leftActions = [
@@ -23,6 +24,9 @@ const leftActions = [
 const rightActions = ['clear'] as ActionKeys[];
 
 const renderTextArea = (onSend: () => void) => <TextArea onSend={onSend} />;
+const renderFooter: FooterRender = ({ expand, onExpandChange }) => (
+  <Footer expand={expand} onExpandChange={onExpandChange} />
+);
 
 const Desktop = memo(() => {
   const [inputHeight, updatePreference] = useGlobalStore((s) => [
@@ -37,6 +41,7 @@ const Desktop = memo(() => {
       onInputHeightChange={(height) => {
         updatePreference({ inputHeight: height });
       }}
+      renderFooter={renderFooter}
       renderTextArea={renderTextArea}
       rightActions={rightActions}
     />

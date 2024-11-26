@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
-import { chatSelectors } from '@/store/chat/selectors';
+import { threadSelectors } from '@/store/chat/selectors';
 import { SendMessageParams } from '@/types/message';
 
 export type UseSendMessageParams = Pick<
@@ -15,15 +15,15 @@ export const useSendThreadMessage = () => {
     s.updateThreadInputMessage,
   ]);
 
-  const isSendButtonDisabledByMessage = useChatStore(chatSelectors.isSendButtonDisabledByMessage);
+  const isSendButtonDisabledByMessage = useChatStore(threadSelectors.isSendButtonDisabledByMessage);
 
   const canSend = !isSendButtonDisabledByMessage;
 
   const send = useCallback((params: UseSendMessageParams = {}) => {
     const store = useChatStore.getState();
-    if (chatSelectors.isAIGenerating(store)) return;
+    if (threadSelectors.isThreadAIGenerating(store)) return;
 
-    const isSendButtonDisabledByMessage = chatSelectors.isSendButtonDisabledByMessage(
+    const isSendButtonDisabledByMessage = threadSelectors.isSendButtonDisabledByMessage(
       useChatStore.getState(),
     );
 

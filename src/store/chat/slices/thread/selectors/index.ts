@@ -158,6 +158,28 @@ const hasThreadBySourceMsgId = (id: string) => (s: ChatStoreState) => {
   return threads.some((t) => t.sourceMessageId === id);
 };
 
+const isThreadAIGenerating = (s: ChatStoreState) =>
+  s.chatLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));
+
+const isInRAGFlow = (s: ChatStoreState) =>
+  s.messageRAGLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));
+const isCreatingMessage = (s: ChatStoreState) => s.isCreatingThreadMessage;
+const isHasMessageLoading = (s: ChatStoreState) =>
+  s.messageLoadingIds.some((id) => portalDisplayChatIDs(s).includes(id));
+
+/**
+ * this function is used to determine whether the send button should be disabled
+ */
+const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
+  // 1. when there is message loading
+  isHasMessageLoading(s) ||
+  // 2. when is creating the topic
+  s.isCreatingThread ||
+  // 3. when is creating the message
+  isCreatingMessage(s) ||
+  // 4. when the message is in RAG flow
+  isInRAGFlow(s);
+
 export const threadSelectors = {
   currentPortalThread,
   currentTopicThreads,
@@ -165,6 +187,8 @@ export const threadSelectors = {
   getThreadsBySourceMsgId,
   getThreadsByTopic,
   hasThreadBySourceMsgId,
+  isSendButtonDisabledByMessage,
+  isThreadAIGenerating,
   portalAIChats,
   portalAIChatsWithHistoryConfig,
   portalDisplayChatIDs,

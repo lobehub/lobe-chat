@@ -161,10 +161,15 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) =
   return isLoading[index];
 };
 
-const isAIGenerating = (s: ChatStoreState) => s.chatLoadingIds.length > 0;
-const isInRAGFlow = (s: ChatStoreState) => s.messageRAGLoadingIds.length > 0;
+const isAIGenerating = (s: ChatStoreState) =>
+  s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
+const isInRAGFlow = (s: ChatStoreState) =>
+  s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
+
 const isCreatingMessage = (s: ChatStoreState) => s.isCreatingMessage;
-const isHasMessageLoading = (s: ChatStoreState) => s.messageLoadingIds.length > 0;
+
+const isHasMessageLoading = (s: ChatStoreState) =>
+  s.messageLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
 /**
  * this function is used to determine whether the send button should be disabled
