@@ -2,6 +2,7 @@ import { Typography } from 'antd';
 import { createStyles } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import { CSSProperties, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useChatStore } from '@/store/chat';
@@ -28,6 +29,7 @@ interface ThreadProps {
 }
 
 const Thread = memo<ThreadProps>(({ id, placement, style }) => {
+  const { t } = useTranslation('chat');
   const { styles } = useStyles();
 
   const threads = useChatStore(threadSelectors.getThreadsBySourceMsgId(id), isEqual);
@@ -43,7 +45,8 @@ const Thread = memo<ThreadProps>(({ id, placement, style }) => {
       <Flexbox className={styles.container} gap={4} padding={4} style={{ width: 'fit-content' }}>
         <Flexbox gap={8} horizontal paddingInline={6}>
           <Typography.Text style={{ fontSize: 12 }} type={'secondary'}>
-            子话题 {threads.length}
+            {t('thread.title')}
+            {threads.length}
           </Typography.Text>
         </Flexbox>
         <Flexbox>

@@ -127,6 +127,8 @@ export default {
   },
   thread: {
     divider: '子话题',
+    threadMessageCount: '{{messageCount}} 条消息',
+    title: '子话题',
   },
   tokenDetails: {
     chats: '会话消息',

@@ -3,6 +3,7 @@ import { createStyles } from 'antd-style';
 import dayjs from 'dayjs';
 import { ChevronRight } from 'lucide-react';
 import { memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
 import { useIsMobile } from '@/hooks/useIsMobile';
@@ -34,6 +35,7 @@ const useStyles = createStyles(({ css, token }) => ({
 }));
 
 const Item = memo<ThreadItem>(({ id, title, lastActiveAt, sourceMessageId }) => {
+  const { t } = useTranslation('chat');
   const openThreadInPortal = useChatStore((s) => s.openThreadInPortal);
   const { styles, cx } = useStyles();
   const [isActive, messageCount] = useChatStore((s) => [
@@ -55,7 +57,7 @@ const Item = memo<ThreadItem>(({ id, title, lastActiveAt, sourceMessageId }) => 
     >
       {title}
       <Flexbox className={styles.extra} horizontal>
-        {!!messageCount && `${messageCount} 条消息`}
+        {!!messageCount && t('thread.threadMessageCount', { messageCount })}
         {!mobile && ` · ${dayjs(lastActiveAt).format('YYYY-MM-DD')}`}
         <Icon icon={ChevronRight} />
       </Flexbox>

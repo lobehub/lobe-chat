@@ -12,7 +12,7 @@ import {
   CHAT_PORTAL_WIDTH,
 } from '@/const/layoutTokens';
 import { useChatStore } from '@/store/chat';
-import { chatPortalSelectors, portalThreadSelectors } from '@/store/chat/slices/portal/selectors';
+import { chatPortalSelectors, portalThreadSelectors } from '@/store/chat/selectors';
 
 const useStyles = createStyles(({ css, token, isDarkMode }) => ({
   content: css`
