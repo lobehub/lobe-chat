@@ -71,3 +71,5 @@ export const chatPortalSelectors = {
   artifactCodeLanguage,
   isArtifactTagClosed,
 };
+
+export * from './selectors/thread';

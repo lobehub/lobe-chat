@@ -13,8 +13,8 @@ import { chatSelectors } from '@/store/chat/selectors';
 import { pluginHelpers, useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 
-import { ToolMessage } from '../../Tool';
 import Arguments from '../../components/Arguments';
+import ToolMessage from './Tool';
 import { useStyles } from './style';
 
 export interface InspectorProps {
@@ -24,13 +24,15 @@ export interface InspectorProps {
   identifier: string;
   index: number;
   messageId: string;
+  showPortal?: boolean;
   style?: CSSProperties;
 }
 
 const CallItem = memo<InspectorProps>(
-  ({ arguments: requestArgs, apiName, messageId, id, index, identifier, style }) => {
+  ({ arguments: requestArgs, apiName, messageId, id, index, identifier, style, showPortal }) => {
     const { t } = useTranslation('plugin');
     const { styles } = useStyles();
+
     const [open, setOpen] = useState(false);
     const loading = useChatStore(chatSelectors.isToolCallStreaming(messageId, index));
     const toolMessage = useChatStore(chatSelectors.getMessageByToolCallId(id));
@@ -42,7 +44,7 @@ const CallItem = memo<InspectorProps>(
 
     // when tool calling stop streaming, we should show the tool message
     return !loading && toolMessage ? (
-      <ToolMessage {...toolMessage} />
+      <ToolMessage {...toolMessage} showPortal={showPortal} />
     ) : (
       <Flexbox gap={8} style={style}>
         <Flexbox

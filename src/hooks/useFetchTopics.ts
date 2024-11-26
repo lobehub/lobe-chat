@@ -6,6 +6,12 @@ import { useSessionStore } from '@/store/session';
  */
 export const useFetchTopics = () => {
   const [sessionId] = useSessionStore((s) => [s.activeId]);
-  const [useFetchTopics] = useChatStore((s) => [s.useFetchTopics]);
+  const [activeTopicId, useFetchTopics, useFetchThreads] = useChatStore((s) => [
+    s.activeTopicId,
+    s.useFetchTopics,
+    s.useFetchThreads,
+  ]);
   useFetchTopics(sessionId);
+
+  useFetchThreads(activeTopicId);
 };

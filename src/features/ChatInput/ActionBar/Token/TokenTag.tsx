@@ -10,7 +10,7 @@ import { useTokenCount } from '@/hooks/useTokenCount';
 import { useAgentStore } from '@/store/agent';
 import { agentSelectors } from '@/store/agent/selectors';
 import { useChatStore } from '@/store/chat';
-import { chatSelectors, topicSelectors } from '@/store/chat/selectors';
+import { topicSelectors } from '@/store/chat/selectors';
 import { useToolStore } from '@/store/tool';
 import { toolSelectors } from '@/store/tool/selectors';
 import { useUserStore } from '@/store/user';
@@ -18,13 +18,15 @@ import { modelProviderSelectors } from '@/store/user/selectors';
 
 import TokenProgress from './TokenProgress';
 
-const Token = memo(() => {
+interface TokenTagProps {
+  total: string;
+}
+const Token = memo<TokenTagProps>(({ total: messageString }) => {
   const { t } = useTranslation(['chat', 'components']);
   const theme = useTheme();
 
-  const [input, messageString, historySummary] = useChatStore((s) => [
+  const [input, historySummary] = useChatStore((s) => [
     s.inputMessage,
-    chatSelectors.chatsMessageString(s),
     topicSelectors.currentActiveTopicSummary(s)?.content || '',
   ]);
 

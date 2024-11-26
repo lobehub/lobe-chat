@@ -8,6 +8,7 @@
   "agents": "Assistente",
   "artifact": {
     "generating": "Gerando",
+    "inThread": "Não é possível visualizar no subtópico, por favor, mude para a área de conversa principal.",
     "thinking": "Pensando",
     "thought": "Processo de pensamento",
     "unknownTitle": "Obra sem título"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Excluir e Regenerar",
+    "deleteDisabledByThreads": "Existem subtópicos, não é possível deletar.",
     "regenerate": "Regenerar"
   },
   "newAgent": "Novo Assistente",
@@ -120,6 +122,11 @@
     "action": "Entrada de Voz",
     "loading": "Reconhecendo...",
     "prettifying": "Embelezando..."
+  },
+  "thread": {
+    "divider": "Subtópico",
+    "threadMessageCount": "{{messageCount}} mensagens",
+    "title": "Subtópico"
   },
   "tokenDetails": {
     "chats": "Mensagens de bate-papo",

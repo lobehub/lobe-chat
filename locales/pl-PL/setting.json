@@ -389,6 +389,11 @@
       "modelDesc": "Model używany do optymalizacji zapytań użytkowników",
       "title": "Przekształcenie zapytań w bazie wiedzy"
     },
+    "thread": {
+      "label": "Model do nazywania podtematów",
+      "modelDesc": "Model używany do automatycznego zmieniania nazw podtematów",
+      "title": "Automatyczne nazywanie podtematów"
+    },
     "title": "Asystent Systemowy",
     "topic": {
       "label": "Model nazewnictwa tematów",
