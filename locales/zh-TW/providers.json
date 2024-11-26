@@ -22,6 +22,9 @@
   "fireworksai": {
     "description": "Fireworks AI 是一家領先的高級語言模型服務商，專注於功能調用和多模態處理。其最新模型 Firefunction V2 基於 Llama-3，優化用於函數調用、對話及指令跟隨。視覺語言模型 FireLLaVA-13B 支持圖像和文本混合輸入。其他 notable 模型包括 Llama 系列和 Mixtral 系列，提供高效的多語言指令跟隨與生成支持。"
   },
+  "giteeai": {
+    "description": "Gitee AI 的 Serverless API 為 AI 開發者提供開箱即用的大模型推理 API 服務。"
+  },
   "github": {
     "description": "透過 GitHub 模型，開發者可以成為 AI 工程師，並使用業界領先的 AI 模型進行建設。"
   },

@@ -21,6 +21,7 @@ tags:
 </Callout>
 
 The template on Zeabur includes 4 services:
+
 - Logto for authrization.
 - PostgreSQL with Vector plugin for data storage and indexing.
 - MinIO for image storage.
@@ -62,8 +63,7 @@ You will see another modal pop-up where you can see the deployment progress.
 
 After the deployment is done, you need to configure your Logto service to enable authrization.
 
-Access your Logto console with the console domain you just binded, and then create a `Next.js 14(App router)` application to get the client ID and client secret, and fill in the cors and callback URLs.
-You can check [this document](../advanced/auth.mdx) for a more detailed guide.
+Access your Logto console with the console domain you just binded, and then create a `Next.js 14(App router)` application to get the client ID and client secret, and fill in the cors and callback URLs. You can check [this document](../advanced/auth.mdx) for a more detailed guide.
 
 Fill in those variables into your LobeChat service on Zeabur, here is a more detailed guide for [editing environment variables on Zeabur](https://zeabur.com/docs/deploy/variables).
 

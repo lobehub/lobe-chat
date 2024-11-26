@@ -22,6 +22,9 @@
   "fireworksai": {
     "description": "Fireworks AI to wiodący dostawca zaawansowanych modeli językowych, skoncentrowany na wywołaniach funkcji i przetwarzaniu multimodalnym. Jego najnowszy model Firefunction V2 oparty na Llama-3, zoptymalizowany do wywołań funkcji, dialogów i przestrzegania instrukcji. Model wizualny FireLLaVA-13B wspiera mieszane wejścia obrazów i tekstu. Inne znaczące modele to seria Llama i seria Mixtral, oferujące efektywne wsparcie dla wielojęzycznego przestrzegania instrukcji i generacji."
   },
+  "giteeai": {
+    "description": "Serverless API Gitee AI zapewnia deweloperom sztucznej inteligencji gotową usługę interfejsu interfejsu interfejsu dużych modeli."
+  },
   "github": {
     "description": "Dzięki modelom GitHub, deweloperzy mogą stać się inżynierami AI i budować z wykorzystaniem wiodących modeli AI w branży."
   },
