@@ -22,6 +22,9 @@
   "fireworksai": {
     "description": "Fireworks AI est un fournisseur de services de modèles linguistiques avancés, axé sur les appels de fonction et le traitement multimodal. Son dernier modèle, Firefunction V2, basé sur Llama-3, est optimisé pour les appels de fonction, les dialogues et le suivi des instructions. Le modèle de langage visuel FireLLaVA-13B prend en charge les entrées mixtes d'images et de texte. D'autres modèles notables incluent la série Llama et la série Mixtral, offrant un support efficace pour le suivi et la génération d'instructions multilingues."
   },
+  "giteeai": {
+    "description": "L'API serverless de gitee ai fournit aux développeurs d'IA un service d'api d'inférence grand modèle prêt à l'emploi."
+  },
   "github": {
     "description": "Avec les modèles GitHub, les développeurs peuvent devenir des ingénieurs en IA et créer avec les modèles d'IA les plus avancés de l'industrie."
   },
