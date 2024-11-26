@@ -2,6 +2,31 @@
 
 # Changelog
 
+### [Version 1.33.5](https://github.com/lobehub/lobe-chat/compare/v1.33.4...v1.33.5)
+
+<sup>Released on **2024-11-26**</sup>
+
+#### 💄 Styles
+
+- **misc**: Update the description translation of Gitee AI.
+
+<br/>
+
+<details>
+<summary><kbd>Improvements and Fixes</kbd></summary>
+
+#### Styles
+
+- **misc**: Update the description translation of Gitee AI, closes [#4793](https://github.com/lobehub/lobe-chat/issues/4793) ([6f8eddc](https://github.com/lobehub/lobe-chat/commit/6f8eddc))
+
+</details>
+
+<div align="right">
+
+[![](https://img.shields.io/badge/-BACK_TO_TOP-151515?style=flat-square)](#readme-top)
+
+</div>
+
 ### [Version 1.33.4](https://github.com/lobehub/lobe-chat/compare/v1.33.3...v1.33.4)
 
 <sup>Released on **2024-11-26**</sup>
