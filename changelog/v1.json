@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "improvements": ["Update the description translation of Gitee AI."]
+    },
+    "date": "2024-11-26",
+    "version": "1.33.5"
+  },
+  {
+    "children": {
       "improvements": ["Refactor getLlmOptionsFromPayload from AgentRuntime."]
     },
     "date": "2024-11-26",
