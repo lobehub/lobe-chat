@@ -28,7 +28,7 @@ const Layout: FC<PropsWithChildren> = ({ children }) => {
         console.log(data);
         updateSystemStatus({ latestChangelogId: data });
       }}
-      width={'min(90vw, 580px)'}
+      width={'min(90vw, 600px)'}
     >
       <Flexbox
         style={{ overflowX: 'hidden', overflowY: 'auto', position: 'relative' }}

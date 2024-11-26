@@ -10,7 +10,7 @@ import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfi
 
 import { LayoutProps } from './type';
 
-const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'), { ssr: false });
+const CloudBanner = dynamic(() => import('@/features/AlertBanner/CloudBanner'));
 const ChangelogModal = dynamic(() => import('@/features/ChangelogModal'), { ssr: false });
 
 const MOBILE_NAV_ROUTES = new Set([
