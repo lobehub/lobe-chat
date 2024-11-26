@@ -32,6 +32,8 @@ interface ProcessMessageParams {
    * the RAG query content, should be embedding and used in the semantic search
    */
   ragQuery?: string;
+  threadId?: string;
+  inPortalThread?: boolean;
 }
 
 export interface AIGenerateAction {
@@ -79,7 +81,15 @@ export interface AIGenerateAction {
   /**
    * Resends a specific message, optionally using a trace ID for tracking
    */
-  internal_resendMessage: (id: string, traceId?: string) => Promise<void>;
+  internal_resendMessage: (
+    id: string,
+    params?: {
+      traceId?: string;
+      messages?: ChatMessage[];
+      threadId?: string;
+      inPortalThread?: boolean;
+    },
+  ) => Promise<void>;
   /**
    * Toggles the loading state for AI message generation, managing the UI feedback
    */
@@ -102,7 +112,7 @@ export const generateAIChat: StateCreator<
 > = (set, get) => ({
   delAndRegenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
-    get().internal_resendMessage(id, traceId);
+    get().internal_resendMessage(id, { traceId });
     get().deleteMessage(id);
 
     // trace the delete and regenerate message
@@ -110,14 +120,14 @@ export const generateAIChat: StateCreator<
   },
   regenerateMessage: async (id) => {
     const traceId = chatSelectors.getTraceIdByMessageId(id)(get());
-    await get().internal_resendMessage(id, traceId);
+    await get().internal_resendMessage(id, { traceId });
 
     // trace the delete and regenerate message
     get().internal_traceMessage(id, { eventType: TraceEventType.RegenerateMessage });
   },
 
   sendMessage: async ({ message, files, onlyAddUserMessage, isWelcomeQuestion }) => {
-    const { internal_coreProcessMessage, activeTopicId, activeId } = get();
+    const { internal_coreProcessMessage, activeTopicId, activeId, activeThreadId } = get();
     if (!activeId) return;
 
     const fileIdList = files?.map((f) => f.id);
@@ -137,6 +147,7 @@ export const generateAIChat: StateCreator<
       sessionId: activeId,
       // if there is activeTopicId，then add topicId to message
       topicId: activeTopicId,
+      threadId: activeThreadId,
     };
 
     const agentConfig = getAgentChatConfig();
@@ -213,6 +224,7 @@ export const generateAIChat: StateCreator<
     await internal_coreProcessMessage(messages, id, {
       isWelcomeQuestion,
       ragQuery: get().internal_shouldUseRAG() ? message : undefined,
+      threadId: activeThreadId,
     });
 
     set({ isCreatingMessage: false }, false, n('creatingMessage/stop'));
@@ -308,6 +320,7 @@ export const generateAIChat: StateCreator<
       parentId: userMessageId,
       sessionId: get().activeId,
       topicId: activeTopicId, // if there is activeTopicId，then add it to topicId
+      threadId: params?.threadId,
       fileChunks,
       ragQueryId,
     };
@@ -320,7 +333,10 @@ export const generateAIChat: StateCreator<
     // 4. if it's the function call message, trigger the function method
     if (isFunctionCall) {
       await refreshMessages();
-      await triggerToolCalls(assistantId);
+      await triggerToolCalls(assistantId, {
+        threadId: params?.threadId,
+        inPortalThread: params?.inPortalThread,
+      });
     }
 
     // 5. summary history if context messages is larger than historyCount
@@ -482,9 +498,12 @@ export const generateAIChat: StateCreator<
     };
   },
 
-  internal_resendMessage: async (messageId, traceId) => {
+  internal_resendMessage: async (
+    messageId,
+    { traceId, messages: outChats, threadId: outThreadId, inPortalThread } = {},
+  ) => {
     // 1. 构造所有相关的历史记录
-    const chats = chatSelectors.activeBaseChats(get());
+    const chats = outChats ?? chatSelectors.mainAIChats(get());
 
     const currentIndex = chats.findIndex((c) => c.id === messageId);
     if (currentIndex < 0) return;
@@ -511,15 +530,19 @@ export const generateAIChat: StateCreator<
 
     if (contextMessages.length <= 0) return;
 
-    const { internal_coreProcessMessage } = get();
+    const { internal_coreProcessMessage, activeThreadId } = get();
 
     const latestMsg = contextMessages.findLast((s) => s.role === 'user');
 
     if (!latestMsg) return;
 
+    const threadId = outThreadId ?? activeThreadId;
+
     await internal_coreProcessMessage(contextMessages, latestMsg.id, {
       traceId,
       ragQuery: get().internal_shouldUseRAG() ? latestMsg.content : undefined,
+      threadId,
+      inPortalThread,
     });
   },
 

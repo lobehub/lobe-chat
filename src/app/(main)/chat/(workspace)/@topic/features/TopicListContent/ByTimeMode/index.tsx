@@ -15,7 +15,7 @@ import TopicGroupItem from './GroupItem';
 const ByTimeMode = memo(() => {
   const { t } = useTranslation('topic');
   const virtuosoRef = useRef<VirtuosoHandle>(null);
-  const [activeTopicId] = useChatStore((s) => [s.activeTopicId]);
+  const [activeTopicId, activeThreadId] = useChatStore((s) => [s.activeTopicId, s.activeThreadId]);
   const groupTopics = useChatStore(topicSelectors.groupedTopicsSelector, isEqual);
 
   const { groups, groupCounts, topics } = useMemo(() => {
@@ -39,10 +39,17 @@ const ByTimeMode = memo(() => {
       return index === 0 ? (
         <TopicItem active={!activeTopicId} fav={favorite} title={title} />
       ) : (
-        <TopicItem active={activeTopicId === id} fav={favorite} id={id} key={id} title={title} />
+        <TopicItem
+          active={activeTopicId === id}
+          fav={favorite}
+          id={id}
+          key={id}
+          threadId={activeThreadId}
+          title={title}
+        />
       );
     },
-    [activeTopicId, topics],
+    [activeTopicId, topics, activeThreadId],
   );
 
   const groupContent = useCallback(

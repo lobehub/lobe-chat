@@ -176,6 +176,15 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math konzentriert sich auf die Problemlösung im Bereich Mathematik und bietet professionelle Lösungen für schwierige Aufgaben."
   },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2 ist die neueste Reihe des Qwen-Modells, das 128k Kontext unterstützt. Im Vergleich zu den derzeit besten Open-Source-Modellen übertrifft Qwen2-72B in den Bereichen natürliche Sprachverständnis, Wissen, Code, Mathematik und Mehrsprachigkeit deutlich die führenden Modelle."
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2 ist die neueste Reihe des Qwen-Modells, das in der Lage ist, die besten Open-Source-Modelle ähnlicher Größe oder sogar größerer Modelle zu übertreffen. Qwen2 7B hat in mehreren Bewertungen signifikante Vorteile erzielt, insbesondere im Bereich Code und Verständnis der chinesischen Sprache."
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct unterstützt 16k Kontext und generiert lange Texte über 8K. Es unterstützt Funktionsaufrufe und nahtlose Interaktionen mit externen Systemen, was die Flexibilität und Skalierbarkeit erheblich verbessert. Das Wissen des Modells hat deutlich zugenommen, und die Codierungs- und mathematischen Fähigkeiten wurden erheblich verbessert, mit Unterstützung für über 29 Sprachen."
+  },
   "SenseChat": {
     "description": "Basisversion des Modells (V4) mit 4K Kontextlänge, die über starke allgemeine Fähigkeiten verfügt."
   },
@@ -205,6 +214,9 @@
   },
   "Tencent/Hunyuan-A52B-Instruct": {
     "description": "Hunyuan-Large ist das größte Open-Source-Transformer-Architektur MoE-Modell der Branche mit insgesamt 389 Milliarden Parametern und 52 Milliarden aktiven Parametern."
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B hat die hervorragenden allgemeinen Sprachfähigkeiten des ursprünglichen Modells beibehalten und durch inkrementelles Training von 500 Milliarden hochwertigen Tokens die mathematische Logik und Codierungsfähigkeiten erheblich verbessert."
   },
   "abab5.5-chat": {
     "description": "Für produktivitätsorientierte Szenarien konzipiert, unterstützt es die Verarbeitung komplexer Aufgaben und die effiziente Textgenerierung, geeignet für professionelle Anwendungen."
@@ -368,6 +380,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4 ist ein leistungsstarker AI-Programmierassistent, der intelligente Fragen und Codevervollständigung in verschiedenen Programmiersprachen unterstützt und die Entwicklungseffizienz steigert."
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B ist ein mehrsprachiges Code-Generierungsmodell, das umfassende Funktionen unterstützt, darunter Code-Vervollständigung und -Generierung, Code-Interpreter, Websuche, Funktionsaufrufe und repository-weite Codefragen und -antworten, und deckt verschiedene Szenarien der Softwareentwicklung ab. Es ist das führende Code-Generierungsmodell mit weniger als 10B Parametern."
+  },
   "codegemma": {
     "description": "CodeGemma ist ein leichtgewichtiges Sprachmodell, das speziell für verschiedene Programmieraufgaben entwickelt wurde und schnelle Iterationen und Integrationen unterstützt."
   },
@@ -421,6 +436,9 @@
   },
   "deepseek-chat": {
     "description": "Ein neues Open-Source-Modell, das allgemeine und Codefähigkeiten kombiniert. Es bewahrt nicht nur die allgemeinen Dialogfähigkeiten des ursprünglichen Chat-Modells und die leistungsstarken Codeverarbeitungsfähigkeiten des Coder-Modells, sondern stimmt auch besser mit menschlichen Präferenzen überein. Darüber hinaus hat DeepSeek-V2.5 in mehreren Bereichen wie Schreibaufgaben und Befolgung von Anweisungen erhebliche Verbesserungen erzielt."
+  },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B ist ein Code-Sprachmodell, das auf 20 Billionen Daten trainiert wurde, von denen 87 % Code und 13 % in Chinesisch und Englisch sind. Das Modell führt eine Fenstergröße von 16K und Aufgaben zur Lückenergänzung ein und bietet projektbezogene Code-Vervollständigung und Fragmentfüllfunktionen."
   },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2 ist ein Open-Source-Mischexperten-Code-Modell, das in Codeaufgaben hervorragende Leistungen erbringt und mit GPT4-Turbo vergleichbar ist."
@@ -476,6 +494,9 @@
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 ist Googles neuestes experimentelles multimodales KI-Modell, das über eine schnelle Verarbeitungskapazität verfügt und Texte, Bilder und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
   },
+  "gemini-exp-1121": {
+    "description": "Gemini Exp 1121 ist Googles neuestes experimentelles multimodales KI-Modell, das über eine schnelle Verarbeitungskapazität verfügt und Texte, Bilder und Videoeingaben unterstützt, um eine effiziente Skalierung für verschiedene Aufgaben zu ermöglichen."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B eignet sich für die Verarbeitung von mittelgroßen Aufgaben und bietet ein gutes Kosten-Nutzen-Verhältnis."
   },
@@ -502,6 +523,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520 ist die neueste Modellversion, die für hochkomplexe und vielfältige Aufgaben konzipiert wurde und hervorragende Leistungen zeigt."
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat zeigt in den Bereichen Semantik, Mathematik, Schlussfolgerungen, Code und Wissen eine hohe Leistung. Es verfügt auch über Funktionen wie Web-Browsing, Code-Ausführung, benutzerdefinierte Toolaufrufe und langes Textverständnis. Es unterstützt 26 Sprachen, darunter Japanisch, Koreanisch und Deutsch."
   },
   "glm-4-air": {
     "description": "GLM-4-Air ist eine kosteneffiziente Version, die in der Leistung nahe am GLM-4 liegt und schnelle Geschwindigkeiten zu einem erschwinglichen Preis bietet."

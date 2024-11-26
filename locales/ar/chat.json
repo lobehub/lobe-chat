@@ -8,6 +8,7 @@
   "agents": "مساعد",
   "artifact": {
     "generating": "جاري الإنشاء",
+    "inThread": "لا يمكن عرض الموضوعات الفرعية، يرجى التبديل إلى منطقة المحادثة الرئيسية لفتحها",
     "thinking": "جاري التفكير",
     "thought": "عملية التفكير",
     "unknownTitle": "عمل غير مسمى"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "حذف وإعادة الإنشاء",
+    "deleteDisabledByThreads": "يوجد موضوعات فرعية، لا يمكن الحذف",
     "regenerate": "إعادة الإنشاء"
   },
   "newAgent": "مساعد جديد",
@@ -120,6 +122,11 @@
     "action": "إدخال صوتي",
     "loading": "جارٍ التعرف...",
     "prettifying": "جارٍ التجميل..."
+  },
+  "thread": {
+    "divider": "موضوع فرعي",
+    "threadMessageCount": "{{messageCount}} رسالة",
+    "title": "موضوع فرعي"
   },
   "tokenDetails": {
     "chats": "رسائل المحادثة",

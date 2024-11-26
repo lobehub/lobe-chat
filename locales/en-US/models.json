@@ -176,6 +176,15 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math focuses on problem-solving in the field of mathematics, providing expert solutions for challenging problems."
   },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2 is the latest series of the Qwen model, supporting 128k context. Compared to the current best open-source models, Qwen2-72B significantly surpasses leading models in natural language understanding, knowledge, coding, mathematics, and multilingual capabilities."
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2 is the latest series of the Qwen model, capable of outperforming optimal open-source models of similar size and even larger models. Qwen2 7B has achieved significant advantages in multiple evaluations, especially in coding and Chinese comprehension."
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct supports 16k context and generates long texts exceeding 8K. It enables seamless interaction with external systems through function calls, greatly enhancing flexibility and scalability. The model's knowledge has significantly increased, and its coding and mathematical abilities have been greatly improved, with multilingual support for over 29 languages."
+  },
   "SenseChat": {
     "description": "Basic version model (V4) with a context length of 4K, featuring strong general capabilities."
   },
@@ -205,6 +214,9 @@
   },
   "Tencent/Hunyuan-A52B-Instruct": {
     "description": "Hunyuan-Large is the industry's largest open-source Transformer architecture MoE model, with a total of 389 billion parameters and 52 billion active parameters."
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B significantly enhances mathematical logic and coding abilities by incrementally training on 500 billion high-quality tokens while maintaining the excellent general language capabilities of the original series."
   },
   "abab5.5-chat": {
     "description": "Targeted at productivity scenarios, supporting complex task processing and efficient text generation, suitable for professional applications."
@@ -368,6 +380,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4 is a powerful AI programming assistant that supports intelligent Q&A and code completion in various programming languages, enhancing development efficiency."
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B is a multilingual code generation model that supports comprehensive functions including code completion and generation, code interpretation, web search, function calls, and repository-level code Q&A, covering various scenarios in software development. It is a top-tier code generation model with fewer than 10B parameters."
+  },
   "codegemma": {
     "description": "CodeGemma is a lightweight language model dedicated to various programming tasks, supporting rapid iteration and integration."
   },
@@ -421,6 +436,9 @@
   },
   "deepseek-chat": {
     "description": "A new open-source model that integrates general and coding capabilities, retaining the general conversational abilities of the original Chat model and the powerful code handling capabilities of the Coder model, while better aligning with human preferences. Additionally, DeepSeek-V2.5 has achieved significant improvements in writing tasks, instruction following, and more."
+  },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B is a code language model trained on 20 trillion data points, of which 87% are code and 13% are in Chinese and English. The model introduces a 16K window size and fill-in-the-blank tasks, providing project-level code completion and snippet filling capabilities."
   },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2 is an open-source hybrid expert code model that performs excellently in coding tasks, comparable to GPT4-Turbo."
@@ -476,6 +494,9 @@
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114 is Google's latest experimental multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it suitable for efficient scaling across various tasks."
   },
+  "gemini-exp-1121": {
+    "description": "Gemini Exp 1121 is Google's latest experimental multimodal AI model, featuring rapid processing capabilities and supporting text, image, and video inputs, making it efficient for a variety of tasks."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B is suitable for medium to small-scale task processing, offering cost-effectiveness."
   },
@@ -502,6 +523,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520 is the latest model version designed for highly complex and diverse tasks, demonstrating outstanding performance."
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat demonstrates high performance across various aspects, including semantics, mathematics, reasoning, coding, and knowledge. It also features web browsing, code execution, custom tool invocation, and long text reasoning, supporting 26 languages including Japanese, Korean, and German."
   },
   "glm-4-air": {
     "description": "GLM-4-Air is a cost-effective version with performance close to GLM-4, offering fast speed at an affordable price."
