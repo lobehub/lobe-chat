@@ -40,7 +40,7 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
       const apiKey = apiKeyManager.pick(payload?.apiKey || llmConfig[`${upperProvider}_API_KEY`]);
       const baseURL = payload?.endpoint || process.env[`${upperProvider}_PROXY_URL`];
 
-      return { apiKey, baseURL };
+      return baseURL ? { apiKey, baseURL } : { apiKey };
     }
 
     case ModelProvider.Azure: {
