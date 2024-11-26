@@ -19,8 +19,7 @@ tags:
 <Steps>
 ### Create an Authelia Identity Provider
 
-We assume you are already familiar with using Authelia. Let's say your LobeChat instance is deployed at https://lobe.example.com/.
-Note that currently only localhost supports HTTP access; other domains need to enable TLS, otherwise Authelia will actively interrupt authentication by default.
+We assume you are already familiar with using Authelia. Let's say your LobeChat instance is deployed at https://lobe.example.com/. Note that currently only localhost supports HTTP access; other domains need to enable TLS, otherwise Authelia will actively interrupt authentication by default.
 
 Now, let's open and edit the configuration file of your Authelia instance:
 
@@ -46,8 +45,7 @@ identity_providers:
       userinfo_signing_algorithm: none
 ```
 
-Make sure to replace secret and redirect_urls with your own values.
-Note! The secret configured in Authelia is ciphertext, i.e., a salted hash value. Its corresponding plaintext needs to be filled in LobeChat later.
+Make sure to replace secret and redirect_urls with your own values. Note! The secret configured in Authelia is ciphertext, i.e., a salted hash value. Its corresponding plaintext needs to be filled in LobeChat later.
 
 Save the configuration file and restart the Authelia service. Now we have completed the Authelia configuration.
 
