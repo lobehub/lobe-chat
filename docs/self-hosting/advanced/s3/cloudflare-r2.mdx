@@ -6,6 +6,7 @@ tags:
   - S3 Storage
   - Configuration Guide
 ---
+
 # Configuring Cloudflare R2 Storage Service
 
 We need to configure an S3 storage service in the server-side database to store files.
@@ -23,13 +24,14 @@ The interface of Cloudflare R2 is shown below:
 <Image
   alt={'Cloudflare R2 Storage Interface'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/41f7f677-0153-4a96-b849-5ac9b7ebefee'}
-></Image>
+/>
 
 When creating the bucket, specify its name and then click create.
+
 <Image
   alt={'Create Bucket in R2'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/9c0d184c-3169-40fa-9115-011cfffb9ca7'}
-></Image>
+/>
 
 ### Obtain Environment Variables for the Bucket
 
@@ -38,7 +40,7 @@ In the settings of the R2 storage bucket, you can view the bucket configuration 
 <Image
   alt={'View relevant information of the bucket'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/2ceb210c-eca0-4439-ba27-8734d4ebb3ee'}
-></Image>
+/>
 
 The corresponding environment variables are:
 
@@ -51,7 +53,9 @@ S3_ENDPOINT=https://0b33a03b5c993fd2f453379dc36558e5.r2.cloudflarestorage.com
 S3_PUBLIC_DOMAIN=https://s3-for-lobechat.your-domain.com
 ```
 
-<Callout type={'warning'}>`S3_ENDPOINT` must have its path removed, otherwise uploaded files cannot be accessed.</Callout>
+<Callout type={'warning'}>
+  `S3_ENDPOINT` must have its path removed, otherwise uploaded files cannot be accessed.
+</Callout>
 
 ### Obtain S3 Key Environment Variables
 
@@ -60,28 +64,28 @@ You need to obtain the access key for S3 so that the LobeChat server has permiss
 <Image
   alt={'View access key of the bucket'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/be0c95c0-6693-44ee-a490-7e8dfaa8b34d'}
-></Image>
+/>
 
 Click the button in the upper right corner to create an API token and enter the create API Token page.
 
 <Image
   alt={'Create corresponding API token'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/7b0ea46c-5157-40a8-888f-f47664a4884f'}
-></Image>
+/>
 
 Since our server-side database needs to read and write to the S3 storage service, the permission needs to be set to `Object Read and Write`, then click create.
 
 <Image
   alt={'Configure API token permissions'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/d6f5a918-7b50-4d6e-83a6-3894ab930ddf'}
-></Image>
+/>
 
 After creation, you can see the corresponding S3 API token.
 
 <Image
   alt={'Copy API token'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/763b18f9-2b5f-44bb-a479-9b56d46f7397'}
-></Image>
+/>
 
 The corresponding environment variables are:
 
@@ -99,14 +103,14 @@ In R2, you can find the CORS configuration in the settings of the storage bucket
 <Image
   alt={'Cross-Origin Settings in Cloudflare R2'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/ab008be7-26b2-4b78-8bd9-24301bf34d23'}
-></Image>
+/>
 
 Add a CORS rule to allow requests from your domain (in the previous section, it is `https://your-project.vercel.app`):
 
 <Image
   alt={'Configure allowed site domain'}
   src={'https://github.com/lobehub/lobe-chat/assets/28616219/dfcc2cb3-2958-4498-a8a4-51bec584fe7d'}
-></Image>
+/>
 
 Example configuration is as follows:
 
@@ -126,7 +130,9 @@ After configuration, click save.
 
 ## Overview of Environment Variables
 
-<Callout type={'warning'}>The `https://` in the URL is essential and must be included to maintain the integrity of the URL.</Callout>
+<Callout type={'warning'}>
+  The `https://` in the URL is essential and must be included to maintain the integrity of the URL.
+</Callout>
 
 ```shell
 # S3 Keys
@@ -143,4 +149,3 @@ S3_PUBLIC_DOMAIN=https://s3-dev.your-domain.com
 # Bucket Region, such as us-west-1. Generally not required, but some service providers may need it.
 # S3_REGION=us-west-1
 ```
-

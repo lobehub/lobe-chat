@@ -11,6 +11,7 @@ tags:
   - Docker Compose
   - Alibaba Cloud
 ---
+
 # Build Your Own Lobe Chat
 
 LobeChat supports various deployment platforms, including Vercel, Docker, and Docker Compose. You can choose a deployment platform that suits you to build your own Lobe Chat.
@@ -24,7 +25,9 @@ You can follow the guide below for quick deployment of LobeChat:
 <PlatformCards urlPrefix={'platform'} />
 
 <Callout>
-  In the client-side database mode, data is stored locally on the user's device, without cross-device synchronization, and does not support advanced features such as file uploads and knowledge base.
+  In the client-side database mode, data is stored locally on the user's device, without
+  cross-device synchronization, and does not support advanced features such as file uploads and
+  knowledge base.
 </Callout>
 
 ## Advanced Mode: Server-Side Database
@@ -32,5 +35,8 @@ You can follow the guide below for quick deployment of LobeChat:
 For users who are already familiar with LobeChat or need cross-device synchronization, you can deploy a version with a server-side database to access a more complete and powerful LobeChat.
 
 <Cards>
-<Card href={'/docs/self-hosting/server-database'} title={'Server-Side Database Deployment Guide'} />
+  <Card
+    href={'/docs/self-hosting/server-database'}
+    title={'Server-Side Database Deployment Guide'}
+  />
 </Cards>
