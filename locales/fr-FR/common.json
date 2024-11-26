@@ -16,6 +16,8 @@
   "back": "Retour",
   "batchDelete": "Suppression en masse",
   "blog": "Blog des produits",
+  "branching": "Créer un sous-sujet",
+  "branchingDisable": "La fonction « sous-sujet » n'est disponible que dans la version serveur. Si vous avez besoin de cette fonctionnalité, veuillez passer en mode de déploiement serveur ou utiliser LobeChat Cloud.",
   "cancel": "Annuler",
   "changelog": "Journal des modifications",
   "close": "Fermer",

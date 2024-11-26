@@ -8,6 +8,7 @@
   "agents": "Асистент",
   "artifact": {
     "generating": "Генериране",
+    "inThread": "Не можете да видите в подтемата, моля, превключете към основната дискусия.",
     "thinking": "В процес на мислене",
     "thought": "Процес на мислене",
     "unknownTitle": "Неназован артефакт"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Изтрий и прегенерирай",
+    "deleteDisabledByThreads": "Съществуват подтеми, не можете да изтриете.",
     "regenerate": "Прегенерирай"
   },
   "newAgent": "Нов агент",
@@ -120,6 +122,11 @@
     "action": "Гласов вход",
     "loading": "Разпознаване...",
     "prettifying": "Изглаждане..."
+  },
+  "thread": {
+    "divider": "Подтема",
+    "threadMessageCount": "{{messageCount}} съобщения",
+    "title": "Подтема"
   },
   "tokenDetails": {
     "chats": "Чат съобщения",

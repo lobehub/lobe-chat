@@ -16,6 +16,8 @@
   "back": "戻る",
   "batchDelete": "バッチ削除",
   "blog": "製品ブログ",
+  "branching": "サブトピックを作成",
+  "branchingDisable": "「サブトピック」機能はサーバー版のみで利用可能です。この機能が必要な場合は、サーバー展開モードに切り替えるか、LobeChat Cloudを使用してください。",
   "cancel": "キャンセル",
   "changelog": "変更履歴",
   "close": "閉じる",

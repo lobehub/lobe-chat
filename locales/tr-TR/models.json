@@ -176,6 +176,15 @@
   "Qwen/Qwen2.5-Math-72B-Instruct": {
     "description": "Qwen2.5-Math, matematik alanındaki sorunları çözmeye odaklanır ve yüksek zorlukta sorulara profesyonel yanıtlar sunar."
   },
+  "Qwen2-72B-Instruct": {
+    "description": "Qwen2, Qwen modelinin en yeni serisidir ve 128k bağlamı destekler. Mevcut en iyi açık kaynak modellerle karşılaştırıldığında, Qwen2-72B doğal dil anlama, bilgi, kod, matematik ve çok dilli yetenekler açısından mevcut lider modelleri önemli ölçüde aşmaktadır."
+  },
+  "Qwen2-7B-Instruct": {
+    "description": "Qwen2, Qwen modelinin en yeni serisidir ve eşit ölçekli en iyi açık kaynak modelleri hatta daha büyük ölçekli modelleri aşabilmektedir. Qwen2 7B, birçok değerlendirmede belirgin bir avantaj elde etmiş, özellikle kod ve Çince anlama konusunda."
+  },
+  "Qwen2.5-72B-Instruct": {
+    "description": "Qwen2.5-72B-Instruct, 16k bağlamı destekler ve 8K'dan uzun metinler üretebilir. Fonksiyon çağrısı ile dış sistemlerle sorunsuz etkileşim sağlar, esneklik ve ölçeklenebilirliği büyük ölçüde artırır. Modelin bilgisi belirgin şekilde artmış ve kodlama ile matematik yetenekleri büyük ölçüde geliştirilmiştir, 29'dan fazla dil desteği sunmaktadır."
+  },
   "SenseChat": {
     "description": "Temel sürüm model (V4), 4K bağlam uzunluğu ile genel yetenekleri güçlüdür."
   },
@@ -205,6 +214,9 @@
   },
   "Tencent/Hunyuan-A52B-Instruct": {
     "description": "Hunyuan-Large, sektördeki en büyük açık kaynaklı Transformer mimarisi MoE modelidir ve toplam 389 milyar parametre ile 52 milyar etkin parametreye sahiptir."
+  },
+  "Yi-34B-Chat": {
+    "description": "Yi-1.5-34B, orijinal model serisinin mükemmel genel dil yeteneklerini korurken, 500 milyar yüksek kaliteli token ile artımlı eğitim sayesinde matematiksel mantık ve kodlama yeteneklerini büyük ölçüde artırmıştır."
   },
   "abab5.5-chat": {
     "description": "Üretkenlik senaryoları için tasarlanmış, karmaşık görev işleme ve verimli metin üretimini destekler, profesyonel alan uygulamaları için uygundur."
@@ -368,6 +380,9 @@
   "codegeex-4": {
     "description": "CodeGeeX-4, çeşitli programlama dillerinde akıllı soru-cevap ve kod tamamlama desteği sunan güçlü bir AI programlama asistanıdır, geliştirme verimliliğini artırır."
   },
+  "codegeex4-all-9b": {
+    "description": "CodeGeeX4-ALL-9B, çok dilli kod üretim modeli olup, kod tamamlama ve üretimi, kod yorumlayıcı, web arama, fonksiyon çağrısı, depo düzeyinde kod soru-cevap gibi kapsamlı işlevleri destekler ve yazılım geliştirme için çeşitli senaryoları kapsar. 10B'den az parametreye sahip en iyi kod üretim modelidir."
+  },
   "codegemma": {
     "description": "CodeGemma, farklı programlama görevleri için özel olarak tasarlanmış hafif bir dil modelidir, hızlı iterasyon ve entegrasyonu destekler."
   },
@@ -421,6 +436,9 @@
   },
   "deepseek-chat": {
     "description": "Genel ve kod yeteneklerini birleştiren yeni bir açık kaynak modeli, yalnızca mevcut Chat modelinin genel diyalog yeteneklerini ve Coder modelinin güçlü kod işleme yeteneklerini korumakla kalmaz, aynı zamanda insan tercihleri ile daha iyi hizalanmıştır. Ayrıca, DeepSeek-V2.5 yazım görevleri, talimat takibi gibi birçok alanda büyük iyileştirmeler sağlamıştır."
+  },
+  "deepseek-coder-33B-instruct": {
+    "description": "DeepSeek Coder 33B, 20 trilyon veri ile eğitilmiş bir kod dili modelidir. Bunun %87'si kod, %13'ü ise Çince ve İngilizce dillerindendir. Model, 16K pencere boyutu ve boşluk doldurma görevini tanıtarak proje düzeyinde kod tamamlama ve parça doldurma işlevi sunmaktadır."
   },
   "deepseek-coder-v2": {
     "description": "DeepSeek Coder V2, açık kaynaklı bir karışık uzman kod modelidir, kod görevlerinde mükemmel performans sergiler ve GPT4-Turbo ile karşılaştırılabilir."
@@ -476,6 +494,9 @@
   "gemini-exp-1114": {
     "description": "Gemini Exp 1114, Google'ın en son deneysel çok modlu AI modeli olup, hızlı işleme yeteneğine sahip, metin, görüntü ve video girişlerini desteklemekte ve çeşitli görevlerde verimli bir şekilde ölçeklenmektedir."
   },
+  "gemini-exp-1121": {
+    "description": "Gemini Exp 1121, Google'un en yeni deneysel çok modlu AI modelidir. Hızlı işlem yeteneğine sahip olup, metin, görüntü ve video girişi destekler ve çeşitli görevler için verimli bir şekilde ölçeklenebilir."
+  },
   "gemma-7b-it": {
     "description": "Gemma 7B, orta ölçekli görev işleme için uygundur ve maliyet etkinliği sunar."
   },
@@ -502,6 +523,9 @@
   },
   "glm-4-0520": {
     "description": "GLM-4-0520, son derece karmaşık ve çeşitli görevler için tasarlanmış en yeni model versiyonudur, olağanüstü performans sergiler."
+  },
+  "glm-4-9b-chat": {
+    "description": "GLM-4-9B-Chat, anlam, matematik, akıl yürütme, kod ve bilgi gibi birçok alanda yüksek performans göstermektedir. Ayrıca web tarayıcı, kod yürütme, özel araç çağrıları ve uzun metin akıl yürütme yeteneklerine sahiptir. Japonca, Korece, Almanca dahil olmak üzere 26 dil desteği sunmaktadır."
   },
   "glm-4-air": {
     "description": "GLM-4-Air, maliyet etkin bir versiyondur, GLM-4'e yakın performans sunar ve hızlı hız ve uygun fiyat sağlar."

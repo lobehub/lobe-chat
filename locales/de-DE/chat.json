@@ -8,6 +8,7 @@
   "agents": "Assistent",
   "artifact": {
     "generating": "Wird generiert",
+    "inThread": "In Unterthemen kann nicht angezeigt werden, bitte wechseln Sie zum Hauptdiskussionsbereich.",
     "thinking": "Denken",
     "thought": "Denkenprozess",
     "unknownTitle": "Unbenanntes Werk"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Löschen und neu generieren",
+    "deleteDisabledByThreads": "Es gibt Unterthemen, die Löschung ist nicht möglich.",
     "regenerate": "Neu generieren"
   },
   "newAgent": "Neuer Assistent",
@@ -120,6 +122,11 @@
     "action": "Spracheingabe",
     "loading": "Erkenne...",
     "prettifying": "Verschönern..."
+  },
+  "thread": {
+    "divider": "Unterthema",
+    "threadMessageCount": "{{messageCount}} Nachrichten",
+    "title": "Unterthema"
   },
   "tokenDetails": {
     "chats": "Chats",
