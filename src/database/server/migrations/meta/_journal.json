@@ -84,6 +84,13 @@
       "when": 1731138670427,
       "tag": "0011_add_topic_history_summary",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1731858381716,
+      "tag": "0012_add_thread",
+      "breakpoints": true
     }
   ],
   "version": "6"

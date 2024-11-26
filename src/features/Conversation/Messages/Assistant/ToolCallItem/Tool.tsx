@@ -1,8 +1,8 @@
 import { Icon } from '@lobehub/ui';
-import { ConfigProvider, Empty, Skeleton } from 'antd';
+import { ConfigProvider, Empty } from 'antd';
 import { useTheme } from 'antd-style';
 import { LucideSquareArrowLeft, LucideSquareArrowRight } from 'lucide-react';
-import { Suspense, memo, useContext, useState } from 'react';
+import { memo, useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
@@ -11,10 +11,14 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
 
-import Arguments from '../components/Arguments';
+import Arguments from '../../components/Arguments';
 import Inspector from './Inspector';
 
-const Message = memo<ChatMessage>(({ id, content, pluginState, plugin }) => {
+const Tool = memo<
+  ChatMessage & {
+    showPortal?: boolean;
+  }
+>(({ id, content, pluginState, plugin, showPortal }) => {
   const [loading, isMessageToolUIOpen] = useChatStore((s) => [
     chatSelectors.isPluginApiInvoking(id)(s),
     chatPortalSelectors.isPluginUIOpen(id)(s),
@@ -35,6 +39,7 @@ const Message = memo<ChatMessage>(({ id, content, pluginState, plugin }) => {
         loading={loading}
         payload={plugin}
         setShow={setShow}
+        showPortal={showPortal}
         showRender={showRender}
       />
       {isMessageToolUIOpen ? (
@@ -69,10 +74,4 @@ const Message = memo<ChatMessage>(({ id, content, pluginState, plugin }) => {
   );
 });
 
-export const ToolMessage = memo<ChatMessage>((props) => (
-  <Suspense
-    fallback={<Skeleton.Button active style={{ height: 46, minWidth: 200, width: '100%' }} />}
-  >
-    <Message {...props} />
-  </Suspense>
-));
+export default Tool;

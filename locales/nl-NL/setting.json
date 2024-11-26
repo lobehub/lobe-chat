@@ -389,6 +389,11 @@
       "modelDesc": "Model dat is opgegeven voor het optimaliseren van gebruikersvragen",
       "title": "Herformuleren van vragen in de kennisbank"
     },
+    "thread": {
+      "label": "Subtopic Naamgevingsmodel",
+      "modelDesc": "Model dat wordt gebruikt voor het automatisch hernoemen van subonderwerpen",
+      "title": "Automatische naamgeving van subonderwerpen"
+    },
     "title": "Systeemassistent",
     "topic": {
       "label": "Onderwerp Naamgevingsmodel",

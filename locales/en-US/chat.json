@@ -8,6 +8,7 @@
   "agents": "Assistants",
   "artifact": {
     "generating": "Generating",
+    "inThread": "Cannot view in subtopic, please switch to the main conversation area to open",
     "thinking": "Thinking",
     "thought": "Thought Process",
     "unknownTitle": "Untitled Work"
@@ -65,6 +66,7 @@
   },
   "messageAction": {
     "delAndRegenerate": "Delete and Regenerate",
+    "deleteDisabledByThreads": "There are subtopics, deletion is not allowed",
     "regenerate": "Regenerate"
   },
   "newAgent": "New Assistant",
@@ -120,6 +122,11 @@
     "action": "Voice Input",
     "loading": "Recognizing...",
     "prettifying": "Polishing..."
+  },
+  "thread": {
+    "divider": "Subtopic",
+    "threadMessageCount": "{{messageCount}} messages",
+    "title": "Subtopic"
   },
   "tokenDetails": {
     "chats": "Chat Messages",

@@ -527,7 +527,7 @@ describe('chatMessage actions', () => {
         await result.current.regenerateMessage(messageId);
       });
 
-      expect(resendMessageSpy).toHaveBeenCalledWith(messageId, 'abc');
+      expect(resendMessageSpy).toHaveBeenCalledWith(messageId, { traceId: 'abc' });
     });
   });
 

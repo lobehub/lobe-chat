@@ -34,6 +34,7 @@ export interface InspectorProps {
   loading?: boolean;
   payload?: ChatPluginPayload;
   setShow?: (showRender: boolean) => void;
+  showPortal?: boolean;
   showRender?: boolean;
 }
 
@@ -47,6 +48,7 @@ const Inspector = memo<InspectorProps>(
     content,
     identifier = 'unknown',
     id,
+    showPortal = true,
   }) => {
     const { t } = useTranslation(['plugin', 'portal']);
     const { styles } = useStyles();
@@ -111,7 +113,7 @@ const Inspector = memo<InspectorProps>(
           </Flexbox>
 
           <Flexbox horizontal>
-            {!isMobile && showRightAction && (
+            {!isMobile && showRightAction && showPortal && (
               <ActionIcon
                 icon={BetweenVerticalStart}
                 onClick={() => {
