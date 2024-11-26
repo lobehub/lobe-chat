@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react';
 import { memo } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
+import { useIsMobile } from '@/hooks/useIsMobile';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ThreadItem } from '@/types/topic';
@@ -39,7 +40,7 @@ const Item = memo<ThreadItem>(({ id, title, lastActiveAt, sourceMessageId }) => 
     s.activeThreadId === id,
     chatSelectors.countMessagesByThreadId(id)(s),
   ]);
-
+  const mobile = useIsMobile();
   return (
     <Flexbox
       align={'baseline'}
@@ -54,8 +55,8 @@ const Item = memo<ThreadItem>(({ id, title, lastActiveAt, sourceMessageId }) => 
     >
       {title}
       <Flexbox className={styles.extra} horizontal>
-        {!!messageCount && `${messageCount} 条消息 · `}
-        {dayjs(lastActiveAt).format('YYYY-MM-DD')}
+        {!!messageCount && `${messageCount} 条消息`}
+        {!mobile && ` · ${dayjs(lastActiveAt).format('YYYY-MM-DD')}`}
         <Icon icon={ChevronRight} />
       </Flexbox>
     </Flexbox>
