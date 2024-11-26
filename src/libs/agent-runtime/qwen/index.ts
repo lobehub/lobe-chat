@@ -29,11 +29,14 @@ export class LobeQwenAI implements LobeRuntimeAI {
 
   constructor({
     apiKey,
-    baseURL = DEFAULT_BASE_URL,
+    baseURL,
     ...res
   }: ClientOptions & Record<string, any> = {}) {
     if (!apiKey) throw AgentRuntimeError.createError(AgentRuntimeErrorType.InvalidProviderAPIKey);
-    this.client = new OpenAI({ apiKey, baseURL, ...res });
+
+    const finalBaseURL = baseURL ? baseURL : DEFAULT_BASE_URL;
+
+    this.client = new OpenAI({ apiKey, baseURL: finalBaseURL, ...res });
     this.baseURL = this.client.baseURL;
   }
 
