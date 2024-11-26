@@ -53,7 +53,8 @@ const Cover = memo<{ alt: string; mobile?: boolean; src: string }>(({ alt, mobil
           height: 'auto',
           width: '100%',
         }}
-        width={580}
+        unoptimized
+        width={600}
       />
     </Flexbox>
   );

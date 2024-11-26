@@ -1,4 +1,3 @@
-import { DiscordIcon } from '@lobehub/ui';
 import {
   Book,
   CircleUserRound,
@@ -6,7 +5,6 @@ import {
   Download,
   Feather,
   FileClockIcon,
-  FileTextIcon,
   LogOut,
   Settings2,
 } from 'lucide-react';
@@ -14,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 
 import { CellProps } from '@/components/Cell';
-import { CHANGELOG_URL, DISCORD, DOCUMENTS, FEEDBACK } from '@/const/url';
+import { DOCUMENTS, FEEDBACK } from '@/const/url';
 import { isServerMode } from '@/const/version';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
 import { useUserStore } from '@/store/user';
@@ -106,22 +104,10 @@ export const useCategory = () => {
       onClick: () => window.open(FEEDBACK, '__blank'),
     },
     {
-      icon: DiscordIcon,
-      key: 'discord',
-      label: 'Discord',
-      onClick: () => window.open(DISCORD, '__blank'),
-    },
-    {
-      icon: FileTextIcon,
+      icon: FileClockIcon,
       key: 'changelog',
       label: t('changelog'),
       onClick: () => router.push('/changelog'),
-    },
-    {
-      icon: FileClockIcon,
-      key: 'releaseNotes',
-      label: t('releaseNotes'),
-      onClick: () => window.open(CHANGELOG_URL, '__blank'),
     },
   ];
 

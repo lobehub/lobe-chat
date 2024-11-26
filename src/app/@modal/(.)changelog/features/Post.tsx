@@ -1,7 +1,10 @@
 import { Typography } from '@lobehub/ui';
+import Link from 'next/link';
 import { Flexbox } from 'react-layout-kit';
+import urlJoin from 'url-join';
 
 import { CustomMDX } from '@/components/mdx';
+import { OFFICIAL_SITE } from '@/const/url';
 import { Locales } from '@/locales/resources';
 import { ChangelogIndexItem, changelogService } from '@/services/changelog';
 
@@ -16,13 +19,18 @@ const Post = async ({
   locale,
 }: ChangelogIndexItem & { branch?: string; locale: Locales; mobile?: boolean }) => {
   const data = await changelogService.getPostById(id, { locale });
+  const url = urlJoin(OFFICIAL_SITE, 'changelog', id);
 
   return (
     <Flexbox gap={8}>
-      <Cover alt={data.title} src={data.image} />
+      <Link href={url} style={{ color: 'inherit' }} target={'_blank'}>
+        <Cover alt={data.title} src={data.image} />
+      </Link>
       <Flexbox gap={8} paddingInline={24}>
         <Typography headerMultiple={0.2} style={{ width: '100%' }}>
-          <h1 id={id}>{data.rawTitle || data.title}</h1>
+          <Link href={url} style={{ color: 'inherit' }} target={'_blank'}>
+            <h1 id={id}>{data.rawTitle || data.title}</h1>
+          </Link>
           <CustomMDX source={data.content} />
         </Typography>
         <Flexbox align={'center'} gap={8} horizontal justify={'space-between'} width={'100%'}>
