@@ -1,50 +1,55 @@
 import { ActionIconGroup } from '@lobehub/ui';
 import { ActionIconGroupItems } from '@lobehub/ui/es/ActionIconGroup';
-import { memo, useMemo } from 'react';
+import { memo, useContext, useMemo } from 'react';
 
 import { useChatStore } from '@/store/chat';
 import { threadSelectors } from '@/store/chat/selectors';
 
+import { InPortalThreadContext } from '../components/ChatItem/InPortalThreadContext';
 import { useChatListActionsBar } from '../hooks/useChatListActionsBar';
 import { RenderAction } from '../types';
 import { ErrorActionsBar } from './Error';
 import { useCustomActions } from './customAction';
 
-export const AssistantActionsBar: RenderAction = memo(
-  ({ onActionClick, error, tools, inThread, id }) => {
-    const hasThread = useChatStore(threadSelectors.hasThreadBySourceMsgId(id));
+export const AssistantActionsBar: RenderAction = memo(({ onActionClick, error, tools, id }) => {
+  const [isThreadMode, hasThread] = useChatStore((s) => [
+    !!s.activeThreadId,
+    threadSelectors.hasThreadBySourceMsgId(id)(s),
+  ]);
 
-    const { regenerate, edit, delAndRegenerate, copy, divider, del, branching } =
-      useChatListActionsBar({ hasThread });
+  const { regenerate, edit, delAndRegenerate, copy, divider, del, branching } =
+    useChatListActionsBar({ hasThread });
 
-    const { translate, tts } = useCustomActions();
-    const hasTools = !!tools;
+  const { translate, tts } = useCustomActions();
+  const hasTools = !!tools;
 
-    const items = useMemo(() => {
-      if (hasTools) return [delAndRegenerate, copy];
+  const inPortalThread = useContext(InPortalThreadContext);
+  const inThread = isThreadMode || inPortalThread;
 
-      return [edit, copy, inThread ? null : branching].filter(Boolean) as ActionIconGroupItems[];
-    }, [inThread]);
+  const items = useMemo(() => {
+    if (hasTools) return [delAndRegenerate, copy];
 
-    if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
+    return [edit, copy, inThread ? null : branching].filter(Boolean) as ActionIconGroupItems[];
+  }, [inThread]);
 
-    return (
-      <ActionIconGroup
-        dropdownMenu={[
-          edit,
-          copy,
-          divider,
-          tts,
-          translate,
-          divider,
-          regenerate,
-          delAndRegenerate,
-          del,
-        ]}
-        items={items}
-        onActionClick={onActionClick}
-        type="ghost"
-      />
-    );
-  },
-);
+  if (error) return <ErrorActionsBar onActionClick={onActionClick} />;
+
+  return (
+    <ActionIconGroup
+      dropdownMenu={[
+        edit,
+        copy,
+        divider,
+        tts,
+        translate,
+        divider,
+        regenerate,
+        delAndRegenerate,
+        del,
+      ]}
+      items={items}
+      onActionClick={onActionClick}
+      type="ghost"
+    />
+  );
+});

@@ -31,7 +31,7 @@ const ThreadChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
   const isParentMessage = index <= threadStartMessageIndex;
 
   const actionBar = useMemo(
-    () => !isParentMessage && <ActionsBar id={id} inThread />,
+    () => !isParentMessage && <ActionsBar id={id} inPortalThread />,
     [id, isParentMessage],
   );
 
@@ -51,7 +51,7 @@ const ThreadChatItem = memo<ThreadChatItemProps>(({ id, index }) => {
       enableHistoryDivider={enableHistoryDivider}
       endRender={endRender}
       id={id}
-      inThread
+      inPortalThread
       index={index}
     />
   );

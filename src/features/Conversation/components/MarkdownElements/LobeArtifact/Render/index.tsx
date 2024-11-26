@@ -10,7 +10,7 @@ import { useChatStore } from '@/store/chat';
 import { chatPortalSelectors, chatSelectors } from '@/store/chat/selectors';
 import { dotLoading } from '@/styles/loading';
 
-import { InThreadContext } from '../../../ChatItem/InThreadContext';
+import { InPortalThreadContext } from '../../../ChatItem/InPortalThreadContext';
 import { MarkdownElementProps } from '../../type';
 import ArtifactIcon from './Icon';
 
@@ -62,7 +62,7 @@ const Render = memo<ArtifactProps>(({ identifier, title, type, language, childre
   const hasChildren = !!children;
   const str = ((children as string) || '').toString?.();
 
-  const inThread = useContext(InThreadContext);
+  const inThread = useContext(InPortalThreadContext);
   const { message } = App.useApp();
   const [isGenerating, isArtifactTagClosed, currentArtifactMessageId, openArtifact, closeArtifact] =
     useChatStore((s) => {

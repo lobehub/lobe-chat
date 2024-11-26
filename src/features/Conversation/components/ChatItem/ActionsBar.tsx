@@ -11,9 +11,7 @@ import { MessageRoleType } from '@/types/message';
 import { renderActions } from '../../Actions';
 import { useChatListActionsBar } from '../../hooks/useChatListActionsBar';
 
-export interface ActionsBarProps extends ActionIconGroupProps {
-  inThread?: boolean;
-}
+export type ActionsBarProps = ActionIconGroupProps;
 
 const ActionsBar = memo<ActionsBarProps>((props) => {
   const { regenerate, edit, copy, divider, del } = useChatListActionsBar();
@@ -30,10 +28,10 @@ const ActionsBar = memo<ActionsBarProps>((props) => {
 
 interface ActionsProps {
   id: string;
-  inThread?: boolean;
+  inPortalThread?: boolean;
 }
 
-const Actions = memo<ActionsProps>(({ id, inThread }) => {
+const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
   const item = useChatStore(chatSelectors.getMessageById(id), isEqual);
   const { t } = useTranslation('common');
   const [
@@ -87,7 +85,7 @@ const Actions = memo<ActionsProps>(({ id, inThread }) => {
         }
 
         case 'regenerate': {
-          if (inThread) {
+          if (inPortalThread) {
             resendThreadMessage(id);
           } else regenerateMessage(id);
 
@@ -97,7 +95,7 @@ const Actions = memo<ActionsProps>(({ id, inThread }) => {
         }
 
         case 'delAndRegenerate': {
-          if (inThread) {
+          if (inPortalThread) {
             delAndResendThreadMessage(id);
           } else {
             delAndRegenerateMessage(id);
@@ -124,7 +122,7 @@ const Actions = memo<ActionsProps>(({ id, inThread }) => {
 
   const RenderFunction = renderActions[(item?.role || '') as MessageRoleType] ?? ActionsBar;
 
-  return <RenderFunction {...item!} inThread={inThread} onActionClick={handleActionClick} />;
+  return <RenderFunction {...item!} inThread={inPortalThread} onActionClick={handleActionClick} />;
 });
 
 export default Actions;

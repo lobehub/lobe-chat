@@ -106,7 +106,7 @@ export const chatThreadMessage: StateCreator<
     // if message is empty or no files, then stop
     if (!message) return;
 
-    set({ isCreatingThreadMessage: true }, false, n('creatingMessage/start'));
+    set({ isCreatingThreadMessage: true }, false, n('creatingThreadMessage/start'));
 
     const newMessage: CreateMessageParams = {
       content: message,
@@ -169,7 +169,7 @@ export const chatThreadMessage: StateCreator<
       inPortalThread: true,
     });
 
-    set({ isCreatingMessage: false }, false, n('creatingMessage/stop'));
+    set({ isCreatingThreadMessage: false }, false, n('creatingThreadMessage/stop'));
 
     // 说明是在新建 thread，需要自动总结标题
     if (!portalThreadId) {

@@ -3,7 +3,7 @@ import { ReactNode, Suspense, memo, useContext } from 'react';
 import { Flexbox } from 'react-layout-kit';
 
 import { LOADING_FLAT } from '@/const/message';
-import { InThreadContext } from '@/features/Conversation/components/ChatItem/InThreadContext';
+import { InPortalThreadContext } from '@/features/Conversation/components/ChatItem/InPortalThreadContext';
 import { useChatStore } from '@/store/chat';
 import { chatSelectors } from '@/store/chat/selectors';
 import { ChatMessage } from '@/types/message';
@@ -20,7 +20,7 @@ export const AssistantMessage = memo<
   const editing = useChatStore(chatSelectors.isMessageEditing(id));
   const generating = useChatStore(chatSelectors.isMessageGenerating(id));
 
-  const inThread = useContext(InThreadContext);
+  const inThread = useContext(InPortalThreadContext);
   const isToolCallGenerating = generating && (content === LOADING_FLAT || !content) && !!tools;
 
   return editing ? (
