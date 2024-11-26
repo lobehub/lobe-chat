@@ -7,6 +7,8 @@ import {
   Cloudy,
   Download,
   Feather,
+  FileClockIcon,
+  FileTextIcon,
   HardDriveDownload,
   HardDriveUpload,
   LifeBuoy,
@@ -24,6 +26,7 @@ import urlJoin from 'url-join';
 import type { MenuProps } from '@/components/Menu';
 import { LOBE_CHAT_CLOUD } from '@/const/branding';
 import {
+  CHANGELOG_URL,
   DISCORD,
   DOCUMENTS_REFER_URL,
   EMAIL_SUPPORT,
@@ -221,6 +224,20 @@ export const useMenu = () => {
               label: (
                 <Link href={mailTo(EMAIL_SUPPORT)} target={'_blank'}>
                   {t('userPanel.email')}
+                </Link>
+              ),
+            },
+            {
+              icon: <Icon icon={FileTextIcon} />,
+              key: 'changelog',
+              label: <Link href={'/changelog'}>{t('changelog')}</Link>,
+            },
+            {
+              icon: <Icon icon={FileClockIcon} />,
+              key: 'releaseNotes',
+              label: (
+                <Link href={CHANGELOG_URL} target={'_blank'}>
+                  {t('releaseNotes')}
                 </Link>
               ),
             },
