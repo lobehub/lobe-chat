@@ -10,15 +10,16 @@ import { systemStatusSelectors } from '@/store/global/selectors';
 import { useWorkspaceModal } from '../../features/useWorkspaceModal';
 
 const PortalModal = memo(({ children }: PropsWithChildren) => {
-  const [showAgentSettings, toggleConfig] = useGlobalStore((s) => [
+  const [showMobilePortal, toggleMobilePortal] = useGlobalStore((s) => [
     systemStatusSelectors.mobileShowPortal(s),
     s.toggleMobilePortal,
   ]);
-  const [open, setOpen] = useWorkspaceModal(showAgentSettings, toggleConfig);
+  const [open, setOpen] = useWorkspaceModal(showMobilePortal, toggleMobilePortal);
   const { t } = useTranslation('portal');
 
   return (
     <Modal
+      allowFullscreen
       height={'95%'}
       onCancel={() => setOpen(false)}
       open={open}

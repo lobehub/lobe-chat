@@ -122,7 +122,7 @@ const Actions = memo<ActionsProps>(({ id, inPortalThread }) => {
 
   const RenderFunction = renderActions[(item?.role || '') as MessageRoleType] ?? ActionsBar;
 
-  return <RenderFunction {...item!} inThread={inPortalThread} onActionClick={handleActionClick} />;
+  return <RenderFunction {...item!} onActionClick={handleActionClick} />;
 });
 
 export default Actions;
