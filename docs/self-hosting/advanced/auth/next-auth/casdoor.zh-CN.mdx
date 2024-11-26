@@ -30,7 +30,8 @@ tags:
 - 你私有部署 Casdoor，其域名为 `https://lobe-auth-api.example.com`。
 
 <Steps>
-  ### 创建 Casdoor 应用
+
+### 创建 Casdoor 应用
 
 访问你私有部署的 Casdoor WebUI（默认为 `http://localhost:8000/`） 进入控制台，默认账号为 `admin`，密码为 `123`。
 
@@ -47,46 +48,46 @@ tags:
 - Logo：`https://lobehub.com/icon-192x192.png`
 - 表单 CSS、表单 CSS（移动端）：
 
-  ```html
-  <style>
+```html
+<style>
+  .login-panel {
+    padding: 40px 70px 0 70px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+  }
+  .panel-logo {
+    width: 64px;
+  }
+  .login-logo-box {
+    margin-top: 20px;
+  }
+
+  #parent-area
+    > main
+    > div
+    > div.login-content
+    > div.login-panel
+    > div.login-form
+    > div
+    > div
+    > button {
+    box-shadow: none !important;
+    border-radius: 10px !important;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    border: 1px solid #eee !important;
+  }
+
+  @media (max-width: 640px) {
     .login-panel {
-      padding: 40px 70px 0 70px;
-      border-radius: 10px;
-      background-color: #ffffff;
-      box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+      padding: 40px 0 0 0;
+      box-shadow: none;
     }
-    .panel-logo {
-      width: 64px;
-    }
-    .login-logo-box {
-      margin-top: 20px;
-    }
-
-    #parent-area
-      > main
-      > div
-      > div.login-content
-      > div.login-panel
-      > div.login-form
-      > div
-      > div
-      > button {
-      box-shadow: none !important;
-      border-radius: 10px !important;
-      transition-property: all;
-      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-      transition-duration: 150ms;
-      border: 1px solid #eee !important;
-    }
-
-    @media (max-width: 640px) {
-      .login-panel {
-        padding: 40px 0 0 0;
-        box-shadow: none;
-      }
-    }
-  </style>
-  ```
+  }
+</style>
+```
 
 随后，复制 `客户端 ID` 和 `客户端密钥`，并保存。
 
@@ -113,7 +114,7 @@ tags:
 
   <Callout type={'tip'}>
     前往 [📘 环境变量](/zh/docs/self-hosting/environment-variables/auth#casdoor) 可查阅相关变量详情。
- 
+
 </Callout>
 </Steps>
 
