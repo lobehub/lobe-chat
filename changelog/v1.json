@@ -1,5 +1,116 @@
 [
   {
+    "children": {
+      "improvements": ["Refactor getLlmOptionsFromPayload from AgentRuntime."]
+    },
+    "date": "2024-11-26",
+    "version": "1.33.4"
+  },
+  {
+    "children": {
+      "fixes": ["Fix fetchOnClient functional for Moonshot."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.3"
+  },
+  {
+    "children": {
+      "fixes": ["Fix multi-turns tools calling."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.2"
+  },
+  {
+    "children": {
+      "improvements": ["Add gemini-exp-1121 model."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.1"
+  },
+  {
+    "children": {
+      "features": ["Add Gitee AI model provider."]
+    },
+    "date": "2024-11-25",
+    "version": "1.33.0"
+  },
+  {
+    "children": {
+      "improvements": ["Support to reset fetched models."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.9"
+  },
+  {
+    "children": {
+      "fixes": ["Fix XAI_PROXY_URL env missing."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.8"
+  },
+  {
+    "children": {
+      "fixes": ["Fix tool message display."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.7"
+  },
+  {
+    "children": {},
+    "date": "2024-11-24",
+    "version": "1.32.6"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the main chat."]
+    },
+    "date": "2024-11-24",
+    "version": "1.32.5"
+  },
+  {
+    "children": {
+      "improvements": ["Refactor the default locale."]
+    },
+    "date": "2024-11-20",
+    "version": "1.32.4"
+  },
+  {
+    "children": {
+      "improvements": [
+        "Add grok-vision-beta model, update Mistral model list, add pixtral-large-latest."
+      ]
+    },
+    "date": "2024-11-20",
+    "version": "1.32.3"
+  },
+  {
+    "children": {},
+    "date": "2024-11-19",
+    "version": "1.32.2"
+  },
+  {
+    "children": {
+      "fixes": ["Keyword search for chat history & sessions."],
+      "improvements": ["Support o1 models using streaming."]
+    },
+    "date": "2024-11-19",
+    "version": "1.32.1"
+  },
+  {
+    "children": {
+      "features": ["Add support InternLM (书生浦语) provider."]
+    },
+    "date": "2024-11-19",
+    "version": "1.32.0"
+  },
+  {
+    "children": {
+      "fixes": ["Connection check logic."]
+    },
+    "date": "2024-11-18",
+    "version": "1.31.11"
+  },
+  {
     "children": {},
     "date": "2024-11-16",
     "version": "1.31.10"
