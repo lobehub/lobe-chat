@@ -16,11 +16,6 @@ export type FooterRender = (params: {
 }) => ReactNode;
 
 interface DesktopChatInputProps {
-  footer?: {
-    saveTopic?: boolean;
-    sendMore?: boolean;
-    shortcutHint?: boolean;
-  };
   inputHeight: number;
   leftActions: ActionKeys[];
   onInputHeightChange?: (height: number) => void;
@@ -33,7 +28,6 @@ const DesktopChatInput = memo<DesktopChatInputProps>(
   ({
     leftActions,
     rightActions,
-    footer,
     renderTextArea,
     inputHeight,
     onInputHeightChange,
