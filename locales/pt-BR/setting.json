@@ -389,6 +389,11 @@
       "modelDesc": "Modelo designado para otimizar as perguntas dos usuários",
       "title": "Reescrita de perguntas do banco de dados"
     },
+    "thread": {
+      "label": "Modelo de Nomeação de Subtópicos",
+      "modelDesc": "Modelo designado para a renomeação automática de subtópicos",
+      "title": "Nomeação Automática de Subtópicos"
+    },
     "title": "Assistente do Sistema",
     "topic": {
       "label": "Modelo de Nomeação de Tópicos",

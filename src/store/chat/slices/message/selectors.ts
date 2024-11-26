@@ -52,33 +52,46 @@ const activeBaseChatsWithoutTool = (s: ChatStoreState) => {
   return messages.filter((m) => m.role !== 'tool');
 };
 
-/**
- * Main display chats
- * 根据当前不同的状态，返回不同的消息列表
- */
-const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
-  return activeBaseChatsWithoutTool(s);
+const getChatsWithThread = (s: ChatStoreState, messages: ChatMessage[]) => {
   // 如果没有 activeThreadId，则返回所有的主消息
-  // const mains = activeBaseChats(s).filter((m) => !m.threadId);
-  // if (!s.activeThreadId) return mains;
-  //
-  // const thread = s.threadMaps[s.activeTopicId!]?.find((t) => t.id === s.activeThreadId);
-  //
-  // if (!thread) return mains;
-  //
-  // const sourceIndex = mains.findIndex((m) => m.id === thread.sourceMessageId);
-  // const sliced = mains.slice(0, sourceIndex + 1);
-  //
-  // return [...sliced, ...activeBaseChats(s).filter((m) => m.threadId === s.activeThreadId)];
+  if (!s.activeThreadId) return messages.filter((m) => !m.threadId);
+
+  const thread = s.threadMaps[s.activeTopicId!]?.find((t) => t.id === s.activeThreadId);
+
+  if (!thread) return messages.filter((m) => !m.threadId);
+
+  const sourceIndex = messages.findIndex((m) => m.id === thread.sourceMessageId);
+  const sliced = messages.slice(0, sourceIndex + 1);
+
+  return [...sliced, ...messages.filter((m) => m.threadId === s.activeThreadId)];
+};
+
+// ============= Main Display Chats ========== //
+// =========================================== //
+const mainDisplayChats = (s: ChatStoreState): ChatMessage[] => {
+  const displayChats = activeBaseChatsWithoutTool(s);
+
+  return getChatsWithThread(s, displayChats);
 };
 
 const mainDisplayChatIDs = (s: ChatStoreState) => mainDisplayChats(s).map((s) => s.id);
 
-const currentChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
-  const chats = activeBaseChats(s);
+const mainAIChats = (s: ChatStoreState): ChatMessage[] => {
+  const messages = activeBaseChats(s);
+
+  return getChatsWithThread(s, messages);
+};
+
+const mainAIChatsWithHistoryConfig = (s: ChatStoreState): ChatMessage[] => {
+  const chats = mainAIChats(s);
   const config = agentSelectors.currentAgentChatConfig(useAgentStore.getState());
 
   return chatHelpers.getSlicedMessagesWithConfig(chats, config);
+};
+
+const mainAIChatsMessageString = (s: ChatStoreState): string => {
+  const chats = mainAIChatsWithHistoryConfig(s);
+  return chats.map((m) => m.content).join('');
 };
 
 const currentToolMessages = (s: ChatStoreState) => {
@@ -110,13 +123,14 @@ const showInboxWelcome = (s: ChatStoreState): boolean => {
   return data.length === 0;
 };
 
-const chatsMessageString = (s: ChatStoreState): string => {
-  const chats = currentChatsWithHistoryConfig(s);
-  return chats.map((m) => m.content).join('');
-};
-
 const getMessageById = (id: string) => (s: ChatStoreState) =>
   chatHelpers.getMessageById(activeBaseChats(s), id);
+
+const countMessagesByThreadId = (id: string) => (s: ChatStoreState) => {
+  const messages = activeBaseChats(s).filter((m) => m.threadId === id);
+
+  return messages.length;
+};
 
 const getMessageByToolCallId = (id: string) => (s: ChatStoreState) => {
   const messages = activeBaseChats(s);
@@ -147,10 +161,15 @@ const isToolCallStreaming = (id: string, index: number) => (s: ChatStoreState) =
   return isLoading[index];
 };
 
-const isAIGenerating = (s: ChatStoreState) => s.chatLoadingIds.length > 0;
-const isInRAGFlow = (s: ChatStoreState) => s.messageRAGLoadingIds.length > 0;
+const isAIGenerating = (s: ChatStoreState) =>
+  s.chatLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
+const isInRAGFlow = (s: ChatStoreState) =>
+  s.messageRAGLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
+
 const isCreatingMessage = (s: ChatStoreState) => s.isCreatingMessage;
-const isHasMessageLoading = (s: ChatStoreState) => s.messageLoadingIds.length > 0;
+
+const isHasMessageLoading = (s: ChatStoreState) =>
+  s.messageLoadingIds.some((id) => mainDisplayChatIDs(s).includes(id));
 
 /**
  * this function is used to determine whether the send button should be disabled
@@ -168,10 +187,9 @@ const isSendButtonDisabledByMessage = (s: ChatStoreState) =>
 export const chatSelectors = {
   activeBaseChats,
   activeBaseChatsWithoutTool,
-  chatsMessageString,
+  countMessagesByThreadId,
   currentChatKey,
   currentChatLoadingState,
-  currentChatsWithHistoryConfig,
   currentToolMessages,
   currentUserFiles,
   getMessageById,
@@ -189,6 +207,9 @@ export const chatSelectors = {
   isSendButtonDisabledByMessage,
   isToolCallStreaming,
   latestMessage,
+  mainAIChats,
+  mainAIChatsMessageString,
+  mainAIChatsWithHistoryConfig,
   mainDisplayChatIDs,
   mainDisplayChats,
   showInboxWelcome,

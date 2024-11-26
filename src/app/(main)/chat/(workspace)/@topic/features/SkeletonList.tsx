@@ -12,7 +12,7 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
     justify-content: center;
 
     height: 44px;
-    padding: 8px;
+    padding: 8px 12px;
 
     .${prefixCls}-skeleton-content {
       display: flex;
@@ -48,7 +48,7 @@ export const Placeholder = memo(() => {
 
 export const SkeletonList = memo(() => (
   <Flexbox style={{ paddingTop: 6 }}>
-    {Array.from({ length: 8 }).map((_, i) => (
+    {Array.from({ length: 6 }).map((_, i) => (
       <Placeholder key={i} />
     ))}
   </Flexbox>
