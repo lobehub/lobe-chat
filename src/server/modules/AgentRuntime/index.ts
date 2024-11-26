@@ -31,7 +31,11 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
   switch (provider) {
     default: {
-      const upperProvider = provider.toUpperCase();
+      let upperProvider = provider.toUpperCase();
+
+      if (!llmConfig[`${upperProvider}_API_KEY`]) {
+        upperProvider = ModelProvider.OpenAI.toUpperCase(); // Use OpenAI options as default
+      }
 
       const apiKey = apiKeyManager.pick(payload?.apiKey || llmConfig[`${upperProvider}_API_KEY`]);
       const baseURL = payload?.endpoint || process.env[`${upperProvider}_PROXY_URL`];
@@ -41,14 +45,10 @@ const getLlmOptionsFromPayload = (provider: string, payload: JWTPayload) => {
 
     case ModelProvider.Azure: {
       const { AZURE_API_KEY, AZURE_API_VERSION, AZURE_ENDPOINT } = llmConfig;
-      const apiKey = apiKeyManager.pick(payload?.apiKey || AZURE_API_KEY);
+      const apikey = apiKeyManager.pick(payload?.apiKey || AZURE_API_KEY);
       const endpoint = payload?.endpoint || AZURE_ENDPOINT;
       const apiVersion = payload?.azureApiVersion || AZURE_API_VERSION;
-      return {
-        apiVersion,
-        apikey: apiKey,
-        endpoint,
-      };
+      return { apiVersion, apikey, endpoint };
     }
 
     case ModelProvider.Bedrock: {
