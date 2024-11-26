@@ -1,6 +1,13 @@
 [
   {
     "children": {
+      "features": ["Forkable Chat Mode."]
+    },
+    "date": "2024-11-26",
+    "version": "1.34.0"
+  },
+  {
+    "children": {
       "improvements": ["Update the description translation of Gitee AI."]
     },
     "date": "2024-11-26",

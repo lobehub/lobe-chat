@@ -12,7 +12,8 @@ const useStyles = createStyles(({ css, prefixCls }) => ({
     justify-content: center;
 
     height: 44px;
-    padding: 8px 12px;
+    padding-block: 8px;
+    padding-inline: 12px;
 
     .${prefixCls}-skeleton-content {
       display: flex;

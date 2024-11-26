@@ -19,10 +19,6 @@ const useStyles = createStyles(({ css, token, isDarkMode }, index: number) => ({
   container: css`
     margin-inline: 8px;
 
-    &.thread-item {
-      width: calc(100% - 16px);
-    }
-
     &::after {
       content: '';
 
@@ -35,6 +31,10 @@ const useStyles = createStyles(({ css, token, isDarkMode }, index: number) => ({
       border-block-end: 2px solid ${token.colorBorderSecondary};
       border-inline-start: 2px solid ${token.colorBorderSecondary};
       border-end-start-radius: 8px;
+    }
+
+    &.thread-item {
+      width: calc(100% - 16px);
     }
   `,
   split: css`
